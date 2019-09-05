@@ -2,90 +2,133 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 509DCC00306
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 814FFC00306
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08D9820828
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:16:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567710969;
-	bh=1c56GflaBJYpW7I3V954ev68I6Ir7BAtdC3/zgNPSqI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BcPKyBVO+fe30adT9kF3yb6CQ//lYpnDzP6UqrkMplfXhpKd4asyGwXnwwN/+N1XP
-	 CVQ3PSFIkNXELdRI3QozF3BJrk4cBhTVSN0S5sjRp/6xuHVhdyt++xRn0yw9UPI2tO
-	 9k0689Klqt6OivpCHPQQXJzfYrMBq4sRD7ylVt5U=
+	by mail.kernel.org (Postfix) with ESMTP id 44E3120828
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:16:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="trHCi8aa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388642AbfIETQH (ORCPT
+        id S2388694AbfIETQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 15:16:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47250 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726097AbfIETQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 15:16:06 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C64032070C;
-        Thu,  5 Sep 2019 19:16:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567710967;
-        bh=1c56GflaBJYpW7I3V954ev68I6Ir7BAtdC3/zgNPSqI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=E7LjTUVI7y9W4bUUFT0EKaEtlID3NjqyjFY7x8/xLimfn4sx6gjuIBcI6We6P6zs4
-         RqbB3LKdzAzOll1M+g2fQEtZOcn2LkdBOMHrNx+6C7xWwA7xEbaJU9+Fo4DJvTjn/r
-         fx17ENyj1rPGNUTbMwIa+jh6NwIvjlUg8/e6mAZw=
-Date:   Thu, 5 Sep 2019 21:16:04 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.2 000/143] 5.2.12-stable review
-Message-ID: <20190905191604.GB15748@kroah.com>
-References: <20190904175314.206239922@linuxfoundation.org>
- <f1f7fd91-061b-9646-20e8-297dfa2262c4@linaro.org>
+        Thu, 5 Sep 2019 15:16:41 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33992 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729067AbfIETQl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 15:16:41 -0400
+Received: by mail-io1-f67.google.com with SMTP id s21so7349937ioa.1;
+        Thu, 05 Sep 2019 12:16:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SeNhzZJnbTj4DW4++p0vK7Bp7AcJgIkbPLU7cUgS82Y=;
+        b=trHCi8aaOFYCtIIbjw99+xFl3hanazQ81YvOunKQeR3rGonw1QhRzR3vb074+7QYst
+         frU5K92RhvZBg3yYZI50naNHvYj4u1jVo/O18jNA1AQmHgvL9IKENRMa2tYWkZheQuxV
+         R3FUCXxCK8ifhcMNfqRZfSEZ5G+KtDPyIGPi9Hq3wdZKxRA2hMxLTK6/eTE1NlML8YHc
+         ia/E0ts8NlJBOXvQgTmGcHAX3lkcz4Ri666fuoo/RHcUl8muazj4j+XUNNqBfix3rSQs
+         HLAxFaMGeWU0FGHsRT347oGieJh2DawFoEgetnTMkBHEZfcshZ7vGqKv5LXEPdRmGxMh
+         iCgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SeNhzZJnbTj4DW4++p0vK7Bp7AcJgIkbPLU7cUgS82Y=;
+        b=ancVdNkpv8kfbwsyfHf7mNiL7av8kkRpiI4IBQoJslf7mOm/KPll7jFN3Xof2y4Lq3
+         +/ZICQnzKmFpNGIqouNqQmnFYgMgI/7+EynkPQTKRzVu4QfMybC0AaJIgDdu4fXIElCU
+         0dsFz884+g175aIxhAx7JQ6HFmpDsV+8eo4fJF8AanG8TKxyHx1KsIVSd29NXGlgaubJ
+         t75aLHjOsQzsY4hFGLWf78g07ji1zA0yrnOE75/pKC8zUrC04jZbnDKXm+vsFrX2gfMJ
+         vK0Y3EzeGk7x7uA1WPcLRInGnHWiEA61/HiJvcHdgz4fO9NyvEsUatbLv+JO6pXoHRrG
+         x/mw==
+X-Gm-Message-State: APjAAAWx0W7QXAKvN7j/1L32gdWIj7gznPLsY5s1WECMzHIEowbsWhFl
+        nmO9ttuHu/lfi+ccP9xGqRQ=
+X-Google-Smtp-Source: APXvYqx9tHLXz1eLp/4aXO/Vef4AWTvUfN/xQL/YJmMXhTNtvCiEqccIipw8UN5VprCIcdbCvTviRw==
+X-Received: by 2002:a02:2e54:: with SMTP id u20mr5991984jae.5.1567710999653;
+        Thu, 05 Sep 2019 12:16:39 -0700 (PDT)
+Received: from JATN (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
+        by smtp.gmail.com with ESMTPSA id h70sm5177098iof.48.2019.09.05.12.16.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2019 12:16:38 -0700 (PDT)
+Date:   Thu, 5 Sep 2019 13:16:37 -0600
+From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bodong@mellanox.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org, ddutile@redhat.com, berrange@redhat.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH] PCI/IOV: Make SR-IOV attributes with mode 0664 use 0644
+Message-ID: <20190905191637.GA22813@JATN>
+References: <20190905063226.43269-1-skunberg.kelsey@gmail.com>
+ <20190905073416.GC29933@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f1f7fd91-061b-9646-20e8-297dfa2262c4@linaro.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190905073416.GC29933@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 12:29:57PM -0500, Daniel Díaz wrote:
-> Hello!
+On Thu, Sep 05, 2019 at 09:34:16AM +0200, Greg KH wrote:
+> On Thu, Sep 05, 2019 at 12:32:26AM -0600, Kelsey Skunberg wrote:
+> > sriov_numvfs and sriov_drivers_autoprobe have "unusual" permissions (0664)
+> > with no reported or found reason for allowing group write permissions.
+> > libvirt runs as root when dealing with PCI, and chowns files for qemu
+> > needs. There is not a need for the "0664" permissions.
+> > 
+> > sriov_numvfs was introduced in:
+> > 	commit 1789382a72a5 ("PCI: SRIOV control and status via sysfs")
+> > 
+> > sriov_drivers_autoprobe was introduced in:
+> > 	commit 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to
+> > 			      control VF driver binding")
+> > 
+> > Change sriov_numvfs and sriov_drivers_autoprobe from "0664" permissions to
+> > "0644" permissions.
+> > 
+> > Exchange DEVICE_ATTR() with DEVICE_ATTR_RW() which sets the mode to "0644".
+> > DEVICE_ATTR() should only be used for "unusual" permissions.
+> > 
+> > Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
+> > ---
+> >  drivers/pci/iov.c | 5 ++---
+> >  1 file changed, 2 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> > index b335db21c85e..b3f972e8cfed 100644
+> > --- a/drivers/pci/iov.c
+> > +++ b/drivers/pci/iov.c
+> > @@ -375,12 +375,11 @@ static ssize_t sriov_drivers_autoprobe_store(struct device *dev,
+> >  }
+> >  
+> >  static DEVICE_ATTR_RO(sriov_totalvfs);
+> > -static DEVICE_ATTR(sriov_numvfs, 0664, sriov_numvfs_show, sriov_numvfs_store);
+> > +static DEVICE_ATTR_RW(sriov_numvfs);
+> >  static DEVICE_ATTR_RO(sriov_offset);
+> >  static DEVICE_ATTR_RO(sriov_stride);
+> >  static DEVICE_ATTR_RO(sriov_vf_device);
+> > -static DEVICE_ATTR(sriov_drivers_autoprobe, 0664, sriov_drivers_autoprobe_show,
+> > -		   sriov_drivers_autoprobe_store);
+> > +static DEVICE_ATTR_RW(sriov_drivers_autoprobe);
+> >  
+> >  static struct attribute *sriov_dev_attrs[] = {
+> >  	&dev_attr_sriov_totalvfs.attr,
 > 
-> On 9/4/19 12:52 PM, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.2.12 release.
-> > There are 143 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Fri 06 Sep 2019 05:50:23 PM UTC.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.12-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
 > 
-> Results from Linaro’s test farm.
-> No regressions on arm64, arm, x86_64, and i386.
+> Nice!!!
+> 
+> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Thanks for testing all of these and letting me know.
+Thank you for reviewing!
 
-greg k-h
+-Kelsey
