@@ -2,286 +2,138 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37723C00306
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4371C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53D88206A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:01:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567717266;
-	bh=NQJ3aMo3ua2SkkGbIaCQJL4Vu0OkMWqaAQcWo+0TUok=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1Q4dpXIPU/u8RBMSGH5OOBOjZ7CxX/bFCei5u50b7VK14NZqc+9HiV8c7cnl0hGlx
-	 GU57DVWl9msUuZAUN1c7cC5tADwtFPUk5dyrVaFm6Ha+6Mg51Q7/RhmUQMpdSBhoaN
-	 q6KnCSs8HzUFpfQJQ/BW0T5+UvtTbCKYwdZO6vrQ=
+	by mail.kernel.org (Postfix) with ESMTP id F11CC206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:03:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="cbTjgF1E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390707AbfIEVBF (ORCPT
+        id S2391720AbfIEVDV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 17:01:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39416 "EHLO mail.kernel.org"
+        Thu, 5 Sep 2019 17:03:21 -0400
+Received: from mga07.intel.com ([134.134.136.100]:25735 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728685AbfIEVBF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 17:01:05 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0985C20640;
-        Thu,  5 Sep 2019 21:01:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567717264;
-        bh=NQJ3aMo3ua2SkkGbIaCQJL4Vu0OkMWqaAQcWo+0TUok=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jxK4M1SySAK/POxJrgL2hnYRRW35WOe71MMWin7nd+L6+B9hKBA88KV8dWx7avqm6
-         cUAYFL7rKgzD3eTJSz52A7T6wiFjNMPTZtE6U3nBxfvWHCdG2hbwT8rMm7R2yW8m6s
-         4/wN8YSJCinAy2IiucIWPII4LrnGz5XNN8DHXPNk=
-Date:   Thu, 5 Sep 2019 16:01:02 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/4] Simplify PCIe hotplug indicator control
-Message-ID: <20190905210102.GG103977@google.com>
-References: <20190903111021.1559-1-efremov@linux.com>
+        id S1728685AbfIEVDU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 17:03:20 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Sep 2019 14:03:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,471,1559545200"; 
+   d="scan'208";a="188101331"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by orsmga006.jf.intel.com with ESMTP; 05 Sep 2019 14:03:19 -0700
+Received: from FMSMSX110.amr.corp.intel.com (10.18.116.10) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 5 Sep 2019 14:03:18 -0700
+Received: from FMSEDG002.ED.cps.intel.com (10.1.192.134) by
+ fmsmsx110.amr.corp.intel.com (10.18.116.10) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 5 Sep 2019 14:03:18 -0700
+Received: from NAM04-SN1-obe.outbound.protection.outlook.com (104.47.44.56) by
+ edgegateway.intel.com (192.55.55.69) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Thu, 5 Sep 2019 14:03:18 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NcBFHzGam8sasDttsBRJr7vWo4JeZCX9QDZDRE7bREEztf+wXoqOaoCnU8mMRFRboMfuVuXR50IlKLJUtGe6BSPDhpJycOhBGwW+X/C+KDbEdCymRquiTBmClHIsLOPo9A+CQqALsVrb/BTN3MrRWDwzLH7B+yY+1TSmHZHxSlMSb471QwRvQFvEipM3H8ojzGpX1v4XkmeWWqfrTZVtsf8pQ/bfkI4y4pAeZzeiaaXCn6HMFsWOkAk7dKd0CU1uCggcoLK25mtLlbm1WyJpPNJ+25oF2BKYvNVd0cQY7JjApgfnx6fejEGDkxArpOqkMBwygA5qGs5XPH849bIghA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ri2S5A5vwbwl0Zr+D8WJBBgURXPJnPb3dax2h0srVNE=;
+ b=lp237XA9OmffdF4mfjLF6of5JXURDHlI2CdNcktWSIw7MXmtY2pxMumg9jg3iNi7s1ukKQKBoCY+BkFGIRe3J+jHk346g5tGUufbcYYHbkC6V0P090BvIF+1wMOOCm04SZkvWBOS5Osor/zklFmekfZDkyAeA67yk2O5XjP5V/aMefwd4/9RkhDZgKv01eAlCAbAXKoM6Npzhr9Sdw/Iv02e/hpDsGUCymSvLFagx0GxfPT4GD/EiDlZHpKvpnD08KoCu2TY2QHWY66nDs1Yz/S0GRdxWViNLj6xAdNV6TyxnqaOo6R0wzDnebh3Dfy6LUO6QHsMHKSuvqtDOoUzqg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ri2S5A5vwbwl0Zr+D8WJBBgURXPJnPb3dax2h0srVNE=;
+ b=cbTjgF1EqJugF02oHXSLUH6xjZVizXTJTHWSSBs16CREq5E0wgnYVj1TyqD90RzYqdZwTQQw37CvVVmvWkAsN6CvWT8DHn0cO6j1amkoXxHxJR2SqtC0dxoeawBW8NIExzYmMQ5l8yiJlSyXRs3ZQU/YJx0GrAldPat9euQX8qQ=
+Received: from BN6PR11MB0050.namprd11.prod.outlook.com (10.161.155.32) by
+ BN6PR11MB1713.namprd11.prod.outlook.com (10.173.26.13) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2220.21; Thu, 5 Sep 2019 21:03:03 +0000
+Received: from BN6PR11MB0050.namprd11.prod.outlook.com
+ ([fe80::a4e9:cc41:8ded:4c03]) by BN6PR11MB0050.namprd11.prod.outlook.com
+ ([fe80::a4e9:cc41:8ded:4c03%3]) with mapi id 15.20.2241.014; Thu, 5 Sep 2019
+ 21:03:03 +0000
+From:   "Gomes, Vinicius" <vinicius.gomes@intel.com>
+To:     Vladimir Oltean <olteanv@gmail.com>
+CC:     Eric Dumazet <eric.dumazet@gmail.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] net: sched: taprio: Fix potential integer overflow in
+ taprio_set_picos_per_byte
+Thread-Topic: [PATCH] net: sched: taprio: Fix potential integer overflow in
+ taprio_set_picos_per_byte
+Thread-Index: AQHVYfQR/bBKdBXupkm2zvl2OxkQsqcZ8H0AgAAwbYCAALxVgIACtQmAgAADWrA=
+Date:   Thu, 5 Sep 2019 21:03:03 +0000
+Message-ID: <BN6PR11MB0050674280A0EEB96C488D7286BB0@BN6PR11MB0050.namprd11.prod.outlook.com>
+References: <20190903010817.GA13595@embeddedor>
+ <cb7d53cd-3f1e-146b-c1ab-f11a584a7224@gmail.com>
+ <CA+h21hpCAJhE8xhsgDQ55_MUUiesV=uVY4tD=TzaCE6wynUPoQ@mail.gmail.com>
+ <8736hd9ilm.fsf@intel.com>
+ <CA+h21hqtuGuJm0rMx_SZAy_HCjSVD_UK1j8wa7fv+p_zUGNV7A@mail.gmail.com>
+In-Reply-To: <CA+h21hqtuGuJm0rMx_SZAy_HCjSVD_UK1j8wa7fv+p_zUGNV7A@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiOTA4YWZjNjMtZTg1MS00ODk3LWEwOTgtNDIyYWRhNTBjN2VmIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiOWxhUW5kbDlIYXBnK1wvaEYySGlydEE0RlBJTkxnczI1SHhEWXR0VzFVWXNJajNKM09od3JwM081dFVNU2k0b2YifQ==
+x-ctpclassification: CTP_NT
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=vinicius.gomes@intel.com; 
+x-originating-ip: [134.134.136.207]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 775923b1-eaf6-4b2e-6198-08d732447150
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN6PR11MB1713;
+x-ms-traffictypediagnostic: BN6PR11MB1713:
+x-microsoft-antispam-prvs: <BN6PR11MB1713ABF2D657591C3BE110A686BB0@BN6PR11MB1713.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 015114592F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(396003)(366004)(39850400004)(376002)(346002)(189003)(199004)(4744005)(256004)(305945005)(74316002)(11346002)(71200400001)(66446008)(64756008)(66556008)(66476007)(4326008)(99286004)(71190400001)(446003)(25786009)(33656002)(7736002)(486006)(76116006)(8676002)(476003)(14454004)(86362001)(5660300002)(6436002)(54906003)(2906002)(478600001)(6116002)(316002)(9686003)(1411001)(76176011)(53936002)(102836004)(8936002)(52536014)(186003)(55016002)(26005)(6916009)(81166006)(81156014)(229853002)(7696005)(66066001)(3846002)(6506007)(66946007)(6246003);DIR:OUT;SFP:1102;SCL:1;SRVR:BN6PR11MB1713;H:BN6PR11MB0050.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: qDwY89MY6Gw0H0SnmpvuDvjsG6ttvhAHMC2sw6xdR5upDmMHfEoffm+VpkPWwKQQ30qsOY1GPfnSsZ0aJcHcIWWwa3KuYyykmo4+UiLUrBbpKtCV39rvEJp6i79IlAIGUFfRgXVrXlE3H9vqHMMCtIyk191BYDgZvilsuWRSKP+8xqNbP7kKlwk77IIbfvcXDewdY1wwCjtbv+qoShqefF6oHPQkCNWKQcTdvDpwmciEId0pDk7VkDmZ0GA/lIYzdRZsFszjg06HcBKLxtT3WSi9F+lN4QZNSbLHwKcIfUauIdVfQDTw15PPGFtl+Wn7wULHzPJutrxbHCdvjZIdOYCtBCudkt70VMI85eCVvhjWx+CdGLQjEEDiMQLX7zGQKWubEyJt/LCx3SqFr6e5VniC+WmNKKKdQwXGfDxoqeI=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190903111021.1559-1-efremov@linux.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 775923b1-eaf6-4b2e-6198-08d732447150
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2019 21:03:03.5983
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 9G/cXtQMVW0OkgHNitCmWtD1nUbKfHqWMJUGlQQ6QDa6pOAYG9l7COGb2WEolPn8evYz5XAxiFk41//lVSfOIN2DCzw4wL7Ke+qD1E5GmWY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR11MB1713
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 02:10:17PM +0300, Denis Efremov wrote:
-> PCIe defines two optional hotplug indicators: a Power indicator and an
-> Attention indicator. Both are controlled by the same register, and each
-> can be on, off or blinking. The current interfaces
-> (pciehp_green_led_{on,off,blink}() and pciehp_set_attention_status()) are
-> non-uniform and require two register writes in many cases where we could
-> do one.
-> 
-> This patchset introduces the new function pciehp_set_indicators(). It
-> allows one to set two indicators with a single register write. All
-> calls to previous interfaces (pciehp_green_led_* and
-> pciehp_set_attention_status()) are replaced with a new one. Thus,
-> the amount of duplicated code for setting indicators is reduced.
-> 
-> Changes in v4:
->   - Changed the inputs validation in pciehp_set_indicators()
->   - Moved PCI_EXP_SLTCTL_ATTN_IND_NONE, PCI_EXP_SLTCTL_PWR_IND_NONE
->     to drivers/pci/hotplug/pciehp.h and set to -1 for not interfering
->     with reserved values in the PCIe Base spec
->   - Added set_power_indicator define
-> 
-> Changes in v3:
->   - Changed pciehp_set_indicators() to work with existing
->     PCI_EXP_SLTCTL_* macros
->   - Reworked the inputs validation in pciehp_set_indicators()
->   - Removed pciehp_set_attention_status() and pciehp_green_led_*()
->     completely
-> 
-> Denis Efremov (4):
->   PCI: pciehp: Add pciehp_set_indicators() to jointly set LED indicators
->   PCI: pciehp: Switch LED indicators with a single write
->   PCI: pciehp: Remove pciehp_set_attention_status()
->   PCI: pciehp: Remove pciehp_green_led_{on,off,blink}()
-> 
->  drivers/pci/hotplug/pciehp.h      | 12 ++++--
->  drivers/pci/hotplug/pciehp_core.c |  7 ++-
->  drivers/pci/hotplug/pciehp_ctrl.c | 26 +++++------
->  drivers/pci/hotplug/pciehp_hpc.c  | 72 +++++++------------------------
->  include/uapi/linux/pci_regs.h     |  1 +
->  5 files changed, 45 insertions(+), 73 deletions(-)
-
-Thanks, Denis, I applied these to pci/pciehp for v5.4.  I think this
-is a great improvement.
-
-I tweaked a few things:
-
-  - Updated comments to refer to "Power" intead of "green",
-    "Attention" instead of "amber", and "Indicator" instead of "LED".
-
-  - Replaced PCI_EXP_SLTCTL_ATTN_IND_NONE and
-    PCI_EXP_SLTCTL_PWR_IND_NONE with INDICATOR_NOOP because I didn't
-    want them to look like definitions from the spec.
-
-  - Dropped set_power_indicator().  It does make things locally easier
-    to read, but I think the overall benefit of having fewer
-    interfaces outweighs that.
-
-The interdiff from your v4 is below.  Let me know if I broke anything.
-
-
-diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
-index dcbf790b7508..654c972b8ea0 100644
---- a/drivers/pci/hotplug/pciehp.h
-+++ b/drivers/pci/hotplug/pciehp.h
-@@ -110,9 +110,9 @@ struct controller {
-  *
-  * @OFF_STATE: slot is powered off, no subordinate devices are enumerated
-  * @BLINKINGON_STATE: slot will be powered on after the 5 second delay,
-- *	green led is blinking
-+ *	Power Indicator is blinking
-  * @BLINKINGOFF_STATE: slot will be powered off after the 5 second delay,
-- *	green led is blinking
-+ *	Power Indicator is blinking
-  * @POWERON_STATE: slot is currently powering on
-  * @POWEROFF_STATE: slot is currently powering off
-  * @ON_STATE: slot is powered on, subordinate devices have been enumerated
-@@ -167,9 +167,7 @@ int pciehp_power_on_slot(struct controller *ctrl);
- void pciehp_power_off_slot(struct controller *ctrl);
- void pciehp_get_power_status(struct controller *ctrl, u8 *status);
- 
--/* Special values for leaving indicators unchanged */
--#define PCI_EXP_SLTCTL_ATTN_IND_NONE -1 /* Attention Indicator noop */
--#define PCI_EXP_SLTCTL_PWR_IND_NONE  -1 /* Power Indicator noop */
-+#define INDICATOR_NOOP -1	/* Leave indicator unchanged */
- void pciehp_set_indicators(struct controller *ctrl, int pwr, int attn);
- 
- void pciehp_get_latch_status(struct controller *ctrl, u8 *status);
-@@ -187,9 +185,6 @@ int pciehp_get_attention_status(struct hotplug_slot *hotplug_slot, u8 *status);
- int pciehp_set_raw_indicator_status(struct hotplug_slot *h_slot, u8 status);
- int pciehp_get_raw_indicator_status(struct hotplug_slot *h_slot, u8 *status);
- 
--#define set_power_indicator(ctrl, x) \
--	pciehp_set_indicators(ctrl, (x), PCI_EXP_SLTCTL_ATTN_IND_NONE)
--
- static inline const char *slot_name(struct controller *ctrl)
- {
- 	return hotplug_slot_name(&ctrl->hotplug_slot);
-diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
-index 7a86ea90ed94..b3122c151b80 100644
---- a/drivers/pci/hotplug/pciehp_core.c
-+++ b/drivers/pci/hotplug/pciehp_core.c
-@@ -95,7 +95,7 @@ static void cleanup_slot(struct controller *ctrl)
- }
- 
- /*
-- * set_attention_status - Turns the Amber LED for a slot on, off or blink
-+ * set_attention_status - Turns the Attention Indicator on, off or blinking
-  */
- static int set_attention_status(struct hotplug_slot *hotplug_slot, u8 status)
- {
-@@ -108,7 +108,7 @@ static int set_attention_status(struct hotplug_slot *hotplug_slot, u8 status)
- 		status = PCI_EXP_SLTCTL_ATTN_IND_OFF;
- 
- 	pci_config_pm_runtime_get(pdev);
--	pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_NONE, status);
-+	pciehp_set_indicators(ctrl, INDICATOR_NOOP, status);
- 	pci_config_pm_runtime_put(pdev);
- 	return 0;
- }
-diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-index d0f55f695770..21af7b16d7a4 100644
---- a/drivers/pci/hotplug/pciehp_ctrl.c
-+++ b/drivers/pci/hotplug/pciehp_ctrl.c
-@@ -30,7 +30,10 @@
- 
- static void set_slot_off(struct controller *ctrl)
- {
--	/* turn off slot, turn on Amber LED, turn off Green LED if supported*/
-+	/*
-+	 * Turn off slot, turn on attention indicator, turn off power
-+	 * indicator
-+	 */
- 	if (POWER_CTRL(ctrl)) {
- 		pciehp_power_off_slot(ctrl);
- 
-@@ -65,7 +68,8 @@ static int board_added(struct controller *ctrl)
- 			return retval;
- 	}
- 
--	set_power_indicator(ctrl, PCI_EXP_SLTCTL_PWR_IND_BLINK);
-+	pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_BLINK,
-+			      INDICATOR_NOOP);
- 
- 	/* Check link training status */
- 	retval = pciehp_check_link_status(ctrl);
-@@ -100,7 +104,7 @@ static int board_added(struct controller *ctrl)
- }
- 
- /**
-- * remove_board - Turns off slot and LEDs
-+ * remove_board - Turn off slot and Power Indicator
-  * @ctrl: PCIe hotplug controller where board is being removed
-  * @safe_removal: whether the board is safely removed (versus surprise removed)
-  */
-@@ -123,8 +127,8 @@ static void remove_board(struct controller *ctrl, bool safe_removal)
- 			   &ctrl->pending_events);
- 	}
- 
--	/* turn off Green LED */
--	set_power_indicator(ctrl, PCI_EXP_SLTCTL_PWR_IND_OFF);
-+	pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_OFF,
-+			      INDICATOR_NOOP);
- }
- 
- static int pciehp_enable_slot(struct controller *ctrl);
-@@ -171,7 +175,7 @@ void pciehp_handle_button_press(struct controller *ctrl)
- 			ctrl_info(ctrl, "Slot(%s) Powering on due to button press\n",
- 				  slot_name(ctrl));
- 		}
--		/* blink green LED and turn off amber */
-+		/* blink power indicator and turn off attention */
- 		pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_BLINK,
- 				      PCI_EXP_SLTCTL_ATTN_IND_OFF);
- 		schedule_delayed_work(&ctrl->button_work, 5 * HZ);
-@@ -312,7 +316,8 @@ static int pciehp_enable_slot(struct controller *ctrl)
- 	ret = __pciehp_enable_slot(ctrl);
- 	if (ret && ATTN_BUTTN(ctrl))
- 		/* may be blinking */
--		set_power_indicator(ctrl, PCI_EXP_SLTCTL_PWR_IND_OFF);
-+		pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_OFF,
-+				      INDICATOR_NOOP);
- 	pm_runtime_put(&ctrl->pcie->port->dev);
- 
- 	mutex_lock(&ctrl->state_lock);
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index 9fd8f99132bb..1a522c1c4177 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -418,17 +418,32 @@ int pciehp_set_raw_indicator_status(struct hotplug_slot *hotplug_slot,
- 	return 0;
- }
- 
-+/**
-+ * pciehp_set_indicators() - set attention indicator, power indicator, or both
-+ * @ctrl: PCIe hotplug controller
-+ * @pwr: one of:
-+ *	PCI_EXP_SLTCTL_PWR_IND_ON
-+ *	PCI_EXP_SLTCTL_PWR_IND_BLINK
-+ *	PCI_EXP_SLTCTL_PWR_IND_OFF
-+ * @attn: one of:
-+ *	PCI_EXP_SLTCTL_ATTN_IND_ON
-+ *	PCI_EXP_SLTCTL_ATTN_IND_BLINK
-+ *	PCI_EXP_SLTCTL_ATTN_IND_OFF
-+ *
-+ * Either @pwr or @attn can also be INDICATOR_NOOP to leave that indicator
-+ * unchanged.
-+ */
- void pciehp_set_indicators(struct controller *ctrl, int pwr, int attn)
- {
- 	u16 cmd = 0, mask = 0;
- 
--	if (PWR_LED(ctrl) && pwr > 0) {
--		cmd |= pwr;
-+	if (PWR_LED(ctrl) && pwr != INDICATOR_NOOP) {
-+		cmd |= (pwr & PCI_EXP_SLTCTL_PIC);
- 		mask |= PCI_EXP_SLTCTL_PIC;
- 	}
- 
--	if (ATTN_LED(ctrl) && attn > 0) {
--		cmd |= attn;
-+	if (ATTN_LED(ctrl) && attn != INDICATOR_NOOP) {
-+		cmd |= (attn & PCI_EXP_SLTCTL_AIC);
- 		mask |= PCI_EXP_SLTCTL_AIC;
- 	}
- 
+SGkgVmxhZGltaXIsDQoNCj4gTG9va3Mgb2sgdG8gbWUsIGJ1dCBJIGhhdmUgbm8gc2F5aW5nIG92
+ZXIgZXRodG9vbCBBUEkuIEFjdHVhbGx5IEkgZG9uJ3QgZXZlbg0KPiBrbm93IHdob20gdG8gYXNr
+IC0gdGhlIG91dHB1dCBvZiAuL3NjcmlwdHMvZ2V0X21haW50YWluZXIucGwNCj4gbmV0L2NvcmUv
+ZXRodG9vbC5jIGlzIGEgYml0IG92ZXJ3aGVsbWluZy4NCj4gVG8gYXZvaWQgY29uZmxpY3RzLCB0
+aGVyZSBuZWVkcyB0byBiZSBzb21lYm9keSBvdXQgb2YgdXMgd2hvIHRha2VzIEVyaWMncw0KPiBz
+aW1wbGlmaWNhdGlvbiwgd2l0aCBHdXN0YXZvJ3MgUmVwb3J0ZWQtYnkgdGFnLCBhbmQgdGhlIDIg
+ZXRodG9vbCAmIHRhcHJpbw0KPiBwYXRjaGVzIHRvIGF2b2lkIGRpdmlzaW9uIGJ5IHplcm8sIGFu
+ZCB0aGUgcHJpbnRpbmcgZml4LCBhbmQgbWF5YmUgZG8gdGhlIHNhbWUgaW4NCj4gY2JzLiBXaWxs
+IHlvdSBiZSB0aGUgb25lPyBTaG91bGQgST8NCg0KSWYgeW91IGhhdmUgdGhlIGN5Y2xlcyB0byBk
+byBpdCwgZ28gZm9yIGl0LiBJIHdvdWxkIG9ubHkgYmUgYWJsZSB0byB3b3JrIG9uIHRoaXMgbmV4
+dCB3ZWVrLg0KDQo+IA0KPiBUaGFua3MsDQo+IC1WbGFkaW1pcg0KDQpUaGFua3MgYSBsb3QsDQot
+LQ0KVmluaWNpdXMNCg==
