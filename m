@@ -2,94 +2,146 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2FFAC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4DADC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 658ED206DE
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:40:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 496C920674
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:40:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730415AbfIENkM (ORCPT
+        id S1730558AbfIENkw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 09:40:12 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:57836 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbfIENkM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 09:40:12 -0400
-Received: from fsav104.sakura.ne.jp (fsav104.sakura.ne.jp [27.133.134.231])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x85DdvGG088282;
-        Thu, 5 Sep 2019 22:39:57 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav104.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav104.sakura.ne.jp);
- Thu, 05 Sep 2019 22:39:57 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav104.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126227201116.bbtec.net [126.227.201.116])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x85Ddn6H088212
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Thu, 5 Sep 2019 22:39:57 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [RFC PATCH] mm, oom: disable dump_tasks by default
-To:     David Rientjes <rientjes@google.com>,
-        Michal Hocko <mhocko@kernel.org>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190903144512.9374-1-mhocko@kernel.org>
- <af0703d2-17e4-1b8e-eb54-58d7743cad60@i-love.sakura.ne.jp>
- <20190904054004.GA3838@dhcp22.suse.cz>
- <alpine.DEB.2.21.1909041302290.95127@chino.kir.corp.google.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <12bcade2-4190-5e5e-35c6-7a04485d74b9@i-love.sakura.ne.jp>
-Date:   Thu, 5 Sep 2019 22:39:47 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 5 Sep 2019 09:40:52 -0400
+Received: from mx2.mailbox.org ([80.241.60.215]:42942 "EHLO mx2.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725975AbfIENkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 09:40:51 -0400
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx2.mailbox.org (Postfix) with ESMTPS id 641B2A2002;
+        Thu,  5 Sep 2019 15:40:45 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter04.heinlein-hosting.de (spamfilter04.heinlein-hosting.de [80.241.56.122]) (amavisd-new, port 10030)
+        with ESMTP id fp988BBgv0Z0; Thu,  5 Sep 2019 15:40:41 +0200 (CEST)
+Date:   Thu, 5 Sep 2019 23:40:17 +1000
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christian Brauner <christian@brauner.io>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v12 01/12] lib: introduce copy_struct_{to,from}_user
+ helpers
+Message-ID: <20190905134017.rstiqa6v6roslzlu@yavin.dot.cyphar.com>
+References: <20190904201933.10736-1-cyphar@cyphar.com>
+ <20190904201933.10736-2-cyphar@cyphar.com>
+ <20190905110544.d6c5t7rx25kvywmi@wittgenstein>
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1909041302290.95127@chino.kir.corp.google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="lfmn5rszd42a2efo"
+Content-Disposition: inline
+In-Reply-To: <20190905110544.d6c5t7rx25kvywmi@wittgenstein>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/09/05 5:04, David Rientjes wrote:
-> On Wed, 4 Sep 2019, Michal Hocko wrote:
-> 
->>>> It's primary purpose is
->>>> to help analyse oom victim selection decision.
->>>
->>> I disagree, for I use the process list for understanding what / how many
->>> processes are consuming what kind of memory (without crashing the system)
->>> for anomaly detection purpose. Although we can't dump memory consumed by
->>> e.g. file descriptors, disabling dump_tasks() loose that clue, and is
->>> problematic for me.
->>
->> Does anything really prevent you from enabling this by sysctl though? Or
->> do you claim that this is a general usage pattern and therefore the
->> default change is not acceptable or do you want a changelog to be
->> updated?
->>
-> 
-> I think the motivation is that users don't want to need to reproduce an 
-> oom kill to figure out why: they want to be able to figure out which 
-> process had higher than normal memory usage.
 
-Right. Users can't reproduce an OOM kill to figure out why. Those who do
-failure analysis for users (e.g. technical staff at support center) need to
-figure out system's state when an OOM kill happened. And installing dynamic
-hooks like SystemTap / eBPF is hardly acceptable for users.
+--lfmn5rszd42a2efo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-What I don't like is that Michal refuses to solve OOM stalling problem,
-does not try to understand how difficult to avoid problems caused by
-thoughtless printk(), and instead recommending to disable oom_dump_tasks.
+On 2019-09-05, Christian Brauner <christian.brauner@ubuntu.com> wrote:
+> On Thu, Sep 05, 2019 at 06:19:22AM +1000, Aleksa Sarai wrote:
+> > A common pattern for syscall extensions is increasing the size of a
+> > struct passed from userspace, such that the zero-value of the new fields
+> > result in the old kernel behaviour (allowing for a mix of userspace and
+> > kernel vintages to operate on one another in most cases). This is done
+> > in both directions -- hence two helpers -- though it's more common to
+> > have to copy user space structs into kernel space.
+> >=20
+> > Previously there was no common lib/ function that implemented
+> > the necessary extension-checking semantics (and different syscalls
+> > implemented them slightly differently or incompletely[1]). A future
+> > patch replaces all of the common uses of this pattern to use the new
+> > copy_struct_{to,from}_user() helpers.
+> >=20
+> > [1]: For instance {sched_setattr,perf_event_open,clone3}(2) all do do
+> >      similar checks to copy_struct_from_user() while rt_sigprocmask(2)
+> >      always rejects differently-sized struct arguments.
+> >=20
+> > Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> > Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
 
-There is nothing that prevents users from enabling oom_dump_tasks by sysctl.
-But that requires a solution for OOM stalling problem. Since I know how
-difficult to avoid problems caused by printk() flooding, I insist that
-we need "mm,oom: Defer dump_tasks() output." patch.
+[...]
+
+> > +	if (unlikely(!access_ok(src, usize)))
+> > +		return -EFAULT;
+> > +
+> > +	/* Deal with trailing bytes. */
+> > +	if (usize < ksize)
+> > +		memset(dst + size, 0, rest);
+[...]
+> That's a change in behavior for clone3() and sched at least, no? Unless
+> - which I guess you might have done - you have moved the "error out when
+> the struct is too small" part before the call to copy_struct_from_user()
+> for them.
+
+Yes, I've put the minimum size check to the callers in all of the
+cases (in the case of clone3() I've #define'd a CLONE_ARGS_SIZE_VER0 to
+match the others -- see patch 2 of the series).
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--lfmn5rszd42a2efo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXXEQPQAKCRCdlLljIbnQ
+EmI0AQDWLDq3CfEAPKhr2gyUgsbcgKNMnsXSA4qFj1Jjd61fzQEAqPhisgSoisGO
+mIYO56C9d94ktWhTGVP9Bs10TG3V/Ac=
+=1PLZ
+-----END PGP SIGNATURE-----
+
+--lfmn5rszd42a2efo--
