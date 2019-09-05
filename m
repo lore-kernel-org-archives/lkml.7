@@ -2,107 +2,151 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D4EC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95755C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E9042082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 766C321848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:08:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732964AbfIEJGf (ORCPT
+        id S1732978AbfIEJId (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 05:06:35 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46610 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731737AbfIEJGf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 05:06:35 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 80E5E8A1C9D;
-        Thu,  5 Sep 2019 09:06:34 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-16.pek2.redhat.com [10.72.8.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4053E5D9CA;
-        Thu,  5 Sep 2019 09:06:23 +0000 (UTC)
-Date:   Thu, 5 Sep 2019 17:06:19 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Bart Van Assche <bvanassche@acm.org>, Jens Axboe <axboe@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Sagi Grimberg <sagi@grimberg.me>, linux-scsi@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Long Li <longli@microsoft.com>,
-        John Garry <john.garry@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-nvme@lists.infradead.org,
-        Keith Busch <keith.busch@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 1/4] softirq: implement IRQ flood detection mechanism
-Message-ID: <20190905090617.GB4432@ming.t460p>
-References: <20190828135054.GA23861@ming.t460p>
- <alpine.DEB.2.21.1908281605190.23149@nanos.tec.linutronix.de>
- <20190903033001.GB23861@ming.t460p>
- <299fb6b5-d414-2e71-1dd2-9d6e34ee1c79@linaro.org>
- <20190903063125.GA21022@ming.t460p>
- <6b88719c-782a-4a63-db9f-bf62734a7874@linaro.org>
- <20190903072848.GA22170@ming.t460p>
- <dd96def4-1121-afbe-2431-9e516a06850c@linaro.org>
- <6f3b6557-1767-8c80-f786-1ea667179b39@acm.org>
- <2a8bd278-5384-d82f-c09b-4fce236d2d95@linaro.org>
+        Thu, 5 Sep 2019 05:08:33 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:47180 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732160AbfIEJId (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 05:08:33 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id AA81243F6A79C6D72018;
+        Thu,  5 Sep 2019 17:08:31 +0800 (CST)
+Received: from [127.0.0.1] (10.74.191.121) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Thu, 5 Sep 2019
+ 17:08:22 +0800
+Subject: Re: [PATCH RFC] driver core: ensure a device has valid node id in
+ device_add()
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     <rafael@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <peterz@infradead.org>, <mingo@kernel.org>, <mhocko@kernel.org>,
+        <linuxarm@huawei.com>
+References: <1567647230-166903-1-git-send-email-linyunsheng@huawei.com>
+ <20190905055727.GB23826@kroah.com>
+ <e5905af2-5a8d-7b00-d2a6-a961f3eee120@huawei.com>
+ <20190905073334.GA29933@kroah.com>
+ <d282774f-29fb-cffb-d606-ab678f792565@huawei.com>
+ <20190905090249.GA28356@kroah.com>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <ccf18baf-096d-b78d-4d5b-bfb8bcd35ba9@huawei.com>
+Date:   Thu, 5 Sep 2019 17:07:34 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2a8bd278-5384-d82f-c09b-4fce236d2d95@linaro.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Thu, 05 Sep 2019 09:06:34 +0000 (UTC)
+In-Reply-To: <20190905090249.GA28356@kroah.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 07:31:48PM +0200, Daniel Lezcano wrote:
-> Hi,
+On 2019/9/5 17:02, Greg KH wrote:
+> On Thu, Sep 05, 2019 at 04:57:00PM +0800, Yunsheng Lin wrote:
+>> On 2019/9/5 15:33, Greg KH wrote:
+>>> On Thu, Sep 05, 2019 at 02:48:24PM +0800, Yunsheng Lin wrote:
+>>>> On 2019/9/5 13:57, Greg KH wrote:
+>>>>> On Thu, Sep 05, 2019 at 09:33:50AM +0800, Yunsheng Lin wrote:
+>>>>>> Currently a device does not belong to any of the numa nodes
+>>>>>> (dev->numa_node is NUMA_NO_NODE) when the FW does not provide
+>>>>>> the node id and the device has not no parent device.
+>>>>>>
+>>>>>> According to discussion in [1]:
+>>>>>> Even if a device's numa node is not set by fw, the device
+>>>>>> really does belong to a node.
+>>>>>>
+>>>>>> This patch sets the device node to node 0 in device_add() if
+>>>>>> the fw has not specified the node id and it either has no
+>>>>>> parent device, or the parent device also does not have a valid
+>>>>>> node id.
+>>>>>>
+>>>>>> There may be explicit handling out there relying on NUMA_NO_NODE,
+>>>>>> like in nvme_probe().
+>>>>>>
+>>>>>> [1] https://lkml.org/lkml/2019/9/2/466
+>>>>>>
+>>>>>> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+>>>>>> ---
+>>>>>>  drivers/base/core.c  | 17 ++++++++++++++---
+>>>>>>  include/linux/numa.h |  2 ++
+>>>>>>  2 files changed, 16 insertions(+), 3 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/base/core.c b/drivers/base/core.c
+>>>>>> index 1669d41..466b8ff 100644
+>>>>>> --- a/drivers/base/core.c
+>>>>>> +++ b/drivers/base/core.c
+>>>>>> @@ -2107,9 +2107,20 @@ int device_add(struct device *dev)
+>>>>>>  	if (kobj)
+>>>>>>  		dev->kobj.parent = kobj;
+>>>>>>  
+>>>>>> -	/* use parent numa_node */
+>>>>>> -	if (parent && (dev_to_node(dev) == NUMA_NO_NODE))
+>>>>>> -		set_dev_node(dev, dev_to_node(parent));
+>>>>>> +	/* use parent numa_node or default node 0 */
+>>>>>> +	if (!numa_node_valid(dev_to_node(dev))) {
+>>>>>> +		int nid = parent ? dev_to_node(parent) : NUMA_NO_NODE;
+>>>>>
+>>>>> Can you expand this to be a "real" if statement please?
+>>>>
+>>>> Sure. May I ask why "? :" is not appropriate here?
+>>>
+>>> Because it is a pain to read, just spell it out and make it obvious what
+>>> is happening.  You write code for developers first, and the compiler
+>>> second, and in this case, either way is identical to the compiler.
+>>>
+>>>>>> +
+>>>>>> +		if (numa_node_valid(nid)) {
+>>>>>> +			set_dev_node(dev, nid);
+>>>>>> +		} else {
+>>>>>> +			if (nr_node_ids > 1U)
+>>>>>> +				pr_err("device: '%s': has invalid NUMA node(%d)\n",
+>>>>>> +				       dev_name(dev), dev_to_node(dev));
+>>>>>
+>>>>> dev_err() will show you the exact device properly, instead of having to
+>>>>> rely on dev_name().
+>>>>>
+>>>>> And what is a user to do if this message happens?  How do they fix this?
+>>>>> If they can not, what good is this error message?
+>>>>
+>>>> If user know about their system's topology well enough and node 0
+>>>> is not the nearest node to the device, maybe user can readjust that by
+>>>> writing the nearest node to /sys/class/pci_bus/XXXX/device/numa_node,
+>>>> if not, then maybe user need to contact the vendor for info or updates.
+>>>>
+>>>> Maybe print error message as below:
+>>>>
+>>>> dev_err(dev, FW_BUG "has invalid NUMA node(%d). Readjust it by writing to sysfs numa_node or contact your vendor for updates.\n",
+>>>> 	dev_to_node(dev));
+>>>
+>>> FW_BUG?
+>>
+>> The sysfs numa_node writing interface does print FW_BUG error.
+>> Maybe it is a way of telling the user to contact the vendors, which
+>> pushing the vendors to update the FW.
 > 
-> On 04/09/2019 19:07, Bart Van Assche wrote:
-> > On 9/3/19 12:50 AM, Daniel Lezcano wrote:
-> >> On 03/09/2019 09:28, Ming Lei wrote:
-> >>> On Tue, Sep 03, 2019 at 08:40:35AM +0200, Daniel Lezcano wrote:
-> >>>> It is a scheduler problem then ?
-> >>>
-> >>> Scheduler can do nothing if the CPU is taken completely by handling
-> >>> interrupt & softirq, so seems not a scheduler problem, IMO.
-> >>
-> >> Why? If there is a irq pressure on one CPU reducing its capacity, the
-> >> scheduler will balance the tasks on another CPU, no?
-> > 
-> > Only if CONFIG_IRQ_TIME_ACCOUNTING has been enabled. However, I don't
-> > know any Linux distro that enables that option. That's probably because
-> > that option introduces two rdtsc() calls in each interrupt. Given the
-> > overhead introduced by this option, I don't think this is the solution
-> > Ming is looking for.
-> 
-> Was this overhead reported somewhere ?
+> But is this always going to be caused by a firmware bug?  If so, ok, if
+> not, and it's a driver/bus kernel issue, we should not say this.
 
-The syscall of gettimeofday() calls ktime_get_real_ts64() which finally
-calls tk_clock_read() which calls rdtsc too.
-
-But gettimeofday() is often used in fast path, and block IO_STAT needs to
-read it too.
+Ok, Make sense. Will not add the FW_BUG printing.
 
 > 
-> > See also irqtime_account_irq() in kernel/sched/cputime.c.
+> thanks,
 > 
-> From my POV, this framework could be interesting to detect this situation.
+> greg k-h
+> 
+> .
+> 
 
-Now we are talking about IRQ_TIME_ACCOUNTING instead of IRQ_TIMINGS, and the
-former one could be used to implement the detection. And the only sharing
-should be the read of timestamp.
-
-Thanks,
-Ming
