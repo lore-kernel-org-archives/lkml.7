@@ -2,117 +2,80 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0748C3A5AB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 03:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55018C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 03:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C76C9206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 03:48:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cD9evuKS"
+	by mail.kernel.org (Postfix) with ESMTP id 33EC6208E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 03:49:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730498AbfIEDsL (ORCPT
+        id S1730727AbfIEDtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 23:48:11 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38218 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727544AbfIEDsL (ORCPT
+        Wed, 4 Sep 2019 23:49:19 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:59619 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728267AbfIEDtS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 23:48:11 -0400
-Received: by mail-pl1-f194.google.com with SMTP id w11so614457plp.5;
-        Wed, 04 Sep 2019 20:48:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=pYD81YFETvqhhEH9qUnNjLJMdHyZTdj4QK4cZ/lMPek=;
-        b=cD9evuKSB0BVKnX+c/uRW7iufFoxlxduxxpDz+f9NBHVsiqDEJspt0hff3P45fewet
-         Mvv4AvSJu8jTEl17jBBGAthlsQiI+iEUi1XabZXilivfmP0iBRs5iAuDC5VAI3SxZhlz
-         SJ5NXFYQe8l3eOK/JHtvkkxE3f3dl9rf3HFzoJw8uxRAMV5hf0t8bwnnLSUVCpf2VAxy
-         b10LCaE+fa9TyhMCgHGccPNC85HWevmIZyidPiEkRR6chPQaYsSsbTddyApkCcKE916S
-         a9fBHSWiIG0BLAim13j65hlCKyeJq2n0NDpCoiBjGLgLMYmd2DeR56eXiJT8dZ3ENR/l
-         sfSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pYD81YFETvqhhEH9qUnNjLJMdHyZTdj4QK4cZ/lMPek=;
-        b=ob8RkVn4sybyjMd8NwbsvljrI0rqeZpiByuj/ZyRpFsVgUJ8YHi0rfiBFoR4W7k9Vk
-         1jzZPPmjmzT4PnaI6kiTff7L37zHHYV9jalIh8fv0jh2Emo2LHxKsk9uk4lLru8OXQk4
-         yogH2ub2KM/EuB0ZnnKU5ooU7QYIv9x6/TX9IsJ/QeQL/nFG8OoGl4sEdjCSm56x+qMi
-         0rVHko3BFJBjqRVqdfCKb2gIPuEIxpCC3kB/OVEbLtTxGLicMBsL75W3NwaaHXRVcacI
-         /ljX1YsTEoI02gkSk6sPM4OaGRO62xCUmBUde87U/XHQCdsgr+XX2z8JDiQ0uHPjfvd9
-         /JCg==
-X-Gm-Message-State: APjAAAW2BK6THR/krcOyPx84+xj5Z0FEEA+4WS6Ro4pbrTRh0+p9grGs
-        Z3KJvR6RXI9YyG46fpvsr63uhor/
-X-Google-Smtp-Source: APXvYqyMZZOXqSmlc1OTz0H0TSwBXgj90khqnhvRX5Qm0n1heW9gb0v8FZ6pCLzJK16qvpck85r6RQ==
-X-Received: by 2002:a17:902:7892:: with SMTP id q18mr1127950pll.206.1567655290351;
-        Wed, 04 Sep 2019 20:48:10 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id z12sm442165pjp.11.2019.09.04.20.48.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 04 Sep 2019 20:48:09 -0700 (PDT)
-Subject: Re: [PATCH 4.14 00/57] 4.14.142-stable review
-To:     Kevin Hilman <khilman@baylibre.com>,
-        "kernelci.org bot" <bot@kernelci.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20190904175301.777414715@linuxfoundation.org>
- <5d705444.1c69fb81.c4927.1cd1@mx.google.com> <7hlfv3shk0.fsf@baylibre.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <6b9adb14-47ec-cd94-d2a2-c79d22d43d76@roeck-us.net>
-Date:   Wed, 4 Sep 2019 20:48:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 4 Sep 2019 23:49:18 -0400
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x853n6WM023154, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x853n6WM023154
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 5 Sep 2019 11:49:06 +0800
+Received: from localhost.localdomain (172.21.83.238) by
+ RTITCASV01.realtek.com.tw (172.21.6.18) with Microsoft SMTP Server id
+ 14.3.468.0; Thu, 5 Sep 2019 11:49:05 +0800
+From:   <max.chou@realtek.com>
+To:     <marcel@holtmann.org>, <johan.hedberg@gmail.com>,
+        <linux-bluetooth@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <alex_lu@realsil.com.cn>, <max.chou@realtek.com>
+Subject: [PATCH] Bluetooth: btrtl: Fix an issue that failing to download the FW which size is over 32K bytes
+Date:   Thu, 5 Sep 2019 11:49:00 +0800
+Message-ID: <20190905034900.1538-1-max.chou@realtek.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <7hlfv3shk0.fsf@baylibre.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [172.21.83.238]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/4/19 5:38 PM, Kevin Hilman wrote:
-> "kernelci.org bot" <bot@kernelci.org> writes:
-> 
->> stable-rc/linux-4.14.y boot: 144 boots: 5 failed, 131 passed with 8 offline (v4.14.141-58-g39a17ab1edd4)
->>
->> Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux-4.14.y/kernel/v4.14.141-58-g39a17ab1edd4/
->> Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.14.y/kernel/v4.14.141-58-g39a17ab1edd4/
->>
->> Tree: stable-rc
->> Branch: linux-4.14.y
->> Git Describe: v4.14.141-58-g39a17ab1edd4
->> Git Commit: 39a17ab1edd4adb3fb732726a36cb54a21cc570d
->> Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
->> Tested: 68 unique boards, 23 SoC families, 14 builds out of 201
->>
->> Boot Failures Detected:
->>
->> arm:
->>      vexpress_defconfig:
->>          gcc-8:
->>              qemu_arm-virt-gicv3: 5 failed labs
-> 
-> All 5 failures are for this same QEMU target in multiple labs
-> 
-> It is also failing in linux-next and on several other stable versions.
-> 
+From: Max Chou <max.chou@realtek.com>
 
-linux-next is in bad shape due to some usb issues, but I am not sure otherwise.
-I ran a quick test on 4.14.y-queue, and all my (arm, arm64) qemu tests are fine.
+Fix the issue that when the FW size is 32K+, it will fail for the download
+process because of the incorrect index.
 
-Is it possible that this is a new or modified test ?
+When firmware patch length is over 32K, "dl_cmd->index" may >= 0x80. It
+will be thought as "data end" that download process will not complete.
+However, driver should recount the index from 1.
 
-Guenter
+Signed-off-by: Max Chou <max.chou@realtek.com>
+---
+ drivers/bluetooth/btrtl.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/bluetooth/btrtl.c b/drivers/bluetooth/btrtl.c
+index 0354e93e7a7c..bf3c02be6930 100644
+--- a/drivers/bluetooth/btrtl.c
++++ b/drivers/bluetooth/btrtl.c
+@@ -401,7 +401,11 @@ static int rtl_download_firmware(struct hci_dev *hdev,
+ 
+ 		BT_DBG("download fw (%d/%d)", i, frag_num);
+ 
+-		dl_cmd->index = i;
++		if (i > 0x7f)
++			dl_cmd->index = (i & 0x7f) + 1;
++		else
++			dl_cmd->index = i;
++
+ 		if (i == (frag_num - 1)) {
+ 			dl_cmd->index |= 0x80; /* data end */
+ 			frag_len = fw_len % RTL_FRAG_LEN;
+-- 
+2.17.1
+
