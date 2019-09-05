@@ -2,133 +2,175 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90991C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F91C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9EAD206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:06:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uWscbpyE"
+	by mail.kernel.org (Postfix) with ESMTP id 1DC2220820
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:07:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567717647;
+	bh=F0QccAvsqT3G/VxnqWYuBJOd6TGCLtEmx4DD9gWPJr0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bEBPODCl+18k1pJkvy3HWKDsvY7IVpFBAcUjAEstJayvbeHj/n1IBG64n/uZAw9cQ
+	 qLz50ZvGGt25Vi/OtRRJklvz7rr+rLNPPMzGIgJdsh5v03ZmE2jAQVsMSdF262bluQ
+	 ASoZWY3e1zWDFtXKTqMRfbpk7/Wze/4YBX3al68I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391737AbfIEVGa (ORCPT
+        id S2391744AbfIEVHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 17:06:30 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:44386 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731717AbfIEVGa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 17:06:30 -0400
-Received: by mail-pl1-f196.google.com with SMTP id k1so1942987pls.11
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 14:06:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=7yHi0EM1wuHkGMUXZfyVx9tlNjiQXCUzsYhxBeDzV1M=;
-        b=uWscbpyE9dkQ9Ap1if0mlmhhmk+R0k97L94OzwSIXUqJELkO2/2TXzdywhKxRhbVlM
-         9nwWPY2AnphlO1rv6bfaXnbTsHQoDyVbXGQkoyPgHItxjjrbsxyVWoxa6PWitoOp1dRQ
-         mcru8jMKrYMsWTsxlkeThn8Vt0wCPRJtXu4Pj3pCU7kQvweSrePlGfJYKYP1XlDxdwGU
-         Z9jYHkXY7bmjqSEBTwdCT8DkDU/P+7lO6GWUMv9NyV+FzO1a5L63v5OLaLzmut9ies48
-         PPkZ7WhKCD1a4BMC8aJ3SlOFbGfeKBztSD+oD+KW7Cqx1c1OgaRKyq7oj1dxxRTM1IhT
-         eRLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=7yHi0EM1wuHkGMUXZfyVx9tlNjiQXCUzsYhxBeDzV1M=;
-        b=OH/YhwoXnt51M9O7sgPuby2RMf5cmUXfKpw1I2UgMDZHJ3P7263mjR6/mGzfhYn1mI
-         nEa5Tj7Y4Wrf2OpjkVxAPuLF7bo30SsHmn8mpllTCEIIQSCE6Gp8/Vub1Gby3fBsYFZF
-         rttyElvQOzkcuM8ZER/uaob/pfXnKYmE8nNcZnPjknLLb+/MnzpLn5uFWj+pEZW9qMt7
-         JvHd8H2u3pP5WbyunCeWUcMZDOV/vFOLKSP+twoXL7vDIaLF+Zsf2tUfsgR++NGW3Y3x
-         Eb1XY/CHr5F7//ktS+8yyTNyGqqBDdF8z2VqpBhb09GHJp6YofF4ZzcCKYhQwRgPsXvs
-         JdXA==
-X-Gm-Message-State: APjAAAWnrpJ16w8fZO0lhTjFD/4UG9XOi79uyAxQQlt78GWjw2nKjXWM
-        gMYUYQ46JuLU85VA6EjttYngdg==
-X-Google-Smtp-Source: APXvYqxa3O1y+UYUcg/sw8NEN3sLIDwiUwCYusviqLqWksc3bVLb0LBFDZQNKLHASvtiUEQWkO6DDw==
-X-Received: by 2002:a17:902:8f95:: with SMTP id z21mr5759919plo.42.1567717589379;
-        Thu, 05 Sep 2019 14:06:29 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id c14sm3832157pfo.64.2019.09.05.14.06.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 14:06:28 -0700 (PDT)
-Date:   Thu, 5 Sep 2019 14:06:28 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Andrea Arcangeli <aarcange@redhat.com>
-cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>, Mel Gorman <mgorman@suse.de>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [patch for-5.3 0/4] revert immediate fallback to remote
- hugepages
-In-Reply-To: <20190904205522.GA9871@redhat.com>
-Message-ID: <alpine.DEB.2.21.1909051400380.217933@chino.kir.corp.google.com>
-References: <alpine.DEB.2.21.1909041252230.94813@chino.kir.corp.google.com> <20190904205522.GA9871@redhat.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 5 Sep 2019 17:07:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40544 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726115AbfIEVHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 17:07:25 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04535206DF;
+        Thu,  5 Sep 2019 21:07:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567717644;
+        bh=F0QccAvsqT3G/VxnqWYuBJOd6TGCLtEmx4DD9gWPJr0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HbA9Rr2GXnyBxWpfnLlf/VmNlWOxLLa/gr/GklgbNkv2FvyjwdTNA0oeAlB5O0Wmi
+         i7E3MUwD1hZ36oMqwXT8mI0rh0MeHhvlGCM/rXj59oEz+RDHZULGHFCTPoJNKqo0PM
+         DH4quk04WsMxQLQlN/9Ig/Z5J5vJ2kPRPe/nz+dQ=
+Date:   Thu, 5 Sep 2019 16:07:22 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-pci@vger.kernel.org,
+        Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "antoine.tenart@bootlin.com" <antoine.tenart@bootlin.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "pvanleeuwen@insidesecure.com" <pvanleeuwen@insidesecure.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: PCI: Add stub pci_irq_vector and others
+Message-ID: <20190905210722.GH103977@google.com>
+References: <20190902141910.1080-1-yuehaibing@huawei.com>
+ <20190903014518.20880-1-yuehaibing@huawei.com>
+ <MN2PR20MB29732EEECB217DDDF822EDA5CAB80@MN2PR20MB2973.namprd20.prod.outlook.com>
+ <CAKv+Gu8PVYyA-mzjrhR6r6upMc=xzpAhsbkuKRtb8T2noo_2XQ@mail.gmail.com>
+ <20190904122600.GA28660@gondor.apana.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190904122600.GA28660@gondor.apana.org.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Sep 2019, Andrea Arcangeli wrote:
-
-> > This is an admittedly hacky solution that shouldn't cause anybody to 
-> > regress based on NUMA and the semantics of MADV_HUGEPAGE for the past 
-> > 4 1/2 years for users whose workload does fit within a socket.
+On Wed, Sep 04, 2019 at 10:26:00PM +1000, Herbert Xu wrote:
+> On Wed, Sep 04, 2019 at 05:10:34AM -0700, Ard Biesheuvel wrote:
+> >
+> > This is the reason we have so many empty static inline functions in
+> > header files - it ensures that the symbols are declared even if the
+> > only invocations are from dead code.
 > 
-> How can you live with the below if you can't live with 5.3-rc6? Here
-> you allocate remote THP if the local THP allocation fails.
+> Does this patch work?
 > 
-> >  			page = __alloc_pages_node(hpage_node,
-> >  						gfp | __GFP_THISNODE, order);
-> > +
-> > +			/*
-> > +			 * If hugepage allocations are configured to always
-> > +			 * synchronous compact or the vma has been madvised
-> > +			 * to prefer hugepage backing, retry allowing remote
-> > +			 * memory as well.
-> > +			 */
-> > +			if (!page && (gfp & __GFP_DIRECT_RECLAIM))
-> > +				page = __alloc_pages_node(hpage_node,
-> > +						gfp | __GFP_NORETRY, order);
-> > +
+> ---8<---
+> This patch adds stub functions pci_alloc_irq_vectors_affinity and
+> pci_irq_vector when CONFIG_PCI is off so that drivers can use them
+> without resorting to ifdefs.
 > 
-> You're still going to get THP allocate remote _before_ you have a
-> chance to allocate 4k local this way. __GFP_NORETRY won't make any
-> difference when there's THP immediately available in the remote nodes.
+> It also moves the PCI_IRQ_* macros outside of the ifdefs so that
+> they are always available.
 > 
+> Fixes: 625f269a5a7a ("crypto: inside-secure - add support for...")
 
-This is incorrect: the fallback allocation here is only if the initial 
-allocation with __GFP_THISNODE fails.  In that case, we were able to 
-compact memory to make a local hugepage available without incurring 
-excessive swap based on the RFC patch that appears as patch 3 in this 
-series.  I very much believe your usecase would benefit from this as well 
-(or at least not cause others to regress).  We *want* remote thp if they 
-are immediately available but only after we have tried to allocate locally 
-from the initial allocation and allowed memory compaction fail first.
+I don't see this commit in Linus' tree yet.
 
-Likely there can be discussion around the fourth patch of this series to 
-get exactly the right policy.  We can construct it as necessary for 
-hugetlbfs to not have any change in behavior, that's simple.  We could 
-also check per-zone watermarks in mm/huge_memory.c to determine if local 
-memory is low-on-memory and, if so, allow remote allocation.  In that case 
-it's certainly better to allocate remotely when we'd be reclaiming locally 
-even for fallback native pages.
+I'd like to include the actual reason for this patch in the commit
+log.  I assume it's fixing a build issue, but I'd like to be a little
+more specific about it.
 
-> I said one good thing about this patch series, that it fixes the swap
-> storms. But upstream 5.3 fixes the swap storms too and what you sent
-> is not nearly equivalent to the mempolicy that Michal was willing
-> to provide you and that we thought you needed to get bigger guarantees
-> of getting only local 2m or local 4k pages.
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Reported-by: YueHaibing <yuehaibing@huawei.com>
+> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 > 
-
-I haven't seen such a patch series, is there a link?
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 9e700d9f9f28..74415ee62211 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -925,6 +925,11 @@ enum {
+>  	PCI_SCAN_ALL_PCIE_DEVS	= 0x00000040,	/* Scan all, not just dev 0 */
+>  };
+>  
+> +#define PCI_IRQ_LEGACY		(1 << 0) /* Allow legacy interrupts */
+> +#define PCI_IRQ_MSI		(1 << 1) /* Allow MSI interrupts */
+> +#define PCI_IRQ_MSIX		(1 << 2) /* Allow MSI-X interrupts */
+> +#define PCI_IRQ_AFFINITY	(1 << 3) /* Auto-assign affinity */
+> +
+>  /* These external functions are only available when PCI support is enabled */
+>  #ifdef CONFIG_PCI
+>  
+> @@ -1408,11 +1413,6 @@ resource_size_t pcibios_window_alignment(struct pci_bus *bus,
+>  int pci_set_vga_state(struct pci_dev *pdev, bool decode,
+>  		      unsigned int command_bits, u32 flags);
+>  
+> -#define PCI_IRQ_LEGACY		(1 << 0) /* Allow legacy interrupts */
+> -#define PCI_IRQ_MSI		(1 << 1) /* Allow MSI interrupts */
+> -#define PCI_IRQ_MSIX		(1 << 2) /* Allow MSI-X interrupts */
+> -#define PCI_IRQ_AFFINITY	(1 << 3) /* Auto-assign affinity */
+> -
+>  /*
+>   * Virtual interrupts allow for more interrupts to be allocated
+>   * than the device has interrupts for. These are not programmed
+> @@ -1517,14 +1517,6 @@ static inline int pci_irq_get_node(struct pci_dev *pdev, int vec)
+>  }
+>  #endif
+>  
+> -static inline int
+> -pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
+> -		      unsigned int max_vecs, unsigned int flags)
+> -{
+> -	return pci_alloc_irq_vectors_affinity(dev, min_vecs, max_vecs, flags,
+> -					      NULL);
+> -}
+> -
+>  /**
+>   * pci_irqd_intx_xlate() - Translate PCI INTx value to an IRQ domain hwirq
+>   * @d: the INTx IRQ domain
+> @@ -1780,8 +1772,29 @@ static inline const struct pci_device_id *pci_match_id(const struct pci_device_i
+>  							 struct pci_dev *dev)
+>  { return NULL; }
+>  static inline bool pci_ats_disabled(void) { return true; }
+> +
+> +static inline int pci_irq_vector(struct pci_dev *dev, unsigned int nr)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+> +static inline int
+> +pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
+> +			       unsigned int max_vecs, unsigned int flags,
+> +			       struct irq_affinity *aff_desc)
+> +{
+> +	return -ENOSPC;
+> +}
+>  #endif /* CONFIG_PCI */
+>  
+> +static inline int
+> +pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
+> +		      unsigned int max_vecs, unsigned int flags)
+> +{
+> +	return pci_alloc_irq_vectors_affinity(dev, min_vecs, max_vecs, flags,
+> +					      NULL);
+> +}
+> +
+>  #ifdef CONFIG_PCI_ATS
+>  /* Address Translation Service */
+>  void pci_ats_init(struct pci_dev *dev);
+> -- 
+> Email: Herbert Xu <herbert@gondor.apana.org.au>
+> Home Page: http://gondor.apana.org.au/~herbert/
+> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
