@@ -2,123 +2,107 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4286C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4078AC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AE25206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:50:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24BE8206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:50:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EojOhlSj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404107AbfIEUuU (ORCPT
+        id S2404117AbfIEUuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 16:50:20 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44592 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404044AbfIEUuC (ORCPT
+        Thu, 5 Sep 2019 16:50:24 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38596 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404110AbfIEUuW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 16:50:02 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1i5yha-0001kd-KB; Thu, 05 Sep 2019 22:49:58 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2F3321C0DFA;
-        Thu,  5 Sep 2019 22:49:58 +0200 (CEST)
-Date:   Thu, 05 Sep 2019 20:49:58 -0000
-From:   "tip-bot2 for Sebastian Andrzej Siewior" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: refs/heads/timers/core] hrtimer: Add a missing bracket and hide
- `migration_base' on !SMP
-Cc:     Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
+        Thu, 5 Sep 2019 16:50:22 -0400
+Received: by mail-wr1-f66.google.com with SMTP id l11so4292107wrx.5
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 13:50:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Avg8QM6aPfWwX5AoBSBFNIlTtI2x7nEGXCQk3lEb/fc=;
+        b=EojOhlSjiJk8y6EJeNppFrahboogV9SnwNJf0VVPvj9yW7Vq17+tZV1p3tUjYh/zzn
+         eQ9R5aIm8Pqf/LEcARwdoX6n0VD2ghT8SwLkb3axshTZ5X2u1d17r2IMg5ucPfiraQFj
+         /I0RSEMx5k/paxbsKQ28uPeRkRjbW+5qDU+2IKnTr0NP71dqHorDFBF04ebs4ogFj5pR
+         sa42t8sSaxPjB2pmqKJpUcm6gvM4EDtdwESfWjL/xPyr66Tff8rszZyTJ9R8ia9vWAcl
+         9OnLStXajERrE2mIAJut0X5KTQK3F8fyYJP9E6YsREIMWXzF7CyrQtYmToM52YC08TFm
+         HIRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Avg8QM6aPfWwX5AoBSBFNIlTtI2x7nEGXCQk3lEb/fc=;
+        b=LRufIfCZLCY2G7DihVzjiV/YXTy/4R+iHxQYYLD2i77a9FZvgY3oEd6rhqbBYDTaph
+         aetftMlkb16GCpOpR5MST4o9Ir1TJl0JpeerRjbFL6Dm1IcMeD2bKZmQXK4nGogFlViZ
+         aLOAXT6qFIWF5YIjKeEKlEPFKt9C8gZJkNP1XMXxupxBpHEqQ1C+K+G1cUtJEwXSJweR
+         uiF4EeBFHm86WAh55uaEQqzxdVq63qYChR8SddJUdLexF+gOCNGydgHaiy7zTv5V/aiB
+         UEuaegTQHNSeJWeexqmlH7+3xbklAQmxr0cCvSpoxjy/4poKlrkmNnsgNJFOAxqI5lAN
+         qFBA==
+X-Gm-Message-State: APjAAAUMHQp05XVBSWl0uBgcHcvmss9jX2dct6U6/Wvile53miWgbJxo
+        lW7aenlfxjyPDFfy3EiK4qjx48qEsFc=
+X-Google-Smtp-Source: APXvYqwi/+00SHE3kxRqKt+uOC1fnKiZKCYTRd+lO9y4jlGHsH2+knmmV2EW7SfCJPj5yMwzkXM97g==
+X-Received: by 2002:adf:dc0f:: with SMTP id t15mr4596106wri.258.1567716620556;
+        Thu, 05 Sep 2019 13:50:20 -0700 (PDT)
+Received: from [192.168.1.6] (124.red-83-36-179.dynamicip.rima-tde.net. [83.36.179.124])
+        by smtp.gmail.com with ESMTPSA id k6sm5932699wrg.0.2019.09.05.13.50.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Sep 2019 13:50:19 -0700 (PDT)
+Subject: Re: [PATCH v3] watchdog: qcom: support pre-timeout when the bark irq
+ is available
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
+        wim@linux-watchdog.org, linux-arm-msm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190905182419.26539-1-jorge.ramirez-ortiz@linaro.org>
+ <20190905183456.GA29500@roeck-us.net>
+From:   Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+Message-ID: <97c57a8a-545e-f5de-0756-e8ce054aa036@linaro.org>
+Date:   Thu, 5 Sep 2019 22:50:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Message-ID: <156771659817.12994.13601627409989265457.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190905183456.GA29500@roeck-us.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the refs/heads/timers/core branch of tip:
+On 9/5/19 20:34, Guenter Roeck wrote:
+> On Thu, Sep 05, 2019 at 08:24:19PM +0200, Jorge Ramirez-Ortiz wrote:
+>> Use the bark interrupt as the pre-timeout notifier whenever this
+>> interrupt is available.
+>>
+>> By default, the pretimeout notification shall occur one second earlier
+>> than the timeout.
+>>
+>> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> 
+> Can you please give people time to reply before flooding the mailing list
+> with revisions ? This is getting annoying quite rapidly. I am going to
+> reply to v2, as I had started on that already (and to the one without
+> subject before).
 
-Commit-ID:     5d2295f3a93b04986d069ebeaf5b07725f9096c1
-Gitweb:        https://git.kernel.org/tip/5d2295f3a93b04986d069ebeaf5b07725f9096c1
-Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate:    Wed, 04 Sep 2019 16:55:27 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 05 Sep 2019 10:39:06 +02:00
+yes, sorry about it. it is not frequent that someone gives a review so
+quickly though so I thought I had time to sneak in some reworks - thanks
+and apologies again.
 
-hrtimer: Add a missing bracket and hide `migration_base' on !SMP
+I am about to send v4 addressing the issues you raised.
 
-The recent change to avoid taking the expiry lock when a timer is currently
-migrated missed to add a bracket at the end of the if statement leading to
-compile errors.  Since that commit the variable `migration_base' is always
-used but it is only available on SMP configuration thus leading to another
-compile error.  The changelog says "The timer base and base->cpu_base
-cannot be NULL in the code path", so it is safe to limit this check to SMP
-configurations only.
+> 
+> Guenter
+> .
+> 
 
-Add the missing bracket to the if statement and hide `migration_base'
-behind CONFIG_SMP bars.
-
-[ tglx: Mark the functions inline ... ]
-
-Fixes: 68b2c8c1e4210 ("hrtimer: Don't take expiry_lock when timer is currently migrated")
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190904145527.eah7z56ntwobqm6j@linutronix.de
-
----
- kernel/time/hrtimer.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-index ebbd0fb..0d4dc24 100644
---- a/kernel/time/hrtimer.c
-+++ b/kernel/time/hrtimer.c
-@@ -140,6 +140,11 @@ static struct hrtimer_cpu_base migration_cpu_base = {
- 
- #define migration_base	migration_cpu_base.clock_base[0]
- 
-+static inline bool is_migration_base(struct hrtimer_clock_base *base)
-+{
-+	return base == &migration_base;
-+}
-+
- /*
-  * We are using hashed locking: holding per_cpu(hrtimer_bases)[n].lock
-  * means that all timers which are tied to this base via timer->base are
-@@ -264,6 +269,11 @@ again:
- 
- #else /* CONFIG_SMP */
- 
-+static inline bool is_migration_base(struct hrtimer_clock_base *base)
-+{
-+	return false;
-+}
-+
- static inline struct hrtimer_clock_base *
- lock_hrtimer_base(const struct hrtimer *timer, unsigned long *flags)
- {
-@@ -1221,7 +1231,7 @@ void hrtimer_cancel_wait_running(const struct hrtimer *timer)
- 	 * Just relax if the timer expires in hard interrupt context or if
- 	 * it is currently on the migration base.
- 	 */
--	if (!timer->is_soft || base == &migration_base)
-+	if (!timer->is_soft || is_migration_base(base)) {
- 		cpu_relax();
- 		return;
- 	}
