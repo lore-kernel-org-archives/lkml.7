@@ -2,88 +2,130 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89DC0C3A5AB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C74B0C3A5AA
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 635B320870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9924320870
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:19:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567671560;
+	bh=EQwo8/N/0cavAcqRuGEE2sEe8CqmWoCUhrTdrBBNzeQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=w9gjItz1/eqq1gS42YqSreU1GxbCvBj5AfV2OdwO27oZzY0iwGOu3lnG6C1kjduWD
+	 tIR32+cwYxeFm/cKnAR3CCqtPYFt0sABGfEtl+OTok9bXbYl1sULOUrpMo9rgyR34f
+	 iPu3vx/xI1NNImMLTHA1Iz2yh/PfakIPn5AQw+1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732518AbfIEITE (ORCPT
+        id S1732538AbfIEITU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 04:19:04 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:46340 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726175AbfIEITE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 04:19:04 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B3E1C515E8C09A72F1EA;
-        Thu,  5 Sep 2019 16:18:59 +0800 (CST)
-Received: from [127.0.0.1] (10.177.29.68) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Thu, 5 Sep 2019
- 16:18:54 +0800
-Message-ID: <5D70C4EC.4090501@huawei.com>
-Date:   Thu, 5 Sep 2019 16:18:52 +0800
-From:   zhong jiang <zhongjiang@huawei.com>
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
+        Thu, 5 Sep 2019 04:19:20 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34612 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbfIEITT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 04:19:19 -0400
+Received: by mail-wr1-f66.google.com with SMTP id s18so1623926wrn.1;
+        Thu, 05 Sep 2019 01:19:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7vrD1vbAUmCFFfdIktyw4RQaBVS3ITim3VvuBMdETos=;
+        b=KrDqJT9pnaYjHlbMev2uN7ZQDpp4ATsX7iMQbyUVPvh7Zyex0SB+oyInc5ZZRKBALx
+         4YRvbckrzDpG1nT0XswKerNPGvzMEe96kQY98ITPkN1mU8xw6tQ+n+6G+Qkg/woR77cR
+         dpwgv3K4VnnE7KSKhZztW2gDMM/V1eLAOj//dDnEsk0KMmqU5SW+ozed1YDFze7sBquI
+         t/o38y4o/EoxKILmRM9AjLqvfG15+z8QFT594yanB9ivEOtf5VoPDpS83cFQvmYHLwUV
+         ZDsK0Y5NrSflQS+FbewoBw9/ke2FDkPsRlHPTWAmvY/hwLtW/GNXiBeMJTeHsk++Uoi9
+         4CMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7vrD1vbAUmCFFfdIktyw4RQaBVS3ITim3VvuBMdETos=;
+        b=NfT4JWcBDQs35Nd5WW4sZ2LhxrYUr+BfCmUcnBioaGXN3Up2C4Ccl6nPgLClX20UJg
+         /ijZaCmGP4ZBGRndVgMpLXSRjOr386ZTfpKIr9UbI3WHMjelqtU11JEvMOtgFcIHfUPO
+         uFnetJdv/jWEPcbjDa6OfvIgd8nJ4sTDZhdoIP0PiiWmeU80Tz3Ie7fSk97iIGCve1TP
+         BKfpiSRDsc4x1SRYAPkGeghKV66YHj2016pRyHINowPcvA0TDuz+gktsTimI00Qoa2gF
+         Z9giminJ+RdiVpt7Uj/H68dwaAgLMSYCoBRlBCiKvVYKm0YWZAGs551zH9q5gbyPgdvB
+         /ZkA==
+X-Gm-Message-State: APjAAAXrrF18CTn30BlcOI8BXylfw8UfK0FJ8wCHUMnsZSZE84IGmBRq
+        3h0sZ8bxtzYH2Tz+M4U/Q5s=
+X-Google-Smtp-Source: APXvYqypRpPI1L8/VzXxqLP6zlec8VR5j0yZcibllXCpQiOHKv1zx3kMkVX/NbRsKv7XAOtrZMasCw==
+X-Received: by 2002:adf:e392:: with SMTP id e18mr1587213wrm.87.1567671557098;
+        Thu, 05 Sep 2019 01:19:17 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id o22sm3223544wra.96.2019.09.05.01.19.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2019 01:19:16 -0700 (PDT)
+Date:   Thu, 5 Sep 2019 10:19:14 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Mike Travis <mike.travis@hpe.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Hedi Berriche <hedi.berriche@hpe.com>,
+        Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 0/8] x86/platform/UV: Update UV Hubless System Support
+Message-ID: <20190905081914.GA28060@gmail.com>
+References: <20190903001815.504418099@stormcage.eag.rdlabs.hpecorp.net>
+ <20190903074717.GA34890@gmail.com>
+ <481b2921-760a-c0f3-489b-2b9c5f792883@hpe.com>
 MIME-Version: 1.0
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-CC:     <tony@atomide.com>, <udeep.dutt@intel.com>,
-        <ashutosh.dixit@intel.com>, <gregkh@linuxfoundation.org>,
-        <kishon@ti.com>, <jonathanh@nvidia.com>, <a.zummo@towertech.it>,
-        <linux-kernel@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
-        <arnd@arndb.de>, <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH 4/4] rtc: ds1347: Use PTR_ERR_OR_ZERO rather than its
- implementation
-References: <1567665795-5901-1-git-send-email-zhongjiang@huawei.com> <1567665795-5901-5-git-send-email-zhongjiang@huawei.com> <20190905073943.GA21254@piout.net>
-In-Reply-To: <20190905073943.GA21254@piout.net>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.29.68]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <481b2921-760a-c0f3-489b-2b9c5f792883@hpe.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/9/5 15:39, Alexandre Belloni wrote:
-> On 05/09/2019 14:43:15+0800, zhong jiang wrote:
->> PTR_ERR_OR_ZERO contains if(IS_ERR(...)) + PTR_ERR. It is better to
->> use it directly. hence just replace it.
->>
-> Unless you have a more significant contribution to this driver, I'm not
-> going to apply this patch, especially since it will have to be reverted
-> as soon as the probe function changes.
-Anyway,  Thanks,
 
-Sincerely,
-zhong jiang
->> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
->> ---
->>  drivers/rtc/rtc-ds1347.c | 5 +----
->>  1 file changed, 1 insertion(+), 4 deletions(-)
->>
->> diff --git a/drivers/rtc/rtc-ds1347.c b/drivers/rtc/rtc-ds1347.c
->> index d392a7b..5a64eea 100644
->> --- a/drivers/rtc/rtc-ds1347.c
->> +++ b/drivers/rtc/rtc-ds1347.c
->> @@ -151,10 +151,7 @@ static int ds1347_probe(struct spi_device *spi)
->>  	rtc = devm_rtc_device_register(&spi->dev, "ds1347",
->>  				&ds1347_rtc_ops, THIS_MODULE);
->>  
->> -	if (IS_ERR(rtc))
->> -		return PTR_ERR(rtc);
->> -
->> -	return 0;
->> +	return PTR_ERR_OR_ZERO(rtc);
->>  }
->>  
->>  static struct spi_driver ds1347_driver = {
->> -- 
->> 1.7.12.4
->>
+* Mike Travis <mike.travis@hpe.com> wrote:
 
+> 
+> 
+> On 9/3/2019 12:47 AM, Ingo Molnar wrote:
+> > 
+> > * Mike Travis <mike.travis@hpe.com> wrote:
+> > 
+> > > 
+> > > These patches support upcoming UV systems that do not have a UV HUB.
+> > > 
+> > > 	* Save OEM_ID from ACPI MADT probe
+> > > 	* Return UV Hubless System Type
+> > > 	* Add return code to UV BIOS Init function
+> > > 	* Setup UV functions for Hubless UV Systems
+> > > 	* Add UV Hubbed/Hubless Proc FS Files
+> > > 	* Decode UVsystab Info
+> > > 	* Account for UV Hubless in is_uvX_hub Ops
+> > 
+> > Beyond addressing Christoph's feedback, please also make sure the series
+> > applies cleanly to tip:master, because right now it doesn't.
+> > 
+> > Thanks,
+> > 
+> > 	Ingo
+> > 
+> 
+> I will do this, and retest.  Currently we are using the latest upstream
+> version but obviously that thinking is flawed, since we are hoping to
+> get into the next merge period.
 
+You are really cutting it close timing-wise ... unless by 'next' you mean 
+not v5.4 but v5.5?
+
+> I also noticed that the MAINTAINERS list for UV is out of date, I will 
+> tend to that too.
+
+Thanks!
+
+	Ingo
