@@ -2,77 +2,113 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B79B8C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B5E5C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35BE720828
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3C7721848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:43:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390500AbfIEPi7 (ORCPT
+        id S2390508AbfIEPnl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 11:38:59 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:43304 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbfIEPi7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 11:38:59 -0400
-Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1i5tq7-0003cq-81; Thu, 05 Sep 2019 17:38:27 +0200
-Date:   Thu, 5 Sep 2019 17:38:21 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-cc:     Petr Mladek <pmladek@suse.com>,
-        John Ogness <john.ogness@linutronix.de>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v4 0/9] printk: new ringbuffer implementation
-In-Reply-To: <20190905143118.GP2349@hirez.programming.kicks-ass.net>
-Message-ID: <alpine.DEB.2.21.1909051736410.1902@nanos.tec.linutronix.de>
-References: <20190807222634.1723-1-john.ogness@linutronix.de> <20190904123531.GA2369@hirez.programming.kicks-ass.net> <20190905130513.4fru6yvjx73pjx7p@pathway.suse.cz> <20190905143118.GP2349@hirez.programming.kicks-ass.net>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 5 Sep 2019 11:43:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35446 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388555AbfIEPnl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 11:43:41 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 603EE20870;
+        Thu,  5 Sep 2019 15:43:41 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.92)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1i5tv9-0007Td-Sk; Thu, 05 Sep 2019 11:43:39 -0400
+Message-Id: <20190905154339.780346390@goodmis.org>
+User-Agent: quilt/0.65
+Date:   Thu, 05 Sep 2019 11:43:01 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matt Helsley <mhelsley@vmware.com>
+Subject: [for-next][PATCH 03/25] recordmcount: Remove uread()
+References: <20190905154258.573706229@goodmis.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 5 Sep 2019, Peter Zijlstra wrote:
-> On Thu, Sep 05, 2019 at 03:05:13PM +0200, Petr Mladek wrote:
-> > The alternative lockless approach is still more complicated than
-> > the serialized one. But I think that it is manageable thanks to
-> > the simplified state tracking. And I might safe use some pain
-> > in the long term.
-> 
-> I've not looked at it yet, sorry. But per the above argument of needing
-> the CPU serialization _anyway_, I don't see a compelling reason not to
-> use it.
-> 
-> It is simple, it works. Let's use it.
-> 
-> If you really fancy a multi-writer buffer, you can always switch to one
-> later, if you can convince someone it actually brings benefits and not
-> just head-aches.
+From: Matt Helsley <mhelsley@vmware.com>
 
-Can we please grab one of the TBD slots at kernel summit next week, sit
-down in a room and hash that out?
+uread() is only used to initialize the ELF file's pseudo
+private-memory mapping while uwrite() and ulseek() work within
+the pseudo-mapping and extend it as necessary.  Thus it is not
+a complementary function to uwrite() and ulseek(). It also makes
+no sense to do cleanups inside uread() when its only caller,
+mmap_file(), is doing the relevant allocations and associated
+initializations.
 
-Thanks,
+Therefore it's clearer to use a plain read() call to initialize the
+data in mmap_file() and remove uread().
 
-	tglx
+Link: http://lkml.kernel.org/r/31a87c22b19150cec1c8dc800c8b0873a2741703.1563992889.git.mhelsley@vmware.com
+
+Signed-off-by: Matt Helsley <mhelsley@vmware.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ scripts/recordmcount.c | 18 +++++-------------
+ 1 file changed, 5 insertions(+), 13 deletions(-)
+
+diff --git a/scripts/recordmcount.c b/scripts/recordmcount.c
+index ebe98c39f3cd..c0dd46344063 100644
+--- a/scripts/recordmcount.c
++++ b/scripts/recordmcount.c
+@@ -89,7 +89,7 @@ succeed_file(void)
+ 	longjmp(jmpenv, SJ_SUCCEED);
+ }
+ 
+-/* ulseek, uread, ...:  Check return value for errors. */
++/* ulseek, uwrite, ...:  Check return value for errors. */
+ 
+ static off_t
+ ulseek(int const fd, off_t const offset, int const whence)
+@@ -112,17 +112,6 @@ ulseek(int const fd, off_t const offset, int const whence)
+ 	return file_ptr - file_map;
+ }
+ 
+-static size_t
+-uread(int const fd, void *const buf, size_t const count)
+-{
+-	size_t const n = read(fd, buf, count);
+-	if (n != count) {
+-		perror("read");
+-		fail_file();
+-	}
+-	return n;
+-}
+-
+ static size_t
+ uwrite(int const fd, void const *const buf, size_t const count)
+ {
+@@ -298,7 +287,10 @@ static void *mmap_file(char const *fname)
+ 	if (file_map == MAP_FAILED) {
+ 		mmap_failed = 1;
+ 		file_map = umalloc(sb.st_size);
+-		uread(fd_map, file_map, sb.st_size);
++		if (read(fd_map, file_map, sb.st_size) != sb.st_size) {
++			perror(fname);
++			fail_file();
++		}
+ 	}
+ 	close(fd_map);
+ 
+-- 
+2.20.1
+
+
