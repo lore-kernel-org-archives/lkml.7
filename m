@@ -2,122 +2,87 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1EDDC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE8EC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 978FC2082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:29:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4538920825
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:31:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="GLdXXnhL"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MWKovpwW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733270AbfIEQ3h (ORCPT
+        id S2387707AbfIEQb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 12:29:37 -0400
-Received: from pio-pvt-msa3.bahnhof.se ([79.136.2.42]:43220 "EHLO
-        pio-pvt-msa3.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730777AbfIEQ3g (ORCPT
+        Thu, 5 Sep 2019 12:31:56 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35634 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730500AbfIEQb4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 12:29:36 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTP id 352D23FBBA;
-        Thu,  5 Sep 2019 18:29:29 +0200 (CEST)
-Authentication-Results: pio-pvt-msa3.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=GLdXXnhL;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa3.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa3.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id GkcQmJL962Gx; Thu,  5 Sep 2019 18:29:28 +0200 (CEST)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTPA id 99AC53FA34;
-        Thu,  5 Sep 2019 18:29:26 +0200 (CEST)
-Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 25A64360160;
-        Thu,  5 Sep 2019 18:29:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1567700966; bh=pG0TnA/QjvfGPWD0SGrgVkNWASVfS3us4YRoLbkZweY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=GLdXXnhLdXo93d/AM7fRLLrTjXj3fu7aaTaeuCI4iZREMNJ+ZsgPjdeS+6AT+ixkt
-         q/8CIqkJRBuS6OlPPSCqjgoZkgt4cCoaKZDdmjMMVfXUudhhI2HDTmuR+MtVxeJuXc
-         lD1eDeynjNfo15bMPuyzhaC240h/m3KKT/sg0wcc=
-Subject: Re: [RFC PATCH 1/2] x86: Don't let pgprot_modify() change the page
- encryption bit
-To:     Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, pv-drivers@vmware.com
-Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "Shutemov, Kirill" <kirill.shutemov@intel.com>
-References: <20190905103541.4161-1-thomas_os@shipmail.org>
- <20190905103541.4161-2-thomas_os@shipmail.org>
- <608bbec6-448e-f9d5-b29a-1984225eb078@intel.com>
- <b84d1dca-4542-a491-e585-a96c9d178466@shipmail.org>
- <1badd275-91aa-45a6-0a89-ded65c7c3829@intel.com>
-From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Organization: VMware Inc.
-Message-ID: <1ceb9abc-7a11-eaa1-b286-11647211e2fc@shipmail.org>
-Date:   Thu, 5 Sep 2019 18:29:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 5 Sep 2019 12:31:56 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 205so2106487pfw.2
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 09:31:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:subject:to:from:user-agent:date;
+        bh=SZRwWiwkgh1GK9Bkb/9Pdeq8WDYShoyhFDPtRHfeWLM=;
+        b=MWKovpwW8zTqMdmJ6SnU7bXm40Ky35yU73fI4bDwvGgxd2s8/Xi5imkfpb/SMKDLGD
+         sQ/CqCU7EsSTI11Ky2b1tigH/UCjk3cUgZim0eRbgflNIQ12hnhmSCO9H6FNoFUe+PgG
+         t3oQAlTtwlMWoTHLG7EFoVEpGTrLCyVTM+cAc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:subject:to:from
+         :user-agent:date;
+        bh=SZRwWiwkgh1GK9Bkb/9Pdeq8WDYShoyhFDPtRHfeWLM=;
+        b=ub3EBCuWTNQF98bWVblkoSPvNZadoO1woL1h3rWusmgN6uni3jOLfoF+20wGhyODA3
+         TnxhvpsiMGkn0XbFWPhDU0wJA1WtXw+fyHc9inr9gTM7LJQcM3/MBh7R7QmBG/jjwYs/
+         F7soeP4UIK1oB7YH76a0gutvGDhwm4eeoH4ZxsuVs8sWSRk0ieIe2yJMpv1i+3CFtcT2
+         W32nT+2nANa3/y7pkvsozGDfHdOe4hSso2nnOc+bV9gZuufIh0QhvElOu5t+NvIT/Zs9
+         fjjJQyJtR7qElRtzdtQ/zM80ZWpYm8ffi5/shmOpccoMpEA4UOIh5gmfsppAJiVfpaLp
+         3q6w==
+X-Gm-Message-State: APjAAAUX1ptTpBmKbU/xQbpSA+GcdceYwzuxTOWyxU+tmFmMbe7mU7jK
+        jRGMKEWR3xOIrw5Etmxx73mmgA==
+X-Google-Smtp-Source: APXvYqyTceuhZnqbPWbDs3R8tZnE3eh1qj5gCXK7x6cT0077/9SMY7ws5QIdPLCSvBrgo6pYO+Lw5A==
+X-Received: by 2002:a63:3006:: with SMTP id w6mr4043307pgw.440.1567701115407;
+        Thu, 05 Sep 2019 09:31:55 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id em21sm2302534pjb.31.2019.09.05.09.31.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2019 09:31:54 -0700 (PDT)
+Message-ID: <5d71387a.1c69fb81.4fb28.5e25@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <1badd275-91aa-45a6-0a89-ded65c7c3829@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190905074152.3oufn7yqr4flu3yc@linutronix.de>
+References: <20190904110038.2bx25byitrejlteu@flow> <5d700756.1c69fb81.77c08.9c82@mx.google.com> <20190905074152.3oufn7yqr4flu3yc@linutronix.de>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-kernel@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>,
+        linux-crypto@vger.kernel.org, Matt Mackall <mpm@selenic.com>,
+        Keerthy <j-keerthy@ti.com>, Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH] random: Support freezable kthreads in add_hwgenerator_randomness()
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Thu, 05 Sep 2019 09:31:53 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/5/19 5:59 PM, Dave Hansen wrote:
-> On 9/5/19 8:21 AM, Thomas Hellström (VMware) wrote:
->>>>    #define pgprot_modify pgprot_modify
->>>>    static inline pgprot_t pgprot_modify(pgprot_t oldprot, pgprot_t
->>>> newprot)
->>>>    {
->>>> -    pgprotval_t preservebits = pgprot_val(oldprot) & _PAGE_CHG_MASK;
->>>> -    pgprotval_t addbits = pgprot_val(newprot);
->>>> +    pgprotval_t preservebits = pgprot_val(oldprot) &
->>>> +        (_PAGE_CHG_MASK | sme_me_mask);
->>>> +    pgprotval_t addbits = pgprot_val(newprot) & ~sme_me_mask;
->>>>        return __pgprot(preservebits | addbits);
->>>>    }
->>> _PAGE_CHG_MASK is claiming similar functionality about preserving bits
->>> when changing PTEs:
-> ...
->>>> #define _PAGE_CHG_MASK  (PTE_PFN_MASK | _PAGE_PCD | _PAGE_PWT
->>>> |         \
->>>>                            _PAGE_SPECIAL | _PAGE_ACCESSED |
->>>> _PAGE_DIRTY | \
->>>>                            _PAGE_SOFT_DIRTY | _PAGE_DEVMAP)
->>> This makes me wonder if we should be including sme_me_mask in
->>> _PAGE_CHG_MASK (logically).
->> I was thinking the same. But what confuses me is that addbits isn't
->> masked with ~_PAGE_CHG_MASK, which is needed for sme_me_mask, since the
->> problem otherwise is typically that the encryption bit is incorrectly
->> set in addbits. I wonder whether it's an optimization or intentional.
-> I think there's a built-in assumption that 'newprot' won't have any of
-> the _PAGE_CHG_MASK bits set.  That makes sense because there are no
-> protection bits in the mask.  But, the code certainly doesn't enforce that.
->
-> Are you seeing 'sme_me_mask' bits set in 'newprot'?
+Quoting Sebastian Andrzej Siewior (2019-09-05 00:41:52)
+> On 2019-09-04 11:49:57 [-0700], Stephen Boyd wrote:
+> > Can you try this?
+>=20
+> yes, works.
+>=20
 
-Yes. AFAIK it's only one bit, and typically always set.
-
-/Thomas
-
+Cool thanks. I'll send a proper patch with your tested-by then?
+Alternatively this can be squashed into this previous patch because it
+was all wrong and is basically reverting the patch and changing the
+wait_event call to be freezable.
 
