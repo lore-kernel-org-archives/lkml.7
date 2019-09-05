@@ -2,100 +2,103 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB9DDC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74707C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C3302070C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:29:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45DBF2070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:30:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Rd8Syujr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kST9Skas"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388459AbfIEL3J (ORCPT
+        id S2388460AbfIELaN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 07:29:09 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38677 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731402AbfIEL3J (ORCPT
+        Thu, 5 Sep 2019 07:30:13 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41174 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725921AbfIELaN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 07:29:09 -0400
-Received: by mail-pf1-f194.google.com with SMTP id h195so1561457pfe.5
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 04:29:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dwvIUziP4fafPY2JOrWPat/xl7RaGutjpB8YJJC4H/U=;
-        b=Rd8SyujrfWfPhmweQ/RJpVjX7e1PVKJ0VbLka9+S335G3HYRFRoBxdeY1BkSk7d56l
-         CpSzg4J/QPMDvXevEgvsbeIm2Zcw4AK9XCKCvTQoszi1k2GHkvtc2ZaKSgceUELVOMSO
-         HiNAdx2jqp0qcdFzYitX2LA7VBvHqTP/cLYzAC+xSvOXDt6CzB/wXIUbu8/tKHVtWAeu
-         qndhi9r7KxCR6gq/NoBh1NftR0yqbfYgluIX/MAqTmdNIZ0iQ2WzgioJ4ktpk61A8e3C
-         fIreFqJnN3harixIOCjxhHoUwnSUa5GY/AoTZlkYJnKPw/1Ct29Lw3fYX+uMIqvTD9Y/
-         4CMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dwvIUziP4fafPY2JOrWPat/xl7RaGutjpB8YJJC4H/U=;
-        b=UN/iTwE6NsqmQ1Vx+0CkIJ8wPJWL+C+X7/gRbkPxUmLQqVeZMWyXkONAFIrz8KVxgi
-         1+K66e8t8z6DzdqhoIxfttIOFBrqTSsYyoZnMevoNtMTPMWEFWZqx+JNwjd+h7AOMblz
-         BRg45vmoC87T7+eO3YErATRiXMaZo0WyLhA+NWD1/UHOJiZMeHQBxXsUdIxLlhLRATQ3
-         t0D3P5sndXlqwZ371KGBif3No+r4NaBVyhJiK4HgdxOGmLPsFIW9hxbI1his/Uzug+JB
-         snET8a1Xx+vnDMnyjd6j+WFrQRXFOQ2+B2+KoiXMZXJUf3D+ePMq8EhOgH9VaYGszZmG
-         FjFg==
-X-Gm-Message-State: APjAAAWsrH5OSfKGFR+XfJvag2o5/1tKXlkVaq3fDybSR9jY3mBzRuk3
-        2K0pP/fgEaUDtLfnBtm9cXi4DfJZdbHfVesmZDZWJg==
-X-Google-Smtp-Source: APXvYqwnHdnf6mymYYDnuovI2OIh+2HMDn+StpZViGrapDrf3a2ZOlbCfC6vrMHEwUlGjl1xvu5Ub0MThTVq0k0Lh94=
-X-Received: by 2002:a65:4b8b:: with SMTP id t11mr2697306pgq.130.1567682948307;
- Thu, 05 Sep 2019 04:29:08 -0700 (PDT)
+        Thu, 5 Sep 2019 07:30:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=3Z6GGxQtw6kGZ90rRUAsKRrfp8SLjkfWxpfQA5HECNQ=; b=kST9SkasBfRkvNAy3jwGSEqAx
+        L5hV5CM0qO23/QJaoYSxUxpqMwhdekI9KbVAvA3Q3J+LOMm6kjJf0t+4RQP0yxfp/J1v1Irv7p20L
+        JU15zzpLAoEiiP/7USl6oOLXMdnYwFAz2UsKeP/b8pvcQOW8izmbSYkTbk4DXe3sel3WoDhE8R0Of
+        9KXIolpsXvHQjfhOeCT9kvsEJEqaN8rMbZyADLjSJ2I2tlfzZ7qfgLEnGSG/HmzjHCs0aTguKxmOl
+        dR7dQMuSw88uIJHMEOx2pLmtfHbKcN9xgJfpxa/gdCymyCSUGNtJkyr2sXlABmPKFWZghNOT5gcpp
+        jIRvB213A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i5pxk-0006sr-BV; Thu, 05 Sep 2019 11:30:04 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 549A4305E47;
+        Thu,  5 Sep 2019 13:29:25 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4B6E829CBE121; Thu,  5 Sep 2019 13:30:02 +0200 (CEST)
+Date:   Thu, 5 Sep 2019 13:30:02 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Patrick Bellasi <patrick.bellasi@arm.com>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
+        steven.sistare@oracle.com, dhaval.giani@oracle.com,
+        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
+        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
+        mgorman@techsingularity.net, parth@linux.ibm.com
+Subject: Re: [RFC PATCH 1/9] sched,cgroup: Add interface for latency-nice
+Message-ID: <20190905113002.GK2349@hirez.programming.kicks-ass.net>
+References: <20190830174944.21741-1-subhra.mazumdar@oracle.com>
+ <20190830174944.21741-2-subhra.mazumdar@oracle.com>
+ <20190905083127.GA2332@hirez.programming.kicks-ass.net>
+ <87r24v2i14.fsf@arm.com>
+ <20190905104616.GD2332@hirez.programming.kicks-ass.net>
+ <20190905111346.2w6kuqrdvaqvgilu@e107158-lin.cambridge.arm.com>
 MIME-Version: 1.0
-References: <CAAeHK+xJrv1hCbO5qOGTBu=c8STo+-obatOGZ4cHkbuhqmEvrg@mail.gmail.com>
- <000000000000a2044d0591cc99b2@google.com>
-In-Reply-To: <000000000000a2044d0591cc99b2@google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Thu, 5 Sep 2019 13:28:57 +0200
-Message-ID: <CAAeHK+xVqvBGJ9dXTijuHusJr6vq85DVnKZbHsdyE8-pbWf-9Q@mail.gmail.com>
-Subject: Re: WARNING: ODEBUG bug in usbhid_disconnect (2)
-To:     syzbot <syzbot+14b53bfeb17f2b210eb7@syzkaller.appspotmail.com>
-Cc:     Roderick.Colenbrander@sony.com,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>, linux-input@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190905111346.2w6kuqrdvaqvgilu@e107158-lin.cambridge.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 5, 2019 at 1:27 PM syzbot
-<syzbot+14b53bfeb17f2b210eb7@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot has tested the proposed patch and the reproducer did not trigger
-> crash:
->
-> Reported-and-tested-by:
-> syzbot+14b53bfeb17f2b210eb7@syzkaller.appspotmail.com
->
-> Tested on:
->
-> commit:         eea39f24 usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=d0c62209eedfd54e
-> dashboard link: https://syzkaller.appspot.com/bug?extid=14b53bfeb17f2b210eb7
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> patch:          https://syzkaller.appspot.com/x/patch.diff?x=12b6944e600000
->
-> Note: testing is done by a robot and is best-effort only.
+On Thu, Sep 05, 2019 at 12:13:47PM +0100, Qais Yousef wrote:
+> On 09/05/19 12:46, Peter Zijlstra wrote:
 
-Nice! Let's mark this one as fixed:
+> > This is important because we want to be able to bias towards less
+> > importance to (tail) latency as well as more importantance to (tail)
+> > latency.
+> > 
+> > Specifically, Oracle wants to sacrifice (some) latency for throughput.
+> > Facebook OTOH seems to want to sacrifice (some) throughput for latency.
+> 
+> Another use case I'm considering is using latency-nice to prefer an idle CPU if
+> latency-nice is set otherwise go for the most energy efficient CPU.
+> 
+> Ie: sacrifice (some) energy for latency.
+> 
+> The way I see interpreting latency-nice here as a binary switch. But
+> maybe we can use the range to select what (some) energy to sacrifice
+> mean here. Hmmm.
 
-#syz fix: HID: sony: Fix memory corruption issue on cleanup.
+It cannot be binary, per definition is must be ternary, that is, <0, ==0
+and >0 (or middle value if you're of that persuasion).
+
+In your case, I'm thinking you mean >0, we want to lower the latency.
+
+Anyway; there were a number of things mentioned at OSPM that we could
+tie into this thing and finding sensible mappings is going to be a bit
+of trial and error I suppose.
+
+But as patrick said; we're very much exporting a BIAS knob, not a set of
+behaviours.
