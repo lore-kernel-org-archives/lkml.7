@@ -2,191 +2,112 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E71C3A5AD
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5992C3A5AC
 	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C2EB22473
+	by mail.kernel.org (Postfix) with ESMTP id B65C82246E
 	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:46:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oZv7yvLo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389515AbfIEMp0 (ORCPT
+        id S2389525AbfIEMqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 08:45:26 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40678 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731492AbfIEMpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 08:45:19 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 42A42B658;
-        Thu,  5 Sep 2019 12:45:17 +0000 (UTC)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     jikos@kernel.org, jpoimboe@redhat.com, pmladek@suse.com
-Cc:     joe.lawrence@redhat.com, nstange@suse.de,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Miroslav Benes <mbenes@suse.cz>
-Subject: [RFC PATCH v2 2/3] livepatch: Unify functions for writing and clearing object relocations
-Date:   Thu,  5 Sep 2019 14:45:13 +0200
-Message-Id: <20190905124514.8944-3-mbenes@suse.cz>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190905124514.8944-1-mbenes@suse.cz>
-References: <20190905124514.8944-1-mbenes@suse.cz>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 5 Sep 2019 08:46:01 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38553 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731418AbfIEMqA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 08:46:00 -0400
+Received: by mail-pl1-f193.google.com with SMTP id w11so1264574plp.5
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 05:46:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=WM6rR/Cv0t68SHx1bqGl5X9yzZvLLjOLxbj6KRGyY+4=;
+        b=oZv7yvLoJTDRZLo4oJSgW5Vbu9DBHBlz5VFNa2fGOc9gpMnxnJvAG935dHVoC5a+zN
+         wTZq/ijBq9l5KtlmXf8ZeuJXUSgPp4WSDeJlO/1PbZw/uq1tfe7UmIfkTx2kY+dBJCFZ
+         YcXtFXj0jhREzVkOWXBtLPNxGCfTEzNwdq9GrvE378KwHnTh2j6j70Iv1Hqqqd8dSmEg
+         qNB34Q1xU+IcalAz4dBUjy0HgTvcx2urOPoxaxqccjCwTpcERUPcKVWsIkGi4Zj2G0un
+         vFucV/QwJID6dSnkaC6xpswL0D92EbXGeq0GRlc5jlNDpSEt2MrEgRFJBW4DO3FlM+D4
+         AvpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=WM6rR/Cv0t68SHx1bqGl5X9yzZvLLjOLxbj6KRGyY+4=;
+        b=cSmxK0XKo6UZRLftByTuFiPcu5kptt1MHyOIu+Z2LkeCSGRUcR/Q38uPdUUX459yuz
+         uKK8O7Qs3oBZIxbi2pAdcoIbTPRWIESEFyS3+v54X9TSY4q75kq9iBCJ+F35jaAIfWfm
+         ubDtDtN5pO/HrW5Owo/gJA/jJw25PSGRZkms0Vkvg/x/c3zFuq6ACbHmHXHgUvAFEoUa
+         Ny2mjwoWYFx4JkWJ64k6fj8wSh1N7gdO/joyXi6Ef4wcxIGlNA6AKQusA7P1h+PwUAMi
+         2Dg2NJGubHi7C4duxJqJmnpHl67oeWvCtu8kcfqxI+PGJTZYKL3xhbe91N1UT7dX0oIA
+         Jycw==
+X-Gm-Message-State: APjAAAWXPebhFGnrv3s/zVRqwrWS2j6fFDoep6/tGD5lwvOGIyLPm8k/
+        kTcT8ZiwcIHwezGR5CCUsdQ=
+X-Google-Smtp-Source: APXvYqwvTeYV5QQ51gK9PVjIDtCbPQnpHl/4CKedsvgU0dSTpgTqXJIt44Kdo8iVLocqVuZPfMevsw==
+X-Received: by 2002:a17:902:426:: with SMTP id 35mr3251485ple.192.1567687560305;
+        Thu, 05 Sep 2019 05:46:00 -0700 (PDT)
+Received: from localhost.localdomain (unknown-224-80.windriver.com. [147.11.224.80])
+        by smtp.gmail.com with ESMTPSA id 74sm3412635pfy.78.2019.09.05.05.45.59
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Thu, 05 Sep 2019 05:45:59 -0700 (PDT)
+From:   Bin Meng <bmeng.cn@gmail.com>
+To:     Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: [PATCH v2] riscv: dts: sifive: Drop "clock-frequency" property of cpu nodes
+Date:   Thu,  5 Sep 2019 05:45:53 -0700
+Message-Id: <1567687553-22334-1-git-send-email-bmeng.cn@gmail.com>
+X-Mailer: git-send-email 1.7.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Functions klp_write_object_relocations() and
-klp_clear_object_relocations() share a lot of code. Take the code out to
-a common function and provide the specific actions through callbacks.
+The "clock-frequency" property of cpu nodes isn't required. Drop it.
 
-Signed-off-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Bin Meng <bmeng.cn@gmail.com>
+
 ---
- kernel/livepatch/core.c | 84 +++++++++++++++++------------------------
- 1 file changed, 34 insertions(+), 50 deletions(-)
 
-diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-index f0b380d2a17a..023c9333c276 100644
---- a/kernel/livepatch/core.c
-+++ b/kernel/livepatch/core.c
-@@ -245,8 +245,11 @@ static int klp_resolve_symbols(Elf_Shdr *relasec, struct module *pmod)
- 	return 0;
- }
- 
--static int klp_write_object_relocations(struct module *pmod,
--					struct klp_object *obj)
-+typedef int (reloc_update_fn_t)(struct module *, unsigned int);
-+
-+static int klp_update_object_relocations(struct module *pmod,
-+					 struct klp_object *obj,
-+					 reloc_update_fn_t reloc_update_fn)
- {
- 	int i, cnt, ret = 0;
- 	const char *objname, *secname;
-@@ -281,13 +284,7 @@ static int klp_write_object_relocations(struct module *pmod,
- 		if (strcmp(objname, sec_objname))
- 			continue;
- 
--		ret = klp_resolve_symbols(sec, pmod);
--		if (ret)
--			break;
--
--		ret = apply_relocate_add(pmod->klp_info->sechdrs,
--					 pmod->core_kallsyms.strtab,
--					 pmod->klp_info->symndx, i, pmod);
-+		ret = reloc_update_fn(pmod, i);
- 		if (ret)
- 			break;
- 	}
-@@ -295,45 +292,6 @@ static int klp_write_object_relocations(struct module *pmod,
- 	return ret;
- }
- 
--static void klp_clear_object_relocations(struct module *pmod,
--					struct klp_object *obj)
--{
--	int i, cnt;
--	const char *objname, *secname;
--	char sec_objname[MODULE_NAME_LEN];
--	Elf_Shdr *sec;
--
--	objname = klp_is_module(obj) ? obj->name : "vmlinux";
--
--	/* For each klp relocation section */
--	for (i = 1; i < pmod->klp_info->hdr.e_shnum; i++) {
--		sec = pmod->klp_info->sechdrs + i;
--		secname = pmod->klp_info->secstrings + sec->sh_name;
--		if (!(sec->sh_flags & SHF_RELA_LIVEPATCH))
--			continue;
--
--		/*
--		 * Format: .klp.rela.sec_objname.section_name
--		 * See comment in klp_resolve_symbols() for an explanation
--		 * of the selected field width value.
--		 */
--		secname = pmod->klp_info->secstrings + sec->sh_name;
--		cnt = sscanf(secname, ".klp.rela.%55[^.]", sec_objname);
--		if (cnt != 1) {
--			pr_err("section %s has an incorrectly formatted name\n",
--			       secname);
--			continue;
--		}
--
--		if (strcmp(objname, sec_objname))
--			continue;
--
--		clear_relocate_add(pmod->klp_info->sechdrs,
--				   pmod->core_kallsyms.strtab,
--				   pmod->klp_info->symndx, i, pmod);
--	}
--}
--
- /*
-  * Sysfs Interface
-  *
-@@ -751,6 +709,21 @@ void __weak arch_klp_init_object_loaded(struct klp_patch *patch,
- {
- }
- 
-+static int klp_write_relocations(struct module *pmod,
-+				 unsigned int relsec)
-+{
-+	int ret;
-+
-+	ret = klp_resolve_symbols(pmod->klp_info->sechdrs + relsec, pmod);
-+	if (ret)
-+		return ret;
-+
-+	ret = apply_relocate_add(pmod->klp_info->sechdrs,
-+				 pmod->core_kallsyms.strtab,
-+				 pmod->klp_info->symndx, relsec, pmod);
-+	return ret;
-+}
-+
- /* parts of the initialization that is done only when the object is loaded */
- static int klp_init_object_loaded(struct klp_patch *patch,
- 				  struct klp_object *obj)
-@@ -761,7 +734,8 @@ static int klp_init_object_loaded(struct klp_patch *patch,
- 	mutex_lock(&text_mutex);
- 
- 	module_disable_ro(patch->mod);
--	ret = klp_write_object_relocations(patch->mod, obj);
-+	ret = klp_update_object_relocations(patch->mod, obj,
-+					    klp_write_relocations);
- 	if (ret) {
- 		module_enable_ro(patch->mod, true);
- 		mutex_unlock(&text_mutex);
-@@ -1111,6 +1085,15 @@ void klp_discard_nops(struct klp_patch *new_patch)
- 	klp_free_objects_dynamic(klp_transition_patch);
- }
- 
-+static int klp_clear_relocations(struct module *pmod,
-+				 unsigned int relsec)
-+{
-+	clear_relocate_add(pmod->klp_info->sechdrs,
-+			   pmod->core_kallsyms.strtab,
-+			   pmod->klp_info->symndx, relsec, pmod);
-+	return 0;
-+}
-+
- /*
-  * Remove parts of patches that touch a given kernel module. The list of
-  * patches processed might be limited. When limit is NULL, all patches
-@@ -1141,7 +1124,8 @@ static void klp_cleanup_module_patches_limited(struct module *mod,
- 
- 			mutex_lock(&text_mutex);
- 			module_disable_ro(patch->mod);
--			klp_clear_object_relocations(patch->mod, obj);
-+			klp_update_object_relocations(patch->mod, obj,
-+						      klp_clear_relocations);
- 			module_enable_ro(patch->mod, true);
- 			mutex_unlock(&text_mutex);
- 
+Changes in v2:
+- drop "clock-frequency" property of cpu nodes
+
+ arch/riscv/boot/dts/sifive/fu540-c000.dtsi | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+index 42b5ec2..a9d48ff 100644
+--- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
++++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+@@ -60,7 +60,6 @@
+ 			};
+ 		};
+ 		cpu2: cpu@2 {
+-			clock-frequency = <0>;
+ 			compatible = "sifive,u54-mc", "sifive,rocket0", "riscv";
+ 			d-cache-block-size = <64>;
+ 			d-cache-sets = <64>;
+@@ -84,7 +83,6 @@
+ 			};
+ 		};
+ 		cpu3: cpu@3 {
+-			clock-frequency = <0>;
+ 			compatible = "sifive,u54-mc", "sifive,rocket0", "riscv";
+ 			d-cache-block-size = <64>;
+ 			d-cache-sets = <64>;
+@@ -108,7 +106,6 @@
+ 			};
+ 		};
+ 		cpu4: cpu@4 {
+-			clock-frequency = <0>;
+ 			compatible = "sifive,u54-mc", "sifive,rocket0", "riscv";
+ 			d-cache-block-size = <64>;
+ 			d-cache-sets = <64>;
 -- 
-2.23.0
+2.7.4
 
