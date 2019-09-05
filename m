@@ -5,65 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A5E9C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21983C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5A862082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:19:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C733C2082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:19:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Esj7f4QN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DhtZCS6p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388834AbfIEQTY (ORCPT
+        id S2388207AbfIEQSN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 12:19:24 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36080 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388173AbfIEQSN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 5 Sep 2019 12:18:13 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y22so2082709pfr.3
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 09:18:12 -0700 (PDT)
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46547 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387959AbfIEQSJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 12:18:09 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q5so2049774pfg.13
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 09:18:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=zGhRU3CF0nckn4q3RpFyAUKnMAipsfpJ2Ggo67IAKJc=;
-        b=Esj7f4QN25ld+Ovd4UPXhi2gSS9+Lzc1VVLMSaLedss00TUu/574n7510/KARXCZI3
-         7W6vE5cd7uARf9ipf0Ags1oPwG3CFAYVMe29Tybo5a64c/5svbgUNtDOdTUTjtzJgzsk
-         BBVG0AUZqbY2eMEesm9XN02filAWjn0hrxTZtIA6mzGsPfn9CVvXwJMErc9ztNrFDZlQ
-         hSJdg6l4K5XNAYyr1Od0KnturBe85nLy/GTao8rjSvtfT1nPC/0vFWd+7bbID+jHlLNF
-         uVWRzrdTujIrO+oTLdms5SAw0eB7uKDL1CNjQPdxf+8SUROE+hX1TvIpDFBHgWNZSiuB
-         ++TA==
+        bh=rjuaqfgsXjJPwAACoDEoQUxKOEl2ZmoHXoDNdOHfK/8=;
+        b=DhtZCS6pEqVXAANTeuPn229D+BZX3X67QaHqNgnEKoio/f3XFGIKudVgM5FDU+7o8L
+         nQ6C8zCJpGUG562Tdrhhk+jzdjUxPEUMlyMrosXluqm8s7BPYWWQ2Sfl8GPdcyN3+vz3
+         WgC0nx5vQPM/ac0gkVSlnhW9uet9jY41HdO0XoqnQ4dQQgwZRDvRXdAX5pdKiXWoz78p
+         gJ/gB20nx7nFBvvCBuWrSZgl46CenVN2LnP6ZluOUqhvk/2lQx7TA+V1EqPfUJ0tOjn4
+         d9umZlIflwKbjOrolidHP4+2mwXkt5JzsO/HIsQg2gt2s/+L0G/cpcGqNlGMyilyzdUy
+         uaqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=zGhRU3CF0nckn4q3RpFyAUKnMAipsfpJ2Ggo67IAKJc=;
-        b=U9h1IAg1u/ZKNm4i0vUAstheCvN6rlN/f4ECDCClb+VlvznpmxsqXtRV0DW/MsIcCg
-         AdbveNx4Yb8g5zEnnaJduFDLFrOaXOpK3Q5JKdLvbKSwjnHpgeboEi6At6rQaMamwPSc
-         nkZxeJDEQia2XG8kwets89FuWt9C//X7IMb90eEQLVeIJIATzcBYlzoHo2LtdjBN8fGy
-         HOQGht9YqjWHGW7GXOLVa2oWA/bf+CiU4Mzk8OI6fR4QYB4bBVi3UYrtf5zNJ52Xv7gF
-         D/DaPDqyVBhkiaMYLFt9Y/7ZPZoqZX5MUgOro12so1CQdqWbusZ2tNHL1hJVMlGT2gm4
-         7HDw==
-X-Gm-Message-State: APjAAAUisvglXK+u7uHG+rudAbnzkBbpNi+Z70/tx/wTw8Pm5OJYCfuR
-        CaTPmI3YMvIeaLxK/lPaGEIaCA==
-X-Google-Smtp-Source: APXvYqxNw7e1zU8HXSUIIVJJi/ZzjnAKR5k1wwrrYFe2F5hAHe78MAzfLAz3iUKxFfZDzG3VAqGKEA==
-X-Received: by 2002:a63:5f01:: with SMTP id t1mr3605020pgb.200.1567700292199;
-        Thu, 05 Sep 2019 09:18:12 -0700 (PDT)
+        bh=rjuaqfgsXjJPwAACoDEoQUxKOEl2ZmoHXoDNdOHfK/8=;
+        b=X97kfcncq/wFgGDlloNXkybKr0sHbAjkLAUR49G3bhKTPTKO4pE61r4Unuvl/fVAUy
+         A4JYxJQc44zQC8E2Q3mRCtq3xu9jCiosbdIjse3aFQ36eHmfxC/iJixavjqN/8Wenabu
+         k+QlewDoq9vXAt9boYjuR3e3CN3ETw6qmeDNbYzR+UExHMS3Fp6D0vHcIAgZeLP9vcxj
+         PJESF/BCxPp4RYKIBS/jV4Tm2+7y80MH+qScvZZEaEbGYPakUq1O9OPSw/yc83p65K8J
+         EoOwf7M5X82l/tv9gAEL68N+zewecVQ7QLhylomeEZy1NDNYbcKLlrzBxy/OeN5L1z2N
+         dKGw==
+X-Gm-Message-State: APjAAAXvIO9C4GAMYz3/l7e/L+fyVzniWOrsDVhVimdvc2V3NRb5JRZ8
+        i0OAK/ZDndrb2oMawu1H1vKdMD+B+Ps=
+X-Google-Smtp-Source: APXvYqwjC/u78z/zaGM+j2+m/kS1EooYMEgWtfeDDH4gvURdMNHJyy5MyPkUpGOGmsnrWffGg8MToQ==
+X-Received: by 2002:a63:394:: with SMTP id 142mr3929328pgd.43.1567700288547;
+        Thu, 05 Sep 2019 09:18:08 -0700 (PDT)
 Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id m129sm6324005pga.39.2019.09.05.09.18.10
+        by smtp.gmail.com with ESMTPSA id m129sm6324005pga.39.2019.09.05.09.18.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 09:18:11 -0700 (PDT)
+        Thu, 05 Sep 2019 09:18:08 -0700 (PDT)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     stable@vger.kernel.org
 Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org,
         linux-pci@vger.kernel.org, linux-mtd@lists.infradead.org
-Subject: [BACKPORT 4.14.y 09/18] misc: pci_endpoint_test: Prevent some integer overflows
-Date:   Thu,  5 Sep 2019 10:17:50 -0600
-Message-Id: <20190905161759.28036-10-mathieu.poirier@linaro.org>
+Subject: [BACKPORT 4.14.y 06/18] ASoC: tlv320aic31xx: Handle inverted BCLK in non-DSP modes
+Date:   Thu,  5 Sep 2019 10:17:47 -0600
+Message-Id: <20190905161759.28036-7-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190905161759.28036-1-mathieu.poirier@linaro.org>
 References: <20190905161759.28036-1-mathieu.poirier@linaro.org>
@@ -72,58 +72,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: "Andrew F. Davis" <afd@ti.com>
 
-commit 378f79cab12b669928f3a4037f023837ead2ce0c upstream
+commit dcb407b257af06fa58b0544ec01ec9e0d3927e02 upstream
 
-"size + max" can have an arithmetic overflow when we're allocating:
+Currently BCLK inverting is only handled when the DAI format is
+DSP, but the BCLK may be inverted in any supported mode. Without
+this using this CODEC in any other mode than DSP with the BCLK
+inverted leads to bad sampling timing and very poor audio quality.
 
-	orig_src_addr = dma_alloc_coherent(dev, size + alignment, ...
-
-I've added a few checks to prevent that.
-
-Fixes: 13107c60681f ("misc: pci_endpoint_test: Add support to provide aligned buffer addresses")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Andrew F. Davis <afd@ti.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- drivers/misc/pci_endpoint_test.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ sound/soc/codecs/tlv320aic31xx.c | 28 ++++++++++++++++++----------
+ 1 file changed, 18 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index 9849bf183299..504fa680825d 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -226,6 +226,9 @@ static bool pci_endpoint_test_copy(struct pci_endpoint_test *test, size_t size)
- 	u32 src_crc32;
- 	u32 dst_crc32;
+diff --git a/sound/soc/codecs/tlv320aic31xx.c b/sound/soc/codecs/tlv320aic31xx.c
+index 54a87a905eb6..d3bd0bf15ddb 100644
+--- a/sound/soc/codecs/tlv320aic31xx.c
++++ b/sound/soc/codecs/tlv320aic31xx.c
+@@ -924,6 +924,18 @@ static int aic31xx_set_dai_fmt(struct snd_soc_dai *codec_dai,
+ 		return -EINVAL;
+ 	}
  
-+	if (size > SIZE_MAX - alignment)
-+		goto err;
++	/* signal polarity */
++	switch (fmt & SND_SOC_DAIFMT_INV_MASK) {
++	case SND_SOC_DAIFMT_NB_NF:
++		break;
++	case SND_SOC_DAIFMT_IB_NF:
++		iface_reg2 |= AIC31XX_BCLKINV_MASK;
++		break;
++	default:
++		dev_err(codec->dev, "Invalid DAI clock signal polarity\n");
++		return -EINVAL;
++	}
 +
- 	orig_src_addr = dma_alloc_coherent(dev, size + alignment,
- 					   &orig_src_phys_addr, GFP_KERNEL);
- 	if (!orig_src_addr) {
-@@ -311,6 +314,9 @@ static bool pci_endpoint_test_write(struct pci_endpoint_test *test, size_t size)
- 	size_t alignment = test->alignment;
- 	u32 crc32;
- 
-+	if (size > SIZE_MAX - alignment)
-+		goto err;
-+
- 	orig_addr = dma_alloc_coherent(dev, size + alignment, &orig_phys_addr,
- 				       GFP_KERNEL);
- 	if (!orig_addr) {
-@@ -369,6 +375,9 @@ static bool pci_endpoint_test_read(struct pci_endpoint_test *test, size_t size)
- 	size_t alignment = test->alignment;
- 	u32 crc32;
- 
-+	if (size > SIZE_MAX - alignment)
-+		goto err;
-+
- 	orig_addr = dma_alloc_coherent(dev, size + alignment, &orig_phys_addr,
- 				       GFP_KERNEL);
- 	if (!orig_addr) {
+ 	/* interface format */
+ 	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
+ 	case SND_SOC_DAIFMT_I2S:
+@@ -931,16 +943,12 @@ static int aic31xx_set_dai_fmt(struct snd_soc_dai *codec_dai,
+ 	case SND_SOC_DAIFMT_DSP_A:
+ 		dsp_a_val = 0x1;
+ 	case SND_SOC_DAIFMT_DSP_B:
+-		/* NOTE: BCLKINV bit value 1 equas NB and 0 equals IB */
+-		switch (fmt & SND_SOC_DAIFMT_INV_MASK) {
+-		case SND_SOC_DAIFMT_NB_NF:
+-			iface_reg2 |= AIC31XX_BCLKINV_MASK;
+-			break;
+-		case SND_SOC_DAIFMT_IB_NF:
+-			break;
+-		default:
+-			return -EINVAL;
+-		}
++		/*
++		 * NOTE: This CODEC samples on the falling edge of BCLK in
++		 * DSP mode, this is inverted compared to what most DAIs
++		 * expect, so we invert for this mode
++		 */
++		iface_reg2 ^= AIC31XX_BCLKINV_MASK;
+ 		iface_reg1 |= (AIC31XX_DSP_MODE <<
+ 			       AIC31XX_IFACE1_DATATYPE_SHIFT);
+ 		break;
 -- 
 2.17.1
 
