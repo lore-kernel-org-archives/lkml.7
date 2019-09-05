@@ -2,148 +2,134 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6804FC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 856A1C43140
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A5B0206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:47:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F197206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:47:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fQ8fdCt8"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="iKQy7pcK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391644AbfIEUr0 (ORCPT
+        id S2404039AbfIEUrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 16:47:26 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:41901 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731142AbfIEUrZ (ORCPT
+        Thu, 5 Sep 2019 16:47:36 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34167 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731142AbfIEUrf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 16:47:25 -0400
-Received: by mail-ed1-f68.google.com with SMTP id z9so4177585edq.8;
-        Thu, 05 Sep 2019 13:47:24 -0700 (PDT)
+        Thu, 5 Sep 2019 16:47:35 -0400
+Received: by mail-ot1-f65.google.com with SMTP id c7so3664722otp.1;
+        Thu, 05 Sep 2019 13:47:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=kB2jjwTxmG739/c0X2n3JU0/QMvBG/XQ10gbX2t4+Y0=;
-        b=fQ8fdCt8EW4/NlLWLwQGlzuxB9Cb0xJQpoiNZFpeo7vpr1WiyuFy52ABSmJLhHRX2m
-         o9A+tnlGklM4eqRSQN3Hcb2lkRhxkBtQPUMfjcM99jrctka6tLjodmyCyZdUlCoLwTxo
-         gTa8VSJXt2JUBYOCOabyyPzREEmlZnlhgrFx7fdZ1wrdRBOhehNmhoGOK+mLw3L3DR/4
-         NIt6wa8pDEhChnM94cXIVZi4YTooBKMAYHRxs9hAmIiEp04Mtqnz6jIUJXfPmBHh1xWt
-         xfR1K+JHkpuqvea3pXidDqDZ1GUZDJU5AzyzNPSTDSPNwxkg2hu4rb3mixSO1JlCGBDx
-         9oMA==
+        bh=Hpe67X407tYeVqfqBtx1jH+uTg6tH8jR8FjjDadQp48=;
+        b=iKQy7pcK0+Aeu3voToJo4z1xhtUcKL/cjAGPDL1dk5XMxb+QXiVvcJoGUZtgExUzeI
+         0hKt0/2ycoBwf5Z5px0oYNSi7eDdWCwY1ozNcT6q2VFHCaOwxI3WE9BvckNlXDy/i9hJ
+         V+2OFzq+TS1o62Qa8oTi0Gi5XnvMDgkhQ9d3EJkUCkce02hswivWIozI2vLA3iLBcfOT
+         EKuLOV494WmLcFsmKFRHBw7xtch424iX/B3Rc0WDxErtSkb5t/zMcVjpVArtPZwcXPTv
+         343poVAErivgK65+70F89MRATt/aK8bBqAkttohiPgY+X5jaAjAxw1azr+yv0RasNH07
+         SpcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=kB2jjwTxmG739/c0X2n3JU0/QMvBG/XQ10gbX2t4+Y0=;
-        b=d7bgdxU+0xz0AVvDGy1dF+q9V4UJoJjgID7Lm30w6Zz1t6ngIVWenPxLNUDYhWnBe4
-         RekFifLywRi80Z2nv8cUxpC5vAjvltvQmPZW+a3sYDI69p9u1UyYFcIQJNd3qO16ECGr
-         bkd8DXK62YP9PWeA9CDOdyfZlnv8P2t28fTZxHT4ZtrLPw8hCtxQtVBWued3/ah5m4r8
-         Cnv+W7KgIukm/jriFmbEr4PIa3Vu+Zr5E/LIMFBm6ujbGmAtFZNT2g7g3y4avW3X1bta
-         vA7m12ltcGQJkulNQcq8m40Rubx9HlweFmf5oamIc3K9Kv+xj3+nds4XGiAZwPXnOCeB
-         Tc1g==
-X-Gm-Message-State: APjAAAXXl5BC5/A044kwHNNI4Ty6sZdXoaVuckVBfd/uHYiFCXxt2kF+
-        ma89UjcKXHpJXH5BkdzvtOHS3mpThdSm6myPwI5WKE9h
-X-Google-Smtp-Source: APXvYqz7tCLIOTjgqv3aJAxKS0GQAQXdJfEE8ntxpKWtICMOaScSqpWOtFxjgwihZYRLoPn594HD1NCdYyCtHE7pw3I=
-X-Received: by 2002:a17:906:4056:: with SMTP id y22mr4662235ejj.230.1567716444102;
- Thu, 05 Sep 2019 13:47:24 -0700 (PDT)
+        bh=Hpe67X407tYeVqfqBtx1jH+uTg6tH8jR8FjjDadQp48=;
+        b=K4P+HdWUL0H+u3UvA1wLCvqLQSycYyncCE5cLlBoDAt84fkdBJBU1QpiWNjc0ITPbW
+         oc/f49eIzfWSqAZ7a3HrDT5MNRsHfF40dXfaffmY9MbgsZ0VWCpsFxH2l/iZ/KunurLm
+         Y4p850vsdpseeCC9noyT8LdC3XbK3v6WlKYJghDbVNZ9iQEXUo2hQ2lhdTyyFyXqGChl
+         OKcAe+9OpfFnWAPHTl23Z4m/BhRW7szrF1pgdGw8enkRq7OUmOIc5G3BCE4veJbmNV7Z
+         NLh1Xee1ua8tcLFLzAv/7y0SniIhVVmWCZUA2xCEUFQ11Q/bKjOIfXkG5PWJy6a08SDQ
+         z1kQ==
+X-Gm-Message-State: APjAAAVEhcjrkzo3Eez7GqLG1GEbAcd5Jn1I3DQl6fhgxZvho+Qwcdtq
+        039NlITugVA+wIoQhblW46dsK5mDAfNUenTvdXc=
+X-Google-Smtp-Source: APXvYqxBMSHXDs1QQOhrT5ERhwwBvzG1utnZHIaaBimzhgUetRGpQI2B9o8vZcXvI+RHZcyVr430j2kSYmOU1uYY5Ps=
+X-Received: by 2002:a9d:12e7:: with SMTP id g94mr3041613otg.6.1567716454237;
+ Thu, 05 Sep 2019 13:47:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190903010817.GA13595@embeddedor> <cb7d53cd-3f1e-146b-c1ab-f11a584a7224@gmail.com>
- <CA+h21hpCAJhE8xhsgDQ55_MUUiesV=uVY4tD=TzaCE6wynUPoQ@mail.gmail.com> <8736hd9ilm.fsf@intel.com>
-In-Reply-To: <8736hd9ilm.fsf@intel.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Thu, 5 Sep 2019 23:47:13 +0300
-Message-ID: <CA+h21hqtuGuJm0rMx_SZAy_HCjSVD_UK1j8wa7fv+p_zUGNV7A@mail.gmail.com>
-Subject: Re: [PATCH] net: sched: taprio: Fix potential integer overflow in taprio_set_picos_per_byte
-To:     Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        "David S. Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
+References: <6a3c26bc6e25d883686287883528dbde30725922.1566975410.git.rahul.tanwar@linux.intel.com>
+ <20190902222015.11360-1-martin.blumenstingl@googlemail.com>
+ <d9e96dab-96be-0c14-b7af-e1f2dc07ebd2@linux.intel.com> <CAFBinCARQJ7q9q3r6c6Yr2SD0Oo_Drah-kxss3Obs-g=B1M28A@mail.gmail.com>
+ <b7920723-1df2-62df-61c7-98c3a1665aa1@linux.intel.com>
+In-Reply-To: <b7920723-1df2-62df-61c7-98c3a1665aa1@linux.intel.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Thu, 5 Sep 2019 22:47:23 +0200
+Message-ID: <CAFBinCA+J-HnXfRnquqviXvX0Jo84hoLC9=_uHbyWKZycwyAFw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] clk: intel: Add CGU clock driver for a new SoC
+To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Cc:     andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com, mturquette@baylibre.com,
+        qi-ming.wu@intel.com, rahul.tanwar@intel.com, robh+dt@kernel.org,
+        robh@kernel.org, sboyd@kernel.org, yixin.zhu@linux.intel.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinicius,
+Hi Rahul,
 
-On Wed, 4 Sep 2019 at 00:26, Vinicius Costa Gomes
-<vinicius.gomes@intel.com> wrote:
+On Wed, Sep 4, 2019 at 10:04 AM Tanwar, Rahul
+<rahul.tanwar@linux.intel.com> wrote:
 >
-> Hi,
 >
-> Vladimir Oltean <olteanv@gmail.com> writes:
+> Hi Martin,
 >
-> > Right. And while we're at it, there's still the potential
-> > division-by-zero problem which I still don't know how to solve without
-> > implementing a full-blown __ethtool_get_link_ksettings parser that
-> > checks against all the possible outputs it can have under the "no
-> > carrier" condition - see "[RFC PATCH 1/1] phylink: Set speed to
-> > SPEED_UNKNOWN when there is no PHY connected" for details.
-> > And there's also a third fix to be made: the netdev_dbg should be made
-> > to print "speed" instead of "ecmd.base.speed".
+> On 4/9/2019 2:53 AM, Martin Blumenstingl wrote:
+> >> My understanding is that if we do not use syscon, then there is no
+> >> point in using regmap because this driver uses simple 32 bit register
+> >> access. Can directly read/write registers using readl() & writel().
+> >>
+> >> Would you agree ?
+> > if there was only the LGM SoC then I would say: drop regmap
+> >
+> > however, last year a driver for the GRX350/GRX550 SoCs was proposed: [0]
+> > this was never updated but it seems to use the same "framework" as the
+> > LGM driver
+> > with this in mind I am for keeping regmap support because.
+> > I think it will be easier to add support for old SoCs like
+> > GRX350/GRX550 (but also VRX200), because the PLL sub-driver (I am
+> > assuming that it is similar on all SoCs) or some other helpers can be
+> > re-used across various SoCs instead of "duplicating" code (where one
+> > variant would use regmap and the other readl/writel).
 >
-> For the ksettings part I am thinking on adding something like this to
-> ethtool.c. Do you think anything is missing (apart from the
-> documentation)?
 >
-> ->
->
-> diff --git a/include/linux/ethtool.h b/include/linux/ethtool.h
-> index 95991e43..d37c80b 100644
-> --- a/include/linux/ethtool.h
-> +++ b/include/linux/ethtool.h
-> @@ -177,6 +177,9 @@ void ethtool_convert_legacy_u32_to_link_mode(unsigned long *dst,
->  bool ethtool_convert_link_mode_to_legacy_u32(u32 *legacy_u32,
->                                      const unsigned long *src);
->
-> +u32 ethtool_link_ksettings_to_speed(const struct ethtool_link_ksettings *settings,
-> +                                   u32 default_speed);
-> +
->  /**
->   * struct ethtool_ops - optional netdev operations
->   * @get_drvinfo: Report driver/device information.  Should only set the
-> diff --git a/net/core/ethtool.c b/net/core/ethtool.c
-> index 6288e69..80e3db3 100644
-> --- a/net/core/ethtool.c
-> +++ b/net/core/ethtool.c
-> @@ -539,6 +539,18 @@ struct ethtool_link_usettings {
->         } link_modes;
->  };
->
-> +u32 ethtool_link_ksettings_to_speed(const struct ethtool_link_ksettings *settings,
-> +                                  u32 default_speed)
-> +{
-> +       if (settings->base.speed == SPEED_UNKNOWN)
-> +               return default_speed;
-> +
-> +       if (settings->base.speed == 0)
-> +               return default_speed;
-> +
-> +       return settings->base.speed;
-> +}
-> +
->  /* Internal kernel helper to query a device ethtool_link_settings. */
->  int __ethtool_get_link_ksettings(struct net_device *dev,
->                                  struct ethtool_link_ksettings *link_ksettings)
+> Earlier, we had discussed about it in our team.  There are no plans to
+> upstream mips based platform code, past up-streaming efforts for mips
+> platforms were also dropped. GRX350/GRX550/VRX200 are all mips
+> based platforms. Plan is to upstream only x86 based platforms. In-fact,
+> i had removed GRX & other older SoCs support from this driver before
+> sending for review. So we can consider only x86 based LGM family of
+> SoCs for this driver & all of them will be reusing same IP.
+this is very sad news
+as far as I can tell many IP cores are similar/identical on
+GRX350/GRX550, LGM and even VRX200
 
-Looks ok to me, but I have no saying over ethtool API. Actually I
-don't even know whom to ask - the output of
-./scripts/get_maintainer.pl net/core/ethtool.c is a bit overwhelming.
-To avoid conflicts, there needs to be somebody out of us who takes
-Eric's simplification, with Gustavo's Reported-by tag, and the 2
-ethtool & taprio patches to avoid division by zero, and the printing
-fix, and maybe do the same in cbs. Will you be the one? Should I?
+I already know that VRX200 is a legacy product and you won't be supporting it
+once LGM support lands upstream you could add support for
+GRX350/GRX550 with small to medium effort
+that is a big win (in my opinion) because it means happier end-users
+(see XWAY and VRX200 support in OpenWrt for example: while support
+from Intel/Lantiq has died long ago these devices can still run a
+recent LTS kernel and get security updates. without OpenWrt these
+devices would probably end up as electronic waste)
 
-Thanks,
--Vladimir
+maybe implementing a re-usable regmap clock driver (for mux, gate and
+divider) means less effort (compared to converting everything to
+standard clock ops) for you.
+(we did the switch from standard clock ops to regmap for the Amlogic
+Meson clock drivers when we discovered that there were some non-clock
+registers that belong to other IP blocks in it and it was a lot of
+effort)
+this will allow you to add support for GRX350/GRX550 in the future if
+demand for upstream drivers rises.
+
+
+Martin
