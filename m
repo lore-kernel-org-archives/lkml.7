@@ -2,173 +2,91 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C75CBC3A5AA
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B889C41514
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EAC72145D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:54:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A2542173B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:56:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aVMxM2zI"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f2rMlOI6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731677AbfIEGy1 (ORCPT
+        id S1731686AbfIEG4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 02:54:27 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:33944 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731583AbfIEGy1 (ORCPT
+        Thu, 5 Sep 2019 02:56:20 -0400
+Received: from mail-pl1-f173.google.com ([209.85.214.173]:36755 "EHLO
+        mail-pl1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730737AbfIEG4U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 02:54:27 -0400
-Received: by mail-wm1-f66.google.com with SMTP id y135so4196117wmc.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 23:54:25 -0700 (PDT)
+        Thu, 5 Sep 2019 02:56:20 -0400
+Received: by mail-pl1-f173.google.com with SMTP id f19so827743plr.3
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 23:56:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=0vLES3KcXlbini5YZPkYzSNWuB2HCug+phEKjv2g50I=;
-        b=aVMxM2zIRwBMfDICMK4DSKmd5ISvZcUcq13BUth0B8nv9QwXj8Dv9SgnF+Jdd0XlgY
-         f79rQFvgQaAk81r/iFiByGiYD56Ah97+/qyesL/qzg0TwKgikG5qWH51yY59V45sAjpH
-         om2JGIZ83c2Stmlon5oaht20cUk9luPtN/hzNcK2sZZENLT2Jd3jmWIb0BpKeNgjgSr0
-         zxOhZAEVXkC7aI4cNLZzRGOL3+r8FEvgjvgYuOClhgNo/a7rE8hrqGVOejsnk5WKL+U+
-         NXHYPf+rqjdKAzPOEsrrkPAT18hwij2RtHuYF44Y+zDAp7YRCCQGb0q6uBQODPqwcMPv
-         /PSg==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:subject:to:from:user-agent:date;
+        bh=kD97/EVwUs7hGEhtRI5cM+0lTbQL7Vks32M4YRn4nes=;
+        b=f2rMlOI6tTwlUpDkj66CovnKcTx6AuUUeHc9hOI4VWUSXRKLIxz27UOd5KOENqMiQ7
+         dybXYDbJwAIufmq7n1UxvQm/WEPpxLLjaALsxCUkxrnO5W7hamAYRggydmoIH7VoWr3J
+         VB93qsszzkcRQ3gnS/rpS3YzCzK8JnFEqgGEo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=0vLES3KcXlbini5YZPkYzSNWuB2HCug+phEKjv2g50I=;
-        b=rTYNN24YyalmDno6WnS5jtwu8jAvg5QFHG+qbcipPAuJ2ja4xc27XjICAOAOArtFQH
-         oAiiPh6YAsvfbfNinK3egCPrHJqcMUWbgXiVQfJL1zqGAih8eJiZbNQZGzz7zszbv88I
-         Jdo6EgEYE2RhU5w9I01COYH/j9MHGZL5jqbKjnmVHcNtUqPtKoG7MHO7A3bkGIFXxlzK
-         yawdrrE84fn1/uIQtINP7we2Pcdn1rpVHGJgSyeFUm1qa2cQcLM0IbzVAofXuJ9gbLiJ
-         dGnTSErnDXLZ0Nb9y5IYnef3l0VOtvteiKAyk5/qGywy9dmU32BMrLhKWMiJrF4u2hTD
-         IaNA==
-X-Gm-Message-State: APjAAAW5AMyyv7HTPq+i5GQCi/jgCvkdF7XTdbmvzirSg2Nqx1td3k6o
-        2L5jhs0p7Ri/SHeRY0ymp5W/oQ==
-X-Google-Smtp-Source: APXvYqybtPbpgaySYMeYrQmaZI0zhXnSJyRoe+if2iMchmxVY7RVAH8EwyN919lmLDwHmgEQic9NmA==
-X-Received: by 2002:a1c:c5cb:: with SMTP id v194mr1518468wmf.108.1567666464468;
-        Wed, 04 Sep 2019 23:54:24 -0700 (PDT)
-Received: from dell ([95.147.198.36])
-        by smtp.gmail.com with ESMTPSA id v2sm3538896wmf.18.2019.09.04.23.54.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 04 Sep 2019 23:54:24 -0700 (PDT)
-Date:   Thu, 5 Sep 2019 07:54:23 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     agross@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 1/1] soc: qcom: geni: Provide parameter error checking
-Message-ID: <20190905065423.GV26880@dell>
-References: <20190903135052.13827-1-lee.jones@linaro.org>
- <20190904031922.GC574@tuxbook-pro>
- <20190904084554.GF26880@dell>
- <20190904182732.GE574@tuxbook-pro>
- <20190904200130.GT26880@dell>
- <20190904202656.GB580@tuxbook-pro>
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:subject:to:from
+         :user-agent:date;
+        bh=kD97/EVwUs7hGEhtRI5cM+0lTbQL7Vks32M4YRn4nes=;
+        b=rMaTtKVw4nF5nENmyQZ/7FDLBtQ0dAPE4/7In6ewhOBED5LtcMqCXv0CgK/f7xVHuY
+         djgkUKmYwpoHnB6tXvf89tZ/BR1oOR9MjjyL9NikqwroRJlw7k/IJ0TZxKjgagFfaCjM
+         abaDtMLbC5UoY2pwUX/thCONLOhWy2tOh6OnnoS3uS0DtSijXaSZFTvGorq7CdA9YtL/
+         vJYcOl9woU4eyE7KoG0z7MxtmeFjoN9gjG1qAImkSS7DsAgMsqIZoe4EnimWgzr8Onq5
+         j+MB1/6pY/nlbvpzQpilbpCZ+TNGPgaZ//hCUqvYQrpvmxfHec7kn+5o19SIw+tyQIKY
+         QnRg==
+X-Gm-Message-State: APjAAAWlK/ggvlNdUZm2dQoNSZRqPmYW9tg2D1v8yt8w/ezjp3h7Lnk7
+        NZ2BUogDs7uVb0+l6bhJv4QJtg==
+X-Google-Smtp-Source: APXvYqzKn1EYDsMpOUWI7sFFZU4cXOjhZbtxWRrgczbEbqf4U+wCl33fGmcpyZGHJD9ZjijclNyYsw==
+X-Received: by 2002:a17:902:820a:: with SMTP id x10mr1817462pln.216.1567666579544;
+        Wed, 04 Sep 2019 23:56:19 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id n9sm1030819pjq.30.2019.09.04.23.56.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Sep 2019 23:56:19 -0700 (PDT)
+Message-ID: <5d70b193.1c69fb81.f9ce7.3447@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190904202656.GB580@tuxbook-pro>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190905064253.GU26880@dell>
+References: <20190903135052.13827-1-lee.jones@linaro.org> <20190904031922.GC574@tuxbook-pro> <20190904084554.GF26880@dell> <20190904182732.GE574@tuxbook-pro> <5d704c9f.1c69fb81.a1686.0eb3@mx.google.com> <20190905064253.GU26880@dell>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>, agross@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 1/1] soc: qcom: geni: Provide parameter error checking
+To:     Lee Jones <lee.jones@linaro.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Wed, 04 Sep 2019 23:56:17 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 04 Sep 2019, Bjorn Andersson wrote:
-
-> On Wed 04 Sep 13:01 PDT 2019, Lee Jones wrote:
-> 
-> > On Wed, 04 Sep 2019, Bjorn Andersson wrote:
-> > 
-> > > On Wed 04 Sep 01:45 PDT 2019, Lee Jones wrote:
-> > > 
-> > > > On Tue, 03 Sep 2019, Bjorn Andersson wrote:
-> > > > 
-> > > > > On Tue 03 Sep 06:50 PDT 2019, Lee Jones wrote:
-> [..]
-> > > > With this simple parameter checking patch, the SE falls back to using
-> > > > FIFO mode to transmit data and continues to work flawlessly.  IMHO
-> > > > this should be applied in the first instance, as it fixes a real (null
-> > > > dereference) bug which currently resides in the Mainline kernel.
-> > > > 
-> > > 
-> > > Per the current driver design the wrapper device is the parent of the
-> > > SE, I should have seen that 8bc529b25354 was the beginning of a game of
-> > > whac-a-mole circumventing this design. Sorry for not spotting this
-> > > earlier.
-> > 
-> > Right, but that doesn't mean that the current driver design is
-> > correct.  ACPI, which is in theory a description of the hardware
-> > doesn't seem to think so.  It looks more like we do this in Linux as a
-> > convenience function to link the devices.  Instead this 'parent' seems
-> > to be represented as a very small register space at the end of the SE
-> > banks.
-> 
-> There's a larger register window containing one block of common
-> registers followed by register blocks for each serial engine.
-> 
-> I don't know if we will need more of the common registers in the future,
-> but for now you at least have the requirement that in order to operate
-> the SEs you need to clock the wrapper. So the current DT model
-> represents the hardware and the power/clocking topology.
-> 
-> The fact that you managed to boot the system with just ignoring all
-> clocks is a surprise to me.
-
-That is a prerequisite of UEFI/ACPI.  All clocks, registers, phys,
-resets, etc must be configured by the firmware.  We should only need
-to play with them for Power Management purposes (which requires the
-PEP to be enabled).
-
-> > > But if this is the one whack left to get the thing to boot then I think
+Quoting Lee Jones (2019-09-04 23:42:53)
+> > > But if this is the one whack left to get the thing to boot then I thi=
+nk
 > > > we should merge it.
-> > 
-> > Amazing, thank you!
-> > 
-> > Do you know how we go about getting this merged?  We only potentially
-> > have 0.5 weeks (1.5 weeks if there is an -rc8 [doubtful]), so we need
-> > to move fast.  Would you be prepared to send it to Linus for -fixes?
-> > I'd do it myself, but this is a little out of my remit.
-> > 
-> 
-> The "offending" commit was picked up mid June and no one noticed that it
-> doesn't work until this week?
+> >=20
+> > Agreed.
+>=20
+> Thanks Stephen.
+>=20
+> Unless you guys scream loudly, I'm going to convert these to Acks.
+>=20
+> If you scream softly, I can convert the to Reviewed-bys.
+>=20
 
-I think you're viewing this from the wrong angle.  The "ACPI
-enablement" commit(s) merely prevented the use of the Clock and
-Regulator APIs, as per the ACPI guidelines.  See [0].
+<in a soft scream>
 
-Right.  Unfortunately, I developed this on top of our DT enablement
-patches, which also included your Geni SE DMA and Regulator status
-hacks, which meant I missed this and the above until now.
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
-It's only now I've had the chance to attempt to boot raw Mainline that
-these came to light, hence the last minute panic to try and fix them.
-
-> Let's slap a Cc: stable@ on it and get it into v5.4-rc1 and it will show
-> up in v5.3.1.
-
-We *can* do that, however my fear is that the distros are going to be
-releasing their new versions (next month) based on v5.3.  Which would
-mean they will not boot on these platforms until they backport these
-patches, which might be some months later.
-
-This is the only issue that prevents ACPI from booting, meaning we can
-at least make use of the distro installers when they are released.
-The patch is very simple and low-risk, so ideally it would go into
--rc7.
-
-[0] Documentation/arm64/arm-acpi.rst
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
