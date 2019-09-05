@@ -2,112 +2,562 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C203AC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9007DC00306
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09D4E20870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:50:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D21102137B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:51:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="W66qD9Mv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UUIx2S2a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390096AbfIEOuP (ORCPT
+        id S2390102AbfIEOvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 10:50:15 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40266 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728590AbfIEOuP (ORCPT
+        Thu, 5 Sep 2019 10:51:19 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40371 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388941AbfIEOvT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 10:50:15 -0400
-Received: by mail-wr1-f65.google.com with SMTP id w13so3136823wru.7
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 07:50:13 -0700 (PDT)
+        Thu, 5 Sep 2019 10:51:19 -0400
+Received: by mail-wm1-f67.google.com with SMTP id t9so3408391wmi.5
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 07:51:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=mu8BT/Kq3mPuYq+U/eVsorSAUs8xgY+5qDBWnOuM4zQ=;
-        b=W66qD9MvYU71Ltt1+svthcd4Eoc/pruAOb+Cxc90hPn6hTfAgyvlaOO5x3Lxv+iONe
-         u+OeRB4Ivd38m7NLTHtfKXTI2QPUFnTNX1e6UmAj/8IWnELOAi2cyKe4BfEXafIeVFV+
-         Cd+xw0mNiyifqxwttGfBk76Wy7iM/hPNl3Ybeg8Dm3H6wKu0YHPiiY6hmQ6y42tLyMmU
-         dNP98tzMgAk80zg1rmNyijzpDIwtlXCx1dofF863CNnaIoHlKB+k/K0n31oNfql04UA0
-         54T96xq6Zqjzr5A+BEJmE+euIAIZIrZkmyi/YqvS/CJdu7FZ9UIVIW2dtBoAtUDVwLWM
-         iGYg==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=hP6dTKrGhmI4Li1vYBwvA5G00RWYLdiehRQLahBt/08=;
+        b=UUIx2S2a1OTzLYcxsOGi8vjYvnpXjIXXfjjInQmQhJrOoLVMUI4bMk0pP8K4hv5+v1
+         bC+ahF3FezFlzFIlypiny7EYPPxM79sdZHZnnpe6qgrTfl/6guRvEmNJy8vpPadhocR8
+         IW0JAJGxuc7RH4bWScdjpjBLvTYEo3MLTNDGuJOCB05O5AH8D6gSDZPqwaUWbITmdboy
+         JTOLJ37XUMxPF83r7F6BQwynpfcnLc9Ytv9w1tMp0R82MmO52QP457mar3d7PWPJu/Rw
+         YJb6IDjcjSjZJrr3aGvnJVnETp/zGeRsmeTgNtJe37OYQ5blm4tzTlx1dRxuMiRRs6DS
+         rUaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=mu8BT/Kq3mPuYq+U/eVsorSAUs8xgY+5qDBWnOuM4zQ=;
-        b=k02DKON++wIPejNzpgRiuZJ4H8OR3JlKDETM01tq8qC2EXw3A26UACTktcKVpxI62v
-         /B+gJEDjF8T/sPcPZlLeWVwv3eKa9P8ZE0VoSL6Nyk8DLAMcKrXHfan0GptRVSeNHM90
-         wGtnPuM0ZvMbsSLzksTrH0p0ofkQQzKsfJNfaFcQAuI8FdFMETdVfAfEwZatFlGKjj1t
-         IYQXvd0i+OfoqMIVRzrL27dL38A62FFPk/BPGI2JDdqhvewaI/Sf2n+7Xbj0RlF9SC6K
-         DishnXuqXfEJGzoTwxHbtI88w6eBGUV3SNHXqyXbbdwg/AHrXJpr3gYwUP4E8FNNZ7oh
-         W1Uw==
-X-Gm-Message-State: APjAAAVt/w8JkrG828lAGf2TnjqEplhBzHZ/2R20J4nfb1HOpNgCgTBe
-        o8nDuPQj5rdraSJA0jftZRtDcw==
-X-Google-Smtp-Source: APXvYqxhnotNQfdCvF70keJJMv1v/fWZi9iXhJD03KhF9FGYj9u21+olcp6OoVLCSYjYjB3O6KVk6Q==
-X-Received: by 2002:adf:fd41:: with SMTP id h1mr2844478wrs.315.1567695013033;
-        Thu, 05 Sep 2019 07:50:13 -0700 (PDT)
-Received: from ziepe.ca ([193.47.165.251])
-        by smtp.gmail.com with ESMTPSA id m17sm3175786wrs.9.2019.09.05.07.50.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 05 Sep 2019 07:50:12 -0700 (PDT)
-Received: from jgg by jggl.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1i5t5P-0005nN-80; Thu, 05 Sep 2019 11:50:11 -0300
-Date:   Thu, 5 Sep 2019 11:50:11 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Christoph Hellwig <hch@lst.de>, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] libnvdimm: Enable unit test infrastructure compile
- checks
-Message-ID: <20190905145011.GA11796@ziepe.ca>
-References: <156763690875.2556198.15786177395425033830.stgit@dwillia2-desk3.amr.corp.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <156763690875.2556198.15786177395425033830.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=hP6dTKrGhmI4Li1vYBwvA5G00RWYLdiehRQLahBt/08=;
+        b=rxFVvhZTlpiokVcUJbxOkkHr7jBzISDULJMD4quaP0Bm6FKN5iWdlWsBR1InxJkZGn
+         bqe3qN5NkTc7d31Jz1yVSsD3ukfnxT8nQXHOy44R2NxGH4eoKOn1Nl603gHFQeaTAhMh
+         DCNN0cmLpenlIL9tNQmc4yiPEFsin4iBKbnWOXIAL+S8utYb9lt1NH+qfLN0We/iin9J
+         PAY5th5Yo+x+VFwW5j0UbSR5h1xr4/nAvSvvB9R1oqrwMryY48IX44r2PEHX36hXsUUy
+         EIZ+w+pXoY5RuzFozhdpcGC5zRFW5TzKuVnRUvAwblKnzfBcASo6DcBS9wIusAMP61ab
+         gd5w==
+X-Gm-Message-State: APjAAAUjLJg/S/j2nztFN6e90zT6TMrN8jAC0HYrMuAjYcx4XxeROgTy
+        1HNw1dS0PYww1jDsmlv8stkL2Q==
+X-Google-Smtp-Source: APXvYqybUDyw7bzKyC0JJlkse2i6lXau2tHY0+7iUxCwZcbyfwIDTqmYWXxNn26wfhgBAKudt68zBQ==
+X-Received: by 2002:a1c:a404:: with SMTP id n4mr3206745wme.137.1567695075383;
+        Thu, 05 Sep 2019 07:51:15 -0700 (PDT)
+Received: from localhost.localdomain ([95.147.198.36])
+        by smtp.gmail.com with ESMTPSA id g201sm4376858wmg.34.2019.09.05.07.51.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2019 07:51:14 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        bjorn.andersson@linaro.org, arnd@arndb.de
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        soc@kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH v4 1/1] arm64: dts: qcom: Add Lenovo Yoga C630
+Date:   Thu,  5 Sep 2019 15:51:12 +0100
+Message-Id: <20190905145112.7366-1-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 03:43:31PM -0700, Dan Williams wrote:
-> The infrastructure to mock core libnvdimm routines for unit testing
-> purposes is prone to bitrot relative to refactoring of that core.
-> Arrange for the unit test core to be built when CONFIG_COMPILE_TEST=y.
-> This does not result in a functional unit test environment, it is only a
-> helper for 0day to catch unit test build regressions.
-> 
-> Note that there are a few x86isms in the implementation, so this does
-> not bother compile testing this architectures other than 64-bit x86.
-> 
-> Cc: Jérôme Glisse <jglisse@redhat.com>
-> Cc: Jason Gunthorpe <jgg@mellanox.com>
-> Reported-by: Christoph Hellwig <hch@lst.de>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> Link: https://lore.kernel.org/r/156097224232.1086847.9463861924683372741.stgit@dwillia2-desk3.amr.corp.intel.com
-> Changes since v3:
-> 
-> - Switch the Makefile operator from := to += to make sure the unit test
->   infrastructure is incrementally included.
-> 
-> Jason, lets try this again. This seems to resolve the build error for
-> me. I believe ":=" would have intermittent results in a parallel build
-> and sometimes result in other targets in drivers/nvdimm/Makefile being
-> bypassed. This has been exposed to the 0day robot for a day with no
-> reports.
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Okay, again we go
+The Lenovo Yoga C630 is built on the SDM850 from Qualcomm, but this seem
+to be similar enough to the SDM845 that we can reuse the sdm845.dtsi.
 
-Jason
+Supported by this patch is: keyboard, battery monitoring, UFS storage,
+USB host and Bluetooth.
+
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+Acked-by: Sudeep Holla <sudeep.holla@arm.com>
+[Lee] Reorder, change licence, remove non-upstream device node
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+
+Changelog:
+ * Reorder nodes alphabetically
+ * Remove superfluous node for driver not yet upstream
+ * Add (then remove) 'no-dma' property
+ * Change licence to BSD
+
+arch/arm64/boot/dts/qcom/Makefile             |   1 +
+ .../boot/dts/qcom/sdm850-lenovo-yoga-c630.dts | 446 ++++++++++++++++++
+ 2 files changed, 447 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index 0a7e5dfce6f7..670c6c65f9e9 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -12,5 +12,6 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r2.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r3.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-db845c.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-4000.dtb
+diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+new file mode 100644
+index 000000000000..ded120d3aef5
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+@@ -0,0 +1,446 @@
++// SPDX-License-Identifier: BSD-3-Clause
++/*
++ * Lenovo Yoga C630
++ *
++ * Copyright (c) 2019, Linaro Ltd.
++ */
++
++/dts-v1/;
++
++#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
++#include "sdm845.dtsi"
++#include "pm8998.dtsi"
++
++/ {
++	model = "Lenovo Yoga C630";
++	compatible = "lenovo,yoga-c630", "qcom,sdm845";
++
++	aliases {
++		hsuart0 = &uart6;
++	};
++};
++
++&apps_rsc {
++	pm8998-rpmh-regulators {
++		compatible = "qcom,pm8998-rpmh-regulators";
++		qcom,pmic-id = "a";
++
++		vdd-l2-l8-l17-supply = <&vreg_s3a_1p35>;
++		vdd-l7-l12-l14-l15-supply = <&vreg_s5a_2p04>;
++
++		vreg_s2a_1p125: smps2 {
++		};
++
++		vreg_s3a_1p35: smps3 {
++			regulator-min-microvolt = <1352000>;
++			regulator-max-microvolt = <1352000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_s4a_1p8: smps4 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_s5a_2p04: smps5 {
++			regulator-min-microvolt = <2040000>;
++			regulator-max-microvolt = <2040000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_s7a_1p025: smps7 {
++		};
++
++		vdd_qusb_hs0:
++		vdda_hp_pcie_core:
++		vdda_mipi_csi0_0p9:
++		vdda_mipi_csi1_0p9:
++		vdda_mipi_csi2_0p9:
++		vdda_mipi_dsi0_pll:
++		vdda_mipi_dsi1_pll:
++		vdda_qlink_lv:
++		vdda_qlink_lv_ck:
++		vdda_qrefs_0p875:
++		vdda_pcie_core:
++		vdda_pll_cc_ebi01:
++		vdda_pll_cc_ebi23:
++		vdda_sp_sensor:
++		vdda_ufs1_core:
++		vdda_ufs2_core:
++		vdda_usb1_ss_core:
++		vdda_usb2_ss_core:
++		vreg_l1a_0p875: ldo1 {
++			regulator-min-microvolt = <880000>;
++			regulator-max-microvolt = <880000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vddpx_10:
++		vreg_l2a_1p2: ldo2 {
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1200000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++			regulator-always-on;
++		};
++
++		vreg_l3a_1p0: ldo3 {
++		};
++
++		vdd_wcss_cx:
++		vdd_wcss_mx:
++		vdda_wcss_pll:
++		vreg_l5a_0p8: ldo5 {
++			regulator-min-microvolt = <800000>;
++			regulator-max-microvolt = <800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vddpx_13:
++		vreg_l6a_1p8: ldo6 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l7a_1p8: ldo7 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l8a_1p2: ldo8 {
++		};
++
++		vreg_l9a_1p8: ldo9 {
++		};
++
++		vreg_l10a_1p8: ldo10 {
++		};
++
++		vreg_l11a_1p0: ldo11 {
++		};
++
++		vdd_qfprom:
++		vdd_qfprom_sp:
++		vdda_apc1_cs_1p8:
++		vdda_gfx_cs_1p8:
++		vdda_qrefs_1p8:
++		vdda_qusb_hs0_1p8:
++		vddpx_11:
++		vreg_l12a_1p8: ldo12 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vddpx_2:
++		vreg_l13a_2p95: ldo13 {
++		};
++
++		vreg_l14a_1p88: ldo14 {
++			regulator-min-microvolt = <1880000>;
++			regulator-max-microvolt = <1880000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++			regulator-always-on;
++		};
++
++		vreg_l15a_1p8: ldo15 {
++		};
++
++		vreg_l16a_2p7: ldo16 {
++		};
++
++		vreg_l17a_1p3: ldo17 {
++			regulator-min-microvolt = <1304000>;
++			regulator-max-microvolt = <1304000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l18a_2p7: ldo18 {
++		};
++
++		vreg_l19a_3p0: ldo19 {
++			regulator-min-microvolt = <3100000>;
++			regulator-max-microvolt = <3108000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l20a_2p95: ldo20 {
++			regulator-min-microvolt = <2960000>;
++			regulator-max-microvolt = <2960000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l21a_2p95: ldo21 {
++		};
++
++		vreg_l22a_2p85: ldo22 {
++		};
++
++		vreg_l23a_3p3: ldo23 {
++		};
++
++		vdda_qusb_hs0_3p1:
++		vreg_l24a_3p075: ldo24 {
++			regulator-min-microvolt = <3075000>;
++			regulator-max-microvolt = <3083000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l25a_3p3: ldo25 {
++			regulator-min-microvolt = <3104000>;
++			regulator-max-microvolt = <3112000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vdda_hp_pcie_1p2:
++		vdda_hv_ebi0:
++		vdda_hv_ebi1:
++		vdda_hv_ebi2:
++		vdda_hv_ebi3:
++		vdda_mipi_csi_1p25:
++		vdda_mipi_dsi0_1p2:
++		vdda_mipi_dsi1_1p2:
++		vdda_pcie_1p2:
++		vdda_ufs1_1p2:
++		vdda_ufs2_1p2:
++		vdda_usb1_ss_1p2:
++		vdda_usb2_ss_1p2:
++		vreg_l26a_1p2: ldo26 {
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1208000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l28a_3p0: ldo28 {
++		};
++
++		vreg_lvs1a_1p8: lvs1 {
++		};
++
++		vreg_lvs2a_1p8: lvs2 {
++		};
++	};
++};
++
++&apps_smmu {
++	/* TODO: Figure out how to survive booting with this enabled */
++	status = "disabled";
++};
++
++&gcc {
++	protected-clocks = <GCC_QSPI_CORE_CLK>,
++			   <GCC_QSPI_CORE_CLK_SRC>,
++			   <GCC_QSPI_CNOC_PERIPH_AHB_CLK>;
++};
++
++&i2c1 {
++	status = "okay";
++	clock-frequency = <400000>;
++};
++
++&i2c3 {
++	status = "okay";
++	clock-frequency = <400000>;
++
++	hid@15 {
++		compatible = "hid-over-i2c";
++		reg = <0x15>;
++		hid-descr-addr = <0x1>;
++
++		interrupts-extended = <&tlmm 37 IRQ_TYPE_EDGE_RISING>;
++	};
++
++	hid@2c {
++		compatible = "hid-over-i2c";
++		reg = <0x2c>;
++		hid-descr-addr = <0x20>;
++
++		interrupts-extended = <&tlmm 37 IRQ_TYPE_EDGE_RISING>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c2_hid_active>;
++	};
++};
++
++&i2c5 {
++	status = "okay";
++	clock-frequency = <400000>;
++
++	hid@10 {
++		compatible = "hid-over-i2c";
++		reg = <0x10>;
++		hid-descr-addr = <0x1>;
++
++		interrupts-extended = <&tlmm 125 IRQ_TYPE_EDGE_FALLING>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c6_hid_active>;
++	};
++};
++
++&i2c11 {
++	status = "okay";
++	clock-frequency = <400000>;
++
++	hid@5c {
++		compatible = "hid-over-i2c";
++		reg = <0x5c>;
++		hid-descr-addr = <0x1>;
++
++		interrupts-extended = <&tlmm 92 IRQ_TYPE_LEVEL_LOW>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c12_hid_active>;
++	};
++};
++
++&qup_i2c12_default {
++	drive-strength = <2>;
++	bias-disable;
++};
++
++&qup_uart6_default {
++	pinmux {
++		 pins = "gpio45", "gpio46", "gpio47", "gpio48";
++		 function = "qup6";
++	};
++
++	cts {
++		pins = "gpio45";
++		bias-pull-down;
++	};
++
++	rts-tx {
++		pins = "gpio46", "gpio47";
++		drive-strength = <2>;
++		bias-disable;
++	};
++
++	rx {
++		pins = "gpio48";
++		bias-pull-up;
++	};
++};
++
++&qupv3_id_0 {
++	status = "okay";
++};
++
++&qupv3_id_1 {
++	status = "okay";
++};
++
++&tlmm {
++	gpio-reserved-ranges = <0 4>, <81 4>;
++
++	i2c2_hid_active: i2c2-hid-active {
++		pins = <37>;
++		function = "gpio";
++
++		input-enable;
++		bias-pull-up;
++		drive-strength = <2>;
++	};
++
++	i2c6_hid_active: i2c6-hid-active {
++		pins = <125>;
++		function = "gpio";
++
++		input-enable;
++		bias-pull-up;
++		drive-strength = <2>;
++	};
++
++	i2c12_hid_active: i2c12-hid-active {
++		pins = <92>;
++		function = "gpio";
++
++		input-enable;
++		bias-pull-up;
++		drive-strength = <2>;
++	};
++};
++
++&uart6 {
++	status = "okay";
++
++	bluetooth {
++		compatible = "qcom,wcn3990-bt";
++
++		vddio-supply = <&vreg_s4a_1p8>;
++		vddxo-supply = <&vreg_l7a_1p8>;
++		vddrf-supply = <&vreg_l17a_1p3>;
++		vddch0-supply = <&vreg_l25a_3p3>;
++		max-speed = <3200000>;
++	};
++};
++
++&ufs_mem_hc {
++	status = "okay";
++
++	vcc-supply = <&vreg_l20a_2p95>;
++	vcc-max-microamp = <600000>;
++};
++
++&ufs_mem_phy {
++	status = "okay";
++
++	vdda-phy-supply = <&vdda_ufs1_core>;
++	vdda-pll-supply = <&vdda_ufs1_1p2>;
++};
++
++&usb_1 {
++	status = "okay";
++};
++
++&usb_1_dwc3 {
++	dr_mode = "host";
++};
++
++&usb_1_hsphy {
++	status = "okay";
++
++	vdd-supply = <&vdda_usb1_ss_core>;
++	vdda-pll-supply = <&vdda_qusb_hs0_1p8>;
++	vdda-phy-dpdm-supply = <&vdda_qusb_hs0_3p1>;
++
++	qcom,imp-res-offset-value = <8>;
++	qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_21_6_MA>;
++	qcom,preemphasis-level = <QUSB2_V2_PREEMPHASIS_5_PERCENT>;
++	qcom,preemphasis-width = <QUSB2_V2_PREEMPHASIS_WIDTH_HALF_BIT>;
++};
++
++&usb_1_qmpphy {
++	status = "okay";
++
++	vdda-phy-supply = <&vdda_usb1_ss_1p2>;
++	vdda-pll-supply = <&vdda_usb1_ss_core>;
++};
++
++&usb_2 {
++	status = "okay";
++};
++
++&usb_2_dwc3 {
++	dr_mode = "host";
++};
++
++&usb_2_hsphy {
++	status = "okay";
++
++	vdd-supply = <&vdda_usb2_ss_core>;
++	vdda-pll-supply = <&vdda_qusb_hs0_1p8>;
++	vdda-phy-dpdm-supply = <&vdda_qusb_hs0_3p1>;
++
++	qcom,imp-res-offset-value = <8>;
++	qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_22_8_MA>;
++};
++
++&usb_2_qmpphy {
++	status = "okay";
++
++	vdda-phy-supply = <&vdda_usb2_ss_1p2>;
++	vdda-pll-supply = <&vdda_usb2_ss_core>;
++};
+-- 
+2.17.1
+
