@@ -2,146 +2,89 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88AF8C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D2ABC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC58C21A49
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:00:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="SnuwT5mI"
+	by mail.kernel.org (Postfix) with ESMTP id 9093621A49
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:00:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389682AbfIENA0 (ORCPT
+        id S2389671AbfIENAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 09:00:26 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38058 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389611AbfIENAH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 09:00:07 -0400
-Received: by mail-wr1-f68.google.com with SMTP id l11so2680273wrx.5
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 06:00:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=to9nPxGvpAjI2vmBY6hiBkK0HN4KqohuKcK/qXqDNPY=;
-        b=SnuwT5mIhn9C8R/kG87+eslWK4M08z27tnIDQ/toGWNx0ojS1cWn09AJM87Ul8otC7
-         syKEujMS+EpLHYDEiwjuyN/zVqjk1XKNHnRjjFPN4NW+7Hy7872vp62w8rS/Q4JF3qkg
-         rs98UZRdufTi7TKufZ9JeOQe450oKBOy4WUSlTUQcdNKLHTvUI86418VWK+TXUEx1z8P
-         LlT1Wfexo1rLCmmkX8GIWWbLAOiv/YPzM7Zg4HEVtTLcYMkV7iMRt/AGmQMuxWQfs5TL
-         ZdT0b4OU5F1WaXI7hc3EZ7lsKR3Tj50eg6jkJSMHVWQyLtuZR5BaxpMWMSpsNNgeyOIa
-         SoJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=to9nPxGvpAjI2vmBY6hiBkK0HN4KqohuKcK/qXqDNPY=;
-        b=A09Oo9X3Il78nw0iOQbCVhUGmfl9cI1bFwKhdbUnq+ojDbqKYS3+ZwDyxxeQa/GWtg
-         tPnalVQkOhK+zB8pn+4hjHt04chDr2ahXxgKBBEEvdKMG53Yt5ozRFf+u8UQggzGK7Ww
-         etTgX8jVEtXc8SbN44rH7rXiFs+38X0uQhOajrD2fwqmfVQ7vN/hcfNwWA6xTMGrfdVH
-         74pkRlgBnb9XoMCEUsQBtVNCNtnzEyMhIuhjUlu8vXF6OBpaI7DCf5FO4Gyl2WzRYjKL
-         yqNweT3EvyYNLKjG0zreGIoeK1aSO2aVsIIjc3+ORjlGAbuweqCqTC4BkxCHFCmMd86S
-         fA5A==
-X-Gm-Message-State: APjAAAXGl02yQDMn1c2mw1sTavmh/mE1oQRXxqX3m/3ybcSTwkgAwXX9
-        Fka2RHFxX4Au7BrPnvtRs/7W2w==
-X-Google-Smtp-Source: APXvYqyWLZJ5ptNeLjAU/5Y4+RE4paQzv79ZLTG/PR8hFu5o1WDdkpKLnFc5q7mcqJc3J1ZSrLAgjA==
-X-Received: by 2002:a05:6000:12d1:: with SMTP id l17mr2510949wrx.91.1567688405327;
-        Thu, 05 Sep 2019 06:00:05 -0700 (PDT)
-Received: from starbuck.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id z189sm3727903wmc.25.2019.09.05.06.00.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 06:00:04 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Kevin Hilman <khilman@baylibre.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/5] arm64: dts: meson: g12: fix audio fifo reg size
-Date:   Thu,  5 Sep 2019 14:59:53 +0200
-Message-Id: <20190905125956.4384-3-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190905125956.4384-1-jbrunet@baylibre.com>
-References: <20190905125956.4384-1-jbrunet@baylibre.com>
+        Thu, 5 Sep 2019 09:00:24 -0400
+Received: from mga12.intel.com ([192.55.52.136]:1366 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389616AbfIENAX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 09:00:23 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Sep 2019 06:00:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,470,1559545200"; 
+   d="scan'208";a="185436053"
+Received: from fmsmsx104.amr.corp.intel.com ([10.18.124.202])
+  by orsmga003.jf.intel.com with ESMTP; 05 Sep 2019 06:00:22 -0700
+Received: from fmsmsx124.amr.corp.intel.com (10.18.125.39) by
+ fmsmsx104.amr.corp.intel.com (10.18.124.202) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 5 Sep 2019 06:00:22 -0700
+Received: from lcsmsx152.ger.corp.intel.com (10.186.165.231) by
+ fmsmsx124.amr.corp.intel.com (10.18.125.39) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 5 Sep 2019 06:00:22 -0700
+Received: from hasmsx108.ger.corp.intel.com ([169.254.9.203]) by
+ LCSMSX152.ger.corp.intel.com ([169.254.4.206]) with mapi id 14.03.0439.000;
+ Thu, 5 Sep 2019 16:00:18 +0300
+From:   "Winkler, Tomas" <tomas.winkler@intel.com>
+To:     Paul Menzel <pmenzel@molgen.mpg.de>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Usyskin, Alexander" <alexander.usyskin@intel.com>
+Subject: RE: Could not read FW version, FW version command failed -5
+Thread-Topic: Could not read FW version, FW version command failed -5
+Thread-Index: AQHVYzAsGj6cSRky10KgwY5FGQQ3WacbooHw
+Date:   Thu, 5 Sep 2019 13:00:18 +0000
+Message-ID: <5B8DA87D05A7694D9FA63FD143655C1B9DCB0429@hasmsx108.ger.corp.intel.com>
+References: <857e1cae-dbcb-4a47-2f43-5e0a1aa4fe65@molgen.mpg.de>
+In-Reply-To: <857e1cae-dbcb-4a47-2f43-5e0a1aa4fe65@molgen.mpg.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZDY3NWRlMzgtNTQ3ZC00Y2EzLWI4NmYtMDI5MGY2NzAzMWQ3IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoic25qM1dVemwyaHpYTmxSNGR4UThid1R2T09RbHlQZFBFV21haXZsU3JcLzM3bVVZMjJiRnJwQ3FkSmpES08wVmgifQ==
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.184.70.10]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The register region size initially is too small to access all
-the fifo registers.
-
-Fixes: c59b7fe5aafd ("arm64: dts: meson: g12a: add audio fifos")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-index 3f39e020f74e..0ee8a369c547 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-@@ -1509,7 +1509,7 @@
- 				toddr_a: audio-controller@100 {
- 					compatible = "amlogic,g12a-toddr",
- 						     "amlogic,axg-toddr";
--					reg = <0x0 0x100 0x0 0x1c>;
-+					reg = <0x0 0x100 0x0 0x2c>;
- 					#sound-dai-cells = <0>;
- 					sound-name-prefix = "TODDR_A";
- 					interrupts = <GIC_SPI 148 IRQ_TYPE_EDGE_RISING>;
-@@ -1521,7 +1521,7 @@
- 				toddr_b: audio-controller@140 {
- 					compatible = "amlogic,g12a-toddr",
- 						     "amlogic,axg-toddr";
--					reg = <0x0 0x140 0x0 0x1c>;
-+					reg = <0x0 0x140 0x0 0x2c>;
- 					#sound-dai-cells = <0>;
- 					sound-name-prefix = "TODDR_B";
- 					interrupts = <GIC_SPI 149 IRQ_TYPE_EDGE_RISING>;
-@@ -1533,7 +1533,7 @@
- 				toddr_c: audio-controller@180 {
- 					compatible = "amlogic,g12a-toddr",
- 						     "amlogic,axg-toddr";
--					reg = <0x0 0x180 0x0 0x1c>;
-+					reg = <0x0 0x180 0x0 0x2c>;
- 					#sound-dai-cells = <0>;
- 					sound-name-prefix = "TODDR_C";
- 					interrupts = <GIC_SPI 150 IRQ_TYPE_EDGE_RISING>;
-@@ -1545,7 +1545,7 @@
- 				frddr_a: audio-controller@1c0 {
- 					compatible = "amlogic,g12a-frddr",
- 						     "amlogic,axg-frddr";
--					reg = <0x0 0x1c0 0x0 0x1c>;
-+					reg = <0x0 0x1c0 0x0 0x2c>;
- 					#sound-dai-cells = <0>;
- 					sound-name-prefix = "FRDDR_A";
- 					interrupts = <GIC_SPI 152 IRQ_TYPE_EDGE_RISING>;
-@@ -1557,7 +1557,7 @@
- 				frddr_b: audio-controller@200 {
- 					compatible = "amlogic,g12a-frddr",
- 						     "amlogic,axg-frddr";
--					reg = <0x0 0x200 0x0 0x1c>;
-+					reg = <0x0 0x200 0x0 0x2c>;
- 					#sound-dai-cells = <0>;
- 					sound-name-prefix = "FRDDR_B";
- 					interrupts = <GIC_SPI 153 IRQ_TYPE_EDGE_RISING>;
-@@ -1569,7 +1569,7 @@
- 				frddr_c: audio-controller@240 {
- 					compatible = "amlogic,g12a-frddr",
- 						     "amlogic,axg-frddr";
--					reg = <0x0 0x240 0x0 0x1c>;
-+					reg = <0x0 0x240 0x0 0x2c>;
- 					#sound-dai-cells = <0>;
- 					sound-name-prefix = "FRDDR_C";
- 					interrupts = <GIC_SPI 154 IRQ_TYPE_EDGE_RISING>;
--- 
-2.21.0
-
+DQoNCj4gRGVhciBUb21hcywNCj4gDQo+IA0KPiBUZXN0aW5nIEZlZG9yYSAzMCB3aXRoIExpbnV4
+IDUuMi4xMSBvbiBhbiBvbGQgRGVsbCBPcHRpUGxleCA5ODAsIExpbnV4IA0KPiBsb2cgdGhlIG1l
+c3NhZ2UgYmVsb3cuDQo+IA0KPiAgICAgWyAgIDE1Ljk2NDI5OF0gbWVpIG1laTo6NTUyMTM1ODQt
+OWEyOS00OTE2LWJhZGYtMGZiN2VkNjgyYWViOjAxOiBDb3VsZA0KPiBub3QgcmVhZCBGVyB2ZXJz
+aW9uDQo+ICAgICBbICAgMTUuOTY0MzAxXSBtZWkgbWVpOjo1NTIxMzU4NC05YTI5LTQ5MTYtYmFk
+Zi0wZmI3ZWQ2ODJhZWI6MDE6IEZXDQo+IHZlcnNpb24gY29tbWFuZCBmYWlsZWQgLTUNCj4gDQo+
+IFRoZSBwcmludHMgaGFwcGVuIGluIGBkcml2ZXJzL21pc2MvbWVpL2J1cy1maXh1cC5jYC4NCj4g
+DQo+ICAgICAgICAgcmV0ID0gMDsNCj4gICAgICAgICBieXRlc19yZWN2ID0gX19tZWlfY2xfcmVj
+dihjbGRldi0+Y2wsIGJ1Ziwgc2l6ZW9mKGJ1ZiksIDAsDQo+ICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgTUtISV9SQ1ZfVElNRU9VVCk7DQo+ICAgICAgICAgaWYgKGJ5dGVzX3Jl
+Y3YgPCAwIHx8IChzaXplX3QpYnl0ZXNfcmVjdiA8IE1LSElfRldWRVJfTEVOKDEpKSB7DQo+ICAg
+ICAgICAgICAgICAgICAvKg0KPiAgICAgICAgICAgICAgICAgICogU2hvdWxkIGJlIGF0IGxlYXN0
+IG9uZSB2ZXJzaW9uIGJsb2NrLA0KPiAgICAgICAgICAgICAgICAgICogZXJyb3Igb3V0IGlmIG5v
+dGhpbmcgZm91bmQNCj4gICAgICAgICAgICAgICAgICAqLw0KPiAgICAgICAgICAgICAgICAgZGV2
+X2VycigmY2xkZXYtPmRldiwgIkNvdWxkIG5vdCByZWFkIEZXIHZlcnNpb25cbiIpOw0KPiAgICAg
+ICAgICAgICAgICAgcmV0dXJuIC1FSU87DQo+ICAgICAgICAgfQ0KPiANCj4gVGhlIFdlYiBpcyBm
+dWxsIG9mIHRoZXNlIG1lc3NhZ2VzLCBzbyBpdCBkb2VzIHNlZW0gbGlrZSBhIG5vcm1hbCANCj4g
+Y29uZGl0aW9uIG9uIGNlcnRhaW4gZGV2aWNlcy4gRG8geW91IGtub3cgdGhlIHJlYXNvbj8gRG8g
+b2xkZXIgSW50ZWwgDQo+IE1FcyBzdXBwb3J0IHRoaXM/DQoNCldvdywgdGhpcyBxdWl0ZSBhbiBv
+bGQgc3lzdGVtIH4gMjAwOSwgdGhlIEZXIHZlcnNpb24gaGFzIGEgYml0IGRpZmZlcmVudCBmb3Jt
+YXQgdGhlcmUsIGl0IHdhcyBvdmVybG9va2VkLCAgd2lsbCBsb29rIGF0IHRoYXQgQVNBUCwgdGhh
+bmtzIGZvciB0aGUgcmVwb3J0LiANClRvbWFzDQoNCg==
