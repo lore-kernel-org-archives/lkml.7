@@ -2,238 +2,227 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4ECC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB77C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64946206DE
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:08:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48E4A206DE
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:09:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=labbott.name header.i=@labbott.name header.b="s8B3vn/s"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nCscRghQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389245AbfIERIb (ORCPT
+        id S2389544AbfIERJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 13:08:31 -0400
-Received: from mail-io1-f41.google.com ([209.85.166.41]:42001 "EHLO
-        mail-io1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732403AbfIERIb (ORCPT
+        Thu, 5 Sep 2019 13:09:16 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:55850 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732403AbfIERJQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 13:08:31 -0400
-Received: by mail-io1-f41.google.com with SMTP id n197so6433755iod.9
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 10:08:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=labbott.name; s=google;
-        h=from:content-transfer-encoding:mime-version:subject:date:references
-         :to:in-reply-to:message-id;
-        bh=uFRmeqr4ImXzE2YrX6PwPkXowk12+Bgtqx8az+3QeJM=;
-        b=s8B3vn/sw0hKicQLnoGbAzczXLHh0zknu3IXAjJWmChdcLzCzignHdddivGx1Fj0kj
-         /D4GrVBMuFbyFQBZyafWTs/Eyv7le0hwjZmj0fonm6NGaeWipdWXvSU3DmYle6eE3uHN
-         yGs9QNAMEa3/L9uFsg/2jkxTgBmgQBRpR6q54=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:content-transfer-encoding:mime-version
-         :subject:date:references:to:in-reply-to:message-id;
-        bh=uFRmeqr4ImXzE2YrX6PwPkXowk12+Bgtqx8az+3QeJM=;
-        b=ZdQZb9PzZm1xBmWfWd0/vnwx3eW54LfqmBu7ExftEH0TfPikL4oUgxdn8LL3SLM9KA
-         tfRYSTbt222C1L3/0PrHUTgSCBKR9iNIsW4IjDiP29GiRBng1mamjBuSNJJHhhXPoqhY
-         vV8fkrE16UOAnluMhyHDrT6eVkhQLSkmVM86Y4XIkf5OE5fztQcEnnqbU54dcxhs1Fop
-         BiV+DoatCek5YOgYujEUIFZbid0Nc0+gWzMpJI5RKMYcoKWd5xo+pmXY99WyatJUwVx2
-         /srQB6BR7T6FzeASHtg1anwoyvI7PNEBWZgdqrdeZ2qIXfLs1g0ChJixWqUQFHIfQ/zv
-         JSAA==
-X-Gm-Message-State: APjAAAWCzVAbKyMOA8gH8PzoBMHT3dhTOBvvatv0DEB63M/YTs7Jrnwr
-        NMERPrR7T00IvOyWF9Wi5auiKg==
-X-Google-Smtp-Source: APXvYqxPNqY25iZOGsF3Yc/WFp8cLpdVc2X/x4i/PAysDfU6fITl8EbcyM6u18QQyy7iblF/G814kA==
-X-Received: by 2002:a5e:d90e:: with SMTP id n14mr5279937iop.29.1567703310144;
-        Thu, 05 Sep 2019 10:08:30 -0700 (PDT)
-Received: from [172.20.41.33] ([12.116.165.10])
-        by smtp.gmail.com with ESMTPSA id m67sm4107925iof.21.2019.09.05.10.08.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Sep 2019 10:08:29 -0700 (PDT)
-From:   Laura Abbott <laura@labbott.name>
-Content-Type: text/plain; charset=us-ascii
+        Thu, 5 Sep 2019 13:09:16 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x85H3tji168969;
+        Thu, 5 Sep 2019 17:07:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=TFj6m5l1ONKxOpEbsJmE/2UNSnom/9p9C9uWukqia2o=;
+ b=nCscRghQMASXQeAZgxSV2ZLBWeoUL7k9/YQ+5Or7S+h4NoVd2RBQYHQ3EzRwmRMiVioq
+ ghWLHxwzcdivg3Dv2QGzet9ZE3rK+RXjdzvIv/sRhZa1AaK9ovLhIJfgmTqz0Mmzfnt3
+ sD+IZA+iNDeVVNPOSwk6SC7jTTY++/SRx3cUsK02i+EBIdGcJiMMNgNsHOczhEBCp/pg
+ MUTlv5x4RXaq6Z3WPDcLGgY3t4z8YOc7gkuNgLUus0P8Q17zxHtxnuserLdqo138hJnH
+ gm08jSvtTgDE8eCS5emmT0wCm81XYfJPsmnVgDCmWdWj1AJAlgD1eO0V2yb4uSstBm3K TQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2uu66e03pp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 05 Sep 2019 17:07:17 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x85H3jJs094501;
+        Thu, 5 Sep 2019 17:07:17 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2uthq1yb9s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 05 Sep 2019 17:07:17 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x85H7DQV003379;
+        Thu, 5 Sep 2019 17:07:13 GMT
+Received: from [192.168.14.112] (/79.182.237.80)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 05 Sep 2019 10:07:13 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
+Subject: Re: [PATCH v3] KVM: x86: Disable posted interrupts for odd IRQs
+From:   Liran Alon <liran.alon@oracle.com>
+In-Reply-To: <20190905125818.22395-1-graf@amazon.com>
+Date:   Thu, 5 Sep 2019 20:07:07 +0300
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jim Mattson <jmattson@google.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
 Content-Transfer-Encoding: quoted-printable
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: Linux Foundation Technical Advisory Board Elections -- voting
- procedures
-Date:   Thu, 5 Sep 2019 13:08:23 -0400
-References: <0F702CB8-6D0C-4550-9EA7-EE86B4D96073@labbott.name>
-To:     ksummit-discuss@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <0F702CB8-6D0C-4550-9EA7-EE86B4D96073@labbott.name>
-Message-Id: <C232C11A-D3FA-476C-8F71-58F675246D37@labbott.name>
-X-Mailer: Apple Mail (2.3273)
+Message-Id: <867E8A7D-645B-45BE-A6C8-8D59C3D09C53@oracle.com>
+References: <20190905125818.22395-1-graf@amazon.com>
+To:     Alexander Graf <graf@amazon.com>
+X-Mailer: Apple Mail (2.3445.4.7)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1909050163
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1909050163
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-> On Sep 3, 2019, at 7:13 AM, Laura Abbott <laura@labbott.name> wrote:
+
+> On 5 Sep 2019, at 15:58, Alexander Graf <graf@amazon.com> wrote:
 >=20
-> Hi,
+> We can easily route hardware interrupts directly into VM context when
+> they target the "Fixed" or "LowPriority" delivery modes.
 >=20
-> On behalf of the Linux Foundation Technical Advisory Board (TAB), I'd =
-like to
-> take this opportunity to announce the voting procedures for the 2019 =
-TAB
-> elections. As was announced[1], this year we are moving to electronic =
-voting.
+> However, on modes such as "SMI" or "Init", we need to go via KVM code
+> to actually put the vCPU into a different mode of operation, so we can
+> not post the interrupt
 >=20
-> Everyone who is registered for kernel summit (co-located with Linux =
-Plumbers
-> Conference in Lisbon this year) by September 8th 2019 is eligible to =
-vote in
-> this year's TAB elections. This includes everyone registered for =
-Plumbers and
-> Maintainers summit. All eligible voters will receive a link from
-> Condorcet Internet Voting Service (https://civs.cs.cornell.edu) by the
-> start of the first Plumbers session (September 9th 10am UTC+1). The =
-voting
-> will run until September 11th at 10am UTC+1.
+> Add code in the VMX and SVM PI logic to explicitly refuse to establish
+> posted mappings for advanced IRQ deliver modes. This reflects the =
+logic
+> in __apic_accept_irq() which also only ever passes Fixed and =
+LowPriority
+> interrupts as posted interrupts into the guest.
 >=20
-> The list of all candidates and their platform is available at the =
-following
-> Google doc
+> This fixes a bug I have with code which configures real hardware to
+> inject virtual SMIs into my guest.
 >=20
-> =
-https://docs.google.com/document/d/1E3_W1c-xJMx9o2PCnKiGt3vqs-mPh77yNO4GSq=
-NipOQ/edit?usp=3Dsharing
->=20
-> We will also be hosting an open TAB session at Plumbers on Monday
-> September 9th at 18:30. A more detailed FAQ about voting procedures is
-> below.
->=20
-> If you have any questions, feel free to reach out to
-> tab@lists.linux-foundation.org .
->=20
-> Thanks,
-> Laura
->=20
-> P.S. Please consider this a reminder to send in your TAB nominations!
->=20
-> [1] =
-https://lists.linuxfoundation.org/pipermail/ksummit-discuss/2019-July/0065=
-82.html
+> Signed-off-by: Alexander Graf <graf@amazon.com>
+
+Reviewed-by: Liran Alon <liran.alon@oracle.com>
+
 >=20
 > ---
 >=20
-> Q: Why are we making this change?
-> A: As explained in the previous announcement,
-> =
-https://lists.linuxfoundation.org/pipermail/ksummit-discuss/2019-July/0065=
-82.html
-> In person voting has a number of limitations. We'd like to move to =
-electronic
-> voting with the objective of giving more members of our community a =
-voice in
-> the membership of the TAB
+> v1 -> v2:
 >=20
-> Q: Who is eligible to vote?
-> A: All registered attendees of Plumbers and Kernel Maintainers Summit =
-are
-> eligible.
+>  - Make error message more unique
+>  - Update commit message to point to __apic_accept_irq()
 >=20
-> Q: If I am registered for Plumbers but not attending can I still vote?
-> A: We will be sending the e-mail to all registered attendees before =
-confirming
-> they are present.
+> v2 -> v3:
 >=20
-> Q: Can I register for Plumbers just to vote?
-> A: Plumbers is sold out this year.
+>  - Use if() rather than switch()
+>  - Move abort logic into existing if() branch for broadcast irqs
+>  -> remove the updated error message again (thus remove R-B tag from =
+Liran)
+>  - Fold VMX and SVM changes into single commit
+>  - Combine postability check into helper function =
+kvm_irq_is_postable()
+> ---
+> arch/x86/include/asm/kvm_host.h | 7 +++++++
+> arch/x86/kvm/svm.c              | 4 +++-
+> arch/x86/kvm/vmx/vmx.c          | 6 +++++-
+> 3 files changed, 15 insertions(+), 2 deletions(-)
 >=20
-> Q: Why bother with electronic voting if the voting pool is still =
-conference
-> attendees?
-> A: The kernel philosophy is small incremental changes. Based on =
-discussions
-> with the TAB, changing the voting method and widening the voting pool
-> simultaneously was too much for one year. The goal is to run the =
-electronic
-> voting this year with the same voting pool and then discuss how voting =
-will
-> work in subsequent years.
+> diff --git a/arch/x86/include/asm/kvm_host.h =
+b/arch/x86/include/asm/kvm_host.h
+> index 44a5ce57a905..5b14aa1fbeeb 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1581,6 +1581,13 @@ bool kvm_intr_is_single_vcpu(struct kvm *kvm, =
+struct kvm_lapic_irq *irq,
+> void kvm_set_msi_irq(struct kvm *kvm, struct =
+kvm_kernel_irq_routing_entry *e,
+> 		     struct kvm_lapic_irq *irq);
 >=20
-> Q: When does voting start?
-> A: E-mails with the voting link will be sent out before the start of =
-the
-> first Plumbers session on Monday September 9th at 10am UTC+1
+> +static inline bool kvm_irq_is_postable(struct kvm_lapic_irq *irq)
+> +{
+> +	/* We can only post Fixed and LowPrio IRQs */
+> +	return (irq->delivery_mode =3D=3D dest_Fixed ||
+> +		irq->delivery_mode =3D=3D dest_LowestPrio);
+> +}
+> +
+> static inline void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu)
+> {
+> 	if (kvm_x86_ops->vcpu_blocking)
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index 1f220a85514f..f5b03d0c9bc6 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -5260,7 +5260,8 @@ get_pi_vcpu_info(struct kvm *kvm, struct =
+kvm_kernel_irq_routing_entry *e,
 >=20
-> Q: When does voting end?
-> A: Voting ends on September 11th at 10am UTC+1
+> 	kvm_set_msi_irq(kvm, e, &irq);
 >=20
-> Q: What's the software used for voting?
-> A: We will be using the hosted version of the Condorcet Internet =
-Voting Service
-> (CIVS) at https://civs.cs.cornell.edu
+> -	if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu)) {
+> +	if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu) ||
+> +	    !kvm_irq_is_postable(&irq)) {
+> 		pr_debug("SVM: %s: use legacy intr remap mode for irq =
+%u\n",
+> 			 __func__, irq.vector);
+> 		return -1;
+> @@ -5314,6 +5315,7 @@ static int svm_update_pi_irte(struct kvm *kvm, =
+unsigned int host_irq,
+> 		 * 1. When cannot target interrupt to a specific vcpu.
+> 		 * 2. Unsetting posted interrupt.
+> 		 * 3. APIC virtialization is disabled for the vcpu.
+> +		 * 4. IRQ has incompatible delivery mode (SMI, INIT, =
+etc)
+> 		 */
+> 		if (!get_pi_vcpu_info(kvm, e, &vcpu_info, &svm) && set =
+&&
+> 		    kvm_vcpu_apicv_active(&svm->vcpu)) {
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 570a233e272b..63f3d88b36cc 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -7382,10 +7382,14 @@ static int vmx_update_pi_irte(struct kvm *kvm, =
+unsigned int host_irq,
+> 		 * irqbalance to make the interrupts single-CPU.
+> 		 *
+> 		 * We will support full lowest-priority interrupt later.
+> +		 *
+> +		 * In addition, we can only inject generic interrupts =
+using
+> +		 * the PI mechanism, refuse to route others through it.
+> 		 */
 >=20
-> Q: Is this code open source?
-> A: Yes. The code is available under a BSD-like research license
+> 		kvm_set_msi_irq(kvm, e, &irq);
+> -		if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu)) {
+> +		if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu) ||
+> +		    !kvm_irq_is_postable(&irq)) {
+> 			/*
+> 			 * Make sure the IRTE is in remapped mode if
+> 			 * we don't handle it in posted mode.
+> --=20
+> 2.17.1
 >=20
-> Q: How do I vote?
-> A: You will receive an e-mail by Monday September 9th at 10am UTC+1 =
-with
-> a link to vote.
 >=20
-> Q: Is this method of voting secure?
-> A: Privacy and security is a focus of CIVS. See
-> https://civs.cs.cornell.edu/sec_priv.html for more information.
 >=20
-> Q: The website mentions ranked choice voting. What is this?
-> A: In ranked choice voting, you rank your preferred choices from most
-> to least liked. The theory is this results in a more accurate =
-representation
-> of what the voter pool wants. This is a different method than we've =
-used
-> for TAB elections in the past where you indicated your preferred $n =
-out
-> of $m candidates. Because we are using the hosted version of CIVS, we =
-did
-> not have the option to use our old method of voting.
 >=20
-> Q: The description mentions an 'election supervisor'. What is this =
-role?
-> A: The election supervisor's role is to start and stop the poll, send
-> links to voters, and set various options for the poll. A single e-mail
-> address is used to e-mail the link to manage the election, after which
-> anyone with the link can manage the poll.
+> Amazon Development Center Germany GmbH
+> Krausenstr. 38
+> 10117 Berlin
+> Geschaeftsfuehrung: Christian Schlaeger, Ralf Herbrich
+> Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+> Sitz: Berlin
+> Ust-ID: DE 289 237 879
 >=20
-> Q: Who is the election supervisor for the TAB elections?
-> A: We have created a mailing list for election management. This =
-mailing
-> list contains individuals from the kernel community who are not =
-running
-> for the TAB this year, similar to in-person proctors from past years.
-> We are still working on getting the mailing list set up, the address =
-will
-> be announced when it is ready.
 >=20
-> Q: What if I lose the e-mail before I vote?
-> A: Please e-mail the election list, address to be announced
 >=20
-> Q: What if I want to change my vote?
-> A: This is not possible, please make sure you've made your final =
-choices
-> when you click submit.
->=20
-> Q: What if I want to practice voting?
-> A: CIVS has a number of sample polls available. Feel free to vote in =
-those
-> to see how the process works.
->=20
-> Q: What if something unforeseen happens with electronic voting and we =
-don't
-> end up with results?
-> A: We will arrange an in person vote similar to previous years.
->=20
-> Q: What if I have questions not addressed here?
-> A: E-mail tab@lists.linuxfoundation.org for the current Technical =
-Advisory
-> Board or the election list, address to be announced
->=20
-
-The mailing list for questions about elections is =
-tab-elections@lists.linuxfoundation.org
 
