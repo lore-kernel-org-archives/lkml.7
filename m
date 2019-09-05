@@ -6,35 +6,36 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C47C3A5AB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C366C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE9B622CF7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:12:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1842922CF7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:12:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389258AbfIEMML (ORCPT
+        id S2389235AbfIEMMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 08:12:11 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:42711 "EHLO
+        Thu, 5 Sep 2019 08:12:06 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:42703 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388965AbfIEMMF (ORCPT
+        with ESMTP id S2387662AbfIEMME (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 08:12:05 -0400
+        Thu, 5 Sep 2019 08:12:04 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1i5qcO-0007tU-4l; Thu, 05 Sep 2019 14:12:04 +0200
-Message-Id: <20190905120539.978233418@linutronix.de>
+        id 1i5qcM-0007tB-No; Thu, 05 Sep 2019 14:12:02 +0200
+Message-Id: <20190905120539.707986830@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Thu, 05 Sep 2019 14:03:43 +0200
+Date:   Thu, 05 Sep 2019 14:03:40 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Frederic Weisbecker <fweisbec@gmail.com>,
         Oleg Nesterov <oleg@redhat.com>,
         Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: [patch 4/6] posix-cpu-timers: Restrict clock_gettime() permissions
+        Kees Cook <keescook@chromium.org>,
+        syzbot+55acd54b57bb4b3840a4@syzkaller.appspotmail.com
+Subject: [patch 1/6] posix-cpu-timers: Always clear head pointer on dequeue
 References: <20190905120339.561100423@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -43,56 +44,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Similar to creating timers on a process there is no restriction at all to
-read the Posix CPU clocks of any process in the system. Per thread CPU
-clock access is limited to threads in the same thread group.
+The head pointer in struct cpu_timer is checked to be NULL in
+posix_cpu_timer_del() when the delete raced with the exit cleanup. The
+works correctly as long as the timer is actually dequeued via
+posix_cpu_timers_exit*().
 
-The per process CPU clocks can be used to observe activity of tasks and
-reading them can affect the execution of the process to which they are
-attached as reading can require to lock sighand lock and sum up the fine
-grained accounting for all threads in the process.
+But if the timer was dequeued due to expiry the head pointer is still set
+and triggers the warning.
 
-Restrict it by checking ptrace MODE_READ permissions of the reader on the
-target process.
+In fact keeping the head pointer around after any dequeue is pointless as
+is has no meaning at all after that.
 
+Clear the head pointer always on dequeue and remove the unused requeue
+function while at it.
+
+Fixes: 60bda037f1dd ("posix-cpu-timers: Utilize timerqueue for storage")
+Reported-by: syzbot+55acd54b57bb4b3840a4@syzkaller.appspotmail.com
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- kernel/time/posix-cpu-timers.c |   17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ include/linux/posix-timers.h |    9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
---- a/kernel/time/posix-cpu-timers.c
-+++ b/kernel/time/posix-cpu-timers.c
-@@ -71,9 +71,18 @@ static struct task_struct *lookup_task(c
- 		/*
- 		 * For clock_gettime() the task does not need to be the
- 		 * actual group leader. tsk->sighand gives access to the
--		 * group's clock.
-+		 * group's clock. current can obviously access itself, so
-+		 * spare the ptrace check below.
- 		 */
--		return (p == current || thread_group_leader(p)) ? p : NULL;
-+		if (p == current)
-+			return p;
-+
-+		if (!thread_group_leader(p))
-+			return NULL;
-+
-+		if (!ptrace_may_access(p, PTRACE_MODE_READ_REALCREDS))
-+			return NULL;
-+		return p;
- 	}
+--- a/include/linux/posix-timers.h
++++ b/include/linux/posix-timers.h
+@@ -74,11 +74,6 @@ struct cpu_timer {
+ 	int			firing;
+ };
  
- 	/*
-@@ -92,9 +101,7 @@ static struct task_struct *lookup_task(c
- 	 * Creating timers on processes which cannot be ptraced is not
- 	 * permitted:
- 	 */
--	if (!ptrace_may_access(p, PTRACE_MODE_ATTACH_REALCREDS))
--		return NULL;
--	return p;
-+	return ptrace_may_access(p, PTRACE_MODE_ATTACH_REALCREDS) ? p : NULL;
+-static inline bool cpu_timer_requeue(struct cpu_timer *ctmr)
+-{
+-	return timerqueue_add(ctmr->head, &ctmr->node);
+-}
+-
+ static inline bool cpu_timer_enqueue(struct timerqueue_head *head,
+ 				     struct cpu_timer *ctmr)
+ {
+@@ -88,8 +83,10 @@ static inline bool cpu_timer_enqueue(str
+ 
+ static inline void cpu_timer_dequeue(struct cpu_timer *ctmr)
+ {
+-	if (!RB_EMPTY_NODE(&ctmr->node.node))
++	if (ctmr->head) {
+ 		timerqueue_del(ctmr->head, &ctmr->node);
++		ctmr->head = NULL;
++	}
  }
  
- static struct task_struct *__get_task_for_clock(const clockid_t clock,
+ static inline u64 cpu_timer_getexpires(struct cpu_timer *ctmr)
 
 
