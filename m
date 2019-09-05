@@ -2,130 +2,141 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C74B0C3A5AA
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D70C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9924320870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:19:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567671560;
-	bh=EQwo8/N/0cavAcqRuGEE2sEe8CqmWoCUhrTdrBBNzeQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=w9gjItz1/eqq1gS42YqSreU1GxbCvBj5AfV2OdwO27oZzY0iwGOu3lnG6C1kjduWD
-	 tIR32+cwYxeFm/cKnAR3CCqtPYFt0sABGfEtl+OTok9bXbYl1sULOUrpMo9rgyR34f
-	 iPu3vx/xI1NNImMLTHA1Iz2yh/PfakIPn5AQw+1s=
+	by mail.kernel.org (Postfix) with ESMTP id C96D320870
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:19:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r1nLUBGc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732538AbfIEITU (ORCPT
+        id S1732551AbfIEIT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 04:19:20 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34612 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbfIEITT (ORCPT
+        Thu, 5 Sep 2019 04:19:27 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36634 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbfIEIT0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 04:19:19 -0400
-Received: by mail-wr1-f66.google.com with SMTP id s18so1623926wrn.1;
-        Thu, 05 Sep 2019 01:19:17 -0700 (PDT)
+        Thu, 5 Sep 2019 04:19:26 -0400
+Received: by mail-pf1-f193.google.com with SMTP id y22so1247636pfr.3;
+        Thu, 05 Sep 2019 01:19:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7vrD1vbAUmCFFfdIktyw4RQaBVS3ITim3VvuBMdETos=;
-        b=KrDqJT9pnaYjHlbMev2uN7ZQDpp4ATsX7iMQbyUVPvh7Zyex0SB+oyInc5ZZRKBALx
-         4YRvbckrzDpG1nT0XswKerNPGvzMEe96kQY98ITPkN1mU8xw6tQ+n+6G+Qkg/woR77cR
-         dpwgv3K4VnnE7KSKhZztW2gDMM/V1eLAOj//dDnEsk0KMmqU5SW+ozed1YDFze7sBquI
-         t/o38y4o/EoxKILmRM9AjLqvfG15+z8QFT594yanB9ivEOtf5VoPDpS83cFQvmYHLwUV
-         ZDsK0Y5NrSflQS+FbewoBw9/ke2FDkPsRlHPTWAmvY/hwLtW/GNXiBeMJTeHsk++Uoi9
-         4CMg==
+        h=from:to:cc:subject:date:message-id;
+        bh=9/BdIi9v9vT+sjdaqY5A0ECHD5U3qpWLnzpWXvofxDY=;
+        b=r1nLUBGcm0bfuZZ9Lr7GSA62KRvGRugvYiQ3s1TSi2oyWNKhdrBXHjTf2ZtGebVm1N
+         sh7wZ2uUUHgw84Q64gm7NOKnM0JGC/frypk5e84p9I93pn5Id8i2RviYRI88bsveSHDY
+         ceTGu6jIfXr9Le2TXdJ+7MVGNwyPmLaPPkUmHclpGnhzdzhdqP5K7uzohK6MqPjmYfoN
+         cSif/IsIjUZQxbdq+gMqUnq0Fel1F2/dwk5Bg2aKRRTkuEgPUD0hhrEZmFnxelU/97z/
+         tbLkUGImiJljqmi2Vnf1sUR9WIOiAuluSIlPrsiRQWDY+2lgmJqYpeo+dU8x/kpG06Lx
+         Q2qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7vrD1vbAUmCFFfdIktyw4RQaBVS3ITim3VvuBMdETos=;
-        b=NfT4JWcBDQs35Nd5WW4sZ2LhxrYUr+BfCmUcnBioaGXN3Up2C4Ccl6nPgLClX20UJg
-         /ijZaCmGP4ZBGRndVgMpLXSRjOr386ZTfpKIr9UbI3WHMjelqtU11JEvMOtgFcIHfUPO
-         uFnetJdv/jWEPcbjDa6OfvIgd8nJ4sTDZhdoIP0PiiWmeU80Tz3Ie7fSk97iIGCve1TP
-         BKfpiSRDsc4x1SRYAPkGeghKV66YHj2016pRyHINowPcvA0TDuz+gktsTimI00Qoa2gF
-         Z9giminJ+RdiVpt7Uj/H68dwaAgLMSYCoBRlBCiKvVYKm0YWZAGs551zH9q5gbyPgdvB
-         /ZkA==
-X-Gm-Message-State: APjAAAXrrF18CTn30BlcOI8BXylfw8UfK0FJ8wCHUMnsZSZE84IGmBRq
-        3h0sZ8bxtzYH2Tz+M4U/Q5s=
-X-Google-Smtp-Source: APXvYqypRpPI1L8/VzXxqLP6zlec8VR5j0yZcibllXCpQiOHKv1zx3kMkVX/NbRsKv7XAOtrZMasCw==
-X-Received: by 2002:adf:e392:: with SMTP id e18mr1587213wrm.87.1567671557098;
-        Thu, 05 Sep 2019 01:19:17 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id o22sm3223544wra.96.2019.09.05.01.19.15
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=9/BdIi9v9vT+sjdaqY5A0ECHD5U3qpWLnzpWXvofxDY=;
+        b=KfALPtawcr0CiiVOCKYdYLNrVT7+VNXwDrk2PKpvWAn8pCv7wLgPBaBZoxay0vuy0i
+         8kk29AY4KU8THN1SOuTxCw3OqbteTMrxh5bat19+6jpCytvjnSZJ1FWCyyXLGRF9aiKZ
+         qHz69xX0CAAJs3uPkGVjlxzg7d9bqIJId4F+NCJMd3Ouj9ebVLZxSFoyzD/OK+GEuPZg
+         MifxJUQPs0GRnj/gD09zp7doQiHPmwopi2b7kfMBHxdbyxv4Sdt6R0YWQ5bm6hhQ51tH
+         y9l/UU3uMQnTBJoWsYKPEkFjLD9zF0EpyUAWYYnuZ9gGtAt1pQZ7clKO37SI+6lEhrsl
+         aPmA==
+X-Gm-Message-State: APjAAAW8J+Bp25pJjf27bHjE8oYY+UklzriABO28CmzQmXGjH6cevqD4
+        ZZd4dupuDXXorJJjNvLBlJ/pAzG2
+X-Google-Smtp-Source: APXvYqxe1QnHt/X7OsIxUjVUHyE38n/yrBYayr07GhF9bIM7Bs1edEmFMoAIFICZevF1sqQC3j1bCw==
+X-Received: by 2002:a63:e148:: with SMTP id h8mr2013798pgk.275.1567671565558;
+        Thu, 05 Sep 2019 01:19:25 -0700 (PDT)
+Received: from localhost.localdomain ([49.216.8.243])
+        by smtp.gmail.com with ESMTPSA id h9sm1170401pgh.51.2019.09.05.01.19.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 01:19:16 -0700 (PDT)
-Date:   Thu, 5 Sep 2019 10:19:14 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Mike Travis <mike.travis@hpe.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Hedi Berriche <hedi.berriche@hpe.com>,
-        Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 0/8] x86/platform/UV: Update UV Hubless System Support
-Message-ID: <20190905081914.GA28060@gmail.com>
-References: <20190903001815.504418099@stormcage.eag.rdlabs.hpecorp.net>
- <20190903074717.GA34890@gmail.com>
- <481b2921-760a-c0f3-489b-2b9c5f792883@hpe.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <481b2921-760a-c0f3-489b-2b9c5f792883@hpe.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 05 Sep 2019 01:19:24 -0700 (PDT)
+From:   jamestai.sky@gmail.com
+X-Google-Original-From: james.tai@realtek.com
+To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        CY_Huang <cy.huang@realtek.com>,
+        Phinex Hung <phinex@realtek.com>,
+        "james.tai" <james.tai@realtek.com>
+Subject: [PATCH] dt-bindings: arm: Convert Realtek board/soc bindings to json-schema
+Date:   Thu,  5 Sep 2019 16:17:21 +0800
+Message-Id: <20190905081721.1548-1-james.tai@realtek.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: "james.tai" <james.tai@realtek.com>
 
-* Mike Travis <mike.travis@hpe.com> wrote:
+Convert Realtek SoC bindings to DT schema format using json-schema.
 
-> 
-> 
-> On 9/3/2019 12:47 AM, Ingo Molnar wrote:
-> > 
-> > * Mike Travis <mike.travis@hpe.com> wrote:
-> > 
-> > > 
-> > > These patches support upcoming UV systems that do not have a UV HUB.
-> > > 
-> > > 	* Save OEM_ID from ACPI MADT probe
-> > > 	* Return UV Hubless System Type
-> > > 	* Add return code to UV BIOS Init function
-> > > 	* Setup UV functions for Hubless UV Systems
-> > > 	* Add UV Hubbed/Hubless Proc FS Files
-> > > 	* Decode UVsystab Info
-> > > 	* Account for UV Hubless in is_uvX_hub Ops
-> > 
-> > Beyond addressing Christoph's feedback, please also make sure the series
-> > applies cleanly to tip:master, because right now it doesn't.
-> > 
-> > Thanks,
-> > 
-> > 	Ingo
-> > 
-> 
-> I will do this, and retest.  Currently we are using the latest upstream
-> version but obviously that thinking is flawed, since we are hoping to
-> get into the next merge period.
+Signed-off-by: james.tai <james.tai@realtek.com>
+---
+ .../devicetree/bindings/arm/realtek.txt       | 22 -------------------
+ .../devicetree/bindings/arm/realtek.yaml      | 17 ++++++++++++++
+ 2 files changed, 17 insertions(+), 22 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/realtek.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/realtek.yaml
 
-You are really cutting it close timing-wise ... unless by 'next' you mean 
-not v5.4 but v5.5?
+diff --git a/Documentation/devicetree/bindings/arm/realtek.txt b/Documentation/devicetree/bindings/arm/realtek.txt
+deleted file mode 100644
+index 95839e19ae92..000000000000
+--- a/Documentation/devicetree/bindings/arm/realtek.txt
++++ /dev/null
+@@ -1,22 +0,0 @@
+-Realtek platforms device tree bindings
+---------------------------------------
+-
+-
+-RTD1295 SoC
+-===========
+-
+-Required root node properties:
+-
+- - compatible :  must contain "realtek,rtd1295"
+-
+-
+-Root node property compatible must contain, depending on board:
+-
+- - MeLE V9: "mele,v9"
+- - ProBox2 AVA: "probox2,ava"
+- - Zidoo X9S: "zidoo,x9s"
+-
+-
+-Example:
+-
+-    compatible = "zidoo,x9s", "realtek,rtd1295";
+diff --git a/Documentation/devicetree/bindings/arm/realtek.yaml b/Documentation/devicetree/bindings/arm/realtek.yaml
+new file mode 100644
+index 000000000000..ad9b13bc42f0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/realtek.yaml
+@@ -0,0 +1,17 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/arm/realtek.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Realtek platforms device tree bindings
++
++properties:
++  compatible:
++    oneOf:
++        items:
++          - enum:
++              - mele,v9
++              - probox2,ava
++              - zidoo,x9s
++          - const: realtek,rtd1295
+-- 
+2.17.1
 
-> I also noticed that the MAINTAINERS list for UV is out of date, I will 
-> tend to that too.
-
-Thanks!
-
-	Ingo
