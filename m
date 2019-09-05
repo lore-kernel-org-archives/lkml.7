@@ -2,246 +2,94 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 531FCC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF80C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B44DD20820
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:24:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DC1C2082C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:24:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KODwrZv8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390400AbfIEPYI (ORCPT
+        id S2390401AbfIEPYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 11:24:08 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:33439 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388090AbfIEPYF (ORCPT
+        Thu, 5 Sep 2019 11:24:42 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54672 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731938AbfIEPYl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 11:24:05 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1N3omW-1iErpu38zI-00zlqx; Thu, 05 Sep 2019 17:23:34 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Christian Brauner <christian@brauner.io>,
-        Manfred Spraul <manfred@colorfullife.com>,
-        Davidlohr Bueso <dave@stgolabs.net>
-Cc:     linux-arch@vger.kernel.org, y2038@lists.linaro.org,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Matt Turner <mattst88@gmail.com>, stable@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-api@vger.kernel.org
-Subject: [PATCH 2/2] ipc: fix sparc64 ipc() wrapper
-Date:   Thu,  5 Sep 2019 17:21:25 +0200
-Message-Id: <20190905152155.1392871-2-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20190905152155.1392871-1-arnd@arndb.de>
-References: <20190905152155.1392871-1-arnd@arndb.de>
+        Thu, 5 Sep 2019 11:24:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=4QFZgq5+nT5oEr4DTI39fauvfzjjEc39wNO2ExmrIoY=; b=KODwrZv8ccEHHsY0uJ8BlzfL7B
+        UtpzVL7jqpuJ/FUxOYe76sI9fzucF0D+jEeZLiKxfGCeaDdRMzOTVYMNFezcEQgqu6rLLB15GAgZ7
+        i7zy+Ofc81azhr5CM7Ok4MaxAXe9T4po8hU44gXx4TnEfneNYMPLBsUEshutsy2pZtKadP6/8evoP
+        2boIUWC6cOGOYlDBdDS/6pvDSBD+yjZ/aYcjp99wUThEcBL3UbgEbVYsektsu9sMYhplkMwZvlorD
+        xeg+mx6QuduxJr/65Dwb8NStJbN07JEWKhTTRfkclF6lYh4TS4myY7SeGZuhw2GiMOt3bXTMNiSAS
+        AHjrlKPA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i5tck-0004zu-5S; Thu, 05 Sep 2019 15:24:38 +0000
+Date:   Thu, 5 Sep 2019 08:24:38 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Thomas =?iso-8859-1?Q?Hellstr=F6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Cc:     Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, pv-drivers@vmware.com,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [RFC PATCH 1/2] x86: Don't let pgprot_modify() change the page
+ encryption bit
+Message-ID: <20190905152438.GA18286@infradead.org>
+References: <20190905103541.4161-1-thomas_os@shipmail.org>
+ <20190905103541.4161-2-thomas_os@shipmail.org>
+ <608bbec6-448e-f9d5-b29a-1984225eb078@intel.com>
+ <b84d1dca-4542-a491-e585-a96c9d178466@shipmail.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:J3zArHkEyY/TISMmsfP0WbJtNBFechQID0MqECzAk0ctCCZ95pR
- yxgwoT6AqRe9E3cjun1fqcvGxYNu0dhxnJv1n8TiPRO3OsLdyhUfeh5h64xInym/iWECW65
- T3KYK41gn/U20N0+cooujcbryonZ+TM85tiFbXMR/F9+C8N9NhGWEfBNKIlD3ZONOHd8yT8
- j87ugz7kTJtQ6MlGcuqgQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:x/9WiilpczI=:GUB6fhEl40TlKmebyV3VtP
- tQZX3lSk+a5TLFJKCm0hJi5iYixyH1OiciKfQkbQTvimuD44FGQ7U8hsVf5gn8KjbAxbU9iuq
- /ehYRHVo2+xqH3r5XWZEvjuEZoVxeA1HUc2pmC8p+Nj00s111rvzBulzfxNS1gSDhoKPIZ2qz
- cGMmSIc9K8luRJeIcuKCGpHLiZIri2GY2jz9UyjXZ9+QDAkc5GZ2dgiKQesN1M2r9oo5mnLdc
- kmNYWK6nA4JjoLQJXQWlcOK79fIN69hvbvaTjSvw975krZyjihDLmCBKRzRtXvMpw2a+hkO+U
- dCQ9/qDjkmGSJRfCu+zCf1Q5cl9EkK2lNTFGE7G3d0qFVuqwqF7sIUcmHSeZOuZlLOHV3cUSl
- YsKinsjpr45kL9+iQqR7BAFxsWamu/sLMLCYgJkh3Q/bDjCBHEYxReRGzxjPL309IJ+jdAbng
- Q6Axj0jiJbXC74NRsVcPtyeFCz8nr0EYBLYzH9nH+8fkbAgoXz75KfqfkXHLSsKeCAPON3h9z
- upT87m0FvgjNUoJHw5y99hjfAowzQINh7qsDHCvEpt2T13Y+1ypYTm5rV6CHP8c7OJsAC8tjI
- x4OQMcg+4ym3RHKhwTdY8J7QLLtxjxa48Wz7c+ND9PKoXw7Y9tsgXcmFA+RltXE+Gvy+cE5s2
- 1TmI+a//nrrYnyRn+D1okiKpl4dJAo9OViaw7Ae+JH5Mw+tsprds18iMpTw+Ba0bdNjbHvcLa
- 32I38a7MyVqBoVJ9CpnLLRA1b1aurNA8LNgb5CPjLv7CiQTob84/AH75xl/PHGd5eK/ex9Wid
- yCulJWrgfB9IombsP5qX21Jt/xPM0uvtvYmeLQd6wPrJIqaGJY=
+In-Reply-To: <b84d1dca-4542-a491-e585-a96c9d178466@shipmail.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Matt bisected a sparc64 specific issue with semctl, shmctl and msgctl
-to a commit from my y2038 series in linux-5.1, as I missed the custom
-sys_ipc() wrapper that sparc64 uses in place of the generic version that
-I patched.
+On Thu, Sep 05, 2019 at 05:21:24PM +0200, Thomas Hellström (VMware) wrote:
+> On 9/5/19 4:15 PM, Dave Hansen wrote:
+> > Hi Thomas,
+> > 
+> > Thanks for the second batch of patches!  These look much improved on all
+> > fronts.
+> 
+> Yes, although the TTM functionality isn't in yet. Hopefully we won't have to
+> bother you with those though, since this assumes TTM will be using the dma
+> API.
 
-The problem is that the sys_{sem,shm,msg}ctl() functions in the kernel
-now do not allow being called with the IPC_64 flag any more, resulting
-in a -EINVAL error when they don't recognize the command.
+Please take a look at dma_mmap_prepare and dma_mmap_fault in this
+branch:
 
-Instead, the correct way to do this now is to call the internal
-ksys_old_{sem,shm,msg}ctl() functions to select the API version.
+	http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/dma-mmap-improvements
 
-As we generally move towards these functions anyway, change all of
-sparc_ipc() to consistently use those in place of the sys_*() versions,
-and move the required ksys_*() declarations into linux/syscalls.h
-
-Reported-by: Matt Turner <mattst88@gmail.com>
-Fixes: 275f22148e87 ("ipc: rename old-style shmctl/semctl/msgctl syscalls")
-Cc: stable@vger.kernel.org
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-Hi Matt,
-
-Can you check that this solves your problem?
----
- arch/sparc/kernel/sys_sparc_64.c | 30 +++++++++++++++---------------
- include/linux/syscalls.h         | 19 +++++++++++++++++++
- ipc/util.h                       | 25 ++-----------------------
- 3 files changed, 36 insertions(+), 38 deletions(-)
-
-diff --git a/arch/sparc/kernel/sys_sparc_64.c b/arch/sparc/kernel/sys_sparc_64.c
-index ccc88926bc00..5ad0494df367 100644
---- a/arch/sparc/kernel/sys_sparc_64.c
-+++ b/arch/sparc/kernel/sys_sparc_64.c
-@@ -340,21 +340,21 @@ SYSCALL_DEFINE6(sparc_ipc, unsigned int, call, int, first, unsigned long, second
- 	if (call <= SEMTIMEDOP) {
- 		switch (call) {
- 		case SEMOP:
--			err = sys_semtimedop(first, ptr,
--					     (unsigned int)second, NULL);
-+			err = ksys_semtimedop(first, ptr,
-+					      (unsigned int)second, NULL);
- 			goto out;
- 		case SEMTIMEDOP:
--			err = sys_semtimedop(first, ptr, (unsigned int)second,
-+			err = ksys_semtimedop(first, ptr, (unsigned int)second,
- 				(const struct __kernel_timespec __user *)
--					     (unsigned long) fifth);
-+					      (unsigned long) fifth);
- 			goto out;
- 		case SEMGET:
--			err = sys_semget(first, (int)second, (int)third);
-+			err = ksys_semget(first, (int)second, (int)third);
- 			goto out;
- 		case SEMCTL: {
--			err = sys_semctl(first, second,
--					 (int)third | IPC_64,
--					 (unsigned long) ptr);
-+			err = ksys_old_semctl(first, second,
-+					      (int)third | IPC_64,
-+					      (unsigned long) ptr);
- 			goto out;
- 		}
- 		default:
-@@ -365,18 +365,18 @@ SYSCALL_DEFINE6(sparc_ipc, unsigned int, call, int, first, unsigned long, second
- 	if (call <= MSGCTL) {
- 		switch (call) {
- 		case MSGSND:
--			err = sys_msgsnd(first, ptr, (size_t)second,
-+			err = ksys_msgsnd(first, ptr, (size_t)second,
- 					 (int)third);
- 			goto out;
- 		case MSGRCV:
--			err = sys_msgrcv(first, ptr, (size_t)second, fifth,
-+			err = ksys_msgrcv(first, ptr, (size_t)second, fifth,
- 					 (int)third);
- 			goto out;
- 		case MSGGET:
--			err = sys_msgget((key_t)first, (int)second);
-+			err = ksys_msgget((key_t)first, (int)second);
- 			goto out;
- 		case MSGCTL:
--			err = sys_msgctl(first, (int)second | IPC_64, ptr);
-+			err = ksys_old_msgctl(first, (int)second | IPC_64, ptr);
- 			goto out;
- 		default:
- 			err = -ENOSYS;
-@@ -396,13 +396,13 @@ SYSCALL_DEFINE6(sparc_ipc, unsigned int, call, int, first, unsigned long, second
- 			goto out;
- 		}
- 		case SHMDT:
--			err = sys_shmdt(ptr);
-+			err = ksys_shmdt(ptr);
- 			goto out;
- 		case SHMGET:
--			err = sys_shmget(first, (size_t)second, (int)third);
-+			err = ksys_shmget(first, (size_t)second, (int)third);
- 			goto out;
- 		case SHMCTL:
--			err = sys_shmctl(first, (int)second | IPC_64, ptr);
-+			err = ksys_old_shmctl(first, (int)second | IPC_64, ptr);
- 			goto out;
- 		default:
- 			err = -ENOSYS;
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index 88145da7d140..f7c561c4dcdd 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -1402,4 +1402,23 @@ static inline unsigned int ksys_personality(unsigned int personality)
- 	return old;
- }
- 
-+/* for __ARCH_WANT_SYS_IPC */
-+long ksys_semtimedop(int semid, struct sembuf __user *tsops,
-+		     unsigned int nsops,
-+		     const struct __kernel_timespec __user *timeout);
-+long ksys_semget(key_t key, int nsems, int semflg);
-+long ksys_old_semctl(int semid, int semnum, int cmd, unsigned long arg);
-+long ksys_msgget(key_t key, int msgflg);
-+long ksys_old_msgctl(int msqid, int cmd, struct msqid_ds __user *buf);
-+long ksys_msgrcv(int msqid, struct msgbuf __user *msgp, size_t msgsz,
-+		 long msgtyp, int msgflg);
-+long ksys_msgsnd(int msqid, struct msgbuf __user *msgp, size_t msgsz,
-+		 int msgflg);
-+long ksys_shmget(key_t key, size_t size, int shmflg);
-+long ksys_shmdt(char __user *shmaddr);
-+long ksys_old_shmctl(int shmid, int cmd, struct shmid_ds __user *buf);
-+long compat_ksys_semtimedop(int semid, struct sembuf __user *tsems,
-+			    unsigned int nsops,
-+			    const struct old_timespec32 __user *timeout);
-+
- #endif
-diff --git a/ipc/util.h b/ipc/util.h
-index 0fcf8e719b76..5766c61aed0e 100644
---- a/ipc/util.h
-+++ b/ipc/util.h
-@@ -276,29 +276,7 @@ static inline int compat_ipc_parse_version(int *cmd)
- 	*cmd &= ~IPC_64;
- 	return version;
- }
--#endif
- 
--/* for __ARCH_WANT_SYS_IPC */
--long ksys_semtimedop(int semid, struct sembuf __user *tsops,
--		     unsigned int nsops,
--		     const struct __kernel_timespec __user *timeout);
--long ksys_semget(key_t key, int nsems, int semflg);
--long ksys_old_semctl(int semid, int semnum, int cmd, unsigned long arg);
--long ksys_msgget(key_t key, int msgflg);
--long ksys_old_msgctl(int msqid, int cmd, struct msqid_ds __user *buf);
--long ksys_msgrcv(int msqid, struct msgbuf __user *msgp, size_t msgsz,
--		 long msgtyp, int msgflg);
--long ksys_msgsnd(int msqid, struct msgbuf __user *msgp, size_t msgsz,
--		 int msgflg);
--long ksys_shmget(key_t key, size_t size, int shmflg);
--long ksys_shmdt(char __user *shmaddr);
--long ksys_old_shmctl(int shmid, int cmd, struct shmid_ds __user *buf);
--
--/* for CONFIG_ARCH_WANT_OLD_COMPAT_IPC */
--long compat_ksys_semtimedop(int semid, struct sembuf __user *tsems,
--			    unsigned int nsops,
--			    const struct old_timespec32 __user *timeout);
--#ifdef CONFIG_COMPAT
- long compat_ksys_old_semctl(int semid, int semnum, int cmd, int arg);
- long compat_ksys_old_msgctl(int msqid, int cmd, void __user *uptr);
- long compat_ksys_msgrcv(int msqid, compat_uptr_t msgp, compat_ssize_t msgsz,
-@@ -306,6 +284,7 @@ long compat_ksys_msgrcv(int msqid, compat_uptr_t msgp, compat_ssize_t msgsz,
- long compat_ksys_msgsnd(int msqid, compat_uptr_t msgp,
- 		       compat_ssize_t msgsz, int msgflg);
- long compat_ksys_old_shmctl(int shmid, int cmd, void __user *uptr);
--#endif /* CONFIG_COMPAT */
-+
-+#endif
- 
- #endif
--- 
-2.20.0
-
+they should allow to fault dma api pages in the page fault handler.  But
+this is totally hot off the press and not actually tested for the last
+few patches.  Note that I've also included your two patches from this
+series to handle SEV.
