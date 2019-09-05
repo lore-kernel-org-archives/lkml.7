@@ -2,76 +2,99 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A0CC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE29C3A5AA
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5E8E207E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:32:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FA6D2070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:32:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567690334;
-	bh=bossB91Qr/I/rrAXVwyYUS2cPZeySQqaMDIW3hBDvTA=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=DBbsNYtGQyMB4VBn3mRlpVLg+npQ4JCTUnZ2tTuESA8dr6V80qXqPqeY1VHS2FV5P
-	 E7IDN/kzJ3EIjwcaSHyyhf8sT3/8V0GnPn7Qp5Sy80AB1OKhOVKT1qikzVGKjr6JTW
-	 omtqWQ7aS0ayIiQ8u1qnjg72ro5Db25XtE4+IZCI=
+	s=default; t=1567690379;
+	bh=gAfpREAUjPx32bCVpX/QRONrGLArS9EYowVV+J13G2I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0Y7Q1mhDBti47RGooAL9qoNwuLzhgH9Ssb3ZOKzLchvQdzn/emcEA/21coN8bMSxl
+	 W4j9Zj/F40ITRInx6JVNc+lpJmOIzw//B7REftbCw37hAASzrz/SAHuGoIpowrplmj
+	 J70r97vnPO7QgVN37R7bycCEoE38wbT5NboJFlqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727447AbfIENcO (ORCPT
+        id S1727739AbfIENc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 09:32:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52780 "EHLO mail.kernel.org"
+        Thu, 5 Sep 2019 09:32:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726080AbfIENcN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 09:32:13 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727514AbfIENc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 09:32:58 -0400
+Received: from rapoport-lnx (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 742F32070C;
-        Thu,  5 Sep 2019 13:32:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F90F206DE;
+        Thu,  5 Sep 2019 13:32:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567690332;
-        bh=bossB91Qr/I/rrAXVwyYUS2cPZeySQqaMDIW3hBDvTA=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=AUwwQvbBlItiebXY3KcPib073goVxzF1Qceij7XJwl2KMptZp0UBmomx/E/rKZ5R0
-         q/CpTg3Okauld295J7hG/u2c3KEwI4RMwTWZ4aJGDrH3AyRIveEXp7myjCr8J0y21m
-         ttVis7KGcESZTucRgdw/+/G08UxJd+cHd7sEVXf0=
-Date:   Thu, 5 Sep 2019 15:31:56 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-cc:     Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>, linux-kernel@vger.kernel.org,
-        live-patching@vger.kernel.org
-Subject: Re: [RFC PATCH 2/2] livepatch: Clear relocation targets on a module
- removal
-In-Reply-To: <20190905132344.byfybt6s42cajtfz@treble>
-Message-ID: <nycvar.YFH.7.76.1909051531020.31470@cbobk.fhfr.pm>
-References: <20190822223649.ptg6e7qyvosrljqx@treble> <20190823081306.kbkm7b4deqrare2v@pathway.suse.cz> <20190826145449.wyo7avwpqyriem46@treble> <alpine.LSU.2.21.1909021802180.29987@pobox.suse.cz> <5c649320-a9bf-ae7f-5102-483bc34d219f@redhat.com>
- <alpine.LSU.2.21.1909031447140.3872@pobox.suse.cz> <20190904084932.gndrtewubqiaxmzy@pathway.suse.cz> <20190905025055.36loaatxtkhdo4q5@treble> <20190905110955.wl4lwjbnpqybhkcn@pathway.suse.cz> <nycvar.YFH.7.76.1909051317550.31470@cbobk.fhfr.pm>
- <20190905132344.byfybt6s42cajtfz@treble>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        s=default; t=1567690377;
+        bh=gAfpREAUjPx32bCVpX/QRONrGLArS9EYowVV+J13G2I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZPtL/gE9krL/IhempLi40HKIdV/N1wp5V5h2NnWuIEQ5s8ZLexH/BzM6btza01Tn5
+         vEbfq7ciYK9AeyCxqIifTErleu0e2Oe8cRnPLbKamyYMgRg0Cn57fQAovmRYWSqCib
+         WMLnf9IqsMzJkqH9GYjlNhXmeB76s0wF4U04thJs=
+Date:   Thu, 5 Sep 2019 16:32:53 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Cc:     Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH] mips: sgi-ip27: switch from DISCONTIGMEM to SPARSEMEM
+Message-ID: <20190905133251.GA3650@rapoport-lnx>
+References: <1567662477-27404-1-git-send-email-rppt@kernel.org>
+ <20190905152150.f7ff6ef70726085de63df828@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190905152150.f7ff6ef70726085de63df828@suse.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 5 Sep 2019, Josh Poimboeuf wrote:
-
-> > All the indirect jumps are turned into alternatives when retpolines 
-> > are in place.
+On Thu, Sep 05, 2019 at 03:21:50PM +0200, Thomas Bogendoerfer wrote:
+> On Thu,  5 Sep 2019 08:47:57 +0300
+> Mike Rapoport <rppt@kernel.org> wrote:
 > 
-> Actually in C code those are done by the compiler as calls/jumps to
-> __x86_indirect_thunk_*.
+> > From: Mike Rapoport <rppt@linux.ibm.com>
+> > 
+> > The memory initialization of SGI-IP27 is already half-way to support
+> > SPARSEMEM and only a call to sparse_init() was missing. Add it to
+> > prom_meminit() and adjust arch/mips/Kconfig to enable SPARSEMEM and
+> > SPARSEMEM_EXTREME for SGI-IP27
+> > 
+> > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> > ---
+> > 
+> > Thomas, could you please test this on your Origin machine?
+> 
+> it crashes in sparse_early_usemaps_alloc_pgdat_section(). Since there is
+> already a sparse_init() in arch_mem_setup() I removed it from ip27-memory.c.
 
-Sure, and the thunks do the redirection via JMP_NOSPEC / CALL_NOSPEC, 
-which has alternative in it.
+Oops, missed that.
+
+> With this booting made more progress but I get an unaligned access in
+> kernel_init_free_pages(). 
+
+Can you please share the log?
+ 
+> My time is a little bit limited today to dig deeper, but testing patches
+> is easy.
+> 
+> Thomas.
+> 
+> -- 
+> SUSE Software Solutions Germany GmbH
+> HRB 247165 (AG München)
+> Geschäftsführer: Felix Imendörffer
 
 -- 
-Jiri Kosina
-SUSE Labs
-
+Sincerely yours,
+Mike.
