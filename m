@@ -2,139 +2,89 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C34C0030E
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EED65C0030F
 	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47D0E21D79
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:13:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA22F21D80
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:14:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730471AbfIEONQ (ORCPT
+        id S1730799AbfIEOOa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 10:13:16 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:43949 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbfIEONQ (ORCPT
+        Thu, 5 Sep 2019 10:14:30 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:36672 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1729157AbfIEOO3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 10:13:16 -0400
-X-Originating-IP: 86.207.98.53
-Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id DF4D72002B;
-        Thu,  5 Sep 2019 14:13:13 +0000 (UTC)
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH] pinctrl: at91-pio4: implement .get_multiple and .set_multiple
-Date:   Thu,  5 Sep 2019 16:13:04 +0200
-Message-Id: <20190905141304.22005-1-alexandre.belloni@bootlin.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 5 Sep 2019 10:14:29 -0400
+Received: (qmail 2656 invoked by uid 2102); 5 Sep 2019 10:14:28 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 5 Sep 2019 10:14:28 -0400
+Date:   Thu, 5 Sep 2019 10:14:28 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Jacky.Cao@sony.com
+cc:     balbi@kernel.org, <gregkh@linuxfoundation.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <Kento.A.Kobayashi@sony.com>
+Subject: Re: [PATCH v3] USB: dummy-hcd: fix power budget for SuperSpeed mode
+In-Reply-To: <16EA1F625E922C43B00B9D82250220500871CDE5@APYOKXMS108.ap.sony.com>
+Message-ID: <Pine.LNX.4.44L0.1909051014160.1631-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement .get_multiple and .set_multiple to allow reading or setting
-multiple pins simultaneously. Pins in the same bank will all be switched at
-the same time, improving synchronization and performances.
+On Thu, 5 Sep 2019 Jacky.Cao@sony.com wrote:
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
----
- drivers/pinctrl/pinctrl-at91-pio4.c | 60 +++++++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
+> The power budget for SuperSpeed mode should be 900 mA
+> according to USB specification, so set the power budget
+> to 900mA for dummy_start_ss which is only used for
+> SuperSpeed mode.
+> 
+> If the max power consumption of SuperSpeed device is
+> larger than 500 mA, insufficient available bus power
+> error happens in usb_choose_configuration function
+> when the device connects to dummy hcd.
+> 
+> Signed-off-by: Jacky Cao <Jacky.Cao@sony.com>
+> ---
+> Changes in v3:
+>   - Rename POWER_BUDGET_3_0 to POWER_BUDGET_3
+>   - Update commit message from USB3.0 specification to USB specification
+> 
+> Changes in v2:
+>   - Fix whitespace damage
+> 
+>  drivers/usb/gadget/udc/dummy_hcd.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/gadget/udc/dummy_hcd.c b/drivers/usb/gadget/udc/dummy_hcd.c
+> index 8414fac..3d499d9 100644
+> --- a/drivers/usb/gadget/udc/dummy_hcd.c
+> +++ b/drivers/usb/gadget/udc/dummy_hcd.c
+> @@ -48,6 +48,7 @@
+>  #define DRIVER_VERSION	"02 May 2005"
+>  
+>  #define POWER_BUDGET	500	/* in mA; use 8 for low-power port testing */
+> +#define POWER_BUDGET_3	900	/* in mA */
+>  
+>  static const char	driver_name[] = "dummy_hcd";
+>  static const char	driver_desc[] = "USB Host+Gadget Emulator";
+> @@ -2432,7 +2433,7 @@ static int dummy_start_ss(struct dummy_hcd *dum_hcd)
+>  	dum_hcd->rh_state = DUMMY_RH_RUNNING;
+>  	dum_hcd->stream_en_ep = 0;
+>  	INIT_LIST_HEAD(&dum_hcd->urbp_list);
+> -	dummy_hcd_to_hcd(dum_hcd)->power_budget = POWER_BUDGET;
+> +	dummy_hcd_to_hcd(dum_hcd)->power_budget = POWER_BUDGET_3;
+>  	dummy_hcd_to_hcd(dum_hcd)->state = HC_STATE_RUNNING;
+>  	dummy_hcd_to_hcd(dum_hcd)->uses_new_polling = 1;
+>  #ifdef CONFIG_USB_OTG
 
-diff --git a/drivers/pinctrl/pinctrl-at91-pio4.c b/drivers/pinctrl/pinctrl-at91-pio4.c
-index d6de4d360cd4..488a302a60d4 100644
---- a/drivers/pinctrl/pinctrl-at91-pio4.c
-+++ b/drivers/pinctrl/pinctrl-at91-pio4.c
-@@ -328,6 +328,35 @@ static int atmel_gpio_get(struct gpio_chip *chip, unsigned offset)
- 	return !!(reg & BIT(pin->line));
- }
- 
-+static int atmel_gpio_get_multiple(struct gpio_chip *chip, unsigned long *mask,
-+				   unsigned long *bits)
-+{
-+	struct atmel_pioctrl *atmel_pioctrl = gpiochip_get_data(chip);
-+	unsigned int bank;
-+
-+	bitmap_zero(bits, atmel_pioctrl->npins);
-+
-+	for (bank = 0; bank < atmel_pioctrl->nbanks; bank++) {
-+		unsigned int word = bank;
-+		unsigned int offset = 0;
-+		unsigned int reg;
-+
-+#if ATMEL_PIO_NPINS_PER_BANK != BITS_PER_LONG
-+		word = BIT_WORD(bank * ATMEL_PIO_NPINS_PER_BANK);
-+		offset = bank * ATMEL_PIO_NPINS_PER_BANK % BITS_PER_LONG;
-+#endif
-+		if (!mask[word])
-+			continue;
-+
-+		reg = atmel_gpio_read(atmel_pioctrl, bank, ATMEL_PIO_PDSR);
-+		bits[word] |= mask[word] & (reg << offset);
-+
-+		pr_err("ABE: %d %08x\n", bank, bits[word]);
-+	}
-+
-+	return 0;
-+}
-+
- static int atmel_gpio_direction_output(struct gpio_chip *chip, unsigned offset,
- 				       int value)
- {
-@@ -358,11 +387,42 @@ static void atmel_gpio_set(struct gpio_chip *chip, unsigned offset, int val)
- 			 BIT(pin->line));
- }
- 
-+static void atmel_gpio_set_multiple(struct gpio_chip *chip, unsigned long *mask,
-+				    unsigned long *bits)
-+{
-+	struct atmel_pioctrl *atmel_pioctrl = gpiochip_get_data(chip);
-+	unsigned int bank;
-+
-+	for (bank = 0; bank < atmel_pioctrl->nbanks; bank++) {
-+		unsigned int bitmask;
-+		unsigned int word = bank;
-+
-+#if ATMEL_PIO_NPINS_PER_BANK != BITS_PER_LONG
-+		word = BIT_WORD(bank * ATMEL_PIO_NPINS_PER_BANK);
-+#endif
-+		if (!mask[word])
-+			continue;
-+
-+		bitmask = mask[word] & bits[word];
-+		atmel_gpio_write(atmel_pioctrl, bank, ATMEL_PIO_SODR, bitmask);
-+
-+		bitmask = mask[word] & ~bits[word];
-+		atmel_gpio_write(atmel_pioctrl, bank, ATMEL_PIO_CODR, bitmask);
-+
-+#if ATMEL_PIO_NPINS_PER_BANK != BITS_PER_LONG
-+		mask[word] >>= ATMEL_PIO_NPINS_PER_BANK;
-+		bits[word] >>= ATMEL_PIO_NPINS_PER_BANK;
-+#endif
-+	}
-+}
-+
- static struct gpio_chip atmel_gpio_chip = {
- 	.direction_input        = atmel_gpio_direction_input,
- 	.get                    = atmel_gpio_get,
-+	.get_multiple           = atmel_gpio_get_multiple,
- 	.direction_output       = atmel_gpio_direction_output,
- 	.set                    = atmel_gpio_set,
-+	.set_multiple           = atmel_gpio_set_multiple,
- 	.to_irq                 = atmel_gpio_to_irq,
- 	.base                   = 0,
- };
--- 
-2.21.0
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
 
