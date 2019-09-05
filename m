@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51BA4C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC16C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B769E21D79
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:03:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70EB4222BD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:04:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389709AbfIENEA (ORCPT
+        id S2389717AbfIENEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 09:04:00 -0400
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:33256 "EHLO
+        Thu, 5 Sep 2019 09:04:06 -0400
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:23104 "EHLO
         mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388012AbfIENDf (ORCPT
+        by vger.kernel.org with ESMTP id S1726097AbfIENDe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 09:03:35 -0400
-Received: from pps.filterd (m0150242.ppops.net [127.0.0.1])
-        by mx0a-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x85D2N0N005623;
+        Thu, 5 Sep 2019 09:03:34 -0400
+Received: from pps.filterd (m0148663.ppops.net [127.0.0.1])
+        by mx0a-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x85D2OJP016164;
         Thu, 5 Sep 2019 13:02:54 GMT
-Received: from g2t2352.austin.hpe.com (g2t2352.austin.hpe.com [15.233.44.25])
-        by mx0a-002e3701.pphosted.com with ESMTP id 2uttq6kqes-1
+Received: from g4t3427.houston.hpe.com (g4t3427.houston.hpe.com [15.241.140.73])
+        by mx0a-002e3701.pphosted.com with ESMTP id 2utxpd26s9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Thu, 05 Sep 2019 13:02:54 +0000
-Received: from stormcage.eag.rdlabs.hpecorp.net (stormcage.eag.rdlabs.hpecorp.net [128.162.236.70])
-        by g2t2352.austin.hpe.com (Postfix) with ESMTP id 3CA7EA3;
+Received: from stormcage.eag.rdlabs.hpecorp.net (unknown [128.162.236.70])
+        by g4t3427.houston.hpe.com (Postfix) with ESMTP id C2F197A;
         Thu,  5 Sep 2019 13:02:53 +0000 (UTC)
 Received: by stormcage.eag.rdlabs.hpecorp.net (Postfix, from userid 5508)
-        id EC6E9201EA1BF; Thu,  5 Sep 2019 08:02:52 -0500 (CDT)
-Message-Id: <20190905130252.861491461@stormcage.eag.rdlabs.hpecorp.net>
+        id 4DAC5201EA8FE; Thu,  5 Sep 2019 08:02:53 -0500 (CDT)
+Message-Id: <20190905130253.207686954@stormcage.eag.rdlabs.hpecorp.net>
 References: <20190905130252.590161292@stormcage.eag.rdlabs.hpecorp.net>
 User-Agent: quilt/0.46-1
-Date:   Thu, 05 Sep 2019 08:02:54 -0500
+Date:   Thu, 05 Sep 2019 08:02:57 -0500
 From:   Mike Travis <mike.travis@hpe.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>,
@@ -48,25 +48,25 @@ Cc:     Dimitri Sivanich <dimitri.sivanich@hpe.com>,
         Hedi Berriche <hedi.berriche@hpe.com>,
         Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org,
         linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: [PATCH 2/8] x86/platform/uv: Return UV Hubless System Type
-Content-Disposition: inline; filename=mod-is_uv_hubless
+Subject: [PATCH 5/8] x86/platform/uv: Add UV Hubbed/Hubless Proc FS Files
+Content-Disposition: inline; filename=add-procfs-files
 X-HPE-SCL: -1
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
  definitions=2019-09-05_04:2019-09-04,2019-09-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- bulkscore=0 impostorscore=0 adultscore=0 clxscore=1015 suspectscore=0
- priorityscore=1501 malwarescore=0 phishscore=0 mlxlogscore=828 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1906280000
- definitions=main-1909050128
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ lowpriorityscore=0 clxscore=1015 priorityscore=1501 mlxscore=0 spamscore=0
+ malwarescore=0 bulkscore=0 mlxlogscore=999 impostorscore=0 suspectscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1906280000 definitions=main-1909050128
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Return the type of UV hubless system for UV specific code that depends
-on that.  Use a define to indicate the change in arg type for this
-function in uv.h.  Add a function to convert UV system type to bit
-pattern needed for is_uv_hubless().
+Indicate to UV user utilities that UV hubless support is available on
+this system via the existing /proc infterface.  The current interface
+is maintained with the addition of new /proc leaves ("hubbed" and
+"hubless") that contain the specific type of UV arch this one is.
 
 Signed-off-by: Mike Travis <mike.travis@hpe.com>
 Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
@@ -85,104 +85,175 @@ Cc: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org
 Cc: stable@vger.kernel.org
 ---
-v2: remove is_uv_hubless define; remove leading '_' from _is_uv_hubless
+v2: remove is_uv_hubbed define; remove leading '_' from _is_uv_hubbed
 ---
- arch/x86/include/asm/uv/uv.h       |   12 ++++++++++--
- arch/x86/kernel/apic/x2apic_uv_x.c |   27 ++++++++++++++++++---------
- 2 files changed, 28 insertions(+), 11 deletions(-)
+ arch/x86/include/asm/uv/uv.h       |    4 +
+ arch/x86/kernel/apic/x2apic_uv_x.c |   93 ++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 96 insertions(+), 1 deletion(-)
 
 --- linux.orig/arch/x86/include/asm/uv/uv.h
 +++ linux/arch/x86/include/asm/uv/uv.h
-@@ -12,6 +12,14 @@ struct mm_struct;
+@@ -12,6 +12,8 @@ struct mm_struct;
  #ifdef CONFIG_X86_UV
  #include <linux/efi.h>
  
-+static inline int uv(int uvtype)
-+{
-+	/* uv(0) is "any" */
-+	if (uvtype >= 0 && uvtype <= 30)
-+		return 1 << uvtype;
-+	return 1;
-+}
++#define	UV_PROC_NODE	"sgi_uv"
 +
- extern unsigned long uv_systab_phys;
- 
- extern enum uv_system_type get_uv_system_type(void);
-@@ -20,7 +28,7 @@ static inline bool is_early_uv_system(vo
+ static inline int uv(int uvtype)
+ {
+ 	/* uv(0) is "any" */
+@@ -28,6 +30,7 @@ static inline bool is_early_uv_system(vo
  	return uv_systab_phys && uv_systab_phys != EFI_INVALID_TABLE_ADDR;
  }
  extern int is_uv_system(void);
--extern int is_uv_hubless(void);
-+extern int is_uv_hubless(int uvtype);
++extern int is_uv_hubbed(int uvtype);
+ extern int is_uv_hubless(int uvtype);
  extern void uv_cpu_init(void);
  extern void uv_nmi_init(void);
- extern void uv_system_init(void);
-@@ -32,7 +40,7 @@ extern const struct cpumask *uv_flush_tl
+@@ -40,6 +43,7 @@ extern const struct cpumask *uv_flush_tl
  static inline enum uv_system_type get_uv_system_type(void) { return UV_NONE; }
  static inline bool is_early_uv_system(void)	{ return 0; }
  static inline int is_uv_system(void)	{ return 0; }
--static inline int is_uv_hubless(void)	{ return 0; }
-+static inline int is_uv_hubless(int uv) { return 0; }
++static inline int is_uv_hubbed(int uv)	{ return 0; }
+ static inline int is_uv_hubless(int uv) { return 0; }
  static inline void uv_cpu_init(void)	{ }
  static inline void uv_system_init(void)	{ }
- static inline const struct cpumask *
 --- linux.orig/arch/x86/kernel/apic/x2apic_uv_x.c
 +++ linux/arch/x86/kernel/apic/x2apic_uv_x.c
-@@ -26,7 +26,7 @@
+@@ -26,6 +26,7 @@
  static DEFINE_PER_CPU(int, x2apic_extra_bits);
  
  static enum uv_system_type	uv_system_type;
--static bool			uv_hubless_system;
-+static int			uv_hubless_system;
++static int			uv_hubbed_system;
+ static int			uv_hubless_system;
  static u64			gru_start_paddr, gru_end_paddr;
  static u64			gru_dist_base, gru_first_node_paddr = -1LL, gru_last_node_paddr;
- static u64			gru_dist_lmask, gru_dist_umask;
-@@ -268,11 +268,20 @@ static int __init uv_acpi_madt_oem_check
- 	uv_stringify(sizeof(oem_table_id), oem_table_id, _oem_table_id);
+@@ -309,6 +310,24 @@ static int __init uv_acpi_madt_oem_check
+ 	if (uv_hub_info->hub_revision == 0)
+ 		goto badbios;
  
- 	if (strncmp(oem_id, "SGI", 3) != 0) {
--		if (strncmp(oem_id, "NSGI", 4) == 0) {
--			uv_hubless_system = true;
--			pr_info("UV: OEM IDs %s/%s, HUBLESS\n",
--				oem_id, oem_table_id);
--		}
-+		if (strncmp(oem_id, "NSGI", 4) != 0)
-+			return 0;
++	switch (uv_hub_info->hub_revision) {
++	case UV4_HUB_REVISION_BASE:
++		uv_hubbed_system = 0x11;
++		break;
 +
-+		/* UV4 Hubless, CH, (0x11:UV4+Any) */
-+		if (strncmp(oem_id, "NSGI4", 5) == 0)
-+			uv_hubless_system = 0x11;
++	case UV3_HUB_REVISION_BASE:
++		uv_hubbed_system = 0x9;
++		break;
 +
-+		/* UV3 Hubless, UV300/MC990X w/o hub (0x9:UV3+Any) */
-+		else
-+			uv_hubless_system = 0x9;
++	case UV2_HUB_REVISION_BASE:
++		uv_hubbed_system = 0x5;
++		break;
 +
-+		pr_info("UV: OEM IDs %s/%s, HUBLESS(0x%x)\n",
-+			oem_id, oem_table_id, uv_hubless_system);
++	case UV1_HUB_REVISION_BASE:
++		uv_hubbed_system = 0x3;
++		break;
++	}
 +
- 		return 0;
- 	}
+ 	pnodeid = early_get_pnodeid();
+ 	early_get_apic_socketid_shift();
  
-@@ -350,9 +359,9 @@ int is_uv_system(void)
+@@ -359,6 +378,12 @@ int is_uv_system(void)
  }
  EXPORT_SYMBOL_GPL(is_uv_system);
  
--int is_uv_hubless(void)
-+int is_uv_hubless(int uvtype)
++int is_uv_hubbed(int uvtype)
++{
++	return (uv_hubbed_system & uvtype);
++}
++EXPORT_SYMBOL_GPL(is_uv_hubbed);
++
+ int is_uv_hubless(int uvtype)
  {
--	return uv_hubless_system;
-+	return (uv_hubless_system & uvtype);
+ 	return (uv_hubless_system & uvtype);
+@@ -1457,6 +1482,68 @@ static void __init build_socket_tables(v
+ 	}
  }
- EXPORT_SYMBOL_GPL(is_uv_hubless);
  
-@@ -1592,7 +1601,7 @@ static void __init uv_system_init_hub(vo
-  */
- void __init uv_system_init(void)
++/* Setup user proc fs files */
++static int proc_hubbed_show(struct seq_file *file, void *data)
++{
++	seq_printf(file, "0x%x\n", uv_hubbed_system);
++	return 0;
++}
++
++static int proc_hubless_show(struct seq_file *file, void *data)
++{
++	seq_printf(file, "0x%x\n", uv_hubless_system);
++	return 0;
++}
++
++static int proc_oemid_show(struct seq_file *file, void *data)
++{
++	seq_printf(file, "%s/%s\n", oem_id, oem_table_id);
++	return 0;
++}
++
++static int proc_hubbed_open(struct inode *inode, struct file *file)
++{
++	return single_open(file, proc_hubbed_show, (void *)NULL);
++}
++
++static int proc_hubless_open(struct inode *inode, struct file *file)
++{
++	return single_open(file, proc_hubless_show, (void *)NULL);
++}
++
++static int proc_oemid_open(struct inode *inode, struct file *file)
++{
++	return single_open(file, proc_oemid_show, (void *)NULL);
++}
++
++/* (struct is "non-const" as open function is set at runtime) */
++static struct file_operations proc_version_fops = {
++	.read		= seq_read,
++	.llseek		= seq_lseek,
++	.release	= single_release,
++};
++
++static const struct file_operations proc_oemid_fops = {
++	.open		= proc_oemid_open,
++	.read		= seq_read,
++	.llseek		= seq_lseek,
++	.release	= single_release,
++};
++
++static __init void uv_setup_proc_files(int hubless)
++{
++	struct proc_dir_entry *pde;
++	char *name = hubless ? "hubless" : "hubbed";
++
++	pde = proc_mkdir(UV_PROC_NODE, NULL);
++	proc_create("oemid", 0, pde, &proc_oemid_fops);
++	proc_create(name, 0, pde, &proc_version_fops);
++	if (hubless)
++		proc_version_fops.open = proc_hubless_open;
++	else
++		proc_version_fops.open = proc_hubbed_open;
++}
++
+ /* Initialize UV hubless systems */
+ static __init int uv_system_init_hubless(void)
  {
--	if (likely(!is_uv_system() && !is_uv_hubless()))
-+	if (likely(!is_uv_system() && !is_uv_hubless(1)))
- 		return;
+@@ -1468,6 +1555,10 @@ static __init int uv_system_init_hubless
+ 	/* Init kernel/BIOS interface */
+ 	rc = uv_bios_init();
  
- 	if (is_uv_system())
++	/* Create user access node if UVsystab available */
++	if (rc >= 0)
++		uv_setup_proc_files(1);
++
+ 	return rc;
+ }
+ 
+@@ -1596,7 +1687,7 @@ static void __init uv_system_init_hub(vo
+ 	uv_nmi_setup();
+ 	uv_cpu_init();
+ 	uv_scir_register_cpu_notifier();
+-	proc_mkdir("sgi_uv", NULL);
++	uv_setup_proc_files(0);
+ 
+ 	/* Register Legacy VGA I/O redirection handler: */
+ 	pci_register_set_vga_state(uv_set_vga_state);
 
 -- 
