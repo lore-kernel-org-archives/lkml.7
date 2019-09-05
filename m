@@ -2,86 +2,93 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C2C4C3A5AB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 07:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE6FC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 07:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75C122168B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 07:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 347BF22BEF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 07:40:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="Nb9f65Al"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732184AbfIEHjv (ORCPT
+        id S1732201AbfIEHkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 03:39:51 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:36847 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731162AbfIEHjv (ORCPT
+        Thu, 5 Sep 2019 03:40:23 -0400
+Received: from sender4-pp-o95.zoho.com ([136.143.188.95]:25501 "EHLO
+        sender4-pp-o95.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731361AbfIEHkX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 03:39:51 -0400
-Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 30611100016;
-        Thu,  5 Sep 2019 07:39:46 +0000 (UTC)
-Date:   Thu, 5 Sep 2019 09:39:43 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     zhong jiang <zhongjiang@huawei.com>
-Cc:     tony@atomide.com, udeep.dutt@intel.com, ashutosh.dixit@intel.com,
-        gregkh@linuxfoundation.org, kishon@ti.com, jonathanh@nvidia.com,
-        a.zummo@towertech.it, linux-kernel@vger.kernel.org,
-        linux-rtc@vger.kernel.org, arnd@arndb.de, lorenzo.pieralisi@arm.com
-Subject: Re: [PATCH 4/4] rtc: ds1347: Use PTR_ERR_OR_ZERO rather than its
- implementation
-Message-ID: <20190905073943.GA21254@piout.net>
-References: <1567665795-5901-1-git-send-email-zhongjiang@huawei.com>
- <1567665795-5901-5-git-send-email-zhongjiang@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1567665795-5901-5-git-send-email-zhongjiang@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Thu, 5 Sep 2019 03:40:23 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1567669130; cv=none; 
+        d=zoho.com; s=zohoarc; 
+        b=dhcLkStAdsTM1o4nHBlvqvbUNxZuGcQyUBirvZm4qmhgSWCaIq6TwuZb4N+RhEWsruQPJkpV5lr31JLTRGKe2NgRy0pHCmx/JXCyPqWeE/lUm4CRkf/GPP8Qs66u2BMOHt96ibGtLwkRTE8XtUlNRZDa2/WLPGjO7GWJojycFHg=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
+        t=1567669130; h=Cc:Date:From:In-Reply-To:Message-ID:References:Subject:To:ARC-Authentication-Results; 
+        bh=Heqr9SZkadaVS8gLSB7N1qy++ZERfguRdtxZqkfJX0A=; 
+        b=TeeCahrW1FxZNnGtRY/HJ++aIRXxwzEaA1R6vuHtSYigzOWIDtpG64Embd1UxvnfnfTyUfIcb+c80fWktW4vyhoTg4rNwu0yKqnZeYaLpG+8yXzlpQAUjxcKDHUo/0WV37Uc3NkuX2cVom7V3t0mVvdXAeEHeRVsG0hlHN7/hxE=
+ARC-Authentication-Results: i=1; mx.zoho.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=from:to:cc:subject:date:message-id:in-reply-to:references; 
+  b=i2voXQ3nizZYL+xtYxnA9lL4pNt7arpQADgXeZk8KBRkG+XHjmm9js3xtqrcz9NsYWfkTb1On1BX
+    +ZD+G5tdImbqQ7t6fAjhQWT+bCNoN/ILCimAZhrf8DBgaeyo2Cb8  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1567669130;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; l=873;
+        bh=Heqr9SZkadaVS8gLSB7N1qy++ZERfguRdtxZqkfJX0A=;
+        b=Nb9f65AlyTRCbjP1L15gZrRZ5ns0cq40NUB1ZR2y62PwUa/zeX+S4Y/or0AAaIgI
+        P7a52uJKv5F9IOlwKTxxHZPwzPBfvjk/P66XpOw8BiPV8RBYfcE12wxdfcS/qxm0SbN
+        +y7S6t7ZB5SWP/2jeqNNVBsaNNnEt/bvrg9MPBTE=
+Received: from zhouyanjie-virtual-machine.localdomain (125.71.5.36 [125.71.5.36]) by mx.zohomail.com
+        with SMTPS id 1567669129342200.53823429847387; Thu, 5 Sep 2019 00:38:49 -0700 (PDT)
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
+        devicetree@vger.kernel.org, ulf.hansson@linaro.org,
+        paul.burton@mips.com, linus.walleij@linaro.org,
+        paul@crapouillou.net, malat@debian.org, yuehaibing@huawei.com,
+        ezequiel@collabora.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        syq@debian.org, jiaxun.yang@flygoat.com
+Subject: [PATCH 3/4] dt-bindings: MMC: Add JZ4760 bindings.
+Date:   Thu,  5 Sep 2019 15:38:08 +0800
+Message-Id: <1567669089-88693-4-git-send-email-zhouyanjie@zoho.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1567669089-88693-1-git-send-email-zhouyanjie@zoho.com>
+References: <1567669089-88693-1-git-send-email-zhouyanjie@zoho.com>
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/09/2019 14:43:15+0800, zhong jiang wrote:
-> PTR_ERR_OR_ZERO contains if(IS_ERR(...)) + PTR_ERR. It is better to
-> use it directly. hence just replace it.
-> 
+Add the MMC bindings for the JZ4760 Soc from Ingenic.
 
-Unless you have a more significant contribution to this driver, I'm not
-going to apply this patch, especially since it will have to be reverted
-as soon as the probe function changes.
+Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+---
+ Documentation/devicetree/bindings/mmc/jz4740.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
-> ---
->  drivers/rtc/rtc-ds1347.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
-> 
-> diff --git a/drivers/rtc/rtc-ds1347.c b/drivers/rtc/rtc-ds1347.c
-> index d392a7b..5a64eea 100644
-> --- a/drivers/rtc/rtc-ds1347.c
-> +++ b/drivers/rtc/rtc-ds1347.c
-> @@ -151,10 +151,7 @@ static int ds1347_probe(struct spi_device *spi)
->  	rtc = devm_rtc_device_register(&spi->dev, "ds1347",
->  				&ds1347_rtc_ops, THIS_MODULE);
->  
-> -	if (IS_ERR(rtc))
-> -		return PTR_ERR(rtc);
-> -
-> -	return 0;
-> +	return PTR_ERR_OR_ZERO(rtc);
->  }
->  
->  static struct spi_driver ds1347_driver = {
-> -- 
-> 1.7.12.4
-> 
-
+diff --git a/Documentation/devicetree/bindings/mmc/jz4740.txt b/Documentation/devicetree/bindings/mmc/jz4740.txt
+index 8a6f87f..13796fe 100644
+--- a/Documentation/devicetree/bindings/mmc/jz4740.txt
++++ b/Documentation/devicetree/bindings/mmc/jz4740.txt
+@@ -8,6 +8,7 @@ Required properties:
+ - compatible: Should be one of the following:
+   - "ingenic,jz4740-mmc" for the JZ4740
+   - "ingenic,jz4725b-mmc" for the JZ4725B
++  - "ingenic,jz4760-mmc" for the JZ4760
+   - "ingenic,jz4780-mmc" for the JZ4780
+ - reg: Should contain the MMC controller registers location and length.
+ - interrupts: Should contain the interrupt specifier of the MMC controller.
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.7.4
+
+
