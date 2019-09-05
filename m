@@ -2,127 +2,97 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA14C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 03:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4A89C3A5AB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 03:59:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31F102168B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 03:59:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="cxi0lxLM";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XdIJZOQm"
+	by mail.kernel.org (Postfix) with ESMTP id B9A1F20820
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 03:59:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730694AbfIED7F (ORCPT
+        id S1730886AbfIED7h convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 23:59:05 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:47789 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727562AbfIED7E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 23:59:04 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id E36DC399A;
-        Wed,  4 Sep 2019 23:59:03 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Wed, 04 Sep 2019 23:59:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=bsxI63SDV53IBgVMw9ODo8bNo53LTDF
-        tLsvuYgDTumc=; b=cxi0lxLMshDNFApXwHb+YnUgaXybAEJD4RXHoK45E5SVzBo
-        jwmlEP9AamppX+wLLstsGJrBCfPKqKxYTMOiHYBvNOtYR4BHt0qAMn/6nvtu023i
-        oMz1+L2EopbHYaibpSYOnjKxAhVvo5SUX8K3Qa+3iN/LCYg3YTy43UJAMOni17wS
-        isZJzyTCpSunnQGn8kUtTNSfo247l0wubez2B7LoDLQGWwZHpYtjlpDMdX58fOOv
-        T33ukMTx5ZzovB0jlb61CseEJQECpU+CIQwN7aWfrCZihc3fGTANoan9eiMlbSAV
-        AAEnEw94LbDxVSanAo6cUFTVRs3r9RHWLiouxOA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=bsxI63
-        SDV53IBgVMw9ODo8bNo53LTDFtLsvuYgDTumc=; b=XdIJZOQmJhKJ1LqYXYYS4h
-        IuDgZApzHMLe2yXEYn0Jtah0T1STxbmaFDguklzz9+FQxNcd7MQ2ZROl4q2YpepQ
-        Z50PtQvsk9GWP6cRgkknPJjFbp2qtfbwKGBQ0TFC8aqEidJT2EgF16qVkSUgBXzi
-        cSJ4phSg7BAjkAOu9lkYR7zNYzrhZTAZotpvpRHZ7uGr3DZsYzCGwro4nVos4uOc
-        G7wyG0OLNiVC2N28x9rXNrNAC9FehG6IsnPTl7t0FyXaMCvjYuEpG7bRQGh3MFfB
-        WTr7pByxoFMtdEwVfr0IWC4UBM//mL8o48rTXsI5/RVMVxALWsHX2XogHIR84WGw
-        ==
-X-ME-Sender: <xms:B4hwXayjsygOYaj8l4PbulBAuT8qWTh1NBH6NzyMdJkaY2VTz--qaA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudejiedgjeeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreerjeenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
-    rhfuihiivgeptd
-X-ME-Proxy: <xmx:B4hwXfGnLBul3l6Udc_i_53IEol2R6CjpoL9MJLEZQo750pyaTOnGA>
-    <xmx:B4hwXTTC5oI7XVX6BT1Jm-kZAOwa8B4ZmTbvqP9BsUX7oP_Vjkmo_A>
-    <xmx:B4hwXaGdHvnq3xcZ3ahDizMlAjxwfEdCU6WlswcVpTDnExbf4FfDZQ>
-    <xmx:B4hwXeyGK36-A7d6lMJZBk4iEBP9mmUowTbonVUncqdCVaq0n2Trwg>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 933F9E00A3; Wed,  4 Sep 2019 23:59:03 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-186-gf4cb3c3-fmstable-20190904v1
-Mime-Version: 1.0
-Message-Id: <3f9d48eb-79ed-42e9-a346-761871e74c98@www.fastmail.com>
-In-Reply-To: <20190905011800.16156-1-rashmica.g@gmail.com>
-References: <20190905011800.16156-1-rashmica.g@gmail.com>
-Date:   Thu, 05 Sep 2019 13:29:29 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Rashmica Gupta" <rashmica.g@gmail.com>,
-        "Linus Walleij" <linus.walleij@linaro.org>
-Cc:     "Bartosz Golaszewski" <bgolaszewski@baylibre.com>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Joel Stanley" <joel@jms.id.au>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: =?UTF-8?Q?Re:_[PATCH_v2_4/4]_gpio:_dt-bindings:_Update_documentation_wit?=
- =?UTF-8?Q?h_ast2600_controllers?=
-Content-Type: text/plain
+        Wed, 4 Sep 2019 23:59:37 -0400
+Received: from ozlabs.org ([203.11.71.1]:52957 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727562AbfIED7g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 23:59:36 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46P6QF30c0z9s7T;
+        Thu,  5 Sep 2019 13:59:33 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Mimi Zohar <zohar@linux.ibm.com>, Nayna Jain <nayna@linux.ibm.com>,
+        linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org,
+        linux-integrity@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Josh Boyer <jwboyer@fedoraproject.org>,
+        David Howells <dhowells@redhat.com>
+Subject: Re: [PATCH v3 3/4] x86/efi: move common keyring handler functions to new file
+In-Reply-To: <1567551071.4937.5.camel@linux.ibm.com>
+References: <1566825818-9731-1-git-send-email-nayna@linux.ibm.com> <1566825818-9731-4-git-send-email-nayna@linux.ibm.com> <87pnkisyiv.fsf@mpe.ellerman.id.au> <1567551071.4937.5.camel@linux.ibm.com>
+Date:   Thu, 05 Sep 2019 13:59:33 +1000
+Message-ID: <87blvzpf4q.fsf@mpe.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Mimi Zohar <zohar@linux.ibm.com> writes:
+> (Cc'ing Josh Boyer, David Howells)
+>
+> On Mon, 2019-09-02 at 21:55 +1000, Michael Ellerman wrote:
+>> Nayna Jain <nayna@linux.ibm.com> writes:
+>> 
+>> > The handlers to add the keys to the .platform keyring and blacklisted
+>> > hashes to the .blacklist keyring is common for both the uefi and powerpc
+>> > mechanisms of loading the keys/hashes from the firmware.
+>> >
+>> > This patch moves the common code from load_uefi.c to keyring_handler.c
+>> >
+>> > Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+>
+> Acked-by: Mimi Zohar <zohar@linux.ibm.com>
+>
+>> > ---
+>> >  security/integrity/Makefile                   |  3 +-
+>> >  .../platform_certs/keyring_handler.c          | 80 +++++++++++++++++++
+>> >  .../platform_certs/keyring_handler.h          | 32 ++++++++
+>> >  security/integrity/platform_certs/load_uefi.c | 67 +---------------
+>> >  4 files changed, 115 insertions(+), 67 deletions(-)
+>> >  create mode 100644 security/integrity/platform_certs/keyring_handler.c
+>> >  create mode 100644 security/integrity/platform_certs/keyring_handler.h
+>> 
+>> This has no acks from security folks, though I'm not really clear on who
+>> maintains those files.
+>
+> I upstreamed David's, Josh's, and Nayna's patches, so that's probably
+> me.
+>
+>> Do I take it because it's mostly just code movement people are OK with
+>> it going in via the powerpc tree?
+>
+> Yes, the only reason for splitting load_uefi.c is for powerpc.  These
+> patches should be upstreamed together.  
 
+Thanks.
 
-On Thu, 5 Sep 2019, at 10:48, Rashmica Gupta wrote:
-> The ast2600 is a new generation of SoC from ASPEED. Similarly to the
-> ast2400 and ast2500, it has a GPIO controller for it's 3.6V GPIO pins.
-> Additionally, it has a GPIO controller for 36 1.8V GPIO pins. These
-> voltages are fixed and cannot be configured via pinconf, so we have two
-> separate drivers for them.
-
-See 3/4 for discussion about the commit message.
-
-> 
-> Signed-off-by: Rashmica Gupta <rashmica.g@gmail.com>
-> ---
->  Documentation/devicetree/bindings/gpio/gpio-aspeed.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt 
-> b/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
-> index 7e9b586770b0..cd388797e07c 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
-> @@ -2,7 +2,8 @@ Aspeed GPIO controller Device Tree Bindings
->  -------------------------------------------
->  
->  Required properties:
-> -- compatible		: Either "aspeed,ast2400-gpio" or "aspeed,ast2500-gpio"
-> +- compatible		: Either "aspeed,ast2400-gpio", "aspeed,ast2500-gpio",
-> +					  "aspeed,ast2600-gpio", or "aspeed,ast2600-1-8v-gpio"
-
-See the discussion on patch 3/4 about how we might eliminate the
-aspeed,ast2600-1-8v-gpio compatible string.
-
-Also, this patch should be the first in the series and start the subject with
-"dt-bindings: gpio: aspeed: ..."
-
-Cheers,
-
-Andrew
+cheers
