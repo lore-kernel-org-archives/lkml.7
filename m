@@ -2,132 +2,164 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0126C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B40C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8276C2082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:03:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E2C82082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:03:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r9T1e6uW"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="srJv115I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389557AbfIEQDQ (ORCPT
+        id S2390677AbfIEQDT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 12:03:16 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38507 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389438AbfIEQDP (ORCPT
+        Thu, 5 Sep 2019 12:03:19 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:40023 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389438AbfIEQDR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 12:03:15 -0400
-Received: by mail-wm1-f68.google.com with SMTP id o184so3720970wme.3
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 09:03:14 -0700 (PDT)
+        Thu, 5 Sep 2019 12:03:17 -0400
+Received: by mail-qk1-f195.google.com with SMTP id f10so2618453qkg.7
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 09:03:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xF5g9IO6jKnafhVzgDApXP2oM7DXnYkebnFH9y77eNE=;
-        b=r9T1e6uWz1LE6nNNk8y0oqPRvd8zqa6gn7QDLNHiVCUH7vRly5jrqlmsPYtj9d1RKh
-         v+3Esb1sjsGDRbND9GSNtycU3df7f7+1pEUYlkfnYh0Jripc/KwYnbfhlIbm982nC3Ev
-         2R2yYm0BVRvJXOf4wvIf14T24AJ2P3aOei3lsX+3+tlRBZmQcprOacmv1tzWkgf6TGI3
-         q6O9UGIv/4XF2K0O7xQ/SPUUjkipL3j/KcdRxrl9iSxEV8W5Do6YyDRK04T4DkGCS74o
-         LimaWvMf0JtIOwj+brZ5XGVf7/gtJiq29j+6LA8fFMx8/NtiwAzun7s4pSONcQ1DkLWl
-         pJZA==
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ARdJcCTl1yvQzK9KFLXbOHVAx1PUXY0NiCi5/Ki6zRU=;
+        b=srJv115Is3P1U681GfWFzKE7i0Oyph2BEelIw9RQDw4Dln8DnSnc88Tiza/8Et1j36
+         3OEPDoDLDWMDlfCdb9bby1HL0sCkqqlMEzLjdLZh8tpE4MRAyc99rr6a/hlqrGjxx2m/
+         KaXYbChyJ7NwsgcfkNrN3Qr78Nqmzy3gFHjtA/dT2vDsmG502OtHEQGe9og31RxU+rJI
+         tS2S5wrJxZz/0XgpVwuQsY+3fY3ghD8rqtVwNRBRhNdj8C68YXgGsHZ8G7KJlj71db1s
+         oKW1//ih086eB7lxRtuLID5QBMTp+6gknvrXt5Gk+261Ch7f+flyF9712noDYKC6CGOJ
+         B6fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xF5g9IO6jKnafhVzgDApXP2oM7DXnYkebnFH9y77eNE=;
-        b=D/4icUv9TkbLKmuTrZeLn5AvbK/IFqgqsm7u30eLxsFeMK1bZA71GRLcgleRPAE+Bi
-         6PAdaLYaYZradwu40dq54GlF8rrp6iknJ3wDIfy9+fKcKNx1h5mDuiLc2B+OgzyCpOTX
-         rjdx4NNKPvajFrXQ15XEU9Sm3sSoyLe5gTSf+6ol+bSE8aNo54R3c0Zz2ZbgeZshuDnY
-         eXjM+3DOclITBT1TSP0usPOpqLmu4JUyLU0o16HXjYai2lxzpQLR7OiM1m1uzTavhkYG
-         FpfosrW2BOSSlL2XTkfOOZdCQHbmdgcxNWH54bIxh7T+WYI4KcdUmwmOYqD1LjzBuHK8
-         Rf5A==
-X-Gm-Message-State: APjAAAXCtQsqQHZU62LYz/KzGmJ2eqVYom9CiBvtkxDNAQhxvpxKSfec
-        VJjnJlFoOubqJq3Xe5VLSAcUPLcyp7PSM8qZdnvs8Q==
-X-Google-Smtp-Source: APXvYqxn697f0MLbHLVLiNrv31ZON72Qw9YwLPyxM0jd0I67TVVrGvqak6f1I7B6szc8twvaNTAUZ5K2Mhj8xS132j0=
-X-Received: by 2002:a1c:cfc9:: with SMTP id f192mr3378872wmg.85.1567699392897;
- Thu, 05 Sep 2019 09:03:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190903200905.198642-1-joel@joelfernandes.org>
- <20190904084508.GL3838@dhcp22.suse.cz> <20190904153258.GH240514@google.com>
- <20190904153759.GC3838@dhcp22.suse.cz> <20190904162808.GO240514@google.com> <20190905144310.GA14491@dhcp22.suse.cz>
-In-Reply-To: <20190905144310.GA14491@dhcp22.suse.cz>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Thu, 5 Sep 2019 09:03:01 -0700
-Message-ID: <CAJuCfpFve2v7d0LX20btk4kAjEpgJ4zeYQQSpqYsSo__CY68xw@mail.gmail.com>
-Subject: Re: [PATCH v2] mm: emit tracepoint when RSS changes by threshold
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ARdJcCTl1yvQzK9KFLXbOHVAx1PUXY0NiCi5/Ki6zRU=;
+        b=VLzax2PWslyS7nLKJfJEWqHzma5JX2cz/6xa2q0HAEtzSKrPucalavK/LNkHuXPb4t
+         junv1E5WpVvS9rqCFuvjU5Ta2LFjPyG/bTmPpFokAHtTqkzPWSXl33L1/6V6+VOJaVoK
+         ZORGB2aFmXL6D33xEmP5qaHd3n4yerAZTnNSfQx/9doI74DjYEG/OFaAhl9B5uwvNqkB
+         A7fhLgADO4awhFcPzFvyrxFOyoJrSKUGnvi9XHmFvGS3a6wocxSsWufokLwQmPoMne07
+         T1gLbXjHW43iLARS1df3OFGJVID3JY7NAQy7xpm6ibANaIPMd+osM4apCyBnZsk+shOx
+         6NYA==
+X-Gm-Message-State: APjAAAW4pXwmJZOi8eRUV/36NwLbNqmm3LhTJC1T8hNCUhe8mOWVi2u+
+        xypfqBuv7Sao09eZ0Gn1e2pPcA==
+X-Google-Smtp-Source: APXvYqwz5Ih1cBni0LNoxZQih9BYTQsib4BYdkphk3cPMd+iJT2Lx0QIEW7e93FPRyn81x6iF6WcRA==
+X-Received: by 2002:ae9:e50f:: with SMTP id w15mr3683737qkf.129.1567699396301;
+        Thu, 05 Sep 2019 09:03:16 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id p126sm1346062qkc.84.2019.09.05.09.03.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Sep 2019 09:03:15 -0700 (PDT)
+Message-ID: <1567699393.5576.96.camel@lca.pw>
+Subject: Re: [PATCH] net/skbuff: silence warnings under memory pressure
+From:   Qian Cai <cai@lca.pw>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Tim Murray <timmurray@google.com>,
-        Carmen Jackson <carmenjackson@google.com>,
-        Mayank Gupta <mayankgupta@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        kernel-team <kernel-team@android.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        linux-mm <linux-mm@kvack.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Vlastimil Babka <vbabka@suse.cz>
+        Petr Mladek <pmladek@suse.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Eric Dumazet <eric.dumazet@gmail.com>, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 05 Sep 2019 12:03:13 -0400
+In-Reply-To: <20190905113208.GA521@jagdpanzerIV>
+References: <20190903185305.GA14028@dhcp22.suse.cz>
+         <1567546948.5576.68.camel@lca.pw> <20190904061501.GB3838@dhcp22.suse.cz>
+         <20190904064144.GA5487@jagdpanzerIV> <20190904065455.GE3838@dhcp22.suse.cz>
+         <20190904071911.GB11968@jagdpanzerIV> <20190904074312.GA25744@jagdpanzerIV>
+         <1567599263.5576.72.camel@lca.pw>
+         <20190904144850.GA8296@tigerII.localdomain>
+         <1567629737.5576.87.camel@lca.pw> <20190905113208.GA521@jagdpanzerIV>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 5, 2019 at 7:43 AM Michal Hocko <mhocko@kernel.org> wrote:
->
-> [Add Steven]
->
-> On Wed 04-09-19 12:28:08, Joel Fernandes wrote:
-> > On Wed, Sep 4, 2019 at 11:38 AM Michal Hocko <mhocko@kernel.org> wrote:
-> > >
-> > > On Wed 04-09-19 11:32:58, Joel Fernandes wrote:
-> [...]
-> > > > but also for reducing
-> > > > tracing noise. Flooding the traces makes it less useful for long traces and
-> > > > post-processing of traces. IOW, the overhead reduction is a bonus.
-> > >
-> > > This is not really anything special for this tracepoint though.
-> > > Basically any tracepoint in a hot path is in the same situation and I do
-> > > not see a point why each of them should really invent its own way to
-> > > throttle. Maybe there is some way to do that in the tracing subsystem
-> > > directly.
-> >
-> > I am not sure if there is a way to do this easily. Add to that, the fact that
-> > you still have to call into trace events. Why call into it at all, if you can
-> > filter in advance and have a sane filtering default?
-> >
-> > The bigger improvement with the threshold is the number of trace records are
-> > almost halved by using a threshold. The number of records went from 4.6K to
-> > 2.6K.
->
-> Steven, would it be feasible to add a generic tracepoint throttling?
+On Thu, 2019-09-05 at 20:32 +0900, Sergey Senozhatsky wrote:
+> On (09/04/19 16:42), Qian Cai wrote:
+> > > Let me think more.
+> > 
+> > To summary, those look to me are all good long-term improvement that would
+> > reduce the likelihood of this kind of livelock in general especially for
+> > other
+> > unknown allocations that happen while processing softirqs, but it is still
+> > up to
+> > the air if it fixes it 100% in all situations as printk() is going to take
+> > more
+> > time
+> 
+> Well. So. I guess that we don't need irq_work most of the time.
+> 
+> We need to queue irq_work for "safe" wake_up_interruptible(), when we
+> know that we can deadlock in scheduler. IOW, only when we are invoked
+> from the scheduler. Scheduler has printk_deferred(), which tells printk()
+> that it cannot do wake_up_interruptible(). Otherwise we can just use
+> normal wake_up_process() and don't need that irq_work->wake_up_interruptible()
+> indirection. The parts of the scheduler, which by mistake call plain printk()
+> from under pi_lock or rq_lock have chances to deadlock anyway and should
+> be switched to printk_deferred().
+> 
+> I think we can queue significantly much less irq_work-s from printk().
+> 
+> Petr, Steven, what do you think?
+> 
+> Something like this. Call wake_up_interruptible(), switch to
+> wake_up_klogd() only when called from sched code.
+> 
+> ---
+> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> index cd51aa7d08a9..89cb47882254 100644
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -2027,8 +2027,11 @@ asmlinkage int vprintk_emit(int facility, int level,
+>  	pending_output = (curr_log_seq != log_next_seq);
+>  	logbuf_unlock_irqrestore(flags);
+>  
+> +	if (!pending_output)
+> +		return printed_len;
+> +
+>  	/* If called from the scheduler, we can not call up(). */
+> -	if (!in_sched && pending_output) {
+> +	if (!in_sched) {
+>  		/*
+>  		 * Disable preemption to avoid being preempted while holding
+>  		 * console_sem which would prevent anyone from printing to
+> @@ -2043,10 +2046,11 @@ asmlinkage int vprintk_emit(int facility, int level,
+>  		if (console_trylock_spinning())
+>  			console_unlock();
+>  		preempt_enable();
+> -	}
+>  
+> -	if (pending_output)
+> +		wake_up_interruptible(&log_wait);
+> +	} else {
+>  		wake_up_klogd();
+> +	}
+>  	return printed_len;
+>  }
+>  EXPORT_SYMBOL(vprintk_emit);
+> ---
+> 
+> > and could deal with console hardware that involve irq_exit() anyway.
+> 
+> printk->console_driver->write() does not involve irq.
 
-I might misunderstand this but is the issue here actually throttling
-of the sheer number of trace records or tracing large enough changes
-to RSS that user might care about? Small changes happen all the time
-but we are likely not interested in those. Surely we could postprocess
-the traces to extract changes large enough to be interesting but why
-capture uninteresting information in the first place? IOW the
-throttling here should be based not on the time between traces but on
-the amount of change of the traced signal. Maybe a generic facility
-like that would be a good idea?
+Hmm, from the article,
 
-> --
-> Michal Hocko
-> SUSE Labs
->
-> --
-> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
->
+https://en.wikipedia.org/wiki/Universal_asynchronous_receiver-transmitter
+
+"Since transmission of a single or multiple characters may take a long time
+relative to CPU speeds, a UART maintains a flag showing busy status so that the
+host system knows if there is at least one character in the transmit buffer or
+shift register; "ready for next character(s)" may also be signaled with an
+interrupt."
