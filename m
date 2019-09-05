@@ -5,65 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFE8C00307
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBADCC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A98020870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:18:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A388214D9
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:18:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GFbERyZ9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HL27V+NY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388334AbfIEQSQ (ORCPT
+        id S2388593AbfIEQSS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 12:18:16 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33898 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388096AbfIEQSL (ORCPT
+        Thu, 5 Sep 2019 12:18:18 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34148 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388431AbfIEQSQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 12:18:11 -0400
-Received: by mail-pf1-f195.google.com with SMTP id r12so2090696pfh.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 09:18:11 -0700 (PDT)
+        Thu, 5 Sep 2019 12:18:16 -0400
+Received: by mail-pl1-f196.google.com with SMTP id d3so1556208plr.1
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 09:18:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=NoTtLr1lztWfrS92BUWnGWn3zk0jvQAYseg1lZWuSGs=;
-        b=GFbERyZ9NRV2dkkLT4vQsg2O43TovjaGYNn6dZQb4zlipk1hrBEI93ONy4uCdy17BN
-         qs6turZaX0cjL2hsvD0XQcPWWyT5eGXz7QIlN5q8rtchZ5viCWRBDwkHQ7obcrcC3Uar
-         1ortXnAwgQMvUwFZEFdfF67Zd3yS6nt3iV9SSsbRUiIhAZwUvGND/emO1CKYf2KWOr28
-         VxlM82pRtImf20eiipHbpwiiWXaq0nZI2+bBsKhiaerAHkOFKlpVyiIpgMWISCo/STX0
-         lWqLo+YlveCj4WJwPQ/Qdyw/LyipxCRHxudVAm/baaKD40BYKWBjg0PjlTT0keABvYme
-         Sx5g==
+        bh=8QjjqDFW2as8gsE3MNwHPLPN76USmssxyGkKOBC9D3E=;
+        b=HL27V+NYul1f+O0bmc6YkYSMF5euNDbYJl3hh04CdtFtjxmvNCYdhhn4rVKZ4mtbnC
+         haoz4ZuRykOa1EVcbKBLOnulQom5g/1qMM4K3pUJqI9gyl8+8M7gUP3hdV27jiyNhaLP
+         o/VZfks/pnLsAsEemsNEwt2UAy9aH5QMHPRsXyteaLVX8yuXtIU8Q7J3Kt0GHRGIjeu+
+         6uqwAVSO0rrjztAQNUcFDtt/AS9X6aQBAlsAr+yR2VeRxvHvm5f4PTxaab1YLr0ySVHa
+         WGR7mnvK9yLWmfNAcVoLZFMGqTS8ZaLoVAcycwWbcXSXF16pUzOt3ohlbzYqLRrORRPt
+         DjoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=NoTtLr1lztWfrS92BUWnGWn3zk0jvQAYseg1lZWuSGs=;
-        b=B3oqoqbPdwNsj+1z65o4F8m1Jze6EpfoH+lMdY8nRX3T6uvkOHLVH/cWLuhAL1RbsQ
-         rlYm+vNXz6pzaMBbYc5xaBe4YOZJtL0XPezp1uJXJc4j5D1ikC5XgXkpSN0t2yBYOG9r
-         vFT0x78PQ3dAZQBWM7eckY5qkAvWUFQR6ptXA6C/d00bupoUkHH+Xa+0BstFLfuC8NFF
-         gbyEBejxxyG2vz7nKKlUCbgpKeN84rjjJuFlkYyESERYAjriFNihhffGtvXkDVwDgyzP
-         gcAN+/9WcBE2fkH591j/x6j5DewnNmmrWBwlbKkx/b2TIYFPNuO/Ols/8ey+2lDdQDD1
-         WMNA==
-X-Gm-Message-State: APjAAAXkqc11KoGbqukOx0JUhWkW6ggXU4w3++Yq7ThIJiAqjX5ysxu2
-        5bndtidEH5YH7wodgliDetamWw==
-X-Google-Smtp-Source: APXvYqxTYivq/efmoU5WtwxZv5cSxczPS7YC9boEJTkxinNAbnn0GjS2kdu7p4Li6YOQRyRvVr3Cpw==
-X-Received: by 2002:a63:60a:: with SMTP id 10mr3873993pgg.381.1567700290813;
-        Thu, 05 Sep 2019 09:18:10 -0700 (PDT)
+        bh=8QjjqDFW2as8gsE3MNwHPLPN76USmssxyGkKOBC9D3E=;
+        b=fjML/jdcBbFZTIjJA4nsoSI3d6I/09SlbnxIdH0jxG+khMkfIxB2jBK7yW91Wg+yqv
+         VkznMy38dS9q6MUrPVffcgvq2fh9EJN/F0rGrwlSk+W9EUSbz+zHx9NuzbnZP6vRttwr
+         RWH8+I4J0jNkB+CILbe59JzGV8vnSwJcaesdCrLyNLmBXZVZ2VrU5gwMY4cc6JI4Ry+m
+         qWRc4lxOtx5SzrzghoPd/I3K3KYhgqmWVJLDN/Jg0IaZu1QLul3u08B4TRhGwhQ8tQWu
+         JpFiiaoTAy3G5zZuASmE8KV0NfRuumopM5pYs1GNEJzLYSMo9LQio87DAif8r70GO68F
+         MT4g==
+X-Gm-Message-State: APjAAAVXdNAhYG23RHNUe79XGKIsG4s3NpEDB+zRSdMhGmcqTLOPBiBx
+        H7tE/W6BFZowijp+sJXKDcw46A==
+X-Google-Smtp-Source: APXvYqyin58dfoGmkrcR+0oj6G4rVylfKjqkSHZX5WE/1JHerRC2GQAUjkfl3U9yKFWbfii5zbbXyA==
+X-Received: by 2002:a17:902:8a87:: with SMTP id p7mr4384259plo.240.1567700295503;
+        Thu, 05 Sep 2019 09:18:15 -0700 (PDT)
 Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id m129sm6324005pga.39.2019.09.05.09.18.09
+        by smtp.gmail.com with ESMTPSA id m129sm6324005pga.39.2019.09.05.09.18.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 09:18:10 -0700 (PDT)
+        Thu, 05 Sep 2019 09:18:14 -0700 (PDT)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     stable@vger.kernel.org
 Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org,
         linux-pci@vger.kernel.org, linux-mtd@lists.infradead.org
-Subject: [BACKPORT 4.14.y 08/18] mtd: spi-nor: cadence-quadspi: add a delay in write sequence
-Date:   Thu,  5 Sep 2019 10:17:49 -0600
-Message-Id: <20190905161759.28036-9-mathieu.poirier@linaro.org>
+Subject: [BACKPORT 4.14.y 12/18] mailbox: reset txdone_method TXDONE_BY_POLL if client knows_txdone
+Date:   Thu,  5 Sep 2019 10:17:53 -0600
+Message-Id: <20190905161759.28036-13-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190905161759.28036-1-mathieu.poirier@linaro.org>
 References: <20190905161759.28036-1-mathieu.poirier@linaro.org>
@@ -72,99 +72,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vignesh R <vigneshr@ti.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
 
-commit 61dc8493bae9ba82a1c72edbc6c6065f6a94456a upstream
+commit 33cd7123ac0ba5360656ae27db453de5b9aa711f upstream
 
-As per 66AK2G02 TRM[1] SPRUHY8F section 11.15.5.3 Indirect Access
-Controller programming sequence, a delay equal to couple of QSPI master
-clock(~5ns) is required after setting CQSPI_REG_INDIRECTWR_START bit and
-writing data to the flash. Introduce a quirk flag CQSPI_NEEDS_WR_DELAY
-to handle this and set this flag for TI 66AK2G SoC.
+Currently the mailbox framework sets txdone_method to TXDONE_BY_POLL if
+the controller sets txdone_by_poll. However some clients can have a
+mechanism to do TXDONE_BY_ACK which they can specify by knows_txdone.
+However, we endup setting both TXDONE_BY_POLL and TXDONE_BY_ACK in that
+case. In such scenario, we may end up with below warnings as the tx
+ticker is run both by mailbox framework and the client.
 
-[1]http://www.ti.com/lit/ug/spruhy8f/spruhy8f.pdf
+WARNING: CPU: 1 PID: 0 at kernel/time/hrtimer.c:805 hrtimer_forward+0x88/0xd8
+CPU: 1 PID: 0 Comm: swapper/1 Not tainted 4.12.0-rc5 #242
+Hardware name: ARM LTD ARM Juno Development Platform
+task: ffff8009768ca700 task.stack: ffff8009768f8000
+PC is at hrtimer_forward+0x88/0xd8
+LR is at txdone_hrtimer+0xd4/0xf8
+Call trace:
+ hrtimer_forward+0x88/0xd8
+ __hrtimer_run_queues+0xe4/0x158
+ hrtimer_interrupt+0xa4/0x220
+ arch_timer_handler_phys+0x30/0x40
+ handle_percpu_devid_irq+0x78/0x130
+ generic_handle_irq+0x24/0x38
+ __handle_domain_irq+0x5c/0xb8
+ gic_handle_irq+0x54/0xa8
 
-Signed-off-by: Vignesh R <vigneshr@ti.com>
-Acked-by: Marek Vasut <marek.vasut@gmail.com>
-Signed-off-by: Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>
+This patch fixes the issue by resetting TXDONE_BY_POLL if client has set
+knows_txdone.
+
+Cc: Alexey Klimov <alexey.klimov@arm.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- drivers/mtd/spi-nor/cadence-quadspi.c | 27 ++++++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+ drivers/mailbox/mailbox.c | 4 ++--
+ drivers/mailbox/pcc.c     | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/mtd/spi-nor/cadence-quadspi.c b/drivers/mtd/spi-nor/cadence-quadspi.c
-index f22dd34f4f83..ff4edf4bb23c 100644
---- a/drivers/mtd/spi-nor/cadence-quadspi.c
-+++ b/drivers/mtd/spi-nor/cadence-quadspi.c
-@@ -38,6 +38,9 @@
- #define CQSPI_NAME			"cadence-qspi"
- #define CQSPI_MAX_CHIPSELECT		16
+diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
+index 44b49a2676f0..055c90b8253c 100644
+--- a/drivers/mailbox/mailbox.c
++++ b/drivers/mailbox/mailbox.c
+@@ -351,7 +351,7 @@ struct mbox_chan *mbox_request_channel(struct mbox_client *cl, int index)
+ 	init_completion(&chan->tx_complete);
  
-+/* Quirks */
-+#define CQSPI_NEEDS_WR_DELAY		BIT(0)
-+
- struct cqspi_st;
+ 	if (chan->txdone_method	== TXDONE_BY_POLL && cl->knows_txdone)
+-		chan->txdone_method |= TXDONE_BY_ACK;
++		chan->txdone_method = TXDONE_BY_ACK;
  
- struct cqspi_flash_pdata {
-@@ -76,6 +79,7 @@ struct cqspi_st {
- 	u32			fifo_depth;
- 	u32			fifo_width;
- 	u32			trigger_address;
-+	u32			wr_delay;
- 	struct cqspi_flash_pdata f_pdata[CQSPI_MAX_CHIPSELECT];
- };
+ 	spin_unlock_irqrestore(&chan->lock, flags);
  
-@@ -623,6 +627,15 @@ static int cqspi_indirect_write_execute(struct spi_nor *nor,
- 	reinit_completion(&cqspi->transfer_complete);
- 	writel(CQSPI_REG_INDIRECTWR_START_MASK,
- 	       reg_base + CQSPI_REG_INDIRECTWR);
-+	/*
-+	 * As per 66AK2G02 TRM SPRUHY8F section 11.15.5.3 Indirect Access
-+	 * Controller programming sequence, couple of cycles of
-+	 * QSPI_REF_CLK delay is required for the above bit to
-+	 * be internally synchronized by the QSPI module. Provide 5
-+	 * cycles of delay.
-+	 */
-+	if (cqspi->wr_delay)
-+		ndelay(cqspi->wr_delay);
+@@ -420,7 +420,7 @@ void mbox_free_channel(struct mbox_chan *chan)
+ 	spin_lock_irqsave(&chan->lock, flags);
+ 	chan->cl = NULL;
+ 	chan->active_req = NULL;
+-	if (chan->txdone_method == (TXDONE_BY_POLL | TXDONE_BY_ACK))
++	if (chan->txdone_method == TXDONE_BY_ACK)
+ 		chan->txdone_method = TXDONE_BY_POLL;
  
- 	while (remaining > 0) {
- 		size_t write_words, mod_bytes;
-@@ -1184,6 +1197,7 @@ static int cqspi_probe(struct platform_device *pdev)
- 	struct cqspi_st *cqspi;
- 	struct resource *res;
- 	struct resource *res_ahb;
-+	unsigned long data;
- 	int ret;
- 	int irq;
+ 	module_put(chan->mbox->dev->driver->owner);
+diff --git a/drivers/mailbox/pcc.c b/drivers/mailbox/pcc.c
+index 9b7005e1345e..27c2294be51a 100644
+--- a/drivers/mailbox/pcc.c
++++ b/drivers/mailbox/pcc.c
+@@ -266,7 +266,7 @@ struct mbox_chan *pcc_mbox_request_channel(struct mbox_client *cl,
+ 	init_completion(&chan->tx_complete);
  
-@@ -1241,6 +1255,10 @@ static int cqspi_probe(struct platform_device *pdev)
- 	}
+ 	if (chan->txdone_method == TXDONE_BY_POLL && cl->knows_txdone)
+-		chan->txdone_method |= TXDONE_BY_ACK;
++		chan->txdone_method = TXDONE_BY_ACK;
  
- 	cqspi->master_ref_clk_hz = clk_get_rate(cqspi->clk);
-+	data  = (unsigned long)of_device_get_match_data(dev);
-+	if (data & CQSPI_NEEDS_WR_DELAY)
-+		cqspi->wr_delay = 5 * DIV_ROUND_UP(NSEC_PER_SEC,
-+						   cqspi->master_ref_clk_hz);
+ 	spin_unlock_irqrestore(&chan->lock, flags);
  
- 	ret = devm_request_irq(dev, irq, cqspi_irq_handler, 0,
- 			       pdev->name, cqspi);
-@@ -1312,7 +1330,14 @@ static const struct dev_pm_ops cqspi__dev_pm_ops = {
- #endif
+@@ -312,7 +312,7 @@ void pcc_mbox_free_channel(struct mbox_chan *chan)
+ 	spin_lock_irqsave(&chan->lock, flags);
+ 	chan->cl = NULL;
+ 	chan->active_req = NULL;
+-	if (chan->txdone_method == (TXDONE_BY_POLL | TXDONE_BY_ACK))
++	if (chan->txdone_method == TXDONE_BY_ACK)
+ 		chan->txdone_method = TXDONE_BY_POLL;
  
- static const struct of_device_id cqspi_dt_ids[] = {
--	{.compatible = "cdns,qspi-nor",},
-+	{
-+		.compatible = "cdns,qspi-nor",
-+		.data = (void *)0,
-+	},
-+	{
-+		.compatible = "ti,k2g-qspi",
-+		.data = (void *)CQSPI_NEEDS_WR_DELAY,
-+	},
- 	{ /* end of table */ }
- };
- 
+ 	spin_unlock_irqrestore(&chan->lock, flags);
 -- 
 2.17.1
 
