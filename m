@@ -2,109 +2,86 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D75C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B52EC3A5AA
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75D9F20825
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:40:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1647920825
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:40:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388602AbfIELkG (ORCPT
+        id S2388616AbfIELkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 07:40:06 -0400
-Received: from foss.arm.com ([217.140.110.172]:42896 "EHLO foss.arm.com"
+        Thu, 5 Sep 2019 07:40:23 -0400
+Received: from mga05.intel.com ([192.55.52.43]:7598 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730753AbfIELkG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 07:40:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8DF2628;
-        Thu,  5 Sep 2019 04:40:05 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BBCC43F718;
-        Thu,  5 Sep 2019 04:40:03 -0700 (PDT)
-References: <20190830174944.21741-1-subhra.mazumdar@oracle.com> <20190830174944.21741-2-subhra.mazumdar@oracle.com> <20190905083127.GA2332@hirez.programming.kicks-ass.net> <87r24v2i14.fsf@arm.com> <20190905104616.GD2332@hirez.programming.kicks-ass.net> <20190905111346.2w6kuqrdvaqvgilu@e107158-lin.cambridge.arm.com> <20190905113002.GK2349@hirez.programming.kicks-ass.net>
-User-agent: mu4e 1.3.3; emacs 26.2
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Qais Yousef <qais.yousef@arm.com>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
-        steven.sistare@oracle.com, dhaval.giani@oracle.com,
-        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
-        mgorman@techsingularity.net, parth@linux.ibm.com
-Subject: Re: [RFC PATCH 1/9] sched,cgroup: Add interface for latency-nice
-In-reply-to: <20190905113002.GK2349@hirez.programming.kicks-ass.net>
-Date:   Thu, 05 Sep 2019 12:40:01 +0100
-Message-ID: <87ftlb2cq6.fsf@arm.com>
+        id S1730753AbfIELkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 07:40:22 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Sep 2019 04:40:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,470,1559545200"; 
+   d="scan'208";a="187951270"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga006.jf.intel.com with ESMTP; 05 Sep 2019 04:40:17 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1i5q7c-0007GF-5F; Thu, 05 Sep 2019 14:40:16 +0300
+Date:   Thu, 5 Sep 2019 14:40:16 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     Dilip Kota <eswara.kota@linux.intel.com>, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, martin.blumenstingl@googlemail.com,
+        linux-pci@vger.kernel.org, hch@infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
+Subject: Re: [PATCH v3 2/2] dwc: PCI: intel: Intel PCIe RC controller driver
+Message-ID: <20190905114016.GF2680@smile.fi.intel.com>
+References: <cover.1567585181.git.eswara.kota@linux.intel.com>
+ <35316bac59d3bc681e76d33e0345f4ef950c4414.1567585181.git.eswara.kota@linux.intel.com>
+ <20190905104517.GX9720@e119886-lin.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190905104517.GX9720@e119886-lin.cambridge.arm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Sep 05, 2019 at 11:45:18AM +0100, Andrew Murray wrote:
+> On Wed, Sep 04, 2019 at 06:10:31PM +0800, Dilip Kota wrote:
+> > Add support to PCIe RC controller on Intel Universal
+> > Gateway SoC. PCIe controller is based of Synopsys
+> > Designware pci core.
 
-On Thu, Sep 05, 2019 at 12:30:02 +0100, Peter Zijlstra wrote...
+> > +config PCIE_INTEL_AXI
 
-> On Thu, Sep 05, 2019 at 12:13:47PM +0100, Qais Yousef wrote:
->> On 09/05/19 12:46, Peter Zijlstra wrote:
->
->> > This is important because we want to be able to bias towards less
->> > importance to (tail) latency as well as more importantance to (tail)
->> > latency.
->> > 
->> > Specifically, Oracle wants to sacrifice (some) latency for throughput.
->> > Facebook OTOH seems to want to sacrifice (some) throughput for latency.
->> 
->> Another use case I'm considering is using latency-nice to prefer an idle CPU if
->> latency-nice is set otherwise go for the most energy efficient CPU.
->> 
->> Ie: sacrifice (some) energy for latency.
->> 
->> The way I see interpreting latency-nice here as a binary switch. But
->> maybe we can use the range to select what (some) energy to sacrifice
->> mean here. Hmmm.
->
-> It cannot be binary, per definition is must be ternary, that is, <0, ==0
-> and >0 (or middle value if you're of that persuasion).
->
-> In your case, I'm thinking you mean >0, we want to lower the latency.
->
-> Anyway; there were a number of things mentioned at OSPM that we could
-> tie into this thing and finding sensible mappings is going to be a bit
-> of trial and error I suppose.
->
-> But as patrick said; we're very much exporting a BIAS knob, not a set of
-> behaviours.
+I think that name here is too generic. Classical x86 seems not using this.
 
-Right, although I think behaviours could still be exported but via a
-different and configurable interface, using thresholds.
-
-Either at compile time or via procfs maybe we can expose and properly
-document what happen in the scheduler if/when a task has a "latency
-niceness" crossing a given threshold.
-
-For example, by setting something like:
-
-   /proc/sys/kernel/sched_cfs_latency_idle = 1000
-
-we state that the task is going to be scheduled according to the
-SCHED_IDLE policy.
-
-  ( ( (tomatoes target here) ) )
-
-Not sure also if we wanna commit to user-space APIs how we internally
-map/translate a "latency niceness" value into a scheduler behaviour
-bias. Maybe better not at least at the very beginning.
-
-Best,
-Patrick
+> > +        bool "Intel AHB/AXI PCIe host controller support"
+> > +        depends on PCI_MSI
+> > +        depends on PCI
+> > +        depends on OF
+> > +        select PCIE_DW_HOST
+> > +        help
+> > +          Say 'Y' here to enable support for Intel AHB/AXI PCIe Host
+> > +	  controller driver.
+> > +	  The Intel PCIe controller is based on the Synopsys Designware
+> > +	  pcie core and therefore uses the Designware core functions to
+> > +	  implement the driver.
 
 -- 
-#include <best/regards.h>
+With Best Regards,
+Andy Shevchenko
 
-Patrick Bellasi
+
