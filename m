@@ -6,92 +6,126 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA93C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE960C43140
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9B3920820
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:22:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 487E5214DB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:23:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390388AbfIEPWa (ORCPT
+        id S2388210AbfIEPXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 11:22:30 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:38739 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388057AbfIEPWa (ORCPT
+        Thu, 5 Sep 2019 11:23:45 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:44019 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731609AbfIEPXo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 11:22:30 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1i5tad-0007qi-Pw; Thu, 05 Sep 2019 15:22:27 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][V2] staging: rtl8723bs: hal: remove redundant variable n
-Date:   Thu,  5 Sep 2019 16:22:27 +0100
-Message-Id: <20190905152227.4610-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 5 Sep 2019 11:23:44 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1M7ehh-1i4XD309vh-0084hW; Thu, 05 Sep 2019 17:22:24 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-arch@vger.kernel.org, y2038@lists.linaro.org,
+        Manfred Spraul <manfred@colorfullife.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Vincent Chen <deanbo422@gmail.com>, stable@vger.kernel.org,
+        Greentime Hu <green.hu@gmail.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Guan Xuetao <gxt@pku.edu.cn>,
+        Stafford Horne <shorne@gmail.com>,
+        Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Ley Foon Tan <lftan@altera.com>,
+        Richard Kuo <rkuo@codeaurora.org>,
+        Mark Salter <msalter@redhat.com>,
+        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
+        Guo Ren <guoren@kernel.org>,
+        Christian Brauner <christian@brauner.io>
+Subject: [PATCH 1/2] ipc: fix semtimedop for generic 32-bit architectures
+Date:   Thu,  5 Sep 2019 17:21:24 +0200
+Message-Id: <20190905152155.1392871-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:XxUJwrw3CMdgDWeLKiHcQFwqG5kArJ+fThzxITIBUQnV8GTJRWt
+ 5s/+x2+IS6LxshP4ageYlrALYSVCMMbn4PLCj6JVtmn07dladMa73O7CfYJKZfYPGAzhpaE
+ Pg5AORkHt/hlQHTDkRhl39XOdHBkuqe1JAub8P59iFIHmEoaBgT/xQhHoIlyBmADQH9/9rg
+ aSIYL4xMi85ktbTYty2bw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:BqtXUM4orE8=:z5RarZPHyTyTUSIZCnz00G
+ BafFSMNtWu5vOpkk7WY2l+3hQiUGyMuMcQiP4S3Mq7sfX3GIG+wzlTy+40cDK6a+U96qePVSI
+ dZBfwCA4/hoIVwenR+mHi0Na31lTyJzpRkcXpwiGI4CdKYz2biMZCsQMTrj/EfFt0q/k2nrqe
+ AnzO7KWgvVlA1GFvDAN2ufVxcA4bmiSh0uAcIRvU8Uo65fOih3pvc4syPcXuzgUrIRaaMb7zo
+ y0ViwslBnFMIDYwCSOBZkLrq+2xyh1tYBNuwjUNjrjSs+ibojKIfXdqg3rPvZSQ+wqvqucKig
+ 32juvrsEVHPzMVuwzNgP/oF4pVjZvC7UdHWFosZh+5YM969U8OT6Qd+JoN2lfq09JYm8CluZl
+ 6fjxAdwNfdWUQ0HsQhtXuYcCIq760Cbb1aq293gV3H9Fp81WIUuC3RdL+AA7GZs0AGFz0lyfT
+ bmnOLsfnWJThKRD/iFyoZklx2qHHjT/n+f+2Nr9XZMCTrSRIBy7Q1OECrqqey0m9KG8MH8Wlg
+ zKjA2K74yZqlPQwMrVYaxDvn00bUo1Y4Lnn9HD5CHTOMR47ME3MZuZiXzh6QvWgRmtFyPsYg0
+ +tqba4W0T196wcnCz+EC8FAP4cObPa8KWCrM6xjtnVTPEbmmamuNne73GDf+dLQhFzZWOxv0P
+ G1AiXW23hUDg4deXhFfV1Vb2+9Hi+679hl+lRQEK4FDRl35UHAqTuzrRaGNwSWhiwqr2Apjih
+ W/lUMDExLP1uhmqmeuMoU4rWD0x5wgkL3jBHgczvJQX2TwotmtJUOPxqgb1ccMRWEwxtr65oM
+ qW98ig3lwLo7Q2dIZtrFLGt1Mz3xkqvyw7GX5hDY/opDRGiM0s=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+As Vincent noticed, the y2038 conversion of semtimedop in linux-5.1
+broke when commit 00bf25d693e7 ("y2038: use time32 syscall names on
+32-bit") changed all system calls on all architectures that take
+a 32-bit time_t to point to the _time32 implementation, but left out
+semtimedop in the asm-generic header.
 
-The variable n is being assigned a value that is never read inside
-an if statement block, the assignment is redundant and can be removed.
-With this removed, n is only being used for a constant loop bounds
-check, so replace n with that value instead and remove n completely.
+This affects all 32-bit architectures using asm-generic/unistd.h:
+h8300, unicore32, openrisc, nios2, hexagon, c6x, arc, nds32 and csky.
 
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+The notable exception is riscv32, which has dropped support for the
+time32 system calls entirely.
 
+Reported-by: Vincent Chen <deanbo422@gmail.com>
+Cc: stable@vger.kernel.org
+Cc: Vincent Chen <deanbo422@gmail.com>
+Cc: Greentime Hu <green.hu@gmail.com>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Guan Xuetao <gxt@pku.edu.cn>
+Cc: Stafford Horne <shorne@gmail.com>
+Cc: Jonas Bonn <jonas@southpole.se>
+Cc: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+Cc: Ley Foon Tan <lftan@altera.com>
+Cc: Richard Kuo <rkuo@codeaurora.org>
+Cc: Mark Salter <msalter@redhat.com>
+Cc: Aurelien Jacquiot <jacquiot.aurelien@gmail.com>
+Cc: Guo Ren <guoren@kernel.org>
+Fixes: 00bf25d693e7 ("y2038: use time32 syscall names on 32-bit")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
+Hi Vincent,
 
-V2: remove the variable n completely, thanks to Dan Carpenter for
-    spotting this.
+Sorry for the delay since your report. Does this address your
+problem?
 
+Anyone else, please note that this patch is required since
+5.1 to make sysvipc work on the listed architectures.
 ---
- drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ include/uapi/asm-generic/unistd.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c b/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c
-index 032d01834f3f..0f3301091258 100644
---- a/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c
-+++ b/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c
-@@ -502,7 +502,7 @@ s32 rtl8723bs_init_recv_priv(struct adapter *padapter)
-  */
- void rtl8723bs_free_recv_priv(struct adapter *padapter)
- {
--	u32 i, n;
-+	u32 i;
- 	struct recv_priv *precvpriv;
- 	struct recv_buf *precvbuf;
- 
-@@ -514,9 +514,8 @@ void rtl8723bs_free_recv_priv(struct adapter *padapter)
- 	/* 3 2. free all recv buffers */
- 	precvbuf = (struct recv_buf *)precvpriv->precv_buf;
- 	if (precvbuf) {
--		n = NR_RECVBUFF;
- 		precvpriv->free_recv_buf_queue_cnt = 0;
--		for (i = 0; i < n ; i++) {
-+		for (i = 0; i < NR_RECVBUFF; i++) {
- 			list_del_init(&precvbuf->list);
- 			rtw_os_recvbuf_resource_free(padapter, precvbuf);
- 			precvbuf++;
-@@ -525,7 +524,6 @@ void rtl8723bs_free_recv_priv(struct adapter *padapter)
- 	}
- 
- 	if (precvpriv->pallocated_recv_buf) {
--		n = NR_RECVBUFF * sizeof(struct recv_buf) + 4;
- 		kfree(precvpriv->pallocated_recv_buf);
- 		precvpriv->pallocated_recv_buf = NULL;
- 	}
+diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
+index 1be0e798e362..1fc8faa6e973 100644
+--- a/include/uapi/asm-generic/unistd.h
++++ b/include/uapi/asm-generic/unistd.h
+@@ -569,7 +569,7 @@ __SYSCALL(__NR_semget, sys_semget)
+ __SC_COMP(__NR_semctl, sys_semctl, compat_sys_semctl)
+ #if defined(__ARCH_WANT_TIME32_SYSCALLS) || __BITS_PER_LONG != 32
+ #define __NR_semtimedop 192
+-__SC_COMP(__NR_semtimedop, sys_semtimedop, sys_semtimedop_time32)
++__SC_3264(__NR_semtimedop, sys_semtimedop_time32, sys_semtimedop)
+ #endif
+ #define __NR_semop 193
+ __SYSCALL(__NR_semop, sys_semop)
 -- 
-2.20.1
+2.20.0
 
