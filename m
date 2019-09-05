@@ -2,251 +2,187 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A5BC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F7B6C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 547912137B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BC64214E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:58:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="YSuQ5o6P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389585AbfIEM5M (ORCPT
+        id S2389595AbfIEM6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 08:57:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46778 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731008AbfIEM5L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 08:57:11 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 02D67B11B;
-        Thu,  5 Sep 2019 12:57:09 +0000 (UTC)
-Date:   Thu, 5 Sep 2019 14:57:16 +0200
-From:   Jean Delvare <jdelvare@suse.de>
-To:     "Xu, Lingyan (NSB - CN/Hangzhou)" <lingyan.xu@nokia-sbell.com>
-Cc:     "Adamski, Krzysztof (Nokia - PL/Wroclaw)" 
-        <krzysztof.adamski@nokia.com>,
-        "Wiebe, Wladislav (Nokia - DE/Ulm)" <wladislav.wiebe@nokia.com>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i801_smbus: clear SMBALERT status bit and disable
- SMBALERT interrupt
-Message-ID: <20190905145716.137e155a@endymion>
-In-Reply-To: <a6cd1872effd46c7ba088f28402b32b8@nokia-sbell.com>
-References: <1565577634-18264-1-git-send-email-lingyan.xu@nokia-sbell.com>
-        <20190828155822.7cb13a7b@endymion>
-        <a6cd1872effd46c7ba088f28402b32b8@nokia-sbell.com>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Thu, 5 Sep 2019 08:58:34 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:13534 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726968AbfIEM6d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 08:58:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1567688312; x=1599224312;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=ETZlDN4IdF0kxziLoR9hjkO844T65juEVcnxEPAUrBo=;
+  b=YSuQ5o6P52iMHkPH4XY/9D7nyNN8jJvFLoBQdTsQ6xvrV7/9vYGjPf+A
+   VAXbT3z7RE0+H3yxl9LuAM1lbjQGlqCneYsp4qgi/nU4ayJAHAriTy91X
+   U1gnl/XwtCfspVut5kl/sGoSW2xjAZVrlVHTvV+rybqTIPppJAucPoSDI
+   s=;
+X-IronPort-AV: E=Sophos;i="5.64,470,1559520000"; 
+   d="scan'208";a="827706210"
+Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2c-2225282c.us-west-2.amazon.com) ([10.47.22.34])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 05 Sep 2019 12:58:30 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2c-2225282c.us-west-2.amazon.com (Postfix) with ESMTPS id DB0B4A2822;
+        Thu,  5 Sep 2019 12:58:29 +0000 (UTC)
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 5 Sep 2019 12:58:29 +0000
+Received: from u79c5a0a55de558.ant.amazon.com (10.43.161.243) by
+ EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 5 Sep 2019 12:58:26 +0000
+From:   Alexander Graf <graf@amazon.com>
+To:     <kvm@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jim Mattson <jmattson@google.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Sean Christopherson" <sean.j.christopherson@intel.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Liran Alon <liran.alon@oracle.com>
+Subject: [PATCH v3] KVM: x86: Disable posted interrupts for odd IRQs
+Date:   Thu, 5 Sep 2019 14:58:18 +0200
+Message-ID: <20190905125818.22395-1-graf@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.243]
+X-ClientProxiedBy: EX13D07UWA003.ant.amazon.com (10.43.160.35) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 3 Sep 2019 02:15:52 +0000, Xu, Lingyan (NSB - CN/Hangzhou) wrote:
-> Thanks a lot for your comments. And, yes, it is dangerous that clear all interrupt bit here based my local test. And about the interrupt flood, I will show you in attached file. And I agree with you that add SMBALERT interrupt handler if possible, but I have no idea about what action is need in this handler because that it seams that i801 can not clear salve chip's status bit directly.
+We can easily route hardware interrupts directly into VM context when
+they target the "Fixed" or "LowPriority" delivery modes.
 
-The whole idea of SMBus alert is that the slave lets the master know
-that it needs attention. The master's driver should then let the
-slave's driver know that its baby is crying for attention, and it is
-the slave driver's job to figure out what the exact problem is. Struct
-i2c_driver has an "alert" field (callback function) for that purpose.
-For a real example of how this can be implemented, see
-drivers/i2c/busses/i2c-parport.c for the master side and
-drivers/hwmon/lm90.c for the slave side. These are the 2 drivers I used
-to initially add the functionality to the kernel.
+However, on modes such as "SMI" or "Init", we need to go via KVM code
+to actually put the vCPU into a different mode of operation, so we can
+not post the interrupt
 
-Now the question is, in your system, which slave device pulls the alert?
+Add code in the VMX and SVM PI logic to explicitly refuse to establish
+posted mappings for advanced IRQ deliver modes. This reflects the logic
+in __apic_accept_irq() which also only ever passes Fixed and LowPriority
+interrupts as posted interrupts into the guest.
 
-If this is of any value to you, I tried implementing it in i2c-i801 a
-few days ago. I can't really test it though as I don't have any device
-which triggers an alert on my system, but I am sharing it with you if
-you want to give it a try. You would still need to write the code in
-the slave driver.
+This fixes a bug I have with code which configures real hardware to
+inject virtual SMIs into my guest.
+
+Signed-off-by: Alexander Graf <graf@amazon.com>
 
 ---
- drivers/i2c/busses/i2c-i801.c |   77 +++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 69 insertions(+), 8 deletions(-)
 
---- linux-5.2.orig/drivers/i2c/busses/i2c-i801.c	2019-08-28 15:58:52.725828215 +0200
-+++ linux-5.2/drivers/i2c/busses/i2c-i801.c	2019-08-28 16:50:09.212696037 +0200
-@@ -196,6 +196,7 @@
+v1 -> v2:
+
+  - Make error message more unique
+  - Update commit message to point to __apic_accept_irq()
+
+v2 -> v3:
+
+  - Use if() rather than switch()
+  - Move abort logic into existing if() branch for broadcast irqs
+  -> remove the updated error message again (thus remove R-B tag from Liran)
+  - Fold VMX and SVM changes into single commit
+  - Combine postability check into helper function kvm_irq_is_postable()
+---
+ arch/x86/include/asm/kvm_host.h | 7 +++++++
+ arch/x86/kvm/svm.c              | 4 +++-
+ arch/x86/kvm/vmx/vmx.c          | 6 +++++-
+ 3 files changed, 15 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 44a5ce57a905..5b14aa1fbeeb 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1581,6 +1581,13 @@ bool kvm_intr_is_single_vcpu(struct kvm *kvm, struct kvm_lapic_irq *irq,
+ void kvm_set_msi_irq(struct kvm *kvm, struct kvm_kernel_irq_routing_entry *e,
+ 		     struct kvm_lapic_irq *irq);
  
- /* Host Notify Command register bits */
- #define SMBSLVCMD_HST_NTFY_INTREN	BIT(0)
-+#define SMBSLVCMD_SMBALERT_DIS		BIT(2)
- 
- #define STATUS_ERROR_FLAGS	(SMBHSTSTS_FAILED | SMBHSTSTS_BUS_ERR | \
- 				 SMBHSTSTS_DEV_ERR)
-@@ -281,6 +282,10 @@ struct i801_priv {
- 	 */
- 	bool acpi_reserved;
- 	struct mutex acpi_lock;
-+
-+	/* SMBus alert */
-+	struct i2c_smbus_alert_setup alert_data;
-+	struct i2c_client *ara;
- };
- 
- #define FEATURE_SMBUS_PEC	BIT(0)
-@@ -289,6 +294,7 @@ struct i801_priv {
- #define FEATURE_I2C_BLOCK_READ	BIT(3)
- #define FEATURE_IRQ		BIT(4)
- #define FEATURE_HOST_NOTIFY	BIT(5)
-+#define FEATURE_SMBUS_ALERT	BIT(6)
- /* Not really a feature, but it's convenient to handle it as such */
- #define FEATURE_IDF		BIT(15)
- #define FEATURE_TCO_SPT		BIT(16)
-@@ -301,6 +307,7 @@ static const char *i801_feature_names[]
- 	"I2C block read",
- 	"Interrupt",
- 	"SMBus Host Notify",
-+	"SMBus Alert",
- };
- 
- static unsigned int disable_features;
-@@ -310,7 +317,8 @@ MODULE_PARM_DESC(disable_features, "Disa
- 	"\t\t  0x02  disable the block buffer\n"
- 	"\t\t  0x08  disable the I2C block read functionality\n"
- 	"\t\t  0x10  don't use interrupts\n"
--	"\t\t  0x20  disable SMBus Host Notify ");
-+	"\t\t  0x20  disable SMBus Host Notify\n"
-+	"\t\t  0x40  disable SMBus Alert ");
- 
- /* Make sure the SMBus host is ready to start transmitting.
-    Return 0 if it is, -EBUSY if it is not. */
-@@ -620,8 +628,24 @@ static irqreturn_t i801_host_notify_isr(
- 	return IRQ_HANDLED;
- }
- 
-+static irqreturn_t i801_smbus_alert_isr(struct i801_priv *priv)
++static inline bool kvm_irq_is_postable(struct kvm_lapic_irq *irq)
 +{
-+	struct i2c_client *ara = priv->ara;
-+
-+	if (ara) {
-+		dev_dbg(&ara->dev, "SMBus alert received\n");
-+		i2c_handle_smbus_alert(ara);
-+	} else
-+		dev_dbg(&priv->adapter.dev,
-+			"SMBus alert received but no ARA client!\n");
-+
-+	/* clear SMBus Alert bit and return */
-+	outb_p(SMBHSTSTS_SMBALERT_STS, SMBHSTSTS(priv));
-+	return IRQ_HANDLED;
++	/* We can only post Fixed and LowPrio IRQs */
++	return (irq->delivery_mode == dest_Fixed ||
++		irq->delivery_mode == dest_LowestPrio);
 +}
 +
- /*
-- * There are three kinds of interrupts:
-+ * There are four kinds of interrupts:
-  *
-  * 1) i801 signals transaction completion with one of these interrupts:
-  *      INTR - Success
-@@ -635,6 +659,8 @@ static irqreturn_t i801_host_notify_isr(
-  *    occurs for each byte of a byte-by-byte to prepare the next byte.
-  *
-  * 3) Host Notify interrupts
-+ *
-+ * 4) SMBus Alert interrupts
-  */
- static irqreturn_t i801_isr(int irq, void *dev_id)
+ static inline void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu)
  {
-@@ -653,6 +679,12 @@ static irqreturn_t i801_isr(int irq, voi
- 			return i801_host_notify_isr(priv);
- 	}
+ 	if (kvm_x86_ops->vcpu_blocking)
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 1f220a85514f..f5b03d0c9bc6 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -5260,7 +5260,8 @@ get_pi_vcpu_info(struct kvm *kvm, struct kvm_kernel_irq_routing_entry *e,
  
-+	if (priv->features & FEATURE_SMBUS_ALERT) {
-+		status = inb_p(SMBHSTSTS(priv));
-+		if (status & SMBHSTSTS_SMBALERT_STS)
-+			return i801_smbus_alert_isr(priv);
-+	}
-+
- 	status = inb_p(SMBHSTSTS(priv));
- 	if (status & SMBHSTSTS_BYTE_DONE)
- 		i801_isr_byte_done(priv);
-@@ -1006,9 +1038,35 @@ static void i801_enable_host_notify(stru
- 	outb_p(SMBSLVSTS_HST_NTFY_STS, SMBSLVSTS(priv));
- }
+ 	kvm_set_msi_irq(kvm, e, &irq);
  
--static void i801_disable_host_notify(struct i801_priv *priv)
-+static void i801_enable_smbus_alert(struct i2c_adapter *adapter)
- {
--	if (!(priv->features & FEATURE_HOST_NOTIFY))
-+	struct i801_priv *priv = i2c_get_adapdata(adapter);
-+
-+	if (!(priv->features & FEATURE_SMBUS_ALERT))
-+		return;
-+
-+	priv->ara = i2c_setup_smbus_alert(adapter, &priv->alert_data);
-+	if (!priv->ara) {
-+		dev_warn(&adapter->dev, "Failed to register ARA client\n");
-+
-+		/* Disable SMBus Alert interrupts */
-+		if (!(SMBSLVCMD_SMBALERT_DIS & priv->original_slvcmd))
-+			outb_p(SMBSLVCMD_SMBALERT_DIS | priv->original_slvcmd,
-+			       SMBSLVCMD(priv));
-+		return;
-+	}
-+
-+	if (SMBSLVCMD_SMBALERT_DIS & priv->original_slvcmd)
-+		outb_p(~SMBSLVCMD_SMBALERT_DIS & priv->original_slvcmd,
-+		       SMBSLVCMD(priv));
-+
-+	/* Clear SMBus Alert bit to allow a new notification */
-+	outb_p(SMBHSTSTS_SMBALERT_STS, SMBHSTSTS(priv));
-+}
-+
-+static void i801_restore_slvcmd(struct i801_priv *priv)
-+{
-+	if (!(priv->features & (FEATURE_HOST_NOTIFY | FEATURE_SMBUS_ALERT)))
- 		return;
+-	if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu)) {
++	if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu) ||
++	    !kvm_irq_is_postable(&irq)) {
+ 		pr_debug("SVM: %s: use legacy intr remap mode for irq %u\n",
+ 			 __func__, irq.vector);
+ 		return -1;
+@@ -5314,6 +5315,7 @@ static int svm_update_pi_irte(struct kvm *kvm, unsigned int host_irq,
+ 		 * 1. When cannot target interrupt to a specific vcpu.
+ 		 * 2. Unsetting posted interrupt.
+ 		 * 3. APIC virtialization is disabled for the vcpu.
++		 * 4. IRQ has incompatible delivery mode (SMI, INIT, etc)
+ 		 */
+ 		if (!get_pi_vcpu_info(kvm, e, &vcpu_info, &svm) && set &&
+ 		    kvm_vcpu_apicv_active(&svm->vcpu)) {
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 570a233e272b..63f3d88b36cc 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7382,10 +7382,14 @@ static int vmx_update_pi_irte(struct kvm *kvm, unsigned int host_irq,
+ 		 * irqbalance to make the interrupts single-CPU.
+ 		 *
+ 		 * We will support full lowest-priority interrupt later.
++		 *
++		 * In addition, we can only inject generic interrupts using
++		 * the PI mechanism, refuse to route others through it.
+ 		 */
  
- 	outb_p(priv->original_slvcmd, SMBSLVCMD(priv));
-@@ -1823,8 +1881,8 @@ static int i801_probe(struct pci_dev *de
- 		outb_p(inb_p(SMBAUXCTL(priv)) &
- 		       ~(SMBAUXCTL_CRC | SMBAUXCTL_E32B), SMBAUXCTL(priv));
- 
--	/* Remember original Host Notify setting */
--	if (priv->features & FEATURE_HOST_NOTIFY)
-+	/* Remember original Host Notify and SMBus Alert setting */
-+	if (priv->features & (FEATURE_HOST_NOTIFY | FEATURE_SMBUS_ALERT))
- 		priv->original_slvcmd = inb_p(SMBSLVCMD(priv));
- 
- 	/* Default timeout in interrupt mode: 200 ms */
-@@ -1875,6 +1933,7 @@ static int i801_probe(struct pci_dev *de
- 	}
- 
- 	i801_enable_host_notify(&priv->adapter);
-+	i801_enable_smbus_alert(&priv->adapter);
- 
- 	i801_probe_optional_slaves(priv);
- 	/* We ignore errors - multiplexing is optional */
-@@ -1897,8 +1956,10 @@ static void i801_remove(struct pci_dev *
- 	pm_runtime_forbid(&dev->dev);
- 	pm_runtime_get_noresume(&dev->dev);
- 
--	i801_disable_host_notify(priv);
-+	i801_restore_slvcmd(priv);
- 	i801_del_mux(priv);
-+	if (priv->ara)
-+		i2c_unregister_device(priv->ara);
- 	i2c_del_adapter(&priv->adapter);
- 	i801_acpi_remove(priv);
- 	pci_write_config_byte(dev, SMBHSTCFG, priv->original_hstcfg);
-@@ -1916,7 +1977,7 @@ static void i801_shutdown(struct pci_dev
- 	struct i801_priv *priv = pci_get_drvdata(dev);
- 
- 	/* Restore config registers to avoid hard hang on some systems */
--	i801_disable_host_notify(priv);
-+	i801_restore_slvcmd(priv);
- 	pci_write_config_byte(dev, SMBHSTCFG, priv->original_hstcfg);
- }
- 
-
-
+ 		kvm_set_msi_irq(kvm, e, &irq);
+-		if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu)) {
++		if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu) ||
++		    !kvm_irq_is_postable(&irq)) {
+ 			/*
+ 			 * Make sure the IRTE is in remapped mode if
+ 			 * we don't handle it in posted mode.
 -- 
-Jean Delvare
-SUSE L3 Support
+2.17.1
+
+
+
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Ralf Herbrich
+Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+Sitz: Berlin
+Ust-ID: DE 289 237 879
+
+
+
