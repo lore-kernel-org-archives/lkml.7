@@ -2,260 +2,293 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42F57C3A5AB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D5AC41514
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B7AE2173B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CF4221848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:17:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Y/MWrKxv";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Y/MWrKxv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733178AbfIEJQe (ORCPT
+        id S1733180AbfIEJRV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 05:16:34 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:56158 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732256AbfIEJQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 05:16:33 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 0F65B44412C63457D230;
-        Thu,  5 Sep 2019 17:16:32 +0800 (CST)
-Received: from localhost (10.202.226.61) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Thu, 5 Sep 2019
- 17:16:25 +0800
-Date:   Thu, 5 Sep 2019 10:16:14 +0100
-From:   Jonathan Cameron <jonathan.cameron@huawei.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linuxarm <linuxarm@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 1/4] ACPI: Support Generic Initiator only domains
-Message-ID: <20190905101614.00002323@huawei.com>
-In-Reply-To: <CAJZ5v0ie8s-Ye7PD=xj0nXL228WDqhjJPCs+eV3n6_SAeaQowg@mail.gmail.com>
-References: <20190821145242.2330-1-Jonathan.Cameron@huawei.com>
-        <20190821145242.2330-2-Jonathan.Cameron@huawei.com>
-        <CAJZ5v0ie8s-Ye7PD=xj0nXL228WDqhjJPCs+eV3n6_SAeaQowg@mail.gmail.com>
-Organization: Huawei
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+        Thu, 5 Sep 2019 05:17:21 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:38438 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731199AbfIEJRV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 05:17:21 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id B2D376115B; Thu,  5 Sep 2019 09:17:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567675039;
+        bh=xMmsJjpiUbsQYYw3AXNouwmzhzt+g8V7N7GpNzi7lRg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Y/MWrKxvYG6ufQuRhV6lV9lhAGydKGRlogRpnbUOYOWsgB7xXcvdmUStyxQTgBGqO
+         yeiH2bDCMCKURBCxmLxhxfgAW/O0nLkPpuySY3GNldfbzg7jpnQZOlwoVvQ1YQgcXG
+         9H9vVQgVASyF4VTmaQw+ARUQA8jqu4RbMrh0ue0Y=
+Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 614A3615AD;
+        Thu,  5 Sep 2019 09:17:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567675039;
+        bh=xMmsJjpiUbsQYYw3AXNouwmzhzt+g8V7N7GpNzi7lRg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Y/MWrKxvYG6ufQuRhV6lV9lhAGydKGRlogRpnbUOYOWsgB7xXcvdmUStyxQTgBGqO
+         yeiH2bDCMCKURBCxmLxhxfgAW/O0nLkPpuySY3GNldfbzg7jpnQZOlwoVvQ1YQgcXG
+         9H9vVQgVASyF4VTmaQw+ARUQA8jqu4RbMrh0ue0Y=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 614A3615AD
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+From:   Maulik Shah <mkshah@codeaurora.org>
+To:     swboyd@chromium.org, agross@kernel.org, david.brown@linaro.org,
+        linux-arm-msm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        bjorn.andersson@linaro.org, evgreen@chromium.org,
+        dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
+        lsrao@codeaurora.org, Maulik Shah <mkshah@codeaurora.org>
+Subject: [PATCH v2] soc: qcom: Introduce subsystem sleep stats driver
+Date:   Thu,  5 Sep 2019 14:47:07 +0530
+Message-Id: <20190905091707.14420-1-mkshah@codeaurora.org>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.61]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2 Sep 2019 23:26:16 +0200
-"Rafael J. Wysocki" <rafael@kernel.org> wrote:
+Multiple subsystems like modem, spss, adsp, cdsp present on
+Qualcomm Technologies Inc's (QTI) SoCs maintains low power mode
+statistics in shared memory (SMEM). Lets add a driver to read
+and display this information using sysfs.
 
-> On Wed, Aug 21, 2019 at 4:53 PM Jonathan Cameron
-> <Jonathan.Cameron@huawei.com> wrote:
-> >
-> > Generic Initiators are a new ACPI concept that allows for the
-> > description of proximity domains that contain a device which
-> > performs memory access (such as a network card) but neither
-> > host CPU nor Memory.
-> >
-> > This patch has the parsing code and provides the infrastructure
-> > for an architecture to associate these new domains with their
-> > nearest memory processing node.
-> >
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>  
-> 
-> Dan, Keith, any comments?
-> 
-> AFAICS this clashes with the series from Dan that rearranges the ACPI
-> NUMA related code.
+Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+---
+Changes in v2:
+	- Correct Makefile to use QCOM_SS_SLEEP_STATS config
+---
+ Documentation/ABI/testing/sysfs-power    |  10 ++
+ drivers/soc/qcom/Kconfig                 |   9 ++
+ drivers/soc/qcom/Makefile                |   1 +
+ drivers/soc/qcom/subsystem_sleep_stats.c | 146 +++++++++++++++++++++++
+ 4 files changed, 166 insertions(+)
+ create mode 100644 drivers/soc/qcom/subsystem_sleep_stats.c
 
-Seems that one is going forwards now which is great. I'll rebase this on
-top of Dan's series and send a v5 sometime soon.
-
-Thanks,
-
-Jonathan
-
-> 
-> > ---
-> >  drivers/acpi/numa.c            | 62 +++++++++++++++++++++++++++++++++-
-> >  drivers/base/node.c            |  3 ++
-> >  include/asm-generic/topology.h |  3 ++
-> >  include/linux/nodemask.h       |  1 +
-> >  include/linux/topology.h       |  7 ++++
-> >  5 files changed, 75 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/acpi/numa.c b/drivers/acpi/numa.c
-> > index eadbf90e65d1..fe34315a9234 100644
-> > --- a/drivers/acpi/numa.c
-> > +++ b/drivers/acpi/numa.c
-> > @@ -170,6 +170,38 @@ acpi_table_print_srat_entry(struct acpi_subtable_header *header)
-> >                 }
-> >                 break;
-> >
-> > +       case ACPI_SRAT_TYPE_GENERIC_AFFINITY:
-> > +       {
-> > +               struct acpi_srat_generic_affinity *p =
-> > +                       (struct acpi_srat_generic_affinity *)header;
-> > +               char name[9] = {};
-> > +
-> > +               if (p->device_handle_type == 0) {
-> > +                       /*
-> > +                        * For pci devices this may be the only place they
-> > +                        * are assigned a proximity domain
-> > +                        */
-> > +                       pr_debug("SRAT Generic Initiator(Seg:%u BDF:%u) in proximity domain %d %s\n",
-> > +                                *(u16 *)(&p->device_handle[0]),
-> > +                                *(u16 *)(&p->device_handle[2]),
-> > +                                p->proximity_domain,
-> > +                                (p->flags & ACPI_SRAT_GENERIC_AFFINITY_ENABLED) ?
-> > +                               "enabled" : "disabled");
-> > +               } else {
-> > +                       /*
-> > +                        * In this case we can rely on the device having a
-> > +                        * proximity domain reference
-> > +                        */
-> > +                       memcpy(name, p->device_handle, 8);
-> > +                       pr_info("SRAT Generic Initiator(HID=%.8s UID=%.4s) in proximity domain %d %s\n",
-> > +                               (char *)(&p->device_handle[0]),
-> > +                               (char *)(&p->device_handle[8]),
-> > +                               p->proximity_domain,
-> > +                               (p->flags & ACPI_SRAT_GENERIC_AFFINITY_ENABLED) ?
-> > +                               "enabled" : "disabled");
-> > +               }
-> > +       }
-> > +       break;
-> >         default:
-> >                 pr_warn("Found unsupported SRAT entry (type = 0x%x)\n",
-> >                         header->type);
-> > @@ -378,6 +410,32 @@ acpi_parse_gicc_affinity(union acpi_subtable_headers *header,
-> >         return 0;
-> >  }
-> >
-> > +static int __init
-> > +acpi_parse_gi_affinity(union acpi_subtable_headers *header,
-> > +                      const unsigned long end)
-> > +{
-> > +       struct acpi_srat_generic_affinity *gi_affinity;
-> > +       int node;
-> > +
-> > +       gi_affinity = (struct acpi_srat_generic_affinity *)header;
-> > +       if (!gi_affinity)
-> > +               return -EINVAL;
-> > +       acpi_table_print_srat_entry(&header->common);
-> > +
-> > +       if (!(gi_affinity->flags & ACPI_SRAT_GENERIC_AFFINITY_ENABLED))
-> > +               return -EINVAL;
-> > +
-> > +       node = acpi_map_pxm_to_node(gi_affinity->proximity_domain);
-> > +       if (node == NUMA_NO_NODE || node >= MAX_NUMNODES) {
-> > +               pr_err("SRAT: Too many proximity domains.\n");
-> > +               return -EINVAL;
-> > +       }
-> > +       node_set(node, numa_nodes_parsed);
-> > +       node_set_state(node, N_GENERIC_INITIATOR);
-> > +
-> > +       return 0;
-> > +}
-> > +
-> >  static int __initdata parsed_numa_memblks;
-> >
-> >  static int __init
-> > @@ -433,7 +491,7 @@ int __init acpi_numa_init(void)
-> >
-> >         /* SRAT: System Resource Affinity Table */
-> >         if (!acpi_table_parse(ACPI_SIG_SRAT, acpi_parse_srat)) {
-> > -               struct acpi_subtable_proc srat_proc[3];
-> > +               struct acpi_subtable_proc srat_proc[4];
-> >
-> >                 memset(srat_proc, 0, sizeof(srat_proc));
-> >                 srat_proc[0].id = ACPI_SRAT_TYPE_CPU_AFFINITY;
-> > @@ -442,6 +500,8 @@ int __init acpi_numa_init(void)
-> >                 srat_proc[1].handler = acpi_parse_x2apic_affinity;
-> >                 srat_proc[2].id = ACPI_SRAT_TYPE_GICC_AFFINITY;
-> >                 srat_proc[2].handler = acpi_parse_gicc_affinity;
-> > +               srat_proc[3].id = ACPI_SRAT_TYPE_GENERIC_AFFINITY;
-> > +               srat_proc[3].handler = acpi_parse_gi_affinity;
-> >
-> >                 acpi_table_parse_entries_array(ACPI_SIG_SRAT,
-> >                                         sizeof(struct acpi_table_srat),
-> > diff --git a/drivers/base/node.c b/drivers/base/node.c
-> > index 75b7e6f6535b..6f60689af5f8 100644
-> > --- a/drivers/base/node.c
-> > +++ b/drivers/base/node.c
-> > @@ -980,6 +980,8 @@ static struct node_attr node_state_attr[] = {
-> >  #endif
-> >         [N_MEMORY] = _NODE_ATTR(has_memory, N_MEMORY),
-> >         [N_CPU] = _NODE_ATTR(has_cpu, N_CPU),
-> > +       [N_GENERIC_INITIATOR] = _NODE_ATTR(has_generic_initiator,
-> > +                                          N_GENERIC_INITIATOR),
-> >  };
-> >
-> >  static struct attribute *node_state_attrs[] = {
-> > @@ -991,6 +993,7 @@ static struct attribute *node_state_attrs[] = {
-> >  #endif
-> >         &node_state_attr[N_MEMORY].attr.attr,
-> >         &node_state_attr[N_CPU].attr.attr,
-> > +       &node_state_attr[N_GENERIC_INITIATOR].attr.attr,
-> >         NULL
-> >  };
-> >
-> > diff --git a/include/asm-generic/topology.h b/include/asm-generic/topology.h
-> > index 238873739550..54d0b4176a45 100644
-> > --- a/include/asm-generic/topology.h
-> > +++ b/include/asm-generic/topology.h
-> > @@ -71,6 +71,9 @@
-> >  #ifndef set_cpu_numa_mem
-> >  #define set_cpu_numa_mem(cpu, node)
-> >  #endif
-> > +#ifndef set_gi_numa_mem
-> > +#define set_gi_numa_mem(gi, node)
-> > +#endif
-> >
-> >  #endif /* !CONFIG_NUMA || !CONFIG_HAVE_MEMORYLESS_NODES */
-> >
-> > diff --git a/include/linux/nodemask.h b/include/linux/nodemask.h
-> > index 27e7fa36f707..1aebf766fb52 100644
-> > --- a/include/linux/nodemask.h
-> > +++ b/include/linux/nodemask.h
-> > @@ -399,6 +399,7 @@ enum node_states {
-> >  #endif
-> >         N_MEMORY,               /* The node has memory(regular, high, movable) */
-> >         N_CPU,          /* The node has one or more cpus */
-> > +       N_GENERIC_INITIATOR,    /* The node is a GI only node */
-> >         NR_NODE_STATES
-> >  };
-> >
-> > diff --git a/include/linux/topology.h b/include/linux/topology.h
-> > index 47a3e3c08036..2f97754e0508 100644
-> > --- a/include/linux/topology.h
-> > +++ b/include/linux/topology.h
-> > @@ -125,6 +125,13 @@ static inline void set_numa_mem(int node)
-> >  }
-> >  #endif
-> >
-> > +#ifndef set_gi_numa_mem
-> > +static inline void set_gi_numa_mem(int gi, int node)
-> > +{
-> > +       _node_numa_mem_[gi] = node;
-> > +}
-> > +#endif
-> > +
-> >  #ifndef node_to_mem_node
-> >  static inline int node_to_mem_node(int node)
-> >  {
-> > --
-> > 2.20.1
-> >  
-> 
-
+diff --git a/Documentation/ABI/testing/sysfs-power b/Documentation/ABI/testing/sysfs-power
+index 18b7dc929234..1f8bb201246a 100644
+--- a/Documentation/ABI/testing/sysfs-power
++++ b/Documentation/ABI/testing/sysfs-power
+@@ -288,6 +288,16 @@ Description:
+ 		writing a "0" (default) to it disables them.  Reads from
+ 		this file return the current value.
+ 
++What:		/sys/power/subsystem_sleep/stats
++Date:		December 2017
++Contact:	Maulik Shah <mkshah@codeaurora.org>
++Description:
++		The /sys/power/subsystem_sleep/stats file prints the subsystem
++		sleep information on Qualcomm Technologies, Inc. (QTI) SoCs.
++
++		Reading from this file will display subsystem level low power
++		mode statistics.
++
+ What:		/sys/power/resume_offset
+ Date:		April 2018
+ Contact:	Mario Limonciello <mario.limonciello@dell.com>
+diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+index 880cf0290962..da53a96c6cce 100644
+--- a/drivers/soc/qcom/Kconfig
++++ b/drivers/soc/qcom/Kconfig
+@@ -163,6 +163,15 @@ config QCOM_SMSM
+ 	  Say yes here to support the Qualcomm Shared Memory State Machine.
+ 	  The state machine is represented by bits in shared memory.
+ 
++config QCOM_SS_SLEEP_STATS
++	tristate "Qualcomm Technologies Inc. Subsystem Sleep Stats driver"
++	depends on QCOM_SMEM
++	help
++	  Say y here to enable support for the Qualcomm Technologies Inc (QTI)
++	  SS sleep stats driver to read the sleep stats of various subsystems
++	  from SMEM. The stats are exported to sysfs. The driver also maintains
++	  application processor sleep stats.
++
+ config QCOM_WCNSS_CTRL
+ 	tristate "Qualcomm WCNSS control driver"
+ 	depends on ARCH_QCOM || COMPILE_TEST
+diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
+index ffe519b0cb66..f00f21b87a22 100644
+--- a/drivers/soc/qcom/Makefile
++++ b/drivers/soc/qcom/Makefile
+@@ -17,6 +17,7 @@ obj-$(CONFIG_QCOM_SMEM) +=	smem.o
+ obj-$(CONFIG_QCOM_SMEM_STATE) += smem_state.o
+ obj-$(CONFIG_QCOM_SMP2P)	+= smp2p.o
+ obj-$(CONFIG_QCOM_SMSM)	+= smsm.o
++obj-$(CONFIG_QCOM_SS_SLEEP_STATS)	+= subsystem_sleep_stats.o
+ obj-$(CONFIG_QCOM_WCNSS_CTRL) += wcnss_ctrl.o
+ obj-$(CONFIG_QCOM_APR) += apr.o
+ obj-$(CONFIG_QCOM_LLCC) += llcc-slice.o
+diff --git a/drivers/soc/qcom/subsystem_sleep_stats.c b/drivers/soc/qcom/subsystem_sleep_stats.c
+new file mode 100644
+index 000000000000..5379714b6ba4
+--- /dev/null
++++ b/drivers/soc/qcom/subsystem_sleep_stats.c
+@@ -0,0 +1,146 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++/*
++ * Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
++ */
++
++#define pr_fmt(fmt) "%s: " fmt, KBUILD_MODNAME
++
++#include <linux/errno.h>
++#include <linux/module.h>
++#include <linux/slab.h>
++#include <linux/types.h>
++
++#include <linux/soc/qcom/smem.h>
++
++enum subsystem_item_id {
++	MODEM = 605,
++	ADSP,
++	CDSP,
++	SLPI,
++	GPU,
++	DISPLAY,
++};
++
++enum subsystem_pid {
++	PID_APSS = 0,
++	PID_MODEM = 1,
++	PID_ADSP = 2,
++	PID_SLPI = 3,
++	PID_CDSP = 5,
++	PID_GPU = PID_APSS,
++	PID_DISPLAY = PID_APSS,
++};
++
++struct subsystem_data {
++	char *name;
++	enum subsystem_item_id item_id;
++	enum subsystem_pid pid;
++};
++
++static const struct subsystem_data subsystems[] = {
++	{"MODEM", MODEM, PID_MODEM},
++	{"ADSP", ADSP, PID_ADSP},
++	{"CDSP", CDSP, PID_CDSP},
++	{"SLPI", SLPI, PID_SLPI},
++	{"GPU", GPU, PID_GPU},
++	{"DISPLAY", DISPLAY, PID_DISPLAY},
++};
++
++struct subsystem_stats {
++	uint32_t version_id;
++	uint32_t count;
++	uint64_t last_entered;
++	uint64_t last_exited;
++	uint64_t accumulated_duration;
++};
++
++struct subsystem_stats_prv_data {
++	struct kobj_attribute ka;
++	struct kobject *kobj;
++};
++
++static struct subsystem_stats_prv_data *prvdata;
++
++static inline ssize_t subsystem_stats_print(char *prvbuf, ssize_t length,
++					    struct subsystem_stats *record,
++					    const char *name)
++{
++	return scnprintf(prvbuf, length, "%s\n\tVersion:0x%x\n"
++			"\tSleep Count:0x%x\n"
++			"\tSleep Last Entered At:0x%llx\n"
++			"\tSleep Last Exited At:0x%llx\n"
++			"\tSleep Accumulated Duration:0x%llx\n\n",
++			name, record->version_id, record->count,
++			record->last_entered, record->last_exited,
++			record->accumulated_duration);
++}
++
++static ssize_t subsystem_stats_show(struct kobject *kobj,
++				    struct kobj_attribute *attr, char *buf)
++{
++	ssize_t length = 0;
++	int i = 0;
++	size_t size = 0;
++	struct subsystem_stats *record = NULL;
++
++	/* Read SMEM data written by other subsystems */
++	for (i = 0; i < ARRAY_SIZE(subsystems); i++) {
++		record = (struct subsystem_stats *) qcom_smem_get(
++			  subsystems[i].pid, subsystems[i].item_id, &size);
++
++		if (!IS_ERR_OR_NULL(record) && (PAGE_SIZE - length > 0))
++			length += subsystem_stats_print(buf + length,
++							PAGE_SIZE - length,
++							record,
++							subsystems[i].name);
++	}
++
++	return length;
++}
++
++static int __init subsystem_sleep_stats_init(void)
++{
++	struct kobject *ss_stats_kobj;
++	int ret;
++
++	prvdata = kmalloc(sizeof(*prvdata), GFP_KERNEL);
++	if (!prvdata)
++		return -ENOMEM;
++
++	ss_stats_kobj = kobject_create_and_add("subsystem_sleep",
++					       power_kobj);
++	if (!ss_stats_kobj)
++		return -ENOMEM;
++
++	prvdata->kobj = ss_stats_kobj;
++
++	sysfs_attr_init(&prvdata->ka.attr);
++	prvdata->ka.attr.mode = 0444;
++	prvdata->ka.attr.name = "stats";
++	prvdata->ka.show = subsystem_stats_show;
++	prvdata->ka.store = NULL;
++
++	ret = sysfs_create_file(prvdata->kobj, &prvdata->ka.attr);
++	if (ret) {
++		pr_err("sysfs_create_file failed\n");
++		kobject_put(prvdata->kobj);
++		kfree(prvdata);
++		return ret;
++	}
++
++	return ret;
++}
++
++static void __exit subsystem_sleep_stats_exit(void)
++{
++	sysfs_remove_file(prvdata->kobj, &prvdata->ka.attr);
++	kobject_put(prvdata->kobj);
++	kfree(prvdata);
++}
++
++module_init(subsystem_sleep_stats_init);
++module_exit(subsystem_sleep_stats_exit);
++
++MODULE_LICENSE("GPL v2");
++MODULE_DESCRIPTION("Qualcomm Technologies, Inc subsystem sleep stats driver");
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, hosted by The Linux Foundation.
 
