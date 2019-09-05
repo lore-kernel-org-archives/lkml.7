@@ -2,114 +2,119 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1B3C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D0FC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBC972173B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B524521848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:15:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567674936;
-	bh=Lf4GVa307w1VgMvnePJnb120Zs7h4v86EeKJR07t8iQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Fse+35vKaW4erY2ItZX2E5FxbcArRvPwPyAxlkCQtZzG+IdqO2tEGYeIfFDn6QTQj
-	 VzSI74EQaHz5rcIzaqXyDiDT4Wducb1ZVo0lzgj6yKpUeKubXeqTGHohvlc3Jy2xsZ
-	 NLEZgjaeoRgWLcSRL8/IYOSXL5IqXVQN5R+2Kejg=
+	s=default; t=1567674955;
+	bh=WmqYVKOOYA94qGvoGgu669eTuZYpqzg+UGzpOtosKGQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=uj5FeBw9c+dEtymKkygajMLH0Ib6U2cODBHpO05Nra2rBlt8dUgenmbhbqlVN78vh
+	 spylqTcVpgDXrACQYW6QonxdN8yXmcqHji+Fk6PkX0/z0PriITROCddj9Bqdc2jMJT
+	 Gkl1jShWxFatTrsRZ0gUvtAitjPBf/8NPa5Yki+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733163AbfIEJPg (ORCPT
+        id S1732035AbfIEJPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 05:15:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34306 "EHLO mail.kernel.org"
+        Thu, 5 Sep 2019 05:15:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:39936 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733117AbfIEJPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 05:15:35 -0400
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86FAD22DBF;
-        Thu,  5 Sep 2019 09:15:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567674934;
-        bh=Lf4GVa307w1VgMvnePJnb120Zs7h4v86EeKJR07t8iQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=iZiB+uvyG4Pk5Kak4VmB5+DuYxHY3wOZtQBqm3PpLJyXmbm+J7C8rEgS8aygWWfZT
-         R2Vvacg+VzEfwczaOdVYsN2YWcPRAyHx7KWzkfjqOssvZg7urX1x7umzKZ5jQzpuQ9
-         GvFxJ6eoNLKzM5swv4SfZ7elFLzeo9CBHTQHAvSg=
-Received: by mail-qt1-f176.google.com with SMTP id u40so1903767qth.11;
-        Thu, 05 Sep 2019 02:15:34 -0700 (PDT)
-X-Gm-Message-State: APjAAAVIYu7CxjfPuh0l0nTj/Yax2nN6gCoQfZNd7IhbGP+ouMM6//UQ
-        1lTNoB9M4Ef19i6tBlR0C6GsqHANyxsKmWRhvQ==
-X-Google-Smtp-Source: APXvYqyNwGylNaWmJdbp0hwtvhbRvYKWfKT2epWyENciBWUw2i2+7fCPtHnQEiLZeksoFBqLyL9cCiJhvQ6vopV1LgA=
-X-Received: by 2002:ac8:44c4:: with SMTP id b4mr2438638qto.224.1567674933700;
- Thu, 05 Sep 2019 02:15:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190903162519.7136-1-sashal@kernel.org> <20190903162519.7136-147-sashal@kernel.org>
- <CAL_JsqJrwwsp1wjCBnNmx45ZiLTXVY_nCfN6OrJ5o9dLbc+_2w@mail.gmail.com> <20190905090336.GA29020@kroah.com>
-In-Reply-To: <20190905090336.GA29020@kroah.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 5 Sep 2019 10:15:22 +0100
-X-Gmail-Original-Message-ID: <CAL_JsqL_MeD_pqZ1Ye2202tKhnqa-tfRhfoprUinh0MGrDr4hA@mail.gmail.com>
-Message-ID: <CAL_JsqL_MeD_pqZ1Ye2202tKhnqa-tfRhfoprUinh0MGrDr4hA@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 4.19 147/167] drm/panel: Add support for Armadeus
- ST0700 Adapt
-To:     Greg KH <greg@kroah.com>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        =?UTF-8?Q?S=C3=A9bastien_Szymanski?= 
-        <sebastien.szymanski@armadeus.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        id S1731109AbfIEJPy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 05:15:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 89DE9360;
+        Thu,  5 Sep 2019 02:15:53 -0700 (PDT)
+Received: from big-swifty.misterjones.org (unknown [10.1.27.38])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1612E3F67D;
+        Thu,  5 Sep 2019 02:15:50 -0700 (PDT)
+Date:   Thu, 05 Sep 2019 10:15:49 +0100
+Message-ID: <86k1anrtmi.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Peter Maydell <peter.maydell@linaro.org>
+Cc:     Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        =?UTF-8?B?IkRhbmllbCBQIC4gQmVycmFuZ8OpIg==?= <berrange@redhat.com>,
+        arm-mail-list <linux-arm-kernel@lists.infradead.org>,
+        kvmarm@lists.cs.columbia.edu,
+        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] KVM: inject data abort if instruction cannot be decoded
+In-Reply-To: <CAFEAcA9qkqkOTqSVrhTpt-NkZSNXomSBNiWo_D6Kr=QKYRRf=w@mail.gmail.com>
+References: <20190904180736.29009-1-xypron.glpk@gmx.de>
+        <86r24vrwyh.wl-maz@kernel.org>
+        <CAFEAcA-mc6cLmRGdGNOBR0PC1f_VBjvTdAL6xYtKjApx3NoPgQ@mail.gmail.com>
+        <86mufjrup7.wl-maz@kernel.org>
+        <CAFEAcA9qkqkOTqSVrhTpt-NkZSNXomSBNiWo_D6Kr=QKYRRf=w@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Organization: Approximate
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 5, 2019 at 10:03 AM Greg KH <greg@kroah.com> wrote:
->
-> On Thu, Sep 05, 2019 at 09:55:58AM +0100, Rob Herring wrote:
-> > On Tue, Sep 3, 2019 at 5:31 PM Sasha Levin <sashal@kernel.org> wrote:
-> > >
-> > > From: S=C3=A9bastien Szymanski <sebastien.szymanski@armadeus.com>
-> > >
-> > > [ Upstream commit c479450f61c7f1f248c9a54aedacd2a6ca521ff8 ]
-> > >
-> > > This patch adds support for the Armadeus ST0700 Adapt. It comes with =
-a
-> > > Santek ST0700I5Y-RBSLW 7.0" WVGA (800x480) TFT and an adapter board s=
-o
-> > > that it can be connected on the TFT header of Armadeus Dev boards.
-> > >
-> > > Cc: stable@vger.kernel.org # v4.19
-> > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > Signed-off-by: S=C3=A9bastien Szymanski <sebastien.szymanski@armadeus=
-.com>
-> > > Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> > > Link: https://patchwork.freedesktop.org/patch/msgid/20190507152713.27=
-494-1-sebastien.szymanski@armadeus.com
-> > > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > > ---
-> > >  .../display/panel/armadeus,st0700-adapt.txt   |  9 ++++++
-> > >  drivers/gpu/drm/panel/panel-simple.c          | 29 +++++++++++++++++=
-++
-> > >  2 files changed, 38 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/display/panel/a=
-rmadeus,st0700-adapt.txt
+On Thu, 05 Sep 2019 09:56:44 +0100,
+Peter Maydell <peter.maydell@linaro.org> wrote:
+> 
+> On Thu, 5 Sep 2019 at 09:52, Marc Zyngier <maz@kernel.org> wrote:
 > >
-> > Looks like a new feature, not stable material. Not sure why it got
-> > tagged for stable.
->
-> New device ids/tables are able to be added to stable kernels, since,
-> well, forever :)
+> > On Thu, 05 Sep 2019 09:16:54 +0100,
+> > Peter Maydell <peter.maydell@linaro.org> wrote:
+> > > This is true, but the problem is that barfing out to userspace
+> > > makes it harder to debug the guest because it means that
+> > > the VM is immediately destroyed, whereas AIUI if we
+> > > inject some kind of exception then (assuming you're set up
+> > > to do kernel-debug via gdbstub) you can actually examine
+> > > the offending guest code with a debugger because at least
+> > > your VM is still around to inspect...
+> >
+> > To Christoffer's point, I find the benefit a bit dubious. Yes, you get
+> > an exception, but the instruction that caused it may be completely
+> > legal (store with post-increment, for example), leading to an even
+> > more puzzled developer (that exception should never have been
+> > delivered the first place).
+> 
+> Right, but the combination of "host kernel prints a message
+> about an unsupported load/store insn" and "within-guest debug
+> dump/stack trace/etc" is much more useful than just having
+> "host kernel prints message" and "QEMU exits"; and it requires
+> about 3 lines of code change...
 
-Yes I know, but I wouldn't put new panels in that category though I
-guess it's just data. If we are, then you should be picking up just
-about every single commit to panel-simple.c for stable.
+Which is wrong, and creates a new behaviour that isn't specified
+anywhere.
 
-Rob
+> 
+> > I'm far more in favour of dumping the state of the access in the run
+> > structure (much like we do for a MMIO access) and let userspace do
+> > something about it (such as dumping information on the console or
+> > breaking). It could even inject an exception *if* the user has asked
+> > for it.
+> 
+> ...whereas this requires agreement on a kernel-userspace API,
+> larger changes in the kernel, somebody to implement the userspace
+> side of things, and the user to update both the kernel and QEMU.
+> It's hard for me to see that the benefit here over the 3-line
+> approach really outweighs the extra effort needed.
+
+3 lines that already require the host kernel to be updated, and create
+a legacy that we'll never be able to get rid of.
+
+> In practice saying "we should do this" is saying "we're going to do
+> nothing", based on the historical record.
+
+Thanks for the vote of confidence...
+
+	M.
+
+-- 
+Jazz is not dead, it just smells funny.
