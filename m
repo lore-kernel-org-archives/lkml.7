@@ -2,70 +2,86 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF37C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 04:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB00C3A5AB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 04:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0473206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 04:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58F90206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 04:56:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731070AbfIEEzj (ORCPT
+        id S1731162AbfIEE4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 00:55:39 -0400
-Received: from mga01.intel.com ([192.55.52.88]:9365 "EHLO mga01.intel.com"
+        Thu, 5 Sep 2019 00:56:15 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:60560 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726042AbfIEEzi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 00:55:38 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 21:55:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,469,1559545200"; 
-   d="scan'208";a="199194458"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 04 Sep 2019 21:55:34 -0700
-Received: by lahna (sSMTP sendmail emulation); Thu, 05 Sep 2019 07:55:33 +0300
-Date:   Thu, 5 Sep 2019 07:55:33 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Jethro Beekman <jethro@fortanix.com>
-Cc:     Marek Vasut <marek.vasut@gmail.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Allison Randal <allison@lohutok.net>,
+        id S1731099AbfIEE4P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 00:56:15 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
+        id 1i5jnx-0006IZ-4w; Thu, 05 Sep 2019 14:55:34 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 05 Sep 2019 14:55:24 +1000
+Date:   Thu, 5 Sep 2019 14:55:24 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Enrico Weigelt <info@metux.net>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] mtd: spi-nor: intel-spi: add support for Intel
- Cannon Lake SPI flash
-Message-ID: <20190905045533.GS18521@lahna.fi.intel.com>
-References: <d62dec18-fed4-7ac5-35c8-25f1be2201a9@fortanix.com>
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Atul Gupta <atul.gupta@chelsio.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-crypto@vger.kernel.org, x86@kernel.org,
+        linux-s390@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 0/9] crypto: sha256 - Merge crypto/sha256.h into
+ crypto/sha.h
+Message-ID: <20190905045524.GC32038@gondor.apana.org.au>
+References: <20190901203532.2615-1-hdegoede@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d62dec18-fed4-7ac5-35c8-25f1be2201a9@fortanix.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190901203532.2615-1-hdegoede@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 01:15:24AM +0000, Jethro Beekman wrote:
-> Now that SPI flash controllers without a software sequencer are
-> supported, it's trivial to add support for CNL and its PCI ID.
+On Sun, Sep 01, 2019 at 10:35:23PM +0200, Hans de Goede wrote:
+> Hi All,
 > 
-> Values from https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/300-series-chipset-pch-datasheet-vol-2.pdf
+> As promised here is a follow-up series to my earlier sha256 series.
 > 
-> Signed-off-by: Jethro Beekman <jethro@fortanix.com>
+> Note I have only compiled and tested this series on x86_64 !! 
+> 
+> All changes to architecture specific code on other archs have not even
+> been tested to compile! With that said most of these changes were done
+> using my editors search - replace function so things should be fine...
+> (and FWIW I did do a Kconfig hack to compile test the ccree change).
+> 
+> The first patch in this series rename various file local functions /
+> arrays to avoid conflicts with the new include/crypto/sha256.h, followed
+> by a patch merging include/crypto/sha256.h into include/crypto/sha.h.
+> 
+> The last patch makes use of this merging to remove a bit more code
+> duplication, making sha256_generic use sha256_init and sha224_init from
+> lib/crypto/sha256.c. An added advantage of this, is that this gives these
+> 2 functions coverage by the crypto selftests.
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+All applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
