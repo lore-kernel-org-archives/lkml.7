@@ -2,108 +2,112 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E4A3C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B53C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3AFB20820
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:51:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 365DC21743
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:52:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567673562;
+	bh=Vwr1OGbeWmeciGTqgCwPbmyklLB7HJwi8iFnUYpVSiM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=joyfw2qc7UUclnBu2DzntQKUJqn08p+NeftTp5kt+y3XC2iUro+9n+68iX/rX9yvr
+	 iiXQJ5ZODtXf6nfAU5P3gTaDZ0qKRN1yh89YVXTgjn+wDxS5Ej03vShwvYg2CzNlOR
+	 0riaZOoWN8af8FG+bBKcO856kbfhTthX+vOmjsCc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732580AbfIEIvq (ORCPT
+        id S1732833AbfIEIwl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 04:51:46 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:38640 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbfIEIvp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 04:51:45 -0400
-Received: by mail-qt1-f196.google.com with SMTP id b2so1876911qtq.5;
-        Thu, 05 Sep 2019 01:51:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p20Q0N9T++jYTpnThB0y4fzC3Jgac/dThX4GFqhd8fQ=;
-        b=Lj+4bSwrNI0pmF9vXl4R3SrdYAxXTX9q7/dwYIyhwIMjGgqml7TRqcrEzg5hkfGtKY
-         R2l3ez/ZOs3aoTBd1fnIRkC+w4wiGCgTj4aJzgfcRBuQUBL+Tv7bEF+3233XgHxj1rRl
-         VfsSBByoZZTeTtW4CRvRxpNnj8N+BbNw+4ve3S5em5ceAn0A+5lQRscQMvJYETFYAkD+
-         6W6h89izBN1/2zHZMYq8dDjG9Rqd/hDTEB94RO2DJ08h0be1Od36Flkde1ZGjVLj0klC
-         84ygyJPyCpWHJmLHzjxXC7l1C2GMP15nSueTL0OHt+DawKOoK8WGdViGtXaYzzfhO/4k
-         dokA==
-X-Gm-Message-State: APjAAAXy88dxdP7xdEeUVtwgRPirb/+4z6k1vfjeztIQbWuTw6yiWgV8
-        QY6knHk5zx5kQH0NUrF0FRYS+nfA2k+25B+A7+s=
-X-Google-Smtp-Source: APXvYqysJScfhnYVEnH4ACpboWpgvQmZTJNertVO4/MovZFR9io6yC6xAJj83VWXiaXtBpeGMc8eZXlYyda0XavhhdM=
-X-Received: by 2002:ac8:5306:: with SMTP id t6mr2345068qtn.204.1567673504645;
- Thu, 05 Sep 2019 01:51:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190905080835.1376-1-james.tai@realtek.com>
-In-Reply-To: <20190905080835.1376-1-james.tai@realtek.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 5 Sep 2019 10:51:28 +0200
-Message-ID: <CAK8P3a3L7mzR+FUMgG75_hrp4HQm4vJR3hsUO_BkQp_247OLsA@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: realtek: Add support for Realtek RTD16XX
- evaluation board
-To:     jamestai.sky@gmail.com
-Cc:     DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        CY_Huang <cy.huang@realtek.com>,
-        Phinex Hung <phinex@realtek.com>,
-        "james.tai" <james.tai@realtek.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 5 Sep 2019 04:52:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:39608 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732205AbfIEIwk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 04:52:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6AA23337;
+        Thu,  5 Sep 2019 01:52:40 -0700 (PDT)
+Received: from big-swifty.misterjones.org (unknown [10.1.27.38])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 205A93F67D;
+        Thu,  5 Sep 2019 01:52:37 -0700 (PDT)
+Date:   Thu, 05 Sep 2019 09:52:36 +0100
+Message-ID: <86mufjrup7.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Peter Maydell <peter.maydell@linaro.org>
+Cc:     Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        =?UTF-8?B?IkRhbmllbCBQIC4gQmVycmFuZ8OpIg==?= <berrange@redhat.com>,
+        arm-mail-list <linux-arm-kernel@lists.infradead.org>,
+        kvmarm@lists.cs.columbia.edu,
+        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] KVM: inject data abort if instruction cannot be decoded
+In-Reply-To: <CAFEAcA-mc6cLmRGdGNOBR0PC1f_VBjvTdAL6xYtKjApx3NoPgQ@mail.gmail.com>
+References: <20190904180736.29009-1-xypron.glpk@gmx.de>
+        <86r24vrwyh.wl-maz@kernel.org>
+        <CAFEAcA-mc6cLmRGdGNOBR0PC1f_VBjvTdAL6xYtKjApx3NoPgQ@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Organization: Approximate
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 5, 2019 at 10:10 AM <jamestai.sky@gmail.com> wrote:
+On Thu, 05 Sep 2019 09:16:54 +0100,
+Peter Maydell <peter.maydell@linaro.org> wrote:
+> 
+> On Thu, 5 Sep 2019 at 09:04, Marc Zyngier <maz@kernel.org> wrote:
+> > How can you tell that the access would fault? You have no idea at that
+> > stage (the kernel doesn't know about the MMIO ranges that userspace
+> > handles). All you know is that you're faced with a memory access that
+> > you cannot emulate in the kernel. Injecting a data abort at that stage
+> > is not something that the architecture allows.
+> 
+> To be fair, locking up the whole CPU (which is effectively
+> what the kvm_err/ENOSYS is going to do to the VM) isn't
+> something the architecture allows either :-)
 
-> +
-> +/ {
-> +       model= "Realtek Mjolnir Evaluation Board";
-> +       model_hex= <0x00000653>;
+Hey, I didn't say things were good as they are now! ;-)
 
-The 'mode_hex' property is rather unusual, please drop that for now.
+I'm definitely willing to change things in that area, but I also don't
+want anyone to start relying on things that are not specified anywhere.
 
-> +       chosen {
-> +               bootargs = "console=ttyS0,115200 earlycon";
-> +       };
-> +
-> +       memory@0 {
-> +               device_type = "memory";
-> +               reg = <0x0 0x0 0x0 0x80000000>;
-> +       };
-> +
-> +       uart0: serial0@98007800 {
-> +               compatible = "snps,dw-apb-uart";
-> +               reg = <0x0 0x98007800 0x0 0x400>,
-> +                       <0x0 0x98007000 0x0 0x100>;
-> +               reg-shift = <2>;
-> +               reg-io-width = <4>;
-> +               interrupts = <0 68 4>;
-> +               clock-frequency = <27000000>;
-> +               status = "okay";
-> +       };
+> 
+> > Of course, the best thing would be to actually fix the guest so that
+> > it doesn't use non-emulatable MMIO accesses. In general, that the sign
+> > of a bug in low-level accessors.
+> 
+> This is true, but the problem is that barfing out to userspace
+> makes it harder to debug the guest because it means that
+> the VM is immediately destroyed, whereas AIUI if we
+> inject some kind of exception then (assuming you're set up
+> to do kernel-debug via gdbstub) you can actually examine
+> the offending guest code with a debugger because at least
+> your VM is still around to inspect...
 
-This looks like an on-chip uart. Please move that into rtd16xx.dtsi
-instead, and just mark it as 'status="disabled"' there if there are
-multiple uarts (and add the other ones as well), then enable
-it for the board here.
+To Christoffer's point, I find the benefit a bit dubious. Yes, you get
+an exception, but the instruction that caused it may be completely
+legal (store with post-increment, for example), leading to an even
+more puzzled developer (that exception should never have been
+delivered the first place).
 
-There should also be an 'aliases'. You normally also want to add
+I'm far more in favour of dumping the state of the access in the run
+structure (much like we do for a MMIO access) and let userspace do
+something about it (such as dumping information on the console or
+breaking). It could even inject an exception *if* the user has asked
+for it.
 
-aliases {
-        serial0 = &uart0;
-};
+Thanks,
 
-chosen {
-       stdout-path= "serial0:115200n8"
-};
+	M.
 
-in the board file to make earlycon work right.
-
-      Arnd
+-- 
+Jazz is not dead, it just smells funny.
