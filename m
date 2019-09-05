@@ -2,193 +2,138 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1703FC43140
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C4DCC00306
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5B09206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:48:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26AC3206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:49:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kat12dfN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c//c8CR3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389217AbfIEQsi (ORCPT
+        id S2389919AbfIEQtY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 12:48:38 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37451 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388934AbfIEQsi (ORCPT
+        Thu, 5 Sep 2019 12:49:24 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:45683 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389229AbfIEQtX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 12:48:38 -0400
-Received: by mail-wm1-f65.google.com with SMTP id r195so3919961wme.2
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 09:48:36 -0700 (PDT)
+        Thu, 5 Sep 2019 12:49:23 -0400
+Received: by mail-pl1-f196.google.com with SMTP id x3so1542414plr.12
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 09:49:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=z2wf6O7vjYLDusEv/JaT0s6lS/A0Ds87W4noLxQv2uw=;
-        b=kat12dfN2u0VwMap5lz9Utz7ioWOknWIL7oOMnvAGWMtOFc3z+lqPLIbKtVL3XGkO6
-         TRK1ksVJnGysvt8NaTB4TaP82Uix6DuY01kFmoElX3fswMhVB2hZ3pj03SP/yyMoJ0HS
-         NLQtoK2bVQjv5EaZ5BkknvDQs2s7tcHKCqTXj5OlsEI1mXRK1Ioc+GtyAB6zsgAwP/8B
-         vApOMXiPGcCV/b1oT6I5jJovwkyqprjPkNGLbOOvLvEPztoakmi2lpVOWZnAnTRMqwdd
-         IA9kVaX6i0fOgZ1YS2bgRMwspp5UizUvZ9w8cfmV4INU3y5AWyAwKL1ddlbAJiNoZIWD
-         rHyg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=s6DdguLvpsjaqo1lAmRSLNlZYbZ+JCGQjvxznUaMzTI=;
+        b=c//c8CR3CeKTHpkY1e60ykUjFtWvCTwYYIu4ZtBmF+C02FkkgM93ytDGJYQ4LuHlam
+         IqmTalKEpb0IMhzFi+CmNqN9Ol9EBP7YwFiDQyig0qyu7HDZRVQNpX0tokzkp8kQuq2V
+         tFKHRE2O3kZWyNHrX3P1ZIwuyYVLs0k2sT6fLv661VId9qIqH2fPI7WaX8mAVruZlBTj
+         jlPncrpwl/G/PVVsbI2ooHkU9yIQFv+x05yImzeIL9B4gPJQeM0I1wF+qu+WWO0qmKzL
+         9B+siYWXDopmE0bXbyYTOgPsZQ+G7aSTI+YYc0uXPU9OVkBFe9bKOStBuGaCOke59yoa
+         d+pA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=z2wf6O7vjYLDusEv/JaT0s6lS/A0Ds87W4noLxQv2uw=;
-        b=YDw0L1lZZZr2sOxVIk/0g57yHaqi489vLJAvWHntE/JuU40NsUjRN3jqn3JHj6BsE9
-         7OHZ2SJvLp5X9Xuk/xLhV+8Q/gIsI9wSmDoVh7V9yiNDY/sm7iOctmG/xszpf+zP220R
-         dyw6cAe5vYx17PeJeqNWlTjkHqS8VGZTBRyoXogcrxviwd+mq1EQYuAsqMPBc8oSFUZm
-         /APg3Kn79FuNGaucbodP6jr+qLgHvTgDArMHu530JD4YiJge15368L9xIDxzbGucAq8f
-         qzez6Ls64p9VmgVG8yBV59i3fCKzXzIzbY6EBLSJG4kPX1Z0vih7oZr/GNKTQhC7mZRD
-         LI9g==
-X-Gm-Message-State: APjAAAXREQ3Vm5O+PcYGZ/v9AaCDfCCXXWuFIjH4QNVVmaOXs1fi++50
-        6aamFsQdTYP9POQRKlXGlMLaJVIGkgY=
-X-Google-Smtp-Source: APXvYqyF7XyRDXBGPyvRloL6Dkz64dhnuPdkNKp3xGLV87VXDMeIL/wIQB4PkbH5vAHJK0COwJxLbw==
-X-Received: by 2002:a1c:f50c:: with SMTP id t12mr3834427wmh.49.1567702115985;
-        Thu, 05 Sep 2019 09:48:35 -0700 (PDT)
-Received: from [192.168.1.6] (124.red-83-36-179.dynamicip.rima-tde.net. [83.36.179.124])
-        by smtp.gmail.com with ESMTPSA id o9sm3940414wrh.46.2019.09.05.09.48.34
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=s6DdguLvpsjaqo1lAmRSLNlZYbZ+JCGQjvxznUaMzTI=;
+        b=EcR6iCEHq7KBkq8NX5+GWlmgQ8kuteh6eY2YhQnYALGp9KWbkWwb9TUugyuiiekag0
+         wHwa/Pp1Imnki21W7brZhlU24SNe82sH8oYLzPaXWPUZbu74YAWLCCH2kABqwSAZq81j
+         crgAr0hpz7WLUEESNbrtThRXycMuyVQD5mHDtcpVlY+dj5Tbk4lEzM9x0iTDuujsvwcc
+         t5hI8W+7wqhGUtQazk5YiALjMqX1TzinqZe/kI+KbUV9htlIflz3By05UOCHG3+loWKG
+         JwGOLcCjmLo1SW8UBCOQnC3KDtVVcrvSVoMZc6znLRrlgM4yCIg8wj2AQ1u8HqetZhSC
+         sIXQ==
+X-Gm-Message-State: APjAAAW9lAkYskWZcl1P7cPJEetcYhqPOfPBjvFLWxWpU91mVr0IMjCN
+        sDdv2LfLD2EqxevumnQ0tcE=
+X-Google-Smtp-Source: APXvYqy5FTSj1o4qiUifTBZryJq5dflpS2JHAw2RAL+7NfZGM87jUh0fwlVBE09na3kPvS080r4Tgg==
+X-Received: by 2002:a17:902:30d:: with SMTP id 13mr4553227pld.284.1567702162891;
+        Thu, 05 Sep 2019 09:49:22 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::1:e84e])
+        by smtp.gmail.com with ESMTPSA id l10sm2563407pgt.93.2019.09.05.09.49.21
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Sep 2019 09:48:35 -0700 (PDT)
-Subject: Re: [PATCH] watchdog: qcom: add support for the bark interrupt
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     agross@kernel.org, wim@linux-watchdog.org,
-        linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190905162135.2618-1-jorge.ramirez-ortiz@linaro.org>
- <20190905163919.GA1676@tuxbook-pro>
-From:   Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-Message-ID: <eda57fef-5fd7-85d9-68e6-deec621a7360@linaro.org>
-Date:   Thu, 5 Sep 2019 18:48:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 05 Sep 2019 09:49:21 -0700 (PDT)
+Date:   Thu, 5 Sep 2019 09:49:20 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Jirka =?utf-8?Q?Hladk=C3=BD?= <jhladky@redhat.com>,
+        =?utf-8?B?SmnFmcOtIFZvesOhcg==?= <jvozar@redhat.com>,
+        X86 ML <x86@kernel.org>
+Subject: Re: [PATCH 2/2] sched/debug: add sched_update_nr_running tracepoint
+Message-ID: <20190905164918.qoufootukks6egtl@ast-mbp.dhcp.thefacebook.com>
+References: <a2924d91-df68-42de-0709-af53649346d5@arm.com>
+ <20190904042310.GA159235@google.com>
+ <20190904104332.ogsjtbtuadhsglxh@e107158-lin.cambridge.arm.com>
+ <20190904130628.GE144846@google.com>
+ <CAADnVQJzgTRWUAaH+L6qwJvHk0vsLPX3eWdZNUr5X77TuEgvPw@mail.gmail.com>
+ <20190904154000.GJ240514@google.com>
+ <CAADnVQK+bSzFdZmgTnDSgibhJ81pR19P6hFArqmZa_xKA1r1VQ@mail.gmail.com>
+ <20190904174707.GV2332@hirez.programming.kicks-ass.net>
+ <CAADnVQJFXq0n1J+vFMwhNgGNBYXK+EsFaE_Zebp84wMOLN8TNA@mail.gmail.com>
+ <20190905081310.GA46285@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190905163919.GA1676@tuxbook-pro>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190905081310.GA46285@gmail.com>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/5/19 18:39, Bjorn Andersson wrote:
-> On Thu 05 Sep 09:21 PDT 2019, Jorge Ramirez-Ortiz wrote:
+On Thu, Sep 05, 2019 at 10:13:10AM +0200, Ingo Molnar wrote:
 > 
->> Use the bark interrupt to notify the bark event. Since the bark and bite
->> timeouts are identical, increase the bite timeout by one second so
->> that the bark event can be logged to the console.
->>
+> * Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
 > 
-> Afaict you should tie the bark to the "pretimeout" in the watchdog
-> framework , which would allow the user to specify a pretimeout and
-> configure what should happen at the bark (just a pr_alert() or panic()).
+> > On Wed, Sep 4, 2019 at 10:47 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> > >
+> > > On Wed, Sep 04, 2019 at 08:51:21AM -0700, Alexei Starovoitov wrote:
+> > > > Anything in tracing can be deleted.
+> > > > Tracing is about debugging and introspection.
+> > > > When underlying kernel code changes the introspection points change as well.
+> > >
+> > > Right; except when it breaks widely used tools; like say powertop. Been
+> > > there, done that.
+> > 
+> > powertop was a lesson learned, but it's not a relevant example anymore.
+> > There are more widely used tools today. Like bcc tools.
+> > And bpftrace is quickly gaining momentum and large user base.
+> > bcc tools did break already several times and people fixed them.
+> 
+> Are these tools using libtraceevents?
 
-yes, you are right. will send v2 based on this.
-thanks!
+bcc tools and bpftrace are using libbcc.
+Which in turn is using libbpf.
+libtraceevents is not used.
 
-> 
-> Regards,
-> Bjorn
-> 
->> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
->> ---
->>  drivers/watchdog/qcom-wdt.c | 42 ++++++++++++++++++++++++++++++++++---
->>  1 file changed, 39 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
->> index 7be7f87be28f..5eaf92084b93 100644
->> --- a/drivers/watchdog/qcom-wdt.c
->> +++ b/drivers/watchdog/qcom-wdt.c
->> @@ -10,6 +10,7 @@
->>  #include <linux/platform_device.h>
->>  #include <linux/watchdog.h>
->>  #include <linux/of_device.h>
->> +#include <linux/interrupt.h>
->>  
->>  enum wdt_reg {
->>  	WDT_RST,
->> @@ -41,6 +42,8 @@ struct qcom_wdt {
->>  	unsigned long		rate;
->>  	void __iomem		*base;
->>  	const u32		*layout;
->> +	unsigned int		irq;
->> +	const struct device	*dev;
->>  };
->>  
->>  static void __iomem *wdt_addr(struct qcom_wdt *wdt, enum wdt_reg reg)
->> @@ -54,15 +57,37 @@ struct qcom_wdt *to_qcom_wdt(struct watchdog_device *wdd)
->>  	return container_of(wdd, struct qcom_wdt, wdd);
->>  }
->>  
->> +static inline int qcom_wdt_enable(struct qcom_wdt *wdt)
->> +{
->> +	if (wdt->irq < 0)
->> +		return 1;
->> +
->> +	/* enable timeout with interrupt */
->> +	return 3;
->> +}
->> +
->> +static irqreturn_t qcom_wdt_irq(int irq, void *cookie)
->> +{
->> +	struct qcom_wdt *wdt =  (struct qcom_wdt *) cookie;
->> +
->> +	dev_warn(wdt->dev, "barking, one second countdown to reset\n");
->> +
->> +	return IRQ_HANDLED;
->> +}
->> +
->>  static int qcom_wdt_start(struct watchdog_device *wdd)
->>  {
->>  	struct qcom_wdt *wdt = to_qcom_wdt(wdd);
->> +	unsigned int bark, bite;
->> +
->> +	bark = wdd->timeout;
->> +	bite = wdt->irq < 0 ? bark : bark + 1;
->>  
->>  	writel(0, wdt_addr(wdt, WDT_EN));
->>  	writel(1, wdt_addr(wdt, WDT_RST));
->> -	writel(wdd->timeout * wdt->rate, wdt_addr(wdt, WDT_BARK_TIME));
->> -	writel(wdd->timeout * wdt->rate, wdt_addr(wdt, WDT_BITE_TIME));
->> -	writel(1, wdt_addr(wdt, WDT_EN));
->> +	writel(bark * wdt->rate, wdt_addr(wdt, WDT_BARK_TIME));
->> +	writel(bite * wdt->rate, wdt_addr(wdt, WDT_BITE_TIME));
->> +	writel(qcom_wdt_enable(wdt), wdt_addr(wdt, WDT_EN));
->>  	return 0;
->>  }
->>  
->> @@ -210,10 +235,21 @@ static int qcom_wdt_probe(struct platform_device *pdev)
->>  	wdt->wdd.max_timeout = 0x10000000U / wdt->rate;
->>  	wdt->wdd.parent = dev;
->>  	wdt->layout = regs;
->> +	wdt->dev = &pdev->dev;
->>  
->>  	if (readl(wdt_addr(wdt, WDT_STS)) & 1)
->>  		wdt->wdd.bootstatus = WDIOF_CARDRESET;
->>  
->> +	wdt->irq = platform_get_irq(pdev, 0);
->> +	if (wdt->irq >= 0) {
->> +		ret = devm_request_irq(&pdev->dev, wdt->irq, qcom_wdt_irq,
->> +				       IRQF_TRIGGER_RISING, "wdog_bark", wdt);
->> +		if (ret) {
->> +			dev_err(&pdev->dev, "failed to request irq\n");
->> +			return ret;
->> +		}
->> +	}
->> +
->>  	/*
->>  	 * If 'timeout-sec' unspecified in devicetree, assume a 30 second
->>  	 * default, unless the max timeout is less than 30 seconds, then use
->> -- 
->> 2.23.0
->>
-> 
+Interesting example is https://github.com/iovisor/bcc/blob/master/tools/tcplife.py
+It's using "inet_sock_set_state" tracepoint when available on newer kernels
+and kprobe in tcp_set_state() function on older kernels.
+That tracepoint changed significantly over time.
+It had different name 'tcp_set_state' and slightly different semantics.
+Hence the tool was fixed when that change in tracepoint happened:
+https://github.com/iovisor/bcc/commit/fd93dc0409b626b749b90f115d3d550a870ed125
+
+Note that tcp:tcp_set_state tracepoint existed for full kernel release.
+Yet people didn't make fuzz about the fact it disappeared in 4.16.
+Though tcplife.py tool is simple there are more complex tools based
+on this idea that are deployed in netflix and fb that went through the same
+tcp_set_state->inet_sock_set_state fixes.
 
