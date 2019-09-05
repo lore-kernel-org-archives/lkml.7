@@ -2,115 +2,180 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DDBBC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5458C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70CBA20870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:27:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UqdnQMjm"
+	by mail.kernel.org (Postfix) with ESMTP id A99CE20870
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:28:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732604AbfIEI1D (ORCPT
+        id S1732610AbfIEI2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 04:27:03 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44234 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732583AbfIEI1D (ORCPT
+        Thu, 5 Sep 2019 04:28:08 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:38204 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbfIEI2I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 04:27:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=T29HodBB++BKOCDptdMCNIsRzIU120R7kdF9uHbtmks=; b=UqdnQMjmtW19KSZrfKLHCPF4Q
-        fGEVr4nbDik31n728nyaw2T0mxPNcCefnf9ns8C8tqhZKAdzSl4bhlsNrEleFzoexO5B/SBBv9pZ1
-        gP9SAQN2MOR1kDvVSxtS5jWdPes3qUDGPC65tqRxYNSU8TlEa3ABWQO4fuvr7DqnumBUREc9abOfb
-        pm8a9ftCNMHb4ubY4rrxy9wpBbWDgwiq/k74bEM3ocaT6SWNGYh6gwhh8ZWMSWQPmMhuOKCylsbrb
-        ei30B0ulngvsmH4dr4EArVzL+/inlrpqCjWKVUkcx0UCiQ7Fwh+9S3nwK1zNoC/uv0dlDj2qmXDzO
-        md6vSHZEA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i5n6Q-0005aT-I9; Thu, 05 Sep 2019 08:26:50 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B44AE305E47;
-        Thu,  5 Sep 2019 10:26:10 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 95DF220977763; Thu,  5 Sep 2019 10:26:47 +0200 (CEST)
-Date:   Thu, 5 Sep 2019 10:26:47 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andrew Cooper <andrew.cooper3@citrix.com>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        xen-devel@lists.xenproject.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Subject: Re: [Xen-devel] [PATCH -tip 0/2] x86: Prohibit kprobes on
- XEN_EMULATE_PREFIX
-Message-ID: <20190905082647.GZ2332@hirez.programming.kicks-ass.net>
-References: <156759754770.24473.11832897710080799131.stgit@devnote2>
- <ad6431be-c86e-5ed5-518a-d1e9d1959e80@citrix.com>
- <20190905104937.60aa03f699a9c0fbf1b651b9@kernel.org>
- <1372ce73-e2d8-6144-57df-a98429587826@citrix.com>
+        Thu, 5 Sep 2019 04:28:08 -0400
+Received: by mail-io1-f71.google.com with SMTP id m5so2289187ioj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 01:28:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=lLnSksznckibmlRTfCFVm1rxNz4y0AHHD3mjF9z5dRw=;
+        b=gmmz1mztV8z72Q5T9uvcs2OUC2pjHKX6XqtyxLjt7nQCS+BbusLl6rUVLGILO/B/tu
+         mpeXXatNoLmiSWrYNroeL7IXuWQNGS+3GYLbegq6hrHvujEj/EvdXlJkQkidEr4yxHD0
+         hQRdWfzYJflaAEk7sTmfDbyL/xm3aINT8V+TcY3JcjcZIgaJXKCeGAghLg9dm6U0sQJO
+         vww567E0LIyFNbBzugyHeA3VLQIvkEH7VU4Q6iUx72zhrrUjWiAvIlz3ngdNjAFpHijD
+         GG4XCiAHs+9t2kP/ZX3b7QxY3UXiMynzpGi3HbnpBu672u+aDrpEtSIjLIl45P+9f9zo
+         flhg==
+X-Gm-Message-State: APjAAAUvv5TtDplkwyrSGcHwwnupncItQmWvO9laGy6VjYdq3XQtqcZX
+        YRau0GMMBEbamoitgqYlSGf+ciLp1b/9ANC/hF74DyyAcvCF
+X-Google-Smtp-Source: APXvYqz02eSpdcmKNMG4YFRntu85AOTvRQgIS0R2HIGGP5vJArqzng004XOFoN2Ugiz/LaoHB5F2vj4lYVAd0c5Dq14QqaO4BIN0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1372ce73-e2d8-6144-57df-a98429587826@citrix.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a02:81c5:: with SMTP id r5mr2904337jag.143.1567672087277;
+ Thu, 05 Sep 2019 01:28:07 -0700 (PDT)
+Date:   Thu, 05 Sep 2019 01:28:07 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e3072b0591ca1937@google.com>
+Subject: general protection fault in __apic_accept_irq
+From:   syzbot <syzbot+dff25ee91f0c7d5c1695@syzkaller.appspotmail.com>
+To:     bp@alien8.de, devel@linuxdriverproject.org, haiyangz@microsoft.com,
+        hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
+        kvm@vger.kernel.org, kys@microsoft.com,
+        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
+        mingo@redhat.com, pbonzini@redhat.com, rkrcmar@redhat.com,
+        sashal@kernel.org, sean.j.christopherson@intel.com,
+        sthemmin@microsoft.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, vkuznets@redhat.com, wanpengli@tencent.com,
+        x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 08:54:17AM +0100, Andrew Cooper wrote:
+Hello,
 
-> I don't know if you've spotted, but the prefix is a ud2a instruction
-> followed by 'xen' in ascii.
->
-> The KVM version was added in c/s 6c86eedc206dd1f9d37a2796faa8e6f2278215d2
+syzbot found the following crash on:
 
-While the Xen one disassebles to valid instructions, that KVM one does
-not:
+HEAD commit:    3b47fd5c Merge tag 'nfs-for-5.3-4' of git://git.linux-nfs...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=124af12a600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=144488c6c6c6d2b6
+dashboard link: https://syzkaller.appspot.com/bug?extid=dff25ee91f0c7d5c1695
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10954676600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1752fe0a600000
 
-	.text
-xen:
-	ud2; .ascii "xen"
-kvm:
-	ud2; .ascii "kvm"
+The bug was bisected to:
 
-disassembles like:
+commit 0aa67255f54df192d29aec7ac6abb1249d45bda7
+Author: Vitaly Kuznetsov <vkuznets@redhat.com>
+Date:   Mon Nov 26 15:47:29 2018 +0000
 
-0000000000000000 <xen>:
-   0:   0f 0b                   ud2
-   2:   78 65                   js     69 <kvm+0x64>
-   4:   6e                      outsb  %ds:(%rsi),(%dx)
-0000000000000005 <kvm>:
-   5:   0f 0b                   ud2
-   7:   6b                      .byte 0x6b
-   8:   76 6d                   jbe    77 <kvm+0x72>
+     x86/hyper-v: move synic/stimer control structures definitions to  
+hyperv-tlfs.h
 
-Which is a bit unfortunate I suppose. At least they don't appear to
-consume further bytes.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=156128c1600000
+console output: https://syzkaller.appspot.com/x/log.txt?x=136128c1600000
 
-I know it is water under the bridge at this point; but you could've used
-UD1 with a displacement with some 'unlikely' values. That way it
-would've decoded to a single instruction.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+dff25ee91f0c7d5c1695@syzkaller.appspotmail.com
+Fixes: 0aa67255f54d ("x86/hyper-v: move synic/stimer control structures  
+definitions to hyperv-tlfs.h")
 
-Something like:
+kvm [9347]: vcpu0, guest rIP: 0xcc Hyper-V uhandled wrmsr: 0x40000004 data  
+0x94
+kvm [9347]: vcpu0, guest rIP: 0xcc Hyper-V uhandled wrmsr: 0x40000004 data  
+0x48c
+kvm [9347]: vcpu0, guest rIP: 0xcc Hyper-V uhandled wrmsr: 0x40000004 data  
+0x4ac
+kvm [9347]: vcpu0, guest rIP: 0xcc Hyper-V uhandled wrmsr: 0x40000005 data  
+0x1520
+kvm [9347]: vcpu0, guest rIP: 0xcc Hyper-V uhandled wrmsr: 0x40000006 data  
+0x15d4
+kvm [9347]: vcpu0, guest rIP: 0xcc Hyper-V uhandled wrmsr: 0x40000007 data  
+0x15c4
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 9347 Comm: syz-executor665 Not tainted 5.3.0-rc7+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:__apic_accept_irq+0x46/0x740 arch/x86/kvm/lapic.c:1029
+Code: 89 55 cc 41 89 f4 48 89 fb 49 bd 00 00 00 00 00 fc ff df e8 5c c9 5d  
+00 48 89 5d c0 4c 8d b3 98 00 00 00 4d 89 f7 49 c1 ef 03 <43> 80 3c 2f 00  
+74 08 4c 89 f7 e8 6b c4 96 00 49 8b 06 48 89 45 d0
+RSP: 0018:ffff88808a30f9b0 EFLAGS: 00010202
+RAX: ffffffff8115c384 RBX: 0000000000000000 RCX: ffff8880977f2140
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: ffff88808a30fa10 R08: 0000000000000000 R09: 0000000000000000
+R10: ffffed1011461f64 R11: 0000000000000000 R12: 0000000000000000
+R13: dffffc0000000000 R14: 0000000000000098 R15: 0000000000000013
+FS:  0000555555e35880(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 000000008f96d000 CR4: 00000000001426f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  kvm_apic_set_irq+0xb4/0x140 arch/x86/kvm/lapic.c:558
+  stimer_notify_direct arch/x86/kvm/hyperv.c:648 [inline]
+  stimer_expiration arch/x86/kvm/hyperv.c:659 [inline]
+  kvm_hv_process_stimers+0x594/0x1650 arch/x86/kvm/hyperv.c:686
+  vcpu_enter_guest+0x2b2a/0x54b0 arch/x86/kvm/x86.c:7896
+  vcpu_run+0x393/0xd40 arch/x86/kvm/x86.c:8152
+  kvm_arch_vcpu_ioctl_run+0x636/0x900 arch/x86/kvm/x86.c:8360
+  kvm_vcpu_ioctl+0x6cf/0xaf0 arch/x86/kvm/../../../virt/kvm/kvm_main.c:2765
+  do_vfs_ioctl+0x744/0x1730 fs/ioctl.c:46
+  ksys_ioctl fs/ioctl.c:713 [inline]
+  __do_sys_ioctl fs/ioctl.c:720 [inline]
+  __se_sys_ioctl fs/ioctl.c:718 [inline]
+  __x64_sys_ioctl+0xe3/0x120 fs/ioctl.c:718
+  do_syscall_64+0xfe/0x140 arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x442a19
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 1b 0c fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffca3d2a208 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000442a19
+RDX: 0000000000000000 RSI: 000000000000ae80 RDI: 0000000000000005
+RBP: 00000000006cd018 R08: 00000000004002c8 R09: 00000000004002c8
+R10: 00000000004002c8 R11: 0000000000000246 R12: 0000000000403ac0
+R13: 0000000000403b50 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace 8515c4c18eb55117 ]---
+RIP: 0010:__apic_accept_irq+0x46/0x740 arch/x86/kvm/lapic.c:1029
+Code: 89 55 cc 41 89 f4 48 89 fb 49 bd 00 00 00 00 00 fc ff df e8 5c c9 5d  
+00 48 89 5d c0 4c 8d b3 98 00 00 00 4d 89 f7 49 c1 ef 03 <43> 80 3c 2f 00  
+74 08 4c 89 f7 e8 6b c4 96 00 49 8b 06 48 89 45 d0
+RSP: 0018:ffff88808a30f9b0 EFLAGS: 00010202
+RAX: ffffffff8115c384 RBX: 0000000000000000 RCX: ffff8880977f2140
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: ffff88808a30fa10 R08: 0000000000000000 R09: 0000000000000000
+R10: ffffed1011461f64 R11: 0000000000000000 R12: 0000000000000000
+R13: dffffc0000000000 R14: 0000000000000098 R15: 0000000000000013
+FS:  0000555555e35880(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 000000008f96d000 CR4: 00000000001426f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-	ud1    0x6e6578(%rax),%rax
 
-which spells out "xen\0" in the displacement:
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-	48 0f b9 80 78 65 6e 00
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
