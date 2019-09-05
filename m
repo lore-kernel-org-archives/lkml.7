@@ -2,132 +2,241 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D85C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBCEC43140
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43D1B206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:00:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3B9C20820
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:00:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mp29bxwu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389599AbfIEVAP (ORCPT
+        id S2390603AbfIEVAu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 17:00:15 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38380 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726936AbfIEVAO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 17:00:14 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 50D4C30083ED;
-        Thu,  5 Sep 2019 21:00:14 +0000 (UTC)
-Received: from prarit.bos.redhat.com (prarit-guest.khw1.lab.eng.bos.redhat.com [10.16.200.63])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C1C1C60610;
-        Thu,  5 Sep 2019 21:00:13 +0000 (UTC)
-Subject: Re: [PATCH v2 9/9] tools/power/x86/intel-speed-select: Fix memory
- leak
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org
-Cc:     andriy.shevchenko@intel.com, David Arcari <darcari@redhat.com>,
+        Thu, 5 Sep 2019 17:00:50 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38659 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387545AbfIEVAt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 17:00:49 -0400
+Received: by mail-wr1-f66.google.com with SMTP id l11so4315579wrx.5
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 14:00:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3nnDoHPMMqk2BqcrsZAHoETbkS1IHUKarK3YqBqfkWc=;
+        b=mp29bxwuxcKXa6CxuC8MdfDEU8Gl4WV38Qt61LUV3pUO/YxqUzHCCTtc008aej+JV6
+         sj7iYZPRDelw8H+IZyeHB+VauqP9Kocl+OkOev/6253abQrjeBNVEha4KY2wXEijrX3/
+         S8XBP2UOiY5oDVvjxSbIWcarF/y09xQYt2lAYoHe+mRBfivPVg/8xp/Ehtp6dAE+UXX9
+         N3MU6Z2XWLzKw5zV+wpLqV+kcg0dY0dOwax3tUQPzdVX9CTdOAEw+W9Y/gXA8KalIN9k
+         3+ygLZt3+3BDnKg7kehRWL7u6060dTQ+Czfi9RupEVQ0lcfC0x7ulGSBmFO8A3Ezz7Yp
+         FHuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3nnDoHPMMqk2BqcrsZAHoETbkS1IHUKarK3YqBqfkWc=;
+        b=OcGF4x7ZeqQGjh0c95+qY0NBkifmzpsTe0UN++4VhtVGrf3h+xt3pd11b4JWCuOs8R
+         pWfO1dRW9x34YWUzJq39UqXxAGobhe2MgWMW3VfkAiGUCG0exngjyKoXwQh6BO25Tf+l
+         LzxvLucLzc24YLX8NVgTotMvYu5OV0tdPe3YQhwX7sl5Q5KoicV9Sw+G6aOTT8mhfA+e
+         AO44ym4UoP2ZZ9yJQy6eXGFhP10LW+kdahAR+0tPs7LzNRndi9g1OxXcQuMD8fwAQ2Te
+         7UlHOvh+2bqlR+rmjFYhSc2pZMM9QijAVPLyZ0jURBde0zS+h8Lvu9Dr0PanejWaQ+J8
+         iyng==
+X-Gm-Message-State: APjAAAXl8loS15jlg2LsuWXmXBqm8k2yqL4H1a7JlhYgfJS/fl30mdbM
+        SgIwJVpOAOb0Y9DeQ2UgB+sgkg==
+X-Google-Smtp-Source: APXvYqzibqT3lsfWxmAKV6EIArkBJaPRFSTn+tf8kWxM+dDG27zmfSNTMEboTtU9NcD1GoKe/xSbYw==
+X-Received: by 2002:a5d:680e:: with SMTP id w14mr258331wru.3.1567717246455;
+        Thu, 05 Sep 2019 14:00:46 -0700 (PDT)
+Received: from localhost.localdomain (124.red-83-36-179.dynamicip.rima-tde.net. [83.36.179.124])
+        by smtp.gmail.com with ESMTPSA id q25sm2484253wmj.22.2019.09.05.14.00.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 05 Sep 2019 14:00:45 -0700 (PDT)
+From:   Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+To:     jorge.ramirez-ortiz@linaro.org, agross@kernel.org,
+        linux@roeck-us.net, wim@linux-watchdog.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20190905120311.15286-1-prarit@redhat.com>
- <20190905120311.15286-10-prarit@redhat.com>
- <f12560e59427ce7e038334a3b59bf084a748d998.camel@linux.intel.com>
-From:   Prarit Bhargava <prarit@redhat.com>
-Message-ID: <13983f13-098e-4390-c014-43b59c4e2f27@redhat.com>
-Date:   Thu, 5 Sep 2019 17:00:13 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+Subject: [PATCH v4] watchdog: qcom: support pre-timeout when the bark irq is available
+Date:   Thu,  5 Sep 2019 23:00:35 +0200
+Message-Id: <20190905210035.9985-1-jorge.ramirez-ortiz@linaro.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <f12560e59427ce7e038334a3b59bf084a748d998.camel@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 05 Sep 2019 21:00:14 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Use the bark interrupt as the pre-timeout notifier whenever this
+interrupt is available.
 
+By default, the pretimeout notification shall occur one second earlier
+than the timeout.
 
-On 9/5/19 3:42 PM, Srinivas Pandruvada wrote:
-> On Thu, 2019-09-05 at 08:03 -0400, Prarit Bhargava wrote:
->> cpumasks are allocated by calling the alloc_cpu_mask() function and
->> are
->> never free'd.  They should be free'd after the commands have run.
->>
->> Fix the memory leaks by calling free_cpu_set().
-> Good to fix this. But after one command execution the process will
-> exit.
-> 
+Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+---
+ v4:
+     address Guenter Roeck comments as follows:
+       remove unnecessary include and private variable
+       provide macro for WDT EN register values
+       use pretimeout as per its API intent
+       handle EPROBE_DEFER on get_irq
+     also:
+       handle the irq registration as done in pm8916_wdt.c
+ v3:
+    remove unnecesary variable added to private.
 
-I'm sorry, I misunderstood your comment.  Yes, the process will exit after one
-command :)
+ v2:
+    register the pre-timeout notifier instead.
 
-P.
+ v1:
+ drivers/watchdog/qcom-wdt.c | 64 ++++++++++++++++++++++++++++++++++---
+ 1 file changed, 59 insertions(+), 5 deletions(-)
 
-> Thanks,
-> Srinivas
-> 
->>
->> Signed-off-by: Prarit Bhargava <prarit@redhat.com>
->> Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
->> Cc: David Arcari <darcari@redhat.com>
->> Cc: linux-kernel@vger.kernel.org
->> ---
->>  tools/power/x86/intel-speed-select/isst-config.c | 16 +++++++++++---
->> --
->>  1 file changed, 11 insertions(+), 5 deletions(-)
->>
->> diff --git a/tools/power/x86/intel-speed-select/isst-config.c
->> b/tools/power/x86/intel-speed-select/isst-config.c
->> index 78f0cebda1da..59753b3917bb 100644
->> --- a/tools/power/x86/intel-speed-select/isst-config.c
->> +++ b/tools/power/x86/intel-speed-select/isst-config.c
->> @@ -603,6 +603,10 @@ static int isst_fill_platform_info(void)
->>  
->>  	close(fd);
->>  
->> +	if (isst_platform_info.api_version > supported_api_ver) {
->> +		printf("Incompatible API versions; Upgrade of tool is
->> required\n");
->> +		return -1;
->> +	}
->>  	return 0;
->>  }
->>  
->> @@ -1528,6 +1532,7 @@ static void cmdline(int argc, char **argv)
->>  {
->>  	int opt;
->>  	int option_index = 0;
->> +	int ret;
->>  
->>  	static struct option long_options[] = {
->>  		{ "cpu", required_argument, 0, 'c' },
->> @@ -1589,13 +1594,14 @@ static void cmdline(int argc, char **argv)
->>  	set_max_cpu_num();
->>  	set_cpu_present_cpu_mask();
->>  	set_cpu_target_cpu_mask();
->> -	isst_fill_platform_info();
->> -	if (isst_platform_info.api_version > supported_api_ver) {
->> -		printf("Incompatible API versions; Upgrade of tool is
->> required\n");
->> -		exit(0);
->> -	}
->> +	ret = isst_fill_platform_info();
->> +	if (ret)
->> +		goto out;
->>  
->>  	process_command(argc, argv);
->> +out:
->> +	free_cpu_set(present_cpumask);
->> +	free_cpu_set(target_cpumask);
->>  }
->>  
->>  int main(int argc, char **argv)
-> 
+diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
+index 7be7f87be28f..0f1d29eeb81d 100644
+--- a/drivers/watchdog/qcom-wdt.c
++++ b/drivers/watchdog/qcom-wdt.c
+@@ -10,6 +10,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/watchdog.h>
+ #include <linux/of_device.h>
++#include <linux/interrupt.h>
+ 
+ enum wdt_reg {
+ 	WDT_RST,
+@@ -19,6 +20,9 @@ enum wdt_reg {
+ 	WDT_BITE_TIME,
+ };
+ 
++#define QCOM_WDT_ENABLE		BIT(0)
++#define QCOM_WDT_ENABLE_IRQ	BIT(1)
++
+ static const u32 reg_offset_data_apcs_tmr[] = {
+ 	[WDT_RST] = 0x38,
+ 	[WDT_EN] = 0x40,
+@@ -54,15 +58,38 @@ struct qcom_wdt *to_qcom_wdt(struct watchdog_device *wdd)
+ 	return container_of(wdd, struct qcom_wdt, wdd);
+ }
+ 
++static inline int qcom_get_enable(struct watchdog_device *wdd)
++{
++	int enable = QCOM_WDT_ENABLE;
++
++	if (wdd->info->options & WDIOF_PRETIMEOUT)
++		enable |= QCOM_WDT_ENABLE_IRQ;
++
++	return enable;
++}
++
++static irqreturn_t qcom_wdt_isr(int irq, void *arg)
++{
++	struct watchdog_device *wdd = arg;
++
++	watchdog_notify_pretimeout(wdd);
++
++	return IRQ_HANDLED;
++}
++
+ static int qcom_wdt_start(struct watchdog_device *wdd)
+ {
+ 	struct qcom_wdt *wdt = to_qcom_wdt(wdd);
++	unsigned int bark = wdd->timeout;
++
++	if (wdd->pretimeout)
++		bark = bark - wdd->pretimeout;
+ 
+ 	writel(0, wdt_addr(wdt, WDT_EN));
+ 	writel(1, wdt_addr(wdt, WDT_RST));
+-	writel(wdd->timeout * wdt->rate, wdt_addr(wdt, WDT_BARK_TIME));
++	writel(bark * wdt->rate, wdt_addr(wdt, WDT_BARK_TIME));
+ 	writel(wdd->timeout * wdt->rate, wdt_addr(wdt, WDT_BITE_TIME));
+-	writel(1, wdt_addr(wdt, WDT_EN));
++	writel(qcom_get_enable(wdd), wdt_addr(wdt, WDT_EN));
+ 	return 0;
+ }
+ 
+@@ -89,6 +116,13 @@ static int qcom_wdt_set_timeout(struct watchdog_device *wdd,
+ 	return qcom_wdt_start(wdd);
+ }
+ 
++static int qcom_wdt_set_pretimeout(struct watchdog_device *wdd,
++				   unsigned int timeout)
++{
++	wdd->pretimeout = timeout;
++	return qcom_wdt_start(wdd);
++}
++
+ static int qcom_wdt_restart(struct watchdog_device *wdd, unsigned long action,
+ 			    void *data)
+ {
+@@ -105,7 +139,7 @@ static int qcom_wdt_restart(struct watchdog_device *wdd, unsigned long action,
+ 	writel(1, wdt_addr(wdt, WDT_RST));
+ 	writel(timeout, wdt_addr(wdt, WDT_BARK_TIME));
+ 	writel(timeout, wdt_addr(wdt, WDT_BITE_TIME));
+-	writel(1, wdt_addr(wdt, WDT_EN));
++	writel(qcom_get_enable(wdd), wdt_addr(wdt, WDT_EN));
+ 
+ 	/*
+ 	 * Actually make sure the above sequence hits hardware before sleeping.
+@@ -121,6 +155,7 @@ static const struct watchdog_ops qcom_wdt_ops = {
+ 	.stop		= qcom_wdt_stop,
+ 	.ping		= qcom_wdt_ping,
+ 	.set_timeout	= qcom_wdt_set_timeout,
++	.set_pretimeout	= qcom_wdt_set_pretimeout,
+ 	.restart        = qcom_wdt_restart,
+ 	.owner		= THIS_MODULE,
+ };
+@@ -133,6 +168,15 @@ static const struct watchdog_info qcom_wdt_info = {
+ 	.identity	= KBUILD_MODNAME,
+ };
+ 
++static const struct watchdog_info qcom_wdt_pt_info = {
++	.options	= WDIOF_KEEPALIVEPING
++			| WDIOF_MAGICCLOSE
++			| WDIOF_SETTIMEOUT
++			| WDIOF_PRETIMEOUT
++			| WDIOF_CARDRESET,
++	.identity	= KBUILD_MODNAME,
++};
++
+ static void qcom_clk_disable_unprepare(void *data)
+ {
+ 	clk_disable_unprepare(data);
+@@ -146,7 +190,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
+ 	struct device_node *np = dev->of_node;
+ 	const u32 *regs;
+ 	u32 percpu_offset;
+-	int ret;
++	int irq, ret;
+ 
+ 	regs = of_device_get_match_data(dev);
+ 	if (!regs) {
+@@ -204,7 +248,17 @@ static int qcom_wdt_probe(struct platform_device *pdev)
+ 		return -EINVAL;
+ 	}
+ 
+-	wdt->wdd.info = &qcom_wdt_info;
++	irq = platform_get_irq(pdev, 0);
++	if (irq > 0) {
++		if (devm_request_irq(dev, irq, qcom_wdt_isr,
++				     IRQF_TRIGGER_RISING, "wdt_bark",
++				     &wdt->wdd))
++			irq = 0;
++	} else if (irq == -EPROBE_DEFER)
++		return -EPROBE_DEFER;
++
++	wdt->wdd.info = irq > 0 ? &qcom_wdt_pt_info : &qcom_wdt_info;
++	wdt->wdd.pretimeout = irq > 0 ? 1 : 0;
+ 	wdt->wdd.ops = &qcom_wdt_ops;
+ 	wdt->wdd.min_timeout = 1;
+ 	wdt->wdd.max_timeout = 0x10000000U / wdt->rate;
+-- 
+2.23.0
+
