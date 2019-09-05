@@ -2,77 +2,138 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8266CC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F12C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55F932070C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:27:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A95F2070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:27:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388436AbfIEL1B (ORCPT
+        id S2388449AbfIEL14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 07:27:01 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:49666 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbfIEL1B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 07:27:01 -0400
-Received: by mail-io1-f70.google.com with SMTP id j23so2783906iog.16
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 04:27:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=7woNlVISujRJGF9f7Yv9hP0vcjuDeQlRJErmR/nep/s=;
-        b=npyD7RMFcSfqSBSxR+n/FvbwA0lYS1jNQIhWRcyTmsu6iPZwAdpRd77tNoPrNM+DZB
-         wmyJgqydQlYEPlqThAnOkF+ohZKQyAo1YI4ctHJ6WnhAcY+QhoHtaP1nU8X2C1Ze63Tl
-         88OyJcyHLISf3ExVOD1S+UXDRcmfwYvQPZUA0Je2AwvEIt58B6Q8XQmpn5hBoIEcmA5H
-         /ateAwJOIVQmfbluyebWY7WjKE1hU0OuCyeEHbNsWAemt45zDsSGpvuugWbWwsWCAdHt
-         TCtqYQbwrjpDYGE77aERtmkjYazBMY+fYq22cP4TrfJkI1lrrb2HbQQ7J+anQ1tCmUhO
-         +89A==
-X-Gm-Message-State: APjAAAUSDBiVKhPxOKXOfDkR9wza4/YoErcTldTgKN32Qyz2gpvMWUvS
-        3moFSaFt1ihXWlRVxQIovW4p+zQwiO3cAg1jusViwyxhGSfj
-X-Google-Smtp-Source: APXvYqzrPWl90MY6xFLW6kE5r7FYbX5PnvVkgsNXXwiFcVSlOrXw4c1TUHRlr2M/2Ww7NwqWIs7UZ4UFqMX/6zQlqsJJFcJYxnZm
+        Thu, 5 Sep 2019 07:27:56 -0400
+Received: from mx2.mailbox.org ([80.241.60.215]:61762 "EHLO mx2.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726231AbfIEL1z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 07:27:55 -0400
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx2.mailbox.org (Postfix) with ESMTPS id 80455A162A;
+        Thu,  5 Sep 2019 13:27:48 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
+        with ESMTP id bvZM-eYrS-l9; Thu,  5 Sep 2019 13:27:44 +0200 (CEST)
+Date:   Thu, 5 Sep 2019 21:27:18 +1000
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christian Brauner <christian@brauner.io>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v12 01/12] lib: introduce copy_struct_{to,from}_user
+ helpers
+Message-ID: <20190905112718.ojg3znly6x3m4mjq@yavin.dot.cyphar.com>
+References: <20190904201933.10736-1-cyphar@cyphar.com>
+ <20190904201933.10736-2-cyphar@cyphar.com>
+ <20190905110915.4vvhicg4ldmpi5u6@wittgenstein>
 MIME-Version: 1.0
-X-Received: by 2002:a02:9a12:: with SMTP id b18mr3575178jal.70.1567682820439;
- Thu, 05 Sep 2019 04:27:00 -0700 (PDT)
-Date:   Thu, 05 Sep 2019 04:27:00 -0700
-In-Reply-To: <CAAeHK+xJrv1hCbO5qOGTBu=c8STo+-obatOGZ4cHkbuhqmEvrg@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a2044d0591cc99b2@google.com>
-Subject: Re: WARNING: ODEBUG bug in usbhid_disconnect (2)
-From:   syzbot <syzbot+14b53bfeb17f2b210eb7@syzkaller.appspotmail.com>
-To:     Roderick.Colenbrander@sony.com, andreyknvl@google.com,
-        benjamin.tissoires@redhat.com, jikos@kernel.org,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, stern@rowland.harvard.edu,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="nkbo7v76ghbobp4m"
+Content-Disposition: inline
+In-Reply-To: <20190905110915.4vvhicg4ldmpi5u6@wittgenstein>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-syzbot has tested the proposed patch and the reproducer did not trigger  
-crash:
+--nkbo7v76ghbobp4m
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reported-and-tested-by:  
-syzbot+14b53bfeb17f2b210eb7@syzkaller.appspotmail.com
+On 2019-09-05, Christian Brauner <christian.brauner@ubuntu.com> wrote:
+> On Thu, Sep 05, 2019 at 06:19:22AM +1000, Aleksa Sarai wrote:
+> > A common pattern for syscall extensions is increasing the size of a
+> > struct passed from userspace, such that the zero-value of the new fields
+> > result in the old kernel behaviour (allowing for a mix of userspace and
+> > kernel vintages to operate on one another in most cases). This is done
+> > in both directions -- hence two helpers -- though it's more common to
+> > have to copy user space structs into kernel space.
+> >=20
+> > Previously there was no common lib/ function that implemented
+> > the necessary extension-checking semantics (and different syscalls
+> > implemented them slightly differently or incompletely[1]). A future
+> > patch replaces all of the common uses of this pattern to use the new
+> > copy_struct_{to,from}_user() helpers.
+> >=20
+> > [1]: For instance {sched_setattr,perf_event_open,clone3}(2) all do do
+> >      similar checks to copy_struct_from_user() while rt_sigprocmask(2)
+> >      always rejects differently-sized struct arguments.
+> >=20
+> > Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> > Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+>=20
+> I would probably split this out into a separate patchset. It can very
+> well go in before openat2(). Thoughts?
 
-Tested on:
+Yeah, I'll split this and the related patches out -- though I will admit
+I'm not sure how you're supposed to deal with multiple independent
+patchsets that depend on each other. How will folks reviewing openat2(2)
+know to include the lib/struct_user.c changes?
 
-commit:         eea39f24 usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d0c62209eedfd54e
-dashboard link: https://syzkaller.appspot.com/bug?extid=14b53bfeb17f2b210eb7
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=12b6944e600000
+Also, whose tree should it go through?
 
-Note: testing is done by a robot and is best-effort only.
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--nkbo7v76ghbobp4m
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXXDxEwAKCRCdlLljIbnQ
+EqovAQD8WBncNVUTEL0Y3xtDhqYMDFHga+X5xWtEwl2PAh4uVQEAhuzdaAU+gBqt
+VqtP9IF4PFfoqMmGbekI1BKCWI4gmgo=
+=UsGw
+-----END PGP SIGNATURE-----
+
+--nkbo7v76ghbobp4m--
