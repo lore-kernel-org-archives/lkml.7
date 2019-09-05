@@ -2,142 +2,130 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29775C00306
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:05:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BBC8C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:14:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08A5520650
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:05:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D44D222BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:14:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Yzt0MNrM"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="a2pBHK6e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbfIEOFx (ORCPT
+        id S1731206AbfIEOOz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 10:05:53 -0400
-Received: from mail-eopbgr760118.outbound.protection.outlook.com ([40.107.76.118]:11467
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725290AbfIEOFw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 10:05:52 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Vq68ixzBsxfm6hf8jSEk3SVAtSePv9NEq6b7glrIO4XOElKcnDYhJYW5P2314x0wY8+rHy6ZShJkLs2xkRS/fFCDjoSH8WC7KxFjFozH3CnQ+6Gh/2nuAZpRC5pU7cDR1Rx9StFdAIGx5E0t6brbZnNv8DCmEDwBjgMfFXQe1HGQwAhQGwpmD/nYyuNO8P/Bv2kDs6o16M9/kOZsMoDgnohOxFc+Lp9YH3EOCYv8LtW/CiT4kXXZ8aXYVG+gIDjsaYQ1cgjHsLJ2glOAOrvmoZ53kggPGIZ2m/JmtlStgQXrsl27VsfEC94vxHhdOcQw1370y15dWJaDjqvbgmwXfw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Iavyn5/LeMujLUYzJfuyfS+4LKPlHifEu2K00ZmAld0=;
- b=NLO8hrYT/trBeqndA4ZG55KBCzIvtZswJUj7j3i3E3BfyMOIIS1hOOA07ijkqjAAcZXH9aFsIzAOZ7VOfXd1CQsBrw0eqxIcPj3HDIy5cmzCRRtElKBmfxXAytRxgswOrwj2CrEwjW2awRjZo6XisYPNdkPxfctGjA8SnXwXDoivvGRGc4IPmTP7mSl93PnAwO7plSTG0hseRIdDsusPDNk0iAS+lYBEeClrWGp2ylFfq2Rean7leO6/fUqHvYLYp0BX1G1WjFVsKmaas8N3NIM2NPF0u0i3RHtVMUUMALnixdlc/N72qExcT/BHOp1jFetdpChPHpDhFHPan2d4fQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Iavyn5/LeMujLUYzJfuyfS+4LKPlHifEu2K00ZmAld0=;
- b=Yzt0MNrMKJh6//1/79waRMybbzkxpgLxkBWtAscpRjBMYJRHTOaewTt84qTPXsja4U5PDd6akIz0bUguUWW9vKQxoP9bVlxvhEEybogd2slRDGmvf+yR1JbfymwAHmTZgjx05vZOC7kMZItJ9zyANND12Hv0zfgOK7fpue+Uy2Q=
-Received: from DM5PR21MB0137.namprd21.prod.outlook.com (10.173.173.12) by
- DM5PR21MB0843.namprd21.prod.outlook.com (10.173.172.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.7; Thu, 5 Sep 2019 14:05:49 +0000
-Received: from DM5PR21MB0137.namprd21.prod.outlook.com
- ([fe80::c437:6219:efcc:fb8a]) by DM5PR21MB0137.namprd21.prod.outlook.com
- ([fe80::c437:6219:efcc:fb8a%7]) with mapi id 15.20.2263.004; Thu, 5 Sep 2019
- 14:05:49 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Wei Hu <weh@microsoft.com>,
-        "b.zolnierkie@samsung.com" <b.zolnierkie@samsung.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>
-CC:     Iouri Tarassov <iourit@microsoft.com>
-Subject: RE: [PATCH v4] video: hyperv: hyperv_fb: Obtain screen resolution
- from Hyper-V host
-Thread-Topic: [PATCH v4] video: hyperv: hyperv_fb: Obtain screen resolution
- from Hyper-V host
-Thread-Index: AQHVY8n1ZHStyEKyQEWtq6qT8x1cIqcdHi/Q
-Date:   Thu, 5 Sep 2019 14:05:49 +0000
-Message-ID: <DM5PR21MB0137D40DF705CDB372497266D7BB0@DM5PR21MB0137.namprd21.prod.outlook.com>
-References: <20190905091120.16761-1-weh@microsoft.com>
-In-Reply-To: <20190905091120.16761-1-weh@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-05T14:05:47.2964572Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=5fdc59c0-9d8b-4103-9a31-ed8f82961311;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e1eebf27-c839-4db0-5391-08d7320a27ae
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM5PR21MB0843;
-x-ms-traffictypediagnostic: DM5PR21MB0843:|DM5PR21MB0843:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR21MB0843C0D93057DFE6CACADD72D7BB0@DM5PR21MB0843.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 015114592F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(136003)(376002)(346002)(396003)(39860400002)(199004)(189003)(2201001)(86362001)(4744005)(478600001)(6636002)(81166006)(10290500003)(6506007)(33656002)(52536014)(229853002)(8676002)(81156014)(8936002)(66066001)(76176011)(14454004)(99286004)(1511001)(5660300002)(186003)(486006)(25786009)(4326008)(476003)(10090500001)(2906002)(6246003)(3846002)(107886003)(53936002)(9686003)(446003)(55016002)(7696005)(256004)(2501003)(11346002)(6436002)(66556008)(26005)(305945005)(71190400001)(71200400001)(6116002)(316002)(7736002)(102836004)(8990500004)(110136005)(22452003)(66476007)(64756008)(66946007)(66446008)(76116006)(74316002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0843;H:DM5PR21MB0137.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 62YoNtJ4rqfQGlhygqWLMdIVo1wXXYN0fPuOwwiHuBNm4s8SprVSmiTZjt1iA2sq1NYP1600XBULdzJkvbvtXFjnX/8eKW8e9vOWN8mptx8OWSsjma1zgzae0wCLUPzvuvWQc3oRvODyrgIdvouF4oqAdV6lFMs24CPNME8j6Iu9mQv/uLarojb8PQodn+M6mA+RGmy3ESalnss2W6U0nC3onQTLUSB+nyWdNSoP9Huu+V70m8vXgLOlbBImINffzZKjeAaZ0yBFFDwbCfV8KQh7S793o2uOmkKiIHIZwo1SBEkNobJkPEe55tr7WOO4/hIGBqIcThq+g5if9W2qWB/5JmfXc7vlIPtBPk8lovvT2RcbwX73QVCqfdtT9NqXzETmh4Hy/bmVTBodlO/gPb9SjD1yZs9k+8nCUlB5xXE=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 5 Sep 2019 10:14:55 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35030 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729157AbfIEOOy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 10:14:54 -0400
+Received: by mail-pg1-f195.google.com with SMTP id n4so1519572pgv.2
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 07:14:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2dyh/qzhi2qens90CnAyZpu8nc1Cd1yi17MqcISR+xc=;
+        b=a2pBHK6eVeP+DeXitzdhwlEvM99BkuEdPz9b/HbbIFuBRONPO0F/o6Um+dJ+WhLiki
+         loBC03lOXyRmzxlQZn5Tub6me3ggBWFKOWP+jpBivc0UDj0Fuao3xzjPV3fWdHbmL60s
+         bMR4jmepYzML3yWOff4TJnVSFSDkAhK0twfJk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2dyh/qzhi2qens90CnAyZpu8nc1Cd1yi17MqcISR+xc=;
+        b=U0lxyrJsh03inFn4W1pup+7RDfO33R+XaJZjDiGSICjXRAJzJIcFGx8rX+4ssYTUOw
+         iC36roSdn2BNxJBXBGDXMm/4AIN834kK9zRLLXwwD+IRu4EDANtydmXdnuvnPqZynYkg
+         Mib7ls3V726t02Zn16tgqs/fcO94ZZhjgFb24MZ6OXPbrdFJSjo6I0LF/IxoWXWj29Gm
+         1B6Y+XAfpkfDncCtdC/yHqN0Hf0qFfRjL1E9OEFMLqqPRYvgWienomodP720K0oPLr4K
+         8vb6Vob96f2+J5gUGQeL3VTbEEDsKe37WeaJjH3UwMcEYrz3O9zO13JZVdvjiQCi4z1C
+         mUFg==
+X-Gm-Message-State: APjAAAWxa3q6BVI4rTXyL3GYXcfBGkvRY9FsHeOUhMaxbuDeQfip7lwn
+        XedLw8nVSYnBk0y/0iKSlbMwYg==
+X-Google-Smtp-Source: APXvYqyWhg5wWBza0xoQXn734lb+BXrNSStNRVuCl14e2+JVF+qyGjoVQWM/ZfKFG0+uOaZkfe8M4w==
+X-Received: by 2002:a65:518a:: with SMTP id h10mr3310283pgq.117.1567692894079;
+        Thu, 05 Sep 2019 07:14:54 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id l6sm8709786pje.28.2019.09.05.07.14.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2019 07:14:53 -0700 (PDT)
+Date:   Thu, 5 Sep 2019 10:14:52 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Tim Murray <timmurray@google.com>,
+        carmenjackson@google.com, mayankgupta@google.com,
+        dancol@google.com, rostedt@goodmis.org, minchan@kernel.org,
+        akpm@linux-foundation.org, kernel-team@android.com,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jerome Glisse <jglisse@redhat.com>, linux-mm@kvack.org,
+        Matthew Wilcox <willy@infradead.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH v2] mm: emit tracepoint when RSS changes by threshold
+Message-ID: <20190905141452.GA26466@google.com>
+References: <20190903200905.198642-1-joel@joelfernandes.org>
+ <20190904084508.GL3838@dhcp22.suse.cz>
+ <20190904153258.GH240514@google.com>
+ <20190904153759.GC3838@dhcp22.suse.cz>
+ <20190904162808.GO240514@google.com>
+ <20190905105424.GG3838@dhcp22.suse.cz>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e1eebf27-c839-4db0-5391-08d7320a27ae
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2019 14:05:49.1083
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xvaKevwvhc5NnMsUW9bAqhbWLA0iGcI4z/0ZN3iHba04kbdFq6RLYAZJcU1299ElHcRrH2TeC0KdvHLhBCxcPc/DnGxc40Ri+ae7AgyX/Ug=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0843
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190905105424.GG3838@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Hu <weh@microsoft.com> Sent: Thursday, September 5, 2019 2:12 AM
->=20
-> Beginning from Windows 10 RS5+, VM screen resolution is obtained from hos=
-t.
-> The "video=3Dhyperv_fb" boot time option is not needed, but still can be
-> used to overwrite what the host specifies. The VM resolution on the host
-> could be set by executing the powershell "set-vmvideo" command.
->=20
-> Signed-off-by: Iouri Tarassov <iourit@microsoft.com>
-> Signed-off-by: Wei Hu <weh@microsoft.com>
-> ---
->     v2:
->     - Implemented fallback when version negotiation failed.
->     - Defined full size for supported_resolution array.
->=20
->     v3:
->     - Corrected the synthvid major and minor version comparison problem.
->=20
->     v4:
->     - Changed function name to synthvid_ver_ge().
->=20
->  drivers/video/fbdev/hyperv_fb.c | 159 +++++++++++++++++++++++++++++---
->  1 file changed, 147 insertions(+), 12 deletions(-)
->=20
+On Thu, Sep 05, 2019 at 12:54:24PM +0200, Michal Hocko wrote:
+> On Wed 04-09-19 12:28:08, Joel Fernandes wrote:
+> > On Wed, Sep 4, 2019 at 11:38 AM Michal Hocko <mhocko@kernel.org> wrote:
+> > >
+> > > On Wed 04-09-19 11:32:58, Joel Fernandes wrote:
+> > > > On Wed, Sep 04, 2019 at 10:45:08AM +0200, Michal Hocko wrote:
+> > > > > On Tue 03-09-19 16:09:05, Joel Fernandes (Google) wrote:
+> > > > > > Useful to track how RSS is changing per TGID to detect spikes in RSS and
+> > > > > > memory hogs. Several Android teams have been using this patch in various
+> > > > > > kernel trees for half a year now. Many reported to me it is really
+> > > > > > useful so I'm posting it upstream.
+> > > > > >
+> > > > > > Initial patch developed by Tim Murray. Changes I made from original patch:
+> > > > > > o Prevent any additional space consumed by mm_struct.
+> > > > > > o Keep overhead low by checking if tracing is enabled.
+> > > > > > o Add some noise reduction and lower overhead by emitting only on
+> > > > > >   threshold changes.
+> > > > >
+> > > > > Does this have any pre-requisite? I do not see trace_rss_stat_enabled in
+> > > > > the Linus tree (nor in linux-next).
+> > > >
+> > > > No, this is generated automatically by the tracepoint infrastructure when a
+> > > > tracepoint is added.
+> > >
+> > > OK, I was not aware of that.
+> > >
+> > > > > Besides that why do we need batching in the first place. Does this have a
+> > > > > measurable overhead? How does it differ from any other tracepoints that we
+> > > > > have in other hotpaths (e.g.  page allocator doesn't do any checks).
+> > > >
+> > > > We do need batching not only for overhead reduction,
+> > >
+> > > What is the overhead?
+> > 
+> > The overhead is occasionally higher without the threshold (that is if we
+> > trace every counter change). I would classify performance benefit to be
+> > almost the same and within the noise.
+> 
+> OK, so the additional code is not really justified.
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+It is really justified. Did you read the whole of the last email?
+
+thanks,
+
+ - Joel
+
