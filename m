@@ -2,482 +2,141 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3CFFC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D998CC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0E47206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:46:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1B87206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:47:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730912AbfIECqf (ORCPT
+        id S1730938AbfIECrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 22:46:35 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:54040 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbfIECqf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 22:46:35 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x852kXCk030194, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x852kXCk030194
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 5 Sep 2019 10:46:33 +0800
-Received: from fc30.localdomain (172.21.177.138) by RTITCASV01.realtek.com.tw
- (172.21.6.18) with Microsoft SMTP Server id 14.3.468.0; Thu, 5 Sep 2019
- 10:46:31 +0800
-From:   Hayes Wang <hayeswang@realtek.com>
-To:     <netdev@vger.kernel.org>
-CC:     <nic_swsd@realtek.com>, <linux-kernel@vger.kernel.org>,
-        Hayes Wang <hayeswang@realtek.com>
-Subject: [PATCH net-next v2] r8152: adjust the settings of ups flags
-Date:   Thu, 5 Sep 2019 10:46:20 +0800
-Message-ID: <1394712342-15778-328-Taiwan-albertk@realtek.com>
-X-Mailer: Microsoft Office Outlook 11
-In-Reply-To: <1394712342-15778-327-Taiwan-albertk@realtek.com>
-References: <1394712342-15778-327-Taiwan-albertk@realtek.com>
+        Wed, 4 Sep 2019 22:47:47 -0400
+Received: from mga06.intel.com ([134.134.136.31]:26696 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726240AbfIECrq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 22:47:46 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 19:47:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,469,1559545200"; 
+   d="scan'208";a="382736187"
+Received: from xsang-optiplex-9020.sh.intel.com (HELO xsang-OptiPlex-9020) ([10.239.159.135])
+  by fmsmga005.fm.intel.com with ESMTP; 04 Sep 2019 19:47:44 -0700
+Date:   Thu, 5 Sep 2019 10:53:57 +0800
+From:   Oliver Sang <oliver.sang@intel.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-fsdevel@vger.kernel.org, lkp@01.org,
+        kernel test robot <lkp@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [LKP] [fs/namei.c] e013ec23b8:
+ WARNING:at_fs/dcache.c:#dentry_free
+Message-ID: <20190905025357.GT22468@xsang-OptiPlex-9020>
+References: <20190831130917.ea4yx4uo5uttxk6l@inn2.lkp.intel.com>
+ <20190831154246.GY1131@ZenIV.linux.org.uk>
+ <20190904065240.GQ22468@xsang-OptiPlex-9020>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [172.21.177.138]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190904065240.GQ22468@xsang-OptiPlex-9020>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The UPS feature only works for runtime suspend, so UPS flags only
-need to be set before enabling runtime suspend. Therefore, I create
-a struct to record relative information, and use it before runtime
-suspend.
+On Wed, Sep 04, 2019 at 02:52:40PM +0800, Oliver Sang wrote:
+> On Sat, Aug 31, 2019 at 04:42:46PM +0100, Al Viro wrote:
+> > On Sat, Aug 31, 2019 at 09:09:17PM +0800, kernel test robot wrote:
+> > 
+> > > [   13.886602] WARNING: CPU: 0 PID: 541 at fs/dcache.c:338 dentry_free+0x7f/0x90
+> > > [   13.889208] Modules linked in:
+> > > [   13.890276] CPU: 0 PID: 541 Comm: readlink Not tainted 5.3.0-rc1-00008-ge013ec23b8231 #1
+> > > [   13.892699] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+> > > [   13.895419] RIP: 0010:dentry_free+0x7f/0x90
+> > > [   13.896739] Code: f0 75 cb 48 8d be b0 00 00 00 48 83 c4 08 48 c7 c6 60 8d cd a5 e9 51 69 e4 ff 48 89 3c 24 48 c7 c7 f8 a9 cb a6 e8 7f 37 e3 ff <0f> 0b 48 8b 34 24 eb 8f 66 0f 1f 84 00 00 00 00 00 66 66 66 66 90
+> > > [   13.901957] RSP: 0018:ffffb5524063fe38 EFLAGS: 00010282
+> > > [   13.903527] RAX: 0000000000000024 RBX: ffff9941878040c0 RCX: ffffffffa706aa08
+> > > [   13.905566] RDX: 0000000000000000 RSI: 0000000000000096 RDI: 0000000000000246
+> > > [   13.907612] RBP: 0000000000000000 R08: 0000000000000280 R09: 0000000000000033
+> > > [   13.909664] R10: 0000000000000000 R11: ffffb5524063fce8 R12: ffff994187804118
+> > > [   13.911711] R13: ffff99427a810000 R14: ffff994187d7c8f0 R15: ffff99427a810b80
+> > > [   13.913753] FS:  0000000000000000(0000) GS:ffff9942bfc00000(0000) knlGS:0000000000000000
+> > > [   13.916187] CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
+> > > [   13.917892] CR2: 000000000937458b CR3: 000000006800a000 CR4: 00000000000006f0
+> > > [   13.919925] Call Trace:
+> > > [   13.920840]  __dentry_kill+0x13c/0x1a0
+> > > [   13.922076]  path_put+0x12/0x20
+> > > [   13.923148]  free_fs_struct+0x1b/0x30
+> > > [   13.924346]  do_exit+0x304/0xc40
+> > > [   13.925438]  ? __schedule+0x25d/0x670
+> > > [   13.926642]  do_group_exit+0x3a/0xa0
+> > > [   13.927817]  __ia32_sys_exit_group+0x14/0x20
+> > > [   13.929160]  do_fast_syscall_32+0xa9/0x340
+> > > [   13.930565]  entry_SYSENTER_compat+0x7f/0x91
+> > > [   13.931924] ---[ end trace 02c6706eb2c2ebf2 ]---
+> > > 
+> > > 
+> > > To reproduce:
+> > > 
+> > >         # build kernel
+> > > 	cd linux
+> > > 	cp config-5.3.0-rc1-00008-ge013ec23b8231 .config
+> > > 	make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 olddefconfig prepare modules_prepare bzImage
+> > > 
+> > >         git clone https://github.com/intel/lkp-tests.git
+> > >         cd lkp-tests
+> > >         bin/lkp qemu -k <bzImage> job-script # job-script is attached in this email
+> > 
+> > Can't reproduce here...
+> 
+> any detail failure by using this reproducer?
+> 
+> > 
+> > I see one potential problem in there, but I would expect it to have the
+> > opposite effect (I really don't believe that it's a ->d_count wraparound -
+> > that would've taken much longer than a minute, if nothing else).
+> > 
+> > How reliably is it reproduced on your setup and does the following have
+> > any impact, one way or another?
+> 
+> It is always reproduced. We noticed that your branch was rebased. If it's still with problem, will let you know.
 
-All chips could record such information, even though not all of
-them support the feature of UPS. Then, some functions could be
-combined.
+by testing the below HEAD commit of current branch, the issue gone
 
-Signed-off-by: Hayes Wang <hayeswang@realtek.com>
----
-v2:
-Fix the conflicts after commit 771efeda3936 ("r8152: modify
-rtl8152_set_speed function") is applied.
----
- drivers/net/usb/r8152.c | 208 +++++++++++++++++++++++-----------------
- 1 file changed, 120 insertions(+), 88 deletions(-)
+commit 46c46f8df9aa425cc4d6bc89d57a6fedf83dc797 (HEAD -> work.namei, origin/work.namei)
+Author: Al Viro <viro@zeniv.linux.org.uk>
+Date:   Sat Jul 27 16:29:22 2019 -0400
 
-diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-index ec23c166e67b..08726090570e 100644
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -445,18 +445,18 @@
- #define UPS_FLAGS_250M_CKDIV		BIT(2)
- #define UPS_FLAGS_EN_ALDPS		BIT(3)
- #define UPS_FLAGS_CTAP_SHORT_DIS	BIT(4)
--#define UPS_FLAGS_SPEED_MASK		(0xf << 16)
- #define ups_flags_speed(x)		((x) << 16)
- #define UPS_FLAGS_EN_EEE		BIT(20)
- #define UPS_FLAGS_EN_500M_EEE		BIT(21)
- #define UPS_FLAGS_EN_EEE_CKDIV		BIT(22)
-+#define UPS_FLAGS_EEE_PLLOFF_100	BIT(23)
- #define UPS_FLAGS_EEE_PLLOFF_GIGA	BIT(24)
- #define UPS_FLAGS_EEE_CMOD_LV_EN	BIT(25)
- #define UPS_FLAGS_EN_GREEN		BIT(26)
- #define UPS_FLAGS_EN_FLOW_CTR		BIT(27)
- 
- enum spd_duplex {
--	NWAY_10M_HALF = 1,
-+	NWAY_10M_HALF,
- 	NWAY_10M_FULL,
- 	NWAY_100M_HALF,
- 	NWAY_100M_FULL,
-@@ -749,6 +749,23 @@ struct r8152 {
- 		void (*autosuspend_en)(struct r8152 *tp, bool enable);
- 	} rtl_ops;
- 
-+	struct ups_info {
-+		u32 _10m_ckdiv:1;
-+		u32 _250m_ckdiv:1;
-+		u32 aldps:1;
-+		u32 lite_mode:2;
-+		u32 speed_duplex:4;
-+		u32 eee:1;
-+		u32 eee_lite:1;
-+		u32 eee_ckdiv:1;
-+		u32 eee_plloff_100:1;
-+		u32 eee_plloff_giga:1;
-+		u32 eee_cmod_lv:1;
-+		u32 green:1;
-+		u32 flow_control:1;
-+		u32 ctap_short_off:1;
-+	} ups_info;
-+
- 	atomic_t rx_count;
- 
- 	bool eee_en;
-@@ -2865,14 +2882,76 @@ static void r8153_u2p3en(struct r8152 *tp, bool enable)
- 	ocp_write_word(tp, MCU_TYPE_USB, USB_U2P3_CTRL, ocp_data);
- }
- 
--static void r8153b_ups_flags_w1w0(struct r8152 *tp, u32 set, u32 clear)
-+static void r8153b_ups_flags(struct r8152 *tp)
- {
--	u32 ocp_data;
-+	u32 ups_flags = 0;
-+
-+	if (tp->ups_info.green)
-+		ups_flags |= UPS_FLAGS_EN_GREEN;
-+
-+	if (tp->ups_info.aldps)
-+		ups_flags |= UPS_FLAGS_EN_ALDPS;
-+
-+	if (tp->ups_info.eee)
-+		ups_flags |= UPS_FLAGS_EN_EEE;
-+
-+	if (tp->ups_info.flow_control)
-+		ups_flags |= UPS_FLAGS_EN_FLOW_CTR;
-+
-+	if (tp->ups_info.eee_ckdiv)
-+		ups_flags |= UPS_FLAGS_EN_EEE_CKDIV;
-+
-+	if (tp->ups_info.eee_cmod_lv)
-+		ups_flags |= UPS_FLAGS_EEE_CMOD_LV_EN;
-+
-+	if (tp->ups_info._10m_ckdiv)
-+		ups_flags |= UPS_FLAGS_EN_10M_CKDIV;
-+
-+	if (tp->ups_info.eee_plloff_100)
-+		ups_flags |= UPS_FLAGS_EEE_PLLOFF_100;
- 
--	ocp_data = ocp_read_dword(tp, MCU_TYPE_USB, USB_UPS_FLAGS);
--	ocp_data &= ~clear;
--	ocp_data |= set;
--	ocp_write_dword(tp, MCU_TYPE_USB, USB_UPS_FLAGS, ocp_data);
-+	if (tp->ups_info.eee_plloff_giga)
-+		ups_flags |= UPS_FLAGS_EEE_PLLOFF_GIGA;
-+
-+	if (tp->ups_info._250m_ckdiv)
-+		ups_flags |= UPS_FLAGS_250M_CKDIV;
-+
-+	if (tp->ups_info.ctap_short_off)
-+		ups_flags |= UPS_FLAGS_CTAP_SHORT_DIS;
-+
-+	switch (tp->ups_info.speed_duplex) {
-+	case NWAY_10M_HALF:
-+		ups_flags |= ups_flags_speed(1);
-+		break;
-+	case NWAY_10M_FULL:
-+		ups_flags |= ups_flags_speed(2);
-+		break;
-+	case NWAY_100M_HALF:
-+		ups_flags |= ups_flags_speed(3);
-+		break;
-+	case NWAY_100M_FULL:
-+		ups_flags |= ups_flags_speed(4);
-+		break;
-+	case NWAY_1000M_FULL:
-+		ups_flags |= ups_flags_speed(5);
-+		break;
-+	case FORCE_10M_HALF:
-+		ups_flags |= ups_flags_speed(6);
-+		break;
-+	case FORCE_10M_FULL:
-+		ups_flags |= ups_flags_speed(7);
-+		break;
-+	case FORCE_100M_HALF:
-+		ups_flags |= ups_flags_speed(8);
-+		break;
-+	case FORCE_100M_FULL:
-+		ups_flags |= ups_flags_speed(9);
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	ocp_write_dword(tp, MCU_TYPE_USB, USB_UPS_FLAGS, ups_flags);
- }
- 
- static void r8153b_green_en(struct r8152 *tp, bool enable)
-@@ -2893,7 +2972,7 @@ static void r8153b_green_en(struct r8152 *tp, bool enable)
- 	data |= GREEN_ETH_EN;
- 	sram_write(tp, SRAM_GREEN_CFG, data);
- 
--	r8153b_ups_flags_w1w0(tp, UPS_FLAGS_EN_GREEN, 0);
-+	tp->ups_info.green = enable;
- }
- 
- static u16 r8153_phy_status(struct r8152 *tp, u16 desired)
-@@ -2923,6 +3002,8 @@ static void r8153b_ups_en(struct r8152 *tp, bool enable)
- 	u32 ocp_data = ocp_read_byte(tp, MCU_TYPE_USB, USB_POWER_CUT);
- 
- 	if (enable) {
-+		r8153b_ups_flags(tp);
-+
- 		ocp_data |= UPS_EN | USP_PREWAKE | PHASE2_EN;
- 		ocp_write_byte(tp, MCU_TYPE_USB, USB_POWER_CUT, ocp_data);
- 
-@@ -3231,16 +3312,8 @@ static void r8153_eee_en(struct r8152 *tp, bool enable)
- 
- 	ocp_write_word(tp, MCU_TYPE_PLA, PLA_EEE_CR, ocp_data);
- 	ocp_reg_write(tp, OCP_EEE_CFG, config);
--}
--
--static void r8153b_eee_en(struct r8152 *tp, bool enable)
--{
--	r8153_eee_en(tp, enable);
- 
--	if (enable)
--		r8153b_ups_flags_w1w0(tp, UPS_FLAGS_EN_EEE, 0);
--	else
--		r8153b_ups_flags_w1w0(tp, 0, UPS_FLAGS_EN_EEE);
-+	tp->ups_info.eee = enable;
- }
- 
- static void rtl_eee_enable(struct r8152 *tp, bool enable)
-@@ -3262,21 +3335,13 @@ static void rtl_eee_enable(struct r8152 *tp, bool enable)
- 	case RTL_VER_04:
- 	case RTL_VER_05:
- 	case RTL_VER_06:
--		if (enable) {
--			r8153_eee_en(tp, true);
--			ocp_reg_write(tp, OCP_EEE_ADV, tp->eee_adv);
--		} else {
--			r8153_eee_en(tp, false);
--			ocp_reg_write(tp, OCP_EEE_ADV, 0);
--		}
--		break;
- 	case RTL_VER_08:
- 	case RTL_VER_09:
- 		if (enable) {
--			r8153b_eee_en(tp, true);
-+			r8153_eee_en(tp, true);
- 			ocp_reg_write(tp, OCP_EEE_ADV, tp->eee_adv);
- 		} else {
--			r8153b_eee_en(tp, false);
-+			r8153_eee_en(tp, false);
- 			ocp_reg_write(tp, OCP_EEE_ADV, 0);
- 		}
- 		break;
-@@ -3292,6 +3357,8 @@ static void r8152b_enable_fc(struct r8152 *tp)
- 	anar = r8152_mdio_read(tp, MII_ADVERTISE);
- 	anar |= ADVERTISE_PAUSE_CAP | ADVERTISE_PAUSE_ASYM;
- 	r8152_mdio_write(tp, MII_ADVERTISE, anar);
-+
-+	tp->ups_info.flow_control = true;
- }
- 
- static void rtl8152_disable(struct r8152 *tp)
-@@ -3485,22 +3552,8 @@ static void r8153_aldps_en(struct r8152 *tp, bool enable)
- 				break;
- 		}
- 	}
--}
- 
--static void r8153b_aldps_en(struct r8152 *tp, bool enable)
--{
--	r8153_aldps_en(tp, enable);
--
--	if (enable)
--		r8153b_ups_flags_w1w0(tp, UPS_FLAGS_EN_ALDPS, 0);
--	else
--		r8153b_ups_flags_w1w0(tp, 0, UPS_FLAGS_EN_ALDPS);
--}
--
--static void r8153b_enable_fc(struct r8152 *tp)
--{
--	r8152b_enable_fc(tp);
--	r8153b_ups_flags_w1w0(tp, UPS_FLAGS_EN_FLOW_CTR, 0);
-+	tp->ups_info.aldps = enable;
- }
- 
- static void r8153_hw_phy_cfg(struct r8152 *tp)
-@@ -3577,11 +3630,11 @@ static u32 r8152_efuse_read(struct r8152 *tp, u8 addr)
- 
- static void r8153b_hw_phy_cfg(struct r8152 *tp)
- {
--	u32 ocp_data, ups_flags = 0;
-+	u32 ocp_data;
- 	u16 data;
- 
- 	/* disable ALDPS before updating the PHY parameters */
--	r8153b_aldps_en(tp, false);
-+	r8153_aldps_en(tp, false);
- 
- 	/* disable EEE before updating the PHY parameters */
- 	rtl_eee_enable(tp, false);
-@@ -3629,28 +3682,27 @@ static void r8153b_hw_phy_cfg(struct r8152 *tp)
- 		data = ocp_reg_read(tp, OCP_POWER_CFG);
- 		data |= EEE_CLKDIV_EN;
- 		ocp_reg_write(tp, OCP_POWER_CFG, data);
-+		tp->ups_info.eee_ckdiv = true;
- 
- 		data = ocp_reg_read(tp, OCP_DOWN_SPEED);
- 		data |= EN_EEE_CMODE | EN_EEE_1000 | EN_10M_CLKDIV;
- 		ocp_reg_write(tp, OCP_DOWN_SPEED, data);
-+		tp->ups_info.eee_cmod_lv = true;
-+		tp->ups_info._10m_ckdiv = true;
-+		tp->ups_info.eee_plloff_giga = true;
- 
- 		ocp_reg_write(tp, OCP_SYSCLK_CFG, 0);
- 		ocp_reg_write(tp, OCP_SYSCLK_CFG, clk_div_expo(5));
--
--		ups_flags |= UPS_FLAGS_EN_10M_CKDIV | UPS_FLAGS_250M_CKDIV |
--			     UPS_FLAGS_EN_EEE_CKDIV | UPS_FLAGS_EEE_CMOD_LV_EN |
--			     UPS_FLAGS_EEE_PLLOFF_GIGA;
-+		tp->ups_info._250m_ckdiv = true;
- 
- 		r8153_patch_request(tp, false);
- 	}
- 
--	r8153b_ups_flags_w1w0(tp, ups_flags, 0);
--
- 	if (tp->eee_en)
- 		rtl_eee_enable(tp, true);
- 
--	r8153b_aldps_en(tp, true);
--	r8153b_enable_fc(tp);
-+	r8153_aldps_en(tp, true);
-+	r8152b_enable_fc(tp);
- 	r8153_u2p3en(tp, true);
- 
- 	set_bit(PHY_RESET, &tp->flags);
-@@ -3801,18 +3853,9 @@ static void rtl8153_disable(struct r8152 *tp)
- 	r8153_aldps_en(tp, true);
- }
- 
--static void rtl8153b_disable(struct r8152 *tp)
--{
--	r8153b_aldps_en(tp, false);
--	rtl_disable(tp);
--	rtl_reset_bmu(tp);
--	r8153b_aldps_en(tp, true);
--}
--
- static int rtl8152_set_speed(struct r8152 *tp, u8 autoneg, u32 speed, u8 duplex,
- 			     u32 advertising)
- {
--	enum spd_duplex speed_duplex;
- 	u16 bmcr;
- 	int ret = 0;
- 
-@@ -3825,24 +3868,24 @@ static int rtl8152_set_speed(struct r8152 *tp, u8 autoneg, u32 speed, u8 duplex,
- 			bmcr = BMCR_SPEED10;
- 			if (duplex == DUPLEX_FULL) {
- 				bmcr |= BMCR_FULLDPLX;
--				speed_duplex = FORCE_10M_FULL;
-+				tp->ups_info.speed_duplex = FORCE_10M_FULL;
- 			} else {
--				speed_duplex = FORCE_10M_HALF;
-+				tp->ups_info.speed_duplex = FORCE_10M_HALF;
- 			}
- 			break;
- 		case SPEED_100:
- 			bmcr = BMCR_SPEED100;
- 			if (duplex == DUPLEX_FULL) {
- 				bmcr |= BMCR_FULLDPLX;
--				speed_duplex = FORCE_100M_FULL;
-+				tp->ups_info.speed_duplex = FORCE_100M_FULL;
- 			} else {
--				speed_duplex = FORCE_100M_HALF;
-+				tp->ups_info.speed_duplex = FORCE_100M_HALF;
- 			}
- 			break;
- 		case SPEED_1000:
- 			if (tp->mii.supports_gmii) {
- 				bmcr = BMCR_SPEED1000 | BMCR_FULLDPLX;
--				speed_duplex = NWAY_1000M_FULL;
-+				tp->ups_info.speed_duplex = NWAY_1000M_FULL;
- 				break;
- 			}
- 			/* fall through */
-@@ -3875,20 +3918,20 @@ static int rtl8152_set_speed(struct r8152 *tp, u8 autoneg, u32 speed, u8 duplex,
- 				ADVERTISE_100HALF | ADVERTISE_100FULL);
- 		if (advertising & RTL_ADVERTISED_10_HALF) {
- 			tmp1 |= ADVERTISE_10HALF;
--			speed_duplex = NWAY_10M_HALF;
-+			tp->ups_info.speed_duplex = NWAY_10M_HALF;
- 		}
- 		if (advertising & RTL_ADVERTISED_10_FULL) {
- 			tmp1 |= ADVERTISE_10FULL;
--			speed_duplex = NWAY_10M_FULL;
-+			tp->ups_info.speed_duplex = NWAY_10M_FULL;
- 		}
- 
- 		if (advertising & RTL_ADVERTISED_100_HALF) {
- 			tmp1 |= ADVERTISE_100HALF;
--			speed_duplex = NWAY_100M_HALF;
-+			tp->ups_info.speed_duplex = NWAY_100M_HALF;
- 		}
- 		if (advertising & RTL_ADVERTISED_100_FULL) {
- 			tmp1 |= ADVERTISE_100FULL;
--			speed_duplex = NWAY_100M_FULL;
-+			tp->ups_info.speed_duplex = NWAY_100M_FULL;
- 		}
- 
- 		if (anar != tmp1) {
-@@ -3905,7 +3948,7 @@ static int rtl8152_set_speed(struct r8152 *tp, u8 autoneg, u32 speed, u8 duplex,
- 
- 			if (advertising & RTL_ADVERTISED_1000_FULL) {
- 				tmp1 |= ADVERTISE_1000FULL;
--				speed_duplex = NWAY_1000M_FULL;
-+				tp->ups_info.speed_duplex = NWAY_1000M_FULL;
- 			}
- 
- 			if (gbcr != tmp1)
-@@ -3922,17 +3965,6 @@ static int rtl8152_set_speed(struct r8152 *tp, u8 autoneg, u32 speed, u8 duplex,
- 
- 	r8152_mdio_write(tp, MII_BMCR, bmcr);
- 
--	switch (tp->version) {
--	case RTL_VER_08:
--	case RTL_VER_09:
--		r8153b_ups_flags_w1w0(tp, ups_flags_speed(speed_duplex),
--				      UPS_FLAGS_SPEED_MASK);
--		break;
--
--	default:
--		break;
--	}
--
- 	if (bmcr & BMCR_RESET) {
- 		int i;
- 
-@@ -4017,12 +4049,12 @@ static void rtl8153b_up(struct r8152 *tp)
- 
- 	r8153b_u1u2en(tp, false);
- 	r8153_u2p3en(tp, false);
--	r8153b_aldps_en(tp, false);
-+	r8153_aldps_en(tp, false);
- 
- 	r8153_first_init(tp);
- 	ocp_write_dword(tp, MCU_TYPE_USB, USB_RX_BUF_TH, RX_THR_B);
- 
--	r8153b_aldps_en(tp, true);
-+	r8153_aldps_en(tp, true);
- 	r8153_u2p3en(tp, true);
- 	r8153b_u1u2en(tp, true);
- }
-@@ -4037,9 +4069,9 @@ static void rtl8153b_down(struct r8152 *tp)
- 	r8153b_u1u2en(tp, false);
- 	r8153_u2p3en(tp, false);
- 	r8153b_power_cut_en(tp, false);
--	r8153b_aldps_en(tp, false);
-+	r8153_aldps_en(tp, false);
- 	r8153_enter_oob(tp);
--	r8153b_aldps_en(tp, true);
-+	r8153_aldps_en(tp, true);
- }
- 
- static bool rtl8152_in_nway(struct r8152 *tp)
-@@ -5445,7 +5477,7 @@ static int rtl_ops_init(struct r8152 *tp)
- 	case RTL_VER_09:
- 		ops->init		= r8153b_init;
- 		ops->enable		= rtl8153_enable;
--		ops->disable		= rtl8153b_disable;
-+		ops->disable		= rtl8153_disable;
- 		ops->up			= rtl8153b_up;
- 		ops->down		= rtl8153b_down;
- 		ops->unload		= rtl8153b_unload;
--- 
-2.21.0
-
+> 
+> > 
+> > diff --git a/fs/namei.c b/fs/namei.c
+> > index 412479e4c258..671c3c1a3425 100644
+> > --- a/fs/namei.c
+> > +++ b/fs/namei.c
+> > @@ -643,10 +643,8 @@ static bool legitimize_root(struct nameidata *nd)
+> >  {
+> >  	if (!nd->root.mnt || (nd->flags & LOOKUP_ROOT))
+> >  		return true;
+> > -	if (unlikely(!legitimize_path(nd, &nd->root, nd->root_seq)))
+> > -		return false;
+> >  	nd->flags |= LOOKUP_ROOT_GRABBED;
+> > -	return true;
+> > +	return legitimize_path(nd, &nd->root, nd->root_seq);
+> >  }
+> >  
+> >  /*
+> > _______________________________________________
+> > LKP mailing list
+> > LKP@lists.01.org
+> > https://lists.01.org/mailman/listinfo/lkp
+> _______________________________________________
+> LKP mailing list
+> LKP@lists.01.org
+> https://lists.01.org/mailman/listinfo/lkp
