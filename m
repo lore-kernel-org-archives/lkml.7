@@ -2,87 +2,113 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB35C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98DCAC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7009B20828
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:35:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B97DC20828
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:38:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NICxO0N2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390622AbfIEUft (ORCPT
+        id S2390750AbfIEUis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 16:35:49 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:51221 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728072AbfIEUfs (ORCPT
+        Thu, 5 Sep 2019 16:38:48 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:45010 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728072AbfIEUis (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 16:35:48 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MD9Gh-1hwrfp1PeL-0097XB; Thu, 05 Sep 2019 22:35:32 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Vinod Koul <vkoul@kernel.org>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] soundwire: add back ACPI dependency
-Date:   Thu,  5 Sep 2019 22:35:09 +0200
-Message-Id: <20190905203527.1478314-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Thu, 5 Sep 2019 16:38:48 -0400
+Received: by mail-ed1-f67.google.com with SMTP id p2so2994757edx.11;
+        Thu, 05 Sep 2019 13:38:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dBIKCItK0rh9/iwZ4eQJEEcGA16rM0H8xyFxTA3Y7k4=;
+        b=NICxO0N2EREg50tY+4E+4rlKX8CcW3ZfFSqtUQ0llYIh9UPPyeABIIy2t2V5z2hijF
+         rrwUZuaydk0ariXYhSobS3PND1DtI8rx64Sp40w2K4zY8QroLxCOJJ7jbRdXrVjVI+r3
+         BHQYZ4s8kffawKAc1weGw95ZmSoKouKN33eQn6nfl4tJqmGFUKCVHaItqMKfEgy+XexF
+         o1YvpS7cz3e9p8PwZoObUGaEk6D4xadYKax3H5XHfU3uxc1I0ihBj63yGI1jPo4m1OTs
+         0yzCC3QddXaUYPbB8NGAN+0O/c6G4ISo8xfBYXOIPHJQrhDyUFWYXo+z7uU0QORRaczQ
+         +W1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dBIKCItK0rh9/iwZ4eQJEEcGA16rM0H8xyFxTA3Y7k4=;
+        b=DYfugXJYbZYw7py2B+T5ZyIyoexeWKEQGNOz1IrwH0IFsV5hZAPlKo7ZEgrY7O3ybA
+         YjxfusDQstSaL/stfyqPh7Uv6nUIs97KCMFp/jSaTvr16AI8EpCC2aPlO0vi0dR92ws8
+         uzKEpbmk/xdtkeZxGFm3YwumSxP6NJ2yrAJIy3V5wmzrUXTW2H9unhE5l17w7Izs2TSp
+         J7N+RsqVnGMq4U45C0HrWAZW5pDm6vVKsqIo7S4llWGDri7gUmR13KzsljS/RI3756Iv
+         ggXlaR1MbE/8FX78oqddLwHk1KHdkExglxkGj7kEcfD7/owtQWjxrls1rJNBhf5imo6f
+         nWGQ==
+X-Gm-Message-State: APjAAAWkCTZfJ0uZ7u1nsADuiuvr+aYFjfNt/cAQD0LBhXwF6w+YxBuF
+        ALbge+P1+1pF9qu5mVGbGgUXSQoX8Zrjo1cVJ6Ec2Q==
+X-Google-Smtp-Source: APXvYqy2OdI8EsLhW2Y7oXVHwZQmNRL6O8HtEy55XYCqDOjB5PsUAoIoxQ30pCasY01my6SD395aiKJlh0kfeGKhzGM=
+X-Received: by 2002:a17:906:4056:: with SMTP id y22mr4632710ejj.230.1567715925860;
+ Thu, 05 Sep 2019 13:38:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:vUt90rPVuKBhMvAKaolFnfJ447V2j2l1NdTi2KuiTVUjJF/VMdK
- W4NpP0PCa6CURF+o9a0uqgojYoRFGkOjD+H1QVw6c1sl23slLJYVQ/udPPOI6YYl7pVrw0H
- +XNjujaTYQzsTuyPl38UUjbiBDNoIY6wtQJqIYkzsHssSJFDlYCwd4uGYzVyiNnUSQ1L0q/
- ROw7IblgHWQfBixsU0lQg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:WzvcKXxZC78=:D4by9+2BPSQkdoUL99X1O1
- ZK8Ld98Bzfj/dBWG+LU0lpKk+23JjbFddiD6m+LtcCu0CXqbboDMPnG4vhR1MTF4pEebU4UdY
- V+Nkc8J7rno4TSeQ6BAoQLVrWZvs8WX36UosnuUI40wgIvB6kylyMnfYqsh4IPtbJRPDR15hj
- 8ayrQT2/G+GJDDivE1TbF388/NexMqtOfE5ngN/9JkEaZncpz68mvLpCvEB0yRhDi9ejaslJJ
- gnpTw1efGODciNFPRlUKpMf3PryP1JcB0IOl83+HUXk32+hvxPDjB3MVKFVlvpyCIX6zep1vp
- Z59tLfL3UehdlDj3EVnqBnrVOWZikd7ZUjxi+joUuYmWyQWRQnYI3eV+EpkKqb6RT1eqCvxEe
- bDxJQc975yDmboJNNtdbwSM3RMCgJszZsG6V1XFbNJCBSlCd2jfUoKbUK8DVb0JVGm9U3TFf3
- fZkq2j38sNWy33k3ma8Iw/xjRTTbzZed3vm8Z7o0qD8WuQ8wtNq6MH8NicOke2QvnSLwATZw2
- 6DFOOSvILMnE3tXAFYdkIa3UbW3w5+q4KDuj4Gfcs85zJetw5qwCWW6C6jORQt9TrG+IzTMyJ
- IMldpPv7l+PN9fZVHn/ANz7heyJX5cYfXAoCnrymFHrBmTzC63s5MatIJCRzxnn9TmWelQrb9
- 0g2m7eBLbBR2+xoYlZ4ej8aYXmQ9t4NS3Ck0/TWLT+WHiXppC7pNNtcJ/clIhjeqAL/IphLIW
- 8yLWFVYdmyV4lkN30c2xrEmk40yE0jIXcjQpw4lbbe8qweQug7/KeFCEqx5IUOT98I3IfC2Ai
- pLMj7R/jcWL8QjXa70y9hegzAvgSt1Fwj7PIx98leGjH/XBBQ8=
+References: <20190905152155.1392871-1-arnd@arndb.de> <20190905152155.1392871-2-arnd@arndb.de>
+In-Reply-To: <20190905152155.1392871-2-arnd@arndb.de>
+From:   Anatoly Pugachev <matorola@gmail.com>
+Date:   Thu, 5 Sep 2019 23:38:39 +0300
+Message-ID: <CADxRZqxkj+vdAOtZYmKtavy5nCtNFAUgfZ6k12nYeNcPYB+ssw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] ipc: fix sparc64 ipc() wrapper
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Linux Kernel list <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Christian Brauner <christian@brauner.io>,
+        Manfred Spraul <manfred@colorfullife.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        linux-arch@vger.kernel.org, y2038@lists.linaro.org,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Matt Turner <mattst88@gmail.com>, stable@vger.kernel.org,
+        Sparc kernel list <sparclinux@vger.kernel.org>,
+        linux-api@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Soundwire gained a warning for randconfig builds without
-CONFIG_ACPI during the linux-5.3-rc cycle:
+On Thu, Sep 5, 2019 at 9:39 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> Matt bisected a sparc64 specific issue with semctl, shmctl and msgctl
+> to a commit from my y2038 series in linux-5.1, as I missed the custom
+> sys_ipc() wrapper that sparc64 uses in place of the generic version that
+> I patched.
+>
+> The problem is that the sys_{sem,shm,msg}ctl() functions in the kernel
+> now do not allow being called with the IPC_64 flag any more, resulting
+> in a -EINVAL error when they don't recognize the command.
+>
+> Instead, the correct way to do this now is to call the internal
+> ksys_old_{sem,shm,msg}ctl() functions to select the API version.
+>
+> As we generally move towards these functions anyway, change all of
+> sparc_ipc() to consistently use those in place of the sys_*() versions,
+> and move the required ksys_*() declarations into linux/syscalls.h
+>
+> Reported-by: Matt Turner <mattst88@gmail.com>
+> Fixes: 275f22148e87 ("ipc: rename old-style shmctl/semctl/msgctl syscalls")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-drivers/soundwire/slave.c:16:12: error: unused function 'sdw_slave_add' [-Werror,-Wunused-function]
 
-Add the CONFIG_ACPI dependency at the top level now.
+Not Matt,
 
-Fixes: 8676b3ca4673 ("soundwire: fix regmap dependencies and align with other serial links")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/soundwire/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+but this patch fixes util-linux.git ipcs test-suite (make check)
+regression for me on current sparc64 git kernel (5.3.0-rc7), which was
+broken somewhere in between 4.19 (debian unstable kernel) and 5.3-rcX.
 
-diff --git a/drivers/soundwire/Kconfig b/drivers/soundwire/Kconfig
-index f518273cfbe3..c73bfbaa2659 100644
---- a/drivers/soundwire/Kconfig
-+++ b/drivers/soundwire/Kconfig
-@@ -5,6 +5,7 @@
- 
- menuconfig SOUNDWIRE
- 	tristate "SoundWire support"
-+	depends on ACPI
- 	help
- 	  SoundWire is a 2-Pin interface with data and clock line ratified
- 	  by the MIPI Alliance. SoundWire is used for transporting data
--- 
-2.20.0
+Thanks!
 
+PS: wanted to bisect kernel, but Matt did it first.
