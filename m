@@ -2,97 +2,247 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E41FC3A5AB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A22C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45BD121743
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:08:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B2F020828
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:10:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ldqIJr7r"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dY5nPbSW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732415AbfIEII0 (ORCPT
+        id S1731807AbfIEIKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 04:08:26 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37773 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730809AbfIEII0 (ORCPT
+        Thu, 5 Sep 2019 04:10:41 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39515 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730809AbfIEIKl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 04:08:26 -0400
-Received: by mail-pl1-f195.google.com with SMTP id b10so922750plr.4;
-        Thu, 05 Sep 2019 01:08:26 -0700 (PDT)
+        Thu, 5 Sep 2019 04:10:41 -0400
+Received: by mail-pf1-f196.google.com with SMTP id s12so1224475pfe.6;
+        Thu, 05 Sep 2019 01:10:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=p4cc3HD6wCgRlnUtcn0OOHFmBZxcsFw0lbNwPOQXaMs=;
-        b=ldqIJr7rYiw3PfQqdQzuOi7dClRQkPVHQ78j0B22mJIViZA3bBPXpqOgqQfRYw477s
-         HSy1oDmzKI7o2tp87ZoXVsuCMMg1FTgRrNOA125vjse2m5crWv6rqwXnRW/56VJ3R5Gl
-         5lbkaq+trdJvu3B3FD95traiLrl5n0Frg1kDdyfgETxTIwvuH7fJ3Xbi+9rw6I0LpPyh
-         9dEC67LHeKADIOu3uUCU5Ja1B30P0AB6ewmQ72l5j0LBBBQ7bK0tBlz8PBniTjaLAE0E
-         RQEM8MjW7Get5PgLg3Azvc4wbNxm1078ev2AKbDiNFD7yruPq+HkHQUu0Q7SgZ/te7KX
-         y1DQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=UKSyScUJ3tWhZqWmcbBMp/7C5WaFYHAGiecinJw7UKg=;
+        b=dY5nPbSW378wxgrmqKRLBV7eO/24goMT9MyJNFw742sM6y1X+KJzqKsDR9kZkah4Wq
+         3qM9bDFTK9LmM/JQk6xq6m41E+YViF3obQct8JRxnRPz6BHbKHv5iTH+5JI+DTBwVFfW
+         cHWySglEPAjl3CapUJNzNzKdaOlEHa+IxxmxdZdYP7EZDSTrSBlP3+FHjaZb2G9CWg1+
+         GBdcP5Fx83WIOVF2RgTBzNO00gAKK/FcRv71IrWP92IqO0Ss7ZQs/j8ybExLRj+1eb5j
+         QAOyofDLd2lIZcRk7qaUBiVS4P4c+MSlMPPOFKbC2EgfSpWPsZygmCitmR0U/xcmBwY4
+         cnfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p4cc3HD6wCgRlnUtcn0OOHFmBZxcsFw0lbNwPOQXaMs=;
-        b=EYkkE0Owejf6lNjiB9gQCxhtZgMJpWkTugTEJZOZJ+psCFQCEwQIgfs57LUIvPnYba
-         ALZ0Cz50FqZYnHBdEHXMvUOkODG+TQEeHrKQBaCQC841myb4h3I9QHtYzCIeRmwvjNip
-         GJ4q1SxzBbyKSWWqecZCUmsjwFj0/ZTmHpvCsibUKDjgD+JHIxQikDkWtQoGL2bsXtp8
-         2LKDbDF36lkUnawkqmoWSfwM688CDlfFaWAV4lvYZaE6NKL/zbO4aM1QDTo6fBlYxqz4
-         HPIcjh2sagwumjqUZt+sbU+7t8iQ0PP4YhiclEEx6tRIHREi5Yv56WR8DkGXVkGzUHxE
-         XMdg==
-X-Gm-Message-State: APjAAAXIqN4OTT2Xo+Ue6qNUMJGhjIrA/TEXbQnyRUV52cgD8LcMZ0vR
-        UYc8LAyp4HAeXlyilpD3Kgi/AhX1LC/r71xKTKI=
-X-Google-Smtp-Source: APXvYqwWrgyUGsctjbz9xkNUlborGLECclh7l27G2fO9h6X4J9/miCFZcTmLyyj7sm/bNj1c3Gs23ePhQy3qAsUB81A=
-X-Received: by 2002:a17:902:9348:: with SMTP id g8mr2103599plp.18.1567670905658;
- Thu, 05 Sep 2019 01:08:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190904061245.30770-1-rashmica.g@gmail.com> <CAHp75Vd_6Rpt5=BjzV8YFCiFP7qsRrYHHo7+=gWwnZH-zT9jNw@mail.gmail.com>
- <dd62da5f10c06fae1823bf8338c2acc83fe40a40.camel@gmail.com>
-In-Reply-To: <dd62da5f10c06fae1823bf8338c2acc83fe40a40.camel@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 5 Sep 2019 11:08:13 +0300
-Message-ID: <CAHp75VfbjRfCOzo2+95aiGDcmEUOAqUORY4epK+REJ=Y57XFFQ@mail.gmail.com>
-Subject: Re: [PATCH 1/4] gpio/aspeed: Fix incorrect number of banks
-To:     Rashmica Gupta <rashmica.g@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed@lists.ozlabs.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=UKSyScUJ3tWhZqWmcbBMp/7C5WaFYHAGiecinJw7UKg=;
+        b=GNdGbTcYPiS/v4q0sSbmGJGVqMT65w7o63gdAjst83EddW80+jpLXB7Fa8B7pHTMJZ
+         lUwCMZJCPnxgzsy3BL72+rn2giFCgd6Mf6ZWPjb+WH01cAMSJv3k1rwAiQleOQhlK1nd
+         cR49b+ckce3PCp3Z1VR+T7aiIppNEoxsShh3OBoZE3m2aQS7xBqZ0OFebozEf3zTdemz
+         WhMCyRPiyL3se/QXeNm4pNJDq/bescKAH7POnZcOQHjMe79Q9ap4TwdGEHx1hdk57yJG
+         1ptmsPYSE+UpJHm5kEjJfKo88JjGPeDrtW5tOEjglDMscYYP20v76VEsG36iAs9auh2j
+         PT7A==
+X-Gm-Message-State: APjAAAUFh7LFcOV/t0nsBYRhIxj3P70NJGFvPQ8sOuYwbMNxmht9Bp9Q
+        YmHLQwtlHyoIiW0nykcdKMKi1Fr7
+X-Google-Smtp-Source: APXvYqwe9M9Je969fgbbZZ9kkG3EHFtM+EaeJyJHcefWzFELOza1FKQBz060wt5M9gVd/LBTdl35cw==
+X-Received: by 2002:a17:90a:bd08:: with SMTP id y8mr2535907pjr.89.1567671039789;
+        Thu, 05 Sep 2019 01:10:39 -0700 (PDT)
+Received: from localhost.localdomain ([49.216.8.243])
+        by smtp.gmail.com with ESMTPSA id r18sm1195220pfc.3.2019.09.05.01.10.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2019 01:10:39 -0700 (PDT)
+From:   jamestai.sky@gmail.com
+X-Google-Original-From: james.tai@realtek.com
+To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        CY_Huang <cy.huang@realtek.com>,
+        Phinex Hung <phinex@realtek.com>,
+        "james.tai" <james.tai@realtek.com>
+Subject: [PATCH] ARM: dts: realtek: Add support for Realtek RTD16XX evaluation board
+Date:   Thu,  5 Sep 2019 16:08:35 +0800
+Message-Id: <20190905080835.1376-1-james.tai@realtek.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 5, 2019 at 2:17 AM Rashmica Gupta <rashmica.g@gmail.com> wrote:
-> On Wed, 2019-09-04 at 19:27 +0300, Andy Shevchenko wrote:
-> > On Wed, Sep 4, 2019 at 9:14 AM Rashmica Gupta <rashmica.g@gmail.com>
-> > wrote:
+From: "james.tai" <james.tai@realtek.com>
 
-> > > -       banks = gpio->config->nr_gpios >> 5;
-> > > +       banks = (gpio->config->nr_gpios >> 5) + 1;
-> >
-> > Shouldn't be rather DIV_ROUND_UP(nr_gpios, sizeof(u32)) ?
->
-> I agree that DIV_ROUND_UP is the right thing to use here, but wouldn't
-> it be DIV_ROUND_UP(nr_gpios, 32)?
+This patch adds a generic devicetree board file and a dtsi for
+Realtek RTD16XX platform.
 
-Right. Either this or BITS_PER_TYPE(u32).
+Signed-off-by: james.tai <james.tai@realtek.com>
+---
+ arch/arm/boot/dts/Makefile            |   2 +
+ arch/arm/boot/dts/rtd1619-mjolnir.dts |  34 +++++++++
+ arch/arm/boot/dts/rtd16xx.dtsi        | 101 ++++++++++++++++++++++++++
+ 3 files changed, 137 insertions(+)
+ create mode 100644 arch/arm/boot/dts/rtd1619-mjolnir.dts
+ create mode 100644 arch/arm/boot/dts/rtd16xx.dtsi
 
-> > >         gpio->dcache = devm_kcalloc(&pdev->dev,
-> > >                                     banks, sizeof(u32),
-> > > GFP_KERNEL);
-
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 9159fa2cea90..4a37d54e78d1 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -1286,3 +1286,5 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
+ 	aspeed-bmc-opp-zaius.dtb \
+ 	aspeed-bmc-portwell-neptune.dtb \
+ 	aspeed-bmc-quanta-q71l.dtb
++dtb-$(CONFIG_ARCH_RTD16XX) += \
++	rtd1619-mjolnir.dtb
+diff --git a/arch/arm/boot/dts/rtd1619-mjolnir.dts b/arch/arm/boot/dts/rtd1619-mjolnir.dts
+new file mode 100644
+index 000000000000..75cf74eb0862
+--- /dev/null
++++ b/arch/arm/boot/dts/rtd1619-mjolnir.dts
+@@ -0,0 +1,34 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++/*
++ * Copyright (c) 2019 Realtek Semiconductor Corp.
++ */
++
++/dts-v1/;
++
++#include "rtd16xx.dtsi"
++
++/ {
++	model= "Realtek Mjolnir Evaluation Board";
++	model_hex= <0x00000653>;
++
++	chosen {
++		bootargs = "console=ttyS0,115200 earlycon";
++	};
++
++	memory@0 {
++		device_type = "memory";
++		reg = <0x0 0x0 0x0 0x80000000>;
++	};
++
++	uart0: serial0@98007800 {
++		compatible = "snps,dw-apb-uart";
++		reg = <0x0 0x98007800 0x0 0x400>,
++			<0x0 0x98007000 0x0 0x100>;
++		reg-shift = <2>;
++		reg-io-width = <4>;
++		interrupts = <0 68 4>;
++		clock-frequency = <27000000>;
++		status = "okay";
++	};
++};
+diff --git a/arch/arm/boot/dts/rtd16xx.dtsi b/arch/arm/boot/dts/rtd16xx.dtsi
+new file mode 100644
+index 000000000000..9f928bdabc42
+--- /dev/null
++++ b/arch/arm/boot/dts/rtd16xx.dtsi
+@@ -0,0 +1,101 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++/*
++ * Copyright (c) 2019 Realtek Semiconductor Corp.
++ */
++
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++
++/{
++	compatible = "realtek,rtd1619";
++	interrupt-parent = <&gic>;
++	#address-cells = <0x2>;
++	#size-cells = <0x2>;
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		A55_0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a55", "arm,armv8";
++			reg = <0x000>;
++			next-level-cache = <&a55_l2>;
++		};
++
++		A55_1: cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a55", "arm,armv8";
++			reg = <0x100>;
++			cpu-release-addr = <0x98007f30>;
++		};
++
++		A55_2: cpu@2 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a55", "arm,armv8";
++			reg = <0x200>;
++			cpu-release-addr = <0x98007f30>;
++		};
++
++		A55_3: cpu@3 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a55", "arm,armv8";
++			reg = <0x300>;
++			cpu-release-addr = <0x98007f30>;
++		};
++
++		A55_4: cpu@4 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a55", "arm,armv8";
++			reg = <0x400>;
++			cpu-release-addr = <0x98007f30>;
++		};
++
++		A55_5: cpu@5 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a55", "arm,armv8";
++			reg = <0x500>;
++			cpu-release-addr = <0x98007f30>;
++		};
++
++		a55_l2: l2-cache {
++			compatible = "cache";
++		};
++	};
++
++	arm_psci {
++		compatible = "arm,psci-0.2";
++		method = "smc";
++	};
++
++	gic: interrupt-controller@ff100000 {
++		compatible = "arm,gic-v3";
++		#interrupt-cells = <3>;
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++		interrupt-controller;
++		redistributor-stride = <0x0 0x20000>;
++		#redistributor-regions = <1>;
++		reg = <0x0 0xff100000 0x0 0x10000>, /* GICD */
++			<0x0 0xff140000 0x0 0x200000>; /* GICR */
++		interrupts = <GIC_PPI 9 4>;
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | 8)>,
++			<GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | 8)>,
++			<GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | 8)>,
++			<GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | 8)>;
++		clock-frequency = <27000000>;
++	};
++
++	osc27M: osc27M {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <27000000>;
++		clock-output-names = "osc27M";
++	};
++};
 -- 
-With Best Regards,
-Andy Shevchenko
+2.17.1
+
