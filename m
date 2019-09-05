@@ -2,193 +2,82 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4837EC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32CC5C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10B2D21883
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:19:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0C8322CEC
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:21:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S15IC+UU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ghGPFq1Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389300AbfIEMTj (ORCPT
+        id S2389305AbfIEMVO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 08:19:39 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38007 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731196AbfIEMTi (ORCPT
+        Thu, 5 Sep 2019 08:21:14 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40292 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387522AbfIEMVN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 08:19:38 -0400
-Received: by mail-wr1-f67.google.com with SMTP id l11so2524845wrx.5
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 05:19:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=MrN3BZcJsYC0iZ+zHMo7h0dJPYXfMi2qws2g4JTc1Xc=;
-        b=S15IC+UUPDHdFE4bLWucvQ/qsfsVgPKO9wIdPfgeaFXw1sMFq3a098nTtoRYJIy8tp
-         xCYN68qu9fy7TEKrmW5XjB0eqCHvnxa5y4R/GVy/fwRzHUPKGTVGT1rTxDilE7WoOaOk
-         QvkomxGPVOA5pqTo4TugedvCrnlxHKglYzcT/D7yugqdYbHHYXJYknmRqzPUzMreboPK
-         bdcrYQPp+ih10O2sIlfpHKHfm06FvigdVzs7qU3O/+tJg6gNgls3D1uLJuTCsg5bwBNn
-         Q0Y3Ufoo9Dz0U36Pqi215tjQmSLExvg8M6hbiZsO1OWy2Jx7+Kfx0kzCldVi6Zc+JHRJ
-         NB3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=MrN3BZcJsYC0iZ+zHMo7h0dJPYXfMi2qws2g4JTc1Xc=;
-        b=Mc20GASqenfssgsnS9QChppShSnX0uuT4Y7Qrz+ok3z6KJRaJmcPfYFrAyk5NCX+zG
-         /+vN+ryDKLHSKd1yzZ8A4t/JSsy/TCvCSkun0uoESamjbQFJGwWOGAk/TMrf4joOS7im
-         j/UkSKGxEeVjmBZ88H2RtFDNtNDMI2MLezNFd75v6mTVwjserc0Pe0//Tlpc2kn8JyRc
-         XvgZWr3yOdS7CuNds0t96+9s1nTWB/FLK0lxutlvKe+DnifW5LNHyFED0F0Rv1JVYRNS
-         yxJeyK8m2llCNfst/zbyCe0mq9PKhEu6pt9ZEIabivo5YCPq27EPMmQxJMqVaud5IU0U
-         7P6g==
-X-Gm-Message-State: APjAAAUNmFtBY27FAXWP2Ei/Hp/P82l3kTdLQj8HC9qWjJuHRD7AhZ6y
-        5D8ksVlBNWBWVkXW+fXJEu0=
-X-Google-Smtp-Source: APXvYqxDYC4JTglMC/x0H9KInstQSf5vyM3V6ALQHn15RVRKGE6WZKFYpnWjVN4kdDEGyICYXlUSng==
-X-Received: by 2002:adf:dd02:: with SMTP id a2mr2448616wrm.15.1567685976473;
-        Thu, 05 Sep 2019 05:19:36 -0700 (PDT)
-Received: from ogabbay-VM ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id z21sm2240328wmf.30.2019.09.05.05.19.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 05 Sep 2019 05:19:35 -0700 (PDT)
-Date:   Thu, 5 Sep 2019 15:19:34 +0300
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [git pull] habanalabs pull request for kernel 5.4
-Message-ID: <20190905121934.GA31853@ogabbay-VM>
+        Thu, 5 Sep 2019 08:21:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=XxjNlzSh4Idu5yXZCZUqJQ0HxpndVHuWT8vcHQ66Uxw=; b=ghGPFq1Yqlxm6/HHyDi2mP656
+        mn4vc5Iiky/79SM9AWLU0wM5+3bbLallTOVW6khFCmIImfN4dgYPgfYBxeTky3hnM1P8R80bskdB9
+        KR7/KpAboHiP/zCA62zBKopVtUZsOS24u4P7Ytx/W3d9kGCFyxKTKdLwWaeYBf+WH7NgGu0ZEGPrW
+        eGLGB5MdJEcT2WXZIROxvaxY7JD8cFliORszSaG9hQhbpLg+ti/OOyOozPkttYXSZext6bN0FGbU3
+        9ZxnzceoMGa9KBG7BEQmTkXV9Y6dWsKK0wafqq32iUPZ786ALJy5p5Rh2jbcuPwtK7qf7oYS0bKWZ
+        Xrah31sVg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i5qlC-0007wK-Gv; Thu, 05 Sep 2019 12:21:10 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C1300303121;
+        Thu,  5 Sep 2019 14:20:31 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id BB7E429CD33B9; Thu,  5 Sep 2019 14:21:08 +0200 (CEST)
+Date:   Thu, 5 Sep 2019 14:21:08 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [patch 5/6] posix-cpu-timers: Sanitize thread clock permissions
+Message-ID: <20190905122108.GO2349@hirez.programming.kicks-ass.net>
+References: <20190905120339.561100423@linutronix.de>
+ <20190905120540.068959005@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190905120540.068959005@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Greg,
+On Thu, Sep 05, 2019 at 02:03:44PM +0200, Thomas Gleixner wrote:
+> The thread clock permissions are restricted to tasks of the same thread
+> group, but that also prevents a ptracer from reading them. This is
+> inconsistent vs. the process restrictions and unnecessary strict.
+> 
+> Relax it to ptrace permissions in the same way as process permissions are
+> handled.
 
-This is the pull request for habanalabs driver for kernel 5.4.
+More of a meta comment on the added permission checking; so where
+clock_getcpuclockid() is allowed to return -EPERM, it doesn't because
+that's in glibc and it has no clue.
 
-It contains one major change, the creation of an additional char device
-per PCI device. In addition, there are some small changes and
-improvements.
-
-Please see the tag message for details on what this pull request contains.
-
-Thanks,
-Oded
-
-The following changes since commit 25ec8710d9c2cd4d0446ac60a72d388000d543e6:
-
-  w1: add DS2501, DS2502, DS2505 EPROM device driver (2019-09-04 14:34:31 +0200)
-
-are available in the Git repository at:
-
-  git://people.freedesktop.org/~gabbayo/linux tags/misc-habanalabs-next-2019-09-05
-
-for you to fetch changes up to 6dc66f7c26f97396a570f84f6b3c3593a6de7f11:
-
-  habanalabs: correctly cast variable to __le32 (2019-09-05 14:55:28 +0300)
-
-----------------------------------------------------------------
-This tag contains the following changes for kernel 5.4:
-
-- Create an additional char device per PCI device. The new char device
-  allows any application to query the device for stats, information, idle
-  state and more. This is needed to support system/monitoring
-  applications, while also allowing the deep-learning application to send
-  work to the ASIC through the main (original) char device.
-
-- Fix possible kernel crash in case user supplies a smaller-than-required
-  buffer to the DEBUG IOCTL.
-
-- Expose the device to userspace only after initialization was done, to
-  prevent a race between the initialization and user submitting workloads.
-
-- Add uapi, as part of INFO IOCTL, to allow user to query the device
-  utilization rate.
-
-- Add uapi, as part of INFO IOCTL, to allow user to retrieve aggregate H/W
-  events, i.e. counting H/W events from the loading of the driver.
-
-- Register to the HWMON subsystem with the board's name, to allow the
-  user to prepare a custom sensor file per board.
-
-- Use correct macros for endian swapping.
-
-- Improve error printing in multiple places.
-
-- Small bug fixes.
-
-----------------------------------------------------------------
-Chuhong Yuan (1):
-      habanalabs: Use dev_get_drvdata
-
-Dotan Barak (1):
-      habanalabs: explicitly set the queue-id enumerated numbers
-
-Oded Gabbay (21):
-      habanalabs: remove write_open_cnt property
-      habanalabs: add comments on INFO IOCTL
-      habanalabs: add debug print when rejecting CS
-      habanalabs: cap simulator timeout
-      habanalabs: power management through sysfs is only for GOYA
-      habanalabs: add handle field to context structure
-      habanalabs: kill user process after CS rollback
-      habanalabs: show the process context dram usage
-      habanalabs: rename user_ctx as compute_ctx
-      habanalabs: maintain a list of file private data objects
-      habanalabs: change device_setup_cdev() to be more generic
-      habanalabs: create two char devices per ASIC
-      habanalabs: replace __cpu_to_le32/64 with cpu_to_le32/64
-      habanalabs: replace __le32_to_cpu with le32_to_cpu
-      habanalabs: print to kernel log when reset is finished
-      habanalabs: add uapi to retrieve device utilization
-      habanalabs: add uapi to retrieve aggregate H/W events
-      habanalabs: display card name as sensors header
-      habanalabs: stop using the acronym KMD
-      habanalabs: show correct id in error print
-      habanalabs: correctly cast variable to __le32
-
-Omer Shpigelman (2):
-      habanalabs: use default structure for user input in Debug IOCTL
-      habanalabs: improve security in Debug IOCTL
-
-Tomer Tayar (5):
-      habanalabs: Add descriptive names to PSOC scratch-pad registers
-      habanalabs: Add descriptive name to PSOC app status register
-      habanalabs: Expose devices after initialization is done
-      habanalabs: Handle HW_IP_INFO if device disabled or in reset
-      habanalabs: Make the Coresight timestamp perpetual
-
- Documentation/ABI/testing/sysfs-driver-habanalabs  |  14 +-
- drivers/misc/habanalabs/asid.c                     |   2 +-
- drivers/misc/habanalabs/command_buffer.c           |   3 +-
- drivers/misc/habanalabs/command_submission.c       |  27 +-
- drivers/misc/habanalabs/context.c                  |  40 +-
- drivers/misc/habanalabs/debugfs.c                  |  16 +-
- drivers/misc/habanalabs/device.c                   | 488 +++++++++++++++------
- drivers/misc/habanalabs/goya/goya.c                |  95 ++--
- drivers/misc/habanalabs/goya/goyaP.h               |  19 +-
- drivers/misc/habanalabs/goya/goya_coresight.c      |  89 ++--
- drivers/misc/habanalabs/goya/goya_hwmgr.c          | 109 +++++
- drivers/misc/habanalabs/habanalabs.h               | 129 ++++--
- drivers/misc/habanalabs/habanalabs_drv.c           | 171 +++++---
- drivers/misc/habanalabs/habanalabs_ioctl.c         | 180 ++++++--
- drivers/misc/habanalabs/hw_queue.c                 |  18 +-
- drivers/misc/habanalabs/hwmon.c                    |  24 +-
- drivers/misc/habanalabs/include/armcp_if.h         |  85 ++--
- drivers/misc/habanalabs/include/goya/goya.h        |   2 +
- .../misc/habanalabs/include/goya/goya_reg_map.h    |  34 ++
- drivers/misc/habanalabs/irq.c                      |   4 +-
- drivers/misc/habanalabs/sysfs.c                    | 126 +-----
- include/uapi/misc/habanalabs.h                     | 102 +++--
- 22 files changed, 1177 insertions(+), 600 deletions(-)
- create mode 100644 drivers/misc/habanalabs/include/goya/goya_reg_map.h
+And these patches implement the ptrace checks and result in -EINVAL for
+timer_create() and clock_gettime(), even though it should arguably be
+-EPERM, but we're not allowed to return that here.
