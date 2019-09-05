@@ -2,91 +2,87 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A84C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9628C00306
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6D6120825
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:00:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CDF620870
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:00:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567695651;
+	bh=yhgyCiB+I9wAcv8ppJAFLmRKDtH0ObHuh3loI62ivI0=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=2DuLaNvakAZ8kca+wsP7RJAqJDHt1LnKjYqUg1Yzj7Pa9nWrSx49/wKtGuFA0GAuy
+	 AsxrH7rsh0fD95dpknHSC+sj9BX0/VXfTA5MuODJjQpQq0Lv8vvCKXWRfyJU5vjNhC
+	 kFOR5DF8IQSZLAU/zwRdJNRblwlaJ8VG2Ide9zaY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390159AbfIEPA3 (ORCPT
+        id S2390180AbfIEPAu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 11:00:29 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:38232 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389796AbfIEPA2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 11:00:28 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1i5tFG-0006AZ-Cc; Thu, 05 Sep 2019 15:00:22 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Ping-Ke Shih <pkshih@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] rtlwifi: rtl8821ae: make array static const and remove redundant assignment
-Date:   Thu,  5 Sep 2019 16:00:22 +0100
-Message-Id: <20190905150022.3609-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 5 Sep 2019 11:00:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53274 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389796AbfIEPAt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 11:00:49 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC886206A5;
+        Thu,  5 Sep 2019 15:00:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567695649;
+        bh=yhgyCiB+I9wAcv8ppJAFLmRKDtH0ObHuh3loI62ivI0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=i8g21wcK+xIi0s3Y0J5TOvQFCSeYJqVsbuB7qyqEdNsiFa0OI9Xm9+3PpW08chnym
+         2G3ivKWmoMgtz+5MEaU09eMl1+5flLgw7ZyTRxpDG7r7tFAj/D51fCJpXU+JNfUD0Q
+         7UTuZSXSCU3ovQVC4dm0bps/sCJ/0Gg0HrZMSSLU=
+Subject: Re: [PATCH 5.2 000/143] 5.2.12-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20190904175314.206239922@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <a27a3bd5-8b11-8e7f-88ce-58444410f9a7@kernel.org>
+Date:   Thu, 5 Sep 2019 09:00:47 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On 9/4/19 11:52 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.2.12 release.
+> There are 143 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri 06 Sep 2019 05:50:23 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.12-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-The array channel_all can be make static const rather than populating
-it on the stack, this makes the code smaller.  Also, variable place
-is being initialized with a value that is never read, so this assignment
-is redundant and can be removed.
+Compiled and booted on my test system. No dmesg regressions.
 
-Before:
-   text	   data	    bss	    dec	    hex	filename
- 118537	   9591	      0	 128128	  1f480	realtek/rtlwifi/rtl8821ae/phy.o
-
-After:
-   text	   data	    bss	    dec	    hex	filename
- 118331	   9687	      0	 128018	  1f412	realtek/rtlwifi/rtl8821ae/phy.o
-
-Saves 110 bytes, (gcc version 9.2.1, amd64)
-
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/net/wireless/realtek/rtlwifi/rtl8821ae/phy.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/phy.c b/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/phy.c
-index 408af144098e..979e434a4e73 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/phy.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/phy.c
-@@ -3613,14 +3613,14 @@ u8 rtl8821ae_phy_sw_chnl(struct ieee80211_hw *hw)
- 
- u8 _rtl8812ae_get_right_chnl_place_for_iqk(u8 chnl)
- {
--	u8 channel_all[TARGET_CHNL_NUM_2G_5G_8812] = {
-+	static const u8 channel_all[TARGET_CHNL_NUM_2G_5G_8812] = {
- 		1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
- 		14, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54,
- 		56, 58, 60, 62, 64, 100, 102, 104, 106, 108,
- 		110, 112, 114, 116, 118, 120, 122, 124, 126,
- 		128, 130, 132, 134, 136, 138, 140, 149, 151,
- 		153, 155, 157, 159, 161, 163, 165};
--	u8 place = chnl;
-+	u8 place;
- 
- 	if (chnl > 14) {
- 		for (place = 14; place < sizeof(channel_all); place++)
--- 
-2.20.1
-
+Thanks,
+-- Shuah
