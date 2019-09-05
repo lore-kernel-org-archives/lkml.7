@@ -2,147 +2,112 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C2EC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16000C43140
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF409206DE
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:09:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fm92g6MJ"
+	by mail.kernel.org (Postfix) with ESMTP id E12E22053B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:10:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567703455;
+	bh=cE3KZFvDaAholPh5xAVpoiqc6UG1iMmZeCae/IiaoPo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=KcKKVsDJ5gd7WNQZmbkfrTyC2PNp5JMHavn8gNqgMtiENS2wMHi0GrhFQk5hbwt+s
+	 bQpqpp7lHHjmQlxdltEJkH6/SQY5FKRv/Xozw4J+g9ZnkgmEBizWBSJXnDRFcGWale
+	 vUzeb2xZDE5jDr5BHquHsnmVJtytsxOxGDJNe/sE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390936AbfIERJv (ORCPT
+        id S2390962AbfIERKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 13:09:51 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:40502 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731215AbfIERJu (ORCPT
+        Thu, 5 Sep 2019 13:10:52 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38202 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389559AbfIERKw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 13:09:50 -0400
-Received: by mail-ot1-f67.google.com with SMTP id y39so2931774ota.7
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 10:09:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=zvuZJm/OeGnitqg6mopzWwdjJ0Sb1OWjOsDK5ScpN2k=;
-        b=fm92g6MJUiNSxClpUlSh5+9QxkTe9Rh6e+PN6S0HdCgK1xYCEHylPDWfFgsXzbSzVY
-         8tic8eObcyj6QB4OGaqYMR4F+jAqIOecKiDKfOk69dUs5tbdt4MD1Pmle3ypkjcUOF6C
-         swexo56txxBOz0g++imEeemrFWDsG135wPPweBXrlulhzJGbK9yqHYoycVPku+PHJrfA
-         1TY767slE0gfetOwrAVel0tqMZnuoEMMjhAVFEcC+SwUvQzTg3t7grtqShIuShmYfrw7
-         7tMV+ktncJrXHJK1cU+oTbA1O1hC150dGKuz+mgVa3IGffGWcu2d+XnBtjQkMe86xo5H
-         rzPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=zvuZJm/OeGnitqg6mopzWwdjJ0Sb1OWjOsDK5ScpN2k=;
-        b=uAJIGdyPNtp6S6RRckwrpIJnI7EI9jv0ndeCjtYz5JZjpgxS7qAXJw/68OdyGk0dhc
-         cQhYh/HsiLF86Zx8JacL6Zvx9Q5mYYxe1F4BIEd01klzioIAZYIB1WFrlw447vS1LqvM
-         mX0x0nrUHcwJNBiF9l5YrSLFHoxn8ndrmgLduBDJfsGbHpp0IX7WGhe9llEUuNVtCaAm
-         L69iCWl20ZZ1wkSieqwdFVQEjfucYqb9r39H1hLuAtdfxP29vM6cHatFLI+UrNXDdl9M
-         HXcrrcLwcFMCDss81JpbERYjG+WgZTmJ6JF+ed+CWzfpE8PDTQxPAVqtuJvKjFkEOpCb
-         YeKg==
-X-Gm-Message-State: APjAAAVGkDnQEDj6PVbhsuxES58zY2Q++rxXJ0QhYBa9zbkKPvj1I+t9
-        A8pmddyRcHtzN5ef/Np2vrk=
-X-Google-Smtp-Source: APXvYqw3BxLF96Sw44HP46EvQNq1DGMg29f4vt4sDfe3puJSl55/vBXNEzcOWlxI+Vt4PHHLENUNxQ==
-X-Received: by 2002:a05:6830:6:: with SMTP id c6mr3285609otp.331.1567703389824;
-        Thu, 05 Sep 2019 10:09:49 -0700 (PDT)
-Received: from [100.71.96.87] ([143.166.81.254])
-        by smtp.gmail.com with ESMTPSA id b10sm669790oie.27.2019.09.05.10.09.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Sep 2019 10:09:49 -0700 (PDT)
-From:   Stuart Hayes <stuart.w.hayes@gmail.com>
-Subject: [PATCH] amd/iommu: flush old domains in kdump kernel
-To:     jroedel@suse.de
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        iommu@lists.linux-foundation.org
-Message-ID: <9d271f88-949a-7356-c516-be95b1566c94@gmail.com>
-Date:   Thu, 5 Sep 2019 12:09:48 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 5 Sep 2019 13:10:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=MjKdVNiFjOdZvdwokVehwJ0c/QLPeMEzqUmQ6koohg0=; b=TP+HPDqbKM126/TJ1UiGl4y8r
+        GpMofqJxAwlaV7rYqLqTqswSp0aCoyLge2iul1chQJTRNXmGlJfx/FV+9cNyV//XEELyYh/fZxki4
+        BLR0FKBg8SAZkcbR6Sp/wBCHCLEWzUQXX+IBGlaEGm9QYPAu5oZgW+AkmZD16wyeYsnOyN2nvud0Q
+        F7X3jrdIEsqNwvK/aTeBvWNJ7DyNjsgNJ1XpkD9+Z3hvwobjk2igzTXMvtHJ1kx+cDDI1V6kvW4h2
+        bnmCVuO2YVn6ST/HzlSnGmOFhUMyWwTFzLXUmbJyQOW+PW/sunv2QxzN0ilG5yx2kxeLGg+htCZ4Z
+        4b73YB87w==;
+Received: from [177.159.253.249] (helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i5vHW-0008Gt-I4; Thu, 05 Sep 2019 17:10:51 +0000
+Date:   Thu, 5 Sep 2019 14:10:44 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
+        Jessica Yu <jeyu@kernel.org>,
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        Thomas Gleixner <tglx@linutronix.de>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH] docs: license-rules.txt: cover SPDX headers on Python
+ scripts
+Message-ID: <20190905141044.4eb3a622@coco.lan>
+In-Reply-To: <20190905141723.GB25790@kroah.com>
+References: <20190905055614.7958918b@coco.lan>
+        <88e638eb959095ab6657d295f9f8c27169569bf2.1567675272.git.mchehab+samsung@kernel.org>
+        <20190905065701.4744e66a@lwn.net>
+        <20190905141723.GB25790@kroah.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When devices are attached to the amd_iommu in a kdump kernel, the old device
-table entries (DTEs), which were copied from the crashed kernel, will be
-overwritten with a new domain number.  When the new DTE is written, the IOMMU
-is told to flush the DTE from its internal cache--but it is not told to flush
-the translation cache entries for the old domain number.
+Em Thu, 5 Sep 2019 16:17:23 +0200
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> escreveu:
 
-Without this patch, AMD systems using the tg3 network driver fail when kdump
-tries to save the vmcore to a network system, showing network timeouts and
-(sometimes) IOMMU errors in the kernel log.
+> On Thu, Sep 05, 2019 at 06:57:01AM -0600, Jonathan Corbet wrote:
+> > On Thu,  5 Sep 2019 06:23:13 -0300
+> > Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
+> >   
+> > > Python's PEP-263 [1] dictates that an script that needs to default to
+> > > UTF-8 encoding has to follow this rule:
+> > > 
+> > > 	'Python will default to ASCII as standard encoding if no other
+> > > 	 encoding hints are given.
+> > > 
+> > > 	 To define a source code encoding, a magic comment must be placed
+> > > 	 into the source files either as first or second line in the file'  
+> > 
+> > So this is only Python 2, right? 
 
-This patch will flush IOMMU translation cache entries for the old domain when
-a DTE gets overwritten with a new domain number.
+Well, Debian 10 (buster) was launched this year, and still comes with python2
+(with is the default):
 
+	$ ls -la /usr/bin/python
+	lrwxrwxrwx 1 root root 7 Mar  4  2019 /usr/bin/python -> python2
 
-Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+I think Debian devs will keep it maintained for a while, as this is a LTS
+distro.
 
----
+> > Python 3 is UTF8 by default.  Given that
+> > Python 2 is EOL in January, is this something we should be concerned
+> > about?  Or should we instead be making sure that all the Python we have
+> > in-tree works properly with Python 3 and be done with it?  
+> 
+> I recommend just using python 3 everywhere and be done with it as there
+> are already many distros that default to that already.
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index b607a92..f853b96 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -1143,6 +1143,17 @@ static void amd_iommu_flush_tlb_all(struct amd_iommu *iommu)
- 	iommu_completion_wait(iommu);
- }
- 
-+static void amd_iommu_flush_tlb_domid(struct amd_iommu *iommu, u32 dom_id)
-+{
-+	struct iommu_cmd cmd;
-+
-+	build_inv_iommu_pages(&cmd, 0, CMD_INV_IOMMU_ALL_PAGES_ADDRESS,
-+			      dom_id, 1);
-+	iommu_queue_command(iommu, &cmd);
-+
-+	iommu_completion_wait(iommu);
-+}
-+
- static void amd_iommu_flush_all(struct amd_iommu *iommu)
- {
- 	struct iommu_cmd cmd;
-@@ -1873,6 +1884,7 @@ static void set_dte_entry(u16 devid, struct protection_domain *domain,
- {
- 	u64 pte_root = 0;
- 	u64 flags = 0;
-+	u32 old_domid;
- 
- 	if (domain->mode != PAGE_MODE_NONE)
- 		pte_root = iommu_virt_to_phys(domain->pt_root);
-@@ -1922,8 +1934,20 @@ static void set_dte_entry(u16 devid, struct protection_domain *domain,
- 	flags &= ~DEV_DOMID_MASK;
- 	flags |= domain->id;
- 
-+	old_domid = amd_iommu_dev_table[devid].data[1] & DEV_DOMID_MASK;
- 	amd_iommu_dev_table[devid].data[1]  = flags;
- 	amd_iommu_dev_table[devid].data[0]  = pte_root;
-+
-+	/*
-+	 * A kdump kernel might be replacing a domain ID that was copied from
-+	 * the previous kernel--if so, it needs to flush the translation cache
-+	 * entries for the old domain ID that is being overwritten
-+	 */
-+	if (old_domid) {
-+		struct amd_iommu *iommu = amd_iommu_rlookup_table[devid];
-+
-+		amd_iommu_flush_tlb_domid(iommu, old_domid);
-+	}
- }
- 
- static void clear_dte_entry(u16 devid)
+Then we need to change the scripts, as they're currently pointing to
+/usr/bin/python instead of /usr/bin/python3. At least on the distros I
+use myself, this doesn't point to /etc/alternates. Instead, it is just
+an alias to python2.
 
-
+Thanks,
+Mauro
