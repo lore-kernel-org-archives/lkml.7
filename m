@@ -2,71 +2,86 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD3E6C3A5AB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:21:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5879BC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6CEC206CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:21:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63CB4206CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:23:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387640AbfIENVw convert rfc822-to-8bit (ORCPT
+        id S2389524AbfIENXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 09:21:52 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60580 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726097AbfIENVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 09:21:51 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 79872B035;
-        Thu,  5 Sep 2019 13:21:50 +0000 (UTC)
-Date:   Thu, 5 Sep 2019 15:21:50 +0200
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH] mips: sgi-ip27: switch from DISCONTIGMEM to SPARSEMEM
-Message-Id: <20190905152150.f7ff6ef70726085de63df828@suse.de>
-In-Reply-To: <1567662477-27404-1-git-send-email-rppt@kernel.org>
-References: <1567662477-27404-1-git-send-email-rppt@kernel.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-suse-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8BIT
+        Thu, 5 Sep 2019 09:23:51 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56044 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731733AbfIENXv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 09:23:51 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0B66B190C10E;
+        Thu,  5 Sep 2019 13:23:51 +0000 (UTC)
+Received: from treble (ovpn-120-170.rdu2.redhat.com [10.10.120.170])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 51A725D9E1;
+        Thu,  5 Sep 2019 13:23:47 +0000 (UTC)
+Date:   Thu, 5 Sep 2019 08:23:44 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>, linux-kernel@vger.kernel.org,
+        live-patching@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] livepatch: Clear relocation targets on a module
+ removal
+Message-ID: <20190905132344.byfybt6s42cajtfz@treble>
+References: <20190822223649.ptg6e7qyvosrljqx@treble>
+ <20190823081306.kbkm7b4deqrare2v@pathway.suse.cz>
+ <20190826145449.wyo7avwpqyriem46@treble>
+ <alpine.LSU.2.21.1909021802180.29987@pobox.suse.cz>
+ <5c649320-a9bf-ae7f-5102-483bc34d219f@redhat.com>
+ <alpine.LSU.2.21.1909031447140.3872@pobox.suse.cz>
+ <20190904084932.gndrtewubqiaxmzy@pathway.suse.cz>
+ <20190905025055.36loaatxtkhdo4q5@treble>
+ <20190905110955.wl4lwjbnpqybhkcn@pathway.suse.cz>
+ <nycvar.YFH.7.76.1909051317550.31470@cbobk.fhfr.pm>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <nycvar.YFH.7.76.1909051317550.31470@cbobk.fhfr.pm>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Thu, 05 Sep 2019 13:23:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  5 Sep 2019 08:47:57 +0300
-Mike Rapoport <rppt@kernel.org> wrote:
-
-> From: Mike Rapoport <rppt@linux.ibm.com>
+On Thu, Sep 05, 2019 at 01:19:06PM +0200, Jiri Kosina wrote:
+> On Thu, 5 Sep 2019, Petr Mladek wrote:
 > 
-> The memory initialization of SGI-IP27 is already half-way to support
-> SPARSEMEM and only a call to sparse_init() was missing. Add it to
-> prom_meminit() and adjust arch/mips/Kconfig to enable SPARSEMEM and
-> SPARSEMEM_EXTREME for SGI-IP27
+> > > I don't have a number, but it's very common to patch a function which 
+> > > uses jump labels or alternatives.
+> > 
+> > Really? My impression is that both alternatives and jump_labels
+> > are used in hot paths. I would expect them mostly in core code
+> > that is always loaded.
+> > 
+> > Alternatives are often used in assembly that we are not able
+> > to livepatch anyway.
+> > 
+> > Or are they spread widely via some macros or inlined functions?
 > 
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> ---
-> 
-> Thomas, could you please test this on your Origin machine?
+> All the indirect jumps are turned into alternatives when retpolines are in 
+> place.
 
-it crashes in sparse_early_usemaps_alloc_pgdat_section(). Since there is
-already a sparse_init() in arch_mem_setup() I removed it from ip27-memory.c.
-With this booting made more progress but I get an unaligned access in
-kernel_init_free_pages(). 
+Actually in C code those are done by the compiler as calls/jumps to
+__x86_indirect_thunk_*.
 
-My time is a little bit limited today to dig deeper, but testing patches
-is easy.
-
-Thomas.
+But there are still a bunch of paravirt patched instructions and
+alternatives used throughout the kernel.
 
 -- 
-SUSE Software Solutions Germany GmbH
-HRB 247165 (AG München)
-Geschäftsführer: Felix Imendörffer
+Josh
