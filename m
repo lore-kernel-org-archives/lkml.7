@@ -2,148 +2,113 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3536FC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D05AC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14EA42080C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:25:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5980522CF6
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:26:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Rf1Dy9DJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733163AbfIEMZW (ORCPT
+        id S2387501AbfIEM0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 08:25:22 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57810 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731294AbfIEMZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 08:25:22 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C94FCAD07;
-        Thu,  5 Sep 2019 12:25:19 +0000 (UTC)
-Subject: Re: [PATCH 0/5] mm, slab: Make kmalloc_info[] contain all types of
- names
-To:     Pengfei Li <lpf.vector@gmail.com>, akpm@linux-foundation.org
-Cc:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
-        iamjoonsoo.kim@lge.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20190903160430.1368-1-lpf.vector@gmail.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Openpgp: preference=signencrypt
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- mQINBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
- KxRWDHX0R2tgpFDXHnzZcQywawu8eSq0LxzxFNYMvtB7sV1pxYwej2qx9B75qW2plBs+7+YB
- 87tMFA+u+L4Z5xAzIimfLD5EKC56kJ1CsXlM8S/LHcmdD9Ctkn3trYDNnat0eoAcfPIP2OZ+
- 9oe9IF/R28zmh0ifLXyJQQz5ofdj4bPf8ecEW0rhcqHfTD8k4yK0xxt3xW+6Exqp9n9bydiy
- tcSAw/TahjW6yrA+6JhSBv1v2tIm+itQc073zjSX8OFL51qQVzRFr7H2UQG33lw2QrvHRXqD
- Ot7ViKam7v0Ho9wEWiQOOZlHItOOXFphWb2yq3nzrKe45oWoSgkxKb97MVsQ+q2SYjJRBBH4
- 8qKhphADYxkIP6yut/eaj9ImvRUZZRi0DTc8xfnvHGTjKbJzC2xpFcY0DQbZzuwsIZ8OPJCc
- LM4S7mT25NE5kUTG/TKQCk922vRdGVMoLA7dIQrgXnRXtyT61sg8PG4wcfOnuWf8577aXP1x
- 6mzw3/jh3F+oSBHb/GcLC7mvWreJifUL2gEdssGfXhGWBo6zLS3qhgtwjay0Jl+kza1lo+Cv
- BB2T79D4WGdDuVa4eOrQ02TxqGN7G0Biz5ZLRSFzQSQwLn8fbwARAQABtCBWbGFzdGltaWwg
- QmFia2EgPHZiYWJrYUBzdXNlLmN6PokCVAQTAQoAPgIbAwULCQgHAwUVCgkICwUWAgMBAAIe
- AQIXgBYhBKlA1DSZLC6OmRA9UCJPp+fMgqZkBQJcbbyGBQkH8VTqAAoJECJPp+fMgqZkpGoP
- /1jhVihakxw1d67kFhPgjWrbzaeAYOJu7Oi79D8BL8Vr5dmNPygbpGpJaCHACWp+10KXj9yz
- fWABs01KMHnZsAIUytVsQv35DMMDzgwVmnoEIRBhisMYOQlH2bBn/dqBjtnhs7zTL4xtqEcF
- 1hoUFEByMOey7gm79utTk09hQE/Zo2x0Ikk98sSIKBETDCl4mkRVRlxPFl4O/w8dSaE4eczH
- LrKezaFiZOv6S1MUKVKzHInonrCqCNbXAHIeZa3JcXCYj1wWAjOt9R3NqcWsBGjFbkgoKMGD
- usiGabetmQjXNlVzyOYdAdrbpVRNVnaL91sB2j8LRD74snKsV0Wzwt90YHxDQ5z3M75YoIdl
- byTKu3BUuqZxkQ/emEuxZ7aRJ1Zw7cKo/IVqjWaQ1SSBDbZ8FAUPpHJxLdGxPRN8Pfw8blKY
- 8mvLJKoF6i9T6+EmlyzxqzOFhcc4X5ig5uQoOjTIq6zhLO+nqVZvUDd2Kz9LMOCYb516cwS/
- Enpi0TcZ5ZobtLqEaL4rupjcJG418HFQ1qxC95u5FfNki+YTmu6ZLXy+1/9BDsPuZBOKYpUm
- 3HWSnCS8J5Ny4SSwfYPH/JrtberWTcCP/8BHmoSpS/3oL3RxrZRRVnPHFzQC6L1oKvIuyXYF
- rkybPXYbmNHN+jTD3X8nRqo+4Qhmu6SHi3VquQENBFsZNQwBCACuowprHNSHhPBKxaBX7qOv
- KAGCmAVhK0eleElKy0sCkFghTenu1sA9AV4okL84qZ9gzaEoVkgbIbDgRbKY2MGvgKxXm+kY
- n8tmCejKoeyVcn9Xs0K5aUZiDz4Ll9VPTiXdf8YcjDgeP6/l4kHb4uSW4Aa9ds0xgt0gP1Xb
- AMwBlK19YvTDZV5u3YVoGkZhspfQqLLtBKSt3FuxTCU7hxCInQd3FHGJT/IIrvm07oDO2Y8J
- DXWHGJ9cK49bBGmK9B4ajsbe5GxtSKFccu8BciNluF+BqbrIiM0upJq5Xqj4y+Xjrpwqm4/M
- ScBsV0Po7qdeqv0pEFIXKj7IgO/d4W2bABEBAAGJA3IEGAEKACYWIQSpQNQ0mSwujpkQPVAi
- T6fnzIKmZAUCWxk1DAIbAgUJA8JnAAFACRAiT6fnzIKmZMB0IAQZAQoAHRYhBKZ2GgCcqNxn
- k0Sx9r6Fd25170XjBQJbGTUMAAoJEL6Fd25170XjDBUH/2jQ7a8g+FC2qBYxU/aCAVAVY0NE
- YuABL4LJ5+iWwmqUh0V9+lU88Cv4/G8fWwU+hBykSXhZXNQ5QJxyR7KWGy7LiPi7Cvovu+1c
- 9Z9HIDNd4u7bxGKMpn19U12ATUBHAlvphzluVvXsJ23ES/F1c59d7IrgOnxqIcXxr9dcaJ2K
- k9VP3TfrjP3g98OKtSsyH0xMu0MCeyewf1piXyukFRRMKIErfThhmNnLiDbaVy6biCLx408L
- Mo4cCvEvqGKgRwyckVyo3JuhqreFeIKBOE1iHvf3x4LU8cIHdjhDP9Wf6ws1XNqIvve7oV+w
- B56YWoalm1rq00yUbs2RoGcXmtX1JQ//aR/paSuLGLIb3ecPB88rvEXPsizrhYUzbe1TTkKc
- 4a4XwW4wdc6pRPVFMdd5idQOKdeBk7NdCZXNzoieFntyPpAq+DveK01xcBoXQ2UktIFIsXey
- uSNdLd5m5lf7/3f0BtaY//f9grm363NUb9KBsTSnv6Vx7Co0DWaxgC3MFSUhxzBzkJNty+2d
- 10jvtwOWzUN+74uXGRYSq5WefQWqqQNnx+IDb4h81NmpIY/X0PqZrapNockj3WHvpbeVFAJ0
- 9MRzYP3x8e5OuEuJfkNnAbwRGkDy98nXW6fKeemREjr8DWfXLKFWroJzkbAVmeIL0pjXATxr
- +tj5JC0uvMrrXefUhXTo0SNoTsuO/OsAKOcVsV/RHHTwCDR2e3W8mOlA3QbYXsscgjghbuLh
- J3oTRrOQa8tUXWqcd5A0+QPo5aaMHIK0UAthZsry5EmCY3BrbXUJlt+23E93hXQvfcsmfi0N
- rNh81eknLLWRYvMOsrbIqEHdZBT4FHHiGjnck6EYx/8F5BAZSodRVEAgXyC8IQJ+UVa02QM5
- D2VL8zRXZ6+wARKjgSrW+duohn535rG/ypd0ctLoXS6dDrFokwTQ2xrJiLbHp9G+noNTHSan
- ExaRzyLbvmblh3AAznb68cWmM3WVkceWACUalsoTLKF1sGrrIBj5updkKkzbKOq5gcC5AQ0E
- Wxk1NQEIAJ9B+lKxYlnKL5IehF1XJfknqsjuiRzj5vnvVrtFcPlSFL12VVFVUC2tT0A1Iuo9
- NAoZXEeuoPf1dLDyHErrWnDyn3SmDgb83eK5YS/K363RLEMOQKWcawPJGGVTIRZgUSgGusKL
- NuZqE5TCqQls0x/OPljufs4gk7E1GQEgE6M90Xbp0w/r0HB49BqjUzwByut7H2wAdiNAbJWZ
- F5GNUS2/2IbgOhOychHdqYpWTqyLgRpf+atqkmpIJwFRVhQUfwztuybgJLGJ6vmh/LyNMRr8
- J++SqkpOFMwJA81kpjuGR7moSrUIGTbDGFfjxmskQV/W/c25Xc6KaCwXah3OJ40AEQEAAYkC
- PAQYAQoAJhYhBKlA1DSZLC6OmRA9UCJPp+fMgqZkBQJbGTU1AhsMBQkDwmcAAAoJECJPp+fM
- gqZkPN4P/Ra4NbETHRj5/fM1fjtngt4dKeX/6McUPDIRuc58B6FuCQxtk7sX3ELs+1+w3eSV
- rHI5cOFRSdgw/iKwwBix8D4Qq0cnympZ622KJL2wpTPRLlNaFLoe5PkoORAjVxLGplvQIlhg
- miljQ3R63ty3+MZfkSVsYITlVkYlHaSwP2t8g7yTVa+q8ZAx0NT9uGWc/1Sg8j/uoPGrctml
- hFNGBTYyPq6mGW9jqaQ8en3ZmmJyw3CHwxZ5FZQ5qc55xgshKiy8jEtxh+dgB9d8zE/S/UGI
- E99N/q+kEKSgSMQMJ/CYPHQJVTi4YHh1yq/qTkHRX+ortrF5VEeDJDv+SljNStIxUdroPD29
- 2ijoaMFTAU+uBtE14UP5F+LWdmRdEGS1Ah1NwooL27uAFllTDQxDhg/+LJ/TqB8ZuidOIy1B
- xVKRSg3I2m+DUTVqBy7Lixo73hnW69kSjtqCeamY/NSu6LNP+b0wAOKhwz9hBEwEHLp05+mj
- 5ZFJyfGsOiNUcMoO/17FO4EBxSDP3FDLllpuzlFD7SXkfJaMWYmXIlO0jLzdfwfcnDzBbPwO
- hBM8hvtsyq8lq8vJOxv6XD6xcTtj5Az8t2JjdUX6SF9hxJpwhBU0wrCoGDkWp4Bbv6jnF7zP
- Nzftr4l8RuJoywDIiJpdaNpSlXKpj/K6KrnyAI/joYc7
-Message-ID: <8641aeba-ab8c-f5a1-a6ad-cf8c0f86baa7@suse.cz>
-Date:   Thu, 5 Sep 2019 14:25:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190903160430.1368-1-lpf.vector@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 5 Sep 2019 08:26:11 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:37726 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731294AbfIEM0L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 08:26:11 -0400
+Received: by mail-qk1-f193.google.com with SMTP id s14so1887197qkm.4
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 05:26:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=bo/kDWZp3bZZn3zakUhkg0ajor/kZS2pwWQ9iXAnPOc=;
+        b=Rf1Dy9DJhqJAwIS4qIRCwfL+woHUrzX2/AEYlsJMpQHsESybDA8+/WuEII9w3/yWFM
+         27tnkefv9zimlG9bX/5TCZp4wtsJtvSJdV+g1nShVSEHze/4n0XCrtxc/riMwcAbkoio
+         vpMZcjlpm60NZ13BUk3DmefkQQ1E24qr80aMrocI6brskeHTBsHCv5B9hytfGOTmsLTy
+         hld14RW3fYlT2OYsXtRVUCbUXrsRpFZdHVQ+LMCcfOlHFxLLPu7OsgW0RbdUCwuF4C7h
+         pS1/u4TSWZ0H9jFTGSkSRaVsNQOqPIavsHAr+Udo6UM22UB+pt/c5K+7ADt4pa3K0xOu
+         rZIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=bo/kDWZp3bZZn3zakUhkg0ajor/kZS2pwWQ9iXAnPOc=;
+        b=XXuA++kTbsekjYfWMYN5XOhyZPyVULqHBunubTk0fD8LVdnFiEs7mXUIZp3UUZc8Tq
+         305hHqq4pAXl1LfJqOXS7zVr02UVmjW05fnyUAruwtqJYH5ykycbLvMh9VCX78xMiif9
+         pX2hEPkOmxCVC3O6EhjOnbEWUJ+wosSnVNkQMScglX+fl4WwV63IoPPoFTj/rCIUc9fO
+         GgdFsFwOcdP2EUCMRRtZv2ApmpHAe7HWYn5oFdqY6ridTr3o8n8a8m/NSnOLsTY+I4DT
+         LIpcxvL4ewLHfihO51XRHtAcXplpehFqPFTxEyaM4RUQghJvRjfoYG57lt6JuWDl/Yp6
+         JBrA==
+X-Gm-Message-State: APjAAAUPUnzYbxXOcOkOYOGuXI5Ud8S2dvjd28UPltp9Ag7m7WPaCVxA
+        M7o/LoH3WYyRx4cp9JsJ+FtosA==
+X-Google-Smtp-Source: APXvYqzrQ9dpro1Q2JB+WgiKIba61kIkoKO9xg2/x0erj1XWRalJyAP9GSJkxkeepAlE1qgNXbCb7Q==
+X-Received: by 2002:a37:9f93:: with SMTP id i141mr2284503qke.304.1567686369652;
+        Thu, 05 Sep 2019 05:26:09 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id z123sm1019144qke.96.2019.09.05.05.26.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Sep 2019 05:26:08 -0700 (PDT)
+Message-ID: <1567686367.5576.89.camel@lca.pw>
+Subject: Re: [PATCH] x86/kaslr: simplify the code in mem_avoid_memmap()
+From:   Qian Cai <cai@lca.pw>
+To:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        Borislav Petkov <bp@alien8.de>
+Cc:     bhe@redhat.com, x86@kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 05 Sep 2019 08:26:07 -0400
+In-Reply-To: <1566483962-10046-1-git-send-email-cai@lca.pw>
+References: <1566483962-10046-1-git-send-email-cai@lca.pw>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/3/19 6:04 PM, Pengfei Li wrote:
-> There are three types of kmalloc, KMALLOC_NORMAL, KMALLOC_RECLAIM
-> and KMALLOC_DMA.
-> 
-> The name of KMALLOC_NORMAL is contained in kmalloc_info[].name,
-> but the names of KMALLOC_RECLAIM and KMALLOC_DMA are dynamically
-> generated by kmalloc_cache_name().
-> 
-> Patch1 predefines the names of all types of kmalloc to save
-> the time spent dynamically generating names.
-> 
-> The other 4 patches did some cleanup work.
-> 
-> These changes make sense, and the time spent by new_kmalloc_cache()
-> has been reduced by approximately 36.3%.
-> 
->                          Time spent by
->                          new_kmalloc_cache()
-> 5.3-rc7                       66264
-> 5.3-rc7+patch                 42188
+Ping. Please take a look at this trivial patch.
 
-Note that the caches are created only once upon boot, so I doubt that
-these time savings (is it in CPU cycles?) will be noticeable at all. But
-diffstat looks ok, and it avoids using kmalloc() (via kasprintf()) to
-allocate names for kmalloc(), so in that sense I think it's worthwhile
-to consider. Thanks.
-
-> Pengfei Li (5):
->   mm, slab: Make kmalloc_info[] contain all types of names
->   mm, slab_common: Remove unused kmalloc_cache_name()
->   mm, slab: Remove unused kmalloc_size()
->   mm, slab_common: Make 'type' is enum kmalloc_cache_type
->   mm, slab_common: Make initializing KMALLOC_DMA start from 1
+On Thu, 2019-08-22 at 10:26 -0400, Qian Cai wrote:
+> If "i >= MAX_MEMMAP_REGIONS" already when entering mem_avoid_memmap(),
+> even without the return statement the loop will not run anyway. The only
+> time it needs to set "memmap_too_large = true" in this situation is
+> "memmap_too_large" is "false" currently. Hence, the code could be
+> simplified.
 > 
->  include/linux/slab.h |  20 ---------
->  mm/slab.c            |   7 +--
->  mm/slab.h            |   2 +-
->  mm/slab_common.c     | 101 +++++++++++++++++++++++--------------------
->  4 files changed, 59 insertions(+), 71 deletions(-)
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>  arch/x86/boot/compressed/kaslr.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
 > 
-
+> diff --git a/arch/x86/boot/compressed/kaslr.c
+> b/arch/x86/boot/compressed/kaslr.c
+> index 2e53c056ba20..35c6942fb95b 100644
+> --- a/arch/x86/boot/compressed/kaslr.c
+> +++ b/arch/x86/boot/compressed/kaslr.c
+> @@ -176,9 +176,6 @@ static void mem_avoid_memmap(char *str)
+>  {
+>  	static int i;
+>  
+> -	if (i >= MAX_MEMMAP_REGIONS)
+> -		return;
+> -
+>  	while (str && (i < MAX_MEMMAP_REGIONS)) {
+>  		int rc;
+>  		unsigned long long start, size;
+> @@ -206,7 +203,7 @@ static void mem_avoid_memmap(char *str)
+>  	}
+>  
+>  	/* More than 4 memmaps, fail kaslr */
+> -	if ((i >= MAX_MEMMAP_REGIONS) && str)
+> +	if (i >= MAX_MEMMAP_REGIONS && !memmap_too_large)
+>  		memmap_too_large = true;
+>  }
+>  
