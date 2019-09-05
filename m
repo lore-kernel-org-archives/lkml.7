@@ -2,230 +2,217 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E47C1C3A5AA
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF1CC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B5A0206CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:27:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D65FC206DE
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:32:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="UKvcJjsO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727190AbfIEN1I (ORCPT
+        id S1726635AbfIENcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 09:27:08 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6226 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726619AbfIEN1H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 09:27:07 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 9C0502EBBF44F5BF49AC;
-        Thu,  5 Sep 2019 21:27:05 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Thu, 5 Sep 2019
- 21:26:59 +0800
-Subject: Re: PCI/kernel msi code vs GIC ITS driver conflict?
-To:     Marc Zyngier <maz@kernel.org>,
-        Andrew Murray <andrew.murray@arm.com>
-References: <f5e948aa-e32f-3f74-ae30-31fee06c2a74@huawei.com>
- <5fd4c1cf-76c1-4054-3754-549317509310@kernel.org>
- <ef258ec7-877c-406a-3d88-80ff79b823f2@huawei.com>
- <20190904102537.GV9720@e119886-lin.cambridge.arm.com>
- <8f1c1fe6-c0d4-1805-b119-6a48a4900e6d@kernel.org>
- <84f6756f-79f2-2e46-fe44-9a46be69f99d@huawei.com>
- <651b4d5f-2d86-65dc-1232-580445852752@kernel.org>
- <8ac8e372-15a0-2f95-089c-c189b619ea62@huawei.com>
- <73c22eaa-172e-0fba-7a44-381106dee50d@kernel.org>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        "luojiaxing@huawei.com" <luojiaxing@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <a73262e6-6ece-4946-896b-2dad5ca28417@huawei.com>
-Date:   Thu, 5 Sep 2019 14:26:54 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        Thu, 5 Sep 2019 09:32:05 -0400
+Received: from esa1.hc3370-68.iphmx.com ([216.71.145.142]:48890 "EHLO
+        esa1.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726097AbfIENcF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 09:32:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1567690323;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=Lcc3gqMGanTbkPh44XjaZd0+ZvHIJNfmbgJ9V1Rp25Y=;
+  b=UKvcJjsO6nxSa8XtI+tkhAs9zBl1RsnjI4BnN8LIqTYlcqvl2dVyeCt2
+   +e8vfvAG2QqMwzG2X64TyilGp7xaIcLMb9zvOGKzwoSEPlktSQgwHeSvO
+   uCPC5LOO5FrviPfdsf3EP8CQI9pvwiEONdTiJet+ELJvUsjo3nwMqR6vH
+   Q=;
+Authentication-Results: esa1.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=andrew.cooper3@citrix.com; spf=Pass smtp.mailfrom=Andrew.Cooper3@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa1.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  andrew.cooper3@citrix.com) identity=pra;
+  client-ip=162.221.158.21; receiver=esa1.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="andrew.cooper3@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa1.hc3370-68.iphmx.com: domain of
+  Andrew.Cooper3@citrix.com designates 162.221.158.21 as
+  permitted sender) identity=mailfrom;
+  client-ip=162.221.158.21; receiver=esa1.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="Andrew.Cooper3@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83 ~all"
+Received-SPF: None (esa1.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa1.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: 0D7GfDJ/REcuiVsBhabK41pNkxL1cYKmQ8/36VcGrGd04fchw6/HgkxGlH6JSpgVMS4H1hH72J
+ 6X4cLS4N6MHNTg8ATLLwK/Z6sfW4Y1wf57N+QGfcnXaJsoMX6FD/5s51jY3pB6CRnxNkAK5w9c
+ LGk0NYkKO4fzdzccLlZCbHLjsGHevABq9/ZDUPCLHbcIVkEF9iQ9rpFywyuvj+zpuGyjqgxmik
+ /HAnyCzuv4PBND1pMnSAqMH+HcqciI7aFtLVBiOudnIkSY9jkihWkyjp1Gp2lJV8m4ZQ9nbbMw
+ sC4=
+X-SBRS: 2.7
+X-MesageID: 5230845
+X-Ironport-Server: esa1.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.64,470,1559534400"; 
+   d="scan'208";a="5230845"
+Subject: Re: [Xen-devel] [PATCH -tip 0/2] x86: Prohibit kprobes on
+ XEN_EMULATE_PREFIX
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+CC:     Ingo Molnar <mingo@kernel.org>, Juergen Gross <jgross@suse.com>,
+        "Stefano Stabellini" <sstabellini@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>, <x86@kernel.org>,
+        <linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>,
+        "Josh Poimboeuf" <jpoimboe@redhat.com>,
+        <xen-devel@lists.xenproject.org>,
+        "Boris Ostrovsky" <boris.ostrovsky@oracle.com>
+References: <156759754770.24473.11832897710080799131.stgit@devnote2>
+ <ad6431be-c86e-5ed5-518a-d1e9d1959e80@citrix.com>
+ <20190905104937.60aa03f699a9c0fbf1b651b9@kernel.org>
+ <1372ce73-e2d8-6144-57df-a98429587826@citrix.com>
+ <20190905203224.e41d7f3dfbf918c5031f9766@kernel.org>
+ <20190905220958.d0189e1e253f9e553b880675@kernel.org>
+From:   Andrew Cooper <andrew.cooper3@citrix.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=andrew.cooper3@citrix.com; prefer-encrypt=mutual; keydata=
+ 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
+ 6+ahAA==
+Message-ID: <1d868c99-58c5-1bbd-e6a4-2003dd319b5b@citrix.com>
+Date:   Thu, 5 Sep 2019 14:31:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <73c22eaa-172e-0fba-7a44-381106dee50d@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190905220958.d0189e1e253f9e553b880675@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
+X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
+ AMSPEX02CL01.citrite.net (10.69.22.125)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/09/2019 12:22, Marc Zyngier wrote:
-> OK, debug was slightly off, but it is interesting that the driver didn't
-> unmap the device, either because it is flagged as shared (with what?) or
-> that additional interrupts are allocated in the lpi_map for this
-> instance.
+On 05/09/2019 14:09, Masami Hiramatsu wrote:
+> On Thu, 5 Sep 2019 20:32:24 +0900
+> Masami Hiramatsu <mhiramat@kernel.org> wrote:
 >
-> Here's an updated debug patch. Can you please run the same thing again?
->
+>> On Thu, 5 Sep 2019 08:54:17 +0100
+>> Andrew Cooper <andrew.cooper3@citrix.com> wrote:
+>>
+>>> On 05/09/2019 02:49, Masami Hiramatsu wrote:
+>>>> On Wed, 4 Sep 2019 12:54:55 +0100
+>>>> Andrew Cooper <andrew.cooper3@citrix.com> wrote:
+>>>>
+>>>>> On 04/09/2019 12:45, Masami Hiramatsu wrote:
+>>>>>> Hi,
+>>>>>>
+>>>>>> These patches allow x86 instruction decoder to decode
+>>>>>> xen-cpuid which has XEN_EMULATE_PREFIX, and prohibit
+>>>>>> kprobes to probe on it.
+>>>>>>
+>>>>>> Josh reported that the objtool can not decode such special
+>>>>>> prefixed instructions, and I found that we also have to
+>>>>>> prohibit kprobes to probe on such instruction.
+>>>>>>
+>>>>>> This series can be applied on -tip master branch which
+>>>>>> has merged Josh's objtool/perf sharing common x86 insn
+>>>>>> decoder series.
+>>>>> The paravirtualised xen-cpuid is were you'll see it most in a regular
+>>>>> kernel, but be aware that it is also used for testing purposes in other
+>>>>> circumstances, and there is an equivalent KVM prefix which is used for
+>>>>> KVM testing.
+>>>> Good catch! I didn't notice that. Is that really same sequance or KVM uses
+>>>> another sequence of instructions for KVM prefix?
+>>> I don't know if you've spotted, but the prefix is a ud2a instruction
+>>> followed by 'xen' in ascii.
+>>>
+>>> The KVM version was added in c/s 6c86eedc206dd1f9d37a2796faa8e6f2278215d2
+> Hmm, I think I might misunderstand what the "emulate prefix"... that is not
+> a prefix which replace actual prefix, but just works like an escape sequence.
+> Thus the next instruction can have any x86 prefix, correct?
 
-As requested:
+There is a bit of history here :)
 
-root@(none)$ echo 0000:74:02.0 > ./sys/bus/pci/drivers/hisi_sas_v3_hw/unbind
+Originally, 13 years ago, Xen invented the "Force Emulate Prefix", which
+was the sequence:
 
-<snip>
+ud2a; .ascii 'xen'; cpuid
 
-[   78.593897] Freed devid 7410 event 0 LPI 0
-[   78.597990] Freed devid 7410 event 1 LPI 0
-[   78.602080] Freed devid 7410 event 2 LPI 0
-[   78.606169] Freed devid 7410 event 3 LPI 0
-[   78.610253] Freed devid 7410 event 4 LPI 0
-[   78.614337] Freed devid 7410 event 5 LPI 0
-[   78.618422] Freed devid 7410 event 6 LPI 0
-[   78.622506] Freed devid 7410 event 7 LPI 0
-[   78.626590] Freed devid 7410 event 8 LPI 0
-[   78.630674] Freed devid 7410 event 9 LPI 0
-[   78.634758] Freed devid 7410 event 10 LPI 0
-[   78.638930] Freed devid 7410 event 11 LPI 0
-[   78.643101] Freed devid 7410 event 12 LPI 0
-[   78.647272] Freed devid 7410 event 13 LPI 0
-[   78.651445] Freed devid 7410 event 14 LPI 0
-[   78.655616] Freed devid 7410 event 15 LPI 0
-[   78.659787] Freed devid 7410 event 16 LPI 0
-[   78.663959] Unmap devid 7410 shared 0 lpi_map 17-31
-root@(none)$ echo 0000:74:02.0 > ./sys/bus/pci/drivers/hisi_sas_v3_hw/bind
-[   86.074545] scsi host0: hisi_sas_v3_hw
-[   87.299141] Reusing ITT for devID 7410
-[   87.322337] hisi_sas_v3_hw: probe of 0000:74:02.0 failed with error -2
-sh: echo: write error: No such device
-root@(none)$
+which hit the #UD handler and was recognised as a request for
+virtualised CPUID information.  This was for ring-deprivileged
+virtualisation, and is needed because the CPUID instruction itself
+doesn't trap to the hypervisor.
 
+Following some security issues in our instruction emulator, I reused
+this prefix with VT-x/SVM guests for testing purposes.  It behaves in a
+similar manner - when enabled, it is recognised in #UD exception
+intercept, and causes Xen to add 5 to the instruction pointer, then
+emulate the instruction starting there.
 
-And here's a working log (without specifying nr_cpus=1), just for reference:
+Then various folk thought that having the same kind of ability to test
+KVM's instruction emulator would be a good idea, so they borrowed the idea.
 
-root@(none)$ echo 0000:74:02.0 > ./sys/bus/pci/drivers/hisi_sas_v3_hw/unbind
+From a behaviour point of view, it is an opaque 5 bytes which means
+"break into the hypervisor, then emulate the following instruction".
 
-<snip>
+The name "prefix" is unfortunate.  It was named thusly because from the
+programmers point of view, it was something you put before the CPUID
+instruction which wanted to be emulated.  It is not related to x86
+instruction concept of a prefix.
 
-[   28.412419] Freed devid 7410 event 0 LPI 0
-[   28.416505] Freed devid 7410 event 1 LPI 0
-[   28.420590] Freed devid 7410 event 2 LPI 0
-[   28.424674] Freed devid 7410 event 3 LPI 0
-[   28.428759] Freed devid 7410 event 4 LPI 0
-[   28.432844] Freed devid 7410 event 5 LPI 0
-[   28.436929] Freed devid 7410 event 6 LPI 0
-[   28.441013] Freed devid 7410 event 7 LPI 0
-[   28.445099] Freed devid 7410 event 8 LPI 0
-[   28.449183] Freed devid 7410 event 9 LPI 0
-[   28.453268] Freed devid 7410 event 10 LPI 0
-[   28.457439] Freed devid 7410 event 11 LPI 0
-[   28.461611] Freed devid 7410 event 12 LPI 0
-[   28.465782] Freed devid 7410 event 13 LPI 0
-[   28.469954] Freed devid 7410 event 14 LPI 0
-[   28.474126] Freed devid 7410 event 15 LPI 0
-[   28.478298] Freed devid 7410 event 16 LPI 0
-[   28.482469] Freed devid 7410 event 17 LPI 0
-[   28.486641] Freed devid 7410 event 18 LPI 0
-[   28.490812] Freed devid 7410 event 19 LPI 0
-[   28.494984] Freed devid 7410 event 20 LPI 0
-[   28.499155] Freed devid 7410 event 21 LPI 0
-[   28.503327] Freed devid 7410 event 22 LPI 0
-[   28.507498] Freed devid 7410 event 23 LPI 0
-[   28.511670] Freed devid 7410 event 24 LPI 0
-[   28.515842] Freed devid 7410 event 25 LPI 0
-[   28.520017] Freed devid 7410 event 26 LPI 0
-[   28.524189] Freed devid 7410 event 27 LPI 0
-[   28.528360] Freed devid 7410 event 28 LPI 0
-[   28.532531] Freed devid 7410 event 29 LPI 0
-[   28.536703] Freed devid 7410 event 30 LPI 0
-[   28.540874] Freed devid 7410 event 31 LPI 0
-[   28.545047] Unmap devid 7410 shared 0 lpi_map
-[   28.552084] Unmap devid 7410
-root@(none)$ echo 0000:74:02.0 > ./sys/bus/pci/drivers/hisi_sas_v3_hw/bind
-[   34.900373] scsi host0: hisi_sas_v3_hw
-[   36.112726] ITS: alloc 9920:32
-[   36.115771] ITT 32 entries, 5 bits
-[   36.119442] ID:0 pID:9920 vID:23
-[   36.122661] ID:1 pID:9921 vID:24
-[   36.125878] ID:2 pID:9922 vID:25
-[   36.129095] ID:3 pID:9923 vID:26
-[   36.132309] ID:4 pID:9924 vID:27
-[   36.135526] ID:5 pID:9925 vID:28
-[   36.138742] ID:6 pID:9926 vID:29
-[   36.141959] ID:7 pID:9927 vID:30
-[   36.145175] ID:8 pID:9928 vID:31
-[   36.148390] ID:9 pID:9929 vID:32
-[   36.151606] ID:10 pID:9930 vID:33
-[   36.154910] ID:11 pID:9931 vID:34
-[   36.158214] ID:12 pID:9932 vID:35
-[   36.161517] ID:13 pID:9933 vID:36
-[   36.164820] ID:14 pID:9934 vID:37
-[   36.168121] ID:15 pID:9935 vID:38
-[   36.171424] ID:16 pID:9936 vID:39
-[   36.174727] ID:17 pID:9937 vID:40
-[   36.178031] ID:18 pID:9938 vID:41
-[   36.181334] ID:19 pID:9939 vID:42
-[   36.184636] ID:20 pID:9940 vID:43
-[   36.187939] ID:21 pID:9941 vID:44
-[   36.191242] ID:22 pID:9942 vID:45
-[   36.194545] ID:23 pID:9943 vID:46
-[   36.197848] ID:24 pID:9944 vID:47
-[   36.201152] ID:25 pID:9945 vID:48
-[   36.204453] ID:26 pID:9946 vID:49
-[   36.207756] ID:27 pID:9947 vID:50
-[   36.211060] ID:28 pID:9948 vID:51
-[   36.214363] ID:29 pID:9949 vID:52
-[   36.217667] ID:30 pID:9950 vID:53
-[   36.220970] ID:31 pID:9951 vID:54
-
-<snip>
-
-
-Cheers,
-John
-
-> Thanks,
->
-> 	M.
->
-> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-> index 1b5c3672aea2..07375171900a 100644
-> --- a/drivers/irqchip/irq-gic-v3-its.c
-> +++ b/drivers/irqchip/irq-gic-v3-its.c
-> @@ -3,7 +3,7 @@
->   * Copyright (C) 2013-2017 ARM Limited, All Rights Reserved.
->   * Author: Marc Zyngier <marc.zyngier@arm.com>
->   */
-> -
-> +#define DEBUG 1
->  #include <linux/acpi.h>
->  #include <linux/acpi_iort.h>
->  #include <linux/bitmap.h>
-> @@ -2649,6 +2649,8 @@ static void its_irq_domain_free(struct irq_domain *domain, unsigned int virq,
->  		/* Mark interrupt index as unused */
->  		clear_bit(event, its_dev->event_map.lpi_map);
->
-> +		pr_debug("Freed devid %x event %d LPI %ld\n", its_dev->device_id, event, data->hwirq);
-> +
->  		/* Nuke the entry in the domain */
->  		irq_domain_reset_irq_data(data);
->  	}
-> @@ -2659,6 +2661,9 @@ static void its_irq_domain_free(struct irq_domain *domain, unsigned int virq,
->  	 * If all interrupts have been freed, start mopping the
->  	 * floor. This is conditionned on the device not being shared.
->  	 */
-> +	pr_debug("Unmap devid %x shared %d lpi_map %*pbl\n",
-> +		 its_dev->device_id, its_dev->shared,
-> +		 its_dev->event_map.nr_lpis, its_dev->event_map.lpi_map);
->  	if (!its_dev->shared &&
->  	    bitmap_empty(its_dev->event_map.lpi_map,
->  			 its_dev->event_map.nr_lpis)) {
-> @@ -2667,6 +2672,7 @@ static void its_irq_domain_free(struct irq_domain *domain, unsigned int virq,
->  			     its_dev->event_map.nr_lpis);
->  		kfree(its_dev->event_map.col_map);
->
-> +		pr_debug("Unmap devid %x\n", its_dev->device_id);
->  		/* Unmap device/itt */
->  		its_send_mapd(its_dev, 0);
->  		its_free_device(its_dev);
-
-
+~Andrew
