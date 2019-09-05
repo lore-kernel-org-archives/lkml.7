@@ -2,122 +2,134 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB42C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AFF4C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C90092070C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A6E522CEC
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:32:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388491AbfIELa5 (ORCPT
+        id S2388503AbfIELcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 07:30:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:42704 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725921AbfIELa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 07:30:57 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 83FFF28;
-        Thu,  5 Sep 2019 04:30:56 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B3B0E3F718;
-        Thu,  5 Sep 2019 04:30:54 -0700 (PDT)
-References: <20190830174944.21741-1-subhra.mazumdar@oracle.com> <20190830174944.21741-2-subhra.mazumdar@oracle.com> <20190905083127.GA2332@hirez.programming.kicks-ass.net> <87r24v2i14.fsf@arm.com> <20190905104616.GD2332@hirez.programming.kicks-ass.net> <20190905111346.2w6kuqrdvaqvgilu@e107158-lin.cambridge.arm.com>
-User-agent: mu4e 1.3.3; emacs 26.2
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
-        steven.sistare@oracle.com, dhaval.giani@oracle.com,
-        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
-        mgorman@techsingularity.net, parth@linux.ibm.com
-Subject: Re: [RFC PATCH 1/9] sched,cgroup: Add interface for latency-nice
-In-reply-to: <20190905111346.2w6kuqrdvaqvgilu@e107158-lin.cambridge.arm.com>
-Date:   Thu, 05 Sep 2019 12:30:52 +0100
-Message-ID: <87h85r2d5f.fsf@arm.com>
+        Thu, 5 Sep 2019 07:32:09 -0400
+Received: from dd10532.kasserver.com ([85.13.133.80]:50680 "EHLO
+        dd10532.kasserver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729366AbfIELcJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 07:32:09 -0400
+X-Greylist: delayed 566 seconds by postgrey-1.27 at vger.kernel.org; Thu, 05 Sep 2019 07:32:07 EDT
+Received: from odsus.home.arpa (p57B0B64C.dip0.t-ipconnect.de [87.176.182.76])
+        by dd10532.kasserver.com (Postfix) with ESMTPSA id B21111F430B7;
+        Thu,  5 Sep 2019 13:22:39 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by odsus.home.arpa (Postfix) with ESMTP id E9E943C97F;
+        Thu,  5 Sep 2019 13:22:38 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at home.arpa
+Received: from odsus.home.arpa ([127.0.0.1])
+        by localhost (odsus.home.arpa [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id PbkwYIGYv5fO; Thu,  5 Sep 2019 13:22:35 +0200 (CEST)
+Received: from [192.168.201.4] (unknown [192.168.201.4])
+        by odsus.home.arpa (Postfix) with ESMTP id A18A43C5BF;
+        Thu,  5 Sep 2019 13:22:35 +0200 (CEST)
+To:     linux-amlogic@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux@vger.kernel.org
+From:   Otto Meier <gf435@gmx.net>
+Subject: [BUG] wrong pinning definition or uart_c in pinctrl-meson-gxbb.c
+Message-ID: <b5370b4b-3347-1b95-aba2-1841f786b5a8@gmx.net>
+Date:   Thu, 5 Sep 2019 13:22:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/mixed;
+ boundary="------------C12424836F50E32A0F35C7C7"
+Content-Language: de-DE
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is a multi-part message in MIME format.
+--------------C12424836F50E32A0F35C7C7
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Sep 05, 2019 at 12:13:47 +0100, Qais Yousef wrote...
+Hi i tried to use uart_C of the the odroid-c2.
 
-> On 09/05/19 12:46, Peter Zijlstra wrote:
->> On Thu, Sep 05, 2019 at 10:45:27AM +0100, Patrick Bellasi wrote:
->> 
->> > > From just reading the above, I would expect it to have the range
->> > > [-20,19] just like normal nice. Apparently this is not so.
->> > 
->> > Regarding the range for the latency-nice values, I guess we have two
->> > options:
->> > 
->> >   - [-20..19], which makes it similar to priorities
->> >   downside: we quite likely end up with a kernel space representation
->> >   which does not match the user-space one, e.g. look at
->> >   task_struct::prio.
->> > 
->> >   - [0..1024], which makes it more similar to a "percentage"
->> > 
->> > Being latency-nice a new concept, we are not constrained by POSIX and
->> > IMHO the [0..1024] scale is a better fit.
->> > 
->> > That will translate into:
->> > 
->> >   latency-nice=0 : default (current mainline) behaviour, all "biasing"
->> >   policies are disabled and we wakeup up as fast as possible
->> > 
->> >   latency-nice=1024 : maximum niceness, where for example we can imaging
->> >   to turn switch a CFS task to be SCHED_IDLE?
->> 
->> There's a few things wrong there; I really feel that if we call it nice,
->> it should be like nice. Otherwise we should call it latency-bias and not
->> have the association with nice to confuse people.
->> 
->> Secondly; the default should be in the middle of the range. Naturally
->> this would be a signed range like nice [-(x+1),x] for some x. but if you
->> want [0,1024], then the default really should be 512, but personally I
->> like 0 better as a default, in which case we need negative numbers.
->> 
->> This is important because we want to be able to bias towards less
->> importance to (tail) latency as well as more importantance to (tail)
->> latency.
->> 
->> Specifically, Oracle wants to sacrifice (some) latency for throughput.
->> Facebook OTOH seems to want to sacrifice (some) throughput for latency.
->
-> Another use case I'm considering is using latency-nice to prefer an idle CPU if
-> latency-nice is set otherwise go for the most energy efficient CPU.
->
-> Ie: sacrifice (some) energy for latency.
->
-> The way I see interpreting latency-nice here as a binary switch. But maybe we
-> can use the range to select what (some) energy to sacrifice mean here. Hmmm.
+I enabled it int the dts file. During boot it crashed when the
+the sdcard slot is addressd.
 
-I see this concept possibly evolving into something more then just a
-binary switch. Not yet convinced if it make sense and/or it's possible
-but, in principle, I was thinking about these possible usages for CFS
-tasks:
+After long search in the net i found this:
 
- - dynamically tune the policy of a task among SCHED_{OTHER,BATCH,IDLE}
-   depending on crossing certain pre-configured threshold of latency
-   niceness.
+https://forum.odroid.com/viewtopic.php?f=139&t=25371&p=194370&hilit=uart_C#p177856
 
- - dynamically bias the vruntime updates we do in place_entity()
-   depending on the actual latency niceness of a task.
 
- - bias the decisions we take in check_preempt_tick() still depending
-   on a relative comparison of the current and wakeup task latency
-   niceness values.
+After changing the pin definitios accordingly erverything works.
 
--- 
-#include <best/regards.h>
+Uart_c is functioning and sdcard ist working.
 
-Patrick Bellasi
+Patch attached
+
+Bye Otto
+
+
+
+
+--------------C12424836F50E32A0F35C7C7
+Content-Type: text/x-patch;
+ name="uart_c_pins.diff"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="uart_c_pins.diff"
+
+Hi i tried to use uart_C of the the odroid-c2.
+
+I enabled it int the dts file. During boot it crashed when the
+the sdcard slot is addressd.
+
+After long search in the net i found this:
+
+https://forum.odroid.com/viewtopic.php?f=139&t=25371&p=194370&hilit=uart_C#p177856
+
+
+After changing the pin definitios accordingly erverything works.
+
+Uart_c is functioning and sdcard ist working.
+
+
+
+--- a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c        2019-08-26 18:24:45.450089334 +0200
++++ b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c        2019-09-05 13:07:38.518637214 +0200
+@@ -192,8 +192,8 @@ static const unsigned int uart_rts_b_pin
+ 
+ static const unsigned int uart_tx_c_pins[]     = { GPIOY_13 };
+ static const unsigned int uart_rx_c_pins[]     = { GPIOY_14 };
+-static const unsigned int uart_cts_c_pins[]    = { GPIOX_11 };
+-static const unsigned int uart_rts_c_pins[]    = { GPIOX_12 };
++static const unsigned int uart_cts_c_pins[]    = { GPIOY_11 };
++static const unsigned int uart_rts_c_pins[]    = { GPIOY_12 };
+ 
+ static const unsigned int i2c_sck_a_pins[]     = { GPIODV_25 };
+ static const unsigned int i2c_sda_a_pins[]     = { GPIODV_24 };
+@@ -439,10 +439,10 @@ static struct meson_pmx_group meson_gxbb
+        GROUP(pwm_f_x,          3,      18),
+ 
+        /* Bank Y */
+-       GROUP(uart_cts_c,       1,      19),
+-       GROUP(uart_rts_c,       1,      18),
+-       GROUP(uart_tx_c,        1,      17),
+-       GROUP(uart_rx_c,        1,      16),
++       GROUP(uart_cts_c,       1,      17),
++       GROUP(uart_rts_c,       1,      16),
++       GROUP(uart_tx_c,        1,      19),
++       GROUP(uart_rx_c,        1,      18),
+        GROUP(pwm_a_y,          1,      21),
+        GROUP(pwm_f_y,          1,      20),
+        GROUP(i2s_out_ch23_y,   1,      5),
+
+signed off Otto Meier gf435@gmx.net
+
+--------------C12424836F50E32A0F35C7C7--
