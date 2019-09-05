@@ -2,147 +2,137 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFE3C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC7D5C3A5AB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8ABC206A1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:16:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C35C206A1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:17:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="IU6LoCZV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733153AbfIENQd (ORCPT
+        id S2387397AbfIENRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 09:16:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34680 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730778AbfIENQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 09:16:33 -0400
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AF1B63D962
-        for <linux-kernel@vger.kernel.org>; Thu,  5 Sep 2019 13:16:32 +0000 (UTC)
-Received: by mail-wr1-f69.google.com with SMTP id x12so993972wrs.0
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 06:16:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=Y5KsV7ATk9uJXfCuKSCQPB4cqNdjilx6B68siiGooKQ=;
-        b=SZV/XNfPHKblEII9dXJix3K59E15wmaSwXoGmbpyxG+b1+0e8fPB43J3jE1XtuePJW
-         WbUiCdmbOpGSut9CxyVnHTNyoH1jfyn0WANMms3aIiR+9LU3HyeTC1ie0LvBr7m7BeGD
-         yd52/V6AO8L0idgqMUw+E8Mo7riCHKElWKKkjJbVfHK0gcu6M6oObPux9qcMkQrthBdA
-         xWmZp5NL8aBfwIIQ5D9eTJH6PSsNIXdeOLecHcXt2UZ4BW16fMsuO3bhjGNIht4j8K/T
-         I++5gE9Htmn61OFlcfyEc4vw1WVIrXHKkKVstItDD7iPFALuk1Kfhzjk3IPtzmb8DSsG
-         gkTg==
-X-Gm-Message-State: APjAAAUU1QJuxFnsbfN5y4r3ZsIkFk7Fy9YSwib3vLom9MzoEpyVYmsU
-        Xg9JhzjHodKa/t588VLnB8feTGp7bhrVv5+i+uc5WlWWpPBXGfHxBbEo0C8zuaD5nUZZEv+c/gn
-        Uc19viyEodN0PQhUl/4l4M0u0
-X-Received: by 2002:a05:6000:12:: with SMTP id h18mr2552469wrx.156.1567689391450;
-        Thu, 05 Sep 2019 06:16:31 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzHisw8e5EMgat1Tmc61GKp+RfNfYK77Y5v5JDYEPXy2BX75X/YzGnGNtotKMognTbhj4f+aw==
-X-Received: by 2002:a05:6000:12:: with SMTP id h18mr2552454wrx.156.1567689391235;
-        Thu, 05 Sep 2019 06:16:31 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id y13sm4075087wrg.8.2019.09.05.06.16.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 06:16:30 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Subject: Re: [PATCH] KVM: LAPIC: Fix SynIC Timers inject timer interrupt w/o LAPIC present
-In-Reply-To: <1567680270-14022-1-git-send-email-wanpengli@tencent.com>
-References: <1567680270-14022-1-git-send-email-wanpengli@tencent.com>
-Date:   Thu, 05 Sep 2019 15:16:29 +0200
-Message-ID: <87ftlakhn6.fsf@vitty.brq.redhat.com>
+        Thu, 5 Sep 2019 09:17:18 -0400
+Received: from mail-eopbgr740071.outbound.protection.outlook.com ([40.107.74.71]:43328
+        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730780AbfIENRR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 09:17:17 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aa4j93z59d4xwwpS/Nj+CBM8uhHQvFUlFkqfd+FkwNCWDpmO2jzsqT30iQ+BXLprmZ9U4F7NaJKg5KwFa7TUMUD5vJGW9rz2OevpwkXiMrB+HAzX6uxwFFfQXNj1KTxO+WB3GRAwDkTsSOTVikcXpBgfwqI+k1ufPWn8gAt7PSU5ZfPlxnCYaQFLxoqHXJFj/3M2fAj5GVxhL6Xprh3m/GPxUVNpvYss46FR652UaDy2/QoJw6x5ljzgOJvWnN1aCfxVV4HFwCA2AZqBNgsUcumMBBFw9VAHKQ7VqrM5mwCBeEY8Yj4a/+GVKH//Oq1DQpdfjtUzJu75S3CcDwGSfg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uVTmM3a0Z1LL3nxtcwTLTK+lmTNNgQZj8TQjhIg9/84=;
+ b=hbyZrcCPApPEuzhVOBnSMTk+vzoMplc3TSuPCggREG4N+CWp7uUfsvZoT/sPSwiG2R3uWO/8hf5taLOzZpGoLLpLMdSvIua7Z1/97XIYZQDHroVT9UKCkYNskA4pBAaVbl8K4wjvqEtyazgE4La0ZpP0ifpjLMyt/ezI9ylQfbQwzFdnYUOYRkHzPvn7XkPSsNnhmhulnRz+0YnwUkX6VdIBTQ/gRrivinErNcJsBBQhx0CuYRpUk882POUGfbn1iT72aKotjM92fyRs3p9SOWiqdJVYdRycM6QlJUmpNDZXtjH8/9iPn3kxmWjItwjj+KXS4sY1/5yz1AV8IUMYEA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uVTmM3a0Z1LL3nxtcwTLTK+lmTNNgQZj8TQjhIg9/84=;
+ b=IU6LoCZV9XJmKxznDGS/0w0ta8hOpOIF1iB7VhbB8F5Z4pbqmObP8UK09UCv0SGr8lvILw8hDJGYVxW5Q9KahxAGSFny5PF37WgU3ewEUBTqfphz0+gP4tmedBVqymk0IgIfUCU9ubSxzaJu0wo+N0nbH3qflO6vXZXjstPBuHw=
+Received: from CY4PR1201MB0230.namprd12.prod.outlook.com (10.172.79.7) by
+ CY4PR1201MB0232.namprd12.prod.outlook.com (10.174.52.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2241.14; Thu, 5 Sep 2019 13:17:14 +0000
+Received: from CY4PR1201MB0230.namprd12.prod.outlook.com
+ ([fe80::708e:c826:5b05:e3f0]) by CY4PR1201MB0230.namprd12.prod.outlook.com
+ ([fe80::708e:c826:5b05:e3f0%11]) with mapi id 15.20.2220.022; Thu, 5 Sep 2019
+ 13:17:14 +0000
+From:   Harry Wentland <hwentlan@amd.com>
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "Wentland, Harry" <Harry.Wentland@amd.com>,
+        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>
+Subject: Re: linux-next: Tree for Sep 4 (amd/display/)
+Thread-Topic: linux-next: Tree for Sep 4 (amd/display/)
+Thread-Index: AQHVY2OBXMezq3awGkCsLLALyRll+qcdEayA
+Date:   Thu, 5 Sep 2019 13:17:14 +0000
+Message-ID: <752f74d6-f6ff-6013-25ad-a8fdce934d17@amd.com>
+References: <20190904233443.3f73c46b@canb.auug.org.au>
+ <6b70fdfd-1f18-1e55-2574-7be5997cfb2a@infradead.org>
+In-Reply-To: <6b70fdfd-1f18-1e55-2574-7be5997cfb2a@infradead.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [2607:fea8:925f:916c::2]
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+x-clientproxiedby: YT1PR01CA0006.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01::19)
+ To CY4PR1201MB0230.namprd12.prod.outlook.com (2603:10b6:910:1e::7)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Harry.Wentland@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b4b54925-03ea-4518-e384-08d732035dff
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:CY4PR1201MB0232;
+x-ms-traffictypediagnostic: CY4PR1201MB0232:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR1201MB02325ADDA607B3D789B7E8608CBB0@CY4PR1201MB0232.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3513;
+x-forefront-prvs: 015114592F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(366004)(376002)(346002)(39860400002)(199004)(189003)(53754006)(486006)(6306002)(99286004)(446003)(14444005)(4326008)(6512007)(11346002)(478600001)(476003)(2616005)(14454004)(966005)(36756003)(25786009)(256004)(229853002)(53936002)(71190400001)(46003)(71200400001)(6246003)(6486002)(31686004)(52116002)(6436002)(65956001)(65806001)(31696002)(4744005)(5660300002)(6116002)(81156014)(81166006)(8676002)(186003)(58126008)(76176011)(66476007)(66556008)(66946007)(66446008)(64756008)(8936002)(7736002)(386003)(102836004)(6506007)(316002)(53546011)(2906002)(110136005)(305945005)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR1201MB0232;H:CY4PR1201MB0230.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Vr8Qt0hj8MmbyEtAM4B1R+94qbhO5Vc5tHiBSSOXP4GCl7yQq7c8GCzkZa4PNLaIXkbdm09dEsIBiTkTbxd+8X0YOnTPG5vNDjI62J/xsS45+ykcuSji+BkJ3jOQSeC2HxADQT7t9tQtCKnWEgRcDr8G5ixSwQx/8qyftaPQW1Jfv85bdTdpnJ8bp7xSd8Z9o0kEbQESIiOs2wCUCP61hV+NVUINKMJ5U0RP7pNly+n1/u86NBkUztAm3FpL84LGNhpst67GGn08umoLbu9AyfWag3F4F+FMkBGbv2cGjIZzmDH/I1zl4erob7INkjBIeZjvFwcC5DiDstAvAxvj9CXhcEAfW7s4XICF+sdfd/Ege+cunh9QNEYKq08SJlCTMbM8XK1x+VFr4x6Ajqs0CG7t52CZnwJMq4WVG6U6ruI=
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <C2E148370D9A45438625E22C870190C8@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b4b54925-03ea-4518-e384-08d732035dff
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2019 13:17:14.3764
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: bJtQcbnVEA1TLmfwJ79NE01a6aKt2SvcWziquaCLUtj/o2nmYxsNadRt/1hkIkvSdSbIaR807HsbSg2R8rcr+Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB0232
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wanpeng Li <kernellwp@gmail.com> writes:
-
-> From: Wanpeng Li <wanpengli@tencent.com>
->
-> Reported by syzkaller:
->
-> 	kasan: GPF could be caused by NULL-ptr deref or user memory access
-> 	general protection fault: 0000 [#1] PREEMPT SMP KASAN
-> 	RIP: 0010:__apic_accept_irq+0x46/0x740 arch/x86/kvm/lapic.c:1029
-> 	Call Trace:
-> 	kvm_apic_set_irq+0xb4/0x140 arch/x86/kvm/lapic.c:558
-> 	stimer_notify_direct arch/x86/kvm/hyperv.c:648 [inline]
-> 	stimer_expiration arch/x86/kvm/hyperv.c:659 [inline]
-> 	kvm_hv_process_stimers+0x594/0x1650 arch/x86/kvm/hyperv.c:686
-> 	vcpu_enter_guest+0x2b2a/0x54b0 arch/x86/kvm/x86.c:7896
-> 	vcpu_run+0x393/0xd40 arch/x86/kvm/x86.c:8152
-> 	kvm_arch_vcpu_ioctl_run+0x636/0x900 arch/x86/kvm/x86.c:8360
-> 	kvm_vcpu_ioctl+0x6cf/0xaf0 arch/x86/kvm/../../../virt/kvm/kvm_main.c:2765
->
-> The testcase programs HV_X64_MSR_STIMERn_CONFIG/HV_X64_MSR_STIMERn_COUNT,
-> in addition, there is no lapic in the kernel, the counters value are small 
-> enough in order that kvm_hv_process_stimers() inject this already-expired 
-> timer interrupt into the guest through lapic in the kernel which triggers 
-> the NULL deferencing. This patch fixes it by checking lapic_in_kernel, 
-> discarding the inject if it is 0.
->
-> Reported-by: syzbot+dff25ee91f0c7d5c1695@syzkaller.appspotmail.com
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Radim Krčmář <rkrcmar@redhat.com>
-> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> ---
->  arch/x86/kvm/hyperv.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-> index c10a8b1..461fcc5 100644
-> --- a/arch/x86/kvm/hyperv.c
-> +++ b/arch/x86/kvm/hyperv.c
-> @@ -645,7 +645,9 @@ static int stimer_notify_direct(struct kvm_vcpu_hv_stimer *stimer)
->  		.vector = stimer->config.apic_vector
->  	};
->  
-> -	return !kvm_apic_set_irq(vcpu, &irq, NULL);
-> +	if (lapic_in_kernel(vcpu))
-> +		return !kvm_apic_set_irq(vcpu, &irq, NULL);
-> +	return 0;
->  }
->  
->  static void stimer_expiration(struct kvm_vcpu_hv_stimer *stimer)
-
-Hm, but this basically means direct mode synthetic timers won't work
-when LAPIC is not in kernel but the feature will still be advertised to
-the guest, not good. Shall we stop advertizing it? Something like
-(completely untested):
-
-diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-index 3f5ad84853fb..1dfa594eaab6 100644
---- a/arch/x86/kvm/hyperv.c
-+++ b/arch/x86/kvm/hyperv.c
-@@ -1856,7 +1856,13 @@ int kvm_vcpu_ioctl_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
- 
-                        ent->edx |= HV_FEATURE_FREQUENCY_MSRS_AVAILABLE;
-                        ent->edx |= HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE;
--                       ent->edx |= HV_STIMER_DIRECT_MODE_AVAILABLE;
-+
-+                       /*
-+                        * Direct Synthetic timers only make sense with in-kernel
-+                        * LAPIC
-+                        */
-+                       if (lapic_in_kernel(vcpu))
-+                               ent->edx |= HV_STIMER_DIRECT_MODE_AVAILABLE;
- 
-                        break;
 
 
+On 2019-09-04 4:58 p.m., Randy Dunlap wrote:
+> On 9/4/19 6:34 AM, Stephen Rothwell wrote:
+>> Hi all,
+>>
+>> News: this will be the last linux-next I will release until Sept 30.
+>>
+>> Changes since 20190903:
+>>
+>=20
+> on x86_64:
+>=20
+> In file included from ../drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn=
+20/display_rq_dlg_calc_20v2.c:77:0:
+> ../drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn20/../dml_inline_defs.=
+h: In function =91dml_min=92:
+> ../drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn20/../dml_inline_defs.=
+h:34:1: error: SSE register return with SSE disabled
+>=20
 
--- 
-Vitaly
+Is that fixed by Stephen's fixup here?
+
+https://lists.freedesktop.org/archives/dri-devel/2019-September/234292.html
+
+Thanks,
+Harry
+
+>=20
