@@ -2,215 +2,195 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E92A1C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 07:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43223C3A5AB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:00:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA3B421848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 07:58:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="VYj2IQtZ"
+	by mail.kernel.org (Postfix) with ESMTP id 1DDBF217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:00:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731942AbfIEH6e (ORCPT
+        id S1731965AbfIEIA6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 03:58:34 -0400
-Received: from mail-ot1-f53.google.com ([209.85.210.53]:37049 "EHLO
-        mail-ot1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731506AbfIEH6d (ORCPT
+        Thu, 5 Sep 2019 04:00:58 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37206 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731378AbfIEIA5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 03:58:33 -0400
-Received: by mail-ot1-f53.google.com with SMTP id s28so1259292otd.4
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 00:58:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=D225Wu60VpTh82RTDj141aqDTPvsXDXDaMlxtYNk+LM=;
-        b=VYj2IQtZyqDBUPY78qtl7nIgn9bPgZxXGr2DVyqJaCsb60JS5t24+oLzwtDfreMzYN
-         /oCl2oD6EHDRUH63thPAbotOls4BpYOht2JzA0GWfSJPXAGE+A3vF8JNmFWeQI2q6wiV
-         nujZTz6xcJ+FtIXS0lpw/iai1jXns82n5RfWs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=D225Wu60VpTh82RTDj141aqDTPvsXDXDaMlxtYNk+LM=;
-        b=TY6TFJQrmJct1moa5BQi/Po7aN4RuYzS3yMwwlqbFnjoL9V2n6vQZcepozkRLRSE3W
-         pVLXgarW0/cd/oEfXJefSv7ImQ08cGd0+BSWWP7Kfvb6w0GGdUGv6yailkZD04w12S5V
-         PeM3qr1CEHmJwojUbHHAjB0MPRPnIqNoomqn4+7cqeVQCu1sdmgiCDW14g9SeLhBcWal
-         cFCDxxvyVMBHMUsFEZZvntxzHtgFA9b2BdgnLfSGXRJiYjKgr1es815n+tVrYLTI9ASH
-         XYh4o3+egvop4TSY8mtmhB5djX3l64tz1QMDli2mZpl8ondwCdaPE9pcdifXKBiXZMYg
-         I/fg==
-X-Gm-Message-State: APjAAAVGqbZp6G+C6CqFHwuyNQEV5Fx86648KG7MtcfYYyhK1xulzwEo
-        MpMaGWmzB8KguIm85qXe4mV4aJX32hAwIK2e7v3zng==
-X-Google-Smtp-Source: APXvYqzJPB4++rsXQ6bby//WNwRovEiZcozGRyupmg+jyfNPI54lWrLYEDv7aaF4Z9KSIJAif8cIrZ5JbpclsBdVQoc=
-X-Received: by 2002:a05:6830:10d8:: with SMTP id z24mr1461693oto.281.1567670312415;
- Thu, 05 Sep 2019 00:58:32 -0700 (PDT)
+        Thu, 5 Sep 2019 04:00:57 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x857vNA9007405
+        for <linux-kernel@vger.kernel.org>; Thu, 5 Sep 2019 04:00:56 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2utwpta6us-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 04:00:56 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <frankja@linux.ibm.com>;
+        Thu, 5 Sep 2019 09:00:54 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 5 Sep 2019 09:00:51 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8580oab34472142
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 5 Sep 2019 08:00:50 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4ADC852073;
+        Thu,  5 Sep 2019 08:00:50 +0000 (GMT)
+Received: from dyn-9-152-224-131.boeblingen.de.ibm.com (unknown [9.152.224.131])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 1DA335205A;
+        Thu,  5 Sep 2019 08:00:50 +0000 (GMT)
+Subject: Re: [PATCH v2 0/2] KVM: s390: Check for invalid bits in
+ kvm_valid_regs and kvm_dirty_regs
+To:     Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190904085200.29021-1-thuth@redhat.com>
+From:   Janosch Frank <frankja@linux.ibm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+Date:   Thu, 5 Sep 2019 10:00:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190830032948.13516-1-hdanton@sina.com> <CABXGCsNywbo90+wgiZ64Srm-KexypTbjiviwTW_BsO9Pm11GKQ@mail.gmail.com>
- <5d6e2298.1c69fb81.b5532.8395SMTPIN_ADDED_MISSING@mx.google.com>
- <CABXGCsMG2YrybO4_5jHaFQQxy2ywB53pY63qRfXK=ZKx5qc2Bw@mail.gmail.com>
- <CAKMK7uH9q09XadTV5Ezm=9aODErD=w_+8feujviVnF5LO_fggA@mail.gmail.com>
- <5d6f10a6.1c69fb81.6b104.af73SMTPIN_ADDED_MISSING@mx.google.com>
- <20190904083747.GE2112@phenom.ffwll.local> <CABXGCsMEjP-UQ5A1xpL-xWHxtFEsOUO14+cmWJUS1ff1hgReFA@mail.gmail.com>
-In-Reply-To: <CABXGCsMEjP-UQ5A1xpL-xWHxtFEsOUO14+cmWJUS1ff1hgReFA@mail.gmail.com>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Thu, 5 Sep 2019 09:58:21 +0200
-Message-ID: <CAKMK7uHQFpQjE8qxw5UUDg6xdbzcr0zaZ7P6WsBK7m0ksKdg3g@mail.gmail.com>
-Subject: Re: gnome-shell stuck because of amdgpu driver [5.3 RC5]
-To:     Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc:     Hillf Danton <hdanton@sina.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Linux kernel <linux-kernel@vger.kernel.org>,
-        Alex Deucher <alexdeucher@gmail.com>,
-        Harry Wentland <hwentlan@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190904085200.29021-1-thuth@redhat.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="gWQIJdATOdynDAV4K9Mg2r9rVWfgCdA9I"
+X-TM-AS-GCONF: 00
+x-cbid: 19090508-0012-0000-0000-00000346F93C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19090508-0013-0000-0000-000021814E17
+Message-Id: <60703ff3-201d-23bd-3e9d-354e53b49252@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-05_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=794 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909050083
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 5, 2019 at 12:27 AM Mikhail Gavrilov
-<mikhail.v.gavrilov@gmail.com> wrote:
->
-> On Wed, 4 Sep 2019 at 13:37, Daniel Vetter <daniel@ffwll.ch> wrote:
-> >
-> > Extend your backtrac warning slightly like
-> >
-> >         WARN(r, "we're stuck on fence %pS\n", fence->ops);
-> >
-> > Also adding Harry and Alex, I'm not really working on amdgpu ...
->
-> [ 3511.998320] ------------[ cut here ]------------
-> [ 3511.998714] we're stuck on fence
-> amdgpu_fence_ops+0x0/0xffffffffffffc220 [amdgpu]$
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--gWQIJdATOdynDAV4K9Mg2r9rVWfgCdA9I
+Content-Type: multipart/mixed; boundary="TQSoxuGeU5g53gbhIQUIOVsdkGjjKBeCS";
+ protected-headers="v1"
+From: Janosch Frank <frankja@linux.ibm.com>
+To: Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org,
+ Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: David Hildenbrand <david@redhat.com>, Cornelia Huck <cohuck@redhat.com>,
+ linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-ID: <60703ff3-201d-23bd-3e9d-354e53b49252@linux.ibm.com>
+Subject: Re: [PATCH v2 0/2] KVM: s390: Check for invalid bits in
+ kvm_valid_regs and kvm_dirty_regs
+References: <20190904085200.29021-1-thuth@redhat.com>
+In-Reply-To: <20190904085200.29021-1-thuth@redhat.com>
 
-I think those fences are only emitted for CS, not display related.
-Adding Christian K=C3=B6nig.
--Daniel
+--TQSoxuGeU5g53gbhIQUIOVsdkGjjKBeCS
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-> [ 3511.998991] WARNING: CPU: 10 PID: 1811 at
-> drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c:332
-> amdgpu_fence_wait_empty+0x1c6/0x240 [amdgpu]
-> [ 3511.999009] Modules linked in: rfcomm fuse xt_CHECKSUM
-> xt_MASQUERADE nf_nat_tftp nf_conntrack_tftp tun bridge stp llc
-> nf_conntrack_netbios_ns nf_conntrack_broadcast xt_CT ip6t_REJECT
-> nf_reject_ipv6 ip6t_rpfilter ipt_REJECT nf_reject_ipv4 xt_conntrack
-> ebtable_nat ip6table_nat ip6table_mangle ip6table_raw
-> ip6table_security iptable_nat nf_nat iptable_mangle iptable_raw
-> iptable_security nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 libcrc32c
-> ip_set nfnetlink ebtable_filter ebtables ip6table_filter ip6_tables
-> iptable_filter cmac bnep sunrpc vfat fat edac_mce_amd kvm_amd
-> snd_hda_codec_realtek rtwpci snd_hda_codec_generic kvm ledtrig_audio
-> snd_hda_codec_hdmi uvcvideo rtw88 videobuf2_vmalloc snd_hda_intel
-> videobuf2_memops videobuf2_v4l2 irqbypass snd_usb_audio snd_hda_codec
-> videobuf2_common crct10dif_pclmul snd_usbmidi_lib crc32_pclmul
-> mac80211 snd_rawmidi videodev snd_hda_core ghash_clmulni_intel btusb
-> snd_hwdep btrtl snd_seq btbcm btintel snd_seq_device eeepc_wmi
-> bluetooth xpad joydev mc snd_pcm
-> [ 3511.999076]  asus_wmi ff_memless cfg80211 sparse_keymap video
-> wmi_bmof ecdh_generic snd_timer ecc sp5100_tco k10temp snd i2c_piix4
-> ccp rfkill soundcore libarc4 gpio_amdpt gpio_generic acpi_cpufreq
-> binfmt_misc ip_tables hid_logitech_hidpp hid_logitech_dj amdgpu
-> amd_iommu_v2 gpu_sched ttm drm_kms_helper drm crc32c_intel igb dca
-> nvme i2c_algo_bit nvme_core wmi pinctrl_amd
-> [ 3511.999126] CPU: 10 PID: 1811 Comm: Xorg Not tainted
-> 5.3.0-0.rc6.git2.1c.fc32.x86_64 #1
-> [ 3511.999131] Hardware name: System manufacturer System Product
-> Name/ROG STRIX X470-I GAMING, BIOS 2703 08/20/2019
-> [ 3511.999253] RIP: 0010:amdgpu_fence_wait_empty+0x1c6/0x240 [amdgpu]
-> [ 3511.999278] Code: fe ff ff 31 c0 c3 48 89 ef e8 36 29 04 cb 84 c0
-> 74 08 48 89 ef e8 8a a9 21 cb 48 8b 75 08 48 c7 c7 2c 16 86 c0 e8 82
-> b8 b9 ca <0f> 0b b8 ea ff ff ff 5d c3 e8 ec 57 c3 ca 84 c0 0f 85 6f ff
-> ff ff
-> [ 3511.999282] RSP: 0018:ffffb9c04170f798 EFLAGS: 00210282
-> [ 3511.999288] RAX: 0000000000000000 RBX: ffff8d2ce5205a80 RCX: 000000000=
-0000006
-> [ 3511.999292] RDX: 0000000000000007 RSI: ffff8d2c5bea4070 RDI: ffff8d2cf=
-b5d9e00
-> [ 3511.999296] RBP: ffff8d28becae480 R08: 00000331b36fd503 R09: 000000000=
-0000000
-> [ 3511.999299] R10: 0000000000000000 R11: 0000000000000000 R12: ffff8d2ce=
-5200000
-> [ 3511.999303] R13: 0000000000000000 R14: 0000000000000000 R15: ffff8d2ce=
-1540000
-> [ 3511.999308] FS:  00007f59a5bc6f00(0000) GS:ffff8d2cfb400000(0000)
-> knlGS:0000000000000000
-> [ 3511.999311] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [ 3511.999315] CR2: 00001108bc475960 CR3: 000000075bf32000 CR4: 000000000=
-03406e0
-> [ 3511.999319] Call Trace:
-> [ 3511.999394]  amdgpu_pm_compute_clocks+0x70/0x5f0 [amdgpu]
-> [ 3511.999503]  dm_pp_apply_display_requirements+0x1a8/0x1c0 [amdgpu]
-> [ 3511.999609]  dce12_update_clocks+0xd8/0x110 [amdgpu]
-> [ 3511.999712]  dc_commit_state+0x414/0x590 [amdgpu]
-> [ 3511.999725]  ? find_held_lock+0x32/0x90
-> [ 3511.999832]  amdgpu_dm_atomic_commit_tail+0xd18/0x1cf0 [amdgpu]
-> [ 3511.999844]  ? reacquire_held_locks+0xed/0x210
-> [ 3511.999859]  ? ttm_eu_backoff_reservation+0xa5/0x160 [ttm]
-> [ 3511.999866]  ? find_held_lock+0x32/0x90
-> [ 3511.999872]  ? find_held_lock+0x32/0x90
-> [ 3511.999881]  ? __lock_acquire+0x247/0x1910
-> [ 3511.999893]  ? find_held_lock+0x32/0x90
-> [ 3511.999901]  ? mark_held_locks+0x50/0x80
-> [ 3511.999907]  ? _raw_spin_unlock_irq+0x29/0x40
-> [ 3511.999913]  ? lockdep_hardirqs_on+0xf0/0x180
-> [ 3511.999919]  ? _raw_spin_unlock_irq+0x29/0x40
-> [ 3511.999924]  ? wait_for_completion_timeout+0x75/0x190
-> [ 3511.999952]  ? commit_tail+0x3c/0x70 [drm_kms_helper]
-> [ 3511.999966]  commit_tail+0x3c/0x70 [drm_kms_helper]
-> [ 3511.999979]  drm_atomic_helper_commit+0xe3/0x150 [drm_kms_helper]
-> [ 3512.000002]  drm_mode_atomic_ioctl+0x793/0x9b0 [drm]
-> [ 3512.000014]  ? __lock_acquire+0x247/0x1910
-> [ 3512.000044]  ? drm_atomic_set_property+0xa50/0xa50 [drm]
-> [ 3512.000066]  drm_ioctl_kernel+0xaa/0xf0 [drm]
-> [ 3512.000088]  drm_ioctl+0x208/0x390 [drm]
-> [ 3512.000108]  ? drm_atomic_set_property+0xa50/0xa50 [drm]
-> [ 3512.000120]  ? lockdep_hardirqs_on+0xf0/0x180
-> [ 3512.000205]  amdgpu_drm_ioctl+0x49/0x80 [amdgpu]
-> [ 3512.000216]  do_vfs_ioctl+0x411/0x750
-> [ 3512.000229]  ksys_ioctl+0x5e/0x90
-> [ 3512.000237]  __x64_sys_ioctl+0x16/0x20
-> [ 3512.000242]  do_syscall_64+0x5c/0xb0
-> [ 3512.000249]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> [ 3512.000254] RIP: 0033:0x7f59a603d00b
-> [ 3512.000259] Code: 0f 1e fa 48 8b 05 7d 9e 0c 00 64 c7 00 26 00 00
-> 00 48 c7 c0 ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00
-> 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 4d 9e 0c 00 f7 d8 64 89
-> 01 48
-> [ 3512.000263] RSP: 002b:00007ffc493bcc08 EFLAGS: 00000246 ORIG_RAX:
-> 0000000000000010
-> [ 3512.000267] RAX: ffffffffffffffda RBX: 00007ffc493bcc50 RCX: 00007f59a=
-603d00b
-> [ 3512.000271] RDX: 00007ffc493bcc50 RSI: 00000000c03864bc RDI: 000000000=
-000000e
-> [ 3512.000275] RBP: 00000000c03864bc R08: 000055aa62e41d00 R09: 000000000=
-0000001
-> [ 3512.000278] R10: 0000000000000001 R11: 0000000000000246 R12: 000055aa6=
-1a99d00
-> [ 3512.000282] R13: 000000000000000e R14: 000055aa628f7430 R15: 000055aa6=
-2e34540
-> [ 3512.000297] irq event stamp: 258283232
-> [ 3512.000303] hardirqs last  enabled at (258283231):
-> [<ffffffff8b170beb>] console_unlock+0x46b/0x5d0
-> [ 3512.000309] hardirqs last disabled at (258283232):
-> [<ffffffff8b0038da>] trace_hardirqs_off_thunk+0x1a/0x20
-> [ 3512.000314] softirqs last  enabled at (258282448):
-> [<ffffffff8be0035d>] __do_softirq+0x35d/0x45d
-> [ 3512.000319] softirqs last disabled at (258282413):
-> [<ffffffff8b0f1e57>] irq_exit+0xf7/0x100
-> [ 3512.000323] ---[ end trace 55ed0c80b95aef99 ]---
->
-> https://pastebin.com/DfqVGDgc
+On 9/4/19 10:51 AM, Thomas Huth wrote:
+> Avoid invalid bits in kvm_valid_regs and kvm_dirty_regs on s390x.
+>=20
+> v2:
+>  - Split the single patch from v1 into two separate patches
+>    (I've kept the Reviewed-bys from v1, but if you don't agree with the=
+
+>     patch description of the 2nd patch, please complain)
+>=20
+> Thomas Huth (2):
+>   KVM: s390: Disallow invalid bits in kvm_valid_regs and kvm_dirty_regs=
+
+>   KVM: selftests: Test invalid bits in kvm_valid_regs and kvm_dirty_reg=
+s
+>     on s390x
+>=20
+>  arch/s390/include/uapi/asm/kvm.h              |  6 ++++
+>  arch/s390/kvm/kvm-s390.c                      |  4 +++
+>  .../selftests/kvm/s390x/sync_regs_test.c      | 30 +++++++++++++++++++=
+
+>  3 files changed, 40 insertions(+)
+>=20
+
+Thanks, both are picked
 
 
+--TQSoxuGeU5g53gbhIQUIOVsdkGjjKBeCS--
 
---=20
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+--gWQIJdATOdynDAV4K9Mg2r9rVWfgCdA9I
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl1wwLEACgkQ41TmuOI4
+ufixCA/+Odhx7Sghxgy98iYZjSMipxnr1NBPClrMVaRiiNkMWt27H1RPnXt3Y/4/
+/RG7rTZgrHaaRN0hMS9AXJHUsbqPunp67gdEeJc99NHYBIRtq5xZCW0zOxX4etXo
+TFhuGSSmJ7LUOTwtOotA+7bNvxJJfph1CdKNIbSVZmPjQw7GxY5gz7ax0fsFc5bM
+3v43lWsZTA2Ar/FnJvhgLiHhvD08ZJ15zFqowDMUvkNyK5c4BCYaNfwkCrRrhrxE
+mzMvGkbHadJnxhoSDkvG+OSuOSkIUDx5KCaDDG5RaLkOa2yTEpdo76uDLoa3AR+T
+jjlpyLyv+pGnxfQxOwqpMEq+AJbmtYVNF1dYGz/T/v3t8jvJ/v1Ux17Ze1dT4kIc
+SEWJu9jrIgdGjDfteLewVRX/DvsJBNHSCvXBeGnghfePQIskEtZPpcuANq32uU04
+KqozbsmuL6Oj5r0+TCSc5SzdMQ+6UYY+wIgitApJaRQXXlBr1RoMZ6arxFuGFTJg
+QAihxEzF2zMr2FtRTl8eAx3IQHP9KDQKa0+t4qYgmwvbePxj7gtOQFsUtupjyqAL
+z7rQ/21eW0bJl7ScRZV0M7et7AhIc/PCChTfJSrOTNUnE+XfDEEW3RZB60JPBUGM
+5FE+C3Oa2XDqkulzPgu5oGkHchNJptq3Vb8ug+aSOH6y1elAi6Y=
+=fh8O
+-----END PGP SIGNATURE-----
+
+--gWQIJdATOdynDAV4K9Mg2r9rVWfgCdA9I--
+
