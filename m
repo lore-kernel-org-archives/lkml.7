@@ -2,147 +2,188 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A51B9C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27665C00306
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFE6F206A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:23:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="hpdJnxdr"
+	by mail.kernel.org (Postfix) with ESMTP id 40C7F207E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:23:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388593AbfIEOXU (ORCPT
+        id S2388680AbfIEOXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 10:23:20 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38035 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725290AbfIEOXU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 10:23:20 -0400
-Received: by mail-pf1-f193.google.com with SMTP id h195so1861794pfe.5
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 07:23:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=o0kJLOF+oseq1sFKQHmWAceakgmtIl8cUwVOf1CyohA=;
-        b=hpdJnxdrixWVfeofcxwBZ6pDNTjh757qry9LSInbu6J/TKbviVyCRd4+icNXHOfbu/
-         enOsoYQtx00GpthU5ztf0reocsmYwyDwhMRZW4u63+ccuTefIwvgH/4GI5O0qs9GGtD0
-         ELjmFfLbDQjkIcAtui4m3jtUvnImposTuinC0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=o0kJLOF+oseq1sFKQHmWAceakgmtIl8cUwVOf1CyohA=;
-        b=lonB7gIK/OykLrUbuWyzczkpPv++fyffgTtyzhBdlTYrPsUHThmgaqoResEN5++mTT
-         bSNKTJQWYlumOW80nl20UHVKSeYlbJH4lD76LPvkPKgOOwNoukurYCH+oHFWUwb3+Hng
-         JQgT0RXY4tAp5WHehBwO2gpKUB/fXGA7itfHYAEmtI+pJIDEgC2q/KjJqZxfIko73iK8
-         XxNtZg0vfaqQQAmONzr9Q95qWCw5bATKuC5m/7QZlry4eLCy7nsH/gfxO52qSTfTD5ZI
-         wLPN+d31peKN7B4EaGSiomq09pFGdBwrSTy1ScWTCQLEiMO4bfK/2VdhEZlFFd0uNe78
-         yDqg==
-X-Gm-Message-State: APjAAAWLlu6VNGIDR/9iNUdlv6h1ydd5+dNMinH7Ze+6J9zKvxiB/NNQ
-        DdMcaW084Xv3jO6BfPny5mzG8Q==
-X-Google-Smtp-Source: APXvYqyRmXPJSFub5OtQlmOXJveZtzr88UtyV9DSQaRDTAUPJYUtpXUW3xtLdzMJjjIysrig3oGj6w==
-X-Received: by 2002:a17:90a:d793:: with SMTP id z19mr4077370pju.36.1567693399291;
-        Thu, 05 Sep 2019 07:23:19 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id s5sm2470598pfm.97.2019.09.05.07.23.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 07:23:18 -0700 (PDT)
-Date:   Thu, 5 Sep 2019 10:23:17 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Tim Murray <timmurray@google.com>,
-        carmenjackson@google.com, mayankgupta@google.com,
-        dancol@google.com, rostedt@goodmis.org, minchan@kernel.org,
-        akpm@linux-foundation.org, kernel-team@android.com,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jerome Glisse <jglisse@redhat.com>, linux-mm@kvack.org,
-        Matthew Wilcox <willy@infradead.org>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH v2] mm: emit tracepoint when RSS changes by threshold
-Message-ID: <20190905142317.GD26466@google.com>
-References: <20190903200905.198642-1-joel@joelfernandes.org>
- <20190904084508.GL3838@dhcp22.suse.cz>
- <20190904153258.GH240514@google.com>
- <20190904153759.GC3838@dhcp22.suse.cz>
- <20190904162808.GO240514@google.com>
- <20190905105424.GG3838@dhcp22.suse.cz>
- <20190905141452.GA26466@google.com>
- <20190905142010.GC3838@dhcp22.suse.cz>
+        Thu, 5 Sep 2019 10:23:44 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:45740 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725290AbfIEOXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 10:23:44 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 047AE9F4826E9888CC2A;
+        Thu,  5 Sep 2019 22:23:42 +0800 (CST)
+Received: from [127.0.0.1] (10.202.227.238) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Thu, 5 Sep 2019
+ 22:23:35 +0800
+Subject: Re: PCI/kernel msi code vs GIC ITS driver conflict?
+To:     Marc Zyngier <maz@kernel.org>,
+        Andrew Murray <andrew.murray@arm.com>
+References: <f5e948aa-e32f-3f74-ae30-31fee06c2a74@huawei.com>
+ <5fd4c1cf-76c1-4054-3754-549317509310@kernel.org>
+ <ef258ec7-877c-406a-3d88-80ff79b823f2@huawei.com>
+ <20190904102537.GV9720@e119886-lin.cambridge.arm.com>
+ <8f1c1fe6-c0d4-1805-b119-6a48a4900e6d@kernel.org>
+ <84f6756f-79f2-2e46-fe44-9a46be69f99d@huawei.com>
+ <651b4d5f-2d86-65dc-1232-580445852752@kernel.org>
+ <8ac8e372-15a0-2f95-089c-c189b619ea62@huawei.com>
+ <73c22eaa-172e-0fba-7a44-381106dee50d@kernel.org>
+ <a73262e6-6ece-4946-896b-2dad5ca28417@huawei.com>
+ <a90e6f99-cad3-8eda-dd08-0ab05ed9ca04@kernel.org>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        "luojiaxing@huawei.com" <luojiaxing@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <ecdb638b-d5d3-efdc-becd-478ce6e6ff96@huawei.com>
+Date:   Thu, 5 Sep 2019 15:23:30 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190905142010.GC3838@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <a90e6f99-cad3-8eda-dd08-0ab05ed9ca04@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.238]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 04:20:10PM +0200, Michal Hocko wrote:
-> On Thu 05-09-19 10:14:52, Joel Fernandes wrote:
-> > On Thu, Sep 05, 2019 at 12:54:24PM +0200, Michal Hocko wrote:
-> > > On Wed 04-09-19 12:28:08, Joel Fernandes wrote:
-> > > > On Wed, Sep 4, 2019 at 11:38 AM Michal Hocko <mhocko@kernel.org> wrote:
-> > > > >
-> > > > > On Wed 04-09-19 11:32:58, Joel Fernandes wrote:
-> > > > > > On Wed, Sep 04, 2019 at 10:45:08AM +0200, Michal Hocko wrote:
-> > > > > > > On Tue 03-09-19 16:09:05, Joel Fernandes (Google) wrote:
-> > > > > > > > Useful to track how RSS is changing per TGID to detect spikes in RSS and
-> > > > > > > > memory hogs. Several Android teams have been using this patch in various
-> > > > > > > > kernel trees for half a year now. Many reported to me it is really
-> > > > > > > > useful so I'm posting it upstream.
-> > > > > > > >
-> > > > > > > > Initial patch developed by Tim Murray. Changes I made from original patch:
-> > > > > > > > o Prevent any additional space consumed by mm_struct.
-> > > > > > > > o Keep overhead low by checking if tracing is enabled.
-> > > > > > > > o Add some noise reduction and lower overhead by emitting only on
-> > > > > > > >   threshold changes.
-> > > > > > >
-> > > > > > > Does this have any pre-requisite? I do not see trace_rss_stat_enabled in
-> > > > > > > the Linus tree (nor in linux-next).
-> > > > > >
-> > > > > > No, this is generated automatically by the tracepoint infrastructure when a
-> > > > > > tracepoint is added.
-> > > > >
-> > > > > OK, I was not aware of that.
-> > > > >
-> > > > > > > Besides that why do we need batching in the first place. Does this have a
-> > > > > > > measurable overhead? How does it differ from any other tracepoints that we
-> > > > > > > have in other hotpaths (e.g.  page allocator doesn't do any checks).
-> > > > > >
-> > > > > > We do need batching not only for overhead reduction,
-> > > > >
-> > > > > What is the overhead?
-> > > > 
-> > > > The overhead is occasionally higher without the threshold (that is if we
-> > > > trace every counter change). I would classify performance benefit to be
-> > > > almost the same and within the noise.
-> > > 
-> > > OK, so the additional code is not really justified.
-> > 
-> > It is really justified. Did you read the whole of the last email?
-> 
-> Of course I have. The information that numbers are in noise with some
-> outliers (without any details about the underlying reason) is simply
-> showing that you are optimizing something probably not worth it.
-> 
-> I would recommend adding a simple tracepoint. That should be pretty non
-> controversial. And if you want to add an optimization on top then
-> provide data to justify it.
+On 05/09/2019 14:50, Marc Zyngier wrote:
+> On 05/09/2019 14:26, John Garry wrote:
+>> On 05/09/2019 12:22, Marc Zyngier wrote:
+>>> OK, debug was slightly off, but it is interesting that the driver didn't
+>>> unmap the device, either because it is flagged as shared (with what?) or
+>>> that additional interrupts are allocated in the lpi_map for this
+>>> instance.
+>>>
+>>> Here's an updated debug patch. Can you please run the same thing again?
+>>>
+>>
+>> As requested:
+>>
+>> root@(none)$ echo 0000:74:02.0 > ./sys/bus/pci/drivers/hisi_sas_v3_hw/unbind
+>>
+>> <snip>
+>>
+>> [   78.593897] Freed devid 7410 event 0 LPI 0
+>> [   78.597990] Freed devid 7410 event 1 LPI 0
+>> [   78.602080] Freed devid 7410 event 2 LPI 0
+>> [   78.606169] Freed devid 7410 event 3 LPI 0
+>> [   78.610253] Freed devid 7410 event 4 LPI 0
+>> [   78.614337] Freed devid 7410 event 5 LPI 0
+>> [   78.618422] Freed devid 7410 event 6 LPI 0
+>> [   78.622506] Freed devid 7410 event 7 LPI 0
+>> [   78.626590] Freed devid 7410 event 8 LPI 0
+>> [   78.630674] Freed devid 7410 event 9 LPI 0
+>> [   78.634758] Freed devid 7410 event 10 LPI 0
+>> [   78.638930] Freed devid 7410 event 11 LPI 0
+>> [   78.643101] Freed devid 7410 event 12 LPI 0
+>> [   78.647272] Freed devid 7410 event 13 LPI 0
+>> [   78.651445] Freed devid 7410 event 14 LPI 0
+>> [   78.655616] Freed devid 7410 event 15 LPI 0
+>> [   78.659787] Freed devid 7410 event 16 LPI 0
+>> [   78.663959] Unmap devid 7410 shared 0 lpi_map 17-31
+>
+> Bah. Try this for size...
+>
 
-Did you read the point about trace sizes? We don't want traces flooded and
-you are not really making any good points about why we should not reduce
-flooding of traces. I don't want to simplify it and lose the benefit. It is
-already simple enough and non-controversial.
+It fits:
 
-thanks,
+root@(none)$ echo 0000:74:02.0 > ./sys/bus/pci/drivers/hisi_sas_v3_hw/unbind
 
- - Joel
+<snip>
+
+[   34.806156] Freed devid 7410 LPI 0
+[   34.809555] Freed devid 7410 LPI 0
+[   34.812951] Freed devid 7410 LPI 0
+[   34.816344] Freed devid 7410 LPI 0
+[   34.819734] Freed devid 7410 LPI 0
+[   34.823122] Freed devid 7410 LPI 0
+[   34.826512] Freed devid 7410 LPI 0
+[   34.829901] Freed devid 7410 LPI 0
+[   34.833291] Freed devid 7410 LPI 0
+[   34.836680] Freed devid 7410 LPI 0
+[   34.840071] Freed devid 7410 LPI 0
+[   34.843461] Freed devid 7410 LPI 0
+[   34.846848] Freed devid 7410 LPI 0
+[   34.850238] Freed devid 7410 LPI 0
+[   34.853627] Freed devid 7410 LPI 0
+[   34.857017] Freed devid 7410 LPI 0
+[   34.860406] Freed devid 7410 LPI 0
+[   34.863797] Unmap devid 7410 shared 0 lpi_map
+[   34.868229] Unmap devid 7410
+root@(none)$
+root@(none)$
+root@(none)$ echo 0000:74:02.0 > ./sys/bus/pci/drivers/hisi_sas_v3_hw/bind
+[   39.158802] scsi host0: hisi_sas_v3_hw
+[   40.383384] ITS: alloc 9920:32
+[   40.386429] ITT 32 entries, 5 bits
+[   40.389970] ID:0 pID:9920 vID:23
+[   40.393188] ID:1 pID:9921 vID:24
+[   40.396404] ID:2 pID:9922 vID:25
+[   40.399621] ID:3 pID:9923 vID:26
+[   40.402836] ID:4 pID:9924 vID:27
+[   40.406053] ID:5 pID:9925 vID:28
+[   40.409269] ID:6 pID:9926 vID:29
+[   40.412485] ID:7 pID:9927 vID:30
+[   40.415702] ID:8 pID:9928 vID:31
+[   40.418916] ID:9 pID:9929 vID:32
+[   40.422132] ID:10 pID:9930 vID:33
+[   40.425435] ID:11 pID:9931 vID:34
+[   40.428739] ID:12 pID:9932 vID:35
+[   40.432042] ID:13 pID:9933 vID:36
+[   40.435345] ID:14 pID:9934 vID:37
+[   40.438648] ID:15 pID:9935 vID:38
+[   40.441951] ID:16 pID:9936 vID:39
+
+
+<snip>
+
+Btw, I hacked the "Freed devid %x event %d LPI %ld\n" print to remove 
+the "event" value, as you may have noticed.
+
+Cheers,
+John
+
+> 	M.
+>
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+> index 1b5c3672aea2..c3a8d732805f 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> @@ -2641,14 +2641,13 @@ static void its_irq_domain_free(struct irq_domain *domain, unsigned int virq,
+>  	struct its_node *its = its_dev->its;
+>  	int i;
+>
+> +	bitmap_release_region(its_dev->event_map.lpi_map,
+> +			      its_get_event_id(irq_domain_get_irq_data(domain, virq)),
+> +			      get_count_order(nr_irqs));
+> +
+>  	for (i = 0; i < nr_irqs; i++) {
+>  		struct irq_data *data = irq_domain_get_irq_data(domain,
+>  								virq + i);
+> -		u32 event = its_get_event_id(data);
+> -
+> -		/* Mark interrupt index as unused */
+> -		clear_bit(event, its_dev->event_map.lpi_map);
+> -
+>  		/* Nuke the entry in the domain */
+>  		irq_domain_reset_irq_data(data);
+>  	}
+>
+>
+
 
