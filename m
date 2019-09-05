@@ -2,290 +2,107 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60747C3A5AB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D4EC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F5832082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:05:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MYYIhq3m";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="k3ZXzWLw"
+	by mail.kernel.org (Postfix) with ESMTP id 3E9042082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:06:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732961AbfIEJFL (ORCPT
+        id S1732964AbfIEJGf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 05:05:11 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:55926 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726137AbfIEJFL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 05:05:11 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 421206115B; Thu,  5 Sep 2019 09:05:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567674310;
-        bh=kurhh/6InAL4dYm8QfJ+nWAbksUUnGWz4Zs93nPkqvw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=MYYIhq3mhSUiRC5d3ZLrtcYbkjTAIrFTwk8Umfd/HIFhhIxvT6BX+mx2sFWLhLkTI
-         gP3LhKULbmc4pKd5gHx5gjMFkLXOYi3bStuuCXoyzZ3A7PWnJfDkuLZC7IgDw8sM23
-         ZQRD818tyG8LsD77HFJv9uYBkbpNJXEZy1Odfg7E=
-Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Thu, 5 Sep 2019 05:06:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46610 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731737AbfIEJGf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 05:06:35 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: mkshah@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8DED56030B;
-        Thu,  5 Sep 2019 09:05:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567674308;
-        bh=kurhh/6InAL4dYm8QfJ+nWAbksUUnGWz4Zs93nPkqvw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=k3ZXzWLwr2gkEFpXtnNDJeNfZkFQprEtMrM9wHciL/RUgfw8JdSaoNmQVMJ5CP0kx
-         hhN2NeH2qv0eUdvujUID4JFEwTWpwN1Qn5Ptfbo0myeiBQYWB4K3TDTChBnw95Wkiy
-         2wEIaFYEyp39fX+bOSV2QcNhpvm1iotKth2TOkMU=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8DED56030B
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-To:     swboyd@chromium.org, agross@kernel.org, david.brown@linaro.org,
-        linux-arm-msm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        bjorn.andersson@linaro.org, evgreen@chromium.org,
-        dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
-        lsrao@codeaurora.org, Maulik Shah <mkshah@codeaurora.org>
-Subject: [PATCH] soc: qcom: Introduce subsystem sleep stats driver
-Date:   Thu,  5 Sep 2019 14:34:24 +0530
-Message-Id: <20190905090424.5591-1-mkshah@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
+        by mx1.redhat.com (Postfix) with ESMTPS id 80E5E8A1C9D;
+        Thu,  5 Sep 2019 09:06:34 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-16.pek2.redhat.com [10.72.8.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4053E5D9CA;
+        Thu,  5 Sep 2019 09:06:23 +0000 (UTC)
+Date:   Thu, 5 Sep 2019 17:06:19 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Bart Van Assche <bvanassche@acm.org>, Jens Axboe <axboe@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Sagi Grimberg <sagi@grimberg.me>, linux-scsi@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Long Li <longli@microsoft.com>,
+        John Garry <john.garry@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-nvme@lists.infradead.org,
+        Keith Busch <keith.busch@intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 1/4] softirq: implement IRQ flood detection mechanism
+Message-ID: <20190905090617.GB4432@ming.t460p>
+References: <20190828135054.GA23861@ming.t460p>
+ <alpine.DEB.2.21.1908281605190.23149@nanos.tec.linutronix.de>
+ <20190903033001.GB23861@ming.t460p>
+ <299fb6b5-d414-2e71-1dd2-9d6e34ee1c79@linaro.org>
+ <20190903063125.GA21022@ming.t460p>
+ <6b88719c-782a-4a63-db9f-bf62734a7874@linaro.org>
+ <20190903072848.GA22170@ming.t460p>
+ <dd96def4-1121-afbe-2431-9e516a06850c@linaro.org>
+ <6f3b6557-1767-8c80-f786-1ea667179b39@acm.org>
+ <2a8bd278-5384-d82f-c09b-4fce236d2d95@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2a8bd278-5384-d82f-c09b-4fce236d2d95@linaro.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Thu, 05 Sep 2019 09:06:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Multiple subsystems like modem, spss, adsp, cdsp present on
-Qualcomm Technologies Inc's (QTI) SoCs maintains low power mode
-statistics in shared memory (SMEM). Lets add a driver to read
-and display this information using sysfs.
+On Wed, Sep 04, 2019 at 07:31:48PM +0200, Daniel Lezcano wrote:
+> Hi,
+> 
+> On 04/09/2019 19:07, Bart Van Assche wrote:
+> > On 9/3/19 12:50 AM, Daniel Lezcano wrote:
+> >> On 03/09/2019 09:28, Ming Lei wrote:
+> >>> On Tue, Sep 03, 2019 at 08:40:35AM +0200, Daniel Lezcano wrote:
+> >>>> It is a scheduler problem then ?
+> >>>
+> >>> Scheduler can do nothing if the CPU is taken completely by handling
+> >>> interrupt & softirq, so seems not a scheduler problem, IMO.
+> >>
+> >> Why? If there is a irq pressure on one CPU reducing its capacity, the
+> >> scheduler will balance the tasks on another CPU, no?
+> > 
+> > Only if CONFIG_IRQ_TIME_ACCOUNTING has been enabled. However, I don't
+> > know any Linux distro that enables that option. That's probably because
+> > that option introduces two rdtsc() calls in each interrupt. Given the
+> > overhead introduced by this option, I don't think this is the solution
+> > Ming is looking for.
+> 
+> Was this overhead reported somewhere ?
 
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
----
- Documentation/ABI/testing/sysfs-power    |  10 ++
- drivers/soc/qcom/Kconfig                 |   9 ++
- drivers/soc/qcom/Makefile                |   1 +
- drivers/soc/qcom/subsystem_sleep_stats.c | 146 +++++++++++++++++++++++
- 4 files changed, 166 insertions(+)
- create mode 100644 drivers/soc/qcom/subsystem_sleep_stats.c
+The syscall of gettimeofday() calls ktime_get_real_ts64() which finally
+calls tk_clock_read() which calls rdtsc too.
 
-diff --git a/Documentation/ABI/testing/sysfs-power b/Documentation/ABI/testing/sysfs-power
-index 18b7dc929234..1f8bb201246a 100644
---- a/Documentation/ABI/testing/sysfs-power
-+++ b/Documentation/ABI/testing/sysfs-power
-@@ -288,6 +288,16 @@ Description:
- 		writing a "0" (default) to it disables them.  Reads from
- 		this file return the current value.
- 
-+What:		/sys/power/subsystem_sleep/stats
-+Date:		December 2017
-+Contact:	Maulik Shah <mkshah@codeaurora.org>
-+Description:
-+		The /sys/power/subsystem_sleep/stats file prints the subsystem
-+		sleep information on Qualcomm Technologies, Inc. (QTI) SoCs.
-+
-+		Reading from this file will display subsystem level low power
-+		mode statistics.
-+
- What:		/sys/power/resume_offset
- Date:		April 2018
- Contact:	Mario Limonciello <mario.limonciello@dell.com>
-diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-index 880cf0290962..da53a96c6cce 100644
---- a/drivers/soc/qcom/Kconfig
-+++ b/drivers/soc/qcom/Kconfig
-@@ -163,6 +163,15 @@ config QCOM_SMSM
- 	  Say yes here to support the Qualcomm Shared Memory State Machine.
- 	  The state machine is represented by bits in shared memory.
- 
-+config QCOM_SS_SLEEP_STATS
-+	tristate "Qualcomm Technologies Inc. Subsystem Sleep Stats driver"
-+	depends on QCOM_SMEM
-+	help
-+	  Say y here to enable support for the Qualcomm Technologies Inc (QTI)
-+	  SS sleep stats driver to read the sleep stats of various subsystems
-+	  from SMEM. The stats are exported to sysfs. The driver also maintains
-+	  application processor sleep stats.
-+
- config QCOM_WCNSS_CTRL
- 	tristate "Qualcomm WCNSS control driver"
- 	depends on ARCH_QCOM || COMPILE_TEST
-diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
-index ffe519b0cb66..657e9494fc51 100644
---- a/drivers/soc/qcom/Makefile
-+++ b/drivers/soc/qcom/Makefile
-@@ -17,6 +17,7 @@ obj-$(CONFIG_QCOM_SMEM) +=	smem.o
- obj-$(CONFIG_QCOM_SMEM_STATE) += smem_state.o
- obj-$(CONFIG_QCOM_SMP2P)	+= smp2p.o
- obj-$(CONFIG_QCOM_SMSM)	+= smsm.o
-+qcom_rpmh-y	+= subsystem_sleep_stats.o
- obj-$(CONFIG_QCOM_WCNSS_CTRL) += wcnss_ctrl.o
- obj-$(CONFIG_QCOM_APR) += apr.o
- obj-$(CONFIG_QCOM_LLCC) += llcc-slice.o
-diff --git a/drivers/soc/qcom/subsystem_sleep_stats.c b/drivers/soc/qcom/subsystem_sleep_stats.c
-new file mode 100644
-index 000000000000..5379714b6ba4
---- /dev/null
-+++ b/drivers/soc/qcom/subsystem_sleep_stats.c
-@@ -0,0 +1,146 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+/*
-+ * Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
-+ */
-+
-+#define pr_fmt(fmt) "%s: " fmt, KBUILD_MODNAME
-+
-+#include <linux/errno.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/types.h>
-+
-+#include <linux/soc/qcom/smem.h>
-+
-+enum subsystem_item_id {
-+	MODEM = 605,
-+	ADSP,
-+	CDSP,
-+	SLPI,
-+	GPU,
-+	DISPLAY,
-+};
-+
-+enum subsystem_pid {
-+	PID_APSS = 0,
-+	PID_MODEM = 1,
-+	PID_ADSP = 2,
-+	PID_SLPI = 3,
-+	PID_CDSP = 5,
-+	PID_GPU = PID_APSS,
-+	PID_DISPLAY = PID_APSS,
-+};
-+
-+struct subsystem_data {
-+	char *name;
-+	enum subsystem_item_id item_id;
-+	enum subsystem_pid pid;
-+};
-+
-+static const struct subsystem_data subsystems[] = {
-+	{"MODEM", MODEM, PID_MODEM},
-+	{"ADSP", ADSP, PID_ADSP},
-+	{"CDSP", CDSP, PID_CDSP},
-+	{"SLPI", SLPI, PID_SLPI},
-+	{"GPU", GPU, PID_GPU},
-+	{"DISPLAY", DISPLAY, PID_DISPLAY},
-+};
-+
-+struct subsystem_stats {
-+	uint32_t version_id;
-+	uint32_t count;
-+	uint64_t last_entered;
-+	uint64_t last_exited;
-+	uint64_t accumulated_duration;
-+};
-+
-+struct subsystem_stats_prv_data {
-+	struct kobj_attribute ka;
-+	struct kobject *kobj;
-+};
-+
-+static struct subsystem_stats_prv_data *prvdata;
-+
-+static inline ssize_t subsystem_stats_print(char *prvbuf, ssize_t length,
-+					    struct subsystem_stats *record,
-+					    const char *name)
-+{
-+	return scnprintf(prvbuf, length, "%s\n\tVersion:0x%x\n"
-+			"\tSleep Count:0x%x\n"
-+			"\tSleep Last Entered At:0x%llx\n"
-+			"\tSleep Last Exited At:0x%llx\n"
-+			"\tSleep Accumulated Duration:0x%llx\n\n",
-+			name, record->version_id, record->count,
-+			record->last_entered, record->last_exited,
-+			record->accumulated_duration);
-+}
-+
-+static ssize_t subsystem_stats_show(struct kobject *kobj,
-+				    struct kobj_attribute *attr, char *buf)
-+{
-+	ssize_t length = 0;
-+	int i = 0;
-+	size_t size = 0;
-+	struct subsystem_stats *record = NULL;
-+
-+	/* Read SMEM data written by other subsystems */
-+	for (i = 0; i < ARRAY_SIZE(subsystems); i++) {
-+		record = (struct subsystem_stats *) qcom_smem_get(
-+			  subsystems[i].pid, subsystems[i].item_id, &size);
-+
-+		if (!IS_ERR_OR_NULL(record) && (PAGE_SIZE - length > 0))
-+			length += subsystem_stats_print(buf + length,
-+							PAGE_SIZE - length,
-+							record,
-+							subsystems[i].name);
-+	}
-+
-+	return length;
-+}
-+
-+static int __init subsystem_sleep_stats_init(void)
-+{
-+	struct kobject *ss_stats_kobj;
-+	int ret;
-+
-+	prvdata = kmalloc(sizeof(*prvdata), GFP_KERNEL);
-+	if (!prvdata)
-+		return -ENOMEM;
-+
-+	ss_stats_kobj = kobject_create_and_add("subsystem_sleep",
-+					       power_kobj);
-+	if (!ss_stats_kobj)
-+		return -ENOMEM;
-+
-+	prvdata->kobj = ss_stats_kobj;
-+
-+	sysfs_attr_init(&prvdata->ka.attr);
-+	prvdata->ka.attr.mode = 0444;
-+	prvdata->ka.attr.name = "stats";
-+	prvdata->ka.show = subsystem_stats_show;
-+	prvdata->ka.store = NULL;
-+
-+	ret = sysfs_create_file(prvdata->kobj, &prvdata->ka.attr);
-+	if (ret) {
-+		pr_err("sysfs_create_file failed\n");
-+		kobject_put(prvdata->kobj);
-+		kfree(prvdata);
-+		return ret;
-+	}
-+
-+	return ret;
-+}
-+
-+static void __exit subsystem_sleep_stats_exit(void)
-+{
-+	sysfs_remove_file(prvdata->kobj, &prvdata->ka.attr);
-+	kobject_put(prvdata->kobj);
-+	kfree(prvdata);
-+}
-+
-+module_init(subsystem_sleep_stats_init);
-+module_exit(subsystem_sleep_stats_exit);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("Qualcomm Technologies, Inc subsystem sleep stats driver");
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, hosted by The Linux Foundation.
+But gettimeofday() is often used in fast path, and block IO_STAT needs to
+read it too.
 
+> 
+> > See also irqtime_account_irq() in kernel/sched/cputime.c.
+> 
+> From my POV, this framework could be interesting to detect this situation.
+
+Now we are talking about IRQ_TIME_ACCOUNTING instead of IRQ_TIMINGS, and the
+former one could be used to implement the detection. And the only sharing
+should be the read of timestamp.
+
+Thanks,
+Ming
