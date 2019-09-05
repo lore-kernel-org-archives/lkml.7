@@ -2,84 +2,65 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF28C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA82C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FE8C20693
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D23E20693
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:46:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730937AbfIEGoV (ORCPT
+        id S1731158AbfIEGqX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 02:44:21 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6222 "EHLO huawei.com"
+        Thu, 5 Sep 2019 02:46:23 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:35676 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726097AbfIEGoV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 02:44:21 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 105E6ECC49D523990C50;
-        Thu,  5 Sep 2019 14:44:19 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Thu, 5 Sep 2019
- 14:44:11 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <shawnguo@kernel.org>, <s.hauer@pengutronix.de>,
-        <kernel@pengutronix.de>, <festevam@gmail.com>, <linux-imx@nxp.com>,
-        <daniel.baluta@nxp.com>, <yuehaibing@huawei.com>,
-        <pierre-louis.bossart@linux.intel.com>
-CC:     <alsa-devel@alsa-project.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] ASoC: SOF: imx8: Fix COMPILE_TEST error
-Date:   Thu, 5 Sep 2019 14:44:00 +0800
-Message-ID: <20190905064400.24800-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        id S1726097AbfIEGqX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 02:46:23 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 9F244DBF19FA7DA58829;
+        Thu,  5 Sep 2019 14:46:21 +0800 (CST)
+Received: from linux-ibm.site (10.175.102.37) by
+ DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 5 Sep 2019 14:46:10 +0800
+From:   zhong jiang <zhongjiang@huawei.com>
+To:     <tony@atomide.com>, <udeep.dutt@intel.com>,
+        <ashutosh.dixit@intel.com>, <gregkh@linuxfoundation.org>,
+        <kishon@ti.com>, <jonathanh@nvidia.com>, <a.zummo@towertech.it>,
+        <alexandre.belloni@bootlin.com>
+CC:     <zhongjiang@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <linux-rtc@vger.kernel.org>, <arnd@arndb.de>,
+        <lorenzo.pieralisi@arm.com>
+Subject: [PATCH 0/4] Use PTR_ERR_OR_ZERO directly
+Date:   Thu, 5 Sep 2019 14:43:11 +0800
+Message-ID: <1567665795-5901-1-git-send-email-zhongjiang@huawei.com>
+X-Mailer: git-send-email 1.7.12.4
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
+X-Originating-IP: [10.175.102.37]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When do compile test, if SND_SOC_SOF_OF is not set, we get:
+With the help of ptr_ret.cocci, I find some place to use
+PTR_ERR_OR_ZERO directly.
 
-sound/soc/sof/imx/imx8.o: In function `imx8_dsp_handle_request':
-imx8.c:(.text+0xb0): undefined reference to `snd_sof_ipc_msgs_rx'
-sound/soc/sof/imx/imx8.o: In function `imx8_ipc_msg_data':
-imx8.c:(.text+0xf4): undefined reference to `sof_mailbox_read'
-sound/soc/sof/imx/imx8.o: In function `imx8_dsp_handle_reply':
-imx8.c:(.text+0x160): undefined reference to `sof_mailbox_read'
+zhong jiang (4):
+  bus: ti-sysc: Use PTR_ERR_OR_ZERO rather than its implementation
+  misc: mic: Use PTR_ERR_OR_ZERO rather than its implementation
+  phy: tegra: Use PTR_ERR_OR_ZERO rather than its implementation
+  rtc: ds1347: Use PTR_ERR_OR_ZERO rather than its implementation
 
-Make SND_SOC_SOF_IMX_TOPLEVEL always depends on SND_SOC_SOF_OF
+ drivers/bus/ti-sysc.c                | 4 +---
+ drivers/misc/mic/scif/scif_epd.h     | 5 ++---
+ drivers/phy/tegra/phy-tegra194-p2u.c | 4 +---
+ drivers/rtc/rtc-ds1347.c             | 5 +----
+ 4 files changed, 5 insertions(+), 13 deletions(-)
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 202acc565a1f ("ASoC: SOF: imx: Add i.MX8 HW support")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- sound/soc/sof/imx/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/sound/soc/sof/imx/Kconfig b/sound/soc/sof/imx/Kconfig
-index fd73d84..5acae75 100644
---- a/sound/soc/sof/imx/Kconfig
-+++ b/sound/soc/sof/imx/Kconfig
-@@ -2,7 +2,8 @@
- 
- config SND_SOC_SOF_IMX_TOPLEVEL
- 	bool "SOF support for NXP i.MX audio DSPs"
--	depends on ARM64 && SND_SOC_SOF_OF || COMPILE_TEST
-+	depends on ARM64|| COMPILE_TEST
-+	depends on SND_SOC_SOF_OF
- 	help
-           This adds support for Sound Open Firmware for NXP i.MX platforms.
-           Say Y if you have such a device.
 -- 
-2.7.4
-
+1.7.12.4
 
