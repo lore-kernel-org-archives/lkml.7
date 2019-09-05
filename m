@@ -2,195 +2,133 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43223C3A5AB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BAF1C3A5AB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DDBF217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:00:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F36C2173B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:02:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aVYVkfqv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731965AbfIEIA6 (ORCPT
+        id S1732003AbfIEICU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 04:00:58 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37206 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731378AbfIEIA5 (ORCPT
+        Thu, 5 Sep 2019 04:02:20 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:49952 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730485AbfIEICU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 04:00:57 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x857vNA9007405
-        for <linux-kernel@vger.kernel.org>; Thu, 5 Sep 2019 04:00:56 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2utwpta6us-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 04:00:56 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <frankja@linux.ibm.com>;
-        Thu, 5 Sep 2019 09:00:54 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 5 Sep 2019 09:00:51 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8580oab34472142
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 5 Sep 2019 08:00:50 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4ADC852073;
-        Thu,  5 Sep 2019 08:00:50 +0000 (GMT)
-Received: from dyn-9-152-224-131.boeblingen.de.ibm.com (unknown [9.152.224.131])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 1DA335205A;
-        Thu,  5 Sep 2019 08:00:50 +0000 (GMT)
-Subject: Re: [PATCH v2 0/2] KVM: s390: Check for invalid bits in
- kvm_valid_regs and kvm_dirty_regs
-To:     Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190904085200.29021-1-thuth@redhat.com>
-From:   Janosch Frank <frankja@linux.ibm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
- 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
-Date:   Thu, 5 Sep 2019 10:00:49 +0200
+        Thu, 5 Sep 2019 04:02:20 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x85827F9038119;
+        Thu, 5 Sep 2019 03:02:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1567670527;
+        bh=rsuS3KW8iGDkRX2+94qPa4U+P9JzBJ56k0nHSuoZiok=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=aVYVkfqvx5jR+TjZksNEc96NMbpPQDsvRIT6QtkQYrFzwcyVtfMwxnoxp2CNh2jqv
+         nINlDgU/8IYGMe7eOB6NBwOPO2Cop25MJbEpDQVTb6pf4mTLY1nuwbb2i/jMwUsNXZ
+         o/L3jpP2qOA+qNXuK4yGTNfBpghWSmhuWa3BAHBY=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x85827O5062575
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 5 Sep 2019 03:02:07 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 5 Sep
+ 2019 03:02:06 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 5 Sep 2019 03:02:06 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x85824RT111065;
+        Thu, 5 Sep 2019 03:02:05 -0500
+Subject: Re: [PATCH -next] dmaengine: ti: edma: remove unused code
+To:     YueHaibing <yuehaibing@huawei.com>, <dan.j.williams@intel.com>,
+        <vkoul@kernel.org>, <arnd@arndb.de>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190905060249.23928-1-yuehaibing@huawei.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <fb0b8690-e8c7-549c-b966-66d278dbe68a@ti.com>
+Date:   Thu, 5 Sep 2019 11:02:33 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190904085200.29021-1-thuth@redhat.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="gWQIJdATOdynDAV4K9Mg2r9rVWfgCdA9I"
-X-TM-AS-GCONF: 00
-x-cbid: 19090508-0012-0000-0000-00000346F93C
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19090508-0013-0000-0000-000021814E17
-Message-Id: <60703ff3-201d-23bd-3e9d-354e53b49252@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-05_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=794 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909050083
+In-Reply-To: <20190905060249.23928-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---gWQIJdATOdynDAV4K9Mg2r9rVWfgCdA9I
-Content-Type: multipart/mixed; boundary="TQSoxuGeU5g53gbhIQUIOVsdkGjjKBeCS";
- protected-headers="v1"
-From: Janosch Frank <frankja@linux.ibm.com>
-To: Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org,
- Christian Borntraeger <borntraeger@de.ibm.com>
-Cc: David Hildenbrand <david@redhat.com>, Cornelia Huck <cohuck@redhat.com>,
- linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <60703ff3-201d-23bd-3e9d-354e53b49252@linux.ibm.com>
-Subject: Re: [PATCH v2 0/2] KVM: s390: Check for invalid bits in
- kvm_valid_regs and kvm_dirty_regs
-References: <20190904085200.29021-1-thuth@redhat.com>
-In-Reply-To: <20190904085200.29021-1-thuth@redhat.com>
-
---TQSoxuGeU5g53gbhIQUIOVsdkGjjKBeCS
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-
-On 9/4/19 10:51 AM, Thomas Huth wrote:
-> Avoid invalid bits in kvm_valid_regs and kvm_dirty_regs on s390x.
->=20
-> v2:
->  - Split the single patch from v1 into two separate patches
->    (I've kept the Reviewed-bys from v1, but if you don't agree with the=
-
->     patch description of the 2nd patch, please complain)
->=20
-> Thomas Huth (2):
->   KVM: s390: Disallow invalid bits in kvm_valid_regs and kvm_dirty_regs=
-
->   KVM: selftests: Test invalid bits in kvm_valid_regs and kvm_dirty_reg=
-s
->     on s390x
->=20
->  arch/s390/include/uapi/asm/kvm.h              |  6 ++++
->  arch/s390/kvm/kvm-s390.c                      |  4 +++
->  .../selftests/kvm/s390x/sync_regs_test.c      | 30 +++++++++++++++++++=
-
->  3 files changed, 40 insertions(+)
->=20
-
-Thanks, both are picked
 
 
---TQSoxuGeU5g53gbhIQUIOVsdkGjjKBeCS--
+On 05/09/2019 9.02, YueHaibing wrote:
+> drivers/dma/ti/edma.c: In function edma_probe:
+> drivers/dma/ti/edma.c:2252:11: warning:
+>  variable off set but not used [-Wunused-but-set-variable]
+> 
+> 'off' is not used now, so remove it.
 
---gWQIJdATOdynDAV4K9Mg2r9rVWfgCdA9I
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+This reminds me that this whole in EDMA driver xbar handling is mostly
+broken...
 
------BEGIN PGP SIGNATURE-----
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl1wwLEACgkQ41TmuOI4
-ufixCA/+Odhx7Sghxgy98iYZjSMipxnr1NBPClrMVaRiiNkMWt27H1RPnXt3Y/4/
-/RG7rTZgrHaaRN0hMS9AXJHUsbqPunp67gdEeJc99NHYBIRtq5xZCW0zOxX4etXo
-TFhuGSSmJ7LUOTwtOotA+7bNvxJJfph1CdKNIbSVZmPjQw7GxY5gz7ax0fsFc5bM
-3v43lWsZTA2Ar/FnJvhgLiHhvD08ZJ15zFqowDMUvkNyK5c4BCYaNfwkCrRrhrxE
-mzMvGkbHadJnxhoSDkvG+OSuOSkIUDx5KCaDDG5RaLkOa2yTEpdo76uDLoa3AR+T
-jjlpyLyv+pGnxfQxOwqpMEq+AJbmtYVNF1dYGz/T/v3t8jvJ/v1Ux17Ze1dT4kIc
-SEWJu9jrIgdGjDfteLewVRX/DvsJBNHSCvXBeGnghfePQIskEtZPpcuANq32uU04
-KqozbsmuL6Oj5r0+TCSc5SzdMQ+6UYY+wIgitApJaRQXXlBr1RoMZ6arxFuGFTJg
-QAihxEzF2zMr2FtRTl8eAx3IQHP9KDQKa0+t4qYgmwvbePxj7gtOQFsUtupjyqAL
-z7rQ/21eW0bJl7ScRZV0M7et7AhIc/PCChTfJSrOTNUnE+XfDEEW3RZB60JPBUGM
-5FE+C3Oa2XDqkulzPgu5oGkHchNJptq3Vb8ug+aSOH6y1elAi6Y=
-=fh8O
------END PGP SIGNATURE-----
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/dma/ti/edma.c | 12 +-----------
+>  1 file changed, 1 insertion(+), 11 deletions(-)
+> 
+> diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
+> index ba7c4f0..54fd981 100644
+> --- a/drivers/dma/ti/edma.c
+> +++ b/drivers/dma/ti/edma.c
+> @@ -2249,10 +2249,8 @@ static int edma_probe(struct platform_device *pdev)
+>  {
+>  	struct edma_soc_info	*info = pdev->dev.platform_data;
+>  	s8			(*queue_priority_mapping)[2];
+> -	int			i, off;
+>  	const s16		(*rsv_slots)[2];
+> -	const s16		(*xbar_chans)[2];
+> -	int			irq;
+> +	int			i, irq;
+>  	char			*irq_name;
+>  	struct resource		*mem;
+>  	struct device_node	*node = pdev->dev.of_node;
+> @@ -2349,14 +2347,6 @@ static int edma_probe(struct platform_device *pdev)
+>  			edma_write_slot(ecc, i, &dummy_paramset);
+>  	}
+>  
+> -	/* Clear the xbar mapped channels in unused list */
+> -	xbar_chans = info->xbar_chans;
+> -	if (xbar_chans) {
+> -		for (i = 0; xbar_chans[i][1] != -1; i++) {
+> -			off = xbar_chans[i][1];
 
---gWQIJdATOdynDAV4K9Mg2r9rVWfgCdA9I--
+originally we had
+			clear_bits(off, 1, ecc->channel_unused);
+here, but I have removed it for some reason with
+1be5336bc7ba050ee07d352643bf4c01c513553c
 
+
+> -		}
+> -	}
+> -
+>  	irq = platform_get_irq_byname(pdev, "edma3_ccint");
+>  	if (irq < 0 && node)
+>  		irq = irq_of_parse_and_map(node, 0);
+> 
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
