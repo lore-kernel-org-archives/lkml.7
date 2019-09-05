@@ -2,93 +2,146 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B56C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E95C8C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB1062145D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:11:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD7E82145D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:11:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567674704;
+	bh=nHc2+L5G3PzMf031jOJuAlkha6yXT8KGXItX6cQnqQY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=IqpFyDWLz2AlnN/lFL8smb9h2o8J/vNKy8FwPrlQnQtlem4emjTeNWgdU3DVUpzu0
+	 gB2XUpWWswteQKqxe5HeDcphj6rUvvazBRuoUcHRk1qFryVapiy8OFAuI5uh/uziOq
+	 BEkFn4LS37YuUuo6Y8Hl9CNRNgaLzrFzuySjpf5E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732169AbfIEJLU (ORCPT
+        id S1732968AbfIEJLn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 05:11:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38230 "EHLO mx1.redhat.com"
+        Thu, 5 Sep 2019 05:11:43 -0400
+Received: from foss.arm.com ([217.140.110.172]:39876 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731167AbfIEJLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 05:11:19 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 60DC93007C23;
-        Thu,  5 Sep 2019 09:11:19 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-16.pek2.redhat.com [10.72.8.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 18A8D5D9CA;
-        Thu,  5 Sep 2019 09:11:08 +0000 (UTC)
-Date:   Thu, 5 Sep 2019 17:11:04 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Keith Busch <keith.busch@intel.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Sagi Grimberg <sagi@grimberg.me>, linux-scsi@vger.kernel.org,
-        Long Li <longli@microsoft.com>,
-        John Garry <john.garry@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-nvme@lists.infradead.org, Jens Axboe <axboe@fb.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 1/4] softirq: implement IRQ flood detection mechanism
-Message-ID: <20190905091103.GC4432@ming.t460p>
-References: <299fb6b5-d414-2e71-1dd2-9d6e34ee1c79@linaro.org>
- <20190903063125.GA21022@ming.t460p>
- <6b88719c-782a-4a63-db9f-bf62734a7874@linaro.org>
- <20190903072848.GA22170@ming.t460p>
- <dd96def4-1121-afbe-2431-9e516a06850c@linaro.org>
- <6f3b6557-1767-8c80-f786-1ea667179b39@acm.org>
- <2a8bd278-5384-d82f-c09b-4fce236d2d95@linaro.org>
- <de16de12-fa1a-666c-ea19-fea5d096c1ca@acm.org>
- <20190904180211.GX2332@hirez.programming.kicks-ass.net>
- <9b924e48-e217-9c11-c1fb-46c92a82ea2d@acm.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9b924e48-e217-9c11-c1fb-46c92a82ea2d@acm.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 05 Sep 2019 09:11:19 +0000 (UTC)
+        id S1731167AbfIEJLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 05:11:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D8C7F344;
+        Thu,  5 Sep 2019 02:11:42 -0700 (PDT)
+Received: from big-swifty.misterjones.org (unknown [10.1.27.38])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 649103F67D;
+        Thu,  5 Sep 2019 02:11:40 -0700 (PDT)
+Date:   Thu, 05 Sep 2019 10:11:38 +0100
+Message-ID: <86lfv3rtth.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Heinrich Schuchardt <xypron.glpk@gmx.de>
+Cc:     James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        =?UTF-8?B?IkRhbmllbCBQIC4gQmVycmFuZ8OpIg==?= <berrange@redhat.com>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] KVM: inject data abort if instruction cannot be decoded
+In-Reply-To: <754fb77a-aace-e0aa-a5bb-a6c6bcff9890@gmx.de>
+References: <20190904180736.29009-1-xypron.glpk@gmx.de>
+        <86r24vrwyh.wl-maz@kernel.org>
+        <754fb77a-aace-e0aa-a5bb-a6c6bcff9890@gmx.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Organization: Approximate
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 12:47:13PM -0700, Bart Van Assche wrote:
-> On 9/4/19 11:02 AM, Peter Zijlstra wrote:
-> > On Wed, Sep 04, 2019 at 10:38:59AM -0700, Bart Van Assche wrote:
-> > > I think it is widely known that rdtsc is a relatively slow x86 instruction.
-> > > So I expect that using that instruction will cause a measurable overhead if
-> > > it is called frequently enough. I'm not aware of any publicly available
-> > > measurement data however.
-> > 
-> > https://www.agner.org/optimize/instruction_tables.pdf
-> > 
-> > RDTSC, Ryzen: ~36
-> > RDTSC, Skylake: ~20
-> > 
-> > Sadly those same tables don't list the cost of actual exceptions or even
-> > IRET :/
+On Thu, 05 Sep 2019 09:28:42 +0100,
+Heinrich Schuchardt <xypron.glpk@gmx.de> wrote:
 > 
-> Thanks Peter for having looked up these numbers. These numbers are much
-> better than last time I checked. Ming, would CONFIG_IRQ_TIME_ACCOUNTING help
-> your workload?
+> On 9/5/19 10:03 AM, Marc Zyngier wrote:
+> > [Please use my kernel.org address. My arm.com address will disappear shortly]
+> > 
+> > On Wed, 04 Sep 2019 19:07:36 +0100,
+> > Heinrich Schuchardt <xypron.glpk@gmx.de> wrote:
+> >> 
+> >> If an application tries to access memory that is not mapped, an error
+> >> ENOSYS, "load/store instruction decoding not implemented" may occur.
+> >> QEMU will hang with a register dump.
+> >> 
+> >> Instead create a data abort that can be handled gracefully by the
+> >> application running in the virtual environment.
+> >> 
+> >> Now the virtual machine can react to the event in the most appropriate
+> >> way - by recovering, by writing an informative log, or by rebooting.
+> >> 
+> >> Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+> >> ---
+> >>   virt/kvm/arm/mmio.c | 4 ++--
+> >>   1 file changed, 2 insertions(+), 2 deletions(-)
+> >> 
+> >> diff --git a/virt/kvm/arm/mmio.c b/virt/kvm/arm/mmio.c
+> >> index a8a6a0c883f1..0cbed7d6a0f4 100644
+> >> --- a/virt/kvm/arm/mmio.c
+> >> +++ b/virt/kvm/arm/mmio.c
+> >> @@ -161,8 +161,8 @@ int io_mem_abort(struct kvm_vcpu *vcpu, struct kvm_run *run,
+> >>   		if (ret)
+> >>   			return ret;
+> >>   	} else {
+> >> -		kvm_err("load/store instruction decoding not implemented\n");
+> >> -		return -ENOSYS;
+> >> +		kvm_inject_dabt(vcpu, kvm_vcpu_get_hfar(vcpu));
+> >> +		return 1;
+> > 
+> > How can you tell that the access would fault? You have no idea at that
+> > stage (the kernel doesn't know about the MMIO ranges that userspace
+> > handles). All you know is that you're faced with a memory access that
+> > you cannot emulate in the kernel. Injecting a data abort at that stage
+> > is not something that the architecture allows.
+> > 
+> > If you want to address this, consider forwarding the access to
+> > userspace. You'll only need an instruction decoder (supporting T1, T2,
+> > A32 and A64) and a S1 page table walker (one per page table format,
+> > all three of them) to emulate the access (having taken care of
+> > stopping all the other vcpus to make sure there is no concurrent
+> > modification of the page tables). You'll then be able to return the
+> > result of the access back to the kernel.
+> 
+> If I understand you right, the problem has to be fixed in QEMU and not
+> in KVM.
 
-In my fio test on azure L80sv2, IRQ_TIME_ACCOUNTING isn't enabled.
-However the irq flood detection introduces two RDTSC for each do_IRQ(),
-not see obvious IOPS difference.
+It is a shared responsibility.
+
+> Is there an example of such a forwarding already available in QEMU?
+
+Yes. That's how we ask userspace (QEMU) to perform a MMIO access on
+behalf of the guest (see how the run structure is populated and the
+vcpu thread returns to userspace).
+
+> > 
+> > Of course, the best thing would be to actually fix the guest so that
+> > it doesn't use non-emulatable MMIO accesses. In general, that the sign
+> > of a bug in low-level accessors.
+> 
+> My problem was to find out where in my guest (U-Boot running UEFI SCT)
+> the problem occurred. With this patch U-Boot gave me the relative
+> address in Shell.efi and I was able to locate what was wrong in U-Boot's
+> UEFI implementation.
+
+I understand that there is a need for more precise information. I'm
+just wary of adding debug features that become something that people
+rely on, despite being in contradiction with the architecture.
+
+I can help with the kernel side of the reporting, should someone want
+to tackle the userspace side of it.
 
 Thanks,
-Ming
+
+	M.
+
+-- 
+Jazz is not dead, it just smells funny.
