@@ -2,87 +2,87 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A674CC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBE0C00306
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1D5020820
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2394220825
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:57:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567695470;
+	bh=zNIbJvEwXPMq+66/oYMUIqWIi0UEzFzWcGMOcefbigo=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=aTXlK2EtNcOUaqI35hXEMCYGmglhlEZ0vdYWsdFwbDmo0d7zFu8K7g+uUGVgQeo4N
+	 pxTEhYiKpIJUuvMw11qK0uuEITm9UauQDdafo9021Jetyh2vyodq/m8lIaQgdkWi3N
+	 5j6yudcA8xbQwyaY/qPaTwOPS07fpoTDPvalPInw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388676AbfIEO5O (ORCPT
+        id S2389822AbfIEO5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 10:57:14 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:43173 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbfIEO5O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 10:57:14 -0400
-Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1i5tCB-00038e-IJ; Thu, 05 Sep 2019 16:57:11 +0200
-Date:   Thu, 5 Sep 2019 16:57:10 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Frederic Weisbecker <frederic@kernel.org>
-cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [patch 0/6] posix-cpu-timers: Fallout fixes and permission
- tightening
-In-Reply-To: <20190905144829.GA18251@lenoir>
-Message-ID: <alpine.DEB.2.21.1909051650030.1902@nanos.tec.linutronix.de>
-References: <20190905120339.561100423@linutronix.de> <20190905144829.GA18251@lenoir>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 5 Sep 2019 10:57:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52300 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726088AbfIEO5s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 10:57:48 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9862E20820;
+        Thu,  5 Sep 2019 14:57:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567695468;
+        bh=zNIbJvEwXPMq+66/oYMUIqWIi0UEzFzWcGMOcefbigo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=a9UU3d7/ldf/Ys11wI3V0fxQmz33xhCZaiQQB/37+mYjhGtWskMANJjFl22mOeX9d
+         9/2v45mYe98Ntv29eEVmJZPJ/P621lKFqYZACS0hGGwgKBSriAnUrE/ql69t294SAO
+         oOEdIxAiubhyUtTdusUnMQZCgTQAhoFZxywXRXnw=
+Subject: Re: [PATCH 4.19 00/93] 4.19.70-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20190904175302.845828956@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <cded890e-71c8-2741-6358-20ab9b4ee91e@kernel.org>
+Date:   Thu, 5 Sep 2019 08:57:46 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 5 Sep 2019, Frederic Weisbecker wrote:
-> On Thu, Sep 05, 2019 at 02:03:39PM +0200, Thomas Gleixner wrote:
-> > Sysbot triggered an issue in the posix timer rework which was trivial to
-> > fix, but after running another test case I discovered that the rework broke
-> > the permission checks subtly. That's also a straightforward fix.
-> > 
-> > Though when staring at it I discovered that the permission checks for
-> > process clocks and process timers are completely bonkers. The only
-> > requirement is that the target PID is a group leader. Which means that any
-> > process can read the clocks and attach timers to any other process without
-> > priviledge restrictions.
-> > 
-> > That's just wrong because the clocks and timers can be used to observe
-> > behaviour and both reading the clocks and arming timers adds overhead and
-> > influences runtime performance of the target process.
+On 9/4/19 11:53 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.70 release.
+> There are 93 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Yeah I stumbled upon that by the past and found out the explanation behind
-> in old history: https://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git/commit/kernel/posix-cpu-timers.c?id=a78331f2168ef1e67b53a0f8218c70a19f0b2a4c
+> Responses should be made by Fri 06 Sep 2019 05:50:23 PM UTC.
+> Anything received after that time might be too late.
 > 
-> "This makes no constraint on who can see whose per-process clocks.  This
-> information is already available for the VIRT and PROF (i.e.  utime and stime)
-> information via /proc.  I am open to suggestions on if/how security
-> constraints on who can see whose clocks should be imposed."
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.70-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> and the diffstat can be found below.
 > 
-> I'm all for mitigating that, let's just hope that won't break some ABIs.
+> thanks,
+> 
+> greg k-h
+> 
 
-Well, reading clocks is one part of the issue. Arming timers on any process
-is a different story.
+Compiled and booted on my test system. No dmesg regressions.
 
-Also /proc/$PID access can be restricted nowadays. So that posic clock
-stuff should at least have exactly the same restrictions.
-
-Thanks,
-
-	tglx
-
+thanks,
+-- Shuah
