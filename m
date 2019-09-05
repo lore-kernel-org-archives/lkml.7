@@ -2,107 +2,245 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDFADC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E0DC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A417320828
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:15:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8DD721848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:16:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k76jOrRn"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mfvDNzvU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732464AbfIEIPo (ORCPT
+        id S1732485AbfIEIQQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 04:15:44 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:34891 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730849AbfIEIPo (ORCPT
+        Thu, 5 Sep 2019 04:16:16 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:43801 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730849AbfIEIQP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 04:15:44 -0400
-Received: by mail-wm1-f65.google.com with SMTP id n10so1768768wmj.0
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 01:15:42 -0700 (PDT)
+        Thu, 5 Sep 2019 04:16:15 -0400
+Received: by mail-pf1-f195.google.com with SMTP id d15so1220518pfo.10
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 01:16:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=10aGnknD8IVEjfbOX2J03d8KjnX6yhuxq2udar1p34k=;
-        b=k76jOrRn/KqtgyfYiCm9Ukk2P3wGLbhaWHDEQR0fjgSahxgrv783qMr08DQCvvoFHb
-         dFWrX/vqeJYe0lMt90mMjPIVomNPc2EEGH7Qyela16mLtoeq5MFuuWSCD23Ka7njLGpD
-         vogzkJ1kEvAkU+Do4oDdoxU4CqoNBABMxFgcr1iKAItorlnA6vClv4aaRagvvUM+PvWT
-         uPkPn7DgrbzAtzYn3CqhC/gNo2rC7GcL0nBRJIOpyRbeZskpX0VxoXCs1sxNNJt55gxb
-         0w3aZ6dYg1SgwHESDCL8DQyDPhMN6vvRMAuoGDg8Mnd1mJwz+mNfCaIwtCl0SbbNi09a
-         uKBQ==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9n12LoDC4iyQEQhSfvrYLmsN/jTJxbwGE2x1rInuHng=;
+        b=mfvDNzvUA14ba5ndLu6rEnyLMfdTvutWp7jgl4Uz8Tj0KkXdvQ9mepDv3Q0JZLqj5g
+         tdaPQnTm+CiDSzL/6duSkVkKy5bimCc2bgP+lFjNet2erbTdwN6NwrxDezk/NAZeDRft
+         htSU/TxkBZT5c7zo/xpFicxxPFnpxtb3O1VGE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=10aGnknD8IVEjfbOX2J03d8KjnX6yhuxq2udar1p34k=;
-        b=meEpZfvyRAUFE7FtRBo+jcJjVMr9uUBEmmxMnjeHcpT9ObjsbgMvZGtsF5R6aEPkfl
-         pvikKzMjTHxuC2IOq5/UFLEyCbM6xwpbR1C6ME7BA/KCwPc+WdYA3xUVImojguj1hwfw
-         srOEcyYB5JENH6Sn36hOKoH80AyHy3Z89qmeOa7qmQA32i+JBNYSdOQexeab/qsK6iKL
-         ZJ91ML81+6rtt5u0nHNAcquqjH5P8S9EOqqePtAhmUuy8xNtayaCP686MD8PrF7aPZZf
-         c/5NmSAjLYL6kKbtZZg60g3Ze+Qe2+WZnhVuXqnjE2NNgeKfSg+Ei+j+Ha8Jv7mUlNSY
-         nCxQ==
-X-Gm-Message-State: APjAAAWPeKDjyr8YzEXg3qY1YLBsT1dazW1H7Jc7xrDVNE4Thk1Gsu35
-        c2Qy6cOiEN9p2mJudPWpjaWaJg==
-X-Google-Smtp-Source: APXvYqwrO6C9MyodFbqDZysM24MlqavSlQNIAbuArfba4cg0pHZov957s+oST5S0PxX0HKLaEDgF4w==
-X-Received: by 2002:a1c:a383:: with SMTP id m125mr1870964wme.57.1567671342179;
-        Thu, 05 Sep 2019 01:15:42 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id q124sm2858526wma.5.2019.09.05.01.15.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Sep 2019 01:15:41 -0700 (PDT)
-Subject: Re: [PATCH v2 5/5] misc: fastrpc: free dma buf scatter list
-To:     Stephen Boyd <swboyd@chromium.org>, gregkh@linuxfoundation.org
-Cc:     arnd@arndb.de, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Mayank Chopra <mak.chopra@codeaurora.org>
-References: <20190829092926.12037-1-srinivas.kandagatla@linaro.org>
- <20190829092926.12037-6-srinivas.kandagatla@linaro.org>
- <5d70991c.1c69fb81.c0590.2f13@mx.google.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <0b530a6a-a788-4a45-38f1-41b85a814afd@linaro.org>
-Date:   Thu, 5 Sep 2019 09:15:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        bh=9n12LoDC4iyQEQhSfvrYLmsN/jTJxbwGE2x1rInuHng=;
+        b=pmxG54KrJ9kJfEG6183Rd8lzwUptThkS2v6D1X2Bi0aAYwtlV23A7jm3JVBsgnB6KM
+         uqEhpqUgm1mGyKKR8cM0dUL2fTS2v3kbvP3S0gnZEld9c2LE5Lyp76QEA8sSBdbaAOrE
+         1DfgzW2BMnPA2unNDY9k/I/8L0y1Ht1dxonT8b2d+iC4hIYsn6rSCsd+vre0y/xP/inM
+         u7uxrwGWnMIUdCQYVDIKY4PnZWUAujXxQqLKlFvZB5gRcUKT++q9Eh5ai5VC1FX+wEf9
+         SboQ/lRzLvotmXQPOcog+/LC6ZNV3o4Hff/kSWAMBsjexM8zlIY+G27kwt0K83l55QKy
+         npmw==
+X-Gm-Message-State: APjAAAXHY7KxJVPnZMgyQE1cDqSVGdByw/yY6nqTkMPM2jvyc6CW6oDl
+        0vhW+et5UO4C2Lq5elXwK7x6sg==
+X-Google-Smtp-Source: APXvYqxegqPyfGwrsPeKCe2Fc5b+coPbLD+CyOyetuPlandyNKc5R4rscY0tB/vIdMYg0qC49XRILQ==
+X-Received: by 2002:a63:6d8d:: with SMTP id i135mr2003284pgc.303.1567671374527;
+        Thu, 05 Sep 2019 01:16:14 -0700 (PDT)
+Received: from drinkcat2.tpe.corp.google.com ([2401:fa00:1:b:d8b7:33af:adcb:b648])
+        by smtp.gmail.com with ESMTPSA id h186sm3490145pfb.63.2019.09.05.01.16.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2019 01:16:13 -0700 (PDT)
+From:   Nicolas Boichat <drinkcat@chromium.org>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Nick Fan <nick.fan@mediatek.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Subject: [PATCH] arm64: dts: mt8183: Add node for the Mali GPU
+Date:   Thu,  5 Sep 2019 16:15:46 +0800
+Message-Id: <20190905081546.42716-1-drinkcat@chromium.org>
+X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
 MIME-Version: 1.0
-In-Reply-To: <5d70991c.1c69fb81.c0590.2f13@mx.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add a basic GPU node and opp table for mt8183.
 
+The binding we use with out-of-tree Mali drivers includes more
+clocks, I assume this would be required eventually if we have an
+in-tree driver:
+clocks =
+        <&topckgen CLK_TOP_MFGPLL_CK>,
+        <&topckgen CLK_TOP_MUX_MFG>,
+        <&clk26m>,
+        <&mfgcfg CLK_MFG_BG3D>;
+clock-names =
+        "clk_main_parent",
+        "clk_mux",
+        "clk_sub_parent",
+        "subsys_mfg_cg";
 
-On 05/09/2019 06:11, Stephen Boyd wrote:
-> Quoting Srinivas Kandagatla (2019-08-29 02:29:26)
->> diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
->> index eee2bb398947..47ae84afac2e 100644
->> --- a/drivers/misc/fastrpc.c
->> +++ b/drivers/misc/fastrpc.c
->> @@ -550,6 +550,7 @@ static void fastrpc_dma_buf_detatch(struct dma_buf *dmabuf,
-> 
-> Is the function really called buf_detatch? Is it supposed to be
-> buf_detach?
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
 
-Thanks Stephen, for you keen observation on the spelling, I will send a 
-patch to fix that!
+---
+Upstreaming what matches existing bindings from our Chromium OS tree:
+https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-4.19/arch/arm64/boot/dts/mediatek/mt8183.dtsi#1348
 
-Looks like I inherited that from drivers/staging/android/ion/ion.c
+The evb part of this change depends on this patch to add PMIC dtsi:
+https://patchwork.kernel.org/patch/10928161/
 
---srini
+ arch/arm64/boot/dts/mediatek/mt8183-evb.dts |   7 ++
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 103 ++++++++++++++++++++
+ 2 files changed, 110 insertions(+)
 
-> 
->>          mutex_lock(&buffer->lock);
->>          list_del(&a->node);
->>          mutex_unlock(&buffer->lock);
->> +       sg_free_table(&a->sgt);
->>          kfree(a);
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+index 1fb195c683c3d01..200d8e65a6368a1 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
++++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+@@ -7,6 +7,7 @@
+ 
+ /dts-v1/;
+ #include "mt8183.dtsi"
++#include "mt6358.dtsi"
+ 
+ / {
+ 	model = "MediaTek MT8183 evaluation board";
+@@ -30,6 +31,12 @@
+ 	status = "okay";
+ };
+ 
++&gpu {
++	supply-names = "mali", "mali_sram";
++	mali-supply = <&mt6358_vgpu_reg>;
++	mali_sram-supply = <&mt6358_vsram_gpu_reg>;
++};
++
+ &i2c0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c_pins_0>;
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index 97f84aa9fc6e1c1..8ea548a762ea252 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -579,6 +579,109 @@
+ 			#clock-cells = <1>;
+ 		};
+ 
++		gpu: mali@13040000 {
++			compatible = "mediatek,mt8183-mali", "arm,mali-bifrost";
++			reg = <0 0x13040000 0 0x4000>;
++			interrupts =
++				<GIC_SPI 280 IRQ_TYPE_LEVEL_LOW>,
++				<GIC_SPI 279 IRQ_TYPE_LEVEL_LOW>,
++				<GIC_SPI 278 IRQ_TYPE_LEVEL_LOW>;
++			interrupt-names = "job", "mmu", "gpu";
++
++			clocks = <&topckgen CLK_TOP_MFGPLL_CK>;
++			power-domains =
++				<&scpsys MT8183_POWER_DOMAIN_MFG_CORE0>,
++				<&scpsys MT8183_POWER_DOMAIN_MFG_CORE1>,
++				<&scpsys MT8183_POWER_DOMAIN_MFG_2D>;
++
++			operating-points-v2 = <&gpu_opp_table>;
++		};
++
++		gpu_opp_table: opp_table0 {
++			compatible = "operating-points-v2";
++			opp-shared;
++
++			opp-300000000 {
++				opp-hz = /bits/ 64 <300000000>;
++				opp-microvolt = <625000>, <850000>;
++			};
++
++			opp-320000000 {
++				opp-hz = /bits/ 64 <320000000>;
++				opp-microvolt = <631250>, <850000>;
++			};
++
++			opp-340000000 {
++				opp-hz = /bits/ 64 <340000000>;
++				opp-microvolt = <637500>, <850000>;
++			};
++
++			opp-360000000 {
++				opp-hz = /bits/ 64 <360000000>;
++				opp-microvolt = <643750>, <850000>;
++			};
++
++			opp-380000000 {
++				opp-hz = /bits/ 64 <380000000>;
++				opp-microvolt = <650000>, <850000>;
++			};
++
++			opp-400000000 {
++				opp-hz = /bits/ 64 <400000000>;
++				opp-microvolt = <656250>, <850000>;
++			};
++
++			opp-420000000 {
++				opp-hz = /bits/ 64 <420000000>;
++				opp-microvolt = <662500>, <850000>;
++			};
++
++			opp-460000000 {
++				opp-hz = /bits/ 64 <460000000>;
++				opp-microvolt = <675000>, <850000>;
++			};
++
++			opp-500000000 {
++				opp-hz = /bits/ 64 <500000000>;
++				opp-microvolt = <687500>, <850000>;
++			};
++
++			opp-540000000 {
++				opp-hz = /bits/ 64 <540000000>;
++				opp-microvolt = <700000>, <850000>;
++			};
++
++			opp-580000000 {
++				opp-hz = /bits/ 64 <580000000>;
++				opp-microvolt = <712500>, <850000>;
++			};
++
++			opp-620000000 {
++				opp-hz = /bits/ 64 <620000000>;
++				opp-microvolt = <725000>, <850000>;
++			};
++
++			opp-653000000 {
++				opp-hz = /bits/ 64 <653000000>;
++				opp-microvolt = <743750>, <850000>;
++			};
++
++			opp-698000000 {
++				opp-hz = /bits/ 64 <698000000>;
++				opp-microvolt = <768750>, <868750>;
++			};
++
++			opp-743000000 {
++				opp-hz = /bits/ 64 <743000000>;
++				opp-microvolt = <793750>, <893750>;
++			};
++
++			opp-800000000 {
++				opp-hz = /bits/ 64 <800000000>;
++				opp-microvolt = <825000>, <925000>;
++			};
++		};
++
+ 		mmsys: syscon@14000000 {
+ 			compatible = "mediatek,mt8183-mmsys", "syscon";
+ 			reg = <0 0x14000000 0 0x1000>;
+-- 
+2.23.0.187.g17f5b7556c-goog
+
