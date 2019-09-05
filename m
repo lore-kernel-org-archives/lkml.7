@@ -2,116 +2,116 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01AF4C3A5AB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:14:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D8C9C3A5AB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF37321883
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:13:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CMd3yrld"
+	by mail.kernel.org (Postfix) with ESMTP id 1800D22CEC
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:16:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567682186;
+	bh=+Ngi9GoneR0+xaQyOFn0Cdw5Tsg/+FcNM58Ucnjchoo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TCNZSXEExkyctn8ahPT/v5BPKEwILVDVTGBSNXJNMQ+GrrPi43DtEXSkltvGHM/f9
+	 Q5AL2VgtkZn0M3nYhDPgnq9IQmyfTaMplayF0INna4+EnDF5BM/suvtzypbkpCiAn/
+	 hQPwZqZzhee6iUbBW4kNiM1e5+Pwm8QmG6waIAfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732570AbfIELN7 (ORCPT
+        id S2387780AbfIELQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 07:13:59 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41445 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732090AbfIELN6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 07:13:58 -0400
-Received: by mail-lj1-f194.google.com with SMTP id a4so2016176ljk.8
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 04:13:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hVb3OF8Z1yUcAp1EC0wGieEJY1VYhAGYv9dxmBhAdNQ=;
-        b=CMd3yrldzyge7k1rGSlqrfxb2zyzXCZwifzGp2sdva/Ug31rtuPMdg/1TiF5qOiVuL
-         PA01RD4IEPI00S+jUUCtOPABJ1+BBQeQAbNm5pFqEv9b57m4v/RIiB+DAsniDmQNBiZI
-         ezvZ4uJu8v+gvFA2/nQYV0T6uTETR7SknY13uZq7IOFbqBNzlb+XSH/ZAQLDP7NEOozI
-         LfM5E3yXJTmpz7scocKK4yBK6Ekk7R/DJzUUqBlwQKPeyStYzvudfR2t7H7M8iaPW53K
-         SbTtOB0rH2F44WrKIzvL0t5JPZo2VOKaoT7sLKZpb7FNJ6tkqmI6JfnRPsXU3ON9XheT
-         XRgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hVb3OF8Z1yUcAp1EC0wGieEJY1VYhAGYv9dxmBhAdNQ=;
-        b=sioCAKzGutVP1ncMVQedhaGNHbWJcT/WdM8GQ+BuBbSdUc16WPJ5954q7uyVY4eocy
-         XvScTUfwnw5ulJVnlPvy6a8VxXc6buJlXPy00RuX40LlKClGhc37neeJbniobW1xZVu9
-         x2MqbynNafYc1KOO8KnSu8fLklftbVSk7A/2nilcZdykejm9oWBz2S6IHBoXpQ8TVI4n
-         8FOGPnUXR55YzWzU0wmenj+YvmR3lNqGBOQfe+DTeO7Q5AZB+AL5tyXTjTgcAZcFIvRb
-         ZKCqo2U3tGIWvBowFP7RDLfLgV1mYP09CHWU2clD0sRwCAyKFJn/4TkZZe3Jds0ZsR/6
-         YakQ==
-X-Gm-Message-State: APjAAAV8AHT5bcxRzew11oKxhu8pkUwnMbg7QOTKVxRrPmAzSxG19iJM
-        0l8FYMY2kk75U1W1COSGAkkKrA2UosM=
-X-Google-Smtp-Source: APXvYqzhi25MQJx4FepzPT+vyEF5/SUZT0BCOG1lmKkN8q2WaXy7ytL75H31vK5Qawvs8R3VY1Qz0A==
-X-Received: by 2002:a2e:90c6:: with SMTP id o6mr1700683ljg.144.1567682036461;
-        Thu, 05 Sep 2019 04:13:56 -0700 (PDT)
-Received: from centauri (ua-84-219-138-247.bbcust.telenor.se. [84.219.138.247])
-        by smtp.gmail.com with ESMTPSA id m18sm379548lfb.73.2019.09.05.04.13.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 04:13:55 -0700 (PDT)
-Date:   Thu, 5 Sep 2019 13:13:53 +0200
-From:   Niklas Cassel <niklas.cassel@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>, linux-arm-msm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH] rpmsg: glink-smem: Name the edge based on parent
- remoteproc
-Message-ID: <20190905111353.GA1936@centauri>
-References: <20190820041656.17197-1-bjorn.andersson@linaro.org>
+        Thu, 5 Sep 2019 07:16:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55672 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732604AbfIELQY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 07:16:24 -0400
+Received: from linux-8ccs (charybdis-ext.suse.de [195.135.221.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 957E321883;
+        Thu,  5 Sep 2019 11:16:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567682183;
+        bh=+Ngi9GoneR0+xaQyOFn0Cdw5Tsg/+FcNM58Ucnjchoo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pU2eFvW5HfenoH+To4/oSVkLeQI2FBOiG5hX1GqEMy1b2Q7w9d9+tL2UdeK2BQd2Q
+         kNSR8x789mrQCNe9TlydGmgY+MP7FDdIqE1ojxROLWqkHD5z32yFDTgxBUeLh/7Hbe
+         M4/KPgLKqNi6eHRn+vWGYTSJ9i9a6+NdeQS0znDE=
+Date:   Thu, 5 Sep 2019 13:16:17 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Matthew Dharm <mdharm-usb@one-eyed-alien.net>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Matthias Maennich <maennich@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        Martijn Coenen <maco@android.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Will Deacon <will@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        linux-modules@vger.kernel.org,
+        linux-usb <linux-usb@vger.kernel.org>,
+        USB Mass Storage on Linux 
+        <usb-storage@lists.one-eyed-alien.net>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>
+Subject: Re: [usb-storage] Re: [PATCH v4 12/12] RFC: watchdog: export core
+ symbols in WATCHDOG_CORE namespace
+Message-ID: <20190905111617.GB27788@linux-8ccs>
+References: <20180716122125.175792-1-maco@android.com>
+ <20190903150638.242049-1-maennich@google.com>
+ <20190903150638.242049-13-maennich@google.com>
+ <20190903161045.GA22754@roeck-us.net>
+ <CAK7LNARYqqCSCc0G4FL7_bj80iMoLLJrUJ7B3+huD25EUkrttA@mail.gmail.com>
+ <c6ac941c-06a4-e5dc-5cb9-fca7b40d7e9a@roeck-us.net>
+ <CAA6KcBBeP9xYbVws4=RMFNA4kyrodE-R3mifhbkee-Q+jFRcoQ@mail.gmail.com>
+ <20190905104147.GA27788@linux-8ccs>
+ <CAK8P3a0rf0PhXK1RdF1mWTyGggBJeH0h0YOCxDvJFgxu8wmWKw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20190820041656.17197-1-bjorn.andersson@linaro.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CAK8P3a0rf0PhXK1RdF1mWTyGggBJeH0h0YOCxDvJFgxu8wmWKw@mail.gmail.com>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 09:16:56PM -0700, Bjorn Andersson wrote:
-> Naming the glink edge device on the parent of_node short name causes
-> collisions when multiple remoteproc instances with only different unit
-> address are described on the platform_bus in DeviceTree.
-> 
-> Base the edge's name on the parent remoteproc's name instead, to ensure
-> that it's unique.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  drivers/rpmsg/qcom_glink_smem.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/rpmsg/qcom_glink_smem.c b/drivers/rpmsg/qcom_glink_smem.c
-> index 64a5ce324c7f..4238383d8685 100644
-> --- a/drivers/rpmsg/qcom_glink_smem.c
-> +++ b/drivers/rpmsg/qcom_glink_smem.c
-> @@ -201,7 +201,7 @@ struct qcom_glink *qcom_glink_smem_register(struct device *parent,
->  	dev->parent = parent;
->  	dev->of_node = node;
->  	dev->release = qcom_glink_smem_release;
-> -	dev_set_name(dev, "%pOFn:%pOFn", node->parent, node);
-> +	dev_set_name(dev, "%s:%pOFn", dev_name(parent->parent), node);
->  	ret = device_register(dev);
->  	if (ret) {
->  		pr_err("failed to register glink edge\n");
-> -- 
-> 2.18.0
-> 
++++ Arnd Bergmann [05/09/19 12:52 +0200]:
+>On Thu, Sep 5, 2019 at 12:41 PM Jessica Yu <jeyu@kernel.org> wrote:
+>> +++ Matthew Dharm [04/09/19 09:16 -0700]:
+>> >On Wed, Sep 4, 2019 at 5:12 AM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+>> >HOWEVER, I have one question:  If these patches are included, and
+>> >someone wants to introduce a bit of code which needs to use two
+>> >symbols from different namespaces but with the same name, can that be
+>> >done?  That is, if driver A has symbol 'foo' and driver B has symbol
+>> >'foo' (both in their respective namespaces), and driver C wants to use
+>> >A.foo and B.foo, can that be supported?
+>>
+>> As of now, we currently don't support this - modpost will warn if a
+>> symbol is exported more than once (across modules + vmlinux), and the
+>> module loader currently assumes exported symbol names are unique.  Do
+>> you have a concrete use case? If there is a strong need for this, I
+>> don't think it'd be too hard to implement.
+>
+>I think what would prevent this from working in general is that having
+>two modules with the same exported symbol in different namespaces
+>won't link if you try to build both modules into the kernel itself.
+>
+>      Arnd
 
-This was sent 19 of August, then again (unchanged) on 29 of August.
+Ah yeah, you are right. I only tried building an identically named
+exported symbol in a module and in the kernel, and there I got away
+with a modpost warning. But this breaks when building the module into
+the kernel, so I guess this is out of the question.
 
-Yet it is still not in linux-next.
-It fixes a real issue on qcs404, so please merge :)
+Thanks,
 
-
-Kind regards,
-Niklas
+Jessica
 
