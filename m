@@ -2,107 +2,61 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B121C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 07:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAABDC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 07:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B78572168B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 07:37:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="HRdBCTR2";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="wPmD0kuH"
+	by mail.kernel.org (Postfix) with ESMTP id A73A72145D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 07:37:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732065AbfIEHhH (ORCPT
+        id S1732090AbfIEHhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 03:37:07 -0400
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:48851 "EHLO
-        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730809AbfIEHhG (ORCPT
+        Thu, 5 Sep 2019 03:37:24 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:42770 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730809AbfIEHhX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 03:37:06 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id 2816B7B9;
-        Thu,  5 Sep 2019 03:37:03 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Thu, 05 Sep 2019 03:37:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=ms9HUSMQgwEBaFLYYsWKEq7yUGv
-        U90TU6t4GZB0HnsU=; b=HRdBCTR2/1P5NuKJKWFzJHCW4i1AXKez5LyG5+fbZgW
-        hIXxqru5zy8s8LQM2RkrFz86BhHJVPVwVWUJY5k75OLzrouUoK+dXyl7NH6jRBKd
-        c6WTv013VkKjlj0TVvf4p6OhwOf5x5Axubt4B7ig1ARtenpv1zP63SWjXeqPgrnj
-        i4tNKbI4kZVqw1XRA07Mj8IZZ71LWQ7qjgjA6vGWxLhefSItLqbZPR5Ei7bZkkTm
-        BLTagIjC8lucqdVvvVk6ZUgjaxh1Ak4HLO894fP5B6sSDnwCJZK6HxcudIvb/sKn
-        FvSbbfWbE2SJ4kgYV1OdLEEQOdElJWlcW33q2Naq6gQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=ms9HUS
-        MQgwEBaFLYYsWKEq7yUGvU90TU6t4GZB0HnsU=; b=wPmD0kuHCKv+1Tm/BuxIlS
-        cPj3tGAHCNFxVxf+VlZg0W6dCEQeLTGhNA49K4kvC0P4qCHCiF9Ym63SxQOz1WgL
-        3RowvonH3ZRoWayE/XLTQmFT27GKQ9a9XQsXWdc7kP0PeDHo2FZqTOZnNwPmx2Pm
-        98R/OZcJrLfh3OGoQO+K3keBHgjmqdBuutgpARtOz1B8Jog3MW3TIS8POB/B9NNE
-        3MnEwxnYbfs/FpGMOSNeEGSoxMRu0XeB/SZHcXpfwhuVXccCpmgl57MSX+1y4vSZ
-        VcMoEZx3BzB3RkIfiSyquDN8wmG5dyeX4Bn1NtjwfIt4yqtTTnOl488AC7jbCbNA
-        ==
-X-ME-Sender: <xms:HrtwXXkup2N1uuKdmKnzoEA_7p1-JJN8NQe-_TSZtoHeqaxRp1KF3A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudejiedgudduiecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfhfgggtuggjfgesth
-    dtredttdervdenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtgho
-    mheqnecukfhppeekfedrkeeirdekledruddtjeenucfrrghrrghmpehmrghilhhfrhhomh
-    epghhrvghgsehkrhhorghhrdgtohhmnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:HrtwXRbAww2rgi9tiP6C1V4TrspSZ65cf7ly2V839tbcdJCK4ZK9Qw>
-    <xmx:HrtwXa25vVRoNRdMdCygr9_sh0fwhVI2wG4brMzTzYSBALpdWMID_Q>
-    <xmx:HrtwXRpeSsgR7XIxn6Ab0BeSDk4X1YsXk9JovxyrFLDeL3IQBVCi0Q>
-    <xmx:HrtwXbWF9L82id3fLfOV7nSJWVzKy0F9RD1JBbiI02PROPkl0nevDg>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 4844ED60063;
-        Thu,  5 Sep 2019 03:37:02 -0400 (EDT)
-Date:   Thu, 5 Sep 2019 09:37:00 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Ajay.Kathat@microchip.com
-Cc:     Eugen.Hristev@microchip.com, Adham.Abozaeid@microchip.com,
-        linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org,
+        Thu, 5 Sep 2019 03:37:23 -0400
+Received: from localhost (unknown [62.21.130.100])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 876E815383DDF;
+        Thu,  5 Sep 2019 00:37:21 -0700 (PDT)
+Date:   Thu, 05 Sep 2019 00:37:19 -0700 (PDT)
+Message-Id: <20190905.003719.181800411074203471.davem@davemloft.net>
+To:     colin.king@canonical.com
+Cc:     jhs@mojatatu.com, xiyou.wangcong@gmail.com, jiri@resnulli.us,
+        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] staging: dt-bindings: wilc1000: add optional rtc_clk
- property
-Message-ID: <20190905073700.GA30339@kroah.com>
-References: <1567603548-13355-1-git-send-email-eugen.hristev@microchip.com>
- <da5ea898-d8da-a6e2-97a0-4662b7d70b31@microchip.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <da5ea898-d8da-a6e2-97a0-4662b7d70b31@microchip.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Subject: Re: [PATCH][next] net/sched: cbs: remove redundant assignment to
+ variable port_rate
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190902182637.22167-1-colin.king@canonical.com>
+References: <20190902182637.22167-1-colin.king@canonical.com>
+X-Mailer: Mew version 6.8 on Emacs 26.2
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 05 Sep 2019 00:37:23 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 06:09:43AM +0000, Ajay.Kathat@microchip.com wrote:
-> Hi Eugen,
-> 
-> On 04-Sep-19 7:03 PM, Eugen Hristev - M18282 wrote:
-> > From: Eugen Hristev <eugen.hristev@microchip.com>
-> > 
-> > Add bindings for optional rtc clock pin.
-> > 
-> > Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> 
-> Thanks for sending the patch series. The changes in this series looks
-> good to me.
-> 
-> Acked-by: Ajay Singh <ajay.kathat@microchip.com>
+From: Colin King <colin.king@canonical.com>
+Date: Mon,  2 Sep 2019 19:26:37 +0100
 
-This is good, but, you are adding new features to the driver, when it is
-still in the staging directory.  What's the plan on getting it out of
-here?  What is left to do?
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Variable port_rate is being initialized with a value that is never read
+> and is being re-assigned a little later on. The assignment is redundant
+> and hence can be removed.
+> 
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-thanks,
-
-greg k-h
+Applied.
