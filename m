@@ -7,145 +7,185 @@ X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D3BC3A59E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 00:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41168C3A59E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 00:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A09B22CF7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 00:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DA8A20828
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 00:19:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RFscreOg"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JIHX+RDg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730324AbfIEATF (ORCPT
+        id S1730390AbfIEATy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 20:19:05 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41497 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727722AbfIEATE (ORCPT
+        Wed, 4 Sep 2019 20:19:54 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:43981 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727789AbfIEATx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 20:19:04 -0400
-Received: by mail-pg1-f196.google.com with SMTP id x15so338047pgg.8
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 17:19:04 -0700 (PDT)
+        Wed, 4 Sep 2019 20:19:53 -0400
+Received: by mail-io1-f67.google.com with SMTP id u185so598825iod.10
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 17:19:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=lvl67MVvuI7hrqwUxQ6/9R19L/ScUzDtg4FInDuKyNs=;
-        b=RFscreOg08IfubTlLj2YYhjd0OvNG3zaaPaFHTZbdCE9qdNznzVZhaZ2UKIvwlvkjr
-         3wVdpNot1KLmfS5xwyOtVNZwTO42xUVmrhtIi5I+eTVXcJOzQUm7FwuSETQypmJPjTlF
-         bGFoZxRct4EUSawtVplUB9tyGqQ4TBIszPJDwUMWTw8mP3UPkXUagFieaKDRAyl60Zht
-         bDD6K4I/k21yxuQK3G85JyC1IEFHUrOpL7+N9AM11LFk7NaE5F/GcWG1PJ77pP5mtUWF
-         aCckbTvvevKqzwE4iWinj1k432oGbcxdo0ICucsmQh5sm5FFkyR2qY/NC1BawKPm3YnD
-         9WHw==
+        bh=I8FjvM+xZTfjefVntC7Dkwl+p61IeCQldrgQjZXcaMg=;
+        b=JIHX+RDghUdIkvnOdsM/PY8Y7heFzotLjcftXFtKBpKuB4dz/K/XDAKxzWaKg2I1XC
+         Vz6sMON5ZX1+8KMKoRoviWAlzywzbYUMen6tQnECNBUudaP2dmUn0fO0cZ/xzXG/JEYy
+         XzjJog43uBwHAuzDACxL6soXKKxy24vzAA8ngXf+U4mCsy+Nm5e+I415ka9/O++sPGSe
+         fnNZytDBJGmQWy2v6LF4iQ00F1c6A5ZBf+AgDGwSvz2dKQnhghssnjXyk2pM9qfvWKZv
+         Zn3ukQ2GzcoYmz3jm59o1v8fRDjqYxeTBQ6tqje9/9gpM71maD+qdtJiiX/vOjAxDI00
+         19Bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=lvl67MVvuI7hrqwUxQ6/9R19L/ScUzDtg4FInDuKyNs=;
-        b=Kzt2Z5Jyqdn1z7Nh5XPoRzZSsSBajEnRA446Ajjr2ioPmMRij1TgMgxzabWyTh+zjh
-         I/jrGv45Ha0ln9RsnERP+u68y/dh4QPZBPwLbFmcT2pTybNBGqAkrw3eGTG2IFyuxhB7
-         xHN0eEcn1bZjayiVst49mFHeh8Tut88CbGf+HmIxBNnBfSx7CLEulAe/vXJ+eLC93vGk
-         R2NGwNRgE0iH3ACUdfC2Qocg9JVDHP7rttomj1937bsF7BYqVV53Vzb50itvv1HsnyG7
-         ZAUF9WgfrEPqySL7E9BWXPgIGIU24/c7437asLB+q3ik/SstMU/n/FwHLMn7SI53R4EF
-         dr7Q==
-X-Gm-Message-State: APjAAAW3qN+XX+DCZXzfwAlyQ3EjRzRIfRRWp/emMvMi+FLMXRpQmKIW
-        NEUbe15/Qo/lASPo/cd1JbgLZlhw0MD3VEgMok7HlA==
-X-Google-Smtp-Source: APXvYqzEOCkCAIB1YFUArWFiPwMn0AJJ8uD2OG1xz/LXXXe9XB6CELnv3wFQJEXjQepqihUzvqJYtvdGAdPstYJqHh4=
-X-Received: by 2002:aa7:8085:: with SMTP id v5mr439950pff.165.1567642743648;
- Wed, 04 Sep 2019 17:19:03 -0700 (PDT)
+        bh=I8FjvM+xZTfjefVntC7Dkwl+p61IeCQldrgQjZXcaMg=;
+        b=ixZbZa+6JQS6TJXeY2/2cf2KNfP0xrUo2XYqMAWn/Bxl0RQ/VbxBUhRcg67xXRpUE7
+         0rDtne9msrUvz+CcYwGJATmYNGT9brz6HnSZ57F4565YIymVupumdmueD8aNFAjPC1Eb
+         G++jwJEo1+hbOCofpS+DZ32/bR2IoVoiH9pgdKq/FnqFvw0p96LePAIH2pOdOcmTvERc
+         SgnhpnL86vU9//ADP8regVxAlBiDlT0eQpVRrc1kmeh9HERz1RpJ4zTKPoTun5s0x/2Q
+         cu+yDJj9DQEDHhbtPMU4wYMBO8jx0KZ89pEsgJjsrJFlJ1ZhqtK5GahIP/oG7R5uXBue
+         Y8DA==
+X-Gm-Message-State: APjAAAU/85/sCvVkdKuvvTacEx2Jricy/CguEFCHSzGeEoQl54Cv9bch
+        bGPRGlTnlgHvKlqWzxLcP8bqgNbOkUgYXLy7fTRHLQ==
+X-Google-Smtp-Source: APXvYqx9xqc2bk9SyNoy04T4d/UrBaK+colXw+QVDalT4kFoA0/MgtWHqJfi7ZY+6elUnmiRCt3C3nCSUIGJ9hBpR7o=
+X-Received: by 2002:a5d:9696:: with SMTP id m22mr936477ion.14.1567642792697;
+ Wed, 04 Sep 2019 17:19:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190829083233.24162-1-linux@rasmusvillemoes.dk>
- <20190830231527.22304-1-linux@rasmusvillemoes.dk> <20190830231527.22304-5-linux@rasmusvillemoes.dk>
-In-Reply-To: <20190830231527.22304-5-linux@rasmusvillemoes.dk>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 4 Sep 2019 17:18:52 -0700
-Message-ID: <CAKwvOdktYpMH8WnEQwNE2JJdKn4w0CHv3L=YHkqU2JzQ6Qwkew@mail.gmail.com>
-Subject: Re: [PATCH v2 4/6] compiler-gcc.h: add asm_inline definition
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
+References: <20190904214505.GA15093@swahl-linux> <CAKwvOdnX3qVq1wGovViyGJSnySKzCATU4SU_ASsL-9XfDZ8+Eg@mail.gmail.com>
+ <CAMVonLiOB4PnbnLGo9gP8MK8kGd_e9vW_t+GOPuHMO_RqmkKNA@mail.gmail.com>
+In-Reply-To: <CAMVonLiOB4PnbnLGo9gP8MK8kGd_e9vW_t+GOPuHMO_RqmkKNA@mail.gmail.com>
+From:   Vaibhav Rustagi <vaibhavrustagi@google.com>
+Date:   Wed, 4 Sep 2019 17:19:41 -0700
+Message-ID: <CAMVonLjBcJm2DqyhybLjCDsm8P9jqSybvq0geDAfvbVn=P0N-g@mail.gmail.com>
+Subject: Re: [PATCH 1/1] x86/purgatory: Change compiler flags to avoid
+ relocation errors.
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Steve Wahl <steve.wahl@hpe.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        russ.anderson@hpe.com, dimitri.sivanich@hpe.com,
+        mike.travis@hpe.com, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 4:15 PM Rasmus Villemoes
-<linux@rasmusvillemoes.dk> wrote:
+On Wed, Sep 4, 2019 at 3:28 PM Vaibhav Rustagi
+<vaibhavrustagi@google.com> wrote:
 >
-> This adds an asm_inline macro which expands to "asm inline" [1] when gcc
-> is new enough (>= 9.1), and just asm for older gccs and other
-> compilers.
+> On Wed, Sep 4, 2019 at 3:19 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
+> >
+> > + (folks recommended by ./scripts/get_maintainer.pl <patchfile>)
+> > (See also, step 7:
+> > https://nickdesaulniers.github.io/blog/2017/05/16/submitting-your-first-patch-to-the-linux-kernel-and-responding-to-feedback/)
+> >
+> > On Wed, Sep 4, 2019 at 2:45 PM Steve Wahl <steve.wahl@hpe.com> wrote:
+> > >
+> > > The last change to this Makefile caused relocation errors when loading
+> >
+> > It's good to add a fixes tag like below when a patch fixes a
+> > regression, so that stable backports the fix as far back as the
+> > regression:
+> > Fixes: b059f801a937 ("x86/purgatory: Use CFLAGS_REMOVE rather than
+> > reset KBUILD_CFLAGS")
+> >
+> > > a kdump kernel.  This change restores the appropriate flags, without
+> > > reverting to the former practice of resetting KBUILD_CFLAGS.
+> > >
+> > > Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
+> > > ---
+> > >  arch/x86/purgatory/Makefile | 35 +++++++++++++++++++----------------
+> > >  1 file changed, 19 insertions(+), 16 deletions(-)
+> > >
+> > > diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
+> > > index 8901a1f89cf5..9f0bfef1f5db 100644
+> > > --- a/arch/x86/purgatory/Makefile
+> > > +++ b/arch/x86/purgatory/Makefile
+> > > @@ -18,37 +18,40 @@ targets += purgatory.ro
+> > >  KASAN_SANITIZE := n
+> > >  KCOV_INSTRUMENT := n
+> > >
+> > > +# These are adjustments to the compiler flags used for objects that
+> > > +# make up the standalone porgatory.ro
+> > > +
+> > > +PURGATORY_CFLAGS_REMOVE := -mcmodel=kernel
+> > > +PURGATORY_CFLAGS := -mcmodel=large -ffreestanding -fno-zero-initialized-in-bss
+> >
+> > Thanks for confirming the fix.  While it sounds like -mcmodel=large is
+> > the only necessary change, I don't object to -ffreestanding of
+> > -fno-zero-initialized-in-bss being readded, especially since I think
+> > what you've done with PURGATORY_CFLAGS_REMOVE is more concise.
+> > Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> > Vaibhav, do you still have an environment setup to quickly test this
+> > again w/ Clang builds?
 >
-> Using asm inline("foo") instead of asm("foo") overrules gcc's
-> heuristic estimate of the size of the code represented by the asm()
-> statement, and makes gcc use the minimum possible size instead. That
-> can in turn affect gcc's inlining decisions.
+> I will setup the environment and will try the changes.
 >
-> I wasn't sure whether to make this a function-like macro or not - this
-> way, it can be combined with volatile as
->
->   asm_inline volatile()
->
-> but perhaps we'd prefer to spell that
->
->   asm_inline_volatile()
->
-> anyway.
->
-> [1] Technically, asm __inline, since both inline and __inline__
-> are macros that attach various attributes, making gcc barf if one
-> literally does "asm inline()". However, the third spelling __inline is
-> available for referring to the bare keyword.
->
-> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> ---
->  include/linux/compiler-gcc.h   | 4 ++++
->  include/linux/compiler_types.h | 4 ++++
->  2 files changed, 8 insertions(+)
->
-> diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
-> index d7ee4c6bad48..544b87b41b58 100644
-> --- a/include/linux/compiler-gcc.h
-> +++ b/include/linux/compiler-gcc.h
-> @@ -172,3 +172,7 @@
->  #endif
->
->  #define __no_fgcse __attribute__((optimize("-fno-gcse")))
-> +
-> +#if GCC_VERSION >= 90100
+I tried the changes and kdump was working.
 
-Is it too late to ask for a feature test macro? Maybe one already
-exists?  I was not able to find documentation or a bug on `asm
-inline`.  I'm quite curious how you even found or heard of this
-feature.  To the source we must go...
-
-> +#define asm_inline asm __inline
-> +#endif
-> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-> index ee49be6d6088..ba8d81b716c7 100644
-> --- a/include/linux/compiler_types.h
-> +++ b/include/linux/compiler_types.h
-> @@ -198,6 +198,10 @@ struct ftrace_likely_data {
->  #define asm_volatile_goto(x...) asm goto(x)
->  #endif
->
-> +#ifndef asm_inline
-> +#define asm_inline asm
-> +#endif
-> +
->  #ifndef __no_fgcse
->  # define __no_fgcse
->  #endif
-> --
-> 2.20.1
->
-
-
--- 
-Thanks,
-~Nick Desaulniers
+> > Tglx, we'll likely want to get this into 5.3 if it's not too late (I
+> > saw Miguel Ojeda mention there might be an -rc8)?
+> >
+> > > +
+> > >  # Default KBUILD_CFLAGS can have -pg option set when FTRACE is enabled. That
+> > >  # in turn leaves some undefined symbols like __fentry__ in purgatory and not
+> > >  # sure how to relocate those.
+> > >  ifdef CONFIG_FUNCTION_TRACER
+> > > -CFLAGS_REMOVE_sha256.o         += $(CC_FLAGS_FTRACE)
+> > > -CFLAGS_REMOVE_purgatory.o      += $(CC_FLAGS_FTRACE)
+> > > -CFLAGS_REMOVE_string.o         += $(CC_FLAGS_FTRACE)
+> > > -CFLAGS_REMOVE_kexec-purgatory.o        += $(CC_FLAGS_FTRACE)
+> > > +PURGATORY_CFLAGS_REMOVE                += $(CC_FLAGS_FTRACE)
+> > >  endif
+> > >
+> > >  ifdef CONFIG_STACKPROTECTOR
+> > > -CFLAGS_REMOVE_sha256.o         += -fstack-protector
+> > > -CFLAGS_REMOVE_purgatory.o      += -fstack-protector
+> > > -CFLAGS_REMOVE_string.o         += -fstack-protector
+> > > -CFLAGS_REMOVE_kexec-purgatory.o        += -fstack-protector
+> > > +PURGATORY_CFLAGS_REMOVE                += -fstack-protector
+> > >  endif
+> > >
+> > >  ifdef CONFIG_STACKPROTECTOR_STRONG
+> > > -CFLAGS_REMOVE_sha256.o         += -fstack-protector-strong
+> > > -CFLAGS_REMOVE_purgatory.o      += -fstack-protector-strong
+> > > -CFLAGS_REMOVE_string.o         += -fstack-protector-strong
+> > > -CFLAGS_REMOVE_kexec-purgatory.o        += -fstack-protector-strong
+> > > +PURGATORY_CFLAGS_REMOVE                += -fstack-protector-strong
+> > >  endif
+> > >
+> > >  ifdef CONFIG_RETPOLINE
+> > > -CFLAGS_REMOVE_sha256.o         += $(RETPOLINE_CFLAGS)
+> > > -CFLAGS_REMOVE_purgatory.o      += $(RETPOLINE_CFLAGS)
+> > > -CFLAGS_REMOVE_string.o         += $(RETPOLINE_CFLAGS)
+> > > -CFLAGS_REMOVE_kexec-purgatory.o        += $(RETPOLINE_CFLAGS)
+> > > +PURGATORY_CFLAGS_REMOVE                += $(RETPOLINE_CFLAGS)
+> > >  endif
+> > >
+> > > +CFLAGS_REMOVE_purgatory.o      += $(PURGATORY_CFLAGS_REMOVE)
+> > > +CFLAGS_purgatory.o             += $(PURGATORY_CFLAGS)
+> > > +
+> > > +CFLAGS_REMOVE_sha256.o         += $(PURGATORY_CFLAGS_REMOVE)
+> > > +CFLAGS_sha256.o                        += $(PURGATORY_CFLAGS)
+> > > +
+> > > +CFLAGS_REMOVE_string.o         += $(PURGATORY_CFLAGS_REMOVE)
+> > > +CFLAGS_string.o                        += $(PURGATORY_CFLAGS)
+> > > +
+> > >  $(obj)/purgatory.ro: $(PURGATORY_OBJS) FORCE
+> > >                 $(call if_changed,ld)
+> > >
+> > > --
+> > > 2.12.3
+> > >
+> >
+> >
+> > --
+> > Thanks,
+> > ~Nick Desaulniers
