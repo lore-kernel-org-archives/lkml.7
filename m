@@ -2,97 +2,87 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD49C00306
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A674CC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAF0F206CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:54:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L0jomP63"
+	by mail.kernel.org (Postfix) with ESMTP id F1D5020820
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:57:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390136AbfIEOyc (ORCPT
+        id S2388676AbfIEO5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 10:54:32 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41616 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390090AbfIEOyc (ORCPT
+        Thu, 5 Sep 2019 10:57:14 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:43173 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726088AbfIEO5O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 10:54:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=s6tAAQYhXVNkbT0qRFk7hwIqccKZKc+HllFbPMAhXzQ=; b=L0jomP63rgBFMv/c20KdK1HHI
-        na/AFiiTkpvGZuPuT6Gypw9honlxILA27VWorgleWFoB/8nMjgSKel7vSdDzdLVpNOfptyQdop144
-        wLK0UjdZXIb4HkM1tOBTi0XvjXCitR7WI6YiFycciC9jDjRsIMAggvjUbQcLHiG9cCUqmmnnH9KVY
-        6su+2m9aQoaZAsc2+vMB/qQXgmZOFEeCiWRT+sAeNNFGd9uiZ4l66D5vMgrjH5PShjQJQ3MIbzyWv
-        aHzbbkFtlvVo7Vo9L+P+z+Z6mbb6qPScQCzbAKeREG0DWBQ0tE36Ce29Eo51LIVUfjo4Robd1OKq/
-        mfkyuGXQQ==;
-Received: from [2601:1c0:6200:6e8::e2a8]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i5t9a-0001B5-D4; Thu, 05 Sep 2019 14:54:30 +0000
-Subject: Re: linux-next: Tree for Sep 4 (amd/display/)
-To:     Harry Wentland <hwentlan@amd.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "Wentland, Harry" <Harry.Wentland@amd.com>,
-        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>
-References: <20190904233443.3f73c46b@canb.auug.org.au>
- <6b70fdfd-1f18-1e55-2574-7be5997cfb2a@infradead.org>
- <752f74d6-f6ff-6013-25ad-a8fdce934d17@amd.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <d29463cd-0497-41f2-a502-110b02c7abc8@infradead.org>
-Date:   Thu, 5 Sep 2019 07:54:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 5 Sep 2019 10:57:14 -0400
+Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i5tCB-00038e-IJ; Thu, 05 Sep 2019 16:57:11 +0200
+Date:   Thu, 5 Sep 2019 16:57:10 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Frederic Weisbecker <frederic@kernel.org>
+cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [patch 0/6] posix-cpu-timers: Fallout fixes and permission
+ tightening
+In-Reply-To: <20190905144829.GA18251@lenoir>
+Message-ID: <alpine.DEB.2.21.1909051650030.1902@nanos.tec.linutronix.de>
+References: <20190905120339.561100423@linutronix.de> <20190905144829.GA18251@lenoir>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <752f74d6-f6ff-6013-25ad-a8fdce934d17@amd.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/5/19 6:17 AM, Harry Wentland wrote:
+On Thu, 5 Sep 2019, Frederic Weisbecker wrote:
+> On Thu, Sep 05, 2019 at 02:03:39PM +0200, Thomas Gleixner wrote:
+> > Sysbot triggered an issue in the posix timer rework which was trivial to
+> > fix, but after running another test case I discovered that the rework broke
+> > the permission checks subtly. That's also a straightforward fix.
+> > 
+> > Though when staring at it I discovered that the permission checks for
+> > process clocks and process timers are completely bonkers. The only
+> > requirement is that the target PID is a group leader. Which means that any
+> > process can read the clocks and attach timers to any other process without
+> > priviledge restrictions.
+> > 
+> > That's just wrong because the clocks and timers can be used to observe
+> > behaviour and both reading the clocks and arming timers adds overhead and
+> > influences runtime performance of the target process.
 > 
+> Yeah I stumbled upon that by the past and found out the explanation behind
+> in old history: https://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git/commit/kernel/posix-cpu-timers.c?id=a78331f2168ef1e67b53a0f8218c70a19f0b2a4c
 > 
-> On 2019-09-04 4:58 p.m., Randy Dunlap wrote:
->> On 9/4/19 6:34 AM, Stephen Rothwell wrote:
->>> Hi all,
->>>
->>> News: this will be the last linux-next I will release until Sept 30.
->>>
->>> Changes since 20190903:
->>>
->>
->> on x86_64:
->>
->> In file included from ../drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn20/display_rq_dlg_calc_20v2.c:77:0:
->> ../drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn20/../dml_inline_defs.h: In function ‘dml_min’:
->> ../drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn20/../dml_inline_defs.h:34:1: error: SSE register return with SSE disabled
->>
+> "This makes no constraint on who can see whose per-process clocks.  This
+> information is already available for the VIRT and PROF (i.e.  utime and stime)
+> information via /proc.  I am open to suggestions on if/how security
+> constraints on who can see whose clocks should be imposed."
 > 
-> Is that fixed by Stephen's fixup here?
-> 
-> https://lists.freedesktop.org/archives/dri-devel/2019-September/234292.html
+> I'm all for mitigating that, let's just hope that won't break some ABIs.
 
-That patch is already in linux-next, so No, it's not.
+Well, reading clocks is one part of the issue. Arming timers on any process
+is a different story.
 
-I am using:
-> gcc --version
-gcc (SUSE Linux) 7.4.1 20190424 [gcc-7-branch revision 270538]
+Also /proc/$PID access can be restricted nowadays. So that posic clock
+stuff should at least have exactly the same restrictions.
 
+Thanks,
 
--- 
-~Randy
+	tglx
+
