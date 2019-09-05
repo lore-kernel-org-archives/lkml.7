@@ -2,138 +2,113 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.2 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20CA9C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B9D3C3A5AB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB3002080C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:23:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567675402;
-	bh=FM76sK1BeWDS2lV+QlGP7EfkJLzR+yGBWlteGpGZ/4g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZjEIfY4szemEgPNo1pRRmdhYwLEzHUvpwBJAwhuuf/9OpGhz13fTvK14J+ZDEoPuf
-	 k4CsFlzyv3AmPPzWCqbgJQH6DxZLn6T40A9F1RosE1Kl8VNaRHJ7dCCKZq7wnHoori
-	 I0MZCAWlcYryh7Tke1IleR+PKKtU/BCw67mTZvAA=
+	by mail.kernel.org (Postfix) with ESMTP id 6D84A22CEC
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:23:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733277AbfIEJXV (ORCPT
+        id S1733295AbfIEJXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 05:23:21 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39726 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725290AbfIEJXU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 05:23:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Nq0/AIfadmx52mPl01oTaYnDgOBbCeLTbcoEAfHL7Zg=; b=hY0wRutmWAyrVgIclY0UBKDXKG
-        kDGfkFIQYuNG822t5f4eBDptsd3awjVjgfBUMMtc02l+fOdNCuTVIWWVV2uklrEtK/e2TlLg01r/O
-        QwrRFsHTdIJhsLEQeSuqvuSBdDy+Zx8+HsyQ2SIuAJmMfN03jYXny65bTTmpaexB2qVMIgq5wiAoi
-        OdhRu90dli4j8eJ4wOkp/tdNO3ePvNebZxzbx6hp5wFvuqvWLXy8uYegazKRo2K7Y2cejO1E31QF2
-        tGQ1U7XVnHgT5p0ldleCzasXAcfSTWzBRuTuNILnVgy7vfDdnrBQX88X2Bf+FXzNpaD2mpVVFd2rJ
-        V2cs1JPg==;
-Received: from 177.17.137.173.dynamic.adsl.gvt.net.br ([177.17.137.173] helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i5nz5-0005Be-W1; Thu, 05 Sep 2019 09:23:20 +0000
-Received: from mchehab by bombadil.infradead.org with local (Exim 4.92.1)
-        (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1i5nz3-0006tA-Kn; Thu, 05 Sep 2019 06:23:17 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Linux Media Mailing List <linux-media@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>, Jessica Yu <jeyu@kernel.org>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        Thomas Gleixner <tglx@linutronix.de>, linux-doc@vger.kernel.org
-Subject: [PATCH] docs: license-rules.txt: cover SPDX headers on Python scripts
-Date:   Thu,  5 Sep 2019 06:23:13 -0300
-Message-Id: <88e638eb959095ab6657d295f9f8c27169569bf2.1567675272.git.mchehab+samsung@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190905055614.7958918b@coco.lan>
-References: <20190905055614.7958918b@coco.lan>
+        Thu, 5 Sep 2019 05:23:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60800 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733279AbfIEJXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 05:23:24 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A0291190C034;
+        Thu,  5 Sep 2019 09:23:23 +0000 (UTC)
+Received: from redhat.com (unknown [10.42.17.64])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id EC0485D712;
+        Thu,  5 Sep 2019 09:23:19 +0000 (UTC)
+Date:   Thu, 5 Sep 2019 10:23:17 +0100
+From:   Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>
+To:     Stefan Hajnoczi <stefanha@redhat.com>
+Cc:     Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] KVM: inject data abort if instruction cannot be
+ decoded
+Message-ID: <20190905092317.GB14512@redhat.com>
+Reply-To: Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>
+References: <20190904180736.29009-1-xypron.glpk@gmx.de>
+ <20190905092039.GG32415@stefanha-x1.localdomain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190905092039.GG32415@stefanha-x1.localdomain>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Thu, 05 Sep 2019 09:23:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The author of the license-rules.rst file wanted to be very restrict
-with regards to the location of the SPDX header. It says that
-the SPDX header "shall be added at the first  possible line in
-a file which can contain a comment". Not happy with this already
-restrictive requiement, it goes further:
+On Thu, Sep 05, 2019 at 10:20:39AM +0100, Stefan Hajnoczi wrote:
+> On Wed, Sep 04, 2019 at 08:07:36PM +0200, Heinrich Schuchardt wrote:
+> > If an application tries to access memory that is not mapped, an error
+> > ENOSYS, "load/store instruction decoding not implemented" may occur.
+> > QEMU will hang with a register dump.
+> > 
+> > Instead create a data abort that can be handled gracefully by the
+> > application running in the virtual environment.
+> > 
+> > Now the virtual machine can react to the event in the most appropriate
+> > way - by recovering, by writing an informative log, or by rebooting.
+> > 
+> > Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+> > ---
+> >  virt/kvm/arm/mmio.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/virt/kvm/arm/mmio.c b/virt/kvm/arm/mmio.c
+> > index a8a6a0c883f1..0cbed7d6a0f4 100644
+> > --- a/virt/kvm/arm/mmio.c
+> > +++ b/virt/kvm/arm/mmio.c
+> > @@ -161,8 +161,8 @@ int io_mem_abort(struct kvm_vcpu *vcpu, struct kvm_run *run,
+> >  		if (ret)
+> >  			return ret;
+> >  	} else {
+> > -		kvm_err("load/store instruction decoding not implemented\n");
+> > -		return -ENOSYS;
+> > +		kvm_inject_dabt(vcpu, kvm_vcpu_get_hfar(vcpu));
+> > +		return 1;
+> 
+> I see this more as a temporary debugging hack than something to merge.
+> 
+> It sounds like in your case the guest environment provided good
+> debugging information and you preferred it over debugging this from the
+> host side.  That's fine, but allowing the guest to continue running in
+> the general case makes it much harder to track down the root cause of a
+> problem because many guest CPU instructions may be executed after the
+> original problem occurs.  Other guest software may fail silently in
+> weird ways.  IMO it's best to fail early.
 
-"For the majority  of files this is the first line, except for
-scripts", opening an exception to have the SPDX header at the
-second line, if the first line starts with "#!".
+The current error message is quite limited in its usefulness - mostly
+you have to be able to google the message and hope to hit a previous
+report which explains the problem, or find someone on IRC who remembers
+the problem, etc.
 
-Well, it turns that this is too restrictive for Python scripts,
-and may cause regressions if this would be enforced.
+Could we put a text doc in the kernel tree explaining the problem in
+enough detail that people can identify their next steps to resolve it,
+and then make this error message tell people to read that text doc.
 
-As mentioned on:
-	https://stackoverflow.com/questions/728891/correct-way-to-define-python-source-code-encoding
-
-Python's PEP-263 [1] dictates that an script that needs to default to
-UTF-8 encoding has to follow this rule:
-
-	'Python will default to ASCII as standard encoding if no other
-	 encoding hints are given.
-
-	 To define a source code encoding, a magic comment must be placed
-	 into the source files either as first or second line in the file'
-
-And:
-	'More precisely, the first or second line must match the following
-	 regular expression:
-
-	 ^[ \t\f]*#.*?coding[:=][ \t]*([-_.a-zA-Z0-9]+)'
-
-[1] https://www.python.org/dev/peps/pep-0263/
-
-If a script has both "#!" and the charset encoding line, we can't place
-a SPDX tag without either violating license-rules.rst or breaking the
-script by making it crash with non-ASCII characters.
-
-So, add a sort notice saying that, for Python scripts, the SPDX
-header may be up to the third line, in order to cover the case
-where both "#!" and "# .*coding.*UTF-8" lines are found.
-
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
----
- Documentation/process/license-rules.rst | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/process/license-rules.rst b/Documentation/process/license-rules.rst
-index 2ef44ada3f11..5d23e3498b1c 100644
---- a/Documentation/process/license-rules.rst
-+++ b/Documentation/process/license-rules.rst
-@@ -64,9 +64,12 @@ License identifier syntax
-    possible line in a file which can contain a comment.  For the majority
-    of files this is the first line, except for scripts which require the
-    '#!PATH_TO_INTERPRETER' in the first line.  For those scripts the SPDX
--   identifier goes into the second line.
-+   identifier goes into the second line\ [1]_.
- 
--|
-+.. [1] Please notice that Python scripts may also need an encoding rule
-+   as defined on PEP-263, which should be defined either at the first
-+   or the second line. So, for such scripts, the SPDX identifier may
-+   go up to the third line.
- 
- 2. Style:
- 
+Regards,
+Daniel
 -- 
-2.21.0
-
-
+|: https://berrange.com      -o-    https://www.flickr.com/photos/dberrange :|
+|: https://libvirt.org         -o-            https://fstop138.berrange.com :|
+|: https://entangle-photo.org    -o-    https://www.instagram.com/dberrange :|
