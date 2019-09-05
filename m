@@ -2,111 +2,151 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D4DCC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA38C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E34C32067B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D53F4206DE
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:41:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="YRaz4L/H"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AWvrPwxF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389128AbfIEQlK (ORCPT
+        id S2389711AbfIEQlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 12:41:10 -0400
-Received: from pio-pvt-msa2.bahnhof.se ([79.136.2.41]:57322 "EHLO
-        pio-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728601AbfIEQlK (ORCPT
+        Thu, 5 Sep 2019 12:41:15 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33176 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389171AbfIEQlO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 12:41:10 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 3CBE9402D7;
-        Thu,  5 Sep 2019 18:41:03 +0200 (CEST)
-Authentication-Results: pio-pvt-msa2.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=YRaz4L/H;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa2.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id M_JX_DVyuU9R; Thu,  5 Sep 2019 18:41:01 +0200 (CEST)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id AEC0A3F3E6;
-        Thu,  5 Sep 2019 18:40:59 +0200 (CEST)
-Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 455FE360160;
-        Thu,  5 Sep 2019 18:40:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1567701659; bh=ayKRPYZ+CmfcKZJe9cQlEdmv7Yf28QhP6pPc0p/MAdo=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=YRaz4L/H+NNuyFpurOwnxOfHXmulBAkLeXmItetqYzC4E7rqKx8k0Uw/t3SKSD1pL
-         ZsUvgpEG5ZbTfCmjnH5Q35hAsqPbYLh+e7fqHf55bmYxDHNj9SJ3a30I4G/hmRK21P
-         lzI6GdGknYhzyoH/q0GuT2tG/IKXRpB7fZk0uqOw=
-Subject: Re: [RFC PATCH 1/2] x86: Don't let pgprot_modify() change the page
- encryption bit
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, pv-drivers@vmware.com,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-References: <20190905103541.4161-1-thomas_os@shipmail.org>
- <20190905103541.4161-2-thomas_os@shipmail.org>
- <608bbec6-448e-f9d5-b29a-1984225eb078@intel.com>
- <b84d1dca-4542-a491-e585-a96c9d178466@shipmail.org>
- <20190905152438.GA18286@infradead.org>
-From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Organization: VMware Inc.
-Message-ID: <86b48953-69a2-c211-2b48-b796c07426bc@shipmail.org>
-Date:   Thu, 5 Sep 2019 18:40:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 5 Sep 2019 12:41:14 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q10so2130538pfl.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 09:41:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+vE/xgq+/pjwKf8dfb2af/ZSiNrPKjB3ZwnjuHKxh+M=;
+        b=AWvrPwxFX1/Q8s8cSwYNJOo0vrKppZiENlQpkaiPEQ2JYZS5lWq5Z2vDi7AsX1zCLW
+         Nvu6jA/eDGPnrFojK14zGC20vRKhNafMGTEJwukIJ/vlaPD/ife4+h34NFTqDtIoiGKn
+         lW295l8jAE/tibwqfChidrQQOP13hur3oVsPQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+vE/xgq+/pjwKf8dfb2af/ZSiNrPKjB3ZwnjuHKxh+M=;
+        b=L9WV5i5c8Vdmmc6p5a8bvldtz8ROilfzlqmFFEBCHkura3ziLsMW2eQX85tcxdKK1A
+         Yuem2eYySMYB5bijmwAuK/LAXKgmWdw6q00FRr95cCWeYEEP3ArC/TM3MQYBgr7xM6sB
+         fZBEl28RgEfTq1Y/FlUTrWWAMgLClZgrNix+ulS0Vxgv+u51OHDoZD2PNcJI5fnTWDuu
+         0dOpdyt0gM4imB+u9B7xGyh5vmCY/zgIo6+UgSG1SErPPvRqLfaHySqxreP1WXuF5jHZ
+         /nCjkokJrRUBfTX12y6T/caTTo/0HLO/H1a1kxWsrL8O6rKLP7E8hxNZMJJnat1Oie6/
+         HO4Q==
+X-Gm-Message-State: APjAAAUf66kq+gX9f38tpnYjmvROeLHUVaxDdMz2KJTs6gUx99KWApQM
+        acAIk3jqp8GUgeyQZHw30BtTgQ==
+X-Google-Smtp-Source: APXvYqzbl/dgUIkoIncTvp0wI0Dzxf5yKuX2pH6zBh62SAMuFpYC8Nvl6x+3TLdpYI4Mj4kPxmn3Hg==
+X-Received: by 2002:a17:90a:630a:: with SMTP id e10mr4784273pjj.25.1567701674170;
+        Thu, 05 Sep 2019 09:41:14 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id f12sm2663012pgo.85.2019.09.05.09.41.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2019 09:41:13 -0700 (PDT)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     linux-kernel@vger.kernel.org, "Theodore Ts'o" <tytso@mit.edu>,
+        linux-crypto@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Keerthy <j-keerthy@ti.com>
+Subject: [PATCH] random: Use wait_event_freezable() in add_hwgenerator_randomness()
+Date:   Thu,  5 Sep 2019 09:41:12 -0700
+Message-Id: <20190905164112.245886-1-swboyd@chromium.org>
+X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
 MIME-Version: 1.0
-In-Reply-To: <20190905152438.GA18286@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/5/19 5:24 PM, Christoph Hellwig wrote:
-> On Thu, Sep 05, 2019 at 05:21:24PM +0200, Thomas Hellström (VMware) wrote:
->> On 9/5/19 4:15 PM, Dave Hansen wrote:
->>> Hi Thomas,
->>>
->>> Thanks for the second batch of patches!  These look much improved on all
->>> fronts.
->> Yes, although the TTM functionality isn't in yet. Hopefully we won't have to
->> bother you with those though, since this assumes TTM will be using the dma
->> API.
-> Please take a look at dma_mmap_prepare and dma_mmap_fault in this
-> branch:
->
-> 	http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/dma-mmap-improvements
->
-> they should allow to fault dma api pages in the page fault handler.  But
-> this is totally hot off the press and not actually tested for the last
-> few patches.  Note that I've also included your two patches from this
-> series to handle SEV.
+Sebastian reports that after commit ff296293b353 ("random: Support freezable
+kthreads in add_hwgenerator_randomness()") we can call might_sleep() when the
+task state is TASK_INTERRUPTIBLE (state=1). This leads to the following warning.
 
-Thanks, Christoph.
+ do not call blocking ops when !TASK_RUNNING; state=1 set at [<00000000349d1489>] prepare_to_wait_event+0x5a/0x180
+ WARNING: CPU: 0 PID: 828 at kernel/sched/core.c:6741 __might_sleep+0x6f/0x80
+ Modules linked in:
 
-I'll get to this tomorrow.
+ CPU: 0 PID: 828 Comm: hwrng Not tainted 5.3.0-rc7-next-20190903+ #46
+ RIP: 0010:__might_sleep+0x6f/0x80
 
-/Thomas
+ Call Trace:
+  kthread_freezable_should_stop+0x1b/0x60
+  add_hwgenerator_randomness+0xdd/0x130
+  hwrng_fillfn+0xbf/0x120
+  kthread+0x10c/0x140
+  ret_from_fork+0x27/0x50
 
+We shouldn't call kthread_freezable_should_stop() from deep within the
+wait_event code because the task state is still set as
+TASK_INTERRUPTIBLE instead of TASK_RUNNING and
+kthread_freezable_should_stop() will try to call into the freezer with
+the task in the wrong state. Use wait_event_freezable() instead so that
+it calls schedule() in the right place and tries to enter the freezer
+when the task state is TASK_RUNNING instead.
+
+Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Tested-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Keerthy <j-keerthy@ti.com>
+Fixes: ff296293b353 ("random: Support freezable kthreads in add_hwgenerator_randomness()")
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+---
+
+See https://lkml.kernel.org/r/20190904110038.2bx25byitrejlteu@flow for
+context on the bug report.
+
+ drivers/char/random.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/char/random.c b/drivers/char/random.c
+index 9b54cdb301d3..d3beed084c0a 100644
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -327,6 +327,7 @@
+ #include <linux/percpu.h>
+ #include <linux/cryptohash.h>
+ #include <linux/fips.h>
++#include <linux/freezer.h>
+ #include <linux/ptrace.h>
+ #include <linux/workqueue.h>
+ #include <linux/irq.h>
+@@ -2429,7 +2430,6 @@ void add_hwgenerator_randomness(const char *buffer, size_t count,
+ 				size_t entropy)
+ {
+ 	struct entropy_store *poolp = &input_pool;
+-	bool frozen = false;
+ 
+ 	if (unlikely(crng_init == 0)) {
+ 		crng_fast_load(buffer, count);
+@@ -2440,13 +2440,11 @@ void add_hwgenerator_randomness(const char *buffer, size_t count,
+ 	 * We'll be woken up again once below random_write_wakeup_thresh,
+ 	 * or when the calling thread is about to terminate.
+ 	 */
+-	wait_event_interruptible(random_write_wait,
+-			kthread_freezable_should_stop(&frozen) ||
++	wait_event_freezable(random_write_wait,
++			kthread_should_stop() ||
+ 			ENTROPY_BITS(&input_pool) <= random_write_wakeup_bits);
+-	if (!frozen) {
+-		mix_pool_bytes(poolp, buffer, count);
+-		credit_entropy_bits(poolp, entropy);
+-	}
++	mix_pool_bytes(poolp, buffer, count);
++	credit_entropy_bits(poolp, entropy);
+ }
+ EXPORT_SYMBOL_GPL(add_hwgenerator_randomness);
+ 
+-- 
+Sent by a computer through tubes
 
