@@ -2,79 +2,148 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC24C41514
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC2DC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF15A22CEC
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D50E21883
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:55:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="0gu0zwfz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387523AbfIELw6 (ORCPT
+        id S2387577AbfIELzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 07:52:58 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58488 "EHLO mx1.suse.de"
+        Thu, 5 Sep 2019 07:55:13 -0400
+Received: from mail-eopbgr740088.outbound.protection.outlook.com ([40.107.74.88]:59664
+        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725921AbfIELw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 07:52:57 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8A64BAEF8;
-        Thu,  5 Sep 2019 11:52:56 +0000 (UTC)
-Date:   Thu, 5 Sep 2019 13:52:42 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Petr Mladek <pmladek@suse.com>
-cc:     Joe Lawrence <joe.lawrence@redhat.com>, jikos@kernel.org,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
-Subject: Re: [RFC PATCH 2/2] livepatch: Clear relocation targets on a module
- removal
-In-Reply-To: <20190904084932.gndrtewubqiaxmzy@pathway.suse.cz>
-Message-ID: <alpine.LSU.2.21.1909051345160.25712@pobox.suse.cz>
-References: <20190728200427.dbrojgu7hafphia7@treble> <alpine.LSU.2.21.1908141256150.16696@pobox.suse.cz> <20190814151244.5xoaxib5iya2qjco@treble> <20190816094608.3p2z73oxcoqavnm4@pathway.suse.cz> <20190822223649.ptg6e7qyvosrljqx@treble>
- <20190823081306.kbkm7b4deqrare2v@pathway.suse.cz> <20190826145449.wyo7avwpqyriem46@treble> <alpine.LSU.2.21.1909021802180.29987@pobox.suse.cz> <5c649320-a9bf-ae7f-5102-483bc34d219f@redhat.com> <alpine.LSU.2.21.1909031447140.3872@pobox.suse.cz>
- <20190904084932.gndrtewubqiaxmzy@pathway.suse.cz>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        id S1725921AbfIELzN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 07:55:13 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eqx1UV76iK5o9g+kCHLnT2wgpyqs4LPnIX/CVlhzuvem/lDss87dtXDXuF8cGv72yn/dePwc7qPo0Tr7sU2+emp2vwCpXh8OZa47nomgjih+2VmDHztQIXFqzE5+2mK5KIJf9lCBiXYofK1LNCsVvGnHGD4DOR+UYOqb5bvqK5YgK3/uHkHtJnjhMnKvN/PSA3m3uBQqaZLLS+8g0x9X/Prbm06WjttZQXj8A6jXOBcUBOkKJ2vPiLp7CE3aCu7Oi82V9LpQ+iKsy5QrmukbMI/7GIyfGmMl4wHyWn+f93v7EZM346o9qR7waCybq2EOCVOAgzl17gUaDwlanlnyOg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OZEp0HFQ6BLNzJ436lZ+H1Aohse7hxCKIhcVEoPc5QE=;
+ b=hegd4fwAs46uX6NVin7aHfqiyDBWEzUyGQnc61dkQK0kMgkSftHUlbtJ70fHfmnkNM3Cwogj6GFOeQzSN/MB0IjP6aL645tPG6+8CZUmUmPdMyEusiSSwxg5C4ngFqPdwfwuzZcCogVyn8lEn7/jzd45FS7uj+L4FkxfU8VQKQ6ykKpVcb9FdRG9ENohygPb1HeZoJ1CgCtkzEDoGbt+bAB6NX8I/4rqGvhNt+OiWxMadd0t6yGn5Tjw6/4KfsQdZyEN+yMxb1u0LZj6ocIzvndSnLySqXnDgGzlCd1IeCRZpnT0cPGXtTOTH1cUWwruU3wS/O8cYujHSnfogblYAQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
+ dkim=pass header.d=vmware.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OZEp0HFQ6BLNzJ436lZ+H1Aohse7hxCKIhcVEoPc5QE=;
+ b=0gu0zwfz/ZNiaDKMIKglnRs0VXnfLGTOEpoHAhggPx1hAAb7ZDtiZPHvSCgLz6KA1acetExh7JHnf8jzT3OeRe8T7j0a+63/jHRTEnJ6Eg087UVwzeetInQVw2ghk5rT6cJ4dUbiGBi2NfTO0q4k8hZZfHGrIWZCP03PnZ6r0uM=
+Received: from MN2PR05MB6141.namprd05.prod.outlook.com (20.178.241.217) by
+ MN2PR05MB6143.namprd05.prod.outlook.com (20.178.244.96) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2241.4; Thu, 5 Sep 2019 11:54:47 +0000
+Received: from MN2PR05MB6141.namprd05.prod.outlook.com
+ ([fe80::9861:5501:d72f:d977]) by MN2PR05MB6141.namprd05.prod.outlook.com
+ ([fe80::9861:5501:d72f:d977%2]) with mapi id 15.20.2241.014; Thu, 5 Sep 2019
+ 11:54:46 +0000
+From:   Thomas Hellstrom <thellstrom@vmware.com>
+To:     "colin.king@canonical.com" <colin.king@canonical.com>,
+        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
+        Linux-graphics-maintainer <Linux-graphics-maintainer@vmware.com>
+CC:     "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
+Subject: Re: [PATCH] drm/vmwgfx: Fix double free in vmw_recv_msg()
+Thread-Topic: [PATCH] drm/vmwgfx: Fix double free in vmw_recv_msg()
+Thread-Index: AQHVU0PQkTqRNIUlckSPpJbkwjPDv6b74yUAgCE3voA=
+Date:   Thu, 5 Sep 2019 11:54:46 +0000
+Message-ID: <830c68e5591dd197e098028227148106739e5591.camel@vmware.com>
+References: <20190815083050.GC27238@mwanda>
+         <08f19935-97fe-4c8b-ca7b-707586ed89a1@canonical.com>
+In-Reply-To: <08f19935-97fe-4c8b-ca7b-707586ed89a1@canonical.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=thellstrom@vmware.com; 
+x-originating-ip: [155.4.205.35]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9a3bb59c-dfd1-4728-063b-08d731f7d961
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR05MB6143;
+x-ms-traffictypediagnostic: MN2PR05MB6143:|MN2PR05MB6143:
+x-ld-processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR05MB6143A59F49C682BBD08CFC12A1BB0@MN2PR05MB6143.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 015114592F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(396003)(366004)(136003)(346002)(199004)(189003)(26005)(118296001)(81156014)(6116002)(71190400001)(71200400001)(8676002)(316002)(102836004)(81166006)(478600001)(86362001)(3846002)(25786009)(6506007)(256004)(66066001)(76116006)(91956017)(6636002)(2906002)(66476007)(476003)(66946007)(53546011)(11346002)(6512007)(66556008)(14454004)(446003)(64756008)(6436002)(66446008)(4326008)(6486002)(186003)(2501003)(54906003)(229853002)(6246003)(5660300002)(8936002)(36756003)(305945005)(486006)(110136005)(2616005)(7736002)(99286004)(53936002)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR05MB6143;H:MN2PR05MB6141.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: YMmoPIADNER+DnpYiA/yfsI9A7PK8YeCQUKtum2fmOzeWRpFNWXdmi3KX+kiY4bBV2zr0BTU7Ai0q5Fr47EwELGobeiS4RpiJN6dOrnKkj7gSBLqoTLdLb2y+f2C/me7nZfCjtdikK3VoERROAIkkpMinrV9qlIyVgqok+G9SOBacvQ2gYtwIOyC2UDFMgfyUG4g0Lz1L69cdDMGYudXvIqNs1BA9HGFMSKMGXAb2bpDM9o2bRTOg/sDcgEhpUXlnsNoXbVgsTnUbkZmnkpEg+Hq0104zMxUwNKoHeUmg5ZMInccHU+hfHJOdZs1Ib8B2O2x0QSPFX2MHuoFBIcUF6XTw54wVNQlBmA5tXHUYlXyKzR3XUwvpNYtD8qPQdRo1ZRID8I0rslFxEbbWuuGvlRSu+I0/HvtLf00HJoNzbg=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <AA51AFC9B7C36441B8DE00A3BA11FC96@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9a3bb59c-dfd1-4728-063b-08d731f7d961
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2019 11:54:46.8792
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JLlUxf/DLovRQg1HZnUdFFF7vvknZtOq7EWUVNMM85TCQ0OZ9mzPyDEg9P90/vgaZQdC/y+sxRGjgKlpba+2pA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR05MB6143
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[...]
-
-> I wonder what is necessary for a productive discussion on Plumbers:
-
-[...]
-
->     + It might be useful to prepare overview of the existing proposals
->       and agree on the positives and negatives. I am afraid that some
->       of them might depend on the customer base and
->       use cases. Sometimes we might not have enough information.
->       But it might be good to get on the same page where possible.
-> 
->       Anyway, it might rule out some variants so that we could better
->       concentrate on the acceptable ones. Or come with yet another
->       proposal that would avoid the real blockers.
-
-My plan is to describe the problem first for the public in the room. Then 
-describe the proposals and their advantages and disadvantages. This should 
-start the discussion pretty well.
-
-I would be happy if we managed to settle at least on the requirements for 
-a solution. It seems that our experience with users and their use cases 
-differ a lot and I doubt we could come up with a good solution without 
-stating what we want (and don't want) first.
-
-Silly hope is that there may be someone with a perfect solution in the 
-room. After all, it is what conferences are for.
-
-> Would it be better to discuss this in a separate room with
-> a whiteboard or paperboard?
-
-Maybe.
-
-Miroslav
+T24gVGh1LCAyMDE5LTA4LTE1IGF0IDA5OjM4ICswMTAwLCBDb2xpbiBJYW4gS2luZyB3cm90ZToN
+Cj4gT24gMTUvMDgvMjAxOSAwOTozMCwgRGFuIENhcnBlbnRlciB3cm90ZToNCj4gPiBXZSByZWNl
+bnRseSBhZGRlZCBhIGtmcmVlKCkgYWZ0ZXIgdGhlIGVuZCBvZiB0aGUgbG9vcDoNCj4gPiANCj4g
+PiAJaWYgKHJldHJpZXMgPT0gUkVUUklFUykgew0KPiA+IAkJa2ZyZWUocmVwbHkpOw0KPiA+IAkJ
+cmV0dXJuIC1FSU5WQUw7DQo+ID4gCX0NCj4gPiANCj4gPiBUaGVyZSBhcmUgdHdvIHByb2JsZW1z
+LiAgRmlyc3QgdGhlIHRlc3QgaXMgd3JvbmcgYW5kIGJlY2F1c2UNCj4gPiByZXRyaWVzDQo+ID4g
+ZXF1YWxzIFJFVFJJRVMgaWYgd2Ugc3VjY2VlZCBvbiB0aGUgbGFzdCBpdGVyYXRpb24gdGhyb3Vn
+aCB0aGUNCj4gPiBsb29wLg0KPiA+IFNlY29uZCBpZiB3ZSBmYWlsIG9uIHRoZSBsYXN0IGl0ZXJh
+dGlvbiB0aHJvdWdoIHRoZSBsb29wIHRoZW4gdGhlDQo+ID4ga2ZyZWUNCj4gPiBpcyBhIGRvdWJs
+ZSBmcmVlLg0KPiA+IA0KPiA+IFdoZW4geW91J3JlIHJlYWRpbmcgdGhpcyBjb2RlLCBwbGVhc2Ug
+bm90ZSB0aGUgYnJlYWsgc3RhdGVtZW50IGF0DQo+ID4gdGhlDQo+ID4gZW5kIG9mIHRoZSB3aGls
+ZSBsb29wLiAgVGhpcyBwYXRjaCBjaGFuZ2VzIHRoZSBsb29wIHNvIHRoYXQgaWYgaXQncw0KPiA+
+IG5vdA0KPiA+IHN1Y2Nlc3NmdWwgdGhlbiAicmVwbHkiIGlzIE5VTEwgYW5kIHdlIGNhbiB0ZXN0
+IGZvciB0aGF0IGFmdGVyd2FyZC4NCj4gPiANCj4gPiBGaXhlczogNmI3YzNiODZmMGI2ICgiZHJt
+L3Ztd2dmeDogZml4IG1lbW9yeSBsZWFrIHdoZW4gdG9vIG1hbnkNCj4gPiByZXRyaWVzIGhhdmUg
+b2NjdXJyZWQiKQ0KPiA+IFNpZ25lZC1vZmYtYnk6IERhbiBDYXJwZW50ZXIgPGRhbi5jYXJwZW50
+ZXJAb3JhY2xlLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9ncHUvZHJtL3Ztd2dmeC92bXdn
+ZnhfbXNnLmMgfCA4ICsrKy0tLS0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMo
+KyksIDUgZGVsZXRpb25zKC0pDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2Ry
+bS92bXdnZngvdm13Z2Z4X21zZy5jDQo+ID4gYi9kcml2ZXJzL2dwdS9kcm0vdm13Z2Z4L3Ztd2dm
+eF9tc2cuYw0KPiA+IGluZGV4IDU5ZTlkMDVhYjkyOC4uMGFmMDQ4ZDFhODE1IDEwMDY0NA0KPiA+
+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS92bXdnZngvdm13Z2Z4X21zZy5jDQo+ID4gKysrIGIvZHJp
+dmVycy9ncHUvZHJtL3Ztd2dmeC92bXdnZnhfbXNnLmMNCj4gPiBAQCAtMzUzLDcgKzM1Myw3IEBA
+IHN0YXRpYyBpbnQgdm13X3JlY3ZfbXNnKHN0cnVjdCBycGNfY2hhbm5lbA0KPiA+ICpjaGFubmVs
+LCB2b2lkICoqbXNnLA0KPiA+ICAJCQkJICAgICAhIShISUdIX1dPUkQoZWN4KSAmDQo+ID4gTUVT
+U0FHRV9TVEFUVVNfSEIpKTsNCj4gPiAgCQlpZiAoKEhJR0hfV09SRChlYngpICYgTUVTU0FHRV9T
+VEFUVVNfU1VDQ0VTUykgPT0gMCkgew0KPiA+ICAJCQlrZnJlZShyZXBseSk7DQo+ID4gLQ0KPiA+
+ICsJCQlyZXBseSA9IE5VTEw7DQo+ID4gIAkJCWlmICgoSElHSF9XT1JEKGVieCkgJiBNRVNTQUdF
+X1NUQVRVU19DUFQpICE9IDApDQo+ID4gew0KPiA+ICAJCQkJLyogQSBjaGVja3BvaW50IG9jY3Vy
+cmVkLiBSZXRyeS4gKi8NCj4gPiAgCQkJCWNvbnRpbnVlOw0KPiA+IEBAIC0zNzcsNyArMzc3LDcg
+QEAgc3RhdGljIGludCB2bXdfcmVjdl9tc2coc3RydWN0IHJwY19jaGFubmVsDQo+ID4gKmNoYW5u
+ZWwsIHZvaWQgKiptc2csDQo+ID4gIA0KPiA+ICAJCWlmICgoSElHSF9XT1JEKGVjeCkgJiBNRVNT
+QUdFX1NUQVRVU19TVUNDRVNTKSA9PSAwKSB7DQo+ID4gIAkJCWtmcmVlKHJlcGx5KTsNCj4gPiAt
+DQo+ID4gKwkJCXJlcGx5ID0gTlVMTDsNCj4gPiAgCQkJaWYgKChISUdIX1dPUkQoZWN4KSAmIE1F
+U1NBR0VfU1RBVFVTX0NQVCkgIT0gMCkNCj4gPiB7DQo+ID4gIAkJCQkvKiBBIGNoZWNrcG9pbnQg
+b2NjdXJyZWQuIFJldHJ5LiAqLw0KPiA+ICAJCQkJY29udGludWU7DQo+ID4gQEAgLTM4OSwxMCAr
+Mzg5LDggQEAgc3RhdGljIGludCB2bXdfcmVjdl9tc2coc3RydWN0IHJwY19jaGFubmVsDQo+ID4g
+KmNoYW5uZWwsIHZvaWQgKiptc2csDQo+ID4gIAkJYnJlYWs7DQo+ID4gIAl9DQo+ID4gIA0KPiA+
+IC0JaWYgKHJldHJpZXMgPT0gUkVUUklFUykgew0KPiA+IC0JCWtmcmVlKHJlcGx5KTsNCj4gPiAr
+CWlmICghcmVwbHkpDQo+ID4gIAkJcmV0dXJuIC1FSU5WQUw7DQo+ID4gLQl9DQo+ID4gIA0KPiA+
+ICAJKm1zZ19sZW4gPSByZXBseV9sZW47DQo+ID4gIAkqbXNnICAgICA9IHJlcGx5Ow0KPiA+IA0K
+PiANCj4gRGFuLCBUaGFua3MgZm9yIGZpeGluZyB1cCBteSBtaXN0YWtlLg0KDQpUaGFua3MsIERh
+bi4gU29ycnkgZm9yIHRoZSBsYXRlIHJlcGx5LiANClJldmlld2VkLWJ5OiBUaG9tYXMgSGVsbHN0
+csO2bSA8dGhlbGxzdHJvbUB2bXdhcmUuY29tPg0KV2lsbCBwdXNoIHRoaXMgdG8gZml4ZXMuDQoN
+Ci9UaG9tYXMNCg0K
