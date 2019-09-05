@@ -2,104 +2,72 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B50C00306
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F35F7C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9132D206A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:26:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZXx8Uvfz"
+	by mail.kernel.org (Postfix) with ESMTP id 1FDF0206A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:27:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388814AbfIEO0v (ORCPT
+        id S2388942AbfIEO1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 10:26:51 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:46654 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729053AbfIEO0v (ORCPT
+        Thu, 5 Sep 2019 10:27:02 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:36653 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729053AbfIEO1C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 10:26:51 -0400
-Received: by mail-io1-f66.google.com with SMTP id x4so5207494iog.13;
-        Thu, 05 Sep 2019 07:26:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=q+357KwvNyY+wJyemee0wqrc8e6AXwO2zGyzu6liuT8=;
-        b=ZXx8UvfzqCNfutH7x8/UBhR2N6yi7+q+BF5eMZ7i4fCdz+eFMVy8WHsWZd7lqNobgf
-         XTIycr3EdIGl9yBCPLJ0LwDWslY0X+If2OQsEtJoaiMvj2X+6YZu+MTSJ0V1FaBfyPpj
-         WRXMzgSyz7wEy+lmnIQ8rqI0iUA83IIuWcbiH4vS8UswSEoC193CIRh1MSAC6M8AtfLA
-         g8vcBRgcJo3bYwOVzQUVdrS4XbFNSVR9Xsx9c+rY9vWTqckksvpXfY0weCozatthiA8W
-         czq3Y2w0xn116mC7d6f3oanKz9IFytA57NarXn1B3DD7sZYnj+SNslOmW4KUI4KbKh7F
-         cVjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=q+357KwvNyY+wJyemee0wqrc8e6AXwO2zGyzu6liuT8=;
-        b=sxT24Ctf+O3+VqIHdJLwTIE+0AO02cxzNX1/BmNJh03kq9DlffDZCuySg1YZaJ9g2U
-         Ejy6XYPdMSXpI5jJlKjP5x74eYcOHUmAeXO0UT7Nzri/e/Hpz4M3yMynVdAtejCxBuO/
-         QqIrtWEtktQT2ujTqIMFrQj0i0XL0BnA7JuLrshWiWZ8aXEsdvUOYM1rf8+KnkYV55oJ
-         SW8v+NZ74EsQGwHNY3Wp1MF0Jh5G2369mrnp09tjcW5X8InlWQK1+YX79bD8J1dN8sIe
-         c74FnguwCEFzK8ERARkuAcowEm5vVYii8lzvs9LU9kmj6vzWfYvVR5yTSzGM9I+cKyCP
-         Bs6A==
-X-Gm-Message-State: APjAAAXK7Fhojg9QarscsV7BFWIzl7nx9eyWTOYS1sMqwIMb5hgMuOQ5
-        XDJounVTxV3EaCpzGSmtvw1mevODvGu6wv//IAc=
-X-Google-Smtp-Source: APXvYqy4Vhcn6NpXRW6OYhDvJUR0iWbZKP2tTqahRcLHyyWlL2k9Yc37MptJ06YkHBxEtkO4k2uf396d5KZGjx1lJ58=
-X-Received: by 2002:a05:6638:8e:: with SMTP id v14mr4293784jao.72.1567693610586;
- Thu, 05 Sep 2019 07:26:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190904211551.10381-1-kw@linux.com>
-In-Reply-To: <20190904211551.10381-1-kw@linux.com>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Thu, 5 Sep 2019 08:26:39 -0600
-Message-ID: <CAOCk7Npab7Ffi1fKQ8p9s6_XbrGJaG6tTa7W2dXNqn+rrP2Onw@mail.gmail.com>
-Subject: Re: [PATCH] drm/msm/dsi: Move static keyword to the front of declarations
-To:     Krzysztof Wilczynski <kw@linux.com>
-Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        lkml <linux-kernel@vger.kernel.org>
+        Thu, 5 Sep 2019 10:27:02 -0400
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1i5six-0007P5-3B; Thu, 05 Sep 2019 16:26:59 +0200
+Message-ID: <1567693618.3958.4.camel@pengutronix.de>
+Subject: Re: [PATCH v2 0/2] reset: meson-audio-arb: add sm1 support
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 05 Sep 2019 16:26:58 +0200
+In-Reply-To: <20190905135040.6635-1-jbrunet@baylibre.com>
+References: <20190905135040.6635-1-jbrunet@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 4, 2019 at 3:15 PM Krzysztof Wilczynski <kw@linux.com> wrote:
->
-> Move the static keyword to the front of declarations
-> of msm_dsi_v2_host_ops, msm_dsi_6g_host_ops and
-> msm_dsi_6g_v2_host_ops, and resolve the following
-> compiler warnings that can be seen when building
-> with warnings enabled (W=3D1):
->
-> drivers/gpu/drm/msm/dsi/dsi_cfg.c:150:1: warning:
->   =E2=80=98static=E2=80=99 is not at beginning of declaration [-Wold-styl=
-e-declaration]
->
-> drivers/gpu/drm/msm/dsi/dsi_cfg.c:161:1: warning:
->   =E2=80=98static=E2=80=99 is not at beginning of declaration [-Wold-styl=
-e-declaration]
->
-> drivers/gpu/drm/msm/dsi/dsi_cfg.c:172:1: warning:
->   =E2=80=98static=E2=80=99 is not at beginning of declaration [-Wold-styl=
-e-declaration]
->
-> Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+Hi Jerome,
 
-Seems fine to me.
+On Thu, 2019-09-05 at 15:50 +0200, Jerome Brunet wrote:
+> This patchset adds the new arb reset lines for the sm1 SoC family
+> It has been tested on the sei610 platform.
+> 
+> Changes since v1 [0]:
+> * Fix the mistake on the number of reset as reported by Phililpp (thx)
+> 
+> [0]:  https://lkml.kernel.org/r/20190820094625.13455-1-jbrunet@baylibre.com
+> 
+> Jerome Brunet (2):
+>   reset: dt-bindings: meson: update arb bindings for sm1
+>   reset: meson-audio-arb: add sm1 support
+> 
+>  .../reset/amlogic,meson-axg-audio-arb.txt     |  3 +-
+>  drivers/reset/reset-meson-audio-arb.c         | 43 +++++++++++++++++--
+>  .../reset/amlogic,meson-axg-audio-arb.h       |  2 +
+>  3 files changed, 44 insertions(+), 4 deletions(-)
 
-Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Thank you, both applied to reset/next.
+
+regards
+Philipp
