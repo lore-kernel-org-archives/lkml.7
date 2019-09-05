@@ -2,137 +2,131 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC7D5C3A5AB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 443A9C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C35C206A1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:17:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FB2A206A1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:21:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="IU6LoCZV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EVdVxDGJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387397AbfIENRS (ORCPT
+        id S1733091AbfIENVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 09:17:18 -0400
-Received: from mail-eopbgr740071.outbound.protection.outlook.com ([40.107.74.71]:43328
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730780AbfIENRR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 09:17:17 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aa4j93z59d4xwwpS/Nj+CBM8uhHQvFUlFkqfd+FkwNCWDpmO2jzsqT30iQ+BXLprmZ9U4F7NaJKg5KwFa7TUMUD5vJGW9rz2OevpwkXiMrB+HAzX6uxwFFfQXNj1KTxO+WB3GRAwDkTsSOTVikcXpBgfwqI+k1ufPWn8gAt7PSU5ZfPlxnCYaQFLxoqHXJFj/3M2fAj5GVxhL6Xprh3m/GPxUVNpvYss46FR652UaDy2/QoJw6x5ljzgOJvWnN1aCfxVV4HFwCA2AZqBNgsUcumMBBFw9VAHKQ7VqrM5mwCBeEY8Yj4a/+GVKH//Oq1DQpdfjtUzJu75S3CcDwGSfg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uVTmM3a0Z1LL3nxtcwTLTK+lmTNNgQZj8TQjhIg9/84=;
- b=hbyZrcCPApPEuzhVOBnSMTk+vzoMplc3TSuPCggREG4N+CWp7uUfsvZoT/sPSwiG2R3uWO/8hf5taLOzZpGoLLpLMdSvIua7Z1/97XIYZQDHroVT9UKCkYNskA4pBAaVbl8K4wjvqEtyazgE4La0ZpP0ifpjLMyt/ezI9ylQfbQwzFdnYUOYRkHzPvn7XkPSsNnhmhulnRz+0YnwUkX6VdIBTQ/gRrivinErNcJsBBQhx0CuYRpUk882POUGfbn1iT72aKotjM92fyRs3p9SOWiqdJVYdRycM6QlJUmpNDZXtjH8/9iPn3kxmWjItwjj+KXS4sY1/5yz1AV8IUMYEA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Thu, 5 Sep 2019 09:21:11 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38420 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731556AbfIENVL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 09:21:11 -0400
+Received: by mail-pl1-f194.google.com with SMTP id w11so1308452plp.5;
+        Thu, 05 Sep 2019 06:21:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uVTmM3a0Z1LL3nxtcwTLTK+lmTNNgQZj8TQjhIg9/84=;
- b=IU6LoCZV9XJmKxznDGS/0w0ta8hOpOIF1iB7VhbB8F5Z4pbqmObP8UK09UCv0SGr8lvILw8hDJGYVxW5Q9KahxAGSFny5PF37WgU3ewEUBTqfphz0+gP4tmedBVqymk0IgIfUCU9ubSxzaJu0wo+N0nbH3qflO6vXZXjstPBuHw=
-Received: from CY4PR1201MB0230.namprd12.prod.outlook.com (10.172.79.7) by
- CY4PR1201MB0232.namprd12.prod.outlook.com (10.174.52.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.14; Thu, 5 Sep 2019 13:17:14 +0000
-Received: from CY4PR1201MB0230.namprd12.prod.outlook.com
- ([fe80::708e:c826:5b05:e3f0]) by CY4PR1201MB0230.namprd12.prod.outlook.com
- ([fe80::708e:c826:5b05:e3f0%11]) with mapi id 15.20.2220.022; Thu, 5 Sep 2019
- 13:17:14 +0000
-From:   Harry Wentland <hwentlan@amd.com>
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "Wentland, Harry" <Harry.Wentland@amd.com>,
-        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>
-Subject: Re: linux-next: Tree for Sep 4 (amd/display/)
-Thread-Topic: linux-next: Tree for Sep 4 (amd/display/)
-Thread-Index: AQHVY2OBXMezq3awGkCsLLALyRll+qcdEayA
-Date:   Thu, 5 Sep 2019 13:17:14 +0000
-Message-ID: <752f74d6-f6ff-6013-25ad-a8fdce934d17@amd.com>
-References: <20190904233443.3f73c46b@canb.auug.org.au>
- <6b70fdfd-1f18-1e55-2574-7be5997cfb2a@infradead.org>
-In-Reply-To: <6b70fdfd-1f18-1e55-2574-7be5997cfb2a@infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [2607:fea8:925f:916c::2]
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=aaqIxHqXkj1uuSVMqAJQpWwcsWGZCUWACOB9sZn+42g=;
+        b=EVdVxDGJkvE83ZF9G3b7iMdrMC7FWZM6C6Ij0T9kXBJfoS0nJ3+T2x59jTN6RcanQq
+         G5Bi/ZlJFn9PIt5bFoR1hBD8vZzdUZWJcFCJgd2foS/LZNmDRasKbB345QQjaBNo+gl/
+         YNVHx5rUp1t6pZF2ZtDtrGybUpU8pwsN5g48iGih630zad17TnzASg10TAEypNDFGnmq
+         abTreFtzCIaZ8zasoArSatJvc9kVulIoJIi/J3+UQNlJyl+Ubuh/8uz8LFkEwgARrZtJ
+         DyNbkIm+SRT2T9n+z3qg4JSFcLu36R8siXehSoLXBQ2QBt5OWtS/thMSAJyKnhYfaJs5
+         rcSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=aaqIxHqXkj1uuSVMqAJQpWwcsWGZCUWACOB9sZn+42g=;
+        b=Sx0PyzUQ/VYIOlRuzMa6HR0vHbCvWRZ5Y0ijBabM3edkQizQnjjviLirR/yHd5zTqB
+         +HxEAXr5GuhOt7m0y0OQ0uyWf8CpwaXosULcoadzZcqRMj4lnPrwpNHyx9+EismGSoIO
+         pWmeaUVTuv27iUIzdEtftoZ10vuDFHA62mBxh1BmFZHVgIyV11KuquDMFwcyWSzE4QUG
+         NQPa0lVdp03+SudpkazQbjCSEfTd8mE0bmNQ6mv5c3DevZPmKMEsJ4TS+Q7kvEU2tq2G
+         UV+gWeGXGkNuYhtPFiYYuK5moZg+I9yKe8Y+L33y5kAALPbpbJ35rkfgj9N2xZZZLoeT
+         D6+w==
+X-Gm-Message-State: APjAAAXvp0Dx+ia8bFOE80P+y55vI4IA2RXcusifzNGmarMmdJrwOepl
+        4EhhkdxOb9p2cZwThgC3/DBQbLZy
+X-Google-Smtp-Source: APXvYqzDMXOush2DRGxOdIyzhIMX1w4EktiiEO6YxugC7cY2TPTX016yrqFI6ZH/6sxJvvA510uJsA==
+X-Received: by 2002:a17:902:343:: with SMTP id 61mr3460800pld.215.1567689669743;
+        Thu, 05 Sep 2019 06:21:09 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id o19sm1957841pjr.23.2019.09.05.06.21.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Sep 2019 06:21:08 -0700 (PDT)
+Subject: Re: [PATCH] i2c: muxes: pca9541: use BIT() macro
+To:     Saiyam Doshi <saiyamdoshi.in@gmail.com>, peda@axentia.se
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190905131318.GA21280@SD.eic.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <1d248333-abe9-cff8-ad29-d3b618643dc6@roeck-us.net>
+Date:   Thu, 5 Sep 2019 06:21:06 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
-x-clientproxiedby: YT1PR01CA0006.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01::19)
- To CY4PR1201MB0230.namprd12.prod.outlook.com (2603:10b6:910:1e::7)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Harry.Wentland@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b4b54925-03ea-4518-e384-08d732035dff
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:CY4PR1201MB0232;
-x-ms-traffictypediagnostic: CY4PR1201MB0232:
-x-ms-exchange-purlcount: 1
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CY4PR1201MB02325ADDA607B3D789B7E8608CBB0@CY4PR1201MB0232.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3513;
-x-forefront-prvs: 015114592F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(366004)(376002)(346002)(39860400002)(199004)(189003)(53754006)(486006)(6306002)(99286004)(446003)(14444005)(4326008)(6512007)(11346002)(478600001)(476003)(2616005)(14454004)(966005)(36756003)(25786009)(256004)(229853002)(53936002)(71190400001)(46003)(71200400001)(6246003)(6486002)(31686004)(52116002)(6436002)(65956001)(65806001)(31696002)(4744005)(5660300002)(6116002)(81156014)(81166006)(8676002)(186003)(58126008)(76176011)(66476007)(66556008)(66946007)(66446008)(64756008)(8936002)(7736002)(386003)(102836004)(6506007)(316002)(53546011)(2906002)(110136005)(305945005)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR1201MB0232;H:CY4PR1201MB0230.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Vr8Qt0hj8MmbyEtAM4B1R+94qbhO5Vc5tHiBSSOXP4GCl7yQq7c8GCzkZa4PNLaIXkbdm09dEsIBiTkTbxd+8X0YOnTPG5vNDjI62J/xsS45+ykcuSji+BkJ3jOQSeC2HxADQT7t9tQtCKnWEgRcDr8G5ixSwQx/8qyftaPQW1Jfv85bdTdpnJ8bp7xSd8Z9o0kEbQESIiOs2wCUCP61hV+NVUINKMJ5U0RP7pNly+n1/u86NBkUztAm3FpL84LGNhpst67GGn08umoLbu9AyfWag3F4F+FMkBGbv2cGjIZzmDH/I1zl4erob7INkjBIeZjvFwcC5DiDstAvAxvj9CXhcEAfW7s4XICF+sdfd/Ege+cunh9QNEYKq08SJlCTMbM8XK1x+VFr4x6Ajqs0CG7t52CZnwJMq4WVG6U6ruI=
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <C2E148370D9A45438625E22C870190C8@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b4b54925-03ea-4518-e384-08d732035dff
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2019 13:17:14.3764
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: bJtQcbnVEA1TLmfwJ79NE01a6aKt2SvcWziquaCLUtj/o2nmYxsNadRt/1hkIkvSdSbIaR807HsbSg2R8rcr+Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB0232
+In-Reply-To: <20190905131318.GA21280@SD.eic.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 9/5/19 6:13 AM, Saiyam Doshi wrote:
+> Use bit mask macro BIT() for definition where appropriate.
+> 
+> Signed-off-by: Saiyam Doshi <saiyamdoshi.in@gmail.com>
 
+linux/bitops.h should be included when using BIT().
 
-On 2019-09-04 4:58 p.m., Randy Dunlap wrote:
-> On 9/4/19 6:34 AM, Stephen Rothwell wrote:
->> Hi all,
->>
->> News: this will be the last linux-next I will release until Sept 30.
->>
->> Changes since 20190903:
->>
->=20
-> on x86_64:
->=20
-> In file included from ../drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn=
-20/display_rq_dlg_calc_20v2.c:77:0:
-> ../drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn20/../dml_inline_defs.=
-h: In function =91dml_min=92:
-> ../drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn20/../dml_inline_defs.=
-h:34:1: error: SSE register return with SSE disabled
->=20
+Guenter
 
-Is that fixed by Stephen's fixup here?
+> ---
+>   drivers/i2c/muxes/i2c-mux-pca9541.c | 28 ++++++++++++++--------------
+>   1 file changed, 14 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/i2c/muxes/i2c-mux-pca9541.c b/drivers/i2c/muxes/i2c-mux-pca9541.c
+> index 9e75d6b9140b..bd4cf8341a06 100644
+> --- a/drivers/i2c/muxes/i2c-mux-pca9541.c
+> +++ b/drivers/i2c/muxes/i2c-mux-pca9541.c
+> @@ -43,20 +43,20 @@
+>   #define PCA9541_CONTROL		0x01
+>   #define PCA9541_ISTAT		0x02
+>   
+> -#define PCA9541_CTL_MYBUS	(1 << 0)
+> -#define PCA9541_CTL_NMYBUS	(1 << 1)
+> -#define PCA9541_CTL_BUSON	(1 << 2)
+> -#define PCA9541_CTL_NBUSON	(1 << 3)
+> -#define PCA9541_CTL_BUSINIT	(1 << 4)
+> -#define PCA9541_CTL_TESTON	(1 << 6)
+> -#define PCA9541_CTL_NTESTON	(1 << 7)
+> -
+> -#define PCA9541_ISTAT_INTIN	(1 << 0)
+> -#define PCA9541_ISTAT_BUSINIT	(1 << 1)
+> -#define PCA9541_ISTAT_BUSOK	(1 << 2)
+> -#define PCA9541_ISTAT_BUSLOST	(1 << 3)
+> -#define PCA9541_ISTAT_MYTEST	(1 << 6)
+> -#define PCA9541_ISTAT_NMYTEST	(1 << 7)
+> +#define PCA9541_CTL_MYBUS	BIT(0)
+> +#define PCA9541_CTL_NMYBUS	BIT(1)
+> +#define PCA9541_CTL_BUSON	BIT(2)
+> +#define PCA9541_CTL_NBUSON	BIT(3)
+> +#define PCA9541_CTL_BUSINIT	BIT(4)
+> +#define PCA9541_CTL_TESTON	BIT(6)
+> +#define PCA9541_CTL_NTESTON	BIT(7)
+> +
+> +#define PCA9541_ISTAT_INTIN	BIT(0)
+> +#define PCA9541_ISTAT_BUSINIT	BIT(1)
+> +#define PCA9541_ISTAT_BUSOK	BIT(2)
+> +#define PCA9541_ISTAT_BUSLOST	BIT(3)
+> +#define PCA9541_ISTAT_MYTEST	BIT(6)
+> +#define PCA9541_ISTAT_NMYTEST	BIT(7)
+>   
+>   #define BUSON		(PCA9541_CTL_BUSON | PCA9541_CTL_NBUSON)
+>   #define MYBUS		(PCA9541_CTL_MYBUS | PCA9541_CTL_NMYBUS)
+> 
 
-https://lists.freedesktop.org/archives/dri-devel/2019-September/234292.html
-
-Thanks,
-Harry
-
->=20
