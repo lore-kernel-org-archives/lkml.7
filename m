@@ -2,68 +2,57 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35817C3A5AB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D59C7C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04B3B21743
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:04:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567670690;
-	bh=UUzJc/ue/a93m0taKXh9s1z/mAnBDooHV9BAX4YRpa0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Ro93VQRr9j66S/PcgXd2lWppoZYGo8RLBDdNusRRKOxIUs/iXacYasfXCOZ5oG4S+
-	 YtaHr+L36fXMJzTSpvXd/oW4Zy/r07DRDIPPS3B0uJsC3KXSzmMmwVreF0AOmSV8B1
-	 uhUxbJZdGP2ZChPWUdL/OFppMd3xoUyzpG6gUyUc=
+	by mail.kernel.org (Postfix) with ESMTP id B46D621743
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:07:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732394AbfIEIEt (ORCPT
+        id S1732089AbfIEIHA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 04:04:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59246 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730991AbfIEIEs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 04:04:48 -0400
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 530EC21883;
-        Thu,  5 Sep 2019 08:04:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567670687;
-        bh=UUzJc/ue/a93m0taKXh9s1z/mAnBDooHV9BAX4YRpa0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=xdyxIzcFkmCittJxVLCAnOnnNhEdIUpg/9yWl0O8cay9hW9RCuNO+ISs7scEl9jVk
-         ru+HwIovSaqbuZk3eEXbNoszctpB8zApTb0PQjkd2C96SHmLTTekEzAXWVju7W+1ce
-         NjGmlHRyndymkkjkSrGLKn1qNFr0yjql+TV/MZOY=
-Received: by mail-qt1-f173.google.com with SMTP id b2so1746723qtq.5;
-        Thu, 05 Sep 2019 01:04:47 -0700 (PDT)
-X-Gm-Message-State: APjAAAVrex28OBhtUOoDe8akGnLPkVKoRf4diZ0PX3zvSlg/GuLF9tNA
-        fxUX1OVGPF9TaYkSekdA6eGakfkpzUkRKBEUng==
-X-Google-Smtp-Source: APXvYqwRGN/t8Ztwm+Pr581GXO5zsaWfW8VanIvwMI00vkFHJS2e6Kk1OJsW7UmmPizjTTPidsBQ1AWG7fsG3JHH9Ls=
-X-Received: by 2002:ac8:31b3:: with SMTP id h48mr2280163qte.300.1567670686489;
- Thu, 05 Sep 2019 01:04:46 -0700 (PDT)
+        Thu, 5 Sep 2019 04:07:00 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:44223 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730809AbfIEIHA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 04:07:00 -0400
+Received: by mail-qt1-f196.google.com with SMTP id u40so1708983qth.11;
+        Thu, 05 Sep 2019 01:06:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AIQLXRbVyNYLq+ol22DsuLqLcT0DV8DAEZvd/28G2Y8=;
+        b=FpRpchdKvqMSkeJ/5sO8CMY+J41eGcJpVvUO/UgNZuOSlALFlDpcO48+hiau/B5PuP
+         08TnU2+DvodbwLUZe8hq6yMOV4HU3+YfKmwWnN2wBiLiOuqAFLMRl21Mn4lKQLBU7HEm
+         CHwpvJdX65HhElRoArF/NQ7exDZe45eOFMd4mjM0TzoNaYGuazl1VmDvI3OM7oiDMYgF
+         7BNB98KVpSy2wJqdZDjxlmNWIYBQm7f2k4pa/aamWWsJ/ODQghE4AlZjkJ1Xl3xr/tZG
+         8rZ35EJuE5Ei+TeMEABSFUTmFmbsr0V+gnAtYVA3LCjnTMg3zw1qktQpUup9NXjun1II
+         G4dQ==
+X-Gm-Message-State: APjAAAUSPGtBqx0zzdoanSpPnukavMkDOUmgSxY2bdf4JV/UUQP7x38u
+        UEWU1hUSdU5PdZfiVSjCd5kMQ+aHeUdb/p1b2lc=
+X-Google-Smtp-Source: APXvYqzex4fLXZ/mKlGNUOU0ZQUObckXY2DD8ddIDBJhMKhbD6Zom5YIMIJqBjYLOTSaVc52F7CeU76TxQx7Vq/TSLc=
+X-Received: by 2002:ac8:5306:: with SMTP id t6mr2220290qtn.204.1567670819019;
+ Thu, 05 Sep 2019 01:06:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190905075213.13260-1-lee.jones@linaro.org>
-In-Reply-To: <20190905075213.13260-1-lee.jones@linaro.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 5 Sep 2019 09:04:34 +0100
-X-Gmail-Original-Message-ID: <CAL_JsqKB1hyJKM6S9cbNptq9kysa4_mgxaby7WmQHMW6d8KX3w@mail.gmail.com>
-Message-ID: <CAL_JsqKB1hyJKM6S9cbNptq9kysa4_mgxaby7WmQHMW6d8KX3w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: soc: qcom: Provide option to disable DMA
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Alok Chauhan <alokc@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>,
-        Vinod <vkoul@kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
+References: <20190831162555.31887-1-yamada.masahiro@socionext.com>
+ <CAK8P3a0kPFojqAWqXEAcitVMjBA5ABc=rRx=zHMxXat+gCz=gA@mail.gmail.com> <20190904224050.GA82176@archlinux-threadripper>
+In-Reply-To: <20190904224050.GA82176@archlinux-threadripper>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 5 Sep 2019 10:06:42 +0200
+Message-ID: <CAK8P3a3d-hFFznJAXOjtemV02Zzm_wJW2LefLONRJmobYodmrw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] kbuild: refactor scripts/Makefile.extrawarn
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -71,17 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 5, 2019 at 8:52 AM Lee Jones <lee.jones@linaro.org> wrote:
+On Thu, Sep 5, 2019 at 12:40 AM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+> On Wed, Sep 04, 2019 at 11:46:45PM +0200, Arnd Bergmann wrote:
+> > On Sat, Aug 31, 2019 at 6:26 PM Masahiro Yamada
+> > <yamada.masahiro@socionext.com> wrote:
+> >
+> > FWIW, I just found out I missed a bug that clang failed to warn about
+> > because of the  -Wno-format. Apparently gcc warns only about type
+> > mismatches that result in incompatible calling conventions (e.g.
+> > int vs int64_t) but not smaller types (int, short) that get converted to an
+> > int anyway. Passing -Wno-format turns both off.
+> >
+> >       Arnd
 >
-> Used when DMA is not available or the best option.
+> Hi Arnd,
 >
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> Reviewed-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt | 1 +
->  1 file changed, 1 insertion(+)
+> This has been fixed in clang 10.0.0 but this areas has not been updated
+> as nobody has sent a patch yet:
+>
+> https://github.com/ClangBuiltLinux/linux/issues/378#issuecomment-524411147
 
-If it was me, I'd just turn off DMA. DMA for typical I2C usage seems
-kind of pointless. However:
+Ok, that's good. I see that on clang-9, the documentation also
+mentions that -Wformat control -Wformat-extra-args -Wformat-invalid-specifier
+-Wformat-y2k -Wformat-zero-length -Wnonnull and -Wformat-security.
+We can probably turn these all on, regardless. The only warning
+that produces output here is -Wformat-security, and only in a couple of
+files (number of warnings per file from a few hundred randconfig builds):
 
-Acked-by: Rob Herring <robh@kernel.org>
+   384 kernel/trace/ring_buffer_benchmark.c
+    176 samples/trace_printk/trace-printk.c
+    174 kernel/debug/kdb/kdb_io.c
+    102 arch/x86/kernel/e820.c
+     80 fs/btrfs/check-integrity.c
+     67 fs/reiserfs/prints.c
+     63 fs/xfs/xfs_log_recover.c
+     54 fs/quota/dquot.c
+     53 lib/test_printf.c
+     39 sound/core/sound.c
+     28 arch/x86/kernel/cpu/mce/core.c
+     21 kernel/trace/preemptirq_delay_test.c
+     19 sound/core/seq/seq_clientmgr.c
+     17 sound/pci/hda/hda_bind.c
+     16 sound/usb/mixer_quirks.c
+     16 arch/x86/kernel/cpu/mce/amd.c
+     15 net/smc/smc_ism.c
+     12 kernel/debug/kdb/kdb_main.c
+      8 net/netfilter/nf_conntrack_helper.c
+      4 kernel/power/suspend_test.c
+      3 sound/pci/rme32.c
+      3 net/dsa/dsa.c
+      2 sound/pci/rme96.c
+      1 sound/soc/sof/intel/hda-codec.c
+      1 sound/pci/korg1212/korg1212.c
+
+      Arnd
