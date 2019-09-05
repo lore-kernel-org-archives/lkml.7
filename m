@@ -2,327 +2,139 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC50C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0794C00306
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37DC5206DE
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:37:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A0EF206DE
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:38:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="YZe7maOd"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gd36TohF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391189AbfIEWhf (ORCPT
+        id S2391210AbfIEWiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 18:37:35 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:51750 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731969AbfIEWhf (ORCPT
+        Thu, 5 Sep 2019 18:38:25 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:53212 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726837AbfIEWiZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 18:37:35 -0400
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id x85MYE2i030413
-        for <linux-kernel@vger.kernel.org>; Thu, 5 Sep 2019 15:37:32 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=facebook; bh=lSqqi78fHp3ioQ5wDihlnWL/SQg6g8y6flEaOHNcEsI=;
- b=YZe7maOdTas13hB6VT6ZbnQkD0fue86QdDdagREhK72OKGEPnUHyCZ65Pmn1+2VoCu99
- Z36JS38vbSG9SVGpfzmZN01QPLH8X/ZANXk0vJ7NXbf/yqNTi97E0MW9W5eLi3GfFlvX
- T1HrSw1NNWA1eOBGQdxlg9qVmgufgMsfIjM= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by m0089730.ppops.net with ESMTP id 2uu6wu17pm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 15:37:32 -0700
-Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:83::6) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 5 Sep 2019 15:37:31 -0700
-Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
-        id 9C6161722F059; Thu,  5 Sep 2019 15:37:30 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
-To:     <linux-mm@kvack.org>
-CC:     Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-team@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Waiman Long <longman@redhat.com>, Roman Gushchin <guro@fb.com>
-Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH RFC 02/14] mm: memcg: introduce mem_cgroup_ptr
-Date:   Thu, 5 Sep 2019 15:37:07 -0700
-Message-ID: <20190905223707.1779299-1-guro@fb.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190905214553.1643060-1-guro@fb.com>
-References: <20190905214553.1643060-1-guro@fb.com>
-X-FB-Internal: Safe
+        Thu, 5 Sep 2019 18:38:25 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x85MYURF061084;
+        Thu, 5 Sep 2019 22:38:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=SMr5Wa1/JRqleE5iB2SBJYc1hjMDbWANCCSO+yo7+7A=;
+ b=gd36TohFcCgMahV+CDJYj5r05LKAiLCosdVUECyedsnKRj7lvI76xNyOFnwJ3pD3k1s/
+ TZ3Y1N5bvPtBRXU+iOjyRutGjuBjT6iVUucSN9XiWWTHHA6KJEOFTdew7i4AP/pIo/My
+ UiMQYzi3qDaEGZOZMMcTcWQG+1NaaIpjqmyy6NEhazHwdkr23lyjUcdZQ1z8Vc5k6MtG
+ V/H5uDMp1ViiwRU4lm1omUg0rIfspI0K/iTuOmC9TzUMT/Np//KdX4SayiPsuj8W6Cj2
+ fnxM2P9YkyqLCN6UpqLanR/pOiTghYtjmRiZPsVqCjLIw2kE+PqF9T1rWv5wgJYkiUhO hw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2uub5yr117-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 05 Sep 2019 22:38:06 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x85MYHBO035022;
+        Thu, 5 Sep 2019 22:38:05 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2utpmby59r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 05 Sep 2019 22:38:05 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x85Mc3iT012918;
+        Thu, 5 Sep 2019 22:38:03 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 05 Sep 2019 15:38:03 -0700
+Date:   Thu, 5 Sep 2019 18:37:56 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] padata: make flushing work with async users
+Message-ID: <20190905223756.wmmjkjvztlerjzee@ca-dmjordan1.us.oracle.com>
+References: <20190828221425.22701-1-daniel.m.jordan@oracle.com>
+ <20190828221425.22701-2-daniel.m.jordan@oracle.com>
+ <20190905041734.GA25330@gondor.apana.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-05_09:2019-09-04,2019-09-05 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 bulkscore=0 phishscore=0
- lowpriorityscore=0 malwarescore=0 suspectscore=3 impostorscore=0
- adultscore=0 spamscore=0 mlxlogscore=999 clxscore=1015 priorityscore=1501
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1906280000 definitions=main-1909050210
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190905041734.GA25330@gondor.apana.org.au>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1909050210
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1909050210
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit introduces mem_cgroup_ptr structure and corresponding API.
-It implements a pointer to a memory cgroup with a built-in reference
-counter. The main goal of it is to implement reparenting efficiently.
+On Thu, Sep 05, 2019 at 02:17:35PM +1000, Herbert Xu wrote:
+> On Wed, Aug 28, 2019 at 06:14:21PM -0400, Daniel Jordan wrote:
+> >
+> > @@ -453,24 +456,15 @@ static void padata_free_pd(struct parallel_data *pd)
+> >  /* Flush all objects out of the padata queues. */
+> >  static void padata_flush_queues(struct parallel_data *pd)
+> >  {
+> > -	int cpu;
+> > -	struct padata_parallel_queue *pqueue;
+> > -	struct padata_serial_queue *squeue;
+> > -
+> > -	for_each_cpu(cpu, pd->cpumask.pcpu) {
+> > -		pqueue = per_cpu_ptr(pd->pqueue, cpu);
+> > -		flush_work(&pqueue->work);
+> > -	}
+> > -
+> > -	if (atomic_read(&pd->reorder_objects))
+> > -		padata_reorder(pd);
+> > +	if (!(pd->pinst->flags & PADATA_INIT))
+> > +		return;
+> >  
+> > -	for_each_cpu(cpu, pd->cpumask.cbcpu) {
+> > -		squeue = per_cpu_ptr(pd->squeue, cpu);
+> > -		flush_work(&squeue->work);
+> > -	}
+> > +	if (atomic_dec_return(&pd->refcnt) == 0)
+> > +		complete(&pd->flushing_done);
+> >  
+> > -	BUG_ON(atomic_read(&pd->refcnt) != 0);
+> > +	wait_for_completion(&pd->flushing_done);
+> > +	reinit_completion(&pd->flushing_done);
+> > +	atomic_set(&pd->refcnt, 1);
+> >  }
+> 
+> I don't think waiting is an option.  In a pathological case the
+> hardware may not return at all.  We cannot and should not hold off
+> CPU hotplug for an arbitrary amount of time when the event we are
+> waiting for isn't even occuring on that CPU.
 
-If a number of objects (e.g. slab pages) have to keep a pointer and
-a reference to a memory cgroup, they can use mem_cgroup_ptr instead.
-On reparenting, only one mem_cgroup_ptr->memcg pointer has to be
-changed, instead of walking over all accounted objects.
+Ok, I hadn't considered hardware not returning.
 
-mem_cgroup_ptr holds a single reference to the corresponding memory
-cgroup. Because it's initialized before the css reference counter,
-css's refcounter can't be bumped at allocation time. Instead, it's
-bumped on reparenting which happens during offlining. A cgroup is
-never released online, so it's fine.
+> I don't think flushing is needed at all.  All we need to do is
+> maintain consistency before and after the CPU hotplug event.
 
-mem_cgroup_ptr is released using rcu, so memcg->kmem_memcg_ptr can
-be accessed in a rcu read section. On reparenting it's atomically
-switched to NULL. If the reader gets NULL, it can just read parent's
-kmem_memcg_ptr instead.
+I could imagine not flushing would work for replacing a pd.  The old pd could
+be freed by whatever drops the last reference and the new pd could be
+installed, all without flushing.
 
-Each memory cgroup contains a list of kmem_memcg_ptrs. On reparenting
-the list is spliced into the parent's list. The list is protected
-using the css set lock.
-
-Signed-off-by: Roman Gushchin <guro@fb.com>
----
- include/linux/memcontrol.h | 50 ++++++++++++++++++++++
- mm/memcontrol.c            | 87 ++++++++++++++++++++++++++++++++++++--
- 2 files changed, 133 insertions(+), 4 deletions(-)
-
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 120d39066148..d822ea66278c 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -23,6 +23,7 @@
- #include <linux/page-flags.h>
- 
- struct mem_cgroup;
-+struct mem_cgroup_ptr;
- struct page;
- struct mm_struct;
- struct kmem_cache;
-@@ -199,6 +200,22 @@ struct memcg_cgwb_frn {
- 	struct wb_completion done;	/* tracks in-flight foreign writebacks */
- };
- 
-+/*
-+ * A pointer to a memory cgroup with a built-in reference counter.
-+ * For a use as an intermediate object to simplify reparenting of
-+ * objects charged to the cgroup. The memcg pointer can be switched
-+ * to the parent cgroup without a need to modify all objects
-+ * which hold the reference to the cgroup.
-+ */
-+struct mem_cgroup_ptr {
-+	struct percpu_ref refcnt;
-+	struct mem_cgroup *memcg;
-+	union {
-+		struct list_head list;
-+		struct rcu_head rcu;
-+	};
-+};
-+
- /*
-  * The memory controller data structure. The memory controller controls both
-  * page cache and RSS per cgroup. We would eventually like to provide
-@@ -312,6 +329,8 @@ struct mem_cgroup {
- 	int kmemcg_id;
- 	enum memcg_kmem_state kmem_state;
- 	struct list_head kmem_caches;
-+	struct mem_cgroup_ptr __rcu *kmem_memcg_ptr;
-+	struct list_head kmem_memcg_ptr_list;
- #endif
- 
- 	int last_scanned_node;
-@@ -440,6 +459,21 @@ struct mem_cgroup *mem_cgroup_from_css(struct cgroup_subsys_state *css){
- 	return css ? container_of(css, struct mem_cgroup, css) : NULL;
- }
- 
-+static inline bool mem_cgroup_ptr_tryget(struct mem_cgroup_ptr *ptr)
-+{
-+	return percpu_ref_tryget(&ptr->refcnt);
-+}
-+
-+static inline void mem_cgroup_ptr_get(struct mem_cgroup_ptr *ptr)
-+{
-+	percpu_ref_get(&ptr->refcnt);
-+}
-+
-+static inline void mem_cgroup_ptr_put(struct mem_cgroup_ptr *ptr)
-+{
-+	percpu_ref_put(&ptr->refcnt);
-+}
-+
- static inline void mem_cgroup_put(struct mem_cgroup *memcg)
- {
- 	if (memcg)
-@@ -1433,6 +1467,22 @@ static inline int memcg_cache_id(struct mem_cgroup *memcg)
- 	return memcg ? memcg->kmemcg_id : -1;
- }
- 
-+static inline struct mem_cgroup_ptr *
-+mem_cgroup_get_kmem_ptr(struct mem_cgroup *memcg)
-+{
-+	struct mem_cgroup_ptr *memcg_ptr;
-+
-+	rcu_read_lock();
-+	do {
-+		memcg_ptr = rcu_dereference(memcg->kmem_memcg_ptr);
-+		if (memcg_ptr && mem_cgroup_ptr_tryget(memcg_ptr))
-+			break;
-+	} while ((memcg = parent_mem_cgroup(memcg)));
-+	rcu_read_unlock();
-+
-+	return memcg_ptr;
-+}
-+
- #else
- 
- static inline int memcg_kmem_charge(struct page *page, gfp_t gfp, int order)
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index effefcec47b3..cb9adb31360e 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -266,6 +266,77 @@ struct cgroup_subsys_state *vmpressure_to_css(struct vmpressure *vmpr)
- }
- 
- #ifdef CONFIG_MEMCG_KMEM
-+extern spinlock_t css_set_lock;
-+
-+static void memcg_ptr_release(struct percpu_ref *ref)
-+{
-+	struct mem_cgroup_ptr *ptr = container_of(ref, struct mem_cgroup_ptr,
-+						  refcnt);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&css_set_lock, flags);
-+	list_del(&ptr->list);
-+	spin_unlock_irqrestore(&css_set_lock, flags);
-+
-+	mem_cgroup_put(ptr->memcg);
-+	percpu_ref_exit(ref);
-+	kfree_rcu(ptr, rcu);
-+}
-+
-+static int memcg_init_kmem_memcg_ptr(struct mem_cgroup *memcg)
-+{
-+	struct mem_cgroup_ptr *kmem_memcg_ptr;
-+	int ret;
-+
-+	kmem_memcg_ptr = kmalloc(sizeof(struct mem_cgroup_ptr), GFP_KERNEL);
-+	if (!kmem_memcg_ptr)
-+		return -ENOMEM;
-+
-+	ret = percpu_ref_init(&kmem_memcg_ptr->refcnt, memcg_ptr_release,
-+			      0, GFP_KERNEL);
-+	if (ret) {
-+		kfree(kmem_memcg_ptr);
-+		return ret;
-+	}
-+
-+	kmem_memcg_ptr->memcg = memcg;
-+	INIT_LIST_HEAD(&kmem_memcg_ptr->list);
-+	rcu_assign_pointer(memcg->kmem_memcg_ptr, kmem_memcg_ptr);
-+	list_add(&kmem_memcg_ptr->list, &memcg->kmem_memcg_ptr_list);
-+	return 0;
-+}
-+
-+static void memcg_reparent_kmem_memcg_ptr(struct mem_cgroup *memcg,
-+					  struct mem_cgroup *parent)
-+{
-+	unsigned int nr_reparented = 0;
-+	struct mem_cgroup_ptr *memcg_ptr = NULL;
-+
-+	rcu_swap_protected(memcg->kmem_memcg_ptr, memcg_ptr, true);
-+	percpu_ref_kill(&memcg_ptr->refcnt);
-+
-+	/*
-+	 * kmem_memcg_ptr is initialized before css refcounter, so until now
-+	 * it doesn't hold a reference to the memcg. Bump it here.
-+	 */
-+	css_get(&memcg->css);
-+
-+	spin_lock_irq(&css_set_lock);
-+	list_for_each_entry(memcg_ptr, &memcg->kmem_memcg_ptr_list, list) {
-+		xchg(&memcg_ptr->memcg, parent);
-+		nr_reparented++;
-+	}
-+	if (nr_reparented)
-+		list_splice(&memcg->kmem_memcg_ptr_list,
-+			    &parent->kmem_memcg_ptr_list);
-+	spin_unlock_irq(&css_set_lock);
-+
-+	if (nr_reparented) {
-+		css_get_many(&parent->css, nr_reparented);
-+		css_put_many(&memcg->css, nr_reparented);
-+	}
-+}
-+
- /*
-  * This will be the memcg's index in each cache's ->memcg_params.memcg_caches.
-  * The main reason for not using cgroup id for this:
-@@ -3554,7 +3625,7 @@ static void memcg_flush_percpu_vmevents(struct mem_cgroup *memcg)
- #ifdef CONFIG_MEMCG_KMEM
- static int memcg_online_kmem(struct mem_cgroup *memcg)
- {
--	int memcg_id;
-+	int memcg_id, ret;
- 
- 	if (cgroup_memory_nokmem)
- 		return 0;
-@@ -3566,6 +3637,12 @@ static int memcg_online_kmem(struct mem_cgroup *memcg)
- 	if (memcg_id < 0)
- 		return memcg_id;
- 
-+	ret = memcg_init_kmem_memcg_ptr(memcg);
-+	if (ret) {
-+		memcg_free_cache_id(memcg_id);
-+		return ret;
-+	}
-+
- 	static_branch_inc(&memcg_kmem_enabled_key);
- 	/*
- 	 * A memory cgroup is considered kmem-online as soon as it gets
-@@ -3601,12 +3678,13 @@ static void memcg_offline_kmem(struct mem_cgroup *memcg)
- 		parent = root_mem_cgroup;
- 
- 	/*
--	 * Deactivate and reparent kmem_caches. Then flush percpu
--	 * slab statistics to have precise values at the parent and
--	 * all ancestor levels. It's required to keep slab stats
-+	 * Deactivate and reparent kmem_caches and reparent kmem_memcg_ptr.
-+	 * Then flush percpu slab statistics to have precise values at the
-+	 * parent and all ancestor levels. It's required to keep slab stats
- 	 * accurate after the reparenting of kmem_caches.
- 	 */
- 	memcg_deactivate_kmem_caches(memcg, parent);
-+	memcg_reparent_kmem_memcg_ptr(memcg, parent);
- 	memcg_flush_percpu_vmstats(memcg, true);
- 
- 	kmemcg_id = memcg->kmemcg_id;
-@@ -5171,6 +5249,7 @@ static struct mem_cgroup *mem_cgroup_alloc(void)
- 	memcg->socket_pressure = jiffies;
- #ifdef CONFIG_MEMCG_KMEM
- 	memcg->kmemcg_id = -1;
-+	INIT_LIST_HEAD(&memcg->kmem_memcg_ptr_list);
- #endif
- #ifdef CONFIG_CGROUP_WRITEBACK
- 	INIT_LIST_HEAD(&memcg->cgwb_list);
--- 
-2.21.0
-
+In the case of freeing an instance, though, padata needs to wait for all the
+jobs to complete so they don't use the instance's data after it's been freed.
+Holding the CPU hotplug lock isn't necessary for this, though, so I think we're
+ok to wait here.
