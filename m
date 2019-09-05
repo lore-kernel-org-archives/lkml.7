@@ -6,37 +6,36 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 820D3C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F65C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 100AE21925
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:44:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B66521D71
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:44:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390671AbfIEPn7 (ORCPT
+        id S2390648AbfIEPnz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 11:43:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35672 "EHLO mail.kernel.org"
+        Thu, 5 Sep 2019 11:43:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390573AbfIEPnp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2390542AbfIEPnp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 5 Sep 2019 11:43:45 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFAFB21D56;
-        Thu,  5 Sep 2019 15:43:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E14A521924;
+        Thu,  5 Sep 2019 15:43:44 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92)
         (envelope-from <rostedt@goodmis.org>)
-        id 1i5tvE-0007eH-9O; Thu, 05 Sep 2019 11:43:44 -0400
-Message-Id: <20190905154344.177680295@goodmis.org>
+        id 1i5tvD-0007cL-D0; Thu, 05 Sep 2019 11:43:43 -0400
+Message-Id: <20190905154343.292050287@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Thu, 05 Sep 2019 11:43:23 -0400
+Date:   Thu, 05 Sep 2019 11:43:19 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Tom Zanussi <zanussi@kernel.org>
-Subject: [for-next][PATCH 25/25] tracing: Add "gfp_t" support in synthetic_events
+        Matt Helsley <mhelsley@vmware.com>
+Subject: [for-next][PATCH 21/25] recordmcount: Clarify what cleanup() does
 References: <20190905154258.573706229@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -45,82 +44,254 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+From: Matt Helsley <mhelsley@vmware.com>
 
-Add "gfp_t" support in synthetic_events, then the "gfp_t" type
-parameter in some functions can be traced.
+cleanup() mostly frees/unmaps the malloc'd/privately-mapped
+copy of the ELF file recordmcount is working on, which is
+set up in mmap_file(). It also deals with positioning within
+the pseduo prive-mapping of the file and appending to the ELF
+file.
 
-Prints the gfp flags as hex in addition to the human-readable flag
-string.  Example output:
+Split into two steps:
+	mmap_cleanup() for the mapping itself
+	file_append_cleanup() for allocations storing the
+		appended ELF data.
 
-  whoopsie-630 [000] ...1 78.969452: testevent: bar=b20 (GFP_ATOMIC|__GFP_ZERO)
-    rcuc/0-11  [000] ...1 81.097555: testevent: bar=a20 (GFP_ATOMIC)
-    rcuc/0-11  [000] ...1 81.583123: testevent: bar=a20 (GFP_ATOMIC)
+Also, move the global variable initializations out of the main,
+per-object-file loop and nearer to the alloc/init (mmap_file())
+and two cleanup functions so we can more clearly see how they're
+related.
 
-Link: http://lkml.kernel.org/r/20190712015308.9908-1-zhengjun.xing@linux.intel.com
+Link: http://lkml.kernel.org/r/2a387ac86d133d22c68f57b9933c32bab1d09a2d.1564596289.git.mhelsley@vmware.com
 
-Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
-[ Added printing of flag names ]
-Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+Signed-off-by: Matt Helsley <mhelsley@vmware.com>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_events_hist.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ scripts/recordmcount.c | 151 ++++++++++++++++++++++-------------------
+ 1 file changed, 81 insertions(+), 70 deletions(-)
 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 65e7d071ed28..3a6e42aa08e6 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -13,6 +13,10 @@
- #include <linux/rculist.h>
- #include <linux/tracefs.h>
- 
-+/* for gfp flag names */
-+#include <linux/trace_events.h>
-+#include <trace/events/mmflags.h>
+diff --git a/scripts/recordmcount.c b/scripts/recordmcount.c
+index 5677fcc88a72..612268eabef4 100644
+--- a/scripts/recordmcount.c
++++ b/scripts/recordmcount.c
+@@ -48,21 +48,26 @@ static void *file_map;	/* pointer of the mapped file */
+ static void *file_end;	/* pointer to the end of the mapped file */
+ static int file_updated; /* flag to state file was changed */
+ static void *file_ptr;	/* current file pointer location */
 +
- #include "tracing_map.h"
- #include "trace.h"
- #include "trace_dynevent.h"
-@@ -752,6 +756,8 @@ static int synth_field_size(char *type)
- 		size = sizeof(unsigned long);
- 	else if (strcmp(type, "pid_t") == 0)
- 		size = sizeof(pid_t);
-+	else if (strcmp(type, "gfp_t") == 0)
-+		size = sizeof(gfp_t);
- 	else if (synth_field_is_string(type))
- 		size = synth_field_string_size(type);
+ static void *file_append; /* added to the end of the file */
+ static size_t file_append_size; /* how much is added to end of file */
  
-@@ -792,6 +798,8 @@ static const char *synth_field_fmt(char *type)
- 		fmt = "%lu";
- 	else if (strcmp(type, "pid_t") == 0)
- 		fmt = "%d";
-+	else if (strcmp(type, "gfp_t") == 0)
-+		fmt = "%x";
- 	else if (synth_field_is_string(type))
- 		fmt = "%s";
+ /* Per-file resource cleanup when multiple files. */
+-static void cleanup(void)
++static void file_append_cleanup(void)
++{
++	free(file_append);
++	file_append = NULL;
++	file_append_size = 0;
++	file_updated = 0;
++}
++
++static void mmap_cleanup(void)
+ {
+ 	if (!mmap_failed)
+ 		munmap(file_map, sb.st_size);
+ 	else
+ 		free(file_map);
+ 	file_map = NULL;
+-	free(file_append);
+-	file_append = NULL;
+-	file_append_size = 0;
+-	file_updated = 0;
+ }
  
-@@ -834,9 +842,20 @@ static enum print_line_t print_synth_event(struct trace_iterator *iter,
- 					 i == se->n_fields - 1 ? "" : " ");
- 			n_u64 += STR_VAR_LEN_MAX / sizeof(u64);
- 		} else {
-+			struct trace_print_flags __flags[] = {
-+			    __def_gfpflag_names, {-1, NULL} };
-+
- 			trace_seq_printf(s, print_fmt, se->fields[i]->name,
- 					 entry->fields[n_u64],
- 					 i == se->n_fields - 1 ? "" : " ");
-+
-+			if (strcmp(se->fields[i]->type, "gfp_t") == 0) {
-+				trace_seq_puts(s, " (");
-+				trace_print_flags_seq(s, "|",
-+						      entry->fields[n_u64],
-+						      __flags);
-+				trace_seq_putc(s, ')');
-+			}
- 			n_u64++;
+ /* ulseek, uwrite, ...:  Check return value for errors. */
+@@ -103,7 +108,8 @@ static ssize_t uwrite(void const *const buf, size_t const count)
  		}
+ 		if (!file_append) {
+ 			perror("write");
+-			cleanup();
++			file_append_cleanup();
++			mmap_cleanup();
+ 			return -1;
+ 		}
+ 		if (file_ptr < file_end) {
+@@ -129,12 +135,76 @@ static void * umalloc(size_t size)
+ 	void *const addr = malloc(size);
+ 	if (addr == 0) {
+ 		fprintf(stderr, "malloc failed: %zu bytes\n", size);
+-		cleanup();
++		file_append_cleanup();
++		mmap_cleanup();
+ 		return NULL;
  	}
+ 	return addr;
+ }
+ 
++/*
++ * Get the whole file as a programming convenience in order to avoid
++ * malloc+lseek+read+free of many pieces.  If successful, then mmap
++ * avoids copying unused pieces; else just read the whole file.
++ * Open for both read and write; new info will be appended to the file.
++ * Use MAP_PRIVATE so that a few changes to the in-memory ElfXX_Ehdr
++ * do not propagate to the file until an explicit overwrite at the last.
++ * This preserves most aspects of consistency (all except .st_size)
++ * for simultaneous readers of the file while we are appending to it.
++ * However, multiple writers still are bad.  We choose not to use
++ * locking because it is expensive and the use case of kernel build
++ * makes multiple writers unlikely.
++ */
++static void *mmap_file(char const *fname)
++{
++	/* Avoid problems if early cleanup() */
++	fd_map = -1;
++	mmap_failed = 1;
++	file_map = NULL;
++	file_ptr = NULL;
++	file_updated = 0;
++	sb.st_size = 0;
++
++	fd_map = open(fname, O_RDONLY);
++	if (fd_map < 0) {
++		perror(fname);
++		return NULL;
++	}
++	if (fstat(fd_map, &sb) < 0) {
++		perror(fname);
++		goto out;
++	}
++	if (!S_ISREG(sb.st_mode)) {
++		fprintf(stderr, "not a regular file: %s\n", fname);
++		goto out;
++	}
++	file_map = mmap(0, sb.st_size, PROT_READ|PROT_WRITE, MAP_PRIVATE,
++			fd_map, 0);
++	if (file_map == MAP_FAILED) {
++		mmap_failed = 1;
++		file_map = umalloc(sb.st_size);
++		if (!file_map) {
++			perror(fname);
++			goto out;
++		}
++		if (read(fd_map, file_map, sb.st_size) != sb.st_size) {
++			perror(fname);
++			free(file_map);
++			file_map = NULL;
++			goto out;
++		}
++	} else
++		mmap_failed = 0;
++out:
++	close(fd_map);
++	fd_map = -1;
++
++	file_end = file_map + sb.st_size;
++
++	return file_map;
++}
++
++
+ static unsigned char ideal_nop5_x86_64[5] = { 0x0f, 0x1f, 0x44, 0x00, 0x00 };
+ static unsigned char ideal_nop5_x86_32[5] = { 0x3e, 0x8d, 0x74, 0x26, 0x00 };
+ static unsigned char *ideal_nop;
+@@ -238,61 +308,6 @@ static int make_nop_arm64(void *map, size_t const offset)
+ 	return 0;
+ }
+ 
+-/*
+- * Get the whole file as a programming convenience in order to avoid
+- * malloc+lseek+read+free of many pieces.  If successful, then mmap
+- * avoids copying unused pieces; else just read the whole file.
+- * Open for both read and write; new info will be appended to the file.
+- * Use MAP_PRIVATE so that a few changes to the in-memory ElfXX_Ehdr
+- * do not propagate to the file until an explicit overwrite at the last.
+- * This preserves most aspects of consistency (all except .st_size)
+- * for simultaneous readers of the file while we are appending to it.
+- * However, multiple writers still are bad.  We choose not to use
+- * locking because it is expensive and the use case of kernel build
+- * makes multiple writers unlikely.
+- */
+-static void *mmap_file(char const *fname)
+-{
+-	file_map = NULL;
+-	sb.st_size = 0;
+-	fd_map = open(fname, O_RDONLY);
+-	if (fd_map < 0) {
+-		perror(fname);
+-		return NULL;
+-	}
+-	if (fstat(fd_map, &sb) < 0) {
+-		perror(fname);
+-		goto out;
+-	}
+-	if (!S_ISREG(sb.st_mode)) {
+-		fprintf(stderr, "not a regular file: %s\n", fname);
+-		goto out;
+-	}
+-	file_map = mmap(0, sb.st_size, PROT_READ|PROT_WRITE, MAP_PRIVATE,
+-			fd_map, 0);
+-	mmap_failed = 0;
+-	if (file_map == MAP_FAILED) {
+-		mmap_failed = 1;
+-		file_map = umalloc(sb.st_size);
+-		if (!file_map) {
+-			perror(fname);
+-			goto out;
+-		}
+-		if (read(fd_map, file_map, sb.st_size) != sb.st_size) {
+-			perror(fname);
+-			free(file_map);
+-			file_map = NULL;
+-			goto out;
+-		}
+-	}
+-out:
+-	close(fd_map);
+-
+-	file_end = file_map + sb.st_size;
+-
+-	return file_map;
+-}
+-
+ static int write_file(const char *fname)
+ {
+ 	char tmp_file[strlen(fname) + 4];
+@@ -438,10 +453,11 @@ static void MIPS64_r_info(Elf64_Rel *const rp, unsigned sym, unsigned type)
+ 
+ static int do_file(char const *const fname)
+ {
+-	Elf32_Ehdr *const ehdr = mmap_file(fname);
+ 	unsigned int reltype = 0;
++	Elf32_Ehdr *ehdr;
+ 	int rc = -1;
+ 
++	ehdr = mmap_file(fname);
+ 	if (!ehdr)
+ 		goto out;
+ 
+@@ -577,7 +593,8 @@ static int do_file(char const *const fname)
+ 
+ 	rc = write_file(fname);
+ out:
+-	cleanup();
++	file_append_cleanup();
++	mmap_cleanup();
+ 	return rc;
+ }
+ 
+@@ -620,12 +637,6 @@ int main(int argc, char *argv[])
+ 		    strcmp(file + (len - ftrace_size), ftrace) == 0)
+ 			continue;
+ 
+-		/* Avoid problems if early cleanup() */
+-		fd_map = -1;
+-		mmap_failed = 1;
+-		file_map = NULL;
+-		file_ptr = NULL;
+-		file_updated = 0;
+ 		if (do_file(file)) {
+ 			fprintf(stderr, "%s: failed\n", file);
+ 			++n_error;
 -- 
 2.20.1
 
