@@ -2,139 +2,119 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F39C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 05:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F84EC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 05:57:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEBA720870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 05:56:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 355FA2173B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 05:57:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567663052;
+	bh=b292g8mJoYcj/jNrZCgS1ByxFY+tYW3GWpZHPIRrAf4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=G7cNuZP/DDAczUu4btvuURwP7yfEsYCNloX3Uwk1vR8JH5LWMvVndjFcgQLj6XdWO
+	 XUN5Hj6ikZ+sSjsA5H63yUoDheqmzveADdoseaR0FlmU/TVi+TKKNxsvpy2v76NYNW
+	 m+9eUyB7U+41xjd1/T6xR2CkKdJs23l+/OoiwmDM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731293AbfIEF4z (ORCPT
+        id S1731301AbfIEF5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 01:56:55 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:14802 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726088AbfIEF4y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 01:56:54 -0400
-X-UUID: b315badb3ec945b792741a96f66d657f-20190905
-X-UUID: b315badb3ec945b792741a96f66d657f-20190905
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <yong.wu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 273631663; Thu, 05 Sep 2019 13:56:45 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31DR.mediatek.inc
- (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 5 Sep
- 2019 13:56:38 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 5 Sep 2019 13:56:37 +0800
-Message-ID: <1567662999.18702.28.camel@mhfsdcap03>
-Subject: Re: [PATCH v3 06/14] media: mtk-mdp: Get rid of mtk_smi_larb_get/put
-From:   Yong Wu <yong.wu@mediatek.com>
-To:     houlong wei <houlong.wei@mediatek.com>
-CC:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Tomasz Figa <tfiga@google.com>,
-        Will Deacon <will.deacon@arm.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux-foundation.org>, <youlin.pei@mediatek.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        "Matthias Kaehlcke" <mka@chromium.org>, <anan.sun@mediatek.com>,
-        <cui.zhang@mediatek.com>, <chao.hao@mediatek.com>,
-        <ming-fan.chen@mediatek.com>, <minghsiu.tsai@mediatek.com>
-Date:   Thu, 5 Sep 2019 13:56:39 +0800
-In-Reply-To: <1567570074.31301.19.camel@mhfsdcap03>
-References: <mailman.21807.1567503573.19300.linux-mediatek@lists.infradead.org>
-         <1567570074.31301.19.camel@mhfsdcap03>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 5 Sep 2019 01:57:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37116 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726088AbfIEF5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 01:57:30 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C2B620870;
+        Thu,  5 Sep 2019 05:57:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567663049;
+        bh=b292g8mJoYcj/jNrZCgS1ByxFY+tYW3GWpZHPIRrAf4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ErtN+Wse6cQ/fgbb+Uv5kkpc0GK+PaMjLAZnJhKvx/3DR4L6OBQne4XGoyCyVfGS/
+         nhC6IulgCw9fhxAZX3//lrazIsqGnnixm/iuulUpxL1naI/nu6cs3bZHmj8fkI11qU
+         B6kGyssuxBIajADYdU3y/axbG3+9yt8+0JF2UGQY=
+Date:   Thu, 5 Sep 2019 07:57:27 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Yunsheng Lin <linyunsheng@huawei.com>
+Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org,
+        peterz@infradead.org, mingo@kernel.org, mhocko@kernel.org,
+        linuxarm@huawei.com
+Subject: Re: [PATCH RFC] driver core: ensure a device has valid node id in
+ device_add()
+Message-ID: <20190905055727.GB23826@kroah.com>
+References: <1567647230-166903-1-git-send-email-linyunsheng@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: B5594BCA8B000D0387E321BE740558961162944E3E3D0781D08371B12D3EAA0E2000:8
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1567647230-166903-1-git-send-email-linyunsheng@huawei.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-09-04 at 12:07 +0800, houlong wei wrote:
-> Hi, Yong,
+On Thu, Sep 05, 2019 at 09:33:50AM +0800, Yunsheng Lin wrote:
+> Currently a device does not belong to any of the numa nodes
+> (dev->numa_node is NUMA_NO_NODE) when the FW does not provide
+> the node id and the device has not no parent device.
 > 
-> I have inline comment below.
-
-Thanks for your review.
-
+> According to discussion in [1]:
+> Even if a device's numa node is not set by fw, the device
+> really does belong to a node.
 > 
-> > MediaTek IOMMU has already added the device_link between the consumer
-> > and smi-larb device. If the mdp device call the pm_runtime_get_sync,
-> > the smi-larb's pm_runtime_get_sync also be called automatically.
-> > 
-> > CC: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
-> > Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> > Reviewed-by: Evan Green <evgreen@chromium.org>
-> > ---
-> >  drivers/media/platform/mtk-mdp/mtk_mdp_comp.c | 38 ---------------------------
-> >  drivers/media/platform/mtk-mdp/mtk_mdp_comp.h |  2 --
-> >  drivers/media/platform/mtk-mdp/mtk_mdp_core.c |  1 -
-> >  3 files changed, 41 deletions(-)
-> > 
-> > diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
-> > index 9afe816..5985a9b 100644
-> > --- a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
-> > +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
-> > @@ -9,7 +9,6 @@
-> >  #include <linux/of.h>
-> >  #include <linux/of_address.h>
-> >  #include <linux/of_platform.h>
-> > -#include <soc/mediatek/smi.h>
-> >  
-> >  #include "mtk_mdp_comp.h"
-> >  
-> > @@ -58,14 +57,6 @@ void mtk_mdp_comp_clock_on(struct device *dev, struct mtk_mdp_comp *comp)
-> >  {
-> >  	int i, err;
-> >  
-> > -	if (comp->larb_dev) {
-> > -		err = mtk_smi_larb_get(comp->larb_dev);
-> > -		if (err)
-> > -			dev_err(dev,
-> > -				"failed to get larb, err %d. type:%d id:%d\n",
-> > -				err, comp->type, comp->id);
-> > -	}
+> This patch sets the device node to node 0 in device_add() if
+> the fw has not specified the node id and it either has no
+> parent device, or the parent device also does not have a valid
+> node id.
 > 
-> In previous design,mtk_mdp_comp_clock_on() is called by each MDP
-> hardware component, and mtk_smi_larb_get() is also called for each MDP
-> hardware component which accesses DRAM via SMI larb.
+> There may be explicit handling out there relying on NUMA_NO_NODE,
+> like in nvme_probe().
 > 
-> Since mdp device only contains mdp_rdma component, so
-> pm_runtime_get_sync() will ignore other smi-larb clock. We need consider
-> how to enable clocks of other smi-larb associated with other mdp
-> component, e.g. mdp_wdma, mdp_wrot.
+> [1] https://lkml.org/lkml/2019/9/2/466
 > 
+> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+> ---
+>  drivers/base/core.c  | 17 ++++++++++++++---
+>  include/linux/numa.h |  2 ++
+>  2 files changed, 16 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index 1669d41..466b8ff 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -2107,9 +2107,20 @@ int device_add(struct device *dev)
+>  	if (kobj)
+>  		dev->kobj.parent = kobj;
+>  
+> -	/* use parent numa_node */
+> -	if (parent && (dev_to_node(dev) == NUMA_NO_NODE))
+> -		set_dev_node(dev, dev_to_node(parent));
+> +	/* use parent numa_node or default node 0 */
+> +	if (!numa_node_valid(dev_to_node(dev))) {
+> +		int nid = parent ? dev_to_node(parent) : NUMA_NO_NODE;
 
-Sorry, I'm not so familiar with mdp, thus, for MDP part, the test and
-reviewing from Minghsiu or you is expected.
+Can you expand this to be a "real" if statement please?
 
-This patch only delete the smi interface literally. In my understanding,
-mdp should call pm_runtime_get with the corresponding device, no matter
-mdp_wdma or mdp_wrot device.
+> +
+> +		if (numa_node_valid(nid)) {
+> +			set_dev_node(dev, nid);
+> +		} else {
+> +			if (nr_node_ids > 1U)
+> +				pr_err("device: '%s': has invalid NUMA node(%d)\n",
+> +				       dev_name(dev), dev_to_node(dev));
 
-Of course I am not sure the mdp flow, If this patch affect its function,
-please tell me. Also, If mdp driver need change correspondingly, I will
-put it into this series like [12/14] of this patchset which is from
-display.
+dev_err() will show you the exact device properly, instead of having to
+rely on dev_name().
 
-[snip]
+And what is a user to do if this message happens?  How do they fix this?
+If they can not, what good is this error message?
 
+thanks,
 
+greg k-h
