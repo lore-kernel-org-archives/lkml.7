@@ -2,131 +2,141 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D8BC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63760C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3CAE2067B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 523A52067B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:51:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WHn/mLxT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391169AbfIERuf (ORCPT
+        id S2391181AbfIERvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 13:50:35 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:42203 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731491AbfIERuf (ORCPT
+        Thu, 5 Sep 2019 13:51:05 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37214 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391170AbfIERvF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 13:50:35 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1i5vtw-0002Fr-Ot; Thu, 05 Sep 2019 17:50:32 +0000
-Subject: NAK: [PATCH] media: cxd2820r: make array tab static const, makes
- object smaller
-From:   Colin Ian King <colin.king@canonical.com>
-To:     Antti Palosaari <crope@iki.fi>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190905174512.8126-1-colin.king@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <7b9c9aea-9cb9-cd9e-871d-1585ada2993c@canonical.com>
-Date:   Thu, 5 Sep 2019 18:50:32 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 5 Sep 2019 13:51:05 -0400
+Received: by mail-ot1-f66.google.com with SMTP id s28so3069814otd.4
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 10:51:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=s9Pb/MqseZ7RlVVs3CNYNbMIo2YR/MhIel99V5tLuCc=;
+        b=WHn/mLxT0ucnyH4gwmp/qpzJbEfaFthNeKdoZwnD/B6/MVQRQqb4wZywL53jq1qIaV
+         gb+TdKsinHPlj+LQlhJoWRU/D7IK2UvLu1uZIbpc98h3j/SLg1FkucCLBSn6QE6a4xv4
+         8A5stXVWsUc3IDcyzSxMHbj/jVhShunx3l22pRcWTxEOi/t6ar1ofl0voxcoIdRfl5r0
+         JMwCWrcjsdNR+EnBKm+WG+n9gRil9h1uAYDHR5V3SPQZC5up027FI9BVXsnmIJn/wGLH
+         a5ELOGPKH2gOOayWt8fPr7sEKLjPvuIF8jdNUuBz8MhE7vzVl2frNjh13WOdqLyRGTLI
+         PW/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=s9Pb/MqseZ7RlVVs3CNYNbMIo2YR/MhIel99V5tLuCc=;
+        b=WsjnBBCyCXoVmDMSwAt1m8J8Uw1qmHt6VuistghjhwdXrSlfjJoYNk2hkWNDOht5Oi
+         aGKFPkgxmD9MJ41WbOKs6iNUj1Zx+Jbv8xZ9vCBiwivvZRTalIljwyBLnabqhQbkv5im
+         NJQgQ8qADE6ebkj3eMVHOn1AFBHpT+3uRNDw5qIgzMm0Ws/3ob9CkuCH04WBmxyjLESb
+         cHMVtujgDP3zIeuAH9yrBS/jGS9zsT2WXIHhdj4m2smXFyW/LnVDZxV8MymIs10/BboF
+         EM1y43gp+nlFWkydtWFxkf2er+gIFxbqsL1wvRr8t9eE+0bZWjnyuVWNsZoSFQfdaC+7
+         lEAw==
+X-Gm-Message-State: APjAAAXW9zdY2r2oEWp0sSovD+DSEzQFEH8zcPiWqZNDVQewYIPE+DMG
+        M56zGtA1q3rrnfLtpNRMt59zCMbgbEnM1IT3QpVYyQ==
+X-Google-Smtp-Source: APXvYqx+O95sXPOaTHKmmrEZVVL5eS8xtFX8KqFEqk0X7AW7J5pOo+WfqsgcGe3pEdAmKOQmEsoGk9XDlW0GP0jc0wc=
+X-Received: by 2002:a9d:6189:: with SMTP id g9mr3419331otk.348.1567705863632;
+ Thu, 05 Sep 2019 10:51:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190905174512.8126-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190903200905.198642-1-joel@joelfernandes.org>
+ <20190904084508.GL3838@dhcp22.suse.cz> <20190904153258.GH240514@google.com>
+ <20190904153759.GC3838@dhcp22.suse.cz> <20190904162808.GO240514@google.com>
+ <20190905144310.GA14491@dhcp22.suse.cz> <CAJuCfpFve2v7d0LX20btk4kAjEpgJ4zeYQQSpqYsSo__CY68xw@mail.gmail.com>
+ <20190905133507.783c6c61@oasis.local.home>
+In-Reply-To: <20190905133507.783c6c61@oasis.local.home>
+From:   Daniel Colascione <dancol@google.com>
+Date:   Thu, 5 Sep 2019 10:50:27 -0700
+Message-ID: <CAKOZueuQpHDnk-3GrLdXH_N_5Z7FRSJu+cwKhHNMUyKRqvkzjA@mail.gmail.com>
+Subject: Re: [PATCH v2] mm: emit tracepoint when RSS changes by threshold
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Suren Baghdasaryan <surenb@google.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tim Murray <timmurray@google.com>,
+        Carmen Jackson <carmenjackson@google.com>,
+        Mayank Gupta <mayankgupta@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        kernel-team <kernel-team@android.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        linux-mm <linux-mm@kvack.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Tom Zanussi <zanussi@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are a few more arrays in these drivers than can be fixed up, I'll
-send a V2.
+On Thu, Sep 5, 2019 at 10:35 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+> On Thu, 5 Sep 2019 09:03:01 -0700
+> Suren Baghdasaryan <surenb@google.com> wrote:
+>
+> > On Thu, Sep 5, 2019 at 7:43 AM Michal Hocko <mhocko@kernel.org> wrote:
+> > >
+> > > [Add Steven]
+> > >
+> > > On Wed 04-09-19 12:28:08, Joel Fernandes wrote:
+> > > > On Wed, Sep 4, 2019 at 11:38 AM Michal Hocko <mhocko@kernel.org> wrote:
+> > > > >
+> > > > > On Wed 04-09-19 11:32:58, Joel Fernandes wrote:
+> > > [...]
+> > > > > > but also for reducing
+> > > > > > tracing noise. Flooding the traces makes it less useful for long traces and
+> > > > > > post-processing of traces. IOW, the overhead reduction is a bonus.
+> > > > >
+> > > > > This is not really anything special for this tracepoint though.
+> > > > > Basically any tracepoint in a hot path is in the same situation and I do
+> > > > > not see a point why each of them should really invent its own way to
+> > > > > throttle. Maybe there is some way to do that in the tracing subsystem
+> > > > > directly.
+> > > >
+> > > > I am not sure if there is a way to do this easily. Add to that, the fact that
+> > > > you still have to call into trace events. Why call into it at all, if you can
+> > > > filter in advance and have a sane filtering default?
+> > > >
+> > > > The bigger improvement with the threshold is the number of trace records are
+> > > > almost halved by using a threshold. The number of records went from 4.6K to
+> > > > 2.6K.
+> > >
+> > > Steven, would it be feasible to add a generic tracepoint throttling?
+> >
+> > I might misunderstand this but is the issue here actually throttling
+> > of the sheer number of trace records or tracing large enough changes
+> > to RSS that user might care about? Small changes happen all the time
+> > but we are likely not interested in those. Surely we could postprocess
+> > the traces to extract changes large enough to be interesting but why
+> > capture uninteresting information in the first place? IOW the
+> > throttling here should be based not on the time between traces but on
+> > the amount of change of the traced signal. Maybe a generic facility
+> > like that would be a good idea?
+>
+> You mean like add a trigger (or filter) that only traces if a field has
+> changed since the last time the trace was hit? Hmm, I think we could
+> possibly do that. Perhaps even now with histogram triggers?
 
-
-On 05/09/2019 18:45, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Don't populate the array tab on the stack but instead make it
-> static const. Makes the object code smaller by 53 bytes.
-> 
-> Before:
->    text	   data	    bss	    dec	    hex	filename
->    7045	   1736	      0	   8781	   224d	media/dvb-frontends/cxd2820r_c.o
-> 
-> After:
->    text	   data	    bss	    dec	    hex	filename
->    6896	   1832	      0	   8728	   2218	media/dvb-frontends/cxd2820r_c.o
-> 
-> (gcc version 9.2.1, amd64)
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/media/dvb-frontends/cxd2820r_c.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/dvb-frontends/cxd2820r_c.c b/drivers/media/dvb-frontends/cxd2820r_c.c
-> index 6f7eedb4c00e..0ba382948c51 100644
-> --- a/drivers/media/dvb-frontends/cxd2820r_c.c
-> +++ b/drivers/media/dvb-frontends/cxd2820r_c.c
-> @@ -298,7 +298,7 @@ int cxd2820r_sleep_c(struct dvb_frontend *fe)
->  	struct cxd2820r_priv *priv = fe->demodulator_priv;
->  	struct i2c_client *client = priv->client[0];
->  	int ret;
-> -	struct reg_val_mask tab[] = {
-> +	static const struct reg_val_mask tab[] = {
->  		{ 0x000ff, 0x1f, 0xff },
->  		{ 0x00085, 0x00, 0xff },
->  		{ 0x00088, 0x01, 0xff },
-> 
-
+I was thinking along the same lines. The histogram subsystem seems
+like a very good fit here. Histogram triggers already let users talk
+about specific fields of trace events, aggregate them in configurable
+ways, and (importantly, IMHO) create synthetic new trace events that
+the kernel emits under configurable conditions.
