@@ -2,144 +2,88 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 742DBC00306
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 894EFC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 500EE20828
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:01:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FD0B2082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:04:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M7j3tgl/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403799AbfIERBw convert rfc822-to-8bit (ORCPT
+        id S2388136AbfIEREY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 13:01:52 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:64759 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733299AbfIERBw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 13:01:52 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 62DF07FDF4;
-        Thu,  5 Sep 2019 17:01:51 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E24AE60BE1;
-        Thu,  5 Sep 2019 17:01:47 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAHk-=wh5ZNE9pBwrnr5MX3iqkUP4nspz17rtozrSxs5-OGygNw@mail.gmail.com>
-References: <CAHk-=wh5ZNE9pBwrnr5MX3iqkUP4nspz17rtozrSxs5-OGygNw@mail.gmail.com> <156763534546.18676.3530557439501101639.stgit@warthog.procyon.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     dhowells@redhat.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rstrode@redhat.com, swhiteho@redhat.com, nicolas.dichtel@6wind.com,
-        raven@themaw.net, keyrings@vger.kernel.org,
-        linux-usb@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Subject: Why add the general notification queue and its sources
+        Thu, 5 Sep 2019 13:04:24 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34369 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730864AbfIEREY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 13:04:24 -0400
+Received: by mail-pg1-f193.google.com with SMTP id n9so1762481pgc.1;
+        Thu, 05 Sep 2019 10:04:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pY9aJUcggotSUrIOovI87Hz1WVVyhaxl425ZRHuP5KA=;
+        b=M7j3tgl/DUrxolbocw8AmEU/2jghfXhspIIzrMqBJDXGYRNcGddstjqjqa4AB6OOBc
+         xijRyCGrz8+elOC5lJd3AywF/DrJBpQlhvPFzuQAwSGur2h9/zL5p2Ty7HGJELB6PuYS
+         74WnZpcsURHJCl+7iwbrvTavhwsp5WQC0McoueVZtl7hg4LT/8SXizn2s01KIAKRZSt4
+         RJgQyO618mlUfdGgGxAtVn9o6K0c7EByl+WcUawyYb+XCpQocMQNLSatAM54dGah2zno
+         WE2xP1wA9Nhi3KBfvesWNnWLuajpeavTa88qTmTWNuftO7wvrZjgZ+gtE+rOXheksEsj
+         mjVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pY9aJUcggotSUrIOovI87Hz1WVVyhaxl425ZRHuP5KA=;
+        b=fAwGERSu9WBP48KHzdejG7uGUzITAnfl5ID05vhEK8bxJvow2bmUTLCnymhfGVIEis
+         SXLDdrUf2OMq3gSLgLJUvPeMgQUWsgbUQBdi+Eoj93Kt9JUDbkzDCduOnQ7DJIji7aRX
+         EHv23oGgLk/oMDLJtqNWP9WMdCpRXWFiN8ReoKYpAob+yhlJUSK4mHdvBty0DX9JqDoa
+         Ndqgw98EGs4vsEOf9+NpI1NQUykekTRQINC5oc0VUEcZdFWm/27SMA75Uxs7aDv92oqB
+         7i6kSfl7FqEhsTbJYkt9MZJhzrfdlDewwTUePuM/FgQ18QiZLhjhkl555+V3vA5EMSL2
+         sP/w==
+X-Gm-Message-State: APjAAAXH3v/5DP2JXH8d0QyQha1l3Mtf5Qfw23Dp9JeazKgyFYT+N87t
+        PTVqMrIVJ1AZJAfhM7kTxUWg9AjCFda2Lcm+J80=
+X-Google-Smtp-Source: APXvYqxCeE/2a4yXh06uzY/UB2tuXby2Gi0P58Q0SuOOPej3LxttTYy+aCrxSc4+BuW1wDetFYErqk9Tc7I5vB40bVQ=
+X-Received: by 2002:a63:5811:: with SMTP id m17mr4129200pgb.237.1567703063289;
+ Thu, 05 Sep 2019 10:04:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <17702.1567702907.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: 8BIT
-Date:   Thu, 05 Sep 2019 18:01:47 +0100
-Message-ID: <17703.1567702907@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Thu, 05 Sep 2019 17:01:51 +0000 (UTC)
+References: <1567609423-26826-1-git-send-email-zdai@linux.vnet.ibm.com>
+In-Reply-To: <1567609423-26826-1-git-send-email-zdai@linux.vnet.ibm.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Thu, 5 Sep 2019 10:04:12 -0700
+Message-ID: <CAM_iQpW_x6bN1Ea1sGv4XpNauXEpu+fKOhoW6350ztYF5izhGg@mail.gmail.com>
+Subject: Re: [v3] net_sched: act_police: add 2 new attributes to support
+ police 64bit rate and peakrate
+To:     David Dai <zdai@linux.vnet.ibm.com>
+Cc:     Jamal Hadi Salim <jhs@mojatatu.com>, Jiri Pirko <jiri@resnulli.us>,
+        David Miller <davem@davemloft.net>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, zdai@us.ibm.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+On Wed, Sep 4, 2019 at 8:03 AM David Dai <zdai@linux.vnet.ibm.com> wrote:
+>
+> For high speed adapter like Mellanox CX-5 card, it can reach upto
+> 100 Gbits per second bandwidth. Currently htb already supports 64bit rate
+> in tc utility. However police action rate and peakrate are still limited
+> to 32bit value (upto 32 Gbits per second). Add 2 new attributes
+> TCA_POLICE_RATE64 and TCA_POLICE_RATE64 in kernel for 64bit support
+> so that tc utility can use them for 64bit rate and peakrate value to
+> break the 32bit limit, and still keep the backward binary compatibility.
+>
+> Tested-by: David Dai <zdai@linux.vnet.ibm.com>
+> Signed-off-by: David Dai <zdai@linux.vnet.ibm.com>
 
-> > Here's a set of patches to add a general notification queue concept and to
-> > add event sources such as:
-> 
-> Why?
-> 
-> I'm just going to be very blunt about this, and say that there is no
-> way I can merge any of this *ever*, unless other people stand up and
-> say that
-> 
->  (a) they'll use it
-> 
-> and
-> 
->  (b) they'll actively develop it and participate in testing and coding
+Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
 
-Besides the core notification buffer which ties this together, there are a
-number of sources that I've implemented, not all of which are in this patch
-series:
-
- (1) Key/keyring notifications.
-
-     If you have your kerberos tickets in a file/directory, your gnome desktop
-     will monitor that using something like fanotify and tell you if your
-     credentials cache changes.
-
-     We also have the ability to cache your kerberos tickets in the session,
-     user or persistent keyring so that it isn't left around on disk across a
-     reboot or logout.  Keyrings, however, cannot currently be monitored
-     asynchronously, so the desktop has to poll for it - not so good on a
-     laptop.
-
-     This source will allow the desktop to avoid the need to poll.
-
- (2) USB notifications.
-
-     GregKH was looking for a way to do USB notifications as I was looking to
-     find additional sources to implement.  I'm not sure how he wants to use
-     them, but I'll let him speak to that himself.
-
- (3) Block notifications.
-
-     This one I was thinking that I could make something like ddrescue better
-     by letting it get notifications this way.  This was a target of
-     convenience since I had a dodgy disk I was trying to rescue.
-
-     It could also potentially be used help systemd, say, detect broken
-     devices and avoid trying to unmount them when trying to reboot the machine.
-
-     I can drop this for now if you prefer.
-
- (4) Mount notifications.
-
-     This one is wanted to avoid repeated trawling of /proc/mounts or similar
-     to work out changes to the mount object attributes and mount topology.
-     I'm told that the proc file holding the namespace_sem is a point of
-     contention, especially as the process of generating the text descriptions
-     of the mounts/superblocks can be quite involved.
-
-     The notifications directly indicate the mounts involved in any particular
-     event and what the change was.  You can poll /proc/mounts, but all you
-     know is that something changed; you don't know what and you don't know
-     how and reading that file may race with multiple changed being effected.
-
-     I pair this with a new fsinfo() system call that allows, amongst other
-     things, the ability to retrieve in one go an { id, change counter } tuple
-     from all the children of a specified mount, allowing buffer overruns to
-     be cleaned up quickly.
-
-     It's not just Red Hat that's potentially interested in this:
-
-	https://lore.kernel.org/linux-fsdevel/293c9bd3-f530-d75e-c353-ddeabac27cf6@6wind.com/
-
- (5) Superblock notifications.
-
-     This one is provided to allow systemd or the desktop to more easily
-     detect events such as I/O errors and EDQUOT/ENOSPC.
-
-I've tried to make the core multipurpose so that the price of the code
-footprint is mitigated.
-
-David
+Thanks.
