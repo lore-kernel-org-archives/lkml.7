@@ -2,143 +2,72 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 063C1C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95992C00307
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02CEB21E6F
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:15:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B901F206CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:08:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567692515;
+	bh=lLiim3xozZsjHT0hv+3puo/J1QUY0m34Dk8S3dYgrd8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bYLkNOB8UYW/8HMx8YoVjG0FqLWaKPDusIV2tia9ZjGypo3SqvY0wxr2buDg2NE12
+	 2tKodRfEpfJ/WXgiF3bEeZfrooX4s3RIPXveJPG4oH4siAzQB6hq6DuSc4K8vqg0b5
+	 Z+jDHkzjW+ZOCq0ZYhdwQr0x4XUr9Wzlklb9dprE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731631AbfIEOPK (ORCPT
+        id S1727770AbfIEOIe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 10:15:10 -0400
-Received: from mga09.intel.com ([134.134.136.24]:44686 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729157AbfIEOPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 10:15:09 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Sep 2019 07:15:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,470,1559545200"; 
-   d="scan'208";a="334569928"
-Received: from smvarma-mobl3.amr.corp.intel.com (HELO [10.251.12.77]) ([10.251.12.77])
-  by orsmga004.jf.intel.com with ESMTP; 05 Sep 2019 07:15:08 -0700
-Subject: Re: [RFC PATCH 1/2] x86: Don't let pgprot_modify() change the page
- encryption bit
-To:     =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, pv-drivers@vmware.com
-Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-References: <20190905103541.4161-1-thomas_os@shipmail.org>
- <20190905103541.4161-2-thomas_os@shipmail.org>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <608bbec6-448e-f9d5-b29a-1984225eb078@intel.com>
-Date:   Thu, 5 Sep 2019 07:15:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 5 Sep 2019 10:08:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40136 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727053AbfIEOIe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 10:08:34 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3F3F5AD07;
+        Thu,  5 Sep 2019 14:08:33 +0000 (UTC)
+Date:   Thu, 5 Sep 2019 16:08:33 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     David Rientjes <rientjes@google.com>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH] mm, oom: disable dump_tasks by default
+Message-ID: <20190905140833.GB3838@dhcp22.suse.cz>
+References: <20190903144512.9374-1-mhocko@kernel.org>
+ <af0703d2-17e4-1b8e-eb54-58d7743cad60@i-love.sakura.ne.jp>
+ <20190904054004.GA3838@dhcp22.suse.cz>
+ <alpine.DEB.2.21.1909041302290.95127@chino.kir.corp.google.com>
+ <12bcade2-4190-5e5e-35c6-7a04485d74b9@i-love.sakura.ne.jp>
 MIME-Version: 1.0
-In-Reply-To: <20190905103541.4161-2-thomas_os@shipmail.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <12bcade2-4190-5e5e-35c6-7a04485d74b9@i-love.sakura.ne.jp>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+On Thu 05-09-19 22:39:47, Tetsuo Handa wrote:
+[...]
+> There is nothing that prevents users from enabling oom_dump_tasks by sysctl.
+> But that requires a solution for OOM stalling problem.
 
-Thanks for the second batch of patches!  These look much improved on all
-fronts.
+You can hardly remove stalling if you are not reducing the amount of
+output or get it into a different context. Whether the later is
+reasonable is another question but you are essentially losing "at the
+OOM event state".
 
-On 9/5/19 3:35 AM, Thomas Hellström (VMware) wrote:
-> -/* mprotect needs to preserve PAT bits when updating vm_page_prot */
-> +/*
-> + * mprotect needs to preserve PAT and encryption bits when updating
-> + * vm_page_prot
-> + */
->  #define pgprot_modify pgprot_modify
->  static inline pgprot_t pgprot_modify(pgprot_t oldprot, pgprot_t newprot)
->  {
-> -	pgprotval_t preservebits = pgprot_val(oldprot) & _PAGE_CHG_MASK;
-> -	pgprotval_t addbits = pgprot_val(newprot);
-> +	pgprotval_t preservebits = pgprot_val(oldprot) &
-> +		(_PAGE_CHG_MASK | sme_me_mask);
-> +	pgprotval_t addbits = pgprot_val(newprot) & ~sme_me_mask;
->  	return __pgprot(preservebits | addbits);
->  }
+> Since I know how
+> difficult to avoid problems caused by printk() flooding, I insist that
+> we need "mm,oom: Defer dump_tasks() output." patch.
 
-_PAGE_CHG_MASK is claiming similar functionality about preserving bits
-when changing PTEs:
-
-> /*
->  * Set of bits not changed in pte_modify.  The pte's
->  * protection key is treated like _PAGE_RW, for
->  * instance, and is *not* included in this mask since
->  * pte_modify() does modify it.
->  */
-> #define _PAGE_CHG_MASK  (PTE_PFN_MASK | _PAGE_PCD | _PAGE_PWT |         \
->                          _PAGE_SPECIAL | _PAGE_ACCESSED | _PAGE_DIRTY | \
->                          _PAGE_SOFT_DIRTY | _PAGE_DEVMAP)
-
-This makes me wonder if we should be including sme_me_mask in
-_PAGE_CHG_MASK (logically).
+insisting is not a way to cooperate.
+-- 
+Michal Hocko
+SUSE Labs
