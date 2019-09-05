@@ -2,86 +2,127 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE76C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 605D2C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C4A02168B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FB0B2168B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:26:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kRp8zzhO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731557AbfIEGZc (ORCPT
+        id S1731569AbfIEG0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 02:25:32 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:42094 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731359AbfIEGZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 02:25:32 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 81238E957918129EA04E;
-        Thu,  5 Sep 2019 14:25:30 +0800 (CST)
-Received: from [127.0.0.1] (10.177.29.68) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Thu, 5 Sep 2019
- 14:25:28 +0800
-Message-ID: <5D70AA57.5080700@huawei.com>
-Date:   Thu, 5 Sep 2019 14:25:27 +0800
-From:   zhong jiang <zhongjiang@huawei.com>
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
+        Thu, 5 Sep 2019 02:26:34 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38958 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731359AbfIEG0e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 02:26:34 -0400
+Received: by mail-pl1-f194.google.com with SMTP id bd8so779437plb.6;
+        Wed, 04 Sep 2019 23:26:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PasM8GCX7mEGAVRsf1zB0IrqtOMIBNlDj4wL+XfNBQQ=;
+        b=kRp8zzhOm5SwgB5xlXbVKho0JVc6ZWWmJPaXU3biT8N/Z1tGE/7OpGVVuQ2bNJoZYU
+         tx0B6NC7jaChCi/dEexhFFmcodCd/ZbF52yx+bmH8oUkuLE/IasxU2DjjMLI4XmluW9Y
+         834BzA1UwGTqG/YmBHYjZJ0XtRv9rI5yshrUIdfxMgBNYu43lU84IR+3F+5AzzrZmJvH
+         /RXzxHdyF9zzvPmPWFyjIqR7YbmFRhHNE32i6jqzZTCpw0CL1VyffHLBJjO6Y/hllGzn
+         1ZBrJepkYMUmS7HaN6/oT/ywknBpthdrSskr7gW9zA6DVgX5WRtT90Xe4H7sgY48V8io
+         Dqsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PasM8GCX7mEGAVRsf1zB0IrqtOMIBNlDj4wL+XfNBQQ=;
+        b=Fiq/jkFkycJBAP7bzksAq1r7uxE5gPimD/DesiI+ngLMzV+9s/koeWkcBQvgJeHB3G
+         3nNrj5vsFqpJPBs1LVtbm4PccfozQ/Lcs5X3lgYd0PFZGLe2MUCAc85PgqZ17oYQ24yv
+         SnuMzny30XhGesi+8Nrs8u1G23qb5lTysykposJQjahBurcbI+Xpa9nI4jv4BTrxBwI5
+         k1JfrWd97lsG2GnJUmd32Mlp9iHaMWXVJkTMgykNLqbmXECwo4hDjQ9YDzhm3OKQJf0d
+         S9QM2ky4/tlfIkYMM+OYRmma9a9SJG8ToJTEZU8lpCujMD0PV3A8c4hq1rwhshriN5F0
+         wuuQ==
+X-Gm-Message-State: APjAAAVfOQyHSqJZSMGOv6ljaJL4v+DckudvR9APJefEMAJtXQiBrwsO
+        LkiQQ4ChjAwSO2oDsiN3FBtd1MtO
+X-Google-Smtp-Source: APXvYqz4fC9DNjfuhuH7Hjj+nAevfg1kox4DNRRwCcn4H7thFDoDqy4ad16301wTifH750eAd6bD5g==
+X-Received: by 2002:a17:902:a983:: with SMTP id bh3mr1616757plb.311.1567664793115;
+        Wed, 04 Sep 2019 23:26:33 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.123])
+        by smtp.googlemail.com with ESMTPSA id d69sm1102941pfd.175.2019.09.04.23.26.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 04 Sep 2019 23:26:32 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Subject: [PATCH 1/2] KVM: LAPIC: Micro optimize IPI latency
+Date:   Thu,  5 Sep 2019 14:26:27 +0800
+Message-Id: <1567664788-10249-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-To:     Will Deacon <will@kernel.org>, <herbert@gondor.apana.org.au>
-CC:     <davem@davemloft.net>, <catalin.marinas@arm.com>,
-        <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] crypto: arm64: Use PTR_ERR_OR_ZERO rather than its implementation.
-References: <1567493656-19916-1-git-send-email-zhongjiang@huawei.com> <20190904102526.5vtdv5ofuezn7fre@willie-the-truck>
-In-Reply-To: <20190904102526.5vtdv5ofuezn7fre@willie-the-truck>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.29.68]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/9/4 18:25, Will Deacon wrote:
-> On Tue, Sep 03, 2019 at 02:54:16PM +0800, zhong jiang wrote:
->> PTR_ERR_OR_ZERO contains if(IS_ERR(...)) + PTR_ERR. It is better to
->> use it directly. hence just replace it.
->>
->> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
->> ---
->>  arch/arm64/crypto/aes-glue.c | 4 +---
->>  1 file changed, 1 insertion(+), 3 deletions(-)
->>
->> diff --git a/arch/arm64/crypto/aes-glue.c b/arch/arm64/crypto/aes-glue.c
->> index ca0c84d..2a2e0a3 100644
->> --- a/arch/arm64/crypto/aes-glue.c
->> +++ b/arch/arm64/crypto/aes-glue.c
->> @@ -409,10 +409,8 @@ static int essiv_cbc_init_tfm(struct crypto_skcipher *tfm)
->>  	struct crypto_aes_essiv_cbc_ctx *ctx = crypto_skcipher_ctx(tfm);
->>  
->>  	ctx->hash = crypto_alloc_shash("sha256", 0, 0);
->> -	if (IS_ERR(ctx->hash))
->> -		return PTR_ERR(ctx->hash);
->>  
->> -	return 0;
->> +	return PTR_ERR_OR_ZERO(ctx->hash);
->>  }
->>  
->>  static void essiv_cbc_exit_tfm(struct crypto_skcipher *tfm)
-> Acked-by: Will Deacon <will@kernel.org>
-Thanks.
+From: Wanpeng Li <wanpengli@tencent.com>
 
-Sincerely,
-zhong jiang
-> Assuming this will go via Herbert.
->
-> Will
->
-> .
->
+This patch optimizes the virtual IPI emulation sequence:
 
+write ICR2                     write ICR2
+write ICR                      read ICR2
+read ICR            ==>        send virtual IPI
+read ICR2                      write ICR
+send virtual IPI
+
+It can reduce kvm-unit-tests/vmexit.flat IPI testing latency(from sender
+send IPI to sender receive the ACK) from 3319 cycles to 3203 cycles on
+SKylake server.
+
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+---
+ arch/x86/kvm/lapic.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index 12ade70..34fd299 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -1200,10 +1200,8 @@ void kvm_apic_set_eoi_accelerated(struct kvm_vcpu *vcpu, int vector)
+ }
+ EXPORT_SYMBOL_GPL(kvm_apic_set_eoi_accelerated);
+ 
+-static void apic_send_ipi(struct kvm_lapic *apic)
++static void apic_send_ipi(struct kvm_lapic *apic, u32 icr_low, u32 icr_high)
+ {
+-	u32 icr_low = kvm_lapic_get_reg(apic, APIC_ICR);
+-	u32 icr_high = kvm_lapic_get_reg(apic, APIC_ICR2);
+ 	struct kvm_lapic_irq irq;
+ 
+ 	irq.vector = icr_low & APIC_VECTOR_MASK;
+@@ -1940,8 +1938,9 @@ int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
+ 	}
+ 	case APIC_ICR:
+ 		/* No delay here, so we always clear the pending bit */
+-		kvm_lapic_set_reg(apic, APIC_ICR, val & ~(1 << 12));
+-		apic_send_ipi(apic);
++		val &= ~(1 << 12);
++		apic_send_ipi(apic, val, kvm_lapic_get_reg(apic, APIC_ICR2));
++		kvm_lapic_set_reg(apic, APIC_ICR, val);
+ 		break;
+ 
+ 	case APIC_ICR2:
+-- 
+2.7.4
 
