@@ -2,65 +2,202 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34204C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8050CC41514
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 146EC20820
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AC262053B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:22:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567682576;
+	bh=+OBsXuLhK8LYJvVp1R9Q19BwhkGixLpb/0PSEY6XwnI=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=G4ycPyH9uvfditTPWo4eLuD8Rv+28Y1MuhmcLuZoBz72ylVpxcODqtpnltgFEJ9nU
+	 0IKeZGVn+O2FpCNf6MeBED8vxw8QIeEX8BB8GB2jO2bT1BjWnE1zOF6jd9RgxS9OyB
+	 6oAsJYJjBMD0Tqeq2g4P6+xnSPcFyu9Y+zuvyuDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388347AbfIELWv (ORCPT
+        id S2388363AbfIELW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 07:22:51 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:39612 "EHLO gloria.sntech.de"
+        Thu, 5 Sep 2019 07:22:56 -0400
+Received: from foss.arm.com ([217.140.110.172]:42526 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732810AbfIELWu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 07:22:50 -0400
-Received: from wf0413.dip.tu-dresden.de ([141.76.181.157] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1i5pqe-0003VI-2X; Thu, 05 Sep 2019 13:22:44 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Finley Xiao <finley.xiao@rock-chips.com>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        zhangqing@rock-chips.com, huangtao@rock-chips.com,
-        tony.xie@rock-chips.com, andy.yan@rock-chips.com
-Subject: Re: [PATCH v1 0/3] clk: rockchip: support clock controller for rk3308 SoC
-Date:   Thu, 05 Sep 2019 13:22:43 +0200
-Message-ID: <8098861.lOb4sKEy6F@phil>
-In-Reply-To: <20190903115947.26618-1-finley.xiao@rock-chips.com>
-References: <20190903115947.26618-1-finley.xiao@rock-chips.com>
+        id S2388335AbfIELWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 07:22:55 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5A4A628;
+        Thu,  5 Sep 2019 04:22:54 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4DEA53F718;
+        Thu,  5 Sep 2019 04:22:52 -0700 (PDT)
+Subject: Re: PCI/kernel msi code vs GIC ITS driver conflict?
+To:     John Garry <john.garry@huawei.com>,
+        Andrew Murray <andrew.murray@arm.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        "luojiaxing@huawei.com" <luojiaxing@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <f5e948aa-e32f-3f74-ae30-31fee06c2a74@huawei.com>
+ <5fd4c1cf-76c1-4054-3754-549317509310@kernel.org>
+ <ef258ec7-877c-406a-3d88-80ff79b823f2@huawei.com>
+ <20190904102537.GV9720@e119886-lin.cambridge.arm.com>
+ <8f1c1fe6-c0d4-1805-b119-6a48a4900e6d@kernel.org>
+ <84f6756f-79f2-2e46-fe44-9a46be69f99d@huawei.com>
+ <651b4d5f-2d86-65dc-1232-580445852752@kernel.org>
+ <8ac8e372-15a0-2f95-089c-c189b619ea62@huawei.com>
+From:   Marc Zyngier <maz@kernel.org>
+Organization: Approximate
+Message-ID: <73c22eaa-172e-0fba-7a44-381106dee50d@kernel.org>
+Date:   Thu, 5 Sep 2019 12:22:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <8ac8e372-15a0-2f95-089c-c189b619ea62@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Finley,
+On 05/09/2019 11:35, John Garry wrote:
+>>>
+>>> Hi Marc,
+>>>
+>>> As requested, I enabled debug for that driver and here are some kernel
+>>> log snippets:
+>>>
+>>> [    8.435707] hisi_sas_v3_hw 0000:74:02.0: Adding to iommu group 0
+>>> [    8.461467] scsi host0: hisi_sas_v3_hw
+>>> [    9.683463] ITS: alloc 9920:32
+>>> [    9.686509] ITT 32 entries, 5 bits
+>>> [    9.690044] ID:0 pID:9920 vID:23
+>>> [    9.693263] ID:1 pID:9921 vID:24
+>>> [    9.696480] ID:2 pID:9922 vID:25
+>>> [    9.699696] ID:3 pID:9923 vID:26
+>>> [    9.702911] ID:4 pID:9924 vID:27
+>>> [    9.706128] ID:5 pID:9925 vID:28
+>>> [    9.709344] ID:6 pID:9926 vID:29
+>>> [    9.712560] ID:7 pID:9927 vID:30
+>>> [    9.715776] ID:8 pID:9928 vID:31
+>>> [    9.718990] ID:9 pID:9929 vID:32
+>>> [    9.722207] ID:10 pID:9930 vID:33
+>>> [    9.725510] ID:11 pID:9931 vID:34
+>>> [    9.728813] ID:12 pID:9932 vID:35
+>>> [    9.732116] ID:13 pID:9933 vID:36
+>>> [    9.735419] ID:14 pID:9934 vID:37
+>>> [    9.738721] ID:15 pID:9935 vID:38
+>>> [    9.742024] ID:16 pID:9936 vID:39
+>>>
+>>> <snip>
+>>>
+>>> (none)$ echo 0000:74:02.0 > ./sys/bus/pci/drivers/hisi_sas_v3_hw/unbind
+>>>
+>>> <snip>
+>>>
+>>> root@(none)$
+>>> $ echo 0000:74:02.0 > ./sys/bus/pci/drivers/hisi_sas_v3_hw/bind
+>>> [   41.110557] scsi host0: hisi_sas_v3_hw
+>>> [   42.335455] Reusing ITT for devID 7410
+>>> [   42.359151] hisi_sas_v3_hw: probe of 0000:74:02.0 failed with error -2
+>>> sh: echo: write error: No such device
+>>> root@(none)$
+>>
+>> Very interesting. Somehow, we think that this is a *new* device that
+>> aliases with itself. Needless to say, that's unexpected. My hunch is
+>> that something goes wrong when freeing the device. Can you try adding
+>> the patch below and report what is happening on unbind?
+>>
+> 
+> Hi Marc,
+> 
+> Here's the new snippet for unbind + bind:
+> 
+> (none)$ echo 0000:74:02.0 > ./sys/bus/pci/drivers/hisi_sas_v3_hw/unbind
+> 
+> <snip>
+> 
+> [  102.189618] Freed devid 7410 LPI 0
+> [  102.193019] Freed devid 7410 LPI 0
+> [  102.196420] Freed devid 7410 LPI 0
+> [  102.199854] Freed devid 7410 LPI 0
+> [  102.203242] Freed devid 7410 LPI 0
+> [  102.206640] Freed devid 7410 LPI 0
+> [  102.210036] Freed devid 7410 LPI 0
+> [  102.213426] Freed devid 7410 LPI 0
+> [  102.216816] Freed devid 7410 LPI 0
+> [  102.220206] Freed devid 7410 LPI 0
+> [  102.223596] Freed devid 7410 LPI 0
+> [  102.226984] Freed devid 7410 LPI 0
+> [  102.230373] Freed devid 7410 LPI 0
+> [  102.233763] Freed devid 7410 LPI 0
+> [  102.237152] Freed devid 7410 LPI 0
+> [  102.240542] Freed devid 7410 LPI 0
+> [  102.243931] Freed devid 7410 LPI 0
+> root@(none)$ echo 0000:74:02.0 > ./sys/bus/pci/drivers/hisi_sas_v3_hw/bind
+> [  111.662451] scsi host0: hisi_sas_v3_hw
+> [  112.887353] Reusing ITT for devID 7410
+> [  112.911275] hisi_sas_v3_hw: probe of 0000:74:02.0 failed with error -2
 
-Am Dienstag, 3. September 2019, 13:59:44 CEST schrieb Finley Xiao:
-> Finley Xiao (3):
->   dt-bindings: Add bindings for rk3308 clock controller
->   clk: rockchip: Add dt-binding header for rk3308
->   clk: rockchip: Add clock controller for the RK3308
 
-applied for (hopefully still) 5.4.
+OK, debug was slightly off, but it is interesting that the driver didn't 
+unmap the device, either because it is flagged as shared (with what?) or 
+that additional interrupts are allocated in the lpi_map for this 
+instance.
 
-I did change the binding patch to name the i2s mclk inputs explicitly
-as you can see in [0] as placeholders in dt-bindings do not necessarily
-work that great.
+Here's an updated debug patch. Can you please run the same thing again?
+
+Thanks,
+
+	M.
+
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index 1b5c3672aea2..07375171900a 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -3,7 +3,7 @@
+  * Copyright (C) 2013-2017 ARM Limited, All Rights Reserved.
+  * Author: Marc Zyngier <marc.zyngier@arm.com>
+  */
+-
++#define DEBUG 1
+ #include <linux/acpi.h>
+ #include <linux/acpi_iort.h>
+ #include <linux/bitmap.h>
+@@ -2649,6 +2649,8 @@ static void its_irq_domain_free(struct irq_domain *domain, unsigned int virq,
+ 		/* Mark interrupt index as unused */
+ 		clear_bit(event, its_dev->event_map.lpi_map);
+ 
++		pr_debug("Freed devid %x event %d LPI %ld\n", its_dev->device_id, event, data->hwirq);
++
+ 		/* Nuke the entry in the domain */
+ 		irq_domain_reset_irq_data(data);
+ 	}
+@@ -2659,6 +2661,9 @@ static void its_irq_domain_free(struct irq_domain *domain, unsigned int virq,
+ 	 * If all interrupts have been freed, start mopping the
+ 	 * floor. This is conditionned on the device not being shared.
+ 	 */
++	pr_debug("Unmap devid %x shared %d lpi_map %*pbl\n",
++		 its_dev->device_id, its_dev->shared,
++		 its_dev->event_map.nr_lpis, its_dev->event_map.lpi_map);
+ 	if (!its_dev->shared &&
+ 	    bitmap_empty(its_dev->event_map.lpi_map,
+ 			 its_dev->event_map.nr_lpis)) {
+@@ -2667,6 +2672,7 @@ static void its_irq_domain_free(struct irq_domain *domain, unsigned int virq,
+ 			     its_dev->event_map.nr_lpis);
+ 		kfree(its_dev->event_map.col_map);
+ 
++		pr_debug("Unmap devid %x\n", its_dev->device_id);
+ 		/* Unmap device/itt */
+ 		its_send_mapd(its_dev, 0);
+ 		its_free_device(its_dev);
 
 
-Heiko
-
-[0] https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git/commit/?h=v5.4-clk/next&id=2d1fb8e983dc0669f276b176142798a228dc0f38
-
-
+-- 
+Jazz is not dead, it just smells funny...
