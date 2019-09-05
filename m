@@ -2,136 +2,127 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A51DC43140
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A96ACC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FA33205ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:36:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF50C205ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:41:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=KoCoConnector.onmicrosoft.com header.i=@KoCoConnector.onmicrosoft.com header.b="kpG9qjvg"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="qW7gVcDz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389466AbfIEOgy (ORCPT
+        id S1730469AbfIEOlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 10:36:54 -0400
-Received: from mail-eopbgr30067.outbound.protection.outlook.com ([40.107.3.67]:51509
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388785AbfIEOgx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 10:36:53 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ssbtug+NmXqs5yzfIIAud3dbmk/XefNkmeD4JkBMnW+ZoJ3wbxSkbuO2obU9digu+v5otpifqm6JWo/si+vii8oOmsfQcLOQiIVIvY9ozLVzuoNIvVO/ITOQXSchMbedquf+usbFmMQtkPm5lbcEIo82UbG/hPqJtD4vJEZi5rXMXCd9GR0Ec2BD+BjgQ94Wike5FFCBhSE+v5p7EVcOMtaWR9LvrcP8mtaioTIF+KVlg0PvtOdEyk2UPaNHcFrSpl3X0hw1l+2K0GAAeFm8rKQrYRE1iVX5yF7EXCWapQsJa2/KaERvYRbHMwzySjIp4DpNttJmJ4BXTaow6sRloQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A3mdCUHjPwoD8Ip/OWUs6oybZ9hCZ3ir+vdNsotmpV0=;
- b=do/097Mi2fUxFuNkJLKOJgG7edvWzPa8rcvHSYVzQPHC4lzNAO/juk4MvnbIkaPe8W8PkcbOKzbEZ/x7LVEJ3tLWeu1E7OhG8qknMOXH183CzSKr+UTpl9mE0FiDp4li5PUrXRSaZcFP60ECDgtD8F2DhjlYxq73GGK0CqoZW4T3BXLhYCpdNlQWLWfZoJ9Li8UdCa7pNHUqVtJ1HxpAZcjJbamdD+TZde6PWuJyGyJQ9AwMImYNQrd7tKV0Fxe/pVcBW6XX2P0K6XZ4EkqMqmbv7uunaqa2JVXTmu539DqTZeFZVYMHXS+SC7OYK850olv2I5O1HwqJUOLPMUFWPg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=kococonnector.com; dmarc=pass action=none
- header.from=kococonnector.com; dkim=pass header.d=kococonnector.com; arc=none
+        Thu, 5 Sep 2019 10:41:02 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:43204 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbfIEOlC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 10:41:02 -0400
+Received: by mail-qk1-f193.google.com with SMTP id m2so2305315qkd.10
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 07:41:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=KoCoConnector.onmicrosoft.com; s=selector2-KoCoConnector-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A3mdCUHjPwoD8Ip/OWUs6oybZ9hCZ3ir+vdNsotmpV0=;
- b=kpG9qjvgNStpIyhL42xwbQCJ3xysWfgMBvKPqcliRMIVaShEif5FKFGSWAtggJeTL9mn1iStszr/x9s7ShzTOYXILPqESUY0svwvCyGZpFVf298prIQWU1ZmvPuUMFcBFR9zoJUn2WLkJXGZR9tNFA4i/QKz7pe/b1xYwIum8kk=
-Received: from DB6PR0902MB2072.eurprd09.prod.outlook.com (10.170.212.23) by
- DB6PR0902MB2135.eurprd09.prod.outlook.com (10.170.212.22) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.22; Thu, 5 Sep 2019 14:36:49 +0000
-Received: from DB6PR0902MB2072.eurprd09.prod.outlook.com
- ([fe80::19cd:2f16:89cd:67cb]) by DB6PR0902MB2072.eurprd09.prod.outlook.com
- ([fe80::19cd:2f16:89cd:67cb%3]) with mapi id 15.20.2220.022; Thu, 5 Sep 2019
- 14:36:49 +0000
-From:   Oliver Graute <oliver.graute@kococonnector.com>
-To:     "oliver.graute@gmail.com" <oliver.graute@gmail.com>
-CC:     Oliver Graute <oliver.graute@kococonnector.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
-Subject: [PATCH v2] watchdog: imx_sc: this patch just fixes whitespaces
-Thread-Topic: [PATCH v2] watchdog: imx_sc: this patch just fixes whitespaces
-Thread-Index: AQHVY/dZCxSIc/58L0ChQ5IO20rCxw==
-Date:   Thu, 5 Sep 2019 14:36:49 +0000
-Message-ID: <20190905143644.20952-1-oliver.graute@kococonnector.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM0PR0202CA0005.eurprd02.prod.outlook.com
- (2603:10a6:208:1::18) To DB6PR0902MB2072.eurprd09.prod.outlook.com
- (2603:10a6:6:8::23)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=oliver.graute@kococonnector.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [193.47.161.132]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4d6a22b1-6545-4aff-cfea-08d7320e7c47
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DB6PR0902MB2135;
-x-ms-traffictypediagnostic: DB6PR0902MB2135:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB6PR0902MB21359C2EA187F87C5813A73CEBBB0@DB6PR0902MB2135.eurprd09.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1060;
-x-forefront-prvs: 015114592F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(39830400003)(366004)(136003)(396003)(199004)(189003)(486006)(305945005)(66066001)(2616005)(7736002)(5640700003)(476003)(386003)(1361003)(6512007)(6436002)(50226002)(8936002)(26005)(6506007)(44832011)(186003)(102836004)(256004)(71190400001)(71200400001)(6116002)(2906002)(3846002)(53936002)(5660300002)(52116002)(86362001)(7416002)(4326008)(508600001)(66446008)(64756008)(66556008)(66476007)(6916009)(66946007)(25786009)(36756003)(1076003)(6486002)(14454004)(4744005)(99286004)(81166006)(8676002)(316002)(2501003)(81156014)(2351001)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0902MB2135;H:DB6PR0902MB2072.eurprd09.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: kococonnector.com does not
- designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: WZYHlBc6URqn6Cx28r4n9JpQIB3c9CDRGZtXLalv176+bRehleigPtt0dpFnG7bkX8Rurxgr43/ZRM+nb5OyQ5rxdX3obLBIkNrk1DhqSb4Mmy1u35Aqen7KTtPgw8rKETSq8EeXc+Unl57N1hzxgV/osjrfwDUFK8LVbQvBqMMJi5d+xt3J2QGpvbS/vsj5xsjAdJVPjpR3y2BZaAbOnmM3a3cuq0Z18ebk8nn0EUxgZDBdHnZDamXMbYxDbRQQ7F+UpgNAACreFdTsdpLz4AyNHJDWSXfyxIMti0Zk/6ok0aYK1+p5Uf1j1IccQzNmhQZ6Ofo3hgDjh/OYsjyPG5q1SJ2TQeTUTRfOZtDPc5oVYLV14oQZD2+BC5y5z6T0ikgf6PYvygw+2yERphY1BtuYC/nNz11XWgm2ZbFTJEk=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: kococonnector.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4d6a22b1-6545-4aff-cfea-08d7320e7c47
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2019 14:36:49.3965
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 59845429-0644-4099-bd7e-17fba65a2f2b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2SHhjSn1+YRQAy7bNmlpfRFiEiYEhZfs8RSd3p0ynkGclXURVNbZHDnlE9FbBSs6Ov1RwahvXrWJFDpq6bfO2iWruBZvsrrJdRSClFARDLI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0902MB2135
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=RwHVDa1GJi8ayjzjkgzkLTLLpxPbUkF92tRTyGxKp8E=;
+        b=qW7gVcDzND0lYEahwAo1BqDAlHLaPYyKi+juRuxEk8puYQtfS+Az/JTNxleGT5JOjh
+         MUyftEBA8SZN5lFGaF80LXJ8ExVfw3bUWGZgk/0CNI7hquPgcyc0Z433Z+H9EhW+jG1i
+         0P1nzrcuzqbqxB9BOy0FUPYjPpOpsjEkaEtC/+DTJg4ooZZTzrgPNtrj+cD2zC/jw2LR
+         keQ+N/No0VKSJ7PKB+C6wSR82Ffmo5B7syJJBD6R6GvW1LyOX+IeJTQGBms+0pPwAMAI
+         RFyMgaq1iZppL7q7WXfHaQ/CW+w7bQPH8RuVMvrRQuZ4+SKye+twacYsL3BVp73xz7RD
+         VQOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=RwHVDa1GJi8ayjzjkgzkLTLLpxPbUkF92tRTyGxKp8E=;
+        b=PrGmW1ngnuVx8B3A8VqNSuqLGkFP97QavtLDxYMaxn/xnkcyBZHhUUjIigCG3oezgG
+         nou2/b8+TclVjCeesE88/z2vmqFh+NRmBwAQ5pVm1dyubE9f1opdg7qO7/PxMywy99Ms
+         kA2JwJH7uL47i1gVaOF4gW0Vo6d7Oadg/toHiLBXeuK1ZIvEgEeNbZjA2FR7uMJ8TfCJ
+         jAZLs0e9dfrhYvlg4wuux/N53bkwtofWRljb/j6Ik6F6QAN4Ee0tfqgcDDHK+PMHSqko
+         l/qUlmGofckqKzp6fwMvQ4pTxyuOaux6SUkD48Lk8QxvuGluwOxTLVr0AdjgDlAAAXof
+         EK5w==
+X-Gm-Message-State: APjAAAVCPZ3pad0gzakaW/V1752Zt2ngxTvSwKhAey7NnfZQyJiwB+4/
+        hSRaPWs6DEATMRbQE4Vpl2QNng==
+X-Google-Smtp-Source: APXvYqxrtgPstnzHgyJSHuCxcpq5WtjXy9rbKx4EcN+tuoaOvYFpINd6tpp3e7sRgqvGI8ZvUhn+VQ==
+X-Received: by 2002:a37:a695:: with SMTP id p143mr3314043qke.144.1567694461221;
+        Thu, 05 Sep 2019 07:41:01 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id x2sm1030038qkf.83.2019.09.05.07.40.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Sep 2019 07:41:00 -0700 (PDT)
+Message-ID: <1567694459.5576.94.camel@lca.pw>
+Subject: Re: [PATCH] gpu/drm: fix a -Wstringop-truncation warning
+From:   Qian Cai <cai@lca.pw>
+To:     daniel@ffwll.ch
+Cc:     maarten.lankhorst@linux.intel.com, maxime.ripard@bootlin.com,
+        sean@poorly.run, airlied@linux.ie, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 05 Sep 2019 10:40:59 -0400
+In-Reply-To: <1566585426-2952-1-git-send-email-cai@lca.pw>
+References: <1566585426-2952-1-git-send-email-cai@lca.pw>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix only whitespace errors in imx_sc_wdt_probe()
+Ping. Please take a look at this trivial patch.
 
-Signed-off-by: Oliver Graute <oliver.graute@kococonnector.com>
----
- drivers/watchdog/imx_sc_wdt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/watchdog/imx_sc_wdt.c b/drivers/watchdog/imx_sc_wdt.c
-index 9260475439eb..7ea5cf54e94a 100644
---- a/drivers/watchdog/imx_sc_wdt.c
-+++ b/drivers/watchdog/imx_sc_wdt.c
-@@ -176,8 +176,8 @@ static int imx_sc_wdt_probe(struct platform_device *pde=
-v)
-=20
- 	ret =3D devm_watchdog_register_device(dev, wdog);
- 	if (ret)
-- 		return ret;
--=20
-+		return ret;
-+
- 	ret =3D imx_scu_irq_group_enable(SC_IRQ_GROUP_WDOG,
- 				       SC_IRQ_WDOG,
- 				       true);
---=20
-2.17.1
-
+On Fri, 2019-08-23 at 14:37 -0400, Qian Cai wrote:
+> In file included from ./include/linux/bitmap.h:9,
+>                  from ./include/linux/cpumask.h:12,
+>                  from ./arch/x86/include/asm/cpumask.h:5,
+>                  from ./arch/x86/include/asm/msr.h:11,
+>                  from ./arch/x86/include/asm/processor.h:21,
+>                  from ./arch/x86/include/asm/cpufeature.h:5,
+>                  from ./arch/x86/include/asm/thread_info.h:53,
+>                  from ./include/linux/thread_info.h:38,
+>                  from ./arch/x86/include/asm/preempt.h:7,
+>                  from ./include/linux/preempt.h:78,
+>                  from ./include/linux/rcupdate.h:27,
+>                  from ./include/linux/rculist.h:11,
+>                  from ./include/linux/pid.h:5,
+>                  from ./include/linux/sched.h:14,
+>                  from ./include/linux/uaccess.h:5,
+>                  from drivers/gpu/drm/drm_property.c:24:
+> In function 'strncpy',
+>     inlined from 'drm_property_create' at
+> drivers/gpu/drm/drm_property.c:130:2:
+> ./include/linux/string.h:305:9: warning: '__builtin_strncpy' specified
+> bound 32 equals destination size [-Wstringop-truncation]
+>   return __builtin_strncpy(p, q, size);
+>          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> Fix it by using strscpy() which will always return a valid string, and
+> doesn't unnecessarily force the tail of the destination buffer to be
+> zeroed.
+> 
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>  drivers/gpu/drm/drm_property.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_property.c b/drivers/gpu/drm/drm_property.c
+> index 892ce636ef72..66ec2cc7a559 100644
+> --- a/drivers/gpu/drm/drm_property.c
+> +++ b/drivers/gpu/drm/drm_property.c
+> @@ -127,8 +127,7 @@ struct drm_property *drm_property_create(struct drm_device
+> *dev,
+>  	property->num_values = num_values;
+>  	INIT_LIST_HEAD(&property->enum_list);
+>  
+> -	strncpy(property->name, name, DRM_PROP_NAME_LEN);
+> -	property->name[DRM_PROP_NAME_LEN-1] = '\0';
+> +	strscpy(property->name, name, DRM_PROP_NAME_LEN);
+>  
+>  	list_add_tail(&property->head, &dev->mode_config.property_list);
+>  
