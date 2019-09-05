@@ -2,91 +2,105 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC024C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 03:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70AC7C3A5AB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 03:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF26E208E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 03:42:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F8B3208E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 03:42:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="gv5Y3PoZ"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="n4nBW4F6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730694AbfIEDmG (ORCPT
+        id S1730801AbfIEDmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 23:42:06 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:30398 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727156AbfIEDmG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 23:42:06 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id x853fY68003716;
-        Thu, 5 Sep 2019 12:41:35 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x853fY68003716
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1567654895;
-        bh=R46SqTBG0wiskAaYxuXipqRLOslxanzHTdul3DZROHA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=gv5Y3PoZTVKNnNJlAVgNZCYAMA72KKtMMFDvlAhmFn2EpRR2yChDvt3wababkCszC
-         HHY21EZLMBcHIcaahCgEr4j7ZAyYb3wxK2UmxQdOAd7arl/8TcNvAxPYuRfHaNq4PY
-         dUNc1yK1b7AGXq3L1LUq2yzWwiQ2zYn2seXtQWtKJsJAOF0ZmLaGfi6JQMNH3ZME0X
-         fZqvqKfLsR58uvg84zWeCYhhRDilgEERcDRB41+8yzsfLQy6kZNlmoUQUJxIv1of9d
-         X9LEnsW5HeBrk7ClwAMnKWyna+X8DDcrzqE+M+9E3cm8uhLqs4BnBYQGyuL2VsBS7V
-         p64SIMHKVZyKQ==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] dmaengine: uniphier-mdmac: use devm_platform_ioremap_resource()
-Date:   Thu,  5 Sep 2019 12:41:33 +0900
-Message-Id: <20190905034133.29514-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 4 Sep 2019 23:42:17 -0400
+Received: from ozlabs.org ([203.11.71.1]:44493 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727156AbfIEDmQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 23:42:16 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46P62G4pP0z9sDB;
+        Thu,  5 Sep 2019 13:42:13 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1567654934;
+        bh=D20kb8FI3SomKAMFU69sx2kOZjLBDN7Zio+s1/ojh5g=;
+        h=Date:From:To:Cc:Subject:From;
+        b=n4nBW4F6iU8JNHCd2sXvqFLwQv01DM83fps9ZYicuMoPD3F4t+EPZ7V99BScFAFN7
+         CcV3qQ4PoST4MbLMx7yKrxtPtJ/AVQd86IjYo2Efo3o193crsys7vNnYR0w+T8QLDT
+         f9XG5Q2Va93VGfrjsop0UJpAbttdKsn27U1+wg84/REF0wllVAWRhZrmXHqVBrNC8G
+         kHnBXwozJBeVgPFQTt6iX42ADyLRIu5P7NgdckkXzFPyfoISY9OHt9O5rzJrykyhMV
+         Be0hI3wOo/8tfxlR7OdqA3CshCpPcxMDrao2SUpkaFXYzRcn5KW40uFAMYM1zNPgMM
+         FTyVkJhnVE9qw==
+Date:   Thu, 5 Sep 2019 13:42:13 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        ARM <linux-arm-kernel@lists.infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Subject: linux-next: manual merge of the net-next tree with the arm-soc tree
+Message-ID: <20190905134213.739ca375@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/7ZgpHNInDPnmm6UQg5TPdzE";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the chain of platform_get_resource() and devm_ioremap_resource()
-with devm_platform_ioremap_resource().
+--Sig_/7ZgpHNInDPnmm6UQg5TPdzE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This allows to remove the local variable for (struct resource *), and
-have one function call less.
+Hi all,
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+Today's linux-next merge of the net-next tree got a conflict in:
 
- drivers/dma/uniphier-mdmac.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+  drivers/net/ethernet/nuvoton/w90p910_ether.c
 
-diff --git a/drivers/dma/uniphier-mdmac.c b/drivers/dma/uniphier-mdmac.c
-index ec65a7430dc4..e42f2312b7a1 100644
---- a/drivers/dma/uniphier-mdmac.c
-+++ b/drivers/dma/uniphier-mdmac.c
-@@ -385,7 +385,6 @@ static int uniphier_mdmac_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct uniphier_mdmac_device *mdev;
- 	struct dma_device *ddev;
--	struct resource *res;
- 	int nr_chans, ret, i;
- 
- 	nr_chans = platform_irq_count(pdev);
-@@ -401,8 +400,7 @@ static int uniphier_mdmac_probe(struct platform_device *pdev)
- 	if (!mdev)
- 		return -ENOMEM;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	mdev->reg_base = devm_ioremap_resource(dev, res);
-+	mdev->reg_base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(mdev->reg_base))
- 		return PTR_ERR(mdev->reg_base);
- 
--- 
-2.17.1
+between commit:
 
+  00d2fbf73d55 ("net: remove w90p910-ether driver")
+
+from the arm-soc tree and commit:
+
+  d1a55841ab24 ("net: Remove dev_err() usage after platform_get_irq()")
+
+from the net-next tree.
+
+I fixed it up (I removed the file) and can carry the fix as necessary.
+This is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/7ZgpHNInDPnmm6UQg5TPdzE
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1whBUACgkQAVBC80lX
+0GxxrAf9F2t1WiC/CROxhOEgz3XgdRi7F4M0XLeKgV6HYsch3nX5Wj9Z1Vh8tW6l
+c/fbKI1ZSokhfgYm1cEiqm/9SQg2lhUiGywuszysvidYT7o1GX/zMb9CGNC5fg8p
+zJsmfVIjLY5Qzo4RtOQSqFlT8wgd+CXFK2fEn/9nEnryStrlzb/E6xA+b437SxuI
+gQ7U2Zl+eNgIgMJXMJlLQQP+3yfw5HJX7Ox4AbYxYbuV6wS9H1XZvWkT4JjCgSQZ
+jsn8b1Ly8foiIhxb7K7cDl7yUCJyjCoVUqIGTAY6grwXCxRGRm5EDr9thpRRrCgS
+yAxzxRctgd46mxhzjE9l0L2sbmpMOA==
+=nc/L
+-----END PGP SIGNATURE-----
+
+--Sig_/7ZgpHNInDPnmm6UQg5TPdzE--
