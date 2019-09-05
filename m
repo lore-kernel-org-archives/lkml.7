@@ -2,111 +2,140 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C0F0C00306
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:10:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21244C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C25EE2082C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:10:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DB39206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:15:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="t3et7p6L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388883AbfIEUKC (ORCPT
+        id S2389173AbfIEUPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 16:10:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39844 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732468AbfIEUKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 16:10:02 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5C742300BEAE;
-        Thu,  5 Sep 2019 20:10:01 +0000 (UTC)
-Received: from ovpn-124-235.rdu2.redhat.com (ovpn-124-235.rdu2.redhat.com [10.10.124.235])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 26E605C1D4;
-        Thu,  5 Sep 2019 20:09:59 +0000 (UTC)
-Message-ID: <d19e8783e7fe47e51fbc12bf33c95fea16c93070.camel@redhat.com>
-Subject: Re: Why add the general notification queue and its sources
-From:   David Lehman <dlehman@redhat.com>
-To:     Ray Strode <rstrode@redhat.com>,
-        Steven Whitehouse <swhiteho@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Ian Kent <ikent@redhat.com>
-Date:   Thu, 05 Sep 2019 16:09:58 -0400
-In-Reply-To: <CAKCoTu7ms4ckwDA_-onuJg+famnMzGZE9gGUcqqMz0kCAAECRg@mail.gmail.com>
-References: <156763534546.18676.3530557439501101639.stgit@warthog.procyon.org.uk>
-         <CAHk-=wh5ZNE9pBwrnr5MX3iqkUP4nspz17rtozrSxs5-OGygNw@mail.gmail.com>
-         <17703.1567702907@warthog.procyon.org.uk>
-         <CAHk-=wjQ5Fpv0D7rxX0W=obx9xoOAxJ_Cr+pGCYOAi2S9FiCNg@mail.gmail.com>
-         <11667f69-fbb5-28d2-3c31-7f865f2b93e5@redhat.com>
-         <CAKCoTu7ms4ckwDA_-onuJg+famnMzGZE9gGUcqqMz0kCAAECRg@mail.gmail.com>
-Organization: Red Hat, Inc.
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Thu, 5 Sep 2019 16:15:47 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:35122 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731390AbfIEUPq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 16:15:46 -0400
+Received: by mail-oi1-f194.google.com with SMTP id a127so3044660oii.2;
+        Thu, 05 Sep 2019 13:15:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=f4Km6SD866R0K00m5TcRPMaTtKdzrbq/4ljlsuFwyq4=;
+        b=t3et7p6L0/whLJE/CMRrP2K3uNDjk8pWYu6Z+iHJ/66Y1V1Y6L0cwifYXlDTXXLZU3
+         3MBi7QwdaNrwDJDSiIIvPoke8D4qYmR5KifsoiZvryw5rCskksgTXJIgtTdbkyJgh8qV
+         MJtYVr3BW9cjCbQ41WAa98hOnuGLeq4iDZN56LFw/ekt4nC8vTPzq264Qt5ezYI9sCTJ
+         +c4RKH3NC5pp7zQoE+JvgkdxisarX3FPxmxyzSpxbX7RfbIIJzrBHCmsifjnzFTn+wL+
+         HLYJB/guTPodagOyMZiPuYILX1K2IHMxDbuYFdTogyBfGFbE2z+fgHbQK52gQmjRpO/4
+         8WXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=f4Km6SD866R0K00m5TcRPMaTtKdzrbq/4ljlsuFwyq4=;
+        b=fkXZ1IDOaJtcW861V3DME/qmh7874GbQ1H7KFgh2NwhLp9NCTh6luCk3FAPrKEf1gh
+         8RnbZSdSpNIWiSc4Qk5KwVlSqlero9g9BK41xWfVn+C6/+N/A/5uwc34xJQ/ZxMFh/sH
+         MZi7r/QbUs0/1Px6wpAPwnWxTbTkDiXYi4vxqVxbdZP7PKf7RBIUN32w4zmn00HnCn7R
+         9JzGb9JXRK43beXFJOwL1fj/+QGJ8c9BGnOq3r6CvdOjv6gEYdhCDNpq3w4nX1HSTIJ5
+         kd3RP3yhopJIBv1VmBuA3yEe0OIEPxk54EUZ5pTdtiChivmzreFZzuNjuEhDh3DPCrA5
+         1FPw==
+X-Gm-Message-State: APjAAAWwZyW4xL4nnqOTtF5D6RPOJgXhkrsrAWqywiAKVzt3+cDOPvh8
+        ukW4DoZghc4Z7H5VHbnxUQqiYLvfaICRwxV34eo=
+X-Google-Smtp-Source: APXvYqz10+RYiYCkiOZQNb4X6pwZA8FC8OaEWNeVGyU1oIcgk9EjqHMgE+OjmcTpYIwU9qrIKMWD+qXHhX6pFCO82+I=
+X-Received: by 2002:a05:6808:b14:: with SMTP id s20mr4202379oij.15.1567714545391;
+ Thu, 05 Sep 2019 13:15:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 05 Sep 2019 20:10:01 +0000 (UTC)
+References: <1567667251-33466-1-git-send-email-jianxin.pan@amlogic.com> <1567667251-33466-5-git-send-email-jianxin.pan@amlogic.com>
+In-Reply-To: <1567667251-33466-5-git-send-email-jianxin.pan@amlogic.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Thu, 5 Sep 2019 22:15:34 +0200
+Message-ID: <CAFBinCBSmW4y-Dz7EkJMV8HOU4k6Z0G-K6T77XnVrHyubaSsdg@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] arm64: dts: add support for A1 based Amlogic AD401
+To:     Jianxin Pan <jianxin.pan@amlogic.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Carlo Caione <carlo@caione.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Tao Zeng <tao.zeng@amlogic.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-09-05 at 14:51 -0400, Ray Strode wrote:
-> Hi,
-> 
-> On Thu, Sep 5, 2019 at 2:37 PM Steven Whitehouse <swhiteho@redhat.com
-> > wrote:
-> > The original reason for the mount notification mechanism was so
-> > that we
-> > are able to provide information to GUIs and similar filesystem and
-> > storage management tools, matching the state of the filesystem with
-> > the
-> > state of the underlying devices. This is part of a larger project
-> > entitled "Project Springfield" to try and provide better management
-> > tools for storage and filesystems. I've copied David Lehman in,
-> > since he
-> > can provide a wider view on this topic.
-> So one problem that I've heard discussed before is what happens in a
-> thinp
-> setup when the disk space is overallocated and gets used up. IIRC,
-> the
-> volumes just sort of eat themselves?
-> 
-> Getting proper notification of looming catastrophic failure to the
-> workstation user
-> before it's too late would be useful, indeed.
-> 
-> I don't know if this new mechanism dhowells has development can help
-> with that,
+Hi Jianxin,
 
-My understanding is that there is already a dm devent that gets sent
-when the low water mark is crossed for a thin pool, but there is
-nothing in userspace that knows how to effectively get the user's
-attention at that time.
+(it's great to see that you and your team are upstreaming this early)
 
-> and/or if solving that problem is part of the Project Springfield
-> initiative or not. Do you
-> know off hand?
+On Thu, Sep 5, 2019 at 9:08 AM Jianxin Pan <jianxin.pan@amlogic.com> wrote:
+[...]
+> +       memory@0 {
+> +               device_type = "memory";
+> +               reg = <0x0 0x0 0x0 0x8000000>;
+> +               /*linux,usable-memory = <0x0 0x0 0x0 0x8000000>;*/
+why do we need that comment here (I don't understand it - why doesn't
+the "reg" property cover this)?
 
-We have been looking into building a userspace event notification
-service (for storage, initially) to aggregate and add context to low-
-level events such as these, providing a single source for all kinds of
-storage events with an excellent signal:noise ratio. Thin pool
-exhaustion is high on the list of problems we would want to address.
+> +       };
+> +};
+> +
+> +&uart_AO_B {
+> +       status = "okay";
+> +};
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+> new file mode 100644
+> index 00000000..4d476ac
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+> @@ -0,0 +1,122 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +/ {
+> +       compatible = "amlogic,a1";
+> +
+> +       interrupt-parent = <&gic>;
+> +       #address-cells = <2>;
+> +       #size-cells = <2>;
+> +
+> +       cpus {
+> +               #address-cells = <0x2>;
+> +               #size-cells = <0x0>;
+only now I notice that all our other .dtsi also use hex values
+(instead of decimal as just a few lines above) here
+do you know if there is a particular reason for this?
+
+[...]
+> +               uart_AO_B: serial@fe002000 {
+> +                       compatible = "amlogic,meson-gx-uart",
+> +                                    "amlogic,meson-ao-uart";
+> +                                    reg = <0x0 0xfe002000 0x0 0x18>;
+the indentation of the "reg" property is off here
+
+also I'm a bit surprised to see no busses (like aobus, cbus, periphs, ...) here
+aren't there any busses defined in the A1 SoC implementation or are
+were you planning to add them later?
 
 
-David
-
+Martin
