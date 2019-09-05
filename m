@@ -2,75 +2,100 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 082E8C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4082C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:50:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67983206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:50:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24C49206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:50:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aPkfZ/ro"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403956AbfIETuW (ORCPT
+        id S2403978AbfIETud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 15:50:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38614 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388286AbfIETt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 15:49:27 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E4CCC7FDCD;
-        Thu,  5 Sep 2019 19:49:26 +0000 (UTC)
-Received: from horse.redhat.com (unknown [10.18.25.137])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BF6E01001B00;
-        Thu,  5 Sep 2019 19:49:26 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 0F63D2253A4; Thu,  5 Sep 2019 15:49:18 -0400 (EDT)
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     linux-fsdevel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, miklos@szeredi.hu
-Cc:     linux-kernel@vger.kernel.org, virtio-fs@redhat.com,
-        vgoyal@redhat.com, stefanha@redhat.com, dgilbert@redhat.com,
-        mst@redhat.com
-Subject: [PATCH 12/18] virtiofs: Use virtio_fs_free_devs() in error path
-Date:   Thu,  5 Sep 2019 15:48:53 -0400
-Message-Id: <20190905194859.16219-13-vgoyal@redhat.com>
-In-Reply-To: <20190905194859.16219-1-vgoyal@redhat.com>
-References: <20190905194859.16219-1-vgoyal@redhat.com>
+        Thu, 5 Sep 2019 15:50:33 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:39948 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391509AbfIETuU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 15:50:20 -0400
+Received: by mail-io1-f68.google.com with SMTP id h144so7501392iof.7;
+        Thu, 05 Sep 2019 12:50:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=m0NtsRxeuK1+l8toJgXjCUzorXMC0p0PoCXPP7s64bE=;
+        b=aPkfZ/ro6nm5G8OA3TvPBAPJ3If/AwjZ31fFqZblCq0YviXO1Yd6xiH3lIaAjDGnXk
+         oRbiJeCQpczUTneO1hWN+iiKz4b1VU7ymFchKhHzxwHR7/zRRcLaPA3MuIWq+xnlLVsI
+         U3AITEvbg3YgxGkmvM44DKr7i8U1Q7FJxN8OVU3lWaD8HIyktVBrJ2j3AsTYLD9davZ9
+         cEspVGwDBZOGIQdeU4tdhaXkSGwzaj8lCwZPaSa14Ih7P093bkIdLawy3WnrcQBHUJap
+         +eGBeGJkLowAl2dMZY/MsqzDc7cH11ixLDswqSsTix3Nh05BFo/S++xOUkGBt+izLNC1
+         hNPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=m0NtsRxeuK1+l8toJgXjCUzorXMC0p0PoCXPP7s64bE=;
+        b=fRb/3kBaB1grJx3hbcZFTrr3weeKghCuDXXq/KbOEuYEjZ53PNEhIj8P5gTmFadFtr
+         P5Vf+e2Na+OQioKdfhZK7r+hnMQXlKxZnPzB3zOfm2XE05cpiKMLkOcWBbnRcqka7ylK
+         3T2x+pQEYNxkXX9obEqiHpjT29z2TI/ETpQh6Fzdj08X9zelB5+ZP46gbJ5hIYiCK0LT
+         tto6cMHOZdFRzcLgra2/JdoBHVSXZVqXXPkOoFREvLS4L3NSEBio/ym9M3QDYdR7YLMT
+         buMdrwsC6ZZVMK8Rv/o6l7njxS0jUMa1ZDBB84JbxMmeuu37VyqcDepBlBM9vrIWMznq
+         2h/Q==
+X-Gm-Message-State: APjAAAUc/JrqO8nHOK+pexImr9/Rr5RhN4ARhRVnSY9VDzP2QwyD/hZ9
+        E31TuVG74mbUjz3pxi49qZU=
+X-Google-Smtp-Source: APXvYqyyW3qMLfOYq8S97IamK8vrqK14u3FJjP0cM5OOKHN9MFM7rxiDvK7D2Lce5ekw6xXd2R79yw==
+X-Received: by 2002:a5d:9342:: with SMTP id i2mr5838470ioo.297.1567713020057;
+        Thu, 05 Sep 2019 12:50:20 -0700 (PDT)
+Received: from JATN (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
+        by smtp.gmail.com with ESMTPSA id l21sm2092513iom.24.2019.09.05.12.50.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2019 12:50:19 -0700 (PDT)
+Date:   Thu, 5 Sep 2019 13:50:17 -0600
+From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.4 00/77] 4.4.191-stable review
+Message-ID: <20190905195017.GA3397@JATN>
+References: <20190904175303.317468926@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Thu, 05 Sep 2019 19:49:26 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190904175303.317468926@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We already have an helper to cleanup fuse devices. Use that instead of
-duplicating the code.
+On Wed, Sep 04, 2019 at 07:52:47PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.191 release.
+> There are 77 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri 06 Sep 2019 05:50:23 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.191-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
----
- fs/fuse/virtio_fs.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Compiled, booted, and no regressions on my system.
 
-diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
-index a76bd5a04521..40259368a6bd 100644
---- a/fs/fuse/virtio_fs.c
-+++ b/fs/fuse/virtio_fs.c
-@@ -999,8 +999,7 @@ static int virtio_fs_fill_super(struct super_block *sb)
- err_free_init_req:
- 	fuse_request_free(init_req);
- err_free_fuse_devs:
--	for (i = 0; i < fs->nvqs; i++)
--		fuse_dev_free(fs->vqs[i].fud);
-+	virtio_fs_free_devs(fs);
- err:
- 	return err;
- }
--- 
-2.20.1
-
+-Kelsey
