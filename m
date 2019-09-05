@@ -2,136 +2,109 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DA6C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C06C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F23F420870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:16:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567692999;
-	bh=CGAJUIJz+juuwAaJD4ZTV4RiFqhOn/XNcDZ6VtvCqQw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mWa6CN8h3si0Tc5V6wwVttWk3XAnvvrXMC9zaOd4z041XpH96y6gD6N9rAlkZveai
-	 OkAt00bu/Axc3qek4Ysm8oUqEKI4X0FRujvld6ZUPxjlhdem+IDaKquuIMbGMeKqsi
-	 udQEGKE3Rfj71teIuwYpnX89VRXMMTVkq1QBlC7A=
+	by mail.kernel.org (Postfix) with ESMTP id 6404C206CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:17:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jkRJNor/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731918AbfIEOQi (ORCPT
+        id S1732776AbfIEORW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 10:16:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44614 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727009AbfIEOQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 10:16:37 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1020206CD;
-        Thu,  5 Sep 2019 14:16:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567692997;
-        bh=CGAJUIJz+juuwAaJD4ZTV4RiFqhOn/XNcDZ6VtvCqQw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=f82WwUyhWlg1KGh1JlWsm4/jFYe6mQURSfoZk74KmI+LI0ag2Nv+w5+Fy3Q9hPgiP
-         9biuGKfs28GCH4InwYj9oLfNVlleVY1i6jMDopx/doQhjnBRE2pSeFtu+D9r4g2R7q
-         Y9EGuhxbi1d2bok7vkkMpwYm0aZytY7+itZclZCw=
-Date:   Thu, 5 Sep 2019 16:16:34 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Mike Travis <mike.travis@hpe.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Hedi Berriche <hedi.berriche@hpe.com>,
-        Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 6/8] x86/platform/uv: Decode UVsystab Info
-Message-ID: <20190905141634.GA25790@kroah.com>
-References: <20190905130252.590161292@stormcage.eag.rdlabs.hpecorp.net>
- <20190905130253.325911213@stormcage.eag.rdlabs.hpecorp.net>
+        Thu, 5 Sep 2019 10:17:22 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:58040 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727009AbfIEORW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 10:17:22 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x85EHF6q066539;
+        Thu, 5 Sep 2019 09:17:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1567693035;
+        bh=ub+LpZSR2SqSnDTZYERv7a6nXgZCl/QfTXbE8sjKO10=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=jkRJNor/c//NIjSOu2F8t0GecbA3rmd/dTZM1I1uP2YjUNdtSlFyQGTDRm9uataKz
+         xfiha8TFkN8MrbcAr3s8LDQvlhyGJtIzrD+azaihHuMhi4HkdJAb/qCRntw9a9Pq7y
+         RiNzAl0LUP90NvcSOwe8j9ck78Ybh+3+QPEydLsA=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x85EHF1r089155;
+        Thu, 5 Sep 2019 09:17:15 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 5 Sep
+ 2019 09:17:13 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 5 Sep 2019 09:17:13 -0500
+Received: from [10.250.98.116] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x85EH9Sc113593;
+        Thu, 5 Sep 2019 09:17:10 -0500
+Subject: Re: [PATCH] bus: ti-sysc: Fix clock handling for no-idle quirks
+To:     Tony Lindgren <tony@atomide.com>, <linux-omap@vger.kernel.org>
+CC:     Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+References: <20190905140337.19373-1-tony@atomide.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <49ce192d-697b-48e2-2b18-47acb370739b@ti.com>
+Date:   Thu, 5 Sep 2019 17:17:04 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190905130253.325911213@stormcage.eag.rdlabs.hpecorp.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190905140337.19373-1-tony@atomide.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 08:02:58AM -0500, Mike Travis wrote:
-> Decode the hubless UVsystab passed from BIOS to the kernel saving
-> pertinent info in a similar manner that hubbed UVsystabs are decoded.
+
+
+On 05/09/2019 17:03, Tony Lindgren wrote:
+> NFSroot can fail on dra7 when cpsw is probed using ti-sysc interconnect
+> target module driver as reported by Keerthy.
 > 
-> Signed-off-by: Mike Travis <mike.travis@hpe.com>
-> Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
-> Reviewed-by: Dimitri Sivanich <dimitri.sivanich@hpe.com>
-> To: Thomas Gleixner <tglx@linutronix.de>
-> To: Ingo Molnar <mingo@redhat.com>
-> To: H. Peter Anvin <hpa@zytor.com>
-> To: Andrew Morton <akpm@linux-foundation.org>
-> To: Borislav Petkov <bp@alien8.de>
-> To: Christoph Hellwig <hch@infradead.org>
-> Cc: Dimitri Sivanich <dimitri.sivanich@hpe.com>
-> Cc: Russ Anderson <russ.anderson@hpe.com>
-> Cc: Hedi Berriche <hedi.berriche@hpe.com>
-> Cc: Steve Wahl <steve.wahl@hpe.com>
-> Cc: x86@kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: stable@vger.kernel.org
+> Device clocks and the interconnect target module may or may not be
+> enabled by the bootloader on init, but we currently assume the clocks
+> and module are on from the bootloader for "ti,no-idle" and
+> "ti,no-idle-on-init" quirks as reported by Grygorii Strashko.
+> 
+> Let's fix the issue by always enabling clocks init, and
+> never disable them for "ti,no-idle" quirk. For "ti,no-idle-on-init"
+> quirk, we must decrement the usage count later on to allow PM
+> runtime to idle the module if requested.
+> 
+> Fixes: 1a5cd7c23cc5 ("bus: ti-sysc: Enable all clocks directly during init to read revision")
+> Cc: Keerthy <j-keerthy@ti.com>
+> Cc: Vignesh Raghavendra <vigneshr@ti.com>
+> Reported-by: Keerthy <j-keerthy@ti.com>
+> Reported-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
 > ---
->  arch/x86/kernel/apic/x2apic_uv_x.c |   16 ++++++++++++++--
->  1 file changed, 14 insertions(+), 2 deletions(-)
+>   drivers/bus/ti-sysc.c | 48 +++++++++++++++++++++++++++++++++----------
+>   1 file changed, 37 insertions(+), 11 deletions(-)
+> 
 
-If you are trying to get one of my automated "WTF: patch XXXX was
-seriously submitted to be applied to the stable tree?" emails, you are
-on track for it...
+Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
 
-Please go read the documentation link I sent you last time and figure
-out how you can justify any of this patch series for a stable kernel
-tree.
+Thank you, Tony.
 
-Also, nit:
-
-> --- linux.orig/arch/x86/kernel/apic/x2apic_uv_x.c
-> +++ linux/arch/x86/kernel/apic/x2apic_uv_x.c
-> @@ -1303,7 +1303,8 @@ static int __init decode_uv_systab(void)
->  	struct uv_systab *st;
->  	int i;
->  
-> -	if (uv_hub_info->hub_revision < UV4_HUB_REVISION_BASE)
-> +	/* Select only UV4 (hubbed or hubless) and higher */
-> +	if (is_uv_hubbed(-2) < uv(4) && is_uv_hubless(-2) < uv(4))
->  		return 0;	/* No extended UVsystab required */
->  
->  	st = uv_systab;
-> @@ -1554,8 +1555,19 @@ static __init int uv_system_init_hubless
->  
->  	/* Init kernel/BIOS interface */
->  	rc = uv_bios_init();
-> +	if (rc < 0) {
-> +		pr_err("UV: BIOS init error:%d\n", rc);
-
-Why isn't that function printing an error?
-
-
-> +		return rc;
-> +	}
-> +
-> +	/* Process UVsystab */
-> +	rc = decode_uv_systab();
-> +	if (rc < 0) {
-> +		pr_err("UV: UVsystab decode error:%d\n", rc);
-
-Same here, have the function itself print the error, makes this type of
-stuff much cleaner.
-
-greg k-h
+-- 
+Best regards,
+grygorii
