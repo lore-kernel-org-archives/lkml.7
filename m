@@ -2,110 +2,71 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDE2C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC9AC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE0E720820
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:49:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36F0220820
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:50:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731738AbfIENto (ORCPT
+        id S1731901AbfIENuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 09:49:44 -0400
-Received: from sauhun.de ([88.99.104.3]:57390 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731008AbfIENto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 09:49:44 -0400
-Received: from localhost (p54B335F6.dip0.t-ipconnect.de [84.179.53.246])
-        by pokefinder.org (Postfix) with ESMTPSA id AC7102C00C0;
-        Thu,  5 Sep 2019 15:49:41 +0200 (CEST)
-Date:   Thu, 5 Sep 2019 15:49:41 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     alokc@codeaurora.org, agross@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, bjorn.andersson@linaro.org, vkoul@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 1/1] i2c: qcom-geni: Provide an option to disable DMA
- processing
-Message-ID: <20190905134941.GG1157@kunai>
-References: <20190905102247.27583-1-lee.jones@linaro.org>
+        Thu, 5 Sep 2019 09:50:22 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:35311 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731008AbfIENuW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 09:50:22 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1i5s9S-0008MZ-8O; Thu, 05 Sep 2019 13:50:18 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: mvsas: remove redundant assignment to variable rc
+Date:   Thu,  5 Sep 2019 14:50:17 +0100
+Message-Id: <20190905135017.23772-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jt0yj30bxbg11sci"
-Content-Disposition: inline
-In-Reply-To: <20190905102247.27583-1-lee.jones@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Colin Ian King <colin.king@canonical.com>
 
---jt0yj30bxbg11sci
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The variable rc is being initialized with a value that is never read
+and is being re-assigned a little later on. The assignment is
+redundant and hence can be removed.
 
-Hi Lee,
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/scsi/mvsas/mv_sas.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I understand you are in a hurry, but please double check before
-sending...
+diff --git a/drivers/scsi/mvsas/mv_sas.c b/drivers/scsi/mvsas/mv_sas.c
+index 3e0b8ebe257f..a920eced92ec 100644
+--- a/drivers/scsi/mvsas/mv_sas.c
++++ b/drivers/scsi/mvsas/mv_sas.c
+@@ -1541,7 +1541,7 @@ int mvs_abort_task(struct sas_task *task)
+ 
+ int mvs_abort_task_set(struct domain_device *dev, u8 *lun)
+ {
+-	int rc = TMF_RESP_FUNC_FAILED;
++	int rc;
+ 	struct mvs_tmf_task tmf_task;
+ 
+ 	tmf_task.tmf = TMF_ABORT_TASK_SET;
+-- 
+2.20.1
 
-On Thu, Sep 05, 2019 at 11:22:47AM +0100, Lee Jones wrote:
-> We have a production-level laptop (Lenovo Yoga C630) which is exhibiting
-> a rather horrific bug.  When I2C HID devices are being scanned for at
-> boot-time the QCom Geni based I2C (Serial Engine) attempts to use DMA.
-> When it does, the laptop reboots and the user never sees the OS.
->=20
-> The beautiful thing about this approach is that, *if* the Geni SE DMA
-> ever starts working, we can remove the C code and any old properties
-> left in older DTs just become NOOP.  Older kernels with newer DTs (less
-> of a priority) *still* will not work - but they do not work now anyway.
-
-=2E.. becasue this paragraph doesn't fit anymore. Needs to be reworded.
-
->=20
-> Fixes: 8bc529b25354 ("soc: qcom: geni: Add support for ACPI")
-
-As said in the other thread, I don't get it, but this is not a show
-stopper for me.
-
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> Reviewed-by: Vinod Koul <vkoul@kernel.org>
-
-I'd like Vinod to resend his review. Because IMO the change since v2 was
-not trivial, so the old rev-by has to be dropped.
-
-Other than that, the code looks good to me!
-
-Regards,
-
-   Wolfram
-
-
---jt0yj30bxbg11sci
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1xEnUACgkQFA3kzBSg
-KbZADQ//bVc8JLCde99ZKqUN8Y09DkUCfN9nWo2ec5DwxFmDGC8HdJ6mtz50/MLV
-jBJDWvml349aU4YwpmGf5ON51GWxey0iWmJ0Fo/km09XZp3JVHObxS+66M1y7p34
-T60tKi6kct3QpVwT+jaqMimTvGDGY6W78cG/GCVErlFbthDEEeDfPzy1iuU0D/OW
-j/rdRGz6Q8VlN2CvN6EPPn9njVwBQBIgsSAGeUULgGxb6dUs9oVp6CbRvPQMzwPV
-7sPJzdV5bZ5YPWRaExFUiR6AfCkeDtJwK26jWKVVVLh2Xfc+FMSJ/pOQrQfzoGDA
-Dv50xlVGa3oQV3zeyHzOIFhUZpjsTChbfzVNSt0GGzgYlc09U3ltyWZBR6iEyPfm
-00x/oA1oyMjLpsaOq3xf5+AP7+PScfvB0910iujc+nPd2agCZRRDtl8hCmCiisBK
-W2RB7RnLd3ZKf09bqU0xwkMNUXHSllk0bZK27lxdGFXIK8XCRjf9SJ6bQe1jvXWO
-P5FG1/PuaQIjh8l7u2t15uFpzISvYvKAhypuSpV1Sbgc9fOfZSlbo20SrVkYAmd1
-Y2JcfmTJBjlmRfpyXoVEzOGJclp1AlyrFQd955dzl/LAVBUdvDlHLaFkZ1molQF4
-Ou0LwmX7yn69/N//1QKohUFuLjAkW+tJHd17zYtqMF/HAPcmZl0=
-=pZZv
------END PGP SIGNATURE-----
-
---jt0yj30bxbg11sci--
