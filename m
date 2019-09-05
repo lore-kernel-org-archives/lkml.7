@@ -2,218 +2,110 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C18DC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC2FC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8AC420870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:32:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567711939;
-	bh=dWtd5+nLhoJSM/SHkQ3WS9gV06tdwTIBSFEzPozW0Vo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HiqPzoUNDvDbqJqMW7xNcr2apZ8CBjChXQUyrAz9G7KkWbi/8y3mNxE/RP9xzQ1ev
-	 gpF7QjLHx019pVOPzCfFj7DGolzE0xLevAshWIOohq2HeZAYU4nX8FPF7PteY5ncmo
-	 KUsLpVBkM3pl+LFzFmx3oXNHE0K71YBwAHqasRHk=
+	by mail.kernel.org (Postfix) with ESMTP id E4E5720825
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:33:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BFSW/p+j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403913AbfIETcS (ORCPT
+        id S2390745AbfIETdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 15:32:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56104 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403870AbfIETcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 15:32:16 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FEF120825;
-        Thu,  5 Sep 2019 19:32:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567711936;
-        bh=dWtd5+nLhoJSM/SHkQ3WS9gV06tdwTIBSFEzPozW0Vo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q78vl1fchrY026ueIJKBt96kYirxW3RG3SvX05USlSF8XWFsZHqYGisifVMxr/kqB
-         lrXJr0YMIS2kUJaLrxdnGWFWqB4OXgRqCJZdS1u3hRLNYfEjnMeGDxvm22vLDtSD81
-         Rxg8BkvfESKLxyzVzRHcTcPW0QTMVHJCPs7loA6c=
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     Ashok Raj <ashok.raj@intel.com>,
-        Keith Busch <keith.busch@intel.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 5/5] PCI/ATS: Cache PASID Capability offset
-Date:   Thu,  5 Sep 2019 14:31:46 -0500
-Message-Id: <20190905193146.90250-6-helgaas@kernel.org>
-X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
-In-Reply-To: <20190905193146.90250-1-helgaas@kernel.org>
-References: <20190905193146.90250-1-helgaas@kernel.org>
+        Thu, 5 Sep 2019 15:33:39 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:38226 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729806AbfIETdj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 15:33:39 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x85JXVf1013274;
+        Thu, 5 Sep 2019 14:33:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1567712012;
+        bh=kkAMWtH2lSDWQdmzGtIiji4XCoqJUTR6qG2fZ+Vzpqc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=BFSW/p+jNL5LX1/ko200OssuvJytWR4GBiX5gGhcP6SgNOs8u+6qORlPMLg51rKtj
+         0vCvmEn+3EbUhSaOjeBRWK76TR3XuFDIlJTQRe9Ojl2DmYFTOYeaEQB81AIuiGulUl
+         SBSi6TnBnrlfsND5HFXVJUcEI8XhXfPFptAFxl7k=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x85JXVeO012448
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 5 Sep 2019 14:33:31 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 5 Sep
+ 2019 14:33:31 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 5 Sep 2019 14:33:31 -0500
+Received: from [10.250.98.116] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x85JXSQZ069292;
+        Thu, 5 Sep 2019 14:33:29 -0500
+Subject: Re: [RESEND PATCH next v2 0/6] ARM: keystone: update dt and enable
+ cpts support
+To:     <santosh.shilimkar@oracle.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>
+CC:     Sekhar Nori <nsekhar@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190705151247.30422-1-grygorii.strashko@ti.com>
+ <2ef8b34e-7a6e-b3e4-90e0-c4e7f16c2e99@oracle.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <323c1835-e6b0-9153-8d1e-06200d5e2201@ti.com>
+Date:   Thu, 5 Sep 2019 22:33:28 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <2ef8b34e-7a6e-b3e4-90e0-c4e7f16c2e99@oracle.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Hi Santosh,
 
-Previously each PASID interface searched for the PASID Capability.  Cache
-the capability offset the first time we use it instead of searching each
-time.
+On 06/07/2019 02:48, santosh.shilimkar@oracle.com wrote:
+> On 7/5/19 8:12 AM, Grygorii Strashko wrote:
+>> Hi Santosh,
+>>
+>> This series is set of platform changes required to enable NETCP CPTS reference
+>> clock selection and final patch to enable CPTS for Keystone 66AK2E/L/HK SoCs.
+>>
+>> Those patches were posted already [1] together with driver's changes, so this
+>> is re-send of DT/platform specific changes only, as driver's changes have
+>> been merged already.
+>>
+>> Patches 1-5: CPTS DT nodes update for TI Keystone 2 66AK2HK/E/L SoCs.
+>> Patch 6: enables CPTS for TI Keystone 2 66AK2HK/E/L SoCs.
+>>
+>> [1] https://patchwork.kernel.org/cover/10980037/
+>>
+>> Grygorii Strashko (6):
+>>    ARM: dts: keystone-clocks: add input fixed clocks
+>>    ARM: dts: k2e-clocks: add input ext. fixed clocks tsipclka/b
+>>    ARM: dts: k2e-netcp: add cpts refclk_mux node
+>>    ARM: dts: k2hk-netcp: add cpts refclk_mux node
+>>    ARM: dts: k2l-netcp: add cpts refclk_mux node
+>>    ARM: configs: keystone: enable cpts
+>>
+> Will add these for 5.4 queue. Thanks !!
 
-[bhelgaas: commit log, reorder patch to later, save offset directly in
-pci_enable_pasid() rather than adding pci_pasid_init()]
-Link: https://lore.kernel.org/r/4957778959fa34eab3e8b3065d1951989c61cb0f.1567029860.git.sathyanarayanan.kuppuswamy@linux.intel.com
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/pci/ats.c   | 43 +++++++++++++++++++++----------------------
- include/linux/pci.h |  1 +
- 2 files changed, 22 insertions(+), 22 deletions(-)
+Sry, that I'm disturbing you, but I do not see those patches applied?
 
-diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-index bc463e2ecc61..cb4f62da7b8a 100644
---- a/drivers/pci/ats.c
-+++ b/drivers/pci/ats.c
-@@ -305,7 +305,7 @@ EXPORT_SYMBOL_GPL(pci_reset_pri);
- int pci_enable_pasid(struct pci_dev *pdev, int features)
- {
- 	u16 control, supported;
--	int pos;
-+	int pasid = pdev->pasid_cap;
- 
- 	/*
- 	 * VFs must not implement the PASID Capability, but if a PF
-@@ -323,11 +323,14 @@ int pci_enable_pasid(struct pci_dev *pdev, int features)
- 	if (!pdev->eetlp_prefix_path)
- 		return -EINVAL;
- 
--	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
--	if (!pos)
--		return -EINVAL;
-+	if (!pasid) {
-+		pasid = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
-+		if (!pasid)
-+			return -EINVAL;
-+		pdev->pasid_cap = pasid;
-+	}
- 
--	pci_read_config_word(pdev, pos + PCI_PASID_CAP, &supported);
-+	pci_read_config_word(pdev, pasid + PCI_PASID_CAP, &supported);
- 	supported &= PCI_PASID_CAP_EXEC | PCI_PASID_CAP_PRIV;
- 
- 	/* User wants to enable anything unsupported? */
-@@ -337,7 +340,7 @@ int pci_enable_pasid(struct pci_dev *pdev, int features)
- 	control = PCI_PASID_CTRL_ENABLE | features;
- 	pdev->pasid_features = features;
- 
--	pci_write_config_word(pdev, pos + PCI_PASID_CTRL, control);
-+	pci_write_config_word(pdev, pasid + PCI_PASID_CTRL, control);
- 
- 	pdev->pasid_enabled = 1;
- 
-@@ -352,7 +355,7 @@ EXPORT_SYMBOL_GPL(pci_enable_pasid);
- void pci_disable_pasid(struct pci_dev *pdev)
- {
- 	u16 control = 0;
--	int pos;
-+	int pasid = pdev->pasid_cap;
- 
- 	/* VFs share the PF PASID configuration */
- 	if (pdev->is_virtfn)
-@@ -361,11 +364,10 @@ void pci_disable_pasid(struct pci_dev *pdev)
- 	if (WARN_ON(!pdev->pasid_enabled))
- 		return;
- 
--	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
--	if (!pos)
-+	if (!pasid)
- 		return;
- 
--	pci_write_config_word(pdev, pos + PCI_PASID_CTRL, control);
-+	pci_write_config_word(pdev, pasid + PCI_PASID_CTRL, control);
- 
- 	pdev->pasid_enabled = 0;
- }
-@@ -378,7 +380,7 @@ EXPORT_SYMBOL_GPL(pci_disable_pasid);
- void pci_restore_pasid_state(struct pci_dev *pdev)
- {
- 	u16 control;
--	int pos;
-+	int pasid = pdev->pasid_cap;
- 
- 	if (pdev->is_virtfn)
- 		return;
-@@ -386,12 +388,11 @@ void pci_restore_pasid_state(struct pci_dev *pdev)
- 	if (!pdev->pasid_enabled)
- 		return;
- 
--	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
--	if (!pos)
-+	if (!pasid)
- 		return;
- 
- 	control = PCI_PASID_CTRL_ENABLE | pdev->pasid_features;
--	pci_write_config_word(pdev, pos + PCI_PASID_CTRL, control);
-+	pci_write_config_word(pdev, pasid + PCI_PASID_CTRL, control);
- }
- EXPORT_SYMBOL_GPL(pci_restore_pasid_state);
- 
-@@ -408,16 +409,15 @@ EXPORT_SYMBOL_GPL(pci_restore_pasid_state);
- int pci_pasid_features(struct pci_dev *pdev)
- {
- 	u16 supported;
--	int pos;
-+	int pasid = pdev->pasid_cap;
- 
- 	if (pdev->is_virtfn)
- 		pdev = pci_physfn(pdev);
- 
--	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
--	if (!pos)
-+	if (!pasid)
- 		return -EINVAL;
- 
--	pci_read_config_word(pdev, pos + PCI_PASID_CAP, &supported);
-+	pci_read_config_word(pdev, pasid + PCI_PASID_CAP, &supported);
- 
- 	supported &= PCI_PASID_CAP_EXEC | PCI_PASID_CAP_PRIV;
- 
-@@ -470,16 +470,15 @@ EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
- int pci_max_pasids(struct pci_dev *pdev)
- {
- 	u16 supported;
--	int pos;
-+	int pasid = pdev->pasid_cap;
- 
- 	if (pdev->is_virtfn)
- 		pdev = pci_physfn(pdev);
- 
--	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
--	if (!pos)
-+	if (!pasid)
- 		return -EINVAL;
- 
--	pci_read_config_word(pdev, pos + PCI_PASID_CAP, &supported);
-+	pci_read_config_word(pdev, pasid + PCI_PASID_CAP, &supported);
- 
- 	supported = (supported & PASID_NUMBER_MASK) >> PASID_NUMBER_SHIFT;
- 
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index c81a24172b14..7ddbb6445e1a 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -458,6 +458,7 @@ struct pci_dev {
- 	u32		pri_reqs_alloc; /* Number of PRI requests allocated */
- #endif
- #ifdef CONFIG_PCI_PASID
-+	u16		pasid_cap;	/* PASID Capability offset */
- 	u16		pasid_features;
- #endif
- #ifdef CONFIG_PCI_P2PDMA
+
+
 -- 
-2.23.0.187.g17f5b7556c-goog
-
+Best regards,
+grygorii
