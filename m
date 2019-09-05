@@ -2,86 +2,225 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB00C3A5AB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 04:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2969C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 04:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58F90206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 04:56:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8E7C206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 04:59:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731162AbfIEE4P (ORCPT
+        id S1731192AbfIEE7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 00:56:15 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:60560 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731099AbfIEE4P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 00:56:15 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1i5jnx-0006IZ-4w; Thu, 05 Sep 2019 14:55:34 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 05 Sep 2019 14:55:24 +1000
-Date:   Thu, 5 Sep 2019 14:55:24 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Atul Gupta <atul.gupta@chelsio.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-crypto@vger.kernel.org, x86@kernel.org,
-        linux-s390@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 0/9] crypto: sha256 - Merge crypto/sha256.h into
- crypto/sha.h
-Message-ID: <20190905045524.GC32038@gondor.apana.org.au>
-References: <20190901203532.2615-1-hdegoede@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190901203532.2615-1-hdegoede@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 5 Sep 2019 00:59:50 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37696 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725921AbfIEE7u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 00:59:50 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2985CB60E;
+        Thu,  5 Sep 2019 04:59:48 +0000 (UTC)
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     akpm@linux-foundation.org
+Cc:     walken@google.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, dave@stgolabs.net,
+        Davidlohr Bueso <dbueso@suse.de>
+Subject: [PATCH -next] mm: introduce vma_interval_tree_foreach_stab()
+Date:   Wed,  4 Sep 2019 21:59:35 -0700
+Message-Id: <20190905045935.5228-1-dave@stgolabs.net>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 01, 2019 at 10:35:23PM +0200, Hans de Goede wrote:
-> Hi All,
-> 
-> As promised here is a follow-up series to my earlier sha256 series.
-> 
-> Note I have only compiled and tested this series on x86_64 !! 
-> 
-> All changes to architecture specific code on other archs have not even
-> been tested to compile! With that said most of these changes were done
-> using my editors search - replace function so things should be fine...
-> (and FWIW I did do a Kconfig hack to compile test the ccree change).
-> 
-> The first patch in this series rename various file local functions /
-> arrays to avoid conflicts with the new include/crypto/sha256.h, followed
-> by a patch merging include/crypto/sha256.h into include/crypto/sha.h.
-> 
-> The last patch makes use of this merging to remove a bit more code
-> duplication, making sha256_generic use sha256_init and sha224_init from
-> lib/crypto/sha256.c. An added advantage of this, is that this gives these
-> 2 functions coverage by the crypto selftests.
+This documents better the nature of the stab lookup/query.
 
-All applied.  Thanks.
+In addition, this is a step that will make the conversion
+of interval tree nodes from [a,b] to [a,b[ easier to review.
+
+For symmetry with vma_interval_tree, the anon equivalent is
+also introduced, albeit a single user. This patch does not
+change any semantics.
+
+Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
+---
+ arch/arm/mm/fault-armv.c   | 2 +-
+ arch/arm/mm/flush.c        | 2 +-
+ arch/nios2/mm/cacheflush.c | 2 +-
+ arch/parisc/kernel/cache.c | 2 +-
+ fs/dax.c                   | 2 +-
+ include/linux/mm.h         | 6 ++++++
+ kernel/events/uprobes.c    | 2 +-
+ mm/hugetlb.c               | 4 ++--
+ mm/khugepaged.c            | 2 +-
+ mm/memory-failure.c        | 6 ++----
+ 10 files changed, 17 insertions(+), 13 deletions(-)
+
+diff --git a/arch/arm/mm/fault-armv.c b/arch/arm/mm/fault-armv.c
+index ae857f41f68d..85bb69f1decb 100644
+--- a/arch/arm/mm/fault-armv.c
++++ b/arch/arm/mm/fault-armv.c
+@@ -143,7 +143,7 @@ make_coherent(struct address_space *mapping, struct vm_area_struct *vma,
+ 	 * cache coherency.
+ 	 */
+ 	flush_dcache_mmap_lock(mapping);
+-	vma_interval_tree_foreach(mpnt, &mapping->i_mmap, pgoff, pgoff) {
++	vma_interval_tree_foreach_stab(mpnt, &mapping->i_mmap, pgoff) {
+ 		/*
+ 		 * If this VMA is not in our MM, we can ignore it.
+ 		 * Note that we intentionally mask out the VMA
+diff --git a/arch/arm/mm/flush.c b/arch/arm/mm/flush.c
+index 6d89db7895d1..b04384406c0f 100644
+--- a/arch/arm/mm/flush.c
++++ b/arch/arm/mm/flush.c
+@@ -249,7 +249,7 @@ static void __flush_dcache_aliases(struct address_space *mapping, struct page *p
+ 	pgoff = page->index;
+ 
+ 	flush_dcache_mmap_lock(mapping);
+-	vma_interval_tree_foreach(mpnt, &mapping->i_mmap, pgoff, pgoff) {
++	vma_interval_tree_foreach_stab(mpnt, &mapping->i_mmap, pgoff) {
+ 		unsigned long offset;
+ 
+ 		/*
+diff --git a/arch/nios2/mm/cacheflush.c b/arch/nios2/mm/cacheflush.c
+index 65de1bd6a760..8abe26b8e29d 100644
+--- a/arch/nios2/mm/cacheflush.c
++++ b/arch/nios2/mm/cacheflush.c
+@@ -79,7 +79,7 @@ static void flush_aliases(struct address_space *mapping, struct page *page)
+ 	pgoff = page->index;
+ 
+ 	flush_dcache_mmap_lock(mapping);
+-	vma_interval_tree_foreach(mpnt, &mapping->i_mmap, pgoff, pgoff) {
++	vma_interval_tree_foreach_stab(mpnt, &mapping->i_mmap, pgoff) {
+ 		unsigned long offset;
+ 
+ 		if (mpnt->vm_mm != mm)
+diff --git a/arch/parisc/kernel/cache.c b/arch/parisc/kernel/cache.c
+index a82b3eaa5398..c5f8aab749c1 100644
+--- a/arch/parisc/kernel/cache.c
++++ b/arch/parisc/kernel/cache.c
+@@ -348,7 +348,7 @@ void flush_dcache_page(struct page *page)
+ 	 * to flush one address here for them all to become coherent */
+ 
+ 	flush_dcache_mmap_lock(mapping);
+-	vma_interval_tree_foreach(mpnt, &mapping->i_mmap, pgoff, pgoff) {
++	vma_interval_tree_foreach_stab(mpnt, &mapping->i_mmap, pgoff) {
+ 		offset = (pgoff - mpnt->vm_pgoff) << PAGE_SHIFT;
+ 		addr = mpnt->vm_start + offset;
+ 
+diff --git a/fs/dax.c b/fs/dax.c
+index 6bf81f931de3..f24c035defb7 100644
+--- a/fs/dax.c
++++ b/fs/dax.c
+@@ -781,7 +781,7 @@ static void dax_entry_mkclean(struct address_space *mapping, pgoff_t index,
+ 	spinlock_t *ptl;
+ 
+ 	i_mmap_lock_read(mapping);
+-	vma_interval_tree_foreach(vma, &mapping->i_mmap, index, index) {
++	vma_interval_tree_foreach_stab(vma, &mapping->i_mmap, index) {
+ 		struct mmu_notifier_range range;
+ 		unsigned long address;
+ 
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 66f296181bcc..14c5eb514bfe 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2244,6 +2244,9 @@ struct vm_area_struct *vma_interval_tree_iter_next(struct vm_area_struct *node,
+ 	for (vma = vma_interval_tree_iter_first(root, start, last);	\
+ 	     vma; vma = vma_interval_tree_iter_next(vma, start, last))
+ 
++#define vma_interval_tree_foreach_stab(vma, root, start)		\
++	vma_interval_tree_foreach(vma, root, start, start)
++
+ void anon_vma_interval_tree_insert(struct anon_vma_chain *node,
+ 				   struct rb_root_cached *root);
+ void anon_vma_interval_tree_remove(struct anon_vma_chain *node,
+@@ -2261,6 +2264,9 @@ void anon_vma_interval_tree_verify(struct anon_vma_chain *node);
+ 	for (avc = anon_vma_interval_tree_iter_first(root, start, last); \
+ 	     avc; avc = anon_vma_interval_tree_iter_next(avc, start, last))
+ 
++#define anon_vma_interval_tree_foreach_stab(vma, root, start)		\
++	anon_vma_interval_tree_foreach(vma, root, start, start)
++
+ /* mmap.c */
+ extern int __vm_enough_memory(struct mm_struct *mm, long pages, int cap_sys_admin);
+ extern int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 94d38a39d72e..6a70dbe0b4b2 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -975,7 +975,7 @@ build_map_info(struct address_space *mapping, loff_t offset, bool is_register)
+ 
+  again:
+ 	i_mmap_lock_read(mapping);
+-	vma_interval_tree_foreach(vma, &mapping->i_mmap, pgoff, pgoff) {
++	vma_interval_tree_foreach_stab(vma, &mapping->i_mmap, pgoff) {
+ 		if (!valid_vma(vma, is_register))
+ 			continue;
+ 
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index ef37c85423a5..1a6b133ca66d 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -3643,7 +3643,7 @@ static void unmap_ref_private(struct mm_struct *mm, struct vm_area_struct *vma,
+ 	 * __unmap_hugepage_range() is called as the lock is already held
+ 	 */
+ 	i_mmap_lock_write(mapping);
+-	vma_interval_tree_foreach(iter_vma, &mapping->i_mmap, pgoff, pgoff) {
++	vma_interval_tree_foreach_stab(iter_vma, &mapping->i_mmap, pgoff) {
+ 		/* Do not unmap the current VMA */
+ 		if (iter_vma == vma)
+ 			continue;
+@@ -4844,7 +4844,7 @@ pte_t *huge_pmd_share(struct mm_struct *mm, unsigned long addr, pud_t *pud)
+ 		return (pte_t *)pmd_alloc(mm, pud, addr);
+ 
+ 	i_mmap_lock_write(mapping);
+-	vma_interval_tree_foreach(svma, &mapping->i_mmap, idx, idx) {
++	vma_interval_tree_foreach_stab(svma, &mapping->i_mmap, idx) {
+ 		if (svma == vma)
+ 			continue;
+ 
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index 00cec6a127aa..a5536e7c4d4c 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -1420,7 +1420,7 @@ static void retract_page_tables(struct address_space *mapping, pgoff_t pgoff)
+ 	pmd_t *pmd, _pmd;
+ 
+ 	i_mmap_lock_write(mapping);
+-	vma_interval_tree_foreach(vma, &mapping->i_mmap, pgoff, pgoff) {
++	vma_interval_tree_foreach_stab(vma, &mapping->i_mmap, pgoff) {
+ 		/*
+ 		 * Check vma->anon_vma to exclude MAP_PRIVATE mappings that
+ 		 * got written to. These VMAs are likely not worth investing
+diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+index 7ef849da8278..79934fd00146 100644
+--- a/mm/memory-failure.c
++++ b/mm/memory-failure.c
+@@ -451,8 +451,7 @@ static void collect_procs_anon(struct page *page, struct list_head *to_kill,
+ 
+ 		if (!t)
+ 			continue;
+-		anon_vma_interval_tree_foreach(vmac, &av->rb_root,
+-					       pgoff, pgoff) {
++		anon_vma_interval_tree_foreach_stab(vmac, &av->rb_root, pgoff) {
+ 			vma = vmac->vma;
+ 			if (!page_mapped_in_vma(page, vma))
+ 				continue;
+@@ -482,8 +481,7 @@ static void collect_procs_file(struct page *page, struct list_head *to_kill,
+ 
+ 		if (!t)
+ 			continue;
+-		vma_interval_tree_foreach(vma, &mapping->i_mmap, pgoff,
+-				      pgoff) {
++		vma_interval_tree_foreach_stab(vma, &mapping->i_mmap, pgoff) {
+ 			/*
+ 			 * Send early kill signal to tasks where a vma covers
+ 			 * the page but the corrupted page is not necessarily
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.16.4
+
