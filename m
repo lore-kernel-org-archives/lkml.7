@@ -2,80 +2,153 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47344C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6711DC3A5AA
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2915420870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:35:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E08521743
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:38:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567672692;
+	bh=0P3K55PEd36SxcI4Sg0an6PxdPdJYTbQsleCLdTdI8k=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=KRaOCQU0VKHCWxbVxUqiAecx78CBoQ46brDnHMGzHFYDSObk/l7/FW2n4Li9rjuAD
+	 VmRe8YMNYxUwQB5w7aF8U5Zi/Dr0NsCZLJ64XkNLntj3KoAP4K63Qk1CpuvDgVbExY
+	 Ul0FPyfsu1CQZAYscwoZ6ZwrlMUFHzuzWuqiC3M0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732709AbfIEIfP (ORCPT
+        id S1732722AbfIEIiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 04:35:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48494 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730753AbfIEIfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 04:35:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 894C7AC93;
-        Thu,  5 Sep 2019 08:35:13 +0000 (UTC)
-From:   Andreas Schwab <schwab@suse.de>
-To:     Anup Patel <Anup.Patel@wdc.com>
-Cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim K <rkrcmar@redhat.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        "kvm\@vger.kernel.org" <kvm@vger.kernel.org>,
-        Anup Patel <anup@brainfault.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alexander Graf <graf@amazon.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "linux-riscv\@lists.infradead.org" <linux-riscv@lists.infradead.org>
-Subject: Re: [PATCH v7 18/21] RISC-V: KVM: Add SBI v0.1 support
-References: <20190904161245.111924-1-anup.patel@wdc.com>
-        <20190904161245.111924-20-anup.patel@wdc.com>
-X-Yow:  Now KEN is having a MENTAL CRISIS because his "R.V." PAYMENTS are
- OVER-DUE!!
-Date:   Thu, 05 Sep 2019 10:35:12 +0200
-In-Reply-To: <20190904161245.111924-20-anup.patel@wdc.com> (Anup Patel's
-        message of "Wed, 4 Sep 2019 16:16:02 +0000")
-Message-ID: <mvmef0v87jz.fsf@suse.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Thu, 5 Sep 2019 04:38:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:39428 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730914AbfIEIiL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 04:38:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4C9A5337;
+        Thu,  5 Sep 2019 01:38:10 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 14D713F67D;
+        Thu,  5 Sep 2019 01:38:08 -0700 (PDT)
+Subject: Re: PCI/kernel msi code vs GIC ITS driver conflict?
+To:     Andrew Murray <andrew.murray@arm.com>,
+        John Garry <john.garry@huawei.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        "luojiaxing@huawei.com" <luojiaxing@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <f5e948aa-e32f-3f74-ae30-31fee06c2a74@huawei.com>
+ <5fd4c1cf-76c1-4054-3754-549317509310@kernel.org>
+ <ef258ec7-877c-406a-3d88-80ff79b823f2@huawei.com>
+ <20190904102537.GV9720@e119886-lin.cambridge.arm.com>
+From:   Marc Zyngier <maz@kernel.org>
+Organization: Approximate
+Message-ID: <8f1c1fe6-c0d4-1805-b119-6a48a4900e6d@kernel.org>
+Date:   Thu, 5 Sep 2019 09:38:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20190904102537.GV9720@e119886-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sep 04 2019, Anup Patel <Anup.Patel@wdc.com> wrote:
+On 04/09/2019 11:25, Andrew Murray wrote:
+> On Wed, Sep 04, 2019 at 09:56:51AM +0100, John Garry wrote:
+>> On 03/09/2019 17:16, Marc Zyngier wrote:
+>>> Hi John,
+>>>
+>>> On 03/09/2019 15:09, John Garry wrote:
+>>>> Hi Marc, Bjorn, Thomas,
+>>
+>> Hi Marc,
+>>
+>>>>
+>>>> We've come across a conflict with the kernel/pci msi code and GIC ITS
+>>>> driver on our arm64 system, whereby we can't unbind and re-bind a PCI
+>>>> device driver under special conditions. I'll explain...
+>>>>
+>>>> Our PCI device support 32 MSIs. The driver attempts to allocate msi
+>>>> vectors with min msi=17, max msi = 32, and affd.pre vectors = 16. For
+>>>> our test we make nr_cpus = 1 (just anything less than 16).
+>>>
+>>> Just to confirm: this PCI device is requiring Multi-MSI, right? As
+>>> opposed to MSI-X?
+>>
+>> Right, Multi-MSI.
+>>
+>>>
+>>>> We find that the pci/kernel msi code gives us 17 vectors, but the GIC
+>>>> ITS code reserves 32 lpi maps in its_irq_domain_alloc(). The problem
+>>>> then occurs when unbinding the driver in its_irq_domain_free() call,
+>>>> where we only clear bits for 17 vectors. So if we unbind the driver and
+>>>> then attempt to bind again, it fails.
+>>>
+>>> Is this device, by any chance, sharing its requested-id with another
+>>> device? By being behind a bridge of some sort?There is some code to
+>>> deal with it, but I'm not sure it has ever been verified in anger...
+>>
+>> It's a RC iEP and there should be no requested-id sharing:
+>>
+>> root@ubuntu:/home/john#  lspci -s 74:02.0 -v
+>> 74:02.0 Serial Attached SCSI controller: Huawei Technologies Co., Ltd.
+>> HiSilicon SAS 3.0 HBA (rev 20)
+>> Flags: bus master, fast devsel, latency 0, IRQ 23, NUMA node 0
+>> Memory at a2000000 (32-bit, non-prefetchable) [size=32K]
+>> Capabilities: [40] Express Root Complex Integrated Endpoint, MSI 00
+>> Capabilities: [80] MSI: Enable+ Count=32/32 Maskable+ 64bit+
+>> Capabilities: [b0] Power Management version 3
+>> Kernel driver in use: hisi_sas_v3_hw
+>>
+>>>
+>>>> Where the fault lies, I can't say. Maybe the kernel msi code should
+>>>> always give power of 2 vectors - as I understand, the PCI spec mandates
+>>>> this. Or maybe the GIC ITS driver has a problem in the free path, as
+>>>> above. Or maybe the PCI driver should not be allowed to request !power
+>>>> of 2 min/max vectors.
+>>>>
+>>>> Opinion?
+>>>
+>>> My hunch is that it is an ITS driver bug: the PCI layer is allowed to
+>>> give any number of MSIs to an endpoint driver, as long as they match the
+>>> requirements of the allocation for Multi-MSI.
+>>
+>> I would tend to say that, but isn't the requirement to allocate power of 2
+>> msi vectors, which doesn't seem to be enforced in the kernel msi layer?
+> 
+> For a PCI device that supports MSI but not MSI-X - my understanding is that
+> pci_alloc_irq_vectors_affinity and pci_alloc_irq_vectors will request *from
+> the device* a power of 2 msi vectors between the min and max given by the
+> driver - msi_setup_entry rounds up to nearest power of 2.
+> 
+> However this doesn't guarantee that pci_alloc_irq_vectors will return a
+> power of 2. For example if you set maxvec to 17, then it will request
+> 32 from the device and pci_alloc_irq_vectors will return 17 (i.e. it satisfies
+> your request by over allocating, but still gives you what you asked for).
+> 
+> I'm not yet familiar with ITS, however if it is reserving 32 yet you only
+> clear 17, then there is mismatch between the number actually reserved from
+> the hardware, and the value returned from pci_alloc_irq_vectors.
+> 
+> (It looks like its_alloc_device_irq rounds up to the nearest power of 2).
 
-> From: Atish Patra <atish.patra@wdc.com>
->
-> The KVM host kernel running in HS-mode needs to handle SBI calls coming
-> from guest kernel running in VS-mode.
->
-> This patch adds SBI v0.1 support in KVM RISC-V. All the SBI calls are
-> implemented correctly except remote tlb flushes. For remote TLB flushes,
-> we are doing full TLB flush and this will be optimized in future.
+That's a "feature" of the architecture. The ITT is sized by the number
+of bits used to index the table, meaning that you can only describe a
+power of two >= 2.
 
-Note that this conflicts with
-https://patchwork.kernel.org/patch/11107221/ which removes <asm/sbi.h>
-from <asm/tlbflush.h>.  You should probably include that header
-explicitly in arch/riscv/kvm/vcpu_sbi.c.
+John, could you stick a "#define DEBUG 1" at the top of irq-gic-v3-its.c
+and report the LPI allocations for this device?
 
-Andreas.
+Thanks,
 
+	M.
 -- 
-Andreas Schwab, SUSE Labs, schwab@suse.de
-GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
-"And now for something completely different."
+Jazz is not dead, it just smells funny...
