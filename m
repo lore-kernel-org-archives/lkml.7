@@ -2,105 +2,156 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA986C43140
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3CC7C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C9C1206DE
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:42:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD258206DE
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:43:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="ZUbcaI0T"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="m5TQ/l8/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391321AbfIESl7 (ORCPT
+        id S2390464AbfIESnl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 14:41:59 -0400
-Received: from mout.gmx.net ([212.227.15.18]:33667 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732033AbfIESl7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 14:41:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1567708872;
-        bh=M1UGnPJJ+2VuEq33S0TdraaobxmDCqcrUAEKeQ8qQUs=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=ZUbcaI0T/PtTrufTRwK68S574RNG0IIdnpXj1FAIZ5Hk2GJ9INr7/CPWoXQf98mlD
-         xqb1bKKYrkuiba88qXFMUIdcc0HdiT3JpXBB3hoJKof64v9bk714UXkxmhiRfaSz0T
-         7fTJq/e15prco2OCp2oJY6DJpfk8h7K9eVpIydPk=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.1.162] ([37.4.249.90]) by mail.gmx.com (mrgmx002
- [212.227.17.190]) with ESMTPSA (Nemesis) id 0M9Jss-1i125G274g-00CkFc; Thu, 05
- Sep 2019 20:41:12 +0200
-Subject: Re: [PATCH -next 02/15] thermal: bcm2835: use
- devm_platform_ioremap_resource() to simplify code
-To:     YueHaibing <yuehaibing@huawei.com>, miquel.raynal@bootlin.com,
-        rui.zhang@intel.com, edubezval@gmail.com,
-        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
-        eric@anholt.net, f.fainelli@gmail.com, rjui@broadcom.com,
-        sbranden@broadcom.com, mmayer@broadcom.com,
-        computersforpeace@gmail.com, gregory.0xf0@gmail.com,
-        matthias.bgg@gmail.com, agross@kernel.org, heiko@sntech.de,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        marc.w.gonzalez@free.fr, mans@mansr.com, talel@amazon.com,
-        jun.nie@linaro.org, shawnguo@kernel.org, phil@raspberrypi.org,
-        gregkh@linuxfoundation.org, david.hernandezsanchez@st.com,
-        horms+renesas@verge.net.au, wsa+renesas@sang-engineering.com
-Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com
-References: <20190904122939.23780-1-yuehaibing@huawei.com>
- <20190904122939.23780-3-yuehaibing@huawei.com>
-From:   Stefan Wahren <wahrenst@gmx.net>
-Message-ID: <ba19c083-3c86-eaeb-c071-ea96c2e0dd6e@gmx.net>
-Date:   Thu, 5 Sep 2019 20:41:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 5 Sep 2019 14:43:41 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42646 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728258AbfIESnk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 14:43:40 -0400
+Received: by mail-pg1-f193.google.com with SMTP id p3so1892554pgb.9
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 11:43:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Fn8SAMa0kHIf62H+0ZvQwfwKj3AOqtxXz/Ns6Tf+0hg=;
+        b=m5TQ/l8/gpBIBBYyzHTkSLKUh00lD/2kUVoHlrS31oAm2wuKupko2sk49zGnZeRC5w
+         XETHnJsuQSxmL+X2PatVMr3RHntKClFgnxL2YuqJhMGVKTpYzE3xq0hvhXy0+BS5n3tN
+         AvUD4Lcosyd8BO3ed/74ILca3jY3et4g3zES0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Fn8SAMa0kHIf62H+0ZvQwfwKj3AOqtxXz/Ns6Tf+0hg=;
+        b=ONeKfehTQeeHRFWU6A0ByEEc3PHH+TlqMWj3i7qvzIQ8OkFqIkeYem5z2UmLGuOXVa
+         ggYB9NqA8ikBp6JKoK4kfCB0RsaLlopoTRGKxEjsu9itS8Uas0qyck4fNl0S7fAbopIr
+         L9289kpJun72xiMyoznw6cKaj4fdIFomnSWAkXt+wb+7FvpsOn+YhJaG0y6mOu0UOZd7
+         HY8ax1RjiWnGP+KKbzIL3ve08RYNpg+W8ZXv1DdPQLlb609wDM/JONrjAy0KpQj7j4lr
+         flT+Ud+KBS9N74N+/lGRYwzV+0KIdry6+ls3cxwcqiDt2eFdmdzJkJP080TFeR2TSt4n
+         hi7w==
+X-Gm-Message-State: APjAAAWSkqyQYZ9iQT9ccqA9ApiBeyDT/WWpZZgoXEnoW5U/ZXJskV94
+        VFl+7UwPCjnwVVGTncHxF04PVPiRPic=
+X-Google-Smtp-Source: APXvYqxsoC2iAUPy8yQ6zCuWue0mOAZvhGJlSFrzwhw4M7Z/y03wd0Fknx/UhdR/a62nnuLNXPy0rA==
+X-Received: by 2002:aa7:8592:: with SMTP id w18mr5708116pfn.237.1567709019909;
+        Thu, 05 Sep 2019 11:43:39 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id d14sm6312439pfh.36.2019.09.05.11.43.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Sep 2019 11:43:39 -0700 (PDT)
+Date:   Thu, 5 Sep 2019 11:43:37 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     linux-mmc@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Jaehoon Chung <jh80.chung@samsung.com>,
+        Yong Mao <yong.mao@mediatek.com>,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 08/11] mmc: core: Fixup processing of SDIO IRQs during
+ system suspend/resume
+Message-ID: <20190905184337.GA133864@google.com>
+References: <20190903142207.5825-1-ulf.hansson@linaro.org>
+ <20190903142207.5825-9-ulf.hansson@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20190904122939.23780-3-yuehaibing@huawei.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:WOmrGoYt2aZLE0c0r9K+/VJMXUNzvW/kX7vmvJXlWPXzYW5NR9J
- luyrP+5HUxX+Ik46iIlejCplMa2am5XS0NfLLQ7ZhlXmasy18+i/OA5VoR5aEu1/yVdmVn8
- AN3N1d8lbnA4HPsgXXRyGpNFweFZlAReZpmXxwXL0XGXKC31gFW9I6jO2SraUQgZg8eu25p
- foqc0kdcwKEMp61BV4kvQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:nkW495xtuv4=:tTHYYykyc8MeFH8VYXAtPV
- 1oz89eAs6J4EKmXGB8jywzeB9Rr+HNFXREs3+bl+7MUrhT6Tb5vvEZikpkfN7YcTYBM8A3ZVH
- n4yQa0u0tAnwQxNBcgEVMVosn+/mze41K8we0bObWZxZnDx2pz3YHKwLh/kXBAuFm7+0Rk0Vz
- yZS/73BjtleldpUL66iGqoS9Kj+dBB99d7VSTXyev99g2bS5AtTKgTzYAA9qHIzpXlHp1Snis
- PEOX6R6c/BcoM0LLyefpTFEzY1NY3QGc+6StuImf16b+OmrPPtW8D//puDVdc/ayO1z9cDfeJ
- 2PL2gEH1o2MNxNBYTWlBwD8J1tB2j4dcJRftBAnkaqQ85Gnn8YFcAPxPDuXAvIsqLzV5G839e
- t3N7LgD6zsHeAv9bVTecZjXBHpH+dyf2hYb76M23xIsMwiP5LM3kDJiED61MjNEaWcX8zsGfm
- RP9/VZQ1volYqm1DX5jdkWLrIHvMus+bGRoZLYL2Q9xS0OD/7faZ7Od2MonlHbOd/NL+MJ3aS
- 5RkRJ+DxwonIs2MCGlaOei4aS36r81FmO4qEESDkxqF7tpHww+f3zGTyKOB3NihhKihqYzL13
- pQeW9GaJIbB8jiwxFakYjSp6Ti/3DZcmc/zXgV5bm4FDgyFgUYqnvUq3AK21ur7WXKI5fAqot
- Xp+FknRGP5lTeyZZ8CsTu46mC2ZzJe50IK5pF1sJhsgLnol8Y4rFGBC1lImxkwgaRFmMvOeRg
- 6p+CY4LmFMoUcXfgsv0n8F2h8jtRus6M6jswi9Gt6eu6xOMsMZF1AaYL1Pa6igzbvRrJfwzU3
- yvScYds6ExX42p5vtUeswaXEf/dgE7K2xM8NN1px/JV4fBBYzPPjOzmp/BbOs9ZB0h6Kavpz2
- XAzYn0SJ3Kktzm96QDIc1dqXs9MM/Zh8VYzo8Lc1dT2USxJ6AR+QdDrz6sYDuqhA5BvZrwKSy
- 1Hki0CKIATnfugQVT9araYuKn4Cva/enmNtmVQepcuvmixrpK5w/zayiST5ToOI9RpIl/vvB1
- S2oeaSoQM7cpO2Yea2NVgSizipQACekJixPec4JSuy+Yu0VZ9pg7o8EHw76mY2MG+r4CsH0qs
- B+wYJGsCbNNnemavOVy5pwJLAavhQyNzEzkaNeSVbJ8Radnx6JSvwpUHT0j6Z9CbiyqktJXjm
- WAkFtcjYEqCIzTorRGlhm1s0kDMdvWQ48irGv4jdgqqjV0BOUzFd1PFWfxdVIEj2oCItAhZRO
- +wNSe5aKqpNdFgJlAHm64qfczlAf/2dRkGgFKifPkw02mAE78ADOPFEIwwUDxgy7aWF9pxBsk
- BkFDWVHIRO1pQHw1LJYrmWliprIUaSrvL2WGAhCqiZ5p3ie7wRrL1uTXOP5q1jDcd60a/ptQS
- HvdmAdVPs6xsOBeK0uTBLtNTJ7JT6bTKcckdOw/FyjzI0O9H1+fEAqb8MkMB1wRxp5QtVQcZe
- nWoFCFDA87OryLqTPF6kHOtM6PdhH/EI8=
+Content-Disposition: inline
+In-Reply-To: <20190903142207.5825-9-ulf.hansson@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 04.09.19 um 14:29 schrieb YueHaibing:
-> Use devm_platform_ioremap_resource() to simplify the code a bit.
-> This is detected by coccinelle.
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Stefan Wahren <wahrenst@gmx.net>
+On Tue, Sep 03, 2019 at 04:22:04PM +0200, Ulf Hansson wrote:
+> System suspend/resume of SDIO cards, with SDIO IRQs enabled and when using
+> MMC_CAP2_SDIO_IRQ_NOTHREAD is unfortunate still suffering from a fragile
+> behaviour. Some problems have been taken care of so far, but more issues
+> remains.
+> 
+> For example, calling the ->ack_sdio_irq() callback to let host drivers
+> re-enable the SDIO IRQs is a bad idea, unless the IRQ have been consumed,
+> which may not be the case during system suspend/resume. This may lead to
+> that a host driver re-signals the same SDIO IRQ over and over again,
+> causing a storm of IRQs and gives a ping-pong effect towards the
+> sdio_irq_work().
+> 
+> Moreover, calling the ->enable_sdio_irq() callback at system resume to
+> re-enable already enabled SDIO IRQs for the host, causes the runtime PM
+> count for some host drivers to become in-balanced. This then leads to the
+> host to remain runtime resumed, no matter if it's needed or not.
+> 
+> To fix these problems, let's check if process_sdio_pending_irqs() actually
+> consumed the SDIO IRQ, before we continue to ack the IRQ by invoking the
+> ->ack_sdio_irq() callback.
+> 
+> Additionally, there should be no need to re-enable SDIO IRQs as the host
+> driver already knows if they were enabled at system suspend, thus also
+> whether it needs to re-enable them at system resume. For this reason, drop
+> the call to ->enable_sdio_irq() during system resume.
+> 
+> In regards to these changes there is yet another issue, which is when there
+> is an SDIO IRQ being signaled by the host driver, but after the SDIO card
+> has been system suspended. Currently these IRQs are just thrown away, while
+> we should at least make sure to try to consume them when the SDIO card has
+> been system resumed. Fix this by calling sdio_signal_irq() after system
+> resumed the SDIO card.
+> 
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> ---
+>  drivers/mmc/core/sdio.c     | 2 +-
+>  drivers/mmc/core/sdio_irq.c | 3 ++-
+>  2 files changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mmc/core/sdio.c b/drivers/mmc/core/sdio.c
+> index c557f1519b77..3114d496495a 100644
+> --- a/drivers/mmc/core/sdio.c
+> +++ b/drivers/mmc/core/sdio.c
+> @@ -1015,7 +1015,7 @@ static int mmc_sdio_resume(struct mmc_host *host)
+>  		if (!(host->caps2 & MMC_CAP2_SDIO_IRQ_NOTHREAD))
+>  			wake_up_process(host->sdio_irq_thread);
+>  		else if (host->caps & MMC_CAP_SDIO_IRQ)
+> -			host->ops->enable_sdio_irq(host, 1);
+> +			sdio_signal_irq(host);
+
+You could possibly limit this to cards that remain powered during
+suspend, but doing it always should do no harm.
+
+>  	}
+>  
+>  out:
+> diff --git a/drivers/mmc/core/sdio_irq.c b/drivers/mmc/core/sdio_irq.c
+> index d7965b53a6d2..900871073bd7 100644
+> --- a/drivers/mmc/core/sdio_irq.c
+> +++ b/drivers/mmc/core/sdio_irq.c
+> @@ -115,7 +115,8 @@ static void sdio_run_irqs(struct mmc_host *host)
+>  	mmc_claim_host(host);
+>  	if (host->sdio_irqs) {
+>  		process_sdio_pending_irqs(host);
+> -		host->ops->ack_sdio_irq(host);
+> +		if (!host->sdio_irq_pending)
+> +			host->ops->ack_sdio_irq(host);
+>  	}
+>  	mmc_release_host(host);
+>  }
+
+I'm by no means a SDIO expert, but as far as I can tell this looks
+good. I verified that this patch fixes a problem with SDIO interrupts
+that are ignored while suspending.
+
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
