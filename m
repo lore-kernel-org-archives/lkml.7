@@ -2,117 +2,137 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D74FC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D7EC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C972207E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:33:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vmsh8nYx"
+	by mail.kernel.org (Postfix) with ESMTP id 8ADFD20825
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:33:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391291AbfIESdN (ORCPT
+        id S2387891AbfIESdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 14:33:13 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44518 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730223AbfIESdL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 14:33:11 -0400
-Received: by mail-wr1-f65.google.com with SMTP id 30so3889088wrk.11
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 11:33:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=B5O8eGkbGw+ETECQevuBRCR0HQOeLcREPjZ6QhzTv+c=;
-        b=Vmsh8nYxnAh2orLd9VI9I62UBJ6glfX/55rAjzstLrdFRdhaw5ET8IGXbqkKIZ59vS
-         iHkfgmCqjZnoS0r9kpEWt4IyjeNE7dO/HGlzmJWqno8p8FSjJQwBEAxfdD83PG+hrE2+
-         I/S27/3KA+hzqQNIw29MPHO4Gt/qiufVujeeMafwUCNpWmw1Bby3/Xp7EJ9ppnC1ZddH
-         Yyb+XzhE3D3wBD99xpBqMw0bw+JU+3IT3tw2w+3pLq+thSPkDS+8MKShOywUd9sy3FWp
-         7Kq84cbsEUYcWzOJ1RczkqxM6rIhVRPxGhHJO5DzEjGD2dVHIcuOzM7Zva/Spudqaian
-         TcNA==
+        Thu, 5 Sep 2019 14:33:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41346 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391294AbfIESdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 14:33:19 -0400
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BB4BB7CB80
+        for <linux-kernel@vger.kernel.org>; Thu,  5 Sep 2019 18:33:18 +0000 (UTC)
+Received: by mail-wr1-f72.google.com with SMTP id f18so1372857wro.19
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 11:33:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=B5O8eGkbGw+ETECQevuBRCR0HQOeLcREPjZ6QhzTv+c=;
-        b=UoeZf2rp1KZxG8jbohS++8GThey7BF3tG2+qm0xDLPeXfDetVjeGSolzYPQUPefMYO
-         Y+ujgmzngbNsNlixFwh6zL22Ox0fC2H88DAIsR/Cmk3mKw5S0KHF8DM9m/CPKhDG5fsE
-         8UPqxe8p/3e2FmNzkC/69IeATcZCVUodlh1nNCL/kMfCVyQiOAZkNDPXvuPQSthkiaDn
-         QqUjKg6Rg9TNUA4zHaNpoKALA5B2bVf78HLdOO5DYMccKPRz9RopH+wxerJhQHnmVdU3
-         hq2zPPef0j1HIAsjOmtFB66t2i5YOgAd02gj3Bdd0Y+z7Ijcb1o7uqdzHW7XGp1LmTso
-         rATQ==
-X-Gm-Message-State: APjAAAU0/12KtNLWpo2MX2B3s8i4vieXP9UNy1UWafNwdVe6fl1CQ2T3
-        anmzDWwlAy/AubB7M1sjlp4=
-X-Google-Smtp-Source: APXvYqx+x9GUtN1lafnRmnXBSsfRNt5BA2TCgYoqdrKwy2zQ5dAjLgpIHWfDFQEmcv3vzIlepZ6/tw==
-X-Received: by 2002:adf:9050:: with SMTP id h74mr3739633wrh.191.1567708389260;
-        Thu, 05 Sep 2019 11:33:09 -0700 (PDT)
-Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
-        by smtp.gmail.com with ESMTPSA id o22sm5997845wra.96.2019.09.05.11.33.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 11:33:08 -0700 (PDT)
-From:   Krzysztof Wilczynski <kw@linux.com>
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>
-Cc:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Tony Cheng <Tony.Cheng@amd.com>, Jun Lei <Jun.Lei@amd.com>,
-        David Francis <David.Francis@amd.com>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
-        Wenjing Liu <Wenjing.Liu@amd.com>,
-        Anthony Koo <anthony.koo@amd.com>,
-        Aidan Wood <Aidan.Wood@amd.com>,
-        Chris Park <Chris.Park@amd.com>,
-        Eric Yang <Eric.Yang2@amd.com>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/amd/display: Move static keyword to the front of declaration
-Date:   Thu,  5 Sep 2019 20:33:06 +0200
-Message-Id: <20190905183306.32670-1-kw@linux.com>
-X-Mailer: git-send-email 2.23.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JkgFvZx1SpfRB54bm11+3DOumUuDokZW525XdQCPb+E=;
+        b=q94w1/u/zp7YixExdQAVpEt2NCjW8tXY/mF3W+dVDY9X68x8wVu3woiuFzZTQV0o3x
+         KuTcqQRoDABJknWdkp2mcRhlWsmkF1J1lVT1xw7fTtw8Awyk2YgWfXQzTy8W4h+JecpT
+         76YN3OniOV4WGKPCZUyhJRByB2Tq7Zz6v1/ojhkyNF/w8PVhL7YqwghfSWmAWltm/WJL
+         vFey36/b50+2UklSOTh4WacV31w7oNcDjIt8aa4UZfwgUWwbPEqYWYGPTYR5zyV1OJQn
+         ardv3wG4YfaHibqP47psVyxxYc/eb4x7r3NBaZJRSfMb8p9R1EdbCyOQUcOMHSinCIUL
+         8YgA==
+X-Gm-Message-State: APjAAAUXY2oMXPfdm7GP6QJmed64F72iRgrBhh4H9ZVAhfwXWDEDkAAF
+        Teq+ye1m+h1g2SXKnmHZ+FY14c48/uqZ/hPXRpT2SAzOi2YCwVawOLi1f9RmfW6OXvwt0HsafFD
+        ghqJNGM2FoBjFakAKteBYxKMMyY6fhxI0obU3hGKj
+X-Received: by 2002:a5d:568c:: with SMTP id f12mr3942180wrv.248.1567708397324;
+        Thu, 05 Sep 2019 11:33:17 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzmOECwYwtvafDfOc5sH/mM1xRRq5odIdcrX+xDOVM3wNnjyolmP+riNwHwlSKTnHua2vRyqquS9BP4i+1k7Ig=
+X-Received: by 2002:a5d:568c:: with SMTP id f12mr3942141wrv.248.1567708396973;
+ Thu, 05 Sep 2019 11:33:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <156763534546.18676.3530557439501101639.stgit@warthog.procyon.org.uk>
+ <CAHk-=wh5ZNE9pBwrnr5MX3iqkUP4nspz17rtozrSxs5-OGygNw@mail.gmail.com>
+ <17703.1567702907@warthog.procyon.org.uk> <CAHk-=wjQ5Fpv0D7rxX0W=obx9xoOAxJ_Cr+pGCYOAi2S9FiCNg@mail.gmail.com>
+In-Reply-To: <CAHk-=wjQ5Fpv0D7rxX0W=obx9xoOAxJ_Cr+pGCYOAi2S9FiCNg@mail.gmail.com>
+From:   Ray Strode <rstrode@redhat.com>
+Date:   Thu, 5 Sep 2019 14:32:40 -0400
+Message-ID: <CAKCoTu7ms_Mr-q08d9XB3uascpzwBa5LF9JTT2aq8uUsoFE8aQ@mail.gmail.com>
+Subject: Re: Why add the general notification queue and its sources
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Ray, Debarshi" <debarshi.ray@gmail.com>,
+        Robbie Harwood <rharwood@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the static keyword to the front of declaration of DC_BUILD_ID,
-and resolve the following compiler warning that can be seen when
-building with warnings enabled (W=1):
+Hi,
 
-drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc.c:75:1: warning:
-  ‘static’ is not at beginning of declaration [-Wold-style-declaration]
+On Thu, Sep 5, 2019 at 1:20 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+> You've at least now answered part of the "Why", but you didn't
+> actually answer the whole "another developer" part.
+It's certainly something we've wanted in the GNOME world for a long time:
 
-Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
----
-Related: https://lore.kernel.org/r/20190827233017.GK9987@google.com
+See for instance
 
- drivers/gpu/drm/amd/display/dc/core/dc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+https://bugzilla.redhat.com/show_bug.cgi?id=991110
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
-index 87ca5a290d12..a5a89bc0e1d1 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
-@@ -72,7 +72,7 @@
- #define DC_LOGGER \
- 	dc->ctx->logger
- 
--const static char DC_BUILD_ID[] = "production-build";
-+static const char DC_BUILD_ID[] = "production-build";
- 
- /**
-  * DOC: Overview
--- 
-2.22.1
+and
 
+https://bugzilla.gnome.org/show_bug.cgi?id=707402
+
+from all the way back 2013.  These are the alternatives I can think of:
+
+- poll? status quo, but not great for obvious wakeup reasons
+- use a different credential cache collection type that does support
+change notification?
+some of the other types do support change notification, but have their
+own set of
+problems. But maybe we should just go back to DIR type credential
+cache collections
+and try to figure out the life cycle problems they pose, i don't
+know... or get more
+man power behind KCM...
+- manage change notification entirely from userspace.  assume credentials will
+always be put in place from krb5-libs entry points, and just skip
+notification if
+it happens out from under the libraries. maybe upstream kerberos guys would
+be onboard with this, I don't know. This seems less robust than having
+the kernel
+in the loop, though.
+
+> I really don't like how nobody else than you seems to even look at any
+> of the key handling patches. Because nobody else seems to care.
+I've got no insight here, so i'll just throw a dart...
+
+viro, is this something you have any interest in watching closer?
+
+> See what I'm saying? This whole "David Howells does his own features
+> that nobody else uses" needs to stop. You need to have a champion. I
+> just don't feel safe pulling these kinds of changes from you, because
+> I get the feeling that ABSOLUTELY NOBODY ELSE ever really looked at it
+> or really cared.
+I get the "one man is not enough for proper maintenance" argument, and
+maybe it's true.  I don't know.
+
+But I just want to point out, I have been asking dhowells for this change
+notification API for years, so it's not something he did on his own and for
+no particularly good reason. It solves a real problem and has a real-world
+use case.
+
+He kindly did it because I (and Robbie Harwood and others) asked him about
+it, off and on, and  he was able to fit it onto his priority list for us.
+From this thread, it sounds like he solved a problem for Greg too, killing a
+couple birds with one stone?
+
+--Ray
