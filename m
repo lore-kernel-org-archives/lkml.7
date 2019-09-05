@@ -2,101 +2,135 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1B1C3A5AA
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 00:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB95C3A59E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 00:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2F5E206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 00:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BAA7206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 00:18:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CX6NCYFo"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="rs3yPZVD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730190AbfIEAP6 (ORCPT
+        id S1729919AbfIEASP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 20:15:58 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:42388 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727156AbfIEAP5 (ORCPT
+        Wed, 4 Sep 2019 20:18:15 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55113 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727562AbfIEASP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 20:15:57 -0400
-Received: by mail-oi1-f193.google.com with SMTP id o6so300936oic.9;
-        Wed, 04 Sep 2019 17:15:56 -0700 (PDT)
+        Wed, 4 Sep 2019 20:18:15 -0400
+Received: by mail-wm1-f67.google.com with SMTP id k2so626028wmj.4
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 17:18:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=sifjxETRYiP3/dI94LWW+EPsjWJBvoBD1awu87P5YhM=;
-        b=CX6NCYFoE0gXba0Ao/upp+gvt8TOaazyHEYHn3cYWF3MLq614j1a2vlELwKOyGPX8V
-         nFH8Do2s50msebXYbJwxi5oc6EMtv5NfIPNFb7frNHMkUc4hTKlfBbUoWfS/FBJz2oWO
-         e+cW5DJOl4CF7bsHkuqwOOtQagDsAglF+05dxJCxSQkVPoOGNqZ3+UjW8w/I3vG9URgZ
-         tQ9GzOEyDl7ROQAi/nXPca5VscXKhlr8n+ILWCX8g4OyeQt6ZEaOvd9VuuojxuF0y9HW
-         WhtM2va9pY/NHejYj9+nZz7dn0krZZg8GyzcUvjDmWTKTd3Hfxfz+NrYLaT/9MOW1neY
-         dh+A==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=MCwGjVWQ8geMBz8XA4P4QY9ik7qf8xcDkwmUNH/Zo/w=;
+        b=rs3yPZVDnwfsTeL+Lusgr1V7QSSD+D7X9BRtvMawntpoFEESYIh0qvfZLElmVuZxLV
+         5ljRB0l/1BAj4jPwMcMeNSN3+50uVX5GOyhknYs48SNEfHCDoyJHWjw1ebh0CLHMZ7bA
+         nTi5OLq+ZTVCN5Yey69p1VzzsbFRJ4jrqBVbudbbsEGlhGh8rZWxGauNdd+3EcTxx2do
+         827U5uRk62+4sH9MrwU/zuGzOWQdfDltAfnjRiANg5ZZlS8UG3mJKXLqgvPJfPcesCvV
+         RzmhoGGOZJMYWlykAPBsxmxpsOEeVJakwZfE3vco9Lc2Hyb5jYWZVb8kphDfIxyNV4R9
+         VM5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=sifjxETRYiP3/dI94LWW+EPsjWJBvoBD1awu87P5YhM=;
-        b=Rr0hKdHUpzXWZZx5oi9QVNXgtX0f0c6an/cZnKnOdKEHE9TmKmshZrNyeTz/ZakAsj
-         RbBDrdX7jyeGytKQtlNw/c7XQd+xw9cuipVe/tG9ZWmAwAMOtvEQlnMQ9vPy/pTmS14p
-         qRNpx8TIpeDIZo0AU6zAXAVGHD9qN6Hp3d711xEx8koF+B56t+5qATx51S9MsJLz4+f0
-         Md6+LOBVuv/1vLgQjs3R0b6SfMvXJjaTUW1tfBKeT5a0bEOKstXxaYWGDqv4EPKJma3x
-         IkxsT1LaV2EIDcRG2CnsF5HThOlUoX9GfIQP6eb0w/rca+90tgNiAZ4QvkONbprckmEE
-         nqAA==
-X-Gm-Message-State: APjAAAUJXB/LAcoI0K0YM7gaELC7rCfp254NP4Juv1neb/rNIMdVQvLE
-        fTzJ+FgV/j8B5oINe6fQvSZRaDzmjMZ/1WN4QWE=
-X-Google-Smtp-Source: APXvYqy6DO2HoL48JbpGVvb47rr337PM1oVuO/LS/a0NiV3grYCFIM824yV6VZ5S2cHKBMOzEOEfD71uHAnVuFBsewY=
-X-Received: by 2002:aca:5a84:: with SMTP id o126mr564762oib.5.1567642556538;
- Wed, 04 Sep 2019 17:15:56 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=MCwGjVWQ8geMBz8XA4P4QY9ik7qf8xcDkwmUNH/Zo/w=;
+        b=Km9hizbfZwvfdOnzL/7P6xcG+St5lroABUQhlrSSnxnlGg2mldI9k3x0wM8rFZA8sq
+         btDYZEGXwLCUelSI0vF4Jk6QTl5i62YEhc0XVPo7BWZeHvSIeNm7MAryM7zxYZS4vRkl
+         fopObPZ9J6VONHOmlFam9R3DLXDjcWOW7SNW4J08Hj8h5jFr3nvvZGUrEZ0WSDITC5YN
+         SH5yrI27eRHIUDvBoRKgKcNsabYQdXXWF+wQPnRkLZ1q9rVIKEcjFu1c0n2hoXo4ovlj
+         kL97Ihzc/ukFtNw55gxOJgurams8jQFx5rNXdVemiwjznjgEjtbyWFewGtd+5qhAvkmV
+         vl0w==
+X-Gm-Message-State: APjAAAW5Ey0nMDe1DJxcIbLSdqzeLDefdnEkXqviE5rILoxqQtmyrKB/
+        Xd/ZxX81EhGZtr6f6fCrdkmZ+5mOfKCC8A==
+X-Google-Smtp-Source: APXvYqweHPDI52RBMILSReOxOpg//glYE0g2TGq/ROtfN7rtrbELR/fepS9zH1a38sRN6aewxq31Qw==
+X-Received: by 2002:a1c:ed06:: with SMTP id l6mr570512wmh.167.1567642693352;
+        Wed, 04 Sep 2019 17:18:13 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id w13sm407488wre.44.2019.09.04.17.18.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 04 Sep 2019 17:18:12 -0700 (PDT)
+Message-ID: <5d705444.1c69fb81.c4927.1cd1@mx.google.com>
+Date:   Wed, 04 Sep 2019 17:18:12 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <1567068597-22419-1-git-send-email-wanpengli@tencent.com> <a70aeec2-1572-ea09-a0c5-299cd70ddc8a@intel.com>
-In-Reply-To: <a70aeec2-1572-ea09-a0c5-299cd70ddc8a@intel.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Thu, 5 Sep 2019 08:15:44 +0800
-Message-ID: <CANRm+Czb07GGy7pP2NRLhaXV4yy01ozdqH34CTSMCSJPR1ZfPw@mail.gmail.com>
-Subject: Re: [PATCH v2] cpuidle-haltpoll: Enable kvm guest polling when
- dedicated physical CPUs are available
-To:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v4.14.141-58-g39a17ab1edd4
+X-Kernelci-Tree: stable-rc
+X-Kernelci-Report-Type: boot
+X-Kernelci-Branch: linux-4.14.y
+In-Reply-To: <20190904175301.777414715@linuxfoundation.org>
+References: <20190904175301.777414715@linuxfoundation.org>
+Subject: Re: [PATCH 4.14 00/57] 4.14.142-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Sep 2019 at 17:48, Rafael J. Wysocki
-<rafael.j.wysocki@intel.com> wrote:
->
-> On 8/29/2019 10:49 AM, Wanpeng Li wrote:
-> > From: Wanpeng Li <wanpengli@tencent.com>
-> >
-> > The downside of guest side polling is that polling is performed even
-> > with other runnable tasks in the host. However, even if poll in kvm
-> > can aware whether or not other runnable tasks in the same pCPU, it
-> > can still incur extra overhead in over-subscribe scenario. Now we can
-> > just enable guest polling when dedicated pCPUs are available.
-> >
-> > Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-> > Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > Cc: Paolo Bonzini <pbonzini@redhat.com>
-> > Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
-> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
->
-> As stated before, I'm going to queue up this change for 5.4, with the
-> Paolo's ACK.
->
-> BTW, in the future please CC power management changes to
-> linux-pm@vger.kernel.org for easier handling.
+stable-rc/linux-4.14.y boot: 144 boots: 5 failed, 131 passed with 8 offline=
+ (v4.14.141-58-g39a17ab1edd4)
 
-Ok, thanks.
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-4.14.y/kernel/v4.14.141-58-g39a17ab1edd4/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.14.=
+y/kernel/v4.14.141-58-g39a17ab1edd4/
 
-Wanpeng
+Tree: stable-rc
+Branch: linux-4.14.y
+Git Describe: v4.14.141-58-g39a17ab1edd4
+Git Commit: 39a17ab1edd4adb3fb732726a36cb54a21cc570d
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 68 unique boards, 23 SoC families, 14 builds out of 201
+
+Boot Failures Detected:
+
+arm:
+    vexpress_defconfig:
+        gcc-8:
+            qemu_arm-virt-gicv3: 5 failed labs
+
+Offline Platforms:
+
+arm64:
+
+    defconfig:
+        gcc-8
+            apq8016-sbc: 1 offline lab
+
+arm:
+
+    multi_v7_defconfig:
+        gcc-8
+            qcom-apq8064-cm-qs600: 1 offline lab
+            qcom-apq8064-ifc6410: 1 offline lab
+            sun5i-r8-chip: 1 offline lab
+
+    davinci_all_defconfig:
+        gcc-8
+            dm365evm,legacy: 1 offline lab
+
+    qcom_defconfig:
+        gcc-8
+            qcom-apq8064-cm-qs600: 1 offline lab
+            qcom-apq8064-ifc6410: 1 offline lab
+
+    sunxi_defconfig:
+        gcc-8
+            sun5i-r8-chip: 1 offline lab
+
+---
+For more info write to <info@kernelci.org>
