@@ -2,143 +2,73 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 660B1C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C08DAC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 415982087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F04B206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:43:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730846AbfIEClu (ORCPT
+        id S1730876AbfIECnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 22:41:50 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:36641 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730451AbfIEClu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 22:41:50 -0400
-X-UUID: ee9c975d9c9f4a36948ac9b4ed035b23-20190905
-X-UUID: ee9c975d9c9f4a36948ac9b4ed035b23-20190905
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 291277882; Thu, 05 Sep 2019 10:41:45 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- MTKMBS33DR.mediatek.inc (172.27.6.106) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 5 Sep 2019 10:41:38 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 5 Sep 2019 10:41:37 +0800
-Message-ID: <1567651299.13330.4.camel@mtksdaap41>
-Subject: Re: [PATCH v6 0/7] Support dsi for mt8183
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        <linux-pwm@vger.kernel.org>, David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Thierry Reding" <treding@nvidia.com>,
-        Ajay Kumar <ajaykumar.rs@samsung.com>,
-        "Inki Dae" <inki.dae@samsung.com>,
-        Rahul Sharma <rahul.sharma@samsung.com>,
-        "Sean Paul" <seanpaul@chromium.org>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        "Andy Yan" <andy.yan@rock-chips.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
-        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
-        <stonea168@163.com>
-Date:   Thu, 5 Sep 2019 10:41:39 +0800
-In-Reply-To: <20190811104008.53372-1-jitao.shi@mediatek.com>
-References: <20190811104008.53372-1-jitao.shi@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 4 Sep 2019 22:43:02 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6215 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727156AbfIECnC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 22:43:02 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id B8A9C1DB3F159A7D5A6F;
+        Thu,  5 Sep 2019 10:43:00 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 5 Sep 2019 10:42:51 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     YueHaibing <yuehaibing@huawei.com>, <devel@driverdev.osuosl.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+Subject: [PATCH -next] staging: exfat: Use kmemdup in exfat_symlink()
+Date:   Thu, 5 Sep 2019 03:00:47 +0000
+Message-ID: <20190905030047.88401-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-Product-Ver: SMEX-12.5.0.1684-8.5.1010-24890.000
-X-TM-AS-Result: No-10.241600-8.000000-10
-X-TMASE-MatchedRID: 6otD/cJAac2EFkjzuXHNt+LdprnA5EQRJih/yo+OvlVSAxvL+nqAnW4+
-        gA+i9D2DqMlm1+4tGhQfHS8wUUuW9T4Pcn5OGAtGMpVOsYwN78M0YG6kQ2QiFFSOymiJfTYXrr5
-        TE4GLzk06n5U+9hWy0GYwRleGHW3t0/GyN5MpGlOqNnzrkU+2mgKflB9+9kWVcJHSK1bfF9XGcw
-        gtERMbmd99l6mYw28dfPU3ZRMebCuKiQbKW6KJeAlpVkdtt3WuOHhqIXe4IzZIyDY579vwTFYvW
-        mlP6FyeEu6Hmd7GM5PTDbyTDLiYnVGEd5OSBmbmngIgpj8eDcC063Wh9WVqgmWCfbzydb0g2EuZ
-        q9zngaeNo+PRbWqfRDsAVzN+Ov/sXEXPO/6fybNBoFITciebPaiz/Co2CGruef8GeKgmo5snmxJ
-        8YZpSdw==
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--10.241600-8.000000
-X-TMASE-Version: SMEX-12.5.0.1684-8.5.1010-24890.000
-X-TM-SNTS-SMTP: 75FAA2A7B910283301DE15DCDB5DB7A8A744F4C0B4B7E434DF4A678FAB936AED2000:8
-X-MTK:  N
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Jitao:
+Use kmemdup rather than duplicating its implementation
 
-For this series, applied to mediatek-drm-next-5.5 [1], and I break
-"[v6,2/7] drm/mediatek: fixes CMDQ reg address of mt8173 is different
-with mt2701" into two patches, thanks.
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/staging/exfat/exfat_super.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-[1]
-https://github.com/ckhu-mediatek/linux.git-tags/commits/mediatek-drm-next-5.5
+diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
+index 5b5c2ca8c9aa..05fdecc3e9ea 100644
+--- a/drivers/staging/exfat/exfat_super.c
++++ b/drivers/staging/exfat/exfat_super.c
+@@ -2696,12 +2696,11 @@ static int exfat_symlink(struct inode *dir, struct dentry *dentry,
+ 	inode->i_mtime = inode->i_atime = inode->i_ctime = current_time(inode);
+ 	/* timestamp is already written, so mark_inode_dirty() is unneeded. */
+ 
+-	EXFAT_I(inode)->target = kmalloc(len+1, GFP_KERNEL);
++	EXFAT_I(inode)->target = kmemdup(target, len + 1, GFP_KERNEL);
+ 	if (!EXFAT_I(inode)->target) {
+ 		err = -ENOMEM;
+ 		goto out;
+ 	}
+-	memcpy(EXFAT_I(inode)->target, target, len+1);
+ 
+ 	dentry->d_time = GET_IVERSION(dentry->d_parent->d_inode);
+ 	d_instantiate(dentry, inode);
 
-Regards,
-CK
-
-
-On Sun, 2019-08-11 at 18:40 +0800, Jitao Shi wrote:
-> Change since v5:
->  - fine tune dphy timing.
-> 
-> Change since v4:
->  - move mipi_dsi_host_unregiter() to .remove()
->  - fine tune add frame size control coding style
->  - change the data type of data_rate as u32, and add DIV_ROUND_UP_ULL
->  - use div_u64 when 8000000000ULL / dsi->data_rate.
-> 
-> Changes since v3
->  - add one more 'tab' for bitwise define.
->  - add Tested-by: Ryan Case <ryandcase@chromium.org>
-> 	and Reviewed-by: CK Hu <ck.hu@mediatek.com>.
->  - remove compare da_hs_zero to da_hs_prepare.
-> 
-> Changes since v2:
->  - change the video timing calc method
->  - fine the dsi and mipitx init sequence
->  - fine tune commit msg
-> 
-> Changes since v1:
->  - separate frame size and reg commit control independent patches.
->  - fix some return values in probe
->  - remove DSI_CMDW0 in "CMDQ reg address of mt8173 is different with mt2701" 
-> 
-> Jitao Shi (7):
->   drm/mediatek: move mipi_dsi_host_register to probe
->   drm/mediatek: fixes CMDQ reg address of mt8173 is different with
->     mt2701
->   drm/mediatek: add dsi reg commit disable control
->   drm/mediatek: add frame size control
->   drm/mediatek: add mt8183 dsi driver support
->   drm/mediatek: change the dsi phytiming calculate method
->   drm: mediatek: adjust dsi and mipi_tx probe sequence
-> 
->  drivers/gpu/drm/mediatek/mtk_drm_drv.c |   2 +-
->  drivers/gpu/drm/mediatek/mtk_dsi.c     | 224 ++++++++++++++++++-------
->  2 files changed, 161 insertions(+), 65 deletions(-)
-> 
 
 
