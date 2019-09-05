@@ -2,94 +2,93 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDCCDC3A5AA
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 00:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 653A0C3A59E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 00:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 903B222CF7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 00:02:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DDAF21881
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 00:06:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="o+xsl4lm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PkpqjHV3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730653AbfIEACd (ORCPT
+        id S1730196AbfIEAGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 20:02:33 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42579 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730158AbfIEACd (ORCPT
+        Wed, 4 Sep 2019 20:06:02 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:37554 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727125AbfIEAGC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 20:02:33 -0400
-Received: by mail-pf1-f193.google.com with SMTP id w22so463243pfi.9
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 17:02:32 -0700 (PDT)
+        Wed, 4 Sep 2019 20:06:02 -0400
+Received: by mail-lf1-f67.google.com with SMTP id w67so438954lff.4
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 17:06:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=DMDiIQY2gVxor/9tfnSEdI8BwtB46XK7pBIB2yMTLBc=;
-        b=o+xsl4lmBHGpnDImWPM+EZHQW8VVGoHi4Ms8RXruJR+FJ/vQ2e61uWD0J7ERaS4FKZ
-         +LAbashurqA9qoUt55zN6vY+z7XjB8j669RaxOBPkjDMFkhUw5Poq2OE6Eoqg3rZlcOh
-         67ctW4j73di+6QPuk1BgvRwvdlGOu6oA8PbE25+4TAGv2lc9R2PHjI8jYFUiPz7MEAUV
-         OKa+0uv2hM12FZCfoKnuFYzUIetiBzEE+AzlYURObnb1YYQdc9k9Yy8Detsp39urQD/p
-         DPPx4eT88OOb8OUMhLUvN1ABBLq3fIbijVX0O+hVzuABVav6duYiI/e8gcjoJmLsJWMr
-         /pBQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UKFQLjmhKUsCsbQHzitLXQ7E0/G2C84MFI2s1l5ssbo=;
+        b=PkpqjHV3cWlSkoLNkFq83xwqGXwh0qSy11RRVDSxEPQtR/mnEAKd4pAZpIQs4ADhV3
+         hUGYlwsLaPIPUJcqsRLFumBCJpm3sieQmqTgqIRVIjNB2dzxD39NUHSHJOv2MZAoHura
+         sJQl+WInqpQk8gCuIqYWbgDPKwBMf7DLJNGk85UuwSmsld/skzCbev15POmGrPRNLA6c
+         6xhjqwvbEtREuww0dp6j65msVGqzI154Kb+No1dmCg1/vQI5hS1dEa/lOjaZmtJuODD0
+         J5dNvTAyA7AuM+ehvzBNpY7yosVsZE0XP6Tzqam0vIQ/bHninz/aFeO5g+6G3w+GxxSq
+         8/GQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=DMDiIQY2gVxor/9tfnSEdI8BwtB46XK7pBIB2yMTLBc=;
-        b=Upy0DH/ASCeqlY4brFvBXiiEDUAyFZxcOuJUsoMbR8MZEZ3qhOUG5ndrGMt7Om/17I
-         8izCCl1NNVi1oc8It+8YAqWZS1qs6SNuj3adTeDjUqK5/6QFv1gd7VhtjzphRuGphwid
-         OWEWrIsHCD10469bM7roEGIOaUfYu55Bs8ZoKW4wE16r8x26I1JekC5MuiTFByKb6xzv
-         BOUNO60eJS2oeBvqNqSsr3Ij4Oyi/KmbHupVhkrTc7Dn/ovHA1oF7BvQ+n5ZQirc9tY2
-         PypmrswgUxdfDE9bkHMeQAD4OWEZ4DH8kMyxPxiHMo2WnvEV6iPjt2uPP+zEIbIZhdQP
-         vm/Q==
-X-Gm-Message-State: APjAAAVVUvSlkx4a0UaTMQbH7u3yH+4Hq0J8Ax3EsulWnfLII28azDt4
-        MOmp+aWTQho8TxKcFYUjOdnHiQ==
-X-Google-Smtp-Source: APXvYqzc0wRcdryTLKgsgoGOwLmF9g/litQYYjhoz0VIQFDDUflUHMSdrzjEFyAFp2XzF5NH1fDC5A==
-X-Received: by 2002:a63:553:: with SMTP id 80mr665691pgf.280.1567641752363;
-        Wed, 04 Sep 2019 17:02:32 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id g24sm192291pfo.178.2019.09.04.17.02.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 04 Sep 2019 17:02:31 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Remi Pommarel <repk@triplefau.lt>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Remi Pommarel <repk@triplefau.lt>,
-        Elie Roudninski <xademax@gmail.com>
-Subject: Re: [PATCH] iio: adc: meson_saradc: Fix memory allocation order
-In-Reply-To: <20190901105410.23567-1-repk@triplefau.lt>
-References: <20190901105410.23567-1-repk@triplefau.lt>
-Date:   Wed, 04 Sep 2019 17:02:30 -0700
-Message-ID: <7h8sr3txt5.fsf@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UKFQLjmhKUsCsbQHzitLXQ7E0/G2C84MFI2s1l5ssbo=;
+        b=H2taEFheRsoUp6kPzi0lP3u/eUm54+yCrX1kD7V388C9QgOrn+h448MOb0FZ1ub3Rr
+         ylRlul6/R9Suhc58dwySkb2OByusVpQvlrNF9TWK8twRjluHhyzMKVYnF9DCkRpQzVES
+         VbMnq7IhgSy/4KQo7w7n379aVsYNgscAWZef5lY2RBA85zEv4GrLQnAAwuNVPSTywyjV
+         epA71/lYERVnQ1D0BPYNynvCczwzeiaAeF41Sse29C9pQCU/qOVbfbcLLZK1vvC8hHLg
+         NTCjBIpnylMf9Tqd7MGS4hknSzWMmjGt5p39wgjVsHF4a504bi1qNjrbiqFkhZqa/N6Z
+         WZ5Q==
+X-Gm-Message-State: APjAAAXEzwcQZ6krtkcCQxn8SpDG9Al7UvG2Y7GiHuH5dx3CJZb8Lr8G
+        vHjCZ34+EOdy8e0GhP5GYV5yxxZVfXtl9alTqblRQBX3
+X-Google-Smtp-Source: APXvYqxwoT+YbK63CE4fWL5dszSDI22IQ15S8zuMrB1APRjFlTEzPpJZ68PLExfAE7IF3esMXLCmsGrBMGBZUIKuOYw=
+X-Received: by 2002:ac2:4902:: with SMTP id n2mr449836lfi.0.1567641960000;
+ Wed, 04 Sep 2019 17:06:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190904182949.GA22025@gmail.com> <6806d25a240cd80ebd265fcf5f02496852027bed.camel@perches.com>
+In-Reply-To: <6806d25a240cd80ebd265fcf5f02496852027bed.camel@perches.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Thu, 5 Sep 2019 02:05:49 +0200
+Message-ID: <CANiq72nVtTa17pnOhKKjx6NY3eYjU5FcXcN4MxFJkwkwV3+ghQ@mail.gmail.com>
+Subject: Re: [GIT PULL] clang-format for v5.3-rc8
+To:     Joe Perches <joe@perches.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remi Pommarel <repk@triplefau.lt> writes:
-
-> meson_saradc's irq handler uses priv->regmap so make sure that it is
-> allocated before the irq get enabled.
+On Thu, Sep 5, 2019 at 1:35 AM Joe Perches <joe@perches.com> wrote:
 >
-> This also fixes crash when CONFIG_DEBUG_SHIRQ is enabled, as device
-> managed resources are freed in the inverted order they had been
-> allocated, priv->regmap was freed before the spurious fake irq that
-> CONFIG_DEBUG_SHIRQ adds called the handler.
+> It's a long, long list.
 >
-> Reported-by: Elie Roudninski <xademax@gmail.com>
-> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+> $ git grep -P -h '^\s*#\s*define\s+\w*for_each\w*' | \
+>   grep -P -oh '\w+for_each\w*' | sort | uniq | wc -l
+> 491
+>
+> Isn't there some way to regexes or automate this?
+>
+> Maybe just:
+> $ git grep -P -h '^\s*#\s*define\s+\w*for_each\w*' | \
+>   grep -P -oh '\w+for_each\w*' | sort | uniq > somefile...
 
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+The command I use is in the file, I re-run it every once in a while.
+Ideally we could run this somehow automatically every -rc (for
+instance), e.g. Linus could have it in his release script or something
+like that, or maybe at the end of the merge window.
+
+Even being more idealistic, clang-format could somehow do this itself
+keeping a cache somewhere.
+
+Cheers,
+Miguel
