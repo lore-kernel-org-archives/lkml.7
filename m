@@ -2,91 +2,160 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3EE8C3A59E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 00:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6C6C3A59E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 00:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C519C206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 00:08:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61141206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 00:14:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="krSe2nyN"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sESb1zCW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729863AbfIEAIB (ORCPT
+        id S1729877AbfIEAOF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 20:08:01 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:38649 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbfIEAIB (ORCPT
+        Wed, 4 Sep 2019 20:14:05 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35358 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728008AbfIEAOF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 20:08:01 -0400
-Received: by mail-lj1-f194.google.com with SMTP id y23so162398ljn.5
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 17:08:00 -0700 (PDT)
+        Wed, 4 Sep 2019 20:14:05 -0400
+Received: by mail-pg1-f194.google.com with SMTP id n4so350697pgv.2
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 17:14:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=zu7o2811sm/C6A/KNhYCc0bgcwAt8nC3g9vfQBeCxDc=;
-        b=krSe2nyNUUQ42yEqQuiQKbA059yid8WbOIANwsENlZMWXndknivxXzrg98reyBRJUV
-         hpUoNg2NnmeOqg9ZRGsuRQCadxNODVU8w4xPvygITVO2JdAOWglH/AtkrBiRxUMFVal9
-         ZhebvNPPPQBnjKchG1YDL2JhwwSyYmYskdaqce6rnDdijto/M5W9iQ3pLhOHB5jlo0R2
-         yONuP2QhOeGZnUVJiAITYAixBGoNtaAbDGfOwPewDGBwHjLIn9I+BV0Lx9wrtmibyi97
-         UM+t/umTqDWRRho8tREbRaOtQgRx2JjMZ0vtEIyvGa2hPC4jQn8Kvrm59JCIitYFVNjg
-         IcYQ==
+        bh=dqXDsnhRAVwDuK0gKJwtjan7LRWZdWfzvhtIzVr2bFM=;
+        b=sESb1zCW39GG4zVbQ+4oDeaqbZQaVItq5P1SFuwmFWeHIjmdw6qD0GQlqh6pOhlyXO
+         vOBs76MHChzhDgQpuFEdXLFusLnVnGYnKbbJ/iRJeOdbK3MVZGeXr7H4tP0bF65KP8VS
+         8QYYjg5/GKOOv6kWkKvpR0a4tyvs1J2GYLkbuw2fIv2bbJXfU6W7fvJ3qzvh0evVjbUA
+         wWDxAGcGy5V3JrZPzrRCZP+JizVUV0s6OEjKfhmCksH6huJLsD2E8RheY1L/Ue3Wuj3v
+         Zi5PKJYMqRbJd6ufwjdzeza5U+GFtpKqq8tL9RBmhz++2+6mpdXStWs8etCO567geQqQ
+         c67A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=zu7o2811sm/C6A/KNhYCc0bgcwAt8nC3g9vfQBeCxDc=;
-        b=YHlDofiMsstycrrr57uVn2AVLrJQyfy5DrxxWl6QVojh1mGbvoUpCGG6b+ACTXs3RR
-         J7xB7iRGqZ041ykUAryZdBVu0Qg+L6t/AtFf5QQfZ8Cxp9STn9oqAX/YVHfO7IAWnDrC
-         aajXvIfe5NCjoMM3qVvy8zxMtNma12TFdHhkflPDbnPAvHH7/0hAXaT5N7/q84XxU5mT
-         UW6L0ZQNUxFqwZcRd/IvZ4cVgbRR1j6WH0CBUWF8q9Jzv3Ynl7JlfG0NTK1/TbULKDHy
-         QignhsbOG6GoqOLFIcvT8+dr+A13TgHLIQG4szHfFg8+UlaG20nj/yG5oCudhOYHDLYO
-         0DBA==
-X-Gm-Message-State: APjAAAVFK5T0w8c6/+nGFRmmg8K2o11EsrAMEAyd14l4QsgZFO7mGP7E
-        VDBzBP/vFSZuRz43s20A/C8IGwj6bp3Wq5FZLpM=
-X-Google-Smtp-Source: APXvYqwBe/D/C2MAdljspvsS4HzS2f00tB+lfsXyQCB8edddc946d7rnWPwZNB9/csxjeRHVO8gh0V/d1ts4/E/c2/w=
-X-Received: by 2002:a2e:9555:: with SMTP id t21mr152882ljh.93.1567642079449;
- Wed, 04 Sep 2019 17:07:59 -0700 (PDT)
+        bh=dqXDsnhRAVwDuK0gKJwtjan7LRWZdWfzvhtIzVr2bFM=;
+        b=lySidTPAPX3EmA7b2ptiIvtO838olKcje7x7eCQkNXKn7hu5RgOPJxMGU/LPQ27EIK
+         jbGj5V4lMJr4AAQbC08TLa3IjIrhZA5SysF82zH6rcn1j46eBqc/ml2T7hvJar0Mhh8C
+         CDAZbRU1Z+VUsTc8qRK5l4ud7urzi7Cbks+wz94G86RJhvSv3pNfLGdAX5DHN05/0wfX
+         wXZCHAkT+xC03Ki83Oc0g7Bc6Xvr2UBU8Dd9Em5ybCWXGxY5UxFsvIJ9bR7zdOOC4+or
+         DaWh+f4owGz/IzNinNrAIlyMBMXDoIj9oP+ezzGjoZg9zxO+0qj0hkGGk2emUn9DpIZR
+         WjEg==
+X-Gm-Message-State: APjAAAUQ8e/tWbllft0eI7D5gyPz/lOGxz7V7F3jiZViatySLs+xqr3a
+        88n7bFgt5UozlQa7YajZxSxylqDvThKHNnsjeP47Yg==
+X-Google-Smtp-Source: APXvYqwZs2PLIjSBeps3r67lUXVSbgoQrz83k9KZ1wop9wPnt2rIz4maD7yzLfIEudO1JUgSXgLgp9zK82NsPf1RmY0=
+X-Received: by 2002:aa7:8481:: with SMTP id u1mr447193pfn.3.1567642444107;
+ Wed, 04 Sep 2019 17:14:04 -0700 (PDT)
 MIME-Version: 1.0
 References: <20190829083233.24162-1-linux@rasmusvillemoes.dk>
- <20190830231527.22304-1-linux@rasmusvillemoes.dk> <20190830231527.22304-3-linux@rasmusvillemoes.dk>
- <CAKwvOdnZE7pCTykwjX_DDh0wKcUAVKA8eSYXSUFWG2e3swFEJQ@mail.gmail.com>
-In-Reply-To: <CAKwvOdnZE7pCTykwjX_DDh0wKcUAVKA8eSYXSUFWG2e3swFEJQ@mail.gmail.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Thu, 5 Sep 2019 02:07:48 +0200
-Message-ID: <CANiq72kQb7VYBnfho_joF3p_-vi24WgYETE19EO3Ou6T5ixLew@mail.gmail.com>
-Subject: Re: [PATCH v2 2/6] lib/zstd/mem.h: replace __inline by inline
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+ <20190830231527.22304-1-linux@rasmusvillemoes.dk> <20190830231527.22304-4-linux@rasmusvillemoes.dk>
+In-Reply-To: <20190830231527.22304-4-linux@rasmusvillemoes.dk>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 4 Sep 2019 17:13:53 -0700
+Message-ID: <CAKwvOdn2zbRCL+L92zjjuyhj4NLLtOEWd3pjady9KyYb7PAbmw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/6] compiler_types.h: don't #define __inline
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Ingo Molnar <mingo@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Joe Perches <joe@perches.com>
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 5, 2019 at 2:00 AM Nick Desaulniers <ndesaulniers@google.com> wrote:
+On Fri, Aug 30, 2019 at 4:15 PM Rasmus Villemoes
+<linux@rasmusvillemoes.dk> wrote:
 >
-> While you're here, would you mind replacing `__attribute__((unused))`
-> with `__unused`?  I would consider "naked attributes" (haven't been
-> feature tested in include/linux/compiler_attributes.h and are verbose)
-> to be an antipattern.
+> The spellings __inline and __inline__ should be reserved for uses
+> where one really wants to refer to the inline keyword, regardless of
+> whether or not the spelling "inline" has been #defined to something
+> else. Due to use of __inline__ in uapi headers, we can't easily get
+> rid of the definition of __inline__. However, almost all users of
+> __inline has been converted to inline, so we can get rid of that
+> #define.
 
-+1 We should aim to avoid them entirely where possible.
+Besides patch 1 and 2 of this series, I also see:
+Documentation/trace/tracepoint-analysis.rst
+318:         :      extern __inline void
+__attribute__((__gnu_inline__, __always_inline__, _
 
-We have __always_unused and __maybe_unused, please choose whatever
-fits best (both map to "unused", we don't have __unused).
+scripts/kernel-doc
+1574:    $prototype =~ s/^__inline +//;
 
-Cheers,
-Miguel
+>
+> The exception is include/acpi/platform/acintel.h. However, that header
+> is only included when using the intel compiler (does anybody actually
+> build the kernel with that?), and the ACPI_INLINE macro is only used
+
+In my effort to make the kernel slightly more compiler-portable, I
+have not yet found anyone building with ICC.  I would love to be
+proven wrong.  Let me go ask some of my Intel friends.
+
+> in the definition of utterly trivial stub functions, where I doubt a
+
+See:
+include/acpi/platform/acenv.h
+146 #elif defined(__INTEL_COMPILER)
+147 #include <acpi/platform/acintel.h>
+
+> small change of semantics (lack of __gnu_inline) changes anything.
+
+include/acpi/platform/acintel.h
+25:#define ACPI_INLINE                 __inline
+include/acpi/platform/acgcc.h
+29:#define ACPI_INLINE             __inline__
+
+lol wut
+
+I mean, you just would have to change that one line in
+include/acpi/platform/acintel.h, right?  I'd sign off on this patch
+with such a patch added to the series.
+
+>
+> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> ---
+>  include/linux/compiler_types.h | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+>
+> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+> index 599c27b56c29..ee49be6d6088 100644
+> --- a/include/linux/compiler_types.h
+> +++ b/include/linux/compiler_types.h
+> @@ -150,8 +150,17 @@ struct ftrace_likely_data {
+>         __maybe_unused notrace
+>  #endif
+>
+> +/*
+> + * gcc provides both __inline__ and __inline as alternate spellings of
+> + * the inline keyword, though the latter is undocumented. New kernel
+> + * code should only use the inline spelling, but some existing code
+> + * uses __inline__. Since we #define inline above, to ensure
+> + * __inline__ has the same semantics, we need this #define.
+> + *
+> + * However, the spelling __inline is strictly reserved for referring
+> + * to the bare keyword.
+> + */
+>  #define __inline__ inline
+> -#define __inline   inline
+>
+>  /*
+>   * Rather then using noinline to prevent stack consumption, use
+> --
+> 2.20.1
+>
+
+
+-- 
+Thanks,
+~Nick Desaulniers
