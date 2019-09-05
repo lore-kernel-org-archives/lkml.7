@@ -2,50 +2,49 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C186C43140
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4E4C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AD3120692
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B748020692
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:58:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567713489;
-	bh=FM76sK1BeWDS2lV+QlGP7EfkJLzR+yGBWlteGpGZ/4g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jROcuwT5rmdyjkvjdntls/8vHDjeASkuQHLam7UKSjitHjj4xzmzSNRhebFC0WHbL
-	 OKwg6l4tZrQNIVPjR6hV54NW319e6ZNJBh88somo0lu0UpkRh8Oqm6z4hyQsAjE5C6
-	 SFaUmSrmAMywtZ0ladHOquxFjp9P8/0zahPfSPfA=
+	s=default; t=1567713494;
+	bh=vNEvZ0vxGBZrnmSnM6oAAmu5Mfyk9lxU7ZynnnQ3GRg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=ubRW4ayyGN6fmHNm6D5a5Sr5JrST7JOX5KsIsYEX4G79yYg3HeYTsueJqkpmRftQo
+	 K5oWkNju11C9rmx3jUcHxQIggsF2eOS0U8vUdmO1GMQnlSr01U90ATjI1oI9e1PwMt
+	 znRxlUTBmg+YqEpGqylR++tRKrqaaYHLt1kniQFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391587AbfIET56 (ORCPT
+        id S2391618AbfIET6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 15:57:58 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58444 "EHLO
+        Thu, 5 Sep 2019 15:58:13 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58484 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728262AbfIET56 (ORCPT
+        with ESMTP id S2391578AbfIET56 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 5 Sep 2019 15:57:58 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Nq0/AIfadmx52mPl01oTaYnDgOBbCeLTbcoEAfHL7Zg=; b=P0VyW60vKrlgkIq79p4R03w8gf
-        D9QfNlomgkxG2Cr+83PxymCjoetMrZOfaLhcUyW7gwmZefv1Ep6tAmRUzXmsYX2F9cSCzf6VY3fa3
-        zhLtjFyF1TV5QbXZUMSTpXITid8E/0DsIqVSjo4MJC/fz9tYcTKtGcjczfU2Z32CNM2eK1SVHpctY
-        Lu61SKIZ1QQhvQ8jez38uUTtGXrbEDtIHEo0+Djys6D1s4xt6jLWkTHZvLpQpSNIallR0jn8G85uu
-        yrUUdk1VDRPBrdieFq0IRYIwQZWTkALicLLVAcDcdrQnpKs2Y+5LhorQtAwFAopOPMIS6KH4cQyVm
-        YKtTA2eg==;
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=s3bnuLPie8tvQfkLbByEq3DCPFD82JjDHl5b4Zu8iF4=; b=plaVHZbHUd55P5ecQIdhVR0Dd
+        b647jC3qkNMHeQvR6S8LXLmPQyjJMxC+UVYMMowrtdyPSFLYcsPNwsaNk1GNEFSQnPYjdaE2yydhg
+        mXc6VYjfer9P+z2VSHqaBFiQSTtO/8kzvcYX/sZfGAwWRAh3oowVLpZcsao0GpvqJpl5aOp4Wluap
+        ksI7yBAPdp5kUPrTAn32B/uuvi2PMsJsHTxCUgT01aTEBYclaB+dXT4oCH/tb8tWrzeLAkL9SmlSH
+        a+s4RP7cWcuPv/mXYD6bMdjkjx3Hep3/sXyJPpPiZ0DxwyFmtwK4WmsyaZsCYqgH+vZ3nb+s10KP9
+        EnA0bL/Bw==;
 Received: from [177.159.253.249] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i5xtF-0000IC-B2; Thu, 05 Sep 2019 19:57:57 +0000
+        id 1i5xtG-0000IH-DH; Thu, 05 Sep 2019 19:57:58 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92.1)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1i5xtC-0005mG-NY; Thu, 05 Sep 2019 16:57:54 -0300
+        id 1i5xtC-0005m1-K3; Thu, 05 Sep 2019 16:57:54 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Media Mailing List <linux-media@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
@@ -53,14 +52,29 @@ Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
         Jonathan Corbet <corbet@lwn.net>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Sven Eckelmann <sven@narfation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Doug Smythies <doug.smythies@gmail.com>,
+        =?UTF-8?q?Aur=C3=A9lien=20Cedeyn?= <aurelien.cedeyn@gmail.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-doc@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Armijn Hemel <armijn@tjaldur.nl>, Jiri Olsa <jolsa@redhat.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Federico Vaga <federico.vaga@vaga.pv.it>,
-        Thomas Gleixner <tglx@linutronix.de>, linux-doc@vger.kernel.org
-Subject: [PATCH 4/6] docs: license-rules.txt: cover SPDX headers on Python scripts
-Date:   Thu,  5 Sep 2019 16:57:51 -0300
-Message-Id: <9dfa708fea2f9df22fa9df60dff0b3152241af8d.1567712829.git.mchehab+samsung@kernel.org>
+        Allison Randal <allison@lohutok.net>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Subject: [PATCH 0/6] Address issues with SPDX requirements and PEP-263
+Date:   Thu,  5 Sep 2019 16:57:47 -0300
+Message-Id: <cover.1567712829.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1567712829.git.mchehab+samsung@kernel.org>
-References: <cover.1567712829.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -68,71 +82,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The author of the license-rules.rst file wanted to be very restrict
-with regards to the location of the SPDX header. It says that
-the SPDX header "shall be added at the first  possible line in
-a file which can contain a comment". Not happy with this already
-restrictive requiement, it goes further:
+The  description at Documentation/process/license-rules.rst is very strict
+with regards to the position where the SPDX tags should be.
 
-"For the majority  of files this is the first line, except for
-scripts", opening an exception to have the SPDX header at the
-second line, if the first line starts with "#!".
+In the past several developers and maintainers interpreted it on a
+more permissive way, placing the SPDX header between lines 1 to 15, 
+with are the ones which the  scripts/spdxcheck.py script verifies.
 
-Well, it turns that this is too restrictive for Python scripts,
-and may cause regressions if this would be enforced.
+However, recently, devs are becoming more strict about such
+requirement and want it to strictly follow the rule, with states that
+the SPDX rule should be at the first line ever on most files, and
+at the second line for scripts.
 
-As mentioned on:
-	https://stackoverflow.com/questions/728891/correct-way-to-define-python-source-code-encoding
+Well, for Python script, such requirement causes violation to PEP-263, 
+making regressions on scripts that contain encoding lines, as PEP-263
+also states about the same.
 
-Python's PEP-263 [1] dictates that an script that needs to default to
-UTF-8 encoding has to follow this rule:
+This series addresses it.
 
-	'Python will default to ASCII as standard encoding if no other
-	 encoding hints are given.
+Patches 1 to 3 fix some Python scripts that violates PEP-263;
 
-	 To define a source code encoding, a magic comment must be placed
-	 into the source files either as first or second line in the file'
+Patch 4 mentions PEP-263 for Python scripts, allowing to go up to
+line 3, when both "#!" and the encoding line is found;
 
-And:
-	'More precisely, the first or second line must match the following
-	 regular expression:
+Patch 5 changes the scripts/spdxcheck.py for it to identify on what
+line each SPDX header is found, optinally allowing to print an histogram
+about that;
 
-	 ^[ \t\f]*#.*?coding[:=][ \t]*([-_.a-zA-Z0-9]+)'
+Patch 6 adds a pedantic^Wstrict mode to scripts/spdxcheck.py,
+making it to also check for violations at the line with contains the
+SPDX header.
 
-[1] https://www.python.org/dev/peps/pep-0263/
+PS.: I sent already a RFC version for those patches along with this
+thread:
 
-If a script has both "#!" and the charset encoding line, we can't place
-a SPDX tag without either violating license-rules.rst or breaking the
-script by making it crash with non-ASCII characters.
+    https://lore.kernel.org/lkml/b32c2e46b91e7bcda2a9bd140673f06d71b2487a.camel@perches.com/
 
-So, add a sort notice saying that, for Python scripts, the SPDX
-header may be up to the third line, in order to cover the case
-where both "#!" and "# .*coding.*UTF-8" lines are found.
+Mauro Carvalho Chehab (6):
+  docs: sphinx: add SPDX header for some sphinx extensions
+  tools: perf: fix SPDX header in the light of PEP-263
+  tools: intel_pstate_tracer.py: fix SPDX header in the light of PEP-263
+  docs: license-rules.txt: cover SPDX headers on Python scripts
+  scripts/spdxcheck.py: keep track on what line SPDX header was found
+  scripts/spdxcheck.py: check if the line number follows the strict rule
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
----
- Documentation/process/license-rules.rst | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ Documentation/process/license-rules.rst       |  7 ++-
+ Documentation/sphinx/kernel_include.py        |  1 +
+ Documentation/sphinx/rstFlatTable.py          |  1 +
+ scripts/spdxcheck.py                          | 55 +++++++++++++++----
+ tools/perf/python/tracepoint.py               |  3 +-
+ tools/perf/python/twatch.py                   |  3 +-
+ .../intel_pstate_tracer.py                    |  2 +-
+ 7 files changed, 55 insertions(+), 17 deletions(-)
 
-diff --git a/Documentation/process/license-rules.rst b/Documentation/process/license-rules.rst
-index 2ef44ada3f11..5d23e3498b1c 100644
---- a/Documentation/process/license-rules.rst
-+++ b/Documentation/process/license-rules.rst
-@@ -64,9 +64,12 @@ License identifier syntax
-    possible line in a file which can contain a comment.  For the majority
-    of files this is the first line, except for scripts which require the
-    '#!PATH_TO_INTERPRETER' in the first line.  For those scripts the SPDX
--   identifier goes into the second line.
-+   identifier goes into the second line\ [1]_.
- 
--|
-+.. [1] Please notice that Python scripts may also need an encoding rule
-+   as defined on PEP-263, which should be defined either at the first
-+   or the second line. So, for such scripts, the SPDX identifier may
-+   go up to the third line.
- 
- 2. Style:
- 
 -- 
 2.21.0
+
 
