@@ -2,42 +2,42 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1551FC00306
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F06E8C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EA3D206CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:46:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31041206CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:46:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="JyKKDs9U"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="Ijf9ltaf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389877AbfIEOqG (ORCPT
+        id S2389886AbfIEOqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 10:46:06 -0400
-Received: from forward100j.mail.yandex.net ([5.45.198.240]:44622 "EHLO
-        forward100j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389424AbfIEOqF (ORCPT
+        Thu, 5 Sep 2019 10:46:20 -0400
+Received: from forward100p.mail.yandex.net ([77.88.28.100]:58893 "EHLO
+        forward100p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728918AbfIEOqT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 10:46:05 -0400
-Received: from mxback20o.mail.yandex.net (mxback20o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::71])
-        by forward100j.mail.yandex.net (Yandex) with ESMTP id 13D4C50E0D67;
-        Thu,  5 Sep 2019 17:46:01 +0300 (MSK)
+        Thu, 5 Sep 2019 10:46:19 -0400
+Received: from mxback16j.mail.yandex.net (mxback16j.mail.yandex.net [IPv6:2a02:6b8:0:1619::92])
+        by forward100p.mail.yandex.net (Yandex) with ESMTP id 4C4C7598117D;
+        Thu,  5 Sep 2019 17:46:16 +0300 (MSK)
 Received: from smtp2o.mail.yandex.net (smtp2o.mail.yandex.net [2a02:6b8:0:1a2d::26])
-        by mxback20o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id Ew6bU6hMB0-k0Z0frFu;
-        Thu, 05 Sep 2019 17:46:01 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1567694761;
-        bh=GDPLbh2Za9If16kngBr0Vy91wenOeOyR+BDWVi+j/l8=;
+        by mxback16j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id 4wniqpzpPT-kFhWBwmx;
+        Thu, 05 Sep 2019 17:46:16 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1567694776;
+        bh=lGWrm07yEb+iDYbXl6MNXFFYrFAuttvAedBfbL1LKfs=;
         h=In-Reply-To:Subject:To:From:Cc:References:Date:Message-Id;
-        b=JyKKDs9U5ZKs2JQfu4IkzVIq6AmaokuKzZhOc3wYlG5UlORdlcw3UpIAH6vPmbC8F
-         4MB69anqrCl9nRSGoU/3oLLjhaxHlLtAcErri0oVnsW2pqShkEBZ0ZAldNsJgfNyDz
-         j99KtC/MZvFYGLSyDBzp7QuT7rTV95By1crzfntE=
-Authentication-Results: mxback20o.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by smtp2o.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id zkoybIaMjG-jlxW4ZjN;
-        Thu, 05 Sep 2019 17:45:58 +0300
+        b=Ijf9ltaf54iJMiLL1kKYhyq7mf4/CahwjIJMu21eJLhPDIt6ghoal5bVwqqrh7O6d
+         GrScwxqWKgtFMSh2w5nXRFL1EwJEQgwsU/xBYOMt+PUkYNlMRYb4VXwQcGAnp9BdOk
+         fdJpSyzCL0PbTmZPy/Zc+aRGpCMbcD1VmTBvWGqE=
+Authentication-Results: mxback16j.mail.yandex.net; dkim=pass header.i=@flygoat.com
+Received: by smtp2o.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id zkoybIaMjG-k2xW8q8W;
+        Thu, 05 Sep 2019 17:46:14 +0300
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (Client certificate not present)
 From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
@@ -46,9 +46,9 @@ Cc:     chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de,
         jason@lakedaemon.net, maz@kernel.org, linux-kernel@vger.kernel.org,
         robh+dt@kernel.org, mark.rutland@arm.co,
         devicetree@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH v2 09/19] irqchip: i8259: Add plat-poll support
-Date:   Thu,  5 Sep 2019 22:43:06 +0800
-Message-Id: <20190905144316.12527-10-jiaxun.yang@flygoat.com>
+Subject: [PATCH v2 10/19] irqchip: mips-cpu: Convert to simple domain
+Date:   Thu,  5 Sep 2019 22:43:07 +0800
+Message-Id: <20190905144316.12527-11-jiaxun.yang@flygoat.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190905144316.12527-1-jiaxun.yang@flygoat.com>
 References: <20190905144316.12527-1-jiaxun.yang@flygoat.com>
@@ -59,93 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For some platforms (e.g. Loongson-3), platfrom interrupt controller
-supports polling interrupt vector from i8259 automaticly and generating
-sepreated interrupt.
+The old code is using legacy domain to setup irq_domain for CPU interrupts
+which requires irq_desc being preallocated.
 
-Thus we add plat-poll OF property for these platforms and setup sepreated
-chained interrupt handler.
+However, when MIPS_CPU_IRQ_BASE >= 16, irq_desc for CPU IRQs may end up
+unallocated and lead to incorrect behavior.
+
+Thus we convert the legacy domain to simple domain which can allocate irq_desc
+during initialization.
 
 Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 ---
- drivers/irqchip/irq-i8259.c | 47 ++++++++++++++++++++++++++++++++-----
- 1 file changed, 41 insertions(+), 6 deletions(-)
+ drivers/irqchip/irq-mips-cpu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-i8259.c b/drivers/irqchip/irq-i8259.c
-index d000870d9b6b..e7a9895f3b2d 100644
---- a/drivers/irqchip/irq-i8259.c
-+++ b/drivers/irqchip/irq-i8259.c
-@@ -40,6 +40,12 @@ static void mask_and_ack_8259A(struct irq_data *d);
- static void init_8259A(int auto_eoi);
- static int (*i8259_poll)(void) = i8259_irq;
+diff --git a/drivers/irqchip/irq-mips-cpu.c b/drivers/irqchip/irq-mips-cpu.c
+index 95d4fd8f7a96..c3cf7fa76424 100644
+--- a/drivers/irqchip/irq-mips-cpu.c
++++ b/drivers/irqchip/irq-mips-cpu.c
+@@ -251,7 +251,7 @@ static void __init __mips_cpu_irq_init(struct device_node *of_node)
+ 	clear_c0_status(ST0_IM);
+ 	clear_c0_cause(CAUSEF_IP);
  
-+struct plat_poll_priv {
-+	struct irq_domain *domain;
-+	int hwirq;
-+};
-+static struct plat_poll_priv plat_poll_priv[16];
-+
- static struct irq_chip i8259A_chip = {
- 	.name			= "XT-PIC",
- 	.irq_mask		= disable_8259A_irq,
-@@ -346,22 +352,51 @@ static void i8259_irq_dispatch(struct irq_desc *desc)
- 	generic_handle_irq(irq);
- }
- 
-+static void plat_poll_irq_dispatch(struct irq_desc *desc)
-+{
-+	struct plat_poll_priv *priv = irq_desc_get_handler_data(desc);
-+	unsigned int irq;
-+
-+	irq = irq_linear_revmap(priv->domain, priv->hwirq);
-+	generic_handle_irq(irq);
-+}
-+
- int __init i8259_of_init(struct device_node *node, struct device_node *parent)
- {
- 	struct irq_domain *domain;
--	unsigned int parent_irq;
- 
- 	domain = __init_i8259_irqs(node);
- 
--	parent_irq = irq_of_parse_and_map(node, 0);
--	if (!parent_irq) {
--		pr_err("Failed to map i8259 parent IRQ\n");
--		irq_domain_remove(domain);
--		return -ENODEV;
-+	if (of_find_property(node, "plat-poll", NULL)) {
-+		int i;
-+
-+		for (i = 0; i < 16; i++) {
-+			int parent_irq = irq_of_parse_and_map(node, i);
-+
-+			if (!parent_irq) {
-+				pr_err("Failed to map %d plat-poll i8259 parent IRQ\n", i);
-+				irq_domain_remove(domain);
-+				return -ENODEV;
-+			}
-+			plat_poll_priv[i].domain = domain;
-+			plat_poll_priv[i].hwirq = i;
-+			irq_set_chained_handler_and_data(parent_irq,
-+				plat_poll_irq_dispatch,
-+				&plat_poll_priv[i]);
-+		}
-+	} else {
-+		unsigned int parent_irq;
-+
-+		parent_irq = irq_of_parse_and_map(node, 0);
-+		if (!parent_irq) {
-+			pr_err("Failed to map i8259 parent IRQ\n");
-+			irq_domain_remove(domain);
-+			return -ENODEV;
- 	}
- 
- 	irq_set_chained_handler_and_data(parent_irq, i8259_irq_dispatch,
- 					 domain);
-+	}
- 	return 0;
- }
- IRQCHIP_DECLARE(i8259, "intel,i8259", i8259_of_init);
+-	irq_domain = irq_domain_add_legacy(of_node, 8, MIPS_CPU_IRQ_BASE, 0,
++	irq_domain = irq_domain_add_simple(of_node, 8, MIPS_CPU_IRQ_BASE,
+ 					   &mips_cpu_intc_irq_domain_ops,
+ 					   NULL);
+ 	if (!irq_domain)
 -- 
 2.22.0
 
