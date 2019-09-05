@@ -2,184 +2,140 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98BFEC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D48C0C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78B1A206A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:30:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mixwydiq"
+	by mail.kernel.org (Postfix) with ESMTP id B8ACE206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:31:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567704714;
+	bh=EEMFdAxLLoVOnA+CEfSYc8kyvxbkjmXoUK2PyeJFfss=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ByvdoWplt/06LL1zxQK2G4UvPVF+rolfIyarUdw93qPz+BooyNknVfuqcqDtvYrkd
+	 HLxfHa7cDOSa/6/7P4OPfmf5REUyfcVx97+enLBHVfTFUnFwt54OYMzw2pr1OkeiXn
+	 6lH3wrvs4jr79LlS6KRaUMndMHs4fBVu7oXdJjHE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388541AbfIERaB (ORCPT
+        id S2388860AbfIERbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 13:30:01 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:34692 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730498AbfIERaA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 13:30:00 -0400
-Received: by mail-oi1-f193.google.com with SMTP id g128so2570149oib.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 10:30:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=kBF+CuaGO/4t9r787l/NvQpCVlHO+XpSE/VVcC9xB0g=;
-        b=MixwydiqafoO/9oDHJjeqXj8nOxXl6nhwPlsWhZrQ6pBDbMhQ2WootX1JBpKr2S4RK
-         0ydyuafEzJ/fZwWnzAmueOSLX5oPL/BipX1iqBX6NxvsOFOZIkbCwNAbiK5+r5qprt9S
-         GSMYVpjMWLbDJDYplqw2hlqXhBpzjBofU1umpcfRy1AX0lNbCebs2Qsa4DqopsHihJhr
-         JcJNK99JuuUZ7owZUf1YzKuexAoXI+MW0cYlyokYQXkkh4OJANtEpMSyr1M9xXKVRFaU
-         L95WmfLnWRy/i9UQv8TWKqZc8p7Jiu4ekL9PpuzjsWX7HIshBzCILW2FFEemEyFSTyGi
-         MR7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kBF+CuaGO/4t9r787l/NvQpCVlHO+XpSE/VVcC9xB0g=;
-        b=TIX6ZohPTpEBxZiVVn0/tDy9HE86O0RD818SPMKfkh0YE8T8sg9iAlnnxRxZHxLLAC
-         YWADr8yc6WLM+Go0RIwhrRuQbPto7YYXPGdqM9H0TByMd6nQcd6yunZptEWuOn+o/hpx
-         fkhgc0GvtE4Hqh49bag4+auF9k2/qZDBugfmlvJMie0E3T81/qJl7G4iNoJR6nEKtgbG
-         uIPq0uMdDEEOMHb+iqqSsmFBcjQlIm08ctBo4GvVFw1EVo/M7Go93G8BK9tKtL7oiKjm
-         MJfNs9EBrqO2dYNGDL1ZT1yg/TdYILFTFcAjy01ZCQE6oGsxwV7NOQW7VXV7d4MuBS20
-         j06A==
-X-Gm-Message-State: APjAAAVIppHt6+eEyNz6rsKJND87eTLdAmFEtCUEhzxnkdQFmbZI9A/p
-        kFmIBRgVCb/GsCiYuvKWAMrToA==
-X-Google-Smtp-Source: APXvYqxacE8CnPcHpxF5hEOku3dIdnrDOhHApz2xMT82tnZ85c/NJ/GSqaXGJ1PHl1qgoxSBNxrVkQ==
-X-Received: by 2002:aca:c592:: with SMTP id v140mr3593099oif.92.1567704599657;
-        Thu, 05 Sep 2019 10:29:59 -0700 (PDT)
-Received: from [192.168.17.59] (CableLink-189-218-29-211.Hosts.InterCable.net. [189.218.29.211])
-        by smtp.gmail.com with ESMTPSA id v2sm668830oic.49.2019.09.05.10.29.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Sep 2019 10:29:58 -0700 (PDT)
-Subject: Re: [PATCH 5.2 000/143] 5.2.12-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20190904175314.206239922@linuxfoundation.org>
-From:   =?UTF-8?Q?Daniel_D=c3=adaz?= <daniel.diaz@linaro.org>
-Message-ID: <f1f7fd91-061b-9646-20e8-297dfa2262c4@linaro.org>
-Date:   Thu, 5 Sep 2019 12:29:57 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 5 Sep 2019 13:31:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54970 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732679AbfIERbw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 13:31:52 -0400
+Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BA4B206A5;
+        Thu,  5 Sep 2019 17:31:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567704712;
+        bh=EEMFdAxLLoVOnA+CEfSYc8kyvxbkjmXoUK2PyeJFfss=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EdkLfl2QY47MxNAsP3UvsrXMR1ubrmiFnF4wpUt7zNqephKiSsnBdYEx+yu9CCfw4
+         aXNwKIouvajQAewklJUF+vPoFQ1EKF2chCsmerUcbdZX43G0VBIJRbZ7vU6+pYpVgU
+         XBGDEOfcu5RGJMB7rpXtFZ7LuwJjHOkVjVoLfSy0=
+Date:   Thu, 5 Sep 2019 19:31:48 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [patch 2/6] posix-cpu-timers: Fix permission check regression
+Message-ID: <20190905173148.GE18251@lenoir>
+References: <20190905120339.561100423@linutronix.de>
+ <20190905120539.797994508@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190905120539.797994508@linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
-
-On 9/4/19 12:52 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.2.12 release.
-> There are 143 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Thu, Sep 05, 2019 at 02:03:41PM +0200, Thomas Gleixner wrote:
+> The recent consolidation of the three permission checks introduced a subtle
+> regression. For timer_create() with a process wide timer it returns the
+> current task if the lookup through the PID which is encoded into the
+> clockid results in returning current.
 > 
-> Responses should be made by Fri 06 Sep 2019 05:50:23 PM UTC.
-> Anything received after that time might be too late.
+> That's broken because it does not validate whether the current task is the
+> group leader.
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.12-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
-> and the diffstat can be found below.
+> That was caused by the two different variants of permission checks:
 > 
-> thanks,
+>   - posix_cpu_timer_get() allowed access to the process wide clock when the
+>     looked up task is current. That's not an issue because the process wide
+>     clock is in the shared sighand.
 > 
-> greg k-h
+>   - posix_cpu_timer_create() made sure that the looked up task is the group
+>     leader.
+> 
+> Restore the previous state.
+> 
+> Note, that these permission checks are more than questionable, but that's
+> subject to follow up changes.
+> 
+> Fixes: 6ae40e3fdcd3 ("posix-cpu-timers: Provide task validation functions")
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>  kernel/time/posix-cpu-timers.c |   40 +++++++++++++++++++++++++++++++---------
+>  1 file changed, 31 insertions(+), 9 deletions(-)
+> 
+> --- a/kernel/time/posix-cpu-timers.c
+> +++ b/kernel/time/posix-cpu-timers.c
+> @@ -47,25 +47,42 @@ void update_rlimit_cpu(struct task_struc
+>  /*
+>   * Functions for validating access to tasks.
+>   */
+> -static struct task_struct *lookup_task(const pid_t pid, bool thread)
+> +static struct task_struct *lookup_task(const pid_t pid, bool thread,
+> +				       bool gettime)
+>  {
+>  	struct task_struct *p;
+>  
+> +	/*
+> +	 * If the encoded PID is 0, then the timer is targeted at current
+> +	 * or the process to which current belongs.
+> +	 */
+>  	if (!pid)
+>  		return thread ? current : current->group_leader;
+>  
+>  	p = find_task_by_vpid(pid);
+> -	if (!p || p == current)
+> +	if (!p)
+>  		return p;
+> +
+>  	if (thread)
+>  		return same_thread_group(p, current) ? p : NULL;
+> -	if (p == current)
+> -		return p;
+> +
+> +	if (gettime) {
+> +		/*
+> +		 * For clock_gettime() the task does not need to be the
+> +		 * actual group leader. tsk->sighand gives access to the
+> +		 * group's clock.
+> +		 */
 
-Results from Linaro’s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+I'm a bit confused with the explanation. Why is it fine to do so with clock
+and not with timer? tsk->sighand gives access to the group's timer as
+well.
 
-Summary
-------------------------------------------------------------------------
-
-kernel: 5.2.12-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-git branch: linux-5.2.y
-git commit: b6eedcb8cf6670234e137d277a5ae1cdf5cd141c
-git describe: v5.2.11-144-gb6eedcb8cf66
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.2-oe/build/v5.2.11-144-gb6eedcb8cf66
-
-
-No regressions (compared to build v5.2.11)
-
-No fixes (compared to build v5.2.11)
-
-Ran 22474 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* network-basic-tests
-* ltp-fs-tests
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* ssuite
-
-
-Greetings!
-
-Daniel Díaz
-daniel.diaz@linaro.org
-
--- 
-Linaro LKFT
-https://lkft.linaro.org
+> +		return (p == current || thread_group_leader(p)) ? p : NULL;
+> +	}
+> +
+> +	/*
+> +	 * For processes require that p is group leader.
+> +	 */
+>  	return has_group_leader_pid(p) ? p : NULL;
+>  }
