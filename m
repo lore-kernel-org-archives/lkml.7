@@ -2,67 +2,68 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D2EC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 03:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE3A1C3A5AB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 03:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42B2720693
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 03:07:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84F6820693
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 03:08:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dJ/kcZiL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rfnun+BK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731068AbfIEDHp (ORCPT
+        id S1731070AbfIEDIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 23:07:45 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33803 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727156AbfIEDHp (ORCPT
+        Wed, 4 Sep 2019 23:08:23 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33843 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730751AbfIEDIW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 23:07:45 -0400
-Received: by mail-pg1-f194.google.com with SMTP id n9so569261pgc.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 20:07:44 -0700 (PDT)
+        Wed, 4 Sep 2019 23:08:22 -0400
+Received: by mail-pg1-f193.google.com with SMTP id n9so569980pgc.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 20:08:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=bv8aLyZNsRQTuIGo9WBDbNKWSEWFm7lp2gBa2Tmb/+Y=;
-        b=dJ/kcZiLoIWOyyw6EfFPZeTXLsTZNg9iDTuBuXEqB+kjja/lH3LAkPeOLFJAsOWKCc
-         C/z6F3GUxZ/IB7EDbx9Q1NptWBRZprPFMK5DtN2adq5zQx7CI500p6v2GhBCDewaN/05
-         GM3lH33ZsVbgMrZZVG7Bp2m/1UrW4z8G9ztPyacNo9gFE1b5xSmhBxudlHqFKmPtOldy
-         IoCm5mHDORE/jjJKkueXfSaUX72IOBNrHiwt63UBkSpiASgBZkMzI2rpreM5GrrxVkGa
-         flKKFL1ofwgPuI9Ap/pt1WBEWqVlX4gFTOGVEeJUxSVIbk9YhecfTtoYN4CrlRp3uy9X
-         h9ZQ==
+        bh=PfNn/W0PmjQ9bUUZ6dAEkvRvRPYcOrbr2656dQFRs6Q=;
+        b=Rfnun+BKpxLGSH5iYf9FM54fTzUr/1eAOg+7ooMe9cJVIYKInFGkE5PP8FtwBa54Lu
+         hDju3syhY1Tz6ydSOrJ3+ZFZU8o5CzZIWg3aM6HnvUgjwjQ7N7ohBKWrP10BM/RbEsbz
+         Lt4v78Gehe70tjX9vpE3FVaoGNT25TOCm8/Evglc197eKQynU/NCrrk/D1mxTbpm6U5Z
+         XedhzH7HGU87rl7hqtoUVFg8bMwl9arkXoON3SF8PQPgE/nARM80G+mo6tQnTkL27uQY
+         t4fbl2EvxU5VeD0ccEHRWivNn11uAXVswJmNzq2fuFGpN0CnQGtXXcndB/SzBQaP0HrW
+         mQwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=bv8aLyZNsRQTuIGo9WBDbNKWSEWFm7lp2gBa2Tmb/+Y=;
-        b=Tf7wKhbArVJibdXgcPEP6rJlsWfA7FQ/9Gnn0nGNiNQp6iEo5UiUhgBkL14nxcWX6I
-         2oO4WVQV3kcuW8QdyeWrZjN0npx1ksY4V+23rRXQlRCTjxaq1OkwmnIeLfPy4wejSvfs
-         oMMn1jC6C7FUX7y7Tr4OPVTDniI1Wv1lBCebeaUzRwrwmz43wQfYxG6UnALfUJunSiuy
-         vWo9DaPu9fVJhvgTFyBuVLz08yLE3Gv0igjPRbtHPjg1DNzjhMy7nlGZ8GSequUHvBtZ
-         NCqbplKlcAotUVPEgY83tv9qTM2JeNp6KNOfHDf9okPCurB60l4q6+Lo6QdeVfSyzwjv
-         ICcA==
-X-Gm-Message-State: APjAAAWcb60pQMEiItQYsg8x99EBq+MF/ZguDVA+KlWtiZ4L3cvTIU4h
-        KRHJFBmD3vxpsKeU2odbBd8gMw==
-X-Google-Smtp-Source: APXvYqyrb1FUlMJrBM7epNFloFgKYqsJf+HLa9tMPIRmvfvzIaUcesBgOzq7JDUpTYhk02fyisWnxg==
-X-Received: by 2002:aa7:8d12:: with SMTP id j18mr1128275pfe.33.1567652864452;
-        Wed, 04 Sep 2019 20:07:44 -0700 (PDT)
+        bh=PfNn/W0PmjQ9bUUZ6dAEkvRvRPYcOrbr2656dQFRs6Q=;
+        b=aNzFG7Oq0AhFdet8Rzh8KGlCQGeUjGWL1vIc99iZiJ05hcorvCxTFWrwrdBwA304qy
+         1jh4LXIYoHe4vDdvKoimI3G3cz30CKu2V16aZgpuufeR7e+kKPfbMwK2t/fW+454/QJw
+         MwWNiLzc07o/JypnHDEpXYfx/+6j5dldfE6eV4MyTh7nTTHRbna55ppFAArRK/fZtfYM
+         T0BO4LcmW2AnENWRomV8w33QtwTP9wHaVabGmUqr51XmrvKf809bQFKmjjmrz3bIPRDQ
+         RPdxvj43vzQ9qPgtkC3v06faIu28yx41B21CzOhHSFAek0ihhMqJnxzk33o7tKpURPB3
+         423A==
+X-Gm-Message-State: APjAAAWGIFfTtio9EUAEzeWpo64c85kmjxhUsWXkN2LiB9561JKa023e
+        BTaNV5LfWcIV4M3nuIzsr0DjtxuitxjHsQ==
+X-Google-Smtp-Source: APXvYqzLtfOPZjB56l72tPxU34aCQyYpUADkwCEg5v8DnhXx1pXs3Xk57srn2UH+MmKw8Yi0OemPAQ==
+X-Received: by 2002:a65:68c9:: with SMTP id k9mr1152083pgt.28.1567652902075;
+        Wed, 04 Sep 2019 20:08:22 -0700 (PDT)
 Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id x9sm425686pgp.75.2019.09.04.20.07.41
+        by smtp.gmail.com with ESMTPSA id s4sm497041pfh.15.2019.09.04.20.08.19
         (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 04 Sep 2019 20:07:43 -0700 (PDT)
+        Wed, 04 Sep 2019 20:08:21 -0700 (PDT)
 From:   Baolin Wang <baolin.wang@linaro.org>
-To:     stable@vger.kernel.org, peterz@infradead.org, mingo@redhat.com
-Cc:     longman@redhat.com, arnd@arndb.de, baolin.wang@linaro.org,
+To:     stable@vger.kernel.org, linus.walleij@linaro.org,
+        natechancellor@gmail.com
+Cc:     linux-gpio@vger.kernel.org, arnd@arndb.de, baolin.wang@linaro.org,
         orsonzhai@gmail.com, vincent.guittot@linaro.org,
         linux-kernel@vger.kernel.org
-Subject: [BACKPORT 4.14.y v2 2/6] locking/lockdep: Add debug_locks check in __lock_downgrade()
-Date:   Thu,  5 Sep 2019 11:07:14 +0800
-Message-Id: <7d3d221015cd343df47de4a68ed4776aca2ca0ab.1567649729.git.baolin.wang@linaro.org>
+Subject: [BACKPORT 4.14.y v2 3/6] pinctrl: sprd: Use define directive for sprd_pinconf_params values
+Date:   Thu,  5 Sep 2019 11:07:52 +0800
+Message-Id: <db6ae70b6b727e646b1f9ed5c2c8d490cfc50695.1567649729.git.baolin.wang@linaro.org>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <cover.1567649728.git.baolin.wang@linaro.org>
 References: <cover.1567649728.git.baolin.wang@linaro.org>
@@ -71,49 +72,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Waiman Long <longman@redhat.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[Upstream commit 513e1073d52e55b8024b4f238a48de7587c64ccf]
+[Upstream commit 957063c924736d4341e5d588757b9f31e8f6fa24]
 
-Tetsuo Handa had reported he saw an incorrect "downgrading a read lock"
-warning right after a previous lockdep warning. It is likely that the
-previous warning turned off lock debugging causing the lockdep to have
-inconsistency states leading to the lock downgrade warning.
+Clang warns when one enumerated type is implicitly converted to another:
 
-Fix that by add a check for debug_locks at the beginning of
-__lock_downgrade().
+drivers/pinctrl/sprd/pinctrl-sprd.c:845:19: warning: implicit conversion
+from enumeration type 'enum sprd_pinconf_params' to different
+enumeration type 'enum pin_config_param' [-Wenum-conversion]
+        {"sprd,control", SPRD_PIN_CONFIG_CONTROL, 0},
+        ~                ^~~~~~~~~~~~~~~~~~~~~~~
+drivers/pinctrl/sprd/pinctrl-sprd.c:846:22: warning: implicit conversion
+from enumeration type 'enum sprd_pinconf_params' to different
+enumeration type 'enum pin_config_param' [-Wenum-conversion]
+        {"sprd,sleep-mode", SPRD_PIN_CONFIG_SLEEP_MODE, 0},
+        ~                   ^~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Reported-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Reported-by: syzbot+53383ae265fb161ef488@syzkaller.appspotmail.com
-Signed-off-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will.deacon@arm.com>
-Link: https://lkml.kernel.org/r/1547093005-26085-1-git-send-email-longman@redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+It is expected that pinctrl drivers can extend pin_config_param because
+of the gap between PIN_CONFIG_END and PIN_CONFIG_MAX so this conversion
+isn't an issue. Most drivers that take advantage of this define the
+PIN_CONFIG variables as constants, rather than enumerated values. Do the
+same thing here so that Clang no longer warns.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/138
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Baolin Wang <baolin.wang@linaro.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 ---
- kernel/locking/lockdep.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/pinctrl/sprd/pinctrl-sprd.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 565005a..5c370c6 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -3650,6 +3650,9 @@ static int reacquire_held_locks(struct task_struct *curr, unsigned int depth,
- 	unsigned int depth;
- 	int i;
+diff --git a/drivers/pinctrl/sprd/pinctrl-sprd.c b/drivers/pinctrl/sprd/pinctrl-sprd.c
+index 6352991..83958bd 100644
+--- a/drivers/pinctrl/sprd/pinctrl-sprd.c
++++ b/drivers/pinctrl/sprd/pinctrl-sprd.c
+@@ -159,10 +159,8 @@ struct sprd_pinctrl {
+ 	struct sprd_pinctrl_soc_info *info;
+ };
  
-+	if (unlikely(!debug_locks))
-+		return 0;
-+
- 	depth = curr->lockdep_depth;
- 	/*
- 	 * This function is about (re)setting the class of a held lock,
+-enum sprd_pinconf_params {
+-	SPRD_PIN_CONFIG_CONTROL = PIN_CONFIG_END + 1,
+-	SPRD_PIN_CONFIG_SLEEP_MODE = PIN_CONFIG_END + 2,
+-};
++#define SPRD_PIN_CONFIG_CONTROL		(PIN_CONFIG_END + 1)
++#define SPRD_PIN_CONFIG_SLEEP_MODE	(PIN_CONFIG_END + 2)
+ 
+ static int sprd_pinctrl_get_id_by_name(struct sprd_pinctrl *sprd_pctl,
+ 				       const char *name)
 -- 
 1.7.9.5
 
