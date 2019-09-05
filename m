@@ -2,173 +2,124 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFE3C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0985DC41514
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08CA62082C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:50:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB8A32082C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:51:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="GuL5k8VK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g+eUEH8K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732387AbfIENuv (ORCPT
+        id S1732465AbfIENv0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 09:50:51 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34544 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731008AbfIENut (ORCPT
+        Thu, 5 Sep 2019 09:51:26 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:38704 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727735AbfIENv0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 09:50:49 -0400
-Received: by mail-wr1-f66.google.com with SMTP id s18so2904273wrn.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 06:50:47 -0700 (PDT)
+        Thu, 5 Sep 2019 09:51:26 -0400
+Received: by mail-oi1-f194.google.com with SMTP id 7so1869243oip.5
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 06:51:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7lkoesH5emPCZ1WO3WioUS9Ej0K8oiEzZCArs+vDclk=;
-        b=GuL5k8VK7SEUa+eInzXIJKoFOrY5XaFAmFl23toxiV9qAxemzM16AiY5hfan5632fD
-         Ar2eIp2Upvmf7AHmPSJnRaZz7ftMWRdjsHuOXlZrLHn/Qu/j9XNJnng7FoZ3hChfhFK3
-         hOaBNN7s5cqT3FS0T/Qmw5WNPAh2PbxyadZqHbHVd91S1FULPPx0wFL5+ba2EbHP8+28
-         XpsvjJbsCOEYKO8eVcJGQ9o8ZpZHE9zUHsf9YGglvLcMsAhy4UgdcbhLxIHkMB5H/afR
-         U2zqGMb3SeB8Xb02JsPQcHc4AkdUsVpcdyzi5EJO5VaPLwmy69xBAhSsIOJRB16JPT8T
-         Wu9Q==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+MsBWp8H3Xsdsta9B4+xQJSg6DayANUO7A/PQ7k+1B8=;
+        b=g+eUEH8KK/ZuogbCziIvbxFHTFdEu/3p51nvNXJl5SnYiqtlJEiK2f2furmO5spfJ0
+         amnFRbVduwCMWbv0veUNrs3SDibOliL9Op976n+nfcc1LAXTlvYIE2zrNRFPuAUV75HY
+         exdGGVlo5JyO2Kj/pWzkwTmlIyXIpz3XV9+5o2wdySnEcwWaWPnR4pkCDEgIGda3M8UA
+         HlXb5GjziX3TaWvc/uOaQyHsJsEuPAiDybwI/StC3wPuWx+XyqZf569lvomLwWzyGptx
+         KsoOMtQ6xh4EUMvGy8HHXr4OnLP2KDdMmv1Yin/f85STVk6yU+pp7+OkRpu0xhfWYUGm
+         FbAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7lkoesH5emPCZ1WO3WioUS9Ej0K8oiEzZCArs+vDclk=;
-        b=Fb9sdaaJ8EEZlR5HFKmKqEH/j/xwmUe8CTh7yCvHAz+RMbxZm/3XKY8+/CRYMg99s8
-         I+9xU/0KvXcB/h4mfcMmQjfugZDHcLW7FGMwgPYJpHI3eltaloPBPhFTEoWxWr7e+ydn
-         Gb992pohRhDlEo9TYxjyXG76VHDetKxMsuXVlUe5pYsQ4bEi/onjxUo2hhvgJT183f0b
-         15rrzKS+65sEhZNOJSG+89fZr0ILP02xjfnxFNKvRaJfJu/kTy3i8WaSyrZtZ9Ejw1rC
-         yHBVi71nXuQS4j8pnrEJ+dYxtKmPf9nxqK84Z1TXjld+vAGxUW+Ic93HR0SyxAfkpVGh
-         wV8A==
-X-Gm-Message-State: APjAAAUP5Pn9xSPbkfJiOTeXn0D82wH8VyN1b/WdkJnOTITTmWUnS5JF
-        e3hJ0V6KbqIP9PXM2RFwrSuJ0A==
-X-Google-Smtp-Source: APXvYqyKxa95xgFb51AsXEWgQity6G8T5bn82NLaGUMSLyirFtOPoyCtT+sjuAmBC+yu4d78xYsgOg==
-X-Received: by 2002:a5d:4985:: with SMTP id r5mr2618861wrq.71.1567691446803;
-        Thu, 05 Sep 2019 06:50:46 -0700 (PDT)
-Received: from starbuck.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id y3sm3324893wra.88.2019.09.05.06.50.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 06:50:46 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] reset: meson-audio-arb: add sm1 support
-Date:   Thu,  5 Sep 2019 15:50:40 +0200
-Message-Id: <20190905135040.6635-3-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190905135040.6635-1-jbrunet@baylibre.com>
-References: <20190905135040.6635-1-jbrunet@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+MsBWp8H3Xsdsta9B4+xQJSg6DayANUO7A/PQ7k+1B8=;
+        b=BWU1zwwXZpNUqi9HLvLNn3+c5PY6m337cg9BWaDFPYV2c0UctdySWRjjLHRYRfiHG3
+         1NOsDWdj9Uul/ps43dYkUPW00l4onU+4ubc9MCrx3JKmz7tcRQJ4J5lEqnYW31Ub4YKJ
+         BErx4ln3DUNCTOtmlybQt5AVDht1cbmv9oFX1Zcfnd/RF1PbVpAwtOwy9PGcH7BNJI31
+         xFabB5k7/qR3Uzxx9+EVka0gUNCNadd2nDIdJHKsp4BdlAFx+ZNddulJgTIO0yImIOXg
+         RfyMP2bua/5IcOR0yKDFsL1aQtTdDICqGA8Arq3LCKZC+NKwebp8jw2DN9BCEm5X8kxD
+         yvdg==
+X-Gm-Message-State: APjAAAVENqvylc+kHUk7zyx5xD94/77f5m0FGWazDPPaG8imRuO0WxiO
+        SOjT2IBUZH7h24K+0jZ5lXf0/57Cy96ECOddcwY=
+X-Google-Smtp-Source: APXvYqyALkEGTwKGlJUd2MWXX4ESYbIOx2MLkr3KfHXqdxypPOA3LDhxgeTh0ec0OiaP6zAfCgpSvZDWiSF18jxDMCs=
+X-Received: by 2002:aca:d683:: with SMTP id n125mr2672295oig.21.1567691485294;
+ Thu, 05 Sep 2019 06:51:25 -0700 (PDT)
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+References: <20190903160430.1368-1-lpf.vector@gmail.com> <8641aeba-ab8c-f5a1-a6ad-cf8c0f86baa7@suse.cz>
+In-Reply-To: <8641aeba-ab8c-f5a1-a6ad-cf8c0f86baa7@suse.cz>
+From:   Pengfei Li <lpf.vector@gmail.com>
+Date:   Thu, 5 Sep 2019 21:51:14 +0800
+Message-ID: <CAD7_sbH+1ZeHVcDWwVkWmNjCzDU4TUAN1zXWCmj1bftyU5o6TA@mail.gmail.com>
+Subject: Re: [PATCH 0/5] mm, slab: Make kmalloc_info[] contain all types of names
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christopher Lameter <cl@linux.com>, penberg@kernel.org,
+        rientjes@google.com, iamjoonsoo.kim@lge.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the new arb reset lines of the SM1 SoC family
+On Thu, Sep 5, 2019 at 8:25 PM Vlastimil Babka <vbabka@suse.cz> wrote:
+>
+> On 9/3/19 6:04 PM, Pengfei Li wrote:
+> > There are three types of kmalloc, KMALLOC_NORMAL, KMALLOC_RECLAIM
+> > and KMALLOC_DMA.
+> >
+> > The name of KMALLOC_NORMAL is contained in kmalloc_info[].name,
+> > but the names of KMALLOC_RECLAIM and KMALLOC_DMA are dynamically
+> > generated by kmalloc_cache_name().
+> >
+> > Patch1 predefines the names of all types of kmalloc to save
+> > the time spent dynamically generating names.
+> >
+> > The other 4 patches did some cleanup work.
+> >
+> > These changes make sense, and the time spent by new_kmalloc_cache()
+> > has been reduced by approximately 36.3%.
+> >
+> >                          Time spent by
+> >                          new_kmalloc_cache()
+> > 5.3-rc7                       66264
+> > 5.3-rc7+patch                 42188
+>
+> Note that the caches are created only once upon boot, so I doubt that
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- drivers/reset/reset-meson-audio-arb.c | 43 +++++++++++++++++++++++++--
- 1 file changed, 40 insertions(+), 3 deletions(-)
+Thank you for your comments.
+Yes, kmalloc-xxx are only created at boot time.
 
-diff --git a/drivers/reset/reset-meson-audio-arb.c b/drivers/reset/reset-meson-audio-arb.c
-index c53a2185a039..1dc06e08a8da 100644
---- a/drivers/reset/reset-meson-audio-arb.c
-+++ b/drivers/reset/reset-meson-audio-arb.c
-@@ -19,6 +19,11 @@ struct meson_audio_arb_data {
- 	spinlock_t lock;
- };
- 
-+struct meson_audio_arb_match_data {
-+	const unsigned int *reset_bits;
-+	unsigned int reset_num;
-+};
-+
- #define ARB_GENERAL_BIT	31
- 
- static const unsigned int axg_audio_arb_reset_bits[] = {
-@@ -30,6 +35,27 @@ static const unsigned int axg_audio_arb_reset_bits[] = {
- 	[AXG_ARB_FRDDR_C]	= 6,
- };
- 
-+static const struct meson_audio_arb_match_data axg_audio_arb_match = {
-+	.reset_bits = axg_audio_arb_reset_bits,
-+	.reset_num = ARRAY_SIZE(axg_audio_arb_reset_bits),
-+};
-+
-+static const unsigned int sm1_audio_arb_reset_bits[] = {
-+	[AXG_ARB_TODDR_A]	= 0,
-+	[AXG_ARB_TODDR_B]	= 1,
-+	[AXG_ARB_TODDR_C]	= 2,
-+	[AXG_ARB_FRDDR_A]	= 4,
-+	[AXG_ARB_FRDDR_B]	= 5,
-+	[AXG_ARB_FRDDR_C]	= 6,
-+	[AXG_ARB_TODDR_D]	= 3,
-+	[AXG_ARB_FRDDR_D]	= 7,
-+};
-+
-+static const struct meson_audio_arb_match_data sm1_audio_arb_match = {
-+	.reset_bits = sm1_audio_arb_reset_bits,
-+	.reset_num = ARRAY_SIZE(sm1_audio_arb_reset_bits),
-+};
-+
- static int meson_audio_arb_update(struct reset_controller_dev *rcdev,
- 				  unsigned long id, bool assert)
- {
-@@ -82,7 +108,13 @@ static const struct reset_control_ops meson_audio_arb_rstc_ops = {
- };
- 
- static const struct of_device_id meson_audio_arb_of_match[] = {
--	{ .compatible = "amlogic,meson-axg-audio-arb", },
-+	{
-+		.compatible = "amlogic,meson-axg-audio-arb",
-+		.data = &axg_audio_arb_match,
-+	}, {
-+		.compatible = "amlogic,meson-sm1-audio-arb",
-+		.data = &sm1_audio_arb_match,
-+	},
- 	{}
- };
- MODULE_DEVICE_TABLE(of, meson_audio_arb_of_match);
-@@ -104,10 +136,15 @@ static int meson_audio_arb_remove(struct platform_device *pdev)
- static int meson_audio_arb_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-+	const struct meson_audio_arb_match_data *data;
- 	struct meson_audio_arb_data *arb;
- 	struct resource *res;
- 	int ret;
- 
-+	data = of_device_get_match_data(dev);
-+	if (!data)
-+		return -EINVAL;
-+
- 	arb = devm_kzalloc(dev, sizeof(*arb), GFP_KERNEL);
- 	if (!arb)
- 		return -ENOMEM;
-@@ -126,8 +163,8 @@ static int meson_audio_arb_probe(struct platform_device *pdev)
- 		return PTR_ERR(arb->regs);
- 
- 	spin_lock_init(&arb->lock);
--	arb->reset_bits = axg_audio_arb_reset_bits;
--	arb->rstc.nr_resets = ARRAY_SIZE(axg_audio_arb_reset_bits);
-+	arb->reset_bits = data->reset_bits;
-+	arb->rstc.nr_resets = data->reset_num;
- 	arb->rstc.ops = &meson_audio_arb_rstc_ops;
- 	arb->rstc.of_node = dev->of_node;
- 	arb->rstc.owner = THIS_MODULE;
--- 
-2.21.0
+> these time savings (is it in CPU cycles?) will be noticeable at all.
 
+Yes, it is CPU cycles.
+
+> But diffstat looks ok, and it avoids using kmalloc() (via kasprintf()) to
+> allocate names for kmalloc(), so in that sense I think it's worthwhile
+> to consider. Thanks.
+>
+
+Thanks.
+
+> > Pengfei Li (5):
+> >   mm, slab: Make kmalloc_info[] contain all types of names
+> >   mm, slab_common: Remove unused kmalloc_cache_name()
+> >   mm, slab: Remove unused kmalloc_size()
+> >   mm, slab_common: Make 'type' is enum kmalloc_cache_type
+> >   mm, slab_common: Make initializing KMALLOC_DMA start from 1
+> >
+> >  include/linux/slab.h |  20 ---------
+> >  mm/slab.c            |   7 +--
+> >  mm/slab.h            |   2 +-
+> >  mm/slab_common.c     | 101 +++++++++++++++++++++++--------------------
+> >  4 files changed, 59 insertions(+), 71 deletions(-)
+> >
+>
