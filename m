@@ -2,90 +2,71 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3E7C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0A3C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B90BC217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:23:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DrmC8F3y"
+	by mail.kernel.org (Postfix) with ESMTP id 49E092168B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:25:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731478AbfIEGX6 (ORCPT
+        id S1731510AbfIEGZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 02:23:58 -0400
-Received: from mail-lj1-f177.google.com ([209.85.208.177]:42394 "EHLO
-        mail-lj1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731293AbfIEGX6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 02:23:58 -0400
-Received: by mail-lj1-f177.google.com with SMTP id y23so1112350lje.9
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 23:23:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uQ5B0SOMWjcZt28lsTs/E8qAiAYYVgJARQcUjO5TKBM=;
-        b=DrmC8F3yi2lHHuP8as/6D3dAKoQREbL9E2VKcGgAozVIA4JT7BikvLkVCWwLvs4FuV
-         KxXdLonPWcr16xzEvwTUf5ryJDh6a1lTkVfHS+S7tluKj2DOEpLDZ+lmClLlRo0Uk4lN
-         g/R2vvfUCiMS93C5yKFmAYq6mJ56NqtlpStUYc6uOflRzs9tLnN27GaZOXDdXWjLH5Tf
-         dCL92feFvhlqmFUzzLHtpVOzP4AKOuBl9j2g19FYgtlvatnVlBATwFiVaO2tErFA8KB2
-         lzeeR8zoh/lrhMI/+AgbFWEnsRygdIfwyDNWfWdOGba6XqwjAvTm76xpyJcBCD+HsPQJ
-         NwAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uQ5B0SOMWjcZt28lsTs/E8qAiAYYVgJARQcUjO5TKBM=;
-        b=M4vWXeFpSmMHJsyP0MgarD5X047meZkMoc5HVURhMBxBpDHe8egJ+v9Ct9FDsJTTy9
-         FksrRP5zWsaYnUQwQmDoJrgBEJ331rmBQy7QxF8DIcB5Dj7c35LZVykDTK6xVK8qUY8G
-         0OXnoihVx5dq4g8J0VRYCSc3fFb12iaxSzLT3VWfz6efFJB9SwBTro7pS7S4bkuYMxpS
-         rNebVZFxMl1snkgqHe/NfmXs17qwdfmX/oKpB4CFc6F76KdMDrxFoCeE5ilTdMawTrU6
-         yZxTFEKfEZ0wyqqFRpQzhJScppzOiQ/OVyHJ+RF/6sv82QjLmkk4EuSJVuoIFYtxz1L6
-         ofAw==
-X-Gm-Message-State: APjAAAWvSdJcwo+2TbS8IsSgpFnsdC7z4cPVv/MPXGoriO8KgB0l+IEp
-        NcUVIJDSeECwz4A2ZloClRKTqQcT0LAoJWi+onw=
-X-Google-Smtp-Source: APXvYqxhB09PqX92csonV9YtKIw4/QYf3ZUpwYPeiLnKXhngzH+Grf1+6N5nXnLs0f6ATlOX1LNMzPaQBxcX+BnpoLA=
-X-Received: by 2002:a2e:3a13:: with SMTP id h19mr868106lja.220.1567664636414;
- Wed, 04 Sep 2019 23:23:56 -0700 (PDT)
+        Thu, 5 Sep 2019 02:25:09 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:33254 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731231AbfIEGZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 02:25:08 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 04943DFB539C480715D5;
+        Thu,  5 Sep 2019 14:09:32 +0800 (CST)
+Received: from [127.0.0.1] (10.177.29.68) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Thu, 5 Sep 2019
+ 14:09:26 +0800
+Message-ID: <5D70A695.60706@huawei.com>
+Date:   Thu, 5 Sep 2019 14:09:25 +0800
+From:   zhong jiang <zhongjiang@huawei.com>
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
 MIME-Version: 1.0
-References: <20190904181740.GA19688@gmail.com>
-In-Reply-To: <20190904181740.GA19688@gmail.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Thu, 5 Sep 2019 08:23:45 +0200
-Message-ID: <CANiq72mJiBQXM4o9CahODLwQfNXfQdE_fE2bmPJFHq7Qep3rHQ@mail.gmail.com>
-Subject: Re: [GIT PULL] compiler-attributes for v5.3-rc8
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Will Deacon <will@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Paul Burton <paul.burton@mips.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     <akpm@linux-foundation.org>, <vbabka@suse.cz>, <mhocko@kernel.org>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] mm: Unsigned 'nr_pages' always larger than zero
+References: <1567649871-60594-1-git-send-email-zhongjiang@huawei.com> <20190905031252.GN29434@bombadil.infradead.org>
+In-Reply-To: <20190905031252.GN29434@bombadil.infradead.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.29.68]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 4, 2019 at 8:18 PM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
+On 2019/9/5 11:12, Matthew Wilcox wrote:
+> On Thu, Sep 05, 2019 at 10:17:51AM +0800, zhong jiang wrote:
+>> With the help of unsigned_lesser_than_zero.cocci. Unsigned 'nr_pages'
+>> compare with zero. And __gup_longterm_locked pass an long local variant
+>> 'rc' to check_and_migrate_cma_pages. Hence it is nicer to change the
+>> parameter to long to fix the issue.
+> I think this patch is right, but I have concerns about this cocci grep.
 >
-> I was going to send this for 5.4 since it is not that trivial, but since
-> you are doing an -rc8, and it fixes an oops, please consider pulling it.
+> The code says:
+>
+>                 if ((nr_pages > 0) && migrate_allow) {
+>
+> There's nothing wrong with this (... other than the fact that nr_pages might
+> happen to be a negative errno).  nr_pages might be 0, and this would be
+> exactly the right test for that situation.  I suppose some might argue
+> that this should be != 0 instead of > 0, but it depends on the situation
+> which one would read better.
+>
+> So please don't blindly make these changes; you're right this time.
+Thanks for your affirmation.  but Andrew come up with anther fix,  using an local long variant
+to store the nr_pages.  which one do you prefer ?
 
-By the way, if you choose to pick it for 5.4 instead, I will take the
-chance to improve a few things (fix a whitespace/style issue in the
-arm patch, improve a few commit messages/typos, maybe get a few extra
-Acks for arches that don't have it). However, the Clang team would
-like to have this for 5.3 if possible, so I didn't want to delay
-sending it.
+Thanks,
+zhong jiang
 
-Cheers,
-Miguel
