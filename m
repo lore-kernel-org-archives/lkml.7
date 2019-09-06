@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98773C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F02BEC00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:14:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7318E207FC
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:14:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE08C214DE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:14:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567775647;
-	bh=xwevScULOZ8aHH02UdNxNNbZKln2GGka5KsITPUu01w=;
+	s=default; t=1567775657;
+	bh=YxdWojc5fQhCsI3MCFNUb/S38/XJllDgwfcUjCixi7c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aWhUu23pVh0XO1HND/aQPdm6PRi6xtN/Wit64z6qQYyEht0mJ+nXXXXQW6t+lHZY4
-	 DazxotIu1HefvDOcC1rZvuB93tSvD/spcaXTxgsmsdYu32OGanYeSceQZ76nxRTB0M
-	 NFp8eTNQ9YyYTiPoFrTvgIvsh+XirBfMqHyRWdHk=
+	b=uUb7mCTqNtIv/dyqtts/zJV2vIF0KnXkq9MlB/1QvIUL7F+Qbp2lv/ZTPUR4+70xk
+	 lnTbCpp9lSwCsCKfnRSSRoiSisWjP+0+1TByQN0gLwXi6Ie5D+5XuaAhWHkfFgfuyI
+	 zfJt8YL4u7VVEDaUOeJPZLi5TBaNmzG0R+fk41mA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393027AbfIFNOG (ORCPT
+        id S2393051AbfIFNOR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 09:14:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35360 "EHLO mail.kernel.org"
+        Fri, 6 Sep 2019 09:14:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388106AbfIFNOF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 09:14:05 -0400
+        id S2388106AbfIFNOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 09:14:16 -0400
 Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD58C206CD;
-        Fri,  6 Sep 2019 13:14:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A55A207FC;
+        Fri,  6 Sep 2019 13:14:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567775644;
-        bh=xwevScULOZ8aHH02UdNxNNbZKln2GGka5KsITPUu01w=;
+        s=default; t=1567775655;
+        bh=YxdWojc5fQhCsI3MCFNUb/S38/XJllDgwfcUjCixi7c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ywcKvpjP6yQuQ4ollCyO25HczFce4Msz6VtqlYmlk6swCFAeqdhyWFKeD3CXoeHoF
-         HL6carKTp5DncQeBKlw9iX41TV7uwbKZENeYEhGGqqzGNpND5Gc1qxqdTOaBpfSAf3
-         /Pp9GZwNtIvwmSvmfreLDNphR1OkYBf/+h5lC5uc=
+        b=XkKh5q5Aus2YgqR1dKqCz2etHrZWowX7W3djWGR1gL3U8RvdvMP18XVzrLm0PVhvq
+         //NYVg8iMWghQpO3BWms/dSwsIM70WgaKZlAfM2MP0Ky5XqqK7Fgu+pZ8LCj27jCCE
+         +I0vJVlcHcRe7KlsdYNQ1IBm+oyj6BNlkGQaS2bI=
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>
 Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
@@ -50,9 +50,9 @@ Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
         Boris Ostrovsky <boris.ostrovsky@oracle.com>,
         Stefano Stabellini <sstabellini@kernel.org>, x86@kernel.org,
         linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org
-Subject: [PATCH -tip v4 2/4] x86: xen: kvm: Gather the definition of emulate prefixes
-Date:   Fri,  6 Sep 2019 22:13:59 +0900
-Message-Id: <156777563917.25081.7286628561790289995.stgit@devnote2>
+Subject: [PATCH -tip v4 3/4] x86: xen: insn: Decode Xen and KVM emulate-prefix signature
+Date:   Fri,  6 Sep 2019 22:14:10 +0900
+Message-Id: <156777564986.25081.4964537658500952557.stgit@devnote2>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <156777561745.25081.1205321122446165328.stgit@devnote2>
 References: <156777561745.25081.1205321122446165328.stgit@devnote2>
@@ -65,23 +65,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Gather the emulate prefixes, which forcibly make the following
-instruction emulated on virtualization, in one place.
+Decode Xen and KVM's emulate-prefix signature by x86 insn decoder.
+It is called "prefix" but actually not x86 instruction prefix, so
+this adds insn.emulate_prefix_size field instead of reusing
+insn.prefixes.
 
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
+If x86 decoder finds a special sequence of instructions of
+XEN_EMULATE_PREFIX and 'ud2a; .ascii "kvm"', it just counts the
+length, set insn.emulate_prefix_size and fold it with the next
+instruction. In other words, the signature and the next instruction
+is treated as a single instruction.
+
+Reported-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
 ---
- arch/x86/include/asm/emulate_prefix.h |   14 ++++++++++++++
- arch/x86/include/asm/xen/interface.h  |   11 ++++-------
- arch/x86/kvm/x86.c                    |    4 +++-
- 3 files changed, 21 insertions(+), 8 deletions(-)
- create mode 100644 arch/x86/include/asm/emulate_prefix.h
+ Changes in v4:
+  - Use asm/emulate_prefix.h instead of xen/prefix.h
+  - Fix to add emulate_prefix.h to the checkist of perf.
+---
+ arch/x86/include/asm/insn.h                 |    6 +++++
+ arch/x86/lib/insn.c                         |   34 +++++++++++++++++++++++++++
+ tools/arch/x86/include/asm/emulate_prefix.h |   14 +++++++++++
+ tools/arch/x86/include/asm/insn.h           |    6 +++++
+ tools/arch/x86/lib/insn.c                   |   34 +++++++++++++++++++++++++++
+ tools/objtool/sync-check.sh                 |    3 ++
+ tools/perf/check-headers.sh                 |    3 ++
+ 7 files changed, 98 insertions(+), 2 deletions(-)
+ create mode 100644 tools/arch/x86/include/asm/emulate_prefix.h
 
-diff --git a/arch/x86/include/asm/emulate_prefix.h b/arch/x86/include/asm/emulate_prefix.h
+diff --git a/arch/x86/include/asm/insn.h b/arch/x86/include/asm/insn.h
+index 154f27be8bfc..5c1ae3eff9d4 100644
+--- a/arch/x86/include/asm/insn.h
++++ b/arch/x86/include/asm/insn.h
+@@ -45,6 +45,7 @@ struct insn {
+ 		struct insn_field immediate2;	/* for 64bit imm or seg16 */
+ 	};
+ 
++	int	emulate_prefix_size;
+ 	insn_attr_t attr;
+ 	unsigned char opnd_bytes;
+ 	unsigned char addr_bytes;
+@@ -128,6 +129,11 @@ static inline int insn_is_evex(struct insn *insn)
+ 	return (insn->vex_prefix.nbytes == 4);
+ }
+ 
++static inline int insn_has_emulate_prefix(struct insn *insn)
++{
++	return !!insn->emulate_prefix_size;
++}
++
+ /* Ensure this instruction is decoded completely */
+ static inline int insn_complete(struct insn *insn)
+ {
+diff --git a/arch/x86/lib/insn.c b/arch/x86/lib/insn.c
+index 0b5862ba6a75..404279563891 100644
+--- a/arch/x86/lib/insn.c
++++ b/arch/x86/lib/insn.c
+@@ -13,6 +13,8 @@
+ #include <asm/inat.h>
+ #include <asm/insn.h>
+ 
++#include <asm/emulate_prefix.h>
++
+ /* Verify next sizeof(t) bytes can be on the same instruction */
+ #define validate_next(t, insn, n)	\
+ 	((insn)->next_byte + sizeof(t) + n <= (insn)->end_kaddr)
+@@ -58,6 +60,36 @@ void insn_init(struct insn *insn, const void *kaddr, int buf_len, int x86_64)
+ 		insn->addr_bytes = 4;
+ }
+ 
++static const insn_byte_t xen_prefix[] = { __XEN_EMULATE_PREFIX };
++static const insn_byte_t kvm_prefix[] = { __KVM_EMULATE_PREFIX };
++
++static int __insn_get_emulate_prefix(struct insn *insn,
++				     const insn_byte_t *prefix, size_t len)
++{
++	size_t i;
++
++	for (i = 0; i < len; i++) {
++		if (peek_nbyte_next(insn_byte_t, insn, i) != prefix[i])
++			goto err_out;
++	}
++
++	insn->emulate_prefix_size = len;
++	insn->next_byte += len;
++
++	return 1;
++
++err_out:
++	return 0;
++}
++
++static void insn_get_emulate_prefix(struct insn *insn)
++{
++	if (__insn_get_emulate_prefix(insn, xen_prefix, sizeof(xen_prefix)))
++		return;
++
++	__insn_get_emulate_prefix(insn, kvm_prefix, sizeof(kvm_prefix));
++}
++
+ /**
+  * insn_get_prefixes - scan x86 instruction prefix bytes
+  * @insn:	&struct insn containing instruction
+@@ -76,6 +108,8 @@ void insn_get_prefixes(struct insn *insn)
+ 	if (prefixes->got)
+ 		return;
+ 
++	insn_get_emulate_prefix(insn);
++
+ 	nb = 0;
+ 	lb = 0;
+ 	b = peek_next(insn_byte_t, insn);
+diff --git a/tools/arch/x86/include/asm/emulate_prefix.h b/tools/arch/x86/include/asm/emulate_prefix.h
 new file mode 100644
 index 000000000000..70f5b98a5286
 --- /dev/null
-+++ b/arch/x86/include/asm/emulate_prefix.h
++++ b/tools/arch/x86/include/asm/emulate_prefix.h
 @@ -0,0 +1,14 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +#ifndef _ASM_X86_EMULATE_PREFIX_H
@@ -97,54 +197,128 @@ index 000000000000..70f5b98a5286
 +#define __KVM_EMULATE_PREFIX  0x0f,0x0b,0x6b,0x76,0x6d	/* ud2 ; .ascii "kvm" */
 +
 +#endif
-diff --git a/arch/x86/include/asm/xen/interface.h b/arch/x86/include/asm/xen/interface.h
-index 62ca03ef5c65..9139b3e86316 100644
---- a/arch/x86/include/asm/xen/interface.h
-+++ b/arch/x86/include/asm/xen/interface.h
-@@ -379,12 +379,9 @@ struct xen_pmu_arch {
-  * Prefix forces emulation of some non-trapping instructions.
-  * Currently only CPUID.
-  */
--#ifdef __ASSEMBLY__
--#define XEN_EMULATE_PREFIX .byte 0x0f,0x0b,0x78,0x65,0x6e ;
--#define XEN_CPUID          XEN_EMULATE_PREFIX cpuid
--#else
--#define XEN_EMULATE_PREFIX ".byte 0x0f,0x0b,0x78,0x65,0x6e ; "
--#define XEN_CPUID          XEN_EMULATE_PREFIX "cpuid"
--#endif
-+#include <asm/emulate_prefix.h>
+diff --git a/tools/arch/x86/include/asm/insn.h b/tools/arch/x86/include/asm/insn.h
+index 37a4c390750b..568854b14d0a 100644
+--- a/tools/arch/x86/include/asm/insn.h
++++ b/tools/arch/x86/include/asm/insn.h
+@@ -45,6 +45,7 @@ struct insn {
+ 		struct insn_field immediate2;	/* for 64bit imm or seg16 */
+ 	};
+ 
++	int	emulate_prefix_size;
+ 	insn_attr_t attr;
+ 	unsigned char opnd_bytes;
+ 	unsigned char addr_bytes;
+@@ -128,6 +129,11 @@ static inline int insn_is_evex(struct insn *insn)
+ 	return (insn->vex_prefix.nbytes == 4);
+ }
+ 
++static inline int insn_has_emulate_prefix(struct insn *insn)
++{
++	return !!insn->emulate_prefix_size;
++}
 +
-+#define XEN_EMULATE_PREFIX __ASM_FORM(.byte __XEN_EMULATE_PREFIX ;)
-+#define XEN_CPUID          XEN_EMULATE_PREFIX __ASM_FORM(cpuid)
- 
- #endif /* _ASM_X86_XEN_INTERFACE_H */
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 290c3c3efb87..5f8b0a60f48b 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -68,6 +68,7 @@
- #include <asm/mshyperv.h>
- #include <asm/hypervisor.h>
- #include <asm/intel_pt.h>
-+#include <asm/emulate_prefix.h>
- #include <clocksource/hyperv_timer.h>
- 
- #define CREATE_TRACE_POINTS
-@@ -5319,6 +5320,7 @@ EXPORT_SYMBOL_GPL(kvm_write_guest_virt_system);
- 
- int handle_ud(struct kvm_vcpu *vcpu)
+ /* Ensure this instruction is decoded completely */
+ static inline int insn_complete(struct insn *insn)
  {
-+	static const char kvm_emulate_prefix[] = { __KVM_EMULATE_PREFIX };
- 	int emul_type = EMULTYPE_TRAP_UD;
- 	enum emulation_result er;
- 	char sig[5]; /* ud2; .ascii "kvm" */
-@@ -5327,7 +5329,7 @@ int handle_ud(struct kvm_vcpu *vcpu)
- 	if (force_emulation_prefix &&
- 	    kvm_read_guest_virt(vcpu, kvm_get_linear_rip(vcpu),
- 				sig, sizeof(sig), &e) == 0 &&
--	    memcmp(sig, "\xf\xbkvm", sizeof(sig)) == 0) {
-+	    memcmp(sig, kvm_emulate_prefix, sizeof(sig)) == 0) {
- 		kvm_rip_write(vcpu, kvm_rip_read(vcpu) + sizeof(sig));
- 		emul_type = 0;
- 	}
+diff --git a/tools/arch/x86/lib/insn.c b/tools/arch/x86/lib/insn.c
+index 79e048f1d902..0151dfc6da61 100644
+--- a/tools/arch/x86/lib/insn.c
++++ b/tools/arch/x86/lib/insn.c
+@@ -13,6 +13,8 @@
+ #include "../include/asm/inat.h"
+ #include "../include/asm/insn.h"
+ 
++#include "../include/asm/emulate_prefix.h"
++
+ /* Verify next sizeof(t) bytes can be on the same instruction */
+ #define validate_next(t, insn, n)	\
+ 	((insn)->next_byte + sizeof(t) + n <= (insn)->end_kaddr)
+@@ -58,6 +60,36 @@ void insn_init(struct insn *insn, const void *kaddr, int buf_len, int x86_64)
+ 		insn->addr_bytes = 4;
+ }
+ 
++static const insn_byte_t xen_prefix[] = { __XEN_EMULATE_PREFIX };
++static const insn_byte_t kvm_prefix[] = { __KVM_EMULATE_PREFIX };
++
++static int __insn_get_emulate_prefix(struct insn *insn,
++				     const insn_byte_t *prefix, size_t len)
++{
++	size_t i;
++
++	for (i = 0; i < len; i++) {
++		if (peek_nbyte_next(insn_byte_t, insn, i) != prefix[i])
++			goto err_out;
++	}
++
++	insn->emulate_prefix_size = len;
++	insn->next_byte += len;
++
++	return 1;
++
++err_out:
++	return 0;
++}
++
++static void insn_get_emulate_prefix(struct insn *insn)
++{
++	if (__insn_get_emulate_prefix(insn, xen_prefix, sizeof(xen_prefix)))
++		return;
++
++	__insn_get_emulate_prefix(insn, kvm_prefix, sizeof(kvm_prefix));
++}
++
+ /**
+  * insn_get_prefixes - scan x86 instruction prefix bytes
+  * @insn:	&struct insn containing instruction
+@@ -76,6 +108,8 @@ void insn_get_prefixes(struct insn *insn)
+ 	if (prefixes->got)
+ 		return;
+ 
++	insn_get_emulate_prefix(insn);
++
+ 	nb = 0;
+ 	lb = 0;
+ 	b = peek_next(insn_byte_t, insn);
+diff --git a/tools/objtool/sync-check.sh b/tools/objtool/sync-check.sh
+index 0a832e265a50..9bd04bbed01e 100755
+--- a/tools/objtool/sync-check.sh
++++ b/tools/objtool/sync-check.sh
+@@ -4,6 +4,7 @@
+ FILES='
+ arch/x86/include/asm/inat_types.h
+ arch/x86/include/asm/orc_types.h
++arch/x86/include/asm/emulate_prefix.h
+ arch/x86/lib/x86-opcode-map.txt
+ arch/x86/tools/gen-insn-attr-x86.awk
+ '
+@@ -46,6 +47,6 @@ done
+ check arch/x86/include/asm/inat.h     '-I "^#include [\"<]\(asm/\)*inat_types.h[\">]"'
+ check arch/x86/include/asm/insn.h     '-I "^#include [\"<]\(asm/\)*inat.h[\">]"'
+ check arch/x86/lib/inat.c             '-I "^#include [\"<]\(../include/\)*asm/insn.h[\">]"'
+-check arch/x86/lib/insn.c             '-I "^#include [\"<]\(../include/\)*asm/in\(at\|sn\).h[\">]"'
++check arch/x86/lib/insn.c             '-I "^#include [\"<]\(../include/\)*asm/in\(at\|sn\).h[\">]" -I "^#include [\"<]\(../include/\)*asm/emulate_prefix.h[\">]"'
+ 
+ cd -
+diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+index e2e0f06c97d0..988b1879ec98 100755
+--- a/tools/perf/check-headers.sh
++++ b/tools/perf/check-headers.sh
+@@ -27,6 +27,7 @@ arch/x86/include/asm/disabled-features.h
+ arch/x86/include/asm/required-features.h
+ arch/x86/include/asm/cpufeatures.h
+ arch/x86/include/asm/inat_types.h
++arch/x86/include/asm/emulate_prefix.h
+ arch/x86/include/uapi/asm/prctl.h
+ arch/x86/lib/x86-opcode-map.txt
+ arch/x86/tools/gen-insn-attr-x86.awk
+@@ -115,7 +116,7 @@ check lib/ctype.c		      '-I "^EXPORT_SYMBOL" -I "^#include <linux/export.h>" -B
+ check arch/x86/include/asm/inat.h     '-I "^#include [\"<]\(asm/\)*inat_types.h[\">]"'
+ check arch/x86/include/asm/insn.h     '-I "^#include [\"<]\(asm/\)*inat.h[\">]"'
+ check arch/x86/lib/inat.c	      '-I "^#include [\"<]\(../include/\)*asm/insn.h[\">]"'
+-check arch/x86/lib/insn.c	      '-I "^#include [\"<]\(../include/\)*asm/in\(at\|sn\).h[\">]"'
++check arch/x86/lib/insn.c             '-I "^#include [\"<]\(../include/\)*asm/in\(at\|sn\).h[\">]" -I "^#include [\"<]\(../include/\)*asm/emulate_prefix.h[\">]"'
+ 
+ # diff non-symmetric files
+ check_2 tools/perf/arch/x86/entry/syscalls/syscall_64.tbl arch/x86/entry/syscalls/syscall_64.tbl
 
