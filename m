@@ -6,53 +6,47 @@ X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF3CC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45CDFC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AA7020578
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:08:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2910320842
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:08:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405967AbfIFRIM (ORCPT
+        id S2405977AbfIFRIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 13:08:12 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:54132 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726007AbfIFRIM (ORCPT
+        Fri, 6 Sep 2019 13:08:15 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:55184 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730223AbfIFRIM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 6 Sep 2019 13:08:12 -0400
-Received: by mail-io1-f72.google.com with SMTP id l21so8389181iob.20
+Received: by mail-io1-f71.google.com with SMTP id a20so8368144iok.21
         for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 10:08:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=q8OkoEi+GgJ9/q6d/Q9AdtdIt7JwUh/xgslJcUrjLWU=;
-        b=WywYCohD/nbMOWK1RcVXQ60qCfPhZa80hfT/2h9zNmpNYbI6iBIwAJcs7kh8FRz1Ai
-         AY62wrr/oiX3tn12Gf/hL1n1yrJxBmsfswESayht3g7RgUUqrJLRx+Rs4mdYBRlKzZh9
-         QMRNxhL282SO0GAgqE4GtuuijPCX+gH3KVAfnUkX39jaP5S+dXmgG/3vRwJ6XGozxsrS
-         0VntAcsZFIpIzCr8Nc1bJV+EBeg7j4rQmWuyjQjiyUrkQ/CJGxSDB1F+ogIQzFQWCB7s
-         JjfwdSR7uX58mEGKjd1nGnVRHTmuCOmmK4NA8HUCprx2QVD6WzGE9kBZekfcoAGIvVPZ
-         jX3w==
-X-Gm-Message-State: APjAAAXzMuhwrvOF0YbsDNHwJjDg/lOWyuMVAEEoi6x6bzsTtnILSaMk
-        dnsmuIeo+8kT+gxEZAzUNPC69JxRpFAW9Jbzhem98PPB6VZt
-X-Google-Smtp-Source: APXvYqxq9lFbaa7rIg62dtip3JkaDW3dot2lG41o2i7UeccV9NumUayL9rzEyecN8Uafq7zcSeGbik42IxMAYgTf+f5QLedVTxzb
+        bh=3njUJ/0K0qrTjvC4IVkpaDi9DWyHseTccD0yHkZDLBs=;
+        b=rc/QGLSalfe7NNG9qc0A3buBwDTXnIRWAfARGcp3JTPrdaqhmt3WCin7ZcePw9FgB6
+         FK98e53lnexaBJTy8R9n0mbKQo05s6AgZPve4MjgmJjVi3O5wbF9XpxUv9X0fTvONkHR
+         fXlToz643+4onYLhzcMrBqydSnC81QFJrkAlxVA58wMvKufvv/AeRAW7Arb518+if7xl
+         68ViUrGr02X7EcyXFh54Fjie2LasdesQTK2d43n0PpVK3SU7RkuKsk0TAiMSS4OfeCB/
+         y4jTBFrm3QqSHKlzWFce+s2ZEyNa5sikWkSeDKVaKX6FE1b62oE8P29agfpuchGWaf16
+         7UWg==
+X-Gm-Message-State: APjAAAUgV8D7NaGQMiuxa+HDd5RCOIjeggWeZjoCyVkEJ5A4czhfrxW4
+        it2szkBZPP2asqvpPdLhZki2sbn6iY2XI/h2nocNoVs8DW5R
+X-Google-Smtp-Source: APXvYqz9DzyEOIuFEOWT1ID4gU21+TU8AcogcmcruNwfteNhsHUn/47ie2zC7VAaiNoCcRLtp+EuV9DagCJQWPfB8T4QNoRDZ2WA
 MIME-Version: 1.0
-X-Received: by 2002:a02:920b:: with SMTP id x11mr11516568jag.17.1567789690508;
- Fri, 06 Sep 2019 10:08:10 -0700 (PDT)
-Date:   Fri, 06 Sep 2019 10:08:10 -0700
+X-Received: by 2002:a02:9994:: with SMTP id a20mr4651152jal.107.1567789691067;
+ Fri, 06 Sep 2019 10:08:11 -0700 (PDT)
+Date:   Fri, 06 Sep 2019 10:08:11 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000009611470591e57be6@google.com>
-Subject: possible deadlock in __mmu_notifier_invalidate_range_end
-From:   syzbot <syzbot+aaedc50d99a03250fe1f@syzkaller.appspotmail.com>
-To:     airlied@linux.ie, akpm@linux-foundation.org, bhelgaas@google.com,
-        bskeggs@redhat.com, dan.j.williams@intel.com,
-        daniel.vetter@ffwll.ch, daniel@ffwll.ch,
-        dri-devel@lists.freedesktop.org, jean-philippe@linaro.org,
-        jgg@ziepe.ca, jglisse@redhat.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, logang@deltatee.com, mhocko@suse.com,
-        nouveau@lists.freedesktop.org, rcampbell@nvidia.com,
-        sfr@canb.auug.org.au, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de
+Message-ID: <0000000000009e73be0591e57b89@google.com>
+Subject: WARNING in xfrm_policy_insert_list (2)
+From:   syzbot <syzbot+2714fa4a72156aa7e18a@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        steffen.klassert@secunet.com, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -63,97 +57,76 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    6d028043 Add linux-next specific files for 20190830
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=16cbf22a600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=82a6bec43ab0cb69
-dashboard link: https://syzkaller.appspot.com/bug?extid=aaedc50d99a03250fe1f
+HEAD commit:    0e5b36bc r8152: adjust the settings of ups flags
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=17932ec6600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=67b69b427c3b2dbf
+dashboard link: https://syzkaller.appspot.com/bug?extid=2714fa4a72156aa7e18a
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15269876600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12685092600000
-
-The bug was bisected to:
-
-commit e58b341134ca751d9c12bacded12a8b4dd51368d
-Author: Stephen Rothwell <sfr@canb.auug.org.au>
-Date:   Fri Aug 30 09:42:14 2019 +0000
-
-     Merge remote-tracking branch 'hmm/hmm'
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11ea65ea600000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=13ea65ea600000
-console output: https://syzkaller.appspot.com/x/log.txt?x=15ea65ea600000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17e5cb2a600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14eba03e600000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+aaedc50d99a03250fe1f@syzkaller.appspotmail.com
-Fixes: e58b341134ca ("Merge remote-tracking branch 'hmm/hmm'")
+Reported-by: syzbot+2714fa4a72156aa7e18a@syzkaller.appspotmail.com
 
-============================================
-WARNING: possible recursive locking detected
-5.3.0-rc6-next-20190830 #75 Not tainted
---------------------------------------------
-oom_reaper/1065 is trying to acquire lock:
-ffffffff8904ff60 (mmu_notifier_invalidate_range_start){+.+.}, at:  
-__mmu_notifier_invalidate_range_end+0x0/0x360 mm/mmu_notifier.c:169
-
-but task is already holding lock:
-ffffffff8904ff60 (mmu_notifier_invalidate_range_start){+.+.}, at:  
-__oom_reap_task_mm+0x196/0x490 mm/oom_kill.c:542
-
-other info that might help us debug this:
-  Possible unsafe locking scenario:
-
-        CPU0
-        ----
-   lock(mmu_notifier_invalidate_range_start);
-   lock(mmu_notifier_invalidate_range_start);
-
-  *** DEADLOCK ***
-
-  May be due to missing lock nesting notation
-
-2 locks held by oom_reaper/1065:
-  #0: ffff888094ad3990 (&mm->mmap_sem#2){++++}, at: oom_reap_task_mm  
-mm/oom_kill.c:570 [inline]
-  #0: ffff888094ad3990 (&mm->mmap_sem#2){++++}, at: oom_reap_task  
-mm/oom_kill.c:613 [inline]
-  #0: ffff888094ad3990 (&mm->mmap_sem#2){++++}, at: oom_reaper+0x3a7/0x1320  
-mm/oom_kill.c:651
-  #1: ffffffff8904ff60 (mmu_notifier_invalidate_range_start){+.+.}, at:  
-__oom_reap_task_mm+0x196/0x490 mm/oom_kill.c:542
-
-stack backtrace:
-CPU: 1 PID: 1065 Comm: oom_reaper Not tainted 5.3.0-rc6-next-20190830 #75
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 8725 at net/xfrm/xfrm_policy.c:1541  
+xfrm_policy_insert_list.cold+0x11/0x90 net/xfrm/xfrm_policy.c:1541
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 8725 Comm: syz-executor575 Not tainted 5.3.0-rc7+ #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
 Call Trace:
   __dump_stack lib/dump_stack.c:77 [inline]
   dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  print_deadlock_bug kernel/locking/lockdep.c:2371 [inline]
-  check_deadlock kernel/locking/lockdep.c:2412 [inline]
-  validate_chain kernel/locking/lockdep.c:2955 [inline]
-  __lock_acquire.cold+0x15d/0x385 kernel/locking/lockdep.c:3955
-  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4487
-  __mmu_notifier_invalidate_range_end+0x3c/0x360 mm/mmu_notifier.c:193
-  mmu_notifier_invalidate_range_end include/linux/mmu_notifier.h:375 [inline]
-  __oom_reap_task_mm+0x3fa/0x490 mm/oom_kill.c:552
-  oom_reap_task_mm mm/oom_kill.c:589 [inline]
-  oom_reap_task mm/oom_kill.c:613 [inline]
-  oom_reaper+0x2b2/0x1320 mm/oom_kill.c:651
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-oom_reaper: reaped process 10145 (syz-executor282), now anon-rss:16480kB,  
-file-rss:872kB, shmem-rss:0kB
-oom_reaper: reaped process 10144 (syz-executor282), now anon-rss:0kB,  
-file-rss:0kB, shmem-rss:0kB
-oom_reaper: reaped process 10158 (syz-executor282), now anon-rss:16824kB,  
-file-rss:872kB, shmem-rss:0kB
-oom_reaper: reaped process 10187 (syz-executor282), now anon-rss:0kB,  
-file-rss:0kB, shmem-rss:0kB
-oom_reaper: reaped process 10173 (syz-executor282), now anon-rss:0kB,  
-file-rss:0kB, shmem-rss:0kB
-oom_reaper: reaped process 10139 (syz-executor282), now anon-rss:0kB,  
-file-rss:0kB, shmem-rss:0kB
+  panic+0x2dc/0x755 kernel/panic.c:219
+  __warn.cold+0x20/0x4c kernel/panic.c:576
+  report_bug+0x263/0x2b0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
+RIP: 0010:xfrm_policy_insert_list.cold+0x11/0x90 net/xfrm/xfrm_policy.c:1541
+Code: f0 79 fb e9 67 fa ff ff 88 55 c0 e8 e9 f0 79 fb 0f b6 55 c0 e9 83 fa  
+ff ff e8 9b cc 3f fb 48 c7 c7 a0 20 52 88 e8 e3 6b 29 fb <0f> 0b 48 8b 45  
+b8 42 0f b6 14 20 48 8b 45 d0 83 e0 07 83 c0 03 38
+RSP: 0018:ffff88808f7ff3a0 EFLAGS: 00010282
+RAX: 0000000000000024 RBX: ffff8880a1ac0040 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815c26f6 RDI: ffffed1011effe66
+RBP: ffff88808f7ff420 R08: 0000000000000024 R09: ffffed1015d060d1
+R10: ffffed1015d060d0 R11: ffff8880ae830687 R12: dffffc0000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: ffff8880a410b240
+  xfrm_policy_inexact_insert+0xec/0x1000 net/xfrm/xfrm_policy.c:1188
+  xfrm_policy_insert+0x530/0x750 net/xfrm/xfrm_policy.c:1574
+  xfrm_add_policy+0x28f/0x530 net/xfrm/xfrm_user.c:1670
+  xfrm_user_rcv_msg+0x459/0x770 net/xfrm/xfrm_user.c:2676
+  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
+  xfrm_netlink_rcv+0x70/0x90 net/xfrm/xfrm_user.c:2684
+  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+  netlink_unicast+0x531/0x710 net/netlink/af_netlink.c:1328
+  netlink_sendmsg+0x8a5/0xd60 net/netlink/af_netlink.c:1917
+  sock_sendmsg_nosec net/socket.c:637 [inline]
+  sock_sendmsg+0xd7/0x130 net/socket.c:657
+  ___sys_sendmsg+0x803/0x920 net/socket.c:2311
+  __sys_sendmsg+0x105/0x1d0 net/socket.c:2356
+  __do_sys_sendmsg net/socket.c:2365 [inline]
+  __se_sys_sendmsg net/socket.c:2363 [inline]
+  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2363
+  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x442209
+Code: e8 fc ab 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 9b 09 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffceda47ad8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000004a3298 RCX: 0000000000442209
+RDX: 0000000000000000 RSI: 0000000020000080 RDI: 0000000000000005
+RBP: 000000000000f970 R08: 00000000004002c8 R09: 00000000004002c8
+R10: 00000000004002c8 R11: 0000000000000246 R12: 0000000000403030
+R13: 00000000004030c0 R14: 0000000000000000 R15: 0000000000000000
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
 ---
@@ -163,6 +136,5 @@ syzbot engineers can be reached at syzkaller@googlegroups.com.
 
 syzbot will keep track of this bug report. See:
 https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 syzbot can test patches for this bug, for details see:
 https://goo.gl/tpsmEJ#testing-patches
