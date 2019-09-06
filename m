@@ -2,89 +2,99 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F56FC00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E07B7C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A80C207FC
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:04:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA15621670
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:04:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="LeW70Cwz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406237AbfIFTEw (ORCPT
+        id S2406248AbfIFTE4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 15:04:52 -0400
-Received: from namei.org ([65.99.196.166]:43022 "EHLO namei.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729074AbfIFTEw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 15:04:52 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by namei.org (8.14.4/8.14.4) with ESMTP id x86J3QSE019203;
-        Fri, 6 Sep 2019 19:03:26 GMT
-Date:   Fri, 6 Sep 2019 12:03:26 -0700 (PDT)
-From:   James Morris <jmorris@namei.org>
-To:     Jeff Layton <jlayton@kernel.org>
-cc:     =?ISO-8859-15?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
-        Florian Weimer <fweimer@redhat.com>,
-        =?ISO-8859-15?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Eric Chiang <ericchiang@google.com>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?ISO-8859-15?Q?Philippe_Tr=E9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] fs: Add support for an O_MAYEXEC flag on
- sys_open()
-In-Reply-To: <5a59b309f9d0603d8481a483e16b5d12ecb77540.camel@kernel.org>
-Message-ID: <alpine.LRH.2.21.1909061202070.18660@namei.org>
-References: <20190906152455.22757-1-mic@digikod.net>  <20190906152455.22757-2-mic@digikod.net>  <87ef0te7v3.fsf@oldenburg2.str.redhat.com>  <75442f3b-a3d8-12db-579a-2c5983426b4d@ssi.gouv.fr>  <f53ec45fd253e96d1c8d0ea6f9cca7f68afa51e3.camel@kernel.org> 
- <1fbf54f6-7597-3633-a76c-11c4b2481add@ssi.gouv.fr> <5a59b309f9d0603d8481a483e16b5d12ecb77540.camel@kernel.org>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Fri, 6 Sep 2019 15:04:56 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:37791 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729074AbfIFTEy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 15:04:54 -0400
+Received: by mail-ed1-f65.google.com with SMTP id i1so7271815edv.4
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 12:04:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jojg3lt9aotJnGt5bH33wsrcyv/EEKP9KJRLMGkqesY=;
+        b=LeW70Cwz4yP0y+LnTrM6vdUtvCMHjSw1acep3zXSJpi5BYck+TcuH8lwg6BFF+angS
+         RDYMTGCVx+3iLx4bIRpfNA69sQlUdbjAfJrE1tIJt9h5xR7KlD59f1teg2zUjKLWji8U
+         HtKOfDiAs4fvtxuIYAkhN86SzJ/3DECTbwuraae7Ro4Fnmf/j7wRycV3GekLevRvA4yi
+         hN+l2NlmZ43f8LnS3649b2RQBq2URKwBrG03uECmpal6VX2gf/H7cIiJydxgVHNdAVEK
+         ZsN2k2L3TJXN4FJXJv8Ww2KRqLaR8luX0x/QO6p8DnbYTUm/7XaIdegqHhHY71r0jRUC
+         LkWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jojg3lt9aotJnGt5bH33wsrcyv/EEKP9KJRLMGkqesY=;
+        b=XeOoX/qR5dzJogrDWTaABcJe0I/Isgz66c1eTiCnPESYDKI5dM/nxu+kahMnfTxDwj
+         2Q9sj52+OQlbxw60aHBSsE5A2U+T2dZd9O22VEgFjZxz+orkoE+uzlftGMdVg0agkcZz
+         0KVV/iUkSlT/jlx9twGlOgcznZttPAJO2C9dnmajaYP8u0hM1tuszNO3jl7VXEFPxPMJ
+         IUYmN3SSSlWs5iIicuHyjrwi5aNBIbF0efK6eeBgaNTB5i6wPWqUhNfT0bvdlHS1H6yk
+         mAFF4Cspfgd6k/FgOw1IPWS6HJKrQm9NVKAOw0FI2j0wpmjr2T3E1pPLo3TD8n8iiPoP
+         oTdQ==
+X-Gm-Message-State: APjAAAXNmT5dgK3Tcsw6jgrr92vn7bx/ZoYMMw1Yt2Fh5pVUsNgPDtZ/
+        4+xQ39He96oW3knOXI2cLxAq5+tUi7rtKmLpZufqkQ==
+X-Google-Smtp-Source: APXvYqyK1SCAqBB23XwDsQMDwIBa7uh8HdAPqm1/xVvjPDxouORMX2W/oKEVAMQ70bEUmrEuPn+OtVr0upjiCbgyF4o=
+X-Received: by 2002:aa7:c40c:: with SMTP id j12mr11447072edq.80.1567796692440;
+ Fri, 06 Sep 2019 12:04:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20190821183204.23576-1-pasha.tatashin@soleen.com>
+ <20190821183204.23576-12-pasha.tatashin@soleen.com> <d53d973c-17dc-2f4f-c052-83d6df15b002@arm.com>
+In-Reply-To: <d53d973c-17dc-2f4f-c052-83d6df15b002@arm.com>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Fri, 6 Sep 2019 15:04:41 -0400
+Message-ID: <CA+CK2bCSDEspfJZ9k_4nWmerQSatc9M_dVf4Jij5xUwTMbg29w@mail.gmail.com>
+Subject: Re: [PATCH v3 11/17] arm64, trans_pgd: add PUD_SECT_RDONLY
+To:     James Morse <james.morse@arm.com>
+Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        kexec mailing list <kexec@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Bhupesh Sharma <bhsharma@redhat.com>,
+        linux-mm <linux-mm@kvack.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 6 Sep 2019, Jeff Layton wrote:
+On Fri, Sep 6, 2019 at 11:21 AM James Morse <james.morse@arm.com> wrote:
+>
+> Hi Pavel,
+>
+> On 21/08/2019 19:31, Pavel Tatashin wrote:
+> > Thre is PMD_SECT_RDONLY that is used in pud_* function which is confusing.
+>
+> Nit: There
+>
+> I bet it was equally confusing before before you moved it! Could you do this earlier in
+> the series with the rest of the cleanup?
+>
+> With that,
+> Acked-by: James Morse <james.morse@arm.com>
 
-> The fact that open and openat didn't vet unknown flags is really a bug.
-> 
-> Too late to fix it now, of course, and as Aleksa points out, we've
-> worked around that in the past. Now though, we have a new openat2
-> syscall on the horizon. There's little need to continue these sorts of
-> hacks.
-> 
-> New open flags really have no place in the old syscalls, IMO.
+Will move it earlier.
 
-Agree here. It's unfortunate but a reality and Linus will reject any such 
-changes which break existing userspace.
-
-
--- 
-James Morris
-<jmorris@namei.org>
-
+Thank you,
+Pasha
