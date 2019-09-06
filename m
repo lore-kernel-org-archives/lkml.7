@@ -2,307 +2,82 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BED84C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FE8C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DB162082C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:59:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V5SzLKgF"
+	by mail.kernel.org (Postfix) with ESMTP id EC51A2082C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:59:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567774792;
+	bh=7dNk/wkZnLE10eskmOPYWTGcMMyxymm+d1pUFfQCuyI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iG0RNqL5X6mPh+K5B0dHGYxteRjffyZGt1wXxVk/H260eGOHRWtAaqbvJHvS3vk4z
+	 ryqbNRDTxrlrsXmNKsbZ0W+mCzCdmSJZHncC6iDeMw31wWKUQFqE+LOvv5bGUJ2tFr
+	 4psEWjAsLVzDK0z8hJSxLeEE53dvjcx90FW1SXcY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392787AbfIFM7n (ORCPT
+        id S2405072AbfIFM7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 08:59:43 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39751 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389339AbfIFM7k (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 08:59:40 -0400
-Received: by mail-pf1-f194.google.com with SMTP id s12so4427582pfe.6;
-        Fri, 06 Sep 2019 05:59:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=A6ci3xjnNB/pGN8cbhPU+nYoJ+P8/SM6iHz9JGmMhLQ=;
-        b=V5SzLKgFsltvmd5anLvBtP33fsPzAZ1RnTsXrkQUJ8xgm/gWKYjpkAK7SsKJmHPdVL
-         ppmY36+37nzlIaf7Fdgtleu4/fj1inMixYs7ANRRgMFw2oAkWh1nqITEMxkL7Tn6hWys
-         rYx79awKu90ZQAsn+q28XQFawjjUO26q6qG7p81ngAxCGs20iq3IMkFnDef3vK84P/Jk
-         QKDy0ad0Q/zvlE40w80DSE474ZUWkEFSDknPhaYiusHyLgVNwMAts3ocg/6GT3YEYC5t
-         jS9okUbxWL/14+XWgaKHAoNIPBSPcMqGSU/xBi/alSFkIzqFeiw/8Y83U4bzFX/fU58s
-         sjGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=A6ci3xjnNB/pGN8cbhPU+nYoJ+P8/SM6iHz9JGmMhLQ=;
-        b=jbRJ8kFKjNYsH3EHvkX0mumLRrBjbAlk1qmavQOfpl4sEaCl9XEkeTEiIuhJuZ4AiH
-         7eElNyx/EsiKIgDwl2RSYZP2+Nv6BmBUmeCOM4vl67NOBj1AO77ZQA0Ubly9sBkhj2N0
-         6M08m+AS+0QwewO7Y7AJB2Jc2V8GtBU+wI3P5aAem2hEzat+ZfT37Zn8UdShyx5sqeTe
-         1UXQqnXK2kdAKR/fz2lBGkVI/MWGpJ0ju+QKthwYovyRXwrdL4Lm1lVwT+i9UOo062Qf
-         TB/JpGwTjQhjiwvf2TPKJFyg3BwLpq8HMA7OWWu0q6QEz75pOECX6D+VEYDU0x0mT38i
-         WrTQ==
-X-Gm-Message-State: APjAAAXvCcUkhVAgXG+dEYkS/amGfM20qxQWLKzPGqYEN0Luso6laqil
-        81UULKTsVCwWrcGSgQ1Ryh4=
-X-Google-Smtp-Source: APXvYqx10Xl/kmRsIAR2VNFb7DNI7jSZHSSWym00PkOxVWo5IB35I3FbuHpR1z/s8P0mXMagKg9n0w==
-X-Received: by 2002:a65:6401:: with SMTP id a1mr7833679pgv.42.1567774780016;
-        Fri, 06 Sep 2019 05:59:40 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id x2sm5724996pfa.89.2019.09.06.05.59.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 06 Sep 2019 05:59:38 -0700 (PDT)
-Date:   Fri, 6 Sep 2019 05:59:37 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-Cc:     agross@kernel.org, wim@linux-watchdog.org,
-        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] watchdog: qcom: support pre-timeout when the bark irq
- is available
-Message-ID: <20190906125937.GA7255@roeck-us.net>
-References: <20190905210035.9985-1-jorge.ramirez-ortiz@linaro.org>
- <20190905211913.GA31094@roeck-us.net>
- <68ca07e6-efa2-d5bd-111b-faaa86808192@linaro.org>
+        Fri, 6 Sep 2019 08:59:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54034 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389339AbfIFM7t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 08:59:49 -0400
+Received: from linux-8ccs (unknown [92.117.154.101])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 159162082C;
+        Fri,  6 Sep 2019 12:59:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567774789;
+        bh=7dNk/wkZnLE10eskmOPYWTGcMMyxymm+d1pUFfQCuyI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jWKjib7HXGf9DXvqicd2O3TEr9G0MiiQirVVoMEPsSyl3Ax2Z7E/pgZPmsIeGvtmw
+         9aIEF/zG7KLYJ5GJqeQgT9JGXX0vXR5KB2Jbr1JDGzmmKzjhPSuLEEMN8mHOZtNCcq
+         8p6p8wN06pECWmJcTXD9ddlnILpjS1rviRKvNfNc=
+Date:   Fri, 6 Sep 2019 14:59:42 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Matthias Maennich <maennich@google.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
+        arnd@arndb.de, gregkh@linuxfoundation.org, joel@joelfernandes.org,
+        lucas.de.marchi@gmail.com, maco@android.com, sspatil@google.com,
+        will@kernel.org, yamada.masahiro@socionext.com,
+        linux-kbuild@vger.kernel.org, linux-modules@vger.kernel.org,
+        linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net
+Subject: Re: [PATCH v5 10/11] usb-storage: remove single-use define for
+ debugging
+Message-ID: <20190906125942.GA31531@linux-8ccs>
+References: <20180716122125.175792-1-maco@android.com>
+ <20190906103235.197072-1-maennich@google.com>
+ <20190906103235.197072-11-maennich@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <68ca07e6-efa2-d5bd-111b-faaa86808192@linaro.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190906103235.197072-11-maennich@google.com>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 11:34:03PM +0200, Jorge Ramirez wrote:
-> On 9/5/19 23:19, Guenter Roeck wrote:
-> > On Thu, Sep 05, 2019 at 11:00:35PM +0200, Jorge Ramirez-Ortiz wrote:
-> >> Use the bark interrupt as the pre-timeout notifier whenever this
-> >> interrupt is available.
-> >>
-> >> By default, the pretimeout notification shall occur one second earlier
-> >> than the timeout.
-> >>
-> >> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> >> ---
-> >>  v4:
-> >>      address Guenter Roeck comments as follows:
-> >>        remove unnecessary include and private variable
-> >>        provide macro for WDT EN register values
-> >>        use pretimeout as per its API intent
-> >>        handle EPROBE_DEFER on get_irq
-> >>      also:
-> >>        handle the irq registration as done in pm8916_wdt.c
-> >>  v3:
-> >>     remove unnecesary variable added to private.
-> >>
-> >>  v2:
-> >>     register the pre-timeout notifier instead.
-> >>
-> >>  v1:
-> >>  drivers/watchdog/qcom-wdt.c | 64 ++++++++++++++++++++++++++++++++++---
-> >>  1 file changed, 59 insertions(+), 5 deletions(-)
-> >>
-> >> diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
-> >> index 7be7f87be28f..0f1d29eeb81d 100644
-> >> --- a/drivers/watchdog/qcom-wdt.c
-> >> +++ b/drivers/watchdog/qcom-wdt.c
-> >> @@ -10,6 +10,7 @@
-> >>  #include <linux/platform_device.h>
-> >>  #include <linux/watchdog.h>
-> >>  #include <linux/of_device.h>
-> >> +#include <linux/interrupt.h>
-> >>  
-> >>  enum wdt_reg {
-> >>  	WDT_RST,
-> >> @@ -19,6 +20,9 @@ enum wdt_reg {
-> >>  	WDT_BITE_TIME,
-> >>  };
-> >>  
-> >> +#define QCOM_WDT_ENABLE		BIT(0)
-> >> +#define QCOM_WDT_ENABLE_IRQ	BIT(1)
-> >> +
-> > 
-> > Using BIT() requires "#include <linux/bits.h>".
-> 
-> do you want it explicitly in the file even if it builds?
-> 
++++ Matthias Maennich [06/09/19 11:32 +0100]:
+>USB_STORAGE was defined as "usb-storage: " and used in a single location
+>as argument to printk. In order to be able to use the name
+>'USB_STORAGE', drop the definition and use the string directly for the
+>printk call.
+>
+>Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>Signed-off-by: Matthias Maennich <maennich@google.com>
 
-May I kindly suggest to read Documentation/process/submit-checklist.rst ?
+Greg, didn't you pick this patch up for usb-next already (for the 5.4
+merge window)? If that's the case, I could apply the series omitting
+this patch (once there are no more comments or complaints).
 
-> > 
-> >>  static const u32 reg_offset_data_apcs_tmr[] = {
-> >>  	[WDT_RST] = 0x38,
-> >>  	[WDT_EN] = 0x40,
-> >> @@ -54,15 +58,38 @@ struct qcom_wdt *to_qcom_wdt(struct watchdog_device *wdd)
-> >>  	return container_of(wdd, struct qcom_wdt, wdd);
-> >>  }
-> >>  
-> >> +static inline int qcom_get_enable(struct watchdog_device *wdd)
-> >> +{
-> >> +	int enable = QCOM_WDT_ENABLE;
-> >> +
-> >> +	if (wdd->info->options & WDIOF_PRETIMEOUT)
-> >> +		enable |= QCOM_WDT_ENABLE_IRQ;
-> >> +
-> > 
-> > Again, the condition needs to be that pretimeout != 0,
-> > not that it is supported.
-> 
-> no I dont think so. doing that would propagate a possible error in some
-> pretimeout setup code which would end up enabling an interrupt when it
-> shouldnt. so I dont think that doing that would be correct.
-> 
-If the pretimeout setup code is buggy, it needs to be fixed.
+Thanks!
 
-> The interrupt should only be enabled if WDIOF_PRETIMEOUT is configured
-> (independently of the pretimeout value); as a matter of fact, if
-> pretimeout is 0, the interrupt will trigger at the same time than bark
-> (which is what the original code used to do).
-> 
-The original code did not set bit 1 of the WDT_EN register,
-and it did not set the bark time.
+Jessica
 
-> so I'd rather keep this condition unless you strongly oppose to it.
-> 
-
-Please feel free to petition  to Wim.
-
-> > 
-> >> +	return enable;
-> >> +}
-> >> +
-> >> +static irqreturn_t qcom_wdt_isr(int irq, void *arg)
-> >> +{
-> >> +	struct watchdog_device *wdd = arg;
-> >> +
-> >> +	watchdog_notify_pretimeout(wdd);
-> >> +
-> >> +	return IRQ_HANDLED;
-> >> +}
-> >> +
-> >>  static int qcom_wdt_start(struct watchdog_device *wdd)
-> >>  {
-> >>  	struct qcom_wdt *wdt = to_qcom_wdt(wdd);
-> >> +	unsigned int bark = wdd->timeout;
-> >> +
-> >> +	if (wdd->pretimeout)
-> >> +		bark = bark - wdd->pretimeout;
-> > 
-> > The if() just adds code and doesn't otherwise do any good.
-> 
-> yeah, was just for clarity and it is surely removed by the compiler. but
-> sure will remove
-> 
-> > 
-> >>  
-> >>  	writel(0, wdt_addr(wdt, WDT_EN));
-> >>  	writel(1, wdt_addr(wdt, WDT_RST));
-> >> -	writel(wdd->timeout * wdt->rate, wdt_addr(wdt, WDT_BARK_TIME));
-> >> +	writel(bark * wdt->rate, wdt_addr(wdt, WDT_BARK_TIME));
-> >>  	writel(wdd->timeout * wdt->rate, wdt_addr(wdt, WDT_BITE_TIME));
-> >> -	writel(1, wdt_addr(wdt, WDT_EN));
-> >> +	writel(qcom_get_enable(wdd), wdt_addr(wdt, WDT_EN));
-> >>  	return 0;
-> >>  }
-> >>  
-> >> @@ -89,6 +116,13 @@ static int qcom_wdt_set_timeout(struct watchdog_device *wdd,
-> >>  	return qcom_wdt_start(wdd);
-> >>  }
-> >>  
-> >> +static int qcom_wdt_set_pretimeout(struct watchdog_device *wdd,
-> >> +				   unsigned int timeout)
-> >> +{
-> >> +	wdd->pretimeout = timeout;
-> >> +	return qcom_wdt_start(wdd);
-> >> +}
-> >> +
-> >>  static int qcom_wdt_restart(struct watchdog_device *wdd, unsigned long action,
-> >>  			    void *data)
-> >>  {
-> >> @@ -105,7 +139,7 @@ static int qcom_wdt_restart(struct watchdog_device *wdd, unsigned long action,
-> >>  	writel(1, wdt_addr(wdt, WDT_RST));
-> >>  	writel(timeout, wdt_addr(wdt, WDT_BARK_TIME));
-> >>  	writel(timeout, wdt_addr(wdt, WDT_BITE_TIME));
-> >> -	writel(1, wdt_addr(wdt, WDT_EN));
-> >> +	writel(qcom_get_enable(wdd), wdt_addr(wdt, WDT_EN));
-> >>  
-> >>  	/*
-> >>  	 * Actually make sure the above sequence hits hardware before sleeping.
-> >> @@ -121,6 +155,7 @@ static const struct watchdog_ops qcom_wdt_ops = {
-> >>  	.stop		= qcom_wdt_stop,
-> >>  	.ping		= qcom_wdt_ping,
-> >>  	.set_timeout	= qcom_wdt_set_timeout,
-> >> +	.set_pretimeout	= qcom_wdt_set_pretimeout,
-> >>  	.restart        = qcom_wdt_restart,
-> >>  	.owner		= THIS_MODULE,
-> >>  };
-> >> @@ -133,6 +168,15 @@ static const struct watchdog_info qcom_wdt_info = {
-> >>  	.identity	= KBUILD_MODNAME,
-> >>  };
-> >>  
-> >> +static const struct watchdog_info qcom_wdt_pt_info = {
-> >> +	.options	= WDIOF_KEEPALIVEPING
-> >> +			| WDIOF_MAGICCLOSE
-> >> +			| WDIOF_SETTIMEOUT
-> >> +			| WDIOF_PRETIMEOUT
-> >> +			| WDIOF_CARDRESET,
-> >> +	.identity	= KBUILD_MODNAME,
-> >> +};
-> >> +
-> >>  static void qcom_clk_disable_unprepare(void *data)
-> >>  {
-> >>  	clk_disable_unprepare(data);
-> >> @@ -146,7 +190,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
-> >>  	struct device_node *np = dev->of_node;
-> >>  	const u32 *regs;
-> >>  	u32 percpu_offset;
-> >> -	int ret;
-> >> +	int irq, ret;
-> >>  
-> >>  	regs = of_device_get_match_data(dev);
-> >>  	if (!regs) {
-> >> @@ -204,7 +248,17 @@ static int qcom_wdt_probe(struct platform_device *pdev)
-> >>  		return -EINVAL;
-> >>  	}
-> >>  
-> >> -	wdt->wdd.info = &qcom_wdt_info;
-> >> +	irq = platform_get_irq(pdev, 0);
-> >> +	if (irq > 0) {
-> >> +		if (devm_request_irq(dev, irq, qcom_wdt_isr,
-> >> +				     IRQF_TRIGGER_RISING, "wdt_bark",
-> >> +				     &wdt->wdd))
-> >> +			irq = 0;
-> >> +	} else if (irq == -EPROBE_DEFER)
-> >> +		return -EPROBE_DEFER;
-> >> +
-> >> +	wdt->wdd.info = irq > 0 ? &qcom_wdt_pt_info : &qcom_wdt_info;
-> >> +	wdt->wdd.pretimeout = irq > 0 ? 1 : 0;
-> > 
-> > Why repeat the conditional ? It seems to me that something like
-> > 
-> > 	wdt->wdd.info = &qcom_wdt_info;
-> > 	...
-> > 	if (irq > 0) {
-> > 		wdt->wdd.info = &qcom_wdt_pt_info;
-> > 		wdt->wdd.pretimeout = 1;
-> > 		...
-> > 	}
-> > 
-> > would be much easier and avoid the repeated conditionals.
-> 
-> I agree. will change.
-> 
-> > 
-> >>  	wdt->wdd.ops = &qcom_wdt_ops;
-> >>  	wdt->wdd.min_timeout = 1;
-> >>  	wdt->wdd.max_timeout = 0x10000000U / wdt->rate;
-> >> -- 
-> >> 2.23.0
-> >>
-> > 
-> 
