@@ -2,168 +2,79 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F12C43140
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B304AC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EC64206A1
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:04:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99DC4206A1
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:11:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389252AbfIFIEC (ORCPT
+        id S2388808AbfIFILg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 04:04:02 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:55324 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728742AbfIFIEC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 04:04:02 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 042B8200589;
-        Fri,  6 Sep 2019 10:03:59 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 321242000EC;
-        Fri,  6 Sep 2019 10:03:52 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E4747402A5;
-        Fri,  6 Sep 2019 16:03:43 +0800 (SGT)
-From:   Biwen Li <biwen.li@nxp.com>
-To:     andy.shevchenko@gmail.com, rafael@kernel.org, leoyang.li@nxp.com,
-        meenakshi.aggarwal@nxp.com, udit.kumar@nxp.com, wsa@the-dreams.de,
-        rjw@rjwysocki.net
-Cc:     chuanhua.han@nxp.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Biwen Li <biwen.li@nxp.com>
-Subject: [v2] ACPI: support for NXP i2c controller
-Date:   Fri,  6 Sep 2019 15:53:19 +0800
-Message-Id: <20190906075319.21244-1-biwen.li@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 6 Sep 2019 04:11:36 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:58450 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726263AbfIFILg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 04:11:36 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1i69LB-0005py-VI; Fri, 06 Sep 2019 08:11:34 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Sylwester Nawrocki <sylvester.nawrocki@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] media: s3c-camif: make array 'registers' static const, makes object smaller
+Date:   Fri,  6 Sep 2019 09:11:33 +0100
+Message-Id: <20190906081133.22543-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuanhua Han <chuanhua.han@nxp.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-Enable NXP i2c controller to boot with ACPI
+Don't populate the array 'registers' on the stack but instead make it
+static const. Makes the object code smaller by 45 bytes.
 
-Signed-off-by: Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>
-Signed-off-by: Udit Kumar <udit.kumar@nxp.com>
-Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
-Signed-off-by: Biwen Li <biwen.li@nxp.com>
+Before:
+   text	   data	    bss	    dec	    hex	filename
+  17364	   5000	      0	  22364	   575c	platform/s3c-camif/camif-regs.o
+
+After:
+   text	   data	    bss	    dec	    hex	filename
+  17255	   5064	      0	  22319	   572f	platform/s3c-camif/camif-regs.o
+
+(gcc version 9.2.1, amd64)
+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
-Change in v2:
-	- Simplify code
-	- Adjust header file order
-	- Not use ACPI_PTR()
+ drivers/media/platform/s3c-camif/camif-regs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- drivers/acpi/acpi_apd.c      |  7 +++++++
- drivers/i2c/busses/i2c-imx.c | 17 +++++++++++++----
- 2 files changed, 20 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/acpi/acpi_apd.c b/drivers/acpi/acpi_apd.c
-index 7cd0c9ac71ea..71511ae2dfcd 100644
---- a/drivers/acpi/acpi_apd.c
-+++ b/drivers/acpi/acpi_apd.c
-@@ -160,11 +160,17 @@ static const struct apd_device_desc hip08_i2c_desc = {
- 	.setup = acpi_apd_setup,
- 	.fixed_clk_rate = 250000000,
- };
-+
- static const struct apd_device_desc thunderx2_i2c_desc = {
- 	.setup = acpi_apd_setup,
- 	.fixed_clk_rate = 125000000,
- };
+diff --git a/drivers/media/platform/s3c-camif/camif-regs.c b/drivers/media/platform/s3c-camif/camif-regs.c
+index 1a65532dc36d..e80204f5720c 100644
+--- a/drivers/media/platform/s3c-camif/camif-regs.c
++++ b/drivers/media/platform/s3c-camif/camif-regs.c
+@@ -553,7 +553,7 @@ void camif_hw_disable_capture(struct camif_vp *vp)
  
-+static const struct apd_device_desc nxp_i2c_desc = {
-+	.setup = acpi_apd_setup,
-+	.fixed_clk_rate = 350000000,
-+};
-+
- static const struct apd_device_desc hip08_spi_desc = {
- 	.setup = acpi_apd_setup,
- 	.fixed_clk_rate = 250000000,
-@@ -238,6 +244,7 @@ static const struct acpi_device_id acpi_apd_device_ids[] = {
- 	{ "HISI02A1", APD_ADDR(hip07_i2c_desc) },
- 	{ "HISI02A2", APD_ADDR(hip08_i2c_desc) },
- 	{ "HISI0173", APD_ADDR(hip08_spi_desc) },
-+	{ "NXP0001", APD_ADDR(nxp_i2c_desc) },
- #endif
- 	{ }
- };
-diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
-index 15f6cde6452f..a3b61336fe55 100644
---- a/drivers/i2c/busses/i2c-imx.c
-+++ b/drivers/i2c/busses/i2c-imx.c
-@@ -20,6 +20,7 @@
-  *
-  */
- 
-+#include <linux/acpi.h>
- #include <linux/clk.h>
- #include <linux/completion.h>
- #include <linux/delay.h>
-@@ -255,6 +256,12 @@ static const struct of_device_id i2c_imx_dt_ids[] = {
- };
- MODULE_DEVICE_TABLE(of, i2c_imx_dt_ids);
- 
-+static const struct acpi_device_id i2c_imx_acpi_ids[] = {
-+	{"NXP0001", .driver_data = (kernel_ulong_t)&vf610_i2c_hwdata},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(acpi, i2c_imx_acpi_ids);
-+
- static inline int is_imx1_i2c(struct imx_i2c_struct *i2c_imx)
+ void camif_hw_dump_regs(struct camif_dev *camif, const char *label)
  {
- 	return i2c_imx->hwdata->devtype == IMX1_I2C;
-@@ -1048,14 +1055,13 @@ static const struct i2c_algorithm i2c_imx_algo = {
- 
- static int i2c_imx_probe(struct platform_device *pdev)
- {
--	const struct of_device_id *of_id = of_match_device(i2c_imx_dt_ids,
--							   &pdev->dev);
- 	struct imx_i2c_struct *i2c_imx;
- 	struct resource *res;
- 	struct imxi2c_platform_data *pdata = dev_get_platdata(&pdev->dev);
- 	void __iomem *base;
- 	int irq, ret;
- 	dma_addr_t phy_addr;
-+	const struct imx_i2c_hwdata *match;
- 
- 	dev_dbg(&pdev->dev, "<%s>\n", __func__);
- 
-@@ -1075,8 +1081,9 @@ static int i2c_imx_probe(struct platform_device *pdev)
- 	if (!i2c_imx)
- 		return -ENOMEM;
- 
--	if (of_id)
--		i2c_imx->hwdata = of_id->data;
-+	match = device_get_match_data(&pdev->dev);
-+	if (match)
-+		i2c_imx->hwdata = match;
- 	else
- 		i2c_imx->hwdata = (struct imx_i2c_hwdata *)
- 				platform_get_device_id(pdev)->driver_data;
-@@ -1089,6 +1096,7 @@ static int i2c_imx_probe(struct platform_device *pdev)
- 	i2c_imx->adapter.nr		= pdev->id;
- 	i2c_imx->adapter.dev.of_node	= pdev->dev.of_node;
- 	i2c_imx->base			= base;
-+	ACPI_COMPANION_SET(&i2c_imx->adapter.dev, ACPI_COMPANION(&pdev->dev));
- 
- 	/* Get I2C clock */
- 	i2c_imx->clk = devm_clk_get(&pdev->dev, NULL);
-@@ -1247,6 +1255,7 @@ static struct platform_driver i2c_imx_driver = {
- 		.name = DRIVER_NAME,
- 		.pm = &i2c_imx_pm_ops,
- 		.of_match_table = i2c_imx_dt_ids,
-+		.acpi_match_table = i2c_imx_acpi_ids,
- 	},
- 	.id_table = imx_i2c_devtype,
- };
+-	struct {
++	static const struct {
+ 		u32 offset;
+ 		const char * const name;
+ 	} registers[] = {
 -- 
-2.17.1
+2.20.1
 
