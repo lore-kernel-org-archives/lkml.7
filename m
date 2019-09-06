@@ -2,109 +2,143 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D79C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A07C00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71A8F20842
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:37:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 616C420842
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:39:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bM//DYNk"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iT3e59oW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392526AbfIFHhi (ORCPT
+        id S2392529AbfIFHjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 03:37:38 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:2505 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389651AbfIFHhi (ORCPT
+        Fri, 6 Sep 2019 03:39:37 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:34420 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728769AbfIFHjh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 03:37:38 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d720cc50000>; Fri, 06 Sep 2019 00:37:41 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 06 Sep 2019 00:37:37 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 06 Sep 2019 00:37:37 -0700
-Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 6 Sep
- 2019 07:37:35 +0000
-Subject: Re: [PATCH 5.2 000/143] 5.2.12-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20190904175314.206239922@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <5b19ac14-31c8-227d-c0c5-741abb65b7d6@nvidia.com>
-Date:   Fri, 6 Sep 2019 08:37:33 +0100
+        Fri, 6 Sep 2019 03:39:37 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x867dRJB053866;
+        Fri, 6 Sep 2019 02:39:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1567755567;
+        bh=z6Nh68YYvTDDh5HiSd5ce/6VHBCPMMXmMgbKOM1slds=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=iT3e59oWcC9/GWHtEvNJFERDlEd0VDsMZpqKav5auCLqqTQwYdbZs8EqQFLsI8XrU
+         SXq+HElmMR2X3k2eAlJiw/9PISXTbdHV2qiKjDSy6p68s2Y/5sQfQBKhxd+rYVubVD
+         tfqhQNMpcmlE5XUW7wOdQ6USYzAY9iKr+slbYk7g=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x867dRN6029677;
+        Fri, 6 Sep 2019 02:39:27 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 6 Sep
+ 2019 02:39:26 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 6 Sep 2019 02:39:26 -0500
+Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x867dNc9078451;
+        Fri, 6 Sep 2019 02:39:23 -0500
+Subject: Re: [PATCH] bus: ti-sysc: Fix handling of invalid clocks
+To:     Tony Lindgren <tony@atomide.com>, <linux-omap@vger.kernel.org>
+CC:     "Andrew F . Davis" <afd@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190905215356.8168-1-tony@atomide.com>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <3c9f7340-f17f-cecd-3ae4-ec8a1af7c2bf@ti.com>
+Date:   Fri, 6 Sep 2019 10:39:22 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190905215356.8168-1-tony@atomide.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1567755461; bh=W+NkiE7QoaFU+ZJdnpNGVoh/5InKLgkQpXj8yGTK1cE=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=bM//DYNkXZ74XweT9jAE3sACLtevwkiIQakzXhuwWHvwfLBa8NGc9voHbqaS7+D3Y
-         rVHYBWnvQo2WGW/XLWOphM1fkWit552vzsjfQH4h2Lo8G05QCw2yOhgCRkKSUyzfEl
-         WV0KrMGIf7vKQ4tbi+s+YxA99LuReqvT088vVjjLq6ZAiCcpoJ93x5Ug+qx5uV590A
-         cOueRYrNygx4T3OEYtHAqIQm95PHZyBiToJBe7qx1MTR+P8QbCP9uEWQzAEPCzWJ1M
-         VWqIj/f1XyQNcFns/JlxYlZzIvspUILVPogVFYW6fXsQBMboNvPxSG6jTH9Jl4Sn1h
-         0xjWm+UIMD8vA==
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 04/09/2019 18:52, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.2.12 release.
-> There are 143 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On 06/09/2019 00:53, Tony Lindgren wrote:
+> We can currently get "Unable to handle kernel paging request at
+> virtual address" for invalid clocks with dts node but no driver:
 > 
-> Responses should be made by Fri 06 Sep 2019 05:50:23 PM UTC.
-> Anything received after that time might be too late.
+> (__clk_get_hw) from [<c0138ebc>] (ti_sysc_find_one_clockdomain+0x18/0x34)
+> (ti_sysc_find_one_clockdomain) from [<c0138f0c>] (ti_sysc_clkdm_init+0x34/0xdc)
+> (ti_sysc_clkdm_init) from [<c0584660>] (sysc_probe+0xa50/0x10e8)
+> (sysc_probe) from [<c065c6ac>] (platform_drv_probe+0x58/0xa8)
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.12-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
-> and the diffstat can be found below.
+> Let's add IS_ERR checks to ti_sysc_clkdm_init() as And let's start treating
+> clk_get() with -ENOENT as a proper error. If the clock name is specified
+> in device tree we must succeed with clk_get() to continue. For modules with
+> no clock names specified in device tree we will just ignore the clocks.
 > 
-> thanks,
+> Fixes: 2b2f7def058a ("bus: ti-sysc: Add support for missing clockdomain handling")
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+
+Acked-by: Roger Quadros <rogerq@ti.com>
+
+> ---
+>   arch/arm/mach-omap2/pdata-quirks.c | 4 ++--
+>   drivers/bus/ti-sysc.c              | 5 +----
+>   2 files changed, 3 insertions(+), 6 deletions(-)
 > 
-> greg k-h
-
-All tests are passing for Tegra ...
-
-Test results for stable-v5.2:
-    12 builds:	12 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    38 tests:	38 pass, 0 fail
-
-Linux version:	5.2.12-rc1-gb6eedcb8cf66
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
-
-Cheers
-Jon
+> diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
+> --- a/arch/arm/mach-omap2/pdata-quirks.c
+> +++ b/arch/arm/mach-omap2/pdata-quirks.c
+> @@ -491,11 +491,11 @@ static int ti_sysc_clkdm_init(struct device *dev,
+>   			      struct clk *fck, struct clk *ick,
+>   			      struct ti_sysc_cookie *cookie)
+>   {
+> -	if (fck)
+> +	if (!IS_ERR(fck))
+>   		cookie->clkdm = ti_sysc_find_one_clockdomain(fck);
+>   	if (cookie->clkdm)
+>   		return 0;
+> -	if (ick)
+> +	if (!IS_ERR(ick))
+>   		cookie->clkdm = ti_sysc_find_one_clockdomain(ick);
+>   	if (cookie->clkdm)
+>   		return 0;
+> diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+> --- a/drivers/bus/ti-sysc.c
+> +++ b/drivers/bus/ti-sysc.c
+> @@ -280,9 +280,6 @@ static int sysc_get_one_clock(struct sysc *ddata, const char *name)
+>   
+>   	ddata->clocks[index] = devm_clk_get(ddata->dev, name);
+>   	if (IS_ERR(ddata->clocks[index])) {
+> -		if (PTR_ERR(ddata->clocks[index]) == -ENOENT)
+> -			return 0;
+> -
+>   		dev_err(ddata->dev, "clock get error for %s: %li\n",
+>   			name, PTR_ERR(ddata->clocks[index]));
+>   
+> @@ -357,7 +354,7 @@ static int sysc_get_clocks(struct sysc *ddata)
+>   			continue;
+>   
+>   		error = sysc_get_one_clock(ddata, name);
+> -		if (error && error != -ENOENT)
+> +		if (error)
+>   			return error;
+>   	}
+>   
+> 
 
 -- 
-nvpublic
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
