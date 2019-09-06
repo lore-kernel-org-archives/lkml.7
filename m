@@ -2,182 +2,182 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2217CC00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4984AC00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC017218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:15:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 192E020838
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:16:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="gvGNNYDM"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="V/cjasBt";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="Fbu0xjgi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404311AbfIFRPX (ORCPT
+        id S2406001AbfIFRQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 13:15:23 -0400
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.82]:21650 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391025AbfIFRPW (ORCPT
+        Fri, 6 Sep 2019 13:16:31 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:53818 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2404253AbfIFRQb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 13:15:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1567790117;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=buKu5hjInnzvyOfqmb2TKwkajlRXIz+/+dwMu1dYtdI=;
-        b=gvGNNYDM7OqBA/fDLh2AEI0mrpwjWaGb27FiVrX/9t4apz96jJVq/is3Yqbn0rYnCI
-        ccIw14IVpYjDUeV7si/GmkeJj0O1UYPise8Zjt28NQlB6q3j/phKZnR0PZSi+jMRBf6/
-        9OC/8TBaceJQStHg5MgaCCjFyiF0o3xKnQMRTXP6ZAesEVuwfo4efkR69jedPrgDTv0b
-        gGvDl19qR75U0Uuq7A32rBFz2NhfgS3jha2VpRo0Vj/3oAFBDs7OCrQ6m5FUlx2WbJ33
-        iSXrWSru2OPPo6sQPorc1vAS0FuCfeLM5Z3g22Jhhxw8pYPBNl/iMLj/rXNJEVYg5CVy
-        zGUg==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/PqwDqp5w=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 44.27.0 DYNA|AUTH)
-        with ESMTPSA id u036f9v86HF9pfI
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Fri, 6 Sep 2019 19:15:09 +0200 (CEST)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [RFC v2 3/3] ARM: dts: omap3: bulk convert compatible to be explicitly ti,omap3430 or ti,omap36xx
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <8C8644AC-FA12-4D26-B96A-76B78798612A@goldelico.com>
-Date:   Fri, 6 Sep 2019 19:15:09 +0200
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        =?utf-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pm@vger.kernel.org,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+        Fri, 6 Sep 2019 13:16:31 -0400
+Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 72E4AC0E6E;
+        Fri,  6 Sep 2019 17:16:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1567790190; bh=kWI9VgqhXX+/hmGmLXK/piySnsf9ewxhsNjI3CkoVM0=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=V/cjasBtprSQtjbsMIKtqtHM9zlANNbrfEmzgU3MxcU0ri0/fRMNWklqdDSDsjqZJ
+         58DgzERdQC0zuLN7y9YA9mptYWoKJ3B2pIVxE4Q9ckrsImrO8DZXdvez0K0YA1wF7Z
+         SeuFy/3gRqFbUJ3j1mnd64rtRvAGA0kvB7nvaN+H181LlFBl7VJZqQAWYw0zj+/47V
+         rDc+Ud3H4fPIu2w7UmDDfU9oSA+LMX8Q/v5L0nknqS9YSIeiL15kIVj4WTe3clUsC2
+         gzPQ47u0QON0QC8zAAM+aZAyl1F6r063pgTAwmD/Oe+Aeo3uJGHg1dy+ddpenF9vFL
+         hsZn5wrlAXzpw==
+Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
+        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 6FB6BA0097;
+        Fri,  6 Sep 2019 17:16:29 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WXQAHTC1.internal.synopsys.com (10.12.238.230) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 6 Sep 2019 10:16:28 -0700
+Received: from NAM05-DM3-obe.outbound.protection.outlook.com (10.13.134.195)
+ by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Fri, 6 Sep 2019 10:16:28 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iRdz0EPfuJwHBgMioUz8ZiKqGXMui6aDBebCC+7P8Pb+FaiavfAwvu8uzcL8PelIB9IMz2bC8UgcemqkjMngdqVTj7AEuwpqH1Fz39U3HrkgiaxXLCY1aLVlhNUzufyyAE1fInimaJvjN3NqKqsvwoDSo92uH8Gn3RoiDz3Y7hBPxWlrm4UZOulb3gh3lqGKK0wCtcm+3tM93j7IO+0gM8fnejNmVpMpdjcw5PEuquprX3g9S6yhCtTlNTDCHWwTx6YAUEGK//Yr5qG15PWqhBsZTbUBUhwO62dNkooHeE5Fep9XZEc4VsdJyD/PrMg9qJmszOEElVQtFV9dVXtxlQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ddpjCxsYQiS8uaEMuGq1luFTm+nMKX2prvN5BkznKQo=;
+ b=oIO+0BJ5ObSoXPikhV+FxPZLnddBLgI86kUZQhEAOxOTq/Sr6WwtCa03DATDQ58ZIpm6ba96VFAu2E8yPxzufQoJwBvEUs/uNE0LxiTyOtrOoJn+JEMT9Z3EAjyeQbhKeE8JcKaNqx19ng58OZbpZ5HGymOsyA7WU+DMVqvQQBS2x+wVRGBFP22CKj6aRIZi14wegpUh5Lr7mdT0j1m9OT2wXpCOURuO+rVYY7Y4IqeQrQBqbdeizW+PDpIYa7FHOca+i1G/xeuESXcBoypH47stmhhPPZEIihvseI/t8yOVzoV1M9iqz1O45BQiMW9CGglGtdlTeUPN8hCxX+cQHQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ddpjCxsYQiS8uaEMuGq1luFTm+nMKX2prvN5BkznKQo=;
+ b=Fbu0xjgiCnbke3VjHdOyTLEMQ9plL/svviZDprJd58iNnmwJPdUnBOHP8ZExxMugVGSZCNRK2guPgDj6jr6mTPX7dh2NJIdagnJ+qWsbKn3FOgFQa+Mq5NGEGlUU/Mx97L+HJwKAIwjHAqmMMC28UMfXU/Lkg8YDyvYfdu2a8tc=
+Received: from BY5PR12MB4034.namprd12.prod.outlook.com (52.135.53.73) by
+ BY5PR12MB4116.namprd12.prod.outlook.com (10.255.126.13) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2241.15; Fri, 6 Sep 2019 17:16:27 +0000
+Received: from BY5PR12MB4034.namprd12.prod.outlook.com
+ ([fe80::a586:3851:b734:476]) by BY5PR12MB4034.namprd12.prod.outlook.com
+ ([fe80::a586:3851:b734:476%2]) with mapi id 15.20.2241.014; Fri, 6 Sep 2019
+ 17:16:27 +0000
+From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+To:     YueHaibing <yuehaibing@huawei.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>
+CC:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
+Subject: Re: [PATCH -next] gpio: creg-snps: use
+ devm_platform_ioremap_resource() to simplify code
+Thread-Topic: [PATCH -next] gpio: creg-snps: use
+ devm_platform_ioremap_resource() to simplify code
+Thread-Index: AQHVZLnZrjliSypkrkeFuMimSB9ye6ce42L/
+Date:   Fri, 6 Sep 2019 17:16:27 +0000
+Message-ID: <BY5PR12MB4034937150040335D9C68FF9DEBA0@BY5PR12MB4034.namprd12.prod.outlook.com>
+References: <20190906131032.22148-1-yuehaibing@huawei.com>
+In-Reply-To: <20190906131032.22148-1-yuehaibing@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=paltsev@synopsys.com; 
+x-originating-ip: [84.204.78.101]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 22c4ee1e-228b-43c1-32ee-08d732edf3b7
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BY5PR12MB4116;
+x-ms-traffictypediagnostic: BY5PR12MB4116:
+x-microsoft-antispam-prvs: <BY5PR12MB41160F9640E38B574A91A7D6DEBA0@BY5PR12MB4116.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:792;
+x-forefront-prvs: 0152EBA40F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(39850400004)(346002)(396003)(136003)(376002)(199004)(189003)(66556008)(6436002)(316002)(6116002)(3846002)(66946007)(64756008)(66446008)(2906002)(7696005)(66476007)(110136005)(54906003)(76116006)(91956017)(6246003)(66066001)(4326008)(229853002)(26005)(14454004)(55016002)(9686003)(102836004)(53546011)(53936002)(6506007)(76176011)(25786009)(186003)(446003)(8936002)(81166006)(81156014)(8676002)(11346002)(2501003)(486006)(476003)(478600001)(256004)(86362001)(2201001)(71200400001)(71190400001)(52536014)(5660300002)(99286004)(305945005)(7736002)(74316002)(33656002);DIR:OUT;SFP:1102;SCL:1;SRVR:BY5PR12MB4116;H:BY5PR12MB4034.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 7LRpQWD6v0TxLJmXi922dKqzJhAN8wDaX+Nllh5dZy28Aut4aRtLkJ3cU3AlvAz0vuLJqYA7mg+4zYxfjowp0Ln977WIH3h3AIx2pbvHB30zNUezCe68QEvFvBNXu9B9nKB3aCTbvKndrUzhBIHejUB4TrR3Hk6UewARce9M/GvQYOQZ2dNSL929hJr+cQcWAAQF2ByIeRGb2F/e73dESKNXF5jBOgf9VddvcpX885dh4kdsh2tIlRXtO8R6uAuEBsQJ0r3fhSy5/Mp+k+vtQSESKpsT6FuZ1xbVzfT698u6s0KpicW23PR3B+MonHioPnB9Z8pBHCQLedz+p8CiQQeayPNZbXpvwxXntIcRQdZTHx/vYkRmfkX3LpYVS1PO9fwriUn+3+0yoLDneXRFA+44WaUZOWv4w8uq1hOGq2g=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <2BA36283-F867-44C0-8AAA-B7CCFA616C8D@goldelico.com>
-References: <cover.1567587220.git.hns@goldelico.com> <a2b56edcada7b9000a6e906387a02c0ee42681db.1567587220.git.hns@goldelico.com> <20190905142734.GV52127@atomide.com> <4BC39938-D63E-4BDC-BA28-5132F77F602D@goldelico.com> <20190906154732.GC52127@atomide.com> <8C8644AC-FA12-4D26-B96A-76B78798612A@goldelico.com>
-To:     Tony Lindgren <tony@atomide.com>
-X-Mailer: Apple Mail (2.3124)
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 22c4ee1e-228b-43c1-32ee-08d732edf3b7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Sep 2019 17:16:27.2581
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: TcnsXXKlddpRRofVIjEdnX9XOLyrByO3qtGwfiqq813dRdyuS9anb9NBf6VZSae1d362ya09lvPpwIsoZEsunA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4116
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-> Am 06.09.2019 um 19:08 schrieb H. Nikolaus Schaller =
-<hns@goldelico.com>:
->=20
-> Hi Tony,
->=20
->> Am 06.09.2019 um 17:47 schrieb Tony Lindgren <tony@atomide.com>:
->>=20
->> * H. Nikolaus Schaller <hns@goldelico.com> [190906 07:53]:
->>>> Am 05.09.2019 um 16:27 schrieb Tony Lindgren <tony@atomide.com>:
->>>> compatible =3D "ti,omap3-ldp", "ti,omap3430", "ti,omap34xx", =
-"ti,omap3";
->>>=20
->>> After thinking a little about the whole topic the main rule of this =
-change must be:
->>>=20
->>> * do not break any existing in-tree DTS
->>> 	=3D> only *add* to compatible what we need to distinguish =
-between omap34 and omap36
->>>=20
->>> * additions shall only follow new scheme
->>> 	=3D> we only add "ti,omap34xx" or "ti,omap36xx"
->>>          but neither "ti,omap3630" nor "ti,omap3430"
->>=20
->> Sorry I don't follow you on this one.. We should always add =
-"ti,omap3630"
->> where "ti,omap36xx" is currently used so we can eventually get rid of
->> "ti,omap36xx". And the same for 34xx.
->=20
-> Ah, ok now I see.
->=20
-> You want to make the "ti,omap3630" the official one and "ti,omap36xx" =
-legacy.
-> It is probably an arbitrary choice if we want to get rid of the xx or =
-the 30.
->=20
-> I had thought to do it the other way round because I had done this =
-statistics:
->=20
-> for i in 3430 34xx 3630 36xx; do echo $i $(fgrep '"'ti,omap$i'"' =
-arch/arm/boot/dts/*.dts* | wc -l); done
->=20
-> 3430 12
-> 34xx 28
-> 3630 3
-> 36xx 23
-
-sorry, here is the correct result. I had some .bak files sitting around:
-
-3430 12
-34xx 5
-3630 3
-36xx 23
-
-> which would indicate that 34xx and 36xx are more common.
->=20
->>> * cover some out-of-tree DTS
->>> 	=3D> make the ti-cpufreq driver still match "ti,omap3430" or =
-"ti,omap3630"
->>> 	   even if this duplicates compatibility
->>>=20
->>> This would mean that the logicpd-som-lv-37xx-devkit.dts gets the =
-additional "ti,omap36xx"
->>> while the omap3-ldp.dts would only get an "ti,omap34xx" but no =
-"ti,omap3430" (since we
->>> do not use it anywhere).
->>>=20
->>> Could you agree on this approach?
->>=20
->> Yeah sounds like logicpd-som-lv-37xx-devkit.dts currently still needs
->> "ti,omap36xx" for now.
->>=20
->> If modifying omap3-ldp.dts, also add "ti,omap3430" in additon to
->> "ti,omap34xx" that it already has.
->>=20
->> So basically let's assume the following:
->>=20
->> "ti,omap3430" =3D=3D "ti,omap34xx"
->> "ti,omap3630" =3D=3D "ti,omap36xx"
->>=20
->> This means code needs to parse both.
->=20
-> Yes, it already does everywhere.
->=20
-> BTW there is also some code that does special SoC detection based on
-> soc_device_match(), mainly in omapdrm/dss.
->=20
-> If we were to use this mechanism in the ti-cpufreq driver we could
-> match it to ti,omap3 and could avoid all these changes.
->=20
-> But make it less maintainable and code more complex.
->=20
->>=20
->> And eventually we just drop the "xx" variants.
->=20
->>=20
->> So while patching compatibles, let's also update for this to
->> avoid multiple patches churning the same compatibles over and
->> over.
->=20
-> Ok. I'll rework the patch so that we never add "ti,34xx" or "ti,36xx"
-> but add "ti,3430" or "ti,3630" if missing.
->=20
-> I'll also take a look at omap.txt bindings since that likely needs
-> an update as well to better describe what the official ones are
-> and which are legacy.
->=20
-> BR and thanks,
-> Nikolaus
->=20
-
+Hi YueHaibing,=0A=
+=0A=
+thanks,=0A=
+Acked-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>=0A=
+=0A=
+---=0A=
+ Eugeniy Paltsev=0A=
+=0A=
+=0A=
+________________________________________=0A=
+From: YueHaibing <yuehaibing@huawei.com>=0A=
+Sent: Friday, September 6, 2019 16:10=0A=
+To: Eugeniy.Paltsev@synopsys.com; linus.walleij@linaro.org; bgolaszewski@ba=
+ylibre.com=0A=
+Cc: linux-gpio@vger.kernel.org; linux-kernel@vger.kernel.org; kernel-janito=
+rs@vger.kernel.org; YueHaibing=0A=
+Subject: [PATCH -next] gpio: creg-snps: use devm_platform_ioremap_resource(=
+) to simplify code=0A=
+=0A=
+Use devm_platform_ioremap_resource() to simplify the code a bit.=0A=
+This is detected by coccinelle.=0A=
+=0A=
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>=0A=
+---=0A=
+ drivers/gpio/gpio-creg-snps.c | 4 +---=0A=
+ 1 file changed, 1 insertion(+), 3 deletions(-)=0A=
+=0A=
+diff --git a/drivers/gpio/gpio-creg-snps.c b/drivers/gpio/gpio-creg-snps.c=
+=0A=
+index 8cbc94d..ff19a8a 100644=0A=
+--- a/drivers/gpio/gpio-creg-snps.c=0A=
++++ b/drivers/gpio/gpio-creg-snps.c=0A=
+@@ -137,7 +137,6 @@ static int creg_gpio_probe(struct platform_device *pdev=
+)=0A=
+        const struct of_device_id *match;=0A=
+        struct device *dev =3D &pdev->dev;=0A=
+        struct creg_gpio *hcg;=0A=
+-       struct resource *mem;=0A=
+        u32 ngpios;=0A=
+        int ret;=0A=
+=0A=
+@@ -145,8 +144,7 @@ static int creg_gpio_probe(struct platform_device *pdev=
+)=0A=
+        if (!hcg)=0A=
+                return -ENOMEM;=0A=
+=0A=
+-       mem =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);=0A=
+-       hcg->regs =3D devm_ioremap_resource(dev, mem);=0A=
++       hcg->regs =3D devm_platform_ioremap_resource(pdev, 0);=0A=
+        if (IS_ERR(hcg->regs))=0A=
+                return PTR_ERR(hcg->regs);=0A=
+=0A=
+--=0A=
+2.7.4=0A=
+=0A=
+=0A=
