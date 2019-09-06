@@ -2,388 +2,136 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 800E5C43140
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 23:51:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E829DC47401
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 23:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51190214E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 23:51:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C37CF206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 23:52:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N8apvxEu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393239AbfIFXvX (ORCPT
+        id S2393279AbfIFXwO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 19:51:23 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:49472 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390921AbfIFXvU (ORCPT
+        Fri, 6 Sep 2019 19:52:14 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35477 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731868AbfIFXwN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 19:51:20 -0400
-Received: from prsriva-Precision-Tower-5810.corp.microsoft.com (unknown [167.220.2.18])
-        by linux.microsoft.com (Postfix) with ESMTPSA id C50CC20B7187;
-        Fri,  6 Sep 2019 16:51:18 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C50CC20B7187
-From:   Prakhar Srivastava <prsriva@linux.microsoft.com>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     arnd@arndb.de, jean-philippe@linaro.org, allison@lohutok.net,
-        kristina.martsenko@arm.org, yamada.masahiro@socionext.com,
-        duwe@lst.de, mark.rutland@arm.com, tglx@linutronix.de,
-        takahiro.akashi@linaro.org, james.morse@arm.org,
-        catalin.marinas@arm.com, sboyd@kernel.org, bauerman@linux.ibm.com
-Subject: [RFC][PATCH v1 1/1] Add support for arm64 to carry ima measurement log in kexec_file_load
-Date:   Fri,  6 Sep 2019 16:51:10 -0700
-Message-Id: <20190906235110.15566-2-prsriva@linux.microsoft.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190906235110.15566-1-prsriva@linux.microsoft.com>
-References: <20190906235110.15566-1-prsriva@linux.microsoft.com>
+        Fri, 6 Sep 2019 19:52:13 -0400
+Received: by mail-lj1-f195.google.com with SMTP id q22so2928529ljj.2
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 16:52:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7gt+dprtIaWWWiehpVBpT9gjTU5sJKWHbohiXhkeDVw=;
+        b=N8apvxEuyAMDm7IdWzHrNax6Ft6Lvj8/T5bGsnuBYBtBJ5220TDZcpKa/hGVGfOAHk
+         oloaJcf7HJINFllAa8ld9Vm/vwaHXJCNdjdU3jX3LY2J83sYJMHZLqDnN/LzOpY1Wqf4
+         gXWFd7YiKBxu+RyqKpqecrgh2H0RVgIVuybb9Jg2GV6XXGaYImkOrd6BhLOiByqE+pYS
+         3i2TeTS9cvlSA1odIj+9mEqPiVH/fuRdT2gy+pCu4aA1pWyjAwZw+4I3F4wNPeLxZfX2
+         QqmHBqKAV3MpPRe2IeOcum5xzZmiAxpUX/8nMZfJeNXM2p0zHBpMMa96l7uVfATdoEuo
+         83bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=7gt+dprtIaWWWiehpVBpT9gjTU5sJKWHbohiXhkeDVw=;
+        b=R25DFim4P2DYb+nim5L/lU5RiFHpr+hM1vkThR2ivsGaaAxEACDCABZR9cQim/0L+T
+         60pQcl5HGwYI8eHT8FUhUcIcAd3F7b0P9uIcGyz3LzIaQZfwOJyOaX1hazC7qX4o9UD5
+         phGsWCKhMJw05Q5f2nc6419WzA/CH4iiATWu/GKe24jB2Teb6paLI8ozwJyKKogoYgQ4
+         /itJHjB8WiFbTRqdSq1m5WMyIL6uRkHPjGFbtYgsCFoOnFw0lwo42PyLh++FIipp0waq
+         p65D9Pf2YDvYJUAurcjEFBKwslQO1s0lEzOgK0P8lNkMVIlFIWwQa6lf1UmpzhZJ/1xv
+         iGyA==
+X-Gm-Message-State: APjAAAWaLOf9nS8aEnxMc5VE6L9jOI0nE253wQYNtx2J0kAk+ZpUVhYS
+        rS3yONVlwDkM0Hyzbpss5+yF76aRlCU=
+X-Google-Smtp-Source: APXvYqzks9jN+Vc+WCVfIT3Izxu7CuU+7cTYAXJzMrP6IaIIHCaeKcyAscaFaspGG5UANI+GaQJ7fg==
+X-Received: by 2002:a2e:b4db:: with SMTP id r27mr7238028ljm.110.1567813931698;
+        Fri, 06 Sep 2019 16:52:11 -0700 (PDT)
+Received: from khorivan (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
+        by smtp.gmail.com with ESMTPSA id t5sm1408113lfl.91.2019.09.06.16.52.10
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 06 Sep 2019 16:52:11 -0700 (PDT)
+Date:   Sat, 7 Sep 2019 02:52:08 +0300
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com,
+        davem@davemloft.net, jakub.kicinski@netronome.com, hawk@kernel.org,
+        john.fastabend@gmail.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH bpf-next 2/8] samples: bpf: Makefile: remove target for
+ native build
+Message-ID: <20190906235207.GA3053@khorivan>
+Mail-Followup-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        ast@kernel.org, daniel@iogearbox.net, yhs@fb.com,
+        davem@davemloft.net, jakub.kicinski@netronome.com, hawk@kernel.org,
+        john.fastabend@gmail.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+References: <20190904212212.13052-1-ivan.khoronzhuk@linaro.org>
+ <20190904212212.13052-3-ivan.khoronzhuk@linaro.org>
+ <20190906233138.4d4fqdnlbikemhau@ast-mbp.dhcp.thefacebook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190906233138.4d4fqdnlbikemhau@ast-mbp.dhcp.thefacebook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During kexec_file_load, carrying forward the ima measurement log allows
-a verifying party to get the entire runtime event log since the last
-full reboot since that is when PCRs were last reset.
+On Fri, Sep 06, 2019 at 04:31:39PM -0700, Alexei Starovoitov wrote:
+>On Thu, Sep 05, 2019 at 12:22:06AM +0300, Ivan Khoronzhuk wrote:
+>> No need to set --target for native build, at least for arm, the
+>> default target will be used anyway. In case of arm, for at least
+>> clang 5 - 10 it causes error like:
+>>
+>> clang: warning: unknown platform, assuming -mfloat-abi=soft
+>> LLVM ERROR: Unsupported calling convention
+>> make[2]: *** [/home/root/snapshot/samples/bpf/Makefile:299:
+>> /home/root/snapshot/samples/bpf/sockex1_kern.o] Error 1
+>>
+>> Only set to real triple helps: --target=arm-linux-gnueabihf
+>> or just drop the target key to use default one. Decision to just
+>> drop it and thus default target will be used (wich is native),
+>> looks better.
+>>
+>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+>> ---
+>>  samples/bpf/Makefile | 2 --
+>>  1 file changed, 2 deletions(-)
+>>
+>> diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
+>> index 61b7394b811e..a2953357927e 100644
+>> --- a/samples/bpf/Makefile
+>> +++ b/samples/bpf/Makefile
+>> @@ -197,8 +197,6 @@ BTF_PAHOLE ?= pahole
+>>  ifdef CROSS_COMPILE
+>>  HOSTCC = $(CROSS_COMPILE)gcc
+>>  CLANG_ARCH_ARGS = --target=$(notdir $(CROSS_COMPILE:%-=%))
+>> -else
+>> -CLANG_ARCH_ARGS = -target $(ARCH)
+>>  endif
+>
+>I don't follow here.
+>Didn't you introduce this bug in patch 1 and now fixing it in patch 2?
+>
 
-Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
----
- arch/arm64/Kconfig                     |   7 +
- arch/arm64/include/asm/ima.h           |  29 ++++
- arch/arm64/include/asm/kexec.h         |   5 +
- arch/arm64/kernel/Makefile             |   3 +-
- arch/arm64/kernel/ima_kexec.c          | 213 +++++++++++++++++++++++++
- arch/arm64/kernel/machine_kexec_file.c |   6 +
- 6 files changed, 262 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/include/asm/ima.h
- create mode 100644 arch/arm64/kernel/ima_kexec.c
+It looks like but that's not true.
+Previous patch adds target only for cross compiling,
+before the patch the target was used for both, cross compiling and w/o cc.
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 3adcec05b1f6..f39b12dbf9e8 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -976,6 +976,13 @@ config KEXEC_VERIFY_SIG
- 	  verification for the corresponding kernel image type being
- 	  loaded in order for this to work.
- 
-+config HAVE_IMA_KEXEC
-+	bool "Carry over IMA measurement log during kexec_file_load() syscall"
-+	depends on KEXEC_FILE
-+	help
-+	  Select this option to carry over IMA measurement log during
-+	  kexec_file_load.
-+
- config KEXEC_IMAGE_VERIFY_SIG
- 	bool "Enable Image signature verification support"
- 	default y
-diff --git a/arch/arm64/include/asm/ima.h b/arch/arm64/include/asm/ima.h
-new file mode 100644
-index 000000000000..e23cee84729f
---- /dev/null
-+++ b/arch/arm64/include/asm/ima.h
-@@ -0,0 +1,29 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_ARM64_IMA_H
-+#define _ASM_ARM64_IMA_H
-+
-+struct kimage;
-+
-+int ima_get_kexec_buffer(void **addr, size_t *size);
-+int ima_free_kexec_buffer(void);
-+
-+#ifdef CONFIG_IMA
-+void remove_ima_buffer(void *fdt, int chosen_node);
-+#else
-+static inline void remove_ima_buffer(void *fdt, int chosen_node) {}
-+#endif
-+
-+#ifdef CONFIG_IMA_KEXEC
-+int arch_ima_add_kexec_buffer(struct kimage *image, unsigned long load_addr,
-+			      size_t size);
-+
-+int setup_ima_buffer(const struct kimage *image, void *fdt, int chosen_node);
-+#else
-+static inline int setup_ima_buffer(const struct kimage *image, void *fdt,
-+				   int chosen_node)
-+{
-+	remove_ima_buffer(fdt, chosen_node);
-+	return 0;
-+}
-+#endif /* CONFIG_IMA_KEXEC */
-+#endif /* _ASM_ARM64_IMA_H */
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index 12a561a54128..e8d2412066e7 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -96,6 +96,11 @@ static inline void crash_post_resume(void) {}
- struct kimage_arch {
- 	void *dtb;
- 	unsigned long dtb_mem;
-+
-+#ifdef CONFIG_IMA_KEXEC
-+	phys_addr_t ima_buffer_addr;
-+	size_t ima_buffer_size;
-+#endif
- };
- 
- extern const struct kexec_file_ops kexec_image_ops;
-diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-index 478491f07b4f..580238f2e9a7 100644
---- a/arch/arm64/kernel/Makefile
-+++ b/arch/arm64/kernel/Makefile
-@@ -55,7 +55,8 @@ obj-$(CONFIG_RANDOMIZE_BASE)		+= kaslr.o
- obj-$(CONFIG_HIBERNATION)		+= hibernate.o hibernate-asm.o
- obj-$(CONFIG_KEXEC_CORE)		+= machine_kexec.o relocate_kernel.o	\
- 					   cpu-reset.o
--obj-$(CONFIG_KEXEC_FILE)		+= machine_kexec_file.o kexec_image.o
-+obj-$(CONFIG_KEXEC_FILE)		+= machine_kexec_file.o kexec_image.o	\
-+					   ima_kexec.o
- obj-$(CONFIG_ARM64_RELOC_TEST)		+= arm64-reloc-test.o
- arm64-reloc-test-y := reloc_test_core.o reloc_test_syms.o
- obj-$(CONFIG_CRASH_DUMP)		+= crash_dump.o
-diff --git a/arch/arm64/kernel/ima_kexec.c b/arch/arm64/kernel/ima_kexec.c
-new file mode 100644
-index 000000000000..b14326d541f3
---- /dev/null
-+++ b/arch/arm64/kernel/ima_kexec.c
-@@ -0,0 +1,213 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2019 Microsoft Corporation.
-+ *
-+ * Authors:
-+ * Prakhar Srivastava <prsriva@linux.microsoft.com>
-+ */
-+
-+#include <linux/slab.h>
-+#include <linux/kexec.h>
-+#include <linux/of.h>
-+#include <linux/memblock.h>
-+#include <linux/libfdt.h>
-+
-+
-+/**
-+ * delete_fdt_mem_rsv - delete memory reservation with given address and size
-+ * @fdt - pointer to the fdt.
-+ * @start - start address of the memory.
-+ * @size - number of cells to be deletd.
-+ * 
-+ * Return: 0 on success, or negative errno on error.
-+ */
-+int delete_fdt_mem_rsv(void *fdt, unsigned long start, unsigned long size)
-+{
-+	int i, ret, num_rsvs = fdt_num_mem_rsv(fdt);
-+
-+	for (i = 0; i < num_rsvs; i++) {
-+		uint64_t rsv_start, rsv_size;
-+
-+		ret = fdt_get_mem_rsv(fdt, i, &rsv_start, &rsv_size);
-+		if (ret) {
-+			pr_err("Malformed device tree\n");
-+			return -EINVAL;
-+		}
-+
-+		if (rsv_start == start && rsv_size == size) {
-+			ret = fdt_del_mem_rsv(fdt, i);
-+			if (ret) {
-+				pr_err("Error deleting device tree reservation\n");
-+				return -EINVAL;
-+			}
-+
-+			return 0;
-+		}
-+	}
-+
-+	return -ENOENT;
-+}
-+
-+/**
-+ * remove_ima_buffer - remove the IMA buffer property and reservation
-+ * @fdt - pointer the fdt.
-+ * @chosen_node - node under which property can be found.
-+ * 
-+ * The IMA measurement buffer is either read by now and freeed or a kexec call
-+ * needs to replace the ima measurement buffer, clear the property and memory
-+ * reservation.
-+ */
-+void remove_ima_buffer(void *fdt, int chosen_node)
-+{
-+	int ret, len;
-+	const void *prop;
-+	uint64_t tmp_start, tmp_end;
-+
-+	prop = fdt_getprop(fdt, chosen_node, "linux,ima-kexec-buffer", &len);
-+	if (prop) {
-+		tmp_start = fdt64_to_cpu(*((const fdt64_t *) prop));
-+
-+		prop = fdt_getprop(fdt, chosen_node,
-+				   "linux,ima-kexec-buffer-end", &len);
-+		if (!prop)
-+			return;
-+
-+		tmp_end = fdt64_to_cpu(*((const fdt64_t *) prop));
-+
-+		ret = delete_fdt_mem_rsv(fdt, tmp_start, tmp_end - tmp_start);
-+
-+		if (ret == 0)
-+			pr_debug("Removed old IMA buffer reservation.\n");
-+		else if (ret != -ENOENT)
-+			return;
-+
-+		fdt_delprop(fdt, chosen_node, "linux,ima-kexec-buffer");
-+		fdt_delprop(fdt, chosen_node, "linux,ima-kexec-buffer-end");
-+	}
-+}
-+
-+/**
-+ * ima_get_kexec_buffer - get IMA buffer from the previous kernel
-+ * @addr:	On successful return, set to point to the buffer contents.
-+ * @size:	On successful return, set to the buffer size.
-+ *
-+ * Return: 0 on success, negative errno on error.
-+ */
-+int ima_get_kexec_buffer(void **addr, size_t *size)
-+{
-+	int len;
-+	const void *prop;
-+	uint64_t tmp_start, tmp_end;
-+
-+	prop = of_get_property(of_chosen, "linux,ima-kexec-buffer", &len);
-+	if (!prop)
-+		return -ENOENT;
-+
-+	tmp_start = fdt64_to_cpu(*((const fdt64_t *) prop));
-+
-+	prop = of_get_property(of_chosen, "linux,ima-kexec-buffer-end", &len);
-+	if (!prop)
-+		return -ENOENT;
-+
-+	tmp_end = fdt64_to_cpu(*((const fdt64_t *) prop));
-+
-+	*addr = __va(tmp_start);
-+	*size = tmp_end - tmp_start;
-+
-+	return 0;
-+}
-+
-+/**
-+ * ima_free_kexec_buffer - free memory used by the IMA buffer
-+ *
-+ * Return: 0 on success, negative errno on error.
-+ */
-+int ima_free_kexec_buffer(void)
-+{
-+	int ret;
-+	void *propStart, *propEnd;
-+	uint64_t tmp_start, tmp_end;
-+
-+	propStart = of_find_property(of_chosen, "linux,ima-kexec-buffer",
-+				     NULL);
-+	if (propStart) {
-+		tmp_start = fdt64_to_cpu(*((const fdt64_t *) propStart));
-+		ret = of_remove_property(of_chosen, propStart);
-+		if (!ret) {
-+			return ret;
-+		}
-+
-+		propEnd = of_find_property(of_chosen,
-+					   "linux,ima-kexec-buffer-end", NULL);
-+		if (!propEnd) {
-+			return -EINVAL;
-+		}
-+
-+		tmp_end = fdt64_to_cpu(*((const fdt64_t *) propEnd));
-+
-+		ret = of_remove_property(of_chosen, propEnd);
-+		if (!ret) {
-+			return ret;
-+		}
-+
-+		return memblock_free(tmp_start, tmp_end - tmp_start);
-+	}
-+	return 0;
-+}
-+
-+#ifdef CONFIG_IMA_KEXEC
-+/**
-+ * arch_ima_add_kexec_buffer - do arch-specific steps to add the IMA
-+ * 	measurement log.
-+ * @image: - pointer to the kimage, to store the address and size of the 
-+ *	 IMA measurement log.
-+ * @load_addr: - the address where the IMA measurement log is stored.
-+ * @size - size of the IMA measurement log.
-+ * 
-+ * Return: 0 on success, negative errno on error.
-+ */
-+int arch_ima_add_kexec_buffer(struct kimage *image, unsigned long load_addr,
-+			      size_t size)
-+{
-+	image->arch.ima_buffer_addr = load_addr;
-+	image->arch.ima_buffer_size = size;
-+	return 0;
-+}
-+
-+/**
-+ * setup_ima_buffer - update the fdt to contain the ima mesasurement log
-+ * @image: - pointer to the kimage, containing the address and size of
-+ *	     the IMA measurement log.
-+ * @fdt: - pointer to the fdt.
-+ * @chosen_node: - node under which property is to be defined.
-+ *  
-+ * Return: 0 on success, negative errno on error.
-+ */
-+int setup_ima_buffer(const struct kimage *image, void *fdt, int chosen_node)
-+{
-+	int ret;
-+
-+	remove_ima_buffer(fdt, chosen_node);
-+
-+	if (!image->arch.ima_buffer_size)
-+		return 0;
-+
-+	ret = fdt_setprop_u64(fdt, chosen_node, "linux,ima-kexec-buffer",
-+			      image->arch.ima_buffer_addr);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = fdt_setprop_u64(fdt, chosen_node, "linux,ima-kexec-buffer-end",
-+			      image->arch.ima_buffer_addr +
-+			      image->arch.ima_buffer_size);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = fdt_add_mem_rsv(fdt, image->arch.ima_buffer_addr,
-+			      image->arch.ima_buffer_size);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+#endif /* CONFIG_IMA_KEXEC */
-diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-index 58871333737a..de5452539c67 100644
---- a/arch/arm64/kernel/machine_kexec_file.c
-+++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -21,6 +21,7 @@
- #include <linux/types.h>
- #include <linux/vmalloc.h>
- #include <asm/byteorder.h>
-+#include <asm/ima.h>
- 
- /* relevant device tree properties */
- #define FDT_PROP_INITRD_START	"linux,initrd-start"
-@@ -85,6 +86,11 @@ static int setup_dtb(struct kimage *image,
- 			goto out;
- 	}
- 
-+	/* add ima measuremnet log buffer */
-+	ret = setup_ima_buffer(image, dtb, off);
-+	if (ret)
-+		goto out;
-+
- 	/* add kaslr-seed */
- 	ret = fdt_delprop(dtb, off, FDT_PROP_KASLR_SEED);
- 	if  (ret == -FDT_ERR_NOTFOUND)
+This patch removes target only for native build (it's not cross compiling).
+
+By fact, it's two separate significant changes.
+
 -- 
-2.17.1
-
+Regards,
+Ivan Khoronzhuk
