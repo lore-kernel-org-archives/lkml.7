@@ -3,89 +3,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0412C00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 16:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F9DC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 16:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8989B206CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 16:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4225207FC
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 16:30:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390245AbfIFQ3F (ORCPT
+        id S2390302AbfIFQao (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 12:29:05 -0400
-Received: from foss.arm.com ([217.140.110.172]:59034 "EHLO foss.arm.com"
+        Fri, 6 Sep 2019 12:30:44 -0400
+Received: from gate.crashing.org ([63.228.1.57]:56683 "EHLO gate.crashing.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389180AbfIFQ3F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 12:29:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA2701570;
-        Fri,  6 Sep 2019 09:29:04 -0700 (PDT)
-Received: from [10.1.196.105] (unknown [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1B94C3F59C;
-        Fri,  6 Sep 2019 09:29:01 -0700 (PDT)
-Subject: Re: [PATCH v5 1/4] dt-bindings: EDAC: Add Amazon's Annapurna Labs L1
- EDAC
-To:     Rob Herring <robh@kernel.org>
-Cc:     "Hawa, Hanna" <hhhawa@amazon.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>, benh@amazon.com,
-        "Krupnik, Ronen" <ronenk@amazon.com>,
-        Talel Shenhar <talel@amazon.com>,
-        Jonathan Chocron <jonnyc@amazon.com>,
-        "Hanoch, Uri" <hanochu@amazon.com>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>
-References: <20190805143911.12185-1-hhhawa@amazon.com>
- <20190805143911.12185-2-hhhawa@amazon.com> <20190821191704.GA32425@bogus>
- <1d23d7c5-cd7b-1512-5300-d43e82ba6dc1@amazon.com>
- <CAL_Jsq+8jGbR4u7FA8r0gP5i2H+nSgOkGU_5mfiL=i=c0sOW8A@mail.gmail.com>
- <d46ac081-1867-2997-e2a3-bcfea42b74f3@arm.com>
- <CAL_Jsq+95qZyHWT_A-=L+SSbR0vmMqQDq8N2XcxwFJVG2HCthA@mail.gmail.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <21050550-7629-e8f7-2d30-16c1858cf3cc@arm.com>
-Date:   Fri, 6 Sep 2019 17:28:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <CAL_Jsq+95qZyHWT_A-=L+SSbR0vmMqQDq8N2XcxwFJVG2HCthA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        id S1726810AbfIFQan (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 12:30:43 -0400
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x86GUT4l007488;
+        Fri, 6 Sep 2019 11:30:29 -0500
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id x86GUSDf007487;
+        Fri, 6 Sep 2019 11:30:28 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Fri, 6 Sep 2019 11:30:28 -0500
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "gcc-patches@gcc.gnu.org" <gcc-patches@gcc.gnu.org>
+Subject: Re: [PATCH v2 4/6] compiler-gcc.h: add asm_inline definition
+Message-ID: <20190906163028.GC9749@gate.crashing.org>
+References: <20190829083233.24162-1-linux@rasmusvillemoes.dk> <20190830231527.22304-1-linux@rasmusvillemoes.dk> <20190830231527.22304-5-linux@rasmusvillemoes.dk> <CAKwvOdktYpMH8WnEQwNE2JJdKn4w0CHv3L=YHkqU2JzQ6Qwkew@mail.gmail.com> <a5085133-33da-6c13-6953-d18cbc6ad3f5@rasmusvillemoes.dk> <20190905134535.GP9749@gate.crashing.org> <CANiq72nXXBgwKcs36R+uau2o1YypfSFKAYWV2xmcRZgz8LRQww@mail.gmail.com> <20190906122349.GZ9749@gate.crashing.org> <CANiq72=3Vz-_6ctEzDQgTA44jmfSn_XZTS8wP1GHgm31Xm8ECw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANiq72=3Vz-_6ctEzDQgTA44jmfSn_XZTS8wP1GHgm31Xm8ECw@mail.gmail.com>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On Fri, Sep 06, 2019 at 05:13:54PM +0200, Miguel Ojeda wrote:
+> On Fri, Sep 6, 2019 at 2:23 PM Segher Boessenkool
+> <segher@kernel.crashing.org> wrote:
+> > I can't find anything with "feature" and "macros" in the C++ standard,
+> > it's "predefined macros" there I guess?  In C, it is also "predefined
+> > macros" in general, and there is "conditional feature macros".
+> 
+> They are introduced in C++20,
 
-On 30/08/2019 22:50, Rob Herring wrote:
-> So KVM provides a semi-CortexA57? Code that runs on real h/w won't as a guest.
+(Which isn't the C++ standard yet, okay).
 
-KVM provides the architectural bits of Cortex-A57's EL1, when running on A57.
+> but they have been added for a lot of
+> older features in both the language (see [cpp.predefined]p1, around 50
+> of them) and the library (see [support.limits.general]p3, ~100):
+> 
+>     http://eel.is/c++draft/cpp.predefined#tab:cpp.predefined.ft
+>     http://eel.is/c++draft/support.limits#tab:support.ft
 
-Code that depends on EL2, won't run as a guest. Code that depends on some
-non-architectural behaviour of A57 won't work in a guest, (e.g. the PMU)
-Features the hypervisor doesn't completely support may get hidden. The aim is to provide
-an virtual CPU, it might not be exactly the same as the one you're running on.
+And they spell it "feature-test" there.  Lovely :-/
 
-Hypervisors have to disable access to the imp-def registers as they may allow the guest to
-break its confinement. (e.g. messing with the L2 timing)
+> > Sure.  But the name is traditional, many decades old, it predates glibc.
+> > Using an established name to mean pretty much the opposite of what it
+> > normally does is a bit confusing, never mind if that usage makes much
+> > sense ;-)
+> 
+> Agreed on principle :-) However, I wouldn't say it is the opposite. I
+> would say they are the same, but from different perspectives: one says
+> "I want to test if the user enabled the feature", the other says "I
+> want to test if the vendor implemented the feature".
 
-Code using imp-def instructions at EL1 needs to know they aren't trapped/disabled by a
-higher exception level. If someone wants to emulate these, something would need a model of
-what those imp-def instructions do.
+No, that is not what it does.  A user defines such a macro, and that
+makes the library change behaviour.
+
+As the GNU C Library manual explains:
+
+     This system exists to allow the library to conform to multiple
+  standards.  Although the different standards are often described as
+  supersets of each other, they are usually incompatible because larger
+  standards require functions with names that smaller ones reserve to the
+  user program.  This is not mere pedantry -- it has been a problem in
+  practice.  For instance, some non-GNU programs define functions named
+  'getline' that have nothing to do with this library's 'getline'.  They
+  would not be compilable if all features were enabled indiscriminately.
+
+https://www.gnu.org/software/libc/manual/html_node/Feature-Test-Macros.html
 
 
-Thanks,
-
-James
+Segher
