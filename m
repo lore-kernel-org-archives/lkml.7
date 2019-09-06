@@ -2,72 +2,93 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2993C00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 23:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FEE5C43140
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 23:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B649D20842
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 23:34:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14F0120842
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 23:34:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jxbb5ZVG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405547AbfIFXeO (ORCPT
+        id S2405597AbfIFXee (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 19:34:14 -0400
-Received: from mail-ot1-f54.google.com ([209.85.210.54]:46071 "EHLO
-        mail-ot1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732131AbfIFXeN (ORCPT
+        Fri, 6 Sep 2019 19:34:34 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41373 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732131AbfIFXed (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 19:34:13 -0400
-Received: by mail-ot1-f54.google.com with SMTP id 41so3549600oti.12;
-        Fri, 06 Sep 2019 16:34:13 -0700 (PDT)
+        Fri, 6 Sep 2019 19:34:33 -0400
+Received: by mail-pl1-f193.google.com with SMTP id m9so3903101pls.8;
+        Fri, 06 Sep 2019 16:34:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=PQUdTfmTeC9Eu7doYDquPbP6FsNUDihOtUoLPN2jFQs=;
+        b=Jxbb5ZVG7jP+a/W/8elEjctYdBRym3CI0km54IzX4iNoSTW8R0gajhivVCAA2h/W4C
+         +nNDOBL8J0WRZUAVDKW6wbkPZc5cMNdIdaB8hcbLPlqGsRNWY/2ph/SdLMZVyrzkTqmV
+         MMcjsfmCI8mCjP2XPA4hssvcL9CtonsjXftQPKSh1KODs2H2yZ0loftjvjgv2T97rjzy
+         FyaxmxFLm2VhCF1cx0MZbTON6yRUcIw9lvq1MdNAZcri5xzuAvhu1PWTtiKnOVm2FwTr
+         XSbJQ2s0idVaqRdytSzSvVQX55B+bQ5rtmnswZEbZ2snTiuY9Fawe+I/UHsgb/BGOEAZ
+         e/TA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
-        b=cnDgCASm2QH4ycGwqbjbqLK/pFjSbCSW5+hnSETvzZQ3svKXt4MMkS2aOHtCXavfEF
-         nmWlvz4ennEc0f1E7+Pofcalie8pOCdhvsWWlEZ9sOEN33zHsmOkuweNf3jjOGhMmkL/
-         pBUVywBy0WNSLQe9scLdyG6dVYVVSVb8I4VqaJ1DlOv9/Tm8ELq64gHLHyg47ONEh+R/
-         y0o1NZ0k4aKOPzUvUuf+xRPJYFJFswgyLOs0rl6E4kdmVp3T7xRFpcxpZof8UAJ63c3e
-         wjtxd3cQlvS1fqOJMarXox0M/UZvuuwGJtMPMFwEQy9ZEf2zKkszkqAmXUySDmAo95bY
-         zBlw==
-X-Gm-Message-State: APjAAAWAb+41KqMIGGRUetkedq+k8XXtHHgNjlDcSUx4BiaCDifUrqb6
-        JL6e2NByHqrXf5qCZ5GTyvE=
-X-Google-Smtp-Source: APXvYqwRA/sTRBH8LKky6oTfHAe/irKHfMvLqzpzDm+MS/dCPKGb5WaN6a5eWl9hHJ4yxsV/ZxcQyQ==
-X-Received: by 2002:a9d:4699:: with SMTP id z25mr9739940ote.134.1567812852711;
-        Fri, 06 Sep 2019 16:34:12 -0700 (PDT)
-Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
-        by smtp.gmail.com with ESMTPSA id y6sm2570389oiy.45.2019.09.06.16.34.11
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PQUdTfmTeC9Eu7doYDquPbP6FsNUDihOtUoLPN2jFQs=;
+        b=o3aTAg5x8NUmVbiQdKP5DUp+2BpJRqBK8KfSoO7+RxID61QI4RmOfXYKq2XVI/p4E3
+         AMW2NtnvKGq2BRX34k46MK6xhVsPeXifvOuBni/eXSdSiKB/2RjgiZPm94bi4GZBXb4y
+         XplIkeMIHCynog0M2IF8lCUGOLJ32Ykpk6oyqkSolfrC+vUwsWMdGos5r0YqPNG1fAQ2
+         jSidH/nNuIQSPkZqN2uHJ5DQYHKo/aA8I7Ue/MX8r5Kmz9pWDBh9/yTPC2XvWSZwqwFx
+         UhgQQwu38iTCpYmdrS3Xh5PA2zyki9C4O2kiV/R+Sf8pxy/d2Zv12gu9LXZc5oTWB6lI
+         bcuA==
+X-Gm-Message-State: APjAAAW4JxbSMWscR5BSzBdCOqo9P0X5yWX7vwzuBPREOwyvMaSY0ezj
+        w3Rgkci09bpeTMvghr5hGdk=
+X-Google-Smtp-Source: APXvYqxcrUHaLye4oY121rlnSfsMiKK0a+zcamioe5WufmKggdtyjpal0qn6qBkvcwYJ7kQ+H9vC6A==
+X-Received: by 2002:a17:902:d702:: with SMTP id w2mr6804221ply.321.1567812872968;
+        Fri, 06 Sep 2019 16:34:32 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::3:46a4])
+        by smtp.gmail.com with ESMTPSA id o67sm6610359pfb.39.2019.09.06.16.34.31
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 06 Sep 2019 16:34:12 -0700 (PDT)
-Subject: Re: [PATCH v8 03/13] nvmet: add return value to
- nvmet_add_async_event()
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
-        Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20190828215429.4572-1-logang@deltatee.com>
- <20190828215429.4572-4-logang@deltatee.com>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <c9e321d6-8cb8-523e-f951-20a951bb6eed@grimberg.me>
-Date:   Fri, 6 Sep 2019 16:34:10 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 06 Sep 2019 16:34:32 -0700 (PDT)
+Date:   Fri, 6 Sep 2019 16:34:31 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com,
+        davem@davemloft.net, jakub.kicinski@netronome.com, hawk@kernel.org,
+        john.fastabend@gmail.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH bpf-next 8/8] samples: bpf: Makefile: base progs build on
+ Makefile.progs
+Message-ID: <20190906233429.6ass5x5inaypvbpr@ast-mbp.dhcp.thefacebook.com>
+References: <20190904212212.13052-1-ivan.khoronzhuk@linaro.org>
+ <20190904212212.13052-9-ivan.khoronzhuk@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20190828215429.4572-4-logang@deltatee.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190904212212.13052-9-ivan.khoronzhuk@linaro.org>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+On Thu, Sep 05, 2019 at 12:22:12AM +0300, Ivan Khoronzhuk wrote:
+> +
+> +If need to use environment of target board, the SYSROOT also can be set,
+> +pointing on FS of target board:
+> +
+> +make samples/bpf/ LLC=~/git/llvm/build/bin/llc \
+> +     CLANG=~/git/llvm/build/bin/clang \
+> +     SYSROOT=~/some_sdk/linux-devkit/sysroots/aarch64-linux-gnu
+
+Patches 7 and 8 look quite heavy. I don't have a way to test them
+which makes me a bit uneasy to accept them as-is.
+Would be great if somebody could give Tested-by.
+
