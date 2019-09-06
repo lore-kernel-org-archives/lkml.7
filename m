@@ -2,76 +2,151 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8D8C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 21:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82529C00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 21:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81BAF20842
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 21:42:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A38D2082C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 21:46:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bB+2a204"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404610AbfIFVm6 (ORCPT
+        id S2404650AbfIFVqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 17:42:58 -0400
-Received: from mail-out.m-online.net ([212.18.0.10]:52497 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404250AbfIFVmz (ORCPT
+        Fri, 6 Sep 2019 17:46:34 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33306 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404449AbfIFVqe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 17:42:55 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 46Q9yj0ngdz1rQCL;
-        Fri,  6 Sep 2019 23:42:45 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 46Q9yY2l3kz1qqkL;
-        Fri,  6 Sep 2019 23:42:45 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id J7TSS6j0588H; Fri,  6 Sep 2019 23:42:44 +0200 (CEST)
-X-Auth-Info: mIq3bsH7f7mokP6K7PXdvjCNFE5IXcDq6+jso6Nkl4M=
-Received: from [IPv6:::1] (unknown [195.140.253.167])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Fri,  6 Sep 2019 23:42:44 +0200 (CEST)
-Subject: Re: [PATCH net-next 3/3] net: dsa: microchip: remove
- NET_DSA_TAG_KSZ_COMMON
-To:     George McCollister <george.mccollister@gmail.com>,
-        netdev@vger.kernel.org
-Cc:     Woojung Huh <woojung.huh@microchip.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Tristram Ha <Tristram.Ha@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org
-References: <20190906213054.48908-1-george.mccollister@gmail.com>
- <20190906213054.48908-4-george.mccollister@gmail.com>
-From:   Marek Vasut <marex@denx.de>
-Message-ID: <4e33a69e-a9d9-39e9-4fb6-2ed0c12d9348@denx.de>
-Date:   Fri, 6 Sep 2019 23:42:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 6 Sep 2019 17:46:34 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q10so5461471pfl.0;
+        Fri, 06 Sep 2019 14:46:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=X+UKEokhysiEjhebMkmydc3Xut+rkxm/820z0jqk+pw=;
+        b=bB+2a2042/w5fLDKgGxSCU63OZJdemRj5lstmeKzyz2kKsymPU9qKVPAWAO5XqEpoX
+         NQjWZboO1Xqc9cYWPK+zS0a3/dsBVhTx70hSi7CyLwAMb2LXE/egWyxML/yi+G4vilyP
+         nAL/lrr66lcMxFh/V1lf0zajAvVc9b7txxr2NelsFwTbWER/5mfQ/zuuL5HzZO9fMRnn
+         jGNd8gO46slJn5TOTEht06yzy1gkw82s82dF+024ICCWEH7H3wPEZO1EkRhjI8sD8ae+
+         z38HpfgWvwwlmJc+rBx98Ea9ZmRte4k86rNSkO4ohCvZ0gLKR42divMBeZ74wTyoYj5y
+         FgEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=X+UKEokhysiEjhebMkmydc3Xut+rkxm/820z0jqk+pw=;
+        b=AHA8r+6AbmFa2DzEeypau87n7a7n4e77z2Bc1a3vMeBt8e7jNwS69pVfo1re/oWxyD
+         DgD2e6tEQZpvusi1GxoPwzCyiYsIGJ9Adu/lrOCvTbpTLHfTzccW99utz5NywPvo24Q4
+         GyF3jMByn7gJY5kWT0J4zYTNg+1xreLDuQ1RJXuH3Hz65GKjEMfr+xAgOnb7vYVyBfZ6
+         JlrMqBppAwsR+KAWdh3ukFzWHTn+22esIgtXiHxcWpvM6Rb7PJWRAcVpoj7BlReRY8Ij
+         tsKFhJoyhjmTGjT9K9FtzWAyPJfc4aSsz1SHP/3ecQpSKz8RdpvdJBRHNyyKdOXwnkHu
+         3xFw==
+X-Gm-Message-State: APjAAAXxu4sYR5GrbDIGAKDfl6rjK7gGOC7I63zh387eyr/tlxPIvsYN
+        FPJkDJxQeUROkyT4a4XIsCI=
+X-Google-Smtp-Source: APXvYqxAQm+A/TufbfRwRtbAOXBB+uXmA4OqTTf7BWWv93xs12KzKxBrIOgomoXlI9U4Nb+Q86U1eg==
+X-Received: by 2002:a17:90a:bf0a:: with SMTP id c10mr11992578pjs.78.1567806393371;
+        Fri, 06 Sep 2019 14:46:33 -0700 (PDT)
+Received: from localhost ([100.118.89.196])
+        by smtp.gmail.com with ESMTPSA id 74sm13108243pfy.78.2019.09.06.14.46.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Sep 2019 14:46:32 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     iommu@lists.linux-foundation.org
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Bruce Wang <bzwang@chromium.org>,
+        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
+        GPU), Georgi Djakov <georgi.djakov@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Joe Perches <joe@perches.com>, Joerg Roedel <jroedel@suse.de>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        linux-kernel@vger.kernel.org (open list),
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Sean Paul <seanpaul@chromium.org>,
+        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH v3 0/2] iommu: handle drivers that manage iommu directly
+Date:   Fri,  6 Sep 2019 14:44:00 -0700
+Message-Id: <20190906214409.26677-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20190906213054.48908-4-george.mccollister@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/6/19 11:30 PM, George McCollister wrote:
-> Remove the superfluous NET_DSA_TAG_KSZ_COMMON and just use the existing
-> NET_DSA_TAG_KSZ. Update the description to mention the three switch
-> families it supports. No functional change.
-> 
-> Signed-off-by: George McCollister <george.mccollister@gmail.com>
+From: Rob Clark <robdclark@chromium.org>
 
-Reviewed-by: Marek Vasut <marex@denx.de>
+One of the challenges we have to enable the aarch64 laptops upstream
+is dealing with the fact that the bootloader enables the display and
+takes the corresponding SMMU context-bank out of BYPASS.  Unfortunately,
+currently, the IOMMU framework attaches a DMA (or potentially an
+IDENTITY) domain before the driver is probed and has a chance to
+intervene and shutdown scanout.  Which makes things go horribly wrong.
+
+But in this case, drm/msm is already directly managing it's IOMMUs
+directly, the DMA API attached iommu_domain simply gets in the way.
+This series adds a way that a driver can indicate to drivers/iommu
+that it does not wish to have an DMA managed iommu_domain attached.
+This way, drm/msm can shut down scanout cleanly before attaching it's
+own iommu_domain.
+
+NOTE that to get things working with arm-smmu on the aarch64 laptops,
+you also need a patchset[1] from Bjorn Andersson to inherit SMMU config
+at boot, when it is already enabled.
+
+[1] https://www.spinics.net/lists/arm-kernel/msg732246.html
+
+NOTE that in discussion of previous revisions, RMRR came up.  This is
+not really a replacement for RMRR (nor does RMRR really provide any
+more information than we already get from EFI GOP, or DT in the
+simplefb case).  I also don't see how RMRR could help w/ SMMU handover
+of CB/SMR config (Bjorn's patchset[1]) without defining new tables.
+
+This perhaps doesn't solve the more general case of bootloader enabled
+display for drivers that actually want to use DMA API managed IOMMU.
+But it does also happen to avoid a related problem with GPU, caused by
+the DMA domain claiming the context bank that the GPU firmware expects
+to use.  And it avoids spurious TLB invalidation coming from the unused
+DMA domain.  So IMHO this is a useful and necessary change.
+
+Rob Clark (2):
+  iommu: add support for drivers that manage iommu explicitly
+  drm/msm: mark devices where iommu is managed by driver
+
+ drivers/gpu/drm/msm/adreno/adreno_device.c | 1 +
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c    | 1 +
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c   | 1 +
+ drivers/gpu/drm/msm/msm_drv.c              | 1 +
+ drivers/iommu/iommu.c                      | 2 +-
+ drivers/iommu/of_iommu.c                   | 3 +++
+ include/linux/device.h                     | 3 ++-
+ 7 files changed, 10 insertions(+), 2 deletions(-)
 
 -- 
-Best regards,
-Marek Vasut
+2.21.0
+
