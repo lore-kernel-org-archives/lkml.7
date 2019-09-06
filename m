@@ -2,174 +2,170 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D5FC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0653C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B367F20842
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:44:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="KnXEBmXQ"
+	by mail.kernel.org (Postfix) with ESMTP id 86C8E2084F
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:45:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567759527;
+	bh=AAE6gQwrlz04d9iJfV1epm//tdvLevDGznfUaNeLQvU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=nrJKi2908UbeVwZtGWmBbRLK7eVFHM3v+6x3zO4F2Dh51Wytt1Ja/yxNhuWq0RD8e
+	 okzeNP98O0URgVOUy7Js19jqNVd7LQG2PfugOfmJeUznjVhnZn6ZV9oAVyjCPqU2ux
+	 HFKfvuvHUGbiufcuXhWXnNIQ+zrAaQUapU0QqwgA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391064AbfIFIo1 (ORCPT
+        id S2391294AbfIFIp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 04:44:27 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:60245 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388156AbfIFIo1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 04:44:27 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190906084425euoutp02d876ce92bb3bcbbe70d017889482cc68~BzO2OZ8P92657026570euoutp02B
-        for <linux-kernel@vger.kernel.org>; Fri,  6 Sep 2019 08:44:25 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190906084425euoutp02d876ce92bb3bcbbe70d017889482cc68~BzO2OZ8P92657026570euoutp02B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1567759466;
-        bh=diyIBNi3GjnlSBl8is9X8PYZkLmZEQ2+ugSACC7EIo8=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=KnXEBmXQxWezsTiOiFxGkUmdhO5MmPS/d41+d4yRpPAttMkcTv4+GvEeekv2ue3x3
-         rgqH4hAGEuPW9BMR/N03yXO3Xs+2Qkqp+YM08zCTZXQvEcr5/M0XEAzyAnLRTwsxlF
-         23x5w3d6bazA7Y0B3mfXKBpi4A6X+isUxihuVpEY=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190906084424eucas1p2d965087b7e1367ca3894862d4781c5a4~BzO1LCIDM1620816208eucas1p2L;
-        Fri,  6 Sep 2019 08:44:24 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 94.08.04309.86C127D5; Fri,  6
-        Sep 2019 09:44:24 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190906084423eucas1p254b1daccc612896c8adddb1b5ff1f99a~BzO0SpJYq3267932679eucas1p2v;
-        Fri,  6 Sep 2019 08:44:23 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190906084423eusmtrp1f5c1f5c81e3eb8e4f23459392ec4e0bb~BzO0Dsu9a2263822638eusmtrp1d;
-        Fri,  6 Sep 2019 08:44:23 +0000 (GMT)
-X-AuditID: cbfec7f4-ae1ff700000010d5-05-5d721c68ce1b
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 08.A7.04117.76C127D5; Fri,  6
-        Sep 2019 09:44:23 +0100 (BST)
-Received: from [106.120.51.20] (unknown [106.120.51.20]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190906084422eusmtip260b14806b754e437a8cb61dd2f1d0859~BzOzASlu30851408514eusmtip24;
-        Fri,  6 Sep 2019 08:44:22 +0000 (GMT)
-Subject: Re: [PATCH v13 5/8] drivers: memory: add DMC driver for Exynos5422
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, mturquette@baylibre.com,
-        sboyd@kernel.org, b.zolnierkie@samsung.com, kgene@kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org, cw00.choi@samsung.com,
-        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
-        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
-        treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org,
-        willy.mh.wolff.ml@gmail.com
-From:   Lukasz Luba <l.luba@partner.samsung.com>
-Message-ID: <72d1096b-b81e-ee21-d4e1-8b40a69ca2fe@partner.samsung.com>
-Date:   Fri, 6 Sep 2019 10:44:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190904183510.GC12918@kozik-lap>
-Content-Language: en-US
+        Fri, 6 Sep 2019 04:45:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56662 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728916AbfIFIp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 04:45:26 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 123DD20842;
+        Fri,  6 Sep 2019 08:45:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567759524;
+        bh=AAE6gQwrlz04d9iJfV1epm//tdvLevDGznfUaNeLQvU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=sG5ozf2AVIh9mIR5y3TR1TzYNG8U4+5dDppI/VOIVYTpVGKQ+W4dLMb9efVk/pbMJ
+         O0d7MDtEzkcHMINTSO8JKA2zRW06spJGhRSgsat5WZyYvbs3z4gxe5yyC6lWwZc+hT
+         vKaBfTlFbNcMkpW/sNKnc7Zg9zhLOLMYz66uGf7w=
+Date:   Fri, 6 Sep 2019 17:45:19 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org
+Subject: Re: [PATCH -tip v3 1/2] x86: xen: insn: Decode Xen and KVM
+ emulate-prefix signature
+Message-Id: <20190906174519.699b83f08d81b55203212fa1@kernel.org>
+In-Reply-To: <20190906073436.GS2349@hirez.programming.kicks-ass.net>
+References: <156773433821.31441.2905951246664148487.stgit@devnote2>
+        <156773434815.31441.12739136439382289412.stgit@devnote2>
+        <20190906073436.GS2349@hirez.programming.kicks-ass.net>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa1BMYRj27bkWu3PaohdNzOaHyyhMzGfQMONy8INhBkMuizOFtsse5Tpm
-        Y4SUUmy13RgatS0pSXKvHaGyRSNULJtp0BbdMCnaPRn9e97nvTzP883HEspkehy7K3SvoA1V
-        h6hoV7Lk8S/L9GAv7eYZ+kwVLkwtoHBDdyuFs83PKZz/3YbwsUsFNE5+linD1ac1OMH2lcAW
-        y3UG1xxtY/D3uHcUflmWQeOueDPCqZb7MnzV3MzgnIY6Ga57tgQ3RufS+Pg9M4Mr2k5QeOBV
-        IYkf1K/AjX0K3PvkI1oIvCnLhPjeniSS73h9nOHTdXUkf9vQzPBFxlM0/yDTxPDxx9pp/kyx
-        EfE3qg7xXUXeq0dudJ2/UwjZFSVo/QK2uQYnxrDhFYr9uXeaSB2yjIxFLAucP/TlaWKRK6vk
-        chE0nOyXSUU3gs/Zbwmp6EJQUn+WjEUuzo3bl9ooqXEFga63iXE0lJwdgb3D24HduZXwqsZM
-        ObAHNwUa+n84McHdJUGXNNYhTXO+UGqMcNBybimkdMQ675PcJEhoueE8OZrbAJ3WCkqacYOn
-        aS2kY9WF84Ob1ydLFz3hbUu2TMIT4JY9w+kZuHoWUmpracnzYsjq6R/y7w5fKosZCXtBVXLc
-        EC+CLv4ikvBhsCVkDs3Mg4rKOsqhSwxGKSjzk+hFkKbLo6RHVMBru5tkQQFJJSmERMvhZIxS
-        mp4MxXG1MgmPgSsmPZOIVIZhuQzDwhiGhTH8172ASCPyFCJFTZAgzgoV9vmKao0YGRrkuyNM
-        U4QGv2rVQGV3KSr7vb0ccSxSjZJz3eGblZQ6SjygKUfAEioPeUHhICXfqT5wUNCGbdVGhghi
-        ORrPkipP+aER1k1KLki9V9gjCOGC9l9XxrqM06GJc7zexKQvcJ++KmvdNbcT7Wu8fdb620oz
-        yotiFEd+3j+V8+uyNcL6ZUtARLBew+bPvvMxTwyLOL+wU+81o2+gw/PbRWNN4rqo5U+bppl9
-        PlxuXbY7Nbon94OHh2lfNRH16JN1/ZZzL94HTjuYY/Mn7IGt1efmvms2t1dP1P+Zt/8hyFWk
-        GKyeOZXQiuq/lNxoj6YDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHeXcuO5azt2n5IqG2+mC3Y2dz+tpF/FIcqg9BBFJeWnrQyLl1
-        zpTULpbYanaxgi4zK4phLMVrtm6aOrQ0G2ZoeYNSitIU04yoRpsj8Nvved7/73l44WEIpZ0K
-        YQ5kmQQxS5epoheQne724XXpy8Sk9We+q3DNtSoK9818pvAt52sK358aAbjwbhWNL3eUyfCr
-        Yj2+MDJGYJerWo67To7L8dTZYQr3PL5B4+lzToCvuRpluNI5JMe2vm4Z7u7YggdO3KNx0TOn
-        HLeOmyns7q0hcdPbbXjgdwCeffERxCO+4mYF4Gd/XCL5yXdFcr60oJvkH1mH5Hyt/QzNN5VV
-        yPlzhRM0f77eDvi6znx+ujZ058I97CbRkG0SwjMMkmmzai+H1SwXi1l1VCzLaWKSNqi1qsi4
-        TWlC5oEcQYyM28dmlJxijK0Bh+89GSQLgGuhBfgxCEahR3fHKQtYwCihDaDq+jHge1iKLjU+
-        lPs4EP3ptdC+0BhAPbbLc6FAuB31djkpLwfBVajv78+5SQR8SqKvtrcynzEBUKGt2VMwDA1Z
-        5LAf8goKuBVdnbSQXibhSnRhtG5u2xKYgFodVuDLLEYvr4+SXtUPRqIH1RHeNgGj0c26D4SP
-        g1H/6C2Zj8PQw283iBKgtM6zrfMU6zzFOk+5DUg7CBKyJX26XlKzkk4vZWels6kGfS3w3ElD
-        2696B7BM7GoBkAEqfwWcMSYpKV2OlKtvAYghVEGKqhpPS5Gmy80TREOKmJ0pSC1A6/nbRSJk
-        SarBc3VZphROy8XgWC5GE6OJxqpgxWnYnKiE6TqTcFAQjIL435MxfiEFgF0b5kBlAwlKtf/G
-        k/Elw5+XM/1pTPl+IxfcYXSU7r7SZS52HBHj10B3w/a8prarn7T9qe9+RfQ8G9gxM1sfV2tT
-        dhzKL5hpHj7WX6wJzU+MgIe525O0eTrzjrtyBSr98txOJk9RoQ0rj75Jvlh+nFo0+L5oX+cy
-        rV97T745XEVKGTpuNSFKun9VffNMPQMAAA==
-X-CMS-MailID: 20190906084423eucas1p254b1daccc612896c8adddb1b5ff1f99a
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190821104323eucas1p1ab979133de45373866e9db1a5f63fb76
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190821104323eucas1p1ab979133de45373866e9db1a5f63fb76
-References: <20190821104303.32079-1-l.luba@partner.samsung.com>
-        <CGME20190821104323eucas1p1ab979133de45373866e9db1a5f63fb76@eucas1p1.samsung.com>
-        <20190821104303.32079-6-l.luba@partner.samsung.com>
-        <20190904183510.GC12918@kozik-lap>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 6 Sep 2019 09:34:36 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
+> On Fri, Sep 06, 2019 at 10:45:48AM +0900, Masami Hiramatsu wrote:
+> 
+> > diff --git a/arch/x86/include/asm/xen/interface.h b/arch/x86/include/asm/xen/interface.h
+> > index 62ca03ef5c65..fe33a9798708 100644
+> > --- a/arch/x86/include/asm/xen/interface.h
+> > +++ b/arch/x86/include/asm/xen/interface.h
+> > @@ -379,12 +379,15 @@ struct xen_pmu_arch {
+> >   * Prefix forces emulation of some non-trapping instructions.
+> >   * Currently only CPUID.
+> >   */
+> > +#include <asm/xen/prefix.h>
+> > +
+> >  #ifdef __ASSEMBLY__
+> > -#define XEN_EMULATE_PREFIX .byte 0x0f,0x0b,0x78,0x65,0x6e ;
+> > +#define XEN_EMULATE_PREFIX .byte __XEN_EMULATE_PREFIX ;
+> >  #define XEN_CPUID          XEN_EMULATE_PREFIX cpuid
+> >  #else
+> > -#define XEN_EMULATE_PREFIX ".byte 0x0f,0x0b,0x78,0x65,0x6e ; "
+> > +#define XEN_EMULATE_PREFIX ".byte " __XEN_EMULATE_PREFIX_STR " ; "
+> >  #define XEN_CPUID          XEN_EMULATE_PREFIX "cpuid"
+> > +
+> >  #endif
+> 
+> Possibly you can do something like:
+> 
+> #define XEN_EMULATE_PREFIX	__ASM_FORM(.byte __XEN_EMULATE_PREFIX ;)
+> #define XEN_CPUID		XEN_EMULATE_PREFIX __ASM_FORM(cpuid)
 
-On 9/4/19 8:35 PM, Krzysztof Kozlowski wrote:
-> On Wed, Aug 21, 2019 at 12:43:00PM +0200, Lukasz Luba wrote:
->> This patch adds driver for Exynos5422 Dynamic Memory Controller.
->> The driver provides support for dynamic frequency and voltage scaling
->> for DMC and DRAM. It supports changing timings of DRAM running with
->> different frequency. There is also an algorithm to calculate timigns
->> based on memory description provided in DT.
->> The patch also contains needed MAINTAINERS file update.
->>
->> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->> ---
->>   MAINTAINERS                             |    8 +
->>   drivers/memory/samsung/Kconfig          |   13 +
->>   drivers/memory/samsung/Makefile         |    1 +
->>   drivers/memory/samsung/exynos5422-dmc.c | 1257 +++++++++++++++++++++++
->>   4 files changed, 1279 insertions(+)
->>   create mode 100644 drivers/memory/samsung/exynos5422-dmc.c
-> 
-> Thanks, applied... or almost. Let's fix it incrementally.
-> 
-> You have two smatch warnings:
->    CHECK   ../drivers/memory/samsung/exynos5422-dmc.c
-> drivers/memory/samsung/exynos5422-dmc.c:272 exynos5_init_freq_table() warn: passing devm_ allocated variable to kfree. 'dmc->opp'
->    CHECK   ../drivers/memory/jedec_ddr_data.c
-> drivers/memory/samsung/exynos5422-dmc.c:565 exynos5_dmc_get_volt_freq() warn: passing zero to 'PTR_ERR'
-> 
-> The second looks like false positive, but first seems to be real.
-Right, I will fix it.
-> 
-> You have also sparse warning to fix:
-> ../drivers/memory/samsung/exynos5422-dmc.c:736:1: warning: symbol 'exynos5_dmc_align_init_freq' was not declared. Should it be static?
-Yes, it should be static but due to the artificial line break I have
-missed it.
+Hmm, OK. But should I split this change from insn decoder change?
 
-It will be sent in the follow up patch.
+> 
+> >  #endif /* _ASM_X86_XEN_INTERFACE_H */
+> > diff --git a/arch/x86/include/asm/xen/prefix.h b/arch/x86/include/asm/xen/prefix.h
+> > new file mode 100644
+> > index 000000000000..f901be0d7a95
+> > --- /dev/null
+> > +++ b/arch/x86/include/asm/xen/prefix.h
+> > @@ -0,0 +1,10 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +#ifndef _TOOLS_ASM_X86_XEN_PREFIX_H
+> > +#define _TOOLS_ASM_X86_XEN_PREFIX_H
+> > +
+> > +#include <linux/stringify.h>
+> > +
+> > +#define __XEN_EMULATE_PREFIX  0x0f,0x0b,0x78,0x65,0x6e
+> > +#define __XEN_EMULATE_PREFIX_STR  __stringify(__XEN_EMULATE_PREFIX)
+> > +
+> > +#endif
+> 
+> How about we make this asm/virt_prefix.h or something and include:
+> 
+> /*
+>  * Virt escape sequences to trigger instruction emulation;
+>  * ideally these would decode to 'whole' instruction and not destroy
+>  * the instruction stream; sadly this is not true for the 'kvm' one :/
+>  */
+> 
+> #define __XEN_EMULATE_PREFIX  0x0f,0x0b,0x78,0x65,0x6e  /* ud2 ; .ascii "xen" */
+> #define __KVM_EMULATE_PREFIX  0x0f,0x0b,0x6b,0x76,0x6d	/* ud2 ; .ascii "kvm" */
 
-Thank you!
+OK, and in that case I think we should do this in separated patch from
+this change.
 
-Regards,
-Lukasz
 > 
-> Best regards,
-> Krzysztof
+> > diff --git a/arch/x86/lib/insn.c b/arch/x86/lib/insn.c
+> > index 0b5862ba6a75..b7eb50187db9 100644
+> > --- a/arch/x86/lib/insn.c
+> > +++ b/arch/x86/lib/insn.c
 > 
+> > @@ -58,6 +61,37 @@ void insn_init(struct insn *insn, const void *kaddr, int buf_len, int x86_64)
+> >  		insn->addr_bytes = 4;
+> >  }
+> >  
+> > +static const insn_byte_t xen_prefix[] = { __XEN_EMULATE_PREFIX };
+> > +/* See handle_ud()@arch/x86/kvm/x86.c */
+> > +static const insn_byte_t kvm_prefix[] = "\xf\xbkvm";
 > 
+> Then you can make this consistent; maybe even something like:
 > 
+> static const insn_byte_t *virt_prefix[] = {
+> 	{ __XEN_EMULATE_PREFIX },
+> 	{ __KVM_EMULATE_PREFIX },
+> 	{ NULL },
+> };
+> 
+> And then change emulate_prefix_size to emulate_prefix_index ?
+
+Hmm, how we can get the length of those emulate prefixes?
+For struct insn, since the size information is important, other
+sub fields have "nbyte" field so that caller can find the actual
+bytes from original byte stream.
+
+Maybe we can have struct emulate_prefix { .nbyte, .type }; and
+define enum etc.. but for me, it seems a bit over engineering.
+(since no one use that feature)
+
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
