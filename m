@@ -2,148 +2,93 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2565EC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 16:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9EECC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 16:12:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07360206CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 16:12:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA469206CD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 16:12:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567786348;
+	bh=yGQH991p6dsqZYSz7vQ4udqTo6UsMW6JF25Ax1+5bTY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=owrxTssHM+/M7qu/uxe3uyw6YQRWQ5rnI1chd+beqU22yUebMqocj+T0eTKCfaqnP
+	 /eSCwcHPFY8EHSyEtL4Ou+BRw1zgceP5TETr2qBsDyMXc/mHhscN5Hgme1oSGhlpbE
+	 Y5BjV5U8wh2/gWJRd07RZc9vp3k7UKDDrzvWa/1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728349AbfIFQMZ (ORCPT
+        id S1730469AbfIFQMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 12:12:25 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43716 "EHLO mx1.redhat.com"
+        Fri, 6 Sep 2019 12:12:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729137AbfIFQMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 12:12:20 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1729118AbfIFQMT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 12:12:19 -0400
+Received: from localhost (unknown [89.248.140.12])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AC0284E832;
-        Fri,  6 Sep 2019 16:12:19 +0000 (UTC)
-Received: from fogou.chygwyn.com (unknown [10.33.36.100])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9E0823CC8;
-        Fri,  6 Sep 2019 16:12:15 +0000 (UTC)
-Subject: Re: Why add the general notification queue and its sources
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>
-Cc:     Ray Strode <rstrode@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Ray, Debarshi" <debarshi.ray@gmail.com>,
-        Robbie Harwood <rharwood@redhat.com>
-References: <156763534546.18676.3530557439501101639.stgit@warthog.procyon.org.uk>
- <CAHk-=wh5ZNE9pBwrnr5MX3iqkUP4nspz17rtozrSxs5-OGygNw@mail.gmail.com>
- <17703.1567702907@warthog.procyon.org.uk>
- <CAHk-=wjQ5Fpv0D7rxX0W=obx9xoOAxJ_Cr+pGCYOAi2S9FiCNg@mail.gmail.com>
- <CAKCoTu7ms_Mr-q08d9XB3uascpzwBa5LF9JTT2aq8uUsoFE8aQ@mail.gmail.com>
- <CAHk-=wjcsxQ8QB_v=cwBQw4pkJg7pp-bBsdWyPivFO_OeF-y+g@mail.gmail.com>
- <5396.1567719164@warthog.procyon.org.uk>
- <CAHk-=wgbCXea1a9OTWgMMvcsCGGiNiPp+ty-edZrBWn63NCYdw@mail.gmail.com>
- <14883.1567725508@warthog.procyon.org.uk>
- <CAHk-=wjt2Eb+yEDOcQwCa0SrZ4cWu967OtQG8Vz21c=n5ZP1Nw@mail.gmail.com>
- <27732.1567764557@warthog.procyon.org.uk>
- <CAHk-=wiR1fpahgKuxSOQY6OfgjWD+MKz8UF6qUQ6V_y2TC_V6w@mail.gmail.com>
- <CAHk-=wioHmz69394xKRqFkhK8si86P_704KgcwjKxawLAYAiug@mail.gmail.com>
-From:   Steven Whitehouse <swhiteho@redhat.com>
-Message-ID: <8e60555e-9247-e03f-e8b4-1d31f70f1221@redhat.com>
-Date:   Fri, 6 Sep 2019 17:12:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D4EA206CD;
+        Fri,  6 Sep 2019 16:12:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567786338;
+        bh=yGQH991p6dsqZYSz7vQ4udqTo6UsMW6JF25Ax1+5bTY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jvP9oeE9ob6IfYj36ll63idsFgtnpga4HasXlDK5+NKLo86y0Wtogq8i/WcBmiV6L
+         YhhiByE38lQk11oi1wxMHvJXCqv2LuMkbUYKcrUwbfrGtdlE8GaDKAYrW99xA+V+a0
+         7+KcKYDTb8CXv5hAS/MHodNvB/2mPPFA0n340HhQ=
+Date:   Fri, 6 Sep 2019 18:12:15 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jean Delvare <jdelvare@suse.de>
+Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] eeprom: Deprecate the legacy eeprom driver
+Message-ID: <20190906161215.GA10547@kroah.com>
+References: <20190902104838.058725c2@endymion>
+ <20190904075729.GA22307@kroah.com>
+ <20190906165004.5e5748cc@endymion>
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wioHmz69394xKRqFkhK8si86P_704KgcwjKxawLAYAiug@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Fri, 06 Sep 2019 16:12:20 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190906165004.5e5748cc@endymion>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Sep 06, 2019 at 04:50:04PM +0200, Jean Delvare wrote:
+> Hi Greg,
+> 
+> On Wed, 4 Sep 2019 09:57:29 +0200, Greg Kroah-Hartman wrote:
+> > On Mon, Sep 02, 2019 at 10:48:38AM +0200, Jean Delvare wrote:
+> > > Time has come to get rid of the old eeprom driver. The at24 driver
+> > > should be used instead. So mark the eeprom driver as deprecated and
+> > > give users some time to migrate. Then we can remove the legacy
+> > > eeprom driver completely.
+> > > 
+> > > Signed-off-by: Jean Delvare <jdelvare@suse.de>
+> > > Cc: Arnd Bergmann <arnd@arndb.de>
+> > > ---
+> > >  drivers/misc/eeprom/Kconfig |    5 ++++-
+> > >  1 file changed, 4 insertions(+), 1 deletion(-)  
+> > 
+> > You might also want to add a big printk() message when the driver is
+> > loaded that it shouldn't be used.
+> 
+> Good idea, although unfortunately this means expanding
+> module_i2c_driver. Or maybe I can use printk_once() in eeprom_probe().
+> Or even just a dev_warn() there to really spam the kernel log in a very
+> visible way.
 
-On 06/09/2019 16:53, Linus Torvalds wrote:
-> On Fri, Sep 6, 2019 at 8:35 AM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
->> This is why I like pipes. You can use them today. They are simple, and
->> extensible, and you don't need to come up with a new subsystem and
->> some untested ad-hoc thing that nobody has actually used.
-> The only _real_ complexity is to make sure that events are reliably parseable.
->
-> That's where you really want to use the Linux-only "packet pipe"
-> thing, becasue otherwise you have to have size markers or other things
-> to delineate events. But if you do that, then it really becomes
-> trivial.
->
-> And I checked, we made it available to user space, even if the
-> original reason for that code was kernel-only autofs use: you just
-> need to make the pipe be O_DIRECT.
->
-> This overly stupid program shows off the feature:
->
->          #define _GNU_SOURCE
->          #include <fcntl.h>
->          #include <unistd.h>
->
->          int main(int argc, char **argv)
->          {
->                  int fd[2];
->                  char buf[10];
->
->                  pipe2(fd, O_DIRECT | O_NONBLOCK);
->                  write(fd[1], "hello", 5);
->                  write(fd[1], "hi", 2);
->                  read(fd[0], buf, sizeof(buf));
->                  read(fd[0], buf, sizeof(buf));
->                  return 0;
->          }
->
-> and it you strace it (because I was too lazy to add error handling or
-> printing of results), you'll see
->
->      write(4, "hello", 5)                    = 5
->      write(4, "hi", 2)                       = 2
->      read(3, "hello", 10)                    = 5
->      read(3, "hi", 10)                       = 2
->
-> note how you got packets of data on the reader side, instead of
-> getting the traditional "just buffer it as a stream".
->
-> So now you can even have multiple readers of the same event pipe, and
-> packetization is obvious and trivial. Of course, I'm not sure why
-> you'd want to have multiple readers, and you'd lose _ordering_, but if
-> all events are independent, this _might_ be a useful thing in a
-> threaded environment. Maybe.
->
-> (Side note: a zero-sized write will not cause a zero-sized packet. It
-> will just be dropped).
->
->                 Linus
+What ever you want is fine with me.
 
-The events are generally not independent - we would need ordering either 
-implicit in the protocol or explicit in the messages. We also need to 
-know in case messages are dropped too - doesn't need to be anything 
-fancy, just some idea that since we last did a read, there are messages 
-that got lost, most likely due to buffer overrun.
+> Would you prefer a v2 of this patch including that change, or a
+> separate, incremental patch?
 
-That is why the initial idea was to use netlink, since it solves a lot 
-of those issues. The downside was that the indirect nature of the 
-netlink sockets resulted in making it tricky to know the namespace of 
-the process to which the message was to be delivered (and hence whether 
-it should be delivered at all),
+An incremental patch as I've already applied this one.
 
-Steve.
+thanks,
 
+greg k-h
