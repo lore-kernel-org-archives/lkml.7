@@ -2,105 +2,158 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17544C00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC510C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF087214DE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:57:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94162214DE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:58:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567785513;
+	bh=mpgGkKCrnRxhITt5MelQZFoxgsQdwiTo40PnPEOkVf8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=didxT93lyB73qvVwdzkyMXAm0sSow60+bFU8e1jhZ4nKUYTLeeIlruqj36JcYo2NZ
+	 lA4PhAOLogTaO2TjtnS7tVYQk1/PFCPJuthm3lw3Qw2XOZPEafTkP0O/RMdkhda/VK
+	 3HapvEX1AUhPn6bZoLFWW/pT346LezKNaYp5V7GY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394969AbfIFP5x (ORCPT
+        id S2394985AbfIFP6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 11:57:53 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:47473 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728741AbfIFP5w (ORCPT
+        Fri, 6 Sep 2019 11:58:32 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:37879 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388180AbfIFP6c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 11:57:52 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1Mq1GE-1iRdCD3TDm-00nCjn; Fri, 06 Sep 2019 17:57:31 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Christian Benvenuti <benve@cisco.com>,
-        Nelson Escobar <neescoba@cisco.com>,
-        Parvi Kaustubhi <pkaustub@cisco.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Leon Romanovsky <leon@kernel.org>,
-        Gal Pressman <galpress@amazon.com>,
-        Parav Pandit <parav@mellanox.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Kamal Heib <kamalheib1@gmail.com>,
-        Florian Westphal <fw@strlen.de>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] usnic: avoid overly large buffers on stack
-Date:   Fri,  6 Sep 2019 17:57:17 +0200
-Message-Id: <20190906155730.2750200-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Fri, 6 Sep 2019 11:58:32 -0400
+Received: by mail-lj1-f196.google.com with SMTP id t14so6483664lji.4
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 08:58:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SLIGvVtM1MWun0WWtqWDQtU9G8VMp6qsOxjP6sOjf2I=;
+        b=Ia8xZ4G7EXG0h3CEDdsSAnGPbD1nnF6pet2NWhAAqHOXPjQLBhaQh07F0TSGTC2pQA
+         4aORuaabR+7VQbbIPbEwZhlj4N84fOFkTe7F+AH5iR91RRW0/A+v490l9anWhBNdAZMu
+         chcmmRDkVHmVtn5FD+klXo/q67grBESatc/HU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SLIGvVtM1MWun0WWtqWDQtU9G8VMp6qsOxjP6sOjf2I=;
+        b=IkjkztPVfWAIVoRoJbwCv5nA9jg0QRvAcEArgUGmZrjqCoAQsRunsTbopTAkVCmPxE
+         s/2zrA04aSodAF6QV4kzhAD7J+Pvz7OGX1r7LhjvtSH4jvBT1ld8qrocbYVhi2z1iLq1
+         mPfyayExZ5rCUS39dnWFxKnaNgQDjh6Xc9xHD7hLp4I0eXKvPHqYxFJjQ4x8o2eaV1HL
+         66G82BwhN4/Tmp0Ved7T42uVzYdcSVMAj1YepP4WaCzfAohvxeozNGwlQF8Nl8KsHrXU
+         YJ4IsiLgy5yreN41SPUdzanpBbrl1HNYq7+wr8zHyvv1jJq/uJyBikowgmftHkQNGtP5
+         +yiA==
+X-Gm-Message-State: APjAAAVYYxPlwXjM8QEjELrZjw63uHibTgWoR/TQucU6AfOnAuQrEHEH
+        dSvVSEAGD0qvTa0YNY9l3T4YG2qT6XE=
+X-Google-Smtp-Source: APXvYqwgBWgAhRNs3PgtB2CUZP0siJuNlLNWDc56KWvqh8xp2BaHGDnPIR6b4NoHv0Y9v/R7onNbJQ==
+X-Received: by 2002:a2e:85c1:: with SMTP id h1mr6074929ljj.174.1567785510252;
+        Fri, 06 Sep 2019 08:58:30 -0700 (PDT)
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
+        by smtp.gmail.com with ESMTPSA id a20sm1212153lff.78.2019.09.06.08.58.29
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Sep 2019 08:58:30 -0700 (PDT)
+Received: by mail-lj1-f176.google.com with SMTP id l1so6442621lji.12
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 08:58:29 -0700 (PDT)
+X-Received: by 2002:a2e:814d:: with SMTP id t13mr6334227ljg.72.1567785205260;
+ Fri, 06 Sep 2019 08:53:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:HDVOY8kxC3eE7WALG7hVfJjSyAaTZ+KrGpPg9ZJuJr4ZTdvo8jK
- f1Wa/p/V5VdaUvKpS6tZcVXcH7QpsfvQ+g6H1/exQ2gHY2eWz1DOj8VT6vclR6fnTt/ZDv6
- 8XoG/aMJONzPlOPveIz1L6juODhrNmt08eESlBG+9JcCje9aUxS+CXdivVkRQKyrCIqhaRv
- Jpf8n9+H52aZmMFJ8KlGA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:lM5YSSTMTMM=:TuZtY5jhLgJsRVZQAUYnVN
- tb1fPknLz/eHVwUCA7Oi/y4qNo8cuZgjwMqn+EpIreYJE79TUEx9jUKc82wc+Zc8naaVd1Fom
- BO9V6jpQwi+qRKNF9yxGRkc1Nk9NZcuGf7evk12WKOU182xhqNm8Hrmz5Wsu1WL5PMnTOBc1i
- lAs3MDlttRh+EzIjJLzlIUUCue0+SRc/s4KyXQpDjikUFt2SsZ4CfTePVa+rsoCUmM98qvHnX
- 8QSHulnXjgeutDP0qpgyhQcbkMoZKKVWqT44k8M/cvqSxwh1fQVXIX9117cj/KDwJz+3yxXmf
- vXN0hiyaY1HYQu5baLynt8W92uKgpDhFnKmP4n7SJU6aLPv8AjvUe508DPz7unZPfhaRQidVL
- M/oWtA2eoYtD9HgsAPK0mxh4EhoBDilicgwbx5MN5a9o6A/kXX/N4Yteqtf8qUom9Yw0b3cDC
- 7FV1UFPg0vzNgFjXyfbpNQR/974UUYSlduQK+nLVqCB0vtgUQWOXf4ngWFMihVYFsTMCffhbD
- bdRcEBvKiYVPrG7DP2GbxM/+MhEK/PjPIj3JUufLEroW5b2sM7fh70Je4WiIH36A8uI2UKM+I
- ID8HyzMF+bqAFCKhcUT/Mo/LfB82XIJjEwzFHFK0claq83zcEJMBLNoecPuAUKf6Wk/AJbd9Y
- rK74+GmZHBZ43KabyIavElUnm3zu0am2at8nbZERwq52SGFmAU6oyvUYiw1Cky8yQZ5H90xpk
- gnXJILY01U4ixOX3xUCxst4fo4b6lvIDIh22en6QGicoqKHIKtGJ6R32ZL4JOiQC1edNg44XI
- pmq2PPgWcFWLTZtn8YcmVlVLGDbyA==
+References: <156763534546.18676.3530557439501101639.stgit@warthog.procyon.org.uk>
+ <CAHk-=wh5ZNE9pBwrnr5MX3iqkUP4nspz17rtozrSxs5-OGygNw@mail.gmail.com>
+ <17703.1567702907@warthog.procyon.org.uk> <CAHk-=wjQ5Fpv0D7rxX0W=obx9xoOAxJ_Cr+pGCYOAi2S9FiCNg@mail.gmail.com>
+ <CAKCoTu7ms_Mr-q08d9XB3uascpzwBa5LF9JTT2aq8uUsoFE8aQ@mail.gmail.com>
+ <CAHk-=wjcsxQ8QB_v=cwBQw4pkJg7pp-bBsdWyPivFO_OeF-y+g@mail.gmail.com>
+ <5396.1567719164@warthog.procyon.org.uk> <CAHk-=wgbCXea1a9OTWgMMvcsCGGiNiPp+ty-edZrBWn63NCYdw@mail.gmail.com>
+ <14883.1567725508@warthog.procyon.org.uk> <CAHk-=wjt2Eb+yEDOcQwCa0SrZ4cWu967OtQG8Vz21c=n5ZP1Nw@mail.gmail.com>
+ <27732.1567764557@warthog.procyon.org.uk> <CAHk-=wiR1fpahgKuxSOQY6OfgjWD+MKz8UF6qUQ6V_y2TC_V6w@mail.gmail.com>
+In-Reply-To: <CAHk-=wiR1fpahgKuxSOQY6OfgjWD+MKz8UF6qUQ6V_y2TC_V6w@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 6 Sep 2019 08:53:09 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wioHmz69394xKRqFkhK8si86P_704KgcwjKxawLAYAiug@mail.gmail.com>
+Message-ID: <CAHk-=wioHmz69394xKRqFkhK8si86P_704KgcwjKxawLAYAiug@mail.gmail.com>
+Subject: Re: Why add the general notification queue and its sources
+To:     David Howells <dhowells@redhat.com>
+Cc:     Ray Strode <rstrode@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Ray, Debarshi" <debarshi.ray@gmail.com>,
+        Robbie Harwood <rharwood@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's never a good idea to put a 1000-byte buffer on the kernel
-stack. The compiler warns about this instance when usnic_ib_log_vf()
-gets inlined into usnic_ib_pci_probe():
+On Fri, Sep 6, 2019 at 8:35 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> This is why I like pipes. You can use them today. They are simple, and
+> extensible, and you don't need to come up with a new subsystem and
+> some untested ad-hoc thing that nobody has actually used.
 
-drivers/infiniband/hw/usnic/usnic_ib_main.c:543:12: error: stack frame size of 1044 bytes in function 'usnic_ib_pci_probe' [-Werror,-Wframe-larger-than=]
+The only _real_ complexity is to make sure that events are reliably parseable.
 
-As this is only called for debugging purposes in the setup path,
-it's trivial to convert to a dynamic allocation.
+That's where you really want to use the Linux-only "packet pipe"
+thing, becasue otherwise you have to have size markers or other things
+to delineate events. But if you do that, then it really becomes
+trivial.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/infiniband/hw/usnic/usnic_ib_main.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+And I checked, we made it available to user space, even if the
+original reason for that code was kernel-only autofs use: you just
+need to make the pipe be O_DIRECT.
 
-diff --git a/drivers/infiniband/hw/usnic/usnic_ib_main.c b/drivers/infiniband/hw/usnic/usnic_ib_main.c
-index 03f54eb9404b..c9abe1c01e4e 100644
---- a/drivers/infiniband/hw/usnic/usnic_ib_main.c
-+++ b/drivers/infiniband/hw/usnic/usnic_ib_main.c
-@@ -89,9 +89,15 @@ static void usnic_ib_dump_vf(struct usnic_ib_vf *vf, char *buf, int buf_sz)
- 
- void usnic_ib_log_vf(struct usnic_ib_vf *vf)
- {
--	char buf[1000];
--	usnic_ib_dump_vf(vf, buf, sizeof(buf));
-+	char *buf = kzalloc(1000, GFP_KERNEL);
-+
-+	if (!buf)
-+		return;
-+
-+	usnic_ib_dump_vf(vf, buf, 1000);
- 	usnic_dbg("%s\n", buf);
-+
-+	kfree(buf);
- }
- 
- /* Start of netdev section */
--- 
-2.20.0
+This overly stupid program shows off the feature:
 
+        #define _GNU_SOURCE
+        #include <fcntl.h>
+        #include <unistd.h>
+
+        int main(int argc, char **argv)
+        {
+                int fd[2];
+                char buf[10];
+
+                pipe2(fd, O_DIRECT | O_NONBLOCK);
+                write(fd[1], "hello", 5);
+                write(fd[1], "hi", 2);
+                read(fd[0], buf, sizeof(buf));
+                read(fd[0], buf, sizeof(buf));
+                return 0;
+        }
+
+and it you strace it (because I was too lazy to add error handling or
+printing of results), you'll see
+
+    write(4, "hello", 5)                    = 5
+    write(4, "hi", 2)                       = 2
+    read(3, "hello", 10)                    = 5
+    read(3, "hi", 10)                       = 2
+
+note how you got packets of data on the reader side, instead of
+getting the traditional "just buffer it as a stream".
+
+So now you can even have multiple readers of the same event pipe, and
+packetization is obvious and trivial. Of course, I'm not sure why
+you'd want to have multiple readers, and you'd lose _ordering_, but if
+all events are independent, this _might_ be a useful thing in a
+threaded environment. Maybe.
+
+(Side note: a zero-sized write will not cause a zero-sized packet. It
+will just be dropped).
+
+               Linus
