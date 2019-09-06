@@ -2,171 +2,97 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF946C43140
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 23:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E3BC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 23:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B015420838
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 23:22:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7D8E20838
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 23:23:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=knightsucfedu39751.onmicrosoft.com header.i=@knightsucfedu39751.onmicrosoft.com header.b="IHs+bNP8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JaPw67OA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392931AbfIFXWW (ORCPT
+        id S2405322AbfIFXXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 19:22:22 -0400
-Received: from mail-eopbgr810083.outbound.protection.outlook.com ([40.107.81.83]:22336
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732131AbfIFXWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 19:22:22 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gf9N1PVtaEj3367MxIdqHrMXBdkVL2zBR2e9kLhv1JSXYMui2SUZKnLMoeHeSuZPCJ+UNAfGRrTghv/zIzODMV6EM5CM66YBgTHz1Bxu2RKR5hFK7ZbaWZa6HC+CQX5rQSk94nj4TXp5ZEpOkiXXxmtsPZiBNmGXk4DeUAfqjAdhsSXYmdDOjRoMPS0xH7269cv448YFZEt1bfErlhDnFbmMGrcRRVUIBGsjy6UTXoXLcfK9KubRzJzhiTDU0kN6j1hfaXzCvHqO9C0MVV9wnE6xKHhLya8ciPRxYNMtx0vstZLzcLdc7ja2+7YO2IYEl3Isiljm+toezigbkQ9UYQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2Re/OxUZbzUXGhJHaZBJOdblBhtvrLl9KrKFh7RLbwc=;
- b=NA+pXC/OdmZW+CbAKMKLxgJ86fbEKsF2ophsEwXjXhWXWUJwqUoSWPZ2fZSYiolCQYYPtTG5qSXFz1MenIrVZ4/waFg96P6F24E4Hh6ywzjT+oaKDRr+CTDLE7yS2N87fx/G9BLNQxvBskBw8fsuqcJoON+7GNjB75jgU1kPAoNqhPX6RFWjPrfUknMIQqfR2ZXVeTqMUa/dAzzQaD+LWbzUvM/m3fa4Nj3BIOpLniJC0GrcGL1u9+O20fVlrMqrkpJAHrPd04A9Ny81JQjUlSm6yF6FL0+NJFJeoi6snWg3as7sJ6L62em+jIaM0XKlZORhqB3evR1cWOE0RLnrFg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=knights.ucf.edu; dmarc=pass action=none
- header.from=knights.ucf.edu; dkim=pass header.d=knights.ucf.edu; arc=none
+        Fri, 6 Sep 2019 19:23:53 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37151 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732131AbfIFXXw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 19:23:52 -0400
+Received: by mail-wm1-f66.google.com with SMTP id r195so8749006wme.2
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 16:23:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=knightsucfedu39751.onmicrosoft.com;
- s=selector2-knightsucfedu39751-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2Re/OxUZbzUXGhJHaZBJOdblBhtvrLl9KrKFh7RLbwc=;
- b=IHs+bNP8gtUhObk2W7cadhT4/kC/06bvpZQHMgVJiTpjjypTOo8XqqgbaIA3d4S8LLQkGdGQQrtj4AFLwhCFL9wvtf0PAwSqTKML2B3LR8npILsez/4D0Ynn/hyIp2YxvnjbAKiOcG8ctJCsrCmrczz4qqb7gqfKe49IqqhDE/w=
-Received: from BN7PR07MB5186.namprd07.prod.outlook.com (20.176.176.155) by
- BN7PR07MB4258.namprd07.prod.outlook.com (52.135.242.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.15; Fri, 6 Sep 2019 23:21:38 +0000
-Received: from BN7PR07MB5186.namprd07.prod.outlook.com
- ([fe80::682e:801a:5227:668f]) by BN7PR07MB5186.namprd07.prod.outlook.com
- ([fe80::682e:801a:5227:668f%7]) with mapi id 15.20.2220.022; Fri, 6 Sep 2019
- 23:21:38 +0000
-From:   Isaac Vaughn <isaac.vaughn@Knights.ucf.edu>
-To:     Borislav Petkov <bp@alien8.de>
-CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] Add PCI device IDs for family 17h, model 70h
-Thread-Topic: [PATCH] Add PCI device IDs for family 17h, model 70h
-Thread-Index: AQHVZQnUh7Ebv130M0alIHUhtmAMhQ==
-Date:   Fri, 6 Sep 2019 23:21:38 +0000
-Message-ID: <20190906192131.8ced0ca112146f32d82b6cae@knights.ucf.edu>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BN6PR1801CA0023.namprd18.prod.outlook.com
- (2603:10b6:405:5f::36) To BN7PR07MB5186.namprd07.prod.outlook.com
- (2603:10b6:408:2a::27)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=isaac.vaughn@Knights.ucf.edu; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-unknown-linux-gnu)
-x-originating-ip: [132.170.61.99]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cb535556-763d-464b-c48c-08d73320f76c
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN7PR07MB4258;
-x-ms-traffictypediagnostic: BN7PR07MB4258:
-x-microsoft-antispam-prvs: <BN7PR07MB4258B4E44F63B9E8E63070C2CEBA0@BN7PR07MB4258.namprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1850;
-x-forefront-prvs: 0152EBA40F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(346002)(376002)(396003)(366004)(199004)(189003)(75432002)(71200400001)(71190400001)(66066001)(50226002)(186003)(1076003)(86362001)(66946007)(256004)(5660300002)(6512007)(6916009)(53936002)(6436002)(14454004)(478600001)(66476007)(25786009)(3846002)(4326008)(64756008)(66446008)(66556008)(476003)(2906002)(6486002)(6116002)(305945005)(88552002)(8936002)(6506007)(386003)(26005)(102836004)(99286004)(316002)(786003)(8676002)(81156014)(52116002)(2616005)(54906003)(44832011)(486006)(81166006)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR07MB4258;H:BN7PR07MB5186.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-received-spf: None (protection.outlook.com: Knights.ucf.edu does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 7F+ESkwvq4P13Hp7BemchKMCBg3TnP+kcrfU7VaTSReqLThU7lPJEFMqZSNNyI62pQANX5Q+uvCGQfXmbwYpF2JncvHmfzfnGcievGvpM1mPeGZ7iSkEylLcZ/heYGBIo1Bp0dTUBI8KYkRnfZ5ed9kPgTAjIU0zLqZC301BDHY10Fhns0jLuQS0OSzdt4QuLy6TxdlmQ46BgDPexk21hAqvYWNLoKaqeDs/rhno6f7M1b+bB5jvoXCNxR7zaKm9qsL5tpypd3GenuJ8G0tSo/8iPQaGFxQyo7EzM7IHY2RMA9OxVyAuXAsdUhXbX9e1V7XaSemLhmRcEpsIt4Nt7bbJsOX5v9eJzeBGMGupIjJmcH1IVGp/dpXElKa2F03Z0RmVeRuPz1MG3SgNRCHUg2DMCNIxdbuTOVVtkjdaeqA=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <4864796329BE3247A31201B95777A322@namprd07.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mipkxs/K3VQhxvIuUjc7V8qspofVUAqg0yqG9RDRrhA=;
+        b=JaPw67OAiUZvfpUlDcvnVfl7MJaj45DXVlS6fFKW0ZOB598Orgq1TgSx5pD4Y9OwwZ
+         rrvF/2B0uWVCmZcS2sChE03AJt/7jHrRwR71TuCquzTiCown6sm3kCPV41jYriy51yoB
+         k/vVV8l5S/NznpFNLRncX/ac1FPnSECemWAXiH6op/TUB4xTG7fd3CQffV4/YSTpxjrv
+         sNnJqykGtElHGgjGjolLHPgCG7YCWFCA8iy5Hrf0wmRk41IohU6/3yIVDKar19CU3pNP
+         ejiTyst6VrZX1jlt4TWh0bsUTmvORLoc1cvgflQ39VzVZ58ek1ShzuU3uLOX+s+fHop9
+         1fvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mipkxs/K3VQhxvIuUjc7V8qspofVUAqg0yqG9RDRrhA=;
+        b=L+t83CN8iaMj5AubnRjBwbvzPn1CQgncJCu1hmx5jkqSGQm60QuGPN5GzL/HZ2bGN9
+         XEWwfQTxriGuhVNz1Cq3H1P/vv5UjDIqlt6g8Nb2Bc69/UcIChJXoYKkPsVeBuEJVVLo
+         ySp0E/tBDL7ZE75snsyaJeGC2dW/0fG/9IKci+FA3gbgUjW948oKqYuFTHkDEqs8jyNz
+         py+Cr2yMYNWpHBVJhli9+SQnshsNwx4n+aWpED/78yCZpaex6s7oOaVH+7+wLOP+HbMG
+         Vk30zrWRVxQIwPe+naQ+MruvtIa9/x67A32rPxQeljN8lRE1fH95SOK4dEJd7yj+Znrd
+         +LMA==
+X-Gm-Message-State: APjAAAX1dHG7soWW3aI8jWqwVW/j7STLhgmLt8tkq7PMXmfYQ8kPk4p/
+        4IXOrv/5LIHnour2FntooNz5yg==
+X-Google-Smtp-Source: APXvYqwqXkZWIKePDvL0sp5Ia/BhDsaQd11TDzBwPdj+Ow9E+ohcnQrkF5KKS1DAmx0ATOmylp+78Q==
+X-Received: by 2002:a1c:a796:: with SMTP id q144mr9295015wme.15.1567812230476;
+        Fri, 06 Sep 2019 16:23:50 -0700 (PDT)
+Received: from localhost.localdomain (124.red-83-36-179.dynamicip.rima-tde.net. [83.36.179.124])
+        by smtp.gmail.com with ESMTPSA id q66sm9254919wme.39.2019.09.06.16.23.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 06 Sep 2019 16:23:50 -0700 (PDT)
+From:   Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+To:     jorge.ramirez-ortiz@linaro.org, agross@kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org
+Cc:     bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] clk: qcom: fix QCS404 TuringCC regmap
+Date:   Sat,  7 Sep 2019 01:23:46 +0200
+Message-Id: <20190906232346.8435-1-jorge.ramirez-ortiz@linaro.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-X-OriginatorOrg: knights.ucf.edu
-X-MS-Exchange-CrossTenant-Network-Message-Id: cb535556-763d-464b-c48c-08d73320f76c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Sep 2019 23:21:38.2753
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 5b16e182-78b3-412c-9196-68342689eeb7
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gRYRJvabhRhbFnRvyJx+T+i4ylXDiUCTAXd0tqskJ0m89tawYxCNA/CvemMRY5n1gnzYrdKJKFLa+DM2T5dUrI9jFaiDLdOsqiuTttJpKyk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR07MB4258
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the new Family 17h Model 70h PCI IDs (device 18h functions 0 and 6)
-to the AMD64 EDAC module.
+The max register is 0x23004 as per the manual (the current
+max_register that this commit is fixing is actually out of bounds).
 
-Cc: Borislav Petkov <bp@alien8.de> (maintainer:EDAC-AMD64)
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org> (supporter:EDAC-CORE)
-Cc: James Morse <james.morse@arm.com> (reviewer:EDAC-CORE)
-Cc: linux-edac@vger.kernel.org (open list:EDAC-AMD64)
-Cc: linux-kernel@vger.kernel.org (open list)
-Signed-off-by: Isaac Vaughn <isaac.vaughn@knights.ucf.edu>
+Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 ---
- drivers/edac/amd64_edac.c | 13 +++++++++++++
- drivers/edac/amd64_edac.h |  3 +++
- 2 files changed, 16 insertions(+)
+ drivers/clk/qcom/turingcc-qcs404.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
-index 873437be86d9..a35c97f9100a 100644
---- a/drivers/edac/amd64_edac.c
-+++ b/drivers/edac/amd64_edac.c
-@@ -2253,6 +2253,15 @@ static struct amd64_family_type family_types[] =3D {
- 			.dbam_to_cs		=3D f17_base_addr_to_cs_size,
- 		}
- 	},
-+	[F17_M70H_CPUS] =3D {
-+		.ctl_name =3D "F17h_M70h",
-+		.f0_id =3D PCI_DEVICE_ID_AMD_17H_M70H_DF_F0,
-+		.f6_id =3D PCI_DEVICE_ID_AMD_17H_M70H_DF_F6,
-+		.ops =3D {
-+			.early_channel_count	=3D f17_early_channel_count,
-+			.dbam_to_cs		=3D f17_base_addr_to_cs_size,
-+		}
-+	},
+diff --git a/drivers/clk/qcom/turingcc-qcs404.c b/drivers/clk/qcom/turingcc-qcs404.c
+index aa859e6ec9bd..4cfbbf5bf4d9 100644
+--- a/drivers/clk/qcom/turingcc-qcs404.c
++++ b/drivers/clk/qcom/turingcc-qcs404.c
+@@ -96,7 +96,7 @@ static const struct regmap_config turingcc_regmap_config = {
+ 	.reg_bits	= 32,
+ 	.reg_stride	= 4,
+ 	.val_bits	= 32,
+-	.max_register	= 0x30000,
++	.max_register	= 0x23004,
+ 	.fast_io	= true,
  };
-=20
- /*
-@@ -3241,6 +3250,10 @@ static struct amd64_family_type *per_family_init(str=
-uct amd64_pvt *pvt)
- 			fam_type =3D &family_types[F17_M30H_CPUS];
- 			pvt->ops =3D &family_types[F17_M30H_CPUS].ops;
- 			break;
-+		} else if (pvt->model >=3D 0x70 && pvt->model <=3D 0x7f) {
-+			fam_type =3D &family_types[F17_M70H_CPUS];
-+			pvt->ops =3D &family_types[F17_M70H_CPUS].ops;
-+			break;
- 		}
- 		/* fall through */
- 	case 0x18:
-diff --git a/drivers/edac/amd64_edac.h b/drivers/edac/amd64_edac.h
-index 8f66472f7adc..1adf7ddbf744 100644
---- a/drivers/edac/amd64_edac.h
-+++ b/drivers/edac/amd64_edac.h
-@@ -119,6 +119,8 @@
- #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F6 0x15ee
- #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F0 0x1490
- #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F6 0x1496
-+#define PCI_DEVICE_ID_AMD_17H_M70H_DF_F0 0x1440
-+#define PCI_DEVICE_ID_AMD_17H_M70H_DF_F6 0x1446
-=20
- /*
-  * Function 1 - Address Map
-@@ -285,6 +287,7 @@ enum amd_families {
- 	F17_CPUS,
- 	F17_M10H_CPUS,
- 	F17_M30H_CPUS,
-+	F17_M70H_CPUS,
- 	NUM_FAMILIES,
- };
-=20
---=20
+ 
+-- 
 2.23.0
+
