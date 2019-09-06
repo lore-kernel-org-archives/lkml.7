@@ -2,33 +2,33 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB6C8C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F3BC43140
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:26:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F0C3214DE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:26:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D18902070C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:26:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404530AbfIFP0j (ORCPT
+        id S2405746AbfIFP0p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 11:26:39 -0400
-Received: from smtp-sh2.infomaniak.ch ([128.65.195.6]:57071 "EHLO
+        Fri, 6 Sep 2019 11:26:45 -0400
+Received: from smtp-sh2.infomaniak.ch ([128.65.195.6]:33283 "EHLO
         smtp-sh2.infomaniak.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404126AbfIFP0i (ORCPT
+        with ESMTP id S2404269AbfIFP0i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 6 Sep 2019 11:26:38 -0400
 Received: from smtp5.infomaniak.ch (smtp5.infomaniak.ch [83.166.132.18])
-        by smtp-sh2.infomaniak.ch (8.14.4/8.14.4/Debian-8+deb8u2) with ESMTP id x86FP9Ih086018
+        by smtp-sh2.infomaniak.ch (8.14.4/8.14.4/Debian-8+deb8u2) with ESMTP id x86FP7rm085954
         (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 6 Sep 2019 17:25:09 +0200
+        Fri, 6 Sep 2019 17:25:07 +0200
 Received: from localhost (ns3096276.ip-94-23-54.eu [94.23.54.103])
         (authenticated bits=0)
-        by smtp5.infomaniak.ch (8.14.5/8.14.5) with ESMTP id x86FP9Sx047701;
-        Fri, 6 Sep 2019 17:25:09 +0200
+        by smtp5.infomaniak.ch (8.14.5/8.14.5) with ESMTP id x86FP6Sd047657;
+        Fri, 6 Sep 2019 17:25:06 +0200
 From:   =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
@@ -62,9 +62,9 @@ Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
         kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
         linux-security-module@vger.kernel.org,
         linux-fsdevel@vger.kernel.org
-Subject: [PATCH v2 5/5] doc: Add documentation for the fs.open_mayexec_enforce sysctl
-Date:   Fri,  6 Sep 2019 17:24:55 +0200
-Message-Id: <20190906152455.22757-6-mic@digikod.net>
+Subject: [PATCH v2 3/5] fs: Enable to enforce noexec mounts or file exec through O_MAYEXEC
+Date:   Fri,  6 Sep 2019 17:24:53 +0200
+Message-Id: <20190906152455.22757-4-mic@digikod.net>
 X-Mailer: git-send-email 2.23.0.rc1
 In-Reply-To: <20190906152455.22757-1-mic@digikod.net>
 References: <20190906152455.22757-1-mic@digikod.net>
@@ -78,80 +78,185 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Enable to either propagate the mount options from the underlying VFS
+mount to prevent execution, or to propagate the file execute permission.
+This may allow a script interpreter to check execution permissions
+before reading commands from a file.
+
+The main goal is to be able to protect the kernel by restricting
+arbitrary syscalls that an attacker could perform with a crafted binary
+or certain script languages.  It also improves multilevel isolation
+by reducing the ability of an attacker to use side channels with
+specific code.  These restrictions can natively be enforced for ELF
+binaries (with the noexec mount option) but require this kernel
+extension to properly handle scripts (e.g., Python, Perl).
+
+Add a new sysctl fs.open_mayexec_enforce to control this behavior.  A
+following patch adds documentation.
+
 Changes since v1:
-* move from LSM/Yama to sysctl/fs
+* move code from Yama to the FS subsystem (suggested by Kees Cook)
+* make omayexec_inode_permission() static (suggested by Jann Horn)
+* use mode 0600 for the sysctl
+* only match regular files (not directories nor other types), which
+  follows the same semantic as commit 73601ea5b7b1 ("fs/open.c: allow
+  opening only regular files during execve()")
 
 Signed-off-by: Mickaël Salaün <mic@digikod.net>
 Reviewed-by: Philippe Trébuchet <philippe.trebuchet@ssi.gouv.fr>
 Reviewed-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
-Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
 Cc: Kees Cook <keescook@chromium.org>
 Cc: Mickaël Salaün <mickael.salaun@ssi.gouv.fr>
 ---
- Documentation/admin-guide/sysctl/fs.rst | 43 +++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+ fs/namei.c         | 68 ++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/fs.h |  3 ++
+ kernel/sysctl.c    |  7 +++++
+ 3 files changed, 78 insertions(+)
 
-diff --git a/Documentation/admin-guide/sysctl/fs.rst b/Documentation/admin-guide/sysctl/fs.rst
-index 2a45119e3331..f2f5bbe428d6 100644
---- a/Documentation/admin-guide/sysctl/fs.rst
-+++ b/Documentation/admin-guide/sysctl/fs.rst
-@@ -37,6 +37,7 @@ Currently, these files are in /proc/sys/fs:
- - inode-nr
- - inode-state
- - nr_open
-+- open_mayexec_enforce
- - overflowuid
- - overflowgid
- - pipe-user-pages-hard
-@@ -165,6 +166,48 @@ system needs to prune the inode list instead of allocating
- more.
+diff --git a/fs/namei.c b/fs/namei.c
+index 0a6b9483d0cb..abd29a76ecef 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -39,6 +39,7 @@
+ #include <linux/bitops.h>
+ #include <linux/init_task.h>
+ #include <linux/uaccess.h>
++#include <linux/sysctl.h>
  
+ #include "internal.h"
+ #include "mount.h"
+@@ -411,6 +412,34 @@ static int sb_permission(struct super_block *sb, struct inode *inode, int mask)
+ 	return 0;
+ }
  
-+open_mayexec_enforce
-+--------------------
++#define OMAYEXEC_ENFORCE_NONE	0
++#define OMAYEXEC_ENFORCE_MOUNT	(1 << 0)
++#define OMAYEXEC_ENFORCE_FILE	(1 << 1)
++#define _OMAYEXEC_LAST		OMAYEXEC_ENFORCE_FILE
++#define _OMAYEXEC_MASK		((_OMAYEXEC_LAST << 1) - 1)
 +
-+The ``O_MAYEXEC`` flag can be passed to :manpage:`open(2)` to only open regular
-+files that are expected to be executable.  If the file is not identified as
-+executable, then the syscall returns -EACCES.  This may allow a script
-+interpreter to check executable permission before reading commands from a file.
-+One interesting use case is to enforce a "write xor execute" policy through
-+interpreters.
++/**
++ * omayexec_inode_permission - check O_MAYEXEC before accessing an inode
++ * @inode: inode structure to check
++ * @mask: permission mask
++ *
++ * Return 0 if access is permitted, -EACCES otherwise.
++ */
++static int omayexec_inode_permission(struct inode *inode, int mask)
++{
++	if (!(mask & MAY_OPENEXEC))
++		return 0;
 +
-+Thanks to this flag, it is possible to enforce the ``noexec`` mount option
-+(i.e.  the underlying mount point of the file is mounted with MNT_NOEXEC or its
-+underlying superblock is SB_I_NOEXEC) not only on ELF binaries but also on
-+scripts.  This may be possible thanks to script interpreters using the
-+``O_MAYEXEC`` flag.  The executable permission is then checked before reading
-+commands from a file, and thus can enforce the ``noexec`` at the interpreter
-+level by propagating this security policy to the scripts.  To be fully
-+effective, these interpreters also need to handle the other ways to execute
-+code (for which the kernel can't help): command line parameters (e.g., option
-+``-e`` for Perl), module loading (e.g., option ``-m`` for Python), stdin, file
-+sourcing, environment variables, configuration files...  According to the
-+threat model, it may be acceptable to allow some script interpreters (e.g.
-+Bash) to interpret commands from stdin, may it be a TTY or a pipe, because it
-+may not be enough to (directly) perform syscalls.
++	if ((sysctl_omayexec_enforce & OMAYEXEC_ENFORCE_MOUNT) &&
++			!(mask & MAY_EXECMOUNT))
++		return -EACCES;
 +
-+There is two complementary security policies: enforce the ``noexec`` mount
-+option, or enforce executable file permission.  These policies are handled by
-+the ``fs.open_mayexec_enforce`` sysctl (writable only with ``CAP_MAC_ADMIN``)
-+as a bitmask:
++	if (sysctl_omayexec_enforce & OMAYEXEC_ENFORCE_FILE)
++		return generic_permission(inode, MAY_EXEC);
 +
-+1 - mount restriction:
-+    check that the mount options for the underlying VFS mount do not prevent
-+    execution.
++	return 0;
++}
 +
-+2 - file permission restriction:
-+    check that the to-be-opened file is marked as executable for the current
-+    process (e.g., POSIX permissions).
-+
-+Code samples can be found in tools/testing/selftests/exec/omayexec.c and
-+https://github.com/clipos-archive/clipos4_portage-overlay/search?q=O_MAYEXEC .
-+
-+
- overflowgid & overflowuid
- -------------------------
+ /**
+  * inode_permission - Check for access rights to a given inode
+  * @inode: Inode to check permission on
+@@ -454,10 +483,48 @@ int inode_permission(struct inode *inode, int mask)
+ 	if (retval)
+ 		return retval;
  
++	retval = omayexec_inode_permission(inode, mask);
++	if (retval)
++		return retval;
++
+ 	return security_inode_permission(inode, mask);
+ }
+ EXPORT_SYMBOL(inode_permission);
+ 
++/*
++ * Handle open_mayexec_enforce sysctl
++ */
++#ifdef CONFIG_SYSCTL
++int proc_omayexec(struct ctl_table *table, int write, void __user *buffer,
++		size_t *lenp, loff_t *ppos)
++{
++	int error;
++
++	if (write) {
++		struct ctl_table table_copy;
++		int tmp_mayexec_enforce;
++
++		if (!capable(CAP_MAC_ADMIN))
++			return -EPERM;
++		tmp_mayexec_enforce = *((int *)table->data);
++		table_copy = *table;
++		/* do not erase sysctl_omayexec_enforce */
++		table_copy.data = &tmp_mayexec_enforce;
++		error = proc_dointvec(&table_copy, write, buffer, lenp, ppos);
++		if (error)
++			return error;
++		if ((tmp_mayexec_enforce | _OMAYEXEC_MASK) != _OMAYEXEC_MASK)
++			return -EINVAL;
++		*((int *)table->data) = tmp_mayexec_enforce;
++	} else {
++		error = proc_dointvec(table, write, buffer, lenp, ppos);
++		if (error)
++			return error;
++	}
++	return 0;
++}
++#endif
++
+ /**
+  * path_get - get a reference to a path
+  * @path: path to get the reference to
+@@ -887,6 +954,7 @@ int sysctl_protected_symlinks __read_mostly = 0;
+ int sysctl_protected_hardlinks __read_mostly = 0;
+ int sysctl_protected_fifos __read_mostly;
+ int sysctl_protected_regular __read_mostly;
++int sysctl_omayexec_enforce __read_mostly = OMAYEXEC_ENFORCE_NONE;
+ 
+ /**
+  * may_follow_link - Check symlink following for unsafe situations
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index e57609dac8dd..735f5950cfed 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -81,6 +81,7 @@ extern int sysctl_protected_symlinks;
+ extern int sysctl_protected_hardlinks;
+ extern int sysctl_protected_fifos;
+ extern int sysctl_protected_regular;
++extern int sysctl_omayexec_enforce;
+ 
+ typedef __kernel_rwf_t rwf_t;
+ 
+@@ -3452,6 +3453,8 @@ int proc_nr_dentry(struct ctl_table *table, int write,
+ 		  void __user *buffer, size_t *lenp, loff_t *ppos);
+ int proc_nr_inodes(struct ctl_table *table, int write,
+ 		   void __user *buffer, size_t *lenp, loff_t *ppos);
++int proc_omayexec(struct ctl_table *table, int write, void __user *buffer,
++		size_t *lenp, loff_t *ppos);
+ int __init get_filesystem_list(char *buf);
+ 
+ #define __FMODE_EXEC		((__force int) FMODE_EXEC)
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 078950d9605b..eaaeb229a828 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -1911,6 +1911,13 @@ static struct ctl_table fs_table[] = {
+ 		.extra1		= SYSCTL_ZERO,
+ 		.extra2		= &two,
+ 	},
++	{
++		.procname       = "open_mayexec_enforce",
++		.data           = &sysctl_omayexec_enforce,
++		.maxlen         = sizeof(int),
++		.mode           = 0600,
++		.proc_handler   = proc_omayexec,
++	},
+ #if defined(CONFIG_BINFMT_MISC) || defined(CONFIG_BINFMT_MISC_MODULE)
+ 	{
+ 		.procname	= "binfmt_misc",
 -- 
 2.23.0
 
