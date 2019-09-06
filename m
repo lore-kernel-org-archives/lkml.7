@@ -2,232 +2,88 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F348C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87924C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2913D214DE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:06:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BDD5214DE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:06:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404530AbfIFMGk (ORCPT
+        id S2404601AbfIFMGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 08:06:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60672 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404438AbfIFMGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 08:06:32 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2A59CAF9F;
-        Fri,  6 Sep 2019 12:06:30 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     catalin.marinas@arm.com, hch@lst.de, wahrenst@gmx.net,
-        marc.zyngier@arm.com, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-riscv@lists.infradead.org, Will Deacon <will@kernel.org>
-Cc:     f.fainelli@gmail.com, robin.murphy@arm.com, nsaenzjulienne@suse.de,
-        linux-kernel@vger.kernel.org, mbrugger@suse.com,
-        linux-rpi-kernel@lists.infradead.org, phill@raspberrypi.org,
-        m.szyprowski@samsung.com
-Subject: [PATCH v4 3/4] arm64: use both ZONE_DMA and ZONE_DMA32
-Date:   Fri,  6 Sep 2019 14:06:14 +0200
-Message-Id: <20190906120617.18836-4-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190906120617.18836-1-nsaenzjulienne@suse.de>
-References: <20190906120617.18836-1-nsaenzjulienne@suse.de>
+        Fri, 6 Sep 2019 08:06:44 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33802 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404502AbfIFMGj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 08:06:39 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4AA20307D88D;
+        Fri,  6 Sep 2019 12:06:39 +0000 (UTC)
+Received: from localhost (ovpn-117-208.ams2.redhat.com [10.36.117.208])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CF22B60610;
+        Fri,  6 Sep 2019 12:06:38 +0000 (UTC)
+Date:   Fri, 6 Sep 2019 13:06:37 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, miklos@szeredi.hu,
+        linux-kernel@vger.kernel.org, virtio-fs@redhat.com,
+        dgilbert@redhat.com, mst@redhat.com
+Subject: Re: [PATCH 17/18] virtiofs: Remove TODO to quiesce/end_requests
+Message-ID: <20190906120637.GY5900@stefanha-x1.localdomain>
+References: <20190905194859.16219-1-vgoyal@redhat.com>
+ <20190905194859.16219-18-vgoyal@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="lYVfafuUkPqz/tKz"
+Content-Disposition: inline
+In-Reply-To: <20190905194859.16219-18-vgoyal@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Fri, 06 Sep 2019 12:06:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-So far all arm64 devices have supported 32 bit DMA masks for their
-peripherals. This is not true anymore for the Raspberry Pi 4 as most of
-it's peripherals can only address the first GB of memory on a total of
-up to 4 GB.
 
-This goes against ZONE_DMA32's intent, as it's expected for ZONE_DMA32
-to be addressable with a 32 bit mask. So it was decided to re-introduce
-ZONE_DMA in arm64.
+--lYVfafuUkPqz/tKz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-ZONE_DMA will contain the lower 1G of memory, which is currently the
-memory area addressable by any peripheral on an arm64 device.
-ZONE_DMA32 will contain the rest of the 32 bit addressable memory.
+On Thu, Sep 05, 2019 at 03:48:58PM -0400, Vivek Goyal wrote:
+> We now stop queues and drain all the pending requests from all virtqueues.
+> So this is not a TODO anymore.
+>=20
+> Got rid of incrementing fc->dev_count as well. It did not seem meaningful
+> for virtio_fs.
+>=20
+> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> ---
+>  fs/fuse/virtio_fs.c | 2 --
+>  1 file changed, 2 deletions(-)
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
 
----
+--lYVfafuUkPqz/tKz
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Changes in v4:
-- Fixed issue when NUMA=n and ZONE_DMA=n
-- Merged two max_zone_dma*_phys() functions
+-----BEGIN PGP SIGNATURE-----
 
-Changes in v3:
-- Used fixed size ZONE_DMA
-- Fix check befor swiotlb_init()
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl1yS80ACgkQnKSrs4Gr
+c8iYtAf+M+W93KWyYjt/Ozu/X8KfP7/va+YH3UjLCSvUxvX5CnMw8go9WAGz79SW
+h3CwH86zMiiBVTqVtUcV6HyxuDRdKDSLC123iMP5ydQGJYa63zkdGpbq8Xnc3kFB
+vQdt2JHMqvByjMdtgAzOSdVYb5kslR6VxFrH8xd+fd7x6gKvp4dNE1lDfuI5iUHN
+vS3OQ2IcSBv1TpPGTRrUhDEcz7N5ebnh5/JQvDbyPbmspchYS+PUvFofzLAQ61Pl
+2gKkBnoYAnpHQJwXaFq7aTp/48t2BIsX9j6WrXeK2PjkV2Xa24O1M7jM995KwK+n
+lHQUmHQMYTsl27X2YQeHusZ4XB1Gdw==
+=LskU
+-----END PGP SIGNATURE-----
 
-Changes in v2:
-- Update comment to reflect new zones split
-- ZONE_DMA will never be left empty
-
- arch/arm64/Kconfig            |  4 +++
- arch/arm64/include/asm/page.h |  2 ++
- arch/arm64/mm/init.c          | 51 ++++++++++++++++++++++++++---------
- 3 files changed, 44 insertions(+), 13 deletions(-)
-
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 6b6362b83004..2dbe0165bd15 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -267,6 +267,10 @@ config GENERIC_CSUM
- config GENERIC_CALIBRATE_DELAY
- 	def_bool y
- 
-+config ZONE_DMA
-+	bool "Support DMA zone" if EXPERT
-+	default y
-+
- config ZONE_DMA32
- 	bool "Support DMA32 zone" if EXPERT
- 	default y
-diff --git a/arch/arm64/include/asm/page.h b/arch/arm64/include/asm/page.h
-index d39ddb258a04..7b8c98830101 100644
---- a/arch/arm64/include/asm/page.h
-+++ b/arch/arm64/include/asm/page.h
-@@ -38,4 +38,6 @@ extern int pfn_valid(unsigned long);
- 
- #include <asm-generic/getorder.h>
- 
-+#define ARCH_ZONE_DMA_BITS 30
-+
- #endif
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 8e9bc64c5878..95ee7e839c75 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -56,6 +56,13 @@ EXPORT_SYMBOL(physvirt_offset);
- struct page *vmemmap __ro_after_init;
- EXPORT_SYMBOL(vmemmap);
- 
-+/*
-+ * We create both ZONE_DMA and ZONE_DMA32. ZONE_DMA covers the first 1G of
-+ * memory as some devices, namely the Raspberry Pi 4, have peripherals with
-+ * this limited view of the memory. ZONE_DMA32 will cover the rest of the 32
-+ * bit addressable memory area.
-+ */
-+phys_addr_t arm64_dma_phys_limit __ro_after_init;
- phys_addr_t arm64_dma32_phys_limit __ro_after_init;
- 
- #ifdef CONFIG_KEXEC_CORE
-@@ -169,15 +176,16 @@ static void __init reserve_elfcorehdr(void)
- {
- }
- #endif /* CONFIG_CRASH_DUMP */
-+
- /*
-- * Return the maximum physical address for ZONE_DMA32 (DMA_BIT_MASK(32)). It
-- * currently assumes that for memory starting above 4G, 32-bit devices will
-- * use a DMA offset.
-+ * Return the maximum physical address for a zone with a given address size
-+ * limit. It currently assumes that for memory starting above 4G, 32-bit
-+ * devices will use a DMA offset.
-  */
--static phys_addr_t __init max_zone_dma32_phys(void)
-+static phys_addr_t __init max_zone_phys(unsigned int zone_bits)
- {
- 	phys_addr_t offset = memblock_start_of_DRAM() & GENMASK_ULL(63, 32);
--	return min(offset + (1ULL << 32), memblock_end_of_DRAM());
-+	return min(offset + (1ULL << zone_bits), memblock_end_of_DRAM());
- }
- 
- #ifdef CONFIG_NUMA
-@@ -186,6 +194,9 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
- {
- 	unsigned long max_zone_pfns[MAX_NR_ZONES]  = {0};
- 
-+#ifdef CONFIG_ZONE_DMA
-+	max_zone_pfns[ZONE_DMA] = PFN_DOWN(arm64_dma_phys_limit);
-+#endif
- #ifdef CONFIG_ZONE_DMA32
- 	max_zone_pfns[ZONE_DMA32] = PFN_DOWN(arm64_dma32_phys_limit);
- #endif
-@@ -201,13 +212,18 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
- 	struct memblock_region *reg;
- 	unsigned long zone_size[MAX_NR_ZONES], zhole_size[MAX_NR_ZONES];
- 	unsigned long max_dma32 = min;
-+	unsigned long max_dma = min;
- 
- 	memset(zone_size, 0, sizeof(zone_size));
- 
--	/* 4GB maximum for 32-bit only capable devices */
-+#ifdef CONFIG_ZONE_DMA
-+	max_dma = PFN_DOWN(arm64_dma_phys_limit);
-+	zone_size[ZONE_DMA] = max_dma - min;
-+	max_dma32 = max_dma;
-+#endif
- #ifdef CONFIG_ZONE_DMA32
- 	max_dma32 = PFN_DOWN(arm64_dma32_phys_limit);
--	zone_size[ZONE_DMA32] = max_dma32 - min;
-+	zone_size[ZONE_DMA32] = max_dma32 - max_dma;
- #endif
- 	zone_size[ZONE_NORMAL] = max - max_dma32;
- 
-@@ -219,11 +235,17 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
- 
- 		if (start >= max)
- 			continue;
--
-+#ifdef CONFIG_ZONE_DMA
-+		if (start < max_dma) {
-+			unsigned long dma_end = min_not_zero(end, max_dma);
-+			zhole_size[ZONE_DMA] -= dma_end - start;
-+		}
-+#endif
- #ifdef CONFIG_ZONE_DMA32
- 		if (start < max_dma32) {
--			unsigned long dma_end = min(end, max_dma32);
--			zhole_size[ZONE_DMA32] -= dma_end - start;
-+			unsigned long dma32_end = min(end, max_dma32);
-+			unsigned long dma32_start = max(start, max_dma);
-+			zhole_size[ZONE_DMA32] -= dma32_end - dma32_start;
- 		}
- #endif
- 		if (end > max_dma32) {
-@@ -418,9 +440,11 @@ void __init arm64_memblock_init(void)
- 
- 	early_init_fdt_scan_reserved_mem();
- 
--	/* 4GB maximum for 32-bit only capable devices */
-+	if (IS_ENABLED(CONFIG_ZONE_DMA))
-+		arm64_dma_phys_limit = max_zone_phys(ARCH_ZONE_DMA_BITS);
-+
- 	if (IS_ENABLED(CONFIG_ZONE_DMA32))
--		arm64_dma32_phys_limit = max_zone_dma32_phys();
-+		arm64_dma32_phys_limit = max_zone_phys(32);
- 	else
- 		arm64_dma32_phys_limit = PHYS_MASK + 1;
- 
-@@ -430,7 +454,7 @@ void __init arm64_memblock_init(void)
- 
- 	high_memory = __va(memblock_end_of_DRAM() - 1) + 1;
- 
--	dma_contiguous_reserve(arm64_dma32_phys_limit);
-+	dma_contiguous_reserve(arm64_dma_phys_limit ? : arm64_dma32_phys_limit);
- }
- 
- void __init bootmem_init(void)
-@@ -534,6 +558,7 @@ static void __init free_unused_memmap(void)
- void __init mem_init(void)
- {
- 	if (swiotlb_force == SWIOTLB_FORCE ||
-+	    max_pfn > (arm64_dma_phys_limit >> PAGE_SHIFT) ||
- 	    max_pfn > (arm64_dma32_phys_limit >> PAGE_SHIFT))
- 		swiotlb_init(1);
- 	else
--- 
-2.23.0
-
+--lYVfafuUkPqz/tKz--
