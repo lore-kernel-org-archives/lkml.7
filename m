@@ -2,112 +2,115 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A41C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 20:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D95C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 20:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EB3920838
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 20:12:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA46C207FC
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 20:16:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hKyTyiOE"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OdQ+M7bC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394367AbfIFUL7 (ORCPT
+        id S2394441AbfIFUQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 16:11:59 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:43263 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388396AbfIFUL7 (ORCPT
+        Fri, 6 Sep 2019 16:16:51 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35501 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394415AbfIFUQv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 16:11:59 -0400
-Received: by mail-lf1-f67.google.com with SMTP id q27so6023742lfo.10
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 13:11:57 -0700 (PDT)
+        Fri, 6 Sep 2019 16:16:51 -0400
+Received: by mail-pg1-f195.google.com with SMTP id n4so4145471pgv.2
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 13:16:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tP24fnQIBLQtciZGMJdns0fvz+gWnf/L1qy3OAOlCF8=;
-        b=hKyTyiOEr5dWpp3q15pBIl0wvmaMEic3JNsgjx18DEmxngWG2c0CeFIqRRaAvHVWaw
-         28EeIs8r0xA3ddAsQ1WAs5SjKKqzIF1kgeB7ksKMmrI/3KU9XVSMOCuPmQjTASDM6uL7
-         tl1KBoz1uUbYaJHh0geLKuyKXkZrASFkLvq4X61yL0MjbFQbgbIjW5WZihIQh+8QCdjr
-         R+W3U7A7GCoQ+KTXnv6qnij/dEtZr58nK8Ii75iVIBOJQT7iBz3oADPrttHl6PqNsFl+
-         BAxF+w4HkdDCrZp5gm9an6o+fyZblJUtLepSAmCq2s2lu+5R+aDPXkg+OIxd5WA4efoo
-         FOPw==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=XpjoT+t3VPIqNty6+N9T0d42yqs+CXC4vRtjt+q0q7o=;
+        b=OdQ+M7bCR/Hs87PAgK5bi456+I3hom4IiTzR1sNybd715+6YInSNgJiLw0rRpHZPMi
+         CjaBP3CTTZu9FeC5FWYDLiBUENvXKGWPkVYABWUL4nKCD6fZpf4BG+Iex6F9NdjHFQHj
+         8+jMcuOvrvlRn4QQ6U0J+daib7Rrvq/aPr2svANxqeK0EG1D144YDT+sCm9505bEfM1e
+         8OfKsXCnkc+BGope+zK89PVKVpHCO099vcN+1Yq+/bRfFe9g7aKQhcDXxCAMf1+TJUzN
+         3mXVBcCYm0fGT8t1RitjWRrgQqLraI6TnC3ROOVlyJ/bqS6N1CBFd1oftwe9qSTYHNRM
+         n7Jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tP24fnQIBLQtciZGMJdns0fvz+gWnf/L1qy3OAOlCF8=;
-        b=TJh2VzHMoIDBh7eU0MDrtdoKiVASb0XPwfebHieABz26AJ884aNun/W8Uxy0N5qpMC
-         oHKKRxDVePMbat6mi1rEXIxi1NtVN9aKOGLY78KN2njhFgFL9YdKtGZGjHv2kit17+y3
-         LAfgx+3hwP9s6PPfL8xVDcA/kh30bAnq5VDAoKW8jEvnBfCkQruMzayGj3ebMdvWNomj
-         jzzBp8fCKIU4nN8fshSsfpSkkfqrasJpdVjVC1oEKpiR6aL6PPluIwlXgQJJLvGPMSLG
-         GIomk8r/NIOg0FGS6XajI8BXflkpDx+YusGR507m3YwYaLk8obbBsVulnAxJUdFQuSFP
-         YQbA==
-X-Gm-Message-State: APjAAAXB+jzM358a/y0M0IqTLexo0rOj3ug4hsWKfkQ7tqAFcuN9EeXY
-        hTB8qemt94tSuliasV77aG1pgY6oSoqQlNVZZ7Q=
-X-Google-Smtp-Source: APXvYqy/KVad41U9S6dPyiddxRDIE2+P/ZBahDz00J9smcyXOHqtOIm5DdfNHsNlb7/sW0FgIVOB5pReRcTE6YiHoSE=
-X-Received: by 2002:ac2:4902:: with SMTP id n2mr7794870lfi.0.1567800716663;
- Fri, 06 Sep 2019 13:11:56 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=XpjoT+t3VPIqNty6+N9T0d42yqs+CXC4vRtjt+q0q7o=;
+        b=cnkSXMILXoZMNr7T737VAib3pcxFGqDzDmxckskHTLdGWSAfV48RSLFYGM7KD0T9/y
+         KXOtKsBniijXbBD/YoXZ/hl2BUAKXNPAfFOjV7vCG0XXjHiuE4y3HOxzR98x22CKFgOo
+         6ju82SL4kAuu9xmZqKq75dh/dJpPcXCb3lvQ+s7jVTA0nCk7REKAoZVJmlU0kd8yFjbl
+         fGq/dOrKTETfsah7cOidtIBXkGOmRk4KMkzFmqNmSEhisXIid/I+rMiMtxVWrequremD
+         C6nOWMNj2yJvdkYX9OAqJaxRov5tgtUxlZlcNAcU9LCTQLAWSmoWX8DF6lH5WKAh5O4F
+         oacQ==
+X-Gm-Message-State: APjAAAU1hGEMd7t2GtKCHsLdTTa53zm7lbKBzLM+pGuJuxvQeaXn0Eph
+        +X4PLvGTN5SlIbKkLoAVrzwWFA==
+X-Google-Smtp-Source: APXvYqy6kmrb6Rqhp74ZrCXwb0I57IQq3ixyKOJRHtKUsywDqn/BCFjE6trl3ESF6oEToJYzNCiNjw==
+X-Received: by 2002:a63:c006:: with SMTP id h6mr9416225pgg.290.1567801010246;
+        Fri, 06 Sep 2019 13:16:50 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id 11sm5406332pgo.43.2019.09.06.13.16.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Sep 2019 13:16:49 -0700 (PDT)
+Date:   Fri, 6 Sep 2019 13:16:48 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+cc:     Vlastimil Babka <vbabka@suse.cz>, Michal Hocko <mhocko@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Mel Gorman <mgorman@suse.de>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [rfc 3/4] mm, page_alloc: avoid expensive reclaim when compaction
+ may not succeed
+In-Reply-To: <3468b605-a3a9-6978-9699-57c52a90bd7e@oracle.com>
+Message-ID: <alpine.DEB.2.21.1909061314270.150656@chino.kir.corp.google.com>
+References: <alpine.DEB.2.21.1909041252230.94813@chino.kir.corp.google.com> <alpine.DEB.2.21.1909041253390.94813@chino.kir.corp.google.com> <20190905090009.GF3838@dhcp22.suse.cz> <fab91766-da33-d62f-59fb-c226e4790a91@suse.cz>
+ <3468b605-a3a9-6978-9699-57c52a90bd7e@oracle.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190904181740.GA19688@gmail.com> <CAHk-=wi2VOPoweqnDhxXKJ9fcLQzkV1oEDjteV=z-C7KXrpomg@mail.gmail.com>
- <CANiq72mXLbaefVBqZzz1vSREi0=HiBUgR1KU3iRjOCum7rvfrw@mail.gmail.com> <CAHk-=wiNksYaQ5zRFgTdY4TMHkxRi3aOcTC2zMMS6+aVSx+yeQ@mail.gmail.com>
-In-Reply-To: <CAHk-=wiNksYaQ5zRFgTdY4TMHkxRi3aOcTC2zMMS6+aVSx+yeQ@mail.gmail.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Fri, 6 Sep 2019 22:11:45 +0200
-Message-ID: <CANiq72kyk6uzxS3LRvcOs9zgYYh7V7V2yPtAFkDwpHmyYcsz_Q@mail.gmail.com>
-Subject: Re: [GIT PULL] compiler-attributes for v5.3-rc8
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Will Deacon <will@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Paul Burton <paul.burton@mips.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 5, 2019 at 10:53 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> That's probably what we should have done originally, avoiding all the
-> issues with "what if we have multi-part strings" etc.
->
-> But it's not what we did, probably because it looked slightly simpler
-> to do the stringification in the macro for the usual case.
->
-> So now we have (according to a quick grep) eight users that have a
-> constant string, and about one hundred users that use the unquoted
-> section name and expect the automatic stringification. I say "about",
-> because I didn't check if any of them might be doing tricks, I really
-> just did a stupid grep.
->
-> And we have that _one_ insane KENTRY thing that was apparently never
-> actually used.
->
-> So I think the minimal fix is to just accept that it's what it is,
-> remove the unnecessary quotes from the 8 existing users, and _if_
-> somebody wants to build the string  by hand (like the KENTRY code
-> did), then just use "__attribute__((section(x)))" for that.
->
-> But yeah, we could just remove the stringification and make the users do it.
->
-> But for the current late rc (and presumably -stable?), I definitely
-> want the absolute minimal thing that fixes the oops.
+On Thu, 5 Sep 2019, Mike Kravetz wrote:
 
-Then I will send a PR with that patch only (Nick, do you know if the
-entire patch is needed or we could further reduce it?).
+> I don't have a specific test for this.  It is somewhat common for people
+> to want to allocate "as many hugetlb pages as possible".  Therefore, they
+> will try to allocate more pages than reasonable for their environment and
+> take what they can get.  I 'tested' by simply creating some background
+> activity and then seeing how many hugetlb pages could be allocated.  Of
+> course, many tries over time in a loop.
+> 
+> This patch did not cause premature allocation failures in my limited testing.
+> The number of pages which could be allocated with and without patch were
+> pretty much the same.
+> 
+> Do note that I tested on top of Andrew's tree which contains this series:
+> http://lkml.kernel.org/r/20190806014744.15446-1-mike.kravetz@oracle.com
+> Patch 3 in that series causes allocations to fail sooner in the case of
+> COMPACT_DEFERRED:
+> http://lkml.kernel.org/r/20190806014744.15446-4-mike.kravetz@oracle.com
+> 
+> hugetlb allocations have the __GFP_RETRY_MAYFAIL flag set.  They are willing
+> to retry and wait and callers are aware of this.  Even though my limited
+> testing did not show regressions caused by this patch, I would prefer if the
+> quick exit did not apply to __GFP_RETRY_MAYFAIL requests.
 
-Then for 5.4 I will prepare a new series moving to non-stringification
-(unless Nick wants to do it himself).
+Good!  I think that is the ideal way of handling it: we can specify the 
+preference to actually loop and retry (but still eventually fail) for 
+hugetlb allocations specifically for this patch by testing for 
+__GFP_RETRY_MAYFAIL.
 
-Cheers,
-Miguel
+I can add that to the formal proposal of patches 3 and 4 in this series 
+assuming we get 5.3 settled by applying the reverts in patches 1 and 2 so 
+that we don't cause various versions of Linux to have different default 
+and madvise allocation policies wrt NUMA.
