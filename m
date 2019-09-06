@@ -2,79 +2,101 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A10AC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 800ADC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CF402081B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:57:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AA432082C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:57:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OoJLwlcF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392142AbfIFO5a (ORCPT
+        id S2392196AbfIFO5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 10:57:30 -0400
-Received: from ms.lwn.net ([45.79.88.28]:36716 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726019AbfIFO5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 10:57:30 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 8ED4E9AC;
-        Fri,  6 Sep 2019 14:57:29 +0000 (UTC)
-Date:   Fri, 6 Sep 2019 08:57:28 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     tglx@linutronix.de, gregkh@linuxfoundation.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        konrad.wilk@oracle.com, jkosina@suse.cz, tyhicks@canonical.com,
-        linux-kernel@microsoft.com,
-        Sasha Levin <alexander.levin@microsoft.com>
-Subject: Re: [PATCH] Documentation/process/embargoed-hardware-issues:
- Microsoft ambassador
-Message-ID: <20190906085728.15af96c3@lwn.net>
-In-Reply-To: <20190906095852.23568-1-sashal@kernel.org>
-References: <20190906095852.23568-1-sashal@kernel.org>
-Organization: LWN.net
+        Fri, 6 Sep 2019 10:57:52 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52506 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726019AbfIFO5v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 10:57:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=8uK72fUcoR/dOk67AIhDl3phYWTEBOSNQgXr2opx6YQ=; b=OoJLwlcFoMcbFlWhKHZL0Iv2t
+        xGSzljJBjV7GRPPUygW13XZxQrWrvjLCjMUwNZW1LKX0QBQ/7xZEL5PN+q9J0HdZjEWQZnB1tw+QA
+        /yGOWMjkyadvtPvYE/i3REW8kTAdxbBkXW++18U4vW2fZEKZkfY0jAQMz79K+9ZagWBVKrEeNFTjZ
+        8pPK5z1TpoluFgMEjSdLdJJlJerF+SffUw/gVMsURZvjv/PbcVSU1u8Q53JMAu4ldpzE7c/cnfxN4
+        pD/nYxN6XMpI9wEUPWYoyhHn8LvediGThCGX7hpHY8aVNvnFA/fQK0YLj65WvTI/X8geljykGhl7S
+        PzGWja24w==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i6FgE-0001Sx-K1; Fri, 06 Sep 2019 14:57:42 +0000
+Date:   Fri, 6 Sep 2019 07:57:42 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Jia He <justin.he@arm.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Airlie <airlied@redhat.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Catalin Marinas <Catalin.Marinas@arm.com>
+Subject: Re: [PATCH v2] mm: fix double page fault on arm64 if PTE_AF is
+ cleared
+Message-ID: <20190906145742.GX29434@bombadil.infradead.org>
+References: <20190906135747.211836-1-justin.he@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190906135747.211836-1-justin.he@arm.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  6 Sep 2019 05:58:52 -0400
-Sasha Levin <sashal@kernel.org> wrote:
+On Fri, Sep 06, 2019 at 09:57:47PM +0800, Jia He wrote:
+>  		 * This really shouldn't fail, because the page is there
+>  		 * in the page tables. But it might just be unreadable,
+>  		 * in which case we just give up and fill the result with
+> -		 * zeroes.
+> +		 * zeroes. If PTE_AF is cleared on arm64, it might
+> +		 * cause double page fault. So makes pte young here
 
-> Add Sasha Levin as Microsoft's process ambassador.
-> 
-> Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  Documentation/process/embargoed-hardware-issues.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/process/embargoed-hardware-issues.rst b/Documentation/process/embargoed-hardware-issues.rst
-> index d37cbc502936d..9a92ccdbce74e 100644
-> --- a/Documentation/process/embargoed-hardware-issues.rst
-> +++ b/Documentation/process/embargoed-hardware-issues.rst
-> @@ -219,7 +219,7 @@ an involved disclosed party. The current ambassadors list:
->    Intel
->    Qualcomm
->  
-> -  Microsoft
-> +  Microsoft	Sasha Levin <sashal@kernel.org>
->    VMware
->    XEN
+How about:
+		 * zeroes. On architectures with software "accessed" bits,
+		 * we would take a double page fault here, so mark it
+		 * accessed here.
 
-This document went upstream via Greg's tree, so updates are awkward for
-me to apply without having to explain a late backmerge to Linus.  I can
-hold them until after the merge window, unless you (Greg) would like to
-take them sooner?
+>  		 */
+> +		if (!pte_young(vmf->orig_pte)) {
 
-Thanks,
+Let's guard this with:
 
-jon
+		if (arch_sw_access_bit && !pte_young(vmf->orig_pte)) {
+
+#define arch_sw_access_bit	0
+by default and have arm64 override it (either to a variable or a constant
+... your choice).  Also, please somebody decide on a better name than
+arch_sw_access_bit.
+
+> +			entry = pte_mkyoung(vmf->orig_pte);
+> +			if (ptep_set_access_flags(vmf->vma, vmf->address,
+> +				vmf->pte, entry, 0))
+
+This indentation is wrong; it makes vmf->pte look like part of the subsequent
+statement instead of part of the condition.
+
+> +				update_mmu_cache(vmf->vma, vmf->address,
+> +						vmf->pte);
+> +		}
+> +
