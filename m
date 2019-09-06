@@ -2,86 +2,112 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 529FBC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A61D9C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FAB420838
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:33:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B14120838
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:36:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="Ef0Hr3tJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394864AbfIFPdM (ORCPT
+        id S2404773AbfIFPgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 11:33:12 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:60027 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725871AbfIFPdM (ORCPT
+        Fri, 6 Sep 2019 11:36:00 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:44720 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404705AbfIFPgA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 11:33:12 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1Mwwhv-1iLQpm1LR5-00yQot; Fri, 06 Sep 2019 17:33:05 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] [don't apply] watch_queue: disable sample
-Date:   Fri,  6 Sep 2019 17:32:36 +0200
-Message-Id: <20190906153249.1864324-2-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20190906153249.1864324-1-arnd@arndb.de>
-References: <20190906153249.1864324-1-arnd@arndb.de>
+        Fri, 6 Sep 2019 11:36:00 -0400
+Received: by mail-ed1-f65.google.com with SMTP id p2so5497532edx.11
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 08:35:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=A4FYq6BYAh9kLfOqN+BJBL7FeQsVNJ/SlbY8XN9CwA8=;
+        b=Ef0Hr3tJqLTPZXz5nKn/QZlVlv/EccVcAXv+2/UUOF6Mg5R+fHj87YhuLGsxjwYppU
+         W3/rHKML8xuucTp2rSpU2M2xqVOAPB2zE2P5SzCfGRnmQUckNHc9bFtZKPELKdLRUP2f
+         JG+u003rO5+i6SD1pmAO0U6edTrVhdAnswlfGrKlbFjZaunsV/07suyfBhpVyRaKAqPz
+         kgoeUTaq1QPmlw+R60+UxKe7BthBtS34DA2HkxeU86dVp7bcstmFCe/Kk5FE9Q+vkfgM
+         O4sRgA1GIDIYLWe3+HSMgP8M/j2LiKmEcd/yTovL3oK0UfXa3QpI0BHSrg+ZS8481Rrp
+         O53Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=A4FYq6BYAh9kLfOqN+BJBL7FeQsVNJ/SlbY8XN9CwA8=;
+        b=pWtGaX1jqiSrNUq0LtJzZ5nNHZHH3/aGdTkMAfuWR9ZHzrUFoMw4uEsTZLN8uVq3k7
+         YWUcRocBpjFk/v4vfDHPGpB10dLDemJoQAe9+cHnsveBW/jGEt0EgodpBWn3Ipc0Pdl6
+         Cl4/COR1avOImO7qNDfizNKDeUufBmi4GSf2nrB4LjYvnzoZPo0itWtyscDJbUs28TQl
+         hf2sUF+utJgVeqeEph4kbqoPoc1MY8F3UNYdr/iVKhZSiFkJxeY1Xg+mJABmcGkwpzxN
+         d1C0Z59aDXRoK63hKiQaNA7BxgrThuQ/E6TbIVFOwDJdzvdUmCHmanmXZyXr7HhnyHhW
+         lHBQ==
+X-Gm-Message-State: APjAAAUgzFXjPL0oqo30ho4xUKeuVIjzunDP59dNr+sPXzKc89s592Cn
+        +/m1O0csaVxx6liXEWv6FXPH/w3F3ZextO/2tp6Yaw==
+X-Google-Smtp-Source: APXvYqwSiKKOKWP/h3a0ZsF+Oo9rceIyMqvsTBtnjeEonE2/Oyyhql11Q3k8Zm0qLFs0EuLz3YWma2Khwt65rF7/etA=
+X-Received: by 2002:a05:6402:17ae:: with SMTP id j14mr10209564edy.219.1567784158621;
+ Fri, 06 Sep 2019 08:35:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:s7LPzVXx1AJcu2lZxoaxETHXyBTWZCi5uuZHceTd7xmKWVYH64/
- P54VqDE9IQNixadRhryh7ZFIl83Ore9NrMOZvT3DMt10/MyjaDHk5x239xvF1o1Txdg+0dS
- jOwnD8QIBufqBUVa1v8h6bnKEhZHti2cLiHUMhwlwvCy+Hb8EwRyS6J7he9vfAfiU1OGN/H
- 2zvHpocrBQdapMUoBsnKw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:QteUEtZ8coQ=:ZWe4eD/tcSVz70zIJy7uSw
- ZvnnparMxVq87+j4LEwOmEfKn45AOwhcCMD7OiakzbWuYQyDdhNuHspDZKFn8batrFibFclFZ
- c4BhsbUPZbhf56m2TW4voOSmCqQi35FmHFEyb8bLteZlZHVV0NSYghCt5VMh1AtE1+ZlI/fpo
- eoCQdQswkHJYOn1tqRhW/FXlKJ0c6CS9NJ5aerAyAfgtdiF1jqKUFEFviscuecz9gA5AsyzNA
- HOMLCJ+6COKeREaqiISM72Bit9Gtu0Jgmo/aS4fN80tu9jnKoCT0lVwjb91tkkpVioK6x7bR8
- MkmuNQFPget5mEIMGkRoNhqzUYy5qQu29awB/56bquNcT3urUQ3/2DFyzNrlcFGwaTrIfkoJ1
- tbbfzFDeo5cJfN7S2cPWonh59qj2PjqcnvrEosotfC8rnHcAVvjICfYqwkBf5RKYkG2UOs94j
- evdSbNEDY54OzEDgWZSxIlEWJvxG6yoUr0n6xMJQeUz5NlioDeFBFXrEv5fLgOHM3nFDc6OJs
- p6xJm1MoxAK243XIlBsuaMAbkWd0UMPNY/bPuVsFlmGAupyQ65kMU39WN/YDUJo4FGp+5p6n7
- IJ+CT7HCf7lGQSB0244pKB6jKDLQX39x5XW0k6Yaj6/QBZLAOVPNM922uwVQ+uMWtBIVzbNFP
- 6C37wI058WU1mgnw9x6s7EEmrbhLw0jS+G9iIhBEh393gl8Lv30PrAehfnYUcgd3ado8iSoUy
- PNitBkqzRHKmUEJGIU1H5fV3c9xvjQ/fMO+h52Qwlzc11JVqBWxwFSlhzvzqBbr0YASIcie8V
- RcQ079WzlDFA2F5LEGN6yOQHwirVg==
+References: <20190821183204.23576-1-pasha.tatashin@soleen.com>
+ <20190821183204.23576-2-pasha.tatashin@soleen.com> <0f83b70e-2f8f-aa05-84d8-41290679003b@arm.com>
+In-Reply-To: <0f83b70e-2f8f-aa05-84d8-41290679003b@arm.com>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Fri, 6 Sep 2019 11:35:47 -0400
+Message-ID: <CA+CK2bBzCnxk8X8R=_70ECT=kn8QRm7OioZP4LNJioTNXYDhXQ@mail.gmail.com>
+Subject: Re: [PATCH v3 01/17] kexec: quiet down kexec reboot
+To:     James Morse <james.morse@arm.com>
+Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        kexec mailing list <kexec@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Bhupesh Sharma <bhsharma@redhat.com>,
+        linux-mm <linux-mm@kvack.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Building in a separate object directory causes a compilation
-failure for a missing header:
+On Fri, Sep 6, 2019 at 11:17 AM James Morse <james.morse@arm.com> wrote:
+>
+> Hi Pavel,
+>
+> On 21/08/2019 19:31, Pavel Tatashin wrote:
+> > Here is a regular kexec command sequence and output:
+> > =====
+> > $ kexec --reuse-cmdline -i --load Image
+> > $ kexec -e
+> > [  161.342002] kexec_core: Starting new kernel
+> >
+> > Welcome to Buildroot
+> > buildroot login:
+> > =====
+> >
+> > Even when "quiet" kernel parameter is specified, "kexec_core: Starting
+> > new kernel" is printed.
+> >
+> > This message has  KERN_EMERG level, but there is no emergency, it is a
+> > normal kexec operation, so quiet it down to appropriate KERN_NOTICE.
+>
+> As this doesn't have a dependency with the rest of the series, you may want to post it
+> independently so it can be picked up independently.
 
-samples/watch_queue/watch_test.c:23:10: fatal error: linux/watch_queue.h: No such file or directory
+Hi James,
 
-I could not figure out why this does not work and applied this
-patch locally. It would be good to fix this properly for 5.4
-instead.
+I have posted it previously, but it has not been picked up. So, I
+decided to include it together with this series. Is this alright with
+you, otherwise I can remove it from this series.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- samples/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/samples/Makefile b/samples/Makefile
-index a61a39047d02..068b28113be9 100644
---- a/samples/Makefile
-+++ b/samples/Makefile
-@@ -20,4 +20,4 @@ obj-$(CONFIG_SAMPLE_TRACE_PRINTK)	+= trace_printk/
- obj-$(CONFIG_VIDEO_PCI_SKELETON)	+= v4l/
- obj-y					+= vfio-mdev/
- subdir-$(CONFIG_SAMPLE_VFS)		+= vfs
--subdir-$(CONFIG_SAMPLE_WATCH_QUEUE)	+= watch_queue
-+#subdir-$(CONFIG_SAMPLE_WATCH_QUEUE)	+= watch_queue
--- 
-2.20.0
-
+Thank you,
+Pasha
