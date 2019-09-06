@@ -2,105 +2,109 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E77E8C00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDC6C0030B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4DBE2081B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C85C02081B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:09:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O1Bg4eLx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392800AbfIFTHY (ORCPT
+        id S2392913AbfIFTJB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 15:07:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60896 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729131AbfIFTHX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 15:07:23 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0877830860BF;
-        Fri,  6 Sep 2019 19:07:23 +0000 (UTC)
-Received: from x2.localnet (ovpn-117-48.phx2.redhat.com [10.3.117.48])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3A44560BF7;
-        Fri,  6 Sep 2019 19:07:20 +0000 (UTC)
-From:   Steve Grubb <sgrubb@redhat.com>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     =?ISO-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Eric Chiang <ericchiang@google.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?ISO-8859-1?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Philippe =?ISO-8859-1?Q?Tr=E9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Steve Dower <steve.dower@python.org>,
-        Thibaut S autereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 0/5] Add support for O_MAYEXEC
-Date:   Fri, 06 Sep 2019 15:07:19 -0400
-Message-ID: <1802966.yheqmZt8Si@x2>
-Organization: Red Hat
-In-Reply-To: <87mufhckxv.fsf@oldenburg2.str.redhat.com>
-References: <20190906152455.22757-1-mic@digikod.net> <2989749.1YmIBkDdQn@x2> <87mufhckxv.fsf@oldenburg2.str.redhat.com>
+        Fri, 6 Sep 2019 15:09:01 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46214 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728988AbfIFTJA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 15:09:00 -0400
+Received: by mail-pg1-f195.google.com with SMTP id m3so3975358pgv.13;
+        Fri, 06 Sep 2019 12:09:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XLAbwCH4CH2GPFxKGgW5hLIRwoX3YXe2UqDB5BrzGc8=;
+        b=O1Bg4eLxG6/wuX3whfk5t9vBOWq+jOJUhnqvb4NJJ4u365XRQmyTZU4+bRt/cVTNb3
+         jH2z1BQggaQ7GAs8nugMF/9AQgBtNMq5PzwoFfA+I+k6B9FpehLFyWIPKUawYe5WyqvA
+         J9A4HiK0+ggNfm/s3kkJhvuLIrlR3y6FeTJW3y6mKMlSGDxp6+SSYIQKu9o5XQh5je26
+         GybmCfFHyroZ2kMmpFAq0sPZr0MdHrThiwD6TiYwOQJnhKGO8N+6K6y1EFgDFKcTHl/F
+         apw1AFb2WW2n5ZR7YVxZwlyeyr4jbTNBm+HA70PvIXhULcNNguVTbiosMKEuxQs0M8Cz
+         FJAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XLAbwCH4CH2GPFxKGgW5hLIRwoX3YXe2UqDB5BrzGc8=;
+        b=ec5A5Gwr4l1XxYbPrw2cB3QMD4tCrH0ci+3ablXZPc+aNDY/f22/W/W+1lkJtw9fAK
+         Om0RsQrUy5xEKJ5Dob4+HT+3koACMLCngz4MppDcpvRThgAnE0YG67fEQJXjC4s3iElI
+         0Vu+RHSeBfQE3Vxvw7wOGL8bMsWrydXvyymarWXiXpHZ6jIm/53iwDmR2VMzFotCFhqA
+         uj6hp2ezNCyaZdQN7kLmqUN/N1GvEbiNivso8PlcF3+gO7eYzxyxKq2EPQDBiqhlwQa6
+         XiA02UPMBnZ9KTIuNlStv6VziccAOMQyAdN84/6oHPvld63y/ebkd43/q4nEC64AOi/2
+         8Bxg==
+X-Gm-Message-State: APjAAAUyOx2nZcaFcAyigyL+N6++7J444qY3F2z+pUTGE0sQhjOY9QB0
+        GFOIOOi/DtJvftXfRuelO7Y=
+X-Google-Smtp-Source: APXvYqySTVMyJzabuC59muoSsicSohGrAyg4Q1bPraBrGFkoGXyOSqY2WbHvyV5wJPt9XRnQFRhv6Q==
+X-Received: by 2002:a62:780c:: with SMTP id t12mr12188159pfc.211.1567796939763;
+        Fri, 06 Sep 2019 12:08:59 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id j9sm6666122pfi.128.2019.09.06.12.08.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 06 Sep 2019 12:08:58 -0700 (PDT)
+Date:   Fri, 6 Sep 2019 12:08:57 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        agross@kernel.org, wim@linux-watchdog.org,
+        linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] watchdog: qcom: support pre-timeout when the bark irq
+ is available
+Message-ID: <20190906190857.GA14545@roeck-us.net>
+References: <20190905210035.9985-1-jorge.ramirez-ortiz@linaro.org>
+ <20190906174009.GC11938@tuxbook-pro>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 06 Sep 2019 19:07:23 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190906174009.GC11938@tuxbook-pro>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday, September 6, 2019 2:57:00 PM EDT Florian Weimer wrote:
-> * Steve Grubb:
-> > Now with LD_AUDIT
-> > $ LD_AUDIT=/home/sgrubb/test/openflags/strip-flags.so.0 strace ./test
-> > 2>&1 | grep passwd openat(3, "passwd", O_RDONLY)           = 4
-> > 
-> > No O_CLOEXEC flag.
+On Fri, Sep 06, 2019 at 10:40:09AM -0700, Bjorn Andersson wrote:
+> On Thu 05 Sep 14:00 PDT 2019, Jorge Ramirez-Ortiz wrote:
+> > diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
+> [..]
+> > +static inline int qcom_get_enable(struct watchdog_device *wdd)
+> > +{
+> > +	int enable = QCOM_WDT_ENABLE;
+> > +
+> > +	if (wdd->info->options & WDIOF_PRETIMEOUT)
+> > +		enable |= QCOM_WDT_ENABLE_IRQ;
 > 
-> I think you need to explain in detail why you consider this a problem.
-
-Because you can strip the O_MAYEXEC flag from being passed into the kernel. 
-Once you do that, you defeat the security mechanism because it never gets 
-invoked. The issue is that the only thing that knows _why_ something is being 
-opened is user space. With this mechanism, you can attempt to pass this 
-reason to the kernel so that it may see if policy permits this. But you can 
-just remove the flag.
-
--Steve
-
-> With LD_PRELOAD and LD_AUDIT, you can already do anything, including
-> scanning other loaded objects for a system call instruction and jumping
-> to that (in case a security module in the kernel performs a PC check to
-> confer additional privileges).
+> Looking at downstream they conditionally write 3 to WDT_EN during
+> initialization, but during suspend/resume they just set it to back to 1.
 > 
-> Thanks,
-> Florian
+Looks like a bug to me.
 
+Either case, per API, pretimeout is enabled with the value of pretimeout,
+not with interrupt information from DT. I am not inclined to accept the
+above condition for enabling it.
 
+> So I don't think you should touch BIT(1) (which name doesn't match
+> downstream or the register documentation)
+> 
 
+You mean touching bit 1 is wrong to start with, and it is not a bit used
+to enable the interrupt (and thus pretimeout) ?
 
+Guess I'll need to dig out the manual myself.
+
+Guenter
