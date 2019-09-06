@@ -2,158 +2,196 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1374BC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07215C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEC41207FC
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:20:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="BxwOBYJm"
+	by mail.kernel.org (Postfix) with ESMTP id D8D932084F
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:22:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732459AbfIFIUv (ORCPT
+        id S1732683AbfIFIWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 04:20:51 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39959 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727915AbfIFIUu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 04:20:50 -0400
-Received: by mail-wm1-f68.google.com with SMTP id t9so5983822wmi.5
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 01:20:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bxSxCGTX5scDr5Ieq/9luU1LSOKlQMOwoIgSxeGJIjI=;
-        b=BxwOBYJmNXdj15JKcfJ54A2tSTwEJYs/JSMdNCmjBwc5Kw8V8Z7WvPjzKC3fFtZdVt
-         N1F5ptfReYpWfAHRMsQPN0i1LOnP4rPIpkLd/AVmVUQhFOKa3Hpc+w1pmZb07S/nwxO6
-         ij1eIQmcF2YkModxrFGD+YrJvo2hRWF94cZkzMKfcQsj+7eacqXysLktD5qXD9boVMhB
-         ea+SaKAbCSaFWsJ5GABBlFt5nxQWt+C0DfElyoGb5r0wU2WDIu6rH4m+IbGoRMxRJ14w
-         AjDWtqMxSSs5Qq6Xnq2I/Lj2LDghv7kAX8w1lu9fpJZhj8zmI1HdnQCetnZD+IX7Bjnj
-         yJ8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bxSxCGTX5scDr5Ieq/9luU1LSOKlQMOwoIgSxeGJIjI=;
-        b=hRZbqVylL7LJvycRObA23UmS+Xs0+QJwmt4k6B3hY7p6fd6nJoiSSWPx5nGoGvnli/
-         X5PTgfrZUJlxLAOup3/QGZkR1VBrp2/ohJLLp9d2Z5Z9W5/cVFH5R7RWvHquSpzOXRrm
-         8QynaVYEEuZ4Rx3M0e2rCuMHWhAD1TsEDzsw9pzhZKUIgQawbUDjuUaig93IoKpK2huU
-         GmX0obwU11tbzPoNRPjGKjRFs6RhVxdp/Q4+Lq9G2/9jABMA5Vus9uKHkWkgGYz5mket
-         tXzTzz5cwr1tt58O5SDbw8twCriiYkx3dEZq0BSohq8zXBgLlrbbjqrOqwHNJcS7/HcQ
-         HqoQ==
-X-Gm-Message-State: APjAAAVhIG+7XFCHOSJXB8Rjk1Kvc8hlGfnWiJumNNCRxvi7nhCxmJF6
-        e/SaydvEXYhwMtAOBCMtClPleksjUaeth0Ck5ylXWQ==
-X-Google-Smtp-Source: APXvYqwZIfv9LJKhtufyQXSyWXH70/rhsZbPefDxeePyf+2s1o31OMXC0fO5THfjyMBhnKyiz1uHRFCkrdsKyLyMISs=
-X-Received: by 2002:a1c:5451:: with SMTP id p17mr6208237wmi.103.1567758048221;
- Fri, 06 Sep 2019 01:20:48 -0700 (PDT)
+        Fri, 6 Sep 2019 04:22:50 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6692 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727376AbfIFIWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 04:22:49 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id BA31868B9DD1DF7BB3BC;
+        Fri,  6 Sep 2019 16:22:46 +0800 (CST)
+Received: from [127.0.0.1] (10.74.191.121) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Fri, 6 Sep 2019
+ 16:22:40 +0800
+Subject: Re: [PATCH RFC] driver core: ensure a device has valid node id in
+ device_add()
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     <rafael@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <peterz@infradead.org>, <mingo@kernel.org>, <mhocko@kernel.org>,
+        <linuxarm@huawei.com>
+References: <1567647230-166903-1-git-send-email-linyunsheng@huawei.com>
+ <20190905055727.GB23826@kroah.com>
+ <e5905af2-5a8d-7b00-d2a6-a961f3eee120@huawei.com>
+ <20190905073334.GA29933@kroah.com>
+ <5a188e2b-6c07-a9db-fbaa-561e9362d3ba@huawei.com>
+ <20190906065211.GA18823@kroah.com>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <26d7a539-96fc-8a92-d60d-7e76e418ab63@huawei.com>
+Date:   Fri, 6 Sep 2019 16:21:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
-References: <20190906071631.23695-1-clin@suse.com>
-In-Reply-To: <20190906071631.23695-1-clin@suse.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Fri, 6 Sep 2019 13:50:37 +0530
-Message-ID: <CAAhSdy3dyw_VsmP_x9NoWKhpmen6zC5EhTjxPRPHS-OizYgL-Q@mail.gmail.com>
-Subject: Re: [PATCH] riscv: save space on the magic number field of image header
-To:     Chester Lin <clin@suse.com>
-Cc:     "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-        "palmer@sifive.com" <palmer@sifive.com>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "merker@debian.org" <merker@debian.org>,
-        "atish.patra@wdc.com" <atish.patra@wdc.com>,
-        "Anup.Patel@wdc.com" <Anup.Patel@wdc.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rick@andestech.com" <rick@andestech.com>,
-        "marek.vasut@gmail.com" <marek.vasut@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190906065211.GA18823@kroah.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 6, 2019 at 12:50 PM Chester Lin <clin@suse.com> wrote:
->
-> Change the symbol from "RISCV" to "RSCV" so the magic number can be 32-bit
-> long, which is consistent with other architectures.
->
-> Signed-off-by: Chester Lin <clin@suse.com>
-> ---
->  arch/riscv/include/asm/image.h | 9 +++++----
->  arch/riscv/kernel/head.S       | 5 ++---
->  2 files changed, 7 insertions(+), 7 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/image.h b/arch/riscv/include/asm/image.h
-> index ef28e106f247..ec8bbfe86dde 100644
-> --- a/arch/riscv/include/asm/image.h
-> +++ b/arch/riscv/include/asm/image.h
-> @@ -3,7 +3,8 @@
->  #ifndef __ASM_IMAGE_H
->  #define __ASM_IMAGE_H
->
-> -#define RISCV_IMAGE_MAGIC      "RISCV"
-> +#define RISCV_IMAGE_MAGIC      "RSCV"
-> +
->
->  #define RISCV_IMAGE_FLAG_BE_SHIFT      0
->  #define RISCV_IMAGE_FLAG_BE_MASK       0x1
-> @@ -39,9 +40,9 @@
->   * @version:           version
->   * @res1:              reserved
->   * @res2:              reserved
-> - * @magic:             Magic number
->   * @res3:              reserved (will be used for additional RISC-V specific
->   *                     header)
-> + * @magic:             Magic number
->   * @res4:              reserved (will be used for PE COFF offset)
->   *
->   * The intention is for this header format to be shared between multiple
-> @@ -57,8 +58,8 @@ struct riscv_image_header {
->         u32 version;
->         u32 res1;
->         u64 res2;
-> -       u64 magic;
-> -       u32 res3;
-> +       u64 res3;
-> +       u32 magic;
->         u32 res4;
->  };
->  #endif /* __ASSEMBLY__ */
-> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-> index 0f1ba17e476f..1f8fffbecf68 100644
-> --- a/arch/riscv/kernel/head.S
-> +++ b/arch/riscv/kernel/head.S
-> @@ -39,9 +39,8 @@ ENTRY(_start)
->         .word RISCV_HEADER_VERSION
->         .word 0
->         .dword 0
-> -       .asciz RISCV_IMAGE_MAGIC
-> -       .word 0
-> -       .balign 4
-> +       .dword 0
-> +       .ascii RISCV_IMAGE_MAGIC
->         .word 0
->
->  .global _start_kernel
-> --
-> 2.22.0
->
+On 2019/9/6 14:52, Greg KH wrote:
+> On Fri, Sep 06, 2019 at 02:41:36PM +0800, Yunsheng Lin wrote:
+>> On 2019/9/5 15:33, Greg KH wrote:
+>>> On Thu, Sep 05, 2019 at 02:48:24PM +0800, Yunsheng Lin wrote:
+>>>> On 2019/9/5 13:57, Greg KH wrote:
+>>>>> On Thu, Sep 05, 2019 at 09:33:50AM +0800, Yunsheng Lin wrote:
+>>>>>> Currently a device does not belong to any of the numa nodes
+>>>>>> (dev->numa_node is NUMA_NO_NODE) when the FW does not provide
+>>>>>> the node id and the device has not no parent device.
+>>>>>>
+>>>>>> According to discussion in [1]:
+>>>>>> Even if a device's numa node is not set by fw, the device
+>>>>>> really does belong to a node.
+>>>>>>
+>>>>>> This patch sets the device node to node 0 in device_add() if
+>>>>>> the fw has not specified the node id and it either has no
+>>>>>> parent device, or the parent device also does not have a valid
+>>>>>> node id.
+>>>>>>
+>>>>>> There may be explicit handling out there relying on NUMA_NO_NODE,
+>>>>>> like in nvme_probe().
+>>>>>>
+>>>>>> [1] https://lkml.org/lkml/2019/9/2/466
+>>>>>>
+>>>>>> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+>>>>>> ---
+>>>>>>  drivers/base/core.c  | 17 ++++++++++++++---
+>>>>>>  include/linux/numa.h |  2 ++
+>>>>>>  2 files changed, 16 insertions(+), 3 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/base/core.c b/drivers/base/core.c
+>>>>>> index 1669d41..466b8ff 100644
+>>>>>> --- a/drivers/base/core.c
+>>>>>> +++ b/drivers/base/core.c
+>>>>>> @@ -2107,9 +2107,20 @@ int device_add(struct device *dev)
+>>>>>>  	if (kobj)
+>>>>>>  		dev->kobj.parent = kobj;
+>>>>>>  
+>>>>>> -	/* use parent numa_node */
+>>>>>> -	if (parent && (dev_to_node(dev) == NUMA_NO_NODE))
+>>>>>> -		set_dev_node(dev, dev_to_node(parent));
+>>>>>> +	/* use parent numa_node or default node 0 */
+>>>>>> +	if (!numa_node_valid(dev_to_node(dev))) {
+>>>>>> +		int nid = parent ? dev_to_node(parent) : NUMA_NO_NODE;
+>>>>>
+>>>>> Can you expand this to be a "real" if statement please?
+>>>>
+>>>> Sure. May I ask why "? :" is not appropriate here?
+>>>
+>>> Because it is a pain to read, just spell it out and make it obvious what
+>>> is happening.  You write code for developers first, and the compiler
+>>> second, and in this case, either way is identical to the compiler.
+>>>
+>>>>>> +
+>>>>>> +		if (numa_node_valid(nid)) {
+>>>>>> +			set_dev_node(dev, nid);
+>>>>>> +		} else {
+>>>>>> +			if (nr_node_ids > 1U)
+>>>>>> +				pr_err("device: '%s': has invalid NUMA node(%d)\n",
+>>>>>> +				       dev_name(dev), dev_to_node(dev));
+>>>>>
+>>>>> dev_err() will show you the exact device properly, instead of having to
+>>>>> rely on dev_name().
+>>>>>
+>>>>> And what is a user to do if this message happens?  How do they fix this?
+>>>>> If they can not, what good is this error message?
+>>>>
+>>>> If user know about their system's topology well enough and node 0
+>>>> is not the nearest node to the device, maybe user can readjust that by
+>>>> writing the nearest node to /sys/class/pci_bus/XXXX/device/numa_node,
+>>>> if not, then maybe user need to contact the vendor for info or updates.
+>>>>
+>>>> Maybe print error message as below:
+>>>>
+>>>> dev_err(dev, FW_BUG "has invalid NUMA node(%d). Readjust it by writing to sysfs numa_node or contact your vendor for updates.\n",
+>>>> 	dev_to_node(dev));
+>>>
+>>> FW_BUG?
+>>>
+>>> Anyway, if you make this change, how many machines start reporting this
+>>> error? 
+>>
+>> Any machines with more than one numa node will start reporting this error.
+>>
+>> 1) many virtual deivces maybe do not set the node id before calling
+>>    device_register(), such as vfio, tun, etc.
+>>
+>> 2) struct cpu has a dev, but does not set the dev' node according to
+>>    cpu_to_node().
+>>
+>> 3) Many platform Device also do not have a node id provided by FW.
+> 
+> Then this patch is not ok, as you are flooding the kernel log saying the
+> system is "broken" when this is just what it always has been like.  How
+> is anyone going to "fix" things?
 
-This change is not at all backward compatible with
-existing booti implementation in U-Boot.
+cpu->node_id does not seem to be used, maybe we can fix the cpu device:
 
-It changes:
-1. Magic offset
-2. Magic value itself
+diff --git a/drivers/base/cpu.c b/drivers/base/cpu.c
+index cc37511d..ad0a841 100644
+--- a/drivers/base/cpu.c
++++ b/drivers/base/cpu.c
+@@ -41,7 +41,7 @@ static void change_cpu_under_node(struct cpu *cpu,
+        int cpuid = cpu->dev.id;
+        unregister_cpu_under_node(cpuid, from_nid);
+        register_cpu_under_node(cpuid, to_nid);
+-       cpu->node_id = to_nid;
++       set_dev_node(&cpu->dev, to_nid);
+ }
 
-We don't see this header changing much apart from
-res1/res2 becoming flags in-future. The PE COFF header
-will be append to this header in-future and it will have lot
-more information.
+ static int cpu_subsys_online(struct device *dev)
+@@ -367,7 +367,7 @@ int register_cpu(struct cpu *cpu, int num)
+ {
+        int error;
 
-Regards,
-Anup
+-       cpu->node_id = cpu_to_node(num);
++       set_dev_node(&cpu->dev, cpu_to_node(num));
+        memset(&cpu->dev, 0x00, sizeof(struct device));
+        cpu->dev.id = num;
+        cpu->dev.bus = &cpu_subsys;
+diff --git a/include/linux/cpu.h b/include/linux/cpu.h
+index fcb1386..9a6fc51 100644
+--- a/include/linux/cpu.h
++++ b/include/linux/cpu.h
+@@ -24,7 +24,6 @@ struct device_node;
+ struct attribute_group;
+
+ struct cpu {
+-       int node_id;            /* The node which contains the CPU */
+        int hotpluggable;       /* creates sysfs control file if hotpluggable */
+        struct device dev;
+ };
+
+
+> 
+> You can adjust the default node to 0 as isn't that what always has
+> happened, but you can not claim it is a "error" that this is happening
+> because it is not an error, it's just the default operation.
+
+You are right, will remove the error log.
+
