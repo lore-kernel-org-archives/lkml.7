@@ -2,130 +2,118 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F55C43140
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB1FC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE267214E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:41:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="KWbZvsNI"
+	by mail.kernel.org (Postfix) with ESMTP id 9510020640
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:47:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567792030;
+	bh=q5ynBOroNDNNaAOhviVWg79WNTV2uq+2hGNpK00/bG8=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=JBGE9+sZxQh3ycL9IVvVMeUK601eTmnl7Z7vaYSv+kuRtTHOCV2pVAbP8j9d/2jmJ
+	 ZtryY7l98uDztSLDxGj/3BCKhFGXL38EZATTS9egEUK2trlG/T0nXhCuTE/9lpZfou
+	 oR4rrQhjcVC+6HoEys+X/CnyB7eaMOaUD+HVBkZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436478AbfIFRla (ORCPT
+        id S2395238AbfIFRrK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 13:41:30 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:42191 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729790AbfIFRla (ORCPT
+        Fri, 6 Sep 2019 13:47:10 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:37849 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726626AbfIFRrJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 13:41:30 -0400
-Received: by mail-ed1-f68.google.com with SMTP id y91so6991301ede.9
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 10:41:29 -0700 (PDT)
+        Fri, 6 Sep 2019 13:47:09 -0400
+Received: by mail-qk1-f196.google.com with SMTP id u184so3513513qkd.4;
+        Fri, 06 Sep 2019 10:47:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VBkiR/7BisGtZVmNVXhHtJrfmofi1qU8Pxcjpjv/ZgU=;
-        b=KWbZvsNIkISQq4DJ0Jn0+DC13xFv36DJ+INz1iCwsDURlinnxi/FqltluIcUdyKEH+
-         rohLlAAcGa9S/ZYLvc1vTaR6e7aQaHawkNyzLp29w4f6Au1gxqx6ccQi15xWrUysZLko
-         l0O4EcJcNb3Zxrza5Xu2Cdd0Q8c1MNJiep4Y23PuKjCm1JHlOUjUXO3rjxiUgpMuxdBZ
-         195WYeYAEX+sfEiPtjph8YRPHJ5jQAWbkYH6/UE6sgH5I3Tkdk2sSbsvvqd+Xnpv0uvu
-         1ilSBFkcIXgD0EgHuYTfM1YDM5ly+poGMtxFMSDOaOGhgSkdDDpWTmBO4MBPmbtsnmHo
-         MKVg==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EWIhvlIYQYgSNiR0JTK+22rY1hmZeqOgk/eFbmgddQ8=;
+        b=bgFCB1+Xb3oPlPNkF9mxMixq6tix1sDigEgne7DbcjtoTb8LtQM7bLEI8c6fEXGCEr
+         QaHWSZoj3I9DLutfVeqVeVjKk01MvMzmnJ5RN6ksDEMplQnSb10hgSbKLM5rfMhtdKMs
+         Oe+ChhyonTqOb55VzVqfon+xG8M4HF5Iy0nBxlBctV5XMCK8HXTlb1IZAdRVPTm2Inhk
+         heOaX5Le/iwR2acsfOMZeV59m5BrRXaierEsmimERyzjDxzbL1Ja4pVjyENMtzpn0ECh
+         4zhTX6QX5XA0QAOF9ucUmOXK2eQOVaULfQkgVrWNM9YsAzt0IiQ0NUKimVeRI9CRlWP7
+         UAwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VBkiR/7BisGtZVmNVXhHtJrfmofi1qU8Pxcjpjv/ZgU=;
-        b=P4qo3vHSZVBq3qubgdjuCpktqvUFJf8Uwn0CADDLA9yqFtVa+roA64gkF7/tWbthhH
-         Al9vBhEkCEPECxjiR7xYQOwIIVwHi6ZUlFtCMsasu2TL8MSpxUrJvbFTEQPNmaO2aFRC
-         qaFqZO0qRQ+2/p9+Dd3koJ8cYodLb/FgVguhzuOCXhc8nTVAPg97kXr1qGv6IKBi3tba
-         6WzUJiRNKWmlChmjQxqKL579Vh2W7yErGSJWZha3lmVrcP8FwKAXOhmogneg/VbkAbtG
-         3i+mgHnsoYxwJ2pxDDjINyxWWXcETbnl4GTGlN2ziHuZfsa1XSRSc88JaLITDGkXCMoB
-         +UuQ==
-X-Gm-Message-State: APjAAAXSj94TLjv2t10bfMblXmU8G9R9ZWRO/+EBmHriYcUsCBjy2VyK
-        ynMLM3UNcNZWlfW2Ztc3IhcYob68K51pOoRGwB1wGg==
-X-Google-Smtp-Source: APXvYqzdydAQq2XsQ/paSb9m4rgwscf0/CCdiPGGGSWL+1ARUwePukKygj3cKHXfmSeUdjAS/Egx8Zb0S9m9dpj+AVQ=
-X-Received: by 2002:aa7:c40c:: with SMTP id j12mr11037477edq.80.1567791688713;
- Fri, 06 Sep 2019 10:41:28 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EWIhvlIYQYgSNiR0JTK+22rY1hmZeqOgk/eFbmgddQ8=;
+        b=McFnKFrS5udd3vNj9qfwvXUY7dlGKHuC9znr7Sz6umXSSPgs95VFqxyqbQHTEnPaxT
+         ZT8WmjVdhcSkM0catLmaUGy8HpfW4aS7gku0iYg0wYtQJj1d6USauKVKBTKzuZP4e7sM
+         5+3Gm718HDiRY/Zdq3Ey8q+066cNiMO7cA8TgbIL0Pi+VCM+sF14cJIZ4tVs7VssncsS
+         OjSBNqqvbC9kiqXU/egiOAZjrAz9Zh0VmVp3ja6xqd2/n+R+jPHTHxzGl2AbMKl6CS0C
+         qWzT3u0AHoD2urdqq8rg2/mJ+OM9g+bNzDgwC2pKYzeoSwuyOxog4UTviMFali9xSjmF
+         GvAQ==
+X-Gm-Message-State: APjAAAUOHU8xMPhWROldFQlmv0kc7m3u5CBCR+Fil4Q7a8ZXqCoEhbYM
+        yytFnexBjp2rr2oKt0xLLzM=
+X-Google-Smtp-Source: APXvYqyKeb8cLLEFnQco06qMeCCL5Perec1oC4sldCMUV05jBqrPKdkNMhRLpGPNtvuqKqZkFjgCYQ==
+X-Received: by 2002:a05:620a:15f4:: with SMTP id p20mr9769193qkm.282.1567792028327;
+        Fri, 06 Sep 2019 10:47:08 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::e7cb])
+        by smtp.gmail.com with ESMTPSA id m92sm2801385qte.50.2019.09.06.10.46.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 06 Sep 2019 10:47:05 -0700 (PDT)
+Date:   Fri, 6 Sep 2019 10:46:56 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     dsterba@suse.cz, josef@toxicpanda.com, clm@fb.com,
+        dsterba@suse.com, axboe@kernel.dk, jack@suse.cz,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCHSET v3 btrfs/for-next] btrfs: fix cgroup writeback support
+Message-ID: <20190906174656.GQ2263813@devbig004.ftw2.facebook.com>
+References: <20190710192818.1069475-1-tj@kernel.org>
+ <20190726151321.GF2868@twin.jikos.cz>
+ <20190905115937.GA2850@twin.jikos.cz>
 MIME-Version: 1.0
-References: <20190821183204.23576-1-pasha.tatashin@soleen.com>
- <20190821183204.23576-8-pasha.tatashin@soleen.com> <f1db863a-de57-2d1a-6bec-6020b2130964@arm.com>
-In-Reply-To: <f1db863a-de57-2d1a-6bec-6020b2130964@arm.com>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Fri, 6 Sep 2019 13:41:17 -0400
-Message-ID: <CA+CK2bDTVGm6pNRGQx7eAyEP6m0xr9X1No_=qgUOTDAoL9uigw@mail.gmail.com>
-Subject: Re: [PATCH v3 07/17] arm64, hibernate: move page handling function to
- new trans_pgd.c
-To:     James Morse <james.morse@arm.com>
-Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        kexec mailing list <kexec@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Bhupesh Sharma <bhsharma@redhat.com>,
-        linux-mm <linux-mm@kvack.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190905115937.GA2850@twin.jikos.cz>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 6, 2019 at 11:18 AM James Morse <james.morse@arm.com> wrote:
->
-> Hi Pavel,
->
-> On 21/08/2019 19:31, Pavel Tatashin wrote:
-> > Now, that we abstracted the required functions move them to a new home.
-> > Later, we will generalize these function in order to be useful outside
-> > of hibernation.
->
-> > diff --git a/arch/arm64/mm/trans_pgd.c b/arch/arm64/mm/trans_pgd.c
-> > new file mode 100644
-> > index 000000000000..00b62d8640c2
-> > --- /dev/null
-> > +++ b/arch/arm64/mm/trans_pgd.c
-> > @@ -0,0 +1,211 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +
-> > +/*
-> > + * Copyright (c) 2019, Microsoft Corporation.
-> > + * Pavel Tatashin <patatash@linux.microsoft.com>
->
-> Hmmm, while line-count isn't a useful metric: this file contains 41% of the code that was
-> in hibernate.c, but has stripped the substantial copyright-pedigree that the hibernate
-> code had built up over the years.
-> (counting lines identified by 'cloc' as code, not comments or blank)
->
-> If you are copying or moving a non trivial quantity of code, you need to preserve the
-> copyright. Something like 'Derived from the arm64 hibernate support which has:'....
+Hello, David.
 
-I will do that.  The copyright thing was meant to appear in
-"generalization" patch that comes later, where I unified most of the
-code to be symmetric.
-So, I will add it there, and also do the derived message that you suggested.
+On Thu, Sep 05, 2019 at 01:59:37PM +0200, David Sterba wrote:
+> On Fri, Jul 26, 2019 at 05:13:21PM +0200, David Sterba wrote:
+> > On Wed, Jul 10, 2019 at 12:28:13PM -0700, Tejun Heo wrote:
+> > > Hello,
+> > > 
+> > > This patchset contains only the btrfs part of the following patchset.
+> > > 
+> > >   [1] [PATCHSET v2 btrfs/for-next] blkcg, btrfs: fix cgroup writeback support
+> > > 
+> > > The block part has already been applied to
+> > > 
+> > >   https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/ for-linus
+> > > 
+> > > with some naming changes.  This patchset has been updated accordingly.
+> > 
+> > I'm going to add this patchset to for-next to get some testing coverage,
+> > there are some comments pending, but that are changelog updates and
+> > refactoring.
+> 
+> No updates, so patchset stays in for-next, closest merge target is 5.5.
 
->
->
-> > + */
-> > +
-> > +/*
-> > + * Transitional tables are used during system transferring from one world to
-> > + * another: such as during hibernate restore, and kexec reboots. During these
-> > + * phases one cannot rely on page table not being overwritten.
->
-> I think you need to mention that hibernate and kexec are rewriting memory, and may
-> overwrite the live page tables, therefore ...
+Sorry about dropping the ball.  It looked like Chris and Nikolay
+weren't agreeing so I wasn't sure what the next step should be and
+then forgot about it.  The following is the discussion.
 
-Will add, thank you.
+  https://lore.kernel.org/linux-btrfs/c2419d01-5c84-3fb4-189e-4db519d08796@suse.com/
 
-Pasha
+What do you think about the exchange?
+
+Thanks.
+
+-- 
+tejun
