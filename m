@@ -2,100 +2,103 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B91AEC00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 433A2C00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:40:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C0B02173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:38:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567795108;
-	bh=hVhoaUaPmOU1ZOElqiu41uA2bABUvrV5xk96hEWFkvE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UQxPfzGTMVER0E8reRgmzaguWn7HJjJuKeypjmzmnhejM7IJCePIPXpzFWEK+rpop
-	 GjQMScRvDBDVonZ/y7ZGqaGA4Gq2+FGuaJg7zFBfVe7R958/dxgGFhdVD+QUAslqCQ
-	 EE83qKTEF+GM2+Jdd+7MIau7uksdn4ThTKJJ36p4=
+	by mail.kernel.org (Postfix) with ESMTP id 2937F214E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:40:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404857AbfIFSi1 (ORCPT
+        id S2404929AbfIFSkN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 14:38:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59248 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404675AbfIFSi1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 14:38:27 -0400
-Received: from localhost (unknown [62.28.240.114])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 491F4208C3;
-        Fri,  6 Sep 2019 18:38:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567795106;
-        bh=hVhoaUaPmOU1ZOElqiu41uA2bABUvrV5xk96hEWFkvE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OeqCGGKHQzQ4cT1+IU4+3do1YgTnwRgr3pls3NNNAzDXzd4hqR04yONuMCJVsUTgq
-         6cm1k3dNYPZGb3GuKQDgVD0u49h4oTyUAVAnnsEuKzItW5Tv8ZBje6YeuYaiIcBQh5
-         Y3u0wU/CTejLYAgo74+wghU5b+lpN/yLuGAtAIjw=
-Date:   Fri, 6 Sep 2019 14:38:24 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Ricard Wanderlof <ricard.wanderlof@axis.com>,
-        stable@vger.kernel.org, Greg Kroah-Hartman <gregkh@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: revert: ASoC: Fail card instantiation if DAI format setup fails
-Message-ID: <20190906183824.GB1528@sasha-vm>
-References: <20190814021047.14828-1-sashal@kernel.org>
- <20190814021047.14828-40-sashal@kernel.org>
- <20190814092213.GC4640@sirena.co.uk>
- <20190826013515.GG5281@sasha-vm>
- <20190827110014.GD23391@sirena.co.uk>
- <20190828021311.GV5281@sasha-vm>
- <alpine.DEB.2.20.1908280859060.5799@lnxricardw1.se.axis.com>
- <alpine.DEB.2.20.1909061031200.3985@lnxricardw1.se.axis.com>
- <20190906105824.GS23391@sirena.co.uk>
+        Fri, 6 Sep 2019 14:40:13 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:44602 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404675AbfIFSkM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 14:40:12 -0400
+Received: by mail-qk1-f196.google.com with SMTP id i78so6573257qke.11;
+        Fri, 06 Sep 2019 11:40:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oUUjU8KYMc7BzEQi/4l2yuN6uGqhnfetnQPhKIRDru4=;
+        b=JNS7ZuZi3k4MgV/deUR2inOJ1+vw91VWR7JrgePISkV902f0qgAiO7tFA/Us9vk+zD
+         Hp0WOVFDpw7N7OaW6/YP6D/zYOtFlHyL0TWjTPMxP07NE9X8GrAQBNDsKGlSpmnwcvV8
+         fWoStIuqQVGbsaLFA9BrC7Pxono3L6fWFRm7bciDcIsKRrWmJk6mAdyYffLwvvb492UB
+         HYie2hxzDiEiCDHffIyaqQrL3FgkpSxh8zCIAasMZNgAOii0aBC9L8pDl6ds4MOq84oZ
+         +OWKU+l+mJk74nGu6xap+WlhFyd94ssfiHaOyWKcS8kq4pS/jBiL24PE0C3KfocspLjv
+         mvFQ==
+X-Gm-Message-State: APjAAAXfvmxpwf9ndBq2mUjKRk6+ORg5CJUlV+666WvJgWWvsJOVZniI
+        r4I3XLw+TmiW3IKrHYyls4mIzYU9FOZzsFkntFs=
+X-Google-Smtp-Source: APXvYqyCqw7rYGaMP81YoI/ZO38/GgHsA863ax6/DiS+UT5bKfL8klB0skhPEiZep7cc9b5ZeTCiSGXA1nTvXmI71zw=
+X-Received: by 2002:a37:4fcf:: with SMTP id d198mr10389759qkb.394.1567795211679;
+ Fri, 06 Sep 2019 11:40:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190906105824.GS23391@sirena.co.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190906152250.1450649-1-arnd@arndb.de> <MN2PR20MB297378A683764AF4F2171B7CCABA0@MN2PR20MB2973.namprd20.prod.outlook.com>
+In-Reply-To: <MN2PR20MB297378A683764AF4F2171B7CCABA0@MN2PR20MB2973.namprd20.prod.outlook.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 6 Sep 2019 20:39:55 +0200
+Message-ID: <CAK8P3a13Ebqd51SWx9svUyvFxV4MKDJKOwKEozzKyga9azBqJA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] crypto: inside-secure - fix uninitialized-variable warning
+To:     Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 06, 2019 at 11:58:24AM +0100, Mark Brown wrote:
->On Fri, Sep 06, 2019 at 10:40:01AM +0200, Ricard Wanderlof wrote:
+On Fri, Sep 6, 2019 at 6:08 PM Pascal Van Leeuwen
+<pvanleeuwen@verimatrix.com> wrote:
+
+> >
+> >  config CRYPTO_DEV_SAFEXCEL
+> >       tristate "Inside Secure's SafeXcel cryptographic engine driver"
+> > -     depends on OF || PCI || COMPILE_TEST
+> > +     depends on OF || PCI
+> >
 >
->> But is this being dropped from the master branch as well? To me it makes
->> the kernel behave in an inconsistent way, first reporting a failure to
->> instantiate a specific sound card in the kernel log, but then seemingly
->> bringing it up anyway.
+> This seems like it just ignores the problem by not allowing compile testing
+> anymore? Somehow that does not feel right ...
+
+No, it just ignores the uninteresting case. You can compile-test this on
+any architecture by turning on OF.
+
+> >       select CRYPTO_LIB_AES
+> >       select CRYPTO_AUTHENC
+> >       select CRYPTO_BLKCIPHER
+> > diff --git a/drivers/crypto/inside-secure/safexcel.c b/drivers/crypto/inside-
+> > secure/safexcel.c
+> > index e12a2a3a5422..9c0bce77de14 100644
+> > --- a/drivers/crypto/inside-secure/safexcel.c
+> > +++ b/drivers/crypto/inside-secure/safexcel.c
+> > @@ -938,6 +938,7 @@ static int safexcel_request_ring_irq(void *pdev, int irqid,
+> >       struct device *dev;
+> >
+> >       if (IS_ENABLED(CONFIG_PCI) && is_pci_dev) {
+> > +#ifdef CONFIG_PCI
+> >
 >
->No, this is absolutely a good and positive change to have in
->master and I'm not suggesting that we should drop it there -
->sorry if I sounded like that.  I just want to be conservative for
->stable so that we don't have anyone updating their stable kernel
->and having their audio blow up on them, we don't want to do
->anything that'd discourage people from taking stable updates and
->hence missing out on security or critical stability updates.
+> The whole point was NOT to use regular #ifdefs such that the code can
+> be compile tested without needing to switch configurations.
+> There is already a different solution in the works involving some empty
+> inline stubs for those pci routines, please see an earlier mail by Herbert
+> titled "PCI: Add stub pci_irq_vector and others".
 
-Hi Mark,
+Ah, good. That should take care of most of the problems. I think
+we still need the Kconfig change, unless the safexcel_init()
+function is also changed to use if(IS_ENABLED()) checks
+instead of #if.
 
-I'm sorry for not dropping this to begin with: I saw your nack and the
-patch ended up still being released because of my fuck up rather than
-me purposefuly ignoring your ack, sorry.
-
-However, I'd like to say that I don't agree with it. I understand your
-reasoning about keeping the stable trees conservative, but I feel that
-going to the extreme with it will just encourage folks to not upgrade
-between major versions.
-
-I'd like to think that upgrading major versions should be the same as
-upgrading minor ones (because numbers don't matter here). If that's not
-the case, let's fix it!
-
---
-Thanks,
-Sasha
+     Arnd
