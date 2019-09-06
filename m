@@ -2,211 +2,157 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A575DC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47BA4C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77DCE206CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:20:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F87F20578
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:25:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NA2rM7b2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436541AbfIFSUZ (ORCPT
+        id S2404566AbfIFSZI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 14:20:25 -0400
-Received: from mga03.intel.com ([134.134.136.65]:19073 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392018AbfIFSUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 14:20:25 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Sep 2019 11:20:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,473,1559545200"; 
-   d="scan'208";a="183211024"
-Received: from km-skylake-client-platform.sc.intel.com ([10.3.52.147])
-  by fmsmga008.fm.intel.com with ESMTP; 06 Sep 2019 11:20:11 -0700
-From:   Kyung Min Park <kyung.min.park@intel.com>
-To:     joro@8bytes.org, dwmw2@infradead.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Cc:     kyung.min.park@intel.com, sohil.mehta@intel.com,
-        ashok.raj@intel.com, jacob.jun.pan@linux.intel.com,
-        baolu.lu@intel.com, andriy.shevchenko@intel.com
-Subject: [PATCH] iommu/vt-d: Add Scalable Mode fault information
-Date:   Fri,  6 Sep 2019 11:14:02 -0700
-Message-Id: <1567793642-17063-1-git-send-email-kyung.min.park@intel.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 6 Sep 2019 14:25:08 -0400
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:40916 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403780AbfIFSZI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 14:25:08 -0400
+Received: by mail-yb1-f196.google.com with SMTP id t15so2494612ybg.7
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 11:25:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WdTZMbaXp+Fn3AW7k8huzJkb6vrG4Ilofg/RU4HTeY4=;
+        b=NA2rM7b2J7kiX/KSSoT1y5lY3VpV+gLXHY/TO80Ow2FpxJNrx6zL6ET28GwSbzajnl
+         5vFbvIWKF7AXXTMV9g9fpKp6EIWYzo5dJwIWVjdWsEFBpWU51bcoZNOnaG2ptwZWrc6g
+         yZfBN6yvMHi0MP1s7RhhFajCqT0lOQsbzlQIqZo46sJW8GL1AeyMZBu97ZhekQcBfQ6A
+         ONCy4kLsD/T8jNrpd/DrieiJqYYYm5P9vvKdZFeqkIIauC6ejyFT1hY8S/wEHa+us09g
+         IyIxQPR4YLa3a1hi31r0pixDWfe1AnQK7p1AYfE0x5OxnnOyIyjzRhPzGgTO0s+B8PY2
+         bOFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WdTZMbaXp+Fn3AW7k8huzJkb6vrG4Ilofg/RU4HTeY4=;
+        b=gY8+mjAqub0iJiS6uSLWHYRO4Trq+GJxItI6rQG8h43wZs5nWgQ2QuMKYMmVleg1EH
+         NXFcuYT2Bl2PA/oqWGN3z4tqu88SWVNAL9ltMY7vWo4ot/kMuZCcJxovcorQ3Xz0zecD
+         sipsTWVUN7aazXQqg7KNMg2izatOJ6xaHDcMqDm/H5pSZKkoqzmGaI+Q939Y6vUopksg
+         w+c3xqiwNN2lFfUVPtObTkUkdAmafABogsJz2KHD4oPy0/O8m9sApxP4z7HuYjRCFx6e
+         rUBleu0jIn7TfItYR1CBTbWQv7n62yUDWtbjee4lvcHEyX4ZU9wNuuy/98vzJCAYYQ2/
+         +KRw==
+X-Gm-Message-State: APjAAAVzji501pcORPPpSIwwEiN4+2E55+Rp/9C5V5rMKdMgCJT+T1mS
+        2EQwU4tqKCkU9Nt+X7a4lKE5UTjm2zsU90jPuCI/xg==
+X-Google-Smtp-Source: APXvYqz/avyNpX/28xYHRUNsgpOhH5S6IbAc3ig7Z/fEr6/umwtbXAZXYCmxo4NTh3quf0HEuq2lwJBpTRveyfFVW9s=
+X-Received: by 2002:a25:c708:: with SMTP id w8mr7607450ybe.358.1567794306397;
+ Fri, 06 Sep 2019 11:25:06 -0700 (PDT)
+MIME-Version: 1.0
+References: <31131c2d-a936-8bbf-e58d-a3baaa457340@gmail.com> <20190906125608.32129-1-mhocko@kernel.org>
+In-Reply-To: <20190906125608.32129-1-mhocko@kernel.org>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Fri, 6 Sep 2019 11:24:55 -0700
+Message-ID: <CALvZod5w72jH8fJSFRaw7wgQTnzF6nb=+St-sSXVGSiG6Bs3Lg@mail.gmail.com>
+Subject: Re: [PATCH] memcg, kmem: do not fail __GFP_NOFAIL charges
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Thomas Lindroth <thomas.lindroth@gmail.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Intel VT-d specification revision 3 added support for Scalable Mode
-Translation for DMA remapping. Add the Scalable Mode fault reasons to
-show detailed fault reasons when the translation fault happens.
+On Fri, Sep 6, 2019 at 5:56 AM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> From: Michal Hocko <mhocko@suse.com>
+>
+> Thomas has noticed the following NULL ptr dereference when using cgroup
+> v1 kmem limit:
+> BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
+> PGD 0
+> P4D 0
+> Oops: 0000 [#1] PREEMPT SMP PTI
+> CPU: 3 PID: 16923 Comm: gtk-update-icon Not tainted 4.19.51 #42
+> Hardware name: Gigabyte Technology Co., Ltd. Z97X-Gaming G1/Z97X-Gaming G1, BIOS F9 07/31/2015
+> RIP: 0010:create_empty_buffers+0x24/0x100
+> Code: cd 0f 1f 44 00 00 0f 1f 44 00 00 41 54 49 89 d4 ba 01 00 00 00 55 53 48 89 fb e8 97 fe ff ff 48 89 c5 48 89 c2 eb 03 48 89 ca <48> 8b 4a 08 4c 09 22 48 85 c9 75 f1 48 89 6a 08 48 8b 43 18 48 8d
+> RSP: 0018:ffff927ac1b37bf8 EFLAGS: 00010286
+> RAX: 0000000000000000 RBX: fffff2d4429fd740 RCX: 0000000100097149
+> RDX: 0000000000000000 RSI: 0000000000000082 RDI: ffff9075a99fbe00
+> RBP: 0000000000000000 R08: fffff2d440949cc8 R09: 00000000000960c0
+> R10: 0000000000000002 R11: 0000000000000000 R12: 0000000000000000
+> R13: ffff907601f18360 R14: 0000000000002000 R15: 0000000000001000
+> FS:  00007fb55b288bc0(0000) GS:ffff90761f8c0000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000000000000008 CR3: 000000007aebc002 CR4: 00000000001606e0
+> Call Trace:
+>  create_page_buffers+0x4d/0x60
+>  __block_write_begin_int+0x8e/0x5a0
+>  ? ext4_inode_attach_jinode.part.82+0xb0/0xb0
+>  ? jbd2__journal_start+0xd7/0x1f0
+>  ext4_da_write_begin+0x112/0x3d0
+>  generic_perform_write+0xf1/0x1b0
+>  ? file_update_time+0x70/0x140
+>  __generic_file_write_iter+0x141/0x1a0
+>  ext4_file_write_iter+0xef/0x3b0
+>  __vfs_write+0x17e/0x1e0
+>  vfs_write+0xa5/0x1a0
+>  ksys_write+0x57/0xd0
+>  do_syscall_64+0x55/0x160
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>
+>  Tetsuo then noticed that this is because the __memcg_kmem_charge_memcg
+>  fails __GFP_NOFAIL charge when the kmem limit is reached. This is a
+>  wrong behavior because nofail allocations are not allowed to fail.
+>  Normal charge path simply forces the charge even if that means to cross
+>  the limit. Kmem accounting should be doing the same.
+>
+> Reported-by: Thomas Lindroth <thomas.lindroth@gmail.com>
+> Debugged-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+> Cc: stable
+> Signed-off-by: Michal Hocko <mhocko@suse.com>
 
-Link: https://software.intel.com/sites/default/files/managed/c5/15/vt-directed-io-spec.pdf
+I wonder what has changed since
+<http://lkml.kernel.org/r/20180525185501.82098-1-shakeelb@google.com/>.
 
-Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
-Signed-off-by: Kyung Min Park <kyung.min.park@intel.com>
----
- drivers/iommu/dmar.c        | 77 ++++++++++++++++++++++++++++++++++++++++++---
- include/linux/intel-iommu.h |  2 ++
- 2 files changed, 75 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
-index 1207e05..5cb63c5 100644
---- a/drivers/iommu/dmar.c
-+++ b/drivers/iommu/dmar.c
-@@ -1532,6 +1532,64 @@ static const char *dma_remap_fault_reasons[] =
- 	"PCE for translation request specifies blocking",
- };
- 
-+static const char * const dma_remap_sm_fault_reasons[] = {
-+	"SM: Invalid Root Table Address",
-+	"SM: TTM 0 for request with PASID",
-+	"SM: TTM 0 for page group request",
-+	"Unknown", "Unknown", "Unknown", "Unknown", "Unknown", /* 0x33-0x37 */
-+	"SM: Error attempting to access Root Entry",
-+	"SM: Present bit in Root Entry is clear",
-+	"SM: Non-zero reserved field set in Root Entry",
-+	"Unknown", "Unknown", "Unknown", "Unknown", "Unknown", /* 0x3B-0x3F */
-+	"SM: Error attempting to access Context Entry",
-+	"SM: Present bit in Context Entry is clear",
-+	"SM: Non-zero reserved field set in the Context Entry",
-+	"SM: Invalid Context Entry",
-+	"SM: DTE field in Context Entry is clear",
-+	"SM: PASID Enable field in Context Entry is clear",
-+	"SM: PASID is larger than the max in Context Entry",
-+	"SM: PRE field in Context-Entry is clear",
-+	"SM: RID_PASID field error in Context-Entry",
-+	"Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", /* 0x49-0x4F */
-+	"SM: Error attempting to access the PASID Directory Entry",
-+	"SM: Present bit in Directory Entry is clear",
-+	"SM: Non-zero reserved field set in PASID Directory Entry",
-+	"Unknown", "Unknown", "Unknown", "Unknown", "Unknown", /* 0x53-0x57 */
-+	"SM: Error attempting to access PASID Table Entry",
-+	"SM: Present bit in PASID Table Entry is clear",
-+	"SM: Non-zero reserved field set in PASID Table Entry",
-+	"SM: Invalid Scalable-Mode PASID Table Entry",
-+	"SM: ERE field is clear in PASID Table Entry",
-+	"SM: SRE field is clear in PASID Table Entry",
-+	"Unknown", "Unknown",/* 0x5E-0x5F */
-+	"Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", /* 0x60-0x67 */
-+	"Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", /* 0x68-0x6F */
-+	"SM: Error attempting to access first-level paging entry",
-+	"SM: Present bit in first-level paging entry is clear",
-+	"SM: Non-zero reserved field set in first-level paging entry",
-+	"SM: Error attempting to access FL-PML4 entry",
-+	"SM: First-level entry address beyond MGAW in Nested translation",
-+	"SM: Read permission error in FL-PML4 entry in Nested translation",
-+	"SM: Read permission error in first-level paging entry in Nested translation",
-+	"SM: Write permission error in first-level paging entry in Nested translation",
-+	"SM: Error attempting to access second-level paging entry",
-+	"SM: Read/Write permission error in second-level paging entry",
-+	"SM: Non-zero reserved field set in second-level paging entry",
-+	"SM: Invalid second-level page table pointer",
-+	"SM: A/D bit update needed in second-level entry when set up in no snoop",
-+	"Unknown", "Unknown", "Unknown", /* 0x7D-0x7F */
-+	"SM: Address in first-level translation is not canonical",
-+	"SM: U/S set 0 for first-level translation with user privilege",
-+	"SM: No execute permission for request with PASID and ER=1",
-+	"SM: Address beyond the DMA hardware max",
-+	"SM: Second-level entry address beyond the max",
-+	"SM: No write permission for Write/AtomicOp request",
-+	"SM: No read permission for Read/AtomicOp request",
-+	"SM: Invalid address-interrupt address",
-+	"Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", /* 0x88-0x8F */
-+	"SM: A/D bit update needed in first-level entry when set up in no snoop",
-+};
-+
- static const char *irq_remap_fault_reasons[] =
- {
- 	"Detected reserved fields in the decoded interrupt-remapped request",
-@@ -1549,6 +1607,10 @@ static const char *dmar_get_fault_reason(u8 fault_reason, int *fault_type)
- 					ARRAY_SIZE(irq_remap_fault_reasons))) {
- 		*fault_type = INTR_REMAP;
- 		return irq_remap_fault_reasons[fault_reason - 0x20];
-+	} else if (fault_reason >= 0x30 && (fault_reason - 0x30 <
-+			ARRAY_SIZE(dma_remap_sm_fault_reasons))) {
-+		*fault_type = DMA_REMAP;
-+		return dma_remap_sm_fault_reasons[fault_reason - 0x30];
- 	} else if (fault_reason < ARRAY_SIZE(dma_remap_fault_reasons)) {
- 		*fault_type = DMA_REMAP;
- 		return dma_remap_fault_reasons[fault_reason];
-@@ -1624,7 +1686,8 @@ void dmar_msi_read(int irq, struct msi_msg *msg)
- }
- 
- static int dmar_fault_do_one(struct intel_iommu *iommu, int type,
--		u8 fault_reason, u16 source_id, unsigned long long addr)
-+		u8 fault_reason, int pasid, u16 source_id,
-+		unsigned long long addr)
- {
- 	const char *reason;
- 	int fault_type;
-@@ -1637,10 +1700,11 @@ static int dmar_fault_do_one(struct intel_iommu *iommu, int type,
- 			PCI_FUNC(source_id & 0xFF), addr >> 48,
- 			fault_reason, reason);
- 	else
--		pr_err("[%s] Request device [%02x:%02x.%d] fault addr %llx [fault reason %02d] %s\n",
-+		pr_err("[%s] Request device [%02x:%02x.%d] PASID %x fault addr %llx [fault reason %02d] %s\n",
- 		       type ? "DMA Read" : "DMA Write",
- 		       source_id >> 8, PCI_SLOT(source_id & 0xFF),
--		       PCI_FUNC(source_id & 0xFF), addr, fault_reason, reason);
-+		       PCI_FUNC(source_id & 0xFF), pasid, addr,
-+		       fault_reason, reason);
- 	return 0;
- }
- 
-@@ -1672,8 +1736,9 @@ irqreturn_t dmar_fault(int irq, void *dev_id)
- 		u8 fault_reason;
- 		u16 source_id;
- 		u64 guest_addr;
--		int type;
-+		int type, pasid;
- 		u32 data;
-+		bool pasid_present;
- 
- 		/* highest 32 bits */
- 		data = readl(iommu->reg + reg +
-@@ -1685,10 +1750,12 @@ irqreturn_t dmar_fault(int irq, void *dev_id)
- 			fault_reason = dma_frcd_fault_reason(data);
- 			type = dma_frcd_type(data);
- 
-+			pasid = dma_frcd_pasid_value(data);
- 			data = readl(iommu->reg + reg +
- 				     fault_index * PRIMARY_FAULT_REG_LEN + 8);
- 			source_id = dma_frcd_source_id(data);
- 
-+			pasid_present = dma_frcd_pasid_present(data);
- 			guest_addr = dmar_readq(iommu->reg + reg +
- 					fault_index * PRIMARY_FAULT_REG_LEN);
- 			guest_addr = dma_frcd_page_addr(guest_addr);
-@@ -1701,7 +1768,9 @@ irqreturn_t dmar_fault(int irq, void *dev_id)
- 		raw_spin_unlock_irqrestore(&iommu->register_lock, flag);
- 
- 		if (!ratelimited)
-+			/* Using pasid -1 if pasid is not present */
- 			dmar_fault_do_one(iommu, type, fault_reason,
-+					  pasid_present ? pasid : -1,
- 					  source_id, guest_addr);
- 
- 		fault_index++;
-diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-index 3c6327b..617f68f 100644
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -265,6 +265,8 @@
- #define dma_frcd_type(d) ((d >> 30) & 1)
- #define dma_frcd_fault_reason(c) (c & 0xff)
- #define dma_frcd_source_id(c) (c & 0xffff)
-+#define dma_frcd_pasid_value(c) (((c) >> 8) & 0xfffff)
-+#define dma_frcd_pasid_present(c) (((c) >> 31) & 1)
- /* low 64 bit */
- #define dma_frcd_page_addr(d) (d & (((u64)-1) << PAGE_SHIFT))
- 
--- 
-2.7.4
-
+> ---
+>  mm/memcontrol.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 9ec5e12486a7..e18108b2b786 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -2821,6 +2821,16 @@ int __memcg_kmem_charge_memcg(struct page *page, gfp_t gfp, int order,
+>
+>         if (!cgroup_subsys_on_dfl(memory_cgrp_subsys) &&
+>             !page_counter_try_charge(&memcg->kmem, nr_pages, &counter)) {
+> +
+> +               /*
+> +                * Enforce __GFP_NOFAIL allocation because callers are not
+> +                * prepared to see failures and likely do not have any failure
+> +                * handling code.
+> +                */
+> +               if (gfp & __GFP_NOFAIL) {
+> +                       page_counter_charge(&memcg->kmem, nr_pages);
+> +                       return 0;
+> +               }
+>                 cancel_charge(memcg, nr_pages);
+>                 return -ENOMEM;
+>         }
+> --
+> 2.20.1
+>
