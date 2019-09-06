@@ -2,73 +2,197 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A91FC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5083AC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1351820578
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:58:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DBB720578
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:58:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392773AbfIFI6j (ORCPT
+        id S2392799AbfIFI6n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 04:58:39 -0400
-Received: from mga09.intel.com ([134.134.136.24]:51431 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730412AbfIFI6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 04:58:38 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Sep 2019 01:58:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,472,1559545200"; 
-   d="scan'208";a="199478645"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.66]) ([10.237.72.66])
-  by fmsmga001.fm.intel.com with ESMTP; 06 Sep 2019 01:58:36 -0700
-Subject: Re: [PATCH 0/6] perf scripts python: exported-sql-viewer.py: Add Time
- chart by CPU
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-References: <20190821083216.1340-1-adrian.hunter@intel.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <6f55cdb7-a431-bd1b-8e7f-f8caf92399af@intel.com>
-Date:   Fri, 6 Sep 2019 11:57:28 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 6 Sep 2019 04:58:43 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:59518 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730412AbfIFI6l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 04:58:41 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1i6A4l-0001EK-CW; Fri, 06 Sep 2019 08:58:39 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] media: em28xx: make various arrays static const, makes object smaller
+Date:   Fri,  6 Sep 2019 09:58:39 +0100
+Message-Id: <20190906085839.24344-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190821083216.1340-1-adrian.hunter@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/08/19 11:32 AM, Adrian Hunter wrote:
-> Hi
-> 
-> These patches to exported-sql-viewer.py, add a time chart based on context
-> switch information.  Context switch information was added to the database
-> export fairly recently, so the chart menu option will only appear if
-> context switch information is in the database.  Refer to the Exported SQL
-> Viewer Help option for more information about the chart.
-> 
-> 
-> Adrian Hunter (6):
->       perf scripts python: exported-sql-viewer.py: Add LookupModel()
->       perf scripts python: exported-sql-viewer.py: Add HBoxLayout and VBoxLayout
->       perf scripts python: exported-sql-viewer.py: Add global time range calculations
->       perf scripts python: exported-sql-viewer.py: Tidy up Call tree call_time
->       perf scripts python: exported-sql-viewer.py: Add ability for Call tree to open at a specified task and time
->       perf scripts python: exported-sql-viewer.py: Add Time chart by CPU
-> 
->  tools/perf/scripts/python/exported-sql-viewer.py | 1555 +++++++++++++++++++++-
->  1 file changed, 1531 insertions(+), 24 deletions(-)
+From: Colin Ian King <colin.king@canonical.com>
 
-Any comments?
+Don't populate the arrays on the stack but instead make them
+static const. Makes the object code smaller by 767 bytes.
+
+Before:
+   text	   data	    bss	    dec	    hex	filename
+  41567	  15088	    192	  56847	   de0f	em28xx/em28xx-dvb.o
+
+After:
+   text	   data	    bss	    dec	    hex	filename
+  39872	  16016	    192	  56080	   db10	em28xx/em28xx-dvb.o
+
+(gcc version 9.2.1, amd64)
+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/media/usb/em28xx/em28xx-dvb.c | 30 +++++++++++++--------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/media/usb/em28xx/em28xx-dvb.c b/drivers/media/usb/em28xx/em28xx-dvb.c
+index a73faf12f7e4..0ab6c493bc74 100644
+--- a/drivers/media/usb/em28xx/em28xx-dvb.c
++++ b/drivers/media/usb/em28xx/em28xx-dvb.c
+@@ -471,13 +471,13 @@ static void hauppauge_hvr930c_init(struct em28xx *dev)
+ {
+ 	int i;
+ 
+-	struct em28xx_reg_seq hauppauge_hvr930c_init[] = {
++	static const struct em28xx_reg_seq hauppauge_hvr930c_init[] = {
+ 		{EM2874_R80_GPIO_P0_CTRL,	0xff,	0xff,	0x65},
+ 		{EM2874_R80_GPIO_P0_CTRL,	0xfb,	0xff,	0x32},
+ 		{EM2874_R80_GPIO_P0_CTRL,	0xff,	0xff,	0xb8},
+ 		{	-1,			-1,	-1,	-1},
+ 	};
+-	struct em28xx_reg_seq hauppauge_hvr930c_end[] = {
++	static const struct em28xx_reg_seq hauppauge_hvr930c_end[] = {
+ 		{EM2874_R80_GPIO_P0_CTRL,	0xef,	0xff,	0x01},
+ 		{EM2874_R80_GPIO_P0_CTRL,	0xaf,	0xff,	0x65},
+ 		{EM2874_R80_GPIO_P0_CTRL,	0xef,	0xff,	0x76},
+@@ -493,7 +493,7 @@ static void hauppauge_hvr930c_init(struct em28xx *dev)
+ 		{	-1,			-1,	-1,	-1},
+ 	};
+ 
+-	struct {
++	static const struct {
+ 		unsigned char r[4];
+ 		int len;
+ 	} regs[] = {
+@@ -537,20 +537,20 @@ static void hauppauge_hvr930c_init(struct em28xx *dev)
+ static void terratec_h5_init(struct em28xx *dev)
+ {
+ 	int i;
+-	struct em28xx_reg_seq terratec_h5_init[] = {
++	static const struct em28xx_reg_seq terratec_h5_init[] = {
+ 		{EM2820_R08_GPIO_CTRL,		0xff,	0xff,	10},
+ 		{EM2874_R80_GPIO_P0_CTRL,	0xf6,	0xff,	100},
+ 		{EM2874_R80_GPIO_P0_CTRL,	0xf2,	0xff,	50},
+ 		{EM2874_R80_GPIO_P0_CTRL,	0xf6,	0xff,	100},
+ 		{	-1,			-1,	-1,	-1},
+ 	};
+-	struct em28xx_reg_seq terratec_h5_end[] = {
++	static const struct em28xx_reg_seq terratec_h5_end[] = {
+ 		{EM2874_R80_GPIO_P0_CTRL,	0xe6,	0xff,	100},
+ 		{EM2874_R80_GPIO_P0_CTRL,	0xa6,	0xff,	50},
+ 		{EM2874_R80_GPIO_P0_CTRL,	0xe6,	0xff,	100},
+ 		{	-1,			-1,	-1,	-1},
+ 	};
+-	struct {
++	static const struct {
+ 		unsigned char r[4];
+ 		int len;
+ 	} regs[] = {
+@@ -594,14 +594,14 @@ static void terratec_htc_stick_init(struct em28xx *dev)
+ 	 * 0xe6: unknown (does not affect DVB-T).
+ 	 * 0xb6: unknown (does not affect DVB-T).
+ 	 */
+-	struct em28xx_reg_seq terratec_htc_stick_init[] = {
++	static const struct em28xx_reg_seq terratec_htc_stick_init[] = {
+ 		{EM2820_R08_GPIO_CTRL,		0xff,	0xff,	10},
+ 		{EM2874_R80_GPIO_P0_CTRL,	0xf6,	0xff,	100},
+ 		{EM2874_R80_GPIO_P0_CTRL,	0xe6,	0xff,	50},
+ 		{EM2874_R80_GPIO_P0_CTRL,	0xf6,	0xff,	100},
+ 		{	-1,			-1,	-1,	-1},
+ 	};
+-	struct em28xx_reg_seq terratec_htc_stick_end[] = {
++	static const struct em28xx_reg_seq terratec_htc_stick_end[] = {
+ 		{EM2874_R80_GPIO_P0_CTRL,	0xb6,	0xff,	100},
+ 		{EM2874_R80_GPIO_P0_CTRL,	0xf6,	0xff,	50},
+ 		{	-1,			-1,	-1,	-1},
+@@ -611,7 +611,7 @@ static void terratec_htc_stick_init(struct em28xx *dev)
+ 	 * Init the analog decoder (not yet supported), but
+ 	 * it's probably still a good idea.
+ 	 */
+-	struct {
++	static const struct {
+ 		unsigned char r[4];
+ 		int len;
+ 	} regs[] = {
+@@ -642,14 +642,14 @@ static void terratec_htc_usb_xs_init(struct em28xx *dev)
+ {
+ 	int i;
+ 
+-	struct em28xx_reg_seq terratec_htc_usb_xs_init[] = {
++	static const struct em28xx_reg_seq terratec_htc_usb_xs_init[] = {
+ 		{EM2820_R08_GPIO_CTRL,		0xff,	0xff,	10},
+ 		{EM2874_R80_GPIO_P0_CTRL,	0xb2,	0xff,	100},
+ 		{EM2874_R80_GPIO_P0_CTRL,	0xb2,	0xff,	50},
+ 		{EM2874_R80_GPIO_P0_CTRL,	0xb6,	0xff,	100},
+ 		{	-1,			-1,	-1,	-1},
+ 	};
+-	struct em28xx_reg_seq terratec_htc_usb_xs_end[] = {
++	static const struct em28xx_reg_seq terratec_htc_usb_xs_end[] = {
+ 		{EM2874_R80_GPIO_P0_CTRL,	0xa6,	0xff,	100},
+ 		{EM2874_R80_GPIO_P0_CTRL,	0xa6,	0xff,	50},
+ 		{EM2874_R80_GPIO_P0_CTRL,	0xe6,	0xff,	100},
+@@ -660,7 +660,7 @@ static void terratec_htc_usb_xs_init(struct em28xx *dev)
+ 	 * Init the analog decoder (not yet supported), but
+ 	 * it's probably still a good idea.
+ 	 */
+-	struct {
++	static const struct {
+ 		unsigned char r[4];
+ 		int len;
+ 	} regs[] = {
+@@ -704,7 +704,7 @@ static void pctv_520e_init(struct em28xx *dev)
+ 	 * digital demodulator and tuner are routed via AVF4910B.
+ 	 */
+ 	int i;
+-	struct {
++	static const struct {
+ 		unsigned char r[4];
+ 		int len;
+ 	} regs[] = {
+@@ -800,7 +800,7 @@ static int em28xx_mt352_terratec_xs_init(struct dvb_frontend *fe)
+ static void px_bcud_init(struct em28xx *dev)
+ {
+ 	int i;
+-	struct {
++	static const struct {
+ 		unsigned char r[4];
+ 		int len;
+ 	} regs1[] = {
+@@ -818,7 +818,7 @@ static void px_bcud_init(struct em28xx *dev)
+ 		{{ 0x85, 0x7a }, 2},
+ 		{{ 0x87, 0x04 }, 2},
+ 	};
+-	static struct em28xx_reg_seq gpio[] = {
++	static const struct em28xx_reg_seq gpio[] = {
+ 		{EM28XX_R06_I2C_CLK,		0x40,	0xff,	300},
+ 		{EM2874_R80_GPIO_P0_CTRL,	0xfd,	0xff,	60},
+ 		{EM28XX_R15_RGAIN,		0x20,	0xff,	0},
+-- 
+2.20.1
+
