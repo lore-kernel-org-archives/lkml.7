@@ -2,80 +2,90 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F3DEC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B08FC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A9B121848
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D57F121670
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:59:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bo2NORtc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394987AbfIFP64 (ORCPT
+        id S2395000AbfIFP7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 11:58:56 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:40156 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726132AbfIFP64 (ORCPT
+        Fri, 6 Sep 2019 11:59:11 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59490 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726810AbfIFP7K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 11:58:56 -0400
-Received: by mail-qt1-f193.google.com with SMTP id g4so7576689qtq.7
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 08:58:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7auWns/CTnLbzbVxcfsLhjzFCtCS8/hOZ420FTFpzQQ=;
-        b=QYI7NjYNcT/dXMdB2Uzz6HsIs1qh+MxpFhIUJwwAVXjnZH0/uL3/lFMdpP8LrSeFQX
-         ZGVJBv05ZCcwHx/knaBSD2fIdtqeYmzMouxG+nvgwFpXaFuWqo06KF308GzarzXk3UTR
-         HGh0+rxK9lSxpqKkPhi/tZw+9ykO4ykF3tm007tlD2iEqizaGnUAka+XobYj+lN4gqSW
-         Ip9Sjto7JHGjbF5rUgipAU8BYCiVwub0NaEkS6/oGdcGM4DK++XrDFJhCv0BNHafoxH2
-         1qNtJvVwor1HkdMfSqHzhzLQYM9cUsnWdbBJyAcLqPNo5D5Rce6DegsZ9Xw7yOaHhrCR
-         6ibw==
-X-Gm-Message-State: APjAAAXyHw5a8D11MwtMeGdATOpBIIGhF969fQrAwtqe8+0jfmcMGXgr
-        OuZTYatNyGcKB1rHQ7u1XTcIasM1o2NYghXAB3A=
-X-Google-Smtp-Source: APXvYqwq+7xHbY917VB85V/NY5F1YjF8CbB5+I8o7pGnKxj+SP6ugGUW2leXjZAH+AchzM9rBGkpsGai69cSD+Ma62s=
-X-Received: by 2002:ad4:4529:: with SMTP id l9mr1355846qvu.45.1567785534799;
- Fri, 06 Sep 2019 08:58:54 -0700 (PDT)
+        Fri, 6 Sep 2019 11:59:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=22s3suVEwybuDGOmnl63bE4bs9K3fxHohFliCUIcsdI=; b=bo2NORtcqX+pna5uqNLOVaY3lP
+        GcjxJLygzVcRUR9QCu2ryEqYBNUsSitjTcyCcA73nnV6tftFfy573yMV/iR0JmPi1m9YtArvHdF50
+        1NnKeUwaQCOqb/Bk9eGmrlHkHcWIKJpwi7GmjHBZytCSrxdxWSKbMxjAJvnhgwNjHMAzKrmWTB22K
+        5sOCIH2N5bXeUNHWif3K4FEerULx2MpVhdIhMT0MPeGAD8X4C7H5hBFFCoumISrpMw8JpqNypN7gs
+        SKVKbigK6tOH3wRKQ+zIGt2NsYILncqRydAEp1DJAIijZLRKVO3JaXcCBfqMA02pCd29ccfSBi3Sb
+        yU4ueQpg==;
+Received: from 213-225-38-191.nat.highway.a1.net ([213.225.38.191] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i6Gda-0004lW-9k; Fri, 06 Sep 2019 15:59:02 +0000
+Date:   Fri, 6 Sep 2019 17:56:50 +0200
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Joel Becker <jlbec@evilplan.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] configfs fixes for 5.3
+Message-ID: <20190906155650.GA32004@infradead.org>
 MIME-Version: 1.0
-References: <20190906151551.1192788-1-arnd@arndb.de> <20150686-f14c-389b-7345-699cee191116@ti.com>
-In-Reply-To: <20150686-f14c-389b-7345-699cee191116@ti.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 6 Sep 2019 17:58:38 +0200
-Message-ID: <CAK8P3a3ByLmeQirVNEumSMGhzs7XFRZujudE81WQhvhLEZprdw@mail.gmail.com>
-Subject: Re: [PATCH] iommu: omap: mark pm functions __maybe_unused
-To:     Suman Anna <s-anna@ti.com>
-Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        Tero Kristo <t-kristo@ti.com>, Will Deacon <will@kernel.org>,
-        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 6, 2019 at 5:24 PM Suman Anna <s-anna@ti.com> wrote:
->
-> Hi Arnd,
->
-> On 9/6/19 10:15 AM, Arnd Bergmann wrote:
-> > The runtime_pm functions are unused when CONFIG_PM is disabled:
-> >
-> > drivers/iommu/omap-iommu.c:1022:12: error: unused function 'omap_iommu_runtime_suspend' [-Werror,-Wunused-function]
-> > static int omap_iommu_runtime_suspend(struct device *dev)
-> > drivers/iommu/omap-iommu.c:1064:12: error: unused function 'omap_iommu_runtime_resume' [-Werror,-Wunused-function]
-> > static int omap_iommu_runtime_resume(struct device *dev)
-> >
-> > Mark them as __maybe_unused to let gcc silently drop them
-> > instead of warning.
->
-> Curious, what defconfig is this? OMAP drivers won't be functional in
-> general without pm_runtime, so CONFIG_PM is mandatory. But from just a
-> CONFIG_PM option point of view, agree with the patch.
+Hi Linus,
 
-I did some randconfig builds for testing the stuff I merged for 5.4.
-I don't think there are any defconfigs without CONFIG_PM.
+please pull these late configfs fixe from Al that fix pretty nasty
+removal vs attribute access races.
 
-      Arnd
+The following changes since commit 089cf7f6ecb266b6a4164919a2e69bd2f938374a:
+
+  Linux 5.3-rc7 (2019-09-02 09:57:40 -0700)
+
+are available in the Git repository at:
+
+  git://git.infradead.org/users/hch/configfs.git tags/configfs-for-5.3
+
+for you to fetch changes up to b0841eefd9693827afb9888235e26ddd098f9cef:
+
+  configfs: provide exclusion between IO and removals (2019-09-04 22:33:51 +0200)
+
+----------------------------------------------------------------
+configfs fixes for 5.3
+
+ - fix removal vs attribute read/write races (Al Viro)
+
+----------------------------------------------------------------
+Al Viro (4):
+      configfs: stash the data we need into configfs_buffer at open time
+      configfs_register_group() shouldn't be (and isn't) called in rmdirable parts
+      configfs: new object reprsenting tree fragments
+      configfs: provide exclusion between IO and removals
+
+ fs/configfs/configfs_internal.h |  15 ++-
+ fs/configfs/dir.c               | 137 +++++++++++++++-----
+ fs/configfs/file.c              | 280 ++++++++++++++++++++--------------------
+ 3 files changed, 257 insertions(+), 175 deletions(-)
