@@ -2,97 +2,150 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4BD5C00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C77C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E18920838
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:24:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C26C20838
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:24:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ssi.gouv.fr header.i=@ssi.gouv.fr header.b="sbpxnjcU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404218AbfIFRYI (ORCPT
+        id S2406071AbfIFRYa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 13:24:08 -0400
-Received: from muru.com ([72.249.23.125]:60044 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729928AbfIFRYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 13:24:08 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 560A580CC;
-        Fri,  6 Sep 2019 17:24:36 +0000 (UTC)
-Date:   Fri, 6 Sep 2019 10:24:03 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        =?utf-8?B?QW5kcsOp?= Roth <neolynx@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pm@vger.kernel.org,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
-Subject: Re: [RFC v2 3/3] ARM: dts: omap3: bulk convert compatible to be
- explicitly ti,omap3430 or ti,omap36xx
-Message-ID: <20190906172403.GG52127@atomide.com>
-References: <cover.1567587220.git.hns@goldelico.com>
- <a2b56edcada7b9000a6e906387a02c0ee42681db.1567587220.git.hns@goldelico.com>
- <20190905142734.GV52127@atomide.com>
- <4BC39938-D63E-4BDC-BA28-5132F77F602D@goldelico.com>
- <20190906154732.GC52127@atomide.com>
- <8C8644AC-FA12-4D26-B96A-76B78798612A@goldelico.com>
+        Fri, 6 Sep 2019 13:24:30 -0400
+Received: from smtp-out.ssi.gouv.fr ([86.65.182.90]:54986 "EHLO
+        smtp-out.ssi.gouv.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729928AbfIFRY3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 13:24:29 -0400
+Received: from smtp-out.ssi.gouv.fr (localhost [127.0.0.1])
+        by smtp-out.ssi.gouv.fr (Postfix) with ESMTP id 96E93D0007D;
+        Fri,  6 Sep 2019 19:24:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ssi.gouv.fr;
+        s=20160407; t=1567790667;
+        bh=KJUuECIANqpK6TruuSChflkPQxJqxFhMngqPuIjpheg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To:From:Subject;
+        b=sbpxnjcUU1rtFVaIRuPkdkOxATfyY/Uuz9hBbitRqUg2lVqhrqGbOJpx02hf+klvN
+         lipJTmGLxWXJjfdA9E+9OX5GuyYNFdgOFtw8HQtPxFJWbgCcS8OnqQWYreCRK7Ex4l
+         y8S5jKXHQ2fxJr/QfhDuHJTiBRubESRjpTOhRkr9MQY9npRBSgO2UTTVKkbHbi+DYn
+         k+anbqV9S//kmngzANIoe2fnFS4Bz9LaLeRvsQWZcLIFChC+1BVQ41w4dvDME/hJUI
+         /PgjsbUDqxTgb3bAG7/Psis5hSOMHi4lDb3Un2k/tvw6xVbk5TTDcBxsJwb39kegw0
+         iqZZAYov54cpA==
+Subject: Re: [PATCH v2 1/5] fs: Add support for an O_MAYEXEC flag on
+ sys_open()
+To:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Aleksa Sarai <cyphar@cyphar.com>
+CC:     Florian Weimer <fweimer@redhat.com>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
+        <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Eric Chiang <ericchiang@google.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
+        <kernel-hardening@lists.openwall.com>, <linux-api@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>
+References: <20190906152455.22757-1-mic@digikod.net>
+ <20190906152455.22757-2-mic@digikod.net>
+ <87ef0te7v3.fsf@oldenburg2.str.redhat.com>
+ <75442f3b-a3d8-12db-579a-2c5983426b4d@ssi.gouv.fr>
+ <20190906170739.kk3opr2phidb7ilb@yavin.dot.cyphar.com>
+ <20190906172050.v44f43psd6qc6awi@wittgenstein>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>
+Message-ID: <062c25e2-1996-c32c-46a1-aa831d69930f@ssi.gouv.fr>
+Date:   Fri, 6 Sep 2019 19:24:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8C8644AC-FA12-4D26-B96A-76B78798612A@goldelico.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190906172050.v44f43psd6qc6awi@wittgenstein>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* H. Nikolaus Schaller <hns@goldelico.com> [190906 17:09]:
-> for i in 3430 34xx 3630 36xx; do echo $i $(fgrep '"'ti,omap$i'"' arch/arm/boot/dts/*.dts* | wc -l); done
-> 
-> 3430 12
-> 34xx 28
-> 3630 3
-> 36xx 23
-> 
-> which would indicate that 34xx and 36xx are more common.
 
-Right, but the xx variants are against the device tree naming and
-that's why we should get rid of them in the dts. The compatible
-should be named after the first instance like "ti,omap3430" and
-similar devices can just use that.
+On 06/09/2019 19:20, Christian Brauner wrote:
+> On Sat, Sep 07, 2019 at 03:07:39AM +1000, Aleksa Sarai wrote:
+>> On 2019-09-06, Micka=C3=ABl Sala=C3=BCn <mickael.salaun@ssi.gouv.fr> wro=
+te:
+>>>
+>>> On 06/09/2019 17:56, Florian Weimer wrote:
+>>>> Let's assume I want to add support for this to the glibc dynamic loade=
+r,
+>>>> while still being able to run on older kernels.
+>>>>
+>>>> Is it safe to try the open call first, with O_MAYEXEC, and if that fai=
+ls
+>>>> with EINVAL, try again without O_MAYEXEC?
+>>>
+>>> The kernel ignore unknown open(2) flags, so yes, it is safe even for
+>>> older kernel to use O_MAYEXEC.
+>>
+>> Depends on your definition of "safe" -- a security feature that you will
+>> silently not enable on older kernels doesn't sound super safe to me.
+>> Unfortunately this is a limitation of open(2) that we cannot change --
+>> which is why the openat2(2) proposal I've been posting gives -EINVAL for
+>> unknown O_* flags.
+>>
+>> There is a way to probe for support (though unpleasant), by creating a
+>> test O_MAYEXEC fd and then checking if the flag is present in
+>> /proc/self/fdinfo/$n.
+>
+> Which Florian said they can't do for various reasons.
+>
+> It is a major painpoint if there's no easy way for userspace to probe
+> for support. Especially if it's security related which usually means
+> that you want to know whether this feature works or not.
 
-> BTW there is also some code that does special SoC detection based on
-> soc_device_match(), mainly in omapdrm/dss.
-> 
-> If we were to use this mechanism in the ti-cpufreq driver we could
-> match it to ti,omap3 and could avoid all these changes.
-> 
-> But make it less maintainable and code more complex.
+I used "safe" deliberately (not "secure" which didn't make sense in this
+sentence). According to the threat model, if the kernel doesn't support
+the feature, it should be ignored by userland. In this case, it fit well
+with the current behavior of open(2). I agree that the openat2(2)
+behavior handling flags is the good way to do it (whitelisting), but the
+O_MAYEXEC flag should not change the userland behavior on its own,
+because it depend on a global policy. Even being able to probe for
+O_MAYEXEC support does not make sense because it would not be enough to
+know the system policy (either this flag is enforced or not=E2=80=A6).
 
-Hmm right, yeah using soc_device_match() would remove this issue.
-It might be worth doing as these SoC variants do not change
-much and the code should not need updating. Up to you to
-decide.
-
-> I'll also take a look at omap.txt bindings since that likely needs
-> an update as well to better describe what the official ones are
-> and which are legacy.
-
-OK. Just limit the compatible changes to the ones that
-need to be modified for this series, the rest can be
-done with a separate patches.
-
-Regards,
-
-Tony
+Les donn=C3=A9es =C3=A0 caract=C3=A8re personnel recueillies et trait=C3=A9=
+es dans le cadre de cet =C3=A9change, le sont =C3=A0 seule fin d=E2=80=99ex=
+=C3=A9cution d=E2=80=99une relation professionnelle et s=E2=80=99op=C3=A8re=
+nt dans cette seule finalit=C3=A9 et pour la dur=C3=A9e n=C3=A9cessaire =C3=
+=A0 cette relation. Si vous souhaitez faire usage de vos droits de consulta=
+tion, de rectification et de suppression de vos donn=C3=A9es, veuillez cont=
+acter contact.rgpd@sgdsn.gouv.fr. Si vous avez re=C3=A7u ce message par err=
+eur, nous vous remercions d=E2=80=99en informer l=E2=80=99exp=C3=A9diteur e=
+t de d=C3=A9truire le message. The personal data collected and processed du=
+ring this exchange aims solely at completing a business relationship and is=
+ limited to the necessary duration of that relationship. If you wish to use=
+ your rights of consultation, rectification and deletion of your data, plea=
+se contact: contact.rgpd@sgdsn.gouv.fr. If you have received this message i=
+n error, we thank you for informing the sender and destroying the message.
