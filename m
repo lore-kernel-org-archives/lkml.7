@@ -2,156 +2,130 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B2BC00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 21:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4818C00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 22:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E31D206BB
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 21:51:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R7tJANYP"
+	by mail.kernel.org (Postfix) with ESMTP id 9DC0420838
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 22:03:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567807390;
+	bh=JYOTkYYE3g9CREcW4Rr1oQgc7T/eq+7DhhZhFapLkq8=;
+	h=In-Reply-To:References:To:From:Cc:Subject:Date:List-ID:From;
+	b=GZjgHV3PABZR4k4Qs7JEXBaT+tZOe/9pblIsYg7kkXEdJiqeT+6bvi1QQpB7F2zJM
+	 xbiqm7bVwkxRm3oB8zSCpNfrY5PiSlntK7UyUWtRwRtxqv9pBjZ8yBYi0LIf8Xldgq
+	 N/LCC5oA/g84n/qZKZ9PEiSYdKFLGVd6IF16ZE70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404796AbfIFVvE (ORCPT
+        id S2391961AbfIFWDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 17:51:04 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42159 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404236AbfIFVvE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 17:51:04 -0400
-Received: by mail-pg1-f196.google.com with SMTP id p3so4244987pgb.9;
-        Fri, 06 Sep 2019 14:51:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=eDpX53pV2w3525Sfc++y574jdtjcTxKRU6k4wrPYJJE=;
-        b=R7tJANYP9RC8vMxjaiQJQysGREeC4SukBKwQay9FF+AMJE+MvsYVBFrsati6KaggWM
-         VWkpRA7WPb67hbvt9c4rmHWNClvfUZwODODfoY+fH9crahdylzEddDD/2NidH2MKqLAp
-         Iapm/hiz0A2mDeZEclyVm+SdU1bJGoc8FP6NklRbcl5IksRx0lwTVYI5cealjOhS7XYM
-         gitoGxs4V3Z1Ekpym5seReRqr8Hs7DrGi6GbW553Hr4d3wKFAx1oTU7V3ez1y5WfY1gc
-         2nf2SwaiX5AwY5cE+npxZbJaQLMTapIZxsY6RSypeBRKrquK9OECMgG8670DMSeZaHyp
-         Vsrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=eDpX53pV2w3525Sfc++y574jdtjcTxKRU6k4wrPYJJE=;
-        b=sZ9nmtGoUKt/aa0fefSOhnURt5p7IOqXJsH1cmcprbc9kTIeD/HXaa7MLC2/z4RHC/
-         2RQIcFXMbvd06KMJI1Esdf22VC5lFe6UsriE2iCLnKAjs2ApTd+zyD/SwsH6Y9OeGztr
-         oDDK1z8KerqH5BGcUpLriGXc+yRjQovk+KTEuc7ys+Y5PlebfjFqEDukciwi/t0XL8V3
-         4WUvXyvdqjwE/LLFpbu3cVWOhLR+3ALF6Gu9/0ZWVWyi04/lq4Fu/s2CgOVRyyTpBVUH
-         BckYg8xBp6V0UrB4at3YgM2jiH5L88FIYN0Ex0L98RbMsdAj4ada6+9nzPTJxJhhapRs
-         OfbQ==
-X-Gm-Message-State: APjAAAWTJ7moDPoouKPlFasFpUKN893OA7B/kq2Won1ZV3Uy+Q3h+ciB
-        egcvBOx5X7gtDR2JACIjFaE=
-X-Google-Smtp-Source: APXvYqxxmn9ULbrQFMLJEtMySO7JBNQkpSXC7k9Y2QPcQyK5SFcavLc7RGYi6hNSQ6p9Iz352cwvcQ==
-X-Received: by 2002:a63:484d:: with SMTP id x13mr9803253pgk.122.1567806663646;
-        Fri, 06 Sep 2019 14:51:03 -0700 (PDT)
-Received: from localhost ([100.118.89.196])
-        by smtp.gmail.com with ESMTPSA id g14sm6823936pfo.133.2019.09.06.14.51.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Sep 2019 14:51:03 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     iommu@lists.linux-foundation.org
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
-        Bruce Wang <bzwang@chromium.org>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Enrico Weigelt <info@metux.net>,
-        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 2/2] drm/msm: mark devices where iommu is managed by driver
-Date:   Fri,  6 Sep 2019 14:44:02 -0700
-Message-Id: <20190906214409.26677-3-robdclark@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190906214409.26677-1-robdclark@gmail.com>
-References: <20190906214409.26677-1-robdclark@gmail.com>
+        Fri, 6 Sep 2019 18:03:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49728 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390045AbfIFWDJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 18:03:09 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C8742081B;
+        Fri,  6 Sep 2019 22:03:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567807388;
+        bh=JYOTkYYE3g9CREcW4Rr1oQgc7T/eq+7DhhZhFapLkq8=;
+        h=In-Reply-To:References:To:From:Cc:Subject:Date:From;
+        b=sP6sCyo5xiItbKXA2QHUtl2blDkXsni7Mgxs4uuomLLMvb2Eib+I1px0DIRy7OMUA
+         UzF5N1e9CJMlOgYUX0zcdjUxVoFEs5v/AZNeGj2DTaDvv4xNlGDr4ESI+s57DvxZD6
+         JT2HajE5DVqfglx5YrEaoDDuPkkASHqo80KmRetU=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CACPK8Xf3C36KMgDmmRtNFqVFHzZx81ko+=54PA4+d5xPitum3g@mail.gmail.com>
+References: <20190816155806.22869-1-joel@jms.id.au> <20190816155806.22869-3-joel@jms.id.au> <20190816171441.3B8F720665@mail.kernel.org> <CACPK8Xf3C36KMgDmmRtNFqVFHzZx81ko+=54PA4+d5xPitum3g@mail.gmail.com>
+To:     Joel Stanley <joel@jms.id.au>
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Ryan Chen <ryan_chen@aspeedtech.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>
+Subject: Re: [PATCH 2/2] clk: Add support for AST2600 SoC
+User-Agent: alot/0.8.1
+Date:   Fri, 06 Sep 2019 15:03:07 -0700
+Message-Id: <20190906220308.6C8742081B@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+Quoting Joel Stanley (2019-08-18 19:03:54)
+> On Fri, 16 Aug 2019 at 17:14, Stephen Boyd <sboyd@kernel.org> wrote:
+> >
+> > Quoting Joel Stanley (2019-08-16 08:58:06)
+> > > +static const char * const vclk_parent_names[] =3D {
+> >
+> > Can you use the new way of specifying clk parents instead of just using
+> > strings?
+>=20
+> How does this work? I had a browse of the APIs in clk-provider.h and
+> it appeared the functions all take char *s still.
 
-Signed-off-by: Rob Clark <robdclark@chromium.org>
----
- drivers/gpu/drm/msm/adreno/adreno_device.c | 1 +
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c    | 1 +
- drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c   | 1 +
- drivers/gpu/drm/msm/msm_drv.c              | 1 +
- 4 files changed, 4 insertions(+)
+Sorry I didn't reply earlier. I'm going to write a kernel-doc to
+describe how to write a "modern" clk driver which should hopefully help
+here.
 
-diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm/msm/adreno/adreno_device.c
-index 7f750a9510a5..19f2bd2d6cb4 100644
---- a/drivers/gpu/drm/msm/adreno/adreno_device.c
-+++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
-@@ -452,6 +452,7 @@ static struct platform_driver adreno_driver = {
- 		.name = "adreno",
- 		.of_match_table = dt_match,
- 		.pm = &adreno_pm_ops,
-+		.driver_manages_iommu = true,
- 	},
- };
- 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-index 5751815a26d7..dec8cc6b64dc 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-@@ -1094,6 +1094,7 @@ static struct platform_driver dpu_driver = {
- 		.name = "msm_dpu",
- 		.of_match_table = dpu_dt_match,
- 		.pm = &dpu_pm_ops,
-+		.driver_manages_iommu = true,
- 	},
- };
- 
-diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-index d93de3a569b4..eff1b000258e 100644
---- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-+++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-@@ -1134,6 +1134,7 @@ static struct platform_driver mdp5_driver = {
- 		.name = "msm_mdp",
- 		.of_match_table = mdp5_dt_match,
- 		.pm = &mdp5_pm_ops,
-+		.driver_manages_iommu = true,
- 	},
- };
- 
-diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-index 3a4fd20a33e8..336a6d0a4cd3 100644
---- a/drivers/gpu/drm/msm/msm_drv.c
-+++ b/drivers/gpu/drm/msm/msm_drv.c
-@@ -1388,6 +1388,7 @@ static struct platform_driver msm_platform_driver = {
- 		.name   = "msm",
- 		.of_match_table = dt_match,
- 		.pm     = &msm_pm_ops,
-+		.driver_manages_iommu = true,
- 	},
- };
- 
--- 
-2.21.0
+The gist is that you can fill out a clk_parent_data array or a clk_hw
+array and set the .name and .fw_name and .index in the clk_parent_data
+array to indicate which clks to get from the DT node's "clocks" and
+"clock-names" properties.
+
+>=20
+> > > +       hw =3D clk_hw_register_fixed_factor(NULL, "ahb", "hpll", 0, 1=
+, axi_div * ahb_div);
+
+Take this one for example. If 'hpll' is actually a clk_hw pointer in
+hand, then you could do something like:
+
+	clk_hw_register_fixed_factor_parent_hw(NULL, "ahb", &hpll, 0, 1, axi_div *=
+ ahb_div);
+
+And if it's something like a clock from DT you could do
+
+	struct clk_parent_data pdata =3D {
+		.name =3D "hpll",
+		.fw_name =3D <clock-names string>,
+		.index =3D <whatever clock index it is>
+	};
+
+	clk_hw_register_fixed_factor_parent_data(NULL, "ahb", &pdata, 0, 1, axi_di=
+v * ahb_div);
+
+I haven't actually written the clk_hw_register_fixed_factor_*() APIs,
+because I'm thinking that it would be better to register the pdata with
+some more parameters so that the
+clk_hw_register_fixed_factor_parent_data() API becomes more like:
+
+	clk_hw_register_fixed_factor_parent_data(NULL, "ahb", "hpll",
+		<clock-names string>, <whatever clock index it is>, 0, 1,
+		axi_div * ahb_div);
+
+Because there's only one parent. For the mux clk it will be a pointer to
+parent_data because I don't see a way around it.
+
+> >
+> > There aren't checks for if these things fail. I guess it doesn't matter
+> > and just let it fail hard?
+>=20
+> I think that's sensible here. If the system has run out of memory this
+> early on then there's not going to be much that works.
+>=20
+> Thanks for the review. I've fixed all of the style issues you
+> mentioned, but would appreciate some guidance on the parent API.
+>=20
+
+Cool! Thanks.
 
