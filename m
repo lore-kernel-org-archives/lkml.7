@@ -2,322 +2,168 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 849A1C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F12C43140
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:04:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61BF32081B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:01:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EC64206A1
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:04:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389225AbfIFIBe (ORCPT
+        id S2389252AbfIFIEC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 04:01:34 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:54980 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727816AbfIFIBe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 04:01:34 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 353D0634C87;
-        Fri,  6 Sep 2019 11:01:19 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1i69BH-0000kb-9U; Fri, 06 Sep 2019 11:01:19 +0300
-Date:   Fri, 6 Sep 2019 11:01:19 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Jan Kotas <jank@cadence.com>
-Cc:     maxime.ripard@bootlin.com, mchehab@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, rafalc@cadence.com,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] media: Add support for Cadence CSI2RX 2.1
-Message-ID: <20190906080119.GF1586@valkosipuli.retiisi.org.uk>
-References: <20190905105601.27034-1-jank@cadence.com>
- <20190905105601.27034-4-jank@cadence.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190905105601.27034-4-jank@cadence.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 6 Sep 2019 04:04:02 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:55324 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728742AbfIFIEC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 04:04:02 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 042B8200589;
+        Fri,  6 Sep 2019 10:03:59 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 321242000EC;
+        Fri,  6 Sep 2019 10:03:52 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E4747402A5;
+        Fri,  6 Sep 2019 16:03:43 +0800 (SGT)
+From:   Biwen Li <biwen.li@nxp.com>
+To:     andy.shevchenko@gmail.com, rafael@kernel.org, leoyang.li@nxp.com,
+        meenakshi.aggarwal@nxp.com, udit.kumar@nxp.com, wsa@the-dreams.de,
+        rjw@rjwysocki.net
+Cc:     chuanhua.han@nxp.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Biwen Li <biwen.li@nxp.com>
+Subject: [v2] ACPI: support for NXP i2c controller
+Date:   Fri,  6 Sep 2019 15:53:19 +0800
+Message-Id: <20190906075319.21244-1-biwen.li@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jan,
+From: Chuanhua Han <chuanhua.han@nxp.com>
 
-On Thu, Sep 05, 2019 at 11:56:01AM +0100, Jan Kotas wrote:
-> This patch adds support for CSI2RX v2.1 version of the controller.
-> 
-> Signed-off-by: Jan Kotas <jank@cadence.com>
-> ---
->  drivers/media/platform/cadence/cdns-csi2rx.c | 139 ++++++++++++++++++++++-----
->  1 file changed, 116 insertions(+), 23 deletions(-)
-> 
-> diff --git a/drivers/media/platform/cadence/cdns-csi2rx.c b/drivers/media/platform/cadence/cdns-csi2rx.c
-> index 97ec09e72..aa1d46111 100644
-> --- a/drivers/media/platform/cadence/cdns-csi2rx.c
-> +++ b/drivers/media/platform/cadence/cdns-csi2rx.c
-> @@ -1,6 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0+
->  /*
-> - * Driver for Cadence MIPI-CSI2 RX Controller v1.3
-> + * Driver for Cadence MIPI-CSI2 RX Controller
->   *
->   * Copyright (C) 2017-2019 Cadence Design Systems Inc.
->   */
-> @@ -26,6 +26,9 @@
->  #define CSI2RX_SOFT_RESET_PROTOCOL			BIT(1)
->  #define CSI2RX_SOFT_RESET_FRONT				BIT(0)
->  
-> +#define CSI2RX_V2_CORE_CTRL_REG			0x004
-> +#define CSI2RX_V2_CORE_CTRL_START			BIT(0)
-> +
->  #define CSI2RX_STATIC_CFG_REG			0x008
->  #define CSI2RX_STATIC_CFG_DLANE_MAP(llane, plane)	((plane) << (16 + (llane) * 4))
->  #define CSI2RX_STATIC_CFG_LANES_MASK			GENMASK(11, 8)
-> @@ -54,6 +57,15 @@ enum csi2rx_pads {
->  	CSI2RX_PAD_MAX,
->  };
->  
-> +struct csi2rx_priv;
-> +
-> +/* CSI2RX Variant Operations */
-> +struct csi2rx_vops {
-> +	void (*get_dev_cfg)(struct csi2rx_priv *csi2rx);
-> +	void (*reset)(struct csi2rx_priv *csi2rx);
-> +	void (*map_static)(struct csi2rx_priv *csi2rx);
-> +};
-> +
->  struct csi2rx_priv {
->  	struct device			*dev;
->  	unsigned int			count;
-> @@ -69,6 +81,7 @@ struct csi2rx_priv {
->  	struct clk			*p_clk;
->  	struct clk			*pixel_clk[CSI2RX_STREAMS_MAX];
->  	struct phy			*dphy;
-> +	struct csi2rx_vops		*vops;
+Enable NXP i2c controller to boot with ACPI
 
-const?
+Signed-off-by: Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>
+Signed-off-by: Udit Kumar <udit.kumar@nxp.com>
+Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
+Signed-off-by: Biwen Li <biwen.li@nxp.com>
+---
+Change in v2:
+	- Simplify code
+	- Adjust header file order
+	- Not use ACPI_PTR()
 
->  
->  	u8				lanes[CSI2RX_LANES_MAX];
->  	u8				num_lanes;
-> @@ -92,6 +105,32 @@ struct csi2rx_priv *v4l2_subdev_to_csi2rx(struct v4l2_subdev *subdev)
->  	return container_of(subdev, struct csi2rx_priv, subdev);
->  }
->  
-> +static void csi2rx_get_dev_cfg(struct csi2rx_priv *csi2rx)
-> +{
-> +	u32 dev_cfg;
-> +
-> +	clk_prepare_enable(csi2rx->p_clk);
-> +	dev_cfg = readl(csi2rx->base + CSI2RX_DEVICE_CFG_REG);
-> +	clk_disable_unprepare(csi2rx->p_clk);
-> +
-> +	csi2rx->max_lanes = dev_cfg & 7;
-> +	csi2rx->max_streams = (dev_cfg >> 4) & 7;
-> +	csi2rx->has_internal_dphy = dev_cfg & BIT(3) ? true : false;
+ drivers/acpi/acpi_apd.c      |  7 +++++++
+ drivers/i2c/busses/i2c-imx.c | 17 +++++++++++++----
+ 2 files changed, 20 insertions(+), 4 deletions(-)
 
-Could you spell out these a little, by adding #defines for the register
-bits? Same below.
-
-> +}
-> +
-> +static void csi2rx_v2_get_dev_cfg(struct csi2rx_priv *csi2rx)
-> +{
-> +	u32 dev_cfg;
-> +
-> +	clk_prepare_enable(csi2rx->p_clk);
-> +	dev_cfg = readl(csi2rx->base + CSI2RX_DEVICE_CFG_REG);
-> +	clk_disable_unprepare(csi2rx->p_clk);
-> +
-> +	csi2rx->max_lanes = dev_cfg & 0xF;
-> +	csi2rx->max_streams = (dev_cfg >> 5) & 0xF;
-> +	csi2rx->has_internal_dphy = dev_cfg & BIT(4) ? true : false;
-> +}
-> +
->  static void csi2rx_reset(struct csi2rx_priv *csi2rx)
->  {
->  	writel(CSI2RX_SOFT_RESET_PROTOCOL | CSI2RX_SOFT_RESET_FRONT,
-> @@ -102,18 +141,21 @@ static void csi2rx_reset(struct csi2rx_priv *csi2rx)
->  	writel(0, csi2rx->base + CSI2RX_SOFT_RESET_REG);
->  }
->  
-> -static int csi2rx_start(struct csi2rx_priv *csi2rx)
-> +static void csi2rx_v2_reset(struct csi2rx_priv *csi2rx)
-> +{
-> +	writel(0, csi2rx->base + CSI2RX_V2_CORE_CTRL_REG);
-> +
-> +	udelay(10);
-> +
-> +	writel(CSI2RX_V2_CORE_CTRL_START,
-> +	       csi2rx->base + CSI2RX_V2_CORE_CTRL_REG);
-> +}
-> +
-> +static void csi2rx_map_static(struct csi2rx_priv *csi2rx)
->  {
->  	unsigned int i;
->  	unsigned long lanes_used = 0;
->  	u32 reg;
-> -	int ret;
-> -
-> -	ret = clk_prepare_enable(csi2rx->p_clk);
-> -	if (ret)
-> -		return ret;
-> -
-> -	csi2rx_reset(csi2rx);
->  
->  	reg = csi2rx->num_lanes << 8;
->  	for (i = 0; i < csi2rx->num_lanes; i++) {
-> @@ -135,6 +177,32 @@ static int csi2rx_start(struct csi2rx_priv *csi2rx)
->  	}
->  
->  	writel(reg, csi2rx->base + CSI2RX_STATIC_CFG_REG);
-> +}
-> +
-> +static void csi2rx_v2_map_static(struct csi2rx_priv *csi2rx)
-> +{
-> +	u32 reg;
-> +
-> +	reg = csi2rx->num_lanes << 4;
-> +	writel(reg, csi2rx->base + CSI2RX_STATIC_CFG_REG);
-> +}
-> +
-> +static int csi2rx_start(struct csi2rx_priv *csi2rx)
-> +{
-> +	unsigned int i;
-> +	int ret;
-> +
-> +	ret = clk_prepare_enable(csi2rx->p_clk);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (csi2rx->vops) {
-> +		if (csi2rx->vops->reset)
-> +			csi2rx->vops->reset(csi2rx);
-> +
-> +		if (csi2rx->vops->map_static)
-> +			csi2rx->vops->map_static(csi2rx);
-> +	}
->  
->  	ret = v4l2_subdev_call(csi2rx->source_subdev, video, s_stream, true);
->  	if (ret)
-> @@ -282,7 +350,6 @@ static int csi2rx_get_resources(struct csi2rx_priv *csi2rx,
->  {
->  	struct resource *res;
->  	unsigned char i;
-> -	u32 dev_cfg;
->  
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	csi2rx->base = devm_ioremap_resource(&pdev->dev, res);
-> @@ -316,26 +383,25 @@ static int csi2rx_get_resources(struct csi2rx_priv *csi2rx,
->  		return -EINVAL;
->  	}
->  
-> -	clk_prepare_enable(csi2rx->p_clk);
-> -	dev_cfg = readl(csi2rx->base + CSI2RX_DEVICE_CFG_REG);
-> -	clk_disable_unprepare(csi2rx->p_clk);
-> +	if (csi2rx->vops && csi2rx->vops->get_dev_cfg) {
-> +		csi2rx->vops->get_dev_cfg(csi2rx);
-> +	} else {
-> +		dev_err(&pdev->dev, "Couldn't get device configuration\n");
-> +		return -EINVAL;
-> +	}
->  
-> -	csi2rx->max_lanes = dev_cfg & 7;
->  	if (csi2rx->max_lanes > CSI2RX_LANES_MAX) {
->  		dev_err(&pdev->dev, "Invalid number of lanes: %u\n",
->  			csi2rx->max_lanes);
->  		return -EINVAL;
->  	}
->  
-> -	csi2rx->max_streams = (dev_cfg >> 4) & 7;
->  	if (csi2rx->max_streams > CSI2RX_STREAMS_MAX) {
->  		dev_err(&pdev->dev, "Invalid number of streams: %u\n",
->  			csi2rx->max_streams);
->  		return -EINVAL;
->  	}
->  
-> -	csi2rx->has_internal_dphy = dev_cfg & BIT(3) ? true : false;
-> -
->  	/*
->  	 * FIXME: Once we'll have internal D-PHY support, the check
->  	 * will need to be removed.
-> @@ -426,9 +492,39 @@ static int csi2rx_parse_dt(struct csi2rx_priv *csi2rx)
->  	return ret;
->  }
->  
-> +static const struct csi2rx_vops csi2rx_vops = {
-> +	.get_dev_cfg = csi2rx_get_dev_cfg,
-> +	.reset = csi2rx_reset,
-> +	.map_static = csi2rx_map_static
-> +};
-> +
-> +static const struct csi2rx_vops csi2rx_v2_vops = {
-> +	.get_dev_cfg = csi2rx_v2_get_dev_cfg,
-> +	.reset = csi2rx_v2_reset,
-> +	.map_static = csi2rx_v2_map_static
-> +};
-> +
-> +static const struct of_device_id csi2rx_of_table[] = {
-> +	{
-> +		.compatible = "cdns,csi2rx",
-> +		.data = &csi2rx_vops
-> +	},
-> +	{
-> +		.compatible = "cdns,csi2rx-1.3",
-> +		.data = &csi2rx_vops
-> +	},
-> +	{
-> +		.compatible = "cdns,csi2rx-2.1",
-> +		.data = &csi2rx_v2_vops
-> +	},
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, csi2rx_of_table);
-> +
->  static int csi2rx_probe(struct platform_device *pdev)
->  {
->  	struct csi2rx_priv *csi2rx;
-> +	const struct of_device_id *of_id;
->  	unsigned int i;
->  	int ret;
->  
-> @@ -439,6 +535,9 @@ static int csi2rx_probe(struct platform_device *pdev)
->  	csi2rx->dev = &pdev->dev;
->  	mutex_init(&csi2rx->lock);
->  
-> +	of_id = of_match_node(csi2rx_of_table, pdev->dev.of_node);
-> +	csi2rx->vops = (struct csi2rx_vops *)of_id->data;
-
-The cast isn't needed, is it?
-
-> +
->  	ret = csi2rx_get_resources(csi2rx, pdev);
->  	if (ret)
->  		goto err_free_priv;
-> @@ -493,12 +592,6 @@ static int csi2rx_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> -static const struct of_device_id csi2rx_of_table[] = {
-> -	{ .compatible = "cdns,csi2rx" },
-> -	{ },
-> -};
-> -MODULE_DEVICE_TABLE(of, csi2rx_of_table);
-> -
->  static struct platform_driver csi2rx_driver = {
->  	.probe	= csi2rx_probe,
->  	.remove	= csi2rx_remove,
-
+diff --git a/drivers/acpi/acpi_apd.c b/drivers/acpi/acpi_apd.c
+index 7cd0c9ac71ea..71511ae2dfcd 100644
+--- a/drivers/acpi/acpi_apd.c
++++ b/drivers/acpi/acpi_apd.c
+@@ -160,11 +160,17 @@ static const struct apd_device_desc hip08_i2c_desc = {
+ 	.setup = acpi_apd_setup,
+ 	.fixed_clk_rate = 250000000,
+ };
++
+ static const struct apd_device_desc thunderx2_i2c_desc = {
+ 	.setup = acpi_apd_setup,
+ 	.fixed_clk_rate = 125000000,
+ };
+ 
++static const struct apd_device_desc nxp_i2c_desc = {
++	.setup = acpi_apd_setup,
++	.fixed_clk_rate = 350000000,
++};
++
+ static const struct apd_device_desc hip08_spi_desc = {
+ 	.setup = acpi_apd_setup,
+ 	.fixed_clk_rate = 250000000,
+@@ -238,6 +244,7 @@ static const struct acpi_device_id acpi_apd_device_ids[] = {
+ 	{ "HISI02A1", APD_ADDR(hip07_i2c_desc) },
+ 	{ "HISI02A2", APD_ADDR(hip08_i2c_desc) },
+ 	{ "HISI0173", APD_ADDR(hip08_spi_desc) },
++	{ "NXP0001", APD_ADDR(nxp_i2c_desc) },
+ #endif
+ 	{ }
+ };
+diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
+index 15f6cde6452f..a3b61336fe55 100644
+--- a/drivers/i2c/busses/i2c-imx.c
++++ b/drivers/i2c/busses/i2c-imx.c
+@@ -20,6 +20,7 @@
+  *
+  */
+ 
++#include <linux/acpi.h>
+ #include <linux/clk.h>
+ #include <linux/completion.h>
+ #include <linux/delay.h>
+@@ -255,6 +256,12 @@ static const struct of_device_id i2c_imx_dt_ids[] = {
+ };
+ MODULE_DEVICE_TABLE(of, i2c_imx_dt_ids);
+ 
++static const struct acpi_device_id i2c_imx_acpi_ids[] = {
++	{"NXP0001", .driver_data = (kernel_ulong_t)&vf610_i2c_hwdata},
++	{ }
++};
++MODULE_DEVICE_TABLE(acpi, i2c_imx_acpi_ids);
++
+ static inline int is_imx1_i2c(struct imx_i2c_struct *i2c_imx)
+ {
+ 	return i2c_imx->hwdata->devtype == IMX1_I2C;
+@@ -1048,14 +1055,13 @@ static const struct i2c_algorithm i2c_imx_algo = {
+ 
+ static int i2c_imx_probe(struct platform_device *pdev)
+ {
+-	const struct of_device_id *of_id = of_match_device(i2c_imx_dt_ids,
+-							   &pdev->dev);
+ 	struct imx_i2c_struct *i2c_imx;
+ 	struct resource *res;
+ 	struct imxi2c_platform_data *pdata = dev_get_platdata(&pdev->dev);
+ 	void __iomem *base;
+ 	int irq, ret;
+ 	dma_addr_t phy_addr;
++	const struct imx_i2c_hwdata *match;
+ 
+ 	dev_dbg(&pdev->dev, "<%s>\n", __func__);
+ 
+@@ -1075,8 +1081,9 @@ static int i2c_imx_probe(struct platform_device *pdev)
+ 	if (!i2c_imx)
+ 		return -ENOMEM;
+ 
+-	if (of_id)
+-		i2c_imx->hwdata = of_id->data;
++	match = device_get_match_data(&pdev->dev);
++	if (match)
++		i2c_imx->hwdata = match;
+ 	else
+ 		i2c_imx->hwdata = (struct imx_i2c_hwdata *)
+ 				platform_get_device_id(pdev)->driver_data;
+@@ -1089,6 +1096,7 @@ static int i2c_imx_probe(struct platform_device *pdev)
+ 	i2c_imx->adapter.nr		= pdev->id;
+ 	i2c_imx->adapter.dev.of_node	= pdev->dev.of_node;
+ 	i2c_imx->base			= base;
++	ACPI_COMPANION_SET(&i2c_imx->adapter.dev, ACPI_COMPANION(&pdev->dev));
+ 
+ 	/* Get I2C clock */
+ 	i2c_imx->clk = devm_clk_get(&pdev->dev, NULL);
+@@ -1247,6 +1255,7 @@ static struct platform_driver i2c_imx_driver = {
+ 		.name = DRIVER_NAME,
+ 		.pm = &i2c_imx_pm_ops,
+ 		.of_match_table = i2c_imx_dt_ids,
++		.acpi_match_table = i2c_imx_acpi_ids,
+ 	},
+ 	.id_table = imx_i2c_devtype,
+ };
 -- 
-Kind regards,
+2.17.1
 
-Sakari Ailus
