@@ -2,196 +2,91 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 328E4C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 00:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A7C7C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 00:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45578206BB
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 00:09:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16DBC206BB
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 00:09:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PK+uMGFp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390798AbfIFAJq (ORCPT
+        id S2391209AbfIFAJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 20:09:46 -0400
-Received: from mx2.mailbox.org ([80.241.60.215]:29966 "EHLO mx2.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389682AbfIFAJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 20:09:44 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx2.mailbox.org (Postfix) with ESMTPS id 11376A01CA;
-        Fri,  6 Sep 2019 02:09:37 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
-        with ESMTP id 0nqlTkvB1Jln; Fri,  6 Sep 2019 02:09:32 +0200 (CEST)
-Date:   Fri, 6 Sep 2019 10:09:08 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian@brauner.io>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v12 01/12] lib: introduce copy_struct_{to,from}_user
- helpers
-Message-ID: <20190906000908.xpvkuhun7v6onp6w@yavin.dot.cyphar.com>
-References: <20190904201933.10736-1-cyphar@cyphar.com>
- <20190904201933.10736-2-cyphar@cyphar.com>
- <20190905180750.GQ1131@ZenIV.linux.org.uk>
- <20190905230003.bek7vqdvruzi4ybx@yavin.dot.cyphar.com>
- <20190905234944.GT1131@ZenIV.linux.org.uk>
+        Thu, 5 Sep 2019 20:09:58 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37570 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390594AbfIFAJ5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 20:09:57 -0400
+Received: by mail-pg1-f195.google.com with SMTP id d1so2390094pgp.4
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 17:09:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:to:from:cc:subject:user-agent:date;
+        bh=h4nsJn/1T9sns7Kk7sgL5OwfvvymyiT6xd0EUZWovFU=;
+        b=PK+uMGFpmKm12wwXuvnoqiECdaCsFZXhx5M+LSwSmO69Dvxrput6ocA2Nzja2O0Eor
+         tXp5SYxO0JRljwkFpXrNMxW6sGCVOYbOGwKkQg45b4ahlzPeFGzBSRZ01yjcYeb4Ue/v
+         P0Jc5SLw1xO12YJHxU4ZbkmzIXmPPNcW52qug=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:to:from:cc:subject
+         :user-agent:date;
+        bh=h4nsJn/1T9sns7Kk7sgL5OwfvvymyiT6xd0EUZWovFU=;
+        b=Ye+pmYHYudgLYiFtqNrsMZaQ2RddhOI+ASRb9mjpNJ7ebVFFMGCKinLx3fslICoqXB
+         D6Blj4KSsciCjJFUy4zgoSDQH4Dn/PH0ryx478/puskMMtuNGiaLxgw2CyK6IMVSK3Wk
+         BjlZiZ6PhBva9W/vSDvzO+3rFTK31UKhUEEXTWpMsELxxD9Use8uz15bkmvQcVzx5FMd
+         VhFx+zi29lUxc+SW0B0M2toqbTlkQMUzL20liwHNaWbuwsdUUuPWTyU68FHpkE75HBp0
+         ptTi3hfHnJFKV8G9WqcESlZgLUIrWgjxpFsJdukiHKYRXpnCa1alMwsQl+E0n0KtJ7LN
+         jzew==
+X-Gm-Message-State: APjAAAVdy/kmW9IGyt40VsuThdaVsM6ceBKIa8jFI7JHKrDk4d6KQ6qV
+        yioj7WxJeS0SZXuoYFNsZjnvAg==
+X-Google-Smtp-Source: APXvYqxeWGMnmHi1inGFWBMslTfV6svSPZ3QN00hOUHzBZcdQEXzTNnDIcUU7sTXb+0Z/UPffhFLPA==
+X-Received: by 2002:aa7:9aa5:: with SMTP id x5mr7095882pfi.16.1567728597089;
+        Thu, 05 Sep 2019 17:09:57 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id g2sm4340815pfm.32.2019.09.05.17.09.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2019 17:09:56 -0700 (PDT)
+Message-ID: <5d71a3d4.1c69fb81.8444a.b82b@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="45flctx23d2mffx4"
-Content-Disposition: inline
-In-Reply-To: <20190905234944.GT1131@ZenIV.linux.org.uk>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190829181203.2660-9-ilina@codeaurora.org>
+References: <20190829181203.2660-1-ilina@codeaurora.org> <20190829181203.2660-9-ilina@codeaurora.org>
+To:     Lina Iyer <ilina@codeaurora.org>, evgreen@chromium.org,
+        linus.walleij@linaro.org, marc.zyngier@arm.com
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, mkshah@codeaurora.org,
+        linux-gpio@vger.kernel.org, rnayak@codeaurora.org
+Subject: Re: [PATCH RFC 08/14] drivers: irqchip: pdc: Add irqchip set/get state calls
+User-Agent: alot/0.8.1
+Date:   Thu, 05 Sep 2019 17:09:55 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---45flctx23d2mffx4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On 2019-09-06, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> On Fri, Sep 06, 2019 at 09:00:03AM +1000, Aleksa Sarai wrote:
-> > > > +			return -EFAULT;
-> > > > +	}
-> > > > +	/* Copy the interoperable parts of the struct. */
-> > > > +	if (__copy_to_user(dst, src, size))
-> > > > +		return -EFAULT;
-> > >=20
-> > > Why not simply clear_user() and copy_to_user()?
-> >=20
-> > I'm not sure I understand what you mean -- are you asking why we need to
-> > do memchr_inv(src + size, 0, rest) earlier?
+Quoting Lina Iyer (2019-08-29 11:11:57)
+> From: Maulik Shah <mkshah@codeaurora.org>
 >=20
-> I'm asking why bother with __ and separate access_ok().
+> Add irqchip calls to set/get interrupt status from the parent interrupt
 
-Ah right, it was a dumb "optimisation" (since we need to do access_ok()
-anyway since we should early -EFAULT in that case). I've dropped the __
-usages in my working copy.
+s/status/state?
 
-> > > 	if ((unsigned long)addr & 1) {
-> > > 		u8 v;
-> > > 		if (get_user(v, (__u8 __user *)addr))
-> > > 			return -EFAULT;
-> > > 		if (v)
-> > > 			return -E2BIG;
-> > > 		addr++;
-> > > 	}
-> > > 	if ((unsigned long)addr & 2) {
-> > > 		u16 v;
-> > > 		if (get_user(v, (__u16 __user *)addr))
-> > > 			return -EFAULT;
-> > > 		if (v)
-> > > 			return -E2BIG;
-> > > 		addr +=3D2;
-> > > 	}
-> > > 	if ((unsigned long)addr & 4) {
-> > > 		u32 v;
-> > > 		if (get_user(v, (__u32 __user *)addr))
-> > > 			return -EFAULT;
-> > > 		if (v)
-> > > 			return -E2BIG;
-> > > 	}
-> > > 	<read the rest like you currently do>
+> controller.
+
+Can you add some comment on why you want to do this? I'm looking for
+something like, "Add this support so we can replay edge triggered
+interrupts detected in suspend by the PDC to its interrupt parent
+(typically the GIC)".
+
 >=20
-> Actually, this is a dumb way to do it - page size on anything
-> is going to be a multiple of 8, so you could just as well
-> read 8 bytes from an address aligned down.  Then mask the
-> bytes you don't want to check out and see if there's anything
-> left.
->=20
-> You can have readability boundaries inside a page - it's either
-> the entire page (let alone a single word) being readable, or
-> it's EFAULT for all parts.
->=20
-> > > would be saner, and things like x86 could trivially add an
-> > > asm variant - it's not hard.  Incidentally, memchr_inv() is
-> > > an overkill in this case...
-> >=20
-> > Why is memchr_inv() overkill?
->=20
-> Look at its implementation; you only care if there are
-> non-zeroes, you don't give a damn where in the buffer
-> the first one would be.  All you need is the same logics
-> as in "from userland" case
-> 	if (!count)
-> 		return true;
-> 	offset =3D (unsigned long)from & 7
-> 	p =3D (u64 *)(from - offset);
-> 	v =3D *p++;
-> 	if (offset) {	// unaligned
-> 		count +=3D offset;
-> 		v &=3D ~aligned_byte_mask(offset); // see strnlen_user.c
-> 	}
-> 	while (count > 8) {
-> 		if (v)
-> 			return false;
-> 		v =3D *p++;
-> 		count -=3D 8;
-> 	}
-> 	if (count !=3D 8)
-> 		v &=3D aligned_byte_mask(count);
-> 	return v =3D=3D 0;
->=20
-> All there is to it...
-
-Alright, will do (for some reason I hadn't made the connection that
-memchr_inv() is doing effectively the same word-by-word comparison but
-also detecting where the first byte is).
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---45flctx23d2mffx4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXXGjoAAKCRCdlLljIbnQ
-EpC9AP0R1Y7fvOkhCrlqhEeSXH2/w/eSafFO51uuSnY7m3dVegEAm16vVXT68ypo
-Z7fWiISgwHeOk0U5O9VS4cZGMgtS3ws=
-=nF2N
------END PGP SIGNATURE-----
-
---45flctx23d2mffx4--
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
