@@ -2,100 +2,163 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C91AC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 563A3C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7266821670
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:46:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24B28208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:46:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ltWL/0NI"
+	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="fW9yI0r5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436618AbfIFSqY (ORCPT
+        id S2436629AbfIFSq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 14:46:24 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42901 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436555AbfIFSqS (ORCPT
+        Fri, 6 Sep 2019 14:46:29 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:33475 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436615AbfIFSqZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 14:46:18 -0400
-Received: by mail-wr1-f67.google.com with SMTP id q14so7580052wrm.9;
-        Fri, 06 Sep 2019 11:46:16 -0700 (PDT)
+        Fri, 6 Sep 2019 14:46:25 -0400
+Received: by mail-io1-f65.google.com with SMTP id m11so15054635ioo.0
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 11:46:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=mk9iiyM0WHriMjrKTK53bNyVyznn052YfKhoDOFj8+M=;
-        b=ltWL/0NIoHGYNechlthfrItQ9BFEmloFHpTqEw3/M6HvdjFLXytt74OL7kTCA8j1Kt
-         JHn+D+sUBJdHoDRjaVU1YaoFRb38IdxLNfKvEm3kAEKssc+XeChc/duhYWZT1SkRCORu
-         m6U4l5HOC43ynNqIsNp6530iR3Pi9dAh4p9ZOTGjrk1YQE9D8dUsgEtiI3KiZ6wKdd4C
-         M+uwyEpQ3Ouyt6jEaZwpOcoyqgAFr2rRSsungYDLbMAR5Zqe6lCfqZI7g4ZFDcCMhT5H
-         JDNDLv/I8/CbVz6ePJWjHZDgJI6aVkrb2fJoz/1gnqpoLuKUNmpLfIpzNurmi1mCzdC/
-         vR9Q==
+        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=QRnJITRgtGPLg2irBHffabraOH6qFTHyLeWEmn2CG4k=;
+        b=fW9yI0r5PaavEuDpO3wqhc1PKV3gT7W2PHr0YvMv8yeRB3SF0rAwRE2BkG1RKIldB5
+         pk0J20GIWh4t241wQZQAl1zHWNJxStYwy5kxUtaiwtqqhZ1ozaqrys8TEuTqNPhLzMt5
+         Zm7do94cFWUwupAl/AOKTQpMgaVyhyVNN+4sksBHKSxv/0mSVTnzzbyVyIbnqt1snF5t
+         iguQSIF5qEqKP9/56X/CjyzTRl1ktsNgpb3jvd0i/WW+d9og8BLCwLR8APIzc18T/0uR
+         OlizzA0soMA5t0+LMz3QvB2o7vOuygMelmEjFL6nD4NQrfX5rILFVMakZMg0djTuN2a5
+         pLkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=mk9iiyM0WHriMjrKTK53bNyVyznn052YfKhoDOFj8+M=;
-        b=mKlcAwernL6r051jN/nR40NP5PaisRxy7rxbiI0cOkNykzHVRrLLzRGiASlqyfM6gi
-         IGPADMwG+4HICJ11wpzA14LjiFVjLx+MI7sMc+J5t4Rtjj/CYGjXDfktSCtF4HSxnf+g
-         Dtn6U8kZs30L4EqDopAgJjQqUJ6eWwxhCi6uQeLT/LjcVMt/YfF6w4NPXJBlXn6htsHH
-         YJYpAType+c+8jhf7RJRNe1NmLNfrC0kCYwYF/2RMCHN+/sgJ1P5ErqEomjt8cRC3/8u
-         bES+RNY+p5JNIeM7th4WzbHqomcuYl1ZGPnBbdEbH6+xCdmue/unVpaMbOG3tkexVH6Q
-         8cYA==
-X-Gm-Message-State: APjAAAW5Va3n+V/KXJXInQOhOOxu8e1fQpAR9ZIApaFnr5AYS0cKK7OS
-        nCIcF1Y027j8baG4IGRoWD0=
-X-Google-Smtp-Source: APXvYqz0nobviNLqKZBy3ZK1oFqnw7zZh1G8l7RuxSpcJpXKnUegVQyaWqWl8zGGBhx++hogOT/Jdw==
-X-Received: by 2002:adf:e392:: with SMTP id e18mr9008949wrm.87.1567795576314;
-        Fri, 06 Sep 2019 11:46:16 -0700 (PDT)
-Received: from Red.localdomain ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id j1sm8677577wrg.24.2019.09.06.11.46.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 06 Sep 2019 11:46:15 -0700 (PDT)
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        linux@armlinux.org.uk, mark.rutland@arm.com, mripard@kernel.org,
-        robh+dt@kernel.org, wens@csie.org
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com,
-        Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: [PATCH 9/9] sunxi_defconfig: add new crypto options
-Date:   Fri,  6 Sep 2019 20:45:51 +0200
-Message-Id: <20190906184551.17858-10-clabbe.montjoie@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190906184551.17858-1-clabbe.montjoie@gmail.com>
-References: <20190906184551.17858-1-clabbe.montjoie@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=QRnJITRgtGPLg2irBHffabraOH6qFTHyLeWEmn2CG4k=;
+        b=YjFD+PhxaeN4kKFgBNiYeygJ9ugCD44AoIb/V/2sw04Mtp6bKF2MGyQKGxT1MAJJFt
+         3sMceYTVlg4JUmnCBWG8a5P/mPwOmNzz8+Zx3FiX/FQ61IuQxSulVmpO4x9NMArrcL0f
+         zRYt8MjhDzHYqn69qhVZJsaJwkO8/14M2fbBSRlItEalCYZVtlpZlzk+UJQlEY40VTdd
+         6QrJQE6lZRY/WeJYzmU03cNjLSXxbT45QTAr1FyWb9sU9Stc2u1AxMrZtiBDY9xwwu3N
+         yBh10Ch25W9KjNmccBX598UAjA/Kr9UErI1YVLv/q5Jyloo84tlMGd25Rcvvm8kjstln
+         9eFQ==
+X-Gm-Message-State: APjAAAUe+yL1rKOgFsyvFr0GpbLFXWaFt4TaKSdO+bLtY9EemOVlGoiN
+        KPucV8b02EOdOcvAiPznni4oFg==
+X-Google-Smtp-Source: APXvYqx8a3vQaJo05FM2AJxDurm67u0wSOJsrKfOs76p1ALl+/al6SlzLMWYqNVPkldCZ7AZ/oWTyQ==
+X-Received: by 2002:a02:ab90:: with SMTP id t16mr12092436jan.110.1567795583168;
+        Fri, 06 Sep 2019 11:46:23 -0700 (PDT)
+Received: from cisco ([2601:282:901:dd7b:49a:5f6f:e06:3c33])
+        by smtp.gmail.com with ESMTPSA id h4sm5578707iok.1.2019.09.06.11.46.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Sep 2019 11:46:22 -0700 (PDT)
+Date:   Fri, 6 Sep 2019 12:46:20 -0600
+From:   Tycho Andersen <tycho@tycho.ws>
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
+        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+        linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Eric Chiang <ericchiang@google.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Philippe =?iso-8859-1?Q?Tr=E9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] fs: Add support for an O_MAYEXEC flag on
+ sys_open()
+Message-ID: <20190906184620.GI7627@cisco>
+References: <20190906152455.22757-1-mic@digikod.net>
+ <20190906152455.22757-2-mic@digikod.net>
+ <87ef0te7v3.fsf@oldenburg2.str.redhat.com>
+ <75442f3b-a3d8-12db-579a-2c5983426b4d@ssi.gouv.fr>
+ <20190906170739.kk3opr2phidb7ilb@yavin.dot.cyphar.com>
+ <20190906172050.v44f43psd6qc6awi@wittgenstein>
+ <20190906174041.GH7627@cisco>
+ <87v9u5cmb0.fsf@oldenburg2.str.redhat.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <87v9u5cmb0.fsf@oldenburg2.str.redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the new allwinner crypto configs to sunxi_defconfig
+On Fri, Sep 06, 2019 at 08:27:31PM +0200, Florian Weimer wrote:
+> * Tycho Andersen:
+> 
+> > On Fri, Sep 06, 2019 at 07:20:51PM +0200, Christian Brauner wrote:
+> >> On Sat, Sep 07, 2019 at 03:07:39AM +1000, Aleksa Sarai wrote:
+> >> > On 2019-09-06, Mickaël Salaün <mickael.salaun@ssi.gouv.fr> wrote:
+> >> > > 
+> >> > > On 06/09/2019 17:56, Florian Weimer wrote:
+> >> > > > Let's assume I want to add support for this to the glibc dynamic loader,
+> >> > > > while still being able to run on older kernels.
+> >> > > >
+> >> > > > Is it safe to try the open call first, with O_MAYEXEC, and if that fails
+> >> > > > with EINVAL, try again without O_MAYEXEC?
+> >> > > 
+> >> > > The kernel ignore unknown open(2) flags, so yes, it is safe even for
+> >> > > older kernel to use O_MAYEXEC.
+> >> > 
+> >> > Depends on your definition of "safe" -- a security feature that you will
+> >> > silently not enable on older kernels doesn't sound super safe to me.
+> >> > Unfortunately this is a limitation of open(2) that we cannot change --
+> >> > which is why the openat2(2) proposal I've been posting gives -EINVAL for
+> >> > unknown O_* flags.
+> >> > 
+> >> > There is a way to probe for support (though unpleasant), by creating a
+> >> > test O_MAYEXEC fd and then checking if the flag is present in
+> >> > /proc/self/fdinfo/$n.
+> >> 
+> >> Which Florian said they can't do for various reasons.
+> >> 
+> >> It is a major painpoint if there's no easy way for userspace to probe
+> >> for support. Especially if it's security related which usually means
+> >> that you want to know whether this feature works or not.
+> >
+> > What about just trying to violate the policy via fexecve() instead of
+> > looking around in /proc? Still ugly, though.
+> 
+> How would we do this?  This is about opening the main executable as part
+> of an explicit loader invocation.  Typically, an fexecve will succeed
+> and try to run the program, but with the wrong dynamic loader.
 
-Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
----
- arch/arm/configs/sunxi_defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+Yeah, fexecve() was a think-o, sorry, you don't need to go that far. I
+was thinking do what the tests in this series do: create a tmpfs with
+MS_NOEXEC, put an executable file in it, and try and open it with
+O_MAYEXEC. If that works, the kernel doesn't support the flag, and it
+should give you -EACCES if the kernel does support the flag.
 
-diff --git a/arch/arm/configs/sunxi_defconfig b/arch/arm/configs/sunxi_defconfig
-index df433abfcb02..d0ab8ba7710a 100644
---- a/arch/arm/configs/sunxi_defconfig
-+++ b/arch/arm/configs/sunxi_defconfig
-@@ -150,4 +150,6 @@ CONFIG_NLS_CODEPAGE_437=y
- CONFIG_NLS_ISO8859_1=y
- CONFIG_PRINTK_TIME=y
- CONFIG_DEBUG_FS=y
-+CONFIG_CRYPTO_DEV_ALLWINNER=y
-+CONFIG_CRYPTO_DEV_SUN8I_CE=y
- CONFIG_CRYPTO_DEV_SUN4I_SS=y
--- 
-2.21.0
+Still a lot of work, though. Seems better to just use openat2.
 
+Tycho
