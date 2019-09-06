@@ -2,96 +2,197 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B91B8C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A16AC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C7F321906
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:50:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QJLxdzCm"
+	by mail.kernel.org (Postfix) with ESMTP id 0E56720842
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:51:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393515AbfIFNus (ORCPT
+        id S2393519AbfIFNvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 09:50:48 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33544 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727143AbfIFNuq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 09:50:46 -0400
-Received: by mail-oi1-f193.google.com with SMTP id e12so4710317oie.0
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 06:50:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=M3zKBTNhIg8D+FIn0RZewf6I27LDWwbXRyiB+RiFIt4=;
-        b=QJLxdzCmNOBoOEJcJvHLBetbvlrq02aheoBREc7Fpa35nydqJO0APfx6nad3lCVm28
-         lJ1ZUe0/fJeQUUFgiMPPj6/fbcM9e7OjKrEc1QrYxG5ClkOdWLBjZFFcMIApdjWbuChA
-         GwWqFB90O/OmPDWZFtpAJd0+ch2CJJJrMPGfYnCy8OENP1wN2b8V+IZ2aaVx5mHzHYo+
-         C0QkvjyNgA22hfWbRziRRoMC+Uw8bf7qwZa9iRMstY4NRjAsqoN/eAs29FaHED5FZO7H
-         9y7wj4KZNLMXXLh1zyjnoa+6KX/HQ1RXmCmVcjWUoO1zek/YPUj/3Er41Lu+SUg8DZJ2
-         YJBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=M3zKBTNhIg8D+FIn0RZewf6I27LDWwbXRyiB+RiFIt4=;
-        b=i2zWHzttYUYjrYD1Iff1Lghif6zPiD2CKtw7yAhppREvqX4Z2B0Rh0KvGCIeUdRV+t
-         3DqvyIOYC1p8Z5Lz9OBKKZxcXaV1LCW7troQVm9QSp8lhIpPtOnY6I28RGmAFr1b66ET
-         2SlG1C8MV5wIapIIqcF0VZaxJFA2QVcQSRlnqouLV2dWN2W5CzADIw7Ev9Ow40ghq19z
-         uC36wt3JaInnf61H4r3vMRG6g5x8kuhwDrDU2FTzU584EEiYmctVLVzeGRW4HCpygfmM
-         kGqzn7wBE4tYvXF6AQq9vM/tlbTxvRl9L+Svsqo7amuFUlGU8lvdNLn89xE/EMgPodeL
-         UiRQ==
-X-Gm-Message-State: APjAAAVsj0U7tAvRXNMbb7369q63sfEiELoEWw6pOvgVveAAGJRgXcVu
-        zeI+PrNVO732f7fTQzRb/BFzSdSa6LJbQo/gNi01WQ==
-X-Google-Smtp-Source: APXvYqxmXHWpUWZdq9c0hrTTVJDwQytlmXVaK7yqoJ7V8pIYxhd7z8W2/IAM32BufSMj7tAhgV/7VotgrBEcuRvwPrQ=
-X-Received: by 2002:aca:50d8:: with SMTP id e207mr6690938oib.48.1567777845580;
- Fri, 06 Sep 2019 06:50:45 -0700 (PDT)
+        Fri, 6 Sep 2019 09:51:43 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45232 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733057AbfIFNvn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 09:51:43 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C9943A28732;
+        Fri,  6 Sep 2019 13:51:42 +0000 (UTC)
+Received: from horse.redhat.com (unknown [10.18.25.137])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0BF611001284;
+        Fri,  6 Sep 2019 13:51:32 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 9B260220292; Fri,  6 Sep 2019 09:51:31 -0400 (EDT)
+Date:   Fri, 6 Sep 2019 09:51:31 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Stefan Hajnoczi <stefanha@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, miklos@szeredi.hu,
+        linux-kernel@vger.kernel.org, virtio-fs@redhat.com,
+        dgilbert@redhat.com, mst@redhat.com
+Subject: Re: [PATCH 16/18] virtiofs: Use virtio_fs_mutex for races w.r.t
+ ->remove and mount path
+Message-ID: <20190906135131.GE22083@redhat.com>
+References: <20190905194859.16219-1-vgoyal@redhat.com>
+ <20190905194859.16219-17-vgoyal@redhat.com>
+ <20190906120534.GX5900@stefanha-x1.localdomain>
 MIME-Version: 1.0
-References: <20190904180736.29009-1-xypron.glpk@gmx.de> <86r24vrwyh.wl-maz@kernel.org>
- <CAFEAcA-mc6cLmRGdGNOBR0PC1f_VBjvTdAL6xYtKjApx3NoPgQ@mail.gmail.com>
- <86mufjrup7.wl-maz@kernel.org> <CAFEAcA9qkqkOTqSVrhTpt-NkZSNXomSBNiWo_D6Kr=QKYRRf=w@mail.gmail.com>
- <20190905092223.GC4320@e113682-lin.lund.arm.com> <4b6662bd-56e4-3c10-3b65-7c90828a22f9@kernel.org>
- <20190906080033.GF4320@e113682-lin.lund.arm.com> <a58c5f76-641a-8381-2cf3-e52d139c4236@amazon.com>
- <20190906131252.GG4320@e113682-lin.lund.arm.com> <CAFEAcA9vwyhAN8uO8=PpaBkBXb0Of4G0jEij7nMrYcnJjSRVjg@mail.gmail.com>
- <28c5c021-7cb0-616b-4215-dd75242c16e6@amazon.com>
-In-Reply-To: <28c5c021-7cb0-616b-4215-dd75242c16e6@amazon.com>
-From:   Peter Maydell <peter.maydell@linaro.org>
-Date:   Fri, 6 Sep 2019 14:50:34 +0100
-Message-ID: <CAFEAcA8HH-JeMLZ29h6GidDcLpb_oUHqoyEMJ0buo3hyTBj5jA@mail.gmail.com>
-Subject: Re: [PATCH 1/1] KVM: inject data abort if instruction cannot be decoded
-To:     Alexander Graf <graf@amazon.com>
-Cc:     Christoffer Dall <christoffer.dall@arm.com>,
-        =?UTF-8?Q?Daniel_P=2E_Berrang=C3=A9?= <berrange@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        kvmarm@lists.cs.columbia.edu,
-        arm-mail-list <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190906120534.GX5900@stefanha-x1.localdomain>
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Fri, 06 Sep 2019 13:51:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 6 Sep 2019 at 14:41, Alexander Graf <graf@amazon.com> wrote:
-> On 06.09.19 15:31, Peter Maydell wrote:
-> > (b) we try to reuse the code we already have that does TCG exception
-> > injection, which might or might not be a design mistake, and
->
-> That's probably a design mistake, correct :)
+On Fri, Sep 06, 2019 at 01:05:34PM +0100, Stefan Hajnoczi wrote:
+> On Thu, Sep 05, 2019 at 03:48:57PM -0400, Vivek Goyal wrote:
+> > It is possible that a mount is in progress and device is being removed at
+> > the same time. Use virtio_fs_mutex to avoid races.
+> > 
+> > This also takes care of bunch of races and removes some TODO items.
+> > 
+> > Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> > ---
+> >  fs/fuse/virtio_fs.c | 32 ++++++++++++++++++++++----------
+> >  1 file changed, 22 insertions(+), 10 deletions(-)
+> 
+> Let's move to a per-device mutex in the future.  That way a single
+> device that fails to drain/complete requests will not hang all other
+> virtio-fs instances.  This is fine for now.
 
-Well, conceptually it's not necessarily a bad idea, because
-in both cases what we're doing is "change the system register
-state (PC, ESR_EL1, ELR_EL1 etc) so that the CPU looks like
-it's just taken an exception"; but some of what the
-TCG code needs to do isn't necessary for KVM and all of it
-was not written with the idea of KVM in mind at all...
+Good point. For now I updated the patch so that it applies cleanly
+after previous two patches changed.
 
-thanks
--- PMM
+Subject: virtiofs: Use virtio_fs_mutex for races w.r.t ->remove and mount path
+
+It is possible that a mount is in progress and device is being removed at
+the same time. Use virtio_fs_mutex to avoid races. 
+
+This also takes care of bunch of races and removes some TODO items.
+
+Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+---
+ fs/fuse/virtio_fs.c |   32 ++++++++++++++++++++++----------
+ 1 file changed, 22 insertions(+), 10 deletions(-)
+
+Index: rhvgoyal-linux-fuse/fs/fuse/virtio_fs.c
+===================================================================
+--- rhvgoyal-linux-fuse.orig/fs/fuse/virtio_fs.c	2019-09-06 09:40:53.309245246 -0400
++++ rhvgoyal-linux-fuse/fs/fuse/virtio_fs.c	2019-09-06 09:43:25.335245246 -0400
+@@ -13,7 +13,9 @@
+ #include <linux/highmem.h>
+ #include "fuse_i.h"
+ 
+-/* List of virtio-fs device instances and a lock for the list */
++/* List of virtio-fs device instances and a lock for the list. Also provides
++ * mutual exclusion in device removal and mounting path
++ */
+ static DEFINE_MUTEX(virtio_fs_mutex);
+ static LIST_HEAD(virtio_fs_instances);
+ 
+@@ -72,17 +74,19 @@ static void release_virtio_fs_obj(struct
+ 	kfree(vfs);
+ }
+ 
++/* Make sure virtiofs_mutex is held */
+ static void virtio_fs_put(struct virtio_fs *fs)
+ {
+-	mutex_lock(&virtio_fs_mutex);
+ 	kref_put(&fs->refcount, release_virtio_fs_obj);
+-	mutex_unlock(&virtio_fs_mutex);
+ }
+ 
+ static void virtio_fs_fiq_release(struct fuse_iqueue *fiq)
+ {
+ 	struct virtio_fs *vfs = fiq->priv;
++
++	mutex_lock(&virtio_fs_mutex);
+ 	virtio_fs_put(vfs);
++	mutex_unlock(&virtio_fs_mutex);
+ }
+ 
+ static void virtio_fs_drain_queue(struct virtio_fs_vq *fsvq)
+@@ -596,9 +600,8 @@ static void virtio_fs_remove(struct virt
+ 	struct virtio_fs *fs = vdev->priv;
+ 
+ 	mutex_lock(&virtio_fs_mutex);
++	/* This device is going away. No one should get new reference */
+ 	list_del_init(&fs->list);
+-	mutex_unlock(&virtio_fs_mutex);
+-
+ 	virtio_fs_stop_all_queues(fs);
+ 	virtio_fs_drain_all_queues(fs);
+ 	vdev->config->reset(vdev);
+@@ -607,6 +610,7 @@ static void virtio_fs_remove(struct virt
+ 	vdev->priv = NULL;
+ 	/* Put device reference on virtio_fs object */
+ 	virtio_fs_put(fs);
++	mutex_unlock(&virtio_fs_mutex);
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
+@@ -978,10 +982,15 @@ static int virtio_fs_fill_super(struct s
+ 		.no_force_umount = true,
+ 	};
+ 
+-	/* TODO lock */
+-	if (fs->vqs[VQ_REQUEST].fud) {
+-		pr_err("virtio-fs: device already in use\n");
+-		err = -EBUSY;
++	mutex_lock(&virtio_fs_mutex);
++
++	/* After holding mutex, make sure virtiofs device is still there.
++	 * Though we are holding a refernce to it, drive ->remove might
++	 * still have cleaned up virtual queues. In that case bail out.
++	 */
++	err = -EINVAL;
++	if (list_empty(&fs->list)) {
++		pr_info("virtio-fs: tag <%s> not found\n", fs->tag);
+ 		goto err;
+ 	}
+ 
+@@ -1007,7 +1016,6 @@ static int virtio_fs_fill_super(struct s
+ 
+ 	fc = fs->vqs[VQ_REQUEST].fud->fc;
+ 
+-	/* TODO take fuse_mutex around this loop? */
+ 	for (i = 0; i < fs->nvqs; i++) {
+ 		struct virtio_fs_vq *fsvq = &fs->vqs[i];
+ 
+@@ -1020,6 +1028,7 @@ static int virtio_fs_fill_super(struct s
+ 	/* Previous unmount will stop all queues. Start these again */
+ 	virtio_fs_start_all_queues(fs);
+ 	fuse_send_init(fc, init_req);
++	mutex_unlock(&virtio_fs_mutex);
+ 	return 0;
+ 
+ err_free_init_req:
+@@ -1027,6 +1036,7 @@ err_free_init_req:
+ err_free_fuse_devs:
+ 	virtio_fs_free_devs(fs);
+ err:
++	mutex_unlock(&virtio_fs_mutex);
+ 	return err;
+ }
+ 
+@@ -1100,7 +1110,9 @@ static int virtio_fs_get_tree(struct fs_
+ 
+ 	fc = kzalloc(sizeof(struct fuse_conn), GFP_KERNEL);
+ 	if (!fc) {
++		mutex_lock(&virtio_fs_mutex);
+ 		virtio_fs_put(fs);
++		mutex_unlock(&virtio_fs_mutex);
+ 		return -ENOMEM;
+ 	}
+ 
+
