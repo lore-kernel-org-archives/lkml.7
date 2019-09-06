@@ -2,45 +2,44 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4546C43140
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0CCC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A393120640
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:41:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BFE420640
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:41:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="ishy2uzL"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="QV3sTkQj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392597AbfIFHli (ORCPT
+        id S2392587AbfIFHlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 03:41:38 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:33356 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2392554AbfIFHl3 (ORCPT
+        Fri, 6 Sep 2019 03:41:36 -0400
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:33342 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2391079AbfIFHl3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 6 Sep 2019 03:41:29 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 2AE33C0E3C;
-        Fri,  6 Sep 2019 07:41:28 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 23988C0E35;
+        Fri,  6 Sep 2019 07:41:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1567755688; bh=jZCMlvgCMuP7tUeAHLlMp4idCMgk/I/cK3F4CsQd+PQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=ishy2uzL4O1BH/uU/Pa3nyGxn/4goiVJhORDkg31zNiVDoAlF5mzhMnrO4K//S78l
-         M5w8LClhcaOfomTJJyC1Y8t0/MB3Bn4HQHGpbXPwx5s28vTGAiodYmdU3CNr96Yqpn
-         Z9Fsn3Sn7ctltDHFBal6vHhGBXc7PcwaOM2A8FTRtBWNFAklk/WeAQOZEcUuFeIxNy
-         dGiWO6o+WCI0WQZFzVazqZZtSJADj89mmVvkzoQZmV10bklpFZFT3/sLK2MnU8sH4o
-         RiUARgV7YIBtTQt8Qy9isheuBEat0Tvbv7Ge3QBO+jYeXEd9Kl+jDigztFruV5U9fp
-         dxI6hQxF0VEYA==
+        t=1567755688; bh=4FNcbwGO762eeiYuWoydSpxazMahLxkBYcFUNjeJ3so=;
+        h=From:To:Cc:Subject:Date:From;
+        b=QV3sTkQjRq3+DWj4SAq7M3ARw0wOD88Y820JB4aK6VQ3BqbtO+ozEBJg5jkZxP6ba
+         3K3PfEsnZAFP8beQSbvbq4rYsxCaqGuqw8h9pPqMiS6RCdbZ0eax/vPBjpPQJO3fpn
+         4GOoFgI8P87xZ6bFcQt0szF2m6kys4oWjegPndcukIUo4cRGrBYIT79WQrcuzC9ip9
+         4+AT6uXZ1T2NKq8mP+IAI4DwvUSgoSG5aniE63bpRkwW+wF/luxd0JWIyWzZQsXLIu
+         EiPm2rX5BcbHPhAqfeLgzesocBttjgJAAkBystKy36O3f9cHmcsjU3truRAWoxfcIF
+         40D7xgWd5/dhw==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id B9DA5A0062;
-        Fri,  6 Sep 2019 07:41:26 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id 001F5A005C;
+        Fri,  6 Sep 2019 07:41:25 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
 Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
@@ -50,23 +49,17 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         "David S. Miller" <davem@davemloft.net>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 2/5] net: stmmac: selftests: Set RX tail pointer in Flow Control test
-Date:   Fri,  6 Sep 2019 09:41:14 +0200
-Message-Id: <9e6d4447eeefa45d7e61e6bb9e4f602981c85c23.1567755423.git.joabreu@synopsys.com>
+Subject: [PATCH net-next 0/5] net: stmmac: Improvements and fixes for -next
+Date:   Fri,  6 Sep 2019 09:41:12 +0200
+Message-Id: <cover.1567755423.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1567755423.git.joabreu@synopsys.com>
-References: <cover.1567755423.git.joabreu@synopsys.com>
-In-Reply-To: <cover.1567755423.git.joabreu@synopsys.com>
-References: <cover.1567755423.git.joabreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need to set the RX tail pointer so that RX engine starts working
-again after finishing the Flow Control test.
-
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Improvements and fixes for recently introduced features. All for -next tree.
+More info in commit logs.
 
 ---
 Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
@@ -78,28 +71,20 @@ Cc: netdev@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c | 6 ++++++
- 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-index dce34c081a1e..2943943bec43 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-@@ -722,8 +722,14 @@ static int stmmac_test_flowctrl(struct stmmac_priv *priv)
- 
- 	for (i = 0; i < rx_cnt; i++) {
- 		struct stmmac_channel *ch = &priv->channel[i];
-+		u32 tail;
- 
-+		tail = priv->rx_queue[i].dma_rx_phy +
-+			(DMA_RX_SIZE * sizeof(struct dma_desc));
-+
-+		stmmac_set_rx_tail_ptr(priv, priv->ioaddr, tail, i);
- 		stmmac_start_rx(priv, priv->ioaddr, i);
-+
- 		local_bh_disable();
- 		napi_reschedule(&ch->rx_napi);
- 		local_bh_enable();
+Jose Abreu (5):
+  net: stmmac: selftests: Add missing checks for support of SA
+  net: stmmac: selftests: Set RX tail pointer in Flow Control test
+  net: stmmac: dwmac4: Enable RX Jumbo frame support
+  net: stmmac: selftests: Add Split Header test
+  net: stmmac: Limit max speeds of XGMAC if asked to
+
+ drivers/net/ethernet/stmicro/stmmac/dwmac4.h       |  3 +-
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c  |  6 ---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  | 25 +++++----
+ .../net/ethernet/stmicro/stmmac/stmmac_selftests.c | 60 ++++++++++++++++++++++
+ 4 files changed, 78 insertions(+), 16 deletions(-)
+
 -- 
 2.7.4
 
