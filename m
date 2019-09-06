@@ -4,218 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F91C00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9D8C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02D3A207FC
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:47:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3609021670
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:47:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405843AbfIFPrK (ORCPT
+        id S2405857AbfIFPrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 11:47:10 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:41265 "EHLO
+        Fri, 6 Sep 2019 11:47:22 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:38231 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394889AbfIFPrK (ORCPT
+        with ESMTP id S2405844AbfIFPrV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 11:47:10 -0400
+        Fri, 6 Sep 2019 11:47:21 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1N1M4p-1iH0lp1SZ9-012o5x; Fri, 06 Sep 2019 17:46:14 +0200
+ (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MiaLn-1ic0673Twl-00fnCZ; Fri, 06 Sep 2019 17:47:08 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Jonathan Cameron <jic23@kernel.org>
+To:     Russell King <linux@armlinux.org.uk>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] [RFC] Revert "iio: hid-sensor-attributes: Convert to use int_pow()"
-Date:   Fri,  6 Sep 2019 17:45:55 +0200
-Message-Id: <20190906154609.2421410-1-arnd@arndb.de>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Enrico Weigelt <info@metux.net>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: don't export unused return_address()
+Date:   Fri,  6 Sep 2019 17:46:55 +0200
+Message-Id: <20190906154706.2449696-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:RxAflYvFSgC4AQPKdZewqxKzyuLVpknAeQFNbvbpm4IWXhrJKE5
- ngA/qm5vcdBarsSA3ksUO+wW2JDquIuxHZeBCggIIdMe9ausS26Mr+sls8Fv2q5OKnQfy7t
- 4RORQsBJIifBebjRCcr2jZUzxAt0Y/2sxEfm+xh8c+8nVyP2dud9U97619dGjF/P3I6kJFg
- EVW1oWZ0e5XaSwQuiR32w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:9rRET29UyqE=:HHigNeMrYT6DOSZg/T67ZP
- zmPQGlUUEekOSFfotQvcxTShBrC1j6gqX/oZrkGM0528Xk+bVpy3VQ9aEXo4JHpPpiSCNmiwB
- 6b3wyFiGX/spxJvaXlzCQgEq72Oo7LiahyBgz/EilX1dptyMi9X/7LV23aBikB3l/kM8gwsne
- XzzNHWNsNcSXXBfWlsahtcf3xMXk/GPJ7bj8pxqbb12nlXnUID/PlLSdAgCc7S64Pab/8ih4G
- phIEZs4Z1xLJ8P+8QiUOp9iF9s5UpVBtbow7ge07+cmkdQTsWevPLtIkifO3OMZHRXAuNFoav
- ZJI4Thqh5TOleh22pJ8LxjgDB1jvBmR3Am2jjZmGGPEMsWmDIY2M32Iikp1IxnjDsryqB0UIM
- b+AxbPyregLyhPMJam/oYbogTOaFbThCN7DaM2mlkZ81QKbGOXy8PEDF+HbyNvhNccZ5zCSPi
- z53oYZOS8dAjG71gccCv4zUVVdtAQgB1FAEvYwhS6iI+0ghnB/fLMQ3Mwiv4fjmxpeG6+X2tO
- x82N5ByY+0zf2v3pZVKLDLb5Tu9o7ghsYpycY6EVGbqHFDRlHYlj1poScvmHSL+nKYFT14Iet
- 4EURBt2SCAUktCVBDi94UwRvm9geTZWddsQCxXojRhhl0G/z1tAYMaURjpmKsjoeG1r1v6eM5
- NrWBH8UFqy/d2K6uRn4ciC5CQqVq/pMdA49IpfpvXj22VW5MHmYQFv5E/QUiDS73FX27jTyQj
- +gxHhxuyed83f/OG/dYY/1CJfGAw0Vz7g7OiXpvB2ua7fdxP9z84VnusVd1MbnzSxMjZr2/Ay
- hcHh2MyMN/35zwwfzBA03hfg345QABAhe8ISXo49fD4pKiEV20=
+X-Provags-ID: V03:K1:KxXBdm+ZdB2njEOuHI0sI2x2LTlMTwa/9hKBgBDFyvjWMqurBar
+ 1eeQnRx0c2Ox7iIBg3bLDT3e+A5wv8//Hw8vhKUVdHCQTetfQSdrjrsU4gUPPAVUYMq8iZT
+ KWgNizZG8M5JX8N3+1xp6Vcd4jLYGRQ83Jo27tXlyvYsVLbkW7W6om1aPaGGEKSRE9rkBZj
+ QoIsM81fh05SMxn2RkQuw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:vdoyMlLfLcU=:2DVor/2vufbs+2xiNNaRoY
+ fWU05+ahmmEOb9gMmRI4XWFn9VIEylv0+DmficJNI3Krbstw87f3wOIrlEFkWOCdWdG/YRvnS
+ EfZPjYBJQAsFo5UkRNXPQDFrwKcCOcZGJI56UApZdhCAysBgKjHEHx6mFAagdxE4/0MprqVsr
+ rKFOPTuBJO2JtHEXCAHRQg8X2Ihiy7pvRV9AvOgm3OhbCzC87ZVsqJdqCVaQdxheA5hBRvSA6
+ EGZuy18hFF2+RyjHnFKf0Gj65cAdfGMbkh9S83qBMI26tBaEV0UmjELm3sgXfv0t2D7aiA0xH
+ HjwNLRQATNkk+YjodkxGlK4Jez+3kgbFtFHXLEkl4u0+zZFouJJ7K8gBrvaNXTVQUeYes5nQs
+ vxi6Pn5vXCsFjGbL/Syj9H+9jI548oYiMo4IGvb7TwV5CjKQnJ473bKpWcXxEGhfm5I1wdOEq
+ fe+G5UgO+xo7nfXQymwg+GugThSksgQKEp6nScmJq7dwoGb2yYASvI3IxRPLu3NMshjgpFan8
+ 6RqnYGncFrUL0qfG/sdsAbuCnt2h+XwfSHIrotMJGF7XBex2CmX9x9oXFQH832A8U7RQc30sY
+ DiWK9WZn2kQsl6Vw8NTd9bADyW6qob4mDnQtJkrHSbMO8qxY4TPYCgLk9TA1fHggPxk6C5FJR
+ 1blQiqgk244xS49SOFkqL94iruf3zffktlDkzjDwKq5jP3KBQlf8ZvXDLt5BXO2gQKqhdaM0n
+ zNCKzIdwQvS3SDWlGgbtA9XQuvo7yXs2lXMToBNNodcqmUfc0uQfgfCZ5EapqjXq8YVFCWxiV
+ +JNrPBbpP6nuUpksqgzACYDRugBpQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The change to use the generic int_pow instead of the private version
-caused a number of build issues on 32-bit architectures and makes
-it generally less efficient because of the 64-bit math:
+Without the frame pointer enabled, return_address() is an inline
+function and does not need to be exported, as shown by this warning:
 
-drivers/iio/common/hid-sensors/hid-sensor-attributes.o: In function `hid_sensor_write_samp_freq_value':
-hid-sensor-attributes.c:(.text+0x29c): undefined reference to `__aeabi_uldivmod'
-drivers/iio/common/hid-sensors/hid-sensor-attributes.o: In function `hid_sensor_read_raw_hyst_value':
-hid-sensor-attributes.c:(.text+0x420): undefined reference to `__aeabi_uldivmod'
-hid-sensor-attributes.c:(.text+0x448): undefined reference to `__aeabi_uldivmod'
-drivers/iio/common/hid-sensors/hid-sensor-attributes.o: In function `hid_sensor_write_raw_hyst_value':
-hid-sensor-attributes.c:(.text+0x570): undefined reference to `__aeabi_uldivmod'
+WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
 
-There is probably a nicer solution to this, but for the moment,
-the revert makes it compile again.
+Move the EXPORT_SYMBOL_GPL() into the #ifdef as well.
 
-Fixes: 473d12f7638c ("iio: hid-sensor-attributes: Convert to use int_pow()")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- .../hid-sensors/hid-sensor-attributes.c       | 53 +++++++++++--------
- 1 file changed, 31 insertions(+), 22 deletions(-)
+ arch/arm/kernel/return_address.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iio/common/hid-sensors/hid-sensor-attributes.c b/drivers/iio/common/hid-sensors/hid-sensor-attributes.c
-index b9dd19b34267..a8a3fe428d8d 100644
---- a/drivers/iio/common/hid-sensors/hid-sensor-attributes.c
-+++ b/drivers/iio/common/hid-sensors/hid-sensor-attributes.c
-@@ -8,7 +8,6 @@
- #include <linux/module.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
--#include <linux/kernel.h>
- #include <linux/slab.h>
- #include <linux/hid-sensor-hub.h>
- #include <linux/iio/iio.h>
-@@ -69,6 +68,16 @@ static struct {
- 	{HID_USAGE_SENSOR_HUMIDITY, 0, 1000, 0},
- };
- 
-+static int pow_10(unsigned power)
-+{
-+	int i;
-+	int ret = 1;
-+	for (i = 0; i < power; ++i)
-+		ret = ret * 10;
-+
-+	return ret;
-+}
-+
- static void simple_div(int dividend, int divisor, int *whole,
- 				int *micro_frac)
- {
-@@ -87,14 +96,14 @@ static void simple_div(int dividend, int divisor, int *whole,
- 			rem *= 10;
- 			exp++;
- 		}
--		*micro_frac = (rem / divisor) * int_pow(10, 6 - exp);
-+		*micro_frac = (rem / divisor) * pow_10(6-exp);
- 	}
+diff --git a/arch/arm/kernel/return_address.c b/arch/arm/kernel/return_address.c
+index b0d2f1fe891d..fb0fc1910102 100644
+--- a/arch/arm/kernel/return_address.c
++++ b/arch/arm/kernel/return_address.c
+@@ -53,6 +53,7 @@ void *return_address(unsigned int level)
+ 		return NULL;
  }
  
- static void split_micro_fraction(unsigned int no, int exp, int *val1, int *val2)
- {
--	*val1 = no / int_pow(10, exp);
--	*val2 = no % int_pow(10, exp) * int_pow(10, 6 - exp);
-+	*val1 = no/pow_10(exp);
-+	*val2 = no%pow_10(exp) * pow_10(6-exp);
- }
++EXPORT_SYMBOL_GPL(return_address);
++
+ #endif /* if defined(CONFIG_FRAME_POINTER) && !defined(CONFIG_ARM_UNWIND) */
  
- /*
-@@ -116,7 +125,7 @@ static void convert_from_vtf_format(u32 value, int size, int exp,
- 	}
- 	exp = hid_sensor_convert_exponent(exp);
- 	if (exp >= 0) {
--		*val1 = sign * value * int_pow(10, exp);
-+		*val1 = sign * value * pow_10(exp);
- 		*val2 = 0;
- 	} else {
- 		split_micro_fraction(value, -exp, val1, val2);
-@@ -136,10 +145,10 @@ static u32 convert_to_vtf_format(int size, int exp, int val1, int val2)
- 		sign = -1;
- 	exp = hid_sensor_convert_exponent(exp);
- 	if (exp < 0) {
--		value = abs(val1) * int_pow(10, -exp);
--		value += abs(val2) / int_pow(10, 6 + exp);
-+		value = abs(val1) * pow_10(-exp);
-+		value += abs(val2) / pow_10(6+exp);
- 	} else
--		value = abs(val1) / int_pow(10, exp);
-+		value = abs(val1) / pow_10(exp);
- 	if (sign < 0)
- 		value =  ((1LL << (size * 8)) - value);
- 
-@@ -202,12 +211,12 @@ int hid_sensor_write_samp_freq_value(struct hid_sensor_common *st,
- 	if (val1 < 0 || val2 < 0)
- 		return -EINVAL;
- 
--	value = val1 * int_pow(10, 6) + val2;
-+	value = val1 * pow_10(6) + val2;
- 	if (value) {
- 		if (st->poll.units == HID_USAGE_SENSOR_UNITS_MILLISECOND)
--			value = int_pow(10, 9) / value;
-+			value = pow_10(9)/value;
- 		else if (st->poll.units == HID_USAGE_SENSOR_UNITS_SECOND)
--			value = int_pow(10, 6) / value;
-+			value = pow_10(6)/value;
- 		else
- 			value = 0;
- 	}
-@@ -302,34 +311,34 @@ static void adjust_exponent_nano(int *val0, int *val1, int scale0,
- 	int rem;
- 
- 	if (exp > 0) {
--		*val0 = scale0 * int_pow(10, exp);
-+		*val0 = scale0 * pow_10(exp);
- 		res = 0;
- 		if (exp > 9) {
- 			*val1 = 0;
- 			return;
- 		}
- 		for (i = 0; i < exp; ++i) {
--			x = scale1 / int_pow(10, 8 - i);
--			res += int_pow(10, exp - 1 - i) * x;
--			scale1 = scale1 % int_pow(10, 8 - i);
-+			x = scale1 / pow_10(8 - i);
-+			res += (pow_10(exp - 1 - i) * x);
-+			scale1 = scale1 % pow_10(8 - i);
- 		}
- 		*val0 += res;
--		*val1 = scale1 * int_pow(10, exp);
-+		*val1 = scale1 * pow_10(exp);
- 	} else if (exp < 0) {
- 		exp = abs(exp);
- 		if (exp > 9) {
- 			*val0 = *val1 = 0;
- 			return;
- 		}
--		*val0 = scale0 / int_pow(10, exp);
--		rem = scale0 % int_pow(10, exp);
-+		*val0 = scale0 / pow_10(exp);
-+		rem = scale0 % pow_10(exp);
- 		res = 0;
- 		for (i = 0; i < (9 - exp); ++i) {
--			x = scale1 / int_pow(10, 8 - i);
--			res += int_pow(10, 8 - exp - i) * x;
--			scale1 = scale1 % int_pow(10, 8 - i);
-+			x = scale1 / pow_10(8 - i);
-+			res += (pow_10(8 - exp - i) * x);
-+			scale1 = scale1 % pow_10(8 - i);
- 		}
--		*val1 = rem * int_pow(10, 9 - exp) + res;
-+		*val1 = rem * pow_10(9 - exp) + res;
- 	} else {
- 		*val0 = scale0;
- 		*val1 = scale1;
+-EXPORT_SYMBOL_GPL(return_address);
 -- 
 2.20.0
 
