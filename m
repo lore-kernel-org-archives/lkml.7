@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86096C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 01:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6EFC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 01:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7288D2082C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 01:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 950272082C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 01:30:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BFmak78K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zs5mXO3t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404207AbfIFBaa (ORCPT
+        id S2404197AbfIFBa2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 21:30:30 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34445 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403979AbfIFBa1 (ORCPT
+        Thu, 5 Sep 2019 21:30:28 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39308 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732899AbfIFBaV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 21:30:27 -0400
-Received: by mail-pf1-f196.google.com with SMTP id r12so3191236pfh.1;
-        Thu, 05 Sep 2019 18:30:26 -0700 (PDT)
+        Thu, 5 Sep 2019 21:30:21 -0400
+Received: by mail-pf1-f195.google.com with SMTP id s12so3170929pfe.6;
+        Thu, 05 Sep 2019 18:30:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=lzU0KnwlLwZRT/00/44UaOi16RS92F7Mftz12Dneqw0=;
-        b=BFmak78KIEynzF4dsEtKE2pyq+InTsB0IwkxiZIhXyCANQaY+y2RNUcjNY+eQP0297
-         /3bxyIm1pAnXXCbWwE3pCwQRcnvtI3Jmki9dxQ0VJa43AFWsgjsMuvdUSPpGRY3ulEW3
-         DiR14PUuuB4xDypIGY3uwsdDa1BaQNohXBqlcK1Evci2KZ+M7e4DdhmeLho9Qo36fHQu
-         qf52Vsjaw5jOXPCKwVPc7a9Y0rglI3z9Agc/2+zHYlhnfh6/nDBNQ8GVn5pp9QdwA1kS
-         m7AosbQmRSdZjhmb/vrTF1zwu898BZn74VD1veuFFLUc5sAGhavFEtrFxBEs3UnvSVeN
-         28jw==
+        bh=PasM8GCX7mEGAVRsf1zB0IrqtOMIBNlDj4wL+XfNBQQ=;
+        b=Zs5mXO3t1tXqEJq3xTtO8EL2rTiUMUX4xV/WUnYDObiV+cMcP+jE5nDcCcB3EWyXed
+         Tn+EwRV8aavfIHIqTUTrfG7D8cD4UU10FUoUfZ5dY5Nx9syOyQOgLzZaaM5zAZ98YoEB
+         3gdboRk0UeB6FHt/y6CVBt+cdLF/8JyJVgrP8DOH6cfSdEIYUnhfmDJttCqGrIZvOC80
+         L8bbrsvs2JB/ULTgiHwTRcf3vDrVTlmjpvRLl+55ft45V000O5tZvk4UlEgWB08zEwlW
+         3RqJy7Tl4THVmszYLc7hDEYZuZI5PgFDxc2XQ/Hv5mfCzYA6CgvYUhQz/s+rkjtAIRm/
+         X1Yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=lzU0KnwlLwZRT/00/44UaOi16RS92F7Mftz12Dneqw0=;
-        b=su8StgWMqC/QPPxj+xvWYabG+CHx9tzAgDVOY49wNMM2NFZU/siZPYQLNhc0NqhfIY
-         KrNeebwkkmSY41K4uNvMYA1mp+YB2pXblk7rJZ1uKbt0QWsBfrF0FPT54Tr+PkiejYZr
-         ZQKzDk0d8TwQWxX2+mzB6l6Mh4KPo7ZsSpdZJa/fnAj5/Q8Obk4e11u2d0Z7a8eSEBUH
-         IO0YlYV1vKIsVR2K0IXSdusG1ka+J6YLVCXhwEIBDV3kMizv+I3iJ/f7SPtQE1ohqVak
-         JcnL2+WM85O5mCscj8etE6RJgyzO5jgpQXcAQn1EfLQ1RrlPYAmqjcVX2feUhLiYmsJi
-         SraQ==
-X-Gm-Message-State: APjAAAUthm0foSjuszinybBxNXnYRU9Z2S/yrsp4z1MsWc8yhGxk9/9s
-        lq5VT8qhcQyjmD0E885u1qOR8Hjk
-X-Google-Smtp-Source: APXvYqyPzRoAay3eF3jG73d8xyiw9BP2olD/7SS7dUF38q/pUW5/uylf1N/SvNnzddQ3nZ3DoHyg2A==
-X-Received: by 2002:a65:5a8c:: with SMTP id c12mr5706037pgt.73.1567733426195;
-        Thu, 05 Sep 2019 18:30:26 -0700 (PDT)
+        bh=PasM8GCX7mEGAVRsf1zB0IrqtOMIBNlDj4wL+XfNBQQ=;
+        b=RGKJEMSTopNS7lVDgl3s9N/vURrdaw2rPXlIl30qDstIBFHZZY9eGPy+17n+QJDdy+
+         S3xLwHjnIeehtBVvNRNx6PPzVFMj73DHV5qKcKYHCtzGEemRCgPwUTfVZTzE0fZfW1ev
+         OBhTEfsF1bX66vm0RWzYLPAvQiyR6iF0bdDBba/Mo8eEShMgtFfk4jF8KOQImspqV6hx
+         70CZgqzti3xAl1/6/SmsATbA7sPUi9uop4tHFlczESyfkm25LW/i9rqPNUnlOgexHjZs
+         DsQ1vdA33nk+FGykKaxcFQtW/L2An7I+usHbiCTvzIAFolGhETjX58gNiSYeAPIjqR9Y
+         ukfQ==
+X-Gm-Message-State: APjAAAWhxi+zQDhFaU+DbuHfnzIGcKnORYvSqHhrKimpdpSz2hlEPsGB
+        g7D6sfUmQLRRDc37S1SxYQPEVTeD
+X-Google-Smtp-Source: APXvYqzzP253JQWcY/nY6IUQxjGomgk/V63k7jg1IqIl/TjGVPhFJPQAf+Ly7VYSe4JWYElKoJBMBA==
+X-Received: by 2002:a17:90a:c38d:: with SMTP id h13mr7332714pjt.115.1567733420667;
+        Thu, 05 Sep 2019 18:30:20 -0700 (PDT)
 Received: from localhost.localdomain ([203.205.141.123])
-        by smtp.googlemail.com with ESMTPSA id g11sm3332294pgu.11.2019.09.05.18.30.23
+        by smtp.googlemail.com with ESMTPSA id g11sm3332294pgu.11.2019.09.05.18.30.18
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 05 Sep 2019 18:30:25 -0700 (PDT)
+        Thu, 05 Sep 2019 18:30:20 -0700 (PDT)
 From:   Wanpeng Li <kernellwp@gmail.com>
 X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
@@ -67,9 +67,9 @@ Cc:     Paolo Bonzini <pbonzini@redhat.com>,
         Wanpeng Li <wanpengli@tencent.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>
-Subject: [PATCH v2 5/5] KVM: hyperv: Fix Direct Synthetic timers assert an interrupt w/o lapic_in_kernel
-Date:   Fri,  6 Sep 2019 09:30:04 +0800
-Message-Id: <1567733404-7759-5-git-send-email-wanpengli@tencent.com>
+Subject: [PATCH RESEND 3/5] KVM: LAPIC: Micro optimize IPI latency
+Date:   Fri,  6 Sep 2019 09:30:02 +0800
+Message-Id: <1567733404-7759-3-git-send-email-wanpengli@tencent.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1567733404-7759-1-git-send-email-wanpengli@tencent.com>
 References: <1567733404-7759-1-git-send-email-wanpengli@tencent.com>
@@ -83,70 +83,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Wanpeng Li <wanpengli@tencent.com>
 
-Reported by syzkaller:
+This patch optimizes the virtual IPI emulation sequence:
 
-	kasan: GPF could be caused by NULL-ptr deref or user memory access
-	general protection fault: 0000 [#1] PREEMPT SMP KASAN
-	RIP: 0010:__apic_accept_irq+0x46/0x740 arch/x86/kvm/lapic.c:1029
-	Call Trace:
-	kvm_apic_set_irq+0xb4/0x140 arch/x86/kvm/lapic.c:558
-	stimer_notify_direct arch/x86/kvm/hyperv.c:648 [inline]
-	stimer_expiration arch/x86/kvm/hyperv.c:659 [inline]
-	kvm_hv_process_stimers+0x594/0x1650 arch/x86/kvm/hyperv.c:686
-	vcpu_enter_guest+0x2b2a/0x54b0 arch/x86/kvm/x86.c:7896
-	vcpu_run+0x393/0xd40 arch/x86/kvm/x86.c:8152
-	kvm_arch_vcpu_ioctl_run+0x636/0x900 arch/x86/kvm/x86.c:8360
-	kvm_vcpu_ioctl+0x6cf/0xaf0 arch/x86/kvm/../../../virt/kvm/kvm_main.c:2765
+write ICR2                     write ICR2
+write ICR                      read ICR2
+read ICR            ==>        send virtual IPI
+read ICR2                      write ICR
+send virtual IPI
 
-The testcase programs HV_X64_MSR_STIMERn_CONFIG/HV_X64_MSR_STIMERn_COUNT,
-in addition, there is no lapic in the kernel, the counters value are small
-enough in order that kvm_hv_process_stimers() inject this already-expired
-timer interrupt into the guest through lapic in the kernel which triggers
-the NULL deferencing. This patch fixes it by don't advertise direct mode 
-synthetic timers and discarding the inject when lapic is not in kernel.
+It can reduce kvm-unit-tests/vmexit.flat IPI testing latency(from sender
+send IPI to sender receive the ACK) from 3319 cycles to 3203 cycles on
+SKylake server.
 
-Reported-by: syzbot+dff25ee91f0c7d5c1695@syzkaller.appspotmail.com
 Cc: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Radim Krčmář <rkrcmar@redhat.com>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
 Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
 ---
-v1 -> v2:
- * don't advertise direct mode synthetic timers when lapic is not in kernel
+ arch/x86/kvm/lapic.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
- arch/x86/kvm/hyperv.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-index c10a8b1..069e655 100644
---- a/arch/x86/kvm/hyperv.c
-+++ b/arch/x86/kvm/hyperv.c
-@@ -645,7 +645,9 @@ static int stimer_notify_direct(struct kvm_vcpu_hv_stimer *stimer)
- 		.vector = stimer->config.apic_vector
- 	};
- 
--	return !kvm_apic_set_irq(vcpu, &irq, NULL);
-+	if (lapic_in_kernel(vcpu))
-+		return !kvm_apic_set_irq(vcpu, &irq, NULL);
-+	return 0;
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index 12ade70..34fd299 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -1200,10 +1200,8 @@ void kvm_apic_set_eoi_accelerated(struct kvm_vcpu *vcpu, int vector)
  }
+ EXPORT_SYMBOL_GPL(kvm_apic_set_eoi_accelerated);
  
- static void stimer_expiration(struct kvm_vcpu_hv_stimer *stimer)
-@@ -1849,7 +1851,13 @@ int kvm_vcpu_ioctl_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
+-static void apic_send_ipi(struct kvm_lapic *apic)
++static void apic_send_ipi(struct kvm_lapic *apic, u32 icr_low, u32 icr_high)
+ {
+-	u32 icr_low = kvm_lapic_get_reg(apic, APIC_ICR);
+-	u32 icr_high = kvm_lapic_get_reg(apic, APIC_ICR2);
+ 	struct kvm_lapic_irq irq;
  
- 			ent->edx |= HV_FEATURE_FREQUENCY_MSRS_AVAILABLE;
- 			ent->edx |= HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE;
--			ent->edx |= HV_STIMER_DIRECT_MODE_AVAILABLE;
-+
-+			/*
-+			 * Direct Synthetic timers only make sense with in-kernel
-+			 * LAPIC
-+			 */
-+			if (lapic_in_kernel(vcpu))
-+				ent->edx |= HV_STIMER_DIRECT_MODE_AVAILABLE;
+ 	irq.vector = icr_low & APIC_VECTOR_MASK;
+@@ -1940,8 +1938,9 @@ int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
+ 	}
+ 	case APIC_ICR:
+ 		/* No delay here, so we always clear the pending bit */
+-		kvm_lapic_set_reg(apic, APIC_ICR, val & ~(1 << 12));
+-		apic_send_ipi(apic);
++		val &= ~(1 << 12);
++		apic_send_ipi(apic, val, kvm_lapic_get_reg(apic, APIC_ICR2));
++		kvm_lapic_set_reg(apic, APIC_ICR, val);
+ 		break;
  
- 			break;
- 
+ 	case APIC_ICR2:
 -- 
 2.7.4
 
