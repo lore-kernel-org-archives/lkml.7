@@ -2,89 +2,144 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A2CC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 452F4C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C66E20640
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:47:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15C9D20842
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:48:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="j0z+LE85"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="g30HVDUy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732698AbfIFHrD (ORCPT
+        id S1733284AbfIFHsr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 03:47:03 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:58030 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732133AbfIFHrD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 03:47:03 -0400
-Received: from zn.tnic (p200300EC2F0B9E00D81CE8CF22720A06.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:9e00:d81c:e8cf:2272:a06])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 795EF1EC09A0;
-        Fri,  6 Sep 2019 09:47:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1567756021;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=kXsLjA6zXd8DcBcKRp3q4a5MOpKDcX1Fi7lO4aq/nhE=;
-        b=j0z+LE85Kw78wgdn2dfqwfaa54eNdfaZx+dGoRSPLw2tZr8it+39Pvu3zM1x5BS6kz6lri
-        E5PUQ/NycDIIgtbycLF3j6e4qKew4SoF98dWP9smHpFFvG2tkNzSV/8KRjhwnRuaIl6PQM
-        i/4182e8DcEJ50NwtLYvxd6725+iPYE=
-Date:   Fri, 6 Sep 2019 09:46:55 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Raj, Ashok" <ashok.raj@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Mihai Carabas <mihai.carabas@oracle.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jon Grimm <Jon.Grimm@amd.com>, kanth.ghatraju@oracle.com,
-        konrad.wilk@oracle.com, patrick.colp@oracle.com,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        x86-ml <x86@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/microcode: Add an option to reload microcode even if
- revision is unchanged
-Message-ID: <20190906074655.GA19008@zn.tnic>
-References: <20190829060942.GA1312@zn.tnic>
- <20190829130213.GA23510@araj-mobl1.jf.intel.com>
- <20190903164630.GF11641@zn.tnic>
- <41cee473-321c-2758-032a-ccf0f01359dc@oracle.com>
- <D8A3D2BD-1FD4-4183-8663-3EF02A6099F3@alien8.de>
- <20190905002132.GA26568@otc-nc-03>
- <20190905072029.GB19246@zn.tnic>
- <20190905194044.GA3663@otc-nc-03>
- <alpine.DEB.2.21.1909052316130.1902@nanos.tec.linutronix.de>
- <20190905222706.GA4422@otc-nc-03>
+        Fri, 6 Sep 2019 03:48:47 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:47154 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728267AbfIFHsq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 03:48:46 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x867mX7e071654;
+        Fri, 6 Sep 2019 02:48:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1567756113;
+        bh=vrG6lpi8QEWkZKj5pHICh2MWv598YJm3hDtGFd45Ws8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=g30HVDUyWInJMcMatKA49ZDCVU8I4zfgaktbMK8nK2CgRdz3d0MIVRLhL/NgxDddz
+         9ogWHNd17/arDpVY2AuOSnn3T+FWnwXTVIk9MOGz6FnWEcR2pRgj9AkUaJUo+rdtXY
+         1oW5naxq0C4WV684cX/bI41caxxkVoaGiUKh8wMk=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x867mXim041637;
+        Fri, 6 Sep 2019 02:48:33 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 6 Sep
+ 2019 02:48:33 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 6 Sep 2019 02:48:33 -0500
+Received: from [172.24.191.45] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x867mTW5109187;
+        Fri, 6 Sep 2019 02:48:30 -0500
+Subject: Re: [PATCH] bus: ti-sysc: Fix handling of invalid clocks
+To:     Tony Lindgren <tony@atomide.com>, <linux-omap@vger.kernel.org>
+CC:     "Andrew F . Davis" <afd@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190905215356.8168-1-tony@atomide.com>
+From:   Keerthy <j-keerthy@ti.com>
+Message-ID: <fd38f85f-c5f0-0166-c55c-0da6d5c2518d@ti.com>
+Date:   Fri, 6 Sep 2019 13:19:08 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190905222706.GA4422@otc-nc-03>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190905215356.8168-1-tony@atomide.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 03:27:06PM -0700, Raj, Ashok wrote:
-> Several customers have asked this to check the safety of late loads.
-> They want to validate in production setup prior to rolling late-load
-> to all production systems.
 
-First of all, they should use *early* loading. I don't know how many
-times I need to say that, maybe I should print it on T-shirts.
 
-And then they can reboot. If you're thinking of the
-"we-can't-reboot-because-we're-cloud" argument don't even bother to
-bring it - I've had it more than enough and no, just because cloud
-people don't want to reboot, it doesn't mean we will support some insane
-use case.
+On 06/09/19 3:23 AM, Tony Lindgren wrote:
+> We can currently get "Unable to handle kernel paging request at
+> virtual address" for invalid clocks with dts node but no driver:
+> 
+> (__clk_get_hw) from [<c0138ebc>] (ti_sysc_find_one_clockdomain+0x18/0x34)
+> (ti_sysc_find_one_clockdomain) from [<c0138f0c>] (ti_sysc_clkdm_init+0x34/0xdc)
+> (ti_sysc_clkdm_init) from [<c0584660>] (sysc_probe+0xa50/0x10e8)
+> (sysc_probe) from [<c065c6ac>] (platform_drv_probe+0x58/0xa8)
+> 
+> Let's add IS_ERR checks to ti_sysc_clkdm_init() as And let's start treating
+> clk_get() with -ENOENT as a proper error. If the clock name is specified
+> in device tree we must succeed with clk_get() to continue. For modules with
+> no clock names specified in device tree we will just ignore the clocks.
 
--- 
-Regards/Gruss,
-    Boris.
+Tested for DS0 and RTC+DDR modes on AM437x
 
-https://people.kernel.org/tglx/notes-about-netiquette
+FWIW
+Tested-by: Keerthy <j-keerthy@ti.com>
+
+> 
+> Fixes: 2b2f7def058a ("bus: ti-sysc: Add support for missing clockdomain handling")
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> ---
+>   arch/arm/mach-omap2/pdata-quirks.c | 4 ++--
+>   drivers/bus/ti-sysc.c              | 5 +----
+>   2 files changed, 3 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
+> --- a/arch/arm/mach-omap2/pdata-quirks.c
+> +++ b/arch/arm/mach-omap2/pdata-quirks.c
+> @@ -491,11 +491,11 @@ static int ti_sysc_clkdm_init(struct device *dev,
+>   			      struct clk *fck, struct clk *ick,
+>   			      struct ti_sysc_cookie *cookie)
+>   {
+> -	if (fck)
+> +	if (!IS_ERR(fck))
+>   		cookie->clkdm = ti_sysc_find_one_clockdomain(fck);
+>   	if (cookie->clkdm)
+>   		return 0;
+> -	if (ick)
+> +	if (!IS_ERR(ick))
+>   		cookie->clkdm = ti_sysc_find_one_clockdomain(ick);
+>   	if (cookie->clkdm)
+>   		return 0;
+> diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+> --- a/drivers/bus/ti-sysc.c
+> +++ b/drivers/bus/ti-sysc.c
+> @@ -280,9 +280,6 @@ static int sysc_get_one_clock(struct sysc *ddata, const char *name)
+>   
+>   	ddata->clocks[index] = devm_clk_get(ddata->dev, name);
+>   	if (IS_ERR(ddata->clocks[index])) {
+> -		if (PTR_ERR(ddata->clocks[index]) == -ENOENT)
+> -			return 0;
+> -
+>   		dev_err(ddata->dev, "clock get error for %s: %li\n",
+>   			name, PTR_ERR(ddata->clocks[index]));
+>   
+> @@ -357,7 +354,7 @@ static int sysc_get_clocks(struct sysc *ddata)
+>   			continue;
+>   
+>   		error = sysc_get_one_clock(ddata, name);
+> -		if (error && error != -ENOENT)
+> +		if (error)
+>   			return error;
+>   	}
+>   
+> 
