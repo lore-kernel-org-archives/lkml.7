@@ -2,122 +2,140 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D2CC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E1AC00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D90522178F
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:25:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bgqPFZOd"
+	by mail.kernel.org (Postfix) with ESMTP id EEC8F2070C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:26:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394823AbfIFPZ4 (ORCPT
+        id S2404107AbfIFP0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 11:25:56 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37653 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731738AbfIFPZz (ORCPT
+        Fri, 6 Sep 2019 11:26:17 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:51663 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbfIFP0R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 11:25:55 -0400
-Received: by mail-io1-f67.google.com with SMTP id r4so13599839iop.4;
-        Fri, 06 Sep 2019 08:25:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=N3FQEUSrBcDUfBeBfn5iCz+oSEqlloCS/pOKCoa2Zr0=;
-        b=bgqPFZOdreq6PKuwjn62NrUjiulsqs09d/Gb8LjLNEs9G7HSU/RYbrcusE7+j93bbt
-         ZNsiZhnSpiVn4xshXGTOP41Zhh95aNeL6YoFa4FzsIe4j81n7vD4tXH/11gzKEMpbsWG
-         sODjHkkbKsQhVeBDNX0+hFtrjw8zAjfPhVHcKf0zbVkHuqfr+UUXFofddBouEiQhNFQc
-         h5lD1fsFu5fy1FMAXTqksih7B3M/LRJrZKA8nyi2MKYfIY0EF76p3ur4BAidhBzLdOfN
-         qMUoNboAFq7Ftys58HMDjwz72VDg0e7C72Gs5afM6ENseG/z+X5YA6JPCfMSOoUDsoE0
-         z0Og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=N3FQEUSrBcDUfBeBfn5iCz+oSEqlloCS/pOKCoa2Zr0=;
-        b=r5L/6Mj3FWx+mx7zy6A2dZLTX2wkV3xcO2cUs7si/9Zowm+45L0QvsxXlRejzsLKFH
-         azEEWRJDuKB4zwCtE/3lurtEZJdP61ZMXuJCNrHGje86WNEVVQtvAlA8oNc4/QwpbiYr
-         K5IGNSeeG+WSSvp9WqytG8qyocR2GSGlZSDjstNR+bT1YIC3l+M7rAEjabCRTh7AtXoY
-         YNI/GPxLpEQOZ6aA2jEm6ULeYyFEtPA6wKFPF9B7dTU3CyzYhjCvnhIFzSMAnAe9JMf+
-         2isXLYcuT9SZCHjDCJkCkmJEXEYkjCBqFBe8gtGWFhmWNO3bexd8pKP6WXHS3wnYPJtK
-         JqEQ==
-X-Gm-Message-State: APjAAAVG2p3v/lkhS1kXHRA5DNm3CiV+xgPepDXNSOGlIW9ia9g3Z+bg
-        +s02r4r9gGiVlvtixNhZn4RZtnUq389o/Aki2ZJdcA==
-X-Google-Smtp-Source: APXvYqwcGzRHOiIe83l2KSz9xAxgf3rf+jrakAFe9L11I466Xd43WAGC5SKvXq6IpFJAS6PXb2pvUJF/d3rtHSR26Kw=
-X-Received: by 2002:a5d:8908:: with SMTP id b8mr11171098ion.237.1567783554482;
- Fri, 06 Sep 2019 08:25:54 -0700 (PDT)
+        Fri, 6 Sep 2019 11:26:17 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1N3bjH-1iEohF3GeB-010cLz; Fri, 06 Sep 2019 17:26:10 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Chris Chiu <chiu@endlessm.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] pinctrl: intel: hide unused intel_pin_to_gpio
+Date:   Fri,  6 Sep 2019 17:26:01 +0200
+Message-Id: <20190906152609.1603386-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-References: <20190906145213.32552.30160.stgit@localhost.localdomain> <20190906112155-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20190906112155-mutt-send-email-mst@kernel.org>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Fri, 6 Sep 2019 08:25:43 -0700
-Message-ID: <CAKgT0UcXLesZ2tBwp9u05OpBJpVDFL61qX9Qpj7VUqdRqw=U_Q@mail.gmail.com>
-Subject: Re: [PATCH v8 0/7] mm / virtio: Provide support for unused page reporting
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        virtio-dev@lists.oasis-open.org,
-        Oscar Salvador <osalvador@suse.de>,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        Rik van Riel <riel@surriel.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        lcapitulino@redhat.com, "Wang, Wei W" <wei.w.wang@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:AiaKs1hcEO1fque6w/E9Anh66wK4Q7pzqtqbUXPbfMjkxkZpJhj
+ gRJeh3Irz/R8XadEwis9bcv1tG2oIDpk75Me9ErHiSBXCDBrvL+uMIzQAifh0k3WNRHlDho
+ Mk42z6/tjP+shaHiPj6mafMnbgSx4Jv9PoKOtige2XWj584zvNW1TJu55u3kwfiG97MVCB8
+ dWdx8ZPbqKo2OK2A1Z+Kg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:OrqLmJTU00I=:davTVrMu33y8hmRr6QShJF
+ dRv7bHz1iAPK9mbk80pWgEZCvw0ACxLMC5DvefJ6sBzsi6KLVEgaWDhlb6qM2n8uF307AKvOu
+ /0l6r9gRgI4+DEbtR/DIwr78B7kdzkmOOv3lRWI0g9tzYo5dJBAps8Itf7gsjkrNlfx1O1v3Q
+ hmUmAoHf0OAhpINoOuM+/OMcC0/hz5maJCbBTmdpGjHad7q2O5dBOFvbmCnXcM8X3JTyNDBWH
+ T1/hmmaAbgF18z11vrXtDCy2prSlM7ytJQBJTMBmfukvCcskXt48wwuqUFiFlAwLw+OQ7ldEW
+ L68ZJzoc8rOPu4LOriXpLQyhKkbVskQbk1OzXOUXWfYU2Y5DHFLPZWU9QWv1UCGGh6Ct67Zqf
+ QqpjQcpktlRWl6TnoiFM5yLcoBdNr4PZ0T1DzGsucBteFSiwsBUGpAjG7LLrXrCBlpCKaQ7du
+ OwOaYtwa0XMQEF7mAAphByjIb8wm3HlAytX9d0GNfn65EtmwqBN2PwW1NldR5mb4cI1xndd9S
+ 4A1piJ6M2zraYL5W2PDfzgtSxmfcjfyVbJrvdOkKsD4b77RP2VkyrDQuvUsmJCQ0o+sz47sQa
+ 8nB33N6SMNQjKCqiE8UJYDp+asIsCx/GKkRu7+Byt+7YxSOQEiDtyH7NuYoh9fONVCWc6Zqq0
+ PdlqzQXD8upPfr0Pnz93REhQsIxSRTkw41gYX+du39AcTk3W67l+cfCNbx924e2vzqs2dU9vi
+ jUxymNahBkGscLbZE/2rrd6ElByhBnygGRPwkMAMq8+PmyE995QCdbOK+9xDgiAW5I6v+QjaU
+ 7/29UxgKfLjnGEKJ5ogRGUCgFqPyzkaNvXWb4u7zHpGjKLSy80=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 6, 2019 at 8:23 AM Michael S. Tsirkin <mst@redhat.com> wrote:
->
-> On Fri, Sep 06, 2019 at 07:53:21AM -0700, Alexander Duyck wrote:
-> > This series provides an asynchronous means of reporting to a hypervisor
-> > that a guest page is no longer in use and can have the data associated
-> > with it dropped. To do this I have implemented functionality that allows
-> > for what I am referring to as unused page reporting
-> >
-> > The functionality for this is fairly simple. When enabled it will allocate
-> > statistics to track the number of reported pages in a given free area.
-> > When the number of free pages exceeds this value plus a high water value,
-> > currently 32, it will begin performing page reporting which consists of
-> > pulling pages off of free list and placing them into a scatter list. The
-> > scatterlist is then given to the page reporting device and it will perform
-> > the required action to make the pages "reported", in the case of
-> > virtio-balloon this results in the pages being madvised as MADV_DONTNEED
-> > and as such they are forced out of the guest. After this they are placed
-> > back on the free list, and an additional bit is added if they are not
-> > merged indicating that they are a reported buddy page instead of a
-> > standard buddy page. The cycle then repeats with additional non-reported
-> > pages being pulled until the free areas all consist of reported pages.
-> >
-> > I am leaving a number of things hard-coded such as limiting the lowest
-> > order processed to PAGEBLOCK_ORDER, and have left it up to the guest to
-> > determine what the limit is on how many pages it wants to allocate to
-> > process the hints. The upper limit for this is based on the size of the
-> > queue used to store the scattergather list.
->
-> I queued this  so this gets tested on linux-next but the mm core changes
-> need acks from appropriate people.
+The intel_pin_to_gpio() function is only called by the
+PM support functions and causes a warning when those are disabled:
 
-Thanks. I will see what I can do to get some more mm people reviewing
-these changes.
+drivers/pinctrl/intel/pinctrl-intel.c:841:12: error: unused function 'intel_pin_to_gpio' [-Werror,-Wunused-function]
 
-- Alex
+As we cannot change the PM functions themselves to use __maybe_unused,
+add another #ifdef here for consistency.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/pinctrl/intel/pinctrl-intel.c | 46 +++++++++++++--------------
+ 1 file changed, 23 insertions(+), 23 deletions(-)
+
+diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+index d66fe2b4221b..67f392174090 100644
+--- a/drivers/pinctrl/intel/pinctrl-intel.c
++++ b/drivers/pinctrl/intel/pinctrl-intel.c
+@@ -831,29 +831,6 @@ static int intel_gpio_to_pin(struct intel_pinctrl *pctrl, unsigned int offset,
+ 	return -EINVAL;
+ }
+ 
+-/**
+- * intel_pin_to_gpio() - Translate from pin number to GPIO offset
+- * @pctrl: Pinctrl structure
+- * @pin: pin number
+- *
+- * Translate the pin number of pinctrl to GPIO offset
+- */
+-static int intel_pin_to_gpio(struct intel_pinctrl *pctrl, int pin)
+-{
+-	const struct intel_community *community;
+-	const struct intel_padgroup *padgrp;
+-
+-	community = intel_get_community(pctrl, pin);
+-	if (!community)
+-		return -EINVAL;
+-
+-	padgrp = intel_community_get_padgroup(community, pin);
+-	if (!padgrp)
+-		return -EINVAL;
+-
+-	return pin - padgrp->base + padgrp->gpio_base;
+-}
+-
+ static int intel_gpio_get(struct gpio_chip *chip, unsigned int offset)
+ {
+ 	struct intel_pinctrl *pctrl = gpiochip_get_data(chip);
+@@ -1477,6 +1454,29 @@ int intel_pinctrl_probe_by_uid(struct platform_device *pdev)
+ EXPORT_SYMBOL_GPL(intel_pinctrl_probe_by_uid);
+ 
+ #ifdef CONFIG_PM_SLEEP
++/**
++ * intel_pin_to_gpio() - Translate from pin number to GPIO offset
++ * @pctrl: Pinctrl structure
++ * @pin: pin number
++ *
++ * Translate the pin number of pinctrl to GPIO offset
++ */
++static int intel_pin_to_gpio(struct intel_pinctrl *pctrl, int pin)
++{
++	const struct intel_community *community;
++	const struct intel_padgroup *padgrp;
++
++	community = intel_get_community(pctrl, pin);
++	if (!community)
++		return -EINVAL;
++
++	padgrp = intel_community_get_padgroup(community, pin);
++	if (!padgrp)
++		return -EINVAL;
++
++	return pin - padgrp->base + padgrp->gpio_base;
++}
++
+ static bool intel_pinctrl_should_save(struct intel_pinctrl *pctrl, unsigned int pin)
+ {
+ 	const struct pin_desc *pd = pin_desc_get(pctrl->pctldev, pin);
+-- 
+2.20.0
+
