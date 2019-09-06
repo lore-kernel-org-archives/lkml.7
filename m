@@ -2,134 +2,114 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC71CC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 05:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE3A7C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 05:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B680206CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 05:08:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A840206CD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 05:10:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392232AbfIFFIC (ORCPT
+        id S2392245AbfIFFKB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 01:08:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55666 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391415AbfIFFIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 01:08:02 -0400
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9E97669066
-        for <linux-kernel@vger.kernel.org>; Fri,  6 Sep 2019 05:08:01 +0000 (UTC)
-Received: by mail-qk1-f198.google.com with SMTP id n135so5053474qke.23
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 22:08:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=l2IJkNQk1WGVpYF2C2pNnjExkv8L64jyK1l0fhuGrQQ=;
-        b=YCwKagdKhtBKaKjOT8SlxcUJ1gJjSfb7PtRbOBAcui62eCilIlBdVsVi7S9as1Wg4e
-         y7DCBPD7lHDTXQCPV/SfvXnXxQ2mt5dxsjScjMMRyhNO49Hry9Rm0zV3I54+xmVaUKl6
-         dBHhgD11rivcqQUHSCqkwsVunRAOopRSBFg4/mpfN5jo1mvq5BiEnUO1QlOWaT2YqD9x
-         /DAhT+u9ZGsvfVY3ZAuuuXc7q6znfykF7pf6SrL3HzDuvOq5owA6WlFvA1+bUuSjrfr9
-         l0K4yTRnzMI5NSetTWR4nsEEl8YaclJirUy/k3IqTLhhjV0axF+ind7Yk+06YLWIm04q
-         YvaA==
-X-Gm-Message-State: APjAAAWRPUjvDS4AQTrqVZ4IBJMpyOGdCXgG33ROcG6JuJv7+CReY+8F
-        Cc6y6Yn4Y/EE2IvqXuavisEXc3aqEN0FgzBO6OMx4KgmsdcpTaduvhyYZ7y+fIwFs6DJDGzTV+L
-        9RuFZ/9YFtPtcVpNDbbm+aqoC
-X-Received: by 2002:ac8:149a:: with SMTP id l26mr7381728qtj.267.1567746481006;
-        Thu, 05 Sep 2019 22:08:01 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzSVqXB2yJBiZ8qLNaAGXzVS5fYjQAlfJVZ4rV3ixHqyHyZ9tuPVELNAMJ1/UauLsyEphl8xA==
-X-Received: by 2002:ac8:149a:: with SMTP id l26mr7381715qtj.267.1567746480788;
-        Thu, 05 Sep 2019 22:08:00 -0700 (PDT)
-Received: from redhat.com (bzq-79-176-40-226.red.bezeqint.net. [79.176.40.226])
-        by smtp.gmail.com with ESMTPSA id b192sm2114746qkg.39.2019.09.05.22.07.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 22:07:59 -0700 (PDT)
-Date:   Fri, 6 Sep 2019 01:07:53 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Ram Pai <linuxram@us.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        virtualization@lists.linux-foundation.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Jason Wang <jasowang@redhat.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Alexey Kardashevskiy <aik@linux.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [RFC PATCH] virtio_ring: Use DMA API if guest memory is encrypted
-Message-ID: <20190906001220-mutt-send-email-mst@kernel.org>
-References: <87zhrj8kcp.fsf@morokweng.localdomain>
- <20190810143038-mutt-send-email-mst@kernel.org>
- <20190810220702.GA5964@ram.ibm.com>
- <20190811055607.GA12488@lst.de>
- <20190811044431-mutt-send-email-mst@kernel.org>
- <20190812121532.GB9405@lst.de>
+        Fri, 6 Sep 2019 01:10:01 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:39181
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389949AbfIFFKB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 01:10:01 -0400
+X-IronPort-AV: E=Sophos;i="5.64,472,1559512800"; 
+   d="scan'208";a="318467270"
+Received: from abo-12-105-68.mrs.modulonet.fr (HELO hadrien) ([85.68.105.12])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Sep 2019 07:09:56 +0200
+Date:   Fri, 6 Sep 2019 07:09:56 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     YueHaibing <yuehaibing@huawei.com>
+cc:     Gilles Muller <Gilles.Muller@lip6.fr>, nicolas.palix@imag.fr,
+        michal.lkml@markovi.net, gregkh@linuxfoundation.org,
+        swboyd@chromium.org, cocci@systeme.lip6.fr,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] coccinelle: platform_get_irq: Fix parse error
+In-Reply-To: <20190906033006.17616-1-yuehaibing@huawei.com>
+Message-ID: <alpine.DEB.2.21.1909060707330.2975@hadrien>
+References: <20190906033006.17616-1-yuehaibing@huawei.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190812121532.GB9405@lst.de>
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 02:15:32PM +0200, Christoph Hellwig wrote:
-> On Sun, Aug 11, 2019 at 04:55:27AM -0400, Michael S. Tsirkin wrote:
-> > On Sun, Aug 11, 2019 at 07:56:07AM +0200, Christoph Hellwig wrote:
-> > > So we need a flag on the virtio device, exposed by the
-> > > hypervisor (or hardware for hw virtio devices) that says:  hey, I'm real,
-> > > don't take a shortcut.
-> > 
-> > The point here is that it's actually still not real. So we would still
-> > use a physical address. However Linux decides that it wants extra
-> > security by moving all data through the bounce buffer.  The distinction
-> > made is that one can actually give device a physical address of the
-> > bounce buffer.
-> 
-> Sure.  The problem is just that you keep piling hacks on top of hacks.
-> We need the per-device flag anyway to properly support hardware virtio
-> device in all circumstances.  Instead of coming up with another ad-hoc
-> hack to force DMA uses implement that one proper bit and reuse it here.
-
-The flag that you mention literally means "I am a real device" so for
-example, you can use VFIO with it. And this device isn't a real one,
-and you can't use VFIO with it, even though it's part of a power
-system which always has an IOMMU.
 
 
+On Fri, 6 Sep 2019, YueHaibing wrote:
 
-Or here's another way to put it: we have a broken device that can only
-access physical addresses, not DMA addresses. But to enable SEV Linux
-requires DMA API.  So we can still make it work if DMA address happens
-to be a physical address (not necessarily of the same page).
+> When do coccicheck, I get this error:
+>
+> spatch -D report --no-show-diff --very-quiet --cocci-file
+> ./scripts/coccinelle/api/platform_get_irq.cocci --include-headers
+> --dir . -I ./arch/x86/include -I ./arch/x86/include/generated -I ./include
+>  -I ./arch/x86/include/uapi -I ./arch/x86/include/generated/uapi
+>  -I ./include/uapi -I ./include/generated/uapi
+>  --include ./include/linux/kconfig.h --jobs 192 --chunksize 1
+> minus: parse error:
+>   File "./scripts/coccinelle/api/platform_get_irq.cocci", line 24, column 9, charpos = 355
+>   around = '\(',
+>   whole content = if ( ret \( < \| <= \) 0 )
+>
+> In commit e56476897448 ("fpga: Remove dev_err() usage
+> after platform_get_irq()") log, I found the semantic patch,
+> it fix this issue.
 
+Thanks very much for reporting the problem.
 
-This is where dma_addr_is_a_phys_addr() is coming from: it tells us this
-weird configuration can still work.  What are we going to do for SEV if
-dma_addr_is_a_phys_addr does not apply? Fail probe I guess.
-
-
-So the proposal is really to make things safe and to this end,
-to add this in probe:
-
-	if (sev_active() &&
-	    !dma_addr_is_a_phys_addr(dev) &&
-	    !virtio_has_feature(vdev, VIRTIO_F_IOMMU_PLATFORM))
-		return -EINVAL;
-
-
-the point being to prevent loading driver where it would
-corrupt guest memory. Put this way, any objections to adding
-dma_addr_is_a_phys_addr to the DMA API?
+Acked-by: Julia Lawall <julia.lawall@lip6.fr>
 
 
-
-
-
--- 
-MST
+>
+> Fixes: 98051ba2b28b ("coccinelle: Add script to check for platform_get_irq() excessive prints")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  scripts/coccinelle/api/platform_get_irq.cocci | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/scripts/coccinelle/api/platform_get_irq.cocci b/scripts/coccinelle/api/platform_get_irq.cocci
+> index f6e1afc..06b6a95 100644
+> --- a/scripts/coccinelle/api/platform_get_irq.cocci
+> +++ b/scripts/coccinelle/api/platform_get_irq.cocci
+> @@ -21,7 +21,7 @@ platform_get_irq
+>  platform_get_irq_byname
+>  )(E, ...);
+>
+> -if ( ret \( < \| <= \) 0 )
+> +if ( \( ret < 0 \| ret <= 0 \) )
+>  {
+>  (
+>  if (ret != -EPROBE_DEFER)
+> @@ -47,7 +47,7 @@ platform_get_irq
+>  platform_get_irq_byname
+>  )(E, ...);
+>
+> -if ( ret \( < \| <= \) 0 )
+> +if ( \( ret < 0 \| ret <= 0 \) )
+>  {
+>  (
+>  -if (ret != -EPROBE_DEFER)
+> @@ -74,7 +74,7 @@ platform_get_irq
+>  platform_get_irq_byname
+>  )(E, ...);
+>
+> -if ( ret \( < \| <= \) 0 )
+> +if ( \( ret < 0 \| ret <= 0 \) )
+>  {
+>  (
+>  if (ret != -EPROBE_DEFER)
+> --
+> 2.7.4
+>
+>
+>
