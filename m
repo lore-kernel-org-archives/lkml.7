@@ -2,124 +2,87 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C160FC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62DD7C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3DF32082C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:47:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A6DC2082C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:47:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390289AbfIFKrT (ORCPT
+        id S2390433AbfIFKrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 06:47:19 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:34920 "EHLO inva020.nxp.com"
+        Fri, 6 Sep 2019 06:47:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51758 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726080AbfIFKrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 06:47:18 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id EC6331A0216;
-        Fri,  6 Sep 2019 12:47:15 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id F00A21A0BC3;
-        Fri,  6 Sep 2019 12:47:10 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8E114402FB;
-        Fri,  6 Sep 2019 18:47:04 +0800 (SGT)
-From:   Hui Song <hui.song_1@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Song Hui <hui.song_1@nxp.com>
-Subject: [PATCH] gpio/mpc8xxx: change irq handler from chained to normal
-Date:   Fri,  6 Sep 2019 18:37:00 +0800
-Message-Id: <20190906103700.2034-1-hui.song_1@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1731211AbfIFKrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 06:47:45 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id F045D3086218;
+        Fri,  6 Sep 2019 10:47:44 +0000 (UTC)
+Received: from localhost (ovpn-117-208.ams2.redhat.com [10.36.117.208])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 63DDE19C70;
+        Fri,  6 Sep 2019 10:47:39 +0000 (UTC)
+Date:   Fri, 6 Sep 2019 11:47:38 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, miklos@szeredi.hu,
+        linux-kernel@vger.kernel.org, virtio-fs@redhat.com,
+        dgilbert@redhat.com, mst@redhat.com
+Subject: Re: [PATCH 07/18] virtiofs: Stop virtiofs queues when device is
+ being removed
+Message-ID: <20190906104738.GO5900@stefanha-x1.localdomain>
+References: <20190905194859.16219-1-vgoyal@redhat.com>
+ <20190905194859.16219-8-vgoyal@redhat.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="acOuGx3oQeOcSZJu"
+Content-Disposition: inline
+In-Reply-To: <20190905194859.16219-8-vgoyal@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Fri, 06 Sep 2019 10:47:45 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Song Hui <hui.song_1@nxp.com>
 
-more one gpio controller use share one interrupt,
-make request interrupt to be shared.
+--acOuGx3oQeOcSZJu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
-Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-Signed-off-by: Song Hui <hui.song_1@nxp.com>
----
- drivers/gpio/gpio-mpc8xxx.c | 21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+On Thu, Sep 05, 2019 at 03:48:48PM -0400, Vivek Goyal wrote:
+> Stop all the virt queues when device is going away. This will ensure that
+> no new requests are submitted to virtqueue and and request will end with
+> error -ENOTCONN.
+>=20
+> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> ---
+>  fs/fuse/virtio_fs.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
 
-diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-index 1a680aa..4006250 100644
---- a/drivers/gpio/gpio-mpc8xxx.c
-+++ b/drivers/gpio/gpio-mpc8xxx.c
-@@ -22,6 +22,7 @@
- #include <linux/irq.h>
- #include <linux/gpio/driver.h>
- #include <linux/bitops.h>
-+#include <linux/interrupt.h>
- 
- #define MPC8XXX_GPIO_PINS	32
- 
-@@ -127,10 +128,9 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
- 		return -ENXIO;
- }
- 
--static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
-+static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
- {
--	struct mpc8xxx_gpio_chip *mpc8xxx_gc = irq_desc_get_handler_data(desc);
--	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct mpc8xxx_gpio_chip *mpc8xxx_gc = (struct mpc8xxx_gpio_chip *)data;
- 	struct gpio_chip *gc = &mpc8xxx_gc->gc;
- 	unsigned int mask;
- 
-@@ -139,8 +139,8 @@ static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
- 	if (mask)
- 		generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
- 						     32 - ffs(mask)));
--	if (chip->irq_eoi)
--		chip->irq_eoi(&desc->irq_data);
-+
-+	return IRQ_HANDLED;
- }
- 
- static void mpc8xxx_irq_unmask(struct irq_data *d)
-@@ -319,6 +319,7 @@ static const struct of_device_id mpc8xxx_gpio_ids[] = {
- 	{ .compatible = "fsl,mpc5125-gpio", .data = &mpc5125_gpio_devtype, },
- 	{ .compatible = "fsl,pq3-gpio",     },
- 	{ .compatible = "fsl,ls1028a-gpio", .data = &ls1028a_gpio_devtype, },
-+	{ .compatible = "fsl,ls1088a-gpio", .data = &ls1028a_gpio_devtype, },
- 	{ .compatible = "fsl,qoriq-gpio",   },
- 	{}
- };
-@@ -408,8 +409,14 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 	if (devtype->gpio_dir_in_init)
- 		devtype->gpio_dir_in_init(gc);
- 
--	irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
--					 mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
-+	ret = request_irq(mpc8xxx_gc->irqn, mpc8xxx_gpio_irq_cascade,
-+		IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade", mpc8xxx_gc);
-+	if (ret) {
-+		pr_err("%s: failed to request_irq(%d), ret = %d\n",
-+				np->full_name, mpc8xxx_gc->irqn, ret);
-+		goto err;
-+	}
-+
- 	return 0;
- err:
- 	iounmap(mpc8xxx_gc->regs);
--- 
-2.9.5
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
 
+--acOuGx3oQeOcSZJu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl1yOUoACgkQnKSrs4Gr
+c8hIyQf/VEB8Z1kkLZJY07A6TpGDbf4zwdPwITwfIrZm8CV5Muj+9w7GN5o9QylC
+HcWecFIGEfC3JXeQdRnq/5rLiAhKXgFkAXo9qkS7uVwLSR1YS+iutJksY2M0V6z0
+sYo8cHSn4X5umbDMrnvlasCdLLAj3IKtaBmHYr8Cm9kOBMLl+H/n77Pvdr36qsoK
+BUNaNZtkGMFtKf+n7nJA1BXi/h+G3RhB6o1hyzdTF0VPLm0muWZda5jgc2cXTHnf
+gQBGQiO/TqCt3bwqiS/fJLIW38/XcDy683UCXkEJiaXcLwX0LgwfHM1zPAVHyx/v
+plygJH26nFKCsOQ2j9GueL6YA3uB2g==
+=VU0e
+-----END PGP SIGNATURE-----
+
+--acOuGx3oQeOcSZJu--
