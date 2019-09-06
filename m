@@ -2,90 +2,105 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE1EC00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17544C00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9743214DE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:56:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF087214DE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:57:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394965AbfIFP4l (ORCPT
+        id S2394969AbfIFP5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 11:56:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52954 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730955AbfIFP4k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 11:56:40 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C440F3090FD1;
-        Fri,  6 Sep 2019 15:56:39 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (dhcp-192-200.str.redhat.com [10.33.192.200])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2D2A95C22C;
-        Fri,  6 Sep 2019 15:56:34 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Eric Chiang <ericchiang@google.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Philippe =?utf-8?Q?Tr=C3=A9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] fs: Add support for an O_MAYEXEC flag on sys_open()
-References: <20190906152455.22757-1-mic@digikod.net>
-        <20190906152455.22757-2-mic@digikod.net>
-Date:   Fri, 06 Sep 2019 17:56:32 +0200
-In-Reply-To: <20190906152455.22757-2-mic@digikod.net> (=?utf-8?Q?=22Micka?=
- =?utf-8?Q?=C3=ABl_Sala=C3=BCn=22's?=
-        message of "Fri, 6 Sep 2019 17:24:51 +0200")
-Message-ID: <87ef0te7v3.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        Fri, 6 Sep 2019 11:57:53 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:47473 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728741AbfIFP5w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 11:57:52 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1Mq1GE-1iRdCD3TDm-00nCjn; Fri, 06 Sep 2019 17:57:31 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Christian Benvenuti <benve@cisco.com>,
+        Nelson Escobar <neescoba@cisco.com>,
+        Parvi Kaustubhi <pkaustub@cisco.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Leon Romanovsky <leon@kernel.org>,
+        Gal Pressman <galpress@amazon.com>,
+        Parav Pandit <parav@mellanox.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Kamal Heib <kamalheib1@gmail.com>,
+        Florian Westphal <fw@strlen.de>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] usnic: avoid overly large buffers on stack
+Date:   Fri,  6 Sep 2019 17:57:17 +0200
+Message-Id: <20190906155730.2750200-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 06 Sep 2019 15:56:40 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:HDVOY8kxC3eE7WALG7hVfJjSyAaTZ+KrGpPg9ZJuJr4ZTdvo8jK
+ f1Wa/p/V5VdaUvKpS6tZcVXcH7QpsfvQ+g6H1/exQ2gHY2eWz1DOj8VT6vclR6fnTt/ZDv6
+ 8XoG/aMJONzPlOPveIz1L6juODhrNmt08eESlBG+9JcCje9aUxS+CXdivVkRQKyrCIqhaRv
+ Jpf8n9+H52aZmMFJ8KlGA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:lM5YSSTMTMM=:TuZtY5jhLgJsRVZQAUYnVN
+ tb1fPknLz/eHVwUCA7Oi/y4qNo8cuZgjwMqn+EpIreYJE79TUEx9jUKc82wc+Zc8naaVd1Fom
+ BO9V6jpQwi+qRKNF9yxGRkc1Nk9NZcuGf7evk12WKOU182xhqNm8Hrmz5Wsu1WL5PMnTOBc1i
+ lAs3MDlttRh+EzIjJLzlIUUCue0+SRc/s4KyXQpDjikUFt2SsZ4CfTePVa+rsoCUmM98qvHnX
+ 8QSHulnXjgeutDP0qpgyhQcbkMoZKKVWqT44k8M/cvqSxwh1fQVXIX9117cj/KDwJz+3yxXmf
+ vXN0hiyaY1HYQu5baLynt8W92uKgpDhFnKmP4n7SJU6aLPv8AjvUe508DPz7unZPfhaRQidVL
+ M/oWtA2eoYtD9HgsAPK0mxh4EhoBDilicgwbx5MN5a9o6A/kXX/N4Yteqtf8qUom9Yw0b3cDC
+ 7FV1UFPg0vzNgFjXyfbpNQR/974UUYSlduQK+nLVqCB0vtgUQWOXf4ngWFMihVYFsTMCffhbD
+ bdRcEBvKiYVPrG7DP2GbxM/+MhEK/PjPIj3JUufLEroW5b2sM7fh70Je4WiIH36A8uI2UKM+I
+ ID8HyzMF+bqAFCKhcUT/Mo/LfB82XIJjEwzFHFK0claq83zcEJMBLNoecPuAUKf6Wk/AJbd9Y
+ rK74+GmZHBZ43KabyIavElUnm3zu0am2at8nbZERwq52SGFmAU6oyvUYiw1Cky8yQZ5H90xpk
+ gnXJILY01U4ixOX3xUCxst4fo4b6lvIDIh22en6QGicoqKHIKtGJ6R32ZL4JOiQC1edNg44XI
+ pmq2PPgWcFWLTZtn8YcmVlVLGDbyA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let's assume I want to add support for this to the glibc dynamic loader,
-while still being able to run on older kernels.
+It's never a good idea to put a 1000-byte buffer on the kernel
+stack. The compiler warns about this instance when usnic_ib_log_vf()
+gets inlined into usnic_ib_pci_probe():
 
-Is it safe to try the open call first, with O_MAYEXEC, and if that fails
-with EINVAL, try again without O_MAYEXEC?
+drivers/infiniband/hw/usnic/usnic_ib_main.c:543:12: error: stack frame size of 1044 bytes in function 'usnic_ib_pci_probe' [-Werror,-Wframe-larger-than=]
 
-Or do I risk disabling this security feature if I do that?
+As this is only called for debugging purposes in the setup path,
+it's trivial to convert to a dynamic allocation.
 
-Do we need a different way for recognizing kernel support.  (Note that
-we cannot probe paths in /proc for various reasons.)
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/infiniband/hw/usnic/usnic_ib_main.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-Thanks,
-Florian
+diff --git a/drivers/infiniband/hw/usnic/usnic_ib_main.c b/drivers/infiniband/hw/usnic/usnic_ib_main.c
+index 03f54eb9404b..c9abe1c01e4e 100644
+--- a/drivers/infiniband/hw/usnic/usnic_ib_main.c
++++ b/drivers/infiniband/hw/usnic/usnic_ib_main.c
+@@ -89,9 +89,15 @@ static void usnic_ib_dump_vf(struct usnic_ib_vf *vf, char *buf, int buf_sz)
+ 
+ void usnic_ib_log_vf(struct usnic_ib_vf *vf)
+ {
+-	char buf[1000];
+-	usnic_ib_dump_vf(vf, buf, sizeof(buf));
++	char *buf = kzalloc(1000, GFP_KERNEL);
++
++	if (!buf)
++		return;
++
++	usnic_ib_dump_vf(vf, buf, 1000);
+ 	usnic_dbg("%s\n", buf);
++
++	kfree(buf);
+ }
+ 
+ /* Start of netdev section */
+-- 
+2.20.0
+
