@@ -5,76 +5,69 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A23C43140
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD6BAC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F20D82178F
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:24:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 965102173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:24:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Bh3hn4Us"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="EvVkZs2J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392775AbfIFTYC (ORCPT
+        id S2392825AbfIFTYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 15:24:02 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:43810 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388998AbfIFTX4 (ORCPT
+        Fri, 6 Sep 2019 15:24:12 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39062 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392997AbfIFTYK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 15:23:56 -0400
-Received: by mail-io1-f68.google.com with SMTP id u185so15172147iod.10
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 12:23:56 -0700 (PDT)
+        Fri, 6 Sep 2019 15:24:10 -0400
+Received: by mail-pf1-f194.google.com with SMTP id s12so5152092pfe.6
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 12:24:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=qJR50YCOwMbxx1IjK9E1aTef9wlkdKgnv5HqeQtRqcM=;
-        b=Bh3hn4UsM6oE18036kSaGShJrvCWLn/X+uasTikKWSblJzZ9D3HytWD8cePVT+jBxI
-         SauJZwWkx8MK5TGGh4tzAeDkM8I8BmZKf+CyrkmvJHZO5og0/PYIjGGi/eHS/rcd0rA+
-         9OTdHEPG2ab+2LbxKYLIYh5tk2sfkLmZCpWso=
+        d=android.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=no7kS2T1qNHP9Zpdwy1E09Unjz4x2T2LCFjYktICQgk=;
+        b=EvVkZs2J1AZ9GTp9kf0rnbiW9t2ITXImmd49lXjLrxM2btzrl5yd/T4Hcqo/dKLr6y
+         Q5j5C5pCfxhbgmewV0/bNfJQ11TPyEMOE3jrODvA82aEojWf9Qagh/WFcF6vaHbvq6Pv
+         ev3h/NdCyySH/YJt+JjM3K4bz5MFm47zXRTobzyogztVYzdQs9Ly0u15OSUf5Lk/j6SB
+         RG9fVhihQPPSJt2EGqZ3gtgMX2daLtUNhaDhavGZdofleGMAejroOkOi4OGSv8cP+w2i
+         XxbWLbE+QmfgowhG25brlvJTcvLuXFDfSOxclhU2h1c30ee7cuEd8IGt1UjKfFDGlYwa
+         Rd3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qJR50YCOwMbxx1IjK9E1aTef9wlkdKgnv5HqeQtRqcM=;
-        b=fIITLaiAlPWNQMV1dfqn5NSLQhlyZT28N0OY7OLFJoXkAFCjgW7sJIdDtU45P8QNLt
-         ze+54HZzbhD3hbLItTqu+bZQKXWtTIp1TDt9nw/BBUIrKeyE8+vAdeCM3p9J+w8BqFgO
-         OVgz9IRAPNXQsepbXwW6wzSV5ZQYBuXvGHlvEsM1+fCj85v5Aa6w7n0zPnnyFgoxE9pB
-         tULEU2xXh33CR5i+ulJr0oknNLb8H6JeLWlrlMl3zs9MyRsI9hJbnAqNCTNUkPP49Vz8
-         ApDv+BP2NtfcFTexlFKh1sAMC04XObtbvrUW+vM/n2RhlCtpThXaHnZRBGjdKKZSGPWs
-         q4Iw==
-X-Gm-Message-State: APjAAAX5BN3hZELP/Q49ib8ARfDNAvCdAWEi53FvdyDOfPeKw7ZMIj75
-        fWzcJ4Hw8bmI2FZugLVD6r05qA==
-X-Google-Smtp-Source: APXvYqy5hNKNaSbwjwB7JTrB3yYUGFNb3GXAP0vGF4wjv9mZrnUkKHMP9pVGLmuyHcBbkR/lMQ30uA==
-X-Received: by 2002:a6b:fc02:: with SMTP id r2mr11259064ioh.15.1567797835630;
-        Fri, 06 Sep 2019 12:23:55 -0700 (PDT)
-Received: from ddavenport4.bld.corp.google.com ([2620:15c:183:0:92f:a80a:519d:f777])
-        by smtp.gmail.com with ESMTPSA id h70sm10931804iof.48.2019.09.06.12.23.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 06 Sep 2019 12:23:55 -0700 (PDT)
-From:   Drew Davenport <ddavenport@chromium.org>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Drew Davenport <ddavenport@chromium.org>,
-        David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>,
-        Jayant Shekhar <jshekhar@codeaurora.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Bruce Wang <bzwang@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH 3/6] drm/msm/dpu: Remove unnecessary NULL checks
-Date:   Fri,  6 Sep 2019 13:23:41 -0600
-Message-Id: <20190906192344.223694-3-ddavenport@chromium.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190906192344.223694-1-ddavenport@chromium.org>
-References: <20190906192344.223694-1-ddavenport@chromium.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=no7kS2T1qNHP9Zpdwy1E09Unjz4x2T2LCFjYktICQgk=;
+        b=oyOzdiTnB7wFEvPZ07dynuWebXGZ36f9nQbqlkETmDylKb2j9iLBH43t2QHHAmSUi7
+         zF+aMwFclMUd93hKlIvOyKCXuQR8QNFHeVV7lktz5YvjtrgzgO+rbLLa8nve4sJO5VOr
+         7+yyljPBQHZwJn/yBig0y+KlET1Jcww70mri262hvlX8wXH0dFHT0bGv4aCCuFgYWI4W
+         YxPJrbqDdfWT19KE5wrou8HdErywHCGccfH5yHJKX9FU7gpvcdrFLWsP64YnyuXmwQm4
+         p7zFshBt52C10bnezdhF5QrtUTyWlWr78w8W64/044+UuwHt+qdPCH/vhRVUZ2o0J0+s
+         FnSg==
+X-Gm-Message-State: APjAAAUBOvbi1QDXuaBcV4otZGeYFbHPdwRhM6ZqizauTA/3rb9kCqe4
+        Q5eGtP6tL6mff4UsealkyMBdeiGDddEZQw==
+X-Google-Smtp-Source: APXvYqxHNghJveR3zrEVoimn0Wso+4JUVbYfHGnGsGo9B8NC/uWVASyxOZhZvPVLoA9ALyNt2tAvJw==
+X-Received: by 2002:a65:64c5:: with SMTP id t5mr9650538pgv.168.1567797849694;
+        Fri, 06 Sep 2019 12:24:09 -0700 (PDT)
+Received: from nebulus.mtv.corp.google.com ([2620:15c:211:200:5404:91ba:59dc:9400])
+        by smtp.gmail.com with ESMTPSA id b24sm7024169pfi.75.2019.09.06.12.24.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Sep 2019 12:24:09 -0700 (PDT)
+From:   Mark Salyzyn <salyzyn@android.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     kernel-team@android.com, Mark Salyzyn <salyzyn@android.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: [PATCH v2] net: enable wireless core features with LEGACY_WEXT_ALLCONFIG
+Date:   Fri,  6 Sep 2019 12:24:00 -0700
+Message-Id: <20190906192403.195620-1-salyzyn@android.com>
+X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -82,239 +75,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drm_device.dev_private is set to a non-NULL msm_drm_private
-struct in msm_drm_init. Successful initialization of msm means
-that dev_private is non-NULL so there is no need to check it
-everywhere.
+In embedded environments the requirements are to be able to pick and
+chose which features one requires built into the kernel.  If an
+embedded environment wants to supports loading modules that have been
+kbuilt out of tree, there is a need to enable hidden configurations
+for legacy wireless core features to provide the API surface for
+them to load.
 
-Signed-off-by: Drew Davenport <ddavenport@chromium.org>
+Introduce CONFIG_LEGACY_WEXT_ALLCONFIG to select all legacy wireless
+extension core features by activating in turn all the associated
+hidden configuration options, without having to specifically select
+any wireless module(s).
+
+Signed-off-by: Mark Salyzyn <salyzyn@android.com>
+Cc: kernel-team@android.com
+Cc: Johannes Berg <johannes@sipsolutions.net>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Marcel Holtmann <marcel@holtmann.org>
+Cc: linux-wireless@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org # 4.19
 ---
+v2: change name and documentation to CONFIG_LEGACY_WEXT_ALLCONFIG
+---
+ net/wireless/Kconfig | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
- drivers/gpu/drm/msm/disp/dpu1/dpu_core_irq.c     |  6 ------
- drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c    |  4 ++--
- drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c         |  4 ++--
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c      | 15 +++++----------
- .../gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c |  2 +-
- .../gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c |  3 +--
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c          | 16 +++-------------
- 7 files changed, 14 insertions(+), 36 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_irq.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_irq.c
-index cdbea38b8697..17f917b718ce 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_irq.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_irq.c
-@@ -349,9 +349,6 @@ void dpu_core_irq_preinstall(struct dpu_kms *dpu_kms)
- 	if (!dpu_kms->dev) {
- 		DPU_ERROR("invalid drm device\n");
- 		return;
--	} else if (!dpu_kms->dev->dev_private) {
--		DPU_ERROR("invalid device private\n");
--		return;
- 	}
- 	priv = dpu_kms->dev->dev_private;
+diff --git a/net/wireless/Kconfig b/net/wireless/Kconfig
+index 67f8360dfcee..0d646cf28de5 100644
+--- a/net/wireless/Kconfig
++++ b/net/wireless/Kconfig
+@@ -17,6 +17,20 @@ config WEXT_SPY
+ config WEXT_PRIV
+ 	bool
  
-@@ -385,9 +382,6 @@ void dpu_core_irq_uninstall(struct dpu_kms *dpu_kms)
- 	if (!dpu_kms->dev) {
- 		DPU_ERROR("invalid drm device\n");
- 		return;
--	} else if (!dpu_kms->dev->dev_private) {
--		DPU_ERROR("invalid device private\n");
--		return;
- 	}
- 	priv = dpu_kms->dev->dev_private;
- 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
-index 09a49b59bb5b..094d74635fb7 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
-@@ -33,13 +33,13 @@ static struct dpu_kms *_dpu_crtc_get_kms(struct drm_crtc *crtc)
- {
- 	struct msm_drm_private *priv;
- 
--	if (!crtc->dev || !crtc->dev->dev_private) {
-+	if (!crtc->dev) {
- 		DPU_ERROR("invalid device\n");
- 		return NULL;
- 	}
- 
- 	priv = crtc->dev->dev_private;
--	if (!priv || !priv->kms) {
-+	if (!priv->kms) {
- 		DPU_ERROR("invalid kms\n");
- 		return NULL;
- 	}
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-index 2ece11262943..ead7d657097c 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-@@ -694,7 +694,7 @@ static void dpu_crtc_disable(struct drm_crtc *crtc,
- 	unsigned long flags;
- 	bool release_bandwidth = false;
- 
--	if (!crtc || !crtc->dev || !crtc->dev->dev_private || !crtc->state) {
-+	if (!crtc || !crtc->dev || !crtc->state) {
- 		DPU_ERROR("invalid crtc\n");
- 		return;
- 	}
-@@ -766,7 +766,7 @@ static void dpu_crtc_enable(struct drm_crtc *crtc,
- 	struct msm_drm_private *priv;
- 	bool request_bandwidth;
- 
--	if (!crtc || !crtc->dev || !crtc->dev->dev_private) {
-+	if (!crtc || !crtc->dev) {
- 		DPU_ERROR("invalid crtc\n");
- 		return;
- 	}
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index 4d2cacd0ce3d..7b37d1eeeab5 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -735,8 +735,7 @@ static int dpu_encoder_resource_control(struct drm_encoder *drm_enc,
- 	struct msm_drm_private *priv;
- 	bool is_vid_mode = false;
- 
--	if (!drm_enc || !drm_enc->dev || !drm_enc->dev->dev_private ||
--			!drm_enc->crtc) {
-+	if (!drm_enc || !drm_enc->dev || !drm_enc->crtc) {
- 		DPU_ERROR("invalid parameters\n");
- 		return -EINVAL;
- 	}
-@@ -1092,7 +1091,7 @@ static void _dpu_encoder_virt_enable_helper(struct drm_encoder *drm_enc)
- 	struct msm_drm_private *priv;
- 	struct dpu_kms *dpu_kms;
- 
--	if (!drm_enc || !drm_enc->dev || !drm_enc->dev->dev_private) {
-+	if (!drm_enc || !drm_enc->dev) {
- 		DPU_ERROR("invalid parameters\n");
- 		return;
- 	}
-@@ -1193,9 +1192,6 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
- 	} else if (!drm_enc->dev) {
- 		DPU_ERROR("invalid dev\n");
- 		return;
--	} else if (!drm_enc->dev->dev_private) {
--		DPU_ERROR("invalid dev_private\n");
--		return;
- 	}
- 
- 	dpu_enc = to_dpu_encoder_virt(drm_enc);
-@@ -1734,8 +1730,7 @@ static void dpu_encoder_vsync_event_handler(struct timer_list *t)
- 	struct msm_drm_private *priv;
- 	struct msm_drm_thread *event_thread;
- 
--	if (!drm_enc->dev || !drm_enc->dev->dev_private ||
--			!drm_enc->crtc) {
-+	if (!drm_enc->dev || !drm_enc->crtc) {
- 		DPU_ERROR("invalid parameters\n");
- 		return;
- 	}
-@@ -1925,7 +1920,7 @@ static int _dpu_encoder_init_debugfs(struct drm_encoder *drm_enc)
- 
- 	char name[DPU_NAME_SIZE];
- 
--	if (!drm_enc->dev || !drm_enc->dev->dev_private) {
-+	if (!drm_enc->dev) {
- 		DPU_ERROR("invalid encoder or kms\n");
- 		return -EINVAL;
- 	}
-@@ -2130,7 +2125,7 @@ static void dpu_encoder_frame_done_timeout(struct timer_list *t)
- 	struct drm_encoder *drm_enc = &dpu_enc->base;
- 	u32 event;
- 
--	if (!drm_enc->dev || !drm_enc->dev->dev_private) {
-+	if (!drm_enc->dev) {
- 		DPU_ERROR("invalid parameters\n");
- 		return;
- 	}
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c
-index 2923b63d95fe..50fe1ed7095c 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c
-@@ -373,7 +373,7 @@ static void dpu_encoder_phys_cmd_tearcheck_config(
- 	}
- 
- 	dpu_kms = phys_enc->dpu_kms;
--	if (!dpu_kms || !dpu_kms->dev || !dpu_kms->dev->dev_private) {
-+	if (!dpu_kms || !dpu_kms->dev) {
- 		DPU_ERROR("invalid device\n");
- 		return;
- 	}
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-index b9c84fb4d4a1..bd333d957add 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-@@ -570,8 +570,7 @@ static void dpu_encoder_phys_vid_disable(struct dpu_encoder_phys *phys_enc)
- 	unsigned long lock_flags;
- 	int ret;
- 
--	if (!phys_enc || !phys_enc->parent || !phys_enc->parent->dev ||
--			!phys_enc->parent->dev->dev_private) {
-+	if (!phys_enc || !phys_enc->parent || !phys_enc->parent->dev) {
- 		DPU_ERROR("invalid encoder/device\n");
- 		return;
- 	}
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-index 58b0485dc375..4a69d8ecf5e1 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-@@ -72,7 +72,7 @@ static int _dpu_danger_signal_status(struct seq_file *s,
- 	struct dpu_danger_safe_status status;
- 	int i;
- 
--	if (!kms->dev || !kms->dev->dev_private || !kms->hw_mdp) {
-+	if (!kms->dev || !kms->hw_mdp) {
- 		DPU_ERROR("invalid arg(s)\n");
- 		return 0;
- 	}
-@@ -157,9 +157,6 @@ static int _dpu_debugfs_show_regset32(struct seq_file *s, void *data)
- 		return 0;
- 
- 	priv = dev->dev_private;
--	if (!priv)
--		return 0;
--
- 	base = dpu_kms->mmio + regset->offset;
- 
- 	/* insert padding spaces, if needed */
-@@ -292,7 +289,7 @@ static void dpu_kms_prepare_commit(struct msm_kms *kms,
- 	dpu_kms = to_dpu_kms(kms);
- 	dev = dpu_kms->dev;
- 
--	if (!dev || !dev->dev_private)
-+	if (!dev)
- 		return;
- 	priv = dev->dev_private;
- 
-@@ -470,9 +467,6 @@ static void _dpu_kms_drm_obj_destroy(struct dpu_kms *dpu_kms)
- 	} else if (!dpu_kms->dev) {
- 		DPU_ERROR("invalid dev\n");
- 		return;
--	} else if (!dpu_kms->dev->dev_private) {
--		DPU_ERROR("invalid dev_private\n");
--		return;
- 	}
- 	priv = dpu_kms->dev->dev_private;
- 
-@@ -809,10 +803,6 @@ static int dpu_kms_hw_init(struct msm_kms *kms)
- 	}
- 
- 	priv = dev->dev_private;
--	if (!priv) {
--		DPU_ERROR("invalid private data\n");
--		return rc;
--	}
- 
- 	atomic_set(&dpu_kms->bandwidth_ref, 0);
- 
-@@ -974,7 +964,7 @@ struct msm_kms *dpu_kms_init(struct drm_device *dev)
- 	struct dpu_kms *dpu_kms;
- 	int irq;
- 
--	if (!dev || !dev->dev_private) {
-+	if (!dev) {
- 		DPU_ERROR("drm device node invalid\n");
- 		return ERR_PTR(-EINVAL);
- 	}
++config LEGACY_WEXT_ALLCONFIG
++	bool "allconfig for legacy wireless extensions"
++	select WIRELESS_EXT
++	select WEXT_CORE
++	select WEXT_PROC
++	select WEXT_SPY
++	select WEXT_PRIV
++	help
++	  Config option used to enable all the legacy wireless extensions to
++	  the core functionality used by add-in modules.
++
++	  If you are not building a kernel to be used for a variety of
++	  out-of-kernel built wireless modules, say N here.
++
+ config CFG80211
+ 	tristate "cfg80211 - wireless configuration API"
+ 	depends on RFKILL || !RFKILL
 -- 
-2.20.1
+2.23.0.187.g17f5b7556c-goog
 
