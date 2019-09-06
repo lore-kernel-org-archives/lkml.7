@@ -2,141 +2,123 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E6FC00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FCFC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:43:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6A0C20650
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C32220842
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:43:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567777389;
+	bh=oCPboVcwffP05i6iQZQMdy+rs6Ty1lZheJJRNHQOumQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZvlRrRjdhzx4gSRoTLSjls0Jupb3cDm/hWspWpFzb3ndr9I0eP71qBRDOOgwCzAzD
+	 ZKV4BZ4jEwcGJJWsDvfKap4Z3Jz8khrEtHutnVNNIdqD88aYhIfPSWdGMO9py4GiRS
+	 8HFldxdC6dSFcUi7EQ8HW5Ei3WztEE6cG+mSJjIo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393353AbfIFNmg (ORCPT
+        id S2393364AbfIFNnI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 09:42:36 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:49567 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388784AbfIFNmg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 09:42:36 -0400
-X-Originating-IP: 2.224.242.101
-Received: from uno.lan (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 1C3CD40015;
-        Fri,  6 Sep 2019 13:42:28 +0000 (UTC)
-From:   Jacopo Mondi <jacopo+renesas@jmondi.org>
-To:     laurent.pinchart@ideasonboard.com,
-        kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
-        horms@verge.net.au, uli@fpond.eu,
-        VenkataRajesh.Kalakodima@in.bosch.com
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>, airlied@linux.ie,
-        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 0/9 drm: rcar-du: Add Color Management Module (CMM)
-Date:   Fri,  6 Sep 2019 15:43:32 +0200
-Message-Id: <20190906134341.9879-1-jacopo+renesas@jmondi.org>
-X-Mailer: git-send-email 2.23.0
+        Fri, 6 Sep 2019 09:43:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47682 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727970AbfIFNnI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 09:43:08 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AFB22082C;
+        Fri,  6 Sep 2019 13:43:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567777387;
+        bh=oCPboVcwffP05i6iQZQMdy+rs6Ty1lZheJJRNHQOumQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ddu2kyb3uipFRZElcO970RXPZdXLSSouiS+scvoCoaSsiXtIN+Fhu9PM9dqtpLE2R
+         p/gqFkJMWiSICPiQX4rA7qT404Zug3oumpORGw/ttZeghuFndMKdoav3BOEt6DW2Rj
+         +jp2vhgrvytTRg+fqAezdMqm0ns4/oyBslcWfdK0=
+Date:   Fri, 6 Sep 2019 14:43:02 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Jan Glauber <jglauber@marvell.com>
+Subject: Re: [PATCH v2 0/6] Rework REFCOUNT_FULL using atomic_fetch_*
+ operations
+Message-ID: <20190906134302.ie7wbdojkzsmrle7@willie-the-truck>
+References: <20190827163204.29903-1-will@kernel.org>
+ <20190828073052.GL2332@hirez.programming.kicks-ass.net>
+ <20190828141439.sqnpm5ff4tgyn66r@willie-the-truck>
+ <201908281353.0EFD0776@keescook>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201908281353.0EFD0776@keescook>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, new iteration of CMM support, with quite a few changes compared to
-v3:
+On Wed, Aug 28, 2019 at 02:03:37PM -0700, Kees Cook wrote:
+> On Wed, Aug 28, 2019 at 03:14:40PM +0100, Will Deacon wrote:
+> > On Wed, Aug 28, 2019 at 09:30:52AM +0200, Peter Zijlstra wrote:
+> > > On Tue, Aug 27, 2019 at 05:31:58PM +0100, Will Deacon wrote:
+> > > > Will Deacon (6):
+> > > >   lib/refcount: Define constants for saturation and max refcount values
+> > > >   lib/refcount: Ensure integer operands are treated as signed
+> > > >   lib/refcount: Remove unused refcount_*_checked() variants
+> > > >   lib/refcount: Move bulk of REFCOUNT_FULL implementation into header
+> > > >   lib/refcount: Improve performance of generic REFCOUNT_FULL code
+> > > >   lib/refcount: Consolidate REFCOUNT_{MAX,SATURATED} definitions
+> 
+> BTW, can you repeat the timing details into the "Improve performance of
+> generic REFCOUNT_FULL code" patch?
 
-References:
-A reference to the v1 cover letter, with some background on the CMM is
-available here:
-https://lkml.org/lkml/2019/6/6/583
-v2:
-https://lore.kernel.org/linux-renesas-soc/20190706140746.29132-10-jacopo+renesas@jmondi.org/
-v3:
-https://lore.kernel.org/linux-renesas-soc/20190825135154.11488-1-jacopo+renesas@jmondi.org/
+Of course.
 
-Change log:
+> > > So I'm not a fan; I itch at the whole racy nature of this thing and I
+> > > find the code less than obvious. Yet, I have to agree it is exceedingly
+> > > unlikely the race will ever actually happen, I just don't want to be the
+> > > one having to debug it.
+> > 
+> > FWIW, I think much the same about the version under arch/x86 ;)
+> > 
+> > > I've not looked at the implementation much; does it do all the same
+> > > checks the FULL one does? The x86-asm one misses a few iirc, so if this
+> > > is similarly fast but has all the checks, it is in fact better.
+> > 
+> > Yes, it passes all of the REFCOUNT_* tests in lkdtm [1] so I agree that
+> > it's an improvement over the asm version.
+> > 
+> > > Can't we make this a default !FULL implementation?
+> > 
+> > My concern with doing that is I think it would make the FULL implementation
+> > entirely pointless. I can't see anybody using it, and it would only exist
+> > as an academic exercise in handling the theoretical races. That's a change
+> > from the current situation where it genuinely handles cases which the
+> > x86-specific code does not and, judging by the Kconfig text, that's the
+> > only reason for its existence.
+> 
+> Looking at timing details, the new implementation is close enough to the
+> x86 asm version that I would be fine to drop the x86-specific case
+> entirely as long as we could drop "FULL" entirely too -- we'd have _one_
+> refcount_t implementation: it would be both complete and fast.
 
-*Bindings/DT:
-- Rebased on renesas-devel-2019-09-03-v5.3-rc7
-- Bindings converted to yaml: thanks Laurent for help
-- s/'cmms'/'renesas,cmms'/ in DU bindings as suggested by Rob
-- s/cmm-<soctype>/<soctype>-cmm/ as suggested by Geert
-- squashed CMM addition for Gen3 SoCs in a single path at the end of
-  the series
+That works for me; I'll spin a new version of this series so you can see
+what it looks like.
 
-*CMM/DU:
-- Only accept fully populated LUT tables, remove the 'size' from the CMM
-  configuration structure as suggested by Laurent
-- Simplify CMM configuration logic: only rely on color_mgmt_changed flag and
-  unconditionally provide a populated LUT table to the cmm_setup() function
-- Protect against probing order inversion (DU is operation while CMM still has
-  not been probed) by adding rcar_cmm_init() operation as it is done for VSP as
-  suggested by Laurent
-- Add CMM function stubs to fix compilation erros when CONFIG_DRM_RCAR_CMM is
-  not selected
-- Minors in the CMM driver as suggested by Laurent
-  - Remove per-soc strings
-  - Make comments style consistent (not using /** anywhere in the .c file,
-    unify comment style)
-  - s/rcar_cmm_load()/rcar_cmm_write()/
-  - Squash cmm configuration and suspend/resume support in rcar_du_kms.c
+> However, I do think a defconfig image size comparison should be done as
+> part of that too. I think this implementation will be larger than the
+> x86 asm one (but not by any amount that I think is a problem).
 
-Testing:
-I have tested by injecting a color inversion LUT table at test program
-initialization:
-https://jmondi.org/cgit/kmsxx/commit/?h=gamma_lut&id=3c6af4db165e5b3dc8996f0a288746c35dbb1cb9
-And by changing the CMM content to switch between a color inversion table
-and a linear table every 50 frames:
-https://jmondi.org/cgit/kmsxx/commit/?h=gamma_lut&id=fe178a43861da7c8e79618e2a13fa0f19dbcd03d
+I've managed to get it down to +0.5% when comparing an x86_64 defconfig
+before these changes, to one afterwards with REFCOUNT_FULL enabled:
 
-Pretty happy with the result, which seems to be consistent across system
-suspend/resume.
+	Total: Before=14762076, After=14835497, chg +0.50%
 
-Testing with real world use cases might be beneficial. Rajesh are you still
-interested in giving this series a spin?
-
-Thanks
-  j
-
-Jacopo Mondi (9):
-  dt-bindings: display: renesas,cmm: Add R-Car CMM documentation
-  dt-bindings: display, renesas,du: Document cmms property
-  drm: rcar-du: Add support for CMM
-  drm: rcar-du: Claim CMM support for Gen3 SoCs
-  drm: rcar-du: kms: Initialize CMM instances
-  drm: rcar-du: crtc: Enable and disable CMMs
-  drm: rcar-du: crtc: Register GAMMA_LUT properties
-  drm: rcar-du: kms: Update CMM in atomic commit tail
-  arm64: dts: renesas: Add CMM units to Gen3 SoCs
-
- .../bindings/display/renesas,cmm.yaml         |  64 +++++
- .../bindings/display/renesas,du.txt           |   5 +
- arch/arm64/boot/dts/renesas/r8a7795.dtsi      |  40 ++-
- arch/arm64/boot/dts/renesas/r8a7796.dtsi      |  28 ++
- arch/arm64/boot/dts/renesas/r8a77965.dtsi     |  28 ++
- arch/arm64/boot/dts/renesas/r8a77990.dtsi     |  22 +-
- arch/arm64/boot/dts/renesas/r8a77995.dtsi     |  22 +-
- drivers/gpu/drm/rcar-du/Kconfig               |   7 +
- drivers/gpu/drm/rcar-du/Makefile              |   1 +
- drivers/gpu/drm/rcar-du/rcar_cmm.c            | 251 ++++++++++++++++++
- drivers/gpu/drm/rcar-du/rcar_cmm.h            |  61 +++++
- drivers/gpu/drm/rcar-du/rcar_du_crtc.c        |  17 ++
- drivers/gpu/drm/rcar-du/rcar_du_crtc.h        |   2 +
- drivers/gpu/drm/rcar-du/rcar_du_drv.c         |  32 ++-
- drivers/gpu/drm/rcar-du/rcar_du_drv.h         |   3 +
- drivers/gpu/drm/rcar-du/rcar_du_group.c       |   8 +
- drivers/gpu/drm/rcar-du/rcar_du_group.h       |   2 +
- drivers/gpu/drm/rcar-du/rcar_du_kms.c         | 106 ++++++++
- drivers/gpu/drm/rcar-du/rcar_du_regs.h        |   5 +
- 19 files changed, 697 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/display/renesas,cmm.yaml
- create mode 100644 drivers/gpu/drm/rcar-du/rcar_cmm.c
- create mode 100644 drivers/gpu/drm/rcar-du/rcar_cmm.h
-
---
-2.23.0
-
+Will
