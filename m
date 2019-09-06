@@ -2,102 +2,216 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39936C43140
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B623C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A56D2070C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:59:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567767594;
-	bh=nri1cRvD93fS1FSuajViJZ1Z2+h/3WzUxR8ezWWos1k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=G1wrRXjpk/pTcULZcZNEGDsEAQrR3ewqhxXYi9JOczRr08kQVxCAdRJGXpcBZlbHF
-	 I08nMnXtrfJIAbDoBenhUy3bHcjYeuZ2eOFfifaX4SJ2SPHcd6Ck0Ms0ngPE2XWY7J
-	 dO0CbFqxHHc/wf+DKUBGEVhgW66bklOy7NCvtMM8=
+	by mail.kernel.org (Postfix) with ESMTP id E24BF20693
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:00:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392130AbfIFK7x (ORCPT
+        id S2392141AbfIFLAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 06:59:53 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55946 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731418AbfIFK7x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 06:59:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=nri1cRvD93fS1FSuajViJZ1Z2+h/3WzUxR8ezWWos1k=; b=efv0xVakc5gcr9ZGopxiCSdI+
-        SjXGitf9TSrgiuS6OByVO1M/MQKQoSXt+cBhS9lxkjkOf80W9Vg9br6JnyurOLa7geq1GyorJzf1L
-        z3bvJNdz0shL4xHdBuUOkTh9XbxLKb5PUM1Lh0a6r3MVUeTJuQzRabDixPWE/40VodJVY=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1i6By0-0001TN-U1; Fri, 06 Sep 2019 10:59:48 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 6454FD02CE7; Fri,  6 Sep 2019 11:59:48 +0100 (BST)
-Date:   Fri, 6 Sep 2019 11:59:48 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Ricard Wanderlof <ricardw@axis.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.4 06/77] ASoC: Fail card instantiation if DAI format
- setup fails
-Message-ID: <20190906105948.GT23391@sirena.co.uk>
-References: <20190904175303.317468926@linuxfoundation.org>
- <20190904175304.060004729@linuxfoundation.org>
- <20190904180952.GF4348@sirena.co.uk>
- <20190905185648.GB24873@kroah.com>
+        Fri, 6 Sep 2019 07:00:48 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:56082 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731418AbfIFLAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 07:00:47 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 3A31F2511DB9331D1880;
+        Fri,  6 Sep 2019 19:00:46 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 6 Sep 2019
+ 19:00:42 +0800
+Subject: Re: [f2fs-dev] [PATCH v4] f2fs: Fix indefinite loop in f2fs_gc()
+To:     Sahitya Tummala <stummala@codeaurora.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+CC:     Chao Yu <chao@kernel.org>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1565185232-11506-1-git-send-email-stummala@codeaurora.org>
+ <2b8f7a88-5204-a4ea-9f80-1056abb30d98@kernel.org>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <355d24c1-b07c-f8ff-1ab9-3f85653ced60@huawei.com>
+Date:   Fri, 6 Sep 2019 19:00:32 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="CMebLzmeJATad/OR"
-Content-Disposition: inline
-In-Reply-To: <20190905185648.GB24873@kroah.com>
-X-Cookie: Don't SANFORIZE me!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <2b8f7a88-5204-a4ea-9f80-1056abb30d98@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Sahitya,
 
---CMebLzmeJATad/OR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Luckily, I can reproduce this issue with generic/269, and have sent another
+patch for the issue, could you please check that one?
 
-On Thu, Sep 05, 2019 at 08:56:48PM +0200, Greg Kroah-Hartman wrote:
-> On Wed, Sep 04, 2019 at 07:09:52PM +0100, Mark Brown wrote:
+Thanks,
 
-> > I nacked this patch when Sasha posted it - it only improves diagnostics
-> > and might make systems that worked by accident break since it turns
-> > things into a hard failure, it won't make anything that didn't work
-> > previously work.
-
-> Now dropped.
-
-Thanks!
-
---CMebLzmeJATad/OR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1yPCMACgkQJNaLcl1U
-h9ALpQf/WK2yXkTwMdpeaQVPdDYQVdZkwsV7MP3epmkRJw9MI+bD/677eAW8GJnc
-Q3DT3rHaaci7UGTXIiBeWkdoxI44lEaFqQtEuDBorC/2eFCRxdsJMDdBQDGKifXM
-yjvcpWWPSOd8HRK65p/mJSUx0Whz8lrGruR3QzzWlXQAFuqXJFVRb01QPOIC2pYi
-zXzLs53IaBdj4fFSBT/K4a7YivqRvPq0dGJQpbNe0JjLTC+Y+i/Lg8vhcYN6u1Wu
-nJSLEgF2DEPeEGCqdnapFhyeF5FBbF0Ipwydgng/UmLwmS1nfPsiF8uCFIYcv6aM
-JcI/REqMlowLymx659maPP7jsAzKlA==
-=A9pj
------END PGP SIGNATURE-----
-
---CMebLzmeJATad/OR--
+On 2019/8/7 22:06, Chao Yu wrote:
+> On 2019-8-7 21:40, Sahitya Tummala wrote:
+>> Policy - Foreground GC, LFS and greedy GC mode.
+>>
+>> Under this policy, f2fs_gc() loops forever to GC as it doesn't have
+>> enough free segements to proceed and thus it keeps calling gc_more
+>> for the same victim segment.  This can happen if the selected victim
+>> segment could not be GC'd due to failed blkaddr validity check i.e.
+>> is_alive() returns false for the blocks set in current validity map.
+>>
+>> Fix this by keeping track of such invalid segments and skip those
+>> segments for selection in get_victim_by_default() to avoid endless
+>> GC loop under such error scenarios. Currently, add this logic under
+>> CONFIG_F2FS_CHECK_FS to be able to root cause the issue in debug
+>> version.
+>>
+>> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+>> ---
+>> v4: Cover all logic with CONFIG_F2FS_CHECK_FS
+>>
+>>  fs/f2fs/gc.c      | 31 +++++++++++++++++++++++++++++--
+>>  fs/f2fs/segment.c | 14 +++++++++++++-
+>>  fs/f2fs/segment.h |  3 +++
+>>  3 files changed, 45 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+>> index 8974672..cbcacbd 100644
+>> --- a/fs/f2fs/gc.c
+>> +++ b/fs/f2fs/gc.c
+>> @@ -382,6 +382,16 @@ static int get_victim_by_default(struct f2fs_sb_info *sbi,
+>>  			nsearched++;
+>>  		}
+>>  
+>> +#ifdef CONFIG_F2FS_CHECK_FS
+>> +		/*
+>> +		 * skip selecting the invalid segno (that is failed due to block
+>> +		 * validity check failure during GC) to avoid endless GC loop in
+>> +		 * such cases.
+>> +		 */
+>> +		if (test_bit(segno, sm->invalid_segmap))
+>> +			goto next;
+>> +#endif
+>> +
+>>  		secno = GET_SEC_FROM_SEG(sbi, segno);
+>>  
+>>  		if (sec_usage_check(sbi, secno))
+>> @@ -602,8 +612,15 @@ static bool is_alive(struct f2fs_sb_info *sbi, struct f2fs_summary *sum,
+>>  {
+>>  	struct page *node_page;
+>>  	nid_t nid;
+>> -	unsigned int ofs_in_node;
+>> +	unsigned int ofs_in_node, segno;
+>>  	block_t source_blkaddr;
+>> +	unsigned long offset;
+>> +#ifdef CONFIG_F2FS_CHECK_FS
+>> +	struct sit_info *sit_i = SIT_I(sbi);
+>> +#endif
+>> +
+>> +	segno = GET_SEGNO(sbi, blkaddr);
+>> +	offset = GET_BLKOFF_FROM_SEG0(sbi, blkaddr);
+>>  
+>>  	nid = le32_to_cpu(sum->nid);
+>>  	ofs_in_node = le16_to_cpu(sum->ofs_in_node);
+>> @@ -627,8 +644,18 @@ static bool is_alive(struct f2fs_sb_info *sbi, struct f2fs_summary *sum,
+>>  	source_blkaddr = datablock_addr(NULL, node_page, ofs_in_node);
+>>  	f2fs_put_page(node_page, 1);
+>>  
+>> -	if (source_blkaddr != blkaddr)
+>> +	if (source_blkaddr != blkaddr) {
+>> +#ifdef CONFIG_F2FS_CHECK_FS
+> 
+> 		unsigned int segno = GET_SEGNO(sbi, blkaddr);
+> 		unsigned int offset = GET_BLKOFF_FROM_SEG0(sbi, blkaddr);
+> 
+> Should be local, otherwise it looks good to me, I think Jaegeuk can help to fix
+> this while merging.
+> 
+> Reviewed-by: Chao Yu <yuchao0@huawei.com>
+> 
+> Thanks,
+> 
+>> +		if (unlikely(check_valid_map(sbi, segno, offset))) {
+>> +			if (!test_and_set_bit(segno, sit_i->invalid_segmap)) {
+>> +				f2fs_err(sbi, "mismatched blkaddr %u (source_blkaddr %u) in seg %u\n",
+>> +						blkaddr, source_blkaddr, segno);
+>> +				f2fs_bug_on(sbi, 1);
+>> +			}
+>> +		}
+>> +#endif
+>>  		return false;
+>> +	}
+>>  	return true;
+>>  }
+>>  
+>> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+>> index a661ac3..ee795b1 100644
+>> --- a/fs/f2fs/segment.c
+>> +++ b/fs/f2fs/segment.c
+>> @@ -806,6 +806,9 @@ static void __remove_dirty_segment(struct f2fs_sb_info *sbi, unsigned int segno,
+>>  		enum dirty_type dirty_type)
+>>  {
+>>  	struct dirty_seglist_info *dirty_i = DIRTY_I(sbi);
+>> +#ifdef CONFIG_F2FS_CHECK_FS
+>> +	struct sit_info *sit_i = SIT_I(sbi);
+>> +#endif
+>>  
+>>  	if (test_and_clear_bit(segno, dirty_i->dirty_segmap[dirty_type]))
+>>  		dirty_i->nr_dirty[dirty_type]--;
+>> @@ -817,9 +820,13 @@ static void __remove_dirty_segment(struct f2fs_sb_info *sbi, unsigned int segno,
+>>  		if (test_and_clear_bit(segno, dirty_i->dirty_segmap[t]))
+>>  			dirty_i->nr_dirty[t]--;
+>>  
+>> -		if (get_valid_blocks(sbi, segno, true) == 0)
+>> +		if (get_valid_blocks(sbi, segno, true) == 0) {
+>>  			clear_bit(GET_SEC_FROM_SEG(sbi, segno),
+>>  						dirty_i->victim_secmap);
+>> +#ifdef CONFIG_F2FS_CHECK_FS
+>> +			clear_bit(segno, sit_i->invalid_segmap);
+>> +#endif
+>> +		}
+>>  	}
+>>  }
+>>  
+>> @@ -4015,6 +4022,10 @@ static int build_sit_info(struct f2fs_sb_info *sbi)
+>>  	sit_i->sit_bitmap_mir = kmemdup(src_bitmap, bitmap_size, GFP_KERNEL);
+>>  	if (!sit_i->sit_bitmap_mir)
+>>  		return -ENOMEM;
+>> +
+>> +	sit_i->invalid_segmap = f2fs_kvzalloc(sbi, bitmap_size, GFP_KERNEL);
+>> +	if (!sit_i->invalid_segmap)
+>> +		return -ENOMEM;
+>>  #endif
+>>  
+>>  	/* init SIT information */
+>> @@ -4517,6 +4528,7 @@ static void destroy_sit_info(struct f2fs_sb_info *sbi)
+>>  	kvfree(sit_i->sit_bitmap);
+>>  #ifdef CONFIG_F2FS_CHECK_FS
+>>  	kvfree(sit_i->sit_bitmap_mir);
+>> +	kvfree(sit_i->invalid_segmap);
+>>  #endif
+>>  	kvfree(sit_i);
+>>  }
+>> diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
+>> index b746028..9370d53 100644
+>> --- a/fs/f2fs/segment.h
+>> +++ b/fs/f2fs/segment.h
+>> @@ -229,6 +229,9 @@ struct sit_info {
+>>  	char *sit_bitmap;		/* SIT bitmap pointer */
+>>  #ifdef CONFIG_F2FS_CHECK_FS
+>>  	char *sit_bitmap_mir;		/* SIT bitmap mirror */
+>> +
+>> +	/* bitmap of segments to be ignored by GC in case of errors */
+>> +	unsigned long *invalid_segmap;
+>>  #endif
+>>  	unsigned int bitmap_size;	/* SIT bitmap size */
+>>  
+>>
+> .
+> 
