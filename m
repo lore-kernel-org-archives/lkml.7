@@ -2,92 +2,113 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED529C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1330C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF4E62082C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:45:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1E2E2082C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:46:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388662AbfIFKp4 (ORCPT
+        id S2388879AbfIFKq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 06:45:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47432 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726080AbfIFKpz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 06:45:55 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9468D878E46;
-        Fri,  6 Sep 2019 10:45:55 +0000 (UTC)
-Received: from localhost (ovpn-117-208.ams2.redhat.com [10.36.117.208])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0ACE81000321;
-        Fri,  6 Sep 2019 10:45:49 +0000 (UTC)
-Date:   Fri, 6 Sep 2019 11:45:49 +0100
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, miklos@szeredi.hu,
-        linux-kernel@vger.kernel.org, virtio-fs@redhat.com,
-        dgilbert@redhat.com, mst@redhat.com
-Subject: Re: [PATCH 04/18] virtiofs: Check connected state for VQ_REQUEST
- queue as well
-Message-ID: <20190906104549.GL5900@stefanha-x1.localdomain>
-References: <20190905194859.16219-1-vgoyal@redhat.com>
- <20190905194859.16219-5-vgoyal@redhat.com>
+        Fri, 6 Sep 2019 06:46:26 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:57113 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbfIFKqZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 06:46:25 -0400
+Received: from fsav404.sakura.ne.jp (fsav404.sakura.ne.jp [133.242.250.103])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x86AkCfe050875;
+        Fri, 6 Sep 2019 19:46:12 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav404.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav404.sakura.ne.jp);
+ Fri, 06 Sep 2019 19:46:11 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav404.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126227201116.bbtec.net [126.227.201.116])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x86AkB0Q050870
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Fri, 6 Sep 2019 19:46:11 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [RFC PATCH] mm, oom: disable dump_tasks by default
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     David Rientjes <rientjes@google.com>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190903144512.9374-1-mhocko@kernel.org>
+ <af0703d2-17e4-1b8e-eb54-58d7743cad60@i-love.sakura.ne.jp>
+ <20190904054004.GA3838@dhcp22.suse.cz>
+ <alpine.DEB.2.21.1909041302290.95127@chino.kir.corp.google.com>
+ <12bcade2-4190-5e5e-35c6-7a04485d74b9@i-love.sakura.ne.jp>
+ <20190905140833.GB3838@dhcp22.suse.cz>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <20ec856d-0f1e-8903-dbe0-bbc8b7a1847a@i-love.sakura.ne.jp>
+Date:   Fri, 6 Sep 2019 19:46:10 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="L/Qt9NZ8t00Dhfad"
-Content-Disposition: inline
-In-Reply-To: <20190905194859.16219-5-vgoyal@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Fri, 06 Sep 2019 10:45:55 +0000 (UTC)
+In-Reply-To: <20190905140833.GB3838@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019/09/05 23:08, Michal Hocko wrote:
+> On Thu 05-09-19 22:39:47, Tetsuo Handa wrote:
+> [...]
+>> There is nothing that prevents users from enabling oom_dump_tasks by sysctl.
+>> But that requires a solution for OOM stalling problem.
+> 
+> You can hardly remove stalling if you are not reducing the amount of
+> output or get it into a different context. Whether the later is
+> reasonable is another question but you are essentially losing "at the
+> OOM event state".
+> 
 
---L/Qt9NZ8t00Dhfad
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I am not losing "at the OOM event state". Please find "struct oom_task_info"
+(for now) embedded into "struct task_struct" which holds "at the OOM event state".
 
-On Thu, Sep 05, 2019 at 03:48:45PM -0400, Vivek Goyal wrote:
-> Right now we are checking ->connected state only for VQ_HIPRIO. Now we wa=
-nt
-> to make use of this method for all queues. So check it for VQ_REQUEST as
-> well.
->=20
-> This will be helpful if device has been removed and virtqueue is gone. In
-> that case ->connected will be false and request can't be submitted anymore
-> and user space will see error -ENOTCONN.
->=20
-> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-> ---
->  fs/fuse/virtio_fs.c | 6 ++++++
->  1 file changed, 6 insertions(+)
+And my patch moves "printk() from dump_tasks()" from OOM context to WQ context.
+Thus, I do remove stalling by defer printing of "struct oom_task_info" until
+the OOM killer sends SIGKILL and the OOM reaper starts reclaiming memory.
 
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-
---L/Qt9NZ8t00Dhfad
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl1yONwACgkQnKSrs4Gr
-c8hiJQf/RcdMwTruxvR/8Bl1CjfN+mUt21UCtv0K/otHklhGEdna7AzGT1QFFBqi
-iyQUlYckbqC72mhKLNOWT/I8JJkq3jUS+xUf2i/qzNv/4B3yVfCFazfumOIcb7P+
-XriTd61VYMSaPfJRPXLvn+oxLknVB9LohRBQHZc0ljt339uGCt9YBlc38G2/XRud
-PT41SRg8rwBjDyfqx3OVTzL7kgxdXaM5ZbUJo24/To3ZQdmzO/QWWDJqUCGi0kCQ
-r5x6rkMUjd9gZCIUcgio7ourUi3+gfQA+sIQHU3FUH+UCyL7+nM5XM61n7t80BpH
-P8ACIKgUO0IDNTm9uaTHnuUTZAUrrw==
-=+Vva
------END PGP SIGNATURE-----
-
---L/Qt9NZ8t00Dhfad--
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -639,6 +639,21 @@ struct wake_q_node {
+ 	struct wake_q_node *next;
+ };
+ 
++/* Memory usage and misc info as of invocation of OOM killer. */
++struct oom_task_info {
++	struct list_head list;
++	unsigned int seq;
++	char comm[TASK_COMM_LEN];
++	pid_t pid;
++	uid_t uid;
++	pid_t tgid;
++	unsigned long total_vm;
++	unsigned long mm_rss;
++	unsigned long pgtables_bytes;
++	unsigned long swapents;
++	int score_adj;
++};
++
+ struct task_struct {
+ #ifdef CONFIG_THREAD_INFO_IN_TASK
+ 	/*
+@@ -1260,7 +1275,7 @@ struct task_struct {
+ #ifdef CONFIG_MMU
+ 	struct task_struct		*oom_reaper_list;
+ #endif
+-	struct list_head		oom_victim_list;
++	struct oom_task_info		oom_task_info;
+ #ifdef CONFIG_VMAP_STACK
+ 	struct vm_struct		*stack_vm_area;
+ #endif
