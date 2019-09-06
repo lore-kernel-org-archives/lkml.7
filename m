@@ -6,60 +6,62 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FEFC00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 22:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7023C00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 22:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9EE020854
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 22:23:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFC74207FC
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 22:23:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567808623;
-	bh=bZdcjHRTRictQKuKHROlwLDaTmKRAORwUFoQbRhpj28=;
+	s=default; t=1567808630;
+	bh=7fWT4pSEpV668ptngcAoGmXNSeOFGFx6ayqh1U9b/uc=;
 	h=In-Reply-To:References:To:From:Cc:Subject:Date:List-ID:From;
-	b=ljJLIJr9iLkaw+cj6SauF957h730htxbPrFCSZA1W3vpTtGowMnBhc875I/D8+NeQ
-	 LUaH65zAda9+xoqmyeQK50V9DvhhNewzOVNBlXZ7X95uF/fMJvUWrIFmY/TXPUstQs
-	 nPNThsFr+uCNSBI7xfHljXgQHaOeV/1rqpPsvjDI=
+	b=vLTrWPKknHjfpEcfRaXvDR3qcU/JOmTcfHpym8OqQCRiwayChvFgPFzmYhWuWITC1
+	 5vzHjO5LKZTwgPm1DBwgs807ALAmX0xsI8ZMfG5y6N+bBe+ujNfnPdWCSKXqO+TkPD
+	 eqU/sXUoL9xO/egkWZez1y5saf6zHIuopEiABqfI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392369AbfIFWXn (ORCPT
+        id S2404870AbfIFWXu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 18:23:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55668 "EHLO mail.kernel.org"
+        Fri, 6 Sep 2019 18:23:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391961AbfIFWXm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 18:23:42 -0400
+        id S2391961AbfIFWXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 18:23:49 -0400
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E63C2207FC;
-        Fri,  6 Sep 2019 22:23:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04419214E0;
+        Fri,  6 Sep 2019 22:23:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567808622;
-        bh=bZdcjHRTRictQKuKHROlwLDaTmKRAORwUFoQbRhpj28=;
+        s=default; t=1567808629;
+        bh=7fWT4pSEpV668ptngcAoGmXNSeOFGFx6ayqh1U9b/uc=;
         h=In-Reply-To:References:To:From:Cc:Subject:Date:From;
-        b=DZ6igBgMOMpRoIV4Lq6HqTpdhr2Z7iGqIkhs8+ySpg6iV9iUejH5iUEkMTxD4A0VZ
-         aX9iy9LAUaxyqPWfQJdUPXtfHMOGVO8gpngAezv1MyZ1MD0b+z3A/JWBNGzQFDC8JY
-         HQ3HdZ14sHe6zjmvhx7iYeToJ8rKdCyCLnTCCKzg=
+        b=PcVCeOpwb38RDWS/yuj5NA6PzqfUXRkDLDdWnyHqWvGf+ibd3zRGHXkz+W5PI+Mi/
+         uQsMpsP4fmSBvZDsCFX2sxrmLFU0QaBs7hGaJzuUfm9PQIP57QxduygJsaYI5UMf8Q
+         yltad5HTkUhYeC0w5OhY+BKUvA026HZlDJ5p5wmc=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190825141848.17346-2-joel@jms.id.au>
-References: <20190825141848.17346-1-joel@jms.id.au> <20190825141848.17346-2-joel@jms.id.au>
+In-Reply-To: <20190825141848.17346-3-joel@jms.id.au>
+References: <20190825141848.17346-1-joel@jms.id.au> <20190825141848.17346-3-joel@jms.id.au>
 To:     Joel Stanley <joel@jms.id.au>,
         Michael Turquette <mturquette@baylibre.com>
 From:   Stephen Boyd <sboyd@kernel.org>
 Cc:     Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh+dt@kernel.org>,
         linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org
-Subject: Re: [PATCH v2 1/2] clk: aspeed: Move structures to header
+Subject: Re: [PATCH v2 2/2] clk: Add support for AST2600 SoC
 User-Agent: alot/0.8.1
-Date:   Fri, 06 Sep 2019 15:23:41 -0700
-Message-Id: <20190906222341.E63C2207FC@mail.kernel.org>
+Date:   Fri, 06 Sep 2019 15:23:48 -0700
+Message-Id: <20190906222349.04419214E0@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Joel Stanley (2019-08-25 07:18:47)
-> They will be reused by the ast2600 driver.
+Quoting Joel Stanley (2019-08-25 07:18:48)
+> The ast2600 is a new BMC SoC from ASPEED. It contains many more clocks
+> than the previous iterations, so support is broken out into it's own
+> driver.
 >=20
 > Signed-off-by: Joel Stanley <joel@jms.id.au>
 > ---
