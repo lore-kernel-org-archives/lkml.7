@@ -2,73 +2,132 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D21C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E50C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4057206CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:23:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42AC9206CD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:24:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sPVCnusf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403993AbfIFMX7 (ORCPT
+        id S2391371AbfIFMYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 08:23:59 -0400
-Received: from gate.crashing.org ([63.228.1.57]:51751 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731928AbfIFMX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 08:23:58 -0400
-Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x86CNoUZ027069;
-        Fri, 6 Sep 2019 07:23:50 -0500
-Received: (from segher@localhost)
-        by gate.crashing.org (8.14.1/8.14.1/Submit) id x86CNnID027066;
-        Fri, 6 Sep 2019 07:23:49 -0500
-X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
-Date:   Fri, 6 Sep 2019 07:23:49 -0500
-From:   Segher Boessenkool <segher@kernel.crashing.org>
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "gcc-patches@gcc.gnu.org" <gcc-patches@gcc.gnu.org>
-Subject: Re: [PATCH v2 4/6] compiler-gcc.h: add asm_inline definition
-Message-ID: <20190906122349.GZ9749@gate.crashing.org>
-References: <20190829083233.24162-1-linux@rasmusvillemoes.dk> <20190830231527.22304-1-linux@rasmusvillemoes.dk> <20190830231527.22304-5-linux@rasmusvillemoes.dk> <CAKwvOdktYpMH8WnEQwNE2JJdKn4w0CHv3L=YHkqU2JzQ6Qwkew@mail.gmail.com> <a5085133-33da-6c13-6953-d18cbc6ad3f5@rasmusvillemoes.dk> <20190905134535.GP9749@gate.crashing.org> <CANiq72nXXBgwKcs36R+uau2o1YypfSFKAYWV2xmcRZgz8LRQww@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANiq72nXXBgwKcs36R+uau2o1YypfSFKAYWV2xmcRZgz8LRQww@mail.gmail.com>
-User-Agent: Mutt/1.4.2.3i
+        Fri, 6 Sep 2019 08:24:35 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41172 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731928AbfIFMYe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 08:24:34 -0400
+Received: by mail-lj1-f193.google.com with SMTP id a4so5814598ljk.8
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 05:24:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uEuqyoR6pX9WcKO2lv8Qx9uofetASJrnmmBj7HQZAO0=;
+        b=sPVCnusfoWpyRZ2QVHQwTwTXqVDSLABe1kb/Mev99Hg2vqfHfoVLATzkVRi2+ZQlU/
+         jUe4bKWmFENp+T5qqbKfZENo1l8dvYqIfw+OK9uKx8yblxrFiCq65laNMqVAldjVdmmu
+         1GzOuoVP5R+l+wfB6mShSS7GmPqISpD/ueZPYKZfKCo4BCRz7iD18iYuQ9oIlLVoA3Ah
+         /NpIXrmXWC8JrXAC3FFaQ/G2EWcWlJXui2gM4J+oZH/lDDSMKALFRDkn2EyJjthC+RdX
+         ZLl3lqv9OoD5ojMhnCCfHGU7MR8CdPT6nkoAHaWC5Fw6UNvT81yS99ZKj8c7hFrkikKG
+         +JZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uEuqyoR6pX9WcKO2lv8Qx9uofetASJrnmmBj7HQZAO0=;
+        b=LYWN0B78NqSKCY6en8SkJZB3WNtpSx7/WGceY0QOBx4ycQM1ibKERKd9pp6ZWwfSjn
+         mcoFr5BZPm+qpcOedBSWaS+0jZvIME9wf+h2VLXgJV/7Spbot6ABqRypZjF/FjLS3shl
+         WkIIYJK0CE/vEQu80uxPtBxMiqnVQZKdMGc9K4pgdeAxK/UtjQxHI2Ed1AyvU2MMwGL8
+         cKqzETC5iheC7Fm2hsSk2GTZVguvVAeV8xw4sqU+am1KXNSZjW+UF02wG4R1xPYyfbED
+         TvqeJZdzx5APJp9gYal1FmLDF2gRfEfRA/kZPqFDXbwc/1DAhjIry/LzvrR9LWK9e9a9
+         BjQg==
+X-Gm-Message-State: APjAAAUZ7ScM0GG/cbL8nvbGptufkaGwABhMuF9BJGrA8fCbGRF788M7
+        3AUGXwnz8WewhjlSrMH6UvcE/h8/JbELkNsk2OY=
+X-Google-Smtp-Source: APXvYqygEaAWPMGIe4tWR6VpyFc1DI2SYZ2tryPFQlAxF5bTrdZ+Bc90vgs+nITDv56N7g83GkVN1pcDuglS9Aq6kkY=
+X-Received: by 2002:a2e:9104:: with SMTP id m4mr5521513ljg.28.1567772673112;
+ Fri, 06 Sep 2019 05:24:33 -0700 (PDT)
+MIME-Version: 1.0
+References: <1567708980-8804-1-git-send-email-jrdr.linux@gmail.com> <20190905185910.GS29434@bombadil.infradead.org>
+In-Reply-To: <20190905185910.GS29434@bombadil.infradead.org>
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+Date:   Fri, 6 Sep 2019 17:54:21 +0530
+Message-ID: <CAFqt6zZ_M3_Jr_08SO+OnnurWNbLJJsNZvVDZOnjh88vzaiXGg@mail.gmail.com>
+Subject: Re: [PATCH] mm/memory.c: Convert to use vmf_error()
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>, airlied@redhat.com,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Linux-MM <linux-mm@kvack.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 05:52:44PM +0200, Miguel Ojeda wrote:
-> On Thu, Sep 5, 2019 at 3:45 PM Segher Boessenkool
-> <segher@kernel.crashing.org> wrote:
-> >
-> > [ That's not what a feature test macro is; a feature test macro allows the
-> >   user to select some optional behaviour.  Things like _GNU_SOURCE.  ]
-> 
-> Yes and no. GNU libc defines feature test macros like you say, but
-> C++'s feature macros are like Rasmus/Nick are saying. I think libc's
+On Fri, Sep 6, 2019 at 12:29 AM Matthew Wilcox <willy@infradead.org> wrote:
+>
+> On Fri, Sep 06, 2019 at 12:13:00AM +0530, Souptick Joarder wrote:
+> > +++ b/mm/memory.c
+> > @@ -1750,13 +1750,10 @@ static vm_fault_t __vm_insert_mixed(struct vm_area_struct *vma,
+> >       } else {
+> >               return insert_pfn(vma, addr, pfn, pgprot, mkwrite);
+> >       }
+> > -
+> > -     if (err == -ENOMEM)
+> > -             return VM_FAULT_OOM;
+> > -     if (err < 0 && err != -EBUSY)
+> > -             return VM_FAULT_SIGBUS;
+> > -
+> > -     return VM_FAULT_NOPAGE;
+> > +     if (!err || err == -EBUSY)
+> > +             return VM_FAULT_NOPAGE;
+> > +     else
+> > +             return vmf_error(err);
+> >  }
+>
+> My plan is to convert insert_page() to return a VM_FAULT error code like
+> insert_pfn() does.  Need to finish off the vm_insert_page() conversions
+> first ;-)
 
-I can't find anything with "feature" and "macros" in the C++ standard,
-it's "predefined macros" there I guess?  In C, it is also "predefined
-macros" in general, and there is "conditional feature macros".
+Previously we have problem while converting vm_insert_page() to return
+vm_fault_t.
 
-> definition is weird, I would call those "feature selection macros"
-> instead, because the user is selecting between some features (whether
-> to enable or not, for instance), rather than testing for the features.
+vm_insert_page() is called from different drivers. Some of them are
+already converted
+to use vm_map_pages()/ vm_map_pages_zero(). But still we left with few users.
 
-Sure.  But the name is traditional, many decades old, it predates glibc.
-Using an established name to mean pretty much the opposite of what it
-normally does is a bit confusing, never mind if that usage makes much
-sense ;-)
+drivers/media/usb/usbvision/usbvision-video.c#L1045
+mm/vmalloc.c#L2969
 
+These 2 can be converted with something like vm_map_vmalloc_pages().
+I am working on it. Will post it in sometime.
 
-Segher
+drivers/android/binder_alloc.c#L259 (have objection)
+drivers/infiniband/hw/efa/efa_verbs.c#L1701
+drivers/infiniband/hw/mlx5/main.c#L2085 (have objection as using
+vm_map_pages_zero() doesn't make sense)
+drivers/xen/gntalloc.c#L548 (have limitation)
+kernel/kcov.c#L297 (have objection)
+net/ipv4/tcp.c#L1799
+net/packet/af_packet.c#L4453
+
+But these are the places where replacing vm_insert_page() is bit
+difficult/ have objection.
+In some cases, maintainers/ reviewers will not agree to replace
+vm_insert_page().
+
+In  other scenario, if we change return type of vm_insert_page() to vm_fault_t,
+we end up with adding few lines of conversion code from vm_fault_t to errno
+in drivers which is not a correct way to go with.
+
+Any suggestion, how to solve this ?
