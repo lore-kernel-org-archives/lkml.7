@@ -2,132 +2,189 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF5B7C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 23:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AD5C43140
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 23:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81D57207FC
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 23:02:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="ABcmNdnf"
+	by mail.kernel.org (Postfix) with ESMTP id 35BB4207FC
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 23:04:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392707AbfIFXC0 (ORCPT
+        id S2405045AbfIFXEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 19:02:26 -0400
-Received: from esa3.hc3370-68.iphmx.com ([216.71.145.155]:52996 "EHLO
-        esa3.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392182AbfIFXC0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 19:02:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1567810944;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=dpPsk8LE83368fkJgEcOsXssOy2FoPlssTTZn0BFLZY=;
-  b=ABcmNdnfZj5F3awRBT4ElXugV/R4FAhj9Y5NMbAwDP8QFMcbfVT8QoCG
-   5ii7BByOHE/QFBuEuws6g2tn8JWy/0BQxxmf509uDENhhpwty7vWqv3DP
-   Yc0s5yanL0PP9qGomas689QvLoi3HyvmKBV34Xu83D+zzQVMDPJgnhzL4
-   w=;
-Authentication-Results: esa3.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=igor.druzhinin@citrix.com; spf=Pass smtp.mailfrom=igor.druzhinin@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa3.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  igor.druzhinin@citrix.com) identity=pra;
-  client-ip=162.221.158.21; receiver=esa3.hc3370-68.iphmx.com;
-  envelope-from="igor.druzhinin@citrix.com";
-  x-sender="igor.druzhinin@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa3.hc3370-68.iphmx.com: domain of
-  igor.druzhinin@citrix.com designates 162.221.158.21 as
-  permitted sender) identity=mailfrom;
-  client-ip=162.221.158.21; receiver=esa3.hc3370-68.iphmx.com;
-  envelope-from="igor.druzhinin@citrix.com";
-  x-sender="igor.druzhinin@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83 ~all"
-Received-SPF: None (esa3.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa3.hc3370-68.iphmx.com;
-  envelope-from="igor.druzhinin@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: T/9zojaCofQTVlg9JytA1HFg6m2EOIp6isp71QNFOWodT3M/pxCZDFS6Tp7lRml6yh9gRo2kio
- k4m0NoQDKq4gwgl/vh+1lZsUVEdxbh0ykvTE3sxXrqKw8IeRa4vj4u+eAuPXXOqnOd03HFyjme
- oMU975HElEZIHLolgJex75ZNWkzp3vEu7c6F6MWHfuf8EvN3yzZL2fw+bqaBQuuOUXRimGOswx
- omBipzSNypUdsO2QvhRuh8Ky9w7+glJ3gnAXM8VxjTLQ0iyvFQraFIUR4PtigIttZLRI4ee31Q
- 6qM=
-X-SBRS: 2.7
-X-MesageID: 5266131
-X-Ironport-Server: esa3.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.64,474,1559534400"; 
-   d="scan'208";a="5266131"
-Subject: Re: [PATCH] xen/pci: try to reserve MCFG areas earlier
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        <xen-devel@lists.xenproject.org>, <linux-kernel@vger.kernel.org>
-CC:     <jgross@suse.com>
-References: <1567556431-9809-1-git-send-email-igor.druzhinin@citrix.com>
- <5054ad91-5b87-652c-873a-b31758948bd7@oracle.com>
-From:   Igor Druzhinin <igor.druzhinin@citrix.com>
-Message-ID: <e3114d56-51cd-b973-1ada-f6a60a7e99cc@citrix.com>
-Date:   Sat, 7 Sep 2019 00:00:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 6 Sep 2019 19:04:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54772 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390944AbfIFXEe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 19:04:34 -0400
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com [209.85.167.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BE125C04BD48
+        for <linux-kernel@vger.kernel.org>; Fri,  6 Sep 2019 23:04:33 +0000 (UTC)
+Received: by mail-lf1-f71.google.com with SMTP id p15so1727031lfc.20
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 16:04:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=oxoH+WSworCrDFgeDCI681cyvPIJ/tnGjW05hqdt5DA=;
+        b=DlZJZlZNWXbmFAuvbIQyYKeeFdP74iTY43WZFVcBHh1R4KMjLfYKhoEOfliLqBOn15
+         clHdH4DZKcJdcaKzkpfQ1DLV4nDGP9mhGgEAOOy4VHb+PxXSPHHAxYjUpGdi1eMNkFjV
+         DOzMTTXwctNdY2jj3VrZtuah0HQzK+zB6C70GUfq7NCUlYtkfvXhJ3ERrcG8qcOUf9lA
+         FiJRCTwHbwSLta/aijZ44OHyuD/U2g3NY2ZSKikrLX0oE6TlDD9neKtn5w1uCdpBPb3g
+         G6HYF8d+Z+gLVIhViIjSGDzu476P3EvSd8y4xRZeJUExsQK3mI4afWmiuDgvwWpjMHo1
+         4fsg==
+X-Gm-Message-State: APjAAAUyBWm+Xn+/MwWGDdXC9IpMjBuK7INXxTVYVUARW0XZDnxh9OZB
+        u8o4bqlrsUWm0WOK6mYyEJlv+iRfDlAhkUiH/zsQv+oey1PNfV00X9OgYebmb5vQBBCCPzDEVVw
+        HvlPWldyZJeyovyr/FM5Ls0Xp
+X-Received: by 2002:a2e:884d:: with SMTP id z13mr6924655ljj.62.1567811070516;
+        Fri, 06 Sep 2019 16:04:30 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwsCIFvk5JgnR0MRQXhHrD2Joc0ZFQ3Mmb520dfURv4Nwe7K1X8zUHWhWYRqWew2CEQyRERqw==
+X-Received: by 2002:a2e:884d:: with SMTP id z13mr6924642ljj.62.1567811070259;
+        Fri, 06 Sep 2019 16:04:30 -0700 (PDT)
+Received: from alrua-x1.borgediget.toke.dk (borgediget.toke.dk. [85.204.121.218])
+        by smtp.gmail.com with ESMTPSA id k28sm1375984lfj.33.2019.09.06.16.04.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Sep 2019 16:04:29 -0700 (PDT)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id E1D5D18061B; Sat,  7 Sep 2019 00:04:27 +0100 (WEST)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Jesper Dangaard Brouer <jbrouer@redhat.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     syzbot <syzbot+4e7a85b1432052e8d6f8@syzkaller.appspotmail.com>,
+        bpf <bpf@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: general protection fault in dev_map_hash_update_elem
+In-Reply-To: <20190906145408.05406b0f@carbon>
+References: <0000000000005091a70591d3e1d9@google.com> <CAADnVQK94boXD8Y=g1LsBtNG4wrYQ0Jnjxhq7hdxvyBKZuPwXw@mail.gmail.com> <20190906145408.05406b0f@carbon>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Sat, 07 Sep 2019 00:04:27 +0100
+Message-ID: <87woelxc04.fsf@toke.dk>
 MIME-Version: 1.0
-In-Reply-To: <5054ad91-5b87-652c-873a-b31758948bd7@oracle.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Jesper Dangaard Brouer <jbrouer@redhat.com> writes:
 
+> On Thu, 5 Sep 2019 14:44:37 -0700
+> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+>
+>> On Thu, Sep 5, 2019 at 1:08 PM syzbot
+>> <syzbot+4e7a85b1432052e8d6f8@syzkaller.appspotmail.com> wrote:
+>> >
+>> > Hello,
+>> >
+>> > syzbot found the following crash on:
+>> >
+>> > HEAD commit:    6d028043 Add linux-next specific files for 20190830
+>> > git tree:       linux-next
+>> > console output: https://syzkaller.appspot.com/x/log.txt?x=135c1a92600000
+>> > kernel config:  https://syzkaller.appspot.com/x/.config?x=82a6bec43ab0cb69
+>> > dashboard link: https://syzkaller.appspot.com/bug?extid=4e7a85b1432052e8d6f8
+>> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=109124e1600000
+>> >
+>> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+>> > Reported-by: syzbot+4e7a85b1432052e8d6f8@syzkaller.appspotmail.com
+>> >
+>> > kasan: CONFIG_KASAN_INLINE enabled
+>> > kasan: GPF could be caused by NULL-ptr deref or user memory access
+>> > general protection fault: 0000 [#1] PREEMPT SMP KASAN
+>> > CPU: 1 PID: 10235 Comm: syz-executor.0 Not tainted 5.3.0-rc6-next-20190830
+>> > #75
+>> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+>> > Google 01/01/2011
+>> > RIP: 0010:__write_once_size include/linux/compiler.h:203 [inline]
+>> > RIP: 0010:__hlist_del include/linux/list.h:795 [inline]
+>> > RIP: 0010:hlist_del_rcu include/linux/rculist.h:475 [inline]
+>> > RIP: 0010:__dev_map_hash_update_elem kernel/bpf/devmap.c:668 [inline]
+>> > RIP: 0010:dev_map_hash_update_elem+0x3c8/0x6e0 kernel/bpf/devmap.c:691
+>> > Code: 48 89 f1 48 89 75 c8 48 c1 e9 03 80 3c 11 00 0f 85 d3 02 00 00 48 b9
+>> > 00 00 00 00 00 fc ff df 48 8b 53 10 48 89 d6 48 c1 ee 03 <80> 3c 0e 00 0f
+>> > 85 97 02 00 00 48 85 c0 48 89 02 74 38 48 89 55 b8
+>> > RSP: 0018:ffff88808d607c30 EFLAGS: 00010046
+>> > RAX: 0000000000000000 RBX: ffff8880a7f14580 RCX: dffffc0000000000
+>> > RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8880a7f14588
+>> > RBP: ffff88808d607c78 R08: 0000000000000004 R09: ffffed1011ac0f73
+>> > R10: ffffed1011ac0f72 R11: 0000000000000003 R12: ffff88809f4e9400
+>> > R13: ffff88809b06ba00 R14: 0000000000000000 R15: ffff88809f4e9528
+>> > FS:  00007f3a3d50c700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+>> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> > CR2: 00007feb3fcd0000 CR3: 00000000986b9000 CR4: 00000000001406e0
+>> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>> > Call Trace:
+>> >   map_update_elem+0xc82/0x10b0 kernel/bpf/syscall.c:966
+>> >   __do_sys_bpf+0x8b5/0x3350 kernel/bpf/syscall.c:2854
+>> >   __se_sys_bpf kernel/bpf/syscall.c:2825 [inline]
+>> >   __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:2825
+>> >   do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+>> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>> > RIP: 0033:0x459879
+>> > Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7
+>> > 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
+>> > ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+>> > RSP: 002b:00007f3a3d50bc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+>> > RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459879
+>> > RDX: 0000000000000020 RSI: 0000000020000040 RDI: 0000000000000002
+>> > RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+>> > R10: 0000000000000000 R11: 0000000000000246 R12: 00007f3a3d50c6d4
+>> > R13: 00000000004bfc86 R14: 00000000004d1960 R15: 00000000ffffffff
+>> > Modules linked in:
+>> > ---[ end trace 083223e21dbd0ae5 ]---
+>> > RIP: 0010:__write_once_size include/linux/compiler.h:203 [inline]
+>> > RIP: 0010:__hlist_del include/linux/list.h:795 [inline]
+>> > RIP: 0010:hlist_del_rcu include/linux/rculist.h:475 [inline]
+>> > RIP: 0010:__dev_map_hash_update_elem kernel/bpf/devmap.c:668 [inline]
+>> > RIP: 0010:dev_map_hash_update_elem+0x3c8/0x6e0 kernel/bpf/devmap.c:691  
+>> 
+>> Toke,
+>> please take a look.
+>> Thanks!
+>
+> Hi Toke,
+>
+> I think the problem is that you read:
+>  old_dev = __dev_map_hash_lookup_elem(map, idx);
+>
+> Before holding the lock dtab->index_lock... 
+>
+> I'm not sure this is the correct fix, but I think below change should
+> solve the issue (not even compile tested):
+>
+> [bpf-next]$ git diff
+>
+> diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
+> index 9af048a932b5..c41854a68e9e 100644
+> --- a/kernel/bpf/devmap.c
+> +++ b/kernel/bpf/devmap.c
+> @@ -664,6 +664,9 @@ static int __dev_map_hash_update_elem(struct net *net, struct bpf_map *map,
+>  
+>         spin_lock_irqsave(&dtab->index_lock, flags);
+>  
+> +       /* Re-read old_dev while holding lock*/
+> +       old_dev = __dev_map_hash_lookup_elem(map, idx);
+> +
+>         if (old_dev) {
+>                 hlist_del_rcu(&old_dev->index_hlist);
+>         } else {
 
-On 06/09/2019 23:30, Boris Ostrovsky wrote:
-> On 9/3/19 8:20 PM, Igor Druzhinin wrote:
->> If MCFG area is not reserved in E820, Xen by default will defer its usage
->> until Dom0 registers it explicitly after ACPI parser recognizes it as
->> a reserved resource in DSDT. Having it reserved in E820 is not
->> mandatory according to "PCI Firmware Specification, rev 3.2" (par. 4.1.2)
->> and firmware is free to keep a hole E820 in that place. Xen doesn't know
->> what exactly is inside this hole since it lacks full ACPI view of the
->> platform therefore it's potentially harmful to access MCFG region
->> without additional checks as some machines are known to provide
->> inconsistent information on the size of the region.
->>
->> Now xen_mcfg_late() runs after acpi_init() which is too late as some basic
->> PCI enumeration starts exactly there. Trying to register a device prior
->> to MCFG reservation causes multiple problems with PCIe extended
->> capability initializations in Xen (e.g. SR-IOV VF BAR sizing). There are
->> no convenient hooks for us to subscribe to so try to register MCFG
->> areas earlier upon the first invocation of xen_add_device(). 
-> 
-> 
-> Where is MCFG parsed? pci_arch_init()?
+I think you're right that it's a race between reading the old_dev ptr
+and the removal, leading to attempts to remove the same element twice.
 
-It happens twice:
-1) first time early one in pci_arch_init() that is arch_initcall - that
-time pci_mmcfg_list will be freed immediately there because MCFG area is
-not reserved in E820;
-2) second time late one in acpi_init() which is subsystem_initcall right
-before where PCI enumeration starts - this time ACPI tables will be
-checked for a reserved resource and pci_mmcfg_list will be finally
-populated.
+Your patch would be one way to fix it, another would be to check the
+pointer for list poison before removing it. Let me run both approaches
+by the bot to make sure it actually fixes the bug; I'll submit a proper
+fix that.
 
-The problem is that on a system that doesn't have MCFG area reserved in
-E820 pci_mmcfg_list is empty before acpi_init() and our PCI hooks are
-called in the same place. So MCFG is still not in use by Xen at this
-point since we haven't reached our xen_mcfg_late().
-
-Igor
-
-
+-Toke
