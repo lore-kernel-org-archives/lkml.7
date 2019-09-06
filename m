@@ -2,115 +2,150 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D95C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 20:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9EC8C00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 20:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA46C207FC
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 20:16:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFA3920854
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 20:18:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OdQ+M7bC"
+	dkim=pass (1024-bit key) header.d=verimatrix.com header.i=@verimatrix.com header.b="Uu+yUQvU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394441AbfIFUQv (ORCPT
+        id S2394465AbfIFUSp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 16:16:51 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:35501 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394415AbfIFUQv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 16:16:51 -0400
-Received: by mail-pg1-f195.google.com with SMTP id n4so4145471pgv.2
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 13:16:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=XpjoT+t3VPIqNty6+N9T0d42yqs+CXC4vRtjt+q0q7o=;
-        b=OdQ+M7bCR/Hs87PAgK5bi456+I3hom4IiTzR1sNybd715+6YInSNgJiLw0rRpHZPMi
-         CjaBP3CTTZu9FeC5FWYDLiBUENvXKGWPkVYABWUL4nKCD6fZpf4BG+Iex6F9NdjHFQHj
-         8+jMcuOvrvlRn4QQ6U0J+daib7Rrvq/aPr2svANxqeK0EG1D144YDT+sCm9505bEfM1e
-         8OfKsXCnkc+BGope+zK89PVKVpHCO099vcN+1Yq+/bRfFe9g7aKQhcDXxCAMf1+TJUzN
-         3mXVBcCYm0fGT8t1RitjWRrgQqLraI6TnC3ROOVlyJ/bqS6N1CBFd1oftwe9qSTYHNRM
-         n7Jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=XpjoT+t3VPIqNty6+N9T0d42yqs+CXC4vRtjt+q0q7o=;
-        b=cnkSXMILXoZMNr7T737VAib3pcxFGqDzDmxckskHTLdGWSAfV48RSLFYGM7KD0T9/y
-         KXOtKsBniijXbBD/YoXZ/hl2BUAKXNPAfFOjV7vCG0XXjHiuE4y3HOxzR98x22CKFgOo
-         6ju82SL4kAuu9xmZqKq75dh/dJpPcXCb3lvQ+s7jVTA0nCk7REKAoZVJmlU0kd8yFjbl
-         fGq/dOrKTETfsah7cOidtIBXkGOmRk4KMkzFmqNmSEhisXIid/I+rMiMtxVWrequremD
-         C6nOWMNj2yJvdkYX9OAqJaxRov5tgtUxlZlcNAcU9LCTQLAWSmoWX8DF6lH5WKAh5O4F
-         oacQ==
-X-Gm-Message-State: APjAAAU1hGEMd7t2GtKCHsLdTTa53zm7lbKBzLM+pGuJuxvQeaXn0Eph
-        +X4PLvGTN5SlIbKkLoAVrzwWFA==
-X-Google-Smtp-Source: APXvYqy6kmrb6Rqhp74ZrCXwb0I57IQq3ixyKOJRHtKUsywDqn/BCFjE6trl3ESF6oEToJYzNCiNjw==
-X-Received: by 2002:a63:c006:: with SMTP id h6mr9416225pgg.290.1567801010246;
-        Fri, 06 Sep 2019 13:16:50 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id 11sm5406332pgo.43.2019.09.06.13.16.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Sep 2019 13:16:49 -0700 (PDT)
-Date:   Fri, 6 Sep 2019 13:16:48 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-cc:     Vlastimil Babka <vbabka@suse.cz>, Michal Hocko <mhocko@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Mel Gorman <mgorman@suse.de>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [rfc 3/4] mm, page_alloc: avoid expensive reclaim when compaction
- may not succeed
-In-Reply-To: <3468b605-a3a9-6978-9699-57c52a90bd7e@oracle.com>
-Message-ID: <alpine.DEB.2.21.1909061314270.150656@chino.kir.corp.google.com>
-References: <alpine.DEB.2.21.1909041252230.94813@chino.kir.corp.google.com> <alpine.DEB.2.21.1909041253390.94813@chino.kir.corp.google.com> <20190905090009.GF3838@dhcp22.suse.cz> <fab91766-da33-d62f-59fb-c226e4790a91@suse.cz>
- <3468b605-a3a9-6978-9699-57c52a90bd7e@oracle.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 6 Sep 2019 16:18:45 -0400
+Received: from mail-eopbgr750078.outbound.protection.outlook.com ([40.107.75.78]:13958
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2392658AbfIFUSp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 16:18:45 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KAB4hIScEI5YVAIBZnNby/l8g2mkUYEX7vr2N6GXD7y8GH+fS31yJINXu0TxNHWnsbfBmSaKd96C0EvjSTqTxoUEh2/lHq79ELelqkERcSl9eEuvnU8KC1tGae4De2zylpt680H75fz/N8dx0gNqyPYfCLgqqz7abu9+PKIeqvw6BOD6/03Qzh1UESO7+Bo78P3xAq/259caiWu3MkBjZIJh2fkH+1lfkMQ66NS+wVHr1JPepmgXE5wLbSOObUD0HAzKN/6/kkOBDfz/tZC16ejUXF6VJYpJXKpcTeoEFbfG+2Ie8ofp8IR/xfOBHqOMA0SgQEt9n0pfdnMeuAHICg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Od7Nt/umOR8rhh+aqRVgwkURU5OTvBpYQLRVO6wpbSM=;
+ b=Hpf37S7thO9qQDVDkl8iC2/70mFqIpiUna/TznnJP0oBVDVwoo8nbENGwrc/tVT6DIK2TssL6qFi0/7r+7R1NlGa8Etg28KWmhNzEQq6WHbqq7xRKRf+B0dLCt8QD3KjHYOg8kSxsH7on/TjzmBtIICin3Q2hRFjpFTO2Fl7UCVcrGXH1352IkNQBgRO9HC4l7LogviwTiiKCEZg/RcTNzEc9dsudpABcyNL5n5igJyJW3+m/9/IGNAX0aB/JBdseZFiY2DwHUb8YWrp+SlJLapOnJIrKW+OuFASLwl2Uc/Zl5MPUulnvUPtNi++Gy1CZg9849vzeiAVRg61RPzg/A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=verimatrix.com; dmarc=pass action=none
+ header.from=verimatrix.com; dkim=pass header.d=verimatrix.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=verimatrix.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Od7Nt/umOR8rhh+aqRVgwkURU5OTvBpYQLRVO6wpbSM=;
+ b=Uu+yUQvUvT7kXoombtf0BdP1ij2lY8/yifXagoH7R1qFvfHavefAS10qJyNIlmAcv7Uxvdwge10/FZirTQRhnRZzaS/Z28qzN6xwURrltJ9Ys5r/zVgE0BEFtn6Gy1D7xDflOYLBJ+hXSkeZqUrzv1EhL/W1R1oMPWTNw14p+y0=
+Received: from MN2PR20MB2973.namprd20.prod.outlook.com (52.132.172.146) by
+ MN2PR20MB2911.namprd20.prod.outlook.com (10.255.7.32) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2241.18; Fri, 6 Sep 2019 20:18:41 +0000
+Received: from MN2PR20MB2973.namprd20.prod.outlook.com
+ ([fe80::6d07:5f09:97bf:c717]) by MN2PR20MB2973.namprd20.prod.outlook.com
+ ([fe80::6d07:5f09:97bf:c717%7]) with mapi id 15.20.2241.014; Fri, 6 Sep 2019
+ 20:18:41 +0000
+From:   Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 1/2] crypto: inside-secure - fix uninitialized-variable
+ warning
+Thread-Topic: [PATCH 1/2] crypto: inside-secure - fix uninitialized-variable
+ warning
+Thread-Index: AQHVZMb9qMxHnA67BkKvoz9dTWlgFKcez7HQgAArtYCAABrUIA==
+Date:   Fri, 6 Sep 2019 20:18:41 +0000
+Message-ID: <MN2PR20MB29731C08A41B4018E9C2146FCABA0@MN2PR20MB2973.namprd20.prod.outlook.com>
+References: <20190906152250.1450649-1-arnd@arndb.de>
+ <MN2PR20MB297378A683764AF4F2171B7CCABA0@MN2PR20MB2973.namprd20.prod.outlook.com>
+ <CAK8P3a13Ebqd51SWx9svUyvFxV4MKDJKOwKEozzKyga9azBqJA@mail.gmail.com>
+In-Reply-To: <CAK8P3a13Ebqd51SWx9svUyvFxV4MKDJKOwKEozzKyga9azBqJA@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pvanleeuwen@verimatrix.com; 
+x-originating-ip: [188.204.2.113]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5ece8be5-5521-4a3f-83af-08d7330768ef
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR20MB2911;
+x-ms-traffictypediagnostic: MN2PR20MB2911:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <MN2PR20MB2911D894D587E3AC1BA2E4CFCABA0@MN2PR20MB2911.namprd20.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0152EBA40F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(136003)(39850400004)(366004)(396003)(43544003)(189003)(199004)(13464003)(8676002)(25786009)(26005)(6916009)(71190400001)(71200400001)(256004)(14444005)(8936002)(6116002)(3846002)(66066001)(81166006)(15974865002)(81156014)(229853002)(66946007)(66476007)(66556008)(64756008)(66446008)(478600001)(52536014)(5660300002)(4326008)(14454004)(186003)(54906003)(33656002)(7696005)(76176011)(76116006)(74316002)(316002)(305945005)(2906002)(7736002)(86362001)(11346002)(6246003)(102836004)(6436002)(476003)(55016002)(9686003)(446003)(486006)(99286004)(53936002)(53546011)(6506007)(18886075002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR20MB2911;H:MN2PR20MB2973.namprd20.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: verimatrix.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: jQEUkoSxdgW/LVMYmCVTOpvqVFXmM0tIIQiEAJKPdO3SuWDhVlahLxSMKPMd6f8pCagShrBtfrjnNYYnWscLQfDB0ykg9VMiFheVYNSWLdwi9naDnQvKlx2MTA5Hski7s6XGQm6JaSHVSCUVNEKApEP/pyrNNQ9UOaWddcwpxjaxICt5KfjrpVkNvy0AjKBH3i4KhDrcwxvVj7hNjzDlan6htNiIV38D92rNgsZ5WFOdUs4F82uatzQ4WH8S2gx1SmrVc1t5P1GUzwnSZHpAd8JzE+15XsADLXSPSsEAJ0HJKiNdtopd0k1a95VJ2HrlNPQXtHcDJTOYCC7UT2GaRqVg84e/qM8/uFKxP6A6kBZ5WcK6/xBsstGOcYfv7otOOO7p2e7KhAVIbNGG0Ze/OHDtN2aNIBbo6PLSsJx1gUU=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-OriginatorOrg: verimatrix.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5ece8be5-5521-4a3f-83af-08d7330768ef
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Sep 2019 20:18:41.3260
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: dcb260f9-022d-4495-8602-eae51035a0d0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: eC+dG5/76t5PAICUwWO1ig1km5t4tuuEjasqnqr9SR4Q0FynOlpAVAn0yD8hLr7mLQVP1a4FLmkH+vWYJXZIIt7tMygXA1ENG/gP+GSbcCc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR20MB2911
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 5 Sep 2019, Mike Kravetz wrote:
-
-> I don't have a specific test for this.  It is somewhat common for people
-> to want to allocate "as many hugetlb pages as possible".  Therefore, they
-> will try to allocate more pages than reasonable for their environment and
-> take what they can get.  I 'tested' by simply creating some background
-> activity and then seeing how many hugetlb pages could be allocated.  Of
-> course, many tries over time in a loop.
-> 
-> This patch did not cause premature allocation failures in my limited testing.
-> The number of pages which could be allocated with and without patch were
-> pretty much the same.
-> 
-> Do note that I tested on top of Andrew's tree which contains this series:
-> http://lkml.kernel.org/r/20190806014744.15446-1-mike.kravetz@oracle.com
-> Patch 3 in that series causes allocations to fail sooner in the case of
-> COMPACT_DEFERRED:
-> http://lkml.kernel.org/r/20190806014744.15446-4-mike.kravetz@oracle.com
-> 
-> hugetlb allocations have the __GFP_RETRY_MAYFAIL flag set.  They are willing
-> to retry and wait and callers are aware of this.  Even though my limited
-> testing did not show regressions caused by this patch, I would prefer if the
-> quick exit did not apply to __GFP_RETRY_MAYFAIL requests.
-
-Good!  I think that is the ideal way of handling it: we can specify the 
-preference to actually loop and retry (but still eventually fail) for 
-hugetlb allocations specifically for this patch by testing for 
-__GFP_RETRY_MAYFAIL.
-
-I can add that to the formal proposal of patches 3 and 4 in this series 
-assuming we get 5.3 settled by applying the reverts in patches 1 and 2 so 
-that we don't cause various versions of Linux to have different default 
-and madvise allocation policies wrt NUMA.
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBcm5kIEJlcmdtYW5uIDxhcm5k
+QGFybmRiLmRlPg0KPiBTZW50OiBGcmlkYXksIFNlcHRlbWJlciA2LCAyMDE5IDg6NDAgUE0NCj4g
+VG86IFBhc2NhbCBWYW4gTGVldXdlbiA8cHZhbmxlZXV3ZW5AdmVyaW1hdHJpeC5jb20+DQo+IENj
+OiBIZXJiZXJ0IFh1IDxoZXJiZXJ0QGdvbmRvci5hcGFuYS5vcmcuYXU+OyBEYXZpZCBTLiBNaWxs
+ZXIgPGRhdmVtQGRhdmVtbG9mdC5uZXQ+OyBBbnRvaW5lDQo+IFRlbmFydCA8YW50b2luZS50ZW5h
+cnRAYm9vdGxpbi5jb20+OyBBcmQgQmllc2hldXZlbCA8YXJkLmJpZXNoZXV2ZWxAbGluYXJvLm9y
+Zz47IEtlZXMgQ29vaw0KPiA8a2Vlc2Nvb2tAY2hyb21pdW0ub3JnPjsgbGludXgtY3J5cHRvQHZn
+ZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBS
+ZTogW1BBVENIIDEvMl0gY3J5cHRvOiBpbnNpZGUtc2VjdXJlIC0gZml4IHVuaW5pdGlhbGl6ZWQt
+dmFyaWFibGUgd2FybmluZw0KPiANCj4gT24gRnJpLCBTZXAgNiwgMjAxOSBhdCA2OjA4IFBNIFBh
+c2NhbCBWYW4gTGVldXdlbg0KPiA8cHZhbmxlZXV3ZW5AdmVyaW1hdHJpeC5jb20+IHdyb3RlOg0K
+PiANCj4gPiA+DQo+ID4gPiAgY29uZmlnIENSWVBUT19ERVZfU0FGRVhDRUwNCj4gPiA+ICAgICAg
+IHRyaXN0YXRlICJJbnNpZGUgU2VjdXJlJ3MgU2FmZVhjZWwgY3J5cHRvZ3JhcGhpYyBlbmdpbmUg
+ZHJpdmVyIg0KPiA+ID4gLSAgICAgZGVwZW5kcyBvbiBPRiB8fCBQQ0kgfHwgQ09NUElMRV9URVNU
+DQo+ID4gPiArICAgICBkZXBlbmRzIG9uIE9GIHx8IFBDSQ0KPiA+ID4NCj4gPg0KPiA+IFRoaXMg
+c2VlbXMgbGlrZSBpdCBqdXN0IGlnbm9yZXMgdGhlIHByb2JsZW0gYnkgbm90IGFsbG93aW5nIGNv
+bXBpbGUgdGVzdGluZw0KPiA+IGFueW1vcmU/IFNvbWVob3cgdGhhdCBkb2VzIG5vdCBmZWVsIHJp
+Z2h0IC4uLg0KPiANCj4gTm8sIGl0IGp1c3QgaWdub3JlcyB0aGUgdW5pbnRlcmVzdGluZyBjYXNl
+LiBZb3UgY2FuIGNvbXBpbGUtdGVzdCB0aGlzIG9uDQo+IGFueSBhcmNoaXRlY3R1cmUgYnkgdHVy
+bmluZyBvbiBPRi4NCj4gDQpZb3UgYXJlIGVudGlyZWx5IGNvcnJlY3QuIEJlY2F1c2Ugb2YgdGhl
+IENPTVBJTEVfVEVTVCBpdCBjb3VsZCBiZSBjb21waWxlZA0Kd2l0aG91dCBlaXRoZXIgT0Ygb3Ig
+UENJIHN1cHBvcnQsIHdoaWNoIG1ha2VzIG5vIHNlbnNlIHdoYXRzb2V2ZXIgLi4uDQoNCj4gPiA+
+ICAgICAgIHNlbGVjdCBDUllQVE9fTElCX0FFUw0KPiA+ID4gICAgICAgc2VsZWN0IENSWVBUT19B
+VVRIRU5DDQo+ID4gPiAgICAgICBzZWxlY3QgQ1JZUFRPX0JMS0NJUEhFUg0KPiA+ID4gZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvY3J5cHRvL2luc2lkZS1zZWN1cmUvc2FmZXhjZWwuYyBiL2RyaXZlcnMv
+Y3J5cHRvL2luc2lkZS0NCj4gPiA+IHNlY3VyZS9zYWZleGNlbC5jDQo+ID4gPiBpbmRleCBlMTJh
+MmEzYTU0MjIuLjljMGJjZTc3ZGUxNCAxMDA2NDQNCj4gPiA+IC0tLSBhL2RyaXZlcnMvY3J5cHRv
+L2luc2lkZS1zZWN1cmUvc2FmZXhjZWwuYw0KPiA+ID4gKysrIGIvZHJpdmVycy9jcnlwdG8vaW5z
+aWRlLXNlY3VyZS9zYWZleGNlbC5jDQo+ID4gPiBAQCAtOTM4LDYgKzkzOCw3IEBAIHN0YXRpYyBp
+bnQgc2FmZXhjZWxfcmVxdWVzdF9yaW5nX2lycSh2b2lkICpwZGV2LCBpbnQgaXJxaWQsDQo+ID4g
+PiAgICAgICBzdHJ1Y3QgZGV2aWNlICpkZXY7DQo+ID4gPg0KPiA+ID4gICAgICAgaWYgKElTX0VO
+QUJMRUQoQ09ORklHX1BDSSkgJiYgaXNfcGNpX2Rldikgew0KPiA+ID4gKyNpZmRlZiBDT05GSUdf
+UENJDQo+ID4gPg0KPiA+DQo+ID4gVGhlIHdob2xlIHBvaW50IHdhcyBOT1QgdG8gdXNlIHJlZ3Vs
+YXIgI2lmZGVmcyBzdWNoIHRoYXQgdGhlIGNvZGUgY2FuDQo+ID4gYmUgY29tcGlsZSB0ZXN0ZWQg
+d2l0aG91dCBuZWVkaW5nIHRvIHN3aXRjaCBjb25maWd1cmF0aW9ucy4NCj4gPiBUaGVyZSBpcyBh
+bHJlYWR5IGEgZGlmZmVyZW50IHNvbHV0aW9uIGluIHRoZSB3b3JrcyBpbnZvbHZpbmcgc29tZSBl
+bXB0eQ0KPiA+IGlubGluZSBzdHVicyBmb3IgdGhvc2UgcGNpIHJvdXRpbmVzLCBwbGVhc2Ugc2Vl
+IGFuIGVhcmxpZXIgbWFpbCBieSBIZXJiZXJ0DQo+ID4gdGl0bGVkICJQQ0k6IEFkZCBzdHViIHBj
+aV9pcnFfdmVjdG9yIGFuZCBvdGhlcnMiLg0KPiANCj4gQWgsIGdvb2QuIFRoYXQgc2hvdWxkIHRh
+a2UgY2FyZSBvZiBtb3N0IG9mIHRoZSBwcm9ibGVtcy4gSSB0aGluaw0KPiB3ZSBzdGlsbCBuZWVk
+IHRoZSBLY29uZmlnIGNoYW5nZSwgdW5sZXNzIHRoZSBzYWZleGNlbF9pbml0KCkNCj4gZnVuY3Rp
+b24gaXMgYWxzbyBjaGFuZ2VkIHRvIHVzZSBpZihJU19FTkFCTEVEKCkpIGNoZWNrcw0KPiBpbnN0
+ZWFkIG9mICNpZi4NCj4gDQo+ICAgICAgQXJuZA0KPg0KWWVzLCBJIGFncmVlLg0KDQoNClJlZ2Fy
+ZHMsDQpQYXNjYWwgdmFuIExlZXV3ZW4NClNpbGljb24gSVAgQXJjaGl0ZWN0LCBNdWx0aS1Qcm90
+b2NvbCBFbmdpbmVzIEAgVmVyaW1hdHJpeA0Kd3d3Lmluc2lkZXNlY3VyZS5jb20NCg0K
