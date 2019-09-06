@@ -2,229 +2,195 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9078BC00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D95C00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DF2320842
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 674102070C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:39:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="gJBn6caS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390239AbfIFLhh (ORCPT
+        id S2390579AbfIFLjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 07:37:37 -0400
-Received: from mga12.intel.com ([192.55.52.136]:30308 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389929AbfIFLhg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 07:37:36 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Sep 2019 04:37:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,472,1559545200"; 
-   d="scan'208";a="183117360"
-Received: from rjwysock-mobl1.ger.corp.intel.com (HELO [10.249.130.212]) ([10.249.130.212])
-  by fmsmga008.fm.intel.com with ESMTP; 06 Sep 2019 04:37:31 -0700
-Subject: Re: [PATCH v5 00/10] EFI Specific Purpose Memory Support
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Keith Busch <keith.busch@intel.com>,
-        kbuild test robot <lkp@intel.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Len Brown <lenb@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>
-References: <156712993795.1616117.3781864460118989466.stgit@dwillia2-desk3.amr.corp.intel.com>
- <2329745.bCNtynFxEq@kreacher>
- <CAPcyv4ggOXjzaYZb4qCMQQL-Xf3fbZqKzqHTUBins_fv3=cEbw@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Organization: Intel Technology Poland Sp. z o. o., KRS 101882, ul. Slowackiego
- 173, 80-298 Gdansk
-Message-ID: <67107eb8-13bc-36ee-0708-7f5ba1d74d9e@intel.com>
-Date:   Fri, 6 Sep 2019 13:37:30 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 6 Sep 2019 07:39:17 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:35090 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390457AbfIFLjQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 07:39:16 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190906113913euoutp0238a78c1e3a288d764bb9f4a4b62537d7~B1ndsZrjV2466624666euoutp02v
+        for <linux-kernel@vger.kernel.org>; Fri,  6 Sep 2019 11:39:13 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190906113913euoutp0238a78c1e3a288d764bb9f4a4b62537d7~B1ndsZrjV2466624666euoutp02v
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1567769953;
+        bh=epZ2/nn61cU86rBoZ+pM3kR6r5TNU/gcgmeJYFybZcI=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=gJBn6caSNHZViW8Q+RQ60DEZY8LUZF+rwFH8aLr8GOm7Kvp3hAzQcJGXxFxYBfWqK
+         hmjVV/WZsWxmxT/w7GPDW4TRLWAnkxo1w590a0jXRfL76IjWFAdRLTKJJtStoLPlrT
+         bPUxUCU1hIuztzb49hCcystDJBH2wYPyHgtfl41U=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190906113912eucas1p15a6d144b485f3d7f7e6ef803aebba111~B1nc2DRO72600726007eucas1p1P;
+        Fri,  6 Sep 2019 11:39:12 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id F5.BD.04309.065427D5; Fri,  6
+        Sep 2019 12:39:12 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190906113911eucas1p25b42a5f4d3846ca4eb676dc5f6067c68~B1ncBI_rh2032920329eucas1p2v;
+        Fri,  6 Sep 2019 11:39:11 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190906113911eusmtrp2df4582dc73d9c4f1f222973a160704dd~B1nby5MDL1602816028eusmtrp2P;
+        Fri,  6 Sep 2019 11:39:11 +0000 (GMT)
+X-AuditID: cbfec7f4-afbff700000010d5-d0-5d724560316e
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id D5.AC.04117.F55427D5; Fri,  6
+        Sep 2019 12:39:11 +0100 (BST)
+Received: from [106.120.51.20] (unknown [106.120.51.20]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190906113910eusmtip177b7d502ecf9cac3a446211bb2bf282c~B1nbCck9m1696716967eusmtip1S;
+        Fri,  6 Sep 2019 11:39:10 +0000 (GMT)
+Subject: Re: [PATCH 3/3] dt-bindings: ddr: Add bindings for Samsung LPDDR3
+ memories
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
+        <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com,
+        robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
+        kyungmin.park@samsung.com,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
+        willy.mh.wolff.ml@gmail.com
+From:   Lukasz Luba <l.luba@partner.samsung.com>
+Message-ID: <52963d0d-cf48-7085-5581-a94c6e15e0bd@partner.samsung.com>
+Date:   Fri, 6 Sep 2019 13:39:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAPcyv4ggOXjzaYZb4qCMQQL-Xf3fbZqKzqHTUBins_fv3=cEbw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <CAJKOXPfoYxTVvt_bMQOs1=BkHzUuW_WvL9zn0jTGS6LLpv=fhQ@mail.gmail.com>
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTYRjG+3Z2Lo5mX9Pam4nC8I+K1C6CH2VWdGFUdiGCqLRWHVRyajvO
+        LgapkNZqZVFmw64khWjznq6M2pYXrKYILdIutkKwVplWStrydIz87/c97/PyPg98HKVy00Fc
+        cmoGb0jVpWgYhbyuadgVvmuVIX5e9+tQUllkpYl7sJcmV53PaHLG85EiLlcFS57mfmJJlec5
+        TTptxQwZMDsRKXI9kJFy5yuWlLg7ZKQr5zZDjjU6WeL4lE+THy3v0DKsLbtShrQNllestqr0
+        BKOtvnlUe7qmFGkHqkI2MtsUMXv5lORM3hAZu0uRNGz1oPSKgIO55RUoG3VPMSE/DnAUPLKa
+        WBNScCp8G0F15RAjPQYR5F+3M6JLhQcQ+C4E/tu40/uBkky3ENz4ViuXTF4EQ/eiRQ7AW+DJ
+        yV+syIF4NrhHf9LiAoXtciiyDctMiOMYHAH1pftFjxKvhjedjUiU5TgMvC2JojwNb4Vvbx20
+        ZJkKrZfe/z3lhzeBvcT1NxuF1fDy/VWZxKFw11tMSTlzOOgxb5Z4JXS1FzMSB0Bfcw0rcTD4
+        GqRdwAJkm68jiY+A58zlcc9icDR30GI0aqyK1RYpycvBZznHiDJgf3jhnSol8IdzdRcpSVbC
+        8TyV5J4FNafaxw9Nh1tlhWwB0lgm9LJM6GKZ0MXy/+41JC9Fat4o6BN5YUEqfyBC0OkFY2pi
+        xJ40fRUa+25tv5sH65FtZLcdYQ5pJivJCkO8itZlCof0dgQcpQlUWivT41XKvbpDh3lD2k6D
+        MYUX7GgmJ9eolVmT3m5X4URdBr+P59N5w7+pjPMLykYFF9Iim6CBqo0564939IcYff2ThlpW
+        tWdzPVl8YZ/iB/+wIDjO9rNVF5fpkJnPF35P5ksG1M4lyYuSfCmtHev6GkfC63vWL36w1F2e
+        h0LCtoQnxAZ9iZusH124L3ptwPnor59dm9oeU4sScqNmhMo01H3VbnbDmqye3Mw5I/FzNXIh
+        STd/DmUQdH8Aj7eSLWoDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrLIsWRmVeSWpSXmKPExsVy+t/xu7rxrkWxBs3/VC02zljPanH9y3NW
+        i/lHzrFa9D9+zWxx/vwGdouzTW/YLTY9vsZqcXnXHDaLz71HGC1mnN/HZLH2yF12i6XXLzJZ
+        3G5cwWbRuvcIu8XhN+2sFt9OPGJ0EPBYM28No8fOWXfZPTat6mTz2Lyk3qNvyypGj8+b5ALY
+        ovRsivJLS1IVMvKLS2yVog0tjPQMLS30jEws9QyNzWOtjEyV9O1sUlJzMstSi/TtEvQyfq5/
+        zFiwQbiiae0GxgbGO/xdjJwcEgImEuueP2XuYuTiEBJYyiixYkMzO0RCTGLSvu1QtrDEn2td
+        bBBFrxklfp96zwaSEBYIlTjT/RusSERAU+L63++sIEXMAodYJD5tPc4IkhAS6GOS6H2k38XI
+        wcEmoCexY1UhSJhXwE3i/uW9jCBhFgEVibcn0kHCogIREod3zGKEKBGUODnzCQuIzSkQKHFo
+        6XmwtcwCZhLzNj9khrDFJW49mc8EYctLbH87h3kCo9AsJO2zkLTMQtIyC0nLAkaWVYwiqaXF
+        uem5xUZ6xYm5xaV56XrJ+bmbGIFRve3Yzy07GLveBR9iFOBgVOLhfeBQFCvEmlhWXJl7iFGC
+        g1lJhHf9xoJYId6UxMqq1KL8+KLSnNTiQ4ymQL9NZJYSTc4HJpy8knhDU0NzC0tDc2NzYzML
+        JXHeDoGDMUIC6YklqdmpqQWpRTB9TBycUg2MZzmnpBhNFl7KHljM+f/laq8XYrGFoX+NxdJN
+        vRt4TjGL+W597/Xm3rpQkd63504b3BS0ZHW+03a9+bG2gqXihy3r13z/c3VzX9fPEk6h5P9n
+        /7y5ad4469rfdzdtz2YstFMQ3sQ9e96zHzm5KqaL9stWRJfLvjG8MXGr69IraQtTAuSsmM0L
+        lViKMxINtZiLihMBVcSENwADAAA=
+X-CMS-MailID: 20190906113911eucas1p25b42a5f4d3846ca4eb676dc5f6067c68
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190906101407eucas1p15eb0df53374b27497b4793eab24becf6
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190906101407eucas1p15eb0df53374b27497b4793eab24becf6
+References: <CGME20190906101407eucas1p15eb0df53374b27497b4793eab24becf6@eucas1p1.samsung.com>
+        <20190906101344.3535-1-l.luba@partner.samsung.com>
+        <20190906101344.3535-4-l.luba@partner.samsung.com>
+        <CAJKOXPfoYxTVvt_bMQOs1=BkHzUuW_WvL9zn0jTGS6LLpv=fhQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/5/2019 1:06 AM, Dan Williams wrote:
-> On Mon, Sep 2, 2019 at 4:09 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
->> On Friday, August 30, 2019 3:52:18 AM CEST Dan Williams wrote:
->>> Changes since v4 [1]:
->>> - Rename the facility from "Application Reserved" to "Soft Reserved" to
->>>    better reflect how the memory is treated. While the spec talks about
->>>    "specific / application purpose" memory the expected kernel behavior is
->>>    to make a best effort at reserving the memory from general purpose
->>>    allocations.
->>>
->>> - Add a new efi=nosoftreserve option to disable consideration of the
->>>    EFI_MEMORY_SP attribute at boot time. This is also motivated by
->>>    Christoph's initial feedback of allowing the kernel to opt-out of the
->>>    policy whims of the platform BIOS implementation.
->>>
->>> - Update the KASLR implementation to exclude soft-reserved memory
->>>    including the case where soft-reserved memory is specified via the
->>>    efi_fake_mem= attribute-override command-line option.
->>>
->>> - Move the memregion allocator to its own object file. v4 had it in
->>>    kernel/resource.c which caused compile errors on Sparc. I otherwise
->>>    could not find an appropriate place to stash it.
->>>
->>> - Rebase on a merge of tip/master and rafael/linux-next since the series
->>>    collides with changes in both those trees.
->>>
->>> [1]: https://lore.kernel.org/r/156140036490.2951909.1837804994781523185.stgit@dwillia2-desk3.amr.corp.intel.com/
->>>
->>> ---
->>>
->>> Thomas, Rafael,
->>>
->>> This happens to collide with both your trees. I think the content
->>> warrants going through the x86 tree, but would need to publish commit:
->>>
->>> 5c7ed4385424 HMAT: Skip publishing target info for nodes with no online memory
->>>
->>> ...in Rafael's tree as a stable id for -tip to pull in, but I'm also
->>> open to other options. I've retained Dave's reviewed-by from v4.
->>>
->>> ---
->>>
->>> The EFI 2.8 Specification [2] introduces the EFI_MEMORY_SP ("specific
->>> purpose") memory attribute. This attribute bit replaces the deprecated
->>> ACPI HMAT "reservation hint" that was introduced in ACPI 6.2 and removed
->>> in ACPI 6.3.
->>>
->>> Given the increasing diversity of memory types that might be advertised
->>> to the operating system, there is a need for platform firmware to hint
->>> which memory ranges are free for the OS to use as general purpose memory
->>> and which ranges are intended for application specific usage. For
->>> example, an application with prior knowledge of the platform may expect
->>> to be able to exclusively allocate a precious / limited pool of high
->>> bandwidth memory. Alternatively, for the general purpose case, the
->>> operating system may want to make the memory available on a best effort
->>> basis as a unique numa-node with performance properties by the new
->>> CONFIG_HMEM_REPORTING [3] facility.
->>>
->>> In support of optionally allowing either application-exclusive and
->>> core-kernel-mm managed access to differentiated memory, claim
->>> EFI_MEMORY_SP ranges for exposure as "soft reserved" and assigned to a
->>> device-dax instance by default. Such instances can be directly owned /
->>> mapped by a platform-topology-aware application. Alternatively, with the
->>> new kmem facility [4], the administrator has the option to instead
->>> designate that those memory ranges be hot-added to the core-kernel-mm as
->>> a unique memory numa-node. In short, allow for the decision about what
->>> software agent manages soft-reserved memory to be made at runtime.
->>>
->>> The patches build on the new HMAT+HMEM_REPORTING facilities merged
->>> for v5.2-rc1. The implementation is tested with qemu emulation of HMAT
->>> [5] plus the efi_fake_mem facility for applying the EFI_MEMORY_SP
->>> attribute. Specific details on reproducing the test configuration are in
->>> patch 10.
->>>
->>> [2]: https://uefi.org/sites/default/files/resources/UEFI_Spec_2_8_final.pdf
->>> [3]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e1cf33aafb84
->>> [4]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=c221c0b0308f
->>> [5]: http://patchwork.ozlabs.org/cover/1096737/
->>>
->>> ---
->>>
->>> Dan Williams (10):
->>>        acpi/numa: Establish a new drivers/acpi/numa/ directory
->>>        efi: Enumerate EFI_MEMORY_SP
->>>        x86, efi: Push EFI_MEMMAP check into leaf routines
->>>        x86, efi: Reserve UEFI 2.8 Specific Purpose Memory for dax
->>>        x86, efi: Add efi_fake_mem support for EFI_MEMORY_SP
->>>        lib: Uplevel the pmem "region" ida to a global allocator
->>>        dax: Fix alloc_dax_region() compile warning
->>>        device-dax: Add a driver for "hmem" devices
->>>        acpi/numa/hmat: Register HMAT at device_initcall level
->>>        acpi/numa/hmat: Register "soft reserved" memory as an "hmem" device
->>>
->>>
->>>   Documentation/admin-guide/kernel-parameters.txt |   19 +++
->>>   arch/x86/Kconfig                                |   21 ++++
->>>   arch/x86/boot/compressed/eboot.c                |    7 +
->>>   arch/x86/boot/compressed/kaslr.c                |   50 +++++++-
->>>   arch/x86/include/asm/e820/types.h               |    8 +
->>>   arch/x86/include/asm/efi-stub.h                 |   11 ++
->>>   arch/x86/include/asm/efi.h                      |   17 +++
->>>   arch/x86/kernel/e820.c                          |   12 ++
->>>   arch/x86/kernel/setup.c                         |   19 ++-
->>>   arch/x86/platform/efi/efi.c                     |   56 +++++++++
->>>   arch/x86/platform/efi/quirks.c                  |    3 +
->>>   drivers/acpi/Kconfig                            |    9 --
->>>   drivers/acpi/Makefile                           |    3 -
->>>   drivers/acpi/hmat/Makefile                      |    2
->>>   drivers/acpi/numa/Kconfig                       |    8 +
->>>   drivers/acpi/numa/Makefile                      |    3 +
->>>   drivers/acpi/numa/hmat.c                        |  138 +++++++++++++++++++++--
->>>   drivers/acpi/numa/srat.c                        |    0
->>>   drivers/dax/Kconfig                             |   27 ++++-
->>>   drivers/dax/Makefile                            |    2
->>>   drivers/dax/bus.c                               |    2
->>>   drivers/dax/bus.h                               |    2
->>>   drivers/dax/dax-private.h                       |    2
->>>   drivers/dax/hmem.c                              |   57 ++++++++++
->>>   drivers/firmware/efi/Makefile                   |    5 +
->>>   drivers/firmware/efi/efi.c                      |    8 +
->>>   drivers/firmware/efi/esrt.c                     |    3 +
->>>   drivers/firmware/efi/fake_mem.c                 |   26 ++--
->>>   drivers/firmware/efi/fake_mem.h                 |   10 ++
->>>   drivers/firmware/efi/libstub/efi-stub-helper.c  |   12 ++
->>>   drivers/firmware/efi/x86-fake_mem.c             |   69 ++++++++++++
->>>   drivers/nvdimm/Kconfig                          |    1
->>>   drivers/nvdimm/core.c                           |    1
->>>   drivers/nvdimm/nd-core.h                        |    1
->>>   drivers/nvdimm/region_devs.c                    |   13 +-
->>>   include/linux/efi.h                             |    4 -
->>>   include/linux/ioport.h                          |    1
->>>   include/linux/memregion.h                       |   23 ++++
->>>   lib/Kconfig                                     |    3 +
->>>   lib/Makefile                                    |    1
->>>   lib/memregion.c                                 |   18 +++
->>>   41 files changed, 584 insertions(+), 93 deletions(-)
->>>   create mode 100644 arch/x86/include/asm/efi-stub.h
->>>   delete mode 100644 drivers/acpi/hmat/Makefile
->>>   rename drivers/acpi/{hmat/Kconfig => numa/Kconfig} (70%)
->>>   create mode 100644 drivers/acpi/numa/Makefile
->>>   rename drivers/acpi/{hmat/hmat.c => numa/hmat.c} (85%)
->>>   rename drivers/acpi/{numa.c => numa/srat.c} (100%)
->>>   create mode 100644 drivers/dax/hmem.c
->>>   create mode 100644 drivers/firmware/efi/fake_mem.h
->>>   create mode 100644 drivers/firmware/efi/x86-fake_mem.c
->>>   create mode 100644 include/linux/memregion.h
->>>   create mode 100644 lib/memregion.c
->>>
->> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Hi Krzysztof,
+
+On 9/6/19 12:56 PM, Krzysztof Kozlowski wrote:
+> On Fri, 6 Sep 2019 at 12:14, Lukasz Luba <l.luba@partner.samsung.com> wrote:
 >>
->> for the ACPI-related changes in this series.
-> Thanks Rafael, is commit 5c7ed4385424 on a stable branch that Thomas
-> could merge, or Thomas, is this all too late for v5.4?
+>> Add description of bindings for Samsung k3qf2f20db LPDDR3 memory.
+>> Minor fixes in the old documentation.
+>>
+>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>> ---
+>>   .../devicetree/bindings/ddr/lpddr3.txt        | 29 +++++++++++++++++--
+>>   1 file changed, 27 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/ddr/lpddr3.txt b/Documentation/devicetree/bindings/ddr/lpddr3.txt
+>> index 3b2485b84b3f..de0905239767 100644
+>> --- a/Documentation/devicetree/bindings/ddr/lpddr3.txt
+>> +++ b/Documentation/devicetree/bindings/ddr/lpddr3.txt
+>> @@ -40,10 +40,34 @@ Child nodes:
+>>     a given speed-bin. Please see Documentation/devicetree/
+>>     bindings/ddr/lpddr3-timings.txt for more information on "lpddr3-timings"
+>>
+>> +Samsung K3QF2F20DB LPDDR3 memory
+>> +------------------------------------------------------------
+>> +
+>> +This binding uses the LPDDR3 binding (described above)
+>> +
+>> +Required properties:
+>> +- compatible:  Should be:
+>> +               "samsung,K3QF2F20DB"
+>> +               followed by "jedec,lpddr3"
+>> +- density  : <u32> representing density in Mb (Mega bits)
+>> +- io-width : <u32> representing bus width. Possible value 32
+>> +- #address-cells: Must be set to 1
+>> +- #size-cells: Must be set to 0
+> 
+> If you decided to repeat all properties again, then it deserves its
+> own bindings file. However I though about simpler solution - just
+> document compatible. Exactly the same as AT24 or AT25 EEPROM bindings.
+> There is not much benefit from copying all these properties.
+OK, I see. I will add only 'compatible' and skip the rest then.
+So the lpddr3.txt file will get this addition:
 
-Yes, I've just exported the acpi-tables branch containing that commit as 
-a stable one in the linux-pm.git tree at kernel.org.
++Samsung K3QF2F20DB LPDDR3 memory
++------------------------------------------------------------
++
++This binding uses the LPDDR3 binding (described above)
++
++Required properties:
++- compatible:  Should be:
++               "samsung,K3QF2F20DB"
++               followed by "jedec,lpddr3"
++
++Optional properties:
++
++The optional properties are the same as in the LPDDR3 generic bindings and
++values should be taken from the data-sheet. Detailed bindings are described
++above.
++
++Child nodes:
++
++Detailed bindings are described in LPDDR3 generic bindings described above.
++
 
-Cheers!
+Is it OK?
 
-
+Regards,
+Lukasz
