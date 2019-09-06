@@ -2,160 +2,172 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E83FC00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE2EC00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:17:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9C8F20838
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:17:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="S03AX30p"
+	by mail.kernel.org (Postfix) with ESMTP id 4270720838
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:17:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567790259;
+	bh=/DJjKsuBIxo0lC+JYJbHfrEm34PU0CCmBYb4S4pNbSQ=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=ydWarzqWeFBJH0jSw9HfXh+koHEkNTWCEau8J7kbQvSQd9xRR7fVk4nHkbk4hcNxB
+	 Ca4zQcRNdeJaddYsbPCcJ8Q1FxCNVauVgPlMMd5mqSn2DVTb9SuO4iYl19YJ8ujueP
+	 B7sKJ6QHkCyM1PR80HRL6lq6LFDOW+Ob2MJusHTA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406021AbfIFRRY (ORCPT
+        id S2406034AbfIFRRi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 13:17:24 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:45570 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391459AbfIFRRX (ORCPT
+        Fri, 6 Sep 2019 13:17:38 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33134 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2404502AbfIFRRi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 13:17:23 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 41so2602948oti.12;
-        Fri, 06 Sep 2019 10:17:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9evHry1UrtWiGWxeLaRDwMC+G1/K0C5Wqdz0SlRBtRA=;
-        b=S03AX30pGa/riu4c+Jmvw31thlqCJ6/58BYW5EDstl8tut2pIX6DS+XKqBIPly98j0
-         arM5bAlXCV9be8gl83690pSpmR1J9dMDi2ACleKB3PCN5J9KZL6g5iAoRmxWbMiqvNF3
-         qC3itT8bwqPnQpFTXFxeLKOfYW+dUY5c8Ct8IOQFoscT2ROpSB17Myo1f6++Q3q3E9fp
-         YGPB3qdZDIGk5096953Vhf6t3BQbyOG0UHoqwucW8WvoqVupxW0PUzT6nbVdjrekix1i
-         O6TPhnexuV9aJm6HkgAJNlwlltU27I7emzs4SGZ34QBV1oyDhJrvrzc/OMHGJmk+Mg+o
-         HEvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9evHry1UrtWiGWxeLaRDwMC+G1/K0C5Wqdz0SlRBtRA=;
-        b=GZ/IPlsfDs05a2d9jg5rDFN55JR6lH7JbywClAN6a64YkubQBRsq1DQM8V+gkputfR
-         6SDxjto03hnwz4cZNWHLlXpUk4FOD5BL/xJVBujqLkODhkJDaZdVZRzzmaYQRmVELy46
-         L8wrDLlD/oBlLWJ8sw6Vudl2fzdx40yGv8la22g80Mv4CSuD5516p2+ssOkx1cLxhc2s
-         OReOy0E3Rxzm3NhJ4xNi+pHRJELNLAsMnQm1KAE6CwhEIo4By6RFbGmo3pAIL0nRvEgh
-         +hyYRMfrboso/yr1jSP09xXR/VGGt7VSwS0e/5tQRlbOcokRnJMMH1vkoNCu2/RJjmb/
-         7JaQ==
-X-Gm-Message-State: APjAAAWfhXc4VhLY8S/XZlS+R07PTRTn2MD/rZCCCBhcTaRmUpRKzh0J
-        5xHBOG35rKQh9KdPdVIeYMIzCQ3LUBS+gBYvvtA=
-X-Google-Smtp-Source: APXvYqzV1urVgS9fUf9+vvQ7IvYRo7AJa7S38jSC4wqoAIa6jp3rnZyJDk83rUwj6UtOcAdQvzQUeXid+CeNTa1O5po=
-X-Received: by 2002:a05:6830:1e5a:: with SMTP id e26mr7852824otj.96.1567790242296;
- Fri, 06 Sep 2019 10:17:22 -0700 (PDT)
+        Fri, 6 Sep 2019 13:17:38 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x86HDR4t144070;
+        Fri, 6 Sep 2019 13:16:41 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uus1qy8gj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 06 Sep 2019 13:16:40 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x86HDYQS144511;
+        Fri, 6 Sep 2019 13:16:39 -0400
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uus1qy8fx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 06 Sep 2019 13:16:39 -0400
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x86HFU9i012063;
+        Fri, 6 Sep 2019 17:16:38 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma05wdc.us.ibm.com with ESMTP id 2uu32utmf6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 06 Sep 2019 17:16:38 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x86HGcdQ48497114
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 6 Sep 2019 17:16:38 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 15941B2065;
+        Fri,  6 Sep 2019 17:16:38 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DAA83B205F;
+        Fri,  6 Sep 2019 17:16:37 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri,  6 Sep 2019 17:16:37 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 05E2C16C5AE5; Fri,  6 Sep 2019 10:16:47 -0700 (PDT)
+Date:   Fri, 6 Sep 2019 10:16:47 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Petr Mladek <pmladek@suse.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: Re: [PATCH -rcu dev 1/2] Revert b8c17e6664c4 ("rcu: Maintain special
+ bits at bottom of ->dynticks counter")
+Message-ID: <20190906171646.GI4051@linux.ibm.com>
+Reply-To: paulmck@kernel.org
+References: <20190904101210.GM4125@linux.ibm.com>
+ <20190904135420.GB240514@google.com>
+ <20190904231308.GB4125@linux.ibm.com>
+ <20190905153620.GG26466@google.com>
+ <20190905164329.GT4125@linux.ibm.com>
+ <20190906000137.GA224720@google.com>
+ <20190906150806.GA11355@google.com>
+ <20190906152144.GF4051@linux.ibm.com>
+ <20190906152753.GA18734@linux.ibm.com>
+ <20190906165751.GA40876@google.com>
 MIME-Version: 1.0
-References: <cover.1567585181.git.eswara.kota@linux.intel.com>
- <fe9549470bc06ea0d0dfc80f46a579baa49b911a.1567585181.git.eswara.kota@linux.intel.com>
- <CAFBinCC5SH5OSUqOkLQhE2o7g5OhSuB_PBjsv93U2P=FNS5oPw@mail.gmail.com> <ce4e04ee-9a8f-fbe1-0133-4a18c92dc136@linux.intel.com>
-In-Reply-To: <ce4e04ee-9a8f-fbe1-0133-4a18c92dc136@linux.intel.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Fri, 6 Sep 2019 19:17:11 +0200
-Message-ID: <CAFBinCABoe89Z9CiG=3Bz6+JoRCYcpxWJ6jzEqMo16SCCoXPmQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: intel: Add YAML schemas for the
- PCIe RC controller
-To:     "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>
-Cc:     Dilip Kota <eswara.kota@linux.intel.com>, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, linux-pci@vger.kernel.org, hch@infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190906165751.GA40876@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-06_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1034 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909060183
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 6, 2019 at 5:22 AM Chuan Hua, Lei
-<chuanhua.lei@linux.intel.com> wrote:
-[...]
-> >> +examples:
-> >> +  - |
-> >> +    pcie10:pcie@d0e00000 {
-> >> +      compatible = "intel,lgm-pcie";
-> >> +      device_type = "pci";
-> >> +      #address-cells = <3>;
-> >> +      #size-cells = <2>;
-> >> +      reg = <
-> >> +            0xd0e00000 0x1000
-> >> +            0xd2000000 0x800000
-> >> +            0xd0a41000 0x1000
-> >> +            >;
-> >> +      reg-names = "dbi", "config", "app";
-> >> +      linux,pci-domain = <0>;
-> >> +      max-link-speed = <4>;
-> >> +      bus-range = <0x00 0x08>;
-> >> +      interrupt-parent = <&ioapic1>;
-> >> +      interrupts = <67 1>;
-> >> +      #interrupt-cells = <1>;
-> >> +      interrupt-map-mask = <0 0 0 0x7>;
-> >> +      interrupt-map = <0 0 0 1 &ioapic1 27 1>,
-> >> +                      <0 0 0 2 &ioapic1 28 1>,
-> >> +                      <0 0 0 3 &ioapic1 29 1>,
-> >> +                      <0 0 0 4 &ioapic1 30 1>;
-> > is the "1" in the interrupts and interrupt-map properties IRQ_TYPE_EDGE_RISING?
-> > you can use these macros in this example as well, see
-> > Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml for
-> > example
->
-> No. 1 here means index from arch/x86/devicetree.c
->
-> static struct of_ioapic_type of_ioapic_type[] =
-> {
->      {
->          .out_type    = IRQ_TYPE_EDGE_RISING,
->          .trigger    = IOAPIC_EDGE,
->          .polarity    = 1,
->      },
->      {
->          .out_type    = IRQ_TYPE_LEVEL_LOW,
->          .trigger    = IOAPIC_LEVEL,
->          .polarity    = 0,
->      },
->      {
->          .out_type    = IRQ_TYPE_LEVEL_HIGH,
->          .trigger    = IOAPIC_LEVEL,
->          .polarity    = 1,
->      },
->      {
->          .out_type    = IRQ_TYPE_EDGE_FALLING,
->          .trigger    = IOAPIC_EDGE,
->          .polarity    = 0,
->      },
-> };
->
-> static int dt_irqdomain_alloc(struct irq_domain *domain, unsigned int virq,
->                    unsigned int nr_irqs, void *arg)
-> {
->      struct irq_fwspec *fwspec = (struct irq_fwspec *)arg;
->      struct of_ioapic_type *it;
->      struct irq_alloc_info tmp;
->      int type_index;
->
->      if (WARN_ON(fwspec->param_count < 2))
->          return -EINVAL;
->
->      type_index = fwspec->param[1]; // index.
->      if (type_index >= ARRAY_SIZE(of_ioapic_type))
->          return -EINVAL;
->
-> I would not see this definition is user-friendly. But it is how x86
-> handles at the moment.
-thank you for explaining this - I had no idea x86 is different from
-all other platforms I know
-the only upstream x86 .dts I could find
-(arch/x86/platform/ce4100/falconfalls.dts) also uses the magic x86
-numbers
-so I'm fine with this until someone else knows a better solution
+On Fri, Sep 06, 2019 at 12:57:51PM -0400, Joel Fernandes wrote:
+> On Fri, Sep 06, 2019 at 08:27:53AM -0700, Paul E. McKenney wrote:
+> > On Fri, Sep 06, 2019 at 08:21:44AM -0700, Paul E. McKenney wrote:
+> > > On Fri, Sep 06, 2019 at 11:08:06AM -0400, Joel Fernandes wrote:
+> > > > On Thu, Sep 05, 2019 at 08:01:37PM -0400, Joel Fernandes wrote:
+> > > > [snip] 
+> > > > > > > > @@ -3004,7 +3007,7 @@ static int rcu_pending(void)
+> > > > > > > >  		return 0;
+> > > > > > > >  
+> > > > > > > >  	/* Is the RCU core waiting for a quiescent state from this CPU? */
+> > > > > > > > -	if (rdp->core_needs_qs && !rdp->cpu_no_qs.b.norm)
+> > > > > > > > +	if (READ_ONCE(rdp->core_needs_qs) && !rdp->cpu_no_qs.b.norm)
+> > > > > > > >  		return 1;
+> > > > > > > >  
+> > > > > > > >  	/* Does this CPU have callbacks ready to invoke? */
+> > > > > > > > @@ -3244,7 +3247,6 @@ int rcutree_prepare_cpu(unsigned int cpu)
+> > > > > > > >  	rdp->gp_seq = rnp->gp_seq;
+> > > > > > > >  	rdp->gp_seq_needed = rnp->gp_seq;
+> > > > > > > >  	rdp->cpu_no_qs.b.norm = true;
+> > > > > > > > -	rdp->core_needs_qs = false;
+> > > > > > > 
+> > > > > > > How about calling the new hint-clearing function here as well? Just for
+> > > > > > > robustness and consistency purposes?
+> > > > > > 
+> > > > > > This and the next function are both called during a CPU-hotplug online
+> > > > > > operation, so there is little robustness or consistency to be had by
+> > > > > > doing it twice.
+> > > > > 
+> > > > > Ok, sorry I missed you are clearing it below in the next function. That's
+> > > > > fine with me.
+> > > > > 
+> > > > > This patch looks good to me and I am Ok with merging of these changes into
+> > > > > the original patch with my authorship as you mentioned. Or if you wanted to
+> > > > > be author, that's fine too :)
+> > > > 
+> > > > Paul, does it make sense to clear these urgency hints in rcu_qs() as well?
+> > > > After all, we are clearing atleast one urgency hint there: the
+> > > > rcu_read_unlock_special::need_qs bit.
+> 
+> Makes sense.
+> 
+> > > We certainly don't want to turn off the scheduling-clock interrupt until
+> > > after the quiescent state has been reported to the RCU core.  And it might
+> > > still be useful to have a heavy quiescent state because the grace-period
+> > > kthread can detect that.  Just in case the CPU that just called rcu_qs()
+> > > is slow about actually reporting that quiescent state to the RCU core.
+> > 
+> > Hmmm...  Should ->need_qs ever be cleared from FQS to begin with?
+> 
+> I did not see the FQS loop clearing ->need_qs in the rcu_read_unlock_special
+> union after looking for a few minutes. Could you clarify which path this?
+> 
+> Or do you mean ->core_needs_qs? If so, I feel the FQS loop should clear it as
+> I think your patch does, since the FQS loop is essentially doing heavy-weight
+> RCU core processing right?
+> 
+> Also, where does FQS loop clear rdp.cpu_no_qs? Shouldn't it clear that as
+> well for the dyntick-idle CPUs?
 
+Synchronization?
 
-Martin
+							Thanx, Paul
