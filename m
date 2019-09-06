@@ -2,92 +2,153 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39531C00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 00:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D70AC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 00:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2771720870
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 00:50:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567731037;
-	bh=dTI/PD6Zp/AXRe7dx+Oz3QClHlFgk/sT4V/cXDhsk68=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q0lVYRAZXiJGmNN71cKuy3NjHn8z6HOfn1u4qVFlkWGy8gUN6gnovjmH5nj3D5gWe
-	 auk6DnbcJAwok2IOUbGQ/ppLRD2zL3Y8JVe4Z0iYQPl5CwCT9wAguphWkf19xYf6NB
-	 408O2/Rik4XbEYCs4ABcQqnZ4xUhodo9lxkJwo3g=
+	by mail.kernel.org (Postfix) with ESMTP id 5A2FD207E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 00:51:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="QTb4ducN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391857AbfIFAuf (ORCPT
+        id S2391867AbfIFAve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 20:50:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46698 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390787AbfIFAuf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 20:50:35 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42DA8207E0;
-        Fri,  6 Sep 2019 00:50:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567731035;
-        bh=dTI/PD6Zp/AXRe7dx+Oz3QClHlFgk/sT4V/cXDhsk68=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fx7VJE8ob8mqtjb5+wF3Z5mBYga5Hvdg9BwlDSIKQKNDGzXS2/OmvsLpgr442JCE8
-         V40l0RzRj8vWAozINBkY2HgNYNd9yitc2/ltw+m4usRPnC+UJ3d9I0cgLr7XchxmcT
-         CQAYZzOO7/KokO2b+nAOt+nVmpJUUDe2ybYMWfI0=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org
-Subject: [PATCH -tip v2 2/2] x86: kprobes: Prohibit probing on instruction which has emulate prefix
-Date:   Fri,  6 Sep 2019 09:50:29 +0900
-Message-Id: <156773102959.29031.18377408063770100148.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <156773100816.29031.12557431294039450779.stgit@devnote2>
-References: <156773100816.29031.12557431294039450779.stgit@devnote2>
-User-Agent: StGit/0.17.1-dirty
+        Thu, 5 Sep 2019 20:51:34 -0400
+Received: from mail.efficios.com ([167.114.142.138]:55250 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390794AbfIFAvd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 20:51:33 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 5416432C7D1;
+        Thu,  5 Sep 2019 20:51:32 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id aKnMaAaamc9x; Thu,  5 Sep 2019 20:51:31 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id CA60D32C7CE;
+        Thu,  5 Sep 2019 20:51:31 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com CA60D32C7CE
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1567731091;
+        bh=4avMchy2H6M2dh3qUpVReLXsndrsxB7wu+tz4cO9dcw=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=QTb4ducNNd/8yHcmsvscs7QNhysC1vYyGPf5SgObu6H4ZO1cR6hkuxKVswdoA6QWz
+         OnfxS5DwoB2AnUjMkslsP6AwUWcwGhQCXO/HbSDCtijURIYWMmelykJhIxo2vDA6s3
+         KtKLMcesFCf1m93VbvcVtAQ0HSEPcjy8TDdfMxm9auKXgFH8tHzHsTnf7tY+IXPuYn
+         jizSLUaZruZbayrTJK3EwzaOckHgIHcfrgdzSUsMt0fFxYa7u/5TKhehwXENKqpN9G
+         xxJyCt3ZVzydV0L5qa5q1bNtmhU2YX9+u92L1r6Go1FY152gZNp4QW8IpRLOP/1GCX
+         vaxHd51e5vm4w==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id j4EWsVNB08Wi; Thu,  5 Sep 2019 20:51:31 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id AE59632C7C2;
+        Thu,  5 Sep 2019 20:51:31 -0400 (EDT)
+Date:   Thu, 5 Sep 2019 20:51:31 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        paulmck <paulmck@linux.ibm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Russell King, ARM Linux" <linux@armlinux.org.uk>,
+        Chris Metcalf <cmetcalf@ezchip.com>,
+        Chris Lameter <cl@linux.com>, Kirill Tkhai <tkhai@yandex.ru>,
+        Mike Galbraith <efault@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Message-ID: <1713923102.3325.1567731091553.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20190904182607.GG17205@worktop.programming.kicks-ass.net>
+References: <20190903201135.1494-1-mathieu.desnoyers@efficios.com> <20190903202434.GX2349@hirez.programming.kicks-ass.net> <CAHk-=whfYb5RnJGqDV3W3093XGwOwePV-SxixaWcWM6hmidArg@mail.gmail.com> <1604807537.1565.1567610340030.JavaMail.zimbra@efficios.com> <20190904160953.GU2332@hirez.programming.kicks-ass.net> <1825272223.1740.1567617173011.JavaMail.zimbra@efficios.com> <20190904182607.GG17205@worktop.programming.kicks-ass.net>
+Subject: Re: [RFC PATCH 1/2] Fix: sched/membarrier: p->mm->membarrier_state
+ racy load
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.15_GA_3829 (ZimbraWebClient - FF68 (Linux)/8.8.15_GA_3829)
+Thread-Topic: sched/membarrier: p->mm->membarrier_state racy load
+Thread-Index: JBSNbl1z+P6IVHXWCzU+dev6Y364Kw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Prohibit probing on instruction which has XEN_EMULATE_PREFIX
-or KVM's emulate prefix. Since that prefix is a marker for Xen
-and KVM, if we modify the marker by kprobe's int3, that doesn't
-work as expected.
+----- On Sep 4, 2019, at 2:26 PM, Peter Zijlstra peterz@infradead.org wrote:
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- arch/x86/kernel/kprobes/core.c |    4 ++++
- 1 file changed, 4 insertions(+)
+> On Wed, Sep 04, 2019 at 01:12:53PM -0400, Mathieu Desnoyers wrote:
+>> ----- On Sep 4, 2019, at 12:09 PM, Peter Zijlstra peterz@infradead.org wrote:
+>> 
+>> > On Wed, Sep 04, 2019 at 11:19:00AM -0400, Mathieu Desnoyers wrote:
+>> >> ----- On Sep 3, 2019, at 4:36 PM, Linus Torvalds torvalds@linux-foundation.org
+>> >> wrote:
+>> > 
+>> >> > I wonder if the easiest model might be to just use a percpu variable
+>> >> > instead for the membarrier stuff? It's not like it has to be in
+>> >> > 'struct task_struct' at all, I think. We only care about the current
+>> >> > runqueues, and those are percpu anyway.
+>> >> 
+>> >> One issue here is that membarrier iterates over all runqueues without
+>> >> grabbing any runqueue lock. If we copy that state from mm to rq on
+>> >> sched switch prepare, we would need to ensure we have the proper
+>> >> memory barriers between:
+>> >> 
+>> >> prior user-space memory accesses  /  setting the runqueue membarrier state
+>> >> 
+>> >> and
+>> >> 
+>> >> setting the runqueue membarrier state / following user-space memory accesses
+>> >> 
+>> >> Copying the membarrier state into the task struct leverages the fact that
+>> >> we have documented and guaranteed those barriers around the rq->curr update
+>> >> in the scheduler.
+>> > 
+>> > Should be the same as the barriers we already rely on for rq->curr, no?
+>> > That is, if we put this before switch_mm() then we have
+>> > smp_mb__after_spinlock() and switch_mm() itself.
+>> 
+>> Yes, I think we can piggy-back on the already documented barriers documented
+>> around
+>> rq->curr store.
+>> 
+>> > Also, if we place mm->membarrier_state in the same cacheline as mm->pgd
+>> > (which switch_mm() is bound to load) then we should be fine, I think.
+>> 
+>> Yes, if we make sure membarrier_prepare_task_switch only updates the
+>> rq->membarrier_state if prev->mm != next->mm, we should be able to avoid
+>> loading next->mm->membarrier_state when switch_mm() is not invoked.
+>> 
+>> I'll prepare RFC patch implementing this approach.
+> 
+> Thinking about this a bit; switching it 'on' still requires some
+> thinking. Consider register on an already threaded process of which
+> multiple threads are 'current' on multiple CPUs. In that case none of
+> the rq bits will be set.
+> 
+> Not even synchronize_rcu() is sufficient to force it either, since we
+> only update on switch_mm() and nothing guarantees we pass that.
+> 
+> One possible approach would be to IPI broadcast (after setting the
+> ->mm->membarrier_State) and having the IPI update the rq state from
+> 'current->mm'.
+> 
+> But possible I'm just confusing evryone again. I'm not having a good day
+> today.
 
-diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
-index 43fc13c831af..4f13af7cbcdb 100644
---- a/arch/x86/kernel/kprobes/core.c
-+++ b/arch/x86/kernel/kprobes/core.c
-@@ -351,6 +351,10 @@ int __copy_instruction(u8 *dest, u8 *src, u8 *real, struct insn *insn)
- 	kernel_insn_init(insn, dest, MAX_INSN_SIZE);
- 	insn_get_length(insn);
- 
-+	/* We can not probe force emulate prefixed instruction */
-+	if (insn_has_emulate_prefix(insn))
-+		return 0;
-+
- 	/* Another subsystem puts a breakpoint, failed to recover */
- 	if (insn->opcode.bytes[0] == BREAKPOINT_INSTRUCTION)
- 		return 0;
+Indeed, switching 'on' requires some care. I implemented the IPI-based
+approach as per your suggestion,
 
+Thanks,
+
+Mathieu
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
