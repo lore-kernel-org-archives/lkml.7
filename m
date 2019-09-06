@@ -2,92 +2,140 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62602C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 22:34:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E499C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 22:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 362092082C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 22:34:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567809299;
-	bh=t0ccCI+8kZUqKdcNW5Uwzzf08BhcuG881ubPr/huBtA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yoIyywMfg2+Fk5jVLGo+Z3hP7DhCArtlDTHgAg/HheKEKifts/VqVAVso9Vesz4m4
-	 WjfuY/HOs7uNBFyih9EdOXFVTJvKahLbH9dA1mt+RIgV6RRUv64fF8V5jCl73Mjmu9
-	 kgmz2m9qux657MZHKl1o32G5YVYYYrWpUTUypWnU=
+	by mail.kernel.org (Postfix) with ESMTP id 32F392082C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 22:35:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vWNPt7nW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392455AbfIFWe5 (ORCPT
+        id S2392486AbfIFWfP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 18:34:57 -0400
-Received: from mga01.intel.com ([192.55.52.88]:20193 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730705AbfIFWe5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 18:34:57 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Sep 2019 15:34:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,474,1559545200"; 
-   d="scan'208";a="190955919"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by FMSMGA003.fm.intel.com with ESMTP; 06 Sep 2019 15:34:55 -0700
-Date:   Fri, 6 Sep 2019 16:25:55 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Long Li <longli@microsoft.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Keith Busch <keith.busch@intel.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        John Garry <john.garry@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        Jens Axboe <axboe@fb.com>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>
-Subject: Re: [PATCH 1/4] softirq: implement IRQ flood detection mechanism
-Message-ID: <20190906222555.GB4260@localhost.localdomain>
-References: <20190903072848.GA22170@ming.t460p>
- <dd96def4-1121-afbe-2431-9e516a06850c@linaro.org>
- <6f3b6557-1767-8c80-f786-1ea667179b39@acm.org>
- <2a8bd278-5384-d82f-c09b-4fce236d2d95@linaro.org>
- <20190905090617.GB4432@ming.t460p>
- <6a36ccc7-24cd-1d92-fef1-2c5e0f798c36@linaro.org>
- <20190906014819.GB27116@ming.t460p>
- <20190906141858.GA3953@localhost.localdomain>
- <CY4PR21MB0741091795CEE3D4624977CFCEBA0@CY4PR21MB0741.namprd21.prod.outlook.com>
- <20190906221920.GA12290@ming.t460p>
+        Fri, 6 Sep 2019 18:35:15 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40044 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729719AbfIFWfP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 18:35:15 -0400
+Received: by mail-pf1-f195.google.com with SMTP id x127so5500777pfb.7
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 15:35:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iKbU78VIf5fOOmTThNh7lnS5dfYeSWT/lSDm744SIO0=;
+        b=vWNPt7nW+whwTncJgD7DAv5qzns5PXjrJEnFy/vqmovNhinfvyE/SH5Sd/MGDZxXNl
+         rC9i5VKXWO6IddxM4bN6WXTx9k4N9y7aUpGAtcimFtT751y4pTMdUhuVM3IxTw9SlpLx
+         TGgwQslOWb+aJsXmFClGfjc3q61vcXl2DRiTaaIeGSrBiS+cNm5vYfo+VQhSipjzvb1A
+         fifni8LV3fnjQzfRjsqAGGui/tp6kOoGQfu1D6AESSMZOqAHJLEvkYL2LrS5ANl3t9IZ
+         wawHHHnUJACFHvTxvTuMmD5/2iA8esBj9VfNrANC4AkBCd88eO/CfO1FwC+oGfHeq5sz
+         mZcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iKbU78VIf5fOOmTThNh7lnS5dfYeSWT/lSDm744SIO0=;
+        b=DMe5Er5aM0LmkvYEwo0Dh6gesDwkUTuSIrilGb1jQrxqraQgL//fZHfmlfIXSkSyHe
+         gYXtOBm2YMqivpboj9CU0tYvSP3WCvlGnzwh9wJ3IjA4RfWJKC6RhbdreZ/Au/6QEY7T
+         xlZHKbx2YMSjWqtDOe+dVfeFax27VZmI2ntsgON/PeQnNdvyE79873AyC8aV6ya0RO4U
+         pM6z4ZO7pwkCvbVBtKUWEEHEsPOmKwyAUFWWAB21XhLViXjw2UbUkxpNbVBy8PpINh8e
+         BMIIcLS2x4aOeErG391CviL7S1+n2JSsopr1Y/wpmy73pho1V5YfGDWCXAyaf52iyc3y
+         +1tA==
+X-Gm-Message-State: APjAAAUcwEpkeHiefqlX33fjWvw/E5pusuQ11l4T0h2z8E3wxsfRyKA4
+        jebK2ADMLtTAqEW84wkr/UT+dVGSqW2e0BeJFkGZsQ==
+X-Google-Smtp-Source: APXvYqy1KOd0YR9NMCuh6I8UzTGEr9wBlKskZml0bIGWIbFBLwh2qFC6HZ5xViGP8bv/yfFWjKhpMaq+HitRk9SP8RM=
+X-Received: by 2002:a63:6193:: with SMTP id v141mr10207909pgb.263.1567809313806;
+ Fri, 06 Sep 2019 15:35:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190906221920.GA12290@ming.t460p>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+References: <20190830231527.22304-5-linux@rasmusvillemoes.dk>
+ <CAKwvOdktYpMH8WnEQwNE2JJdKn4w0CHv3L=YHkqU2JzQ6Qwkew@mail.gmail.com>
+ <a5085133-33da-6c13-6953-d18cbc6ad3f5@rasmusvillemoes.dk> <20190905134535.GP9749@gate.crashing.org>
+ <CANiq72nXXBgwKcs36R+uau2o1YypfSFKAYWV2xmcRZgz8LRQww@mail.gmail.com>
+ <20190906122349.GZ9749@gate.crashing.org> <CANiq72=3Vz-_6ctEzDQgTA44jmfSn_XZTS8wP1GHgm31Xm8ECw@mail.gmail.com>
+ <20190906163028.GC9749@gate.crashing.org> <20190906163918.GJ2120@tucnak>
+ <CAKwvOd=MT_=U250tR+t0jTtj7SxKJjnEZ1FmR3ir_PHjcXFLVw@mail.gmail.com> <20190906220347.GD9749@gate.crashing.org>
+In-Reply-To: <20190906220347.GD9749@gate.crashing.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Fri, 6 Sep 2019 15:35:02 -0700
+Message-ID: <CAKwvOdnWBV35SCRHwMwXf+nrFc+D1E7BfRddb20zoyVJSdecCA@mail.gmail.com>
+Subject: Re: [PATCH v2 4/6] compiler-gcc.h: add asm_inline definition
+To:     Segher Boessenkool <segher@kernel.crashing.org>,
+        Jakub Jelinek <jakub@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "gcc-patches@gcc.gnu.org" <gcc-patches@gcc.gnu.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 07, 2019 at 06:19:21AM +0800, Ming Lei wrote:
-> On Fri, Sep 06, 2019 at 05:50:49PM +0000, Long Li wrote:
-> > >Subject: Re: [PATCH 1/4] softirq: implement IRQ flood detection mechanism
-> > >
-> > >Why are all 8 nvmes sharing the same CPU for interrupt handling?
-> > >Shouldn't matrix_find_best_cpu_managed() handle selecting the least used
-> > >CPU from the cpumask for the effective interrupt handling?
-> > 
-> > The tests run on 10 NVMe disks on a system of 80 CPUs. Each NVMe disk has 32 hardware queues.
-> 
-> Then there are total 320 NVMe MSI/X vectors, and 80 CPUs, so irq matrix
-> can't avoid effective CPUs overlapping at all.
+On Fri, Sep 6, 2019 at 3:03 PM Segher Boessenkool
+<segher@kernel.crashing.org> wrote:
+>
+> On Fri, Sep 06, 2019 at 11:14:08AM -0700, Nick Desaulniers wrote:
+> > Here's the case that I think is perfect:
+> > https://developers.redhat.com/blog/2016/02/25/new-asm-flags-feature-for-x86-in-gcc-6/
+> >
+> > Specifically the feature test preprocessor define __GCC_ASM_FLAG_OUTPUTS__.
+> >
+> > See exactly how we handle it in the kernel:
+> > - https://github.com/ClangBuiltLinux/linux/blob/0445971000375859008414f87e7c72fa0d809cf8/arch/x86/include/asm/asm.h#L112-L118
+> > - https://github.com/ClangBuiltLinux/linux/blob/0445971000375859008414f87e7c72fa0d809cf8/arch/x86/include/asm/rmwcc.h#L14-L30
+> >
+> > Feature detection of the feature makes it trivial to detect when the
+> > feature is supported, rather than brittle compiler version checks.
+> > Had it been a GCC version check, it wouldn't work for clang out of the
+> > box when clang added support for __GCC_ASM_FLAG_OUTPUTS__.  But since
+> > we had the helpful __GCC_ASM_FLAG_OUTPUTS__, and wisely based our use
+> > of the feature on that preprocessor define, the code ***just worked***
+> > for compilers that didn't support the feature ***and*** compilers when
+> > they did support the feature ***without changing any of the source
+> > code*** being compiled.
+>
+> And if instead you tested whether the actual feature you need works as
+> you need it to, it would even work fine if there was a bug we fixed that
+> breaks things for the kernel.  Without needing a new compiler.
 
-Sure, but it's at most half, meanwhile the CPU that's dispatching requests
-would naturally be throttled by the other half who's completions are
-interrupting that CPU, no?
+That assumes a feature is broken out of the gate and is putting the
+cart before the horse.  If a feature is available, it should work.  If
+you later find it to be unsatisfactory, sure go out of your way to add
+ugly compiler-specific version checks or upgrade your minimally
+supported toolchain; until then feature detection is much cleaner (see
+again __GCC_ASM_FLAG_OUTPUTS__).
+
+>
+> Or as another example, if we added support for some other flags. (x86
+> has only a few flags; many other archs have many more, and in some cases
+> newer hardware actually has more flags than older).
+
+I think compiler flags are orthogonal to GNU C extensions we're discussing here.
+
+>
+> With the "macro" scheme we would need to add new macros in all these
+> cases.  And since those are target-specific macros, that quickly expands
+> beyond reasonable bounds.
+
+I don't think so.  Can you show me an example codebase that proves me wrong?
+
+>
+> If you want to know if you can do X in some environment, just try to do X.
+
+That's a very autoconf centric viewpoint.  Why doesn't the kernel take
+that approach for __GCC_ASM_FLAG_OUTPUTS__?  Why not repeatedly invoke
+$CC to find if every compiler __attribute__ is supported?  Do you
+think it's faster for the C preprocessor to check for a few #ifdefs,
+or to repeatedly invoke $CC at build or compile time to detect new
+features?
+-- 
+Thanks,
+~Nick Desaulniers
