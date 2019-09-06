@@ -2,128 +2,99 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 259BDC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0804C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A55320842
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7263121670
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:39:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="iQxmxhr0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405781AbfIFPjA (ORCPT
+        id S2405790AbfIFPjj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 11:39:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38448 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733236AbfIFPi7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 11:38:59 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3CE4E3082B43;
-        Fri,  6 Sep 2019 15:38:59 +0000 (UTC)
-Received: from [10.33.36.146] (unknown [10.33.36.146])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1CC676012E;
-        Fri,  6 Sep 2019 15:38:56 +0000 (UTC)
-Subject: Re: [RFC PATCH 2/2] livepatch: Clear relocation targets on a module
- removal
-To:     Miroslav Benes <mbenes@suse.cz>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Petr Mladek <pmladek@suse.com>, jikos@kernel.org,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
-References: <20190814151244.5xoaxib5iya2qjco@treble>
- <20190816094608.3p2z73oxcoqavnm4@pathway.suse.cz>
- <20190822223649.ptg6e7qyvosrljqx@treble>
- <20190823081306.kbkm7b4deqrare2v@pathway.suse.cz>
- <20190826145449.wyo7avwpqyriem46@treble>
- <alpine.LSU.2.21.1909021802180.29987@pobox.suse.cz>
- <5c649320-a9bf-ae7f-5102-483bc34d219f@redhat.com>
- <alpine.LSU.2.21.1909031447140.3872@pobox.suse.cz>
- <20190905023202.ed7fecc22xze4pwj@treble>
- <alpine.LSU.2.21.1909051403530.25712@pobox.suse.cz>
- <20190905125418.kleis5ackvhtn4hs@treble>
- <alpine.LSU.2.21.1909061431590.3031@pobox.suse.cz>
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-Message-ID: <9a917499-4dbc-e78c-05d0-226e49fc9fa3@redhat.com>
-Date:   Fri, 6 Sep 2019 16:38:54 +0100
+        Fri, 6 Sep 2019 11:39:39 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:43418 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404773AbfIFPjj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 11:39:39 -0400
+Received: by mail-io1-f67.google.com with SMTP id u185so13628575iod.10
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 08:39:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=MdfjTxN5SOgJB1OGke0HstginlQfCiAqgh1ZlMJdL5M=;
+        b=iQxmxhr0Eehh//WtWgiVCBnOQNedwADskIWQWrQDQMZsClb78zvHu9hgpI9l4vRsxX
+         Dt4VF0jB1ES83gsGXpQuMYayTg5icZJ39by0BVgCdsjc1xwU2iMeo8MZxV4XFg6c3LnE
+         NqpsRanw0uCu4j9jA7BW/6pO22E7l9vW6VCaFPTSUgMA6ZGZyV+JUwGzdmIxtVeHOYQC
+         HgkXXAriRRrHom++/NqocmTh+dDh8dY/ACafxTYgubpcsg680mg/Qn+LkzLqX0ZT9jeL
+         yKnybe1UFjgDYVdm4YsehLDfLNNqHMAWP3DKdufzYcDlgUjP6ddchagZ2oDx1WMMp47H
+         61Og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MdfjTxN5SOgJB1OGke0HstginlQfCiAqgh1ZlMJdL5M=;
+        b=NqzBXbn/YD71ibxIXAd4o55QN6KqaX02b3j5rn/on4pkeKX+lfUDp9GOoAWLvxx/QT
+         qFyacdfrwqkP7eqkwBMhfJE0VMbwxQXGxrMZn8C+QAbNmaIfXUgF3tKDaIp0wrighguW
+         e26SXqprAeJNFK0N/MQciS4Ko7S0UHv2j1lyEosKzhSNLBNAWR+EtQb7vxGvoWfGwoFY
+         Zb3dcnWfV/6pVhSUHFQo8TVNYMv6vrulpYYIevR4hH/p4FBYnVyo2VAFzyEbuOZ2p64a
+         xK7qgAvnnUfZPND9p3Bbpx0XFotxwqv4lcchIOppn5sN/E/u8XnBdmSoRsn2IeXbYhQz
+         JO9g==
+X-Gm-Message-State: APjAAAXFg8HKNhpJNvNaEK02/l2RLZ6oyZ9wttWBh1ERK9sZ4lyJnRcz
+        I0jWuj/aZ9lxGYlQkmaV4rsBTgxDt8TFsw==
+X-Google-Smtp-Source: APXvYqwIfGCXsY6+A9vxjZfhEunDp+sh5DIimV6KP61gWu6aK82Hhk0OIMcvdfLyTZMjqHHhjctsVg==
+X-Received: by 2002:a5d:9dcf:: with SMTP id 15mr1370597ioo.181.1567784377906;
+        Fri, 06 Sep 2019 08:39:37 -0700 (PDT)
+Received: from [192.168.1.50] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id e139sm8592829iof.60.2019.09.06.08.39.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 06 Sep 2019 08:39:37 -0700 (PDT)
+Subject: Re: [PATCH 1/2] watch_queue: make locked_vm accessible
+To:     Arnd Bergmann <arnd@arndb.de>, David Howells <dhowells@redhat.com>
+Cc:     Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org
+References: <20190906153249.1864324-1-arnd@arndb.de>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <1bfa4486-96db-dd83-dc6d-433302f3235f@kernel.dk>
+Date:   Fri, 6 Sep 2019 09:39:36 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <alpine.LSU.2.21.1909061431590.3031@pobox.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190906153249.1864324-1-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Fri, 06 Sep 2019 15:38:59 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/6/19 1:51 PM, Miroslav Benes wrote:
+On 9/6/19 9:32 AM, Arnd Bergmann wrote:
+> The locked_vm member of struct user_struct is guarded by an #ifdef,
+> which breaks building the new watch_queue driver when all the other
+> subsystems that need it are disabled:
 > 
->>> Now, I don't think that replacing .ko on disk is a good idea. We've
->>> already discussed it. It would lead to a maintenance/packaging problem,
->>> because you never know which version of the module is loaded in the
->>> system. The state space grows rather rapidly there.
->>
->> What exactly are your concerns?
->>
->> Either the old version of the module is loaded, and it's livepatched; or
->> the new version of the module is loaded, and it's not livepatched.
+> drivers/misc/watch_queue.c:315:38: error: no member named 'locked_vm' in 'struct user_struct'; did you mean 'locked_shm'?
 > 
-> Let's have module foo.ko with function a().
-> 
-> Live patch 1 (LP1) fixes it to a'(), which calls new function b() (present
-> in LP1). LP1 is used only if foo.ko is loaded. foo.ko is replaced with
-> foo'.ko on disk. It contains both a'() (fixed a() to be precise) and new
-> b().
-> 
-> Now there is LP2 with new function c() (or c'(), it does not matter)
-> calling b(). Either foo.ko or foo'.ko can be loaded and you don't know
-> which one. The implementation LP2 would be different in both cases.
-> 
-> You could say that it does not matter. If LP2 is implemented for foo.ko,
-> the same could work for foo'.ko (b() would be a part of LP2 and would not
-> be called directly from foo'.ko). LP2 would only be necessarily larger. It
-> is true in case of functions, but if symbol b is not a function but a
-> global variable, it is different then.
-> 
-> Moreover, in this case foo'.ko is "LP superset". Meaning that it contains
-> only fixes which are present in LP1. What if it is not. We usually
-> preserve kABI, so there could be a module in two or more versions compiled
-> from slightly different code (older/newer and so on) and you don't know
-> which one is loaded. To be fair we don't allow it (I think) at SUSE except
-> for KMPs (kernel module packages) (the issue of course exists even now
-> and we haven't solved it yet, because it is rare) and out of tree modules
-> which we don't support with LP. It could be solved with srcversion, but it
-> complicates things a lot. "blue sky" idea could extend the issue to all
-> modules given the above is real.
-> 
-> Does it make sense?
-> 
+> Add watch_queue to the list.
 
-If I understand correctly, you're saying that this would add another 
-dimension to the potential system state that livepatches need to 
-consider?  e.g. when updating a livepatch to v3, a v2 patched module may 
-or may not be loaded.  So are we updating livepatch v2 code or module v2 
-code...
+Should we either:
 
-I agree that for functions, we could probably get away with repeating 
-code, but not necessarily for new global variables.
+1) Make it unconditionally available
 
-Then there's the question of:
+or
 
-   module v3 == module v{1,2} + livepatch v3?
+2) Introduce a symbol for this that others can select, like
+   CONFIG_NEEDS_USER_LOCKED_VM or something like that.
 
+?
 
-Is this scenario similar to one where a customer somehow finds and loads 
-module v3 before loading livepatch v3?  Livepatch doesn't have a 
-srcversion whitelist so this should be entirely possible.  I suppose it 
-is a bit different in that module v3 would be starting from a fresh load 
-and not something that livepatch v3 has hotpatched from an unknown 
-source/base.
+-- 
+Jens Axboe
 
--- Joe
