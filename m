@@ -2,87 +2,174 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2447C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2809C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B31BF20854
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:40:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4A4E20854
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:42:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392067AbfIFMkr (ORCPT
+        id S2392676AbfIFMmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 08:40:47 -0400
-Received: from mga04.intel.com ([192.55.52.120]:5727 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728507AbfIFMkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 08:40:46 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Sep 2019 05:40:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,473,1559545200"; 
-   d="scan'208";a="213132853"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga002.fm.intel.com with ESMTP; 06 Sep 2019 05:40:44 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1i6DXf-0006YI-E3; Fri, 06 Sep 2019 15:40:43 +0300
-Date:   Fri, 6 Sep 2019 15:40:43 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 1/3] software node: implement reference properties
-Message-ID: <20190906124043.GS2680@smile.fi.intel.com>
-References: <20190906043809.18990-1-dmitry.torokhov@gmail.com>
- <20190906111744.GA30048@kuha.fi.intel.com>
+        Fri, 6 Sep 2019 08:42:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57754 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2392067AbfIFMmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 08:42:14 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 43544B02E;
+        Fri,  6 Sep 2019 12:42:12 +0000 (UTC)
+Date:   Fri, 6 Sep 2019 14:42:11 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        John Ogness <john.ogness@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v4 0/9] printk: new ringbuffer implementation
+Message-ID: <20190906124211.2dionk2kzcslaotz@pathway.suse.cz>
+References: <20190807222634.1723-1-john.ogness@linutronix.de>
+ <20190904123531.GA2369@hirez.programming.kicks-ass.net>
+ <20190905130513.4fru6yvjx73pjx7p@pathway.suse.cz>
+ <20190905143118.GP2349@hirez.programming.kicks-ass.net>
+ <20190906090627.GX2386@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190906111744.GA30048@kuha.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190906090627.GX2386@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 06, 2019 at 02:17:44PM +0300, Heikki Krogerus wrote:
-> On Thu, Sep 05, 2019 at 09:38:07PM -0700, Dmitry Torokhov wrote:
-> > It is possible to store references to software nodes in the same fashion as
-> > other static properties, so that users do not need to define separate
-> > structures:
+On Fri 2019-09-06 11:06:27, Peter Zijlstra wrote:
+> On Thu, Sep 05, 2019 at 04:31:18PM +0200, Peter Zijlstra wrote:
+> > So I have something roughly like the below; I'm suggesting you add the
+> > line with + on:
 > > 
-> > const struct software_node gpio_bank_b_node = {
-> > 	.name = "B",
-> > };
+> >   int early_vprintk(const char *fmt, va_list args)
+> >   {
+> > 	char buf[256]; // teh suck!
+> > 	int old, n = vscnprintf(buf, sizeof(buf), fmt, args);
 > > 
-> > const struct property_entry simone_key_enter_props[] __initconst = {
-> > 	PROPERTY_ENTRY_U32("linux,code", KEY_ENTER),
-> > 	PROPERTY_ENTRY_STRING("label", "enter"),
-> > 	PROPERTY_ENTRY_REF("gpios", &gpio_bank_b_node, 123, GPIO_ACTIVE_LOW),
-> > 	{ }
-> > };
+> > 	old = cpu_lock();
+> > +	printk_buffer_store(buf, n);
+> > 	early_console->write(early_console, buf, n);
+> > 	cpu_unlock(old);
 > > 
-> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > 	return n;
+> >   }
+> > 
+> > (yes, yes, we can get rid of the on-stack @buf thing with a
+> > reserve+commit API, but who cares :-))
 > 
-> This looks really good to me. I'll wait for Andy's comments on the
-> idea, but to me it makes sense.
+> Another approach is something like:
+> 
+> DEFINE_PER_CPU(int, printk_nest);
+> DEFINE_PER_CPU(char, printk_line[4][256]);
+> 
+> int vprintk(const char *fmt, va_list args)
+> {
+> 	int c, n, i;
+> 	char *buf;
+> 
+> 	preempt_disable();
+> 	i = min(3, this_cpu_inc_return(printk_nest) - 1);
+> 	buf = this_cpu_ptr(printk_line[i]);
+> 	n = vscnprintf(buf, 256, fmt, args);
+> 
+> 	c = cpu_lock();
+> 	printk_buffer_store(buf, n);
+> 	if (early_console)
+> 		early_console->write(early_console, buf, n);
+> 	cpu_unlock(c);
+> 
+> 	this_cpu_dec(printk_nest);
+> 	preempt_enable();
+> 
+> 	return n;
+> }
+> 
+> Again, simple and straight forward (and I'm sure it's been mentioned
+> before too).
+> 
+> We really should not be making this stuff harder than it needs to be
+> (and anybody whining about lines longer than 256 characters can just go
+> away, those are unreadable anyway).
 
-Idea in general is fine. Though, taking into consideration, for example,
-drivers/mfd/intel-lpss-pci.c, the size of predefined structures bumps a lot.
-I think we always should keep a pointer. In this case we may not add another
-property type.
+I wish it was that simple. It is possible that I see it too
+complicated. But this comes to my mind:
 
--- 
-With Best Regards,
-Andy Shevchenko
+1. The simple printk_buffer_store(buf, n) is not NMI safe. For this,
+   we might need the reserve-store approach.
 
 
+2. The simple approach works only with lockless consoles. We need
+   something else for the rest at least for NMI. Simle offloading
+   to a kthread has been blocked for years. People wanted the
+   trylock-and-flush-immediately approach.
+
+
+3. console_lock works in tty as a big kernel lock. I do not know
+   much details. But people familiar with the code said that
+   it was a disaster. I assume that tty is still rather
+   important console. I am not sure how it would fit into the
+   simple approach.
+
+
+4. The console handling has got non-synchronous (console_trylock)
+   quite early (ver 2.4.10, year 2001). The reason was to do not
+   serialize CPUs by the speed of the console.
+
+   Serialized output could remove many troubles. The logic in
+   console_unlock() is really crazy. It might be acceptable
+   for debugging. But is it acceptable on production systems?
+
+
+5. John planed to use the cpu_lock in the lockless consoles.
+   I wonder if it was only in the console->write() callback
+   or if it would spread the lock more widely.
+
+
+6. One huge nightmare is panic() and code called from there.
+   It is a maze of hacks, including arch-specific code, to
+   prevent deadlocks and get the messages out.
+
+   Any lock might be blocked on any CPU at the moment. Or it
+   it might become blocked when CPUs are stopped by NMI.
+
+   Fully lock-less log buffer might save us some headache.
+   I am not sure whether a single lock shared between printk()
+   writers and console drivers will make the situation easier
+   or more complicated.
+
+
+7. People would complain when continuous lines become less
+   reliable. It might be most visible when mixing backtraces
+   from all CPUs. Simple sorting by prefix will not make
+   it readable. The historic way was to synchronize CPUs
+   by a spin lock. But then the cpu_lock() could cause
+   deadlock.
+
+
+I would be really happy when we could ignore some of the problems
+or find an easy solution. I just want to make sure that we take
+into account all the known aspects.
+
+I am sure that we could do better than we do now. I do not want
+to block any improvements. I am just a bit lost in the many
+black corners.
+
+Best Regards,
+Petr
