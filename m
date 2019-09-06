@@ -2,179 +2,240 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A328DC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14CE7C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89B8020640
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:43:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6250208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:45:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="eLxc4P2G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730459AbfIFHnX (ORCPT
+        id S1731558AbfIFHpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 03:43:23 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:39908 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726323AbfIFHnX (ORCPT
+        Fri, 6 Sep 2019 03:45:34 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:41747 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727764AbfIFHpd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 03:43:23 -0400
-Received: by mail-wm1-f65.google.com with SMTP id q12so5866296wmj.4;
-        Fri, 06 Sep 2019 00:43:21 -0700 (PDT)
+        Fri, 6 Sep 2019 03:45:33 -0400
+Received: by mail-ed1-f66.google.com with SMTP id z9so5415449edq.8
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 00:45:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zo7pH214UHwzpcJKHz+DSAZKUS6UbKLfm3ouHEw9TdY=;
+        b=eLxc4P2GE5OEYYrsrSZcd7X16YU1qq8WWoRTUyYnrHQ79ArSd+KEhoY0mtL39f86Tu
+         fFTIvKEk3XMAV+o7x2d/e7HmfX5PO5Dol5+343Uh4m08cmCvzWDlPvHXuwaAQMVvcOdO
+         klTXJp+3I35x9Thh+9gMsuP5swWQp1WD3J3lVSXrtXDN9qf5JnuI4bjeu+vyjy11I+aB
+         Lm0r2sHfuNffvOQv3dENiIUPC9g4/MArMpNJNVRHKTBIwAcN+Hv5oX8g+tpMnS5va2OV
+         PMei5Jfu5ry5XHGKlSC42w/5BK61LuSnXtxgpV72kuOHL+uTF5ZjAxtXol7gTV6K4ynD
+         CY7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=ZX+fJ6kKmFi7b0gcgOsbNpKUcKQe/PtH3be90uHqjyE=;
-        b=DBy61pSG/1XAsVOzcU9tvMX/H7j1DqIdhM6+U7d5SY/qb5F1XSamjgmguFJTQ0kFwK
-         9KQgI8wNVOynp1AqZhQHV6Oz3+7CsJ14jJjiP9U6o1jDfAMN2Z9K9TzyhaiW8MVXeA84
-         //Ezj4d7wHT5UltLBoGdnkMyIkD7Tw/dkIe7nmOUMROpEna4dwUcq0VzShyB6fN6m0Vt
-         xa66la6xpN7+B1QKEz53ShEP/+AT5WUl0hFgWnu/Sq1+6pcQjypzccUiScUlC7ZrRRxB
-         U+1gGHTi/TVYUx/ucBrrhtnDwIrBpa6ntUqwBCxuRLWZx3nMn58L+4v4jBH/OSD6Aogo
-         Ri5Q==
-X-Gm-Message-State: APjAAAVxQlmrF4SpkakuUrugzfgFCJuxFAHZmHQZIcoltH+63j7pVqcK
-        pJ2Egq320mCcyzb6yx3HS6Jd3J4r7I4=
-X-Google-Smtp-Source: APXvYqzqbp+DOxBmh/9kc5bWxb4ZJbe7qWqVbnioyjb6kmRfH1ws0o+Fwcpu8EU7LpYaci6np+XSsg==
-X-Received: by 2002:a1c:608b:: with SMTP id u133mr6097859wmb.27.1567755800254;
-        Fri, 06 Sep 2019 00:43:20 -0700 (PDT)
-Received: from [192.168.1.49] (185-219-167-24-static.vivo.cz. [185.219.167.24])
-        by smtp.gmail.com with ESMTPSA id k26sm4937914wmi.37.2019.09.06.00.43.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Sep 2019 00:43:19 -0700 (PDT)
-Subject: Re: [PATCH v8 04/28] x86/asm/entry: annotate THUNKs
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
-        x86@kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190808103854.6192-1-jslaby@suse.cz>
- <20190808103854.6192-5-jslaby@suse.cz> <20190815124328.GG15313@zn.tnic>
-From:   Jiri Slaby <jslaby@suse.cz>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <b339dc02-390d-b896-5b80-ebe5f08525e8@suse.cz>
-Date:   Fri, 6 Sep 2019 09:43:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zo7pH214UHwzpcJKHz+DSAZKUS6UbKLfm3ouHEw9TdY=;
+        b=AFIMZxrSPNaIzUywQuGPGH9s8ecYISVDcpuyzXEBmMX+/DzWKUmTERwOpROR7xKAas
+         F/5YrSj42S/WjKvlQhvUs6+qSC4Z6bcf9fX7ZEE8hzgS/FuJ4MwKmzfEdbeboEu4pk7c
+         J+UD1KTZK1+5Qpuif4FAuWWABiGG/TJKcYEJpX3N+ruu4umI7yM1N3SABoX2J9ZmVymA
+         yPirRsV8DHlXCotHrtM4HP+tETx3rPGsqO+QUIaaBX5hK3KPFe/WO0TmHLRfZCXcl9Pl
+         KfJIw7YuVmxLLnVOkOs6CLiowq6CHx22IG6WEwBkLS/MqgLwhtAWq2vmHNznro0eH4zd
+         C5+A==
+X-Gm-Message-State: APjAAAUrA6MENaTu51VcMRi4luMa7N0a35cV1jAw+8IE4a2c67zPkvtf
+        uUFM9NjKxpYl8JvSkZ/rKPVnGw==
+X-Google-Smtp-Source: APXvYqz5t2n0Cz3SWMqp+PJxO+EEtSxd7CrrMRDClS4OArRgLQd502XG8mJBe7tqpVJIgjUGwvRQVg==
+X-Received: by 2002:a17:906:1903:: with SMTP id a3mr6146192eje.112.1567755930993;
+        Fri, 06 Sep 2019 00:45:30 -0700 (PDT)
+Received: from maco2.ams.corp.google.com (a83-162-234-235.adsl.xs4all.nl. [83.162.234.235])
+        by smtp.gmail.com with ESMTPSA id z65sm799136ede.86.2019.09.06.00.45.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Sep 2019 00:45:30 -0700 (PDT)
+From:   Martijn Coenen <maco@android.com>
+To:     agk@redhat.com, snitzer@redhat.com, dm-devel@redhat.com
+Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        kernel-team@android.com, narayan@google.com, dariofreni@google.com,
+        ioffe@google.com, jiyong@google.com, maco@google.com,
+        Martijn Coenen <maco@android.com>
+Subject: [PATCH] dm-bufio: Allow clients to specify an upper bound on cache size.
+Date:   Fri,  6 Sep 2019 09:45:26 +0200
+Message-Id: <20190906074526.169194-1-maco@android.com>
+X-Mailer: git-send-email 2.23.0.162.g0b9fbb3734-goog
 MIME-Version: 1.0
-In-Reply-To: <20190815124328.GG15313@zn.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15. 08. 19, 14:43, Borislav Petkov wrote:
-> On Thu, Aug 08, 2019 at 12:38:30PM +0200, Jiri Slaby wrote:
->> Place SYM_*_START_NOALIGN and SYM_*_END around the THUNK macro body.
->> Preserve @function by FUNC (64bit) and CODE (32bit). Given it was not
->> marked as aligned, use NOALIGN.
->>
->> The common tail .L_restore is put inside SYM_CODE_START_LOCAL_NOALIGN
->> and SYM_CODE_END too.
-> 
-> What is that needed for? It is a local label...
-> 
->> The result:
->>  Value  Size Type    Bind   Vis      Ndx Name
->>   0000    28 FUNC    GLOBAL DEFAULT    1 trace_hardirqs_on_thunk
->>   001c    28 FUNC    GLOBAL DEFAULT    1 trace_hardirqs_off_thunk
->>   0038    24 FUNC    GLOBAL DEFAULT    1 lockdep_sys_exit_thunk
->>   0050    24 FUNC    GLOBAL DEFAULT    1 ___preempt_schedule
->>   0068    24 FUNC    GLOBAL DEFAULT    1 ___preempt_schedule_notra
-> 
-> No difference except alignment:
+The upper limit on the cache size of a client is currently determined by
+dividing the total cache size by the number of clients. However, in some
+cases it is beneficial to give one client a higher limit than others; an
+example is a device with many dm-verity targets, where one target has a
+very large hashtree, and all the others have a small hashtree. Giving
+the target with the large hashtree a higher limit will be beneficial.
+Another example is dm-verity-fec: FEC is only used in (rare) error
+conditions, yet for every dm-verity target with FEC, we create two FEC
+dm-bufio clients, which together have a higher cache limit than the
+dm-verity target itself.
 
-Yeah, alignment is one and visual effect the other. One can immediately
-see where it starts and where it ends -- readability. There is no other
-functional meaning, so I don't mind not annotating it. It's your call. So?
+This patchset allows a client to indicate a maximum cache size for its
+client; if that maximum is lower than the calculated per-client limit,
+that maximum will be used instead, and the freed up cache size will be
+allocated to other clients (that haven't set a maximum).
 
-before:
+Note that this algorithm is not perfect; if we have 100MB with 3
+clients, where the first set a max of 1MB, the second set a max of 40MB,
+and the third set no maximumm, the ideal allocation would be 1:40:59,
+respectively. However, because the initial per-client limit is 100 / 3
+=~33MB, the requested max of 40MB is over the per-client limit, and
+instead the allocation will end up being ~ 1:40:49. This is still better
+than the original 33:33:33 allocation. An iterative algorithm could do
+better, but it also complicates the code significantly.
 
-#if defined(CONFIG_TRACE_IRQFLAGS) \
- || defined(CONFIG_DEBUG_LOCK_ALLOC) \
- || defined(CONFIG_PREEMPTION)
-.L_restore:
-        popq %r11
-        popq %r10
-        popq %r9
-        popq %r8
-        popq %rax
-        popq %rcx
-        popq %rdx
-        popq %rsi
-        popq %rdi
-        popq %rbp
-        ret
-        _ASM_NOKPROBE(.L_restore)
-#endif
+Signed-off-by: Martijn Coenen <maco@android.com>
+---
+ drivers/md/dm-bufio.c    | 60 +++++++++++++++++++++++++++++++++++++---
+ include/linux/dm-bufio.h |  7 +++++
+ 2 files changed, 63 insertions(+), 4 deletions(-)
 
-after:
-#if defined(CONFIG_TRACE_IRQFLAGS) \
- || defined(CONFIG_DEBUG_LOCK_ALLOC) \
- || defined(CONFIG_PREEMPTION)
-SYM_CODE_START_LOCAL_NOALIGN(.L_restore)
-        popq %r11
-        popq %r10
-        popq %r9
-        popq %r8
-        popq %rax
-        popq %rcx
-        popq %rdx
-        popq %rsi
-        popq %rdi
-        popq %rbp
-        ret
-        _ASM_NOKPROBE(.L_restore)
-SYM_CODE_END(.L_restore)
-#endif
-
-
-thanks,
+diff --git a/drivers/md/dm-bufio.c b/drivers/md/dm-bufio.c
+index b6b5acc92ca2d..d116030107c54 100644
+--- a/drivers/md/dm-bufio.c
++++ b/drivers/md/dm-bufio.c
+@@ -25,9 +25,20 @@
+  * Memory management policy:
+  *	Limit the number of buffers to DM_BUFIO_MEMORY_PERCENT of main memory
+  *	or DM_BUFIO_VMALLOC_PERCENT of vmalloc memory (whichever is lower).
+- *	Always allocate at least DM_BUFIO_MIN_BUFFERS buffers.
+- *	Start background writeback when there are DM_BUFIO_WRITEBACK_PERCENT
+- *	dirty buffers.
++ *
++ *	By default, all clients have an equal memory limit, which is the total
++ *	cache size divided by the number of clients. On devices with few
++ *	clients, this can be quite a large amount, and clients that know an
++ *	upper bound on their desired cache size can call
++ *	dm_bufio_set_maximum_buffers() to indicate this, to allow more "needy"
++ *	clients to get higher limits. In that case, if the per-client memory
++ *	limit exceeds the requested maximum, we use the requested maximum
++ *	instead, and divide the freed up space evenly with other clients that
++ *	haven't requested a maximum.
++ *
++ *	Always allocate at least DM_BUFIO_MIN_BUFFERS buffers.  Start
++ *	background writeback when there are DM_BUFIO_WRITEBACK_PERCENT dirty
++ *	buffers.
+  */
+ #define DM_BUFIO_MIN_BUFFERS		8
+ 
+@@ -98,6 +109,7 @@ struct dm_bufio_client {
+ 	unsigned need_reserved_buffers;
+ 
+ 	unsigned minimum_buffers;
++	unsigned maximum_buffers;
+ 
+ 	struct rb_root buffer_tree;
+ 	wait_queue_head_t free_buffer_wait;
+@@ -310,6 +322,11 @@ static void adjust_total_allocated(unsigned char data_mode, long diff)
+  */
+ static void __cache_size_refresh(void)
+ {
++	unsigned long max_cache_size_per_client;
++	unsigned long remaining_cache_size_to_divide;
++	struct dm_bufio_client *c;
++	unsigned int num_clients_to_divide = 0;
++
+ 	BUG_ON(!mutex_is_locked(&dm_bufio_clients_lock));
+ 	BUG_ON(dm_bufio_client_count < 0);
+ 
+@@ -324,8 +341,22 @@ static void __cache_size_refresh(void)
+ 		dm_bufio_cache_size_latch = dm_bufio_default_cache_size;
+ 	}
+ 
+-	dm_bufio_cache_size_per_client = dm_bufio_cache_size_latch /
++	remaining_cache_size_to_divide = dm_bufio_cache_size_latch;
++	max_cache_size_per_client = dm_bufio_cache_size_latch /
+ 					 (dm_bufio_client_count ? : 1);
++
++	list_for_each_entry(c, &dm_bufio_all_clients, client_list) {
++		unsigned long max = (unsigned long) c->maximum_buffers *
++			c->block_size;
++
++		if (max > 0 && max < max_cache_size_per_client)
++			remaining_cache_size_to_divide -= max;
++		else
++			num_clients_to_divide++;
++	}
++
++	dm_bufio_cache_size_per_client = remaining_cache_size_to_divide /
++					 (num_clients_to_divide ? : 1);
+ }
+ 
+ /*
+@@ -928,6 +959,15 @@ static void __get_memory_limit(struct dm_bufio_client *c,
+ 	else
+ 		buffers /= c->block_size;
+ 
++	/*
++	 * Note that dm_bufio_cache_size_per_client already takes into account
++	 * clients requesting less than is available; but that means the
++	 * available cache size per client has increased, and if they were
++	 * below the per-client limit then, they will still be below the limit
++	 * now.
++	 */
++	if ((c->maximum_buffers > 0) && buffers > c->maximum_buffers)
++		buffers = c->maximum_buffers;
+ 	if (buffers < c->minimum_buffers)
+ 		buffers = c->minimum_buffers;
+ 
+@@ -1450,6 +1490,17 @@ void dm_bufio_set_minimum_buffers(struct dm_bufio_client *c, unsigned n)
+ }
+ EXPORT_SYMBOL_GPL(dm_bufio_set_minimum_buffers);
+ 
++void dm_bufio_set_maximum_buffers(struct dm_bufio_client *c, unsigned n)
++{
++	mutex_lock(&dm_bufio_clients_lock);
++
++	c->maximum_buffers = n;
++	__cache_size_refresh();
++
++	mutex_unlock(&dm_bufio_clients_lock);
++}
++EXPORT_SYMBOL(dm_bufio_set_maximum_buffers);
++
+ unsigned dm_bufio_get_block_size(struct dm_bufio_client *c)
+ {
+ 	return c->block_size;
+@@ -1664,6 +1715,7 @@ struct dm_bufio_client *dm_bufio_client_create(struct block_device *bdev, unsign
+ 	c->need_reserved_buffers = reserved_buffers;
+ 
+ 	dm_bufio_set_minimum_buffers(c, DM_BUFIO_MIN_BUFFERS);
++	c->maximum_buffers = 0;
+ 
+ 	init_waitqueue_head(&c->free_buffer_wait);
+ 	c->async_write_error = 0;
+diff --git a/include/linux/dm-bufio.h b/include/linux/dm-bufio.h
+index 3c8b7d274bd9b..89f2f04c16ef2 100644
+--- a/include/linux/dm-bufio.h
++++ b/include/linux/dm-bufio.h
+@@ -136,6 +136,13 @@ void dm_bufio_forget(struct dm_bufio_client *c, sector_t block);
+  */
+ void dm_bufio_set_minimum_buffers(struct dm_bufio_client *c, unsigned n);
+ 
++/*
++ * Set the maximum number of buffers a client can hold. If called with a value
++ * of 0 (which is also the default), the maximum number of buffers is equal to
++ * the total cache size divided by the number of clients.
++ */
++void dm_bufio_set_maximum_buffers(struct dm_bufio_client *c, unsigned n);
++
+ unsigned dm_bufio_get_block_size(struct dm_bufio_client *c);
+ sector_t dm_bufio_get_device_size(struct dm_bufio_client *c);
+ sector_t dm_bufio_get_block_number(struct dm_buffer *b);
 -- 
-js
-suse labs
+2.23.0.162.g0b9fbb3734-goog
+
