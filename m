@@ -2,108 +2,113 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 330E4C43140
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E213C43140
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0785F214E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:56:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC05520854
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:56:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gLYNOAhG"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="V7YmFi2h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404310AbfIFL4A (ORCPT
+        id S2391509AbfIFLz5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 07:56:00 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38251 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404296AbfIFLz4 (ORCPT
+        Fri, 6 Sep 2019 07:55:57 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:52134 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389491AbfIFLzx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 07:55:56 -0400
-Received: by mail-pg1-f193.google.com with SMTP id d10so3378492pgo.5
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 04:55:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=n0xZnwvqrMb6ldOj+rJWYs9r2G218dDOkg+hug4AnqA=;
-        b=gLYNOAhGFrZSLpPOwi/adRGDzZxevZp8l1+MggAdRf+GhloCsbcBldsllG04vfEQ5Q
-         e3thTHGGQfil99wc0YZ5UsqSNh442lu3kiFdZ7SM0r+YCESy+jfzLjt0WumgScEWvr7p
-         SNX6pDxHHDZhE/l7YzR8U864CeKlVREq3rMzk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=n0xZnwvqrMb6ldOj+rJWYs9r2G218dDOkg+hug4AnqA=;
-        b=huOYa0T7KM6JQ/tVodCoYTnArRrToqHTsCOrHDOhec5BGX+fzW/Xa8agEUZnfxxqge
-         vqxasSTaOjo/ctfOZA8FjDIFnZL7R6DsNl0x9eXXzBqENo1aoIx7mA32wEWvRH0nhTD8
-         HnLycWFHf01Q57GEUPW9QxkMElYVx5EMWiwEuqL+QAjmcMOrjXwqGzsQNDZ0XfqgBK5P
-         OL0VQgrdpiC4Jqp22auzNvb99Zl2bK7A9k3WqoGcUnCEm5DA+1WUaKyJ1IZQplMuqOu4
-         g0WGuaNl0MjxHdthm8ed4w8CO1b+JlG1YfgPJSj8y+i6UhT3WYowNRJ3R4CbBYaElBXB
-         6aSg==
-X-Gm-Message-State: APjAAAXuwzeRGuxqNWprQQiustIDFEnGT7U7woiXuF5JEmiuVTGuZ623
-        imSMAZirc1yt2qsAzcbKMO8Xmw==
-X-Google-Smtp-Source: APXvYqx5WhsXkvJ3BjBJ1D6yszHS/6Iq4oTXUP8qX5zioVUs3GbhIlU2rVJbHdqrkKNPSmEZQmBIAw==
-X-Received: by 2002:a63:6686:: with SMTP id a128mr7450171pgc.361.1567770955316;
-        Fri, 06 Sep 2019 04:55:55 -0700 (PDT)
-Received: from acourbot.tok.corp.google.com ([2401:fa00:4:4:9712:8cf1:d0f:7d33])
-        by smtp.gmail.com with ESMTPSA id o22sm3667394pjq.21.2019.09.06.04.55.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Sep 2019 04:55:54 -0700 (PDT)
-From:   Alexandre Courbot <acourbot@chromium.org>
-To:     Yunfei Dong <yunfei.dong@mediatek.com>,
-        Tiffany Lin <tiffany.lin@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Alexandre Courbot <acourbot@chromium.org>
-Subject: [RFC PATCH v2 09/13] media: doc: Add documentation for MM21 video format
-Date:   Fri,  6 Sep 2019 20:55:09 +0900
-Message-Id: <20190906115513.159705-10-acourbot@chromium.org>
-X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
-In-Reply-To: <20190906115513.159705-1-acourbot@chromium.org>
-References: <20190906115513.159705-1-acourbot@chromium.org>
+        Fri, 6 Sep 2019 07:55:53 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x86Bs9q1084833;
+        Fri, 6 Sep 2019 11:55:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=UQ7HZzVsUj9ewFhA6fQpQ91lzSpUtdtyloZU6ZAWe04=;
+ b=V7YmFi2h8p3HXetZAeZvjZ1vpqxdwMH+sg5CGT4ej4gyFv9iw6jz/10yTXc3ibXht8Gh
+ veBX1PGMp6vhAoHHcTBWb3ijpPzgCzSZgv9G0fRmFw94qzO/RPWx2OfWsvufET1ESHFs
+ ynKZxtumzwADP/mK1FCFhmWz/dhY+VwOk47YvU+Iu3sMQ7vtFWwRfjBMs5lJ4gDa4u/x
+ J3+azWJJcw0qT2tNhonEcFY7CxvD0QNDkzrDIxs0tRRRYknI0Bs/gUxzK1hEJ3BFm3h1
+ piDPa42KVtxk3y7d+kngg1+Q2x3d8Uq/k9RinMVcwWO2F5DKxm93yx0hLm+6Egzy2j/2 9w== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2uupvpr1k9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 Sep 2019 11:55:41 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x86BrvSo047977;
+        Fri, 6 Sep 2019 11:55:40 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2uud7pers0-60
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 Sep 2019 11:55:40 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x86AwWeY031955;
+        Fri, 6 Sep 2019 10:58:32 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 06 Sep 2019 03:58:32 -0700
+Date:   Fri, 6 Sep 2019 13:58:24 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Dan Elkouby <streetwalkermc@gmail.com>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Fabian Henneke <fabian.henneke@gmail.com>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Bluetooth: hidp: Fix error checks in
+ hidp_get/set_raw_report
+Message-ID: <20190906105824.GA14147@kadam>
+References: <20190906094158.8854-1-streetwalkermc@gmail.com>
+ <20190906101306.GA12017@kadam>
+ <CANnEQ3HX0SNG+Hzs2b+BzLwuewsC8-3sF2urWV+bqUahXq0hVA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANnEQ3HX0SNG+Hzs2b+BzLwuewsC8-3sF2urWV+bqUahXq0hVA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1909060126
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1909060126
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the documentation for the MM21 video format, used by the MT8183
-codec and MDP3 image processor.
+On Fri, Sep 06, 2019 at 01:40:15PM +0300, Dan Elkouby wrote:
+> On Fri, Sep 6, 2019 at 1:14 PM Dan Carpenter wrote:
+> > I think we also need to update update ms_ff_worker() which assumes that
+> > hid_hw_output_report() returns zero on success.
+> 
+> Yes, it looks like that's the case. Should I amend my patch to include
+> this fix, or should it be a separate patch? I don't have access to any
+> hardware covered by hid-microsoft, so I won't be able to test it.
+> 
 
-Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
----
- Documentation/media/uapi/v4l/pixfmt-reserved.rst | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Yes.  Please amend the patch.  We all understand that you don't have
+the hardware so it's not a problem.  If you want to blame me in the
+commit message that's fine.  "Dan Carpenter pointed out a related issue
+in ms_ff_worker()".  But we're only silencing a warning so it can't
+really break anything.
 
-diff --git a/Documentation/media/uapi/v4l/pixfmt-reserved.rst b/Documentation/media/uapi/v4l/pixfmt-reserved.rst
-index b2cd155e691b..10d5bda9ffc7 100644
---- a/Documentation/media/uapi/v4l/pixfmt-reserved.rst
-+++ b/Documentation/media/uapi/v4l/pixfmt-reserved.rst
-@@ -264,6 +264,16 @@ please make a proposal on the linux-media mailing list.
- 	of tiles, resulting in 32-aligned resolutions for the luminance plane
- 	and 16-aligned resolutions for the chrominance plane (with 2x2
- 	subsampling).
-+    * .. _V4L2-PIX-FMT-MM21:
-+
-+      - ``V4L2_PIX_FMT_MM21``
-+      - 'MM21'
-+      - Non-compressed two-planar block format used by Mediatek MT8183.
-+	The compression is lossless.
-+	It is an opaque intermediate format and the MDP3 hardware must be
-+	used to convert ``V4L2_PIX_FMT_MM21`` to a non-proprietary video
-+	format.
-+
- 
- .. tabularcolumns:: |p{6.6cm}|p{2.2cm}|p{8.7cm}|
- 
--- 
-2.23.0.187.g17f5b7556c-goog
+You can add my Reviewed-by tag as well when you resend.
+
+regards,
+dan carpenter
 
