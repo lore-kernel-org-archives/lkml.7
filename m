@@ -2,168 +2,165 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F467C43140
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACAC3C43140
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6242B20838
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:53:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84B6820842
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:53:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567799632;
+	bh=44OuvarrjJYG10b9Rp3iZi7GWWZRyB2mpVd3L0pG6yg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=xd1v8QEVPs55ijBPbVEEGMkqeXG9N3QNd97EgQu9rKuGYDGFCls9Ftr/X7L/ytObf
+	 2kT7ighg5ugxoF0xenupdeVBprxNtmXqNkssd6dJUZpkfxiPmXT//PIlBU+rec1fzd
+	 WM+otBsuHCjW++NsHNkGYvjhkN87fshGzlkIN+gw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393498AbfIFTxl (ORCPT
+        id S2393925AbfIFTxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 15:53:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45548 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727004AbfIFTxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 15:53:41 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A18E92A09AB;
-        Fri,  6 Sep 2019 19:53:40 +0000 (UTC)
-Received: from localhost (dhcp-10-20-1-130.bss.redhat.com [10.20.1.130])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4050B10018F8;
-        Fri,  6 Sep 2019 19:53:40 +0000 (UTC)
-From:   Robbie Harwood <rharwood@redhat.com>
-To:     Ray Strode <rstrode@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     David Howells <dhowells@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Ray\, Debarshi" <debarshi.ray@gmail.com>
-Subject: Re: Why add the general notification queue and its sources
-In-Reply-To: <CAKCoTu70E9cbVu=jVG4EiXnTNiG-znvri6Omh2t++1zRw+639Q@mail.gmail.com>
-References: <156763534546.18676.3530557439501101639.stgit@warthog.procyon.org.uk> <CAHk-=wh5ZNE9pBwrnr5MX3iqkUP4nspz17rtozrSxs5-OGygNw@mail.gmail.com> <17703.1567702907@warthog.procyon.org.uk> <CAHk-=wjQ5Fpv0D7rxX0W=obx9xoOAxJ_Cr+pGCYOAi2S9FiCNg@mail.gmail.com> <CAKCoTu7ms_Mr-q08d9XB3uascpzwBa5LF9JTT2aq8uUsoFE8aQ@mail.gmail.com> <CAHk-=wjcsxQ8QB_v=cwBQw4pkJg7pp-bBsdWyPivFO_OeF-y+g@mail.gmail.com> <CAKCoTu70E9cbVu=jVG4EiXnTNiG-znvri6Omh2t++1zRw+639Q@mail.gmail.com>
-Date:   Fri, 06 Sep 2019 15:53:38 -0400
-Message-ID: <jlg7e6l19rx.fsf@redhat.com>
+        Fri, 6 Sep 2019 15:53:52 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39280 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727004AbfIFTxv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 15:53:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Ew6/0qVAdmZqdoKuB0ftq6YKxojcd2lW86roVTM6SN0=; b=HaDIZREUU4sYgn/JzFNf6E0OZ
+        wUV/Zha1HrvFqpRxD1keIy+llfbiYbyO54VUM5f14UIi3JBAs86JzzzA99a3oqAbsCfWCa3j9D5Il
+        Ul9csN2rC3lOfxHUkE3Nur3f17cxxoyo+NJZbmQO4IV/gC95JSVPhjhYrajx+qvRluFGsRuG3eKC+
+        pMchkuAKJ3LpEIkBkmTDw/+ai08Rk50M18mwfnNfCYsLlXEEJ2sGNmfiC8w2cnmml6WGjhnENKE2b
+        9y1CdcuQbB8qsi9RgytnVvp8W/fRwJ7e+YwUOwQi5K+8dKgAeN99bYl3lucqlkPTQ/g1iRzoJLnGQ
+        MBaqbwQkA==;
+Received: from [177.159.253.249] (helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i6KIn-0006S3-1u; Fri, 06 Sep 2019 19:53:49 +0000
+Date:   Fri, 6 Sep 2019 16:53:41 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Jessica Yu <jeyu@kernel.org>,
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-doc@vger.kernel.org, Robert Moore <robert.moore@intel.com>,
+        Erik Schmauss <erik.schmauss@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Len Brown <lenb@kernel.org>, Thomas Renninger <trenn@suse.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Valentina Manea <valentina.manea.m@gmail.com>,
+        linux-acpi@vger.kernel.org, devel@acpica.org,
+        linux-pm@vger.kernel.org, linux-usb <linux-usb@vger.kernel.org>
+Subject: Re: [RFC PATCH] tools: Add SPDX license to man pages
+Message-ID: <20190906164959.288ab3d5@coco.lan>
+In-Reply-To: <1b1cfc9c8c13b58c47d1d123763c8bc412abf9d4.camel@perches.com>
+References: <20190905055614.7958918b@coco.lan>
+        <88e638eb959095ab6657d295f9f8c27169569bf2.1567675272.git.mchehab+samsung@kernel.org>
+        <20190905092703.GA30899@kroah.com>
+        <20190905090701.37dcf75e@coco.lan>
+        <b32c2e46b91e7bcda2a9bd140673f06d71b2487a.camel@perches.com>
+        <20190906083457.7e7934ec@coco.lan>
+        <1b1cfc9c8c13b58c47d1d123763c8bc412abf9d4.camel@perches.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Fri, 06 Sep 2019 19:53:40 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Em Fri, 06 Sep 2019 11:12:58 -0700
+Joe Perches <joe@perches.com> escreveu:
 
-Ray Strode <rstrode@redhat.com> writes:
+> On Fri, 2019-09-06 at 08:34 -0300, Mauro Carvalho Chehab wrote:
+> > Warning: SPDX header for file tools/thermal/tmon/tmon.8 is at line 2  
+> []
+> > The last one is interesting... what's the "very first line" where a
+> > SPDX header tag should be on a man page?  
+> 
+> just fyi:
+> 
+> It looks like .man pages could use a comment form
+> using '.\"' like this example on the first line:
+> 
+> $ head -5 tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.8
+> .\"  This page Copyright (C) 2010 - 2015 Len Brown <len.brown@intel.com>
+> .\"  Distributed under the GPL, Copyleft 1994.
+> .TH X86_ENERGY_PERF_POLICY 8
+> .SH NAME
+> x86_energy_perf_policy \- Manage Energy vs. Performance Policy via x86 Model Specific Registers
+> 
+> So maybe:
+> ---
+>  tools/power/acpi/man/acpidump.8                                 | 1 +
+>  tools/power/cpupower/man/cpupower-frequency-info.1              | 1 +
+>  tools/power/cpupower/man/cpupower-frequency-set.1               | 1 +
+>  tools/power/cpupower/man/cpupower-idle-info.1                   | 1 +
+>  tools/power/cpupower/man/cpupower-idle-set.1                    | 1 +
+>  tools/power/cpupower/man/cpupower-info.1                        | 1 +
+>  tools/power/cpupower/man/cpupower-monitor.1                     | 1 +
+>  tools/power/cpupower/man/cpupower-set.1                         | 1 +
+>  tools/power/cpupower/man/cpupower.1                             | 1 +
+>  tools/power/pm-graph/bootgraph.8                                | 1 +
+>  tools/power/pm-graph/sleepgraph.8                               | 1 +
+>  tools/power/x86/turbostat/turbostat.8                           | 1 +
+>  tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.8 | 1 +
+>  tools/thermal/tmon/tmon.8                                       | 1 +
+>  tools/usb/usbip/doc/usbip.8                                     | 1 +
+>  tools/usb/usbip/doc/usbipd.8                                    | 1 +
+>  16 files changed, 16 insertions(+)
 
-> Linus Torvalds <torvalds@linux-foundation.org> wrote:
->
->> That is *way* too specific to make for any kind of generic
->> notification mechanism.
->
-> Well from my standpoint, I just don't want to have to poll... I don't
-> have a strong opinion about how it looks architecturally to reach that
-> goal.
->
-> Ideally, at a higher level, I want the userspace api that gnome uses
-> to be something like:
->
-> err =3D krb5_cc_watch (ctx, ccache, (krb5_cc_change_fct) on_cc_change ,
-> &watch_fd);
->
-> then a watch_fd would get handed back and caller could poll on it. if
-> it woke up poll(), caller would do
->
-> krb5_cc_watch_update (ctx, ccache, watch_fd)
->
-> or so and it would trigger on_cc_change to get called (or something like =
-that).
->
-> If under the hood, fd comes from opening /dev/watch_queue, and
-> krb5_cc_watch_update reads from some mmap'ed buffer to decide whether
-> or not to call on_cc_change, that's fine with me.
->
-> If under the hood, fd comes from a pipe fd returned from some ioctl or
-> syscall, and krb5_cc_watch_update reads messages directly from that fd
-> to decide whether or not to call on_cc_change, that's fine with
-> me. too.
->
-> it could be an eventfd too, or whatever, too, just as long as its
-> something I can add to poll() and don't have to intermittently poll
-> ... :-)
->
->
->> And why would you do a broken big-key thing in the kernel in the
->> first place? Why don't you just have a kernel key to indirectly
->> encrypt using a key and "additional user space data". The kernel
->> should simply not take care of insane 1MB keys.
->
-> =F0=9F=A4=B7 dunno.  I assume you're referencing the discussions from com=
-ment 0
-> on that 2013 bug.  I wasn't involved in those discussions, I just
-> chimed in after they happened trying to avoid having to add polling
-> :-)
->
-> I have no idea why a ticket would get that large. I assume it only is
-> in weird edge cases.
+Makes sense. I would also patch license-rules.txt with something like:
 
-Sadly they're not weird, but yes.  Kerberos tickets can get decently
-large due to Microsoft's PACs (see MS-PAC and MS-KILE), which we need to
-process, understand, and store for Active Directory interop.  I'm not
-sure if I've personally made one over 1MB, but it could easily occur
-given enough claims (MS-ADTS).
+diff --git a/Documentation/process/license-rules.rst b/Documentation/process/license-rules.rst
+index 5d23e3498b1c..6224421ee120 100644
+--- a/Documentation/process/license-rules.rst
++++ b/Documentation/process/license-rules.rst
+@@ -76,12 +76,13 @@ License identifier syntax
+    The SPDX license identifier is added in form of a comment.  The comment
+    style depends on the file type::
+ 
+-      C source:	// SPDX-License-Identifier: <SPDX License Expression>
+-      C header:	/* SPDX-License-Identifier: <SPDX License Expression> */
+-      ASM:	/* SPDX-License-Identifier: <SPDX License Expression> */
+-      scripts:	# SPDX-License-Identifier: <SPDX License Expression>
+-      .rst:	.. SPDX-License-Identifier: <SPDX License Expression>
+-      .dts{i}:	// SPDX-License-Identifier: <SPDX License Expression>
++      C source:  // SPDX-License-Identifier: <SPDX License Expression>
++      C header:  /* SPDX-License-Identifier: <SPDX License Expression> */
++      ASM:       /* SPDX-License-Identifier: <SPDX License Expression> */
++      scripts:   # SPDX-License-Identifier: <SPDX License Expression>
++      .rst:      .. SPDX-License-Identifier: <SPDX License Expression>
++      .dts{i}:	  // SPDX-License-Identifier: <SPDX License Expression>
++      man pages: .\" SPDX-License-Identifier: <SPDX License Expression>
+ 
+    If a specific tool cannot handle the standard comment style, then the
+    appropriate comment mechanism which the tool accepts shall be used. This
 
-> Anyway, gnome treats the tickets as opaque blobs.  it doesn't do anything
-> with them other than tell the user when they need to get refreshed...
->
-> all the actual key manipulation happens from krb5 libraries.
->
-> of course, one advantage of having the tickets kernel side is nfs
-> could in theory access them directly, rather than up calling back to
-> userspace...
+> diff --git a/tools/thermal/tmon/tmon.8 b/tools/thermal/tmon/tmon.8
+> index 2f122de5841b..cffaa0d65478 100644
+> --- a/tools/thermal/tmon/tmon.8
+> +++ b/tools/thermal/tmon/tmon.8
+> @@ -1,3 +1,4 @@
+> +.\" SPDX-License-Identifier: GPL-2.0-only
+>  .TH TMON 8
+>  # SPDX-License-Identifier: GPL-2.0
+>  .SH NAME
 
-Easy availability to filesystems is in fact the main theoretical
-advantage of the keyring for us in krb5 (and, for whatever it's worth,
-is why we're interested in namespaced keyrings for containers).  Our
-privilege separation mechanism (gssproxy) is cache-type agnostic, and we
-do have other credential cache types (KCM and DIR/FILE) in the
-implementation.
+Hmm... here, you should probably keep the same license as defined at
+the existing tag (GPL-2.0) and remove the comment one.
+
 
 Thanks,
-=2D-Robbie
-
-=2D-
-Robbie Harwood
-Kerberos Development Lead
-Security Engineering Team
-Red Hat, Inc.
-Boston, MA, US
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEA5qc6hnelQjDaHWqJTL5F2qVpEIFAl1yuUIACgkQJTL5F2qV
-pEKhxBAApTOa699cr0sDXl0rHPK+Ibj1T49ryHpbykhJ30RKQmC9xRFoxqJmN/N9
-sy+xVpHxUikuVktp6So7ZNXh6mcY7bKYzZUpT/LITdDRo/NZxgAwk3DSLxXVNwWx
-6h0lJTX95uHxfdxLlYJOOTyndCgdXGDAr2jFovZo06mb/VPK1WL4q5mIjTKtN47u
-lG2YnU6SyY/zLwL3BKaQnUq/VruFbuQm+28zwsrVmZEZxIBs/bNcnkD0vT+mOTTa
-dXVqi6VNmXmtlsctsVbCXAQSNXOVC+K3qZBZAEJo5kObyRwctzIUOehOLnGZ89/K
-5mny02IPPLCpvUBhvVYroE0lyLKHpbkWnXyGmcPTNpyKNa5bylsoZmN4DWZevdQn
-hPrar7/gYlPoaQOot2VVYMeqn0rT4XJLf/DzG0YsSmMD5EUd5/0GZ8TVTw2iZKnj
-FIhGdP0MwIYrGARma830/iffk4dLj/qzn8K1mpgr2aaYBzQOalyrE8DJ7xgba386
-S1A+hlwSY7Byi4aFXT/vZgGrJ9FEPStD2N8xYHYdntZKe0t3TqCHEn8SM57yN6mR
-aOvzPHaPG/4OsCuugySMtR/8uzGY/tSuItEQF/vLX8azZkeyPLsqBLRyUsCLPGAV
-Zv+fpFJtNC8PYLtUiZXRYYk4THFX20bIU/Ky8LCiRs0vddyhHvc=
-=Si8+
------END PGP SIGNATURE-----
---=-=-=--
+Mauro
