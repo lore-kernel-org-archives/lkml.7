@@ -2,197 +2,78 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5083AC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF64CC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DBB720578
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:58:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F28C21848
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:59:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392799AbfIFI6n (ORCPT
+        id S2392808AbfIFI75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 04:58:43 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:59518 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730412AbfIFI6l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 04:58:41 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1i6A4l-0001EK-CW; Fri, 06 Sep 2019 08:58:39 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] media: em28xx: make various arrays static const, makes object smaller
-Date:   Fri,  6 Sep 2019 09:58:39 +0100
-Message-Id: <20190906085839.24344-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 6 Sep 2019 04:59:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33550 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730412AbfIFI75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 04:59:57 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 040D7883820;
+        Fri,  6 Sep 2019 08:59:57 +0000 (UTC)
+Received: from plouf.redhat.com (ovpn-204-26.brq.redhat.com [10.40.204.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 525CE5C1D8;
+        Fri,  6 Sep 2019 08:59:53 +0000 (UTC)
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: [PATCH] Input - elan_i2c: remove Lenovo Legion Y7000 PnpID
+Date:   Fri,  6 Sep 2019 10:59:48 +0200
+Message-Id: <20190906085948.27470-1-benjamin.tissoires@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Fri, 06 Sep 2019 08:59:57 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Looks like the Bios of the Lenovo Legion Y7000 is using ELAN061B
+when the actual device is supposed to be used with hid-multitouch.
 
-Don't populate the arrays on the stack but instead make them
-static const. Makes the object code smaller by 767 bytes.
+Remove it from the list of the supported device, hoping that
+no one will complain about the loss in functionality.
 
-Before:
-   text	   data	    bss	    dec	    hex	filename
-  41567	  15088	    192	  56847	   de0f	em28xx/em28xx-dvb.o
-
-After:
-   text	   data	    bss	    dec	    hex	filename
-  39872	  16016	    192	  56080	   db10	em28xx/em28xx-dvb.o
-
-(gcc version 9.2.1, amd64)
-
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=203467
+Fixes: Fixes: 738c06d0e456 ("Input: elan_i2c - add hardware ID for multiple Lenovo laptops")
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 ---
- drivers/media/usb/em28xx/em28xx-dvb.c | 30 +++++++++++++--------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/media/usb/em28xx/em28xx-dvb.c b/drivers/media/usb/em28xx/em28xx-dvb.c
-index a73faf12f7e4..0ab6c493bc74 100644
---- a/drivers/media/usb/em28xx/em28xx-dvb.c
-+++ b/drivers/media/usb/em28xx/em28xx-dvb.c
-@@ -471,13 +471,13 @@ static void hauppauge_hvr930c_init(struct em28xx *dev)
- {
- 	int i;
- 
--	struct em28xx_reg_seq hauppauge_hvr930c_init[] = {
-+	static const struct em28xx_reg_seq hauppauge_hvr930c_init[] = {
- 		{EM2874_R80_GPIO_P0_CTRL,	0xff,	0xff,	0x65},
- 		{EM2874_R80_GPIO_P0_CTRL,	0xfb,	0xff,	0x32},
- 		{EM2874_R80_GPIO_P0_CTRL,	0xff,	0xff,	0xb8},
- 		{	-1,			-1,	-1,	-1},
- 	};
--	struct em28xx_reg_seq hauppauge_hvr930c_end[] = {
-+	static const struct em28xx_reg_seq hauppauge_hvr930c_end[] = {
- 		{EM2874_R80_GPIO_P0_CTRL,	0xef,	0xff,	0x01},
- 		{EM2874_R80_GPIO_P0_CTRL,	0xaf,	0xff,	0x65},
- 		{EM2874_R80_GPIO_P0_CTRL,	0xef,	0xff,	0x76},
-@@ -493,7 +493,7 @@ static void hauppauge_hvr930c_init(struct em28xx *dev)
- 		{	-1,			-1,	-1,	-1},
- 	};
- 
--	struct {
-+	static const struct {
- 		unsigned char r[4];
- 		int len;
- 	} regs[] = {
-@@ -537,20 +537,20 @@ static void hauppauge_hvr930c_init(struct em28xx *dev)
- static void terratec_h5_init(struct em28xx *dev)
- {
- 	int i;
--	struct em28xx_reg_seq terratec_h5_init[] = {
-+	static const struct em28xx_reg_seq terratec_h5_init[] = {
- 		{EM2820_R08_GPIO_CTRL,		0xff,	0xff,	10},
- 		{EM2874_R80_GPIO_P0_CTRL,	0xf6,	0xff,	100},
- 		{EM2874_R80_GPIO_P0_CTRL,	0xf2,	0xff,	50},
- 		{EM2874_R80_GPIO_P0_CTRL,	0xf6,	0xff,	100},
- 		{	-1,			-1,	-1,	-1},
- 	};
--	struct em28xx_reg_seq terratec_h5_end[] = {
-+	static const struct em28xx_reg_seq terratec_h5_end[] = {
- 		{EM2874_R80_GPIO_P0_CTRL,	0xe6,	0xff,	100},
- 		{EM2874_R80_GPIO_P0_CTRL,	0xa6,	0xff,	50},
- 		{EM2874_R80_GPIO_P0_CTRL,	0xe6,	0xff,	100},
- 		{	-1,			-1,	-1,	-1},
- 	};
--	struct {
-+	static const struct {
- 		unsigned char r[4];
- 		int len;
- 	} regs[] = {
-@@ -594,14 +594,14 @@ static void terratec_htc_stick_init(struct em28xx *dev)
- 	 * 0xe6: unknown (does not affect DVB-T).
- 	 * 0xb6: unknown (does not affect DVB-T).
- 	 */
--	struct em28xx_reg_seq terratec_htc_stick_init[] = {
-+	static const struct em28xx_reg_seq terratec_htc_stick_init[] = {
- 		{EM2820_R08_GPIO_CTRL,		0xff,	0xff,	10},
- 		{EM2874_R80_GPIO_P0_CTRL,	0xf6,	0xff,	100},
- 		{EM2874_R80_GPIO_P0_CTRL,	0xe6,	0xff,	50},
- 		{EM2874_R80_GPIO_P0_CTRL,	0xf6,	0xff,	100},
- 		{	-1,			-1,	-1,	-1},
- 	};
--	struct em28xx_reg_seq terratec_htc_stick_end[] = {
-+	static const struct em28xx_reg_seq terratec_htc_stick_end[] = {
- 		{EM2874_R80_GPIO_P0_CTRL,	0xb6,	0xff,	100},
- 		{EM2874_R80_GPIO_P0_CTRL,	0xf6,	0xff,	50},
- 		{	-1,			-1,	-1,	-1},
-@@ -611,7 +611,7 @@ static void terratec_htc_stick_init(struct em28xx *dev)
- 	 * Init the analog decoder (not yet supported), but
- 	 * it's probably still a good idea.
- 	 */
--	struct {
-+	static const struct {
- 		unsigned char r[4];
- 		int len;
- 	} regs[] = {
-@@ -642,14 +642,14 @@ static void terratec_htc_usb_xs_init(struct em28xx *dev)
- {
- 	int i;
- 
--	struct em28xx_reg_seq terratec_htc_usb_xs_init[] = {
-+	static const struct em28xx_reg_seq terratec_htc_usb_xs_init[] = {
- 		{EM2820_R08_GPIO_CTRL,		0xff,	0xff,	10},
- 		{EM2874_R80_GPIO_P0_CTRL,	0xb2,	0xff,	100},
- 		{EM2874_R80_GPIO_P0_CTRL,	0xb2,	0xff,	50},
- 		{EM2874_R80_GPIO_P0_CTRL,	0xb6,	0xff,	100},
- 		{	-1,			-1,	-1,	-1},
- 	};
--	struct em28xx_reg_seq terratec_htc_usb_xs_end[] = {
-+	static const struct em28xx_reg_seq terratec_htc_usb_xs_end[] = {
- 		{EM2874_R80_GPIO_P0_CTRL,	0xa6,	0xff,	100},
- 		{EM2874_R80_GPIO_P0_CTRL,	0xa6,	0xff,	50},
- 		{EM2874_R80_GPIO_P0_CTRL,	0xe6,	0xff,	100},
-@@ -660,7 +660,7 @@ static void terratec_htc_usb_xs_init(struct em28xx *dev)
- 	 * Init the analog decoder (not yet supported), but
- 	 * it's probably still a good idea.
- 	 */
--	struct {
-+	static const struct {
- 		unsigned char r[4];
- 		int len;
- 	} regs[] = {
-@@ -704,7 +704,7 @@ static void pctv_520e_init(struct em28xx *dev)
- 	 * digital demodulator and tuner are routed via AVF4910B.
- 	 */
- 	int i;
--	struct {
-+	static const struct {
- 		unsigned char r[4];
- 		int len;
- 	} regs[] = {
-@@ -800,7 +800,7 @@ static int em28xx_mt352_terratec_xs_init(struct dvb_frontend *fe)
- static void px_bcud_init(struct em28xx *dev)
- {
- 	int i;
--	struct {
-+	static const struct {
- 		unsigned char r[4];
- 		int len;
- 	} regs1[] = {
-@@ -818,7 +818,7 @@ static void px_bcud_init(struct em28xx *dev)
- 		{{ 0x85, 0x7a }, 2},
- 		{{ 0x87, 0x04 }, 2},
- 	};
--	static struct em28xx_reg_seq gpio[] = {
-+	static const struct em28xx_reg_seq gpio[] = {
- 		{EM28XX_R06_I2C_CLK,		0x40,	0xff,	300},
- 		{EM2874_R80_GPIO_P0_CTRL,	0xfd,	0xff,	60},
- 		{EM28XX_R15_RGAIN,		0x20,	0xff,	0},
+Note to self: once this gets in, we need to send a similar patch
+to stable, as there are a few stable branches with this PnpID.
+
+
+ include/linux/input/elan-i2c-ids.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/input/elan-i2c-ids.h b/include/linux/input/elan-i2c-ids.h
+index ceabb01a6a7d..1ecb6b45812c 100644
+--- a/include/linux/input/elan-i2c-ids.h
++++ b/include/linux/input/elan-i2c-ids.h
+@@ -48,7 +48,7 @@ static const struct acpi_device_id elan_acpi_id[] = {
+ 	{ "ELAN0618", 0 },
+ 	{ "ELAN0619", 0 },
+ 	{ "ELAN061A", 0 },
+-	{ "ELAN061B", 0 },
++/*	{ "ELAN061B", 0 }, not working on the Lenovo Legion Y7000 */
+ 	{ "ELAN061C", 0 },
+ 	{ "ELAN061D", 0 },
+ 	{ "ELAN061E", 0 },
 -- 
-2.20.1
+2.21.0
 
