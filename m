@@ -2,118 +2,132 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB1FC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE7AC00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:47:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9510020640
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:47:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567792030;
-	bh=q5ynBOroNDNNaAOhviVWg79WNTV2uq+2hGNpK00/bG8=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=JBGE9+sZxQh3ycL9IVvVMeUK601eTmnl7Z7vaYSv+kuRtTHOCV2pVAbP8j9d/2jmJ
-	 ZtryY7l98uDztSLDxGj/3BCKhFGXL38EZATTS9egEUK2trlG/T0nXhCuTE/9lpZfou
-	 oR4rrQhjcVC+6HoEys+X/CnyB7eaMOaUD+HVBkZs=
+	by mail.kernel.org (Postfix) with ESMTP id E07F820640
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:47:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="FRjTuqf9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395238AbfIFRrK (ORCPT
+        id S2395275AbfIFRrj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 13:47:10 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:37849 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726626AbfIFRrJ (ORCPT
+        Fri, 6 Sep 2019 13:47:39 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:46179 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2395237AbfIFRri (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 13:47:09 -0400
-Received: by mail-qk1-f196.google.com with SMTP id u184so3513513qkd.4;
-        Fri, 06 Sep 2019 10:47:09 -0700 (PDT)
+        Fri, 6 Sep 2019 13:47:38 -0400
+Received: by mail-ed1-f65.google.com with SMTP id i8so6967737edn.13
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 10:47:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=EWIhvlIYQYgSNiR0JTK+22rY1hmZeqOgk/eFbmgddQ8=;
-        b=bgFCB1+Xb3oPlPNkF9mxMixq6tix1sDigEgne7DbcjtoTb8LtQM7bLEI8c6fEXGCEr
-         QaHWSZoj3I9DLutfVeqVeVjKk01MvMzmnJ5RN6ksDEMplQnSb10hgSbKLM5rfMhtdKMs
-         Oe+ChhyonTqOb55VzVqfon+xG8M4HF5Iy0nBxlBctV5XMCK8HXTlb1IZAdRVPTm2Inhk
-         heOaX5Le/iwR2acsfOMZeV59m5BrRXaierEsmimERyzjDxzbL1Ja4pVjyENMtzpn0ECh
-         4zhTX6QX5XA0QAOF9ucUmOXK2eQOVaULfQkgVrWNM9YsAzt0IiQ0NUKimVeRI9CRlWP7
-         UAwA==
+        d=ffwll.ch; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AXnjF1eMA0qvhNi+oaAvRaU1Op/sm6+LQv/OHFTjjBs=;
+        b=FRjTuqf9guqExV42vYGxD/fiJVxgZg0XxcBoMZkO3y4QM+JRyu5YDuJcT8dY4cwVtT
+         6/DchteyEMWB7Egugye1ennPXOFn5/y55kWgyjVlAxTOzKoAeV3mZZ1vkODIu9aV6ZZ/
+         wPg7BapUpyEmLjNdij5gnkTUktJpuxzhSOXy4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EWIhvlIYQYgSNiR0JTK+22rY1hmZeqOgk/eFbmgddQ8=;
-        b=McFnKFrS5udd3vNj9qfwvXUY7dlGKHuC9znr7Sz6umXSSPgs95VFqxyqbQHTEnPaxT
-         ZT8WmjVdhcSkM0catLmaUGy8HpfW4aS7gku0iYg0wYtQJj1d6USauKVKBTKzuZP4e7sM
-         5+3Gm718HDiRY/Zdq3Ey8q+066cNiMO7cA8TgbIL0Pi+VCM+sF14cJIZ4tVs7VssncsS
-         OjSBNqqvbC9kiqXU/egiOAZjrAz9Zh0VmVp3ja6xqd2/n+R+jPHTHxzGl2AbMKl6CS0C
-         qWzT3u0AHoD2urdqq8rg2/mJ+OM9g+bNzDgwC2pKYzeoSwuyOxog4UTviMFali9xSjmF
-         GvAQ==
-X-Gm-Message-State: APjAAAUOHU8xMPhWROldFQlmv0kc7m3u5CBCR+Fil4Q7a8ZXqCoEhbYM
-        yytFnexBjp2rr2oKt0xLLzM=
-X-Google-Smtp-Source: APXvYqyKeb8cLLEFnQco06qMeCCL5Perec1oC4sldCMUV05jBqrPKdkNMhRLpGPNtvuqKqZkFjgCYQ==
-X-Received: by 2002:a05:620a:15f4:: with SMTP id p20mr9769193qkm.282.1567792028327;
-        Fri, 06 Sep 2019 10:47:08 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::e7cb])
-        by smtp.gmail.com with ESMTPSA id m92sm2801385qte.50.2019.09.06.10.46.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 06 Sep 2019 10:47:05 -0700 (PDT)
-Date:   Fri, 6 Sep 2019 10:46:56 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     dsterba@suse.cz, josef@toxicpanda.com, clm@fb.com,
-        dsterba@suse.com, axboe@kernel.dk, jack@suse.cz,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCHSET v3 btrfs/for-next] btrfs: fix cgroup writeback support
-Message-ID: <20190906174656.GQ2263813@devbig004.ftw2.facebook.com>
-References: <20190710192818.1069475-1-tj@kernel.org>
- <20190726151321.GF2868@twin.jikos.cz>
- <20190905115937.GA2850@twin.jikos.cz>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AXnjF1eMA0qvhNi+oaAvRaU1Op/sm6+LQv/OHFTjjBs=;
+        b=Nil6vaxszFw2RMLXXsaEGa00PZzCv6x3t81MQZ3/3ErnkhxkwArGNCwmekmuNKJiPX
+         6ZVi23cIt8wRGEVKatL/41QUng1QSU+GDei74NxAbNrvw74gJ2VSWOxIZaMpR4YjbS1A
+         nCpiGei8PeG1hy6QbiBa/2HKtj5JFvAJ5YOVNyqxNbMcXP7EAsmiqxVZcmjloO00ReRE
+         CEm6XeZCQiEmZNBdZyU79Zx5UKZx51sAkxy8DMD/FVCHMQLoejo/r3HRz33WlYdTJ7cL
+         jHboQeppie4JKQ0l6pl4xAfayazFLYBG+5xJ8YgT3/1toFkUhjf0jCdBMvPmvTDadr4Z
+         ETiQ==
+X-Gm-Message-State: APjAAAVIIAMnzyRgxKjKQCT6P9/ieGm1Gx/UqjRu8GqTgo4l2uS1JCMd
+        GgppjLZrcjXcJ2rKYP/JdsXju2SzGhQ=
+X-Google-Smtp-Source: APXvYqyXNSoipVDK3YxyEJ0q0hqumo6vbP/ePP5SeWNLJC+mFFPaXXQumLn2z+pO051A2VuoAWL5CA==
+X-Received: by 2002:a17:906:8158:: with SMTP id z24mr8426652ejw.54.1567792056188;
+        Fri, 06 Sep 2019 10:47:36 -0700 (PDT)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id m14sm537241edc.61.2019.09.06.10.47.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Sep 2019 10:47:35 -0700 (PDT)
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        syzbot+aaedc50d99a03250fe1f@syzkaller.appspotmail.com,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        linux-mm@kvack.org
+Subject: [PATCH] mm, notifier: Fix early return case for new lockdep annotations
+Date:   Fri,  6 Sep 2019 19:47:30 +0200
+Message-Id: <20190906174730.22462-1-daniel.vetter@ffwll.ch>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190905115937.GA2850@twin.jikos.cz>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, David.
+I missed that when extending the lockdep annotations to the
+nonblocking case.
 
-On Thu, Sep 05, 2019 at 01:59:37PM +0200, David Sterba wrote:
-> On Fri, Jul 26, 2019 at 05:13:21PM +0200, David Sterba wrote:
-> > On Wed, Jul 10, 2019 at 12:28:13PM -0700, Tejun Heo wrote:
-> > > Hello,
-> > > 
-> > > This patchset contains only the btrfs part of the following patchset.
-> > > 
-> > >   [1] [PATCHSET v2 btrfs/for-next] blkcg, btrfs: fix cgroup writeback support
-> > > 
-> > > The block part has already been applied to
-> > > 
-> > >   https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/ for-linus
-> > > 
-> > > with some naming changes.  This patchset has been updated accordingly.
-> > 
-> > I'm going to add this patchset to for-next to get some testing coverage,
-> > there are some comments pending, but that are changelog updates and
-> > refactoring.
-> 
-> No updates, so patchset stays in for-next, closest merge target is 5.5.
+I missed this while testing since in the i915 mmu notifiers is hitting
+a nice lockdep splat already before the point of going into oom killer
+mode :-/
 
-Sorry about dropping the ball.  It looked like Chris and Nikolay
-weren't agreeing so I wasn't sure what the next step should be and
-then forgot about it.  The following is the discussion.
+Reported-by: syzbot+aaedc50d99a03250fe1f@syzkaller.appspotmail.com
+Fixes: d2b219ed03d4 ("mm/mmu_notifiers: add a lockdep map for invalidate_range_start/end")
+Cc: Jason Gunthorpe <jgg@mellanox.com>
+Cc: Daniel Vetter <daniel.vetter@intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Jérôme Glisse" <jglisse@redhat.com>
+Cc: Ralph Campbell <rcampbell@nvidia.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc: linux-mm@kvack.org
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+---
+ include/linux/mmu_notifier.h | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-  https://lore.kernel.org/linux-btrfs/c2419d01-5c84-3fb4-189e-4db519d08796@suse.com/
-
-What do you think about the exchange?
-
-Thanks.
-
+diff --git a/include/linux/mmu_notifier.h b/include/linux/mmu_notifier.h
+index 5a03417e5bf7..4edd98b06834 100644
+--- a/include/linux/mmu_notifier.h
++++ b/include/linux/mmu_notifier.h
+@@ -356,13 +356,14 @@ mmu_notifier_invalidate_range_start(struct mmu_notifier_range *range)
+ static inline int
+ mmu_notifier_invalidate_range_start_nonblock(struct mmu_notifier_range *range)
+ {
++	int ret = 0;
+ 	lock_map_acquire(&__mmu_notifier_invalidate_range_start_map);
+ 	if (mm_has_notifiers(range->mm)) {
+ 		range->flags &= ~MMU_NOTIFIER_RANGE_BLOCKABLE;
+-		return __mmu_notifier_invalidate_range_start(range);
++		ret = __mmu_notifier_invalidate_range_start(range);
+ 	}
+ 	lock_map_release(&__mmu_notifier_invalidate_range_start_map);
+-	return 0;
++	return ret;
+ }
+ 
+ static inline void
 -- 
-tejun
+2.23.0
+
