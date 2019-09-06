@@ -2,111 +2,151 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76ED1C43140
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 966F3C00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46A24208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:48:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 705E9206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:48:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567777728;
-	bh=XjGqsQwGOzLfXmUA0qJ7g0JfY2IRLjG4Dyn2VFqgHKc=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=CsYLEa3z1WKV+gk2EayRKDfyi57nyI2F43G+Ll/6oSwiOIqGaqlB6vpqsEnAGy3FQ
-	 WhKIEcjyTOoHpLYYxrDMZ7TCuucXkb6/fukikRxbebtIN+aCesxThdF02QkC5Tq93g
-	 i9TS0RC7fpBDuww9QN3x/MYmqhU+aG/qPMckdm0Q=
+	s=default; t=1567777734;
+	bh=KBsqa4jnxJv597i+HTzpp7iOqV36pZxy1eWe32Fmr+U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OI126sgaFtkObbUDWtMXW4FY04YkcKjKjGApeIciQLkB8fmw/dWX7fu+Nyc1kd4kl
+	 vwfLVggPTx5RfZ+K31zGtapXcBXelzuiTwqCaPegYz4OoSAuccCzU/S9Dg9aTsqrd0
+	 7x5M3ipmhe3FT26MtLwxB8f9dQQqMHEH/mlh1tBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405241AbfIFNsr (ORCPT
+        id S2405254AbfIFNsx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 09:48:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49946 "EHLO mail.kernel.org"
+        Fri, 6 Sep 2019 09:48:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727031AbfIFNsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 09:48:47 -0400
+        id S1727031AbfIFNsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 09:48:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 614BE206B8;
-        Fri,  6 Sep 2019 13:48:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 081E4206B8;
+        Fri,  6 Sep 2019 13:48:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567777726;
-        bh=XjGqsQwGOzLfXmUA0qJ7g0JfY2IRLjG4Dyn2VFqgHKc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Yo9bfWt/FgXeGhC4EbCbGmaVAB4+z8qwgVLGSuduGEvP+blbAAkIcjrWtl7vxZ1Uu
-         y+LsKdY2Zfv2UbBjstQy8Wdp1fx4f75SK5rG+NS5D/5DKwLATvYI7etKhrtLmYqY1L
-         5uva2BE3pV8MBDrldv/wvEvO4YXevZXka7nOOAgA=
-Date:   Fri, 6 Sep 2019 15:48:44 +0200
+        s=default; t=1567777732;
+        bh=KBsqa4jnxJv597i+HTzpp7iOqV36pZxy1eWe32Fmr+U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oqvpYWO/OerZCpe7WxKsXFSClw99++6DgheqyiH5td5fVCjg9NCH818ErHnbG5IlI
+         oZ/kGzt0+NStIccSqxu9QG1s2WRJYUxn6zv1Ej3m/KpwxfX17TLNUPbgla4GGk+thA
+         H+rnZJ+Jhm/jDnUJ+ykPuQBkOrBmYG+rMfp9zYuQ=
+Date:   Fri, 6 Sep 2019 15:48:50 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
         torvalds@linux-foundation.org, stable@vger.kernel.org
 Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
-Subject: Linux 4.19.71
-Message-ID: <20190906134844.GA7458@kroah.com>
+Subject: Re: Linux 4.19.71
+Message-ID: <20190906134850.GB7458@kroah.com>
+References: <20190906134844.GA7458@kroah.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="k+w/mQv8wyuph6w0"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20190906134844.GA7458@kroah.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---k+w/mQv8wyuph6w0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-I'm announcing the release of the 4.19.71 kernel.
-
-Only users of the elantech driver need to upgrade to fix a regression in
-a recent release.
-
-The updated 4.19.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.19.y
-and can be browsed at the normal kernel.org git web browser:
-	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
-
-thanks,
-
-greg k-h
-
-------------
-
- Makefile                       |    2 -
- drivers/input/mouse/elantech.c |   54 ++++++++++++++++++++++-------------------
- 2 files changed, 30 insertions(+), 26 deletions(-)
-
-Benjamin Tissoires (1):
-      Revert "Input: elantech - enable SMBus on new (2018+) systems"
-
-Greg Kroah-Hartman (1):
-      Linux 4.19.71
-
-
---k+w/mQv8wyuph6w0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAl1yY7wACgkQONu9yGCS
-aT63yQ/8D9iAmNNgDP5t1tr29JWo+hpUsHgyNGS2BDEPudNPucE6r+la72ZRSJpl
-gMqIVLh2q4JjkSeh0KNoJRK7Cxpj+20gXax2K4SRWjntwk6hvDPv+iJz+erGsZmw
-XwGvtXbYvA/SKmnGzjH0k151B3anaM8oW3VEhd3IDnbPKKPRwgrnYDOVj9nQEwwK
-1YYFd0GXI3XYtDJ2uAxEPx7dDBxbR/XrCYSMXYXGO5/X0OfvP4BKRyzrcYnDa4jy
-55C/tycFJuYJ8Z9Z5e1cnc+YDKPRdl7d7W6eKeG9RFEmkEimnamnHcc/TfQrEaXG
-ouSVnI2GhX/UYyAjsIOlQFjbXEyGmq52w6BL/QupeLOhNG6MhLDCWVAxgY76BlFB
-BA2yoMxIdTLr6AdHkIBxhCBIhyNJuvruBzs3Aje4/8+TwJNQvEPee0EeAyxckGU1
-9Pszm5oqrwTVuGj9fGl51/dSY069oThUS2N2Qnhtk3mKRViy+X/SJslyZOrVsMQD
-GXHolHqWTtOSOpGMdEddC/cQNeaW2V2g/B1PK4vW6qGisuJ82ny5vX4SXw0RUUvc
-E9e85jzhdn4sf8OFIaB1eZIxV4yK31yl4VfQMGaNtUSdzY1weXM2N0B+JqStMt3R
-QHCjhLmWtn8SiwXN7irpoTQvpO+PmRged7X5D+UGfcSXwHchfWk=
-=QFx9
------END PGP SIGNATURE-----
-
---k+w/mQv8wyuph6w0--
+diff --git a/Makefile b/Makefile
+index ecf8806cb71f..f6c9d5757470 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ VERSION = 4
+ PATCHLEVEL = 19
+-SUBLEVEL = 70
++SUBLEVEL = 71
+ EXTRAVERSION =
+ NAME = "People's Front"
+ 
+diff --git a/drivers/input/mouse/elantech.c b/drivers/input/mouse/elantech.c
+index eb9b9de47fd1..530142b5a115 100644
+--- a/drivers/input/mouse/elantech.c
++++ b/drivers/input/mouse/elantech.c
+@@ -1810,30 +1810,6 @@ static int elantech_create_smbus(struct psmouse *psmouse,
+ 				  leave_breadcrumbs);
+ }
+ 
+-static bool elantech_use_host_notify(struct psmouse *psmouse,
+-				     struct elantech_device_info *info)
+-{
+-	if (ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version))
+-		return true;
+-
+-	switch (info->bus) {
+-	case ETP_BUS_PS2_ONLY:
+-		/* expected case */
+-		break;
+-	case ETP_BUS_SMB_HST_NTFY_ONLY:
+-	case ETP_BUS_PS2_SMB_HST_NTFY:
+-		/* SMbus implementation is stable since 2018 */
+-		if (dmi_get_bios_year() >= 2018)
+-			return true;
+-	default:
+-		psmouse_dbg(psmouse,
+-			    "Ignoring SMBus bus provider %d\n", info->bus);
+-		break;
+-	}
+-
+-	return false;
+-}
+-
+ /**
+  * elantech_setup_smbus - called once the PS/2 devices are enumerated
+  * and decides to instantiate a SMBus InterTouch device.
+@@ -1853,7 +1829,7 @@ static int elantech_setup_smbus(struct psmouse *psmouse,
+ 		 * i2c_blacklist_pnp_ids.
+ 		 * Old ICs are up to the user to decide.
+ 		 */
+-		if (!elantech_use_host_notify(psmouse, info) ||
++		if (!ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version) ||
+ 		    psmouse_matches_pnp_id(psmouse, i2c_blacklist_pnp_ids))
+ 			return -ENXIO;
+ 	}
+@@ -1873,6 +1849,34 @@ static int elantech_setup_smbus(struct psmouse *psmouse,
+ 	return 0;
+ }
+ 
++static bool elantech_use_host_notify(struct psmouse *psmouse,
++				     struct elantech_device_info *info)
++{
++	if (ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version))
++		return true;
++
++	switch (info->bus) {
++	case ETP_BUS_PS2_ONLY:
++		/* expected case */
++		break;
++	case ETP_BUS_SMB_ALERT_ONLY:
++		/* fall-through  */
++	case ETP_BUS_PS2_SMB_ALERT:
++		psmouse_dbg(psmouse, "Ignoring SMBus provider through alert protocol.\n");
++		break;
++	case ETP_BUS_SMB_HST_NTFY_ONLY:
++		/* fall-through  */
++	case ETP_BUS_PS2_SMB_HST_NTFY:
++		return true;
++	default:
++		psmouse_dbg(psmouse,
++			    "Ignoring SMBus bus provider %d.\n",
++			    info->bus);
++	}
++
++	return false;
++}
++
+ int elantech_init_smbus(struct psmouse *psmouse)
+ {
+ 	struct elantech_device_info info;
