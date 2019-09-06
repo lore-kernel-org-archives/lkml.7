@@ -7,38 +7,37 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD6BC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2644C43140
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5EC621670
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:09:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88D1421670
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:09:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403961AbfIFLJ3 (ORCPT
+        id S2403991AbfIFLJc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 07:09:29 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47070 "EHLO
+        Fri, 6 Sep 2019 07:09:32 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47066 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392367AbfIFLIc (ORCPT
+        with ESMTP id S2392350AbfIFLIa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 07:08:32 -0400
+        Fri, 6 Sep 2019 07:08:30 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i6C6O-0007AI-4x; Fri, 06 Sep 2019 13:08:28 +0200
+        id 1i6C6N-00077z-FK; Fri, 06 Sep 2019 13:08:27 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 662131C0E2B;
-        Fri,  6 Sep 2019 13:08:17 +0200 (CEST)
-Date:   Fri, 06 Sep 2019 11:08:17 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id CF5911C0E27;
+        Fri,  6 Sep 2019 13:08:16 +0200 (CEST)
+Date:   Fri, 06 Sep 2019 11:08:16 -0000
 From:   "tip-bot2 for Marc Zyngier" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] irqchip/gic: Rework gic_configure_irq to take the
- full ICFGR base
+Subject: [tip: irq/core] irqchip/gic-v3: Dynamically allocate PPI NMI refcounts
 Cc:     Marc Zyngier <maz@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
 MIME-Version: 1.0
-Message-ID: <156776809737.24167.16109669324170708245.tip-bot2@tip-bot2>
+Message-ID: <156776809681.24167.5607321387316678190.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -54,137 +53,116 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     13d22e2e1f35f2d3cc7ddc002c23e733c2782dd4
-Gitweb:        https://git.kernel.org/tip/13d22e2e1f35f2d3cc7ddc002c23e733c2782dd4
+Commit-ID:     81a43273045b116901e569ca27ddf55550f92caf
+Gitweb:        https://git.kernel.org/tip/81a43273045b116901e569ca27ddf55550f92caf
 Author:        Marc Zyngier <maz@kernel.org>
-AuthorDate:    Tue, 16 Jul 2019 14:35:17 +01:00
+AuthorDate:    Thu, 18 Jul 2019 12:53:05 +01:00
 Committer:     Marc Zyngier <maz@kernel.org>
-CommitterDate: Tue, 20 Aug 2019 10:04:09 +01:00
+CommitterDate: Tue, 20 Aug 2019 10:23:34 +01:00
 
-irqchip/gic: Rework gic_configure_irq to take the full ICFGR base
+irqchip/gic-v3: Dynamically allocate PPI NMI refcounts
 
-gic_configure_irq is currently passed the (re)distributor address,
-to which it applies an a fixed offset to get to the configuration
-registers. This offset is constant across all GICs, or rather it was
-until to v3.1...
-
-An easy way out is for the individual drivers to pass the base
-address of the configuration register for the considered interrupt.
-At the same time, move part of the error handling back to the
-individual drivers, as things are about to change on that front.
+As we're about to have a variable number of PPIs, let's make the
+allocation of the NMI refcounts dynamic. Also apply some minor
+cleanups (moving things around).
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/irqchip/irq-gic-common.c | 14 +++++---------
- drivers/irqchip/irq-gic-v3.c     | 11 ++++++++++-
- drivers/irqchip/irq-gic.c        | 10 +++++++++-
- drivers/irqchip/irq-hip04.c      |  7 ++++++-
- 4 files changed, 30 insertions(+), 12 deletions(-)
+ drivers/irqchip/irq-gic-v3.c | 47 +++++++++++++++++++++++++----------
+ 1 file changed, 34 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-common.c b/drivers/irqchip/irq-gic-common.c
-index b0a8215..6900b6f 100644
---- a/drivers/irqchip/irq-gic-common.c
-+++ b/drivers/irqchip/irq-gic-common.c
-@@ -63,7 +63,7 @@ int gic_configure_irq(unsigned int irq, unsigned int type,
- 	 * for "irq", depending on "type".
- 	 */
- 	raw_spin_lock_irqsave(&irq_controller_lock, flags);
--	val = oldval = readl_relaxed(base + GIC_DIST_CONFIG + confoff);
-+	val = oldval = readl_relaxed(base + confoff);
- 	if (type & IRQ_TYPE_LEVEL_MASK)
- 		val &= ~confmask;
- 	else if (type & IRQ_TYPE_EDGE_BOTH)
-@@ -83,14 +83,10 @@ int gic_configure_irq(unsigned int irq, unsigned int type,
- 	 * does not allow us to set the configuration or we are in a
- 	 * non-secure mode, and hence it may not be catastrophic.
- 	 */
--	writel_relaxed(val, base + GIC_DIST_CONFIG + confoff);
--	if (readl_relaxed(base + GIC_DIST_CONFIG + confoff) != val) {
--		if (WARN_ON(irq >= 32))
--			ret = -EINVAL;
--		else
--			pr_warn("GIC: PPI%d is secure or misconfigured\n",
--				irq - 16);
--	}
-+	writel_relaxed(val, base + confoff);
-+	if (readl_relaxed(base + confoff) != val)
-+		ret = -EINVAL;
-+
- 	raw_spin_unlock_irqrestore(&irq_controller_lock, flags);
- 
- 	if (sync_access)
 diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index be961c2..efc5319 100644
+index f884dd9..869a805 100644
 --- a/drivers/irqchip/irq-gic-v3.c
 +++ b/drivers/irqchip/irq-gic-v3.c
-@@ -407,6 +407,7 @@ static int gic_set_type(struct irq_data *d, unsigned int type)
- 	unsigned int irq = gic_irq(d);
- 	void (*rwp_wait)(void);
- 	void __iomem *base;
-+	int ret;
+@@ -88,7 +88,7 @@ static DEFINE_STATIC_KEY_TRUE(supports_deactivate_key);
+ static DEFINE_STATIC_KEY_FALSE(supports_pseudo_nmis);
  
- 	/* Interrupt configuration for SGIs can't be changed */
- 	if (irq < 16)
-@@ -425,7 +426,15 @@ static int gic_set_type(struct irq_data *d, unsigned int type)
- 		rwp_wait = gic_dist_wait_for_rwp;
- 	}
+ /* ppi_nmi_refs[n] == number of cpus having ppi[n + 16] set as NMI */
+-static refcount_t ppi_nmi_refs[16];
++static refcount_t *ppi_nmi_refs;
  
--	return gic_configure_irq(irq, type, base, rwp_wait);
-+
-+	ret = gic_configure_irq(irq, type, base + GICD_ICFGR, rwp_wait);
-+	if (ret && irq < 32) {
-+		/* Misconfigured PPIs are usually not fatal */
-+		pr_warn("GIC: PPI%d is secure or misconfigured\n", irq - 16);
-+		ret = 0;
-+	}
-+
-+	return ret;
+ static struct gic_kvm_info gic_v3_kvm_info;
+ static DEFINE_PER_CPU(bool, has_rss);
+@@ -409,6 +409,16 @@ static void gic_irq_set_prio(struct irq_data *d, u8 prio)
+ 	writeb_relaxed(prio, base + offset + index);
  }
  
- static int gic_irq_set_vcpu_affinity(struct irq_data *d, void *vcpu)
-diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-index b6b8573..5ca7d55 100644
---- a/drivers/irqchip/irq-gic.c
-+++ b/drivers/irqchip/irq-gic.c
-@@ -291,6 +291,7 @@ static int gic_set_type(struct irq_data *d, unsigned int type)
++static u32 gic_get_ppi_index(struct irq_data *d)
++{
++	switch (get_intid_range(d)) {
++	case PPI_RANGE:
++		return d->hwirq - 16;
++	default:
++		unreachable();
++	}
++}
++
+ static int gic_irq_nmi_setup(struct irq_data *d)
  {
- 	void __iomem *base = gic_dist_base(d);
- 	unsigned int gicirq = gic_irq(d);
-+	int ret;
- 
- 	/* Interrupt configuration for SGIs can't be changed */
- 	if (gicirq < 16)
-@@ -301,7 +302,14 @@ static int gic_set_type(struct irq_data *d, unsigned int type)
- 			    type != IRQ_TYPE_EDGE_RISING)
+ 	struct irq_desc *desc = irq_to_desc(d->irq);
+@@ -429,10 +439,12 @@ static int gic_irq_nmi_setup(struct irq_data *d)
  		return -EINVAL;
  
--	return gic_configure_irq(gicirq, type, base, NULL);
-+	ret = gic_configure_irq(gicirq, type, base + GIC_DIST_CONFIG, NULL);
-+	if (ret && gicirq < 32) {
-+		/* Misconfigured PPIs are usually not fatal */
-+		pr_warn("GIC: PPI%d is secure or misconfigured\n", gicirq - 16);
-+		ret = 0;
+ 	/* desc lock should already be held */
+-	if (gic_irq(d) < 32) {
++	if (gic_irq_in_rdist(d)) {
++		u32 idx = gic_get_ppi_index(d);
++
+ 		/* Setting up PPI as NMI, only switch handler for first NMI */
+-		if (!refcount_inc_not_zero(&ppi_nmi_refs[gic_irq(d) - 16])) {
+-			refcount_set(&ppi_nmi_refs[gic_irq(d) - 16], 1);
++		if (!refcount_inc_not_zero(&ppi_nmi_refs[idx])) {
++			refcount_set(&ppi_nmi_refs[idx], 1);
+ 			desc->handle_irq = handle_percpu_devid_fasteoi_nmi;
+ 		}
+ 	} else {
+@@ -464,9 +476,11 @@ static void gic_irq_nmi_teardown(struct irq_data *d)
+ 		return;
+ 
+ 	/* desc lock should already be held */
+-	if (gic_irq(d) < 32) {
++	if (gic_irq_in_rdist(d)) {
++		u32 idx = gic_get_ppi_index(d);
++
+ 		/* Tearing down NMI, only switch handler for last NMI */
+-		if (refcount_dec_and_test(&ppi_nmi_refs[gic_irq(d) - 16]))
++		if (refcount_dec_and_test(&ppi_nmi_refs[idx]))
+ 			desc->handle_irq = handle_percpu_devid_irq;
+ 	} else {
+ 		desc->handle_irq = handle_fasteoi_irq;
+@@ -1394,7 +1408,19 @@ static void gic_enable_nmi_support(void)
+ {
+ 	int i;
+ 
+-	for (i = 0; i < 16; i++)
++	if (!gic_prio_masking_enabled())
++		return;
++
++	if (gic_has_group0() && !gic_dist_security_disabled()) {
++		pr_warn("SCR_EL3.FIQ is cleared, cannot enable use of pseudo-NMIs\n");
++		return;
 +	}
 +
-+	return ret;
- }
++	ppi_nmi_refs = kcalloc(gic_data.ppi_nr, sizeof(*ppi_nmi_refs), GFP_KERNEL);
++	if (!ppi_nmi_refs)
++		return;
++
++	for (i = 0; i < gic_data.ppi_nr; i++)
+ 		refcount_set(&ppi_nmi_refs[i], 0);
  
- static int gic_irq_set_vcpu_affinity(struct irq_data *d, void *vcpu)
-diff --git a/drivers/irqchip/irq-hip04.c b/drivers/irqchip/irq-hip04.c
-index cf70582..1626131 100644
---- a/drivers/irqchip/irq-hip04.c
-+++ b/drivers/irqchip/irq-hip04.c
-@@ -130,7 +130,12 @@ static int hip04_irq_set_type(struct irq_data *d, unsigned int type)
+ 	static_branch_enable(&supports_pseudo_nmis);
+@@ -1472,12 +1498,7 @@ static int __init gic_init_bases(void __iomem *dist_base,
+ 			gicv2m_init(handle, gic_data.domain);
+ 	}
  
- 	raw_spin_lock(&irq_controller_lock);
+-	if (gic_prio_masking_enabled()) {
+-		if (!gic_has_group0() || gic_dist_security_disabled())
+-			gic_enable_nmi_support();
+-		else
+-			pr_warn("SCR_EL3.FIQ is cleared, cannot enable use of pseudo-NMIs\n");
+-	}
++	gic_enable_nmi_support();
  
--	ret = gic_configure_irq(irq, type, base, NULL);
-+	ret = gic_configure_irq(irq, type, base + GIC_DIST_CONFIG, NULL);
-+	if (ret && irq < 32) {
-+		/* Misconfigured PPIs are usually not fatal */
-+		pr_warn("GIC: PPI%d is secure or misconfigured\n", irq - 16);
-+		ret = 0;
-+	}
- 
- 	raw_spin_unlock(&irq_controller_lock);
+ 	return 0;
  
