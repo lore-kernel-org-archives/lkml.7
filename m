@@ -2,165 +2,104 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACAC3C43140
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26912C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:54:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84B6820842
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:53:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567799632;
-	bh=44OuvarrjJYG10b9Rp3iZi7GWWZRyB2mpVd3L0pG6yg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=xd1v8QEVPs55ijBPbVEEGMkqeXG9N3QNd97EgQu9rKuGYDGFCls9Ftr/X7L/ytObf
-	 2kT7ighg5ugxoF0xenupdeVBprxNtmXqNkssd6dJUZpkfxiPmXT//PIlBU+rec1fzd
-	 WM+otBsuHCjW++NsHNkGYvjhkN87fshGzlkIN+gw=
+	by mail.kernel.org (Postfix) with ESMTP id EDEA120842
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:54:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D1gmX8qh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393925AbfIFTxw (ORCPT
+        id S2394010AbfIFTyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 15:53:52 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39280 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727004AbfIFTxv (ORCPT
+        Fri, 6 Sep 2019 15:54:03 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:41726 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727004AbfIFTyC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 15:53:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Ew6/0qVAdmZqdoKuB0ftq6YKxojcd2lW86roVTM6SN0=; b=HaDIZREUU4sYgn/JzFNf6E0OZ
-        wUV/Zha1HrvFqpRxD1keIy+llfbiYbyO54VUM5f14UIi3JBAs86JzzzA99a3oqAbsCfWCa3j9D5Il
-        Ul9csN2rC3lOfxHUkE3Nur3f17cxxoyo+NJZbmQO4IV/gC95JSVPhjhYrajx+qvRluFGsRuG3eKC+
-        pMchkuAKJ3LpEIkBkmTDw/+ai08Rk50M18mwfnNfCYsLlXEEJ2sGNmfiC8w2cnmml6WGjhnENKE2b
-        9y1CdcuQbB8qsi9RgytnVvp8W/fRwJ7e+YwUOwQi5K+8dKgAeN99bYl3lucqlkPTQ/g1iRzoJLnGQ
-        MBaqbwQkA==;
-Received: from [177.159.253.249] (helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i6KIn-0006S3-1u; Fri, 06 Sep 2019 19:53:49 +0000
-Date:   Fri, 6 Sep 2019 16:53:41 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Jessica Yu <jeyu@kernel.org>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
+        Fri, 6 Sep 2019 15:54:02 -0400
+Received: by mail-pg1-f195.google.com with SMTP id x15so4079235pgg.8
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 12:54:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VpEKZIToJcJNtnrt6GtVJ64TAfq7GPSof5ZG1aF07lE=;
+        b=D1gmX8qhzlfB/Pv7zyAZj4Fdbl/Ww/xUcMUcOizFDGiz+svCTiSk/J5vhlLzfJy0Fj
+         mQU4m/XKA8lbeph7b0Djr18inpjH01goTUNDbFmzlzPlravDK0d/QCxXlfRpROLz4n2p
+         XbwNqzzZwfNRQoe/5bo+dJVhCjyvS6YqH5L98KFp2qbCc0jMtRsbPozPmb+0/hnwJCRh
+         UhE4Igys1vXpOkk/JgAyeR/7M86hqQLiZiZgIF97NUxxeNzaZ36E4dT1dhOGVEVDj0tI
+         Q0YIRbW9gQOeHMgI1w3SJvA0vU5qJ54bzYnlkawU+fP6Ikbey+r7jjvVuDyoNkWQKDgo
+         oGOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VpEKZIToJcJNtnrt6GtVJ64TAfq7GPSof5ZG1aF07lE=;
+        b=JJxrMOQ3Br3XZq5QPJcC82Dc51bvQou20cQ2zKdEif9UhZdTSPNslkm0Q8TieDUcKF
+         grOHGHh00WjmmsMAo5yzHOA/6phWwRJ9FmhE5H3QmmbnRQ5xmFp+8KSu1+WHxVkRB6YY
+         ONZHByEIADFYubNRc36H5t11vmF/n1b9sB2yawmQPQtyasv4BJ1gSXE/ZAkD4uoVOy83
+         YQ9F27dpx0jxv2wD/USIAkxngmLfGb+aihKTchs16e0eXmwzLs1MyBlbPCQQNqZcMBag
+         g1WXpclEC1hJQKLODWQ8iwt7+3+Ok8eHChJtyt2WrnshmyI8d1z97CZnYoSqY1ceo2IN
+         c+5A==
+X-Gm-Message-State: APjAAAWxZWLYfQULsSZX+3UzrzoVw/hudvWBEVA3dkguJzakL1RtLYeT
+        XcUz0N1ObGBEroIqthHTFBo=
+X-Google-Smtp-Source: APXvYqxNtcNcExy7Z7dsvZlivPZODRshEiZdXLLiHzW3C0Sb63CyGltsOeH3x/I+o5Cj4kpWO2opUg==
+X-Received: by 2002:a17:90a:8a02:: with SMTP id w2mr10511834pjn.131.1567799642060;
+        Fri, 06 Sep 2019 12:54:02 -0700 (PDT)
+Received: from localhost ([121.137.63.184])
+        by smtp.gmail.com with ESMTPSA id g2sm7614527pfm.32.2019.09.06.12.54.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Sep 2019 12:54:01 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Date:   Sat, 7 Sep 2019 04:53:59 +0900
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        John Ogness <john.ogness@linutronix.de>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linux-doc@vger.kernel.org, Robert Moore <robert.moore@intel.com>,
-        Erik Schmauss <erik.schmauss@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Len Brown <lenb@kernel.org>, Thomas Renninger <trenn@suse.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Valentina Manea <valentina.manea.m@gmail.com>,
-        linux-acpi@vger.kernel.org, devel@acpica.org,
-        linux-pm@vger.kernel.org, linux-usb <linux-usb@vger.kernel.org>
-Subject: Re: [RFC PATCH] tools: Add SPDX license to man pages
-Message-ID: <20190906164959.288ab3d5@coco.lan>
-In-Reply-To: <1b1cfc9c8c13b58c47d1d123763c8bc412abf9d4.camel@perches.com>
-References: <20190905055614.7958918b@coco.lan>
-        <88e638eb959095ab6657d295f9f8c27169569bf2.1567675272.git.mchehab+samsung@kernel.org>
-        <20190905092703.GA30899@kroah.com>
-        <20190905090701.37dcf75e@coco.lan>
-        <b32c2e46b91e7bcda2a9bd140673f06d71b2487a.camel@perches.com>
-        <20190906083457.7e7934ec@coco.lan>
-        <1b1cfc9c8c13b58c47d1d123763c8bc412abf9d4.camel@perches.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v4 0/9] printk: new ringbuffer implementation
+Message-ID: <20190906195359.GB69785@tigerII.localdomain>
+References: <20190807222634.1723-1-john.ogness@linutronix.de>
+ <20190904123531.GA2369@hirez.programming.kicks-ass.net>
+ <20190905130513.4fru6yvjx73pjx7p@pathway.suse.cz>
+ <20190905143118.GP2349@hirez.programming.kicks-ass.net>
+ <20190906090627.GX2386@hirez.programming.kicks-ass.net>
+ <20190906124211.2dionk2kzcslaotz@pathway.suse.cz>
+ <20190906140126.GY2349@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190906140126.GY2349@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, 06 Sep 2019 11:12:58 -0700
-Joe Perches <joe@perches.com> escreveu:
-
-> On Fri, 2019-09-06 at 08:34 -0300, Mauro Carvalho Chehab wrote:
-> > Warning: SPDX header for file tools/thermal/tmon/tmon.8 is at line 2  
-> []
-> > The last one is interesting... what's the "very first line" where a
-> > SPDX header tag should be on a man page?  
+On (09/06/19 16:01), Peter Zijlstra wrote:
+> > 2. The simple approach works only with lockless consoles. We need
+> >    something else for the rest at least for NMI. Simle offloading
+> >    to a kthread has been blocked for years. People wanted the
+> >    trylock-and-flush-immediately approach.
 > 
-> just fyi:
-> 
-> It looks like .man pages could use a comment form
-> using '.\"' like this example on the first line:
-> 
-> $ head -5 tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.8
-> .\"  This page Copyright (C) 2010 - 2015 Len Brown <len.brown@intel.com>
-> .\"  Distributed under the GPL, Copyleft 1994.
-> .TH X86_ENERGY_PERF_POLICY 8
-> .SH NAME
-> x86_energy_perf_policy \- Manage Energy vs. Performance Policy via x86 Model Specific Registers
-> 
-> So maybe:
-> ---
->  tools/power/acpi/man/acpidump.8                                 | 1 +
->  tools/power/cpupower/man/cpupower-frequency-info.1              | 1 +
->  tools/power/cpupower/man/cpupower-frequency-set.1               | 1 +
->  tools/power/cpupower/man/cpupower-idle-info.1                   | 1 +
->  tools/power/cpupower/man/cpupower-idle-set.1                    | 1 +
->  tools/power/cpupower/man/cpupower-info.1                        | 1 +
->  tools/power/cpupower/man/cpupower-monitor.1                     | 1 +
->  tools/power/cpupower/man/cpupower-set.1                         | 1 +
->  tools/power/cpupower/man/cpupower.1                             | 1 +
->  tools/power/pm-graph/bootgraph.8                                | 1 +
->  tools/power/pm-graph/sleepgraph.8                               | 1 +
->  tools/power/x86/turbostat/turbostat.8                           | 1 +
->  tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.8 | 1 +
->  tools/thermal/tmon/tmon.8                                       | 1 +
->  tools/usb/usbip/doc/usbip.8                                     | 1 +
->  tools/usb/usbip/doc/usbipd.8                                    | 1 +
->  16 files changed, 16 insertions(+)
+> Have an irq_work to wake up a kthread that will print to shit consoles.
 
-Makes sense. I would also patch license-rules.txt with something like:
+Do we need sched dependency? We can print a batch of pending
+logbuf messages and queue another irw_work if there are more
+pending messages, right?
 
-diff --git a/Documentation/process/license-rules.rst b/Documentation/process/license-rules.rst
-index 5d23e3498b1c..6224421ee120 100644
---- a/Documentation/process/license-rules.rst
-+++ b/Documentation/process/license-rules.rst
-@@ -76,12 +76,13 @@ License identifier syntax
-    The SPDX license identifier is added in form of a comment.  The comment
-    style depends on the file type::
- 
--      C source:	// SPDX-License-Identifier: <SPDX License Expression>
--      C header:	/* SPDX-License-Identifier: <SPDX License Expression> */
--      ASM:	/* SPDX-License-Identifier: <SPDX License Expression> */
--      scripts:	# SPDX-License-Identifier: <SPDX License Expression>
--      .rst:	.. SPDX-License-Identifier: <SPDX License Expression>
--      .dts{i}:	// SPDX-License-Identifier: <SPDX License Expression>
-+      C source:  // SPDX-License-Identifier: <SPDX License Expression>
-+      C header:  /* SPDX-License-Identifier: <SPDX License Expression> */
-+      ASM:       /* SPDX-License-Identifier: <SPDX License Expression> */
-+      scripts:   # SPDX-License-Identifier: <SPDX License Expression>
-+      .rst:      .. SPDX-License-Identifier: <SPDX License Expression>
-+      .dts{i}:	  // SPDX-License-Identifier: <SPDX License Expression>
-+      man pages: .\" SPDX-License-Identifier: <SPDX License Expression>
- 
-    If a specific tool cannot handle the standard comment style, then the
-    appropriate comment mechanism which the tool accepts shall be used. This
-
-> diff --git a/tools/thermal/tmon/tmon.8 b/tools/thermal/tmon/tmon.8
-> index 2f122de5841b..cffaa0d65478 100644
-> --- a/tools/thermal/tmon/tmon.8
-> +++ b/tools/thermal/tmon/tmon.8
-> @@ -1,3 +1,4 @@
-> +.\" SPDX-License-Identifier: GPL-2.0-only
->  .TH TMON 8
->  # SPDX-License-Identifier: GPL-2.0
->  .SH NAME
-
-Hmm... here, you should probably keep the same license as defined at
-the existing tag (GPL-2.0) and remove the comment one.
-
-
-Thanks,
-Mauro
+	-ss
