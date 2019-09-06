@@ -2,115 +2,95 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A7FC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CD2C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:57:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DA6920854
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:56:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567767418;
-	bh=eKqQLsZ1CqXLPChoayXDfV/yXKBUa6ki7SK6YURr7JQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=n8e7oBR7K0AjVpdYPofNUFlG2Ldf9AeHk81Sdt91rcXvn7p3Ei1Ex+gbau/Fmdmar
-	 ZHxy2c83F/H6b5fV76AGI7UFV6LfqgP/XfrVm5WT+of8roJqc2vDHovjD8z0IuPVH1
-	 tp3wswAGxodkRCoFqqcnjp+odwiIT3Gr5sOsLNcs=
+	by mail.kernel.org (Postfix) with ESMTP id 5FDD820854
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:57:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391988AbfIFK45 (ORCPT
+        id S2392081AbfIFK5G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 06:56:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45266 "EHLO mail.kernel.org"
+        Fri, 6 Sep 2019 06:57:06 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38998 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388816AbfIFK45 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 06:56:57 -0400
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2388816AbfIFK5G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 06:57:06 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B505208C3;
-        Fri,  6 Sep 2019 10:56:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567767415;
-        bh=eKqQLsZ1CqXLPChoayXDfV/yXKBUa6ki7SK6YURr7JQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=iwe7A6POO/AXJafBwclGZTdDimAL7JL/4tkeyQ2Hmmn/p1RAKgcK1OXWpNcost0c6
-         vb6M7H3Hkn2NmTAYYE4TKKuMQBsOeTRnrzB3CLFIS0u69fCfWWPHZAnzndjTpfAjSt
-         FTUs49YdlcffPsxSnWGKYkGzC9ON7Sqxu9LEJ72k=
-Received: by mail-lf1-f46.google.com with SMTP id w67so4643365lff.4;
-        Fri, 06 Sep 2019 03:56:55 -0700 (PDT)
-X-Gm-Message-State: APjAAAX7QwOnVMGx9VyFBlAipKtctxddwMZyP5E2ngKc3f/PStM44rI4
-        BADpwCTBLEpKc+BXgcabB9zaf+m39yPd8ELcLtk=
-X-Google-Smtp-Source: APXvYqyuyvNE+DfCX2EXl+GcF9M9zNqpthnU+rCpM/ZylcfvRmscK9OYLhqRaqB/x8T/f9Qsn/DW81HgYTXkDGfiTR4=
-X-Received: by 2002:a19:c649:: with SMTP id w70mr5991002lff.33.1567767413630;
- Fri, 06 Sep 2019 03:56:53 -0700 (PDT)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1ED6F308FB9A;
+        Fri,  6 Sep 2019 10:57:06 +0000 (UTC)
+Received: from localhost (ovpn-117-208.ams2.redhat.com [10.36.117.208])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 52FDF5D9E1;
+        Fri,  6 Sep 2019 10:56:59 +0000 (UTC)
+Date:   Fri, 6 Sep 2019 11:56:58 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, miklos@szeredi.hu,
+        linux-kernel@vger.kernel.org, virtio-fs@redhat.com,
+        dgilbert@redhat.com, mst@redhat.com
+Subject: Re: [PATCH 10/18] virtiofs: Do not use device managed mem for
+ virtio_fs and virtio_fs_vq
+Message-ID: <20190906105658.GR5900@stefanha-x1.localdomain>
+References: <20190905194859.16219-1-vgoyal@redhat.com>
+ <20190905194859.16219-11-vgoyal@redhat.com>
 MIME-Version: 1.0
-References: <CGME20190906101407eucas1p15eb0df53374b27497b4793eab24becf6@eucas1p1.samsung.com>
- <20190906101344.3535-1-l.luba@partner.samsung.com> <20190906101344.3535-4-l.luba@partner.samsung.com>
-In-Reply-To: <20190906101344.3535-4-l.luba@partner.samsung.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Fri, 6 Sep 2019 12:56:42 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPfoYxTVvt_bMQOs1=BkHzUuW_WvL9zn0jTGS6LLpv=fhQ@mail.gmail.com>
-Message-ID: <CAJKOXPfoYxTVvt_bMQOs1=BkHzUuW_WvL9zn0jTGS6LLpv=fhQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] dt-bindings: ddr: Add bindings for Samsung LPDDR3 memories
-To:     Lukasz Luba <l.luba@partner.samsung.com>
-Cc:     devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
-        <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com,
-        robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
-        kyungmin.park@samsung.com,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
-        willy.mh.wolff.ml@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="Sf3MmCJcUNNLokcm"
+Content-Disposition: inline
+In-Reply-To: <20190905194859.16219-11-vgoyal@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 06 Sep 2019 10:57:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 6 Sep 2019 at 12:14, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->
-> Add description of bindings for Samsung k3qf2f20db LPDDR3 memory.
-> Minor fixes in the old documentation.
->
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+
+--Sf3MmCJcUNNLokcm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Sep 05, 2019 at 03:48:51PM -0400, Vivek Goyal wrote:
+> These data structures should go away when virtio_fs object is going away.
+> When deivce is going away, we need to just make sure virtqueues can go
+> away and after that none of the code accesses vq and all the requests
+> get error.
+>=20
+> So allocate memory for virtio_fs and virtio_fs_vq normally and free it
+> at right time.
+>=20
+> This patch still frees up memory during device remove time. A later patch
+> will make virtio_fs object reference counted and this memory will be
+> freed when last reference to object is dropped.
+>=20
+> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 > ---
->  .../devicetree/bindings/ddr/lpddr3.txt        | 29 +++++++++++++++++--
->  1 file changed, 27 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/ddr/lpddr3.txt b/Documentation/devicetree/bindings/ddr/lpddr3.txt
-> index 3b2485b84b3f..de0905239767 100644
-> --- a/Documentation/devicetree/bindings/ddr/lpddr3.txt
-> +++ b/Documentation/devicetree/bindings/ddr/lpddr3.txt
-> @@ -40,10 +40,34 @@ Child nodes:
->    a given speed-bin. Please see Documentation/devicetree/
->    bindings/ddr/lpddr3-timings.txt for more information on "lpddr3-timings"
->
-> +Samsung K3QF2F20DB LPDDR3 memory
-> +------------------------------------------------------------
-> +
-> +This binding uses the LPDDR3 binding (described above)
-> +
-> +Required properties:
-> +- compatible:  Should be:
-> +               "samsung,K3QF2F20DB"
-> +               followed by "jedec,lpddr3"
-> +- density  : <u32> representing density in Mb (Mega bits)
-> +- io-width : <u32> representing bus width. Possible value 32
-> +- #address-cells: Must be set to 1
-> +- #size-cells: Must be set to 0
+>  fs/fuse/virtio_fs.c | 13 ++++++++-----
+>  1 file changed, 8 insertions(+), 5 deletions(-)
 
-If you decided to repeat all properties again, then it deserves its
-own bindings file. However I though about simpler solution - just
-document compatible. Exactly the same as AT24 or AT25 EEPROM bindings.
-There is not much benefit from copying all these properties.
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
 
-Best regards,
-Krzysztof
+--Sf3MmCJcUNNLokcm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl1yO3oACgkQnKSrs4Gr
+c8gsdQgAw8es95r3jldWITNK2HV3hQUadAUD6wcJTqh47Co/1pn1JWttU9UhsGCs
+wlgovlHxIO9oPsjaBc+Vcyczu7QtV+5x4r2lAsxHBH0idZnq6H8T+Om+iM9F3Bhs
+hlXTBKrjDt3anxgGHZ/EysPRolxSBPr3W81uqVOATwsS8zKO0liMr6z6brUc12Jx
+a9w/zciAljgcusrSgVkQ5C1JwCvMxgGctU1rqzPE1QwPHOT+1/+f7KqJYmTvCYHJ
+NfWPrl8z3I68LSE9XkSL6oVU9NDNbey1lzpGIBOpOmZZqucUU67jXy8HO3z2iNB6
+UUKV1kzQjkeYn8GGRSqyyJhao8stKw==
+=d30F
+-----END PGP SIGNATURE-----
+
+--Sf3MmCJcUNNLokcm--
