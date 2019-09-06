@@ -2,145 +2,91 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C08EC43140
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 848BFC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 731A62173B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:43:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="p9Fm55ey"
+	by mail.kernel.org (Postfix) with ESMTP id 65352206BB
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:50:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390863AbfIFLnm (ORCPT
+        id S2390934AbfIFLug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 07:43:42 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:52407 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732247AbfIFLnl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 07:43:41 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190906114340euoutp01ae101a2d7d59f767e6dc67ad90de01fb~B1rWCx_Wq0880508805euoutp01B
-        for <linux-kernel@vger.kernel.org>; Fri,  6 Sep 2019 11:43:40 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190906114340euoutp01ae101a2d7d59f767e6dc67ad90de01fb~B1rWCx_Wq0880508805euoutp01B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1567770220;
-        bh=OW0f6c3CLqS1mIrCtJ9qyU+c9aKY4mGI3dmjJibuHYo=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=p9Fm55eyP30q2s1FyECXUE6OHs7Mvjisc7q9UfP9E4lcRV4rIDDsIGKVO6S14BIZM
-         KZH+JONQRLcGfMRguXyoSALU6V6u1g4giF69jT10QWeMicjDUX/ErIc8WfvuXj0t7s
-         +zrCGvXbV0OR6fPGQ0Sgp6PoT9fEWLRzQsyZNwO8=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190906114339eucas1p174db246a792bbf8492f717c3388f5578~B1rVTi8Ad2539525395eucas1p1Q;
-        Fri,  6 Sep 2019 11:43:39 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 71.4E.04309.B66427D5; Fri,  6
-        Sep 2019 12:43:39 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190906114338eucas1p28dae7245ddbcd5b438d025665510dd63~B1rUg1y8N2426224262eucas1p2k;
-        Fri,  6 Sep 2019 11:43:38 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190906114338eusmtrp22d07ec883e3f41b3a4f242c81b665047~B1rUgFV421872918729eusmtrp2-;
-        Fri,  6 Sep 2019 11:43:38 +0000 (GMT)
-X-AuditID: cbfec7f4-afbff700000010d5-98-5d72466b9e93
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 64.2D.04117.A66427D5; Fri,  6
-        Sep 2019 12:43:38 +0100 (BST)
-Received: from [106.120.51.20] (unknown [106.120.51.20]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190906114337eusmtip22215df20daca6c6f45fa78f70fee86be~B1rTwyf7l1724517245eusmtip2P;
-        Fri,  6 Sep 2019 11:43:37 +0000 (GMT)
-Subject: Re: [PATCH 1/3] memory: Exynos5422: minor fixes in DMC
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
-        <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com,
-        robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
-        kyungmin.park@samsung.com,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
-        willy.mh.wolff.ml@gmail.com
-From:   Lukasz Luba <l.luba@partner.samsung.com>
-Message-ID: <80c5aade-0ce3-e2c8-454b-78dc366dac67@partner.samsung.com>
-Date:   Fri, 6 Sep 2019 13:43:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Fri, 6 Sep 2019 07:50:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53072 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389867AbfIFLug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 07:50:36 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0113F190C106;
+        Fri,  6 Sep 2019 11:50:36 +0000 (UTC)
+Received: from localhost (ovpn-117-208.ams2.redhat.com [10.36.117.208])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EED2A5D9CA;
+        Fri,  6 Sep 2019 11:50:27 +0000 (UTC)
+Date:   Fri, 6 Sep 2019 12:50:26 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, miklos@szeredi.hu,
+        linux-kernel@vger.kernel.org, virtio-fs@redhat.com,
+        dgilbert@redhat.com, mst@redhat.com
+Subject: Re: [PATCH 11/18] virtiofs: stop and drain queues after sending
+ DESTROY
+Message-ID: <20190906115026.GS5900@stefanha-x1.localdomain>
+References: <20190905194859.16219-1-vgoyal@redhat.com>
+ <20190905194859.16219-12-vgoyal@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAJKOXPdLhrvqR==k4a9w9cmdnwGRYaTXC1ya+vOeVaGpML0zcQ@mail.gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SW0hUURTtzJ079yqOHUfNjWXBYFGCWuHHCU3tgQ31UdGDKCUnvaj4bK5a
-        apCajxJfiKgNphVWNkz5TMcxK0bxgdpUQpZhaRpGKphKpmjlzB3Jv7XXXvusvTaHpWRDtDMb
-        ERPPqWKUUXKJtbipc9HoHhmgCtpdPCojdWU1NBmcn6BJZcdrmhSMTVLEaKxlSH/6FEPqx97T
-        ZEBfLiFzeR2IlBlfiMiTjmGGPBh8KyKf0qolJLOtgyHtU9k0+dX9FfljhbZCixQt6mFGUa+5
-        JVE0VF1X5DdqkGKufusJyXlrn1AuKiKRU3n6BluHG/qG6Lh+6mrb7UwqFf0U5SArFrAXjGao
-        V7E1K8PVCIoLJhihmEew+F1jKeYQDFY8kKyNtMx0WxqPEEzkaswNGZ5GoO31MGF77Ae66XKx
-        CTvgXTC4skCbBihsEEOZfnHVkGUl2AN0mssmjRQHQNO7SfM7YuwKJQ355llHfA5mR9ppQWMH
-        PbfHzbwVPgnZAzfMego7wdB4pUjA26B5upwyeQFOY6GpsZMStj4Mn58XMgK2hx9djRa8Bf62
-        VFqOwUNq3j0k4GswVnDHovGG9q63tGlnajVMjd5ToA+AevQ3Y6IB28KHaTthBVsoaiqlBFoK
-        N7NkgnonNOa+sRhtgkfaEqYQydXrgqnXhVGvC6P+73sXiTXIiUvgo8M4fm8Md8WDV0bzCTFh
-        HiGx0fVo9cf1/uma1yH98iUDwiyS20jJIVWQjFYm8knRBgQsJXeQ1tTFBcmkocqkZE4Ve1GV
-        EMXxBrSZFcudpCkbRi7IcJgynovkuDhOtdYVsVbOqejOzONUUXJeRo8xt/aZ0d4pQqfIYY69
-        S3ILdlkpyxo/3Rru6x8Ykqt9FdaylHfc28Wl7Xj/Rs++L8vd3kuG2iN4vv+pX12z9D4lby0v
-        PRVIZvWePkVHZzmvAEd35407Dm7/aJfycMFZy51Nr2GyC89M7V/+NlPV9bJdvi/SRueaLBfz
-        4co9bpSKV/4DkkjR/m0DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrPIsWRmVeSWpSXmKPExsVy+t/xe7pZbkWxBm031Sw2zljPanH9y3NW
-        i/lHzrFa9D9+zWxx/vwGdouzTW/YLTY9vsZqcXnXHDaLz71HGC1mnN/HZLH2yF12i6XXLzJZ
-        3G5cwWbRuvcIu8XhN+2sFt9OPGJ0EPBYM28No8fOWXfZPTat6mTz2Lyk3qNvyypGj8+b5ALY
-        ovRsivJLS1IVMvKLS2yVog0tjPQMLS30jEws9QyNzWOtjEyV9O1sUlJzMstSi/TtEvQyDp25
-        xVpwlrli78xW5gbGj0xdjJwcEgImEjs/nGDvYuTiEBJYyijxfdt7qISYxKR929khbGGJP9e6
-        2CCKXjNKHF17ECwhLGAvsePtHBYQW0RAU+L63++sIEXMAodYJD5tPc4I0dHHJDF77XrmLkYO
-        DjYBPYkdqwpBGngF3CS2XXrNBmKzCKhITNvcBzZIVCBC4vCOWYwQNYISJ2c+AYtzCgRKtF9u
-        BqtnFjCTmLf5ITOELS5x68l8JghbXmL72znMExiFZiFpn4WkZRaSlllIWhYwsqxiFEktLc5N
-        zy020itOzC0uzUvXS87P3cQIjOxtx35u2cHY9S74EKMAB6MSD+8Dh6JYIdbEsuLK3EOMEhzM
-        SiK86zcWxArxpiRWVqUW5ccXleakFh9iNAV6biKzlGhyPjDp5JXEG5oamltYGpobmxubWSiJ
-        83YIHIwREkhPLEnNTk0tSC2C6WPi4JRqYDyTqCzHc+/GN6VNM6LarbWmXdKsnr9B75D9qxrn
-        C+37zi/4v2rhCYZW9i2fVLafmstTOsXAT5zxZu+yj2KNjLyTKq/eq5jjZVQzf/2KFiaHYL4d
-        l2utozI3W9V43pqzZFaYxvKM1xeuBa87Ov/hjpXRTD4n3/Fv/Fdp93V+zjsW/R+5rDlf/m1W
-        YinOSDTUYi4qTgQAWOqTMgIDAAA=
-X-CMS-MailID: 20190906114338eucas1p28dae7245ddbcd5b438d025665510dd63
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190906101405eucas1p2e3da7b461810a3a520e76c636a06e486
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190906101405eucas1p2e3da7b461810a3a520e76c636a06e486
-References: <CGME20190906101405eucas1p2e3da7b461810a3a520e76c636a06e486@eucas1p2.samsung.com>
-        <20190906101344.3535-1-l.luba@partner.samsung.com>
-        <20190906101344.3535-2-l.luba@partner.samsung.com>
-        <CAJKOXPdLhrvqR==k4a9w9cmdnwGRYaTXC1ya+vOeVaGpML0zcQ@mail.gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="6zn93sY2JrH9m7VZ"
+Content-Disposition: inline
+In-Reply-To: <20190905194859.16219-12-vgoyal@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Fri, 06 Sep 2019 11:50:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--6zn93sY2JrH9m7VZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 9/6/19 12:51 PM, Krzysztof Kozlowski wrote:
-> On Fri, 6 Sep 2019 at 12:14, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->>
->> Small fixes captured by static analyzes.
-> 
-> Explain please what are the errors being fixed. Additionally error
-> message from tool might be useful.
-> 
-> Also:
-> Reported-by: Krzysztof Kozlowski <krzk@kernel.org>
+On Thu, Sep 05, 2019 at 03:48:52PM -0400, Vivek Goyal wrote:
+> During virtio_kill_sb() we first stop forget queue and drain it and then
+> call fuse_kill_sb_anon(). This will result in sending DESTROY request to
+> fuse server. Once finished, stop all the queues and drain one more time
+> just to be sure and then free up the devices.
+>=20
+> Given drain queues will call flush_work() on various workers, remove this
+> logic from virtio_free_devs().
+>=20
+> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> ---
+>  fs/fuse/virtio_fs.c | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
 
-OK, I will add it in the next version.
-My apologies for missing your name there.
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
 
-Regards,
-Lukasz
+--6zn93sY2JrH9m7VZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl1ySAIACgkQnKSrs4Gr
+c8hPCggAqxxAtpxUlxuyJ1JMZVearCJpL7Y98Ts25vXNZJKaGv/Z7w+0b1YNHE04
+RuXVOEqhwAG5VKOIpPYs+SJwTEwWTgsHEdAgtprbwW+v/vrOlf3LEaC9QS7+Z6bZ
+altTVdvWHQiqulsObNYVrgm/alLh75y8skYmwHHAK0EtbLoOwBnwzYNHyuOsH7tk
+YdpXmipXCBBtjQrC9rWXSt0ug0xCm29uK/voTea5mrDVFTpTixcKJ2LM6jnT6r4v
+mXBtZwegQNYew2LLapEqG+GNE2SSbMD765Z/MFyR48cksq/5mEbCOavSmN8S1HfH
+zelxUzsGNaQAsRXvt+wUI8Y94D+aoQ==
+=OYfd
+-----END PGP SIGNATURE-----
+
+--6zn93sY2JrH9m7VZ--
