@@ -2,125 +2,81 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A210CC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BDACC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D41820644
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:06:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="KYxNmbyK"
+	by mail.kernel.org (Postfix) with ESMTP id 4604320838
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:11:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404273AbfIFSGA (ORCPT
+        id S2395247AbfIFSLR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 14:06:00 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36395 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733128AbfIFSGA (ORCPT
+        Fri, 6 Sep 2019 14:11:17 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:56276 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387514AbfIFSLR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 14:06:00 -0400
-Received: by mail-pg1-f193.google.com with SMTP id l21so3914343pgm.3
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 11:06:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=p8V7F8KyP/+hxEP3mQzxR8zQvVH94st7p5AqUmIp58o=;
-        b=KYxNmbyKb7HyYEXpPpjDcy/Dpd9jCTYKt/74keKiG2/HtRpP/uMNQTR5+Px2Vx+XET
-         v3M9kvYTm7v7Au7BLwR9NgPNnRdvjymJcNFDAmCW3GGUJiIFPQi33CQCppw0DXIooxcZ
-         B5RxsyCrpNrhM0AS8Fg3xiZDSBNNvKcYUxgZ6DMZi2zLsZ9hwqhAkjsY73zk2HS2RDW9
-         ap56YyunzImXHMO9e48SVwU8uYB83UK8Zhfy27jG7ZV/74z200v2ARAckKv5L7zAKhCb
-         WkQO1K3tNZgfZqJlRjDp6+BFvEw4lrOD2MQxe4MG5PRrdn+FRJdCVZnzwgos5+FqJS0Y
-         tDgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=p8V7F8KyP/+hxEP3mQzxR8zQvVH94st7p5AqUmIp58o=;
-        b=EIGNqRQOKVZomL/4BiricMF4vGCA1YDV0DfBfGpgG7K19mw72yxeSvlkgTVtWEXUR/
-         TdPC358y7s5iYY8FiWiDd6A1MzvKfoEVUVQ7LbDecx3kvCUCCmvAjAjyeSxZ9CzaY+ia
-         VNavb5sl+OxnAMFdk0OyMOgxxRKlItFwwg5xxRL6NkNs1MWuQuobXQ88y7uDCG0UpbXo
-         +tECMMRk2dB5DCqAJDbN/pPnbkms9DbPFeIKSMjNAR3RDYK4tUg5IoD9+2OCkVBegNDX
-         oi7fVOZbpVuG4cVaWFJrIuprfOA6veip0Mpl09UVEIvtZCkjlHTj89PcnC9QNqoud1U6
-         ZCCg==
-X-Gm-Message-State: APjAAAVPVKIJR+4QSA2xNWqllw55D6EUUlhHjHNr3x7dMtFfw0XLWuxJ
-        ZQEbgrzsMOMuW1kjeiwZkj55DgOUI/IlPA==
-X-Google-Smtp-Source: APXvYqz3R0KV2UoI6cPr+Bfc/NaNPL+NeUrRz64kO6R/9IPa6CJkQmQDFNK6q7XylojGJ0m1fgULUw==
-X-Received: by 2002:a62:60c7:: with SMTP id u190mr12406747pfb.54.1567793159283;
-        Fri, 06 Sep 2019 11:05:59 -0700 (PDT)
-Received: from nebulus.mtv.corp.google.com ([2620:15c:211:200:5404:91ba:59dc:9400])
-        by smtp.gmail.com with ESMTPSA id b185sm8749287pfg.14.2019.09.06.11.05.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Sep 2019 11:05:58 -0700 (PDT)
-From:   Mark Salyzyn <salyzyn@android.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     kernel-team@android.com, Mark Salyzyn <salyzyn@android.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: [PATCH] net: enable wireless core features with WIRELESS_ALLCONFIG
-Date:   Fri,  6 Sep 2019 11:05:45 -0700
-Message-Id: <20190906180551.163714-1-salyzyn@android.com>
-X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
+        Fri, 6 Sep 2019 14:11:17 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1i6IhW-0007zm-Uk; Fri, 06 Sep 2019 18:11:15 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] fbdev: matrox: make array wtst_xlat static const, makes object smaller
+Date:   Fri,  6 Sep 2019 19:11:14 +0100
+Message-Id: <20190906181114.31414-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In embedded environments the requirements are to be able to pick and
-chose which features one requires built into the kernel.  If an
-embedded environment wants to supports loading modules that have been
-kbuilt out of tree, there is a need to enable hidden configurations
-for core features to provide the API surface for them to load.
+From: Colin Ian King <colin.king@canonical.com>
 
-Introduce CONFIG_WIRELESS_ALLCONFIG to select all wireless core
-features by activating all the hidden configuration options, without
-having to specifically select any wireless module(s).
+Don't populate the array wtst_xlat on the stack but instead make it
+static const. Makes the object code smaller by 89 bytes.
 
-Signed-off-by: Mark Salyzyn <salyzyn@android.com>
-Cc: kernel-team@android.com
-Cc: Johannes Berg <johannes@sipsolutions.net>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: linux-wireless@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org # 4.19
+Before:
+   text	   data	    bss	    dec	    hex	filename
+  14347	    840	      0	  15187	   3b53	fbdev/matrox/matroxfb_misc.o
+
+After:
+   text	   data	    bss	    dec	    hex	filename
+  14162	    936	      0	  15098	   3afa	fbdev/matrox/matroxfb_misc.o
+
+(gcc version 9.2.1, amd64)
+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- net/wireless/Kconfig | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/video/fbdev/matrox/matroxfb_misc.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/net/wireless/Kconfig b/net/wireless/Kconfig
-index 67f8360dfcee..0d32350e1729 100644
---- a/net/wireless/Kconfig
-+++ b/net/wireless/Kconfig
-@@ -17,6 +17,20 @@ config WEXT_SPY
- config WEXT_PRIV
- 	bool
- 
-+config WIRELESS_ALLCONFIG
-+	bool "allconfig for wireless core"
-+	select WIRELESS_EXT
-+	select WEXT_CORE
-+	select WEXT_PROC
-+	select WEXT_SPY
-+	select WEXT_PRIV
-+	help
-+	  Config option used to enable all the wireless core functionality
-+	  used by modules.
+diff --git a/drivers/video/fbdev/matrox/matroxfb_misc.c b/drivers/video/fbdev/matrox/matroxfb_misc.c
+index c7aaca12805e..feb0977c82eb 100644
+--- a/drivers/video/fbdev/matrox/matroxfb_misc.c
++++ b/drivers/video/fbdev/matrox/matroxfb_misc.c
+@@ -673,7 +673,10 @@ static int parse_pins5(struct matrox_fb_info *minfo,
+ 	if (bd->pins[115] & 4) {
+ 		minfo->values.reg.mctlwtst_core = minfo->values.reg.mctlwtst;
+ 	} else {
+-		u_int32_t wtst_xlat[] = { 0, 1, 5, 6, 7, 5, 2, 3 };
++		static const u_int32_t wtst_xlat[] = {
++			0, 1, 5, 6, 7, 5, 2, 3
++		};
 +
-+	  If you are not building a kernel to be used for a variety of
-+	  out-of-kernel built wireless modules, say N here.
-+
- config CFG80211
- 	tristate "cfg80211 - wireless configuration API"
- 	depends on RFKILL || !RFKILL
+ 		minfo->values.reg.mctlwtst_core = (minfo->values.reg.mctlwtst & ~7) |
+ 						  wtst_xlat[minfo->values.reg.mctlwtst & 7];
+ 	}
 -- 
-2.23.0.187.g17f5b7556c-goog
+2.20.1
 
