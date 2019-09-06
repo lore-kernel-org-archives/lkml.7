@@ -2,124 +2,127 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E005C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A74B2C43140
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01D682081B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:09:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gCOqk6IH"
+	by mail.kernel.org (Postfix) with ESMTP id 892BE21906
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:13:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392974AbfIFTJZ (ORCPT
+        id S2406257AbfIFTNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 15:09:25 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46169 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392916AbfIFTJY (ORCPT
+        Fri, 6 Sep 2019 15:13:42 -0400
+Received: from shelob.surriel.com ([96.67.55.147]:38106 "EHLO
+        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729080AbfIFTNm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 15:09:24 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q5so5095778pfg.13;
-        Fri, 06 Sep 2019 12:09:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ma6Tu8w1pUSuy9BaqryD7q/KmAKTaHA+Knrq/Z2rpYA=;
-        b=gCOqk6IH6MXlJoSnUrrR5ztwnkH9QHZ2R03FHK0c0N6hz6arNBSXd7pEC8FoArYmkN
-         2Oled/wQxOBjr6uxqhMPn6beJLZa64vkQg4kueiGUd8cBx+eXSUeM7vb66IRdwNKM59M
-         e5fMr3IQj73CBtInsULDXMZeXJZPGrRMV1U9CC6dBOIgJ6mphN5OwjguE18F7+P/vpBR
-         qRhMsn7wnGVfpfauYI5j2bgHFSzDoRSBHH1k0capKzI3dnvnC4eyRvVhYi9Yn76mGoPk
-         gUYPsftO5ylhXyrqWA4EbwLfAaKyVWYBdyEmN7BRXLyTv9EeRGMBQprINqTvyLz/Ohvt
-         vYFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ma6Tu8w1pUSuy9BaqryD7q/KmAKTaHA+Knrq/Z2rpYA=;
-        b=mDBeG/gTjgmQ6//0MOGHmhs7pXE10H/r7G+MW8t3JayQtxgGnGCLlpOcoJR3wgJ3qN
-         uBeXFD7iCUm0nt5Qxc9majRoChKt7Bcyxo/0UIedGLruFKPMlk7ojKXGVBVS5iOo3ORn
-         dPX8g6iZ0tLhqBocypR43tmfrjfX7NFlpb7dWFxtdb5bCUnuw1UhGkrdqLJL0jUmxAnG
-         CdqBhKI9b0Wgvrl7yl3XzcfmIpyOYNyVivsk6NF1XdMBg5NUNkLSgxcFD15nd3kxKvE0
-         EnMQU5Ch7qJ6eVNyYsb8vUhFsGftspglcmYq+e40JTC6pyklj+RsErLtc2cyKSdBYgaX
-         1/pA==
-X-Gm-Message-State: APjAAAVB+fgRfWJ1aGsu1VXlTdI1W3ed46j7pEQlq7+ki+HDehfRK9Xi
-        I7pUfgwNRLXR+tqpDceGW+E=
-X-Google-Smtp-Source: APXvYqyu0bh/v7TklWt6ccJ/3x10ObXBND5aSbOPLqRL/YsJNg84lzGFPNTFG1oKjl8fvHAhN6BjIg==
-X-Received: by 2002:a17:90a:a594:: with SMTP id b20mr1876259pjq.0.1567796963530;
-        Fri, 06 Sep 2019 12:09:23 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id f19sm7140441pfn.100.2019.09.06.12.09.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Sep 2019 12:09:23 -0700 (PDT)
-Date:   Fri, 6 Sep 2019 12:09:21 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Input - elan_i2c: remove Lenovo Legion Y7000 PnpID
-Message-ID: <20190906190921.GQ187474@dtor-ws>
-References: <20190906085948.27470-1-benjamin.tissoires@redhat.com>
- <20190906190334.GP187474@dtor-ws>
+        Fri, 6 Sep 2019 15:13:42 -0400
+Received: from imladris.surriel.com ([96.67.55.152])
+        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92.1)
+        (envelope-from <riel@shelob.surriel.com>)
+        id 1i6Jey-0003p8-3e; Fri, 06 Sep 2019 15:12:40 -0400
+From:   Rik van Riel <riel@surriel.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     kernel-team@fb.com, pjt@google.com, dietmar.eggemann@arm.com,
+        peterz@infradead.org, mingo@redhat.com, morten.rasmussen@arm.com,
+        tglx@linutronix.de, mgorman@techsingularity.net,
+        vincent.guittot@linaro.org
+Subject: [PATCH RFC v5 0/15] sched,fair: flatten CPU controller runqueues
+Date:   Fri,  6 Sep 2019 15:12:22 -0400
+Message-Id: <20190906191237.27006-1-riel@surriel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190906190334.GP187474@dtor-ws>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 06, 2019 at 12:03:34PM -0700, Dmitry Torokhov wrote:
-> On Fri, Sep 06, 2019 at 10:59:48AM +0200, Benjamin Tissoires wrote:
-> > Looks like the Bios of the Lenovo Legion Y7000 is using ELAN061B
-> > when the actual device is supposed to be used with hid-multitouch.
-> > 
-> > Remove it from the list of the supported device, hoping that
-> > no one will complain about the loss in functionality.
-> > 
-> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=203467
-> > Fixes: Fixes: 738c06d0e456 ("Input: elan_i2c - add hardware ID for multiple Lenovo laptops")
-> > Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> 
-> I suppose this one should go to stable?
+The current implementation of the CPU controller uses hierarchical
+runqueues, where on wakeup a task is enqueued on its group's runqueue,
+the group is enqueued on the runqueue of the group above it, etc.
 
-Gah, I am not very attentive, as you just said it below. Sorry.
+This increases a fairly large amount of overhead for workloads that
+do a lot of wakeups a second, especially given that the default systemd
+hierarchy is 2 or 3 levels deep.
 
-> 
-> > ---
-> > 
-> > Note to self: once this gets in, we need to send a similar patch
-> > to stable, as there are a few stable branches with this PnpID.
-> > 
-> > 
-> >  include/linux/input/elan-i2c-ids.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/include/linux/input/elan-i2c-ids.h b/include/linux/input/elan-i2c-ids.h
-> > index ceabb01a6a7d..1ecb6b45812c 100644
-> > --- a/include/linux/input/elan-i2c-ids.h
-> > +++ b/include/linux/input/elan-i2c-ids.h
-> > @@ -48,7 +48,7 @@ static const struct acpi_device_id elan_acpi_id[] = {
-> >  	{ "ELAN0618", 0 },
-> >  	{ "ELAN0619", 0 },
-> >  	{ "ELAN061A", 0 },
-> > -	{ "ELAN061B", 0 },
-> > +/*	{ "ELAN061B", 0 }, not working on the Lenovo Legion Y7000 */
-> >  	{ "ELAN061C", 0 },
-> >  	{ "ELAN061D", 0 },
-> >  	{ "ELAN061E", 0 },
-> > -- 
-> > 2.21.0
-> > 
-> 
-> -- 
-> Dmitry
+This patch series is an attempt at reducing that overhead, by placing
+all the tasks on the same runqueue, and scaling the task priority by
+the priority of the group, which is calculated periodically.
 
--- 
-Dmitry
+My main TODO items for the next period of time are likely going to
+be testing, testing, and testing. I hope to find and flush out any
+corner case I can find, and make sure performance does not regress
+with any workloads, and hopefully improves some.
+
+Other TODO items:
+- More code cleanups.
+- Remove some more now unused code.
+- Reimplement CONFIG_CFS_BANDWIDTH.
+
+Plan for the CONFIG_CFS_BANDWIDTH reimplementation:
+- When a cgroup gets throttled, mark the cgroup and its children
+  as throttled.
+- When pick_next_entity finds a task that is on a throttled cgroup,
+  stash it on the cgroup runqueue (which is not used for runnable
+  tasks any more). Leave the vruntime unchanged, and adjust that
+  runqueue's vruntime to be that of the left-most task.
+- When a cgroup gets unthrottled, and has tasks on it, place it on
+  a vruntime ordered heap separate from the main runqueue.
+- Have pick_next_task_fair grab one task off that heap every time it
+  is called, and the min vruntime of that heap is lower than the
+  vruntime of the CPU's cfs_rq (or the CPU has no other runnable tasks).
+- Place that selected task on the CPU's cfs_rq, renormalizing its
+  vruntime with the GENTLE_FAIR_SLEEPERS logic. That should help
+  interleave the already runnable tasks with the recently unthrottled
+  group, and prevent thundering herd issues.
+- If the group gets throttled again before all of its task had a chance
+  to run, vruntime sorting ensures all the tasks in the throttled cgroup
+  get a chance to run over time.
+
+Changes from v4:
+- drop patch that removes __sched_slice (Vincent Guittot)
+- remove se->depth (Dietmar Eggemann)
+- various other small cleanups and improvements suggested by people
+
+Changes from v3:
+- replace max_h_load with another hacky idea to ramp up the
+  task_se_h_weight; I believe this new idea is wrong as well, but
+  it will hopefully inspire a better solution (thanks to Peter Zijlstra)
+- fix the ordering inside enqueue_task_fair to get task weights set up right
+  (thanks to Peter Zijlstra)
+- change wakeup_preempt_entity to reduce the number of task preemptions,
+  hopefully resulting in behavior closer to what people configure in sysctl
+- various other small cleanups and fixes
+
+Changes from v2:
+- fixed the web server performance regression, in a way vaguely similar
+  to what Josef Bacik suggested (blame me for the implementation)
+- removed some code duplication so the diffstat is redder than before
+- propagate sum_exec_runtime up the tree, in preparation for CFS_BANDWIDTH
+- small cleanups left and right
+
+Changes from v1:
+- use task_se_h_weight instead of task_se_h_load in calc_delta_fair
+  and sched_slice, this seems to improve performance a little, but
+  I still have some remaining regression to chase with our web server
+  workload
+- implement a number of the changes suggested by Dietmar Eggemann
+  (still holding out for a better name for group_cfs_rq_of_parent)
+
+This series applies on top of 5.2
+
+ include/linux/sched.h |    8 
+ kernel/sched/core.c   |    3 
+ kernel/sched/debug.c  |   15 
+ kernel/sched/fair.c   |  821 ++++++++++++++++++++------------------------------
+ kernel/sched/pelt.c   |   68 +---
+ kernel/sched/pelt.h   |    2 
+ kernel/sched/sched.h  |    9 
+ 7 files changed, 367 insertions(+), 559 deletions(-)
+
+
