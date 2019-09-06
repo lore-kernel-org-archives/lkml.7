@@ -2,211 +2,57 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD33C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23517C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E16D720854
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:00:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567778431;
-	bh=j/Uywp6ry6qvlC/hGHuuFemTZcm+b8UDcJWsmoUkxj8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Xplvg5XXaqBfRpiXWFuc3U4FXWpTDoW/R23Io+qjehuuvVS3FqhR6kgYMv+x2PxJB
-	 Vfj6KjSNR/ILcxMa8L4bKUZY39DQ6+RhfMTShxBd7TAxiCrG+KZ6VwbXoI0EoAUR93
-	 PjjjV6xM2c15+Kt3U8aGCxKqzqeS5R61AlVFl9Vw=
+	by mail.kernel.org (Postfix) with ESMTP id 0794A2070C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:01:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393846AbfIFOA3 (ORCPT
+        id S2393855AbfIFOB2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 10:00:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53188 "EHLO mail.kernel.org"
+        Fri, 6 Sep 2019 10:01:28 -0400
+Received: from verein.lst.de ([213.95.11.211]:57552 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388998AbfIFOA3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 10:00:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D497206B8;
-        Fri,  6 Sep 2019 14:00:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567778428;
-        bh=j/Uywp6ry6qvlC/hGHuuFemTZcm+b8UDcJWsmoUkxj8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=B+P+LhIJbf479/5mQmKPTD/+zvv3gbhXUkELPLZOVftMAjmHv4wm49Ne6DDmLZE3h
-         zxunjd4YtYGhB0qVS1mppm76ECUAYGqaCBD2WLzqUwzVRRsNljVBhvaOkoaxNREI4G
-         tuZOKiX8GKSLQuL6NG1+I9N8P/9Gy3zYTee5N9Kw=
-Date:   Fri, 6 Sep 2019 16:00:25 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Yunsheng Lin <linyunsheng@huawei.com>
-Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org,
-        peterz@infradead.org, mingo@kernel.org, mhocko@kernel.org,
-        linuxarm@huawei.com
-Subject: Re: [PATCH RFC] driver core: ensure a device has valid node id in
- device_add()
-Message-ID: <20190906140025.GB8570@kroah.com>
-References: <1567647230-166903-1-git-send-email-linyunsheng@huawei.com>
- <20190905055727.GB23826@kroah.com>
- <e5905af2-5a8d-7b00-d2a6-a961f3eee120@huawei.com>
- <20190905073334.GA29933@kroah.com>
- <5a188e2b-6c07-a9db-fbaa-561e9362d3ba@huawei.com>
- <20190906065211.GA18823@kroah.com>
- <26d7a539-96fc-8a92-d60d-7e76e418ab63@huawei.com>
+        id S1732131AbfIFOB2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 10:01:28 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id C476768B05; Fri,  6 Sep 2019 16:01:23 +0200 (CEST)
+Date:   Fri, 6 Sep 2019 16:01:23 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        gross@suse.com, x86@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        xen-devel@lists.xenproject.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 09/11] swiotlb-xen: simplify cache maintainance
+Message-ID: <20190906140123.GA9894@lst.de>
+References: <20190905113408.3104-1-hch@lst.de> <20190905113408.3104-10-hch@lst.de> <e4f9b393-2631-57cd-f42f-3581e75ab9a3@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <26d7a539-96fc-8a92-d60d-7e76e418ab63@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <e4f9b393-2631-57cd-f42f-3581e75ab9a3@oracle.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 06, 2019 at 04:21:47PM +0800, Yunsheng Lin wrote:
-> On 2019/9/6 14:52, Greg KH wrote:
-> > On Fri, Sep 06, 2019 at 02:41:36PM +0800, Yunsheng Lin wrote:
-> >> On 2019/9/5 15:33, Greg KH wrote:
-> >>> On Thu, Sep 05, 2019 at 02:48:24PM +0800, Yunsheng Lin wrote:
-> >>>> On 2019/9/5 13:57, Greg KH wrote:
-> >>>>> On Thu, Sep 05, 2019 at 09:33:50AM +0800, Yunsheng Lin wrote:
-> >>>>>> Currently a device does not belong to any of the numa nodes
-> >>>>>> (dev->numa_node is NUMA_NO_NODE) when the FW does not provide
-> >>>>>> the node id and the device has not no parent device.
-> >>>>>>
-> >>>>>> According to discussion in [1]:
-> >>>>>> Even if a device's numa node is not set by fw, the device
-> >>>>>> really does belong to a node.
-> >>>>>>
-> >>>>>> This patch sets the device node to node 0 in device_add() if
-> >>>>>> the fw has not specified the node id and it either has no
-> >>>>>> parent device, or the parent device also does not have a valid
-> >>>>>> node id.
-> >>>>>>
-> >>>>>> There may be explicit handling out there relying on NUMA_NO_NODE,
-> >>>>>> like in nvme_probe().
-> >>>>>>
-> >>>>>> [1] https://lkml.org/lkml/2019/9/2/466
-> >>>>>>
-> >>>>>> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-> >>>>>> ---
-> >>>>>>  drivers/base/core.c  | 17 ++++++++++++++---
-> >>>>>>  include/linux/numa.h |  2 ++
-> >>>>>>  2 files changed, 16 insertions(+), 3 deletions(-)
-> >>>>>>
-> >>>>>> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> >>>>>> index 1669d41..466b8ff 100644
-> >>>>>> --- a/drivers/base/core.c
-> >>>>>> +++ b/drivers/base/core.c
-> >>>>>> @@ -2107,9 +2107,20 @@ int device_add(struct device *dev)
-> >>>>>>  	if (kobj)
-> >>>>>>  		dev->kobj.parent = kobj;
-> >>>>>>  
-> >>>>>> -	/* use parent numa_node */
-> >>>>>> -	if (parent && (dev_to_node(dev) == NUMA_NO_NODE))
-> >>>>>> -		set_dev_node(dev, dev_to_node(parent));
-> >>>>>> +	/* use parent numa_node or default node 0 */
-> >>>>>> +	if (!numa_node_valid(dev_to_node(dev))) {
-> >>>>>> +		int nid = parent ? dev_to_node(parent) : NUMA_NO_NODE;
-> >>>>>
-> >>>>> Can you expand this to be a "real" if statement please?
-> >>>>
-> >>>> Sure. May I ask why "? :" is not appropriate here?
-> >>>
-> >>> Because it is a pain to read, just spell it out and make it obvious what
-> >>> is happening.  You write code for developers first, and the compiler
-> >>> second, and in this case, either way is identical to the compiler.
-> >>>
-> >>>>>> +
-> >>>>>> +		if (numa_node_valid(nid)) {
-> >>>>>> +			set_dev_node(dev, nid);
-> >>>>>> +		} else {
-> >>>>>> +			if (nr_node_ids > 1U)
-> >>>>>> +				pr_err("device: '%s': has invalid NUMA node(%d)\n",
-> >>>>>> +				       dev_name(dev), dev_to_node(dev));
-> >>>>>
-> >>>>> dev_err() will show you the exact device properly, instead of having to
-> >>>>> rely on dev_name().
-> >>>>>
-> >>>>> And what is a user to do if this message happens?  How do they fix this?
-> >>>>> If they can not, what good is this error message?
-> >>>>
-> >>>> If user know about their system's topology well enough and node 0
-> >>>> is not the nearest node to the device, maybe user can readjust that by
-> >>>> writing the nearest node to /sys/class/pci_bus/XXXX/device/numa_node,
-> >>>> if not, then maybe user need to contact the vendor for info or updates.
-> >>>>
-> >>>> Maybe print error message as below:
-> >>>>
-> >>>> dev_err(dev, FW_BUG "has invalid NUMA node(%d). Readjust it by writing to sysfs numa_node or contact your vendor for updates.\n",
-> >>>> 	dev_to_node(dev));
-> >>>
-> >>> FW_BUG?
-> >>>
-> >>> Anyway, if you make this change, how many machines start reporting this
-> >>> error? 
-> >>
-> >> Any machines with more than one numa node will start reporting this error.
-> >>
-> >> 1) many virtual deivces maybe do not set the node id before calling
-> >>    device_register(), such as vfio, tun, etc.
-> >>
-> >> 2) struct cpu has a dev, but does not set the dev' node according to
-> >>    cpu_to_node().
-> >>
-> >> 3) Many platform Device also do not have a node id provided by FW.
-> > 
-> > Then this patch is not ok, as you are flooding the kernel log saying the
-> > system is "broken" when this is just what it always has been like.  How
-> > is anyone going to "fix" things?
+On Fri, Sep 06, 2019 at 09:52:12AM -0400, Boris Ostrovsky wrote:
+> We need nop definitions of these two for x86.
 > 
-> cpu->node_id does not seem to be used, maybe we can fix the cpu device:
-> 
-> diff --git a/drivers/base/cpu.c b/drivers/base/cpu.c
-> index cc37511d..ad0a841 100644
-> --- a/drivers/base/cpu.c
-> +++ b/drivers/base/cpu.c
-> @@ -41,7 +41,7 @@ static void change_cpu_under_node(struct cpu *cpu,
->         int cpuid = cpu->dev.id;
->         unregister_cpu_under_node(cpuid, from_nid);
->         register_cpu_under_node(cpuid, to_nid);
-> -       cpu->node_id = to_nid;
-> +       set_dev_node(&cpu->dev, to_nid);
->  }
-> 
->  static int cpu_subsys_online(struct device *dev)
-> @@ -367,7 +367,7 @@ int register_cpu(struct cpu *cpu, int num)
->  {
->         int error;
-> 
-> -       cpu->node_id = cpu_to_node(num);
-> +       set_dev_node(&cpu->dev, cpu_to_node(num));
->         memset(&cpu->dev, 0x00, sizeof(struct device));
->         cpu->dev.id = num;
->         cpu->dev.bus = &cpu_subsys;
-> diff --git a/include/linux/cpu.h b/include/linux/cpu.h
-> index fcb1386..9a6fc51 100644
-> --- a/include/linux/cpu.h
-> +++ b/include/linux/cpu.h
-> @@ -24,7 +24,6 @@ struct device_node;
->  struct attribute_group;
-> 
->  struct cpu {
-> -       int node_id;            /* The node which contains the CPU */
->         int hotpluggable;       /* creates sysfs control file if hotpluggable */
->         struct device dev;
->  };
+> Everything builds now but that's probably because the calls are under
+> 'if (!dev_is_dma_coherent(dev))' which is always false so compiler
+> optimized is out. I don't think we should rely on that.
 
-I have no idea what you are trying to do here, it feels like you are
-flailing around trying to set something that almost no bios/firmware
-sets or cares about.
-
-If setting the proper node is a requirement, make sure your firmware
-does this and then all should be fine.  Otherwise just use the default
-node like what happens today, right?
-
-thanks,
-
-greg k-h
+That is how a lot of the kernel works.  Provide protypes only for code
+that is semantically compiled, but can't ever be called due to
+IS_ENABLED() checks.  It took me a while to get used to it, but it
+actually is pretty nice as the linker does the work for you to check
+that it really is never called.  Much better than say a BUILD_BUG_ON().
