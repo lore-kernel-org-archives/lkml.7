@@ -2,80 +2,91 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17774C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F7CC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E03E120842
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1FD220854
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:31:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567769487;
+	bh=iogpGBQG7jXWKjVA6uZiFSlDPTuY7gAzoeRO+2zCtHs=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=E9edM80DRBq51i+2sJR5aVKcBMMQ6mkbaKGQUrXOvkxcr21r4ov78AkDDERWEafIh
+	 fmU20cgsj9U3gMOCxKX6Jr1iB/dfTD7GiIemfUaTYbQszl4huGn81dQu1aYDVYzKke
+	 UP4Kc1xPHv1a8sy81LqaTWYvW09ZB/9ITZjXo3EE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388384AbfIFL2L (ORCPT
+        id S2388988AbfIFLb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 07:28:11 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:37846 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725308AbfIFL2K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 07:28:10 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1i6CPM-0005wt-H2; Fri, 06 Sep 2019 11:28:04 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Peng Li <lipeng321@huawei.com>, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] net: hns3: make array spec_opcode static const, makes object smaller
-Date:   Fri,  6 Sep 2019 12:28:04 +0100
-Message-Id: <20190906112804.7812-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 6 Sep 2019 07:31:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34946 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732984AbfIFLb0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 07:31:26 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B45BF2070C;
+        Fri,  6 Sep 2019 11:31:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567769485;
+        bh=iogpGBQG7jXWKjVA6uZiFSlDPTuY7gAzoeRO+2zCtHs=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=yd935ui4dpymxpEuwbJ9LbamdQt/qCxtr11s6AswOEey2QNt0zao+eKe1PGz31BI9
+         qaxLcPg2RwxbttqksqxBVWxamHtR6qlHLzyA6E84hTviaChQOWijY1jvQWb62xfDQE
+         RXUaBanQkhqp0kgzGLXNcniuXFSNNufTqL3iRwQM=
+Date:   Fri, 6 Sep 2019 13:31:06 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Dan Elkouby <streetwalkermc@gmail.com>
+cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Fabian Henneke <fabian.henneke@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH] Bluetooth: hidp: Fix assumptions on the return value of
+ hidp_send_message
+In-Reply-To: <20190906110645.27601-1-streetwalkermc@gmail.com>
+Message-ID: <nycvar.YFH.7.76.1909061330390.31470@cbobk.fhfr.pm>
+References: <20190906101306.GA12017@kadam> <20190906110645.27601-1-streetwalkermc@gmail.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Fri, 6 Sep 2019, Dan Elkouby wrote:
 
-Don't populate the array spec_opcode on the stack but instead make it
-static const. Makes the object code smaller by 48 bytes.
+> hidp_send_message was changed to return non-zero values on success,
+> which some other bits did not expect. This caused spurious errors to be
+> propagated through the stack, breaking some drivers, such as hid-sony
+> for the Dualshock 4 in Bluetooth mode.
+> 
+> As pointed out by Dan Carpenter, hid-microsoft directly relied on that
+> assumption as well.
+> 
+> Fixes: 48d9cc9d85dd ("Bluetooth: hidp: Let hidp_send_message return number of queued bytes")
+> 
+> Signed-off-by: Dan Elkouby <streetwalkermc@gmail.com>
 
-Before:
-   text	   data	    bss	    dec	    hex	filename
-   6914	   1040	    128	   8082	   1f92	hns3/hns3vf/hclgevf_cmd.o
+Reviewed-by: Jiri Kosina <jkosina@suse.cz>
 
-After:
-   text	   data	    bss	    dec	    hex	filename
-   6866	   1040	    128	   8034	   1f62	hns3/hns3vf/hclgevf_cmd.o
+Marcel, are you taking this through your tree?
 
-(gcc version 9.2.1, amd64)
+Thanks,
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
-index 4c2c9458648f..d5d1cc5d1b6e 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
-@@ -74,7 +74,7 @@ static bool hclgevf_cmd_csq_done(struct hclgevf_hw *hw)
- 
- static bool hclgevf_is_special_opcode(u16 opcode)
- {
--	u16 spec_opcode[] = {0x30, 0x31, 0x32};
-+	static const u16 spec_opcode[] = {0x30, 0x31, 0x32};
- 	int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(spec_opcode); i++) {
 -- 
-2.20.1
+Jiri Kosina
+SUSE Labs
 
