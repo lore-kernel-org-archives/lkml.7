@@ -2,93 +2,172 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 325DCC00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 20:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCAAC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 20:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F39A9208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 20:03:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567800211;
-	bh=mExBVNjiBRxzB4QV3B2LFfejWgHVMRDf7/4uEQllzqg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=quS4bpzSfdhfauzUiyZrgVemCmpwCKLeQshKCo1WYtMCO/zqj4zFRiKggZNPeFtiT
-	 I3txG57ZxezVWQk/IhUCtWUx7aJk5TUIo6zqRKG2je81D+FH8oLZ5rzDD63OO5hDas
-	 XwZLa2GjhYD/dXGP2xLeVS//A1L8C5IrsjrIkwvU=
+	by mail.kernel.org (Postfix) with ESMTP id E3EFB20854
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 20:06:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="E0bpCavZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394339AbfIFUDa (ORCPT
+        id S2394352AbfIFUGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 16:03:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39808 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726008AbfIFUD3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 16:03:29 -0400
-Received: from localhost (unknown [62.28.240.114])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0756320854;
-        Fri,  6 Sep 2019 20:03:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567800209;
-        bh=mExBVNjiBRxzB4QV3B2LFfejWgHVMRDf7/4uEQllzqg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rEIu4cj6eimR+r4plydg3wHpJIMOiwvK6XrHsYRaOs4dQsfN0uk78ZiL6V3YSwksz
-         e8R3pr+zjo+P+2bOo3HzNg0jPQ1CCaeFesjbTbohQVdAknaLloZE4KD1wWJ7CQbbMK
-         +NtWn7507V4tVg48WnPew19qIk4/p1cXTy3rHdoA=
-Date:   Fri, 6 Sep 2019 16:03:26 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 0/9] Enhance the hv_vmbus driver to support hibernation
-Message-ID: <20190906200325.GD1528@sasha-vm>
-References: <1567724446-30990-1-git-send-email-decui@microsoft.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <1567724446-30990-1-git-send-email-decui@microsoft.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 6 Sep 2019 16:06:04 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42882 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726008AbfIFUGE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 16:06:04 -0400
+Received: by mail-pg1-f196.google.com with SMTP id p3so4103244pgb.9
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 13:06:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=fA56nmfsZsnUsEfBRX6jWIQZ7RippmvM12LMrLjjbeM=;
+        b=E0bpCavZc9w7bg3ldootyHw632dMvkQjPiTDyyD9E4nvHHA/R4hfUqQe7JLvWLoVI1
+         ZzdmjRUZn1I/3UFIId9wru0Cc8NhUgmlZoWyxM/ETmiRdFCnjHslhNciqqND5mXeB2ql
+         n2FNStFMy81oIyvmFuPfhqeBNzaKyrGa2txp4Fp60Why8ReO3XzcGfC7Iqb3t9OIfHFS
+         hkuXHMI1y873af/967NcJKza/15DICLILQudnnZaxDY3hkSvNaemTLwpsFes4bFnAeGl
+         yrMqylb/J5NUitzWqPaJmoR/oVtP6BgW0XPr9/NxQgR7ofco0GzSUDnNYnFHisgIXVU8
+         A/KA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=fA56nmfsZsnUsEfBRX6jWIQZ7RippmvM12LMrLjjbeM=;
+        b=Q//jUDzySoLjLmUIWQMCYXf1apwcpRK5GymZ+3sZn52fJHrAjpk5pLF9bdq0e0VRLN
+         N/9XzFHw4syms4/2vR3d19KCXJleakfZrt6ANuhpfodV3cE0PKp6Dcq3ez36I5mkJzdA
+         sVuehpVGkgV4fzbOqj4110KQhqjPu26nClWEbmy6uxN/1aZv9aqYepMEzAekUT7OQx0O
+         9hstZBIqmcHjqeBxpgbAOz8sxhZIr3Ifkkx6WZvecEdI7IwNPzutV6V5jZViFgZjY6WC
+         ft9o8kOEnry3IkLYt2Itu4Qs2t2gC+WgaxFXMK8wTptk29tPHFAV+7hz8jWU6hJCu4eB
+         GKdA==
+X-Gm-Message-State: APjAAAXBYjvmFw/R9nka5kvtkr9qpZQwlqflyTd3YgmxgksA81LUhSp7
+        wlt67oOvwfVg2YDhTzvP0qBGbg==
+X-Google-Smtp-Source: APXvYqz56KYhH6DJKB5EGgZ1CB/vlaLiWum8K3dRnvpJQJJwnJqULKe23ljO87SF/jS0Eam/QGtA3w==
+X-Received: by 2002:a62:3083:: with SMTP id w125mr12963792pfw.102.1567800362967;
+        Fri, 06 Sep 2019 13:06:02 -0700 (PDT)
+Received: from ?IPv6:2600:100f:b121:da37:bc66:d4de:83c7:e0cd? ([2600:100f:b121:da37:bc66:d4de:83c7:e0cd])
+        by smtp.gmail.com with ESMTPSA id k8sm5007663pgm.14.2019.09.06.13.06.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 06 Sep 2019 13:06:02 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v2 1/5] fs: Add support for an O_MAYEXEC flag on sys_open()
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16G102)
+In-Reply-To: <e1ac9428e6b768ac3145aafbe19b24dd6cf410b9.camel@kernel.org>
+Date:   Fri, 6 Sep 2019 13:06:00 -0700
+Cc:     Aleksa Sarai <cyphar@cyphar.com>,
+        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
+        Florian Weimer <fweimer@redhat.com>,
+        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+        linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Eric Chiang <ericchiang@google.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?utf-8?Q?Philippe_Tr=C3=A9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <D2A57C7B-B0FD-424E-9F81-B858FFF21FF0@amacapital.net>
+References: <20190906152455.22757-1-mic@digikod.net> <20190906152455.22757-2-mic@digikod.net> <87ef0te7v3.fsf@oldenburg2.str.redhat.com> <75442f3b-a3d8-12db-579a-2c5983426b4d@ssi.gouv.fr> <f53ec45fd253e96d1c8d0ea6f9cca7f68afa51e3.camel@kernel.org> <20190906171335.d7mc3no5tdrcn6r5@yavin.dot.cyphar.com> <e1ac9428e6b768ac3145aafbe19b24dd6cf410b9.camel@kernel.org>
+To:     Jeff Layton <jlayton@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 11:01:14PM +0000, Dexuan Cui wrote:
->This patchset (consisting of 9 patches) was part of the v4 patchset (consisting
->of 12 patches):
->    https://lkml.org/lkml/2019/9/2/894
->
->The other 3 patches in v4 are posted in another patchset, which will go
->through the tip.git tree.
->
->All the 9 patches here are now rebased to the hyperv tree's hyperv-next branch:
->https://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git/log/?h=hyperv-next
->, and all the 9 patches have Michael Kelley's Signed-off-by's.
->
->Please review.
 
-Given that these two series depend on each other, I'd much prefer for
-them to go through one tree.
 
-But, I may be wrong, and I'm going to see if a scenario such as this
-make sense. I've queued this one to the hyperv-next, but I'll wait for
-the x86 folks to send their pull request to Linus first before I do it
-for these patches.
+> On Sep 6, 2019, at 12:43 PM, Jeff Layton <jlayton@kernel.org> wrote:
+>=20
+>> On Sat, 2019-09-07 at 03:13 +1000, Aleksa Sarai wrote:
+>>> On 2019-09-06, Jeff Layton <jlayton@kernel.org> wrote:
+>>>> On Fri, 2019-09-06 at 18:06 +0200, Micka=C3=ABl Sala=C3=BCn wrote:
+>>>>> On 06/09/2019 17:56, Florian Weimer wrote:
+>>>>> Let's assume I want to add support for this to the glibc dynamic loade=
+r,
+>>>>> while still being able to run on older kernels.
+>>>>>=20
+>>>>> Is it safe to try the open call first, with O_MAYEXEC, and if that fai=
+ls
+>>>>> with EINVAL, try again without O_MAYEXEC?
+>>>>=20
+>>>> The kernel ignore unknown open(2) flags, so yes, it is safe even for
+>>>> older kernel to use O_MAYEXEC.
+>>>>=20
+>>>=20
+>>> Well...maybe. What about existing programs that are sending down bogus
+>>> open flags? Once you turn this on, they may break...or provide a way to
+>>> circumvent the protections this gives.
+>>=20
+>> It should be noted that this has been a valid concern for every new O_*
+>> flag introduced (and yet we still introduced new flags, despite the
+>> concern) -- though to be fair, O_TMPFILE actually does have a
+>> work-around with the O_DIRECTORY mask setup.
+>>=20
+>> The openat2() set adds O_EMPTYPATH -- though in fairness it's also
+>> backwards compatible because empty path strings have always given ENOENT
+>> (or EINVAL?) while O_EMPTYPATH is a no-op non-empty strings.
+>>=20
+>>> Maybe this should be a new flag that is only usable in the new openat2()=
 
-Usually cases such as these are the exception, but for Hyper-V it seems
-to be the norm, so I'm curious to see how this will unfold.
+>>> syscall that's still under discussion? That syscall will enforce that
+>>> all flags are recognized. You presumably wouldn't need the sysctl if you=
 
---
-Thanks,
-Sasha
+>>> went that route too.
+>>=20
+>> I'm also interested in whether we could add an UPGRADE_NOEXEC flag to
+>> how->upgrade_mask for the openat2(2) patchset (I reserved a flag bit for
+>> it, since I'd heard about this work through the grape-vine).
+>>=20
+>=20
+> I rather like the idea of having openat2 fds be non-executable by
+> default, and having userland request it specifically via O_MAYEXEC (or
+> some similar openat2 flag) if it's needed. Then you could add an
+> UPGRADE_EXEC flag instead?
+>=20
+> That seems like something reasonable to do with a brand new API, and
+> might be very helpful for preventing certain classes of attacks.
+>=20
+>=20
+
+There are at least four concepts of executability here:
+
+- Just check the file mode and any other relevant permissions. Return a norm=
+al fd.  Makes sense for script interpreters, perhaps.
+
+- Make the fd fexecve-able.
+
+- Make the resulting fd mappable PROT_EXEC.
+
+- Make the resulting fd upgradable.
+
+I=E2=80=99m not at all convinced that the kernel needs to distinguish all th=
+ese, but at least upgradability should be its own thing IMO.=
