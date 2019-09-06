@@ -1,127 +1,97 @@
 Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Level: *
+X-Spam-Status: No, score=1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 923CAC43140
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 21:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57CEEC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 21:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6225A207FC
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 21:31:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26F3B2070C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 21:33:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eQaw1beE"
+	dkim=pass (1024-bit key) header.d=kragniz.eu header.i=@kragniz.eu header.b="JS1TGHU5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404354AbfIFVbo (ORCPT
+        id S2391948AbfIFVdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 17:31:44 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:43866 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404164AbfIFVbc (ORCPT
+        Fri, 6 Sep 2019 17:33:52 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37606 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731289AbfIFVdv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 17:31:32 -0400
-Received: by mail-io1-f66.google.com with SMTP id u185so15991214iod.10;
-        Fri, 06 Sep 2019 14:31:32 -0700 (PDT)
+        Fri, 6 Sep 2019 17:33:51 -0400
+Received: by mail-wm1-f68.google.com with SMTP id r195so8568495wme.2
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 14:33:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=26yRkKngdeGZdYrj7tLUW2NHxKx3LhkS3JePK0gY+8A=;
-        b=eQaw1beEZr2GTZtMQnwD4KoxcrO7wW+xNyWWkrP2z15GUpMkkEapVjQ5w4SEAkrgCO
-         JX4dYw7L8W1ldVldtUTF1hOTmCYawc2cJF4QqsVbi7Z/6m/I3RzqmfWu/aIJjLV7Udpv
-         0OT0FkVKdko1sg8GJUu5/LuSqn5bFMptposIKM54yDJR2zsnmeV6koBfyVkTDZxmd6py
-         u4yrGx/h2XPaHO1twcAz4NfRFPGfDQL0RWq2/he7dLycoq64oF2Mu7FOjvJWdEJfBLHv
-         2tX90211ztFSB1Os14T6P2lbrWzDWeu8tzMmjGPpzRLtz805qGw5UHORPK8fzVI439Ya
-         J2jw==
+        d=kragniz.eu; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8lEHoZAxZRxpTMRYBgPVsjVs/tSBcLbaOLSEdPXXZZc=;
+        b=JS1TGHU5NCROSoRlcU+zIbbKnd6aj8LivEAdS2CcVkX0z1qQVenhkOeRmkvYTN6Guw
+         rJ6hvVPBAuVge5tk/EsMUzgG74J2krUU/QOyTIY3V2AI+9To9NVX2sjcz3Wwk04pJS7j
+         a9n9fg/8vOvU+Kc6nqnzKHh93EYlccRCPvl2A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=26yRkKngdeGZdYrj7tLUW2NHxKx3LhkS3JePK0gY+8A=;
-        b=ta7TGR0+XX28UXXyvtgiPBemPQHeKmTTbMntpZttrInz9JB4QSdfs1grruOY3080iS
-         A3kq7ZUIknSqDNvr76x/zu4NGTE9TVa9Q8GBaw3V4SdP/Vj3mjMoMnzxWvQTWyIiCPcB
-         0NRx3VmjJlEItChgrcUyv0n/mJ0ZtVdNWfhvStPXMAQDVsCSzp9jL/Vw2Cm5LxeosJ1p
-         C1wHYqnSt+KNmSwof0DIN4oyfFGTyLufnbW8YhSrwqztSeurm8IlAdx+KWnsN1KciS2b
-         Y5/bq8PX10vqq3Eg2kS34HXSTcOM3NodW4yOjlueiPVQ5Xi4arqZhyg8aJ1JXgwWCuEt
-         iUkw==
-X-Gm-Message-State: APjAAAV0P+cDNtskwiHEWHl8YAGpV058o5m8AtEqbu3j3yYQuPAZ7444
-        BcuonO+AW+KGn/g2E7iExn2yItO5+g==
-X-Google-Smtp-Source: APXvYqzcCiaPEcke/zEYQ0pYn1CgYsKteKJ06NbqPe0dchKECo4QjXZDiChHP9gfa1tKb+fBtG9SVA==
-X-Received: by 2002:a5d:8506:: with SMTP id q6mr598789ion.43.1567805491405;
-        Fri, 06 Sep 2019 14:31:31 -0700 (PDT)
-Received: from threadripper.novatech-llc.local ([216.21.169.52])
-        by smtp.gmail.com with ESMTPSA id r2sm4158110ioh.61.2019.09.06.14.31.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 06 Sep 2019 14:31:31 -0700 (PDT)
-From:   George McCollister <george.mccollister@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     Woojung Huh <woojung.huh@microchip.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Tristram Ha <Tristram.Ha@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Marek Vasut <marex@denx.de>, linux-kernel@vger.kernel.org,
-        George McCollister <george.mccollister@gmail.com>
-Subject: [PATCH net-next 3/3] net: dsa: microchip: remove NET_DSA_TAG_KSZ_COMMON
-Date:   Fri,  6 Sep 2019 16:30:54 -0500
-Message-Id: <20190906213054.48908-4-george.mccollister@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190906213054.48908-1-george.mccollister@gmail.com>
-References: <20190906213054.48908-1-george.mccollister@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8lEHoZAxZRxpTMRYBgPVsjVs/tSBcLbaOLSEdPXXZZc=;
+        b=bgI4w128yuzOqxv2gosNn5daySaDqMMf038dcXjAekWDaykILZdYw2HlxdbAFmhW/H
+         OucZdwPQ0qq5+nfnxdb4s4Tu2oNvrbI7wEaI7AnUukxN+t0lx6PFEJPjZoXa5vCZAgQP
+         b367VYq9Ovt/FQTpWiOtVaYYJeowAySXJ8Ygdy3cVr0EHqpC7QcAZTiX1WNDz09qHZmO
+         O69TXMC0BteyzbnNMuOWceeTopx9HAIqic+lATtJQ8Z5otEdKWkAwDveNCOzrmz/l32f
+         mMsVjiTEy2VPCGiqK2tUm+kUMu5ZvrbOHLUr/Ttg0uzyBspcemdfZoXKuZNHOjP2I2Hz
+         zMzA==
+X-Gm-Message-State: APjAAAUBiPuubXRCXgUqu/bb6prxjPyvPpa+Dr4HJ3+NU5xMmy2HDLRG
+        AZWOVmgdjJBei5+v5z9mTauIiQ==
+X-Google-Smtp-Source: APXvYqwtwcDoMFYDRFk3ANIzceYfQKr1FNj3yo8H7jd6Uy/Qvcr77d1HfLaTahHYQ1RunFQCZxvVtQ==
+X-Received: by 2002:a1c:a8cb:: with SMTP id r194mr8842529wme.156.1567805629375;
+        Fri, 06 Sep 2019 14:33:49 -0700 (PDT)
+Received: from gmail.com ([2.31.167.169])
+        by smtp.gmail.com with ESMTPSA id 189sm9895231wmz.19.2019.09.06.14.33.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Sep 2019 14:33:48 -0700 (PDT)
+Date:   Fri, 6 Sep 2019 22:37:29 +0100
+From:   Louis Taylor <louis@kragniz.eu>
+To:     Joe Perches <joe@perches.com>
+Cc:     linux-doc@vger.kernel.org, corbet@lwn.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] docs: printk-formats: Stop encouraging use of
+ unnecessary %h[xudi] and %hh[xudi]
+Message-ID: <20190906213729.GA18504@gmail.com>
+References: <a68114afb134b8633905f5a25ae7c4e6799ce8f1.camel@perches.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a68114afb134b8633905f5a25ae7c4e6799ce8f1.camel@perches.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the superfluous NET_DSA_TAG_KSZ_COMMON and just use the existing
-NET_DSA_TAG_KSZ. Update the description to mention the three switch
-families it supports. No functional change.
+On Fri, Sep 06, 2019 at 02:11:51PM -0700, Joe Perches wrote:
+> Standard integer promotion is already done and %hx and %hhx is useless
+> so do not encourage the use of %hh[xudi] or %h[xudi].
+> 
+> As Linus said in:
+> Link: https://lore.kernel.org/lkml/CAHk-=wgoxnmsj8GEVFJSvTwdnWm8wVJthefNk2n6+4TC=20e0Q@mail.gmail.com/
+> 
+> It's a pointless warning, making for more complex code, and
+> making people remember esoteric printf format details that have no
+> reason for existing.
+> 
+> The "h" and "hh" things should never be used. The only reason for them
+> being used if if you have an "int", but you want to print it out as a
+> "char" (and honestly, that is a really bad reason, you'd be better off
+> just using a proper cast to make the code more obvious).
+> 
+> So if what you have a "char" (or unsigned char) you should always just
+> print it out as an "int", knowing that the compiler already did the
+> proper type conversion.
 
-Signed-off-by: George McCollister <george.mccollister@gmail.com>
----
- net/dsa/Kconfig  | 9 ++-------
- net/dsa/Makefile | 2 +-
- 2 files changed, 3 insertions(+), 8 deletions(-)
+Yeah, makes sense. Sorry for adding these in the first place.
 
-diff --git a/net/dsa/Kconfig b/net/dsa/Kconfig
-index 2f69d4b53d46..29e2bd5cc5af 100644
---- a/net/dsa/Kconfig
-+++ b/net/dsa/Kconfig
-@@ -73,16 +73,11 @@ config NET_DSA_TAG_MTK
- 	  Say Y or M if you want to enable support for tagging frames for
- 	  Mediatek switches.
- 
--config NET_DSA_TAG_KSZ_COMMON
--	tristate
--	default n
--
- config NET_DSA_TAG_KSZ
--	tristate "Tag driver for Microchip 9893 family of switches"
--	select NET_DSA_TAG_KSZ_COMMON
-+	tristate "Tag driver for Microchip 8795/9477/9893 families of switches"
- 	help
- 	  Say Y if you want to enable support for tagging frames for the
--	  Microchip 9893 family of switches.
-+	  Microchip 8795/9477/9893 families of switches.
- 
- config NET_DSA_TAG_QCA
- 	tristate "Tag driver for Qualcomm Atheros QCA8K switches"
-diff --git a/net/dsa/Makefile b/net/dsa/Makefile
-index c342f54715ba..2c6d286f0511 100644
---- a/net/dsa/Makefile
-+++ b/net/dsa/Makefile
-@@ -9,7 +9,7 @@ obj-$(CONFIG_NET_DSA_TAG_BRCM_COMMON) += tag_brcm.o
- obj-$(CONFIG_NET_DSA_TAG_DSA) += tag_dsa.o
- obj-$(CONFIG_NET_DSA_TAG_EDSA) += tag_edsa.o
- obj-$(CONFIG_NET_DSA_TAG_GSWIP) += tag_gswip.o
--obj-$(CONFIG_NET_DSA_TAG_KSZ_COMMON) += tag_ksz.o
-+obj-$(CONFIG_NET_DSA_TAG_KSZ) += tag_ksz.o
- obj-$(CONFIG_NET_DSA_TAG_LAN9303) += tag_lan9303.o
- obj-$(CONFIG_NET_DSA_TAG_MTK) += tag_mtk.o
- obj-$(CONFIG_NET_DSA_TAG_QCA) += tag_qca.o
--- 
-2.11.0
-
+Reviewed-by: Louis Taylor <louis@kragniz.eu>
