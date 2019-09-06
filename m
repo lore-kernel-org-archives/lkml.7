@@ -2,120 +2,142 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2876C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BAAC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8B45206CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:27:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sqTvZMOg"
+	by mail.kernel.org (Postfix) with ESMTP id 75ADF214DE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:27:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404469AbfIFM1c (ORCPT
+        id S2404673AbfIFM1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 08:27:32 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:40652 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403993AbfIFM1c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 08:27:32 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 7so5804804ljw.7
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 05:27:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=voMncQMQ4YdYJSbQPybIZCy/AcK0j9pgJUBzJv0XJ0A=;
-        b=sqTvZMOg0FK+tbQ5Twd8lIUIdl5cRw7f3mUvyMcKovHkLwtCNr+KhR8ryq4wVIDwmE
-         MrBFX2gvgSY3HU2O7p/fa3kIFtwabChkkv1UJeIL2HzkjG5QPDhFYHq8EkK3B24Bgydv
-         Fi2qkSQYUx9TdJxWg4stgkl9/pi/wDuDnFFyyRBx/kMYn9jJS/zdvJSGTuo1h2Temozf
-         Nvf/Hnfjf2PuJ6a6jToQHWZwxuQcOEfdbQhKzPmea0lJsU/ZNqvBUb+imGx19W9r0HCK
-         Hyvu0+zXQQzELhka7MTfPB6km6DSDMOt5IvIpqPyjyiI/acvmccpl7me4YJqAOCRVfA5
-         PFBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=voMncQMQ4YdYJSbQPybIZCy/AcK0j9pgJUBzJv0XJ0A=;
-        b=fdyinHi4RT1h+axEEgCnHjUM8u0ggEZctV89BXyqKth1uwPxoHib5HwUl5Z8Ccj3Zb
-         4rbaZGngK83HSJNKdtnf4n8oGaY93qpB+aZQKtYCiOS4OsZ6E/9uZrtCd6Z2V+zglBMC
-         7s7K2m/09wmntEfGkhvzAC79DpQqrUsABpzfHcDsqZJUHlS4facrZXQn6BnlHFx0KezW
-         X28WaJCcLaa9rrgXYS/3SCQKAzhJbp7as+wkAD3jy0Ab650yIBArBrodvoVaFWjMdXak
-         zQHrWn0VJ4RXo6jrtAXdgciYLHcJ9Awv4+a0EtBbMLnvjWkRl8CJlgXCYTPB3l990OKx
-         tFNw==
-X-Gm-Message-State: APjAAAVWDw9DbeVW4LiVrqNiHbmqgc+McTusq/3onzgkKjRQC+XI+9Rs
-        1Cb1fivz84Yy5rYrznbI+4q2Q34Hf6YaOzxyUac=
-X-Google-Smtp-Source: APXvYqyqVi6A3SK9ZHo9Lzs4psldtYUrV3ugRoL85TI5Orqgiv42bAur5gdeHYcDQujEI1t/u7SSENxNihK+5Pwaths=
-X-Received: by 2002:a2e:9602:: with SMTP id v2mr5657222ljh.215.1567772850472;
- Fri, 06 Sep 2019 05:27:30 -0700 (PDT)
+        Fri, 6 Sep 2019 08:27:48 -0400
+Received: from mga06.intel.com ([134.134.136.31]:49013 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403993AbfIFM1r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 08:27:47 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Sep 2019 05:27:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,473,1559545200"; 
+   d="scan'208";a="383238151"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga005.fm.intel.com with ESMTP; 06 Sep 2019 05:27:44 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1i6DL5-0006Qi-Ns; Fri, 06 Sep 2019 15:27:43 +0300
+Date:   Fri, 6 Sep 2019 15:27:43 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 1/3] software node: implement reference properties
+Message-ID: <20190906122743.GQ2680@smile.fi.intel.com>
+References: <20190906043809.18990-1-dmitry.torokhov@gmail.com>
 MIME-Version: 1.0
-References: <1567413598-4477-1-git-send-email-jrdr.linux@gmail.com>
-In-Reply-To: <1567413598-4477-1-git-send-email-jrdr.linux@gmail.com>
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-Date:   Fri, 6 Sep 2019 17:57:19 +0530
-Message-ID: <CAFqt6zYkFk55gzmfwMFzpWiOp0xP3DXdmWyO2Ce8+mqYW12SNw@mail.gmail.com>
-Subject: Re: [PATCH v2] swiotlb-xen: Convert to use macro
-To:     konrad.wilk@oracle.com,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>, sstabellini@kernel.org
-Cc:     xen-devel@lists.xenproject.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org,
-        Sabyasachi Gupta <sabyasachi.linux@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190906043809.18990-1-dmitry.torokhov@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 2, 2019 at 2:04 PM Souptick Joarder <jrdr.linux@gmail.com> wrote:
->
-> Rather than using static int max_dma_bits, this
-> can be coverted to use as macro.
->
-> Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
-> Reviewed-by: Juergen Gross <jgross@suse.com>
+On Thu, Sep 05, 2019 at 09:38:07PM -0700, Dmitry Torokhov wrote:
+> It is possible to store references to software nodes in the same fashion as
+> other static properties, so that users do not need to define separate
+> structures:
+> 
+> const struct software_node gpio_bank_b_node = {
+> 	.name = "B",
+> };
 
-If it is still not late, can we get this patch in queue for 5.4 ?
+Why this can't be __initconst?
 
-> ---
->  drivers/xen/swiotlb-xen.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
-> index ae1df49..d1eced5 100644
-> --- a/drivers/xen/swiotlb-xen.c
-> +++ b/drivers/xen/swiotlb-xen.c
-> @@ -38,6 +38,7 @@
->  #include <asm/xen/page-coherent.h>
->
->  #include <trace/events/swiotlb.h>
-> +#define MAX_DMA_BITS 32
->  /*
->   * Used to do a quick range check in swiotlb_tbl_unmap_single and
->   * swiotlb_tbl_sync_single_*, to see if the memory was in fact allocated by this
-> @@ -114,8 +115,6 @@ static int is_xen_swiotlb_buffer(dma_addr_t dma_addr)
->         return 0;
->  }
->
-> -static int max_dma_bits = 32;
-> -
->  static int
->  xen_swiotlb_fixup(void *buf, size_t size, unsigned long nslabs)
->  {
-> @@ -135,7 +134,7 @@ static int is_xen_swiotlb_buffer(dma_addr_t dma_addr)
->                                 p + (i << IO_TLB_SHIFT),
->                                 get_order(slabs << IO_TLB_SHIFT),
->                                 dma_bits, &dma_handle);
-> -               } while (rc && dma_bits++ < max_dma_bits);
-> +               } while (rc && dma_bits++ < MAX_DMA_BITS);
->                 if (rc)
->                         return rc;
->
-> --
-> 1.9.1
->
+> const struct property_entry simone_key_enter_props[] __initconst = {
+> 	PROPERTY_ENTRY_U32("linux,code", KEY_ENTER),
+> 	PROPERTY_ENTRY_STRING("label", "enter"),
+> 	PROPERTY_ENTRY_REF("gpios", &gpio_bank_b_node, 123, GPIO_ACTIVE_LOW),
+> 	{ }
+> };
+
+So it's basically mimics the concept of phandle, right?
+
+> +		ref_args = prop->is_array ?
+> +				&prop->pointer.ref[index] : &prop->value.ref;
+
+Better to do if with explicit 'if ()' as it's done in the rest of the code.
+
+	if (prop->is_array)
+		ref_args = ...;
+	else
+		ref_args = ...;
+
+> -	DEV_PROP_MAX,
+> +	DEV_PROP_MAX
+
+It seems it wasn't ever used, so, can be dropped completely.
+
+> @@ -240,6 +255,7 @@ struct property_entry {
+>  			const u32 *u32_data;
+>  			const u64 *u64_data;
+>  			const char * const *str;
+> +			const struct software_node_ref_args *ref;
+>  		} pointer;
+>  		union {
+>  			u8 u8_data;
+> @@ -247,6 +263,7 @@ struct property_entry {
+>  			u32 u32_data;
+>  			u64 u64_data;
+>  			const char *str;
+> +			struct software_node_ref_args ref;
+
+Hmm... This bumps the size of union a lot for each existing property_entry.
+Is there any other way? Maybe we can keep pointer and allocate memory for it
+when copying?
+
+>  		} value;
+
+> +#define PROPERTY_ENTRY_REF_ARRAY(_name_, _val_)			\
+> +(struct property_entry) {					\
+> +	.name = _name_,						\
+> +	.length = ARRAY_SIZE(_val_) *				\
+> +			sizeof(struct software_node_ref_args),	\
+
+I would rather leave it on one line and shift right all \:s in this macro.
+
+> +	.is_array = true,					\
+> +	.type = DEV_PROP_REF,					\
+> +	.pointer.ref = _val_,					\
+> +}
+> +
+
+> +#define PROPERTY_ENTRY_REF(_name_, _ref_, ...)			\
+> +(struct property_entry) {					\
+> +	.name = _name_,						\
+> +	.length = sizeof(struct software_node_ref_args),	\
+> +	.type = DEV_PROP_REF,					\
+> +	.value.ref.node = _ref_,				\
+
+> +	.value.ref.nargs =					\
+> +		ARRAY_SIZE(((u64[]){ 0, ##__VA_ARGS__ })) - 1,	\
+
+Ditto.
+
+> +	.value.ref.args = { __VA_ARGS__ },			\
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
