@@ -2,191 +2,74 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7EAC43140
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 23:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF12C00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 23:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 661BC2173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 23:40:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f5qht4kB"
+	by mail.kernel.org (Postfix) with ESMTP id 96F89214E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 23:40:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405766AbfIFXka (ORCPT
+        id S2405843AbfIFXkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 19:40:30 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:33479 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405729AbfIFXka (ORCPT
+        Fri, 6 Sep 2019 19:40:36 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:43114 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405729AbfIFXkf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 19:40:30 -0400
-Received: by mail-pl1-f195.google.com with SMTP id t11so3919124plo.0
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 16:40:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pxKRv8jsRZzTGKhj+ioFhgpVS6Dzsmm59+PKHULgKG4=;
-        b=f5qht4kBJty1w+M1QEqeEr7xM9Wdo7RR8Rao8IQtESokz+K0NhWhBs5VMOnCX7Rzey
-         n3kQ0m28gB61aIOoyjV4+gonSGVif7/x2NLw+5C8dnvbzZ1XYCWVrxayUITMuHWvrBRj
-         dD0g2Q/1aGyuTiMBmtgbjVBzyk5nKLsPhOcNw=
+        Fri, 6 Sep 2019 19:40:35 -0400
+Received: by mail-oi1-f194.google.com with SMTP id t84so6421025oih.10;
+        Fri, 06 Sep 2019 16:40:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pxKRv8jsRZzTGKhj+ioFhgpVS6Dzsmm59+PKHULgKG4=;
-        b=FrSIzVE4cDbihlebfG/zINJes2PHtYz7ZYlgfQx/rxNjQMdGidkr8hRkW4ULltZupZ
-         4Ug7l24h6aDD42xytol0QvMtI0H8/EwT3dB9uiWnJE5POIfNRgx1LRplpJVTgvZx47ih
-         A/CtXHs2/fIGjpM8Z8kRDEj4vSuyc4ls8/TtyfzepDzdWRecTOO3hlW0cBg2OwjkX9Xf
-         HwXso85JYKHp1MFxGIoLionQkFTebVkNSRG5JLU7F75kNpiYmmFnQKcUvAKbLikRVRn/
-         8A306SGe+1SVBnNwG/THHLlpCtfnQbpq4Q/kV4ww6I13EBWbxM9AboZ8kvj8iSo/RVq1
-         CJfg==
-X-Gm-Message-State: APjAAAWdfMCsLTRGxioxFlctzgjSJ0QlwSzGNG3wUL4JprS+bjn1FjDl
-        Novx2dWFLyOBwdGgvOsTtZN0BA==
-X-Google-Smtp-Source: APXvYqy5ATiCVXAmYBmhNqO3VIuKk8WRC1Ed+4dSQcZvN9PCdHTA/UhyJBc1yPjVotkulRJugBZxhQ==
-X-Received: by 2002:a17:902:864a:: with SMTP id y10mr11724408plt.294.1567813229347;
-        Fri, 06 Sep 2019 16:40:29 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id m9sm927359pjf.11.2019.09.06.16.40.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Sep 2019 16:40:28 -0700 (PDT)
-Date:   Fri, 6 Sep 2019 16:40:25 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Ravi Chandra Sadineni <ravisadineni@chromium.org>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, rjw@rjwysocki.net, pavel@ucw.cz,
-        len.brown@intel.com, gregkh@linuxfoundation.org, bhe@redhat.com,
-        dyoung@redhat.com, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, tbroch@chromium.org, trong@google.com
-Subject: Re: [PATCH 1/2] power: sysfs: Add link to wakeup class device.
-Message-ID: <20190906234025.GD133864@google.com>
-References: <20190724174355.255314-1-ravisadineni@chromium.org>
- <20190724174355.255314-2-ravisadineni@chromium.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ckiUV8HeIYQ/rsOxCbMNm/VjxU8EUESI63njQcctYnQ=;
+        b=LNe2LUW/uHScJNOtn+2zSOOXQzVqCrrEjhQQqoc2x/owcLYRTDFBErhKZKfNiNUUVX
+         mSyNIE6RhRp+91wG5mUCIL4wA2YXiDGVjQFq3CctT+p+B6fWuU2F87tMHiqbdiYMzBqZ
+         9huuqAkkKIJj5bvKyzMISiEIR7FRGiFlHjvwKwdSb9XTABoK4iimZ87ZddiutHm3J5mB
+         /EpL8ADgYeUH30PD11BSQycqMy6ZpYgp3dOcla8UdPNhoxPjTiY9Klw7qPdhV8kEkpBC
+         hEistFd3GCy+1WqaywR+Bw/6neOt6QkvK3FhQzUzCIIYGSiE3klnq9Xkvqo9++pjU/5S
+         0qyg==
+X-Gm-Message-State: APjAAAXYPFdznFQ76j5dnTaviNqnm2dwHPqFLUZ3H9t3DkOB5umOHl9L
+        epBoGbKdzeJBl7loWbOHxqUN1J9j
+X-Google-Smtp-Source: APXvYqwIj4G+yxyw390JPsYAPQ+j0LZYO7Jfo5X/fJwmq/xVN01yp+lhcqixc0ggg122plDaAo1mZw==
+X-Received: by 2002:a05:6808:195:: with SMTP id w21mr4987809oic.109.1567813234565;
+        Fri, 06 Sep 2019 16:40:34 -0700 (PDT)
+Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
+        by smtp.gmail.com with ESMTPSA id p15sm2769865otq.37.2019.09.06.16.40.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 06 Sep 2019 16:40:33 -0700 (PDT)
+Subject: Re: [PATCH v8 11/13] block: don't check blk_rq_is_passthrough() in
+ blk_do_io_stat()
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc:     Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
+        Jens Axboe <axboe@fb.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190828215429.4572-1-logang@deltatee.com>
+ <20190828215429.4572-12-logang@deltatee.com>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <6684bf33-5151-9f09-8cfd-7586cc9be99c@grimberg.me>
+Date:   Fri, 6 Sep 2019 16:40:32 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190724174355.255314-2-ravisadineni@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190828215429.4572-12-logang@deltatee.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ravi,
+Looks good,
 
-On Wed, Jul 24, 2019 at 10:43:54AM -0700, Ravi Chandra Sadineni wrote:
-> https://patchwork.kernel.org/patch/11045069/ creates a virtual
-> device
-
-To refer to unsubmitted patches in the commit message it is
-probably better to use the subject ("PM / wakeup: show wakeup
-sources stats in sysfs") and add a link after '---', or say
-"${subject}" [1] and put the link at the bottom of the commit message
-
-You might want to try again now that the patch has landed :)
-
-> under wakeup class for each wake capable device exposing all related
-> sysfs attributes. But there isn't a symlink from the actual device
-> node to these virtual devices. This patch creates a symlink from the
-> actual device to the corresponding wakeup_source device under wakeup
-> class.
-
-> Signed-off-by: Ravi Chandra Sadineni <ravisadineni@chromium.org>
-> ---
->  drivers/base/power/power.h  |  2 ++
->  drivers/base/power/sysfs.c  | 25 +++++++++++++++++++++++++
->  drivers/base/power/wakeup.c |  2 ++
->  3 files changed, 29 insertions(+)
-> 
-> diff --git a/drivers/base/power/power.h b/drivers/base/power/power.h
-> index c511def48b48..32b0f5c080a9 100644
-> --- a/drivers/base/power/power.h
-> +++ b/drivers/base/power/power.h
-> @@ -67,6 +67,8 @@ extern void dpm_sysfs_remove(struct device *dev);
->  extern void rpm_sysfs_remove(struct device *dev);
->  extern int wakeup_sysfs_add(struct device *dev);
->  extern void wakeup_sysfs_remove(struct device *dev);
-> +extern void wakeup_source_sysfs_link_add(struct device *dev);
-> +extern void wakeup_source_sysfs_link_remove(struct device *dev);
-
-the names seem a bit clunky, how about wakeup_sysfs_add/remove_link()?
-
->  extern int pm_qos_sysfs_add_resume_latency(struct device *dev);
->  extern void pm_qos_sysfs_remove_resume_latency(struct device *dev);
->  extern int pm_qos_sysfs_add_flags(struct device *dev);
-> diff --git a/drivers/base/power/sysfs.c b/drivers/base/power/sysfs.c
-> index d713738ce796..fbbdb7b16ac5 100644
-> --- a/drivers/base/power/sysfs.c
-> +++ b/drivers/base/power/sysfs.c
-> @@ -95,6 +95,7 @@
->  const char power_group_name[] = "power";
->  EXPORT_SYMBOL_GPL(power_group_name);
->  
-> +static const char wakeup_source_symlink_name[] = "wakeup_source";
->  static const char ctrl_auto[] = "auto";
->  static const char ctrl_on[] = "on";
->  
-> @@ -679,6 +680,30 @@ int dpm_sysfs_add(struct device *dev)
->  	return rc;
->  }
->  
-> +void wakeup_source_sysfs_link_add(struct device *dev)
-> +{
-> +	struct wakeup_source *ws;
-> +	int err;
-> +
-> +	ws = dev->power.wakeup;
-> +	if (ws && ws->dev) {
-> +		err = sysfs_add_link_to_group(&dev->kobj, power_group_name,
-> +			&ws->dev->kobj, wakeup_source_symlink_name);
-> +		if (err) {
-> +			dev_err(dev,
-> +				"could not add %s symlink err %d\n",
-
-I'd suggest
-
-				"could not add '%s' symlink: %d\n",
-
-or
-
-				"could not add 'wakeup_source' symlink: %d\n",
-
-the latter is easier to grep.
-
-> +				wakeup_source_symlink_name,
-> +				err);
-> +		}
-> +	}
-> +}
-> +
-> +void wakeup_source_sysfs_link_remove(struct device *dev)
-> +{
-> +	sysfs_remove_link_from_group(&dev->kobj, power_group_name,
-> +		wakeup_source_symlink_name);
-> +}
-> +
->  int wakeup_sysfs_add(struct device *dev)
->  {
->  	return sysfs_merge_group(&dev->kobj, &pm_wakeup_attr_group);
-> diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
-> index fe779fe13a7f..87dfe401b035 100644
-> --- a/drivers/base/power/wakeup.c
-> +++ b/drivers/base/power/wakeup.c
-> @@ -270,6 +270,7 @@ static int device_wakeup_attach(struct device *dev, struct wakeup_source *ws)
->  	if (dev->power.wakeirq)
->  		device_wakeup_attach_irq(dev, dev->power.wakeirq);
->  	spin_unlock_irq(&dev->power.lock);
-> +	wakeup_source_sysfs_link_add(dev);
->  	return 0;
->  }
->  
-> @@ -391,6 +392,7 @@ static struct wakeup_source *device_wakeup_detach(struct device *dev)
->  	ws = dev->power.wakeup;
->  	dev->power.wakeup = NULL;
->  	spin_unlock_irq(&dev->power.lock);
-> +	wakeup_source_sysfs_link_remove(dev);
-
-you want to do this before the wakeup source is detached.
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
