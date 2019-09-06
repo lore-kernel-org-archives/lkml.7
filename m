@@ -2,132 +2,70 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E50C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1FBC00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42AC9206CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:24:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sPVCnusf"
+	by mail.kernel.org (Postfix) with ESMTP id 3DB29206CD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:25:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391371AbfIFMYf (ORCPT
+        id S2391954AbfIFMZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 08:24:35 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41172 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731928AbfIFMYe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 08:24:34 -0400
-Received: by mail-lj1-f193.google.com with SMTP id a4so5814598ljk.8
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 05:24:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uEuqyoR6pX9WcKO2lv8Qx9uofetASJrnmmBj7HQZAO0=;
-        b=sPVCnusfoWpyRZ2QVHQwTwTXqVDSLABe1kb/Mev99Hg2vqfHfoVLATzkVRi2+ZQlU/
-         jUe4bKWmFENp+T5qqbKfZENo1l8dvYqIfw+OK9uKx8yblxrFiCq65laNMqVAldjVdmmu
-         1GzOuoVP5R+l+wfB6mShSS7GmPqISpD/ueZPYKZfKCo4BCRz7iD18iYuQ9oIlLVoA3Ah
-         /NpIXrmXWC8JrXAC3FFaQ/G2EWcWlJXui2gM4J+oZH/lDDSMKALFRDkn2EyJjthC+RdX
-         ZLl3lqv9OoD5ojMhnCCfHGU7MR8CdPT6nkoAHaWC5Fw6UNvT81yS99ZKj8c7hFrkikKG
-         +JZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uEuqyoR6pX9WcKO2lv8Qx9uofetASJrnmmBj7HQZAO0=;
-        b=LYWN0B78NqSKCY6en8SkJZB3WNtpSx7/WGceY0QOBx4ycQM1ibKERKd9pp6ZWwfSjn
-         mcoFr5BZPm+qpcOedBSWaS+0jZvIME9wf+h2VLXgJV/7Spbot6ABqRypZjF/FjLS3shl
-         WkIIYJK0CE/vEQu80uxPtBxMiqnVQZKdMGc9K4pgdeAxK/UtjQxHI2Ed1AyvU2MMwGL8
-         cKqzETC5iheC7Fm2hsSk2GTZVguvVAeV8xw4sqU+am1KXNSZjW+UF02wG4R1xPYyfbED
-         TvqeJZdzx5APJp9gYal1FmLDF2gRfEfRA/kZPqFDXbwc/1DAhjIry/LzvrR9LWK9e9a9
-         BjQg==
-X-Gm-Message-State: APjAAAUZ7ScM0GG/cbL8nvbGptufkaGwABhMuF9BJGrA8fCbGRF788M7
-        3AUGXwnz8WewhjlSrMH6UvcE/h8/JbELkNsk2OY=
-X-Google-Smtp-Source: APXvYqygEaAWPMGIe4tWR6VpyFc1DI2SYZ2tryPFQlAxF5bTrdZ+Bc90vgs+nITDv56N7g83GkVN1pcDuglS9Aq6kkY=
-X-Received: by 2002:a2e:9104:: with SMTP id m4mr5521513ljg.28.1567772673112;
- Fri, 06 Sep 2019 05:24:33 -0700 (PDT)
+        Fri, 6 Sep 2019 08:25:23 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:57302 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731928AbfIFMZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 08:25:23 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 3DFD49630CBDFC79E2B7;
+        Fri,  6 Sep 2019 20:25:21 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Fri, 6 Sep 2019
+ 20:25:10 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>
+CC:     <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] crypto: essiv - Remove unnecessary NULL checks
+Date:   Fri, 6 Sep 2019 20:25:02 +0800
+Message-ID: <20190906122502.27236-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-References: <1567708980-8804-1-git-send-email-jrdr.linux@gmail.com> <20190905185910.GS29434@bombadil.infradead.org>
-In-Reply-To: <20190905185910.GS29434@bombadil.infradead.org>
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-Date:   Fri, 6 Sep 2019 17:54:21 +0530
-Message-ID: <CAFqt6zZ_M3_Jr_08SO+OnnurWNbLJJsNZvVDZOnjh88vzaiXGg@mail.gmail.com>
-Subject: Re: [PATCH] mm/memory.c: Convert to use vmf_error()
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>, airlied@redhat.com,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Linux-MM <linux-mm@kvack.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 6, 2019 at 12:29 AM Matthew Wilcox <willy@infradead.org> wrote:
->
-> On Fri, Sep 06, 2019 at 12:13:00AM +0530, Souptick Joarder wrote:
-> > +++ b/mm/memory.c
-> > @@ -1750,13 +1750,10 @@ static vm_fault_t __vm_insert_mixed(struct vm_area_struct *vma,
-> >       } else {
-> >               return insert_pfn(vma, addr, pfn, pgprot, mkwrite);
-> >       }
-> > -
-> > -     if (err == -ENOMEM)
-> > -             return VM_FAULT_OOM;
-> > -     if (err < 0 && err != -EBUSY)
-> > -             return VM_FAULT_SIGBUS;
-> > -
-> > -     return VM_FAULT_NOPAGE;
-> > +     if (!err || err == -EBUSY)
-> > +             return VM_FAULT_NOPAGE;
-> > +     else
-> > +             return vmf_error(err);
-> >  }
->
-> My plan is to convert insert_page() to return a VM_FAULT error code like
-> insert_pfn() does.  Need to finish off the vm_insert_page() conversions
-> first ;-)
+NULL check before kfree is not needed.
+Generated-by: scripts/coccinelle/free/ifnullfree.cocci
 
-Previously we have problem while converting vm_insert_page() to return
-vm_fault_t.
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ crypto/essiv.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-vm_insert_page() is called from different drivers. Some of them are
-already converted
-to use vm_map_pages()/ vm_map_pages_zero(). But still we left with few users.
+diff --git a/crypto/essiv.c b/crypto/essiv.c
+index a8befc8..3d3f9d7 100644
+--- a/crypto/essiv.c
++++ b/crypto/essiv.c
+@@ -188,8 +188,7 @@ static void essiv_aead_done(struct crypto_async_request *areq, int err)
+ 	struct aead_request *req = areq->data;
+ 	struct essiv_aead_request_ctx *rctx = aead_request_ctx(req);
+ 
+-	if (rctx->assoc)
+-		kfree(rctx->assoc);
++	kfree(rctx->assoc);
+ 	aead_request_complete(req, err);
+ }
+ 
+-- 
+2.7.4
 
-drivers/media/usb/usbvision/usbvision-video.c#L1045
-mm/vmalloc.c#L2969
 
-These 2 can be converted with something like vm_map_vmalloc_pages().
-I am working on it. Will post it in sometime.
-
-drivers/android/binder_alloc.c#L259 (have objection)
-drivers/infiniband/hw/efa/efa_verbs.c#L1701
-drivers/infiniband/hw/mlx5/main.c#L2085 (have objection as using
-vm_map_pages_zero() doesn't make sense)
-drivers/xen/gntalloc.c#L548 (have limitation)
-kernel/kcov.c#L297 (have objection)
-net/ipv4/tcp.c#L1799
-net/packet/af_packet.c#L4453
-
-But these are the places where replacing vm_insert_page() is bit
-difficult/ have objection.
-In some cases, maintainers/ reviewers will not agree to replace
-vm_insert_page().
-
-In  other scenario, if we change return type of vm_insert_page() to vm_fault_t,
-we end up with adding few lines of conversion code from vm_fault_t to errno
-in drivers which is not a correct way to go with.
-
-Any suggestion, how to solve this ?
