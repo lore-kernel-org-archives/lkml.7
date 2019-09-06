@@ -2,90 +2,140 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00AEEC00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:09:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FAC3C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA4FE2082C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:09:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 065EC2084F
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:09:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GzHu9b16"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390799AbfIFKJW (ORCPT
+        id S2390878AbfIFKJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 06:09:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49512 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387843AbfIFKJV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 06:09:21 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9B78C3084288;
-        Fri,  6 Sep 2019 10:09:21 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 126BB60A97;
-        Fri,  6 Sep 2019 10:09:17 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAHk-=wjt2Eb+yEDOcQwCa0SrZ4cWu967OtQG8Vz21c=n5ZP1Nw@mail.gmail.com>
-References: <CAHk-=wjt2Eb+yEDOcQwCa0SrZ4cWu967OtQG8Vz21c=n5ZP1Nw@mail.gmail.com> <156763534546.18676.3530557439501101639.stgit@warthog.procyon.org.uk> <CAHk-=wh5ZNE9pBwrnr5MX3iqkUP4nspz17rtozrSxs5-OGygNw@mail.gmail.com> <17703.1567702907@warthog.procyon.org.uk> <CAHk-=wjQ5Fpv0D7rxX0W=obx9xoOAxJ_Cr+pGCYOAi2S9FiCNg@mail.gmail.com> <CAKCoTu7ms_Mr-q08d9XB3uascpzwBa5LF9JTT2aq8uUsoFE8aQ@mail.gmail.com> <CAHk-=wjcsxQ8QB_v=cwBQw4pkJg7pp-bBsdWyPivFO_OeF-y+g@mail.gmail.com> <5396.1567719164@warthog.procyon.org.uk> <CAHk-=wgbCXea1a9OTWgMMvcsCGGiNiPp+ty-edZrBWn63NCYdw@mail.gmail.com> <14883.1567725508@warthog.procyon.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     dhowells@redhat.com, Ray Strode <rstrode@redhat.com>,
+        Fri, 6 Sep 2019 06:09:49 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45982 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733254AbfIFKJs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 06:09:48 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 4so3203217pgm.12
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 03:09:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mPlEyz3pTYtQ2PRdAV0S+EQaWH5tHTmS4heiquzIdK4=;
+        b=GzHu9b16+b83L8RCAs1A/8tSCMuuLX7crTu6pydCxnq9K7f0YxzOEes87MnbbrHGHN
+         9YCHQ//OiR5bVRa176WJzUkFTxMTU7rypHyQ96JZ1sRS5wq3qxm2nHrrkM3q2012Drcv
+         Nfo8T/hnSvh3L9FRX2u6wqY5XppxdpPAJ0RI51JkpWBUzxaHv8RVDE9oVqDo64sfxdzn
+         uun6VxJQIy0H5gtrmwKNiGsBx7tn62rJSqE3Y+jQ3eThHEYN/RryM2JFPsC2mwp+l+VW
+         HZqj89qkaaX5+uu0z8ktJt3nasDhAda2Q2a6+kHfc4NZAW1w0Niw3BbJHVJeKDQcPQ1f
+         nNXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mPlEyz3pTYtQ2PRdAV0S+EQaWH5tHTmS4heiquzIdK4=;
+        b=GVczzIrsVJSm1SnPDG52n+V3V8KYsEhDf/rNHwxTCw0WShkP60YifX3iAOIO44qAYX
+         rwjTkYM6JM+T2nDb/7pUyOHi44L0JXhxz05veoIRkUk22jEyuYSHLky3TPjwI7dYwpLN
+         SD4MOmsSjiydaMfock5hYE+KMydr9s8AmZoHuP9me64Nt9zx46TZjrS1/U+yZGxzzDpM
+         6HN47T/af2j9cwPuwCDC3VQfVHQ2XZaPikkMiF4RL8eQYANDB2AZ3ys13Gdky0t/ctV4
+         JQb+e92mT66gh2tUCZiwMgPGE8//1yabeqwb5lZpNZBYVKCFFhxt/Q+JNV3LhFxguanC
+         O/FQ==
+X-Gm-Message-State: APjAAAVY/O4mrtfPPinv+GHAIRc8iPiMlXvfAOytQ6gP+fohoVyMF4RY
+        kEhyJjiWzbA9ln5gEnv0a8Xhy0/Z
+X-Google-Smtp-Source: APXvYqxpGObgjVki9/w1RI1A8UxU46n8xgyMHyCMaDXVc7WQigU7hXMeNqpGROS52hE9VkNE3wklbg==
+X-Received: by 2002:a17:90a:1c01:: with SMTP id s1mr8959839pjs.76.1567764588226;
+        Fri, 06 Sep 2019 03:09:48 -0700 (PDT)
+Received: from localhost ([175.223.27.235])
+        by smtp.gmail.com with ESMTPSA id d14sm5997414pjx.8.2019.09.06.03.09.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Sep 2019 03:09:47 -0700 (PDT)
+Date:   Fri, 6 Sep 2019 19:09:43 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        John Ogness <john.ogness@linutronix.de>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Ray, Debarshi" <debarshi.ray@gmail.com>,
-        Robbie Harwood <rharwood@redhat.com>
-Subject: Re: Why add the general notification queue and its sources
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v4 0/9] printk: new ringbuffer implementation
+Message-ID: <20190906100943.GB10876@jagdpanzerIV>
+References: <20190807222634.1723-1-john.ogness@linutronix.de>
+ <20190904123531.GA2369@hirez.programming.kicks-ass.net>
+ <20190905130513.4fru6yvjx73pjx7p@pathway.suse.cz>
+ <20190905143118.GP2349@hirez.programming.kicks-ass.net>
+ <20190906090627.GX2386@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <27731.1567764557.1@warthog.procyon.org.uk>
-Date:   Fri, 06 Sep 2019 11:09:17 +0100
-Message-ID: <27732.1567764557@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 06 Sep 2019 10:09:21 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190906090627.GX2386@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+On (09/06/19 11:06), Peter Zijlstra wrote:
+> Another approach is something like:
+> 
+> DEFINE_PER_CPU(int, printk_nest);
+> DEFINE_PER_CPU(char, printk_line[4][256]);
+>
+> int vprintk(const char *fmt, va_list args)
+> {
+> 	int c, n, i;
+> 	char *buf;
+> 
+> 	preempt_disable();
+> 	i = min(3, this_cpu_inc_return(printk_nest) - 1);
+> 	buf = this_cpu_ptr(printk_line[i]);
+> 	n = vscnprintf(buf, 256, fmt, args);
+> 
+> 	c = cpu_lock();
+> 	printk_buffer_store(buf, n);
+> 	if (early_console)
+> 		early_console->write(early_console, buf, n);
+> 	cpu_unlock(c);
+>
+> 	this_cpu_dec(printk_nest);
+> 	preempt_enable();
+> 
+> 	return n;
+> }
+> 
+> Again, simple and straight forward (and I'm sure it's been mentioned
+> before too).
 
-> But it's *literally* just finding the places that work with
-> pipe->curbuf/nrbufs and making them use atomic updates.
+ :)
 
-No.  It really isn't.  That's two variables that describe the occupied section
-of the buffer.  Unless you have something like a 68020 with CAS2, or put them
-next to each other so you can use CMPXCHG8, you can't do that.
+---
+diff --git a/kernel/printk/printk_safe.c b/kernel/printk/printk_safe.c
+index 139c310049b1..9c73eb6259ce 100644
+--- a/kernel/printk/printk_safe.c
++++ b/kernel/printk/printk_safe.c
+@@ -103,7 +103,10 @@ static __printf(2, 0) int printk_safe_log_store(struct printk_safe_seq_buf *s,
+        if (atomic_cmpxchg(&s->len, len, len + add) != len)
+                goto again;
+ 
+-       queue_flush_work(s);
++       if (early_console)
++               early_console->write(early_console, s->buffer + len, add);
++       else
++               queue_flush_work(s);
+        return add;
+ }
+---
 
-They need converting to head/tail pointers first.
-
-> They really would work with almost anything. You could even mix-and-match
-> "data generated by kernel" and "data done by 'write()' or 'splice()' by a
-> user process".
-
-Imagine that userspace writes a large message and takes the mutex.  At the
-same time something in softirq context decides *it* wants to write a message -
-it can't take the mutex and it can't wait, so the userspace write would have
-to cause the kernel message to be dropped.
-
-What I would have to do is make a write to a notification pipe go through
-post_notification() and limit the size to the maximum for a single message.
-
-Much easier to simply suppress writes and splices on pipes that have been set
-up to be notification queues - at least for now.
-
-David
+	-ss
