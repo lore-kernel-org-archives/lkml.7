@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2232EC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9233EC43140
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F02A421670
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:46:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 678A42173B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:46:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VliEAdMq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZhrFxoH/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395373AbfIFSqJ (ORCPT
+        id S2395399AbfIFSqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 14:46:09 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53010 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390567AbfIFSqG (ORCPT
+        Fri, 6 Sep 2019 14:46:14 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40341 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2395376AbfIFSqM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 14:46:06 -0400
-Received: by mail-wm1-f67.google.com with SMTP id t17so7513944wmi.2;
-        Fri, 06 Sep 2019 11:46:04 -0700 (PDT)
+        Fri, 6 Sep 2019 14:46:12 -0400
+Received: by mail-wr1-f65.google.com with SMTP id w13so7597887wru.7;
+        Fri, 06 Sep 2019 11:46:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=UVVsUJ3cqxC7B0N9mD/oVG/ysz/2hMqLEdaltl6/SKo=;
-        b=VliEAdMqXCZEuavCqjEh6OTr7ebBnxrMGNbDl2ershs4s/Nu3eg5EQbTh3IHq1RrYU
-         6sjfvjcrb8dH+OW8JTbCr0hZ4zVdMvWooEFD5JQBPoi3B5+8FyIkdGspxnf2/Y34eaJe
-         wnT6Qj4WdcFJN1CKgrGjZQBghzuxkv/M5kPlNttWstId/gDVxTWjGtCwY2Pqjyi0fro4
-         1BtmmF4req7lbyPrLe/cjkdWNBaqTNUl/rTZZPIOX0vx/ssFR7CtsDgbN42TRjuKCqXH
-         Msieu8Zh8UulkL+6NTZhiqPzAyauh7tIEkHGb4EeOOH2pw/3hIxzEjH823o38S/Psu4M
-         jd8Q==
+        bh=6gfPZRpIljPhV4Y76bqDwXphABtlmbrLYPaesl3pjCI=;
+        b=ZhrFxoH/Go/p9mDemMia8OkzNhnhOPc3pjz+NcsRC2j4y/b2FxlHEx4JI6pFQy0591
+         5dKC6539twpYGEEBLEixpHsXoY3A9qmMkHplxGPCYrps8CgvQNI0OwcF8f9GdHF72+HS
+         4yDE06GGnbURNVBeChjpzi5N+D6lFsH4LobskCrGZ2NTTEXsELEuxBBeGPI5Um6IWuc/
+         YCbM76t3XLK0cDZcGgRKd2h1JxU038SSQKQBuJAceVR+tTAAvsXVfkRIczqqGy5HptOu
+         7RaTRWVYWuewASFlg3+W/7rRkSmk2Y5TcmjmddP2D3iO3Cl+H0S+GLhQYHWHAdPtn9lD
+         G4wQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=UVVsUJ3cqxC7B0N9mD/oVG/ysz/2hMqLEdaltl6/SKo=;
-        b=TZ1VCnOpOyUhT2bBEONwZGKBmiRFFShuIPNO25YTFhlEDyjwvPblsGW43AEMT85fU9
-         Ffnz+KIb86lojLKLysJWd4kGOo3mUMbZf+FPPD9liS4d3I9hKE2TppCNNIZZ1FcLfj3e
-         2w4b62T6OGaBm4flL+kihL7MlxTgKM6AOM1jzSYyhXDnAgl1YtoUkj+icvQWntd7DXMV
-         jh3m/wIEz10r9xGnTiSjwdJBywGTDvSFutyLrKFGgkh2RfK9Ze+Dx8qJ5GgoQ6O2U38H
-         mDDRgB8CKlKSQ0SDcCVK7d5MK85c1QsA9S3cH7Sj10ScR/GvFuf8YQTnU11Z9vRU3ZcI
-         yNGA==
-X-Gm-Message-State: APjAAAVauUCZJAXoEYIxAvCZ9pdY2/hzqQK/qISV1szYxrYFuyaO7lEl
-        gSoP8PUXuZB6PNaQwTIye0E=
-X-Google-Smtp-Source: APXvYqyjrzRBxxj7tYzXaXaxio1nphXp3XWOYZgyMvwziBQzHIPj2h/NUODsCwcJ/4g0/R25PDbU+Q==
-X-Received: by 2002:a1c:9a46:: with SMTP id c67mr8434773wme.115.1567795564198;
-        Fri, 06 Sep 2019 11:46:04 -0700 (PDT)
+        bh=6gfPZRpIljPhV4Y76bqDwXphABtlmbrLYPaesl3pjCI=;
+        b=msZj72w29CyeVmvABNQscxSJzsbXL2ZrS9DUR3jPiGtO4i/cDHljuimgntOJNsUcIj
+         PIuJNW4XyNTWp+vkl04cqJ/IMHXZ6Tqvqg84Bemt5acw/dhz0qCdKhhb04ohBNAjzipa
+         9xQbb1FKgBBikwl+5rVGmX7Fcu6BcVd0VInik+Nbls46hcPa2boTCESOe9oQH60sbqIh
+         4B6B+w/DCT9HFoLK4oTXIIGOCfrmFmNnDv2f2mdf9PXp/NdamVBYxEFa/JvnOon1dGqX
+         TR8D5OKFOm8BpiDyUbwAUNqNSaxdJ23/r8pQnr7wjY0/zTW4Xo4auQFJPHU6hs37himh
+         eC1g==
+X-Gm-Message-State: APjAAAUXiRDC9zeNHm/suCRBvyRYg2qLeptvjl5x7k8m8gN10Gzui3Yi
+        qsThtuWQc73GFMGc2gFu6P6G1Dr8
+X-Google-Smtp-Source: APXvYqw3NjoNTVeM2qHMyiFQjvaRW2FdN8p50r5ozVUMwrqRJxmmaB+S5AyuSL/MHK/u6B6fQEleuA==
+X-Received: by 2002:adf:e30e:: with SMTP id b14mr8399491wrj.168.1567795570676;
+        Fri, 06 Sep 2019 11:46:10 -0700 (PDT)
 Received: from Red.localdomain ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id j1sm8677577wrg.24.2019.09.06.11.46.02
+        by smtp.googlemail.com with ESMTPSA id j1sm8677577wrg.24.2019.09.06.11.46.09
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 06 Sep 2019 11:46:03 -0700 (PDT)
+        Fri, 06 Sep 2019 11:46:10 -0700 (PDT)
 From:   Corentin Labbe <clabbe.montjoie@gmail.com>
 To:     davem@davemloft.net, herbert@gondor.apana.org.au,
         linux@armlinux.org.uk, mark.rutland@arm.com, mripard@kernel.org,
@@ -65,9 +65,9 @@ Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-sunxi@googlegroups.com,
         Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: [PATCH 1/9] crypto: Add allwinner subdirectory
-Date:   Fri,  6 Sep 2019 20:45:43 +0200
-Message-Id: <20190906184551.17858-2-clabbe.montjoie@gmail.com>
+Subject: [PATCH 5/9] ARM: dts: sun8i: h3: Add Crypto Engine node
+Date:   Fri,  6 Sep 2019 20:45:47 +0200
+Message-Id: <20190906184551.17858-6-clabbe.montjoie@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190906184551.17858-1-clabbe.montjoie@gmail.com>
 References: <20190906184551.17858-1-clabbe.montjoie@gmail.com>
@@ -78,70 +78,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since a second Allwinner crypto driver will be added, it is better to
-create a dedicated subdirectory.
+The Crypto Engine is a hardware cryptographic accelerator that supports
+many algorithms.
+It could be found on most Allwinner SoCs.
+
+This patch enables the Crypto Engine on the Allwinner H3 SoC Device-tree.
 
 Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
 ---
- MAINTAINERS                      | 6 ++++++
- drivers/crypto/Kconfig           | 2 ++
- drivers/crypto/Makefile          | 1 +
- drivers/crypto/allwinner/Kconfig | 6 ++++++
- 4 files changed, 15 insertions(+)
- create mode 100644 drivers/crypto/allwinner/Kconfig
+ arch/arm/boot/dts/sun8i-h3.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ee4e873c0f9a..d62ddf8ff262 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -681,6 +681,12 @@ L:	linux-crypto@vger.kernel.org
- S:	Maintained
- F:	drivers/crypto/sunxi-ss/
+diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+index e37c30e811d3..873abe1b279b 100644
+--- a/arch/arm/boot/dts/sun8i-h3.dtsi
++++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+@@ -153,6 +153,17 @@
+ 			allwinner,sram = <&ve_sram 1>;
+ 		};
  
-+ALLWINNER CRYPTO ENGINE
-+M:	Corentin Labbe <clabbe.montjoie@gmail.com>
-+L:	linux-crypto@vger.kernel.org
-+S:	Maintained
-+F:	drivers/crypto/allwinner/
++		crypto: crypto@1c15000 {
++			compatible = "allwinner,sun8i-h3-crypto";
++			reg = <0x01c15000 0x1000>;
++			interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "ce_ns";
++			resets = <&ccu RST_BUS_CE>;
++			reset-names = "ahb";
++			clocks = <&ccu CLK_BUS_CE>, <&ccu CLK_CE>;
++			clock-names = "ahb", "mod";
++		};
 +
- ALLWINNER VPU DRIVER
- M:	Maxime Ripard <mripard@kernel.org>
- M:	Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
-index 83271d944a96..fe90dd74797c 100644
---- a/drivers/crypto/Kconfig
-+++ b/drivers/crypto/Kconfig
-@@ -11,6 +11,8 @@ menuconfig CRYPTO_HW
- 
- if CRYPTO_HW
- 
-+source "drivers/crypto/allwinner/Kconfig"
-+
- config CRYPTO_DEV_PADLOCK
- 	tristate "Support for VIA PadLock ACE"
- 	depends on X86 && !UML
-diff --git a/drivers/crypto/Makefile b/drivers/crypto/Makefile
-index afc4753b5d28..90d60eff5ecc 100644
---- a/drivers/crypto/Makefile
-+++ b/drivers/crypto/Makefile
-@@ -1,4 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
-+obj-$(CONFIG_CRYPTO_DEV_ALLWINNER) += allwinner/
- obj-$(CONFIG_CRYPTO_DEV_ATMEL_AES) += atmel-aes.o
- obj-$(CONFIG_CRYPTO_DEV_ATMEL_SHA) += atmel-sha.o
- obj-$(CONFIG_CRYPTO_DEV_ATMEL_TDES) += atmel-tdes.o
-diff --git a/drivers/crypto/allwinner/Kconfig b/drivers/crypto/allwinner/Kconfig
-new file mode 100644
-index 000000000000..0c8a99f7959d
---- /dev/null
-+++ b/drivers/crypto/allwinner/Kconfig
-@@ -0,0 +1,6 @@
-+config CRYPTO_DEV_ALLWINNER
-+	bool "Support for Allwinner cryptographic offloader"
-+	depends on ARCH_SUNXI || COMPILE_TEST
-+	default y if ARCH_SUNXI
-+	help
-+	  Say Y here to get to see options for Allwinner hardware crypto devices
+ 		mali: gpu@1c40000 {
+ 			compatible = "allwinner,sun8i-h3-mali", "arm,mali-400";
+ 			reg = <0x01c40000 0x10000>;
 -- 
 2.21.0
 
