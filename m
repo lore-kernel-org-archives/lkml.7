@@ -2,158 +2,152 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 784BDC43140
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 00:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E5FC00306
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 00:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CBA920828
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 00:03:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D1F6206BB
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 00:07:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="g/LkE4xF"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="afSHrmH1";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="BnWgN3gL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390366AbfIFADV (ORCPT
+        id S2390581AbfIFAHp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 20:03:21 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45039 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389062AbfIFADV (ORCPT
+        Thu, 5 Sep 2019 20:07:45 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:37444 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1733029AbfIFAHp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 20:03:21 -0400
-Received: by mail-pg1-f194.google.com with SMTP id i18so2357618pgl.11
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 17:03:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:to:from:cc:subject:user-agent:date;
-        bh=0Ap1O2bRGHDTN8/1MAgOi/15FUHUI37QE4DT4enZiVA=;
-        b=g/LkE4xFyaKVY1fcbkFs9yu5NGROGG6i4T474hOEJw0qXHSKxjNbjTV/UIkFmSXlrE
-         6X4hUOh854NEO4Z5o1zyn5XQVgOwDPd498KcmPCeb4tVwJ/w364jG1Gazhifalz7WAze
-         Uen6Ik2gJweCf1dyocHsH1d07nYUM691Q0Ens=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:to:from:cc:subject
-         :user-agent:date;
-        bh=0Ap1O2bRGHDTN8/1MAgOi/15FUHUI37QE4DT4enZiVA=;
-        b=ZfAE3bkutk7n8uaSOtaYsaDTkfaeaw/37HyO+eeBHEu0pbuQ7r9Lv7iaw4jZxMPNIC
-         jcwjgJ7kuK3w4oIIV7boAO66Pdknvm1Ma53msotCoYrpXbC4cT3OfrHhgxOk+eiM1KrG
-         TrjnoNpo+RLJsvKlC4nOAWbR6hMz67T6OErfyi0fpRFOVBTW18YQYB453+uZSttsfO1T
-         YJ7MEV64dVzxPLAzKxSw1QdT0yafcHxHcTrfvXw7OeyGfLtqRXggEWci2cYV95TrbRMg
-         t0/CPcSmfBgqy/u+cIag+afNOdaXs9PbbWeL6zFnhaLfAC/G3bDAvVvOjXl+ie/LaHSg
-         +L3g==
-X-Gm-Message-State: APjAAAXtZcBJIumRwri+DRvVUCizsCmb927IJmBCy9cxoSUGi4V3lbMl
-        m1wNmEn0K8M4U2xY9W/0Qw0vIA==
-X-Google-Smtp-Source: APXvYqwKxt0ENj/VMAOTcaQ3FOYWHGWtFoXbK2eAUL73v5SBuSB87WxWVxzRlMDWUA3P5kPJAWeE2Q==
-X-Received: by 2002:a62:cd45:: with SMTP id o66mr7305107pfg.112.1567728199901;
-        Thu, 05 Sep 2019 17:03:19 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id k5sm2833198pjs.1.2019.09.05.17.03.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 17:03:19 -0700 (PDT)
-Message-ID: <5d71a247.1c69fb81.2146f.7ed2@mx.google.com>
+        Thu, 5 Sep 2019 20:07:45 -0400
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8604Xfs026183;
+        Thu, 5 Sep 2019 17:07:41 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=kN2Xvnm6Hl5JsZSV4uuvkY8u7qTFXSld+3/9oLVeHkE=;
+ b=afSHrmH1V0HAwsYn66G1jG1DATO0x/EdrHroNNmLaXs9/GK97snI16WLWwUq5hSCbxvB
+ oDk0aDkpMKu5FZyBTgHNlh40UmOfZORzEkNBqvxsxNFWv+o6OctBPjd8tO/9KL9Emp+x
+ 9RwmI1r1jEAnm5wVNeCHoLlv6CHTk2vUu0s= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2utksg6j3y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 05 Sep 2019 17:07:41 -0700
+Received: from ash-exopmbx101.TheFacebook.com (2620:10d:c0a8:82::b) by
+ ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 5 Sep 2019 17:07:40 -0700
+Received: from ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) by
+ ash-exopmbx101.TheFacebook.com (2620:10d:c0a8:82::b) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 5 Sep 2019 17:07:40 -0700
+Received: from NAM02-BL2-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.173) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 5 Sep 2019 17:07:40 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iYCtRHX3BuuLVdgpuq+b+5haOKdX5uM1gYCmUJWmjup77jXpC+38BdBb3UJsZy/b6PYAX/Ez7YvilzvP8a+SDO3Ol6Hap6w0TZfjUf2LsylsPDuF4S2prbGFx0TTfh+w8+D2xlq+WuzKHb8WyT8jPIVokaQfQg/WFx/sEkJ0yQ+AFK+5yzhU6rK7GOTnj3P5QqbDjUov6Yc3NB1g1nHryQyPWOpOA4ZEOB3RCzQta0aaKWXMCmZDCaZqCAPq/XW/6hxqAhksJ+CAUQkYymRxpNP8Ch7x8tx74t2ON8VClFq2usWo+0koSkZnP6WilFPA7bvFWjgIPJdarV7VwZjOqQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kN2Xvnm6Hl5JsZSV4uuvkY8u7qTFXSld+3/9oLVeHkE=;
+ b=M7ZsRmDn02yXfgScSIsrwmPR3XPN4q/uu5Oz8ymvHs9sHBe1t0WGGNhV+MaWf0IctIUCoKhM1e6hlrrDt4Zjibb2AFptPiMdhrDffFbIQxsMODf9d85pw1Z8uqiGS6vIEs/lpiptXjprrjEojHPxxl36VrAJoqItK0rhki166pUezB8B+YLU/VJL0eGvmZmSNPmtzVlp8EPY81qU7bkn1WckV7AoyyRQ1JQVzrLiYZDJd0a5acKzgJT2FugLoV/Zcq8J8EJbx11DL4Ai9ZdUH8Ax1XfYCjH/478FDuU7W2f952Kci0AYTOJAxuYcG6Q7V1c3m0HWqdqkYfOi0X+moQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kN2Xvnm6Hl5JsZSV4uuvkY8u7qTFXSld+3/9oLVeHkE=;
+ b=BnWgN3gLQWxKzEVY/I+gDeuxfK/VzBm8vKD5bvXkAskfSBOLolSjldKisJ5WHzr/42cSQ5hyIBMmQJv+DEzirwPZFCcJFGD/7NhtT8i9I8xHLLoyfOa9JZCOHv1ckvhvpsmoLy3aQyEMyX+lDfcydLIbjbtsUR87JLnmOdPOTQk=
+Received: from DM6PR15MB3387.namprd15.prod.outlook.com (20.179.51.80) by
+ DM6PR15MB3322.namprd15.prod.outlook.com (20.179.52.84) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2220.16; Fri, 6 Sep 2019 00:07:39 +0000
+Received: from DM6PR15MB3387.namprd15.prod.outlook.com
+ ([fe80::6145:2a97:12be:e75d]) by DM6PR15MB3387.namprd15.prod.outlook.com
+ ([fe80::6145:2a97:12be:e75d%6]) with mapi id 15.20.2241.014; Fri, 6 Sep 2019
+ 00:07:39 +0000
+From:   Yonghong Song <yhs@fb.com>
+To:     Sami Tolvanen <samitolvanen@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Tom Herbert <tom@herbertland.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] kcm: use BPF_PROG_RUN
+Thread-Topic: [PATCH] kcm: use BPF_PROG_RUN
+Thread-Index: AQHVZC8bc+pmpGy1ok6fORwh6k7nd6cdxc4A
+Date:   Fri, 6 Sep 2019 00:07:39 +0000
+Message-ID: <0f77cc31-4df5-a74f-5b64-a1e3fc439c6d@fb.com>
+References: <20190905211528.97828-1-samitolvanen@google.com>
+In-Reply-To: <20190905211528.97828-1-samitolvanen@google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR12CA0065.namprd12.prod.outlook.com
+ (2603:10b6:300:103::27) To DM6PR15MB3387.namprd15.prod.outlook.com
+ (2603:10b6:5:16d::16)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::2:fc2d]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e4d4e1ea-dcc8-4699-bb87-08d7325e3aec
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM6PR15MB3322;
+x-ms-traffictypediagnostic: DM6PR15MB3322:
+x-microsoft-antispam-prvs: <DM6PR15MB332236349F35A10990624B7BD3BA0@DM6PR15MB3322.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:669;
+x-forefront-prvs: 0152EBA40F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(366004)(396003)(39860400002)(376002)(346002)(199004)(189003)(478600001)(99286004)(31686004)(305945005)(53936002)(6246003)(66446008)(36756003)(64756008)(66556008)(4744005)(6116002)(76176011)(6486002)(71190400001)(71200400001)(14444005)(2616005)(229853002)(446003)(256004)(186003)(11346002)(7736002)(86362001)(66946007)(2906002)(66476007)(8676002)(52116002)(81166006)(6436002)(6512007)(486006)(8936002)(25786009)(476003)(81156014)(14454004)(316002)(386003)(110136005)(5660300002)(54906003)(4326008)(31696002)(102836004)(53546011)(46003)(6506007);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR15MB3322;H:DM6PR15MB3387.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: f+QAn0dAnZQmE4JchokUxGqGWXTR0koRp+taOP/KhTiFfidH0Sy3uCeM7OObTmKixNZhqipcmv9g4ffoQP/GNHyOu4pvSoeZxeM4wPr7xtPaTbGaawFMKIt7zGi7MlSbsDYSd2gHd/wZceMwbSpzLOP9ACpqJYSlc1dGBrm4G2uCidU05/Dv3cUoCHF3oxf50oo3kSqaGg/FaVyVwiTbhz0WwaSVgzfz3eqLDLrdwb2aLZvgfs9345L+6xkjgqPpNl3UZqi2G0mgujGGpzi2UVzE4euqUove4JSIfFp+fdy64mYSjrxCw0JmXqTkRqADdOmdKKVM5YAl7Xtdz2MFE3jXOLULyxgoOWJr0bZyBC749zhowYhCpAJV6IxgZYMMLCgLc914DQm3CiKJIVIfjnU2qTv5UOnJ3Y9dNI0jBbU=
+x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="utf-8"
+Content-ID: <F1C31A7C5F35A04D879C0B1BD52BE007@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190903170722.GA31716@codeaurora.org>
-References: <20190829181203.2660-1-ilina@codeaurora.org> <20190829181203.2660-6-ilina@codeaurora.org> <5d6d1b72.1c69fb81.ee88.efcf@mx.google.com> <102c9268-c4ce-6133-3b0a-67c2fcba1e7a@arm.com> <20190903170722.GA31716@codeaurora.org>
-To:     Lina Iyer <ilina@codeaurora.org>,
-        Marc Zyngier <marc.zyngier@arm.com>
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Rob Herring <robh@kernel.org>, evgreen@chromium.org,
-        linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org,
-        mkshah@codeaurora.org, linux-gpio@vger.kernel.org,
-        rnayak@codeaurora.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH RFC 05/14] dt-bindings/interrupt-controller: pdc: add SPI config register
-User-Agent: alot/0.8.1
-Date:   Thu, 05 Sep 2019 17:03:18 -0700
+X-MS-Exchange-CrossTenant-Network-Message-Id: e4d4e1ea-dcc8-4699-bb87-08d7325e3aec
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Sep 2019 00:07:39.5011
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: iUUIvO5r6pGTZVXeje03Jz2jPXTK5Bfh6RTWL93ZLNvfV/WdXDH+TP3dS2syEgry
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR15MB3322
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-05_10:2019-09-04,2019-09-05 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 malwarescore=0
+ clxscore=1011 impostorscore=0 mlxscore=0 lowpriorityscore=0
+ mlxlogscore=999 priorityscore=1501 suspectscore=0 phishscore=0
+ adultscore=0 bulkscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1906280000 definitions=main-1909050225
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Lina Iyer (2019-09-03 10:07:22)
-> On Mon, Sep 02 2019 at 07:58 -0600, Marc Zyngier wrote:
-> >On 02/09/2019 14:38, Rob Herring wrote:
-> >> On Thu, Aug 29, 2019 at 12:11:54PM -0600, Lina Iyer wrote:
-> >>> In addition to configuring the PDC, additional registers that interfa=
-ce
-> >>> the GIC have to be configured to match the GPIO type. The registers on
-> >>> some QCOM SoCs are access restricted, while on other SoCs are not. Th=
-ey
-> >>> SoCs with access restriction to these SPI registers need to be written
-> >>
-> >> Took me a minute to figure out this is GIC SPI interrupts, not SPI bus.
-> >>
-> >>> from the firmware using the SCM interface. Add a flag to indicate if =
-the
-> >>> register is to be written using SCM interface.
-> >>>
-> >>> Cc: devicetree@vger.kernel.org
-> >>> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> >>> ---
-> >>>  .../bindings/interrupt-controller/qcom,pdc.txt           | 9 +++++++=
-+-
-> >>>  1 file changed, 8 insertions(+), 1 deletion(-)
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/q=
-com,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,p=
-dc.txt
-> >>> index 8e0797cb1487..852fcba98ea6 100644
-> >>> --- a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc=
-.txt
-> >>> +++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc=
-.txt
-> >>> @@ -50,15 +50,22 @@ Properties:
-> >>>                 The second element is the GIC hwirq number for the PD=
-C port.
-> >>>                 The third element is the number of interrupts in sequ=
-ence.
-> >>>
-> >>> +- qcom,scm-spi-cfg:
-> >>> +   Usage: optional
-> >>> +   Value type: <bool>
-> >>> +   Definition: Specifies if the SPI configuration registers have to =
-be
-> >>> +               written from the firmware.
-> >>> +
-> >>>  Example:
-> >>>
-> >>>     pdc: interrupt-controller@b220000 {
-> >>>             compatible =3D "qcom,sdm845-pdc";
-> >>> -           reg =3D <0xb220000 0x30000>;
-> >>> +           reg =3D <0xb220000 0x30000>, <0x179900f0 0x60>;
-> >>
-> >> There needs to be a description for reg updated. These aren't GIC
-> >> registers are they? Because those go in the GIC node.
-> >
-> They are not GIC registers. I will update this documentation.
->=20
-> >This is completely insane. Why are the GIC registers configured as
-> >secure the first place, if they are expected to be in control of the
-> >non-secure?
-> These are not GIC registers but located on the PDC interface to the GIC.
-> They may or may not be secure access controlled, depending on the SoC.
->=20
-
-It looks like it falls under this "mailbox" device which is really the
-catch all bucket for bits with no home besides they're related to the
-apps CPUs/subsystem.
-
-	apss_shared: mailbox@17990000 {
-		compatible =3D "qcom,sdm845-apss-shared";
-		reg =3D <0 0x17990000 0 0x1000>;
-		#mbox-cells =3D <1>;
-	};
-
-Can you point to this node with a phandle and then parse the reg
-property out of it to use in the scm readl/writel APIs? Maybe it can be
-a two cell property with <&apps_shared 0xf0> to indicate the offset to
-the registers to read/write? In non-secure mode presumably we need to
-also write these registers? Good news is that there's a regmap for this
-driver already, so maybe that can be acquired from the pdc driver.
-
+DQoNCk9uIDkvNS8xOSAyOjE1IFBNLCBTYW1pIFRvbHZhbmVuIHdyb3RlOg0KPiBJbnN0ZWFkIG9m
+IGludm9raW5nIHN0cnVjdCBicGZfcHJvZzo6YnBmX2Z1bmMgZGlyZWN0bHksIHVzZSB0aGUNCj4g
+QlBGX1BST0dfUlVOIG1hY3JvLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogU2FtaSBUb2x2YW5lbiA8
+c2FtaXRvbHZhbmVuQGdvb2dsZS5jb20+DQoNCkFja2VkLWJ5OiBZb25naG9uZyBTb25nIDx5aHNA
+ZmIuY29tPg0KDQo+IC0tLQ0KPiAgIG5ldC9rY20va2Ntc29jay5jIHwgMiArLQ0KPiAgIDEgZmls
+ZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlmZiAtLWdp
+dCBhL25ldC9rY20va2Ntc29jay5jIGIvbmV0L2tjbS9rY21zb2NrLmMNCj4gaW5kZXggNWRiYzBj
+NDhmOGNiLi5mMzUwYzYxM2JkN2QgMTAwNjQ0DQo+IC0tLSBhL25ldC9rY20va2Ntc29jay5jDQo+
+ICsrKyBiL25ldC9rY20va2Ntc29jay5jDQo+IEBAIC0zNzksNyArMzc5LDcgQEAgc3RhdGljIGlu
+dCBrY21fcGFyc2VfZnVuY19zdHJwYXJzZXIoc3RydWN0IHN0cnBhcnNlciAqc3RycCwgc3RydWN0
+IHNrX2J1ZmYgKnNrYikNCj4gICAJc3RydWN0IGtjbV9wc29jayAqcHNvY2sgPSBjb250YWluZXJf
+b2Yoc3RycCwgc3RydWN0IGtjbV9wc29jaywgc3RycCk7DQo+ICAgCXN0cnVjdCBicGZfcHJvZyAq
+cHJvZyA9IHBzb2NrLT5icGZfcHJvZzsNCj4gICANCj4gLQlyZXR1cm4gKCpwcm9nLT5icGZfZnVu
+Yykoc2tiLCBwcm9nLT5pbnNuc2kpOw0KPiArCXJldHVybiBCUEZfUFJPR19SVU4ocHJvZywgc2ti
+KTsNCj4gICB9DQo+ICAgDQo+ICAgc3RhdGljIGludCBrY21fcmVhZF9zb2NrX2RvbmUoc3RydWN0
+IHN0cnBhcnNlciAqc3RycCwgaW50IGVycikNCj4gDQo=
