@@ -2,60 +2,62 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0703C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF4A0C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98F9E20854
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B66482082C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:17:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XBgpn3/S"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iK2R5BfL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394352AbfIFOR4 (ORCPT
+        id S2394381AbfIFOR7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 10:17:56 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:33864 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394290AbfIFORy (ORCPT
+        Fri, 6 Sep 2019 10:17:59 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:60278 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394290AbfIFOR5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 10:17:54 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x86EHqm4033766;
-        Fri, 6 Sep 2019 09:17:52 -0500
+        Fri, 6 Sep 2019 10:17:57 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x86EHs8R033208;
+        Fri, 6 Sep 2019 09:17:54 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1567779472;
-        bh=+L55aTwWGyUbvaaXfZF0uAs4AUymc3puZPlhVMgEnt8=;
-        h=From:To:CC:Subject:Date;
-        b=XBgpn3/SQXgbuHcAblOfiMb5pJn2Z9Ecob7dA9FuQSF5UdytHfYfoZuSwy3+cnF11
-         WWNmMjDdpMU48ZIGBzkx4DF+RUaCIgG6tKpNtxPxyQ52e+CHF/fXs2SpSsVQ85rVN1
-         qh3Aa+LVJPc2ZHKIpukYSSmvsTZPN+68MO39fyfM=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x86EHq3J093589
+        s=ti-com-17Q1; t=1567779474;
+        bh=Q0YSzmtvj7sqG004BV4lez3XreU1ptGoRlCRKi0kkXE=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=iK2R5BfLmLoYQap6f051TME+qiH2qqg6MAM9FFHgfLpiiMrKzF1qqgB5KaVZrpLbf
+         vm81b+vTVeokvamwL1wAiQWWgdZP5WxrwDGxT2z1y1J5iHD2VBIH0Qz3J286oDDRW2
+         zDMT/O3VG5LwVPZl9Y+hpoqsfO7k0Uvxqrc0OsZo=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x86EHsY8065345
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 6 Sep 2019 09:17:52 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 6 Sep 2019 09:17:54 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 6 Sep
- 2019 09:17:50 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 09:17:54 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 6 Sep 2019 09:17:49 -0500
+ Frontend Transport; Fri, 6 Sep 2019 09:17:54 -0500
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x86EHlOd032723;
-        Fri, 6 Sep 2019 09:17:48 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x86EHlOf032723;
+        Fri, 6 Sep 2019 09:17:52 -0500
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <vkoul@kernel.org>, <robh+dt@kernel.org>
 CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <dan.j.williams@intel.com>, <devicetree@vger.kernel.org>
-Subject: [RFC 0/3] dmaengine: Support for DMA domain controllers
-Date:   Fri, 6 Sep 2019 17:18:13 +0300
-Message-ID: <20190906141816.24095-1-peter.ujfalusi@ti.com>
+Subject: [RFC 2/3] dmaengine: of_dma: Function to look up the DMA domain of a client
+Date:   Fri, 6 Sep 2019 17:18:15 +0300
+Message-ID: <20190906141816.24095-3-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190906141816.24095-1-peter.ujfalusi@ti.com>
+References: <20190906141816.24095-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -65,62 +67,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Find the DMA domain controller of the client device by iterating up in
+device tree looking for the closest 'dma-domain-controller' property.
 
-More and more SoC have more than one DMA controller integrated.
+If the client's node is not provided then check the DT root for the
+controller.
 
-If a device needs none slave DMA channel for operation (block copy from/to
-memory mapped regions for example) at the moment when they request a channel it
-is going to be taken from the first DMA controller which was registered, but
-this might be not optimal for the device.
-
-For example on AM654 we have two DMAs: main_udmap and mcu_udmap.
-DDR to DDR memcpy is twice as fast on main_udmap compared to mcu_udmap, while
-devices on MCU domain (OSPI for example) are more than twice as fast on
-mcu_udmap than with main_udmap.
-
-Because of probing order (mcu_udmap is probing first) modules would use
-mcu_udmap instead of the better main_udmap. Currently the only solution is to
-make a choice and disable the MEM_TO_MEM functionality on one of them which is
-not a great solution.
-
-With the introduction of DMA domain controllers we can utilize the best DMA
-controller for the job around the SoC without the need to degrade performance.
-
-If the dma-domain-controller is not present in DT or booted w/o DT the none
-slave channel request will work as it does today.
-
-The last patch introduces a new dma_domain_request_chan_by_mask() function and
-I have a define for dma_request_chan_by_mask() to avoid breaking users of the
-dma_request_chan_by_mask, but looking at the kernel we have small amount of
-users:
-drivers/gpu/drm/vc4/vc4_dsi.c
-drivers/media/platform/omap/omap_vout_vrfb.c
-drivers/media/platform/omap3isp/isphist.c
-drivers/mtd/spi-nor/cadence-quadspi.c
-drivers/spi/spi-ti-qspi.c
-
-If it is acceptable we can modify the parameters of dma_request_chan_by_mask()
-to include ther device pointer and at the same time change all of the clients
-by giving NULL or in case of the last two their dev.
-
-Regards,
-Peter
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
-Peter Ujfalusi (3):
-  dt-bindings: dma: Add documentation for DMA domains
-  dmaengine: of_dma: Function to look up the DMA domain of a client
-  dmaengine: Support for requesting channels preferring DMA domain
-    controller
+ drivers/dma/of-dma.c   | 42 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/of_dma.h |  7 +++++++
+ 2 files changed, 49 insertions(+)
 
- .../devicetree/bindings/dma/dma-domain.yaml   | 59 +++++++++++++++++++
- drivers/dma/dmaengine.c                       | 17 ++++--
- drivers/dma/of-dma.c                          | 42 +++++++++++++
- include/linux/dmaengine.h                     |  9 ++-
- include/linux/of_dma.h                        |  7 +++
- 5 files changed, 126 insertions(+), 8 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/dma/dma-domain.yaml
-
+diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
+index c2d779daa4b5..04b5795cd76b 100644
+--- a/drivers/dma/of-dma.c
++++ b/drivers/dma/of-dma.c
+@@ -18,6 +18,48 @@
+ static LIST_HEAD(of_dma_list);
+ static DEFINE_MUTEX(of_dma_lock);
+ 
++/**
++ * of_find_dma_domain - Get the domain DMA controller
++ * @np:		device node of the client device
++ *
++ * Look up the DMA controller of the domain the client device is part of.
++ * Finds the dma-domain controller the client device belongs to. It is used when
++ * requesting non slave channels (like channel for memcpy) to make sure that the
++ * channel can be request from a DMA controller which can service the given
++ * domain best.
++ *
++ * Returns the device_node pointer of the DMA controller or succes or NULL on
++ * error.
++ */
++struct device_node *of_find_dma_domain(struct device_node *np)
++{
++	struct device_node *dma_domain = NULL;
++	phandle dma_phandle;
++
++	/*
++	 * If no device_node is provided look at the root level for system
++	 * default DMA controller for modules.
++	 */
++	if (!np)
++		np = of_root;
++
++	if (!np || !of_node_get(np))
++		return NULL;
++
++	do {
++		if (of_property_read_u32(np, "dma-domain-controller",
++					 &dma_phandle))
++			np = of_get_next_parent(np);
++		else {
++			dma_domain = of_find_node_by_phandle(dma_phandle);
++			of_node_put(np);
++		}
++	} while (!dma_domain && np);
++
++	return dma_domain;
++}
++EXPORT_SYMBOL_GPL(of_find_dma_domain);
++
+ /**
+  * of_dma_find_controller - Get a DMA controller in DT DMA helpers list
+  * @dma_spec:	pointer to DMA specifier as found in the device tree
+diff --git a/include/linux/of_dma.h b/include/linux/of_dma.h
+index fd706cdf255c..6eab0a8d3335 100644
+--- a/include/linux/of_dma.h
++++ b/include/linux/of_dma.h
+@@ -32,6 +32,8 @@ struct of_dma_filter_info {
+ };
+ 
+ #ifdef CONFIG_DMA_OF
++extern struct device_node *of_find_dma_domain(struct device_node *np);
++
+ extern int of_dma_controller_register(struct device_node *np,
+ 		struct dma_chan *(*of_dma_xlate)
+ 		(struct of_phandle_args *, struct of_dma *),
+@@ -52,6 +54,11 @@ extern struct dma_chan *of_dma_xlate_by_chan_id(struct of_phandle_args *dma_spec
+ 		struct of_dma *ofdma);
+ 
+ #else
++static inline struct device_node *of_find_dma_domain(struct device_node *np)
++{
++	return NULL;
++}
++
+ static inline int of_dma_controller_register(struct device_node *np,
+ 		struct dma_chan *(*of_dma_xlate)
+ 		(struct of_phandle_args *, struct of_dma *),
 -- 
 Peter
 
