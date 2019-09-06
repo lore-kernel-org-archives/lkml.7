@@ -2,189 +2,158 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DATE_IN_PAST_24_48,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6039CC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1374BC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4761A207FC
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:18:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEC41207FC
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:20:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="BxwOBYJm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391030AbfIFIR3 (ORCPT
+        id S1732459AbfIFIUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 04:17:29 -0400
-Received: from mga11.intel.com ([192.55.52.93]:23720 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389928AbfIFIR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 04:17:27 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Sep 2019 01:17:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,472,1559545200"; 
-   d="scan'208";a="383186125"
-Received: from yiliu-dev.bj.intel.com ([10.238.156.139])
-  by fmsmga005.fm.intel.com with ESMTP; 06 Sep 2019 01:17:24 -0700
-From:   Liu Yi L <yi.l.liu@intel.com>
-To:     alex.williamson@redhat.com, kwankhede@nvidia.com
-Cc:     kevin.tian@intel.com, baolu.lu@linux.intel.com, yi.l.liu@intel.com,
-        yi.y.sun@intel.com, joro@8bytes.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, yan.y.zhao@intel.com, shaopeng.he@intel.com,
-        chenbo.xia@intel.com, jun.j.tian@intel.com
-Subject: [PATCH v2 02/13] vfio_pci: refine user config reference in vfio-pci module
-Date:   Thu,  5 Sep 2019 15:59:19 +0800
-Message-Id: <1567670370-4484-3-git-send-email-yi.l.liu@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1567670370-4484-1-git-send-email-yi.l.liu@intel.com>
-References: <1567670370-4484-1-git-send-email-yi.l.liu@intel.com>
+        Fri, 6 Sep 2019 04:20:51 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39959 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727915AbfIFIUu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 04:20:50 -0400
+Received: by mail-wm1-f68.google.com with SMTP id t9so5983822wmi.5
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 01:20:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bxSxCGTX5scDr5Ieq/9luU1LSOKlQMOwoIgSxeGJIjI=;
+        b=BxwOBYJmNXdj15JKcfJ54A2tSTwEJYs/JSMdNCmjBwc5Kw8V8Z7WvPjzKC3fFtZdVt
+         N1F5ptfReYpWfAHRMsQPN0i1LOnP4rPIpkLd/AVmVUQhFOKa3Hpc+w1pmZb07S/nwxO6
+         ij1eIQmcF2YkModxrFGD+YrJvo2hRWF94cZkzMKfcQsj+7eacqXysLktD5qXD9boVMhB
+         ea+SaKAbCSaFWsJ5GABBlFt5nxQWt+C0DfElyoGb5r0wU2WDIu6rH4m+IbGoRMxRJ14w
+         AjDWtqMxSSs5Qq6Xnq2I/Lj2LDghv7kAX8w1lu9fpJZhj8zmI1HdnQCetnZD+IX7Bjnj
+         yJ8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bxSxCGTX5scDr5Ieq/9luU1LSOKlQMOwoIgSxeGJIjI=;
+        b=hRZbqVylL7LJvycRObA23UmS+Xs0+QJwmt4k6B3hY7p6fd6nJoiSSWPx5nGoGvnli/
+         X5PTgfrZUJlxLAOup3/QGZkR1VBrp2/ohJLLp9d2Z5Z9W5/cVFH5R7RWvHquSpzOXRrm
+         8QynaVYEEuZ4Rx3M0e2rCuMHWhAD1TsEDzsw9pzhZKUIgQawbUDjuUaig93IoKpK2huU
+         GmX0obwU11tbzPoNRPjGKjRFs6RhVxdp/Q4+Lq9G2/9jABMA5Vus9uKHkWkgGYz5mket
+         tXzTzz5cwr1tt58O5SDbw8twCriiYkx3dEZq0BSohq8zXBgLlrbbjqrOqwHNJcS7/HcQ
+         HqoQ==
+X-Gm-Message-State: APjAAAVhIG+7XFCHOSJXB8Rjk1Kvc8hlGfnWiJumNNCRxvi7nhCxmJF6
+        e/SaydvEXYhwMtAOBCMtClPleksjUaeth0Ck5ylXWQ==
+X-Google-Smtp-Source: APXvYqwZIfv9LJKhtufyQXSyWXH70/rhsZbPefDxeePyf+2s1o31OMXC0fO5THfjyMBhnKyiz1uHRFCkrdsKyLyMISs=
+X-Received: by 2002:a1c:5451:: with SMTP id p17mr6208237wmi.103.1567758048221;
+ Fri, 06 Sep 2019 01:20:48 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190906071631.23695-1-clin@suse.com>
+In-Reply-To: <20190906071631.23695-1-clin@suse.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Fri, 6 Sep 2019 13:50:37 +0530
+Message-ID: <CAAhSdy3dyw_VsmP_x9NoWKhpmen6zC5EhTjxPRPHS-OizYgL-Q@mail.gmail.com>
+Subject: Re: [PATCH] riscv: save space on the magic number field of image header
+To:     Chester Lin <clin@suse.com>
+Cc:     "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+        "palmer@sifive.com" <palmer@sifive.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "merker@debian.org" <merker@debian.org>,
+        "atish.patra@wdc.com" <atish.patra@wdc.com>,
+        "Anup.Patel@wdc.com" <Anup.Patel@wdc.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rick@andestech.com" <rick@andestech.com>,
+        "marek.vasut@gmail.com" <marek.vasut@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds three fields in struct vfio_pci_device to pass the user
-configs of vfio-pci module to some functions which could be common in
-future usage.
+On Fri, Sep 6, 2019 at 12:50 PM Chester Lin <clin@suse.com> wrote:
+>
+> Change the symbol from "RISCV" to "RSCV" so the magic number can be 32-bit
+> long, which is consistent with other architectures.
+>
+> Signed-off-by: Chester Lin <clin@suse.com>
+> ---
+>  arch/riscv/include/asm/image.h | 9 +++++----
+>  arch/riscv/kernel/head.S       | 5 ++---
+>  2 files changed, 7 insertions(+), 7 deletions(-)
+>
+> diff --git a/arch/riscv/include/asm/image.h b/arch/riscv/include/asm/image.h
+> index ef28e106f247..ec8bbfe86dde 100644
+> --- a/arch/riscv/include/asm/image.h
+> +++ b/arch/riscv/include/asm/image.h
+> @@ -3,7 +3,8 @@
+>  #ifndef __ASM_IMAGE_H
+>  #define __ASM_IMAGE_H
+>
+> -#define RISCV_IMAGE_MAGIC      "RISCV"
+> +#define RISCV_IMAGE_MAGIC      "RSCV"
+> +
+>
+>  #define RISCV_IMAGE_FLAG_BE_SHIFT      0
+>  #define RISCV_IMAGE_FLAG_BE_MASK       0x1
+> @@ -39,9 +40,9 @@
+>   * @version:           version
+>   * @res1:              reserved
+>   * @res2:              reserved
+> - * @magic:             Magic number
+>   * @res3:              reserved (will be used for additional RISC-V specific
+>   *                     header)
+> + * @magic:             Magic number
+>   * @res4:              reserved (will be used for PE COFF offset)
+>   *
+>   * The intention is for this header format to be shared between multiple
+> @@ -57,8 +58,8 @@ struct riscv_image_header {
+>         u32 version;
+>         u32 res1;
+>         u64 res2;
+> -       u64 magic;
+> -       u32 res3;
+> +       u64 res3;
+> +       u32 magic;
+>         u32 res4;
+>  };
+>  #endif /* __ASSEMBLY__ */
+> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+> index 0f1ba17e476f..1f8fffbecf68 100644
+> --- a/arch/riscv/kernel/head.S
+> +++ b/arch/riscv/kernel/head.S
+> @@ -39,9 +39,8 @@ ENTRY(_start)
+>         .word RISCV_HEADER_VERSION
+>         .word 0
+>         .dword 0
+> -       .asciz RISCV_IMAGE_MAGIC
+> -       .word 0
+> -       .balign 4
+> +       .dword 0
+> +       .ascii RISCV_IMAGE_MAGIC
+>         .word 0
+>
+>  .global _start_kernel
+> --
+> 2.22.0
+>
 
-Cc: Kevin Tian <kevin.tian@intel.com>
-Cc: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
----
- drivers/vfio/pci/vfio_pci.c         | 24 +++++++++++++++---------
- drivers/vfio/pci/vfio_pci_private.h |  9 +++++++--
- 2 files changed, 22 insertions(+), 11 deletions(-)
+This change is not at all backward compatible with
+existing booti implementation in U-Boot.
 
-diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-index 38271df..fed2687 100644
---- a/drivers/vfio/pci/vfio_pci.c
-+++ b/drivers/vfio/pci/vfio_pci.c
-@@ -69,7 +69,8 @@ static unsigned int vfio_pci_set_vga_decode(void *opaque, bool single_vga)
- 	unsigned char max_busnr;
- 	unsigned int decodes;
- 
--	if (single_vga || !vfio_vga_disabled() || pci_is_root_bus(pdev->bus))
-+	if (single_vga || !vfio_vga_disabled(vdev) ||
-+		pci_is_root_bus(pdev->bus))
- 		return VGA_RSRC_NORMAL_IO | VGA_RSRC_NORMAL_MEM |
- 		       VGA_RSRC_LEGACY_IO | VGA_RSRC_LEGACY_MEM;
- 
-@@ -273,7 +274,7 @@ static int vfio_pci_enable(struct vfio_pci_device *vdev)
- 	if (!vdev->pci_saved_state)
- 		pci_dbg(pdev, "%s: Couldn't store saved state\n", __func__);
- 
--	if (likely(!nointxmask)) {
-+	if (likely(!vdev->nointxmask)) {
- 		if (vfio_pci_nointx(pdev)) {
- 			pci_info(pdev, "Masking broken INTx support\n");
- 			vdev->nointx = true;
-@@ -310,7 +311,7 @@ static int vfio_pci_enable(struct vfio_pci_device *vdev)
- 	} else
- 		vdev->msix_bar = 0xFF;
- 
--	if (!vfio_vga_disabled() && vfio_pci_is_vga(pdev))
-+	if (!vfio_vga_disabled(vdev) && vfio_pci_is_vga(pdev))
- 		vdev->has_vga = true;
- 
- 
-@@ -436,7 +437,7 @@ static void vfio_pci_disable(struct vfio_pci_device *vdev)
- 
- 	vfio_pci_try_bus_reset(vdev);
- 
--	if (!disable_idle_d3)
-+	if (!vdev->disable_idle_d3)
- 		vfio_pci_set_power_state(vdev, PCI_D3hot);
- }
- 
-@@ -1304,6 +1305,11 @@ static int vfio_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	spin_lock_init(&vdev->irqlock);
- 	mutex_init(&vdev->ioeventfds_lock);
- 	INIT_LIST_HEAD(&vdev->ioeventfds_list);
-+	vdev->nointxmask = nointxmask;
-+#ifdef CONFIG_VFIO_PCI_VGA
-+	vdev->disable_vga = disable_vga;
-+#endif
-+	vdev->disable_idle_d3 = disable_idle_d3;
- 
- 	ret = vfio_add_group_dev(&pdev->dev, &vfio_pci_ops, vdev);
- 	if (ret) {
-@@ -1328,7 +1334,7 @@ static int vfio_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 
- 	vfio_pci_probe_power_state(vdev);
- 
--	if (!disable_idle_d3) {
-+	if (!vdev->disable_idle_d3) {
- 		/*
- 		 * pci-core sets the device power state to an unknown value at
- 		 * bootup and after being removed from a driver.  The only
-@@ -1359,7 +1365,7 @@ static void vfio_pci_remove(struct pci_dev *pdev)
- 	kfree(vdev->region);
- 	mutex_destroy(&vdev->ioeventfds_lock);
- 
--	if (!disable_idle_d3)
-+	if (!vdev->disable_idle_d3)
- 		vfio_pci_set_power_state(vdev, PCI_D0);
- 
- 	kfree(vdev->pm_save);
-@@ -1594,7 +1600,7 @@ static void vfio_pci_try_bus_reset(struct vfio_pci_device *vdev)
- 		if (!ret) {
- 			tmp->needs_reset = false;
- 
--			if (tmp != vdev && !disable_idle_d3)
-+			if (tmp != vdev && !tmp->disable_idle_d3)
- 				vfio_pci_set_power_state(tmp, PCI_D3hot);
- 		}
- 
-@@ -1610,7 +1616,7 @@ static void __exit vfio_pci_cleanup(void)
- 	vfio_pci_uninit_perm_bits();
- }
- 
--static void __init vfio_pci_fill_ids(void)
-+static void __init vfio_pci_fill_ids(char *ids)
- {
- 	char *p, *id;
- 	int rc;
-@@ -1665,7 +1671,7 @@ static int __init vfio_pci_init(void)
- 	if (ret)
- 		goto out_driver;
- 
--	vfio_pci_fill_ids();
-+	vfio_pci_fill_ids(&ids[0]);
- 
- 	return 0;
- 
-diff --git a/drivers/vfio/pci/vfio_pci_private.h b/drivers/vfio/pci/vfio_pci_private.h
-index f12d92c..68521d2 100644
---- a/drivers/vfio/pci/vfio_pci_private.h
-+++ b/drivers/vfio/pci/vfio_pci_private.h
-@@ -122,6 +122,11 @@ struct vfio_pci_device {
- 	struct list_head	dummy_resources_list;
- 	struct mutex		ioeventfds_lock;
- 	struct list_head	ioeventfds_list;
-+	bool			nointxmask;
-+#ifdef CONFIG_VFIO_PCI_VGA
-+	bool			disable_vga;
-+#endif
-+	bool			disable_idle_d3;
- };
- 
- #define is_intx(vdev) (vdev->irq_type == VFIO_PCI_INTX_IRQ_INDEX)
-@@ -135,10 +140,10 @@ static inline bool vfio_pci_is_vga(struct pci_dev *pdev)
- 	return (pdev->class >> 8) == PCI_CLASS_DISPLAY_VGA;
- }
- 
--static inline bool vfio_vga_disabled(void)
-+static inline bool vfio_vga_disabled(struct vfio_pci_device *vdev)
- {
- #ifdef CONFIG_VFIO_PCI_VGA
--	return disable_vga;
-+	return vdev->disable_vga;
- #else
- 	return true;
- #endif
--- 
-2.7.4
+It changes:
+1. Magic offset
+2. Magic value itself
 
+We don't see this header changing much apart from
+res1/res2 becoming flags in-future. The PE COFF header
+will be append to this header in-future and it will have lot
+more information.
+
+Regards,
+Anup
