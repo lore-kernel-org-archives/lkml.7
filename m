@@ -2,191 +2,117 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 391A3C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 20:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B5D5C00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 20:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0146D20838
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 20:49:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F38820838
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 20:49:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m6qyufmE"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="1+4Krb8Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390931AbfIFUtu (ORCPT
+        id S2392061AbfIFUt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 16:49:50 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:45011 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727967AbfIFUtu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 16:49:50 -0400
-Received: by mail-pl1-f195.google.com with SMTP id k1so3734098pls.11
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 13:49:49 -0700 (PDT)
+        Fri, 6 Sep 2019 16:49:56 -0400
+Received: from mail-eopbgr750077.outbound.protection.outlook.com ([40.107.75.77]:35554
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390989AbfIFUtz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 16:49:55 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Diu82E9tqGbDtKbMnIEqUADx/exV6cmsLIMRznx0ljiNEivw0UWkq4VWGAzE7IPGCcrSggXPrn7zpji686ppFJ1Y/Iw1RICOSDgAzI9FC7E520fpZR0CxUpsgW7DTN3jnAiVtXc/V9nQJDBgPbY+FcUO2ihHbINLwkxS2/x0cugGZWpCl1aPYxxJCw3JteL4L8+SurQvTLhamVVUrdw2/dnM9L0pDCctl9EtKARRZh7LO9cGbvT+c706pWxaoyY2NE8yEYn53sFtgsgxskpqZK4vn1g1y28OjeUcBct5fYF2U92USU6lpcF4m5okk2REkIy5+yuhezGFIE5CAKXkHw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=43mP6q8nsAAmnNlgcLe4zVPQWZvk8jwFyPKnGf+XNFw=;
+ b=NQaeR3cK4p//mIRaM6VOLP4ipUP7fNKEnowxKwsyyyPPfmSd4MK/4TdXqrJokcWmnGCm4RT42NrsWci2BBkTZ+CSe9YPl+g//E4up8QkgLUAzB0X5j7+xI8+geayW/MBRVMysZ946TXs0prEX6cqobllowDwVDjHGyx31w9NUKcFydPmXAj34IX5EWDuOjTzL/+of3SIrrBxGGjOQ2KDVCQhDhaw6mEiLpH1haTTst2Cn6wsoWJDTPlRgbCOJR+CeHJVVFCzbzUdOxfQ2LukhkpeDoiXdLpnMU6v5wuwEoaYe5xuz7bYvTANXMuoUYeqvdP0m4KIatoScDZ4BIhBRg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=kfkmrxQuYct5oda3TZXHJcSutKY7WtItarpPz/Nika8=;
-        b=m6qyufmEcA1q9csq0wvc9P3T85Zka9N0eqyLSBh6LtA/fSqOYqiggb4Ti2x2ytUbiJ
-         yUdHJSySkoGNZ+1W9HcLm+OD7jsC+Gv0cqDWk665ODM6mHUTOj08YT8DkrBbSV59Z9KU
-         zxKj8uQu5nxC4ULrTctqNbcfSAJyQoirBL3f9KTf6SNyOiDTT3FJ1RQ2ERrpH9T9TzdA
-         zdt0Fh4Ev7UV7jEo4PoUSijNkpV2nIpUtB+dOJyRTilhN9UMY11E8inHe914UH1WVMBK
-         9wOADohZm/M7em58IJUCXEEGifWj+LsSxXvHcHpSKXtxagT0zNuHaQA702TGS/gpaw7B
-         q0hA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=kfkmrxQuYct5oda3TZXHJcSutKY7WtItarpPz/Nika8=;
-        b=Y4Jh7/95U7l4qgyGMNsg/6u+xGifXnVpfkqNbxuUQyu8m7veMtgZ64GHW66rOja4cV
-         MYDTReGWOfT7utBe/tH08KwM6PBIlR0XQOe2SLc79eibzAsG0B1/e8oAm55/pZu+c/6t
-         o8PR8jKCFB/yjlzauR70LHPGS8IBgbckfa/9bNUvw3UfU2wkMCTfPqWsNxnb+W/8j6Hv
-         TNKgj74bdc3VE0BIGUH+EzhPBZh4A6tMeNRMwS9t5gQvzmlFMWCKFqHIAVgeVMATkIEQ
-         MtV88rGoqNHkl3jdSjETy1SU7iuayVMQjF8CPHQsmbu2V5dQDU//+nd5N/3CJdhHsDCT
-         cbcw==
-X-Gm-Message-State: APjAAAXwGJY/p0Nbjw8gFdJOf/9piMxm9LUH2yc46F5tQTf6OiekCWh+
-        JS0TSEex4689oamP0go+7Yx06Q==
-X-Google-Smtp-Source: APXvYqxcT8C6ufZz91jvAjOHySnglu91710xPdmO0DFJ0rNT9RX8NEXCxbTVx9NOXfVHnwfBSagVng==
-X-Received: by 2002:a17:902:3363:: with SMTP id a90mr11288893plc.270.1567802989095;
-        Fri, 06 Sep 2019 13:49:49 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id l26sm5589994pgb.90.2019.09.06.13.49.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Sep 2019 13:49:48 -0700 (PDT)
-Date:   Fri, 6 Sep 2019 13:49:47 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Vlastimil Babka <vbabka@suse.cz>
-cc:     Michal Hocko <mhocko@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Mel Gorman <mgorman@suse.de>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Subject: Re: [rfc 3/4] mm, page_alloc: avoid expensive reclaim when compaction
- may not succeed
-In-Reply-To: <fab91766-da33-d62f-59fb-c226e4790a91@suse.cz>
-Message-ID: <alpine.DEB.2.21.1909061341150.150656@chino.kir.corp.google.com>
-References: <alpine.DEB.2.21.1909041252230.94813@chino.kir.corp.google.com> <alpine.DEB.2.21.1909041253390.94813@chino.kir.corp.google.com> <20190905090009.GF3838@dhcp22.suse.cz> <fab91766-da33-d62f-59fb-c226e4790a91@suse.cz>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=43mP6q8nsAAmnNlgcLe4zVPQWZvk8jwFyPKnGf+XNFw=;
+ b=1+4Krb8QeOLCQIuB8zIPZS64xay9hLd7OPqJOVtSPBuVvBFCeFU5nqXAfCv1EovgSq9ETj/Mi8lJDEB0Iqx9SzFWfyuNXldXApZIZTYJvkQisJWBODswEZBBlI+ZC4sOZ0UkNSDDyxh9/y9UBs0m30x0qhQWDLKYWIhk56OWrWE=
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) by
+ SN6PR12MB2735.namprd12.prod.outlook.com (52.135.107.26) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2241.18; Fri, 6 Sep 2019 20:49:52 +0000
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::307c:a378:f96e:690]) by SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::307c:a378:f96e:690%7]) with mapi id 15.20.2220.020; Fri, 6 Sep 2019
+ 20:49:52 +0000
+From:   "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+To:     Borislav Petkov <bp@alien8.de>
+CC:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [RFC PATCH v3 08/10] EDAC/amd64: Gather hardware information
+ early
+Thread-Topic: [RFC PATCH v3 08/10] EDAC/amd64: Gather hardware information
+ early
+Thread-Index: AQHVWHyM0yWTJ6Qnuku4Pj6P3bApxacR5aOAgA03aPCAABcugIAAAtag
+Date:   Fri, 6 Sep 2019 20:49:52 +0000
+Message-ID: <SN6PR12MB2639232DF612AD2B02CFAAA4F8BA0@SN6PR12MB2639.namprd12.prod.outlook.com>
+References: <20190821235938.118710-1-Yazen.Ghannam@amd.com>
+ <20190821235938.118710-9-Yazen.Ghannam@amd.com>
+ <20190829092241.GB1312@zn.tnic>
+ <SN6PR12MB26393DDA0F1818DCDD2D7953F8BA0@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190906203519.GN19008@zn.tnic>
+In-Reply-To: <20190906203519.GN19008@zn.tnic>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Yazen.Ghannam@amd.com; 
+x-originating-ip: [165.204.77.11]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 81eb16da-921d-408c-6d3c-08d7330bc40c
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR12MB2735;
+x-ms-traffictypediagnostic: SN6PR12MB2735:
+x-microsoft-antispam-prvs: <SN6PR12MB2735655A14AA337017C4C744F8BA0@SN6PR12MB2735.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0152EBA40F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(396003)(376002)(346002)(39860400002)(189003)(199004)(13464003)(256004)(8676002)(7736002)(74316002)(305945005)(81166006)(6436002)(6916009)(81156014)(55016002)(8936002)(229853002)(33656002)(2906002)(54906003)(316002)(6116002)(3846002)(76116006)(9686003)(486006)(476003)(11346002)(446003)(86362001)(4326008)(25786009)(66066001)(76176011)(5660300002)(66476007)(52536014)(4744005)(7696005)(102836004)(53546011)(6506007)(186003)(66556008)(53936002)(66946007)(64756008)(66446008)(6246003)(71190400001)(71200400001)(99286004)(26005)(478600001)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2735;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: OS9LL9fJbStUiSXAhXvd5Di1hGioqlUfXVhz1E9Z43eN27Yd8Uhu/tiLSBgWtePngtFEopZGgBda9se9aTskhD4l+3CmQvVRvRUNkB5v0pdPEZYlxs2tzSrPTtrwX5M63KLMVuOHC9WwolwQxzpuyeL8HI8FBIzpiE7nsD9+VypIGwHp8KTJQ80qs+isYCwu4JIvWPTgTaizrplI087kabv3+8nc4TBs9TJKcV3Ei29A5y0Z1gcX7bUvKk+Y1X440Y0WN7JVhXVRl7N5ZJxEpb8E0fV3v0uXM9xbm+vRMxAWslV4b9koJHOOMLbBWLRBsAXqMrr7nJQnJ+mmp6536p2AOPL+DZSjbub7KmkUCQ5KFV1VLCDgwYwVPhlUgDb9D03ej6c7hxJRZlwai3OdKUIYLEqXH13FEJp/23Lkck8=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 81eb16da-921d-408c-6d3c-08d7330bc40c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Sep 2019 20:49:52.1500
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: lZehiIMUy564QOuX4qJi/tCOMCbTvOYfCst1CIv1i2zsNzor5pC94t39Vt0FKWWoPn/hQPeX7wlTgFbitWG5WQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2735
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 5 Sep 2019, Vlastimil Babka wrote:
-
-> >>  - failing order-0 watermark checks in memory compaction does not account
-> >>    for how far below the watermarks the zone actually is: to enable
-> >>    migration, there must be *some* free memory available.  Per the above,
-> >>    watermarks are not always suffficient if isolate_freepages() cannot
-> >>    find the free memory but it could require hundreds of MBs of reclaim to
-> >>    even reach this threshold (read: potentially very expensive reclaim with
-> >>    no indication compaction can be successful), and
-> 
-> I doubt it's hundreds of MBs for a 2MB hugepage.
-> 
-
-I'm not sure how you presume to know, we certainly have incidents where 
-compaction is skipped because free pages are are 100MB+ under low 
-watermarks.
-
-> >> For hugepage allocations, these are quite substantial drawbacks because
-> >> these are very high order allocations (order-9 on x86) and falling back to
-> >> doing reclaim can potentially be *very* expensive without any indication
-> >> that compaction would even be successful.
-> 
-> You seem to lump together hugetlbfs and THP here, by saying "hugepage",
-> but these are very different things - hugetlbfs reservations are
-> expected to be potentially expensive.
-> 
-
-Mike Kravetz followed up and I can make a simple change to this fix to 
-only run the new logic if the allocation is not using __GFP_RETRY_MAYFAIL 
-which would exclude hugetlb allocations and include transparent hugepage 
-allocations.
-
-> >> Reclaim itself is unlikely to free entire pageblocks and certainly no
-> >> reliance should be put on it to do so in isolation (recall lumpy reclaim).
-> >> This means we should avoid reclaim and simply fail hugepage allocation if
-> >> compaction is deferred.
-> 
-> It is however possible that reclaim frees enough to make even a
-> previously deferred compaction succeed.
-> 
-
-This is another way that the return value that we get from memory 
-compaction can be improved since right now we only check 
-compaction_deferred() at the priorities we care about.  This discussion 
-has revealed several areas where we can get more reliable and actionable 
-return values from memory compaction to implement a sane default policy in 
-the page allocator that works for everybody.
-
-> >> It is also not helpful to thrash a zone by doing excessive reclaim if
-> >> compaction may not be able to access that memory.  If order-0 watermarks
-> >> fail and the allocation order is sufficiently large, it is likely better
-> >> to fail the allocation rather than thrashing the zone.
-> >>
-> >> Signed-off-by: David Rientjes <rientjes@google.com>
-> >> ---
-> >>  mm/page_alloc.c | 22 ++++++++++++++++++++++
-> >>  1 file changed, 22 insertions(+)
-> >>
-> >> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> >> --- a/mm/page_alloc.c
-> >> +++ b/mm/page_alloc.c
-> >> @@ -4458,6 +4458,28 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
-> >>  		if (page)
-> >>  			goto got_pg;
-> >>  
-> >> +		 if (order >= pageblock_order && (gfp_mask & __GFP_IO)) {
-> >> +			/*
-> >> +			 * If allocating entire pageblock(s) and compaction
-> >> +			 * failed because all zones are below low watermarks
-> >> +			 * or is prohibited because it recently failed at this
-> >> +			 * order, fail immediately.
-> >> +			 *
-> >> +			 * Reclaim is
-> >> +			 *  - potentially very expensive because zones are far
-> >> +			 *    below their low watermarks or this is part of very
-> >> +			 *    bursty high order allocations,
-> >> +			 *  - not guaranteed to help because isolate_freepages()
-> >> +			 *    may not iterate over freed pages as part of its
-> >> +			 *    linear scan, and
-> >> +			 *  - unlikely to make entire pageblocks free on its
-> >> +			 *    own.
-> >> +			 */
-> >> +			if (compact_result == COMPACT_SKIPPED ||
-> >> +			    compact_result == COMPACT_DEFERRED)
-> >> +				goto nopage;
-> 
-> As I said, I expect this will make hugetlbfs reservations fail
-> prematurely - Mike can probably confirm or disprove that.
-> I think it also addresses consequences, not the primary problem, IMHO.
-> I believe the primary problem is that we reclaim something even if
-> there's enough memory for compaction. This won't change with your patch,
-> as compact_result won't be SKIPPED in that case. 
-
-I'm relying only on Andrea's one line feedback saying that this would 
-address the swap storms that he is reporting, more details on why it 
-doesn't, if it doesn't, would definitely be helpful.
-
-> Then we continue
-> through to __alloc_pages_direct_reclaim(), shrink_zones() which will
-> call compaction_ready(), which will only return true and skip reclaim of
-> the zone, if there's high_watermark (!!!) + compact_gap() pages.
-
-Interesting find, that heuristic certainly doesn't appear consistent.  
-Another thing to add to the list for how the memory compaction, direct 
-reclaim, and page allocator feedback loop can be improved to provide sane 
-default behavior for everybody.
-
-If you'd like to send a patch to address this issue specifically, that 
-would be very helpful!  I'm hoping Andrea can test it.
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51eC1lZGFjLW93bmVyQHZn
+ZXIua2VybmVsLm9yZyA8bGludXgtZWRhYy1vd25lckB2Z2VyLmtlcm5lbC5vcmc+IE9uIEJlaGFs
+ZiBPZiBCb3Jpc2xhdiBQZXRrb3YNCj4gU2VudDogRnJpZGF5LCBTZXB0ZW1iZXIgNiwgMjAxOSAz
+OjM1IFBNDQo+IFRvOiBHaGFubmFtLCBZYXplbiA8WWF6ZW4uR2hhbm5hbUBhbWQuY29tPg0KPiBD
+YzogbGludXgtZWRhY0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
+cmcNCj4gU3ViamVjdDogUmU6IFtSRkMgUEFUQ0ggdjMgMDgvMTBdIEVEQUMvYW1kNjQ6IEdhdGhl
+ciBoYXJkd2FyZSBpbmZvcm1hdGlvbiBlYXJseQ0KPiANCj4gT24gRnJpLCBTZXAgMDYsIDIwMTkg
+YXQgMDc6MTQ6NTdQTSArMDAwMCwgR2hhbm5hbSwgWWF6ZW4gd3JvdGU6DQo+ID4gVGhpcyBzdHJ1
+Y3QgaXMgdXNlZCBwZXIgY2hhbm5lbCwgc28gd2UgbWF5IGhhdmUgMi04IHBlciBzeXN0ZW0uDQo+
+IA0KPiBBaCwgdHJ1ZS4NCj4gDQo+ID4gV2UgY291bGQgZml4IGl0IGF0IHRoZSBtYXggKDgpLiBX
+aGF0IGRvIHlvdSB0aGluaz8NCj4gDQo+IEFueXRoaW5nIGluIHN0cnVjdCBhbWQ2NF91bWMgdGhh
+dCBpcyBzaGFyZWQgYmV0d2VlbiB0aG9zZSBjaGFubmVscyBvcg0KPiBhbGwgbWF4IDggb2YgdGhl
+bSBjYW4gYmUgZGlzdGluY3Q/DQo+IA0KDQoNCkFsbCB0aGUgZmllbGRzIGFyZSByZWdpc3RlciB2
+YWx1ZXMsIGFuZCB0aGVyZSBhcmUgdW5pcXVlIGluc3RhbmNlcyBmb3IgZWFjaCBjaGFubmVsLiBU
+aGV5IGNhbg0KcG90ZW50aWFsbHkgYWxsIGJlIGRpZmZlcmVudC4NCg0KVGhhbmtzLA0KWWF6ZW4N
+Cg==
