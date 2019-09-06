@@ -2,170 +2,80 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2153C00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 052DEC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9676520854
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:01:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC8D52082C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:01:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392968AbfIFKBR (ORCPT
+        id S2388084AbfIFKBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 06:01:17 -0400
-Received: from foss.arm.com ([217.140.110.172]:53846 "EHLO foss.arm.com"
+        Fri, 6 Sep 2019 06:01:43 -0400
+Received: from mga11.intel.com ([192.55.52.93]:30782 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732160AbfIFKBR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 06:01:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B67721570;
-        Fri,  6 Sep 2019 03:01:16 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2F8F23F59C;
-        Fri,  6 Sep 2019 03:01:16 -0700 (PDT)
-Date:   Fri, 6 Sep 2019 11:01:14 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Abhishek Shah <abhishek.shah@broadcom.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        linux-pci@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
-Subject: Re: [PATCH 1/1] PCI: iproc: Invalidate PAXB address mapping before
- programming it
-Message-ID: <20190906100114.GE9720@e119886-lin.cambridge.arm.com>
-References: <20190906035813.24046-1-abhishek.shah@broadcom.com>
- <20190906083816.GD9720@e119886-lin.cambridge.arm.com>
- <CAKUFe6ZuRGJSmLdXqTWJzX-nE_Vh4yEQF_-rf+BWFrD_r4BRaQ@mail.gmail.com>
+        id S1725921AbfIFKBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 06:01:43 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Sep 2019 03:01:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,472,1559545200"; 
+   d="scan'208";a="384167515"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 06 Sep 2019 03:01:42 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1i6B3l-0004ah-7V; Fri, 06 Sep 2019 13:01:41 +0300
+Date:   Fri, 6 Sep 2019 13:01:41 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     "J. Bruce Fields" <bfields@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH 5/9] Remove unused %*pE[achnops] formats
+Message-ID: <20190906100141.GL2680@smile.fi.intel.com>
+References: <20190905193604.GC31247@fieldses.org>
+ <1567712673-1629-1-git-send-email-bfields@redhat.com>
+ <1567712673-1629-5-git-send-email-bfields@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKUFe6ZuRGJSmLdXqTWJzX-nE_Vh4yEQF_-rf+BWFrD_r4BRaQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <1567712673-1629-5-git-send-email-bfields@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 06, 2019 at 02:55:19PM +0530, Abhishek Shah wrote:
-> Hi Andrew,
+On Thu, Sep 05, 2019 at 03:44:29PM -0400, J. Bruce Fields wrote:
+> From: "J. Bruce Fields" <bfields@redhat.com>
 > 
-> Thanks for the review. Please see my response inline:
+> The [achnops] are confusing, and in practice the only one anyone seems
+> to need is the bare %*pE.
 > 
-> On Fri, Sep 6, 2019 at 2:08 PM Andrew Murray <andrew.murray@arm.com> wrote:
-> >
-> > On Fri, Sep 06, 2019 at 09:28:13AM +0530, Abhishek Shah wrote:
-> > > Invalidate PAXB inbound/outbound address mapping each time before
-> > > programming it. This is helpful for the cases where we need to
-> > > reprogram inbound/outbound address mapping without resetting PAXB.
-> > > kexec kernel is one such example.
-> >
-> > Why is this approach better than resetting the PAXB (I assume that's
-> > the PCI controller IP)? Wouldn't resetting the PAXB address this issue,
-> > and ensure that no other configuration is left behind?
-> >
-> We normally reset PAXB in the firmware(ATF). But for cases like kexec
-> kernel boot,
-> we do not execute any firmware code and directly boot into kernel.
-> 
-> We could have done PAXB reset in the driver itself as you have suggested here.
-> But note that this detail could vary for each SoC, because these
-> registers are not part
-> of PAXB register space itself, rather exists in a register space responsible for
-> controlling power to various wrappers in PCIe IP. Normally, this kind
-> of SoC specific
-> details are handled in firmware itself, we don't bring them to driver level.
+> I think some set of modifiers here might actually be useful, but the
+> ones we have are confusing and unused, so let's just toss these out and
+> then rethink what we might want to add back later.
 
-OK understood.
+Have you evaluated potential users of this API. Do they need anything of the
+existing functionality?
 
-> 
-> > Or is this related to earlier boot stages loading firmware for the emulated
-> > downstream endpoints (ep_is_internal)?
-> >
-> > Finally, in the case where ep_is_internal do you need to disable anything
-> > prior to invalidating the mappings?
-> >
-> No, ep_is_internal  is indicator for PAXC IP. It does not have
-> mappings as in PAXB.
+mangle_path()
+tomoyo_print_bprm()
+tomoyo_scan_bprm()
+tomoyo_environ()
+tomoyo_encode2()
+tomoyo_const_part_length()
 
-I think I meant !ep_is_internal. I.e. is there possibility of inbound traffic
-prior to invalidating the mappings. I'd assume not, but that's an assumption.
+Maybe there are more, I didn't check it carefully.
 
-Either way:
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 
-> 
-> 
-> Regards,
-> Abhishek
-> > >
-> > > Signed-off-by: Abhishek Shah <abhishek.shah@broadcom.com>
-> > > Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-> > > Reviewed-by: Vikram Mysore Prakash <vikram.prakash@broadcom.com>
-> > > ---
-> > >  drivers/pci/controller/pcie-iproc.c | 28 ++++++++++++++++++++++++++++
-> > >  1 file changed, 28 insertions(+)
-> > >
-> > > diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
-> > > index e3ca46497470..99a9521ba7ab 100644
-> > > --- a/drivers/pci/controller/pcie-iproc.c
-> > > +++ b/drivers/pci/controller/pcie-iproc.c
-> > > @@ -1245,6 +1245,32 @@ static int iproc_pcie_map_dma_ranges(struct iproc_pcie *pcie)
-> > >       return ret;
-> > >  }
-> > >
-> > > +static void iproc_pcie_invalidate_mapping(struct iproc_pcie *pcie)
-> > > +{
-> > > +     struct iproc_pcie_ib *ib = &pcie->ib;
-> > > +     struct iproc_pcie_ob *ob = &pcie->ob;
-> > > +     int idx;
-> > > +
-> > > +     if (pcie->ep_is_internal)
-> > > +             return;
-> > > +
-> > > +     if (pcie->need_ob_cfg) {
-> > > +             /* iterate through all OARR mapping regions */
-> > > +             for (idx = ob->nr_windows - 1; idx >= 0; idx--) {
-> > > +                     iproc_pcie_write_reg(pcie,
-> > > +                                          MAP_REG(IPROC_PCIE_OARR0, idx), 0);
-> > > +             }
-> > > +     }
-> > > +
-> > > +     if (pcie->need_ib_cfg) {
-> > > +             /* iterate through all IARR mapping regions */
-> > > +             for (idx = 0; idx < ib->nr_regions; idx++) {
-> > > +                     iproc_pcie_write_reg(pcie,
-> > > +                                          MAP_REG(IPROC_PCIE_IARR0, idx), 0);
-> > > +             }
-> > > +     }
-> > > +}
-> > > +
-> > >  static int iproce_pcie_get_msi(struct iproc_pcie *pcie,
-> > >                              struct device_node *msi_node,
-> > >                              u64 *msi_addr)
-> > > @@ -1517,6 +1543,8 @@ int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
-> > >       iproc_pcie_perst_ctrl(pcie, true);
-> > >       iproc_pcie_perst_ctrl(pcie, false);
-> > >
-> > > +     iproc_pcie_invalidate_mapping(pcie);
-> > > +
-> > >       if (pcie->need_ob_cfg) {
-> > >               ret = iproc_pcie_map_ranges(pcie, res);
-> > >               if (ret) {
-> >
-> > The code changes look good to me.
-> >
-> > Thanks,
-> >
-> > Andrew Murray
-> >
-> > > --
-> > > 2.17.1
-> > >
