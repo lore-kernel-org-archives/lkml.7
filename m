@@ -2,159 +2,249 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 036DBC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B710C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD5CF20578
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:10:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567775440;
-	bh=fsvy9vB8q4xTi27VCFoIvbbPemsnqqmabbXkyz4cBfE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=CuXAtkiZNQwR5yptWfQUA76XkxOxxq3Cx7il1UHAA2KSIHcyForYgmWaPXSZuvPrc
-	 13zAGR4NUtuJHZqjfWx/d+uKsdKCmceBQXUDKbLMLhQMmyA1y4QVGgP5aw7iU2SyB/
-	 DtaZq6aPM3/wX/u8ut078B/97KqH9WhhD8jpmZpE=
+	by mail.kernel.org (Postfix) with ESMTP id 26E1F206BB
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:11:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="O7cSTnQX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392865AbfIFNKk (ORCPT
+        id S2392887AbfIFNLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 09:10:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33198 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392815AbfIFNKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 09:10:39 -0400
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E82A5206BB;
-        Fri,  6 Sep 2019 13:10:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567775438;
-        bh=fsvy9vB8q4xTi27VCFoIvbbPemsnqqmabbXkyz4cBfE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=GVwE5+RV6T7Gk0Oq0NkKxThLbuJJSjnvI2Fitw6yXzMf7D4uZ6OIeVDHXzmCK5XnV
-         bq+EA39B9jr5AId38ttNcjiDLYKzPER1qO2wSA3U2M1i/WXGu0VKr0Dx5t2AOBb/oT
-         SaVnWO//bsZKavhY81nypz6K1yXB1rEYJovkI/jA=
-Received: by mail-qk1-f169.google.com with SMTP id q203so5561287qke.1;
-        Fri, 06 Sep 2019 06:10:37 -0700 (PDT)
-X-Gm-Message-State: APjAAAWuwzl3XeH0cZIlzgltmPftGaBM8ky9lW2Y01t9oq4m9C7yu5NN
-        bumJ2gtfVkGOzdhFV3nGUdE9J2coI2+52AV5/w==
-X-Google-Smtp-Source: APXvYqzQsKhFz6B/Tax9+gdiWg6xhgwxLCJHR+sGwYgZteGSTYU6RIcYIc2kuLGw0yP+EpjEMjHw0xD2+f0cwiairNk=
-X-Received: by 2002:a37:682:: with SMTP id 124mr8391679qkg.393.1567775437120;
- Fri, 06 Sep 2019 06:10:37 -0700 (PDT)
+        Fri, 6 Sep 2019 09:11:05 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:45506 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390869AbfIFNLE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 09:11:04 -0400
+Received: by mail-oi1-f194.google.com with SMTP id v12so4840908oic.12
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 06:11:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ev36SfNlEf6PWNGJxHlI3s/lnO7unyXrg4qse6t6H1Y=;
+        b=O7cSTnQX0I4DPwo6zpKvGk0Vm3gxj9OL36Kq2prSvEQS7dI61nwm4xuhznBq8mv7QJ
+         AZ+sTYZIRWkkIBAE7Y4TuoMPYSIUSTW7EvigyRYyOtjBKFes2iqQ43kkExyIGptSr0ZW
+         gNTvbQsbIJRH4k1SlovpUgBeThCYNFCt+pOpY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ev36SfNlEf6PWNGJxHlI3s/lnO7unyXrg4qse6t6H1Y=;
+        b=AoHX2w4qjzg3LUO71PHNXkOOf3CyIPu2YfDEzGilYrmGuTPWWcdMuPhw9ttZxGyo3u
+         170s5DjXSKvPdrEa5ucn692gJp7Ci9iikrgpeMZCktsTscQCsfe+Ihdawcu6oWP3zhlv
+         utlIdUaTHJGOum/sk4LVMejvqC0lSCvMjIhQyXXFQ9OH2xOjRd8gz0p6BaGPYUNhxTk0
+         SxxZH+sd+GywjzBhajryeZMGakbSF9g31zo+nk3ncrkMsSFSinkLnlRf6ihKZ2OShv/H
+         0rm6ZblsUBp01mqzXFp96wm2rOfvxXPSvtEPMCId9eEzGaBEByazv98bXtwtGr9QiD7j
+         A1hg==
+X-Gm-Message-State: APjAAAUiOEpNN+76WycaCSpMWIuaANZkEODidtZv/hb+tZLhouq5bHKS
+        L1j37Fcs08FCg8iw8WFqEE0YZBFN3ruy2eCwu027Aw==
+X-Google-Smtp-Source: APXvYqxmRFNxgvHcNL/LVYV5FNh1qBNcj2zSLrlkLuEVi0kz8/vLyP49vyiza79LNaPIq5ZnEWOh+fco9c7/hTrasD4=
+X-Received: by 2002:aca:5c45:: with SMTP id q66mr5340295oib.132.1567775463282;
+ Fri, 06 Sep 2019 06:11:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190823125618.8133-1-peter.ujfalusi@ti.com> <20190823125618.8133-5-peter.ujfalusi@ti.com>
- <20190829224728.GA1198@bogus> <a4c5688b-cbeb-5059-5351-11d9ae1b25d5@ti.com> <15d5dc03-d6ca-f438-f37a-e71298abda95@ti.com>
-In-Reply-To: <15d5dc03-d6ca-f438-f37a-e71298abda95@ti.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 6 Sep 2019 14:10:25 +0100
-X-Gmail-Original-Message-ID: <CAL_JsqJ6R9X93vVM6A6H5yDFnQk5T7ym126TRb140m5COD3nwg@mail.gmail.com>
-Message-ID: <CAL_JsqJ6R9X93vVM6A6H5yDFnQk5T7ym126TRb140m5COD3nwg@mail.gmail.com>
-Subject: Re: [PATCH 4/5] dt-bindings: dma: ti-edma: Add option for reserved
- channel ranges
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Vinod <vkoul@kernel.org>, Dan Williams <dan.j.williams@intel.com>,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>
+References: <20190808134417.10610-1-kraxel@redhat.com> <20190808134417.10610-6-kraxel@redhat.com>
+ <20190903094859.GQ2112@phenom.ffwll.local> <20190906121318.r4nvoacazvwukuun@sirius.home.kraxel.org>
+In-Reply-To: <20190906121318.r4nvoacazvwukuun@sirius.home.kraxel.org>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Fri, 6 Sep 2019 15:10:52 +0200
+Message-ID: <CAKMK7uHFS8uW15NMEzN92POD2hyhkvKFgePdjgL=D-noUAkq3Q@mail.gmail.com>
+Subject: Re: [PATCH v4 05/17] drm: add mmap() to drm_gem_object_funcs
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 3, 2019 at 11:19 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+On Fri, Sep 6, 2019 at 2:13 PM Gerd Hoffmann <kraxel@redhat.com> wrote:
 >
-> Hi Rob,
+>   Hi,
 >
-> On 30/08/2019 8.37, Peter Ujfalusi wrote:
-> > Rob,
-> >
-> > On 30/08/2019 1.47, Rob Herring wrote:
-> >> On Fri, Aug 23, 2019 at 03:56:17PM +0300, Peter Ujfalusi wrote:
-> >>> Similarly to paRAM slots, channels can be used by other cores.
-> >>>
-> >>> Add optional property to configure the reserved channel ranges.
-> >>>
-> >>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> >>> ---
-> >>>  Documentation/devicetree/bindings/dma/ti-edma.txt | 5 +++++
-> >>>  1 file changed, 5 insertions(+)
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/dma/ti-edma.txt b/Documentation/devicetree/bindings/dma/ti-edma.txt
-> >>> index 4bbc94d829c8..1198682ada99 100644
-> >>> --- a/Documentation/devicetree/bindings/dma/ti-edma.txt
-> >>> +++ b/Documentation/devicetree/bindings/dma/ti-edma.txt
-> >>> @@ -42,6 +42,9 @@ Optional properties:
-> >>>  - ti,edma-reserved-slot-ranges: PaRAM slot ranges which should not be used by
-> >>>             the driver, they are allocated to be used by for example the
-> >>>             DSP. See example.
-> >>> +- ti,edma-reserved-chan-ranges: channel ranges which should not be used by
-> >>> +           the driver, they are allocated to be used by for example the
-> >>> +           DSP. See example.
-> >>
-> >> Based on the other thread, I think extending dma-channel-mask to a
-> >> uint32-array makes sense here.
-> >
-> > Yes, that is the reason I have asked on that and I'm in progress of
-> > converting the edma driver to use the dma-channel-mask.
-> > Just need to do some shuffling in the driver to get the mask in a form
-> > usable by the driver.
-> >
-> > I'll send an updated series early next week.
+> > I think if we do an mmap callback, it should replace all the mmap handling
+> > (except the drm_gem_object_get) that drm_gem_mmap_obj does. So maybe
+> > something like the below:
 >
-> How should the dma-channel-mask uint31-array should be documented and used?
+> [ snip ]
 >
-> Basically some EDMA have 32, some 64 channels. This is fine.
-> Let's say I want to mask out channel 0-4 and 24-27
+> > Since I remember quite a few discussions where the default vma flag
+> > wrangling we're doing is seriously getting in the way of things too.
 >
-> This would look like in case of EDMA with 32 channels:
-> &edma {
->         /* channel 0-4 and 24-27 is not to be used */
->         dma-channel-mask = <0xf0fffff0>;
-> };
+> Yep, makes sense.
 >
-> How this should look like in case when I have 64 channels?
-> &edma {
->         /* channel 0-4 and 24-27 is not to be used */
->         dma-channel-mask = <0xf0fffff0>, <0xffffffff>;
-> };
+> > I think even better would be if this new ->mmap hook could also be used
+> > directly by the dma-buf mmap code, without having to jump through hoops
+> > creating a fake file and fake vma offset and everything. I think with that
+> > we'd have a really solid case to add this ->mmap hook.
 >
-> When I read the u32s then
-> chan_mask[0] is for channel 0-31 (LSB is channel 0)
-> chan_maks[1] is for channel 32-63 (LSB is channel 32)
->
-> Or:
-> &edma {
->         /* channel 0-4 and 24-27 is not to be used */
->         dma-channel-mask = <0xffffffff>, <0xf0fffff0>;
-> };
->
-> chan_maks[0] is for channel 32-63 (LSB is channel 32)
-> chan_mask[1] is for channel 0-31 (LSB is channel 0)
->
-> Do you have pointer on already established notion on how to document and
-> handle this?
+> Looks easy on a quick glance.  So something like the patch below (quick
+> sketch, not tested yet other than compiling it)?
 
-As far as word ordering, I guess you can do whatever order you want.
-MSB first would make the most sense if this was only going to be up to
-64-bit. But given it could be 96, 128, ... bits, probably the least
-significant word first makes sense and is easier to parse for a
-variable length.
+Yup, looks good, and if it works I'm happy to smash r-b and a-b tags over this.
 
-The binding schema can be something like this:
+One thought below.
 
-items:
-  - description: Mask of channels 0-31
-  - description: Mask of channels 32-63
+> cheers,
+>   Gerd
+>
+> From c13b30d776fb593a03473fa3bc93baf470cba728 Mon Sep 17 00:00:00 2001
+> From: Gerd Hoffmann <kraxel@redhat.com>
+> Date: Wed, 19 Jun 2019 14:26:51 +0200
+> Subject: [PATCH] drm: add mmap() to drm_gem_object_funcs
+>
+> drm_gem_object_funcs->vm_ops alone can't handle everything which needs
+> to be done for mmap(), tweaking vm_flags for example.  So add a new
+> mmap() callback to drm_gem_object_funcs where this code can go to.
+>
+> Note that the vm_ops field is not used in case the mmap callback is
+> presnt, it is expected that the callback sets vma->vm_ops instead.
+>
+> drm_gem_mmap_obj() will use the new callback for object specific mmap
+> setup.  With this in place the need for driver-speific fops->mmap
+> callbacks goes away, drm_gem_mmap can be hooked instead.
+>
+> drm_gem_prime_mmap() will use the new callback too to just mmap gem
+> objects directly instead of jumping though loops to make
+> drm_gem_object_lookup() and fops->mmap work.
+>
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> ---
+>  include/drm/drm_gem.h       | 14 ++++++++++++++
+>  drivers/gpu/drm/drm_gem.c   | 26 +++++++++++++++++---------
+>  drivers/gpu/drm/drm_prime.c |  9 +++++++++
+>  3 files changed, 40 insertions(+), 9 deletions(-)
+>
+> diff --git a/include/drm/drm_gem.h b/include/drm/drm_gem.h
+> index 6aaba14f5972..e71f75a2ab57 100644
+> --- a/include/drm/drm_gem.h
+> +++ b/include/drm/drm_gem.h
+> @@ -150,6 +150,20 @@ struct drm_gem_object_funcs {
+>          */
+>         void (*vunmap)(struct drm_gem_object *obj, void *vaddr);
+>
+> +       /**
+> +        * @mmap:
+> +        *
+> +        * Handle mmap() of the gem object, setup vma accordingly.
+> +        *
+> +        * This callback is optional.
+> +        *
+> +        * The callback is used by by both drm_gem_mmap_obj() and
+> +        * drm_gem_prime_mmap().  When @mmap is present @vm_ops is not
+> +        * used, the @mmap callback must set vma->vm_ops instead.
+> +        *
+> +        */
+> +       int (*mmap)(struct drm_gem_object *obj, struct vm_area_struct *vma);
+> +
+>         /**
+>          * @vm_ops:
+>          *
+> diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
+> index 6854f5867d51..aabde003ac4a 100644
+> --- a/drivers/gpu/drm/drm_gem.c
+> +++ b/drivers/gpu/drm/drm_gem.c
+> @@ -1099,22 +1099,30 @@ int drm_gem_mmap_obj(struct drm_gem_object *obj, unsigned long obj_size,
+>                      struct vm_area_struct *vma)
+>  {
+>         struct drm_device *dev = obj->dev;
+> +       int ret;
+>
+>         /* Check for valid size. */
+>         if (obj_size < vma->vm_end - vma->vm_start)
+>                 return -EINVAL;
+>
+> -       if (obj->funcs && obj->funcs->vm_ops)
+> -               vma->vm_ops = obj->funcs->vm_ops;
+> -       else if (dev->driver->gem_vm_ops)
+> -               vma->vm_ops = dev->driver->gem_vm_ops;
+> -       else
+> -               return -EINVAL;
+> +       if (obj->funcs && obj->funcs->mmap) {
+> +               ret = obj->funcs->mmap(obj, vma);
+> +               if (ret)
+> +                       return ret;
+> +       } else {
+> +               if (obj->funcs && obj->funcs->vm_ops)
+> +                       vma->vm_ops = obj->funcs->vm_ops;
+> +               else if (dev->driver->gem_vm_ops)
+> +                       vma->vm_ops = dev->driver->gem_vm_ops;
+> +               else
+> +                       return -EINVAL;
+> +
+> +               vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;
+> +               vma->vm_page_prot = pgprot_writecombine(vm_get_page_prot(vma->vm_flags));
+> +               vma->vm_page_prot = pgprot_decrypted(vma->vm_page_prot);
+> +       }
 
-The length is implied by the number of list items.
+Totally unrelated discussion around HMM lead me to a bit a chase, and
+realizing that we probably want a
 
-Rob
+    WARN_ON(!(vma->vm_flags & VM_SPECIAL));
+
+here, to make sure drivers set at least one of the "this is a special
+vma, don't try to treat it like pagecache/anon memory". Just to be on
+the safe side. Maybe we also want to keep the entire vma->vm_flags
+assignment in the common code, but at least the WARN_ON would be a
+good check I think. Maybe also check for VM_DONTEXPAND while at it
+(that would also break things badly if it's not set). VM_DONTDUMP I
+think is leftover from when drm drivers exposed register mmaps to
+userspace.
+
+Anyway, just some detail questions, I think this looks real good.
+
+Thanks, Daniel
+
+> -       vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;
+>         vma->vm_private_data = obj;
+> -       vma->vm_page_prot = pgprot_writecombine(vm_get_page_prot(vma->vm_flags));
+> -       vma->vm_page_prot = pgprot_decrypted(vma->vm_page_prot);
+>
+>         /* Take a ref for this mapping of the object, so that the fault
+>          * handler can dereference the mmap offset's pointer to the object.
+> diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_prime.c
+> index 0a2316e0e812..0814211b0f3f 100644
+> --- a/drivers/gpu/drm/drm_prime.c
+> +++ b/drivers/gpu/drm/drm_prime.c
+> @@ -713,6 +713,15 @@ int drm_gem_prime_mmap(struct drm_gem_object *obj, struct vm_area_struct *vma)
+>         struct file *fil;
+>         int ret;
+>
+> +       if (obj->funcs && obj->funcs->mmap) {
+> +               ret = obj->funcs->mmap(obj, vma);
+> +               if (ret)
+> +                       return ret;
+> +               vma->vm_private_data = obj;
+> +               drm_gem_object_get(obj);
+> +               return 0;
+> +       }
+> +
+>         priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+>         fil = kzalloc(sizeof(*fil), GFP_KERNEL);
+>         if (!priv || !fil) {
+> --
+> 2.18.1
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+
+
+--
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
