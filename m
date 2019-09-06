@@ -7,68 +7,69 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F78C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECAEDC43140
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BEDA20838
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:23:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C056C2173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:24:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="B3VuUrCP"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RVUr+41F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389101AbfIFTX5 (ORCPT
+        id S2392601AbfIFTYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 15:23:57 -0400
-Received: from mail-io1-f46.google.com ([209.85.166.46]:35458 "EHLO
-        mail-io1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388818AbfIFTXz (ORCPT
+        Fri, 6 Sep 2019 15:24:00 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:34517 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390206AbfIFTX5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 15:23:55 -0400
-Received: by mail-io1-f46.google.com with SMTP id f4so14532794ion.2
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 12:23:55 -0700 (PDT)
+        Fri, 6 Sep 2019 15:23:57 -0400
+Received: by mail-io1-f66.google.com with SMTP id s21so15291639ioa.1
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 12:23:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=W2yelZaQQgNOeM3tNL1ucPE8YNMsnU8lMoKbAm8AChY=;
-        b=B3VuUrCPXYpqko0QYumGcNMUcl2LhhNpt8HxgSsn0nP4Qj3gxIGutfehwIrE/9CNMq
-         Y/x74jvwoJ5LfLkSBRpe9Ody0Qe/J7PVA5YgG84CwXB6883006LkjTHM/BKvJ5Ghkbp8
-         cqFcByfJzSDo8FoE6q4ujiKJd2RwGPWB9kUNM=
+        bh=j/k1s41Cd84FscFUH5HHkD4volUIZMrS8vWB51FggFg=;
+        b=RVUr+41FgmB62dAmBtO1Yq+z6nYqWpcb7vKjFfyJhjKwnK2zetlCIe4aATNsLL5Igw
+         63by+MASskqj+6jzFzFqSsjREa0+GkcMUAoeg4H9GmmkSkEDivCEm46WJVBXxXlYGmlH
+         NVFZ/59Xrc+sZiOFTXGT5XjfVM+a7JzT0eVK4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=W2yelZaQQgNOeM3tNL1ucPE8YNMsnU8lMoKbAm8AChY=;
-        b=jMIGVNEyDpAeHchnmXOrZPmusVHauFfjnF+oI5/vJ/OEDNKCwtDrKAv3Qqa0tGvdBg
-         NcnhevEcZwpUDa1qOtREcgGpAd1baBrZeDLFADrD8qgsEQ1wSahoiJFcYc0TJrWN763S
-         zGieF6ngB/J9MqWHTXRTAnSzZpeJdwv2b8ppHjne5iayY55rC5FtnMDf+zRCfXfO4Alq
-         bLxsZfsvZZxahI2eGMXMi+p4EtKgqeAmk3e0tLJhnWhRdGeaEGQva6Ln/uWibtRW4ImR
-         ttdjoMBLZxOZk6ZxMkMQaBT8jyiCWc/j2D5r2LOiBweXuXYKNPAWEuWAPv55MI3w/z4H
-         5Msg==
-X-Gm-Message-State: APjAAAXBLeEnDgoZsITSUBlYXrGWA7w8HHYC6Ugd9DNTAOPDzB7SMBBu
-        H7kQm+TO7pAxx3N4laKwr3wJJQ==
-X-Google-Smtp-Source: APXvYqyY9z+bVXK367r0PSgo655xMFstBXHta7tC6uhSnr685D0+632U3Kq50X7yvcGVAdjr9dTt6w==
-X-Received: by 2002:a02:b882:: with SMTP id p2mr11801092jam.16.1567797834689;
-        Fri, 06 Sep 2019 12:23:54 -0700 (PDT)
+        bh=j/k1s41Cd84FscFUH5HHkD4volUIZMrS8vWB51FggFg=;
+        b=juCLjCK44btEx0pLue4IwS6NSSZgI2cWMFAqJ3YW4/N8l81r9b9B0n52gGC2qo0ETk
+         v9l01kutWQ7v7DKlGC8ChbcfMnE7Nllt6gcVQO7dculn/qf2hKGzQ603L20+JduZbJ7d
+         yGHmg6lDtVkymVOijoh/nh4oKXHhQdVD2ENAKL9piaq4be30a7VlJ0++CwQvXM83A42b
+         VLwYTRAQKCIma/AxcKx8TPltgmkIvO9dUJMa3o8Kpifuj0Xs6Kcbv/ZA1WP7glfhK1HG
+         5+wF0ug2Hr3u3F0LQgyF9eOhRcPN+jEIPwQqwWHjzeehx6BrytRrirM3XUtLGDKuHjVU
+         tb5g==
+X-Gm-Message-State: APjAAAWBwWVbFW3dkw4TjNMBEPTpeR+q0rGJ1opBPn0AiYG18ZNe/vmx
+        flWT5LwK/biqCCaosoIarjGlUg==
+X-Google-Smtp-Source: APXvYqxqS6QiXdDk5JDrakHdF9YlW8kNKtcmhtlrPTEYPW9EklfJ+iKnRmaedLHEBp6mDxHHlcHM/w==
+X-Received: by 2002:a02:cad1:: with SMTP id f17mr8739258jap.18.1567797836589;
+        Fri, 06 Sep 2019 12:23:56 -0700 (PDT)
 Received: from ddavenport4.bld.corp.google.com ([2620:15c:183:0:92f:a80a:519d:f777])
-        by smtp.gmail.com with ESMTPSA id h70sm10931804iof.48.2019.09.06.12.23.53
+        by smtp.gmail.com with ESMTPSA id h70sm10931804iof.48.2019.09.06.12.23.55
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 06 Sep 2019 12:23:54 -0700 (PDT)
+        Fri, 06 Sep 2019 12:23:56 -0700 (PDT)
 From:   Drew Davenport <ddavenport@chromium.org>
 To:     dri-devel@lists.freedesktop.org
 Cc:     Drew Davenport <ddavenport@chromium.org>,
-        David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>,
+        Sean Paul <sean@poorly.run>,
+        Jayant Shekhar <jshekhar@codeaurora.org>,
         Bruce Wang <bzwang@chromium.org>,
-        linux-arm-msm@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jeykumar Sankaran <jsanka@codeaurora.org>,
         Jordan Crouse <jcrouse@codeaurora.org>,
         Rob Clark <robdclark@gmail.com>,
+        David Airlie <airlied@linux.ie>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH 2/6] drm/msm/dpu: Remove unused macro
-Date:   Fri,  6 Sep 2019 13:23:40 -0600
-Message-Id: <20190906192344.223694-2-ddavenport@chromium.org>
+        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
+        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH 4/6] drm/msm/dpu: Remove unnecessary NULL checks
+Date:   Fri,  6 Sep 2019 13:23:42 -0600
+Message-Id: <20190906192344.223694-4-ddavenport@chromium.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190906192344.223694-1-ddavenport@chromium.org>
 References: <20190906192344.223694-1-ddavenport@chromium.org>
@@ -79,27 +80,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+drm_crtc.dev will never be NULL, so no need to check it.
+
 Signed-off-by: Drew Davenport <ddavenport@chromium.org>
 ---
 
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c | 5 -----
+ drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c      | 6 +++---
+ 2 files changed, 3 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
-index 4c889aabdaf9..6ceba33a179e 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
-@@ -139,10 +139,6 @@ struct vsync_info {
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+index 094d74635fb7..839887a3a80c 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+@@ -33,11 +33,6 @@ static struct dpu_kms *_dpu_crtc_get_kms(struct drm_crtc *crtc)
+ {
+ 	struct msm_drm_private *priv;
  
- #define to_dpu_kms(x) container_of(x, struct dpu_kms, base)
- 
--/* get struct msm_kms * from drm_device * */
--#define ddev_to_msm_kms(D) ((D) && (D)->dev_private ? \
--		((struct msm_drm_private *)((D)->dev_private))->kms : NULL)
+-	if (!crtc->dev) {
+-		DPU_ERROR("invalid device\n");
+-		return NULL;
+-	}
 -
- /**
-  * Debugfs functions - extra helper functions for debugfs support
-  *
+ 	priv = crtc->dev->dev_private;
+ 	if (!priv->kms) {
+ 		DPU_ERROR("invalid kms\n");
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+index ead7d657097c..0b9dc042d2e2 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+@@ -266,7 +266,7 @@ enum dpu_intf_mode dpu_crtc_get_intf_mode(struct drm_crtc *crtc)
+ {
+ 	struct drm_encoder *encoder;
+ 
+-	if (!crtc || !crtc->dev) {
++	if (!crtc) {
+ 		DPU_ERROR("invalid crtc\n");
+ 		return INTF_MODE_NONE;
+ 	}
+@@ -694,7 +694,7 @@ static void dpu_crtc_disable(struct drm_crtc *crtc,
+ 	unsigned long flags;
+ 	bool release_bandwidth = false;
+ 
+-	if (!crtc || !crtc->dev || !crtc->state) {
++	if (!crtc || !crtc->state) {
+ 		DPU_ERROR("invalid crtc\n");
+ 		return;
+ 	}
+@@ -766,7 +766,7 @@ static void dpu_crtc_enable(struct drm_crtc *crtc,
+ 	struct msm_drm_private *priv;
+ 	bool request_bandwidth;
+ 
+-	if (!crtc || !crtc->dev) {
++	if (!crtc) {
+ 		DPU_ERROR("invalid crtc\n");
+ 		return;
+ 	}
 -- 
 2.20.1
 
