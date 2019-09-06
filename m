@@ -2,65 +2,70 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCBB0C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6A5C00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB8B8207FC
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:50:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56B652082C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:51:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567785118;
+	bh=olq8KpdU2v3Ls1VC1ZH3usO+fBe5ugYbV7wB0pi1OIk=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=ikjKP1m51hWUqvTzsgF053P6kW5EJLSOUAV/mbYHn5GjiAn08yTBNHvMy8BzjSKhZ
+	 VzLAWohg/LzJi27bYnpLfxX+EtrABeMvcbH/IWqOecKSRFUocB3ewoX3dojSJzd/Ok
+	 9Kn0Hyb7PxmarBpVJfA1wR0Y5eqgaJBwoU3LMEI8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394934AbfIFPuy (ORCPT
+        id S2394944AbfIFPv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 11:50:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60642 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726654AbfIFPuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 11:50:54 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 432B5B0E2;
-        Fri,  6 Sep 2019 15:50:52 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id D58D2DA8F3; Fri,  6 Sep 2019 17:51:15 +0200 (CEST)
-Date:   Fri, 6 Sep 2019 17:51:15 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Abdul Haleem <abdhalee@linux.vnet.ibm.com>
-Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>, nborisov@suse.com,
-        dsterba@suse.com, linux-btrfs@vger.kernel.org,
-        chandan <chandan@linux.vnet.ibm.com>, josef@toxicpanda.com,
-        mpe <mpe@ellerman.id.au>, sachinp <sachinp@linux.vnet.ibm.com>,
-        Brian King <brking@linux.vnet.ibm.com>
-Subject: Re: [mainline][BUG][PPC][btrfs][bisected 00801a] kernel BUG at
- fs/btrfs/locking.c:71!
-Message-ID: <20190906155115.GD2850@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz,
-        Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>, nborisov@suse.com,
-        dsterba@suse.com, linux-btrfs@vger.kernel.org,
-        chandan <chandan@linux.vnet.ibm.com>, josef@toxicpanda.com,
-        mpe <mpe@ellerman.id.au>, sachinp <sachinp@linux.vnet.ibm.com>,
-        Brian King <brking@linux.vnet.ibm.com>
-References: <1567500907.5082.12.camel@abdul>
+        Fri, 6 Sep 2019 11:51:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33644 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732161AbfIFPv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 11:51:57 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2ED86207FC;
+        Fri,  6 Sep 2019 15:51:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567785116;
+        bh=olq8KpdU2v3Ls1VC1ZH3usO+fBe5ugYbV7wB0pi1OIk=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=1xdml3Gsyy3q/j7FTCJbHUz4yUZX/SH6snWYY7sqhzkaljmRd3+G0ZZgM+LR6DOoH
+         br/s0BrkxHY1m6dhKYaVDPESnYjHutAjWsgthb6JXc2MRCgla6GRGJxJdVJvYZb83N
+         JefFJkiuJUget12PjYQqEVIMrk9KSSFmo5ZEkQxc=
+Subject: Re: [PATCH] kunit: Fix '--build_dir' option
+To:     SeongJae Park <sj38.park@gmail.com>, brendanhiggins@google.com
+Cc:     linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, shuah <shuah@kernel.org>
+References: <1567771541-7690-1-git-send-email-sj38.park@gmail.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <3531717b-fa9d-ac94-57ec-0eb501d1ad3b@kernel.org>
+Date:   Fri, 6 Sep 2019 09:51:35 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1567500907.5082.12.camel@abdul>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+In-Reply-To: <1567771541-7690-1-git-send-email-sj38.park@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 02:25:07PM +0530, Abdul Haleem wrote:
-> Greeting's
-> 
-> Mainline kernel panics with LTP/fs_fill-dir tests for btrfs file
-> system on my P9 box running mainline kernel 5.3.0-rc5
+On 9/6/19 6:05 AM, SeongJae Park wrote:
+> kunit fails to run with '--build_dir' option because the option is not
+> properly sent to kernel running procedure.  This commit fixes the
+> problem.
 
-Is the issue reproducible? And if yes, how reliably? Thanks.
+Can you please include the failure you are seeing in the commit log
+
+thanks,
+-- Shuah
+
+
