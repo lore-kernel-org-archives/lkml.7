@@ -2,82 +2,102 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DADC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 210C0C00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C50520693
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 072D020693
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:44:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406087AbfIFSn0 (ORCPT
+        id S2406121AbfIFSoO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 14:43:26 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:39147 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387551AbfIFSnZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 14:43:25 -0400
-Received: by mail-qt1-f196.google.com with SMTP id n7so8205807qtb.6
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 11:43:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WkS2XXCTwZb6YCGTw5O8BPXzmTufdtb9zrUqg8FXBEs=;
-        b=XV2XZDQ8uEWM9GVBd8KC++b7cPC73XjFMgzAdTPqOTvuHH7LTkOGAn1mcRus0yZN1e
-         5aefbbsOJkyD/HpZ7KY1s32jb9kapi5G8HcPrg4g8+SZMUwLiYKFwbGzyYF1TIL+POXc
-         De8TL06hvoawHMyV9OENSr6bBDg7VS5gVocm/aOqG5wxWPEpfKX9QVUPViQQTnGKNu9g
-         oZGXSNH7YcwsbxEjZAX4YAWygr4JHPTMSePbq1ZDBljpz+Ljl6hz4Ra7rGMayxV43NYV
-         WDCfe3FwsBFYtw64Ketre9lYUr7WCNUbfziMUZaJwSiIFyWbIdG/C3Fy/j0PeFOlzR3G
-         e4Tg==
-X-Gm-Message-State: APjAAAUnhNRK9/hHlxm7H3aepHbTiTbjC3WFGAP95EeYmrMF5LuW5+nT
-        GNzstkKUvUrIVjyiIWUQm8Q0mJMTlupzdbDtRzc=
-X-Google-Smtp-Source: APXvYqzeM5sPyXVSJByhX9sewUEoecwMbHXmfzgZuNlYhYf52qE9yKwrupNhlJQ7WsFT6aNkw1+BHT4NIhTABRAe3XA=
-X-Received: by 2002:aed:2842:: with SMTP id r60mr10515562qtd.142.1567795404696;
- Fri, 06 Sep 2019 11:43:24 -0700 (PDT)
+        Fri, 6 Sep 2019 14:44:14 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41070 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406106AbfIFSoO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 14:44:14 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 350D018CE073;
+        Fri,  6 Sep 2019 18:44:13 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-116-27.ams2.redhat.com [10.36.116.27])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 93B9C60BF1;
+        Fri,  6 Sep 2019 18:44:05 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
+        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Eric Chiang <ericchiang@google.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Philippe =?utf-8?Q?Tr=C3=A9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] fs: Add support for an O_MAYEXEC flag on sys_open()
+References: <20190906152455.22757-1-mic@digikod.net>
+        <20190906152455.22757-2-mic@digikod.net>
+        <87ef0te7v3.fsf@oldenburg2.str.redhat.com>
+        <75442f3b-a3d8-12db-579a-2c5983426b4d@ssi.gouv.fr>
+        <f53ec45fd253e96d1c8d0ea6f9cca7f68afa51e3.camel@kernel.org>
+        <1fbf54f6-7597-3633-a76c-11c4b2481add@ssi.gouv.fr>
+        <5a59b309f9d0603d8481a483e16b5d12ecb77540.camel@kernel.org>
+Date:   Fri, 06 Sep 2019 20:44:03 +0200
+In-Reply-To: <5a59b309f9d0603d8481a483e16b5d12ecb77540.camel@kernel.org> (Jeff
+        Layton's message of "Fri, 06 Sep 2019 14:38:11 -0400")
+Message-ID: <87r24tcljg.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-References: <20190906153700.2061625-1-arnd@arndb.de> <5ce4f4c7-f764-8937-75bf-83a4d4c57fa7@linux.com>
-In-Reply-To: <5ce4f4c7-f764-8937-75bf-83a4d4c57fa7@linux.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 6 Sep 2019 20:43:08 +0200
-Message-ID: <CAK8P3a1_m4R2Qz9A+B22vju_W3j8X1VbUrJT+Pnmfync8SoEQg@mail.gmail.com>
-Subject: Re: [PATCH] lz4: make LZ4HC_setExternalDict as non-static
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Emil Velikov <emil.l.velikov@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.63]); Fri, 06 Sep 2019 18:44:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 6, 2019 at 6:21 PM Denis Efremov <efremov@linux.com> wrote:
->
-> Hi,
->
-> > kbuild warns for exported static symbols. This one seems to
-> > be meant as an external API but does not have any in-kernel
-> > users:
-> >
-> > WARNING: "LZ4HC_setExternalDict" [vmlinux] is a static EXPORT_SYMBOL
-> >
-> > I suppose the function should not just get removed since it would
-> > be nice to stay close to the upstream version of lz4hc, so just
-> > make it global.
->
-> I'm not sure what is better here. But just in case, I sent a different
-> patch that removes EXPORT_SYMBOL from this function some time ago:
-> https://lkml.org/lkml/2019/7/8/842
->
-> I checked first that this functions is indeed static in the original lib[1]
-> and this symbol is not used in kernel.
->
-> [1] https://github.com/lz4/lz4/blob/dev/lib/lz4hc.c#L1054
+* Jeff Layton:
 
-Ah, good. Your patch is the better fix then.
+> Even better would be to declare the new flag in some openat2-only flag
+> space, so there's no confusion about it being supported by legacy open
+> calls.
 
-      Arnd
+Isn't that desirable anyway because otherwise fcntl with F_GETFL will
+give really confusing results?
+
+> If glibc wants to implement an open -> openat2 wrapper in userland
+> later, it can set that flag in the wrapper implicitly to emulate the old
+> behavior.
+
+I see us rather doing the opposite, i.e. implement openat2 with
+non-exotic flags using openat.  But we've bitten by this in the past, so
+maybe that's not such a great idea.  It's tempting to make the same
+mistake again for every new system call.
+
+Thanks,
+Florian
