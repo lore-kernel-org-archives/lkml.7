@@ -2,125 +2,105 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F4FC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2726BC00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D2E02082C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:27:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01D5C20854
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:29:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567794562;
+	bh=le0ALQaDnlgcqarLRMQtu/QI4EFwGOH5PX4ms/GeKIc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TjXPrWsRNZZZUOD841ar6rnMqI8jdU0vlPJJ4xMW7tMyTyPuyw2ntiznRWAh5Cmdj
+	 zX1OHnA1gfNfII55LAc9McDDii0DbNG6GsTXzh5zeioOlQTWBJlX0kY6BgmwTLafL2
+	 sxgtMQhw4wZiDKP2/xUtM7ekm30q1/IhV+LJ7SZo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404651AbfIFS1o convert rfc822-to-8bit (ORCPT
+        id S2436553AbfIFS3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 14:27:44 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50020 "EHLO mx1.redhat.com"
+        Fri, 6 Sep 2019 14:29:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392062AbfIFS1o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 14:27:44 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S2391371AbfIFS3V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 14:29:21 -0400
+Received: from localhost (unknown [62.28.240.114])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 24C82558A1;
-        Fri,  6 Sep 2019 18:27:43 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-116-27.ams2.redhat.com [10.36.116.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E83F85EE1D;
-        Fri,  6 Sep 2019 18:27:33 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Tycho Andersen <tycho@tycho.ws>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
-        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
-        linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Eric Chiang <ericchiang@google.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Philippe =?utf-8?Q?Tr=C3=A9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] fs: Add support for an O_MAYEXEC flag on sys_open()
-References: <20190906152455.22757-1-mic@digikod.net>
-        <20190906152455.22757-2-mic@digikod.net>
-        <87ef0te7v3.fsf@oldenburg2.str.redhat.com>
-        <75442f3b-a3d8-12db-579a-2c5983426b4d@ssi.gouv.fr>
-        <20190906170739.kk3opr2phidb7ilb@yavin.dot.cyphar.com>
-        <20190906172050.v44f43psd6qc6awi@wittgenstein>
-        <20190906174041.GH7627@cisco>
-Date:   Fri, 06 Sep 2019 20:27:31 +0200
-In-Reply-To: <20190906174041.GH7627@cisco> (Tycho Andersen's message of "Fri,
-        6 Sep 2019 11:40:41 -0600")
-Message-ID: <87v9u5cmb0.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E1932082C;
+        Fri,  6 Sep 2019 18:29:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567794560;
+        bh=le0ALQaDnlgcqarLRMQtu/QI4EFwGOH5PX4ms/GeKIc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=X1CemnEOLlGMFFQA8Axyn/In8fCt0xMKu+fHtjxyvyRkv17mkIZ32vkPn6sc0p9sl
+         y+W1f89QWROdrPTlEACr0WRKklhLUYVQdmmxZ2E1Xzja+B7SBIEEy/hNZD8WWk9TpG
+         qcJL9GwDQb2T9LCQXUJk57JUC5gHQa48AcfIXOoc=
+Date:   Fri, 6 Sep 2019 14:29:17 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Ricard Wanderlof <ricard.wanderlof@axis.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: revert: ASoC: Fail card instantiation if DAI format setup fails
+Message-ID: <20190906182917.GA1528@sasha-vm>
+References: <alpine.DEB.2.20.1909061658580.3985@lnxricardw1.se.axis.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 06 Sep 2019 18:27:43 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.20.1909061658580.3985@lnxricardw1.se.axis.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Tycho Andersen:
-
-> On Fri, Sep 06, 2019 at 07:20:51PM +0200, Christian Brauner wrote:
->> On Sat, Sep 07, 2019 at 03:07:39AM +1000, Aleksa Sarai wrote:
->> > On 2019-09-06, Mickaël Salaün <mickael.salaun@ssi.gouv.fr> wrote:
->> > > 
->> > > On 06/09/2019 17:56, Florian Weimer wrote:
->> > > > Let's assume I want to add support for this to the glibc dynamic loader,
->> > > > while still being able to run on older kernels.
->> > > >
->> > > > Is it safe to try the open call first, with O_MAYEXEC, and if that fails
->> > > > with EINVAL, try again without O_MAYEXEC?
->> > > 
->> > > The kernel ignore unknown open(2) flags, so yes, it is safe even for
->> > > older kernel to use O_MAYEXEC.
->> > 
->> > Depends on your definition of "safe" -- a security feature that you will
->> > silently not enable on older kernels doesn't sound super safe to me.
->> > Unfortunately this is a limitation of open(2) that we cannot change --
->> > which is why the openat2(2) proposal I've been posting gives -EINVAL for
->> > unknown O_* flags.
->> > 
->> > There is a way to probe for support (though unpleasant), by creating a
->> > test O_MAYEXEC fd and then checking if the flag is present in
->> > /proc/self/fdinfo/$n.
->> 
->> Which Florian said they can't do for various reasons.
->> 
->> It is a major painpoint if there's no easy way for userspace to probe
->> for support. Especially if it's security related which usually means
->> that you want to know whether this feature works or not.
+On Fri, Sep 06, 2019 at 05:00:28PM +0200, Ricard Wanderlof wrote:
 >
-> What about just trying to violate the policy via fexecve() instead of
-> looking around in /proc? Still ugly, though.
+>Sorry for the repost, I relized I stupidly got Greg's email adress wrong
+>first time around.
+>
+>> > On Tue, Aug 27, 2019 at 12:00:14PM +0100, Mark Brown wrote:
+>> > > On Sun, Aug 25, 2019 at 09:35:15PM -0400, Sasha Levin wrote:
+>> > > > On Wed, Aug 14, 2019 at 10:22:13AM +0100, Mark Brown wrote:
+>> > >
+>> > > > > > If the DAI format setup fails, there is no valid communication format
+>> > > > > > between CPU and CODEC, so fail card instantiation, rather than
+>> > > > continue
+>> > > > > > with a card that will most likely not function properly.
+>> > >
+>> > > > > This is another one where if nobody noticed a problem already and things
+>> > > > > just happened to be working this might break things, it's vanishingly
+>> > > > > unlikely to fix anything that was broken.
+>> > >
+>> > > > Same as the other patch: this patch suggests it fixes a real bug, and if
+>> > > > this patch is broken let's fix it.
+>> > >
+>> > > If anyone ran into this on the older kernel and fixed or worked
+>> > > around it locally there's a reasonable chance this will then
+>> > > break what they're doing.  The patch itself is perfectly fine but
+>
+>(Sorry about the mangled subject line, I'd accidentally deleted the
+>original message from my inbox.)
+>
+>I'm a bit bewildered here. As the author of the original patch I'm of
+>course biased, and I can certainly understand the patch being dropped from
+>existing release branches, since as Mark correctly states, it does not fix
+>any broken behavior and might even break things that happen to work by
+>chance.
+>
+>But is this being dropped from the master branch as well? To me it makes
+>the kernel behave in an inconsistent way, first reporting a failure to
+>instantiate a specific sound card in the kernel log, but then seemingly
+>bringing it up anyway.
 
-How would we do this?  This is about opening the main executable as part
-of an explicit loader invocation.  Typically, an fexecve will succeed
-and try to run the program, but with the wrong dynamic loader.
+Hi Richard,
 
+This patch is only dropped from the stable branches, it still remains in
+the mainline branch.
+
+--
 Thanks,
-Florian
+Sasha
