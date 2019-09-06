@@ -2,133 +2,115 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1661C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 04:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79628C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 04:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E833207FC
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 04:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5100E207FC
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 04:55:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="R7bhguuu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gkvknkt1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389591AbfIFEwR (ORCPT
+        id S2390686AbfIFEzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 00:52:17 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:41712 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbfIFEwQ (ORCPT
+        Fri, 6 Sep 2019 00:55:09 -0400
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:40943 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727514AbfIFEzI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 00:52:16 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x864q6xo165294;
-        Fri, 6 Sep 2019 04:52:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=KYhsWfcC1iMt71xKx7AjqLrfKI6cIO/kus0pmtMoVYI=;
- b=R7bhguuuAj+QxGbojFmU3ZneukGYN3gnkPEysNDEMgNRQ6Y46oqrb++vqLLFLdngzlA9
- WgeFLZNu1n/Ogz9q9AecZt95XQEBonCdUtzwCBb69xakojZxwpQhkdlpRVZjVt4AdEU4
- NSbnuPKrk160n7rrf+/j+R3ibkJJFVLB5CLBoh9CCNSDG2KKorEauRgR5WxCqY8NnR6w
- e3uMpod7c24GcqOfb6x9svt0w5AFkegTkNhg0zioqFPKMzW3fkiBJ+eTvE75r6j6Anui
- niRmzLwiRzhhFOi1TnQS4kL/hfrmkijyMjVj9NkAbX9n34qZaTpJC1WLJXy17/Sib57s Pw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2uugt5000q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 06 Sep 2019 04:52:06 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x864mmu8128244;
-        Fri, 6 Sep 2019 04:52:06 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2utpmc9nvf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 06 Sep 2019 04:52:06 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x864q56i010773;
-        Fri, 6 Sep 2019 04:52:05 GMT
-Received: from [10.159.230.78] (/10.159.230.78)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 05 Sep 2019 21:52:04 -0700
-Subject: Re: [RESEND PATCH next v2 0/6] ARM: keystone: update dt and enable
- cpts support
-To:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>
-Cc:     Sekhar Nori <nsekhar@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20190705151247.30422-1-grygorii.strashko@ti.com>
- <2ef8b34e-7a6e-b3e4-90e0-c4e7f16c2e99@oracle.com>
- <323c1835-e6b0-9153-8d1e-06200d5e2201@ti.com>
-From:   santosh.shilimkar@oracle.com
-Organization: Oracle Corporation
-Message-ID: <56a97316-73aa-b8ba-41f3-a374a14edc92@oracle.com>
-Date:   Thu, 5 Sep 2019 21:52:03 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.2
+        Fri, 6 Sep 2019 00:55:08 -0400
+Received: by mail-vk1-f193.google.com with SMTP id d126so1011902vkf.7
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 21:55:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/gxIWH0Z2/nc7EM+6BfjuISpsFajm8nKC3P95I4PSIk=;
+        b=Gkvknkt1b8owSIyUje5r0ssZriQWhtSEiH5uUPU0W51hvEigEqcC+eAzkevDWGzZ9J
+         G4O6uerwLfmsRXwLr+PxBQIHrn/7nSIo/Aq31HTZMVUwric3fHhbSjgTfVsk9YV/o+Wn
+         3lEg72m+jme00C7mT/bbtYRgPn6fWuu7Rf2i3okbcHIOtUmpASzmtDsKeTAbPKNN0r/o
+         0Li+5mHjyHzMANdaqgiezETL5PJVrOZiV2TxIZwYEKY930VphyGlBrc5qXbSyIXd1kQs
+         HFoXfJbOrizbSFXiuiRqPZNoGnTRUM7IXUZC+OvpCzh8BB0nIVZ6Zzq2j4RBRwbuQKFW
+         g19w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/gxIWH0Z2/nc7EM+6BfjuISpsFajm8nKC3P95I4PSIk=;
+        b=GCCdcaspqqS2L7oG9C8yznRam1b9MsLx6PJdjCNRfTdZCi7C5/DDIoFZthQWA0k2ks
+         ncxcNk5lmpGaMwdgatuMZjWBjK45DgVMRPVbtEtp7zOVUc5wOXNKcr7swHDAeaIbbv/w
+         PvP7jikYo90tOpnEHL9mtUgBK5zY7NcdKmge1ic17tULOiyG92em0EV2qAAJVGKrMh2T
+         RHfOy51VZ9EX9ims7l61CywoFYi5afZsGrB+vx1mmUUUFDva73NBUIUIxNIYpU8QEIu6
+         BxAzKHNjcb6VqXmLd/BNAtwMuY2mYeUT/jKqlFatfaxFqmKoni6W04hwftCGpph8WP+C
+         JEIQ==
+X-Gm-Message-State: APjAAAVgGIVJcMvJz01SAbfjUEaTaEVfIc5a+0GvckjTuVzG8Ruh0m0w
+        0aKDj8c8/9gKhmx/97Fnyj8EdjOPd+a5b2m8CwMVgtnQ
+X-Google-Smtp-Source: APXvYqy+8Uy5jSjnaZ2NKBfl3MiDrPQ3f6jSQwHeh9wMPiMvhpEwKy58ZlLjpymDZWP8QmxqhTcJmsZixmWBF7tngb8=
+X-Received: by 2002:ac5:cdad:: with SMTP id l13mr3412485vka.30.1567745707609;
+ Thu, 05 Sep 2019 21:55:07 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <323c1835-e6b0-9153-8d1e-06200d5e2201@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1909060054
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1909060054
+References: <20190905121934.GA31853@ogabbay-VM> <20190905205017.GA25089@kroah.com>
+ <CAFCwf12VtkZd-cd7A+dznWx70ydjdxX7ahi7tn5CSGPoEcjexA@mail.gmail.com>
+In-Reply-To: <CAFCwf12VtkZd-cd7A+dznWx70ydjdxX7ahi7tn5CSGPoEcjexA@mail.gmail.com>
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+Date:   Fri, 6 Sep 2019 07:54:41 +0300
+Message-ID: <CAFCwf12LurmKz0ek-fN-uCh5tXq95hHtkzRJ7_bxzvEK-mMsnA@mail.gmail.com>
+Subject: Re: [git pull] habanalabs pull request for kernel 5.4
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/5/19 12:33 PM, Grygorii Strashko wrote:
-> Hi Santosh,
-> 
-> On 06/07/2019 02:48, santosh.shilimkar@oracle.com wrote:
->> On 7/5/19 8:12 AM, Grygorii Strashko wrote:
->>> Hi Santosh,
->>>
->>> This series is set of platform changes required to enable NETCP CPTS 
->>> reference
->>> clock selection and final patch to enable CPTS for Keystone 
->>> 66AK2E/L/HK SoCs.
->>>
->>> Those patches were posted already [1] together with driver's changes, 
->>> so this
->>> is re-send of DT/platform specific changes only, as driver's changes 
->>> have
->>> been merged already.
->>>
->>> Patches 1-5: CPTS DT nodes update for TI Keystone 2 66AK2HK/E/L SoCs.
->>> Patch 6: enables CPTS for TI Keystone 2 66AK2HK/E/L SoCs.
->>>
->>> [1] https://patchwork.kernel.org/cover/10980037/
->>>
->>> Grygorii Strashko (6):
->>>    ARM: dts: keystone-clocks: add input fixed clocks
->>>    ARM: dts: k2e-clocks: add input ext. fixed clocks tsipclka/b
->>>    ARM: dts: k2e-netcp: add cpts refclk_mux node
->>>    ARM: dts: k2hk-netcp: add cpts refclk_mux node
->>>    ARM: dts: k2l-netcp: add cpts refclk_mux node
->>>    ARM: configs: keystone: enable cpts
->>>
->> Will add these for 5.4 queue. Thanks !!
-> 
-> Sry, that I'm disturbing you, but I do not see those patches applied?
-> 
-Sorry I missed this one. Will queue this up for next merge window.
-Will push this out to next early once rc1 is out. If you don't
-see it, please ping me.
+On Fri, Sep 6, 2019 at 7:38 AM Oded Gabbay <oded.gabbay@gmail.com> wrote:
+>
+> On Thu, Sep 5, 2019 at 11:50 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Thu, Sep 05, 2019 at 03:19:34PM +0300, Oded Gabbay wrote:
+> > > Hello Greg,
+> > >
+> > > This is the pull request for habanalabs driver for kernel 5.4.
+> > >
+> > > It contains one major change, the creation of an additional char device
+> > > per PCI device. In addition, there are some small changes and
+> > > improvements.
+> > >
+> > > Please see the tag message for details on what this pull request contains.
+> > >
+> > > Thanks,
+> > > Oded
+> > >
+> > > The following changes since commit 25ec8710d9c2cd4d0446ac60a72d388000d543e6:
+> > >
+> > >   w1: add DS2501, DS2502, DS2505 EPROM device driver (2019-09-04 14:34:31 +0200)
+> > >
+> > > are available in the Git repository at:
+> > >
+> > >   git://people.freedesktop.org/~gabbayo/linux tags/misc-habanalabs-next-2019-09-05
+> >
+> > Is that a signed tag?  It doesn't seem to me like it is, have you always
+> > sent unsigned tags?
+> >
+> > thanks,
+> >
+> > greg k-h
+>
+> It is unsigned. I have never sent you a signed tag.
+>
+> Thanks,
+> Oded
 
+Just to clarify. I have never sent a signed pull request. I'll look
+now how to do it and re-send this pull request to you.
+My only question is how do you verify my GPG key ? Do I need to
+authenticate it somewhere ?
 
-Regards,
-Santosh
+Thanks,
+Oded
