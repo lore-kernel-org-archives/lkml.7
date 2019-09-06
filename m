@@ -2,143 +2,126 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A57C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 22:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6002C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 22:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6120920842
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 22:47:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A22020842
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 22:47:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aKhzrC/S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405225AbfIFWrd (ORCPT
+        id S2405245AbfIFWrh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 18:47:33 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:48746 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388713AbfIFWrd (ORCPT
+        Fri, 6 Sep 2019 18:47:37 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34860 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388713AbfIFWre (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 18:47:33 -0400
-Received: from localhost ([127.0.0.1] helo=vostro.local)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1i6N0k-0004QP-Ej; Sat, 07 Sep 2019 00:47:22 +0200
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v4 0/9] printk: new ringbuffer implementation
-References: <20190807222634.1723-1-john.ogness@linutronix.de>
-        <20190904123531.GA2369@hirez.programming.kicks-ass.net>
-        <20190905130513.4fru6yvjx73pjx7p@pathway.suse.cz>
-        <20190905143118.GP2349@hirez.programming.kicks-ass.net>
-        <20190906090627.GX2386@hirez.programming.kicks-ass.net>
-        <20190906124211.2dionk2kzcslaotz@pathway.suse.cz>
-        <20190906140126.GY2349@hirez.programming.kicks-ass.net>
-Date:   Sat, 07 Sep 2019 00:47:20 +0200
-In-Reply-To: <20190906140126.GY2349@hirez.programming.kicks-ass.net> (Peter
-        Zijlstra's message of "Fri, 6 Sep 2019 16:01:26 +0200")
-Message-ID: <87mufhqbyf.fsf@linutronix.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+        Fri, 6 Sep 2019 18:47:34 -0400
+Received: by mail-pg1-f194.google.com with SMTP id n4so4326680pgv.2
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 15:47:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eh4BYWlMKBWYksN67VKDMRhVawrCIBtabo9ZsX+5Iy0=;
+        b=aKhzrC/S3brQTWp4YtDWI5vu5nP4sIGBfd2Qy4mSoPmDn4barETg1DJ1hFgLN1IO/r
+         m0kQm7w2FaG2uW24h6MfjCEKfty++Zoo4LLEiOPv6t6azLPl+0Lwn8W4ZgJQBhKRe+d8
+         Oy4+hx20U0/0USNaYVfmRNN8q6qbyLJPY3QApO3suvQnTlIltjXzkgd4xVe+aHUZpO4V
+         kJEKNMo6GxSaLc1Q56AE4mxsyRNwo1X0ycmH4bOOdpbxnCDET/0in8PIlzx0EvlVW8Ud
+         BcGPCs1qA3P5GPm0h9k9it6/X3OFJUIENzGHl4sSdmNRUJ8IpJxPZ2yFd2c5mDZDkLSm
+         h4ZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eh4BYWlMKBWYksN67VKDMRhVawrCIBtabo9ZsX+5Iy0=;
+        b=YijBxTBfvP4G0u3iZurXlCvCspL9keIffI6OysZOQ9F+6/o1eaLRRWOvY8bxeKkCiS
+         mREiBKpkHk6TtpZ6HRaY172ANfYJoazF1lTdNwjrarxu+ZqbNQo5++Vg4O4z6qUEftq/
+         JRfSyaBiLkBo9h9jvhUgsjDNfwiaP5MUg6/WJpFGdaYONbiXMpkcT21SHNpPc9Iwciu8
+         PNXlEQER8/FlGNxb8XKu7Ki7THECqc1QnVKaSeUGjbpcGQ9ISAhK9ACnIT5x7zzUrOlP
+         8CHwZMoxY/zq5i1rXN8jyWsx+vpGf+76rB28+8J0pxkPWtY8B6t6+ndPs1YJTc3gTR+V
+         nX8A==
+X-Gm-Message-State: APjAAAUKcjYb1qgHDlSFpxldAumwL9LvXE3FmfjVZLdDrnXI681pMNaI
+        b+ae3Ab0gDN2QEsHy/Y4r37VvgCuKuGchWL7SvTm6A==
+X-Google-Smtp-Source: APXvYqwdjdOUtRpbeCXdmOlr2UuwLqFAltRgTvFfFozJRMHdSWg43vl7tVZTanKPZPSAz6sw2iyMF8gn9Qxmsd60juA=
+X-Received: by 2002:a17:90a:154f:: with SMTP id y15mr9703535pja.73.1567810053188;
+ Fri, 06 Sep 2019 15:47:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+References: <20190904181740.GA19688@gmail.com> <CAHk-=wi2VOPoweqnDhxXKJ9fcLQzkV1oEDjteV=z-C7KXrpomg@mail.gmail.com>
+ <CANiq72mXLbaefVBqZzz1vSREi0=HiBUgR1KU3iRjOCum7rvfrw@mail.gmail.com>
+ <CAHk-=wiNksYaQ5zRFgTdY4TMHkxRi3aOcTC2zMMS6+aVSx+yeQ@mail.gmail.com> <CANiq72kyk6uzxS3LRvcOs9zgYYh7V7V2yPtAFkDwpHmyYcsz_Q@mail.gmail.com>
+In-Reply-To: <CANiq72kyk6uzxS3LRvcOs9zgYYh7V7V2yPtAFkDwpHmyYcsz_Q@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Fri, 6 Sep 2019 15:47:21 -0700
+Message-ID: <CAKwvOdkodVFxUr_Xc-qeUHnpxEmofENDhNdvCuiRzcGXQ54QkQ@mail.gmail.com>
+Subject: Re: [GIT PULL] compiler-attributes for v5.3-rc8
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Will Deacon <will@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Paul Burton <paul.burton@mips.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-09-06, Peter Zijlstra <peterz@infradead.org> wrote:
->> I wish it was that simple. It is possible that I see it too
->> complicated. But this comes to my mind:
->> 
->> 1. The simple printk_buffer_store(buf, n) is not NMI safe. For this,
->>    we might need the reserve-store approach.
+On Fri, Sep 6, 2019 at 1:11 PM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
 >
-> Of course it is, and sure it has a reserve+commit internally. I'm sure
-> I posted an implenentation of something like this at some point.
+> On Thu, Sep 5, 2019 at 10:53 PM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > That's probably what we should have done originally, avoiding all the
+> > issues with "what if we have multi-part strings" etc.
+> >
+> > But it's not what we did, probably because it looked slightly simpler
+> > to do the stringification in the macro for the usual case.
+> >
+> > So now we have (according to a quick grep) eight users that have a
+> > constant string, and about one hundred users that use the unquoted
+> > section name and expect the automatic stringification. I say "about",
+> > because I didn't check if any of them might be doing tricks, I really
+> > just did a stupid grep.
+> >
+> > And we have that _one_ insane KENTRY thing that was apparently never
+> > actually used.
+> >
+> > So I think the minimal fix is to just accept that it's what it is,
+> > remove the unnecessary quotes from the 8 existing users, and _if_
+> > somebody wants to build the string  by hand (like the KENTRY code
+> > did), then just use "__attribute__((section(x)))" for that.
+> >
+> > But yeah, we could just remove the stringification and make the users do it.
+> >
+> > But for the current late rc (and presumably -stable?), I definitely
+> > want the absolute minimal thing that fixes the oops.
 >
-> It is lockless (wait-free in fact, which is stronger) and supports
-> multi-readers. I'm sure I posted something like that before, and ISTR
-> John has something like that around somewhere too.
+> Then I will send a PR with that patch only (Nick, do you know if the
+> entire patch is needed or we could further reduce it?).
 
-Yes. It was called RFCv1[0].
+Sedat reported (https://github.com/ClangBuiltLinux/linux/issues/619#issuecomment-520042577,
+https://github.com/ClangBuiltLinux/linux/issues/619#issuecomment-520065525)
+that only the bottom two hunks of that patch
+(https://github.com/ojeda/linux/commit/c97e82b97f4bba00304905fe7965f923abd2d755)
 
-> The only thing I'm omitting is doing vscnprintf() twice, first to
-> determine the length, and then into the reservation. Partly because I
-> think that is silly and 256 chars should be plenty for everyone,
-> partly because that avoids having vscnprintf() inside the cpu_lock()
-> and partly because it is simpler to not do that.
-
-Yes, this approach is more straight forward and was suggested in the
-feedback to RFCv1. Although I think the current limit (1024) should
-still be OK. Then we have 1 dedicated page per CPU for vscnprintf().
-
->> 2. The simple approach works only with lockless consoles. We need
->>    something else for the rest at least for NMI. Simle offloading
->>    to a kthread has been blocked for years. People wanted the
->>    trylock-and-flush-immediately approach.
 >
-> Have an irq_work to wake up a kthread that will print to shit
-> consoles.
+> Then for 5.4 I will prepare a new series moving to non-stringification
+> (unless Nick wants to do it himself).
 
-This is the approach in all the RFC versions.
-
->> 5. John planed to use the cpu_lock in the lockless consoles.
->>    I wonder if it was only in the console->write() callback
->>    or if it would spread the lock more widely.
-
-The 8250 driver in RFCv1 uses the cpu-lock in console->write() on a
-per-character basis and in console->write_atomic() on a per-line
-basis. This is necessary because the 8250 driver cannot run lockless. It
-requires synchronization for its UART_IER clearing/setting before/after
-transmit.
-
-IMO the existing early console implementations are _not_ safe for
-preemption. This was the reason for the new write_atomic() callback in
-RFCv1.
-
-> Right, I'm saying that since you need it anyway, lift it up one layer.
-> It makes everything simpler. More simpler is more better.
-
-This was my reasoning for using the cpu-lock in RFCv1. Moving to a
-lockless ringbuffer for RFCv2 was because there was too much
-resistance/concern surrounding the cpu-lock. But yes, if we want to
-support atomic consoles, the cpu-lock will still be needed.
-
-The cpu-lock (and the related concerns) were discussed here[1].
-
->> 7. People would complain when continuous lines become less
->>    reliable. It might be most visible when mixing backtraces
->>    from all CPUs. Simple sorting by prefix will not make
->>    it readable. The historic way was to synchronize CPUs
->>    by a spin lock. But then the cpu_lock() could cause
->>    deadlock.
->
-> Why? I'm running with that thing on, I've never seen a deadlock ever
-> because of it.
-
-As was discussed in the thread I just mentioned, introducing the
-cpu-lock means that _all_ NMI functions taking spinlocks need to use the
-cpu-lock. Even though Peter has never seen a deadlock, a deadlock is
-possible if a BUG is triggered while one such spinlock is held. Also
-note that it is not allowed to have 2 cpu-locks in the system. This is
-where the BKL references started showing up.
-
-Spinlocks in NMI context are rare, but they have existed in the past and
-could exist again in the future. My suggestion was to create the policy
-that any needed locking in NMI context must be done using the one
-cpu-lock.
-
-John Ogness
-
-[0] https://lkml.kernel.org/r/20190212143003.48446-1-john.ogness@linutronix.de
-[1] https://lkml.kernel.org/r/20190227094655.ecdwhsc2bf5spkqx@pathway.suse.cz
+Technically, it's not a regression, just something that would be nice
+to have sooner rather than later.  The whole series can wait for 5.4,
+IMO.  I'll look into updating the patchset next week.
+-- 
+Thanks,
+~Nick Desaulniers
