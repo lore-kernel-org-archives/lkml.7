@@ -2,365 +2,243 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A108C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46324C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B02C20842
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:55:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22F772070C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:58:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388188AbfIFHz4 (ORCPT
+        id S2388541AbfIFH6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 03:55:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34468 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726323AbfIFHzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 03:55:54 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 45A8FADBF;
-        Fri,  6 Sep 2019 07:55:52 +0000 (UTC)
-From:   Jiri Slaby <jslaby@suse.cz>
-To:     bp@alien8.de
-Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        Jiri Slaby <jslaby@suse.cz>, Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH 2/2] x86/asm: Make some functions local labels
-Date:   Fri,  6 Sep 2019 09:55:50 +0200
-Message-Id: <20190906075550.23435-2-jslaby@suse.cz>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190906075550.23435-1-jslaby@suse.cz>
-References: <20190906075550.23435-1-jslaby@suse.cz>
+        Fri, 6 Sep 2019 03:58:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:52764 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726908AbfIFH6Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 03:58:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 206E928;
+        Fri,  6 Sep 2019 00:58:23 -0700 (PDT)
+Received: from localhost (e113682-lin.copenhagen.arm.com [10.32.144.41])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A78CE3F718;
+        Fri,  6 Sep 2019 00:58:22 -0700 (PDT)
+Date:   Fri, 6 Sep 2019 09:58:21 +0200
+From:   Christoffer Dall <christoffer.dall@arm.com>
+To:     Heinrich Schuchardt <xypron.glpk@gmx.de>
+Cc:     Peter Maydell <peter.maydell@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>,
+        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        kvmarm@lists.cs.columbia.edu,
+        arm-mail-list <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 1/1] KVM: inject data abort if instruction cannot be
+ decoded
+Message-ID: <20190906075821.GE4320@e113682-lin.lund.arm.com>
+References: <20190904180736.29009-1-xypron.glpk@gmx.de>
+ <86r24vrwyh.wl-maz@kernel.org>
+ <CAFEAcA-mc6cLmRGdGNOBR0PC1f_VBjvTdAL6xYtKjApx3NoPgQ@mail.gmail.com>
+ <86mufjrup7.wl-maz@kernel.org>
+ <CAFEAcA9qkqkOTqSVrhTpt-NkZSNXomSBNiWo_D6Kr=QKYRRf=w@mail.gmail.com>
+ <20190905092223.GC4320@e113682-lin.lund.arm.com>
+ <27e7edd6-1c4f-c970-3395-ecb4f176f858@gmx.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <27e7edd6-1c4f-c970-3395-ecb4f176f858@gmx.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Boris suggests to make a local label (prepend ".L") from these functions
-to eliminate them from the symbol table. These are functions with very
-local names and really should not be visible anywhere.
+On Thu, Sep 05, 2019 at 03:25:47PM +0200, Heinrich Schuchardt wrote:
+> On 9/5/19 11:22 AM, Christoffer Dall wrote:
+> > On Thu, Sep 05, 2019 at 09:56:44AM +0100, Peter Maydell wrote:
+> > > On Thu, 5 Sep 2019 at 09:52, Marc Zyngier <maz@kernel.org> wrote:
+> > > > 
+> > > > On Thu, 05 Sep 2019 09:16:54 +0100,
+> > > > Peter Maydell <peter.maydell@linaro.org> wrote:
+> > > > > This is true, but the problem is that barfing out to userspace
+> > > > > makes it harder to debug the guest because it means that
+> > > > > the VM is immediately destroyed, whereas AIUI if we
+> > > > > inject some kind of exception then (assuming you're set up
+> > > > > to do kernel-debug via gdbstub) you can actually examine
+> > > > > the offending guest code with a debugger because at least
+> > > > > your VM is still around to inspect...
+> > > > 
+> > > > To Christoffer's point, I find the benefit a bit dubious. Yes, you get
+> > > > an exception, but the instruction that caused it may be completely
+> > > > legal (store with post-increment, for example), leading to an even
+> > > > more puzzled developer (that exception should never have been
+> > > > delivered the first place).
+> > > 
+> > > Right, but the combination of "host kernel prints a message
+> > > about an unsupported load/store insn" and "within-guest debug
+> > > dump/stack trace/etc" is much more useful than just having
+> > > "host kernel prints message" and "QEMU exits"; and it requires
+> > > about 3 lines of code change...
+> > > 
+> > > > I'm far more in favour of dumping the state of the access in the run
+> > > > structure (much like we do for a MMIO access) and let userspace do
+> > > > something about it (such as dumping information on the console or
+> > > > breaking). It could even inject an exception *if* the user has asked
+> > > > for it.
+> > > 
+> > > ...whereas this requires agreement on a kernel-userspace API,
+> > > larger changes in the kernel, somebody to implement the userspace
+> > > side of things, and the user to update both the kernel and QEMU.
+> > > It's hard for me to see that the benefit here over the 3-line
+> > > approach really outweighs the extra effort needed. In practice
+> > > saying "we should do this" is saying "we're going to do nothing",
+> > > based on the historical record.
+> > > 
+> > 
+> > How about something like the following (completely untested, liable for
+> > ABI discussions etc. etc., but for illustration purposes).
+> > 
+> > I think it raises the question (and likely many other) of whether we can
+> > break the existing 'ABI' and change behavior for missing ISV
+> > retrospectively for legacy user space when the issue has occurred?
+> > 
+> > Someone might have written code that reacts to the -ENOSYS, so I've
+> > taken the conservative approach for this for the time being.
+> > 
+> > 
+> > diff --git a/arch/arm/include/asm/kvm_host.h b/arch/arm/include/asm/kvm_host.h
+> > index 8a37c8e89777..19a92c49039c 100644
+> > --- a/arch/arm/include/asm/kvm_host.h
+> > +++ b/arch/arm/include/asm/kvm_host.h
+> > @@ -76,6 +76,14 @@ struct kvm_arch {
+> > 
+> >   	/* Mandated version of PSCI */
+> >   	u32 psci_version;
+> > +
+> > +	/*
+> > +	 * If we encounter a data abort without valid instruction syndrome
+> > +	 * information, report this to user space.  User space can (and
+> > +	 * should) opt in to this feature if KVM_CAP_ARM_NISV_TO_USER is
+> > +	 * supported.
+> > +	 */
+> > +	bool return_nisv_io_abort_to_user;
+> >   };
+> > 
+> >   #define KVM_NR_MEM_OBJS     40
+> > diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+> > index f656169db8c3..019bc560edc1 100644
+> > --- a/arch/arm64/include/asm/kvm_host.h
+> > +++ b/arch/arm64/include/asm/kvm_host.h
+> > @@ -83,6 +83,14 @@ struct kvm_arch {
+> > 
+> >   	/* Mandated version of PSCI */
+> >   	u32 psci_version;
+> > +
+> > +	/*
+> > +	 * If we encounter a data abort without valid instruction syndrome
+> > +	 * information, report this to user space.  User space can (and
+> > +	 * should) opt in to this feature if KVM_CAP_ARM_NISV_TO_USER is
+> > +	 * supported.
+> > +	 */
+> > +	bool return_nisv_io_abort_to_user;
+> 
+> How about 32bit ARM?
+> 
 
-Note that objtool won't see these functions anymore (to generate ORC
-debug info). But all the functions are not annotated with ENDPROC, so
-they won't have objtool's attention anyway.
+What about it?  Not sure I understand the comment.
 
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: x86@kernel.org
----
- arch/x86/boot/compressed/head_32.S |  4 ++--
- arch/x86/boot/compressed/head_64.S | 18 +++++++++---------
- arch/x86/entry/entry_64.S          |  4 ++--
- arch/x86/lib/copy_user_64.S        | 14 +++++++-------
- arch/x86/lib/getuser.S             | 16 ++++++++--------
- arch/x86/lib/putuser.S             | 22 +++++++++++-----------
- 6 files changed, 39 insertions(+), 39 deletions(-)
+> >   };
+> > 
+> >   #define KVM_NR_MEM_OBJS     40
+> > diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> > index 5e3f12d5359e..a4dd004d0db9 100644
+> > --- a/include/uapi/linux/kvm.h
+> > +++ b/include/uapi/linux/kvm.h
+> > @@ -235,6 +235,7 @@ struct kvm_hyperv_exit {
+> >   #define KVM_EXIT_S390_STSI        25
+> >   #define KVM_EXIT_IOAPIC_EOI       26
+> >   #define KVM_EXIT_HYPERV           27
+> > +#define KVM_EXIT_ARM_NISV         28
+> > 
+> >   /* For KVM_EXIT_INTERNAL_ERROR */
+> >   /* Emulate instruction failed. */
+> > @@ -996,6 +997,7 @@ struct kvm_ppc_resize_hpt {
+> >   #define KVM_CAP_ARM_PTRAUTH_ADDRESS 171
+> >   #define KVM_CAP_ARM_PTRAUTH_GENERIC 172
+> >   #define KVM_CAP_PMU_EVENT_FILTER 173
+> > +#define KVM_CAP_ARM_NISV_TO_USER 174
+> > 
+> >   #ifdef KVM_CAP_IRQ_ROUTING
+> > 
+> > diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
+> > index 35a069815baf..2ce94bd9d4a9 100644
+> > --- a/virt/kvm/arm/arm.c
+> > +++ b/virt/kvm/arm/arm.c
+> > @@ -98,6 +98,26 @@ int kvm_arch_check_processor_compat(void)
+> >   	return 0;
+> >   }
+> > 
+> > +int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
+> > +			    struct kvm_enable_cap *cap)
+> 
+> This overrides the weak implementation in virt/kvm/kvm_main.c. OK.
+> 
 
-diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
-index 37380c0d5999..5e30eaaf8576 100644
---- a/arch/x86/boot/compressed/head_32.S
-+++ b/arch/x86/boot/compressed/head_32.S
-@@ -140,7 +140,7 @@ ENTRY(startup_32)
- /*
-  * Jump to the relocated address.
-  */
--	leal	relocated(%ebx), %eax
-+	leal	.Lrelocated(%ebx), %eax
- 	jmp	*%eax
- ENDPROC(startup_32)
- 
-@@ -209,7 +209,7 @@ ENDPROC(efi32_stub_entry)
- #endif
- 
- 	.text
--relocated:
-+.Lrelocated:
- 
- /*
-  * Clear BSS (stack is currently empty)
-diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
-index 6233ae35d0d9..d98cd483377e 100644
---- a/arch/x86/boot/compressed/head_64.S
-+++ b/arch/x86/boot/compressed/head_64.S
-@@ -87,7 +87,7 @@ ENTRY(startup_32)
- 
- 	call	verify_cpu
- 	testl	%eax, %eax
--	jnz	no_longmode
-+	jnz	.Lno_longmode
- 
- /*
-  * Compute the delta between where we were compiled to run at
-@@ -322,7 +322,7 @@ ENTRY(startup_64)
- 1:	popq	%rdi
- 	subq	$1b, %rdi
- 
--	call	adjust_got
-+	call	.Ladjust_got
- 
- 	/*
- 	 * At this point we are in long mode with 4-level paging enabled,
-@@ -421,7 +421,7 @@ trampoline_return:
- 
- 	/* The new adjustment is the relocation address */
- 	movq	%rbx, %rdi
--	call	adjust_got
-+	call	.Ladjust_got
- 
- /*
-  * Copy the compressed kernel to the end of our buffer
-@@ -440,7 +440,7 @@ trampoline_return:
- /*
-  * Jump to the relocated address.
-  */
--	leaq	relocated(%rbx), %rax
-+	leaq	.Lrelocated(%rbx), %rax
- 	jmp	*%rax
- 
- #ifdef CONFIG_EFI_STUB
-@@ -511,7 +511,7 @@ ENDPROC(efi64_stub_entry)
- #endif
- 
- 	.text
--relocated:
-+.Lrelocated:
- 
- /*
-  * Clear BSS (stack is currently empty)
-@@ -548,7 +548,7 @@ relocated:
-  * first time we touch GOT).
-  * RDI is the new adjustment to apply.
-  */
--adjust_got:
-+.Ladjust_got:
- 	/* Walk through the GOT adding the address to the entries */
- 	leaq	_got(%rip), %rdx
- 	leaq	_egot(%rip), %rcx
-@@ -622,7 +622,7 @@ ENTRY(trampoline_32bit_src)
- 	movl	%eax, %cr4
- 
- 	/* Calculate address of paging_enabled() once we are executing in the trampoline */
--	leal	paging_enabled - trampoline_32bit_src + TRAMPOLINE_32BIT_CODE_OFFSET(%ecx), %eax
-+	leal	.Lpaging_enabled - trampoline_32bit_src + TRAMPOLINE_32BIT_CODE_OFFSET(%ecx), %eax
- 
- 	/* Prepare the stack for far return to Long Mode */
- 	pushl	$__KERNEL_CS
-@@ -635,7 +635,7 @@ ENTRY(trampoline_32bit_src)
- 	lret
- 
- 	.code64
--paging_enabled:
-+.Lpaging_enabled:
- 	/* Return from the trampoline */
- 	jmp	*%rdi
- 
-@@ -647,7 +647,7 @@ paging_enabled:
- 	.org	trampoline_32bit_src + TRAMPOLINE_32BIT_CODE_SIZE
- 
- 	.code32
--no_longmode:
-+.Lno_longmode:
- 	/* This isn't an x86-64 CPU, so hang intentionally, we cannot continue */
- 1:
- 	hlt
-diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index af077ded1969..b7c3ea4cb19d 100644
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -1058,10 +1058,10 @@ ENTRY(native_load_gs_index)
- ENDPROC(native_load_gs_index)
- EXPORT_SYMBOL(native_load_gs_index)
- 
--	_ASM_EXTABLE(.Lgs_change, bad_gs)
-+	_ASM_EXTABLE(.Lgs_change, .Lbad_gs)
- 	.section .fixup, "ax"
- 	/* running with kernelgs */
--bad_gs:
-+.Lbad_gs:
- 	SWAPGS					/* switch back to user gs */
- .macro ZAP_GS
- 	/* This can't be a string because the preprocessor needs to see it. */
-diff --git a/arch/x86/lib/copy_user_64.S b/arch/x86/lib/copy_user_64.S
-index 4fe1601dbc5d..86976b55ae74 100644
---- a/arch/x86/lib/copy_user_64.S
-+++ b/arch/x86/lib/copy_user_64.S
-@@ -33,7 +33,7 @@
- 102:
- 	.section .fixup,"ax"
- 103:	addl %ecx,%edx			/* ecx is zerorest also */
--	jmp copy_user_handle_tail
-+	jmp .Lcopy_user_handle_tail
- 	.previous
- 
- 	_ASM_EXTABLE_UA(100b, 103b)
-@@ -113,7 +113,7 @@ ENTRY(copy_user_generic_unrolled)
- 40:	leal (%rdx,%rcx,8),%edx
- 	jmp 60f
- 50:	movl %ecx,%edx
--60:	jmp copy_user_handle_tail /* ecx is zerorest also */
-+60:	jmp .Lcopy_user_handle_tail /* ecx is zerorest also */
- 	.previous
- 
- 	_ASM_EXTABLE_UA(1b, 30b)
-@@ -177,7 +177,7 @@ ENTRY(copy_user_generic_string)
- 	.section .fixup,"ax"
- 11:	leal (%rdx,%rcx,8),%ecx
- 12:	movl %ecx,%edx		/* ecx is zerorest also */
--	jmp copy_user_handle_tail
-+	jmp .Lcopy_user_handle_tail
- 	.previous
- 
- 	_ASM_EXTABLE_UA(1b, 11b)
-@@ -210,7 +210,7 @@ ENTRY(copy_user_enhanced_fast_string)
- 
- 	.section .fixup,"ax"
- 12:	movl %ecx,%edx		/* ecx is zerorest also */
--	jmp copy_user_handle_tail
-+	jmp .Lcopy_user_handle_tail
- 	.previous
- 
- 	_ASM_EXTABLE_UA(1b, 12b)
-@@ -231,7 +231,7 @@ EXPORT_SYMBOL(copy_user_enhanced_fast_string)
-  * eax uncopied bytes or 0 if successful.
-  */
- ALIGN;
--copy_user_handle_tail:
-+.Lcopy_user_handle_tail:
- 	movl %edx,%ecx
- 1:	rep movsb
- 2:	mov %ecx,%eax
-@@ -239,7 +239,7 @@ copy_user_handle_tail:
- 	ret
- 
- 	_ASM_EXTABLE_UA(1b, 2b)
--END(copy_user_handle_tail)
-+END(.Lcopy_user_handle_tail)
- 
- /*
-  * copy_user_nocache - Uncached memory copy with exception handling
-@@ -364,7 +364,7 @@ ENTRY(__copy_user_nocache)
- 	movl %ecx,%edx
- .L_fixup_handle_tail:
- 	sfence
--	jmp copy_user_handle_tail
-+	jmp .Lcopy_user_handle_tail
- 	.previous
- 
- 	_ASM_EXTABLE_UA(1b, .L_fixup_4x8b_copy)
-diff --git a/arch/x86/lib/getuser.S b/arch/x86/lib/getuser.S
-index 304f958c27b2..9578eb88fc87 100644
---- a/arch/x86/lib/getuser.S
-+++ b/arch/x86/lib/getuser.S
-@@ -115,7 +115,7 @@ ENDPROC(__get_user_8)
- EXPORT_SYMBOL(__get_user_8)
- 
- 
--bad_get_user_clac:
-+.Lbad_get_user_clac:
- 	ASM_CLAC
- bad_get_user:
- 	xor %edx,%edx
-@@ -123,7 +123,7 @@ bad_get_user:
- 	ret
- 
- #ifdef CONFIG_X86_32
--bad_get_user_8_clac:
-+.Lbad_get_user_8_clac:
- 	ASM_CLAC
- bad_get_user_8:
- 	xor %edx,%edx
-@@ -132,12 +132,12 @@ bad_get_user_8:
- 	ret
- #endif
- 
--	_ASM_EXTABLE_UA(1b, bad_get_user_clac)
--	_ASM_EXTABLE_UA(2b, bad_get_user_clac)
--	_ASM_EXTABLE_UA(3b, bad_get_user_clac)
-+	_ASM_EXTABLE_UA(1b, .Lbad_get_user_clac)
-+	_ASM_EXTABLE_UA(2b, .Lbad_get_user_clac)
-+	_ASM_EXTABLE_UA(3b, .Lbad_get_user_clac)
- #ifdef CONFIG_X86_64
--	_ASM_EXTABLE_UA(4b, bad_get_user_clac)
-+	_ASM_EXTABLE_UA(4b, .Lbad_get_user_clac)
- #else
--	_ASM_EXTABLE_UA(4b, bad_get_user_8_clac)
--	_ASM_EXTABLE_UA(5b, bad_get_user_8_clac)
-+	_ASM_EXTABLE_UA(4b, .Lbad_get_user_8_clac)
-+	_ASM_EXTABLE_UA(5b, .Lbad_get_user_8_clac)
- #endif
-diff --git a/arch/x86/lib/putuser.S b/arch/x86/lib/putuser.S
-index 14bf78341d3c..126dd6a9ec9b 100644
---- a/arch/x86/lib/putuser.S
-+++ b/arch/x86/lib/putuser.S
-@@ -37,7 +37,7 @@
- ENTRY(__put_user_1)
- 	ENTER
- 	cmp TASK_addr_limit(%_ASM_BX),%_ASM_CX
--	jae bad_put_user
-+	jae .Lbad_put_user
- 	ASM_STAC
- 1:	movb %al,(%_ASM_CX)
- 	xor %eax,%eax
-@@ -51,7 +51,7 @@ ENTRY(__put_user_2)
- 	mov TASK_addr_limit(%_ASM_BX),%_ASM_BX
- 	sub $1,%_ASM_BX
- 	cmp %_ASM_BX,%_ASM_CX
--	jae bad_put_user
-+	jae .Lbad_put_user
- 	ASM_STAC
- 2:	movw %ax,(%_ASM_CX)
- 	xor %eax,%eax
-@@ -65,7 +65,7 @@ ENTRY(__put_user_4)
- 	mov TASK_addr_limit(%_ASM_BX),%_ASM_BX
- 	sub $3,%_ASM_BX
- 	cmp %_ASM_BX,%_ASM_CX
--	jae bad_put_user
-+	jae .Lbad_put_user
- 	ASM_STAC
- 3:	movl %eax,(%_ASM_CX)
- 	xor %eax,%eax
-@@ -79,7 +79,7 @@ ENTRY(__put_user_8)
- 	mov TASK_addr_limit(%_ASM_BX),%_ASM_BX
- 	sub $7,%_ASM_BX
- 	cmp %_ASM_BX,%_ASM_CX
--	jae bad_put_user
-+	jae .Lbad_put_user
- 	ASM_STAC
- 4:	mov %_ASM_AX,(%_ASM_CX)
- #ifdef CONFIG_X86_32
-@@ -91,16 +91,16 @@ ENTRY(__put_user_8)
- ENDPROC(__put_user_8)
- EXPORT_SYMBOL(__put_user_8)
- 
--bad_put_user_clac:
-+.Lbad_put_user_clac:
- 	ASM_CLAC
--bad_put_user:
-+.Lbad_put_user:
- 	movl $-EFAULT,%eax
- 	RET
- 
--	_ASM_EXTABLE_UA(1b, bad_put_user_clac)
--	_ASM_EXTABLE_UA(2b, bad_put_user_clac)
--	_ASM_EXTABLE_UA(3b, bad_put_user_clac)
--	_ASM_EXTABLE_UA(4b, bad_put_user_clac)
-+	_ASM_EXTABLE_UA(1b, .Lbad_put_user_clac)
-+	_ASM_EXTABLE_UA(2b, .Lbad_put_user_clac)
-+	_ASM_EXTABLE_UA(3b, .Lbad_put_user_clac)
-+	_ASM_EXTABLE_UA(4b, .Lbad_put_user_clac)
- #ifdef CONFIG_X86_32
--	_ASM_EXTABLE_UA(5b, bad_put_user_clac)
-+	_ASM_EXTABLE_UA(5b, .Lbad_put_user_clac)
- #endif
--- 
-2.23.0
+Yes.
 
+> > +{
+> > +	int r;
+> > +
+> > +	if (cap->flags)
+> > +		return -EINVAL;
+> > +
+> > +	switch (cap->cap) {
+> > +	case KVM_CAP_ARM_NISV_TO_USER:
+> > +		r = 0;
+> > +		kvm->arch.return_nisv_io_abort_to_user = true;
+> > +		break;
+> > +	default:
+> > +		r = -EINVAL;
+> > +		break;
+> > +	}
+> > +
+> > +	return r;
+> > +}
+> > 
+> >   /**
+> >    * kvm_arch_init_vm - initializes a VM data structure
+> > @@ -196,6 +216,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+> >   	case KVM_CAP_MP_STATE:
+> >   	case KVM_CAP_IMMEDIATE_EXIT:
+> >   	case KVM_CAP_VCPU_EVENTS:
+> > +	case KVM_CAP_ARM_NISV_TO_USER:
+> >   		r = 1;
+> >   		break;
+> >   	case KVM_CAP_ARM_SET_DEVICE_ADDR:
+> > @@ -673,6 +694,8 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> >   		ret = kvm_handle_mmio_return(vcpu, vcpu->run);
+> >   		if (ret)
+> >   			return ret;
+> > +	} else if (run->exit_reason == KVM_EXIT_ARM_NISV) {
+> > +		kvm_inject_undefined(vcpu);
+> 
+> So QEMU can try to enable the feature via IOCTL. And here you would
+> raise the 'undefined instruction' exception which QEMU will have to
+> handle in the loop calling KVM either by trying to make sense of the
+> instruction or by passing it on to the guest.
+> 
+> Conceptually this looks good to me and meets the requirements of my
+> application.
+> 
+> Thanks a lot for your suggestion.
+> 
+
+I will change the undef to an external abort as I think that's more in
+line with the architecture, and document this, test and send out as a
+proper patch.
+
+Thanks,
+
+    Christoffer
