@@ -2,135 +2,199 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D88EAC00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F3CCC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCC5D20842
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:03:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B9862082C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:04:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567771486;
+	bh=WfoAJJZMZguzaett0OpZ0X99wYOeh8fyA9s9NQ3IimU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=F7WgcsFOR6ezUdgqyKpV9qvPPbzCRYFuVe7PRyAqJ4lFZz4d4vlGgAJaJ/WTOKGiX
+	 mwg5oyJrlcphzr8zwAoIjlv+VLzoMx57BWIKJzXakVcTnzjT3U2Y7VtMrQDH/OkLG4
+	 RQdjjqOV/18eEKB9ORA99xkRvmflk6hCT0rkUukw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391664AbfIFMDM (ORCPT
+        id S2404158AbfIFMEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 08:03:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42988 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389504AbfIFMDL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 08:03:11 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7EC002F30C1;
-        Fri,  6 Sep 2019 12:03:11 +0000 (UTC)
-Received: from localhost (ovpn-117-208.ams2.redhat.com [10.36.117.208])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EB1B05D784;
-        Fri,  6 Sep 2019 12:03:10 +0000 (UTC)
-Date:   Fri, 6 Sep 2019 13:03:09 +0100
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, miklos@szeredi.hu,
-        linux-kernel@vger.kernel.org, virtio-fs@redhat.com,
-        dgilbert@redhat.com, mst@redhat.com
-Subject: Re: [PATCH 15/18] virtiofs: Make virtio_fs object refcounted
-Message-ID: <20190906120309.GW5900@stefanha-x1.localdomain>
-References: <20190905194859.16219-1-vgoyal@redhat.com>
- <20190905194859.16219-16-vgoyal@redhat.com>
+        Fri, 6 Sep 2019 08:04:45 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:43894 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403871AbfIFMEp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 08:04:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=IjejP0JivUPaE/S6eWHK4rjSZSkDVH4JEZl30906qmU=; b=TZO9dy/zykqjfF5gYELED+err
+        g9eAVNvO5sW+n3QneUdSqvb1Vd44f/J0O8+loUFhz5zsZXQcmGuSTmfjl9eVgjtzj+UsDc+GtLHpx
+        eZEMUroQVUryQIaXI7DXo2LGTtWohIVdg6/pxkLLAf5fCzLRKdf7k4VE06CPcTadO7xya3rCKuOkR
+        npvZJ0hGEwJtzqNgTMk413/SUX1HL++TDIA9za7FfR8OSSc4At2oNXJeWC0rWa6sEBccOwE8Ws3UX
+        Q34s4BTcCOURRylXnfy8JcSRKm1s8VYPMlx/2sBEX5J9/gzfF7RXSUGlvjYTz+NKmtIY3OcH1mme+
+        ohI6XjTvw==;
+Received: from [177.159.253.249] (helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i6Cyq-0006Cw-EP; Fri, 06 Sep 2019 12:04:44 +0000
+Date:   Fri, 6 Sep 2019 09:04:39 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Media Mailing List <linux-media@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Sven Eckelmann <sven@narfation.org>,
+        Thierry Reding <treding@nvidia.com>,
+        =?UTF-8?B?QXVyw6lsaWVu?= Cedeyn <aurelien.cedeyn@gmail.com>,
+        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>
+Subject: [PATCH v2 6/6] scripts/spdxcheck.py: check if the line number
+ follows the strict rule
+Message-ID: <20190906090439.37b8d334@coco.lan>
+In-Reply-To: <1b7b5c906646f8165fd818ec9e400609d7a7290b.1567712829.git.mchehab+samsung@kernel.org>
+References: <cover.1567712829.git.mchehab+samsung@kernel.org>
+        <1b7b5c906646f8165fd818ec9e400609d7a7290b.1567712829.git.mchehab+samsung@kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="fCmRXBY78W5odcVA"
-Content-Disposition: inline
-In-Reply-To: <20190905194859.16219-16-vgoyal@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Fri, 06 Sep 2019 12:03:11 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+There is a very strict rule saying on what line a SPDX header
+should be. Add an optional pedantic check for it.
 
---fCmRXBY78W5odcVA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+When the check is enabled, it will verify if the file has the
+SPDX header "at the first possible line in a file which can contain
+a comment", as stated at:
 
-On Thu, Sep 05, 2019 at 03:48:56PM -0400, Vivek Goyal wrote:
-> This object is used both by fuse_connection as well virt device. So make
-> this object reference counted and that makes it easy to define life cycle
-> of the object.
->=20
-> Now deivce can be removed while filesystem is still mounted. This will
-> cleanup all the virtqueues but virtio_fs object will still be around and
-> will be cleaned when filesystem is unmounted and sb/fc drops its referenc=
-e.
->=20
-> Removing a device also stops all virt queues and any new reuqest gets
-> error -ENOTCONN. All existing in flight requests are drained before
-> ->remove returns.
->=20
-> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-> ---
->  fs/fuse/virtio_fs.c | 52 +++++++++++++++++++++++++++++++++++++--------
->  1 file changed, 43 insertions(+), 9 deletions(-)
->=20
-> diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
-> index 01bbf2c0e144..29ec2f5bbbe2 100644
-> --- a/fs/fuse/virtio_fs.c
-> +++ b/fs/fuse/virtio_fs.c
-> @@ -37,6 +37,7 @@ struct virtio_fs_vq {
-> =20
->  /* A virtio-fs device instance */
->  struct virtio_fs {
-> +	struct kref refcount;
->  	struct list_head list;    /* on virtio_fs_instances */
->  	char *tag;
->  	struct virtio_fs_vq *vqs;
-> @@ -63,6 +64,27 @@ static inline struct fuse_pqueue *vq_to_fpq(struct vir=
-tqueue *vq)
->  	return &vq_to_fsvq(vq)->fud->pq;
->  }
-> =20
-> +static void release_virtiofs_obj(struct kref *ref)
-> +{
-> +	struct virtio_fs *vfs =3D container_of(ref, struct virtio_fs, refcount);
-> +
-> +	kfree(vfs->vqs);
-> +	kfree(vfs);
-> +}
-> +
-> +static void virtiofs_put(struct virtio_fs *fs)
+	Documentation/process/license-rules.rst
 
-Why do the two function names above contain "virtiofs" instead
-of "virtio_fs"?  I'm not sure if this is intentional and is supposed to
-mean something, but it's confusing.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-> +{
-> +	mutex_lock(&virtio_fs_mutex);
-> +	kref_put(&fs->refcount, release_virtiofs_obj);
-> +	mutex_unlock(&virtio_fs_mutex);
-> +}
-> +
-> +static void virtio_fs_put(struct fuse_iqueue *fiq)
-
-Minor issue: this function name is confusingly similar to
-virtiofs_put().  Please rename to virtio_fs_fiq_put().
-
---fCmRXBY78W5odcVA
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl1ySv0ACgkQnKSrs4Gr
-c8gi5QgAiBUMFExTxgTgb6RrUfkYvhvR0YjuN8ik/lgPSvOOVMtT6LMM77ysQauR
-LdWnlChQQCMbdamE0Z1RjdPlj461cs3RjPH7QHZtimEOeYBUQegMuOx2aPcLj55u
-LCaJauSLzpxYlNKcEFKlmrfaVNAoFRFcFMsAUt5qekoK1mhtcFQ1TYwXyJdqObUY
-sYK5tPk2nJvMkeRHr84V8fpI0WiyQU+6okJnEfNUYmx+p1qn7VjIPsGq+Yz4MLF8
-baWiJFLjWRFvW6STaaams5Yx4VI3jNtUI7qvikpuOkYWzwQfvv6qbH/RDYk5j5d1
-/yxvM1H6W/rDyI1qYOi1etkBab+HEg==
-=p10d
------END PGP SIGNATURE-----
-
---fCmRXBY78W5odcVA--
+diff --git a/scripts/spdxcheck.py b/scripts/spdxcheck.py
+index c969b050366f..920cceb0d036 100755
+--- a/scripts/spdxcheck.py
++++ b/scripts/spdxcheck.py
+@@ -164,9 +164,18 @@ class id_parser(object):
+         self.lastid = None
+         self.parser.parse(expr, lexer = self.lexer)
+ 
+-    def parse_lines(self, fd, maxlines, fname):
++    def parse_lines(self, fd, maxlines, fname, strict):
+         self.checked += 1
+         self.curline = 0
++        self.max_line = 1
++        self.is_python = False
++
++        if fname.endswith(".py"):
++            self.is_python = True
++
++        if fname.find("COPYING") >= 0:
++            self.max_line = maxlines
++
+         try:
+             for line in fd:
+                 line = line.decode(locale.getpreferredencoding(False), errors='ignore')
+@@ -174,6 +183,13 @@ class id_parser(object):
+                 if self.curline > maxlines:
+                     break
+                 self.lines_checked += 1
++                if self.curline == 1:
++		    if re.match("\#\!", line):
++                        self.max_line = 2
++			if re.match("\#\!.*python", line):
++			    is_python = True
++                if self.curline <= 2 and self.is_python and re.match("^[ \t\f]*#.*?coding[:=][ \t]*([-_.a-zA-Z0-9]+)", line):
++                        self.max_line += 1
+                 if line.find("SPDX-License-Identifier:") < 0:
+                     continue
+                 expr = line.split(':')[1].strip()
+@@ -189,6 +205,8 @@ class id_parser(object):
+                 # Should we check for more SPDX ids in the same file and
+                 # complain if there are any?
+                 #
++                if strict and self.curline > self.max_line:
++                    sys.stderr.write('Warning: SPDX header for file %s is at line %d\n' % (fname,self.curline))
+                 return self.curline - 1
+ 
+             return -1
+@@ -202,7 +220,7 @@ class id_parser(object):
+                 sys.stdout.write('%s: %d:0 %s\n' %(fname, self.curline, col, pe.txt))
+             self.spdx_errors += 1
+ 
+-def scan_git_tree(ln_count, tree):
++def scan_git_tree(ln_count, tree, strict):
+     for el in tree.traverse():
+         # Exclude stuff which would make pointless noise
+         # FIXME: Put this somewhere more sensible
+@@ -213,15 +231,15 @@ def scan_git_tree(ln_count, tree):
+         if not os.path.isfile(el.path):
+             continue
+         with open(el.path, 'rb') as fd:
+-            ln = parser.parse_lines(fd, args.maxlines, el.path)
++            ln = parser.parse_lines(fd, args.maxlines, el.path, strict)
+             if ln >= 0:
+                 ln_count[ln] += 1;
+     return ln_count
+ 
+-def scan_git_subtree(ln_count, tree, path):
++def scan_git_subtree(ln_count, tree, path, strict):
+     for p in path.strip('/').split('/'):
+         tree = tree[p]
+-    scan_git_tree(ln_count, tree)
++    scan_git_tree(ln_count, tree, strict)
+ 
+ if __name__ == '__main__':
+ 
+@@ -231,6 +249,7 @@ if __name__ == '__main__':
+                     help='Maximum number of lines to scan in a file. Default 15')
+     ap.add_argument('-v', '--verbose', action='store_true', help='Verbose statistics output')
+     ap.add_argument('-H', '--histogram', action='store_true', help='Verbose histogram about SPDX header position')
++    ap.add_argument('-s', '--strict', action='store_true', help='Enable strict mode, making it complain about SPDX line position')
+     args = ap.parse_args()
+ 
+     # Sanity check path arguments
+@@ -266,7 +285,7 @@ if __name__ == '__main__':
+     try:
+         if len(args.path) and args.path[0] == '-':
+             stdin = os.fdopen(sys.stdin.fileno(), 'rb')
+-            ln = parser.parse_lines(stdin, args.maxlines, '-')
++            ln = parser.parse_lines(stdin, args.maxlines, '-', args.strict)
+             if ln >= 0:
+                 ln_count[ln] += 1;
+ 
+@@ -274,18 +293,18 @@ if __name__ == '__main__':
+             if args.path:
+                 for p in args.path:
+                     if os.path.isfile(p):
+-                        ln = parser.parse_lines(open(p, 'rb'), args.maxlines, p)
++                        ln = parser.parse_lines(open(p, 'rb'), args.maxlines, p, args.strict)
+                         if ln >= 0:
+                             ln_count[ln] += 1;
+ 
+                     elif os.path.isdir(p):
+-                        scan_git_subtree(ln_count, repo.head.reference.commit.tree, p)
++                        scan_git_subtree(ln_count, repo.head.reference.commit.tree, p, args.strict)
+                     else:
+                         sys.stderr.write('path %s does not exist\n' %p)
+                         sys.exit(1)
+             else:
+                 # Full git tree scan
+-                scan_git_tree(ln_count, repo.head.commit.tree)
++                scan_git_tree(ln_count, repo.head.commit.tree, args.strict)
+ 
+             if args.verbose:
+                 sys.stderr.write('\n')
