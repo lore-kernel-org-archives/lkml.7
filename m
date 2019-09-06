@@ -2,140 +2,111 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D42C43140
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4B3C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 310DE2084F
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:14:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D925D2084F
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:14:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="CQCgygnX"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IHImL/hk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391641AbfIFKOP (ORCPT
+        id S2391862AbfIFKOR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 06:14:15 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:50704 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391468AbfIFKOJ (ORCPT
+        Fri, 6 Sep 2019 06:14:17 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:34744 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391487AbfIFKON (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 06:14:09 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190906101408euoutp0182849b2ce3727f6252f35d5b8906ad2c~B0dLLNFZR0823508235euoutp01V
-        for <linux-kernel@vger.kernel.org>; Fri,  6 Sep 2019 10:14:08 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190906101408euoutp0182849b2ce3727f6252f35d5b8906ad2c~B0dLLNFZR0823508235euoutp01V
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1567764848;
-        bh=Uy8PbI8Ay//0lPtuuye0Cr4E/yS+/gJgE62W7KlqB88=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CQCgygnXTSwu9J3NMtmTbRo5PQsMCHxALB/4rf5EbR3cPYDcbGzq3u3IuLNYfhve7
-         0OUnU4APEZlGmGHboMDn/4+r5qUxumXG6vPYZSGJPGBJit/prRsEgZqtpzJgGkJ15F
-         kuZkheL+2siTQWH9x18a6ZB8y/rLI7gYD3XGems4=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190906101407eucas1p2f83ea12590aa7a81bd1367620314c2fa~B0dKKYx-J0426804268eucas1p2K;
-        Fri,  6 Sep 2019 10:14:07 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 17.F8.04374.F61327D5; Fri,  6
-        Sep 2019 11:14:07 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190906101406eucas1p289695a398d757b116367257293c3544d~B0dJQJNPf0165101651eucas1p2V;
-        Fri,  6 Sep 2019 10:14:06 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190906101406eusmtrp2bd76666accd9da1e19564368dabf7995~B0dJB4LdS3160331603eusmtrp2Q;
-        Fri,  6 Sep 2019 10:14:06 +0000 (GMT)
-X-AuditID: cbfec7f5-4ddff70000001116-3e-5d72316f3170
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 5D.03.04117.E61327D5; Fri,  6
-        Sep 2019 11:14:06 +0100 (BST)
-Received: from AMDC3778.DIGITAL.local (unknown [106.120.51.20]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190906101405eusmtip1d3d6b902b9c7631ac6f5e54f2daa3811~B0dINg9fb0073200732eusmtip1v;
-        Fri,  6 Sep 2019 10:14:05 +0000 (GMT)
-From:   Lukasz Luba <l.luba@partner.samsung.com>
-To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org, cw00.choi@samsung.com,
-        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
-        willy.mh.wolff.ml@gmail.com,
-        Lukasz Luba <l.luba@partner.samsung.com>
-Subject: [PATCH 2/3] ARM: dts: exynos: fix too long line in memory device
-Date:   Fri,  6 Sep 2019 12:13:43 +0200
-Message-Id: <20190906101344.3535-3-l.luba@partner.samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190906101344.3535-1-l.luba@partner.samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrMKsWRmVeSWpSXmKPExsWy7djP87r5hkWxBm3XOCw2zljPanH9y3NW
-        i/lHzrFa9D9+zWxx/vwGdouzTW/YLW41yFhsenyN1eLyrjlsFp97jzBazDi/j8li7ZG77BZL
-        r19ksrjduILNonXvEXaLw2/aWS2+nXjE6CDosWbeGkaPnbPusntsWtXJ5rF5Sb3HwXd7mDz6
-        tqxi9Pi8SS6APYrLJiU1J7MstUjfLoErY8eBy8wFz9kq9t5ZyNTAeJm1i5GTQ0LAROL7n/ts
-        XYxcHEICKxgl3v//yALhfGGUuDn5PiuE85lRYsK7HcxdjBxgLR9XFUHElzNKrGrfzgrXsWd6
-        IwtIEZuAnsSOVYUgK0QEFjNKfDscBWIzC2xjkuj9KgNiCwt4SrRfngB2BouAqsTKw0dZQGxe
-        ATuJQ39Os0CcJy+xesMBZhCbU8BeYtL6qWDXSQgcY5e4+fY8O0SRi8SxvSA/gNjCEq+Ob4GK
-        y0j83zmfCcIulmjoXcgIYddIPO6fC1VjLXH4+EVWkJuZBTQl1u/Shwg7Sux9+5IJ4l8+iRtv
-        BSHO55OYtG06NBh4JTrahCCqNSS29FyAWiQmsXzNNKjhHhIvH9xjgoTOJEaJ9l+LmCYwys9C
-        WLaAkXEVo3hqaXFuemqxcV5quV5xYm5xaV66XnJ+7iZGYFI6/e/41x2M+/4kHWIU4GBU4uEV
-        +FIQK8SaWFZcmXuIUYKDWUmEd/1GoBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXHeaoYH0UIC6Ykl
-        qdmpqQWpRTBZJg5OqQbGaUdPOewUTBWUO3p2idMFVctc1YwdHuX3/9myv3kVIV3quzf6il27
-        +BTz/b03jDf9u1H4+OnZs0VTZn9X/tr7wse+cNmWPXXzX5lpyFb2nmmdUmU3+d0L7yfB7M+5
-        c2McZ+/aOyt015+wTw9vHLuVq7ci/kqPzdr1cn5Ns0/aZ92pKP6h3cMYrMRSnJFoqMVcVJwI
-        APOi1dVGAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprGIsWRmVeSWpSXmKPExsVy+t/xu7p5hkWxBn+P8llsnLGe1eL6l+es
-        FvOPnGO16H/8mtni/PkN7BZnm96wW9xqkLHY9Pgaq8XlXXPYLD73HmG0mHF+H5PF2iN32S2W
-        Xr/IZHG7cQWbReveI+wWh9+0s1p8O/GI0UHQY828NYweO2fdZffYtKqTzWPzknqPg+/2MHn0
-        bVnF6PF5k1wAe5SeTVF+aUmqQkZ+cYmtUrShhZGeoaWFnpGJpZ6hsXmslZGpkr6dTUpqTmZZ
-        apG+XYJexo4Dl5kLnrNV7L2zkKmB8TJrFyMHh4SAicTHVUVdjFwcQgJLGSWun2gBinMCxcUk
-        Ju3bzg5hC0v8udbFBmILCXxilHg9twykl01AT2LHqkKQXhGB5YwSx1a9ZQZxmAWOMEn075oH
-        NkhYwFOi/fIEMJtFQFVi5eGjLCA2r4CdxKE/p1kgFshLrN5wgBnE5hSwl5i0fioLxDI7iV1T
-        OlkmMPItYGRYxSiSWlqcm55bbKRXnJhbXJqXrpecn7uJERgn24793LKDsetd8CFGAQ5GJR5e
-        gS8FsUKsiWXFlbmHGCU4mJVEeNdvBArxpiRWVqUW5ccXleakFh9iNAU6aiKzlGhyPjCG80ri
-        DU0NzS0sDc2NzY3NLJTEeTsEDsYICaQnlqRmp6YWpBbB9DFxcEo1MF5f3u893+KudFF+kofU
-        W/a90vkR39wcjDSYRTLnZTMo1bGFXO0sunL+JdujWP81r9+vy//HZ7FmNvMDXdXNJ6WObpgg
-        LZKw5W5Gj+rszz1pm9j7Gt7lCN99Kbz1SOt6Y/bilgefBKxX8nHWBMz4LCqQfPrSZP4jzDMX
-        7xb+cj3fYEufBye/lBJLcUaioRZzUXEiAEV82JepAgAA
-X-CMS-MailID: 20190906101406eucas1p289695a398d757b116367257293c3544d
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190906101406eucas1p289695a398d757b116367257293c3544d
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190906101406eucas1p289695a398d757b116367257293c3544d
-References: <20190906101344.3535-1-l.luba@partner.samsung.com>
-        <CGME20190906101406eucas1p289695a398d757b116367257293c3544d@eucas1p2.samsung.com>
+        Fri, 6 Sep 2019 06:14:13 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x86ADnO6003918;
+        Fri, 6 Sep 2019 10:13:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=9ZMm+KBPOZqRS75mZ7031RkVZwnvS9z1Wx5ZMZLh53E=;
+ b=IHImL/hkpYOt1DBem1nyKiRma41Tt63AdsBBMTsHoMHCrk4qYIyF8MEAUudo0LBszc00
+ EuEYKFG28HacWSmOii8pkGPNVO5KH4N+ogm3MKctbmUOAe8XSffQPwjpR/djF0MeTS43
+ qu7y5p/eZMCCzVW+Nxo48gHxAPrZTUsg01mGXwRysBu7ECLmGLWehZc36MYaFRjmrRxZ
+ JW0axSSHVkyH6JbOyFgFvTvHmvAOdYybAC1pT3cv218pWD73PQBNAdPm8eHYogsrDIjR
+ qVkeHtFBEToIrfgdFEQjQVSaT5P2qs7nRImhdOdknH7ihjx/pXX5mv3gIGky60w4eZ8Q pQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2uungtg02d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 Sep 2019 10:13:59 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x86ADoDW032312;
+        Fri, 6 Sep 2019 10:13:58 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2uum4gu7f3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 Sep 2019 10:13:58 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x86ADINC020397;
+        Fri, 6 Sep 2019 10:13:18 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 06 Sep 2019 03:13:18 -0700
+Date:   Fri, 6 Sep 2019 13:13:06 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Dan Elkouby <streetwalkermc@gmail.com>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Fabian Henneke <fabian.henneke@gmail.com>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Bluetooth: hidp: Fix error checks in
+ hidp_get/set_raw_report
+Message-ID: <20190906101306.GA12017@kadam>
+References: <20190906094158.8854-1-streetwalkermc@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190906094158.8854-1-streetwalkermc@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=927
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1909060108
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=992 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1909060108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Small fix moving the comment to line above making sure the lines do not
-exceed 80 characters.
+On Fri, Sep 06, 2019 at 12:41:57PM +0300, Dan Elkouby wrote:
+> Commit 48d9cc9d85dd ("Bluetooth: hidp: Let hidp_send_message return
+> number of queued bytes") changed hidp_send_message to return non-zero
+> values on success, which some other bits did not expect. This caused
+> spurious errors to be propagated through the stack, breaking some (all?)
+> drivers, such as hid-sony for the Dualshock 4 in Bluetooth mode.
+> 
+> Signed-off-by: Dan Elkouby <streetwalkermc@gmail.com>
 
-Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
----
- arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+I think we also need to update update ms_ff_worker() which assumes that
+hid_hw_output_report() returns zero on success.  Please use the Fixes
+tag for this since a lot of scripts rely on it to decide what to
+backport.
 
-diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-index fe885ca969af..059fa32d1a8f 100644
---- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-+++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-@@ -103,7 +103,8 @@
- 
- 		timings_samsung_K3QF2F20DB_800mhz: lpddr3-timings@800000000 {
- 			compatible	= "jedec,lpddr3-timings";
--			reg		= <800000000>; /* workaround: it shows max-freq */
-+			/* workaround: 'reg' shows max-freq */
-+			reg		= <800000000>;
- 			min-freq	= <100000000>;
- 			tRFC		= <65000>;
- 			tRRD		= <6000>;
--- 
-2.17.1
+Fixes: 48d9cc9d85dd ("Bluetooth: hidp: Let hidp_send_message return number of queued bytes")
+
+Otherwise, it looks good.  Thanks for catching this.
+
+regards,
+dan carpenter
 
