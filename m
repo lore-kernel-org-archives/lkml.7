@@ -2,29 +2,29 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2467C00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C07D6C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A400F206B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A331E20842
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:53:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405304AbfIFNxZ (ORCPT
+        id S2405316AbfIFNx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 09:53:25 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:60407 "EHLO
+        Fri, 6 Sep 2019 09:53:28 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:43221 "EHLO
         relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727143AbfIFNxZ (ORCPT
+        with ESMTP id S1727143AbfIFNx2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 09:53:25 -0400
+        Fri, 6 Sep 2019 09:53:28 -0400
 X-Originating-IP: 2.224.242.101
 Received: from uno.lan (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
         (Authenticated sender: jacopo@jmondi.org)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 9D240FF805;
-        Fri,  6 Sep 2019 13:53:17 +0000 (UTC)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 976AAFF809;
+        Fri,  6 Sep 2019 13:53:23 +0000 (UTC)
 From:   Jacopo Mondi <jacopo+renesas@jmondi.org>
 To:     laurent.pinchart@ideasonboard.com,
         kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
@@ -34,11 +34,14 @@ Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>, airlied@linux.ie,
         daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
         Harsha.ManjulaMallikarjun@in.bosch.com,
         linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 0/9 drm: rcar-du: Add Color Management Module (CMM)
-Date:   Fri,  6 Sep 2019 15:54:27 +0200
-Message-Id: <20190906135436.10622-1-jacopo+renesas@jmondi.org>
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com
+Subject: [PATCH v4 1/9] dt-bindings: display: renesas,cmm: Add R-Car CMM documentation
+Date:   Fri,  6 Sep 2019 15:54:28 +0200
+Message-Id: <20190906135436.10622-2-jacopo+renesas@jmondi.org>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190906135436.10622-1-jacopo+renesas@jmondi.org>
+References: <20190906135436.10622-1-jacopo+renesas@jmondi.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -46,101 +49,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Ugh, sorry for the double sending, but I forgot --cc-cover to git-send
-  email and the series has not been delivered to the mailing lists.
-  Sorry about that. ]
+Add device tree bindings documentation for the Renesas R-Car Display
+Unit Color Management Module.
 
-Hello, new iteration of CMM support, with quite a few changes compared to
-v3:
+CMM is the image enhancement module available on each R-Car DU video
+channel on R-Car Gen2 and Gen3 SoCs (V3H and V3M excluded).
 
-References:
-A reference to the v1 cover letter, with some background on the CMM is
-available here:
-https://lkml.org/lkml/2019/6/6/583
-v2:
-https://lore.kernel.org/linux-renesas-soc/20190706140746.29132-10-jacopo+renesas@jmondi.org/
-v3:
-https://lore.kernel.org/linux-renesas-soc/20190825135154.11488-1-jacopo+renesas@jmondi.org/
-
-Change log:
-
-*Bindings/DT:
-- Rebased on renesas-devel-2019-09-03-v5.3-rc7
-- Bindings converted to yaml: thanks Laurent for help
-- s/'cmms'/'renesas,cmms'/ in DU bindings as suggested by Rob
-- s/cmm-<soctype>/<soctype>-cmm/ as suggested by Geert
-- squashed CMM addition for Gen3 SoCs in a single path at the end of
-  the series
-
-*CMM/DU:
-- Only accept fully populated LUT tables, remove the 'size' from the CMM
-  configuration structure as suggested by Laurent
-- Simplify CMM configuration logic: only rely on color_mgmt_changed flag and
-  unconditionally provide a populated LUT table to the cmm_setup() function
-- Protect against probing order inversion (DU is operation while CMM still has
-  not been probed) by adding rcar_cmm_init() operation as it is done for VSP as
-  suggested by Laurent
-- Add CMM function stubs to fix compilation erros when CONFIG_DRM_RCAR_CMM is
-  not selected
-- Minors in the CMM driver as suggested by Laurent
-  - Remove per-soc strings
-  - Make comments style consistent (not using /** anywhere in the .c file,
-    unify comment style)
-  - s/rcar_cmm_load()/rcar_cmm_write()/
-  - Squash cmm configuration and suspend/resume support in rcar_du_kms.c
-
-Testing:
-I have tested by injecting a color inversion LUT table at test program
-initialization:
-https://jmondi.org/cgit/kmsxx/commit/?h=gamma_lut&id=3c6af4db165e5b3dc8996f0a288746c35dbb1cb9
-And by changing the CMM content to switch between a color inversion table
-and a linear table every 50 frames:
-https://jmondi.org/cgit/kmsxx/commit/?h=gamma_lut&id=fe178a43861da7c8e79618e2a13fa0f19dbcd03d
-
-Pretty happy with the result, which seems to be consistent across system
-suspend/resume.
-
-Testing with real world use cases might be beneficial. Rajesh are you still
-interested in giving this series a spin?
-
-Thanks
-  j
-
-Jacopo Mondi (9):
-  dt-bindings: display: renesas,cmm: Add R-Car CMM documentation
-  dt-bindings: display, renesas,du: Document cmms property
-  drm: rcar-du: Add support for CMM
-  drm: rcar-du: Claim CMM support for Gen3 SoCs
-  drm: rcar-du: kms: Initialize CMM instances
-  drm: rcar-du: crtc: Enable and disable CMMs
-  drm: rcar-du: crtc: Register GAMMA_LUT properties
-  drm: rcar-du: kms: Update CMM in atomic commit tail
-  arm64: dts: renesas: Add CMM units to Gen3 SoCs
-
- .../bindings/display/renesas,cmm.yaml         |  64 +++++
- .../bindings/display/renesas,du.txt           |   5 +
- arch/arm64/boot/dts/renesas/r8a7795.dtsi      |  40 ++-
- arch/arm64/boot/dts/renesas/r8a7796.dtsi      |  28 ++
- arch/arm64/boot/dts/renesas/r8a77965.dtsi     |  28 ++
- arch/arm64/boot/dts/renesas/r8a77990.dtsi     |  22 +-
- arch/arm64/boot/dts/renesas/r8a77995.dtsi     |  22 +-
- drivers/gpu/drm/rcar-du/Kconfig               |   7 +
- drivers/gpu/drm/rcar-du/Makefile              |   1 +
- drivers/gpu/drm/rcar-du/rcar_cmm.c            | 251 ++++++++++++++++++
- drivers/gpu/drm/rcar-du/rcar_cmm.h            |  61 +++++
- drivers/gpu/drm/rcar-du/rcar_du_crtc.c        |  17 ++
- drivers/gpu/drm/rcar-du/rcar_du_crtc.h        |   2 +
- drivers/gpu/drm/rcar-du/rcar_du_drv.c         |  32 ++-
- drivers/gpu/drm/rcar-du/rcar_du_drv.h         |   3 +
- drivers/gpu/drm/rcar-du/rcar_du_group.c       |   8 +
- drivers/gpu/drm/rcar-du/rcar_du_group.h       |   2 +
- drivers/gpu/drm/rcar-du/rcar_du_kms.c         | 106 ++++++++
- drivers/gpu/drm/rcar-du/rcar_du_regs.h        |   5 +
- 19 files changed, 697 insertions(+), 7 deletions(-)
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+---
+ .../bindings/display/renesas,cmm.yaml         | 64 +++++++++++++++++++
+ 1 file changed, 64 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/display/renesas,cmm.yaml
- create mode 100644 drivers/gpu/drm/rcar-du/rcar_cmm.c
- create mode 100644 drivers/gpu/drm/rcar-du/rcar_cmm.h
 
+diff --git a/Documentation/devicetree/bindings/display/renesas,cmm.yaml b/Documentation/devicetree/bindings/display/renesas,cmm.yaml
+new file mode 100644
+index 000000000000..9e5922689cd7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/renesas,cmm.yaml
+@@ -0,0 +1,64 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/renesas,cmm.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Renesas R-Car Color Management Module (CMM)
++
++maintainers:
++  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
++  - Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
++  - Jacopo Mondi <jacopo+renesas@jmondi.org>
++
++description: |+
++  Renesas R-Car color management module connected to R-Car DU video channels.
++  It provides image enhancement functions such as 1-D look-up tables (LUT),
++  3-D look-up tables (CMU), 1D-histogram generation (HGO), and color
++  space conversion (CSC).
++
++properties:
++  compatible:
++    items:
++      - enum:
++        - renesas,r8a7795-cmm
++        - renesas,r8a7796-cmm
++        - renesas,r8a77965-cmm
++        - renesas,r8a77990-cmm
++        - renesas,r8a77995-cmm
++      - enum:
++        - renesas,rcar-gen3-cmm
++        - renesas,rcar-gen2-cmm
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++  power-domains:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - resets
++  - power-domains
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/r8a7796-cpg-mssr.h>
++    #include <dt-bindings/power/r8a7796-sysc.h>
++
++    cmm0: cmm@fea40000 {
++         compatible = "renesas,r8a7796-cmm";
++         reg = <0 0xfea40000 0 0x1000>;
++         power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
++         clocks = <&cpg CPG_MOD 711>;
++         resets = <&cpg 711>;
++    };
 --
 2.23.0
 
