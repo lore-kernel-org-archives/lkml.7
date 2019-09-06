@@ -2,151 +2,148 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82529C00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 21:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1606DC00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 21:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A38D2082C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 21:46:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bB+2a204"
+	by mail.kernel.org (Postfix) with ESMTP id EC0922082C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 21:47:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404650AbfIFVqe (ORCPT
+        id S2404695AbfIFVrK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 17:46:34 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33306 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404449AbfIFVqe (ORCPT
+        Fri, 6 Sep 2019 17:47:10 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:46830 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404449AbfIFVrJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 17:46:34 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q10so5461471pfl.0;
-        Fri, 06 Sep 2019 14:46:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=X+UKEokhysiEjhebMkmydc3Xut+rkxm/820z0jqk+pw=;
-        b=bB+2a2042/w5fLDKgGxSCU63OZJdemRj5lstmeKzyz2kKsymPU9qKVPAWAO5XqEpoX
-         NQjWZboO1Xqc9cYWPK+zS0a3/dsBVhTx70hSi7CyLwAMb2LXE/egWyxML/yi+G4vilyP
-         nAL/lrr66lcMxFh/V1lf0zajAvVc9b7txxr2NelsFwTbWER/5mfQ/zuuL5HzZO9fMRnn
-         jGNd8gO46slJn5TOTEht06yzy1gkw82s82dF+024ICCWEH7H3wPEZO1EkRhjI8sD8ae+
-         z38HpfgWvwwlmJc+rBx98Ea9ZmRte4k86rNSkO4ohCvZ0gLKR42divMBeZ74wTyoYj5y
-         FgEw==
+        Fri, 6 Sep 2019 17:47:09 -0400
+Received: by mail-ot1-f68.google.com with SMTP id g19so7114098otg.13;
+        Fri, 06 Sep 2019 14:47:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=X+UKEokhysiEjhebMkmydc3Xut+rkxm/820z0jqk+pw=;
-        b=AHA8r+6AbmFa2DzEeypau87n7a7n4e77z2Bc1a3vMeBt8e7jNwS69pVfo1re/oWxyD
-         DgD2e6tEQZpvusi1GxoPwzCyiYsIGJ9Adu/lrOCvTbpTLHfTzccW99utz5NywPvo24Q4
-         GyF3jMByn7gJY5kWT0J4zYTNg+1xreLDuQ1RJXuH3Hz65GKjEMfr+xAgOnb7vYVyBfZ6
-         JlrMqBppAwsR+KAWdh3ukFzWHTn+22esIgtXiHxcWpvM6Rb7PJWRAcVpoj7BlReRY8Ij
-         tsKFhJoyhjmTGjT9K9FtzWAyPJfc4aSsz1SHP/3ecQpSKz8RdpvdJBRHNyyKdOXwnkHu
-         3xFw==
-X-Gm-Message-State: APjAAAXxu4sYR5GrbDIGAKDfl6rjK7gGOC7I63zh387eyr/tlxPIvsYN
-        FPJkDJxQeUROkyT4a4XIsCI=
-X-Google-Smtp-Source: APXvYqxAQm+A/TufbfRwRtbAOXBB+uXmA4OqTTf7BWWv93xs12KzKxBrIOgomoXlI9U4Nb+Q86U1eg==
-X-Received: by 2002:a17:90a:bf0a:: with SMTP id c10mr11992578pjs.78.1567806393371;
-        Fri, 06 Sep 2019 14:46:33 -0700 (PDT)
-Received: from localhost ([100.118.89.196])
-        by smtp.gmail.com with ESMTPSA id 74sm13108243pfy.78.2019.09.06.14.46.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Sep 2019 14:46:32 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     iommu@lists.linux-foundation.org
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Bruce Wang <bzwang@chromium.org>,
-        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
-        GPU), Georgi Djakov <georgi.djakov@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Joe Perches <joe@perches.com>, Joerg Roedel <jroedel@suse.de>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        linux-kernel@vger.kernel.org (open list),
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Sean Paul <seanpaul@chromium.org>,
-        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH v3 0/2] iommu: handle drivers that manage iommu directly
-Date:   Fri,  6 Sep 2019 14:44:00 -0700
-Message-Id: <20190906214409.26677-1-robdclark@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AxdmH4Las6LxoPzUkRRDSuUEuP8kEFd6s6/nV6yfxfg=;
+        b=kJ8V6SKUgTMBpZVLUgCBoDhLUAbrxohNBnGKYz5ADglBM8cRRC1XNgOxTfO09Ao0wV
+         8BQczCd7yaJz8hbUKtmym+hsPhNtnOH6VfJeyhMLJf02rJj5kcMcbVCoYJgL7w8JymdV
+         a6sIuJJnXC+WYQdwJkTwB6KlZCMRFOWZypKUDrlCRYHXJoLcgWFawqoYD0FEll+HRcQv
+         lkATQM/e/CxseNcd8hAOhXPWzrxqvEV0H7/8NRqkwJypKjzjRzJqRcBjmMkcJFX3W1b/
+         C/0/IwQcNBLmREJ6IoFqK1nu6D1qlhUj5yGseVzABJBooBmDdzzhqbXnPPEcsP1Hp0uL
+         X+MQ==
+X-Gm-Message-State: APjAAAWgjKQBs5F/JE9VoVTCxiSHM7wQu1Ja2vZUveWaudQtNON2ZItc
+        4GvN8WaC3vXjWsrTRisWOlj07Tds
+X-Google-Smtp-Source: APXvYqyKdkJy2UYmQBEftN3cVDKDxGk7OkLkrI9pGAnrPLPlQPtaJfgj/TAw7lpHUajBdykqy4i+wg==
+X-Received: by 2002:a9d:127:: with SMTP id 36mr3127123otu.64.1567806427609;
+        Fri, 06 Sep 2019 14:47:07 -0700 (PDT)
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com. [209.85.167.182])
+        by smtp.gmail.com with ESMTPSA id b21sm2544627otl.12.2019.09.06.14.47.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Sep 2019 14:47:06 -0700 (PDT)
+Received: by mail-oi1-f182.google.com with SMTP id t84so6244575oih.10;
+        Fri, 06 Sep 2019 14:47:06 -0700 (PDT)
+X-Received: by 2002:a54:4492:: with SMTP id v18mr25801oiv.175.1567806426189;
+ Fri, 06 Sep 2019 14:47:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190906115614.5645-1-hui.song_1@nxp.com>
+In-Reply-To: <20190906115614.5645-1-hui.song_1@nxp.com>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Fri, 6 Sep 2019 16:46:54 -0500
+X-Gmail-Original-Message-ID: <CADRPPNSjOV4RvJiFU2krj_-0gwcvw07x27Ku9t7h+VKNd=BStQ@mail.gmail.com>
+Message-ID: <CADRPPNSjOV4RvJiFU2krj_-0gwcvw07x27Ku9t7h+VKNd=BStQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio/mpc8xxx: change irq handler from chained to normal
+To:     Hui Song <hui.song_1@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+On Fri, Sep 6, 2019 at 10:20 AM Hui Song <hui.song_1@nxp.com> wrote:
+>
+> From: Song Hui <hui.song_1@nxp.com>
+>
 
-One of the challenges we have to enable the aarch64 laptops upstream
-is dealing with the fact that the bootloader enables the display and
-takes the corresponding SMMU context-bank out of BYPASS.  Unfortunately,
-currently, the IOMMU framework attaches a DMA (or potentially an
-IDENTITY) domain before the driver is probed and has a chance to
-intervene and shutdown scanout.  Which makes things go horribly wrong.
+The English below need to be fixed.
 
-But in this case, drm/msm is already directly managing it's IOMMUs
-directly, the DMA API attached iommu_domain simply gets in the way.
-This series adds a way that a driver can indicate to drivers/iommu
-that it does not wish to have an DMA managed iommu_domain attached.
-This way, drm/msm can shut down scanout cleanly before attaching it's
-own iommu_domain.
+> more one gpio controller use share one interrupt,
+> make request interrupt to be shared.
 
-NOTE that to get things working with arm-smmu on the aarch64 laptops,
-you also need a patchset[1] from Bjorn Andersson to inherit SMMU config
-at boot, when it is already enabled.
+More than one gpio controllers can share one interrupt, change the
+driver to request shared irq.
 
-[1] https://www.spinics.net/lists/arm-kernel/msg732246.html
-
-NOTE that in discussion of previous revisions, RMRR came up.  This is
-not really a replacement for RMRR (nor does RMRR really provide any
-more information than we already get from EFI GOP, or DT in the
-simplefb case).  I also don't see how RMRR could help w/ SMMU handover
-of CB/SMR config (Bjorn's patchset[1]) without defining new tables.
-
-This perhaps doesn't solve the more general case of bootloader enabled
-display for drivers that actually want to use DMA API managed IOMMU.
-But it does also happen to avoid a related problem with GPU, caused by
-the DMA domain claiming the context bank that the GPU firmware expects
-to use.  And it avoids spurious TLB invalidation coming from the unused
-DMA domain.  So IMHO this is a useful and necessary change.
-
-Rob Clark (2):
-  iommu: add support for drivers that manage iommu explicitly
-  drm/msm: mark devices where iommu is managed by driver
-
- drivers/gpu/drm/msm/adreno/adreno_device.c | 1 +
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c    | 1 +
- drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c   | 1 +
- drivers/gpu/drm/msm/msm_drv.c              | 1 +
- drivers/iommu/iommu.c                      | 2 +-
- drivers/iommu/of_iommu.c                   | 3 +++
- include/linux/device.h                     | 3 ++-
- 7 files changed, 10 insertions(+), 2 deletions(-)
-
--- 
-2.21.0
-
+>
+> Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
+> Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
+> Signed-off-by: Song Hui <hui.song_1@nxp.com>
+> ---
+>  drivers/gpio/gpio-mpc8xxx.c | 20 +++++++++++++-------
+>  1 file changed, 13 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+> index 16a47de..4006250 100644
+> --- a/drivers/gpio/gpio-mpc8xxx.c
+> +++ b/drivers/gpio/gpio-mpc8xxx.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/irq.h>
+>  #include <linux/gpio/driver.h>
+>  #include <linux/bitops.h>
+> +#include <linux/interrupt.h>
+>
+>  #define MPC8XXX_GPIO_PINS      32
+>
+> @@ -127,10 +128,9 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
+>                 return -ENXIO;
+>  }
+>
+> -static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
+> +static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
+>  {
+> -       struct mpc8xxx_gpio_chip *mpc8xxx_gc = irq_desc_get_handler_data(desc);
+> -       struct irq_chip *chip = irq_desc_get_chip(desc);
+> +       struct mpc8xxx_gpio_chip *mpc8xxx_gc = (struct mpc8xxx_gpio_chip *)data;
+>         struct gpio_chip *gc = &mpc8xxx_gc->gc;
+>         unsigned int mask;
+>
+> @@ -139,8 +139,8 @@ static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
+>         if (mask)
+>                 generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
+>                                                      32 - ffs(mask)));
+> -       if (chip->irq_eoi)
+> -               chip->irq_eoi(&desc->irq_data);
+> +
+> +       return IRQ_HANDLED;
+>  }
+>
+>  static void mpc8xxx_irq_unmask(struct irq_data *d)
+> @@ -409,8 +409,14 @@ static int mpc8xxx_probe(struct platform_device *pdev)
+>         if (devtype->gpio_dir_in_init)
+>                 devtype->gpio_dir_in_init(gc);
+>
+> -       irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
+> -                                        mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
+> +       ret = request_irq(mpc8xxx_gc->irqn, mpc8xxx_gpio_irq_cascade,
+> +               IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade", mpc8xxx_gc);
+> +       if (ret) {
+> +               pr_err("%s: failed to request_irq(%d), ret = %d\n",
+> +                               np->full_name, mpc8xxx_gc->irqn, ret);
+> +               goto err;
+> +       }
+> +
+>         return 0;
+>  err:
+>         iounmap(mpc8xxx_gc->regs);
+> --
+> 2.9.5
+>
