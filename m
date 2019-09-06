@@ -2,284 +2,122 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B41C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D2CC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:25:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42FC62070C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D90522178F
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:25:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bgqPFZOd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394808AbfIFPZN (ORCPT
+        id S2394823AbfIFPZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 11:25:13 -0400
-Received: from smtp3.goneo.de ([85.220.129.37]:38160 "EHLO smtp3.goneo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726019AbfIFPZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 11:25:12 -0400
-X-Greylist: delayed 405 seconds by postgrey-1.27 at vger.kernel.org; Fri, 06 Sep 2019 11:25:11 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by smtp3.goneo.de (Postfix) with ESMTP id F0DDD23FA4D;
-        Fri,  6 Sep 2019 17:18:23 +0200 (CEST)
-X-Virus-Scanned: by goneo
-Received: from smtp3.goneo.de ([127.0.0.1])
-        by localhost (smtp3.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 2bE9_yAf_TMV; Fri,  6 Sep 2019 17:18:20 +0200 (CEST)
-Received: from [192.168.1.127] (dyndsl-037-138-233-152.ewe-ip-backbone.de [37.138.233.152])
-        by smtp3.goneo.de (Postfix) with ESMTPSA id 059E423F498;
-        Fri,  6 Sep 2019 17:18:19 +0200 (CEST)
-Subject: Re: [PATCH] docs: license-rules.txt: cover SPDX headers on Python
- scripts
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
-        Jessica Yu <jeyu@kernel.org>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        Thomas Gleixner <tglx@linutronix.de>, linux-doc@vger.kernel.org
-References: <20190905055614.7958918b@coco.lan>
- <88e638eb959095ab6657d295f9f8c27169569bf2.1567675272.git.mchehab+samsung@kernel.org>
- <20190905065701.4744e66a@lwn.net> <20190905162810.2388d532@coco.lan>
- <20190905134008.57cd3e89@lwn.net> <20190905170733.3a25dee8@coco.lan>
-From:   Markus Heiser <markus.heiser@darmarit.de>
-Message-ID: <be6f3670-c5d5-e686-8472-d9d33e6c2a6a@darmarit.de>
-Date:   Fri, 6 Sep 2019 17:18:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 6 Sep 2019 11:25:56 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:37653 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731738AbfIFPZz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 11:25:55 -0400
+Received: by mail-io1-f67.google.com with SMTP id r4so13599839iop.4;
+        Fri, 06 Sep 2019 08:25:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=N3FQEUSrBcDUfBeBfn5iCz+oSEqlloCS/pOKCoa2Zr0=;
+        b=bgqPFZOdreq6PKuwjn62NrUjiulsqs09d/Gb8LjLNEs9G7HSU/RYbrcusE7+j93bbt
+         ZNsiZhnSpiVn4xshXGTOP41Zhh95aNeL6YoFa4FzsIe4j81n7vD4tXH/11gzKEMpbsWG
+         sODjHkkbKsQhVeBDNX0+hFtrjw8zAjfPhVHcKf0zbVkHuqfr+UUXFofddBouEiQhNFQc
+         h5lD1fsFu5fy1FMAXTqksih7B3M/LRJrZKA8nyi2MKYfIY0EF76p3ur4BAidhBzLdOfN
+         qMUoNboAFq7Ftys58HMDjwz72VDg0e7C72Gs5afM6ENseG/z+X5YA6JPCfMSOoUDsoE0
+         z0Og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=N3FQEUSrBcDUfBeBfn5iCz+oSEqlloCS/pOKCoa2Zr0=;
+        b=r5L/6Mj3FWx+mx7zy6A2dZLTX2wkV3xcO2cUs7si/9Zowm+45L0QvsxXlRejzsLKFH
+         azEEWRJDuKB4zwCtE/3lurtEZJdP61ZMXuJCNrHGje86WNEVVQtvAlA8oNc4/QwpbiYr
+         K5IGNSeeG+WSSvp9WqytG8qyocR2GSGlZSDjstNR+bT1YIC3l+M7rAEjabCRTh7AtXoY
+         YNI/GPxLpEQOZ6aA2jEm6ULeYyFEtPA6wKFPF9B7dTU3CyzYhjCvnhIFzSMAnAe9JMf+
+         2isXLYcuT9SZCHjDCJkCkmJEXEYkjCBqFBe8gtGWFhmWNO3bexd8pKP6WXHS3wnYPJtK
+         JqEQ==
+X-Gm-Message-State: APjAAAVG2p3v/lkhS1kXHRA5DNm3CiV+xgPepDXNSOGlIW9ia9g3Z+bg
+        +s02r4r9gGiVlvtixNhZn4RZtnUq389o/Aki2ZJdcA==
+X-Google-Smtp-Source: APXvYqwcGzRHOiIe83l2KSz9xAxgf3rf+jrakAFe9L11I466Xd43WAGC5SKvXq6IpFJAS6PXb2pvUJF/d3rtHSR26Kw=
+X-Received: by 2002:a5d:8908:: with SMTP id b8mr11171098ion.237.1567783554482;
+ Fri, 06 Sep 2019 08:25:54 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190905170733.3a25dee8@coco.lan>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
-Content-Transfer-Encoding: 8bit
+References: <20190906145213.32552.30160.stgit@localhost.localdomain> <20190906112155-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20190906112155-mutt-send-email-mst@kernel.org>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Fri, 6 Sep 2019 08:25:43 -0700
+Message-ID: <CAKgT0UcXLesZ2tBwp9u05OpBJpVDFL61qX9Qpj7VUqdRqw=U_Q@mail.gmail.com>
+Subject: Re: [PATCH v8 0/7] mm / virtio: Provide support for unused page reporting
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        virtio-dev@lists.oasis-open.org,
+        Oscar Salvador <osalvador@suse.de>,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Pankaj Gupta <pagupta@redhat.com>,
+        Rik van Riel <riel@surriel.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        lcapitulino@redhat.com, "Wang, Wei W" <wei.w.wang@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In practice the python needs "-*- coding: utf-8 -*-  to be in one of the first
-two lines.  The SPDX tag in practice has to be in one of the first 15 lines:
+On Fri, Sep 6, 2019 at 8:23 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+>
+> On Fri, Sep 06, 2019 at 07:53:21AM -0700, Alexander Duyck wrote:
+> > This series provides an asynchronous means of reporting to a hypervisor
+> > that a guest page is no longer in use and can have the data associated
+> > with it dropped. To do this I have implemented functionality that allows
+> > for what I am referring to as unused page reporting
+> >
+> > The functionality for this is fairly simple. When enabled it will allocate
+> > statistics to track the number of reported pages in a given free area.
+> > When the number of free pages exceeds this value plus a high water value,
+> > currently 32, it will begin performing page reporting which consists of
+> > pulling pages off of free list and placing them into a scatter list. The
+> > scatterlist is then given to the page reporting device and it will perform
+> > the required action to make the pages "reported", in the case of
+> > virtio-balloon this results in the pages being madvised as MADV_DONTNEED
+> > and as such they are forced out of the guest. After this they are placed
+> > back on the free list, and an additional bit is added if they are not
+> > merged indicating that they are a reported buddy page instead of a
+> > standard buddy page. The cycle then repeats with additional non-reported
+> > pages being pulled until the free areas all consist of reported pages.
+> >
+> > I am leaving a number of things hard-coded such as limiting the lowest
+> > order processed to PAGEBLOCK_ORDER, and have left it up to the guest to
+> > determine what the limit is on how many pages it wants to allocate to
+> > process the hints. The upper limit for this is based on the size of the
+> > queue used to store the scattergather list.
+>
+> I queued this  so this gets tested on linux-next but the mm core changes
+> need acks from appropriate people.
 
-     ap.add_argument('-m', '--maxlines', type=int, default=15,
-                     help='Maximum number of lines to scan in a file. Default 15')
+Thanks. I will see what I can do to get some more mm people reviewing
+these changes.
 
-IMO, all we need to patch is the documentation from:
-
-   """The SPDX license identifier in kernel files shall be added at the first
-      possible line in a file which can contain a comment. """
-
-to something like ..
-
-   """The SPDX license identifier in kernel files shall be added at the first 15
-      lines in a file which can contain a comments. """
-
-Often when it comes to encodings people are tend to mix up things.
-Below you find some comments of mine in the hope to clarify encoding mess:
-
-    TL;DR
-
-Am 05.09.19 um 22:07 schrieb Mauro Carvalho Chehab:
-> Em Thu, 5 Sep 2019 13:40:08 -0600
-> Jonathan Corbet <corbet@lwn.net> escreveu:
-> 
->> On Thu, 5 Sep 2019 16:28:10 -0300
->> Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
->>
->>> I don't think we can count that python 3 uses utf-8 per default.
->>>
->>> I strongly suspect that, if one uses a Python3 version < 3.7, it will
->>> still default to ASCII.
->>>
->>> On a quick look, the new UTF-8 mode was added on PEP-540:
->>>
->>> 	https://www.python.org/dev/peps/pep-0540/
->>>
->>> Such change happened at Python 3.7.
->>
->> That PEP is to override the locale and use utf8 unconditionally.  It
->> says, with regard to the pre-PEP state:
->>
->> 	UTF-8 is also the default encoding of Python scripts, XML and JSON
->> 	file formats.
->>
->> Unicode was the reason for much of the Python 3 pain; it seems unlikely
->> that many installations are defaulting to ASCII anyway...?
-
-Don't mix unicode and utf-8.
-
-What has changed in python 3 compared to python 2 is the internal
-representation of the string type (which has nothing to with the
-encoding of files!).
-
-Python2 type str() -- results in a "byte literal"
-   https://docs.python.org/2.7/library/functions.html#str
-
-Python2 type unicode() -- results in a "unicode literal"
-   https://docs.python.org/2.7/library/functions.html#unicode
-
-Python3 type str() -- results in a unicode literal
-   https://docs.python.org/3/library/stdtypes.html#text-sequence-type-str
-
-Python3 unicode() -- this type is not defined, was replaced by str()
-
-Python3 byte() -- results in a  byte literal (what str() was in py2)
-   https://docs.python.org/3/library/stdtypes.html#bytes
-
-This is mostly a pain when your source works with byte-streams
-and you have to switch py2 to py3.  But this has nothing to do
-with the encoding of source files and how the encoding is tagged
-in a file.  And what the default encoding of a source file is
-when such tags are omitted.
-
-First lets have a look at the default encoding of py source:
-
-   Python will default to ASCII as standard encoding if no other
-   encoding hints are given.
-
-from  https://www.python.org/dev/peps/pep-0263/#defining-the-encoding
-
-And my addition: what is correct for py2.  In py3 we have UTF-8
-
-   PEP 3120: The default source encoding is now UTF-8.
-
-from 
-https://docs.python.org/3.0/whatsnew/3.0.html#text-vs-data-instead-of-unicode-vs-8-bit
-
-> 
-> Yeah, but I remember that UTF-8 handling changed a few times during python 3
-> releases. I didn't really tracked what happened, as I don't usually program
-> in Python. So, I'm actually relying on what I can find about that.
-> 
-> Looking at Python 3.0 release[1], it says:
-> 
-> 	"In many cases, but not all, the system default is UTF-8;
-> 	 you should never count on this default."
-> 
-> [1] https://docs.python.org/3.0/whatsnew/3.0.html
-> 
-> So, at least on early Python 3 releases, the default may not be UTF-8.
-> 
-> I don't know about you, but, from time to time, people complain about
-> UTF-8 chars when I'm handling patches (last time was on a patch series
-> for Kernel 5.3 by a core dev in Australia, with was unable to apply a
-> patch from me with had some UTF-8 chars).
-> 
-
-Don't mix the output of a text file which is read by the standard
-open() function in py2/py3 and the source file encoding used by
-the interpreter for reading the source file itself.  To complete
-your citation:
-
-   In many cases, but not all, the system default is UTF-8; you
-   should never count on this default. Any application reading or
-   writing more than pure ASCII text should probably have a way to
-   override the encoding.
-
-This means your application has to know the encoding of a stream/file.
-E.g. we handle the output from of the external Perl script
-scripts/kernel-docs by encoding the byte stream from proc-call's
-stdout into utf-8:
-
-    out, err = codecs.decode(out, 'utf-8'), codecs.decode(err, 'utf-8')
-
-see patch 
-https://github.com/torvalds/linux/commit/86c0f046a8b0c23fca65f77333c233a06c25ef9a
-
-Again, this is talking about application development and has
-nothing to do with the encoding of the source files.
-
-
-> So, I'm pretty sure that some devs don't set the locale to UTF8 even
-> those days.
-
-The LANG environment influence only the default encoding of streams like stdout
-and does not change the default encoding for source code files.
-
-To clarify by example, create a test123.py file and save it as !! UTF-8 !!.
-
-   import sys, locale
-   print("system's default encoding: " +  sys.getdefaultencoding())
-   print("sys.stdout's encoding: " + sys.stdout.encoding)
-   print("locale's prefered encoding: " +  locale.getpreferredencoding())
-   text = "Encoding ist Scheiße"
-   try:
-       print("::" + text)
-   except UnicodeEncodeError as exc:
-       print("appl had a UnicodeEncodeError exception: %s" % exc)
-
-Probe encoding of the source file and run some tests:
-
-   $ file test123.py
-   test123.py: Python script, UTF-8 Unicode text executable
-
-Lets see how it is stored::
-
-   $ hexdump -C test123.py | grep Schei
-   000000e0  6e 67 20 69 73 74 20 53  63 68 65 69 c3 9f 65 22  |ng ist Schei..e"|
-
-The 'ß' is a two byte char 0xc39f in UTF-8 and the unicode code-point is U+00DF.
-
-Since we encoded the file in utf-8 and python2 excepts ASCII as default
-we will get a SyntaxError::
-
-   $ python2 test123.py
-   File "test123.py", line 6
-   SyntaxError: Non-ASCII character '\xc3' in file test123.py on line 6,
-   but no encoding declared; see http://python.org/dev/peps/pep-0263/ for
-   details
-
-The only way to fix it is to use a magic comment (# -*- coding: utf-8 -*-)
-Py3 expects UTF-8 encoded source as default, see PEP-3120 vs PEP-0263.  And
-we got what excepted:
-
-   $ python3 test123.py
-   system's default encoding: utf-8
-   sys.stdout's encoding: UTF-8
-   locale's prefered encoding: UTF-8
-   ::Encoding ist Scheiße
-
-OK, now lets see what happens when locale (LANG) is changed:
-
-   $ LANG=POSIX python3 test123.py
-   system's default encoding: utf-8
-   sys.stdout's encoding: ANSI_X3.4-1968
-   locale's prefered encoding: ANSI_X3.4-1968
-   application print throws UnicodeEncodeError: 'ascii' codec can't encode
-   character '\xdf' in position 21: ordinal not in range(128)
-
-The interpreter has no problem to read the source file, because the py3
-systems's default encoding stays in UTF-8 .. only the print application
-throws a UnicodeEncodeError when it prints the internal unicode (with non
-ASCII char in) to a stdout which encodes now ASCII (aka ANSI_X3.4-1968).
-
-Next lets try ISO-8859-1
-
-   LANG=en_US.ISO-8859-1 python3 test123.py
-   system's default encoding: utf-8
-   sys.stdout's encoding: ISO-8859-1
-   locale's prefered encoding: ISO-8859-1
-   ::Encoding ist Schei�e
-
-Again; The interpreter has no problem to read the UTF-8 source file (no
-SyntaxError).  Only the application works not as expected...
-
-The German 'ß' was correctly read by the interpreter and converted to the
-internal unicode representation '\u00DF'.  When it is written to stdout (print)
-it is correctly encoded from unicode to ISO-8859-1, but why do we get a '�'?
-Because the my X-terminal still uses UTF-8 even when I change the LANG.
-Lets use liut(1) and everything is fine:
-
-   LANG=en_US.ISO-8859-1 luit -encoding ISO-8859-1 python3 test123.py
-   system's default encoding: utf-8
-   sys.stdout's encoding: ISO-8859-1
-   locale's prefered encoding: ISO-8859-1
-   ::Encoding ist Scheiße
-
-So much more to say about encoding, we haven't talked about all the
-pitfalls e.g. with filename encoding or the encoding of used editors ;)
-
--- Markus --
-
+- Alex
