@@ -2,177 +2,199 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F03ECC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 00:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9785BC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 00:22:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 065A020828
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 00:15:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84AE0206DE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 00:22:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RWyzr011"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391498AbfIFAPB (ORCPT
+        id S2391510AbfIFAWk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 20:15:01 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:44722 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391444AbfIFAPA (ORCPT
+        Thu, 5 Sep 2019 20:22:40 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:42006 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733029AbfIFAWj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 20:15:00 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.1 #3 (Red Hat Linux))
-        id 1i61tX-00047s-6A; Fri, 06 Sep 2019 00:14:31 +0000
-Date:   Fri, 6 Sep 2019 01:14:31 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian@brauner.io>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v12 01/12] lib: introduce copy_struct_{to,from}_user
- helpers
-Message-ID: <20190906001431.GU1131@ZenIV.linux.org.uk>
-References: <20190904201933.10736-1-cyphar@cyphar.com>
- <20190904201933.10736-2-cyphar@cyphar.com>
- <20190905180750.GQ1131@ZenIV.linux.org.uk>
- <20190905230003.bek7vqdvruzi4ybx@yavin.dot.cyphar.com>
- <20190905234944.GT1131@ZenIV.linux.org.uk>
+        Thu, 5 Sep 2019 20:22:39 -0400
+Received: by mail-ot1-f66.google.com with SMTP id c10so4083728otd.9;
+        Thu, 05 Sep 2019 17:22:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=F3KgxZCE6wGfvBP5oQ0LRpaf5srELgoiLv08h1VYngU=;
+        b=RWyzr011WHchg8QDqqcyyG+FLCXDP1Z+h5I++aBHB1NGSbFPXlGrqiO4fbykMTFIKJ
+         Ssy1jwn1j0z0AdhpLhaKgyGO77L4x8wHJWt2Yo8mJj8RwnLN70swmBFfs1XqqllZMb5a
+         DWlONHhW3PBO/qR2nuTiM5VFm+jWt/allCHOWrNLOFEYAMwhKYDALbpRzIDPSCcOfFn2
+         Kh5GRFcvYsj5n2qXr6Ayd43UFYXrihNsY66wmxDXTB8UETm4P9Bgp0JUiJSBW4/Q8qHC
+         4asB+wk80RxvbJT9E9XuFB0Bv8O+yw8xi/75LNoBRVnT+frbKq3MNxlN/gOQ2XhmyGEI
+         0Cgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=F3KgxZCE6wGfvBP5oQ0LRpaf5srELgoiLv08h1VYngU=;
+        b=bjvkoT1sxtlebfhygdoP7VG7zwmjjl2QMAbzumoVJWscIR8jGvGc0bpgTr6dzDshxs
+         Tjz4qz0YDUQhsj1r0UswFPjJZ9w9zH6BJS7xLvTy1xHtWCn0OuLDQwDYaywIyTKXNtBt
+         dBQwXIgG6wFJImsAsPTGqvj4CpjFbuLqcJ2zzlrkfSqKCA1eaY/zY/EzttfDqQbDS41M
+         2NretthfR4q/D8RKCkXn0e9Ps/xw0WXyWglIcq+thPF0kNXmChex9q8wnTy9EqH8KSbF
+         SkYpScaad91bt0ejegO4ICSQBxrSZFboTjbg7cU5kHnkac8ySpV4X4gesxRKZqG+l5Vj
+         6LRw==
+X-Gm-Message-State: APjAAAXjRRjDVYYni1eVPKjiWcHlqZREoN5Y2XklM1OshfBoiBheR3VS
+        C1xNi8h9w3uc/oft1A3AlxHqjnAuRmS/QF3UNkI=
+X-Google-Smtp-Source: APXvYqzSeuicgTsdlkgjbJ7p0pM1nUj95yiRm3MH9E3XVyaqYqNQrhO1FdH26XxjqNebqAci4sW5NTeNvJnAqkUe1UQ=
+X-Received: by 2002:a9d:3a63:: with SMTP id j90mr5093105otc.185.1567729358504;
+ Thu, 05 Sep 2019 17:22:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190905234944.GT1131@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+References: <20190905125818.22395-1-graf@amazon.com>
+In-Reply-To: <20190905125818.22395-1-graf@amazon.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Fri, 6 Sep 2019 08:22:25 +0800
+Message-ID: <CANRm+Cy9+AUeoCZRr6shZjaMT07=t6BJsOR8CHhy-RuZvMP+WA@mail.gmail.com>
+Subject: Re: [PATCH v3] KVM: x86: Disable posted interrupts for odd IRQs
+To:     Alexander Graf <graf@amazon.com>
+Cc:     kvm <kvm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jim Mattson <jmattson@google.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Liran Alon <liran.alon@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 06, 2019 at 12:49:44AM +0100, Al Viro wrote:
-> On Fri, Sep 06, 2019 at 09:00:03AM +1000, Aleksa Sarai wrote:
-> > > > +			return -EFAULT;
-> > > > +	}
-> > > > +	/* Copy the interoperable parts of the struct. */
-> > > > +	if (__copy_to_user(dst, src, size))
-> > > > +		return -EFAULT;
-> > > 
-> > > Why not simply clear_user() and copy_to_user()?
-> > 
-> > I'm not sure I understand what you mean -- are you asking why we need to
-> > do memchr_inv(src + size, 0, rest) earlier?
-> 
-> I'm asking why bother with __ and separate access_ok().
-> 
-> > > 	if ((unsigned long)addr & 1) {
-> > > 		u8 v;
-> > > 		if (get_user(v, (__u8 __user *)addr))
-> > > 			return -EFAULT;
-> > > 		if (v)
-> > > 			return -E2BIG;
-> > > 		addr++;
-> > > 	}
-> > > 	if ((unsigned long)addr & 2) {
-> > > 		u16 v;
-> > > 		if (get_user(v, (__u16 __user *)addr))
-> > > 			return -EFAULT;
-> > > 		if (v)
-> > > 			return -E2BIG;
-> > > 		addr +=2;
-> > > 	}
-> > > 	if ((unsigned long)addr & 4) {
-> > > 		u32 v;
-> > > 		if (get_user(v, (__u32 __user *)addr))
-> > > 			return -EFAULT;
-> > > 		if (v)
-> > > 			return -E2BIG;
-> > > 	}
-> > > 	<read the rest like you currently do>
-> 
-> Actually, this is a dumb way to do it - page size on anything
-> is going to be a multiple of 8, so you could just as well
-> read 8 bytes from an address aligned down.  Then mask the
-> bytes you don't want to check out and see if there's anything
-> left.
-> 
-> You can have readability boundaries inside a page - it's either
-> the entire page (let alone a single word) being readable, or
-> it's EFAULT for all parts.
-> 
-> > > would be saner, and things like x86 could trivially add an
-> > > asm variant - it's not hard.  Incidentally, memchr_inv() is
-> > > an overkill in this case...
-> > 
-> > Why is memchr_inv() overkill?
-> 
-> Look at its implementation; you only care if there are
-> non-zeroes, you don't give a damn where in the buffer
-> the first one would be.  All you need is the same logics
-> as in "from userland" case
-> 	if (!count)
-> 		return true;
-> 	offset = (unsigned long)from & 7
-> 	p = (u64 *)(from - offset);
-> 	v = *p++;
-> 	if (offset) {	// unaligned
-> 		count += offset;
-> 		v &= ~aligned_byte_mask(offset); // see strnlen_user.c
-> 	}
-> 	while (count > 8) {
-> 		if (v)
-> 			return false;
-> 		v = *p++;
-> 		count -= 8;
-> 	}
-> 	if (count != 8)
-> 		v &= aligned_byte_mask(count);
-> 	return v == 0;
-> 
-> All there is to it...
+On Thu, 5 Sep 2019 at 21:46, Alexander Graf <graf@amazon.com> wrote:
+>
+> We can easily route hardware interrupts directly into VM context when
+> they target the "Fixed" or "LowPriority" delivery modes.
+>
+> However, on modes such as "SMI" or "Init", we need to go via KVM code
+> to actually put the vCPU into a different mode of operation, so we can
+> not post the interrupt
+>
+> Add code in the VMX and SVM PI logic to explicitly refuse to establish
+> posted mappings for advanced IRQ deliver modes. This reflects the logic
+> in __apic_accept_irq() which also only ever passes Fixed and LowPriority
+> interrupts as posted interrupts into the guest.
+>
+> This fixes a bug I have with code which configures real hardware to
+> inject virtual SMIs into my guest.
+>
+> Signed-off-by: Alexander Graf <graf@amazon.com>
 
-... and __user case would be pretty much this with
-	if (user_access_begin(from, count)) {
-		....
-		user_access_end();
-	}
-wrapped around the damn thing - again, see strnlen_user.c, with
-	unsafe_get_user(v, p++, efault);
-instead of those
-	v = *p++;
+Reviewed-by: Wanpeng Li <wanpengli@tencent.com>
 
-Calling conventions might need some thinking - it might be
-	* all read, all zeroes
-	* non-zero found
-	* read failed
-so we probably want to map the "all zeroes" case to 0,
-"read failed" to -EFAULT and "non-zero found" to something
-else.  Might be positive, might be some other -E.... - not
-sure if E2BIG (or EFBIG) makes much sense here.  Need to
-look at the users...
+>
+> ---
+>
+> v1 -> v2:
+>
+>   - Make error message more unique
+>   - Update commit message to point to __apic_accept_irq()
+>
+> v2 -> v3:
+>
+>   - Use if() rather than switch()
+>   - Move abort logic into existing if() branch for broadcast irqs
+>   -> remove the updated error message again (thus remove R-B tag from Liran)
+>   - Fold VMX and SVM changes into single commit
+>   - Combine postability check into helper function kvm_irq_is_postable()
+> ---
+>  arch/x86/include/asm/kvm_host.h | 7 +++++++
+>  arch/x86/kvm/svm.c              | 4 +++-
+>  arch/x86/kvm/vmx/vmx.c          | 6 +++++-
+>  3 files changed, 15 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 44a5ce57a905..5b14aa1fbeeb 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1581,6 +1581,13 @@ bool kvm_intr_is_single_vcpu(struct kvm *kvm, struct kvm_lapic_irq *irq,
+>  void kvm_set_msi_irq(struct kvm *kvm, struct kvm_kernel_irq_routing_entry *e,
+>                      struct kvm_lapic_irq *irq);
+>
+> +static inline bool kvm_irq_is_postable(struct kvm_lapic_irq *irq)
+> +{
+> +       /* We can only post Fixed and LowPrio IRQs */
+> +       return (irq->delivery_mode == dest_Fixed ||
+> +               irq->delivery_mode == dest_LowestPrio);
+> +}
+> +
+>  static inline void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu)
+>  {
+>         if (kvm_x86_ops->vcpu_blocking)
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index 1f220a85514f..f5b03d0c9bc6 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -5260,7 +5260,8 @@ get_pi_vcpu_info(struct kvm *kvm, struct kvm_kernel_irq_routing_entry *e,
+>
+>         kvm_set_msi_irq(kvm, e, &irq);
+>
+> -       if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu)) {
+> +       if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu) ||
+> +           !kvm_irq_is_postable(&irq)) {
+>                 pr_debug("SVM: %s: use legacy intr remap mode for irq %u\n",
+>                          __func__, irq.vector);
+>                 return -1;
+> @@ -5314,6 +5315,7 @@ static int svm_update_pi_irte(struct kvm *kvm, unsigned int host_irq,
+>                  * 1. When cannot target interrupt to a specific vcpu.
+>                  * 2. Unsetting posted interrupt.
+>                  * 3. APIC virtialization is disabled for the vcpu.
+> +                * 4. IRQ has incompatible delivery mode (SMI, INIT, etc)
+>                  */
+>                 if (!get_pi_vcpu_info(kvm, e, &vcpu_info, &svm) && set &&
+>                     kvm_vcpu_apicv_active(&svm->vcpu)) {
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 570a233e272b..63f3d88b36cc 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -7382,10 +7382,14 @@ static int vmx_update_pi_irte(struct kvm *kvm, unsigned int host_irq,
+>                  * irqbalance to make the interrupts single-CPU.
+>                  *
+>                  * We will support full lowest-priority interrupt later.
+> +                *
+> +                * In addition, we can only inject generic interrupts using
+> +                * the PI mechanism, refuse to route others through it.
+>                  */
+>
+>                 kvm_set_msi_irq(kvm, e, &irq);
+> -               if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu)) {
+> +               if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu) ||
+> +                   !kvm_irq_is_postable(&irq)) {
+>                         /*
+>                          * Make sure the IRTE is in remapped mode if
+>                          * we don't handle it in posted mode.
+> --
+> 2.17.1
+>
+>
+>
+>
+> Amazon Development Center Germany GmbH
+> Krausenstr. 38
+> 10117 Berlin
+> Geschaeftsfuehrung: Christian Schlaeger, Ralf Herbrich
+> Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+> Sitz: Berlin
+> Ust-ID: DE 289 237 879
+>
+>
+>
