@@ -2,101 +2,123 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 800ADC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B0B1C00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AA432082C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:57:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OoJLwlcF"
+	by mail.kernel.org (Postfix) with ESMTP id 22F742082C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:58:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567781912;
+	bh=x1c0Spa+Qjq4re2LGUvCBcQxxEGgtZC4TTO10h8FMUk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Jb842vGhhR33RBxtgjxCb8uf1VugkqhQQJapDE/deDKFiXvxghqIpzPkNrB1RyVrz
+	 1EqFYToPB7ooj3zmdaYLJa4sb9NxDmoyAcsrorM4Z5fUCcFVjwFlGbG20qlyfkIUH0
+	 Xrdd1PT4fBHmnjbvtjTl4xYEuycresnNBb1ptbrI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392196AbfIFO5w (ORCPT
+        id S2392336AbfIFO6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 10:57:52 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52506 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726019AbfIFO5v (ORCPT
+        Fri, 6 Sep 2019 10:58:31 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:34697 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726019AbfIFO6b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 10:57:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8uK72fUcoR/dOk67AIhDl3phYWTEBOSNQgXr2opx6YQ=; b=OoJLwlcFoMcbFlWhKHZL0Iv2t
-        xGSzljJBjV7GRPPUygW13XZxQrWrvjLCjMUwNZW1LKX0QBQ/7xZEL5PN+q9J0HdZjEWQZnB1tw+QA
-        /yGOWMjkyadvtPvYE/i3REW8kTAdxbBkXW++18U4vW2fZEKZkfY0jAQMz79K+9ZagWBVKrEeNFTjZ
-        8pPK5z1TpoluFgMEjSdLdJJlJerF+SffUw/gVMsURZvjv/PbcVSU1u8Q53JMAu4ldpzE7c/cnfxN4
-        pD/nYxN6XMpI9wEUPWYoyhHn8LvediGThCGX7hpHY8aVNvnFA/fQK0YLj65WvTI/X8geljykGhl7S
-        PzGWja24w==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i6FgE-0001Sx-K1; Fri, 06 Sep 2019 14:57:42 +0000
-Date:   Fri, 6 Sep 2019 07:57:42 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Jia He <justin.he@arm.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Airlie <airlied@redhat.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Catalin Marinas <Catalin.Marinas@arm.com>
-Subject: Re: [PATCH v2] mm: fix double page fault on arm64 if PTE_AF is
- cleared
-Message-ID: <20190906145742.GX29434@bombadil.infradead.org>
-References: <20190906135747.211836-1-justin.he@arm.com>
+        Fri, 6 Sep 2019 10:58:31 -0400
+Received: by mail-qt1-f193.google.com with SMTP id a13so7407633qtj.1;
+        Fri, 06 Sep 2019 07:58:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LOL4RkhxwNmxVBDlkkOKh5q7eIdq3MEVHDS6KxIm1I4=;
+        b=MOXP8ySNFPJpMxFpoTNloLC7w8Wh/zABeSUGLmy9GcZZLTPwTWbLNAiqmpDc3ec4/o
+         fd/SQEbUNPqNvtpl1/z5Lvnd779JkYSuyqQbJvM8lCbSRUV/hrvYwZxSgL1rKwz0us/i
+         ZREmz6vxrZfPNGqJkZmhWJzITJzzyL2gIw8RxEgkUTgtbxCjFWnGsP1l5JXqBN4ds0LM
+         SVyRMrlR29TEH85320jHVL5TDIO8nn5KCyJ9cdcTr0DMf2el5OoMqyCl+KPnXNdr78gM
+         NnqSEpEKFjrjmUF5jre4PNzvz5/0G04w9u5myf8I6/pAcoyhos2ouAn+mFiJ6I12Kg6r
+         75JQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LOL4RkhxwNmxVBDlkkOKh5q7eIdq3MEVHDS6KxIm1I4=;
+        b=bvCsxm+7mke4oAm9lVJ7sqkX5g8rBzceWjkhyKXuRsc7PKNbiEpuNWMiVcpq+43ulF
+         QIolFhhZOJQAM/S7B5/PM4pqoiPJfFOsQSwJhJaGjF+zLmVkw0O6kRO3rGfg3MuiBgzw
+         O7tgFWS8GMtyuaX1tVND2xrnvXgCSSir8sxkhAXA0ArA4Wy+qPbV1Sgc0d8OvVmhwrrt
+         qsNn8FjJm0XGGU7K5iiJ060rOC8fp7hPSGyPAMGNpTsSluIaeLyppOgsMNMp0vvGfM8X
+         pWdHPdj3GbuAG696f4vO/fihvrVzS7fUHL/fx/6D8hHVxnhamUcqWdcA1dq030oHeX/m
+         hmqQ==
+X-Gm-Message-State: APjAAAXupRDMVQga3obNhhiRDQ6cNTSbLe6kxxhsSDAkqGdUtexBXq9C
+        VcrEGiFSQeTq0pO4Vig0Y4A=
+X-Google-Smtp-Source: APXvYqzw/ynJVnXeScViPWyvcMnfE9uWmFXTKN6Uah/pXOmrexC6Mnw/vVsY8SiKAx59SdE4f2ivQw==
+X-Received: by 2002:ac8:5390:: with SMTP id x16mr9499947qtp.390.1567781909530;
+        Fri, 06 Sep 2019 07:58:29 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::e7cb])
+        by smtp.gmail.com with ESMTPSA id g194sm2967170qke.46.2019.09.06.07.58.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 06 Sep 2019 07:58:28 -0700 (PDT)
+Date:   Fri, 6 Sep 2019 07:58:26 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Paolo Valente <paolo.valente@linaro.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, newella@fb.com, clm@fb.com,
+        Josef Bacik <josef@toxicpanda.com>, dennisz@fb.com,
+        Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>, kernel-team@fb.com,
+        cgroups@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
+        bpf@vger.kernel.org
+Subject: Re: [PATCHSET block/for-next] IO cost model based work-conserving
+ porportional controller
+Message-ID: <20190906145826.GL2263813@devbig004.ftw2.facebook.com>
+References: <5A63F937-F7B5-4D09-9DB4-C73D6F571D50@linaro.org>
+ <B5E431F7-549D-4FC4-A098-D074DF9586A1@linaro.org>
+ <20190820151903.GH2263813@devbig004.ftw2.facebook.com>
+ <9EB760CE-0028-4766-AE9D-6E90028D8579@linaro.org>
+ <20190831065358.GF2263813@devbig004.ftw2.facebook.com>
+ <88C7DC68-680E-49BB-9699-509B9B0B12A0@linaro.org>
+ <20190902155652.GH2263813@devbig004.ftw2.facebook.com>
+ <D9F6BC6D-FEB3-40CA-A33C-F501AE4434F0@linaro.org>
+ <20190905165540.GJ2263813@devbig004.ftw2.facebook.com>
+ <EFFA2298-8614-4AFC-9208-B36976F6548C@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190906135747.211836-1-justin.he@arm.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <EFFA2298-8614-4AFC-9208-B36976F6548C@linaro.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 06, 2019 at 09:57:47PM +0800, Jia He wrote:
->  		 * This really shouldn't fail, because the page is there
->  		 * in the page tables. But it might just be unreadable,
->  		 * in which case we just give up and fill the result with
-> -		 * zeroes.
-> +		 * zeroes. If PTE_AF is cleared on arm64, it might
-> +		 * cause double page fault. So makes pte young here
+Hello, Paolo.
 
-How about:
-		 * zeroes. On architectures with software "accessed" bits,
-		 * we would take a double page fault here, so mark it
-		 * accessed here.
+On Fri, Sep 06, 2019 at 11:07:17AM +0200, Paolo Valente wrote:
+> email.  As for the filesystem, I'm interested in ext4, because it is
+> the most widely used file system, and, with some workloads, it makes
 
->  		 */
-> +		if (!pte_young(vmf->orig_pte)) {
+Ext4 can't do writeback control as it currently stands.  It creates
+hard ordering across data writes from different cgroups.  No matter
+what mechanism you use for IO control, it is broken.  I'm sure it's
+fixable but does need some work.
 
-Let's guard this with:
+That said, read-only tests like you're doing should work fine on ext4
+too but the last time I tested io control on ext4 is more than a year
+ago so something might have changed in the meantime.
 
-		if (arch_sw_access_bit && !pte_young(vmf->orig_pte)) {
+Just to rule out this isn't what you're hitting.  Can you please run
+your test on btrfs with the following patchset applied?
 
-#define arch_sw_access_bit	0
-by default and have arm64 override it (either to a variable or a constant
-... your choice).  Also, please somebody decide on a better name than
-arch_sw_access_bit.
+ http://lkml.kernel.org/r/20190710192818.1069475-1-tj@kernel.org
 
-> +			entry = pte_mkyoung(vmf->orig_pte);
-> +			if (ptep_set_access_flags(vmf->vma, vmf->address,
-> +				vmf->pte, entry, 0))
+And as I wrote in the previous reply, I did run your benchmark on one
+of the test machines and it did work fine.
 
-This indentation is wrong; it makes vmf->pte look like part of the subsequent
-statement instead of part of the condition.
+Thanks.
 
-> +				update_mmu_cache(vmf->vma, vmf->address,
-> +						vmf->pte);
-> +		}
-> +
+-- 
+tejun
