@@ -2,227 +2,177 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F064C00306
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 00:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F03ECC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 00:15:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CEE420828
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 00:14:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OAFKh8Uk"
+	by mail.kernel.org (Postfix) with ESMTP id 065A020828
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 00:15:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391437AbfIFAOB (ORCPT
+        id S2391498AbfIFAPB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 20:14:01 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41505 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389391AbfIFAOB (ORCPT
+        Thu, 5 Sep 2019 20:15:01 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:44722 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391444AbfIFAPA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 20:14:01 -0400
-Received: by mail-io1-f68.google.com with SMTP id r26so8798815ioh.8;
-        Thu, 05 Sep 2019 17:14:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nJVwwPSAJKVbMbsLZ7VhY19jh2tOjHarFelaWr5DkmM=;
-        b=OAFKh8Uk/OpeBEl5IM4Hb86xkRhQaV/2jTeQCc6WZg/Wenq2PXT4upoXc2NF4HJmr4
-         X1P/l6Ja8YC7pFSGLUkuHJ8eyYo+MKotckGZ4fzUPDhNbf4+BUSRAn7nkSitwu3Tucmv
-         FBhpm42qlSVUsZsMMGaWGl4D0W7TwNo06cVkPXwJn5F5se+f+n2Tepyq/DS6UhlLiNn5
-         kBoQvcslAw6OMb/kSjF8Me74EaNIFaQUJjul9fyEdfXepP5JUnfmUnK4vE5rO2R0mBnB
-         Sk1Gmnn1vyUiKwjjyuSzyh/WouYfylxcO45JjpJTBl6DhzYQ2KhhoZXyN587c53P6yTH
-         4zsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nJVwwPSAJKVbMbsLZ7VhY19jh2tOjHarFelaWr5DkmM=;
-        b=iXxsBfWvx9z24pIM8uvrIgVUjGBZsAuXI/dCp1Xt093l/Hjzh1wMolktfG0q2v7K4M
-         jS1bBXr8jxWdnW3qEy7by4to6kwsvoCr2sq9KfFIVpbSst1CAQkrUQxuGyAvD/eMEV9Q
-         x1ms2rRn60RKCU6pzsGXCzXChwzmhMIjy8LfkTRN51iPneL0fZR4Y/e3dhcHxyn+UlQJ
-         cN4mJfXsg1Y2i3NxhOx6eRonEXvgrBdjk+McX5KVKhlEEGNSwFnU2ukRfyN4cNHP9V4n
-         VEJEWRySmVxErAI24/TwtUkeYXBVapPSs4YADRnu4ht+/lrUTiZBq8j/pMPLAHebU8bA
-         Envg==
-X-Gm-Message-State: APjAAAVndyyqTdYKu+Y4+JZxnwuDEqWs82t/doEzFqKpkxTJde0ZfYYO
-        gmFfjlEfBMxaTF/FtxaCrQ==
-X-Google-Smtp-Source: APXvYqzT2Xor7edLiL1XzktT3DBrWzzdvfX5Iz2WUTIaqNdyXPwfyzimT2M5f4q0P0OqiUGHaS2DpQ==
-X-Received: by 2002:a5e:8c01:: with SMTP id n1mr7253657ioj.152.1567728840096;
-        Thu, 05 Sep 2019 17:14:00 -0700 (PDT)
-Received: from Test-Virtual-Machine (d24-141-106-246.home.cgocable.net. [24.141.106.246])
-        by smtp.gmail.com with ESMTPSA id s201sm7974407ios.83.2019.09.05.17.13.58
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 05 Sep 2019 17:13:58 -0700 (PDT)
-Date:   Thu, 5 Sep 2019 20:13:56 -0400
-From:   Branden Bonaby <brandonbonaby94@gmail.com>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 1/2] drivers: hv: vmbus: Introduce latency testing
-Message-ID: <20190906001356.GA17342@Test-Virtual-Machine>
-References: <cover.1567047549.git.brandonbonaby94@gmail.com>
- <da1ab5c98ce902ec181a799d8d1f040e8cc39af6.1567047549.git.brandonbonaby94@gmail.com>
- <DM5PR21MB0137F04798C30379AD6CE553D7BE0@DM5PR21MB0137.namprd21.prod.outlook.com>
+        Thu, 5 Sep 2019 20:15:00 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.1 #3 (Red Hat Linux))
+        id 1i61tX-00047s-6A; Fri, 06 Sep 2019 00:14:31 +0000
+Date:   Fri, 6 Sep 2019 01:14:31 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christian Brauner <christian@brauner.io>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v12 01/12] lib: introduce copy_struct_{to,from}_user
+ helpers
+Message-ID: <20190906001431.GU1131@ZenIV.linux.org.uk>
+References: <20190904201933.10736-1-cyphar@cyphar.com>
+ <20190904201933.10736-2-cyphar@cyphar.com>
+ <20190905180750.GQ1131@ZenIV.linux.org.uk>
+ <20190905230003.bek7vqdvruzi4ybx@yavin.dot.cyphar.com>
+ <20190905234944.GT1131@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <DM5PR21MB0137F04798C30379AD6CE553D7BE0@DM5PR21MB0137.namprd21.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190905234944.GT1131@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 06:31:04PM +0000, Michael Kelley wrote:
-> From: Branden Bonaby <brandonbonaby94@gmail.com> Sent: Wednesday, August 28, 2019 9:24 PM
+On Fri, Sep 06, 2019 at 12:49:44AM +0100, Al Viro wrote:
+> On Fri, Sep 06, 2019 at 09:00:03AM +1000, Aleksa Sarai wrote:
+> > > > +			return -EFAULT;
+> > > > +	}
+> > > > +	/* Copy the interoperable parts of the struct. */
+> > > > +	if (__copy_to_user(dst, src, size))
+> > > > +		return -EFAULT;
+> > > 
+> > > Why not simply clear_user() and copy_to_user()?
 > > 
-> > Introduce user specified latency in the packet reception path
-> > By exposing the test parameters as part of the debugfs channel
-> > attributes. We will control the testing state via these attributes.
+> > I'm not sure I understand what you mean -- are you asking why we need to
+> > do memchr_inv(src + size, 0, rest) earlier?
+> 
+> I'm asking why bother with __ and separate access_ok().
+> 
+> > > 	if ((unsigned long)addr & 1) {
+> > > 		u8 v;
+> > > 		if (get_user(v, (__u8 __user *)addr))
+> > > 			return -EFAULT;
+> > > 		if (v)
+> > > 			return -E2BIG;
+> > > 		addr++;
+> > > 	}
+> > > 	if ((unsigned long)addr & 2) {
+> > > 		u16 v;
+> > > 		if (get_user(v, (__u16 __user *)addr))
+> > > 			return -EFAULT;
+> > > 		if (v)
+> > > 			return -E2BIG;
+> > > 		addr +=2;
+> > > 	}
+> > > 	if ((unsigned long)addr & 4) {
+> > > 		u32 v;
+> > > 		if (get_user(v, (__u32 __user *)addr))
+> > > 			return -EFAULT;
+> > > 		if (v)
+> > > 			return -E2BIG;
+> > > 	}
+> > > 	<read the rest like you currently do>
+> 
+> Actually, this is a dumb way to do it - page size on anything
+> is going to be a multiple of 8, so you could just as well
+> read 8 bytes from an address aligned down.  Then mask the
+> bytes you don't want to check out and see if there's anything
+> left.
+> 
+> You can have readability boundaries inside a page - it's either
+> the entire page (let alone a single word) being readable, or
+> it's EFAULT for all parts.
+> 
+> > > would be saner, and things like x86 could trivially add an
+> > > asm variant - it's not hard.  Incidentally, memchr_inv() is
+> > > an overkill in this case...
 > > 
-> > Signed-off-by: Branden Bonaby <brandonbonaby94@gmail.com>
-> > ---
-> > diff --git a/Documentation/ABI/testing/debugfs-hyperv
-> > b/Documentation/ABI/testing/debugfs-hyperv
-> > new file mode 100644
-> > index 000000000000..0903e6427a2d
-> > --- /dev/null
-> > +++ b/Documentation/ABI/testing/debugfs-hyperv
-> > @@ -0,0 +1,23 @@
-> > +What:           /sys/kernel/debug/hyperv/<UUID>/fuzz_test_state
-> > +Date:           August 2019
-> > +KernelVersion:  5.3
+> > Why is memchr_inv() overkill?
 > 
-> Given the way the timing works for adding code to the Linux kernel,
-> the earliest your new code will be included is 5.4.  The merge window
-> for 5.4 will open in two weeks, so your code would need to be accepted
-> by then to be included in 5.4.  Otherwise, it won't make it until the next
-> merge window, which would be for 5.5.  I would suggest changing this
-> (and the others below) to 5.4 for now, but you might have to change to
-> 5.5 if additional revisions are needed.
+> Look at its implementation; you only care if there are
+> non-zeroes, you don't give a damn where in the buffer
+> the first one would be.  All you need is the same logics
+> as in "from userland" case
+> 	if (!count)
+> 		return true;
+> 	offset = (unsigned long)from & 7
+> 	p = (u64 *)(from - offset);
+> 	v = *p++;
+> 	if (offset) {	// unaligned
+> 		count += offset;
+> 		v &= ~aligned_byte_mask(offset); // see strnlen_user.c
+> 	}
+> 	while (count > 8) {
+> 		if (v)
+> 			return false;
+> 		v = *p++;
+> 		count -= 8;
+> 	}
+> 	if (count != 8)
+> 		v &= aligned_byte_mask(count);
+> 	return v == 0;
 > 
+> All there is to it...
 
-I see, I'll keep this in mind when submitting the further revisions
-thanks
+... and __user case would be pretty much this with
+	if (user_access_begin(from, count)) {
+		....
+		user_access_end();
+	}
+wrapped around the damn thing - again, see strnlen_user.c, with
+	unsafe_get_user(v, p++, efault);
+instead of those
+	v = *p++;
 
-> > diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
-> > index a1eec7177c2d..d754bd86ca47 100644
-> > --- a/drivers/hv/Makefile
-> > +++ b/drivers/hv/Makefile
-> > @@ -2,6 +2,7 @@
-> >  obj-$(CONFIG_HYPERV)		+= hv_vmbus.o
-> >  obj-$(CONFIG_HYPERV_UTILS)	+= hv_utils.o
-> >  obj-$(CONFIG_HYPERV_BALLOON)	+= hv_balloon.o
-> > +obj-$(CONFIG_HYPERV_TESTING)	+= hv_debugfs.o
-> 
-> There's an additional complexity here that I failed to describe to
-> you in my previous comments.  :-(    The above line makes the
-> hv_debugfs code part of the main Linux OS image -- i.e., the
-> vmlinuz file that gets installed into /boot, such that if hv_debugfs
-> is built, it is always loaded into the memory of the running system.
-> That's OK, but we should consider the alternative, which is to
-> make the hv_debugfs code part of the hv_vmbus module that
-> is specified a bit further down in the same Makefile.   A module
-> is installed into /lib/modules/<kernel version>/kernel, and
-> is only loaded into memory on the running system if something
-> actually references code in the module.  This approach helps avoid
-> loading code into memory that isn't actually used.
-> 
-> Whether code is built as a separate module or is just built into
-> the main vmlinuz file is also controlled by the .config file setting.
-> For example, CONFIG_HYPERV=m says to treat hv_vmbus as a
-> separate module, while CONFIG_HYPERV=y says to build the
-> hv_vmbus module directly into the vmlinuz file even though the
-> Makefile constructs it as a module.
-> 
-> Making hv_debugfs part of the hv_vmbus module is generally better
-> than just building it into the main vmlinuz because it's best to include
-> only things that must always be present in the main vmlinuz file.
-> hv_debugfs doesn't have any reason it needs to always be present.
-> By comparison, hv_balloon is included in the main vmlinuz, which
-> might be due to it dealing with memory mgmt and needing to be
-> in the vmlinuz image, but I'm not sure.
-> 
-> You can make hv_debugfs part of the hv_vmbus module with this line
-> placed after the line specifying hv_vmbus_y, instead of the line you
-> currently have:
-> 
-> hv_vmbus-$(CONFIG_HYPERV_TESTING)       += hv_debugfs.o
-> 
-
-Ah, I see now. That makes sense I'll go ahead and make the adjustments
-
-thanks
-
-> > +
-> > +static int hv_debugfs_delay_set(void *data, u64 val)
-> > +{
-> > +	int ret = 0;
-> > +
-> > +	if (val >= 1 && val <= 1000)
-> > +		*(u32 *)data = val;
-> > +	else if (val == 0)
-> > +		*(u32 *)data = 0;
-> 
-> I think this "else if" clause can be folded into the first
-> "if" statement by just checking "val >= 0".
-> 
-
-good call, I'll fold it into one statement 
-
-> 
-> > +/* Remove dentry associated with released hv device */
-> > +void hv_debug_rm_dev_dir(struct hv_device *dev)
-> > +{
-> > +	if (!IS_ERR(hv_debug_root))
-> > +		debugfs_remove_recursive(dev->debug_dir);
-> > +}
-> 
-> This function is the first of five functions that are called by
-> code outside of hv_debugfs.c.   You probably saw the separate
-> email from the kbuild test robot showing a build error on each
-> of these five functions.  Here's why.
-> 
-> When CONFIG_HYPERV=m is set, and hv_vmbus is built as a
-> module, there are references to the five functions from the
-> module to your hv_debugfs that is built as core code in
-> vmlinuz.  By default, Linux does not allow such core code to
-> be called by modules.   Core code must add a statement like:
-> 
-> EXPORT_SYMBOL_GPL(hv_debug_rm_dev_dir);
-> 
-> to allow the module to call it.   This gives the code writer
-> a very minimal amount of scope control.  However, if you build 
-> hv_debugfs as part of the module hv_vmbus, and the only
-> references to the five functions are within the module hv_vmbus,
-> then the EXPORT statements aren't needed because all
-> references are internal to the hv_vmbus module.  But if
-> you envision a function like hv_debug_delay_test() being
-> called by other Hyper-V drivers that are outside the
-> hv_vmbus module, then you will need the EXPORT statement
-> at least for that function.
-> 
-> You probably have your .config file setup with
-> CONFIG_HYPERV=y.  In that case, the hv_vmbus module is
-> built-in to the kernel, so you didn't get the errors reported
-> by the kbuild test robot.  When testing new code, it's a
-> good practice to build with the HYPERV settings set to
-> 'm' to make sure that any issues with module references
-> get flushed out and fixed.
-> 
-> Michael
-
-Oh I see, I'll test it out as a module so I can fix this. As for
-exporting hv_debug_delay_test() It might come in handy later but
-I think for now I should focus on just the ones in the hv_vmbus
-module for now. 
-
-thanks
+Calling conventions might need some thinking - it might be
+	* all read, all zeroes
+	* non-zero found
+	* read failed
+so we probably want to map the "all zeroes" case to 0,
+"read failed" to -EFAULT and "non-zero found" to something
+else.  Might be positive, might be some other -E.... - not
+sure if E2BIG (or EFBIG) makes much sense here.  Need to
+look at the users...
