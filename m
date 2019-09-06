@@ -2,202 +2,110 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03957C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:54:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9522C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0905206A5
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:54:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K7Hb+8Hh"
+	by mail.kernel.org (Postfix) with ESMTP id 982DE206A5
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:55:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405685AbfIFOyv (ORCPT
+        id S2394690AbfIFOzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 10:54:51 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45554 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394700AbfIFOyv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 10:54:51 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y72so4626481pfb.12;
-        Fri, 06 Sep 2019 07:54:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:date:message-id:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=R9EIePxtKgh7rutMNGBvqWvR/nyIQIv1yBQVlI6lc80=;
-        b=K7Hb+8Hh6OGFNptrd3xhs0dSBGL89ydD/TEtpjhiu9tPxvrsGW3oZrKONgKiu45x/P
-         dAbz7znolXERw89jByTZcAJWibJCzG0jedqFEGgpoJoUBO8qpsB7BBgraJiTg8Ry2NjA
-         cFWicLV2bexuIOGZulOA00dHHT+tzHPWjOnL3X8puT4y/bCgbfvETE/JpOryD+JF7qb6
-         f4DJmu/f0YRPuc0T7TkL7ScmlDt8nGyn0uxI7SXUFtPtXo01hwiAi1PxcFeYZTMEZcxU
-         nse6Vg4Q57o1ncXt/v2IDpjPPRvRkrAZoEnIkkaUX6KReSNrAhmG/BdcGcpJCeov5gII
-         nPDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=R9EIePxtKgh7rutMNGBvqWvR/nyIQIv1yBQVlI6lc80=;
-        b=oPlorYZOg+/dMDI2y8KWunxDTdl3FJdc/9qzOZYBDxhR9PHxTT/jvTB6CS6NRnW+cC
-         heRVfzBIhAHC12LynP9LYqfAMiNUD9qj34hquQuh5b+YXVeCntT/5SIedvinnOU4hCB0
-         Nd00XoV+iyYvavyxXQidZxKt/DzOMW4m5CFNIInwFMDoeG1bsbdlyrkh/VfRw+eFtFXn
-         xCTHt+Y3Gs2TsOa0yaxzYCjzUUa8TDYVTQISkFv9hjj/9RVeF3QwEO0+066+Gb58VTKa
-         XY/5az66XMrM1+nw+flMmaHhvs3Q11f4sbNINKXbEu1M8BbQRoPRyS7s9Teh4DDcNfhO
-         /MLw==
-X-Gm-Message-State: APjAAAWrTR/+lLDpW7Vsqt6/pngP1biaCgW0Ygc1uv9QxYnXaAvO0cQe
-        2VsR8ZZUlGgUd78Z3b2Q7Cc=
-X-Google-Smtp-Source: APXvYqyR/D4tsD7rhNX2PQcMu+Gyd4kcgZa1BS+hYcFptabaRpV4hgMyTPouaYkRi3vtvC8wwpCvOQ==
-X-Received: by 2002:a17:90a:c20c:: with SMTP id e12mr10459302pjt.14.1567781690374;
-        Fri, 06 Sep 2019 07:54:50 -0700 (PDT)
-Received: from localhost.localdomain ([2001:470:b:9c3:9e5c:8eff:fe4f:f2d0])
-        by smtp.gmail.com with ESMTPSA id v7sm3096573pjr.29.2019.09.06.07.54.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 06 Sep 2019 07:54:49 -0700 (PDT)
-Subject: [PATCH v8 QEMU 3/3] virtio-balloon: Provide a interface for unused
- page reporting
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-To:     nitesh@redhat.com, kvm@vger.kernel.org, mst@redhat.com,
-        david@redhat.com, dave.hansen@intel.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, virtio-dev@lists.oasis-open.org
-Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
-        konrad.wilk@oracle.com, willy@infradead.org,
-        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com, mhocko@kernel.org,
-        alexander.h.duyck@linux.intel.com, osalvador@suse.de
-Date:   Fri, 06 Sep 2019 07:54:49 -0700
-Message-ID: <20190906145449.574.85741.stgit@localhost.localdomain>
-In-Reply-To: <20190906145213.32552.30160.stgit@localhost.localdomain>
-References: <20190906145213.32552.30160.stgit@localhost.localdomain>
-User-Agent: StGit/0.17.1-dirty
+        Fri, 6 Sep 2019 10:55:36 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58132 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725872AbfIFOzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 10:55:36 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 79BDCAC67;
+        Fri,  6 Sep 2019 14:55:34 +0000 (UTC)
+Date:   Fri, 6 Sep 2019 16:55:33 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, Qian Cai <cai@lca.pw>,
+        davem@davemloft.net, Eric Dumazet <eric.dumazet@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH] net/skbuff: silence warnings under memory pressure
+Message-ID: <20190906145533.4uw43a5pvsawmdov@pathway.suse.cz>
+References: <1567546948.5576.68.camel@lca.pw>
+ <20190904061501.GB3838@dhcp22.suse.cz>
+ <20190904064144.GA5487@jagdpanzerIV>
+ <20190904065455.GE3838@dhcp22.suse.cz>
+ <20190904071911.GB11968@jagdpanzerIV>
+ <20190904074312.GA25744@jagdpanzerIV>
+ <1567599263.5576.72.camel@lca.pw>
+ <20190904144850.GA8296@tigerII.localdomain>
+ <1567629737.5576.87.camel@lca.pw>
+ <20190905113208.GA521@jagdpanzerIV>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190905113208.GA521@jagdpanzerIV>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+On Thu 2019-09-05 20:32:08, Sergey Senozhatsky wrote:
+> On (09/04/19 16:42), Qian Cai wrote:
+> > > Let me think more.
+> > 
+> > To summary, those look to me are all good long-term improvement that would
+> > reduce the likelihood of this kind of livelock in general especially for other
+> > unknown allocations that happen while processing softirqs, but it is still up to
+> > the air if it fixes it 100% in all situations as printk() is going to take more
+> > time
+> 
+> Well. So. I guess that we don't need irq_work most of the time.
+> 
+> We need to queue irq_work for "safe" wake_up_interruptible(), when we
+> know that we can deadlock in scheduler. IOW, only when we are invoked
+> from the scheduler. Scheduler has printk_deferred(), which tells printk()
+> that it cannot do wake_up_interruptible(). Otherwise we can just use
+> normal wake_up_process() and don't need that irq_work->wake_up_interruptible()
+> indirection. The parts of the scheduler, which by mistake call plain printk()
+> from under pi_lock or rq_lock have chances to deadlock anyway and should
+> be switched to printk_deferred().
+> 
+> I think we can queue significantly much less irq_work-s from printk().
+> 
+> Petr, Steven, what do you think?
+> 
+> Something like this. Call wake_up_interruptible(), switch to
+> wake_up_klogd() only when called from sched code.
 
-Add support for what I am referring to as "unused page reporting".
-Basically the idea is to function very similar to how the balloon works
-in that we basically end up madvising the page as not being used. However
-we don't really need to bother with any deflate type logic since the page
-will be faulted back into the guest when it is read or written to.
+Replacing irq_work_queue() with wake_up_interruptible() looks
+dangerous to me.
 
-This is meant to be a simplification of the existing balloon interface
-to use for providing hints to what memory needs to be freed. I am assuming
-this is safe to do as the deflate logic does not actually appear to do very
-much other than tracking what subpages have been released and which ones
-haven't.
+As a result, all "normal" printk() calls from the scheduler
+code will deadlock. There is almost always a userspace
+logger registered.
 
-Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
----
- hw/virtio/virtio-balloon.c         |   46 ++++++++++++++++++++++++++++++++++--
- include/hw/virtio/virtio-balloon.h |    2 +-
- 2 files changed, 45 insertions(+), 3 deletions(-)
+By "normal" I mean anything that is not printk_deferred(). For
+example, any WARN() from sheduler will cause a deadlock.
+We will not even have chance to catch these problems in
+advance by lockdep.
 
-diff --git a/hw/virtio/virtio-balloon.c b/hw/virtio/virtio-balloon.c
-index 003b3ebcfdfb..7a30df63bc77 100644
---- a/hw/virtio/virtio-balloon.c
-+++ b/hw/virtio/virtio-balloon.c
-@@ -320,6 +320,40 @@ static void balloon_stats_set_poll_interval(Object *obj, Visitor *v,
-     balloon_stats_change_timer(s, 0);
- }
- 
-+static void virtio_balloon_handle_report(VirtIODevice *vdev, VirtQueue *vq)
-+{
-+    VirtIOBalloon *dev = VIRTIO_BALLOON(vdev);
-+    VirtQueueElement *elem;
-+
-+    while ((elem = virtqueue_pop(vq, sizeof(VirtQueueElement)))) {
-+    	unsigned int i;
-+
-+        for (i = 0; i < elem->in_num; i++) {
-+            void *addr = elem->in_sg[i].iov_base;
-+            size_t size = elem->in_sg[i].iov_len;
-+            ram_addr_t ram_offset;
-+            size_t rb_page_size;
-+            RAMBlock *rb;
-+
-+            if (qemu_balloon_is_inhibited() || dev->poison_val)
-+                continue;
-+
-+            rb = qemu_ram_block_from_host(addr, false, &ram_offset);
-+            rb_page_size = qemu_ram_pagesize(rb);
-+
-+            /* For now we will simply ignore unaligned memory regions */
-+            if ((ram_offset | size) & (rb_page_size - 1))
-+                continue;
-+
-+            ram_block_discard_range(rb, ram_offset, size);
-+        }
-+
-+        virtqueue_push(vq, elem, 0);
-+        virtio_notify(vdev, vq);
-+        g_free(elem);
-+    }
-+}
-+
- static void virtio_balloon_handle_output(VirtIODevice *vdev, VirtQueue *vq)
- {
-     VirtIOBalloon *s = VIRTIO_BALLOON(vdev);
-@@ -627,7 +661,8 @@ static size_t virtio_balloon_config_size(VirtIOBalloon *s)
-         return sizeof(struct virtio_balloon_config);
-     }
-     if (virtio_has_feature(features, VIRTIO_BALLOON_F_PAGE_POISON) ||
--        virtio_has_feature(features, VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
-+        virtio_has_feature(features, VIRTIO_BALLOON_F_FREE_PAGE_HINT) ||
-+        virtio_has_feature(features, VIRTIO_BALLOON_F_REPORTING)) {
-         return sizeof(struct virtio_balloon_config);
-     }
-     return offsetof(struct virtio_balloon_config, free_page_report_cmd_id);
-@@ -715,7 +750,8 @@ static uint64_t virtio_balloon_get_features(VirtIODevice *vdev, uint64_t f,
-     VirtIOBalloon *dev = VIRTIO_BALLOON(vdev);
-     f |= dev->host_features;
-     virtio_add_feature(&f, VIRTIO_BALLOON_F_STATS_VQ);
--    if (virtio_has_feature(f, VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
-+    if (virtio_has_feature(f, VIRTIO_BALLOON_F_FREE_PAGE_HINT) ||
-+        virtio_has_feature(f, VIRTIO_BALLOON_F_REPORTING)) {
-         virtio_add_feature(&f, VIRTIO_BALLOON_F_PAGE_POISON);
-     }
- 
-@@ -805,6 +841,10 @@ static void virtio_balloon_device_realize(DeviceState *dev, Error **errp)
-     s->dvq = virtio_add_queue(vdev, 128, virtio_balloon_handle_output);
-     s->svq = virtio_add_queue(vdev, 128, virtio_balloon_receive_stats);
- 
-+    if (virtio_has_feature(s->host_features, VIRTIO_BALLOON_F_REPORTING)) {
-+        s->rvq = virtio_add_queue(vdev, 32, virtio_balloon_handle_report);
-+    }
-+
-     if (virtio_has_feature(s->host_features,
-                            VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
-         s->free_page_vq = virtio_add_queue(vdev, VIRTQUEUE_MAX_SIZE,
-@@ -931,6 +971,8 @@ static Property virtio_balloon_properties[] = {
-      */
-     DEFINE_PROP_BOOL("qemu-4-0-config-size", VirtIOBalloon,
-                      qemu_4_0_config_size, false),
-+    DEFINE_PROP_BIT("unused-page-reporting", VirtIOBalloon, host_features,
-+                    VIRTIO_BALLOON_F_REPORTING, true),
-     DEFINE_PROP_LINK("iothread", VirtIOBalloon, iothread, TYPE_IOTHREAD,
-                      IOThread *),
-     DEFINE_PROP_END_OF_LIST(),
-diff --git a/include/hw/virtio/virtio-balloon.h b/include/hw/virtio/virtio-balloon.h
-index 7fe78e5c14d7..db5bf7127112 100644
---- a/include/hw/virtio/virtio-balloon.h
-+++ b/include/hw/virtio/virtio-balloon.h
-@@ -42,7 +42,7 @@ enum virtio_balloon_free_page_report_status {
- 
- typedef struct VirtIOBalloon {
-     VirtIODevice parent_obj;
--    VirtQueue *ivq, *dvq, *svq, *free_page_vq;
-+    VirtQueue *ivq, *dvq, *svq, *free_page_vq, *rvq;
-     uint32_t free_page_report_status;
-     uint32_t num_pages;
-     uint32_t actual;
+The difference is that console_unlock() calls wake_up_process()
+only when there is a waiter. And the hard console_lock() is not
+called that often.
 
+
+Honestly, scheduling IRQ looks like the most lightweight and reliable
+solution for offloading. We are in big troubles if we could not use
+it in printk() code.
+
+IMHO, the best solution is to ratelimit the warnings about the
+allocation failures. It does not make sense to repeat the same
+warning again and again. We might need a better ratelimiting API
+if the current one is not reliable.
+
+Best Regards,
+Petr
