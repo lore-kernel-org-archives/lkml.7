@@ -6,81 +6,82 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFDFC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 529FBC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 503EC20838
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:32:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FAB420838
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:33:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394854AbfIFPc5 (ORCPT
+        id S2394864AbfIFPdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 11:32:57 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:58731 "EHLO
+        Fri, 6 Sep 2019 11:33:12 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:60027 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725871AbfIFPc5 (ORCPT
+        with ESMTP id S1725871AbfIFPdM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 11:32:57 -0400
+        Fri, 6 Sep 2019 11:33:12 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MHX3R-1htHnP36g5-00DWTJ; Fri, 06 Sep 2019 17:32:50 +0200
+ 1Mwwhv-1iLQpm1LR5-00yQot; Fri, 06 Sep 2019 17:33:05 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     David Howells <dhowells@redhat.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] watch_queue: make locked_vm accessible
-Date:   Fri,  6 Sep 2019 17:32:35 +0200
-Message-Id: <20190906153249.1864324-1-arnd@arndb.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] [don't apply] watch_queue: disable sample
+Date:   Fri,  6 Sep 2019 17:32:36 +0200
+Message-Id: <20190906153249.1864324-2-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20190906153249.1864324-1-arnd@arndb.de>
+References: <20190906153249.1864324-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:sbgYIj3sTLe6oQpfz0v9JJ1XPJHhKbHYyyuMMQMqloTgfI7J+rF
- Ggq9j5ylWWGi582FcXvRN3IlkRObdarvjkKJ7QeB3fpN6usSCoV07tXKS/LeXsYbpHkL7c5
- FbZKF6TFQ3hJ8diapQciK0ZYmZJubNGw4ACvb7hbXVURJYIBqz/d1iplTY2jJ2JdELKLP4w
- h/ASi/JKgrIV2x89Tgdbg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:3hY4TUfEVzk=:stupZYSdkkZxNkZrc4/bey
- 8HMh1FzR2V4l5qYWkBYMCbQpwkofK81n8wx1tUIS2l+9OTzIbq0Vv/k6ufDxj28RmK47JQETv
- rJq3fyYpp55OBqyg6F573sZCvC2xqyeWm6nBs8eElmuV3O2KEW4pJhn1c8Twu0IxmNp3+3YJZ
- 2gcJr0cbQr3pL77PVSOlEElQkzMEmj0PVKPaRj+sRefo/cKAn7bxJeUeVwCZPKSOuEIntcZq8
- nQKeTgKnTa1qJt9cPN5gUhl9ussoBRJWTqEX7vxUVjwOHD1UVYZW0Jvi7htMyHkin8B/MOIYs
- HC6xHOTiTIueai4vT5WaiVTyfGFwy5KTSQfR9XueP8z/fZvjhesTiCG8HgTS5OtYej2JD7VL/
- osPH50qi5pQ3kEA62ibhd0IBWULDoynEUm3zKAUTcGkT6ttaX5rlNi298m3FiGn6NXjtXbsbP
- 4oE3jRXkJ5P/yKCgVN7RZEygsgxbYBj6DKACcWunzS3E14/nySVYw7CjaPUNw8FwpZ9jVyyFa
- N7iNbZQdWI+QN9CykkICxjD3V7p7RwchXasFta83oEQu1T4KK6fYkOKJXrXg+aZDSrcgwb1Mq
- rMvzds3+93dP5IqAY+IYpt+qAgAYnOsRV2IlMr5mUicOQawclzp+oZIXs9SU0TyKXo/UyJ41c
- 8OOlW6DjWntvKBduRZn81tOxqLCbrdsSG59UymiKmslSqg0Gyzx9x8GDOl3RhO65orZHEA4Tz
- ocBlmv8vGfsnRZKY9wZDrvjtkV5EnRNWga5x7unk+bCRpPr6Plu7M73TvMfqKbyJHees80AVc
- U+fc6PAerA+gWKYzEC2V95fi/UxS8gDjiZ+VWo/kuBngcrGDiQ=
+X-Provags-ID: V03:K1:s7LPzVXx1AJcu2lZxoaxETHXyBTWZCi5uuZHceTd7xmKWVYH64/
+ P54VqDE9IQNixadRhryh7ZFIl83Ore9NrMOZvT3DMt10/MyjaDHk5x239xvF1o1Txdg+0dS
+ jOwnD8QIBufqBUVa1v8h6bnKEhZHti2cLiHUMhwlwvCy+Hb8EwRyS6J7he9vfAfiU1OGN/H
+ 2zvHpocrBQdapMUoBsnKw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:QteUEtZ8coQ=:ZWe4eD/tcSVz70zIJy7uSw
+ ZvnnparMxVq87+j4LEwOmEfKn45AOwhcCMD7OiakzbWuYQyDdhNuHspDZKFn8batrFibFclFZ
+ c4BhsbUPZbhf56m2TW4voOSmCqQi35FmHFEyb8bLteZlZHVV0NSYghCt5VMh1AtE1+ZlI/fpo
+ eoCQdQswkHJYOn1tqRhW/FXlKJ0c6CS9NJ5aerAyAfgtdiF1jqKUFEFviscuecz9gA5AsyzNA
+ HOMLCJ+6COKeREaqiISM72Bit9Gtu0Jgmo/aS4fN80tu9jnKoCT0lVwjb91tkkpVioK6x7bR8
+ MkmuNQFPget5mEIMGkRoNhqzUYy5qQu29awB/56bquNcT3urUQ3/2DFyzNrlcFGwaTrIfkoJ1
+ tbbfzFDeo5cJfN7S2cPWonh59qj2PjqcnvrEosotfC8rnHcAVvjICfYqwkBf5RKYkG2UOs94j
+ evdSbNEDY54OzEDgWZSxIlEWJvxG6yoUr0n6xMJQeUz5NlioDeFBFXrEv5fLgOHM3nFDc6OJs
+ p6xJm1MoxAK243XIlBsuaMAbkWd0UMPNY/bPuVsFlmGAupyQ65kMU39WN/YDUJo4FGp+5p6n7
+ IJ+CT7HCf7lGQSB0244pKB6jKDLQX39x5XW0k6Yaj6/QBZLAOVPNM922uwVQ+uMWtBIVzbNFP
+ 6C37wI058WU1mgnw9x6s7EEmrbhLw0jS+G9iIhBEh393gl8Lv30PrAehfnYUcgd3ado8iSoUy
+ PNitBkqzRHKmUEJGIU1H5fV3c9xvjQ/fMO+h52Qwlzc11JVqBWxwFSlhzvzqBbr0YASIcie8V
+ RcQ079WzlDFA2F5LEGN6yOQHwirVg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The locked_vm member of struct user_struct is guarded by an #ifdef,
-which breaks building the new watch_queue driver when all the other
-subsystems that need it are disabled:
+Building in a separate object directory causes a compilation
+failure for a missing header:
 
-drivers/misc/watch_queue.c:315:38: error: no member named 'locked_vm' in 'struct user_struct'; did you mean 'locked_shm'?
+samples/watch_queue/watch_test.c:23:10: fatal error: linux/watch_queue.h: No such file or directory
 
-Add watch_queue to the list.
+I could not figure out why this does not work and applied this
+patch locally. It would be good to fix this properly for 5.4
+instead.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- include/linux/sched/user.h | 2 +-
+ samples/Makefile | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/sched/user.h b/include/linux/sched/user.h
-index 917d88edb7b9..6cd21c7bb83e 100644
---- a/include/linux/sched/user.h
-+++ b/include/linux/sched/user.h
-@@ -33,7 +33,7 @@ struct user_struct {
- 	kuid_t uid;
- 
- #if defined(CONFIG_PERF_EVENTS) || defined(CONFIG_BPF_SYSCALL) || \
--    defined(CONFIG_NET) || defined(CONFIG_IO_URING)
-+    defined(CONFIG_NET) || defined(CONFIG_IO_URING) || defined(CONFIG_WATCH_QUEUE)
- 	atomic_long_t locked_vm;
- #endif
- 
+diff --git a/samples/Makefile b/samples/Makefile
+index a61a39047d02..068b28113be9 100644
+--- a/samples/Makefile
++++ b/samples/Makefile
+@@ -20,4 +20,4 @@ obj-$(CONFIG_SAMPLE_TRACE_PRINTK)	+= trace_printk/
+ obj-$(CONFIG_VIDEO_PCI_SKELETON)	+= v4l/
+ obj-y					+= vfio-mdev/
+ subdir-$(CONFIG_SAMPLE_VFS)		+= vfs
+-subdir-$(CONFIG_SAMPLE_WATCH_QUEUE)	+= watch_queue
++#subdir-$(CONFIG_SAMPLE_WATCH_QUEUE)	+= watch_queue
 -- 
 2.20.0
 
