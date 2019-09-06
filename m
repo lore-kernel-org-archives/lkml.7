@@ -2,102 +2,131 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 210C0C00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6B9C00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 072D020693
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:44:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FAB520838
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:46:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UF6J+7FY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406121AbfIFSoO (ORCPT
+        id S2395359AbfIFSqG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 14:44:14 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41070 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406106AbfIFSoO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 14:44:14 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 350D018CE073;
-        Fri,  6 Sep 2019 18:44:13 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-116-27.ams2.redhat.com [10.36.116.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 93B9C60BF1;
-        Fri,  6 Sep 2019 18:44:05 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
-        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
-        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Eric Chiang <ericchiang@google.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Philippe =?utf-8?Q?Tr=C3=A9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] fs: Add support for an O_MAYEXEC flag on sys_open()
-References: <20190906152455.22757-1-mic@digikod.net>
-        <20190906152455.22757-2-mic@digikod.net>
-        <87ef0te7v3.fsf@oldenburg2.str.redhat.com>
-        <75442f3b-a3d8-12db-579a-2c5983426b4d@ssi.gouv.fr>
-        <f53ec45fd253e96d1c8d0ea6f9cca7f68afa51e3.camel@kernel.org>
-        <1fbf54f6-7597-3633-a76c-11c4b2481add@ssi.gouv.fr>
-        <5a59b309f9d0603d8481a483e16b5d12ecb77540.camel@kernel.org>
-Date:   Fri, 06 Sep 2019 20:44:03 +0200
-In-Reply-To: <5a59b309f9d0603d8481a483e16b5d12ecb77540.camel@kernel.org> (Jeff
-        Layton's message of "Fri, 06 Sep 2019 14:38:11 -0400")
-Message-ID: <87r24tcljg.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        Fri, 6 Sep 2019 14:46:06 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39569 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390235AbfIFSqF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 14:46:05 -0400
+Received: by mail-wm1-f65.google.com with SMTP id q12so8171659wmj.4;
+        Fri, 06 Sep 2019 11:46:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xrcge4xWSXW5K31t/HQVYFW44MIvXTrC+21SSJQ7ljI=;
+        b=UF6J+7FY9nlRmV8MXdouTLIlk/PpuSE8Z9pSuifFCXnHcXTCm0fulWoCKMBAzrzRVi
+         obsHYkHyHVJ3OSDqjzsFeZk544ak+rV+yH1Pn3qhjWsd5KRhsiU1SxR+8BL6110HXWQC
+         Ujngu9jHfWMF3MycgtptWTwvEJNMRss+ip0TzJeuk/k3eeemWAdwOtkLYuSz0H8LUE+e
+         FSQoGBUbAG/np/5n0NRInUUBJy8+oA7+USY0+cnxduQSk6oefxcmQpjXRyU3mzDfPRIW
+         lzGBmFxrexM/E3tXPMJg9a8Z4wBJpoyj22Wy061OwTKatx0o03sE7BmpDA5hWsvPoXRh
+         Poxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xrcge4xWSXW5K31t/HQVYFW44MIvXTrC+21SSJQ7ljI=;
+        b=h7/ECtFPXNEcZiVh/qwVlM5YT7WcoXB3ixXJwYnCV/aV45Of/753C0GRg4NojFFP3L
+         q8NBG2DiveF6WWBD92/VRMVQxreU7+jY9p23YVEO5ZQVNb/lLAgEMukD0Ob5293iHQwS
+         eaxchRk/cwK3ZXuY9clPyYW3TRho5gf0WFRgsQJkJHtZkh7GH+n4NSGZ+O1x+V6w8dO9
+         x/qLRBcgBYFFoJJU+O8ulrYOY687zTLny8VmlWBRa9Kd6CCMjSxpOS+UVu6soTaeOszL
+         SLhSt0+XVn8pCO7TcFjqkoAudw/xaQdfKX/+aHO1n9Oenvl2td46FZDzhEe0aOLV2YST
+         WDMg==
+X-Gm-Message-State: APjAAAUNxppdwLQup3g9NflPB+tlLmQpJccc2AvjN6EYqIcxUzd19xrj
+        6AQdAle51X4yGczuX4YpOIg=
+X-Google-Smtp-Source: APXvYqwGlyUteBngMNlLK5XdG8uuNUUdHWlmcx4mol+MpShd8I2m1TXqYmGsLUTxg6Pg1YojLCiRjw==
+X-Received: by 2002:a7b:c447:: with SMTP id l7mr8159910wmi.33.1567795562952;
+        Fri, 06 Sep 2019 11:46:02 -0700 (PDT)
+Received: from Red.localdomain ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id j1sm8677577wrg.24.2019.09.06.11.46.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 06 Sep 2019 11:46:02 -0700 (PDT)
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        linux@armlinux.org.uk, mark.rutland@arm.com, mripard@kernel.org,
+        robh+dt@kernel.org, wens@csie.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com,
+        Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: [PATCH 0/9] crypto: add sun8i-ce driver for Allwinner crypto engine
+Date:   Fri,  6 Sep 2019 20:45:42 +0200
+Message-Id: <20190906184551.17858-1-clabbe.montjoie@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.63]); Fri, 06 Sep 2019 18:44:13 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Jeff Layton:
+Hello
 
-> Even better would be to declare the new flag in some openat2-only flag
-> space, so there's no confusion about it being supported by legacy open
-> calls.
+This patch serie adds support for the Allwinner crypto engine.
+The Crypto Engine is the third generation of Allwinner cryptogaphic offloader.
+The first generation is the Security System already handled by the
+sun4i-ss driver.
+The second is named also Security System and is present on A80 and A83T
+SoCs, originaly this driver supported it also, but supporting both IP bringing
+too much complexity and another driver (sun8i-ss) will came for it.
 
-Isn't that desirable anyway because otherwise fcntl with F_GETFL will
-give really confusing results?
+For the moment, the driver support only DES3/AES in ECB/CBC mode.
+Patchs for CTR/CTS/XTS and RNGs will came later.
 
-> If glibc wants to implement an open -> openat2 wrapper in userland
-> later, it can set that flag in the wrapper implicitly to emulate the old
-> behavior.
+Regards
 
-I see us rather doing the opposite, i.e. implement openat2 with
-non-exotic flags using openat.  But we've bitten by this in the past, so
-maybe that's not such a great idea.  It's tempting to make the same
-mistake again for every new system call.
+Corentin Labbe (9):
+  crypto: Add allwinner subdirectory
+  crypto: Add Allwinner sun8i-ce Crypto Engine
+  dt-bindings: crypto: Add DT bindings documentation for sun8i-ce Crypto
+    Engine
+  ARM: dts: sun8i: r40: add crypto engine node
+  ARM: dts: sun8i: h3: Add Crypto Engine node
+  ARM64: dts: allwinner: sun50i: Add Crypto Engine node on A64
+  ARM64: dts: allwinner: sun50i: Add crypto engine node on H5
+  ARM64: dts: allwinner: sun50i: Add Crypto Engine node on H6
+  sunxi_defconfig: add new crypto options
 
-Thanks,
-Florian
+ .../bindings/crypto/allwinner,sun8i-ce.yaml   |  84 +++
+ MAINTAINERS                                   |   6 +
+ arch/arm/boot/dts/sun8i-h3.dtsi               |  11 +
+ arch/arm/boot/dts/sun8i-r40.dtsi              |  11 +
+ arch/arm/configs/sunxi_defconfig              |   2 +
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  11 +
+ arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  |  11 +
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  10 +
+ drivers/crypto/Kconfig                        |   2 +
+ drivers/crypto/Makefile                       |   1 +
+ drivers/crypto/allwinner/Kconfig              |  32 +
+ drivers/crypto/allwinner/Makefile             |   1 +
+ drivers/crypto/allwinner/sun8i-ce/Makefile    |   2 +
+ .../allwinner/sun8i-ce/sun8i-ce-cipher.c      | 390 +++++++++++
+ .../crypto/allwinner/sun8i-ce/sun8i-ce-core.c | 630 ++++++++++++++++++
+ drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h  | 256 +++++++
+ 16 files changed, 1460 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/allwinner,sun8i-ce.yaml
+ create mode 100644 drivers/crypto/allwinner/Kconfig
+ create mode 100644 drivers/crypto/allwinner/Makefile
+ create mode 100644 drivers/crypto/allwinner/sun8i-ce/Makefile
+ create mode 100644 drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+ create mode 100644 drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
+ create mode 100644 drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h
+
+-- 
+2.21.0
+
