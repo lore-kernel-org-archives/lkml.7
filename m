@@ -2,73 +2,82 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15385C00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 16:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D62C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E30FA20842
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 16:59:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7437E20693
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:01:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395103AbfIFQ7g (ORCPT
+        id S2395124AbfIFRBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 12:59:36 -0400
-Received: from mga18.intel.com ([134.134.136.126]:59966 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727816AbfIFQ7g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 12:59:36 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Sep 2019 09:59:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,473,1559545200"; 
-   d="scan'208";a="183187904"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga008.fm.intel.com with ESMTP; 06 Sep 2019 09:59:33 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1i6Ha8-0002Nu-BV; Fri, 06 Sep 2019 19:59:32 +0300
-Date:   Fri, 6 Sep 2019 19:59:32 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Chris Chiu <chiu@endlessm.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: intel: hide unused intel_pin_to_gpio
-Message-ID: <20190906165932.GX2680@smile.fi.intel.com>
-References: <20190906152609.1603386-1-arnd@arndb.de>
+        Fri, 6 Sep 2019 13:01:13 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:53697 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727816AbfIFRBN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 13:01:13 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1i6Hbc-0002Xh-UF; Fri, 06 Sep 2019 17:01:05 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Pedro Sousa <pedrom.sousa@synopsys.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: ufs: make array setup_attrs static const, makes object smaller
+Date:   Fri,  6 Sep 2019 18:01:04 +0100
+Message-Id: <20190906170104.10450-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190906152609.1603386-1-arnd@arndb.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 06, 2019 at 05:26:01PM +0200, Arnd Bergmann wrote:
-> The intel_pin_to_gpio() function is only called by the
-> PM support functions and causes a warning when those are disabled:
-> 
-> drivers/pinctrl/intel/pinctrl-intel.c:841:12: error: unused function 'intel_pin_to_gpio' [-Werror,-Wunused-function]
-> 
-> As we cannot change the PM functions themselves to use __maybe_unused,
-> add another #ifdef here for consistency.
+From: Colin Ian King <colin.king@canonical.com>
 
-It's not adding another #ifdef here...
+Don't populate the array setup_attrs on the stack but instead make it
+static const. Makes the object code smaller by 180 bytes.
 
-Nevertheless, I'm afraid that in the future we might need this in other
-place(s). Can we add __maybe_unused to this function exclusively?
+Before:
+   text	   data	    bss	    dec	    hex	filename
+   2140	    224	      0	   2364	    93c	drivers/scsi/ufs/ufshcd-dwc.o
 
+After:
+   text	   data	    bss	    dec	    hex	filename
+   1863	    320	      0	   2183	    887	drivers/scsi/ufs/ufshcd-dwc.o
+
+(gcc version 9.2.1, amd64)
+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/scsi/ufs/ufshcd-dwc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/scsi/ufs/ufshcd-dwc.c b/drivers/scsi/ufs/ufshcd-dwc.c
+index fb9e2ff4f8d2..6a901da2d15a 100644
+--- a/drivers/scsi/ufs/ufshcd-dwc.c
++++ b/drivers/scsi/ufs/ufshcd-dwc.c
+@@ -80,7 +80,7 @@ static int ufshcd_dwc_link_is_up(struct ufs_hba *hba)
+  */
+ static int ufshcd_dwc_connection_setup(struct ufs_hba *hba)
+ {
+-	const struct ufshcd_dme_attr_val setup_attrs[] = {
++	static const struct ufshcd_dme_attr_val setup_attrs[] = {
+ 		{ UIC_ARG_MIB(T_CONNECTIONSTATE), 0, DME_LOCAL },
+ 		{ UIC_ARG_MIB(N_DEVICEID), 0, DME_LOCAL },
+ 		{ UIC_ARG_MIB(N_DEVICEID_VALID), 0, DME_LOCAL },
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.20.1
 
