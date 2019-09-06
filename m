@@ -2,77 +2,85 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13054C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34408C00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6D022070C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:54:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D80C2070C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:54:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391387AbfIFKyn (ORCPT
+        id S2391507AbfIFKyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 06:54:43 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6693 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728218AbfIFKym (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 06:54:42 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 049A9D59D406580C3DA1;
-        Fri,  6 Sep 2019 18:54:41 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 6 Sep 2019 18:54:30 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] f2fs: fix to avoid accessing uninitialized field of inode page in is_alive()
-Date:   Fri, 6 Sep 2019 18:54:26 +0800
-Message-ID: <20190906105426.109151-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Fri, 6 Sep 2019 06:54:55 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46716 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391388AbfIFKyz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 06:54:55 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0E04110A8120;
+        Fri,  6 Sep 2019 10:54:55 +0000 (UTC)
+Received: from localhost (ovpn-117-208.ams2.redhat.com [10.36.117.208])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AB9875D6A9;
+        Fri,  6 Sep 2019 10:54:49 +0000 (UTC)
+Date:   Fri, 6 Sep 2019 11:54:48 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, miklos@szeredi.hu,
+        linux-kernel@vger.kernel.org, virtio-fs@redhat.com,
+        dgilbert@redhat.com, mst@redhat.com
+Subject: Re: [PATCH 09/18] virtiofs: Add an helper to start all the queues
+Message-ID: <20190906105448.GQ5900@stefanha-x1.localdomain>
+References: <20190905194859.16219-1-vgoyal@redhat.com>
+ <20190905194859.16219-10-vgoyal@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zywvytGCXzdVpkje"
+Content-Disposition: inline
+In-Reply-To: <20190905194859.16219-10-vgoyal@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Fri, 06 Sep 2019 10:54:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If inode is newly created, inode page may not synchronize with inode cache,
-so fields like .i_inline or .i_extra_isize could be wrong, in below call
-path, we may access such wrong fields, result in failing to migrate valid
-target block.
 
-- gc_data_segment
- - is_alive
-  - datablock_addr
-   - offset_in_addr
+--zywvytGCXzdVpkje
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: 7a2af766af15 ("f2fs: enhance on-disk inode structure scalability")
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
- fs/f2fs/dir.c | 3 +++
- 1 file changed, 3 insertions(+)
+On Thu, Sep 05, 2019 at 03:48:50PM -0400, Vivek Goyal wrote:
+> This just marks are the queues are connected and ready to accept the
+> request.
+>=20
+> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> ---
+>  fs/fuse/virtio_fs.c | 19 ++++++++++++++++---
+>  1 file changed, 16 insertions(+), 3 deletions(-)
 
-diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
-index 765f13354d3f..b1840852967e 100644
---- a/fs/f2fs/dir.c
-+++ b/fs/f2fs/dir.c
-@@ -479,6 +479,9 @@ struct page *f2fs_init_inode_metadata(struct inode *inode, struct inode *dir,
- 		if (IS_ERR(page))
- 			return page;
- 
-+		/* synchronize inode page's data from inode cache */
-+		f2fs_update_inode(inode, page);
-+
- 		if (S_ISDIR(inode->i_mode)) {
- 			/* in order to handle error case */
- 			get_page(page);
--- 
-2.18.0.rc1
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
 
+--zywvytGCXzdVpkje
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl1yOvgACgkQnKSrs4Gr
+c8gpQQgAmqp0vUor8BWsHmF4f+In/ZlxHyIx8n3wydsF7FDmfDqnXBAAB1qRRErW
+2msRa5bwjkk9CUJdE9qVsrep5CjgqpApmNEGuCREhZcRpS7RFyZJaXbPhRI4ipII
+VjAcP0OhH1iVnyy2kWy4EaTdmDAgqjCLZjB3rDKldsYq37sfwAlX0xWyWBwKgRLm
+3g0KmiJa8E4aVlG01KfLrGd7+aschTC8Jm5p6XPVE8yN4tFCf0Ax3DbZ6PZen+ah
++BQQSXjYiyszHGT+F0E70ihwnaxZkqtiSOluPk0+db+DAvRC11OgYv54YdGXv6Gf
+g2HoRAtGSvMStmfuZfboifUBFXVhyw==
+=cHMM
+-----END PGP SIGNATURE-----
+
+--zywvytGCXzdVpkje--
