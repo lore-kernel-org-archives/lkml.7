@@ -2,58 +2,60 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A016C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 21:31:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9828FC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 21:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF2E8207FC
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 21:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65E072070C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 21:31:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pifvv8St"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eUmGZiHY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391875AbfIFVb3 (ORCPT
+        id S2404296AbfIFVbf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 17:31:29 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:45150 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388050AbfIFVb3 (ORCPT
+        Fri, 6 Sep 2019 17:31:35 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:41976 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391892AbfIFVbb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 17:31:29 -0400
-Received: by mail-io1-f67.google.com with SMTP id f12so16000326iog.12;
-        Fri, 06 Sep 2019 14:31:29 -0700 (PDT)
+        Fri, 6 Sep 2019 17:31:31 -0400
+Received: by mail-io1-f65.google.com with SMTP id r26so15997126ioh.8;
+        Fri, 06 Sep 2019 14:31:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=xVwpmZ2ZtvdywiC1aj2psfrcaWaJNdDJ11Fduy+f3HM=;
-        b=pifvv8St5FQaAQPjk2WT98XQiM3BW6BdU8LlrGB7GiohB2696W5SFXceYx+isaDLWy
-         DblAMPyZGKZKnpiVf0Y6Fdc6tALGBurl0lhmxwME9HSyXyNUsWbsV2L4BqzC07Z80+6L
-         voCMFmkUZm+umHMtxzbLZQQzo9wGeWUg2aCeCz0OOy5TvkjZg1FQOXYrYOl/xTYi4wFv
-         DD9z1dAGxWJeV/qkLM498RU26Om0F1IfCaG7Ql3uSk8fz7Z1c7X94SxEu6NmH9bj4Idz
-         0mG/3sv07qeqYRRwZYCPgPfJpvZCQJNtjYwvIA7GU3c1KrzQcL7YLMGjyqUMDFpJQ2BG
-         UIzw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=ctf47Isk+sWnuqgqj31UnomMaq5+optxw6xq0HgIW2Y=;
+        b=eUmGZiHY6PK00maj+13dp0wquFLwQIyBCzSXt8batfQ4qm1OeWNEEkxQMvJxHQuALI
+         ojQgAC5wpfMaFrvGfxiehzwxeJa9teTSCZJ5lQMYH3/9jwhW0qIcFn0OOIox9GmZveKU
+         kRAppzZ5cjG1dRPyTqsd59kUFHf37bCxh4+enUjQzE6OewldbZV8MWSRzv9tdWz15Fpm
+         BA1EgBEeqMuPZjF4et3euCRp/koOY/QVjksRr+9C344WBvcB3IwvIIR80uUGpFRtWsfU
+         0O1+E5b3bYgVbsoZNyWsXl+X1l+UlM35fs9TrZIPYr6bN1INPnL8tH9VcCtjIZpjt2Ax
+         UCuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=xVwpmZ2ZtvdywiC1aj2psfrcaWaJNdDJ11Fduy+f3HM=;
-        b=VsKfxfg8011HpZqs1gHSaWUIv3BruCcZqzNz/QKarvuyRSsAXTUUm1zDid8rhVMFVy
-         TX6cC3llRVIXSU05ZO7+f0hG6OpMvYfOomLriDDhV9wPMj5VgGNcst2hJiCT8oSiVmSI
-         OJK4IFj+YKFowaGN903rlx2SjJRg7ho1zgcd6yUZi1QaQdvEhhGZT7JGvBTdh2mr6R2w
-         AWhe5TkOjPn8Ez+MSmqLGHvDFP24PFp8daeMM5poD93ZAw0GzGunlvwMy5KRZEA+4IQV
-         Vr+JvRFXEhi+VnTldGUvAg85SCRVKq1CFctv92XUAbxSGVJWCK+8bZQBMo9YsbPUqjia
-         jQ1Q==
-X-Gm-Message-State: APjAAAXpcN4YfbnldDlmfMAan3t3JBj/i5IakJV68zvgxLLg5atMIc8A
-        cRlOIlXDyyC4ghfeOe91bLrj46ayXA==
-X-Google-Smtp-Source: APXvYqwq12dav+L5hmnDjzwDq6Gavs6929nwU75cW+mTayMD4U4e5mZ4kHvn8RDV8b1YVbXJZBtaVQ==
-X-Received: by 2002:a6b:6204:: with SMTP id f4mr9408758iog.175.1567805488374;
-        Fri, 06 Sep 2019 14:31:28 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=ctf47Isk+sWnuqgqj31UnomMaq5+optxw6xq0HgIW2Y=;
+        b=eDceYxtVJEm5HhlsuSm3HUaKBYAwi0MTgV6/oqEPUF0VRdfoAI/C6kdqcLw64vl6nS
+         I1Q6Bjo+gHddBEkt3FKKk1UWVKQCka8lYH+xn+aV+ASWFhUIafr+it3GkoJqmvJqM+uT
+         dzdCXCotHlqGgwhMA2avNC2baY4+cMMY+3yfl3ED/+XOl7r6q3Y5HGEJ4axI8bmszih0
+         nhvw0Vz69b14QTLZwzHQKQCxC9LMkRecnQWywgpAm0RJ7JAAyImBI7YqUYaeKZudykCM
+         algyIBZNmkwxYMNsfCR9HeWUbeIxdCqmKYCQdF3bnZTcyUew7XojygMifA3BFqheiNcC
+         YsKA==
+X-Gm-Message-State: APjAAAUNuCLpAUmDd8YKrpf++6GDj/OZc80HcAmouHQBsNQT/xOCmAqC
+        JInrvWgh2arW5OLXBR98HhMFChR2Eg==
+X-Google-Smtp-Source: APXvYqxF5zQ66iPLOKfHFfDP/II61WH+CVgQrt3EPFpOUdrpvHdm/DTUEE8NwOOoj19hYKPZyTo+ww==
+X-Received: by 2002:a02:600c:: with SMTP id i12mr12940192jac.84.1567805490536;
+        Fri, 06 Sep 2019 14:31:30 -0700 (PDT)
 Received: from threadripper.novatech-llc.local ([216.21.169.52])
-        by smtp.gmail.com with ESMTPSA id r2sm4158110ioh.61.2019.09.06.14.31.27
+        by smtp.gmail.com with ESMTPSA id r2sm4158110ioh.61.2019.09.06.14.31.29
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 06 Sep 2019 14:31:27 -0700 (PDT)
+        Fri, 06 Sep 2019 14:31:29 -0700 (PDT)
 From:   George McCollister <george.mccollister@gmail.com>
 To:     netdev@vger.kernel.org
 Cc:     Woojung Huh <woojung.huh@microchip.com>,
@@ -63,42 +65,72 @@ Cc:     Woojung Huh <woojung.huh@microchip.com>,
         "David S. Miller" <davem@davemloft.net>,
         Marek Vasut <marex@denx.de>, linux-kernel@vger.kernel.org,
         George McCollister <george.mccollister@gmail.com>
-Subject: [PATCH net-next 0/3] add ksz9567 with I2C support to ksz9477 driver
-Date:   Fri,  6 Sep 2019 16:30:51 -0500
-Message-Id: <20190906213054.48908-1-george.mccollister@gmail.com>
+Subject: [PATCH net-next 2/3] net: dsa: microchip: add ksz9567 to ksz9477 driver
+Date:   Fri,  6 Sep 2019 16:30:53 -0500
+Message-Id: <20190906213054.48908-3-george.mccollister@gmail.com>
 X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20190906213054.48908-1-george.mccollister@gmail.com>
+References: <20190906213054.48908-1-george.mccollister@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Resurrect KSZ9477 I2C driver support patch originally sent to the list
-by Tristram Ha and resolve outstanding issues. It now works as similarly to
-the ksz9477 SPI driver as possible, using the same regmap macros.
+Add support for the KSZ9567 7-Port Gigabit Ethernet Switch to the
+ksz9477 driver. The KSZ9567 supports both SPI and I2C. Oddly the
+ksz9567 is already in the device tree binding documentation.
 
-Add support for ksz9567 to the ksz9477 driver (tested on a board with
-ksz9567 connected via I2C).
+Signed-off-by: George McCollister <george.mccollister@gmail.com>
+---
+ drivers/net/dsa/microchip/ksz9477.c     | 9 +++++++++
+ drivers/net/dsa/microchip/ksz9477_i2c.c | 1 +
+ drivers/net/dsa/microchip/ksz9477_spi.c | 1 +
+ 3 files changed, 11 insertions(+)
 
-Remove NET_DSA_TAG_KSZ_COMMON since it's not needed.
-
-George McCollister (2):
-  net: dsa: microchip: add ksz9567 to ksz9477 driver
-  net: dsa: microchip: remove NET_DSA_TAG_KSZ_COMMON
-
-Tristram Ha (1):
-  net: dsa: microchip: add KSZ9477 I2C driver
-
- drivers/net/dsa/microchip/Kconfig       |   7 +++
- drivers/net/dsa/microchip/Makefile      |   1 +
- drivers/net/dsa/microchip/ksz9477.c     |   9 +++
- drivers/net/dsa/microchip/ksz9477_i2c.c | 101 ++++++++++++++++++++++++++++++++
- drivers/net/dsa/microchip/ksz9477_spi.c |   1 +
- drivers/net/dsa/microchip/ksz_common.h  |   2 +
- net/dsa/Kconfig                         |   9 +--
- net/dsa/Makefile                        |   2 +-
- 8 files changed, 124 insertions(+), 8 deletions(-)
- create mode 100644 drivers/net/dsa/microchip/ksz9477_i2c.c
-
+diff --git a/drivers/net/dsa/microchip/ksz9477.c b/drivers/net/dsa/microchip/ksz9477.c
+index 187be42de5f1..50ffc63d6231 100644
+--- a/drivers/net/dsa/microchip/ksz9477.c
++++ b/drivers/net/dsa/microchip/ksz9477.c
+@@ -1529,6 +1529,15 @@ static const struct ksz_chip_data ksz9477_switch_chips[] = {
+ 		.cpu_ports = 0x07,	/* can be configured as cpu port */
+ 		.port_cnt = 3,		/* total port count */
+ 	},
++	{
++		.chip_id = 0x00956700,
++		.dev_name = "KSZ9567",
++		.num_vlans = 4096,
++		.num_alus = 4096,
++		.num_statics = 16,
++		.cpu_ports = 0x7F,	/* can be configured as cpu port */
++		.port_cnt = 7,		/* total physical port count */
++	},
+ };
+ 
+ static int ksz9477_switch_init(struct ksz_device *dev)
+diff --git a/drivers/net/dsa/microchip/ksz9477_i2c.c b/drivers/net/dsa/microchip/ksz9477_i2c.c
+index 85fd0fb43941..c1548a43b60d 100644
+--- a/drivers/net/dsa/microchip/ksz9477_i2c.c
++++ b/drivers/net/dsa/microchip/ksz9477_i2c.c
+@@ -77,6 +77,7 @@ MODULE_DEVICE_TABLE(i2c, ksz9477_i2c_id);
+ static const struct of_device_id ksz9477_dt_ids[] = {
+ 	{ .compatible = "microchip,ksz9477" },
+ 	{ .compatible = "microchip,ksz9897" },
++	{ .compatible = "microchip,ksz9567" },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, ksz9477_dt_ids);
+diff --git a/drivers/net/dsa/microchip/ksz9477_spi.c b/drivers/net/dsa/microchip/ksz9477_spi.c
+index 2e402e4d866f..f4198d6f72be 100644
+--- a/drivers/net/dsa/microchip/ksz9477_spi.c
++++ b/drivers/net/dsa/microchip/ksz9477_spi.c
+@@ -81,6 +81,7 @@ static const struct of_device_id ksz9477_dt_ids[] = {
+ 	{ .compatible = "microchip,ksz9893" },
+ 	{ .compatible = "microchip,ksz9563" },
+ 	{ .compatible = "microchip,ksz8563" },
++	{ .compatible = "microchip,ksz9567" },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, ksz9477_dt_ids);
 -- 
 2.11.0
 
