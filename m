@@ -2,153 +2,77 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7956BC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D75CC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53CE82067B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 106592082C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:30:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405384AbfIFO3F (ORCPT
+        id S2405432AbfIFOaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 10:29:05 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:36696 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388545AbfIFO3F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 10:29:05 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 69C8BE935B408234D2E0;
-        Fri,  6 Sep 2019 22:29:01 +0800 (CST)
-Received: from [127.0.0.1] (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Fri, 6 Sep 2019
- 22:28:59 +0800
-Subject: Re: [PATCH] media: staging: tegra-vde: Disable building with
- COMPILE_TEST
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>
-References: <20190826133140.13456-1-yuehaibing@huawei.com>
- <7f73bcac-f52d-f1b3-324c-e9b551c5378b@xs4all.nl>
- <20190829124034.GA19842@ulmo>
- <b048b460-9d58-8e38-e335-f9a3fface559@gmail.com>
- <20190829154902.GC19842@ulmo>
- <c4014675-8fc6-e947-7ac5-68795fd80bc0@gmail.com>
-CC:     <mchehab@kernel.org>, <gregkh@linuxfoundation.org>,
-        <jonathanh@nvidia.com>, <robin.murphy@arm.com>,
-        <linux-media@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <3ce3b6ed-86d3-55ac-462d-4bc91b7d04ed@huawei.com>
-Date:   Fri, 6 Sep 2019 22:28:58 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Fri, 6 Sep 2019 10:30:16 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:46547 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390975AbfIFOaQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 10:30:16 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1i6FFc-0005RF-IG; Fri, 06 Sep 2019 14:30:12 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Hugh Dickins <hughd@google.com>, linux-mm@kvack.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] mm/shmem.c: make array 'values' static const, makes object smaller
+Date:   Fri,  6 Sep 2019 15:30:12 +0100
+Message-Id: <20190906143012.28698-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <c4014675-8fc6-e947-7ac5-68795fd80bc0@gmail.com>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Colin Ian King <colin.king@canonical.com>
 
+Don't populate the array 'values' on the stack but instead make it
+static const. Makes the object code smaller by 111 bytes.
 
-On 2019/9/6 21:38, Dmitry Osipenko wrote:
-> 29.08.2019 18:49, Thierry Reding пишет:
->> On Thu, Aug 29, 2019 at 04:58:22PM +0300, Dmitry Osipenko wrote:
->>> 29.08.2019 15:40, Thierry Reding пишет:
->>>> On Thu, Aug 29, 2019 at 01:39:32PM +0200, Hans Verkuil wrote:
->>>>> On 8/26/19 3:31 PM, YueHaibing wrote:
->>>>>> If COMPILE_TEST is y and IOMMU_SUPPORT is n, selecting TEGRA_VDE
->>>>>> to m will set IOMMU_IOVA to m, this fails the building of
->>>>>> TEGRA_HOST1X and DRM_TEGRA which is y like this:
->>>>>>
->>>>>> drivers/gpu/host1x/cdma.o: In function `host1x_cdma_init':
->>>>>> cdma.c:(.text+0x66c): undefined reference to `alloc_iova'
->>>>>> cdma.c:(.text+0x698): undefined reference to `__free_iova'
->>>>>>
->>>>>> drivers/gpu/drm/tegra/drm.o: In function `tegra_drm_unload':
->>>>>> drm.c:(.text+0xeb0): undefined reference to `put_iova_domain'
->>>>>> drm.c:(.text+0xeb4): undefined reference to `iova_cache_put'
->>>>>>
->>>>>> Reported-by: Hulk Robot <hulkci@huawei.com>
->>>>>> Fixes: 6b2265975239 ("media: staging: tegra-vde: Fix build error")
->>>>>> Fixes: b301f8de1925 ("media: staging: media: tegra-vde: Add IOMMU support")
->>>>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->>>>>> ---
->>>>>>  drivers/staging/media/tegra-vde/Kconfig | 4 ++--
->>>>>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/staging/media/tegra-vde/Kconfig b/drivers/staging/media/tegra-vde/Kconfig
->>>>>> index ba49ea5..a41d30c 100644
->>>>>> --- a/drivers/staging/media/tegra-vde/Kconfig
->>>>>> +++ b/drivers/staging/media/tegra-vde/Kconfig
->>>>>> @@ -1,9 +1,9 @@
->>>>>>  # SPDX-License-Identifier: GPL-2.0
->>>>>>  config TEGRA_VDE
->>>>>>  	tristate "NVIDIA Tegra Video Decoder Engine driver"
->>>>>> -	depends on ARCH_TEGRA || COMPILE_TEST
->>>>>> +	depends on ARCH_TEGRA
->>>>>
->>>>> What happens if you drop this change,
->>>>>
->>>>>>  	select DMA_SHARED_BUFFER
->>>>>> -	select IOMMU_IOVA if (IOMMU_SUPPORT || COMPILE_TEST)
->>>>>> +	select IOMMU_IOVA if IOMMU_SUPPORT
->>>>>
->>>>> but keep this change?
->>>>>
->>>>> iova.h has stubs that are used if IOMMU_IOVA is not set, so it should
->>>>> work when compile testing this tegra-vde driver.
->>>>>
->>>>> Haven't tried it, but making sure that compile testing keep working is
->>>>> really important.
->>>
->>> The driver's code compilation works okay, it's the linkage stage which
->>> fails during compile-testing.
->>>
->>>> Yeah, that variant seems to work for me. I think it's also more correct
->>>> because the IOMMU_IOVA if IOMMU_SUPPORT dependency really says that the
->>>> IOVA usage is bound to IOMMU support. If IOMMU support is not enabled,
->>>> then IOVA is not needed either, so the dummies will do just fine.
->>>
->>> Am I understanding correctly that you're suggesting to revert [1][2] and
->>> get back to the other problem?
->>>
->>> [1]
->>> https://lore.kernel.org/linux-media/dd547b44-7abb-371f-aeee-a82b96f824e2@gmail.com/T/
->>> [2] https://patchwork.ozlabs.org/patch/1136619/
->>>
->>> If we want to keep compile testing, I guess the only reasonable variant
->>> right now is to select IOMMU_IOVA unconditionally in all of the drivers
->>> (vde, host1x, drm and etc) and then just ignore that IOVA will be
->>> compiled-and-unused if IOMMU_SUPPORT=n (note that IOMMU_SUPPORT=y in all
->>> of default kernel configurations).
->>
->> Agreed. I think we should just select IOMMU_IOVA unconditionally. We
->> really do want IOMMU_SUPPORT always as well, but it might be nice to be
->> able to switch it off for testing or so. In the cases that really matter
->> we will be enabling both IOMMU_SUPPORT and IOMMU_IOVA anyway, so might
->> as well select IOMMU_IOVA always. It's not terribly big and I can't
->> imagine anyone wanting to run a kernel without IOMMU_SUPPORT for
->> anything other than testing.
-> 
-> Hello Yue,
-> 
-> Could you please make an updated version of the fix in accordance to the above comments?
-> 
-> Alternatively, we can go with the current patch and temporarily remove the compile-testing. I'll make
-> patches to properly re-add compile-testing sometime later then.
+Before:
+   text	   data	    bss	    dec	    hex	filename
+ 108612	  11169	    512	 120293	  1d5e5	mm/shmem.o
 
-I prefer to do this choice, thanks.
+After:
+   text	   data	    bss	    dec	    hex	filename
+ 108437	  11233	    512	 120182	  1d576	mm/shmem.o
 
-> 
-> .
-> 
+(gcc version 9.2.1, amd64)
+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ mm/shmem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 77d2df011c0e..30e1de87bdca 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -3934,7 +3934,7 @@ int __init shmem_init(void)
+ static ssize_t shmem_enabled_show(struct kobject *kobj,
+ 		struct kobj_attribute *attr, char *buf)
+ {
+-	int values[] = {
++	static const int values[] = {
+ 		SHMEM_HUGE_ALWAYS,
+ 		SHMEM_HUGE_WITHIN_SIZE,
+ 		SHMEM_HUGE_ADVISE,
+-- 
+2.20.1
 
