@@ -2,177 +2,155 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB04C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 09:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6081C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 09:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0646D2082C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 09:25:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="eKLzvu2M"
+	by mail.kernel.org (Postfix) with ESMTP id 8DE782082C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 09:26:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392898AbfIFJZd (ORCPT
+        id S2392909AbfIFJ0Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 05:25:33 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:32832 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727447AbfIFJZc (ORCPT
+        Fri, 6 Sep 2019 05:26:24 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:50481 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbfIFJ0Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 05:25:32 -0400
-Received: by mail-wr1-f65.google.com with SMTP id u16so5829027wrr.0
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 02:25:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4/hTF78iK4Cpd1QxROMccGOHzNHaxmbPis/cOP5u7Xg=;
-        b=eKLzvu2MGA64vk98hhxrKNuyKWibjjWUbKiy08K4iRsX1Co7AIxiUbclqeXzsnCFIu
-         IWvBUrh2iX8dSC1MP4TPJdmTs5Hh1NJEcr3hwmC88o+E9iYYFLSjyxH0ZOTOLFrt3f9l
-         16xmIXG1pm8YAmLbpt11SbjP/akgC3ruX5yVU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4/hTF78iK4Cpd1QxROMccGOHzNHaxmbPis/cOP5u7Xg=;
-        b=nunwQTl/t/CAIPK9gzvzX5CiBv0WEj1EV3FapzwS1uPpdDYxbW6RJXwDBk6BXMaRxo
-         00LeS2nBX+9wGniQaq1mDHg4cpHLkybAOb0r1WbGQMeP6QW2cEmDfm9lgH0wSpM7qKNP
-         U+pqVWJvOdOb29f35LcR2jWt6/BXQH/tYf8/QVN2y3ZLmMv/CexFEXqj76v/OYKNGXXa
-         9p2+dGYcy8gjtGD70dvHF05TOcehVBVp6O2tdWLQdIlDf1HWwytDKKOIGf6YACF8Q8bZ
-         zYi9haEK/X6kkWWWAAl3/ImW1Zf/halsS4GVSFbK90V2XR0aCwjFyPpzTK3gpr2qXY8X
-         5kAg==
-X-Gm-Message-State: APjAAAVbUCCww62VlNPQtHQpwsk6QSUZ7BpNtshP0rCl2gdkqv8zmjxr
-        C3HGmOPEAXIOfhiKqI4Pl6eYPR+RpUAb4pYrbwIAwg==
-X-Google-Smtp-Source: APXvYqwbU+XGTguORWihC8VnYu09/9mUmdttn0D/6NQhpn7lEMS/E0pN0mR6XPsaf0hc7khzR2EiaXrcqpuqhy9wNdY=
-X-Received: by 2002:adf:dd04:: with SMTP id a4mr6298846wrm.340.1567761930632;
- Fri, 06 Sep 2019 02:25:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190906035813.24046-1-abhishek.shah@broadcom.com> <20190906083816.GD9720@e119886-lin.cambridge.arm.com>
-In-Reply-To: <20190906083816.GD9720@e119886-lin.cambridge.arm.com>
-From:   Abhishek Shah <abhishek.shah@broadcom.com>
-Date:   Fri, 6 Sep 2019 14:55:19 +0530
-Message-ID: <CAKUFe6ZuRGJSmLdXqTWJzX-nE_Vh4yEQF_-rf+BWFrD_r4BRaQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] PCI: iproc: Invalidate PAXB address mapping before
- programming it
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        linux-pci@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+        Fri, 6 Sep 2019 05:26:24 -0400
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1i6AVV-0003w1-Ob; Fri, 06 Sep 2019 11:26:17 +0200
+Message-ID: <1567761976.6575.1.camel@pengutronix.de>
+Subject: Re: [PATCH for 5.4] media: hantro: Fix s_fmt for dynamic resolution
+ changes
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org
+Cc:     kernel@collabora.com,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        fbuergisser@chromium.org, linux-kernel@vger.kernel.org
+Date:   Fri, 06 Sep 2019 11:26:16 +0200
+In-Reply-To: <93b49e964b1f9f5c799affd2ab5416a16f0dda23.camel@collabora.com>
+References: <20190903171256.25052-1-ezequiel@collabora.com>
+         <1567592011.3041.1.camel@pengutronix.de>
+         <37bbd1b8ee7bb82c75aefb675e0c3ddd955dde0b.camel@collabora.com>
+         <1567603704.3041.10.camel@pengutronix.de>
+         <93b49e964b1f9f5c799affd2ab5416a16f0dda23.camel@collabora.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+On Thu, 2019-09-05 at 15:00 -0300, Ezequiel Garcia wrote:
+> On Wed, 2019-09-04 at 15:28 +0200, Philipp Zabel wrote:
+> > On Wed, 2019-09-04 at 10:01 -0300, Ezequiel Garcia wrote:
+> > > On Wed, 2019-09-04 at 12:13 +0200, Philipp Zabel wrote:
+> > > > Hi Ezequiel,
+> > > > 
+> > > > On Tue, 2019-09-03 at 14:12 -0300, Ezequiel Garcia wrote:
+> > > > > Commit 953aaa1492c53 ("media: rockchip/vpu: Prepare things to support decoders")
+> > > > > changed the conditions under S_FMT was allowed for OUTPUT
+> > > > > CAPTURE buffers.
+> > > > > 
+> > > > > However, and according to the mem-to-mem stateless decoder specification,
+> > > > > in order to support dynamic resolution changes, S_FMT should be allowed
+> > > > > even if OUTPUT buffers have been allocated.
+> > > > > 
+> > > > > Relax decoder S_FMT restrictions on OUTPUT buffers, allowing a resolution
+> > > > > modification, provided the pixel format stays the same.
+> > > > > 
+> > > > > Tested on RK3288 platforms using ChromiumOS Video Decode/Encode Accelerator Unittests.
+> > > > > 
+> > > > > Fixes: 953aaa1492c53 ("media: rockchip/vpu: Prepare things to support decoders")
+> > > > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > > > > ---
+> > > > >  drivers/staging/media/hantro/hantro_v4l2.c | 22 ++++++++++++++++------
+> > > > >  1 file changed, 16 insertions(+), 6 deletions(-)
+> > > > > 
+> > > > > diff --git a/drivers/staging/media/hantro/hantro_v4l2.c b/drivers/staging/media/hantro/hantro_v4l2.c
+> > > > > index 3dae52abb96c..d48b548842cf 100644
+> > > > > --- a/drivers/staging/media/hantro/hantro_v4l2.c
+> > > > > +++ b/drivers/staging/media/hantro/hantro_v4l2.c
+> > > > > @@ -367,19 +367,22 @@ vidioc_s_fmt_out_mplane(struct file *file, void *priv, struct v4l2_format *f)
+> > > > >  {
+> > > > >  	struct v4l2_pix_format_mplane *pix_mp = &f->fmt.pix_mp;
+> > > > >  	struct hantro_ctx *ctx = fh_to_ctx(priv);
+> > > > > +	struct vb2_queue *vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
+> > > > >  	const struct hantro_fmt *formats;
+> > > > >  	unsigned int num_fmts;
+> > > > > -	struct vb2_queue *vq;
+> > > > >  	int ret;
+> > > > >  
+> > > > > -	/* Change not allowed if queue is busy. */
+> > > > > -	vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
+> > > > > -	if (vb2_is_busy(vq))
+> > > > > -		return -EBUSY;
+> > > > > -
+> > > > >  	if (!hantro_is_encoder_ctx(ctx)) {
+> > > > >  		struct vb2_queue *peer_vq;
+> > > > >  
+> > > > > +		/*
+> > > > > +		 * In other to support dynamic resolution change,
+> > > > > +		 * the decoder admits a resolution change, as long
+> > > > > +		 * as the pixelformat remains. Can't be done if streaming.
+> > > > > +		 */
+> > > > > +		if (vb2_is_streaming(vq) || (vb2_is_busy(vq) &&
+> > > > > +		    pix_mp->pixelformat != ctx->src_fmt.pixelformat))
+> > > > 
+> > > > Before using contents of the v4l2_format f for comparison, we should run
+> > > > vidioc_try_fmt_out_mplane over it.
+> > > 
+> > > Right, good catch.
+> > > 
+> > > >  Also, besides pixelformat, sizeimage
+> > > > shouldn't change either, at least if this is a VB2_MMAP queue.
+> > > > 
+> > > 
+> > > This is the OUTPUT queue, so I don't see why the sizeimage
+> > > of the coded buffers should stay the same. Maybe I'm missing
+> > > something? 
+> > 
+> > If the OUTPUT vb2_queue is busy, we already have some buffers of the old
+> > size allocated. We can't change their size dynamically with just
+> > VIDIOC_S_FMT.
+> > 
+> > Maybe this should correct sizeimage to the old size instead of returning
+> > -EBUSY? Either way, if the old buffer size is too small to reasonably
+> > decode the new resolution, the OUTPUT buffers have to be reallocated.
+> > 
+> 
+> Note that for a decoder, the OUTPUT side buffers are coded. Is there any
+> straightforward correlation between the buffer size and the resolution?
+>
+> In other words, how does the driver figure out if the size is
+> resonably large?
 
-Thanks for the review. Please see my response inline:
+The decoded frame size seems like a reasonable upper bound at first, but
+especially for formats like H.264 it is trivial to construct slices that
+are larger than that with I_PCM macroblocks.
 
-On Fri, Sep 6, 2019 at 2:08 PM Andrew Murray <andrew.murray@arm.com> wrote:
->
-> On Fri, Sep 06, 2019 at 09:28:13AM +0530, Abhishek Shah wrote:
-> > Invalidate PAXB inbound/outbound address mapping each time before
-> > programming it. This is helpful for the cases where we need to
-> > reprogram inbound/outbound address mapping without resetting PAXB.
-> > kexec kernel is one such example.
->
-> Why is this approach better than resetting the PAXB (I assume that's
-> the PCI controller IP)? Wouldn't resetting the PAXB address this issue,
-> and ensure that no other configuration is left behind?
->
-We normally reset PAXB in the firmware(ATF). But for cases like kexec
-kernel boot,
-we do not execute any firmware code and directly boot into kernel.
+I think for H.264 some limit depending on profile and level can be
+constructed from spec chapter A.3. "Levels", by looking at the rules for
+the sum of NumBytesInNALunit, though not quite straightforward.
 
-We could have done PAXB reset in the driver itself as you have suggested here.
-But note that this detail could vary for each SoC, because these
-registers are not part
-of PAXB register space itself, rather exists in a register space responsible for
-controlling power to various wrappers in PCIe IP. Normally, this kind
-of SoC specific
-details are handled in firmware itself, we don't bring them to driver level.
-
-> Or is this related to earlier boot stages loading firmware for the emulated
-> downstream endpoints (ep_is_internal)?
->
-> Finally, in the case where ep_is_internal do you need to disable anything
-> prior to invalidating the mappings?
->
-No, ep_is_internal  is indicator for PAXC IP. It does not have
-mappings as in PAXB.
-
-
-Regards,
-Abhishek
-> >
-> > Signed-off-by: Abhishek Shah <abhishek.shah@broadcom.com>
-> > Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-> > Reviewed-by: Vikram Mysore Prakash <vikram.prakash@broadcom.com>
-> > ---
-> >  drivers/pci/controller/pcie-iproc.c | 28 ++++++++++++++++++++++++++++
-> >  1 file changed, 28 insertions(+)
-> >
-> > diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
-> > index e3ca46497470..99a9521ba7ab 100644
-> > --- a/drivers/pci/controller/pcie-iproc.c
-> > +++ b/drivers/pci/controller/pcie-iproc.c
-> > @@ -1245,6 +1245,32 @@ static int iproc_pcie_map_dma_ranges(struct iproc_pcie *pcie)
-> >       return ret;
-> >  }
-> >
-> > +static void iproc_pcie_invalidate_mapping(struct iproc_pcie *pcie)
-> > +{
-> > +     struct iproc_pcie_ib *ib = &pcie->ib;
-> > +     struct iproc_pcie_ob *ob = &pcie->ob;
-> > +     int idx;
-> > +
-> > +     if (pcie->ep_is_internal)
-> > +             return;
-> > +
-> > +     if (pcie->need_ob_cfg) {
-> > +             /* iterate through all OARR mapping regions */
-> > +             for (idx = ob->nr_windows - 1; idx >= 0; idx--) {
-> > +                     iproc_pcie_write_reg(pcie,
-> > +                                          MAP_REG(IPROC_PCIE_OARR0, idx), 0);
-> > +             }
-> > +     }
-> > +
-> > +     if (pcie->need_ib_cfg) {
-> > +             /* iterate through all IARR mapping regions */
-> > +             for (idx = 0; idx < ib->nr_regions; idx++) {
-> > +                     iproc_pcie_write_reg(pcie,
-> > +                                          MAP_REG(IPROC_PCIE_IARR0, idx), 0);
-> > +             }
-> > +     }
-> > +}
-> > +
-> >  static int iproce_pcie_get_msi(struct iproc_pcie *pcie,
-> >                              struct device_node *msi_node,
-> >                              u64 *msi_addr)
-> > @@ -1517,6 +1543,8 @@ int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
-> >       iproc_pcie_perst_ctrl(pcie, true);
-> >       iproc_pcie_perst_ctrl(pcie, false);
-> >
-> > +     iproc_pcie_invalidate_mapping(pcie);
-> > +
-> >       if (pcie->need_ob_cfg) {
-> >               ret = iproc_pcie_map_ranges(pcie, res);
-> >               if (ret) {
->
-> The code changes look good to me.
->
-> Thanks,
->
-> Andrew Murray
->
-> > --
-> > 2.17.1
-> >
+regards
+Philipp
