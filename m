@@ -2,127 +2,100 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B901C00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F4D5C43140
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F6532082C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:23:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D8EC2173B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:23:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394764AbfIFPX3 (ORCPT
+        id S2394783AbfIFPXg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 11:23:29 -0400
-Received: from foss.arm.com ([217.140.110.172]:58326 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726019AbfIFPX3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 11:23:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7E0ED1576;
-        Fri,  6 Sep 2019 08:23:28 -0700 (PDT)
-Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8D3603F59C;
-        Fri,  6 Sep 2019 08:23:27 -0700 (PDT)
-From:   Steven Price <steven.price@arm.com>
-Subject: Re: [PATCH] drm/panfrost: Fix regulator_get_optional() misuse
-To:     Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-References: <20190904123032.23263-1-broonie@kernel.org>
-Message-ID: <ccd81530-2dbd-3c02-ca0a-1085b00663b5@arm.com>
-Date:   Fri, 6 Sep 2019 16:23:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 6 Sep 2019 11:23:36 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:57609 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726019AbfIFPXf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 11:23:35 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MC3L9-1i0zgF3HKf-00CQ6I; Fri, 06 Sep 2019 17:23:14 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Zhou Wang <wangzhou1@hisilicon.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Hao Fang <fanghao11@huawei.com>,
+        Kenneth Lee <liguozhu@hisilicon.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] crypto: hisilicon - avoid unused function warning
+Date:   Fri,  6 Sep 2019 17:22:30 +0200
+Message-Id: <20190906152250.1450649-2-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20190906152250.1450649-1-arnd@arndb.de>
+References: <20190906152250.1450649-1-arnd@arndb.de>
 MIME-Version: 1.0
-In-Reply-To: <20190904123032.23263-1-broonie@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:ltG7Dz//KZqox/ulRWhNwr6SfqbMWug5c/0Q+nuvztJL6BD1vJA
+ EmHRbJP1qdS6LHV68X6MZAAlJG0X0zCKPWwfoQuPwwOy5llTfWPGPYi7Zj45BMLWklrozkT
+ xKHwcH9T6mMO5c4xJ4zh27kGw9XbnlTJfrQ+d9MTzb37QOjUaolFjo9vQHybDkA9bQR7viF
+ ipY6Iu17Pt9qIK8PGMl+Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:1uFE00/QaKM=:RpHBHFJ7z5dUtAY8BG6QR+
+ PXPkJAqDK11VOHtVg5HxdhFLKQ+dv/ca8OlweOakzJCAkjIs3YgBwZ7CfxItKbFwc1fZX0mEc
+ OcDTEGGCOhC36+aAYf71NFoxz3SpDzq3nQhpeF+mjfdvcAvoxbDsDtpBl2XlHPYh6xoxuRILZ
+ G5dVVc1XZC2R2AVqeiHpdOEcoiRLQdFM9s8+MOp843H5/kt0F1znnd1UVz0EBGu5g+qVguH4I
+ 7Wl2S+TCgbGTrCKAmRd6ZBFRsgPeP1kYWxvtZRcy5TcD4CDaikGoShMSiFA2sNDW2S3U2yaLA
+ CJd4Ref3oLxIQvj0l4ozsBEshGINdKP7RjxX8qhsBsi6MF1qS/j0ITT2t1u2ag9uKj4hoDXvC
+ VRcNAaGawP1JaexgXFrCkBOLoO+/2qtx47EQBQGkblceVV0AxOrd2xggwfNlCdsHmdUOYPp3C
+ eofed5/n/MO5X5bZd/LqgZ7LeykztBwws0w6hrCb4dFA4fi5CITEvnIXdAMjtVcafJpWjYBgk
+ wbPZciDvGyvwz5zaaJ9BxVVjZUiv6P2IdEojIhhgKwP1EQFmpeu0jrqICOYr2qOGWiv0JZVdG
+ L/n8IW91EQA0dbjoE5Rq/bZbbFSCD1gPwHiQYQqftj7YLquEvs3eQrs6CPtbdwfqeaYRAY0ty
+ TmH/FXTsdxtA4FDaFdGAu5FNiYLiDUAZJw9Ja/MBhc8op4w685vGfeNZTyv7OlMpnGZH3wvJp
+ A0cVeScbtsRqEh4ZfhgrrGxOLzdsdCCbgPrXQAL6MJRKZR99wONcWBxJHDkCojWZDJXxHXFzY
+ C0fpJCXDkBSmo9cVpJLE9/hEBmaFrKdTfVOanF7laQKELtPrsM=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/09/2019 13:30, Mark Brown wrote:
-> The panfrost driver requests a supply using regulator_get_optional()
-> but both the name of the supply and the usage pattern suggest that it is
-> being used for the main power for the device and is not at all optional
-> for the device for function, there is no meaningful handling for absent
-> supplies.  Such regulators should use the vanilla regulator_get()
-> interface, it will ensure that even if a supply is not described in the
-> system integration one will be provided in software.
-> 
-> Signed-off-by: Mark Brown <broonie@kernel.org>
+The only caller of hisi_zip_vf_q_assign() is hidden in an #ifdef,
+so the function causes a warning when CONFIG_PCI_IOV is disabled:
 
-Tested-by: Steven Price <steven.price@arm.com>
+drivers/crypto/hisilicon/zip/zip_main.c:740:12: error: unused function 'hisi_zip_vf_q_assign' [-Werror,-Wunused-function]
 
-Looks like my approach to this was wrong - so we should also revert the
-changes I made previously.
+Move it into the same #ifdef.
 
-----8<----
-From fe20f8abcde8444bb41a8f72fb35de943a27ec5c Mon Sep 17 00:00:00 2001
-From: Steven Price <steven.price@arm.com>
-Date: Fri, 6 Sep 2019 15:20:53 +0100
-Subject: [PATCH] drm/panfrost: Revert changes to cope with NULL regulator
-
-Handling a NULL return from devm_regulator_get_optional() doesn't seem
-like the correct way of handling this. Instead revert the changes in
-favour of switching to using devm_regulator_get() which will return a
-dummy regulator instead.
-
-Reverts commit 52282163dfa6 ("drm/panfrost: Add missing check for pfdev->regulator")
-Reverts commit e21dd290881b ("drm/panfrost: Enable devfreq to work without regulator")
-
-Signed-off-by: Steven Price <steven.price@arm.com>
+Fixes: 79e09f30eeba ("crypto: hisilicon - add SRIOV support for ZIP")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/gpu/drm/panfrost/panfrost_devfreq.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/crypto/hisilicon/zip/zip_main.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.c b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-index a1f5fa6a742a..076983071e58 100644
---- a/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-@@ -39,7 +39,7 @@ static int panfrost_devfreq_target(struct device *dev, unsigned long *freq,
- 	 * If frequency scaling from low to high, adjust voltage first.
- 	 * If frequency scaling from high to low, adjust frequency first.
- 	 */
--	if (old_clk_rate < target_rate && pfdev->regulator) {
-+	if (old_clk_rate < target_rate) {
- 		err = regulator_set_voltage(pfdev->regulator, target_volt,
- 					    target_volt);
- 		if (err) {
-@@ -53,14 +53,12 @@ static int panfrost_devfreq_target(struct device *dev, unsigned long *freq,
- 	if (err) {
- 		dev_err(dev, "Cannot set frequency %lu (%d)\n", target_rate,
- 			err);
--		if (pfdev->regulator)
--			regulator_set_voltage(pfdev->regulator,
--					      pfdev->devfreq.cur_volt,
--					      pfdev->devfreq.cur_volt);
-+		regulator_set_voltage(pfdev->regulator, pfdev->devfreq.cur_volt,
-+				      pfdev->devfreq.cur_volt);
- 		return err;
- 	}
+diff --git a/drivers/crypto/hisilicon/zip/zip_main.c b/drivers/crypto/hisilicon/zip/zip_main.c
+index 6e0ca75585d4..bd0283c2fa87 100644
+--- a/drivers/crypto/hisilicon/zip/zip_main.c
++++ b/drivers/crypto/hisilicon/zip/zip_main.c
+@@ -736,6 +736,7 @@ static int hisi_zip_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	return ret;
+ }
  
--	if (old_clk_rate > target_rate && pfdev->regulator) {
-+	if (old_clk_rate > target_rate) {
- 		err = regulator_set_voltage(pfdev->regulator, target_volt,
- 					    target_volt);
- 		if (err)
-@@ -138,6 +136,9 @@ int panfrost_devfreq_init(struct panfrost_device *pfdev)
- 	int ret;
- 	struct dev_pm_opp *opp;
++#ifdef CONFIG_PCI_IOV
+ /* Currently we only support equal assignment */
+ static int hisi_zip_vf_q_assign(struct hisi_zip *hisi_zip, int num_vfs)
+ {
+@@ -764,6 +765,7 @@ static int hisi_zip_vf_q_assign(struct hisi_zip *hisi_zip, int num_vfs)
  
-+	if (!pfdev->regulator)
-+		return 0;
-+
- 	ret = dev_pm_opp_of_add_table(&pfdev->pdev->dev);
- 	if (ret == -ENODEV) /* Optional, continue without devfreq */
- 		return 0;
+ 	return 0;
+ }
++#endif
+ 
+ static int hisi_zip_clear_vft_config(struct hisi_zip *hisi_zip)
+ {
 -- 
-2.20.1
+2.20.0
 
