@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEDB0C43331
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E03C00306
 	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 03:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A88AC206DE
+	by mail.kernel.org (Postfix) with ESMTP id D35BE2082C
 	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 03:13:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="b8K0dwSO"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="ZDThdENw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404398AbfIFDNJ (ORCPT
+        id S2392095AbfIFDNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 23:13:09 -0400
-Received: from mail.efficios.com ([167.114.142.138]:40124 "EHLO
+        Thu, 5 Sep 2019 23:13:10 -0400
+Received: from mail.efficios.com ([167.114.142.138]:40200 "EHLO
         mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391259AbfIFDNJ (ORCPT
+        with ESMTP id S2391352AbfIFDNJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 5 Sep 2019 23:13:09 -0400
 Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 0A41532CD7E;
+        by mail.efficios.com (Postfix) with ESMTP id B6FCE32CD97;
         Thu,  5 Sep 2019 23:13:08 -0400 (EDT)
 Received: from mail.efficios.com ([IPv6:::1])
         by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id aayVk7JPbFuJ; Thu,  5 Sep 2019 23:13:07 -0400 (EDT)
+        with ESMTP id I7PkGRtwE3SS; Thu,  5 Sep 2019 23:13:08 -0400 (EDT)
 Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 5A2DB32CD78;
-        Thu,  5 Sep 2019 23:13:07 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 5A2DB32CD78
+        by mail.efficios.com (Postfix) with ESMTP id 352B732CD8B;
+        Thu,  5 Sep 2019 23:13:08 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 352B732CD8B
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1567739587;
-        bh=7Srmn34tOeDbJzYM48SWBd4hahO+yo5hhHH3R10GHHo=;
+        s=default; t=1567739588;
+        bh=2A9/n7ArrLAzW9IAuwPyXacDtSg9pVuTezAJwqTSuNo=;
         h=From:To:Date:Message-Id;
-        b=b8K0dwSOPkr9c1xMqkrNDNl2ZxxygJer6Cq8atILpglXPX1lDdxBudcarGU1EzFWw
-         fVvO3kbCJa70pN40/ykfJMaOostIjxuOqoafXPaaD7snB7rUuUoRK66kijboyd1RS9
-         WUwSGnvsUIbVWVycioK64dKBoleiEgmZ3nwn9RjYo/33SLQ3Ye5T1Ltcy2RVbfSH5E
-         BopLIJbY+0d9A01teWiR/KEfnTe403TVK9XcCszSVM+LG6nlqsUOptlCG/E088V1Qm
-         SP3EMCfBkt5mwfbYU5XER7ZNvgusF0BbGhg/4bZWWkoaPdiDnWNa5SF4f9MThaxZEm
-         srlsnhQpFNYdw==
+        b=ZDThdENw17KD/ErjaGjuMvkzgkhkwp421myC9lRRUVfmif0IbwYPSxgCNIt2nf2U8
+         UuF9MM3ZEmpgCX8NLCnuOIHJ53hU7xVLYomDvz74b4lrPSDKowwdHxDMXUwgY/Vt/2
+         c5itvN3OrwY+owK1nOwsBrcqgEI2OwMmTQSqWJgz85hM7yqk44IpgmM0ilDMXdKms+
+         3mtEK4KLDiOTvZXD4IEfClUHAKY62sHfNIG8kyX2X1jQTdRFuo3hP199YsmA7YAT9c
+         inMTYjO+XrGYtTBXtmNdTAZSKbnI00owD/rk+N+zBL+IirYZuc8NTzjQwMuC6/ukXT
+         /ZBDbAUsS8mfg==
 X-Virus-Scanned: amavisd-new at efficios.com
 Received: from mail.efficios.com ([IPv6:::1])
         by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id x5jTZ3oxQ--h; Thu,  5 Sep 2019 23:13:07 -0400 (EDT)
+        with ESMTP id N0lQwGd4mzoc; Thu,  5 Sep 2019 23:13:08 -0400 (EDT)
 Received: from localhost.localdomain (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
-        by mail.efficios.com (Postfix) with ESMTPSA id 1C10532CD68;
+        by mail.efficios.com (Postfix) with ESMTPSA id 5437032CD74;
         Thu,  5 Sep 2019 23:13:07 -0400 (EDT)
 From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
@@ -63,9 +63,9 @@ Cc:     Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
         Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
         Thomas Gleixner <tglx@linutronix.de>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: [RFC PATCH 2/4] Cleanup: sched/membarrier: remove redundant check
-Date:   Thu,  5 Sep 2019 23:12:58 -0400
-Message-Id: <20190906031300.1647-3-mathieu.desnoyers@efficios.com>
+Subject: [RFC PATCH 3/4] Cleanup: sched/membarrier: only sync_core before usermode for same mm
+Date:   Thu,  5 Sep 2019 23:12:59 -0400
+Message-Id: <20190906031300.1647-4-mathieu.desnoyers@efficios.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190906031300.1647-1-mathieu.desnoyers@efficios.com>
 References: <20190906031300.1647-1-mathieu.desnoyers@efficios.com>
@@ -74,8 +74,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Checking that the number of threads is 1 is redundant with checking
-mm_users == 1.
+When the prev and next task's mm change, switch_mm() provides the core
+serializing guarantees before returning to usermode. The only case
+where an explicit core serialization is needed is when the scheduler
+keeps the same mm for prev and next.
 
 Suggested-by: Oleg Nesterov <oleg@redhat.com>
 Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
@@ -92,31 +94,22 @@ Cc: Mike Galbraith <efault@gmx.de>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/sched/membarrier.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/sched/mm.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/kernel/sched/membarrier.c b/kernel/sched/membarrier.c
-index 5110d91b1b0e..7e0a0d6535f3 100644
---- a/kernel/sched/membarrier.c
-+++ b/kernel/sched/membarrier.c
-@@ -186,7 +186,7 @@ static int membarrier_register_global_expedited(void)
- 	    MEMBARRIER_STATE_GLOBAL_EXPEDITED_READY)
- 		return 0;
- 	atomic_or(MEMBARRIER_STATE_GLOBAL_EXPEDITED, &mm->membarrier_state);
--	if (atomic_read(&mm->mm_users) == 1 && get_nr_threads(p) == 1) {
-+	if (atomic_read(&mm->mm_users) == 1) {
- 		/*
- 		 * For single mm user, single threaded process, we can
- 		 * simply issue a memory barrier after setting
-@@ -232,7 +232,7 @@ static int membarrier_register_private_expedited(int flags)
- 	if (flags & MEMBARRIER_FLAG_SYNC_CORE)
- 		atomic_or(MEMBARRIER_STATE_PRIVATE_EXPEDITED_SYNC_CORE,
- 			  &mm->membarrier_state);
--	if (!(atomic_read(&mm->mm_users) == 1 && get_nr_threads(p) == 1)) {
-+	if (atomic_read(&mm->mm_users) != 1) {
- 		/*
- 		 * Ensure all future scheduler executions will observe the
- 		 * new thread flag state for this process.
+diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+index 4a7944078cc3..8557ec664213 100644
+--- a/include/linux/sched/mm.h
++++ b/include/linux/sched/mm.h
+@@ -362,6 +362,8 @@ enum {
+ 
+ static inline void membarrier_mm_sync_core_before_usermode(struct mm_struct *mm)
+ {
++	if (current->mm != mm)
++		return;
+ 	if (likely(!(atomic_read(&mm->membarrier_state) &
+ 		     MEMBARRIER_STATE_PRIVATE_EXPEDITED_SYNC_CORE)))
+ 		return;
 -- 
 2.17.1
 
