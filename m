@@ -2,199 +2,154 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9785BC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 00:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3153DC43140
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 00:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84AE0206DE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 00:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D66D206DE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 00:22:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RWyzr011"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="StCAfb2A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391510AbfIFAWk (ORCPT
+        id S2391542AbfIFAWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 20:22:40 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42006 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733029AbfIFAWj (ORCPT
+        Thu, 5 Sep 2019 20:22:53 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43166 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391513AbfIFAWw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 20:22:39 -0400
-Received: by mail-ot1-f66.google.com with SMTP id c10so4083728otd.9;
-        Thu, 05 Sep 2019 17:22:38 -0700 (PDT)
+        Thu, 5 Sep 2019 20:22:52 -0400
+Received: by mail-pf1-f196.google.com with SMTP id d15so3037039pfo.10
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 17:22:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=F3KgxZCE6wGfvBP5oQ0LRpaf5srELgoiLv08h1VYngU=;
-        b=RWyzr011WHchg8QDqqcyyG+FLCXDP1Z+h5I++aBHB1NGSbFPXlGrqiO4fbykMTFIKJ
-         Ssy1jwn1j0z0AdhpLhaKgyGO77L4x8wHJWt2Yo8mJj8RwnLN70swmBFfs1XqqllZMb5a
-         DWlONHhW3PBO/qR2nuTiM5VFm+jWt/allCHOWrNLOFEYAMwhKYDALbpRzIDPSCcOfFn2
-         Kh5GRFcvYsj5n2qXr6Ayd43UFYXrihNsY66wmxDXTB8UETm4P9Bgp0JUiJSBW4/Q8qHC
-         4asB+wk80RxvbJT9E9XuFB0Bv8O+yw8xi/75LNoBRVnT+frbKq3MNxlN/gOQ2XhmyGEI
-         0Cgg==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:to:from:cc:subject:user-agent:date;
+        bh=MPDWtahInu0EL/Ywfs85W/c8rw7VGUzH6mYW6IduHVo=;
+        b=StCAfb2AiqD8Ue3i9/QI4bpVf/OWZ286AN1LOQL2HLVx0V3VRyFDprvRadL0U790Iy
+         4vGCpclo1d6hoYw8GYf8EGw8r7PCB9VLmNFaruJFxZLEht1Wfv1rij2uywO62jUbAu4K
+         HO1r3hANXe6deztEoqZXXBxJ7mLDcjgE27KHc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=F3KgxZCE6wGfvBP5oQ0LRpaf5srELgoiLv08h1VYngU=;
-        b=bjvkoT1sxtlebfhygdoP7VG7zwmjjl2QMAbzumoVJWscIR8jGvGc0bpgTr6dzDshxs
-         Tjz4qz0YDUQhsj1r0UswFPjJZ9w9zH6BJS7xLvTy1xHtWCn0OuLDQwDYaywIyTKXNtBt
-         dBQwXIgG6wFJImsAsPTGqvj4CpjFbuLqcJ2zzlrkfSqKCA1eaY/zY/EzttfDqQbDS41M
-         2NretthfR4q/D8RKCkXn0e9Ps/xw0WXyWglIcq+thPF0kNXmChex9q8wnTy9EqH8KSbF
-         SkYpScaad91bt0ejegO4ICSQBxrSZFboTjbg7cU5kHnkac8ySpV4X4gesxRKZqG+l5Vj
-         6LRw==
-X-Gm-Message-State: APjAAAXjRRjDVYYni1eVPKjiWcHlqZREoN5Y2XklM1OshfBoiBheR3VS
-        C1xNi8h9w3uc/oft1A3AlxHqjnAuRmS/QF3UNkI=
-X-Google-Smtp-Source: APXvYqzSeuicgTsdlkgjbJ7p0pM1nUj95yiRm3MH9E3XVyaqYqNQrhO1FdH26XxjqNebqAci4sW5NTeNvJnAqkUe1UQ=
-X-Received: by 2002:a9d:3a63:: with SMTP id j90mr5093105otc.185.1567729358504;
- Thu, 05 Sep 2019 17:22:38 -0700 (PDT)
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:to:from:cc:subject
+         :user-agent:date;
+        bh=MPDWtahInu0EL/Ywfs85W/c8rw7VGUzH6mYW6IduHVo=;
+        b=MPpDoLPNj8GHwzIx8LZ6VfiafRoUD+et+OvWqGH0D8Zp79bT7a5Qgo5ksIEjMRFz2s
+         5dWSGnOMkyAWhm0aclgJk6cWXFukk0izvco5QKxstdJRLAmwOmACD6/aIFBh3VieHDfC
+         FwEDBTKMLNg0qqP7HIK7G3NbV7qYBJFyASOea7Gof07l9Aj5Q/GewlIZh1Sg06qpM2sT
+         UrAK7v2ApWaYaTRZlEIW4mEMSIJX19JdBWJ7uKA1UJg/cngFX/Fk47x3hbUCgozgFEW+
+         8rotzHnqQ5Fn520pbhObAqUvlv4TSYtEH2AcmRnU6Qc8SZYTfMBJghiOf1R3YPPQqjQa
+         +tqQ==
+X-Gm-Message-State: APjAAAWVKaJDfx4wnfDI0NE3gOgNNTRMBtHWAIcgM1nlW8rzV/Y6YLTr
+        vPpkz99nE5JMAiITrE1pl67Dxg==
+X-Google-Smtp-Source: APXvYqyPAzRHOCF66O88q/1xZ1v7Uq+Z7TZEGqx/dnTiXiGD00folZPLr/+XxSEuNGZyohJIeuldtA==
+X-Received: by 2002:aa7:8219:: with SMTP id k25mr7365951pfi.72.1567729371874;
+        Thu, 05 Sep 2019 17:22:51 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id k31sm3495752pjb.14.2019.09.05.17.22.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2019 17:22:51 -0700 (PDT)
+Message-ID: <5d71a6db.1c69fb81.1bc1c.9225@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190905125818.22395-1-graf@amazon.com>
-In-Reply-To: <20190905125818.22395-1-graf@amazon.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Fri, 6 Sep 2019 08:22:25 +0800
-Message-ID: <CANRm+Cy9+AUeoCZRr6shZjaMT07=t6BJsOR8CHhy-RuZvMP+WA@mail.gmail.com>
-Subject: Re: [PATCH v3] KVM: x86: Disable posted interrupts for odd IRQs
-To:     Alexander Graf <graf@amazon.com>
-Cc:     kvm <kvm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jim Mattson <jmattson@google.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Liran Alon <liran.alon@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190829181203.2660-7-ilina@codeaurora.org>
+References: <20190829181203.2660-1-ilina@codeaurora.org> <20190829181203.2660-7-ilina@codeaurora.org>
+To:     Lina Iyer <ilina@codeaurora.org>, evgreen@chromium.org,
+        linus.walleij@linaro.org, marc.zyngier@arm.com
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, mkshah@codeaurora.org,
+        linux-gpio@vger.kernel.org, rnayak@codeaurora.org,
+        Lina Iyer <ilina@codeaurora.org>
+Subject: Re: [PATCH RFC 06/14] drivers: irqchip: pdc: additionally set type in SPI config registers
+User-Agent: alot/0.8.1
+Date:   Thu, 05 Sep 2019 17:22:50 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 5 Sep 2019 at 21:46, Alexander Graf <graf@amazon.com> wrote:
->
-> We can easily route hardware interrupts directly into VM context when
-> they target the "Fixed" or "LowPriority" delivery modes.
->
-> However, on modes such as "SMI" or "Init", we need to go via KVM code
-> to actually put the vCPU into a different mode of operation, so we can
-> not post the interrupt
->
-> Add code in the VMX and SVM PI logic to explicitly refuse to establish
-> posted mappings for advanced IRQ deliver modes. This reflects the logic
-> in __apic_accept_irq() which also only ever passes Fixed and LowPriority
-> interrupts as posted interrupts into the guest.
->
-> This fixes a bug I have with code which configures real hardware to
-> inject virtual SMIs into my guest.
->
-> Signed-off-by: Alexander Graf <graf@amazon.com>
-
-Reviewed-by: Wanpeng Li <wanpengli@tencent.com>
-
->
-> ---
->
-> v1 -> v2:
->
->   - Make error message more unique
->   - Update commit message to point to __apic_accept_irq()
->
-> v2 -> v3:
->
->   - Use if() rather than switch()
->   - Move abort logic into existing if() branch for broadcast irqs
->   -> remove the updated error message again (thus remove R-B tag from Liran)
->   - Fold VMX and SVM changes into single commit
->   - Combine postability check into helper function kvm_irq_is_postable()
-> ---
->  arch/x86/include/asm/kvm_host.h | 7 +++++++
->  arch/x86/kvm/svm.c              | 4 +++-
->  arch/x86/kvm/vmx/vmx.c          | 6 +++++-
->  3 files changed, 15 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 44a5ce57a905..5b14aa1fbeeb 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1581,6 +1581,13 @@ bool kvm_intr_is_single_vcpu(struct kvm *kvm, struct kvm_lapic_irq *irq,
->  void kvm_set_msi_irq(struct kvm *kvm, struct kvm_kernel_irq_routing_entry *e,
->                      struct kvm_lapic_irq *irq);
->
-> +static inline bool kvm_irq_is_postable(struct kvm_lapic_irq *irq)
+Quoting Lina Iyer (2019-08-29 11:11:55)
+> diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
+> index ad1faf634bcf..bf5f98bb4d2b 100644
+> --- a/drivers/irqchip/qcom-pdc.c
+> +++ b/drivers/irqchip/qcom-pdc.c
+> @@ -100,6 +112,57 @@ static void qcom_pdc_gic_unmask(struct irq_data *d)
+>         irq_chip_unmask_parent(d);
+>  }
+> =20
+> +static u32 __spi_pin_read(unsigned int pin)
 > +{
-> +       /* We can only post Fixed and LowPrio IRQs */
-> +       return (irq->delivery_mode == dest_Fixed ||
-> +               irq->delivery_mode == dest_LowestPrio);
+> +       void __iomem *cfg_reg =3D spi_cfg->base + pin * 4;
+> +       u64 scm_cfg_reg =3D spi_cfg->start + pin * 4;
+> +
+> +       if (spi_cfg->scm_io) {
+> +               unsigned int val;
+> +
+> +               qcom_scm_io_readl(scm_cfg_reg, &val);
+> +               return val;
+> +       } else {
+> +               return readl(cfg_reg);
+> +       }
+
+Please remove the else and just return readl() result instead.
+
 > +}
 > +
->  static inline void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu)
->  {
->         if (kvm_x86_ops->vcpu_blocking)
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index 1f220a85514f..f5b03d0c9bc6 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -5260,7 +5260,8 @@ get_pi_vcpu_info(struct kvm *kvm, struct kvm_kernel_irq_routing_entry *e,
->
->         kvm_set_msi_irq(kvm, e, &irq);
->
-> -       if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu)) {
-> +       if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu) ||
-> +           !kvm_irq_is_postable(&irq)) {
->                 pr_debug("SVM: %s: use legacy intr remap mode for irq %u\n",
->                          __func__, irq.vector);
->                 return -1;
-> @@ -5314,6 +5315,7 @@ static int svm_update_pi_irte(struct kvm *kvm, unsigned int host_irq,
->                  * 1. When cannot target interrupt to a specific vcpu.
->                  * 2. Unsetting posted interrupt.
->                  * 3. APIC virtialization is disabled for the vcpu.
-> +                * 4. IRQ has incompatible delivery mode (SMI, INIT, etc)
->                  */
->                 if (!get_pi_vcpu_info(kvm, e, &vcpu_info, &svm) && set &&
->                     kvm_vcpu_apicv_active(&svm->vcpu)) {
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 570a233e272b..63f3d88b36cc 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -7382,10 +7382,14 @@ static int vmx_update_pi_irte(struct kvm *kvm, unsigned int host_irq,
->                  * irqbalance to make the interrupts single-CPU.
->                  *
->                  * We will support full lowest-priority interrupt later.
-> +                *
-> +                * In addition, we can only inject generic interrupts using
-> +                * the PI mechanism, refuse to route others through it.
->                  */
->
->                 kvm_set_msi_irq(kvm, e, &irq);
-> -               if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu)) {
-> +               if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu) ||
-> +                   !kvm_irq_is_postable(&irq)) {
->                         /*
->                          * Make sure the IRTE is in remapped mode if
->                          * we don't handle it in posted mode.
-> --
-> 2.17.1
->
->
->
->
-> Amazon Development Center Germany GmbH
-> Krausenstr. 38
-> 10117 Berlin
-> Geschaeftsfuehrung: Christian Schlaeger, Ralf Herbrich
-> Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-> Sitz: Berlin
-> Ust-ID: DE 289 237 879
->
->
->
+> +static void __spi_pin_write(unsigned int pin, unsigned int val)
+> +{
+> +       void __iomem *cfg_reg =3D spi_cfg->base + pin * 4;
+> +       u64 scm_cfg_reg =3D spi_cfg->start + pin * 4;
+> +
+> +       if (spi_cfg->scm_io)
+> +               qcom_scm_io_writel(scm_cfg_reg, val);
+> +       else
+> +               writel(val, cfg_reg);
+> +}
+> +
+> +static int spi_configure_type(irq_hw_number_t hwirq, unsigned int type)
+> +{
+> +       int spi =3D hwirq - 32;
+> +       u32 pin =3D spi / 32;
+> +       u32 mask =3D BIT(spi % 32);
+> +       u32 val;
+> +       unsigned long flags;
+> +
+> +       if (!spi_cfg)
+> +               return 0;
+> +
+> +       if (pin * 4 > spi_cfg->size)
+> +               return -EFAULT;
+> +
+> +       raw_spin_lock_irqsave(&pdc_lock, flags);
+
+Ah I don't think the regmap would use a raw spinlock, so that's another
+hurdle to get over here.
+
+> +       val =3D __spi_pin_read(pin);
+> +       val &=3D ~mask;
+> +       if (type & IRQ_TYPE_LEVEL_MASK)
+> +               val |=3D mask;
+> +       __spi_pin_write(pin, val);
+
+Does monitoring level triggered interrupts matter? I'm asking if the
+whole thing can be configured to monitor for edges regardless of trigger
+type and then let the level handling be done by the GIC after the wakeup
+or when the device is active.
+
+> +       raw_spin_unlock_irqrestore(&pdc_lock, flags);
+> +
+> +       return 0;
+> +}
+> +
+>  /*
+>   * GIC does not handle falling edge or active low. To allow falling edge=
+ and
+>   * active low interrupts to be handled at GIC, PDC has an inverter that =
+inverts
