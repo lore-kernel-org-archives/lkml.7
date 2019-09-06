@@ -2,110 +2,79 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9522C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A10AC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 982DE206A5
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:55:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CF402081B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:57:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394690AbfIFOzg (ORCPT
+        id S2392142AbfIFO5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 10:55:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58132 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725872AbfIFOzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 10:55:36 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 79BDCAC67;
-        Fri,  6 Sep 2019 14:55:34 +0000 (UTC)
-Date:   Fri, 6 Sep 2019 16:55:33 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, Qian Cai <cai@lca.pw>,
-        davem@davemloft.net, Eric Dumazet <eric.dumazet@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH] net/skbuff: silence warnings under memory pressure
-Message-ID: <20190906145533.4uw43a5pvsawmdov@pathway.suse.cz>
-References: <1567546948.5576.68.camel@lca.pw>
- <20190904061501.GB3838@dhcp22.suse.cz>
- <20190904064144.GA5487@jagdpanzerIV>
- <20190904065455.GE3838@dhcp22.suse.cz>
- <20190904071911.GB11968@jagdpanzerIV>
- <20190904074312.GA25744@jagdpanzerIV>
- <1567599263.5576.72.camel@lca.pw>
- <20190904144850.GA8296@tigerII.localdomain>
- <1567629737.5576.87.camel@lca.pw>
- <20190905113208.GA521@jagdpanzerIV>
+        Fri, 6 Sep 2019 10:57:30 -0400
+Received: from ms.lwn.net ([45.79.88.28]:36716 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726019AbfIFO5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 10:57:30 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 8ED4E9AC;
+        Fri,  6 Sep 2019 14:57:29 +0000 (UTC)
+Date:   Fri, 6 Sep 2019 08:57:28 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     tglx@linutronix.de, gregkh@linuxfoundation.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        konrad.wilk@oracle.com, jkosina@suse.cz, tyhicks@canonical.com,
+        linux-kernel@microsoft.com,
+        Sasha Levin <alexander.levin@microsoft.com>
+Subject: Re: [PATCH] Documentation/process/embargoed-hardware-issues:
+ Microsoft ambassador
+Message-ID: <20190906085728.15af96c3@lwn.net>
+In-Reply-To: <20190906095852.23568-1-sashal@kernel.org>
+References: <20190906095852.23568-1-sashal@kernel.org>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190905113208.GA521@jagdpanzerIV>
-User-Agent: NeoMutt/20170912 (1.9.0)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 2019-09-05 20:32:08, Sergey Senozhatsky wrote:
-> On (09/04/19 16:42), Qian Cai wrote:
-> > > Let me think more.
-> > 
-> > To summary, those look to me are all good long-term improvement that would
-> > reduce the likelihood of this kind of livelock in general especially for other
-> > unknown allocations that happen while processing softirqs, but it is still up to
-> > the air if it fixes it 100% in all situations as printk() is going to take more
-> > time
+On Fri,  6 Sep 2019 05:58:52 -0400
+Sasha Levin <sashal@kernel.org> wrote:
+
+> Add Sasha Levin as Microsoft's process ambassador.
 > 
-> Well. So. I guess that we don't need irq_work most of the time.
+> Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  Documentation/process/embargoed-hardware-issues.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> We need to queue irq_work for "safe" wake_up_interruptible(), when we
-> know that we can deadlock in scheduler. IOW, only when we are invoked
-> from the scheduler. Scheduler has printk_deferred(), which tells printk()
-> that it cannot do wake_up_interruptible(). Otherwise we can just use
-> normal wake_up_process() and don't need that irq_work->wake_up_interruptible()
-> indirection. The parts of the scheduler, which by mistake call plain printk()
-> from under pi_lock or rq_lock have chances to deadlock anyway and should
-> be switched to printk_deferred().
-> 
-> I think we can queue significantly much less irq_work-s from printk().
-> 
-> Petr, Steven, what do you think?
-> 
-> Something like this. Call wake_up_interruptible(), switch to
-> wake_up_klogd() only when called from sched code.
+> diff --git a/Documentation/process/embargoed-hardware-issues.rst b/Documentation/process/embargoed-hardware-issues.rst
+> index d37cbc502936d..9a92ccdbce74e 100644
+> --- a/Documentation/process/embargoed-hardware-issues.rst
+> +++ b/Documentation/process/embargoed-hardware-issues.rst
+> @@ -219,7 +219,7 @@ an involved disclosed party. The current ambassadors list:
+>    Intel
+>    Qualcomm
+>  
+> -  Microsoft
+> +  Microsoft	Sasha Levin <sashal@kernel.org>
+>    VMware
+>    XEN
 
-Replacing irq_work_queue() with wake_up_interruptible() looks
-dangerous to me.
+This document went upstream via Greg's tree, so updates are awkward for
+me to apply without having to explain a late backmerge to Linus.  I can
+hold them until after the merge window, unless you (Greg) would like to
+take them sooner?
 
-As a result, all "normal" printk() calls from the scheduler
-code will deadlock. There is almost always a userspace
-logger registered.
+Thanks,
 
-By "normal" I mean anything that is not printk_deferred(). For
-example, any WARN() from sheduler will cause a deadlock.
-We will not even have chance to catch these problems in
-advance by lockdep.
-
-The difference is that console_unlock() calls wake_up_process()
-only when there is a waiter. And the hard console_lock() is not
-called that often.
-
-
-Honestly, scheduling IRQ looks like the most lightweight and reliable
-solution for offloading. We are in big troubles if we could not use
-it in printk() code.
-
-IMHO, the best solution is to ratelimit the warnings about the
-allocation failures. It does not make sense to repeat the same
-warning again and again. We might need a better ratelimiting API
-if the current one is not reliable.
-
-Best Regards,
-Petr
+jon
