@@ -2,109 +2,232 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A5A4C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 01:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3564C00306
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 01:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32BA22082C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 01:30:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="puPqJNuU"
+	by mail.kernel.org (Postfix) with ESMTP id DFEF1207E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 01:35:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403988AbfIFBa0 (ORCPT
+        id S1732734AbfIFBfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 21:30:26 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37628 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391915AbfIFBaY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 21:30:24 -0400
-Received: by mail-pg1-f194.google.com with SMTP id d1so2496983pgp.4;
-        Thu, 05 Sep 2019 18:30:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=AziVDiNsJfWSoLEyeTjoxxBYGSeB6j2LvcpA2gkjX9Y=;
-        b=puPqJNuU2re3ZarBofADdbCQPRA4Nexdfs0IazA91Nh/pAC0CdSSGIy/aM/XrewZaD
-         Zs49HgtAeUSmbE644alwC4NcOKIgUZ80JrsVWPB9tFfOzHHuoCNx24trIsZFgvF6v8mo
-         kZ+ryhZ4TAoPVq5N7Yd3XzQBrj68Smus+JiRND9WzsWRyVIClfuciOGRtikbProl+7GL
-         mPEGUPHk+WwWio6t5YxhE6uhlWKB4dcvXWdJnyHjpyKtNnfrWVsQ4rKrIUNpFHRrr0bP
-         A7F7F37KJOaO0RdWim4j/FCmuKSCPP6K7xq+8CbLOufjID17J3G0oV75CQ6Nl57WMbHg
-         SkAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=AziVDiNsJfWSoLEyeTjoxxBYGSeB6j2LvcpA2gkjX9Y=;
-        b=Ieemg7/lT5QvmmH8WN52UYT5nWgq+O7tMox03m0YNuMxt48JuNagZENVCPmZEUPkt3
-         hbXuXMY2UVzWCB4YpNyQk2yD177frQG39z2qNywun2kAm8T6OSkSY5qYYzMBJTQH6Hxy
-         4qXyHIRtEzmkpoq8WutMlSSv4kVhPEjKsKmehkcmm4g3npY30nQ9nDVw/OneXg1U+45A
-         Bh+zr2h+CZdltI1fjhvEz98003CpLpfdUxSw3HjLFZilGXl5z7yzFkLo9OggLkpX8oJf
-         tSPHjqLFf3skh7U8w24RnoDTr5r/PCNSdaKvvs+VceQytMTVx0LM9YPp9pPV1i82gZVQ
-         zXFw==
-X-Gm-Message-State: APjAAAWVxZQzb3OTPJKSV0O3H/CAtmu9NjVhwLnJl2aJ7Wy76h7nzW8P
-        xWESGen2dOmxmkobVBnApqApSp7w
-X-Google-Smtp-Source: APXvYqy1fUbJXE5zasPgxg4UQV5TR/ejP9L4h//1lvPpmqMTiUelwv/c0XoLmR3pFUht8zTHGnmYKA==
-X-Received: by 2002:a63:2903:: with SMTP id p3mr5863365pgp.306.1567733423455;
-        Thu, 05 Sep 2019 18:30:23 -0700 (PDT)
-Received: from localhost.localdomain ([203.205.141.123])
-        by smtp.googlemail.com with ESMTPSA id g11sm3332294pgu.11.2019.09.05.18.30.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 05 Sep 2019 18:30:22 -0700 (PDT)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: [PATCH RESEND 4/5] KVM: VMX: Stop the preemption timer during vCPU reset
-Date:   Fri,  6 Sep 2019 09:30:03 +0800
-Message-Id: <1567733404-7759-4-git-send-email-wanpengli@tencent.com>
+        Thu, 5 Sep 2019 21:35:19 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:46392 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730279AbfIFBfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 21:35:18 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 009C51A050C;
+        Fri,  6 Sep 2019 03:35:16 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A52BD1A0B7A;
+        Fri,  6 Sep 2019 03:35:07 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 947C440296;
+        Fri,  6 Sep 2019 09:34:57 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     mturquette@baylibre.com, sboyd@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        leonard.crestez@nxp.com, abel.vesa@nxp.com, peng.fan@nxp.com,
+        ping.bai@nxp.com, chen.fang@nxp.com, shengjiu.wang@nxp.com,
+        aisheng.dong@nxp.com, sfr@canb.auug.org.au, l.stach@pengutronix.de,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V2 1/2] clk: imx8mm: Move 1443X/1416X PLL clock structure to common place
+Date:   Fri,  6 Sep 2019 09:34:05 -0400
+Message-Id: <1567776846-6373-1-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1567733404-7759-1-git-send-email-wanpengli@tencent.com>
-References: <1567733404-7759-1-git-send-email-wanpengli@tencent.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+Many i.MX8M SoCs use same 1443X/1416X PLL, such as i.MX8MM,
+i.MX8MN and later i.MX8M SoCs, moving these PLL definitions
+to pll14xx driver can save a lot of duplicated code on each
+platform.
 
-The hrtimer which is used to emulate lapic timer is stopped during
-vcpu reset, preemption timer should do the same.
+Meanwhile, no need to define PLL clock structure for every
+module which uses same type of PLL, e.g., audio/video/dram use
+1443X PLL, arm/gpu/vpu/sys use 1416X PLL, define 2 PLL clock
+structure for each group is enough.
 
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 1 +
- 1 file changed, 1 insertion(+)
+Changes since V1:
+	- Move 1443X/1416X PLL clock table/structure to pll14xx driver.
+---
+ drivers/clk/imx/clk-imx8mm.c  | 87 +++++--------------------------------------
+ drivers/clk/imx/clk-pll14xx.c | 30 +++++++++++++++
+ drivers/clk/imx/clk.h         |  3 ++
+ 3 files changed, 43 insertions(+), 77 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 570a233..f794929 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -4162,6 +4162,7 @@ static void vmx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
+diff --git a/drivers/clk/imx/clk-imx8mm.c b/drivers/clk/imx/clk-imx8mm.c
+index 2758e3f..9649250 100644
+--- a/drivers/clk/imx/clk-imx8mm.c
++++ b/drivers/clk/imx/clk-imx8mm.c
+@@ -26,73 +26,6 @@ static u32 share_count_disp;
+ static u32 share_count_pdm;
+ static u32 share_count_nand;
  
- 	vcpu->arch.microcode_version = 0x100000000ULL;
- 	vmx->vcpu.arch.regs[VCPU_REGS_RDX] = get_rdx_init_val();
-+	vmx->hv_deadline_tsc = -1;
- 	kvm_set_cr8(vcpu, 0);
+-static const struct imx_pll14xx_rate_table imx8mm_pll1416x_tbl[] = {
+-	PLL_1416X_RATE(1800000000U, 225, 3, 0),
+-	PLL_1416X_RATE(1600000000U, 200, 3, 0),
+-	PLL_1416X_RATE(1200000000U, 300, 3, 1),
+-	PLL_1416X_RATE(1000000000U, 250, 3, 1),
+-	PLL_1416X_RATE(800000000U,  200, 3, 1),
+-	PLL_1416X_RATE(750000000U,  250, 2, 2),
+-	PLL_1416X_RATE(700000000U,  350, 3, 2),
+-	PLL_1416X_RATE(600000000U,  300, 3, 2),
+-};
+-
+-static const struct imx_pll14xx_rate_table imx8mm_audiopll_tbl[] = {
+-	PLL_1443X_RATE(393216000U, 262, 2, 3, 9437),
+-	PLL_1443X_RATE(361267200U, 361, 3, 3, 17511),
+-};
+-
+-static const struct imx_pll14xx_rate_table imx8mm_videopll_tbl[] = {
+-	PLL_1443X_RATE(650000000U, 325, 3, 2, 0),
+-	PLL_1443X_RATE(594000000U, 198, 2, 2, 0),
+-};
+-
+-static const struct imx_pll14xx_rate_table imx8mm_drampll_tbl[] = {
+-	PLL_1443X_RATE(650000000U, 325, 3, 2, 0),
+-};
+-
+-static struct imx_pll14xx_clk imx8mm_audio_pll = {
+-		.type = PLL_1443X,
+-		.rate_table = imx8mm_audiopll_tbl,
+-		.rate_count = ARRAY_SIZE(imx8mm_audiopll_tbl),
+-};
+-
+-static struct imx_pll14xx_clk imx8mm_video_pll = {
+-		.type = PLL_1443X,
+-		.rate_table = imx8mm_videopll_tbl,
+-		.rate_count = ARRAY_SIZE(imx8mm_videopll_tbl),
+-};
+-
+-static struct imx_pll14xx_clk imx8mm_dram_pll = {
+-		.type = PLL_1443X,
+-		.rate_table = imx8mm_drampll_tbl,
+-		.rate_count = ARRAY_SIZE(imx8mm_drampll_tbl),
+-};
+-
+-static struct imx_pll14xx_clk imx8mm_arm_pll = {
+-		.type = PLL_1416X,
+-		.rate_table = imx8mm_pll1416x_tbl,
+-		.rate_count = ARRAY_SIZE(imx8mm_pll1416x_tbl),
+-};
+-
+-static struct imx_pll14xx_clk imx8mm_gpu_pll = {
+-		.type = PLL_1416X,
+-		.rate_table = imx8mm_pll1416x_tbl,
+-		.rate_count = ARRAY_SIZE(imx8mm_pll1416x_tbl),
+-};
+-
+-static struct imx_pll14xx_clk imx8mm_vpu_pll = {
+-		.type = PLL_1416X,
+-		.rate_table = imx8mm_pll1416x_tbl,
+-		.rate_count = ARRAY_SIZE(imx8mm_pll1416x_tbl),
+-};
+-
+-static struct imx_pll14xx_clk imx8mm_sys_pll = {
+-		.type = PLL_1416X,
+-		.rate_table = imx8mm_pll1416x_tbl,
+-		.rate_count = ARRAY_SIZE(imx8mm_pll1416x_tbl),
+-};
+-
+ static const char *pll_ref_sels[] = { "osc_24m", "dummy", "dummy", "dummy", };
+ static const char *audio_pll1_bypass_sels[] = {"audio_pll1", "audio_pll1_ref_sel", };
+ static const char *audio_pll2_bypass_sels[] = {"audio_pll2", "audio_pll2_ref_sel", };
+@@ -396,16 +329,16 @@ static int imx8mm_clocks_probe(struct platform_device *pdev)
+ 	clks[IMX8MM_SYS_PLL2_REF_SEL] = imx_clk_mux("sys_pll2_ref_sel", base + 0x104, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
+ 	clks[IMX8MM_SYS_PLL3_REF_SEL] = imx_clk_mux("sys_pll3_ref_sel", base + 0x114, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
  
- 	if (!init_event) {
+-	clks[IMX8MM_AUDIO_PLL1] = imx_clk_pll14xx("audio_pll1", "audio_pll1_ref_sel", base, &imx8mm_audio_pll);
+-	clks[IMX8MM_AUDIO_PLL2] = imx_clk_pll14xx("audio_pll2", "audio_pll2_ref_sel", base + 0x14, &imx8mm_audio_pll);
+-	clks[IMX8MM_VIDEO_PLL1] = imx_clk_pll14xx("video_pll1", "video_pll1_ref_sel", base + 0x28, &imx8mm_video_pll);
+-	clks[IMX8MM_DRAM_PLL] = imx_clk_pll14xx("dram_pll", "dram_pll_ref_sel", base + 0x50, &imx8mm_dram_pll);
+-	clks[IMX8MM_GPU_PLL] = imx_clk_pll14xx("gpu_pll", "gpu_pll_ref_sel", base + 0x64, &imx8mm_gpu_pll);
+-	clks[IMX8MM_VPU_PLL] = imx_clk_pll14xx("vpu_pll", "vpu_pll_ref_sel", base + 0x74, &imx8mm_vpu_pll);
+-	clks[IMX8MM_ARM_PLL] = imx_clk_pll14xx("arm_pll", "arm_pll_ref_sel", base + 0x84, &imx8mm_arm_pll);
+-	clks[IMX8MM_SYS_PLL1] = imx_clk_pll14xx("sys_pll1", "sys_pll1_ref_sel", base + 0x94, &imx8mm_sys_pll);
+-	clks[IMX8MM_SYS_PLL2] = imx_clk_pll14xx("sys_pll2", "sys_pll2_ref_sel", base + 0x104, &imx8mm_sys_pll);
+-	clks[IMX8MM_SYS_PLL3] = imx_clk_pll14xx("sys_pll3", "sys_pll3_ref_sel", base + 0x114, &imx8mm_sys_pll);
++	clks[IMX8MM_AUDIO_PLL1] = imx_clk_pll14xx("audio_pll1", "audio_pll1_ref_sel", base, &imx_1443x_pll);
++	clks[IMX8MM_AUDIO_PLL2] = imx_clk_pll14xx("audio_pll2", "audio_pll2_ref_sel", base + 0x14, &imx_1443x_pll);
++	clks[IMX8MM_VIDEO_PLL1] = imx_clk_pll14xx("video_pll1", "video_pll1_ref_sel", base + 0x28, &imx_1443x_pll);
++	clks[IMX8MM_DRAM_PLL] = imx_clk_pll14xx("dram_pll", "dram_pll_ref_sel", base + 0x50, &imx_1443x_pll);
++	clks[IMX8MM_GPU_PLL] = imx_clk_pll14xx("gpu_pll", "gpu_pll_ref_sel", base + 0x64, &imx_1416x_pll);
++	clks[IMX8MM_VPU_PLL] = imx_clk_pll14xx("vpu_pll", "vpu_pll_ref_sel", base + 0x74, &imx_1416x_pll);
++	clks[IMX8MM_ARM_PLL] = imx_clk_pll14xx("arm_pll", "arm_pll_ref_sel", base + 0x84, &imx_1416x_pll);
++	clks[IMX8MM_SYS_PLL1] = imx_clk_pll14xx("sys_pll1", "sys_pll1_ref_sel", base + 0x94, &imx_1416x_pll);
++	clks[IMX8MM_SYS_PLL2] = imx_clk_pll14xx("sys_pll2", "sys_pll2_ref_sel", base + 0x104, &imx_1416x_pll);
++	clks[IMX8MM_SYS_PLL3] = imx_clk_pll14xx("sys_pll3", "sys_pll3_ref_sel", base + 0x114, &imx_1416x_pll);
+ 
+ 	/* PLL bypass out */
+ 	clks[IMX8MM_AUDIO_PLL1_BYPASS] = imx_clk_mux_flags("audio_pll1_bypass", base, 4, 1, audio_pll1_bypass_sels, ARRAY_SIZE(audio_pll1_bypass_sels), CLK_SET_RATE_PARENT);
+diff --git a/drivers/clk/imx/clk-pll14xx.c b/drivers/clk/imx/clk-pll14xx.c
+index b721302..4a61743 100644
+--- a/drivers/clk/imx/clk-pll14xx.c
++++ b/drivers/clk/imx/clk-pll14xx.c
+@@ -41,6 +41,36 @@ struct clk_pll14xx {
+ 
+ #define to_clk_pll14xx(_hw) container_of(_hw, struct clk_pll14xx, hw)
+ 
++const struct imx_pll14xx_rate_table imx_pll1416x_tbl[] = {
++	PLL_1416X_RATE(1800000000U, 225, 3, 0),
++	PLL_1416X_RATE(1600000000U, 200, 3, 0),
++	PLL_1416X_RATE(1200000000U, 300, 3, 1),
++	PLL_1416X_RATE(1000000000U, 250, 3, 1),
++	PLL_1416X_RATE(800000000U,  200, 3, 1),
++	PLL_1416X_RATE(750000000U,  250, 2, 2),
++	PLL_1416X_RATE(700000000U,  350, 3, 2),
++	PLL_1416X_RATE(600000000U,  300, 3, 2),
++};
++
++const struct imx_pll14xx_rate_table imx_pll1443x_tbl[] = {
++	PLL_1443X_RATE(650000000U, 325, 3, 2, 0),
++	PLL_1443X_RATE(594000000U, 198, 2, 2, 0),
++	PLL_1443X_RATE(393216000U, 262, 2, 3, 9437),
++	PLL_1443X_RATE(361267200U, 361, 3, 3, 17511),
++};
++
++struct imx_pll14xx_clk imx_1443x_pll = {
++	.type = PLL_1443X,
++	.rate_table = imx_pll1443x_tbl,
++	.rate_count = ARRAY_SIZE(imx_pll1443x_tbl),
++};
++
++struct imx_pll14xx_clk imx_1416x_pll = {
++	.type = PLL_1416X,
++	.rate_table = imx_pll1416x_tbl,
++	.rate_count = ARRAY_SIZE(imx_pll1416x_tbl),
++};
++
+ static const struct imx_pll14xx_rate_table *imx_get_pll_settings(
+ 		struct clk_pll14xx *pll, unsigned long rate)
+ {
+diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
+index f7a389a..bc5bb6a 100644
+--- a/drivers/clk/imx/clk.h
++++ b/drivers/clk/imx/clk.h
+@@ -50,6 +50,9 @@ struct imx_pll14xx_clk {
+ 	int flags;
+ };
+ 
++extern struct imx_pll14xx_clk imx_1416x_pll;
++extern struct imx_pll14xx_clk imx_1443x_pll;
++
+ #define imx_clk_cpu(name, parent_name, div, mux, pll, step) \
+ 	imx_clk_hw_cpu(name, parent_name, div, mux, pll, step)->clk
+ 
 -- 
 2.7.4
 
