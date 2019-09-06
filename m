@@ -2,115 +2,220 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D54C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F91C00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70B6D20693
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:46:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=erdfelt.com header.i=@erdfelt.com header.b="i0IQ2nfN"
+	by mail.kernel.org (Postfix) with ESMTP id 02D3A207FC
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:47:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405831AbfIFPqU (ORCPT
+        id S2405843AbfIFPrK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 11:46:20 -0400
-Received: from out.bound.email ([141.193.244.10]:46721 "EHLO out.bound.email"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392834AbfIFPqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 11:46:20 -0400
-Received: from mail.sventech.com (localhost [127.0.0.1])
-        by out.bound.email (Postfix) with ESMTP id 233EB8A30DF;
-        Fri,  6 Sep 2019 08:46:19 -0700 (PDT)
-Received: by mail.sventech.com (Postfix, from userid 1000)
-        id 0841C16001D9; Fri,  6 Sep 2019 08:46:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=erdfelt.com;
-        s=default; t=1567784779;
-        bh=eBlOVLfggcwOPxI4VN9G8ioY2gar25PrXIsBZRxpLxs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=i0IQ2nfNoO1DT3lznsrNlpQJeuJ2LVZtgy0gHfA31FcEkTne/nOalwG6ojr0OeZ1I
-         978u89+rUiJVkYZmluwK/xtbBsRoFf4zednw75DIvvskcUIWcA9L2XDv5vDGCG9Ugo
-         ybW9yY7u7wBoUOXMyeRRn66IYENpZkIhxnf7F6qs=
-Date:   Fri, 6 Sep 2019 08:46:18 -0700
-From:   Johannes Erdfelt <johannes@erdfelt.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Mihai Carabas <mihai.carabas@oracle.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jon Grimm <Jon.Grimm@amd.com>, kanth.ghatraju@oracle.com,
-        konrad.wilk@oracle.com, patrick.colp@oracle.com,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        x86-ml <x86@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/microcode: Add an option to reload microcode even if
- revision is unchanged
-Message-ID: <20190906154618.GB29569@sventech.com>
-References: <41cee473-321c-2758-032a-ccf0f01359dc@oracle.com>
- <D8A3D2BD-1FD4-4183-8663-3EF02A6099F3@alien8.de>
- <20190905002132.GA26568@otc-nc-03>
- <20190905072029.GB19246@zn.tnic>
- <20190905194044.GA3663@otc-nc-03>
- <alpine.DEB.2.21.1909052316130.1902@nanos.tec.linutronix.de>
- <20190905222706.GA4422@otc-nc-03>
- <alpine.DEB.2.21.1909061431330.1902@nanos.tec.linutronix.de>
- <20190906144039.GA29569@sventech.com>
- <20190906151617.GE19008@zn.tnic>
+        Fri, 6 Sep 2019 11:47:10 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:41265 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394889AbfIFPrK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 11:47:10 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1N1M4p-1iH0lp1SZ9-012o5x; Fri, 06 Sep 2019 17:46:14 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] [RFC] Revert "iio: hid-sensor-attributes: Convert to use int_pow()"
+Date:   Fri,  6 Sep 2019 17:45:55 +0200
+Message-Id: <20190906154609.2421410-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190906151617.GE19008@zn.tnic>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:RxAflYvFSgC4AQPKdZewqxKzyuLVpknAeQFNbvbpm4IWXhrJKE5
+ ngA/qm5vcdBarsSA3ksUO+wW2JDquIuxHZeBCggIIdMe9ausS26Mr+sls8Fv2q5OKnQfy7t
+ 4RORQsBJIifBebjRCcr2jZUzxAt0Y/2sxEfm+xh8c+8nVyP2dud9U97619dGjF/P3I6kJFg
+ EVW1oWZ0e5XaSwQuiR32w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:9rRET29UyqE=:HHigNeMrYT6DOSZg/T67ZP
+ zmPQGlUUEekOSFfotQvcxTShBrC1j6gqX/oZrkGM0528Xk+bVpy3VQ9aEXo4JHpPpiSCNmiwB
+ 6b3wyFiGX/spxJvaXlzCQgEq72Oo7LiahyBgz/EilX1dptyMi9X/7LV23aBikB3l/kM8gwsne
+ XzzNHWNsNcSXXBfWlsahtcf3xMXk/GPJ7bj8pxqbb12nlXnUID/PlLSdAgCc7S64Pab/8ih4G
+ phIEZs4Z1xLJ8P+8QiUOp9iF9s5UpVBtbow7ge07+cmkdQTsWevPLtIkifO3OMZHRXAuNFoav
+ ZJI4Thqh5TOleh22pJ8LxjgDB1jvBmR3Am2jjZmGGPEMsWmDIY2M32Iikp1IxnjDsryqB0UIM
+ b+AxbPyregLyhPMJam/oYbogTOaFbThCN7DaM2mlkZ81QKbGOXy8PEDF+HbyNvhNccZ5zCSPi
+ z53oYZOS8dAjG71gccCv4zUVVdtAQgB1FAEvYwhS6iI+0ghnB/fLMQ3Mwiv4fjmxpeG6+X2tO
+ x82N5ByY+0zf2v3pZVKLDLb5Tu9o7ghsYpycY6EVGbqHFDRlHYlj1poScvmHSL+nKYFT14Iet
+ 4EURBt2SCAUktCVBDi94UwRvm9geTZWddsQCxXojRhhl0G/z1tAYMaURjpmKsjoeG1r1v6eM5
+ NrWBH8UFqy/d2K6uRn4ciC5CQqVq/pMdA49IpfpvXj22VW5MHmYQFv5E/QUiDS73FX27jTyQj
+ +gxHhxuyed83f/OG/dYY/1CJfGAw0Vz7g7OiXpvB2ua7fdxP9z84VnusVd1MbnzSxMjZr2/Ay
+ hcHh2MyMN/35zwwfzBA03hfg345QABAhe8ISXo49fD4pKiEV20=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 06, 2019, Borislav Petkov <bp@alien8.de> wrote:
-> On Fri, Sep 06, 2019 at 07:40:39AM -0700, Johannes Erdfelt wrote:
-> > I ask because we have successfully used late microcode loading on tens
-> > of thousands of hosts.
-> 
-> How do you deal with all the mitigations microcode loaded late?
+The change to use the generic int_pow instead of the private version
+caused a number of build issues on 32-bit architectures and makes
+it generally less efficient because of the 64-bit math:
 
-We developed livepatches to add the necessary support. I understand we
-aren't the typical Linux user. We do custom development and validation
-to support our use case.
+drivers/iio/common/hid-sensors/hid-sensor-attributes.o: In function `hid_sensor_write_samp_freq_value':
+hid-sensor-attributes.c:(.text+0x29c): undefined reference to `__aeabi_uldivmod'
+drivers/iio/common/hid-sensors/hid-sensor-attributes.o: In function `hid_sensor_read_raw_hyst_value':
+hid-sensor-attributes.c:(.text+0x420): undefined reference to `__aeabi_uldivmod'
+hid-sensor-attributes.c:(.text+0x448): undefined reference to `__aeabi_uldivmod'
+drivers/iio/common/hid-sensors/hid-sensor-attributes.o: In function `hid_sensor_write_raw_hyst_value':
+hid-sensor-attributes.c:(.text+0x570): undefined reference to `__aeabi_uldivmod'
 
-That said, we very much rely on late microcode loading and it has helped
-us and our customers significantly.
+There is probably a nicer solution to this, but for the moment,
+the revert makes it compile again.
 
-> > I'm a bit worried to see that there is a push to remove a feature that
-> > we currently rely on.
-> 
-> I'd love to remove it. And the fact that people rely on it more instead
-> of fixing their infrastructure to reboot machines and do early microcode
-> updates is making it worse. Microcode update should be batched with
-> kernel updates and that's it. They happen normally once-twice per year -
-> except the last two years but the last two years are not normal anyway
-> - and done. No need to do some crazy CPUID features reloading dances in
-> the kernel and making sure cores will see the updated paths and so on.
+Fixes: 473d12f7638c ("iio: hid-sensor-attributes: Convert to use int_pow()")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ .../hid-sensors/hid-sensor-attributes.c       | 53 +++++++++++--------
+ 1 file changed, 31 insertions(+), 22 deletions(-)
 
-It's really easy to say "fix your infrastructure" when you're not
-running that infrastructure.
-
-Reboots suck. Customers hate it. Operations hates it. When you get into
-the number of hosts we have, you run into all kinds of weird failure
-scenarios. (What do you mean that the NIC that was working just fine
-before the reboot is no longer seen on the PCI bus?)
-
-The more reboots we can avoid, the better it is for us and our
-customers.
-
-I understand that it could be unsafe to late load some rare microcode
-updates (theoretical or not). However, that is certainly the exception.
-We have done this multiple times on our fleet and we plan to continue
-doing so in the future.
-
-There just aren't any good alternatives currently.
-
-JE
+diff --git a/drivers/iio/common/hid-sensors/hid-sensor-attributes.c b/drivers/iio/common/hid-sensors/hid-sensor-attributes.c
+index b9dd19b34267..a8a3fe428d8d 100644
+--- a/drivers/iio/common/hid-sensors/hid-sensor-attributes.c
++++ b/drivers/iio/common/hid-sensors/hid-sensor-attributes.c
+@@ -8,7 +8,6 @@
+ #include <linux/module.h>
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+-#include <linux/kernel.h>
+ #include <linux/slab.h>
+ #include <linux/hid-sensor-hub.h>
+ #include <linux/iio/iio.h>
+@@ -69,6 +68,16 @@ static struct {
+ 	{HID_USAGE_SENSOR_HUMIDITY, 0, 1000, 0},
+ };
+ 
++static int pow_10(unsigned power)
++{
++	int i;
++	int ret = 1;
++	for (i = 0; i < power; ++i)
++		ret = ret * 10;
++
++	return ret;
++}
++
+ static void simple_div(int dividend, int divisor, int *whole,
+ 				int *micro_frac)
+ {
+@@ -87,14 +96,14 @@ static void simple_div(int dividend, int divisor, int *whole,
+ 			rem *= 10;
+ 			exp++;
+ 		}
+-		*micro_frac = (rem / divisor) * int_pow(10, 6 - exp);
++		*micro_frac = (rem / divisor) * pow_10(6-exp);
+ 	}
+ }
+ 
+ static void split_micro_fraction(unsigned int no, int exp, int *val1, int *val2)
+ {
+-	*val1 = no / int_pow(10, exp);
+-	*val2 = no % int_pow(10, exp) * int_pow(10, 6 - exp);
++	*val1 = no/pow_10(exp);
++	*val2 = no%pow_10(exp) * pow_10(6-exp);
+ }
+ 
+ /*
+@@ -116,7 +125,7 @@ static void convert_from_vtf_format(u32 value, int size, int exp,
+ 	}
+ 	exp = hid_sensor_convert_exponent(exp);
+ 	if (exp >= 0) {
+-		*val1 = sign * value * int_pow(10, exp);
++		*val1 = sign * value * pow_10(exp);
+ 		*val2 = 0;
+ 	} else {
+ 		split_micro_fraction(value, -exp, val1, val2);
+@@ -136,10 +145,10 @@ static u32 convert_to_vtf_format(int size, int exp, int val1, int val2)
+ 		sign = -1;
+ 	exp = hid_sensor_convert_exponent(exp);
+ 	if (exp < 0) {
+-		value = abs(val1) * int_pow(10, -exp);
+-		value += abs(val2) / int_pow(10, 6 + exp);
++		value = abs(val1) * pow_10(-exp);
++		value += abs(val2) / pow_10(6+exp);
+ 	} else
+-		value = abs(val1) / int_pow(10, exp);
++		value = abs(val1) / pow_10(exp);
+ 	if (sign < 0)
+ 		value =  ((1LL << (size * 8)) - value);
+ 
+@@ -202,12 +211,12 @@ int hid_sensor_write_samp_freq_value(struct hid_sensor_common *st,
+ 	if (val1 < 0 || val2 < 0)
+ 		return -EINVAL;
+ 
+-	value = val1 * int_pow(10, 6) + val2;
++	value = val1 * pow_10(6) + val2;
+ 	if (value) {
+ 		if (st->poll.units == HID_USAGE_SENSOR_UNITS_MILLISECOND)
+-			value = int_pow(10, 9) / value;
++			value = pow_10(9)/value;
+ 		else if (st->poll.units == HID_USAGE_SENSOR_UNITS_SECOND)
+-			value = int_pow(10, 6) / value;
++			value = pow_10(6)/value;
+ 		else
+ 			value = 0;
+ 	}
+@@ -302,34 +311,34 @@ static void adjust_exponent_nano(int *val0, int *val1, int scale0,
+ 	int rem;
+ 
+ 	if (exp > 0) {
+-		*val0 = scale0 * int_pow(10, exp);
++		*val0 = scale0 * pow_10(exp);
+ 		res = 0;
+ 		if (exp > 9) {
+ 			*val1 = 0;
+ 			return;
+ 		}
+ 		for (i = 0; i < exp; ++i) {
+-			x = scale1 / int_pow(10, 8 - i);
+-			res += int_pow(10, exp - 1 - i) * x;
+-			scale1 = scale1 % int_pow(10, 8 - i);
++			x = scale1 / pow_10(8 - i);
++			res += (pow_10(exp - 1 - i) * x);
++			scale1 = scale1 % pow_10(8 - i);
+ 		}
+ 		*val0 += res;
+-		*val1 = scale1 * int_pow(10, exp);
++		*val1 = scale1 * pow_10(exp);
+ 	} else if (exp < 0) {
+ 		exp = abs(exp);
+ 		if (exp > 9) {
+ 			*val0 = *val1 = 0;
+ 			return;
+ 		}
+-		*val0 = scale0 / int_pow(10, exp);
+-		rem = scale0 % int_pow(10, exp);
++		*val0 = scale0 / pow_10(exp);
++		rem = scale0 % pow_10(exp);
+ 		res = 0;
+ 		for (i = 0; i < (9 - exp); ++i) {
+-			x = scale1 / int_pow(10, 8 - i);
+-			res += int_pow(10, 8 - exp - i) * x;
+-			scale1 = scale1 % int_pow(10, 8 - i);
++			x = scale1 / pow_10(8 - i);
++			res += (pow_10(8 - exp - i) * x);
++			scale1 = scale1 % pow_10(8 - i);
+ 		}
+-		*val1 = rem * int_pow(10, 9 - exp) + res;
++		*val1 = rem * pow_10(9 - exp) + res;
+ 	} else {
+ 		*val0 = scale0;
+ 		*val1 = scale1;
+-- 
+2.20.0
 
