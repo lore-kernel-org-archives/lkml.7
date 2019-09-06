@@ -2,166 +2,301 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A04BC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 01:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B15B0C00306
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 01:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85062206CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 01:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2AD4206CD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 01:58:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WrLJm/MW"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cxFDaBTv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404288AbfIFByh (ORCPT
+        id S2404306AbfIFB6W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 21:54:37 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46955 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730991AbfIFByh (ORCPT
+        Thu, 5 Sep 2019 21:58:22 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:45866 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730991AbfIFB6V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 21:54:37 -0400
-Received: by mail-ot1-f67.google.com with SMTP id g19so4230236otg.13;
-        Thu, 05 Sep 2019 18:54:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=K4IFwD6VM+XLab7BYsbQN6PVDmVS6cIQkZE+YPWUOPU=;
-        b=WrLJm/MW5tbyw7TlKFFlM2O2CiNTHVtwpxcgm0nmNCI9be7PPZbHhtNkHYn5/eceZT
-         A0IRWAJAZEa4Ipem66aHvsFLLW6NXJmX4xS/n7twVXWUkCkeXvdo8HEC/P37Lqt9SuC2
-         qXDv22KnGWOp/mtuGE3/V0MzR9ukygUrBvFf1xzoPk/xVsEGGFjQppAt+oMHfXB9KDON
-         W+9fT6k7bWM7GwPOFjJSYkUVDHS3+8ZNGcflYJD0p7tGgYotZzTGrq6KRsE0kn54e4NH
-         tA0fbfg4JMPSLMmBzpVDuSUuAYht/fuFECkkNVZixWIGPFfHrAJ974GDQ6YgfI6GWf3Y
-         xh+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=K4IFwD6VM+XLab7BYsbQN6PVDmVS6cIQkZE+YPWUOPU=;
-        b=eIxoqjMHbsHhbE+dIEVC+8umb7s9nQYd+IBwIMNlPNXqkgokv+bjgDFAKHxA5+Vr+e
-         +gdoqrhYlkLcT6PGn67/bdes+pFKpzWNprxaDTXuFaSMtnQVGec4Tg+avJoKiVow/lEe
-         WiTj3o/KYwAuolnzJb767AWhywQQ1gStM5nfOGsqYqL7zq5nOI9A0mJxQUCKSqWnfqf8
-         hsb9EEEGCbAtgJp6ISwbU8a1qV8GLIWhYV56djD5PqqlGKiGyM/Qe+qxj2sCfmBjmDol
-         XRqhJwI+FtZkH/2H7JRj0VF4mFrap9DErS0ujlQyRKZIPRxm1xojlZkMSXCfBBkO8nax
-         1s9g==
-X-Gm-Message-State: APjAAAUSFwF7Le7L+cp4oNcgHelt+Wrsvn5sgBd8KF2eBkJF+h8Z5PWy
-        eEkr6VCBDhRN6LDuwCzW64sdqsytkGsiV1JwMu4=
-X-Google-Smtp-Source: APXvYqyfziUSAkRNvffX8M48//3wAYR9dKmOeDSPAKVir2eFp79YrLdsxiD2iIxxWfguu0ZSJzJmQ2d0M3HpFcgZcKE=
-X-Received: by 2002:a9d:3ae:: with SMTP id f43mr4081296otf.254.1567734875909;
- Thu, 05 Sep 2019 18:54:35 -0700 (PDT)
+        Thu, 5 Sep 2019 21:58:21 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x861raFa033912;
+        Fri, 6 Sep 2019 01:58:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2019-08-05;
+ bh=wZpwXmqOxWqhR0DvbaLn0ZKC1APUcFkWjxi8qiwEj3Q=;
+ b=cxFDaBTvJY4QV40tWKe5huskppZMGPOy1Ng581AUIopGsUO31D2jk/w9sgGsV8uMemZz
+ kqm/uuQyiWnDkaa7WlAFZSmtmEZZTjqQsWVOt9iNOPtQaWf+rsFQyLwlN4oTlCHxAhDY
+ rJQcOb693wFCW2Z//ckf5IMSr0+IPwJ2FJo5lgmqFQsLQXydmNb/E4DrebAXv9CTpBID
+ MhMptBdztG5RfSvaLLhJXi5OlXee6Yg8BoSMFP7+fL3gFduZxDd5a9qBRblt2+e6pQW4
+ 99AAiaAAoLy1bLlvz76NN2DBitibB9dTRAZ3lYEfYg962ddNuxSmRY/QXgj84hqTxhVs Gw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2uue1f81am-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 Sep 2019 01:58:07 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x861cYhL188476;
+        Fri, 6 Sep 2019 01:40:44 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2utpmc44wk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 Sep 2019 01:40:44 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x861efrg004045;
+        Fri, 6 Sep 2019 01:40:41 GMT
+Received: from localhost.localdomain (/98.229.125.203)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 05 Sep 2019 18:40:41 -0700
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Cc:     Lai Jiangshan <jiangshanlai@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tejun Heo <tj@kernel.org>, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Daniel Jordan <daniel.m.jordan@oracle.com>
+Subject: [PATCH v3 5/9] pcrypt: remove padata cpumask notifier
+Date:   Thu,  5 Sep 2019 21:40:25 -0400
+Message-Id: <20190906014029.3345-6-daniel.m.jordan@oracle.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190906014029.3345-1-daniel.m.jordan@oracle.com>
+References: <20190906014029.3345-1-daniel.m.jordan@oracle.com>
 MIME-Version: 1.0
-References: <1567680270-14022-1-git-send-email-wanpengli@tencent.com> <87ftlakhn6.fsf@vitty.brq.redhat.com>
-In-Reply-To: <87ftlakhn6.fsf@vitty.brq.redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Fri, 6 Sep 2019 09:54:23 +0800
-Message-ID: <CANRm+CyPxb+ZY2cTdbLL_LBKMJSOaMqnPGKc_ATc6-TMHW-rJw@mail.gmail.com>
-Subject: Re: [PATCH] KVM: LAPIC: Fix SynIC Timers inject timer interrupt w/o
- LAPIC present
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1909060015
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1909060019
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 5 Sep 2019 at 21:16, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
->
-> Wanpeng Li <kernellwp@gmail.com> writes:
->
-> > From: Wanpeng Li <wanpengli@tencent.com>
-> >
-> > Reported by syzkaller:
-> >
-> >       kasan: GPF could be caused by NULL-ptr deref or user memory acces=
-s
-> >       general protection fault: 0000 [#1] PREEMPT SMP KASAN
-> >       RIP: 0010:__apic_accept_irq+0x46/0x740 arch/x86/kvm/lapic.c:1029
-> >       Call Trace:
-> >       kvm_apic_set_irq+0xb4/0x140 arch/x86/kvm/lapic.c:558
-> >       stimer_notify_direct arch/x86/kvm/hyperv.c:648 [inline]
-> >       stimer_expiration arch/x86/kvm/hyperv.c:659 [inline]
-> >       kvm_hv_process_stimers+0x594/0x1650 arch/x86/kvm/hyperv.c:686
-> >       vcpu_enter_guest+0x2b2a/0x54b0 arch/x86/kvm/x86.c:7896
-> >       vcpu_run+0x393/0xd40 arch/x86/kvm/x86.c:8152
-> >       kvm_arch_vcpu_ioctl_run+0x636/0x900 arch/x86/kvm/x86.c:8360
-> >       kvm_vcpu_ioctl+0x6cf/0xaf0 arch/x86/kvm/../../../virt/kvm/kvm_mai=
-n.c:2765
-> >
-> > The testcase programs HV_X64_MSR_STIMERn_CONFIG/HV_X64_MSR_STIMERn_COUN=
-T,
-> > in addition, there is no lapic in the kernel, the counters value are sm=
-all
-> > enough in order that kvm_hv_process_stimers() inject this already-expir=
-ed
-> > timer interrupt into the guest through lapic in the kernel which trigge=
-rs
-> > the NULL deferencing. This patch fixes it by checking lapic_in_kernel,
-> > discarding the inject if it is 0.
-> >
-> > Reported-by: syzbot+dff25ee91f0c7d5c1695@syzkaller.appspotmail.com
-> > Cc: Paolo Bonzini <pbonzini@redhat.com>
-> > Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
-> > Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> > ---
-> >  arch/x86/kvm/hyperv.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-> > index c10a8b1..461fcc5 100644
-> > --- a/arch/x86/kvm/hyperv.c
-> > +++ b/arch/x86/kvm/hyperv.c
-> > @@ -645,7 +645,9 @@ static int stimer_notify_direct(struct kvm_vcpu_hv_=
-stimer *stimer)
-> >               .vector =3D stimer->config.apic_vector
-> >       };
-> >
-> > -     return !kvm_apic_set_irq(vcpu, &irq, NULL);
-> > +     if (lapic_in_kernel(vcpu))
-> > +             return !kvm_apic_set_irq(vcpu, &irq, NULL);
-> > +     return 0;
-> >  }
-> >
-> >  static void stimer_expiration(struct kvm_vcpu_hv_stimer *stimer)
->
-> Hm, but this basically means direct mode synthetic timers won't work
-> when LAPIC is not in kernel but the feature will still be advertised to
-> the guest, not good. Shall we stop advertizing it? Something like
-> (completely untested):
->
-> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-> index 3f5ad84853fb..1dfa594eaab6 100644
-> --- a/arch/x86/kvm/hyperv.c
-> +++ b/arch/x86/kvm/hyperv.c
-> @@ -1856,7 +1856,13 @@ int kvm_vcpu_ioctl_get_hv_cpuid(struct kvm_vcpu *v=
-cpu, struct kvm_cpuid2 *cpuid,
->
->                         ent->edx |=3D HV_FEATURE_FREQUENCY_MSRS_AVAILABLE=
-;
->                         ent->edx |=3D HV_FEATURE_GUEST_CRASH_MSR_AVAILABL=
-E;
-> -                       ent->edx |=3D HV_STIMER_DIRECT_MODE_AVAILABLE;
-> +
-> +                       /*
-> +                        * Direct Synthetic timers only make sense with i=
-n-kernel
-> +                        * LAPIC
-> +                        */
-> +                       if (lapic_in_kernel(vcpu))
-> +                               ent->edx |=3D HV_STIMER_DIRECT_MODE_AVAIL=
-ABLE;
->
->                         break;
+Now that padata_do_parallel takes care of finding an alternate callback
+CPU, there's no need for pcrypt's callback cpumask, so remove it and the
+notifier callback that keeps it in sync.
 
-Thanks, I fold this into v2, syzkaller even didn't check the cpuid, so
-I still keep the discard inject part.
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Acked-by: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Lai Jiangshan <jiangshanlai@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ crypto/pcrypt.c | 125 +++++++-----------------------------------------
+ 1 file changed, 18 insertions(+), 107 deletions(-)
 
-                                                                   Wanpeng
+diff --git a/crypto/pcrypt.c b/crypto/pcrypt.c
+index efca962ab12a..2ec36e6a132f 100644
+--- a/crypto/pcrypt.c
++++ b/crypto/pcrypt.c
+@@ -18,33 +18,8 @@
+ #include <linux/cpu.h>
+ #include <crypto/pcrypt.h>
+ 
+-struct padata_pcrypt {
+-	struct padata_instance *pinst;
+-
+-	/*
+-	 * Cpumask for callback CPUs. It should be
+-	 * equal to serial cpumask of corresponding padata instance,
+-	 * so it is updated when padata notifies us about serial
+-	 * cpumask change.
+-	 *
+-	 * cb_cpumask is protected by RCU. This fact prevents us from
+-	 * using cpumask_var_t directly because the actual type of
+-	 * cpumsak_var_t depends on kernel configuration(particularly on
+-	 * CONFIG_CPUMASK_OFFSTACK macro). Depending on the configuration
+-	 * cpumask_var_t may be either a pointer to the struct cpumask
+-	 * or a variable allocated on the stack. Thus we can not safely use
+-	 * cpumask_var_t with RCU operations such as rcu_assign_pointer or
+-	 * rcu_dereference. So cpumask_var_t is wrapped with struct
+-	 * pcrypt_cpumask which makes possible to use it with RCU.
+-	 */
+-	struct pcrypt_cpumask {
+-		cpumask_var_t mask;
+-	} *cb_cpumask;
+-	struct notifier_block nblock;
+-};
+-
+-static struct padata_pcrypt pencrypt;
+-static struct padata_pcrypt pdecrypt;
++static struct padata_instance *pencrypt;
++static struct padata_instance *pdecrypt;
+ static struct kset           *pcrypt_kset;
+ 
+ struct pcrypt_instance_ctx {
+@@ -128,7 +103,7 @@ static int pcrypt_aead_encrypt(struct aead_request *req)
+ 			       req->cryptlen, req->iv);
+ 	aead_request_set_ad(creq, req->assoclen);
+ 
+-	err = padata_do_parallel(pencrypt.pinst, padata, &ctx->cb_cpu);
++	err = padata_do_parallel(pencrypt, padata, &ctx->cb_cpu);
+ 	if (!err)
+ 		return -EINPROGRESS;
+ 
+@@ -170,7 +145,7 @@ static int pcrypt_aead_decrypt(struct aead_request *req)
+ 			       req->cryptlen, req->iv);
+ 	aead_request_set_ad(creq, req->assoclen);
+ 
+-	err = padata_do_parallel(pdecrypt.pinst, padata, &ctx->cb_cpu);
++	err = padata_do_parallel(pdecrypt, padata, &ctx->cb_cpu);
+ 	if (!err)
+ 		return -EINPROGRESS;
+ 
+@@ -317,36 +292,6 @@ static int pcrypt_create(struct crypto_template *tmpl, struct rtattr **tb)
+ 	return -EINVAL;
+ }
+ 
+-static int pcrypt_cpumask_change_notify(struct notifier_block *self,
+-					unsigned long val, void *data)
+-{
+-	struct padata_pcrypt *pcrypt;
+-	struct pcrypt_cpumask *new_mask, *old_mask;
+-	struct padata_cpumask *cpumask = (struct padata_cpumask *)data;
+-
+-	if (!(val & PADATA_CPU_SERIAL))
+-		return 0;
+-
+-	pcrypt = container_of(self, struct padata_pcrypt, nblock);
+-	new_mask = kmalloc(sizeof(*new_mask), GFP_KERNEL);
+-	if (!new_mask)
+-		return -ENOMEM;
+-	if (!alloc_cpumask_var(&new_mask->mask, GFP_KERNEL)) {
+-		kfree(new_mask);
+-		return -ENOMEM;
+-	}
+-
+-	old_mask = pcrypt->cb_cpumask;
+-
+-	cpumask_copy(new_mask->mask, cpumask->cbcpu);
+-	rcu_assign_pointer(pcrypt->cb_cpumask, new_mask);
+-	synchronize_rcu();
+-
+-	free_cpumask_var(old_mask->mask);
+-	kfree(old_mask);
+-	return 0;
+-}
+-
+ static int pcrypt_sysfs_add(struct padata_instance *pinst, const char *name)
+ {
+ 	int ret;
+@@ -359,63 +304,29 @@ static int pcrypt_sysfs_add(struct padata_instance *pinst, const char *name)
+ 	return ret;
+ }
+ 
+-static int pcrypt_init_padata(struct padata_pcrypt *pcrypt,
+-			      const char *name)
++static int pcrypt_init_padata(struct padata_instance **pinst, const char *name)
+ {
+ 	int ret = -ENOMEM;
+-	struct pcrypt_cpumask *mask;
+ 
+ 	get_online_cpus();
+ 
+-	pcrypt->pinst = padata_alloc_possible(name);
+-	if (!pcrypt->pinst)
+-		goto err;
+-
+-	mask = kmalloc(sizeof(*mask), GFP_KERNEL);
+-	if (!mask)
+-		goto err_free_padata;
+-	if (!alloc_cpumask_var(&mask->mask, GFP_KERNEL)) {
+-		kfree(mask);
+-		goto err_free_padata;
+-	}
+-
+-	cpumask_and(mask->mask, cpu_possible_mask, cpu_online_mask);
+-	rcu_assign_pointer(pcrypt->cb_cpumask, mask);
+-
+-	pcrypt->nblock.notifier_call = pcrypt_cpumask_change_notify;
+-	ret = padata_register_cpumask_notifier(pcrypt->pinst, &pcrypt->nblock);
+-	if (ret)
+-		goto err_free_cpumask;
++	*pinst = padata_alloc_possible(name);
++	if (!*pinst)
++		return ret;
+ 
+-	ret = pcrypt_sysfs_add(pcrypt->pinst, name);
++	ret = pcrypt_sysfs_add(*pinst, name);
+ 	if (ret)
+-		goto err_unregister_notifier;
++		padata_free(*pinst);
+ 
+ 	put_online_cpus();
+ 
+-	return ret;
+-
+-err_unregister_notifier:
+-	padata_unregister_cpumask_notifier(pcrypt->pinst, &pcrypt->nblock);
+-err_free_cpumask:
+-	free_cpumask_var(mask->mask);
+-	kfree(mask);
+-err_free_padata:
+-	padata_free(pcrypt->pinst);
+-err:
+-	put_online_cpus();
+-
+ 	return ret;
+ }
+ 
+-static void pcrypt_fini_padata(struct padata_pcrypt *pcrypt)
++static void pcrypt_fini_padata(struct padata_instance *pinst)
+ {
+-	free_cpumask_var(pcrypt->cb_cpumask->mask);
+-	kfree(pcrypt->cb_cpumask);
+-
+-	padata_stop(pcrypt->pinst);
+-	padata_unregister_cpumask_notifier(pcrypt->pinst, &pcrypt->nblock);
+-	padata_free(pcrypt->pinst);
++	padata_stop(pinst);
++	padata_free(pinst);
+ }
+ 
+ static struct crypto_template pcrypt_tmpl = {
+@@ -440,13 +351,13 @@ static int __init pcrypt_init(void)
+ 	if (err)
+ 		goto err_deinit_pencrypt;
+ 
+-	padata_start(pencrypt.pinst);
+-	padata_start(pdecrypt.pinst);
++	padata_start(pencrypt);
++	padata_start(pdecrypt);
+ 
+ 	return crypto_register_template(&pcrypt_tmpl);
+ 
+ err_deinit_pencrypt:
+-	pcrypt_fini_padata(&pencrypt);
++	pcrypt_fini_padata(pencrypt);
+ err_unreg_kset:
+ 	kset_unregister(pcrypt_kset);
+ err:
+@@ -455,8 +366,8 @@ static int __init pcrypt_init(void)
+ 
+ static void __exit pcrypt_exit(void)
+ {
+-	pcrypt_fini_padata(&pencrypt);
+-	pcrypt_fini_padata(&pdecrypt);
++	pcrypt_fini_padata(pencrypt);
++	pcrypt_fini_padata(pdecrypt);
+ 
+ 	kset_unregister(pcrypt_kset);
+ 	crypto_unregister_template(&pcrypt_tmpl);
+-- 
+2.23.0
+
