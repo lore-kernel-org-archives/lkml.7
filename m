@@ -2,140 +2,198 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E1AC00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F35C43140
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEC8F2070C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:26:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7426B2082C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:26:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404107AbfIFP0R (ORCPT
+        id S2405698AbfIFP0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 11:26:17 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:51663 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbfIFP0R (ORCPT
+        Fri, 6 Sep 2019 11:26:39 -0400
+Received: from smtp-sh2.infomaniak.ch ([128.65.195.6]:34011 "EHLO
+        smtp-sh2.infomaniak.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404118AbfIFP0i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 11:26:17 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1N3bjH-1iEohF3GeB-010cLz; Fri, 06 Sep 2019 17:26:10 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Chris Chiu <chiu@endlessm.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: intel: hide unused intel_pin_to_gpio
-Date:   Fri,  6 Sep 2019 17:26:01 +0200
-Message-Id: <20190906152609.1603386-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Fri, 6 Sep 2019 11:26:38 -0400
+Received: from smtp5.infomaniak.ch (smtp5.infomaniak.ch [83.166.132.18])
+        by smtp-sh2.infomaniak.ch (8.14.4/8.14.4/Debian-8+deb8u2) with ESMTP id x86FP3Og085821
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 6 Sep 2019 17:25:03 +0200
+Received: from localhost (ns3096276.ip-94-23-54.eu [94.23.54.103])
+        (authenticated bits=0)
+        by smtp5.infomaniak.ch (8.14.5/8.14.5) with ESMTP id x86FP1FY047370;
+        Fri, 6 Sep 2019 17:25:01 +0200
+From:   =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?UTF-8?q?Philippe=20Tr=C3=A9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH v2 1/5] fs: Add support for an O_MAYEXEC flag on sys_open()
+Date:   Fri,  6 Sep 2019 17:24:51 +0200
+Message-Id: <20190906152455.22757-2-mic@digikod.net>
+X-Mailer: git-send-email 2.23.0.rc1
+In-Reply-To: <20190906152455.22757-1-mic@digikod.net>
+References: <20190906152455.22757-1-mic@digikod.net>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:AiaKs1hcEO1fque6w/E9Anh66wK4Q7pzqtqbUXPbfMjkxkZpJhj
- gRJeh3Irz/R8XadEwis9bcv1tG2oIDpk75Me9ErHiSBXCDBrvL+uMIzQAifh0k3WNRHlDho
- Mk42z6/tjP+shaHiPj6mafMnbgSx4Jv9PoKOtige2XWj584zvNW1TJu55u3kwfiG97MVCB8
- dWdx8ZPbqKo2OK2A1Z+Kg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:OrqLmJTU00I=:davTVrMu33y8hmRr6QShJF
- dRv7bHz1iAPK9mbk80pWgEZCvw0ACxLMC5DvefJ6sBzsi6KLVEgaWDhlb6qM2n8uF307AKvOu
- /0l6r9gRgI4+DEbtR/DIwr78B7kdzkmOOv3lRWI0g9tzYo5dJBAps8Itf7gsjkrNlfx1O1v3Q
- hmUmAoHf0OAhpINoOuM+/OMcC0/hz5maJCbBTmdpGjHad7q2O5dBOFvbmCnXcM8X3JTyNDBWH
- T1/hmmaAbgF18z11vrXtDCy2prSlM7ytJQBJTMBmfukvCcskXt48wwuqUFiFlAwLw+OQ7ldEW
- L68ZJzoc8rOPu4LOriXpLQyhKkbVskQbk1OzXOUXWfYU2Y5DHFLPZWU9QWv1UCGGh6Ct67Zqf
- QqpjQcpktlRWl6TnoiFM5yLcoBdNr4PZ0T1DzGsucBteFSiwsBUGpAjG7LLrXrCBlpCKaQ7du
- OwOaYtwa0XMQEF7mAAphByjIb8wm3HlAytX9d0GNfn65EtmwqBN2PwW1NldR5mb4cI1xndd9S
- 4A1piJ6M2zraYL5W2PDfzgtSxmfcjfyVbJrvdOkKsD4b77RP2VkyrDQuvUsmJCQ0o+sz47sQa
- 8nB33N6SMNQjKCqiE8UJYDp+asIsCx/GKkRu7+Byt+7YxSOQEiDtyH7NuYoh9fONVCWc6Zqq0
- PdlqzQXD8upPfr0Pnz93REhQsIxSRTkw41gYX+du39AcTk3W67l+cfCNbx924e2vzqs2dU9vi
- jUxymNahBkGscLbZE/2rrd6ElByhBnygGRPwkMAMq8+PmyE995QCdbOK+9xDgiAW5I6v+QjaU
- 7/29UxgKfLjnGEKJ5ogRGUCgFqPyzkaNvXWb4u7zHpGjKLSy80=
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The intel_pin_to_gpio() function is only called by the
-PM support functions and causes a warning when those are disabled:
+When the O_MAYEXEC flag is passed, sys_open() may be subject to
+additional restrictions depending on a security policy implemented by an
+LSM through the inode_permission hook.
 
-drivers/pinctrl/intel/pinctrl-intel.c:841:12: error: unused function 'intel_pin_to_gpio' [-Werror,-Wunused-function]
+The underlying idea is to be able to restrict scripts interpretation
+according to a policy defined by the system administrator.  For this to
+be possible, script interpreters must use the O_MAYEXEC flag
+appropriately.  To be fully effective, these interpreters also need to
+handle the other ways to execute code (for which the kernel can't help):
+command line parameters (e.g., option -e for Perl), module loading
+(e.g., option -m for Python), stdin, file sourcing, environment
+variables, configuration files...  According to the threat model, it may
+be acceptable to allow some script interpreters (e.g. Bash) to interpret
+commands from stdin, may it be a TTY or a pipe, because it may not be
+enough to (directly) perform syscalls.
 
-As we cannot change the PM functions themselves to use __maybe_unused,
-add another #ifdef here for consistency.
+A simple security policy implementation is available in a following
+patch for Yama.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+This is an updated subset of the patch initially written by Vincent
+Strubel for CLIP OS:
+https://github.com/clipos-archive/src_platform_clip-patches/blob/f5cb330d6b684752e403b4e41b39f7004d88e561/1901_open_mayexec.patch
+This patch has been used for more than 10 years with customized script
+interpreters.  Some examples can be found here:
+https://github.com/clipos-archive/clipos4_portage-overlay/search?q=O_MAYEXEC
+
+Changes since v1:
+* set __FMODE_EXEC when using O_MAYEXEC to make this information
+  available through the new fanotify/FAN_OPEN_EXEC event (suggested by
+  Jan Kara and Matthew Bobrowski)
+
+Signed-off-by: Mickaël Salaün <mic@digikod.net>
+Signed-off-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
+Signed-off-by: Vincent Strubel <vincent.strubel@ssi.gouv.fr>
+Reviewed-by: Philippe Trébuchet <philippe.trebuchet@ssi.gouv.fr>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Mickaël Salaün <mickael.salaun@ssi.gouv.fr>
 ---
- drivers/pinctrl/intel/pinctrl-intel.c | 46 +++++++++++++--------------
- 1 file changed, 23 insertions(+), 23 deletions(-)
+ fs/fcntl.c                       | 2 +-
+ fs/open.c                        | 6 ++++++
+ include/linux/fcntl.h            | 2 +-
+ include/linux/fs.h               | 2 ++
+ include/uapi/asm-generic/fcntl.h | 3 +++
+ 5 files changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-index d66fe2b4221b..67f392174090 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.c
-+++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -831,29 +831,6 @@ static int intel_gpio_to_pin(struct intel_pinctrl *pctrl, unsigned int offset,
- 	return -EINVAL;
- }
+diff --git a/fs/fcntl.c b/fs/fcntl.c
+index 3d40771e8e7c..4cf05a2fd162 100644
+--- a/fs/fcntl.c
++++ b/fs/fcntl.c
+@@ -1031,7 +1031,7 @@ static int __init fcntl_init(void)
+ 	 * Exceptions: O_NONBLOCK is a two bit define on parisc; O_NDELAY
+ 	 * is defined as O_NONBLOCK on some platforms and not on others.
+ 	 */
+-	BUILD_BUG_ON(21 - 1 /* for O_RDONLY being 0 */ !=
++	BUILD_BUG_ON(22 - 1 /* for O_RDONLY being 0 */ !=
+ 		HWEIGHT32(
+ 			(VALID_OPEN_FLAGS & ~(O_NONBLOCK | O_NDELAY)) |
+ 			__FMODE_EXEC | __FMODE_NONOTIFY));
+diff --git a/fs/open.c b/fs/open.c
+index a59abe3c669a..1b9b6fedf7cd 100644
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -989,6 +989,12 @@ static inline int build_open_flags(int flags, umode_t mode, struct open_flags *o
+ 		acc_mode = 0;
+ 	}
  
--/**
-- * intel_pin_to_gpio() - Translate from pin number to GPIO offset
-- * @pctrl: Pinctrl structure
-- * @pin: pin number
-- *
-- * Translate the pin number of pinctrl to GPIO offset
-- */
--static int intel_pin_to_gpio(struct intel_pinctrl *pctrl, int pin)
--{
--	const struct intel_community *community;
--	const struct intel_padgroup *padgrp;
--
--	community = intel_get_community(pctrl, pin);
--	if (!community)
--		return -EINVAL;
--
--	padgrp = intel_community_get_padgroup(community, pin);
--	if (!padgrp)
--		return -EINVAL;
--
--	return pin - padgrp->base + padgrp->gpio_base;
--}
--
- static int intel_gpio_get(struct gpio_chip *chip, unsigned int offset)
- {
- 	struct intel_pinctrl *pctrl = gpiochip_get_data(chip);
-@@ -1477,6 +1454,29 @@ int intel_pinctrl_probe_by_uid(struct platform_device *pdev)
- EXPORT_SYMBOL_GPL(intel_pinctrl_probe_by_uid);
++	/* Check execution permissions on open. */
++	if (flags & O_MAYEXEC) {
++		acc_mode |= MAY_OPENEXEC;
++		flags |= __FMODE_EXEC;
++	}
++
+ 	op->open_flag = flags;
  
- #ifdef CONFIG_PM_SLEEP
-+/**
-+ * intel_pin_to_gpio() - Translate from pin number to GPIO offset
-+ * @pctrl: Pinctrl structure
-+ * @pin: pin number
-+ *
-+ * Translate the pin number of pinctrl to GPIO offset
-+ */
-+static int intel_pin_to_gpio(struct intel_pinctrl *pctrl, int pin)
-+{
-+	const struct intel_community *community;
-+	const struct intel_padgroup *padgrp;
+ 	/* O_TRUNC implies we need access checks for write permissions */
+diff --git a/include/linux/fcntl.h b/include/linux/fcntl.h
+index d019df946cb2..af88fb6c8313 100644
+--- a/include/linux/fcntl.h
++++ b/include/linux/fcntl.h
+@@ -9,7 +9,7 @@
+ 	(O_RDONLY | O_WRONLY | O_RDWR | O_CREAT | O_EXCL | O_NOCTTY | O_TRUNC | \
+ 	 O_APPEND | O_NDELAY | O_NONBLOCK | O_NDELAY | __O_SYNC | O_DSYNC | \
+ 	 FASYNC	| O_DIRECT | O_LARGEFILE | O_DIRECTORY | O_NOFOLLOW | \
+-	 O_NOATIME | O_CLOEXEC | O_PATH | __O_TMPFILE)
++	 O_NOATIME | O_CLOEXEC | O_PATH | __O_TMPFILE | O_MAYEXEC)
+ 
+ #ifndef force_o_largefile
+ #define force_o_largefile() (!IS_ENABLED(CONFIG_ARCH_32BIT_OFF_T))
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 997a530ff4e9..848f5711bdf0 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -99,6 +99,8 @@ typedef int (dio_iodone_t)(struct kiocb *iocb, loff_t offset,
+ #define MAY_CHDIR		0x00000040
+ /* called from RCU mode, don't block */
+ #define MAY_NOT_BLOCK		0x00000080
++/* the inode is opened with O_MAYEXEC */
++#define MAY_OPENEXEC		0x00000100
+ 
+ /*
+  * flags in file.f_mode.  Note that FMODE_READ and FMODE_WRITE must correspond
+diff --git a/include/uapi/asm-generic/fcntl.h b/include/uapi/asm-generic/fcntl.h
+index 9dc0bf0c5a6e..cbb9425d6e7c 100644
+--- a/include/uapi/asm-generic/fcntl.h
++++ b/include/uapi/asm-generic/fcntl.h
+@@ -97,6 +97,9 @@
+ #define O_NDELAY	O_NONBLOCK
+ #endif
+ 
++/* command execution from file is intended, check exec permissions */
++#define O_MAYEXEC	040000000
 +
-+	community = intel_get_community(pctrl, pin);
-+	if (!community)
-+		return -EINVAL;
-+
-+	padgrp = intel_community_get_padgroup(community, pin);
-+	if (!padgrp)
-+		return -EINVAL;
-+
-+	return pin - padgrp->base + padgrp->gpio_base;
-+}
-+
- static bool intel_pinctrl_should_save(struct intel_pinctrl *pctrl, unsigned int pin)
- {
- 	const struct pin_desc *pd = pin_desc_get(pctrl->pctldev, pin);
+ #define F_DUPFD		0	/* dup */
+ #define F_GETFD		1	/* get close_on_exec */
+ #define F_SETFD		2	/* set/clear close_on_exec */
 -- 
-2.20.0
+2.23.0
 
