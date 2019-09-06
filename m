@@ -2,91 +2,177 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0506BC00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 09:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB04C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 09:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC60920842
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 09:22:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567761774;
-	bh=8zRzOgKBLApr8oEix1IWk40fk2ytXiBJhxyvn7NB6Ck=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PAbsjmVtDBRg16XGmly2wP4xNMzyfHaS7Shc+PSWAMgafHRqhHjvbxZMJd9dZyGb4
-	 iHnUAz7X6bDBOoUrkJTi9UVXnGE0tIDd/BimQjNtudygwBiB39wrPEXf/a2X95DFb9
-	 wojO0Mry9FbTimvRy+OX1pZWrxw5jmJlUGlMU9Lk=
+	by mail.kernel.org (Postfix) with ESMTP id 0646D2082C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 09:25:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="eKLzvu2M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392886AbfIFJWy (ORCPT
+        id S2392898AbfIFJZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 05:22:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46732 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728356AbfIFJWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 05:22:53 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 489262082C;
-        Fri,  6 Sep 2019 09:22:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567761773;
-        bh=8zRzOgKBLApr8oEix1IWk40fk2ytXiBJhxyvn7NB6Ck=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PK5pNnbzM5cB2Tpvid2oulC6TVGMwM60sVnaFbqEEeZsC70OgEQyThbYjLIknPYlB
-         47x8CrJBCXCarK8f7H6Z7T4kaJKQAHTfjzeAbIKf9OQ5m2niidZ71K9q77QhWthoja
-         Q9Z1o2vbSjUO/6OaCsDfoWGH5LLRF4qr3oQIZThI=
-Date:   Fri, 6 Sep 2019 10:22:47 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Quentin Perret <quentin.perret@arm.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        peterz@infradead.org, mingo@redhat.com, rjw@rjwysocki.net,
-        vincent.guittot@linaro.org, juri.lelli@redhat.com,
-        catalin.marinas@arm.com, morten.rasmussen@arm.com,
-        chris.redpath@arm.com, dietmar.eggemann@arm.com,
-        patrick.bellasi@arm.com, valentin.schneider@arm.com,
-        qais.yousef@arm.com, qperret@qperret.net
-Subject: Re: [PATCH] mailmap: Update email address for Quentin Perret
-Message-ID: <20190906092246.corlf2mtyb2rajoe@willie-the-truck>
-References: <20190902105036.32419-1-quentin.perret@arm.com>
- <20190903145950.xko5fejupxj3f5nx@willie-the-truck>
- <20190904144346.396a77f8@lwn.net>
+        Fri, 6 Sep 2019 05:25:33 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:32832 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727447AbfIFJZc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 05:25:32 -0400
+Received: by mail-wr1-f65.google.com with SMTP id u16so5829027wrr.0
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 02:25:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4/hTF78iK4Cpd1QxROMccGOHzNHaxmbPis/cOP5u7Xg=;
+        b=eKLzvu2MGA64vk98hhxrKNuyKWibjjWUbKiy08K4iRsX1Co7AIxiUbclqeXzsnCFIu
+         IWvBUrh2iX8dSC1MP4TPJdmTs5Hh1NJEcr3hwmC88o+E9iYYFLSjyxH0ZOTOLFrt3f9l
+         16xmIXG1pm8YAmLbpt11SbjP/akgC3ruX5yVU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4/hTF78iK4Cpd1QxROMccGOHzNHaxmbPis/cOP5u7Xg=;
+        b=nunwQTl/t/CAIPK9gzvzX5CiBv0WEj1EV3FapzwS1uPpdDYxbW6RJXwDBk6BXMaRxo
+         00LeS2nBX+9wGniQaq1mDHg4cpHLkybAOb0r1WbGQMeP6QW2cEmDfm9lgH0wSpM7qKNP
+         U+pqVWJvOdOb29f35LcR2jWt6/BXQH/tYf8/QVN2y3ZLmMv/CexFEXqj76v/OYKNGXXa
+         9p2+dGYcy8gjtGD70dvHF05TOcehVBVp6O2tdWLQdIlDf1HWwytDKKOIGf6YACF8Q8bZ
+         zYi9haEK/X6kkWWWAAl3/ImW1Zf/halsS4GVSFbK90V2XR0aCwjFyPpzTK3gpr2qXY8X
+         5kAg==
+X-Gm-Message-State: APjAAAVbUCCww62VlNPQtHQpwsk6QSUZ7BpNtshP0rCl2gdkqv8zmjxr
+        C3HGmOPEAXIOfhiKqI4Pl6eYPR+RpUAb4pYrbwIAwg==
+X-Google-Smtp-Source: APXvYqwbU+XGTguORWihC8VnYu09/9mUmdttn0D/6NQhpn7lEMS/E0pN0mR6XPsaf0hc7khzR2EiaXrcqpuqhy9wNdY=
+X-Received: by 2002:adf:dd04:: with SMTP id a4mr6298846wrm.340.1567761930632;
+ Fri, 06 Sep 2019 02:25:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190904144346.396a77f8@lwn.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20190906035813.24046-1-abhishek.shah@broadcom.com> <20190906083816.GD9720@e119886-lin.cambridge.arm.com>
+In-Reply-To: <20190906083816.GD9720@e119886-lin.cambridge.arm.com>
+From:   Abhishek Shah <abhishek.shah@broadcom.com>
+Date:   Fri, 6 Sep 2019 14:55:19 +0530
+Message-ID: <CAKUFe6ZuRGJSmLdXqTWJzX-nE_Vh4yEQF_-rf+BWFrD_r4BRaQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] PCI: iproc: Invalidate PAXB address mapping before
+ programming it
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        linux-pci@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 02:43:46PM -0600, Jonathan Corbet wrote:
-> On Tue, 3 Sep 2019 15:59:50 +0100
-> Will Deacon <will@kernel.org> wrote:
-> 
-> > Since this isn't really an arm64 change (there's no change to MAINTAINERS),
-> > I'd rather it went via Andrew or Jon. However, there was some resistance
-> > last time this sort of email change happened:
-> > 
-> >   http://lkml.kernel.org/r/20190806112959.14845da4@lwn.net
-> > 
-> > so I'm not sure what the current preference is. Jon?
-> 
-> If there's some value to having an entry in the mailmap file, then
-> obviously it should be added.  I didn't resist so much as engage in a
-> little muttering under my breath as I applied the patch...
+Hi Andrew,
 
-Ok, just wanted to make sure you were ok with it. Would be able to pick
-this via your tree then, please? If it helps,
+Thanks for the review. Please see my response inline:
 
-Acked-by: Will Deacon <will@kernel.org>
+On Fri, Sep 6, 2019 at 2:08 PM Andrew Murray <andrew.murray@arm.com> wrote:
+>
+> On Fri, Sep 06, 2019 at 09:28:13AM +0530, Abhishek Shah wrote:
+> > Invalidate PAXB inbound/outbound address mapping each time before
+> > programming it. This is helpful for the cases where we need to
+> > reprogram inbound/outbound address mapping without resetting PAXB.
+> > kexec kernel is one such example.
+>
+> Why is this approach better than resetting the PAXB (I assume that's
+> the PCI controller IP)? Wouldn't resetting the PAXB address this issue,
+> and ensure that no other configuration is left behind?
+>
+We normally reset PAXB in the firmware(ATF). But for cases like kexec
+kernel boot,
+we do not execute any firmware code and directly boot into kernel.
 
-The original patch is here:
+We could have done PAXB reset in the driver itself as you have suggested here.
+But note that this detail could vary for each SoC, because these
+registers are not part
+of PAXB register space itself, rather exists in a register space responsible for
+controlling power to various wrappers in PCIe IP. Normally, this kind
+of SoC specific
+details are handled in firmware itself, we don't bring them to driver level.
 
-http://lore.kernel.org/r/20190902105036.32419-1-quentin.perret@arm.com
+> Or is this related to earlier boot stages loading firmware for the emulated
+> downstream endpoints (ep_is_internal)?
+>
+> Finally, in the case where ep_is_internal do you need to disable anything
+> prior to invalidating the mappings?
+>
+No, ep_is_internal  is indicator for PAXC IP. It does not have
+mappings as in PAXB.
 
-Will
+
+Regards,
+Abhishek
+> >
+> > Signed-off-by: Abhishek Shah <abhishek.shah@broadcom.com>
+> > Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+> > Reviewed-by: Vikram Mysore Prakash <vikram.prakash@broadcom.com>
+> > ---
+> >  drivers/pci/controller/pcie-iproc.c | 28 ++++++++++++++++++++++++++++
+> >  1 file changed, 28 insertions(+)
+> >
+> > diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
+> > index e3ca46497470..99a9521ba7ab 100644
+> > --- a/drivers/pci/controller/pcie-iproc.c
+> > +++ b/drivers/pci/controller/pcie-iproc.c
+> > @@ -1245,6 +1245,32 @@ static int iproc_pcie_map_dma_ranges(struct iproc_pcie *pcie)
+> >       return ret;
+> >  }
+> >
+> > +static void iproc_pcie_invalidate_mapping(struct iproc_pcie *pcie)
+> > +{
+> > +     struct iproc_pcie_ib *ib = &pcie->ib;
+> > +     struct iproc_pcie_ob *ob = &pcie->ob;
+> > +     int idx;
+> > +
+> > +     if (pcie->ep_is_internal)
+> > +             return;
+> > +
+> > +     if (pcie->need_ob_cfg) {
+> > +             /* iterate through all OARR mapping regions */
+> > +             for (idx = ob->nr_windows - 1; idx >= 0; idx--) {
+> > +                     iproc_pcie_write_reg(pcie,
+> > +                                          MAP_REG(IPROC_PCIE_OARR0, idx), 0);
+> > +             }
+> > +     }
+> > +
+> > +     if (pcie->need_ib_cfg) {
+> > +             /* iterate through all IARR mapping regions */
+> > +             for (idx = 0; idx < ib->nr_regions; idx++) {
+> > +                     iproc_pcie_write_reg(pcie,
+> > +                                          MAP_REG(IPROC_PCIE_IARR0, idx), 0);
+> > +             }
+> > +     }
+> > +}
+> > +
+> >  static int iproce_pcie_get_msi(struct iproc_pcie *pcie,
+> >                              struct device_node *msi_node,
+> >                              u64 *msi_addr)
+> > @@ -1517,6 +1543,8 @@ int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
+> >       iproc_pcie_perst_ctrl(pcie, true);
+> >       iproc_pcie_perst_ctrl(pcie, false);
+> >
+> > +     iproc_pcie_invalidate_mapping(pcie);
+> > +
+> >       if (pcie->need_ob_cfg) {
+> >               ret = iproc_pcie_map_ranges(pcie, res);
+> >               if (ret) {
+>
+> The code changes look good to me.
+>
+> Thanks,
+>
+> Andrew Murray
+>
+> > --
+> > 2.17.1
+> >
