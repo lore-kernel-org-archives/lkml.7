@@ -2,162 +2,174 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24957C00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 06:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA7BC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 06:29:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DE9E20854
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 06:27:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tYI7NDik"
+	by mail.kernel.org (Postfix) with ESMTP id 0D6802082C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 06:29:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392358AbfIFG1g (ORCPT
+        id S2392403AbfIFG3F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 02:27:36 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:41824 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727970AbfIFG1g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 02:27:36 -0400
-Received: by mail-pl1-f195.google.com with SMTP id m9so2626051pls.8;
-        Thu, 05 Sep 2019 23:27:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=n30qcH046iWaW71uUfJO57qHyXMN57OJWxHknUR+29c=;
-        b=tYI7NDikpxLUXtA/lqOpvKs/cEOU/szl6gmUMcA6n5Wqn7oOYYahU9r0V8AnAf0reF
-         4nHQ1YC8+oXk9P+lJMfs0XzzTqyi09hRp9tSP67QUu5MoQSmzCfP9LXuuI7b9K3UuE5b
-         mdN50wGfFfRALcDAkydIcx5fNlo6PYSgzXZ9PfXokso3Nqyswhlrapw1UpqxIMK/X767
-         DjWdSGMBSz+cXvuh5vOE14GhX5xL26XbLSFsNS2jEX/CbeTssvrLih94s65BfzXQykgB
-         xXXX99uB+tDkk2QMc1kyNw4OJPr4PKPFxd2Q7NMMnAWnetg7z9ZcbOcNvEgP28bB/QJP
-         R/Gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=n30qcH046iWaW71uUfJO57qHyXMN57OJWxHknUR+29c=;
-        b=SfZVnt9vrjb/ZkryDoNDlralIBTagbyaqEL5NLkIe1GldKu2ZmmXzU8Des45lSIaaN
-         TwT7m/1P2OJ6pbkOdAo5/9qhbT8OyYSJrWx/s6TD/wMa3cW9EgeUOtYdnCgICMmIqRgT
-         lkHyIbk0CP30x8ceaBqAMdkc4wsy+YsXnVEApc5RlHSqz+hNQJUyKBGNEYqD8FBf02un
-         HKFQAEUyspVBD1KVHCvgB++UpY6jo+owE5hIomqL45VimHUS8nWsCKoxlBdKOIH4eAXd
-         PB0O6mf5TgdFB52mubLXe8dOOpc8NzUJQqodPqpRenmI0kj1q+AM9lUznomsO0/04M+T
-         HS8w==
-X-Gm-Message-State: APjAAAV1wh16Kpu/jUw46DYVrXOI8tvGZOx0n8nq7YuYI33ssVTK1kwC
-        AFXdECKTA558vR/eagAAQSY=
-X-Google-Smtp-Source: APXvYqzTYD4UT8lYUo5iEkHosGPzmhfer4sXZbHMDlzxTN6P9Gg1Nm+xU4PDIY7OW2IN4o6EWNWUmg==
-X-Received: by 2002:a17:902:4a:: with SMTP id 68mr1975472pla.196.1567751255165;
-        Thu, 05 Sep 2019 23:27:35 -0700 (PDT)
-Received: from rashmica.ozlabs.ibm.com ([122.99.82.10])
-        by smtp.gmail.com with ESMTPSA id j2sm4752728pfe.130.2019.09.05.23.27.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 23:27:34 -0700 (PDT)
-From:   Rashmica Gupta <rashmica.g@gmail.com>
-To:     linus.walleij@linaro.org
-Cc:     Rashmica Gupta <rashmica.g@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        linux-gpio@vger.kernel.org (open list:GPIO SUBSYSTEM),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/ASPEED MACHINE
-        SUPPORT),
-        linux-aspeed@lists.ozlabs.org (moderated list:ARM/ASPEED MACHINE
-        SUPPORT), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 4/5] gpios: Use ngpio property from device tree if available
-Date:   Fri,  6 Sep 2019 16:27:26 +1000
-Message-Id: <20190906062727.13521-1-rashmica.g@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 6 Sep 2019 02:29:05 -0400
+Received: from foss.arm.com ([217.140.110.172]:51964 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732131AbfIFG3E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 02:29:04 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2652828;
+        Thu,  5 Sep 2019 23:29:03 -0700 (PDT)
+Received: from [10.162.42.101] (p8cg001049571a15.blr.arm.com [10.162.42.101])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EE03C3F67D;
+        Thu,  5 Sep 2019 23:31:17 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: Re: [PATCH 1/1] mm/pgtable/debug: Add test validating architecture
+ page table helpers
+To:     Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+References: <1567497706-8649-1-git-send-email-anshuman.khandual@arm.com>
+ <1567497706-8649-2-git-send-email-anshuman.khandual@arm.com>
+ <20190904221618.1b624a98@thinkpad>
+ <20e3044d-2af5-b27b-7653-cec53bdec941@arm.com>
+ <20190905190629.523bdb87@thinkpad>
+Message-ID: <3c609e33-afbb-ffaf-481a-6d225a06d1d0@arm.com>
+Date:   Fri, 6 Sep 2019 11:58:59 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190905190629.523bdb87@thinkpad>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the ngpio property from the device tree if it exists. If it doesn't
-then fallback to the hardcoded value in the config.
+On 09/05/2019 10:36 PM, Gerald Schaefer wrote:
+> On Thu, 5 Sep 2019 14:48:14 +0530
+> Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+> 
+>>> [...]  
+>>>> +
+>>>> +#if !defined(__PAGETABLE_PMD_FOLDED) && !defined(__ARCH_HAS_4LEVEL_HACK)
+>>>> +static void pud_clear_tests(pud_t *pudp)
+>>>> +{
+>>>> +	memset(pudp, RANDOM_NZVALUE, sizeof(pud_t));
+>>>> +	pud_clear(pudp);
+>>>> +	WARN_ON(!pud_none(READ_ONCE(*pudp)));
+>>>> +}  
+>>>
+>>> For pgd/p4d/pud_clear(), we only clear if the page table level is present
+>>> and not folded. The memset() here overwrites the table type bits, so
+>>> pud_clear() will not clear anything on s390 and the pud_none() check will
+>>> fail.
+>>> Would it be possible to OR a (larger) random value into the table, so that
+>>> the lower 12 bits would be preserved?  
+>>
+>> So the suggestion is instead of doing memset() on entry with RANDOM_NZVALUE,
+>> it should OR a large random value preserving lower 12 bits. Hmm, this should
+>> still do the trick for other platforms, they just need non zero value. So on
+>> s390, the lower 12 bits on the page table entry already has valid value while
+>> entering this function which would make sure that pud_clear() really does
+>> clear the entry ?
+> 
+> Yes, in theory the table entry on s390 would have the type set in the last
+> 4 bits, so preserving those would be enough. If it does not conflict with
+> others, I would still suggest preserving all 12 bits since those would contain
+> arch-specific flags in general, just to be sure. For s390, the pte/pmd tests
+> would also work with the memset, but for consistency I think the same logic
+> should be used in all pxd_clear_tests.
 
-This is in preparation for adding ast2600 support. The ast2600 SoC has
-two GPIO controllers and so requires two instances of the GPIO driver.
-We use the ngpio property to different between them as they have
-different numbers of GPIOs.
+Makes sense but..
 
-Signed-off-by: Rashmica Gupta <rashmica.g@gmail.com>
----
- drivers/gpio/gpio-aspeed.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+There is a small challenge with this. Modifying individual bits on a given
+page table entry from generic code like this test case is bit tricky. That
+is because there are not enough helpers to create entries with an absolute
+value. This would have been easier if all the platforms provided functions
+like __pxx() which is not the case now. Otherwise something like this should
+have worked.
 
-diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
-index 16c6eaf70857..c3d5ecba343b 100644
---- a/drivers/gpio/gpio-aspeed.c
-+++ b/drivers/gpio/gpio-aspeed.c
-@@ -694,7 +694,7 @@ static void set_irq_valid_mask(struct aspeed_gpio *gpio)
- 		for_each_clear_bit(offset, &input, 32) {
- 			unsigned int i = props->bank * 32 + offset;
- 
--			if (i >= gpio->config->nr_gpios)
-+			if (i >= gpio->chip.ngpio)
- 				break;
- 
- 			clear_bit(i, gpio->chip.irq.valid_mask);
-@@ -1007,10 +1007,10 @@ int aspeed_gpio_copro_grab_gpio(struct gpio_desc *desc,
- 	unsigned long flags;
- 
- 	if (!gpio->cf_copro_bankmap)
--		gpio->cf_copro_bankmap = kzalloc(gpio->config->nr_gpios >> 3, GFP_KERNEL);
-+		gpio->cf_copro_bankmap = kzalloc(gpio->chip.ngpio >> 3, GFP_KERNEL);
- 	if (!gpio->cf_copro_bankmap)
- 		return -ENOMEM;
--	if (offset < 0 || offset > gpio->config->nr_gpios)
-+	if (offset < 0 || offset > gpio->chip.ngpio)
- 		return -EINVAL;
- 	bindex = offset >> 3;
- 
-@@ -1055,7 +1055,7 @@ int aspeed_gpio_copro_release_gpio(struct gpio_desc *desc)
- 	if (!gpio->cf_copro_bankmap)
- 		return -ENXIO;
- 
--	if (offset < 0 || offset > gpio->config->nr_gpios)
-+	if (offset < 0 || offset > gpio->chip.ngpio)
- 		return -EINVAL;
- 	bindex = offset >> 3;
- 
-@@ -1119,7 +1119,8 @@ static int __init aspeed_gpio_probe(struct platform_device *pdev)
- {
- 	const struct of_device_id *gpio_id;
- 	struct aspeed_gpio *gpio;
--	int rc, i, banks;
-+	int rc, i, banks, err;
-+	u32 ngpio;
- 
- 	gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
- 	if (!gpio)
-@@ -1145,7 +1146,10 @@ static int __init aspeed_gpio_probe(struct platform_device *pdev)
- 	gpio->config = gpio_id->data;
- 
- 	gpio->chip.parent = &pdev->dev;
--	gpio->chip.ngpio = gpio->config->nr_gpios;
-+	err = of_property_read_u32(pdev->dev.of_node, "ngpios", &ngpio);
-+	gpio->chip.ngpio = (u16) ngpio;
-+	if (err)
-+		gpio->chip.ngpio = gpio->config->nr_gpios;
- 	gpio->chip.direction_input = aspeed_gpio_dir_in;
- 	gpio->chip.direction_output = aspeed_gpio_dir_out;
- 	gpio->chip.get_direction = aspeed_gpio_get_direction;
-@@ -1158,7 +1162,7 @@ static int __init aspeed_gpio_probe(struct platform_device *pdev)
- 	gpio->chip.base = -1;
- 
- 	/* Allocate a cache of the output registers */
--	banks = DIV_ROUND_UP(gpio->config->nr_gpios, 32);
-+	banks = DIV_ROUND_UP(gpio->chip.ngpio, 32);
- 	gpio->dcache = devm_kcalloc(&pdev->dev,
- 				    banks, sizeof(u32), GFP_KERNEL);
- 	if (!gpio->dcache)
--- 
-2.20.1
 
+pud_t pud = READ_ONCE(*pudp);
+pud = __pud(pud_val(pud) | RANDOM_VALUE (keeping lower 12 bits 0))
+WRITE_ONCE(*pudp, pud);
+
+But __pud() will fail to build in many platforms.
+
+The other alternative will be to make sure memset() happens on all other
+bits except the lower 12 bits which will depend on endianness. If s390
+has a fixed endianness, we can still use either of them which will hold
+good for others as well.
+
+memset(pudp, RANDOM_NZVALUE, sizeof(pud_t) - 3);
+
+OR
+
+memset(pudp + 3, RANDOM_NZVALUE, sizeof(pud_t) - 3);
+
+> 
+> However, there is another issue on s390 which will make this only work
+> for pud_clear_tests(), and not for the p4d/pgd_tests. The problem is that
+> mm_alloc() will only give you a 3-level page table initially on s390.
+> This means that pudp == p4dp == pgdp, and so the p4d/pgd_tests will
+> both see the pud level (of course this also affects other tests).
+
+Got it.
+
+> 
+> Not sure yet how to fix this, i.e. how to initialize/update the page table
+> to 5 levels. We can handle 5 level page tables, and it would be good if
+> all levels could be tested, but using mm_alloc() to establish the page
+> tables might not work on s390. One option could be to provide an arch-hook
+> or weak function to allocate/initialize the mm.
+
+Sure, got it. Though I plan to do add some arch specific tests or init sequence
+like the above later on but for now the idea is to get the smallest possible set
+of test cases which builds and runs on all platforms without requiring any arch
+specific hooks or special casing (#ifdef) to be agreed upon broadly and accepted.
+
+Do you think this is absolutely necessary on s390 for the very first set of test
+cases or we can add this later on as an improvement ?
+
+> 
+> IIUC, the (dummy) mm is really only needed to provide an mm->pgd as starting
+> point, right?
+
+Right.
