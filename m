@@ -2,143 +2,100 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D7CDC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 02:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B3B9C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 02:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17C8420674
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 02:05:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t8Bh4xj2"
+	by mail.kernel.org (Postfix) with ESMTP id 9B78E206DE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 02:17:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404326AbfIFCF5 (ORCPT
+        id S2404332AbfIFCRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 22:05:57 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41320 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729121AbfIFCF4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 22:05:56 -0400
-Received: by mail-io1-f65.google.com with SMTP id r26so9244135ioh.8;
-        Thu, 05 Sep 2019 19:05:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fNjAO7w9eS/oFTIrN8hMdx8IAfL3ao3OhGwC/h4NODs=;
-        b=t8Bh4xj2REDoF1VC5A1yXzR++DYfGZ2hBOftZzOlHWjxGCJP3not1J15Q9nahr5wGS
-         GIYP1R3pfOUEsxJNJlJIgGEbHuwblu+RbJWWIdC/x3zeLvf6PfcJ848aS8zqBkEY7ipN
-         vitdSOSdFhgJ+zDY2bhyN0X1q9tgyIwj/vvFMG3O9VTzzj9Tt/6qEaaOCfi2S30ZOyXh
-         9knxO2u+VvMhjNgdcamqQW67xPRedv/uj62VB/ygLGFQ+ZN5i7Cee1yLbF1X8JirI0d2
-         3PjFnEel04uTrbagLUQ2hlmVit1hfe1M0mWzmsUNxQmta3kRX0JhzoCL2ZYrUy5aEYug
-         olZA==
+        Thu, 5 Sep 2019 22:17:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58180 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728628AbfIFCRe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 22:17:34 -0400
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5C6F1369CC
+        for <linux-kernel@vger.kernel.org>; Fri,  6 Sep 2019 02:17:34 +0000 (UTC)
+Received: by mail-pf1-f199.google.com with SMTP id r7so3376781pfg.2
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 19:17:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=fNjAO7w9eS/oFTIrN8hMdx8IAfL3ao3OhGwC/h4NODs=;
-        b=NQ3KqUeAUkAo8MGt2Oy8pHGOdhFGBuLCqBY+7Db3kd95D64Ql9xkDCRCiB2bPZdv81
-         htYlNEdMlbdwWU2vZSzpgVSEaCOTeOakFmVLqRsg93iAaSDISstS4+YjGM8dKZjhqS8D
-         t07Q7fs8hQ6xXqorcnFhiFrbUnIYSSlGMmxAlvmUG9ZR4+9ypSOyPZLY2O1Ukk/aWGq5
-         aGBb6pbHDoIhYKZy3X5GULGeVUVtXlpvKTP6jwCUQ++fh6uFb2egE1lP6+esBzYmQvGZ
-         f4+SO9bu9Lfy3rmSCMEIXupGo49LHFqI4Qg34XAjl+3+1yALCcuJpjAi8yk/WyNLFtaT
-         Tt6A==
-X-Gm-Message-State: APjAAAVJKj36NMQ+ktehxGUF9u9aKZjZys/A3wpFgfyuNMZNX9Jy3cJ6
-        we/O8Amc3mcoe+ruEPNhNaQ=
-X-Google-Smtp-Source: APXvYqzrvldW3ojU/x20+y7cTaP88HXbmpOoRGCbe7AKvjRaefPQMetR6tFq1AYrY2esgO5umdzJJg==
-X-Received: by 2002:a02:cbad:: with SMTP id v13mr6827583jap.69.1567735555412;
-        Thu, 05 Sep 2019 19:05:55 -0700 (PDT)
-Received: from [10.186.170.145] ([128.210.107.81])
-        by smtp.gmail.com with ESMTPSA id k6sm2489169ioh.28.2019.09.05.19.05.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Sep 2019 19:05:54 -0700 (PDT)
-Subject: Re: WARNING in hso_free_net_device
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     Stephen Hemminger <stephen@networkplumber.org>,
-        syzbot+44d53c7255bb1aea22d2@syzkaller.appspotmail.com,
-        alexios.zavras@intel.com, "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Mathias Payer <mathias.payer@nebelwelt.net>,
-        netdev <netdev@vger.kernel.org>, rfontana@redhat.com,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oliver Neukum <oneukum@suse.com>
-References: <0000000000002a95df0591a4f114@google.com>
- <d6e4d2da-66c6-a8fe-2fea-a3435fa7cb54@gmail.com>
- <20190904154140.45dfb398@hermes.lan>
- <285edb24-01f9-3f9d-4946-b2f41ccd0774@gmail.com>
- <CAAeHK+y3eQ7bXvo1tiAkwLCsFkbSU5B+6hsKbdEzkSXP2_Jyzg@mail.gmail.com>
-From:   Hui Peng <benquike@gmail.com>
-Message-ID: <02ef64cc-5053-e6da-fc59-9970f48064c5@gmail.com>
-Date:   Thu, 5 Sep 2019 22:05:54 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
+        bh=aBUS+fgsamAUOZtSEp++jlkJB5YgKT1csWUc+zQUKS4=;
+        b=RaUSZubVvzcceJVO+n9BiE36/iLz2Be5c1bdS+Zxkv812Pjz4X/Lhb/3VKGvOQcN5V
+         mMH3ySPHTgFG9f10nIoDr6oVKC/Gw5tUOuTG5uUFb4/yUtLmE4ihb0oV6Zsskqx6euf9
+         kx2MApAVU3/bTD7YpwD1291kJYacozggJb51XKU8mPVHbGQa79g7hRofETGMB5hDOcrD
+         hxgiwiTc25PPFSacZlCv3MuXK24I8yCrjDnnjNcQtDeOWv9xzqUBHFvzrGsdSszLJOl/
+         JLaBBnyWUFBX7kp0/RIk/P3tzh1ovDBO29N7Oghvaot6+qKiHCA9Dg3mqV5qV5XAtSoU
+         t6cQ==
+X-Gm-Message-State: APjAAAUjumksEvuP0tY7fUKfprQ4PuOQiEk5nDnVGX2eyfqGHrmPYkEg
+        8b7rP72QIisbO+uGlv2UDRZVTIwRYfHIz8uqqGsPZIKyUER2QemrGZZumibebfEkGCvoZNBVQEa
+        v/56iuyLx2b5RkitcUNprJw8p
+X-Received: by 2002:a62:e717:: with SMTP id s23mr7759988pfh.71.1567736253143;
+        Thu, 05 Sep 2019 19:17:33 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzCQJM/WuwJ79nbWX4bQwimjvaO+Ug+0hsWoiE4Vf9iu3itMcfU3iYer2r464k1bCxIb1dlRA==
+X-Received: by 2002:a62:e717:: with SMTP id s23mr7759963pfh.71.1567736252846;
+        Thu, 05 Sep 2019 19:17:32 -0700 (PDT)
+Received: from xz-x1.redhat.com ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id a11sm8212359pfg.94.2019.09.05.19.17.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2019 19:17:32 -0700 (PDT)
+From:   Peter Xu <peterx@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <kernellwp@gmail.com>,
+        Krish Sadhukhan <krish.sadhukhan@oracle.com>, peterx@redhat.com
+Subject: [PATCH v4 0/4] KVM: X86: Some tracepoint enhancements
+Date:   Fri,  6 Sep 2019 10:17:18 +0800
+Message-Id: <20190906021722.2095-1-peterx@redhat.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <CAAeHK+y3eQ7bXvo1tiAkwLCsFkbSU5B+6hsKbdEzkSXP2_Jyzg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+v4:
+- pick r-b
+- swap the last two patches [Sean]
 
+v3:
+- use unsigned int for vcpu id [Sean]
+- a new patch to fix ple_window type [Sean]
 
-On 9/5/2019 7:24 AM, Andrey Konovalov wrote:
-> On Thu, Sep 5, 2019 at 4:20 AM Hui Peng <benquike@gmail.com> wrote:
->>
->> Can you guys have  a look at the attached patch?
-> 
-> Let's try it:
-> 
-> #syz test: https://github.com/google/kasan.git eea39f24
-> 
-> FYI: there are two more reports coming from this driver, which might
-> (or might not) have the same root cause. One of them has a suggested
-> fix by Oliver.
-> 
-> https://syzkaller.appspot.com/bug?extid=67b2bd0e34f952d0321e
-> https://syzkaller.appspot.com/bug?extid=93f2f45b19519b289613
-> 
+v2:
+- fix commit messages, change format of ple window tracepoint [Sean]
+- rebase [Wanpeng]
 
-I think they are different, though similar.
-This one is resulted from unregistering a network device.
-These 2 are resulted from unregistering a tty device.
+Each small patch explains itself.  I noticed them when I'm tracing
+some IRQ paths and I found them helpful at least to me.
 
->>
->> On 9/4/19 6:41 PM, Stephen Hemminger wrote:
->>> On Wed, 4 Sep 2019 16:27:50 -0400
->>> Hui Peng <benquike@gmail.com> wrote:
->>>
->>>> Hi, all:
->>>>
->>>> I looked at the bug a little.
->>>>
->>>> The issue is that in the error handling code, hso_free_net_device
->>>> unregisters
->>>>
->>>> the net_device (hso_net->net)  by calling unregister_netdev. In the
->>>> error handling code path,
->>>>
->>>> hso_net->net has not been registered yet.
->>>>
->>>> I think there are two ways to solve the issue:
->>>>
->>>> 1. fix it in drivers/net/usb/hso.c to avoiding unregistering the
->>>> net_device when it is still not registered
->>>>
->>>> 2. fix it in unregister_netdev. We can add a field in net_device to
->>>> record whether it is registered, and make unregister_netdev return if
->>>> the net_device is not registered yet.
->>>>
->>>> What do you guys think ?
->>> #1
+Please have a look.  Thanks,
+
+Peter Xu (4):
+  KVM: X86: Trace vcpu_id for vmexit
+  KVM: X86: Remove tailing newline for tracepoints
+  KVM: VMX: Change ple_window type to unsigned int
+  KVM: X86: Tune PLE Window tracepoint
+
+ arch/x86/kvm/svm.c     | 16 ++++++++--------
+ arch/x86/kvm/trace.h   | 34 ++++++++++++++--------------------
+ arch/x86/kvm/vmx/vmx.c | 18 ++++++++++--------
+ arch/x86/kvm/vmx/vmx.h |  2 +-
+ arch/x86/kvm/x86.c     |  2 +-
+ 5 files changed, 34 insertions(+), 38 deletions(-)
+
+-- 
+2.21.0
+
