@@ -2,139 +2,106 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E61EC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AC7C00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DEBF2178F
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:43:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567799019;
-	bh=ALyNp3XcRSlV1veUdTZyS37yI/5XROmEBPXmdB9FYx4=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=f9KUb59W5fXyVaXgwf9JBJu4jlruRlMkYPksybvv+PfcAwpLwHRb9LQW9cBhEzKif
-	 PMtThmfWRiKaPlmEQk1R+IPFJGkr6BXL5elteUBHUg3Q5zW/K+3dtFBSWUVqbhrm4a
-	 2AHlesAOHixIaftU1lmEoTKjk0cF5i1aY2Px0fDk=
+	by mail.kernel.org (Postfix) with ESMTP id DFA4D2070C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:46:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="YUqGDAHk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393453AbfIFTni (ORCPT
+        id S2392201AbfIFTqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 15:43:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32904 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390847AbfIFTnh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 15:43:37 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 181CE2067B;
-        Fri,  6 Sep 2019 19:43:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567799016;
-        bh=ALyNp3XcRSlV1veUdTZyS37yI/5XROmEBPXmdB9FYx4=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=ZLlJ/9IRcMsHvRjRaWN0d9mSVEKCiZFHur+ATf+fp4xj2Rl+snYyPCX41v5rHFTLI
-         rD0BA6rDVyioR2ei5h6gk01qCm5Bwxf7EytRZkPsj6+Bv+1R03mWzrDgo1+FZcm9kF
-         /c8ilg0uGXLLIhwX9Goa/g33Kbe2Soke3SrCr+5A=
-Message-ID: <e1ac9428e6b768ac3145aafbe19b24dd6cf410b9.camel@kernel.org>
-Subject: Re: [PATCH v2 1/5] fs: Add support for an O_MAYEXEC flag on
- sys_open()
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     =?ISO-8859-1?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
-        Florian Weimer <fweimer@redhat.com>,
-        =?ISO-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Eric Chiang <ericchiang@google.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Philippe =?ISO-8859-1?Q?Tr=E9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Date:   Fri, 06 Sep 2019 15:43:33 -0400
-In-Reply-To: <20190906171335.d7mc3no5tdrcn6r5@yavin.dot.cyphar.com>
-References: <20190906152455.22757-1-mic@digikod.net>
-         <20190906152455.22757-2-mic@digikod.net>
-         <87ef0te7v3.fsf@oldenburg2.str.redhat.com>
-         <75442f3b-a3d8-12db-579a-2c5983426b4d@ssi.gouv.fr>
-         <f53ec45fd253e96d1c8d0ea6f9cca7f68afa51e3.camel@kernel.org>
-         <20190906171335.d7mc3no5tdrcn6r5@yavin.dot.cyphar.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Fri, 6 Sep 2019 15:46:31 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:36693 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727053AbfIFTqb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 15:46:31 -0400
+Received: by mail-qk1-f194.google.com with SMTP id s18so6880987qkj.3;
+        Fri, 06 Sep 2019 12:46:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HsrQyq0fSQ6NSNordv4m3ugR52nxCtwTVlUHfUbQ0EI=;
+        b=YUqGDAHkNC1LA/qFGmWHHXUhy7OgS3YOmBlvZmolATepPJ+zNPP5giD8aLLP0r1HSy
+         dCIT7OwBod1u/izNfI3LKZz3oFN9Ng7NLUdiHIM6EygUgG1HoOPGQIsbpzL/NBCIsXWe
+         0SyN6XKhfQ0GFs1PqfP+fXP/erND0Ab26Wvm8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HsrQyq0fSQ6NSNordv4m3ugR52nxCtwTVlUHfUbQ0EI=;
+        b=jUNy+oF0s5X1A74hi9z7MzEefVgDDaWYtDw5UXvIDErTJak7GLbC7qvgpPdmciNQRA
+         0rTPd93SNSGe+EqRd0fv0S6Kh9WyFBGUytPQ6p5aOqovcKmSR3itj6A21YDizr/0PtcD
+         7OuNopDVjPD4VvOmnaMExmcU++T51yTIpFBNGVgp6zTL/IZ1vMME8uYFSW/Jxj8r5MIt
+         tFB7tHxWOw6JsEmB6IwVkj1t43spJEo8+pje2bHWekCl+0h7fhCgjCgN+mQ2bWO5+sJd
+         36lX2hkXvXQE8DURFn5tGVAj4H380kSJpv1NSjGeJnb9xtKoM0VtdtMaLf5o0/effEfw
+         MvPQ==
+X-Gm-Message-State: APjAAAXd9iOKUVTRylVCKqjh8Cchv0RHUXFAgE6BkntIWaWG4N89rc9I
+        ujey2Lf3V9avqCSV4yEwed4PmlbuXIWQJ0tRbqg=
+X-Google-Smtp-Source: APXvYqwNq2ZlKzt+IPAsPeskkSnOA2qCbZo3zhZPKfOkyDsHGhfdMhr7xtW8vDKerDug2KA8rdNL44wm9pzUVYV04yc=
+X-Received: by 2002:a37:f61e:: with SMTP id y30mr10837593qkj.208.1567799189999;
+ Fri, 06 Sep 2019 12:46:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190906062623.13354-1-rashmica.g@gmail.com>
+In-Reply-To: <20190906062623.13354-1-rashmica.g@gmail.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Fri, 6 Sep 2019 19:46:18 +0000
+Message-ID: <CACPK8XeAohB1qZsWHaxa0zEJM5jVhvV6PSj0fKajobC5HYbMtg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/5] gpio/aspeed: Fix incorrect number of banks
+To:     Rashmica Gupta <rashmica.g@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
+        <linux-aspeed@lists.ozlabs.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-09-07 at 03:13 +1000, Aleksa Sarai wrote:
-> On 2019-09-06, Jeff Layton <jlayton@kernel.org> wrote:
-> > On Fri, 2019-09-06 at 18:06 +0200, Mickaël Salaün wrote:
-> > > On 06/09/2019 17:56, Florian Weimer wrote:
-> > > > Let's assume I want to add support for this to the glibc dynamic loader,
-> > > > while still being able to run on older kernels.
-> > > > 
-> > > > Is it safe to try the open call first, with O_MAYEXEC, and if that fails
-> > > > with EINVAL, try again without O_MAYEXEC?
-> > > 
-> > > The kernel ignore unknown open(2) flags, so yes, it is safe even for
-> > > older kernel to use O_MAYEXEC.
-> > > 
-> > 
-> > Well...maybe. What about existing programs that are sending down bogus
-> > open flags? Once you turn this on, they may break...or provide a way to
-> > circumvent the protections this gives.
-> 
-> It should be noted that this has been a valid concern for every new O_*
-> flag introduced (and yet we still introduced new flags, despite the
-> concern) -- though to be fair, O_TMPFILE actually does have a
-> work-around with the O_DIRECTORY mask setup.
-> 
-> The openat2() set adds O_EMPTYPATH -- though in fairness it's also
-> backwards compatible because empty path strings have always given ENOENT
-> (or EINVAL?) while O_EMPTYPATH is a no-op non-empty strings.
-> 
-> > Maybe this should be a new flag that is only usable in the new openat2()
-> > syscall that's still under discussion? That syscall will enforce that
-> > all flags are recognized. You presumably wouldn't need the sysctl if you
-> > went that route too.
-> 
-> I'm also interested in whether we could add an UPGRADE_NOEXEC flag to
-> how->upgrade_mask for the openat2(2) patchset (I reserved a flag bit for
-> it, since I'd heard about this work through the grape-vine).
-> 
+On Fri, 6 Sep 2019 at 06:26, Rashmica Gupta <rashmica.g@gmail.com> wrote:
+>
+> The current calculation for the number of GPIO banks is only correct if
+> the number of GPIOs is a multiple of 32 (if there were 31 GPIOs we would
+> currently say there are 0 banks, which is incorrect).
+>
+> Fixes: 361b79119a4b7 ('gpio: Add Aspeed driver')
+>
+> Signed-off-by: Rashmica Gupta <rashmica.g@gmail.com>
+> Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
 
-I rather like the idea of having openat2 fds be non-executable by
-default, and having userland request it specifically via O_MAYEXEC (or
-some similar openat2 flag) if it's needed. Then you could add an
-UPGRADE_EXEC flag instead?
+Reviewed-by: Joel Stanley <joel@jms.d.au>
 
-That seems like something reasonable to do with a brand new API, and
-might be very helpful for preventing certain classes of attacks.
-
--- 
-Jeff Layton <jlayton@kernel.org>
-
+> ---
+>  drivers/gpio/gpio-aspeed.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
+> index 9defe25d4721..b83e23aecd18 100644
+> --- a/drivers/gpio/gpio-aspeed.c
+> +++ b/drivers/gpio/gpio-aspeed.c
+> @@ -1165,7 +1165,7 @@ static int __init aspeed_gpio_probe(struct platform_device *pdev)
+>         gpio->chip.base = -1;
+>
+>         /* Allocate a cache of the output registers */
+> -       banks = gpio->config->nr_gpios >> 5;
+> +       banks = DIV_ROUND_UP(gpio->config->nr_gpios, 32);
+>         gpio->dcache = devm_kcalloc(&pdev->dev,
+>                                     banks, sizeof(u32), GFP_KERNEL);
+>         if (!gpio->dcache)
+> --
+> 2.20.1
+>
