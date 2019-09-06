@@ -2,67 +2,56 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81FAAC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B7EBC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FFBB208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:17:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 683DA20693
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:21:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393259AbfIFNRo (ORCPT
+        id S2393266AbfIFNVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 09:17:44 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:59996 "EHLO
+        Fri, 6 Sep 2019 09:21:09 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:60064 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392541AbfIFNRo (ORCPT
+        with ESMTP id S1728793AbfIFNVJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 09:17:44 -0400
+        Fri, 6 Sep 2019 09:21:09 -0400
 Received: from localhost (unknown [88.214.184.128])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id B3597152F6952;
-        Fri,  6 Sep 2019 06:17:41 -0700 (PDT)
-Date:   Fri, 06 Sep 2019 15:17:39 +0200 (CEST)
-Message-Id: <20190906.151739.1653688874182107118.davem@davemloft.net>
-To:     radhey.shyam.pandey@xilinx.com
-Cc:     netdev@vger.kernel.org, michal.simek@xilinx.com,
-        anirudha.sarangi@xilinx.com, john.linn@xilinx.com,
-        mchehab+samsung@kernel.org, gregkh@linuxfoundation.org,
-        nicolas.ferre@microchip.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] MAINTAINERS: add myself as maintainer for
- xilinx axiethernet driver
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6FA25152F9952;
+        Fri,  6 Sep 2019 06:21:07 -0700 (PDT)
+Date:   Fri, 06 Sep 2019 15:21:05 +0200 (CEST)
+Message-Id: <20190906.152105.1216913799363290912.davem@davemloft.net>
+To:     tanhuazhong@huawei.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        salil.mehta@huawei.com, yisen.zhuang@huawei.com,
+        linuxarm@huawei.com, jakub.kicinski@netronome.com
+Subject: Re: [PATCH V2 net-next 0/7] net: hns3: add some bugfixes and
+ cleanups
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1567688168-20607-1-git-send-email-radhey.shyam.pandey@xilinx.com>
-References: <1567688168-20607-1-git-send-email-radhey.shyam.pandey@xilinx.com>
+In-Reply-To: <1567690302-16648-1-git-send-email-tanhuazhong@huawei.com>
+References: <1567690302-16648-1-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: Mew version 6.8 on Emacs 26.2
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 06 Sep 2019 06:17:43 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 06 Sep 2019 06:21:08 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Date: Thu,  5 Sep 2019 18:26:08 +0530
+From: Huazhong Tan <tanhuazhong@huawei.com>
+Date: Thu, 5 Sep 2019 21:31:35 +0800
 
-> I am maintaining xilinx axiethernet driver in xilinx tree and would like
-> to maintain it in the mainline kernel as well. Hence adding myself as a
-> maintainer. Also Anirudha and John has moved to new roles, so based on
-> request removing them from the maintainer list.
-> 
-> Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-> Acked-by: John Linn <john.linn@xilinx.com>
-> Acked-by: Michal Simek <michal.simek@xilinx.com>
-> ---
-> I am resending this patch as earlier version didn't go through mailing
-> list due to some config restriction on the external email addresses.
-> Also adding Michal's acked-by tag.
+> This patch-set includes bugfixes and cleanups for the HNS3
+> ethernet controller driver.
+ ...
 
-Applied to 'net'.
+Series applied to net-next
