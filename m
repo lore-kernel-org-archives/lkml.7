@@ -2,91 +2,100 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2A3C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85803C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:33:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 292C0206A1
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:33:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55529206A1
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:33:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="B5lMPpGH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395210AbfIFRdr (ORCPT
+        id S2395222AbfIFRdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 13:33:47 -0400
-Received: from smtprelay0102.hostedemail.com ([216.40.44.102]:41097 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727381AbfIFRdq (ORCPT
+        Fri, 6 Sep 2019 13:33:55 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:33443 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388372AbfIFRdz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 13:33:46 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 11459100E86C4;
-        Fri,  6 Sep 2019 17:33:45 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: shape57_207efb1258f13
-X-Filterd-Recvd-Size: 2276
-Received: from XPS-9350.home (unknown [47.151.152.152])
-        (Authenticated sender: joe@perches.com)
-        by omf09.hostedemail.com (Postfix) with ESMTPA;
-        Fri,  6 Sep 2019 17:33:43 +0000 (UTC)
-Message-ID: <9d30210a2d024aae4c36c8995019cdeab29e1e19.camel@perches.com>
-Subject: Re: [PATCH] docs: license-rules.txt: cover SPDX headers on Python
- scripts
-From:   Joe Perches <joe@perches.com>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Jessica Yu <jeyu@kernel.org>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        Thomas Gleixner <tglx@linutronix.de>, linux-doc@vger.kernel.org
-Date:   Fri, 06 Sep 2019 10:33:42 -0700
-In-Reply-To: <20190906083457.7e7934ec@coco.lan>
-References: <20190905055614.7958918b@coco.lan>
-         <88e638eb959095ab6657d295f9f8c27169569bf2.1567675272.git.mchehab+samsung@kernel.org>
-         <20190905092703.GA30899@kroah.com> <20190905090701.37dcf75e@coco.lan>
-         <b32c2e46b91e7bcda2a9bd140673f06d71b2487a.camel@perches.com>
-         <20190906083457.7e7934ec@coco.lan>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
+        Fri, 6 Sep 2019 13:33:55 -0400
+Received: by mail-oi1-f193.google.com with SMTP id e12so5339384oie.0
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 10:33:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qpDnR/GYJ/XrBLmzSIYUWPDpRlqXVwU8hq/PPEapHXQ=;
+        b=B5lMPpGHxIofgZL10Pn92uDG8MnE3nHQtXDzubuDNUxCRt56k31Zr5/4pBbkv4ywfp
+         k2B9yLhvs+CQZolGYvrtvi/f3xzxDtXhUuaaFUh5Dvv21CfjE/LNyLRZb+x7i5PmiS1D
+         ZIUPTbM+K/3hH0G5jF0Ehvp/Yz/ZSAz34z7I9miMnRsfe9zcMJiYCJBadW8maOBNVufF
+         LcFtXZOm1s1HhJLXNF5PKER+f1vQe8CZv1SdFAlPsTrPBHjyL4m5sSnEEtuWzr+dME/d
+         yPglC9Vp78a/MAqamkHBU5HxSM1bZk6G1BF35zRlxhELkYuQGhMHkWrK/kqOJOKhXYXT
+         WCAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qpDnR/GYJ/XrBLmzSIYUWPDpRlqXVwU8hq/PPEapHXQ=;
+        b=GCKO8/JAgSdU9hxd3bFQmpfGz1FcwJhV1no0ZAm/t5LMrokkpl/ZQt8LKUG/aAgzD6
+         X7c544BCqUWUD1DRRVbMX2oJCgZV//ELoZemsryFJkkS7gMGvCy1IntH9vSNAgM3D1bV
+         xuWcyk8rY6EGabqedBGprePFntLHJstAmjuhl5NIjS5lGabPdVw+hTh6R+hUaZU9Hiwt
+         BbyIfUkL0ySH4CwaggaESjR2iU1K2QhYF05yWrGYKWffHhJKQHsP1iHe87MsafXyZXCL
+         Yl+KqogKMNeEXR4v06cKzCq39YRDSqpQz457ZzvazHo3C5dtdCiICORMkXeJ1LV9vZyk
+         SSEA==
+X-Gm-Message-State: APjAAAVUWLeC0Q3raJH8IHZyO47bhG+D3o9jqbLcGMXfumIljFhGfeAv
+        gF/d58yP7ne96oRL+tJy3mcYrOFYBJvj5+wv2Hmenw==
+X-Google-Smtp-Source: APXvYqxs26WaI4nMH81FCrmErnLZVB0v+f8/lt+3MTncxWG87yVQW0BSOxASyAFc+69JKSrfI3WlFVqe6CUueDct1rs=
+X-Received: by 2002:aca:5dc3:: with SMTP id r186mr7672240oib.73.1567791233988;
+ Fri, 06 Sep 2019 10:33:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20190906145213.32552.30160.stgit@localhost.localdomain> <20190906145327.32552.39455.stgit@localhost.localdomain>
+In-Reply-To: <20190906145327.32552.39455.stgit@localhost.localdomain>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 6 Sep 2019 10:33:42 -0700
+Message-ID: <CAPcyv4i_LPrYvenhzcM_Ji6nviZWHqTDWQDDusv5pCXv0Bi7QA@mail.gmail.com>
+Subject: Re: [PATCH v8 1/7] mm: Add per-cpu logic to page shuffling
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     nitesh@redhat.com, KVM list <kvm@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        virtio-dev@lists.oasis-open.org,
+        Oscar Salvador <osalvador@suse.de>, yang.zhang.wz@gmail.com,
+        Pankaj Gupta <pagupta@redhat.com>,
+        Rik van Riel <riel@surriel.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        lcapitulino@redhat.com, "Wang, Wei W" <wei.w.wang@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-09-06 at 08:34 -0300, Mauro Carvalho Chehab wrote:
-> I did some changes on it, plus one change at the pedantic mode of
-> scripts/spdxcheck.py, and placed the corresponding patches at:
-> 
-> 	https://git.linuxtv.org/mchehab/experimental.git/log/?h=spdx_pedantic
+On Fri, Sep 6, 2019 at 7:53 AM Alexander Duyck
+<alexander.duyck@gmail.com> wrote:
+>
+> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+>
+> Change the logic used to generate randomness in the suffle path so that we
+> can avoid cache line bouncing. The previous logic was sharing the offset
+> and entropy word between all CPUs. As such this can result in cache line
+> bouncing and will ultimately hurt performance when enabled.
+>
+> To resolve this I have moved to a per-cpu logic for maintaining a unsigned
+> long containing some amount of bits, and an offset value for which bit we
+> can use for entropy with each call.
+>
 
-Your script needs a modification of this line:
-
-    $spdx = $1 if m/(SPDX-License-Identifier:.*)/;
-
-This is on $_ and not $spdx.
-
-This line needs to be:
-
-    $spdx = $1 if $spdx =~ m/(SPDX-License-Identifier:.*)/;
-
-Otherwise the script produces:
----
-diff --git a/tools/perf/util/rlimit.h b/tools/perf/util/rlimit.h
-index 9f59d8e..5d975b9 100644
---- a/tools/perf/util/rlimit.h
-+++ b/tools/perf/util/rlimit.h
-@@ -1,6 +1,6 @@
-+/* SPDX-License-Identifier: LGPL-2.1 */ */
- #ifndef __PERF_RLIMIT_H_
- #define __PERF_RLIMIT_H_
--/* SPDX-License-Identifier: LGPL-2.1 */
- 
- void rlimit__bump_memlock(void);
- #endif // __PERF_RLIMIT_H_
-
-
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
