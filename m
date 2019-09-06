@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F21C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 06:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE78C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 06:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 662AE20842
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 06:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D046E2082C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 06:16:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391561AbfIFGQt (ORCPT
+        id S2391599AbfIFGQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 02:16:49 -0400
+        Fri, 6 Sep 2019 02:16:53 -0400
 Received: from mga01.intel.com ([192.55.52.88]:4005 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388719AbfIFGQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 02:16:47 -0400
+        id S2388719AbfIFGQw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 02:16:52 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Sep 2019 23:16:46 -0700
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Sep 2019 23:16:51 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,472,1559545200"; 
-   d="scan'208";a="383159387"
+   d="scan'208";a="383159428"
 Received: from allen-box.sh.intel.com ([10.239.159.136])
-  by fmsmga005.fm.intel.com with ESMTP; 05 Sep 2019 23:16:42 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 05 Sep 2019 23:16:47 -0700
 From:   Lu Baolu <baolu.lu@linux.intel.com>
 To:     David Woodhouse <dwmw2@infradead.org>,
         Joerg Roedel <joro@8bytes.org>,
@@ -50,9 +50,9 @@ Cc:     ashok.raj@intel.com, jacob.jun.pan@intel.com, alan.cox@intel.com,
         iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
         Lu Baolu <baolu.lu@linux.intel.com>,
         Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v9 4/5] iommu/vt-d: Add trace events for device dma map/unmap
-Date:   Fri,  6 Sep 2019 14:14:51 +0800
-Message-Id: <20190906061452.30791-5-baolu.lu@linux.intel.com>
+Subject: [PATCH v9 5/5] iommu/vt-d: Use bounce buffer for untrusted devices
+Date:   Fri,  6 Sep 2019 14:14:52 +0800
+Message-Id: <20190906061452.30791-6-baolu.lu@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190906061452.30791-1-baolu.lu@linux.intel.com>
 References: <20190906061452.30791-1-baolu.lu@linux.intel.com>
@@ -61,223 +61,325 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds trace support for the Intel IOMMU driver. It
-also declares some events which could be used to trace
-the events when an IOVA is being mapped or unmapped in
-a domain.
+The Intel VT-d hardware uses paging for DMA remapping.
+The minimum mapped window is a page size. The device
+drivers may map buffers not filling the whole IOMMU
+window. This allows the device to access to possibly
+unrelated memory and a malicious device could exploit
+this to perform DMA attacks. To address this, the
+Intel IOMMU driver will use bounce pages for those
+buffers which don't fill whole IOMMU pages.
 
 Cc: Ashok Raj <ashok.raj@intel.com>
 Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
 Cc: Kevin Tian <kevin.tian@intel.com>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Tested-by: Xu Pengfei <pengfei.xu@intel.com>
+Tested-by: Mika Westerberg <mika.westerberg@intel.com>
 ---
- drivers/iommu/Makefile             |   1 +
- drivers/iommu/intel-iommu.c        |  13 +++-
- drivers/iommu/intel-trace.c        |  14 ++++
- include/trace/events/intel_iommu.h | 106 +++++++++++++++++++++++++++++
- 4 files changed, 131 insertions(+), 3 deletions(-)
- create mode 100644 drivers/iommu/intel-trace.c
- create mode 100644 include/trace/events/intel_iommu.h
+ drivers/iommu/intel-iommu.c | 258 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 258 insertions(+)
 
-diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
-index f13f36ae1af6..bfe27b2755bd 100644
---- a/drivers/iommu/Makefile
-+++ b/drivers/iommu/Makefile
-@@ -17,6 +17,7 @@ obj-$(CONFIG_ARM_SMMU) += arm-smmu.o
- obj-$(CONFIG_ARM_SMMU_V3) += arm-smmu-v3.o
- obj-$(CONFIG_DMAR_TABLE) += dmar.o
- obj-$(CONFIG_INTEL_IOMMU) += intel-iommu.o intel-pasid.o
-+obj-$(CONFIG_INTEL_IOMMU) += intel-trace.o
- obj-$(CONFIG_INTEL_IOMMU_DEBUGFS) += intel-iommu-debugfs.o
- obj-$(CONFIG_INTEL_IOMMU_SVM) += intel-svm.o
- obj-$(CONFIG_IPMMU_VMSA) += ipmmu-vmsa.o
 diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 34e1265bb2ad..0720fd7b262b 100644
+index 0720fd7b262b..c6935172df81 100644
 --- a/drivers/iommu/intel-iommu.c
 +++ b/drivers/iommu/intel-iommu.c
-@@ -3541,6 +3541,9 @@ static dma_addr_t __intel_map_single(struct device *dev, phys_addr_t paddr,
- 
- 	start_paddr = (phys_addr_t)iova_pfn << PAGE_SHIFT;
- 	start_paddr += paddr & ~PAGE_MASK;
-+
-+	trace_map_single(dev, start_paddr, paddr, size << VTD_PAGE_SHIFT);
-+
- 	return start_paddr;
- 
- error:
-@@ -3596,10 +3599,7 @@ static void intel_unmap(struct device *dev, dma_addr_t dev_addr, size_t size)
- 	if (dev_is_pci(dev))
- 		pdev = to_pci_dev(dev);
- 
--	dev_dbg(dev, "Device unmapping: pfn %lx-%lx\n", start_pfn, last_pfn);
--
- 	freelist = domain_unmap(domain, start_pfn, last_pfn);
--
- 	if (intel_iommu_strict || (pdev && pdev->untrusted) ||
- 			!has_iova_flush_queue(&domain->iovad)) {
- 		iommu_flush_iotlb_psi(iommu, domain, start_pfn,
-@@ -3615,6 +3615,8 @@ static void intel_unmap(struct device *dev, dma_addr_t dev_addr, size_t size)
- 		 * cpu used up by the iotlb flush operation...
- 		 */
- 	}
-+
-+	trace_unmap_single(dev, dev_addr, size);
- }
- 
- static void intel_unmap_page(struct device *dev, dma_addr_t dev_addr,
-@@ -3705,6 +3707,8 @@ static void intel_unmap_sg(struct device *dev, struct scatterlist *sglist,
- 	}
- 
- 	intel_unmap(dev, startaddr, nrpages << VTD_PAGE_SHIFT);
-+
-+	trace_unmap_sg(dev, startaddr, nrpages << VTD_PAGE_SHIFT);
- }
- 
- static int intel_map_sg(struct device *dev, struct scatterlist *sglist, int nelems,
-@@ -3761,6 +3765,9 @@ static int intel_map_sg(struct device *dev, struct scatterlist *sglist, int nele
- 		return 0;
- 	}
- 
-+	trace_map_sg(dev, iova_pfn << PAGE_SHIFT,
-+		     sg_phys(sglist), size << VTD_PAGE_SHIFT);
-+
- 	return nelems;
- }
- 
-diff --git a/drivers/iommu/intel-trace.c b/drivers/iommu/intel-trace.c
-new file mode 100644
-index 000000000000..bfb6a6e37a88
---- /dev/null
-+++ b/drivers/iommu/intel-trace.c
-@@ -0,0 +1,14 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Intel IOMMU trace support
-+ *
-+ * Copyright (C) 2019 Intel Corporation
-+ *
-+ * Author: Lu Baolu <baolu.lu@linux.intel.com>
-+ */
-+
-+#include <linux/string.h>
-+#include <linux/types.h>
-+
-+#define CREATE_TRACE_POINTS
+@@ -41,9 +41,11 @@
+ #include <linux/dma-direct.h>
+ #include <linux/crash_dump.h>
+ #include <linux/numa.h>
++#include <linux/swiotlb.h>
+ #include <asm/irq_remapping.h>
+ #include <asm/cacheflush.h>
+ #include <asm/iommu.h>
 +#include <trace/events/intel_iommu.h>
-diff --git a/include/trace/events/intel_iommu.h b/include/trace/events/intel_iommu.h
-new file mode 100644
-index 000000000000..54e61d456cdf
---- /dev/null
-+++ b/include/trace/events/intel_iommu.h
-@@ -0,0 +1,106 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Intel IOMMU trace support
-+ *
-+ * Copyright (C) 2019 Intel Corporation
-+ *
-+ * Author: Lu Baolu <baolu.lu@linux.intel.com>
-+ */
-+#ifdef CONFIG_INTEL_IOMMU
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM intel_iommu
+ 
+ #include "irq_remapping.h"
+ #include "intel-pasid.h"
+@@ -346,6 +348,8 @@ static int domain_detach_iommu(struct dmar_domain *domain,
+ static bool device_is_rmrr_locked(struct device *dev);
+ static int intel_iommu_attach_device(struct iommu_domain *domain,
+ 				     struct device *dev);
++static phys_addr_t intel_iommu_iova_to_phys(struct iommu_domain *domain,
++					    dma_addr_t iova);
+ 
+ #ifdef CONFIG_INTEL_IOMMU_DEFAULT_ON
+ int dmar_disabled = 0;
+@@ -3783,6 +3787,252 @@ static const struct dma_map_ops intel_dma_ops = {
+ 	.dma_supported = dma_direct_supported,
+ };
+ 
++static void
++bounce_sync_single(struct device *dev, dma_addr_t addr, size_t size,
++		   enum dma_data_direction dir, enum dma_sync_target target)
++{
++	struct dmar_domain *domain;
++	phys_addr_t tlb_addr;
 +
-+#if !defined(_TRACE_INTEL_IOMMU_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_INTEL_IOMMU_H
++	domain = find_domain(dev);
++	if (WARN_ON(!domain))
++		return;
 +
-+#include <linux/tracepoint.h>
-+#include <linux/intel-iommu.h>
++	tlb_addr = intel_iommu_iova_to_phys(&domain->domain, addr);
++	if (is_swiotlb_buffer(tlb_addr))
++		swiotlb_tbl_sync_single(dev, tlb_addr, size, dir, target);
++}
 +
-+DECLARE_EVENT_CLASS(dma_map,
-+	TP_PROTO(struct device *dev, dma_addr_t dev_addr, phys_addr_t phys_addr,
-+		 size_t size),
++static dma_addr_t
++bounce_map_single(struct device *dev, phys_addr_t paddr, size_t size,
++		  enum dma_data_direction dir, unsigned long attrs,
++		  u64 dma_mask)
++{
++	size_t aligned_size = ALIGN(size, VTD_PAGE_SIZE);
++	struct dmar_domain *domain;
++	struct intel_iommu *iommu;
++	unsigned long iova_pfn;
++	unsigned long nrpages;
++	phys_addr_t tlb_addr;
++	int prot = 0;
++	int ret;
 +
-+	TP_ARGS(dev, dev_addr, phys_addr, size),
++	domain = find_domain(dev);
++	if (WARN_ON(dir == DMA_NONE || !domain))
++		return DMA_MAPPING_ERROR;
 +
-+	TP_STRUCT__entry(
-+		__string(dev_name, dev_name(dev))
-+		__field(dma_addr_t, dev_addr)
-+		__field(phys_addr_t, phys_addr)
-+		__field(size_t,	size)
-+	),
++	iommu = domain_get_iommu(domain);
++	if (WARN_ON(!iommu))
++		return DMA_MAPPING_ERROR;
 +
-+	TP_fast_assign(
-+		__assign_str(dev_name, dev_name(dev));
-+		__entry->dev_addr = dev_addr;
-+		__entry->phys_addr = phys_addr;
-+		__entry->size = size;
-+	),
++	nrpages = aligned_nrpages(0, size);
++	iova_pfn = intel_alloc_iova(dev, domain,
++				    dma_to_mm_pfn(nrpages), dma_mask);
++	if (!iova_pfn)
++		return DMA_MAPPING_ERROR;
 +
-+	TP_printk("dev=%s dev_addr=0x%llx phys_addr=0x%llx size=%zu",
-+		  __get_str(dev_name),
-+		  (unsigned long long)__entry->dev_addr,
-+		  (unsigned long long)__entry->phys_addr,
-+		  __entry->size)
-+);
++	/*
++	 * Check if DMAR supports zero-length reads on write only
++	 * mappings..
++	 */
++	if (dir == DMA_TO_DEVICE || dir == DMA_BIDIRECTIONAL ||
++			!cap_zlr(iommu->cap))
++		prot |= DMA_PTE_READ;
++	if (dir == DMA_FROM_DEVICE || dir == DMA_BIDIRECTIONAL)
++		prot |= DMA_PTE_WRITE;
 +
-+DEFINE_EVENT(dma_map, map_single,
-+	TP_PROTO(struct device *dev, dma_addr_t dev_addr, phys_addr_t phys_addr,
-+		 size_t size),
-+	TP_ARGS(dev, dev_addr, phys_addr, size)
-+);
++	/*
++	 * If both the physical buffer start address and size are
++	 * page aligned, we don't need to use a bounce page.
++	 */
++	if (!IS_ALIGNED(paddr | size, VTD_PAGE_SIZE)) {
++		tlb_addr = swiotlb_tbl_map_single(dev,
++				__phys_to_dma(dev, io_tlb_start),
++				paddr, size, aligned_size, dir, attrs);
++		if (tlb_addr == DMA_MAPPING_ERROR) {
++			goto swiotlb_error;
++		} else {
++			/* Cleanup the padding area. */
++			void *padding_start = phys_to_virt(tlb_addr);
++			size_t padding_size = aligned_size;
 +
-+DEFINE_EVENT(dma_map, map_sg,
-+	TP_PROTO(struct device *dev, dma_addr_t dev_addr, phys_addr_t phys_addr,
-+		 size_t size),
-+	TP_ARGS(dev, dev_addr, phys_addr, size)
-+);
++			if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC) &&
++			    (dir == DMA_TO_DEVICE ||
++			     dir == DMA_BIDIRECTIONAL)) {
++				padding_start += size;
++				padding_size -= size;
++			}
 +
-+DEFINE_EVENT(dma_map, bounce_map_single,
-+	TP_PROTO(struct device *dev, dma_addr_t dev_addr, phys_addr_t phys_addr,
-+		 size_t size),
-+	TP_ARGS(dev, dev_addr, phys_addr, size)
-+);
++			memset(padding_start, 0, padding_size);
++		}
++	} else {
++		tlb_addr = paddr;
++	}
 +
-+DECLARE_EVENT_CLASS(dma_unmap,
-+	TP_PROTO(struct device *dev, dma_addr_t dev_addr, size_t size),
++	ret = domain_pfn_mapping(domain, mm_to_dma_pfn(iova_pfn),
++				 tlb_addr >> VTD_PAGE_SHIFT, nrpages, prot);
++	if (ret)
++		goto mapping_error;
 +
-+	TP_ARGS(dev, dev_addr, size),
++	trace_bounce_map_single(dev, iova_pfn << PAGE_SHIFT, paddr, size);
 +
-+	TP_STRUCT__entry(
-+		__string(dev_name, dev_name(dev))
-+		__field(dma_addr_t, dev_addr)
-+		__field(size_t,	size)
-+	),
++	return (phys_addr_t)iova_pfn << PAGE_SHIFT;
 +
-+	TP_fast_assign(
-+		__assign_str(dev_name, dev_name(dev));
-+		__entry->dev_addr = dev_addr;
-+		__entry->size = size;
-+	),
++mapping_error:
++	if (is_swiotlb_buffer(tlb_addr))
++		swiotlb_tbl_unmap_single(dev, tlb_addr, size,
++					 aligned_size, dir, attrs);
++swiotlb_error:
++	free_iova_fast(&domain->iovad, iova_pfn, dma_to_mm_pfn(nrpages));
++	dev_err(dev, "Device bounce map: %zx@%llx dir %d --- failed\n",
++		size, (unsigned long long)paddr, dir);
 +
-+	TP_printk("dev=%s dev_addr=0x%llx size=%zu",
-+		  __get_str(dev_name),
-+		  (unsigned long long)__entry->dev_addr,
-+		  __entry->size)
-+);
++	return DMA_MAPPING_ERROR;
++}
 +
-+DEFINE_EVENT(dma_unmap, unmap_single,
-+	TP_PROTO(struct device *dev, dma_addr_t dev_addr, size_t size),
-+	TP_ARGS(dev, dev_addr, size)
-+);
++static void
++bounce_unmap_single(struct device *dev, dma_addr_t dev_addr, size_t size,
++		    enum dma_data_direction dir, unsigned long attrs)
++{
++	size_t aligned_size = ALIGN(size, VTD_PAGE_SIZE);
++	struct dmar_domain *domain;
++	phys_addr_t tlb_addr;
 +
-+DEFINE_EVENT(dma_unmap, unmap_sg,
-+	TP_PROTO(struct device *dev, dma_addr_t dev_addr, size_t size),
-+	TP_ARGS(dev, dev_addr, size)
-+);
++	domain = find_domain(dev);
++	if (WARN_ON(!domain))
++		return;
 +
-+DEFINE_EVENT(dma_unmap, bounce_unmap_single,
-+	TP_PROTO(struct device *dev, dma_addr_t dev_addr, size_t size),
-+	TP_ARGS(dev, dev_addr, size)
-+);
++	tlb_addr = intel_iommu_iova_to_phys(&domain->domain, dev_addr);
++	if (WARN_ON(!tlb_addr))
++		return;
 +
-+#endif /* _TRACE_INTEL_IOMMU_H */
++	intel_unmap(dev, dev_addr, size);
++	if (is_swiotlb_buffer(tlb_addr))
++		swiotlb_tbl_unmap_single(dev, tlb_addr, size,
++					 aligned_size, dir, attrs);
 +
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
-+#endif /* CONFIG_INTEL_IOMMU */
++	trace_bounce_unmap_single(dev, dev_addr, size);
++}
++
++static dma_addr_t
++bounce_map_page(struct device *dev, struct page *page, unsigned long offset,
++		size_t size, enum dma_data_direction dir, unsigned long attrs)
++{
++	return bounce_map_single(dev, page_to_phys(page) + offset,
++				 size, dir, attrs, *dev->dma_mask);
++}
++
++static dma_addr_t
++bounce_map_resource(struct device *dev, phys_addr_t phys_addr, size_t size,
++		    enum dma_data_direction dir, unsigned long attrs)
++{
++	return bounce_map_single(dev, phys_addr, size,
++				 dir, attrs, *dev->dma_mask);
++}
++
++static void
++bounce_unmap_page(struct device *dev, dma_addr_t dev_addr, size_t size,
++		  enum dma_data_direction dir, unsigned long attrs)
++{
++	bounce_unmap_single(dev, dev_addr, size, dir, attrs);
++}
++
++static void
++bounce_unmap_resource(struct device *dev, dma_addr_t dev_addr, size_t size,
++		      enum dma_data_direction dir, unsigned long attrs)
++{
++	bounce_unmap_single(dev, dev_addr, size, dir, attrs);
++}
++
++static void
++bounce_unmap_sg(struct device *dev, struct scatterlist *sglist, int nelems,
++		enum dma_data_direction dir, unsigned long attrs)
++{
++	struct scatterlist *sg;
++	int i;
++
++	for_each_sg(sglist, sg, nelems, i)
++		bounce_unmap_page(dev, sg->dma_address,
++				  sg_dma_len(sg), dir, attrs);
++}
++
++static int
++bounce_map_sg(struct device *dev, struct scatterlist *sglist, int nelems,
++	      enum dma_data_direction dir, unsigned long attrs)
++{
++	int i;
++	struct scatterlist *sg;
++
++	for_each_sg(sglist, sg, nelems, i) {
++		sg->dma_address = bounce_map_page(dev, sg_page(sg),
++						  sg->offset, sg->length,
++						  dir, attrs);
++		if (sg->dma_address == DMA_MAPPING_ERROR)
++			goto out_unmap;
++		sg_dma_len(sg) = sg->length;
++	}
++
++	return nelems;
++
++out_unmap:
++	bounce_unmap_sg(dev, sglist, i, dir, attrs | DMA_ATTR_SKIP_CPU_SYNC);
++	return 0;
++}
++
++static void
++bounce_sync_single_for_cpu(struct device *dev, dma_addr_t addr,
++			   size_t size, enum dma_data_direction dir)
++{
++	bounce_sync_single(dev, addr, size, dir, SYNC_FOR_CPU);
++}
++
++static void
++bounce_sync_single_for_device(struct device *dev, dma_addr_t addr,
++			      size_t size, enum dma_data_direction dir)
++{
++	bounce_sync_single(dev, addr, size, dir, SYNC_FOR_DEVICE);
++}
++
++static void
++bounce_sync_sg_for_cpu(struct device *dev, struct scatterlist *sglist,
++		       int nelems, enum dma_data_direction dir)
++{
++	struct scatterlist *sg;
++	int i;
++
++	for_each_sg(sglist, sg, nelems, i)
++		bounce_sync_single(dev, sg_dma_address(sg),
++				   sg_dma_len(sg), dir, SYNC_FOR_CPU);
++}
++
++static void
++bounce_sync_sg_for_device(struct device *dev, struct scatterlist *sglist,
++			  int nelems, enum dma_data_direction dir)
++{
++	struct scatterlist *sg;
++	int i;
++
++	for_each_sg(sglist, sg, nelems, i)
++		bounce_sync_single(dev, sg_dma_address(sg),
++				   sg_dma_len(sg), dir, SYNC_FOR_DEVICE);
++}
++
++static const struct dma_map_ops bounce_dma_ops = {
++	.alloc			= intel_alloc_coherent,
++	.free			= intel_free_coherent,
++	.map_sg			= bounce_map_sg,
++	.unmap_sg		= bounce_unmap_sg,
++	.map_page		= bounce_map_page,
++	.unmap_page		= bounce_unmap_page,
++	.sync_single_for_cpu	= bounce_sync_single_for_cpu,
++	.sync_single_for_device	= bounce_sync_single_for_device,
++	.sync_sg_for_cpu	= bounce_sync_sg_for_cpu,
++	.sync_sg_for_device	= bounce_sync_sg_for_device,
++	.map_resource		= bounce_map_resource,
++	.unmap_resource		= bounce_unmap_resource,
++	.dma_supported		= dma_direct_supported,
++};
++
+ static inline int iommu_domain_cache_init(void)
+ {
+ 	int ret = 0;
+@@ -5376,6 +5626,11 @@ static int intel_iommu_add_device(struct device *dev)
+ 		}
+ 	}
+ 
++	if (device_needs_bounce(dev)) {
++		dev_info(dev, "Use Intel IOMMU bounce page dma_ops\n");
++		set_dma_ops(dev, &bounce_dma_ops);
++	}
++
+ 	return 0;
+ }
+ 
+@@ -5393,6 +5648,9 @@ static void intel_iommu_remove_device(struct device *dev)
+ 	iommu_group_remove_device(dev);
+ 
+ 	iommu_device_unlink(&iommu->iommu, dev);
++
++	if (device_needs_bounce(dev))
++		set_dma_ops(dev, NULL);
+ }
+ 
+ static void intel_iommu_get_resv_regions(struct device *device,
 -- 
 2.17.1
 
