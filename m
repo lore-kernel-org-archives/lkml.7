@@ -2,151 +2,210 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 337AEC00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 717D3C00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EE2B20854
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:49:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567777774;
-	bh=cIv8TA2XdJhfbThtH/Vg6ldC4kZ2Uq/7TJp0aEucP/Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=S5+hRtxOmwXBhi1vnNxm2wPZbtLu9AJ0CfeKUgMmCkJrHIC2eGloYDbbrVU8gcCI7
-	 SeIAEnQlYZoUjhamCWy9stRDP6F/7nptHFqsFzYFJJa7SAlvfISR/urhD7z2zym6X/
-	 OVsQmUvWE0xixbHXR0lbAJ62lMqiQ39z1YrLGxac=
+	by mail.kernel.org (Postfix) with ESMTP id 4A4C9206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:50:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="dTKytgdT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405279AbfIFNtd (ORCPT
+        id S2393487AbfIFNuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 09:49:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50278 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405266AbfIFNtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 09:49:33 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAA25206B8;
-        Fri,  6 Sep 2019 13:49:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567777772;
-        bh=cIv8TA2XdJhfbThtH/Vg6ldC4kZ2Uq/7TJp0aEucP/Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wR/fK4PLM25KA5fxxSViqwyA7FEB0rcAV8VJQTFpfujqnkWWaooRVQV0GRXcDF0yH
-         QnFtpTshwy8Y6nSJ4y7opp4pCyWtLaLVxMgE6vrPAbao8/Q3pmBUDLhDqFP6MjFzqP
-         Sa8dr+VSkL7T491+/8l6I9AL1yCiD0Ts+pNH3pjA=
-Date:   Fri, 6 Sep 2019 15:49:30 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds@linux-foundation.org, stable@vger.kernel.org
-Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
-Subject: Re: Linux 5.2.13
-Message-ID: <20190906134930.GB7628@kroah.com>
-References: <20190906134925.GA7628@kroah.com>
+        Fri, 6 Sep 2019 09:50:22 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52302 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731814AbfIFNuW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 09:50:22 -0400
+Received: by mail-wm1-f65.google.com with SMTP id t17so6606228wmi.2
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 06:50:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KrYX6Q/LeSVDnxpxfV2uN5QLi2+c+z0J+TjzkFIN0Fc=;
+        b=dTKytgdTPeYLmGHfgGyuJ4gHDsBA88t0GaqfFy3KJSzw1grNzTF8bHCl4EsBTg7uo/
+         Vdscq0BFMxUIAA4MGalbd0RSAsvdpql9MVo2nujiAO+Chbp/hsWpuJz1+bgaAo7oGkcN
+         MWUlnZArwvVWxG00Oeb6rSgQfQRJZ2D763X5A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KrYX6Q/LeSVDnxpxfV2uN5QLi2+c+z0J+TjzkFIN0Fc=;
+        b=epRgPfA6sKQtygOcajXF55v0hz5ugLDcUm3qgy11ExyGo4vHX1/10nD4aU/GuyVfZA
+         tRAUfteeYYTLDipcNQ0LI/0PyS4yjJ2Cdr0ZXGrY17hSoVjTp+h10XFrJ9cGRk53Yz1e
+         LgBizq/REOOv3Tbd0d77kenW67lG7TtaGKoBJU++LaBzVdWlf6zjE/5VJU7F8TUN/SQv
+         LA3DA7V3gBxnaVaY7Oj/9CqZ89nXBqy5fqlAHeaean8lRnocvIPeaHzeGxr6ZmtqkZOg
+         j0j/IaProXRjDXZDZlYz/TdtNe5BLTgYY73dW53ZxwcfHBCSiBTkW9gBV1Z9zw6aQAj1
+         IGDw==
+X-Gm-Message-State: APjAAAUlmySsp4/ZpwrPJyeckPJc31ffNJkWAKIMT9u5tUH9GCRqB+ej
+        btMwIwpShEpN5OUPplIi0m6lbmrliKK32YyU4em3Lw==
+X-Google-Smtp-Source: APXvYqxU9LVVRhlbWADFqDWPsgI5B12obV4dqUR9JZ3Z6uPq60OE8Cz65ZO/IZ+QTP/vT+9EPMbOAc/F220BbvmL1Ms=
+X-Received: by 2002:a1c:f016:: with SMTP id a22mr7494148wmb.170.1567777819341;
+ Fri, 06 Sep 2019 06:50:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190906134925.GA7628@kroah.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <1566275985-25670-1-git-send-email-srinath.mannam@broadcom.com> <20190905222649.GK103977@google.com>
+In-Reply-To: <20190905222649.GK103977@google.com>
+From:   Srinath Mannam <srinath.mannam@broadcom.com>
+Date:   Fri, 6 Sep 2019 19:20:08 +0530
+Message-ID: <CABe79T6Ve_j17fDNZ=2u2Yzq+tD1PjU-PZFHTQRK3siLGt5C-A@mail.gmail.com>
+Subject: Re: [PATCH] PCI: Add PCIE ACS quirk for IPROC PAXB
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Abhinav Ratna <abhinav.ratna@broadcom.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-diff --git a/Makefile b/Makefile
-index e26d52d93bb1..288284de8858 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- VERSION = 5
- PATCHLEVEL = 2
--SUBLEVEL = 12
-+SUBLEVEL = 13
- EXTRAVERSION =
- NAME = Bobtail Squid
- 
-diff --git a/drivers/input/mouse/elantech.c b/drivers/input/mouse/elantech.c
-index a47c7add4e0e..a4345052abd2 100644
---- a/drivers/input/mouse/elantech.c
-+++ b/drivers/input/mouse/elantech.c
-@@ -1807,30 +1807,6 @@ static int elantech_create_smbus(struct psmouse *psmouse,
- 				  leave_breadcrumbs);
- }
- 
--static bool elantech_use_host_notify(struct psmouse *psmouse,
--				     struct elantech_device_info *info)
--{
--	if (ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version))
--		return true;
--
--	switch (info->bus) {
--	case ETP_BUS_PS2_ONLY:
--		/* expected case */
--		break;
--	case ETP_BUS_SMB_HST_NTFY_ONLY:
--	case ETP_BUS_PS2_SMB_HST_NTFY:
--		/* SMbus implementation is stable since 2018 */
--		if (dmi_get_bios_year() >= 2018)
--			return true;
--	default:
--		psmouse_dbg(psmouse,
--			    "Ignoring SMBus bus provider %d\n", info->bus);
--		break;
--	}
--
--	return false;
--}
--
- /**
-  * elantech_setup_smbus - called once the PS/2 devices are enumerated
-  * and decides to instantiate a SMBus InterTouch device.
-@@ -1850,7 +1826,7 @@ static int elantech_setup_smbus(struct psmouse *psmouse,
- 		 * i2c_blacklist_pnp_ids.
- 		 * Old ICs are up to the user to decide.
- 		 */
--		if (!elantech_use_host_notify(psmouse, info) ||
-+		if (!ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version) ||
- 		    psmouse_matches_pnp_id(psmouse, i2c_blacklist_pnp_ids))
- 			return -ENXIO;
- 	}
-@@ -1870,6 +1846,34 @@ static int elantech_setup_smbus(struct psmouse *psmouse,
- 	return 0;
- }
- 
-+static bool elantech_use_host_notify(struct psmouse *psmouse,
-+				     struct elantech_device_info *info)
-+{
-+	if (ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version))
-+		return true;
-+
-+	switch (info->bus) {
-+	case ETP_BUS_PS2_ONLY:
-+		/* expected case */
-+		break;
-+	case ETP_BUS_SMB_ALERT_ONLY:
-+		/* fall-through  */
-+	case ETP_BUS_PS2_SMB_ALERT:
-+		psmouse_dbg(psmouse, "Ignoring SMBus provider through alert protocol.\n");
-+		break;
-+	case ETP_BUS_SMB_HST_NTFY_ONLY:
-+		/* fall-through  */
-+	case ETP_BUS_PS2_SMB_HST_NTFY:
-+		return true;
-+	default:
-+		psmouse_dbg(psmouse,
-+			    "Ignoring SMBus bus provider %d.\n",
-+			    info->bus);
-+	}
-+
-+	return false;
-+}
-+
- int elantech_init_smbus(struct psmouse *psmouse)
- {
- 	struct elantech_device_info info;
+Hi Bjorn,
+
+Thank you for the improvements. With the changes, comments and commit
+message exactly describes the purpose.
+I tested the code changes and works fine.
+
+Thanks again,
+Srinath
+
+On Fri, Sep 6, 2019 at 3:56 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> [+cc Alex]
+>
+> On Tue, Aug 20, 2019 at 10:09:45AM +0530, Srinath Mannam wrote:
+> > From: Abhinav Ratna <abhinav.ratna@broadcom.com>
+> >
+> > IPROC PAXB RC doesn't support ACS capabilities and control registers.
+> > Add quirk to have separate IOMMU groups for all EPs and functions connected
+> > to root port, by masking RR/CR/SV/UF bits.
+> >
+> > Signed-off-by: Abhinav Ratna <abhinav.ratna@broadcom.com>
+> > Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+>
+> I tentatively applied this to pci/misc with Scott's ack for v5.4.
+>
+> I tweaked the patch itself to follow the style of similar quirks
+> (interdiff is below, plus a diff of the commit log).  Please make sure
+> I didn't break it.
+>
+> I also went out on a limb and reworded the comment to give what I
+> *think* is the justification for this patch, as opposed to merely a
+> description of the code.  I'm making a lot of assumptions there, so
+> please confirm that they're correct, or supply alternate justification
+> if they're not.
+>
+> > ---
+> >  drivers/pci/quirks.c | 16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
+> >
+> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > index 0f16acc..f9584c0 100644
+> > --- a/drivers/pci/quirks.c
+> > +++ b/drivers/pci/quirks.c
+> > @@ -4466,6 +4466,21 @@ static int pci_quirk_mf_endpoint_acs(struct pci_dev *dev, u16 acs_flags)
+> >       return acs_flags ? 0 : 1;
+> >  }
+> >
+> > +static int pcie_quirk_brcm_bridge_acs(struct pci_dev *dev, u16 acs_flags)
+> > +{
+> > +     /*
+> > +      * IPROC PAXB RC doesn't support ACS capabilities and control registers.
+> > +      * Add quirk to to have separate IOMMU groups for all EPs and functions
+> > +      * connected to root port, by masking RR/CR/SV/UF bits.
+> > +      */
+> > +
+> > +     u16 flags = (PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_SV);
+> > +     int ret = acs_flags & ~flags ? 0 : 1;
+> > +
+> > +     return ret;
+> > +}
+> > +
+> > +
+> >  static const struct pci_dev_acs_enabled {
+> >       u16 vendor;
+> >       u16 device;
+> > @@ -4559,6 +4574,7 @@ static const struct pci_dev_acs_enabled {
+> >       { PCI_VENDOR_ID_AMPERE, 0xE00A, pci_quirk_xgene_acs },
+> >       { PCI_VENDOR_ID_AMPERE, 0xE00B, pci_quirk_xgene_acs },
+> >       { PCI_VENDOR_ID_AMPERE, 0xE00C, pci_quirk_xgene_acs },
+> > +     { PCI_VENDOR_ID_BROADCOM, 0xD714, pcie_quirk_brcm_bridge_acs },
+> >       { 0 }
+> >  };
+>
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 77c0330ac922..2edbce35e8c5 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -4466,21 +4466,19 @@ static int pci_quirk_mf_endpoint_acs(struct pci_dev *dev, u16 acs_flags)
+>         return acs_flags ? 0 : 1;
+>  }
+>
+> -static int pcie_quirk_brcm_bridge_acs(struct pci_dev *dev, u16 acs_flags)
+> +static int pci_quirk_brcm_acs(struct pci_dev *dev, u16 acs_flags)
+>  {
+>         /*
+> -        * IPROC PAXB RC doesn't support ACS capabilities and control registers.
+> -        * Add quirk to to have separate IOMMU groups for all EPs and functions
+> -        * connected to root port, by masking RR/CR/SV/UF bits.
+> +        * iProc PAXB Root Ports don't advertise an ACS capability, but
+> +        * they do not allow peer-to-peer transactions between Root Ports.
+> +        * Allow each Root Port to be in a separate IOMMU group by masking
+> +        * SV/RR/CR/UF bits.
+>          */
+> +       acs_flags &= ~(PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+>
+> -       u16 flags = (PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_SV);
+> -       int ret = acs_flags & ~flags ? 0 : 1;
+> -
+> -       return ret;
+> +       return acs_flags ? 0 : 1;
+>  }
+>
+> -
+>  static const struct pci_dev_acs_enabled {
+>         u16 vendor;
+>         u16 device;
+> @@ -4574,7 +4572,7 @@ static const struct pci_dev_acs_enabled {
+>         { PCI_VENDOR_ID_AMPERE, 0xE00A, pci_quirk_xgene_acs },
+>         { PCI_VENDOR_ID_AMPERE, 0xE00B, pci_quirk_xgene_acs },
+>         { PCI_VENDOR_ID_AMPERE, 0xE00C, pci_quirk_xgene_acs },
+> -       { PCI_VENDOR_ID_BROADCOM, 0xD714, pcie_quirk_brcm_bridge_acs },
+> +       { PCI_VENDOR_ID_BROADCOM, 0xD714, pci_quirk_brcm_acs },
+>         { 0 }
+>  };
+>
+>
+>
+>
+> @@ -1,49 +1,49 @@
+> -commit b50ae502eff0
+> +commit 46b2c32df7a4
+>  Author: Abhinav Ratna <abhinav.ratna@broadcom.com>
+>  Date:   Tue Aug 20 10:09:45 2019 +0530
+>
+> -    PCI: Add PCIE ACS quirk for IPROC PAXB
+> +    PCI: Add ACS quirk for iProc PAXB
+>
+> -    IPROC PAXB RC doesn't support ACS capabilities and control registers.
+> -    Add quirk to have separate IOMMU groups for all EPs and functions connected
+> -    to root port, by masking RR/CR/SV/UF bits.
+> +    iProc PAXB Root Ports don't advertise an ACS capability, but they do not
+> +    allow peer-to-peer transactions between Root Ports.  Add an ACS quirk so
+> +    each Root Port can be in a separate IOMMU group.
+>
+> +    [bhelgaas: commit log, comment, use common implementation style]
+>      Link: https://lore.kernel.org/r/1566275985-25670-1-git-send-email-srinath.mannam@broadcom.com
+>      Signed-off-by: Abhinav Ratna <abhinav.ratna@broadcom.com>
+>      Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+>      Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> +    Acked-by: Scott Branden <scott.branden@broadcom.com>
+>
