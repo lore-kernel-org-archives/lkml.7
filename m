@@ -2,92 +2,62 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F13FC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1843BC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46D33207FC
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:14:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567775667;
-	bh=dTI/PD6Zp/AXRe7dx+Oz3QClHlFgk/sT4V/cXDhsk68=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JMQWyR6ONzrZ96t8AoTyPafqtnP1lafROIVVNVof63NWMNaxZH47BPvyJ/ZBxZxkA
-	 YGC+Wts+uXXy6Z32Q1oIvhNOpeGkJLHJm4MgAlrfJ4i4Cld7weW/Y+umm7Grxh8bKw
-	 RVbUP3OMIK3OLArFD8TW03RDG7JwkzehCRcJM3tc=
+	by mail.kernel.org (Postfix) with ESMTP id E65C2206BB
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:15:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393086AbfIFNO0 (ORCPT
+        id S2393178AbfIFNPJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 09:14:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35746 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388106AbfIFNO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 09:14:26 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D837206BB;
-        Fri,  6 Sep 2019 13:14:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567775665;
-        bh=dTI/PD6Zp/AXRe7dx+Oz3QClHlFgk/sT4V/cXDhsk68=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kTmx2s+62Y/4eEQFPY035FvyFlUmf88LUNSIVewSZCHATtGSevTrRRVXP+wltKibl
-         b9yLGk+TUP3KzvCreKIPMGfToBbt9VZV7BklHS3DfBKoSGwzouEtlf+gOnTPv7y+hu
-         W0io4Di/0BRZrRDopawOxAenhii0ZCxjO2iT1PPI=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org
-Subject: [PATCH -tip v4 4/4] x86: kprobes: Prohibit probing on instruction which has emulate prefix
-Date:   Fri,  6 Sep 2019 22:14:20 +0900
-Message-Id: <156777566048.25081.6296162369492175325.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <156777561745.25081.1205321122446165328.stgit@devnote2>
-References: <156777561745.25081.1205321122446165328.stgit@devnote2>
-User-Agent: StGit/0.17.1-dirty
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        Fri, 6 Sep 2019 09:15:09 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:59972 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388106AbfIFNPJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 09:15:09 -0400
+Received: from localhost (unknown [88.214.184.128])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 78D8F152F5C9A;
+        Fri,  6 Sep 2019 06:15:06 -0700 (PDT)
+Date:   Fri, 06 Sep 2019 15:15:05 +0200 (CEST)
+Message-Id: <20190906.151505.1486178691190611604.davem@davemloft.net>
+To:     jasowang@redhat.com
+Cc:     jgg@mellanox.com, mst@redhat.com, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, aarcange@redhat.com,
+        jglisse@redhat.com, linux-mm@kvack.org
+Subject: Re: [PATCH 0/2] Revert and rework on the metadata accelreation
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <7785d39b-b4e7-8165-516c-ee6a08ac9c4e@redhat.com>
+References: <20190905122736.19768-1-jasowang@redhat.com>
+        <20190905135907.GB6011@mellanox.com>
+        <7785d39b-b4e7-8165-516c-ee6a08ac9c4e@redhat.com>
+X-Mailer: Mew version 6.8 on Emacs 26.2
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=iso-2022-jp
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 06 Sep 2019 06:15:08 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Prohibit probing on instruction which has XEN_EMULATE_PREFIX
-or KVM's emulate prefix. Since that prefix is a marker for Xen
-and KVM, if we modify the marker by kprobe's int3, that doesn't
-work as expected.
+From: Jason Wang <jasowang@redhat.com>
+Date: Fri, 6 Sep 2019 18:02:35 +0800
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- arch/x86/kernel/kprobes/core.c |    4 ++++
- 1 file changed, 4 insertions(+)
+> On 2019/9/5 下午9:59, Jason Gunthorpe wrote:
+>> I think you should apply the revert this cycle and rebase the other
+>> patch for next..
+>>
+>> Jason
+> 
+> Yes, the plan is to revert in this release cycle.
 
-diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
-index 43fc13c831af..4f13af7cbcdb 100644
---- a/arch/x86/kernel/kprobes/core.c
-+++ b/arch/x86/kernel/kprobes/core.c
-@@ -351,6 +351,10 @@ int __copy_instruction(u8 *dest, u8 *src, u8 *real, struct insn *insn)
- 	kernel_insn_init(insn, dest, MAX_INSN_SIZE);
- 	insn_get_length(insn);
- 
-+	/* We can not probe force emulate prefixed instruction */
-+	if (insn_has_emulate_prefix(insn))
-+		return 0;
-+
- 	/* Another subsystem puts a breakpoint, failed to recover */
- 	if (insn->opcode.bytes[0] == BREAKPOINT_INSTRUCTION)
- 		return 0;
-
+Then you should reset patch #1 all by itself targetting 'net'.
