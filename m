@@ -2,120 +2,179 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C95C00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A328DC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEF3A206B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:41:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="drvZ1NVf"
+	by mail.kernel.org (Postfix) with ESMTP id 89B8020640
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:43:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392575AbfIFHla (ORCPT
+        id S1730459AbfIFHnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 03:41:30 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:33308 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730293AbfIFHl3 (ORCPT
+        Fri, 6 Sep 2019 03:43:23 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39908 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726323AbfIFHnX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 03:41:29 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 50F4AC0E3E;
-        Fri,  6 Sep 2019 07:41:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1567755688; bh=5PThB8CbPp7CzMhqALHU7PGlPrATo2NWaeXFnvxIVn8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=drvZ1NVfjP8S07HTglCD14IF98r7nF21bZy9Q7+7ipGQcVBY5gubVAMjK0yGX330n
-         3JXnT4RfjyfzDpBZ6o4X9wUF0q68w/W3dm1fVeMomjRC26jkU893lHRk9iYcpJ2ZzX
-         o8j22eZNVJ5Xv8Lq3UPedq0dczXiYjtqhRUD7kybd+D8/CoHbYji9MO73O1zrDdvbq
-         nSezPLPbgExNnMomZlzp5HSInq9ivBA5AVu1Jawa7lT93AVLWBp+KsNJrEZrbbVgGH
-         XdRWC/Z/DRw50fbXtY3vvaWuupikLWfsVVbLdejC1AgWAr1EiretupAuPe6hSptzxH
-         ukgdeVJtn5IbA==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id CDB44A0066;
-        Fri,  6 Sep 2019 07:41:26 +0000 (UTC)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     netdev@vger.kernel.org
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 3/5] net: stmmac: dwmac4: Enable RX Jumbo frame support
-Date:   Fri,  6 Sep 2019 09:41:15 +0200
-Message-Id: <1eb3adcf838e92cffd2c4a6ef405fed0f3ac2b1e.1567755423.git.joabreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1567755423.git.joabreu@synopsys.com>
-References: <cover.1567755423.git.joabreu@synopsys.com>
-In-Reply-To: <cover.1567755423.git.joabreu@synopsys.com>
-References: <cover.1567755423.git.joabreu@synopsys.com>
+        Fri, 6 Sep 2019 03:43:23 -0400
+Received: by mail-wm1-f65.google.com with SMTP id q12so5866296wmj.4;
+        Fri, 06 Sep 2019 00:43:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=ZX+fJ6kKmFi7b0gcgOsbNpKUcKQe/PtH3be90uHqjyE=;
+        b=DBy61pSG/1XAsVOzcU9tvMX/H7j1DqIdhM6+U7d5SY/qb5F1XSamjgmguFJTQ0kFwK
+         9KQgI8wNVOynp1AqZhQHV6Oz3+7CsJ14jJjiP9U6o1jDfAMN2Z9K9TzyhaiW8MVXeA84
+         //Ezj4d7wHT5UltLBoGdnkMyIkD7Tw/dkIe7nmOUMROpEna4dwUcq0VzShyB6fN6m0Vt
+         xa66la6xpN7+B1QKEz53ShEP/+AT5WUl0hFgWnu/Sq1+6pcQjypzccUiScUlC7ZrRRxB
+         U+1gGHTi/TVYUx/ucBrrhtnDwIrBpa6ntUqwBCxuRLWZx3nMn58L+4v4jBH/OSD6Aogo
+         Ri5Q==
+X-Gm-Message-State: APjAAAVxQlmrF4SpkakuUrugzfgFCJuxFAHZmHQZIcoltH+63j7pVqcK
+        pJ2Egq320mCcyzb6yx3HS6Jd3J4r7I4=
+X-Google-Smtp-Source: APXvYqzqbp+DOxBmh/9kc5bWxb4ZJbe7qWqVbnioyjb6kmRfH1ws0o+Fwcpu8EU7LpYaci6np+XSsg==
+X-Received: by 2002:a1c:608b:: with SMTP id u133mr6097859wmb.27.1567755800254;
+        Fri, 06 Sep 2019 00:43:20 -0700 (PDT)
+Received: from [192.168.1.49] (185-219-167-24-static.vivo.cz. [185.219.167.24])
+        by smtp.gmail.com with ESMTPSA id k26sm4937914wmi.37.2019.09.06.00.43.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Sep 2019 00:43:19 -0700 (PDT)
+Subject: Re: [PATCH v8 04/28] x86/asm/entry: annotate THUNKs
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        x86@kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190808103854.6192-1-jslaby@suse.cz>
+ <20190808103854.6192-5-jslaby@suse.cz> <20190815124328.GG15313@zn.tnic>
+From:   Jiri Slaby <jslaby@suse.cz>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <b339dc02-390d-b896-5b80-ebe5f08525e8@suse.cz>
+Date:   Fri, 6 Sep 2019 09:43:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190815124328.GG15313@zn.tnic>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We are already doing it by default in the TX path so we can also enable
-Jumbo Frame support in the RX path independently of MTU value.
+On 15. 08. 19, 14:43, Borislav Petkov wrote:
+> On Thu, Aug 08, 2019 at 12:38:30PM +0200, Jiri Slaby wrote:
+>> Place SYM_*_START_NOALIGN and SYM_*_END around the THUNK macro body.
+>> Preserve @function by FUNC (64bit) and CODE (32bit). Given it was not
+>> marked as aligned, use NOALIGN.
+>>
+>> The common tail .L_restore is put inside SYM_CODE_START_LOCAL_NOALIGN
+>> and SYM_CODE_END too.
+> 
+> What is that needed for? It is a local label...
+> 
+>> The result:
+>>  Value  Size Type    Bind   Vis      Ndx Name
+>>   0000    28 FUNC    GLOBAL DEFAULT    1 trace_hardirqs_on_thunk
+>>   001c    28 FUNC    GLOBAL DEFAULT    1 trace_hardirqs_off_thunk
+>>   0038    24 FUNC    GLOBAL DEFAULT    1 lockdep_sys_exit_thunk
+>>   0050    24 FUNC    GLOBAL DEFAULT    1 ___preempt_schedule
+>>   0068    24 FUNC    GLOBAL DEFAULT    1 ___preempt_schedule_notra
+> 
+> No difference except alignment:
 
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Yeah, alignment is one and visual effect the other. One can immediately
+see where it starts and where it ends -- readability. There is no other
+functional meaning, so I don't mind not annotating it. It's your call. So?
 
----
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Jose Abreu <joabreu@synopsys.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: netdev@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/net/ethernet/stmicro/stmmac/dwmac4.h      | 3 ++-
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 6 ------
- 2 files changed, 2 insertions(+), 7 deletions(-)
+before:
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
-index 2ed11a581d80..03301ffc0391 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
-@@ -352,7 +352,8 @@ enum power_event {
- 
- /* Default operating mode of the MAC */
- #define GMAC_CORE_INIT (GMAC_CONFIG_JD | GMAC_CONFIG_PS | \
--			GMAC_CONFIG_BE | GMAC_CONFIG_DCRS)
-+			GMAC_CONFIG_BE | GMAC_CONFIG_DCRS | \
-+			GMAC_CONFIG_JE)
- 
- /* To dump the core regs excluding  the Address Registers */
- #define	GMAC_REG_NUM	132
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-index fc9954e4a772..596311a80d1c 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -25,15 +25,9 @@ static void dwmac4_core_init(struct mac_device_info *hw,
- {
- 	void __iomem *ioaddr = hw->pcsr;
- 	u32 value = readl(ioaddr + GMAC_CONFIG);
--	int mtu = dev->mtu;
- 
- 	value |= GMAC_CORE_INIT;
- 
--	if (mtu > 1500)
--		value |= GMAC_CONFIG_2K;
--	if (mtu > 2000)
--		value |= GMAC_CONFIG_JE;
--
- 	if (hw->ps) {
- 		value |= GMAC_CONFIG_TE;
- 
+#if defined(CONFIG_TRACE_IRQFLAGS) \
+ || defined(CONFIG_DEBUG_LOCK_ALLOC) \
+ || defined(CONFIG_PREEMPTION)
+.L_restore:
+        popq %r11
+        popq %r10
+        popq %r9
+        popq %r8
+        popq %rax
+        popq %rcx
+        popq %rdx
+        popq %rsi
+        popq %rdi
+        popq %rbp
+        ret
+        _ASM_NOKPROBE(.L_restore)
+#endif
+
+after:
+#if defined(CONFIG_TRACE_IRQFLAGS) \
+ || defined(CONFIG_DEBUG_LOCK_ALLOC) \
+ || defined(CONFIG_PREEMPTION)
+SYM_CODE_START_LOCAL_NOALIGN(.L_restore)
+        popq %r11
+        popq %r10
+        popq %r9
+        popq %r8
+        popq %rax
+        popq %rcx
+        popq %rdx
+        popq %rsi
+        popq %rdi
+        popq %rbp
+        ret
+        _ASM_NOKPROBE(.L_restore)
+SYM_CODE_END(.L_restore)
+#endif
+
+
+thanks,
 -- 
-2.7.4
-
+js
+suse labs
