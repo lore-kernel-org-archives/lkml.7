@@ -2,136 +2,133 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 510B2C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 04:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1661C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 04:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C5852082C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 04:49:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567745399;
-	bh=aUv4wuCZGfhNs3j768vzfIVkfV5uyrkIy0vGHS8vQJE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ccpHMR7f0LcXVtrMroDSpwm3tL9rXETNzIKWQWjNPjL+yYZsuJWDZ7TNemnz8x/BF
-	 8lAdhnImStoW4zW7bzyctYhIb9r92fzIZ1qZXwPbX5XIBF8JadskOd+0ir8axR10Ag
-	 SFoTs8eQLK+wUyHpOb5v3iGO/RLMVeF2WYGjJWhI=
+	by mail.kernel.org (Postfix) with ESMTP id 8E833207FC
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 04:52:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="R7bhguuu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388870AbfIFEt6 (ORCPT
+        id S2389591AbfIFEwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 00:49:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37794 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725768AbfIFEt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 00:49:57 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09D3B207FC;
-        Fri,  6 Sep 2019 04:49:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567745396;
-        bh=aUv4wuCZGfhNs3j768vzfIVkfV5uyrkIy0vGHS8vQJE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SLfUIhq2RGk+82eBGoEMGAAKYdlj9VvE42bMOY4NkcGHw+6F86Q23i3zZwlWfYBaX
-         uJlsclgeyXdAxxz3FglT7yKXueFJpnX2ihvu3Zb/WeW9KVOG+xa4wHFSubB8fmTtgl
-         ZwNO7L/Ugj0YGMHsZ2VBSAmzc7jA+DtNSWK5tr5c=
-Date:   Thu, 5 Sep 2019 21:49:54 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Frederic Weisbecker <frederic@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        syzbot <syzbot+dabf3198a30ed5a2158f@syzkaller.appspotmail.com>
-Subject: Re: WARNING in posix_cpu_timer_del (3)
-Message-ID: <20190906044954.GF803@sol.localdomain>
-Mail-Followup-To: Thomas Gleixner <tglx@linutronix.de>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        syzbot <syzbot+dabf3198a30ed5a2158f@syzkaller.appspotmail.com>
-References: <0000000000009b6b880591a8b697@google.com>
+        Fri, 6 Sep 2019 00:52:17 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:41712 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbfIFEwQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 00:52:16 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x864q6xo165294;
+        Fri, 6 Sep 2019 04:52:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=KYhsWfcC1iMt71xKx7AjqLrfKI6cIO/kus0pmtMoVYI=;
+ b=R7bhguuuAj+QxGbojFmU3ZneukGYN3gnkPEysNDEMgNRQ6Y46oqrb++vqLLFLdngzlA9
+ WgeFLZNu1n/Ogz9q9AecZt95XQEBonCdUtzwCBb69xakojZxwpQhkdlpRVZjVt4AdEU4
+ NSbnuPKrk160n7rrf+/j+R3ibkJJFVLB5CLBoh9CCNSDG2KKorEauRgR5WxCqY8NnR6w
+ e3uMpod7c24GcqOfb6x9svt0w5AFkegTkNhg0zioqFPKMzW3fkiBJ+eTvE75r6j6Anui
+ niRmzLwiRzhhFOi1TnQS4kL/hfrmkijyMjVj9NkAbX9n34qZaTpJC1WLJXy17/Sib57s Pw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2uugt5000q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 Sep 2019 04:52:06 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x864mmu8128244;
+        Fri, 6 Sep 2019 04:52:06 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2utpmc9nvf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 Sep 2019 04:52:06 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x864q56i010773;
+        Fri, 6 Sep 2019 04:52:05 GMT
+Received: from [10.159.230.78] (/10.159.230.78)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 05 Sep 2019 21:52:04 -0700
+Subject: Re: [RESEND PATCH next v2 0/6] ARM: keystone: update dt and enable
+ cpts support
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>
+Cc:     Sekhar Nori <nsekhar@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20190705151247.30422-1-grygorii.strashko@ti.com>
+ <2ef8b34e-7a6e-b3e4-90e0-c4e7f16c2e99@oracle.com>
+ <323c1835-e6b0-9153-8d1e-06200d5e2201@ti.com>
+From:   santosh.shilimkar@oracle.com
+Organization: Oracle Corporation
+Message-ID: <56a97316-73aa-b8ba-41f3-a374a14edc92@oracle.com>
+Date:   Thu, 5 Sep 2019 21:52:03 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0000000000009b6b880591a8b697@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <323c1835-e6b0-9153-8d1e-06200d5e2201@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1909060054
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1909060054
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 09:38:07AM -0700, syzbot wrote:
-> Hello,
+On 9/5/19 12:33 PM, Grygorii Strashko wrote:
+> Hi Santosh,
 > 
-> syzbot found the following crash on:
+> On 06/07/2019 02:48, santosh.shilimkar@oracle.com wrote:
+>> On 7/5/19 8:12 AM, Grygorii Strashko wrote:
+>>> Hi Santosh,
+>>>
+>>> This series is set of platform changes required to enable NETCP CPTS 
+>>> reference
+>>> clock selection and final patch to enable CPTS for Keystone 
+>>> 66AK2E/L/HK SoCs.
+>>>
+>>> Those patches were posted already [1] together with driver's changes, 
+>>> so this
+>>> is re-send of DT/platform specific changes only, as driver's changes 
+>>> have
+>>> been merged already.
+>>>
+>>> Patches 1-5: CPTS DT nodes update for TI Keystone 2 66AK2HK/E/L SoCs.
+>>> Patch 6: enables CPTS for TI Keystone 2 66AK2HK/E/L SoCs.
+>>>
+>>> [1] https://patchwork.kernel.org/cover/10980037/
+>>>
+>>> Grygorii Strashko (6):
+>>>    ARM: dts: keystone-clocks: add input fixed clocks
+>>>    ARM: dts: k2e-clocks: add input ext. fixed clocks tsipclka/b
+>>>    ARM: dts: k2e-netcp: add cpts refclk_mux node
+>>>    ARM: dts: k2hk-netcp: add cpts refclk_mux node
+>>>    ARM: dts: k2l-netcp: add cpts refclk_mux node
+>>>    ARM: configs: keystone: enable cpts
+>>>
+>> Will add these for 5.4 queue. Thanks !!
 > 
-> HEAD commit:    6d028043 Add linux-next specific files for 20190830
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=179e59de600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=82a6bec43ab0cb69
-> dashboard link: https://syzkaller.appspot.com/bug?extid=dabf3198a30ed5a2158f
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13bb4546600000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13af4356600000
+> Sry, that I'm disturbing you, but I do not see those patches applied?
 > 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+dabf3198a30ed5a2158f@syzkaller.appspotmail.com
-> 
-> ------------[ cut here ]------------
-> WARNING: CPU: 1 PID: 9805 at kernel/time/posix-cpu-timers.c:401
-> posix_cpu_timer_del+0x2f0/0x3b0 kernel/time/posix-cpu-timers.c:401
-> Kernel panic - not syncing: panic_on_warn set ...
-> CPU: 1 PID: 9805 Comm: syz-executor380 Not tainted 5.3.0-rc6-next-20190830
-> #75
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
->  panic+0x2dc/0x755 kernel/panic.c:220
->  __warn.cold+0x2f/0x3c kernel/panic.c:581
->  report_bug+0x289/0x300 lib/bug.c:195
->  fixup_bug arch/x86/kernel/traps.c:179 [inline]
->  fixup_bug arch/x86/kernel/traps.c:174 [inline]
->  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
->  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
->  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
-> RIP: 0010:posix_cpu_timer_del+0x2f0/0x3b0 kernel/time/posix-cpu-timers.c:401
-> Code: 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85
-> b5 00 00 00 48 83 bb c8 00 00 00 00 74 16 e8 00 58 0d 00 <0f> 0b e9 87 fe ff
-> ff e8 c4 38 48 00 e9 dd fd ff ff e8 ea 57 0d 00
-> RSP: 0018:ffff88809ac87a30 EFLAGS: 00010093
-> RAX: ffff888090a6e0c0 RBX: ffff88809ae762e0 RCX: 1ffff1101214dd2a
-> RDX: 0000000000000000 RSI: ffffffff8164fe10 RDI: ffff88809ae763a8
-> RBP: ffff88809ac87ac0 R08: 0000000000000002 R09: ffff888090a6e958
-> R10: fffffbfff138aef8 R11: ffffffff89c577c7 R12: ffff88809b326100
-> R13: 1ffff11013590f47 R14: ffff88809ac87a98 R15: ffff88809ae76338
->  timer_delete_hook kernel/time/posix-timers.c:978 [inline]
->  itimer_delete kernel/time/posix-timers.c:1021 [inline]
->  exit_itimers+0xdb/0x2e0 kernel/time/posix-timers.c:1041
->  do_exit+0x1980/0x2e60 kernel/exit.c:853
->  do_group_exit+0x135/0x360 kernel/exit.c:983
->  get_signal+0x47c/0x2500 kernel/signal.c:2734
->  do_signal+0x87/0x1700 arch/x86/kernel/signal.c:815
->  exit_to_usermode_loop+0x286/0x380 arch/x86/entry/common.c:159
->  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
->  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
->  do_syscall_64+0x65f/0x760 arch/x86/entry/common.c:300
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x446679
-> Code: e8 5c b3 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7
-> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff
-> 0f 83 0b 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007ffff909e168 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
-> RAX: 0000000000000000 RBX: 0000000000017a92 RCX: 0000000000446679
-> RDX: 0000000000000000 RSI: 0000000000000080 RDI: 00000000006dbc2c
-> RBP: 00000000006dbc2c R08: 000000037ffffa00 R09: 000000037ffffa00
-> R10: 00007ffff909e180 R11: 0000000000000246 R12: 00000000006dbc20
-> R13: 0000000000000000 R14: 000000000000002d R15: 20c49ba5e353f7cf
-> Kernel Offset: disabled
-> Rebooting in 86400 seconds..
+Sorry I missed this one. Will queue this up for next merge window.
+Will push this out to next early once rc1 is out. If you don't
+see it, please ping me.
 
-FYI, this is still reproducible on latest linux-next (next-20190904).
 
-- Eric
+Regards,
+Santosh
