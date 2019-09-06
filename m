@@ -5,54 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 382FEC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 728F2C0030B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1242B206CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CB36206CD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:55:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="j0fpr0SZ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kmeCQIBi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391371AbfIFLze (ORCPT
+        id S2403832AbfIFLzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 07:55:34 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35008 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727381AbfIFLzd (ORCPT
+        Fri, 6 Sep 2019 07:55:37 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42236 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391385AbfIFLzg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 07:55:33 -0400
-Received: by mail-pg1-f193.google.com with SMTP id n4so3387560pgv.2
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 04:55:33 -0700 (PDT)
+        Fri, 6 Sep 2019 07:55:36 -0400
+Received: by mail-pf1-f195.google.com with SMTP id w22so4301301pfi.9
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 04:55:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=+OhbUrYZqce0AMoF+F11Glo98JJ+mfowWQPDmtjNy0c=;
-        b=j0fpr0SZSekbxfXZ1FC/pKVVDJOVri+GMbhaUUg0GN7iFcJUJbsxYR2ufhju7H4jFa
-         Jv5dNhGX1Oqtv4RcGth4eaQdF8yVq5LeliVMFrfqFwvuiRhpX30n+RWuTHUTalX6WKus
-         REzcBschvcwWBSNcVBdtu2HD0ERIb/mvo+mT8=
+        bh=xs0FBb2Eh/a0ZfUN3lmjqgA2lvRsBqNMJJ4Hr+t8rsk=;
+        b=kmeCQIBiGhW+tQk1fg/PEzbkGpG3iO+oFGAUpfEbSWNTm3PcVsny+MysO5F3WoE8LT
+         6a1P2nxNWtuzOcJDNmFvJvCTt/BzxCDIh+lGvKuymsWqD5KYCc1+yhDA5KbdNkk90OvF
+         BXy91nw60TByc1eZCT/j7tGOHhq8l0wGAhkwQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+OhbUrYZqce0AMoF+F11Glo98JJ+mfowWQPDmtjNy0c=;
-        b=S+Xpp/Bkuhl2lX8BLKM3HWHtSU1r9z2xrzyjMP4rkST8CE/t999x45n5hc5IC7MAzc
-         j5qTkDZ294gT5JwfttdRyXLtI/vN4+PbeTrUMjCxkh25kN+c2iURmogImZZxGvMxUp1N
-         c8SJ2UmG52369OWuQyN67pZZXPrAe2s1H071fZ4iN3EKLFHXPjY8mXDqABAl3vRwrauu
-         e7Z4awdRdCZbasU4bW8PP36jUyxrBNBc9SeQvQCPuG2tkNKu4vJ1tEPPoPCLjG0DWCUt
-         OfXY5CRv4tDPAPtWhM87cfuP9ayUcTD9eH4Bo/4/fk+0McaD5Qqwp2KVk57fVvWgy2km
-         1MHg==
-X-Gm-Message-State: APjAAAVy3EWxuSYOqI/1IXWUKK0XNh13pMXb57VuBYy9oehDhsuVJIt/
-        HKc2G/fXjmIZN+2smuK4lJU6bg==
-X-Google-Smtp-Source: APXvYqy4WC4joqsKUtL19abRcSKOqjJJ+pZZ5uFtnSaqIUEDo7bsKgApsUMm4LCY1XtDNk4LXigH1g==
-X-Received: by 2002:a17:90a:264a:: with SMTP id l68mr9420784pje.74.1567770932661;
-        Fri, 06 Sep 2019 04:55:32 -0700 (PDT)
+        bh=xs0FBb2Eh/a0ZfUN3lmjqgA2lvRsBqNMJJ4Hr+t8rsk=;
+        b=Z0mW8JpITPj/5muWFSk3IqxHwkuByimIIzc1NwJ9Fc6P3RzAmtSPm3rdsq7dLb+ZJN
+         tZdFw7zUljShJLZLckKt6ypvR9w1LA/XXu/mz+syo9qmZyNjky+UiCu3qMlR+DyC8dVr
+         R1HnoPddOE0+OYV63YQZWhonHX0HGGkvnJxcLbU4oqmDXwIHwzkVQMwOtX3ZXVvFcQev
+         sBWeF6Pvg1TO6r3PWO+qqAdzT+GnvV8zPKOY0TKNjc7/Snslk4EBiouLlYvkdta9l1sg
+         ayOWs+83nRFBi2my5HD13N7wttIQxZ1lguMwHMepB+EOtUcrXoxmTEh7i5DV9rKpNJhd
+         QJDA==
+X-Gm-Message-State: APjAAAWd5Dxf93bl4Y+gc+PeVxwNQEkawY6YCyuUn+ERxHX5fYLBR4ne
+        lpKCBkmI++gcVZ4BGqG32xVDhg==
+X-Google-Smtp-Source: APXvYqyowvNhtzHl1k0Wi0wS4lHGEUaq8Era+YDWf70Q5A7/cxadAiuvSkuQdQrv8pFKymQ7yzZiUQ==
+X-Received: by 2002:aa7:920b:: with SMTP id 11mr9848278pfo.231.1567770935302;
+        Fri, 06 Sep 2019 04:55:35 -0700 (PDT)
 Received: from acourbot.tok.corp.google.com ([2401:fa00:4:4:9712:8cf1:d0f:7d33])
-        by smtp.gmail.com with ESMTPSA id o22sm3667394pjq.21.2019.09.06.04.55.30
+        by smtp.gmail.com with ESMTPSA id o22sm3667394pjq.21.2019.09.06.04.55.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Sep 2019 04:55:32 -0700 (PDT)
+        Fri, 06 Sep 2019 04:55:34 -0700 (PDT)
 From:   Alexandre Courbot <acourbot@chromium.org>
 To:     Yunfei Dong <yunfei.dong@mediatek.com>,
         Tiffany Lin <tiffany.lin@mediatek.com>,
@@ -62,9 +62,9 @@ To:     Yunfei Dong <yunfei.dong@mediatek.com>,
 Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
         linux-kernel@vger.kernel.org,
         Alexandre Courbot <acourbot@chromium.org>
-Subject: [RFC PATCH v2 01/13] media: mtk-vcodec: vdec: fix incorrect pointer dereference
-Date:   Fri,  6 Sep 2019 20:55:01 +0900
-Message-Id: <20190906115513.159705-2-acourbot@chromium.org>
+Subject: [RFC PATCH v2 02/13] media: mtk-vcodec: vdec: set VPI IPI handler in one place
+Date:   Fri,  6 Sep 2019 20:55:02 +0900
+Message-Id: <20190906115513.159705-3-acourbot@chromium.org>
 X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
 In-Reply-To: <20190906115513.159705-1-acourbot@chromium.org>
 References: <20190906115513.159705-1-acourbot@chromium.org>
@@ -75,32 +75,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunfei Dong <yunfei.dong@mediatek.com>
+Each of the supported decoder formats used to set the same RPC
+interrupt handler by themselves, even though this could be done
+by the IF init function itself. Move it to the right place and stop
+making its symbol public.
 
-mtk_q_data::fmt is actually a pointer and must be dereferenced as such.
-This went under the radar because mtk_v4l2_debug() evaluates to nothing
-unless DEBUG is defined.
-
-Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
-[acourbot: split into its own commit]
 Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
 ---
- drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c | 1 -
+ drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c  | 1 -
+ drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c  | 1 -
+ drivers/media/platform/mtk-vcodec/vdec_vpu_if.c       | 9 ++++++++-
+ drivers/media/platform/mtk-vcodec/vdec_vpu_if.h       | 9 ---------
+ 5 files changed, 8 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
-index 26a55c3e807e..653f111532ab 100644
---- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
-+++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
-@@ -284,7 +284,7 @@ static void mtk_vdec_update_fmt(struct mtk_vcodec_ctx *ctx,
- 		fmt = &mtk_video_formats[k];
- 		if (fmt->fourcc == pixelformat) {
- 			mtk_v4l2_debug(1, "Update cap fourcc(%d -> %d)",
--				dst_q_data->fmt.fourcc, pixelformat);
-+				dst_q_data->fmt->fourcc, pixelformat);
- 			dst_q_data->fmt = fmt;
- 			return;
- 		}
+diff --git a/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c b/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
+index 49aa85a9bb5a..50048c170b99 100644
+--- a/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
++++ b/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
+@@ -283,7 +283,6 @@ static int vdec_h264_init(struct mtk_vcodec_ctx *ctx)
+ 	inst->vpu.id = IPI_VDEC_H264;
+ 	inst->vpu.dev = ctx->dev->vpu_plat_dev;
+ 	inst->vpu.ctx = ctx;
+-	inst->vpu.handler = vpu_dec_ipi_handler;
+ 
+ 	err = vpu_dec_init(&inst->vpu);
+ 	if (err) {
+diff --git a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c
+index 63a8708ce682..6011fdd60a22 100644
+--- a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c
++++ b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c
+@@ -402,7 +402,6 @@ static int vdec_vp8_init(struct mtk_vcodec_ctx *ctx)
+ 	inst->vpu.id = IPI_VDEC_VP8;
+ 	inst->vpu.dev = ctx->dev->vpu_plat_dev;
+ 	inst->vpu.ctx = ctx;
+-	inst->vpu.handler = vpu_dec_ipi_handler;
+ 
+ 	err = vpu_dec_init(&inst->vpu);
+ 	if (err) {
+diff --git a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
+index 5066c283d86d..24c1f0bf2147 100644
+--- a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
++++ b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
+@@ -793,7 +793,6 @@ static int vdec_vp9_init(struct mtk_vcodec_ctx *ctx)
+ 	inst->vpu.id = IPI_VDEC_VP9;
+ 	inst->vpu.dev = ctx->dev->vpu_plat_dev;
+ 	inst->vpu.ctx = ctx;
+-	inst->vpu.handler = vpu_dec_ipi_handler;
+ 
+ 	if (vpu_dec_init(&inst->vpu)) {
+ 		mtk_vcodec_err(inst, "vp9_dec_vpu_init failed");
+diff --git a/drivers/media/platform/mtk-vcodec/vdec_vpu_if.c b/drivers/media/platform/mtk-vcodec/vdec_vpu_if.c
+index 3f38cc4509ef..70abfd4cd4b9 100644
+--- a/drivers/media/platform/mtk-vcodec/vdec_vpu_if.c
++++ b/drivers/media/platform/mtk-vcodec/vdec_vpu_if.c
+@@ -25,10 +25,16 @@ static void handle_init_ack_msg(struct vdec_vpu_ipi_init_ack *msg)
+ }
+ 
+ /*
++ * vpu_dec_ipi_handler - Handler for VPU ipi message.
++ *
++ * @data: ipi message
++ * @len : length of ipi message
++ * @priv: callback private data which is passed by decoder when register.
++ *
+  * This function runs in interrupt context and it means there's an IPI MSG
+  * from VPU.
+  */
+-void vpu_dec_ipi_handler(void *data, unsigned int len, void *priv)
++static void vpu_dec_ipi_handler(void *data, unsigned int len, void *priv)
+ {
+ 	struct vdec_vpu_ipi_ack *msg = data;
+ 	struct vdec_vpu_inst *vpu = (struct vdec_vpu_inst *)
+@@ -102,6 +108,7 @@ int vpu_dec_init(struct vdec_vpu_inst *vpu)
+ 	mtk_vcodec_debug_enter(vpu);
+ 
+ 	init_waitqueue_head(&vpu->wq);
++	vpu->handler = vpu_dec_ipi_handler;
+ 
+ 	err = vpu_ipi_register(vpu->dev, vpu->id, vpu->handler, "vdec", NULL);
+ 	if (err != 0) {
+diff --git a/drivers/media/platform/mtk-vcodec/vdec_vpu_if.h b/drivers/media/platform/mtk-vcodec/vdec_vpu_if.h
+index b76f717e4fd7..f779b0676fbd 100644
+--- a/drivers/media/platform/mtk-vcodec/vdec_vpu_if.h
++++ b/drivers/media/platform/mtk-vcodec/vdec_vpu_if.h
+@@ -76,13 +76,4 @@ int vpu_dec_deinit(struct vdec_vpu_inst *vpu);
+  */
+ int vpu_dec_reset(struct vdec_vpu_inst *vpu);
+ 
+-/**
+- * vpu_dec_ipi_handler - Handler for VPU ipi message.
+- *
+- * @data: ipi message
+- * @len : length of ipi message
+- * @priv: callback private data which is passed by decoder when register.
+- */
+-void vpu_dec_ipi_handler(void *data, unsigned int len, void *priv);
+-
+ #endif
 -- 
 2.23.0.187.g17f5b7556c-goog
 
