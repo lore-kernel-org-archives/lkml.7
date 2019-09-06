@@ -2,98 +2,116 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA5DC00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF17CC00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31EA520842
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1CEE20842
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:44:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="GOMgzAf/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394908AbfIFPnD (ORCPT
+        id S2405782AbfIFPoX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 11:43:03 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:35393 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394896AbfIFPnD (ORCPT
+        Fri, 6 Sep 2019 11:44:23 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:38844 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725871AbfIFPoX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 11:43:03 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1M7sYM-1i1IIg2adW-0051I2; Fri, 06 Sep 2019 17:42:44 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Shiraz Saleem <shiraz.saleem@intel.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ib_umem: fix type mismatch
-Date:   Fri,  6 Sep 2019 17:42:37 +0200
-Message-Id: <20190906154243.2282560-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Fri, 6 Sep 2019 11:44:23 -0400
+Received: by mail-ed1-f67.google.com with SMTP id a23so4464458edv.5
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 08:44:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UXzffckHlrDd2GxMkcUegpxPLxQbezYI5SKZXnOnJzk=;
+        b=GOMgzAf/lkF5c2eKwXgjCw9a3KXnWR5APRE7h0mk6NdXu79AGiO8sODfHid9N6Xl5h
+         M/C8KT/SLLU5H1Aqg4nwEKOuTu5OkbyrUQJTErU8uVcm673iUBJEH32XMXPStUacK9QI
+         xCMSuQrJe1j8CHQBTWz9PB+Jomp1+g+QD9Tkd9KMYHmJWFzG5xyCzw8xyfNgbLXZwkrs
+         5FlS9o5FS4p8okYBPzuG2ITgzJGemxFxUkm3aSbDG/x0MDmUmazIm6dOMXX9j66GMFk+
+         3cLHZkaYpm/muQI+jLdcObCu1m/ydijbn1wGNoRDjuAv/Fx5CRGdTNnFLVIVNVPLSSN2
+         qWrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UXzffckHlrDd2GxMkcUegpxPLxQbezYI5SKZXnOnJzk=;
+        b=V8svtINDMGmdJhTKUfaEJt2Q33E2aEzijyMPGH7g/jR/XHYPgYan3kfZ/OqJjC8B2O
+         cH60bD/E6J88kboNK2vXtI89m6uapzpXU/JYv6erZVGe4PiLJVge9zoXB8bJWbBHs3i5
+         tmQfLlQJTuxV0pIgIF0/m6pg97ivmU6VEfhwki2CjiFnBcNmPqP3gl+T5yujSQZSjE5Y
+         h/QWfORGFqDneuoqus39kp1eRw9s+6QGaV0W+u4YmVklLgssnaxxXm4NJoy6caK+De5g
+         T16CjtTtnxCa2Rfcet/04+M/dTcDi+H9uKpTpQ3HNXAVYqtl0arp2AilVasl6LqPh/GB
+         Feng==
+X-Gm-Message-State: APjAAAUOc5BUnlZxwRQUYjpQpOZHDBCW/SCoikcWntX82n6fR+hVdOUt
+        XXkTHElY3dwlS0NtjFF9G+oTuxMHg8ApoXJK8gp+qw==
+X-Google-Smtp-Source: APXvYqwplMA0AW8lXkCWQuG9K8cCsGpwcuOwcj3r1h53xYTkZkNhYGGnMNAxboAR+e2euONipoiDRfZvyN8jJZQFWsM=
+X-Received: by 2002:a17:906:f04:: with SMTP id z4mr8127839eji.209.1567784661783;
+ Fri, 06 Sep 2019 08:44:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:K9/EFzvNoMru8L8s9TvbI42t5t0VeGJl4YOAHC+qXPJKsxIG/QA
- bEgBPhwyGxE+wquiLrWWz8BfpIOA1qoMHUsgMxn8reqteYVqxOkOrBR1WF0y8WFmxxW2H29
- ZqeVIFEJYcMo8KnMJbVojzk5fgRNUubK1bCSkOHVxVvpJj9WidxK0gW/m5BNUGZBpq7LW1z
- 4fisvxaYts59Sf/GnB6vA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Kyijkn+kpMo=:Wac2vwJV0iJeEqlNcjo4j1
- zm8eeRR5mt+6Q6HO46u2FdC1Y3sVIh/19vmOZWnfRe2lpXHNyvls5Fvlaf66ONwQ3/GXysnpi
- ATt0dPjRld7KpPQgUHdgQ5UzdoaML140C/vIg2bTb4wSySIo/q7kCWoKhxaZYO5HpggnPH6My
- PyqhzH6cSCk900ikNXkTmr0apvmsCqwXob7nd2e32mq4YeZsK1tt2vnNYasbC/PLCii2X28pR
- TGOE1plLFgqq9PXHB1LsD7Jl75zgzwhgXRTOZOvlGt2NzRVPoELox4oPZkbF6iVKGByhdlpMe
- FfaWatXY0Ja4tbJZZ1E9zt0upGOm5Tf7AF0ISBO2YJ403u/G/cC7HqkgIC3tLOMoPTANR/cbJ
- 719XvwmwW07OQ+iSfwkLHWCMsF17pHrq5BCqa4TcgvLCmvhEVrOSjzQD9AUxolWgcNMqD7Ms0
- cp6tftCjFzO/87vfR+2mD07A+rlvccPXgSQutYjZg3l9zRUggczDW84PS7zlLKlwcOpcqszQg
- 0O3h7J5cLuShM31elfxcg/ksQ3VOkj98pgOhv1TMfCaQkDH0PSMlh7NSF/Q8T7yUJvzAyzddp
- B8N28+S1uAa7NNJLDTsKl4kr97ItRbWkA+aDm1LWIcwvt+gusBhYXf/jQy6aH8druY2scKimv
- QkRAa2JSUizS8bbsHHK4VwU2sUC9auc1OyLP9MNRIXVYsDmAc2qVFLVUcolMP8M+lwjew9BRK
- hCBXN4yEzuq9jFTB9dfyEREwcxHjsGAdMdJNL9sO7IF+vjrSF9xDrjGGwwudk5c43HzF2UZX6
- pvkoAl/nKG3wlJV4nM6Ipna7Saa7KW3T0iQp0/piQO/uDPkWtk=
+References: <20190821183204.23576-1-pasha.tatashin@soleen.com>
+ <20190821183204.23576-6-pasha.tatashin@soleen.com> <ddd81093-89fc-5146-0b33-ad3bd9a1c10c@arm.com>
+In-Reply-To: <ddd81093-89fc-5146-0b33-ad3bd9a1c10c@arm.com>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Fri, 6 Sep 2019 11:44:10 -0400
+Message-ID: <CA+CK2bBXfa0MFspOpWAGL4Q7iYH9UMdKAwMD-PyL7Wp4s64x+Q@mail.gmail.com>
+Subject: Re: [PATCH v3 05/17] arm64, hibernate: check pgd table allocation
+To:     James Morse <james.morse@arm.com>
+Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        kexec mailing list <kexec@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Bhupesh Sharma <bhsharma@redhat.com>,
+        linux-mm <linux-mm@kvack.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On some 32-bit architectures, size_t is defined as 'int' rather
-than 'long', causing a harmless warning:
+On Fri, Sep 6, 2019 at 11:17 AM James Morse <james.morse@arm.com> wrote:
+>
+> Hi Pavel,
+>
+> On 21/08/2019 19:31, Pavel Tatashin wrote:
+> > There is a bug in create_safe_exec_page(), when page table is allocated
+> > it is not checked that table is allocated successfully:
+> >
+> > But it is dereferenced in: pgd_none(READ_ONCE(*pgdp)).
+>
+> If there is a bug, it shouldn't be fixed part way through a series. This makes it
+> difficult to backport the fix.
+>
+> Please split this out as an independent patch with a 'Fixes:' tag for the commit that
+> introduced the bug.
+>
+>
+> > Another issue,
+>
+> So this patch does two things? That is rarely a good idea. Again, this makes it difficult
+> to backport the fix.
+>
+>
+> > is that phys_to_ttbr() uses an offset in page table instead
+> > of pgd directly.
+>
+> If you were going to reuse this, that would be a bug. But because the only page that is
+> being mapped, is mapped to PAGE_SIZE, all the top bits will be 0. The offset calls are
+> boiler-plate. It doesn't look intentional, but its harmless.
 
-drivers/infiniband/core/umem_odp.c:220:7: error: comparison of distinct pointer types ('typeof (umem_odp->umem.address) *' (aka 'unsigned long *') and 'typeof (umem_odp->umem.length) *' (aka 'unsigned int *')) [-Werror,-Wcompare-distinct-pointer-types]
-                if (check_add_overflow(umem_odp->umem.address,
-                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-include/linux/overflow.h:59:15: note: expanded from macro 'check_add_overflow'
-        (void) (&__a == &__b);                  \
-                ~~~~ ^  ~~~~
+Yes, it is harmless otherwise the code would not work. But it is
+confusing to read, and looks broken. I will separate this change as
+two patches as you suggested.
 
-As size_t is always the same length as unsigned long in all supported
-architectures, change the structure definition to use the unsigned long
-type for both.
-
-Fixes: 204e3e5630c5 ("RDMA/odp: Check for overflow when computing the umem_odp end")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- include/rdma/ib_umem.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/rdma/ib_umem.h b/include/rdma/ib_umem.h
-index a91b2af64ec4..5dffe05402ef 100644
---- a/include/rdma/ib_umem.h
-+++ b/include/rdma/ib_umem.h
-@@ -44,7 +44,7 @@ struct ib_umem_odp;
- struct ib_umem {
- 	struct ib_device       *ibdev;
- 	struct mm_struct       *owning_mm;
--	size_t			length;
-+	unsigned long		length;
- 	unsigned long		address;
- 	u32 writable : 1;
- 	u32 is_odp : 1;
--- 
-2.20.0
-
+Thank you,
+Pasha
