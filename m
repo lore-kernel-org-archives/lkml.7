@@ -2,130 +2,133 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 531A1C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 22:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24920C00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 22:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B6E82082C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 22:39:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1F742082C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 22:40:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hjkDrjTb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392581AbfIFWjQ (ORCPT
+        id S2405118AbfIFWkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 18:39:16 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:46956 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392542AbfIFWjQ (ORCPT
+        Fri, 6 Sep 2019 18:40:15 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36465 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728997AbfIFWkO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 18:39:16 -0400
-Received: by mail-ed1-f67.google.com with SMTP id i8so7854495edn.13;
-        Fri, 06 Sep 2019 15:39:14 -0700 (PDT)
+        Fri, 6 Sep 2019 18:40:14 -0400
+Received: by mail-pf1-f194.google.com with SMTP id y22so5526448pfr.3;
+        Fri, 06 Sep 2019 15:40:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MsAQeZ5AYD+kZhfXC2gyG2pV1eCsEpoHL7tP+VvH2Tc=;
+        b=hjkDrjTb2hf+jyXpZaZWnf85yEpBPvZ4VuTCVrHB+rrO4f9sdj3cR9jZnpjMOhF118
+         9DAuUNMQ3rAhLfOAHFW4NXC5o07VIvLSBOclGzlsoS8mM7QmJhZ6MwbH86mG/3a2Fuwe
+         hfGJVXOE3zZ31rca7gfqUZCIum2sg1hoCT46ypVX+lJBN1F1ekImakM9CHjdFeQsr8vs
+         TSQ+D+340ImkmxS88KmsbLQl+HcnVJd17P4Pvb/X+INlhfAlfPKSgqFnaiM0GlUviyAF
+         sJl2T+41CXA7UXbMQTNiEDxbca7uRwuNnG4qeRRwV4GXWQYkqYiTOvbzjUSx636UdQna
+         GTOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YNLqTN8803DFINNIjjxUVy15PHLGVY4/L8dez9jnCGo=;
-        b=okfNRS/dbkcwoXAcUFWBTmUHQLMlnPPJTZRh52uiQo0H5Kiz66dYXEgwPJEUwyX8AI
-         2xCjEpiEBizpBj/hlKX/9cSk8IxvSt58rhp/jX7T9lvDjYdihKE2hLQXpMdEWMbldZ0g
-         FRAELyFjA6CI8it29Z2BDrHOu8MyPok1mYzA1EwYvJaU7gQOYTBMvub0cKlgI/T+Nnxz
-         9mu/vw09M/A3ubUA/wCR5smInW2rmr+DX1IMDyzaLRHSupZfKmceKh3uUGJaSX7jlZyE
-         W0DBvutUps2naG9w+Kt1yK1OKTHMQYDswSTGlyDcgwcViScQR2ks1cOkEOH6jxXIBajZ
-         HgGQ==
-X-Gm-Message-State: APjAAAUmVeEKdB8lD4too5u+zLcKto/L9cCWzuHXLg0BwoIEqzRWHAo/
-        YHf5pz7ozRGVjuwDReTPKUfiVj+e
-X-Google-Smtp-Source: APXvYqz7gLTmLHUbahLeOqR7dknkVE+aivBMARy2opxkne/AGr+ar0mOc39wS4C7xmosIlUDviq30Q==
-X-Received: by 2002:a50:a5f8:: with SMTP id b53mr12284231edc.39.1567809553991;
-        Fri, 06 Sep 2019 15:39:13 -0700 (PDT)
-Received: from [10.68.32.192] (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.gmail.com with ESMTPSA id c32sm963827eda.97.2019.09.06.15.39.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Sep 2019 15:39:13 -0700 (PDT)
-Subject: Re: [PATCH] mostpost: don't warn about symbols from another file
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>
-Cc:     Emil Velikov <emil.l.velikov@gmail.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        WANG Chao <chao.wang@ucloud.cn>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190906151059.1077708-1-arnd@arndb.de>
-From:   Denis Efremov <efremov@linux.com>
-Message-ID: <7fc19dd4-93fb-fa15-3d36-3079cd42cf7c@linux.com>
-Date:   Sat, 7 Sep 2019 01:39:11 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MsAQeZ5AYD+kZhfXC2gyG2pV1eCsEpoHL7tP+VvH2Tc=;
+        b=dOXZ9BtQpsx3TBTlPR0qH9TOgbVdJgtBemoFivGiYLg7G6POMIs8hga0VKTnPcFLVG
+         ybPGaFSUkgWmwLkTrLO9XNvuWNhq/PYkA7XD8G1ac5xP5RjBUk8c1Un3ALdBjC0PC4g/
+         lFKM+SiHm7e/u+umuVAFGT/bBKQ8FQTEuhHYTmDakU8thZAV/ZolRFZN5lDhllYT+Ad+
+         Nbpj0n0FIcQ2k3UJldEjH8pmu7rsjseamSrwSaHA4OEg69FFerO4W0Mu6f2WeIqIm7Hl
+         6j5yx2WyZZKczyZ3y+ldva58Q796+IpuGqAFnop7jH7Kca11syVQRm5hi6tapL8TfRGb
+         nbxw==
+X-Gm-Message-State: APjAAAUX0dxR+K7dWH99PfKOlrYYYkmHEP/ZZlvy9/eBsgDzy1TVl0V0
+        q0b5RyacpcmnZE2RMdMJwSw=
+X-Google-Smtp-Source: APXvYqyQGP1ApD5xPHT/cIwKDEn18HTgHnThb4//YCMQYVfOhAIrFFpjlzTo2bY96DP3TkHif9TE2g==
+X-Received: by 2002:aa7:8ad7:: with SMTP id b23mr11110390pfd.99.1567809614021;
+        Fri, 06 Sep 2019 15:40:14 -0700 (PDT)
+Received: from Gentoo ([103.231.91.70])
+        by smtp.gmail.com with ESMTPSA id 185sm7714089pfd.125.2019.09.06.15.40.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 06 Sep 2019 15:40:12 -0700 (PDT)
+Date:   Sat, 7 Sep 2019 04:08:32 +0530
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org, lwn@lwn.net,
+        Jiri Slaby <jslaby@suse.cz>
+Subject: Re: Linux 5.2.13
+Message-ID: <20190906223828.GA31917@Gentoo>
+References: <20190906134925.GA7628@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <20190906151059.1077708-1-arnd@arndb.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="X1bOJ3K7DJ5YkBrT"
+Content-Disposition: inline
+In-Reply-To: <20190906134925.GA7628@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 06.09.2019 18:10, Arnd Bergmann wrote:
-> On architectures such as ARM that have a list of symbols exported from
-> assembler in a separate C file, we get a lot of new warnings:
-> 
-> WARNING: "__ashrdi3" [vmlinux] is a static (unknown)
-> WARNING: "__lshrdi3" [vmlinux] is a static (unknown)
-> WARNING: "__aeabi_llsr" [vmlinux] is a static (unknown)
-> WARNING: "__aeabi_lasr" [vmlinux] is a static (unknown)
-> WARNING: "__aeabi_uidivmod" [vmlinux] is a static (unknown)
-> WARNING: "__udivsi3" [vmlinux] is a static (unknown)
-> WARNING: "_change_bit" [vmlinux] is a static (unknown)
-> WARNING: "__aeabi_idiv" [vmlinux] is a static (unknown)
-> WARNING: "__umodsi3" [vmlinux] is a static (unknown)
-> WARNING: "__aeabi_uidiv" [vmlinux] is a static (unknown)
-> WARNING: "__aeabi_idivmod" [vmlinux] is a static (unknown)
-> WARNING: "__muldi3" [vmlinux] is a static (unknown)
-> WARNING: "__aeabi_ulcmp" [vmlinux] is a static (unknown)
-> WARNING: "__raw_writesb" [vmlinux] is a static (unknown)
-> WARNING: "__raw_readsb" [vmlinux] is a static (unknown)
-> ...
-> 
-> This is not helpful, as these are clearly not static symbols
-> at all. Suppress the warning in a case like this.
-> 
+--X1bOJ3K7DJ5YkBrT
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
 
-It looks very similar to this discussion https://lkml.org/lkml/2019/7/30/112
+On 15:49 Fri 06 Sep 2019, Greg KH wrote:
+>I'm announcing the release of the 5.2.13 kernel.
+>
+>Only users of the elantech driver need to update to fix a regression in
+>a previous release.
+>
+>The updated 5.2.y git tree can be found at:
+>	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-5.2.y
+>and can be browsed at the normal kernel.org git web browser:
+>	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
+>
+>thanks,
+>
+>greg k-h
+>
+>------------
+>
+> Makefile                       |    2 -
+> drivers/input/mouse/elantech.c |   54 ++++++++++++++++++++++-------------------
+> 2 files changed, 30 insertions(+), 26 deletions(-)
+>
+>Benjamin Tissoires (1):
+>      Revert "Input: elantech - enable SMBus on new (2018+) systems"
+>
+>Greg Kroah-Hartman (1):
+>      Linux 5.2.13
+>
 
-Could you please write the steps to reproduce the warnings?
-Now, I'm trying to build linux-next (host Ubuntu 19.04 x86_64) with:
-$ make ARCH=arm CROSS_COMPILE=/usr/bin/arm-linux-gnueabi-
-But I can't get these warnings.
-
-I would like to check the type of this asm symbols. It seems like they
-are STT_NOTYPE. In this case the fix could also involve ELF_ST_TYPE check.
+Thanks, a bunch Greg! :)
 
 Thanks,
-Denis
+Bhaskar
 
-> Fixes: 15bfc2348d54 ("modpost: check for static EXPORT_SYMBOL* functions")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  scripts/mod/modpost.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-> index 76c221dd9b2b..4265dd924933 100644
-> --- a/scripts/mod/modpost.c
-> +++ b/scripts/mod/modpost.c
-> @@ -2543,7 +2543,7 @@ int main(int argc, char **argv)
->  		struct symbol *s = symbolhash[n];
->  
->  		while (s) {
-> -			if (s->is_static)
-> +			if (s->is_static && s->export != export_unknown)
->  				warn("\"%s\" [%s] is a static %s\n",
->  				     s->name, s->module->name,
->  				     export_str(s->export));
-> 
+--X1bOJ3K7DJ5YkBrT
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl1y3+AACgkQsjqdtxFL
+KRUEbwf/Zsb6jxrbvQRwWtlsQHWn63vGKRRoYxfAh9fmbVBKpjj9pE0DmVrXcpER
+x9bBdlewEo9YyczeZPEfkperL8Foec6D02QShYkwPz9oJIo61kQQuFFdTUf5qOVZ
+Djki8GsiGsd4Qi/nJUryaCDHFudOZ2tXXW1iDFYC7maAZ2Un1iA1+4g7KEniqY1l
+nyK5TfAhvgnaP4eN6eOR1xqFUu5go+fn9Vb1eBHRfhjdHbhsQz85wMcmlRRFMEko
+P1cWFxwDOaHFYLGaiteOunTXiDbCjLcTtKhCIqIBveHJ48TR29uPmus6UJ9IfkUh
+p9m44Iwqa+nb13s969sDhbcyobTLqw==
+=DJv5
+-----END PGP SIGNATURE-----
+
+--X1bOJ3K7DJ5YkBrT--
