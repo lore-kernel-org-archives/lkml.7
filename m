@@ -2,143 +2,118 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A07C00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 100E9C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 616C420842
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:39:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E132E20640
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:41:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iT3e59oW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ko0EMTSF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392529AbfIFHjh (ORCPT
+        id S2392539AbfIFHlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 03:39:37 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:34420 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728769AbfIFHjh (ORCPT
+        Fri, 6 Sep 2019 03:41:21 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48824 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390377AbfIFHlV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 03:39:37 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x867dRJB053866;
-        Fri, 6 Sep 2019 02:39:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1567755567;
-        bh=z6Nh68YYvTDDh5HiSd5ce/6VHBCPMMXmMgbKOM1slds=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=iT3e59oWcC9/GWHtEvNJFERDlEd0VDsMZpqKav5auCLqqTQwYdbZs8EqQFLsI8XrU
-         SXq+HElmMR2X3k2eAlJiw/9PISXTbdHV2qiKjDSy6p68s2Y/5sQfQBKhxd+rYVubVD
-         tfqhQNMpcmlE5XUW7wOdQ6USYzAY9iKr+slbYk7g=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x867dRN6029677;
-        Fri, 6 Sep 2019 02:39:27 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 6 Sep
- 2019 02:39:26 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 6 Sep 2019 02:39:26 -0500
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x867dNc9078451;
-        Fri, 6 Sep 2019 02:39:23 -0500
-Subject: Re: [PATCH] bus: ti-sysc: Fix handling of invalid clocks
-To:     Tony Lindgren <tony@atomide.com>, <linux-omap@vger.kernel.org>
-CC:     "Andrew F . Davis" <afd@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190905215356.8168-1-tony@atomide.com>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <3c9f7340-f17f-cecd-3ae4-ec8a1af7c2bf@ti.com>
-Date:   Fri, 6 Sep 2019 10:39:22 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 6 Sep 2019 03:41:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=iJtXmWMKcn3iCXNa/Hctfd9mlp3VUMAuUJlQTpyeJJY=; b=Ko0EMTSFOIYfVQMqXEm3XgbLG
+        s/6LDJnSDqs9gv/GTg44o8jGYklcj5DNtuR8z5TwUhn0dGyIQ2jB1Cf6mm/zlLHQCJrhGpMYFzidf
+        OW6I0m1MSYLv623ElCTNPgMQprOz1+J9IgClyyYKZwb8NQEvp7NzGBm+W07L99QOGu8KHMQ/ul/lU
+        0zOukNii4FV56Ep1Sf6zFAbcvgTWqnmLRm4mu+GEfxQ0Jz7z9AYD6ExKjbInyM7LnD074x91weZtm
+        wAenRl5Df9j5VCoEnOdO6UlX6k+y9oXeAypXtDbVX60HIabxaaeWqS5DuYhHpjBYyHFQwhpLKoNjV
+        6K6dJpwhw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i68rj-0005fp-7T; Fri, 06 Sep 2019 07:41:07 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A6B4D303121;
+        Fri,  6 Sep 2019 09:40:27 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 044B229DE780A; Fri,  6 Sep 2019 09:41:04 +0200 (CEST)
+Date:   Fri, 6 Sep 2019 09:41:04 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Chris Metcalf <cmetcalf@ezchip.com>,
+        Christoph Lameter <cl@linux.com>,
+        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [RFC PATCH 3/4] Cleanup: sched/membarrier: only sync_core before
+ usermode for same mm
+Message-ID: <20190906074104.GT2349@hirez.programming.kicks-ass.net>
+References: <20190906031300.1647-1-mathieu.desnoyers@efficios.com>
+ <20190906031300.1647-4-mathieu.desnoyers@efficios.com>
 MIME-Version: 1.0
-In-Reply-To: <20190905215356.8168-1-tony@atomide.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190906031300.1647-4-mathieu.desnoyers@efficios.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/09/2019 00:53, Tony Lindgren wrote:
-> We can currently get "Unable to handle kernel paging request at
-> virtual address" for invalid clocks with dts node but no driver:
+On Thu, Sep 05, 2019 at 11:12:59PM -0400, Mathieu Desnoyers wrote:
+> When the prev and next task's mm change, switch_mm() provides the core
+> serializing guarantees before returning to usermode. The only case
+> where an explicit core serialization is needed is when the scheduler
+> keeps the same mm for prev and next.
 > 
-> (__clk_get_hw) from [<c0138ebc>] (ti_sysc_find_one_clockdomain+0x18/0x34)
-> (ti_sysc_find_one_clockdomain) from [<c0138f0c>] (ti_sysc_clkdm_init+0x34/0xdc)
-> (ti_sysc_clkdm_init) from [<c0584660>] (sysc_probe+0xa50/0x10e8)
-> (sysc_probe) from [<c065c6ac>] (platform_drv_probe+0x58/0xa8)
-> 
-> Let's add IS_ERR checks to ti_sysc_clkdm_init() as And let's start treating
-> clk_get() with -ENOENT as a proper error. If the clock name is specified
-> in device tree we must succeed with clk_get() to continue. For modules with
-> no clock names specified in device tree we will just ignore the clocks.
-> 
-> Fixes: 2b2f7def058a ("bus: ti-sysc: Add support for missing clockdomain handling")
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-
-Acked-by: Roger Quadros <rogerq@ti.com>
-
+> Suggested-by: Oleg Nesterov <oleg@redhat.com>
+> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Oleg Nesterov <oleg@redhat.com>
+> Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+> Cc: Chris Metcalf <cmetcalf@ezchip.com>
+> Cc: Christoph Lameter <cl@linux.com>
+> Cc: Kirill Tkhai <tkhai@yandex.ru>
+> Cc: Mike Galbraith <efault@gmx.de>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@kernel.org>
 > ---
->   arch/arm/mach-omap2/pdata-quirks.c | 4 ++--
->   drivers/bus/ti-sysc.c              | 5 +----
->   2 files changed, 3 insertions(+), 6 deletions(-)
+>  include/linux/sched/mm.h | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
-> --- a/arch/arm/mach-omap2/pdata-quirks.c
-> +++ b/arch/arm/mach-omap2/pdata-quirks.c
-> @@ -491,11 +491,11 @@ static int ti_sysc_clkdm_init(struct device *dev,
->   			      struct clk *fck, struct clk *ick,
->   			      struct ti_sysc_cookie *cookie)
->   {
-> -	if (fck)
-> +	if (!IS_ERR(fck))
->   		cookie->clkdm = ti_sysc_find_one_clockdomain(fck);
->   	if (cookie->clkdm)
->   		return 0;
-> -	if (ick)
-> +	if (!IS_ERR(ick))
->   		cookie->clkdm = ti_sysc_find_one_clockdomain(ick);
->   	if (cookie->clkdm)
->   		return 0;
-> diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
-> --- a/drivers/bus/ti-sysc.c
-> +++ b/drivers/bus/ti-sysc.c
-> @@ -280,9 +280,6 @@ static int sysc_get_one_clock(struct sysc *ddata, const char *name)
->   
->   	ddata->clocks[index] = devm_clk_get(ddata->dev, name);
->   	if (IS_ERR(ddata->clocks[index])) {
-> -		if (PTR_ERR(ddata->clocks[index]) == -ENOENT)
-> -			return 0;
-> -
->   		dev_err(ddata->dev, "clock get error for %s: %li\n",
->   			name, PTR_ERR(ddata->clocks[index]));
->   
-> @@ -357,7 +354,7 @@ static int sysc_get_clocks(struct sysc *ddata)
->   			continue;
->   
->   		error = sysc_get_one_clock(ddata, name);
-> -		if (error && error != -ENOENT)
-> +		if (error)
->   			return error;
->   	}
->   
-> 
+> diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+> index 4a7944078cc3..8557ec664213 100644
+> --- a/include/linux/sched/mm.h
+> +++ b/include/linux/sched/mm.h
+> @@ -362,6 +362,8 @@ enum {
+>  
+>  static inline void membarrier_mm_sync_core_before_usermode(struct mm_struct *mm)
+>  {
+> +	if (current->mm != mm)
+> +		return;
+>  	if (likely(!(atomic_read(&mm->membarrier_state) &
+>  		     MEMBARRIER_STATE_PRIVATE_EXPEDITED_SYNC_CORE)))
+>  		return;
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+So SYNC_CORE is about I$ coherency and funny thing like that. Now it
+seems 'natural' that if we flip the address space, that I$ also gets
+wiped/updated, because the whole text mapping changes.
+
+But did we just assume that, or did we verify the truth of this? (I'm
+just being paranoid here)
