@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C31D8C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B478C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5862206BB
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:10:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BF6D206BB
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:10:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388113AbfIFLKA (ORCPT
+        id S2393243AbfIFLKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 07:10:00 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47022 "EHLO
+        Fri, 6 Sep 2019 07:10:05 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47029 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392246AbfIFLIY (ORCPT
+        with ESMTP id S2392255AbfIFLIY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 6 Sep 2019 07:08:24 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i6C6B-00072i-JQ; Fri, 06 Sep 2019 13:08:15 +0200
+        id 1i6C6H-00073O-8q; Fri, 06 Sep 2019 13:08:21 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 07BB01C0E21;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3FAE81C0744;
         Fri,  6 Sep 2019 13:08:15 +0200 (CEST)
-Date:   Fri, 06 Sep 2019 11:08:14 -0000
-From:   "tip-bot2 for Lubomir Rintel" <tip-bot2@linutronix.de>
+Date:   Fri, 06 Sep 2019 11:08:15 -0000
+From:   "tip-bot2 for Jerome Brunet" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] irqchip/mmp: Do not use of_address_to_resource() to
- get mux regs
-Cc:     Lubomir Rintel <lkundrak@v3.sk>, Marc Zyngier <maz@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Ingo Molnar <mingo@kernel.org>,
+Subject: [tip: irq/core] dt-bindings: interrupt-controller: New binding for
+ the meson sm1 SoCs
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Marc Zyngier <maz@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
-In-Reply-To: <20190822092643.593488-7-lkundrak@v3.sk>
-References: <20190822092643.593488-7-lkundrak@v3.sk>
+In-Reply-To: <20190829161635.25067-2-jbrunet@baylibre.com>
+References: <20190829161635.25067-2-jbrunet@baylibre.com>
 MIME-Version: 1.0
-Message-ID: <156776809499.24167.7572723147707304063.tip-bot2@tip-bot2>
+Message-ID: <156776809521.24167.11608140259251300270.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,74 +57,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     d6a95280ba169c3a3d632d983cc6977c544a06e8
-Gitweb:        https://git.kernel.org/tip/d6a95280ba169c3a3d632d983cc6977c544a06e8
-Author:        Lubomir Rintel <lkundrak@v3.sk>
-AuthorDate:    Thu, 22 Aug 2019 11:26:29 +02:00
+Commit-ID:     abc08aac82af0c71e30b446575f5810c9cc11640
+Gitweb:        https://git.kernel.org/tip/abc08aac82af0c71e30b446575f5810c9cc11640
+Author:        Jerome Brunet <jbrunet@baylibre.com>
+AuthorDate:    Thu, 29 Aug 2019 18:16:34 +02:00
 Committer:     Marc Zyngier <maz@kernel.org>
-CommitterDate: Fri, 30 Aug 2019 15:23:30 +01:00
+CommitterDate: Fri, 30 Aug 2019 15:01:06 +01:00
 
-irqchip/mmp: Do not use of_address_to_resource() to get mux regs
+dt-bindings: interrupt-controller: New binding for the meson sm1 SoCs
 
-The "regs" property of the "mrvl,mmp2-mux-intc" devices are silly. They
-are offsets from intc's base, not addresses on the parent bus. At this
-point it probably can't be fixed.
+Update the dt-binding to add support for the sm1 SoC family in the
+amlogic GPIO interrupt controller driver.
 
-On an OLPC XO-1.75 machine, the muxes are children of the intc, not the
-axi bus, and thus of_address_to_resource() won't work. We should treat
-the values as mere integers as opposed to bus addresses.
-
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Link: https://lore.kernel.org/r/20190822092643.593488-7-lkundrak@v3.sk
+Link: https://lore.kernel.org/r/20190829161635.25067-2-jbrunet@baylibre.com
 ---
- drivers/irqchip/irq-mmp.c | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+ Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/irqchip/irq-mmp.c b/drivers/irqchip/irq-mmp.c
-index 0671c3b..f60e52b 100644
---- a/drivers/irqchip/irq-mmp.c
-+++ b/drivers/irqchip/irq-mmp.c
-@@ -422,9 +422,9 @@ IRQCHIP_DECLARE(mmp2_intc, "mrvl,mmp2-intc", mmp2_of_init);
- static int __init mmp2_mux_of_init(struct device_node *node,
- 				   struct device_node *parent)
- {
--	struct resource res;
- 	int i, ret, irq, j = 0;
- 	u32 nr_irqs, mfp_irq;
-+	u32 reg[4];
- 
- 	if (!parent)
- 		return -ENODEV;
-@@ -436,18 +436,22 @@ static int __init mmp2_mux_of_init(struct device_node *node,
- 		pr_err("Not found mrvl,intc-nr-irqs property\n");
- 		return -EINVAL;
- 	}
--	ret = of_address_to_resource(node, 0, &res);
--	if (ret < 0) {
--		pr_err("Not found reg property\n");
--		return -EINVAL;
--	}
--	icu_data[i].reg_status = mmp_icu_base + res.start;
--	ret = of_address_to_resource(node, 1, &res);
-+
-+	/*
-+	 * For historical reasons, the "regs" property of the
-+	 * mrvl,mmp2-mux-intc is not a regular "regs" property containing
-+	 * addresses on the parent bus, but offsets from the intc's base.
-+	 * That is why we can't use of_address_to_resource() here.
-+	 */
-+	ret = of_property_read_variable_u32_array(node, "reg", reg,
-+						  ARRAY_SIZE(reg),
-+						  ARRAY_SIZE(reg));
- 	if (ret < 0) {
- 		pr_err("Not found reg property\n");
- 		return -EINVAL;
- 	}
--	icu_data[i].reg_mask = mmp_icu_base + res.start;
-+	icu_data[i].reg_status = mmp_icu_base + reg[0];
-+	icu_data[i].reg_mask = mmp_icu_base + reg[2];
- 	icu_data[i].cascade_irq = irq_of_parse_and_map(node, 0);
- 	if (!icu_data[i].cascade_irq)
- 		return -EINVAL;
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
+index 7d531d5..684bb1c 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
+@@ -16,6 +16,7 @@ Required properties:
+     "amlogic,meson-gxl-gpio-intc" for GXL SoCs (S905X, S912)
+     "amlogic,meson-axg-gpio-intc" for AXG SoCs (A113D, A113X)
+     "amlogic,meson-g12a-gpio-intc" for G12A SoCs (S905D2, S905X2, S905Y2)
++    "amlogic,meson-sm1-gpio-intc" for SM1 SoCs (S905D3, S905X3, S905Y3)
+ - reg : Specifies base physical address and size of the registers.
+ - interrupt-controller : Identifies the node as an interrupt controller.
+ - #interrupt-cells : Specifies the number of cells needed to encode an
