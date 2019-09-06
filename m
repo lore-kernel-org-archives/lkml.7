@@ -2,73 +2,156 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8309C43140
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 21:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4974DC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 21:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A139B2173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 21:20:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567804835;
-	bh=MQt++sVNBB2fzbH/p8lHsEpraval7qpthWJQ2mg7J/k=;
-	h=In-Reply-To:References:To:From:Cc:Subject:Date:List-ID:From;
-	b=kILotCH9bc7hAmomWDtruvcHgFlw9gp83egc5+UmWSsZDqG28Vl+fmUNrdoCJTjwV
-	 had3wftrvsl+Btx9d39yQUfA3CRwYId82rkd0p/nAt/2BKISiNbDB29/kHAbksN9ak
-	 aPXxnUYMzDKiM2PArHY2JY4/uwNIMLScbA2Kuv4w=
+	by mail.kernel.org (Postfix) with ESMTP id 1D5192070C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 21:27:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="r9+0Nr8W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404063AbfIFVUe (ORCPT
+        id S2404137AbfIFV1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 17:20:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38424 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388619AbfIFVUe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 17:20:34 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6D002070C;
-        Fri,  6 Sep 2019 21:20:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567804834;
-        bh=MQt++sVNBB2fzbH/p8lHsEpraval7qpthWJQ2mg7J/k=;
-        h=In-Reply-To:References:To:From:Cc:Subject:Date:From;
-        b=EqJe/rsxG28z3OlZyW6hNJXnxqdnkuKY2us5bqWi8O6pFdveNEugWZ3i3SRE/tDOr
-         qxVzhWXSx3LtazqgVHz4pdnKzP/QUj3TNviWsTKyaDi/a4KQkvArJj+/cqG6NuqnfE
-         sKQSdB4kTDa/I/44zDFi/UKTstRtzYIqCJfNJhtA=
-Content-Type: text/plain; charset="utf-8"
+        Fri, 6 Sep 2019 17:27:33 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36490 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388210AbfIFV1c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 17:27:32 -0400
+Received: by mail-wr1-f67.google.com with SMTP id y19so7970255wrd.3
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 14:27:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=wrOUeKLOBiJ84ary/XbohFbZ13Zk1ML2RYjXdtdAXc8=;
+        b=r9+0Nr8WSDe0BeX/xgAvWhVEvW9tH0MuECx4aYmadpoy+3AFNgE6P9zxnYbpi57Qg7
+         oi8mXEOkBqQuZ1KEtgbaT+Pl2O1KbPwC6Vc3Hjpv81mmG+Dl0F6ElTIY2un5As6UNNd8
+         1Nr6igDyk8LhIW78BM3pgjMt6zvMStcW3LOt64HlJVN6uQhJdt6goRVp3jM5WH/6pv2S
+         bMbj9IcbdmWNBc7L0ckUq4/u2TCeVPxp8MB/7bohTe03clXVLIJki9/BahI4idCJLobh
+         H6szFVATb+QD+ne0aA7JwOOrYm0C5HsO4tg2YjOsgyf2nHjIT91yC15X7Jgl3N6l+cFz
+         GTcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=wrOUeKLOBiJ84ary/XbohFbZ13Zk1ML2RYjXdtdAXc8=;
+        b=HEM8LeBnj7sChYWqjd7obuq6N4AQL2BsbCVmPMf6WGhxzfu/f8Tc5cQWBcl9nJCifj
+         OE51b4kCCzfqoQH6bX3lE15ofx1jZa8CjbOmOWbDCl6es+kjKuUvd0Qmgw24j1y1N2uL
+         5Kkf1EYpUWskq7Mhsc3FafhZOrINKxtIcZ1SsYpg8meZTxxxhrwY++WNcZCiakOqb9Pp
+         oon9EP7t6S3CrFLHCFqswHgFo1z9Ia+mn1n/5tA1oX6Oum1yINq8bwiTgb6Im/FhpXEg
+         n0AXCREIth6QweolszCoXpCW6IJSZwO7Wnq5r3eFIyFO81nxicyTHFLbXwaIfejUX6KL
+         Oc9Q==
+X-Gm-Message-State: APjAAAX7dHf7k5hcRx4FwPnYeqmFS1pzYnboGAJIkAau6FZf8R+e+J5Z
+        OMNPilmChruhAV+E52fSVgS4Oto/+MT55lAtArdJFQ==
+X-Google-Smtp-Source: APXvYqyQvYUwaDE/LHd6zbqUqBfKDoNlGm2VDQzp7ApQIQOK1Au2qKqEKdxutbrRvuaMW9sopVqvXXG4ciLpqp7XHr8=
+X-Received: by 2002:adf:dcc4:: with SMTP id x4mr1493611wrm.221.1567805250597;
+ Fri, 06 Sep 2019 14:27:30 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190906152455.22757-1-mic@digikod.net> <20190906152455.22757-2-mic@digikod.net>
+ <87ef0te7v3.fsf@oldenburg2.str.redhat.com> <75442f3b-a3d8-12db-579a-2c5983426b4d@ssi.gouv.fr>
+ <f53ec45fd253e96d1c8d0ea6f9cca7f68afa51e3.camel@kernel.org>
+ <20190906171335.d7mc3no5tdrcn6r5@yavin.dot.cyphar.com> <e1ac9428e6b768ac3145aafbe19b24dd6cf410b9.camel@kernel.org>
+ <D2A57C7B-B0FD-424E-9F81-B858FFF21FF0@amacapital.net> <8dc59d585a133e96f9adaf0a148334e7f19058b9.camel@kernel.org>
+In-Reply-To: <8dc59d585a133e96f9adaf0a148334e7f19058b9.camel@kernel.org>
+From:   Andy Lutomirski <luto@amacapital.net>
+Date:   Fri, 6 Sep 2019 14:27:19 -0700
+Message-ID: <CALCETrVR5d2XTpAN8QLRv3cYDfpAdZRNNcD-TtE5H+v7-i7QhQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] fs: Add support for an O_MAYEXEC flag on sys_open()
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Aleksa Sarai <cyphar@cyphar.com>,
+        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mickael.salaun@ssi.gouv.fr>,
+        Florian Weimer <fweimer@redhat.com>,
+        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Eric Chiang <ericchiang@google.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?UTF-8?Q?Philippe_Tr=C3=A9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190703162700.32091-1-huangfq.daxian@gmail.com>
-References: <20190703162700.32091-1-huangfq.daxian@gmail.com>
-To:     Fuqian Huang <huangfq.daxian@gmail.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Tero Kristo <t-kristo@ti.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-omap@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: Re: [PATCH v2 05/35] clk/ti: Use kmemdup rather than duplicating its implementation
-User-Agent: alot/0.8.1
-Date:   Fri, 06 Sep 2019 14:20:33 -0700
-Message-Id: <20190906212033.E6D002070C@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Fuqian Huang (2019-07-03 09:27:00)
-> kmemdup is introduced to duplicate a region of memory in a neat way.
-> Rather than kmalloc/kzalloc + memcpy, which the programmer needs to
-> write the size twice (sometimes lead to mistakes), kmemdup improves
-> readability, leads to smaller code and also reduce the chances of mistake=
-s.
-> Suggestion to use kmemdup rather than using kmalloc/kzalloc + memcpy.
->=20
-> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
-> ---
+> On Sep 6, 2019, at 1:51 PM, Jeff Layton <jlayton@kernel.org> wrote:
+>
+> On Fri, 2019-09-06 at 13:06 -0700, Andy Lutomirski wrote:
+>
+>> I=E2=80=99m not at all convinced that the kernel needs to distinguish al=
+l these, but at least upgradability should be its own thing IMO.
+>
+> Good point. Upgradability is definitely orthogonal, though the idea
+> there is to alter the default behavior. If the default is NOEXEC then
+> UPGRADE_EXEC would make sense.
+>
+> In any case, I was mostly thinking about the middle two in your list
+> above. After more careful reading of the patches, I now get get that
+> Micka=C3=ABl is more interested in the first, and that's really a differe=
+nt
+> sort of use-case.
+>
+> Most opens never result in the fd being fed to fexecve or mmapped with
+> PROT_EXEC, so having userland explicitly opt-in to allowing that during
+> the open sounds like a reasonable thing to do.
+>
+> But I get that preventing execution via script interpreters of files
+> that are not executable might be something nice to have.
+>
+> Perhaps we need two flags for openat2?
+>
+> OA2_MAYEXEC : test that permissions allow execution and that the file
+> doesn't reside on a noexec mount before allowing the open
+>
+> OA2_EXECABLE : only allow fexecve or mmapping with PROT_EXEC if the fd
+> was opened with this
+>
+>
+>
 
-Applied to clk-next
+We could go one step farther and have three masks: check_perms,
+fd_perms, and upgrade_perms.  check_perms says =E2=80=9Cfail if I don=E2=80=
+=99t have
+these perms=E2=80=9D.  fd_perms is the permissions on the returned fd, and
+upgrade_perms is the upgrade mask.  (fd_perms  & ~check_perms) !=3D 0 is
+an error.  This makes it possible to say "I want to make sure the file
+is writable, but I don't actually want to write to it", which could
+plausibly be useful.
 
+I would argue that these things should have new, sane bits, e.g.
+FILE_READ, FILE_WRITE, and FILE_EXECUTE (or maybe FILE_MAP_EXEC and
+FILE_EXECVE).  And maybe there should be at least 16 bits for each
+mask reserved.  Windows has a lot more mode bits than Linux, and it's
+not entirely nuts.  We do *not* need any direct equivalent of O_RDWR
+for openat2().
+
+--Andy
