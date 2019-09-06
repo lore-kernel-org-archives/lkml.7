@@ -2,87 +2,97 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62DD7C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 081EBC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A6DC2082C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDD6F2082C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:50:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oK6KBT4O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390433AbfIFKrp (ORCPT
+        id S2390686AbfIFKuK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 06:47:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51758 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731211AbfIFKrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 06:47:45 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id F045D3086218;
-        Fri,  6 Sep 2019 10:47:44 +0000 (UTC)
-Received: from localhost (ovpn-117-208.ams2.redhat.com [10.36.117.208])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 63DDE19C70;
-        Fri,  6 Sep 2019 10:47:39 +0000 (UTC)
-Date:   Fri, 6 Sep 2019 11:47:38 +0100
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, miklos@szeredi.hu,
-        linux-kernel@vger.kernel.org, virtio-fs@redhat.com,
-        dgilbert@redhat.com, mst@redhat.com
-Subject: Re: [PATCH 07/18] virtiofs: Stop virtiofs queues when device is
- being removed
-Message-ID: <20190906104738.GO5900@stefanha-x1.localdomain>
-References: <20190905194859.16219-1-vgoyal@redhat.com>
- <20190905194859.16219-8-vgoyal@redhat.com>
+        Fri, 6 Sep 2019 06:50:10 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:52746 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731717AbfIFKuJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 06:50:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=d9eCsVlOV0qwfpo9c1jVQsAQiCp5Qrb/vwvQlXE2I0k=; b=oK6KBT4OdGd26VgBA2+t1oj5P
+        ZFyVJGP0t1PlQxinX44Idet+6CmIzNMrl8IeDbIo7+hvBbRxq3UQCuIHF2yBo+uYiRWfPG4nrX2QB
+        5QcKF1W2VZLBYtyma9rY9P1IexmPyczHnayaG8bUFtrJWgK01kMwUwCaURCIX27RF9yGc05P+XFbw
+        LK9RwdhfYbCxntWy08cxn9ubnTtP+gnNms/Ic01jE/VxQvMFfg5qUFIbFUCCUgQR1Oyt9QlEVfoGw
+        EYhfCGnoux81FR0kY7UadcdJRfCmUi/aZpxYRccn3L3RSFeleCMLzxRpUlfHjnDJVJ9Z/XSlUjUQM
+        HYfIWchkQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i6BoM-0006RL-Ca; Fri, 06 Sep 2019 10:49:50 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 03CAF3011DF;
+        Fri,  6 Sep 2019 12:49:10 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 599DC29E2D2F9; Fri,  6 Sep 2019 12:49:48 +0200 (CEST)
+Date:   Fri, 6 Sep 2019 12:49:48 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        John Ogness <john.ogness@linutronix.de>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v4 0/9] printk: new ringbuffer implementation
+Message-ID: <20190906104948.GX2349@hirez.programming.kicks-ass.net>
+References: <20190807222634.1723-1-john.ogness@linutronix.de>
+ <20190904123531.GA2369@hirez.programming.kicks-ass.net>
+ <20190905130513.4fru6yvjx73pjx7p@pathway.suse.cz>
+ <20190905143118.GP2349@hirez.programming.kicks-ass.net>
+ <20190906090627.GX2386@hirez.programming.kicks-ass.net>
+ <20190906100943.GB10876@jagdpanzerIV>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="acOuGx3oQeOcSZJu"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190905194859.16219-8-vgoyal@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Fri, 06 Sep 2019 10:47:45 +0000 (UTC)
+In-Reply-To: <20190906100943.GB10876@jagdpanzerIV>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Sep 06, 2019 at 07:09:43PM +0900, Sergey Senozhatsky wrote:
 
---acOuGx3oQeOcSZJu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Sep 05, 2019 at 03:48:48PM -0400, Vivek Goyal wrote:
-> Stop all the virt queues when device is going away. This will ensure that
-> no new requests are submitted to virtqueue and and request will end with
-> error -ENOTCONN.
->=20
-> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 > ---
->  fs/fuse/virtio_fs.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+> diff --git a/kernel/printk/printk_safe.c b/kernel/printk/printk_safe.c
+> index 139c310049b1..9c73eb6259ce 100644
+> --- a/kernel/printk/printk_safe.c
+> +++ b/kernel/printk/printk_safe.c
+> @@ -103,7 +103,10 @@ static __printf(2, 0) int printk_safe_log_store(struct printk_safe_seq_buf *s,
+>         if (atomic_cmpxchg(&s->len, len, len + add) != len)
+>                 goto again;
+>  
+> -       queue_flush_work(s);
+> +       if (early_console)
+> +               early_console->write(early_console, s->buffer + len, add);
+> +       else
+> +               queue_flush_work(s);
+>         return add;
+>  }
 
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-
---acOuGx3oQeOcSZJu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl1yOUoACgkQnKSrs4Gr
-c8hIyQf/VEB8Z1kkLZJY07A6TpGDbf4zwdPwITwfIrZm8CV5Muj+9w7GN5o9QylC
-HcWecFIGEfC3JXeQdRnq/5rLiAhKXgFkAXo9qkS7uVwLSR1YS+iutJksY2M0V6z0
-sYo8cHSn4X5umbDMrnvlasCdLLAj3IKtaBmHYr8Cm9kOBMLl+H/n77Pvdr36qsoK
-BUNaNZtkGMFtKf+n7nJA1BXi/h+G3RhB6o1hyzdTF0VPLm0muWZda5jgc2cXTHnf
-gQBGQiO/TqCt3bwqiS/fJLIW38/XcDy683UCXkEJiaXcLwX0LgwfHM1zPAVHyx/v
-plygJH26nFKCsOQ2j9GueL6YA3uB2g==
-=VU0e
------END PGP SIGNATURE-----
-
---acOuGx3oQeOcSZJu--
+You've not been following along, that generates absolutely unreadable
+garbage.
