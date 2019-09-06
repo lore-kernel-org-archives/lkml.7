@@ -2,90 +2,89 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC75C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A33C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90A12207FC
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:01:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567796474;
-	bh=Jiz8B43eSk9SxWcQmicR7EYR2TlCQ2PdKvvmefGBoLA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cYuZ/e0jXgUfq1EookmHyB6gBze4s1k3CAM7GBkKxv9edUZr/zWRbXtVhX6TsaI0O
-	 J1MWUskhwlA/NqFjSRx3qQVjwr7zgHL8Wl/Etu5yCh/lANEVZE66Dm0kzata1xRbiR
-	 Qek1u1NnMGosEXqec0wbN6MqSpiI1Sl+RRVDoPJ0=
+	by mail.kernel.org (Postfix) with ESMTP id 56DC4207FC
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:02:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="L3OOwEaZ";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KtfJ+x+Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405272AbfIFTBN (ORCPT
+        id S2405323AbfIFTCH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 15:01:13 -0400
-Received: from mga06.intel.com ([134.134.136.31]:16332 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405197AbfIFTBM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 15:01:12 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Sep 2019 12:01:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,474,1559545200"; 
-   d="scan'208";a="190907127"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by FMSMGA003.fm.intel.com with ESMTP; 06 Sep 2019 12:01:11 -0700
-Date:   Fri, 6 Sep 2019 12:52:11 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Sagi Grimberg <sagi@grimberg.me>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        linux-scsi@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Long Li <longli@microsoft.com>,
-        John Garry <john.garry@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-nvme@lists.infradead.org,
-        Keith Busch <keith.busch@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 1/4] softirq: implement IRQ flood detection mechanism
-Message-ID: <20190906185210.GA4260@localhost.localdomain>
-References: <6b88719c-782a-4a63-db9f-bf62734a7874@linaro.org>
- <20190903072848.GA22170@ming.t460p>
- <dd96def4-1121-afbe-2431-9e516a06850c@linaro.org>
- <6f3b6557-1767-8c80-f786-1ea667179b39@acm.org>
- <2a8bd278-5384-d82f-c09b-4fce236d2d95@linaro.org>
- <20190905090617.GB4432@ming.t460p>
- <6a36ccc7-24cd-1d92-fef1-2c5e0f798c36@linaro.org>
- <20190906014819.GB27116@ming.t460p>
- <ffefcfa0-09b6-9af5-f94e-8e7ddd2eef16@linaro.org>
- <6eb2a745-7b92-73ce-46f5-cc6a5ef08abc@grimberg.me>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6eb2a745-7b92-73ce-46f5-cc6a5ef08abc@grimberg.me>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+        Fri, 6 Sep 2019 15:02:07 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:57782 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731568AbfIFTCH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 15:02:07 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 711C36115D; Fri,  6 Sep 2019 19:02:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567796526;
+        bh=fHlSdGoTTdUuPm+ZMeSUpg6AMfOrhFJdRH0w4GFu9Gc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=L3OOwEaZgKQRgFZCzGd74o4Yub9X9Oy+XviqQOq+p4nQRbc5fFpx7fEXAy+6C+z1V
+         E3VVV6gS+q8y3EM6ZvOiaAprr4+hEk4RkD/4w6x72mGr3Lvu65MT3PlqD4JnodIQVZ
+         kYmlEdSC0tTonETyuQuGINM6dmnyqQFQOMeMHK1U=
+Received: from tsoni-linux1.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tsoni@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1A7D8602DC;
+        Fri,  6 Sep 2019 19:02:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567796525;
+        bh=fHlSdGoTTdUuPm+ZMeSUpg6AMfOrhFJdRH0w4GFu9Gc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=KtfJ+x+ZRwWOIbRQpROvYVrVDWjYHV43rHrna8mA54tOkAthogDyPba8/Bw9PrH0z
+         rS8r32ovlsV14JCAX9YJLJp4AozEJzccyNaJhwPWJKZbxo6Fe1Cf2A02JqGTnS8hHd
+         6eZH3/jdheyCJyA54vktSlOOwl+4p7bMMwhJhjiI=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1A7D8602DC
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tsoni@codeaurora.org
+From:   Trilok Soni <tsoni@codeaurora.org>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        corbet@lwn.net, tyhicks@canonical.com, jkosina@suse.cz,
+        konrad.wilk@oracle.com, labbott@redhat.com, tglx@linutronix.de,
+        tsoni@quicinc.com, Trilok Soni <tsoni@codeaurora.org>
+Subject: [PATCH] Documentation/process: Add Qualcomm process ambassador for hardware security issues
+Date:   Fri,  6 Sep 2019 12:01:57 -0700
+Message-Id: <1567796517-8964-1-git-send-email-tsoni@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 06, 2019 at 11:30:57AM -0700, Sagi Grimberg wrote:
-> 
-> > 
-> > Ok, so the real problem is per-cpu bounded tasks.
-> > 
-> > I share Thomas opinion about a NAPI like approach.
-> 
-> We already have that, its irq_poll, but it seems that for this
-> use-case, we get lower performance for some reason. I'm not
-> entirely sure why that is, maybe its because we need to mask interrupts
-> because we don't have an "arm" register in nvme like network devices
-> have?
+Add Trilok Soni as process ambassador for hardware security issues
+from Qualcomm.
 
-For MSI, that's the INTMS/INTMC NVMe registers. MSI-x, though, has to
-disarm it in its table entry, and the Linux implementation will do a
-posted read in that path, which is a bit too expensive.
+Signed-off-by: Trilok Soni <tsoni@codeaurora.org>
+---
+ Documentation/process/embargoed-hardware-issues.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/process/embargoed-hardware-issues.rst b/Documentation/process/embargoed-hardware-issues.rst
+index d37cbc5..0416751 100644
+--- a/Documentation/process/embargoed-hardware-issues.rst
++++ b/Documentation/process/embargoed-hardware-issues.rst
+@@ -217,7 +217,7 @@ an involved disclosed party. The current ambassadors list:
+   AMD
+   IBM
+   Intel
+-  Qualcomm
++  Qualcomm	Trilok Soni <tsoni@codeaurora.org>
+ 
+   Microsoft
+   VMware
+-- 
+1.9.1
+
