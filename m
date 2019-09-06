@@ -2,140 +2,174 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C27E5C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5755CC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D082214E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:14:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bwGlTu37"
+	by mail.kernel.org (Postfix) with ESMTP id 2E93C206CD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:17:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567793832;
+	bh=4sexOClVRfEKRvP4SaMC/43yPprZ0Rt9XHDAzG/IwaA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=IZxMf5/6UALyPLuJWcGfMSaA+iw01tcOp89SBEXeYb9g6A/B8xDSggMSTnzHBuujL
+	 rvCz8FhMQTZjmI+oCEcu+h5v3MPGadpQMeFXnImociqPWngYqFpvam75fAz7rE5k7V
+	 z/j6e/1xz0sxMR72YAWeUwlwwqyU3H1PgS3ugMoE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395323AbfIFSOV (ORCPT
+        id S2436521AbfIFSRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 14:14:21 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46538 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730540AbfIFSOV (ORCPT
+        Fri, 6 Sep 2019 14:17:11 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:46442 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404380AbfIFSRK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 14:14:21 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q5so4998052pfg.13
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 11:14:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IVmS35APPsvZEyHb/hkutEn/YX4Fk0dbgk2QnuIg6M8=;
-        b=bwGlTu37wG//Rl/oPzfokc56k5fbB+PzXpwdhNVKe40PvEcZiFZviCIK8Vxg4zic4F
-         BQxTWx+Z4HAhHgP/ZwTYh68NEgKp2EPdg8T2twTkqi3GLqWu66MQDjdGPl0vxmDy9hLm
-         zeOmvWKymiCagahdfkvPVK1ibc6B8/SiJppqMehonaXQ0yEyd28TF9UhrRWLa/b50BBa
-         ViTQzx/4D0PCoD1pPLC9hBsVty5O5kzC2l+Y8itRiQpsn8VizCaGTYTbS9kE5ycFZ7VK
-         ZrfTyienHowZ+tvqw5BuMU/446R7mNNSmh06UhYcNhz2Jd1N0RACIeAlYyVdGNwI0PSa
-         aNAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IVmS35APPsvZEyHb/hkutEn/YX4Fk0dbgk2QnuIg6M8=;
-        b=tIkDCqNmfdrPYyaYR1ze4sL40r+c3EKJcOOBMJ4xZ2vn1gHzlhVCqLH8i1yWzaLiJG
-         wuA+Y9d/HXopudgzl/LI6L1j/7XTmY01jNVhA5XttYgpjefpDOpCUguLQXtPmw7qE+9H
-         vgSk+145FvZKwJgKB40I6dOHDnz3Te18U6l6NDh7pQE6RCB2I2DNh2VeJ01CrkufIWK2
-         ADGcA0TFfDQp7ktsW6cVa3iDM0J5u80S/fJG/BFuSDRBICim50eT/AE8PV+MmhXw/RLt
-         skUADSEWWzgcVGzUORe9jH6XAZPTFOYPh8SGVRcb/S1axLuJWoIBdxCJc6UsCJUj0lIq
-         mjag==
-X-Gm-Message-State: APjAAAWB2Llfc47WumPmeAD52LJtOxC2phm1S6IXKoJ+KwN9llt4HjAJ
-        aIx58Sdi15aaW/SAUbsfzIaUn7GROInEfYwv4SZjrw==
-X-Google-Smtp-Source: APXvYqwT9sER3T9wjBUfIeVQ3AbDkcnjBhIA171HurQ1hKs7Tc8uDMwXZYUInBsBtuJbrTZNIT1yyGOEZ23uzGdvzwI=
-X-Received: by 2002:a62:cec4:: with SMTP id y187mr12206609pfg.84.1567793659699;
- Fri, 06 Sep 2019 11:14:19 -0700 (PDT)
+        Fri, 6 Sep 2019 14:17:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=AN/xZn55x9Paj2FV2HROTLrpQ/d1Z8rdQtqFNYMx15k=; b=a2LyxNAI0Lcsqgpec/cV6Geyu
+        csa/ODYVy4viu6nyQy7lzVgeX7GpkedJsMEKqTRisl8Wqr+6K0CjKYsjdhaxFUi6VTOMC0v1sIWBU
+        BAoQDAixwLCwGLSHROyiiFLjlJXVuTUMAszBhwQBr1TiJeGkDbSpEWUymdCo5+2aqlyJFYZXawsHh
+        D+tLRpYT0rOC4GqQsUfo3GFdznIQ/nBbsUSEdT0bb4M87lFTgalcf1If/McWLOusags15Jnk+Kg8d
+        JG6c/nJ+yLbOSAqk/vDFStx05rvTAxpwoe3uFDutK/ZPKAEVYaPExSpKGtX4Y2ypCaXvvEpe2yk/e
+        gVtYrPU6w==;
+Received: from [177.159.253.249] (helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i6InE-00047a-18; Fri, 06 Sep 2019 18:17:08 +0000
+Date:   Fri, 6 Sep 2019 15:17:02 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Jessica Yu <jeyu@kernel.org>,
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        Thomas Gleixner <tglx@linutronix.de>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH] docs: license-rules.txt: cover SPDX headers on Python
+ scripts
+Message-ID: <20190906151702.3e67ccf7@coco.lan>
+In-Reply-To: <9d30210a2d024aae4c36c8995019cdeab29e1e19.camel@perches.com>
+References: <20190905055614.7958918b@coco.lan>
+        <88e638eb959095ab6657d295f9f8c27169569bf2.1567675272.git.mchehab+samsung@kernel.org>
+        <20190905092703.GA30899@kroah.com>
+        <20190905090701.37dcf75e@coco.lan>
+        <b32c2e46b91e7bcda2a9bd140673f06d71b2487a.camel@perches.com>
+        <20190906083457.7e7934ec@coco.lan>
+        <9d30210a2d024aae4c36c8995019cdeab29e1e19.camel@perches.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20190829083233.24162-1-linux@rasmusvillemoes.dk>
- <20190830231527.22304-1-linux@rasmusvillemoes.dk> <20190830231527.22304-5-linux@rasmusvillemoes.dk>
- <CAKwvOdktYpMH8WnEQwNE2JJdKn4w0CHv3L=YHkqU2JzQ6Qwkew@mail.gmail.com>
- <a5085133-33da-6c13-6953-d18cbc6ad3f5@rasmusvillemoes.dk> <20190905134535.GP9749@gate.crashing.org>
- <CANiq72nXXBgwKcs36R+uau2o1YypfSFKAYWV2xmcRZgz8LRQww@mail.gmail.com>
- <20190906122349.GZ9749@gate.crashing.org> <CANiq72=3Vz-_6ctEzDQgTA44jmfSn_XZTS8wP1GHgm31Xm8ECw@mail.gmail.com>
- <20190906163028.GC9749@gate.crashing.org> <20190906163918.GJ2120@tucnak>
-In-Reply-To: <20190906163918.GJ2120@tucnak>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 6 Sep 2019 11:14:08 -0700
-Message-ID: <CAKwvOd=MT_=U250tR+t0jTtj7SxKJjnEZ1FmR3ir_PHjcXFLVw@mail.gmail.com>
-Subject: Re: [PATCH v2 4/6] compiler-gcc.h: add asm_inline definition
-To:     Jakub Jelinek <jakub@redhat.com>
-Cc:     Segher Boessenkool <segher@kernel.crashing.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "gcc-patches@gcc.gnu.org" <gcc-patches@gcc.gnu.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 6, 2019 at 9:39 AM Jakub Jelinek <jakub@redhat.com> wrote:
->
-> On Fri, Sep 06, 2019 at 11:30:28AM -0500, Segher Boessenkool wrote:
-> > On Fri, Sep 06, 2019 at 05:13:54PM +0200, Miguel Ojeda wrote:
-> > > On Fri, Sep 6, 2019 at 2:23 PM Segher Boessenkool
-> > > <segher@kernel.crashing.org> wrote:
-> > > > I can't find anything with "feature" and "macros" in the C++ standard,
-> > > > it's "predefined macros" there I guess?  In C, it is also "predefined
-> > > > macros" in general, and there is "conditional feature macros".
-> > >
-> > > They are introduced in C++20,
-> >
-> > (Which isn't the C++ standard yet, okay).
->
-> Well, they have been required by SD-6 before being added to C++20, so we
-> have tons of the predefined macros for C++ already starting with gcc 4.9 or
-> so, but it is something required by the standard so we have to do that.
-> Most of them depend also on compiler options, so can't be easily replaced
-> with a simple __GNUC__ version check.
->
-> What I'd like to add is that each predefined macro isn't without cost,
-> while adding one predefined macro might not be measurable (though, for
-> some predefined macros (the floating point values) it was very measurable
-> and we had to resort to lazy evaluation of the macros), adding hundreds of
-> predefined macros is measurable, affects the speed of empty compiler run,
-> adds size of -g3 produced debug info, increases size of -E -dD output etc.
->
->         Jakub
+Em Fri, 06 Sep 2019 10:33:42 -0700
+Joe Perches <joe@perches.com> escreveu:
 
-Here's the case that I think is perfect:
-https://developers.redhat.com/blog/2016/02/25/new-asm-flags-feature-for-x86-in-gcc-6/
+> On Fri, 2019-09-06 at 08:34 -0300, Mauro Carvalho Chehab wrote:
+> > I did some changes on it, plus one change at the pedantic mode of
+> > scripts/spdxcheck.py, and placed the corresponding patches at:
+> > 
+> > 	https://git.linuxtv.org/mchehab/experimental.git/log/?h=spdx_pedantic  
+> 
+> Your script needs a modification of this line:
 
-Specifically the feature test preprocessor define __GCC_ASM_FLAG_OUTPUTS__.
+It is yours script, I just made a few improvements for it to also catch
+scripts.
 
-See exactly how we handle it in the kernel:
-- https://github.com/ClangBuiltLinux/linux/blob/0445971000375859008414f87e7c72fa0d809cf8/arch/x86/include/asm/asm.h#L112-L118
-- https://github.com/ClangBuiltLinux/linux/blob/0445971000375859008414f87e7c72fa0d809cf8/arch/x86/include/asm/rmwcc.h#L14-L30
+>     $spdx = $1 if m/(SPDX-License-Identifier:.*)/;
+> 
+> This is on $_ and not $spdx.
+> 
+> This line needs to be:
+> 
+>     $spdx = $1 if $spdx =~ m/(SPDX-License-Identifier:.*)/;
 
-Feature detection of the feature makes it trivial to detect when the
-feature is supported, rather than brittle compiler version checks.
-Had it been a GCC version check, it wouldn't work for clang out of the
-box when clang added support for __GCC_ASM_FLAG_OUTPUTS__.  But since
-we had the helpful __GCC_ASM_FLAG_OUTPUTS__, and wisely based our use
-of the feature on that preprocessor define, the code ***just worked***
-for compilers that didn't support the feature ***and*** compilers when
-they did support the feature ***without changing any of the source
-code*** being compiled.
+Gah, true!
 
-All I'm asking for is that when GCC adds a new GNU C extension (such
-as `asm inline`), define a new preprocessor symbol (like has already
-been done w/ __GCC_ASM_FLAG_OUTPUTS__), so that we don't have to use
-version checking (or reimplementing autoconf) and use feature
-detection instead.  This simplifies use of this feature even between
-codebases supporting multiple versions of GCC.
+It also doesn't get the case where SPDX-License-Identifier: is
+followed by a tab, and fixed an issue when detecting files without
+any extension.
 
-(Also, I'm guessing the cost of another preprocessor define is near
-zero compared to parsing comments for -Wimplicit-fallthrough)
--- 
+The enclosed script does a better job.
+
+I changed the output of it on my testing branch:
+	https://git.linuxtv.org/mchehab/experimental.git/log/?h=spdx_pedantic
+
+The only thing that it doesn't change is an issue with an asm code,
+with uses "@" for comments.
+
+As this is a single file, better to do it manually:
+
+	https://git.linuxtv.org/mchehab/experimental.git/commit/?h=spdx_pedantic&id=f1b7b2169ae2c8d8ab80a5997ebef9aa03a42d30
+
 Thanks,
-~Nick Desaulniers
+Mauro
+
+---
+
+#!/usr/bin/perl 
+
+@file_arr = qx(git grep -nE 'SPDX-License-Identifier:\\s' | grep -v ':1:');
+foreach (@file_arr) {
+    /^([^:]+):([^:]+):(.*)/;
+    my ($file, $line, $spdx) = ($1, $2, $3);
+
+    next if ($file =~ m,(COPYING|LICENSES/|sha1-armv4-large.S),);
+    next if ($line > 10);
+
+    $spdx =~ s/^\s*\/?\*\s*//;
+    $spdx =~ s/\s*\*\/\s*$//;
+    $spdx = $1 if $spdx =~ m/(SPDX-License-Identifier:.*)/;
+    $spdx =~ s/(SPDX-License-Identifier:)\s+/$1 /;
+
+    if ($file =~ /\.(h|dts|dtsi|S)$/) {
+	$spdx = "/* $spdx */";
+    } elsif ($file =~ /\.(c)$/) {
+	$spdx = "// $spdx";
+    } elsif ($file =~ /\.(rst)$/) {
+	$spdx = ".. $spdx";
+    } elsif ($file =~ /\.(py|pl|sh|tc)$/ || !($file =~ /\./)) {
+	$spdx = "# $spdx";
+    } else {
+        next;
+    }
+
+    open(FH, '<', $file) or die $!;
+    my @lines = <FH>;
+    close FH;
+    open(FH, '>', $file) or die $!;
+    my $count = 0;
+    my $print_spdx = 1;
+    foreach (@lines) {
+	$count++;
+        if ($print_spdx) {
+            if ($count == 1 && (/:orphan:/ || /^#\!/)) {
+                print FH "$_";
+                next;
+            }
+            if ($count <= 2 && /^[ \t\f]*#.*?coding[:=][ \t]*([-_.a-zA-Z0-9]+)/) {
+                print FH "$_";
+                next;
+            }
+            print FH "$spdx\n";
+	    $print_spdx = 0;
+        }
+	next if ($count == $line);
+	next if ($count == $line - 1 && $_ =~ /^\s*\*\s*$/);
+	next if ($count == $line + 1 && $_ =~ /^\s*\*\s*$/);
+	next if ($count == $line - 1 && $_ =~ /^$/);
+	print FH "$_";
+    }
+    close FH;
+}
