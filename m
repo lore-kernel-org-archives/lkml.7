@@ -2,80 +2,111 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE47C00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76ED1C43140
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FCE5206B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:48:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46A24208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:48:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567777728;
+	bh=XjGqsQwGOzLfXmUA0qJ7g0JfY2IRLjG4Dyn2VFqgHKc=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=CsYLEa3z1WKV+gk2EayRKDfyi57nyI2F43G+Ll/6oSwiOIqGaqlB6vpqsEnAGy3FQ
+	 WhKIEcjyTOoHpLYYxrDMZ7TCuucXkb6/fukikRxbebtIN+aCesxThdF02QkC5Tq93g
+	 i9TS0RC7fpBDuww9QN3x/MYmqhU+aG/qPMckdm0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405230AbfIFNsj (ORCPT
+        id S2405241AbfIFNsr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 09:48:39 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:42472 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727031AbfIFNsj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 09:48:39 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 6E9F1C240AAF7362C57F;
-        Fri,  6 Sep 2019 21:48:36 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Fri, 6 Sep 2019
- 21:48:28 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <Eugeniy.Paltsev@synopsys.com>, <linus.walleij@linaro.org>,
-        <bgolaszewski@baylibre.com>
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] gpio: creg-snps: use devm_platform_ioremap_resource() to simplify code
-Date:   Fri, 6 Sep 2019 21:10:32 +0800
-Message-ID: <20190906131032.22148-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Fri, 6 Sep 2019 09:48:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49946 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727031AbfIFNsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 09:48:47 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 614BE206B8;
+        Fri,  6 Sep 2019 13:48:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567777726;
+        bh=XjGqsQwGOzLfXmUA0qJ7g0JfY2IRLjG4Dyn2VFqgHKc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Yo9bfWt/FgXeGhC4EbCbGmaVAB4+z8qwgVLGSuduGEvP+blbAAkIcjrWtl7vxZ1Uu
+         y+LsKdY2Zfv2UbBjstQy8Wdp1fx4f75SK5rG+NS5D/5DKwLATvYI7etKhrtLmYqY1L
+         5uva2BE3pV8MBDrldv/wvEvO4YXevZXka7nOOAgA=
+Date:   Fri, 6 Sep 2019 15:48:44 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 4.19.71
+Message-ID: <20190906134844.GA7458@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="k+w/mQv8wyuph6w0"
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_resource() to simplify the code a bit.
-This is detected by coccinelle.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/gpio/gpio-creg-snps.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+--k+w/mQv8wyuph6w0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/gpio/gpio-creg-snps.c b/drivers/gpio/gpio-creg-snps.c
-index 8cbc94d..ff19a8a 100644
---- a/drivers/gpio/gpio-creg-snps.c
-+++ b/drivers/gpio/gpio-creg-snps.c
-@@ -137,7 +137,6 @@ static int creg_gpio_probe(struct platform_device *pdev)
- 	const struct of_device_id *match;
- 	struct device *dev = &pdev->dev;
- 	struct creg_gpio *hcg;
--	struct resource *mem;
- 	u32 ngpios;
- 	int ret;
- 
-@@ -145,8 +144,7 @@ static int creg_gpio_probe(struct platform_device *pdev)
- 	if (!hcg)
- 		return -ENOMEM;
- 
--	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	hcg->regs = devm_ioremap_resource(dev, mem);
-+	hcg->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(hcg->regs))
- 		return PTR_ERR(hcg->regs);
- 
--- 
-2.7.4
+I'm announcing the release of the 4.19.71 kernel.
+
+Only users of the elantech driver need to upgrade to fix a regression in
+a recent release.
+
+The updated 4.19.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.19.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
+
+thanks,
+
+greg k-h
+
+------------
+
+ Makefile                       |    2 -
+ drivers/input/mouse/elantech.c |   54 ++++++++++++++++++++++-------------------
+ 2 files changed, 30 insertions(+), 26 deletions(-)
+
+Benjamin Tissoires (1):
+      Revert "Input: elantech - enable SMBus on new (2018+) systems"
+
+Greg Kroah-Hartman (1):
+      Linux 4.19.71
 
 
+--k+w/mQv8wyuph6w0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAl1yY7wACgkQONu9yGCS
+aT63yQ/8D9iAmNNgDP5t1tr29JWo+hpUsHgyNGS2BDEPudNPucE6r+la72ZRSJpl
+gMqIVLh2q4JjkSeh0KNoJRK7Cxpj+20gXax2K4SRWjntwk6hvDPv+iJz+erGsZmw
+XwGvtXbYvA/SKmnGzjH0k151B3anaM8oW3VEhd3IDnbPKKPRwgrnYDOVj9nQEwwK
+1YYFd0GXI3XYtDJ2uAxEPx7dDBxbR/XrCYSMXYXGO5/X0OfvP4BKRyzrcYnDa4jy
+55C/tycFJuYJ8Z9Z5e1cnc+YDKPRdl7d7W6eKeG9RFEmkEimnamnHcc/TfQrEaXG
+ouSVnI2GhX/UYyAjsIOlQFjbXEyGmq52w6BL/QupeLOhNG6MhLDCWVAxgY76BlFB
+BA2yoMxIdTLr6AdHkIBxhCBIhyNJuvruBzs3Aje4/8+TwJNQvEPee0EeAyxckGU1
+9Pszm5oqrwTVuGj9fGl51/dSY069oThUS2N2Qnhtk3mKRViy+X/SJslyZOrVsMQD
+GXHolHqWTtOSOpGMdEddC/cQNeaW2V2g/B1PK4vW6qGisuJ82ny5vX4SXw0RUUvc
+E9e85jzhdn4sf8OFIaB1eZIxV4yK31yl4VfQMGaNtUSdzY1weXM2N0B+JqStMt3R
+QHCjhLmWtn8SiwXN7irpoTQvpO+PmRged7X5D+UGfcSXwHchfWk=
+=QFx9
+-----END PGP SIGNATURE-----
+
+--k+w/mQv8wyuph6w0--
