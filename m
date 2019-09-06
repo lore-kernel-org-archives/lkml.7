@@ -2,86 +2,105 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9D8C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6576EC43140
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3609021670
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40732214DE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:47:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405857AbfIFPrW (ORCPT
+        id S2394915AbfIFPri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 11:47:22 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:38231 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405844AbfIFPrV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 11:47:21 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MiaLn-1ic0673Twl-00fnCZ; Fri, 06 Sep 2019 17:47:08 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Russell King <linux@armlinux.org.uk>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Enrico Weigelt <info@metux.net>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: don't export unused return_address()
-Date:   Fri,  6 Sep 2019 17:46:55 +0200
-Message-Id: <20190906154706.2449696-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Fri, 6 Sep 2019 11:47:38 -0400
+Received: from muru.com ([72.249.23.125]:59962 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727762AbfIFPri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 11:47:38 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 1F90580CC;
+        Fri,  6 Sep 2019 15:48:06 +0000 (UTC)
+Date:   Fri, 6 Sep 2019 08:47:32 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        =?utf-8?B?QW5kcsOp?= Roth <neolynx@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+Subject: Re: [RFC v2 3/3] ARM: dts: omap3: bulk convert compatible to be
+ explicitly ti,omap3430 or ti,omap36xx
+Message-ID: <20190906154732.GC52127@atomide.com>
+References: <cover.1567587220.git.hns@goldelico.com>
+ <a2b56edcada7b9000a6e906387a02c0ee42681db.1567587220.git.hns@goldelico.com>
+ <20190905142734.GV52127@atomide.com>
+ <4BC39938-D63E-4BDC-BA28-5132F77F602D@goldelico.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:KxXBdm+ZdB2njEOuHI0sI2x2LTlMTwa/9hKBgBDFyvjWMqurBar
- 1eeQnRx0c2Ox7iIBg3bLDT3e+A5wv8//Hw8vhKUVdHCQTetfQSdrjrsU4gUPPAVUYMq8iZT
- KWgNizZG8M5JX8N3+1xp6Vcd4jLYGRQ83Jo27tXlyvYsVLbkW7W6om1aPaGGEKSRE9rkBZj
- QoIsM81fh05SMxn2RkQuw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:vdoyMlLfLcU=:2DVor/2vufbs+2xiNNaRoY
- fWU05+ahmmEOb9gMmRI4XWFn9VIEylv0+DmficJNI3Krbstw87f3wOIrlEFkWOCdWdG/YRvnS
- EfZPjYBJQAsFo5UkRNXPQDFrwKcCOcZGJI56UApZdhCAysBgKjHEHx6mFAagdxE4/0MprqVsr
- rKFOPTuBJO2JtHEXCAHRQg8X2Ihiy7pvRV9AvOgm3OhbCzC87ZVsqJdqCVaQdxheA5hBRvSA6
- EGZuy18hFF2+RyjHnFKf0Gj65cAdfGMbkh9S83qBMI26tBaEV0UmjELm3sgXfv0t2D7aiA0xH
- HjwNLRQATNkk+YjodkxGlK4Jez+3kgbFtFHXLEkl4u0+zZFouJJ7K8gBrvaNXTVQUeYes5nQs
- vxi6Pn5vXCsFjGbL/Syj9H+9jI548oYiMo4IGvb7TwV5CjKQnJ473bKpWcXxEGhfm5I1wdOEq
- fe+G5UgO+xo7nfXQymwg+GugThSksgQKEp6nScmJq7dwoGb2yYASvI3IxRPLu3NMshjgpFan8
- 6RqnYGncFrUL0qfG/sdsAbuCnt2h+XwfSHIrotMJGF7XBex2CmX9x9oXFQH832A8U7RQc30sY
- DiWK9WZn2kQsl6Vw8NTd9bADyW6qob4mDnQtJkrHSbMO8qxY4TPYCgLk9TA1fHggPxk6C5FJR
- 1blQiqgk244xS49SOFkqL94iruf3zffktlDkzjDwKq5jP3KBQlf8ZvXDLt5BXO2gQKqhdaM0n
- zNCKzIdwQvS3SDWlGgbtA9XQuvo7yXs2lXMToBNNodcqmUfc0uQfgfCZ5EapqjXq8YVFCWxiV
- +JNrPBbpP6nuUpksqgzACYDRugBpQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4BC39938-D63E-4BDC-BA28-5132F77F602D@goldelico.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Without the frame pointer enabled, return_address() is an inline
-function and does not need to be exported, as shown by this warning:
+* H. Nikolaus Schaller <hns@goldelico.com> [190906 07:53]:
+> > Am 05.09.2019 um 16:27 schrieb Tony Lindgren <tony@atomide.com>:
+> > compatible = "ti,omap3-ldp", "ti,omap3430", "ti,omap34xx", "ti,omap3";
+> 
+> After thinking a little about the whole topic the main rule of this change must be:
+> 
+> * do not break any existing in-tree DTS
+> 	=> only *add* to compatible what we need to distinguish between omap34 and omap36
+> 
+> * additions shall only follow new scheme
+> 	=> we only add "ti,omap34xx" or "ti,omap36xx"
+>            but neither "ti,omap3630" nor "ti,omap3430"
 
-WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
+Sorry I don't follow you on this one.. We should always add "ti,omap3630"
+where "ti,omap36xx" is currently used so we can eventually get rid of
+"ti,omap36xx". And the same for 34xx.
 
-Move the EXPORT_SYMBOL_GPL() into the #ifdef as well.
+> * cover some out-of-tree DTS
+> 	=> make the ti-cpufreq driver still match "ti,omap3430" or "ti,omap3630"
+> 	   even if this duplicates compatibility
+> 
+> This would mean that the logicpd-som-lv-37xx-devkit.dts gets the additional "ti,omap36xx"
+> while the omap3-ldp.dts would only get an "ti,omap34xx" but no "ti,omap3430" (since we
+> do not use it anywhere).
+> 
+> Could you agree on this approach?
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm/kernel/return_address.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Yeah sounds like logicpd-som-lv-37xx-devkit.dts currently still needs
+"ti,omap36xx" for now.
 
-diff --git a/arch/arm/kernel/return_address.c b/arch/arm/kernel/return_address.c
-index b0d2f1fe891d..fb0fc1910102 100644
---- a/arch/arm/kernel/return_address.c
-+++ b/arch/arm/kernel/return_address.c
-@@ -53,6 +53,7 @@ void *return_address(unsigned int level)
- 		return NULL;
- }
- 
-+EXPORT_SYMBOL_GPL(return_address);
-+
- #endif /* if defined(CONFIG_FRAME_POINTER) && !defined(CONFIG_ARM_UNWIND) */
- 
--EXPORT_SYMBOL_GPL(return_address);
--- 
-2.20.0
+If modifying omap3-ldp.dts, also add "ti,omap3430" in additon to
+"ti,omap34xx" that it already has.
 
+So basically let's assume the following:
+
+"ti,omap3430" == "ti,omap34xx"
+"ti,omap3630" == "ti,omap36xx"
+
+This means code needs to parse both.
+
+And eventually we just drop the "xx" variants.
+
+So while patching compatibles, let's also update for this to
+avoid multiple patches churning the same compatibles over and
+over.
+
+Regards,
+
+Tony
