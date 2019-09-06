@@ -2,85 +2,51 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F757C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D48C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:08:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DFBA2067D
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:08:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD35A2067D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:08:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405712AbfIFPI2 (ORCPT
+        id S2405721AbfIFPIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 11:08:28 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:48601 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726908AbfIFPI2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 11:08:28 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1i6FqZ-0001Eg-V9; Fri, 06 Sep 2019 15:08:24 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Rui Miguel Silva <rmfrfs@gmail.com>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] media: imx7-mipi-csis: make array 'registers' static const, makes object smaller
-Date:   Fri,  6 Sep 2019 16:08:23 +0100
-Message-Id: <20190906150823.30859-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 6 Sep 2019 11:08:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39172 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726462AbfIFPIs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 11:08:48 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id BB1EEAD69;
+        Fri,  6 Sep 2019 15:08:47 +0000 (UTC)
+Date:   Fri, 6 Sep 2019 17:08:56 +0200
+From:   Jean Delvare <jdelvare@suse.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Thomas <trenn@suse.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: /dev/mem and secure boot
+Message-ID: <20190906170856.20d54cc3@endymion>
+In-Reply-To: <20190906170737.1a00178c@endymion>
+References: <20190906130221.0b47a565@endymion>
+        <20190906121510.GA17328@kroah.com>
+        <20190906170737.1a00178c@endymion>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+D'oh, I hit reply while still editing... Sorry for the noise, a better
+answer will come later when ready.
 
-Don't populate the array 'registers' on the stack but instead make it
-static const. Makes the object code smaller by 10 bytes.
-
-Before:
-   text	   data	    bss	    dec	    hex	filename
-  20138	   5196	    128	  25462	   6376	staging/media/imx/imx7-mipi-csis.o
-
-After:
-   text	   data	    bss	    dec	    hex	filename
-  20032	   5292	    128	  25452	   636c	staging/media/imx/imx7-mipi-csis.o
-
-(gcc version 9.2.1, amd64)
-
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/staging/media/imx/imx7-mipi-csis.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c b/drivers/staging/media/imx/imx7-mipi-csis.c
-index 73d8354e618c..f8a97b7e2535 100644
---- a/drivers/staging/media/imx/imx7-mipi-csis.c
-+++ b/drivers/staging/media/imx/imx7-mipi-csis.c
-@@ -293,7 +293,7 @@ static int mipi_csis_dump_regs(struct csi_state *state)
- 	struct device *dev = &state->pdev->dev;
- 	unsigned int i;
- 	u32 cfg;
--	struct {
-+	static const struct {
- 		u32 offset;
- 		const char * const name;
- 	} registers[] = {
 -- 
-2.20.1
-
+Jean Delvare
+SUSE L3 Support
