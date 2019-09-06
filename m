@@ -2,102 +2,160 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A733C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E83FC00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:17:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CF1A208C3
+	by mail.kernel.org (Postfix) with ESMTP id E9C8F20838
 	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:17:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Sq1EshMb"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="S03AX30p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406011AbfIFRRY (ORCPT
+        id S2406021AbfIFRRY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 6 Sep 2019 13:17:24 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:35874 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733278AbfIFRRX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45570 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391459AbfIFRRX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 6 Sep 2019 13:17:23 -0400
-Received: from zn.tnic (p200300EC2F0B9E00A12ADCB2AAAA451F.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:9e00:a12a:dcb2:aaaa:451f])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 07C531EC094F;
-        Fri,  6 Sep 2019 19:17:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1567790242;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=DrItdgOwfueRiUWCUUuY7oRWF0Gci3i+6hFy85DBwzA=;
-        b=Sq1EshMbCOXHbkKUAcE9HSUjqyLIuuEALX45VjE7MGs3qQ2P+ze6xON+60wK/hAJ0DD4rd
-        msj/qiZfkMs/biLhpYBp0eV/RVgBZb1t1KKDUUMcOrk0QrUAEk8imGAIzz6oTqYT3H/+yb
-        2UVgFwQw2LR20KzNdO4XGfJGj8AbnFM=
-Date:   Fri, 6 Sep 2019 19:17:20 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Johannes Erdfelt <johannes@erdfelt.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Mihai Carabas <mihai.carabas@oracle.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jon Grimm <Jon.Grimm@amd.com>, kanth.ghatraju@oracle.com,
-        konrad.wilk@oracle.com, patrick.colp@oracle.com,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        x86-ml <x86@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/microcode: Add an option to reload microcode even if
- revision is unchanged
-Message-ID: <20190906171720.GM19008@zn.tnic>
-References: <20190905072029.GB19246@zn.tnic>
- <20190905194044.GA3663@otc-nc-03>
- <alpine.DEB.2.21.1909052316130.1902@nanos.tec.linutronix.de>
- <20190905222706.GA4422@otc-nc-03>
- <alpine.DEB.2.21.1909061431330.1902@nanos.tec.linutronix.de>
- <20190906144039.GA29569@sventech.com>
- <20190906151617.GE19008@zn.tnic>
- <20190906154618.GB29569@sventech.com>
- <20190906161735.GH19008@zn.tnic>
- <20190906165207.GC29569@sventech.com>
+Received: by mail-ot1-f65.google.com with SMTP id 41so2602948oti.12;
+        Fri, 06 Sep 2019 10:17:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9evHry1UrtWiGWxeLaRDwMC+G1/K0C5Wqdz0SlRBtRA=;
+        b=S03AX30pGa/riu4c+Jmvw31thlqCJ6/58BYW5EDstl8tut2pIX6DS+XKqBIPly98j0
+         arM5bAlXCV9be8gl83690pSpmR1J9dMDi2ACleKB3PCN5J9KZL6g5iAoRmxWbMiqvNF3
+         qC3itT8bwqPnQpFTXFxeLKOfYW+dUY5c8Ct8IOQFoscT2ROpSB17Myo1f6++Q3q3E9fp
+         YGPB3qdZDIGk5096953Vhf6t3BQbyOG0UHoqwucW8WvoqVupxW0PUzT6nbVdjrekix1i
+         O6TPhnexuV9aJm6HkgAJNlwlltU27I7emzs4SGZ34QBV1oyDhJrvrzc/OMHGJmk+Mg+o
+         HEvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9evHry1UrtWiGWxeLaRDwMC+G1/K0C5Wqdz0SlRBtRA=;
+        b=GZ/IPlsfDs05a2d9jg5rDFN55JR6lH7JbywClAN6a64YkubQBRsq1DQM8V+gkputfR
+         6SDxjto03hnwz4cZNWHLlXpUk4FOD5BL/xJVBujqLkODhkJDaZdVZRzzmaYQRmVELy46
+         L8wrDLlD/oBlLWJ8sw6Vudl2fzdx40yGv8la22g80Mv4CSuD5516p2+ssOkx1cLxhc2s
+         OReOy0E3Rxzm3NhJ4xNi+pHRJELNLAsMnQm1KAE6CwhEIo4By6RFbGmo3pAIL0nRvEgh
+         +hyYRMfrboso/yr1jSP09xXR/VGGt7VSwS0e/5tQRlbOcokRnJMMH1vkoNCu2/RJjmb/
+         7JaQ==
+X-Gm-Message-State: APjAAAWfhXc4VhLY8S/XZlS+R07PTRTn2MD/rZCCCBhcTaRmUpRKzh0J
+        5xHBOG35rKQh9KdPdVIeYMIzCQ3LUBS+gBYvvtA=
+X-Google-Smtp-Source: APXvYqzV1urVgS9fUf9+vvQ7IvYRo7AJa7S38jSC4wqoAIa6jp3rnZyJDk83rUwj6UtOcAdQvzQUeXid+CeNTa1O5po=
+X-Received: by 2002:a05:6830:1e5a:: with SMTP id e26mr7852824otj.96.1567790242296;
+ Fri, 06 Sep 2019 10:17:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190906165207.GC29569@sventech.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1567585181.git.eswara.kota@linux.intel.com>
+ <fe9549470bc06ea0d0dfc80f46a579baa49b911a.1567585181.git.eswara.kota@linux.intel.com>
+ <CAFBinCC5SH5OSUqOkLQhE2o7g5OhSuB_PBjsv93U2P=FNS5oPw@mail.gmail.com> <ce4e04ee-9a8f-fbe1-0133-4a18c92dc136@linux.intel.com>
+In-Reply-To: <ce4e04ee-9a8f-fbe1-0133-4a18c92dc136@linux.intel.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Fri, 6 Sep 2019 19:17:11 +0200
+Message-ID: <CAFBinCABoe89Z9CiG=3Bz6+JoRCYcpxWJ6jzEqMo16SCCoXPmQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: intel: Add YAML schemas for the
+ PCIe RC controller
+To:     "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>
+Cc:     Dilip Kota <eswara.kota@linux.intel.com>, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, linux-pci@vger.kernel.org, hch@infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 06, 2019 at 09:52:07AM -0700, Johannes Erdfelt wrote:
-> That doesn't mean that late loading isn't still useful.
+On Fri, Sep 6, 2019 at 5:22 AM Chuan Hua, Lei
+<chuanhua.lei@linux.intel.com> wrote:
+[...]
+> >> +examples:
+> >> +  - |
+> >> +    pcie10:pcie@d0e00000 {
+> >> +      compatible = "intel,lgm-pcie";
+> >> +      device_type = "pci";
+> >> +      #address-cells = <3>;
+> >> +      #size-cells = <2>;
+> >> +      reg = <
+> >> +            0xd0e00000 0x1000
+> >> +            0xd2000000 0x800000
+> >> +            0xd0a41000 0x1000
+> >> +            >;
+> >> +      reg-names = "dbi", "config", "app";
+> >> +      linux,pci-domain = <0>;
+> >> +      max-link-speed = <4>;
+> >> +      bus-range = <0x00 0x08>;
+> >> +      interrupt-parent = <&ioapic1>;
+> >> +      interrupts = <67 1>;
+> >> +      #interrupt-cells = <1>;
+> >> +      interrupt-map-mask = <0 0 0 0x7>;
+> >> +      interrupt-map = <0 0 0 1 &ioapic1 27 1>,
+> >> +                      <0 0 0 2 &ioapic1 28 1>,
+> >> +                      <0 0 0 3 &ioapic1 29 1>,
+> >> +                      <0 0 0 4 &ioapic1 30 1>;
+> > is the "1" in the interrupts and interrupt-map properties IRQ_TYPE_EDGE_RISING?
+> > you can use these macros in this example as well, see
+> > Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml for
+> > example
+>
+> No. 1 here means index from arch/x86/devicetree.c
+>
+> static struct of_ioapic_type of_ioapic_type[] =
+> {
+>      {
+>          .out_type    = IRQ_TYPE_EDGE_RISING,
+>          .trigger    = IOAPIC_EDGE,
+>          .polarity    = 1,
+>      },
+>      {
+>          .out_type    = IRQ_TYPE_LEVEL_LOW,
+>          .trigger    = IOAPIC_LEVEL,
+>          .polarity    = 0,
+>      },
+>      {
+>          .out_type    = IRQ_TYPE_LEVEL_HIGH,
+>          .trigger    = IOAPIC_LEVEL,
+>          .polarity    = 1,
+>      },
+>      {
+>          .out_type    = IRQ_TYPE_EDGE_FALLING,
+>          .trigger    = IOAPIC_EDGE,
+>          .polarity    = 0,
+>      },
+> };
+>
+> static int dt_irqdomain_alloc(struct irq_domain *domain, unsigned int virq,
+>                    unsigned int nr_irqs, void *arg)
+> {
+>      struct irq_fwspec *fwspec = (struct irq_fwspec *)arg;
+>      struct of_ioapic_type *it;
+>      struct irq_alloc_info tmp;
+>      int type_index;
+>
+>      if (WARN_ON(fwspec->param_count < 2))
+>          return -EINVAL;
+>
+>      type_index = fwspec->param[1]; // index.
+>      if (type_index >= ARRAY_SIZE(of_ioapic_type))
+>          return -EINVAL;
+>
+> I would not see this definition is user-friendly. But it is how x86
+> handles at the moment.
+thank you for explaining this - I had no idea x86 is different from
+all other platforms I know
+the only upstream x86 .dts I could find
+(arch/x86/platform/ce4100/falconfalls.dts) also uses the magic x86
+numbers
+so I'm fine with this until someone else knows a better solution
 
-If it weren't useful, it would've been gone a long time ago. No one is
-arguing whether it is useful or not.
 
-> Just as I can't know for sure that every future microcode update will be
-> safely late loadable, you can't know for sure that every future microcode
-> update won't be safely late loadable.
-
-Well, you know what can happen so good luck, I guess.
-
-> We do use other techniques as well particularly when it's not time
-> sensitive.
-
-So you reboot or not? Do you do reboot-similar techniques where you can
-potentially do early microcode loading too?
-
-> It very much makes it right because it's still a tool that can be used
-> safely in the right cases. Just because it can't be used 100% of the time
-> (even if it is close to that in practice) doesn't make it magically unsafe
-> either.
-
-As I said, good luck with that. It's not like you haven't been warned
-about what can happen.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Martin
