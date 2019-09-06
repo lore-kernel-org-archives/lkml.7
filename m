@@ -2,132 +2,71 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0D9C00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E79DC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C781C20578
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:02:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567774953;
-	bh=cS+jKt5ph0FPxFV3bytX1mCFf3/6EuAElXCY755Qphs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bMQn452LUtU9cZECX0M4VJhbhyTqid0FdBs+kP7vO7S4wtzu7lz8oexvmyh7DqmBl
-	 oBCuN0YDeZorqta+rETvU1F5Az0SaATF5eO0j3uU+nhsc78HeAOfSyJwv3StIqm93R
-	 8Cn5y2BGGIi+GGdDUV4CcAkSzxi75JYqT1sqb7cs=
+	by mail.kernel.org (Postfix) with ESMTP id 3FE7320578
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:02:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404941AbfIFNCd (ORCPT
+        id S2405077AbfIFNCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 09:02:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56044 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727914AbfIFNCc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 09:02:32 -0400
-Received: from rapoport-lnx (unknown [87.71.71.249])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 291C520578;
-        Fri,  6 Sep 2019 13:02:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567774951;
-        bh=cS+jKt5ph0FPxFV3bytX1mCFf3/6EuAElXCY755Qphs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k9eBe8u5TKKzZ0KdndmsTfF3GToYgcWW7XpSdb2POg6+ywj+6iniQzlnoH1pi7ODO
-         +8BUTlpWcjhnXZVPD1hjeMZlszKHrcAOpPXfwa2PADjv6v6MnM9tygYHLi/WWhzS9D
-         KyVu0nxVFAFPf7V7kwwvHVSBHjabjuzzczosEOsM=
-Date:   Fri, 6 Sep 2019 16:02:24 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Cc:     Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH] mips: sgi-ip27: switch from DISCONTIGMEM to SPARSEMEM
-Message-ID: <20190906130223.GA17704@rapoport-lnx>
-References: <1567662477-27404-1-git-send-email-rppt@kernel.org>
- <20190905152150.f7ff6ef70726085de63df828@suse.de>
- <20190905133251.GA3650@rapoport-lnx>
- <20190905154831.88b7853b47ba7db7bd7626bd@suse.de>
- <20190905154747.GB3650@rapoport-lnx>
- <20190905233800.0f6b3fb3722cde2f5a88663a@suse.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190905233800.0f6b3fb3722cde2f5a88663a@suse.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Fri, 6 Sep 2019 09:02:40 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:59808 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727914AbfIFNCk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 09:02:40 -0400
+Received: from localhost (unknown [88.214.184.128])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id E7789152F5C96;
+        Fri,  6 Sep 2019 06:02:37 -0700 (PDT)
+Date:   Fri, 06 Sep 2019 15:02:36 +0200 (CEST)
+Message-Id: <20190906.150236.2142448918782013970.davem@davemloft.net>
+To:     zdai@linux.vnet.ibm.com
+Cc:     jhs@mojatatu.com, xiyou.wangcong@gmail.com, jiri@resnulli.us,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        zdai@us.ibm.com
+Subject: Re: [v3] net_sched: act_police: add 2 new attributes to support
+ police 64bit rate and peakrate
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1567609423-26826-1-git-send-email-zdai@linux.vnet.ibm.com>
+References: <1567609423-26826-1-git-send-email-zdai@linux.vnet.ibm.com>
+X-Mailer: Mew version 6.8 on Emacs 26.2
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 06 Sep 2019 06:02:39 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 11:38:00PM +0200, Thomas Bogendoerfer wrote:
-> On Thu, 5 Sep 2019 18:47:49 +0300
-> Mike Rapoport <rppt@kernel.org> wrote:
-> 
-> > On Thu, Sep 05, 2019 at 03:48:31PM +0200, Thomas Bogendoerfer wrote:
-> > > On Thu, 5 Sep 2019 16:32:53 +0300
-> > > Mike Rapoport <rppt@kernel.org> wrote:
-> > > 
-> > > > On Thu, Sep 05, 2019 at 03:21:50PM +0200, Thomas Bogendoerfer wrote:
-> > > > > On Thu,  5 Sep 2019 08:47:57 +0300
-> > > > > Mike Rapoport <rppt@kernel.org> wrote:
-> > > > > 
-> > > > > > From: Mike Rapoport <rppt@linux.ibm.com>
-> > > > > > 
-> > > > > > The memory initialization of SGI-IP27 is already half-way to support
-> > > > > > SPARSEMEM and only a call to sparse_init() was missing. Add it to
-> > > > > > prom_meminit() and adjust arch/mips/Kconfig to enable SPARSEMEM and
-> > > > > > SPARSEMEM_EXTREME for SGI-IP27
-> > > > > > 
-> > > > > > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> > > > > > ---
-> > > > > > 
-> > > > > > Thomas, could you please test this on your Origin machine?
-> > > > > 
-> > > > > it crashes in sparse_early_usemaps_alloc_pgdat_section(). Since there is
-> > > > > already a sparse_init() in arch_mem_setup() I removed it from ip27-memory.c.
-> > > > 
-> > > > Oops, missed that.
-> > > > 
-> > > > > With this booting made more progress but I get an unaligned access in
-> > > > > kernel_init_free_pages(). 
-> > > > 
-> > > > Can you please share the log?
-> > > 
-> > > sure
-> > 
-> > Nothing looked particularly suspicious, but I've found that I've missed the
-> > definition of pfn_to_nid() is for DISCONTIGMEM only, maybe making it
-> > available for SPARSE would help :)
-> > 
-> > I'm pretty much shooting in the dark here, but can you please try the patch
-> > below on top of the original one:
-> 
-> doesn't compile: 
-> 
-> /home/tbogendoerfer/wip/mips/linux/include/linux/mmzone.h:1367:0: warning: "pfn_to_nid" redefined
->  #define pfn_to_nid(pfn)       \
-> 
-> 
-> For testing I've removed the version in linux/mmzone.h, but kernel still crashes. Only
-> difference is that several CPUs are printing the oops in unaligned handler in parallel.
-> With the sparse_init() in prom_meminit() kernel dies at the same spot as before.
+From: David Dai <zdai@linux.vnet.ibm.com>
+Date: Wed,  4 Sep 2019 10:03:43 -0500
 
-Well, apparently the generic pfn_to_nid() is better :)
-
-I suspect that unaligned access comes from __page_to_pfn, can you please
-check what scripts/fadd2line reports for kernel_init_free_pages+0xcc/0x138?
-
-> Thomas.
+> For high speed adapter like Mellanox CX-5 card, it can reach upto
+> 100 Gbits per second bandwidth. Currently htb already supports 64bit rate
+> in tc utility. However police action rate and peakrate are still limited
+> to 32bit value (upto 32 Gbits per second). Add 2 new attributes
+> TCA_POLICE_RATE64 and TCA_POLICE_RATE64 in kernel for 64bit support
+> so that tc utility can use them for 64bit rate and peakrate value to
+> break the 32bit limit, and still keep the backward binary compatibility.
 > 
-> -- 
-> SUSE Software Solutions Germany GmbH
-> HRB 247165 (AG München)
-> Geschäftsführer: Felix Imendörffer
+> Tested-by: David Dai <zdai@linux.vnet.ibm.com>
+> Signed-off-by: David Dai <zdai@linux.vnet.ibm.com>
+> ---
+> Changelog:
+> v1->v2:
+>  - Move 2 attributes TCA_POLICE_RATE64 TCA_POLICE_PEAKRATE64 after
+>    TCA_POLICE_PAD in pkt_cls.h header.
+> v2->v3:
+>  - Use TCA_POLICE_PAD instead of __TCA_POLICE_MAX as padding attr
+>    in last parameter in nla_put_u64_64bit() routine.
 
--- 
-Sincerely yours,
-Mike.
+Applied to net-next.
