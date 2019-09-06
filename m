@@ -2,147 +2,97 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27491C43140
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF66C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1E4A2084F
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:14:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="A63medX+"
+	by mail.kernel.org (Postfix) with ESMTP id 7F10C206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:16:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391893AbfIFKO0 (ORCPT
+        id S2389180AbfIFKQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 06:14:26 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:50693 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390895AbfIFKOI (ORCPT
+        Fri, 6 Sep 2019 06:16:06 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:53105 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726931AbfIFKQG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 06:14:08 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190906101407euoutp01f1a86b3e80ad599e4bf91ae9265a3fda~B0dKFw2NW0929309293euoutp01E
-        for <linux-kernel@vger.kernel.org>; Fri,  6 Sep 2019 10:14:07 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190906101407euoutp01f1a86b3e80ad599e4bf91ae9265a3fda~B0dKFw2NW0929309293euoutp01E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1567764847;
-        bh=WuzwCUYV2cdfl7qLbkBAHqDKsnTlIX0yAhB2QMQqk30=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A63medX+1JY83V1tg7q6yFeeXbxIlZKFMsLu9c/5GHwI+hJbNYkMrPfisXmXdXgMO
-         k1uP6jOsvoydbvHJu0YwzIqujjcd9IDja1mfMLINtiFIU/JB+bBn77n1i+ydqbVCuq
-         AxyAFez+HHxhWnLlNbE1vYkA0RpUTO0HWwsoJfWI=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190906101406eucas1p2dab289502ae4d19bca00c58b64cbb50a~B0dJP-wP_1006510065eucas1p2u;
-        Fri,  6 Sep 2019 10:14:06 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 63.C7.04469.E61327D5; Fri,  6
-        Sep 2019 11:14:06 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190906101405eucas1p2e3da7b461810a3a520e76c636a06e486~B0dIkS26A1006510065eucas1p2r;
-        Fri,  6 Sep 2019 10:14:05 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190906101405eusmtrp1c640308e8ab83c4ae2f8dfd9cdeeaae3~B0dIQh6Mn1272412724eusmtrp1a;
-        Fri,  6 Sep 2019 10:14:05 +0000 (GMT)
-X-AuditID: cbfec7f2-994db9c000001175-e4-5d72316e83a3
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 2A.9E.04166.D61327D5; Fri,  6
-        Sep 2019 11:14:05 +0100 (BST)
-Received: from AMDC3778.DIGITAL.local (unknown [106.120.51.20]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190906101404eusmtip1d71620cc9f795288ce2881dd16b7cf9e~B0dHYdujW3027130271eusmtip1a;
-        Fri,  6 Sep 2019 10:14:04 +0000 (GMT)
-From:   Lukasz Luba <l.luba@partner.samsung.com>
-To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org, cw00.choi@samsung.com,
-        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
-        willy.mh.wolff.ml@gmail.com,
-        Lukasz Luba <l.luba@partner.samsung.com>
-Subject: [PATCH 1/3]  memory: Exynos5422: minor fixes in DMC
-Date:   Fri,  6 Sep 2019 12:13:42 +0200
-Message-Id: <20190906101344.3535-2-l.luba@partner.samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190906101344.3535-1-l.luba@partner.samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA0VSa0hTYRj229nZOY5mxyn5oiNjEZSgZkR8kJmRwf5U0g8rQ2rpybxN3fHS
-        labZTdPZIjOzi3TRprI5dai0Sp3NCpsWalpmKmSaKXijoiLnmfXveZ73eb734eWjCWkt6U3H
-        qdJYtUqZKBeJhebnP+z+qiB11PrmqeW4pthA4t7ZURLfsb4msXbkK4HtdiOFO7InKNyvkWHT
-        SA+J3zaVivBMvhXhYvsTAa62DlD4QW+XAL/PqhDhcxYrhVsnLpB4vn0Yhborqm5XIUVjyQCl
-        MOkviRS1988omicfCxQFdXqkmDGtDKcixcExbGJcBqsODDkkPjpZ8hSlzFPHCrM3aFC/KBe5
-        0sBshLzOUioXiWkpU4Hgxth3IU9mEfzWF4h4MoPAZLQIlyJll0adg3IEmiu1gn+RvvryBULT
-        IiYAGvSpjoAncw/BfGukAxOMWQD5czIH9mCCwWCqXuwhZNbA2GzjIpYwITD6sw7xy3yh0viM
-        cGBXZivoDNcW6wHTQkFp95yAN4VBt83iDHjAuK2O4rEMXl297GzNgSa/zOk5BSPaW07PZmi1
-        dZGOzgSzDgxNgby8DUqGvlMOGRg3ePfNna/vBjrzdYKXJXDxvJR3r4W6y53OMiugvKrI+bgC
-        pjVZBH8dHQK7pYksRL4l/5fdRUiPvNh0LimW5YJUbGYAp0zi0lWxAdHJSSa08JVe/bFNN6C5
-        N4dbEEMj+TIJM5sSJSWVGdzxpBYENCH3lBhqFiRJjPL4CVadfFCdnshyLciHFsq9JCddPh2Q
-        MrHKNDaBZVNY9dJUQLt6a5BlOjft9NzJ8cCEs7LB6D0Roaf7I7Q+w7lDsgj5keJViT47U/Cj
-        l0Vx+z8Ock1j2g5x6kCl2djdVpmz62ann9vni5kz2/O+vKD7Vv+q39tmn0irmWx2GYn03/Jw
-        y6ae9qkz7rqXYTut8bHxuz8ovVy9pzvP7tCF29Yb4ISW9MnZVykXckeVQX6EmlP+BWlBwcJG
-        AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprOIsWRmVeSWpSXmKPExsVy+t/xu7q5hkWxBkveilhsnLGe1eL6l+es
-        FvOPnGO16H/8mtni/PkN7BZnm96wW9xqkLHY9Pgaq8XlXXPYLD73HmG0mHF+H5PF2iN32S2W
-        Xr/IZHG7cQWbReveI+wWh9+0s1p8O/GI0UHQY828NYweO2fdZffYtKqTzWPzknqPg+/2MHn0
-        bVnF6PF5k1wAe5SeTVF+aUmqQkZ+cYmtUrShhZGeoaWFnpGJpZ6hsXmslZGpkr6dTUpqTmZZ
-        apG+XYJexrtZ+xkLvrFXTGgyamC8xdbFyMkhIWAisbDzOZDNxSEksJRRovVjE1RCTGLSvu3s
-        ELawxJ9rXVBFnxglbszsBHI4ONgE9CR2rCoEiYsILGeUOLbqLTOIwyxwhEmif9c8VpBuYQEb
-        ifWb1oJNZRFQlXj5ZSeYzStgJ/H81xZGiA3yEqs3HGAGsTkF7CUmrZ/KAmILAdXsmtLJMoGR
-        bwEjwypGkdTS4tz03GJDveLE3OLSvHS95PzcTYzASNl27OfmHYyXNgYfYhTgYFTi4RX4UhAr
-        xJpYVlyZe4hRgoNZSYR3/UagEG9KYmVValF+fFFpTmrxIUZToKMmMkuJJucDozivJN7Q1NDc
-        wtLQ3Njc2MxCSZy3Q+BgjJBAemJJanZqakFqEUwfEwenVANjUxqPbcb1uFe5h15mNOlzFa8P
-        Trm+c0mv0NmlPr8Pqk8N1vLt0XRTvj6nL9REZ5L9pf6YbMusYJ+9/4Nv/Gmb3ZGZWVEp/YE5
-        NOPtqh88Jjf5JF9HiIQtfmN2cNW39q9xPZNXBqeEnj7CYbLsgOql4JLmww9bftxYODsvdPtO
-        0YWsalsu1W9UYinOSDTUYi4qTgQAk7C8yaoCAAA=
-X-CMS-MailID: 20190906101405eucas1p2e3da7b461810a3a520e76c636a06e486
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190906101405eucas1p2e3da7b461810a3a520e76c636a06e486
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190906101405eucas1p2e3da7b461810a3a520e76c636a06e486
-References: <20190906101344.3535-1-l.luba@partner.samsung.com>
-        <CGME20190906101405eucas1p2e3da7b461810a3a520e76c636a06e486@eucas1p2.samsung.com>
+        Fri, 6 Sep 2019 06:16:06 -0400
+X-UUID: 35be169ede134e03bb7c75bec3103570-20190906
+X-UUID: 35be169ede134e03bb7c75bec3103570-20190906
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <roger.lu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 524014696; Fri, 06 Sep 2019 18:16:00 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 6 Sep 2019 18:15:50 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 6 Sep 2019 18:15:50 +0800
+Message-ID: <1567764953.472.2.camel@mtksdaap41>
+Subject: Re: [PATCH v5 0/3] PM / AVS: SVS: Introduce SVS engine
+From:   Roger Lu <roger.lu@mediatek.com>
+To:     Kevin Hilman <khilman@kernel.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Nicolas Boichat <drinkcat@google.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Fan Chen <fan.chen@mediatek.com>,
+        "HenryC Chen" <HenryC.Chen@mediatek.com>, <yt.lee@mediatek.com>,
+        Angus Lin <Angus.Lin@mediatek.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        Nishanth Menon <nm@ti.com>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>
+Date:   Fri, 6 Sep 2019 18:15:53 +0800
+In-Reply-To: <20190906100514.30803-1-roger.lu@mediatek.com>
+References: <20190906100514.30803-1-roger.lu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: BC4C79346B1AD8DE4D01B67A379430A73C2A7576C913D66AAA878836F8AEDA7A2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Small fixes captured by static analyzes.
+Excuse me, I forgot to add "changes since" below. Add it back now.
 
-Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
----
- drivers/memory/samsung/exynos5422-dmc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Fri, 2019-09-06 at 18:05 +0800, Roger Lu wrote:
+> 1. SVS driver use OPP adjust event in [1] to update OPP table voltage part.
+> 2. SVS dts node refers to CPU opp table [2] and GPU opp table [3].
+> 3. SVS dts node refers to thermal efuse [4] and PMIC regulator [5].
+> 
+> [1] https://patchwork.kernel.org/patch/11092245/
+> [2] https://patchwork.kernel.org/patch/10934123/
+> [3] https://patchwork.kernel.org/patch/11132381/
+> [4] https://patchwork.kernel.org/patch/11093655/
+> [5] https://patchwork.kernel.org/patch/11110493/
 
-diff --git a/drivers/memory/samsung/exynos5422-dmc.c b/drivers/memory/samsung/exynos5422-dmc.c
-index 8c2ec29a7d57..a809fa997c03 100644
---- a/drivers/memory/samsung/exynos5422-dmc.c
-+++ b/drivers/memory/samsung/exynos5422-dmc.c
-@@ -269,7 +269,7 @@ static int exynos5_init_freq_table(struct exynos5_dmc *dmc,
- 	return 0;
- 
- err_free_tables:
--	kfree(dmc->opp);
-+	devm_kfree(dmc->dev, dmc->opp);
- err_opp:
- 	dev_pm_opp_of_remove_table(dmc->dev);
- 
-@@ -732,7 +732,7 @@ static struct devfreq_dev_profile exynos5_dmc_df_profile = {
-  * statistics engine which supports only registered values. Thus, some alignment
-  * must be made.
-  */
--unsigned long
-+static unsigned long
- exynos5_dmc_align_init_freq(struct exynos5_dmc *dmc,
- 			    unsigned long bootloader_init_freq)
- {
--- 
-2.17.1
+changes since v4:
+- Add SVS dts node patch in SVS patch series.
+
+> Roger Lu (3):
+>   dt-bindings: soc: add mtk svs dt-bindings
+>   arm64: dts: mt8183: add svs device information
+>   PM / AVS: SVS: Introduce SVS engine
+> 
+>  .../devicetree/bindings/power/mtk-svs.txt     |   88 +
+>  arch/arm64/boot/dts/mediatek/mt8183-evb.dts   |   16 +
+>  arch/arm64/boot/dts/mediatek/mt8183.dtsi      |   38 +
+>  drivers/power/avs/Kconfig                     |   10 +
+>  drivers/power/avs/Makefile                    |    1 +
+>  drivers/power/avs/mtk_svs.c                   | 2075 +++++++++++++++++
+>  include/linux/power/mtk_svs.h                 |   23 +
+>  7 files changed, 2251 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/mtk-svs.txt
+>  create mode 100644 drivers/power/avs/mtk_svs.c
+>  create mode 100644 include/linux/power/mtk_svs.h
+
 
