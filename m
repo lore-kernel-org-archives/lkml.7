@@ -2,144 +2,98 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 452F4C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 366B1C00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15C9D20842
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:48:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="g30HVDUy"
+	by mail.kernel.org (Postfix) with ESMTP id 161AA2070C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:52:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567756369;
+	bh=winWBgL5TQGcDxGKWAnYQDvbmLb4EaB1sIi2qiT87RM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=eYcY8nfhhqYQqxNB4pLPEWOOWQv4nf/uSfkgLX0TarjXsVauEGbC2ioRHJFRV+hrH
+	 TzqWhN/l5bF/aNLwavWOc8cheFmL77q/Ulqkpwc0zOYORxzxMqjIIYmwgkPUbfy8q8
+	 +KE8BxZXYyeZffrNoPs5Q3DkH/er7pI/Uz6v5NXc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733284AbfIFHsr (ORCPT
+        id S1730392AbfIFHws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 03:48:47 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:47154 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728267AbfIFHsq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 03:48:46 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x867mX7e071654;
-        Fri, 6 Sep 2019 02:48:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1567756113;
-        bh=vrG6lpi8QEWkZKj5pHICh2MWv598YJm3hDtGFd45Ws8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=g30HVDUyWInJMcMatKA49ZDCVU8I4zfgaktbMK8nK2CgRdz3d0MIVRLhL/NgxDddz
-         9ogWHNd17/arDpVY2AuOSnn3T+FWnwXTVIk9MOGz6FnWEcR2pRgj9AkUaJUo+rdtXY
-         1oW5naxq0C4WV684cX/bI41caxxkVoaGiUKh8wMk=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x867mXim041637;
-        Fri, 6 Sep 2019 02:48:33 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 6 Sep
- 2019 02:48:33 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 6 Sep 2019 02:48:33 -0500
-Received: from [172.24.191.45] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x867mTW5109187;
-        Fri, 6 Sep 2019 02:48:30 -0500
-Subject: Re: [PATCH] bus: ti-sysc: Fix handling of invalid clocks
-To:     Tony Lindgren <tony@atomide.com>, <linux-omap@vger.kernel.org>
-CC:     "Andrew F . Davis" <afd@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nishanth Menon <nm@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190905215356.8168-1-tony@atomide.com>
-From:   Keerthy <j-keerthy@ti.com>
-Message-ID: <fd38f85f-c5f0-0166-c55c-0da6d5c2518d@ti.com>
-Date:   Fri, 6 Sep 2019 13:19:08 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 6 Sep 2019 03:52:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60920 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725290AbfIFHws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 03:52:48 -0400
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D010220842;
+        Fri,  6 Sep 2019 07:52:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567756367;
+        bh=winWBgL5TQGcDxGKWAnYQDvbmLb4EaB1sIi2qiT87RM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=I3iTW5c2Sy3Jw3wH3U8rb8Ck6BcfVtTSx7cY9quGWXplqe9xYiY/t/Nf5QupucKIi
+         iUeiD70snyQwk4hk104xe5tiV4oH5Pw/Q75/xbvl7ljpqZ/lac5ciPTi3u1zolMh8b
+         TivWfpZrPerwQ+Cmmd6uuu7x8vFE6WEGFX38/GsU=
+Received: by mail-lj1-f170.google.com with SMTP id y23so4778124ljn.5;
+        Fri, 06 Sep 2019 00:52:46 -0700 (PDT)
+X-Gm-Message-State: APjAAAVaTFIB2zKjg6HVOLRw0kTq6ELq0kSLkZoRP0JgqawjiGnr9SsH
+        yMfCYh3DpfsKVyEi0LJeicKaubXlWeb4kYGzpBo=
+X-Google-Smtp-Source: APXvYqwlILqYRT4xGA2lf0NyhxXTFgqTN26f5VG4eIgJJFkGkypXCZxvH9/zNmt7h0mx2yp1J0eOPraYUnXRWZw8Ud8=
+X-Received: by 2002:a2e:8091:: with SMTP id i17mr4913713ljg.13.1567756364930;
+ Fri, 06 Sep 2019 00:52:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190905215356.8168-1-tony@atomide.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <CAF-0O_5TSO04M=0kdghhGKTs54QVEYn5mBh7e83EusFjS_Hg3Q@mail.gmail.com>
+In-Reply-To: <CAF-0O_5TSO04M=0kdghhGKTs54QVEYn5mBh7e83EusFjS_Hg3Q@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Fri, 6 Sep 2019 09:52:33 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPdSmCbkUxbhuoEG8+0U_o1=heHrOeWjrddgy7bedN8Rag@mail.gmail.com>
+Message-ID: <CAJKOXPdSmCbkUxbhuoEG8+0U_o1=heHrOeWjrddgy7bedN8Rag@mail.gmail.com>
+Subject: Re: cpuidle big_little driver on Odroid-xu4
+To:     Jaafar Ali <jaafarkhalaf@gmail.com>
+Cc:     Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kgene@kernel.org, sam@ravnborg.org, linux-clk@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, 1 Sep 2019 at 15:19, Jaafar Ali <jaafarkhalaf@gmail.com> wrote:
+>
+> Dear Sylwester,
+> Kernel 5.3rc1
+> Hardware Odroid-XU4
+> cpuidle-big_little driver for exynos 5422 of odroid-xu3/4 is not working.
+> when I enable it in the defconfig , CONFIG_ARM_BIG_LITTLE_CPUIDLE=y,
+> the device will not boot and the heartbeat blue LED stops.
+> when the powerdown state[1] is removed form cpuidle-big_little driver
+> or the function bl_enter_powerdown is disabled by early return, the
+> kernel boots successfully and I can see cpuidle driver inside
+> /sys/devices/system/cpu/cpuidle/current_driver
+> both cpuidle-big_little power down state (exynos5420) and suspend
+> stuff are using mcpm_cpu_suspend() which in turn calls
+> mcpm_cpu_power_down() eventually.
+> while suspend stuff is working correctly and the cpu can
+> suspend/resume without problems, the cpuidle-bl is not working
+> the few difference between suspend.c and cpuidle-big_little that I
+> found are suspend.c do some more preparations such as storing resume
+> entry point "mcpm_entry_point" into S5P_INFORM0, reset
+> EXYNOS5420_CPU_STATE and save and restore some other registers.
+> Can we repeat the scenario of suspend in cpuidle-big_little
 
+Hi Jaafar,
 
-On 06/09/19 3:23 AM, Tony Lindgren wrote:
-> We can currently get "Unable to handle kernel paging request at
-> virtual address" for invalid clocks with dts node but no driver:
-> 
-> (__clk_get_hw) from [<c0138ebc>] (ti_sysc_find_one_clockdomain+0x18/0x34)
-> (ti_sysc_find_one_clockdomain) from [<c0138f0c>] (ti_sysc_clkdm_init+0x34/0xdc)
-> (ti_sysc_clkdm_init) from [<c0584660>] (sysc_probe+0xa50/0x10e8)
-> (sysc_probe) from [<c065c6ac>] (platform_drv_probe+0x58/0xa8)
-> 
-> Let's add IS_ERR checks to ti_sysc_clkdm_init() as And let's start treating
-> clk_get() with -ENOENT as a proper error. If the clock name is specified
-> in device tree we must succeed with clk_get() to continue. For modules with
-> no clock names specified in device tree we will just ignore the clocks.
+Thank you for the report. I am not sure whether big-little cpuidle was
+working properly before... (before v5.3-rc1) I added your report to
+https://exynos.wiki.kernel.org/todo_tasks
 
-Tested for DS0 and RTC+DDR modes on AM437x
-
-FWIW
-Tested-by: Keerthy <j-keerthy@ti.com>
-
-> 
-> Fixes: 2b2f7def058a ("bus: ti-sysc: Add support for missing clockdomain handling")
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
->   arch/arm/mach-omap2/pdata-quirks.c | 4 ++--
->   drivers/bus/ti-sysc.c              | 5 +----
->   2 files changed, 3 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
-> --- a/arch/arm/mach-omap2/pdata-quirks.c
-> +++ b/arch/arm/mach-omap2/pdata-quirks.c
-> @@ -491,11 +491,11 @@ static int ti_sysc_clkdm_init(struct device *dev,
->   			      struct clk *fck, struct clk *ick,
->   			      struct ti_sysc_cookie *cookie)
->   {
-> -	if (fck)
-> +	if (!IS_ERR(fck))
->   		cookie->clkdm = ti_sysc_find_one_clockdomain(fck);
->   	if (cookie->clkdm)
->   		return 0;
-> -	if (ick)
-> +	if (!IS_ERR(ick))
->   		cookie->clkdm = ti_sysc_find_one_clockdomain(ick);
->   	if (cookie->clkdm)
->   		return 0;
-> diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
-> --- a/drivers/bus/ti-sysc.c
-> +++ b/drivers/bus/ti-sysc.c
-> @@ -280,9 +280,6 @@ static int sysc_get_one_clock(struct sysc *ddata, const char *name)
->   
->   	ddata->clocks[index] = devm_clk_get(ddata->dev, name);
->   	if (IS_ERR(ddata->clocks[index])) {
-> -		if (PTR_ERR(ddata->clocks[index]) == -ENOENT)
-> -			return 0;
-> -
->   		dev_err(ddata->dev, "clock get error for %s: %li\n",
->   			name, PTR_ERR(ddata->clocks[index]));
->   
-> @@ -357,7 +354,7 @@ static int sysc_get_clocks(struct sysc *ddata)
->   			continue;
->   
->   		error = sysc_get_one_clock(ddata, name);
-> -		if (error && error != -ENOENT)
-> +		if (error)
->   			return error;
->   	}
->   
-> 
+Best regards,
+Krzysztof
