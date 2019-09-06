@@ -2,93 +2,103 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5F9C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C46C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D8FF2070C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:52:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E21520854
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:53:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567767236;
+	bh=H+yTWQX57cegf2t72h7LJ305mRugKGEYc05Jr3cLZl0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nWlgS2EN6JZgLkmSxgU+zHgrxE5KPfmiPQjZIPSa2BRUR8C170eSM64Q1CFvgDGtl
+	 j/ur/zin6j5teb0Ttpf0wlM2TdJrew3PRvr6qDpgZmqqNPUcOxqdN72PPNoHNt8U2r
+	 06Dp8gfcFloDhJGyPmajomMZI08n1fQ+4lT3AQEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391246AbfIFKwR (ORCPT
+        id S2391366AbfIFKxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 06:52:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37912 "EHLO mx1.redhat.com"
+        Fri, 6 Sep 2019 06:53:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725946AbfIFKwR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 06:52:17 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1731515AbfIFKxz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 06:53:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B8532800DD4;
-        Fri,  6 Sep 2019 10:52:16 +0000 (UTC)
-Received: from localhost (ovpn-117-208.ams2.redhat.com [10.36.117.208])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C21C460BF1;
-        Fri,  6 Sep 2019 10:52:11 +0000 (UTC)
-Date:   Fri, 6 Sep 2019 11:52:10 +0100
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, miklos@szeredi.hu,
-        linux-kernel@vger.kernel.org, virtio-fs@redhat.com,
-        dgilbert@redhat.com, mst@redhat.com
-Subject: Re: [PATCH 08/18] virtiofs: Drain all pending requests during
- ->remove time
-Message-ID: <20190906105210.GP5900@stefanha-x1.localdomain>
-References: <20190905194859.16219-1-vgoyal@redhat.com>
- <20190905194859.16219-9-vgoyal@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id AA37A2070C;
+        Fri,  6 Sep 2019 10:53:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567767234;
+        bh=H+yTWQX57cegf2t72h7LJ305mRugKGEYc05Jr3cLZl0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=X34lVF1/1G4jA3xOv7encmcLEKgk6EnvfH47jJK/im4kRjv2V70PBlcg4SG3UEw8P
+         VXV4kn/prPJPDQ0mvUVnK9YWs2xTRyqTwh+MEo3YvXamvvAht+6tt8L3mZQEMuvq99
+         BqTWRvdDx3LNTkLZ3D/CoiT09yEmkIdXHjg1jAE0=
+Date:   Fri, 6 Sep 2019 12:53:52 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Austin Kim <austindh.kim@gmail.com>, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        dvhart@infradead.org, andy@infradead.org, hpa@zytor.com,
+        allison@lohutok.net, armijn@tjaldur.nl, kjlu@umn.edu,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/platform/uv: move kmalloc() NULL check routine
+Message-ID: <20190906105352.GA8656@kroah.com>
+References: <20190905232951.GA28779@LGEARND20B15>
+ <20190906093252.GB16843@kroah.com>
+ <20190906104341.GW2349@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4IFtMBbmeqbTM/ox"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190905194859.16219-9-vgoyal@redhat.com>
+In-Reply-To: <20190906104341.GW2349@hirez.programming.kicks-ass.net>
 User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Fri, 06 Sep 2019 10:52:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Sep 06, 2019 at 12:43:41PM +0200, Peter Zijlstra wrote:
+> On Fri, Sep 06, 2019 at 11:32:52AM +0200, Greg KH wrote:
+> > On Fri, Sep 06, 2019 at 08:29:51AM +0900, Austin Kim wrote:
+> > > The result of kmalloc should have been checked ahead of below statement:
+> > > 	pqp = (struct bau_pq_entry *)vp;
+> > > 
+> > > Move BUG_ON(!vp) before above statement.
+> > > 
+> > > Signed-off-by: Austin Kim <austindh.kim@gmail.com>
+> > > ---
+> > >  arch/x86/platform/uv/tlb_uv.c | 4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/arch/x86/platform/uv/tlb_uv.c b/arch/x86/platform/uv/tlb_uv.c
+> > > index 20c389a..5f0a96bf 100644
+> > > --- a/arch/x86/platform/uv/tlb_uv.c
+> > > +++ b/arch/x86/platform/uv/tlb_uv.c
+> > > @@ -1804,9 +1804,9 @@ static void pq_init(int node, int pnode)
+> > >  
+> > >  	plsize = (DEST_Q_SIZE + 1) * sizeof(struct bau_pq_entry);
+> > >  	vp = kmalloc_node(plsize, GFP_KERNEL, node);
+> > > -	pqp = (struct bau_pq_entry *)vp;
+> > > -	BUG_ON(!pqp);
+> > > +	BUG_ON(!vp);
+> > 
+> > Ick!  Don't crash the whole machine if you are out of memory, that's a
+> > totally lazy and broken driver.  Fix this up properly please.
+> 
+> This is boot time init; if memory allocation fails, we're in trouble, no
+> way forward no way back.
+> 
+> It is not uncommon to have BUG_ON() for alloc failing during boot.
 
---4IFtMBbmeqbTM/ox
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hey, how come you get to get away with this here, and in the tty layer I
+had to do all sorts of foolish things just for the same "impossible"
+thing because syzbot found a way to emulate such lunacy?
 
-On Thu, Sep 05, 2019 at 03:48:49PM -0400, Vivek Goyal wrote:
-> +static void virtio_fs_drain_queue(struct virtio_fs_vq *fsvq)
-> +{
-> +	WARN_ON(fsvq->in_flight < 0);
-> +
-> +	/* Wait for in flight requests to finish.*/
-> +	while (1) {
-> +		spin_lock(&fsvq->lock);
-> +		if (!fsvq->in_flight) {
-> +			spin_unlock(&fsvq->lock);
-> +			break;
-> +		}
-> +		spin_unlock(&fsvq->lock);
-> +		usleep_range(1000, 2000);
-> +	}
+Just you wait until the fuzzers get ahold of this code...  :)
 
-I think all contexts that call this allow sleeping so we could avoid
-usleep here.
-
---4IFtMBbmeqbTM/ox
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl1yOloACgkQnKSrs4Gr
-c8gmeQgAoJQJeQAjTj+aeNGzBdb4oLsqKKM6Q+4z3dqyaIM7pOTsdgiPZ/q1DA5U
-3/e2c4UFDTEg+r9xvEx5FFgBiPFrpwGU3N8mroPEUY9yueCllNsIZmS0y8n76YDb
-dCAPCksGMF4o9AWlHAMnxFoao+EfbsJd1mNU/7f7hFqFQoAuCu64321mwhqtOO+V
-PXUqk6wTZtWxPAzvZCO93D4DuUfrW7jzHRNyvCvgPiJLCTU43uptr1PDJKuDCxAp
-Sqpb5jJevhxuwbc84hIEnKY/0ERKxjky+XWBsHHc1Yy/CWAdNCyU0tW8OuUaG5+k
-FF9UbW4BK3wqyzMhWOd/4jDbTz6oyA==
-=x8L/
------END PGP SIGNATURE-----
-
---4IFtMBbmeqbTM/ox--
+greg k-h
