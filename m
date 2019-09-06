@@ -2,174 +2,181 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4FD4C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:20:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A97C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 837212053B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:20:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 644F32053B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:23:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="l6w73NJ4";
+	dkim=pass (1024-bit key) header.d=cisco.onmicrosoft.com header.i=@cisco.onmicrosoft.com header.b="uZTaGDtf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392487AbfIFHUy convert rfc822-to-8bit (ORCPT
+        id S2392495AbfIFHXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 03:20:54 -0400
-Received: from m4a0041g.houston.softwaregrp.com ([15.124.2.87]:39904 "EHLO
-        m4a0041g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2392442AbfIFHUy (ORCPT
+        Fri, 6 Sep 2019 03:23:49 -0400
+Received: from alln-iport-1.cisco.com ([173.37.142.88]:58525 "EHLO
+        alln-iport-1.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389197AbfIFHXt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 03:20:54 -0400
-Received: FROM m4a0041g.houston.softwaregrp.com (15.120.17.146) BY m4a0041g.houston.softwaregrp.com WITH ESMTP;
- Fri,  6 Sep 2019 07:18:05 +0000
-Received: from M4W0334.microfocus.com (2002:f78:1192::f78:1192) by
- M4W0334.microfocus.com (2002:f78:1192::f78:1192) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Fri, 6 Sep 2019 07:17:17 +0000
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com (15.124.8.12) by
- M4W0334.microfocus.com (15.120.17.146) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10 via Frontend Transport; Fri, 6 Sep 2019 07:17:17 +0000
+        Fri, 6 Sep 2019 03:23:49 -0400
+X-Greylist: delayed 16138 seconds by postgrey-1.27 at vger.kernel.org; Fri, 06 Sep 2019 03:23:48 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=cisco.com; i=@cisco.com; l=2506; q=dns/txt; s=iport;
+  t=1567754628; x=1568964228;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=hk6dKiNghRNURoPVtWLKaIwJZ9u9n9Nt3lUUWqvY3To=;
+  b=l6w73NJ4UFddqJ4iOUpgY25hoavuOQwtPaqCfyf4h5XN3C7ACy2QiOkO
+   K4XyWB/kIVNCrEztz6Mk/ZFpZPkNfJqmEIoleIX9Vm3WnFKM6l+lSAnIK
+   MvpK7QGwlV1AJqrwrbNBTfGHldYc+Z8+V0cHL7zgsk5DYIPpIxTS0tjDV
+   o=;
+IronPort-PHdr: =?us-ascii?q?9a23=3Azv+ipxfSIzneyYBiKawAE0lLlGMj4e+mNxMJ6p?=
+ =?us-ascii?q?chl7NFe7ii+JKnJkHE+PFxlwGQD57D5adCjOzb++D7VGoM7IzJkUhKcYcEFn?=
+ =?us-ascii?q?pnwd4TgxRmBceEDUPhK/u/Yio5Ec9CWVlN9HCgOk8TE8H7NBXf?=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0BBAQBfCHJd/40NJK1lGgEBAQEBAgE?=
+ =?us-ascii?q?BAQEHAgEBAQGBZ4FFUAOBQyAECyqEIYNHA4p1TYFqJZdtglIDVAkBAQEMAQE?=
+ =?us-ascii?q?tAgEBhD8CF4IgIzgTAgMJAQEEAQEBAgEGBG2FLgyFSgEBAQECARILBhEMAQE?=
+ =?us-ascii?q?3AQQHBAIBCA4DAwECAwImAgICMBUICAIEDgUigwCBawMODwGdeAKBOIhhc4E?=
+ =?us-ascii?q?ygn0BAQWFFxiCFgkUeCiLeBiBQD+BOAwTgh4uPoREF4J0MoImjwc0nQIKgiC?=
+ =?us-ascii?q?UcRuYeoo9nCECBAIEBQIOAQEFgWkhgVhwFTsqAYJBgkKDcopTc4Epj2EBAQ?=
+X-IronPort-AV: E=Sophos;i="5.64,472,1559520000"; 
+   d="scan'208";a="320921228"
+Received: from alln-core-8.cisco.com ([173.36.13.141])
+  by alln-iport-1.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 06 Sep 2019 07:23:47 +0000
+Received: from XCH-ALN-002.cisco.com (xch-aln-002.cisco.com [173.36.7.12])
+        by alln-core-8.cisco.com (8.15.2/8.15.2) with ESMTPS id x867NltT023562
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=FAIL);
+        Fri, 6 Sep 2019 07:23:47 GMT
+Received: from xhs-rcd-003.cisco.com (173.37.227.248) by XCH-ALN-002.cisco.com
+ (173.36.7.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 6 Sep
+ 2019 02:23:46 -0500
+Received: from xhs-rcd-003.cisco.com (173.37.227.248) by xhs-rcd-003.cisco.com
+ (173.37.227.248) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 6 Sep
+ 2019 02:23:46 -0500
+Received: from NAM05-DM3-obe.outbound.protection.outlook.com (72.163.14.9) by
+ xhs-rcd-003.cisco.com (173.37.227.248) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Fri, 6 Sep 2019 02:23:46 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Y6ce23scdtxLdc7y8abArsDracMcB/50HMaLfL2v+nya54iF0KWdOxUpucp3wJpr+VtiCwwTl44Zx95/Psj5lIlgNgnMZLfEhFc0Vt7msktLOnevl9WqBRDY/MgeMBihD9oUCCl9kZ7Oy3dlTmycBXiTUmbOjlyzUF54yUldT+P8oQ9Clirjq95KL7wDgH0q8iJiFbfn0bqv0KfOadAminID5o8ur5dlkyaq+LAMi5Oeu5jDe84nsozuBecCu6tj3JJNyOnm49gd9Qs/D1AqLge7q6yUGtd4YyXqvEaOWyxd6O6SGtAIV7tnHEdb0CIpqjUIEHBsyHeYasD3q+jsHg==
+ b=MOrzkVnIa55l+78SFlsJ2q3SLQXyBBhShXMdDqUItV9GQA8UGABBqwpDCv4Bw+XBFE0Q8QAVnhYp4IeXzE5UMe2o3KFLBxY1ubksmS1mAYV9QoDsxUo7b4fKvt+/GMPsD07w/U0Jzx/0VIFa6VhDjGdS2sm5/bYy/eKCI0oIQQnvOGSRls1X+eyANSypg05VkAVO4kW0HzUb+4BA7Ve2kr5+hWDWTBUHB1MA9Z+UwuAHqaBIXVXTVMZp93P7Hwc5qpVvwCvtOIQmCTVO/NnFetPKAJSSz6nXvKCaXoMSVRv70oSksf3oONBk1IbE8OPTw7xXmqZRyO2ZJsGIlPS0lg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MTdPGuCoAiG0yJYCZE89xJMOVWPqp009nAHsu3p4EP0=;
- b=D9WEk9fvrjBYMiNjWrzQkeZgbrQl0+Lxpp7leoeYfeo8t2L1gDsRUUTD+LfuANsV7aqz1PVBxFSujMQA0RzRf4LZPL4fv5gcvP+80+m5AaArrqIlDYmiyBC3Y7IpNq/5TGjkPJCNAgWr19tG7alcLHbvLbGliudzuj2V20KFynAPO0J0D/O3m1cfOXpO4peZyYQ/btEA8Ej5BiKFkwFu/RAkyOEerC3HDZz+JMNfVNQfZi0a/H+pNfnBICADtm9/3/aXcugZ3unozMlXOODIFsu//kLTilj7Lmo9kqY5XFJcZoDSTJvH9A//i5jJsw8kjxYEThgyoU00BwAanY3ggw==
+ bh=hk6dKiNghRNURoPVtWLKaIwJZ9u9n9Nt3lUUWqvY3To=;
+ b=QyTRffbfxzyOsAf2xjZDjNylAI6m3/UmAyVVt1s4VSm5wN+Rb9MvJwYvTmWSYWJom/mZ7kEpEvIrgk2g5N8sl19Mcco6fpmvnNTIQ6mYT3QPv2lotCRAu7FABboMYBj3uuecymm6qZXsS9dYvi2r/9G9QCN8jnBxAIthZxrOLvbTR1vdhTK/ffOkF019BPa1tIKFZHCQzCP5HXbZxqe+3to4XNk4/zp4PTMC5l/IDf2z2tOuCJBFYDEkVhbxgkmjlbFSKLRXKshDP0gYyj7a5hMiwQFgg40lv6SNFZHv2oG3x28aXdaCLJkfEiNvWU5YGVkmTzniZMUPZs+D6syi7w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-Received: from BY5PR18MB3283.namprd18.prod.outlook.com (10.255.139.203) by
- BY5PR18MB3139.namprd18.prod.outlook.com (10.255.136.11) with Microsoft SMTP
+ smtp.mailfrom=cisco.com; dmarc=pass action=none header.from=cisco.com;
+ dkim=pass header.d=cisco.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cisco.onmicrosoft.com;
+ s=selector2-cisco-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hk6dKiNghRNURoPVtWLKaIwJZ9u9n9Nt3lUUWqvY3To=;
+ b=uZTaGDtf/yc8Xl48XkxccVrKGcuSyIQyyVJ8+El/+wgD93RLa36hrOOjtvoYqRyKLKcIQVpKKDvVt3jp+cV+2eZp1WSyMHjpUheasjUiA8QZnwCGe5ycGN1RoPsG/AaZLMgwP6TH7plMrmVPQqn5DeMuvbQTNZ7FE8L3OLVYtmY=
+Received: from MN2PR11MB3999.namprd11.prod.outlook.com (10.255.181.96) by
+ MN2PR11MB3904.namprd11.prod.outlook.com (10.255.180.79) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.13; Fri, 6 Sep 2019 07:17:16 +0000
-Received: from BY5PR18MB3283.namprd18.prod.outlook.com
- ([fe80::a46b:1f66:8378:b25e]) by BY5PR18MB3283.namprd18.prod.outlook.com
- ([fe80::a46b:1f66:8378:b25e%3]) with mapi id 15.20.2241.014; Fri, 6 Sep 2019
- 07:17:16 +0000
-From:   Chester Lin <clin@suse.com>
-To:     "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-        "palmer@sifive.com" <palmer@sifive.com>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "merker@debian.org" <merker@debian.org>,
-        "atish.patra@wdc.com" <atish.patra@wdc.com>,
-        "Anup.Patel@wdc.com" <Anup.Patel@wdc.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>
-CC:     "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+ 15.20.2241.17; Fri, 6 Sep 2019 07:23:44 +0000
+Received: from MN2PR11MB3999.namprd11.prod.outlook.com
+ ([fe80::942d:38ac:36ca:e557]) by MN2PR11MB3999.namprd11.prod.outlook.com
+ ([fe80::942d:38ac:36ca:e557%6]) with mapi id 15.20.2241.014; Fri, 6 Sep 2019
+ 07:23:44 +0000
+From:   "Enke Chen (enkechen)" <enkechen@cisco.com>
+To:     David Miller <davem@davemloft.net>
+CC:     "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
+        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rick@andestech.com" <rick@andestech.com>,
-        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
-        Chester Lin <clin@suse.com>
-Subject: [PATCH] riscv: save space on the magic number field of image header
-Thread-Topic: [PATCH] riscv: save space on the magic number field of image
- header
-Thread-Index: AQHVZIMcNduMKr0kk0WFNI6AGCbw5w==
-Date:   Fri, 6 Sep 2019 07:17:15 +0000
-Message-ID: <20190906071631.23695-1-clin@suse.com>
-Accept-Language: zh-TW, en-US
+        "xe-linux-external(mailer list)" <xe-linux-external@cisco.com>,
+        "Enke Chen (enkechen)" <enkechen@cisco.com>
+Subject: Re: [PATCH] net: Remove the source address setting in connect() for
+ UDP
+Thread-Topic: [PATCH] net: Remove the source address setting in connect() for
+ UDP
+Thread-Index: AQHVZF6CHsOdeXPHPUGTpDh6i+p9EacePIYA//+NawA=
+Date:   Fri, 6 Sep 2019 07:23:43 +0000
+Message-ID: <1DCD31CA-E94F-4127-876F-8DD355E6CF9A@cisco.com>
+References: <20190906025437.613-1-enkechen@cisco.com>
+ <20190906.091350.2133455010162259391.davem@davemloft.net>
+In-Reply-To: <20190906.091350.2133455010162259391.davem@davemloft.net>
+Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, OOF, AutoReply
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: HK0PR03CA0119.apcprd03.prod.outlook.com
- (2603:1096:203:b0::35) To BY5PR18MB3283.namprd18.prod.outlook.com
- (2603:10b6:a03:196::11)
-authentication-results: spf=none (sender IP is ) smtp.mailfrom=clin@suse.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.22.0
-x-originating-ip: [60.251.47.116]
+user-agent: Microsoft-MacOutlook/10.1c.0.190812
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=enkechen@cisco.com; 
+x-originating-ip: [2001:420:c0c8:1005::8e]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f46e4041-a95f-4c1c-8a73-08d7329a3e95
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BY5PR18MB3139;
-x-ms-traffictypediagnostic: BY5PR18MB3139:
+x-ms-office365-filtering-correlation-id: 8cb7e661-3bd1-4db3-a2c4-08d7329b264e
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR11MB3904;
+x-ms-traffictypediagnostic: MN2PR11MB3904:
+x-ld-processed: 5ae1af62-9505-4097-a69a-c1553ef7840e,ExtAddr
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BY5PR18MB3139EF69604CACB6E7D7C6DCADBA0@BY5PR18MB3139.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-microsoft-antispam-prvs: <MN2PR11MB39047A3921E39106BC851E59C5BA0@MN2PR11MB3904.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
 x-forefront-prvs: 0152EBA40F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(346002)(396003)(376002)(39860400002)(136003)(189003)(199004)(256004)(36756003)(486006)(2616005)(14454004)(476003)(2501003)(478600001)(6486002)(186003)(386003)(6506007)(50226002)(8936002)(71200400001)(71190400001)(66946007)(26005)(7416002)(66556008)(81166006)(81156014)(5660300002)(8676002)(102836004)(6116002)(3846002)(52116002)(66476007)(55236004)(6436002)(64756008)(99286004)(66446008)(2906002)(86362001)(6512007)(1076003)(2201001)(110136005)(54906003)(2171002)(316002)(305945005)(4326008)(107886003)(66066001)(7736002)(25786009)(53936002);DIR:OUT;SFP:1102;SCL:1;SRVR:BY5PR18MB3139;H:BY5PR18MB3283.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: suse.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(136003)(346002)(366004)(39860400002)(13464003)(189003)(199004)(53546011)(6506007)(76116006)(102836004)(2906002)(76176011)(6512007)(53936002)(478600001)(316002)(66446008)(64756008)(6436002)(33656002)(2616005)(58126008)(99286004)(66556008)(54906003)(66946007)(91956017)(66476007)(186003)(46003)(476003)(11346002)(486006)(446003)(81166006)(81156014)(86362001)(8676002)(6486002)(305945005)(4326008)(8936002)(6116002)(71190400001)(7736002)(71200400001)(256004)(36756003)(25786009)(6246003)(229853002)(5660300002)(14454004)(6916009)(107886003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3904;H:MN2PR11MB3999.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: cisco.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: gwOxo58LCPBFLmm0855bKAeXkUICZfL26NTt0HGsjCnEXntS7OC7RJbl00OHEIKYFntU1RQcwNMHwFSI+qf4K7wDq5nYSYwlHmocHamboW+MzrY0M/jw3duYVGNsNhzjY5oUW65Own5ulibQ74hqrtzf3ECaIbhzDiIGFPLHZLX1Xvy8fP0R1CXlhqLKv/fcHOqyyp9EQfCt+M0OfTLo2H8K+2GJHZO8r0GOBjYzXb4gtnL1myFpry4Gb2j/H2KBrgWSuo6SNLbxsgT9/vRS+HZxoTCI4Tb9XqciPHYNqj+tuPunQfY8wA5C2V216Ypy8qbxrZsffpGA5UPHvhG0ewNp//Jw9dPLAik6y7aMrrNlY04f8XQLTUnzEfGtJg94Uw+hYx3BKU45RTOjhssyUhyrU2mqX+yJMFatZMdlI5I=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+x-microsoft-antispam-message-info: gr0dcGdwzn/huyMwsqwI4/U/ItEVa6330mWuBAE2IVo+XWFEzwrzW47FzddXWqpccu9BP6TdROjA4FZy1cfH5qqKn1j3vjMWg+yVAyNI9NfIG+XCDCiHIrfxDV559BjzsoBOeW1SQ9Jug3jE09c6/Y4mdoejT4OfxXTn18l6UWe5SpHYSzdf0kRC0eT0b5KrWUWxAXwl9Lhhtffmp7RGf9jFijWNsXxXg3iSkJoLqOzfxjCOKGTqazqugT+5fjajFK2BiuBpZFiIyB+cxyIoPbBLfx6KS93o64pwLvKFvHs8dixF5FOruVHlz0gwr1NgEjyf6NK2j87F6a/5z2ExCoFW4wNz2XUAN8tXNg9c3OrRNQmjkdEfMnu6FmftZqbpkldwGZED9ONkK6QqUAsryU7iySQE0W/YsRxwf76oAFw=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <6D14D8617FC40D4A9268006EF0797F9B@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: f46e4041-a95f-4c1c-8a73-08d7329a3e95
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Sep 2019 07:17:15.5812
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8cb7e661-3bd1-4db3-a2c4-08d7329b264e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Sep 2019 07:23:43.8842
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 856b813c-16e5-49a5-85ec-6f081e13b527
+X-MS-Exchange-CrossTenant-id: 5ae1af62-9505-4097-a69a-c1553ef7840e
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +jVT5rwHENlXecm0yziQHeIBI/AN5q8u9tIgpXrOwJW/eM8wbExr6Xud5BL5O93Q
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR18MB3139
-X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-userprincipalname: pr25jFpPXuTWd0lKSx4A+4YkdZyw0L1Ek6oUeTCAo5JUSU1DWss22cyyGJqv0YPphqW37jSQ6Lb9Nayrz73biw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3904
+X-OriginatorOrg: cisco.com
+X-Outbound-SMTP-Client: 173.36.7.12, xch-aln-002.cisco.com
+X-Outbound-Node: alln-core-8.cisco.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change the symbol from "RISCV" to "RSCV" so the magic number can be 32-bit
-long, which is consistent with other architectures.
-
-Signed-off-by: Chester Lin <clin@suse.com>
----
- arch/riscv/include/asm/image.h | 9 +++++----
- arch/riscv/kernel/head.S       | 5 ++---
- 2 files changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/arch/riscv/include/asm/image.h b/arch/riscv/include/asm/image.h
-index ef28e106f247..ec8bbfe86dde 100644
---- a/arch/riscv/include/asm/image.h
-+++ b/arch/riscv/include/asm/image.h
-@@ -3,7 +3,8 @@
- #ifndef __ASM_IMAGE_H
- #define __ASM_IMAGE_H
- 
--#define RISCV_IMAGE_MAGIC	"RISCV"
-+#define RISCV_IMAGE_MAGIC	"RSCV"
-+
- 
- #define RISCV_IMAGE_FLAG_BE_SHIFT	0
- #define RISCV_IMAGE_FLAG_BE_MASK	0x1
-@@ -39,9 +40,9 @@
-  * @version:		version
-  * @res1:		reserved
-  * @res2:		reserved
-- * @magic:		Magic number
-  * @res3:		reserved (will be used for additional RISC-V specific
-  *			header)
-+ * @magic:		Magic number
-  * @res4:		reserved (will be used for PE COFF offset)
-  *
-  * The intention is for this header format to be shared between multiple
-@@ -57,8 +58,8 @@ struct riscv_image_header {
- 	u32 version;
- 	u32 res1;
- 	u64 res2;
--	u64 magic;
--	u32 res3;
-+	u64 res3;
-+	u32 magic;
- 	u32 res4;
- };
- #endif /* __ASSEMBLY__ */
-diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-index 0f1ba17e476f..1f8fffbecf68 100644
---- a/arch/riscv/kernel/head.S
-+++ b/arch/riscv/kernel/head.S
-@@ -39,9 +39,8 @@ ENTRY(_start)
- 	.word RISCV_HEADER_VERSION
- 	.word 0
- 	.dword 0
--	.asciz RISCV_IMAGE_MAGIC
--	.word 0
--	.balign 4
-+	.dword 0
-+	.ascii RISCV_IMAGE_MAGIC
- 	.word 0
- 
- .global _start_kernel
--- 
-2.22.0
-
+SGksIERhdmlkOg0KDQpZZXMsIEkgdW5kZXJzdGFuZCB0aGUgY29kZSBoYXMgYmVlbiB0aGVyZSBm
+b3IgYSBsb25nIHRpbWUuICBCdXQgdGhlIGlzc3VlcyBhcmUgcmVhbCwgYW5kIGl0J3MgcmVhbGx5
+IG5hc3R5IHdoZW4NCllvdSBydW4gaW50byB0aGVtLiAgQXMgSSBkZXNjcmliZWQgaW4gdGhlIHBh
+dGNoIGxvZywgdGhlcmUgaXMgbm8gYmFja3dhcmQgY29tcGF0aWJpbGl0eSBJc3N1ZSBmb3IgZml4
+aW5nIGl0Lg0KDQotLS0NClRoZXJlIGlzIG5vIGJhY2t3YXJkIGNvbXBhdGliaWxpdHkgaXNzdWUg
+aGVyZSBhcyB0aGUgc291cmNlIGFkZHJlc3Mgc2V0dGluZw0KaW4gY29ubmVjdCgpIGlzIG5vdCBu
+ZWVkZWQgYW55d2F5Lg0KDQogIC0gTm8gaW1wYWN0IG9uIHRoZSBzb3VyY2UgYWRkcmVzcyBzZWxl
+Y3Rpb24gd2hlbiB0aGUgc291cmNlIGFkZHJlc3MNCiAgICBpcyBleHBsaWNpdGx5IHNwZWNpZmll
+ZCBieSAiYmluZCgpIiwgb3IgYnkgdGhlICJJUF9QS1RJTkZPIiBvcHRpb24uDQoNCiAgLSBJbiB0
+aGUgY2FzZSB0aGF0IHRoZSBzb3VyY2UgYWRkcmVzcyBpcyBub3QgZXhwbGljaXRseSBzcGVjaWZp
+ZWQsDQogICAgdGhlIHNlbGVjdGlvbiBvZiB0aGUgc291cmNlIGFkZHJlc3Mgd291bGQgYmUgbW9y
+ZSBhY2N1cmF0ZSBhbmQNCiAgICByZWxpYWJsZSBiYXNlZCBvbiB0aGUgdXAtdG8tZGF0ZSByb3V0
+aW5nIHRhYmxlLg0KLS0tDQoNClRoYW5rcy4gIC0tIEVua2UNCg0K77u/LS0tLS1PcmlnaW5hbCBN
+ZXNzYWdlLS0tLS0NCkZyb206IDxsaW51eC1rZXJuZWwtb3duZXJAdmdlci5rZXJuZWwub3JnPiBv
+biBiZWhhbGYgb2YgRGF2aWQgTWlsbGVyIDxkYXZlbUBkYXZlbWxvZnQubmV0Pg0KRGF0ZTogRnJp
+ZGF5LCBTZXB0ZW1iZXIgNiwgMjAxOSBhdCAxMjoxNCBBTQ0KVG86ICJFbmtlIENoZW4gKGVua2Vj
+aGVuKSIgPGVua2VjaGVuQGNpc2NvLmNvbT4NCkNjOiAia3V6bmV0QG1zMi5pbnIuYWMucnUiIDxr
+dXpuZXRAbXMyLmluci5hYy5ydT4sICJ5b3NoZnVqaUBsaW51eC1pcHY2Lm9yZyIgPHlvc2hmdWpp
+QGxpbnV4LWlwdjYub3JnPiwgIm5ldGRldkB2Z2VyLmtlcm5lbC5vcmciIDxuZXRkZXZAdmdlci5r
+ZXJuZWwub3JnPiwgImxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmciIDxsaW51eC1rZXJuZWxA
+dmdlci5rZXJuZWwub3JnPiwgInhlLWxpbnV4LWV4dGVybmFsKG1haWxlciBsaXN0KSIgPHhlLWxp
+bnV4LWV4dGVybmFsQGNpc2NvLmNvbT4NClN1YmplY3Q6IFJlOiBbUEFUQ0hdIG5ldDogUmVtb3Zl
+IHRoZSBzb3VyY2UgYWRkcmVzcyBzZXR0aW5nIGluIGNvbm5lY3QoKSBmb3IgVURQDQoNCkZyb206
+IEVua2UgQ2hlbiA8ZW5rZWNoZW5AY2lzY28uY29tPg0KRGF0ZTogVGh1LCAgNSBTZXAgMjAxOSAx
+OTo1NDozNyAtMDcwMA0KDQo+IFRoZSBjb25uZWN0KCkgc3lzdGVtIGNhbGwgZm9yIGEgVURQIHNv
+Y2tldCBpcyBmb3Igc2V0dGluZyB0aGUgZGVzdGluYXRpb24NCj4gYWRkcmVzcyBhbmQgcG9ydC4g
+QnV0IHRoZSBjdXJyZW50IGNvZGUgbWlzdGFrZW5seSBzZXRzIHRoZSBzb3VyY2UgYWRkcmVzcw0K
+PiBmb3IgdGhlIHNvY2tldCBhcyB3ZWxsLiBSZW1vdmUgdGhlIHNvdXJjZSBhZGRyZXNzIHNldHRp
+bmcgaW4gY29ubmVjdCgpIGZvcg0KPiBVRFAgaW4gdGhpcyBwYXRjaC4NCg0KRG8geW91IGhhdmUg
+YW55IGlkZWEgaG93IG1hbnkgZGVjYWRlcyBvZiBwcmVjZWRlbmNlIHRoaXMgYmVoYXZpb3IgaGFz
+IGFuZA0KdGhlcmVmb3JlIGhvdyBtdWNoIHlvdSBwb3RlbnRpYWxseSB3aWxsIGJyZWFrIHVzZXJz
+cGFjZT8NCg0KVGhpcyBib2F0IGhhcyBzYWlsZWQgYSBsb25nIHRpbWUgYWdvIEknbSBhZnJhaWQu
+DQoNCg==
