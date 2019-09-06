@@ -6,35 +6,34 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D45DC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70FFBC43140
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E264B2070C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:14:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 553E72070C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:14:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436688AbfIFTO0 (ORCPT
+        id S2406319AbfIFTO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 15:14:26 -0400
-Received: from shelob.surriel.com ([96.67.55.147]:38312 "EHLO
+        Fri, 6 Sep 2019 15:14:27 -0400
+Received: from shelob.surriel.com ([96.67.55.147]:38282 "EHLO
         shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406265AbfIFTOJ (ORCPT
+        with ESMTP id S2406269AbfIFTOJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 6 Sep 2019 15:14:09 -0400
 Received: from imladris.surriel.com ([96.67.55.152])
         by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
         (Exim 4.92.1)
         (envelope-from <riel@shelob.surriel.com>)
-        id 1i6Jey-0003p8-5t; Fri, 06 Sep 2019 15:12:40 -0400
+        id 1i6Jey-0003p8-RC; Fri, 06 Sep 2019 15:12:40 -0400
 From:   Rik van Riel <riel@surriel.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     kernel-team@fb.com, pjt@google.com, dietmar.eggemann@arm.com,
         peterz@infradead.org, mingo@redhat.com, morten.rasmussen@arm.com,
         tglx@linutronix.de, mgorman@techsingularity.net,
-        vincent.guittot@linaro.org, Rik van Riel <riel@surriel.com>,
-        Josef Bacik <josef@toxicpanda.com>
-Subject: [PATCH 01/15] sched: introduce task_se_h_load helper
-Date:   Fri,  6 Sep 2019 15:12:23 -0400
-Message-Id: <20190906191237.27006-2-riel@surriel.com>
+        vincent.guittot@linaro.org, Rik van Riel <riel@surriel.com>
+Subject: [PATCH 15/15] sched,fair: remove se->depth
+Date:   Fri,  6 Sep 2019 15:12:37 -0400
+Message-Id: <20190906191237.27006-16-riel@surriel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190906191237.27006-1-riel@surriel.com>
 References: <20190906191237.27006-1-riel@surriel.com>
@@ -45,140 +44,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sometimes the hierarchical load of a sched_entity needs to be calculated.
-Rename task_h_load to task_se_h_load, and directly pass a sched_entity to
-that function.
-
-Move the function declaration up above where it will be used later.
-
-No functional changes.
+Remove se->depth and the code that touches it, since we no longer need
+any of that.
 
 Signed-off-by: Rik van Riel <riel@surriel.com>
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Suggested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
 ---
- kernel/sched/fair.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ include/linux/sched.h |  1 -
+ kernel/sched/fair.c   | 50 ++-----------------------------------------
+ 2 files changed, 2 insertions(+), 49 deletions(-)
 
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index bdca15b3afe7..94aec4065fd1 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -451,7 +451,6 @@ struct sched_entity {
+ 	struct sched_statistics		statistics;
+ 
+ #ifdef CONFIG_FAIR_GROUP_SCHED
+-	int				depth;
+ 	unsigned long			enqueued_h_load;
+ 	unsigned long			enqueued_h_weight;
+ 	u64				propagated_exec_runtime;
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index f35930f5e528..812f7947aab2 100644
+index 3c25ab666799..0fb3de853d45 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -242,6 +242,7 @@ static u64 __calc_delta(u64 delta_exec, unsigned long weight, struct load_weight
+@@ -438,38 +438,6 @@ static inline bool task_se_in_cgroup(struct sched_entity *se)
+ 	return parent_entity(se);
+ }
  
+-static void
+-find_matching_se(struct sched_entity **se, struct sched_entity **pse)
+-{
+-	int se_depth, pse_depth;
+-
+-	/*
+-	 * preemption test can be made between sibling entities who are in the
+-	 * same cfs_rq i.e who have a common parent. Walk up the hierarchy of
+-	 * both tasks until we find their ancestors who are siblings of common
+-	 * parent.
+-	 */
+-
+-	/* First walk up until both entities are at same depth */
+-	se_depth = (*se)->depth;
+-	pse_depth = (*pse)->depth;
+-
+-	while (se_depth > pse_depth) {
+-		se_depth--;
+-		*se = parent_entity(*se);
+-	}
+-
+-	while (pse_depth > se_depth) {
+-		pse_depth--;
+-		*pse = parent_entity(*pse);
+-	}
+-
+-	while (!is_same_group(*se, *pse)) {
+-		*se = parent_entity(*se);
+-		*pse = parent_entity(*pse);
+-	}
+-}
+-
+ /* Add the cgroup cfs_rqs to the list, for update_blocked_averages */
+ static void enqueue_entity_cfs_rqs(struct sched_entity *se)
+ {
+@@ -10221,14 +10189,6 @@ static void attach_entity_cfs_rq(struct sched_entity *se)
+ 	int flags = sched_feat(ATTACH_AGE_LOAD) ? 0 : SKIP_AGE_LOAD;
+ 	struct cfs_rq *cfs_rq = group_cfs_rq_of_parent(se);
  
- const struct sched_class fair_sched_class;
-+static unsigned long task_se_h_load(struct sched_entity *se);
+-#ifdef CONFIG_FAIR_GROUP_SCHED
+-	/*
+-	 * Since the real-depth could have been changed (only FAIR
+-	 * class maintain depth value), reset depth properly.
+-	 */
+-	se->depth = se->parent ? se->parent->depth + 1 : 0;
+-#endif
+-
+ 	/* Synchronize entity with its cfs_rq */
+ 	update_load_avg(cfs_rq, se, flags);
+ 	attach_entity_load_avg(cfs_rq, se, 0);
+@@ -10316,10 +10276,7 @@ void init_cfs_rq(struct cfs_rq *cfs_rq)
+ #ifdef CONFIG_FAIR_GROUP_SCHED
+ static void task_set_group_fair(struct task_struct *p)
+ {
+-	struct sched_entity *se = &p->se;
+-
+ 	set_task_rq(p, task_cpu(p));
+-	se->depth = se->parent ? se->parent->depth + 1 : 0;
+ }
  
- /**************************************************************
-  * CFS operations on generic schedulable entities:
-@@ -706,7 +707,6 @@ static u64 sched_vslice(struct cfs_rq *cfs_rq, struct sched_entity *se)
- #ifdef CONFIG_SMP
- 
- static int select_idle_sibling(struct task_struct *p, int prev_cpu, int cpu);
--static unsigned long task_h_load(struct task_struct *p);
- static unsigned long capacity_of(int cpu);
- 
- /* Give new sched_entity start runnable values to heavy its load in infant time */
-@@ -1668,7 +1668,7 @@ static void task_numa_compare(struct task_numa_env *env,
- 	/*
- 	 * In the overloaded case, try and keep the load balanced.
- 	 */
--	load = task_h_load(env->p) - task_h_load(cur);
-+	load = task_se_h_load(&env->p->se) - task_se_h_load(&cur->se);
- 	if (!load)
- 		goto assign;
- 
-@@ -1706,7 +1706,7 @@ static void task_numa_find_cpu(struct task_numa_env *env,
- 	bool maymove = false;
- 	int cpu;
- 
--	load = task_h_load(env->p);
-+	load = task_se_h_load(&env->p->se);
- 	dst_load = env->dst_stats.load + load;
- 	src_load = env->src_stats.load - load;
- 
-@@ -3389,7 +3389,7 @@ static inline void add_tg_cfs_propagate(struct cfs_rq *cfs_rq, long runnable_sum
-  * avg. The immediate corollary is that all (fair) tasks must be attached, see
-  * post_init_entity_util_avg().
-  *
-- * cfs_rq->avg is used for task_h_load() and update_cfs_share() for example.
-+ * cfs_rq->avg is used for task_se_h_load() and update_cfs_share() for example.
-  *
-  * Returns true if the load decayed or we removed load.
-  *
-@@ -3522,7 +3522,7 @@ static inline void update_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
- 
- 	/*
- 	 * Track task load average for carrying it to new CPU after migrated, and
--	 * track group sched_entity load average for task_h_load calc in migration
-+	 * track group sched_entity load average for task_se_h_load calc in migration
- 	 */
- 	if (se->avg.last_update_time && !(flags & SKIP_AGE_LOAD))
- 		__update_load_avg_se(now, cfs_rq, se);
-@@ -3751,7 +3751,7 @@ static inline void update_misfit_status(struct task_struct *p, struct rq *rq)
+ static void task_move_group_fair(struct task_struct *p)
+@@ -10465,13 +10422,10 @@ void init_tg_cfs_entry(struct task_group *tg, struct cfs_rq *cfs_rq,
+ 	if (!se)
  		return;
- 	}
  
--	rq->misfit_task_load = task_h_load(p);
-+	rq->misfit_task_load = task_se_h_load(&p->se);
- }
+-	if (!parent) {
++	if (!parent)
+ 		se->cfs_rq = &rq->cfs;
+-		se->depth = 0;
+-	} else {
++	else
+ 		se->cfs_rq = parent->my_q;
+-		se->depth = parent->depth + 1;
+-	}
  
- #else /* CONFIG_SMP */
-@@ -5739,7 +5739,7 @@ wake_affine_weight(struct sched_domain *sd, struct task_struct *p,
- 	this_eff_load = target_load(this_cpu, sd->wake_idx);
- 
- 	if (sync) {
--		unsigned long current_load = task_h_load(current);
-+		unsigned long current_load = task_se_h_load(&current->se);
- 
- 		if (current_load > this_eff_load)
- 			return this_cpu;
-@@ -5747,7 +5747,7 @@ wake_affine_weight(struct sched_domain *sd, struct task_struct *p,
- 		this_eff_load -= current_load;
- 	}
- 
--	task_load = task_h_load(p);
-+	task_load = task_se_h_load(&p->se);
- 
- 	this_eff_load += task_load;
- 	if (sched_feat(WA_BIAS))
-@@ -7600,7 +7600,7 @@ static int detach_tasks(struct lb_env *env)
- 		if (!can_migrate_task(p, env))
- 			goto next;
- 
--		load = task_h_load(p);
-+		load = task_se_h_load(&p->se);
- 
- 		if (sched_feat(LB_MIN) && load < 16 && !env->sd->nr_balance_failed)
- 			goto next;
-@@ -7833,12 +7833,12 @@ static void update_cfs_rq_h_load(struct cfs_rq *cfs_rq)
- 	}
- }
- 
--static unsigned long task_h_load(struct task_struct *p)
-+static unsigned long task_se_h_load(struct sched_entity *se)
- {
--	struct cfs_rq *cfs_rq = task_cfs_rq(p);
-+	struct cfs_rq *cfs_rq = cfs_rq_of(se);
- 
- 	update_cfs_rq_h_load(cfs_rq);
--	return div64_ul(p->se.avg.load_avg * cfs_rq->h_load,
-+	return div64_ul(se->avg.load_avg * cfs_rq->h_load,
- 			cfs_rq_load_avg(cfs_rq) + 1);
- }
- #else
-@@ -7865,9 +7865,9 @@ static inline void update_blocked_averages(int cpu)
- 	rq_unlock_irqrestore(rq, &rf);
- }
- 
--static unsigned long task_h_load(struct task_struct *p)
-+static unsigned long task_se_h_load(struct sched_entity *se)
- {
--	return p->se.avg.load_avg;
-+	return se->avg.load_avg;
- }
- #endif
- 
+ 	se->my_q = cfs_rq;
+ 	/* guarantee group entities always have weight */
 -- 
 2.20.1
 
