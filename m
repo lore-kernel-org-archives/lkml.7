@@ -2,87 +2,107 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE172C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A28DC00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C51C9206CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ED8C207FC
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:42:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732738AbfIFKkf (ORCPT
+        id S1731569AbfIFKme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 06:40:35 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35716 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728269AbfIFKkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 06:40:33 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0BB7285363;
-        Fri,  6 Sep 2019 10:40:33 +0000 (UTC)
-Received: from localhost (ovpn-117-208.ams2.redhat.com [10.36.117.208])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9B74D19C70;
-        Fri,  6 Sep 2019 10:40:25 +0000 (UTC)
-Date:   Fri, 6 Sep 2019 11:40:24 +0100
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, miklos@szeredi.hu,
-        linux-kernel@vger.kernel.org, virtio-fs@redhat.com,
-        dgilbert@redhat.com, mst@redhat.com
-Subject: Re: [PATCH 01/18] virtiofs: Remove request from processing list
- before calling end
-Message-ID: <20190906104024.GI5900@stefanha-x1.localdomain>
-References: <20190905194859.16219-1-vgoyal@redhat.com>
- <20190905194859.16219-2-vgoyal@redhat.com>
+        Fri, 6 Sep 2019 06:42:34 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:47261 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728269AbfIFKmd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 06:42:33 -0400
+X-Originating-IP: 86.207.98.53
+Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id BE71F240004;
+        Fri,  6 Sep 2019 10:42:30 +0000 (UTC)
+Date:   Fri, 6 Sep 2019 12:42:24 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     David Laight <David.Laight@aculab.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "Claudiu.Beznea@microchip.com" <Claudiu.Beznea@microchip.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] pinctrl: at91-pio4: implement .get_multiple and
+ .set_multiple
+Message-ID: <20190906104224.GG21254@piout.net>
+References: <20190905144849.24882-1-alexandre.belloni@bootlin.com>
+ <2261eadf98584d13a490f2abd8777d4a@AcuMS.aculab.com>
+ <20190906091212.GF21254@piout.net>
+ <b010053340ef48dfa244ff48c8decd38@AcuMS.aculab.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="UthUFkbMtH2ceUK2"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190905194859.16219-2-vgoyal@redhat.com>
+In-Reply-To: <b010053340ef48dfa244ff48c8decd38@AcuMS.aculab.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 06 Sep 2019 10:40:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 06/09/2019 09:46:02+0000, David Laight wrote:
+> From: Alexandre Belloni
+> > Sent: 06 September 2019 10:12
+> > On 06/09/2019 09:05:36+0000, David Laight wrote:
+> > > From: Alexandre Belloni
+> > > > Implement .get_multiple and .set_multiple to allow reading or setting
+> > > > multiple pins simultaneously. Pins in the same bank will all be switched at
+> > > > the same time, improving synchronization and performances.
+> > >
+> > > Actually it won't 'improve synchronisation', instead it will lead to
+> > > random synchronisation errors and potential metastability if one
+> > > pin is used as a clock and another as data, or if the code is reading
+> > > a free-flowing counter.
+> > >
+> > 
+> > It does improve gpio switching synchronisation when they are in the same
+> > bank as it will remove the 250ns delay. Of course, if you need this
+> > delay between clk and data, then the consumer driver should ensure the
+> > delay is present.
+> 
+> With multiple requests the output pin changes will always be in the
+> same order and will be separated by (say) 250ns.
+> This is a guaranteed synchronisation.
+> 
+> If you change multiple pins with the same 'iowrite()' then the pins
+> will change at approximately the same time.
+> But the actual order will depend on internal device delays (which
+> may depend on the actual silicon and temperature).
+> You then have to take account of varying track lengths and the
+> target devices input stage properties before knowing which change
+> arrives first.
+> The delays might be sub-nanosecond, but they matter if you are
+> talking about synchronisation.
+> 
 
---UthUFkbMtH2ceUK2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+And my point is that this means that your gpio consumer driver is buggy
+if it doesn't do multiple requests if it requires a delay between two
+pin changes.
 
-On Thu, Sep 05, 2019 at 03:48:42PM -0400, Vivek Goyal wrote:
-> In error path we are calling fuse_request_end() but we need to clear
-> FR_SENT bit as well as remove request from processing queue. Otherwise
-> fuse_request_end() triggers a warning as well as other issues show up.
->=20
-> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-> ---
->  fs/fuse/virtio_fs.c | 4 ++++
->  1 file changed, 4 insertions(+)
+> IIRC both SMBus and I2C now quote 0ns setup time.
+> Changing both clock and data with the same IOW isn't enough to
+> guarantee this.
+> (In practise the I2C setup time required by a device is probably
+> slightly negative (In order to support 0ns inputs) so a very small
+> -ve setup will (mostly) work.)
 
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+I'm not sure what is your point exactly as this patch doesn't break any
+existing use cases.
 
---UthUFkbMtH2ceUK2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl1yN5gACgkQnKSrs4Gr
-c8iH2Qf9FDlsSyo3aEDCwVuW5ufQrOhFl5xJgIrwu9zF7Q8xWoHeRxDRnuXqrpy0
-IBO3sm8mijVdTypCJ8zrFIER28OnXnmNmRuZFPxmlDoSf1/G74BAX7qaLH8NTikF
-CwJC4TUljhUvvGNKo9/jRu6qVKNcNxz8BXmxjIGBSWWGu90lmDwarFxX6arkWn+x
-N8E6/S9dUi6f6jiEy0k0zNUUZ+i4bXhM3SsGXaNuoI/GzZQUG8016CUbYKDSxRxo
-ov0FV+U9gy9GEDbuhy5LI5DrlYOzlpSe8OiNiw031NIlcrGmty1o75Dw4j0Bxzwr
-zMlTa2f77G2tmrCucSRxbNT2u2u6xw==
-=1d2m
------END PGP SIGNATURE-----
-
---UthUFkbMtH2ceUK2--
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
