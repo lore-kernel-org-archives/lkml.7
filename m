@@ -2,194 +2,181 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F0D8C00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 04:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE639C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 04:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59EAE2075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 04:36:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C41A42075C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 04:38:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WG5L+TES"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="prCHOm9/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbfIFEga (ORCPT
+        id S1728218AbfIFEiP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 00:36:30 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38175 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727049AbfIFEg3 (ORCPT
+        Fri, 6 Sep 2019 00:38:15 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34994 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726007AbfIFEiO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 00:36:29 -0400
-Received: by mail-wr1-f67.google.com with SMTP id l11so5048015wrx.5
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 21:36:27 -0700 (PDT)
+        Fri, 6 Sep 2019 00:38:14 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 205so3489804pfw.2;
+        Thu, 05 Sep 2019 21:38:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=b16J94wBUCbL6ClXaViI12VQCjSeJ+kWLA0s8q17Edc=;
-        b=WG5L+TES8+kQ29z4owKJN52CvURHz+GKKH0k42c5tYvp69F5MG3Ip2LkOYOH5+mMki
-         DzbYnxjCpwu+065M+I3h9QsdaBuiP2DRQSrhLLHPtWdb1DgjkgjihCE1wslVTyEvvrWM
-         Qq7zeNgkrmuqOlrDt60zS9vvHHvzQ70gwPIDfsrhJum95d/inpzMnWwoR/H71tftORMV
-         3Oc0np2I2UnTN8YD7Mr2NJLCYEqG610muEhsh7GeCYij+uuv3f7PZaLIDPtuHk1lxjsp
-         QZIpwS6efqL5tT+aa7gaLmZe3L6cPvfX2Klmll/Ir51vhK4BMbz6F74NE2WC3mvdTZaB
-         Soug==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=rocKisRtaIo/HOtqERrBvsycAn2143YAZdtTrg16FdY=;
+        b=prCHOm9/jV5cSbG34An0s5U9aRNFRwaRW6fH3dZPvrKBKmq0ypCYCTmSbAfxs/zopY
+         5A8PN/994hPRLwnbVjarCVIf1QlHxlSsEquHn3uovIgs3vZhE/Utue6X/EKflGewaBNG
+         zffhP3vXlnwGeT+ATgqI3i84NcafEVU9eedFQzVDAUQ+DMnEhn4Jj8PWGnr1TLKdDXl7
+         j2xiBi4TU6ehOEEHCSs/uH4HzEoQ/C+ubSouzjv5riRECDJDvCWea1Itaf1DIWJQvUWx
+         SBxvBS7mce744XR6FptXbvVjdwnYhvJGCRk9qNCFkcevZ/VrhLTwDdOpLzH2ia3bWPlb
+         Cmvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=b16J94wBUCbL6ClXaViI12VQCjSeJ+kWLA0s8q17Edc=;
-        b=Zl4x9CswD2QmEGKD6vZxT1R0wzHeJJrlkTQXqP1ErO1tkzLcsZx5BJrl9uqi7cepVr
-         JSredwAB2kEn6qsfBI6acXCemBPpa9k0F294deS5LiPUPM6KAEZFE8OqEqwqLk5zMzkB
-         xpury6LXuYKxvXV+A5ZC/CeEvVmnaHSVHpE9nkof1Muu47B++exMcPlIIs5oVi584evS
-         IES8GHoyiQgApVTfpxI3zWAV6hO3N5IXy+k9bMSj3aIx7Gl6wf4Q6+a+1g+1xwLgA+QR
-         CRaal0XeAp+GH5jyp6jya1D9orYEIw0A6D4I5kQAUeuflP3hyIPjQU99aKPCqQqubB+H
-         5b7Q==
-X-Gm-Message-State: APjAAAUsd2cKtSe/AY5HQge8+eN7XF5wOL9xZHfzDYPhs/Iml6z9FEc4
-        omkpEVzpge9kz383GhX81tw3WA==
-X-Google-Smtp-Source: APXvYqx1kPs6BXSOewK+jFf41X7St62jLPHByAJQn4FSZ+aJZioV6Ft5ahIXAD/7l/tnmdDOzg7F2g==
-X-Received: by 2002:adf:e545:: with SMTP id z5mr5179482wrm.263.1567744586477;
-        Thu, 05 Sep 2019 21:36:26 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:a0b5:f0e4:ddb5:dee4? ([2a01:e34:ed2f:f020:a0b5:f0e4:ddb5:dee4])
-        by smtp.googlemail.com with ESMTPSA id f186sm6876589wmg.21.2019.09.05.21.36.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Sep 2019 21:36:25 -0700 (PDT)
-Subject: Re: [PATCH 1/4] softirq: implement IRQ flood detection mechanism
-To:     Long Li <longli@microsoft.com>, Ming Lei <ming.lei@redhat.com>
-Cc:     Bart Van Assche <bvanassche@acm.org>, Jens Axboe <axboe@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        John Garry <john.garry@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        Keith Busch <keith.busch@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Christoph Hellwig <hch@lst.de>
-References: <20190828135054.GA23861@ming.t460p>
- <alpine.DEB.2.21.1908281605190.23149@nanos.tec.linutronix.de>
- <20190903033001.GB23861@ming.t460p>
- <299fb6b5-d414-2e71-1dd2-9d6e34ee1c79@linaro.org>
- <20190903063125.GA21022@ming.t460p>
- <6b88719c-782a-4a63-db9f-bf62734a7874@linaro.org>
- <20190903072848.GA22170@ming.t460p>
- <dd96def4-1121-afbe-2431-9e516a06850c@linaro.org>
- <6f3b6557-1767-8c80-f786-1ea667179b39@acm.org>
- <2a8bd278-5384-d82f-c09b-4fce236d2d95@linaro.org>
- <20190905090617.GB4432@ming.t460p>
- <6a36ccc7-24cd-1d92-fef1-2c5e0f798c36@linaro.org>
- <CY4PR21MB0741B78A465208A457E64457CEBA0@CY4PR21MB0741.namprd21.prod.outlook.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <7cb33d0d-5d40-b77b-3522-317a107794d6@linaro.org>
-Date:   Fri, 6 Sep 2019 06:36:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=rocKisRtaIo/HOtqERrBvsycAn2143YAZdtTrg16FdY=;
+        b=nqP6RGkOKBIgLYjpcd5v8x74cKF3cWukq4Nv3H9wk64YUQoHWzlArQxx50r980v9fE
+         ccRqq4yrgroSH7Yrci3qGaL2jrrRipQ57g7hrpMGhkyx+Trd/XRr6p9e38/XjeTbHRNg
+         iZgw17tlD2Z1IecBTO+kle1pch9WYqDQP5KJTz7iICgoCSQA6kVQK60Fe4EmaFAuQRhD
+         UV8DuXYBVd8eqXqWNCNMZhz2of+HFTF3wg02LJEN45FJWVPWNclpxCiLMpmsMr5tgEEt
+         bvLv6CG4wOc+LT4xWv2xttTVEUWN0MyVbTnmFr4K1BvA3LNzQZIAgQUysI4qR58aYmUz
+         4yqg==
+X-Gm-Message-State: APjAAAUyPJ46yp4KSj8BhJ+8vy4xGsFChjjU6vd6+tNuHk18MRYVbm8i
+        6qVuD4SXL+DrpvZVFetVwUQ=
+X-Google-Smtp-Source: APXvYqzy1JBgf6aWTKYYE51HITlrq7ScLKpndcFL+JknByCLokgHyIeWzq6oz5smpbvRaJR3TK584w==
+X-Received: by 2002:a17:90a:bc08:: with SMTP id w8mr5195521pjr.80.1567744693563;
+        Thu, 05 Sep 2019 21:38:13 -0700 (PDT)
+Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id y15sm6085378pfp.111.2019.09.05.21.38.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2019 21:38:13 -0700 (PDT)
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: [PATCH 2/3] platform/x86: intel_cht_int33fe: use inline reference properties
+Date:   Thu,  5 Sep 2019 21:38:08 -0700
+Message-Id: <20190906043809.18990-2-dmitry.torokhov@gmail.com>
+X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
+In-Reply-To: <20190906043809.18990-1-dmitry.torokhov@gmail.com>
+References: <20190906043809.18990-1-dmitry.torokhov@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CY4PR21MB0741B78A465208A457E64457CEBA0@CY4PR21MB0741.namprd21.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Now that static device properties allow defining reference properties
+together with all other types of properties, instead of managing them
+separately, let's adjust the driver.
 
-On 06/09/2019 03:22, Long Li wrote:
-[ ... ]
-> 
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
 
-> Tracing shows that the CPU was in either hardirq or softirq all the
-> time before warnings. During tests, the system was unresponsive at
-> times.
-> 
-> Ming's patch fixed this problem. The system was responsive throughout
-> tests.
-> 
-> As for performance hit, both resulted in a small drop in peak IOPS.
-> With IRQ_TIME_ACCOUNTING I see a 3% drop. With Ming's patch it is 1%
-> drop.
+Heikki, I do not have this hardware, so if you could try this out
+it would be really great.
 
-Do you mean IRQ_TIME_ACCOUNTING + irq threaded ?
+ drivers/platform/x86/intel_cht_int33fe.c | 46 ++++++++++++------------
+ 1 file changed, 22 insertions(+), 24 deletions(-)
 
-
-> For the tests, I used the following fio command on 10 NVMe disks: fio
-> --bs=4k --ioengine=libaio --iodepth=128
-> --filename=/dev/nvme0n1:/dev/nvme1n1:/dev/nvme2n1:/dev/nvme3n1:/dev/nvme4n1:/dev/nvme5n1:/dev/nvme6n1:/dev/nvme7n1:/dev/nvme8n1:/dev/nvme9n1
-> --direct=1 --runtime=12000 --numjobs=80 --rw=randread --name=test
-> --group_reporting --gtod_reduce=1
-
+diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
+index 4fbdff48a4b5..91f3c8840fd8 100644
+--- a/drivers/platform/x86/intel_cht_int33fe.c
++++ b/drivers/platform/x86/intel_cht_int33fe.c
+@@ -50,28 +50,8 @@ struct cht_int33fe_data {
+ 
+ static const struct software_node nodes[];
+ 
+-static const struct software_node_ref_args pi3usb30532_ref = {
+-	&nodes[INT33FE_NODE_PI3USB30532]
+-};
+-
+-static const struct software_node_ref_args dp_ref = {
+-	&nodes[INT33FE_NODE_DISPLAYPORT]
+-};
+-
+ static struct software_node_ref_args mux_ref;
+ 
+-static const struct software_node_reference usb_connector_refs[] = {
+-	{ "orientation-switch", 1, &pi3usb30532_ref},
+-	{ "mode-switch", 1, &pi3usb30532_ref},
+-	{ "displayport", 1, &dp_ref},
+-	{ }
+-};
+-
+-static const struct software_node_reference fusb302_refs[] = {
+-	{ "usb-role-switch", 1, &mux_ref},
+-	{ }
+-};
+-
+ /*
+  * Grrr I severly dislike buggy BIOS-es. At least one BIOS enumerates
+  * the max17047 both through the INT33FE ACPI device (it is right there
+@@ -107,7 +87,13 @@ static const struct property_entry max17047_props[] = {
+ 	{ }
+ };
+ 
+-static const struct property_entry fusb302_props[] = {
++/* Not const because we need to update "usb-role-switch" property. */
++static struct property_entry fusb302_props[] = {
++	/*
++	 * usb-role-switch property must be first as we rely on fixed
++	 * position to adjust it once we know the real node.
++	 */
++	PROPERTY_ENTRY_REF("usb-role-switch", NULL),
+ 	PROPERTY_ENTRY_STRING("linux,extcon-name", "cht_wcove_pwrsrc"),
+ 	{ }
+ };
+@@ -131,16 +117,22 @@ static const struct property_entry usb_connector_props[] = {
+ 	PROPERTY_ENTRY_U32_ARRAY("source-pdos", src_pdo),
+ 	PROPERTY_ENTRY_U32_ARRAY("sink-pdos", snk_pdo),
+ 	PROPERTY_ENTRY_U32("op-sink-microwatt", 2500000),
++	PROPERTY_ENTRY_REF("orientation-switch",
++			   &nodes[INT33FE_NODE_PI3USB30532]),
++	PROPERTY_ENTRY_REF("mode-switch",
++			   &nodes[INT33FE_NODE_PI3USB30532]),
++	PROPERTY_ENTRY_REF("displayport",
++			   &nodes[INT33FE_NODE_DISPLAYPORT]),
+ 	{ }
+ };
+ 
+ static const struct software_node nodes[] = {
+-	{ "fusb302", NULL, fusb302_props, fusb302_refs },
++	{ "fusb302", NULL, fusb302_props },
+ 	{ "max17047", NULL, max17047_props },
+ 	{ "pi3usb30532" },
+ 	{ "displayport" },
+ 	{ "usb-role-switch" },
+-	{ "connector", &nodes[0], usb_connector_props, usb_connector_refs },
++	{ "connector", &nodes[0], usb_connector_props },
+ 	{ }
+ };
+ 
+@@ -174,7 +166,13 @@ static int cht_int33fe_setup_mux(struct cht_int33fe_data *data)
+ 
+ 	data->mux = fwnode_handle_get(dev->fwnode);
+ 	put_device(dev);
+-	mux_ref.node = to_software_node(data->mux);
++
++	/*
++	 * Update "usb-role-switch" property with real node. Note that we
++	 * rely on software_node_register_nodes() to use the original
++	 * instance of properties instead of copying them.
++	 */
++	fusb302_props[0].value.ref.node = to_software_node(data->mux);
+ 
+ 	return 0;
+ }
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.23.0.187.g17f5b7556c-goog
 
