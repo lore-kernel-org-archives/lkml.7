@@ -4,88 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F013CC43140
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6B0C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9205205ED
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00862205ED
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:22:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394119AbfIFOVy (ORCPT
+        id S2394407AbfIFOWL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 10:21:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:57040 "EHLO foss.arm.com"
+        Fri, 6 Sep 2019 10:22:11 -0400
+Received: from mga07.intel.com ([134.134.136.100]:10875 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732020AbfIFOVx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 10:21:53 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2E10228;
-        Fri,  6 Sep 2019 07:21:53 -0700 (PDT)
-Received: from [10.1.197.50] (e120937-lin.cambridge.arm.com [10.1.197.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8AA123F718;
-        Fri,  6 Sep 2019 07:21:51 -0700 (PDT)
-Subject: Re: [PATCH ARM64] selftests, arm64: add kernel headers path for
- tags_test
-To:     Andrey Konovalov <andreyknvl@google.com>,
-        Will Deacon <will@kernel.org>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Amit Kachhap <Amit.Kachhap@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Dmitry Vyukov <dvyukov@google.com>
-References: <c28135c82eaf6d6e2c7e02c1ebc2b99a607d8116.1567615235.git.andreyknvl@google.com>
- <20190906135151.d74nq3qzjmhe4mb5@willie-the-truck>
- <CAAeHK+zDZo6oaSDnJfiD_S1WYqAT13yEFP7hbehZ62C-BBp3rQ@mail.gmail.com>
-From:   Cristian Marussi <cristian.marussi@arm.com>
-Message-ID: <febb420d-003a-0288-8636-7fd7878ef63b@arm.com>
-Date:   Fri, 6 Sep 2019 15:21:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1732899AbfIFOWL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 10:22:11 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Sep 2019 07:22:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,473,1559545200"; 
+   d="scan'208";a="199528473"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga001.fm.intel.com with ESMTP; 06 Sep 2019 07:22:08 -0700
+Date:   Fri, 6 Sep 2019 07:22:08 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <kernellwp@gmail.com>,
+        Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Subject: Re: [PATCH v4 3/4] KVM: VMX: Change ple_window type to unsigned int
+Message-ID: <20190906142208.GA29496@linux.intel.com>
+References: <20190906021722.2095-1-peterx@redhat.com>
+ <20190906021722.2095-4-peterx@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAAeHK+zDZo6oaSDnJfiD_S1WYqAT13yEFP7hbehZ62C-BBp3rQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190906021722.2095-4-peterx@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/09/2019 14:55, Andrey Konovalov wrote:
-> On Fri, Sep 6, 2019 at 3:51 PM Will Deacon <will@kernel.org> wrote:
->>
->> On Wed, Sep 04, 2019 at 06:41:00PM +0200, Andrey Konovalov wrote:
->>> tags_test.c relies on PR_SET_TAGGED_ADDR_CTRL/PR_TAGGED_ADDR_ENABLE being
->>> present in system headers. When this is not the case the build of this
->>> test fails with undeclared identifier errors.
->>>
->>> Fix by providing the path to the KSFT installed kernel headers in CFLAGS.
->>>
->>> Reported-by: Cristian Marussi <cristian.marussi@arm.com>
->>> Suggested-by: Cristian Marussi <cristian.marussi@arm.com>
->>> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
->>> ---
->>>  tools/testing/selftests/arm64/Makefile | 1 +
->>>  1 file changed, 1 insertion(+)
->>
->> Damn, I just tagged the arm64 queue for 5.4 and didn't spot this patch.
->>
->> I'll queue it at -rc1 instead, if that's ok? It doesn't look urgent.
+On Fri, Sep 06, 2019 at 10:17:21AM +0800, Peter Xu wrote:
+> The VMX ple_window is 32 bits wide, so logically it can overflow with
+> an int.  The module parameter is declared as unsigned int which is
+> good, however the dynamic variable is not.  Switching all the
+> ple_window references to use unsigned int.
 > 
-> Sorry, I guess I should have pinged you directly.
+> The tracepoint changes will also affect SVM, but SVM is using an even
+> smaller width (16 bits) so it's always fine.
 > 
-> I think it should be fine to leave it for rc1. It might cause a build
-> error in some kernel CI systems if they run kselftests though.
-> 
+> Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Peter Xu <peterx@redhat.com>
+> ---
 
-It won't be a big issue probably.
-
-Cristian
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
