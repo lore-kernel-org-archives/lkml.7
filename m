@@ -2,400 +2,233 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3709C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C765C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E388206CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:33:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kXRJ0YO2"
+	by mail.kernel.org (Postfix) with ESMTP id 5672B206CD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:36:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392055AbfIFKc4 (ORCPT
+        id S1726627AbfIFKgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 06:32:56 -0400
-Received: from mail-yw1-f73.google.com ([209.85.161.73]:33742 "EHLO
-        mail-yw1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392026AbfIFKcw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 06:32:52 -0400
-Received: by mail-yw1-f73.google.com with SMTP id b2so4236782ywf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 03:32:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=6KFIwWWApjCQfX4bs8S0gCxREVnzqCf121iaZRShrCw=;
-        b=kXRJ0YO2AVoL/eO6tVZ31PmcQrpocEIsGGksoXq91D+DgrwMl9WG9U3oZyRsIdnGq8
-         aircvFNC/xnaZV7N1bJCYERWM0edXRcc58A+mQCxW/jHcPQbdMmzwWg/wwKtA0djFZyH
-         yshbI63FoSr/FPwZLILrKTsMJy3EX5rmNmMMGxi8xAWEI0dP4FnEAg3uhN8pcJy7GC2L
-         OZJ+N4Q7AxjOdftSP7xtwuqzBwW8qUaEpeCZWQ//Q4J6FfsUmyn3+yn0wRNQkfp1pxFY
-         aR8rus9h1g2mK6s1IeJ+dEtMXhYh2h/I821IMxJb/I/KFFzKdnfpyLXA5neuZtM2MPIa
-         iz6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=6KFIwWWApjCQfX4bs8S0gCxREVnzqCf121iaZRShrCw=;
-        b=nwceFCwWXE4E/jZg9pP8JJeNr6J+SOGKPCh/7R/6ORGXWlRBpeQJX8+vp3WFCtqWqd
-         gAGMfmqRveVHNQLvnxn8WYwouIQdmmUvYfgllEIWqgj95+iCV+EhdpcyWS9rYR5ws4CN
-         /PSu9YSi7QxfXxpdzKok+owM2IuS7/GgNgLt/ji0iK6WJen8RIqxRnKa1V7sJ3D+1Ls3
-         K61MeBG650912uau8ln6mavB0QYmyXoCfEMii4txiuZTIVI5N9mYSn8PeQfSES4EE/LS
-         cYv0TQdC98zzjac43gzN0z8Utp11lMzOpiDIqdfv16AM59n/g6bSi+HnwCDBHAxKt9z+
-         aD1w==
-X-Gm-Message-State: APjAAAWPtr1r0JGAhvT540MyYV2Uqm9wvrNnRkWw5OtZJAMPNPiGqqVN
-        9MEVpPQi1c427ZuzgCmgdTOxBqJtbb2Kwiyv9g6sCD5cCQ12bt+c18/x30e2UK3TDn/gRrGmGBm
-        q4GQCbw2O+q3Uo1nEsLo4D++yS1QXvSC5jbS682Z8O7eLYnsCWhir40ERAhJOV8/SLWMiOsjR5Y
-        0=
-X-Google-Smtp-Source: APXvYqyx8R9IrUKYa1igtaMIAEyLhj4ox4XQXbyMVEh/4JeWnkBKFhdjGXm/PdZiS/pBKdxAvZU9GILcRF5oyg==
-X-Received: by 2002:a81:794c:: with SMTP id u73mr1553918ywc.230.1567765971037;
- Fri, 06 Sep 2019 03:32:51 -0700 (PDT)
-Date:   Fri,  6 Sep 2019 11:32:27 +0100
-In-Reply-To: <20190906103235.197072-1-maennich@google.com>
-Message-Id: <20190906103235.197072-4-maennich@google.com>
-Mime-Version: 1.0
-References: <20180716122125.175792-1-maco@android.com> <20190906103235.197072-1-maennich@google.com>
-X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
-Subject: [PATCH v5 03/11] module: add support for symbol namespaces.
-From:   Matthias Maennich <maennich@google.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     kernel-team@android.com, maennich@google.com, arnd@arndb.de,
-        gregkh@linuxfoundation.org, jeyu@kernel.org,
-        joel@joelfernandes.org, lucas.de.marchi@gmail.com,
-        maco@android.com, sspatil@google.com, will@kernel.org,
-        yamada.masahiro@socionext.com, linux-kbuild@vger.kernel.org,
-        linux-modules@vger.kernel.org, linux-usb@vger.kernel.org,
-        usb-storage@lists.one-eyed-alien.net
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 6 Sep 2019 06:36:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47346 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725846AbfIFKgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 06:36:07 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2C4818553B;
+        Fri,  6 Sep 2019 10:36:06 +0000 (UTC)
+Received: from [10.36.117.162] (ovpn-117-162.ams2.redhat.com [10.36.117.162])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C31B91001956;
+        Fri,  6 Sep 2019 10:35:58 +0000 (UTC)
+Subject: Re: [RFC PATCH v2] mm: initialize struct pages reserved by
+ ZONE_DEVICE driver.
+To:     Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "mhocko@kernel.org" <mhocko@kernel.org>,
+        "adobriyan@gmail.com" <adobriyan@gmail.com>,
+        "hch@lst.de" <hch@lst.de>,
+        "longman@redhat.com" <longman@redhat.com>,
+        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
+        "mst@redhat.com" <mst@redhat.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Junichi Nomura <j-nomura@ce.jp.nec.com>
+References: <20190906081027.15477-1-t-fukasawa@vx.jp.nec.com>
+ <b7732a55-4a10-2c1d-c2f5-ca38ee60964d@redhat.com>
+ <e762ee45-43e3-975a-ad19-065f07d1440f@vx.jp.nec.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <40a1ce2e-1384-b869-97d0-7195b5b47de0@redhat.com>
+Date:   Fri, 6 Sep 2019 12:35:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <e762ee45-43e3-975a-ad19-065f07d1440f@vx.jp.nec.com>
+Content-Type: text/plain; charset=iso-2022-jp
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 06 Sep 2019 10:36:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The EXPORT_SYMBOL_NS() and EXPORT_SYMBOL_NS_GPL() macros can be used to
-export a symbol to a specific namespace.  There are no _GPL_FUTURE and
-_UNUSED variants because these are currently unused, and I'm not sure
-they are necessary.
+On 06.09.19 12:02, Toshiki Fukasawa wrote:
+> Thank you for your feedback.
+> 
+> On 2019/09/06 17:45, David Hildenbrand wrote:
+>> On 06.09.19 10:09, Toshiki Fukasawa wrote:
+>>> A kernel panic is observed during reading
+>>> /proc/kpage{cgroup,count,flags} for first few pfns allocated by
+>>> pmem namespace:
+>>>
+>>> BUG: unable to handle page fault for address: fffffffffffffffe
+>>> [  114.495280] #PF: supervisor read access in kernel mode
+>>> [  114.495738] #PF: error_code(0x0000) - not-present page
+>>> [  114.496203] PGD 17120e067 P4D 17120e067 PUD 171210067 PMD 0
+>>> [  114.496713] Oops: 0000 [#1] SMP PTI
+>>> [  114.497037] CPU: 9 PID: 1202 Comm: page-types Not tainted 5.3.0-rc1
+>>> [  114.497621] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.0-0-g63451fca13-prebuilt.qemu-project.org 04/01/2014
+>>> [  114.498706] RIP: 0010:stable_page_flags+0x27/0x3f0
+>>> [  114.499142] Code: 82 66 90 66 66 66 66 90 48 85 ff 0f 84 d1 03 00 00 41 54 55 48 89 fd 53 48 8b 57 08 48 8b 1f 48 8d 42 ff 83 e2 01 48 0f 44 c7 <48> 8b 00 f6 c4 02 0f 84 57 03 00 00 45 31 e4 48 8b 55 08 48 89 ef
+>>> [  114.500788] RSP: 0018:ffffa5e601a0fe60 EFLAGS: 00010202
+>>> [  114.501373] RAX: fffffffffffffffe RBX: ffffffffffffffff RCX: 0000000000000000
+>>> [  114.502009] RDX: 0000000000000001 RSI: 00007ffca13a7310 RDI: ffffd07489000000
+>>> [  114.502637] RBP: ffffd07489000000 R08: 0000000000000001 R09: 0000000000000000
+>>> [  114.503270] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000240000
+>>> [  114.503896] R13: 0000000000080000 R14: 00007ffca13a7310 R15: ffffa5e601a0ff08
+>>> [  114.504530] FS:  00007f0266c7f540(0000) GS:ffff962dbbac0000(0000) knlGS:0000000000000000
+>>> [  114.505245] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>> [  114.505754] CR2: fffffffffffffffe CR3: 000000023a204000 CR4: 00000000000006e0
+>>> [  114.506401] Call Trace:
+>>> [  114.506660]  kpageflags_read+0xb1/0x130
+>>> [  114.507051]  proc_reg_read+0x39/0x60
+>>> [  114.507387]  vfs_read+0x8a/0x140
+>>> [  114.507686]  ksys_pread64+0x61/0xa0
+>>> [  114.508021]  do_syscall_64+0x5f/0x1a0
+>>> [  114.508372]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>>> [  114.508844] RIP: 0033:0x7f0266ba426b
+>>>
+>>> The first few pages of ZONE_DEVICE expressed as the range
+>>> (altmap->base_pfn) to (altmap->base_pfn + altmap->reserve) are
+>>> skipped by struct page initialization. Some pfn walkers like
+>>> /proc/kpage{cgroup, count, flags} can't handle these uninitialized
+>>> struct pages, which causes the error.
+>>>
+>>> In previous discussion, Dan seemed to have concern that the struct
+>>> page area of some pages indicated by vmem_altmap->reserve may not
+>>> be allocated. (See https://lore.kernel.org/lkml/CAPcyv4i5FjTOnPbXNcTzvt+e6RQYow0JRQwSFuxaa62LSuvzHQ@mail.gmail.com/)
+>>> However, arch_add_memory() called by devm_memremap_pages() allocates
+>>> struct page area for pages containing addresses in the range
+>>> (res.start) to (res.start + resource_size(res)), which include the
+>>> pages indicated by vmem_altmap->reserve. If I read correctly, it is
+>>> allocated as requested at least on x86_64. Also, memmap_init_zone()
+>>> initializes struct pages in the same range.
+>>> So I think the struct pages should be initialized.>
+>>
+>> For !ZONE_DEVICE memory, the memmap is valid with SECTION_IS_ONLINE -
+>> for the whole section. For ZONE_DEVICE memory we have no such
+>> indication. In any section that is !SECTION_IS_ONLINE and
+>> SECTION_MARKED_PRESENT, we could have any subsections initialized. >
+>> The only indication I am aware of is pfn_zone_device_reserved() - which
+>> seems to check exactly what you are trying to skip here.
+>>
+>> Can't you somehow use pfn_zone_device_reserved() ? Or if you considered
+>> that already, why did you decide against it?
+> 
+> No, in current approach this function is no longer needed.
+> The reason why we change the approach is that all pfn walkers
+> have to be aware of the uninitialized struct pages.
 
-I didn't add EXPORT_SYMBOL_NS() for ASM exports; this patch sets the
-namespace of ASM exports to NULL by default. In case of relative
-references, it will be relocatable to NULL. If there's a need, this
-should be pretty easy to add.
+We should use the same strategy for all pfn walkers then (effectively
+get rid of pfn_zone_device_reserved() if that's what we want).
 
-A module that wants to use a symbol exported to a namespace must add a
-MODULE_IMPORT_NS() statement to their module code; otherwise, modpost
-will complain when building the module, and the kernel module loader
-will emit an error and fail when loading the module.
+> 
+> As for SECTION_IS_ONLINE, I'm not sure now.
+> I will look into it next week.
 
-MODULE_IMPORT_NS() adds a modinfo tag 'import_ns' to the module. That
-tag can be observed by the modinfo command, modpost and kernel/module.c
-at the time of loading the module.
+SECTION_IS_ONLINE does currently not apply to ZONE_DEVICE and due to
+sub-section support for ZONE_DEVICE, it cannot easily be reused.
 
-The ELF symbols are renamed to include the namespace with an asm label;
-for example, symbol 'usb_stor_suspend' in namespace USB_STORAGE becomes
-'usb_stor_suspend.USB_STORAGE'.  This allows modpost to do namespace
-checking, without having to go through all the effort of parsing ELF and
-relocation records just to get to the struct kernel_symbols.
+> 
+> Thanks,
+> Toshiki Fukasawa
+> 
+>>
+>>> Signed-off-by: Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
+>>> Cc: stable@vger.kernel.org
+>>> ---
+>>> Changes since rev 1:
+>>>   Instead of avoiding uninitialized pages on the pfn walker side,
+>>>   we initialize struct pages.
+>>>
+>>> mm/page_alloc.c | 5 +----
+>>>   1 file changed, 1 insertion(+), 4 deletions(-)
+>>>
+>>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+>>> index 9c91949..6d180ae 100644
+>>> --- a/mm/page_alloc.c
+>>> +++ b/mm/page_alloc.c
+>>> @@ -5846,8 +5846,7 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
+>>>   
+>>>   #ifdef CONFIG_ZONE_DEVICE
+>>>   	/*
+>>> -	 * Honor reservation requested by the driver for this ZONE_DEVICE
+>>> -	 * memory. We limit the total number of pages to initialize to just
+>>> +	 * We limit the total number of pages to initialize to just
+>>>   	 * those that might contain the memory mapping. We will defer the
+>>>   	 * ZONE_DEVICE page initialization until after we have released
+>>>   	 * the hotplug lock.
+>>> @@ -5856,8 +5855,6 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
+>>>   		if (!altmap)
+>>>   			return;
+>>>   
+>>> -		if (start_pfn == altmap->base_pfn)
+>>> -			start_pfn += altmap->reserve;
+>>>   		end_pfn = altmap->base_pfn + vmem_altmap_offset(altmap);
+>>>   	}
+>>>   #endif
+>>>
+>>
+>>
 
-On x86_64 I saw no difference in binary size (compression), but at
-runtime this will require a word of memory per export to hold the
-namespace. An alternative could be to store namespaced symbols in their
-own section and use a separate 'struct namespaced_kernel_symbol' for
-that section, at the cost of making the module loader more complex.
 
-Co-developed-by: Martijn Coenen <maco@android.com>
-Signed-off-by: Martijn Coenen <maco@android.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Matthias Maennich <maennich@google.com>
----
- include/asm-generic/export.h |  6 +--
- include/linux/export.h       | 91 +++++++++++++++++++++++++++++-------
- include/linux/module.h       |  2 +
- kernel/module.c              | 43 +++++++++++++++++
- 4 files changed, 123 insertions(+), 19 deletions(-)
-
-diff --git a/include/asm-generic/export.h b/include/asm-generic/export.h
-index 63f54907317b..e2b5d0f569d3 100644
---- a/include/asm-generic/export.h
-+++ b/include/asm-generic/export.h
-@@ -17,11 +17,11 @@
- 
- .macro __put, val, name
- #ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
--	.long	\val - ., \name - .
-+	.long	\val - ., \name - ., 0 - .
- #elif defined(CONFIG_64BIT)
--	.quad	\val, \name
-+	.quad	\val, \name, 0
- #else
--	.long	\val, \name
-+	.long	\val, \name, 0
- #endif
- .endm
- 
-diff --git a/include/linux/export.h b/include/linux/export.h
-index 28a4d2150689..d59461e71478 100644
---- a/include/linux/export.h
-+++ b/include/linux/export.h
-@@ -20,6 +20,8 @@ extern struct module __this_module;
- 
- #ifdef CONFIG_MODULES
- 
-+#define NS_SEPARATOR "."
-+
- #if defined(__KERNEL__) && !defined(__GENKSYMS__)
- #ifdef CONFIG_MODVERSIONS
- /* Mark the CRC weak since genksyms apparently decides not to
-@@ -29,13 +31,13 @@ extern struct module __this_module;
- 	asm("	.section \"___kcrctab" sec "+" #sym "\", \"a\"	\n"	\
- 	    "	.weak	__crc_" #sym "				\n"	\
- 	    "	.long	__crc_" #sym " - .			\n"	\
--	    "	.previous					\n");
-+	    "	.previous					\n")
- #else
- #define __CRC_SYMBOL(sym, sec)						\
- 	asm("	.section \"___kcrctab" sec "+" #sym "\", \"a\"	\n"	\
- 	    "	.weak	__crc_" #sym "				\n"	\
- 	    "	.long	__crc_" #sym "				\n"	\
--	    "	.previous					\n");
-+	    "	.previous					\n")
- #endif
- #else
- #define __CRC_SYMBOL(sym, sec)
-@@ -49,6 +51,16 @@ extern struct module __this_module;
-  * absolute relocations that require runtime processing on relocatable
-  * kernels.
-  */
-+#define __KSYMTAB_ENTRY_NS(sym, sec, ns)				\
-+	__ADDRESSABLE(sym)						\
-+	asm("	.section \"___ksymtab" sec "+" #sym "\", \"a\"	\n"	\
-+	    "	.balign	4					\n"	\
-+	    "__ksymtab_" #sym NS_SEPARATOR #ns ":		\n"	\
-+	    "	.long	" #sym "- .				\n"	\
-+	    "	.long	__kstrtab_" #sym "- .			\n"	\
-+	    "	.long	__kstrtab_ns_" #sym "- .		\n"	\
-+	    "	.previous					\n")
-+
- #define __KSYMTAB_ENTRY(sym, sec)					\
- 	__ADDRESSABLE(sym)						\
- 	asm("	.section \"___ksymtab" sec "+" #sym "\", \"a\"	\n"	\
-@@ -56,32 +68,53 @@ extern struct module __this_module;
- 	    "__ksymtab_" #sym ":				\n"	\
- 	    "	.long	" #sym "- .				\n"	\
- 	    "	.long	__kstrtab_" #sym "- .			\n"	\
-+	    "	.long	0 - .					\n"	\
- 	    "	.previous					\n")
- 
- struct kernel_symbol {
- 	int value_offset;
- 	int name_offset;
-+	int namespace_offset;
- };
- #else
-+#define __KSYMTAB_ENTRY_NS(sym, sec, ns)				\
-+	static const struct kernel_symbol __ksymtab_##sym##__##ns	\
-+	asm("__ksymtab_" #sym NS_SEPARATOR #ns)				\
-+	__attribute__((section("___ksymtab" sec "+" #sym), used))	\
-+	__aligned(sizeof(void *))					\
-+	= { (unsigned long)&sym, __kstrtab_##sym, __kstrtab_ns_##sym }
-+
- #define __KSYMTAB_ENTRY(sym, sec)					\
- 	static const struct kernel_symbol __ksymtab_##sym		\
-+	asm("__ksymtab_" #sym)						\
- 	__attribute__((section("___ksymtab" sec "+" #sym), used))	\
- 	__aligned(sizeof(void *))					\
--	= { (unsigned long)&sym, __kstrtab_##sym }
-+	= { (unsigned long)&sym, __kstrtab_##sym, NULL }
- 
- struct kernel_symbol {
- 	unsigned long value;
- 	const char *name;
-+	const char *namespace;
- };
- #endif
- 
--/* For every exported symbol, place a struct in the __ksymtab section */
--#define ___EXPORT_SYMBOL(sym, sec)					\
-+#define ___export_symbol_common(sym, sec)				\
- 	extern typeof(sym) sym;						\
--	__CRC_SYMBOL(sym, sec)						\
-+	__CRC_SYMBOL(sym, sec);						\
- 	static const char __kstrtab_##sym[]				\
- 	__attribute__((section("__ksymtab_strings"), used, aligned(1)))	\
--	= #sym;								\
-+	= #sym								\
-+
-+/* For every exported symbol, place a struct in the __ksymtab section */
-+#define ___EXPORT_SYMBOL_NS(sym, sec, ns)				\
-+	___export_symbol_common(sym, sec);				\
-+	static const char __kstrtab_ns_##sym[]				\
-+	__attribute__((section("__ksymtab_strings"), used, aligned(1)))	\
-+	= #ns;								\
-+	__KSYMTAB_ENTRY_NS(sym, sec, ns)
-+
-+#define ___EXPORT_SYMBOL(sym, sec)					\
-+	___export_symbol_common(sym, sec);				\
- 	__KSYMTAB_ENTRY(sym, sec)
- 
- #if defined(__DISABLE_EXPORTS)
-@@ -91,6 +124,7 @@ struct kernel_symbol {
-  * be reused in other execution contexts such as the UEFI stub or the
-  * decompressor.
-  */
-+#define __EXPORT_SYMBOL_NS(sym, sec, ns)
- #define __EXPORT_SYMBOL(sym, sec)
- 
- #elif defined(CONFIG_TRIM_UNUSED_KSYMS)
-@@ -117,18 +151,26 @@ struct kernel_symbol {
- #define __cond_export_sym_1(sym, sec) ___EXPORT_SYMBOL(sym, sec)
- #define __cond_export_sym_0(sym, sec) /* nothing */
- 
-+#define __EXPORT_SYMBOL_NS(sym, sec, ns)				\
-+	__ksym_marker(sym);						\
-+	__cond_export_ns_sym(sym, sec, ns, __is_defined(__KSYM_##sym))
-+#define __cond_export_ns_sym(sym, sec, ns, conf)			\
-+	___cond_export_ns_sym(sym, sec, ns, conf)
-+#define ___cond_export_ns_sym(sym, sec, ns, enabled)			\
-+	__cond_export_ns_sym_##enabled(sym, sec, ns)
-+#define __cond_export_ns_sym_1(sym, sec, ns) ___EXPORT_SYMBOL_NS(sym, sec, ns)
-+#define __cond_export_ns_sym_0(sym, sec, ns) /* nothing */
-+
- #else
-+#define __EXPORT_SYMBOL_NS ___EXPORT_SYMBOL_NS
- #define __EXPORT_SYMBOL ___EXPORT_SYMBOL
- #endif
- 
--#define EXPORT_SYMBOL(sym)					\
--	__EXPORT_SYMBOL(sym, "")
--
--#define EXPORT_SYMBOL_GPL(sym)					\
--	__EXPORT_SYMBOL(sym, "_gpl")
--
--#define EXPORT_SYMBOL_GPL_FUTURE(sym)				\
--	__EXPORT_SYMBOL(sym, "_gpl_future")
-+#define EXPORT_SYMBOL(sym) __EXPORT_SYMBOL(sym, "")
-+#define EXPORT_SYMBOL_GPL(sym) __EXPORT_SYMBOL(sym, "_gpl")
-+#define EXPORT_SYMBOL_GPL_FUTURE(sym) __EXPORT_SYMBOL(sym, "_gpl_future")
-+#define EXPORT_SYMBOL_NS(sym, ns) __EXPORT_SYMBOL_NS(sym, "", ns)
-+#define EXPORT_SYMBOL_NS_GPL(sym, ns) __EXPORT_SYMBOL_NS(sym, "_gpl", ns)
- 
- #ifdef CONFIG_UNUSED_SYMBOLS
- #define EXPORT_UNUSED_SYMBOL(sym) __EXPORT_SYMBOL(sym, "_unused")
-@@ -138,11 +180,28 @@ struct kernel_symbol {
- #define EXPORT_UNUSED_SYMBOL_GPL(sym)
- #endif
- 
--#endif	/* __GENKSYMS__ */
-+#endif	/* __KERNEL__ && !__GENKSYMS__ */
-+
-+#if defined(__GENKSYMS__)
-+/*
-+ * When we're running genksyms, ignore the namespace and make the _NS
-+ * variants look like the normal ones. There are two reasons for this:
-+ * 1) In the normal definition of EXPORT_SYMBOL_NS, the 'ns' macro
-+ *    argument is itself not expanded because it's always tokenized or
-+ *    concatenated; but when running genksyms, a blank definition of the
-+ *    macro does allow the argument to be expanded; if a namespace
-+ *    happens to collide with a #define, this can cause issues.
-+ * 2) There's no need to modify genksyms to deal with the _NS variants
-+ */
-+#define EXPORT_SYMBOL_NS(sym, ns) EXPORT_SYMBOL(sym)
-+#define EXPORT_SYMBOL_NS_GPL(sym, ns) EXPORT_SYMBOL_GPL(sym)
-+#endif
- 
- #else /* !CONFIG_MODULES... */
- 
- #define EXPORT_SYMBOL(sym)
-+#define EXPORT_SYMBOL_NS(sym, ns)
-+#define EXPORT_SYMBOL_NS_GPL(sym, ns)
- #define EXPORT_SYMBOL_GPL(sym)
- #define EXPORT_SYMBOL_GPL_FUTURE(sym)
- #define EXPORT_UNUSED_SYMBOL(sym)
-diff --git a/include/linux/module.h b/include/linux/module.h
-index 1455812dd325..b3611e749f72 100644
---- a/include/linux/module.h
-+++ b/include/linux/module.h
-@@ -280,6 +280,8 @@ struct notifier_block;
- 
- #ifdef CONFIG_MODULES
- 
-+#define MODULE_IMPORT_NS(ns) MODULE_INFO(import_ns, #ns)
-+
- extern int modules_disabled; /* for sysctl */
- /* Get/put a kernel symbol (calls must be symmetric) */
- void *__symbol_get(const char *symbol);
-diff --git a/kernel/module.c b/kernel/module.c
-index 3ee507c0a92f..6bb9b938f9c7 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -544,6 +544,15 @@ static const char *kernel_symbol_name(const struct kernel_symbol *sym)
- #endif
- }
- 
-+static const char *kernel_symbol_namespace(const struct kernel_symbol *sym)
-+{
-+#ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
-+	return offset_to_ptr(&sym->namespace_offset);
-+#else
-+	return sym->namespace;
-+#endif
-+}
-+
- static int cmp_name(const void *va, const void *vb)
- {
- 	const char *a;
-@@ -1379,6 +1388,34 @@ static inline int same_magic(const char *amagic, const char *bmagic,
- }
- #endif /* CONFIG_MODVERSIONS */
- 
-+static char *get_modinfo(const struct load_info *info, const char *tag);
-+static char *get_next_modinfo(const struct load_info *info, const char *tag,
-+			      char *prev);
-+
-+static int verify_namespace_is_imported(const struct load_info *info,
-+					const struct kernel_symbol *sym,
-+					struct module *mod)
-+{
-+	const char *namespace;
-+	char *imported_namespace;
-+
-+	namespace = kernel_symbol_namespace(sym);
-+	if (namespace) {
-+		imported_namespace = get_modinfo(info, "import_ns");
-+		while (imported_namespace) {
-+			if (strcmp(namespace, imported_namespace) == 0)
-+				return 0;
-+			imported_namespace = get_next_modinfo(
-+				info, "import_ns", imported_namespace);
-+		}
-+		pr_err("%s: module uses symbol (%s) from namespace %s, but does not import it.\n",
-+		       mod->name, kernel_symbol_name(sym), namespace);
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
-+
- /* Resolve a symbol for this module.  I.e. if we find one, record usage. */
- static const struct kernel_symbol *resolve_symbol(struct module *mod,
- 						  const struct load_info *info,
-@@ -1407,6 +1444,12 @@ static const struct kernel_symbol *resolve_symbol(struct module *mod,
- 		goto getname;
- 	}
- 
-+	err = verify_namespace_is_imported(info, sym, mod);
-+	if (err) {
-+		sym = ERR_PTR(err);
-+		goto getname;
-+	}
-+
- 	err = ref_module(mod, owner);
- 	if (err) {
- 		sym = ERR_PTR(err);
 -- 
-2.23.0.187.g17f5b7556c-goog
 
+Thanks,
+
+David / dhildenb
