@@ -2,159 +2,140 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3BD9C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 16:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E948CC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 16:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 781AD20838
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 16:48:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=labbott.name header.i=@labbott.name header.b="P0Y3Cxv9"
+	by mail.kernel.org (Postfix) with ESMTP id BF33520838
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 16:49:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567788545;
+	bh=xWpSJFUS4h9orrA331aLGvjdzbINh7yeaGYKw2j49vE=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=zrwIuzox4AzaygaRqLit74MNVA6oOtyJD/L6/8D6+0BLKZlGquJME5Kt4ziUzXI2o
+	 PNQQJNT7kP9HCOVt3MIlvFJ8aqMvlb0+OoDz90iZ1oqkFOwfa02+CkotzbvL6xJp1g
+	 cheuM3OeCt2qH1DW5hZdmkHPq1RgYLFMF3X9Xc0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405933AbfIFQss (ORCPT
+        id S2405949AbfIFQtF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 12:48:48 -0400
-Received: from mail-wm1-f48.google.com ([209.85.128.48]:39319 "EHLO
-        mail-wm1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726687AbfIFQss (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 12:48:48 -0400
-Received: by mail-wm1-f48.google.com with SMTP id q12so7842235wmj.4
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 09:48:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=labbott.name; s=google;
-        h=from:content-transfer-encoding:mime-version:subject:date:references
-         :to:in-reply-to:message-id;
-        bh=WqzJM7D3m+j/VALbdXaY9LFDVmtXJLRKN7AtxDWWJro=;
-        b=P0Y3Cxv9LAB60ToSE06wo5j4wfO3+9t7n2zm0e85wAAwSS7B4EOesJJ9AjJq6m8aVu
-         GeU4MSkJ+yxUDK15Kg19nsThE3PeqItDz92AkUYfJA3q8Ozokj38ExioPZt7575N2ART
-         4bbFpJ+Td8L8g/dTKQypJtSjikkqK6QS/GzpQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:content-transfer-encoding:mime-version
-         :subject:date:references:to:in-reply-to:message-id;
-        bh=WqzJM7D3m+j/VALbdXaY9LFDVmtXJLRKN7AtxDWWJro=;
-        b=Go8HWvJaU3W0eaJLbSkusj+4RgkQO1JvqoolNwXyRseMVhxwTjjmGCTH5wQ3mXZuBe
-         t3UJM4NoLi3LGBEjpsCfTBXatlndzMqQd/4LdAvvjq7np2IqJoY5wiKTGjg6aC/lNxSS
-         +gAH0VCnayREbfs8ipUpQ1emFvAbMKQhdt/LBe2sMh27emwGZz55A4KkHl7cjWAQlfaC
-         wupo8KaVXG3N+fPGZY4C4yZTOOiui1bY5RTDWHKXIPqoyS3W8roqqmf6srmz21Q83NT/
-         0zrJnQzCoeL6ACL/3IEBOCuaDlGKU05MVtcKotZsGHMbs11LrT3uSI4dGgCmOTHuWEaR
-         4qYg==
-X-Gm-Message-State: APjAAAXm7mnd39ycEb6EDQ3EK7mXi4uOLqT2xriRV0LywrafyMxaLj2c
-        JuXHZprrHdL87Qg5pD15yvjKMzgC2vyHFWZi
-X-Google-Smtp-Source: APXvYqwxjexkqE7+LZN/nSx6c13Elah68botHgYQphHqJmfC4wWyADm1J8XAaOt3unIIR1qRMjUhuA==
-X-Received: by 2002:a7b:c4d0:: with SMTP id g16mr8517714wmk.94.1567788525132;
-        Fri, 06 Sep 2019 09:48:45 -0700 (PDT)
-Received: from [10.93.12.198] (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
-        by smtp.gmail.com with ESMTPSA id y3sm13296858wmg.2.2019.09.06.09.48.44
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 06 Sep 2019 09:48:44 -0700 (PDT)
-From:   Laura Abbott <laura@labbott.name>
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: Linux Foundation Technical Advisory Board Elections -- Call for
- nominations
-Date:   Fri, 6 Sep 2019 12:48:41 -0400
-References: <DD187286-CEBE-44B3-A992-F84FC9C9CD26@labbott.name>
- <EDD7B30A-8A0D-45BF-BBD5-4AEFA5625FA1@labbott.name>
-To:     linux-kernel@vger.kernel.org
-In-Reply-To: <EDD7B30A-8A0D-45BF-BBD5-4AEFA5625FA1@labbott.name>
-Message-Id: <16C62493-240B-4C43-9448-6D4DD1FF1828@labbott.name>
-X-Mailer: Apple Mail (2.3273)
+        Fri, 6 Sep 2019 12:49:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55288 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405934AbfIFQtE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 12:49:04 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE05620644;
+        Fri,  6 Sep 2019 16:49:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567788543;
+        bh=xWpSJFUS4h9orrA331aLGvjdzbINh7yeaGYKw2j49vE=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=f2hfBkg1hv++7RhCjFnGYFYZ7UpLwMTDlXmWlwYszll17PrezP1cyi1PEEmnh+HNN
+         pnFT3OLPKxEOE5McxRb6hxqaoesj0DEtnoHNAQbAtp1/Ro9WmKNQ4jdHnENi4ZBFiz
+         IKixR/rSalsZdHuMF3yJ3i0ZTpyfCcai5ni0Vlng=
+Message-ID: <f53ec45fd253e96d1c8d0ea6f9cca7f68afa51e3.camel@kernel.org>
+Subject: Re: [PATCH v2 1/5] fs: Add support for an O_MAYEXEC flag on
+ sys_open()
+From:   Jeff Layton <jlayton@kernel.org>
+To:     =?ISO-8859-1?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
+        Florian Weimer <fweimer@redhat.com>,
+        =?ISO-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
+Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Eric Chiang <ericchiang@google.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Philippe =?ISO-8859-1?Q?Tr=E9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Date:   Fri, 06 Sep 2019 12:48:59 -0400
+In-Reply-To: <75442f3b-a3d8-12db-579a-2c5983426b4d@ssi.gouv.fr>
+References: <20190906152455.22757-1-mic@digikod.net>
+         <20190906152455.22757-2-mic@digikod.net>
+         <87ef0te7v3.fsf@oldenburg2.str.redhat.com>
+         <75442f3b-a3d8-12db-579a-2c5983426b4d@ssi.gouv.fr>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 2019-09-06 at 18:06 +0200, Mickaël Salaün wrote:
+> On 06/09/2019 17:56, Florian Weimer wrote:
+> > Let's assume I want to add support for this to the glibc dynamic loader,
+> > while still being able to run on older kernels.
+> > 
+> > Is it safe to try the open call first, with O_MAYEXEC, and if that fails
+> > with EINVAL, try again without O_MAYEXEC?
+> 
+> The kernel ignore unknown open(2) flags, so yes, it is safe even for
+> older kernel to use O_MAYEXEC.
+> 
 
-> On Aug 28, 2019, at 1:48 PM, Laura Abbott <laura@labbott.name> wrote:
->=20
->=20
->> On Aug 9, 2019, at 2:26 AM, Laura Abbott <laura@labbott.name> wrote:
->>=20
->> Hello everyone,
->>=20
->> Friendly reminder that the TAB elections are coming soon:
->>=20
->> The Linux Foundation Technical Advisory Board (TAB) serves as the
->> interface between the kernel development community and the Linux
->> Foundation. The TAB advises the Foundation on kernel-related matters,
->> helps member companies learn to work with the community, and works to
->> resolve community-related problems before they get out of hand.  We
->> also support the Code of Conduct committee in their mission.
->>=20
->> The board has ten members, one of whom sits on the Linux Foundation
->> board of directors.
->>=20
->> The election to select five TAB members will be held at the 2019 =
-Kernel Summit
->> in Lisbon, Portugal September 9-11. As has been announced[2], we are =
-moving to
->> an electronic voting system this year. Further details about the =
-exact voting
->> procedures will be coming soon. Anyone is eligible to stand for =
-election,
->> simply send your nomination to:
->>=20
->> tech-board-discuss at lists.linux-foundation.org
->>=20
->> With your nomination, please include a short candidate statement. =
-This candidate
->> statement should focus on why you are running and what you hope to =
-accomplish
->> on the TAB. We will be collecting these statements and making them =
-publicly=20
->> available.
->>=20
->> The deadline for receiving nominations is 9am GMT+1 on September 9th =
-(the first
->> day of Kernel Summit). Due to the use of electronic voting, this will =
-be a hard
->> deadline!
->>=20
->> Current TAB members, and their election year:
->>=20
->> Jon Corbet		2017
->> Greg Kroah-Hartman	2017
->> Steven Rostedt		2017
->> Ted Tso			2017
->> Tim Bird		2017
->>=20
->> Chris Mason		2018
->> Laura Abbott		2018
->> Olof Johansson		2018
->> Kees Cook		2018
->> Dan Williams		2018
->>=20
->> The five slots from 2017 are all up for election.  As always, please
->> let us know if you have questions, and please do consider running.
->>=20
->> Thanks,
->> Laura
->>=20
->> [1] TAB members sit for a term of two years, and half of the board is
->> up for election every year. Five of the seats are up for election =
-now.
->> The other five are halfway through their term and will be up for
->> election next year.
->>=20
->> [2] =
-https://lists.linuxfoundation.org/pipermail/ksummit-discuss/2019-July/0065=
-82.html
->=20
-> Reminder to send in your candidate statements, the current ones are
-> available at=20
->=20
-> =
-https://docs.google.com/document/d/1E3_W1c-xJMx9o2PCnKiGt3vqs-mPh77yNO4GSq=
-NipOQ
+Well...maybe. What about existing programs that are sending down bogus
+open flags? Once you turn this on, they may break...or provide a way to
+circumvent the protections this gives.
 
+Maybe this should be a new flag that is only usable in the new openat2()
+syscall that's still under discussion? That syscall will enforce that
+all flags are recognized. You presumably wouldn't need the sysctl if you
+went that route too.
 
-Final reminder, the deadline is Monday September 9th at  9am UTC+1
-(that's 9am Lisbon time). Because we are doing electronic voting this is =
-a hard deadline!=
+Anyone that wants to use this will have to recompile anyway. If the
+kernel doesn't support openat2 or if the flag is rejected then you know
+that you have no O_MAYEXEC support and can decide what to do.
+
+> > Or do I risk disabling this security feature if I do that?
+> 
+> It is only a security feature if the kernel support it, otherwise it is
+> a no-op.
+> 
+
+With a security feature, I think we really want userland to aware of
+whether it works.
+
+> > Do we need a different way for recognizing kernel support.  (Note that
+> > we cannot probe paths in /proc for various reasons.)
+> 
+> There is no need to probe for kernel support.
+> 
+> > Thanks,
+> > Florian
+> > 
+> 
+> --
+> Mickaël Salaün
+> 
+> Les données à caractère personnel recueillies et traitées dans le cadre de cet échange, le sont à seule fin d’exécution d’une relation professionnelle et s’opèrent dans cette seule finalité et pour la durée nécessaire à cette relation. Si vous souhaitez faire usage de vos droits de consultation, de rectification et de suppression de vos données, veuillez contacter contact.rgpd@sgdsn.gouv.fr. Si vous avez reçu ce message par erreur, nous vous remercions d’en informer l’expéditeur et de détruire le message. The personal data collected and processed during this exchange aims solely at completing a business relationship and is limited to the necessary duration of that relationship. If you wish to use your rights of consultation, rectification and deletion of your data, please contact: contact.rgpd@sgdsn.gouv.fr. If you have received this message in error, we thank you for informing the sender and destroying the message.
+
+-- 
+Jeff Layton <jlayton@kernel.org>
+
