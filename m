@@ -2,103 +2,112 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70BAAC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0102FC00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AC2320838
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:00:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="E1edasld"
+	by mail.kernel.org (Postfix) with ESMTP id DAAB32082C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:00:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405195AbfIFTAU (ORCPT
+        id S2405223AbfIFTAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 15:00:20 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:44189 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387551AbfIFTAT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 15:00:19 -0400
-Received: by mail-ed1-f66.google.com with SMTP id p2so6056496edx.11
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 12:00:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LrjX9gD4VIauKO9U5B9UI5Q0lIvPgAd5pEYZKOh182w=;
-        b=E1edasldtuMUUwkDEeQ56lGV0qKHCc+ezSSI7PED72qKwm8givcI1UCheonDF+81rU
-         DZOhA3PS5YT2Z+lRz68MmcNRorzwGoqu0KRyVhZh73RM5K5J8t3dDYLms/P0kTbvPtec
-         7X0KIeg9UYHi7xjL3yLM/8gmOM3hLlwYmIHLEfMReHliOIdzcdvn9E3msksKAtQuGev3
-         ToWGr15CVcoDF6P+lIE/dr4tO9E1aQqZPQUs26CFG4bEXIw89ZNUvP34ZpJRGdaObYaM
-         GKhb6NJJySchkPl9O+1tmmIYBIgS1VoHFBQ5g7ReLTaEQvcU+kkN7J8ip6j/ozSYTNfg
-         lfGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LrjX9gD4VIauKO9U5B9UI5Q0lIvPgAd5pEYZKOh182w=;
-        b=pWfxe3i8GPHDjefz54at6EKGM7PeSQdf42KCgTjSR2nkxIck9w4/r/LrZmYbxnDVn6
-         GahLZ9XX8vhiUkFOzAvD5PoArVVgqKPBEoMQ97JoD6WWFZZZNepBcQxB8CSX8qUsUrEx
-         gKvrW0UE9OugiLyimb+9/hwkK5IIDNbPWRlIUV1eT94UbM+sthXbJipFvy7LAKWeprzv
-         J6Vbj4Z+/4s3I2Ur6xlwpS1MSoTxQXn7YBR6T3GtHN4W7C8uA48Dqd2S/m7vQiH/gwOY
-         0DlkzsA2s/neYC7Xg6o8kKUnRLDiS1Dq86DKHCcl/pMw8r+vnwS8XF2zWDNzoJpZHRLu
-         EazQ==
-X-Gm-Message-State: APjAAAWa35/0jxrBakYtg0+JvBZqw2ebjDo3sCJ/PdBookzjGnIDAn12
-        Ssl/sC4gaGH9Zwe/BIB12tyRv+h2r6WH6ZwFrcrm7w==
-X-Google-Smtp-Source: APXvYqySdTqXeFzwKDdERIUW6O7satVNK6R7jE0J4FvXnhmNRURLOur3h+Xuy9x0CmE+4eeQW35qwli0Re25EqwHAFE=
-X-Received: by 2002:a17:906:bb0f:: with SMTP id jz15mr8571853ejb.264.1567796416697;
- Fri, 06 Sep 2019 12:00:16 -0700 (PDT)
+        Fri, 6 Sep 2019 15:00:44 -0400
+Received: from mga11.intel.com ([192.55.52.93]:19366 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405197AbfIFTAo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 15:00:44 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Sep 2019 12:00:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,474,1559545200"; 
+   d="scan'208";a="384313381"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 06 Sep 2019 12:00:41 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1i6JTM-0004KJ-BX; Fri, 06 Sep 2019 22:00:40 +0300
+Date:   Fri, 6 Sep 2019 22:00:40 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Dave Young <dyoung@redhat.com>
+Cc:     Jean Delvare <jdelvare@suse.de>, kexec@lists.infradead.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+        matt@codeblueprint.co.uk, ard.biesheuvel@linaro.org
+Subject: Re: [PATCH v1 2/2] firmware: dmi_scan: Pass dmi_entry_point to
+ kexec'ed kernel
+Message-ID: <20190906190040.GA16211@smile.fi.intel.com>
+References: <20161202195416.58953-1-andriy.shevchenko@linux.intel.com>
+ <20161202195416.58953-3-andriy.shevchenko@linux.intel.com>
+ <20161215122856.7d24b7a8@endymion>
+ <20161216023213.GA4505@dhcp-128-65.nay.redhat.com>
+ <1481890738.9552.70.camel@linux.intel.com>
+ <20161216143330.69e9c8ee@endymion>
+ <20161217105721.GB6922@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-References: <20190821183204.23576-1-pasha.tatashin@soleen.com>
- <20190821183204.23576-10-pasha.tatashin@soleen.com> <2d9f7511-ce65-d5ca-653e-f4d43994a32d@arm.com>
-In-Reply-To: <2d9f7511-ce65-d5ca-653e-f4d43994a32d@arm.com>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Fri, 6 Sep 2019 15:00:05 -0400
-Message-ID: <CA+CK2bAkimTmsj-iGVq6AkMMNAb7+J5wm-Ra-qovS+3Ou5j33w@mail.gmail.com>
-Subject: Re: [PATCH v3 09/17] arm64, trans_pgd: add trans_pgd_create_empty
-To:     James Morse <james.morse@arm.com>
-Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        kexec mailing list <kexec@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Bhupesh Sharma <bhsharma@redhat.com>,
-        linux-mm <linux-mm@kvack.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20161217105721.GB6922@dhcp-128-65.nay.redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 6, 2019 at 11:20 AM James Morse <james.morse@arm.com> wrote:
->
-> Hi Pavel,
->
-> On 21/08/2019 19:31, Pavel Tatashin wrote:
-> > This functions returns a zeroed trans_pgd using the allocator that is
-> > specified in the info argument.
-> >
-> > trans_pgds should be created by using this function.
->
-> This function takes the allocator you give it, and calls it once.
->
-> Given both users need one pgd, and have to provide the allocator, it seems strange that
-> they aren't trusted to call it.
->
-> I don't think this patch is necessary.
->
-> Let the caller pass in the pgd_t to the helpers.
+On Sat, Dec 17, 2016 at 06:57:21PM +0800, Dave Young wrote:
+> On 12/16/16 at 02:33pm, Jean Delvare wrote:
+> > On Fri, 16 Dec 2016 14:18:58 +0200, Andy Shevchenko wrote:
+> > > On Fri, 2016-12-16 at 10:32 +0800, Dave Young wrote:
+> > > > On 12/15/16 at 12:28pm, Jean Delvare wrote:
+> > > > > I am no kexec expert but this confuses me. Shouldn't the second
+> > > > > kernel have access to the EFI systab as the first kernel does? It
+> > > > > includes many more pointers than just ACPI and DMI tables, and it
+> > > > > would seem inconvenient to have to pass all these addresses
+> > > > > individually explicitly.
+> > > > 
+> > > > Yes, in modern linux kernel, kexec has the support for EFI, I think it
+> > > > should work naturally at least in x86_64.
+> > > 
+> > > Thanks for this good news!
+> > > 
+> > > Unfortunately Intel Galileo is 32-bit platform.
+> > 
+> > If it was done for X86_64 then maybe it can be generalized to X86?
+> 
+> For X86_64, we have a new way for efi runtime memmory mapping, in i386
+> code it still use old ioremap way. It is impossible to use same way as
+> the X86_64 since the virtual address space is limited.
+> 
+> But maybe for 32bit, kexec kernel can run in physical mode, but I'm not
+> sure, I would suggest Andy to do a test first with efi=noruntime for
+> kexec 2nd kernel.
 
-Ok.
+Sorry for a delay.
+Eventually I found time to check this.
 
-Thank you,
-Pasha
+Unfortunately the efi=noruntime didn't help:
+
+# uname -a
+Linux buildroot 5.3.0-rc7+ #17 Thu Sep 5 16:08:22 EEST 2019 i586 GNU/Linux
+# dmidecode
+# dmidecode 4.2
+Scanning /dev/mem for entry point.
+# No SMBIOS nor DMI entry point found, sorry.
+#
+# cat /proc/cmdline
+... ignore_loglevel efi=noruntime earlycon=efifb acpi_rsdp=0xf01e014
+
+So, I am all ears to anything else to try.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
