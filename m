@@ -7,53 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF317C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 185C5C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAA7D214DE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2C0720854
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:17:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="I3hUmqTW"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kaSjK+uU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394184AbfIFORD (ORCPT
+        id S2392746AbfIFOQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 10:17:03 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:54202 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394120AbfIFORC (ORCPT
+        Fri, 6 Sep 2019 10:16:59 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:53074 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730193AbfIFOQ6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 10:17:02 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x86EGv2l021991;
-        Fri, 6 Sep 2019 09:16:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1567779417;
-        bh=bZLbfyDYIbQSM/yox3v/jl434Vis5vyrJc6A2BOuhBo=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=I3hUmqTWTT2+3Lcq+H5M1u5aluKQ3nndK2yTjytWxqAFPZk/uapYGeo/HeBQ3/Ir+
-         VMa8Nn9Mm3CrN6ZppvJM8Zwr+3NSeTuo4jpBH2qPiGjn4GXSr1hGFkXRKStJO5O19g
-         Y+aPtXFaOqYQW2nB3kVLYiOWlecwavFePZczCX2A=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x86EGvZa127784;
-        Fri, 6 Sep 2019 09:16:57 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 6 Sep
- 2019 09:16:57 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 6 Sep 2019 09:16:57 -0500
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x86EGmaf042400;
+        Fri, 6 Sep 2019 10:16:58 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x86EGtVb081331;
         Fri, 6 Sep 2019 09:16:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1567779416;
+        bh=Q0YSzmtvj7sqG004BV4lez3XreU1ptGoRlCRKi0kkXE=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=kaSjK+uUbjW52iptdurvJMAQUbh3EfebBtj6Qmy6YTdE9dtVls6Vim7l7PCSAALjA
+         5SBPMxyhVQT89QM1ilLkJhdbHlovDn2v2u5LtwoQblW3SGCDdBPF7g4NAGoPyMjBc7
+         Kazi5ZowDUQlRUunuW2hINf1MNcLqY9DWcOySGK0=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x86EGtnm092456
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 6 Sep 2019 09:16:55 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 6 Sep
+ 2019 09:16:55 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 6 Sep 2019 09:16:55 -0500
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x86EGmae042400;
+        Fri, 6 Sep 2019 09:16:53 -0500
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <vinod.koul@intel.com>, <robh+dt@kernel.org>
 CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <dan.j.williams@intel.com>, <devicetree@vger.kernel.org>
-Subject: [RFC 3/3] dmaengine: Support for requesting channels preferring DMA domain controller
-Date:   Fri, 6 Sep 2019 17:17:17 +0300
-Message-ID: <20190906141717.23859-4-peter.ujfalusi@ti.com>
+Subject: [RFC 2/3] dmaengine: of_dma: Function to look up the DMA domain of a client
+Date:   Fri, 6 Sep 2019 17:17:16 +0300
+Message-ID: <20190906141717.23859-3-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190906141717.23859-1-peter.ujfalusi@ti.com>
 References: <20190906141717.23859-1-peter.ujfalusi@ti.com>
@@ -66,107 +67,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case the channel is not requested via the slave API, use the
-of_find_dma_domain() to see if a system default DMA controller is
-specified.
+Find the DMA domain controller of the client device by iterating up in
+device tree looking for the closest 'dma-domain-controller' property.
 
-Add new function which can be used by clients to request channels by mask
-from their DMA domain controller if specified.
-
-Client drivers can take advantage of the domain support by moving from
-dma_request_chan_by_mask() to dma_domain_request_chan_by_mask()
+If the client's node is not provided then check the DT root for the
+controller.
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- drivers/dma/dmaengine.c   | 17 ++++++++++++-----
- include/linux/dmaengine.h |  9 ++++++---
- 2 files changed, 18 insertions(+), 8 deletions(-)
+ drivers/dma/of-dma.c   | 42 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/of_dma.h |  7 +++++++
+ 2 files changed, 49 insertions(+)
 
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index 6baddf7dcbfd..087450eed68c 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -640,6 +640,10 @@ struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
- 	struct dma_device *device, *_d;
- 	struct dma_chan *chan = NULL;
+diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
+index c2d779daa4b5..04b5795cd76b 100644
+--- a/drivers/dma/of-dma.c
++++ b/drivers/dma/of-dma.c
+@@ -18,6 +18,48 @@
+ static LIST_HEAD(of_dma_list);
+ static DEFINE_MUTEX(of_dma_lock);
  
-+	/* If np is not specified, get the default DMA domain controller */
-+	if (!np)
-+		np = of_find_dma_domain(NULL);
++/**
++ * of_find_dma_domain - Get the domain DMA controller
++ * @np:		device node of the client device
++ *
++ * Look up the DMA controller of the domain the client device is part of.
++ * Finds the dma-domain controller the client device belongs to. It is used when
++ * requesting non slave channels (like channel for memcpy) to make sure that the
++ * channel can be request from a DMA controller which can service the given
++ * domain best.
++ *
++ * Returns the device_node pointer of the DMA controller or succes or NULL on
++ * error.
++ */
++struct device_node *of_find_dma_domain(struct device_node *np)
++{
++	struct device_node *dma_domain = NULL;
++	phandle dma_phandle;
 +
- 	/* Find a channel */
- 	mutex_lock(&dma_list_mutex);
- 	list_for_each_entry_safe(device, _d, &dma_device_list, global_node) {
-@@ -751,19 +755,22 @@ struct dma_chan *dma_request_slave_channel(struct device *dev,
- EXPORT_SYMBOL_GPL(dma_request_slave_channel);
- 
++	/*
++	 * If no device_node is provided look at the root level for system
++	 * default DMA controller for modules.
++	 */
++	if (!np)
++		np = of_root;
++
++	if (!np || !of_node_get(np))
++		return NULL;
++
++	do {
++		if (of_property_read_u32(np, "dma-domain-controller",
++					 &dma_phandle))
++			np = of_get_next_parent(np);
++		else {
++			dma_domain = of_find_node_by_phandle(dma_phandle);
++			of_node_put(np);
++		}
++	} while (!dma_domain && np);
++
++	return dma_domain;
++}
++EXPORT_SYMBOL_GPL(of_find_dma_domain);
++
  /**
-- * dma_request_chan_by_mask - allocate a channel satisfying certain capabilities
-- * @mask: capabilities that the channel must satisfy
-+ * dma_domain_request_chan_by_mask - allocate a channel by mask from DMA domain
-+ * @dev:	pointer to client device structure
-+ * @mask:	capabilities that the channel must satisfy
-  *
-  * Returns pointer to appropriate DMA channel on success or an error pointer.
-  */
--struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask)
-+struct dma_chan *dma_domain_request_chan_by_mask(struct device *dev,
-+						 const dma_cap_mask_t *mask)
- {
- 	struct dma_chan *chan;
+  * of_dma_find_controller - Get a DMA controller in DT DMA helpers list
+  * @dma_spec:	pointer to DMA specifier as found in the device tree
+diff --git a/include/linux/of_dma.h b/include/linux/of_dma.h
+index fd706cdf255c..6eab0a8d3335 100644
+--- a/include/linux/of_dma.h
++++ b/include/linux/of_dma.h
+@@ -32,6 +32,8 @@ struct of_dma_filter_info {
+ };
  
- 	if (!mask)
- 		return ERR_PTR(-ENODEV);
+ #ifdef CONFIG_DMA_OF
++extern struct device_node *of_find_dma_domain(struct device_node *np);
++
+ extern int of_dma_controller_register(struct device_node *np,
+ 		struct dma_chan *(*of_dma_xlate)
+ 		(struct of_phandle_args *, struct of_dma *),
+@@ -52,6 +54,11 @@ extern struct dma_chan *of_dma_xlate_by_chan_id(struct of_phandle_args *dma_spec
+ 		struct of_dma *ofdma);
  
--	chan = __dma_request_channel(mask, NULL, NULL, NULL);
-+	chan = __dma_request_channel(mask, NULL, NULL,
-+				     of_find_dma_domain(dev->of_node));
- 	if (!chan) {
- 		mutex_lock(&dma_list_mutex);
- 		if (list_empty(&dma_device_list))
-@@ -775,7 +782,7 @@ struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask)
- 
- 	return chan;
- }
--EXPORT_SYMBOL_GPL(dma_request_chan_by_mask);
-+EXPORT_SYMBOL_GPL(dma_domain_request_chan_by_mask);
- 
- void dma_release_channel(struct dma_chan *chan)
- {
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 3b2e8e302f6c..9f94df81e83f 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -1438,7 +1438,8 @@ struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
- struct dma_chan *dma_request_slave_channel(struct device *dev, const char *name);
- 
- struct dma_chan *dma_request_chan(struct device *dev, const char *name);
--struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask);
-+struct dma_chan *dma_domain_request_chan_by_mask(struct device *dev,
-+						 const dma_cap_mask_t *mask);
- 
- void dma_release_channel(struct dma_chan *chan);
- int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps);
-@@ -1475,8 +1476,8 @@ static inline struct dma_chan *dma_request_chan(struct device *dev,
- {
- 	return ERR_PTR(-ENODEV);
- }
--static inline struct dma_chan *dma_request_chan_by_mask(
--						const dma_cap_mask_t *mask)
-+static inline struct dma_chan *dma_domain_request_chan_by_mask(struct device *dev,
-+			const dma_cap_mask_t *mask)
- {
- 	return ERR_PTR(-ENODEV);
- }
-@@ -1537,6 +1538,8 @@ struct dma_chan *dma_get_any_slave_channel(struct dma_device *device);
- 	__dma_request_channel(&(mask), x, y, NULL)
- #define dma_request_slave_channel_compat(mask, x, y, dev, name) \
- 	__dma_request_slave_channel_compat(&(mask), x, y, dev, name)
-+#define dma_request_chan_by_mask(mask) \
-+	dma_domain_request_chan_by_mask(NULL, mask)
- 
- static inline struct dma_chan
- *__dma_request_slave_channel_compat(const dma_cap_mask_t *mask,
+ #else
++static inline struct device_node *of_find_dma_domain(struct device_node *np)
++{
++	return NULL;
++}
++
+ static inline int of_dma_controller_register(struct device_node *np,
+ 		struct dma_chan *(*of_dma_xlate)
+ 		(struct of_phandle_args *, struct of_dma *),
 -- 
 Peter
 
