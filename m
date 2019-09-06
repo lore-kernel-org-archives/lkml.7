@@ -2,114 +2,122 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E312C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 06:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE44C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 06:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DA162082C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 06:25:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED3F9206A5
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 06:26:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ADimNP2N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391797AbfIFGZr (ORCPT
+        id S2391909AbfIFGZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 02:25:47 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:45698 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727970AbfIFGZq (ORCPT
+        Fri, 6 Sep 2019 02:25:59 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38130 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727970AbfIFGZ6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 02:25:46 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1i67gk-0000Uv-OY; Fri, 06 Sep 2019 08:25:42 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 565151C0744;
-        Fri,  6 Sep 2019 08:25:42 +0200 (CEST)
-Date:   Fri, 06 Sep 2019 06:25:42 -0000
-From:   "tip-bot2 for Mark-PK Tsai" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf/hw_breakpoint: Fix arch_hw_breakpoint
- use-before-initialization
-Cc:     Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
+        Fri, 6 Sep 2019 02:25:58 -0400
+Received: by mail-pl1-f196.google.com with SMTP id w11so2636362plp.5;
+        Thu, 05 Sep 2019 23:25:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nRxcumHCoieD4YHhJDBwA9IBTCoCwLTVhc9o3nRRDkI=;
+        b=ADimNP2ND3VOH2ln0p+yNfF/DGU2qkBipN72ljAr/PczQvTfbrKsX07vY8Zdwngoar
+         LhdZEUosmuWvZxdURnHwN7oYANLXkw1O7D6cD5OJp5+/tCkczEX/nk5v6+w2CXfSDCk9
+         L8eHl7xI6P/RcTjbsUVJuQNkq6YLcLN6H3OV6ApvAePbpWSpsOyYEqqqvMNYFtcxKvQR
+         cbG2R/hIbwiZcQaSbzwjgw2yVtC0T4zgOKxeF049FwRTUIo7ETmaEAstIajleYpZtZKM
+         C42BxBvR8hUAH8v2LxsxzjNdxPxoxqeK2II8PyPVrsFPJubqbesfhTTe9RIflLXv6b83
+         6QLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nRxcumHCoieD4YHhJDBwA9IBTCoCwLTVhc9o3nRRDkI=;
+        b=MuW1ggQqkU0Wkossy8PGyQMQQyKS0Ee8dYjwcZeyh15DipREOpoBdZnzUL+cLD/vCR
+         5aoWbUR0bPcGGbuDePqda/bvHZMNb4Wq+QdkGW3Saxsg80+FVhNC7lnkog783Dp0uCqq
+         0RAPQvwsN7P7RbDJXE4mnH+EsFOp8Y/lK3io2LLNd0ZM5uafd/5vcc6/59929hRbYaub
+         eLCTX3Zr8g0nT2TR9Y2VNmkl1AZi042cF8VAuPFxEjV5AzMbX+lBUZ1TU+aehuM1V3RG
+         7Y1Tjdt3G6Z0xFkatiIsHS30s3+50yoaUOeOAKbXr5sFCTk8nKa+4pn3oED7yfH/LZCR
+         WZGw==
+X-Gm-Message-State: APjAAAWCRiOD6wv5iqU3+dLiYa80cYYHB7+tUpRX+wh5dq8JeWXdZeL7
+        Yt80/Avzgcep1RmrAMYnt8oBHwknFqU=
+X-Google-Smtp-Source: APXvYqxAHm7TEMjvZZG+IKwNgVMQW4iXvRHQ3UYm4fIeZ5CGft2zoBZMr3vCIp78S9acysQdbufG3A==
+X-Received: by 2002:a17:902:748b:: with SMTP id h11mr7587383pll.269.1567751158029;
+        Thu, 05 Sep 2019 23:25:58 -0700 (PDT)
+Received: from rashmica.ozlabs.ibm.com ([122.99.82.10])
+        by smtp.gmail.com with ESMTPSA id y192sm6244998pfg.141.2019.09.05.23.25.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2019 23:25:57 -0700 (PDT)
+From:   Rashmica Gupta <rashmica.g@gmail.com>
+To:     linus.walleij@linaro.org
+Cc:     Rashmica Gupta <rashmica.g@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        linux-gpio@vger.kernel.org (open list:GPIO SUBSYSTEM),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/ASPEED MACHINE
+        SUPPORT),
+        linux-aspeed@lists.ozlabs.org (moderated list:ARM/ASPEED MACHINE
+        SUPPORT), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v3 1/5] dt-bindings: gpio: aspeed: Update documentation with ast2600 controllers
+Date:   Fri,  6 Sep 2019 16:25:47 +1000
+Message-Id: <20190906062547.13264-1-rashmica.g@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Message-ID: <156775114220.13152.7362529034900093824.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/urgent branch of tip:
+The ast2600 is a new generation of SoC from ASPEED. Similarly to the
+ast2400 and ast2500, it has a GPIO controller for it's 3.3V GPIO pins.
+Additionally, it has a GPIO controller for 36 1.8V GPIO pins.  We use
+the ngpio property to differentiate between these controllers.
 
-Commit-ID:     310aa0a25b338b3100c94880c9a69bec8ce8c3ae
-Gitweb:        https://git.kernel.org/tip/310aa0a25b338b3100c94880c9a69bec8ce8c3ae
-Author:        Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-AuthorDate:    Fri, 06 Sep 2019 14:01:16 +08:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 06 Sep 2019 08:24:01 +02:00
-
-perf/hw_breakpoint: Fix arch_hw_breakpoint use-before-initialization
-
-If we disable the compiler's auto-initialization feature, if
--fplugin-arg-structleak_plugin-byref or -ftrivial-auto-var-init=pattern
-are disabled, arch_hw_breakpoint may be used before initialization after:
-
-  9a4903dde2c86 ("perf/hw_breakpoint: Split attribute parse and commit")
-
-On our ARM platform, the struct step_ctrl in arch_hw_breakpoint, which
-used to be zero-initialized by kzalloc(), may be used in
-arch_install_hw_breakpoint() without initialization.
-
-Signed-off-by: Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alix Wu <alix.wu@mediatek.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: YJ Chiang <yj.chiang@mediatek.com>
-Link: https://lkml.kernel.org/r/20190906060115.9460-1-mark-pk.tsai@mediatek.com
-[ Minor edits. ]
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Rashmica Gupta <rashmica.g@gmail.com>
 ---
- kernel/events/hw_breakpoint.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/gpio/gpio-aspeed.txt | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/events/hw_breakpoint.c b/kernel/events/hw_breakpoint.c
-index c5cd852..3cc8416 100644
---- a/kernel/events/hw_breakpoint.c
-+++ b/kernel/events/hw_breakpoint.c
-@@ -413,7 +413,7 @@ static int hw_breakpoint_parse(struct perf_event *bp,
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt b/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
+index 7e9b586770b0..b2033fc3a71a 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
+@@ -2,7 +2,8 @@ Aspeed GPIO controller Device Tree Bindings
+ -------------------------------------------
  
- int register_perf_hw_breakpoint(struct perf_event *bp)
- {
--	struct arch_hw_breakpoint hw;
-+	struct arch_hw_breakpoint hw = { };
- 	int err;
+ Required properties:
+-- compatible		: Either "aspeed,ast2400-gpio" or "aspeed,ast2500-gpio"
++- compatible		: Either "aspeed,ast2400-gpio", "aspeed,ast2500-gpio",
++					or "aspeed,ast2600-gpio".
  
- 	err = reserve_bp_slot(bp);
-@@ -461,7 +461,7 @@ int
- modify_user_hw_breakpoint_check(struct perf_event *bp, struct perf_event_attr *attr,
- 			        bool check)
- {
--	struct arch_hw_breakpoint hw;
-+	struct arch_hw_breakpoint hw = { };
- 	int err;
+ - #gpio-cells 		: Should be two
+ 			  - First cell is the GPIO line number
+@@ -17,7 +18,9 @@ Required properties:
  
- 	err = hw_breakpoint_parse(bp, attr, &hw);
+ Optional properties:
+ 
+-- clocks                : A phandle to the clock to use for debounce timings
++- clocks		: A phandle to the clock to use for debounce timings
++- ngpios		: Number of GPIOs controlled by this controller. Should	be set
++				  when there are multiple GPIO controllers on a SoC (ast2600).
+ 
+ The gpio and interrupt properties are further described in their respective
+ bindings documentation:
+-- 
+2.20.1
+
