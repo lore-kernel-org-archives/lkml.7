@@ -2,76 +2,93 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68DCCC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 20:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 325DCC00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 20:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3970120854
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 20:02:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F39A9208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 20:03:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567800211;
+	bh=mExBVNjiBRxzB4QV3B2LFfejWgHVMRDf7/4uEQllzqg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=quS4bpzSfdhfauzUiyZrgVemCmpwCKLeQshKCo1WYtMCO/zqj4zFRiKggZNPeFtiT
+	 I3txG57ZxezVWQk/IhUCtWUx7aJk5TUIo6zqRKG2je81D+FH8oLZ5rzDD63OO5hDas
+	 XwZLa2GjhYD/dXGP2xLeVS//A1L8C5IrsjrIkwvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394282AbfIFUCB (ORCPT
+        id S2394339AbfIFUDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 16:02:01 -0400
-Received: from muru.com ([72.249.23.125]:60068 "EHLO muru.com"
+        Fri, 6 Sep 2019 16:03:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726008AbfIFUCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 16:02:01 -0400
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id 04BB680CC;
-        Fri,  6 Sep 2019 20:02:28 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     linux-omap@vger.kernel.org
-Cc:     "Andrew F . Davis" <afd@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Subject: [PATCH] bus: ti-sysc: Remove unpaired sysc_clkdm_deny_idle()
-Date:   Fri,  6 Sep 2019 13:01:54 -0700
-Message-Id: <20190906200154.6510-1-tony@atomide.com>
-X-Mailer: git-send-email 2.23.0
+        id S1726008AbfIFUD3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 16:03:29 -0400
+Received: from localhost (unknown [62.28.240.114])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0756320854;
+        Fri,  6 Sep 2019 20:03:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567800209;
+        bh=mExBVNjiBRxzB4QV3B2LFfejWgHVMRDf7/4uEQllzqg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rEIu4cj6eimR+r4plydg3wHpJIMOiwvK6XrHsYRaOs4dQsfN0uk78ZiL6V3YSwksz
+         e8R3pr+zjo+P+2bOo3HzNg0jPQ1CCaeFesjbTbohQVdAknaLloZE4KD1wWJ7CQbbMK
+         +NtWn7507V4tVg48WnPew19qIk4/p1cXTy3rHdoA=
+Date:   Fri, 6 Sep 2019 16:03:26 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 0/9] Enhance the hv_vmbus driver to support hibernation
+Message-ID: <20190906200325.GD1528@sasha-vm>
+References: <1567724446-30990-1-git-send-email-decui@microsoft.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <1567724446-30990-1-git-send-email-decui@microsoft.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit d098913a10f8 ("bus: ti-sysc: Fix clock handling for no-idle
-quirks") fixed handling for no-idle quirk modules that are not enabled
-by the bootloader.
+On Thu, Sep 05, 2019 at 11:01:14PM +0000, Dexuan Cui wrote:
+>This patchset (consisting of 9 patches) was part of the v4 patchset (consisting
+>of 12 patches):
+>    https://lkml.org/lkml/2019/9/2/894
+>
+>The other 3 patches in v4 are posted in another patchset, which will go
+>through the tip.git tree.
+>
+>All the 9 patches here are now rebased to the hyperv tree's hyperv-next branch:
+>https://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git/log/?h=hyperv-next
+>, and all the 9 patches have Michael Kelley's Signed-off-by's.
+>
+>Please review.
 
-But it also caused unpaired clockdomain calls that won't allow idling
-the system. That's because clkdm_allow_idle_nolock() and
-clkdm_deny_idle_nolock() have usage count with clkdm->forcewake_count.
+Given that these two series depend on each other, I'd much prefer for
+them to go through one tree.
 
-Let's drop the unpaired sysc_clkdm_deny_idle() to fix idling of devices.
+But, I may be wrong, and I'm going to see if a scenario such as this
+make sense. I've queued this one to the hyperv-next, but I'll wait for
+the x86 folks to send their pull request to Linus first before I do it
+for these patches.
 
-Fixes: d098913a10f8 ("bus: ti-sysc: Fix clock handling for no-idle quirks")
-Cc: Keerthy <j-keerthy@ti.com>
-Cc: Vignesh Raghavendra <vigneshr@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- drivers/bus/ti-sysc.c | 1 -
- 1 file changed, 1 deletion(-)
+Usually cases such as these are the exception, but for Hyper-V it seems
+to be the norm, so I'm curious to see how this will unfold.
 
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -2363,7 +2363,6 @@ static void ti_sysc_idle(struct work_struct *work)
- 	 */
- 	if (ddata->cfg.quirks & (SYSC_QUIRK_NO_IDLE |
- 				 SYSC_QUIRK_NO_IDLE_ON_INIT)) {
--		sysc_clkdm_deny_idle(ddata);
- 		sysc_disable_main_clocks(ddata);
- 		sysc_disable_opt_clocks(ddata);
- 		sysc_clkdm_allow_idle(ddata);
--- 
-2.23.0
+--
+Thanks,
+Sasha
