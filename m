@@ -2,139 +2,97 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9038C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BE6C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 753CD20854
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:07:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S3M0xG/j"
+	by mail.kernel.org (Postfix) with ESMTP id 8396B20854
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:08:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392177AbfIFLHf (ORCPT
+        id S2392226AbfIFLIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 07:07:35 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:47010 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390377AbfIFLHf (ORCPT
+        Fri, 6 Sep 2019 07:08:20 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:46986 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbfIFLIU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 07:07:35 -0400
-Received: by mail-wr1-f68.google.com with SMTP id h7so6120772wrt.13;
-        Fri, 06 Sep 2019 04:07:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=JUfMY89FxK/4PZfbkgvJJAvRZHgggwqGP387mVBSBec=;
-        b=S3M0xG/jx0E4rGxCy8CVN6/zRlA0cXFS8/IV9aQhtVEJinXzEXPDKns32hds3EHFQI
-         DNM7KPNRAgRlaspudMCUM06Fe88Ur24TVa2js4g1T9CQpHTBg6BWpXZ7bc5XUgZ1//FJ
-         AGkdM4p7w8NdNpGUCI+Apy7DkYG+DVjq04Qom6nd4w/W0cY204ZTDtZQKEGjsbyvv/qY
-         WZOAqaasWNldcqXmCwbpQw+BWOJ1B1OVJO6T844q6WtqVC/IwEh91WeoXL4+HAHsILzu
-         deUs4dmp6iUimlvCrurIW5IXNaGM0DnSV4/zbFkwUHifGY67NuGs0UQw3jcOElSNqtGd
-         tIdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=JUfMY89FxK/4PZfbkgvJJAvRZHgggwqGP387mVBSBec=;
-        b=YfbVdTjBzJpV7t5/WJm8l5OL9+f23vG+Rn0R9JDMjTxfQZUgr1uYBvANeeD87lTYUa
-         0kFfuRW9trsNgaxdJ85JYuXGGJu25ARRzu3kKIFM4u1WIm4t1cFRcOuzIL01t9timqxp
-         nbrqBZB7yxz4WLqb9tqrOXbmDPAezE5kYf4a/6qpdWiDF5MEMnOZUK+OPeXjjcXin+Go
-         6ERbW9869bjuQOEX9OrG+P6GF/Ftr0+CSanB3xIngygDFnanokQjwwqgmbIHAzovvw+Y
-         mPoCRug3eDERtoOtWFS4MwTEt0RutAVHicQp82RpwrXFS9r6m79bBa3Tz6EpAetzWRRX
-         RfZQ==
-X-Gm-Message-State: APjAAAUXiE/btcG8HwA8+kuw1SkhjCWz6A01GGPDfc+d+TWpqHQeEl62
-        dTctPC2MCR16vqHdlG5EE3U=
-X-Google-Smtp-Source: APXvYqwUgxvFFbfK4J/6FC9T0gRHiyy2dDDvOAgb/kCod1chhRzVIAEm94KmawloJ8DHxeqDd3WgfQ==
-X-Received: by 2002:a05:6000:108e:: with SMTP id y14mr6517608wrw.344.1567768052678;
-        Fri, 06 Sep 2019 04:07:32 -0700 (PDT)
-Received: from Akatsuki.lan (bzq-109-67-210-71.red.bezeqint.net. [109.67.210.71])
-        by smtp.googlemail.com with ESMTPSA id j30sm7949283wrb.66.2019.09.06.04.07.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Sep 2019 04:07:32 -0700 (PDT)
-From:   Dan Elkouby <streetwalkermc@gmail.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Dan Elkouby <streetwalkermc@gmail.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Fabian Henneke <fabian.henneke@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH] Bluetooth: hidp: Fix assumptions on the return value of hidp_send_message
-Date:   Fri,  6 Sep 2019 14:06:44 +0300
-Message-Id: <20190906110645.27601-1-streetwalkermc@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190906101306.GA12017@kadam>
-References: <20190906101306.GA12017@kadam>
+        Fri, 6 Sep 2019 07:08:20 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1i6C6A-00072H-W3; Fri, 06 Sep 2019 13:08:15 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 612531C0E06;
+        Fri,  6 Sep 2019 13:08:14 +0200 (CEST)
+Date:   Fri, 06 Sep 2019 11:08:14 -0000
+From:   "tip-bot2 for Lubomir Rintel" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/core] irqchip/mmp: Coexist with GIC root IRQ controller
+Cc:     Lubomir Rintel <lkundrak@v3.sk>, Marc Zyngier <maz@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20190822092643.593488-10-lkundrak@v3.sk>
+References: <20190822092643.593488-10-lkundrak@v3.sk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <156776809436.24167.3987576375342875062.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hidp_send_message was changed to return non-zero values on success,
-which some other bits did not expect. This caused spurious errors to be
-propagated through the stack, breaking some drivers, such as hid-sony
-for the Dualshock 4 in Bluetooth mode.
+The following commit has been merged into the irq/core branch of tip:
 
-As pointed out by Dan Carpenter, hid-microsoft directly relied on that
-assumption as well.
+Commit-ID:     2178add02238f8352f5b3294a79f4763183aade6
+Gitweb:        https://git.kernel.org/tip/2178add02238f8352f5b3294a79f4763183aade6
+Author:        Lubomir Rintel <lkundrak@v3.sk>
+AuthorDate:    Thu, 22 Aug 2019 11:26:32 +02:00
+Committer:     Marc Zyngier <maz@kernel.org>
+CommitterDate: Fri, 30 Aug 2019 15:23:30 +01:00
 
-Fixes: 48d9cc9d85dd ("Bluetooth: hidp: Let hidp_send_message return number of queued bytes")
+irqchip/mmp: Coexist with GIC root IRQ controller
 
-Signed-off-by: Dan Elkouby <streetwalkermc@gmail.com>
+On MMP3, the GIC can be set as a root IRQ interrupt controller. If the
+device tree indicated that GIC is enabled, avoid hooking up
+mmp2_handle_irq().
+
+The interrupt muxes are still being used.
+
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20190822092643.593488-10-lkundrak@v3.sk
 ---
- drivers/hid/hid-microsoft.c | 2 +-
- net/bluetooth/hidp/core.c   | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/irqchip/irq-mmp.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-microsoft.c b/drivers/hid/hid-microsoft.c
-index 8b3a922bdad3..2cf83856f2e4 100644
---- a/drivers/hid/hid-microsoft.c
-+++ b/drivers/hid/hid-microsoft.c
-@@ -303,7 +303,7 @@ static void ms_ff_worker(struct work_struct *work)
- 	r->magnitude[MAGNITUDE_WEAK] = ms->weak;     /* right actuator */
- 
- 	ret = hid_hw_output_report(hdev, (__u8 *)r, sizeof(*r));
--	if (ret)
-+	if (ret < 0)
- 		hid_warn(hdev, "failed to send FF report\n");
+diff --git a/drivers/irqchip/irq-mmp.c b/drivers/irqchip/irq-mmp.c
+index da290d8..4a74ac7 100644
+--- a/drivers/irqchip/irq-mmp.c
++++ b/drivers/irqchip/irq-mmp.c
+@@ -468,7 +468,12 @@ static int __init mmp3_of_init(struct device_node *node,
+ 	icu_data[0].conf_disable = mmp3_conf.conf_disable;
+ 	icu_data[0].conf_mask = mmp3_conf.conf_mask;
+ 	icu_data[0].conf2_mask = mmp3_conf.conf2_mask;
+-	set_handle_irq(mmp2_handle_irq);
++
++	if (!parent) {
++		/* This is the main interrupt controller. */
++		set_handle_irq(mmp2_handle_irq);
++	}
++
+ 	max_icu_nr = 1;
+ 	return 0;
  }
- 
-diff --git a/net/bluetooth/hidp/core.c b/net/bluetooth/hidp/core.c
-index 8d889969ae7e..bef84b95e2c4 100644
---- a/net/bluetooth/hidp/core.c
-+++ b/net/bluetooth/hidp/core.c
-@@ -267,7 +267,7 @@ static int hidp_get_raw_report(struct hid_device *hid,
- 	set_bit(HIDP_WAITING_FOR_RETURN, &session->flags);
- 	data[0] = report_number;
- 	ret = hidp_send_ctrl_message(session, report_type, data, 1);
--	if (ret)
-+	if (ret < 0)
- 		goto err;
- 
- 	/* Wait for the return of the report. The returned report
-@@ -343,7 +343,7 @@ static int hidp_set_raw_report(struct hid_device *hid, unsigned char reportnum,
- 	data[0] = reportnum;
- 	set_bit(HIDP_WAITING_FOR_SEND_ACK, &session->flags);
- 	ret = hidp_send_ctrl_message(session, report_type, data, count);
--	if (ret)
-+	if (ret < 0)
- 		goto err;
- 
- 	/* Wait for the ACK from the device. */
--- 
-2.23.0
-
