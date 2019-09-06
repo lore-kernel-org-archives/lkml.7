@@ -2,139 +2,124 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45CDFC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E00C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2910320842
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B19EA20693
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:08:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405977AbfIFRIP (ORCPT
+        id S2395142AbfIFRIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 13:08:15 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:55184 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730223AbfIFRIM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 13:08:12 -0400
-Received: by mail-io1-f71.google.com with SMTP id a20so8368144iok.21
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 10:08:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=3njUJ/0K0qrTjvC4IVkpaDi9DWyHseTccD0yHkZDLBs=;
-        b=rc/QGLSalfe7NNG9qc0A3buBwDTXnIRWAfARGcp3JTPrdaqhmt3WCin7ZcePw9FgB6
-         FK98e53lnexaBJTy8R9n0mbKQo05s6AgZPve4MjgmJjVi3O5wbF9XpxUv9X0fTvONkHR
-         fXlToz643+4onYLhzcMrBqydSnC81QFJrkAlxVA58wMvKufvv/AeRAW7Arb518+if7xl
-         68ViUrGr02X7EcyXFh54Fjie2LasdesQTK2d43n0PpVK3SU7RkuKsk0TAiMSS4OfeCB/
-         y4jTBFrm3QqSHKlzWFce+s2ZEyNa5sikWkSeDKVaKX6FE1b62oE8P29agfpuchGWaf16
-         7UWg==
-X-Gm-Message-State: APjAAAUgV8D7NaGQMiuxa+HDd5RCOIjeggWeZjoCyVkEJ5A4czhfrxW4
-        it2szkBZPP2asqvpPdLhZki2sbn6iY2XI/h2nocNoVs8DW5R
-X-Google-Smtp-Source: APXvYqz9DzyEOIuFEOWT1ID4gU21+TU8AcogcmcruNwfteNhsHUn/47ie2zC7VAaiNoCcRLtp+EuV9DagCJQWPfB8T4QNoRDZ2WA
+        Fri, 6 Sep 2019 13:08:17 -0400
+Received: from mx2.mailbox.org ([80.241.60.215]:38946 "EHLO mx2.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726012AbfIFRIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 13:08:16 -0400
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx2.mailbox.org (Postfix) with ESMTPS id BE83CA10B1;
+        Fri,  6 Sep 2019 19:08:12 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
+        with ESMTP id LZRQmSkyiH7U; Fri,  6 Sep 2019 19:08:06 +0200 (CEST)
+Date:   Sat, 7 Sep 2019 03:07:39 +1000
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>
+Cc:     Florian Weimer <fweimer@redhat.com>,
+        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+        linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Eric Chiang <ericchiang@google.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Philippe =?utf-8?Q?Tr=C3=A9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] fs: Add support for an O_MAYEXEC flag on
+ sys_open()
+Message-ID: <20190906170739.kk3opr2phidb7ilb@yavin.dot.cyphar.com>
+References: <20190906152455.22757-1-mic@digikod.net>
+ <20190906152455.22757-2-mic@digikod.net>
+ <87ef0te7v3.fsf@oldenburg2.str.redhat.com>
+ <75442f3b-a3d8-12db-579a-2c5983426b4d@ssi.gouv.fr>
 MIME-Version: 1.0
-X-Received: by 2002:a02:9994:: with SMTP id a20mr4651152jal.107.1567789691067;
- Fri, 06 Sep 2019 10:08:11 -0700 (PDT)
-Date:   Fri, 06 Sep 2019 10:08:11 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000009e73be0591e57b89@google.com>
-Subject: WARNING in xfrm_policy_insert_list (2)
-From:   syzbot <syzbot+2714fa4a72156aa7e18a@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        steffen.klassert@secunet.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="6rtmfi5hsevxvupm"
+Content-Disposition: inline
+In-Reply-To: <75442f3b-a3d8-12db-579a-2c5983426b4d@ssi.gouv.fr>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-syzbot found the following crash on:
+--6rtmfi5hsevxvupm
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-HEAD commit:    0e5b36bc r8152: adjust the settings of ups flags
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=17932ec6600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=67b69b427c3b2dbf
-dashboard link: https://syzkaller.appspot.com/bug?extid=2714fa4a72156aa7e18a
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17e5cb2a600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14eba03e600000
+On 2019-09-06, Micka=EBl Sala=FCn <mickael.salaun@ssi.gouv.fr> wrote:
+>=20
+> On 06/09/2019 17:56, Florian Weimer wrote:
+> > Let's assume I want to add support for this to the glibc dynamic loader,
+> > while still being able to run on older kernels.
+> >
+> > Is it safe to try the open call first, with O_MAYEXEC, and if that fails
+> > with EINVAL, try again without O_MAYEXEC?
+>=20
+> The kernel ignore unknown open(2) flags, so yes, it is safe even for
+> older kernel to use O_MAYEXEC.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+2714fa4a72156aa7e18a@syzkaller.appspotmail.com
+Depends on your definition of "safe" -- a security feature that you will
+silently not enable on older kernels doesn't sound super safe to me.
+Unfortunately this is a limitation of open(2) that we cannot change --
+which is why the openat2(2) proposal I've been posting gives -EINVAL for
+unknown O_* flags.
 
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 8725 at net/xfrm/xfrm_policy.c:1541  
-xfrm_policy_insert_list.cold+0x11/0x90 net/xfrm/xfrm_policy.c:1541
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 8725 Comm: syz-executor575 Not tainted 5.3.0-rc7+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  panic+0x2dc/0x755 kernel/panic.c:219
-  __warn.cold+0x20/0x4c kernel/panic.c:576
-  report_bug+0x263/0x2b0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
-RIP: 0010:xfrm_policy_insert_list.cold+0x11/0x90 net/xfrm/xfrm_policy.c:1541
-Code: f0 79 fb e9 67 fa ff ff 88 55 c0 e8 e9 f0 79 fb 0f b6 55 c0 e9 83 fa  
-ff ff e8 9b cc 3f fb 48 c7 c7 a0 20 52 88 e8 e3 6b 29 fb <0f> 0b 48 8b 45  
-b8 42 0f b6 14 20 48 8b 45 d0 83 e0 07 83 c0 03 38
-RSP: 0018:ffff88808f7ff3a0 EFLAGS: 00010282
-RAX: 0000000000000024 RBX: ffff8880a1ac0040 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff815c26f6 RDI: ffffed1011effe66
-RBP: ffff88808f7ff420 R08: 0000000000000024 R09: ffffed1015d060d1
-R10: ffffed1015d060d0 R11: ffff8880ae830687 R12: dffffc0000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: ffff8880a410b240
-  xfrm_policy_inexact_insert+0xec/0x1000 net/xfrm/xfrm_policy.c:1188
-  xfrm_policy_insert+0x530/0x750 net/xfrm/xfrm_policy.c:1574
-  xfrm_add_policy+0x28f/0x530 net/xfrm/xfrm_user.c:1670
-  xfrm_user_rcv_msg+0x459/0x770 net/xfrm/xfrm_user.c:2676
-  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
-  xfrm_netlink_rcv+0x70/0x90 net/xfrm/xfrm_user.c:2684
-  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
-  netlink_unicast+0x531/0x710 net/netlink/af_netlink.c:1328
-  netlink_sendmsg+0x8a5/0xd60 net/netlink/af_netlink.c:1917
-  sock_sendmsg_nosec net/socket.c:637 [inline]
-  sock_sendmsg+0xd7/0x130 net/socket.c:657
-  ___sys_sendmsg+0x803/0x920 net/socket.c:2311
-  __sys_sendmsg+0x105/0x1d0 net/socket.c:2356
-  __do_sys_sendmsg net/socket.c:2365 [inline]
-  __se_sys_sendmsg net/socket.c:2363 [inline]
-  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2363
-  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x442209
-Code: e8 fc ab 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 9b 09 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffceda47ad8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00000000004a3298 RCX: 0000000000442209
-RDX: 0000000000000000 RSI: 0000000020000080 RDI: 0000000000000005
-RBP: 000000000000f970 R08: 00000000004002c8 R09: 00000000004002c8
-R10: 00000000004002c8 R11: 0000000000000246 R12: 0000000000403030
-R13: 00000000004030c0 R14: 0000000000000000 R15: 0000000000000000
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+There is a way to probe for support (though unpleasant), by creating a
+test O_MAYEXEC fd and then checking if the flag is present in
+/proc/self/fdinfo/$n.
 
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+--6rtmfi5hsevxvupm
+Content-Type: application/pgp-signature; name="signature.asc"
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXXKSVwAKCRCdlLljIbnQ
+EqsMAQCcsnT73iJu8qsLaNqcZ8fDsRQoivoCCPz1rmApirVAJwD8Dykhs9u7hP9n
+7SbkdjKA/jSU4Chb/m54X97YQPGbcAU=
+=hMDq
+-----END PGP SIGNATURE-----
+
+--6rtmfi5hsevxvupm--
