@@ -2,106 +2,135 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20573C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D88EAC00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8D7B21670
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:02:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567771363;
-	bh=UxRMWOh/mTJxy7AKKGSd+lMbUkSWzK4/wGyu/nnvzTk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Ru2EI2gdb1/T9LRgivtV0bwwvoH4AVDTRRsnRBpIOAodDPEmh+zcnRYCDBVRwuAMX
-	 SV550+KpZO+kj7rdyJWdsg2/uEqxhvpVjaBIlzImeXNCCXIfEaU3RbnQG+4DKFeh9y
-	 BejmAxv9lmBqDfwwVEvM5O+VwAxXngLV1FPkzfGg=
+	by mail.kernel.org (Postfix) with ESMTP id BCC5D20842
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:03:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391464AbfIFMCm (ORCPT
+        id S2391664AbfIFMDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 08:02:42 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43820 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388384AbfIFMCl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 08:02:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=nM0u5Zwq/3ANoKVqYW1XKfXAdbkiEeIYyJ22EK0M/e4=; b=bV6/1kh/QpXrOH7u71wDiTaNu
-        pT/ORqN8EtynTeqdqeyQHlooZkY6g/alSG0BTEA+kysQ+ScXgQLc4ItDM80QG+dtmDf13oYK2PxQL
-        XfVROo0Z/v6AxdIi9Gc6yndrUK2UeA5SjllC/kTutMJtoFnnsUBu7Cdx2LV/8Vc4HEFRHmyc6zebe
-        nhLkrO2hcNsUXuKuTAFf0Sh/78BTc0UpzwWY9pdrjZMTCfMalUL1lwntBwXKiVb+vIbTIOpjU/0Z8
-        dW2SkAK83ynfTWkXFxyG4PSELjtDmpt9bbLRbao6N6ihr5VqgOS2B83LnxBdzTIaptHL5fHsWU9w3
-        g+m2Dk+LA==;
-Received: from [177.159.253.249] (helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i6Cwm-00067t-PV; Fri, 06 Sep 2019 12:02:37 +0000
-Date:   Fri, 6 Sep 2019 09:02:28 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Sven Eckelmann <sven@narfation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Doug Smythies <doug.smythies@gmail.com>,
-        =?UTF-8?B?QXVyw6lsaWVu?= Cedeyn <aurelien.cedeyn@gmail.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-doc@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Armijn Hemel <armijn@tjaldur.nl>, Jiri Olsa <jolsa@redhat.com>,
-        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        Allison Randal <allison@lohutok.net>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: Re: [PATCH 0/6] Address issues with SPDX requirements and PEP-263
-Message-ID: <20190906090228.1971ede9@coco.lan>
-In-Reply-To: <20daa66d58e01f33a248b8703aa8e37933ef4154.camel@perches.com>
-References: <cover.1567712829.git.mchehab+samsung@kernel.org>
-        <20daa66d58e01f33a248b8703aa8e37933ef4154.camel@perches.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 6 Sep 2019 08:03:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42988 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389504AbfIFMDL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 08:03:11 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7EC002F30C1;
+        Fri,  6 Sep 2019 12:03:11 +0000 (UTC)
+Received: from localhost (ovpn-117-208.ams2.redhat.com [10.36.117.208])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EB1B05D784;
+        Fri,  6 Sep 2019 12:03:10 +0000 (UTC)
+Date:   Fri, 6 Sep 2019 13:03:09 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, miklos@szeredi.hu,
+        linux-kernel@vger.kernel.org, virtio-fs@redhat.com,
+        dgilbert@redhat.com, mst@redhat.com
+Subject: Re: [PATCH 15/18] virtiofs: Make virtio_fs object refcounted
+Message-ID: <20190906120309.GW5900@stefanha-x1.localdomain>
+References: <20190905194859.16219-1-vgoyal@redhat.com>
+ <20190905194859.16219-16-vgoyal@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="fCmRXBY78W5odcVA"
+Content-Disposition: inline
+In-Reply-To: <20190905194859.16219-16-vgoyal@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Fri, 06 Sep 2019 12:03:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, 05 Sep 2019 13:05:08 -0700
-Joe Perches <joe@perches.com> escreveu:
 
-> On Thu, 2019-09-05 at 16:57 -0300, Mauro Carvalho Chehab wrote:
-> > The  description at Documentation/process/license-rules.rst is very strict
-> > with regards to the position where the SPDX tags should be.  
-> []
-> > PS.: I sent already a RFC version for those patches along with this
-> > thread:
-> > 
-> >     https://lore.kernel.org/lkml/b32c2e46b91e7bcda2a9bd140673f06d71b2487a.camel@perches.com/  
-> 
-> Nice, thanks.
-> 
-> Now I guess I have to update checkpatch too.
-> (unless you want to... ;)
+--fCmRXBY78W5odcVA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yeah, it makes sense to update checkpatch too. Perhaps it could be
-changed to use the "-s" flag on the check, instead of implementing
-its own logic to handle the position.
+On Thu, Sep 05, 2019 at 03:48:56PM -0400, Vivek Goyal wrote:
+> This object is used both by fuse_connection as well virt device. So make
+> this object reference counted and that makes it easy to define life cycle
+> of the object.
+>=20
+> Now deivce can be removed while filesystem is still mounted. This will
+> cleanup all the virtqueues but virtio_fs object will still be around and
+> will be cleaned when filesystem is unmounted and sb/fc drops its referenc=
+e.
+>=20
+> Removing a device also stops all virt queues and any new reuqest gets
+> error -ENOTCONN. All existing in flight requests are drained before
+> ->remove returns.
+>=20
+> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> ---
+>  fs/fuse/virtio_fs.c | 52 +++++++++++++++++++++++++++++++++++++--------
+>  1 file changed, 43 insertions(+), 9 deletions(-)
+>=20
+> diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
+> index 01bbf2c0e144..29ec2f5bbbe2 100644
+> --- a/fs/fuse/virtio_fs.c
+> +++ b/fs/fuse/virtio_fs.c
+> @@ -37,6 +37,7 @@ struct virtio_fs_vq {
+> =20
+>  /* A virtio-fs device instance */
+>  struct virtio_fs {
+> +	struct kref refcount;
+>  	struct list_head list;    /* on virtio_fs_instances */
+>  	char *tag;
+>  	struct virtio_fs_vq *vqs;
+> @@ -63,6 +64,27 @@ static inline struct fuse_pqueue *vq_to_fpq(struct vir=
+tqueue *vq)
+>  	return &vq_to_fsvq(vq)->fud->pq;
+>  }
+> =20
+> +static void release_virtiofs_obj(struct kref *ref)
+> +{
+> +	struct virtio_fs *vfs =3D container_of(ref, struct virtio_fs, refcount);
+> +
+> +	kfree(vfs->vqs);
+> +	kfree(vfs);
+> +}
+> +
+> +static void virtiofs_put(struct virtio_fs *fs)
 
-Thanks,
-Mauro
+Why do the two function names above contain "virtiofs" instead
+of "virtio_fs"?  I'm not sure if this is intentional and is supposed to
+mean something, but it's confusing.
+
+> +{
+> +	mutex_lock(&virtio_fs_mutex);
+> +	kref_put(&fs->refcount, release_virtiofs_obj);
+> +	mutex_unlock(&virtio_fs_mutex);
+> +}
+> +
+> +static void virtio_fs_put(struct fuse_iqueue *fiq)
+
+Minor issue: this function name is confusingly similar to
+virtiofs_put().  Please rename to virtio_fs_fiq_put().
+
+--fCmRXBY78W5odcVA
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl1ySv0ACgkQnKSrs4Gr
+c8gi5QgAiBUMFExTxgTgb6RrUfkYvhvR0YjuN8ik/lgPSvOOVMtT6LMM77ysQauR
+LdWnlChQQCMbdamE0Z1RjdPlj461cs3RjPH7QHZtimEOeYBUQegMuOx2aPcLj55u
+LCaJauSLzpxYlNKcEFKlmrfaVNAoFRFcFMsAUt5qekoK1mhtcFQ1TYwXyJdqObUY
+sYK5tPk2nJvMkeRHr84V8fpI0WiyQU+6okJnEfNUYmx+p1qn7VjIPsGq+Yz4MLF8
+baWiJFLjWRFvW6STaaams5Yx4VI3jNtUI7qvikpuOkYWzwQfvv6qbH/RDYk5j5d1
+/yxvM1H6W/rDyI1qYOi1etkBab+HEg==
+=p10d
+-----END PGP SIGNATURE-----
+
+--fCmRXBY78W5odcVA--
