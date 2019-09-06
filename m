@@ -2,67 +2,77 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A3FC00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D692C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB8F1206A1
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:40:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF48420842
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:40:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405477AbfIFOkX (ORCPT
+        id S2405535AbfIFOkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 10:40:23 -0400
-Received: from ms.lwn.net ([45.79.88.28]:36548 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727481AbfIFOkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 10:40:23 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 57C9697D;
-        Fri,  6 Sep 2019 14:40:22 +0000 (UTC)
-Date:   Fri, 6 Sep 2019 08:40:21 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Will Deacon <will@kernel.org>
-Cc:     Quentin Perret <quentin.perret@arm.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        peterz@infradead.org, mingo@redhat.com, rjw@rjwysocki.net,
-        vincent.guittot@linaro.org, juri.lelli@redhat.com,
-        catalin.marinas@arm.com, morten.rasmussen@arm.com,
-        chris.redpath@arm.com, dietmar.eggemann@arm.com,
-        patrick.bellasi@arm.com, valentin.schneider@arm.com,
-        qais.yousef@arm.com, qperret@qperret.net
-Subject: Re: [PATCH] mailmap: Update email address for Quentin Perret
-Message-ID: <20190906084021.0bbdc32f@lwn.net>
-In-Reply-To: <20190906092246.corlf2mtyb2rajoe@willie-the-truck>
-References: <20190902105036.32419-1-quentin.perret@arm.com>
-        <20190903145950.xko5fejupxj3f5nx@willie-the-truck>
-        <20190904144346.396a77f8@lwn.net>
-        <20190906092246.corlf2mtyb2rajoe@willie-the-truck>
-Organization: LWN.net
+        Fri, 6 Sep 2019 10:40:33 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:51466 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727481AbfIFOkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 10:40:32 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 086BA58B86854A1F6124;
+        Fri,  6 Sep 2019 22:40:31 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Fri, 6 Sep 2019
+ 22:40:20 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <will@kernel.org>, <mark.rutland@arm.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] perf/arm-cci: use devm_platform_ioremap_resource() to simplify code
+Date:   Fri, 6 Sep 2019 22:40:14 +0800
+Message-ID: <20190906144014.27924-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 6 Sep 2019 10:22:47 +0100
-Will Deacon <will@kernel.org> wrote:
+Use devm_platform_ioremap_resource() to simplify the code a bit.
+This is detected by coccinelle.
 
-> > If there's some value to having an entry in the mailmap file, then
-> > obviously it should be added.  I didn't resist so much as engage in a
-> > little muttering under my breath as I applied the patch...  
-> 
-> Ok, just wanted to make sure you were ok with it. Would be able to pick
-> this via your tree then, please?
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/perf/arm-cci.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Done.
+diff --git a/drivers/perf/arm-cci.c b/drivers/perf/arm-cci.c
+index 8f8606b..1b8e337 100644
+--- a/drivers/perf/arm-cci.c
++++ b/drivers/perf/arm-cci.c
+@@ -1642,7 +1642,6 @@ static struct cci_pmu *cci_pmu_alloc(struct device *dev)
+ 
+ static int cci_pmu_probe(struct platform_device *pdev)
+ {
+-	struct resource *res;
+ 	struct cci_pmu *cci_pmu;
+ 	int i, ret, irq;
+ 
+@@ -1650,8 +1649,7 @@ static int cci_pmu_probe(struct platform_device *pdev)
+ 	if (IS_ERR(cci_pmu))
+ 		return PTR_ERR(cci_pmu);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	cci_pmu->base = devm_ioremap_resource(&pdev->dev, res);
++	cci_pmu->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(cci_pmu->base))
+ 		return -ENOMEM;
+ 
+-- 
+2.7.4
 
-Thanks,
 
-jon
