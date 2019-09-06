@@ -5,54 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E25C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B18C00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A724208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BF88206CD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:55:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lD7C87Vc"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lLV2gwGM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404059AbfIFLzk (ORCPT
+        id S2404145AbfIFLzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 07:55:40 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36237 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391470AbfIFLzi (ORCPT
+        Fri, 6 Sep 2019 07:55:47 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33076 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389491AbfIFLzp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 07:55:38 -0400
-Received: by mail-pl1-f193.google.com with SMTP id f19so3038099plr.3
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 04:55:38 -0700 (PDT)
+        Fri, 6 Sep 2019 07:55:45 -0400
+Received: by mail-pg1-f194.google.com with SMTP id n190so3393654pgn.0
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 04:55:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=rmvBNkTdsDRsEM61NjMf/X0IeoL67srtswcL/KipeCU=;
-        b=lD7C87VcCfCC73o5yfmt2mC/BIZKrEeMM/aT6dR4o+mCr1k4uiXbUBCGjdmwVCK7f+
-         xuR8XlsTWg3PNQMzw6MlyoZnkB09W7iSSH2oWnJ8xLBnFXifM9yzmQCi0zibzW0c1/Ge
-         RlScRApeYLC5DHYB1nXWL5UsmHcTspdONkYsI=
+        bh=4lTNcwm20PrqdKZwqwME+P7TkVJwX8BduVt7KKRJVsA=;
+        b=lLV2gwGM83GFbvRH6leXJY7IjhYkevqzxuIOZL+rS9NxmqdRv52+du0LxlgNFSEkvk
+         jkOrohbD5BRDXe8lPFmNdeB7CLMUPOHYDWGv9nBDd49mwXpWjYD8elpIZdD+rCoKv7p9
+         0rZCBlOnbR75zyOym1pVaidZucRnKsrhs6sCE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=rmvBNkTdsDRsEM61NjMf/X0IeoL67srtswcL/KipeCU=;
-        b=uLbdZQnqQh1R21b3bYRFJYvV4VJ2T+pOXvMgxH6o7aV06ujO+xPquoEgV4FdGBRcqq
-         RZUZEwOkponQvW3LYhhFetGh/zvQy5bvS5/JXCPlL7f3d5VzaqmzBKno20LPKOOYcXLk
-         YebtPitPA2YyxnrI4+AT4yj1ldLF+gf0YswxLQ04I4IsEJJ5UgQUGtk94kFyccUp+nf6
-         l8CEENGs39exz4wf+iILpq29F2sgLg9EMEpDFpT755AKHZSEvRycMm64Wn5OLBRZu6q2
-         gdl/VsllyjWQH1+16BO8srh5nxaknstYYR2TIAZ09k3cXJxaKd1eTRZvEXJd8WvF6oX+
-         zyNA==
-X-Gm-Message-State: APjAAAUwOW036EhKwJSiCkfjbFZmvi6mW5vWwrGIZemT2oQiDxFsHMys
-        FetaXfaxTCkDAIZjelIAnoqB1A==
-X-Google-Smtp-Source: APXvYqyUCSBsPgZieu0kGLJ172xmNCEYZ4dQ2c7hwk8o5f0gKm/e7v15Sxpv0rgcqXV8P/Q5bi7y3A==
-X-Received: by 2002:a17:902:8690:: with SMTP id g16mr9003555plo.282.1567770937975;
-        Fri, 06 Sep 2019 04:55:37 -0700 (PDT)
+        bh=4lTNcwm20PrqdKZwqwME+P7TkVJwX8BduVt7KKRJVsA=;
+        b=hGOcw2V3xgOc2tdgSeQopYl89pIonTcOXbWY+CX+VWaF0c8oR0oEE7YJ96q2RxbTrJ
+         uN84YfXj2ablJzDPZvEP11BBcWXxsqQw/3OrIbVMHKlG8Lk6yyoFnBfkjU9+FYR98sz/
+         u6w7wPwk6W711C4nhkmS+GSNufHM7zqLkzLA33zt/KPPwiW75MUNpLa6YUpb0k5Y/NVS
+         eVD9O7ALQAD5uYt2q2xV+F0s0a3d+jBu/T1dA+MQFBV27ZnOjno/WhPfWSlo3RwUvYIj
+         sO5+G/wELzP9PmMWHBiCS+2syUIh3D6UMsKn+scltLNNc3pV/tTsqBMXaxIHNBEOc5jm
+         WI3A==
+X-Gm-Message-State: APjAAAVKxBmvIyY3lBCftn6xGsuSSfB9ZcxE1GmmbvoT4nIi8BmTxvb5
+        NMFBuqqdntodDJGkhlpRTrHsrAMEGxM=
+X-Google-Smtp-Source: APXvYqzI5Knz1BLv9KLoX+QwHyFxEv9cD9Uc1BOp4sz/N8WliWFLEBYWo9DdJzDV/jJjcL3Q6eVucQ==
+X-Received: by 2002:a62:ae0c:: with SMTP id q12mr9699937pff.253.1567770944179;
+        Fri, 06 Sep 2019 04:55:44 -0700 (PDT)
 Received: from acourbot.tok.corp.google.com ([2401:fa00:4:4:9712:8cf1:d0f:7d33])
-        by smtp.gmail.com with ESMTPSA id o22sm3667394pjq.21.2019.09.06.04.55.35
+        by smtp.gmail.com with ESMTPSA id o22sm3667394pjq.21.2019.09.06.04.55.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Sep 2019 04:55:37 -0700 (PDT)
+        Fri, 06 Sep 2019 04:55:43 -0700 (PDT)
 From:   Alexandre Courbot <acourbot@chromium.org>
 To:     Yunfei Dong <yunfei.dong@mediatek.com>,
         Tiffany Lin <tiffany.lin@mediatek.com>,
@@ -62,9 +62,9 @@ To:     Yunfei Dong <yunfei.dong@mediatek.com>,
 Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
         linux-kernel@vger.kernel.org,
         Alexandre Courbot <acourbot@chromium.org>
-Subject: [RFC PATCH v2 03/13] media: mtk-vcodec: vdec: clean up vidioc_vdec_s_fmt a bit
-Date:   Fri,  6 Sep 2019 20:55:03 +0900
-Message-Id: <20190906115513.159705-4-acourbot@chromium.org>
+Subject: [RFC PATCH v2 05/13] media: mtk-vcodec: vdec: handle firmware version field
+Date:   Fri,  6 Sep 2019 20:55:05 +0900
+Message-Id: <20190906115513.159705-6-acourbot@chromium.org>
 X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
 In-Reply-To: <20190906115513.159705-1-acourbot@chromium.org>
 References: <20190906115513.159705-1-acourbot@chromium.org>
@@ -75,63 +75,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Check for a potentially NULL pointer that was overlooked and use shorter
-accessors to the same data. While we are at it, sprinkle a few comments.
+Firmwares for decoders newer than MT8173 will include an ABI version
+number in their initialization ack message. Add the capacity to manage
+it and make initialization fail if the firmware ABI is of a version that
+we don't support.
+
+For MT8173, this ABI version field does not exist ; thus ignore it on
+this chip. There should only be one firmware version available for it
+anyway.
 
 Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
 ---
- .../media/platform/mtk-vcodec/mtk_vcodec_dec.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ .../mtk-vcodec/mtk_vcodec_dec_stateful.c      |  1 +
+ .../platform/mtk-vcodec/mtk_vcodec_drv.h      |  8 +++++++
+ .../media/platform/mtk-vcodec/vdec_ipi_msg.h  |  5 +++++
+ .../media/platform/mtk-vcodec/vdec_vpu_if.c   | 21 +++++++++++++++++--
+ 4 files changed, 33 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
-index 653f111532ab..858727824889 100644
---- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
-+++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
-@@ -841,12 +841,20 @@ static int vidioc_vdec_s_fmt(struct file *file, void *priv,
- 		return -EINVAL;
+diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_stateful.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_stateful.c
+index 2471624ddfe3..73b16c34d3d9 100644
+--- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_stateful.c
++++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_stateful.c
+@@ -616,6 +616,7 @@ static struct vb2_ops mtk_vdec_frame_vb2_ops = {
+ };
  
- 	pix_mp = &f->fmt.pix_mp;
-+	/*
-+	 * Setting OUTPUT format after OUTPUT buffers are allocated is invalid
-+	 * if using the stateful API.
-+	 */
- 	if ((f->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE) &&
- 	    vb2_is_busy(&ctx->m2m_ctx->out_q_ctx.q)) {
- 		mtk_v4l2_err("out_q_ctx buffers already requested");
- 		ret = -EBUSY;
+ const struct mtk_vcodec_dec_pdata mtk_frame_8173_pdata = {
++	.chip = MTK_MT8173,
+ 	.init_vdec_params = mtk_init_vdec_params,
+ 	.ctrls_setup = mtk_vcodec_dec_ctrls_setup,
+ 	.vdec_vb2_ops = &mtk_vdec_frame_vb2_ops,
+diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h b/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
+index 23d4cc135ee6..fc99f686faa9 100644
+--- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
++++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
+@@ -300,6 +300,10 @@ struct mtk_vcodec_ctx {
+ 
+ };
+ 
++enum mtk_chip {
++	MTK_MT8173,
++};
++
+ /**
+  * struct mtk_vcodec_dec_pdata - compatible data for each IC
+  * @init_vdec_params: init vdec params
+@@ -317,6 +321,8 @@ struct mtk_vcodec_ctx {
+  * @vdec_framesizes: supported video decoder frame sizes
+  * @num_framesizes: count of video decoder frame sizes
+  *
++ * @chip: chip this decoder is compatible with
++ *
+  * @uses_stateless_api: whether the decoder uses the stateless API with requests
+  */
+ 
+@@ -336,6 +342,8 @@ struct mtk_vcodec_dec_pdata {
+ 	const struct mtk_codec_framesizes *vdec_framesizes;
+ 	const int num_framesizes;
+ 
++	enum mtk_chip chip;
++
+ 	bool uses_stateless_api;
+ };
+ 
+diff --git a/drivers/media/platform/mtk-vcodec/vdec_ipi_msg.h b/drivers/media/platform/mtk-vcodec/vdec_ipi_msg.h
+index 47a1c1c0fd04..eb66729fda63 100644
+--- a/drivers/media/platform/mtk-vcodec/vdec_ipi_msg.h
++++ b/drivers/media/platform/mtk-vcodec/vdec_ipi_msg.h
+@@ -83,12 +83,17 @@ struct vdec_ap_ipi_dec_start {
+  * @status	: VPU exeuction result
+  * @ap_inst_addr	: AP vcodec_vpu_inst instance address
+  * @vpu_inst_addr	: VPU decoder instance address
++ * @vdec_abi_version:	ABI version of the firmware. Kernel can use it to
++ *			ensure that it is compatible with the firmware.
++ *			This field is not valid for MT8173 and must not be
++ *			accessed for this chip.
+  */
+ struct vdec_vpu_ipi_init_ack {
+ 	uint32_t msg_id;
+ 	int32_t status;
+ 	uint64_t ap_inst_addr;
+ 	uint32_t vpu_inst_addr;
++	uint32_t vdec_abi_version;
+ };
+ 
+ #endif
+diff --git a/drivers/media/platform/mtk-vcodec/vdec_vpu_if.c b/drivers/media/platform/mtk-vcodec/vdec_vpu_if.c
+index 70abfd4cd4b9..cc963c813654 100644
+--- a/drivers/media/platform/mtk-vcodec/vdec_vpu_if.c
++++ b/drivers/media/platform/mtk-vcodec/vdec_vpu_if.c
+@@ -22,6 +22,22 @@ static void handle_init_ack_msg(struct vdec_vpu_ipi_init_ack *msg)
+ 	vpu->inst_addr = msg->vpu_inst_addr;
+ 
+ 	mtk_vcodec_debug(vpu, "- vpu_inst_addr = 0x%x", vpu->inst_addr);
++
++	/* Firmware version field does not exist on MT8173. */
++	if (vpu->ctx->dev->vdec_pdata->chip == MTK_MT8173)
++		return;
++
++	/* Check firmware version. */
++	mtk_vcodec_debug(vpu, "firmware version 0x%x\n", msg->vdec_abi_version);
++	switch (msg->vdec_abi_version) {
++	case 1:
++		break;
++	default:
++		mtk_vcodec_err(vpu, "unhandled firmware version 0x%x\n",
++			       msg->vdec_abi_version);
++		vpu->failure = 1;
++		break;
++	}
+ }
+ 
+ /*
+@@ -42,6 +58,9 @@ static void vpu_dec_ipi_handler(void *data, unsigned int len, void *priv)
+ 
+ 	mtk_vcodec_debug(vpu, "+ id=%X", msg->msg_id);
+ 
++	vpu->failure = msg->status;
++	vpu->signaled = 1;
++
+ 	if (msg->status == 0) {
+ 		switch (msg->msg_id) {
+ 		case VPU_IPIMSG_DEC_INIT_ACK:
+@@ -61,8 +80,6 @@ static void vpu_dec_ipi_handler(void *data, unsigned int len, void *priv)
  	}
  
-+	/*
-+	 * Setting CAPTURE format after CAPTURE buffers are allocated is
-+	 * invalid.
-+	 */
- 	if ((f->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE) &&
- 	    vb2_is_busy(&ctx->m2m_ctx->cap_q_ctx.q)) {
- 		mtk_v4l2_err("cap_q_ctx buffers already requested");
-@@ -865,6 +873,8 @@ static int vidioc_vdec_s_fmt(struct file *file, void *priv,
- 			fmt = mtk_vdec_find_format(f);
- 		}
- 	}
-+	if (fmt == NULL)
-+		return -EINVAL;
+ 	mtk_vcodec_debug(vpu, "- id=%X", msg->msg_id);
+-	vpu->failure = msg->status;
+-	vpu->signaled = 1;
+ }
  
- 	q_data->fmt = fmt;
- 	vidioc_try_fmt(f, q_data->fmt);
-@@ -873,10 +883,10 @@ static int vidioc_vdec_s_fmt(struct file *file, void *priv,
- 		q_data->coded_width = pix_mp->width;
- 		q_data->coded_height = pix_mp->height;
- 
--		ctx->colorspace = f->fmt.pix_mp.colorspace;
--		ctx->ycbcr_enc = f->fmt.pix_mp.ycbcr_enc;
--		ctx->quantization = f->fmt.pix_mp.quantization;
--		ctx->xfer_func = f->fmt.pix_mp.xfer_func;
-+		ctx->colorspace = pix_mp->colorspace;
-+		ctx->ycbcr_enc = pix_mp->ycbcr_enc;
-+		ctx->quantization = pix_mp->quantization;
-+		ctx->xfer_func = pix_mp->xfer_func;
- 
- 		if (ctx->state == MTK_STATE_FREE) {
- 			ret = vdec_if_init(ctx, q_data->fmt->fourcc);
+ static int vcodec_vpu_send_msg(struct vdec_vpu_inst *vpu, void *msg, int len)
 -- 
 2.23.0.187.g17f5b7556c-goog
 
