@@ -2,174 +2,103 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5755CC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A31AFC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E93C206CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:17:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567793832;
-	bh=4sexOClVRfEKRvP4SaMC/43yPprZ0Rt9XHDAzG/IwaA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=IZxMf5/6UALyPLuJWcGfMSaA+iw01tcOp89SBEXeYb9g6A/B8xDSggMSTnzHBuujL
-	 rvCz8FhMQTZjmI+oCEcu+h5v3MPGadpQMeFXnImociqPWngYqFpvam75fAz7rE5k7V
-	 z/j6e/1xz0sxMR72YAWeUwlwwqyU3H1PgS3ugMoE=
+	by mail.kernel.org (Postfix) with ESMTP id 744932173B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:17:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436521AbfIFSRL (ORCPT
+        id S2436531AbfIFSRU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 14:17:11 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:46442 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404380AbfIFSRK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 14:17:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=AN/xZn55x9Paj2FV2HROTLrpQ/d1Z8rdQtqFNYMx15k=; b=a2LyxNAI0Lcsqgpec/cV6Geyu
-        csa/ODYVy4viu6nyQy7lzVgeX7GpkedJsMEKqTRisl8Wqr+6K0CjKYsjdhaxFUi6VTOMC0v1sIWBU
-        BAoQDAixwLCwGLSHROyiiFLjlJXVuTUMAszBhwQBr1TiJeGkDbSpEWUymdCo5+2aqlyJFYZXawsHh
-        D+tLRpYT0rOC4GqQsUfo3GFdznIQ/nBbsUSEdT0bb4M87lFTgalcf1If/McWLOusags15Jnk+Kg8d
-        JG6c/nJ+yLbOSAqk/vDFStx05rvTAxpwoe3uFDutK/ZPKAEVYaPExSpKGtX4Y2ypCaXvvEpe2yk/e
-        gVtYrPU6w==;
-Received: from [177.159.253.249] (helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i6InE-00047a-18; Fri, 06 Sep 2019 18:17:08 +0000
-Date:   Fri, 6 Sep 2019 15:17:02 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Jessica Yu <jeyu@kernel.org>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        Thomas Gleixner <tglx@linutronix.de>, linux-doc@vger.kernel.org
-Subject: Re: [PATCH] docs: license-rules.txt: cover SPDX headers on Python
- scripts
-Message-ID: <20190906151702.3e67ccf7@coco.lan>
-In-Reply-To: <9d30210a2d024aae4c36c8995019cdeab29e1e19.camel@perches.com>
-References: <20190905055614.7958918b@coco.lan>
-        <88e638eb959095ab6657d295f9f8c27169569bf2.1567675272.git.mchehab+samsung@kernel.org>
-        <20190905092703.GA30899@kroah.com>
-        <20190905090701.37dcf75e@coco.lan>
-        <b32c2e46b91e7bcda2a9bd140673f06d71b2487a.camel@perches.com>
-        <20190906083457.7e7934ec@coco.lan>
-        <9d30210a2d024aae4c36c8995019cdeab29e1e19.camel@perches.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 6 Sep 2019 14:17:20 -0400
+Received: from mga11.intel.com ([192.55.52.93]:16000 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404380AbfIFSRS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 14:17:18 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Sep 2019 11:17:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,473,1559545200"; 
+   d="scan'208";a="213231606"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by fmsmga002.fm.intel.com with SMTP; 06 Sep 2019 11:17:14 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Fri, 06 Sep 2019 21:17:14 +0300
+Date:   Fri, 6 Sep 2019 21:17:14 +0300
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fbdev: matrox: make array wtst_xlat static const, makes
+ object smaller
+Message-ID: <20190906181714.GU7482@intel.com>
+References: <20190906181114.31414-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190906181114.31414-1-colin.king@canonical.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, 06 Sep 2019 10:33:42 -0700
-Joe Perches <joe@perches.com> escreveu:
-
-> On Fri, 2019-09-06 at 08:34 -0300, Mauro Carvalho Chehab wrote:
-> > I did some changes on it, plus one change at the pedantic mode of
-> > scripts/spdxcheck.py, and placed the corresponding patches at:
-> > 
-> > 	https://git.linuxtv.org/mchehab/experimental.git/log/?h=spdx_pedantic  
+On Fri, Sep 06, 2019 at 07:11:14PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> Your script needs a modification of this line:
-
-It is yours script, I just made a few improvements for it to also catch
-scripts.
-
->     $spdx = $1 if m/(SPDX-License-Identifier:.*)/;
+> Don't populate the array wtst_xlat on the stack but instead make it
+> static const. Makes the object code smaller by 89 bytes.
 > 
-> This is on $_ and not $spdx.
+> Before:
+>    text	   data	    bss	    dec	    hex	filename
+>   14347	    840	      0	  15187	   3b53	fbdev/matrox/matroxfb_misc.o
 > 
-> This line needs to be:
+> After:
+>    text	   data	    bss	    dec	    hex	filename
+>   14162	    936	      0	  15098	   3afa	fbdev/matrox/matroxfb_misc.o
 > 
->     $spdx = $1 if $spdx =~ m/(SPDX-License-Identifier:.*)/;
+> (gcc version 9.2.1, amd64)
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/video/fbdev/matrox/matroxfb_misc.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/video/fbdev/matrox/matroxfb_misc.c b/drivers/video/fbdev/matrox/matroxfb_misc.c
+> index c7aaca12805e..feb0977c82eb 100644
+> --- a/drivers/video/fbdev/matrox/matroxfb_misc.c
+> +++ b/drivers/video/fbdev/matrox/matroxfb_misc.c
+> @@ -673,7 +673,10 @@ static int parse_pins5(struct matrox_fb_info *minfo,
+>  	if (bd->pins[115] & 4) {
+>  		minfo->values.reg.mctlwtst_core = minfo->values.reg.mctlwtst;
+>  	} else {
+> -		u_int32_t wtst_xlat[] = { 0, 1, 5, 6, 7, 5, 2, 3 };
+> +		static const u_int32_t wtst_xlat[] = {
+> +			0, 1, 5, 6, 7, 5, 2, 3
 
-Gah, true!
+All of those would easily fit in u8 as well.
 
-It also doesn't get the case where SPDX-License-Identifier: is
-followed by a tab, and fixed an issue when detecting files without
-any extension.
+> +		};
+> +
+>  		minfo->values.reg.mctlwtst_core = (minfo->values.reg.mctlwtst & ~7) |
+>  						  wtst_xlat[minfo->values.reg.mctlwtst & 7];
+>  	}
+> -- 
+> 2.20.1
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
-The enclosed script does a better job.
-
-I changed the output of it on my testing branch:
-	https://git.linuxtv.org/mchehab/experimental.git/log/?h=spdx_pedantic
-
-The only thing that it doesn't change is an issue with an asm code,
-with uses "@" for comments.
-
-As this is a single file, better to do it manually:
-
-	https://git.linuxtv.org/mchehab/experimental.git/commit/?h=spdx_pedantic&id=f1b7b2169ae2c8d8ab80a5997ebef9aa03a42d30
-
-Thanks,
-Mauro
-
----
-
-#!/usr/bin/perl 
-
-@file_arr = qx(git grep -nE 'SPDX-License-Identifier:\\s' | grep -v ':1:');
-foreach (@file_arr) {
-    /^([^:]+):([^:]+):(.*)/;
-    my ($file, $line, $spdx) = ($1, $2, $3);
-
-    next if ($file =~ m,(COPYING|LICENSES/|sha1-armv4-large.S),);
-    next if ($line > 10);
-
-    $spdx =~ s/^\s*\/?\*\s*//;
-    $spdx =~ s/\s*\*\/\s*$//;
-    $spdx = $1 if $spdx =~ m/(SPDX-License-Identifier:.*)/;
-    $spdx =~ s/(SPDX-License-Identifier:)\s+/$1 /;
-
-    if ($file =~ /\.(h|dts|dtsi|S)$/) {
-	$spdx = "/* $spdx */";
-    } elsif ($file =~ /\.(c)$/) {
-	$spdx = "// $spdx";
-    } elsif ($file =~ /\.(rst)$/) {
-	$spdx = ".. $spdx";
-    } elsif ($file =~ /\.(py|pl|sh|tc)$/ || !($file =~ /\./)) {
-	$spdx = "# $spdx";
-    } else {
-        next;
-    }
-
-    open(FH, '<', $file) or die $!;
-    my @lines = <FH>;
-    close FH;
-    open(FH, '>', $file) or die $!;
-    my $count = 0;
-    my $print_spdx = 1;
-    foreach (@lines) {
-	$count++;
-        if ($print_spdx) {
-            if ($count == 1 && (/:orphan:/ || /^#\!/)) {
-                print FH "$_";
-                next;
-            }
-            if ($count <= 2 && /^[ \t\f]*#.*?coding[:=][ \t]*([-_.a-zA-Z0-9]+)/) {
-                print FH "$_";
-                next;
-            }
-            print FH "$spdx\n";
-	    $print_spdx = 0;
-        }
-	next if ($count == $line);
-	next if ($count == $line - 1 && $_ =~ /^\s*\*\s*$/);
-	next if ($count == $line + 1 && $_ =~ /^\s*\*\s*$/);
-	next if ($count == $line - 1 && $_ =~ /^$/);
-	print FH "$_";
-    }
-    close FH;
-}
+-- 
+Ville Syrjälä
+Intel
