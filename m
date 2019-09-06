@@ -2,186 +2,108 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94971C43140
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 01:36:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 094BEC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 01:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91ABE207E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 01:36:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECFC02082C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 01:39:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567733950;
+	bh=aHg0E3mt7AI+DRDT0bvLOsakhhkONV9V1aoQPlFMNE4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=mofjjNyNSulAK9BY9v1shSGC2DWkyxij9BRb1rULgy0/lm5t69xSz3MWDYP8yNkEA
+	 Be0Wa0OrvWSRJV3cqLyJek0ltWK6BMe8Eto+oPODALcrudCAaghs8V4ruL7DTnJvpK
+	 QPYH5ZtxCX85fBJaNQ0z/uhQXChcZVf++q8puif0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390992AbfIFBgK (ORCPT
+        id S2387444AbfIFBjJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 21:36:10 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:39778 "EHLO inva021.nxp.com"
+        Thu, 5 Sep 2019 21:39:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729999AbfIFBgJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 21:36:09 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 56BDA200958;
-        Fri,  6 Sep 2019 03:36:06 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4EFA1200959;
-        Fri,  6 Sep 2019 03:35:09 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 408A14030B;
-        Fri,  6 Sep 2019 09:34:59 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     mturquette@baylibre.com, sboyd@kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        leonard.crestez@nxp.com, abel.vesa@nxp.com, peng.fan@nxp.com,
-        ping.bai@nxp.com, chen.fang@nxp.com, shengjiu.wang@nxp.com,
-        aisheng.dong@nxp.com, sfr@canb.auug.org.au, l.stach@pengutronix.de,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2 2/2] clk: imx8mn: Use common 1443X/1416X PLL clock structure
-Date:   Fri,  6 Sep 2019 09:34:06 -0400
-Message-Id: <1567776846-6373-2-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1567776846-6373-1-git-send-email-Anson.Huang@nxp.com>
-References: <1567776846-6373-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1726858AbfIFBjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 21:39:08 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EC3E207E0;
+        Fri,  6 Sep 2019 01:39:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567733948;
+        bh=aHg0E3mt7AI+DRDT0bvLOsakhhkONV9V1aoQPlFMNE4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=h1/LB253vTL/bFRu7AR63XO0H8mRHG6hnMyzEjSZqjzMKbRQ0kmWWrDnElyIqhyPG
+         n+6jMf2x9aq15ZMF5LEowxUqh0dJkOpAVi0GRxp6x6xK5fVMdxRzjTMI6QJEOFuSyF
+         dEPeTPyOgb9E8xo94UpkzEbGkpFurmqxwT16X7GI=
+Date:   Fri, 6 Sep 2019 10:39:03 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org
+Subject: Re: [PATCH -tip v2 1/2] x86: xen: insn: Decode Xen and KVM
+ emulate-prefix signature
+Message-Id: <20190906103903.36868b9074b3111ada3d85da@kernel.org>
+In-Reply-To: <20190906011350.y65zwuychhryt7eg@treble>
+References: <156773100816.29031.12557431294039450779.stgit@devnote2>
+        <156773101914.29031.4027232648773934988.stgit@devnote2>
+        <20190906011350.y65zwuychhryt7eg@treble>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use common 1413X/1416X PLL clock structure to save a lot
-of duplicated code on i.MX8MN clock driver.
+On Thu, 5 Sep 2019 20:13:50 -0500
+Josh Poimboeuf <jpoimboe@redhat.com> wrote:
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V1:
-	- Changes according to patch 1/2, now PLL table/structure is in pll14xx driver.
----
- drivers/clk/imx/clk-imx8mn.c  | 89 +++++--------------------------------------
- drivers/clk/imx/clk-pll14xx.c |  2 +
- 2 files changed, 12 insertions(+), 79 deletions(-)
+> On Fri, Sep 06, 2019 at 09:50:19AM +0900, Masami Hiramatsu wrote:
+> > --- a/tools/objtool/sync-check.sh
+> > +++ b/tools/objtool/sync-check.sh
+> > @@ -4,6 +4,7 @@
+> >  FILES='
+> >  arch/x86/include/asm/inat_types.h
+> >  arch/x86/include/asm/orc_types.h
+> > +arch/x86/include/asm/xen/prefix.h
+> >  arch/x86/lib/x86-opcode-map.txt
+> >  arch/x86/tools/gen-insn-attr-x86.awk
+> >  '
+> > @@ -46,6 +47,6 @@ done
+> >  check arch/x86/include/asm/inat.h     '-I "^#include [\"<]\(asm/\)*inat_types.h[\">]"'
+> >  check arch/x86/include/asm/insn.h     '-I "^#include [\"<]\(asm/\)*inat.h[\">]"'
+> >  check arch/x86/lib/inat.c             '-I "^#include [\"<]\(../include/\)*asm/insn.h[\">]"'
+> > -check arch/x86/lib/insn.c             '-I "^#include [\"<]\(../include/\)*asm/in\(at\|sn\).h[\">]"'
+> > +check arch/x86/lib/insn.c             '-I "^#include [\"<]\(../include/\)*asm/in\(at\|sn\).h[\">]" -I "^#include [\"<]\(../include/\)*asm/xen/prefix.h[\">]"'
+> 
+> Unfortunately perf also has a similar sync check script:
+> tools/perf/check-headers.sh.  So you'll also need to add the above
+> changes there.
 
-diff --git a/drivers/clk/imx/clk-imx8mn.c b/drivers/clk/imx/clk-imx8mn.c
-index cc65c13..91b6da8 100644
---- a/drivers/clk/imx/clk-imx8mn.c
-+++ b/drivers/clk/imx/clk-imx8mn.c
-@@ -39,75 +39,6 @@ enum {
- 	NR_PLLS,
- };
- 
--static const struct imx_pll14xx_rate_table imx8mn_pll1416x_tbl[] = {
--	PLL_1416X_RATE(1800000000U, 225, 3, 0),
--	PLL_1416X_RATE(1600000000U, 200, 3, 0),
--	PLL_1416X_RATE(1500000000U, 375, 3, 1),
--	PLL_1416X_RATE(1400000000U, 350, 3, 1),
--	PLL_1416X_RATE(1200000000U, 300, 3, 1),
--	PLL_1416X_RATE(1000000000U, 250, 3, 1),
--	PLL_1416X_RATE(800000000U,  200, 3, 1),
--	PLL_1416X_RATE(750000000U,  250, 2, 2),
--	PLL_1416X_RATE(700000000U,  350, 3, 2),
--	PLL_1416X_RATE(600000000U,  300, 3, 2),
--};
--
--static const struct imx_pll14xx_rate_table imx8mn_audiopll_tbl[] = {
--	PLL_1443X_RATE(393216000U, 262, 2, 3, 9437),
--	PLL_1443X_RATE(361267200U, 361, 3, 3, 17511),
--};
--
--static const struct imx_pll14xx_rate_table imx8mn_videopll_tbl[] = {
--	PLL_1443X_RATE(650000000U, 325, 3, 2, 0),
--	PLL_1443X_RATE(594000000U, 198, 2, 2, 0),
--};
--
--static const struct imx_pll14xx_rate_table imx8mn_drampll_tbl[] = {
--	PLL_1443X_RATE(650000000U, 325, 3, 2, 0),
--};
--
--static struct imx_pll14xx_clk imx8mn_audio_pll = {
--		.type = PLL_1443X,
--		.rate_table = imx8mn_audiopll_tbl,
--		.rate_count = ARRAY_SIZE(imx8mn_audiopll_tbl),
--};
--
--static struct imx_pll14xx_clk imx8mn_video_pll = {
--		.type = PLL_1443X,
--		.rate_table = imx8mn_videopll_tbl,
--		.rate_count = ARRAY_SIZE(imx8mn_videopll_tbl),
--};
--
--static struct imx_pll14xx_clk imx8mn_dram_pll = {
--		.type = PLL_1443X,
--		.rate_table = imx8mn_drampll_tbl,
--		.rate_count = ARRAY_SIZE(imx8mn_drampll_tbl),
--};
--
--static struct imx_pll14xx_clk imx8mn_arm_pll = {
--		.type = PLL_1416X,
--		.rate_table = imx8mn_pll1416x_tbl,
--		.rate_count = ARRAY_SIZE(imx8mn_pll1416x_tbl),
--};
--
--static struct imx_pll14xx_clk imx8mn_gpu_pll = {
--		.type = PLL_1416X,
--		.rate_table = imx8mn_pll1416x_tbl,
--		.rate_count = ARRAY_SIZE(imx8mn_pll1416x_tbl),
--};
--
--static struct imx_pll14xx_clk imx8mn_vpu_pll = {
--		.type = PLL_1416X,
--		.rate_table = imx8mn_pll1416x_tbl,
--		.rate_count = ARRAY_SIZE(imx8mn_pll1416x_tbl),
--};
--
--static struct imx_pll14xx_clk imx8mn_sys_pll = {
--		.type = PLL_1416X,
--		.rate_table = imx8mn_pll1416x_tbl,
--		.rate_count = ARRAY_SIZE(imx8mn_pll1416x_tbl),
--};
--
- static const char * const pll_ref_sels[] = { "osc_24m", "dummy", "dummy", "dummy", };
- static const char * const audio_pll1_bypass_sels[] = {"audio_pll1", "audio_pll1_ref_sel", };
- static const char * const audio_pll2_bypass_sels[] = {"audio_pll2", "audio_pll2_ref_sel", };
-@@ -409,16 +340,16 @@ static int imx8mn_clocks_probe(struct platform_device *pdev)
- 	clks[IMX8MN_SYS_PLL2_REF_SEL] = imx_clk_mux("sys_pll2_ref_sel", base + 0x104, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
- 	clks[IMX8MN_SYS_PLL3_REF_SEL] = imx_clk_mux("sys_pll3_ref_sel", base + 0x114, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
- 
--	clks[IMX8MN_AUDIO_PLL1] = imx_clk_pll14xx("audio_pll1", "audio_pll1_ref_sel", base, &imx8mn_audio_pll);
--	clks[IMX8MN_AUDIO_PLL2] = imx_clk_pll14xx("audio_pll2", "audio_pll2_ref_sel", base + 0x14, &imx8mn_audio_pll);
--	clks[IMX8MN_VIDEO_PLL1] = imx_clk_pll14xx("video_pll1", "video_pll1_ref_sel", base + 0x28, &imx8mn_video_pll);
--	clks[IMX8MN_DRAM_PLL] = imx_clk_pll14xx("dram_pll", "dram_pll_ref_sel", base + 0x50, &imx8mn_dram_pll);
--	clks[IMX8MN_GPU_PLL] = imx_clk_pll14xx("gpu_pll", "gpu_pll_ref_sel", base + 0x64, &imx8mn_gpu_pll);
--	clks[IMX8MN_VPU_PLL] = imx_clk_pll14xx("vpu_pll", "vpu_pll_ref_sel", base + 0x74, &imx8mn_vpu_pll);
--	clks[IMX8MN_ARM_PLL] = imx_clk_pll14xx("arm_pll", "arm_pll_ref_sel", base + 0x84, &imx8mn_arm_pll);
--	clks[IMX8MN_SYS_PLL1] = imx_clk_pll14xx("sys_pll1", "sys_pll1_ref_sel", base + 0x94, &imx8mn_sys_pll);
--	clks[IMX8MN_SYS_PLL2] = imx_clk_pll14xx("sys_pll2", "sys_pll2_ref_sel", base + 0x104, &imx8mn_sys_pll);
--	clks[IMX8MN_SYS_PLL3] = imx_clk_pll14xx("sys_pll3", "sys_pll3_ref_sel", base + 0x114, &imx8mn_sys_pll);
-+	clks[IMX8MN_AUDIO_PLL1] = imx_clk_pll14xx("audio_pll1", "audio_pll1_ref_sel", base, &imx_1443x_pll);
-+	clks[IMX8MN_AUDIO_PLL2] = imx_clk_pll14xx("audio_pll2", "audio_pll2_ref_sel", base + 0x14, &imx_1443x_pll);
-+	clks[IMX8MN_VIDEO_PLL1] = imx_clk_pll14xx("video_pll1", "video_pll1_ref_sel", base + 0x28, &imx_1443x_pll);
-+	clks[IMX8MN_DRAM_PLL] = imx_clk_pll14xx("dram_pll", "dram_pll_ref_sel", base + 0x50, &imx_1443x_pll);
-+	clks[IMX8MN_GPU_PLL] = imx_clk_pll14xx("gpu_pll", "gpu_pll_ref_sel", base + 0x64, &imx_1416x_pll);
-+	clks[IMX8MN_VPU_PLL] = imx_clk_pll14xx("vpu_pll", "vpu_pll_ref_sel", base + 0x74, &imx_1416x_pll);
-+	clks[IMX8MN_ARM_PLL] = imx_clk_pll14xx("arm_pll", "arm_pll_ref_sel", base + 0x84, &imx_1416x_pll);
-+	clks[IMX8MN_SYS_PLL1] = imx_clk_pll14xx("sys_pll1", "sys_pll1_ref_sel", base + 0x94, &imx_1416x_pll);
-+	clks[IMX8MN_SYS_PLL2] = imx_clk_pll14xx("sys_pll2", "sys_pll2_ref_sel", base + 0x104, &imx_1416x_pll);
-+	clks[IMX8MN_SYS_PLL3] = imx_clk_pll14xx("sys_pll3", "sys_pll3_ref_sel", base + 0x114, &imx_1416x_pll);
- 
- 	/* PLL bypass out */
- 	clks[IMX8MN_AUDIO_PLL1_BYPASS] = imx_clk_mux_flags("audio_pll1_bypass", base, 4, 1, audio_pll1_bypass_sels, ARRAY_SIZE(audio_pll1_bypass_sels), CLK_SET_RATE_PARENT);
-diff --git a/drivers/clk/imx/clk-pll14xx.c b/drivers/clk/imx/clk-pll14xx.c
-index 4a61743..3741b01 100644
---- a/drivers/clk/imx/clk-pll14xx.c
-+++ b/drivers/clk/imx/clk-pll14xx.c
-@@ -44,6 +44,8 @@ struct clk_pll14xx {
- const struct imx_pll14xx_rate_table imx_pll1416x_tbl[] = {
- 	PLL_1416X_RATE(1800000000U, 225, 3, 0),
- 	PLL_1416X_RATE(1600000000U, 200, 3, 0),
-+	PLL_1416X_RATE(1500000000U, 375, 3, 1),
-+	PLL_1416X_RATE(1400000000U, 350, 3, 1),
- 	PLL_1416X_RATE(1200000000U, 300, 3, 1),
- 	PLL_1416X_RATE(1000000000U, 250, 3, 1),
- 	PLL_1416X_RATE(800000000U,  200, 3, 1),
+Oops, I thought it was integrated... OK, I'll update this patch.
+
+> 
+> Otherwise
+> 
+> Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
+
+Thanks!
+
+> 
+> -- 
+> Josh
+
+
 -- 
-2.7.4
-
+Masami Hiramatsu <mhiramat@kernel.org>
