@@ -2,204 +2,204 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E5AC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 22:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47DC0C00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 22:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A41A6207FC
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 22:26:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 160A1207FC
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 22:27:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TPOOmssS"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="YupL3jZr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404984AbfIFW0X (ORCPT
+        id S2405006AbfIFW1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 18:26:23 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40395 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404918AbfIFW0S (ORCPT
+        Fri, 6 Sep 2019 18:27:48 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:35532 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728997AbfIFW1r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 18:26:18 -0400
-Received: by mail-pf1-f194.google.com with SMTP id x127so5490463pfb.7;
-        Fri, 06 Sep 2019 15:26:17 -0700 (PDT)
+        Fri, 6 Sep 2019 18:27:47 -0400
+Received: by mail-io1-f65.google.com with SMTP id f4so15623492ion.2
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 15:27:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=dwemBU+v3KzP8p62Iwnfn5JccM5nY24p7G/KK/8dCU8=;
-        b=TPOOmssSdlRC00scR9zIyH6VvqkQesXn8nQHaHe1yocHyV6llbP75QzlImSqMFL7cT
-         ktJBOCI3vrzOuFapqt1nSmnSjBeN25H6fwn0i0281/QdLHBkyZCJLXWieaJjg232vhXu
-         8a9F/N6+pM1A+kQDBwjWFeLzfFy+nK9RwPVeobjlDgf9PWlqBFsU/K0k+V51t1i52sRp
-         3wzmvwY1Wli4vgOkqaYbULaxd924fsIEILtzGa541lT9MCeFt409ROtdynkebTmMQ0nz
-         KKTZTK0YwzOrNdfpeHfikCbryXMLGjMZ2UZgwLogxpf2t8xa5tYBF8TV1sk2gT8Kk17Q
-         EiUQ==
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=8UChFRti7FriSKfd749PLP6AnWejrsOvB1UAiDMJe3s=;
+        b=YupL3jZr/TWgAojD2Ci7M0GvJ+WdRcFE8WDZnIFv/N6RgArGLyiY5qbGsdraqSuraE
+         iWP8AtBHFnAGhl+d9fk3PrEQSwnEJNt7BxH5d/IH/ty5yXUttOKB0kUoHUNAlHGOHM5A
+         BKl7Z9xaKLYVKf0oWs4Fi1LhyoqHwisD8upJ+TE0CNInnHWeaeqRWBkz996JdLrsTrjK
+         Lb1uHuAOnPqgGGjP6EH0xCFZXzryDbi6UWLrc7Aydx3kPdr5KtqgIR+wRonLB1jbhNmN
+         Wj3eFnVJ3sVfXKXHfuVPrhlOR7vK/YKTEJ5ZHT8xTHJcWaZviYwoXONTcr9QxXNrbriK
+         XQzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=dwemBU+v3KzP8p62Iwnfn5JccM5nY24p7G/KK/8dCU8=;
-        b=NZRwzdOjT1Fmy9t11cPQ/NTrNmdRTTpZHI/P6jALDzJKFdwBhoXKVMLy3Bu3W9JBtY
-         IbsqWSt/F816OkzNHhjHwX9kgPmby2kAGLe1BZDT8Y2y4is85xLIXGnxkBu771BL8RoO
-         kTF5ygsdDUq+OcUzC1DkTDJ/PxWsahQexwX+u5pb59RGNIa3IrMg+aK93AO0QioISAhi
-         Bj0+m6TxWkZ2ygrZ82f1YaaNjYJpml/Y9I2c9/MF26SupyJUGu522zsslS8FPy867gLC
-         BmFlw9jaM672UFcCJ8cRj+vvXky7b0NIYtycWs6PvXBf0UTzUVWQ7kiOG7WV6tJVRivl
-         vbSg==
-X-Gm-Message-State: APjAAAUnnuJCncp9CFn7yT7lh8+4/7ckRQYFL5aqhMdySYRKvCMTh6N6
-        KCCWy/YpEg2wsvorO2Qy3wU=
-X-Google-Smtp-Source: APXvYqx23C6Ba42TXbg+9w9fK12tQbcjz/a+3Fdzh88mbhk94bm9Cod2Rn5AKW7eD+mhdxjbKbSwbg==
-X-Received: by 2002:a17:90a:c24e:: with SMTP id d14mr12602456pjx.0.1567808776849;
-        Fri, 06 Sep 2019 15:26:16 -0700 (PDT)
-Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id o130sm9648902pfg.171.2019.09.06.15.26.15
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=8UChFRti7FriSKfd749PLP6AnWejrsOvB1UAiDMJe3s=;
+        b=dmF59PSsU85Gb1neI6b6BaUuQKnHekMvsfsm0jtRp9+mhb6LS4+DzsRjJ6pb5sB4sJ
+         tqk0a6NqgPCeMMu45guUjMb/Cf/fbcxVlMk40dw5LpLFCYmbnNMcNsRsXQuj0HRiDI53
+         QbN0+5iX5DAKvqvhQDdoUH3nVg16+Yv5fZAQHY3ZB349x9uc/gJB4OEfM/T+v4PYz+3K
+         EN1ZckPM3kkClmyIS28Niu735uEvazAWqRVeEhDma18KWLSsiGfn4KCTAec/H6DdHQyC
+         /9Al/ZOg4H4W8jbtU67uajtblgN+/CZE6W18TCqzNoYTOFL0GenhEEcmyzjb585rR3s6
+         yT9w==
+X-Gm-Message-State: APjAAAVAcxNCWjriBfKIb+Z783YPs9vb95p1QvfxLMgsm38FiuZwOlyI
+        xDuXWUMELc0UAp0zy8jVBYAJCjEfQhU=
+X-Google-Smtp-Source: APXvYqz6f3d1f7tO/KV0O5SAVfRLbfjlx9lkm8ZmPnAeOjQ8XT1oSirK57IB5SNTZ6UgHwq6dHAj1g==
+X-Received: by 2002:a6b:c947:: with SMTP id z68mr14000572iof.132.1567808866295;
+        Fri, 06 Sep 2019 15:27:46 -0700 (PDT)
+Received: from localhost (75-161-11-128.albq.qwest.net. [75.161.11.128])
+        by smtp.gmail.com with ESMTPSA id a22sm5346826iot.80.2019.09.06.15.27.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Sep 2019 15:26:15 -0700 (PDT)
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH v2 3/3] software node: remove separate handling of references
-Date:   Fri,  6 Sep 2019 15:26:11 -0700
-Message-Id: <20190906222611.223532-3-dmitry.torokhov@gmail.com>
-X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
-In-Reply-To: <20190906222611.223532-1-dmitry.torokhov@gmail.com>
-References: <20190906222611.223532-1-dmitry.torokhov@gmail.com>
+        Fri, 06 Sep 2019 15:27:45 -0700 (PDT)
+Date:   Fri, 6 Sep 2019 15:27:44 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Christoph Hellwig <hch@lst.de>
+cc:     palmer@sifive.com, bp@alien8.de, mchehab@kernel.org,
+        linux-riscv@lists.infradead.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] riscv: move sifive_l2_cache.c to drivers/soc
+In-Reply-To: <20190818082935.14869-1-hch@lst.de>
+Message-ID: <alpine.DEB.2.21.9999.1909061525040.6292@viisi.sifive.com>
+References: <20190818082935.14869-1-hch@lst.de>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that all users of references have moved to reference properties,
-we can remove separate handling of references.
+On Sun, 18 Aug 2019, Christoph Hellwig wrote:
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
+> The sifive_l2_cache.c is in no way related to RISC-V architecture
+> memory management.  It is a little stub driver working around the fact
+> that the EDAC maintainers prefer their drivers to be structured in a
+> certain way that doesn't fit the SiFive SOCs.
+> 
+> Move the file to drivers/soc and add a Kconfig option for it, as well
+> as the whole drivers/soc boilerplate for CONFIG_SOC_SIFIVE.
 
-v1->v2:
+The code in the patch looks OK to me.  However, two topics that need 
+action:
 
-- dropped rename of struct software_node_ref_args ->
-	struct software_node_reference
+- Since the patch doesn't fix any bugs, there shouldn't be a Fixes: line.  
+Please let me know whether I can drop the line locally before I apply the 
+patch, or whether you'd like to resend it.
 
- drivers/base/swnode.c    | 44 +++++++++++++++-------------------------
- include/linux/property.h | 14 -------------
- 2 files changed, 16 insertions(+), 42 deletions(-)
+- Since the patch touches drivers/edac/Kconfig, it needs to be acked by 
+the EDAC maintainers.  I've added them to this message, but I need you to 
+do the work of chasing down the ack, as is standard Linux practice.
 
-diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index bd720d995123..5dc113de0cae 100644
---- a/drivers/base/swnode.c
-+++ b/drivers/base/swnode.c
-@@ -570,8 +570,7 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
- 				 struct fwnode_reference_args *args)
- {
- 	struct swnode *swnode = to_swnode(fwnode);
--	const struct software_node_reference *ref;
--	const struct software_node_ref_args *ref_args;
-+	const struct software_node_ref_args *ref;
- 	const struct property_entry *prop;
- 	struct fwnode_handle *refnode;
- 	int i;
-@@ -580,36 +579,25 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
- 		return -ENOENT;
- 
- 	prop = property_entry_get(swnode->node->properties, propname);
--	if (prop) {
--		if (prop->type != DEV_PROP_REF)
--			return -EINVAL;
--
--		/*
--		 * We expect all references to be stored as arrays via
--		 * a pointer, even single ones.
--		 */
--		if (!prop->is_array)
--			return -EINVAL;
--
--		if (index * sizeof(*ref_args) >= prop->length)
--			return -ENOENT;
-+	if (!prop)
-+		return -ENOENT;
- 
--		ref_args = &prop->pointer.ref[index];
--	} else {
--		if (!swnode->node->references)
--			return -ENOENT;
-+	if (prop->type != DEV_PROP_REF)
-+		return -EINVAL;
- 
--		for (ref = swnode->node->references; ref->name; ref++)
--			if (!strcmp(ref->name, propname))
--				break;
-+	/*
-+	 * We expect all references to be stored as arrays via
-+	 * a pointer, even single ones.
-+	 */
-+	if (!prop->is_array)
-+		return -EINVAL;
- 
--		if (!ref->name || index > (ref->nrefs - 1))
--			return -ENOENT;
-+	if (index * sizeof(*ref) >= prop->length)
-+		return -ENOENT;
- 
--		ref_args = &ref->refs[index];
--	}
-+	ref = &prop->pointer.ref[index];
- 
--	refnode = software_node_fwnode(ref_args->node);
-+	refnode = software_node_fwnode(ref->node);
- 	if (!refnode)
- 		return -ENOENT;
- 
-@@ -628,7 +616,7 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
- 	args->nargs = nargs;
- 
- 	for (i = 0; i < nargs; i++)
--		args->args[i] = ref_args->args[i];
-+		args->args[i] = ref->args[i];
- 
- 	return 0;
- }
-diff --git a/include/linux/property.h b/include/linux/property.h
-index 6658403f6fa9..5e4adccd6404 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -415,30 +415,16 @@ int fwnode_graph_parse_endpoint(const struct fwnode_handle *fwnode,
- /* -------------------------------------------------------------------------- */
- /* Software fwnode support - when HW description is incomplete or missing */
- 
--/**
-- * struct software_node_reference - Named software node reference property
-- * @name: Name of the property
-- * @nrefs: Number of elements in @refs array
-- * @refs: Array of references with optional arguments
-- */
--struct software_node_reference {
--	const char *name;
--	unsigned int nrefs;
--	const struct software_node_ref_args *refs;
--};
--
- /**
-  * struct software_node - Software node description
-  * @name: Name of the software node
-  * @parent: Parent of the software node
-  * @properties: Array of device properties
-- * @references: Array of software node reference properties
-  */
- struct software_node {
- 	const char *name;
- 	const struct software_node *parent;
- 	const struct property_entry *properties;
--	const struct software_node_reference *references;
- };
- 
- bool is_software_node(const struct fwnode_handle *fwnode);
--- 
-2.23.0.187.g17f5b7556c-goog
+If we can get those within the next few days, I'll add it to the queue for 
+v5.4-rc1.
+
+thanks -
+
+- Paul
+
+> 
+> Fixes: a967a289f169 ("RISC-V: sifive_l2_cache: Add L2 cache controller driver for SiFive SoCs")
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  arch/riscv/mm/Makefile                                 |  1 -
+>  drivers/edac/Kconfig                                   |  2 +-
+>  drivers/soc/Kconfig                                    |  1 +
+>  drivers/soc/Makefile                                   |  1 +
+>  drivers/soc/sifive/Kconfig                             | 10 ++++++++++
+>  drivers/soc/sifive/Makefile                            |  4 ++++
+>  .../riscv/mm => drivers/soc/sifive}/sifive_l2_cache.c  |  0
+>  7 files changed, 17 insertions(+), 2 deletions(-)
+>  create mode 100644 drivers/soc/sifive/Kconfig
+>  create mode 100644 drivers/soc/sifive/Makefile
+>  rename {arch/riscv/mm => drivers/soc/sifive}/sifive_l2_cache.c (100%)
+> 
+> diff --git a/arch/riscv/mm/Makefile b/arch/riscv/mm/Makefile
+> index 74055e1d6f21..d2101d0741d4 100644
+> --- a/arch/riscv/mm/Makefile
+> +++ b/arch/riscv/mm/Makefile
+> @@ -11,6 +11,5 @@ obj-y += extable.o
+>  obj-y += ioremap.o
+>  obj-y += cacheflush.o
+>  obj-y += context.o
+> -obj-y += sifive_l2_cache.o
+>  
+>  obj-$(CONFIG_HUGETLB_PAGE) += hugetlbpage.o
+> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+> index 200c04ce5b0e..9241b3e7a050 100644
+> --- a/drivers/edac/Kconfig
+> +++ b/drivers/edac/Kconfig
+> @@ -462,7 +462,7 @@ config EDAC_ALTERA_SDMMC
+>  
+>  config EDAC_SIFIVE
+>  	bool "Sifive platform EDAC driver"
+> -	depends on EDAC=y && RISCV
+> +	depends on EDAC=y && SIFIVE_L2
+>  	help
+>  	  Support for error detection and correction on the SiFive SoCs.
+>  
+> diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
+> index 833e04a7835c..1778f8c62861 100644
+> --- a/drivers/soc/Kconfig
+> +++ b/drivers/soc/Kconfig
+> @@ -14,6 +14,7 @@ source "drivers/soc/qcom/Kconfig"
+>  source "drivers/soc/renesas/Kconfig"
+>  source "drivers/soc/rockchip/Kconfig"
+>  source "drivers/soc/samsung/Kconfig"
+> +source "drivers/soc/sifive/Kconfig"
+>  source "drivers/soc/sunxi/Kconfig"
+>  source "drivers/soc/tegra/Kconfig"
+>  source "drivers/soc/ti/Kconfig"
+> diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
+> index 2ec355003524..8b49d782a1ab 100644
+> --- a/drivers/soc/Makefile
+> +++ b/drivers/soc/Makefile
+> @@ -20,6 +20,7 @@ obj-y				+= qcom/
+>  obj-y				+= renesas/
+>  obj-$(CONFIG_ARCH_ROCKCHIP)	+= rockchip/
+>  obj-$(CONFIG_SOC_SAMSUNG)	+= samsung/
+> +obj-$(CONFIG_SOC_SIFIVE)	+= sifive/
+>  obj-y				+= sunxi/
+>  obj-$(CONFIG_ARCH_TEGRA)	+= tegra/
+>  obj-y				+= ti/
+> diff --git a/drivers/soc/sifive/Kconfig b/drivers/soc/sifive/Kconfig
+> new file mode 100644
+> index 000000000000..9ffb2e8a48cd
+> --- /dev/null
+> +++ b/drivers/soc/sifive/Kconfig
+> @@ -0,0 +1,10 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +if SOC_SIFIVE
+> +
+> +config SIFIVE_L2
+> +	tristate "Sifive L2 Cache controller"
+> +	help
+> +	  Support for the L2 cache controller on SiFive platforms.
+> +
+> +endif
+> diff --git a/drivers/soc/sifive/Makefile b/drivers/soc/sifive/Makefile
+> new file mode 100644
+> index 000000000000..9b4a85558347
+> --- /dev/null
+> +++ b/drivers/soc/sifive/Makefile
+> @@ -0,0 +1,4 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +obj-$(CONFIG_SIFIVE_L2)	+= sifive_l2_cache.o
+> +
+> diff --git a/arch/riscv/mm/sifive_l2_cache.c b/drivers/soc/sifive/sifive_l2_cache.c
+> similarity index 100%
+> rename from arch/riscv/mm/sifive_l2_cache.c
+> rename to drivers/soc/sifive/sifive_l2_cache.c
+> -- 
+> 2.20.1
+> 
+> 
+
 
