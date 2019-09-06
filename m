@@ -2,85 +2,198 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C92C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08081C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F6662070C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:10:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7DB820842
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:11:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Ez1yUFu1";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ZUGx+jQA"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Xx71kc9Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394065AbfIFOK3 (ORCPT
+        id S2404574AbfIFOLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 10:10:29 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:44702 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728978AbfIFOK3 (ORCPT
+        Fri, 6 Sep 2019 10:11:39 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51104 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731109AbfIFOLi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 10:10:29 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 898D76115B; Fri,  6 Sep 2019 14:10:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567779028;
-        bh=feH1EvpOenhl2IGvjR9dljrk5cvxpWB/HARVbpGVAN0=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=Ez1yUFu1Fgmpvd5G6H+wdWAIcs5EaWqKd8arPaUpsDc2kk47aAZU6kKvAGW3bdwZk
-         4CXbQHg6GT0Vcbvycc8WQrxLLN3TqLNRk7K7DmWSsVku1CZW3LMnzMgdvui3m+dYLw
-         BE8GTmWGOrVXZ9UbomOl/7E26webKgg73eG0cvRs=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 53CBD607F4;
-        Fri,  6 Sep 2019 14:10:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567779027;
-        bh=feH1EvpOenhl2IGvjR9dljrk5cvxpWB/HARVbpGVAN0=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=ZUGx+jQAkcNoXXo+DGw9/K6eTWQoqojqiFVvT2e3u5/fhjpS6EqcNmJLcaLpmY3Qm
-         yxrfOCRE+3VNgEx91mn/dBdlU+lpPBEiJWyN29nMpZ9XB0ez6iCZgBZJQ2/p2TkLZ/
-         Q2L/yYjB+Sy/Wy4jzqIuMtVaKEJhF4PRJ4MG7r2k=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 53CBD607F4
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Fri, 6 Sep 2019 10:11:38 -0400
+Received: by mail-wm1-f67.google.com with SMTP id c10so6709885wmc.0
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 07:11:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uxSs6u5eFL2Fmxz4qSSdK4W0hbBeAeuUV7TP8iEVHbA=;
+        b=Xx71kc9ZA2dizC2CobXhZKpxSwoNdELsJ3zjdxUffb/FAZIA2ONnikzPGal5kY1V21
+         83QeMQaYfPQ7tJEjiKTCJkk7MxEThgQU5T8CgfbzrtRcMYS/pHWBbkEP7OH6+KXnMn3T
+         STjK0qX1Fi1jEhBUkFtcPs8kOPx2cTo4LJ4x4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uxSs6u5eFL2Fmxz4qSSdK4W0hbBeAeuUV7TP8iEVHbA=;
+        b=XiHU+X2V3o9C0Y8W4VzbRxsldUtsfGmO2pf82EuKRMTDz55ScQf3l0NaJxAPQqve2S
+         q/pSSGDHhOWwqmAe5vZ8LXFSOJvrgwWTCFAetmIuTFix2YP+p1ux0fxR2qPPnGInThyZ
+         qzN8OV8bYmv9HCHaNjJoGsb8K8zG5dmTmFM3ubOoU3G8H7xDRhiYNuK9pBlEUj9nzpQL
+         MHw2n3l5V+8cWVHQF5QfUy9ulhFCd5o+5LPdWozHwqAraIoleq6CYi8qr2w0+S/FE0Bl
+         0HlLloUFPFNJSmJQ2H0FBehfuIcKNqYnN2080bfj6Il1tW3nEDa2ftwTC/JQmBv1wzmg
+         gYRg==
+X-Gm-Message-State: APjAAAVC5FkSiQ2DYf7y1Sqzo7IITkxFotlYNZsal13QyQgYm21Pv1hd
+        cGighWacY9qOScV2hWLdIOpmkpNG8mP+kZdxNxYcUA==
+X-Google-Smtp-Source: APXvYqyFWtG3K4VffBanZjWgEE0gjBI9JN1KgXZTx05j8BUCf2JwO4vNBjVITkdWqykFiJqHpd4ZeLH18rn0mXMuaKY=
+X-Received: by 2002:a05:600c:2486:: with SMTP id 6mr7217627wms.82.1567779095791;
+ Fri, 06 Sep 2019 07:11:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] hostap: remove set but not used variable 'copied' in
- prism2_io_debug_proc_read
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <1567497430-22539-1-git-send-email-zhongjiang@huawei.com>
-References: <1567497430-22539-1-git-send-email-zhongjiang@huawei.com>
-To:     zhong jiang <zhongjiang@huawei.com>
-Cc:     <davem@davemloft.net>, <zhongjiang@huawei.com>,
-        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190906141028.898D76115B@smtp.codeaurora.org>
-Date:   Fri,  6 Sep 2019 14:10:28 +0000 (UTC)
+References: <20190906035813.24046-1-abhishek.shah@broadcom.com>
+ <20190906083816.GD9720@e119886-lin.cambridge.arm.com> <CAKUFe6ZuRGJSmLdXqTWJzX-nE_Vh4yEQF_-rf+BWFrD_r4BRaQ@mail.gmail.com>
+ <20190906100114.GE9720@e119886-lin.cambridge.arm.com>
+In-Reply-To: <20190906100114.GE9720@e119886-lin.cambridge.arm.com>
+From:   Abhishek Shah <abhishek.shah@broadcom.com>
+Date:   Fri, 6 Sep 2019 19:41:23 +0530
+Message-ID: <CAKUFe6aHGM0qHXcwopVfv_6+ALA=zmtBzSwNUO6qg8OEG-h_Ww@mail.gmail.com>
+Subject: Re: [PATCH 1/1] PCI: iproc: Invalidate PAXB address mapping before
+ programming it
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        linux-pci@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-zhong jiang <zhongjiang@huawei.com> wrote:
+Hi Andrew,
 
-> Obviously, variable 'copied' is initialized to zero. But it is not used.
-> hence just remove it.
-> 
-> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
 
-Patch applied to wireless-drivers-next.git, thanks.
+On Fri, Sep 6, 2019 at 3:31 PM Andrew Murray <andrew.murray@arm.com> wrote:
+>
+> On Fri, Sep 06, 2019 at 02:55:19PM +0530, Abhishek Shah wrote:
+> > Hi Andrew,
+> >
+> > Thanks for the review. Please see my response inline:
+> >
+> > On Fri, Sep 6, 2019 at 2:08 PM Andrew Murray <andrew.murray@arm.com> wrote:
+> > >
+> > > On Fri, Sep 06, 2019 at 09:28:13AM +0530, Abhishek Shah wrote:
+> > > > Invalidate PAXB inbound/outbound address mapping each time before
+> > > > programming it. This is helpful for the cases where we need to
+> > > > reprogram inbound/outbound address mapping without resetting PAXB.
+> > > > kexec kernel is one such example.
+> > >
+> > > Why is this approach better than resetting the PAXB (I assume that's
+> > > the PCI controller IP)? Wouldn't resetting the PAXB address this issue,
+> > > and ensure that no other configuration is left behind?
+> > >
+> > We normally reset PAXB in the firmware(ATF). But for cases like kexec
+> > kernel boot,
+> > we do not execute any firmware code and directly boot into kernel.
+> >
+> > We could have done PAXB reset in the driver itself as you have suggested here.
+> > But note that this detail could vary for each SoC, because these
+> > registers are not part
+> > of PAXB register space itself, rather exists in a register space responsible for
+> > controlling power to various wrappers in PCIe IP. Normally, this kind
+> > of SoC specific
+> > details are handled in firmware itself, we don't bring them to driver level.
+>
+> OK understood.
+>
+> >
+> > > Or is this related to earlier boot stages loading firmware for the emulated
+> > > downstream endpoints (ep_is_internal)?
+> > >
+> > > Finally, in the case where ep_is_internal do you need to disable anything
+> > > prior to invalidating the mappings?
+> > >
+> > No, ep_is_internal  is indicator for PAXC IP. It does not have
+> > mappings as in PAXB.
+>
+> I think I meant !ep_is_internal. I.e. is there possibility of inbound traffic
+> prior to invalidating the mappings. I'd assume not, but that's an assumption.
+>
+No, EP devices are not even enumerated yet.
 
-64827a6ac049 hostap: remove set but not used variable 'copied' in prism2_io_debug_proc_read
-
--- 
-https://patchwork.kernel.org/patch/11127357/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+> Either way:
+>
+> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+>
+> >
+> >
+> > Regards,
+> > Abhishek
+> > > >
+> > > > Signed-off-by: Abhishek Shah <abhishek.shah@broadcom.com>
+> > > > Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+> > > > Reviewed-by: Vikram Mysore Prakash <vikram.prakash@broadcom.com>
+> > > > ---
+> > > >  drivers/pci/controller/pcie-iproc.c | 28 ++++++++++++++++++++++++++++
+> > > >  1 file changed, 28 insertions(+)
+> > > >
+> > > > diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
+> > > > index e3ca46497470..99a9521ba7ab 100644
+> > > > --- a/drivers/pci/controller/pcie-iproc.c
+> > > > +++ b/drivers/pci/controller/pcie-iproc.c
+> > > > @@ -1245,6 +1245,32 @@ static int iproc_pcie_map_dma_ranges(struct iproc_pcie *pcie)
+> > > >       return ret;
+> > > >  }
+> > > >
+> > > > +static void iproc_pcie_invalidate_mapping(struct iproc_pcie *pcie)
+> > > > +{
+> > > > +     struct iproc_pcie_ib *ib = &pcie->ib;
+> > > > +     struct iproc_pcie_ob *ob = &pcie->ob;
+> > > > +     int idx;
+> > > > +
+> > > > +     if (pcie->ep_is_internal)
+> > > > +             return;
+> > > > +
+> > > > +     if (pcie->need_ob_cfg) {
+> > > > +             /* iterate through all OARR mapping regions */
+> > > > +             for (idx = ob->nr_windows - 1; idx >= 0; idx--) {
+> > > > +                     iproc_pcie_write_reg(pcie,
+> > > > +                                          MAP_REG(IPROC_PCIE_OARR0, idx), 0);
+> > > > +             }
+> > > > +     }
+> > > > +
+> > > > +     if (pcie->need_ib_cfg) {
+> > > > +             /* iterate through all IARR mapping regions */
+> > > > +             for (idx = 0; idx < ib->nr_regions; idx++) {
+> > > > +                     iproc_pcie_write_reg(pcie,
+> > > > +                                          MAP_REG(IPROC_PCIE_IARR0, idx), 0);
+> > > > +             }
+> > > > +     }
+> > > > +}
+> > > > +
+> > > >  static int iproce_pcie_get_msi(struct iproc_pcie *pcie,
+> > > >                              struct device_node *msi_node,
+> > > >                              u64 *msi_addr)
+> > > > @@ -1517,6 +1543,8 @@ int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
+> > > >       iproc_pcie_perst_ctrl(pcie, true);
+> > > >       iproc_pcie_perst_ctrl(pcie, false);
+> > > >
+> > > > +     iproc_pcie_invalidate_mapping(pcie);
+> > > > +
+> > > >       if (pcie->need_ob_cfg) {
+> > > >               ret = iproc_pcie_map_ranges(pcie, res);
+> > > >               if (ret) {
+> > >
+> > > The code changes look good to me.
+> > >
+> > > Thanks,
+> > >
+> > > Andrew Murray
+> > >
+> > > > --
+> > > > 2.17.1
+> > > >
