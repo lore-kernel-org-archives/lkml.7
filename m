@@ -2,94 +2,128 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8370C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 259BDC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EDE920842
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:37:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A55320842
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:39:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405770AbfIFPhJ (ORCPT
+        id S2405781AbfIFPjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 11:37:09 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:45071 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404930AbfIFPhJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 11:37:09 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MSqbe-1hiV2c2HkM-00UICm; Fri, 06 Sep 2019 17:37:04 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Denis Efremov <efremov@linux.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] lz4: make LZ4HC_setExternalDict as non-static
-Date:   Fri,  6 Sep 2019 17:36:51 +0200
-Message-Id: <20190906153700.2061625-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Fri, 6 Sep 2019 11:39:00 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38448 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733236AbfIFPi7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 11:38:59 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3CE4E3082B43;
+        Fri,  6 Sep 2019 15:38:59 +0000 (UTC)
+Received: from [10.33.36.146] (unknown [10.33.36.146])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1CC676012E;
+        Fri,  6 Sep 2019 15:38:56 +0000 (UTC)
+Subject: Re: [RFC PATCH 2/2] livepatch: Clear relocation targets on a module
+ removal
+To:     Miroslav Benes <mbenes@suse.cz>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Petr Mladek <pmladek@suse.com>, jikos@kernel.org,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
+References: <20190814151244.5xoaxib5iya2qjco@treble>
+ <20190816094608.3p2z73oxcoqavnm4@pathway.suse.cz>
+ <20190822223649.ptg6e7qyvosrljqx@treble>
+ <20190823081306.kbkm7b4deqrare2v@pathway.suse.cz>
+ <20190826145449.wyo7avwpqyriem46@treble>
+ <alpine.LSU.2.21.1909021802180.29987@pobox.suse.cz>
+ <5c649320-a9bf-ae7f-5102-483bc34d219f@redhat.com>
+ <alpine.LSU.2.21.1909031447140.3872@pobox.suse.cz>
+ <20190905023202.ed7fecc22xze4pwj@treble>
+ <alpine.LSU.2.21.1909051403530.25712@pobox.suse.cz>
+ <20190905125418.kleis5ackvhtn4hs@treble>
+ <alpine.LSU.2.21.1909061431590.3031@pobox.suse.cz>
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+Message-ID: <9a917499-4dbc-e78c-05d0-226e49fc9fa3@redhat.com>
+Date:   Fri, 6 Sep 2019 16:38:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:EJ5JQ+Xj0P7cX8kieNr9FXzkUNigJ9OgMm2KcPl1kp14ZBgs82I
- tRcGaVG2o/4UOvzMulaiIztZyY0IuZ38B8wNGYTdj9VWbEjQIZLbJlQXuvrLjcVF7f1z5FI
- itnFcXTrrCsWOqKoFtwacZDb6m5Ql7s2ABsnPyBdcS+4Tg8knyjv94c7S2f6Z7WSoESB0G5
- U+r676C0x1uz+ovKop9qg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:VQN4GhY3oFE=:CYjie9SUE7YSwX34TXIlWF
- OuCXJLFkZAsOvMYStltjIOLv9sUpMJeKiQ8OleFjiosRtwzLyLhYz8oo88wjC8lQAoHRjbmkr
- WN+ZyDpXE+XkbxDZPieE315e29PuPzCxOuJJ3y6mcJTtE8Ul0GeKy/gFbftvDwhLqLR6/ShLZ
- ebvx+Vxr0TMlB9coJEg48oBLn7OEWYSAuEdku3qTKh9rN2Cc+dv9vk0M0+ypVe95aTtT0VjEx
- KoSWHK76wHKQ6SeCMZtROyUjDrfbe3bNLi7ebLo2e+j6L0SsA9LTlzNaflvnZwmyeJf58+/Lh
- k1metbgVOH5XqBm0QVcHR5OB8fMubvGNUfV5dx8p3SUq3tUdXRgtmopcGf8keJbyLslIwbi1M
- 65vR0jZOD0df8XJ94DZP92NPqopdOVssOAhHpGapxCmQRjF4wSxAlV37PyTQU0P+gQyg7kEyx
- CX5YJGOIuexPtfalTuv5/NkynhODs4LGNWEcSK4rkvxJp0lGsLbxFL7Q5LNkeM/szf48uHV1W
- MIJuxNCxmO//1ihL6IaOyaFDbiifVCjX/gNPy9rXWappg3ZhM0IMRgYFrS8EtlpGwTHL+0IwQ
- oKmlnCIgqqZSQVKokdz5Qfj0C51PklBF3v+OjL8KzUjmIztCQ5K5IH9l5JrLcqEATfYyK96EQ
- Zx1Kc2GKNWxxVTAc0HyHHGidkYD+U1SoNCg3vYlswT+nq9CHGL4dBc2xo9I+UCLDazqAX0Uh7
- qp/wn0kppyzL9xem/BEtsoHUaavueZQgj9dKJbEIhv9VHlNr6e9IvxfCrLU06OjEL9whyaHBO
- MiTIRSxsrG93VZasGOYHxHDMCC3P1nCDAgHT4/h6jNMKBew/+8=
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <alpine.LSU.2.21.1909061431590.3031@pobox.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Fri, 06 Sep 2019 15:38:59 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kbuild warns for exported static symbols. This one seems to
-be meant as an external API but does not have any in-kernel
-users:
+On 9/6/19 1:51 PM, Miroslav Benes wrote:
+> 
+>>> Now, I don't think that replacing .ko on disk is a good idea. We've
+>>> already discussed it. It would lead to a maintenance/packaging problem,
+>>> because you never know which version of the module is loaded in the
+>>> system. The state space grows rather rapidly there.
+>>
+>> What exactly are your concerns?
+>>
+>> Either the old version of the module is loaded, and it's livepatched; or
+>> the new version of the module is loaded, and it's not livepatched.
+> 
+> Let's have module foo.ko with function a().
+> 
+> Live patch 1 (LP1) fixes it to a'(), which calls new function b() (present
+> in LP1). LP1 is used only if foo.ko is loaded. foo.ko is replaced with
+> foo'.ko on disk. It contains both a'() (fixed a() to be precise) and new
+> b().
+> 
+> Now there is LP2 with new function c() (or c'(), it does not matter)
+> calling b(). Either foo.ko or foo'.ko can be loaded and you don't know
+> which one. The implementation LP2 would be different in both cases.
+> 
+> You could say that it does not matter. If LP2 is implemented for foo.ko,
+> the same could work for foo'.ko (b() would be a part of LP2 and would not
+> be called directly from foo'.ko). LP2 would only be necessarily larger. It
+> is true in case of functions, but if symbol b is not a function but a
+> global variable, it is different then.
+> 
+> Moreover, in this case foo'.ko is "LP superset". Meaning that it contains
+> only fixes which are present in LP1. What if it is not. We usually
+> preserve kABI, so there could be a module in two or more versions compiled
+> from slightly different code (older/newer and so on) and you don't know
+> which one is loaded. To be fair we don't allow it (I think) at SUSE except
+> for KMPs (kernel module packages) (the issue of course exists even now
+> and we haven't solved it yet, because it is rare) and out of tree modules
+> which we don't support with LP. It could be solved with srcversion, but it
+> complicates things a lot. "blue sky" idea could extend the issue to all
+> modules given the above is real.
+> 
+> Does it make sense?
+> 
 
-WARNING: "LZ4HC_setExternalDict" [vmlinux] is a static EXPORT_SYMBOL
+If I understand correctly, you're saying that this would add another 
+dimension to the potential system state that livepatches need to 
+consider?  e.g. when updating a livepatch to v3, a v2 patched module may 
+or may not be loaded.  So are we updating livepatch v2 code or module v2 
+code...
 
-I suppose the function should not just get removed since it would
-be nice to stay close to the upstream version of lz4hc, so just
-make it global.
+I agree that for functions, we could probably get away with repeating 
+code, but not necessarily for new global variables.
 
-The modpost commit is correct, but is listed here as the one
-that introduced the warning.
+Then there's the question of:
 
-Fixes: 15bfc2348d54 ("modpost: check for static EXPORT_SYMBOL* functions")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- lib/lz4/lz4hc_compress.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+   module v3 == module v{1,2} + livepatch v3?
 
-diff --git a/lib/lz4/lz4hc_compress.c b/lib/lz4/lz4hc_compress.c
-index 176f03b83e56..e1075293c009 100644
---- a/lib/lz4/lz4hc_compress.c
-+++ b/lib/lz4/lz4hc_compress.c
-@@ -642,7 +642,7 @@ EXPORT_SYMBOL(LZ4_loadDictHC);
- 
- /* compression */
- 
--static void LZ4HC_setExternalDict(
-+void LZ4HC_setExternalDict(
- 	LZ4HC_CCtx_internal *ctxPtr,
- 	const BYTE *newBlock)
- {
--- 
-2.20.0
 
+Is this scenario similar to one where a customer somehow finds and loads 
+module v3 before loading livepatch v3?  Livepatch doesn't have a 
+srcversion whitelist so this should be entirely possible.  I suppose it 
+is a bit different in that module v3 would be starting from a fresh load 
+and not something that livepatch v3 has hotpatched from an unknown 
+source/base.
+
+-- Joe
