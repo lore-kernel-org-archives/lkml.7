@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F66EC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AB63C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4F3A2084F
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:08:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C2712084F
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:08:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393158AbfIFLIo (ORCPT
+        id S2393168AbfIFLIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 07:08:44 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47073 "EHLO
+        Fri, 6 Sep 2019 07:08:46 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47097 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392373AbfIFLIc (ORCPT
+        with ESMTP id S2392424AbfIFLIg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 07:08:32 -0400
+        Fri, 6 Sep 2019 07:08:36 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i6C6P-0007BT-Lx; Fri, 06 Sep 2019 13:08:29 +0200
+        id 1i6C6R-0007CO-Sb; Fri, 06 Sep 2019 13:08:32 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E55A21C0E2F;
-        Fri,  6 Sep 2019 13:08:17 +0200 (CEST)
-Date:   Fri, 06 Sep 2019 11:08:17 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2F4A11C0E31;
+        Fri,  6 Sep 2019 13:08:18 +0200 (CEST)
+Date:   Fri, 06 Sep 2019 11:08:18 -0000
 From:   "tip-bot2 for Marc Zyngier" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] irqchip/ixp4xx: Register the base PA instead of its
- VA in fwnode
+Subject: [tip: irq/core] irqchip/gic: Register the distributor's PA instead of
+ its VA in fwnode
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Marc Zyngier <maz@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
 MIME-Version: 1.0
-Message-ID: <156776809786.24167.1522028379821628567.tip-bot2@tip-bot2>
+Message-ID: <156776809815.24167.18169065323577349477.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -55,35 +55,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     9adc54d4e8c56ed5851bb51314ffcbaebdfbf17e
-Gitweb:        https://git.kernel.org/tip/9adc54d4e8c56ed5851bb51314ffcbaebdfbf17e
+Commit-ID:     188a8471ef03718709bd785d3976f6cd72bb551d
+Gitweb:        https://git.kernel.org/tip/188a8471ef03718709bd785d3976f6cd72bb551d
 Author:        Marc Zyngier <maz@kernel.org>
 AuthorDate:    Wed, 31 Jul 2019 16:13:42 +01:00
 Committer:     Marc Zyngier <maz@kernel.org>
-CommitterDate: Wed, 07 Aug 2019 14:24:41 +01:00
+CommitterDate: Wed, 07 Aug 2019 14:24:33 +01:00
 
-irqchip/ixp4xx: Register the base PA instead of its VA in fwnode
+irqchip/gic: Register the distributor's PA instead of its VA in fwnode
 
-Do not expose the base VA (it appears in debugfs). Instead,
+Do not expose the distributor's VA (it appears in debugfs). Instead,
 record the PA, which at least can be used to precisely identify
 the associated irqchip and domain.
 
 Acked-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/irqchip/irq-ixp4xx.c | 2 +-
+ drivers/irqchip/irq-gic.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-ixp4xx.c b/drivers/irqchip/irq-ixp4xx.c
-index 6751c35..37e0749 100644
---- a/drivers/irqchip/irq-ixp4xx.c
-+++ b/drivers/irqchip/irq-ixp4xx.c
-@@ -319,7 +319,7 @@ void __init ixp4xx_irq_init(resource_size_t irqbase,
- 		pr_crit("IXP4XX: could not ioremap interrupt controller\n");
- 		return;
- 	}
--	fwnode = irq_domain_alloc_fwnode(base);
-+	fwnode = irq_domain_alloc_fwnode(&irqbase);
- 	if (!fwnode) {
- 		pr_crit("IXP4XX: no domain handle\n");
- 		return;
+diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+index e45f45e..b6b8573 100644
+--- a/drivers/irqchip/irq-gic.c
++++ b/drivers/irqchip/irq-gic.c
+@@ -1627,7 +1627,7 @@ static int __init gic_v2_acpi_init(struct acpi_subtable_header *header,
+ 	/*
+ 	 * Initialize GIC instance zero (no multi-GIC support).
+ 	 */
+-	domain_handle = irq_domain_alloc_fwnode(gic->raw_dist_base);
++	domain_handle = irq_domain_alloc_fwnode(&dist->base_address);
+ 	if (!domain_handle) {
+ 		pr_err("Unable to allocate domain handle\n");
+ 		gic_teardown(gic);
