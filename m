@@ -2,185 +2,83 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29644C00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B4AC0030B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0F4E20854
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:36:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="CE0iHkRp"
+	by mail.kernel.org (Postfix) with ESMTP id 80407206CD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:39:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727971AbfIFKg6 (ORCPT
+        id S1728218AbfIFKjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 06:36:58 -0400
-Received: from mail-eopbgr00068.outbound.protection.outlook.com ([40.107.0.68]:58526
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725946AbfIFKg6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 06:36:58 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TxlAvxRG3qopazKbFsns+x/MlaoJVhqEW+ptg8UsG1JY+ARobWeGSd9MxJ+cOawDwokDhnb5/TQKd01pX2Vw+22xUoj3IpBVc8t4SHBaxPCik7fpgkvslJ4hiI29ONIKftKKVGMBtSKI5vtv7o1mMDVJx59GuOlX4XdluGVm7Ao6oa6DFt7KhTDBIc0a3tK1i60XbYFU8HqHh6daFU9KSGOhmaIJmgy/MANrFhbyTohZVP6kO58YyJE3JTRJmdYRIY5prRNms5asxOkJFlbg9u9uohc7kRz9C33Wyk3ER9o/LUch/6Bd4BuW/ZqBcocV0W5wDxXHSlSD9ZbyvQyIxg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DqDjFZldFO74IkAUYJc5v88+gWIYINHXIYSObssg260=;
- b=U2vuT6Aahzrw7ePkP3TaJovMM+aW9sOWGJ8wZJRR6ZIjIPt51pGXfPpvLpYYOzPoqNtPBzHL8qzMnY/W4RTmgeNIoyd4QgyMvgB7sP3p8TbQLdpQBMWkjHQMV5G2irBebrJyHJkxBbED3J7Z58yrhz3uTsRCj65I47dZhGD9p8prlyu//AWTLQN5EWjbIT+C2XpPrPVeVQv5ysMOMjk0tt7Luyr0nvZTgMnMf7yd+8ZF8MwtG7zdcoW90ISCa9G0vqdlhOV0/pOzGnQ3eu4v8cABAB0YTmLFnylG9xqYdpPDyzV8iitG8weP+T3XHIaOxeIo9rzGUKaJVUPy1LBflg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DqDjFZldFO74IkAUYJc5v88+gWIYINHXIYSObssg260=;
- b=CE0iHkRp7E1gw5KGoD2w0cXqQ1o9LdnAv3rjf19jhvJlXaqvPmzi17CxLLZ5RFcs0k1LJ/ippLbfZoYIYFwp+krBjDAA+asRx4ZL+d1u9rJOwGHd388DD5CauJig6bVloLYAQgOLZIdYe9ysNjI4cVSmIy8qoLvS624HrHD9/J4=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB3344.eurprd04.prod.outlook.com (52.134.8.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.18; Fri, 6 Sep 2019 10:36:54 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::c1a3:2946:8fa8:bfc5]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::c1a3:2946:8fa8:bfc5%3]) with mapi id 15.20.2241.018; Fri, 6 Sep 2019
- 10:36:54 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Shawn Guo <shawnguo@kernel.org>
-CC:     Cory Tusar <cory.tusar@zii.aero>, Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] arm64: dts: imx8mq: Add CAAM node
-Thread-Topic: [PATCH] arm64: dts: imx8mq: Add CAAM node
-Thread-Index: AQHVX3YoDzlFnP6e30CCIqXKl5RGwQ==
-Date:   Fri, 6 Sep 2019 10:36:54 +0000
-Message-ID: <VI1PR0402MB3485E83188A0972A2DA74C5D98BA0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <20190830210139.7028-1-andrew.smirnov@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [84.117.251.185]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a910bed2-695c-4f8f-426f-08d732b622b8
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3344;
-x-ms-traffictypediagnostic: VI1PR0402MB3344:|VI1PR0402MB3344:
-x-ms-exchange-purlcount: 1
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB3344F4798E19C202B30100B798BA0@VI1PR0402MB3344.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3276;
-x-forefront-prvs: 0152EBA40F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(376002)(346002)(396003)(39860400002)(199004)(189003)(91956017)(76116006)(33656002)(86362001)(53546011)(6506007)(66446008)(64756008)(66476007)(66946007)(66556008)(14454004)(55016002)(26005)(6246003)(102836004)(53936002)(6306002)(5660300002)(7736002)(8676002)(81156014)(81166006)(8936002)(7416002)(256004)(14444005)(478600001)(9686003)(305945005)(52536014)(44832011)(486006)(99286004)(476003)(76176011)(446003)(66066001)(6436002)(7696005)(186003)(71200400001)(229853002)(25786009)(316002)(71190400001)(4326008)(110136005)(54906003)(966005)(2906002)(74316002)(6116002)(3846002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3344;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: C1sO3h0A8A9r3gHYGusrikVx7ppWTlQu3PAvx72M4R4ws1Zf4PDvjVwrla6iaCAeJpYAIkkf8XiOHPBf/gfplNlIrn/RNp3R6bPwgKqVZ/yFc0nZOJm5lAtYnxzY6FpVKoRpyokTlS0DupL1CRWdGdYW3NAauWuhZ0cjlKgNc9U2xhk6iX+nqfSXw77vi1OF2aE3LA3CyS7rLsIfOfDwHtYJ3OANt5hlQMgq3o8BTeCkJj42MXbKZdLwK+MdlbBbt2Tmo6pOQNwJn+WmfapRyYBrFGmK/bL6F4WzgckMt/GYfXv/7jqFiNyiV2+vzPIQTmhLwFsRxwhY9lDRzJm+BbUp0pDuDr7Ws3TGmTVJ+LuRQP0Gj0+WrHQBfr5gxmVz9fzNTbzDop1MDz3V9d5ORQoZdxLK3LMBQ2pqdOvA+jk=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 6 Sep 2019 06:39:47 -0400
+Received: from mga14.intel.com ([192.55.52.115]:19708 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725946AbfIFKjr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 06:39:47 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Sep 2019 03:39:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,472,1559545200"; 
+   d="scan'208";a="199493528"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 06 Sep 2019 03:39:46 -0700
+Received: from [10.226.38.242] (ekotax-mobl.gar.corp.intel.com [10.226.38.242])
+        by linux.intel.com (Postfix) with ESMTP id 07DEA5800FE;
+        Fri,  6 Sep 2019 03:39:43 -0700 (PDT)
+Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: intel: Add YAML schemas for the
+ PCIe RC controller
+To:     "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>,
+        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, robh@kernel.org,
+        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+        hch@infradead.org, devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+References: <cover.1567585181.git.eswara.kota@linux.intel.com>
+ <fe9549470bc06ea0d0dfc80f46a579baa49b911a.1567585181.git.eswara.kota@linux.intel.com>
+ <54ec6a30-69d8-a4af-95fa-2f457d605142@linux.intel.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <e8ead144-dd4a-0ffc-6266-920f045250f3@linux.intel.com>
+Date:   Fri, 6 Sep 2019 18:39:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a910bed2-695c-4f8f-426f-08d732b622b8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Sep 2019 10:36:54.3752
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: XBbuT3pXpKu2zDIwtf+dOmdBr8dDJWLz1RIvX7LBz7qnGEEdT23Sq5yjpmuIRLE4K9fGGlnZgK0yANa24dwuyQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3344
+In-Reply-To: <54ec6a30-69d8-a4af-95fa-2f457d605142@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/31/2019 12:01 AM, Andrey Smirnov wrote:=0A=
-> Add node for CAAM - Cryptographic Acceleration and Assurance Module.=0A=
-> =0A=
-> Signed-off-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>=0A=
-> Cc: Cory Tusar <cory.tusar@zii.aero>=0A=
-> Cc: Chris Healy <cphealy@gmail.com>=0A=
-> Cc: Lucas Stach <l.stach@pengutronix.de>=0A=
-> Cc: Herbert Xu <herbert@gondor.apana.org.au>=0A=
-> Cc: Shawn Guo <shawnguo@kernel.org>=0A=
-> Cc: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
-> Cc: linux-crypto@vger.kernel.org=0A=
-> Cc: linux-kernel@vger.kernel.org=0A=
-> ---=0A=
-> =0A=
-> Shawn:=0A=
-> =0A=
-> Just a bit of a context: as per this thread=0A=
-> https://lore.kernel.org/linux-crypto/20190830131547.GA27480@gondor.apana.=
-org.au/=0A=
-> I am hoping I can get and Ack from you for this patch, so it can go=0A=
-> via cryptodev tree.=0A=
-> =0A=
-Could we please get an Ack in time for v5.4?=0A=
-=0A=
-Thanks,=0A=
-Horia=0A=
-=0A=
-> Thanks,=0A=
-> Andrey Smirnov=0A=
-> =0A=
->  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 30 +++++++++++++++++++++++=
-=0A=
->  1 file changed, 30 insertions(+)=0A=
-> =0A=
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/=
-dts/freescale/imx8mq.dtsi=0A=
-> index d09b808eff87..752d5a61878c 100644=0A=
-> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi=0A=
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi=0A=
-> @@ -728,6 +728,36 @@=0A=
->  				status =3D "disabled";=0A=
->  			};=0A=
->  =0A=
-> +			crypto: crypto@30900000 {=0A=
-> +				compatible =3D "fsl,sec-v4.0";=0A=
-> +				#address-cells =3D <1>;=0A=
-> +				#size-cells =3D <1>;=0A=
-> +				reg =3D <0x30900000 0x40000>;=0A=
-> +				ranges =3D <0 0x30900000 0x40000>;=0A=
-> +				interrupts =3D <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;=0A=
-> +				clocks =3D <&clk IMX8MQ_CLK_AHB>,=0A=
-> +					 <&clk IMX8MQ_CLK_IPG_ROOT>;=0A=
-> +				clock-names =3D "aclk", "ipg";=0A=
-> +=0A=
-> +				sec_jr0: jr@1000 {=0A=
-> +					compatible =3D "fsl,sec-v4.0-job-ring";=0A=
-> +					reg =3D <0x1000 0x1000>;=0A=
-> +					interrupts =3D <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;=0A=
-> +				};=0A=
-> +=0A=
-> +				sec_jr1: jr@2000 {=0A=
-> +					compatible =3D "fsl,sec-v4.0-job-ring";=0A=
-> +					reg =3D <0x2000 0x1000>;=0A=
-> +					interrupts =3D <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;=0A=
-> +				};=0A=
-> +=0A=
-> +				sec_jr2: jr@3000 {=0A=
-> +					compatible =3D "fsl,sec-v4.0-job-ring";=0A=
-> +					reg =3D <0x3000 0x1000>;=0A=
-> +					interrupts =3D <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;=0A=
-> +				};=0A=
-> +			};=0A=
-> +=0A=
->  			i2c1: i2c@30a20000 {=0A=
->  				compatible =3D "fsl,imx8mq-i2c", "fsl,imx21-i2c";=0A=
->  				reg =3D <0x30a20000 0x10000>;=0A=
-> =0A=
-=0A=
+Hi Chuan Hua,
+
+On 9/5/2019 10:23 AM, Chuan Hua, Lei wrote:
+> Hi Dilip,
+>
+> On 9/4/2019 6:10 PM, Dilip Kota wrote:
+>> The Intel PCIe RC controller is Synopsys Designware
+>> based PCIe core. Add YAML schemas for PCIe in RC mode
+>> present in Intel Universal Gateway soc.
+>>
+>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+>> ---
+>> changes on v3:
+>>     Add the appropriate License-Identifier
+>>     Rename intel,rst-interval to 'reset-assert-us'
+> rst->interval to reset-assert-ms(should be typo error)
+
+Sure, i will fix it. That's a typo error.
+Thanks for pointing it.
+
+Regards
+Dilip
+
+
