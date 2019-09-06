@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE53C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 02:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E9AC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 02:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31E7B2070C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 02:32:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3833E2070C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 02:32:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sRr1SYAa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dS5ZfROF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391956AbfIFCb7 (ORCPT
+        id S2391972AbfIFCcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 22:31:59 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33845 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726600AbfIFCb6 (ORCPT
+        Thu, 5 Sep 2019 22:32:15 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:34079 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726600AbfIFCcO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 22:31:58 -0400
-Received: by mail-pg1-f196.google.com with SMTP id n9so2590653pgc.1;
-        Thu, 05 Sep 2019 19:31:58 -0700 (PDT)
+        Thu, 5 Sep 2019 22:32:14 -0400
+Received: by mail-pl1-f195.google.com with SMTP id d3so2375249plr.1;
+        Thu, 05 Sep 2019 19:32:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=X/gqa9V2L+P7ZTpCq0TlKj9v1dS5cmC4kjSw+65uCNc=;
-        b=sRr1SYAaudA+kSuECzIoCIqqyWi5BJ8VPufG6rrkCb0hcSgGoItmXtoEhstYNM1aau
-         G/Qr1cEupkKZJIg/tiAd8xEm0ViGPoSH3EJs6Oh2MTQGVD+yqf/ZYejaKK+tsT4VrNrW
-         EEFJUxFS+cPTzHrfYTiPwrxPMM1iM4BmcFp8ritwJtKuOVupgJIHPFvgv98NS2FSvyBp
-         kNwtOSSaCkRClJWnxRUoVbtjno7PLd+vLYgl0DyrNxfJc6RJ4JGqKYLQxdLPnweNY8Gz
-         f51JrKAX4cf2VNV2GCTKqwgpYOC90z+EG/jtcXd+K7Wc9qx5Nq1TcTc+oBPDt5AlqqMa
-         TByQ==
+        bh=+363ozv7hHWtnDZ7Q+OUTPSDfOt22ArWkNBA2J7l/rE=;
+        b=dS5ZfROFghyniETTIersxbAr8Bj66TmNb2OqDTLsPycKxwqcrBV08/bF5y48sucgSE
+         +ooQ+tqt2RGwbOGMslvWVQXiHJ6So+teUEt8MxliZag5O9FiUvQY9PTj4KBNc34Z941J
+         rCkDfsgsU/Iplurfctr7UcCEFQUE2gPqZOoaXnHPxu/PAcyscM4/j+XnYwDe9JjJ3p0y
+         lfU22ilkRUAlJvp/FuJ/CnSYU0zDc0tN3yOG6+YiHIbLiVDTvc0H8i8Uy4ueTTPxu2Uo
+         Jqd97gWflwKfRQ3wJOfCbusAxpP952fdY0z+ni4s6Cd4hAM4XmtMWLMGGo/wVs+2v0n6
+         VAqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=X/gqa9V2L+P7ZTpCq0TlKj9v1dS5cmC4kjSw+65uCNc=;
-        b=SCTUBTPookhohDfALGsrqNy8Nml2MySUmKdip77lyp0hCWSCs2hutpQJmLRf/rVgGQ
-         hDNdMkjxr3Uv7Kc/LmVy54qmjVa0cyxFUW9UbevH7etqWwBTsepS91nKo//dWQKQG8QS
-         JgAkU5he7t6b7NWpYC6OYL1SDS4Uhg0TEmEhsZJo/dR3Bz11B0Y3h2Rs9VFdQiCOgQea
-         id0CtvNWXQXntG/R51mB8PWeQhxGbxitxkVu3//+iOkUOBjCABrDUKjmpEs1CoMYCKim
-         F2ZKiv7w6FiV6vqVFiTBPcf9RJDp1OSZHOzBRawGoOEvCSc1X7xeVmpdEVfusnzcNzDF
-         cc7w==
-X-Gm-Message-State: APjAAAU0Q5bGm93Lm2Yz6ZzWXJBVdrCrelnNeXHV/1dzCNSO9c9pQpld
-        iqtApOz66/n7dteg1enbx3A=
-X-Google-Smtp-Source: APXvYqxUvQF2FpuosJop/9aRW+1znZiDlir3wLoqBBUzScNDRpySke+xlxehhodmtxC6o1pU/7P6fg==
-X-Received: by 2002:aa7:8510:: with SMTP id v16mr7814724pfn.113.1567737118419;
-        Thu, 05 Sep 2019 19:31:58 -0700 (PDT)
+        bh=+363ozv7hHWtnDZ7Q+OUTPSDfOt22ArWkNBA2J7l/rE=;
+        b=ZuwKgDTAtAhQuZZLYGZv3xnQvgHzIjXemKu6d99QKlVOciip0AFq2ds4PVlIcy0Zt6
+         n/1T6qPFiPLmILkW6FPRQCXdJneoxyVJJSECxqA649sj+YlWJmGxriiQH/23Y4y3jyp6
+         NlDCu6zkRVccoTy3FGfvrvcHXoo70e3g00V1ALruRbn6bKitcqO4dEAucRdDvdcgv+bU
+         bLtNEwH/glMc1l4E2pWK91WOrtXsdPCTlrZ4N1OU0hdrmwgAU93vDoeEEABWmc56cDFg
+         PszMUkTETVsPfj4z0IJuXCbLZvCVPLrmSeLJ/5RahLhBnOrfzmfHJsmsc9Jbe5dj2xms
+         jFaQ==
+X-Gm-Message-State: APjAAAWNqeD7ycsZVBY3FSv/q6r5Y8uuY+Ww5Bi6Q9dKApIe1Nqsl5R+
+        vUMGAM2ofXrYgUQvJeO5Lio=
+X-Google-Smtp-Source: APXvYqxed7C6ImU9htYUulA/MMFbq9ztOqgZHE25K0Mb7LpnO+bv0q6cjA24s6bUSZiinFwboMmXyA==
+X-Received: by 2002:a17:902:bc4c:: with SMTP id t12mr6818012plz.90.1567737133927;
+        Thu, 05 Sep 2019 19:32:13 -0700 (PDT)
 Received: from gli-arch.genesyslogic.com.tw (60-251-58-169.HINET-IP.hinet.net. [60.251.58.169])
-        by smtp.gmail.com with ESMTPSA id k5sm5852121pfp.109.2019.09.05.19.31.56
+        by smtp.gmail.com with ESMTPSA id l3sm5161332pjq.24.2019.09.05.19.32.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 19:31:57 -0700 (PDT)
+        Thu, 05 Sep 2019 19:32:13 -0700 (PDT)
 From:   Ben Chuang <benchuanggli@gmail.com>
 To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
 Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
         johnsonm@danlj.org, ben.chuang@genesyslogic.com.tw,
         Ben Chuang <benchuanggli@gmail.com>
-Subject: [PATCH V8 3/5] PCI: Add Genesys Logic, Inc. Vendor ID
-Date:   Fri,  6 Sep 2019 10:32:06 +0800
-Message-Id: <860ef173fe110630d91e384ae44d7ad42cb72d3a.1567734321.git.benchuanggli@gmail.com>
+Subject: [PATCH V8 4/5] mmc: sdhci: Export sdhci_abort_tuning function symbol
+Date:   Fri,  6 Sep 2019 10:32:18 +0800
+Message-Id: <8495caa6af2bcfb916e57e626dd2d9eaeb0310c5.1567734321.git.benchuanggli@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1567734321.git.benchuanggli@gmail.com>
 References: <cover.1567734321.git.benchuanggli@gmail.com>
@@ -77,29 +77,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ben Chuang <ben.chuang@genesyslogic.com.tw>
 
-Add the Genesys Logic, Inc. vendor ID to pci_ids.h.
+Export sdhci_abort_tuning() function symbols which are used by other SD Host
+controller driver modules.
 
 Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
 Co-developed-by: Michael K Johnson <johnsonm@danlj.org>
 Signed-off-by: Michael K Johnson <johnsonm@danlj.org>
 Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- include/linux/pci_ids.h | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/mmc/host/sdhci.c | 3 ++-
+ drivers/mmc/host/sdhci.h | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 70e86148cb1e..4f7e12772a14 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -2403,6 +2403,8 @@
- #define PCI_DEVICE_ID_RDC_R6061		0x6061
- #define PCI_DEVICE_ID_RDC_D1010		0x1010
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 9106ebc7a422..0f2f110534db 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -2328,7 +2328,7 @@ void sdhci_reset_tuning(struct sdhci_host *host)
+ }
+ EXPORT_SYMBOL_GPL(sdhci_reset_tuning);
  
-+#define PCI_VENDOR_ID_GLI		0x17a0
-+
- #define PCI_VENDOR_ID_LENOVO		0x17aa
+-static void sdhci_abort_tuning(struct sdhci_host *host, u32 opcode)
++void sdhci_abort_tuning(struct sdhci_host *host, u32 opcode)
+ {
+ 	sdhci_reset_tuning(host);
  
- #define PCI_VENDOR_ID_QCOM		0x17cb
+@@ -2339,6 +2339,7 @@ static void sdhci_abort_tuning(struct sdhci_host *host, u32 opcode)
+ 
+ 	mmc_abort_tuning(host->mmc, opcode);
+ }
++EXPORT_SYMBOL_GPL(sdhci_abort_tuning);
+ 
+ /*
+  * We use sdhci_send_tuning() because mmc_send_tuning() is not a good fit. SDHCI
+diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+index 72601a4d2e95..437bab3af195 100644
+--- a/drivers/mmc/host/sdhci.h
++++ b/drivers/mmc/host/sdhci.h
+@@ -797,5 +797,6 @@ void sdhci_start_tuning(struct sdhci_host *host);
+ void sdhci_end_tuning(struct sdhci_host *host);
+ void sdhci_reset_tuning(struct sdhci_host *host);
+ void sdhci_send_tuning(struct sdhci_host *host, u32 opcode);
++void sdhci_abort_tuning(struct sdhci_host *host, u32 opcode);
+ 
+ #endif /* __SDHCI_HW_H */
 -- 
 2.23.0
 
