@@ -2,85 +2,115 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F4DC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D50C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46DA7206CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:19:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE9D8214E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:20:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404630AbfIFMTg (ORCPT
+        id S2404648AbfIFMUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 08:19:36 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:40133 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732863AbfIFMTg (ORCPT
+        Fri, 6 Sep 2019 08:20:35 -0400
+Received: from smtprelay0137.hostedemail.com ([216.40.44.137]:37610 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732863AbfIFMUe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 08:19:36 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1i6DD4-0002Bw-N2; Fri, 06 Sep 2019 12:19:26 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Felix Fietkau <nbd@nbd.name>,
-        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Roy Luo <royluo@google.com>, Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] mt76: mt76x0e: make array mt76x0_chan_map static const, makes object smaller
-Date:   Fri,  6 Sep 2019 13:19:26 +0100
-Message-Id: <20190906121926.24080-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 6 Sep 2019 08:20:34 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 891AF52C8;
+        Fri,  6 Sep 2019 12:20:33 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: hope21_3ed998ba99338
+X-Filterd-Recvd-Size: 3203
+Received: from XPS-9350.home (unknown [47.151.152.152])
+        (Authenticated sender: joe@perches.com)
+        by omf04.hostedemail.com (Postfix) with ESMTPA;
+        Fri,  6 Sep 2019 12:20:31 +0000 (UTC)
+Message-ID: <a610efdd3bf488d407dc1130fa8ed090019ccffd.camel@perches.com>
+Subject: Re: [PATCH] docs: license-rules.txt: cover SPDX headers on Python
+ scripts
+From:   Joe Perches <joe@perches.com>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Jessica Yu <jeyu@kernel.org>,
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        Thomas Gleixner <tglx@linutronix.de>, linux-doc@vger.kernel.org
+Date:   Fri, 06 Sep 2019 05:20:30 -0700
+In-Reply-To: <20190906083457.7e7934ec@coco.lan>
+References: <20190905055614.7958918b@coco.lan>
+         <88e638eb959095ab6657d295f9f8c27169569bf2.1567675272.git.mchehab+samsung@kernel.org>
+         <20190905092703.GA30899@kroah.com> <20190905090701.37dcf75e@coco.lan>
+         <b32c2e46b91e7bcda2a9bd140673f06d71b2487a.camel@perches.com>
+         <20190906083457.7e7934ec@coco.lan>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Fri, 2019-09-06 at 08:34 -0300, Mauro Carvalho Chehab wrote:
+> I did some changes on it, plus one change at the pedantic mode of
+> scripts/spdxcheck.py, and placed the corresponding patches at:
+> 
+> 	https://git.linuxtv.org/mchehab/experimental.git/log/?h=spdx_pedantic
 
-Don't populate the array mt76x0_chan_map on the stack but instead make it
-static const. Makes the object code smaller by 80 bytes.
+Overall seems very nice, thanks.
 
-Before:
-   text	   data	    bss	    dec	    hex	filename
-   7685	   1192	      0	   8877	   22ad	mediatek/mt76/mt76x0/eeprom.o
+Couple nits.
 
-After:
-   text	   data	    bss	    dec	    hex	filename
-   7541	   1256	      0	   8797	   225d	mediatek/mt76/mt76x0/eeprom.o
+Some of the scripts and py files move the author
+block into a description or add unnecessary blank
+comments.  These may use some manual fixups.
 
-(gcc version 9.2.1, amd64)
+For instance:
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/net/wireless/mediatek/mt76/mt76x0/eeprom.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+index f12a4e2..ff610ec 100755
+--- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
++++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+@@ -1,4 +1,5 @@
+ #!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
+ # probe libc's inet_pton & backtrace it with ping
+ # Installs a probe on libc's inet_pton function, that will use uprobes,
+@@ -6,8 +7,6 @@
+ # with the a backtrace 3 levels deep, check that it is what we expect.
+ # This needs no debuginfo package, all is done using the libc ELF symtab
+ # and the CFI info in the binaries.
+-
+-# SPDX-License-Identifier: GPL-2.0
+ # Arnaldo Carvalho de Melo <acme@kernel.org>, 2017
+ 
+  . $(dirname $0)/lib/probe.sh
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76x0/eeprom.c b/drivers/net/wireless/mediatek/mt76/mt76x0/eeprom.c
-index 9d4426f6905f..96368fac4228 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76x0/eeprom.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt76x0/eeprom.c
-@@ -212,7 +212,7 @@ void mt76x0_get_tx_power_per_rate(struct mt76x02_dev *dev,
- void mt76x0_get_power_info(struct mt76x02_dev *dev,
- 			   struct ieee80211_channel *chan, s8 *tp)
- {
--	struct mt76x0_chan_map {
-+	static const struct mt76x0_chan_map {
- 		u8 chan;
- 		u8 offset;
- 	} chan_map[] = {
--- 
-2.20.1
+and
+
+diff --git a/tools/testing/selftests/bpf/tcp_client.py b/tools/testing/selftests/bpf/tcp_client.py
+index a53ed58..c2ee17d 100755
+--- a/tools/testing/selftests/bpf/tcp_client.py
++++ b/tools/testing/selftests/bpf/tcp_client.py
+@@ -1,7 +1,7 @@
+ #!/usr/bin/env python3
+-#
+ # SPDX-License-Identifier: GPL-2.0
+ #
++#
+
+> what's the "very first line" where a
+> SPDX header tag should be on a man page?
+
+Beats me.
+This says man pages are documents,
+https://spdx.org/rdf/ontology/spdx-2-0-rev-7/individuals/usageType_document___85292652.html
+
 
