@@ -2,98 +2,154 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B22C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC412C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 819A12081B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:16:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567757779;
-	bh=3sLnj+Tc/pqn6UjHEL984J9vKbqhCcz5DUtjg/ZN+mI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=c2WEf+83IuXa1YxR9WVODpde+fKea23jh9JPUmFKbXvWaZYXoGye40w5krDTE39sh
-	 1JEv3rZfeSot0zzVeSRJoG2IAOLorS4yeRAMwnxj/X/GsdBllSfSo+ccEPezzXNjOI
-	 Lu+77/ppAaTDNAzxY7bppjfKBM/R7Xeuv2tc8AyA=
+	by mail.kernel.org (Postfix) with ESMTP id C6917207FC
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:17:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389859AbfIFIQS (ORCPT
+        id S2389899AbfIFIRR convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 04:16:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44614 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726263AbfIFIQR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 04:16:17 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8531A207FC;
-        Fri,  6 Sep 2019 08:16:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567757777;
-        bh=3sLnj+Tc/pqn6UjHEL984J9vKbqhCcz5DUtjg/ZN+mI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=H96/XIXwAJXCZ4TEg3+RTUF+UoXZibCrPywG72fFDkMwvXQLkxnFoz4C0gW7zj3ce
-         UpSREKPGQti/Hzzc4dq44MM/9X8NeAppnQwIoWytZbBq7qpNz9XLCUS/SHiBtfL+TH
-         CEUh3wW1S4+wQ7cy2fO7SzAbDDHZVMKIP1yOTS2w=
-Date:   Fri, 6 Sep 2019 10:16:14 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 5.2 000/143] 5.2.12-stable review
-Message-ID: <20190906081614.GA32667@kroah.com>
-References: <20190904175314.206239922@linuxfoundation.org>
- <5b19ac14-31c8-227d-c0c5-741abb65b7d6@nvidia.com>
+        Fri, 6 Sep 2019 04:17:17 -0400
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:58818 "EHLO
+        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbfIFIRR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 04:17:17 -0400
+Received: from mailgate02.nec.co.jp ([114.179.233.122])
+        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x868GoAD017898
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Fri, 6 Sep 2019 17:16:50 +0900
+Received: from mailsv02.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
+        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x868Gn8O006386;
+        Fri, 6 Sep 2019 17:16:49 +0900
+Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
+        by mailsv02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x868F0sx023285;
+        Fri, 6 Sep 2019 17:16:49 +0900
+Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.152] [10.38.151.152]) by mail02.kamome.nec.co.jp with ESMTP id BT-MMP-8242729; Fri, 6 Sep 2019 17:09:54 +0900
+Received: from BPXM20GP.gisp.nec.co.jp ([10.38.151.212]) by
+ BPXC24GP.gisp.nec.co.jp ([10.38.151.152]) with mapi id 14.03.0439.000; Fri, 6
+ Sep 2019 17:09:54 +0900
+From:   Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
+To:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "mhocko@kernel.org" <mhocko@kernel.org>,
+        "adobriyan@gmail.com" <adobriyan@gmail.com>,
+        "hch@lst.de" <hch@lst.de>,
+        "longman@redhat.com" <longman@redhat.com>,
+        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
+        "mst@redhat.com" <mst@redhat.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Junichi Nomura <j-nomura@ce.jp.nec.com>,
+        Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
+Subject: [RFC PATCH v2] mm: initialize struct pages reserved by ZONE_DEVICE
+ driver.
+Thread-Topic: [RFC PATCH v2] mm: initialize struct pages reserved by
+ ZONE_DEVICE driver.
+Thread-Index: AQHVZIp2xk1cU6nEkk+ez7kL5reVFA==
+Date:   Fri, 6 Sep 2019 08:09:52 +0000
+Message-ID: <20190906081027.15477-1-t-fukasawa@vx.jp.nec.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.34.125.135]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5b19ac14-31c8-227d-c0c5-741abb65b7d6@nvidia.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 06, 2019 at 08:37:33AM +0100, Jon Hunter wrote:
-> 
-> On 04/09/2019 18:52, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.2.12 release.
-> > There are 143 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Fri 06 Sep 2019 05:50:23 PM UTC.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.12-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> 
-> All tests are passing for Tegra ...
-> 
-> Test results for stable-v5.2:
->     12 builds:	12 pass, 0 fail
->     22 boots:	22 pass, 0 fail
->     38 tests:	38 pass, 0 fail
-> 
-> Linux version:	5.2.12-rc1-gb6eedcb8cf66
-> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
->                 tegra194-p2972-0000, tegra20-ventana,
->                 tegra210-p2371-2180, tegra30-cardhu-a04
+A kernel panic is observed during reading
+/proc/kpage{cgroup,count,flags} for first few pfns allocated by
+pmem namespace:
 
-Thanks for testing all of these and letting me know.
+BUG: unable to handle page fault for address: fffffffffffffffe
+[  114.495280] #PF: supervisor read access in kernel mode
+[  114.495738] #PF: error_code(0x0000) - not-present page
+[  114.496203] PGD 17120e067 P4D 17120e067 PUD 171210067 PMD 0
+[  114.496713] Oops: 0000 [#1] SMP PTI
+[  114.497037] CPU: 9 PID: 1202 Comm: page-types Not tainted 5.3.0-rc1
+[  114.497621] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.0-0-g63451fca13-prebuilt.qemu-project.org 04/01/2014
+[  114.498706] RIP: 0010:stable_page_flags+0x27/0x3f0
+[  114.499142] Code: 82 66 90 66 66 66 66 90 48 85 ff 0f 84 d1 03 00 00 41 54 55 48 89 fd 53 48 8b 57 08 48 8b 1f 48 8d 42 ff 83 e2 01 48 0f 44 c7 <48> 8b 00 f6 c4 02 0f 84 57 03 00 00 45 31 e4 48 8b 55 08 48 89 ef
+[  114.500788] RSP: 0018:ffffa5e601a0fe60 EFLAGS: 00010202
+[  114.501373] RAX: fffffffffffffffe RBX: ffffffffffffffff RCX: 0000000000000000
+[  114.502009] RDX: 0000000000000001 RSI: 00007ffca13a7310 RDI: ffffd07489000000
+[  114.502637] RBP: ffffd07489000000 R08: 0000000000000001 R09: 0000000000000000
+[  114.503270] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000240000
+[  114.503896] R13: 0000000000080000 R14: 00007ffca13a7310 R15: ffffa5e601a0ff08
+[  114.504530] FS:  00007f0266c7f540(0000) GS:ffff962dbbac0000(0000) knlGS:0000000000000000
+[  114.505245] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  114.505754] CR2: fffffffffffffffe CR3: 000000023a204000 CR4: 00000000000006e0
+[  114.506401] Call Trace:
+[  114.506660]  kpageflags_read+0xb1/0x130
+[  114.507051]  proc_reg_read+0x39/0x60
+[  114.507387]  vfs_read+0x8a/0x140
+[  114.507686]  ksys_pread64+0x61/0xa0
+[  114.508021]  do_syscall_64+0x5f/0x1a0
+[  114.508372]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[  114.508844] RIP: 0033:0x7f0266ba426b
 
-greg k-h
+The first few pages of ZONE_DEVICE expressed as the range
+(altmap->base_pfn) to (altmap->base_pfn + altmap->reserve) are
+skipped by struct page initialization. Some pfn walkers like
+/proc/kpage{cgroup, count, flags} can't handle these uninitialized
+struct pages, which causes the error.
+
+In previous discussion, Dan seemed to have concern that the struct
+page area of some pages indicated by vmem_altmap->reserve may not
+be allocated. (See https://lore.kernel.org/lkml/CAPcyv4i5FjTOnPbXNcTzvt+e6RQYow0JRQwSFuxaa62LSuvzHQ@mail.gmail.com/)
+However, arch_add_memory() called by devm_memremap_pages() allocates
+struct page area for pages containing addresses in the range
+(res.start) to (res.start + resource_size(res)), which include the
+pages indicated by vmem_altmap->reserve. If I read correctly, it is
+allocated as requested at least on x86_64. Also, memmap_init_zone()
+initializes struct pages in the same range.
+So I think the struct pages should be initialized.
+
+Signed-off-by: Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
+Cc: stable@vger.kernel.org
+---
+Changes since rev 1:
+ Instead of avoiding uninitialized pages on the pfn walker side,
+ we initialize struct pages.
+
+mm/page_alloc.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 9c91949..6d180ae 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -5846,8 +5846,7 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
+ 
+ #ifdef CONFIG_ZONE_DEVICE
+ 	/*
+-	 * Honor reservation requested by the driver for this ZONE_DEVICE
+-	 * memory. We limit the total number of pages to initialize to just
++	 * We limit the total number of pages to initialize to just
+ 	 * those that might contain the memory mapping. We will defer the
+ 	 * ZONE_DEVICE page initialization until after we have released
+ 	 * the hotplug lock.
+@@ -5856,8 +5855,6 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
+ 		if (!altmap)
+ 			return;
+ 
+-		if (start_pfn == altmap->base_pfn)
+-			start_pfn += altmap->reserve;
+ 		end_pfn = altmap->base_pfn + vmem_altmap_offset(altmap);
+ 	}
+ #endif
+-- 
+1.8.3.1
+
