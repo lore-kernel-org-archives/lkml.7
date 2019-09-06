@@ -2,95 +2,131 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B4B9C00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 04:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F64C00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 04:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4766D20854
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 04:19:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567743578;
-	bh=9wEomr15DqQQFhjsBZXapKuHKKB45PBaOQHhXs8HHp8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UWKFTc1abOe7aLvBJbot0dYjv9tzfujia6KX95xxNsPpZBR11FXgZsj8+X5YLloZB
-	 hZ2fd4ataz1iZSa44/xRYVsN0gfa7608KKnHBMD7ag2A9VphLy+yPHP1SjL0s53iWw
-	 N/ombRGm6gXYbdJJOJ7MJd5diayMaQjKFw5syfvc=
+	by mail.kernel.org (Postfix) with ESMTP id 35EF72075C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 04:32:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q3BuF2fB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbfIFETg (ORCPT
+        id S1727032AbfIFEca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 00:19:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48600 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725958AbfIFETg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 00:19:36 -0400
-Received: from localhost (unknown [223.226.32.145])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A473206CD;
-        Fri,  6 Sep 2019 04:19:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567743575;
-        bh=9wEomr15DqQQFhjsBZXapKuHKKB45PBaOQHhXs8HHp8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=m1WiMGmptBN2cyjUduyaacqO6M/p/cHX8x1ZtV+FkmhG8+yMNjTy7XbuRmojKpBgk
-         20yF9UStj0DwHs/HL/OH2iagYGmh6iq4YooP9WYcTwHo1DJSDF/bZt4qj1KAmX6LeO
-         028BuJAfK6mS5lGVPXXuUXSjNEjn/RYCMby7ACxA=
-Date:   Fri, 6 Sep 2019 09:48:27 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 3/3] phy: qcom-qmp: Add SM8150 QMP UFS PHY support
-Message-ID: <20190906041827.GD2672@vkoul-mobl>
-References: <20190904100835.6099-1-vkoul@kernel.org>
- <20190904100835.6099-4-vkoul@kernel.org>
- <5d70475a.1c69fb81.650ed.0ad0@mx.google.com>
+        Fri, 6 Sep 2019 00:32:30 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36337 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726538AbfIFEc3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 00:32:29 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y22so3482837pfr.3;
+        Thu, 05 Sep 2019 21:32:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=/FnnT+XGY6LiCYmK28My012gZf6Sb+2aTvY99K4lAnU=;
+        b=Q3BuF2fBnREwoZv5O0AULfEwU50686QrzaKhLHMbWisLQZzidLcHnWw7inOhq+X5d0
+         A7knkkQ3nLa7oS8l1UsfvfKguV8y5dLyN1LfgryRRtb3GWx6t4b8WXdkq3QbZUbh+70i
+         BxNMcc5vP4B3FudQvzW0CJLc/VZEYAvqa2DXFt89TaP8Hw1i+W3BnmPyWO0M7A3wFSvH
+         nhkXpPqf1fDndZZZQkIMX9cgFVSpB5beYnftiuo3f2HCETrBTme40co3jJXniSJmbrdG
+         s1+UqzUA1KIPC7d3657NGcX5QQTDBTnN6ABFTeuGkvx8XadIGA4C1F//o59yUrr5Rx10
+         vAzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=/FnnT+XGY6LiCYmK28My012gZf6Sb+2aTvY99K4lAnU=;
+        b=c6PROcx6FQDZp/Fx2WAW/7oyyxU9NY53qj4dve4NrjNV/tx6gomIWiNeWseFQHQBmF
+         fZ6dx1o8d10EtehNPzgOcxwnd+7BRF1xVnbJd5fGlXefBLK5hyjth9PwB0Ke7Mmb6i1W
+         bNWr0n8O+XAdlU2T1SWidnVnpeqkz7uMgdHXg5/RGhthxPTPxp6obNSYzQjhQhLg3hWB
+         Q/yxGQ/PM1N2Dg7AjIWqrHCMo3neC6dwEGOzGWyzW8ZsDS9nGfRUg8fD6jQYcES1qWbw
+         J2+Nwy0FP66F623Fx9GXP+kSjXCbb53fH5B1VvAz782hNtF5sJpfb1OTPAi67zXyF3QN
+         V5Tg==
+X-Gm-Message-State: APjAAAWcv9bA1qBrG3TPkSZ1ww9zVkI8RShAlLhsHJRuzZP87dXETOiV
+        OVri0no3FPpZLU/cEJ0dyLA=
+X-Google-Smtp-Source: APXvYqxc2uuv0Y76XwL+zuFYgZvhJZ59EpeDPE8ua3TPxZjuvmHYXMQb7gErTzcoocI8nf9EL8w66A==
+X-Received: by 2002:a63:e901:: with SMTP id i1mr6181363pgh.451.1567744349121;
+        Thu, 05 Sep 2019 21:32:29 -0700 (PDT)
+Received: from localhost ([175.223.27.235])
+        by smtp.gmail.com with ESMTPSA id w13sm4344619pfi.30.2019.09.05.21.32.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2019 21:32:28 -0700 (PDT)
+Date:   Fri, 6 Sep 2019 13:32:24 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Eric Dumazet <eric.dumazet@gmail.com>, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net/skbuff: silence warnings under memory pressure
+Message-ID: <20190906043224.GA18163@jagdpanzerIV>
+References: <20190904061501.GB3838@dhcp22.suse.cz>
+ <20190904064144.GA5487@jagdpanzerIV>
+ <20190904065455.GE3838@dhcp22.suse.cz>
+ <20190904071911.GB11968@jagdpanzerIV>
+ <20190904074312.GA25744@jagdpanzerIV>
+ <1567599263.5576.72.camel@lca.pw>
+ <20190904144850.GA8296@tigerII.localdomain>
+ <1567629737.5576.87.camel@lca.pw>
+ <20190905113208.GA521@jagdpanzerIV>
+ <1567699393.5576.96.camel@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <5d70475a.1c69fb81.650ed.0ad0@mx.google.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1567699393.5576.96.camel@lca.pw>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04-09-19, 16:23, Stephen Boyd wrote:
-> Quoting Vinod Koul (2019-09-04 03:08:35)
-> > @@ -878,6 +883,93 @@ static const struct qmp_phy_init_tbl msm8998_usb3_pcs_tbl[] = {
-> >         QMP_PHY_INIT_CFG(QPHY_V3_PCS_RXEQTRAINING_RUN_TIME, 0x13),
-> >  };
-> >  
-> > +static const struct qmp_phy_init_tbl sm8150_ufsphy_serdes_tbl[] = {
-> > +       QMP_PHY_INIT_CFG(QPHY_POWER_DOWN_CONTROL, 0x01),
-> > +       QMP_PHY_INIT_CFG(QSERDES_COM_V4_SYSCLK_EN_SEL, 0xD9),
-> 
-> Can you use lowercase hex?
+On (09/05/19 12:03), Qian Cai wrote:
+> > ---
+> > diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> > index cd51aa7d08a9..89cb47882254 100644
+> > --- a/kernel/printk/printk.c
+> > +++ b/kernel/printk/printk.c
+> > @@ -2027,8 +2027,11 @@ asmlinkage int vprintk_emit(int facility, int level,
+> >  	pending_output = (curr_log_seq != log_next_seq);
+> >  	logbuf_unlock_irqrestore(flags);
+> >  
+> > +	if (!pending_output)
+> > +		return printed_len;
+> > +
+> >  	/* If called from the scheduler, we can not call up(). */
+> > -	if (!in_sched && pending_output) {
+> > +	if (!in_sched) {
+> >  		/*
+> >  		 * Disable preemption to avoid being preempted while holding
+> >  		 * console_sem which would prevent anyone from printing to
+> > @@ -2043,10 +2046,11 @@ asmlinkage int vprintk_emit(int facility, int level,
+> >  		if (console_trylock_spinning())
+> >  			console_unlock();
+> >  		preempt_enable();
+> > -	}
+> >  
+> > -	if (pending_output)
+> > +		wake_up_interruptible(&log_wait);
+> > +	} else {
+> >  		wake_up_klogd();
+> > +	}
+> >  	return printed_len;
+> >  }
+> >  EXPORT_SYMBOL(vprintk_emit);
+> > ---
 
-Sure will update
+Qian Cai, any chance you can test that patch?
 
-> > +       QMP_PHY_INIT_CFG(QSERDES_COM_V4_HSCLK_SEL, 0x11),
-> > +       QMP_PHY_INIT_CFG(QSERDES_COM_V4_HSCLK_HS_SWITCH_SEL, 0x00),
-> > +       QMP_PHY_INIT_CFG(QSERDES_COM_V4_LOCK_CMP_EN, 0x01),
-> > +       QMP_PHY_INIT_CFG(QSERDES_COM_V4_VCO_TUNE_MAP, 0x02),
-> > +       QMP_PHY_INIT_CFG(QSERDES_COM_V4_PLL_IVCO, 0x0F),
-> > +       QMP_PHY_INIT_CFG(QSERDES_COM_V4_VCO_TUNE_INITVAL2, 0x00),
-> > +       QMP_PHY_INIT_CFG(QSERDES_COM_V4_BIN_VCOCAL_HSCLK_SEL, 0x11),
-> > +       QMP_PHY_INIT_CFG(QSERDES_COM_V4_DEC_START_MODE0, 0x82),
-> > +       QMP_PHY_INIT_CFG(QSERDES_COM_V4_CP_CTRL_MODE0, 0x06),
-> 
-> Gotta love the pile of numbers and register writes...
-
-:D
-
--- 
-~Vinod
+	-ss
