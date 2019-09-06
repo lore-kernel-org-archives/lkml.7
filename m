@@ -2,136 +2,146 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC30C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 23:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C42C2C43140
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 23:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 713B2214E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 23:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DFB4214E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 23:30:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CfxhObTV"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="enS/hQsC";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HOVzxhMY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392926AbfIFXaG (ORCPT
+        id S2405478AbfIFXav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 19:30:06 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:39531 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392731AbfIFXaG (ORCPT
+        Fri, 6 Sep 2019 19:30:51 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:51599 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728978AbfIFXau (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 19:30:06 -0400
-Received: by mail-ed1-f65.google.com with SMTP id u6so7998746edq.6
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 16:30:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Eqinxltb4P+tBqyuO4WEtRUcfdT4qbszA3gfVj1CVng=;
-        b=CfxhObTVAmcNKpN/uttdeqMFFuot/dgQ8oBhunu1p3A2/KXMdnJc7eTmTJi6e2ocMn
-         NDFZD/Qh8ub6N+V6n8nGKJNHUKm6leUg+lflNX9keuez69bvdXFvHkCOlVvCSi5FCwQp
-         GqpsxbxIXF0lypQ9v5DbU9u4VRzHE/ky6Ttco=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Eqinxltb4P+tBqyuO4WEtRUcfdT4qbszA3gfVj1CVng=;
-        b=aP99GEvRuTWDaxdHxa9xqgjredvn0X56FzgD5OEepPkgwMDs6NMhoV2THneB9PJIyl
-         SwlxKhPzGIO/f2ErvCkrn5oEiLiV4msLM7U4HbvQB2DljWW3Q8U+oFa2vTAzCvRsnckD
-         UB2jDc7dtkCPyBWWTkttIocraWCeeB2tZOYzj4xO3tqbGVkxWMTk2fPEUiN+6iD09kLB
-         jObYIOQZT38Cyi3Omqkg5+G72h7mqV90i05XEwUNjKn3MKXk3IyhdLL+5yR8DEbdKA2d
-         kxY5wiF08if8B1SlG8/E8KpHO7nriG3BxZK5kIylYwidcxb3kJV9eQcDyjP6BKO4gpQ7
-         Eb/A==
-X-Gm-Message-State: APjAAAVlwbrcb1Oy1glGLsD1tQNFItsAYqIW9w5hrgc0Kd/7AGJ3wIur
-        6XebCU0tM1b1oRpSEGpmXigOJ2cXN/E=
-X-Google-Smtp-Source: APXvYqzBJlh78K+G/YRwwriM/LbVv76Xk764DtnFxcOl7k0QHK+IiwYAY+meGonR5FZ/vHsm5MfsuA==
-X-Received: by 2002:a50:9438:: with SMTP id p53mr12476291eda.291.1567812604206;
-        Fri, 06 Sep 2019 16:30:04 -0700 (PDT)
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com. [209.85.221.51])
-        by smtp.gmail.com with ESMTPSA id g21sm1216793edv.0.2019.09.06.16.30.03
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Sep 2019 16:30:04 -0700 (PDT)
-Received: by mail-wr1-f51.google.com with SMTP id w13so8144825wru.7
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 16:30:03 -0700 (PDT)
-X-Received: by 2002:adf:de08:: with SMTP id b8mr8516944wrm.200.1567812179254;
- Fri, 06 Sep 2019 16:22:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190730191303.206365-1-thgarnie@chromium.org>
- <20190806154347.GD25897@zn.tnic> <20190806155034.GP2349@hirez.programming.kicks-ass.net>
- <CAJcbSZETvvQYmh6U_Oauptdsrp-emmSG_QsAZzKLv+0-b2Yxig@mail.gmail.com>
-In-Reply-To: <CAJcbSZETvvQYmh6U_Oauptdsrp-emmSG_QsAZzKLv+0-b2Yxig@mail.gmail.com>
-From:   Thomas Garnier <thgarnie@chromium.org>
-Date:   Fri, 6 Sep 2019 16:22:47 -0700
-X-Gmail-Original-Message-ID: <CAJcbSZEc07UJtWyM5i-DGRpNTtoxoY7cDpdyDh3N-Bb+G3s0gA@mail.gmail.com>
-Message-ID: <CAJcbSZEc07UJtWyM5i-DGRpNTtoxoY7cDpdyDh3N-Bb+G3s0gA@mail.gmail.com>
-Subject: Re: [PATCH v9 00/11] x86: PIE support to extend KASLR randomization
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        Fri, 6 Sep 2019 19:30:50 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id F1DF32202A;
+        Fri,  6 Sep 2019 19:30:48 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Fri, 06 Sep 2019 19:30:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=FGZ8S19n43tAruLCrzOkg9MRjNq
+        62BLa54KBCyPc1Ic=; b=enS/hQsCWDFF6qI3rbYcTZyLHh+uaaU9vPEpOkLCmAh
+        J7u+hgfrXrQgUw/UILiZB3WDTnXjgqQwqBCNgHKAgF4v90BGOvt0LDjKt2lUkKcK
+        WR90Qqu0RRR+Yif2oSKFAsrVc2S4UIKAXZTGwrh6hiYCN7d/2E4taU23IsrVAJ1U
+        2paxk/lz18QuvdCaAiErJmc0NX+c2fTI27NhBq3kBaHs/mwi5bAH/mCFo+e1WLkK
+        1Uufn0n86xD3Zoj02TJl+dh0lr1487+NPDRhbBgGz975OYH5u/xHaD+EQzOS1oi1
+        Bc76tvsJR6jcWMVKZpP5CZatBu1ii8W4pCac9ANJCow==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=FGZ8S1
+        9n43tAruLCrzOkg9MRjNq62BLa54KBCyPc1Ic=; b=HOVzxhMYZCcjkYxlDqttm8
+        Cw3fkZxuMsEUL/AwNxTpDF7jKUnJwaDaZQbMSxd47q/Ur7qKqugM78rb2RU+EUAI
+        nXVFj/1JGME89Vj0BUeaavKy/HQI2IbVUeaw5QyYrLzRXjbgNW4zK1CvM5UFdU3f
+        yihV2xmAtNxuf8zqOUAobHZWVUOxLmyI63ByQnQHn0Ih/ctwgUe8Yco3xYJ32WnT
+        HsdHRO5WftlGBhcVA5fya4cTCuYKEcXHzniYIVZfit0CFsYphCG5yZSwvQZoodh4
+        GmiwrqgPCsAWxs51Wbk2fobHaaNSlZzRCyrYjwj4M+9gZ6pMbt+ApSJDJ0mfkc8g
+        ==
+X-ME-Sender: <xms:KOxyXeCXnbphK_rHEudHrWoJMT_zQuvc0MryatwIn4QqRgvU95Fe2A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudektddgvdduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
+    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeektddrvdehuddrudeivd
+    drudeigeenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhm
+    necuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:KOxyXbG7eu3pSwfAE_T3eYhzU37ZxMp-b2vM4GCzpKhOC1BVn8glmA>
+    <xmx:KOxyXSjv9NaFxJVTtG9_RVE646Ut2ntkRKqOAFXtpTVwYWYjsG4Jig>
+    <xmx:KOxyXRzi6UZo7EXZoB2wLa6_jeLcWUxTT01cptI3lg0bt9Ratj4YvQ>
+    <xmx:KOxyXYuKPS2NVxX3TMzGKiaqBdn6ejmA8XLM42f6iZY02RNnAaBiSw>
+Received: from localhost (unknown [80.251.162.164])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 01ED8D6005B;
+        Fri,  6 Sep 2019 19:30:47 -0400 (EDT)
+Date:   Sat, 7 Sep 2019 01:30:45 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Mark Salyzyn <salyzyn@android.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
+        Johannes Berg <johannes@sipsolutions.net>,
         "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Juergen Gross <jgross@suse.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Nadav Amit <namit@vmware.com>, Jann Horn <jannh@google.com>,
-        Feng Tang <feng.tang@intel.com>,
-        Maran Wilson <maran.wilson@oracle.com>,
-        Enrico Weigelt <info@metux.net>,
-        Allison Randal <allison@lohutok.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Marcel Holtmann <marcel@holtmann.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v2] net: enable wireless core features with
+ LEGACY_WEXT_ALLCONFIG
+Message-ID: <20190906233045.GB9478@kroah.com>
+References: <20190906192403.195620-1-salyzyn@android.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190906192403.195620-1-salyzyn@android.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 12:55 PM Thomas Garnier <thgarnie@chromium.org> wrote:
->
-> On Tue, Aug 6, 2019 at 8:51 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Tue, Aug 06, 2019 at 05:43:47PM +0200, Borislav Petkov wrote:
-> > > On Tue, Jul 30, 2019 at 12:12:44PM -0700, Thomas Garnier wrote:
-> > > > These patches make some of the changes necessary to build the kernel as
-> > > > Position Independent Executable (PIE) on x86_64. Another patchset will
-> > > > add the PIE option and larger architecture changes.
-> > >
-> > > Yeah, about this: do we have a longer writeup about the actual benefits
-> > > of all this and why we should take this all? After all, after looking
-> > > at the first couple of asm patches, it is posing restrictions to how
-> > > we deal with virtual addresses in asm (only RIP-relative addressing in
-> > > 64-bit mode, MOVs with 64-bit immediates, etc, for example) and I'm
-> > > willing to bet money that some future unrelated change will break PIE
-> > > sooner or later.
->
-> The goal is being able to extend the range of addresses where the
-> kernel can be placed with KASLR. I will look at clarifying that in the
-> future.
->
-> >
-> > Possibly objtool can help here; it should be possible to teach it about
-> > these rules, and then it will yell when violated. That should avoid
-> > regressions.
-> >
->
-> I will look into that as well.
+On Fri, Sep 06, 2019 at 12:24:00PM -0700, Mark Salyzyn wrote:
+> In embedded environments the requirements are to be able to pick and
+> chose which features one requires built into the kernel.  If an
+> embedded environment wants to supports loading modules that have been
+> kbuilt out of tree, there is a need to enable hidden configurations
+> for legacy wireless core features to provide the API surface for
+> them to load.
+> 
+> Introduce CONFIG_LEGACY_WEXT_ALLCONFIG to select all legacy wireless
+> extension core features by activating in turn all the associated
+> hidden configuration options, without having to specifically select
+> any wireless module(s).
+> 
+> Signed-off-by: Mark Salyzyn <salyzyn@android.com>
+> Cc: kernel-team@android.com
+> Cc: Johannes Berg <johannes@sipsolutions.net>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Marcel Holtmann <marcel@holtmann.org>
+> Cc: linux-wireless@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: stable@vger.kernel.org # 4.19
+> ---
+> v2: change name and documentation to CONFIG_LEGACY_WEXT_ALLCONFIG
+> ---
+>  net/wireless/Kconfig | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/net/wireless/Kconfig b/net/wireless/Kconfig
+> index 67f8360dfcee..0d646cf28de5 100644
+> --- a/net/wireless/Kconfig
+> +++ b/net/wireless/Kconfig
+> @@ -17,6 +17,20 @@ config WEXT_SPY
+>  config WEXT_PRIV
+>  	bool
+>  
+> +config LEGACY_WEXT_ALLCONFIG
+> +	bool "allconfig for legacy wireless extensions"
+> +	select WIRELESS_EXT
+> +	select WEXT_CORE
+> +	select WEXT_PROC
+> +	select WEXT_SPY
+> +	select WEXT_PRIV
+> +	help
+> +	  Config option used to enable all the legacy wireless extensions to
+> +	  the core functionality used by add-in modules.
+> +
+> +	  If you are not building a kernel to be used for a variety of
+> +	  out-of-kernel built wireless modules, say N here.
+> +
+>  config CFG80211
+>  	tristate "cfg80211 - wireless configuration API"
+>  	depends on RFKILL || !RFKILL
+> -- 
+> 2.23.0.187.g17f5b7556c-goog
+> 
 
-Following a discussion with Kees. I will explore objtool in the
-follow-up patchset as we still have more elaborate pie changes in the
-second set. I like the idea overall and I think it would be great if
-it works.
+How is this patch applicable to stable kernels???
