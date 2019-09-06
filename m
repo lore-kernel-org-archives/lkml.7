@@ -2,155 +2,93 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6081C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 09:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C41C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 09:32:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DE782082C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 09:26:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4E8E20854
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 09:32:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567762378;
+	bh=cPDqk6aXgLbE+FjZ+dLvMyI1fQjEIqWJyXy+GFf60BE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bwKuaiXtDa+qI6Lr1a2U7+VBjsT5F+wtvD2cBfFyK3TECZOllhdXrouBehXa7leQp
+	 iSEyusE4BBMXjRtiimB0eECb767FVcULQF83CfbI86ONEkhHUXi6dN10gmCLTLB+rV
+	 ZFdDHrVeGWQC88+ExUVdPVDYe9zwFutMpPchMWH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392909AbfIFJ0Y (ORCPT
+        id S2392927AbfIFJcz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 05:26:24 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:50481 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbfIFJ0Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 05:26:24 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1i6AVV-0003w1-Ob; Fri, 06 Sep 2019 11:26:17 +0200
-Message-ID: <1567761976.6575.1.camel@pengutronix.de>
-Subject: Re: [PATCH for 5.4] media: hantro: Fix s_fmt for dynamic resolution
- changes
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org
-Cc:     kernel@collabora.com,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        fbuergisser@chromium.org, linux-kernel@vger.kernel.org
-Date:   Fri, 06 Sep 2019 11:26:16 +0200
-In-Reply-To: <93b49e964b1f9f5c799affd2ab5416a16f0dda23.camel@collabora.com>
-References: <20190903171256.25052-1-ezequiel@collabora.com>
-         <1567592011.3041.1.camel@pengutronix.de>
-         <37bbd1b8ee7bb82c75aefb675e0c3ddd955dde0b.camel@collabora.com>
-         <1567603704.3041.10.camel@pengutronix.de>
-         <93b49e964b1f9f5c799affd2ab5416a16f0dda23.camel@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Fri, 6 Sep 2019 05:32:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49534 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392912AbfIFJcy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 05:32:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F04832081B;
+        Fri,  6 Sep 2019 09:32:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567762374;
+        bh=cPDqk6aXgLbE+FjZ+dLvMyI1fQjEIqWJyXy+GFf60BE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=N9p1q33DSeih0KQVKngEMuv4yWhp9cEYmvpkGXiwIyuCY/fTxSayvES0HnzP+/Xkz
+         ACedDjqe59IqJcEfcQA/LpTQtx1fRdX7rDFFGWDs36lF/Fje5OPkvoHJdg5ZO5wPBq
+         WmK7M5ooWAeATfBOv2PByyhNRJZf2M4DgtLJnaL4=
+Date:   Fri, 6 Sep 2019 11:32:52 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Austin Kim <austindh.kim@gmail.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        dvhart@infradead.org, andy@infradead.org, hpa@zytor.com,
+        allison@lohutok.net, armijn@tjaldur.nl, kjlu@umn.edu,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/platform/uv: move kmalloc() NULL check routine
+Message-ID: <20190906093252.GB16843@kroah.com>
+References: <20190905232951.GA28779@LGEARND20B15>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190905232951.GA28779@LGEARND20B15>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-09-05 at 15:00 -0300, Ezequiel Garcia wrote:
-> On Wed, 2019-09-04 at 15:28 +0200, Philipp Zabel wrote:
-> > On Wed, 2019-09-04 at 10:01 -0300, Ezequiel Garcia wrote:
-> > > On Wed, 2019-09-04 at 12:13 +0200, Philipp Zabel wrote:
-> > > > Hi Ezequiel,
-> > > > 
-> > > > On Tue, 2019-09-03 at 14:12 -0300, Ezequiel Garcia wrote:
-> > > > > Commit 953aaa1492c53 ("media: rockchip/vpu: Prepare things to support decoders")
-> > > > > changed the conditions under S_FMT was allowed for OUTPUT
-> > > > > CAPTURE buffers.
-> > > > > 
-> > > > > However, and according to the mem-to-mem stateless decoder specification,
-> > > > > in order to support dynamic resolution changes, S_FMT should be allowed
-> > > > > even if OUTPUT buffers have been allocated.
-> > > > > 
-> > > > > Relax decoder S_FMT restrictions on OUTPUT buffers, allowing a resolution
-> > > > > modification, provided the pixel format stays the same.
-> > > > > 
-> > > > > Tested on RK3288 platforms using ChromiumOS Video Decode/Encode Accelerator Unittests.
-> > > > > 
-> > > > > Fixes: 953aaa1492c53 ("media: rockchip/vpu: Prepare things to support decoders")
-> > > > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > > > > ---
-> > > > >  drivers/staging/media/hantro/hantro_v4l2.c | 22 ++++++++++++++++------
-> > > > >  1 file changed, 16 insertions(+), 6 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/staging/media/hantro/hantro_v4l2.c b/drivers/staging/media/hantro/hantro_v4l2.c
-> > > > > index 3dae52abb96c..d48b548842cf 100644
-> > > > > --- a/drivers/staging/media/hantro/hantro_v4l2.c
-> > > > > +++ b/drivers/staging/media/hantro/hantro_v4l2.c
-> > > > > @@ -367,19 +367,22 @@ vidioc_s_fmt_out_mplane(struct file *file, void *priv, struct v4l2_format *f)
-> > > > >  {
-> > > > >  	struct v4l2_pix_format_mplane *pix_mp = &f->fmt.pix_mp;
-> > > > >  	struct hantro_ctx *ctx = fh_to_ctx(priv);
-> > > > > +	struct vb2_queue *vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
-> > > > >  	const struct hantro_fmt *formats;
-> > > > >  	unsigned int num_fmts;
-> > > > > -	struct vb2_queue *vq;
-> > > > >  	int ret;
-> > > > >  
-> > > > > -	/* Change not allowed if queue is busy. */
-> > > > > -	vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
-> > > > > -	if (vb2_is_busy(vq))
-> > > > > -		return -EBUSY;
-> > > > > -
-> > > > >  	if (!hantro_is_encoder_ctx(ctx)) {
-> > > > >  		struct vb2_queue *peer_vq;
-> > > > >  
-> > > > > +		/*
-> > > > > +		 * In other to support dynamic resolution change,
-> > > > > +		 * the decoder admits a resolution change, as long
-> > > > > +		 * as the pixelformat remains. Can't be done if streaming.
-> > > > > +		 */
-> > > > > +		if (vb2_is_streaming(vq) || (vb2_is_busy(vq) &&
-> > > > > +		    pix_mp->pixelformat != ctx->src_fmt.pixelformat))
-> > > > 
-> > > > Before using contents of the v4l2_format f for comparison, we should run
-> > > > vidioc_try_fmt_out_mplane over it.
-> > > 
-> > > Right, good catch.
-> > > 
-> > > >  Also, besides pixelformat, sizeimage
-> > > > shouldn't change either, at least if this is a VB2_MMAP queue.
-> > > > 
-> > > 
-> > > This is the OUTPUT queue, so I don't see why the sizeimage
-> > > of the coded buffers should stay the same. Maybe I'm missing
-> > > something? 
-> > 
-> > If the OUTPUT vb2_queue is busy, we already have some buffers of the old
-> > size allocated. We can't change their size dynamically with just
-> > VIDIOC_S_FMT.
-> > 
-> > Maybe this should correct sizeimage to the old size instead of returning
-> > -EBUSY? Either way, if the old buffer size is too small to reasonably
-> > decode the new resolution, the OUTPUT buffers have to be reallocated.
-> > 
+On Fri, Sep 06, 2019 at 08:29:51AM +0900, Austin Kim wrote:
+> The result of kmalloc should have been checked ahead of below statement:
+> 	pqp = (struct bau_pq_entry *)vp;
 > 
-> Note that for a decoder, the OUTPUT side buffers are coded. Is there any
-> straightforward correlation between the buffer size and the resolution?
->
-> In other words, how does the driver figure out if the size is
-> resonably large?
+> Move BUG_ON(!vp) before above statement.
+> 
+> Signed-off-by: Austin Kim <austindh.kim@gmail.com>
+> ---
+>  arch/x86/platform/uv/tlb_uv.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/platform/uv/tlb_uv.c b/arch/x86/platform/uv/tlb_uv.c
+> index 20c389a..5f0a96bf 100644
+> --- a/arch/x86/platform/uv/tlb_uv.c
+> +++ b/arch/x86/platform/uv/tlb_uv.c
+> @@ -1804,9 +1804,9 @@ static void pq_init(int node, int pnode)
+>  
+>  	plsize = (DEST_Q_SIZE + 1) * sizeof(struct bau_pq_entry);
+>  	vp = kmalloc_node(plsize, GFP_KERNEL, node);
+> -	pqp = (struct bau_pq_entry *)vp;
+> -	BUG_ON(!pqp);
+> +	BUG_ON(!vp);
 
-The decoded frame size seems like a reasonable upper bound at first, but
-especially for formats like H.264 it is trivial to construct slices that
-are larger than that with I_PCM macroblocks.
+Ick!  Don't crash the whole machine if you are out of memory, that's a
+totally lazy and broken driver.  Fix this up properly please.
 
-I think for H.264 some limit depending on profile and level can be
-constructed from spec chapter A.3. "Levels", by looking at the rules for
-the sum of NumBytesInNALunit, though not quite straightforward.
+But the original code is just fine (from a this is doing what I want it
+to do point of view), I don't see the need to change anything here, you
+did not modify any logic at all.
 
-regards
-Philipp
+thanks,
+
+greg k-h
