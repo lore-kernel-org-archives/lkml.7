@@ -8,66 +8,66 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C0DC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 02:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B31C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 02:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 664A92070C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 02:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5ED52070C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 02:36:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nF54xOvF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KhFHj1wO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391985AbfIFCdT (ORCPT
+        id S2403838AbfIFCgs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 22:33:19 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46406 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731491AbfIFCdT (ORCPT
+        Thu, 5 Sep 2019 22:36:48 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34407 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391988AbfIFCgs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 22:33:19 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q5so3247521pfg.13;
-        Thu, 05 Sep 2019 19:33:18 -0700 (PDT)
+        Thu, 5 Sep 2019 22:36:48 -0400
+Received: by mail-pg1-f194.google.com with SMTP id n9so2597417pgc.1;
+        Thu, 05 Sep 2019 19:36:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=pPbuLaJBt7uR0wPIXo36o1repAm77znOz8JRwWFns+8=;
-        b=nF54xOvFuxUJeItxdO04c6E77l92fUy2rFij1n2ikg6VT8VJSDCz02+Hl+n+u2AOZD
-         NFHdalVJseIfCNV8jdRbnX5CKqnU+9z/Ad2xIHPBv2gtwiTD/zUEvurBaO83fncZl/kI
-         VI6T3yT8OEtlds7Flzj4Ry/2+I5yQoG377vNwWq7NLVod8nt00w7IuQ4OrmDibcchqOa
-         MK1aDKnNOU66UWR7R8C2CilALzbqz78NqjU4KSG9o408P9QeKAp/QlB4AS79d8nxLiO3
-         xJgbxfrp6cDl085KnfyCG/eQ/ZQVgOgPYf/1m0VLGKG881ZrP/CUQr236acX3rKBqSXO
-         Czzg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ePXAwP/rNBu3eb2hTDPp8xoweMPxOufZFxZtTEYoIiM=;
+        b=KhFHj1wOs6NfxYaU6KE5WVurkHI8yrh+fF6wgCdTTbo6+qJyCGcFM1Z8rV18BOwJrn
+         Mc3fKxq35i6gEHwZ08mYp9CM9NVWh5iGPe0mFngbJq0+7lSyP73cVsjSmWHKu4yn4FbC
+         +1UXBDj1A5wjmAedQqkWYYQFBBdXDerNTTd6jWjw6zqZGYZxqszRxLLabOMfGgX97lP7
+         1NrKumt6bPoWW8G70PBpw1BGFYRDghfyRHvYjJedm4lF5liKt8p+WmpoDWmWP1W6ApCy
+         0yDqF56tKhkM8uyV29eGuHJ6TiVuhFmrW8AbrNsL6duZjUqxgqZ/fXp78jMSYfKzgd9z
+         TGYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=pPbuLaJBt7uR0wPIXo36o1repAm77znOz8JRwWFns+8=;
-        b=nBw5wPw2w35GN3mmUFIQCt5++UlAXtRvNmQeIRdmPbZstO/tHMALSq844wkshFxnJ/
-         pTEwxDZwQiohMlVd8leJ5dSACQmHoRO2YpMcIret7NN+l1JpZC+aIrlGgo2bnV6Kq3LT
-         jc+36/384fzPhsrNEV+2oiFFEJLewBe3TOLC06ZYSoyviDli5OWvZz2QF7Vn3l+1jdC3
-         2E4JPLlEJ/1RGFNC83hF2FyRkVg+jlCSlGVONtfI3p0w7Nx74F1tcNu9p/dkWrPTevWG
-         4+9T93xFrGUzXXnXo6XS+bZIPEzK3aWt+iIq1V2AMV+j/R1zLIn3s86W9t+FfMUhDG9G
-         aYew==
-X-Gm-Message-State: APjAAAULpFABLOQnSPlgcEXDWxRR61SqHhWKCsxlXftXtJjl/GdrS5pu
-        n5WAVcY00X8a5PqCcYdFxqs=
-X-Google-Smtp-Source: APXvYqxGQqLySiqDHscaX2XrYZYJXb4kbCdXEJMfrmkbhnk9KUl2XtSolAUbFoSafbbsXnVaWKW1Cw==
-X-Received: by 2002:a17:90a:248c:: with SMTP id i12mr7436448pje.130.1567737197987;
-        Thu, 05 Sep 2019 19:33:17 -0700 (PDT)
-Received: from gli-arch.genesyslogic.com.tw (60-251-58-169.HINET-IP.hinet.net. [60.251.58.169])
-        by smtp.gmail.com with ESMTPSA id f74sm8025150pfa.34.2019.09.05.19.33.16
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ePXAwP/rNBu3eb2hTDPp8xoweMPxOufZFxZtTEYoIiM=;
+        b=XUPLMdxyQs9/87WKzvlYkFhrioQqmRA8Vk4ZkQmhlQLe2ynKmLcBhPD4diR9EBCl0+
+         EpTc3bHrITHHhjF5eftAIUKxGVnvIlRW9RnYgvtHcMD4Ny/Nbu7NPDtQCGn6N4nveUE0
+         AwHR/9w9d7lULJ8H58ztXQRxJy1Fe+Pr1wqq70seruuXqDulX08QdloeHHIBXjLckwqV
+         vy0wBMshdMTkxJ3faJGFcRMnxOgjkAjd+ktzGRZE6KiCtecVRBOFpIwlLC8eX0ZR86nY
+         wCyHhLEp5J5IAioVuyHFLSbcm+cgRBWR3karuoNmIfDMo5EA4l/6KepnBi+rr7Q5VaX4
+         2imA==
+X-Gm-Message-State: APjAAAXQWjR3JyBEbKTbfVjCvHDhzBdyvLc6fQWpq6oYF6QXIC4XZhwr
+        FahwRdJjnHDkvJ9oCZ/BVRQ=
+X-Google-Smtp-Source: APXvYqxwDwOBTZ0IPGMkUTK6wkUJwtjxOeDa2nQtaWm5wQqr0Uo79ddmcGaajBceJMjFJwy/Ai5W1A==
+X-Received: by 2002:a65:690b:: with SMTP id s11mr5953189pgq.10.1567737407258;
+        Thu, 05 Sep 2019 19:36:47 -0700 (PDT)
+Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
+        by smtp.gmail.com with ESMTPSA id v7sm4035747pff.87.2019.09.05.19.36.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 19:33:17 -0700 (PDT)
-From:   Ben Chuang <benchuanggli@gmail.com>
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        johnsonm@danlj.org, ben.chuang@genesyslogic.com.tw,
-        Ben Chuang <benchuanggli@gmail.com>
-Subject: [PATCH V8 5/5] mmc: host: sdhci-pci: Add Genesys Logic GL975x support
-Date:   Fri,  6 Sep 2019 10:33:26 +0800
-Message-Id: <13ba23b2b159a88bb385b6a1e8ead5fe5ea53156.1567734321.git.benchuanggli@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1567734321.git.benchuanggli@gmail.com>
-References: <cover.1567734321.git.benchuanggli@gmail.com>
+        Thu, 05 Sep 2019 19:36:46 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+        Florian Dollinger <dollinger.florian@gmx.de>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RESEND PATCH v2] Bluetooth: Retry configure request if result is L2CAP_CONF_UNKNOWN
+Date:   Thu,  5 Sep 2019 19:36:01 -0700
+Message-Id: <20190906023601.4378-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,447 +75,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+Due to:
 
-Add support for the GL9750 and GL9755 chipsets.
+ * Current implementation of l2cap_config_rsp() dropping BT
+   connection if sender of configuration response replied with unknown
+   option failure (Result=0x0003/L2CAP_CONF_UNKNOWN)
 
-Enable v4 mode and wait 5ms after set 1.8V signal enable for GL9750/
-GL9755. Fix the value of SDHCI_MAX_CURRENT register and use the vendor
-tuning flow for GL9750.
+ * Current implementation of l2cap_build_conf_req() adding
+   L2CAP_CONF_RFC(0x04) option to initial configure request sent by
+   the Linux host.
 
-Co-developed-by: Michael K Johnson <johnsonm@danlj.org>
-Signed-off-by: Michael K Johnson <johnsonm@danlj.org>
-Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+devices that do no recongninze L2CAP_CONF_RFC, such as Xbox One S
+controllers, will get stuck in endless connect -> configure ->
+disconnect loop, never connect and be generaly unusable.
+
+To avoid this problem add code to do the following:
+
+ 1. Parse the body of response L2CAP_CONF_UNKNOWN and, in case of
+    unsupported option being RFC, clear L2CAP_FEAT_ERTM and
+    L2CAP_FEAT_STREAMING from connection's feature mask (in order to
+    prevent RFC option from being added going forward)
+
+ 2. Retry configuration step the same way it's done for
+    L2CAP_CONF_UNACCEPT
+
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
+Cc: Florian Dollinger <dollinger.florian@gmx.de>
+Cc: Marcel Holtmann <marcel@holtmann.org>
+Cc: Johan Hedberg <johan.hedberg@gmail.com>
+Cc: linux-bluetooth@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 ---
- drivers/mmc/host/Kconfig          |   1 +
- drivers/mmc/host/Makefile         |   2 +-
- drivers/mmc/host/sdhci-pci-core.c |   2 +
- drivers/mmc/host/sdhci-pci-gli.c  | 355 ++++++++++++++++++++++++++++++
- drivers/mmc/host/sdhci-pci.h      |   5 +
- 5 files changed, 364 insertions(+), 1 deletion(-)
- create mode 100644 drivers/mmc/host/sdhci-pci-gli.c
 
-diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-index 931770f17087..9fbfff514d6c 100644
---- a/drivers/mmc/host/Kconfig
-+++ b/drivers/mmc/host/Kconfig
-@@ -94,6 +94,7 @@ config MMC_SDHCI_PCI
- 	depends on MMC_SDHCI && PCI
- 	select MMC_CQHCI
- 	select IOSF_MBI if X86
-+	select MMC_SDHCI_IO_ACCESSORS
- 	help
- 	  This selects the PCI Secure Digital Host Controller Interface.
- 	  Most controllers found today are PCI devices.
-diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
-index 73578718f119..661445415090 100644
---- a/drivers/mmc/host/Makefile
-+++ b/drivers/mmc/host/Makefile
-@@ -13,7 +13,7 @@ obj-$(CONFIG_MMC_MXS)		+= mxs-mmc.o
- obj-$(CONFIG_MMC_SDHCI)		+= sdhci.o
- obj-$(CONFIG_MMC_SDHCI_PCI)	+= sdhci-pci.o
- sdhci-pci-y			+= sdhci-pci-core.o sdhci-pci-o2micro.o sdhci-pci-arasan.o \
--				   sdhci-pci-dwc-mshc.o
-+				   sdhci-pci-dwc-mshc.o sdhci-pci-gli.o
- obj-$(subst m,y,$(CONFIG_MMC_SDHCI_PCI))	+= sdhci-pci-data.o
- obj-$(CONFIG_MMC_SDHCI_ACPI)	+= sdhci-acpi.o
- obj-$(CONFIG_MMC_SDHCI_PXAV3)	+= sdhci-pxav3.o
-diff --git a/drivers/mmc/host/sdhci-pci-core.c b/drivers/mmc/host/sdhci-pci-core.c
-index 4154ee11b47d..e5835fbf73bc 100644
---- a/drivers/mmc/host/sdhci-pci-core.c
-+++ b/drivers/mmc/host/sdhci-pci-core.c
-@@ -1682,6 +1682,8 @@ static const struct pci_device_id pci_ids[] = {
- 	SDHCI_PCI_DEVICE(O2, SEABIRD1, o2),
- 	SDHCI_PCI_DEVICE(ARASAN, PHY_EMMC, arasan),
- 	SDHCI_PCI_DEVICE(SYNOPSYS, DWC_MSHC, snps),
-+	SDHCI_PCI_DEVICE(GLI, 9750, gl9750),
-+	SDHCI_PCI_DEVICE(GLI, 9755, gl9755),
- 	SDHCI_PCI_DEVICE_CLASS(AMD, SYSTEM_SDHCI, PCI_CLASS_MASK, amd),
- 	/* Generic SD host controller */
- 	{PCI_DEVICE_CLASS(SYSTEM_SDHCI, PCI_CLASS_MASK)},
-diff --git a/drivers/mmc/host/sdhci-pci-gli.c b/drivers/mmc/host/sdhci-pci-gli.c
-new file mode 100644
-index 000000000000..94462b94abec
---- /dev/null
-+++ b/drivers/mmc/host/sdhci-pci-gli.c
-@@ -0,0 +1,355 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (C) 2019 Genesys Logic, Inc.
-+ *
-+ * Authors: Ben Chuang <ben.chuang@genesyslogic.com.tw>
-+ *
-+ * Version: v0.9.0 (2019-08-08)
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/bits.h>
-+#include <linux/pci.h>
-+#include <linux/mmc/mmc.h>
-+#include <linux/delay.h>
-+#include "sdhci.h"
-+#include "sdhci-pci.h"
-+
-+/*  Genesys Logic extra registers */
-+#define SDHCI_GLI_9750_WT         0x800
-+#define   SDHCI_GLI_9750_WT_EN      BIT(0)
-+#define   GLI_9750_WT_EN_ON	    0x1
-+#define   GLI_9750_WT_EN_OFF	    0x0
-+
-+#define SDHCI_GLI_9750_DRIVING      0x860
-+#define   SDHCI_GLI_9750_DRIVING_1    GENMASK(11, 0)
-+#define   SDHCI_GLI_9750_DRIVING_2    GENMASK(27, 26)
-+#define   GLI_9750_DRIVING_1_VALUE    0xFFF
-+#define   GLI_9750_DRIVING_2_VALUE    0x3
-+
-+#define SDHCI_GLI_9750_PLL	      0x864
-+#define   SDHCI_GLI_9750_PLL_TX2_INV    BIT(23)
-+#define   SDHCI_GLI_9750_PLL_TX2_DLY    GENMASK(22, 20)
-+#define   GLI_9750_PLL_TX2_INV_VALUE    0x1
-+#define   GLI_9750_PLL_TX2_DLY_VALUE    0x0
-+
-+#define SDHCI_GLI_9750_SW_CTRL      0x874
-+#define   SDHCI_GLI_9750_SW_CTRL_4    GENMASK(7, 6)
-+#define   GLI_9750_SW_CTRL_4_VALUE    0x3
-+
-+#define SDHCI_GLI_9750_MISC            0x878
-+#define   SDHCI_GLI_9750_MISC_TX1_INV    BIT(2)
-+#define   SDHCI_GLI_9750_MISC_RX_INV     BIT(3)
-+#define   SDHCI_GLI_9750_MISC_TX1_DLY    GENMASK(6, 4)
-+#define   GLI_9750_MISC_TX1_INV_VALUE    0x0
-+#define   GLI_9750_MISC_RX_INV_ON        0x1
-+#define   GLI_9750_MISC_RX_INV_OFF       0x0
-+#define   GLI_9750_MISC_RX_INV_VALUE     GLI_9750_MISC_RX_INV_OFF
-+#define   GLI_9750_MISC_TX1_DLY_VALUE    0x5
-+
-+#define SDHCI_GLI_9750_TUNING_CONTROL	          0x540
-+#define   SDHCI_GLI_9750_TUNING_CONTROL_EN          BIT(4)
-+#define   GLI_9750_TUNING_CONTROL_EN_ON             0x1
-+#define   GLI_9750_TUNING_CONTROL_EN_OFF            0x0
-+#define   SDHCI_GLI_9750_TUNING_CONTROL_GLITCH_1    BIT(16)
-+#define   SDHCI_GLI_9750_TUNING_CONTROL_GLITCH_2    GENMASK(20, 19)
-+#define   GLI_9750_TUNING_CONTROL_GLITCH_1_VALUE    0x1
-+#define   GLI_9750_TUNING_CONTROL_GLITCH_2_VALUE    0x2
-+
-+#define SDHCI_GLI_9750_TUNING_PARAMETERS           0x544
-+#define   SDHCI_GLI_9750_TUNING_PARAMETERS_RX_DLY    GENMASK(2, 0)
-+#define   GLI_9750_TUNING_PARAMETERS_RX_DLY_VALUE    0x1
-+
-+#define GLI_MAX_TUNING_LOOP 40
-+
-+/* Genesys Logic chipset */
-+static inline void gl9750_wt_on(struct sdhci_host *host)
+Changes since [v1]:
+
+   - Patch simplified to simply clear L2CAP_FEAT_ERTM |
+     L2CAP_FEAT_STREAMING from feat_mask when device flags RFC options
+     as unknown
+
+[v1] lore.kernel.org/r/20190208025828.30901-1-andrew.smirnov@gmail.com
+
+ net/bluetooth/l2cap_core.c | 58 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
+
+diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
+index dfc1edb168b7..77b65870b064 100644
+--- a/net/bluetooth/l2cap_core.c
++++ b/net/bluetooth/l2cap_core.c
+@@ -4216,6 +4216,49 @@ static inline int l2cap_config_req(struct l2cap_conn *conn,
+ 	return err;
+ }
+ 
++static inline int l2cap_config_rsp_unknown(struct l2cap_conn *conn,
++					   struct l2cap_chan *chan,
++					   const u8 *data,
++					   int len)
 +{
-+	u32 wt_value;
-+	u32 wt_enable;
++	char req[64];
 +
-+	wt_value = sdhci_readl(host, SDHCI_GLI_9750_WT);
-+	wt_enable = FIELD_GET(SDHCI_GLI_9750_WT_EN, wt_value);
++	if (!len || len > sizeof(req) -  sizeof(struct l2cap_conf_req))
++		return -ECONNRESET;
 +
-+	if (wt_enable == GLI_9750_WT_EN_ON)
-+		return;
++	while (len--) {
++		const u8 option_type = *data++;
 +
-+	wt_value &= ~SDHCI_GLI_9750_WT_EN;
-+	wt_value |= FIELD_PREP(SDHCI_GLI_9750_WT_EN, GLI_9750_WT_EN_ON);
++		BT_DBG("chan %p, unknown option type: %u", chan,  option_type);
 +
-+	sdhci_writel(host, wt_value, SDHCI_GLI_9750_WT);
-+}
++		/* "...Hints shall not be included in the Response and
++		 * shall not be the sole cause for rejecting the
++		 * Request.."
++		 */
++		if (option_type & L2CAP_CONF_HINT)
++			return -ECONNRESET;
 +
-+static inline void gl9750_wt_off(struct sdhci_host *host)
-+{
-+	u32 wt_value;
-+	u32 wt_enable;
-+
-+	wt_value = sdhci_readl(host, SDHCI_GLI_9750_WT);
-+	wt_enable = FIELD_GET(SDHCI_GLI_9750_WT_EN, wt_value);
-+
-+	if (wt_enable == GLI_9750_WT_EN_OFF)
-+		return;
-+
-+	wt_value &= ~SDHCI_GLI_9750_WT_EN;
-+	wt_value |= FIELD_PREP(SDHCI_GLI_9750_WT_EN, GLI_9750_WT_EN_OFF);
-+
-+	sdhci_writel(host, wt_value, SDHCI_GLI_9750_WT);
-+}
-+
-+static void gli_set_9750(struct sdhci_host *host)
-+{
-+	u32 driving_value;
-+	u32 pll_value;
-+	u32 sw_ctrl_value;
-+	u32 misc_value;
-+	u32 parameter_value;
-+	u32 control_value;
-+	u16 ctrl2;
-+
-+	gl9750_wt_on(host);
-+
-+	driving_value = sdhci_readl(host, SDHCI_GLI_9750_DRIVING);
-+	pll_value = sdhci_readl(host, SDHCI_GLI_9750_PLL);
-+	sw_ctrl_value = sdhci_readl(host, SDHCI_GLI_9750_SW_CTRL);
-+	misc_value = sdhci_readl(host, SDHCI_GLI_9750_MISC);
-+	parameter_value = sdhci_readl(host, SDHCI_GLI_9750_TUNING_PARAMETERS);
-+	control_value = sdhci_readl(host, SDHCI_GLI_9750_TUNING_CONTROL);
-+
-+	driving_value &= ~(SDHCI_GLI_9750_DRIVING_1);
-+	driving_value &= ~(SDHCI_GLI_9750_DRIVING_2);
-+	driving_value |= FIELD_PREP(SDHCI_GLI_9750_DRIVING_1,
-+				    GLI_9750_DRIVING_1_VALUE);
-+	driving_value |= FIELD_PREP(SDHCI_GLI_9750_DRIVING_2,
-+				    GLI_9750_DRIVING_2_VALUE);
-+	sdhci_writel(host, driving_value, SDHCI_GLI_9750_DRIVING);
-+
-+	sw_ctrl_value &= ~SDHCI_GLI_9750_SW_CTRL_4;
-+	sw_ctrl_value |= FIELD_PREP(SDHCI_GLI_9750_SW_CTRL_4,
-+				    GLI_9750_SW_CTRL_4_VALUE);
-+	sdhci_writel(host, sw_ctrl_value, SDHCI_GLI_9750_SW_CTRL);
-+
-+	/* reset the tuning flow after reinit and before starting tuning */
-+	pll_value &= ~SDHCI_GLI_9750_PLL_TX2_INV;
-+	pll_value &= ~SDHCI_GLI_9750_PLL_TX2_DLY;
-+	pll_value |= FIELD_PREP(SDHCI_GLI_9750_PLL_TX2_INV,
-+				GLI_9750_PLL_TX2_INV_VALUE);
-+	pll_value |= FIELD_PREP(SDHCI_GLI_9750_PLL_TX2_DLY,
-+				GLI_9750_PLL_TX2_DLY_VALUE);
-+
-+	misc_value &= ~SDHCI_GLI_9750_MISC_TX1_INV;
-+	misc_value &= ~SDHCI_GLI_9750_MISC_RX_INV;
-+	misc_value &= ~SDHCI_GLI_9750_MISC_TX1_DLY;
-+	misc_value |= FIELD_PREP(SDHCI_GLI_9750_MISC_TX1_INV,
-+				 GLI_9750_MISC_TX1_INV_VALUE);
-+	misc_value |= FIELD_PREP(SDHCI_GLI_9750_MISC_RX_INV,
-+				 GLI_9750_MISC_RX_INV_VALUE);
-+	misc_value |= FIELD_PREP(SDHCI_GLI_9750_MISC_TX1_DLY,
-+				 GLI_9750_MISC_TX1_DLY_VALUE);
-+
-+	parameter_value &= ~SDHCI_GLI_9750_TUNING_PARAMETERS_RX_DLY;
-+	parameter_value |= FIELD_PREP(SDHCI_GLI_9750_TUNING_PARAMETERS_RX_DLY,
-+				      GLI_9750_TUNING_PARAMETERS_RX_DLY_VALUE);
-+
-+	control_value &= ~SDHCI_GLI_9750_TUNING_CONTROL_GLITCH_1;
-+	control_value &= ~SDHCI_GLI_9750_TUNING_CONTROL_GLITCH_2;
-+	control_value |= FIELD_PREP(SDHCI_GLI_9750_TUNING_CONTROL_GLITCH_1,
-+				    GLI_9750_TUNING_CONTROL_GLITCH_1_VALUE);
-+	control_value |= FIELD_PREP(SDHCI_GLI_9750_TUNING_CONTROL_GLITCH_2,
-+				    GLI_9750_TUNING_CONTROL_GLITCH_2_VALUE);
-+
-+	sdhci_writel(host, pll_value, SDHCI_GLI_9750_PLL);
-+	sdhci_writel(host, misc_value, SDHCI_GLI_9750_MISC);
-+
-+	/* disable tuned clk */
-+	ctrl2 = sdhci_readw(host, SDHCI_HOST_CONTROL2);
-+	ctrl2 &= ~SDHCI_CTRL_TUNED_CLK;
-+	sdhci_writew(host, ctrl2, SDHCI_HOST_CONTROL2);
-+
-+	/* enable tuning parameters control */
-+	control_value &= ~SDHCI_GLI_9750_TUNING_CONTROL_EN;
-+	control_value |= FIELD_PREP(SDHCI_GLI_9750_TUNING_CONTROL_EN,
-+				    GLI_9750_TUNING_CONTROL_EN_ON);
-+	sdhci_writel(host, control_value, SDHCI_GLI_9750_TUNING_CONTROL);
-+
-+	/* write tuning parameters */
-+	sdhci_writel(host, parameter_value, SDHCI_GLI_9750_TUNING_PARAMETERS);
-+
-+	/* disable tuning parameters control */
-+	control_value &= ~SDHCI_GLI_9750_TUNING_CONTROL_EN;
-+	control_value |= FIELD_PREP(SDHCI_GLI_9750_TUNING_CONTROL_EN,
-+				    GLI_9750_TUNING_CONTROL_EN_OFF);
-+	sdhci_writel(host, control_value, SDHCI_GLI_9750_TUNING_CONTROL);
-+
-+	/* clear tuned clk */
-+	ctrl2 = sdhci_readw(host, SDHCI_HOST_CONTROL2);
-+	ctrl2 &= ~SDHCI_CTRL_TUNED_CLK;
-+	sdhci_writew(host, ctrl2, SDHCI_HOST_CONTROL2);
-+
-+	gl9750_wt_off(host);
-+}
-+
-+static void gli_set_9750_rx_inv(struct sdhci_host *host, bool b)
-+{
-+	u32 misc_value;
-+
-+	gl9750_wt_on(host);
-+
-+	misc_value = sdhci_readl(host, SDHCI_GLI_9750_MISC);
-+	if (b) {
-+		misc_value &= ~SDHCI_GLI_9750_MISC_RX_INV;
-+		misc_value |= FIELD_PREP(SDHCI_GLI_9750_MISC_RX_INV,
-+					 GLI_9750_MISC_RX_INV_ON);
-+		sdhci_writel(host, misc_value, SDHCI_GLI_9750_MISC);
-+	} else {
-+		misc_value &= ~SDHCI_GLI_9750_MISC_RX_INV;
-+		misc_value |= FIELD_PREP(SDHCI_GLI_9750_MISC_RX_INV,
-+					 GLI_9750_MISC_RX_INV_OFF);
-+		sdhci_writel(host, misc_value, SDHCI_GLI_9750_MISC);
-+	}
-+
-+	gl9750_wt_off(host);
-+}
-+
-+static int __sdhci_execute_tuning_9750(struct sdhci_host *host, u32 opcode)
-+{
-+	int i;
-+	int rx_inv;
-+
-+	for (rx_inv = 0; rx_inv < 2; rx_inv++) {
-+		gli_set_9750_rx_inv(host, !!rx_inv);
-+		sdhci_start_tuning(host);
-+
-+		for (i = 0; i < GLI_MAX_TUNING_LOOP; i++) {
-+			u16 ctrl;
-+
-+			sdhci_send_tuning(host, opcode);
-+
-+			if (!host->tuning_done) {
-+				sdhci_abort_tuning(host, opcode);
-+				break;
-+			}
-+
-+			ctrl = sdhci_readw(host, SDHCI_HOST_CONTROL2);
-+			if (!(ctrl & SDHCI_CTRL_EXEC_TUNING)) {
-+				if (ctrl & SDHCI_CTRL_TUNED_CLK)
-+					return 0; /* Success! */
-+				break;
-+			}
++		switch (option_type) {
++		case L2CAP_CONF_RFC:
++			/* Clearing the following feature should
++			 * prevent RFC option from being added next
++			 * connection attempt
++			 */
++			conn->feat_mask &= ~(L2CAP_FEAT_ERTM |
++					     L2CAP_FEAT_STREAMING);
++			break;
++		default:
++			return -ECONNRESET;
 +		}
 +	}
-+	if (!host->tuning_done) {
-+		pr_info("%s: Tuning timeout, falling back to fixed sampling clock\n",
-+			mmc_hostname(host->mmc));
-+		return -ETIMEDOUT;
-+	}
 +
-+	pr_info("%s: Tuning failed, falling back to fixed sampling clock\n",
-+		mmc_hostname(host->mmc));
-+	sdhci_reset_tuning(host);
-+
-+	return -EAGAIN;
-+}
-+
-+static int gl9750_execute_tuning(struct sdhci_host *host, u32 opcode)
-+{
-+	host->mmc->retune_period = 0;
-+	if (host->tuning_mode == SDHCI_TUNING_MODE_1)
-+		host->mmc->retune_period = host->tuning_count;
-+
-+	gli_set_9750(host);
-+	host->tuning_err = __sdhci_execute_tuning_9750(host, opcode);
-+	sdhci_end_tuning(host);
++	len = l2cap_build_conf_req(chan, req, sizeof(req));
++	l2cap_send_cmd(conn, l2cap_get_ident(conn), L2CAP_CONF_REQ, len, req);
++	chan->num_conf_req++;
 +
 +	return 0;
 +}
 +
-+static int gli_probe_slot_gl9750(struct sdhci_pci_slot *slot)
-+{
-+	struct sdhci_host *host = slot->host;
-+
-+	slot->host->mmc->caps2 |= MMC_CAP2_NO_SDIO;
-+	sdhci_enable_v4_mode(host);
-+
-+	return 0;
-+}
-+
-+static int gli_probe_slot_gl9755(struct sdhci_pci_slot *slot)
-+{
-+	struct sdhci_host *host = slot->host;
-+
-+	slot->host->mmc->caps2 |= MMC_CAP2_NO_SDIO;
-+	sdhci_enable_v4_mode(host);
-+
-+	return 0;
-+}
-+
-+static void sdhci_gli_voltage_switch(struct sdhci_host *host)
-+{
-+	/*
-+	 * Accroding to Section 3.6.1 signal voltage switch procedure in
-+	 * SD Host Controller Simplified Spec. 4.20, the step 6~8 are the
-+	 * following:
-+	 * (6) Set 1.8V Signal Enable in the Host Control 2 register.
-+	 * (7) Wait 5ms. 1.8V voltage regulator shall be stable within this
-+	 *     period.
-+	 * (8) If 1.8V Signal Enable is cleared by Host Controller, go to
-+	 *     step (12).
-+	 *
-+	 * Wait 5ms after set 1.8V signal enable in Host Control 2 register
-+	 * to ensure 1.8V signal enable bit is set by GL9750/GL9755.
-+	 */
-+	usleep_range(5000, 5500);
-+}
-+
-+static void sdhci_gl9750_reset(struct sdhci_host *host, u8 mask)
-+{
-+	sdhci_reset(host, mask);
-+	gli_set_9750(host);
-+}
-+
-+static u32 sdhci_gl9750_readl(struct sdhci_host *host, int reg)
-+{
-+	u32 value;
-+
-+	value = readl(host->ioaddr + reg);
-+	if (unlikely(reg == SDHCI_MAX_CURRENT && !(value & 0xff)))
-+		value |= 0xc8;
-+
-+	return value;
-+}
-+
-+static const struct sdhci_ops sdhci_gl9755_ops = {
-+	.set_clock		= sdhci_set_clock,
-+	.enable_dma		= sdhci_pci_enable_dma,
-+	.set_bus_width		= sdhci_set_bus_width,
-+	.reset			= sdhci_reset,
-+	.set_uhs_signaling	= sdhci_set_uhs_signaling,
-+	.voltage_switch		= sdhci_gli_voltage_switch,
-+};
-+
-+const struct sdhci_pci_fixes sdhci_gl9755 = {
-+	.quirks		= SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC,
-+	.quirks2	= SDHCI_QUIRK2_BROKEN_DDR50,
-+	.probe_slot	= gli_probe_slot_gl9755,
-+	.ops            = &sdhci_gl9755_ops,
-+};
-+
-+static const struct sdhci_ops sdhci_gl9750_ops = {
-+	.read_l                 = sdhci_gl9750_readl,
-+	.set_clock		= sdhci_set_clock,
-+	.enable_dma		= sdhci_pci_enable_dma,
-+	.set_bus_width		= sdhci_set_bus_width,
-+	.reset			= sdhci_gl9750_reset,
-+	.set_uhs_signaling	= sdhci_set_uhs_signaling,
-+	.voltage_switch		= sdhci_gli_voltage_switch,
-+	.platform_execute_tuning = gl9750_execute_tuning,
-+};
-+
-+const struct sdhci_pci_fixes sdhci_gl9750 = {
-+	.quirks		= SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC,
-+	.quirks2	= SDHCI_QUIRK2_BROKEN_DDR50,
-+	.probe_slot	= gli_probe_slot_gl9750,
-+	.ops            = &sdhci_gl9750_ops,
-+};
-+
-diff --git a/drivers/mmc/host/sdhci-pci.h b/drivers/mmc/host/sdhci-pci.h
-index e5dc6e44c7a4..738ba5afcc20 100644
---- a/drivers/mmc/host/sdhci-pci.h
-+++ b/drivers/mmc/host/sdhci-pci.h
-@@ -65,6 +65,9 @@
+ static inline int l2cap_config_rsp(struct l2cap_conn *conn,
+ 				   struct l2cap_cmd_hdr *cmd, u16 cmd_len,
+ 				   u8 *data)
+@@ -4271,6 +4314,21 @@ static inline int l2cap_config_rsp(struct l2cap_conn *conn,
+ 		}
+ 		goto done;
  
- #define PCI_DEVICE_ID_SYNOPSYS_DWC_MSHC 0xc202
- 
-+#define PCI_DEVICE_ID_GLI_9755		0x9755
-+#define PCI_DEVICE_ID_GLI_9750		0x9750
-+
- /*
-  * PCI device class and mask
-  */
-@@ -185,5 +188,7 @@ int sdhci_pci_enable_dma(struct sdhci_host *host);
- extern const struct sdhci_pci_fixes sdhci_arasan;
- extern const struct sdhci_pci_fixes sdhci_snps;
- extern const struct sdhci_pci_fixes sdhci_o2;
-+extern const struct sdhci_pci_fixes sdhci_gl9750;
-+extern const struct sdhci_pci_fixes sdhci_gl9755;
- 
- #endif /* __SDHCI_PCI_H */
++	case L2CAP_CONF_UNKNOWN:
++		if (chan->num_conf_rsp <= L2CAP_CONF_MAX_CONF_RSP) {
++			if (l2cap_config_rsp_unknown(conn, chan, rsp->data,
++						     len) < 0) {
++				l2cap_send_disconn_req(chan, ECONNRESET);
++				goto done;
++			}
++			break;
++		}
++		/* Once, chan->num_conf_rsp goes above
++		 * L2CAP_CONF_MAX_CONF_RSP we want to go down all the
++		 * way to default label (just like L2CAP_CONF_UNACCEPT
++		 * below)
++		 */
++		/* fall through */
+ 	case L2CAP_CONF_UNACCEPT:
+ 		if (chan->num_conf_rsp <= L2CAP_CONF_MAX_CONF_RSP) {
+ 			char req[64];
 -- 
-2.23.0
+2.21.0
 
