@@ -2,104 +2,138 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E72C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7785CC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E754B20640
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:50:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 537C5207FC
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:50:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a2lXYmPy"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="FcC4ty+R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436485AbfIFRum (ORCPT
+        id S2436502AbfIFRuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 13:50:42 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34997 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2395292AbfIFRul (ORCPT
+        Fri, 6 Sep 2019 13:50:52 -0400
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.84]:31859 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436487AbfIFRuu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 13:50:41 -0400
-Received: by mail-oi1-f195.google.com with SMTP id a127so5664902oii.2;
-        Fri, 06 Sep 2019 10:50:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=F4XFpZ/Ntp6JNNqwWcwMDQ9RkygXrkeY+nz32s4dwlI=;
-        b=a2lXYmPyCS4UA3sQ/bVxed9DPzu2SlgOjrFzOX4oEzGwjRtl+jVYZt6AjXGy07rY29
-         24SeCgfuTyObZ50ZEOgxXU3gG6tUn6H4IVDoTClIE+Iw9fK2pvvQnoIfi3cVo1w/HlLM
-         oxltd0ZVJUkncdo4JwomxUQA4leGpMW7mOd0bk1e8BvBDKPBY+dps8bkRhnCLoKHXjcp
-         3JgnO54Au8u+2LWvy753N44LAAU0SSK5584KCAhPu9DIH/BGQult7vs/ODi6xQnAsPxV
-         IQQc2dTxYlYZawB7hEzyyLD9RE9s1ay6pOfMo/0hkoiXozlSqCY+X/uZ9pW+Ro56aZjq
-         UXog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=F4XFpZ/Ntp6JNNqwWcwMDQ9RkygXrkeY+nz32s4dwlI=;
-        b=OueTTH4yiKDZcyktLWFnxuS9YsI5Rri/dm0Le3z/6F9nC9QzRYFK4ljqVM/zRvE0Pa
-         BxXYBOgc1OA+0gv500An1Kk+DbOxZCTtartEGKK/BzvaYh2D3VwTNFTuAPRuQQPKvGlj
-         DDUUtCpzplMTnV02N+BkRp78AYhHmQ/gTYxt7DAcTRpN2DfF/zzr/BTOBmyzE/4KbAtV
-         3Ccq8x2ktv7+I2Q89nWLKjxXKHs4k/ZW6aBMelhJHG1Z5KaHxwwiBr6+sZU8b/YJgR6V
-         +bRz/mO2qJShTkXVn1QSZs0QJr+BPqKSV3arUHVqx/XlyUgENipZLAtTbkXjK/zLgkNP
-         rQew==
-X-Gm-Message-State: APjAAAXqWhDOQeVDSO0Ssbf+kpblmVSZmj/oHAG2lHqr84hPKmoasFjQ
-        76z/sgvndfBLnFLYpsTGlF7AToy3
-X-Google-Smtp-Source: APXvYqxzox6qJNPz7yEiqg0BiF3uTnaUtCGgjyVmQFBVlRPiRvwAQoEaZjVsB/vZH88rAZLKA1LVyg==
-X-Received: by 2002:a54:4f11:: with SMTP id e17mr7643443oiy.46.1567792240430;
-        Fri, 06 Sep 2019 10:50:40 -0700 (PDT)
-Received: from [192.168.1.156] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id i47sm2453711ota.1.2019.09.06.10.50.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Sep 2019 10:50:40 -0700 (PDT)
-Subject: Re: [PATCH] staging: rtl8188eu: make two arrays static const, makes
- object smaller
-To:     Colin King <colin.king@canonical.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190906173949.21860-1-colin.king@canonical.com>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <9f1e1550-2a75-abc3-4d87-a0c1d1ae1ccb@lwfinger.net>
-Date:   Fri, 6 Sep 2019 12:50:39 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190906173949.21860-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 6 Sep 2019 13:50:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1567792247;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=zWqUl/D9qgP5vSQuEcJUw56yuZP8tzxb9O/b8P5+E0c=;
+        b=FcC4ty+RDXIyUR4VpzR9yWVcMiMnId0S4U3UNu6tOqVjQfVAYas0KhVAlxLW4My4UJ
+        1Z0+bz64C3vxj5bO0m5USXM2k9jgPbJo9Jjw65ya514gRiuqptr2DRT87Qm6Frrp/O/p
+        z+v0hpv2WNAc+l0MinqZKHiI7LnuUcG0xf3/DnXNO1c83WKjT0pVnRiS54vtsvQXcr2L
+        xgJ5W3zlXKvHF4PBUfPnwgX1Kltz/KIZ4UFL4on+sNOQxjisZ5pQ43V76qN91WE/8duR
+        kPkRrekj3rRccLDOEGfGidg9PMaIz8UeOSB2zpAhnVpe+e2ghNHPE7nmcipvGBqkOoUI
+        PW0Q==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/PqwDqp5w=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 44.27.0 DYNA|AUTH)
+        with ESMTPSA id u036f9v86HodpiH
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Fri, 6 Sep 2019 19:50:39 +0200 (CEST)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [RFC v2 3/3] ARM: dts: omap3: bulk convert compatible to be explicitly ti,omap3430 or ti,omap36xx
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20190906172403.GG52127@atomide.com>
+Date:   Fri, 6 Sep 2019 19:50:38 +0200
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        =?utf-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <06661291-1025-4714-99BF-A3CE787E2782@goldelico.com>
+References: <cover.1567587220.git.hns@goldelico.com> <a2b56edcada7b9000a6e906387a02c0ee42681db.1567587220.git.hns@goldelico.com> <20190905142734.GV52127@atomide.com> <4BC39938-D63E-4BDC-BA28-5132F77F602D@goldelico.com> <20190906154732.GC52127@atomide.com> <8C8644AC-FA12-4D26-B96A-76B78798612A@goldelico.com> <20190906172403.GG52127@atomide.com>
+To:     Tony Lindgren <tony@atomide.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/6/19 12:39 PM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Don't populate two arrays on the stack but instead make them
-> static const. Makes the object code smaller by 49 bytes.
-> 
-> Before:
->     text	   data	    bss	    dec	    hex	filename
->    26821	   5616	      0	  32437	   7eb5	rtl8188eu/core/rtw_ieee80211.o
-> 
-> After:
->     text	   data	    bss	    dec	    hex	filename
->    26612	   5776	      0	  32388	   7e84	rtl8188eu/core/rtw_ieee80211.o
-> 
-> (gcc version 9.2.1, amd64)
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
 
-Acked-by: Larry Finger <Larry.Finger@lwfinger.net>
+> Am 06.09.2019 um 19:24 schrieb Tony Lindgren <tony@atomide.com>:
+>=20
+> * H. Nikolaus Schaller <hns@goldelico.com> [190906 17:09]:
+>> for i in 3430 34xx 3630 36xx; do echo $i $(fgrep '"'ti,omap$i'"' =
+arch/arm/boot/dts/*.dts* | wc -l); done
+>>=20
+>> 3430 12
+>> 34xx 28
+>> 3630 3
+>> 36xx 23
+>>=20
+>> which would indicate that 34xx and 36xx are more common.
+>=20
+> Right, but the xx variants are against the device tree naming and
+> that's why we should get rid of them in the dts. The compatible
+> should be named after the first instance like "ti,omap3430" and
+> similar devices can just use that.
+>=20
+>> BTW there is also some code that does special SoC detection based on
+>> soc_device_match(), mainly in omapdrm/dss.
+>>=20
+>> If we were to use this mechanism in the ti-cpufreq driver we could
+>> match it to ti,omap3 and could avoid all these changes.
+>>=20
+>> But make it less maintainable and code more complex.
+>=20
+> Hmm right, yeah using soc_device_match() would remove this issue.
+> It might be worth doing as these SoC variants do not change
+> much and the code should not need updating. Up to you to
+> decide.
+>=20
+>> I'll also take a look at omap.txt bindings since that likely needs
+>> an update as well to better describe what the official ones are
+>> and which are legacy.
+>=20
+> OK. Just limit the compatible changes to the ones that
+> need to be modified for this series, the rest can be
+> done with a separate patches.
 
-Thanks,
+Well, with this rule we modify almost all of them.
+In total ca. 35 files. But it looks right.
 
-Larry
+The rest is just one missing ti,am3517.
+
+Here is the script I want to use for bulk conversion:
+
+# add ti,omap3430 if missing
+find arch/arm/boot/dts -name '*.dts*' -exec fgrep -q '"ti,omap34xx"' {} =
+\; ! -exec fgrep -q '"ti,omap3430"' {} \; -exec sed -i '' =
+'s/"ti,omap34xx"/"ti,omap3430", "ti,omap34xx"/' {} \;
+# add ti,omap3630 if missing
+find arch/arm/boot/dts -name '*.dts*' -exec fgrep -q '"ti,omap36xx"' {} =
+\; ! -exec fgrep -q '"ti,omap3630"' {} \; -exec sed -i '' =
+'s/"ti,omap36xx"/"ti,omap3630", "ti,omap36xx"/' {} \;
+# add ti,omap3430 default if missing
+find arch/arm/boot/dts -name 'omap*.dts*' -exec fgrep -q '"ti,omap3"' {} =
+\; ! -exec fgrep -q '"ti,omap3630"' {} \; ! -exec fgrep -q =
+'"ti,omap36xx"' {} \; ! -exec fgrep -q '"ti,am3517"' {} \; ! -exec fgrep =
+-q '"ti,omap34xx"' {} \; ! -exec fgrep -q '"ti,omap3430"' {} \; -exec =
+sed -i '' 's/"ti,omap3"/"ti,omap3430", "ti,omap3"/' {} \;
+
++ manually add ti,am3517 to arch/arm/boot/dts/am3517_mt_ventoux.dts
+
+BR,
+Nikolaus
+
