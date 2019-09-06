@@ -2,178 +2,143 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD37C00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 22:45:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A57C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 22:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B9CB20644
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 22:45:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="ljyDan3u"
+	by mail.kernel.org (Postfix) with ESMTP id 6120920842
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 22:47:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405195AbfIFWp4 (ORCPT
+        id S2405225AbfIFWrd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 18:45:56 -0400
-Received: from mail-eopbgr1310113.outbound.protection.outlook.com ([40.107.131.113]:8560
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2405017AbfIFWp4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 18:45:56 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JXdiO6KE71LrNhwaax+bDPEfg02J757Pwioxm9sOCBrQpTYrp7pQi/t4Ua215sWtNQmqA058YjmEnO7c0CpR6ALalrH+iITbUJeJuw/NfTQR/C8xUDChZJeroIC1GlCW3DNVCemD+GjbMHuky2WSnrxJ/YC3yE9MjXqYEmHsKqPDkxT2Tq9C0M5Oz1GW5KvLxA8smWbl6NVBjbKBuiKIdXN43EOiyn12duIl5CICtjsHbWRgsqrny2LGIA1OAlLTRCRtvgYTJqthcUPwUEnmQewnCYLtrdJIvrvWSEFQYnkgF9+aQnx8Qu127IBU1B2LYd79ax5qHS3QVHpFkC9QJg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1VOfhLMEwc0nEH2aJAM/nO+8GviGtXlqHMBCiFlL1Q4=;
- b=mHRLOzhcb0d9Gbsf8ZXPKpzW/mo8oF3yNMB6stpURDdLdVDVNGzmSQZcZV8ZFBc3OrOlWfXiKbj5AF6SWkPOakac/kWARrJPxLXKPnNCZwyAeoka4umXTrUt2ryWrZizfm3gqihh45YZ7syHrtuUKCn87eikQi/pU9EWY//yPPvfdlWdk0JROsFgvo1F2oIfCpqPcoS26fdolBvFE/R+0cECPcD0Qz7lSbF0Qs3F8QDsPdcXFUkYc4zjq1ioAJpG5btsZXw9v3oGMVrHiUr+lVF6bujuhgoC79An31DjbBxt5eFLKWZtv9j91jNmCVZ36+8veFoA/Fl4WPFt763m5g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1VOfhLMEwc0nEH2aJAM/nO+8GviGtXlqHMBCiFlL1Q4=;
- b=ljyDan3uquWjv7RTkBe0azq2hRibLm2kgS9KuaL1xcbfuJcFkdBaeHpapb10cQxS4nNJaJTOkIoLcglySWFXdJdN1JQsEXOvxRB55BsW4gtBzsnRRWPu1YDApqoEp32L/GgvKJ8NMylOVVcltzBe4pP8m8NIjBgm6x0x0AdG9Ko=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0203.APCP153.PROD.OUTLOOK.COM (52.133.194.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.6; Fri, 6 Sep 2019 22:45:31 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::3415:3493:a660:90e3]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::3415:3493:a660:90e3%4]) with mapi id 15.20.2263.005; Fri, 6 Sep 2019
- 22:45:31 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Sasha Levin <sashal@kernel.org>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v5 0/9] Enhance the hv_vmbus driver to support hibernation
-Thread-Topic: [PATCH v5 0/9] Enhance the hv_vmbus driver to support
- hibernation
-Thread-Index: AQHVZO4q3kr8cCc730q424LopDWEJqcfGZvg
-Date:   Fri, 6 Sep 2019 22:45:31 +0000
-Message-ID: <PU1P153MB01697512A097B489E0440E13BFBA0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <1567724446-30990-1-git-send-email-decui@microsoft.com>
- <20190906200325.GD1528@sasha-vm>
-In-Reply-To: <20190906200325.GD1528@sasha-vm>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-06T22:45:29.0874008Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=02fde12d-e263-4d00-b3b2-d0d411bc1267;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:2:310e:b8a5:374f:67ac]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 86e431e7-c086-45f0-081c-08d7331bec3d
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0203;
-x-ms-traffictypediagnostic: PU1P153MB0203:|PU1P153MB0203:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <PU1P153MB0203CE8B1B4A7684BB13105BBFBA0@PU1P153MB0203.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0152EBA40F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(4636009)(376002)(366004)(39860400002)(346002)(396003)(136003)(61514002)(199004)(189003)(71190400001)(55016002)(476003)(76176011)(22452003)(54906003)(6246003)(99286004)(10090500001)(6436002)(8936002)(6916009)(7696005)(81166006)(81156014)(9686003)(8676002)(71200400001)(33656002)(14454004)(2906002)(256004)(53936002)(14444005)(4326008)(478600001)(25786009)(6116002)(486006)(6506007)(86362001)(8990500004)(7736002)(305945005)(52536014)(46003)(74316002)(10290500003)(66946007)(76116006)(66556008)(66476007)(64756008)(66446008)(229853002)(316002)(5660300002)(446003)(186003)(11346002)(102836004)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0203;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: YBuErGLUIztwNtm3vIZDRN6D/DJS1TOOLCDLRN8/887rjF9e2WnOsk8342T7kfQucYe236eBxVNprZVj+FG4sfmny8SvqHc2Kgww9/pI5oIFYe9X2MNHn70rKyQ1IrXitpl15P6oB03NZi9fHeeFR/cYI5lFqc55NfQ3FLaQLun6deUP7AsAl9Cvg8nVpXyk20z0j21KzzmdVsyhtLdnAWgyR887rn85YVRlju96rkWnbhugYZPJtdJxpPrLjE2zTItkTE1oRwngfPIy/yOqJNJ53JtnkPQ4RBNYwU65nOT0Ee1Yf8PoqM5wqWns30ouLahJdL6QPvfsZlSXY9JxDGgZR1TgkfnehU7IRneyp7BCHEhJgE0nXV1s11dxyvNJfREOhz/+M2LLGzopiLc14Ont8nFRuxT9Af9p7yX5M5w=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 6 Sep 2019 18:47:33 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:48746 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388713AbfIFWrd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 18:47:33 -0400
+Received: from localhost ([127.0.0.1] helo=vostro.local)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1i6N0k-0004QP-Ej; Sat, 07 Sep 2019 00:47:22 +0200
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v4 0/9] printk: new ringbuffer implementation
+References: <20190807222634.1723-1-john.ogness@linutronix.de>
+        <20190904123531.GA2369@hirez.programming.kicks-ass.net>
+        <20190905130513.4fru6yvjx73pjx7p@pathway.suse.cz>
+        <20190905143118.GP2349@hirez.programming.kicks-ass.net>
+        <20190906090627.GX2386@hirez.programming.kicks-ass.net>
+        <20190906124211.2dionk2kzcslaotz@pathway.suse.cz>
+        <20190906140126.GY2349@hirez.programming.kicks-ass.net>
+Date:   Sat, 07 Sep 2019 00:47:20 +0200
+In-Reply-To: <20190906140126.GY2349@hirez.programming.kicks-ass.net> (Peter
+        Zijlstra's message of "Fri, 6 Sep 2019 16:01:26 +0200")
+Message-ID: <87mufhqbyf.fsf@linutronix.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 86e431e7-c086-45f0-081c-08d7331bec3d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Sep 2019 22:45:31.2123
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vj/Fv0Us/gjYvDeL1lK0FTS/1vn3Y1seRpukBWsFDdfN30QvNkXFwAub6uk67hMiA9jFAqwkco56gSVMocqJow==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0203
+Content-Type: text/plain; charset=us-ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Sasha Levin <sashal@kernel.org>
-> Sent: Friday, September 6, 2019 1:03 PM
-> On Thu, Sep 05, 2019 at 11:01:14PM +0000, Dexuan Cui wrote:
-> >This patchset (consisting of 9 patches) was part of the v4 patchset (con=
-sisting
-> >of 12 patches):
-> >
-> >The other 3 patches in v4 are posted in another patchset, which will go
-> >through the tip.git tree.
-> >
-> >All the 9 patches here are now rebased to the hyperv tree's hyperv-next
-> branch, and all the 9 patches have Michael Kelley's Signed-off-by's.
-> >
-> >Please review.
->=20
-> Given that these two series depend on each other, I'd much prefer for
-> them to go through one tree.
+On 2019-09-06, Peter Zijlstra <peterz@infradead.org> wrote:
+>> I wish it was that simple. It is possible that I see it too
+>> complicated. But this comes to my mind:
+>> 
+>> 1. The simple printk_buffer_store(buf, n) is not NMI safe. For this,
+>>    we might need the reserve-store approach.
+>
+> Of course it is, and sure it has a reserve+commit internally. I'm sure
+> I posted an implenentation of something like this at some point.
+>
+> It is lockless (wait-free in fact, which is stronger) and supports
+> multi-readers. I'm sure I posted something like that before, and ISTR
+> John has something like that around somewhere too.
 
-Hi Sasha,
-Yeah, that would be ideal. The problem here is: the other patchset conflict=
-s
-with the existing patches in the tip.git tree's timers/core branch, so IMO=
-=20
-the 3 patches have to go through the tip tree:
+Yes. It was called RFCv1[0].
 
-[PATCH v5 1/3] x86/hyper-v: Suspend/resume the hypercall page for hibernati=
-on
-[PATCH v5 2/3] x86/hyper-v: Implement hv_is_hibernation_supported()
-[PATCH v5 3/3] clocksource/drivers: Suspend/resume Hyper-V clocksource for =
-hibernation
+> The only thing I'm omitting is doing vscnprintf() twice, first to
+> determine the length, and then into the reservation. Partly because I
+> think that is silly and 256 chars should be plenty for everyone,
+> partly because that avoids having vscnprintf() inside the cpu_lock()
+> and partly because it is simpler to not do that.
 
-> But, I may be wrong, and I'm going to see if a scenario such as this
-> make sense. I've queued this one to the hyperv-next, but I'll wait for
-> the x86 folks to send their pull request to Linus first before I do it
-> for these patches.
+Yes, this approach is more straight forward and was suggested in the
+feedback to RFCv1. Although I think the current limit (1024) should
+still be OK. Then we have 1 dedicated page per CPU for vscnprintf().
 
-Actually IMHO you don't need to wait, because there is not a build
-dependency, so either patchset can go into the Linus's tree first.
+>> 2. The simple approach works only with lockless consoles. We need
+>>    something else for the rest at least for NMI. Simle offloading
+>>    to a kthread has been blocked for years. People wanted the
+>>    trylock-and-flush-immediately approach.
+>
+> Have an irq_work to wake up a kthread that will print to shit
+> consoles.
 
-The 2 patchsets are just the first step to make hibernation work for Linux =
-VM
-running on Hyper-V. Next I'm going to post some high-level VSC patches for
-hv_balloon, hv_utils, hv_netvsc, hid_hyperv, hv_storvsc, hyperv_keyboard,=20
-hyperv_fb,etc. All of these should go through the hyperv tree, since they'r=
-e
-pure hyper-v changes, and they depend on this 9-patch patchset. I'll make
-a note in every patch so the subsystem maintainers will be aware and ack it=
-.
+This is the approach in all the RFC versions.
 
-Among the VSC patches, the hv_balloon patch does depend on the 2nd patch:
-    [PATCH v5 2/3] x86/hyper-v: Implement hv_is_hibernation_supported().
-I think I'll wait for the aforementioned 2 patchsets to be in first, before=
- posting
-the hv_balloon patch.
+>> 5. John planed to use the cpu_lock in the lockless consoles.
+>>    I wonder if it was only in the console->write() callback
+>>    or if it would spread the lock more widely.
 
-> Usually cases such as these are the exception, but for Hyper-V it seems
-> to be the norm, so I'm curious to see how this will unfold.
->=20
-> Thanks,
-> Sasha
+The 8250 driver in RFCv1 uses the cpu-lock in console->write() on a
+per-character basis and in console->write_atomic() on a per-line
+basis. This is necessary because the 8250 driver cannot run lockless. It
+requires synchronization for its UART_IER clearing/setting before/after
+transmit.
 
-Thanks for taking care all the patches!
+IMO the existing early console implementations are _not_ safe for
+preemption. This was the reason for the new write_atomic() callback in
+RFCv1.
 
-Thanks,
--- Dexuan
+> Right, I'm saying that since you need it anyway, lift it up one layer.
+> It makes everything simpler. More simpler is more better.
+
+This was my reasoning for using the cpu-lock in RFCv1. Moving to a
+lockless ringbuffer for RFCv2 was because there was too much
+resistance/concern surrounding the cpu-lock. But yes, if we want to
+support atomic consoles, the cpu-lock will still be needed.
+
+The cpu-lock (and the related concerns) were discussed here[1].
+
+>> 7. People would complain when continuous lines become less
+>>    reliable. It might be most visible when mixing backtraces
+>>    from all CPUs. Simple sorting by prefix will not make
+>>    it readable. The historic way was to synchronize CPUs
+>>    by a spin lock. But then the cpu_lock() could cause
+>>    deadlock.
+>
+> Why? I'm running with that thing on, I've never seen a deadlock ever
+> because of it.
+
+As was discussed in the thread I just mentioned, introducing the
+cpu-lock means that _all_ NMI functions taking spinlocks need to use the
+cpu-lock. Even though Peter has never seen a deadlock, a deadlock is
+possible if a BUG is triggered while one such spinlock is held. Also
+note that it is not allowed to have 2 cpu-locks in the system. This is
+where the BKL references started showing up.
+
+Spinlocks in NMI context are rare, but they have existed in the past and
+could exist again in the future. My suggestion was to create the policy
+that any needed locking in NMI context must be done using the one
+cpu-lock.
+
+John Ogness
+
+[0] https://lkml.kernel.org/r/20190212143003.48446-1-john.ogness@linutronix.de
+[1] https://lkml.kernel.org/r/20190227094655.ecdwhsc2bf5spkqx@pathway.suse.cz
