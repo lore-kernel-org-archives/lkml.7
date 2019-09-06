@@ -2,133 +2,167 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24920C00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 22:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA94C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 22:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1F742082C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 22:40:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hjkDrjTb"
+	by mail.kernel.org (Postfix) with ESMTP id 5AFD820854
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 22:44:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405118AbfIFWkP (ORCPT
+        id S2405164AbfIFWoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 18:40:15 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36465 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728997AbfIFWkO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 18:40:14 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y22so5526448pfr.3;
-        Fri, 06 Sep 2019 15:40:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MsAQeZ5AYD+kZhfXC2gyG2pV1eCsEpoHL7tP+VvH2Tc=;
-        b=hjkDrjTb2hf+jyXpZaZWnf85yEpBPvZ4VuTCVrHB+rrO4f9sdj3cR9jZnpjMOhF118
-         9DAuUNMQ3rAhLfOAHFW4NXC5o07VIvLSBOclGzlsoS8mM7QmJhZ6MwbH86mG/3a2Fuwe
-         hfGJVXOE3zZ31rca7gfqUZCIum2sg1hoCT46ypVX+lJBN1F1ekImakM9CHjdFeQsr8vs
-         TSQ+D+340ImkmxS88KmsbLQl+HcnVJd17P4Pvb/X+INlhfAlfPKSgqFnaiM0GlUviyAF
-         sJl2T+41CXA7UXbMQTNiEDxbca7uRwuNnG4qeRRwV4GXWQYkqYiTOvbzjUSx636UdQna
-         GTOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MsAQeZ5AYD+kZhfXC2gyG2pV1eCsEpoHL7tP+VvH2Tc=;
-        b=dOXZ9BtQpsx3TBTlPR0qH9TOgbVdJgtBemoFivGiYLg7G6POMIs8hga0VKTnPcFLVG
-         ybPGaFSUkgWmwLkTrLO9XNvuWNhq/PYkA7XD8G1ac5xP5RjBUk8c1Un3ALdBjC0PC4g/
-         lFKM+SiHm7e/u+umuVAFGT/bBKQ8FQTEuhHYTmDakU8thZAV/ZolRFZN5lDhllYT+Ad+
-         Nbpj0n0FIcQ2k3UJldEjH8pmu7rsjseamSrwSaHA4OEg69FFerO4W0Mu6f2WeIqIm7Hl
-         6j5yx2WyZZKczyZ3y+ldva58Q796+IpuGqAFnop7jH7Kca11syVQRm5hi6tapL8TfRGb
-         nbxw==
-X-Gm-Message-State: APjAAAUX0dxR+K7dWH99PfKOlrYYYkmHEP/ZZlvy9/eBsgDzy1TVl0V0
-        q0b5RyacpcmnZE2RMdMJwSw=
-X-Google-Smtp-Source: APXvYqyQGP1ApD5xPHT/cIwKDEn18HTgHnThb4//YCMQYVfOhAIrFFpjlzTo2bY96DP3TkHif9TE2g==
-X-Received: by 2002:aa7:8ad7:: with SMTP id b23mr11110390pfd.99.1567809614021;
-        Fri, 06 Sep 2019 15:40:14 -0700 (PDT)
-Received: from Gentoo ([103.231.91.70])
-        by smtp.gmail.com with ESMTPSA id 185sm7714089pfd.125.2019.09.06.15.40.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 06 Sep 2019 15:40:12 -0700 (PDT)
-Date:   Sat, 7 Sep 2019 04:08:32 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds@linux-foundation.org, stable@vger.kernel.org, lwn@lwn.net,
-        Jiri Slaby <jslaby@suse.cz>
-Subject: Re: Linux 5.2.13
-Message-ID: <20190906223828.GA31917@Gentoo>
-References: <20190906134925.GA7628@kroah.com>
+        Fri, 6 Sep 2019 18:44:39 -0400
+Received: from mx2.mailbox.org ([80.241.60.215]:34998 "EHLO mx2.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405124AbfIFWoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 18:44:38 -0400
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx2.mailbox.org (Postfix) with ESMTPS id 2F49CA018F;
+        Sat,  7 Sep 2019 00:44:35 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter06.heinlein-hosting.de (spamfilter06.heinlein-hosting.de [80.241.56.125]) (amavisd-new, port 10030)
+        with ESMTP id ah2HSFJ0Uz9J; Sat,  7 Sep 2019 00:44:31 +0200 (CEST)
+Date:   Sat, 7 Sep 2019 08:44:10 +1000
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Steve Grubb <sgrubb@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+        linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Eric Chiang <ericchiang@google.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Philippe =?utf-8?Q?Tr=C3=A9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Steve Dower <steve.dower@python.org>,
+        Thibaut S autereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 0/5] Add support for O_MAYEXEC
+Message-ID: <20190906224410.lffd6l5lnm4z3hht@yavin.dot.cyphar.com>
+References: <20190906152455.22757-1-mic@digikod.net>
+ <2989749.1YmIBkDdQn@x2>
+ <87mufhckxv.fsf@oldenburg2.str.redhat.com>
+ <1802966.yheqmZt8Si@x2>
+ <C95B704C-F84F-4341-BDE7-CD70C5DDBEEF@amacapital.net>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="X1bOJ3K7DJ5YkBrT"
+        protocol="application/pgp-signature"; boundary="wklcrvy7q5jmmd7k"
 Content-Disposition: inline
-In-Reply-To: <20190906134925.GA7628@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <C95B704C-F84F-4341-BDE7-CD70C5DDBEEF@amacapital.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---X1bOJ3K7DJ5YkBrT
-Content-Type: text/plain; charset=us-ascii; format=flowed
+--wklcrvy7q5jmmd7k
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 15:49 Fri 06 Sep 2019, Greg KH wrote:
->I'm announcing the release of the 5.2.13 kernel.
->
->Only users of the elantech driver need to update to fix a regression in
->a previous release.
->
->The updated 5.2.y git tree can be found at:
->	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-5.2.y
->and can be browsed at the normal kernel.org git web browser:
->	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
->
->thanks,
->
->greg k-h
->
->------------
->
-> Makefile                       |    2 -
-> drivers/input/mouse/elantech.c |   54 ++++++++++++++++++++++-------------------
-> 2 files changed, 30 insertions(+), 26 deletions(-)
->
->Benjamin Tissoires (1):
->      Revert "Input: elantech - enable SMBus on new (2018+) systems"
->
->Greg Kroah-Hartman (1):
->      Linux 5.2.13
->
+On 2019-09-06, Andy Lutomirski <luto@amacapital.net> wrote:
+> > On Sep 6, 2019, at 12:07 PM, Steve Grubb <sgrubb@redhat.com> wrote:
+> >=20
+> >> On Friday, September 6, 2019 2:57:00 PM EDT Florian Weimer wrote:
+> >> * Steve Grubb:
+> >>> Now with LD_AUDIT
+> >>> $ LD_AUDIT=3D/home/sgrubb/test/openflags/strip-flags.so.0 strace ./te=
+st
+> >>> 2>&1 | grep passwd openat(3, "passwd", O_RDONLY)           =3D 4
+> >>>=20
+> >>> No O_CLOEXEC flag.
+> >>=20
+> >> I think you need to explain in detail why you consider this a problem.
+> >=20
+> > Because you can strip the O_MAYEXEC flag from being passed into the ker=
+nel.=20
+> > Once you do that, you defeat the security mechanism because it never ge=
+ts=20
+> > invoked. The issue is that the only thing that knows _why_ something is=
+ being=20
+> > opened is user space. With this mechanism, you can attempt to pass this=
+=20
+> > reason to the kernel so that it may see if policy permits this. But you=
+ can=20
+> > just remove the flag.
+>=20
+> I=E2=80=99m with Florian here. Once you are executing code in a process, =
+you
+> could just emulate some other unapproved code. This series is not
+> intended to provide the kind of absolute protection you=E2=80=99re imagin=
+ing.
 
-Thanks, a bunch Greg! :)
+I also agree, though I think that there is a separate argument to be
+made that there are two possible problems with O_MAYEXEC (which might
+not be really big concerns):
 
-Thanks,
-Bhaskar
+  * It's very footgun-prone if you didn't call O_MAYEXEC yourself and
+    you pass the descriptor elsewhere. You need to check f_flags to see
+    if it contains O_MAYEXEC. Maybe there is an argument to be made that
+    passing O_MAYEXECs around isn't a valid use-case, but in that case
+    there should be some warnings about that.
 
---X1bOJ3K7DJ5YkBrT
+  * There's effectively a TOCTOU flaw (even if you are sure O_MAYEXEC is
+    in f_flags) -- if the filesystem becomes re-mounted noexec (or the
+    file has a-x permissions) after you've done the check you won't get
+    hit with an error when you go to use the file descriptor later.
+
+To fix both you'd need to do what you mention later:
+
+> What the kernel *could* do is prevent mmapping a non-FMODE_EXEC file
+> with PROT_EXEC, which would indeed have a real effect (in an iOS-like
+> world, for example) but would break many, many things.
+
+And I think this would be useful (with the two possible ways of
+executing .text split into FMODE_EXEC and FMODE_MAP_EXEC, as mentioned
+in a sister subthread), but would have to be opt-in for the obvious
+reason you outlined. However, we could make it the default for
+openat2(2) -- assuming we can agree on what the semantics of a
+theoretical FMODE_EXEC should be.
+
+And of course we'd need to do FMODE_UPGRADE_EXEC (which would need to
+also permit fexecve(2) though probably not PROT_EXEC -- I don't think
+you can mmap() an O_PATH descriptor).
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--wklcrvy7q5jmmd7k
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl1y3+AACgkQsjqdtxFL
-KRUEbwf/Zsb6jxrbvQRwWtlsQHWn63vGKRRoYxfAh9fmbVBKpjj9pE0DmVrXcpER
-x9bBdlewEo9YyczeZPEfkperL8Foec6D02QShYkwPz9oJIo61kQQuFFdTUf5qOVZ
-Djki8GsiGsd4Qi/nJUryaCDHFudOZ2tXXW1iDFYC7maAZ2Un1iA1+4g7KEniqY1l
-nyK5TfAhvgnaP4eN6eOR1xqFUu5go+fn9Vb1eBHRfhjdHbhsQz85wMcmlRRFMEko
-P1cWFxwDOaHFYLGaiteOunTXiDbCjLcTtKhCIqIBveHJ48TR29uPmus6UJ9IfkUh
-p9m44Iwqa+nb13s969sDhbcyobTLqw==
-=DJv5
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXXLhNwAKCRCdlLljIbnQ
+EqESAP4hGdjnhIiY8PqSsSWOneHYlpSs5PmQeVFEMID7L1q5eQD/VYLQV7Re28+C
+Vwi3t+FOW7oGNIMCuKekC3BbxXyYGA0=
+=kolV
 -----END PGP SIGNATURE-----
 
---X1bOJ3K7DJ5YkBrT--
+--wklcrvy7q5jmmd7k--
