@@ -2,116 +2,71 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 540BDC00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 23:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5188C43140
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 23:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DEB020842
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 23:31:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OfYDOtkA"
+	by mail.kernel.org (Postfix) with ESMTP id A0B3F20842
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 23:33:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405515AbfIFXbn (ORCPT
+        id S2392973AbfIFXdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 19:31:43 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41895 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405354AbfIFXbn (ORCPT
+        Fri, 6 Sep 2019 19:33:32 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:35843 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392874AbfIFXdb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 19:31:43 -0400
-Received: by mail-pf1-f193.google.com with SMTP id b13so5557649pfo.8;
-        Fri, 06 Sep 2019 16:31:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=SQjSnJNJU1DdxchJMC/G1usRxJ9DGlAOVDt5OIAWEIM=;
-        b=OfYDOtkAPn55J/GFccGgpHGhJaaQ0/ESjPcoJx0MjfKalKLhPkRD8x0t1hBMA3FfAK
-         uVymWSL6AQne/M6bZ5IhnoVumioi6UBXfIC/KU9/CkZIHIwDbO1EL2xYRNcFpkQs7mVp
-         4CMLw2SYsUYqoFKQiJCyrvOBOHdbm8D/hvmKoe+cMFfqYApxsr4nPcw0zlmKy8q82l/i
-         Pz2P+qS/G1PrxOY7zTh8x5Y0wEYC5pGwCsvb5Igwbz5N+x3qbwUIB+NuLpMEkNU8zDKN
-         n8uKjjUMsJqZl0c/1LSygKaiHTWjQa63xdgAlCavXMRHHt9HnmWhMH4VoN5Ieau9I+as
-         jNWg==
+        Fri, 6 Sep 2019 19:33:31 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 67so7352044oto.3;
+        Fri, 06 Sep 2019 16:33:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SQjSnJNJU1DdxchJMC/G1usRxJ9DGlAOVDt5OIAWEIM=;
-        b=KOtMi76LZxHSABV76B43GZZeRN21ZT5ZsdG9H8KwUEA6V8QJlniZcjjHFIJk52kGHs
-         tecbtPl4QPXVWtxi5HRpmHvtfbixUoE8LHmM0/2z+hu5b9FfwosGwVFOIshTYP3PIuXR
-         HK57v8tzPnLpv/4mOAwXNAogG5AQmJ50HDvuyAeQA8YQf+tQwqJEVxBVq+eHQyNnHD96
-         YO7fuJfWJsPL+mvHoSaBJlqKsG3kLX1CqY/uVNTocYTxgrhGqVdRmtcakAvDW9sjfX2S
-         ta4OpVJaTmgnyMWOs71O0qWqeurjfqWHQufkAChL8rqSUEmYqEy/cylLcrvXbOseFpqm
-         Inxw==
-X-Gm-Message-State: APjAAAVprftQQ8F47dNZErZvvfKyhAO5ngcsHHWqQa1ynC3b0+tpjzqT
-        VIYUDH0E5uu+dT6iptoIBRY=
-X-Google-Smtp-Source: APXvYqyohMK2Sa4UkHMdy7FHCRPoPAlddUUVpl0RMdphR8hzl8HPCjopKTnAZ0csXJL1qptqS7oMpg==
-X-Received: by 2002:a17:90a:c706:: with SMTP id o6mr7967364pjt.56.1567812702047;
-        Fri, 06 Sep 2019 16:31:42 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::3:46a4])
-        by smtp.gmail.com with ESMTPSA id y194sm9649282pfg.186.2019.09.06.16.31.40
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
+        b=jdesAfIeqYR/VZVBFIv9KOmq7Ibhq3CC0pLqIHgiUA9qioYXELpFeWTaKtAFfT5nS2
+         Bsq4SMztUC28ZmyxFJiHYZs/hGBAJ1vbZXpckvQQkPRE1/kioo0M2Ln0EHlSk1ZQIwKe
+         eSriNg1g02CP0PAkTGWECTXYsOh2lEMEDM84Mom1SkaMhVuFgAHC+A+JWlHr0t8Ek5RY
+         dS5Z+VR9bKpW1BPR4wnFFhGyGNidBcscEfeo1ZUeB6zmKrnNna3cDmxPoeSO08+Q6HWh
+         o4T+5zmnwRS8CIxgJHmMvfnsMqBH9VLo1TOgoHXqfVr/B3O0cSAKZxUzpB3Rl8omyTFq
+         RSDQ==
+X-Gm-Message-State: APjAAAVQOGgJSwGkqDIu0cYKcqrukhGtGrkFeXNwpCKiS8KIuxnRhxKV
+        NFHIZwgIWSY6BedKeHiZYuU=
+X-Google-Smtp-Source: APXvYqyerfyqDjBSkqBV5awpri+gcw1eOii1hkXi4+t7I8BPKUfhltTsqe2asvXehkt1m+lTJphnMw==
+X-Received: by 2002:a9d:6acb:: with SMTP id m11mr9725890otq.40.1567812810260;
+        Fri, 06 Sep 2019 16:33:30 -0700 (PDT)
+Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
+        by smtp.gmail.com with ESMTPSA id z33sm2710525otb.75.2019.09.06.16.33.28
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 06 Sep 2019 16:31:41 -0700 (PDT)
-Date:   Fri, 6 Sep 2019 16:31:39 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Cc:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com,
-        davem@davemloft.net, jakub.kicinski@netronome.com, hawk@kernel.org,
-        john.fastabend@gmail.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH bpf-next 2/8] samples: bpf: Makefile: remove target for
- native build
-Message-ID: <20190906233138.4d4fqdnlbikemhau@ast-mbp.dhcp.thefacebook.com>
-References: <20190904212212.13052-1-ivan.khoronzhuk@linaro.org>
- <20190904212212.13052-3-ivan.khoronzhuk@linaro.org>
+        Fri, 06 Sep 2019 16:33:29 -0700 (PDT)
+Subject: Re: [PATCH v8 01/13] nvme-core: introduce nvme_ctrl_get_by_path()
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc:     Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
+        Jens Axboe <axboe@fb.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190828215429.4572-1-logang@deltatee.com>
+ <20190828215429.4572-2-logang@deltatee.com>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <f67b6e12-8d88-6dab-1211-64595ea58421@grimberg.me>
+Date:   Fri, 6 Sep 2019 16:33:27 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190904212212.13052-3-ivan.khoronzhuk@linaro.org>
-User-Agent: NeoMutt/20180223
+In-Reply-To: <20190828215429.4572-2-logang@deltatee.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 12:22:06AM +0300, Ivan Khoronzhuk wrote:
-> No need to set --target for native build, at least for arm, the
-> default target will be used anyway. In case of arm, for at least
-> clang 5 - 10 it causes error like:
-> 
-> clang: warning: unknown platform, assuming -mfloat-abi=soft
-> LLVM ERROR: Unsupported calling convention
-> make[2]: *** [/home/root/snapshot/samples/bpf/Makefile:299:
-> /home/root/snapshot/samples/bpf/sockex1_kern.o] Error 1
-> 
-> Only set to real triple helps: --target=arm-linux-gnueabihf
-> or just drop the target key to use default one. Decision to just
-> drop it and thus default target will be used (wich is native),
-> looks better.
-> 
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-> ---
->  samples/bpf/Makefile | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
-> index 61b7394b811e..a2953357927e 100644
-> --- a/samples/bpf/Makefile
-> +++ b/samples/bpf/Makefile
-> @@ -197,8 +197,6 @@ BTF_PAHOLE ?= pahole
->  ifdef CROSS_COMPILE
->  HOSTCC = $(CROSS_COMPILE)gcc
->  CLANG_ARCH_ARGS = --target=$(notdir $(CROSS_COMPILE:%-=%))
-> -else
-> -CLANG_ARCH_ARGS = -target $(ARCH)
->  endif
-
-I don't follow here.
-Didn't you introduce this bug in patch 1 and now fixing it in patch 2?
-
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
