@@ -2,100 +2,91 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45647C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A302C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:44:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CA4E208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:44:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567766666;
-	bh=oPAhurO0ALmu/C/6NOdjj83pRyv0Wb9DoTwwsAJYlVo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Lwd8E4OJXW00FpFQe6M+MH+gOVcMDUuFxvGaPJCMcJwZm4b/4ugRMWd8wBh0GH8aO
-	 CKMO1C1son09M50TfhCnKmcM3lVRS55KMB4oft08e2+I1caEA9U6WId6A+QnCObZaJ
-	 FYamRTcJNnadxubVlyxoLmITtHVPzR6/rYjSyNp0=
+	by mail.kernel.org (Postfix) with ESMTP id 1959D20854
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:44:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387861AbfIFKoZ (ORCPT
+        id S2388347AbfIFKoc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 06:44:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34068 "EHLO mail.kernel.org"
+        Fri, 6 Sep 2019 06:44:32 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45388 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733174AbfIFKoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 06:44:25 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728218AbfIFKob (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 06:44:31 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D2D22084F;
-        Fri,  6 Sep 2019 10:44:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567766664;
-        bh=oPAhurO0ALmu/C/6NOdjj83pRyv0Wb9DoTwwsAJYlVo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rIMVemDEyXaAuskc8ewY7x+fhcG45AS08U0OBPKvgArIe26Qut3LEXAIrd2WipGP2
-         iZmoKBHhiTVPo7UWvCBOQUxxcvuzAFW06wgbT/7cvSClsFBvW9wpaW+LnNrRxAjs0W
-         W85saJY+M/jWusrJJDIP/Ha+SA+YByuw9zDQBAf0=
-Date:   Fri, 6 Sep 2019 11:44:20 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] efi/libstub/arm64: Report meaningful relocation errors
-Message-ID: <20190906104419.cyewsrnwcks7cbny@willie-the-truck>
-References: <201908141353.043EF60B@keescook>
- <20190904103803.iv7agcw2suv6fcib@willie-the-truck>
- <201909041336.E6DE4B69@keescook>
+        by mx1.redhat.com (Postfix) with ESMTPS id 9B40D369CC;
+        Fri,  6 Sep 2019 10:44:31 +0000 (UTC)
+Received: from localhost (ovpn-117-208.ams2.redhat.com [10.36.117.208])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 447CE60605;
+        Fri,  6 Sep 2019 10:44:26 +0000 (UTC)
+Date:   Fri, 6 Sep 2019 11:44:25 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, miklos@szeredi.hu,
+        linux-kernel@vger.kernel.org, virtio-fs@redhat.com,
+        dgilbert@redhat.com, mst@redhat.com
+Subject: Re: [PATCH 03/18] virtiofs: Pass fsvq instead of vq as parameter to
+ virtio_fs_enqueue_req
+Message-ID: <20190906104425.GK5900@stefanha-x1.localdomain>
+References: <20190905194859.16219-1-vgoyal@redhat.com>
+ <20190905194859.16219-4-vgoyal@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ee6FjwWxuMujAVRe"
 Content-Disposition: inline
-In-Reply-To: <201909041336.E6DE4B69@keescook>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190905194859.16219-4-vgoyal@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Fri, 06 Sep 2019 10:44:31 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 01:38:04PM -0700, Kees Cook wrote:
-> On Wed, Sep 04, 2019 at 11:38:03AM +0100, Will Deacon wrote:
-> > On Wed, Aug 14, 2019 at 01:55:50PM -0700, Kees Cook wrote:
-> > > diff --git a/drivers/firmware/efi/libstub/arm64-stub.c b/drivers/firmware/efi/libstub/arm64-stub.c
-> > > index 1550d244e996..24022f956e01 100644
-> > > --- a/drivers/firmware/efi/libstub/arm64-stub.c
-> > > +++ b/drivers/firmware/efi/libstub/arm64-stub.c
-> > > @@ -111,6 +111,8 @@ efi_status_t handle_kernel_image(efi_system_table_t *sys_table_arg,
-> > >  		status = efi_random_alloc(sys_table_arg, *reserve_size,
-> > >  					  MIN_KIMG_ALIGN, reserve_addr,
-> > >  					  (u32)phys_seed);
-> > > +		if (status != EFI_SUCCESS)
-> > > +			pr_efi_err(sys_table_arg, "KASLR allocate_pages() failed\n");
-> > >  
-> > >  		*image_addr = *reserve_addr + offset;
-> > >  	} else {
-> > > @@ -135,6 +137,8 @@ efi_status_t handle_kernel_image(efi_system_table_t *sys_table_arg,
-> > >  					EFI_LOADER_DATA,
-> > >  					*reserve_size / EFI_PAGE_SIZE,
-> > >  					(efi_physical_addr_t *)reserve_addr);
-> > > +		if (status != EFI_SUCCESS)
-> > > +			pr_efi_err(sys_table_arg, "regular allocate_pages() failed\n");
-> > >  	}
-> > 
-> > Not sure I see the need to distinsuish the 'KASLR' case from the 'regular'
-> > case -- only one should run, right?  That also didn't seem to be part of
-> > the use-case in the commit, unless I'm missing something.
-> 
-> I just did that to help with differentiating the cases. Maybe something
-> was special about KASLR picking the wrong location that triggered the
-> failure, etc.
-> 
-> > Maybe combine the prints as per the diff below?
-> 
-> That could work. If you're against the KASLR vs regular thing, I can
-> respin the patch?
 
-Happy to Ack it with that change, although I suppose it's ultimately up
-to Ard :)
+--ee6FjwWxuMujAVRe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Will
+On Thu, Sep 05, 2019 at 03:48:44PM -0400, Vivek Goyal wrote:
+> Pass fsvq instead of vq as parameter to virtio_fs_enqueue_req(). We will
+> retrieve vq from fsvq under spin lock.
+>=20
+> Later in the patch series we will retrieve vq only if fsvq is still conne=
+cted
+> other vq might have been cleaned up by device ->remove code and we will
+> return error.
+>=20
+> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> ---
+>  fs/fuse/virtio_fs.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+
+--ee6FjwWxuMujAVRe
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl1yOIgACgkQnKSrs4Gr
+c8g+8Qf9HHMGZxy914gG38i6e+DYwvC5CryjFWlCDopWdJemyDaSNvh8UTIgIHGs
+swJeFt68ZxTzEW1c/YGufHhbxDlaDhTZEs6lfIvd7I+feMa1Ovwo3fZ4UfqFBiAp
+SC12MZ7/8B8wMQ1z9IG2JykyYJqoe2jQLKzr1/bQ2rW/wsh7nK+i14SkbiR560z7
+bAM610aHlhhm5IPmbDuKwvui2cwyMRnHsSSWatrM3IvuOoR9fd/5DhqPKoGALSNH
+FLI3zz4UiELQl2ln/hAI46cFN5b3zOucaegRvn7+C4msZkccGjAMUshVh3UPpdjK
+DLFNt7LWNZp+0euYiznREAKikwyZrA==
+=O1h4
+-----END PGP SIGNATURE-----
+
+--ee6FjwWxuMujAVRe--
