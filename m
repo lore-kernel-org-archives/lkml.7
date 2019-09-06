@@ -2,103 +2,77 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C46C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13054C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E21520854
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:53:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567767236;
-	bh=H+yTWQX57cegf2t72h7LJ305mRugKGEYc05Jr3cLZl0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nWlgS2EN6JZgLkmSxgU+zHgrxE5KPfmiPQjZIPSa2BRUR8C170eSM64Q1CFvgDGtl
-	 j/ur/zin6j5teb0Ttpf0wlM2TdJrew3PRvr6qDpgZmqqNPUcOxqdN72PPNoHNt8U2r
-	 06Dp8gfcFloDhJGyPmajomMZI08n1fQ+4lT3AQEM=
+	by mail.kernel.org (Postfix) with ESMTP id E6D022070C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:54:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391366AbfIFKxz (ORCPT
+        id S2391387AbfIFKyn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 06:53:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39840 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731515AbfIFKxz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 06:53:55 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA37A2070C;
-        Fri,  6 Sep 2019 10:53:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567767234;
-        bh=H+yTWQX57cegf2t72h7LJ305mRugKGEYc05Jr3cLZl0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=X34lVF1/1G4jA3xOv7encmcLEKgk6EnvfH47jJK/im4kRjv2V70PBlcg4SG3UEw8P
-         VXV4kn/prPJPDQ0mvUVnK9YWs2xTRyqTwh+MEo3YvXamvvAht+6tt8L3mZQEMuvq99
-         BqTWRvdDx3LNTkLZ3D/CoiT09yEmkIdXHjg1jAE0=
-Date:   Fri, 6 Sep 2019 12:53:52 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Austin Kim <austindh.kim@gmail.com>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        dvhart@infradead.org, andy@infradead.org, hpa@zytor.com,
-        allison@lohutok.net, armijn@tjaldur.nl, kjlu@umn.edu,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/platform/uv: move kmalloc() NULL check routine
-Message-ID: <20190906105352.GA8656@kroah.com>
-References: <20190905232951.GA28779@LGEARND20B15>
- <20190906093252.GB16843@kroah.com>
- <20190906104341.GW2349@hirez.programming.kicks-ass.net>
+        Fri, 6 Sep 2019 06:54:43 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6693 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728218AbfIFKym (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 06:54:42 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 049A9D59D406580C3DA1;
+        Fri,  6 Sep 2019 18:54:41 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 6 Sep 2019 18:54:30 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH] f2fs: fix to avoid accessing uninitialized field of inode page in is_alive()
+Date:   Fri, 6 Sep 2019 18:54:26 +0800
+Message-ID: <20190906105426.109151-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190906104341.GW2349@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 06, 2019 at 12:43:41PM +0200, Peter Zijlstra wrote:
-> On Fri, Sep 06, 2019 at 11:32:52AM +0200, Greg KH wrote:
-> > On Fri, Sep 06, 2019 at 08:29:51AM +0900, Austin Kim wrote:
-> > > The result of kmalloc should have been checked ahead of below statement:
-> > > 	pqp = (struct bau_pq_entry *)vp;
-> > > 
-> > > Move BUG_ON(!vp) before above statement.
-> > > 
-> > > Signed-off-by: Austin Kim <austindh.kim@gmail.com>
-> > > ---
-> > >  arch/x86/platform/uv/tlb_uv.c | 4 ++--
-> > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/arch/x86/platform/uv/tlb_uv.c b/arch/x86/platform/uv/tlb_uv.c
-> > > index 20c389a..5f0a96bf 100644
-> > > --- a/arch/x86/platform/uv/tlb_uv.c
-> > > +++ b/arch/x86/platform/uv/tlb_uv.c
-> > > @@ -1804,9 +1804,9 @@ static void pq_init(int node, int pnode)
-> > >  
-> > >  	plsize = (DEST_Q_SIZE + 1) * sizeof(struct bau_pq_entry);
-> > >  	vp = kmalloc_node(plsize, GFP_KERNEL, node);
-> > > -	pqp = (struct bau_pq_entry *)vp;
-> > > -	BUG_ON(!pqp);
-> > > +	BUG_ON(!vp);
-> > 
-> > Ick!  Don't crash the whole machine if you are out of memory, that's a
-> > totally lazy and broken driver.  Fix this up properly please.
-> 
-> This is boot time init; if memory allocation fails, we're in trouble, no
-> way forward no way back.
-> 
-> It is not uncommon to have BUG_ON() for alloc failing during boot.
+If inode is newly created, inode page may not synchronize with inode cache,
+so fields like .i_inline or .i_extra_isize could be wrong, in below call
+path, we may access such wrong fields, result in failing to migrate valid
+target block.
 
-Hey, how come you get to get away with this here, and in the tty layer I
-had to do all sorts of foolish things just for the same "impossible"
-thing because syzbot found a way to emulate such lunacy?
+- gc_data_segment
+ - is_alive
+  - datablock_addr
+   - offset_in_addr
 
-Just you wait until the fuzzers get ahold of this code...  :)
+Fixes: 7a2af766af15 ("f2fs: enhance on-disk inode structure scalability")
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+ fs/f2fs/dir.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-greg k-h
+diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
+index 765f13354d3f..b1840852967e 100644
+--- a/fs/f2fs/dir.c
++++ b/fs/f2fs/dir.c
+@@ -479,6 +479,9 @@ struct page *f2fs_init_inode_metadata(struct inode *inode, struct inode *dir,
+ 		if (IS_ERR(page))
+ 			return page;
+ 
++		/* synchronize inode page's data from inode cache */
++		f2fs_update_inode(inode, page);
++
+ 		if (S_ISDIR(inode->i_mode)) {
+ 			/* in order to handle error case */
+ 			get_page(page);
+-- 
+2.18.0.rc1
+
