@@ -2,120 +2,122 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2121C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EFC9C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6CC12082C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:11:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B285214DE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:12:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388057AbfIFPLf (ORCPT
+        id S2388100AbfIFPM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 11:11:35 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:60621 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726019AbfIFPLe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 11:11:34 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MpDa5-1iVMm21VU7-00qmuU; Fri, 06 Sep 2019 17:11:25 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Saeed Mahameed <saeedm@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Feras Daoud <ferasda@mellanox.com>,
-        Erez Shitrit <erezsh@mellanox.com>,
-        Moshe Shemesh <moshe@mellanox.com>,
-        Eran Ben Elisha <eranbe@mellanox.com>, Qian Cai <cai@lca.pw>,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] net/mlx5: reduce stack usage in FW tracer
-Date:   Fri,  6 Sep 2019 17:11:16 +0200
-Message-Id: <20190906151123.1088455-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Fri, 6 Sep 2019 11:12:29 -0400
+Received: from 8bytes.org ([81.169.241.247]:53380 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730926AbfIFPM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 11:12:29 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id C25EB2D9; Fri,  6 Sep 2019 17:12:27 +0200 (CEST)
+Date:   Fri, 6 Sep 2019 17:12:26 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+Subject: [git pull] IOMMU Fixes for Linux v5.3-rc7
+Message-ID: <20190906151220.GA8420@8bytes.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:p/b8Nl+a8dcOBXe1E3zEBq4jgiU9iqZOcICuoVMvko8jH0U4ryo
- FeR6Q+0c1vFSlpCFpWhwUSHP5Li2ZMgA2Klua6mVw68Z5Zcfnc1az5h+1qXOAk0xALJ53XG
- h4sI7EmaaRERYBnBrNJzSaKMDw5civlTahWbDF3P+hM9NjqgalSlPwKZ8FW7Y7ixhwuntGt
- lRyvkrcRvkOThH77r5nTg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+SyaHs2zKCE=:FWX7FWPQbNudZ9Cz9qFnPg
- Fs53G8kwE94rvxELM3px1JcfUxQ/T4jLokQZo3lwKyL9WRYGqYhdHklF826KN0DTpBwLQfmTL
- ZqD86Su8i2y2Z5fUniTOK3C4qKDPEzHuQgK9kcifrdrILQ0nbIjfZVahyfRJYH5+Z6nQ6qg9P
- W6kkw8COj9cTmCn5mDXVNZDk+Nep7+KZy49DSLiDAoy0+O3cuB6x47k7YwgrR0Z/VQEfFnMMH
- kMHeJDZPYSMrsHx25JOX2eJW6jdEOuvY+XWD93QjfK0POa22sgfgNzPEJr3njRGG+6p19iHgh
- WOhcYYPk2oadqUlbyvRbtmrc0rYtMhPpBgPX2MndGZndS1jQbMw9QJxy5gPKISd3odlIiG872
- pXSuhMki2Rq8ufRvjE1c/2McMT6zbX3d8NNlMqCY+1hFBUIw7BNYdYaDkgLFFFmwPxysSpRdk
- qoeSlgC2w1zcqwn28yMoccOihwRnAE4tleAIjplz84I/43c8QwEetomB/qwD1pxxrYbc+tNt2
- n0zbjxmoFJfG5baeTr6cTvvnIBAcdCcPO+4l5JPt8DYQvQ6V3E7+acMsgAz3YFzFyT6iAv0Vl
- 0jVMtognsqRNePtAjZMQVAtvqfWNNsZoYIaDOgp5fHahwAivQrQkuemwOasukqgAMX9GO4JXi
- 89ytPfAnoq6wr+NgAIc97qaQmCG7cRlmypofPkqoNp3/x0KHhXtoqB/pQ9ziee2/tyZQUIJj5
- 57G/C17D/Pdc43BkugGMwW0hRaXsJoBMhCZ7eohEHGF7y58GdZAf3/fAw+hHdWyRnYocwj5zj
- DGpBksL6TcusCqZ3FqmMbIShtjlihFhYrXYNRk2IOfJBIt2fIA=
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="azLHFNyN32YCQGCU"
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's generally not ok to put a 512 byte buffer on the stack, as kernel
-stack is a scarce resource:
 
-drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c:660:13: error: stack frame size of 1032 bytes in function 'mlx5_fw_tracer_handle_traces' [-Werror,-Wframe-larger-than=]
+--azLHFNyN32YCQGCU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This is done in a context that is allowed to sleep, so using
-dynamic allocation is ok as well. I'm not too worried about
-runtime overhead, as this already contains an snprintf() and
-other expensive functions.
+Hi Linus,
 
-Fixes: 70dd6fdb8987 ("net/mlx5: FW tracer, parse traces and kernel tracing support")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- .../mellanox/mlx5/core/diag/fw_tracer.c       | 21 ++++++++++---------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+The following changes since commit a55aa89aab90fae7c815b0551b07be37db359d76:
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c b/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
-index 2011eaf15cc5..d81e78060f9f 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
-@@ -557,16 +557,16 @@ static void mlx5_tracer_print_trace(struct tracer_string_format *str_frmt,
- 				    struct mlx5_core_dev *dev,
- 				    u64 trace_timestamp)
- {
--	char	tmp[512];
--
--	snprintf(tmp, sizeof(tmp), str_frmt->string,
--		 str_frmt->params[0],
--		 str_frmt->params[1],
--		 str_frmt->params[2],
--		 str_frmt->params[3],
--		 str_frmt->params[4],
--		 str_frmt->params[5],
--		 str_frmt->params[6]);
-+	char *tmp = kasprintf(GFP_KERNEL, str_frmt->string,
-+			      str_frmt->params[0],
-+			      str_frmt->params[1],
-+			      str_frmt->params[2],
-+			      str_frmt->params[3],
-+			      str_frmt->params[4],
-+			      str_frmt->params[5],
-+			      str_frmt->params[6]);
-+	if (!tmp)
-+		return;
- 
- 	trace_mlx5_fw(dev->tracer, trace_timestamp, str_frmt->lost,
- 		      str_frmt->event_id, tmp);
-@@ -576,6 +576,7 @@ static void mlx5_tracer_print_trace(struct tracer_string_format *str_frmt,
- 
- 	/* remove it from hash */
- 	mlx5_tracer_clean_message(str_frmt);
-+	kfree(tmp);
- }
- 
- static int mlx5_tracer_handle_string_trace(struct mlx5_fw_tracer *tracer,
--- 
-2.20.0
+  Linux 5.3-rc6 (2019-08-25 12:01:23 -0700)
 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git tags/iommu-fixes-v5.3-rc7
+
+for you to fetch changes up to 754265bcab78a9014f0f99cd35e0d610fcd7dfa7:
+
+  iommu/amd: Fix race in increase_address_space() (2019-09-06 10:55:51 +0200)
+
+----------------------------------------------------------------
+IOMMU Fixes for Linux v5.3-rc7
+
+Including:
+
+	* Revert for an Intel VT-d patch that caused problems for some
+	  users.
+
+	* Removal of a feature in the Intel VT-d driver that was never
+	  supported in hardware. This qualifies as a fix because the
+	  code for this feature sets reserved bits in the invalidation
+	  queue descriptor, causing failed invalidations on real
+	  hardware.
+
+	* Two fixes for AMD IOMMU driver to fix a race condition and to
+	  add a missing IOTLB flush when kernel is booted in kdump mode.
+
+----------------------------------------------------------------
+Jacob Pan (1):
+      iommu/vt-d: Remove global page flush support
+
+Joerg Roedel (1):
+      iommu/amd: Fix race in increase_address_space()
+
+Lu Baolu (1):
+      Revert "iommu/vt-d: Avoid duplicated pci dma alias consideration"
+
+Stuart Hayes (1):
+      iommu/amd: Flush old domains in kdump kernel
+
+ drivers/iommu/amd_iommu.c   | 40 ++++++++++++++++++++++++++++-----
+ drivers/iommu/intel-iommu.c | 55 +++++++++++++++++++++++++++++++++++++++++++--
+ drivers/iommu/intel-svm.c   | 36 +++++++++++++----------------
+ include/linux/intel-iommu.h |  3 ---
+ 4 files changed, 103 insertions(+), 31 deletions(-)
+
+Please pull.
+
+Thanks,
+
+	Joerg
+
+--azLHFNyN32YCQGCU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEr9jSbILcajRFYWYyK/BELZcBGuMFAl1yd1QACgkQK/BELZcB
+GuPzJw/9Fovs43Zte02ZZuzwcYPEkErhLi6mwB37Oj0u0MTzPf0zrYn6u0dn320N
+xzTEfGYWFRp/PRIfwR5JiJsDU8BvlfCAJZEGp8sAnOTMto2AGG5rgZ4ZxVypK6vm
+6bM92eSESQJjseyZTva4IZOF4qeWTgzO7voox84IgWHrWCoem5aS8Y1EVC69+uxa
+EOH1TSb3TJLfOf0TKW3aDrftrTbtsvvliOFYLNHoUOx9iOkBzb/0XpL71r6x71dP
+n9jNEpxVAJJNuM/oYK9j1UDASHH8Vxdqh0Joy47hhysiBlI9Nnv6rrE06BvVXq0O
+ap4PSK9h3fNrDCvpF7G0gGapesieMzJH1Ogu9I1egm3sbD6VJZHz1XK2ynY69y+X
+8ZMlPnQu1MDedmYcUj8WixJxTDZO69+nSUhVJF7VG4pmnizKjsjoBDjTpPnv1vwj
+E23R4BvStG/44vNPYEps879U5xpjAKrnaq4JwVQD9C5fsiTFlmwcbZrFifllyhae
+YpjNMzeifbhx+YQi8mq/4rBgSOZ4rh9qRxaN6iVs9lbN6WQvwMCI23g6Y3onZaIW
++RhJhq6d96yl/CzbUdesk7SWEBxI7INoPpmsKN2Z6+uolIBuRbM3amv4CH4G7IV/
+czphzdovKPPmj625crlzchFg+rDOhVWjdcQEmdnBVQXeCTjt48o=
+=DD9K
+-----END PGP SIGNATURE-----
+
+--azLHFNyN32YCQGCU--
