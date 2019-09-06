@@ -2,186 +2,144 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB41DC43140
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 680CCC00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4FE82070C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:15:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4167220838
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:23:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BZ9ZPQFE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Yr22SN8b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393028AbfIFTP2 (ORCPT
+        id S2388655AbfIFTXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 15:15:28 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54772 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388188AbfIFTP1 (ORCPT
+        Fri, 6 Sep 2019 15:23:53 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:41751 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731943AbfIFTXx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 15:15:27 -0400
-Received: by mail-wm1-f67.google.com with SMTP id k2so7564545wmj.4
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 12:15:26 -0700 (PDT)
+        Fri, 6 Sep 2019 15:23:53 -0400
+Received: by mail-io1-f65.google.com with SMTP id r26so15184011ioh.8
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 12:23:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uAbo/PuP1oAvgMz0HNGoK4Dcz3lR/udWe9hb5pb4G5o=;
-        b=BZ9ZPQFEefPbylzzSILZNdRGuE9/xtKCM7ZKqsaygt5wgxFB+yN4jlw3m4wmBHs4rl
-         FCFanrQZE49Fdz/MM1GzW4V2L4owtoZss8o3JNCuw2+CX8BL2DMhiwngBVPSO/vZLuCN
-         6QP6lwtJQpLCPDzYgIBF9+UaRWp8awChKXQMBJ5jS3T/aXV69SIW5xDwBczI0w5rRjnC
-         s91kekaIyp6L1zxwjhmIJwYahdRLweo2vkwDJbeF5WX1GIEa2mv4iEYRcVCGEetFp7hJ
-         Cxlj+5jnovYVC87bVZQ48vu5pQdRwil9yleuuUZX7Sk6Kly/cVxWKft2BZo4SEGvex4p
-         uw+w==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AE6/toJbSfVkr1wiQ76oTdfqTgHlpEwnqu8Dl52qybo=;
+        b=Yr22SN8b0+6K0mLDWoC2RcAMt2BSA+g2SJIZhWjnemfnUIXzIb9OfP5pwLy2SunBV0
+         1mA0dkaunKNZD6NnQTCgqpZ+kfi0Kz3khBQI59IZsUPZ2n+ATm6MmAz9fG81bQHXpHwA
+         DxRwDMxvuIrw2OwIStmmkKuWrbKeB04MPeufs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=uAbo/PuP1oAvgMz0HNGoK4Dcz3lR/udWe9hb5pb4G5o=;
-        b=d+EQzBAjv7Zb8O8GqaGablJjHqayzMH5j0UK1IXsdn4G35oNzN7DSgZCPaz3lu9n8n
-         +vT1eqlYSqRvNwK9i+lCsJHJqdLDgpMufLEknHJv27KxjVqMlPE4CQdeC3h6c5c/6Qkn
-         CFIRmSVfLD6s9AT64X7699tJnjxTZI9DiDInNZzJH4/97avH9QFJfDo3ts3lS3zBcCLs
-         8rIsBsYqW9oUDFtYDLiF0NTiaiIgigXE8kBcPDSIvXEzqfuF8NsAR0eRgmfEIfLbQyqF
-         7dyS1pIsjAQuk32sx2sVN9KbPcpl0RTtElxdqNbaxIUHDUbh6907xCOXmW7x7vhOg9od
-         cGEw==
-X-Gm-Message-State: APjAAAVLf3aUO1w21fSmaC+qJ9xZgrXKcflHxXPcc1Q8iD7CbaQ0DkU/
-        MFKhoq74frx7VtVz0Ncf16s0W1hFXF4=
-X-Google-Smtp-Source: APXvYqyuqP9MJIJIboiOnmCmvPz7aUfzfQv49+NA/ObuQRrAvHy9eneaAQKFKiRvleXT4nAZSTIZ1w==
-X-Received: by 2002:a7b:c1cc:: with SMTP id a12mr8162819wmj.73.1567797325881;
-        Fri, 06 Sep 2019 12:15:25 -0700 (PDT)
-Received: from [192.168.1.6] (124.red-83-36-179.dynamicip.rima-tde.net. [83.36.179.124])
-        by smtp.gmail.com with ESMTPSA id q124sm10814089wma.5.2019.09.06.12.15.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 06 Sep 2019 12:15:25 -0700 (PDT)
-Subject: Re: [PATCH v4] watchdog: qcom: support pre-timeout when the bark irq
- is available
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     agross@kernel.org, linux@roeck-us.net, wim@linux-watchdog.org,
-        linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190905210035.9985-1-jorge.ramirez-ortiz@linaro.org>
- <20190906174009.GC11938@tuxbook-pro>
-From:   Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-Message-ID: <f06d0e52-11f4-c1e9-6e3b-30790dfec534@linaro.org>
-Date:   Fri, 6 Sep 2019 21:15:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        bh=AE6/toJbSfVkr1wiQ76oTdfqTgHlpEwnqu8Dl52qybo=;
+        b=mnwnWMoDNcJrUwDjI6LhUrfjT7x0spTA3eXTparE0CX0WxbAdR0jKxf8Nq7GmlX/3N
+         TkqmUaHIVb+UKCn5XlUkZcdWrVSwxQn4p4b++9D3sKTY8nyfjMrFjo6p+QuA1dc83miF
+         b1woegnDTRqocuGaWS6I4eTd6GsMkPTl1evnPZb234U6Y4w0m38znDwuGmBbvxKAogq2
+         spPRIrkljTOJg2eD9PevyHosuWvNLYfSnkR4XhNdfwZMheJdH9C2JVUBxIq2MACEkqdX
+         aBJurtmn33JWN2gDUzkinsguRCdnhGr7OjFvMR/6EtQqq1TU56PJXYDST6GEZmdoFmTI
+         jJSA==
+X-Gm-Message-State: APjAAAUQjAQ3VAYmRJwUpfwXMqmGevPQadhPPk9cUCc0JWFc3JhkwkGr
+        iJ7Q3AJJWJoiAUNsLI8TBTiW/Q==
+X-Google-Smtp-Source: APXvYqxNdgUM84LcEYFHrtVVCkCw4B+04vJZJSOxcLjqGkPJJF2PCpuIaKSujUu3oHwmwt5ZIOC3fQ==
+X-Received: by 2002:a5e:9509:: with SMTP id r9mr3806096ioj.100.1567797832607;
+        Fri, 06 Sep 2019 12:23:52 -0700 (PDT)
+Received: from ddavenport4.bld.corp.google.com ([2620:15c:183:0:92f:a80a:519d:f777])
+        by smtp.gmail.com with ESMTPSA id h70sm10931804iof.48.2019.09.06.12.23.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 06 Sep 2019 12:23:52 -0700 (PDT)
+From:   Drew Davenport <ddavenport@chromium.org>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Drew Davenport <ddavenport@chromium.org>,
+        David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>,
+        Bruce Wang <bzwang@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Fritz Koenig <frkoenig@google.com>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
+        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH 1/6] drm/msm/dpu: Remove unused variables
+Date:   Fri,  6 Sep 2019 13:23:39 -0600
+Message-Id: <20190906192344.223694-1-ddavenport@chromium.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190906174009.GC11938@tuxbook-pro>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/6/19 19:40, Bjorn Andersson wrote:
-> On Thu 05 Sep 14:00 PDT 2019, Jorge Ramirez-Ortiz wrote:
->> diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
-> [..]
->> +static inline int qcom_get_enable(struct watchdog_device *wdd)
->> +{
->> +	int enable = QCOM_WDT_ENABLE;
->> +
->> +	if (wdd->info->options & WDIOF_PRETIMEOUT)
->> +		enable |= QCOM_WDT_ENABLE_IRQ;
-> 
-> Looking at downstream they conditionally write 3 to WDT_EN during
-> initialization, but during suspend/resume they just set it to back to 1.
-> 
-> So I don't think you should touch BIT(1) (which name doesn't match
-> downstream or the register documentation)
+Signed-off-by: Drew Davenport <ddavenport@chromium.org>
+---
 
-writing BIT(1) on the enable register is necessary to get the interrupt
-and therefore to be notified of the bark event. this can not be avoided.
+ drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c    | 5 -----
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 7 -------
+ 2 files changed, 12 deletions(-)
 
-> 
->> +
->> +	return enable;
->> +}
->> +
->> +static irqreturn_t qcom_wdt_isr(int irq, void *arg)
->> +{
->> +	struct watchdog_device *wdd = arg;
->> +
->> +	watchdog_notify_pretimeout(wdd);
->> +
->> +	return IRQ_HANDLED;
->> +}
->> +
->>  static int qcom_wdt_start(struct watchdog_device *wdd)
->>  {
->>  	struct qcom_wdt *wdt = to_qcom_wdt(wdd);
->> +	unsigned int bark = wdd->timeout;
->> +
->> +	if (wdd->pretimeout)
->> +		bark = bark - wdd->pretimeout;
-> 
-> As Guenter points out, writing wdd->timeout - wdt->pretimeout to
-> WDT_BARK_TIME unconditionally should do the trick.
-
-yes
-
-> 
->>  
->>  	writel(0, wdt_addr(wdt, WDT_EN));
->>  	writel(1, wdt_addr(wdt, WDT_RST));
->> -	writel(wdd->timeout * wdt->rate, wdt_addr(wdt, WDT_BARK_TIME));
->> +	writel(bark * wdt->rate, wdt_addr(wdt, WDT_BARK_TIME));
->>  	writel(wdd->timeout * wdt->rate, wdt_addr(wdt, WDT_BITE_TIME));
->> -	writel(1, wdt_addr(wdt, WDT_EN));
->> +	writel(qcom_get_enable(wdd), wdt_addr(wdt, WDT_EN));
->>  	return 0;
->>  }
-> [..]
->> @@ -204,7 +248,17 @@ static int qcom_wdt_probe(struct platform_device *pdev)
->>  		return -EINVAL;
->>  	}
->>  
->> -	wdt->wdd.info = &qcom_wdt_info;
->> +	irq = platform_get_irq(pdev, 0);
->> +	if (irq > 0) {
->> +		if (devm_request_irq(dev, irq, qcom_wdt_isr,
->> +				     IRQF_TRIGGER_RISING, "wdt_bark",
->> +				     &wdt->wdd))
-> 
-> A failure here means that a irq was specified in DT (platform_get_irq()
-> returned > 0) but you failed to acquire request it, you should fail your
-> probe() when this happens.
-
-yeah that is what I thought but since pm8916-wdt.c has recently been
-merged exactly like I copied above I chose to follow to avoid arguing
-about this.
-
-anyway I'll send a patch to fix pm8916-wdt.c and then will do it that
-same way on this driver.
-
-> 
->> +			irq = 0;
->> +	} else if (irq == -EPROBE_DEFER)
->> +		return -EPROBE_DEFER;
-> 
-> Some {} around this block please.
-
-um, checkpatch didnt complain. anyway sure, will do
-
-> 
-> Regards,
-> Bjorn
-> 
->> +
->> +	wdt->wdd.info = irq > 0 ? &qcom_wdt_pt_info : &qcom_wdt_info;
->> +	wdt->wdd.pretimeout = irq > 0 ? 1 : 0;
->>  	wdt->wdd.ops = &qcom_wdt_ops;
->>  	wdt->wdd.min_timeout = 1;
->>  	wdt->wdd.max_timeout = 0x10000000U / wdt->rate;
->> -- 
->> 2.23.0
->>
-> 
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+index ce59adff06aa..2ece11262943 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+@@ -1288,13 +1288,8 @@ struct drm_crtc *dpu_crtc_init(struct drm_device *dev, struct drm_plane *plane,
+ {
+ 	struct drm_crtc *crtc = NULL;
+ 	struct dpu_crtc *dpu_crtc = NULL;
+-	struct msm_drm_private *priv = NULL;
+-	struct dpu_kms *kms = NULL;
+ 	int i;
+ 
+-	priv = dev->dev_private;
+-	kms = to_dpu_kms(priv->kms);
+-
+ 	dpu_crtc = kzalloc(sizeof(*dpu_crtc), GFP_KERNEL);
+ 	if (!dpu_crtc)
+ 		return ERR_PTR(-ENOMEM);
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+index d82ea994063f..4d2cacd0ce3d 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+@@ -1914,8 +1914,6 @@ static int _dpu_encoder_debugfs_status_open(struct inode *inode,
+ static int _dpu_encoder_init_debugfs(struct drm_encoder *drm_enc)
+ {
+ 	struct dpu_encoder_virt *dpu_enc = to_dpu_encoder_virt(drm_enc);
+-	struct msm_drm_private *priv;
+-	struct dpu_kms *dpu_kms;
+ 	int i;
+ 
+ 	static const struct file_operations debugfs_status_fops = {
+@@ -1932,9 +1930,6 @@ static int _dpu_encoder_init_debugfs(struct drm_encoder *drm_enc)
+ 		return -EINVAL;
+ 	}
+ 
+-	priv = drm_enc->dev->dev_private;
+-	dpu_kms = to_dpu_kms(priv->kms);
+-
+ 	snprintf(name, DPU_NAME_SIZE, "encoder%u", drm_enc->base.id);
+ 
+ 	/* create overall sub-directory for the encoder */
+@@ -2133,14 +2128,12 @@ static void dpu_encoder_frame_done_timeout(struct timer_list *t)
+ 	struct dpu_encoder_virt *dpu_enc = from_timer(dpu_enc, t,
+ 			frame_done_timer);
+ 	struct drm_encoder *drm_enc = &dpu_enc->base;
+-	struct msm_drm_private *priv;
+ 	u32 event;
+ 
+ 	if (!drm_enc->dev || !drm_enc->dev->dev_private) {
+ 		DPU_ERROR("invalid parameters\n");
+ 		return;
+ 	}
+-	priv = drm_enc->dev->dev_private;
+ 
+ 	if (!dpu_enc->frame_busy_mask[0] || !dpu_enc->crtc_frame_event_cb) {
+ 		DRM_DEBUG_KMS("id:%u invalid timeout frame_busy_mask=%lu\n",
+-- 
+2.20.1
 
