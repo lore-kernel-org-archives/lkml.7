@@ -2,79 +2,171 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF232C43140
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A905C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9811206CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:53:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15E10206CD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:55:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Q7hjPYGL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391303AbfIFLxw (ORCPT
+        id S2390181AbfIFLzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 07:53:52 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:38883 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727381AbfIFLxw (ORCPT
+        Fri, 6 Sep 2019 07:55:31 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35003 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727381AbfIFLzb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 07:53:52 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1i6CoG-0007oJ-PY; Fri, 06 Sep 2019 11:53:48 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Tariq Toukan <tariqt@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] net/mlx4_en: ethtool: make array modes static const, makes object smaller
-Date:   Fri,  6 Sep 2019 12:53:48 +0100
-Message-Id: <20190906115348.16621-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 6 Sep 2019 07:55:31 -0400
+Received: by mail-pg1-f194.google.com with SMTP id n4so3387506pgv.2
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 04:55:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=p2GTZqYEpAHU3zxK7mUSVan2/q7zCWudSwqJMCAWjdU=;
+        b=Q7hjPYGL9bDK+x4kJfT32W6MDCaBCdgo+h9aVnGOuZ+iYpet306mnAp6DyCY6tc4fg
+         pZZ7wqT4fL6+2ze22yCAOfc4Cx015rbU9orx6nTX1jOVUrYfesR/ULw+H9XG+2k1UizP
+         C5PGPQAuvFwgC7DEpcCDuUBKx1X5mZScZVpQQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=p2GTZqYEpAHU3zxK7mUSVan2/q7zCWudSwqJMCAWjdU=;
+        b=OlyAuQMiilQMICYYLr11Km3ixY11hDIp2aK8P+jjxRWJvTFgnlHm7Y9vUMhlMNPvq9
+         AFZ2QEsx6+w7Pbhni07KPkFK6r9x9tmcHrjCQ1e/XMIRihSvo/rOO5KVVL6gOttlOKun
+         HgsZaRoBHScFSmykIco8PIJ0HrKFvH1FN0DTQkzchCxFBDcVrStoh1Aw8gdCPCdECZHh
+         aOJp2sUcSspMYEZrAnDNUAJ0OEZ2BDfbBXHBLDCEFTFTdlboOhdMqS2gRb1SB0PoKYA8
+         ZhckAWrmaHHnYa67GMdI2W7qQmvJolE9QiOKIj8+ZnJPJQRpE6aQKuKn1YGgZ2nS20t4
+         kcWw==
+X-Gm-Message-State: APjAAAUQkBRqW27wIk0I8PugxJ61gyXX7uEmfQUcu3xFUwgkpLt1MJ4m
+        hxijCwGorBRZffj3+RNQh6RbAw==
+X-Google-Smtp-Source: APXvYqwUaIkWwSCm/jZjM27LsOAEyV1Cy9HbtXfWDAxFW5q0aoylVsZqC0rL9vmjw5uuYMy0KYSKkQ==
+X-Received: by 2002:a17:90a:a78b:: with SMTP id f11mr9476022pjq.16.1567770929971;
+        Fri, 06 Sep 2019 04:55:29 -0700 (PDT)
+Received: from acourbot.tok.corp.google.com ([2401:fa00:4:4:9712:8cf1:d0f:7d33])
+        by smtp.gmail.com with ESMTPSA id o22sm3667394pjq.21.2019.09.06.04.55.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Sep 2019 04:55:29 -0700 (PDT)
+From:   Alexandre Courbot <acourbot@chromium.org>
+To:     Yunfei Dong <yunfei.dong@mediatek.com>,
+        Tiffany Lin <tiffany.lin@mediatek.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Alexandre Courbot <acourbot@chromium.org>
+Subject: [RFC PATCH v2 00/12] media: mtk-vcodec: support for MT8183 decoder
+Date:   Fri,  6 Sep 2019 20:55:00 +0900
+Message-Id: <20190906115513.159705-1-acourbot@chromium.org>
+X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Another spin [1] of the support for the MT8183 stateless decoder taken from the
+Chrome OS tree. This version is updated to work with the latest revision of
+the stateless API. It requires the SCP support patchset [2] and thus is not yet
+suitable for merging, except maybe the first 3 to 6 patches.
 
-Don't populate the array modes on the stack but instead make it
-static const. Makes the object code smaller by 303 bytes.
+Patches 1 to 3 are cleanup/fixes and can be merged as-is.
 
-Before:
-   text	   data	    bss	    dec	    hex	filename
-  51240	   5008	   1312	  57560	   e0d8 mellanox/mlx4/en_ethtool.o
+The mtk-vcodec driver already supports the MT8173 chip, which uses the stateful
+codec API. Therefore the first step, since MT8183 uses the stateless codec API,
+is to isolate the stateful ops from the common code and into its own file, which
+is what patch 4 does.
 
-After:
-   text	   data	    bss	    dec	    hex	filename
-  50937	   5008	   1312	  57257	   dfa9	mellanox/mlx4/en_ethtool.o
+Patches 5 and 6 abstract the firmware in the same way, and add a firmware
+version number that will be used by MT8183 firmware.
 
-(gcc version 9.2.1, amd64)
+Patch 7 adds support for communicating with a SCP firmware, and requires the SCP
+support series to compile.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/net/ethernet/mellanox/mlx4/en_ethtool.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Patches 8 and 9 add the documentation and declarations of the MM21 format, a
+proprietary block format that MT8183 decodes into. The MDP3 m2m block is capable
+of converting this format into something more common.
 
-diff --git a/drivers/net/ethernet/mellanox/mlx4/en_ethtool.c b/drivers/net/ethernet/mellanox/mlx4/en_ethtool.c
-index 94c59939a8cf..d8313e2ee600 100644
---- a/drivers/net/ethernet/mellanox/mlx4/en_ethtool.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/en_ethtool.c
-@@ -639,7 +639,7 @@ static unsigned long *ptys2ethtool_link_mode(struct ptys2ethtool_config *cfg,
- #define MLX4_BUILD_PTYS2ETHTOOL_CONFIG(reg_, speed_, ...)		\
- 	({								\
- 		struct ptys2ethtool_config *cfg;			\
--		const unsigned int modes[] = { __VA_ARGS__ };		\
-+		static const unsigned int modes[] = { __VA_ARGS__ };	\
- 		unsigned int i;						\
- 		cfg = &ptys2ethtool_map[reg_];				\
- 		cfg->speed = speed_;					\
--- 
-2.20.1
+Patch 10 and 11 add general support for stateless codecs, and support for
+decoding a H.264 stream using a stateless codec.
+
+Patch 12 adds support for the media device required to create requests for
+stateless decoding.
+
+Finally, patch 13 enables MT8183.
+
+Although the code is not mergeable yet, I thought it would be interesting to
+publish it as a RFC that illustrates how another driver implements the stateless
+codec API. Reviews are also of course welcome.
+
+[1] https://patchwork.kernel.org/cover/10963719/
+[2] https://lkml.org/lkml/2019/9/5/63
+
+Alexandre Courbot (5):
+  media: mtk-vcodec: vdec: set VPI IPI handler in one place
+  media: mtk-vcodec: vdec: clean up vidioc_vdec_s_fmt a bit
+  media: mtk-vcodec: vdec: handle firmware version field
+  media: add Mediatek's MM21 format
+  media: doc: Add documentation for MM21 video format
+
+Yunfei Dong (8):
+  media: mtk-vcodec: vdec: fix incorrect pointer dereference
+  media: mtk-vcodec: vdec: move stateful ops into their own file
+  media: mtk-vcodec: abstract firmware interface
+  media: mtk-vcodec: add SCP firmware ops
+  media: mtk-vcodec: vdec: support stateless API
+  media: mtk-vcodec: vdec: support stateless H.264 decoding
+  media: mtk-vcodec: vdec: add media device if using stateless api
+  media: mtk-vcodec: enable MT8183 decoder
+
+ .../media/uapi/v4l/pixfmt-reserved.rst        |  10 +
+ drivers/media/platform/Kconfig                |   1 +
+ drivers/media/platform/mtk-vcodec/Makefile    |   7 +-
+ .../platform/mtk-vcodec/mtk_vcodec_dec.c      | 770 +++---------------
+ .../platform/mtk-vcodec/mtk_vcodec_dec.h      |  30 +-
+ .../platform/mtk-vcodec/mtk_vcodec_dec_drv.c  | 103 ++-
+ .../platform/mtk-vcodec/mtk_vcodec_dec_pm.c   |   1 -
+ .../mtk-vcodec/mtk_vcodec_dec_stateful.c      | 631 ++++++++++++++
+ .../mtk-vcodec/mtk_vcodec_dec_stateless.c     | 494 +++++++++++
+ .../platform/mtk-vcodec/mtk_vcodec_drv.h      |  60 +-
+ .../platform/mtk-vcodec/mtk_vcodec_enc_drv.c  |  49 +-
+ .../platform/mtk-vcodec/mtk_vcodec_enc_pm.c   |   2 -
+ .../media/platform/mtk-vcodec/mtk_vcodec_fw.c | 208 +++++
+ .../media/platform/mtk-vcodec/mtk_vcodec_fw.h |  38 +
+ .../platform/mtk-vcodec/mtk_vcodec_util.c     |   1 -
+ .../platform/mtk-vcodec/vdec/vdec_h264_if.c   |   2 -
+ .../mtk-vcodec/vdec/vdec_h264_req_if.c        | 627 ++++++++++++++
+ .../platform/mtk-vcodec/vdec/vdec_vp8_if.c    |   2 -
+ .../platform/mtk-vcodec/vdec/vdec_vp9_if.c    |   2 -
+ .../media/platform/mtk-vcodec/vdec_drv_base.h |   2 -
+ .../media/platform/mtk-vcodec/vdec_drv_if.c   |   4 +-
+ .../media/platform/mtk-vcodec/vdec_drv_if.h   |   1 +
+ .../media/platform/mtk-vcodec/vdec_ipi_msg.h  |   7 +
+ .../media/platform/mtk-vcodec/vdec_vpu_if.c   |  40 +-
+ .../media/platform/mtk-vcodec/vdec_vpu_if.h   |  20 +-
+ .../platform/mtk-vcodec/venc/venc_h264_if.c   |  15 +-
+ .../platform/mtk-vcodec/venc/venc_vp8_if.c    |   8 +-
+ .../media/platform/mtk-vcodec/venc_drv_if.c   |   1 -
+ .../media/platform/mtk-vcodec/venc_ipi_msg.h  |   2 +
+ .../media/platform/mtk-vcodec/venc_vpu_if.c   |  15 +-
+ .../media/platform/mtk-vcodec/venc_vpu_if.h   |   5 +-
+ drivers/media/v4l2-core/v4l2-ioctl.c          |   1 +
+ include/uapi/linux/videodev2.h                |   1 +
+ 33 files changed, 2397 insertions(+), 763 deletions(-)
+ create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_stateful.c
+ create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_stateless.c
+ create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.c
+ create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.h
+ create mode 100644 drivers/media/platform/mtk-vcodec/vdec/vdec_h264_req_if.c
+
+--
+2.23.0.187.g17f5b7556c-goog
 
