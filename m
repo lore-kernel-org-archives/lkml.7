@@ -2,113 +2,144 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 761D9C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B74C43140
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D81F2084F
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:12:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IbIDBCZA"
+	by mail.kernel.org (Postfix) with ESMTP id 4D0FC206BB
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:14:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733270AbfIFLMA (ORCPT
+        id S1730484AbfIFLOX convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 07:12:00 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:36336 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbfIFLL7 (ORCPT
+        Fri, 6 Sep 2019 07:14:23 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39014 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbfIFLOX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 07:11:59 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x86BAO2i049604;
-        Fri, 6 Sep 2019 11:11:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=s6bUfn3M2Qn5f9zJCGuo2O8BMmS1pPdybKqDEQJQR8I=;
- b=IbIDBCZAqSX8jfrLOR18B81k6LaArCdkzP+8NvfFJRCeOgYpZismgpKtkigWzaWCVAhh
- wkpcElO//ht2C9fCyLFRI+nBQnFtI1UDU6H85IE2X1IpINoqbDZG6MDclCoYB6LLt39o
- es7cTWiHDNVBnLTj9iXtRmLVeL1/S84FBTzNy02mM0sBlhNkXkS7OeHXSyiRm9Es8/P0
- DDVFq+yDTeBw5jL6ZV5oTWCyc31Nc59EJ4MV5vXKBT/OMXB+5jmO6kV8Uy4/RK9Ma4rV
- 7CFx1aHHS+eLTixvyqYq1uqSLurdQAo7fWbo3pign/GYV42c6V9hlqKLctDK66r2USJx ZQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2uupbd00b9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 06 Sep 2019 11:11:33 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x86B9PRv156389;
-        Fri, 6 Sep 2019 11:11:32 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2uum4gwaqs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 06 Sep 2019 11:11:32 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x86BBSxK024021;
-        Fri, 6 Sep 2019 11:11:28 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 06 Sep 2019 04:11:28 -0700
-Date:   Fri, 6 Sep 2019 14:11:17 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Dan Elkouby <streetwalkermc@gmail.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Fabian Henneke <fabian.henneke@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH] Bluetooth: hidp: Fix assumptions on the return value of
- hidp_send_message
-Message-ID: <20190906111117.GB14147@kadam>
-References: <20190906101306.GA12017@kadam>
- <20190906110645.27601-1-streetwalkermc@gmail.com>
+        Fri, 6 Sep 2019 07:14:23 -0400
+Received: by mail-ot1-f65.google.com with SMTP id n7so5348745otk.6;
+        Fri, 06 Sep 2019 04:14:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=A+M249Y2yXTR5pLBFzUNH1SBf+7zmy/nNt6gvl0in+8=;
+        b=ay3oHVCvhkOP4NCTsypUY8oM+oDGeXKR8DMt3kZaxiOGKxKu3ocvmz9GawMYIQG0xV
+         dxypLYOYFoIJag0hImEircHpTUDwE5tEedcSuX5+aU2eWGuurARp3DTbjlmIdPvOX0xE
+         JShBsh4+SM4CROCBLTiFvAkeLKURYbZp0HncVEwVYhTSay0WjYVv9a9PH7qyJ+SuHwz1
+         8QB+kezx1lSi5UxyDJbxcv1dbWmmJtOv8EobOCMfCyMUfY+Aw6LdSdyUiG709F6CBEcy
+         YcTHWNL0zTeAWf52sdAQRCQGgllGQMfvo6VNzRXkjaGrKlJ8DMYUWuY1eFYoxOzsXAGN
+         EQ8A==
+X-Gm-Message-State: APjAAAVouXrwZq1gD4s6qlAs+H8cuHLbtdbaShdMeIx7c0emn2EunT3D
+        AHBkB7bM5/+cX2dVDqgoEkZrtAGZPu4RGQuJkTw=
+X-Google-Smtp-Source: APXvYqzUNQXMQuLstdGXR8mRJrmMCqQfnRb/uNRT1dACYw9FvhrBJuzXdIAg5nMAqX8cUVjMPZH+gtG74Cj8EpGzPcc=
+X-Received: by 2002:a05:6830:1196:: with SMTP id u22mr6812488otq.39.1567768461501;
+ Fri, 06 Sep 2019 04:14:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190906110645.27601-1-streetwalkermc@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=884
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1909060117
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=949 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1909060117
+References: <20190705160536.12047-1-geert+renesas@glider.be>
+ <CAMpxmJXOrDLdw6ZPBHxzsDRYiLmhRNCb-s_Z=Gu=Ecg1XA5ONQ@mail.gmail.com>
+ <CAMuHMdWdb0dcS8Nvk-Poz2dT7nuHjFhqpsRPZZnSKsc3VffcRA@mail.gmail.com>
+ <CAMpxmJUF1s1zyXVtoUGfbV7Yk+heua4rNjY=DrX=jr-v8UfNxA@mail.gmail.com>
+ <CAMuHMdUkF32+wOLkfd2BL4h-=0nZjPDMtVOpOcyDYzBbhWXteQ@mail.gmail.com> <CAMpxmJXCYeGjCu_PhCPffZQZ+ST9YCp27-PTHfL2SJ0Bh8SJFQ@mail.gmail.com>
+In-Reply-To: <CAMpxmJXCYeGjCu_PhCPffZQZ+ST9YCp27-PTHfL2SJ0Bh8SJFQ@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 6 Sep 2019 13:14:10 +0200
+Message-ID: <CAMuHMdV32_x5+CEqZM-mNjg5dAEK-D1JNTTGQYqR87u5X2dJqg@mail.gmail.com>
+Subject: Re: [PATCH RFC] gpio: Add Virtual Aggregator GPIO Driver
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 06, 2019 at 02:06:44PM +0300, Dan Elkouby wrote:
-> hidp_send_message was changed to return non-zero values on success,
-> which some other bits did not expect. This caused spurious errors to be
-> propagated through the stack, breaking some drivers, such as hid-sony
-> for the Dualshock 4 in Bluetooth mode.
-> 
-> As pointed out by Dan Carpenter, hid-microsoft directly relied on that
-> assumption as well.
-> 
-> Fixes: 48d9cc9d85dd ("Bluetooth: hidp: Let hidp_send_message return number of queued bytes")
-> 
-> Signed-off-by: Dan Elkouby <streetwalkermc@gmail.com>
+Hi Bartosz,
 
-Thanks!
+On Fri, Jul 12, 2019 at 11:27 AM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+> wt., 9 lip 2019 o 17:59 Geert Uytterhoeven <geert@linux-m68k.org> napisał(a):
+> > On Tue, Jul 9, 2019 at 4:59 PM Bartosz Golaszewski
+> > <bgolaszewski@baylibre.com> wrote:
+> > > pon., 8 lip 2019 o 12:24 Geert Uytterhoeven <geert@linux-m68k.org> napisał(a):
+> > > > On Mon, Jul 8, 2019 at 11:45 AM Bartosz Golaszewski
+> > > > <bgolaszewski@baylibre.com> wrote:
+> > > > > pt., 5 lip 2019 o 18:05 Geert Uytterhoeven <geert+renesas@glider.be> napisał(a):
+> > > > > > GPIO controllers are exported to userspace using /dev/gpiochip*
+> > > > > > character devices.  Access control to these devices is provided by
+> > > > > > standard UNIX file system permissions, on an all-or-nothing basis:
+> > > > > > either a GPIO controller is accessible for a user, or it is not.
+> > > > > > Currently no mechanism exists to control access to individual GPIOs.
+> > > > > >
+> > > > > > Hence add a virtual GPIO driver to aggregate existing GPIOs (up to 32),
+> > > > > > and expose them as a new gpiochip.  This is useful for implementing
+> > > > > > access control, and assigning a set of GPIOs to a specific user.
+> > > > > > Furthermore, it would simplify and harden exporting GPIOs to a virtual
+> > > > > > machine, as the VM can just grab the full virtual GPIO controller, and
+> > > > > > no longer needs to care about which GPIOs to grab and which not,
+> > > > > > reducing the attack surface.
+> > > > > >
+> > > > > > Virtual GPIO controllers are instantiated by writing to the "new_device"
+> > > > > > attribute file in sysfs:
+> > > > > >
+> > > > > >     $ echo "<gpiochipA> <gpioA1> [<gpioA2> ...]"
+> > > > > >            "[, <gpiochipB> <gpioB1> [<gpioB2> ...]] ...]"
+> > > > > >             > /sys/bus/platform/drivers/gpio-virt-agg/new_device
+> > > > > >
+> > > > > > Likewise, virtual GPIO controllers can be destroyed after use:
+> > > > > >
+> > > > > >     $ echo gpio-virt-agg.<N> \
+> > > > > >             > /sys/bus/platform/drivers/gpio-virt-agg/delete_device
+> >
+> > > Am I doing it right? I'm trying to create a device and am only getting this:
+> > >
+> > > # echo gpiochip2 23 > new_device
+> > > [  707.507039] gpio-virt-agg gpio-virt-agg.0: Cannot find gpiochip gpiochip2
+> > >
+> > > gpiochip2 *does* exist in the system.
+> >
+> > Please try the name of the platform device instead.
+> > I.e. for my koelsch (R-Car M2-W), it needs "e6052000.gpio" instead
+> > of "gpiochip2".
+> >
+> > Probably the driver should match on both.
+> >
+> > > I see. I'll try to review it more thoroughly once I get to play with
+> > > it. So far I'm stuck on creating the virtual chip.
+>
+> This is not a show-stopper but one thing that's bothering me in this
+> is that lines used by the aggregator are considered 'used' in regard
+> to the original chip. I'm wondering how much effort would it take to
+> have them be 'muxed' into two (real and virtual) chips at once.
 
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+Is that really what you want?
+If a GPIO is aggregated with othrs, it's intended to be used only through
+the aggregator, isn't it?
 
-regards,
-dan carpenter
+> Other than that - seems to works pretty nice other than the matching
+> by chip name and by line names.
 
+Thanks, working on that...
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
