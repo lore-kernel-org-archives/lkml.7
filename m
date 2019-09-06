@@ -2,100 +2,107 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C2CC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9922EC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7428920842
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D51020842
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:14:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aGysDeQk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389084AbfIFPNe (ORCPT
+        id S2389324AbfIFPOH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 11:13:34 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:42545 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729088AbfIFPNd (ORCPT
+        Fri, 6 Sep 2019 11:14:07 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:40540 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729088AbfIFPOH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 11:13:33 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1M1aQN-1i8BbC4BGV-0036MD; Fri, 06 Sep 2019 17:13:10 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] fbdev/sa1100fb: Remove even more dead code
-Date:   Fri,  6 Sep 2019 17:13:00 +0200
-Message-Id: <20190906151307.1127187-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Fri, 6 Sep 2019 11:14:07 -0400
+Received: by mail-lf1-f68.google.com with SMTP id u29so5339740lfk.7
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 08:14:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=N+hd4ikAg0UpVVUG6qz74A3chZejVQifX4eNqPKApKc=;
+        b=aGysDeQkqqUsNV8borziuung6bBqJ0Mo1pKcZHsg1ADcDuLf/EPmdB3gVcOdlmro8+
+         Mh1H6+T+aYc9JvScsE/vioBmdPyoN9PXS3mUkWQIGddKEpMti2iFp+yndaqboM4hYA8k
+         TrJbP6yz9lHlah3hRm8Q5j3yUQV7Afu1O0UHQ4jl6/3lYNrImddnELOHoetKtPK+Nd7u
+         r07Wc9izwlOecsxRaHzmu/29cas/6kqp5peyHHvtK2hajmPCw5qmjWVDr7WUSzWvA8yL
+         1ziR0vTTSEIcMWoYDOi5FOGfY06V/77neH0pWZwGL2AcyVXMuPLWFG+vWSv3jgFWfn/6
+         //2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=N+hd4ikAg0UpVVUG6qz74A3chZejVQifX4eNqPKApKc=;
+        b=D3fKgNo5T6818ar5yfKTBpTYQP002kFqXgIHR9RTVrzF2RUT0kPaju0muhVjYS0Gss
+         tPiIy6geN6YS8o0XW4sVT78ff7yazLCxpPxy+QG9SKX0mHZcVH1IJ9JQ15Ec0NDzjWdP
+         6u3uFImn0ajG2sQAgBVgafcRX/43yWe72hMF8bwg7DCAY40LdWByCDS1QrVbk0ne4ZJv
+         Jdz0UCjpOSH/IeU0NqXjB1YVCHYU2VeH5mgea/Imn3ZR1bJZYv9mNGrHTqiGYNtDFDie
+         FbWnozSAW0CRwzevdC1GvbEj9ioln1lVWT04uVrHaDHQ397jHhz8hlw5OshR30GHuuo6
+         6ukQ==
+X-Gm-Message-State: APjAAAXw4yMcW57la+FKDzrPOwuCrAV5UHMWCn8DiL4FT5y6Ft/ZvsCr
+        PPnGxKlULKwZ7X78z7mq5e37mk3BYb5A+DbgEfc=
+X-Google-Smtp-Source: APXvYqyi0p+qM+d7HsVcT3pTYX01Zc9ci7D4z1XblSdvz4NX2dBopTRsTc5Uj/vtBd64msGIMmyMYZATds+lqONrIiA=
+X-Received: by 2002:ac2:568c:: with SMTP id 12mr6580937lfr.133.1567782845460;
+ Fri, 06 Sep 2019 08:14:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:I6rpL7gCiCsYUlp6FQGbVholK0223LnZWj/mxxwbsh2wD5HPO0Y
- MgVBcVUFLW1dBmdRHCg4XJVf13q17fakxkds8ehcBiRyzFyuzAUTxekyquLBSQNqi73GnuK
- sZ1vOwTnwrszmg9WFHWB62ED8ONFwcWv3gEjZGuyAsYaw9u5kWcwqrkY49JhR48ELym/ShX
- ICERUva5XHQeD9P6oD39g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:KwBM+j6sNhA=:23ZTg/QTnEz4XrkmDljwtB
- MBdqWImY+6RZZCY1helSoVRJQZLQtlx5auA31z4ZCkerN2bGZpU1wJzHJyS3eYxPG3j8s1cQD
- fwfXNzSeCwMmx/WjnOUNHcoCdV4+0gdvurE0600hcdX36SAuuDPb39EvvtNkQn9nCUlv3cviV
- o1q20+yQjrQMmNgBeF/vknJhKykartW1vGh8Go+HJMheA49YbbEP5jT2f6IaGHKQ+7wMUB5HD
- EV3WDLIEnB7WWU1NqamJj2LKye4Q64TKReDxf4krxrJ2ACBRdI5TqFGwOhUv3opeDxrJBkun6
- eru8GRr9+SV18fjXTaYfQmDR0HFFn29T6v9fyddJGpyiu8ou2tYFrm7o5mTsjoLa8sV2Ga6eQ
- Eptf6a90avgIWO1+exad423axv8jx+SqSBZgcgsDogwLoyJ8a3N7xN1Z9SWHpQv8HclVxBcyJ
- 5+8PcsWHxGtm+TL3aXhbz4yX471/4N7MC93cHi4RRdow7KtK/0ZdOWHJmD8Gwv56KzXcu1XB7
- tohcl6x0mR/GV+7S0mt/6CoKp/jIrBvH7AkMP5pDk7+1e3nLdFyGeHo0Sjk43MsrGjrV35k6W
- 90mdy/DlvYvQ031hrGQPt1PDYmTEIDjRj10g+X3euhe7eJoZBgRU+nM1bMSUBZ3nALhfOB23K
- C+DXCT5KqzCzX1msEBVRROa50EsIZdnaGgn2PJVgF7kfbLNhpj9ZpkVoj89XFuguvAriVISPe
- 0JB8/EcOeSJWhIzpcv3pe6G3s1sE3xH9t6aNDZWlG2LNjoLkvDpei0IwViHbimKzmXngWNfs8
- e6r4WtvvxVl0i9gPzIkF1IjltyWgQ==
+References: <20190829083233.24162-1-linux@rasmusvillemoes.dk>
+ <20190830231527.22304-1-linux@rasmusvillemoes.dk> <20190830231527.22304-5-linux@rasmusvillemoes.dk>
+ <CAKwvOdktYpMH8WnEQwNE2JJdKn4w0CHv3L=YHkqU2JzQ6Qwkew@mail.gmail.com>
+ <a5085133-33da-6c13-6953-d18cbc6ad3f5@rasmusvillemoes.dk> <20190905134535.GP9749@gate.crashing.org>
+ <CANiq72nXXBgwKcs36R+uau2o1YypfSFKAYWV2xmcRZgz8LRQww@mail.gmail.com> <20190906122349.GZ9749@gate.crashing.org>
+In-Reply-To: <20190906122349.GZ9749@gate.crashing.org>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Fri, 6 Sep 2019 17:13:54 +0200
+Message-ID: <CANiq72=3Vz-_6ctEzDQgTA44jmfSn_XZTS8wP1GHgm31Xm8ECw@mail.gmail.com>
+Subject: Re: [PATCH v2 4/6] compiler-gcc.h: add asm_inline definition
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "gcc-patches@gcc.gnu.org" <gcc-patches@gcc.gnu.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This function lost its only call site as part of
-earlier dead code removal, so remove it as well:
+On Fri, Sep 6, 2019 at 2:23 PM Segher Boessenkool
+<segher@kernel.crashing.org> wrote:
+>
+> I can't find anything with "feature" and "macros" in the C++ standard,
+> it's "predefined macros" there I guess?  In C, it is also "predefined
+> macros" in general, and there is "conditional feature macros".
 
-drivers/video/fbdev/sa1100fb.c:975:21: error: unused function 'sa1100fb_min_dma_period' [-Werror,-Wunused-function]
+They are introduced in C++20, but they have been added for a lot of
+older features in both the language (see [cpp.predefined]p1, around 50
+of them) and the library (see [support.limits.general]p3, ~100):
 
-Fixes: 390e5de11284 ("fbdev/sa1100fb: Remove dead code")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/video/fbdev/sa1100fb.c | 13 -------------
- 1 file changed, 13 deletions(-)
+    http://eel.is/c++draft/cpp.predefined#tab:cpp.predefined.ft
+    http://eel.is/c++draft/support.limits#tab:support.ft
 
-diff --git a/drivers/video/fbdev/sa1100fb.c b/drivers/video/fbdev/sa1100fb.c
-index ae2bcfee338a..81ad3aa1ca06 100644
---- a/drivers/video/fbdev/sa1100fb.c
-+++ b/drivers/video/fbdev/sa1100fb.c
-@@ -967,19 +967,6 @@ static void sa1100fb_task(struct work_struct *w)
- }
- 
- #ifdef CONFIG_CPU_FREQ
--/*
-- * Calculate the minimum DMA period over all displays that we own.
-- * This, together with the SDRAM bandwidth defines the slowest CPU
-- * frequency that can be selected.
-- */
--static unsigned int sa1100fb_min_dma_period(struct sa1100fb_info *fbi)
--{
--	/*
--	 * FIXME: we need to verify _all_ consoles.
--	 */
--	return sa1100fb_display_dma_period(&fbi->fb.var);
--}
--
- /*
-  * CPU clock speed change handler.  We need to adjust the LCD timing
-  * parameters when the CPU clock is adjusted by the power management
--- 
-2.20.0
+> Sure.  But the name is traditional, many decades old, it predates glibc.
+> Using an established name to mean pretty much the opposite of what it
+> normally does is a bit confusing, never mind if that usage makes much
+> sense ;-)
 
+Agreed on principle :-) However, I wouldn't say it is the opposite. I
+would say they are the same, but from different perspectives: one says
+"I want to test if the user enabled the feature", the other says "I
+want to test if the vendor implemented the feature". Which is fine,
+but for users the meaning is inverted as you say: in the first case
+they want to say "I want to enable this feature in this library" --
+they don't want to "test" anything. And since most people will be
+users, not vendors writing standard libraries, I think the user
+perspective would have been better.
+
+Cheers,
+Miguel
