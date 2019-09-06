@@ -2,81 +2,71 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC2FC43140
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 16:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3359EC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 16:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 543B82070C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 16:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 036AF2173B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 16:05:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567785909;
+	bh=b1hB4Hzd76gmAO6x22jNaF/llqS4XF+ieLK0Q/iLKyg=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=QMk3hBc+etzez+9kIsMo6C4mjOqyyz8MB/2TYqzCrjQ+TTVauyaEdhKPsSVCZZ6EO
+	 02TA3hu6d09FcCfyqTA5jEaTuUB1HHS1odFWDb6YhpkD2vHMwJ85YWvVEtnNo74F6F
+	 sY6/i2DEFXzg0XHPNXMzL5MEhWaZyKW58EN1d9ns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392055AbfIFQCk (ORCPT
+        id S2395071AbfIFQFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 12:02:40 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:36518 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730767AbfIFQCk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 12:02:40 -0400
-Received: by mail-qk1-f196.google.com with SMTP id s18so6130875qkj.3;
-        Fri, 06 Sep 2019 09:02:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D2UnQvaWbnmWdR72EwgKASOHbRdH1J70PBC+fpxUSII=;
-        b=qN7r9oC+bbUMGjwHMWIX43aSLN9cHYy67oJoYdwWS1jmJv4eMaUNmCM55CQhUdcFOm
-         2JniVTh1PwkCXZflPACkmAHu4EST1btre0/Pcurvh7L8ZIcSW/Y95z0Oer5+4kjUMO5M
-         TVEjCvhs7tHPch0bAQ4Wg9KyP2wqmbXdq12clyHv74DqHod/rrRdMCZHsVtjZT8dVOTX
-         cQ3p7NckH/LPNQB7wIV0BYcZEc0ccwAyiBykoNz3mo87/D2D3CJUu/1a+Iw5SaSAiVlu
-         +m+xaH7LHBLQLyvaBULokv89M7kxnjb8+6oPpFv64xni8qyRCkyLZBHexVX0wDcj/FFq
-         S3qw==
-X-Gm-Message-State: APjAAAUBW+kk0okMj3QKuVopLpailBNKB8JMgiwKnjLqTEA+l14yY2qw
-        KQr0MZLitKU2GME6bCdozRR4+R7WEo9V+7Jh8OFdsaWA
-X-Google-Smtp-Source: APXvYqyOQtOjLTWW+COZnxCLc8XDIKJXqxS+DIdZttoPgrH1FkwVKGZoRXS19m2B5VoNat7566rsw+ZN+NUSRyoPhUM=
-X-Received: by 2002:a37:4fcf:: with SMTP id d198mr9489423qkb.394.1567785759220;
- Fri, 06 Sep 2019 09:02:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190906152800.1662489-1-arnd@arndb.de> <5dfe1bfc-0236-25cf-756b-ce05f7110136@linuxfoundation.org>
-In-Reply-To: <5dfe1bfc-0236-25cf-756b-ce05f7110136@linuxfoundation.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 6 Sep 2019 18:02:22 +0200
-Message-ID: <CAK8P3a3ynubySZ3A5M7D__B6R+caMjys=v+GVjqA78rppOJQQQ@mail.gmail.com>
-Subject: Re: [PATCH] kunit: add PRINTK dependency
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 6 Sep 2019 12:05:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36838 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390604AbfIFQFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 12:05:07 -0400
+Subject: Re: [git pull] drm fixes for 5.3-rc8 (or final)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567785906;
+        bh=b1hB4Hzd76gmAO6x22jNaF/llqS4XF+ieLK0Q/iLKyg=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=BEw9cohDjNEe2uedGZflktJOedxTBoGsATjrpAHPRNxaCaGO6xIDibF0Z6p4393Mp
+         d4FyQzHoo0U8ODqmSp/hzvuMDvEGToaLofmN4KtKONJLofEeLjP+QILZWY1I0WB2UF
+         YomcxAiGqAPPg3hJjdSa2qBsJ/ssjCeGw/9fqPto=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CAPM=9twnS=MQzLZM6sJ5wCtS5reFqd7715DtceP-6+=h2JoKLg@mail.gmail.com>
+References: <CAPM=9twnS=MQzLZM6sJ5wCtS5reFqd7715DtceP-6+=h2JoKLg@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAPM=9twnS=MQzLZM6sJ5wCtS5reFqd7715DtceP-6+=h2JoKLg@mail.gmail.com>
+X-PR-Tracked-Remote: git://anongit.freedesktop.org/drm/drm
+ tags/drm-fixes-2019-09-06
+X-PR-Tracked-Commit-Id: 1e19ec6c3c417a0893fcfae7abfba623e781d876
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 08d433d8121598f7c2a45f3461c534746b1ed05b
+Message-Id: <156778590670.8517.14063443643134424076.pr-tracker-bot@kernel.org>
+Date:   Fri, 06 Sep 2019 16:05:06 +0000
+To:     Dave Airlie <airlied@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 6, 2019 at 5:39 PM Shuah Khan <skhan@linuxfoundation.org> wrote:
+The pull request you sent on Fri, 6 Sep 2019 17:18:34 +1000:
 
-> >   config KUNIT
-> >       bool "Enable support for unit tests (KUnit)"
-> > +     depends on PRINTK
-> >       help
-> >         Enables support for kernel unit tests (KUnit), a lightweight unit
-> >         testing and mocking framework for the Linux kernel. These tests are
-> >
->
-> Hi Arnd,
->
-> This is found and fixed already. I am just about to apply Berndan's
-> patch that fixes this dependency. All of this vprintk_emit() stuff
-> is redone.
+> git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2019-09-06
 
-Ok, perfect. Unfortunately I only started testing the coming
-linux-next release after Stephen went on his break, so
-I'm missing some updates.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/08d433d8121598f7c2a45f3461c534746b1ed05b
 
-    Arnd
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
