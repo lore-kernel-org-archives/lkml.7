@@ -2,105 +2,184 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6576EC43140
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06CAFC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40732214DE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DACA02082C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:47:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394915AbfIFPri (ORCPT
+        id S2394926AbfIFPrn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 11:47:38 -0400
-Received: from muru.com ([72.249.23.125]:59962 "EHLO muru.com"
+        Fri, 6 Sep 2019 11:47:43 -0400
+Received: from mga11.intel.com ([192.55.52.93]:2595 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727762AbfIFPri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 11:47:38 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 1F90580CC;
-        Fri,  6 Sep 2019 15:48:06 +0000 (UTC)
-Date:   Fri, 6 Sep 2019 08:47:32 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        =?utf-8?B?QW5kcsOp?= Roth <neolynx@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pm@vger.kernel.org,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
-Subject: Re: [RFC v2 3/3] ARM: dts: omap3: bulk convert compatible to be
- explicitly ti,omap3430 or ti,omap36xx
-Message-ID: <20190906154732.GC52127@atomide.com>
-References: <cover.1567587220.git.hns@goldelico.com>
- <a2b56edcada7b9000a6e906387a02c0ee42681db.1567587220.git.hns@goldelico.com>
- <20190905142734.GV52127@atomide.com>
- <4BC39938-D63E-4BDC-BA28-5132F77F602D@goldelico.com>
+        id S1727762AbfIFPrm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 11:47:42 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Sep 2019 08:47:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,473,1559545200"; 
+   d="scan'208";a="358818953"
+Received: from ibutcher-mobl1.ger.corp.intel.com (HELO [10.251.95.104]) ([10.251.95.104])
+  by orsmga005.jf.intel.com with ESMTP; 06 Sep 2019 08:47:39 -0700
+Subject: Re: [Intel-gfx] [PATCH v4 5/5] drm/i915/pmu: Support multiple GPUs
+From:   Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20190801141732.31335-5-tvrtko.ursulin@linux.intel.com>
+ <20190801155438.23986-1-tvrtko.ursulin@linux.intel.com>
+Cc:     Intel-gfx@lists.freedesktop.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Michal Wajdeczko <michal.wajdeczko@linux.intel.com>
+Organization: Intel Corporation UK Plc
+Message-ID: <fe351573-7d82-d50f-e004-32da7c6a0407@linux.intel.com>
+Date:   Fri, 6 Sep 2019 16:47:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4BC39938-D63E-4BDC-BA28-5132F77F602D@goldelico.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190801155438.23986-1-tvrtko.ursulin@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* H. Nikolaus Schaller <hns@goldelico.com> [190906 07:53]:
-> > Am 05.09.2019 um 16:27 schrieb Tony Lindgren <tony@atomide.com>:
-> > compatible = "ti,omap3-ldp", "ti,omap3430", "ti,omap34xx", "ti,omap3";
-> 
-> After thinking a little about the whole topic the main rule of this change must be:
-> 
-> * do not break any existing in-tree DTS
-> 	=> only *add* to compatible what we need to distinguish between omap34 and omap36
-> 
-> * additions shall only follow new scheme
-> 	=> we only add "ti,omap34xx" or "ti,omap36xx"
->            but neither "ti,omap3630" nor "ti,omap3430"
 
-Sorry I don't follow you on this one.. We should always add "ti,omap3630"
-where "ti,omap36xx" is currently used so we can eventually get rid of
-"ti,omap36xx". And the same for 34xx.
+Peter, Thomas,
 
-> * cover some out-of-tree DTS
-> 	=> make the ti-cpufreq driver still match "ti,omap3430" or "ti,omap3630"
-> 	   even if this duplicates compatibility
-> 
-> This would mean that the logicpd-som-lv-37xx-devkit.dts gets the additional "ti,omap36xx"
-> while the omap3-ldp.dts would only get an "ti,omap34xx" but no "ti,omap3430" (since we
-> do not use it anywhere).
-> 
-> Could you agree on this approach?
+If you could spare a moment for some brainstorming on the topic of 
+uncore PMU and multiple providers it would be appreciated.
 
-Yeah sounds like logicpd-som-lv-37xx-devkit.dts currently still needs
-"ti,omap36xx" for now.
+So from i915 we export some metrics as uncore PMU, which shows up under 
+/sys/devices/i915. Shortsightedness or what, we did not realize that one 
+day we could have more than one i915 device in a system which now 
+creates a problem, or at least raises a question on naming.
 
-If modifying omap3-ldp.dts, also add "ti,omap3430" in additon to
-"ti,omap34xx" that it already has.
+The patch below works around this by appending the PCI device name to 
+additional instances of i915 when it registers with perf_pmu_register.
 
-So basically let's assume the following:
-
-"ti,omap3430" == "ti,omap34xx"
-"ti,omap3630" == "ti,omap36xx"
-
-This means code needs to parse both.
-
-And eventually we just drop the "xx" variants.
-
-So while patching compatibles, let's also update for this to
-avoid multiple patches churning the same compatibles over and
-over.
+Question is if there is a better solution, or if not, whether you are 
+aware of any plans to extend the perf core to better support this? Are 
+there any other uncore PMU providers in an identical situation?
 
 Regards,
 
-Tony
+Tvrtko
+
+On 01/08/2019 16:54, Tvrtko Ursulin wrote:
+> From: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+> 
+> With discrete graphics system can have both integrated and discrete GPU
+> handled by i915.
+> 
+> Currently we use a fixed name ("i915") when registering as the uncore PMU
+> provider which stops working in this case.
+> 
+> To fix this we add the PCI device name string to non-integrated devices
+> handled by us. Integrated devices keep the legacy name preserving
+> backward compatibility.
+> 
+> v2:
+>   * Detect IGP and keep legacy name. (Michal)
+>   * Use PCI device name as suffix. (Michal, Chris)
+> 
+> v3:
+>   * Constify the name. (Chris)
+>   * Use pci_domain_nr. (Chris)
+> 
+> v4:
+>   * Fix kfree_const usage. (Chris)
+> 
+> Signed-off-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+> Cc: Chris Wilson <chris@chris-wilson.co.uk>
+> Cc: Michal Wajdeczko <michal.wajdeczko@intel.com>
+> Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+> ---
+>   drivers/gpu/drm/i915/i915_pmu.c | 25 +++++++++++++++++++++++--
+>   drivers/gpu/drm/i915/i915_pmu.h |  4 ++++
+>   2 files changed, 27 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/i915/i915_pmu.c b/drivers/gpu/drm/i915/i915_pmu.c
+> index e0e0180bca7c..e0fea227077e 100644
+> --- a/drivers/gpu/drm/i915/i915_pmu.c
+> +++ b/drivers/gpu/drm/i915/i915_pmu.c
+> @@ -1053,6 +1053,15 @@ static void i915_pmu_unregister_cpuhp_state(struct i915_pmu *pmu)
+>   	cpuhp_remove_multi_state(cpuhp_slot);
+>   }
+>   
+> +static bool is_igp(struct pci_dev *pdev)
+> +{
+> +	/* IGP is 0000:00:02.0 */
+> +	return pci_domain_nr(pdev->bus) == 0 &&
+> +	       pdev->bus->number == 0 &&
+> +	       PCI_SLOT(pdev->devfn) == 2 &&
+> +	       PCI_FUNC(pdev->devfn) == 0;
+> +}
+> +
+>   void i915_pmu_register(struct drm_i915_private *i915)
+>   {
+>   	struct i915_pmu *pmu = &i915->pmu;
+> @@ -1083,10 +1092,19 @@ void i915_pmu_register(struct drm_i915_private *i915)
+>   	hrtimer_init(&pmu->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+>   	pmu->timer.function = i915_sample;
+>   
+> -	ret = perf_pmu_register(&pmu->base, "i915", -1);
+> -	if (ret)
+> +	if (!is_igp(i915->drm.pdev))
+> +		pmu->name = kasprintf(GFP_KERNEL,
+> +				      "i915-%s",
+> +				      dev_name(i915->drm.dev));
+> +	else
+> +		pmu->name = "i915";
+> +	if (!pmu->name)
+>   		goto err;
+>   
+> +	ret = perf_pmu_register(&pmu->base, pmu->name, -1);
+> +	if (ret)
+> +		goto err_name;
+> +
+>   	ret = i915_pmu_register_cpuhp_state(pmu);
+>   	if (ret)
+>   		goto err_unreg;
+> @@ -1095,6 +1113,8 @@ void i915_pmu_register(struct drm_i915_private *i915)
+>   
+>   err_unreg:
+>   	perf_pmu_unregister(&pmu->base);
+> +err_name:
+> +	kfree_const(pmu->name);
+>   err:
+>   	pmu->base.event_init = NULL;
+>   	free_event_attributes(pmu);
+> @@ -1116,5 +1136,6 @@ void i915_pmu_unregister(struct drm_i915_private *i915)
+>   
+>   	perf_pmu_unregister(&pmu->base);
+>   	pmu->base.event_init = NULL;
+> +	kfree_const(pmu->name);
+>   	free_event_attributes(pmu);
+>   }
+> diff --git a/drivers/gpu/drm/i915/i915_pmu.h b/drivers/gpu/drm/i915/i915_pmu.h
+> index 4fc4f2478301..ff24f3bb0102 100644
+> --- a/drivers/gpu/drm/i915/i915_pmu.h
+> +++ b/drivers/gpu/drm/i915/i915_pmu.h
+> @@ -46,6 +46,10 @@ struct i915_pmu {
+>   	 * @base: PMU base.
+>   	 */
+>   	struct pmu base;
+> +	/**
+> +	 * @name: Name as registered with perf core.
+> +	 */
+> +	const char *name;
+>   	/**
+>   	 * @lock: Lock protecting enable mask and ref count handling.
+>   	 */
+> 
