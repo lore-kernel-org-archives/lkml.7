@@ -2,118 +2,93 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 060BCC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5F9C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF90F214DE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:51:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567767076;
-	bh=F40/vyERzL2PLT+u7CNuLPRmvSEYRMi6jl/F1YioOow=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=c245R0bHFrTrql2GuaKEhMFVsiCSeaP23jEuy1V5FWi4VYawomsRJwwKuFAOkn1wY
-	 QiQXWiSCS6Y2UozmPtcX0Am652LtQsRz1qdnvod9r0SdSRpTNySpvj+v5UQLra9UjY
-	 I0xYKLxpLikDCVIAhCVWoNQsqGiS2CqJ2UE917/I=
+	by mail.kernel.org (Postfix) with ESMTP id 0D8FF2070C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:52:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391061AbfIFKvQ (ORCPT
+        id S2391246AbfIFKwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 06:51:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36898 "EHLO mail.kernel.org"
+        Fri, 6 Sep 2019 06:52:17 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37912 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725946AbfIFKvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 06:51:15 -0400
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725946AbfIFKwR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 06:52:17 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D51F7214E0;
-        Fri,  6 Sep 2019 10:51:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567767075;
-        bh=F40/vyERzL2PLT+u7CNuLPRmvSEYRMi6jl/F1YioOow=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=XC7BjD4hpWNrKK1pOpCRX02SjWQJCOK5gbUvFoli/8DoHFwcrigpVQp1QjIv24WpF
-         3hJfKMDgOn65XmIZDcVCGO/8Sr3r8YzUkIFTLavQgHRoyJu9StYgFHDfQQAjBcVc19
-         ARQKYejAHq4EGjxZetUnrB+vwDkoilM7UE3eDMcE=
-Received: by mail-lj1-f173.google.com with SMTP id x18so5611106ljh.1;
-        Fri, 06 Sep 2019 03:51:14 -0700 (PDT)
-X-Gm-Message-State: APjAAAUh3hVUqSUtvNoPL9Hvk3wMzH3mgRGf+L8EaQysZkHZ9arQVoot
-        jxTyhOuiAabRMC2SAg8vm0gG6SQ1YA731I0QBIk=
-X-Google-Smtp-Source: APXvYqwz+PkOkcsh+hE8+0p+GyRXl5rEBYk6E+6at+bWRa6Bvz54E4CXhRKX/zpdsB3GgFZGBaVFW3t88k1Ohu8cSYo=
-X-Received: by 2002:a2e:8785:: with SMTP id n5mr1760238lji.210.1567767072972;
- Fri, 06 Sep 2019 03:51:12 -0700 (PDT)
+        by mx1.redhat.com (Postfix) with ESMTPS id B8532800DD4;
+        Fri,  6 Sep 2019 10:52:16 +0000 (UTC)
+Received: from localhost (ovpn-117-208.ams2.redhat.com [10.36.117.208])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C21C460BF1;
+        Fri,  6 Sep 2019 10:52:11 +0000 (UTC)
+Date:   Fri, 6 Sep 2019 11:52:10 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, miklos@szeredi.hu,
+        linux-kernel@vger.kernel.org, virtio-fs@redhat.com,
+        dgilbert@redhat.com, mst@redhat.com
+Subject: Re: [PATCH 08/18] virtiofs: Drain all pending requests during
+ ->remove time
+Message-ID: <20190906105210.GP5900@stefanha-x1.localdomain>
+References: <20190905194859.16219-1-vgoyal@redhat.com>
+ <20190905194859.16219-9-vgoyal@redhat.com>
 MIME-Version: 1.0
-References: <CGME20190906101405eucas1p2e3da7b461810a3a520e76c636a06e486@eucas1p2.samsung.com>
- <20190906101344.3535-1-l.luba@partner.samsung.com> <20190906101344.3535-2-l.luba@partner.samsung.com>
-In-Reply-To: <20190906101344.3535-2-l.luba@partner.samsung.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Fri, 6 Sep 2019 12:51:01 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPdLhrvqR==k4a9w9cmdnwGRYaTXC1ya+vOeVaGpML0zcQ@mail.gmail.com>
-Message-ID: <CAJKOXPdLhrvqR==k4a9w9cmdnwGRYaTXC1ya+vOeVaGpML0zcQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] memory: Exynos5422: minor fixes in DMC
-To:     Lukasz Luba <l.luba@partner.samsung.com>
-Cc:     devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
-        <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com,
-        robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
-        kyungmin.park@samsung.com,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
-        willy.mh.wolff.ml@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="4IFtMBbmeqbTM/ox"
+Content-Disposition: inline
+In-Reply-To: <20190905194859.16219-9-vgoyal@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Fri, 06 Sep 2019 10:52:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 6 Sep 2019 at 12:14, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->
-> Small fixes captured by static analyzes.
 
-Explain please what are the errors being fixed. Additionally error
-message from tool might be useful.
+--4IFtMBbmeqbTM/ox
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Also:
-Reported-by: Krzysztof Kozlowski <krzk@kernel.org>
+On Thu, Sep 05, 2019 at 03:48:49PM -0400, Vivek Goyal wrote:
+> +static void virtio_fs_drain_queue(struct virtio_fs_vq *fsvq)
+> +{
+> +	WARN_ON(fsvq->in_flight < 0);
+> +
+> +	/* Wait for in flight requests to finish.*/
+> +	while (1) {
+> +		spin_lock(&fsvq->lock);
+> +		if (!fsvq->in_flight) {
+> +			spin_unlock(&fsvq->lock);
+> +			break;
+> +		}
+> +		spin_unlock(&fsvq->lock);
+> +		usleep_range(1000, 2000);
+> +	}
 
-Best regards,
-Krzysztof
+I think all contexts that call this allow sleeping so we could avoid
+usleep here.
 
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> ---
->  drivers/memory/samsung/exynos5422-dmc.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/memory/samsung/exynos5422-dmc.c b/drivers/memory/samsung/exynos5422-dmc.c
-> index 8c2ec29a7d57..a809fa997c03 100644
-> --- a/drivers/memory/samsung/exynos5422-dmc.c
-> +++ b/drivers/memory/samsung/exynos5422-dmc.c
-> @@ -269,7 +269,7 @@ static int exynos5_init_freq_table(struct exynos5_dmc *dmc,
->         return 0;
->
->  err_free_tables:
-> -       kfree(dmc->opp);
-> +       devm_kfree(dmc->dev, dmc->opp);
->  err_opp:
->         dev_pm_opp_of_remove_table(dmc->dev);
->
-> @@ -732,7 +732,7 @@ static struct devfreq_dev_profile exynos5_dmc_df_profile = {
->   * statistics engine which supports only registered values. Thus, some alignment
->   * must be made.
->   */
-> -unsigned long
-> +static unsigned long
->  exynos5_dmc_align_init_freq(struct exynos5_dmc *dmc,
->                             unsigned long bootloader_init_freq)
->  {
-> --
-> 2.17.1
->
+--4IFtMBbmeqbTM/ox
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl1yOloACgkQnKSrs4Gr
+c8gmeQgAoJQJeQAjTj+aeNGzBdb4oLsqKKM6Q+4z3dqyaIM7pOTsdgiPZ/q1DA5U
+3/e2c4UFDTEg+r9xvEx5FFgBiPFrpwGU3N8mroPEUY9yueCllNsIZmS0y8n76YDb
+dCAPCksGMF4o9AWlHAMnxFoao+EfbsJd1mNU/7f7hFqFQoAuCu64321mwhqtOO+V
+PXUqk6wTZtWxPAzvZCO93D4DuUfrW7jzHRNyvCvgPiJLCTU43uptr1PDJKuDCxAp
+Sqpb5jJevhxuwbc84hIEnKY/0ERKxjky+XWBsHHc1Yy/CWAdNCyU0tW8OuUaG5+k
+FF9UbW4BK3wqyzMhWOd/4jDbTz6oyA==
+=x8L/
+-----END PGP SIGNATURE-----
+
+--4IFtMBbmeqbTM/ox--
