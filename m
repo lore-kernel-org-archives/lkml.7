@@ -2,127 +2,163 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DE9C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 09:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B44FC00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 09:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AF9620854
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 09:06:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69AF3214DE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 09:07:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kjjyxzGH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g2/f8zaL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392852AbfIFJGv (ORCPT
+        id S2403767AbfIFJHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 05:06:51 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:51960 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389138AbfIFJGv (ORCPT
+        Fri, 6 Sep 2019 05:07:22 -0400
+Received: from mail-wm1-f43.google.com ([209.85.128.43]:39283 "EHLO
+        mail-wm1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392853AbfIFJHW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 05:06:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=vk20lkAmcOiEVq+MyZECDuXSB+dU8yQRts5ngj0GVXE=; b=kjjyxzGH/bgBMCEn9CDlBGSTV
-        rWS+qCnIhH0IwAnBaejGt9e2YjA4A1K33NqTEdRK9tnAxyTfRnFRL/9mY+KZn4qClq/VXR32ZYm5K
-        QPhnwIL+fvhWB99Xbgyx3ox8Wy5XIPYacltFyany8bbzXroii7IbG8uW2bPK79N6pmi4j3ycSQO/q
-        5RUCLdUZ5Co3aJ3G//qTsllRnaQJL2MLrpQSE+0sIySifEe9iXuhPnMbAgzKTwPceJGRwccWG/eO/
-        UGwuePCmY4Zyvfin4k6DffOky4fo/zT+/RTQ1wac6DoDUQcw3FRKCvrY63wplR8y3IFwt7a7u5W9X
-        kJIxoaI1g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i6ACL-0004HM-AS; Fri, 06 Sep 2019 09:06:29 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1FF81301A5D;
-        Fri,  6 Sep 2019 11:05:49 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4A75129DE780C; Fri,  6 Sep 2019 11:06:27 +0200 (CEST)
-Date:   Fri, 6 Sep 2019 11:06:27 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     John Ogness <john.ogness@linutronix.de>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v4 0/9] printk: new ringbuffer implementation
-Message-ID: <20190906090627.GX2386@hirez.programming.kicks-ass.net>
-References: <20190807222634.1723-1-john.ogness@linutronix.de>
- <20190904123531.GA2369@hirez.programming.kicks-ass.net>
- <20190905130513.4fru6yvjx73pjx7p@pathway.suse.cz>
- <20190905143118.GP2349@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190905143118.GP2349@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 6 Sep 2019 05:07:22 -0400
+Received: by mail-wm1-f43.google.com with SMTP id q12so6172867wmj.4
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 02:07:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=bRNpTF+jlVTEA0th1ETWAk1qTJWN6Qeu8URjuG4vuw0=;
+        b=g2/f8zaLtJ58LwSPZ4Fxp31XofUqLVy6CiLpQZDRxqfSFCkkkcQLmP2pN2lCr2Rvma
+         iQJYDrF+zvyU/PUN6bEeU5c3tIgPkZfK545NpqirU+wuHQnRcG43TdxBmEC2cEZRwsiY
+         rtFeoV8dRoYX1yt6xiu7gsSNbRo/a2xy2lLe+bnBCfBxMj1ZL9K1yYgTC0JgUyLrQ8Up
+         SGrBhpTBm62GcF/Xcwdw5RbV4mP9XNKsL94XLYOL+Z65LESWw2zQzD1bbFKib96Bk+9s
+         KAaQoiygmpBNgES7OYeyQdBSdamFxGxMR9Rl/R6obORIq2TlsRfCcMnN7w819OT00gC7
+         vLkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=bRNpTF+jlVTEA0th1ETWAk1qTJWN6Qeu8URjuG4vuw0=;
+        b=Hpmu9nuku3JSIwFQfnYp6+YvJe3BHAYBwdTU/kvazS4lCxhLjvMxbCgdRnbRfQwQ5Q
+         d7fP7fK3e+uriS+3b2gE7V05VyXyT/AiZvBGAnk+lw1QcVsAlqzoNGKuec8OALJLkblM
+         +zj+F7whWxuLyQ1+LJPUE6YCvh4A8nZPv0uiLq9PKF5th8jagsfHsadrfl7p/3ezSRNw
+         lMw0iChlESJ4eyBZWF/iLJC6tVBV9d7+x8QtSfaYskWrBOGJSdud4IYP4grOnH81vLBe
+         0baNI63WWpsax4zWZdjLi18dcpwBU8g+xR62AyLCkvz+z1BONB4vtDg9w3khoB74fczj
+         QaxA==
+X-Gm-Message-State: APjAAAUx89fLKhf9Dk2QI0Kxz/btll2f4P7z8LwbmxsoqJbuxCLkCgSb
+        PU/lAqu2QEEIO1GxeHX51uzDMQ==
+X-Google-Smtp-Source: APXvYqzTkSfIsU3hU/2q5f43wN5BDN/9Qf5vdBDJjz92GTwgZTlvkevjXpGIrHIxjNr/Bdt75k4Fig==
+X-Received: by 2002:a7b:c935:: with SMTP id h21mr6004171wml.35.1567760839881;
+        Fri, 06 Sep 2019 02:07:19 -0700 (PDT)
+Received: from [192.168.0.103] (88-147-65-157.dyn.eolo.it. [88.147.65.157])
+        by smtp.gmail.com with ESMTPSA id j22sm9584317wre.45.2019.09.06.02.07.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 06 Sep 2019 02:07:19 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCHSET block/for-next] IO cost model based work-conserving
+ porportional controller
+From:   Paolo Valente <paolo.valente@linaro.org>
+In-Reply-To: <20190905165540.GJ2263813@devbig004.ftw2.facebook.com>
+Date:   Fri, 6 Sep 2019 11:07:17 +0200
+Cc:     Jens Axboe <axboe@kernel.dk>, newella@fb.com, clm@fb.com,
+        Josef Bacik <josef@toxicpanda.com>, dennisz@fb.com,
+        Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>, kernel-team@fb.com,
+        cgroups@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
+        bpf@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <EFFA2298-8614-4AFC-9208-B36976F6548C@linaro.org>
+References: <20190614015620.1587672-1-tj@kernel.org>
+ <20190614175642.GA657710@devbig004.ftw2.facebook.com>
+ <5A63F937-F7B5-4D09-9DB4-C73D6F571D50@linaro.org>
+ <B5E431F7-549D-4FC4-A098-D074DF9586A1@linaro.org>
+ <20190820151903.GH2263813@devbig004.ftw2.facebook.com>
+ <9EB760CE-0028-4766-AE9D-6E90028D8579@linaro.org>
+ <20190831065358.GF2263813@devbig004.ftw2.facebook.com>
+ <88C7DC68-680E-49BB-9699-509B9B0B12A0@linaro.org>
+ <20190902155652.GH2263813@devbig004.ftw2.facebook.com>
+ <D9F6BC6D-FEB3-40CA-A33C-F501AE4434F0@linaro.org>
+ <20190905165540.GJ2263813@devbig004.ftw2.facebook.com>
+To:     Tejun Heo <tj@kernel.org>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 04:31:18PM +0200, Peter Zijlstra wrote:
-> So I have something roughly like the below; I'm suggesting you add the
-> line with + on:
+
+
+> Il giorno 5 set 2019, alle ore 18:55, Tejun Heo <tj@kernel.org> ha scritto:
 > 
->   int early_vprintk(const char *fmt, va_list args)
->   {
-> 	char buf[256]; // teh suck!
-> 	int old, n = vscnprintf(buf, sizeof(buf), fmt, args);
+> Hello, Paolo.
 > 
-> 	old = cpu_lock();
-> +	printk_buffer_store(buf, n);
-> 	early_console->write(early_console, buf, n);
-> 	cpu_unlock(old);
+> So, I'm currently verifying iocost in the FB fleet.  Around three
+> thousand machines running v5.2 (+ some backports) with btrfs on a
+> handful of different models of consumer grade SSDs.  I haven't seen
+> complete loss of control as you're reporting.  Given that you're
+> reporting the same thing on io.latency, which is deployed on multiple
+> orders of magnitude more machines at this point, it's likely that
+> there's something common affecting your test setup.
+
+Yep, I had that doubt too, so I extended my tests to one more PC and
+two more drives: a fast SAMSUNG NVMe SSD 970 PRO and an HITACHI
+HTS72755 HDD, using the QoS configurations suggested in your last
+email.  As for the filesystem, I'm interested in ext4, because it is
+the most widely used file system, and, with some workloads, it makes
+it hard to control I/O while keeping throughput high.  I'll provide hw
+and sw details in my reply to your next question.  I'm willing to run
+tests with btrfs too, at a later time.
+
+Something is wrong with io.cost also with the other PC and the other
+drives.  In the next table, each pair of numbers contains the target's
+throughput and the total throughput:
+
+                  none                 io.cost               bfq
+SAMSUNG SSD    11.373  3295.517     6.468  3273.892    10.802  1862.288
+HITACHI HDD    0.026    11.531      0.042    30.299     0.067    76.642
+
+With the SAMSUNG SSD, io.cost gives to the target less throughput than
+none (and bfq is behaving badly too, but this is my problem).  On the
+HDD, io.cost gives to the target a little bit more than half the
+throughput guaranteed by bfq, and reaches less than half the total
+throughput reached by bfq.
+
+I do agree that three thousand is an overwhelming number of machines,
+and I'll probably never have that many resources for my tests.  Still,
+it seems rather unlikely that two different PCs, and three different
+drives, all suffer from a common anomaly that causes troubles only to
+io.cost and io.latency.
+
+I try to never overlook also me being the problematic link in the
+chain.  But I'm executing this test with the public script I mentioned
+in my previous emails; and all steps seem correct.
+
+>  Can you please
+> describe your test configuration and if you aren't already try testing
+> on btrfs?
 > 
-> 	return n;
->   }
+
+PC 1: Thinkpad W520, Ubuntu 18.04 (no configuration change w.r.t.
+defaults), PLEXTOR SATA PX-256M5S SSD, HITACHI HTS72755 HDD, ext4.
+
+PC 2: Thinkpad X1 Extreme, Ubuntu 19.04 (no configuration change
+w.r.t.  defaults), SAMSUNG NVMe SSD 970 PRO, ext4.
+
+If you need more details, just ask.
+
+Thanks,
+Paolo
+
+
+
+> Thanks.
 > 
-> (yes, yes, we can get rid of the on-stack @buf thing with a
-> reserve+commit API, but who cares :-))
+> -- 
+> tejun
 
-Another approach is something like:
-
-DEFINE_PER_CPU(int, printk_nest);
-DEFINE_PER_CPU(char, printk_line[4][256]);
-
-int vprintk(const char *fmt, va_list args)
-{
-	int c, n, i;
-	char *buf;
-
-	preempt_disable();
-	i = min(3, this_cpu_inc_return(printk_nest) - 1);
-	buf = this_cpu_ptr(printk_line[i]);
-	n = vscnprintf(buf, 256, fmt, args);
-
-	c = cpu_lock();
-	printk_buffer_store(buf, n);
-	if (early_console)
-		early_console->write(early_console, buf, n);
-	cpu_unlock(c);
-
-	this_cpu_dec(printk_nest);
-	preempt_enable();
-
-	return n;
-}
-
-Again, simple and straight forward (and I'm sure it's been mentioned
-before too).
-
-We really should not be making this stuff harder than it needs to be
-(and anybody whining about lines longer than 256 characters can just go
-away, those are unreadable anyway).
