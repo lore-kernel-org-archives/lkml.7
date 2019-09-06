@@ -2,88 +2,88 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CDB6C43140
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46195C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0917D20650
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:34:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567776878;
-	bh=ZL7K6EY/Tb5BCpmLi1+uFwypuJTHioF9TInqvs7lW2M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hn8kh7YrfJ2QO61fWWUoo5RFHNFgOmzOP5ensjpGvOW4/ZuxCz7uv+bmYIW3/udH1
-	 Ln30bQw4wUFkF6F/hxBvKB0QSBmBvFGbYloeFUV/OvPhe7jXEa1VXSCymLHV94VYq+
-	 siaue4azDdafgCe07JCtG6Pn4sYBHBf158E4WlTo=
+	by mail.kernel.org (Postfix) with ESMTP id 1C94420650
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:35:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P+wdYOXp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405150AbfIFNeh (ORCPT
+        id S2393318AbfIFNfu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 09:34:37 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45158 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405138AbfIFNeh (ORCPT
+        Fri, 6 Sep 2019 09:35:50 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45269 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391482AbfIFNft (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 09:34:37 -0400
-Received: by mail-wr1-f65.google.com with SMTP id l16so6570829wrv.12;
-        Fri, 06 Sep 2019 06:34:36 -0700 (PDT)
+        Fri, 6 Sep 2019 09:35:49 -0400
+Received: by mail-lj1-f193.google.com with SMTP id l1so5998635lji.12
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 06:35:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xs44Y9C5kY9tV3QgTmhRhvweKEdDbOReR13zxyIFFm4=;
+        b=P+wdYOXpehdroAADXmlcuh1eKFwYQnN9366FZu4R1fvFkm0lVI+c7zFRMrez/myy5J
+         pK+j9uFHU1sR2CyMU8GF6RDjY6C5oRSviR+jOYAkCVKEwx3oBEoAiBW/nuJJnz4QhL9U
+         jMaHsJfoXNhassZc0ZQ3K/s4tt4XTdh1E3/oNqSxEUJAa50xZDVRscWWRdkaryc2FdvH
+         9nJEZ0TSssBVBeIwazelGPD3TXqdYEFK7pzqeOXqWYx0pDIKalCZr9tlGEbw1q0WpqeT
+         YOjoXWtjJ6vELErSJukfsrO5hMk/TH1mq/2XNc1bNVOvbLXJUOIAQ78A23RPEMDppzTS
+         CiBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=o+3PJsjCXNDOqrcoh72izbEswidXP+TmFzzy5ZV1VQY=;
-        b=IC7ehVCV7D7FEifGRfAf5mdGasd6YA8Zur/6SWPWfT+JgDmf5V23z6pfOhYMfotZZ/
-         K1dO5Vh66pauhjm7J7w+1ADVcxkCdZr7mJAZJ/PHNxB2Nf/dT/WPbfwPQ3j/BQJfEe8+
-         B/1Myb9ozH4Qnw3dzNZpEQYhoAA3ykZ+rKXgjsI35bBd+MhFVl6Wg0yBN9eMvPh2uqFe
-         MT4dUH3+uNkyIXiczuqVCVexDmR7d9Xl9pu0LG3D9GRoUmjV/gYrTQGB0j1UkSKLcYQ2
-         lNRcgO8Py6vNsJTYUcpZO0jNHjFthENB66aeygDOkyRXK6BNA/ax3gTtjsM3mmGpLSUv
-         CYBg==
-X-Gm-Message-State: APjAAAUlrnrqoyCLJz6hUjMXeqFZ4L+kRFT8ZleSBDMo/vAl1sRm0Dxc
-        BSzg64Of/tFVDFeKNmTfS8kpV1xgrA==
-X-Google-Smtp-Source: APXvYqxo3CRRMOOb/pXKjiUP/AwCwS3zo+BXCHzRBhu63dJyJ5P8p6QXvaweU7/OgZXu/lRKNT+2SQ==
-X-Received: by 2002:adf:e605:: with SMTP id p5mr7067657wrm.105.1567776875251;
-        Fri, 06 Sep 2019 06:34:35 -0700 (PDT)
-Received: from localhost ([212.187.182.162])
-        by smtp.gmail.com with ESMTPSA id n8sm8986763wma.7.2019.09.06.06.34.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Sep 2019 06:34:34 -0700 (PDT)
-Date:   Fri, 6 Sep 2019 14:34:34 +0100
-From:   Rob Herring <robh@kernel.org>
-To:     jamestai.sky@gmail.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sugaya Taichi <sugaya.taichi@socionext.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Olof Johansson <olof@lixom.net>,
-        CY_Huang <cy.huang@realtek.com>,
-        Phinex Hung <phinex@realtek.com>,
-        "james.tai" <james.tai@realtek.com>
-Subject: Re: [PATCH] dt-bindings: cpu: Add a support cpu type for cortex-a55
-Message-ID: <20190906133434.GA3272@bogus>
-References: <20190905081435.1492-1-james.tai@realtek.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xs44Y9C5kY9tV3QgTmhRhvweKEdDbOReR13zxyIFFm4=;
+        b=GFCwu/sWKpfrE8rpqO2T62b24AIG4vC/x5Hqr/rLC4Zth/UXDBQhecnOJAPTFxZPVI
+         040scZ7vsbH1DgslQnQGJ+eZlGXTszPiWVZoziY5PTvT8jr9wIGjMh2tuMHPcGLS/8iA
+         AS0sgkhrWigJ+8a9YB66M0TVFTnd+iazVln5piaDjxtb0W3t0jKWStx+ERP6HYxbeOT0
+         zydF0CRCZPQUPD5W5NMNHYd+HEn+6F36Ft/NTlChQb1lvWXTGeRj9vixBaCeqTZ+3g+f
+         ld7IoIpEgBWln/39zlgFy/GvEhN7DYKb0944zn/mabcys17uzbkyD92oIlzxNQYO5fQw
+         ANcQ==
+X-Gm-Message-State: APjAAAUOP6TCvdhXZdEB2CNI7ZL1xwDbZ8S3xMOtKTGxjYtRg2H90147
+        /x7uyetRzLPkrM0UU8i1ByqPDKlsQc6LVoVTQXA=
+X-Google-Smtp-Source: APXvYqzxJ7WXxHJ/RpsvAOAd7PcptKpBh+T3mH0KMZgK4eRb/w+5tXb58u023SExLR7cXWypmkkwfEQ8EMhzxlF2a9o=
+X-Received: by 2002:a2e:83d6:: with SMTP id s22mr5760872ljh.104.1567776947696;
+ Fri, 06 Sep 2019 06:35:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190905081435.1492-1-james.tai@realtek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1567413598-4477-1-git-send-email-jrdr.linux@gmail.com>
+ <CAFqt6zYkFk55gzmfwMFzpWiOp0xP3DXdmWyO2Ce8+mqYW12SNw@mail.gmail.com> <61bd1ea6-10b7-a1ee-fd79-327abf09fd73@oracle.com>
+In-Reply-To: <61bd1ea6-10b7-a1ee-fd79-327abf09fd73@oracle.com>
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+Date:   Fri, 6 Sep 2019 19:05:36 +0530
+Message-ID: <CAFqt6zZeenG495uAL09zXxTW+OeUrRzY+8eWd8CSzsu=xOZ2_A@mail.gmail.com>
+Subject: Re: [PATCH v2] swiotlb-xen: Convert to use macro
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc:     konrad.wilk@oracle.com, Juergen Gross <jgross@suse.com>,
+        sstabellini@kernel.org, xen-devel@lists.xenproject.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Sabyasachi Gupta <sabyasachi.linux@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  5 Sep 2019 16:14:35 +0800, jamestai.sky@gmail.com wrote:
-> From: "james.tai" <james.tai@realtek.com>
-> 
-> Add arm cpu type cortex-a55.
-> 
-> Signed-off-by: james.tai <james.tai@realtek.com>
-> ---
->  Documentation/devicetree/bindings/arm/cpus.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
+On Fri, Sep 6, 2019 at 7:02 PM Boris Ostrovsky
+<boris.ostrovsky@oracle.com> wrote:
+>
+> On 9/6/19 8:27 AM, Souptick Joarder wrote:
+> > On Mon, Sep 2, 2019 at 2:04 PM Souptick Joarder <jrdr.linux@gmail.com> wrote:
+> >> Rather than using static int max_dma_bits, this
+> >> can be coverted to use as macro.
+> >>
+> >> Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+> >> Reviewed-by: Juergen Gross <jgross@suse.com>
+> > If it is still not late, can we get this patch in queue for 5.4 ?
+>
+>
+> Yes, I will queue it later today.
 
-Applied, thanks.
-
-Rob
+Thanks Boris.
