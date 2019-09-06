@@ -2,161 +2,115 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 196F2C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A7FC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D84482070C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:55:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DA6920854
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:56:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567767330;
-	bh=18pq3LwCWzyPlgiR3DyZ4lXdwag9ZaGpDaXS1k8UebE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JKkWbI/pzJJiYQPPpQPd1f+a7Y6m6ouOSLCsRix/rKa1SchfDgQhTAK9MCnNv0Dc2
-	 bPgoj6eimITDp/3DcZ1TSzwJWs/iSUEWXrMCMSO989zszz2NnFJMB9vjLh36ce14nR
-	 As3wjLrsGbX0ABybNXEuqYGvS/VvTuPmfJNYLfUo=
+	s=default; t=1567767418;
+	bh=eKqQLsZ1CqXLPChoayXDfV/yXKBUa6ki7SK6YURr7JQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=n8e7oBR7K0AjVpdYPofNUFlG2Ldf9AeHk81Sdt91rcXvn7p3Ei1Ex+gbau/Fmdmar
+	 ZHxy2c83F/H6b5fV76AGI7UFV6LfqgP/XfrVm5WT+of8roJqc2vDHovjD8z0IuPVH1
+	 tp3wswAGxodkRCoFqqcnjp+odwiIT3Gr5sOsLNcs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391689AbfIFKza (ORCPT
+        id S2391988AbfIFK45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 06:55:30 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48508 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391541AbfIFKz3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 06:55:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=jxvUc8xlampYvLgbd5XOv3nymCzHXx5x8vB16XRysHA=; b=pemxa5WrNHEfFh+9kQ1lN26t3
-        jhV8vq8Ob7RSY/A6KfQ7PGth1f5PavwaiVmvnFZbeNoype8JmqDksLfNnBeln5gKIfUHVBYT/LhPU
-        QWUN0PL//bAqdFSJUw4UBuXtnQjXuuM05sGUuQEMJtl2EHEqEioEUu2gbIf3dbVTqxlAg=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1i6Btk-0001RZ-Pi; Fri, 06 Sep 2019 10:55:24 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id ED8D6D02CE7; Fri,  6 Sep 2019 11:55:23 +0100 (BST)
-Date:   Fri, 6 Sep 2019 11:55:23 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Steven Price <steven.price@arm.com>
-Cc:     David Airlie <airlied@linux.ie>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] drm/panfrost: Fix regulator_get_optional() misuse
-Message-ID: <20190906105523.GR23391@sirena.co.uk>
-References: <20190904123032.23263-1-broonie@kernel.org>
- <CAL_JsqK8hn8aHa0e-QhT5=dMqCd0_HzNWMHM1YbEC_2z8n-tXg@mail.gmail.com>
- <feaf7338-9aa1-5065-7a83-028aeadd5578@arm.com>
- <20190905124014.GA4053@sirena.co.uk>
- <93b8910d-fc01-4c16-fd7e-86abfc3cc617@arm.com>
- <20190905163420.GD4053@sirena.co.uk>
- <58594735-c079-74e5-26c8-4911f073d4df@arm.com>
+        Fri, 6 Sep 2019 06:56:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45266 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388816AbfIFK45 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 06:56:57 -0400
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B505208C3;
+        Fri,  6 Sep 2019 10:56:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567767415;
+        bh=eKqQLsZ1CqXLPChoayXDfV/yXKBUa6ki7SK6YURr7JQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=iwe7A6POO/AXJafBwclGZTdDimAL7JL/4tkeyQ2Hmmn/p1RAKgcK1OXWpNcost0c6
+         vb6M7H3Hkn2NmTAYYE4TKKuMQBsOeTRnrzB3CLFIS0u69fCfWWPHZAnzndjTpfAjSt
+         FTUs49YdlcffPsxSnWGKYkGzC9ON7Sqxu9LEJ72k=
+Received: by mail-lf1-f46.google.com with SMTP id w67so4643365lff.4;
+        Fri, 06 Sep 2019 03:56:55 -0700 (PDT)
+X-Gm-Message-State: APjAAAX7QwOnVMGx9VyFBlAipKtctxddwMZyP5E2ngKc3f/PStM44rI4
+        BADpwCTBLEpKc+BXgcabB9zaf+m39yPd8ELcLtk=
+X-Google-Smtp-Source: APXvYqyuyvNE+DfCX2EXl+GcF9M9zNqpthnU+rCpM/ZylcfvRmscK9OYLhqRaqB/x8T/f9Qsn/DW81HgYTXkDGfiTR4=
+X-Received: by 2002:a19:c649:: with SMTP id w70mr5991002lff.33.1567767413630;
+ Fri, 06 Sep 2019 03:56:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="j1TzbQBGf+ftliiX"
-Content-Disposition: inline
-In-Reply-To: <58594735-c079-74e5-26c8-4911f073d4df@arm.com>
-X-Cookie: Don't SANFORIZE me!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CGME20190906101407eucas1p15eb0df53374b27497b4793eab24becf6@eucas1p1.samsung.com>
+ <20190906101344.3535-1-l.luba@partner.samsung.com> <20190906101344.3535-4-l.luba@partner.samsung.com>
+In-Reply-To: <20190906101344.3535-4-l.luba@partner.samsung.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Fri, 6 Sep 2019 12:56:42 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPfoYxTVvt_bMQOs1=BkHzUuW_WvL9zn0jTGS6LLpv=fhQ@mail.gmail.com>
+Message-ID: <CAJKOXPfoYxTVvt_bMQOs1=BkHzUuW_WvL9zn0jTGS6LLpv=fhQ@mail.gmail.com>
+Subject: Re: [PATCH 3/3] dt-bindings: ddr: Add bindings for Samsung LPDDR3 memories
+To:     Lukasz Luba <l.luba@partner.samsung.com>
+Cc:     devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
+        <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com,
+        robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
+        kyungmin.park@samsung.com,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
+        willy.mh.wolff.ml@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 6 Sep 2019 at 12:14, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>
+> Add description of bindings for Samsung k3qf2f20db LPDDR3 memory.
+> Minor fixes in the old documentation.
+>
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>  .../devicetree/bindings/ddr/lpddr3.txt        | 29 +++++++++++++++++--
+>  1 file changed, 27 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/ddr/lpddr3.txt b/Documentation/devicetree/bindings/ddr/lpddr3.txt
+> index 3b2485b84b3f..de0905239767 100644
+> --- a/Documentation/devicetree/bindings/ddr/lpddr3.txt
+> +++ b/Documentation/devicetree/bindings/ddr/lpddr3.txt
+> @@ -40,10 +40,34 @@ Child nodes:
+>    a given speed-bin. Please see Documentation/devicetree/
+>    bindings/ddr/lpddr3-timings.txt for more information on "lpddr3-timings"
+>
+> +Samsung K3QF2F20DB LPDDR3 memory
+> +------------------------------------------------------------
+> +
+> +This binding uses the LPDDR3 binding (described above)
+> +
+> +Required properties:
+> +- compatible:  Should be:
+> +               "samsung,K3QF2F20DB"
+> +               followed by "jedec,lpddr3"
+> +- density  : <u32> representing density in Mb (Mega bits)
+> +- io-width : <u32> representing bus width. Possible value 32
+> +- #address-cells: Must be set to 1
+> +- #size-cells: Must be set to 0
 
---j1TzbQBGf+ftliiX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+If you decided to repeat all properties again, then it deserves its
+own bindings file. However I though about simpler solution - just
+document compatible. Exactly the same as AT24 or AT25 EEPROM bindings.
+There is not much benefit from copying all these properties.
 
-On Fri, Sep 06, 2019 at 11:00:53AM +0100, Steven Price wrote:
-> On 05/09/2019 17:34, Mark Brown wrote:
-
-> > that information, I'd recommend eliminating individual OPPs if some are
-> > supported or just never doing any regulator configuration if none can be
-> > set.
-
-> The problem on the Hikey960 is that the voltage control is not done by
-> Linux. At the moment I have a DT with a set of operating-points:
-
-Like I said above:
-
-| > > that information, I'd recommend eliminating individual OPPs if some are
-| > > supported or just never doing any regulator configuration if none can be
-| > > set.
-
-> But while Linux can set the frequency (via the mailbox interface) the
-> voltages are not set by Linux but are implicit by choosing a frequency.
-> At the moment my DT has a clock but no regulator and with the code in
-> drm-next this works.
-
-If you're just not getting any voltages for the OPPs then your
-code shouldn't be trying to set voltages in the first place,
-regulator or not.
-
-> Your change swapping devm_regulator_get_optional() to
-> devm_regulator_get() breaks this because that will return a dummy
-> regulator which will reject any regulator_set_voltage() calls.
-
-OTOH the current code won't work on a system which does specify a
-regulator but doesn't have voltages configured in the OPP table
-or where the regulator constraints for the board haven't been
-configured to allow the voltage to be varied (perhaps the voltage
-bit hasn't been worked out, perhaps the voltages were just added
-to the OPPs in the SoC DT and the board constraints weren't
-updated to allow voltage variation).
-
-> I don't currently see how I can write a DT configuration for the
-> Hikey960 which would work with the devm_regulator_get() call.
-
-Like I've been saying you can discover if you can configure
-individual voltages and use that information to either suppress
-the OPPs concerned or just skip setting voltages for them, my
-suggestion is to suppress OPPs only if you can set some of them.
-At the very least if you don't have a voltage at all on a given
-OPP you should skip the set.
-
-> > However you're probably better off hiding all this stuff with the
-> > generic OPP code rather than open coding it - this already has much
-> > better handling for this, it supports voltage ranges rather than single
-> > voltages and optional regulators already.  I'm not 100% clear why this
-> > is open coded TBH but I might be missing something, if there's some
-> > restriction preventing the generic code being used it seems like those
-> > sohuld be fixed.
-
-> To be honest I've no idea how to use the generic OPP code to do this. I
-> suspect the original open coding was cargo-culted from another driver:
-> the comments in the function look like they were lifted from
-> drivers/devfreq/rk3399_dmc.c. Any help tidying this up would be appreciated.
-
-Yes, there's a lot of cargo culting of bad regulator API usage in
-the DRM subsystem for some reason, I keep having to do these
-periodic sweeps and there's always stuff in there.  I think a lot
-of it comes from BSP code that just gets dropped in without
-review and then cut'n'pasted but I've not figured out why DRM is
-so badly affected.
-
---j1TzbQBGf+ftliiX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1yOxkACgkQJNaLcl1U
-h9CmSwf/b18G7+KT6yxu0T7eY2r1bqKpr84kLCcHDwooTHOade5hoO1sNN+9/W5v
-JCYYmg68lRgYIFmQUelfo1RHXMsVlcHyn9pZJFFOGv1j3tVHrAkP5ec8oYViW1V2
-6bzLoF/GqPFmfr78g9diZST7SCHX8N2RzLOZuNQVliMbqT8SY9LOBWc0EUkm2dtX
-TnNdx1j0nkzDLRLyx3riuBOH5ymjYGbd6Ki/dFMG2zI3jx5JOi2FSXmNiTzjeGmI
-/blSGI2TNcR56eJOTND3h6Tsf8QNN24tH+OAIsUFNkqNooJWK3/+xEHrhVaCpH/3
-lvf/wx16GU6puuQsEo2ijuCdDydeXQ==
-=cmPn
------END PGP SIGNATURE-----
-
---j1TzbQBGf+ftliiX--
+Best regards,
+Krzysztof
