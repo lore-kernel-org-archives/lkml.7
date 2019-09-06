@@ -8,53 +8,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F305C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE6CC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 659C82070C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4AE62070C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:49:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RKKwKRs2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rR42GsoQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393497AbfIFTtM (ORCPT
+        id S2393561AbfIFTtU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 15:49:12 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40075 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725846AbfIFTtM (ORCPT
+        Fri, 6 Sep 2019 15:49:20 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33738 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393498AbfIFTtU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 15:49:12 -0400
-Received: by mail-pg1-f195.google.com with SMTP id w10so4077608pgj.7
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 12:49:11 -0700 (PDT)
+        Fri, 6 Sep 2019 15:49:20 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q10so5232731pfl.0
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 12:49:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=uAzFuMJFC8Qs6zalTfHoEOACCJjWE6SxXCJNlMiufmc=;
-        b=RKKwKRs2N6yoI0pB2oH4Uv9SbRzRWQEW0woC725TrgQ5hhPfgqJWWtes733p+nCc4u
-         ds98ZXgCub53C6qaASOae9vIW3w2C7hXik/fsEOhicdwKkxuKJcR6hWAE4HsDXbnU9U0
-         5gNeKjfnE2BGZhJNJ8AAVceGHsbxrZOOpmfEkOef6xgNdcNdw/DE1xZIQ8TUu9MinI/j
-         OxfwccCtnukauMPYWIs4U4jT+wlBUWnze7aTbQThbkKOBNuwJbBeouUFufFHctIO45OV
-         lXZikXmPFrQJsxk871LQr1cv4vXt4Gc5+hdxl/AAKi+K5cUaYMyhCEp7HTne/9AyBaDS
-         WrVA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=mU1+WGtGI6s1SQGf+HUbugB7ywPYgCVVN6kyBzTaNcA=;
+        b=rR42GsoQTXfsBGioVnUnyXrolTnujYH0VV3GlvCX7f+eVRQOY4iR4Jl+A6T+JGK6Uk
+         JhVPirT10DmB2aIVqgd4ufROGVgCU8UmCaouhJLZWmSkSJ2scDGTwV76+FP7Edb0zl3m
+         EjtKQp3GCokxIGWgxsemLvZS7youH/HsBTsxTfjEei6lQXPSs48cXywXSvUhFW6i2a/h
+         hPrEbkaapa19w8ts7Y5h34/COYBufEfcxHs7sxStF+YBs/HNE+dQTMfCodr6eRHu+eOU
+         htdA0pHyEdY+AGo8rb8rs7WmyBfdJYCIjmIarIXCLCreuFoEdum2dXLGlhZQYqKQCT4A
+         D2uA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=uAzFuMJFC8Qs6zalTfHoEOACCJjWE6SxXCJNlMiufmc=;
-        b=Bid/zszyssFDNi2gFQX7CP5qUcsuZs4nJiH6gU+viw+66o8LUaaeLEn0QAl4Lt5Cgq
-         5lOUGbAHBVszelptpvOJCFkhDPzI4lGOTgEL+c6QD/iA+pLWEJjg5+ray4eZfp6PunAz
-         FIayf0YXLzYkRLnl4EzpY2jQ+YLqFoaXJ+d5vGFR764Stb1GIGaFST6jmssPwfhnTtYu
-         UoKV/tZZ2TWgg1UiaIWMEczwoKMC8E7BCCYyQ8raiYtlFYgpuR5WYugS1L7j0rDRHfDQ
-         zgdrKZiaLJRx5QZPhFxoo4oS0ENAB+IoDQNgSYdwgsoRsOF0NhEkAiCKOhr1IfFpVMpo
-         iyFg==
-X-Gm-Message-State: APjAAAWHYLgW9eB9k0ePorHYgxoclDtISZP/6cA9JxVbY+kcD9mb7Uaj
-        qPYakz1shFyVgvNbwbEs1+I=
-X-Google-Smtp-Source: APXvYqzYnh/9vJNadE0cCHveRlhb7dIY5iG/blPZ0Hq8le4ixP+lhRxijP9d4wDs0X4pvqNWVypmWA==
-X-Received: by 2002:a17:90a:2e15:: with SMTP id q21mr11395700pjd.97.1567799351470;
-        Fri, 06 Sep 2019 12:49:11 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=mU1+WGtGI6s1SQGf+HUbugB7ywPYgCVVN6kyBzTaNcA=;
+        b=ojuE7Yk8QdrsnlvwwK04A2Um6x4bxavgyJYHA52bVLQ3WhcvQ4cNxqlR0+cEkmruSq
+         8Lxh4YOes7Nab4S5fP3Nl9AtuLeF1nF/i/j1OOWe9BG0w98qxE5/o3Yc5rCNFxY7qOiF
+         Cv1P1Q51BFkfFHMyQz/uv1UhGxBgxAg1qoDGtBJwZfSn+d4oqiXbG+m4iQwqPjjcDTv6
+         ANkvBN/5moAyxOqD0JFn00TMfiApeNV9jQN28e+xC+yoFAqxzDYNZ+C1XmeM1UATKIld
+         bwINu0lFR13p7rNaEKsFhtzq6K73kyAqd39ilRxQ7NJdyStFKfEjD8BucwlOK0FIXWv+
+         u+rw==
+X-Gm-Message-State: APjAAAUkbrI296e4HEONZQx22k1uNHwv0rjCmWjq+t+du5c4xX7Xd7Qj
+        H+n4WvCz+GcLaMoth4Gvxow=
+X-Google-Smtp-Source: APXvYqxso7WabPx8hLIH7RQGLkKtxnqxDs90vXPzVkIPXtY/aopJL+vzjpb6PG1mpQ04vofmb+UVqw==
+X-Received: by 2002:aa7:8a86:: with SMTP id a6mr12830850pfc.76.1567799359949;
+        Fri, 06 Sep 2019 12:49:19 -0700 (PDT)
 Received: from mail.broadcom.com ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id c127sm9830119pfb.5.2019.09.06.12.49.08
+        by smtp.gmail.com with ESMTPSA id c127sm9830119pfb.5.2019.09.06.12.49.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Sep 2019 12:49:10 -0700 (PDT)
+        Fri, 06 Sep 2019 12:49:19 -0700 (PDT)
 From:   Kamal Dasu <kdasu.kdev@gmail.com>
 To:     kdasu.kdev@gmail.com
 Cc:     Brian Norris <computersforpeace@gmail.com>,
@@ -67,68 +68,68 @@ Cc:     Brian Norris <computersforpeace@gmail.com>,
         Frieder Schrempf <frieder.schrempf@kontron.de>,
         linux-mtd@lists.infradead.org,
         bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] mtd: nand: brcmnand: Add support for flash-dma v0
-Date:   Fri,  6 Sep 2019 15:47:15 -0400
-Message-Id: <20190906194719.15761-1-kdasu.kdev@gmail.com>
+Subject: [PATCH 2/2] mtd: rawnand: use bounce buffer when vmalloced data buf detected
+Date:   Fri,  6 Sep 2019 15:47:16 -0400
+Message-Id: <20190906194719.15761-2-kdasu.kdev@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190906194719.15761-1-kdasu.kdev@gmail.com>
+References: <20190906194719.15761-1-kdasu.kdev@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change adds support for flash dma v0.0.
+For controller drivers that use DMA and set NAND_USE_BOUNCE_BUFFER
+option use data buffers that are not vmalloced, aligned and have
+valid virtual address to be able to do DMA transfers. This change
+adds additional check and makes use of data buffer allocated
+in nand_base driver when it is passed a vmalloced data buffer for
+DMA transfers.
 
 Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
 ---
- drivers/mtd/nand/raw/brcmnand/brcmnand.c | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+ drivers/mtd/nand/raw/nand_base.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-index 33310b8a6eb8..1eade9dc3b0d 100644
---- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-+++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-@@ -117,6 +117,18 @@ enum flash_dma_reg {
- 	FLASH_DMA_CURRENT_DESC_EXT,
- };
+diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
+index 91f046d4d452..46f6965a896a 100644
+--- a/drivers/mtd/nand/raw/nand_base.c
++++ b/drivers/mtd/nand/raw/nand_base.c
+@@ -45,6 +45,12 @@
  
-+/* flash_dma registers v0*/
-+static const u16 flash_dma_regs_v0[] = {
-+	[FLASH_DMA_REVISION]		= 0x00,
-+	[FLASH_DMA_FIRST_DESC]		= 0x04,
-+	[FLASH_DMA_CTRL]		= 0x08,
-+	[FLASH_DMA_MODE]		= 0x0c,
-+	[FLASH_DMA_STATUS]		= 0x10,
-+	[FLASH_DMA_INTERRUPT_DESC]	= 0x14,
-+	[FLASH_DMA_ERROR_STATUS]	= 0x18,
-+	[FLASH_DMA_CURRENT_DESC]	= 0x1c,
-+};
+ #include "internals.h"
+ 
++static int nand_need_bounce_buf(const void *buf, struct nand_chip *chip)
++{
++	return !virt_addr_valid(buf) || is_vmalloc_addr(buf) ||
++		!IS_ALIGNED((unsigned long)buf, chip->buf_align);
++}
 +
- /* flash_dma registers v1*/
- static const u16 flash_dma_regs_v1[] = {
- 	[FLASH_DMA_REVISION]		= 0x00,
-@@ -597,6 +609,8 @@ static void brcmnand_flash_dma_revision_init(struct brcmnand_controller *ctrl)
- 	/* flash_dma register offsets */
- 	if (ctrl->nand_version >= 0x0703)
- 		ctrl->flash_dma_offsets = flash_dma_regs_v4;
-+	else if (ctrl->nand_version == 0x0602)
-+		ctrl->flash_dma_offsets = flash_dma_regs_v0;
- 	else
- 		ctrl->flash_dma_offsets = flash_dma_regs_v1;
- }
-@@ -1673,8 +1687,11 @@ static void brcmnand_dma_run(struct brcmnand_host *host, dma_addr_t desc)
+ /* Define default oob placement schemes for large and small page devices */
+ static int nand_ooblayout_ecc_sp(struct mtd_info *mtd, int section,
+ 				 struct mtd_oob_region *oobregion)
+@@ -3183,9 +3189,7 @@ static int nand_do_read_ops(struct nand_chip *chip, loff_t from,
+ 		if (!aligned)
+ 			use_bufpoi = 1;
+ 		else if (chip->options & NAND_USE_BOUNCE_BUFFER)
+-			use_bufpoi = !virt_addr_valid(buf) ||
+-				     !IS_ALIGNED((unsigned long)buf,
+-						 chip->buf_align);
++			use_bufpoi = nand_need_bounce_buf(buf, chip);
+ 		else
+ 			use_bufpoi = 0;
  
- 	flash_dma_writel(ctrl, FLASH_DMA_FIRST_DESC, lower_32_bits(desc));
- 	(void)flash_dma_readl(ctrl, FLASH_DMA_FIRST_DESC);
--	flash_dma_writel(ctrl, FLASH_DMA_FIRST_DESC_EXT, upper_32_bits(desc));
--	(void)flash_dma_readl(ctrl, FLASH_DMA_FIRST_DESC_EXT);
-+	if (ctrl->nand_version > 0x0602) {
-+		flash_dma_writel(ctrl, FLASH_DMA_FIRST_DESC_EXT,
-+				 upper_32_bits(desc));
-+		(void)flash_dma_readl(ctrl, FLASH_DMA_FIRST_DESC_EXT);
-+	}
+@@ -4009,9 +4013,7 @@ static int nand_do_write_ops(struct nand_chip *chip, loff_t to,
+ 		if (part_pagewr)
+ 			use_bufpoi = 1;
+ 		else if (chip->options & NAND_USE_BOUNCE_BUFFER)
+-			use_bufpoi = !virt_addr_valid(buf) ||
+-				     !IS_ALIGNED((unsigned long)buf,
+-						 chip->buf_align);
++			use_bufpoi = nand_need_bounce_buf(buf, chip);
+ 		else
+ 			use_bufpoi = 0;
  
- 	/* Start FLASH_DMA engine */
- 	ctrl->dma_pending = true;
 -- 
 2.17.1
 
