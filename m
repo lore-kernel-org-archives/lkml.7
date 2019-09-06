@@ -2,126 +2,120 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD2FC00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2876C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:27:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9178206CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:26:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8B45206CD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:27:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Bo0wCAuO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sqTvZMOg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404241AbfIFM0R (ORCPT
+        id S2404469AbfIFM1c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 08:26:17 -0400
-Received: from mail-eopbgr10072.outbound.protection.outlook.com ([40.107.1.72]:57216
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731928AbfIFM0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 08:26:17 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QwqL/l3v5L3jYQYqIO6x3QSMXU5AfbmukJD+wfTABIISyHQKm1UXdvJJNdBVm+KLKRR7ZokuhJ4xLFCEG9EHj6WZG5uqqtbin9WlR+zSGTzbYryFI2TRGwRoksSTdoRmW0N0qqBNotHr5s1nt4Iu3dOI89BKPYgLf8VTRvv/kD0hkV5BRCu/4mYHPlDbT2Cj7OZwU23UDm09kxzUyHJfPcWKYENnpiYlxeMzVpGyq5G8QREyGb51SVyHVhHTzxML3BAAWNnmvekNI3wfBEPgcNUkKcyRN3GoXQw/hOZYWhJTw3qMz3knNWPiG9m7xJehy1vohVjdidOdPuGpEk3GrQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=a4qKuXOvUE6W4lL+8F5mZty+q16+l7nC8gQokWhAN0Q=;
- b=McbgHibO1+Ne5Pa8LWN4bwl0WHbFlawPsq636QIqYL1bm0z6L4OlHC6MXDJ8OfA899G5XwN+W6FsdDybcSnJv3xrxTtrcf3av8DX8Fl0MmR9Usko9bFyJUShjaV5kaGLS7M9BGBlCR9gh7BDmmafW3J81oFLB9U+LPfv2b7R3J/yNj7rqQ4veSBMr0WB2Ur4gFMhhZUiWh9i8L7KJKYqZFhg/BWicoEKnzL1WentX8JNhFySxdTWSMX+/RdpBXS2sx1f0J4EJ+J/ExZ2x+maR3KWvjLu/bu+GhiDRmGWHmMHVS4qOnqrUg49YWozsa956MGLjVLvaKvYlwWtJT9MYA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=a4qKuXOvUE6W4lL+8F5mZty+q16+l7nC8gQokWhAN0Q=;
- b=Bo0wCAuOpZBOSATwC2lJZLzIdKvUkZQWwTfxiA/0E4D+CjoyAxA1lODFukLLxgbHeyFGJHW5BswbDmlPTSrIbOEa4WjNgl5xJ3VxGxnfkxEw9iDKlUICvFPn+j9wSUQ1BZDThwSRn6CXBwdReZnO0s8LIwtFuGqKhvAbvkZEFQ4=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB3471.eurprd04.prod.outlook.com (52.134.3.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.18; Fri, 6 Sep 2019 12:26:13 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::c1a3:2946:8fa8:bfc5]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::c1a3:2946:8fa8:bfc5%3]) with mapi id 15.20.2241.018; Fri, 6 Sep 2019
- 12:26:13 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-CC:     Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 04/12] crypto: caam - dispose of IRQ mapping only after
- IRQ is freed
-Thread-Topic: [PATCH 04/12] crypto: caam - dispose of IRQ mapping only after
- IRQ is freed
-Thread-Index: AQHVYslwb7liAWd2nUa/9cDFJAb3gQ==
-Date:   Fri, 6 Sep 2019 12:26:12 +0000
-Message-ID: <VI1PR0402MB34859D023EE16F42244535D398BA0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <20190904023515.7107-1-andrew.smirnov@gmail.com>
- <20190904023515.7107-5-andrew.smirnov@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [84.117.251.185]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 28708405-f4bb-484d-3c45-08d732c567fc
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3471;
-x-ms-traffictypediagnostic: VI1PR0402MB3471:|VI1PR0402MB3471:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB3471F47EA82CE1F02BF4EFDC98BA0@VI1PR0402MB3471.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2331;
-x-forefront-prvs: 0152EBA40F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(366004)(39860400002)(396003)(136003)(199004)(189003)(102836004)(6506007)(53546011)(6436002)(486006)(476003)(66066001)(446003)(55016002)(186003)(9686003)(44832011)(53936002)(478600001)(26005)(14454004)(86362001)(4326008)(25786009)(3846002)(66476007)(66556008)(64756008)(6116002)(66446008)(76116006)(66946007)(6246003)(76176011)(7696005)(91956017)(71190400001)(71200400001)(99286004)(52536014)(7736002)(33656002)(74316002)(5660300002)(2906002)(229853002)(110136005)(54906003)(305945005)(316002)(8676002)(14444005)(8936002)(256004)(81166006)(81156014)(2501003)(4744005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3471;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 69YrurzpaHhKi7Wxr4VOu9HISmoT+Os3dDt1CKJyoMo4hH2YlXr5cz5hRywzcWn7Vt7VLJDCkelAv/4pWoj1kFyukN0Jxw0fABIpYXwnvCSeGSxUih4sy5sDiT4KjgMuyiS/V2G1piarAtxCPBn0J3hwSRohlZZ3IJKcYsRpRzCfChyScb/bZjyjtbIhpfcpcK1+bNt33A9AMV9oaggOMEtCAdhfjgebcqzrfzEnp+yo6PCyGl6koJtmB2n0EujjO2lZF6xJc8TLSPPIVP0DkdKjiWQzF5EWcjPnMglHsyr7AeDTcGw6dlCv0P5XnLKTyq2hSwqzuyYbQ/9WMs3e3GYWGEqZc4m83u3gNfRNz0HRya6mfePadmVxZUmwKb7dGQLhbUUlgB5wvtMB5996Blm8GeYrgixZuIQ8aPVogYo=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 6 Sep 2019 08:27:32 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:40652 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403993AbfIFM1c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 08:27:32 -0400
+Received: by mail-lj1-f195.google.com with SMTP id 7so5804804ljw.7
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 05:27:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=voMncQMQ4YdYJSbQPybIZCy/AcK0j9pgJUBzJv0XJ0A=;
+        b=sqTvZMOg0FK+tbQ5Twd8lIUIdl5cRw7f3mUvyMcKovHkLwtCNr+KhR8ryq4wVIDwmE
+         MrBFX2gvgSY3HU2O7p/fa3kIFtwabChkkv1UJeIL2HzkjG5QPDhFYHq8EkK3B24Bgydv
+         Fi2qkSQYUx9TdJxWg4stgkl9/pi/wDuDnFFyyRBx/kMYn9jJS/zdvJSGTuo1h2Temozf
+         Nvf/Hnfjf2PuJ6a6jToQHWZwxuQcOEfdbQhKzPmea0lJsU/ZNqvBUb+imGx19W9r0HCK
+         Hyvu0+zXQQzELhka7MTfPB6km6DSDMOt5IvIpqPyjyiI/acvmccpl7me4YJqAOCRVfA5
+         PFBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=voMncQMQ4YdYJSbQPybIZCy/AcK0j9pgJUBzJv0XJ0A=;
+        b=fdyinHi4RT1h+axEEgCnHjUM8u0ggEZctV89BXyqKth1uwPxoHib5HwUl5Z8Ccj3Zb
+         4rbaZGngK83HSJNKdtnf4n8oGaY93qpB+aZQKtYCiOS4OsZ6E/9uZrtCd6Z2V+zglBMC
+         7s7K2m/09wmntEfGkhvzAC79DpQqrUsABpzfHcDsqZJUHlS4facrZXQn6BnlHFx0KezW
+         X28WaJCcLaa9rrgXYS/3SCQKAzhJbp7as+wkAD3jy0Ab650yIBArBrodvoVaFWjMdXak
+         zQHrWn0VJ4RXo6jrtAXdgciYLHcJ9Awv4+a0EtBbMLnvjWkRl8CJlgXCYTPB3l990OKx
+         tFNw==
+X-Gm-Message-State: APjAAAVWDw9DbeVW4LiVrqNiHbmqgc+McTusq/3onzgkKjRQC+XI+9Rs
+        1Cb1fivz84Yy5rYrznbI+4q2Q34Hf6YaOzxyUac=
+X-Google-Smtp-Source: APXvYqyqVi6A3SK9ZHo9Lzs4psldtYUrV3ugRoL85TI5Orqgiv42bAur5gdeHYcDQujEI1t/u7SSENxNihK+5Pwaths=
+X-Received: by 2002:a2e:9602:: with SMTP id v2mr5657222ljh.215.1567772850472;
+ Fri, 06 Sep 2019 05:27:30 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 28708405-f4bb-484d-3c45-08d732c567fc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Sep 2019 12:26:12.9804
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: u5fxUaW3BTfv7eCa4dFVg3zOg/SqmMUlbeHnoNx3MXS/RyeMPfV35WKDrkY9Acqb8y8TIwm0RbcrH73+nOgXDw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3471
+References: <1567413598-4477-1-git-send-email-jrdr.linux@gmail.com>
+In-Reply-To: <1567413598-4477-1-git-send-email-jrdr.linux@gmail.com>
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+Date:   Fri, 6 Sep 2019 17:57:19 +0530
+Message-ID: <CAFqt6zYkFk55gzmfwMFzpWiOp0xP3DXdmWyO2Ce8+mqYW12SNw@mail.gmail.com>
+Subject: Re: [PATCH v2] swiotlb-xen: Convert to use macro
+To:     konrad.wilk@oracle.com,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>, sstabellini@kernel.org
+Cc:     xen-devel@lists.xenproject.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org,
+        Sabyasachi Gupta <sabyasachi.linux@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/4/2019 5:35 AM, Andrey Smirnov wrote:=0A=
-> With IRQ requesting being managed by devres we need to make sure that=0A=
-> we dispose of IRQ mapping after and not before it is free'd (otherwise=0A=
-> we'll end up with a warning from the kernel). To achieve that simply=0A=
-> convert IRQ mapping to rely on devres as well.=0A=
-> =0A=
-> Fixes: f314f12db65c ("crypto: caam - convert caam_jr_init() to use devres=
-")=0A=
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>=0A=
-> Cc: Chris Healy <cphealy@gmail.com>=0A=
-> Cc: Lucas Stach <l.stach@pengutronix.de>=0A=
-> Cc: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
-> Cc: Herbert Xu <herbert@gondor.apana.org.au>=0A=
-> Cc: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
-> Cc: linux-crypto@vger.kernel.org=0A=
-> Cc: linux-kernel@vger.kernel.org=0A=
-Cc: <stable@vger.kernel.org>=0A=
-Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
-=0A=
-I'd prefer pushing patches 1 and 4 first, considering they are fixes=0A=
-while the rest are optimizations.=0A=
-=0A=
-Thanks,=0A=
-Horia=0A=
-=0A=
+On Mon, Sep 2, 2019 at 2:04 PM Souptick Joarder <jrdr.linux@gmail.com> wrote:
+>
+> Rather than using static int max_dma_bits, this
+> can be coverted to use as macro.
+>
+> Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+> Reviewed-by: Juergen Gross <jgross@suse.com>
+
+If it is still not late, can we get this patch in queue for 5.4 ?
+
+> ---
+>  drivers/xen/swiotlb-xen.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
+> index ae1df49..d1eced5 100644
+> --- a/drivers/xen/swiotlb-xen.c
+> +++ b/drivers/xen/swiotlb-xen.c
+> @@ -38,6 +38,7 @@
+>  #include <asm/xen/page-coherent.h>
+>
+>  #include <trace/events/swiotlb.h>
+> +#define MAX_DMA_BITS 32
+>  /*
+>   * Used to do a quick range check in swiotlb_tbl_unmap_single and
+>   * swiotlb_tbl_sync_single_*, to see if the memory was in fact allocated by this
+> @@ -114,8 +115,6 @@ static int is_xen_swiotlb_buffer(dma_addr_t dma_addr)
+>         return 0;
+>  }
+>
+> -static int max_dma_bits = 32;
+> -
+>  static int
+>  xen_swiotlb_fixup(void *buf, size_t size, unsigned long nslabs)
+>  {
+> @@ -135,7 +134,7 @@ static int is_xen_swiotlb_buffer(dma_addr_t dma_addr)
+>                                 p + (i << IO_TLB_SHIFT),
+>                                 get_order(slabs << IO_TLB_SHIFT),
+>                                 dma_bits, &dma_handle);
+> -               } while (rc && dma_bits++ < max_dma_bits);
+> +               } while (rc && dma_bits++ < MAX_DMA_BITS);
+>                 if (rc)
+>                         return rc;
+>
+> --
+> 1.9.1
+>
