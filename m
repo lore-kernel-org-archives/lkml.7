@@ -2,174 +2,90 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA7BC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 06:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88466C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 06:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D6802082C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 06:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D55F2081B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 06:32:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nQlJ/BiQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392403AbfIFG3F (ORCPT
+        id S2392412AbfIFGcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 02:29:05 -0400
-Received: from foss.arm.com ([217.140.110.172]:51964 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732131AbfIFG3E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 02:29:04 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2652828;
-        Thu,  5 Sep 2019 23:29:03 -0700 (PDT)
-Received: from [10.162.42.101] (p8cg001049571a15.blr.arm.com [10.162.42.101])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EE03C3F67D;
-        Thu,  5 Sep 2019 23:31:17 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: Re: [PATCH 1/1] mm/pgtable/debug: Add test validating architecture
- page table helpers
-To:     Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <1567497706-8649-1-git-send-email-anshuman.khandual@arm.com>
- <1567497706-8649-2-git-send-email-anshuman.khandual@arm.com>
- <20190904221618.1b624a98@thinkpad>
- <20e3044d-2af5-b27b-7653-cec53bdec941@arm.com>
- <20190905190629.523bdb87@thinkpad>
-Message-ID: <3c609e33-afbb-ffaf-481a-6d225a06d1d0@arm.com>
-Date:   Fri, 6 Sep 2019 11:58:59 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Fri, 6 Sep 2019 02:32:04 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58540 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388744AbfIFGcE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 02:32:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=NZb9OMfbhfEBf9CQkdhgvBZ3CNpG50UBGVbYSMEPXRk=; b=nQlJ/BiQGAgDtLtP4cuBwA6Q6F
+        OzgJOnZNJdgSVF7a9WbJ3xEHL8XwVOXqyJWKHWDUU+DeQGvrrgEqNRTJjnPTymABWQlkV01eN8SPp
+        O/tE7BrzLhpsyRfMV7/QgCJeIe+jlhg8nd/iIJM10Mcs68RnHim+H2nHR/xS1VTTPhhHnT+RWNMhk
+        9SBAzMKPJYYo9nwvGXDaj27RLe5VopaHUolqA/5VhiigzDqgPuktzcZ7scLrWWICZYDa9A6IlNZm+
+        sNb68z3ID596XCQBv9nbgGDygfVPj4fKgyDhYBLmkWDNh1jdh9ZYZ1ZIQfxiXMeFMZLrizk96LgiH
+        DlIjZxIQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i67mt-0008Fn-GB; Fri, 06 Sep 2019 06:32:03 +0000
+Date:   Thu, 5 Sep 2019 23:32:03 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Thomas =?iso-8859-1?Q?Hellstr=F6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        "pv-drivers@vmware.com" <pv-drivers@vmware.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
+Subject: Re: dma_mmap_fault discussion
+Message-ID: <20190906063203.GA25415@infradead.org>
+References: <20190905103541.4161-1-thomas_os@shipmail.org>
+ <20190905103541.4161-2-thomas_os@shipmail.org>
+ <608bbec6-448e-f9d5-b29a-1984225eb078@intel.com>
+ <b84d1dca-4542-a491-e585-a96c9d178466@shipmail.org>
+ <20190905152438.GA18286@infradead.org>
+ <cbbb0e95-8df1-9ab8-59ad-81bd7f3933fa@shipmail.org>
 MIME-Version: 1.0
-In-Reply-To: <20190905190629.523bdb87@thinkpad>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cbbb0e95-8df1-9ab8-59ad-81bd7f3933fa@shipmail.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/05/2019 10:36 PM, Gerald Schaefer wrote:
-> On Thu, 5 Sep 2019 14:48:14 +0530
-> Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+On Thu, Sep 05, 2019 at 07:05:43PM +0200, Thomas Hellström (VMware) wrote:
+> I took a quick look at the interfaces and have two questions:
 > 
->>> [...]  
->>>> +
->>>> +#if !defined(__PAGETABLE_PMD_FOLDED) && !defined(__ARCH_HAS_4LEVEL_HACK)
->>>> +static void pud_clear_tests(pud_t *pudp)
->>>> +{
->>>> +	memset(pudp, RANDOM_NZVALUE, sizeof(pud_t));
->>>> +	pud_clear(pudp);
->>>> +	WARN_ON(!pud_none(READ_ONCE(*pudp)));
->>>> +}  
->>>
->>> For pgd/p4d/pud_clear(), we only clear if the page table level is present
->>> and not folded. The memset() here overwrites the table type bits, so
->>> pud_clear() will not clear anything on s390 and the pud_none() check will
->>> fail.
->>> Would it be possible to OR a (larger) random value into the table, so that
->>> the lower 12 bits would be preserved?  
->>
->> So the suggestion is instead of doing memset() on entry with RANDOM_NZVALUE,
->> it should OR a large random value preserving lower 12 bits. Hmm, this should
->> still do the trick for other platforms, they just need non zero value. So on
->> s390, the lower 12 bits on the page table entry already has valid value while
->> entering this function which would make sure that pud_clear() really does
->> clear the entry ?
-> 
-> Yes, in theory the table entry on s390 would have the type set in the last
-> 4 bits, so preserving those would be enough. If it does not conflict with
-> others, I would still suggest preserving all 12 bits since those would contain
-> arch-specific flags in general, just to be sure. For s390, the pte/pmd tests
-> would also work with the memset, but for consistency I think the same logic
-> should be used in all pxd_clear_tests.
+> 1) dma_mmap_prepare(), would it be possible to drop the references to the
+> actual coherent region? The thing is that TTM doesn't know at mmap time what
+> memory will be backing the region. It can be VRAM, coherent memory or system
 
-Makes sense but..
+I guess we can shift the argument checking into the fault handler.
 
-There is a small challenge with this. Modifying individual bits on a given
-page table entry from generic code like this test case is bit tricky. That
-is because there are not enough helpers to create entries with an absolute
-value. This would have been easier if all the platforms provided functions
-like __pxx() which is not the case now. Otherwise something like this should
-have worked.
+> 2) @cpu_addr and @dma_addr are the values pointing at the beginning of an
+> allocated chunk, right?
 
+Yes.
 
-pud_t pud = READ_ONCE(*pudp);
-pud = __pud(pud_val(pud) | RANDOM_VALUE (keeping lower 12 bits 0))
-WRITE_ONCE(*pudp, pud);
+> The reason I'm asking is that TTM's coherent memory
+> pool is sub-allocating from larger chunks into smaller PAGE_SIZE chunks,
+> which means that a TTM buffer object may be randomly split across larger
+> chunks, which means we have to store these values for each PAGE_SiZE chunk.
 
-But __pud() will fail to build in many platforms.
-
-The other alternative will be to make sure memset() happens on all other
-bits except the lower 12 bits which will depend on endianness. If s390
-has a fixed endianness, we can still use either of them which will hold
-good for others as well.
-
-memset(pudp, RANDOM_NZVALUE, sizeof(pud_t) - 3);
-
-OR
-
-memset(pudp + 3, RANDOM_NZVALUE, sizeof(pud_t) - 3);
-
-> 
-> However, there is another issue on s390 which will make this only work
-> for pud_clear_tests(), and not for the p4d/pgd_tests. The problem is that
-> mm_alloc() will only give you a 3-level page table initially on s390.
-> This means that pudp == p4dp == pgdp, and so the p4d/pgd_tests will
-> both see the pud level (of course this also affects other tests).
-
-Got it.
-
-> 
-> Not sure yet how to fix this, i.e. how to initialize/update the page table
-> to 5 levels. We can handle 5 level page tables, and it would be good if
-> all levels could be tested, but using mm_alloc() to establish the page
-> tables might not work on s390. One option could be to provide an arch-hook
-> or weak function to allocate/initialize the mm.
-
-Sure, got it. Though I plan to do add some arch specific tests or init sequence
-like the above later on but for now the idea is to get the smallest possible set
-of test cases which builds and runs on all platforms without requiring any arch
-specific hooks or special casing (#ifdef) to be agreed upon broadly and accepted.
-
-Do you think this is absolutely necessary on s390 for the very first set of test
-cases or we can add this later on as an improvement ?
-
-> 
-> IIUC, the (dummy) mm is really only needed to provide an mm->pgd as starting
-> point, right?
-
-Right.
+For implementations that remap non-contigous regions using vmap we need the
+start cpu address passed, as that is used to find the vm_struct structure
+for it.  That being said I don't see a problem with you keeping track
+of the original start and offset into in your suballocation helpers.
