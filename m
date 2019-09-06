@@ -2,95 +2,123 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CD2C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98550C00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FDD820854
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:57:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DBA02070C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:57:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392081AbfIFK5G (ORCPT
+        id S2392106AbfIFK5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 06:57:06 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38998 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388816AbfIFK5G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 06:57:06 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1ED6F308FB9A;
-        Fri,  6 Sep 2019 10:57:06 +0000 (UTC)
-Received: from localhost (ovpn-117-208.ams2.redhat.com [10.36.117.208])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 52FDF5D9E1;
-        Fri,  6 Sep 2019 10:56:59 +0000 (UTC)
-Date:   Fri, 6 Sep 2019 11:56:58 +0100
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, miklos@szeredi.hu,
-        linux-kernel@vger.kernel.org, virtio-fs@redhat.com,
-        dgilbert@redhat.com, mst@redhat.com
-Subject: Re: [PATCH 10/18] virtiofs: Do not use device managed mem for
- virtio_fs and virtio_fs_vq
-Message-ID: <20190906105658.GR5900@stefanha-x1.localdomain>
-References: <20190905194859.16219-1-vgoyal@redhat.com>
- <20190905194859.16219-11-vgoyal@redhat.com>
+        Fri, 6 Sep 2019 06:57:40 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:48978 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732465AbfIFK5k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 06:57:40 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 6686280E9F; Fri,  6 Sep 2019 12:57:23 +0200 (CEST)
+Date:   Fri, 6 Sep 2019 12:57:36 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Jiri Slaby <jslaby@suse.cz>
+Cc:     bp@alien8.de, tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 1/2] x86/asm/suspend: Get rid of bogus_64_magic
+Message-ID: <20190906105736.GA25668@amd>
+References: <20190906075550.23435-1-jslaby@suse.cz>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Sf3MmCJcUNNLokcm"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="DocE+STaALJfprDB"
 Content-Disposition: inline
-In-Reply-To: <20190905194859.16219-11-vgoyal@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 06 Sep 2019 10:57:06 +0000 (UTC)
+In-Reply-To: <20190906075550.23435-1-jslaby@suse.cz>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---Sf3MmCJcUNNLokcm
+--DocE+STaALJfprDB
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 05, 2019 at 03:48:51PM -0400, Vivek Goyal wrote:
-> These data structures should go away when virtio_fs object is going away.
-> When deivce is going away, we need to just make sure virtqueues can go
-> away and after that none of the code accesses vq and all the requests
-> get error.
->=20
-> So allocate memory for virtio_fs and virtio_fs_vq normally and free it
-> at right time.
->=20
-> This patch still frees up memory during device remove time. A later patch
-> will make virtio_fs object reference counted and this memory will be
-> freed when last reference to object is dropped.
->=20
-> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+On Fri 2019-09-06 09:55:49, Jiri Slaby wrote:
+> bogus_64_magic is only a dead-end loop. There is no need for an
+> out-of-order function (and unannotated local label), so just handle it
+> in-place and also store 0xbad-m-a-g-i-c to rcx beforehand.
+
+Slower, longer, does not really fix anything. Why is it good idea?
+
+NAK.
+							Pavel
+
+> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Len Brown <lenb@kernel.org>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: x86@kernel.org
+> Cc: linux-pm@vger.kernel.org
 > ---
->  fs/fuse/virtio_fs.c | 13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
+>  arch/x86/kernel/acpi/wakeup_64.S | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/arch/x86/kernel/acpi/wakeup_64.S b/arch/x86/kernel/acpi/wake=
+up_64.S
+> index b0715c3ac18d..7f9ade13bbcf 100644
+> --- a/arch/x86/kernel/acpi/wakeup_64.S
+> +++ b/arch/x86/kernel/acpi/wakeup_64.S
+> @@ -18,8 +18,13 @@ ENTRY(wakeup_long64)
+>  	movq	saved_magic, %rax
+>  	movq	$0x123456789abcdef0, %rdx
+>  	cmpq	%rdx, %rax
+> -	jne	bogus_64_magic
+> +	je	2f
+> =20
+> +	/* stop here on a saved_magic mismatch */
+> +	movq $0xbad6d61676963, %rcx
+> +1:
+> +	jmp 1b
+> +2:
+>  	movw	$__KERNEL_DS, %ax
+>  	movw	%ax, %ss=09
+>  	movw	%ax, %ds
+> @@ -37,9 +42,6 @@ ENTRY(wakeup_long64)
+>  	jmp	*%rax
+>  ENDPROC(wakeup_long64)
+> =20
+> -bogus_64_magic:
+> -	jmp	bogus_64_magic
+> -
+>  ENTRY(do_suspend_lowlevel)
+>  	FRAME_BEGIN
+>  	subq	$8, %rsp
 
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
---Sf3MmCJcUNNLokcm
+--DocE+STaALJfprDB
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl1yO3oACgkQnKSrs4Gr
-c8gsdQgAw8es95r3jldWITNK2HV3hQUadAUD6wcJTqh47Co/1pn1JWttU9UhsGCs
-wlgovlHxIO9oPsjaBc+Vcyczu7QtV+5x4r2lAsxHBH0idZnq6H8T+Om+iM9F3Bhs
-hlXTBKrjDt3anxgGHZ/EysPRolxSBPr3W81uqVOATwsS8zKO0liMr6z6brUc12Jx
-a9w/zciAljgcusrSgVkQ5C1JwCvMxgGctU1rqzPE1QwPHOT+1/+f7KqJYmTvCYHJ
-NfWPrl8z3I68LSE9XkSL6oVU9NDNbey1lzpGIBOpOmZZqucUU67jXy8HO3z2iNB6
-UUKV1kzQjkeYn8GGRSqyyJhao8stKw==
-=d30F
+iEYEARECAAYFAl1yO6AACgkQMOfwapXb+vKKkgCfWKZSaunUYQPe+he5Nb1J9/3M
+ArYAnR9TClBgjBOSa5UxTavZ3jtAdrtj
+=GcVj
 -----END PGP SIGNATURE-----
 
---Sf3MmCJcUNNLokcm--
+--DocE+STaALJfprDB--
