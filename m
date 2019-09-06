@@ -2,85 +2,178 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37DD3C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 01:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FEAC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 01:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30FC6206DE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 01:13:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B098720820
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 01:16:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hmHN99A4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403928AbfIFBNz (ORCPT
+        id S2391873AbfIFBQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 21:13:55 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37520 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389384AbfIFBNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 21:13:54 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 61B9218C4271;
-        Fri,  6 Sep 2019 01:13:54 +0000 (UTC)
-Received: from treble (ovpn-120-170.rdu2.redhat.com [10.10.120.170])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D2F2C5D9CA;
-        Fri,  6 Sep 2019 01:13:52 +0000 (UTC)
-Date:   Thu, 5 Sep 2019 20:13:50 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org
-Subject: Re: [PATCH -tip v2 1/2] x86: xen: insn: Decode Xen and KVM
- emulate-prefix signature
-Message-ID: <20190906011350.y65zwuychhryt7eg@treble>
-References: <156773100816.29031.12557431294039450779.stgit@devnote2>
- <156773101914.29031.4027232648773934988.stgit@devnote2>
+        Thu, 5 Sep 2019 21:16:24 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:39829 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387843AbfIFBQY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 21:16:24 -0400
+Received: by mail-vs1-f65.google.com with SMTP id y62so2973747vsb.6
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 18:16:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=G/jjPUvkqLp7k2MNayLy8yxR2QJnGQkJPP4pKvRP8XY=;
+        b=hmHN99A4aLokrPl4lZWpuHNAv5KcXkuR1PLZM3hGzvO6K+EL46baGousu8iKVvHw/U
+         RJFOxJaMVEBUmH0UIaNTJqQ8Ltsp6iQCMqxNRDPuB9IuMGwTpbKw6h9KZCSXIHaM3lDj
+         VRd6Mv4A//Jxll8nWOxOmsCGAkff7kwUyjwqWl0M2+xsPWgT1aEZEPMqG2c9GCjrpkH5
+         z+G73lipkuj4pbpMFSLZQ2y5GXwVBY94FqeMPW0brat5LLjvpigbGSNu3AUb0TEX2+Q9
+         KaNeBfTeEIGRdIlEU+pJnj1/x0A6u7ZCBOvfHl7FTl4Grtshwn4h5p/ZKvbdRAH05X0X
+         rmhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=G/jjPUvkqLp7k2MNayLy8yxR2QJnGQkJPP4pKvRP8XY=;
+        b=j3qFz8VEYcn5ECNhjqtHoTicN0JMcSvIf4xpAXmcwoWm5beGQqGdfJbJALzXlnGO7h
+         uluB32MWUTQih4AtkbR7Ev4t+R8pMbv1ufXz4GN1UmJlQtNUnhm0j2H8sDUQc6PJXbl7
+         JuoGsLwn99W2/4T7LV3AQmzMHkfzK7+dS6WVFwGyLJDR0m7Kxorzz4B2QipvrUBnuX8f
+         g/8K/XzR7DNiq+xFZlreaerSdi4N97BQQqshfiUINcXtsiLcDCgtf7RLD+wnwtuTxiNm
+         aNS+Z4u+uZukiXbBH2J99OOlkruvyFzd7bUFaufsSNhbcK8+LNQ+zpv7cpk/5gSbOG/B
+         C7JA==
+X-Gm-Message-State: APjAAAXcD581vi8PdrKxzeUyQie7aQF5rrL9PhqlHaQVl6r44Yke7NYF
+        iRcwGAJB275K4NJQKgkB/nbomMj/mfQxIiX2ot6q6Q==
+X-Google-Smtp-Source: APXvYqzYnX89Xr/kb8QZtSv/BCXEqHmOOsdTFJDhTkcQdWuAQor0/lxU7xkYlX8I/lJ93uL2cXZdqF9tN62Y8dfC2k8=
+X-Received: by 2002:a67:1043:: with SMTP id 64mr3783637vsq.114.1567732580314;
+ Thu, 05 Sep 2019 18:16:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <156773101914.29031.4027232648773934988.stgit@devnote2>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Fri, 06 Sep 2019 01:13:54 +0000 (UTC)
+References: <20190903200905.198642-1-joel@joelfernandes.org>
+ <20190904084508.GL3838@dhcp22.suse.cz> <20190904153258.GH240514@google.com>
+ <20190904153759.GC3838@dhcp22.suse.cz> <20190904162808.GO240514@google.com>
+ <20190905144310.GA14491@dhcp22.suse.cz> <CAJuCfpFve2v7d0LX20btk4kAjEpgJ4zeYQQSpqYsSo__CY68xw@mail.gmail.com>
+ <20190905133507.783c6c61@oasis.local.home> <CAKOZueuQpHDnk-3GrLdXH_N_5Z7FRSJu+cwKhHNMUyKRqvkzjA@mail.gmail.com>
+ <20190906005904.GC224720@google.com>
+In-Reply-To: <20190906005904.GC224720@google.com>
+From:   Daniel Colascione <dancol@google.com>
+Date:   Thu, 5 Sep 2019 18:15:43 -0700
+Message-ID: <CAKOZuevJyfZRFz3M5myLy+XpS=mAxYCf+oQ2csxCHh7VO-OrKw@mail.gmail.com>
+Subject: Re: [PATCH v2] mm: emit tracepoint when RSS changes by threshold
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tim Murray <timmurray@google.com>,
+        Carmen Jackson <carmenjackson@google.com>,
+        Mayank Gupta <mayankgupta@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        kernel-team <kernel-team@android.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        linux-mm <linux-mm@kvack.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Tom Zanussi <zanussi@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 06, 2019 at 09:50:19AM +0900, Masami Hiramatsu wrote:
-> --- a/tools/objtool/sync-check.sh
-> +++ b/tools/objtool/sync-check.sh
-> @@ -4,6 +4,7 @@
->  FILES='
->  arch/x86/include/asm/inat_types.h
->  arch/x86/include/asm/orc_types.h
-> +arch/x86/include/asm/xen/prefix.h
->  arch/x86/lib/x86-opcode-map.txt
->  arch/x86/tools/gen-insn-attr-x86.awk
->  '
-> @@ -46,6 +47,6 @@ done
->  check arch/x86/include/asm/inat.h     '-I "^#include [\"<]\(asm/\)*inat_types.h[\">]"'
->  check arch/x86/include/asm/insn.h     '-I "^#include [\"<]\(asm/\)*inat.h[\">]"'
->  check arch/x86/lib/inat.c             '-I "^#include [\"<]\(../include/\)*asm/insn.h[\">]"'
-> -check arch/x86/lib/insn.c             '-I "^#include [\"<]\(../include/\)*asm/in\(at\|sn\).h[\">]"'
-> +check arch/x86/lib/insn.c             '-I "^#include [\"<]\(../include/\)*asm/in\(at\|sn\).h[\">]" -I "^#include [\"<]\(../include/\)*asm/xen/prefix.h[\">]"'
+On Thu, Sep 5, 2019 at 5:59 PM Joel Fernandes <joel@joelfernandes.org> wrote:
+> On Thu, Sep 05, 2019 at 10:50:27AM -0700, Daniel Colascione wrote:
+> > On Thu, Sep 5, 2019 at 10:35 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+> > > On Thu, 5 Sep 2019 09:03:01 -0700
+> > > Suren Baghdasaryan <surenb@google.com> wrote:
+> > >
+> > > > On Thu, Sep 5, 2019 at 7:43 AM Michal Hocko <mhocko@kernel.org> wrote:
+> > > > >
+> > > > > [Add Steven]
+> > > > >
+> > > > > On Wed 04-09-19 12:28:08, Joel Fernandes wrote:
+> > > > > > On Wed, Sep 4, 2019 at 11:38 AM Michal Hocko <mhocko@kernel.org> wrote:
+> > > > > > >
+> > > > > > > On Wed 04-09-19 11:32:58, Joel Fernandes wrote:
+> > > > > [...]
+> > > > > > > > but also for reducing
+> > > > > > > > tracing noise. Flooding the traces makes it less useful for long traces and
+> > > > > > > > post-processing of traces. IOW, the overhead reduction is a bonus.
+> > > > > > >
+> > > > > > > This is not really anything special for this tracepoint though.
+> > > > > > > Basically any tracepoint in a hot path is in the same situation and I do
+> > > > > > > not see a point why each of them should really invent its own way to
+> > > > > > > throttle. Maybe there is some way to do that in the tracing subsystem
+> > > > > > > directly.
+> > > > > >
+> > > > > > I am not sure if there is a way to do this easily. Add to that, the fact that
+> > > > > > you still have to call into trace events. Why call into it at all, if you can
+> > > > > > filter in advance and have a sane filtering default?
+> > > > > >
+> > > > > > The bigger improvement with the threshold is the number of trace records are
+> > > > > > almost halved by using a threshold. The number of records went from 4.6K to
+> > > > > > 2.6K.
+> > > > >
+> > > > > Steven, would it be feasible to add a generic tracepoint throttling?
+> > > >
+> > > > I might misunderstand this but is the issue here actually throttling
+> > > > of the sheer number of trace records or tracing large enough changes
+> > > > to RSS that user might care about? Small changes happen all the time
+> > > > but we are likely not interested in those. Surely we could postprocess
+> > > > the traces to extract changes large enough to be interesting but why
+> > > > capture uninteresting information in the first place? IOW the
+> > > > throttling here should be based not on the time between traces but on
+> > > > the amount of change of the traced signal. Maybe a generic facility
+> > > > like that would be a good idea?
+> > >
+> > > You mean like add a trigger (or filter) that only traces if a field has
+> > > changed since the last time the trace was hit? Hmm, I think we could
+> > > possibly do that. Perhaps even now with histogram triggers?
+> >
+> > I was thinking along the same lines. The histogram subsystem seems
+> > like a very good fit here. Histogram triggers already let users talk
+> > about specific fields of trace events, aggregate them in configurable
+> > ways, and (importantly, IMHO) create synthetic new trace events that
+> > the kernel emits under configurable conditions.
+>
+> Hmm, I think this tracing feature will be a good idea. But in order not to
+> gate this patch, can we agree on keeping a temporary threshold for this
+> patch? Once such idea is implemented in trace subsystem, then we can remove
+> the temporary filter.
+>
+> As Tim said, we don't want our traces flooded and this is a very useful
+> tracepoint as proven in our internal usage at Android. The threshold filter
+> is just few lines of code.
 
-Unfortunately perf also has a similar sync check script:
-tools/perf/check-headers.sh.  So you'll also need to add the above
-changes there.
+I'm not sure the threshold filtering code you've added does the right
+thing: we don't keep state, so if a counter constantly flips between
+one "side" of the TRACE_MM_COUNTER_THRESHOLD and the other, we'll emit
+ftrace events at high frequency. More generally, this filtering
+couples the rate of counter logging to the *value* of the counter ---
+that is, we log ftrace events at different times depending on how much
+memory we happen to have used --- and that's not ideal from a
+predictability POV.
 
-Otherwise
+All things being equal, I'd prefer that we get things upstream as fast
+as possible. But in this case, I'd rather wait for a general-purpose
+filtering facility (whether that facility is based on histogram, eBPF,
+or something else) rather than hardcode one particular fixed filtering
+strategy (which might be suboptimal) for one particular kind of event.
+Is there some special urgency here?
 
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
+How about we instead add non-filtered tracepoints for the mm counters?
+These tracepoints will still be free when turned off.
 
--- 
-Josh
+Having added the basic tracepoints, we can discuss separately how to
+do the rate limiting. Maybe instead of providing direct support for
+the algorithm that I described above, we can just use a BPF program as
+a yes/no predicate for whether to log to ftrace. That'd get us to the
+same place as this patch, but more flexibly, right?
