@@ -2,92 +2,92 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C92D9C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED529C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 948CA207FC
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:45:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567766713;
-	bh=8obvABzY456lelT+/+F0iiNkcUGvNaX0PoU7PvA7MHw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BN5N6837Y+WiESPf4A03aLv6Stg9Dvw2VQyy1UBoJkNOOX2MWKR7bfyUi7rRBQwLo
-	 nWHmCPxXi2i5lCsHENnppiKI21Lz40hBGSYG2R53hxdoe2Pn6+qtbRYIYdP97bwKRr
-	 zkpoETJfeDPSmK8kQW87Qd67ejhXdWVQxWK9HMpw=
+	by mail.kernel.org (Postfix) with ESMTP id CF4E62082C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:45:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388497AbfIFKpN (ORCPT
+        id S2388662AbfIFKp4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 06:45:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34330 "EHLO mail.kernel.org"
+        Fri, 6 Sep 2019 06:45:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47432 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730767AbfIFKpM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 06:45:12 -0400
-Received: from localhost (unknown [223.226.32.145])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726080AbfIFKpz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 06:45:55 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2EFD2084F;
-        Fri,  6 Sep 2019 10:45:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567766711;
-        bh=8obvABzY456lelT+/+F0iiNkcUGvNaX0PoU7PvA7MHw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IDxctFLgE85TE+lmarvW0ZhIpYuXdofqQrSBdKIrPm3CGWpNYJmjk2lLowearehq3
-         3VMQmSIPx3QAsdwv2bl03ucelgJ+waAVxPmtJJCLjM0DNYYletYyjdRnztifkQ8Vws
-         td1cL8xV+TWdvhE8RDn2cUIkMKPAs+2hb2vFccds=
-Date:   Fri, 6 Sep 2019 16:14:03 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Sanyog Kale <sanyog.r.kale@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] soundwire: add back ACPI dependency
-Message-ID: <20190906104403.GH2672@vkoul-mobl>
-References: <20190905203527.1478314-1-arnd@arndb.de>
- <20190906043805.GE2672@vkoul-mobl>
- <CAK8P3a38ywYFaGekbi6_idwrZvaVX8u8giUpK1r26QAbekLp8Q@mail.gmail.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 9468D878E46;
+        Fri,  6 Sep 2019 10:45:55 +0000 (UTC)
+Received: from localhost (ovpn-117-208.ams2.redhat.com [10.36.117.208])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0ACE81000321;
+        Fri,  6 Sep 2019 10:45:49 +0000 (UTC)
+Date:   Fri, 6 Sep 2019 11:45:49 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, miklos@szeredi.hu,
+        linux-kernel@vger.kernel.org, virtio-fs@redhat.com,
+        dgilbert@redhat.com, mst@redhat.com
+Subject: Re: [PATCH 04/18] virtiofs: Check connected state for VQ_REQUEST
+ queue as well
+Message-ID: <20190906104549.GL5900@stefanha-x1.localdomain>
+References: <20190905194859.16219-1-vgoyal@redhat.com>
+ <20190905194859.16219-5-vgoyal@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="L/Qt9NZ8t00Dhfad"
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a38ywYFaGekbi6_idwrZvaVX8u8giUpK1r26QAbekLp8Q@mail.gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190905194859.16219-5-vgoyal@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Fri, 06 Sep 2019 10:45:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06-09-19, 12:02, Arnd Bergmann wrote:
-> On Fri, Sep 6, 2019 at 6:39 AM Vinod Koul <vkoul@kernel.org> wrote:
-> >
-> > On 05-09-19, 22:35, Arnd Bergmann wrote:
-> > > Soundwire gained a warning for randconfig builds without
-> > > CONFIG_ACPI during the linux-5.3-rc cycle:
-> > >
-> > > drivers/soundwire/slave.c:16:12: error: unused function 'sdw_slave_add' [-Werror,-Wunused-function]
-> > >
-> > > Add the CONFIG_ACPI dependency at the top level now.
-> >
-> > Did you run this yesterday or today. I have applied Srini's patches to
-> > add DT support for Soundwire couple of days back so we should not see
-> > this warning anymore
-> 
-> This is on the latest linux-next, which is dated 20190904. As Stephen is
-> not releasing any more linux-next kernels until later this month, I'm
-> missing anything that came in afterwards.
 
-That is interesting as next-20190904 has the DT changes :) Can you share
-the config you used to get this.
+--L/Qt9NZ8t00Dhfad
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I have two instances of sdw_slave_add() in next-20190904:
+On Thu, Sep 05, 2019 at 03:48:45PM -0400, Vivek Goyal wrote:
+> Right now we are checking ->connected state only for VQ_HIPRIO. Now we wa=
+nt
+> to make use of this method for all queues. So check it for VQ_REQUEST as
+> well.
+>=20
+> This will be helpful if device has been removed and virtqueue is gone. In
+> that case ->connected will be false and request can't be submitted anymore
+> and user space will see error -ENOTCONN.
+>=20
+> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> ---
+>  fs/fuse/virtio_fs.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 
-drivers/soundwire/slave.c:              sdw_slave_add(bus, &id, acpi_fwnode_handle(adev));
-drivers/soundwire/slave.c:              sdw_slave_add(bus, &id, of_fwnode_handle(node));
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
 
-Thanks
--- 
-~Vinod
+--L/Qt9NZ8t00Dhfad
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl1yONwACgkQnKSrs4Gr
+c8hiJQf/RcdMwTruxvR/8Bl1CjfN+mUt21UCtv0K/otHklhGEdna7AzGT1QFFBqi
+iyQUlYckbqC72mhKLNOWT/I8JJkq3jUS+xUf2i/qzNv/4B3yVfCFazfumOIcb7P+
+XriTd61VYMSaPfJRPXLvn+oxLknVB9LohRBQHZc0ljt339uGCt9YBlc38G2/XRud
+PT41SRg8rwBjDyfqx3OVTzL7kgxdXaM5ZbUJo24/To3ZQdmzO/QWWDJqUCGi0kCQ
+r5x6rkMUjd9gZCIUcgio7ourUi3+gfQA+sIQHU3FUH+UCyL7+nM5XM61n7t80BpH
+P8ACIKgUO0IDNTm9uaTHnuUTZAUrrw==
+=+Vva
+-----END PGP SIGNATURE-----
+
+--L/Qt9NZ8t00Dhfad--
