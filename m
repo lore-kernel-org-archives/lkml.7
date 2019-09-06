@@ -2,210 +2,263 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 717D3C00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 802EDC00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A4C9206B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:50:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="dTKytgdT"
+	by mail.kernel.org (Postfix) with ESMTP id 52087206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:50:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393487AbfIFNuW (ORCPT
+        id S2393502AbfIFNum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 09:50:22 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52302 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731814AbfIFNuW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 09:50:22 -0400
-Received: by mail-wm1-f65.google.com with SMTP id t17so6606228wmi.2
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 06:50:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KrYX6Q/LeSVDnxpxfV2uN5QLi2+c+z0J+TjzkFIN0Fc=;
-        b=dTKytgdTPeYLmGHfgGyuJ4gHDsBA88t0GaqfFy3KJSzw1grNzTF8bHCl4EsBTg7uo/
-         Vdscq0BFMxUIAA4MGalbd0RSAsvdpql9MVo2nujiAO+Chbp/hsWpuJz1+bgaAo7oGkcN
-         MWUlnZArwvVWxG00Oeb6rSgQfQRJZ2D763X5A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KrYX6Q/LeSVDnxpxfV2uN5QLi2+c+z0J+TjzkFIN0Fc=;
-        b=epRgPfA6sKQtygOcajXF55v0hz5ugLDcUm3qgy11ExyGo4vHX1/10nD4aU/GuyVfZA
-         tRAUfteeYYTLDipcNQ0LI/0PyS4yjJ2Cdr0ZXGrY17hSoVjTp+h10XFrJ9cGRk53Yz1e
-         LgBizq/REOOv3Tbd0d77kenW67lG7TtaGKoBJU++LaBzVdWlf6zjE/5VJU7F8TUN/SQv
-         LA3DA7V3gBxnaVaY7Oj/9CqZ89nXBqy5fqlAHeaean8lRnocvIPeaHzeGxr6ZmtqkZOg
-         j0j/IaProXRjDXZDZlYz/TdtNe5BLTgYY73dW53ZxwcfHBCSiBTkW9gBV1Z9zw6aQAj1
-         IGDw==
-X-Gm-Message-State: APjAAAUlmySsp4/ZpwrPJyeckPJc31ffNJkWAKIMT9u5tUH9GCRqB+ej
-        btMwIwpShEpN5OUPplIi0m6lbmrliKK32YyU4em3Lw==
-X-Google-Smtp-Source: APXvYqxU9LVVRhlbWADFqDWPsgI5B12obV4dqUR9JZ3Z6uPq60OE8Cz65ZO/IZ+QTP/vT+9EPMbOAc/F220BbvmL1Ms=
-X-Received: by 2002:a1c:f016:: with SMTP id a22mr7494148wmb.170.1567777819341;
- Fri, 06 Sep 2019 06:50:19 -0700 (PDT)
+        Fri, 6 Sep 2019 09:50:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59512 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727143AbfIFNul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 09:50:41 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 35BA0883822;
+        Fri,  6 Sep 2019 13:50:40 +0000 (UTC)
+Received: from horse.redhat.com (unknown [10.18.25.137])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 22D335D9CA;
+        Fri,  6 Sep 2019 13:50:33 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id A94B6220292; Fri,  6 Sep 2019 09:50:32 -0400 (EDT)
+Date:   Fri, 6 Sep 2019 09:50:32 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Stefan Hajnoczi <stefanha@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, miklos@szeredi.hu,
+        linux-kernel@vger.kernel.org, virtio-fs@redhat.com,
+        dgilbert@redhat.com, mst@redhat.com
+Subject: Re: [PATCH 15/18] virtiofs: Make virtio_fs object refcounted
+Message-ID: <20190906135032.GD22083@redhat.com>
+References: <20190905194859.16219-1-vgoyal@redhat.com>
+ <20190905194859.16219-16-vgoyal@redhat.com>
+ <20190906120309.GW5900@stefanha-x1.localdomain>
 MIME-Version: 1.0
-References: <1566275985-25670-1-git-send-email-srinath.mannam@broadcom.com> <20190905222649.GK103977@google.com>
-In-Reply-To: <20190905222649.GK103977@google.com>
-From:   Srinath Mannam <srinath.mannam@broadcom.com>
-Date:   Fri, 6 Sep 2019 19:20:08 +0530
-Message-ID: <CABe79T6Ve_j17fDNZ=2u2Yzq+tD1PjU-PZFHTQRK3siLGt5C-A@mail.gmail.com>
-Subject: Re: [PATCH] PCI: Add PCIE ACS quirk for IPROC PAXB
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Abhinav Ratna <abhinav.ratna@broadcom.com>,
-        Alex Williamson <alex.williamson@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190906120309.GW5900@stefanha-x1.localdomain>
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Fri, 06 Sep 2019 13:50:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
-
-Thank you for the improvements. With the changes, comments and commit
-message exactly describes the purpose.
-I tested the code changes and works fine.
-
-Thanks again,
-Srinath
-
-On Fri, Sep 6, 2019 at 3:56 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> [+cc Alex]
->
-> On Tue, Aug 20, 2019 at 10:09:45AM +0530, Srinath Mannam wrote:
-> > From: Abhinav Ratna <abhinav.ratna@broadcom.com>
-> >
-> > IPROC PAXB RC doesn't support ACS capabilities and control registers.
-> > Add quirk to have separate IOMMU groups for all EPs and functions connected
-> > to root port, by masking RR/CR/SV/UF bits.
-> >
-> > Signed-off-by: Abhinav Ratna <abhinav.ratna@broadcom.com>
-> > Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
->
-> I tentatively applied this to pci/misc with Scott's ack for v5.4.
->
-> I tweaked the patch itself to follow the style of similar quirks
-> (interdiff is below, plus a diff of the commit log).  Please make sure
-> I didn't break it.
->
-> I also went out on a limb and reworded the comment to give what I
-> *think* is the justification for this patch, as opposed to merely a
-> description of the code.  I'm making a lot of assumptions there, so
-> please confirm that they're correct, or supply alternate justification
-> if they're not.
->
+On Fri, Sep 06, 2019 at 01:03:09PM +0100, Stefan Hajnoczi wrote:
+> On Thu, Sep 05, 2019 at 03:48:56PM -0400, Vivek Goyal wrote:
+> > This object is used both by fuse_connection as well virt device. So make
+> > this object reference counted and that makes it easy to define life cycle
+> > of the object.
+> > 
+> > Now deivce can be removed while filesystem is still mounted. This will
+> > cleanup all the virtqueues but virtio_fs object will still be around and
+> > will be cleaned when filesystem is unmounted and sb/fc drops its reference.
+> > 
+> > Removing a device also stops all virt queues and any new reuqest gets
+> > error -ENOTCONN. All existing in flight requests are drained before
+> > ->remove returns.
+> > 
+> > Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 > > ---
-> >  drivers/pci/quirks.c | 16 ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
-> >
-> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > index 0f16acc..f9584c0 100644
-> > --- a/drivers/pci/quirks.c
-> > +++ b/drivers/pci/quirks.c
-> > @@ -4466,6 +4466,21 @@ static int pci_quirk_mf_endpoint_acs(struct pci_dev *dev, u16 acs_flags)
-> >       return acs_flags ? 0 : 1;
+> >  fs/fuse/virtio_fs.c | 52 +++++++++++++++++++++++++++++++++++++--------
+> >  1 file changed, 43 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
+> > index 01bbf2c0e144..29ec2f5bbbe2 100644
+> > --- a/fs/fuse/virtio_fs.c
+> > +++ b/fs/fuse/virtio_fs.c
+> > @@ -37,6 +37,7 @@ struct virtio_fs_vq {
+> >  
+> >  /* A virtio-fs device instance */
+> >  struct virtio_fs {
+> > +	struct kref refcount;
+> >  	struct list_head list;    /* on virtio_fs_instances */
+> >  	char *tag;
+> >  	struct virtio_fs_vq *vqs;
+> > @@ -63,6 +64,27 @@ static inline struct fuse_pqueue *vq_to_fpq(struct virtqueue *vq)
+> >  	return &vq_to_fsvq(vq)->fud->pq;
 > >  }
-> >
-> > +static int pcie_quirk_brcm_bridge_acs(struct pci_dev *dev, u16 acs_flags)
+> >  
+> > +static void release_virtiofs_obj(struct kref *ref)
 > > +{
-> > +     /*
-> > +      * IPROC PAXB RC doesn't support ACS capabilities and control registers.
-> > +      * Add quirk to to have separate IOMMU groups for all EPs and functions
-> > +      * connected to root port, by masking RR/CR/SV/UF bits.
-> > +      */
+> > +	struct virtio_fs *vfs = container_of(ref, struct virtio_fs, refcount);
 > > +
-> > +     u16 flags = (PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_SV);
-> > +     int ret = acs_flags & ~flags ? 0 : 1;
-> > +
-> > +     return ret;
+> > +	kfree(vfs->vqs);
+> > +	kfree(vfs);
 > > +}
 > > +
+> > +static void virtiofs_put(struct virtio_fs *fs)
+> 
+> Why do the two function names above contain "virtiofs" instead
+> of "virtio_fs"?  I'm not sure if this is intentional and is supposed to
+> mean something, but it's confusing.
+> 
+> > +{
+> > +	mutex_lock(&virtio_fs_mutex);
+> > +	kref_put(&fs->refcount, release_virtiofs_obj);
+> > +	mutex_unlock(&virtio_fs_mutex);
+> > +}
 > > +
-> >  static const struct pci_dev_acs_enabled {
-> >       u16 vendor;
-> >       u16 device;
-> > @@ -4559,6 +4574,7 @@ static const struct pci_dev_acs_enabled {
-> >       { PCI_VENDOR_ID_AMPERE, 0xE00A, pci_quirk_xgene_acs },
-> >       { PCI_VENDOR_ID_AMPERE, 0xE00B, pci_quirk_xgene_acs },
-> >       { PCI_VENDOR_ID_AMPERE, 0xE00C, pci_quirk_xgene_acs },
-> > +     { PCI_VENDOR_ID_BROADCOM, 0xD714, pcie_quirk_brcm_bridge_acs },
-> >       { 0 }
-> >  };
->
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 77c0330ac922..2edbce35e8c5 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -4466,21 +4466,19 @@ static int pci_quirk_mf_endpoint_acs(struct pci_dev *dev, u16 acs_flags)
->         return acs_flags ? 0 : 1;
->  }
->
-> -static int pcie_quirk_brcm_bridge_acs(struct pci_dev *dev, u16 acs_flags)
-> +static int pci_quirk_brcm_acs(struct pci_dev *dev, u16 acs_flags)
->  {
->         /*
-> -        * IPROC PAXB RC doesn't support ACS capabilities and control registers.
-> -        * Add quirk to to have separate IOMMU groups for all EPs and functions
-> -        * connected to root port, by masking RR/CR/SV/UF bits.
-> +        * iProc PAXB Root Ports don't advertise an ACS capability, but
-> +        * they do not allow peer-to-peer transactions between Root Ports.
-> +        * Allow each Root Port to be in a separate IOMMU group by masking
-> +        * SV/RR/CR/UF bits.
->          */
-> +       acs_flags &= ~(PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
->
-> -       u16 flags = (PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_SV);
-> -       int ret = acs_flags & ~flags ? 0 : 1;
-> -
-> -       return ret;
-> +       return acs_flags ? 0 : 1;
->  }
->
-> -
->  static const struct pci_dev_acs_enabled {
->         u16 vendor;
->         u16 device;
-> @@ -4574,7 +4572,7 @@ static const struct pci_dev_acs_enabled {
->         { PCI_VENDOR_ID_AMPERE, 0xE00A, pci_quirk_xgene_acs },
->         { PCI_VENDOR_ID_AMPERE, 0xE00B, pci_quirk_xgene_acs },
->         { PCI_VENDOR_ID_AMPERE, 0xE00C, pci_quirk_xgene_acs },
-> -       { PCI_VENDOR_ID_BROADCOM, 0xD714, pcie_quirk_brcm_bridge_acs },
-> +       { PCI_VENDOR_ID_BROADCOM, 0xD714, pci_quirk_brcm_acs },
->         { 0 }
->  };
->
->
->
->
-> @@ -1,49 +1,49 @@
-> -commit b50ae502eff0
-> +commit 46b2c32df7a4
->  Author: Abhinav Ratna <abhinav.ratna@broadcom.com>
->  Date:   Tue Aug 20 10:09:45 2019 +0530
->
-> -    PCI: Add PCIE ACS quirk for IPROC PAXB
-> +    PCI: Add ACS quirk for iProc PAXB
->
-> -    IPROC PAXB RC doesn't support ACS capabilities and control registers.
-> -    Add quirk to have separate IOMMU groups for all EPs and functions connected
-> -    to root port, by masking RR/CR/SV/UF bits.
-> +    iProc PAXB Root Ports don't advertise an ACS capability, but they do not
-> +    allow peer-to-peer transactions between Root Ports.  Add an ACS quirk so
-> +    each Root Port can be in a separate IOMMU group.
->
-> +    [bhelgaas: commit log, comment, use common implementation style]
->      Link: https://lore.kernel.org/r/1566275985-25670-1-git-send-email-srinath.mannam@broadcom.com
->      Signed-off-by: Abhinav Ratna <abhinav.ratna@broadcom.com>
->      Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
->      Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> +    Acked-by: Scott Branden <scott.branden@broadcom.com>
->
+> > +static void virtio_fs_put(struct fuse_iqueue *fiq)
+> 
+> Minor issue: this function name is confusingly similar to
+> virtiofs_put().  Please rename to virtio_fs_fiq_put().
+
+Fixed with ->release semantics. Replaced "virtiofs" with "virtio_fs".
+
+
+Subject: virtiofs: Make virtio_fs object refcounted
+
+This object is used both by fuse_connection as well virt device. So make
+this object reference counted and that makes it easy to define life cycle
+of the object. 
+
+Now deivce can be removed while filesystem is still mounted. This will
+cleanup all the virtqueues but virtio_fs object will still be around and
+will be cleaned when filesystem is unmounted and sb/fc drops its reference.
+
+Removing a device also stops all virt queues and any new reuqest gets
+error -ENOTCONN. All existing in flight requests are drained before
+->remove returns.
+
+Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+---
+ fs/fuse/virtio_fs.c |   52 +++++++++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 43 insertions(+), 9 deletions(-)
+
+Index: rhvgoyal-linux-fuse/fs/fuse/virtio_fs.c
+===================================================================
+--- rhvgoyal-linux-fuse.orig/fs/fuse/virtio_fs.c	2019-09-06 09:24:21.177245246 -0400
++++ rhvgoyal-linux-fuse/fs/fuse/virtio_fs.c	2019-09-06 09:40:53.309245246 -0400
+@@ -37,6 +37,7 @@ struct virtio_fs_vq {
+ 
+ /* A virtio-fs device instance */
+ struct virtio_fs {
++	struct kref refcount;
+ 	struct list_head list;    /* on virtio_fs_instances */
+ 	char *tag;
+ 	struct virtio_fs_vq *vqs;
+@@ -63,6 +64,27 @@ static inline struct fuse_pqueue *vq_to_
+ 	return &vq_to_fsvq(vq)->fud->pq;
+ }
+ 
++static void release_virtio_fs_obj(struct kref *ref)
++{
++	struct virtio_fs *vfs = container_of(ref, struct virtio_fs, refcount);
++
++	kfree(vfs->vqs);
++	kfree(vfs);
++}
++
++static void virtio_fs_put(struct virtio_fs *fs)
++{
++	mutex_lock(&virtio_fs_mutex);
++	kref_put(&fs->refcount, release_virtio_fs_obj);
++	mutex_unlock(&virtio_fs_mutex);
++}
++
++static void virtio_fs_fiq_release(struct fuse_iqueue *fiq)
++{
++	struct virtio_fs *vfs = fiq->priv;
++	virtio_fs_put(vfs);
++}
++
+ static void virtio_fs_drain_queue(struct virtio_fs_vq *fsvq)
+ {
+ 	WARN_ON(fsvq->in_flight < 0);
+@@ -156,8 +178,10 @@ static struct virtio_fs *virtio_fs_find_
+ 	mutex_lock(&virtio_fs_mutex);
+ 
+ 	list_for_each_entry(fs, &virtio_fs_instances, list) {
+-		if (strcmp(fs->tag, tag) == 0)
++		if (strcmp(fs->tag, tag) == 0) {
++			kref_get(&fs->refcount);
+ 			goto found;
++		}
+ 	}
+ 
+ 	fs = NULL; /* not found */
+@@ -519,6 +543,7 @@ static int virtio_fs_probe(struct virtio
+ 	fs = kzalloc(sizeof(*fs), GFP_KERNEL);
+ 	if (!fs)
+ 		return -ENOMEM;
++	kref_init(&fs->refcount);
+ 	vdev->priv = fs;
+ 
+ 	ret = virtio_fs_read_tag(vdev, fs);
+@@ -570,18 +595,18 @@ static void virtio_fs_remove(struct virt
+ {
+ 	struct virtio_fs *fs = vdev->priv;
+ 
++	mutex_lock(&virtio_fs_mutex);
++	list_del_init(&fs->list);
++	mutex_unlock(&virtio_fs_mutex);
++
+ 	virtio_fs_stop_all_queues(fs);
+ 	virtio_fs_drain_all_queues(fs);
+ 	vdev->config->reset(vdev);
+ 	virtio_fs_cleanup_vqs(vdev, fs);
+ 
+-	mutex_lock(&virtio_fs_mutex);
+-	list_del(&fs->list);
+-	mutex_unlock(&virtio_fs_mutex);
+-
+ 	vdev->priv = NULL;
+-	kfree(fs->vqs);
+-	kfree(fs);
++	/* Put device reference on virtio_fs object */
++	virtio_fs_put(fs);
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
+@@ -932,6 +957,7 @@ const static struct fuse_iqueue_ops virt
+ 	.wake_forget_and_unlock		= virtio_fs_wake_forget_and_unlock,
+ 	.wake_interrupt_and_unlock	= virtio_fs_wake_interrupt_and_unlock,
+ 	.wake_pending_and_unlock	= virtio_fs_wake_pending_and_unlock,
++	.release			= virtio_fs_fiq_release,
+ };
+ 
+ static int virtio_fs_fill_super(struct super_block *sb)
+@@ -1026,7 +1052,9 @@ static void virtio_kill_sb(struct super_
+ 	fuse_kill_sb_anon(sb);
+ 
+ 	/* fuse_kill_sb_anon() must have sent destroy. Stop all queues
+-	 * and drain one more time and free fuse devices.
++	 * and drain one more time and free fuse devices. Freeing fuse
++	 * devices will drop their reference on fuse_conn and that in
++	 * turn will drop its reference on virtio_fs object.
+ 	 */
+ 	virtio_fs_stop_all_queues(vfs);
+ 	virtio_fs_drain_all_queues(vfs);
+@@ -1060,6 +1088,10 @@ static int virtio_fs_get_tree(struct fs_
+ 	struct fuse_conn *fc;
+ 	int err;
+ 
++	/* This gets a reference on virtio_fs object. This ptr gets installed
++	 * in fc->iq->priv. Once fuse_conn is going away, it calls ->put()
++	 * to drop the reference to this object.
++	 */
+ 	fs = virtio_fs_find_instance(fsc->source);
+ 	if (!fs) {
+ 		pr_info("virtio-fs: tag <%s> not found\n", fsc->source);
+@@ -1067,8 +1099,10 @@ static int virtio_fs_get_tree(struct fs_
+ 	}
+ 
+ 	fc = kzalloc(sizeof(struct fuse_conn), GFP_KERNEL);
+-	if (!fc)
++	if (!fc) {
++		virtio_fs_put(fs);
+ 		return -ENOMEM;
++	}
+ 
+ 	fuse_conn_init(fc, get_user_ns(current_user_ns()), &virtio_fs_fiq_ops,
+ 		       fs);
