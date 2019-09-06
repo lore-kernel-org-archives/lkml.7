@@ -2,592 +2,256 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C94C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B14C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:53:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AC2F2082C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:52:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="agmj4dZJ";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BlSXdLlx"
+	by mail.kernel.org (Postfix) with ESMTP id 373D52082C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:53:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404804AbfIFMwB (ORCPT
+        id S2392733AbfIFMxW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 08:52:01 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:51194 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392097AbfIFMwA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 08:52:00 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id EDD07611BE; Fri,  6 Sep 2019 12:51:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567774316;
-        bh=QlV9IIqZD30lxc7FF1drBur+WGBYYXqrYbpYqgFNsrc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=agmj4dZJtRiJIOV4X5Afjc1zOT3KNO88uQYcy4SmZcIA4VgFiHFLmbm57axIN+CXH
-         iAuRlHXz6JiyA5rEQMmZAJelIwl0nywK0PGwpCHbNfVkPvqq4g2mGzTDVQFt0jFdlt
-         ULPvbRZUXufZNH0pm/gmHVQhnU24CmMwscnxJz9U=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id B179D607F4;
-        Fri,  6 Sep 2019 12:51:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567774314;
-        bh=QlV9IIqZD30lxc7FF1drBur+WGBYYXqrYbpYqgFNsrc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BlSXdLlxIfbYhd25OpJ/HcaxR/atEGUJ+5YRFjr6MsF+VpUAgmYOLQuO7FNdGzx6f
-         1Qhl1nv16/Xm4qgrr67Xw0nPt7pqHC9cScOj/CO4KE3JOyN1mHpwUzuI2zatq1W9Rg
-         4r0up51VrS5tRCa60Vz8o10dAl7zh0XYPDkM4XbE=
+        Fri, 6 Sep 2019 08:53:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50808 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732774AbfIFMxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 08:53:21 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 50914883820;
+        Fri,  6 Sep 2019 12:53:20 +0000 (UTC)
+Received: from [10.36.117.162] (ovpn-117-162.ams2.redhat.com [10.36.117.162])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CF36E60BF1;
+        Fri,  6 Sep 2019 12:53:13 +0000 (UTC)
+Subject: Re: [PATCH v2 3/7] mm: Introduce FAULT_FLAG_INTERRUPTIBLE
+To:     Peter Xu <peterx@redhat.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Hugh Dickins <hughd@google.com>,
+        Maya Gokhale <gokhale2@llnl.gov>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Martin Cracauer <cracauer@cons.org>,
+        Marty McFadden <mcfadden8@llnl.gov>, Shaohua Li <shli@fb.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Denis Plotnikov <dplotnikov@virtuozzo.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mel Gorman <mgorman@suse.de>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
+References: <20190905101534.9637-1-peterx@redhat.com>
+ <20190905101534.9637-4-peterx@redhat.com>
+ <0d45ffaf-0588-a068-d361-6a9cb6c71413@redhat.com>
+ <20190906123851.GB8813@xz-x1>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <df8cc623-617f-f14f-d23e-312dbdf05d2e@redhat.com>
+Date:   Fri, 6 Sep 2019 14:53:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20190906123851.GB8813@xz-x1>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Fri, 06 Sep 2019 18:21:54 +0530
-From:   ppvk@codeaurora.org
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, georgi.djakov@linaro.org
-Cc:     asutoshd@codeaurora.org, vbadigan@codeaurora.org,
-        stummala@codeaurora.org, sayalil@codeaurora.org,
-        rampraka@codeaurora.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Subhash Jadavani <subhashj@codeaurora.org>,
-        Andy Gross <agross@kernel.org>
-Subject: Re: [RFC 1/2] mmc: sdhci-msm: Add support for bus bandwidth voting
-In-Reply-To: <1567774037-2344-2-git-send-email-ppvk@codeaurora.org>
-References: <1567774037-2344-1-git-send-email-ppvk@codeaurora.org>
- <1567774037-2344-2-git-send-email-ppvk@codeaurora.org>
-Message-ID: <ae24703de33d4049c451dd4a331f7a5f@codeaurora.org>
-X-Sender: ppvk@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Fri, 06 Sep 2019 12:53:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Georgi Djakov
+On 06.09.19 14:38, Peter Xu wrote:
+> On Fri, Sep 06, 2019 at 11:02:22AM +0200, David Hildenbrand wrote:
+>> On 05.09.19 12:15, Peter Xu wrote:
+>>> handle_userfaultfd() is currently the only one place in the kernel
+>>> page fault procedures that can respond to non-fatal userspace signals.
+>>> It was trying to detect such an allowance by checking against USER &
+>>> KILLABLE flags, which was "un-official".
+>>>
+>>> In this patch, we introduced a new flag (FAULT_FLAG_INTERRUPTIBLE) to
+>>> show that the fault handler allows the fault procedure to respond even
+>>> to non-fatal signals.  Meanwhile, add this new flag to the default
+>>> fault flags so that all the page fault handlers can benefit from the
+>>> new flag.  With that, replacing the userfault check to this one.
+>>>
+>>> Since the line is getting even longer, clean up the fault flags a bit
+>>> too to ease TTY users.
+>>>
+>>> Although we've got a new flag and applied it, we shouldn't have any
+>>> functional change with this patch so far.
+>>>
+>>> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+>>> Signed-off-by: Peter Xu <peterx@redhat.com>
+>>> ---
+>>>  fs/userfaultfd.c   |  4 +---
+>>>  include/linux/mm.h | 39 ++++++++++++++++++++++++++++-----------
+>>>  2 files changed, 29 insertions(+), 14 deletions(-)
+>>>
+>>> diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+>>> index ccbdbd62f0d8..4a8ad2dc2b6f 100644
+>>> --- a/fs/userfaultfd.c
+>>> +++ b/fs/userfaultfd.c
+>>> @@ -462,9 +462,7 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason)
+>>>  	uwq.ctx = ctx;
+>>>  	uwq.waken = false;
+>>>  
+>>> -	return_to_userland =
+>>> -		(vmf->flags & (FAULT_FLAG_USER|FAULT_FLAG_KILLABLE)) ==
+>>> -		(FAULT_FLAG_USER|FAULT_FLAG_KILLABLE);
+>>> +	return_to_userland = vmf->flags & FAULT_FLAG_INTERRUPTIBLE;
+>>>  	blocking_state = return_to_userland ? TASK_INTERRUPTIBLE :
+>>>  			 TASK_KILLABLE;
+>>>  
+>>> diff --git a/include/linux/mm.h b/include/linux/mm.h
+>>> index 57fb5c535f8e..53ec7abb8472 100644
+>>> --- a/include/linux/mm.h
+>>> +++ b/include/linux/mm.h
+>>> @@ -383,22 +383,38 @@ extern unsigned int kobjsize(const void *objp);
+>>>   */
+>>>  extern pgprot_t protection_map[16];
+>>>  
+>>> -#define FAULT_FLAG_WRITE	0x01	/* Fault was a write access */
+>>> -#define FAULT_FLAG_MKWRITE	0x02	/* Fault was mkwrite of existing pte */
+>>> -#define FAULT_FLAG_ALLOW_RETRY	0x04	/* Retry fault if blocking */
+>>> -#define FAULT_FLAG_RETRY_NOWAIT	0x08	/* Don't drop mmap_sem and wait when retrying */
+>>> -#define FAULT_FLAG_KILLABLE	0x10	/* The fault task is in SIGKILL killable region */
+>>> -#define FAULT_FLAG_TRIED	0x20	/* Second try */
+>>> -#define FAULT_FLAG_USER		0x40	/* The fault originated in userspace */
+>>> -#define FAULT_FLAG_REMOTE	0x80	/* faulting for non current tsk/mm */
+>>> -#define FAULT_FLAG_INSTRUCTION  0x100	/* The fault was during an instruction fetch */
+>>> +/**
+>>> + * Fault flag definitions.
+>>> + *
+>>> + * @FAULT_FLAG_WRITE: Fault was a write fault.
+>>> + * @FAULT_FLAG_MKWRITE: Fault was mkwrite of existing PTE.
+>>> + * @FAULT_FLAG_ALLOW_RETRY: Allow to retry the fault if blocked.
+>>> + * @FAULT_FLAG_RETRY_NOWAIT: Don't drop mmap_sem and wait when retrying.
+>>> + * @FAULT_FLAG_KILLABLE: The fault task is in SIGKILL killable region.
+>>> + * @FAULT_FLAG_TRIED: The fault has been tried once.
+>>> + * @FAULT_FLAG_USER: The fault originated in userspace.
+>>> + * @FAULT_FLAG_REMOTE: The fault is not for current task/mm.
+>>> + * @FAULT_FLAG_INSTRUCTION: The fault was during an instruction fetch.
+>>> + * @FAULT_FLAG_INTERRUPTIBLE: The fault can be interrupted by non-fatal signals.
+>>> + */
+>>> +#define FAULT_FLAG_WRITE			0x01
+>>> +#define FAULT_FLAG_MKWRITE			0x02
+>>> +#define FAULT_FLAG_ALLOW_RETRY			0x04
+>>> +#define FAULT_FLAG_RETRY_NOWAIT			0x08
+>>> +#define FAULT_FLAG_KILLABLE			0x10
+>>> +#define FAULT_FLAG_TRIED			0x20
+>>> +#define FAULT_FLAG_USER				0x40
+>>> +#define FAULT_FLAG_REMOTE			0x80
+>>> +#define FAULT_FLAG_INSTRUCTION  		0x100
+>>> +#define FAULT_FLAG_INTERRUPTIBLE		0x200
+>>>  
+>>
+>> I'd probably split off the unrelated doc changes. Just a matter of taste.
+> 
+> The thing is that it's not really a document change but only a format
+> change (when I wanted to add the new macro it's easily getting out of
+> 80 chars so I simply reformatted all the rest to make them look
+> similar).  I'm afraid that could be too trivial to change the format
+> as a single patch, but I can do it if anyone else also thinks it
+> proper.
+> 
+>>
+>>>  /*
+>>>   * The default fault flags that should be used by most of the
+>>>   * arch-specific page fault handlers.
+>>>   */
+>>>  #define FAULT_FLAG_DEFAULT  (FAULT_FLAG_ALLOW_RETRY | \
+>>> -			     FAULT_FLAG_KILLABLE)
+>>> +			     FAULT_FLAG_KILLABLE | \
+>>> +			     FAULT_FLAG_INTERRUPTIBLE)
+>>
+>> So by default, all faults are marked interruptible, also
+>> !FAULT_FLAG_USER. I assume the trick right now is that
+>> handle_userfault() will indeed only be called on user faults and the
+>> flag is used nowhere else ;)
+> 
+> Sorry if this is confusing, but FAULT_FLAG_DEFAULT is just a macro to
+> make the patchset easier so we define this initial flags for most of
+> the archs (say, there can be some arch that does not use this default
+> value, but the fact is most archs are indeed using the same flags
+> hence we define it here now).
+> 
+> And, userfaultfd can also handle kernel faults.  For FAULT_FLAG_USER,
+> it will be set if the fault comes from userspace (in
+> do_user_addr_fault()).
+> 
+Got it, sounds sane to me then.
 
-On 2019-09-06 18:17, Pradeep P V K wrote:
-> Vote for the MSM bus bandwidth required by SDHC driver
-> based on the clock frequency and bus width of the card.
-> Otherwise,the system clocks may run at minimum clock speed
-> and thus affecting the performance.
+>>
+>> Would it make sense to name it FAULT_FLAG_USER_INTERRUPTIBLE, to stress
+>> that the flag only applies to user faults? (or am I missing something
+>> and this could also apply to !user faults somewhen in the future?
 > 
-> This change is based on Georgi Djakov [RFC]
-> (https://lkml.org/lkml/2018/10/11/499)
+> As mentioned above, uffd can handle kernel faults.  And, for what I
+> understand, it's not really directly related to user fault or not at
+> all, instead its more or less match with TASK_{INTERRUPTIBLE|KILLABLE}
+> on what kind of signals we care about during the fault processing.  So
+> it seems to me that it's two different things.
 > 
-> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
-> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
-> ---
->  drivers/mmc/host/sdhci-msm.c | 393 
-> ++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 390 insertions(+), 3 deletions(-)
+>>
+>> (I am no expert on the fault paths yet, so sorry for the silly questions)
 > 
-> diff --git a/drivers/mmc/host/sdhci-msm.c 
-> b/drivers/mmc/host/sdhci-msm.c
-> index b75c82d..71515ca 100644
-> --- a/drivers/mmc/host/sdhci-msm.c
-> +++ b/drivers/mmc/host/sdhci-msm.c
-> @@ -11,6 +11,7 @@
->  #include <linux/mmc/mmc.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/slab.h>
-> +#include <linux/interconnect.h>
->  #include <linux/iopoll.h>
->  #include <linux/regulator/consumer.h>
-> 
-> @@ -122,6 +123,9 @@
->  #define msm_host_writel(msm_host, val, host, offset) \
->  	msm_host->var_ops->msm_writel_relaxed(val, host, offset)
-> 
-> +#define SDHC_DDR "sdhc-ddr"
-> +#define CPU_SDHC "cpu-sdhc"
-> +
->  struct sdhci_msm_offset {
->  	u32 core_hc_mode;
->  	u32 core_mci_data_cnt;
-> @@ -228,6 +232,31 @@ struct sdhci_msm_variant_info {
->  	const struct sdhci_msm_offset *offset;
->  };
-> 
-> +struct msm_bus_vectors {
-> +	uint64_t ab;
-> +	uint64_t ib;
-> +};
-> +
-> +struct msm_bus_path {
-> +	unsigned int num_paths;
-> +	struct msm_bus_vectors *vec;
-> +};
-> +
-> +struct sdhci_msm_bus_vote_data {
-> +	const char *name;
-> +	unsigned int num_usecase;
-> +	struct msm_bus_path *usecase;
-> +
-> +	unsigned int *bw_vecs;
-> +	unsigned int bw_vecs_size;
-> +
-> +	struct icc_path *sdhc_ddr;
-> +	struct icc_path *cpu_sdhc;
-> +
-> +	uint32_t curr_vote;
-> +
-> +};
-> +
->  struct sdhci_msm_host {
->  	struct platform_device *pdev;
->  	void __iomem *core_mem;	/* MSM SDCC mapped address */
-> @@ -253,8 +282,13 @@ struct sdhci_msm_host {
->  	const struct sdhci_msm_offset *offset;
->  	bool use_cdr;
->  	u32 transfer_mode;
-> +	bool skip_bus_bw_voting;
-> +	struct sdhci_msm_bus_vote_data *bus_vote_data;
-> +	struct delayed_work bus_vote_work;
->  };
-> 
-> +static void sdhci_msm_bus_voting(struct sdhci_host *host, u32 enable);
-> +
->  static const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct
-> sdhci_host *host)
->  {
->  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> @@ -1557,6 +1591,8 @@ static void sdhci_msm_set_clock(struct
-> sdhci_host *host, unsigned int clock)
-> 
->  	msm_set_clock_rate_for_bus_mode(host, clock);
->  out:
-> +	if (!msm_host->skip_bus_bw_voting)
-> +		sdhci_msm_bus_voting(host, !!clock);
->  	__sdhci_msm_set_clock(host, clock);
->  }
-> 
-> @@ -1678,6 +1714,341 @@ static void
-> sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
->  	pr_debug("%s: supported caps: 0x%08x\n", mmc_hostname(mmc), caps);
->  }
-> 
-> +static int sdhci_msm_dt_get_array(struct device *dev, const char 
-> *prop_name,
-> +				 u32 **bw_vecs, int *len, u32 size)
-> +{
-> +	int ret = 0;
-> +	struct device_node *np = dev->of_node;
-> +	size_t sz;
-> +	u32 *arr = NULL;
-> +
-> +	if (!of_get_property(np, prop_name, len)) {
-> +		ret = -EINVAL;
-> +		goto out;
-> +	}
-> +	sz = *len = *len / sizeof(*arr);
-> +	if (sz <= 0 || (size > 0 && (sz > size))) {
-> +		dev_err(dev, "%s invalid size\n", prop_name);
-> +		ret = -EINVAL;
-> +		goto out;
-> +	}
-> +
-> +	arr = devm_kzalloc(dev, sz * sizeof(*arr), GFP_KERNEL);
-> +	if (!arr) {
-> +		ret = -ENOMEM;
-> +		goto out;
-> +	}
-> +
-> +	ret = of_property_read_u32_array(np, prop_name, arr, sz);
-> +	if (ret < 0) {
-> +		dev_err(dev, "%s failed reading array %d\n", prop_name, ret);
-> +		goto out;
-> +	}
-> +	*bw_vecs = arr;
-> +out:
-> +	if (ret)
-> +		*len = 0;
-> +	return ret;
-> +}
-> +
-> +/* Returns required bandwidth in Bytes per Sec */
-> +static unsigned long sdhci_get_bw_required(struct sdhci_host *host,
-> +					struct mmc_ios *ios)
-> +{
-> +	unsigned long bw;
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
-> +
-> +	bw = msm_host->clk_rate;
-> +
-> +	if (ios->bus_width == MMC_BUS_WIDTH_4)
-> +		bw /= 2;
-> +	else if (ios->bus_width == MMC_BUS_WIDTH_1)
-> +		bw /= 8;
-> +
-> +	return bw;
-> +}
-> +
-> +static int sdhci_msm_bus_get_vote_for_bw(struct sdhci_msm_host *host,
-> +					   unsigned int bw)
-> +{
-> +	struct sdhci_msm_bus_vote_data *bvd = host->bus_vote_data;
-> +
-> +	unsigned int *table = bvd->bw_vecs;
-> +	unsigned int size = bvd->bw_vecs_size;
-> +	int i;
-> +
-> +	for (i = 0; i < size; i++) {
-> +		if (bw <= table[i])
-> +			break;
-> +	}
-> +
-> +	if (i && (i == size))
-> +		i--;
-> +
-> +	return i;
-> +}
-> +
-> +/*
-> + * This function must be called with host lock acquired.
-> + * Caller of this function should also ensure that msm bus client
-> + * handle is not null.
-> + */
-> +static inline int sdhci_msm_bus_set_vote(struct sdhci_msm_host 
-> *msm_host,
-> +					     int vote,
-> +					     unsigned long *flags)
-> +{
-> +	struct sdhci_host *host =  platform_get_drvdata(msm_host->pdev);
-> +	struct sdhci_msm_bus_vote_data *bvd = msm_host->bus_vote_data;
-> +	struct msm_bus_path *usecase = bvd->usecase;
-> +	struct msm_bus_vectors *vec = usecase[vote].vec;
-> +	int ddr_rc = 0, cpu_rc = 0;
-> +
-> +	if (vote != bvd->curr_vote) {
-> +		spin_unlock_irqrestore(&host->lock, *flags);
-> +		pr_debug("%s: vote:%d sdhc_ddr ab:%llu ib:%llu cpu_sdhc ab:%llu 
-> ib:%llu\n",
-> +				mmc_hostname(host->mmc), vote, vec[0].ab,
-> +				vec[0].ib, vec[1].ab, vec[1].ib);
-> +		ddr_rc = icc_set_bw(bvd->sdhc_ddr, vec[0].ab, vec[0].ib);
-> +		cpu_rc = icc_set_bw(bvd->cpu_sdhc, vec[1].ab, vec[1].ib);
-> +		spin_lock_irqsave(&host->lock, *flags);
-> +		if (ddr_rc || cpu_rc) {
-> +			pr_err("%s: icc_set() failed\n",
-> +				mmc_hostname(host->mmc));
-> +			goto out;
-> +		}
-> +		bvd->curr_vote = vote;
-> +	}
-> +out:
-> +	return cpu_rc;
-> +}
-> +
-> +/*
-> + * Internal work. Work to set 0 bandwidth for msm bus.
-> + */
-> +static void sdhci_msm_bus_work(struct work_struct *work)
-> +{
-> +	struct sdhci_msm_host *msm_host;
-> +	struct sdhci_host *host;
-> +	unsigned long flags;
-> +
-> +	msm_host = container_of(work, struct sdhci_msm_host,
-> +				bus_vote_work.work);
-> +	host =  platform_get_drvdata(msm_host->pdev);
-> +
-> +	/* Check handle and return */
-> +	if (!msm_host->bus_vote_data->sdhc_ddr ||
-> +			!msm_host->bus_vote_data->cpu_sdhc)
-> +		return;
-> +	spin_lock_irqsave(&host->lock, flags);
-> +	/* don't vote for 0 bandwidth if any request is in progress */
-> +	if (!host->mmc->ongoing_mrq)
-> +		sdhci_msm_bus_set_vote(msm_host, 0, &flags);
-> +	else
-> +		pr_warn("Transfer in progress.Skipping bus voting to 0\n");
-> +	spin_unlock_irqrestore(&host->lock, flags);
-> +}
-> +
-> +/*
-> + * This function cancels any scheduled delayed work and sets the bus
-> + * vote based on bw (bandwidth) argument.
-> + */
-> +static void sdhci_msm_bus_cancel_work_and_set_vote(struct sdhci_host 
-> *host,
-> +						unsigned int bw)
-> +{
-> +	int vote;
-> +	unsigned long flags;
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
-> +
-> +	cancel_delayed_work_sync(&msm_host->bus_vote_work);
-> +	spin_lock_irqsave(&host->lock, flags);
-> +	vote = sdhci_msm_bus_get_vote_for_bw(msm_host, bw);
-> +	sdhci_msm_bus_set_vote(msm_host, vote, &flags);
-> +	spin_unlock_irqrestore(&host->lock, flags);
-> +}
-> +
-> +
-> +#define MSM_MMC_BUS_VOTING_DELAY	200 /* msecs */
-> +#define VOTE_ZERO  0
-> +
-> +/* This function queues a work which will set the bandwidth requiement 
-> to 0 */
-> +static void sdhci_msm_bus_queue_work(struct sdhci_host *host)
-> +{
-> +	unsigned long flags;
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
-> +
-> +	spin_lock_irqsave(&host->lock, flags);
-> +	if (msm_host->bus_vote_data->curr_vote != VOTE_ZERO)
-> +		queue_delayed_work(system_wq,
-> +				   &msm_host->bus_vote_work,
-> +				   msecs_to_jiffies(MSM_MMC_BUS_VOTING_DELAY));
-> +	spin_unlock_irqrestore(&host->lock, flags);
-> +}
-> +
-> +static struct sdhci_msm_bus_vote_data
-> *sdhci_msm_get_bus_vote_data(struct device
-> +				       *dev, struct sdhci_msm_host *host)
-> +
-> +{
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct device_node *of_node = dev->of_node;
-> +	struct sdhci_msm_bus_vote_data *bvd = NULL;
-> +	struct msm_bus_path *usecase = NULL;
-> +	int ret = 0, i = 0, j, k, num_paths, len;
-> +	const uint32_t *vec_arr = NULL;
-> +	bool mem_err = false;
-> +
-> +	if (!pdev) {
-> +		dev_err(dev, "Null platform device!\n");
-> +		return NULL;
-> +	}
-> +
-> +	bvd = devm_kzalloc(dev, sizeof(struct sdhci_msm_bus_vote_data),
-> +				GFP_KERNEL);
-> +	if (!bvd) {
-> +		ret = -ENOMEM;
-> +		dev_err(dev, "No sufficient memory!\n");
-> +		return bvd;
-> +	}
-> +	ret = sdhci_msm_dt_get_array(dev, "qcom,bus-bw-vectors-bps",
-> +				&bvd->bw_vecs, &bvd->bw_vecs_size, 0);
-> +	if (ret) {
-> +		dev_info(dev, "No dt property of bus bw. voting defined!\n");
-> +		dev_info(dev, "Skipping Bus BW voting now!!\n");
-> +		host->skip_bus_bw_voting = true;
-> +		if (ret != -EINVAL && ret != -ENOMEM)
-> +			goto free;
-> +		goto err;
-> +	}
-> +
-> +	ret = of_property_read_string(of_node, "qcom,msm-bus,name", 
-> &bvd->name);
-> +	if (ret) {
-> +		dev_err(dev, "Error: (%d) Bus name missing!\n", ret);
-> +		goto err;
-> +	}
-> +
-> +	ret = of_property_read_u32(of_node, "qcom,msm-bus,num-cases",
-> +		&bvd->num_usecase);
-> +	if (ret) {
-> +		dev_err(dev, "Error: num-usecases not found\n");
-> +		goto err;
-> +	}
-> +
-> +	usecase = devm_kzalloc(dev, (sizeof(struct msm_bus_path) *
-> +				   bvd->num_usecase), GFP_KERNEL);
-> +	if (!usecase)
-> +		goto err;
-> +
-> +	ret = of_property_read_u32(of_node, "qcom,msm-bus,num-paths",
-> +				   &num_paths);
-> +	if (ret) {
-> +		dev_err(dev, "Error: num_paths not found\n");
-> +		goto out;
-> +	}
-> +
-> +	vec_arr = of_get_property(of_node, "qcom,msm-bus,vectors-KBps", 
-> &len);
-> +	if (vec_arr == NULL) {
-> +		dev_err(dev, "Error: Vector array not found\n");
-> +		goto out;
-> +	}
-> +
-> +	for (i = 0; i < bvd->num_usecase; i++) {
-> +		usecase[i].num_paths = num_paths;
-> +		usecase[i].vec = devm_kzalloc(dev, num_paths *
-> +					      sizeof(struct msm_bus_vectors),
-> +					      GFP_KERNEL);
-> +		if (!usecase[i].vec) {
-> +			mem_err = true;
-> +			dev_err(dev, "Error: Failed to alloc mem for vectors\n");
-> +			goto out;
-> +		}
-> +		for (j = 0; j < num_paths; j++) {
-> +			int idx = ((i * num_paths) + j) * 2;
-> +
-> +			usecase[i].vec[j].ab = (uint64_t)
-> +				be32_to_cpu(vec_arr[idx]);
-> +			usecase[i].vec[j].ib = (uint64_t)
-> +				be32_to_cpu(vec_arr[idx + 1]);
-> +		}
-> +	}
-> +
-> +	bvd->usecase = usecase;
-> +	return bvd;
-> +out:
-> +	if (mem_err) {
-> +		for (k = i - 1; k >= 0; k--)
-> +			devm_kfree(dev, usecase[k].vec);
-> +	}
-> +	devm_kfree(dev, usecase);
-> +free:
-> +	devm_kfree(dev, bvd->bw_vecs);
-> +err:
-> +	devm_kfree(dev, bvd);
-> +	bvd = NULL;
-> +	return bvd;
-> +}
-> +
-> +static int sdhci_msm_bus_register(struct sdhci_msm_host *host,
-> +				struct platform_device *pdev)
-> +{
-> +	struct sdhci_msm_bus_vote_data *bsd;
-> +	struct device *dev = &pdev->dev;
-> +
-> +	bsd = sdhci_msm_get_bus_vote_data(dev, host);
-> +	if (!bsd) {
-> +		dev_err(&pdev->dev, "Failed: getting bus_scale data\n");
-> +		return PTR_ERR(bsd);
-> +	}
-> +	host->bus_vote_data = bsd;
-> +
-> +	bsd->sdhc_ddr = of_icc_get(&pdev->dev, SDHC_DDR);
-> +	if (IS_ERR(bsd->sdhc_ddr)) {
-> +		dev_err(&pdev->dev, "Error: (%ld) failed getting %s path\n",
-> +			PTR_ERR(bsd->sdhc_ddr), SDHC_DDR);
-> +		return PTR_ERR(bsd->sdhc_ddr);
-> +	}
-> +
-> +	bsd->cpu_sdhc = of_icc_get(&pdev->dev, CPU_SDHC);
-> +	if (IS_ERR(bsd->cpu_sdhc)) {
-> +		dev_err(&pdev->dev, "Error: (%ld) failed getting %s path\n",
-> +			PTR_ERR(bsd->cpu_sdhc), CPU_SDHC);
-> +		return PTR_ERR(bsd->cpu_sdhc);
-> +	}
-> +
-> +	INIT_DELAYED_WORK(&host->bus_vote_work, sdhci_msm_bus_work);
-> +
-> +	return 0;
-> +}
-> +
-> +static void sdhci_msm_bus_unregister(struct device *dev,
-> +				struct sdhci_msm_host *host)
-> +{
-> +	struct sdhci_msm_bus_vote_data *bsd = host->bus_vote_data;
-> +	int i;
-> +
-> +	icc_put(bsd->sdhc_ddr);
-> +	icc_put(bsd->cpu_sdhc);
-> +
-> +	for (i = 0; i < bsd->num_usecase; i++)
-> +		devm_kfree(dev, bsd->usecase[i].vec);
-> +	devm_kfree(dev, bsd->usecase);
-> +	devm_kfree(dev, bsd->bw_vecs);
-> +	devm_kfree(dev, bsd);
-> +}
-> +
-> +static void sdhci_msm_bus_voting(struct sdhci_host *host, u32 enable)
-> +{
-> +	struct mmc_ios *ios = &host->mmc->ios;
-> +	unsigned int bw;
-> +
-> +	bw = sdhci_get_bw_required(host, ios);
-> +	if (enable)
-> +		sdhci_msm_bus_cancel_work_and_set_vote(host, bw);
-> +	else
-> +		sdhci_msm_bus_queue_work(host);
-> +}
-> +
->  static const struct sdhci_msm_variant_ops mci_var_ops = {
->  	.msm_readl_relaxed = sdhci_msm_mci_variant_readl_relaxed,
->  	.msm_writel_relaxed = sdhci_msm_mci_variant_writel_relaxed,
-> @@ -1839,6 +2210,13 @@ static int sdhci_msm_probe(struct 
-> platform_device *pdev)
->  		dev_warn(&pdev->dev, "TCXO clk not present (%d)\n", ret);
->  	}
-> 
-> +	ret = sdhci_msm_bus_register(msm_host, pdev);
-> +	if (ret && !msm_host->skip_bus_bw_voting)
-> +		goto clk_disable;
-> +
-> +	if (!msm_host->skip_bus_bw_voting)
-> +		sdhci_msm_bus_voting(host, 1);
-> +
->  	if (!msm_host->mci_removed) {
->  		core_memres = platform_get_resource(pdev, IORESOURCE_MEM, 1);
->  		msm_host->core_mem = devm_ioremap_resource(&pdev->dev,
-> @@ -1846,7 +2224,7 @@ static int sdhci_msm_probe(struct platform_device 
-> *pdev)
-> 
->  		if (IS_ERR(msm_host->core_mem)) {
->  			ret = PTR_ERR(msm_host->core_mem);
-> -			goto clk_disable;
-> +			goto bus_unregister;
->  		}
->  	}
-> 
-> @@ -1918,7 +2296,7 @@ static int sdhci_msm_probe(struct platform_device 
-> *pdev)
->  	msm_host->pwr_irq = platform_get_irq_byname(pdev, "pwr_irq");
->  	if (msm_host->pwr_irq < 0) {
->  		ret = msm_host->pwr_irq;
-> -		goto clk_disable;
-> +		goto bus_unregister;
->  	}
-> 
->  	sdhci_msm_init_pwr_irq_wait(msm_host);
-> @@ -1931,7 +2309,7 @@ static int sdhci_msm_probe(struct platform_device 
-> *pdev)
->  					dev_name(&pdev->dev), host);
->  	if (ret) {
->  		dev_err(&pdev->dev, "Request IRQ failed (%d)\n", ret);
-> -		goto clk_disable;
-> +		goto bus_unregister;
->  	}
-> 
->  	pm_runtime_get_noresume(&pdev->dev);
-> @@ -1956,6 +2334,11 @@ static int sdhci_msm_probe(struct 
-> platform_device *pdev)
->  	pm_runtime_disable(&pdev->dev);
->  	pm_runtime_set_suspended(&pdev->dev);
->  	pm_runtime_put_noidle(&pdev->dev);
-> +bus_unregister:
-> +	if (!msm_host->skip_bus_bw_voting) {
-> +		sdhci_msm_bus_cancel_work_and_set_vote(host, 0);
-> +		sdhci_msm_bus_unregister(&pdev->dev, msm_host);
-> +	}
->  clk_disable:
->  	clk_bulk_disable_unprepare(ARRAY_SIZE(msm_host->bulk_clks),
->  				   msm_host->bulk_clks);
-> @@ -1985,6 +2368,10 @@ static int sdhci_msm_remove(struct 
-> platform_device *pdev)
->  				   msm_host->bulk_clks);
->  	if (!IS_ERR(msm_host->bus_clk))
->  		clk_disable_unprepare(msm_host->bus_clk);
-> +	if (!msm_host->skip_bus_bw_voting) {
-> +		sdhci_msm_bus_cancel_work_and_set_vote(host, 0);
-> +		sdhci_msm_bus_unregister(&pdev->dev, msm_host);
-> +	}
->  	sdhci_pltfm_free(pdev);
->  	return 0;
->  }
+> (I only hope that I'm not providing silly answers. :)
+
+I highly doubt it :) Thanks!
+
+-- 
+
+Thanks,
+
+David / dhildenb
