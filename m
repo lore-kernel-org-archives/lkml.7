@@ -2,80 +2,73 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 392FEC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 21:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8309C43140
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 21:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 182092070C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 21:19:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A139B2173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 21:20:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567804835;
+	bh=MQt++sVNBB2fzbH/p8lHsEpraval7qpthWJQ2mg7J/k=;
+	h=In-Reply-To:References:To:From:Cc:Subject:Date:List-ID:From;
+	b=kILotCH9bc7hAmomWDtruvcHgFlw9gp83egc5+UmWSsZDqG28Vl+fmUNrdoCJTjwV
+	 had3wftrvsl+Btx9d39yQUfA3CRwYId82rkd0p/nAt/2BKISiNbDB29/kHAbksN9ak
+	 aPXxnUYMzDKiM2PArHY2JY4/uwNIMLScbA2Kuv4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403945AbfIFVTQ (ORCPT
+        id S2404063AbfIFVUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 17:19:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49602 "EHLO mx1.redhat.com"
+        Fri, 6 Sep 2019 17:20:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388619AbfIFVTP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 17:19:15 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S2388619AbfIFVUe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 17:20:34 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 067E2195DB80;
-        Fri,  6 Sep 2019 21:19:15 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6272C5D712;
-        Fri,  6 Sep 2019 21:19:11 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20190906174102.GB2819@mit.edu>
-References: <20190906174102.GB2819@mit.edu> <5396.1567719164@warthog.procyon.org.uk> <CAHk-=wgbCXea1a9OTWgMMvcsCGGiNiPp+ty-edZrBWn63NCYdw@mail.gmail.com> <14883.1567725508@warthog.procyon.org.uk> <CAHk-=wjt2Eb+yEDOcQwCa0SrZ4cWu967OtQG8Vz21c=n5ZP1Nw@mail.gmail.com> <27732.1567764557@warthog.procyon.org.uk> <CAHk-=wiR1fpahgKuxSOQY6OfgjWD+MKz8UF6qUQ6V_y2TC_V6w@mail.gmail.com> <CAHk-=wioHmz69394xKRqFkhK8si86P_704KgcwjKxawLAYAiug@mail.gmail.com> <8e60555e-9247-e03f-e8b4-1d31f70f1221@redhat.com> <CAHk-=wg6=qhw0-F=2_8y=VdT+fj8k7G1+t2XNSkRYimXhampVg@mail.gmail.com> <CAHk-=wjaSzdzYNuQXUSZNkT75Wmfw2v96tekgnV8nOwBQ3h0ig@mail.gmail.com>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     dhowells@redhat.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Ray Strode <rstrode@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Ray, Debarshi" <debarshi.ray@gmail.com>,
-        Robbie Harwood <rharwood@redhat.com>
-Subject: Re: Why add the general notification queue and its sources
+        by mail.kernel.org (Postfix) with ESMTPSA id E6D002070C;
+        Fri,  6 Sep 2019 21:20:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567804834;
+        bh=MQt++sVNBB2fzbH/p8lHsEpraval7qpthWJQ2mg7J/k=;
+        h=In-Reply-To:References:To:From:Cc:Subject:Date:From;
+        b=EqJe/rsxG28z3OlZyW6hNJXnxqdnkuKY2us5bqWi8O6pFdveNEugWZ3i3SRE/tDOr
+         qxVzhWXSx3LtazqgVHz4pdnKzP/QUj3TNviWsTKyaDi/a4KQkvArJj+/cqG6NuqnfE
+         sKQSdB4kTDa/I/44zDFi/UKTstRtzYIqCJfNJhtA=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <24429.1567804750.1@warthog.procyon.org.uk>
-Date:   Fri, 06 Sep 2019 22:19:10 +0100
-Message-ID: <24430.1567804750@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Fri, 06 Sep 2019 21:19:15 +0000 (UTC)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190703162700.32091-1-huangfq.daxian@gmail.com>
+References: <20190703162700.32091-1-huangfq.daxian@gmail.com>
+To:     Fuqian Huang <huangfq.daxian@gmail.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Tero Kristo <t-kristo@ti.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-omap@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Fuqian Huang <huangfq.daxian@gmail.com>
+Subject: Re: [PATCH v2 05/35] clk/ti: Use kmemdup rather than duplicating its implementation
+User-Agent: alot/0.8.1
+Date:   Fri, 06 Sep 2019 14:20:33 -0700
+Message-Id: <20190906212033.E6D002070C@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Theodore Y. Ts'o <tytso@mit.edu> wrote:
+Quoting Fuqian Huang (2019-07-03 09:27:00)
+> kmemdup is introduced to duplicate a region of memory in a neat way.
+> Rather than kmalloc/kzalloc + memcpy, which the programmer needs to
+> write the size twice (sometimes lead to mistakes), kmemdup improves
+> readability, leads to smaller code and also reduce the chances of mistake=
+s.
+> Suggestion to use kmemdup rather than using kmalloc/kzalloc + memcpy.
+>=20
+> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+> ---
 
-> Something else which we should consider up front is how to handle the
-> case where you have multiple userspace processes that want to
-> subscribe to the same notification.
+Applied to clk-next
 
-I have that.
-
-> This also implies that we'll need to have some kind of standard header
-> at the beginning to specify the source of a particular notification
-> message.
-
-That too.
-
-David
