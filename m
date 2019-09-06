@@ -2,91 +2,97 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3334DC00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4BD5C00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2ABD208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:21:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567790507;
-	bh=ADje3siOrKc3kc72eJWckxUuVI+/07TKsbTBTdCEemg=;
-	h=In-Reply-To:References:To:From:Cc:Subject:Date:List-ID:From;
-	b=je6OAxiOP/ffUmOS/TPPLIxRGCpfoAnThxwZQxpF8Su7Ap1kwjWeYVU/91rBL17IE
-	 7qQx7IM2V0/3NIs1nEaZIq1E5O7giqHF2VCmDxDrgCOoOKCnUEL4YjwNiwPUlTKhJD
-	 orS1oaf2eFGyveFK2pvoBWT/IVA28/7IR/jA5OU8=
+	by mail.kernel.org (Postfix) with ESMTP id 8E18920838
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:24:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391160AbfIFRVq (ORCPT
+        id S2404218AbfIFRYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 13:21:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35514 "EHLO mail.kernel.org"
+        Fri, 6 Sep 2019 13:24:08 -0400
+Received: from muru.com ([72.249.23.125]:60044 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729928AbfIFRVq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 13:21:46 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAD3C20838;
-        Fri,  6 Sep 2019 17:21:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567790505;
-        bh=ADje3siOrKc3kc72eJWckxUuVI+/07TKsbTBTdCEemg=;
-        h=In-Reply-To:References:To:From:Cc:Subject:Date:From;
-        b=F6Gg7R7VzPr/ErhXep+secgJOYEBq4w1EPvGI9pGvgXLJyGo8svrm/oW7drg/3L4u
-         l3sPzoyhGbENPNLTSVFQLrEjB5xpS/XsulalWsinGBLJ2kG5JvxneKC7kQS/BDAewx
-         9I6tlGM8NyofUoWppoluz4rzEsTAz6npxf9yJ2Fk=
-Content-Type: text/plain; charset="utf-8"
+        id S1729928AbfIFRYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 13:24:08 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 560A580CC;
+        Fri,  6 Sep 2019 17:24:36 +0000 (UTC)
+Date:   Fri, 6 Sep 2019 10:24:03 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        =?utf-8?B?QW5kcsOp?= Roth <neolynx@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+Subject: Re: [RFC v2 3/3] ARM: dts: omap3: bulk convert compatible to be
+ explicitly ti,omap3430 or ti,omap36xx
+Message-ID: <20190906172403.GG52127@atomide.com>
+References: <cover.1567587220.git.hns@goldelico.com>
+ <a2b56edcada7b9000a6e906387a02c0ee42681db.1567587220.git.hns@goldelico.com>
+ <20190905142734.GV52127@atomide.com>
+ <4BC39938-D63E-4BDC-BA28-5132F77F602D@goldelico.com>
+ <20190906154732.GC52127@atomide.com>
+ <8C8644AC-FA12-4D26-B96A-76B78798612A@goldelico.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1566855676-11510-1-git-send-email-peng.fan@nxp.com>
-References: <1566855676-11510-1-git-send-email-peng.fan@nxp.com>
-To:     "festevam@gmail.com" <festevam@gmail.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>, Abel Vesa <abel.vesa@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH V2 1/4] clk: imx: pll14xx: avoid glitch when set rate
-User-Agent: alot/0.8.1
-Date:   Fri, 06 Sep 2019 10:21:45 -0700
-Message-Id: <20190906172145.CAD3C20838@mail.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8C8644AC-FA12-4D26-B96A-76B78798612A@goldelico.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Peng Fan (2019-08-26 02:42:14)
-> From: Peng Fan <peng.fan@nxp.com>
->=20
-> According to PLL1443XA and PLL1416X spec,
-> "When BYPASS is 0 and RESETB is changed from 0 to 1, FOUT starts to
-> output unstable clock until lock time passes. PLL1416X/PLL1443XA may
-> generate a glitch at FOUT."
->=20
-> So set BYPASS when RESETB is changed from 0 to 1 to avoid glitch.
-> In the end of set rate, BYPASS will be cleared.
->=20
-> When prepare clock, also need to take care to avoid glitch. So
-> we also follow Spec to set BYPASS before RESETB changed from 0 to 1.
-> And add a check if the RESETB is already 0, directly return 0;
->=20
-> Fixes: 8646d4dcc7fb ("clk: imx: Add PLLs driver for imx8mm soc")
-> Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
+* H. Nikolaus Schaller <hns@goldelico.com> [190906 17:09]:
+> for i in 3430 34xx 3630 36xx; do echo $i $(fgrep '"'ti,omap$i'"' arch/arm/boot/dts/*.dts* | wc -l); done
+> 
+> 3430 12
+> 34xx 28
+> 3630 3
+> 36xx 23
+> 
+> which would indicate that 34xx and 36xx are more common.
 
-Please make cover letters for multi-patch series.
+Right, but the xx variants are against the device tree naming and
+that's why we should get rid of them in the dts. The compatible
+should be named after the first instance like "ti,omap3430" and
+similar devices can just use that.
 
+> BTW there is also some code that does special SoC detection based on
+> soc_device_match(), mainly in omapdrm/dss.
+> 
+> If we were to use this mechanism in the ti-cpufreq driver we could
+> match it to ti,omap3 and could avoid all these changes.
+> 
+> But make it less maintainable and code more complex.
+
+Hmm right, yeah using soc_device_match() would remove this issue.
+It might be worth doing as these SoC variants do not change
+much and the code should not need updating. Up to you to
+decide.
+
+> I'll also take a look at omap.txt bindings since that likely needs
+> an update as well to better describe what the official ones are
+> and which are legacy.
+
+OK. Just limit the compatible changes to the ones that
+need to be modified for this series, the rest can be
+done with a separate patches.
+
+Regards,
+
+Tony
