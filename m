@@ -2,81 +2,91 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0575DC00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2A3C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9EB820842
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:30:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567791037;
-	bh=i1CVD4eeoDs3jI2oDy7B58p/ldJyg1fEXzVadkF+/ho=;
-	h=In-Reply-To:References:To:From:Cc:Subject:Date:List-ID:From;
-	b=z4X30rQHN1aWNManZu8RNKkrEO9TUqJGbF+BD0gL25MhiXQDaxf32CjQSO8OUYtWx
-	 NmpHweZ6VM7elP50rwqtbmaZpt52kdeFiModBnB/Sk432kmc8+5yqTV/TPTdBtziv6
-	 7diGuE5X/2xugQrEB8UHzaYIszFLnOyHXTGkT7x0=
+	by mail.kernel.org (Postfix) with ESMTP id 292C0206A1
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:33:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395199AbfIFRah (ORCPT
+        id S2395210AbfIFRdr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 13:30:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38014 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732789AbfIFRag (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 13:30:36 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE16520838;
-        Fri,  6 Sep 2019 17:30:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567791035;
-        bh=i1CVD4eeoDs3jI2oDy7B58p/ldJyg1fEXzVadkF+/ho=;
-        h=In-Reply-To:References:To:From:Cc:Subject:Date:From;
-        b=YrGEIBTNgkBjx5GuhaHqy+wgb//ReGDHpTZUKwCygfqSMFfFJBuv43BH/lnRMCMHQ
-         DAJyo4qze6+djqt5qS5MwloqpXLLNNL1Evy2Kz7zgKalMT+sqGnoiXkIVoEwfB6Pnq
-         CMfLoNPj3oLg+kd4lLrsS1V3Fa4JiziCQaK2PYq8=
-Content-Type: text/plain; charset="utf-8"
+        Fri, 6 Sep 2019 13:33:47 -0400
+Received: from smtprelay0102.hostedemail.com ([216.40.44.102]:41097 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727381AbfIFRdq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 13:33:46 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 11459100E86C4;
+        Fri,  6 Sep 2019 17:33:45 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: shape57_207efb1258f13
+X-Filterd-Recvd-Size: 2276
+Received: from XPS-9350.home (unknown [47.151.152.152])
+        (Authenticated sender: joe@perches.com)
+        by omf09.hostedemail.com (Postfix) with ESMTPA;
+        Fri,  6 Sep 2019 17:33:43 +0000 (UTC)
+Message-ID: <9d30210a2d024aae4c36c8995019cdeab29e1e19.camel@perches.com>
+Subject: Re: [PATCH] docs: license-rules.txt: cover SPDX headers on Python
+ scripts
+From:   Joe Perches <joe@perches.com>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Jessica Yu <jeyu@kernel.org>,
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        Thomas Gleixner <tglx@linutronix.de>, linux-doc@vger.kernel.org
+Date:   Fri, 06 Sep 2019 10:33:42 -0700
+In-Reply-To: <20190906083457.7e7934ec@coco.lan>
+References: <20190905055614.7958918b@coco.lan>
+         <88e638eb959095ab6657d295f9f8c27169569bf2.1567675272.git.mchehab+samsung@kernel.org>
+         <20190905092703.GA30899@kroah.com> <20190905090701.37dcf75e@coco.lan>
+         <b32c2e46b91e7bcda2a9bd140673f06d71b2487a.camel@perches.com>
+         <20190906083457.7e7934ec@coco.lan>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <alpine.DEB.2.21.1908081809160.2995@hadrien>
-References: <alpine.DEB.2.21.1908081809160.2995@hadrien>
-To:     Jonas Gorski <jonas.gorski@gmail.com>,
-        Julia Lawall <julia.lawall@lip6.fr>
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        Michael Turquette <mturquette@baylibre.com>,
-        Philippe Mathieu-Daud?? <f4bug@amsat.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        linux-kernel@vger.kernel.org, kbuild-all@01.org
-Subject: Re: [PATCH] clk: fix devm_platform_ioremap_resource.cocci warnings
-User-Agent: alot/0.8.1
-Date:   Fri, 06 Sep 2019 10:30:34 -0700
-Message-Id: <20190906173035.BE16520838@mail.kernel.org>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Julia Lawall (2019-08-08 09:10:53)
-> From: kbuild test robot <lkp@intel.com>
->=20
-> drivers/clk/bcm/clk-bcm63xx-gate.c:174:1-9: WARNING: Use devm_platform_io=
-remap_resource for hw -> regs
->=20
->  Use devm_platform_ioremap_resource helper which wraps
->  platform_get_resource() and devm_ioremap_resource() together.
->=20
-> Generated by: scripts/coccinelle/api/devm_platform_ioremap_resource.cocci
->=20
-> Fixes: 1c099779c1e2 ("clk: add BCM63XX gated clock controller driver")
-> CC: Jonas Gorski <jonas.gorski@gmail.com>
-> Signed-off-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Julia Lawall <julia.lawall@lip6.fr>
-> ---
+On Fri, 2019-09-06 at 08:34 -0300, Mauro Carvalho Chehab wrote:
+> I did some changes on it, plus one change at the pedantic mode of
+> scripts/spdxcheck.py, and placed the corresponding patches at:
+> 
+> 	https://git.linuxtv.org/mchehab/experimental.git/log/?h=spdx_pedantic
 
-Applied to clk-next
+Your script needs a modification of this line:
+
+    $spdx = $1 if m/(SPDX-License-Identifier:.*)/;
+
+This is on $_ and not $spdx.
+
+This line needs to be:
+
+    $spdx = $1 if $spdx =~ m/(SPDX-License-Identifier:.*)/;
+
+Otherwise the script produces:
+---
+diff --git a/tools/perf/util/rlimit.h b/tools/perf/util/rlimit.h
+index 9f59d8e..5d975b9 100644
+--- a/tools/perf/util/rlimit.h
++++ b/tools/perf/util/rlimit.h
+@@ -1,6 +1,6 @@
++/* SPDX-License-Identifier: LGPL-2.1 */ */
+ #ifndef __PERF_RLIMIT_H_
+ #define __PERF_RLIMIT_H_
+-/* SPDX-License-Identifier: LGPL-2.1 */
+ 
+ void rlimit__bump_memlock(void);
+ #endif // __PERF_RLIMIT_H_
+
 
