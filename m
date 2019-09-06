@@ -2,127 +2,182 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27616C43140
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2217CC00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 008E120640
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:15:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567790109;
-	bh=Pdd5X5KdmhTY3zVAeyGvUCWFX8Plc6Z4m96rFXEwVAk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=I/geKYwdum12C4QoAyyKY3O4YSq9yyXmSjM2LeOpB7kGieezlU8LZsbgXyZ+lIkZu
-	 79A8kOH+5ZIyQChvuPG1uBtsXAvt510Fluc3fhqhjG99vR4HBOu0vxmSVQTSFbDJs0
-	 6BTRUT7/yyf4SAdO3lnPmEkuitGfpnb0fJUFMzhM=
+	by mail.kernel.org (Postfix) with ESMTP id EC017218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:15:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="gvGNNYDM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404086AbfIFRPI (ORCPT
+        id S2404311AbfIFRPX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 13:15:08 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:37801 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391743AbfIFRPH (ORCPT
+        Fri, 6 Sep 2019 13:15:23 -0400
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.82]:21650 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391025AbfIFRPW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 13:15:07 -0400
-Received: by mail-lf1-f65.google.com with SMTP id w67so5658922lff.4
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 10:15:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HgnD7xuPPV7kJPJv1y/oxrmL+dxJJMuTrQ4Q4FChOdU=;
-        b=S6FXIRgesHQioG8oGxLk5Tjwzb4SPiDI6TQkN/1PfVNUkJMeUM47+DjxmFZZnsgnqF
-         aVUh5gjMjdVeG3Ez1LdJPa9NKOGaCIHQumkrSOBf3OS+YC+yfMLrM6/zSsHJRG8ghrAg
-         d5Mr3bY5beGZhlJwy9YNIxLVtQzi4ydOFbhE4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HgnD7xuPPV7kJPJv1y/oxrmL+dxJJMuTrQ4Q4FChOdU=;
-        b=U+BTVZN0IjbhzTgYTZtnueRL68kLIH02P0o/lIbwAvrZCdQTgGfEK76Ilvkcym1C3p
-         TItrRU+Q1PFxw4XJayvQQWJ/NJdFHM/pVpHp0g0J5AFOPxETX+HFIxyGTisROvG2DFT/
-         z9TPdr6aNAj9WABlATWj5p+VzRYStrPZfoTdZNt4BkyBau90SnEb7H0vqKoBXhr7yZNj
-         uTawR8CEdLziqL46YQ0Iyw5WWx/X4fHaCqcEI9V/0v8UjEQVtPD6f/yyUFbNN+BxfYQ9
-         9F6s+T7hgpdcspvalOaPEzJK1e/jvXHYq1Z2wYfkOLyzX9CwjC/c/qkEDVjHialjwRna
-         DSHQ==
-X-Gm-Message-State: APjAAAUt3TsQNdtNu3Qkucg4VpE3EZ7HhlxJxOeY6gJLH88FS5SaChi+
-        To54vg9svr8/weXurnFTB/H6toKpcjM=
-X-Google-Smtp-Source: APXvYqzYttjOzAmLxDFvCZe3eTCLxGkCJkkWw+ooO+i8Pe6hbwix5URjneQVV1NDCbBFddvS2gltlQ==
-X-Received: by 2002:a19:431e:: with SMTP id q30mr7063547lfa.171.1567790105504;
-        Fri, 06 Sep 2019 10:15:05 -0700 (PDT)
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
-        by smtp.gmail.com with ESMTPSA id p27sm1247842lfo.95.2019.09.06.10.15.04
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Sep 2019 10:15:04 -0700 (PDT)
-Received: by mail-lj1-f179.google.com with SMTP id t14so6701836lji.4
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 10:15:04 -0700 (PDT)
-X-Received: by 2002:a2e:8507:: with SMTP id j7mr6626752lji.156.1567790104003;
- Fri, 06 Sep 2019 10:15:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <156763534546.18676.3530557439501101639.stgit@warthog.procyon.org.uk>
- <CAHk-=wh5ZNE9pBwrnr5MX3iqkUP4nspz17rtozrSxs5-OGygNw@mail.gmail.com>
- <17703.1567702907@warthog.procyon.org.uk> <CAHk-=wjQ5Fpv0D7rxX0W=obx9xoOAxJ_Cr+pGCYOAi2S9FiCNg@mail.gmail.com>
- <CAKCoTu7ms_Mr-q08d9XB3uascpzwBa5LF9JTT2aq8uUsoFE8aQ@mail.gmail.com>
- <CAHk-=wjcsxQ8QB_v=cwBQw4pkJg7pp-bBsdWyPivFO_OeF-y+g@mail.gmail.com>
- <5396.1567719164@warthog.procyon.org.uk> <CAHk-=wgbCXea1a9OTWgMMvcsCGGiNiPp+ty-edZrBWn63NCYdw@mail.gmail.com>
- <14883.1567725508@warthog.procyon.org.uk> <CAHk-=wjt2Eb+yEDOcQwCa0SrZ4cWu967OtQG8Vz21c=n5ZP1Nw@mail.gmail.com>
- <27732.1567764557@warthog.procyon.org.uk> <CAHk-=wiR1fpahgKuxSOQY6OfgjWD+MKz8UF6qUQ6V_y2TC_V6w@mail.gmail.com>
- <CAHk-=wioHmz69394xKRqFkhK8si86P_704KgcwjKxawLAYAiug@mail.gmail.com>
- <8e60555e-9247-e03f-e8b4-1d31f70f1221@redhat.com> <CAHk-=wg6=qhw0-F=2_8y=VdT+fj8k7G1+t2XNSkRYimXhampVg@mail.gmail.com>
-In-Reply-To: <CAHk-=wg6=qhw0-F=2_8y=VdT+fj8k7G1+t2XNSkRYimXhampVg@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 6 Sep 2019 10:14:47 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjaSzdzYNuQXUSZNkT75Wmfw2v96tekgnV8nOwBQ3h0ig@mail.gmail.com>
-Message-ID: <CAHk-=wjaSzdzYNuQXUSZNkT75Wmfw2v96tekgnV8nOwBQ3h0ig@mail.gmail.com>
-Subject: Re: Why add the general notification queue and its sources
-To:     Steven Whitehouse <swhiteho@redhat.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        Ray Strode <rstrode@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Ray, Debarshi" <debarshi.ray@gmail.com>,
-        Robbie Harwood <rharwood@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 6 Sep 2019 13:15:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1567790117;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=buKu5hjInnzvyOfqmb2TKwkajlRXIz+/+dwMu1dYtdI=;
+        b=gvGNNYDM7OqBA/fDLh2AEI0mrpwjWaGb27FiVrX/9t4apz96jJVq/is3Yqbn0rYnCI
+        ccIw14IVpYjDUeV7si/GmkeJj0O1UYPise8Zjt28NQlB6q3j/phKZnR0PZSi+jMRBf6/
+        9OC/8TBaceJQStHg5MgaCCjFyiF0o3xKnQMRTXP6ZAesEVuwfo4efkR69jedPrgDTv0b
+        gGvDl19qR75U0Uuq7A32rBFz2NhfgS3jha2VpRo0Vj/3oAFBDs7OCrQ6m5FUlx2WbJ33
+        iSXrWSru2OPPo6sQPorc1vAS0FuCfeLM5Z3g22Jhhxw8pYPBNl/iMLj/rXNJEVYg5CVy
+        zGUg==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/PqwDqp5w=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 44.27.0 DYNA|AUTH)
+        with ESMTPSA id u036f9v86HF9pfI
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Fri, 6 Sep 2019 19:15:09 +0200 (CEST)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [RFC v2 3/3] ARM: dts: omap3: bulk convert compatible to be explicitly ti,omap3430 or ti,omap36xx
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <8C8644AC-FA12-4D26-B96A-76B78798612A@goldelico.com>
+Date:   Fri, 6 Sep 2019 19:15:09 +0200
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        =?utf-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <2BA36283-F867-44C0-8AAA-B7CCFA616C8D@goldelico.com>
+References: <cover.1567587220.git.hns@goldelico.com> <a2b56edcada7b9000a6e906387a02c0ee42681db.1567587220.git.hns@goldelico.com> <20190905142734.GV52127@atomide.com> <4BC39938-D63E-4BDC-BA28-5132F77F602D@goldelico.com> <20190906154732.GC52127@atomide.com> <8C8644AC-FA12-4D26-B96A-76B78798612A@goldelico.com>
+To:     Tony Lindgren <tony@atomide.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 6, 2019 at 10:07 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> Hmm. Maybe somebody can come up with a good legacy signaling solution
-> (and "just use another pipe for error notification and OOB data" for
-> the first one may _work_, but that sounds pretty hacky and just not
-> very convenient).
 
-... actually, maybe the trivial solution for at least some prototyping
-cases is to make any user mode writers never drop messages. Don't use
-a non-blocking fd for the write direction.
+> Am 06.09.2019 um 19:08 schrieb H. Nikolaus Schaller =
+<hns@goldelico.com>:
+>=20
+> Hi Tony,
+>=20
+>> Am 06.09.2019 um 17:47 schrieb Tony Lindgren <tony@atomide.com>:
+>>=20
+>> * H. Nikolaus Schaller <hns@goldelico.com> [190906 07:53]:
+>>>> Am 05.09.2019 um 16:27 schrieb Tony Lindgren <tony@atomide.com>:
+>>>> compatible =3D "ti,omap3-ldp", "ti,omap3430", "ti,omap34xx", =
+"ti,omap3";
+>>>=20
+>>> After thinking a little about the whole topic the main rule of this =
+change must be:
+>>>=20
+>>> * do not break any existing in-tree DTS
+>>> 	=3D> only *add* to compatible what we need to distinguish =
+between omap34 and omap36
+>>>=20
+>>> * additions shall only follow new scheme
+>>> 	=3D> we only add "ti,omap34xx" or "ti,omap36xx"
+>>>          but neither "ti,omap3630" nor "ti,omap3430"
+>>=20
+>> Sorry I don't follow you on this one.. We should always add =
+"ti,omap3630"
+>> where "ti,omap36xx" is currently used so we can eventually get rid of
+>> "ti,omap36xx". And the same for 34xx.
+>=20
+> Ah, ok now I see.
+>=20
+> You want to make the "ti,omap3630" the official one and "ti,omap36xx" =
+legacy.
+> It is probably an arbitrary choice if we want to get rid of the xx or =
+the 30.
+>=20
+> I had thought to do it the other way round because I had done this =
+statistics:
+>=20
+> for i in 3430 34xx 3630 36xx; do echo $i $(fgrep '"'ti,omap$i'"' =
+arch/arm/boot/dts/*.dts* | wc -l); done
+>=20
+> 3430 12
+> 34xx 28
+> 3630 3
+> 36xx 23
 
-That's obviously *not* acceptable for a kernel writer, and it's not
-acceptable for an actual system daemon writer (that you could block by
-just not reading the notifications), but it's certainly acceptable for
-the "let's prototype having kernel support for /proc/mounts
-notifications using a local thread that just polls for it every few
-seconds".
+sorry, here is the correct result. I had some .bak files sitting around:
 
-So at least for _some_ prototypes you can probably just ignore the
-overflow issue. It won't get you full test coverage, but it will get
-you a working legacy solution and a "look, if we have kernel support
-for this, we can do better".
+3430 12
+34xx 5
+3630 3
+36xx 23
 
-                 Linus
+> which would indicate that 34xx and 36xx are more common.
+>=20
+>>> * cover some out-of-tree DTS
+>>> 	=3D> make the ti-cpufreq driver still match "ti,omap3430" or =
+"ti,omap3630"
+>>> 	   even if this duplicates compatibility
+>>>=20
+>>> This would mean that the logicpd-som-lv-37xx-devkit.dts gets the =
+additional "ti,omap36xx"
+>>> while the omap3-ldp.dts would only get an "ti,omap34xx" but no =
+"ti,omap3430" (since we
+>>> do not use it anywhere).
+>>>=20
+>>> Could you agree on this approach?
+>>=20
+>> Yeah sounds like logicpd-som-lv-37xx-devkit.dts currently still needs
+>> "ti,omap36xx" for now.
+>>=20
+>> If modifying omap3-ldp.dts, also add "ti,omap3430" in additon to
+>> "ti,omap34xx" that it already has.
+>>=20
+>> So basically let's assume the following:
+>>=20
+>> "ti,omap3430" =3D=3D "ti,omap34xx"
+>> "ti,omap3630" =3D=3D "ti,omap36xx"
+>>=20
+>> This means code needs to parse both.
+>=20
+> Yes, it already does everywhere.
+>=20
+> BTW there is also some code that does special SoC detection based on
+> soc_device_match(), mainly in omapdrm/dss.
+>=20
+> If we were to use this mechanism in the ti-cpufreq driver we could
+> match it to ti,omap3 and could avoid all these changes.
+>=20
+> But make it less maintainable and code more complex.
+>=20
+>>=20
+>> And eventually we just drop the "xx" variants.
+>=20
+>>=20
+>> So while patching compatibles, let's also update for this to
+>> avoid multiple patches churning the same compatibles over and
+>> over.
+>=20
+> Ok. I'll rework the patch so that we never add "ti,34xx" or "ti,36xx"
+> but add "ti,3430" or "ti,3630" if missing.
+>=20
+> I'll also take a look at omap.txt bindings since that likely needs
+> an update as well to better describe what the official ones are
+> and which are legacy.
+>=20
+> BR and thanks,
+> Nikolaus
+>=20
+
