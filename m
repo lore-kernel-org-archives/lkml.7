@@ -2,122 +2,97 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B76C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 16:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B7EC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 16:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 387B820644
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 16:45:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 777FF20644
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 16:48:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CdtaZKex"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403878AbfIFQpy (ORCPT
+        id S2405843AbfIFQsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 12:45:54 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44628 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727816AbfIFQpy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 12:45:54 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id ED1433084288;
-        Fri,  6 Sep 2019 16:45:53 +0000 (UTC)
-Received: from treble (ovpn-112-76.rdu2.redhat.com [10.10.112.76])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CB107194BB;
-        Fri,  6 Sep 2019 16:45:48 +0000 (UTC)
-Date:   Fri, 6 Sep 2019 11:45:44 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     Joe Lawrence <joe.lawrence@redhat.com>,
-        Petr Mladek <pmladek@suse.com>, jikos@kernel.org,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
-Subject: Re: [RFC PATCH 2/2] livepatch: Clear relocation targets on a module
- removal
-Message-ID: <20190906164544.4hmszo2wlqw3pvu5@treble>
-References: <20190822223649.ptg6e7qyvosrljqx@treble>
- <20190823081306.kbkm7b4deqrare2v@pathway.suse.cz>
- <20190826145449.wyo7avwpqyriem46@treble>
- <alpine.LSU.2.21.1909021802180.29987@pobox.suse.cz>
- <5c649320-a9bf-ae7f-5102-483bc34d219f@redhat.com>
- <alpine.LSU.2.21.1909031447140.3872@pobox.suse.cz>
- <20190905023202.ed7fecc22xze4pwj@treble>
- <alpine.LSU.2.21.1909051403530.25712@pobox.suse.cz>
- <20190905125418.kleis5ackvhtn4hs@treble>
- <alpine.LSU.2.21.1909061431590.3031@pobox.suse.cz>
+        Fri, 6 Sep 2019 12:48:07 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:35651 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726687AbfIFQsH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 12:48:07 -0400
+Received: by mail-lf1-f66.google.com with SMTP id w6so5626900lfl.2
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 09:48:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rQxQmL5WKmqkiAdBzxBOpYt8ZpWix1U/0Cxla2OL6B4=;
+        b=CdtaZKexOxpjujZe0ssUyItgzsYGIs6tyrl06lcsSvQcidtI4XlufBfc+y17ixEWs2
+         Yf3Ue404z91Vne3BD8g20GCjLqm6XNtIJMYNxDPmIxyGW4tJf/U61cBxFg+3l5q+7+7a
+         dTfbgw2bHQ7dBu1D3Yq3OuiT5ExlJKlKPVS1/3a24X4DEuKYvmvptByERu1RAPp8IJBy
+         M1c7XIVOni77s5rz8mHJKWIzoPczSGVix48QxGy9yQoiRjwAhzOtDZZoze6uAjXMhJ+b
+         RiQKu+JawMjXorYN0ABKAx/OngQAWtG75kWbK/bDUqt2IBiRA+kYEA5J7iOTHIqhfcjd
+         VQ2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rQxQmL5WKmqkiAdBzxBOpYt8ZpWix1U/0Cxla2OL6B4=;
+        b=IxdUd7BDkwPubh56h9QAgV2Bgqsi2Fu8DnR/PFNkFLDIa8tg6LTOXwpG93MScaTmuH
+         rR0q3R7YU9xzx3eQYXL0+LEA2nemnou9l/LTFYzEF7WI0Xp8x+2zd4GQCYyGt6org8hn
+         liSA3idrw9rqJl7Ggait4NJACRld/ZSgc1xka/rrEeHyZy3+iGJKt+S4qr5++154DcoZ
+         WxYBJ0cSohsACBh7IwgQtGOOkupjKptX7gy3A1Uo1/WKnfyJudXuQikSy97HL4ibzzuL
+         Fw/P9OjlcJqDia3DeXHiJKt0TxBSg9SmXrHPJL0RuEeR1BU0dwZmTVxBzR6OF4CxIeh/
+         bYFQ==
+X-Gm-Message-State: APjAAAVXvRHe5lmSA+C08u//Jnsx3WGw6rF3RwkXzqjJUnaPAsXho8sN
+        AgDZSYLdUxQRZGB+t+ps+mPGIVboHULD+bNpMVeIDQ==
+X-Google-Smtp-Source: APXvYqy+0qCW9TDQY5RuFmuYzqhGsB6VBVTHryyiAu3OlG6RsXDTWL6fSCLhiT3nsp/vA2mHCVdipZr6cGVOuocrA4g=
+X-Received: by 2002:ac2:4902:: with SMTP id n2mr7206138lfi.0.1567788485327;
+ Fri, 06 Sep 2019 09:48:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.21.1909061431590.3031@pobox.suse.cz>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 06 Sep 2019 16:45:54 +0000 (UTC)
+References: <20190829083233.24162-1-linux@rasmusvillemoes.dk>
+ <20190830231527.22304-1-linux@rasmusvillemoes.dk> <20190830231527.22304-5-linux@rasmusvillemoes.dk>
+ <CAKwvOdktYpMH8WnEQwNE2JJdKn4w0CHv3L=YHkqU2JzQ6Qwkew@mail.gmail.com>
+ <a5085133-33da-6c13-6953-d18cbc6ad3f5@rasmusvillemoes.dk> <20190905134535.GP9749@gate.crashing.org>
+ <CANiq72nXXBgwKcs36R+uau2o1YypfSFKAYWV2xmcRZgz8LRQww@mail.gmail.com>
+ <20190906122349.GZ9749@gate.crashing.org> <CANiq72=3Vz-_6ctEzDQgTA44jmfSn_XZTS8wP1GHgm31Xm8ECw@mail.gmail.com>
+ <20190906163028.GC9749@gate.crashing.org>
+In-Reply-To: <20190906163028.GC9749@gate.crashing.org>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Fri, 6 Sep 2019 18:47:54 +0200
+Message-ID: <CANiq72k9BjDBChLMjbUbAsB3+DiX_efc6A010TYgrbyEg=xx=w@mail.gmail.com>
+Subject: Re: [PATCH v2 4/6] compiler-gcc.h: add asm_inline definition
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "gcc-patches@gcc.gnu.org" <gcc-patches@gcc.gnu.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 06, 2019 at 02:51:01PM +0200, Miroslav Benes wrote:
-> 
-> > > Now, I don't think that replacing .ko on disk is a good idea. We've 
-> > > already discussed it. It would lead to a maintenance/packaging problem, 
-> > > because you never know which version of the module is loaded in the 
-> > > system. The state space grows rather rapidly there.
-> > 
-> > What exactly are your concerns?
-> > 
-> > Either the old version of the module is loaded, and it's livepatched; or
-> > the new version of the module is loaded, and it's not livepatched.
-> 
-> Let's have module foo.ko with function a().
-> 
-> Live patch 1 (LP1) fixes it to a'(), which calls new function b() (present 
-> in LP1). LP1 is used only if foo.ko is loaded. foo.ko is replaced with 
-> foo'.ko on disk. It contains both a'() (fixed a() to be precise) and new 
-> b().
-> 
-> Now there is LP2 with new function c() (or c'(), it does not matter) 
-> calling b(). Either foo.ko or foo'.ko can be loaded and you don't know 
-> which one. The implementation LP2 would be different in both cases.
-> 
-> You could say that it does not matter. If LP2 is implemented for foo.ko, 
-> the same could work for foo'.ko (b() would be a part of LP2 and would not 
-> be called directly from foo'.ko). LP2 would only be necessarily larger. It 
-> is true in case of functions, but if symbol b is not a function but a 
-> global variable, it is different then.
+On Fri, Sep 6, 2019 at 6:30 PM Segher Boessenkool
+<segher@kernel.crashing.org> wrote:
+>
+> (Which isn't the C++ standard yet, okay).
 
-Assuming atomic replace, I don't see how this could be a problem.  LP2
-replaces LP1, so why would LP2 need to access LP1's (or foo'.ko's)
-symbol b?  All live patches should be built against and targeted for the
-original foo.ko.
+At this stage, it pretty much is. It is basically bug fixing at this point.
 
-However... it might break atomic replace functionality in another way.
+> No, that is not what it does.  A user defines such a macro, and that
+> makes the library change behaviour.
 
-If LP2 is an 'atomic replace' partial revert of LP1, and foo'.ko were
-loaded, when loading LP2, the atomic replace code wouldn't be able to
-detect which functions were "patched" in foo'.ko. So if the LP2
-functions are not a superset of the LP1 functions, the "patched"
-functions in foo'.ko wouldn't get reverted.
+That is what I have said:
 
-What if foo'.ko were really just the original foo.ko, plus livepatch
-metadata grafted onto it somehow, such that it patches itself when it
-loads?  Then patched state would always be the same regardless of
-whether the patch came from the LP or foo'.ko.
+  "I want to test if the user enabled the feature"
 
-> Moreover, in this case foo'.ko is "LP superset". Meaning that it contains 
-> only fixes which are present in LP1. What if it is not. We usually 
-> preserve kABI, so there could be a module in two or more versions compiled 
-> from slightly different code (older/newer and so on) and you don't know 
-> which one is loaded. To be fair we don't allow it (I think) at SUSE except 
-> for KMPs (kernel module packages) (the issue of course exists even now 
-> and we haven't solved it yet, because it is rare) and out of tree modules 
-> which we don't support with LP. It could be solved with srcversion, but it 
-> complicates things a lot. "blue sky" idea could extend the issue to all 
-> modules given the above is real.
+means the *library* tests if the user enabled the feature before
+including the library. But the user does not want to test anything.
 
-I'm having trouble understanding what this issue is and how "blue sky"
-would extend it.
-
--- 
-Josh
+Cheers,
+Miguel
