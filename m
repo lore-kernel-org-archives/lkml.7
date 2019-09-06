@@ -2,225 +2,163 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABFBC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 09:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A9BC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 09:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A61A2082C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 09:20:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E26322082C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 09:22:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZainT9Yr"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="LilT1R8t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404129AbfIFJUc (ORCPT
+        id S2391231AbfIFJWq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 05:20:32 -0400
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:36917 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728356AbfIFJUc (ORCPT
+        Fri, 6 Sep 2019 05:22:46 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:50618 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728356AbfIFJWp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 05:20:32 -0400
-Received: by mail-vk1-f196.google.com with SMTP id v78so1133639vke.4
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 02:20:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Et7PHDrqyxAsDDe/lA78jPHwRxPA1rwYR+XjZVclCvQ=;
-        b=ZainT9YricB7thYzru3Q462ubqbMr6Gq+6drN+wbR81ADdNfAf/VsDo8uRhVZyZSux
-         6Bd8YIYWmBxfPK5x+DgTStjCQ7+KBvWFcVdBw2Zl+acbA3AlshjdyQ++mAwMt39o9Gma
-         YFUfWRjyaW+JWUx2KyMaHtqUMuglucAbtZD8/X953Bgvs8YaNhX9IDDFkibfhozf05py
-         0BUU+a5wV7qb/p+Tf0+Hctq6vta6tNS07Lv9+CbuYGYuYT5rrA3K2CRp3Y5C9tny9hTA
-         27x90IBSjvlWQL8U5+DP8wXyZ+2bQPe1jzDM00cIpXfebydXvVnoP3EVVHyjzxWLtHQy
-         qFcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Et7PHDrqyxAsDDe/lA78jPHwRxPA1rwYR+XjZVclCvQ=;
-        b=VpgkuhMhAQioaxbrBHw0hug5J82MYMXuDeng9XM+hTEcwrD4Rw6VOIIkdyukDzcmtT
-         aeNHFOl1a3UfvlEU0N8/FZFhWf+/Nkjnkfh9ApHkaEk7Un+RraSVSnfy2136jlPkxUuj
-         85dX9IDxrMtp6gLCjLZMyQNAInAZQiCxMzumEdHH001rixEgte8uFOuiuq/mqwx1uW1Q
-         GeAIsVCRFlldrRGqw0TUdKGBAOOBtv0Bdu2ZTt2kFNYC1E9y/vtjXJh2nXdyGZXguf8b
-         iDlZ4gnqdn3yAjJEIQGszUAuCfaxK62RjNppDlIDdjYe7FZAJVp0Do1sI2CVf5H9HriQ
-         PKeg==
-X-Gm-Message-State: APjAAAXLmhrc26gamHY+NiZavUMWoEKbd/bHxaIbksaSokoBF9Sv/XYR
-        92n/PVfP+yHpWdnhxtEQkWdPG6fsqrWadGTV238ytw==
-X-Google-Smtp-Source: APXvYqweXpPFiaYJZp3vUYimxv5p2OUTQgGsh9OAs5qU+UkhWxXLaqpYQiFrraMr+rkgJj5XS385iHyXrUnBe7zyy7I=
-X-Received: by 2002:a1f:5e4f:: with SMTP id s76mr3852640vkb.4.1567761630813;
- Fri, 06 Sep 2019 02:20:30 -0700 (PDT)
+        Fri, 6 Sep 2019 05:22:45 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x869M3lL025630;
+        Fri, 6 Sep 2019 11:22:31 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=STMicroelectronics;
+ bh=z4f+K9FCvLJRtiC5DZZCJIIPbU+tClnqdagLmTLqx60=;
+ b=LilT1R8twNVz2da+lQrKhR+6yGfpSLuCH65T3knsZqFV7MlC+TGFu9Z5eEAlhplhVyfB
+ gP1/+wreD6EQzFgZ0075c+A+u2CQXtixqgoMwH6qClCBFidJExhBq7tFkUUj+5RMIyZ6
+ Y3TbGiyV8iovbT+OD9BEMxvYY/ZDzjhMYzsn5bpQjAf5t+rRMr1HTe64oNb6zjEWXAJr
+ ke9rUXOBngCqDLHb3/neaEC0pqO/d6YW94IQ0vpXi4e6ZHxBwwpvfvdQ7/IsEkC/HsSg
+ c+j4HP/Y/uRx6FzlSv26FQcTstzzZsXjVddePSR6wxP4QyNnMzTTT2awiqywguRo9Quo FQ== 
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2uqec3e3w0-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 06 Sep 2019 11:22:31 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 84EF452;
+        Fri,  6 Sep 2019 09:22:23 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6C4082C7C1C;
+        Fri,  6 Sep 2019 11:22:22 +0200 (CEST)
+Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS23.st.com
+ (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 6 Sep 2019
+ 11:22:22 +0200
+Received: from localhost (10.201.23.97) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 6 Sep 2019 11:22:21
+ +0200
+From:   =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>
+To:     Yannick Fertre <yannick.fertre@st.com>,
+        Philippe Cornu <philippe.cornu@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Vincent Abriou <vincent.abriou@st.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] drm/stm: ltdc: add pinctrl for DPI encoder mode
+Date:   Fri, 6 Sep 2019 11:21:48 +0200
+Message-ID: <1567761708-31777-1-git-send-email-yannick.fertre@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <20190903142207.5825-1-ulf.hansson@linaro.org> <20190903142207.5825-6-ulf.hansson@linaro.org>
- <CAD=FV=UhA4pxui29k+SHygCYq+a3O8ELJCq7=6iVSUrnwvk8DQ@mail.gmail.com>
-In-Reply-To: <CAD=FV=UhA4pxui29k+SHygCYq+a3O8ELJCq7=6iVSUrnwvk8DQ@mail.gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 6 Sep 2019 11:19:54 +0200
-Message-ID: <CAPDyKFo3BNjFcqfURP2TWrMWB3SGC6p4hMcxz++QRRBwCsLH4w@mail.gmail.com>
-Subject: Re: [PATCH 05/11] mmc: core: Clarify sdio_irq_pending flag for MMC_CAP2_SDIO_IRQ_NOTHREAD
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Linux MMC List <linux-mmc@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        Yong Mao <yong.mao@mediatek.com>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.201.23.97]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-06_04:2019-09-04,2019-09-06 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 6 Sep 2019 at 01:47, Doug Anderson <dianders@chromium.org> wrote:
->
-> Hi,
->
-> On Tue, Sep 3, 2019 at 7:22 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> >
-> > In the single SDIO IRQ handler case, the sdio_irq_pending flag is used to
-> > avoid reading the SDIO_CCCR_INTx register and instead immediately call the
-> > SDIO func's >irq_handler() callback.
-> >
-> > To clarify the use behind the flag for the MMC_CAP2_SDIO_IRQ_NOTHREAD case,
-> > let's set the flag from inside sdio_signal_irq(), rather from
-> > sdio_run_irqs().
->
-> I'm having a hard time parsing the above statement...  Can you reword
-> and maybe I'll understand?
+The implementation of functions encoder_enable and encoder_disable
+make possible to control the pinctrl according to the encoder type.
+The pinctrl must be activated only if the encoder type is DPI.
+This helps to move the DPI-related pinctrl configuration from
+all the panel or bridge to the LTDC dt node.
 
-Sure, I admit, it's not very good. :-) How about the below.
+Reviewed-by: Philippe Cornu <philippe.cornu@st.com>
 
-The sdio_irq_pending flag is used to let host drivers indicate that it
-has signaled an IRQ. If that is the case and we only have a single
-SDIO func that have claimed an SDIO IRQ, our assumption is that we can
-avoid reading the SDIO_CCCR_INTx register and just call the SDIO func
-irq handler immediately. This makes sense, but the flag is set/cleared
-in a somewhat messy order, let's fix that up according to below.
+Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
+---
+ drivers/gpu/drm/stm/ltdc.c | 35 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-First, the flag is currently set in sdio_run_irqs(), which is executed
-as a work that was scheduled from sdio_signal_irq(). To make it more
-implicit that the host have signaled an IRQ, let's instead immediately
-set the flag in sdio_signal_irq(). This also makes the behavior
-consistent with host drivers that uses the legacy,
-mmc_signal_sdio_irq() API. This have no functional impact, because we
-don't expect host drivers to call sdio_signal_irq() until after the
-work (sdio_run_irqs()) have been executed anyways.
+diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
+index 3ab4fbf..1c4fde0 100644
+--- a/drivers/gpu/drm/stm/ltdc.c
++++ b/drivers/gpu/drm/stm/ltdc.c
+@@ -15,6 +15,7 @@
+ #include <linux/module.h>
+ #include <linux/of_address.h>
+ #include <linux/of_graph.h>
++#include <linux/pinctrl/consumer.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/reset.h>
+@@ -1040,6 +1041,36 @@ static const struct drm_encoder_funcs ltdc_encoder_funcs = {
+ 	.destroy = drm_encoder_cleanup,
+ };
+ 
++static void ltdc_encoder_disable(struct drm_encoder *encoder)
++{
++	struct drm_device *ddev = encoder->dev;
++
++	DRM_DEBUG_DRIVER("\n");
++
++	/* Set to sleep state the pinctrl whatever type of encoder */
++	pinctrl_pm_select_sleep_state(ddev->dev);
++}
++
++static void ltdc_encoder_enable(struct drm_encoder *encoder)
++{
++	struct drm_device *ddev = encoder->dev;
++
++	DRM_DEBUG_DRIVER("\n");
++
++	/*
++	 * Set to default state the pinctrl only with DPI type.
++	 * Others types like DSI, don't need pinctrl due to
++	 * internal bridge (the signals do not come out of the chipset).
++	 */
++	if (encoder->encoder_type == DRM_MODE_ENCODER_DPI)
++		pinctrl_pm_select_default_state(ddev->dev);
++}
++
++static const struct drm_encoder_helper_funcs ltdc_encoder_helper_funcs = {
++	.disable = ltdc_encoder_disable,
++	.enable = ltdc_encoder_enable,
++};
++
+ static int ltdc_encoder_init(struct drm_device *ddev, struct drm_bridge *bridge)
+ {
+ 	struct drm_encoder *encoder;
+@@ -1055,6 +1086,8 @@ static int ltdc_encoder_init(struct drm_device *ddev, struct drm_bridge *bridge)
+ 	drm_encoder_init(ddev, encoder, &ltdc_encoder_funcs,
+ 			 DRM_MODE_ENCODER_DPI, NULL);
+ 
++	drm_encoder_helper_add(encoder, &ltdc_encoder_helper_funcs);
++
+ 	ret = drm_bridge_attach(encoder, bridge, NULL);
+ 	if (ret) {
+ 		drm_encoder_cleanup(encoder);
+@@ -1280,6 +1313,8 @@ int ltdc_load(struct drm_device *ddev)
+ 
+ 	clk_disable_unprepare(ldev->pixel_clk);
+ 
++	pinctrl_pm_select_sleep_state(ddev->dev);
++
+ 	pm_runtime_enable(ddev->dev);
+ 
+ 	return 0;
+-- 
+2.7.4
 
-Second, currently we never clears the flag when using the
-sdio_run_irqs() work, but only when using the sdio_irq_thread(). Let
-make the behavior consistent, by moving the flag to be cleared inside
-the common process_sdio_pending_irqs() function. Additionally, tweak
-the behavior of the flag slightly, by avoiding to clear it unless we
-processed the SDIO IRQ. The purpose with this at this point, is to
-keep the information about whether there have been an SDIO IRQ
-signaled by the host, so at system resume we can decide to process it
-without reading the SDIO_CCCR_INTx register.
-
->
->
-> > Moreover, let's also reset the flag when the SDIO IRQ have
-> > been properly processed.
-> >
-> > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> > ---
-> >  drivers/mmc/core/sdio_irq.c | 9 ++++++---
-> >  1 file changed, 6 insertions(+), 3 deletions(-)
->
-> Nice!  This looks like it addresses some of the things that came up in
-> the previous discussion [1] and should be a nice improvement.  From
-> re-reading that discussion that will probably change the behvaior
-> slightly (hopefully for the better) in the single-function case where
-> we might actually poll CCCR_INTx sometimes now.
-
-Correct!
-
->
->
-> > diff --git a/drivers/mmc/core/sdio_irq.c b/drivers/mmc/core/sdio_irq.c
-> > index f75043266984..0962a4357d54 100644
-> > --- a/drivers/mmc/core/sdio_irq.c
-> > +++ b/drivers/mmc/core/sdio_irq.c
-> > @@ -59,6 +59,7 @@ static int process_sdio_pending_irqs(struct mmc_host *host)
-> >  {
-> >         struct mmc_card *card = host->card;
-> >         int i, ret, count;
-> > +       bool sdio_irq_pending = host->sdio_irq_pending;
-> >         unsigned char pending;
-> >         struct sdio_func *func;
-> >
-> > @@ -66,13 +67,16 @@ static int process_sdio_pending_irqs(struct mmc_host *host)
-> >         if (mmc_card_suspended(card))
-> >                 return 0;
-> >
-> > +       /* Clear the flag to indicate that we have processed the IRQ. */
-> > +       host->sdio_irq_pending = false;
-> > +
-> >         /*
-> >          * Optimization, if there is only 1 function interrupt registered
-> >          * and we know an IRQ was signaled then call irq handler directly.
-> >          * Otherwise do the full probe.
-> >          */
-> >         func = card->sdio_single_irq;
-> > -       if (func && host->sdio_irq_pending) {
-> > +       if (func && sdio_irq_pending) {
-> >                 func->irq_handler(func);
-> >                 return 1;
-> >         }
-> > @@ -110,7 +114,6 @@ static void sdio_run_irqs(struct mmc_host *host)
-> >  {
-> >         mmc_claim_host(host);
-> >         if (host->sdio_irqs) {
-> > -               host->sdio_irq_pending = true;
-> >                 process_sdio_pending_irqs(host);
-> >                 if (host->ops->ack_sdio_irq)
-> >                         host->ops->ack_sdio_irq(host);
-> > @@ -128,6 +131,7 @@ void sdio_irq_work(struct work_struct *work)
-> >
-> >  void sdio_signal_irq(struct mmc_host *host)
-> >  {
-> > +       host->sdio_irq_pending = true;
->
-> Is this safe to do without claiming the host or any other type of
-> locking?  sdio_signal_irq() is called directly from the interrupt
-> handler on dw_mmc with no locks held at all.  Could we have races /
-> problems with weakly ordered memory?
-
-At this point, for $subject patch and @subject series, I don't see any
-issues. But perhaps when we go forward and start using the flag
-slightly differently.
-
->
-> Maybe I'm not understanding why this has to move.  It seems like it
-> would have been fine to leave this part in sdio_run_irqs() where it
-> was...
-
-The changes later in the series relies on this change, as we start
-making use of the flag to understand if we should ack an SDIO IRQ.
-
->
->
-> [1] https://lore.kernel.org/r/CAD=FV=XBVRsdiOD0vhgTvMXmqm=fzy9Bzd_x=E1TNPBsT_D-tQ@mail.gmail.com
->
-> -Doug
->
-> >         queue_delayed_work(system_wq, &host->sdio_irq_work, 0);
-> >  }
-> >  EXPORT_SYMBOL_GPL(sdio_signal_irq);
-> > @@ -173,7 +177,6 @@ static int sdio_irq_thread(void *_host)
-> >                 if (ret)
-> >                         break;
-> >                 ret = process_sdio_pending_irqs(host);
-> > -               host->sdio_irq_pending = false;
-> >                 mmc_release_host(host);
-> >
-> >                 /*
-> > --
-> > 2.17.1
-> >
-
-Kind regards
-Uffe
