@@ -6,81 +6,85 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B56C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A023C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 259C1206CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A016206CD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:52:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391081AbfIFLwG (ORCPT
+        id S2391140AbfIFLws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 07:52:06 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48316 "EHLO mx1.redhat.com"
+        Fri, 6 Sep 2019 07:52:48 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52204 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727381AbfIFLwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 07:52:05 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        id S1727381AbfIFLws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 07:52:48 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DDE3CC057F2C;
-        Fri,  6 Sep 2019 11:52:05 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 16FFF305D637;
+        Fri,  6 Sep 2019 11:52:48 +0000 (UTC)
 Received: from localhost (ovpn-117-208.ams2.redhat.com [10.36.117.208])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 721DC5C1D4;
-        Fri,  6 Sep 2019 11:51:59 +0000 (UTC)
-Date:   Fri, 6 Sep 2019 12:51:58 +0100
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 51C755D6A9;
+        Fri,  6 Sep 2019 11:52:42 +0000 (UTC)
+Date:   Fri, 6 Sep 2019 12:52:41 +0100
 From:   Stefan Hajnoczi <stefanha@redhat.com>
 To:     Vivek Goyal <vgoyal@redhat.com>
 Cc:     linux-fsdevel@vger.kernel.org,
         virtualization@lists.linux-foundation.org, miklos@szeredi.hu,
         linux-kernel@vger.kernel.org, virtio-fs@redhat.com,
         dgilbert@redhat.com, mst@redhat.com
-Subject: Re: [PATCH 12/18] virtiofs: Use virtio_fs_free_devs() in error path
-Message-ID: <20190906115158.GT5900@stefanha-x1.localdomain>
+Subject: Re: [PATCH 13/18] virtiofs: Do not access virtqueue in request
+ submission path
+Message-ID: <20190906115241.GU5900@stefanha-x1.localdomain>
 References: <20190905194859.16219-1-vgoyal@redhat.com>
- <20190905194859.16219-13-vgoyal@redhat.com>
+ <20190905194859.16219-14-vgoyal@redhat.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="yypaS3FvPkEUiGyo"
+        protocol="application/pgp-signature"; boundary="iBHcHRCIarfY7C0j"
 Content-Disposition: inline
-In-Reply-To: <20190905194859.16219-13-vgoyal@redhat.com>
+In-Reply-To: <20190905194859.16219-14-vgoyal@redhat.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 06 Sep 2019 11:52:05 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Fri, 06 Sep 2019 11:52:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---yypaS3FvPkEUiGyo
+--iBHcHRCIarfY7C0j
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 05, 2019 at 03:48:53PM -0400, Vivek Goyal wrote:
-> We already have an helper to cleanup fuse devices. Use that instead of
-> duplicating the code.
+On Thu, Sep 05, 2019 at 03:48:54PM -0400, Vivek Goyal wrote:
+> In request submission path it is possible that virtqueue is already gone
+> due to driver->remove(). So do not access it in dev_dbg(). Use pr_debug()
+> instead.
+>=20
+> If virtuqueue is gone, this will result in NULL pointer deference.
 >=20
 > Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 > ---
->  fs/fuse/virtio_fs.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  fs/fuse/virtio_fs.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 
 Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
 
---yypaS3FvPkEUiGyo
+--iBHcHRCIarfY7C0j
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl1ySF4ACgkQnKSrs4Gr
-c8hVlggAupQb9gfTAr4egGumTVeZNasLSgBakY+MqFVWz6P9M1eU0+mtx0t+LTvK
-6hPYtUtYRNcR4U4LWcuAf30gKaYbr5UFDYmQ8zp8sCouPeTZChlnd35T2Aez6RQw
-lTlB2cAikH0aAjaLU1ldhLnx/+NkO8KkPh5tEYfCOHPEgpZSz1BQ5ce5iwVY9s5a
-2OZEet0IehG38kKsyXW88H+F/p8vHVLRrUkhi5CCezvlim7HFWRLFhj4Dc6Eu0sT
-HQmMvhppnlYqoDj8+Nkhs2Xv87KZxK2E6k2Z5NLle7vl1H6HbROZPMJB0WPLLZ2y
-+yZpbk5cezyZigVO/ES7VBTJc6IZyA==
-=OijB
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl1ySIkACgkQnKSrs4Gr
+c8gXMQf/QUTibXMbQdKidGB1Vqv7pi+fendYycKROG3QMPsuTAtmXYzqvaPyQ+V7
+IQKRcXkPStzxee3RJePDleTtTNsjDlsuLgfpvgh0Bik7ZTOfN7ddHzXvcBx2VDJf
+OtV+D2N9Cm2YkI1r2OEVWylqmv9aH83xFJHj5hsc7vNO+yu9V+7TA+RZKasdT1GX
+zd/W2E4xlYS/vz9fKRX7QReLWIla2yJVy7Qb6MECtMGELGmq02OdzsO5SJWX52cG
+gSh58Gw1wIyidQXqTbEkl+gNMORVs3xtNvlIXNyEcXjvaVZzRCAdq3UGVAFL2C7x
+LeqWw3/P3WTKxDZwTHLyAwoo2fpnpg==
+=cLla
 -----END PGP SIGNATURE-----
 
---yypaS3FvPkEUiGyo--
+--iBHcHRCIarfY7C0j--
