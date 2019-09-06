@@ -2,79 +2,139 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 663BEC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9038C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CD6F206BB
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:02:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567767757;
-	bh=shvV/Zk/BQkSbVSg065+YUhljAGOjzdleh/m0itSkjs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=W1o7vHyaP6vZ14pjby7UpCvVUvELo5duUMX1L3/85dwWWTuZTZxNZWXNcuwzv4xp1
-	 GpO6SzkbvckOzHvAZoxDQxyY119OghDKeSuoG5c9uX5RY3tku2c0JB5JxICVlaXRDD
-	 PaLRcmO2Dh8NaibN40sOz5TcSTEZHHNuJPz/t2pA=
+	by mail.kernel.org (Postfix) with ESMTP id 753CD20854
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:07:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S3M0xG/j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392159AbfIFLCg (ORCPT
+        id S2392177AbfIFLHf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 07:02:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54840 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731418AbfIFLCg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 07:02:36 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6B409AF2C;
-        Fri,  6 Sep 2019 11:02:34 +0000 (UTC)
-Date:   Fri, 6 Sep 2019 13:02:33 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     David Rientjes <rientjes@google.com>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH] mm, oom: disable dump_tasks by default
-Message-ID: <20190906110233.GE14491@dhcp22.suse.cz>
-References: <20190903144512.9374-1-mhocko@kernel.org>
- <af0703d2-17e4-1b8e-eb54-58d7743cad60@i-love.sakura.ne.jp>
- <20190904054004.GA3838@dhcp22.suse.cz>
- <alpine.DEB.2.21.1909041302290.95127@chino.kir.corp.google.com>
- <12bcade2-4190-5e5e-35c6-7a04485d74b9@i-love.sakura.ne.jp>
- <20190905140833.GB3838@dhcp22.suse.cz>
- <20ec856d-0f1e-8903-dbe0-bbc8b7a1847a@i-love.sakura.ne.jp>
+        Fri, 6 Sep 2019 07:07:35 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:47010 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390377AbfIFLHf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 07:07:35 -0400
+Received: by mail-wr1-f68.google.com with SMTP id h7so6120772wrt.13;
+        Fri, 06 Sep 2019 04:07:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=JUfMY89FxK/4PZfbkgvJJAvRZHgggwqGP387mVBSBec=;
+        b=S3M0xG/jx0E4rGxCy8CVN6/zRlA0cXFS8/IV9aQhtVEJinXzEXPDKns32hds3EHFQI
+         DNM7KPNRAgRlaspudMCUM06Fe88Ur24TVa2js4g1T9CQpHTBg6BWpXZ7bc5XUgZ1//FJ
+         AGkdM4p7w8NdNpGUCI+Apy7DkYG+DVjq04Qom6nd4w/W0cY204ZTDtZQKEGjsbyvv/qY
+         WZOAqaasWNldcqXmCwbpQw+BWOJ1B1OVJO6T844q6WtqVC/IwEh91WeoXL4+HAHsILzu
+         deUs4dmp6iUimlvCrurIW5IXNaGM0DnSV4/zbFkwUHifGY67NuGs0UQw3jcOElSNqtGd
+         tIdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=JUfMY89FxK/4PZfbkgvJJAvRZHgggwqGP387mVBSBec=;
+        b=YfbVdTjBzJpV7t5/WJm8l5OL9+f23vG+Rn0R9JDMjTxfQZUgr1uYBvANeeD87lTYUa
+         0kFfuRW9trsNgaxdJ85JYuXGGJu25ARRzu3kKIFM4u1WIm4t1cFRcOuzIL01t9timqxp
+         nbrqBZB7yxz4WLqb9tqrOXbmDPAezE5kYf4a/6qpdWiDF5MEMnOZUK+OPeXjjcXin+Go
+         6ERbW9869bjuQOEX9OrG+P6GF/Ftr0+CSanB3xIngygDFnanokQjwwqgmbIHAzovvw+Y
+         mPoCRug3eDERtoOtWFS4MwTEt0RutAVHicQp82RpwrXFS9r6m79bBa3Tz6EpAetzWRRX
+         RfZQ==
+X-Gm-Message-State: APjAAAUXiE/btcG8HwA8+kuw1SkhjCWz6A01GGPDfc+d+TWpqHQeEl62
+        dTctPC2MCR16vqHdlG5EE3U=
+X-Google-Smtp-Source: APXvYqwUgxvFFbfK4J/6FC9T0gRHiyy2dDDvOAgb/kCod1chhRzVIAEm94KmawloJ8DHxeqDd3WgfQ==
+X-Received: by 2002:a05:6000:108e:: with SMTP id y14mr6517608wrw.344.1567768052678;
+        Fri, 06 Sep 2019 04:07:32 -0700 (PDT)
+Received: from Akatsuki.lan (bzq-109-67-210-71.red.bezeqint.net. [109.67.210.71])
+        by smtp.googlemail.com with ESMTPSA id j30sm7949283wrb.66.2019.09.06.04.07.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Sep 2019 04:07:32 -0700 (PDT)
+From:   Dan Elkouby <streetwalkermc@gmail.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Dan Elkouby <streetwalkermc@gmail.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Fabian Henneke <fabian.henneke@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH] Bluetooth: hidp: Fix assumptions on the return value of hidp_send_message
+Date:   Fri,  6 Sep 2019 14:06:44 +0300
+Message-Id: <20190906110645.27601-1-streetwalkermc@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190906101306.GA12017@kadam>
+References: <20190906101306.GA12017@kadam>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20ec856d-0f1e-8903-dbe0-bbc8b7a1847a@i-love.sakura.ne.jp>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 06-09-19 19:46:10, Tetsuo Handa wrote:
-> On 2019/09/05 23:08, Michal Hocko wrote:
-> > On Thu 05-09-19 22:39:47, Tetsuo Handa wrote:
-> > [...]
-> >> There is nothing that prevents users from enabling oom_dump_tasks by sysctl.
-> >> But that requires a solution for OOM stalling problem.
-> > 
-> > You can hardly remove stalling if you are not reducing the amount of
-> > output or get it into a different context. Whether the later is
-> > reasonable is another question but you are essentially losing "at the
-> > OOM event state".
-> > 
-> 
-> I am not losing "at the OOM event state". Please find "struct oom_task_info"
-> (for now) embedded into "struct task_struct" which holds "at the OOM event state".
-> 
-> And my patch moves "printk() from dump_tasks()" from OOM context to WQ context.
+hidp_send_message was changed to return non-zero values on success,
+which some other bits did not expect. This caused spurious errors to be
+propagated through the stack, breaking some drivers, such as hid-sony
+for the Dualshock 4 in Bluetooth mode.
 
-Workers might be blocked for unbound amount of time and so this
-information might be printed late.
+As pointed out by Dan Carpenter, hid-microsoft directly relied on that
+assumption as well.
+
+Fixes: 48d9cc9d85dd ("Bluetooth: hidp: Let hidp_send_message return number of queued bytes")
+
+Signed-off-by: Dan Elkouby <streetwalkermc@gmail.com>
+---
+ drivers/hid/hid-microsoft.c | 2 +-
+ net/bluetooth/hidp/core.c   | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/hid/hid-microsoft.c b/drivers/hid/hid-microsoft.c
+index 8b3a922bdad3..2cf83856f2e4 100644
+--- a/drivers/hid/hid-microsoft.c
++++ b/drivers/hid/hid-microsoft.c
+@@ -303,7 +303,7 @@ static void ms_ff_worker(struct work_struct *work)
+ 	r->magnitude[MAGNITUDE_WEAK] = ms->weak;     /* right actuator */
+ 
+ 	ret = hid_hw_output_report(hdev, (__u8 *)r, sizeof(*r));
+-	if (ret)
++	if (ret < 0)
+ 		hid_warn(hdev, "failed to send FF report\n");
+ }
+ 
+diff --git a/net/bluetooth/hidp/core.c b/net/bluetooth/hidp/core.c
+index 8d889969ae7e..bef84b95e2c4 100644
+--- a/net/bluetooth/hidp/core.c
++++ b/net/bluetooth/hidp/core.c
+@@ -267,7 +267,7 @@ static int hidp_get_raw_report(struct hid_device *hid,
+ 	set_bit(HIDP_WAITING_FOR_RETURN, &session->flags);
+ 	data[0] = report_number;
+ 	ret = hidp_send_ctrl_message(session, report_type, data, 1);
+-	if (ret)
++	if (ret < 0)
+ 		goto err;
+ 
+ 	/* Wait for the return of the report. The returned report
+@@ -343,7 +343,7 @@ static int hidp_set_raw_report(struct hid_device *hid, unsigned char reportnum,
+ 	data[0] = reportnum;
+ 	set_bit(HIDP_WAITING_FOR_SEND_ACK, &session->flags);
+ 	ret = hidp_send_ctrl_message(session, report_type, data, count);
+-	if (ret)
++	if (ret < 0)
+ 		goto err;
+ 
+ 	/* Wait for the ACK from the device. */
 -- 
-Michal Hocko
-SUSE Labs
+2.23.0
+
