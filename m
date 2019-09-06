@@ -2,84 +2,200 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E26C00306
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 00:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD362C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 00:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AFB620828
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 00:11:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="h1SJ6VKq"
+	by mail.kernel.org (Postfix) with ESMTP id A96D720828
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 00:13:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567728781;
+	bh=KhjFNpiRFHK9PPEK1PzJJvml1QDKiwN5IywzZB/DABo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=UJ0n7E2yMMglXXESY33pB73+fjJigUwjkJli4r3tNDGUvkVFtojEnUWx1NRkDU2VG
+	 50MbHsEperMj6/HDbKt6SNJkOBWqOr17MRjiPnS7M3NN3tg6YuGuQWv3XtiDnBx5co
+	 OsxGegIqEEWZWfNLkzDKHy5zcU8cO02OiJOGP7I8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391291AbfIFAL1 (ORCPT
+        id S2391337AbfIFANA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 20:11:27 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40208 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389563AbfIFAL1 (ORCPT
+        Thu, 5 Sep 2019 20:13:00 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:38566 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389391AbfIFANA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 20:11:27 -0400
-Received: by mail-pf1-f195.google.com with SMTP id x127so3021917pfb.7
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 17:11:26 -0700 (PDT)
+        Thu, 5 Sep 2019 20:13:00 -0400
+Received: by mail-lf1-f65.google.com with SMTP id c12so3506842lfh.5
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 17:12:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:to:from:cc:subject:user-agent:date;
-        bh=EG+/MUED2UsQmYwWnl+m4YuOSd+iLXFMVT1+SFmuY6c=;
-        b=h1SJ6VKq8ziz5RC8etjR71RJ2+HMI7S05F2FIAd7599+cB/Mu/hr9Kxmr5ObJQEysF
-         tP1VrtlZsu8SVBbc7DfKxTvbsJiV+dsJCVpAhxy9MrNEsfk23LnNZAqiH4/AhRv1hARF
-         oDPuwAv77pmBKFQZs31UH2NVp7+GP1g+mAV8I=
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0NMHQZwfVd4ulDW3P9IBDkOOXGi1t10wFsvSD1QyNDE=;
+        b=PrQ/gz4Yvh3kDyFvFLcH3TLv78hTzoNA/ToV1HPN5PDzcNoSoVUwUoP72QpHgogaxX
+         CLkzLD1zXZqq6zgzwke2sO6s4DA395H5eQOgvJCtQoWHNcdLmv5+5Qv3OTtes1ZdYxgr
+         dP7NEV3rjX1ke9HkH3D1w0hGa1cOD5ShRa+2M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:to:from:cc:subject
-         :user-agent:date;
-        bh=EG+/MUED2UsQmYwWnl+m4YuOSd+iLXFMVT1+SFmuY6c=;
-        b=cmaltY9+inW91RvAtw2XIz2mSl0vCrMHKSB6L9toUSVkGnLvwuzeNhpdubo4hJfFEZ
-         vWKCApz3Q/GCIPz9TayDQkWmuuuOu/GT8vHOwIiXbHwvQFODdilTSiJ861ic6tj0Jsiu
-         7tptTcRTCXRlH4XSrqc3faBJewQDGdmM05SHwPy5OAduSmOxvSu8ItUxyiWc0KuGl64e
-         njMa5C1Levnt52XWYmE1nkg22c7SzJwX1RV1NPpftWmSsnLnQlAoLSsCsw2M7GSkCgzg
-         oC2f+LND6x3PIsfVUPp0rx8Npk00MnibGffgnViF7HRLx18otbQggy21mfykUj1l0smM
-         8ySQ==
-X-Gm-Message-State: APjAAAWYBhMq64W/hbF2AiiHBt/KcdvP3H8TUCGc2d7buAkHHfDW9QD2
-        dfa5UF5Z9TAGTmMo3Uc5Q4gHJg==
-X-Google-Smtp-Source: APXvYqwLhj+gPLsunu19pmG77d0/jojdsmDQ/S673OcY6GTlSwQiF/q78gZDnO+Xepr37qc8Kslp7g==
-X-Received: by 2002:a62:1d8a:: with SMTP id d132mr7213725pfd.187.1567728686428;
-        Thu, 05 Sep 2019 17:11:26 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id u9sm3106745pjb.4.2019.09.05.17.11.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 17:11:26 -0700 (PDT)
-Message-ID: <5d71a42e.1c69fb81.b56a6.852e@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0NMHQZwfVd4ulDW3P9IBDkOOXGi1t10wFsvSD1QyNDE=;
+        b=Ou5WbOXl9EHWFgM6leLPLqx+BdfTauP07twK5LFNPTqEKAclqsTO7TpHrKY+o4qVVz
+         Wcx1eKsvIwY5Nk5ShsGGkCK6nc75ObiRTInqhWu+9Mw0z051d4Fq0PVc6yAPqG05GLPc
+         xYYkh4pktEBxKqRXfEiZgBJiq5hEUSH7NcPxTJVmOKG2Hg6krMiErNEreqodYLSH1SCD
+         IHJMJ7GJ24x8BHAOtrkTpp3Jdk8G9eChnNdlieRn+o8ErubVqj7Yge8uc2wHRIM7cnPZ
+         bzkCPVpvisK9ZKPqKN+Ci0pR6HxGXJvrTYIdJW1pSEyWMYbXY7XagM19v9uZJldtdpR6
+         yKzQ==
+X-Gm-Message-State: APjAAAVeE1DGEIfGbAN/ar+6Jjp02KqGz4xv6tYqL0sl3dMfoJinrTWr
+        +UZao2RbagVJyDyMT39ZnC1+LXE1l4o=
+X-Google-Smtp-Source: APXvYqy1NJghq/pI+Yx80+quX+Q7zhL79Q+Pl2TXGfWIbK1fbnqfkKY+QAHeRH+Wp2dA1AKg/0XDxA==
+X-Received: by 2002:a19:c6d5:: with SMTP id w204mr4085761lff.53.1567728777029;
+        Thu, 05 Sep 2019 17:12:57 -0700 (PDT)
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
+        by smtp.gmail.com with ESMTPSA id u9sm683938lja.27.2019.09.05.17.12.56
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Sep 2019 17:12:56 -0700 (PDT)
+Received: by mail-lj1-f181.google.com with SMTP id a4so4293837ljk.8
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 17:12:56 -0700 (PDT)
+X-Received: by 2002:a2e:3c14:: with SMTP id j20mr3770452lja.84.1567728461450;
+ Thu, 05 Sep 2019 17:07:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190829181203.2660-10-ilina@codeaurora.org>
-References: <20190829181203.2660-1-ilina@codeaurora.org> <20190829181203.2660-10-ilina@codeaurora.org>
-To:     Lina Iyer <ilina@codeaurora.org>, evgreen@chromium.org,
-        linus.walleij@linaro.org, marc.zyngier@arm.com
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, mkshah@codeaurora.org,
-        linux-gpio@vger.kernel.org, rnayak@codeaurora.org,
-        Lina Iyer <ilina@codeaurora.org>
-Subject: Re: [PATCH RFC 09/14] drivers: pinctrl: msm: fix use of deprecated gpiolib APIs
-User-Agent: alot/0.8.1
-Date:   Thu, 05 Sep 2019 17:11:25 -0700
+References: <156763534546.18676.3530557439501101639.stgit@warthog.procyon.org.uk>
+ <CAHk-=wh5ZNE9pBwrnr5MX3iqkUP4nspz17rtozrSxs5-OGygNw@mail.gmail.com>
+ <17703.1567702907@warthog.procyon.org.uk> <CAHk-=wjQ5Fpv0D7rxX0W=obx9xoOAxJ_Cr+pGCYOAi2S9FiCNg@mail.gmail.com>
+ <CAKCoTu7ms_Mr-q08d9XB3uascpzwBa5LF9JTT2aq8uUsoFE8aQ@mail.gmail.com>
+ <CAHk-=wjcsxQ8QB_v=cwBQw4pkJg7pp-bBsdWyPivFO_OeF-y+g@mail.gmail.com>
+ <5396.1567719164@warthog.procyon.org.uk> <CAHk-=wgbCXea1a9OTWgMMvcsCGGiNiPp+ty-edZrBWn63NCYdw@mail.gmail.com>
+ <14883.1567725508@warthog.procyon.org.uk>
+In-Reply-To: <14883.1567725508@warthog.procyon.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 5 Sep 2019 17:07:25 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjt2Eb+yEDOcQwCa0SrZ4cWu967OtQG8Vz21c=n5ZP1Nw@mail.gmail.com>
+Message-ID: <CAHk-=wjt2Eb+yEDOcQwCa0SrZ4cWu967OtQG8Vz21c=n5ZP1Nw@mail.gmail.com>
+Subject: Re: Why add the general notification queue and its sources
+To:     David Howells <dhowells@redhat.com>
+Cc:     Ray Strode <rstrode@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Ray, Debarshi" <debarshi.ray@gmail.com>,
+        Robbie Harwood <rharwood@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The subject is misleading. It's not fixing anything, just moving away
-from deprecated to "supported" APIs.
+On Thu, Sep 5, 2019 at 4:18 PM David Howells <dhowells@redhat.com> wrote:
+>
+> Can you write into a pipe from softirq context and/or with spinlocks held
+> and/or with the RCU read lock held?  That is a requirement.  Another is that
+> messages get inserted whole or not at all (or if they are truncated, the size
+> field gets updated).
 
-Quoting Lina Iyer (2019-08-29 11:11:58)
-> Replace gpiochip_irqchip_add() and gpiochip_set_chained_irqchip() calls
-> by populating the gpio_irq_chip data structures instead.
->=20
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+Right now we use a mutex for the buffer locking, so no, pipe buffers
+are not irq-safe or atomic. That's due to the whole "we may block on
+data from user space" when doing a write.
+
+HOWEVER.
+
+Pipes actually have buffers on two different levels: there's the
+actual data buffers themselves (each described by a "struct
+pipe_buffer"), and there's the circular queue of them (the
+"pipe->buf[]" array, with pipe->curbuf/nrbufs) that points to
+individual data buffers.
+
+And we could easily separate out that data buffer management. Right
+now it's not really all that separated: people just do things like
+
+        int newbuf = (pipe->curbuf + bufs) & (pipe->buffers-1);
+        struct pipe_buffer *buf = pipe->bufs + newbuf;
+...
+        pipe->nrbufs++;
+
+to add a buffer into that circular array of buffers, but _that_ part
+could be made separate.  It's just all protected by the pipe mutex
+right now, so it has never been an issue.
+
+And yes, atomicity of writes has actually been an integral part of
+pipes since forever. It's actually the only unambiguous atomicity that
+POSIX guarantees. It only holds for writes to pipes() of less than
+PIPE_BUF blocks, but that's 4096 on Linux.
+
+> Since one end would certainly be attached to an fd, it looks on the face of it
+> that writing into the pipe would require taking pipe->mutex.
+
+That's how the normal synchronization is done, yes. And changing that
+in general would be pretty painful. For example, two concurrent
+user-space writers might take page faults and just generally be
+painful, and the pipe locking needs to serialize that.
+
+So the mutex couldn't go away from pipes in general - it would remain
+for read/write/splice mutual exclusion (and it's not just the data it
+protects, it's the reader/writer logic for EPIPE etc).
+
+But the low-level pipe->bufs[] handling is another issue entirely.
+Even when a user space writer copies things from user space, it does
+so into a pre-allocated buffer that is then attached to the list of
+buffers somewhat separately (there's a magical special case where you
+can re-use a buffer that is marked as "I can be reused" and append
+into an already allocated buffer).
+
+And adding new buffers *could* be done with it's own separate locking.
+If you have a blocking writer (ie a user space data source), that
+would still take the pipe mutex, and it would delay the user space
+readers (because the readers also need the mutex), but it should not
+be all that hard to just make the whole "curbuf/nrbufs" handling use
+its own locking (maybe even some lockless atomics and cmpxchg).
+
+So a kernel writer could "insert" a "struct pipe_buffer" atomically,
+and wake up the reader atomically. No need for the other complexity
+that is protected by the mutex.
+
+The buggest problem is perhaps that the number of pipe buffers per
+pipe is fairly limited by default. PIPE_DEF_BUFFERS is 16, and if we'd
+insert using the ->bufs[] array, that would be the limit of "number of
+messages". But each message could be any size (we've historically
+limited pipe buffers to one page each, but that limit isn't all that
+hard. You could put more data in there).
+
+The number of pipe buffers _is_ dynamic, so the above PIPE_DEF_BUFFERS
+isn't a hard limit, but it would be the default.
+
+Would it be entirely trivial to do all the above? No. But it's
+*literally* just finding the places that work with pipe->curbuf/nrbufs
+and making them use atomic updates. You'd find all the places by just
+renaming them (and making them atomic or whatever) and the compiler
+will tell you "this area needs fixing".
+
+We've actually used pipes for messages before: autofs uses a magic
+packetized pipe buffer thing. It didn't need any extra atomicity,
+though, so it stil all worked with the regular pipe->mutex thing.
+
+And there is a big advantage from using pipes. They really would work
+with almost anything. You could even mix-and-match "data generated by
+kernel" and "data done by 'write()' or 'splice()' by a user process".
+
+NOTE! I'm not at all saying that pipes are perfect. You'll find people
+who swear by sockets instead. They have their own advantages (and
+disadvantages). Most people who do packet-based stuff tend to prefer
+sockets, because those have standard packet-based models (Linux pipes
+have that packet mode too, but it's certainly not standard, and I'm
+not even sure we ever exposed it to user space - it could be that it's
+only used by the autofs daemon).
+
+I have a soft spot for pipes, just because I think they are simpler
+than sockets. But that soft spot might be misplaced.
+
+                   Linus
