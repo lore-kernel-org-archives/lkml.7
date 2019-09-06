@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0578C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FAFCC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:14:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C58E820838
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:14:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8094520838
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:14:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406329AbfIFTOa (ORCPT
+        id S2406339AbfIFTOd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 15:14:30 -0400
-Received: from shelob.surriel.com ([96.67.55.147]:38242 "EHLO
+        Fri, 6 Sep 2019 15:14:33 -0400
+Received: from shelob.surriel.com ([96.67.55.147]:38236 "EHLO
         shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406264AbfIFTOJ (ORCPT
+        with ESMTP id S2406263AbfIFTOJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 6 Sep 2019 15:14:09 -0400
 Received: from imladris.surriel.com ([96.67.55.152])
         by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
         (Exim 4.92.1)
         (envelope-from <riel@shelob.surriel.com>)
-        id 1i6Jey-0003p8-E1; Fri, 06 Sep 2019 15:12:40 -0400
+        id 1i6Jey-0003p8-IR; Fri, 06 Sep 2019 15:12:40 -0400
 From:   Rik van Riel <riel@surriel.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     kernel-team@fb.com, pjt@google.com, dietmar.eggemann@arm.com,
         peterz@infradead.org, mingo@redhat.com, morten.rasmussen@arm.com,
         tglx@linutronix.de, mgorman@techsingularity.net,
         vincent.guittot@linaro.org, Rik van Riel <riel@surriel.com>
-Subject: [PATCH 06/15] sched,cfs: use explicit cfs_rq of parent se helper
-Date:   Fri,  6 Sep 2019 15:12:28 -0400
-Message-Id: <20190906191237.27006-7-riel@surriel.com>
+Subject: [PATCH 09/15] sched,fair: add helper functions for flattened runqueue
+Date:   Fri,  6 Sep 2019 15:12:31 -0400
+Message-Id: <20190906191237.27006-10-riel@surriel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190906191237.27006-1-riel@surriel.com>
 References: <20190906191237.27006-1-riel@surriel.com>
@@ -44,73 +44,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use an explicit "cfs_rq of parent sched_entity" helper in a few
-strategic places, where cfs_rq_of(se) may no longer point at the
-right runqueue once we flatten the hierarchical cgroup runqueues.
+Add helper functions to make the flattened runqueue patch a little smaller.
 
-No functional change.
+The task_se_h_weight function is similar to task_se_h_load, but scales the
+task weight by the group weight, without taking the task's duty cycle into
+account.
+
+The task_se_in_cgroup helper is functionally identical to parent_entity,
+but directly calling a function with that name obscures what the other
+code is trying to use it for, and would make the code harder to understand.
 
 Signed-off-by: Rik van Riel <riel@surriel.com>
 ---
- kernel/sched/fair.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ kernel/sched/fair.c | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 1c1593611291..dfc116cb8750 100644
+index 3e294e9c9994..08f7f627bdde 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -276,6 +276,15 @@ static inline struct cfs_rq *group_cfs_rq(struct sched_entity *grp)
- 	return grp->my_q;
+@@ -243,6 +243,7 @@ static u64 __calc_delta(u64 delta_exec, unsigned long weight, struct load_weight
+ 
+ const struct sched_class fair_sched_class;
+ static unsigned long task_se_h_load(struct sched_entity *se);
++static unsigned long task_se_h_weight(struct sched_entity *se);
+ 
+ /**************************************************************
+  * CFS operations on generic schedulable entities:
+@@ -431,6 +432,12 @@ static inline struct sched_entity *parent_entity(struct sched_entity *se)
+ 	return se->parent;
  }
  
-+/* runqueue owned by the parent entity; the root cfs_rq for a top level se */
-+static inline struct cfs_rq *group_cfs_rq_of_parent(struct sched_entity *se)
++/* Is this (task) sched_entity in a non-root cgroup? */
++static inline bool task_se_in_cgroup(struct sched_entity *se)
 +{
-+	if (se->parent)
-+		return group_cfs_rq(se->parent);
-+
-+	return cfs_rq_of(se);
++	return parent_entity(se);
 +}
 +
- static inline bool list_add_leaf_cfs_rq(struct cfs_rq *cfs_rq)
+ static void
+ find_matching_se(struct sched_entity **se, struct sched_entity **pse)
  {
- 	struct rq *rq = rq_of(cfs_rq);
-@@ -3319,7 +3328,7 @@ static inline int propagate_entity_load_avg(struct sched_entity *se)
+@@ -513,6 +520,11 @@ static inline struct sched_entity *parent_entity(struct sched_entity *se)
+ 	return NULL;
+ }
  
- 	gcfs_rq->propagate = 0;
++static inline bool task_se_in_cgroup(struct sched_entity *se)
++{
++	return false;
++}
++
+ static inline void
+ find_matching_se(struct sched_entity **se, struct sched_entity **pse)
+ {
+@@ -7853,6 +7865,20 @@ static void update_cfs_rq_h_load(struct cfs_rq *cfs_rq)
+ 	}
+ }
  
--	cfs_rq = cfs_rq_of(se);
++static unsigned long task_se_h_weight(struct sched_entity *se)
++{
++	struct cfs_rq *cfs_rq;
++
++	if (!task_se_in_cgroup(se))
++		return se->load.weight;
++
 +	cfs_rq = group_cfs_rq_of_parent(se);
- 
- 	add_tg_cfs_propagate(cfs_rq, gcfs_rq->prop_runnable_sum);
- 
-@@ -7796,7 +7805,7 @@ static void update_cfs_rq_h_load(struct cfs_rq *cfs_rq)
- 
- 	WRITE_ONCE(cfs_rq->h_load_next, NULL);
- 	for_each_sched_entity(se) {
--		cfs_rq = cfs_rq_of(se);
-+		cfs_rq = group_cfs_rq_of_parent(se);
- 		WRITE_ONCE(cfs_rq->h_load_next, se);
- 		if (cfs_rq->last_h_load_update == now)
- 			break;
-@@ -7819,7 +7828,7 @@ static void update_cfs_rq_h_load(struct cfs_rq *cfs_rq)
- 
++	update_cfs_rq_h_load(cfs_rq);
++
++	/* Reduce the load.weight by the h_load of the group the task is in. */
++	return (cfs_rq->h_load * se->load.weight) >> SCHED_FIXEDPOINT_SHIFT;
++}
++
  static unsigned long task_se_h_load(struct sched_entity *se)
  {
--	struct cfs_rq *cfs_rq = cfs_rq_of(se);
-+	struct cfs_rq *cfs_rq = group_cfs_rq_of_parent(se);
+ 	struct cfs_rq *cfs_rq = group_cfs_rq_of_parent(se);
+@@ -7889,6 +7915,11 @@ static unsigned long task_se_h_load(struct sched_entity *se)
+ {
+ 	return se->avg.load_avg;
+ }
++
++static unsigned long task_se_h_weight(struct sched_entity *se)
++{
++	return se->load.weight;
++}
+ #endif
  
- 	update_cfs_rq_h_load(cfs_rq);
- 	return div64_ul(se->avg.load_avg * cfs_rq->h_load,
-@@ -10166,7 +10175,7 @@ static void task_tick_fair(struct rq *rq, struct task_struct *curr, int queued)
- 	struct sched_entity *se = &curr->se;
- 
- 	for_each_sched_entity(se) {
--		cfs_rq = cfs_rq_of(se);
-+		cfs_rq = group_cfs_rq_of_parent(se);
- 		entity_tick(cfs_rq, se, queued);
- 	}
- 
+ /********** Helpers for find_busiest_group ************************/
 -- 
 2.20.1
 
