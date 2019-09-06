@@ -2,170 +2,207 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0653C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B41DC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86C8E2084F
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:45:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567759527;
-	bh=AAE6gQwrlz04d9iJfV1epm//tdvLevDGznfUaNeLQvU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=nrJKi2908UbeVwZtGWmBbRLK7eVFHM3v+6x3zO4F2Dh51Wytt1Ja/yxNhuWq0RD8e
-	 okzeNP98O0URgVOUy7Js19jqNVd7LQG2PfugOfmJeUznjVhnZn6ZV9oAVyjCPqU2ux
-	 HFKfvuvHUGbiufcuXhWXnNIQ+zrAaQUapU0QqwgA=
+	by mail.kernel.org (Postfix) with ESMTP id 2818720842
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:45:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391294AbfIFIp0 (ORCPT
+        id S2391639AbfIFIpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 04:45:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56662 "EHLO mail.kernel.org"
+        Fri, 6 Sep 2019 04:45:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56766 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728916AbfIFIp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 04:45:26 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728916AbfIFIpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 04:45:40 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 123DD20842;
-        Fri,  6 Sep 2019 08:45:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567759524;
-        bh=AAE6gQwrlz04d9iJfV1epm//tdvLevDGznfUaNeLQvU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=sG5ozf2AVIh9mIR5y3TR1TzYNG8U4+5dDppI/VOIVYTpVGKQ+W4dLMb9efVk/pbMJ
-         O0d7MDtEzkcHMINTSO8JKA2zRW06spJGhRSgsat5WZyYvbs3z4gxe5yyC6lWwZc+hT
-         vKaBfTlFbNcMkpW/sNKnc7Zg9zhLOLMYz66uGf7w=
-Date:   Fri, 6 Sep 2019 17:45:19 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org
-Subject: Re: [PATCH -tip v3 1/2] x86: xen: insn: Decode Xen and KVM
- emulate-prefix signature
-Message-Id: <20190906174519.699b83f08d81b55203212fa1@kernel.org>
-In-Reply-To: <20190906073436.GS2349@hirez.programming.kicks-ass.net>
-References: <156773433821.31441.2905951246664148487.stgit@devnote2>
-        <156773434815.31441.12739136439382289412.stgit@devnote2>
-        <20190906073436.GS2349@hirez.programming.kicks-ass.net>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        by mx1.redhat.com (Postfix) with ESMTPS id C7515C04BD48;
+        Fri,  6 Sep 2019 08:45:39 +0000 (UTC)
+Received: from [10.36.117.162] (ovpn-117-162.ams2.redhat.com [10.36.117.162])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 098B25C219;
+        Fri,  6 Sep 2019 08:45:31 +0000 (UTC)
+Subject: Re: [RFC PATCH v2] mm: initialize struct pages reserved by
+ ZONE_DEVICE driver.
+To:     Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "mhocko@kernel.org" <mhocko@kernel.org>,
+        "adobriyan@gmail.com" <adobriyan@gmail.com>,
+        "hch@lst.de" <hch@lst.de>,
+        "longman@redhat.com" <longman@redhat.com>,
+        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
+        "mst@redhat.com" <mst@redhat.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Junichi Nomura <j-nomura@ce.jp.nec.com>
+References: <20190906081027.15477-1-t-fukasawa@vx.jp.nec.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <b7732a55-4a10-2c1d-c2f5-ca38ee60964d@redhat.com>
+Date:   Fri, 6 Sep 2019 10:45:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190906081027.15477-1-t-fukasawa@vx.jp.nec.com>
+Content-Type: text/plain; charset=iso-2022-jp
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Fri, 06 Sep 2019 08:45:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 6 Sep 2019 09:34:36 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+On 06.09.19 10:09, Toshiki Fukasawa wrote:
+> A kernel panic is observed during reading
+> /proc/kpage{cgroup,count,flags} for first few pfns allocated by
+> pmem namespace:
+> 
+> BUG: unable to handle page fault for address: fffffffffffffffe
+> [  114.495280] #PF: supervisor read access in kernel mode
+> [  114.495738] #PF: error_code(0x0000) - not-present page
+> [  114.496203] PGD 17120e067 P4D 17120e067 PUD 171210067 PMD 0
+> [  114.496713] Oops: 0000 [#1] SMP PTI
+> [  114.497037] CPU: 9 PID: 1202 Comm: page-types Not tainted 5.3.0-rc1
+> [  114.497621] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.0-0-g63451fca13-prebuilt.qemu-project.org 04/01/2014
+> [  114.498706] RIP: 0010:stable_page_flags+0x27/0x3f0
+> [  114.499142] Code: 82 66 90 66 66 66 66 90 48 85 ff 0f 84 d1 03 00 00 41 54 55 48 89 fd 53 48 8b 57 08 48 8b 1f 48 8d 42 ff 83 e2 01 48 0f 44 c7 <48> 8b 00 f6 c4 02 0f 84 57 03 00 00 45 31 e4 48 8b 55 08 48 89 ef
+> [  114.500788] RSP: 0018:ffffa5e601a0fe60 EFLAGS: 00010202
+> [  114.501373] RAX: fffffffffffffffe RBX: ffffffffffffffff RCX: 0000000000000000
+> [  114.502009] RDX: 0000000000000001 RSI: 00007ffca13a7310 RDI: ffffd07489000000
+> [  114.502637] RBP: ffffd07489000000 R08: 0000000000000001 R09: 0000000000000000
+> [  114.503270] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000240000
+> [  114.503896] R13: 0000000000080000 R14: 00007ffca13a7310 R15: ffffa5e601a0ff08
+> [  114.504530] FS:  00007f0266c7f540(0000) GS:ffff962dbbac0000(0000) knlGS:0000000000000000
+> [  114.505245] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  114.505754] CR2: fffffffffffffffe CR3: 000000023a204000 CR4: 00000000000006e0
+> [  114.506401] Call Trace:
+> [  114.506660]  kpageflags_read+0xb1/0x130
+> [  114.507051]  proc_reg_read+0x39/0x60
+> [  114.507387]  vfs_read+0x8a/0x140
+> [  114.507686]  ksys_pread64+0x61/0xa0
+> [  114.508021]  do_syscall_64+0x5f/0x1a0
+> [  114.508372]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> [  114.508844] RIP: 0033:0x7f0266ba426b
+> 
+> The first few pages of ZONE_DEVICE expressed as the range
+> (altmap->base_pfn) to (altmap->base_pfn + altmap->reserve) are
+> skipped by struct page initialization. Some pfn walkers like
+> /proc/kpage{cgroup, count, flags} can't handle these uninitialized
+> struct pages, which causes the error.
+> 
+> In previous discussion, Dan seemed to have concern that the struct
+> page area of some pages indicated by vmem_altmap->reserve may not
+> be allocated. (See https://lore.kernel.org/lkml/CAPcyv4i5FjTOnPbXNcTzvt+e6RQYow0JRQwSFuxaa62LSuvzHQ@mail.gmail.com/)
+> However, arch_add_memory() called by devm_memremap_pages() allocates
+> struct page area for pages containing addresses in the range
+> (res.start) to (res.start + resource_size(res)), which include the
+> pages indicated by vmem_altmap->reserve. If I read correctly, it is
+> allocated as requested at least on x86_64. Also, memmap_init_zone()
+> initializes struct pages in the same range.
+> So I think the struct pages should be initialized.>
 
-> On Fri, Sep 06, 2019 at 10:45:48AM +0900, Masami Hiramatsu wrote:
-> 
-> > diff --git a/arch/x86/include/asm/xen/interface.h b/arch/x86/include/asm/xen/interface.h
-> > index 62ca03ef5c65..fe33a9798708 100644
-> > --- a/arch/x86/include/asm/xen/interface.h
-> > +++ b/arch/x86/include/asm/xen/interface.h
-> > @@ -379,12 +379,15 @@ struct xen_pmu_arch {
-> >   * Prefix forces emulation of some non-trapping instructions.
-> >   * Currently only CPUID.
-> >   */
-> > +#include <asm/xen/prefix.h>
-> > +
-> >  #ifdef __ASSEMBLY__
-> > -#define XEN_EMULATE_PREFIX .byte 0x0f,0x0b,0x78,0x65,0x6e ;
-> > +#define XEN_EMULATE_PREFIX .byte __XEN_EMULATE_PREFIX ;
-> >  #define XEN_CPUID          XEN_EMULATE_PREFIX cpuid
-> >  #else
-> > -#define XEN_EMULATE_PREFIX ".byte 0x0f,0x0b,0x78,0x65,0x6e ; "
-> > +#define XEN_EMULATE_PREFIX ".byte " __XEN_EMULATE_PREFIX_STR " ; "
-> >  #define XEN_CPUID          XEN_EMULATE_PREFIX "cpuid"
-> > +
-> >  #endif
-> 
-> Possibly you can do something like:
-> 
-> #define XEN_EMULATE_PREFIX	__ASM_FORM(.byte __XEN_EMULATE_PREFIX ;)
-> #define XEN_CPUID		XEN_EMULATE_PREFIX __ASM_FORM(cpuid)
+For !ZONE_DEVICE memory, the memmap is valid with SECTION_IS_ONLINE -
+for the whole section. For ZONE_DEVICE memory we have no such
+indication. In any section that is !SECTION_IS_ONLINE and
+SECTION_MARKED_PRESENT, we could have any subsections initialized.
 
-Hmm, OK. But should I split this change from insn decoder change?
+The only indication I am aware of is pfn_zone_device_reserved() - which
+seems to check exactly what you are trying to skip here.
 
-> 
-> >  #endif /* _ASM_X86_XEN_INTERFACE_H */
-> > diff --git a/arch/x86/include/asm/xen/prefix.h b/arch/x86/include/asm/xen/prefix.h
-> > new file mode 100644
-> > index 000000000000..f901be0d7a95
-> > --- /dev/null
-> > +++ b/arch/x86/include/asm/xen/prefix.h
-> > @@ -0,0 +1,10 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +#ifndef _TOOLS_ASM_X86_XEN_PREFIX_H
-> > +#define _TOOLS_ASM_X86_XEN_PREFIX_H
-> > +
-> > +#include <linux/stringify.h>
-> > +
-> > +#define __XEN_EMULATE_PREFIX  0x0f,0x0b,0x78,0x65,0x6e
-> > +#define __XEN_EMULATE_PREFIX_STR  __stringify(__XEN_EMULATE_PREFIX)
-> > +
-> > +#endif
-> 
-> How about we make this asm/virt_prefix.h or something and include:
-> 
-> /*
->  * Virt escape sequences to trigger instruction emulation;
->  * ideally these would decode to 'whole' instruction and not destroy
->  * the instruction stream; sadly this is not true for the 'kvm' one :/
->  */
-> 
-> #define __XEN_EMULATE_PREFIX  0x0f,0x0b,0x78,0x65,0x6e  /* ud2 ; .ascii "xen" */
-> #define __KVM_EMULATE_PREFIX  0x0f,0x0b,0x6b,0x76,0x6d	/* ud2 ; .ascii "kvm" */
+Can't you somehow use pfn_zone_device_reserved() ? Or if you considered
+that already, why did you decide against it?
 
-OK, and in that case I think we should do this in separated patch from
-this change.
+> Signed-off-by: Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
+> Cc: stable@vger.kernel.org
+> ---
+> Changes since rev 1:
+>  Instead of avoiding uninitialized pages on the pfn walker side,
+>  we initialize struct pages.
+> 
+> mm/page_alloc.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+> 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 9c91949..6d180ae 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -5846,8 +5846,7 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
+>  
+>  #ifdef CONFIG_ZONE_DEVICE
+>  	/*
+> -	 * Honor reservation requested by the driver for this ZONE_DEVICE
+> -	 * memory. We limit the total number of pages to initialize to just
+> +	 * We limit the total number of pages to initialize to just
+>  	 * those that might contain the memory mapping. We will defer the
+>  	 * ZONE_DEVICE page initialization until after we have released
+>  	 * the hotplug lock.
+> @@ -5856,8 +5855,6 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
+>  		if (!altmap)
+>  			return;
+>  
+> -		if (start_pfn == altmap->base_pfn)
+> -			start_pfn += altmap->reserve;
+>  		end_pfn = altmap->base_pfn + vmem_altmap_offset(altmap);
+>  	}
+>  #endif
+> 
 
-> 
-> > diff --git a/arch/x86/lib/insn.c b/arch/x86/lib/insn.c
-> > index 0b5862ba6a75..b7eb50187db9 100644
-> > --- a/arch/x86/lib/insn.c
-> > +++ b/arch/x86/lib/insn.c
-> 
-> > @@ -58,6 +61,37 @@ void insn_init(struct insn *insn, const void *kaddr, int buf_len, int x86_64)
-> >  		insn->addr_bytes = 4;
-> >  }
-> >  
-> > +static const insn_byte_t xen_prefix[] = { __XEN_EMULATE_PREFIX };
-> > +/* See handle_ud()@arch/x86/kvm/x86.c */
-> > +static const insn_byte_t kvm_prefix[] = "\xf\xbkvm";
-> 
-> Then you can make this consistent; maybe even something like:
-> 
-> static const insn_byte_t *virt_prefix[] = {
-> 	{ __XEN_EMULATE_PREFIX },
-> 	{ __KVM_EMULATE_PREFIX },
-> 	{ NULL },
-> };
-> 
-> And then change emulate_prefix_size to emulate_prefix_index ?
-
-Hmm, how we can get the length of those emulate prefixes?
-For struct insn, since the size information is important, other
-sub fields have "nbyte" field so that caller can find the actual
-bytes from original byte stream.
-
-Maybe we can have struct emulate_prefix { .nbyte, .type }; and
-define enum etc.. but for me, it seems a bit over engineering.
-(since no one use that feature)
-
-Thank you,
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+
+Thanks,
+
+David / dhildenb
