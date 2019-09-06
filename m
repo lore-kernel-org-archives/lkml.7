@@ -2,68 +2,107 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6DF8C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 02:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD9EC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 02:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8219207E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 02:49:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14BA2207E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 02:50:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o68Bclrx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392024AbfIFCtP (ORCPT
+        id S2392041AbfIFCu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 22:49:15 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6235 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2391203AbfIFCtP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 22:49:15 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 56F871731D68F0548963;
-        Fri,  6 Sep 2019 10:49:13 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.207) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 6 Sep 2019
- 10:49:09 +0800
-Subject: Re: [f2fs-dev] [PATCH v2] f2fs: separate NOCoW and pinfile semantics
-From:   Chao Yu <yuchao0@huawei.com>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <20190723023640.GC60778@jaegeuk-macbookpro.roam.corp.google.com>
- <d4d064a2-2b3c-3536-6488-39e7cfdb1ea4@huawei.com>
- <20190729055738.GA95664@jaegeuk-macbookpro.roam.corp.google.com>
- <07cd3aba-3516-9ba5-286e-277abb98e244@huawei.com>
- <20190730180231.GB76478@jaegeuk-macbookpro.roam.corp.google.com>
- <00e70eb1-c4fa-a6c9-69d7-71ff995c7d6c@huawei.com>
- <20190801041435.GB84433@jaegeuk-macbookpro.roam.corp.google.com>
- <d35d5ad7-5622-fbf5-5853-e541f8c26670@huawei.com>
- <20190801222746.GA27597@jaegeuk-macbookpro.roam.corp.google.com>
- <5d566fce-4412-65b2-e9d9-279b648f7551@huawei.com>
- <20190806003749.GB98101@jaegeuk-macbookpro.roam.corp.google.com>
- <b5549a88-6805-99a8-4b0a-3bbf49da794c@huawei.com>
-Message-ID: <5c583e7c-bb69-4bfb-9ff8-29182973c359@huawei.com>
-Date:   Fri, 6 Sep 2019 10:47:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 5 Sep 2019 22:50:28 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42095 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391203AbfIFCu1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 22:50:27 -0400
+Received: by mail-pf1-f193.google.com with SMTP id w22so3288162pfi.9;
+        Thu, 05 Sep 2019 19:50:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VgjVGE6lmfxhygBnBRcl9Vrz9pus5n253xhtFVc0NKA=;
+        b=o68BclrxtpBqJvfD6tSNsOFflIRQ/l2ADb5wWCZzJFChRYr6SktchPaV1FNPE8jsaq
+         nS1tdR7qtKYNTi4a95CJW5tOvBGQ7Az5OmBlRAbJMVp07NepKODC2NDEf+Ke3OkPiZtC
+         KzMfZec26XSCrNPUxtNQrTVXVUTZeiWr6w8RNxY/5Bj06hPLduV6m0ZKbpAjoQTXOInB
+         KRt5CgZJvv1kLuUgv6j223ouAe8bcR1pi8/KUnaLSenkuN0huOyjSav85wLh2Pr2572F
+         peq8dLUF4fxx1mxfUxzUF5Y0N/bMi21gt2QnIFhHhYV253NTJ4WRSOFj0dFwKnnrXfo/
+         zuHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VgjVGE6lmfxhygBnBRcl9Vrz9pus5n253xhtFVc0NKA=;
+        b=tqwVi4TlVAT7g0CRv017P6U+RjvwanZ6/Jd0U6qTPKqY6HsePXh0fezkpt8yQg+2Vw
+         V8oH0sM1OVt5fO0jHvbhHdOzodbDmO7xNkOPwiMszpZzVPA6Hx4Gfeq0TYRNxNWs5yRN
+         0j7BHTYVcs9wtdmpal3qrKDHpkcKDMOxC6ZiW83LTlFWB75iPfBhNu4cEWS3bWu0s5OD
+         XjvOWMeiYK6/xY/83z/UtVAHp8SONAlxUGS1wSLgr0H7mjl58E1+DnGeZIt1ThlZAUf6
+         baWJ+u2GDyFpN8j39s3p1qrjPjHj4ahuI+EvnTbt8OUuHDmQMlK7Wvsx+ENTZ4Vv8g36
+         WpCw==
+X-Gm-Message-State: APjAAAXaXwLnK/Vd+SL98nnjZdSBXdFNWWqA2CxRkNgzIE/5bwe6Lh4x
+        6rQyUcz5Oo4enP1bZBr6T74=
+X-Google-Smtp-Source: APXvYqyh56I11YbI0Ls757lx16cnPwBBUbXbnLk+XuviLZKkM437vuzYWKlS3jQNm4KSJM77TTynwA==
+X-Received: by 2002:a17:90a:2e15:: with SMTP id q21mr7246465pjd.97.1567738226815;
+        Thu, 05 Sep 2019 19:50:26 -0700 (PDT)
+Received: from localhost ([175.223.27.235])
+        by smtp.gmail.com with ESMTPSA id p68sm8147568pfp.9.2019.09.05.19.50.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2019 19:50:25 -0700 (PDT)
+Date:   Fri, 6 Sep 2019 11:50:22 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Qian Cai <cai@lca.pw>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Eric Dumazet <eric.dumazet@gmail.com>, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net/skbuff: silence warnings under memory pressure
+Message-ID: <20190906025022.GA1253@jagdpanzerIV>
+References: <20190904064144.GA5487@jagdpanzerIV>
+ <20190904065455.GE3838@dhcp22.suse.cz>
+ <20190904071911.GB11968@jagdpanzerIV>
+ <20190904074312.GA25744@jagdpanzerIV>
+ <1567599263.5576.72.camel@lca.pw>
+ <20190904144850.GA8296@tigerII.localdomain>
+ <1567629737.5576.87.camel@lca.pw>
+ <20190905113208.GA521@jagdpanzerIV>
+ <1567699393.5576.96.camel@lca.pw>
+ <20190905131413.0aa4e4f1@oasis.local.home>
 MIME-Version: 1.0
-In-Reply-To: <b5549a88-6805-99a8-4b0a-3bbf49da794c@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190905131413.0aa4e4f1@oasis.local.home>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/8/6 9:36, Chao Yu wrote:
->>>> Now WAL mode were set by default in Android, so most of db file are -wal type now.
->>> Will be back again tho.
->> R?
-> Q.
+On (09/05/19 13:14), Steven Rostedt wrote:
+> > Hmm, from the article,
+> > 
+> > https://en.wikipedia.org/wiki/Universal_asynchronous_receiver-transmitter
+> > 
+> > "Since transmission of a single or multiple characters may take a long time
+> > relative to CPU speeds, a UART maintains a flag showing busy status so that the
+> > host system knows if there is at least one character in the transmit buffer or
+> > shift register; "ready for next character(s)" may also be signaled with an
+> > interrupt."
+> 
+> I'm pretty sure all serial consoles do a busy loop on the UART and not
+> use interrupts to notify when it's available.
 
-Jaegeuk, why we reuse persist mode in Q now?
+Yes. Besides, we call console drivers with local IRQs disabled.
 
-Thanks,
+	-ss
