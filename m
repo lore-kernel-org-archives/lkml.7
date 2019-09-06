@@ -2,113 +2,87 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1330C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F02C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1E2E2082C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:46:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E83272082C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:46:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388879AbfIFKq0 (ORCPT
+        id S2389180AbfIFKqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 06:46:26 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:57113 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbfIFKqZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 06:46:25 -0400
-Received: from fsav404.sakura.ne.jp (fsav404.sakura.ne.jp [133.242.250.103])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x86AkCfe050875;
-        Fri, 6 Sep 2019 19:46:12 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav404.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav404.sakura.ne.jp);
- Fri, 06 Sep 2019 19:46:11 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav404.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126227201116.bbtec.net [126.227.201.116])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x86AkB0Q050870
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Fri, 6 Sep 2019 19:46:11 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [RFC PATCH] mm, oom: disable dump_tasks by default
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     David Rientjes <rientjes@google.com>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190903144512.9374-1-mhocko@kernel.org>
- <af0703d2-17e4-1b8e-eb54-58d7743cad60@i-love.sakura.ne.jp>
- <20190904054004.GA3838@dhcp22.suse.cz>
- <alpine.DEB.2.21.1909041302290.95127@chino.kir.corp.google.com>
- <12bcade2-4190-5e5e-35c6-7a04485d74b9@i-love.sakura.ne.jp>
- <20190905140833.GB3838@dhcp22.suse.cz>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <20ec856d-0f1e-8903-dbe0-bbc8b7a1847a@i-love.sakura.ne.jp>
-Date:   Fri, 6 Sep 2019 19:46:10 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 6 Sep 2019 06:46:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38454 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726080AbfIFKqg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 06:46:36 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8AFE9195DD01;
+        Fri,  6 Sep 2019 10:46:36 +0000 (UTC)
+Received: from localhost (ovpn-117-208.ams2.redhat.com [10.36.117.208])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 92B3B5D712;
+        Fri,  6 Sep 2019 10:46:30 +0000 (UTC)
+Date:   Fri, 6 Sep 2019 11:46:29 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, miklos@szeredi.hu,
+        linux-kernel@vger.kernel.org, virtio-fs@redhat.com,
+        dgilbert@redhat.com, mst@redhat.com
+Subject: Re: [PATCH 05/18] Maintain count of in flight requests for
+ VQ_REQUEST queue
+Message-ID: <20190906104629.GM5900@stefanha-x1.localdomain>
+References: <20190905194859.16219-1-vgoyal@redhat.com>
+ <20190905194859.16219-6-vgoyal@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190905140833.GB3838@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="6Mt39TZj+HFMr11E"
+Content-Disposition: inline
+In-Reply-To: <20190905194859.16219-6-vgoyal@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Fri, 06 Sep 2019 10:46:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/09/05 23:08, Michal Hocko wrote:
-> On Thu 05-09-19 22:39:47, Tetsuo Handa wrote:
-> [...]
->> There is nothing that prevents users from enabling oom_dump_tasks by sysctl.
->> But that requires a solution for OOM stalling problem.
-> 
-> You can hardly remove stalling if you are not reducing the amount of
-> output or get it into a different context. Whether the later is
-> reasonable is another question but you are essentially losing "at the
-> OOM event state".
-> 
 
-I am not losing "at the OOM event state". Please find "struct oom_task_info"
-(for now) embedded into "struct task_struct" which holds "at the OOM event state".
+--6Mt39TZj+HFMr11E
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-And my patch moves "printk() from dump_tasks()" from OOM context to WQ context.
-Thus, I do remove stalling by defer printing of "struct oom_task_info" until
-the OOM killer sends SIGKILL and the OOM reaper starts reclaiming memory.
+On Thu, Sep 05, 2019 at 03:48:46PM -0400, Vivek Goyal wrote:
+> As of now we maintain this count only for VQ_HIPRIO. Maintain it for
+> VQ_REQUEST as well so that later it can be used to drain VQ_REQUEST
+> queue.
+>=20
+> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> ---
+>  fs/fuse/virtio_fs.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -639,6 +639,21 @@ struct wake_q_node {
- 	struct wake_q_node *next;
- };
- 
-+/* Memory usage and misc info as of invocation of OOM killer. */
-+struct oom_task_info {
-+	struct list_head list;
-+	unsigned int seq;
-+	char comm[TASK_COMM_LEN];
-+	pid_t pid;
-+	uid_t uid;
-+	pid_t tgid;
-+	unsigned long total_vm;
-+	unsigned long mm_rss;
-+	unsigned long pgtables_bytes;
-+	unsigned long swapents;
-+	int score_adj;
-+};
-+
- struct task_struct {
- #ifdef CONFIG_THREAD_INFO_IN_TASK
- 	/*
-@@ -1260,7 +1275,7 @@ struct task_struct {
- #ifdef CONFIG_MMU
- 	struct task_struct		*oom_reaper_list;
- #endif
--	struct list_head		oom_victim_list;
-+	struct oom_task_info		oom_task_info;
- #ifdef CONFIG_VMAP_STACK
- 	struct vm_struct		*stack_vm_area;
- #endif
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+
+--6Mt39TZj+HFMr11E
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl1yOQUACgkQnKSrs4Gr
+c8i06Qf/YsXsjq8+oavPjTWaNCzD+gEcjd+8mynWoVujlBAz0pFZFRAmIlq1Jfkx
+a0SLeeftv9+xKQOx0U4hGY3m9qOVGA2f6fA+9vTrrJijt3O0QoY5wXN+0n0K0Qae
+ewLQnKeKi12oPmQxy2xCjUT8MIW8xS+nx9PE14LN58+SmoyDx/FbWieHqtzAkKDy
+ykr8KKp4NHWq/+ybm5n5ht0i++jvbtNk+Do4CXPes4Z0YrK1eH3Jqnlrcsx3TuT/
+puv1rBv/9hUQYO/ub4McGshjdSxNlL+BuW0e6LczHlAK2kyFtV0dLbZVJJYdGeC5
+mf6GHYgWCJo1e7tdyqx428bbty/Jhw==
+=h20v
+-----END PGP SIGNATURE-----
+
+--6Mt39TZj+HFMr11E--
