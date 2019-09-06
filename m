@@ -2,68 +2,158 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0D5C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3841C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23DF12186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:29:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="oeQci1hB"
+	by mail.kernel.org (Postfix) with ESMTP id 8F60F208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:30:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393289AbfIFT3b (ORCPT
+        id S2393329AbfIFTaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 15:29:31 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:60430 "EHLO vps0.lunn.ch"
+        Fri, 6 Sep 2019 15:30:46 -0400
+Received: from foss.arm.com ([217.140.110.172]:60564 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727768AbfIFT3b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 15:29:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=VKuOCqb0qokrqyrI79Z2Qe4eyujHBZLejEMxpAlk8kY=; b=oeQci1hBJlwILpkSPpSFnE/4W1
-        /E2bxMrjj4JU/oGw3rkg6DXroxyrGNdCNvhXuAWsDVvZ3j4pQ8wNHkh//Q93D8KAECrrWqcl+94aa
-        YcKfZfCueFCWXEmbtldg4OqboanUAcvzrmlHb7H1ORjcn28P2n2bPLb+BElpFmJ/CWbE=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1i6Jv5-0000mP-9Q; Fri, 06 Sep 2019 21:29:19 +0200
-Date:   Fri, 6 Sep 2019 21:29:19 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>
-Cc:     davem@davemloft.net, robh+dt@kernel.org, f.fainelli@gmail.com,
-        Mark Rutland <mark.rutland@arm.com>,
-        Trent Piepho <tpiepho@impinj.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] net: phy: dp83867: Add documentation for SGMII mode
- type
-Message-ID: <20190906192919.GA2339@lunn.ch>
-References: <1567700761-14195-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
- <1567700761-14195-2-git-send-email-vitaly.gaiduk@cloudbear.ru>
+        id S1730615AbfIFTap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 15:30:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EC7CD28;
+        Fri,  6 Sep 2019 12:30:42 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3C5EB3F718;
+        Fri,  6 Sep 2019 12:30:42 -0700 (PDT)
+Date:   Fri, 6 Sep 2019 20:30:40 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Yue Wang <yue.wang@Amlogic.com>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        zhong jiang <zhongjiang@huawei.com>,
+        kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] PCI: dwc: Use PTR_ERR_OR_ZERO() in five functions
+Message-ID: <20190906193040.GG9720@e119886-lin.cambridge.arm.com>
+References: <95c9dfae-af81-82ad-e989-1fdf5f29808e@web.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1567700761-14195-2-git-send-email-vitaly.gaiduk@cloudbear.ru>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <95c9dfae-af81-82ad-e989-1fdf5f29808e@web.de>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 07:26:00PM +0300, Vitaly Gaiduk wrote:
-> Add documentation of ti,sgmii-type which can be used to select
-> SGMII mode type (4 or 6-wire).
+On Fri, Sep 06, 2019 at 08:50:07PM +0200, Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Fri, 6 Sep 2019 20:40:06 +0200
+> 
+> Simplify these function implementations by using a known function.
+> 
+> Generated by: scripts/coccinelle/api/ptr_ret.cocci
+> 
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
 
-Hi Vitaly
+Thanks for this, looks good to me:
 
-Is 4 vs 6-wire a generic SGMII property? Or is it proprietary to TI?
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 
-I did a quick search and i could not find any other PHYs supporting
-it.
-
-	Andrew
+> ---
+>  drivers/pci/controller/dwc/pci-exynos.c |  5 +----
+>  drivers/pci/controller/dwc/pci-meson.c  | 10 ++--------
+>  drivers/pci/controller/dwc/pcie-kirin.c | 10 ++--------
+>  3 files changed, 5 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
+> index cee5f2f590e2..b6ab1cc5d895 100644
+> --- a/drivers/pci/controller/dwc/pci-exynos.c
+> +++ b/drivers/pci/controller/dwc/pci-exynos.c
+> @@ -92,10 +92,7 @@ static int exynos5440_pcie_get_mem_resources(struct platform_device *pdev,
+> 
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	ep->mem_res->elbi_base = devm_ioremap_resource(dev, res);
+> -	if (IS_ERR(ep->mem_res->elbi_base))
+> -		return PTR_ERR(ep->mem_res->elbi_base);
+> -
+> -	return 0;
+> +	return PTR_ERR_OR_ZERO(ep->mem_res->elbi_base);
+>  }
+> 
+>  static int exynos5440_pcie_get_clk_resources(struct exynos_pcie *ep)
+> diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
+> index e35e9eaa50ee..713059918002 100644
+> --- a/drivers/pci/controller/dwc/pci-meson.c
+> +++ b/drivers/pci/controller/dwc/pci-meson.c
+> @@ -182,10 +182,7 @@ static int meson_pcie_get_mems(struct platform_device *pdev,
+> 
+>  	/* Meson SoC has two PCI controllers use same phy register*/
+>  	mp->mem_res.phy_base = meson_pcie_get_mem_shared(pdev, mp, "phy");
+> -	if (IS_ERR(mp->mem_res.phy_base))
+> -		return PTR_ERR(mp->mem_res.phy_base);
+> -
+> -	return 0;
+> +	return PTR_ERR_OR_ZERO(mp->mem_res.phy_base);
+>  }
+> 
+>  static void meson_pcie_power_on(struct meson_pcie *mp)
+> @@ -259,10 +256,7 @@ static int meson_pcie_probe_clocks(struct meson_pcie *mp)
+>  		return PTR_ERR(res->general_clk);
+> 
+>  	res->clk = meson_pcie_probe_clock(dev, "pcie", 0);
+> -	if (IS_ERR(res->clk))
+> -		return PTR_ERR(res->clk);
+> -
+> -	return 0;
+> +	return PTR_ERR_OR_ZERO(res->clk);
+>  }
+> 
+>  static inline void meson_elb_writel(struct meson_pcie *mp, u32 val, u32 reg)
+> diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
+> index c19617a912bd..75b1f1dde747 100644
+> --- a/drivers/pci/controller/dwc/pcie-kirin.c
+> +++ b/drivers/pci/controller/dwc/pcie-kirin.c
+> @@ -138,10 +138,7 @@ static long kirin_pcie_get_clk(struct kirin_pcie *kirin_pcie,
+>  		return PTR_ERR(kirin_pcie->apb_sys_clk);
+> 
+>  	kirin_pcie->pcie_aclk = devm_clk_get(dev, "pcie_aclk");
+> -	if (IS_ERR(kirin_pcie->pcie_aclk))
+> -		return PTR_ERR(kirin_pcie->pcie_aclk);
+> -
+> -	return 0;
+> +	return PTR_ERR_OR_ZERO(kirin_pcie->pcie_aclk);
+>  }
+> 
+>  static long kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
+> @@ -174,10 +171,7 @@ static long kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
+> 
+>  	kirin_pcie->sysctrl =
+>  		syscon_regmap_lookup_by_compatible("hisilicon,hi3660-sctrl");
+> -	if (IS_ERR(kirin_pcie->sysctrl))
+> -		return PTR_ERR(kirin_pcie->sysctrl);
+> -
+> -	return 0;
+> +	return PTR_ERR_OR_ZERO(kirin_pcie->sysctrl);
+>  }
+> 
+>  static int kirin_pcie_phy_init(struct kirin_pcie *kirin_pcie)
+> --
+> 2.23.0
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
