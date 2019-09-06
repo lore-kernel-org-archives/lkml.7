@@ -2,42 +2,43 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 358A6C43140
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 05:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24263C43140
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 05:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C254214DE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 05:11:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0284720842
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 05:11:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567746705;
-	bh=IYBU8RWlqSgIbvGErYHD/EAnjlBL4u7Aj4RPOn5vpbM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=BopBMAbg5aeBRpcX9+vdebdFOmOdlAS/bdgy9R14R9KP/Qub/s03bGUGxteBAO+UN
-	 8eJnoiE7GPrgjgJlvQ68YgZ1paxpJEu9XDv4qBY/EJGDqEzzQ2WHgaoHT26O/zcbjk
-	 vK+Ak8VR7nPOZn053EomuQ/zJCij6FmlYzM9hb2o=
+	s=default; t=1567746711;
+	bh=8h2WHDT9y/qnU8gqaUSOOuGv/wzGUeapUE/cZcM+kHE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=nx8z9uSzfUR2GghYKU1JavoNaU+b3yAySjW0E1qkI1JwhpyfnzNu+jFDeqzfQv18q
+	 qETZjsxJP4KLf+mO6VujuN66qWwWP7HTaibCZ/72Kv6yPtZbxGf0+DTcHJ99F2Ij2G
+	 QhdHC4h35O0UREkTwLAPTIlFvyHTyL4ao/4f0reI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392263AbfIFFLo (ORCPT
+        id S2392276AbfIFFLu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 01:11:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46822 "EHLO mail.kernel.org"
+        Fri, 6 Sep 2019 01:11:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732560AbfIFFLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 01:11:44 -0400
+        id S1732560AbfIFFLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 01:11:50 -0400
 Received: from localhost.localdomain (unknown [223.226.32.145])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41DDC2070C;
-        Fri,  6 Sep 2019 05:11:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DD932081B;
+        Fri,  6 Sep 2019 05:11:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567746703;
-        bh=IYBU8RWlqSgIbvGErYHD/EAnjlBL4u7Aj4RPOn5vpbM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=zIgdjuZr2DOtl6+9KgEzceNxs+6sd3n3OVm5RgZ6JSi4TI6w20UsZv5j1okklgdhF
-         xjy/ECeG16H146K0N6ECsJFs4kta5EdbUjT3nxZgYYO+2W9QUDyjHvqJ36lS3nDd5T
-         oJ1fahH2VWhaO7inE068UC0AwAje0qe6XacohJcY=
+        s=default; t=1567746709;
+        bh=8h2WHDT9y/qnU8gqaUSOOuGv/wzGUeapUE/cZcM+kHE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kL9vCf7/m22LDJZFgWa0+7eEvDqqdIGdc57xvB4T2FoXsyw09Ra+MT05dQwVdPA2e
+         Nx8/+q7ejlkoROx3YzAdqCNB0iua6DMmQSkKxOUMcM7PWTnig1KVqkh+S08ijJG8Y3
+         1FBIHwkCW9V76w02nSO6aKr1ZVCivHoGhhkjOnlg=
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Kishon Vijay Abraham I <kishon@ti.com>
 Cc:     linux-arm-msm@vger.kernel.org,
@@ -53,10 +54,12 @@ Cc:     linux-arm-msm@vger.kernel.org,
         Subhash Jadavani <subhashj@codeaurora.org>,
         Douglas Anderson <dianders@chromium.org>,
         Stephen Boyd <swboyd@chromium.org>
-Subject: [PATCH v2 0/3] UFS: Add support for SM8150 UFS
-Date:   Fri,  6 Sep 2019 10:40:14 +0530
-Message-Id: <20190906051017.26846-1-vkoul@kernel.org>
+Subject: [PATCH v2 1/3] dt-bindings: ufs: Add sm8150 compatible string
+Date:   Fri,  6 Sep 2019 10:40:15 +0530
+Message-Id: <20190906051017.26846-2-vkoul@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190906051017.26846-1-vkoul@kernel.org>
+References: <20190906051017.26846-1-vkoul@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -64,25 +67,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series adds compatible strings for ufs hc and ufs qmp phy found in
-Qualcomm SM8150 SoC. Also update the qmp phy driver with version 4 and
-support for ufs phy.
+Document "qcom,sm8150-ufshc" compatible string for UFS HC found on
+SM8150.
 
-Changes since v1:
- - make the numbers a lower case hex
- - add review tags recieved
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+---
+ Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Vinod Koul (3):
-  dt-bindings: ufs: Add sm8150 compatible string
-  dt-bindings: phy-qcom-qmp: Add sm8150 UFS phy compatible string
-  phy: qcom-qmp: Add SM8150 QMP UFS PHY support
-
- .../devicetree/bindings/phy/qcom-qmp-phy.txt  |   7 +-
- .../devicetree/bindings/ufs/ufshcd-pltfrm.txt |   1 +
- drivers/phy/qualcomm/phy-qcom-qmp.c           | 125 ++++++++++++++++++
- drivers/phy/qualcomm/phy-qcom-qmp.h           |  96 ++++++++++++++
- 4 files changed, 228 insertions(+), 1 deletion(-)
-
+diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+index a74720486ee2..7529e2c26127 100644
+--- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
++++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+@@ -13,6 +13,7 @@ Required properties:
+ 			    "qcom,msm8996-ufshc", "qcom,ufshc", "jedec,ufs-2.0"
+ 			    "qcom,msm8998-ufshc", "qcom,ufshc", "jedec,ufs-2.0"
+ 			    "qcom,sdm845-ufshc", "qcom,ufshc", "jedec,ufs-2.0"
++			    "qcom,sm8150-ufshc", "qcom,ufshc", "jedec,ufs-2.0"
+ - interrupts        : <interrupt mapping for UFS host controller IRQ>
+ - reg               : <registers mapping>
+ 
 -- 
 2.20.1
 
