@@ -2,176 +2,141 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1407CC00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E07ADC00307
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:14:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E321E20578
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:10:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C37F620842
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:14:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395103AbfIFRKX (ORCPT
+        id S2395147AbfIFROC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 13:10:23 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37790 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733096AbfIFRKW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 13:10:22 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x86H7DMK074642
-        for <linux-kernel@vger.kernel.org>; Fri, 6 Sep 2019 13:10:21 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uusdmdy48-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 13:10:20 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
-        Fri, 6 Sep 2019 18:10:18 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 6 Sep 2019 18:10:13 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x86HACop42008614
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 6 Sep 2019 17:10:12 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7642811C04A;
-        Fri,  6 Sep 2019 17:10:12 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6F88311C064;
-        Fri,  6 Sep 2019 17:10:08 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.102.0.23])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  6 Sep 2019 17:10:08 +0000 (GMT)
-Subject: Re: [RFC PATCH 1/9] sched,cgroup: Add interface for latency-nice
-To:     Valentin Schneider <valentin.schneider@arm.com>,
-        Patrick Bellasi <patrick.bellasi@arm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
-        steven.sistare@oracle.com, dhaval.giani@oracle.com,
-        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
-        mgorman@techsingularity.net
-References: <20190830174944.21741-1-subhra.mazumdar@oracle.com>
- <20190830174944.21741-2-subhra.mazumdar@oracle.com>
- <20190905083127.GA2332@hirez.programming.kicks-ass.net>
- <87r24v2i14.fsf@arm.com>
- <20190905104616.GD2332@hirez.programming.kicks-ass.net>
- <87imq72dpc.fsf@arm.com> <df69627e-8aa0-e2cb-044e-fb392f34efa5@arm.com>
- <87d0ge3n85.fsf@arm.com> <3bb17e15-5492-b78c-20a8-5989519f20e2@linux.ibm.com>
- <75e782c7-121d-a0ea-7fbf-efb0c83f50e6@arm.com>
-From:   Parth Shah <parth@linux.ibm.com>
-Date:   Fri, 6 Sep 2019 22:40:07 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.0
+        Fri, 6 Sep 2019 13:14:02 -0400
+Received: from mx2.mailbox.org ([80.241.60.215]:62144 "EHLO mx2.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731344AbfIFROB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 13:14:01 -0400
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx2.mailbox.org (Postfix) with ESMTPS id 2C196A1701;
+        Fri,  6 Sep 2019 19:13:58 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter04.heinlein-hosting.de (spamfilter04.heinlein-hosting.de [80.241.56.122]) (amavisd-new, port 10030)
+        with ESMTP id KTJPQqxl-qfv; Fri,  6 Sep 2019 19:13:54 +0200 (CEST)
+Date:   Sat, 7 Sep 2019 03:13:35 +1000
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
+        Florian Weimer <fweimer@redhat.com>,
+        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+        linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Eric Chiang <ericchiang@google.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Philippe =?utf-8?Q?Tr=C3=A9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] fs: Add support for an O_MAYEXEC flag on
+ sys_open()
+Message-ID: <20190906171335.d7mc3no5tdrcn6r5@yavin.dot.cyphar.com>
+References: <20190906152455.22757-1-mic@digikod.net>
+ <20190906152455.22757-2-mic@digikod.net>
+ <87ef0te7v3.fsf@oldenburg2.str.redhat.com>
+ <75442f3b-a3d8-12db-579a-2c5983426b4d@ssi.gouv.fr>
+ <f53ec45fd253e96d1c8d0ea6f9cca7f68afa51e3.camel@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <75e782c7-121d-a0ea-7fbf-efb0c83f50e6@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19090617-0008-0000-0000-00000311F001
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19090617-0009-0000-0000-00004A304E1F
-Message-Id: <f4d28328-973c-4b94-334d-a68c958f6cc4@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-06_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909060182
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ksyy7c2s2dmez4ls"
+Content-Disposition: inline
+In-Reply-To: <f53ec45fd253e96d1c8d0ea6f9cca7f68afa51e3.camel@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--ksyy7c2s2dmez4ls
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 9/6/19 7:43 PM, Valentin Schneider wrote:
-> On 06/09/2019 13:45, Parth Shah wrote:> 
->> I guess there is some usecase in case of thermal throttling.
->> If a task is heating up the core then in ideal scenarios POWER systems throttle
->> down to rated frequency.
->> In such case, if the task is latency sensitive (min latency nice), we can move the
->> task around the chip to heat up the chip uniformly allowing me to gain more performance
->> with sustained higher frequency.
->> With this, we will require the help from active load balancer and latency-nice
->> classification on per task and/or group basis.
->>
->> Hopefully, this might be useful for other arch as well, right?
->>
-> 
-> Most of the functionality is already there, we're only really missing thermal
-> pressure awareness. There was [1] but it seems to have died.
-> 
-> 
-> At least with CFS load balancing, if thermal throttling is correctly
-> reflected as a CPU capacity reduction you will tend to move things away from
-> that CPU, since load is balanced over capacities.
-> 
+On 2019-09-06, Jeff Layton <jlayton@kernel.org> wrote:
+> On Fri, 2019-09-06 at 18:06 +0200, Micka=EBl Sala=FCn wrote:
+> > On 06/09/2019 17:56, Florian Weimer wrote:
+> > > Let's assume I want to add support for this to the glibc dynamic load=
+er,
+> > > while still being able to run on older kernels.
+> > >=20
+> > > Is it safe to try the open call first, with O_MAYEXEC, and if that fa=
+ils
+> > > with EINVAL, try again without O_MAYEXEC?
+> >=20
+> > The kernel ignore unknown open(2) flags, so yes, it is safe even for
+> > older kernel to use O_MAYEXEC.
+> >=20
+>=20
+> Well...maybe. What about existing programs that are sending down bogus
+> open flags? Once you turn this on, they may break...or provide a way to
+> circumvent the protections this gives.
 
-Right, CPU capacity can solve the problem of indicating the thermal throttle to the scheduler.
-AFAIU, the patchset from Thara changes CPU capacity to reflect Thermal headroom of the CPU.
-This is a nice mitigation but,
-1. Sometimes a single task is responsible for the Thermal heatup of the core, reducing the
-   CPU capacity of all the CPUs in the core is not optimal when just moving such single
-   task to other core can allow us to remain within thermal headroom. This is important
-   for the servers especially where there are upto 8 threads.
-2. Given the implementation in the patches and its integration with EAS, it seems difficult
-   to adapt to servers, where CPU capacity itself is in doubt.
-   https://lkml.org/lkml/2019/5/15/1402
+It should be noted that this has been a valid concern for every new O_*
+flag introduced (and yet we still introduced new flags, despite the
+concern) -- though to be fair, O_TMPFILE actually does have a
+work-around with the O_DIRECTORY mask setup.
 
-> 
-> For active balance, we actually already have a condition that moves a task
-> to a less capacity-pressured CPU (although it is somewhat specific). So if
-> thermal pressure follows that task (e.g. it's doing tons of vector/float),
-> it will be rotated around.
+The openat2() set adds O_EMPTYPATH -- though in fairness it's also
+backwards compatible because empty path strings have always given ENOENT
+(or EINVAL?) while O_EMPTYPATH is a no-op non-empty strings.
 
-Agree. But this should break in certain conditions like when we have multiple tasks
-in a core with almost equal utilization among which one is just doing vector operations.
-LB can pick and move any task with equal probability if the capacity is reduced here.
+> Maybe this should be a new flag that is only usable in the new openat2()
+> syscall that's still under discussion? That syscall will enforce that
+> all flags are recognized. You presumably wouldn't need the sysctl if you
+> went that route too.
 
-> 
-> However there should be a point made on latency vs throughput. If you
-> care about latency you probably do not want to active balance your task. If
+I'm also interested in whether we could add an UPGRADE_NOEXEC flag to
+how->upgrade_mask for the openat2(2) patchset (I reserved a flag bit for
+it, since I'd heard about this work through the grape-vine).
 
-Can you please elaborate on why not to consider active balance for latency sensitive tasks?
-Because, sometimes finding a thermally cool core is beneficial when Turbo frequency
-range is around 20% above rated ones.
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
 
-> you care about throughput, it should be specified in some way (util-clamp
-> says hello!).
-> 
+--ksyy7c2s2dmez4ls
+Content-Type: application/pgp-signature; name="signature.asc"
 
-yes I do care for latency and throughput both. :-)
-but I'm wondering how uclamp can solve the problem for throughput.
-If I make the thermally hot tasks to appear bigger than other tasks then reducing
-CPU capacity can allow such tasks to move around the chip.
-But this will require the utilization value to be relatively large compared to the other
-tasks in the core. Or other task's uclamp.max can be lowered to make such task rotate.
-If I got it right, then this will be a difficult UCLAMP usecase from user perspective, right?
-I feel like I'm missing something here.
+-----BEGIN PGP SIGNATURE-----
 
-> It sort of feels like you'd want an extension of misfit migration (salesman
-> hat goes on from here) - misfit moves tasks that are CPU bound (IOW their
-> util is >= 80% of the CPU capacity) to CPUs of higher capacity. It's only
-> enabled for systems with asymmetric capacities, but could be enabled globally
-> for "dynamically-created asymmetric capacities" (IOW RT/IRQ/thermal pressure
-> on SMP systems).> On top of that, if we make misfit consider e.g. uclamp.min (I don't think
-> that's already the case), then you have your throughput knob to have *some* 
-> designated tasks move away from (thermal & else) pressure. 
-> 
-> 
-> [1]: https://lore.kernel.org/lkml/1555443521-579-1-git-send-email-thara.gopinath@linaro.org/
-> 
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXXKTvAAKCRCdlLljIbnQ
+Ep42AQDi8f6e24vrdyEbKC1Hri+QQFzpcnoeEUiuXcTSgZHNWgD/eHmpIaIcPrjX
+g5Pz4p5iuc67RR3OCv44VfaA+oZMjAo=
+=7221
+-----END PGP SIGNATURE-----
 
-Thanks,
-Parth
-
+--ksyy7c2s2dmez4ls--
