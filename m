@@ -2,107 +2,168 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17517C00306
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 03:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C20FC43140
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 03:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19D832082C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 03:01:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567738903;
-	bh=SzGojQzToRqxCpfmdL86DOZQu8Y6O9dT8W5aQVfbQtM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RqexiHypdlmgwnJOMhoExWv45FQHT9zzFhkWU5paWVxc8L/Yhcfp2+RIXMJ1MytEA
-	 rq6D5lt9ACLXwa6Y+pVhJMNhTuSFMJ7CC/N4NRUUt2M99WR8GPGFbtp3+YbijbOM+k
-	 QZTilH4N3nYkhwzz6dNk8vDm4VCFYK63TLwA/Y8U=
+	by mail.kernel.org (Postfix) with ESMTP id 37FB62082C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 03:01:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="qKDIxdaB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392066AbfIFDBm (ORCPT
+        id S2392076AbfIFDBs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 23:01:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47404 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389424AbfIFDBl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 23:01:41 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29D0F206DE;
-        Fri,  6 Sep 2019 03:01:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567738901;
-        bh=SzGojQzToRqxCpfmdL86DOZQu8Y6O9dT8W5aQVfbQtM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Z1Be55gNDfWeThG1FWdE+yvMpl2tizqjHZX1hjRMeSA1xDz17abFKiO0cSKIBepey
-         ho2Lettv6EyOoj87WTit0tPc+j4w4RxDIKigQxK+DMSO4p+w3fu0gUWceZllTsfIZc
-         92lXiMjeXPSSqqyUrJSAwleXJCOJkKIDrL8wCyDU=
-Date:   Thu, 5 Sep 2019 20:01:39 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com,
-        syzbot+5aca688dac0796c56129@syzkaller.appspotmail.com
-Subject: Re: [PATCH vfs/for-next] vfs: fix vfs_get_single_reconf_super error
- handling
-Message-ID: <20190906030139.GC803@sol.localdomain>
-Mail-Followup-To: Alexander Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        syzbot+5aca688dac0796c56129@syzkaller.appspotmail.com
-References: <0000000000003675ae05915a9fd3@google.com>
- <20190831031024.26008-1-ebiggers@kernel.org>
+        Thu, 5 Sep 2019 23:01:48 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:45206 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731491AbfIFDBp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 23:01:45 -0400
+Received: by mail-pl1-f193.google.com with SMTP id x3so2355305plr.12
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 20:01:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VdtQHcHlOGfkgdoayOFupO26wYojQPptWdBT4QWZFV0=;
+        b=qKDIxdaBOcENAQEPhYaySH0B5SQARhQhLC6br1u55nJm0eVwYM8SSQVmlFoHirjoub
+         Q0JZknIUZ1KihMnJ+Y/QiW6S2D06im9oRco+h+YsqTvdg8pxq+y8iCrMrDOEZEZbIxig
+         Ngr6Lv3il76BZi2EFjjXczMgUa5KVU0HK757M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VdtQHcHlOGfkgdoayOFupO26wYojQPptWdBT4QWZFV0=;
+        b=GveE7ji/S0GKpE4fQWoBe+UtYRfsKvnqyBthqB8B7wxVGnM4pXvGf2ki9EXqhIXwcY
+         IGaPiNxRVtlF5im4x5wbHxENaRHhdiHu5mbUReH689p0XPSsta1M0Hu49KthZdxXV1c7
+         Vb+kwJs03YUiWFdBjgr8+h92a8ap0NKcNAhFPOBDP8uDE9+Cgp4k9nNGP15uKtTRkNeX
+         I4RyOqnkMgsiiFKPkB8me5j2nIsH7zsYbZXwXVf06/TqWcNBlwhFIzrb3FovybaduBXt
+         aML12E6Ipfh+q1Vg9hypiEbKKoLQIJOoekDVVbdmAPYScvYa6jsg0YIoWSHjyiZSAIFU
+         WrSQ==
+X-Gm-Message-State: APjAAAUE9zDXXbX3tzdMyFrlq0ndCAiIxVy9//32F+W0WOUlWvrv7ZOt
+        EjOWAO/lUA4cpM4XKnH7Hi1G5w==
+X-Google-Smtp-Source: APXvYqwZPj7q8xJbbhNyAYHvgPo532plxc4r83loWDY18f56T55uFaXSHxe+m00EA+dA31PShWQEPQ==
+X-Received: by 2002:a17:902:bc4c:: with SMTP id t12mr6912147plz.90.1567738904014;
+        Thu, 05 Sep 2019 20:01:44 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id d135sm4364879pfd.81.2019.09.05.20.01.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2019 20:01:43 -0700 (PDT)
+Date:   Thu, 5 Sep 2019 23:01:42 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tim Murray <timmurray@google.com>,
+        Carmen Jackson <carmenjackson@google.com>,
+        Mayank Gupta <mayankgupta@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        kernel-team <kernel-team@android.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        linux-mm <linux-mm@kvack.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Tom Zanussi <zanussi@kernel.org>
+Subject: Re: [PATCH v2] mm: emit tracepoint when RSS changes by threshold
+Message-ID: <20190906030142.GA29926@google.com>
+References: <20190904084508.GL3838@dhcp22.suse.cz>
+ <20190904153258.GH240514@google.com>
+ <20190904153759.GC3838@dhcp22.suse.cz>
+ <20190904162808.GO240514@google.com>
+ <20190905144310.GA14491@dhcp22.suse.cz>
+ <CAJuCfpFve2v7d0LX20btk4kAjEpgJ4zeYQQSpqYsSo__CY68xw@mail.gmail.com>
+ <20190905133507.783c6c61@oasis.local.home>
+ <CAKOZueuQpHDnk-3GrLdXH_N_5Z7FRSJu+cwKhHNMUyKRqvkzjA@mail.gmail.com>
+ <20190906005904.GC224720@google.com>
+ <CAKOZuevJyfZRFz3M5myLy+XpS=mAxYCf+oQ2csxCHh7VO-OrKw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190831031024.26008-1-ebiggers@kernel.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CAKOZuevJyfZRFz3M5myLy+XpS=mAxYCf+oQ2csxCHh7VO-OrKw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 10:10:24PM -0500, Eric Biggers wrote:
-> From: Eric Biggers <ebiggers@google.com>
+On Thu, Sep 05, 2019 at 06:15:43PM -0700, Daniel Colascione wrote:
+[snip]
+> > > > > > > The bigger improvement with the threshold is the number of trace records are
+> > > > > > > almost halved by using a threshold. The number of records went from 4.6K to
+> > > > > > > 2.6K.
+> > > > > >
+> > > > > > Steven, would it be feasible to add a generic tracepoint throttling?
+> > > > >
+> > > > > I might misunderstand this but is the issue here actually throttling
+> > > > > of the sheer number of trace records or tracing large enough changes
+> > > > > to RSS that user might care about? Small changes happen all the time
+> > > > > but we are likely not interested in those. Surely we could postprocess
+> > > > > the traces to extract changes large enough to be interesting but why
+> > > > > capture uninteresting information in the first place? IOW the
+> > > > > throttling here should be based not on the time between traces but on
+> > > > > the amount of change of the traced signal. Maybe a generic facility
+> > > > > like that would be a good idea?
+> > > >
+> > > > You mean like add a trigger (or filter) that only traces if a field has
+> > > > changed since the last time the trace was hit? Hmm, I think we could
+> > > > possibly do that. Perhaps even now with histogram triggers?
+> > >
+> > > I was thinking along the same lines. The histogram subsystem seems
+> > > like a very good fit here. Histogram triggers already let users talk
+> > > about specific fields of trace events, aggregate them in configurable
+> > > ways, and (importantly, IMHO) create synthetic new trace events that
+> > > the kernel emits under configurable conditions.
+> >
+> > Hmm, I think this tracing feature will be a good idea. But in order not to
+> > gate this patch, can we agree on keeping a temporary threshold for this
+> > patch? Once such idea is implemented in trace subsystem, then we can remove
+> > the temporary filter.
+> >
+> > As Tim said, we don't want our traces flooded and this is a very useful
+> > tracepoint as proven in our internal usage at Android. The threshold filter
+> > is just few lines of code.
 > 
-> syzbot reported an invalid free in debugfs_release_dentry().  The
-> reproducer tries to mount debugfs with the 'dirsync' option, which is
-> not allowed.  The bug is that if reconfigure_super() fails in
-> vfs_get_super(), deactivate_locked_super() is called, but also
-> fs_context::root is left non-NULL which causes deactivate_super() to be
-> called again later.
+> I'm not sure the threshold filtering code you've added does the right
+> thing: we don't keep state, so if a counter constantly flips between
+> one "side" of the TRACE_MM_COUNTER_THRESHOLD and the other, we'll emit
+> ftrace events at high frequency. More generally, this filtering
+> couples the rate of counter logging to the *value* of the counter ---
+> that is, we log ftrace events at different times depending on how much
+> memory we happen to have used --- and that's not ideal from a
+> predictability POV.
 > 
-> Fix it by releasing fs_context::root in the error path.
+> All things being equal, I'd prefer that we get things upstream as fast
+> as possible. But in this case, I'd rather wait for a general-purpose
+> filtering facility (whether that facility is based on histogram, eBPF,
+> or something else) rather than hardcode one particular fixed filtering
+> strategy (which might be suboptimal) for one particular kind of event.
+> Is there some special urgency here?
 > 
-> Reported-by: syzbot+5aca688dac0796c56129@syzkaller.appspotmail.com
-> Fixes: e478b48498a7 ("vfs: Add a single-or-reconfig keying to vfs_get_super()")
-> Cc: David Howells <dhowells@redhat.com>
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
-> ---
->  fs/super.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+> How about we instead add non-filtered tracepoints for the mm counters?
+> These tracepoints will still be free when turned off.
 > 
-> diff --git a/fs/super.c b/fs/super.c
-> index 0f913376fc4c..99195e15be05 100644
-> --- a/fs/super.c
-> +++ b/fs/super.c
-> @@ -1194,8 +1194,11 @@ int vfs_get_super(struct fs_context *fc,
->  		fc->root = dget(sb->s_root);
->  		if (keying == vfs_get_single_reconf_super) {
->  			err = reconfigure_super(fc);
-> -			if (err < 0)
-> +			if (err < 0) {
-> +				dput(fc->root);
-> +				fc->root = NULL;
->  				goto error;
-> +			}
->  		}
->  	}
->  
+> Having added the basic tracepoints, we can discuss separately how to
+> do the rate limiting. Maybe instead of providing direct support for
+> the algorithm that I described above, we can just use a BPF program as
+> a yes/no predicate for whether to log to ftrace. That'd get us to the
+> same place as this patch, but more flexibly, right?
 
-Ping.  This is still broken in linux-next.
+Chatted with Daniel offline, we agreed on removing the threshold -- which
+Michal also wants to be that way.
 
-- Eric
+So I'll be resubmitting this patch with the threshold removed; and we'll work
+on seeing to use filtering through other generic ways like BPF.
+
+thanks all!
+
+ - Joel
+
