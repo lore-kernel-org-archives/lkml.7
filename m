@@ -2,92 +2,103 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C62EC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6027FC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70B35206BB
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:09:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 420E6206BB
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 11:09:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392367AbfIFLJu (ORCPT
+        id S1728377AbfIFLJy convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 07:09:50 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47035 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392277AbfIFLIZ (ORCPT
+        Fri, 6 Sep 2019 07:09:54 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40942 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731527AbfIFLJv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 07:08:25 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1i6C6H-00073S-CR; Fri, 06 Sep 2019 13:08:21 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 9385A1C0E04;
-        Fri,  6 Sep 2019 13:08:15 +0200 (CEST)
-Date:   Fri, 06 Sep 2019 11:08:15 -0000
-From:   "tip-bot2 for Masahiro Yamada" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] irqchip: Add include guard to irq-partition-percpu.h
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Marc Zyngier <maz@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
+        Fri, 6 Sep 2019 07:09:51 -0400
+Received: by mail-ot1-f67.google.com with SMTP id y39so5341311ota.7;
+        Fri, 06 Sep 2019 04:09:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=YjIOTnA7AJrnGQlF0RtRVuR7iIuADp5iAhDiCUvFbDY=;
+        b=RsTS3VcxF55/+90ijx30BBcgmTMDLDJcPW2gE/p8rcYNRNamg8aaKkVQldvzDht5PM
+         7xuua/7XK8Nq+SbjZVOe901eYb6z54Eve0ioYJtlxvFf0eG0yjUmjAnNC+NT62Y1QzRB
+         Jjk7hxGtGY8OVQE8cftrMhKIhEVLirmpD5OslKJdkt1Plhl0K+4EMGBawDIe6pPpeRjU
+         R/pFbRQC+hNL42JWaC9LVwT1ae0H9i1Oigd0o7iURelqJDcvbKzE3z9BF71j8W+LAQ77
+         uBiTc7ZECucv7fVDWXs5TkYy7fwe0/YfSrVIMId85UFnwpqDbNBiiHkdSo70T4T1lGKL
+         G2ig==
+X-Gm-Message-State: APjAAAWeEoU31d3ZGKoHuPQ5h6RoHE8wC/sPZ7dUG8noMbeJVtoUylBj
+        oz8wBrYRMo3I98elF/eu9EcBf5v9PFqbx8LeDGo=
+X-Google-Smtp-Source: APXvYqycNpCL4JLDQsajFhUn38P3soOaWnlH2I8lUg6IR7dOErT/aqJzV4mupZNPg2j96MybcS6x7VN9KphMVsGGLLA=
+X-Received: by 2002:a05:6830:1196:: with SMTP id u22mr6795961otq.39.1567768190812;
+ Fri, 06 Sep 2019 04:09:50 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <156776809546.24167.16607497136307365643.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20190705160536.12047-1-geert+renesas@glider.be>
+ <CAMpxmJXOrDLdw6ZPBHxzsDRYiLmhRNCb-s_Z=Gu=Ecg1XA5ONQ@mail.gmail.com>
+ <CAMuHMdWdb0dcS8Nvk-Poz2dT7nuHjFhqpsRPZZnSKsc3VffcRA@mail.gmail.com> <CAMpxmJUF1s1zyXVtoUGfbV7Yk+heua4rNjY=DrX=jr-v8UfNxA@mail.gmail.com>
+In-Reply-To: <CAMpxmJUF1s1zyXVtoUGfbV7Yk+heua4rNjY=DrX=jr-v8UfNxA@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 6 Sep 2019 13:09:39 +0200
+Message-ID: <CAMuHMdXOhrc1o5Jh3TN+JT4VFSSMg8Wy-rsgH=b8hNZQd8rXiA@mail.gmail.com>
+Subject: Re: [PATCH RFC] gpio: Add Virtual Aggregator GPIO Driver
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Alexander Graf <agraf@suse.de>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the irq/core branch of tip:
+On Tue, Jul 9, 2019 at 4:59 PM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+> pon., 8 lip 2019 o 12:24 Geert Uytterhoeven <geert@linux-m68k.org> napisał(a):
+> > On Mon, Jul 8, 2019 at 11:45 AM Bartosz Golaszewski
+> > <bgolaszewski@baylibre.com> wrote:
+> > > pt., 5 lip 2019 o 18:05 Geert Uytterhoeven <geert+renesas@glider.be> napisał(a):
+> > > > +static int gpio_virt_agg_set_config(struct gpio_chip *chip,
+> > > > +                                   unsigned int offset, unsigned long config)
+> > > > +{
+> > > > +       struct gpio_virt_agg_priv *priv = gpiochip_get_data(chip);
+> > > > +
+> > > > +       chip = priv->desc[offset]->gdev->chip;
+> > > > +       if (chip->set_config)
+> > > > +               return chip->set_config(chip, offset, config);
+> > > > +
+> > > > +       // FIXME gpiod_set_transitory() expects success if not implemented
+> >
+> > BTW, do you have a comment about this FIXME?
+>
+> Ha! Interesting. I'll give it a thought and respond elsewhere as it's
+> a different subject.
+>
+> > > > +       return -ENOTSUPP;
 
-Commit-ID:     a512584abd7ab860560ac21e6daac1aaebc1c14f
-Gitweb:        https://git.kernel.org/tip/a512584abd7ab860560ac21e6daac1aaebc1c14f
-Author:        Masahiro Yamada <yamada.masahiro@socionext.com>
-AuthorDate:    Mon, 19 Aug 2019 16:45:34 +09:00
-Committer:     Marc Zyngier <maz@kernel.org>
-CommitterDate: Tue, 20 Aug 2019 10:35:46 +01:00
+Upon closer look, this turns out to be a red herring: gpiod_set_transitory()
+converts -ENOTSUPP to zero, so there is no issue.
 
-irqchip: Add include guard to irq-partition-percpu.h
+Gr{oetje,eeting}s,
 
-Add a header include guard just in case.
+                        Geert
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
- include/linux/irqchip/irq-partition-percpu.h | 5 +++++
- 1 file changed, 5 insertions(+)
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-diff --git a/include/linux/irqchip/irq-partition-percpu.h b/include/linux/irqchip/irq-partition-percpu.h
-index a783ddb..2f6ae75 100644
---- a/include/linux/irqchip/irq-partition-percpu.h
-+++ b/include/linux/irqchip/irq-partition-percpu.h
-@@ -4,6 +4,9 @@
-  * Author: Marc Zyngier <marc.zyngier@arm.com>
-  */
- 
-+#ifndef __LINUX_IRQCHIP_IRQ_PARTITION_PERCPU_H
-+#define __LINUX_IRQCHIP_IRQ_PARTITION_PERCPU_H
-+
- #include <linux/fwnode.h>
- #include <linux/cpumask.h>
- #include <linux/irqdomain.h>
-@@ -46,3 +49,5 @@ struct irq_domain *partition_get_domain(struct partition_desc *dsc)
- 	return NULL;
- }
- #endif
-+
-+#endif /* __LINUX_IRQCHIP_IRQ_PARTITION_PERCPU_H */
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
