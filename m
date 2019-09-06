@@ -2,153 +2,225 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFED5C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18019C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C59D42070C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E67152070C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:23:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394744AbfIFPXM (ORCPT
+        id S2394758AbfIFPXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 11:23:12 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:32893 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387557AbfIFPXL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 11:23:11 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MQ5aw-1hkAou31pA-00M5hb; Fri, 06 Sep 2019 17:22:52 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Antoine Tenart <antoine.tenart@bootlin.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Pascal van Leeuwen <pvanleeuwen@verimatrix.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] crypto: inside-secure - fix uninitialized-variable warning
-Date:   Fri,  6 Sep 2019 17:22:29 +0200
-Message-Id: <20190906152250.1450649-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Fri, 6 Sep 2019 11:23:15 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57924 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387557AbfIFPXO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 11:23:14 -0400
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 856196907A
+        for <linux-kernel@vger.kernel.org>; Fri,  6 Sep 2019 15:23:13 +0000 (UTC)
+Received: by mail-qk1-f197.google.com with SMTP id o133so6842894qke.4
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 08:23:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+0qfYdENvJZS+7XOB5nUvg22BeaGDp5RFB+PXPHe2sA=;
+        b=VHdVahSnEgAfNrKSF9QYhnNC84B6Gs4DZUH+gVrMfwF+ExipAgDysjXsGbAm5HXU6r
+         JpC1ZFgzE0igBKxD0Ye0JWESqvgyECMNMpWluLPgDfNQhxsasMYefi6e2zuWzD4ZmamW
+         WqKAns4zbHCSRlN2Dm2Y6EKNOKpQKg4moF8JpIJLd2dD56aBFOae46CMZfc0VtjdKF+Y
+         oKOL0fEoGXiwe6oz244oOsgkTgRx9DU6PvnrIRqkSfbavIQ1OoMfuh5ZvzsjXWBO5tkV
+         7+YappeQr22lxoZmS25ySGxQ1uY00ouZenzTW02dYwYSg46Sgz2cce6iGlQoPOezPnHv
+         Dbqw==
+X-Gm-Message-State: APjAAAWSatwI4uHGiJtJQFTKyKu3YWVhhudsj0ug/tC8iOLntiSIyVWu
+        gxcDnzOyfM1BY/Blv5l9ZhSR2KCPfUIQhlmuDe/6n8vfBYOWfEcYxiFoAJFWkdnfaK2vn0I2l8m
+        r0l7+Znp3/5H+mKIRf8GyPYIq
+X-Received: by 2002:aed:2a3d:: with SMTP id c58mr2413015qtd.263.1567783392771;
+        Fri, 06 Sep 2019 08:23:12 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqysRIOzKDov+VLJzuU+1EVJ6lS9gwz44EHckhRXGPrzep783X6xQjMVtNeoDnVh5QAs4+gXfA==
+X-Received: by 2002:aed:2a3d:: with SMTP id c58mr2412982qtd.263.1567783392541;
+        Fri, 06 Sep 2019 08:23:12 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-40-226.red.bezeqint.net. [79.176.40.226])
+        by smtp.gmail.com with ESMTPSA id o67sm788480qkf.8.2019.09.06.08.23.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Sep 2019 08:23:11 -0700 (PDT)
+Date:   Fri, 6 Sep 2019 11:23:03 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     nitesh@redhat.com, kvm@vger.kernel.org, david@redhat.com,
+        dave.hansen@intel.com, linux-kernel@vger.kernel.org,
+        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, virtio-dev@lists.oasis-open.org,
+        osalvador@suse.de, yang.zhang.wz@gmail.com, pagupta@redhat.com,
+        riel@surriel.com, konrad.wilk@oracle.com, lcapitulino@redhat.com,
+        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com, alexander.h.duyck@linux.intel.com
+Subject: Re: [PATCH v8 0/7] mm / virtio: Provide support for unused page
+ reporting
+Message-ID: <20190906112155-mutt-send-email-mst@kernel.org>
+References: <20190906145213.32552.30160.stgit@localhost.localdomain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:u547Yb77RHO15kDZX4JTrsBGpb64BliQTLpiUK93UQdkYW08oE8
- U2DBhk8auGRevbg3P7wWD0SvYnA8yvjFpmlj0dnVypm38xB4q6uqiIEsjLJnkvV+VfWZ/nG
- LPPHP0ygT2s0dSdaqNz/YpdCERJ7sgtZOCAIKM3ojYAVvInaQdG3F5KSVWed2QCoolHsgG1
- 4zpc9UGWFRvw2bjETOBug==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:bnjJzuxwR8o=:zTI8B7lwfhDUvN6/jeDt8r
- 43CebgMnsG/r6n0jVItqrGmSlJngNg2Mu8B/x5Jk7ejXZta/KEFf7dRmQRb4Y4KwGE0WSRFEb
- lzTvnFaIz/cR9hSewht/+KDHys+jMtTfVDKDQivgrR6cRNSSDAD7cPowgfXQd5RiVWF2V8zHu
- U07yvxCeoCtozv+OyBc7ugWnFuH7cAsvJlg4sAh4muUYRrP3seK8QSzbxzE8TYyLjNnBou3uC
- b40jeQSkGyw2lQ9Mk1CNgGROHw4RD5dBlFq2wgucjaO8zOfMxIKNMnb9YlruQttyvUj7ZN2Dt
- JOh3RebyFHNpvIO5dILhbmL+OtMhENWhxurStERv++LxeCHuQASNKp2qlOMt6tMnDmreMOl2s
- 9SqMB5g61bgkeZzwa5MHC11yz9Td4mvowUXSMPVV/jpYG9tFqBvLOIvM1+CoBBpCCy1qXuqM4
- N+/Eue3u9uiDFJS7u8ZZ/isl8IBMC8DBuLmBBUpSI1mhQf4RBBvx1Cm6fIiHVg5GqGZ8fy+vk
- XHTq7YDzgT0LvfCvdR0+i7wzTQ1ExFwteFg0BnQ0Y9B767GgDccSAPWeyc01q8zR+alvOqumx
- tjrMuDKgRMdAJ+NgT5ys4qyI2vpaqUca/nTJFikmYKpNMVRdOQanqzJiurafJEa+laYjbskGx
- rwI2Y6dGTIQx7bxQcrLsbh4z917uhgDZ/cm3r23BwCJExQQbN+C+5GRxxjkfl9iWj11vRixkO
- Hzo9Jivr0r9yiX2y4CmX98SVv19nqUSEDE6XNKLPWEU048MY/pKfPxsOW/YCvCYP4rH5BXoOt
- RNl+6LGj/Mb9+BSR0MCo0gag9xYlCsSVtDHAWeMu5SXEq4QyPY=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190906145213.32552.30160.stgit@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The addition of PCI support introduced multiple randconfig issues.
+On Fri, Sep 06, 2019 at 07:53:21AM -0700, Alexander Duyck wrote:
+> This series provides an asynchronous means of reporting to a hypervisor
+> that a guest page is no longer in use and can have the data associated
+> with it dropped. To do this I have implemented functionality that allows
+> for what I am referring to as unused page reporting
+> 
+> The functionality for this is fairly simple. When enabled it will allocate
+> statistics to track the number of reported pages in a given free area.
+> When the number of free pages exceeds this value plus a high water value,
+> currently 32, it will begin performing page reporting which consists of
+> pulling pages off of free list and placing them into a scatter list. The
+> scatterlist is then given to the page reporting device and it will perform
+> the required action to make the pages "reported", in the case of
+> virtio-balloon this results in the pages being madvised as MADV_DONTNEED
+> and as such they are forced out of the guest. After this they are placed
+> back on the free list, and an additional bit is added if they are not
+> merged indicating that they are a reported buddy page instead of a
+> standard buddy page. The cycle then repeats with additional non-reported
+> pages being pulled until the free areas all consist of reported pages.
+> 
+> I am leaving a number of things hard-coded such as limiting the lowest
+> order processed to PAGEBLOCK_ORDER, and have left it up to the guest to
+> determine what the limit is on how many pages it wants to allocate to
+> process the hints. The upper limit for this is based on the size of the
+> queue used to store the scattergather list.
 
-- When PCI is disabled, some external functions are undeclared:
-drivers/crypto/inside-secure/safexcel.c:944:9: error: implicit declaration of function 'pci_irq_vector' [-Werror,-Wimplicit-function-declaration]
+I queued this  so this gets tested on linux-next but the mm core changes
+need acks from appropriate people.
 
-- Also, in the same configuration, there is an uninitialized variable:
-drivers/crypto/inside-secure/safexcel.c:940:6: error: variable 'irq' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
-
-- Finally, the driver fails to completely if both PCI and OF
-  are disabled.
-
-Take care of all of the above by adding more checks for CONFIG_PCI
-and CONFIG_OF.
-
-Fixes: 625f269a5a7a ("crypto: inside-secure - add support for PCI based FPGA development board")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/crypto/Kconfig                  | 2 +-
- drivers/crypto/inside-secure/safexcel.c | 8 ++++++++
- 2 files changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
-index 3c4361947f8d..048bc4b393ac 100644
---- a/drivers/crypto/Kconfig
-+++ b/drivers/crypto/Kconfig
-@@ -719,7 +719,7 @@ source "drivers/crypto/stm32/Kconfig"
- 
- config CRYPTO_DEV_SAFEXCEL
- 	tristate "Inside Secure's SafeXcel cryptographic engine driver"
--	depends on OF || PCI || COMPILE_TEST
-+	depends on OF || PCI
- 	select CRYPTO_LIB_AES
- 	select CRYPTO_AUTHENC
- 	select CRYPTO_BLKCIPHER
-diff --git a/drivers/crypto/inside-secure/safexcel.c b/drivers/crypto/inside-secure/safexcel.c
-index e12a2a3a5422..9c0bce77de14 100644
---- a/drivers/crypto/inside-secure/safexcel.c
-+++ b/drivers/crypto/inside-secure/safexcel.c
-@@ -938,6 +938,7 @@ static int safexcel_request_ring_irq(void *pdev, int irqid,
- 	struct device *dev;
- 
- 	if (IS_ENABLED(CONFIG_PCI) && is_pci_dev) {
-+#ifdef CONFIG_PCI
- 		struct pci_dev *pci_pdev = pdev;
- 
- 		dev = &pci_pdev->dev;
-@@ -947,6 +948,7 @@ static int safexcel_request_ring_irq(void *pdev, int irqid,
- 				irqid, irq);
- 			return irq;
- 		}
-+#endif
- 	} else if (IS_ENABLED(CONFIG_OF)) {
- 		struct platform_device *plf_pdev = pdev;
- 		char irq_name[6] = {0}; /* "ringX\0" */
-@@ -960,6 +962,8 @@ static int safexcel_request_ring_irq(void *pdev, int irqid,
- 				irq_name, irq);
- 			return irq;
- 		}
-+	} else {
-+		return -ENXIO;
- 	}
- 
- 	ret = devm_request_threaded_irq(dev, irq, handler,
-@@ -1138,6 +1142,7 @@ static int safexcel_probe_generic(void *pdev,
- 	safexcel_configure(priv);
- 
- 	if (IS_ENABLED(CONFIG_PCI) && priv->version == EIP197_DEVBRD) {
-+#ifdef CONFIG_PCI
- 		/*
- 		 * Request MSI vectors for global + 1 per ring -
- 		 * or just 1 for older dev images
-@@ -1152,6 +1157,7 @@ static int safexcel_probe_generic(void *pdev,
- 			dev_err(dev, "Failed to allocate PCI MSI interrupts\n");
- 			return ret;
- 		}
-+#endif
- 	}
- 
- 	/* Register the ring IRQ handlers and configure the rings */
-@@ -1503,7 +1509,9 @@ static struct pci_driver safexcel_pci_driver = {
- 
- static int __init safexcel_init(void)
- {
-+#ifdef CONFIG_PCI
- 	int rc;
-+#endif
- 
- #if IS_ENABLED(CONFIG_OF)
- 		/* Register platform driver */
--- 
-2.20.0
-
+> My primary testing has just been to verify the memory is being freed after
+> allocation by running memhog 40g on a 40g guest and watching the total
+> free memory via /proc/meminfo on the host. With this I have verified most
+> of the memory is freed after each iteration. As far as performance I have
+> been mainly focusing on the will-it-scale/page_fault1 test running with
+> 16 vcpus. I have modified it to use Transparent Huge Pages. With this I
+> see almost no difference, -0.08%, with the patches applied and the feature
+> disabled. I see a regression of -0.86% with the feature enabled, but the
+> madvise disabled in the hypervisor due to a device being assigned. With
+> the feature fully enabled I see a regression of -3.27% versus the baseline
+> without these patches applied. In my testing I found that most of the
+> overhead was due to the page zeroing that comes as a result of the pages
+> having to be faulted back into the guest.
+> 
+> One side effect of these patches is that the guest becomes much more
+> resilient in terms of NUMA locality. With the pages being freed and then
+> reallocated when used it allows for the pages to be much closer to the
+> active thread, and as a result there can be situations where this patch
+> set will out-perform the stock kernel when the guest memory is not local
+> to the guest vCPUs. To avoid that in my testing I set the affinity of all
+> the vCPUs and QEMU instance to the same node.
+> 
+> Changes from the RFC:
+> https://lore.kernel.org/lkml/20190530215223.13974.22445.stgit@localhost.localdomain/
+> Moved aeration requested flag out of aerator and into zone->flags.
+> Moved boundary out of free_area and into local variables for aeration.
+> Moved aeration cycle out of interrupt and into workqueue.
+> Left nr_free as total pages instead of splitting it between raw and aerated.
+> Combined size and physical address values in virtio ring into one 64b value.
+> 
+> Changes from v1:
+> https://lore.kernel.org/lkml/20190619222922.1231.27432.stgit@localhost.localdomain/
+> Dropped "waste page treatment" in favor of "page hinting"
+> Renamed files and functions from "aeration" to "page_hinting"
+> Moved from page->lru list to scatterlist
+> Replaced wait on refcnt in shutdown with RCU and cancel_delayed_work_sync
+> Virtio now uses scatterlist directly instead of intermediate array
+> Moved stats out of free_area, now in separate area and pointed to from zone
+> Merged patch 5 into patch 4 to improve review-ability
+> Updated various code comments throughout
+> 
+> Changes from v2:
+> https://lore.kernel.org/lkml/20190724165158.6685.87228.stgit@localhost.localdomain/
+> Dropped "page hinting" in favor of "page reporting"
+> Renamed files from "hinting" to "reporting"
+> Replaced "Hinted" page type with "Reported" page flag
+> Added support for page poisoning while hinting is active
+> Add QEMU patch that implements PAGE_POISON feature
+> 
+> Changes from v3:
+> https://lore.kernel.org/lkml/20190801222158.22190.96964.stgit@localhost.localdomain/
+> Added mutex lock around page reporting startup and shutdown
+> Fixed reference to "page aeration" in patch 2
+> Split page reporting function bit out into separate QEMU patch
+> Limited capacity of scatterlist to vq size - 1 instead of vq size
+> Added exception handling for case of virtio descriptor allocation failure
+> 
+> Changes from v4:
+> https://lore.kernel.org/lkml/20190807224037.6891.53512.stgit@localhost.localdomain/
+> Replaced spin_(un)lock with spin_(un)lock_irq in page_reporting_cycle()
+> Dropped if/continue for ternary operator in page_reporting_process()
+> Added checks for isolate and cma types to for_each_reporting_migratetype_order
+> Added virtio-dev, Michal Hocko, and Oscar Salvador to to:/cc:
+> Rebased on latest linux-next and QEMU git trees
+> 
+> Changes from v5:
+> https://lore.kernel.org/lkml/20190812213158.22097.30576.stgit@localhost.localdomain/
+> Replaced spin_(un)lock with spin_(un)lock_irq in page_reporting_startup()
+> Updated shuffle code to use "shuffle_pick_tail" and updated patch description
+> Dropped storage of order and migratettype while page is being reported
+> Used get_pfnblock_migratetype to determine migratetype of page
+> Renamed put_reported_page to free_reported_page, added order as argument
+> Dropped check for CMA type as I believe we should be reporting those
+> Added code to allow moving of reported pages into and out of isolation
+> Defined page reporting order as minimum of Huge Page size vs MAX_ORDER - 1
+> Cleaned up use of static branch usage for page_reporting_notify_enabled
+> 
+> Changes from v6:
+> https://lore.kernel.org/lkml/20190821145806.20926.22448.stgit@localhost.localdomain/
+> Rebased on linux-next for 20190903
+> Added jump label to __page_reporting_request so we release RCU read lock
+> Removed "- 1" from capacity limit based on virtio ring
+> Added code to verify capacity is non-zero or return error on startup
+> 
+> Changes from v7:
+> https://lore.kernel.org/lkml/20190904150920.13848.32271.stgit@localhost.localdomain/
+> Updated poison fixes to clear flag if "nosanity" is enabled in kernel config
+> Split shuffle per-cpu optimization into seperate patch
+> Moved check for !phdev->capacity into reporting patch where it belongs
+> Added Reviewed-by tags received for v7
+> 
+> ---
+> 
+> Alexander Duyck (7):
+>       mm: Add per-cpu logic to page shuffling
+>       mm: Adjust shuffle code to allow for future coalescing
+>       mm: Move set/get_pcppage_migratetype to mmzone.h
+>       mm: Use zone and order instead of free area in free_list manipulators
+>       mm: Introduce Reported pages
+>       virtio-balloon: Pull page poisoning config out of free page hinting
+>       virtio-balloon: Add support for providing unused page reports to host
+> 
+> 
+>  drivers/virtio/Kconfig              |    1 
+>  drivers/virtio/virtio_balloon.c     |   87 ++++++++-
+>  include/linux/mmzone.h              |  124 ++++++++-----
+>  include/linux/page-flags.h          |   11 +
+>  include/linux/page_reporting.h      |  177 ++++++++++++++++++
+>  include/uapi/linux/virtio_balloon.h |    1 
+>  mm/Kconfig                          |    5 +
+>  mm/Makefile                         |    1 
+>  mm/internal.h                       |   18 ++
+>  mm/memory_hotplug.c                 |    1 
+>  mm/page_alloc.c                     |  216 ++++++++++++++++------
+>  mm/page_reporting.c                 |  340 +++++++++++++++++++++++++++++++++++
+>  mm/shuffle.c                        |   40 ++--
+>  mm/shuffle.h                        |   12 +
+>  14 files changed, 902 insertions(+), 132 deletions(-)
+>  create mode 100644 include/linux/page_reporting.h
+>  create mode 100644 mm/page_reporting.c
+> 
+> --
