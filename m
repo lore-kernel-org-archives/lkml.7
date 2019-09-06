@@ -2,197 +2,213 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B122C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC9EC43140
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 759E52082C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 811262082C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 12:14:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BVLCNstX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391814AbfIFMNX (ORCPT
+        id S2391876AbfIFMOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 08:13:23 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55274 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727210AbfIFMNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 08:13:23 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C44A11DB3;
-        Fri,  6 Sep 2019 12:13:22 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-117-59.ams2.redhat.com [10.36.117.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3756910016EB;
-        Fri,  6 Sep 2019 12:13:22 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 4417D31EBF; Fri,  6 Sep 2019 14:13:18 +0200 (CEST)
-Date:   Fri, 6 Sep 2019 14:13:18 +0200
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org, tzimmermann@suse.de,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 05/17] drm: add mmap() to drm_gem_object_funcs
-Message-ID: <20190906121318.r4nvoacazvwukuun@sirius.home.kraxel.org>
-References: <20190808134417.10610-1-kraxel@redhat.com>
- <20190808134417.10610-6-kraxel@redhat.com>
- <20190903094859.GQ2112@phenom.ffwll.local>
+        Fri, 6 Sep 2019 08:14:14 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:47455 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731749AbfIFMOO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 08:14:14 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190906121411euoutp0224293dcea5b2af9a5cb4de5767380c2a~B2F-uKL5N1157511575euoutp023
+        for <linux-kernel@vger.kernel.org>; Fri,  6 Sep 2019 12:14:11 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190906121411euoutp0224293dcea5b2af9a5cb4de5767380c2a~B2F-uKL5N1157511575euoutp023
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1567772051;
+        bh=8bq0zyXxMMGz7JArDAMaWTFTMXYIKCVTlRXFaU/lxLE=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=BVLCNstXliCJiSTE7hI5qCqLLBUnseQWq+OqvRkBiE7qqylf5ezN3RPTKorz3fW6x
+         14vcgFmCV8izPuOgtv/Sy+TDZcra7i3o1It4IfZmyejGd2+jwrTEb/84DAezjuCoWg
+         nSAtx6VEbdFTjykv6kxveRDOg6MiJ0eopr1N0YjQ=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190906121410eucas1p20d604a2935d841fd3c0bfaf07c151ec2~B2F_zQnIv1615716157eucas1p2b;
+        Fri,  6 Sep 2019 12:14:10 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 60.08.04374.29D427D5; Fri,  6
+        Sep 2019 13:14:10 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190906121409eucas1p19c9b4675d6a4a60f3fedae6597be10f3~B2F97UTwZ1740117401eucas1p1e;
+        Fri,  6 Sep 2019 12:14:09 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190906121409eusmtrp14ca8de593255321a04aeaa0d5ddbb3c8~B2F9sce9B2099920999eusmtrp1R;
+        Fri,  6 Sep 2019 12:14:09 +0000 (GMT)
+X-AuditID: cbfec7f5-4ddff70000001116-21-5d724d9287d8
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 12.F0.04117.19D427D5; Fri,  6
+        Sep 2019 13:14:09 +0100 (BST)
+Received: from [106.120.51.20] (unknown [106.120.51.20]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190906121408eusmtip24d7641472ec9002de43140e73e4a2ab1~B2F9DGPpa0190101901eusmtip2x;
+        Fri,  6 Sep 2019 12:14:08 +0000 (GMT)
+Subject: Re: [PATCH 3/3] dt-bindings: ddr: Add bindings for Samsung LPDDR3
+ memories
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
+        <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com,
+        robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
+        kyungmin.park@samsung.com,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
+        willy.mh.wolff.ml@gmail.com
+From:   Lukasz Luba <l.luba@partner.samsung.com>
+Message-ID: <99d2f2be-80f8-258c-2621-a4b5ff5cd177@partner.samsung.com>
+Date:   Fri, 6 Sep 2019 14:14:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190903094859.GQ2112@phenom.ffwll.local>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Fri, 06 Sep 2019 12:13:22 +0000 (UTC)
+In-Reply-To: <CAJKOXPfEcURr_bLRaAdjWT3cb7mcuKTk8rmn7OTO=xtvjvJ=jQ@mail.gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SfSyVYRjGe877eaxjb4e4+1htp9ZkIWPr2ZJJzU5tUX+0VaY68nYYDp0X
+        faloqI6PSiuc6csqnEgOIRPrOIsSslosaUIpH2tFGil5vSz//e7rvp7nvq9nD0soO6mlbJgu
+        htfrNBEq2oaseDbe6pK5Qx+0vtG6Cpdml1C4fbSfwjetLRS+2DtI4NbWhwxuPjvEYHPvWwq/
+        rs6l8Ui6FeHs1loZLrZ2Mfhue5sMdyYW0Dj5iZXB9UPnKDzW2IN8OHXRjSKkfmzsYtRm0wVa
+        XXbnjDqj3ITUI+YVO+l9Nl4hfERYHK938z5oEzpVUUhE319ybLCygU5AVfYGJGeB84TvOUnI
+        gGxYJVeAoL+rbrYYRWCsGWakYgRBcf2YbO5I7t0eWmrkI8gy5JFSMYxgMu0FLbrsuN3wMvU3
+        I7I9txba//yiRBPBWUjIrh6fvoplac4VqkxHRI+C84PU0c+UyCS3Gi53fSFFXsztgR/d9ZTk
+        WQTPc/pmdDm3C9KTemdmEZwjvOu7KZN4JVQO5xLiLOASWbjV+ImU1t4KX8tv0BLbwUBDOSPx
+        cmi6kjbrESAh/TaSOB56L16f9WyE+oY2StyZmA5TUu0myZthyphJizJwttAxvEhawRYyK7II
+        SVbA+RSl5HaC8rRXs2/oAPlF15hLSGWcF8w4L4xxXhjj/7m3EGlCjnysEKnlBQ8df9RV0EQK
+        sTqt66GoSDOa/nJNfxt+VqHayWAL4likWqjo9tEHKSlNnHA80oKAJVT2ipLS6CClIkRz/ASv
+        jzqgj43gBQtaxpIqR8XJBd2BSk6rieHDeT6a1891Zax8aQLKrzqg/pjEJOcN+Ha0+18VmA8O
+        273GDgdO7DfUOuc0B3v5ugQMbik9kZdIjevej9R9k6908rtd/DPZP8UwKHPYZgpK4gssLZBq
+        P+4+hgMKJ9YdzMh+sEl5elddv+cpPjjgTXgZTdY4FUdvuNck31mi9fHY6xzhXal6umb3I008
+        ryKFUI27M6EXNP8AELsQK24DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrPIsWRmVeSWpSXmKPExsVy+t/xe7oTfYtiDQ63qVpsnLGe1eL6l+es
+        FvOPnGO16H/8mtni/PkN7BZnm96wW2x6fI3V4vKuOWwWn3uPMFrMOL+PyWLtkbvsFkuvX2Sy
+        uN24gs2ide8RdovDb9pZLb6deMToIOCxZt4aRo+ds+6ye2xa1cnmsXlJvUffllWMHp83yQWw
+        RenZFOWXlqQqZOQXl9gqRRtaGOkZWlroGZlY6hkam8daGZkq6dvZpKTmZJalFunbJehl/N+2
+        krlgtWTF6+3H2RoYd4h0MXJySAiYSMxZ+oiti5GLQ0hgKaPEh8OtrBAJMYlJ+7azQ9jCEn+u
+        dUEVvWaUWLdkI1hCWCBU4kz3bzBbREBT4vrf76wgRcwCh1gkPm09zgjRMYlZYvWfqyxdjBwc
+        bAJ6EjtWFYI08Aq4SXR/eQa2jUVARWLi3RcsILaoQITE4R2zGCFqBCVOznwCFucUCJTobXnM
+        BmIzC5hJzNv8kBnCFpe49WQ+E4QtL7H97RzmCYxCs5C0z0LSMgtJyywkLQsYWVYxiqSWFuem
+        5xYb6RUn5haX5qXrJefnbmIERva2Yz+37GDsehd8iFGAg1GJh/eBQ1GsEGtiWXFl7iFGCQ5m
+        JRHe9RsLYoV4UxIrq1KL8uOLSnNSiw8xmgI9N5FZSjQ5H5h08kriDU0NzS0sDc2NzY3NLJTE
+        eTsEDsYICaQnlqRmp6YWpBbB9DFxcEo1MKp53nDxc0m0ZvQ09tv4Z0nUAdYliz+d5ErtEPvy
+        52Tl/L87HaqlraW26CbdSdnwqUqzWtYt9ImVWNqNBrFtFy476DOIpE56e9d6+fS4yWZT7Naf
+        qLx2mff7ystGOVJWbzfIRcXe3X+89m5H5FKdK/e5XoWtOP3lUJ1M8uJqsZeNy5atWLl+XZ4S
+        S3FGoqEWc1FxIgB7L0JuAgMAAA==
+X-CMS-MailID: 20190906121409eucas1p19c9b4675d6a4a60f3fedae6597be10f3
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190906101407eucas1p15eb0df53374b27497b4793eab24becf6
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190906101407eucas1p15eb0df53374b27497b4793eab24becf6
+References: <CGME20190906101407eucas1p15eb0df53374b27497b4793eab24becf6@eucas1p1.samsung.com>
+        <20190906101344.3535-1-l.luba@partner.samsung.com>
+        <20190906101344.3535-4-l.luba@partner.samsung.com>
+        <CAJKOXPfoYxTVvt_bMQOs1=BkHzUuW_WvL9zn0jTGS6LLpv=fhQ@mail.gmail.com>
+        <52963d0d-cf48-7085-5581-a94c6e15e0bd@partner.samsung.com>
+        <CAJKOXPfEcURr_bLRaAdjWT3cb7mcuKTk8rmn7OTO=xtvjvJ=jQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  Hi,
 
-> I think if we do an mmap callback, it should replace all the mmap handling
-> (except the drm_gem_object_get) that drm_gem_mmap_obj does. So maybe
-> something like the below:
 
-[ snip ]
+On 9/6/19 1:50 PM, Krzysztof Kozlowski wrote:
+> On Fri, 6 Sep 2019 at 13:39, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>>
+>> Hi Krzysztof,
+>>
+>> On 9/6/19 12:56 PM, Krzysztof Kozlowski wrote:
+>>> On Fri, 6 Sep 2019 at 12:14, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>>>>
+>>>> Add description of bindings for Samsung k3qf2f20db LPDDR3 memory.
+>>>> Minor fixes in the old documentation.
+>>>>
+>>>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>>>> ---
+>>>>    .../devicetree/bindings/ddr/lpddr3.txt        | 29 +++++++++++++++++--
+>>>>    1 file changed, 27 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/ddr/lpddr3.txt b/Documentation/devicetree/bindings/ddr/lpddr3.txt
+>>>> index 3b2485b84b3f..de0905239767 100644
+>>>> --- a/Documentation/devicetree/bindings/ddr/lpddr3.txt
+>>>> +++ b/Documentation/devicetree/bindings/ddr/lpddr3.txt
+>>>> @@ -40,10 +40,34 @@ Child nodes:
+>>>>      a given speed-bin. Please see Documentation/devicetree/
+>>>>      bindings/ddr/lpddr3-timings.txt for more information on "lpddr3-timings"
+>>>>
+>>>> +Samsung K3QF2F20DB LPDDR3 memory
+>>>> +------------------------------------------------------------
+>>>> +
+>>>> +This binding uses the LPDDR3 binding (described above)
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible:  Should be:
+>>>> +               "samsung,K3QF2F20DB"
+>>>> +               followed by "jedec,lpddr3"
+>>>> +- density  : <u32> representing density in Mb (Mega bits)
+>>>> +- io-width : <u32> representing bus width. Possible value 32
+>>>> +- #address-cells: Must be set to 1
+>>>> +- #size-cells: Must be set to 0
+>>>
+>>> If you decided to repeat all properties again, then it deserves its
+>>> own bindings file. However I though about simpler solution - just
+>>> document compatible. Exactly the same as AT24 or AT25 EEPROM bindings.
+>>> There is not much benefit from copying all these properties.
+>> OK, I see. I will add only 'compatible' and skip the rest then.
+>> So the lpddr3.txt file will get this addition:
+>>
+>> +Samsung K3QF2F20DB LPDDR3 memory
+>> +------------------------------------------------------------
+>> +
+>> +This binding uses the LPDDR3 binding (described above)
+>> +
+>> +Required properties:
+>> +- compatible:  Should be:
+>> +               "samsung,K3QF2F20DB"
+>> +               followed by "jedec,lpddr3"
+>> +
+>> +Optional properties:
+>> +
+>> +The optional properties are the same as in the LPDDR3 generic bindings and
+>> +values should be taken from the data-sheet. Detailed bindings are described
+>> +above.
+>> +
+>> +Child nodes:
+>> +
+>> +Detailed bindings are described in LPDDR3 generic bindings described above.
+>> +
+>>
+>> Is it OK?
+> 
+> To me it is still a lot of text just for one compatible and I can
+> image more of such entries for other memories... However I do not mind
+> and anyway, YAML will simplify it. If you're in doubt, wait for Rob's
+> reply as this is his part.
 
-> Since I remember quite a few discussions where the default vma flag
-> wrangling we're doing is seriously getting in the way of things too.
+You are definitely right, YAML will simplify this.
+I will wait a few days with the v2 series, maybe Rob would like to see
+something different. If not, I will send v2 with the above change.
+Thank you for your comments.
 
-Yep, makes sense.
-
-> I think even better would be if this new ->mmap hook could also be used
-> directly by the dma-buf mmap code, without having to jump through hoops
-> creating a fake file and fake vma offset and everything. I think with that
-> we'd have a really solid case to add this ->mmap hook.
-
-Looks easy on a quick glance.  So something like the patch below (quick
-sketch, not tested yet other than compiling it)?
-
-cheers,
-  Gerd
-
-From c13b30d776fb593a03473fa3bc93baf470cba728 Mon Sep 17 00:00:00 2001
-From: Gerd Hoffmann <kraxel@redhat.com>
-Date: Wed, 19 Jun 2019 14:26:51 +0200
-Subject: [PATCH] drm: add mmap() to drm_gem_object_funcs
-
-drm_gem_object_funcs->vm_ops alone can't handle everything which needs
-to be done for mmap(), tweaking vm_flags for example.  So add a new
-mmap() callback to drm_gem_object_funcs where this code can go to.
-
-Note that the vm_ops field is not used in case the mmap callback is
-presnt, it is expected that the callback sets vma->vm_ops instead.
-
-drm_gem_mmap_obj() will use the new callback for object specific mmap
-setup.  With this in place the need for driver-speific fops->mmap
-callbacks goes away, drm_gem_mmap can be hooked instead.
-
-drm_gem_prime_mmap() will use the new callback too to just mmap gem
-objects directly instead of jumping though loops to make
-drm_gem_object_lookup() and fops->mmap work.
-
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
----
- include/drm/drm_gem.h       | 14 ++++++++++++++
- drivers/gpu/drm/drm_gem.c   | 26 +++++++++++++++++---------
- drivers/gpu/drm/drm_prime.c |  9 +++++++++
- 3 files changed, 40 insertions(+), 9 deletions(-)
-
-diff --git a/include/drm/drm_gem.h b/include/drm/drm_gem.h
-index 6aaba14f5972..e71f75a2ab57 100644
---- a/include/drm/drm_gem.h
-+++ b/include/drm/drm_gem.h
-@@ -150,6 +150,20 @@ struct drm_gem_object_funcs {
- 	 */
- 	void (*vunmap)(struct drm_gem_object *obj, void *vaddr);
- 
-+	/**
-+	 * @mmap:
-+	 *
-+	 * Handle mmap() of the gem object, setup vma accordingly.
-+	 *
-+	 * This callback is optional.
-+	 *
-+	 * The callback is used by by both drm_gem_mmap_obj() and
-+	 * drm_gem_prime_mmap().  When @mmap is present @vm_ops is not
-+	 * used, the @mmap callback must set vma->vm_ops instead.
-+	 *
-+	 */
-+	int (*mmap)(struct drm_gem_object *obj, struct vm_area_struct *vma);
-+
- 	/**
- 	 * @vm_ops:
- 	 *
-diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
-index 6854f5867d51..aabde003ac4a 100644
---- a/drivers/gpu/drm/drm_gem.c
-+++ b/drivers/gpu/drm/drm_gem.c
-@@ -1099,22 +1099,30 @@ int drm_gem_mmap_obj(struct drm_gem_object *obj, unsigned long obj_size,
- 		     struct vm_area_struct *vma)
- {
- 	struct drm_device *dev = obj->dev;
-+	int ret;
- 
- 	/* Check for valid size. */
- 	if (obj_size < vma->vm_end - vma->vm_start)
- 		return -EINVAL;
- 
--	if (obj->funcs && obj->funcs->vm_ops)
--		vma->vm_ops = obj->funcs->vm_ops;
--	else if (dev->driver->gem_vm_ops)
--		vma->vm_ops = dev->driver->gem_vm_ops;
--	else
--		return -EINVAL;
-+	if (obj->funcs && obj->funcs->mmap) {
-+		ret = obj->funcs->mmap(obj, vma);
-+		if (ret)
-+			return ret;
-+	} else {
-+		if (obj->funcs && obj->funcs->vm_ops)
-+			vma->vm_ops = obj->funcs->vm_ops;
-+		else if (dev->driver->gem_vm_ops)
-+			vma->vm_ops = dev->driver->gem_vm_ops;
-+		else
-+			return -EINVAL;
-+
-+		vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;
-+		vma->vm_page_prot = pgprot_writecombine(vm_get_page_prot(vma->vm_flags));
-+		vma->vm_page_prot = pgprot_decrypted(vma->vm_page_prot);
-+	}
- 
--	vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;
- 	vma->vm_private_data = obj;
--	vma->vm_page_prot = pgprot_writecombine(vm_get_page_prot(vma->vm_flags));
--	vma->vm_page_prot = pgprot_decrypted(vma->vm_page_prot);
- 
- 	/* Take a ref for this mapping of the object, so that the fault
- 	 * handler can dereference the mmap offset's pointer to the object.
-diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_prime.c
-index 0a2316e0e812..0814211b0f3f 100644
---- a/drivers/gpu/drm/drm_prime.c
-+++ b/drivers/gpu/drm/drm_prime.c
-@@ -713,6 +713,15 @@ int drm_gem_prime_mmap(struct drm_gem_object *obj, struct vm_area_struct *vma)
- 	struct file *fil;
- 	int ret;
- 
-+	if (obj->funcs && obj->funcs->mmap) {
-+		ret = obj->funcs->mmap(obj, vma);
-+		if (ret)
-+			return ret;
-+		vma->vm_private_data = obj;
-+		drm_gem_object_get(obj);
-+		return 0;
-+	}
-+
- 	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
- 	fil = kzalloc(sizeof(*fil), GFP_KERNEL);
- 	if (!priv || !fil) {
--- 
-2.18.1
+Regards,
+Lukasz
 
