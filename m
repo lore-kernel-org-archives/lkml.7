@@ -2,84 +2,114 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A48FEC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 01:25:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8803AC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 01:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A12CE20820
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 01:25:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82E9720820
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 01:27:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391888AbfIFBZf (ORCPT
+        id S2391889AbfIFB1r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 21:25:35 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:59696 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389245AbfIFBZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 21:25:35 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id D84102FD553F59EA768F;
-        Fri,  6 Sep 2019 09:25:33 +0800 (CST)
-Received: from [127.0.0.1] (10.74.221.148) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Fri, 6 Sep 2019
- 09:25:26 +0800
-Subject: Re: [PATCH] Revert "net: get rid of an signed integer overflow in
- ip_idents_reserve()"
-To:     Eric Dumazet <eric.dumazet@gmail.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1564132635-57634-1-git-send-email-zhangshaokun@hisilicon.com>
- <afa992f6-eb5e-8104-9a03-f992b184a6b6@gmail.com>
-CC:     Yang Guo <guoyang2@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jiri Pirko <jiri@resnulli.us>
-From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
-Message-ID: <c308f1a8-59b5-fb74-4879-e6f89c4a814a@hisilicon.com>
-Date:   Fri, 6 Sep 2019 09:25:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.1.1
-MIME-Version: 1.0
-In-Reply-To: <afa992f6-eb5e-8104-9a03-f992b184a6b6@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.221.148]
-X-CFilter-Loop: Reflected
+        Thu, 5 Sep 2019 21:27:47 -0400
+Received: from mga05.intel.com ([192.55.52.43]:12199 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729366AbfIFB1r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 21:27:47 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Sep 2019 18:27:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,471,1559545200"; 
+   d="scan'208";a="383094043"
+Received: from brentlu-desk0.itwn.intel.com ([10.5.253.11])
+  by fmsmga005.fm.intel.com with ESMTP; 05 Sep 2019 18:27:44 -0700
+From:   Brent Lu <brent.lu@intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     cezary.rojewski@intel.com, pierre-louis.bossart@linux.intel.com,
+        liam.r.girdwood@linux.intel.com, yang.jie@linux.intel.com,
+        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
+        brent.lu@intel.com, kuninori.morimoto.gx@renesas.com,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: bdw-rt5677: channel constraint support
+Date:   Fri,  6 Sep 2019 09:24:18 +0800
+Message-Id: <1567733058-9561-1-git-send-email-brent.lu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eric,
+BDW boards using this machine driver supports only stereo capture and
+playback. Implement a constraint to enforce it.
 
-On 2019/7/26 17:58, Eric Dumazet wrote:
-> 
-> 
-> On 7/26/19 11:17 AM, Shaokun Zhang wrote:
->> From: Yang Guo <guoyang2@huawei.com>
->>
->> There is an significant performance regression with the following
->> commit-id <adb03115f459>
->> ("net: get rid of an signed integer overflow in ip_idents_reserve()").
->>
->>
-> 
-> So, you jump around and took ownership of this issue, while some of us
-> are already working on it ?
-> 
+Signed-off-by: Brent Lu <brent.lu@intel.com>
+---
+ sound/soc/intel/boards/bdw-rt5677.c | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-Any update about this issue?
-
-Thanks,
-Shaokun
-
-> Have you first checked that current UBSAN versions will not complain anymore ?
-> 
-> A revert adding back the original issue would be silly, performance of
-> benchmarks is nice but secondary.
-> 
-> 
-> 
+diff --git a/sound/soc/intel/boards/bdw-rt5677.c b/sound/soc/intel/boards/bdw-rt5677.c
+index 4a4d335..a312b55 100644
+--- a/sound/soc/intel/boards/bdw-rt5677.c
++++ b/sound/soc/intel/boards/bdw-rt5677.c
+@@ -22,6 +22,8 @@
+ 
+ #include "../../codecs/rt5677.h"
+ 
++#define DUAL_CHANNEL 2
++
+ struct bdw_rt5677_priv {
+ 	struct gpio_desc *gpio_hp_en;
+ 	struct snd_soc_component *component;
+@@ -245,6 +247,36 @@ static int bdw_rt5677_init(struct snd_soc_pcm_runtime *rtd)
+ 	return 0;
+ }
+ 
++static const unsigned int channels[] = {
++	DUAL_CHANNEL,
++};
++
++static const struct snd_pcm_hw_constraint_list constraints_channels = {
++	.count = ARRAY_SIZE(channels),
++	.list = channels,
++	.mask = 0,
++};
++
++static int bdw_fe_startup(struct snd_pcm_substream *substream)
++{
++	struct snd_pcm_runtime *runtime = substream->runtime;
++
++	/*
++	 * On this platform for PCM device we support,
++	 * stereo
++	 */
++
++	runtime->hw.channels_max = DUAL_CHANNEL;
++	snd_pcm_hw_constraint_list(runtime, 0, SNDRV_PCM_HW_PARAM_CHANNELS,
++					   &constraints_channels);
++
++	return 0;
++}
++
++static const struct snd_soc_ops bdw_rt5677_fe_ops = {
++	.startup = bdw_fe_startup,
++};
++
+ /* broadwell digital audio interface glue - connects codec <--> CPU */
+ SND_SOC_DAILINK_DEF(dummy,
+ 	DAILINK_COMP_ARRAY(COMP_DUMMY()));
+@@ -273,6 +305,7 @@ static struct snd_soc_dai_link bdw_rt5677_dais[] = {
+ 		},
+ 		.dpcm_capture = 1,
+ 		.dpcm_playback = 1,
++		.ops = &bdw_rt5677_fe_ops,
+ 		SND_SOC_DAILINK_REG(fe, dummy, platform),
+ 	},
+ 
+-- 
+2.7.4
 
