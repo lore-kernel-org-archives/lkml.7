@@ -2,196 +2,151 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA0FC43140
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 03:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C82C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 03:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E5B82082E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 03:22:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7FA1206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 03:25:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cqX6p5ID"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391241AbfIFDWc (ORCPT
+        id S2392101AbfIFDZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 23:22:32 -0400
-Received: from mga04.intel.com ([192.55.52.120]:3028 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731938AbfIFDWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 23:22:32 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Sep 2019 20:22:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,472,1559545200"; 
-   d="scan'208";a="267231270"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 05 Sep 2019 20:22:30 -0700
-Received: from [10.226.39.8] (leichuan-mobl.gar.corp.intel.com [10.226.39.8])
-        by linux.intel.com (Postfix) with ESMTP id F14005808CB;
-        Thu,  5 Sep 2019 20:22:27 -0700 (PDT)
-Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: intel: Add YAML schemas for the
- PCIe RC controller
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, robh@kernel.org,
-        linux-pci@vger.kernel.org, hch@infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com
-References: <cover.1567585181.git.eswara.kota@linux.intel.com>
- <fe9549470bc06ea0d0dfc80f46a579baa49b911a.1567585181.git.eswara.kota@linux.intel.com>
- <CAFBinCC5SH5OSUqOkLQhE2o7g5OhSuB_PBjsv93U2P=FNS5oPw@mail.gmail.com>
-From:   "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>
-Message-ID: <ce4e04ee-9a8f-fbe1-0133-4a18c92dc136@linux.intel.com>
-Date:   Fri, 6 Sep 2019 11:22:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        Thu, 5 Sep 2019 23:25:57 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:59308 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391320AbfIFDZ5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 23:25:57 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x863PACX068165;
+        Fri, 6 Sep 2019 03:25:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2019-08-05;
+ bh=XW7Ojx+pUK0p5QiMONWXWBE8OOEMf80urxVFCJSXtuQ=;
+ b=cqX6p5IDFND77MqTG5i+hn/gGBFt0oKpLb1RFhNaJ+VDUNN4hzKhwnRu6b8D38wdAxZ3
+ DyHTCsSKp5IgJ+sNGO2IBnKx48ClR7jM08uM0XtC90mSWxGDDynb91WCufdwo2Ze2trU
+ MkamE10IQy2TdCofgYF8TJADAjZT6JfEX7y3kRWD8WiSPCGM087NoQHw9LuqC4EX9WfF
+ ALP10dU36EHgyI3cVQGP5M17JV1Rwmjo46t6OVhcrj+2birt7V5kstMYg3uw3VWMZUga
+ wBGmbfk1jYEdmB+42D51Ns7VgeGqaaQCACpEcXc2YfCCpJIbPUQUZ4UbwofgwkxadKJb Xw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2uuf51g2c1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 Sep 2019 03:25:39 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x861ciol071292;
+        Fri, 6 Sep 2019 01:40:45 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2utvr4fve4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 Sep 2019 01:40:45 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x861ei7Q021721;
+        Fri, 6 Sep 2019 01:40:44 GMT
+Received: from localhost.localdomain (/98.229.125.203)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 05 Sep 2019 18:40:44 -0700
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Cc:     Lai Jiangshan <jiangshanlai@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tejun Heo <tj@kernel.org>, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Daniel Jordan <daniel.m.jordan@oracle.com>
+Subject: [PATCH v3 9/9] padata: remove cpu_index from the parallel_queue
+Date:   Thu,  5 Sep 2019 21:40:29 -0400
+Message-Id: <20190906014029.3345-10-daniel.m.jordan@oracle.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190906014029.3345-1-daniel.m.jordan@oracle.com>
+References: <20190906014029.3345-1-daniel.m.jordan@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <CAFBinCC5SH5OSUqOkLQhE2o7g5OhSuB_PBjsv93U2P=FNS5oPw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1909060015
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1909060037
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+With the removal of the ENODATA case from padata_get_next, the cpu_index
+field is no longer useful, so it can go away.
 
-On 9/6/2019 4:31 AM, Martin Blumenstingl wrote:
-> Hi Dilip,
->
-> On Wed, Sep 4, 2019 at 12:11 PM Dilip Kota <eswara.kota@linux.intel.com> wrote:
-> [...]
->> +properties:
->> +  compatible:
->> +    const: intel,lgm-pcie
-> should we add the "snps,dw-pcie" here (and in the example below) as well?
-> (this is what for example
-> Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt does)
-Thanks for pointing out this. We should add this.
->
-> [...]
->> +  phy-names:
->> +    const: pciephy
-> the most popular choice in Documentation/devicetree/bindings/pci/ is "pcie-phy"
-> if Rob is happy with "pciephy" (which is already part of two other
-> bindings) then I'm happy with "pciephy" as well
-Agree.
->
->> +  num-lanes:
->> +    description: Number of lanes to use for this port.
-> are there SoCs with more than 2 lanes?
-> you can list the allowed values in an enum so "num-lanes = <16>"
-> causes an error when someone accidentally has this in their .dts (and
-> runs the dt-bindings validation)
-Our SoC(LGM) supports single lane or dual lane. Again this also depends 
-on the board. I wonder if we should put this into board specific dts.  
-To make multiple lanes work properly, it also depends on the phy mode. 
-In my internal version, I put it into board dts.
->
-> [...]
->> +  reset-assert-ms:
-> maybe add:
->    $ref: /schemas/types.yaml#/definitions/uint32
-Agree
->> +    description: |
->> +      Device reset interval in ms.
->> +      Some devices need an interval upto 500ms. By default it is 100ms.
->> +
->> +required:
->> +  - compatible
->> +  - device_type
->> +  - reg
->> +  - reg-names
->> +  - ranges
->> +  - resets
->> +  - clocks
->> +  - phys
->> +  - phy-names
->> +  - reset-gpios
->> +  - num-lanes
->> +  - linux,pci-domain
->> +  - interrupts
->> +  - interrupt-map
->> +  - interrupt-map-mask
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    pcie10:pcie@d0e00000 {
->> +      compatible = "intel,lgm-pcie";
->> +      device_type = "pci";
->> +      #address-cells = <3>;
->> +      #size-cells = <2>;
->> +      reg = <
->> +            0xd0e00000 0x1000
->> +            0xd2000000 0x800000
->> +            0xd0a41000 0x1000
->> +            >;
->> +      reg-names = "dbi", "config", "app";
->> +      linux,pci-domain = <0>;
->> +      max-link-speed = <4>;
->> +      bus-range = <0x00 0x08>;
->> +      interrupt-parent = <&ioapic1>;
->> +      interrupts = <67 1>;
->> +      #interrupt-cells = <1>;
->> +      interrupt-map-mask = <0 0 0 0x7>;
->> +      interrupt-map = <0 0 0 1 &ioapic1 27 1>,
->> +                      <0 0 0 2 &ioapic1 28 1>,
->> +                      <0 0 0 3 &ioapic1 29 1>,
->> +                      <0 0 0 4 &ioapic1 30 1>;
-> is the "1" in the interrupts and interrupt-map properties IRQ_TYPE_EDGE_RISING?
-> you can use these macros in this example as well, see
-> Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml for
-> example
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Acked-by: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Lai Jiangshan <jiangshanlai@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ include/linux/padata.h |  2 --
+ kernel/padata.c        | 13 ++-----------
+ 2 files changed, 2 insertions(+), 13 deletions(-)
 
-No. 1 here means index from arch/x86/devicetree.c
+diff --git a/include/linux/padata.h b/include/linux/padata.h
+index 43d3fd9d17fc..23717eeaad23 100644
+--- a/include/linux/padata.h
++++ b/include/linux/padata.h
+@@ -75,14 +75,12 @@ struct padata_serial_queue {
+  * @swork: work struct for serialization.
+  * @work: work struct for parallelization.
+  * @num_obj: Number of objects that are processed by this cpu.
+- * @cpu_index: Index of the cpu.
+  */
+ struct padata_parallel_queue {
+        struct padata_list    parallel;
+        struct padata_list    reorder;
+        struct work_struct    work;
+        atomic_t              num_obj;
+-       int                   cpu_index;
+ };
+ 
+ /**
+diff --git a/kernel/padata.c b/kernel/padata.c
+index 832224dcf2e1..c3fec1413295 100644
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -400,21 +400,12 @@ static void padata_init_squeues(struct parallel_data *pd)
+ /* Initialize all percpu queues used by parallel workers */
+ static void padata_init_pqueues(struct parallel_data *pd)
+ {
+-	int cpu_index, cpu;
++	int cpu;
+ 	struct padata_parallel_queue *pqueue;
+ 
+-	cpu_index = 0;
+-	for_each_possible_cpu(cpu) {
++	for_each_cpu(cpu, pd->cpumask.pcpu) {
+ 		pqueue = per_cpu_ptr(pd->pqueue, cpu);
+ 
+-		if (!cpumask_test_cpu(cpu, pd->cpumask.pcpu)) {
+-			pqueue->cpu_index = -1;
+-			continue;
+-		}
+-
+-		pqueue->cpu_index = cpu_index;
+-		cpu_index++;
+-
+ 		__padata_list_init(&pqueue->reorder);
+ 		__padata_list_init(&pqueue->parallel);
+ 		INIT_WORK(&pqueue->work, padata_parallel_worker);
+-- 
+2.23.0
 
-static struct of_ioapic_type of_ioapic_type[] =
-{
-     {
-         .out_type    = IRQ_TYPE_EDGE_RISING,
-         .trigger    = IOAPIC_EDGE,
-         .polarity    = 1,
-     },
-     {
-         .out_type    = IRQ_TYPE_LEVEL_LOW,
-         .trigger    = IOAPIC_LEVEL,
-         .polarity    = 0,
-     },
-     {
-         .out_type    = IRQ_TYPE_LEVEL_HIGH,
-         .trigger    = IOAPIC_LEVEL,
-         .polarity    = 1,
-     },
-     {
-         .out_type    = IRQ_TYPE_EDGE_FALLING,
-         .trigger    = IOAPIC_EDGE,
-         .polarity    = 0,
-     },
-};
-
-static int dt_irqdomain_alloc(struct irq_domain *domain, unsigned int virq,
-                   unsigned int nr_irqs, void *arg)
-{
-     struct irq_fwspec *fwspec = (struct irq_fwspec *)arg;
-     struct of_ioapic_type *it;
-     struct irq_alloc_info tmp;
-     int type_index;
-
-     if (WARN_ON(fwspec->param_count < 2))
-         return -EINVAL;
-
-     type_index = fwspec->param[1]; // index.
-     if (type_index >= ARRAY_SIZE(of_ioapic_type))
-         return -EINVAL;
-
-I would not see this definition is user-friendly. But it is how x86 
-handles at the moment.
-
->
-> Martin
