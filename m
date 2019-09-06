@@ -2,67 +2,130 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA2B5C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FAEC43140
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFA1020842
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC8C621670
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:38:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389492AbfIFIhT (ORCPT
+        id S2389671AbfIFIiU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 04:37:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57822 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731558AbfIFIhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 04:37:18 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0DC41AB87;
-        Fri,  6 Sep 2019 08:37:17 +0000 (UTC)
-Date:   Fri, 6 Sep 2019 10:37:15 +0200
-From:   Joerg Roedel <jroedel@suse.de>
-To:     Stuart Hayes <stuart.w.hayes@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: Re: [PATCH] amd/iommu: flush old domains in kdump kernel
-Message-ID: <20190906083715.GD5457@suse.de>
-References: <9d271f88-949a-7356-c516-be95b1566c94@gmail.com>
+        Fri, 6 Sep 2019 04:38:20 -0400
+Received: from foss.arm.com ([217.140.110.172]:53096 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732683AbfIFIiT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 04:38:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6234B1570;
+        Fri,  6 Sep 2019 01:38:19 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CE1F63F718;
+        Fri,  6 Sep 2019 01:38:18 -0700 (PDT)
+Date:   Fri, 6 Sep 2019 09:38:17 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Abhishek Shah <abhishek.shah@broadcom.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Subject: Re: [PATCH 1/1] PCI: iproc: Invalidate PAXB address mapping before
+ programming it
+Message-ID: <20190906083816.GD9720@e119886-lin.cambridge.arm.com>
+References: <20190906035813.24046-1-abhishek.shah@broadcom.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9d271f88-949a-7356-c516-be95b1566c94@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190906035813.24046-1-abhishek.shah@broadcom.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 12:09:48PM -0500, Stuart Hayes wrote:
-> When devices are attached to the amd_iommu in a kdump kernel, the old device
-> table entries (DTEs), which were copied from the crashed kernel, will be
-> overwritten with a new domain number.  When the new DTE is written, the IOMMU
-> is told to flush the DTE from its internal cache--but it is not told to flush
-> the translation cache entries for the old domain number.
+On Fri, Sep 06, 2019 at 09:28:13AM +0530, Abhishek Shah wrote:
+> Invalidate PAXB inbound/outbound address mapping each time before
+> programming it. This is helpful for the cases where we need to
+> reprogram inbound/outbound address mapping without resetting PAXB.
+> kexec kernel is one such example.
+
+Why is this approach better than resetting the PAXB (I assume that's
+the PCI controller IP)? Wouldn't resetting the PAXB address this issue,
+and ensure that no other configuration is left behind?
+
+Or is this related to earlier boot stages loading firmware for the emulated
+downstream endpoints (ep_is_internal)?
+
+Finally, in the case where ep_is_internal do you need to disable anything
+prior to invalidating the mappings?
+
 > 
-> Without this patch, AMD systems using the tg3 network driver fail when kdump
-> tries to save the vmcore to a network system, showing network timeouts and
-> (sometimes) IOMMU errors in the kernel log.
+> Signed-off-by: Abhishek Shah <abhishek.shah@broadcom.com>
+> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+> Reviewed-by: Vikram Mysore Prakash <vikram.prakash@broadcom.com>
+> ---
+>  drivers/pci/controller/pcie-iproc.c | 28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
 > 
-> This patch will flush IOMMU translation cache entries for the old domain when
-> a DTE gets overwritten with a new domain number.
+> diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
+> index e3ca46497470..99a9521ba7ab 100644
+> --- a/drivers/pci/controller/pcie-iproc.c
+> +++ b/drivers/pci/controller/pcie-iproc.c
+> @@ -1245,6 +1245,32 @@ static int iproc_pcie_map_dma_ranges(struct iproc_pcie *pcie)
+>  	return ret;
+>  }
+>  
+> +static void iproc_pcie_invalidate_mapping(struct iproc_pcie *pcie)
+> +{
+> +	struct iproc_pcie_ib *ib = &pcie->ib;
+> +	struct iproc_pcie_ob *ob = &pcie->ob;
+> +	int idx;
+> +
+> +	if (pcie->ep_is_internal)
+> +		return;
+> +
+> +	if (pcie->need_ob_cfg) {
+> +		/* iterate through all OARR mapping regions */
+> +		for (idx = ob->nr_windows - 1; idx >= 0; idx--) {
+> +			iproc_pcie_write_reg(pcie,
+> +					     MAP_REG(IPROC_PCIE_OARR0, idx), 0);
+> +		}
+> +	}
+> +
+> +	if (pcie->need_ib_cfg) {
+> +		/* iterate through all IARR mapping regions */
+> +		for (idx = 0; idx < ib->nr_regions; idx++) {
+> +			iproc_pcie_write_reg(pcie,
+> +					     MAP_REG(IPROC_PCIE_IARR0, idx), 0);
+> +		}
+> +	}
+> +}
+> +
+>  static int iproce_pcie_get_msi(struct iproc_pcie *pcie,
+>  			       struct device_node *msi_node,
+>  			       u64 *msi_addr)
+> @@ -1517,6 +1543,8 @@ int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
+>  	iproc_pcie_perst_ctrl(pcie, true);
+>  	iproc_pcie_perst_ctrl(pcie, false);
+>  
+> +	iproc_pcie_invalidate_mapping(pcie);
+> +
+>  	if (pcie->need_ob_cfg) {
+>  		ret = iproc_pcie_map_ranges(pcie, res);
+>  		if (ret) {
 
-Hmm, this seems to point to an interesting implementation detail of the
-AMD IOMMUs. In theory, when the DTE is flushed, there shouldn't be any
-device transactions looked up with the old domain id anymore, and thus
-no faults should happen.
+The code changes look good to me.
 
-Anyway, applied the patch, thanks.
+Thanks,
 
+Andrew Murray
 
-Regards,
-
-	Joerg
+> -- 
+> 2.17.1
+> 
