@@ -2,170 +2,166 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95ED4C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 01:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A04BC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 01:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B8F9206CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 01:48:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85062206CD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 01:54:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WrLJm/MW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404281AbfIFBsp (ORCPT
+        id S2404288AbfIFByh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 21:48:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42136 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404265AbfIFBsp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 21:48:45 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A106218C4266;
-        Fri,  6 Sep 2019 01:48:44 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-16.pek2.redhat.com [10.72.8.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8744860C18;
-        Fri,  6 Sep 2019 01:48:26 +0000 (UTC)
-Date:   Fri, 6 Sep 2019 09:48:21 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Keith Busch <keith.busch@intel.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        linux-scsi@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Long Li <longli@microsoft.com>,
-        John Garry <john.garry@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-nvme@lists.infradead.org, Jens Axboe <axboe@fb.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>
-Subject: Re: [PATCH 1/4] softirq: implement IRQ flood detection mechanism
-Message-ID: <20190906014819.GB27116@ming.t460p>
-References: <20190903033001.GB23861@ming.t460p>
- <299fb6b5-d414-2e71-1dd2-9d6e34ee1c79@linaro.org>
- <20190903063125.GA21022@ming.t460p>
- <6b88719c-782a-4a63-db9f-bf62734a7874@linaro.org>
- <20190903072848.GA22170@ming.t460p>
- <dd96def4-1121-afbe-2431-9e516a06850c@linaro.org>
- <6f3b6557-1767-8c80-f786-1ea667179b39@acm.org>
- <2a8bd278-5384-d82f-c09b-4fce236d2d95@linaro.org>
- <20190905090617.GB4432@ming.t460p>
- <6a36ccc7-24cd-1d92-fef1-2c5e0f798c36@linaro.org>
+        Thu, 5 Sep 2019 21:54:37 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:46955 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730991AbfIFByh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 21:54:37 -0400
+Received: by mail-ot1-f67.google.com with SMTP id g19so4230236otg.13;
+        Thu, 05 Sep 2019 18:54:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=K4IFwD6VM+XLab7BYsbQN6PVDmVS6cIQkZE+YPWUOPU=;
+        b=WrLJm/MW5tbyw7TlKFFlM2O2CiNTHVtwpxcgm0nmNCI9be7PPZbHhtNkHYn5/eceZT
+         A0IRWAJAZEa4Ipem66aHvsFLLW6NXJmX4xS/n7twVXWUkCkeXvdo8HEC/P37Lqt9SuC2
+         qXDv22KnGWOp/mtuGE3/V0MzR9ukygUrBvFf1xzoPk/xVsEGGFjQppAt+oMHfXB9KDON
+         W+9fT6k7bWM7GwPOFjJSYkUVDHS3+8ZNGcflYJD0p7tGgYotZzTGrq6KRsE0kn54e4NH
+         tA0fbfg4JMPSLMmBzpVDuSUuAYht/fuFECkkNVZixWIGPFfHrAJ974GDQ6YgfI6GWf3Y
+         xh+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=K4IFwD6VM+XLab7BYsbQN6PVDmVS6cIQkZE+YPWUOPU=;
+        b=eIxoqjMHbsHhbE+dIEVC+8umb7s9nQYd+IBwIMNlPNXqkgokv+bjgDFAKHxA5+Vr+e
+         +gdoqrhYlkLcT6PGn67/bdes+pFKpzWNprxaDTXuFaSMtnQVGec4Tg+avJoKiVow/lEe
+         WiTj3o/KYwAuolnzJb767AWhywQQ1gStM5nfOGsqYqL7zq5nOI9A0mJxQUCKSqWnfqf8
+         hsb9EEEGCbAtgJp6ISwbU8a1qV8GLIWhYV56djD5PqqlGKiGyM/Qe+qxj2sCfmBjmDol
+         XRqhJwI+FtZkH/2H7JRj0VF4mFrap9DErS0ujlQyRKZIPRxm1xojlZkMSXCfBBkO8nax
+         1s9g==
+X-Gm-Message-State: APjAAAUSFwF7Le7L+cp4oNcgHelt+Wrsvn5sgBd8KF2eBkJF+h8Z5PWy
+        eEkr6VCBDhRN6LDuwCzW64sdqsytkGsiV1JwMu4=
+X-Google-Smtp-Source: APXvYqyfziUSAkRNvffX8M48//3wAYR9dKmOeDSPAKVir2eFp79YrLdsxiD2iIxxWfguu0ZSJzJmQ2d0M3HpFcgZcKE=
+X-Received: by 2002:a9d:3ae:: with SMTP id f43mr4081296otf.254.1567734875909;
+ Thu, 05 Sep 2019 18:54:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6a36ccc7-24cd-1d92-fef1-2c5e0f798c36@linaro.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Fri, 06 Sep 2019 01:48:44 +0000 (UTC)
+References: <1567680270-14022-1-git-send-email-wanpengli@tencent.com> <87ftlakhn6.fsf@vitty.brq.redhat.com>
+In-Reply-To: <87ftlakhn6.fsf@vitty.brq.redhat.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Fri, 6 Sep 2019 09:54:23 +0800
+Message-ID: <CANRm+CyPxb+ZY2cTdbLL_LBKMJSOaMqnPGKc_ATc6-TMHW-rJw@mail.gmail.com>
+Subject: Re: [PATCH] KVM: LAPIC: Fix SynIC Timers inject timer interrupt w/o
+ LAPIC present
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+On Thu, 5 Sep 2019 at 21:16, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>
+> Wanpeng Li <kernellwp@gmail.com> writes:
+>
+> > From: Wanpeng Li <wanpengli@tencent.com>
+> >
+> > Reported by syzkaller:
+> >
+> >       kasan: GPF could be caused by NULL-ptr deref or user memory acces=
+s
+> >       general protection fault: 0000 [#1] PREEMPT SMP KASAN
+> >       RIP: 0010:__apic_accept_irq+0x46/0x740 arch/x86/kvm/lapic.c:1029
+> >       Call Trace:
+> >       kvm_apic_set_irq+0xb4/0x140 arch/x86/kvm/lapic.c:558
+> >       stimer_notify_direct arch/x86/kvm/hyperv.c:648 [inline]
+> >       stimer_expiration arch/x86/kvm/hyperv.c:659 [inline]
+> >       kvm_hv_process_stimers+0x594/0x1650 arch/x86/kvm/hyperv.c:686
+> >       vcpu_enter_guest+0x2b2a/0x54b0 arch/x86/kvm/x86.c:7896
+> >       vcpu_run+0x393/0xd40 arch/x86/kvm/x86.c:8152
+> >       kvm_arch_vcpu_ioctl_run+0x636/0x900 arch/x86/kvm/x86.c:8360
+> >       kvm_vcpu_ioctl+0x6cf/0xaf0 arch/x86/kvm/../../../virt/kvm/kvm_mai=
+n.c:2765
+> >
+> > The testcase programs HV_X64_MSR_STIMERn_CONFIG/HV_X64_MSR_STIMERn_COUN=
+T,
+> > in addition, there is no lapic in the kernel, the counters value are sm=
+all
+> > enough in order that kvm_hv_process_stimers() inject this already-expir=
+ed
+> > timer interrupt into the guest through lapic in the kernel which trigge=
+rs
+> > the NULL deferencing. This patch fixes it by checking lapic_in_kernel,
+> > discarding the inject if it is 0.
+> >
+> > Reported-by: syzbot+dff25ee91f0c7d5c1695@syzkaller.appspotmail.com
+> > Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
+> > Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > ---
+> >  arch/x86/kvm/hyperv.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+> > index c10a8b1..461fcc5 100644
+> > --- a/arch/x86/kvm/hyperv.c
+> > +++ b/arch/x86/kvm/hyperv.c
+> > @@ -645,7 +645,9 @@ static int stimer_notify_direct(struct kvm_vcpu_hv_=
+stimer *stimer)
+> >               .vector =3D stimer->config.apic_vector
+> >       };
+> >
+> > -     return !kvm_apic_set_irq(vcpu, &irq, NULL);
+> > +     if (lapic_in_kernel(vcpu))
+> > +             return !kvm_apic_set_irq(vcpu, &irq, NULL);
+> > +     return 0;
+> >  }
+> >
+> >  static void stimer_expiration(struct kvm_vcpu_hv_stimer *stimer)
+>
+> Hm, but this basically means direct mode synthetic timers won't work
+> when LAPIC is not in kernel but the feature will still be advertised to
+> the guest, not good. Shall we stop advertizing it? Something like
+> (completely untested):
+>
+> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+> index 3f5ad84853fb..1dfa594eaab6 100644
+> --- a/arch/x86/kvm/hyperv.c
+> +++ b/arch/x86/kvm/hyperv.c
+> @@ -1856,7 +1856,13 @@ int kvm_vcpu_ioctl_get_hv_cpuid(struct kvm_vcpu *v=
+cpu, struct kvm_cpuid2 *cpuid,
+>
+>                         ent->edx |=3D HV_FEATURE_FREQUENCY_MSRS_AVAILABLE=
+;
+>                         ent->edx |=3D HV_FEATURE_GUEST_CRASH_MSR_AVAILABL=
+E;
+> -                       ent->edx |=3D HV_STIMER_DIRECT_MODE_AVAILABLE;
+> +
+> +                       /*
+> +                        * Direct Synthetic timers only make sense with i=
+n-kernel
+> +                        * LAPIC
+> +                        */
+> +                       if (lapic_in_kernel(vcpu))
+> +                               ent->edx |=3D HV_STIMER_DIRECT_MODE_AVAIL=
+ABLE;
+>
+>                         break;
 
-On Thu, Sep 05, 2019 at 12:37:13PM +0200, Daniel Lezcano wrote:
-> 
-> Hi Ming,
-> 
-> On 05/09/2019 11:06, Ming Lei wrote:
-> > On Wed, Sep 04, 2019 at 07:31:48PM +0200, Daniel Lezcano wrote:
-> >> Hi,
-> >>
-> >> On 04/09/2019 19:07, Bart Van Assche wrote:
-> >>> On 9/3/19 12:50 AM, Daniel Lezcano wrote:
-> >>>> On 03/09/2019 09:28, Ming Lei wrote:
-> >>>>> On Tue, Sep 03, 2019 at 08:40:35AM +0200, Daniel Lezcano wrote:
-> >>>>>> It is a scheduler problem then ?
-> >>>>>
-> >>>>> Scheduler can do nothing if the CPU is taken completely by handling
-> >>>>> interrupt & softirq, so seems not a scheduler problem, IMO.
-> >>>>
-> >>>> Why? If there is a irq pressure on one CPU reducing its capacity, the
-> >>>> scheduler will balance the tasks on another CPU, no?
-> >>>
-> >>> Only if CONFIG_IRQ_TIME_ACCOUNTING has been enabled. However, I don't
-> >>> know any Linux distro that enables that option. That's probably because
-> >>> that option introduces two rdtsc() calls in each interrupt. Given the
-> >>> overhead introduced by this option, I don't think this is the solution
-> >>> Ming is looking for.
-> >>
-> >> Was this overhead reported somewhere ?
-> > 
-> > The syscall of gettimeofday() calls ktime_get_real_ts64() which finally
-> > calls tk_clock_read() which calls rdtsc too.
-> > 
-> > But gettimeofday() is often used in fast path, and block IO_STAT needs to
-> > read it too.
-> > 
-> >>
-> >>> See also irqtime_account_irq() in kernel/sched/cputime.c.
-> >>
-> >> From my POV, this framework could be interesting to detect this situation.
-> > 
-> > Now we are talking about IRQ_TIME_ACCOUNTING instead of IRQ_TIMINGS, and the
-> > former one could be used to implement the detection. And the only sharing
-> > should be the read of timestamp.
-> 
-> You did not share yet the analysis of the problem (the kernel warnings
-> give the symptoms) and gave the reasoning for the solution. It is hard
-> to understand what you are looking for exactly and how to connect the dots.
+Thanks, I fold this into v2, syzkaller even didn't check the cpuid, so
+I still keep the discard inject part.
 
-Let me explain it one more time:
-
-When one IRQ flood happens on one CPU:
-
-1) softirq handling on this CPU can't make progress
-
-2) kernel thread bound to this CPU can't make progress
-
-For example, network may require softirq to xmit packets, or another irq
-thread for handling keyboards/mice or whatever, or rcu_sched may depend
-on that CPU for making progress, then the irq flood stalls the whole
-system.
-
-> 
-> AFAIU, there are fast medium where the responses to requests are faster
-> than the time to process them, right?
-
-Usually medium may not be faster than CPU, now we are talking about
-interrupts, which can be originated from lots of devices concurrently,
-for example, in Long Li'test, there are 8 NVMe drives involved.
-
-> 
-> I don't see how detecting IRQ flooding and use a threaded irq is the
-> solution, can you explain?
-
-When IRQ flood is detected, we reserve a bit little time for providing
-chance to make softirq/threads scheduled by scheduler, then the above
-problem can be avoided.
-
-> 
-> If the responses are coming at a very high rate, whatever the solution
-> (interrupts, threaded interrupts, polling), we are still in the same
-> situation.
-
-When we moving the interrupt handling into irq thread, other softirq/
-threaded interrupt/thread gets chance to be scheduled, so we can avoid
-to stall the whole system.
-
-> 
-> My suggestion was initially to see if the interrupt load will be taken
-> into accounts in the cpu load and favorize task migration with the
-> scheduler load balance to a less loaded CPU, thus the CPU processing
-> interrupts will end up doing only that while other CPUs will handle the
-> "threaded" side.
-> 
-> Beside that, I'm wondering if the block scheduler should be somehow
-> involved in that [1]
-
-For NVMe or any multi-queue storage, the default scheduler is 'none',
-which basically does nothing except for submitting IO asap.
-
-
-Thanks,
-Ming
+                                                                   Wanpeng
