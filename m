@@ -5,63 +5,63 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCF8C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:33:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB83CC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0D7F20854
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEF7D208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 10:33:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I9PXGQZo"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cZiGseyf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393078AbfIFKdH (ORCPT
+        id S2393097AbfIFKdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 06:33:07 -0400
-Received: from mail-qt1-f202.google.com ([209.85.160.202]:49650 "EHLO
-        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393059AbfIFKdD (ORCPT
+        Fri, 6 Sep 2019 06:33:12 -0400
+Received: from mail-qk1-f201.google.com ([209.85.222.201]:44869 "EHLO
+        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393080AbfIFKdJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 06:33:03 -0400
-Received: by mail-qt1-f202.google.com with SMTP id x19so5756975qto.16
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 03:33:02 -0700 (PDT)
+        Fri, 6 Sep 2019 06:33:09 -0400
+Received: by mail-qk1-f201.google.com with SMTP id x77so5885354qka.11
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 03:33:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=RSyx3V/T3+Fb/fBnjK85DcZdNsViLHAQqUGk4FWkZsU=;
-        b=I9PXGQZof7MywX5pNz/TswRnQbwCl4MRemtmB301MfQQWr8aq2bwX3QwB4ZRJ/Sxyz
-         csifElsn94ZgSkW5c2pPzyCsUEqlKSk7fSyDelm7JO6MQtKPqTRxkU+dwif/m7kknjbe
-         KPhhz50ROCs5AFFtcJb+01sZdAnQdXy2FQsim6sGgp1JmreqXP0ORtk97Hk1YhO2CF7q
-         Hn353Z3VGR3JaqNV86U9BNGyT0G0zIu12mkvbhvFZ5g9oUwuywZhzYmAk/Z4GFBitgEE
-         7bIeyjVD7qVQhpX86A1FtDJc0qtxl7qypHzvvzJhsb3+dUJS8Q8sjWEixuqnaog/7/SS
-         qIUA==
+        bh=HSbsfWVVQztJZc+gKr3UHxvMR+zwYz1b7+HvG/QIJmo=;
+        b=cZiGseyfBR+vIiP+EvGOEGCUl7taws/qim7XTx9xLJTgqFFT4GFMDy+8E54LCVWCmG
+         H6l/08zQEvFRgaPbBtzYD4qcPv6uA6eg6+IfVjocTQmwWmpTYMHQWcJ10ekNG9An9rS9
+         klum4ZstbFvGUjhVCElWn4iHPyQG/AatNxPioRAWUyZVObvWNhERWcDXt/sTCm+3elmR
+         juqF4yhlD8IVEC2a8zyttdYhQ2NavMWD+IW3Hgg9K/vJ3Z4M6hjvW24apqT75NZI5h+U
+         q/DjMXQLb6hRM+rYGUdh17ZsmO7Glb6cV2/4C78KvZDlsMnfmEbl0gPHFiD6ZoeHA7QN
+         Dbew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=RSyx3V/T3+Fb/fBnjK85DcZdNsViLHAQqUGk4FWkZsU=;
-        b=tVdX3xhctPo9g4Jd1rHzR3D7GBW55JKn/a4E4OO7RPBY0IFRep+DWYJsgP/7Q0UuUy
-         rA6yz64aGRhWVY3PqYPnv5Zolt+5R04i/Oz++PuSSMSie22bvExua1EcPek+LqpRcr3e
-         XDpV5qKKcC5bA3UsFifNQU27cY63vD63QsX+++twFHaykG0VO3VLaZU0QE3dEuJhL140
-         d//QkM8yTEcAQvW5IftkYodMClia5p+1ZjX/SXDikM+wJ0ECsA0yywdr0NeNFQQjOk//
-         Co8B8JgIR/Ero87U6JiS42KNIUNmvRyqG9WgUtdao2s5W4vJ4IZVwN0ulrX80OJ/bJXs
-         q8TA==
-X-Gm-Message-State: APjAAAVHnw9IvT8rPwMEVYMBufUeojkWfiAMDOohpstOidwi9uxj8VUi
-        37Y2Qfa4rWCeN7qIkGGCB4jd6ShD0fmlHuh8t8dasuW34UZvsJ7joIXazFh/MV4vcxoF+zs4kXy
-        VpTv6SBIGZECQ0AD1UWswsDSTo7123Rq9e47UANbYg6apjDwXk+1UOU6A/QQDkUsI47RPd0RWtJ
-        Q=
-X-Google-Smtp-Source: APXvYqxGo+cyOXvSYBQKLZexTuCj0WVDifScmh7j3DTkyvPu/M1nmWvyrbXdK58ETdBSPYoWpzvNcto3fKODzw==
-X-Received: by 2002:ac8:1116:: with SMTP id c22mr8369140qtj.179.1567765982297;
- Fri, 06 Sep 2019 03:33:02 -0700 (PDT)
-Date:   Fri,  6 Sep 2019 11:32:31 +0100
+        bh=HSbsfWVVQztJZc+gKr3UHxvMR+zwYz1b7+HvG/QIJmo=;
+        b=nDhmZFOxbCf3FBpACxwGCyfug2WVYZnKeJNemfgWsP2nP+bXcQ1e+3mAXyQEXGiA7h
+         eWYaYHCwrOSqp5K7D0ku+X0yFQylrLoyWp4P4AyoNxGVA/SzGpDC7iWOu9db/5YjqtJh
+         898DsA21MGm7uy1er2cabamBJpSgn2lEuT0S+vud3+BwnOpDDDV4VydpoTO+Za2qY8wo
+         fEPGUlQ7xgHZv0gXpo/u4nVIwsn9UPLY5KfDFr5TmOwY1ZI2Y6DM859nlEJhleIzyT6r
+         HPszellM7Hdg/2Mmprpz9MCsS/oBu6K+ibKAPnEWzzLB2oLQNXUTTBD5WMGylEqhfxm0
+         7WLg==
+X-Gm-Message-State: APjAAAXoESj5OKh55wb2GwQXuYxWPQ34A4Pkej6GkGx0V4QDxUNzC81d
+        P+KgU5zl3GJB4au9ExUqjBHrJjj/JbgpiXCAagfV0Dt3Elr2mRu6ElwWx/nJFLDBzrEIn30Yesy
+        ZUobowb2YcVtMgoLXV1Jx4XrKgE2aUTP1vAKSntx9go2Au+ltyn+/uUslhTmqnX1cJJLjKnasJH
+        Y=
+X-Google-Smtp-Source: APXvYqwOqLJFARsv5qn3x4ZrbRn5j0Pqx+KC5xtwsLrXeEZBVPkfByzscCC05soAO77rz4hJgkKz4sA5GPb9fw==
+X-Received: by 2002:ae9:e219:: with SMTP id c25mr8159358qkc.234.1567765987998;
+ Fri, 06 Sep 2019 03:33:07 -0700 (PDT)
+Date:   Fri,  6 Sep 2019 11:32:33 +0100
 In-Reply-To: <20190906103235.197072-1-maennich@google.com>
-Message-Id: <20190906103235.197072-8-maennich@google.com>
+Message-Id: <20190906103235.197072-10-maennich@google.com>
 Mime-Version: 1.0
 References: <20180716122125.175792-1-maco@android.com> <20190906103235.197072-1-maennich@google.com>
 X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
-Subject: [PATCH v5 07/11] modpost: add support for generating namespace dependencies
+Subject: [PATCH v5 09/11] docs: Add documentation for Symbol Namespaces
 From:   Matthias Maennich <maennich@google.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     kernel-team@android.com, maennich@google.com, arnd@arndb.de,
@@ -77,177 +77,206 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds an option to modpost to generate a <module>.ns_deps file
-per module, containing the namespace dependencies for that module.
+Describe using Symbol Namespaces from a perspective of a user. I.e.
+module authors or subsystem maintainers.
 
-E.g. if the linked module my-module.ko would depend on the symbol
-myfunc.MY_NS in the namespace MY_NS, the my-module.ns_deps file created
-by modpost would contain the entry MY_NS to express the namespace
-dependency of my-module imposed by using the symbol myfunc.
-
-These files can subsequently be used by static analysis tools (like
-coccinelle scripts) to address issues with missing namespace imports. A
-later patch of this series will introduce such a script 'nsdeps' and a
-corresponding make target to automatically add missing
-MODULE_IMPORT_NS() definitions to the module's sources. For that it uses
-the information provided in the generated .ns_deps files.
-
-Co-developed-by: Martijn Coenen <maco@android.com>
-Signed-off-by: Martijn Coenen <maco@android.com>
 Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Matthias Maennich <maennich@google.com>
 ---
- .gitignore            |  1 +
- Makefile              |  2 +-
- scripts/mod/modpost.c | 54 +++++++++++++++++++++++++++++++++++++++----
- scripts/mod/modpost.h |  2 ++
- 4 files changed, 53 insertions(+), 6 deletions(-)
+ Documentation/kbuild/namespaces.rst      | 154 +++++++++++++++++++++++
+ Documentation/kernel-hacking/hacking.rst |  18 +++
+ 2 files changed, 172 insertions(+)
+ create mode 100644 Documentation/kbuild/namespaces.rst
 
-diff --git a/.gitignore b/.gitignore
-index 2030c7a4d2f8..9ee63aa2a3fb 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -32,6 +32,7 @@
- *.lzo
- *.mod
- *.mod.c
-+*.ns_deps
- *.o
- *.o.*
- *.order
-diff --git a/Makefile b/Makefile
-index 0cbe8717bdb3..0cdb957ae2c3 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1669,7 +1669,7 @@ clean: $(clean-dirs)
- 		-o -name '*.ko.*' \
- 		-o -name '*.dtb' -o -name '*.dtb.S' -o -name '*.dt.yaml' \
- 		-o -name '*.dwo' -o -name '*.lst' \
--		-o -name '*.su' -o -name '*.mod' \
-+		-o -name '*.su' -o -name '*.mod' -o -name '*.ns_deps' \
- 		-o -name '.*.d' -o -name '.*.tmp' -o -name '*.mod.c' \
- 		-o -name '*.lex.c' -o -name '*.tab.[ch]' \
- 		-o -name '*.asn1.[ch]' \
-diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index c2d49afaea1c..be72da25fe7c 100644
---- a/scripts/mod/modpost.c
-+++ b/scripts/mod/modpost.c
-@@ -38,6 +38,8 @@ static int sec_mismatch_count = 0;
- static int sec_mismatch_fatal = 0;
- /* ignore missing files */
- static int ignore_missing_files;
-+/* write namespace dependencies */
-+static int write_namespace_deps;
+diff --git a/Documentation/kbuild/namespaces.rst b/Documentation/kbuild/namespaces.rst
+new file mode 100644
+index 000000000000..982ed7b568ac
+--- /dev/null
++++ b/Documentation/kbuild/namespaces.rst
+@@ -0,0 +1,154 @@
++=================
++Symbol Namespaces
++=================
++
++The following document describes how to use Symbol Namespaces to structure the
++export surface of in-kernel symbols exported through the family of
++EXPORT_SYMBOL() macros.
++
++.. Table of Contents
++
++	=== 1 Introduction
++	=== 2 How to define Symbol Namespaces
++	   --- 2.1 Using the EXPORT_SYMBOL macros
++	   --- 2.2 Using the DEFAULT_SYMBOL_NAMESPACE define
++	=== 3 How to use Symbols exported in Namespaces
++	=== 4 Loading Modules that use namespaced Symbols
++	=== 5 Automatically creating MODULE_IMPORT_NS statements
++
++1. Introduction
++===============
++
++Symbol Namespaces have been introduced as a means to structure the export
++surface of the in-kernel API. It allows subsystem maintainers to partition
++their exported symbols into separate namespaces. That is useful for
++documentation purposes (think of the SUBSYSTEM_DEBUG namespace) as well as for
++limiting the availability of a set of symbols for use in other parts of the
++kernel. As of today, modules that make use of symbols exported into namespaces,
++are required to import the namespace. Otherwise the kernel will, depending on
++its configuration, reject loading the module or warn about a missing import.
++
++2. How to define Symbol Namespaces
++==================================
++
++Symbols can be exported into namespace using different methods. All of them are
++changing the way EXPORT_SYMBOL and friends are instrumented to create ksymtab
++entries.
++
++2.1 Using the EXPORT_SYMBOL macros
++==================================
++
++In addition to the macros EXPORT_SYMBOL() and EXPORT_SYMBOL_GPL(), that allow
++exporting of kernel symbols to the kernel symbol table, variants of these are
++available to export symbols into a certain namespace: EXPORT_SYMBOL_NS() and
++EXPORT_SYMBOL_NS_GPL(). They take one additional argument: the namespace.
++Please note that due to macro expansion that argument needs to be a
++preprocessor symbol. E.g. to export the symbol `usb_stor_suspend` into the
++namespace `USB_STORAGE`, use::
++
++	EXPORT_SYMBOL_NS(usb_stor_suspend, USB_STORAGE);
++
++The corresponding ksymtab entry struct `kernel_symbol` will have the member
++`namespace` set accordingly. A symbol that is exported without a namespace will
++refer to `NULL`. There is no default namespace if none is defined. `modpost`
++and kernel/module.c make use the namespace at build time or module load time,
++respectively.
++
++2.2 Using the DEFAULT_SYMBOL_NAMESPACE define
++=============================================
++
++Defining namespaces for all symbols of a subsystem can be very verbose and may
++become hard to maintain. Therefore a default define (DEFAULT_SYMBOL_NAMESPACE)
++is been provided, that, if set, will become the default for all EXPORT_SYMBOL()
++and EXPORT_SYMBOL_GPL() macro expansions that do not specify a namespace.
++
++There are multiple ways of specifying this define and it depends on the
++subsystem and the maintainer's preference, which one to use. The first option
++is to define the default namespace in the `Makefile` of the subsystem. E.g. to
++export all symbols defined in usb-common into the namespace USB_COMMON, add a
++line like this to drivers/usb/common/Makefile::
++
++	ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=USB_COMMON
++
++That will affect all EXPORT_SYMBOL() and EXPORT_SYMBOL_GPL() statements. A
++symbol exported with EXPORT_SYMBOL_NS() while this definition is present, will
++still be exported into the namespace that is passed as the namespace argument
++as this argument has preference over a default symbol namespace.
++
++A second option to define the default namespace is directly in the compilation
++unit as preprocessor statement. The above example would then read::
++
++	#undef  DEFAULT_SYMBOL_NAMESPACE
++	#define DEFAULT_SYMBOL_NAMESPACE USB_COMMON
++
++within the corresponding compilation unit before any EXPORT_SYMBOL macro is
++used.
++
++3. How to use Symbols exported in Namespaces
++============================================
++
++In order to use symbols that are exported into namespaces, kernel modules need
++to explicitly import these namespaces. Otherwise the kernel might reject to
++load the module. The module code is required to use the macro MODULE_IMPORT_NS
++for the namespaces it uses symbols from. E.g. a module using the
++usb_stor_suspend symbol from above, needs to import the namespace USB_STORAGE
++using a statement like::
++
++	MODULE_IMPORT_NS(USB_STORAGE);
++
++This will create a `modinfo` tag in the module for each imported namespace.
++This has the side effect, that the imported namespaces of a module can be
++inspected with modinfo::
++
++	$ modinfo drivers/usb/storage/ums-karma.ko
++	[...]
++	import_ns:      USB_STORAGE
++	[...]
++
++
++It is advisable to add the MODULE_IMPORT_NS() statement close to other module
++metadata definitions like MODULE_AUTHOR() or MODULE_LICENSE(). Refer to section
++5. for a way to create missing import statements automatically.
++
++4. Loading Modules that use namespaced Symbols
++==============================================
++
++At module loading time (e.g. `insmod`), the kernel will check each symbol
++referenced from the module for its availability and whether the namespace it
++might be exported to has been imported by the module. The default behaviour of
++the kernel is to reject loading modules that don't specify sufficient imports.
++An error will be logged and loading will be failed with EINVAL. In order to
++allow loading of modules that don't satisfy this precondition, a configuration
++option is available: Setting MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS=y will
++enable loading regardless, but will emit a warning.
++
++5. Automatically creating MODULE_IMPORT_NS statements
++=====================================================
++
++Missing namespaces imports can easily be detected at build time. In fact,
++modpost will emit a warning if a module uses a symbol from a namespace
++without importing it.
++MODULE_IMPORT_NS() statements will usually be added at a definite location
++(along with other module meta data). To make the life of module authors (and
++subsystem maintainers) easier, a script and make target is available to fixup
++missing imports. Fixing missing imports can be done with::
++
++	$ make nsdeps
++
++A typical scenario for module authors would be::
++
++	- write code that depends on a symbol from a not imported namespace
++	- `make`
++	- notice the warning of modpost telling about a missing import
++	- run `make nsdeps` to add the import to the correct code location
++
++For subsystem maintainers introducing a namespace, the steps are very similar.
++Again, `make nsdeps` will eventually add the missing namespace imports for
++in-tree modules::
++
++	- move or add symbols to a namespace (e.g. with EXPORT_SYMBOL_NS())
++	- `make` (preferably with an allmodconfig to cover all in-kernel
++	  modules)
++	- notice the warning of modpost telling about a missing import
++	- run `make nsdeps` to add the import to the correct code location
++
+diff --git a/Documentation/kernel-hacking/hacking.rst b/Documentation/kernel-hacking/hacking.rst
+index 5891a701a159..a3ddb213a5e1 100644
+--- a/Documentation/kernel-hacking/hacking.rst
++++ b/Documentation/kernel-hacking/hacking.rst
+@@ -594,6 +594,24 @@ internal implementation issue, and not really an interface. Some
+ maintainers and developers may however require EXPORT_SYMBOL_GPL()
+ when adding any new APIs or functionality.
  
- enum export {
- 	export_plain,      export_unused,     export_gpl,
-@@ -2176,10 +2178,15 @@ static int check_exports(struct module *mod)
- 		else
- 			basename = mod->name;
++:c:func:`EXPORT_SYMBOL_NS()`
++----------------------------
++
++Defined in ``include/linux/export.h``
++
++This is the variant of `EXPORT_SYMBOL()` that allows specifying a symbol
++namespace. Symbol Namespaces are documented in
++``Documentation/kbuild/namespaces.rst``.
++
++:c:func:`EXPORT_SYMBOL_NS_GPL()`
++--------------------------------
++
++Defined in ``include/linux/export.h``
++
++This is the variant of `EXPORT_SYMBOL_GPL()` that allows specifying a symbol
++namespace. Symbol Namespaces are documented in
++``Documentation/kbuild/namespaces.rst``.
++
+ Routines and Conventions
+ ========================
  
--		if (exp->namespace &&
--		    !module_imports_namespace(mod, exp->namespace)) {
--			warn("module %s uses symbol %s from namespace %s, but does not import it.\n",
--			     basename, exp->name, exp->namespace);
-+		if (exp->namespace) {
-+			add_namespace(&mod->required_namespaces,
-+				      exp->namespace);
-+
-+			if (!write_namespace_deps &&
-+			    !module_imports_namespace(mod, exp->namespace)) {
-+				warn("module %s uses symbol %s from namespace %s, but does not import it.\n",
-+				     basename, exp->name, exp->namespace);
-+			}
- 		}
- 
- 		if (!mod->gpl_compatible)
-@@ -2484,6 +2491,31 @@ static void write_dump(const char *fname)
- 	free(buf.p);
- }
- 
-+static void write_namespace_deps_files(void)
-+{
-+	struct module *mod;
-+	struct namespace_list *ns;
-+	struct buffer ns_deps_buf = {};
-+
-+	for (mod = modules; mod; mod = mod->next) {
-+		char fname[PATH_MAX];
-+
-+		if (mod->skip)
-+			continue;
-+
-+		ns_deps_buf.pos = 0;
-+
-+		for (ns = mod->required_namespaces; ns; ns = ns->next)
-+			buf_printf(&ns_deps_buf, "%s\n", ns->namespace);
-+
-+		if (ns_deps_buf.pos == 0)
-+			continue;
-+
-+		sprintf(fname, "%s.ns_deps", mod->name);
-+		write_if_changed(&ns_deps_buf, fname);
-+	}
-+}
-+
- struct ext_sym_list {
- 	struct ext_sym_list *next;
- 	const char *file;
-@@ -2500,7 +2532,7 @@ int main(int argc, char **argv)
- 	struct ext_sym_list *extsym_iter;
- 	struct ext_sym_list *extsym_start = NULL;
- 
--	while ((opt = getopt(argc, argv, "i:I:e:mnsT:o:awE")) != -1) {
-+	while ((opt = getopt(argc, argv, "i:I:e:mnsT:o:awEd")) != -1) {
- 		switch (opt) {
- 		case 'i':
- 			kernel_read = optarg;
-@@ -2541,6 +2573,9 @@ int main(int argc, char **argv)
- 		case 'E':
- 			sec_mismatch_fatal = 1;
- 			break;
-+		case 'd':
-+			write_namespace_deps = 1;
-+			break;
- 		default:
- 			exit(1);
- 		}
-@@ -2575,6 +2610,9 @@ int main(int argc, char **argv)
- 
- 		err |= check_modname_len(mod);
- 		err |= check_exports(mod);
-+		if (write_namespace_deps)
-+			continue;
-+
- 		add_header(&buf, mod);
- 		add_intree_flag(&buf, !external_module);
- 		add_retpoline(&buf);
-@@ -2587,6 +2625,12 @@ int main(int argc, char **argv)
- 		sprintf(fname, "%s.mod.c", mod->name);
- 		write_if_changed(&buf, fname);
- 	}
-+
-+	if (write_namespace_deps) {
-+		write_namespace_deps_files();
-+		return 0;
-+	}
-+
- 	if (dump_write)
- 		write_dump(dump_write);
- 	if (sec_mismatch_count && sec_mismatch_fatal)
-diff --git a/scripts/mod/modpost.h b/scripts/mod/modpost.h
-index 9626bf3e7424..92a926d375d2 100644
---- a/scripts/mod/modpost.h
-+++ b/scripts/mod/modpost.h
-@@ -126,6 +126,8 @@ struct module {
- 	struct buffer dev_table_buf;
- 	char	     srcversion[25];
- 	int is_dot_o;
-+	// Required namespace dependencies
-+	struct namespace_list *required_namespaces;
- 	// Actual imported namespaces
- 	struct namespace_list *imported_namespaces;
- };
 -- 
 2.23.0.187.g17f5b7556c-goog
 
