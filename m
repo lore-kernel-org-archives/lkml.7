@@ -6,104 +6,116 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF57C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2121C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0228206BB
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:11:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6CC12082C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 15:11:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387522AbfIFPL0 (ORCPT
+        id S2388057AbfIFPLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 11:11:26 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:33425 "EHLO
+        Fri, 6 Sep 2019 11:11:35 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:60621 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726019AbfIFPLZ (ORCPT
+        with ESMTP id S1726019AbfIFPLe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 11:11:25 -0400
+        Fri, 6 Sep 2019 11:11:34 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MV2Sk-1hgIWR2ZKI-00S57m; Fri, 06 Sep 2019 17:11:01 +0200
+ (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MpDa5-1iVMm21VU7-00qmuU; Fri, 06 Sep 2019 17:11:25 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Denis Efremov <efremov@linux.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        WANG Chao <chao.wang@ucloud.cn>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] mostpost: don't warn about symbols from another file
-Date:   Fri,  6 Sep 2019 17:10:48 +0200
-Message-Id: <20190906151059.1077708-1-arnd@arndb.de>
+To:     Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Feras Daoud <ferasda@mellanox.com>,
+        Erez Shitrit <erezsh@mellanox.com>,
+        Moshe Shemesh <moshe@mellanox.com>,
+        Eran Ben Elisha <eranbe@mellanox.com>, Qian Cai <cai@lca.pw>,
+        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net/mlx5: reduce stack usage in FW tracer
+Date:   Fri,  6 Sep 2019 17:11:16 +0200
+Message-Id: <20190906151123.1088455-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:MYSsX62M3kMVOdBJmO0fvdsGZ8LVBevwQAuhV3ZGapv8NxCoKjk
- ewBSHOJ+U+W4Bx40YN/DKiYCMc86z16Ni9hwgNX31KTZIAQYIAvTD4YPKc19zHK2HJ7KxZM
- 34zimubqZDjIL66j4kVkFU7LPxsU3RM9eaT4qGUqavdgjJa2/3/5bWTiBhHSmqT+lHTR+FE
- 1IJMRDtXw4khhHR8Tekyg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:jPkOfdxtGfs=:MMY/6CGqG/UaoJb6vlh/AH
- U2S63vjc7H4TGNfEYOqhGsvpyk6EgV+g15g+sMayiSRR2f+MT5IdUdb9rZbHaLCr1GotwD6pT
- frLmDSswIbANiqQSInn3yIX8G+ziGOO1Vf8V+QB7qpyhit/8ieCC9j1bUYMkjNqIa9MW9hQRU
- 0wDsEX+hDy3qwUhpRGa5jGdsgIyiwXrqC7dAamrIzlrtHEIXYOwFm57GshwlU1WJsJTv1E4Wb
- xsUowHX2NJGL9RhYj6GDxJTEpJSjQ57naMl2kC4yOS+g1vrghWwECPYRqyWAkU0B53jE2KYjA
- 9IeJbdtviemSV3LsUtpKGAYOs8dP3JyKnqwEc86GmeYVf8vq48AVfft6Fz7RBCqzxoNAmN/p/
- YXcn/DnAtGdcEOLAsYjgKfMOdHQQ+QaCZhPPlO57z1uJlMOS2rYP63phI8tKm9B/Op1IKdLjv
- jidOQNVMWyVc3yCdnIOwBi/tpIsQw98d2VCKlQ8ubtacaqaZYNLeER6RhMT7XloK403DppwZH
- rrqtyQcwavMJMWQHm5RieV9NqUJ9+Hl2NrPRneE99v6dqcFZpj0L14cUuPF5zsuG5pmVzHokf
- VHIi1FgSaP3HccwZyt5aUm1TzelqEujdKzlU2LW0gWyrCA6oWslARprr7xAC9FtdH4p4IEwag
- XmIzaJIggQbqgbEp6I8u7zm9W/9lX7C3XdPYzmFLfsI6Efy72BQg9wlFSXnrgago5Pc4yXeuO
- l053iPLVHskj4J3ftQDlLripZ8/U19RyokcegBgwFccbc9qkshuvbS5fWqozc5bhMuWZPtPEc
- sAOqHEpf3V0xguUpX9MgRl1zWeeGg==
+X-Provags-ID: V03:K1:p/b8Nl+a8dcOBXe1E3zEBq4jgiU9iqZOcICuoVMvko8jH0U4ryo
+ FeR6Q+0c1vFSlpCFpWhwUSHP5Li2ZMgA2Klua6mVw68Z5Zcfnc1az5h+1qXOAk0xALJ53XG
+ h4sI7EmaaRERYBnBrNJzSaKMDw5civlTahWbDF3P+hM9NjqgalSlPwKZ8FW7Y7ixhwuntGt
+ lRyvkrcRvkOThH77r5nTg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:+SyaHs2zKCE=:FWX7FWPQbNudZ9Cz9qFnPg
+ Fs53G8kwE94rvxELM3px1JcfUxQ/T4jLokQZo3lwKyL9WRYGqYhdHklF826KN0DTpBwLQfmTL
+ ZqD86Su8i2y2Z5fUniTOK3C4qKDPEzHuQgK9kcifrdrILQ0nbIjfZVahyfRJYH5+Z6nQ6qg9P
+ W6kkw8COj9cTmCn5mDXVNZDk+Nep7+KZy49DSLiDAoy0+O3cuB6x47k7YwgrR0Z/VQEfFnMMH
+ kMHeJDZPYSMrsHx25JOX2eJW6jdEOuvY+XWD93QjfK0POa22sgfgNzPEJr3njRGG+6p19iHgh
+ WOhcYYPk2oadqUlbyvRbtmrc0rYtMhPpBgPX2MndGZndS1jQbMw9QJxy5gPKISd3odlIiG872
+ pXSuhMki2Rq8ufRvjE1c/2McMT6zbX3d8NNlMqCY+1hFBUIw7BNYdYaDkgLFFFmwPxysSpRdk
+ qoeSlgC2w1zcqwn28yMoccOihwRnAE4tleAIjplz84I/43c8QwEetomB/qwD1pxxrYbc+tNt2
+ n0zbjxmoFJfG5baeTr6cTvvnIBAcdCcPO+4l5JPt8DYQvQ6V3E7+acMsgAz3YFzFyT6iAv0Vl
+ 0jVMtognsqRNePtAjZMQVAtvqfWNNsZoYIaDOgp5fHahwAivQrQkuemwOasukqgAMX9GO4JXi
+ 89ytPfAnoq6wr+NgAIc97qaQmCG7cRlmypofPkqoNp3/x0KHhXtoqB/pQ9ziee2/tyZQUIJj5
+ 57G/C17D/Pdc43BkugGMwW0hRaXsJoBMhCZ7eohEHGF7y58GdZAf3/fAw+hHdWyRnYocwj5zj
+ DGpBksL6TcusCqZ3FqmMbIShtjlihFhYrXYNRk2IOfJBIt2fIA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On architectures such as ARM that have a list of symbols exported from
-assembler in a separate C file, we get a lot of new warnings:
+It's generally not ok to put a 512 byte buffer on the stack, as kernel
+stack is a scarce resource:
 
-WARNING: "__ashrdi3" [vmlinux] is a static (unknown)
-WARNING: "__lshrdi3" [vmlinux] is a static (unknown)
-WARNING: "__aeabi_llsr" [vmlinux] is a static (unknown)
-WARNING: "__aeabi_lasr" [vmlinux] is a static (unknown)
-WARNING: "__aeabi_uidivmod" [vmlinux] is a static (unknown)
-WARNING: "__udivsi3" [vmlinux] is a static (unknown)
-WARNING: "_change_bit" [vmlinux] is a static (unknown)
-WARNING: "__aeabi_idiv" [vmlinux] is a static (unknown)
-WARNING: "__umodsi3" [vmlinux] is a static (unknown)
-WARNING: "__aeabi_uidiv" [vmlinux] is a static (unknown)
-WARNING: "__aeabi_idivmod" [vmlinux] is a static (unknown)
-WARNING: "__muldi3" [vmlinux] is a static (unknown)
-WARNING: "__aeabi_ulcmp" [vmlinux] is a static (unknown)
-WARNING: "__raw_writesb" [vmlinux] is a static (unknown)
-WARNING: "__raw_readsb" [vmlinux] is a static (unknown)
-...
+drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c:660:13: error: stack frame size of 1032 bytes in function 'mlx5_fw_tracer_handle_traces' [-Werror,-Wframe-larger-than=]
 
-This is not helpful, as these are clearly not static symbols
-at all. Suppress the warning in a case like this.
+This is done in a context that is allowed to sleep, so using
+dynamic allocation is ok as well. I'm not too worried about
+runtime overhead, as this already contains an snprintf() and
+other expensive functions.
 
-Fixes: 15bfc2348d54 ("modpost: check for static EXPORT_SYMBOL* functions")
+Fixes: 70dd6fdb8987 ("net/mlx5: FW tracer, parse traces and kernel tracing support")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- scripts/mod/modpost.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../mellanox/mlx5/core/diag/fw_tracer.c       | 21 ++++++++++---------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
-diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index 76c221dd9b2b..4265dd924933 100644
---- a/scripts/mod/modpost.c
-+++ b/scripts/mod/modpost.c
-@@ -2543,7 +2543,7 @@ int main(int argc, char **argv)
- 		struct symbol *s = symbolhash[n];
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c b/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
+index 2011eaf15cc5..d81e78060f9f 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
+@@ -557,16 +557,16 @@ static void mlx5_tracer_print_trace(struct tracer_string_format *str_frmt,
+ 				    struct mlx5_core_dev *dev,
+ 				    u64 trace_timestamp)
+ {
+-	char	tmp[512];
+-
+-	snprintf(tmp, sizeof(tmp), str_frmt->string,
+-		 str_frmt->params[0],
+-		 str_frmt->params[1],
+-		 str_frmt->params[2],
+-		 str_frmt->params[3],
+-		 str_frmt->params[4],
+-		 str_frmt->params[5],
+-		 str_frmt->params[6]);
++	char *tmp = kasprintf(GFP_KERNEL, str_frmt->string,
++			      str_frmt->params[0],
++			      str_frmt->params[1],
++			      str_frmt->params[2],
++			      str_frmt->params[3],
++			      str_frmt->params[4],
++			      str_frmt->params[5],
++			      str_frmt->params[6]);
++	if (!tmp)
++		return;
  
- 		while (s) {
--			if (s->is_static)
-+			if (s->is_static && s->export != export_unknown)
- 				warn("\"%s\" [%s] is a static %s\n",
- 				     s->name, s->module->name,
- 				     export_str(s->export));
+ 	trace_mlx5_fw(dev->tracer, trace_timestamp, str_frmt->lost,
+ 		      str_frmt->event_id, tmp);
+@@ -576,6 +576,7 @@ static void mlx5_tracer_print_trace(struct tracer_string_format *str_frmt,
+ 
+ 	/* remove it from hash */
+ 	mlx5_tracer_clean_message(str_frmt);
++	kfree(tmp);
+ }
+ 
+ static int mlx5_tracer_handle_string_trace(struct mlx5_fw_tracer *tracer,
 -- 
 2.20.0
 
