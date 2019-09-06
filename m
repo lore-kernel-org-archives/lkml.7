@@ -5,42 +5,42 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A57C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D11EC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 233F3207FC
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:41:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15085206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 07:41:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="UKDD5M3Q"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="d99qkytP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404587AbfIFHlb (ORCPT
+        id S2404566AbfIFHlb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 6 Sep 2019 03:41:31 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:33366 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2392555AbfIFHl3 (ORCPT
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:33322 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2391062AbfIFHl3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 6 Sep 2019 03:41:29 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 23683C0E03;
-        Fri,  6 Sep 2019 07:41:27 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 542E7C0E3F;
+        Fri,  6 Sep 2019 07:41:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1567755688; bh=1i/geIHgBQLLy7LPimv2MIzVFeg/Cl2TeuERvfMsPYk=;
+        t=1567755688; bh=PPN655geEk93zxgKDoKCmCCtqNmGhdnuRq0oF4It5O0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=UKDD5M3QsYIJSRZ7L9o99VGsWgvjEfmNmPwUfpdbQebZ8qBBDEJY4wRUNpNkuTO7v
-         R3FngN05ExpqQxQWK/icr3lKvhAY0ywtmn5/8r/PqTuIsg4ydYiO5Cl3boXasgE2E1
-         ZBhMsqDhvK405Rng3quH4TxJhW6j1zrVtFK7j/OgQEMgEsip9DpF1zKdV85M5cwbk/
-         9Urvg/z/EQ+Wi1K1i8RF2Tu89qxCxwVO1+5f8j9PrzaUVeCAA4l+c/b9s3P79xPQvG
-         Ij8OoXdWTGC/xipH4+25Qj+IkdTl35l43Ax/SERJpxFqYUXnOcrslIoNG2o1KpVRHz
-         xzGrdurzMs3PA==
+        b=d99qkytPcmwlzrst7u/DLYo0N5+MwF8KX1avousmvwlQAN5bjxJ51z1CpgXU/y+p5
+         6BqozjwF2QL7LIq5wOBVDiLlNoyWBiHrTdSpaF7biaL5LIbxwFsDzm4OO1iuW6G9ya
+         QbhxGoGCtNLVqPNcH4oRfvAwV8kbuf8AX4tF3NnWBaOuAsMPszxgvWzJluhFMMbUM4
+         LCWBT53ryDF5RN6bp2ecfBL35ha8InUa0yxv2xU+POY7l/400joHVhMHpwRmklPpJf
+         6ystkU7/f7dimbkYjYmuq2fJ8UkUVQ7LvrGOoUuhCcyZiqOxW6LXkHEhgzuPkmgQA0
+         /h/XGOp0BZnWg==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id A5E9BA005D;
-        Fri,  6 Sep 2019 07:41:26 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id 03710A006D;
+        Fri,  6 Sep 2019 07:41:27 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
 Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
@@ -50,9 +50,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         "David S. Miller" <davem@davemloft.net>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 1/5] net: stmmac: selftests: Add missing checks for support of SA
-Date:   Fri,  6 Sep 2019 09:41:13 +0200
-Message-Id: <3b38421ddf3d8c4e40400f990999d548b8c459b5.1567755423.git.joabreu@synopsys.com>
+Subject: [PATCH net-next 5/5] net: stmmac: Limit max speeds of XGMAC if asked to
+Date:   Fri,  6 Sep 2019 09:41:17 +0200
+Message-Id: <151c0529f0c698e94b81bee44d4f1d0a3379cab2.1567755423.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1567755423.git.joabreu@synopsys.com>
 References: <cover.1567755423.git.joabreu@synopsys.com>
@@ -63,8 +63,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add checks for support of Source Address Insertion/Replacement before
-running the test.
+We may have some SoCs that can't achieve XGMAC max speed. Limit it if
+asked to.
 
 Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 
@@ -78,53 +78,45 @@ Cc: netdev@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 25 +++++++++++++++--------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-index 305d24935cf4..dce34c081a1e 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-@@ -1057,6 +1057,9 @@ static int stmmac_test_desc_sai(struct stmmac_priv *priv)
- 	struct stmmac_packet_attrs attr = { };
- 	int ret;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index c3baca9f587b..686b82068142 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -831,15 +831,22 @@ static void stmmac_validate(struct phylink_config *config,
+ 		phylink_set(mask, 1000baseT_Full);
+ 		phylink_set(mask, 1000baseX_Full);
+ 	} else if (priv->plat->has_xgmac) {
+-		phylink_set(mac_supported, 2500baseT_Full);
+-		phylink_set(mac_supported, 5000baseT_Full);
+-		phylink_set(mac_supported, 10000baseSR_Full);
+-		phylink_set(mac_supported, 10000baseLR_Full);
+-		phylink_set(mac_supported, 10000baseER_Full);
+-		phylink_set(mac_supported, 10000baseLRM_Full);
+-		phylink_set(mac_supported, 10000baseT_Full);
+-		phylink_set(mac_supported, 10000baseKX4_Full);
+-		phylink_set(mac_supported, 10000baseKR_Full);
++		if (!max_speed || (max_speed >= 2500)) {
++			phylink_set(mac_supported, 2500baseT_Full);
++			phylink_set(mac_supported, 2500baseX_Full);
++		}
++		if (!max_speed || (max_speed >= 5000)) {
++			phylink_set(mac_supported, 5000baseT_Full);
++		}
++		if (!max_speed || (max_speed >= 10000)) {
++			phylink_set(mac_supported, 10000baseSR_Full);
++			phylink_set(mac_supported, 10000baseLR_Full);
++			phylink_set(mac_supported, 10000baseER_Full);
++			phylink_set(mac_supported, 10000baseLRM_Full);
++			phylink_set(mac_supported, 10000baseT_Full);
++			phylink_set(mac_supported, 10000baseKX4_Full);
++			phylink_set(mac_supported, 10000baseKR_Full);
++		}
+ 	}
  
-+	if (!priv->dma_cap.vlins)
-+		return -EOPNOTSUPP;
-+
- 	attr.remove_sa = true;
- 	attr.sarc = true;
- 	attr.src = src;
-@@ -1076,6 +1079,9 @@ static int stmmac_test_desc_sar(struct stmmac_priv *priv)
- 	struct stmmac_packet_attrs attr = { };
- 	int ret;
- 
-+	if (!priv->dma_cap.vlins)
-+		return -EOPNOTSUPP;
-+
- 	attr.sarc = true;
- 	attr.src = src;
- 	attr.dst = priv->dev->dev_addr;
-@@ -1094,6 +1100,9 @@ static int stmmac_test_reg_sai(struct stmmac_priv *priv)
- 	struct stmmac_packet_attrs attr = { };
- 	int ret;
- 
-+	if (!priv->dma_cap.vlins)
-+		return -EOPNOTSUPP;
-+
- 	attr.remove_sa = true;
- 	attr.sarc = true;
- 	attr.src = src;
-@@ -1114,6 +1123,9 @@ static int stmmac_test_reg_sar(struct stmmac_priv *priv)
- 	struct stmmac_packet_attrs attr = { };
- 	int ret;
- 
-+	if (!priv->dma_cap.vlins)
-+		return -EOPNOTSUPP;
-+
- 	attr.sarc = true;
- 	attr.src = src;
- 	attr.dst = priv->dev->dev_addr;
+ 	/* Half-Duplex can only work with single queue */
 -- 
 2.7.4
 
