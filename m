@@ -2,140 +2,148 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDED2C00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 16:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2565EC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 16:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6FE4206CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 16:12:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BPdcx31t"
+	by mail.kernel.org (Postfix) with ESMTP id 07360206CD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 16:12:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405919AbfIFQMQ (ORCPT
+        id S1728349AbfIFQMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 12:12:16 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37274 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730469AbfIFQMP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 12:12:15 -0400
-Received: by mail-wm1-f66.google.com with SMTP id r195so7735336wme.2;
-        Fri, 06 Sep 2019 09:12:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ILtVojFZTEb8FF/wRJjeokcFy4RpmNFGdpdwHcd1aO8=;
-        b=BPdcx31t0hDAFBE30vtwm4hig+o034kYfzODtpi0q5S/KqUMu0s9T0lZ6c+fLDtVtJ
-         0ofl7RWMb6D0503ACI4CDIR/YWzvOQ8F1R11iIZo0H/nwwtwDYicX9Z0S3U4DjrWk4Zb
-         NDD/ealmzdW9Z/XLlioNmhZTuG22PQFrEFroDRf5qDuQeofz6ogMVFFeFhgaYkeqaQuO
-         VKcipF8vE67mcQNeWtOst642MwWKiWCp3+tFAcxaffX7mP7BJFrWQQ/C3Tuj+8SkFO0A
-         KBUKM1nmocLAZ2iQKQ/4zqX1HhUlDh+7BuScNAcR4/+qHz9wxH4sH74YPc9fDWvvazpw
-         NiMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=ILtVojFZTEb8FF/wRJjeokcFy4RpmNFGdpdwHcd1aO8=;
-        b=IpiYiShyJcLmD+uFERKJSJJG8XxgCHfM6errSFpKPwYKZQ40odUWEBTO0NMPrunUfn
-         knvZz+8doIbLljNSuuSWhK3/EDcWb7rvHBGS38yoFpiG8yVwS/zNQPolCLGaWAwN58fp
-         6Ax381ojKOFb3STVhTFyg0FM0AuGX7cLqDal4vUVRid0hOh67UbmQG8nM6e9c5i/bsNx
-         TmbwzDUhgxU8LRGtZFHN7s4TaaR2bos0emEWqhObJ4DYOHe8jLh+skFCO/Acxs+bbzPz
-         2Jr9n0097szNwOHR23/p27eW6VQjXLiQGtYor5n7JlA2kFxgYg5rSR1JOJJFGRTMfsUO
-         1APg==
-X-Gm-Message-State: APjAAAWKy422kx7RhdEMp/GDgbo4EajaaxtMQMG8wDKy97CmCmI++13f
-        uSdUKe6nut+eBRIZ+PcJR7s=
-X-Google-Smtp-Source: APXvYqzb4xcjjCICO3KDg3wCqhtGEBriueUximMF6pCjL8W7M1akQCuiDZ68PS4ixXZxskJX7MSLbg==
-X-Received: by 2002:a1c:be04:: with SMTP id o4mr8181369wmf.60.1567786332669;
-        Fri, 06 Sep 2019 09:12:12 -0700 (PDT)
-Received: from localhost.localdomain (bl5-208-252.dsl.telepac.pt. [82.154.208.252])
-        by smtp.gmail.com with ESMTPSA id f23sm7198141wmf.1.2019.09.06.09.12.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 06 Sep 2019 09:12:11 -0700 (PDT)
-From:   SeongJae Park <sj38.park@gmail.com>
-To:     shuah@kernel.org, brendanhiggins@google.com
-Cc:     linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, SeongJae Park <sj38.park@gmail.com>
-Subject: [PATCH] kunit: Fix '--build_dir' option
-Date:   Sat,  7 Sep 2019 01:11:54 +0900
-Message-Id: <1567786314-12330-1-git-send-email-sj38.park@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <CAEjAshr=JqVpF651eSZYFhwVAMNZ29LWcfrH07K_M9GU=hPnvg@mail.gmail.com>
-References: <CAEjAshr=JqVpF651eSZYFhwVAMNZ29LWcfrH07K_M9GU=hPnvg@mail.gmail.com>
+        Fri, 6 Sep 2019 12:12:25 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43716 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729137AbfIFQMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 12:12:20 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AC0284E832;
+        Fri,  6 Sep 2019 16:12:19 +0000 (UTC)
+Received: from fogou.chygwyn.com (unknown [10.33.36.100])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9E0823CC8;
+        Fri,  6 Sep 2019 16:12:15 +0000 (UTC)
+Subject: Re: Why add the general notification queue and its sources
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>
+Cc:     Ray Strode <rstrode@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Ray, Debarshi" <debarshi.ray@gmail.com>,
+        Robbie Harwood <rharwood@redhat.com>
+References: <156763534546.18676.3530557439501101639.stgit@warthog.procyon.org.uk>
+ <CAHk-=wh5ZNE9pBwrnr5MX3iqkUP4nspz17rtozrSxs5-OGygNw@mail.gmail.com>
+ <17703.1567702907@warthog.procyon.org.uk>
+ <CAHk-=wjQ5Fpv0D7rxX0W=obx9xoOAxJ_Cr+pGCYOAi2S9FiCNg@mail.gmail.com>
+ <CAKCoTu7ms_Mr-q08d9XB3uascpzwBa5LF9JTT2aq8uUsoFE8aQ@mail.gmail.com>
+ <CAHk-=wjcsxQ8QB_v=cwBQw4pkJg7pp-bBsdWyPivFO_OeF-y+g@mail.gmail.com>
+ <5396.1567719164@warthog.procyon.org.uk>
+ <CAHk-=wgbCXea1a9OTWgMMvcsCGGiNiPp+ty-edZrBWn63NCYdw@mail.gmail.com>
+ <14883.1567725508@warthog.procyon.org.uk>
+ <CAHk-=wjt2Eb+yEDOcQwCa0SrZ4cWu967OtQG8Vz21c=n5ZP1Nw@mail.gmail.com>
+ <27732.1567764557@warthog.procyon.org.uk>
+ <CAHk-=wiR1fpahgKuxSOQY6OfgjWD+MKz8UF6qUQ6V_y2TC_V6w@mail.gmail.com>
+ <CAHk-=wioHmz69394xKRqFkhK8si86P_704KgcwjKxawLAYAiug@mail.gmail.com>
+From:   Steven Whitehouse <swhiteho@redhat.com>
+Message-ID: <8e60555e-9247-e03f-e8b4-1d31f70f1221@redhat.com>
+Date:   Fri, 6 Sep 2019 17:12:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <CAHk-=wioHmz69394xKRqFkhK8si86P_704KgcwjKxawLAYAiug@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Fri, 06 Sep 2019 16:12:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Running kunit with '--build_dir' option gives following error message:
+Hi,
 
-```
-$ ./tools/testing/kunit/kunit.py run --build_dir ../linux.out.kunit/
-[00:57:24] Building KUnit Kernel ...
-[00:57:29] Starting KUnit Kernel ...
-Traceback (most recent call last):
-  File "./tools/testing/kunit/kunit.py", line 136, in <module>
-    main(sys.argv[1:])
-  File "./tools/testing/kunit/kunit.py", line 129, in main
-    result = run_tests(linux, request)
-  File "./tools/testing/kunit/kunit.py", line 68, in run_tests
-    test_result = kunit_parser.parse_run_tests(kunit_output)
-  File "/home/sjpark/linux/tools/testing/kunit/kunit_parser.py", line
-283, in parse_run_tests
-    test_result =
-parse_test_result(list(isolate_kunit_output(kernel_output)))
-  File "/home/sjpark/linux/tools/testing/kunit/kunit_parser.py", line
-54, in isolate_kunit_output
-    for line in kernel_output:
-  File "/home/sjpark/linux/tools/testing/kunit/kunit_kernel.py", line
-145, in run_kernel
-    process = self._ops.linux_bin(args, timeout, build_dir)
-  File "/home/sjpark/linux/tools/testing/kunit/kunit_kernel.py", line
-69, in linux_bin
-    stderr=subprocess.PIPE)
-  File "/usr/lib/python3.5/subprocess.py", line 947, in __init__
-    restore_signals, start_new_session)
-  File "/usr/lib/python3.5/subprocess.py", line 1551, in _execute_child
-    raise child_exception_type(errno_num, err_msg)
-FileNotFoundError: [Errno 2] No such file or directory: './linux'
-```
+On 06/09/2019 16:53, Linus Torvalds wrote:
+> On Fri, Sep 6, 2019 at 8:35 AM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+>> This is why I like pipes. You can use them today. They are simple, and
+>> extensible, and you don't need to come up with a new subsystem and
+>> some untested ad-hoc thing that nobody has actually used.
+> The only _real_ complexity is to make sure that events are reliably parseable.
+>
+> That's where you really want to use the Linux-only "packet pipe"
+> thing, becasue otherwise you have to have size markers or other things
+> to delineate events. But if you do that, then it really becomes
+> trivial.
+>
+> And I checked, we made it available to user space, even if the
+> original reason for that code was kernel-only autofs use: you just
+> need to make the pipe be O_DIRECT.
+>
+> This overly stupid program shows off the feature:
+>
+>          #define _GNU_SOURCE
+>          #include <fcntl.h>
+>          #include <unistd.h>
+>
+>          int main(int argc, char **argv)
+>          {
+>                  int fd[2];
+>                  char buf[10];
+>
+>                  pipe2(fd, O_DIRECT | O_NONBLOCK);
+>                  write(fd[1], "hello", 5);
+>                  write(fd[1], "hi", 2);
+>                  read(fd[0], buf, sizeof(buf));
+>                  read(fd[0], buf, sizeof(buf));
+>                  return 0;
+>          }
+>
+> and it you strace it (because I was too lazy to add error handling or
+> printing of results), you'll see
+>
+>      write(4, "hello", 5)                    = 5
+>      write(4, "hi", 2)                       = 2
+>      read(3, "hello", 10)                    = 5
+>      read(3, "hi", 10)                       = 2
+>
+> note how you got packets of data on the reader side, instead of
+> getting the traditional "just buffer it as a stream".
+>
+> So now you can even have multiple readers of the same event pipe, and
+> packetization is obvious and trivial. Of course, I'm not sure why
+> you'd want to have multiple readers, and you'd lose _ordering_, but if
+> all events are independent, this _might_ be a useful thing in a
+> threaded environment. Maybe.
+>
+> (Side note: a zero-sized write will not cause a zero-sized packet. It
+> will just be dropped).
+>
+>                 Linus
 
-This error occurs because the '--build_dir' option value is not passed
-to the 'run_kernel()' function.  Consequently, the function assumes
-the kernel image that built for the tests, which is under the
-'--build_dir' directory, is in kernel source directory and finally raises
-the 'FileNotFoundError'.
+The events are generally not independent - we would need ordering either 
+implicit in the protocol or explicit in the messages. We also need to 
+know in case messages are dropped too - doesn't need to be anything 
+fancy, just some idea that since we last did a read, there are messages 
+that got lost, most likely due to buffer overrun.
 
-This commit fixes the problem by properly passing the '--build_dir'
-option value to the 'run_kernel()'.
+That is why the initial idea was to use netlink, since it solves a lot 
+of those issues. The downside was that the indirect nature of the 
+netlink sockets resulted in making it tricky to know the namespace of 
+the process to which the message was to be delivered (and hence whether 
+it should be delivered at all),
 
-Signed-off-by: SeongJae Park <sj38.park@gmail.com>
----
- tools/testing/kunit/kunit.py | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
-index 8d33980..e016430 100755
---- a/tools/testing/kunit/kunit.py
-+++ b/tools/testing/kunit/kunit.py
-@@ -62,9 +62,11 @@ def run_tests(linux: kunit_kernel.LinuxSourceTree,
- 					      'Tests not Parsed.')
- 	if request.raw_output:
- 		kunit_parser.raw_output(
--			linux.run_kernel(timeout=request.timeout))
-+			linux.run_kernel(timeout=request.timeout,
-+					 build_dir=request.build_dir))
- 	else:
--		kunit_output = linux.run_kernel(timeout=request.timeout)
-+		kunit_output = linux.run_kernel(timeout=request.timeout,
-+						build_dir=request.build_dir)
- 		test_result = kunit_parser.parse_run_tests(kunit_output)
- 	test_end = time.time()
- 
--- 
-2.7.4
+Steve.
 
