@@ -2,163 +2,91 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 563A3C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4241C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24B28208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:46:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="fW9yI0r5"
+	by mail.kernel.org (Postfix) with ESMTP id A75FA21670
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:46:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436629AbfIFSq3 (ORCPT
+        id S2436640AbfIFSqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 14:46:29 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:33475 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436615AbfIFSqZ (ORCPT
+        Fri, 6 Sep 2019 14:46:36 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:36140 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436545AbfIFSqR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 14:46:25 -0400
-Received: by mail-io1-f65.google.com with SMTP id m11so15054635ioo.0
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 11:46:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=QRnJITRgtGPLg2irBHffabraOH6qFTHyLeWEmn2CG4k=;
-        b=fW9yI0r5PaavEuDpO3wqhc1PKV3gT7W2PHr0YvMv8yeRB3SF0rAwRE2BkG1RKIldB5
-         pk0J20GIWh4t241wQZQAl1zHWNJxStYwy5kxUtaiwtqqhZ1ozaqrys8TEuTqNPhLzMt5
-         Zm7do94cFWUwupAl/AOKTQpMgaVyhyVNN+4sksBHKSxv/0mSVTnzzbyVyIbnqt1snF5t
-         iguQSIF5qEqKP9/56X/CjyzTRl1ktsNgpb3jvd0i/WW+d9og8BLCwLR8APIzc18T/0uR
-         OlizzA0soMA5t0+LMz3QvB2o7vOuygMelmEjFL6nD4NQrfX5rILFVMakZMg0djTuN2a5
-         pLkA==
+        Fri, 6 Sep 2019 14:46:17 -0400
+Received: by mail-qk1-f193.google.com with SMTP id s18so6662544qkj.3;
+        Fri, 06 Sep 2019 11:46:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=QRnJITRgtGPLg2irBHffabraOH6qFTHyLeWEmn2CG4k=;
-        b=YjFD+PhxaeN4kKFgBNiYeygJ9ugCD44AoIb/V/2sw04Mtp6bKF2MGyQKGxT1MAJJFt
-         3sMceYTVlg4JUmnCBWG8a5P/mPwOmNzz8+Zx3FiX/FQ61IuQxSulVmpO4x9NMArrcL0f
-         zRYt8MjhDzHYqn69qhVZJsaJwkO8/14M2fbBSRlItEalCYZVtlpZlzk+UJQlEY40VTdd
-         6QrJQE6lZRY/WeJYzmU03cNjLSXxbT45QTAr1FyWb9sU9Stc2u1AxMrZtiBDY9xwwu3N
-         yBh10Ch25W9KjNmccBX598UAjA/Kr9UErI1YVLv/q5Jyloo84tlMGd25Rcvvm8kjstln
-         9eFQ==
-X-Gm-Message-State: APjAAAUe+yL1rKOgFsyvFr0GpbLFXWaFt4TaKSdO+bLtY9EemOVlGoiN
-        KPucV8b02EOdOcvAiPznni4oFg==
-X-Google-Smtp-Source: APXvYqx8a3vQaJo05FM2AJxDurm67u0wSOJsrKfOs76p1ALl+/al6SlzLMWYqNVPkldCZ7AZ/oWTyQ==
-X-Received: by 2002:a02:ab90:: with SMTP id t16mr12092436jan.110.1567795583168;
-        Fri, 06 Sep 2019 11:46:23 -0700 (PDT)
-Received: from cisco ([2601:282:901:dd7b:49a:5f6f:e06:3c33])
-        by smtp.gmail.com with ESMTPSA id h4sm5578707iok.1.2019.09.06.11.46.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Sep 2019 11:46:22 -0700 (PDT)
-Date:   Fri, 6 Sep 2019 12:46:20 -0600
-From:   Tycho Andersen <tycho@tycho.ws>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
-        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Eric Chiang <ericchiang@google.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Philippe =?iso-8859-1?Q?Tr=E9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] fs: Add support for an O_MAYEXEC flag on
- sys_open()
-Message-ID: <20190906184620.GI7627@cisco>
-References: <20190906152455.22757-1-mic@digikod.net>
- <20190906152455.22757-2-mic@digikod.net>
- <87ef0te7v3.fsf@oldenburg2.str.redhat.com>
- <75442f3b-a3d8-12db-579a-2c5983426b4d@ssi.gouv.fr>
- <20190906170739.kk3opr2phidb7ilb@yavin.dot.cyphar.com>
- <20190906172050.v44f43psd6qc6awi@wittgenstein>
- <20190906174041.GH7627@cisco>
- <87v9u5cmb0.fsf@oldenburg2.str.redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LTlygxheqA0ZZNrkDVt9guFUuqGEjiIr9KDMB3qJhbQ=;
+        b=YcJJtbieeTzVLmfL5VW7qavVMuiq6c51Ci8Czq2c5VTnQjZ7pseehJ8KRlQyS/JYi5
+         mXVeRoA/nd217dCC26yJq5axmKlBP8fnPAjI7zCYCd/k2cmB33hGQjurSlPaBu0CIegI
+         2qYJeOulZow6Eug0s4NX9oYTaiOcgkdxDfR31y+4Ub5rs9hrFE7xhbi87LxUS0ACVE1W
+         WW/B+ST9KM320vth5QdRLYD6cPST30tWoevZuqY1O7H/554FeWGsGgnFMo30WKwyXQv9
+         3lM5Ljc70Zw8Qs81wSO+MWuOdVt9FseZZxB6KzEL7zGE6JscwsSeExDkQlRfe7rRwsjY
+         fksA==
+X-Gm-Message-State: APjAAAXKP/sDfaQ0XFHiHHif8TidDea/eifQaVJjkSBpqGZYVq3zbEVl
+        tOExf91rkCW6EbvnLQBpQCKDzRUEYV3WmMM1oLU=
+X-Google-Smtp-Source: APXvYqwe+f4RMkONNgT86kugBZ72qvP1vpX49oBMpid8ck5WPBtzUo7ndLc7rEo7ORmlDBeuo0opYcPQ+aZzocH9T0I=
+X-Received: by 2002:a05:620a:145a:: with SMTP id i26mr10522538qkl.352.1567795576166;
+ Fri, 06 Sep 2019 11:46:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87v9u5cmb0.fsf@oldenburg2.str.redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190906154609.2421410-1-arnd@arndb.de> <20190906165527.GW2680@smile.fi.intel.com>
+In-Reply-To: <20190906165527.GW2680@smile.fi.intel.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 6 Sep 2019 20:46:00 +0200
+Message-ID: <CAK8P3a1S2g__qn4LP+z=ah4L2AJCHndn3LWbMkPedsu_HOd1_g@mail.gmail.com>
+Subject: Re: [PATCH] [RFC] Revert "iio: hid-sensor-attributes: Convert to use int_pow()"
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        linux-iio@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 06, 2019 at 08:27:31PM +0200, Florian Weimer wrote:
-> * Tycho Andersen:
-> 
-> > On Fri, Sep 06, 2019 at 07:20:51PM +0200, Christian Brauner wrote:
-> >> On Sat, Sep 07, 2019 at 03:07:39AM +1000, Aleksa Sarai wrote:
-> >> > On 2019-09-06, Mickaël Salaün <mickael.salaun@ssi.gouv.fr> wrote:
-> >> > > 
-> >> > > On 06/09/2019 17:56, Florian Weimer wrote:
-> >> > > > Let's assume I want to add support for this to the glibc dynamic loader,
-> >> > > > while still being able to run on older kernels.
-> >> > > >
-> >> > > > Is it safe to try the open call first, with O_MAYEXEC, and if that fails
-> >> > > > with EINVAL, try again without O_MAYEXEC?
-> >> > > 
-> >> > > The kernel ignore unknown open(2) flags, so yes, it is safe even for
-> >> > > older kernel to use O_MAYEXEC.
-> >> > 
-> >> > Depends on your definition of "safe" -- a security feature that you will
-> >> > silently not enable on older kernels doesn't sound super safe to me.
-> >> > Unfortunately this is a limitation of open(2) that we cannot change --
-> >> > which is why the openat2(2) proposal I've been posting gives -EINVAL for
-> >> > unknown O_* flags.
-> >> > 
-> >> > There is a way to probe for support (though unpleasant), by creating a
-> >> > test O_MAYEXEC fd and then checking if the flag is present in
-> >> > /proc/self/fdinfo/$n.
-> >> 
-> >> Which Florian said they can't do for various reasons.
-> >> 
-> >> It is a major painpoint if there's no easy way for userspace to probe
-> >> for support. Especially if it's security related which usually means
-> >> that you want to know whether this feature works or not.
+On Fri, Sep 6, 2019 at 6:55 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Fri, Sep 06, 2019 at 05:45:55PM +0200, Arnd Bergmann wrote:
+> > The change to use the generic int_pow instead of the private version
+> > caused a number of build issues on 32-bit architectures and makes
+> > it generally less efficient because of the 64-bit math:
 > >
-> > What about just trying to violate the policy via fexecve() instead of
-> > looking around in /proc? Still ugly, though.
-> 
-> How would we do this?  This is about opening the main executable as part
-> of an explicit loader invocation.  Typically, an fexecve will succeed
-> and try to run the program, but with the wrong dynamic loader.
+> > drivers/iio/common/hid-sensors/hid-sensor-attributes.o: In function `hid_sensor_write_samp_freq_value':
+> > hid-sensor-attributes.c:(.text+0x29c): undefined reference to `__aeabi_uldivmod'
+> > drivers/iio/common/hid-sensors/hid-sensor-attributes.o: In function `hid_sensor_read_raw_hyst_value':
+> > hid-sensor-attributes.c:(.text+0x420): undefined reference to `__aeabi_uldivmod'
+> > hid-sensor-attributes.c:(.text+0x448): undefined reference to `__aeabi_uldivmod'
+> > drivers/iio/common/hid-sensors/hid-sensor-attributes.o: In function `hid_sensor_write_raw_hyst_value':
+> > hid-sensor-attributes.c:(.text+0x570): undefined reference to `__aeabi_uldivmod'
+> >
+> > There is probably a nicer solution to this, but for the moment,
+> > the revert makes it compile again.
+> >
+> > Fixes: 473d12f7638c ("iio: hid-sensor-attributes: Convert to use int_pow()")
+>
+> Does the fix [1] works for you?
+>
+> [1]: https://lore.kernel.org/linux-iio/6851830d050ddb2f27d1e6969755ee4f3293d37c.camel@intel.com/
 
-Yeah, fexecve() was a think-o, sorry, you don't need to go that far. I
-was thinking do what the tests in this series do: create a tmpfs with
-MS_NOEXEC, put an executable file in it, and try and open it with
-O_MAYEXEC. If that works, the kernel doesn't support the flag, and it
-should give you -EACCES if the kernel does support the flag.
+It looks like a better fix, I applied that on my test build tree now, will
+let you know if I find any remaining unexpected problems with it.
 
-Still a lot of work, though. Seems better to just use openat2.
-
-Tycho
+       Arnd
