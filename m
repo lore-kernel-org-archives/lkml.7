@@ -2,103 +2,159 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0467C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F218C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:17:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3F4320842
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:13:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 253DF2082C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:17:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bMPSYu3h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394071AbfIFONk (ORCPT
+        id S2394119AbfIFOQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 10:13:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:56916 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731142AbfIFONj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 10:13:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C5E9328;
-        Fri,  6 Sep 2019 07:13:38 -0700 (PDT)
-Received: from [10.0.2.15] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DFCCD3F718;
-        Fri,  6 Sep 2019 07:13:36 -0700 (PDT)
-Subject: Re: [RFC PATCH 1/9] sched,cgroup: Add interface for latency-nice
-To:     Parth Shah <parth@linux.ibm.com>,
-        Patrick Bellasi <patrick.bellasi@arm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
-        steven.sistare@oracle.com, dhaval.giani@oracle.com,
-        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
-        mgorman@techsingularity.net
-References: <20190830174944.21741-1-subhra.mazumdar@oracle.com>
- <20190830174944.21741-2-subhra.mazumdar@oracle.com>
- <20190905083127.GA2332@hirez.programming.kicks-ass.net>
- <87r24v2i14.fsf@arm.com>
- <20190905104616.GD2332@hirez.programming.kicks-ass.net>
- <87imq72dpc.fsf@arm.com> <df69627e-8aa0-e2cb-044e-fb392f34efa5@arm.com>
- <87d0ge3n85.fsf@arm.com> <3bb17e15-5492-b78c-20a8-5989519f20e2@linux.ibm.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <75e782c7-121d-a0ea-7fbf-efb0c83f50e6@arm.com>
-Date:   Fri, 6 Sep 2019 15:13:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 6 Sep 2019 10:16:59 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:53072 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729017AbfIFOQ6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 10:16:58 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x86EGrqM081318;
+        Fri, 6 Sep 2019 09:16:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1567779413;
+        bh=lL+zXXpiAMPM0yEzqtzknYNhG5vy2NXPPxTYA7JesO0=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=bMPSYu3h2iINSzphkoyAysVXm0iwyvy1a2EUt0dQQ2CW6AglsVw2xIayp6CImvkpF
+         HRT8Z/IvKAgoQdyC+D5FNdoVy/vScxAeC1a0CmnzFsh0kZ33Hh5Rvl76Sr/nRbPYlC
+         3QSOVssDCgoEaihU3HP5w3hah29dn2/QNSPPUoKs=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x86EGrAd092427
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 6 Sep 2019 09:16:53 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 6 Sep
+ 2019 09:16:53 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 6 Sep 2019 09:16:53 -0500
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x86EGmad042400;
+        Fri, 6 Sep 2019 09:16:51 -0500
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vinod.koul@intel.com>, <robh+dt@kernel.org>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dan.j.williams@intel.com>, <devicetree@vger.kernel.org>
+Subject: [RFC 1/3] dt-bindings: dma: Add documentation for DMA domains
+Date:   Fri, 6 Sep 2019 17:17:15 +0300
+Message-ID: <20190906141717.23859-2-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190906141717.23859-1-peter.ujfalusi@ti.com>
+References: <20190906141717.23859-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <3bb17e15-5492-b78c-20a8-5989519f20e2@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/09/2019 13:45, Parth Shah wrote:> 
-> I guess there is some usecase in case of thermal throttling.
-> If a task is heating up the core then in ideal scenarios POWER systems throttle
-> down to rated frequency.
-> In such case, if the task is latency sensitive (min latency nice), we can move the
-> task around the chip to heat up the chip uniformly allowing me to gain more performance
-> with sustained higher frequency.
-> With this, we will require the help from active load balancer and latency-nice
-> classification on per task and/or group basis.
-> 
-> Hopefully, this might be useful for other arch as well, right?
-> 
+On systems where multiple DMA controllers available, none Slave (for example
+memcpy operation) users can not be described in DT as there is no device
+involved from the DMA controller's point of view, DMA binding is not usable.
+However in these systems still a peripheral might need to be serviced by or
+it is better to serviced by specific DMA controller.
+When a memcpy is used to/from a memory mapped region for example a DMA in the
+same domain can perform better.
+For generic software modules doing mem 2 mem operations it also matter that
+they will get a channel from a controller which is faster in DDR to DDR mode
+rather then from the first controller happen to be loaded.
 
-Most of the functionality is already there, we're only really missing thermal
-pressure awareness. There was [1] but it seems to have died.
+This property is inherited, so it may be specified in a device node or in any
+of its parent nodes.
 
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ .../devicetree/bindings/dma/dma-domain.yaml   | 59 +++++++++++++++++++
+ 1 file changed, 59 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/dma-domain.yaml
 
-At least with CFS load balancing, if thermal throttling is correctly
-reflected as a CPU capacity reduction you will tend to move things away from
-that CPU, since load is balanced over capacities.
+diff --git a/Documentation/devicetree/bindings/dma/dma-domain.yaml b/Documentation/devicetree/bindings/dma/dma-domain.yaml
+new file mode 100644
+index 000000000000..c2f182f30081
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/dma-domain.yaml
+@@ -0,0 +1,59 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/dma-controller.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: DMA Domain Controller Definition
++
++maintainers:
++  - Vinod Koul <vkoul@kernel.org>
++
++allOf:
++  - $ref: "dma-controller.yaml#"
++
++description:
++  On systems where multiple DMA controllers available, none Slave (for example
++  memcpy operation) users can not be described in DT as there is no device
++  involved from the DMA controller's point of view, DMA binding is not usable.
++  However in these systems still a peripheral might need to be serviced by or
++  it is better to serviced by specific DMA controller.
++  When a memcpy is used to/from a memory mapped region for example a DMA in the
++  same domain can perform better.
++  For generic software modules doing mem 2 mem operations it also matter that
++  they will get a channel from a controller which is faster in DDR to DDR mode
++  rather then from the first controller happen to be loaded.
++
++  This property is inherited, so it may be specified in a device node or in any
++  of its parent nodes.
++
++properties:
++  $dma-domain-controller:
++    $ref: /schemas/types.yaml#definitions/phandle
++    description:
++      phande to the DMA controller node which should be used for the device or
++      domain.
++
++examples:
++  - |
++    / {
++        model = "Texas Instruments K3 AM654 SoC";
++        compatible = "ti,am654";
++        interrupt-parent = <&gic500>;
++        /* For modules without device, DDR to DDR is faster on main UDMAP */
++        dma-domain-controller = <&main_udmap>;
++        #address-cells = <2>;
++        #size-cells = <2>;
++        ...
++    };
++
++    &cbass_main {
++        /* For modules within MAIN domain, use main UDMAP */
++        dma-domain-controller = <&main_udmap>;
++    };
++
++    &cbass_mcu {
++        /* For modules within MCU domain, use mcu UDMAP */
++        dma-domain-controller = <&mcu_udmap>;
++    };
++...
+-- 
+Peter
 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
-For active balance, we actually already have a condition that moves a task
-to a less capacity-pressured CPU (although it is somewhat specific). So if
-thermal pressure follows that task (e.g. it's doing tons of vector/float),
-it will be rotated around.
-
-However there should be a point made on latency vs throughput. If you
-care about latency you probably do not want to active balance your task. If
-you care about throughput, it should be specified in some way (util-clamp
-says hello!).
-
-It sort of feels like you'd want an extension of misfit migration (salesman
-hat goes on from here) - misfit moves tasks that are CPU bound (IOW their
-util is >= 80% of the CPU capacity) to CPUs of higher capacity. It's only
-enabled for systems with asymmetric capacities, but could be enabled globally
-for "dynamically-created asymmetric capacities" (IOW RT/IRQ/thermal pressure
-on SMP systems).
-
-On top of that, if we make misfit consider e.g. uclamp.min (I don't think
-that's already the case), then you have your throughput knob to have *some* 
-designated tasks move away from (thermal & else) pressure. 
-
-
-[1]: https://lore.kernel.org/lkml/1555443521-579-1-git-send-email-thara.gopinath@linaro.org/
