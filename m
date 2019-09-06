@@ -2,172 +2,106 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCAAC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 20:06:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C3F2C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 20:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3EFB20854
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 20:06:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="E0bpCavZ"
+	by mail.kernel.org (Postfix) with ESMTP id 03DDB208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 20:08:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567800505;
+	bh=rB2nTwjhUiu0Mgcy94TeRmJDmlGu0zjrG/3qdk2pnBI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EPvf6uKgNrBrXoCubsZGgfAgkCWAX7p1f5CtnfyCx23KTX9Cfl3MG0QGiatic1vCo
+	 l149SPh+kBUbbhI7lUcIk3gh+XRxlyE64cQtaBxUqyy0DrPxiKzocAW9jCSjo1veUm
+	 g2sFgAAoJqNm7D2PCUlzQC3L50I3+uuE8b9uT0Zc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394352AbfIFUGE (ORCPT
+        id S2394414AbfIFUIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 16:06:04 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42882 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726008AbfIFUGE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 16:06:04 -0400
-Received: by mail-pg1-f196.google.com with SMTP id p3so4103244pgb.9
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 13:06:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=fA56nmfsZsnUsEfBRX6jWIQZ7RippmvM12LMrLjjbeM=;
-        b=E0bpCavZc9w7bg3ldootyHw632dMvkQjPiTDyyD9E4nvHHA/R4hfUqQe7JLvWLoVI1
-         ZzdmjRUZn1I/3UFIId9wru0Cc8NhUgmlZoWyxM/ETmiRdFCnjHslhNciqqND5mXeB2ql
-         n2FNStFMy81oIyvmFuPfhqeBNzaKyrGa2txp4Fp60Why8ReO3XzcGfC7Iqb3t9OIfHFS
-         hkuXHMI1y873af/967NcJKza/15DICLILQudnnZaxDY3hkSvNaemTLwpsFes4bFnAeGl
-         yrMqylb/J5NUitzWqPaJmoR/oVtP6BgW0XPr9/NxQgR7ofco0GzSUDnNYnFHisgIXVU8
-         A/KA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=fA56nmfsZsnUsEfBRX6jWIQZ7RippmvM12LMrLjjbeM=;
-        b=Q//jUDzySoLjLmUIWQMCYXf1apwcpRK5GymZ+3sZn52fJHrAjpk5pLF9bdq0e0VRLN
-         N/9XzFHw4syms4/2vR3d19KCXJleakfZrt6ANuhpfodV3cE0PKp6Dcq3ez36I5mkJzdA
-         sVuehpVGkgV4fzbOqj4110KQhqjPu26nClWEbmy6uxN/1aZv9aqYepMEzAekUT7OQx0O
-         9hstZBIqmcHjqeBxpgbAOz8sxhZIr3Ifkkx6WZvecEdI7IwNPzutV6V5jZViFgZjY6WC
-         ft9o8kOEnry3IkLYt2Itu4Qs2t2gC+WgaxFXMK8wTptk29tPHFAV+7hz8jWU6hJCu4eB
-         GKdA==
-X-Gm-Message-State: APjAAAXBYjvmFw/R9nka5kvtkr9qpZQwlqflyTd3YgmxgksA81LUhSp7
-        wlt67oOvwfVg2YDhTzvP0qBGbg==
-X-Google-Smtp-Source: APXvYqz56KYhH6DJKB5EGgZ1CB/vlaLiWum8K3dRnvpJQJJwnJqULKe23ljO87SF/jS0Eam/QGtA3w==
-X-Received: by 2002:a62:3083:: with SMTP id w125mr12963792pfw.102.1567800362967;
-        Fri, 06 Sep 2019 13:06:02 -0700 (PDT)
-Received: from ?IPv6:2600:100f:b121:da37:bc66:d4de:83c7:e0cd? ([2600:100f:b121:da37:bc66:d4de:83c7:e0cd])
-        by smtp.gmail.com with ESMTPSA id k8sm5007663pgm.14.2019.09.06.13.06.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 06 Sep 2019 13:06:02 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v2 1/5] fs: Add support for an O_MAYEXEC flag on sys_open()
-From:   Andy Lutomirski <luto@amacapital.net>
-X-Mailer: iPhone Mail (16G102)
-In-Reply-To: <e1ac9428e6b768ac3145aafbe19b24dd6cf410b9.camel@kernel.org>
-Date:   Fri, 6 Sep 2019 13:06:00 -0700
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
-        Florian Weimer <fweimer@redhat.com>,
-        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
-        linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Eric Chiang <ericchiang@google.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?utf-8?Q?Philippe_Tr=C3=A9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D2A57C7B-B0FD-424E-9F81-B858FFF21FF0@amacapital.net>
-References: <20190906152455.22757-1-mic@digikod.net> <20190906152455.22757-2-mic@digikod.net> <87ef0te7v3.fsf@oldenburg2.str.redhat.com> <75442f3b-a3d8-12db-579a-2c5983426b4d@ssi.gouv.fr> <f53ec45fd253e96d1c8d0ea6f9cca7f68afa51e3.camel@kernel.org> <20190906171335.d7mc3no5tdrcn6r5@yavin.dot.cyphar.com> <e1ac9428e6b768ac3145aafbe19b24dd6cf410b9.camel@kernel.org>
-To:     Jeff Layton <jlayton@kernel.org>
+        Fri, 6 Sep 2019 16:08:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40412 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391991AbfIFUIX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 16:08:23 -0400
+Received: from localhost (unknown [62.28.240.114])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DE1320854;
+        Fri,  6 Sep 2019 20:08:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567800503;
+        bh=rB2nTwjhUiu0Mgcy94TeRmJDmlGu0zjrG/3qdk2pnBI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=E6ErQprQExdNgpxnCv5HbF1D9e4KhGGaPR+WNG19EJyNqgqjEV8JqjEZxrfzgbC2T
+         ywk8fA31BTzcZYmcuAkzMJsxVR8dsi9wdy+Lw6+u+qhqvnGtR5IpOGjnofoSYaHSz9
+         G2hkeyNWYJWZJieeRKRneInH45rdt6XkmVkAl91c=
+Date:   Fri, 6 Sep 2019 16:08:20 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     longli@linuxonhyperv.com
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-hyperv@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Long Li <longli@microsoft.com>
+Subject: Re: [Patch v4] storvsc: setup 1:1 mapping between hardware queue and
+ CPU queue
+Message-ID: <20190906200820.GE1528@sasha-vm>
+References: <1567790660-48142-1-git-send-email-longli@linuxonhyperv.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <1567790660-48142-1-git-send-email-longli@linuxonhyperv.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Sep 06, 2019 at 10:24:20AM -0700, longli@linuxonhyperv.com wrote:
+>From: Long Li <longli@microsoft.com>
+>
+>storvsc doesn't use a dedicated hardware queue for a given CPU queue. When
+>issuing I/O, it selects returning CPU (hardware queue) dynamically based on
+>vmbus channel usage across all channels.
+>
+>This patch advertises num_present_cpus() as number of hardware queues. This
+>will have upper layer setup 1:1 mapping between hardware queue and CPU queue
+>and avoid unnecessary locking when issuing I/O.
+>
+>Signed-off-by: Long Li <longli@microsoft.com>
+>---
+>
+>Changes:
+>v2: rely on default upper layer function to map queues. (suggested by Ming Lei
+><tom.leiming@gmail.com>)
+>v3: use num_present_cpus() instead of num_online_cpus(). Hyper-v doesn't
+>support hot-add CPUs. (suggested by Michael Kelley <mikelley@microsoft.com>)
+>v4: move change logs to after Signed-of-by
+>
+> drivers/scsi/storvsc_drv.c | 3 +--
+> 1 file changed, 1 insertion(+), 2 deletions(-)
+>
+>diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+>index b89269120a2d..cf987712041a 100644
+>--- a/drivers/scsi/storvsc_drv.c
+>+++ b/drivers/scsi/storvsc_drv.c
+>@@ -1836,8 +1836,7 @@ static int storvsc_probe(struct hv_device *device,
+> 	/*
+> 	 * Set the number of HW queues we are supporting.
+> 	 */
+>-	if (stor_device->num_sc != 0)
+>-		host->nr_hw_queues = stor_device->num_sc + 1;
+>+	host->nr_hw_queues = num_present_cpus();
 
+Just looking at the change notes for v3: why isn't this
+num_active_cpus() then? One can still isolate CPUs on hyper-v, no?
 
-> On Sep 6, 2019, at 12:43 PM, Jeff Layton <jlayton@kernel.org> wrote:
->=20
->> On Sat, 2019-09-07 at 03:13 +1000, Aleksa Sarai wrote:
->>> On 2019-09-06, Jeff Layton <jlayton@kernel.org> wrote:
->>>> On Fri, 2019-09-06 at 18:06 +0200, Micka=C3=ABl Sala=C3=BCn wrote:
->>>>> On 06/09/2019 17:56, Florian Weimer wrote:
->>>>> Let's assume I want to add support for this to the glibc dynamic loade=
-r,
->>>>> while still being able to run on older kernels.
->>>>>=20
->>>>> Is it safe to try the open call first, with O_MAYEXEC, and if that fai=
-ls
->>>>> with EINVAL, try again without O_MAYEXEC?
->>>>=20
->>>> The kernel ignore unknown open(2) flags, so yes, it is safe even for
->>>> older kernel to use O_MAYEXEC.
->>>>=20
->>>=20
->>> Well...maybe. What about existing programs that are sending down bogus
->>> open flags? Once you turn this on, they may break...or provide a way to
->>> circumvent the protections this gives.
->>=20
->> It should be noted that this has been a valid concern for every new O_*
->> flag introduced (and yet we still introduced new flags, despite the
->> concern) -- though to be fair, O_TMPFILE actually does have a
->> work-around with the O_DIRECTORY mask setup.
->>=20
->> The openat2() set adds O_EMPTYPATH -- though in fairness it's also
->> backwards compatible because empty path strings have always given ENOENT
->> (or EINVAL?) while O_EMPTYPATH is a no-op non-empty strings.
->>=20
->>> Maybe this should be a new flag that is only usable in the new openat2()=
-
->>> syscall that's still under discussion? That syscall will enforce that
->>> all flags are recognized. You presumably wouldn't need the sysctl if you=
-
->>> went that route too.
->>=20
->> I'm also interested in whether we could add an UPGRADE_NOEXEC flag to
->> how->upgrade_mask for the openat2(2) patchset (I reserved a flag bit for
->> it, since I'd heard about this work through the grape-vine).
->>=20
->=20
-> I rather like the idea of having openat2 fds be non-executable by
-> default, and having userland request it specifically via O_MAYEXEC (or
-> some similar openat2 flag) if it's needed. Then you could add an
-> UPGRADE_EXEC flag instead?
->=20
-> That seems like something reasonable to do with a brand new API, and
-> might be very helpful for preventing certain classes of attacks.
->=20
->=20
-
-There are at least four concepts of executability here:
-
-- Just check the file mode and any other relevant permissions. Return a norm=
-al fd.  Makes sense for script interpreters, perhaps.
-
-- Make the fd fexecve-able.
-
-- Make the resulting fd mappable PROT_EXEC.
-
-- Make the resulting fd upgradable.
-
-I=E2=80=99m not at all convinced that the kernel needs to distinguish all th=
-ese, but at least upgradability should be its own thing IMO.=
+--
+Thanks,
+Sasha
