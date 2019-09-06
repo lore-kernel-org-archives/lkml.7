@@ -2,199 +2,92 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1443C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9500EC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61FDF20838
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:56:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69E4C20838
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 18:57:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392304AbfIFSz5 (ORCPT
+        id S2404520AbfIFS5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 14:55:57 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:48245 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733057AbfIFSz5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 14:55:57 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1i6JOb-0000EG-0g; Fri, 06 Sep 2019 20:55:45 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7BAC91C0744;
-        Fri,  6 Sep 2019 20:55:44 +0200 (CEST)
-Date:   Fri, 06 Sep 2019 18:55:44 -0000
-From:   "tip-bot2 for Steve Wahl" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/purgatory: Change compiler flags from
- -mcmodel=kernel to -mcmodel=large to fix kexec relocation errors
-Cc:     Vaibhav Rustagi <vaibhavrustagi@google.com>,
-        Andreas Smas <andreas@lonelycoder.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        clang-built-linux@googlegroups.com, dimitri.sivanich@hpe.com,
-        mike.travis@hpe.com, russ.anderson@hpe.com,
-        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
-In-Reply-To: <20190905202346.GA26595@swahl-linux>
-References: <20190905202346.GA26595@swahl-linux>
+        Fri, 6 Sep 2019 14:57:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51980 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387716AbfIFS5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 14:57:10 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DFBDD10C0942;
+        Fri,  6 Sep 2019 18:57:09 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-116-27.ams2.redhat.com [10.36.116.27])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4CA925C1D8;
+        Fri,  6 Sep 2019 18:57:02 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Steve Grubb <sgrubb@redhat.com>
+Cc:     =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Eric Chiang <ericchiang@google.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Philippe =?utf-8?Q?Tr=C3=A9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Steve Dower <steve.dower@python.org>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 0/5] Add support for O_MAYEXEC
+References: <20190906152455.22757-1-mic@digikod.net> <2989749.1YmIBkDdQn@x2>
+Date:   Fri, 06 Sep 2019 20:57:00 +0200
+In-Reply-To: <2989749.1YmIBkDdQn@x2> (Steve Grubb's message of "Fri, 06 Sep
+        2019 14:50:02 -0400")
+Message-ID: <87mufhckxv.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-Message-ID: <156779614439.24167.3539003390891394057.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Fri, 06 Sep 2019 18:57:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+* Steve Grubb:
 
-Commit-ID:     e16c2983fba0fa6763e43ad10916be35e3d8dc05
-Gitweb:        https://git.kernel.org/tip/e16c2983fba0fa6763e43ad10916be35e3d8dc05
-Author:        Steve Wahl <steve.wahl@hpe.com>
-AuthorDate:    Thu, 05 Sep 2019 15:23:46 -05:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 06 Sep 2019 09:50:56 +02:00
+> Now with LD_AUDIT
+> $ LD_AUDIT=/home/sgrubb/test/openflags/strip-flags.so.0 strace ./test 2>&1 | grep passwd
+> openat(3, "passwd", O_RDONLY)           = 4
+>
+> No O_CLOEXEC flag.
 
-x86/purgatory: Change compiler flags from -mcmodel=kernel to -mcmodel=large to fix kexec relocation errors
+I think you need to explain in detail why you consider this a problem.
 
-The last change to this Makefile caused relocation errors when loading
-a kdump kernel.  Restore -mcmodel=large (not -mcmodel=kernel),
--ffreestanding, and -fno-zero-initialized-bsss, without reverting to
-the former practice of resetting KBUILD_CFLAGS.
+With LD_PRELOAD and LD_AUDIT, you can already do anything, including
+scanning other loaded objects for a system call instruction and jumping
+to that (in case a security module in the kernel performs a PC check to
+confer additional privileges).
 
-Purgatory.ro is a standalone binary that is not linked against the
-rest of the kernel.  Its image is copied into an array that is linked
-to the kernel, and from there kexec relocates it wherever it desires.
-
-With the previous change to compiler flags, the error "kexec: Overflow
-in relocation type 11 value 0x11fffd000" was encountered when trying
-to load the crash kernel.  This is from kexec code trying to relocate
-the purgatory.ro object.
-
->From the error message, relocation type 11 is R_X86_64_32S.  The
-x86_64 ABI says:
-
-  "The R_X86_64_32 and R_X86_64_32S relocations truncate the
-   computed value to 32-bits.  The linker must verify that the
-   generated value for the R_X86_64_32 (R_X86_64_32S) relocation
-   zero-extends (sign-extends) to the original 64-bit value."
-
-This type of relocation doesn't work when kexec chooses to place the
-purgatory binary in memory that is not reachable with 32 bit
-addresses.
-
-The compiler flag -mcmodel=kernel allows those type of relocations to
-be emitted, so revert to using -mcmodel=large as was done before.
-
-Also restore the -ffreestanding and -fno-zero-initialized-bss flags
-because they are appropriate for a stand alone piece of object code
-which doesn't explicitly zero the bss, and one other report has said
-undefined symbols are encountered without -ffreestanding.
-
-These identical compiler flag changes need to happen for every object
-that becomes part of the purgatory.ro object, so gather them together
-first into PURGATORY_CFLAGS_REMOVE and PURGATORY_CFLAGS, and then
-apply them to each of the objects that have C source.  Do not apply
-any of these flags to kexec-purgatory.o, which is not part of the
-standalone object but part of the kernel proper.
-
-Tested-by: Vaibhav Rustagi <vaibhavrustagi@google.com>
-Tested-by: Andreas Smas <andreas@lonelycoder.com>
-Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: None
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: clang-built-linux@googlegroups.com
-Cc: dimitri.sivanich@hpe.com
-Cc: mike.travis@hpe.com
-Cc: russ.anderson@hpe.com
-Fixes: b059f801a937 ("x86/purgatory: Use CFLAGS_REMOVE rather than reset KBUILD_CFLAGS")
-Link: https://lkml.kernel.org/r/20190905202346.GA26595@swahl-linux
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/purgatory/Makefile | 35 +++++++++++++++++++----------------
- 1 file changed, 19 insertions(+), 16 deletions(-)
-
-diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
-index 8901a1f..10fb42d 100644
---- a/arch/x86/purgatory/Makefile
-+++ b/arch/x86/purgatory/Makefile
-@@ -18,37 +18,40 @@ targets += purgatory.ro
- KASAN_SANITIZE	:= n
- KCOV_INSTRUMENT := n
- 
-+# These are adjustments to the compiler flags used for objects that
-+# make up the standalone purgatory.ro
-+
-+PURGATORY_CFLAGS_REMOVE := -mcmodel=kernel
-+PURGATORY_CFLAGS := -mcmodel=large -ffreestanding -fno-zero-initialized-in-bss
-+
- # Default KBUILD_CFLAGS can have -pg option set when FTRACE is enabled. That
- # in turn leaves some undefined symbols like __fentry__ in purgatory and not
- # sure how to relocate those.
- ifdef CONFIG_FUNCTION_TRACER
--CFLAGS_REMOVE_sha256.o		+= $(CC_FLAGS_FTRACE)
--CFLAGS_REMOVE_purgatory.o	+= $(CC_FLAGS_FTRACE)
--CFLAGS_REMOVE_string.o		+= $(CC_FLAGS_FTRACE)
--CFLAGS_REMOVE_kexec-purgatory.o	+= $(CC_FLAGS_FTRACE)
-+PURGATORY_CFLAGS_REMOVE		+= $(CC_FLAGS_FTRACE)
- endif
- 
- ifdef CONFIG_STACKPROTECTOR
--CFLAGS_REMOVE_sha256.o		+= -fstack-protector
--CFLAGS_REMOVE_purgatory.o	+= -fstack-protector
--CFLAGS_REMOVE_string.o		+= -fstack-protector
--CFLAGS_REMOVE_kexec-purgatory.o	+= -fstack-protector
-+PURGATORY_CFLAGS_REMOVE		+= -fstack-protector
- endif
- 
- ifdef CONFIG_STACKPROTECTOR_STRONG
--CFLAGS_REMOVE_sha256.o		+= -fstack-protector-strong
--CFLAGS_REMOVE_purgatory.o	+= -fstack-protector-strong
--CFLAGS_REMOVE_string.o		+= -fstack-protector-strong
--CFLAGS_REMOVE_kexec-purgatory.o	+= -fstack-protector-strong
-+PURGATORY_CFLAGS_REMOVE		+= -fstack-protector-strong
- endif
- 
- ifdef CONFIG_RETPOLINE
--CFLAGS_REMOVE_sha256.o		+= $(RETPOLINE_CFLAGS)
--CFLAGS_REMOVE_purgatory.o	+= $(RETPOLINE_CFLAGS)
--CFLAGS_REMOVE_string.o		+= $(RETPOLINE_CFLAGS)
--CFLAGS_REMOVE_kexec-purgatory.o	+= $(RETPOLINE_CFLAGS)
-+PURGATORY_CFLAGS_REMOVE		+= $(RETPOLINE_CFLAGS)
- endif
- 
-+CFLAGS_REMOVE_purgatory.o	+= $(PURGATORY_CFLAGS_REMOVE)
-+CFLAGS_purgatory.o		+= $(PURGATORY_CFLAGS)
-+
-+CFLAGS_REMOVE_sha256.o		+= $(PURGATORY_CFLAGS_REMOVE)
-+CFLAGS_sha256.o			+= $(PURGATORY_CFLAGS)
-+
-+CFLAGS_REMOVE_string.o		+= $(PURGATORY_CFLAGS_REMOVE)
-+CFLAGS_string.o			+= $(PURGATORY_CFLAGS)
-+
- $(obj)/purgatory.ro: $(PURGATORY_OBJS) FORCE
- 		$(call if_changed,ld)
- 
+Thanks,
+Florian
