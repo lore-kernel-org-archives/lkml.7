@@ -2,83 +2,81 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44120C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 16:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC2FC43140
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 16:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2444B21670
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 16:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 543B82070C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 16:02:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395019AbfIFQAh (ORCPT
+        id S2392055AbfIFQCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 12:00:37 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:38243 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726295AbfIFQAg (ORCPT
+        Fri, 6 Sep 2019 12:02:40 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:36518 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730767AbfIFQCk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 12:00:36 -0400
-Received: by mail-qk1-f195.google.com with SMTP id x5so6082095qkh.5
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 09:00:36 -0700 (PDT)
+        Fri, 6 Sep 2019 12:02:40 -0400
+Received: by mail-qk1-f196.google.com with SMTP id s18so6130875qkj.3;
+        Fri, 06 Sep 2019 09:02:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ES4SaHURAaJC01GAaptDev9SfTdpvqyq6m4yX4fQcB8=;
-        b=VXwqctCfDR+6l2dQ+0vcQB16a0N6tJqPs19kOPRxudsB91+TLVdI0k8GAZH/WfCFx6
-         tqO9t7VPmhMq3jIznqzmZgrwg4btKdDVGoyy2F9BCVHO94yjoonCifqiY+CiRRFsUEOS
-         KyHVntxUwpeb2Beho8TlUxCERaVc1Nw5aiylqqYlB7TbAB92MQSM/Ig8tlUzCGLXMspt
-         VhL1/tv43/sz0RU3GOycUS4Dq35I0w/fvMHsyRTVQz8xVG5Dws2XzWPz1nglcI6rKWZ1
-         ShKdYb+gtBW567ZXNhHbUFKuIgV6HmHBdNE8kAlxqK0Y0OxPPWi7E5P3V29kap3fIkuZ
-         /6/Q==
-X-Gm-Message-State: APjAAAWcrGAqG8xj5fEdYCVQzdzJIQfyrPuzgrKN8tgnh1NThtMJk/A6
-        HWYqvGW11rglllAnLzT0cICG+EfkO5Nbg5gaj64=
-X-Google-Smtp-Source: APXvYqz3LSRyVLYYD4QDIyXNudChhzjqkuMLsRlKHB4VakqREofKG/STxaa6LfsgS6WjUsYS6TRljEVwYTs6CmUAbq0=
-X-Received: by 2002:a37:4b0d:: with SMTP id y13mr9297353qka.3.1567785635669;
- Fri, 06 Sep 2019 09:00:35 -0700 (PDT)
+        bh=D2UnQvaWbnmWdR72EwgKASOHbRdH1J70PBC+fpxUSII=;
+        b=qN7r9oC+bbUMGjwHMWIX43aSLN9cHYy67oJoYdwWS1jmJv4eMaUNmCM55CQhUdcFOm
+         2JniVTh1PwkCXZflPACkmAHu4EST1btre0/Pcurvh7L8ZIcSW/Y95z0Oer5+4kjUMO5M
+         TVEjCvhs7tHPch0bAQ4Wg9KyP2wqmbXdq12clyHv74DqHod/rrRdMCZHsVtjZT8dVOTX
+         cQ3p7NckH/LPNQB7wIV0BYcZEc0ccwAyiBykoNz3mo87/D2D3CJUu/1a+Iw5SaSAiVlu
+         +m+xaH7LHBLQLyvaBULokv89M7kxnjb8+6oPpFv64xni8qyRCkyLZBHexVX0wDcj/FFq
+         S3qw==
+X-Gm-Message-State: APjAAAUBW+kk0okMj3QKuVopLpailBNKB8JMgiwKnjLqTEA+l14yY2qw
+        KQr0MZLitKU2GME6bCdozRR4+R7WEo9V+7Jh8OFdsaWA
+X-Google-Smtp-Source: APXvYqyOQtOjLTWW+COZnxCLc8XDIKJXqxS+DIdZttoPgrH1FkwVKGZoRXS19m2B5VoNat7566rsw+ZN+NUSRyoPhUM=
+X-Received: by 2002:a37:4fcf:: with SMTP id d198mr9489423qkb.394.1567785759220;
+ Fri, 06 Sep 2019 09:02:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190906153948.2160342-1-arnd@arndb.de> <7abad95e-ea47-c068-d91c-ba503f2530b9@citrix.com>
-In-Reply-To: <7abad95e-ea47-c068-d91c-ba503f2530b9@citrix.com>
+References: <20190906152800.1662489-1-arnd@arndb.de> <5dfe1bfc-0236-25cf-756b-ce05f7110136@linuxfoundation.org>
+In-Reply-To: <5dfe1bfc-0236-25cf-756b-ce05f7110136@linuxfoundation.org>
 From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 6 Sep 2019 18:00:19 +0200
-Message-ID: <CAK8P3a1qkMLW_Wnn-N0seUw4N5bPwTU7Dy7CwOWxzS6NTnTmiQ@mail.gmail.com>
-Subject: Re: [Xen-devel] [PATCH] ARM: xen: unexport HYPERVISOR_platform_op function
-To:     Andrew Cooper <andrew.cooper3@citrix.com>
-Cc:     Stefano Stabellini <sstabellini@kernel.org>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Denis Efremov <efremov@linux.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        xen-devel <xen-devel@lists.xenproject.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Date:   Fri, 6 Sep 2019 18:02:22 +0200
+Message-ID: <CAK8P3a3ynubySZ3A5M7D__B6R+caMjys=v+GVjqA78rppOJQQQ@mail.gmail.com>
+Subject: Re: [PATCH] kunit: add PRINTK dependency
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 6, 2019 at 5:55 PM Andrew Cooper <andrew.cooper3@citrix.com> wrote:
->
-> On 06/09/2019 16:39, Arnd Bergmann wrote:
-> > HYPERVISOR_platform_op() is an inline function and should not
-> > be exported. Since commit 15bfc2348d54 ("modpost: check for
-> > static EXPORT_SYMBOL* functions"), this causes a warning:
-> >
-> > WARNING: "HYPERVISOR_platform_op" [vmlinux] is a static EXPORT_SYMBOL_GPL
-> >
-> > Remove the extraneous export.
-> >
-> > Fixes: 15bfc2348d54 ("modpost: check for static EXPORT_SYMBOL* functions")
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->
-> Something is wonky.  That symbol is (/ really ought to be) in the
-> hypercall page and most definitely not inline.
->
-> Which tree is that changeset from?  I can't find the SHA.
+On Fri, Sep 6, 2019 at 5:39 PM Shuah Khan <skhan@linuxfoundation.org> wrote:
 
-This is from linux-next, I think from the kbuild tree.
+> >   config KUNIT
+> >       bool "Enable support for unit tests (KUnit)"
+> > +     depends on PRINTK
+> >       help
+> >         Enables support for kernel unit tests (KUnit), a lightweight unit
+> >         testing and mocking framework for the Linux kernel. These tests are
+> >
+>
+> Hi Arnd,
+>
+> This is found and fixed already. I am just about to apply Berndan's
+> patch that fixes this dependency. All of this vprintk_emit() stuff
+> is redone.
 
-       Arnd
+Ok, perfect. Unfortunately I only started testing the coming
+linux-next release after Stephen went on his break, so
+I'm missing some updates.
+
+    Arnd
