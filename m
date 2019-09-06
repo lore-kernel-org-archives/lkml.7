@@ -2,197 +2,89 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A16AC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D12B7C43140
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E56720842
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:51:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A99F20842
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 13:51:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567777918;
+	bh=as/XjEUMXPVqoYxYK9HcXrjJdB7meJhPBQv74NDA/Dk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ClA0MqA3WJ2p2Sx7maEPrvwE4AaBpuH5vUa8Xi8w0IPuHcdC4NgTWwi8IfWXsHqaT
+	 uwAtpzYgaC/pmCvprAMZuhGBSwYagB/lmBrVqnwnig0WF4zRmJvD5gTH/VN3Bf5HVL
+	 JyHq5vY666xOJx9m6a4J8McuCwnRroUdwIb48/ws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393519AbfIFNvn (ORCPT
+        id S2404130AbfIFNv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 09:51:43 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45232 "EHLO mx1.redhat.com"
+        Fri, 6 Sep 2019 09:51:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733057AbfIFNvn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 09:51:43 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1732267AbfIFNv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 09:51:57 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C9943A28732;
-        Fri,  6 Sep 2019 13:51:42 +0000 (UTC)
-Received: from horse.redhat.com (unknown [10.18.25.137])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0BF611001284;
-        Fri,  6 Sep 2019 13:51:32 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 9B260220292; Fri,  6 Sep 2019 09:51:31 -0400 (EDT)
-Date:   Fri, 6 Sep 2019 09:51:31 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Stefan Hajnoczi <stefanha@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, miklos@szeredi.hu,
-        linux-kernel@vger.kernel.org, virtio-fs@redhat.com,
-        dgilbert@redhat.com, mst@redhat.com
-Subject: Re: [PATCH 16/18] virtiofs: Use virtio_fs_mutex for races w.r.t
- ->remove and mount path
-Message-ID: <20190906135131.GE22083@redhat.com>
-References: <20190905194859.16219-1-vgoyal@redhat.com>
- <20190905194859.16219-17-vgoyal@redhat.com>
- <20190906120534.GX5900@stefanha-x1.localdomain>
+        by mail.kernel.org (Postfix) with ESMTPSA id B6AE9206B8;
+        Fri,  6 Sep 2019 13:51:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567777916;
+        bh=as/XjEUMXPVqoYxYK9HcXrjJdB7meJhPBQv74NDA/Dk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iMZVKIcOsXlK0ngWB5tyhZEhgyNFdmZHPUhDUdhmVp+8oNUG/hplV1I6BSIy1yYbg
+         GMoDei2fYhooB2Lhxi8Jx6If241kcTs4lAIrBhENf86AzWSP/CfqMOnzjr3i+zT9WT
+         1h6XQDCU+hbkkt7A0kSKkKu5auro86K7FdeEEZgU=
+Date:   Fri, 6 Sep 2019 14:51:52 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Amit Kachhap <Amit.Kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: [PATCH ARM64] selftests, arm64: add kernel headers path for
+ tags_test
+Message-ID: <20190906135151.d74nq3qzjmhe4mb5@willie-the-truck>
+References: <c28135c82eaf6d6e2c7e02c1ebc2b99a607d8116.1567615235.git.andreyknvl@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190906120534.GX5900@stefanha-x1.localdomain>
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Fri, 06 Sep 2019 13:51:42 +0000 (UTC)
+In-Reply-To: <c28135c82eaf6d6e2c7e02c1ebc2b99a607d8116.1567615235.git.andreyknvl@google.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 06, 2019 at 01:05:34PM +0100, Stefan Hajnoczi wrote:
-> On Thu, Sep 05, 2019 at 03:48:57PM -0400, Vivek Goyal wrote:
-> > It is possible that a mount is in progress and device is being removed at
-> > the same time. Use virtio_fs_mutex to avoid races.
-> > 
-> > This also takes care of bunch of races and removes some TODO items.
-> > 
-> > Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-> > ---
-> >  fs/fuse/virtio_fs.c | 32 ++++++++++++++++++++++----------
-> >  1 file changed, 22 insertions(+), 10 deletions(-)
+On Wed, Sep 04, 2019 at 06:41:00PM +0200, Andrey Konovalov wrote:
+> tags_test.c relies on PR_SET_TAGGED_ADDR_CTRL/PR_TAGGED_ADDR_ENABLE being
+> present in system headers. When this is not the case the build of this
+> test fails with undeclared identifier errors.
 > 
-> Let's move to a per-device mutex in the future.  That way a single
-> device that fails to drain/complete requests will not hang all other
-> virtio-fs instances.  This is fine for now.
+> Fix by providing the path to the KSFT installed kernel headers in CFLAGS.
+> 
+> Reported-by: Cristian Marussi <cristian.marussi@arm.com>
+> Suggested-by: Cristian Marussi <cristian.marussi@arm.com>
+> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> ---
+>  tools/testing/selftests/arm64/Makefile | 1 +
+>  1 file changed, 1 insertion(+)
 
-Good point. For now I updated the patch so that it applies cleanly
-after previous two patches changed.
+Damn, I just tagged the arm64 queue for 5.4 and didn't spot this patch.
 
-Subject: virtiofs: Use virtio_fs_mutex for races w.r.t ->remove and mount path
+I'll queue it at -rc1 instead, if that's ok? It doesn't look urgent.
 
-It is possible that a mount is in progress and device is being removed at
-the same time. Use virtio_fs_mutex to avoid races. 
+Thanks,
 
-This also takes care of bunch of races and removes some TODO items.
-
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
----
- fs/fuse/virtio_fs.c |   32 ++++++++++++++++++++++----------
- 1 file changed, 22 insertions(+), 10 deletions(-)
-
-Index: rhvgoyal-linux-fuse/fs/fuse/virtio_fs.c
-===================================================================
---- rhvgoyal-linux-fuse.orig/fs/fuse/virtio_fs.c	2019-09-06 09:40:53.309245246 -0400
-+++ rhvgoyal-linux-fuse/fs/fuse/virtio_fs.c	2019-09-06 09:43:25.335245246 -0400
-@@ -13,7 +13,9 @@
- #include <linux/highmem.h>
- #include "fuse_i.h"
- 
--/* List of virtio-fs device instances and a lock for the list */
-+/* List of virtio-fs device instances and a lock for the list. Also provides
-+ * mutual exclusion in device removal and mounting path
-+ */
- static DEFINE_MUTEX(virtio_fs_mutex);
- static LIST_HEAD(virtio_fs_instances);
- 
-@@ -72,17 +74,19 @@ static void release_virtio_fs_obj(struct
- 	kfree(vfs);
- }
- 
-+/* Make sure virtiofs_mutex is held */
- static void virtio_fs_put(struct virtio_fs *fs)
- {
--	mutex_lock(&virtio_fs_mutex);
- 	kref_put(&fs->refcount, release_virtio_fs_obj);
--	mutex_unlock(&virtio_fs_mutex);
- }
- 
- static void virtio_fs_fiq_release(struct fuse_iqueue *fiq)
- {
- 	struct virtio_fs *vfs = fiq->priv;
-+
-+	mutex_lock(&virtio_fs_mutex);
- 	virtio_fs_put(vfs);
-+	mutex_unlock(&virtio_fs_mutex);
- }
- 
- static void virtio_fs_drain_queue(struct virtio_fs_vq *fsvq)
-@@ -596,9 +600,8 @@ static void virtio_fs_remove(struct virt
- 	struct virtio_fs *fs = vdev->priv;
- 
- 	mutex_lock(&virtio_fs_mutex);
-+	/* This device is going away. No one should get new reference */
- 	list_del_init(&fs->list);
--	mutex_unlock(&virtio_fs_mutex);
--
- 	virtio_fs_stop_all_queues(fs);
- 	virtio_fs_drain_all_queues(fs);
- 	vdev->config->reset(vdev);
-@@ -607,6 +610,7 @@ static void virtio_fs_remove(struct virt
- 	vdev->priv = NULL;
- 	/* Put device reference on virtio_fs object */
- 	virtio_fs_put(fs);
-+	mutex_unlock(&virtio_fs_mutex);
- }
- 
- #ifdef CONFIG_PM_SLEEP
-@@ -978,10 +982,15 @@ static int virtio_fs_fill_super(struct s
- 		.no_force_umount = true,
- 	};
- 
--	/* TODO lock */
--	if (fs->vqs[VQ_REQUEST].fud) {
--		pr_err("virtio-fs: device already in use\n");
--		err = -EBUSY;
-+	mutex_lock(&virtio_fs_mutex);
-+
-+	/* After holding mutex, make sure virtiofs device is still there.
-+	 * Though we are holding a refernce to it, drive ->remove might
-+	 * still have cleaned up virtual queues. In that case bail out.
-+	 */
-+	err = -EINVAL;
-+	if (list_empty(&fs->list)) {
-+		pr_info("virtio-fs: tag <%s> not found\n", fs->tag);
- 		goto err;
- 	}
- 
-@@ -1007,7 +1016,6 @@ static int virtio_fs_fill_super(struct s
- 
- 	fc = fs->vqs[VQ_REQUEST].fud->fc;
- 
--	/* TODO take fuse_mutex around this loop? */
- 	for (i = 0; i < fs->nvqs; i++) {
- 		struct virtio_fs_vq *fsvq = &fs->vqs[i];
- 
-@@ -1020,6 +1028,7 @@ static int virtio_fs_fill_super(struct s
- 	/* Previous unmount will stop all queues. Start these again */
- 	virtio_fs_start_all_queues(fs);
- 	fuse_send_init(fc, init_req);
-+	mutex_unlock(&virtio_fs_mutex);
- 	return 0;
- 
- err_free_init_req:
-@@ -1027,6 +1036,7 @@ err_free_init_req:
- err_free_fuse_devs:
- 	virtio_fs_free_devs(fs);
- err:
-+	mutex_unlock(&virtio_fs_mutex);
- 	return err;
- }
- 
-@@ -1100,7 +1110,9 @@ static int virtio_fs_get_tree(struct fs_
- 
- 	fc = kzalloc(sizeof(struct fuse_conn), GFP_KERNEL);
- 	if (!fc) {
-+		mutex_lock(&virtio_fs_mutex);
- 		virtio_fs_put(fs);
-+		mutex_unlock(&virtio_fs_mutex);
- 		return -ENOMEM;
- 	}
- 
-
+Will
