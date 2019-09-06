@@ -2,170 +2,112 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 049A2C43140
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B92C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0F9421848
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:09:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01DE520693
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 17:10:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="QEN5WL28"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="S+tNW9LH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395143AbfIFRJD (ORCPT
+        id S2391025AbfIFRKW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 13:09:03 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:34190 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732130AbfIFRJD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 13:09:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1567789738;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=rBCaqKNoNCZ9+3F1oh6m+vepb8uT3GJ5XSm5+YAEkEU=;
-        b=QEN5WL28EpXn0/MfyxW2jtAwC8543Mw/SDhdZu9jtwZHp0Z57uE0BsRpwmxnKJcuJj
-        qv4v265RmfIiLmUyWM8EegwGKi6WOE8LGw+CaBRWv096Z4hxUvEnFnCvFG8vLe/upRul
-        CrrOzj5daMuvdQaw2w7iQOyO9e9K169O/3hu2hMMQVRhMD7O3WanVmBTlLK2iIC/DNpL
-        VjFnouyKcXWJe0wg2JVRSWiE32cV0xywAa7bwMrPercwL1i+umUNECV+Sh3md+CPHzEp
-        O4Qvi/ifB99qe6wI5drmH0nFznCMgXjUdb9F0RFwdqbn5eWT/O4GZOV08ihU5Ykr2efP
-        +eLg==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/PqwDqp5w=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 44.27.0 DYNA|AUTH)
-        with ESMTPSA id u036f9v86H8spen
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Fri, 6 Sep 2019 19:08:54 +0200 (CEST)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [RFC v2 3/3] ARM: dts: omap3: bulk convert compatible to be explicitly ti,omap3430 or ti,omap36xx
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20190906154732.GC52127@atomide.com>
-Date:   Fri, 6 Sep 2019 19:08:54 +0200
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        =?utf-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pm@vger.kernel.org,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <8C8644AC-FA12-4D26-B96A-76B78798612A@goldelico.com>
-References: <cover.1567587220.git.hns@goldelico.com> <a2b56edcada7b9000a6e906387a02c0ee42681db.1567587220.git.hns@goldelico.com> <20190905142734.GV52127@atomide.com> <4BC39938-D63E-4BDC-BA28-5132F77F602D@goldelico.com> <20190906154732.GC52127@atomide.com>
-To:     Tony Lindgren <tony@atomide.com>
-X-Mailer: Apple Mail (2.3124)
+        Fri, 6 Sep 2019 13:10:22 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:34846 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732683AbfIFRKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 13:10:21 -0400
+Received: from zn.tnic (p200300EC2F0B9E0090E54EFB2576D755.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:9e00:90e5:4efb:2576:d755])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A5BDF1EC0528;
+        Fri,  6 Sep 2019 19:10:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1567789820;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=ujq/9wwVKbYtmT1d+l0p4TYSlaAZEGl0EoXsFpFQqYM=;
+        b=S+tNW9LHWpv9f+hX8imI5dbvKLO/tx1sEQsEeej/9vtDM6OzS2tGH7Ap8p5UZcNPV3J0aS
+        GJsmjdBBBv/caVvbRmLP8i2XDhaG6YOWUU91n7pAjhlX3Pek66+FJKpW9I3gm7vgw5UNSc
+        G/C9gQSmCJ2twqnCueYan/nG/+7bNzU=
+Date:   Fri, 6 Sep 2019 19:10:12 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc:     Johannes Erdfelt <johannes@erdfelt.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Mihai Carabas <mihai.carabas@oracle.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jon Grimm <Jon.Grimm@amd.com>, kanth.ghatraju@oracle.com,
+        patrick.colp@oracle.com, Tom Lendacky <thomas.lendacky@amd.com>,
+        x86-ml <x86@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/microcode: Add an option to reload microcode even if
+ revision is unchanged
+Message-ID: <20190906171012.GK19008@zn.tnic>
+References: <20190905072029.GB19246@zn.tnic>
+ <20190905194044.GA3663@otc-nc-03>
+ <alpine.DEB.2.21.1909052316130.1902@nanos.tec.linutronix.de>
+ <20190905222706.GA4422@otc-nc-03>
+ <alpine.DEB.2.21.1909061431330.1902@nanos.tec.linutronix.de>
+ <20190906144039.GA29569@sventech.com>
+ <20190906151617.GE19008@zn.tnic>
+ <20190906154618.GB29569@sventech.com>
+ <20190906161735.GH19008@zn.tnic>
+ <20190906164353.GB2840@char.us.oracle.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190906164353.GB2840@char.us.oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tony,
+On Fri, Sep 06, 2019 at 12:43:53PM -0400, Konrad Rzeszutek Wilk wrote:
+> Do you have insights on the best way to restructure the code for this?
 
-> Am 06.09.2019 um 17:47 schrieb Tony Lindgren <tony@atomide.com>:
->=20
-> * H. Nikolaus Schaller <hns@goldelico.com> [190906 07:53]:
->>> Am 05.09.2019 um 16:27 schrieb Tony Lindgren <tony@atomide.com>:
->>> compatible =3D "ti,omap3-ldp", "ti,omap3430", "ti,omap34xx", =
-"ti,omap3";
->>=20
->> After thinking a little about the whole topic the main rule of this =
-change must be:
->>=20
->> * do not break any existing in-tree DTS
->> 	=3D> only *add* to compatible what we need to distinguish =
-between omap34 and omap36
->>=20
->> * additions shall only follow new scheme
->> 	=3D> we only add "ti,omap34xx" or "ti,omap36xx"
->>           but neither "ti,omap3630" nor "ti,omap3430"
->=20
-> Sorry I don't follow you on this one.. We should always add =
-"ti,omap3630"
-> where "ti,omap36xx" is currently used so we can eventually get rid of
-> "ti,omap36xx". And the same for 34xx.
+Well, I only started thinking about this when you guys brought it on and
+you were actually serious about it. :)
 
-Ah, ok now I see.
+So IINM, this is one of the livepatch problems where the universe before
+the patching and after the patching needs to be consistent, so to speak.
 
-You want to make the "ti,omap3630" the official one and "ti,omap36xx" =
-legacy.
-It is probably an arbitrary choice if we want to get rid of the xx or =
-the 30.
+But how do you handle the case where feature detection has happened, a
+bunch of code is active now and running because the feature is there and
+then you disable that feature and all that code does what? And what do
+you tell the user programs which are using it?
 
-I had thought to do it the other way round because I had done this =
-statistics:
+Sounds a lot like a reboot to me. :-P
 
-for i in 3430 34xx 3630 36xx; do echo $i $(fgrep '"'ti,omap$i'"' =
-arch/arm/boot/dts/*.dts* | wc -l); done
+Was the code programmed with the ability to be gracefully disabled at
+any point in time, in mind? I doubt that. I don't think any of the CPU
+feature supporting code has been programmed to be disabled at arbitrary
+points in time.
 
-3430 12
-34xx 28
-3630 3
-36xx 23
+Now, can you do something like suspend the CPUs, disable some
+features and resume them and make them re-detect it all again and act
+accordingly?
 
-which would indicate that 34xx and 36xx are more common.
+Sure, we do some of that but not comprehensively...
 
->> * cover some out-of-tree DTS
->> 	=3D> make the ti-cpufreq driver still match "ti,omap3430" or =
-"ti,omap3630"
->> 	   even if this duplicates compatibility
->>=20
->> This would mean that the logicpd-som-lv-37xx-devkit.dts gets the =
-additional "ti,omap36xx"
->> while the omap3-ldp.dts would only get an "ti,omap34xx" but no =
-"ti,omap3430" (since we
->> do not use it anywhere).
->>=20
->> Could you agree on this approach?
->=20
-> Yeah sounds like logicpd-som-lv-37xx-devkit.dts currently still needs
-> "ti,omap36xx" for now.
->=20
-> If modifying omap3-ldp.dts, also add "ti,omap3430" in additon to
-> "ti,omap34xx" that it already has.
->=20
-> So basically let's assume the following:
->=20
-> "ti,omap3430" =3D=3D "ti,omap34xx"
-> "ti,omap3630" =3D=3D "ti,omap36xx"
->=20
-> This means code needs to parse both.
+So my gut feeling is this is just the tip of the iceberg and the devil
+is in the detail and all sorts of similar proverbs.
 
-Yes, it already does everywhere.
+Best guess would be, try to do it and see what kinds of problems you
+encounter and try to fix them cleanly. I betcha you'll be busy a long
+time...
 
-BTW there is also some code that does special SoC detection based on
-soc_device_match(), mainly in omapdrm/dss.
+:-)
 
-If we were to use this mechanism in the ti-cpufreq driver we could
-match it to ti,omap3 and could avoid all these changes.
+-- 
+Regards/Gruss,
+    Boris.
 
-But make it less maintainable and code more complex.
-
->=20
-> And eventually we just drop the "xx" variants.
-
->=20
-> So while patching compatibles, let's also update for this to
-> avoid multiple patches churning the same compatibles over and
-> over.
-
-Ok. I'll rework the patch so that we never add "ti,34xx" or "ti,36xx"
-but add "ti,3430" or "ti,3630" if missing.
-
-I'll also take a look at omap.txt bindings since that likely needs
-an update as well to better describe what the official ones are
-and which are legacy.
-
-BR and thanks,
-Nikolaus
-
+https://people.kernel.org/tglx/notes-about-netiquette
