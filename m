@@ -2,112 +2,90 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0102FC00307
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC75C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAAB32082C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:00:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90A12207FC
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:01:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567796474;
+	bh=Jiz8B43eSk9SxWcQmicR7EYR2TlCQ2PdKvvmefGBoLA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cYuZ/e0jXgUfq1EookmHyB6gBze4s1k3CAM7GBkKxv9edUZr/zWRbXtVhX6TsaI0O
+	 J1MWUskhwlA/NqFjSRx3qQVjwr7zgHL8Wl/Etu5yCh/lANEVZE66Dm0kzata1xRbiR
+	 Qek1u1NnMGosEXqec0wbN6MqSpiI1Sl+RRVDoPJ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405223AbfIFTAo (ORCPT
+        id S2405272AbfIFTBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 15:00:44 -0400
-Received: from mga11.intel.com ([192.55.52.93]:19366 "EHLO mga11.intel.com"
+        Fri, 6 Sep 2019 15:01:13 -0400
+Received: from mga06.intel.com ([134.134.136.31]:16332 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405197AbfIFTAo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 15:00:44 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S2405197AbfIFTBM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 15:01:12 -0400
+X-Amp-Result: UNSCANNABLE
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Sep 2019 12:00:42 -0700
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Sep 2019 12:01:12 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,474,1559545200"; 
-   d="scan'208";a="384313381"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga006.fm.intel.com with ESMTP; 06 Sep 2019 12:00:41 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1i6JTM-0004KJ-BX; Fri, 06 Sep 2019 22:00:40 +0300
-Date:   Fri, 6 Sep 2019 22:00:40 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Dave Young <dyoung@redhat.com>
-Cc:     Jean Delvare <jdelvare@suse.de>, kexec@lists.infradead.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        matt@codeblueprint.co.uk, ard.biesheuvel@linaro.org
-Subject: Re: [PATCH v1 2/2] firmware: dmi_scan: Pass dmi_entry_point to
- kexec'ed kernel
-Message-ID: <20190906190040.GA16211@smile.fi.intel.com>
-References: <20161202195416.58953-1-andriy.shevchenko@linux.intel.com>
- <20161202195416.58953-3-andriy.shevchenko@linux.intel.com>
- <20161215122856.7d24b7a8@endymion>
- <20161216023213.GA4505@dhcp-128-65.nay.redhat.com>
- <1481890738.9552.70.camel@linux.intel.com>
- <20161216143330.69e9c8ee@endymion>
- <20161217105721.GB6922@dhcp-128-65.nay.redhat.com>
+   d="scan'208";a="190907127"
+Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
+  by FMSMGA003.fm.intel.com with ESMTP; 06 Sep 2019 12:01:11 -0700
+Date:   Fri, 6 Sep 2019 12:52:11 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     Sagi Grimberg <sagi@grimberg.me>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-scsi@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Long Li <longli@microsoft.com>,
+        John Garry <john.garry@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-nvme@lists.infradead.org,
+        Keith Busch <keith.busch@intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 1/4] softirq: implement IRQ flood detection mechanism
+Message-ID: <20190906185210.GA4260@localhost.localdomain>
+References: <6b88719c-782a-4a63-db9f-bf62734a7874@linaro.org>
+ <20190903072848.GA22170@ming.t460p>
+ <dd96def4-1121-afbe-2431-9e516a06850c@linaro.org>
+ <6f3b6557-1767-8c80-f786-1ea667179b39@acm.org>
+ <2a8bd278-5384-d82f-c09b-4fce236d2d95@linaro.org>
+ <20190905090617.GB4432@ming.t460p>
+ <6a36ccc7-24cd-1d92-fef1-2c5e0f798c36@linaro.org>
+ <20190906014819.GB27116@ming.t460p>
+ <ffefcfa0-09b6-9af5-f94e-8e7ddd2eef16@linaro.org>
+ <6eb2a745-7b92-73ce-46f5-cc6a5ef08abc@grimberg.me>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20161217105721.GB6922@dhcp-128-65.nay.redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <6eb2a745-7b92-73ce-46f5-cc6a5ef08abc@grimberg.me>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 17, 2016 at 06:57:21PM +0800, Dave Young wrote:
-> On 12/16/16 at 02:33pm, Jean Delvare wrote:
-> > On Fri, 16 Dec 2016 14:18:58 +0200, Andy Shevchenko wrote:
-> > > On Fri, 2016-12-16 at 10:32 +0800, Dave Young wrote:
-> > > > On 12/15/16 at 12:28pm, Jean Delvare wrote:
-> > > > > I am no kexec expert but this confuses me. Shouldn't the second
-> > > > > kernel have access to the EFI systab as the first kernel does? It
-> > > > > includes many more pointers than just ACPI and DMI tables, and it
-> > > > > would seem inconvenient to have to pass all these addresses
-> > > > > individually explicitly.
-> > > > 
-> > > > Yes, in modern linux kernel, kexec has the support for EFI, I think it
-> > > > should work naturally at least in x86_64.
-> > > 
-> > > Thanks for this good news!
-> > > 
-> > > Unfortunately Intel Galileo is 32-bit platform.
+On Fri, Sep 06, 2019 at 11:30:57AM -0700, Sagi Grimberg wrote:
+> 
 > > 
-> > If it was done for X86_64 then maybe it can be generalized to X86?
+> > Ok, so the real problem is per-cpu bounded tasks.
+> > 
+> > I share Thomas opinion about a NAPI like approach.
 > 
-> For X86_64, we have a new way for efi runtime memmory mapping, in i386
-> code it still use old ioremap way. It is impossible to use same way as
-> the X86_64 since the virtual address space is limited.
-> 
-> But maybe for 32bit, kexec kernel can run in physical mode, but I'm not
-> sure, I would suggest Andy to do a test first with efi=noruntime for
-> kexec 2nd kernel.
+> We already have that, its irq_poll, but it seems that for this
+> use-case, we get lower performance for some reason. I'm not
+> entirely sure why that is, maybe its because we need to mask interrupts
+> because we don't have an "arm" register in nvme like network devices
+> have?
 
-Sorry for a delay.
-Eventually I found time to check this.
-
-Unfortunately the efi=noruntime didn't help:
-
-# uname -a
-Linux buildroot 5.3.0-rc7+ #17 Thu Sep 5 16:08:22 EEST 2019 i586 GNU/Linux
-# dmidecode
-# dmidecode 4.2
-Scanning /dev/mem for entry point.
-# No SMBIOS nor DMI entry point found, sorry.
-#
-# cat /proc/cmdline
-... ignore_loglevel efi=noruntime earlycon=efifb acpi_rsdp=0xf01e014
-
-So, I am all ears to anything else to try.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+For MSI, that's the INTMS/INTMC NVMe registers. MSI-x, though, has to
+disarm it in its table entry, and the Linux implementation will do a
+posted read in that path, which is a bit too expensive.
