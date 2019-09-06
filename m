@@ -2,158 +2,140 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3841C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 068F5C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F60F208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:30:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA3462070C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 19:33:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393329AbfIFTaq (ORCPT
+        id S2393375AbfIFTdT convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 15:30:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:60564 "EHLO foss.arm.com"
+        Fri, 6 Sep 2019 15:33:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40732 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730615AbfIFTap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 15:30:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EC7CD28;
-        Fri,  6 Sep 2019 12:30:42 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3C5EB3F718;
-        Fri,  6 Sep 2019 12:30:42 -0700 (PDT)
-Date:   Fri, 6 Sep 2019 20:30:40 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Yue Wang <yue.wang@Amlogic.com>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        zhong jiang <zhongjiang@huawei.com>,
-        kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PCI: dwc: Use PTR_ERR_OR_ZERO() in five functions
-Message-ID: <20190906193040.GG9720@e119886-lin.cambridge.arm.com>
-References: <95c9dfae-af81-82ad-e989-1fdf5f29808e@web.de>
+        id S2393338AbfIFTdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 15:33:18 -0400
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 874056696C
+        for <linux-kernel@vger.kernel.org>; Fri,  6 Sep 2019 19:33:17 +0000 (UTC)
+Received: by mail-wr1-f72.google.com with SMTP id n6so2979696wrw.14
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 12:33:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=R/U7mUhygsddH+fGB+zy3E9CKa5h+Z8Nm54osdGuOgs=;
+        b=IIQaZ5ZbKWDmWOAV6GpNgweeUAy/KpDQb4NjZON+aWmQwWFJx0dAnmYJLsuoexnGe4
+         XL1Kd9giN31oLGZfgJ5ZEkh3gC+SOLOwlvYQEE2QHPpHf87SqQU8wDghXRhLTANPX8Gc
+         FOuoCjbasc54dOHz6JspATWPctibhxu9jRwPcq1itFyvRs7zfTatiMLBLB4ejv180nA9
+         3Wur0y0KYDSIlvYLExE9eBA8ywvSOmPCv340/eDNIJ/BGHlCeSxqJud8lxvOPnrgwMvB
+         CqGDNBupObQNyb7zqS4n5vHxsrsuNiylZM91XY+Rkx4wHWexRPAfOmNcbfGHDOY6Ydpa
+         ajmw==
+X-Gm-Message-State: APjAAAWzC7svmrEeTOCzlFfC1Lx9whVmwdERZ5XLBNHF+fz1rtlyUWjy
+        TFrIPUqRDM0R/N7xiVsiNhrHdU4hEXbIy7lI+KUOv3HgIkrzoSshggrTr4FvdTwDR/Be99umMv3
+        nGHObzr44X+0VRCV2xm12X1aKl4An52fKs20gsqtU
+X-Received: by 2002:a1c:ca02:: with SMTP id a2mr9252538wmg.127.1567798396045;
+        Fri, 06 Sep 2019 12:33:16 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyTIyfiPV/yAsPvflKtcRM07P7nCUNe0sQoeZ2AMSNSLR0dzqdoxrOYrd5Bg/c1ZdH+IG1R0aOFq6s5vYlI0XA=
+X-Received: by 2002:a1c:ca02:: with SMTP id a2mr9252505wmg.127.1567798395711;
+ Fri, 06 Sep 2019 12:33:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <95c9dfae-af81-82ad-e989-1fdf5f29808e@web.de>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+References: <156763534546.18676.3530557439501101639.stgit@warthog.procyon.org.uk>
+ <CAHk-=wh5ZNE9pBwrnr5MX3iqkUP4nspz17rtozrSxs5-OGygNw@mail.gmail.com>
+ <17703.1567702907@warthog.procyon.org.uk> <CAHk-=wjQ5Fpv0D7rxX0W=obx9xoOAxJ_Cr+pGCYOAi2S9FiCNg@mail.gmail.com>
+ <CAKCoTu7ms_Mr-q08d9XB3uascpzwBa5LF9JTT2aq8uUsoFE8aQ@mail.gmail.com> <CAHk-=wjcsxQ8QB_v=cwBQw4pkJg7pp-bBsdWyPivFO_OeF-y+g@mail.gmail.com>
+In-Reply-To: <CAHk-=wjcsxQ8QB_v=cwBQw4pkJg7pp-bBsdWyPivFO_OeF-y+g@mail.gmail.com>
+From:   Ray Strode <rstrode@redhat.com>
+Date:   Fri, 6 Sep 2019 15:32:37 -0400
+Message-ID: <CAKCoTu70E9cbVu=jVG4EiXnTNiG-znvri6Omh2t++1zRw+639Q@mail.gmail.com>
+Subject: Re: Why add the general notification queue and its sources
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Ray, Debarshi" <debarshi.ray@gmail.com>,
+        Robbie Harwood <rharwood@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 06, 2019 at 08:50:07PM +0200, Markus Elfring wrote:
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Fri, 6 Sep 2019 20:40:06 +0200
-> 
-> Simplify these function implementations by using a known function.
-> 
-> Generated by: scripts/coccinelle/api/ptr_ret.cocci
-> 
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+Hi,
 
-Thanks for this, looks good to me:
+On Thu, Sep 5, 2019 at 4:39 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+> That is *way* too specific to make for any kind of generic
+> notification mechanism.
+Well from my standpoint, I just don't want to have to poll... I don't
+have a strong opinion
+about how it looks architecturally to reach that goal.
 
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Ideally, at a higher level, I want the userspace api that gnome uses
+to be something
+like:
 
-> ---
->  drivers/pci/controller/dwc/pci-exynos.c |  5 +----
->  drivers/pci/controller/dwc/pci-meson.c  | 10 ++--------
->  drivers/pci/controller/dwc/pcie-kirin.c | 10 ++--------
->  3 files changed, 5 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
-> index cee5f2f590e2..b6ab1cc5d895 100644
-> --- a/drivers/pci/controller/dwc/pci-exynos.c
-> +++ b/drivers/pci/controller/dwc/pci-exynos.c
-> @@ -92,10 +92,7 @@ static int exynos5440_pcie_get_mem_resources(struct platform_device *pdev,
-> 
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	ep->mem_res->elbi_base = devm_ioremap_resource(dev, res);
-> -	if (IS_ERR(ep->mem_res->elbi_base))
-> -		return PTR_ERR(ep->mem_res->elbi_base);
-> -
-> -	return 0;
-> +	return PTR_ERR_OR_ZERO(ep->mem_res->elbi_base);
->  }
-> 
->  static int exynos5440_pcie_get_clk_resources(struct exynos_pcie *ep)
-> diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
-> index e35e9eaa50ee..713059918002 100644
-> --- a/drivers/pci/controller/dwc/pci-meson.c
-> +++ b/drivers/pci/controller/dwc/pci-meson.c
-> @@ -182,10 +182,7 @@ static int meson_pcie_get_mems(struct platform_device *pdev,
-> 
->  	/* Meson SoC has two PCI controllers use same phy register*/
->  	mp->mem_res.phy_base = meson_pcie_get_mem_shared(pdev, mp, "phy");
-> -	if (IS_ERR(mp->mem_res.phy_base))
-> -		return PTR_ERR(mp->mem_res.phy_base);
-> -
-> -	return 0;
-> +	return PTR_ERR_OR_ZERO(mp->mem_res.phy_base);
->  }
-> 
->  static void meson_pcie_power_on(struct meson_pcie *mp)
-> @@ -259,10 +256,7 @@ static int meson_pcie_probe_clocks(struct meson_pcie *mp)
->  		return PTR_ERR(res->general_clk);
-> 
->  	res->clk = meson_pcie_probe_clock(dev, "pcie", 0);
-> -	if (IS_ERR(res->clk))
-> -		return PTR_ERR(res->clk);
-> -
-> -	return 0;
-> +	return PTR_ERR_OR_ZERO(res->clk);
->  }
-> 
->  static inline void meson_elb_writel(struct meson_pcie *mp, u32 val, u32 reg)
-> diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
-> index c19617a912bd..75b1f1dde747 100644
-> --- a/drivers/pci/controller/dwc/pcie-kirin.c
-> +++ b/drivers/pci/controller/dwc/pcie-kirin.c
-> @@ -138,10 +138,7 @@ static long kirin_pcie_get_clk(struct kirin_pcie *kirin_pcie,
->  		return PTR_ERR(kirin_pcie->apb_sys_clk);
-> 
->  	kirin_pcie->pcie_aclk = devm_clk_get(dev, "pcie_aclk");
-> -	if (IS_ERR(kirin_pcie->pcie_aclk))
-> -		return PTR_ERR(kirin_pcie->pcie_aclk);
-> -
-> -	return 0;
-> +	return PTR_ERR_OR_ZERO(kirin_pcie->pcie_aclk);
->  }
-> 
->  static long kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
-> @@ -174,10 +171,7 @@ static long kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
-> 
->  	kirin_pcie->sysctrl =
->  		syscon_regmap_lookup_by_compatible("hisilicon,hi3660-sctrl");
-> -	if (IS_ERR(kirin_pcie->sysctrl))
-> -		return PTR_ERR(kirin_pcie->sysctrl);
-> -
-> -	return 0;
-> +	return PTR_ERR_OR_ZERO(kirin_pcie->sysctrl);
->  }
-> 
->  static int kirin_pcie_phy_init(struct kirin_pcie *kirin_pcie)
-> --
-> 2.23.0
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+err = krb5_cc_watch (ctx, ccache, (krb5_cc_change_fct) on_cc_change ,
+&watch_fd);
+
+then a watch_fd would get handed back and caller could poll on it. if
+it woke up poll(),
+caller would do
+
+krb5_cc_watch_update (ctx, ccache, watch_fd)
+
+or so and it would trigger on_cc_change to get called (or something like that).
+
+If under the hood,  fd comes from opening /dev/watch_queue, and
+krb5_cc_watch_update reads from some mmap'ed buffer to decide whether
+or not to call on_cc_change, that's fine with me.
+
+If under the hood, fd comes from a pipe fd returned from some ioctl or syscall,
+and krb5_cc_watch_update reads messages directly from that fd to decide
+whether or not to call on_cc_change, that's fine with me. too.
+
+it could be an eventfd too, or whatever, too, just as long as its
+something I can add
+to poll() and don't have to intermittently poll ... :-)
+
+> Also, what is the security model here? Open a special character
+> device, and you get access to random notifications from random
+> sources?
+I guess dhowells answered this...
+
+> And why would you do a broken big-key thing in the kernel in the first
+> place? Why don't you just have a kernel key to indirectly encrypt
+> using a key and "additional user space data". The kernel should simply
+> not take care of insane 1MB keys.
+🤷 dunno.  I assume you're referencing the discussions from comment 0
+on that 2013 bug.  I wasn't involved in those discussions, I just chimed in
+after they happened trying to avoid having to add polling :-)
+
+I have no idea why a ticket would get that large. I assume it only is in weird
+edge cases.
+
+Anyway, gnome treats the tickets as opaque blobs.  it doesn't do anything
+with them other than tell the user when they need to get refreshed...
+
+all the actual key manipulation happens from krb5 libraries.
+
+of course, one advantage of having the tickets kernel side is nfs could
+in theory access them directly, rather than up calling back to userspace...
+
+--Ray
