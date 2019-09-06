@@ -3,72 +3,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E047C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E51C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AF472082C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:49:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DDFC206A5
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 14:50:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394617AbfIFOt5 (ORCPT
+        id S2394629AbfIFOuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 10:49:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53612 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730799AbfIFOt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 10:49:57 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CBD20B628;
-        Fri,  6 Sep 2019 14:49:55 +0000 (UTC)
-Date:   Fri, 6 Sep 2019 16:50:04 +0200
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] eeprom: Deprecate the legacy eeprom driver
-Message-ID: <20190906165004.5e5748cc@endymion>
-In-Reply-To: <20190904075729.GA22307@kroah.com>
-References: <20190902104838.058725c2@endymion>
-        <20190904075729.GA22307@kroah.com>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Fri, 6 Sep 2019 10:50:22 -0400
+Received: from mga06.intel.com ([134.134.136.31]:60335 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729121AbfIFOuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 10:50:22 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Sep 2019 07:50:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,473,1559545200"; 
+   d="scan'208";a="185802221"
+Received: from spandruv-mobl3.jf.intel.com ([10.251.22.142])
+  by orsmga003.jf.intel.com with ESMTP; 06 Sep 2019 07:50:21 -0700
+Message-ID: <6b576770a4bbe6c24ea524083dec5a16bf3c9e94.camel@linux.intel.com>
+Subject: Re: [PATCH 2/2] tools/power/x86/intel-speed-select: Display core
+ count for bucket
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Prarit Bhargava <prarit@redhat.com>
+Cc:     darcari@redhat.com, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Date:   Fri, 06 Sep 2019 07:50:21 -0700
+In-Reply-To: <20190906134655.GU2680@smile.fi.intel.com>
+References: <20190905233748.6822-1-srinivas.pandruvada@linux.intel.com>
+         <20190905233748.6822-2-srinivas.pandruvada@linux.intel.com>
+         <780a3faf-9e44-64f4-a354-bdee39af3af5@redhat.com>
+         <20190906134655.GU2680@smile.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
-
-On Wed, 4 Sep 2019 09:57:29 +0200, Greg Kroah-Hartman wrote:
-> On Mon, Sep 02, 2019 at 10:48:38AM +0200, Jean Delvare wrote:
-> > Time has come to get rid of the old eeprom driver. The at24 driver
-> > should be used instead. So mark the eeprom driver as deprecated and
-> > give users some time to migrate. Then we can remove the legacy
-> > eeprom driver completely.
+On Fri, 2019-09-06 at 16:46 +0300, Andy Shevchenko wrote:
+> On Fri, Sep 06, 2019 at 05:39:54AM -0400, Prarit Bhargava wrote:
+> > On 9/5/19 7:37 PM, Srinivas Pandruvada wrote:
+> > > Read the bucket and core count relationship via MSR and display
+> > > when displaying turbo ratio limits.
+> > > +	ret = isst_send_msr_command(cpu, 0x1ae, 0, buckets_info);
 > > 
-> > Signed-off-by: Jean Delvare <jdelvare@suse.de>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > ---
-> >  drivers/misc/eeprom/Kconfig |    5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)  
+> > ^^^ you can get rid of the magic number 0x1ae by doing (sorry for
+> > the cut-and-paste)
+> > 
+> > diff --git a/tools/power/x86/intel-speed-select/Makefile
+> > b/tools/power/x86/intel
+> > index 12c6939dca2a..087d802ad844 100644
+> > --- a/tools/power/x86/intel-speed-select/Makefile
+> > +++ b/tools/power/x86/intel-speed-select/Makefile
+> > @@ -15,6 +15,8 @@ endif
+> >  MAKEFLAGS += -r
+> > 
+> >  override CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
+> > +override CFLAGS += -I../../../include
+> > +override CFLAGS +=
+> > -DMSRHEADER='"../../../../arch/x86/include/asm/msr-index.h"'
+No, we can't use msr_index.
+
 > 
-> You might also want to add a big printk() message when the driver is
-> loaded that it shouldn't be used.
-
-Good idea, although unfortunately this means expanding
-module_i2c_driver. Or maybe I can use printk_once() in eeprom_probe().
-Or even just a dev_warn() there to really spam the kernel log in a very
-visible way.
-
-Would you prefer a v2 of this patch including that change, or a
-separate, incremental patch?
+> I guess it can be done in more neat way.
+> 
+> > As I've been looking at this code I have been wondering why didn't
+> > you just use
+> > the standard /dev/cpu/X/msr interface that other x86 power
+> > utilities (turbostat,
+> > x86_energy_perf_policy) use?  Implementing msr_read() is trivial
+> > (warning
+> > untested and uncompiled code)
+No. We can't. The MSR interface is disabled on several distribution and
+platforms with secured boot. So some special MSRs are only allowed via
+this IOCTL interface.
 
 Thanks,
--- 
-Jean Delvare
-SUSE L3 Support
+Srinivas
+
+
+> 
+> Actually good point!
+> 
+
