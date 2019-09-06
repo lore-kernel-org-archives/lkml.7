@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C84AAC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 01:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86096C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 01:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B633820820
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 01:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7288D2082C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 01:30:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dstsaqxC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BFmak78K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390971AbfIFBaU (ORCPT
+        id S2404207AbfIFBaa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 21:30:20 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37330 "EHLO
+        Thu, 5 Sep 2019 21:30:30 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34445 "EHLO
         mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391913AbfIFBaS (ORCPT
+        with ESMTP id S2403979AbfIFBa1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 21:30:18 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y5so427057pfo.4;
-        Thu, 05 Sep 2019 18:30:18 -0700 (PDT)
+        Thu, 5 Sep 2019 21:30:27 -0400
+Received: by mail-pf1-f196.google.com with SMTP id r12so3191236pfh.1;
+        Thu, 05 Sep 2019 18:30:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=TGB4uJiUeL5Fo2JfDzEml4xHl1KEyJtx9FM84cwKunw=;
-        b=dstsaqxCZRcfN6gGH6ctFsOO7xhq5phOxmqAm/OB1NMyIBTc0QTP8lK8u29elsTd6T
-         JnzSPMr3Uu0gU6diT7nvgY1fbXUwy88aPlQTtNVWDIWJuwMYlK7YaXNWPQxKyK1b+xj2
-         fQmL2Yv9U/7++ML6zUAtFHJqTjnY5v1rLmcNTHMWonaTkoTdyIxzbxDHZctYHNpq2suy
-         Ftj36gQRIaZX2cxdTi/d4MwgOvDroDzu+6jCOd5ycHHFfR9jaGcI+8ypcTMOELJfSIC0
-         iCUDVKSUY6p4tdxQ9LL/DieyvZ0gERKPGv8yD3tcy5v57qPfk1niukCxM+khJfJdPJn7
-         X/kA==
+        bh=lzU0KnwlLwZRT/00/44UaOi16RS92F7Mftz12Dneqw0=;
+        b=BFmak78KIEynzF4dsEtKE2pyq+InTsB0IwkxiZIhXyCANQaY+y2RNUcjNY+eQP0297
+         /3bxyIm1pAnXXCbWwE3pCwQRcnvtI3Jmki9dxQ0VJa43AFWsgjsMuvdUSPpGRY3ulEW3
+         DiR14PUuuB4xDypIGY3uwsdDa1BaQNohXBqlcK1Evci2KZ+M7e4DdhmeLho9Qo36fHQu
+         qf52Vsjaw5jOXPCKwVPc7a9Y0rglI3z9Agc/2+zHYlhnfh6/nDBNQ8GVn5pp9QdwA1kS
+         m7AosbQmRSdZjhmb/vrTF1zwu898BZn74VD1veuFFLUc5sAGhavFEtrFxBEs3UnvSVeN
+         28jw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=TGB4uJiUeL5Fo2JfDzEml4xHl1KEyJtx9FM84cwKunw=;
-        b=OU6F5xjKVn0zA2GEpbiOayp6Ear6bBS4m1bHu/vp7BVmb/DDNvgzorfiYgvPaeDGkN
-         AoQZYgHcbUmjbQRFS6Wow2esStxS3n/T5Z/qxmJ+8fExosOUFMtZsPEgczG0YDUEVvwI
-         3EFkIHxZaXOH26bqOKjPtliN9hAxxUT4SkfJruNN5V3Sh6tJdRqOw2fIz9aAmvno2ssM
-         2N9g7WpyRhtULQgWyWS46llWLsvP3n4vi7jv4qsgRU5svt0ZBzNtkKtWlyM34752J7if
-         YViSP/nXGFVM2Xesmabpe2gjQjoVL7hdSGMUIksSGHZSSbx4gg4HHsoMZ/xHCGl6z6XN
-         veYg==
-X-Gm-Message-State: APjAAAUspCAIMOsiKT0puvLtYae0LbX/aSYRX/g7ZC0/Hq45wvaJmnnj
-        KqtO5bQuqOOQTFwswdM9Q4mFWJ53
-X-Google-Smtp-Source: APXvYqwkT90touvJ1jKr02oZ3a3Vt6s2FTsqRJSY6OLRK0rLVNyYttyEO3FHF6pjnBUTXKcMWLsP6g==
-X-Received: by 2002:a17:90a:b118:: with SMTP id z24mr7107999pjq.79.1567733417905;
-        Thu, 05 Sep 2019 18:30:17 -0700 (PDT)
+        bh=lzU0KnwlLwZRT/00/44UaOi16RS92F7Mftz12Dneqw0=;
+        b=su8StgWMqC/QPPxj+xvWYabG+CHx9tzAgDVOY49wNMM2NFZU/siZPYQLNhc0NqhfIY
+         KrNeebwkkmSY41K4uNvMYA1mp+YB2pXblk7rJZ1uKbt0QWsBfrF0FPT54Tr+PkiejYZr
+         ZQKzDk0d8TwQWxX2+mzB6l6Mh4KPo7ZsSpdZJa/fnAj5/Q8Obk4e11u2d0Z7a8eSEBUH
+         IO0YlYV1vKIsVR2K0IXSdusG1ka+J6YLVCXhwEIBDV3kMizv+I3iJ/f7SPtQE1ohqVak
+         JcnL2+WM85O5mCscj8etE6RJgyzO5jgpQXcAQn1EfLQ1RrlPYAmqjcVX2feUhLiYmsJi
+         SraQ==
+X-Gm-Message-State: APjAAAUthm0foSjuszinybBxNXnYRU9Z2S/yrsp4z1MsWc8yhGxk9/9s
+        lq5VT8qhcQyjmD0E885u1qOR8Hjk
+X-Google-Smtp-Source: APXvYqyPzRoAay3eF3jG73d8xyiw9BP2olD/7SS7dUF38q/pUW5/uylf1N/SvNnzddQ3nZ3DoHyg2A==
+X-Received: by 2002:a65:5a8c:: with SMTP id c12mr5706037pgt.73.1567733426195;
+        Thu, 05 Sep 2019 18:30:26 -0700 (PDT)
 Received: from localhost.localdomain ([203.205.141.123])
-        by smtp.googlemail.com with ESMTPSA id g11sm3332294pgu.11.2019.09.05.18.30.15
+        by smtp.googlemail.com with ESMTPSA id g11sm3332294pgu.11.2019.09.05.18.30.23
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 05 Sep 2019 18:30:17 -0700 (PDT)
+        Thu, 05 Sep 2019 18:30:25 -0700 (PDT)
 From:   Wanpeng Li <kernellwp@gmail.com>
 X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
@@ -67,9 +67,9 @@ Cc:     Paolo Bonzini <pbonzini@redhat.com>,
         Wanpeng Li <wanpengli@tencent.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>
-Subject: [PATCH RESEND v3 2/5] KVM: LAPIC: Periodically revaluate to get conservative lapic_timer_advance_ns
-Date:   Fri,  6 Sep 2019 09:30:01 +0800
-Message-Id: <1567733404-7759-2-git-send-email-wanpengli@tencent.com>
+Subject: [PATCH v2 5/5] KVM: hyperv: Fix Direct Synthetic timers assert an interrupt w/o lapic_in_kernel
+Date:   Fri,  6 Sep 2019 09:30:04 +0800
+Message-Id: <1567733404-7759-5-git-send-email-wanpengli@tencent.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1567733404-7759-1-git-send-email-wanpengli@tencent.com>
 References: <1567733404-7759-1-git-send-email-wanpengli@tencent.com>
@@ -83,152 +83,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Wanpeng Li <wanpengli@tencent.com>
 
-Even if for realtime CPUs, cache line bounces, frequency scaling, presence 
-of higher-priority RT tasks, etc can still cause different response. These 
-interferences should be considered and periodically revaluate whether 
-or not the lapic_timer_advance_ns value is the best, do nothing if it is,
-otherwise recaluate again. Set lapic_timer_advance_ns to the minimal 
-conservative value from all the estimated values.
+Reported by syzkaller:
 
-Testing on Skylake server, cat vcpu*/lapic_timer_advance_ns, before patch:
-1628
-4161
-4321
-3236
-...
+	kasan: GPF could be caused by NULL-ptr deref or user memory access
+	general protection fault: 0000 [#1] PREEMPT SMP KASAN
+	RIP: 0010:__apic_accept_irq+0x46/0x740 arch/x86/kvm/lapic.c:1029
+	Call Trace:
+	kvm_apic_set_irq+0xb4/0x140 arch/x86/kvm/lapic.c:558
+	stimer_notify_direct arch/x86/kvm/hyperv.c:648 [inline]
+	stimer_expiration arch/x86/kvm/hyperv.c:659 [inline]
+	kvm_hv_process_stimers+0x594/0x1650 arch/x86/kvm/hyperv.c:686
+	vcpu_enter_guest+0x2b2a/0x54b0 arch/x86/kvm/x86.c:7896
+	vcpu_run+0x393/0xd40 arch/x86/kvm/x86.c:8152
+	kvm_arch_vcpu_ioctl_run+0x636/0x900 arch/x86/kvm/x86.c:8360
+	kvm_vcpu_ioctl+0x6cf/0xaf0 arch/x86/kvm/../../../virt/kvm/kvm_main.c:2765
 
-Testing on Skylake server, cat vcpu*/lapic_timer_advance_ns, after patch:
-1553
-1499
-1509
-1489
-...
+The testcase programs HV_X64_MSR_STIMERn_CONFIG/HV_X64_MSR_STIMERn_COUNT,
+in addition, there is no lapic in the kernel, the counters value are small
+enough in order that kvm_hv_process_stimers() inject this already-expired
+timer interrupt into the guest through lapic in the kernel which triggers
+the NULL deferencing. This patch fixes it by don't advertise direct mode 
+synthetic timers and discarding the inject when lapic is not in kernel.
 
-Testing on Haswell desktop, cat vcpu*/lapic_timer_advance_ns, before patch:
-4617
-3641
-4102
-4577
-...
-Testing on Haswell desktop, cat vcpu*/lapic_timer_advance_ns, after patch:
-2775
-2892
-2764
-2775
-...
-
+Reported-by: syzbot+dff25ee91f0c7d5c1695@syzkaller.appspotmail.com
 Cc: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Radim Krčmář <rkrcmar@redhat.com>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
 Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
 ---
- arch/x86/kvm/lapic.c | 37 ++++++++++++++++++++++++++++++-------
- arch/x86/kvm/lapic.h |  2 ++
- 2 files changed, 32 insertions(+), 7 deletions(-)
+v1 -> v2:
+ * don't advertise direct mode synthetic timers when lapic is not in kernel
 
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index 2f4a48a..12ade70 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -70,6 +70,7 @@
- /* step-by-step approximation to mitigate fluctuation */
- #define LAPIC_TIMER_ADVANCE_ADJUST_STEP 8
- #define LAPIC_TIMER_ADVANCE_FILTER 10000
-+#define LAPIC_TIMER_ADVANCE_RECALC_PERIOD (600 * HZ)
+ arch/x86/kvm/hyperv.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+index c10a8b1..069e655 100644
+--- a/arch/x86/kvm/hyperv.c
++++ b/arch/x86/kvm/hyperv.c
+@@ -645,7 +645,9 @@ static int stimer_notify_direct(struct kvm_vcpu_hv_stimer *stimer)
+ 		.vector = stimer->config.apic_vector
+ 	};
  
- static inline int apic_test_vector(int vec, void *bitmap)
- {
-@@ -1484,13 +1485,24 @@ static inline void __wait_lapic_expire(struct kvm_vcpu *vcpu, u64 guest_cycles)
- static inline void adjust_lapic_timer_advance(struct kvm_vcpu *vcpu,
- 					      s64 advance_expire_delta)
- {
--	struct kvm_lapic *apic = vcpu->arch.apic;
--	u32 timer_advance_ns = apic->lapic_timer.timer_advance_ns, ns;
-+	struct kvm_timer *ktimer = &vcpu->arch.apic->lapic_timer;
-+	u32 timer_advance_ns = ktimer->timer_advance_ns, ns;
- 
- 	if (abs(advance_expire_delta) > LAPIC_TIMER_ADVANCE_FILTER)
- 		/* filter out drastic fluctuations */
- 		return;
- 
-+	/* periodic revaluate */
-+	if (unlikely(ktimer->timer_advance_adjust_done)) {
-+		ktimer->recalc_timer_advance_ns = jiffies +
-+			LAPIC_TIMER_ADVANCE_RECALC_PERIOD;
-+		if (abs(advance_expire_delta) > LAPIC_TIMER_ADVANCE_ADJUST_DONE) {
-+			timer_advance_ns = LAPIC_TIMER_ADVANCE_ADJUST_INIT;
-+			ktimer->timer_advance_adjust_done = false;
-+		} else
-+			return;
-+	}
-+
- 	/* too early */
- 	if (advance_expire_delta < 0) {
- 		ns = -advance_expire_delta * 1000000ULL;
-@@ -1503,17 +1515,24 @@ static inline void adjust_lapic_timer_advance(struct kvm_vcpu *vcpu,
- 		timer_advance_ns += ns;
- 	}
- 
--	timer_advance_ns = (apic->lapic_timer.timer_advance_ns *
-+	timer_advance_ns = (ktimer->timer_advance_ns *
- 		(LAPIC_TIMER_ADVANCE_ADJUST_STEP - 1) + advance_expire_delta) /
- 		LAPIC_TIMER_ADVANCE_ADJUST_STEP;
- 
- 	if (abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_DONE)
--		apic->lapic_timer.timer_advance_adjust_done = true;
-+		ktimer->timer_advance_adjust_done = true;
- 	if (unlikely(timer_advance_ns > 5000)) {
- 		timer_advance_ns = LAPIC_TIMER_ADVANCE_ADJUST_INIT;
--		apic->lapic_timer.timer_advance_adjust_done = false;
-+		ktimer->timer_advance_adjust_done = false;
-+	}
-+
-+	ktimer->timer_advance_ns = timer_advance_ns;
-+
-+	if (ktimer->timer_advance_adjust_done) {
-+		if (ktimer->min_timer_advance_ns > timer_advance_ns)
-+			ktimer->min_timer_advance_ns = timer_advance_ns;
-+		ktimer->timer_advance_ns = ktimer->min_timer_advance_ns;
- 	}
--	apic->lapic_timer.timer_advance_ns = timer_advance_ns;
+-	return !kvm_apic_set_irq(vcpu, &irq, NULL);
++	if (lapic_in_kernel(vcpu))
++		return !kvm_apic_set_irq(vcpu, &irq, NULL);
++	return 0;
  }
  
- static void __kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
-@@ -1532,7 +1551,8 @@ static void __kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
- 	if (guest_tsc < tsc_deadline)
- 		__wait_lapic_expire(vcpu, tsc_deadline - guest_tsc);
+ static void stimer_expiration(struct kvm_vcpu_hv_stimer *stimer)
+@@ -1849,7 +1851,13 @@ int kvm_vcpu_ioctl_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
  
--	if (unlikely(!apic->lapic_timer.timer_advance_adjust_done))
-+	if (unlikely(!apic->lapic_timer.timer_advance_adjust_done) ||
-+		time_before(apic->lapic_timer.recalc_timer_advance_ns, jiffies))
- 		adjust_lapic_timer_advance(vcpu, apic->lapic_timer.advance_expire_delta);
- }
+ 			ent->edx |= HV_FEATURE_FREQUENCY_MSRS_AVAILABLE;
+ 			ent->edx |= HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE;
+-			ent->edx |= HV_STIMER_DIRECT_MODE_AVAILABLE;
++
++			/*
++			 * Direct Synthetic timers only make sense with in-kernel
++			 * LAPIC
++			 */
++			if (lapic_in_kernel(vcpu))
++				ent->edx |= HV_STIMER_DIRECT_MODE_AVAILABLE;
  
-@@ -2310,9 +2330,12 @@ int kvm_create_lapic(struct kvm_vcpu *vcpu, int timer_advance_ns)
- 	if (timer_advance_ns == -1) {
- 		apic->lapic_timer.timer_advance_ns = LAPIC_TIMER_ADVANCE_ADJUST_INIT;
- 		apic->lapic_timer.timer_advance_adjust_done = false;
-+		apic->lapic_timer.recalc_timer_advance_ns = jiffies;
-+		apic->lapic_timer.min_timer_advance_ns = UINT_MAX;
- 	} else {
- 		apic->lapic_timer.timer_advance_ns = timer_advance_ns;
- 		apic->lapic_timer.timer_advance_adjust_done = true;
-+		apic->lapic_timer.recalc_timer_advance_ns = MAX_JIFFY_OFFSET;
- 	}
+ 			break;
  
- 
-diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
-index 50053d2..56a05eb 100644
---- a/arch/x86/kvm/lapic.h
-+++ b/arch/x86/kvm/lapic.h
-@@ -31,6 +31,8 @@ struct kvm_timer {
- 	u32 timer_mode_mask;
- 	u64 tscdeadline;
- 	u64 expired_tscdeadline;
-+	unsigned long recalc_timer_advance_ns;
-+	u32 min_timer_advance_ns;
- 	u32 timer_advance_ns;
- 	s64 advance_expire_delta;
- 	atomic_t pending;			/* accumulated triggered timers */
 -- 
 2.7.4
 
