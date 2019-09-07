@@ -2,156 +2,88 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B94C0030B
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 14:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1507BC43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 15:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA52821871
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 14:58:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KniegP04"
+	by mail.kernel.org (Postfix) with ESMTP id E42B62178F
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 15:00:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394701AbfIGO6T (ORCPT
+        id S2394712AbfIGPAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 10:58:19 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33938 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391733AbfIGO6S (ORCPT
+        Sat, 7 Sep 2019 11:00:22 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:49349 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391215AbfIGPAV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 10:58:18 -0400
-Received: by mail-wr1-f66.google.com with SMTP id s18so9411027wrn.1;
-        Sat, 07 Sep 2019 07:58:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=1COcKaS2HXJAJL3v76zzn2hj7Bwkz387tvnsFY+Qqwo=;
-        b=KniegP04d/AhcqE+5LUIynxWrj4CHnLgNRFGgR7j8m829cSrKRqZLjBci1iMhrN9+x
-         cqyDDhNpm9roTgyItEoJBj9jYmhcfmOiEyJecJy+xX17N141k3tCye93e+hJxq2oXIDB
-         2x2zNGykFoX/BoI0c03XYb1SW0e2rtEpH2DysWWXHRAgWNMQz7SLWGUisP3CVuaoBXJk
-         hoNFQ2uHsjflydICv0dD6BWPs46wkgceQ9aSvnBXiTjZ/E1aAz0wzza4n/sDf/D3+icV
-         6KW8/8E0Wg/nkvsmHWe0k2DE4bzBIRAbzjsS5SLleqiJXKabVZqL4pFk1s9IvWhS8sqE
-         RrpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=1COcKaS2HXJAJL3v76zzn2hj7Bwkz387tvnsFY+Qqwo=;
-        b=OLBrlOsQnwZNSqQDaAU/cWhRFV2JMhner3XB04U+kwOOjfy8DcUuBKz2oa1lmw/aNy
-         4rUQnCxEUbIpBSoIsmZJMLPUzEm3rLVcb2ge44mTAPcVjkLrdAgAlIg24eZH84Nrkg/V
-         Hxi3isyEvcWGwg+CCwiw8FxfXBjMyvnKQOh0p3wmqB4XEEG3zCDi/ZcWRQYQkHnZZUJB
-         TuCg8K9SmvUHkBoAkf1/ytRU+KOG607XVb5d+DeKLdtjperRI3wtqjZNp1o0y2s5Pile
-         0VUxUzQilrnmur4ktNnunmrW3wxHgHFNo+i07mdQzJwsWNEh6nslNVXvIN0ZIFPPUtDg
-         oj4A==
-X-Gm-Message-State: APjAAAUbIY5/SbZ8DctVuR2fKajdUU2jJVi+7qITQRpwpLLefN7AjTM0
-        VT9BWPIJS4tP4exCmRPUNaKDdPlDZT64/Y2GXE8=
-X-Google-Smtp-Source: APXvYqzSXDuicK9cIB3YHlgQmu0ZhC7GmzlZl5Qjwb/WQCt4v0+9tJb5jpYKC073HCxRSWvKDYp3DpEEhmnzeKDshIA=
-X-Received: by 2002:adf:e286:: with SMTP id v6mr11989190wri.4.1567868296438;
- Sat, 07 Sep 2019 07:58:16 -0700 (PDT)
+        Sat, 7 Sep 2019 11:00:21 -0400
+Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i6cCI-0007dS-9H; Sat, 07 Sep 2019 17:00:18 +0200
+Date:   Sat, 7 Sep 2019 17:00:17 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Bandan Das <bsd@redhat.com>
+Subject: Re: Linux 5.3-rc7
+In-Reply-To: <156786727951.13300.15226856788926071603@skylake-alporthouse-com>
+Message-ID: <alpine.DEB.2.21.1909071657430.1902@nanos.tec.linutronix.de>
+References: <CAHk-=wi_nBULUyO=OKtNBCZ+VSqdOcEiUeFqXTQY_D5ga5k4gQ@mail.gmail.com> <156785100521.13300.14461504732265570003@skylake-alporthouse-com> <alpine.DEB.2.21.1909071628420.1902@nanos.tec.linutronix.de>
+ <156786727951.13300.15226856788926071603@skylake-alporthouse-com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190903162519.7136-1-sashal@kernel.org> <20190903162519.7136-44-sashal@kernel.org>
- <7957107d-634f-4771-327e-99fdd5e6474e@daenzer.net> <20190903170347.GA24357@kroah.com>
- <20190903200139.GJ5281@sasha-vm> <CAKMK7uFpBnkF4xABdkDMZ8TYhL4jg6ZuGyHGyVeBxc9rkyUtXQ@mail.gmail.com>
-In-Reply-To: <CAKMK7uFpBnkF4xABdkDMZ8TYhL4jg6ZuGyHGyVeBxc9rkyUtXQ@mail.gmail.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Sat, 7 Sep 2019 10:58:03 -0400
-Message-ID: <CADnq5_Mfee4xmzMJ-Hmw251QCMfabWPKd8PX+o70D97qdCDJ8g@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 4.19 044/167] drm/amdgpu: validate user pitch alignment
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Sasha Levin <sashal@kernel.org>, Dave Airlie <airlied@linux.ie>,
-        Yu Zhao <yuzhao@google.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        =?UTF-8?Q?Michel_D=C3=A4nzer?= <michel@daenzer.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 3, 2019 at 4:16 PM Daniel Vetter <daniel@ffwll.ch> wrote:
->
-> On Tue, Sep 3, 2019 at 10:01 PM Sasha Levin <sashal@kernel.org> wrote:
-> >
-> > On Tue, Sep 03, 2019 at 07:03:47PM +0200, Greg KH wrote:
-> > >On Tue, Sep 03, 2019 at 06:40:43PM +0200, Michel D=C3=A4nzer wrote:
-> > >> On 2019-09-03 6:23 p.m., Sasha Levin wrote:
-> > >> > From: Yu Zhao <yuzhao@google.com>
-> > >> >
-> > >> > [ Upstream commit 89f23b6efef554766177bf51aa754bce14c3e7da ]
-> > >>
-> > >> Hold your horses!
-> > >>
-> > >> This commit and c4a32b266da7bb702e60381ca0c35eaddbc89a6c had to be
-> > >> reverted, as they caused regressions. See commits
-> > >> 25ec429e86bb790e40387a550f0501d0ac55a47c &
-> > >> 92b0730eaf2d549fdfb10ecc8b71f34b9f472c12 .
-> > >>
-> > >>
-> > >> This isn't bolstering confidence in how these patches are selected..=
-.
-> > >
-> > >The patch _itself_ said to be backported to the stable trees from 4.2
-> > >and newer.  Why wouldn't we be confident in doing this?
-> > >
-> > >If the patch doesn't want to be backported, then do not add the cc:
-> > >stable line to it...
-> >
-> > This patch was picked because it has a stable tag, which you presumably
-> > saw as your Reviewed-by tag is in the patch. This is why it was
-> > backported; it doesn't take AI to backport patches tagged for stable...
-> >
-> > The revert of this patch, however:
-> >
-> >  1. Didn't have a stable tag.
-> >  2. Didn't have a "Fixes:" tag.
-> >  3. Didn't have the usual "the reverts commit ..." string added by git
-> >  when one does a revert.
-> >
-> > Which is why we still kick patches for review, even though they had a
-> > stable tag, just so people could take a look and confirm we're not
-> > missing anything - like we did here.
-> >
-> > I'm not sure what you expected me to do differently here.
->
-> Yeah this looks like fail on the revert side, they need to reference
-> the reverted commit somehow ...
->
-> Alex, why got this dropped? Is this more fallout from the back&forth
-> shuffling you're doing between your internal branches behind the
-> firewall, and the public history?
+On Sat, 7 Sep 2019, Chris Wilson wrote:
+> Quoting Thomas Gleixner (2019-09-07 15:29:19)
+> > On Sat, 7 Sep 2019, Chris Wilson wrote:
+> > > Quoting Linus Torvalds (2019-09-02 18:28:26)
+> > > > Bandan Das:
+> > > >       x86/apic: Include the LDR when clearing out APIC registers
+> > > 
+> > > Apologies if this is known already, I'm way behind on email.
+> > > 
+> > > I've bisected
+> > > 
+> > > [   18.693846] smpboot: CPU 0 is now offline
+> > > [   19.707737] smpboot: Booting Node 0 Processor 0 APIC 0x0
+> > > [   29.707602] smpboot: do_boot_cpu failed(-1) to wakeup CPU#0
+> > > 
+> > > https://intel-gfx-ci.01.org/tree/drm-tip/igt@perf_pmu@cpu-hotplug.html
+> > > 
+> > > to 558682b52919. (Reverts cleanly and fixes the problem.)
+> > > 
+> > > I'm guessing that this is also behind the suspend failures, missing
+> > > /dev/cpu/0/msr, and random perf_event_open() failures we have observed
+> > > in our CI since -rc7 across all generations of Intel cpus.
+> > 
+> > So is this on bare metal or in a VM?
+> 
+> Our single virtualised piece of kit doesn't support cpu hotplug, so this
+> test is not being run. We have failures on
+> icl (2019), glk (2017), kbl (2017), bxt (2016), skl (2015),
+> bsw (2016), hsw (2013), byt (2013), snb (2011), elk (2008),
+> bwr (2006), blb (2007)
 
-The behind the firewall comments are not really helpful.  There aren't
-any "behind the firewall" trees.  Everything is mirrored in public.
-Yes it is annoying that we don't have a direct committer tree, but the
-only shuffling is between public trees.  The problem is 90% of our
-customers want packaged out of tree drivers rather than in tree
-drivers because they are using an old distro or a custom distro or
-something else so we have to do this dance.  I realize there are other
-dances we could do to solve this problem, but they all have their own
-set of costs and this is what we have now.  The patch shuffling
-doesn't help, but regardless, the same thing could happen even with a
-direct committer tree if someone missed the tag when committing.
+Ok let me find a testbox to figure out whats wrong there.
 
-Alex
+Does this only happen with that CPU0 hotplug stuff enabled or on CPUs other
+than CPU0 as well? That hotplug CPU0 stuff is a bandaid so I wouldn't be
+surprised if we broke that somehow.
 
->
-> Also adding Dave Airlie.
-> -Daniel
-> --
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> +41 (0) 79 365 57 48 - http://blog.ffwll.ch
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Thanks,
+
+	tglx
