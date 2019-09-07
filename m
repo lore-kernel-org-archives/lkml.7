@@ -2,146 +2,154 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2F5C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 16:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC6BDC43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 16:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEDD1206BB
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 16:32:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YAACSMo4"
+	by mail.kernel.org (Postfix) with ESMTP id B4FB421871
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 16:37:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394938AbfIGQcp (ORCPT
+        id S2394984AbfIGQhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 12:32:45 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46328 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392683AbfIGQco (ORCPT
+        Sat, 7 Sep 2019 12:37:20 -0400
+Received: from www1102.sakura.ne.jp ([219.94.129.142]:16949 "EHLO
+        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392062AbfIGQhU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 12:32:44 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q5so6522326pfg.13;
-        Sat, 07 Sep 2019 09:32:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OWKMTVEpcjEgU67HpPrX0ZG66N8BrYaoMAyOS7ISkKw=;
-        b=YAACSMo4u3WzOCuq9vZYRponMeG5TUtWEDgBWfe/TC9c4cqYfea+DvSZObHWa6pdj7
-         Pe8jbcM+PEovYy1lKjoUxBiZYaYIF2jZGHHmEh08NcFiDNhAYRS3W+4aLhqYjaJ/cnk/
-         2BOlurNIp59gDSJdp0JD5HmeYez6Yb78SbbheEH4qZANHgT6lvSmgJf5huBLfWN1Sh8i
-         bxXUvaaPRY3dgHI5J9yXD1T2Zcs6pzy7Zc/IaIhWdvpwu7Z8eFUYW9N25Slu9gw520SP
-         v0QDigl/lOLbSkWYwausocQxD6JAdD+cyDPToU2QOohsVZJoj1itwxDh6SWbTZ8Bu6mc
-         /AaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OWKMTVEpcjEgU67HpPrX0ZG66N8BrYaoMAyOS7ISkKw=;
-        b=VIidkEbtriuXV2gL5lvzba3vUYXs9VcFCU8CWPoPwZALYO1QnzeEJ6bfoy3aULdwLP
-         VE4XXrZIAXAcNxrGnw3SOyw6MnhDjJioG8eWRIKOQmquBQLq4TTuWdtTvAoIsrINHKuj
-         kGsSVPe65EaZ7/R48wogddP98EcMZJharPmdtGxTX8xn/WSjnHwC6Bu6tRdHvWnZ0YbY
-         UNldEv4YT/YJr7YS1enT1N66JHAYuKhjBNZJbHx/23OAYTubDyTuCtvInbNs1DsziKb2
-         ueq2HWh48LpFr/M0VkABUfJf9I/Muc545F9OfvpdBgZ2bSbYFubJ64gLl1D20xAItgiz
-         QaOw==
-X-Gm-Message-State: APjAAAV7vYnaAlduUkTHLaGz+hwkS4GYyiDVZ6neHeXUVj4jw2m6aolg
-        AH7CaVNJfa2g+XGxxm5er5w=
-X-Google-Smtp-Source: APXvYqzHa92DDO9jXGHTroP2d6b2wkphlnLlSVKLHITC01IKwgahaaAGNPHPJsuQ6/zKIPGyykwEFA==
-X-Received: by 2002:a63:5648:: with SMTP id g8mr13024920pgm.81.1567873963790;
-        Sat, 07 Sep 2019 09:32:43 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id c125sm13601189pfa.107.2019.09.07.09.32.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Sep 2019 09:32:43 -0700 (PDT)
-Date:   Sat, 7 Sep 2019 09:32:40 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] software node: implement reference properties
-Message-ID: <20190907163240.GA27112@dtor-ws>
-References: <20190906222611.223532-1-dmitry.torokhov@gmail.com>
- <20190907160819.GH2680@smile.fi.intel.com>
+        Sat, 7 Sep 2019 12:37:20 -0400
+Received: from fsav106.sakura.ne.jp (fsav106.sakura.ne.jp [27.133.134.233])
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x87GawhE091901;
+        Sun, 8 Sep 2019 01:36:58 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Received: from www1102.sakura.ne.jp (219.94.129.142)
+ by fsav106.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav106.sakura.ne.jp);
+ Sun, 08 Sep 2019 01:36:58 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav106.sakura.ne.jp)
+Received: from localhost.localdomain (118.153.231.153.ap.dti.ne.jp [153.231.153.118])
+        (authenticated bits=0)
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x87GatL3091872
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Sun, 8 Sep 2019 01:36:58 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
+To:     Mark Brown <broonie@kernel.org>,
+        David Yang <yangxiaohua@everest-semi.com>,
+        Daniel Drake <drake@endlessm.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Subject: [PATCH 2/2] ASoC: es8316: support fixed and variable both clock rates
+Date:   Sun,  8 Sep 2019 01:36:53 +0900
+Message-Id: <20190907163653.9382-2-katsuhiro@katsuster.net>
+X-Mailer: git-send-email 2.23.0.rc1
+In-Reply-To: <20190907163653.9382-1-katsuhiro@katsuster.net>
+References: <20190907163653.9382-1-katsuhiro@katsuster.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190907160819.GH2680@smile.fi.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 07, 2019 at 07:08:19PM +0300, Andy Shevchenko wrote:
-> On Fri, Sep 06, 2019 at 03:26:09PM -0700, Dmitry Torokhov wrote:
-> > It is possible to store references to software nodes in the same fashion as
-> > other static properties, so that users do not need to define separate
-> > structures:
-> > 
-> > static const struct software_node gpio_bank_b_node = {
-> > 	.name = "B",
-> > };
-> > 
-> > static const struct property_entry simone_key_enter_props[] = {
-> > 	PROPERTY_ENTRY_U32("linux,code", KEY_ENTER),
-> > 	PROPERTY_ENTRY_STRING("label", "enter"),
-> > 	PROPERTY_ENTRY_REF("gpios", &gpio_bank_b_node, 123, GPIO_ACTIVE_LOW),
-> > 	{ }
-> > };
-> > 
-> 
-> Thanks for an update, my comments below.
-> 
-> > +	} else if (src->type == DEV_PROP_REF) {
-> > +		/* All reference properties must be arrays */
-> > +		return -EINVAL;
-> 
-> Hmm... What about to duplicate pointer under value union and use is_array to
-> distinguish which one to use? Because...
+This patch supports some type of machine drivers that set 0 to mclk
+when sound device goes to idle state. After applied this patch,
+sysclk == 0 means there is no constraint of sound rate and other
+values will set constraints which is derived by sysclk setting.
 
-Then we have to special-case copying this entry, similar to the pains we
-are going with the strings.
+Original code refuses sysclk == 0 setting. But some boards and SoC
+(such as RockPro64 and RockChip I2S) has connected SoC MCLK out to
+ES8316 MCLK in. In this case, SoC side I2S will choose suitable
+frequency of MCLK such as fs * mclk-fs when user starts playing or
+capturing.
 
-> 
-> 
-> > @@ -240,6 +254,7 @@ struct property_entry {
-> >  			const u32 *u32_data;
-> >  			const u64 *u64_data;
-> >  			const char * const *str;
-> > +			const struct software_node_ref_args *ref;
-> >  		} pointer;
-> 
-> > +#define PROPERTY_ENTRY_REF(_name_, _ref_, ...)				\
-> > +(struct property_entry) {						\
-> > +	.name = _name_,							\
-> 
-> > +	.length = sizeof(struct software_node_ref_args),		\
-> 
-> Is it correct?
+Bad scenario as follows (mclk-fs = 256):
+  - Initialize sysclk by correct value (Ex. 12.288MHz)
+    - ES8316 set constraints of PCM rate by sysclk
+      48kHz (1/256), 32kHz (1/384), 30.720kHz (1/400),
+      24kHz (1/512), 16kHz (1/768), 12kHz (1/1024)
+  - Play 48kHz sound, it's acceptable
+  - Sysclk is not changed
 
-Yes, we length is element size * number of elements.
+  - Play 32kHz sound, it's acceptable
+  - Set sysclk by 8.192MHz (= fs * mclk-fs = 32k * 256)
+    - ES8316 set constraints of PCM rate by sysclk
+      32kHz (1/256), 21.33kHz (1/384), 20.48kHz (1/400),
+      16kHz (1/512), 10.66kHz (1/768), 8kHz (1/1024)
 
-> 
-> > +	.type = DEV_PROP_REF,						\
-> 
-> > +	.is_array = true,						\
-> 
-> I really don't like this "cheating".
+  - Play 48kHz again, but it's NOT acceptable because constraints
+    list does not allow 48kHz
 
-This is not cheating. Any single value can be represented as an array of
-one element. Actually, the only reason we have this "is_array" business
-is because for scalar values and short strings it is much cheaper to
-store single value in-line instead of out of line + pointer, especially
-on 64 bit arches.
+Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+---
+ sound/soc/codecs/es8316.c | 35 ++++++++++++++++++++---------------
+ 1 file changed, 20 insertions(+), 15 deletions(-)
 
-If you want we can change is_array into is_inline.
-
-Thanks.
-
+diff --git a/sound/soc/codecs/es8316.c b/sound/soc/codecs/es8316.c
+index 1424ecd6952c..36eef1fb3d18 100644
+--- a/sound/soc/codecs/es8316.c
++++ b/sound/soc/codecs/es8316.c
+@@ -370,8 +370,12 @@ static int es8316_set_dai_sysclk(struct snd_soc_dai *codec_dai,
+ 
+ 	es8316->sysclk = freq;
+ 
+-	if (freq == 0)
++	if (freq == 0) {
++		es8316->sysclk_constraints.list = NULL;
++		es8316->sysclk_constraints.count = 0;
++
+ 		return 0;
++	}
+ 
+ 	ret = clk_set_rate(es8316->mclk, freq);
+ 	if (ret)
+@@ -450,17 +454,10 @@ static int es8316_pcm_startup(struct snd_pcm_substream *substream,
+ 	struct snd_soc_component *component = dai->component;
+ 	struct es8316_priv *es8316 = snd_soc_component_get_drvdata(component);
+ 
+-	if (es8316->sysclk == 0) {
+-		dev_err(component->dev, "No sysclk provided\n");
+-		return -EINVAL;
+-	}
+-
+-	/* The set of sample rates that can be supported depends on the
+-	 * MCLK supplied to the CODEC.
+-	 */
+-	snd_pcm_hw_constraint_list(substream->runtime, 0,
+-				   SNDRV_PCM_HW_PARAM_RATE,
+-				   &es8316->sysclk_constraints);
++	if (es8316->sysclk_constraints.list)
++		snd_pcm_hw_constraint_list(substream->runtime, 0,
++					   SNDRV_PCM_HW_PARAM_RATE,
++					   &es8316->sysclk_constraints);
+ 
+ 	return 0;
+ }
+@@ -472,11 +469,19 @@ static int es8316_pcm_hw_params(struct snd_pcm_substream *substream,
+ 	struct snd_soc_component *component = dai->component;
+ 	struct es8316_priv *es8316 = snd_soc_component_get_drvdata(component);
+ 	u8 wordlen = 0;
++	int i;
+ 
+-	if (!es8316->sysclk) {
+-		dev_err(component->dev, "No MCLK configured\n");
+-		return -EINVAL;
++	/* Validate supported sample rates that are autodetected from MCLK */
++	for (i = 0; i < NR_SUPPORTED_MCLK_LRCK_RATIOS; i++) {
++		const unsigned int ratio = supported_mclk_lrck_ratios[i];
++
++		if (es8316->sysclk % ratio != 0)
++			continue;
++		if (es8316->sysclk / ratio == params_rate(params))
++			break;
+ 	}
++	if (i == NR_SUPPORTED_MCLK_LRCK_RATIOS)
++		return -EINVAL;
+ 
+ 	switch (params_format(params)) {
+ 	case SNDRV_PCM_FORMAT_S16_LE:
 -- 
-Dmitry
+2.23.0.rc1
+
