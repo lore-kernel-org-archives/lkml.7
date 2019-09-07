@@ -2,102 +2,129 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3053AC43331
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E49C0030B
 	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 18:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 012FE208C3
+	by mail.kernel.org (Postfix) with ESMTP id 28C91218AE
 	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 18:03:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567879433;
-	bh=e5FUBJ9aytqsJuJLqp+Yls1/TrENiOHMX5NzwQhFO7Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gJfyEamjVr+DKfL1q6gsTsFLO0Rx6D1vZBB2yL7vKtRz0V9uLVOdSzjMUE+xIYZCs
-	 3fjjt1ZP1FDLpIwHDjViKkDe0tYxYSkFAMCvz7U2T5B0s7OjPNmUtd6Wro6jRKGec3
-	 WDI4Cl/dih+v9E/OhFakhPPgu5PsSTa2O6L6L96g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393525AbfIGSCy (ORCPT
+        id S2394012AbfIGSDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 14:02:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44120 "EHLO mail.kernel.org"
+        Sat, 7 Sep 2019 14:03:52 -0400
+Received: from mga03.intel.com ([134.134.136.65]:26223 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727014AbfIGSCx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 14:02:53 -0400
-Received: from localhost (unknown [80.251.162.164])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EA1A208C3;
-        Sat,  7 Sep 2019 18:02:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567879373;
-        bh=e5FUBJ9aytqsJuJLqp+Yls1/TrENiOHMX5NzwQhFO7Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ibYSHyes2qb80Szjxhjkb5JReauwPH6cQt2elVIQRBIHbbXw833R80uH3+i73yPV5
-         HlVmBMsiTZ1ARvW7YUcI/pkbeJPBVwEBBH3KUNVxTMqqGg6yxL12qH2z7dEUdXF/lS
-         X4SRi1WvALZO6H/7taCyAK45LMBqq27x+pHSTtjo=
-Date:   Sat, 7 Sep 2019 19:02:50 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Sandro Volery <sandro@volery.com>
-Cc:     linux-kernel@vger.kernel.org, jslaby@suse.com
-Subject: Re: [PATCH] Fixed most indent issues in tty_io.c
-Message-ID: <20190907180250.GA20602@kroah.com>
-References: <20190907174232.GA20070@kroah.com>
- <E460500C-317E-459B-BBFE-98EEA1B4620D@volery.com>
+        id S2389581AbfIGSDw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Sep 2019 14:03:52 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Sep 2019 11:03:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,478,1559545200"; 
+   d="scan'208";a="335189350"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004.jf.intel.com with ESMTP; 07 Sep 2019 11:03:49 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1i6f3s-0001D0-9T; Sat, 07 Sep 2019 21:03:48 +0300
+Date:   Sat, 7 Sep 2019 21:03:48 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] software node: implement reference properties
+Message-ID: <20190907180348.GM2680@smile.fi.intel.com>
+References: <20190906222611.223532-1-dmitry.torokhov@gmail.com>
+ <20190907160819.GH2680@smile.fi.intel.com>
+ <20190907163240.GA27112@dtor-ws>
+ <20190907171251.GL2680@smile.fi.intel.com>
+ <20190907173724.GA145199@dtor-ws>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <E460500C-317E-459B-BBFE-98EEA1B4620D@volery.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190907173724.GA145199@dtor-ws>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 07, 2019 at 07:49:43PM +0200, Sandro Volery wrote:
-> 
-> 
-> 
-> 
-> > On 7 Sep 2019, at 19:42, Greg KH <gregkh@linuxfoundation.org> wrote:
+On Sat, Sep 07, 2019 at 10:37:24AM -0700, Dmitry Torokhov wrote:
+> On Sat, Sep 07, 2019 at 08:12:51PM +0300, Andy Shevchenko wrote:
+> > On Sat, Sep 07, 2019 at 09:32:40AM -0700, Dmitry Torokhov wrote:
+> > > On Sat, Sep 07, 2019 at 07:08:19PM +0300, Andy Shevchenko wrote:
+> > > > On Fri, Sep 06, 2019 at 03:26:09PM -0700, Dmitry Torokhov wrote:
 > > 
-> > ﻿On Sat, Sep 07, 2019 at 07:35:42PM +0200, Sandro Volery wrote:
-> >> 
-> >> 
-> >>>>>> On 7 Sep 2019, at 19:29, Greg KH <gregkh@linuxfoundation.org> wrote:
-> >>>>> ﻿On Sat, Sep 07, 2019 at 07:23:59PM +0200, Sandro Volery wrote:
-> >>>>> Dear Greg,
-> >>>>> I am pretty sure the issue was, that I did too many things at once. However, all the things I did are related to spaces / tabs, maybe that still works?
-> >>> 
-> >>> <snip>
-> >>> 
-> >>> For some reason you sent this only to me, which is a bit rude to
-> >>> everyone else on the mailing list.  I'll be glad to respond if you
-> >>> resend it to everyone.
-> >> 
-> >> I'm sorry, newbie here. I thought it'd be better to not annoy everyone with responses but learning things everyday I guess :)
+> > > > > +	} else if (src->type == DEV_PROP_REF) {
+> > > > > +		/* All reference properties must be arrays */
+> > > > > +		return -EINVAL;
+> > > > 
+> > > > Hmm... What about to duplicate pointer under value union and use is_array to
+> > > > distinguish which one to use? Because...
+> > > 
+> > > Then we have to special-case copying this entry, similar to the pains we
+> > > are going with the strings.
 > > 
-> > No problem, but you should also line-wrap your emails :)
+> > I can't see it as a pain. Simple do the same kmemdup() for the case when
+> > is_array = false and DEV_TYPE_REF?
 > 
-> I've just been told that before, I'll try to change 
-> those settings asap.
-> 
-> > 
-> >> I am pretty sure the issue with my patch was that there was too many changes, however all of them were spaces and tabs related, so I think this could be fine?
-> > 
-> > As the bot said, break it out into "one patch per logical change", and
-> > "fix all whitespace issues" is not "one logical change".
-> 
-> So a logical change would be if I make one patch
-> to replace all spaces with tabs and a separate
-> patch to add a space before the : ?
+> And then you need to make sure it is freed on error paths and when we
+> remove property entries. This requires more checks and code. In contrast
+> we already know how to handle out of line objects of arbitrary size.
 
-Yes, that would be good.  Make it a patch series please.
+We can put it one level up to be a sibling to value / pointer unions.
+In that case is_array can be anything (we just don't care).
 
-thanks,
+Actually strings aren't inlined.
 
-greg k-h
+> > By the way, don't we need to update property_entry_{get,set}_pointer()?
+> 
+> I do not see these, where are they?
+
+swnode.c. I meant property_{get,set}_pointer().
+
+> > > > > +	.is_array = true,						\
+> > > > 
+> > > > I really don't like this "cheating".
+> > > 
+> > > This is not cheating. Any single value can be represented as an array of
+> > > one element. Actually, the only reason we have this "is_array" business
+> > > is because for scalar values and short strings it is much cheaper to
+> > > store single value in-line instead of out of line + pointer, especially
+> > > on 64 bit arches.
+> > 
+> > Yes, and this is a lot of benefit!
+> 
+> Yes, nobody argues against it. Here however we are dealing with a larger
+> structure. There is absolutely no benefit of trying to separate single
+> value vs array here.
+
+Thus, moving to upper layer makes more sense. Right?
+
+> > > If you want we can change is_array into is_inline.
+> > 
+> > Nope, is_array is exactly what it tells us about the content. Its functional
+> > load is to distinguish which union (value vs. pointer) we are using.
+> 
+> No, it signifies whether the value is stored within property entry or
+> outside. I can fit probably 8 bytes arrays into property entry
+> structure, in which case is_array will definitely not reflect the data
+> type.
+
+Nope, since strings are not inlined AFAICS.
+
+> It is the type-specific accessors that know how to parse and fetch data
+> from properties.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
