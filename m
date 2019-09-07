@@ -2,245 +2,86 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB89FC43140
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 12:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 875CDC43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 12:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B94A206BB
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 12:40:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567860055;
-	bh=8CdC9s2J+EXRB9t2P5assmBfzpxHrY6X7806hW2vZbI=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=PbXJvUcyZZpzh1Gv9H6X/4/kSCgWOxkY8ZhHoRFtchyyZ8Yv3ZnhuJS0iqzUFB6dI
-	 KaUnl/uxg+DZPPaAe8JPl+1ttv1NYs0k8NMrK7r42KsKxk+zt3FVnJTDbku1ykzMPz
-	 ftMOddPgTmX8h+5hwYEgi9pgY9b9WqvVp+Ty5Gpw=
+	by mail.kernel.org (Postfix) with ESMTP id 6398E218AC
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 12:55:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405938AbfIGMky (ORCPT
+        id S2405962AbfIGMxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 08:40:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49340 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731870AbfIGMkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 08:40:53 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CE4A21871;
-        Sat,  7 Sep 2019 12:40:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567860051;
-        bh=8CdC9s2J+EXRB9t2P5assmBfzpxHrY6X7806hW2vZbI=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=BMvFV1UX5X6Uy9Wv1qL/PSUiseB7R2rehCkF1jManrfGr8YI9PSHDWUn9L+S2pFuv
-         RCN9fVNO1dVgQYKSzjsx39Mxn3GBmfn+uxlg8EP9mU5AYcsQNbkdlUXvr6YJL1XW0i
-         aq/hmJ23hyXTE39ZyvTfy0uteQUqAjbcN+eR3HO4=
-Message-ID: <7236f382d72130f2afbbe8940e72cc67e5c6dce0.camel@kernel.org>
-Subject: Re: [PATCH v12 11/12] open: openat2(2) syscall
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian@brauner.io>
-Cc:     Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Date:   Sat, 07 Sep 2019 08:40:47 -0400
-In-Reply-To: <20190904201933.10736-12-cyphar@cyphar.com>
-References: <20190904201933.10736-1-cyphar@cyphar.com>
-         <20190904201933.10736-12-cyphar@cyphar.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Sat, 7 Sep 2019 08:53:34 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:40556 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405937AbfIGMxe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Sep 2019 08:53:34 -0400
+Received: by mail-qk1-f196.google.com with SMTP id y144so366116qkb.7
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Sep 2019 05:53:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KSJwfnMis9QrVqeedJqyZyK7Kr0nVk7TIwsUX6R+/Sc=;
+        b=eWsj2Bw9EikjUgWsQBHy5ag54lTSU1jAB8e5KgqdsXoi9Jfz8/CydzxpLmsui7UoJn
+         MfneqU3e55wu/yyBsjW+IMzlWugER0Qjm1hUewZQqZuSoJZgOQv+/pmaJao5EoST0b7y
+         5AYJijThcAVz15dW+Lsc4VzzwrBfajeTHhelyX414eckkGTlFb9QzQxqKZ423SPYx5b6
+         0Q5ug7KRb0VIbGP72PCBqewzz5/ULKdAsN9ydIzmO0aPuh/yfxFqXuVCWdNZYOGQtQjZ
+         ed+IW7MHtMeR7jJSaJQIvZqh/Jn1yunaHPYzBpYmZ5QQ+M2AC00GGOOWKG58CeNRXBsc
+         Q5Xg==
+X-Gm-Message-State: APjAAAWGk9sFh6edu1iVqW+3jhZqvcAILH90myIRks5WEMzbZuuJrJnX
+        3vyeD/AgaXW/yISZVgniktyEPeR0rEBKeEOOaAk=
+X-Google-Smtp-Source: APXvYqx1WAz8NTJWR3u5PT+9/TEYFS9I/oprVLZ0lG7uw4e83SfDBJh1IoDvbQo/VbdQmw+xtGQxRWuIerQRBlObqdY=
+X-Received: by 2002:a37:4fcf:: with SMTP id d198mr13773083qkb.394.1567860813556;
+ Sat, 07 Sep 2019 05:53:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20190907020631.29359-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190907020631.29359-1-yamada.masahiro@socionext.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Sat, 7 Sep 2019 14:53:16 +0200
+Message-ID: <CAK8P3a2GRZJQThJAdavv_EKp27dtUtysKtpYpkKSSupTJ4qemg@mail.gmail.com>
+Subject: Re: [PATCH] samples: watch_queue: add HEADERS_INSTALL dependency
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-09-05 at 06:19 +1000, Aleksa Sarai wrote:
-> The most obvious syscall to add support for the new LOOKUP_* scoping
-> flags would be openat(2). However, there are a few reasons why this is
-> not the best course of action:
-> 
->  * The new LOOKUP_* flags are intended to be security features, and
->    openat(2) will silently ignore all unknown flags. This means that
->    users would need to avoid foot-gunning themselves constantly when
->    using this interface if it were part of openat(2). This can be fixed
->    by having userspace libraries handle this for users[1], but should be
->    avoided if possible.
-> 
->  * Resolution scoping feels like a different operation to the existing
->    O_* flags. And since openat(2) has limited flag space, it seems to be
->    quite wasteful to clutter it with 5 flags that are all
->    resolution-related. Arguably O_NOFOLLOW is also a resolution flag but
->    its entire purpose is to error out if you encounter a trailing
->    symlink -- not to scope resolution.
-> 
->  * Other systems would be able to reimplement this syscall allowing for
->    cross-OS standardisation rather than being hidden amongst O_* flags
->    which may result in it not being used by all the parties that might
->    want to use it (file servers, web servers, container runtimes, etc).
-> 
->  * It gives us the opportunity to iterate on the O_PATH interface. In
->    particular, the new @how->upgrade_mask field for fd re-opening is
->    only possible because we have a clean slate without needing to re-use
->    the ACC_MODE flag design nor the existing openat(2) @mode semantics.
-> 
-> To this end, we introduce the openat2(2) syscall. It provides all of the
-> features of openat(2) through the @how->flags argument, but also
-> also provides a new @how->resolve argument which exposes RESOLVE_* flags
-> that map to our new LOOKUP_* flags. It also eliminates the long-standing
-> ugliness of variadic-open(2) by embedding it in a struct.
-> 
-> In order to allow for userspace to lock down their usage of file
-> descriptor re-opening, openat2(2) has the ability for users to disallow
-> certain re-opening modes through @how->upgrade_mask. At the moment,
-> there is no UPGRADE_NOEXEC.
-> 
-> [1]: https://github.com/openSUSE/libpathrs
-> 
-> Suggested-by: Christian Brauner <christian@brauner.io>
-> Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
-> ---
->  arch/alpha/kernel/syscalls/syscall.tbl      |  1 +
->  arch/arm/tools/syscall.tbl                  |  1 +
->  arch/arm64/include/asm/unistd.h             |  2 +-
->  arch/arm64/include/asm/unistd32.h           |  2 +
->  arch/ia64/kernel/syscalls/syscall.tbl       |  1 +
->  arch/m68k/kernel/syscalls/syscall.tbl       |  1 +
->  arch/microblaze/kernel/syscalls/syscall.tbl |  1 +
->  arch/mips/kernel/syscalls/syscall_n32.tbl   |  1 +
->  arch/mips/kernel/syscalls/syscall_n64.tbl   |  1 +
->  arch/mips/kernel/syscalls/syscall_o32.tbl   |  1 +
->  arch/parisc/kernel/syscalls/syscall.tbl     |  1 +
->  arch/powerpc/kernel/syscalls/syscall.tbl    |  1 +
->  arch/s390/kernel/syscalls/syscall.tbl       |  1 +
->  arch/sh/kernel/syscalls/syscall.tbl         |  1 +
->  arch/sparc/kernel/syscalls/syscall.tbl      |  1 +
->  arch/x86/entry/syscalls/syscall_32.tbl      |  1 +
->  arch/x86/entry/syscalls/syscall_64.tbl      |  1 +
->  arch/xtensa/kernel/syscalls/syscall.tbl     |  1 +
->  fs/open.c                                   | 94 ++++++++++++++++-----
->  include/linux/fcntl.h                       | 19 ++++-
->  include/linux/fs.h                          |  4 +-
->  include/linux/syscalls.h                    | 14 ++-
->  include/uapi/asm-generic/unistd.h           |  5 +-
->  include/uapi/linux/fcntl.h                  | 42 +++++++++
->  24 files changed, 168 insertions(+), 30 deletions(-)
-> 
+On Sat, Sep 7, 2019 at 4:07 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> samples/watch_queue/Makefile specifies the header search path
+> -I$(objtree)/usr/include, which is probaby needed to include
+> <linux/watch_queue.h> etc.
+>
+> To make it work properly, add "depends on HEADERS_INSTALL" so that
+> headers are installed into $(objtree)/usr/include before building
+> this sample.
+>
+> Fixes: 7141642ed120 ("Add sample notification program")
+> Reported-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[...]
+Tested-by: Arnd Bergmann <arnd@arndb.de>
 
-> diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
-> index 1d338357df8a..479baf2da10e 100644
-> --- a/include/uapi/linux/fcntl.h
-> +++ b/include/uapi/linux/fcntl.h
-> @@ -93,5 +93,47 @@
->  
->  #define AT_RECURSIVE		0x8000	/* Apply to the entire subtree */
->  
-> +/**
-> + * Arguments for how openat2(2) should open the target path. If @resolve is
-> + * zero, then openat2(2) operates identically to openat(2).
-> + *
-> + * However, unlike openat(2), unknown bits in @flags result in -EINVAL rather
-> + * than being silently ignored. In addition, @mode (or @upgrade_mask) must be
-> + * zero unless one of {O_CREAT, O_TMPFILE, O_PATH} are set.
-> + *
+> Arnd reported a build error:
+> https://lkml.org/lkml/2019/9/6/665
+>
+> Missing "depends on HEADERS_INSTALL" is the only reason
+> I have in my mind.
+>
+> If it still fails to build, I do not know why.
 
-After thinking about this a bit, I wonder if we might be better served
-with a new set of OA2_* flags instead of repurposing the O_* flags?
+It works, thanks for the fix!
 
-Yes, those flags are familiar, but this is an entirely new syscall. We
-have a chance to make a fresh start. Does something like O_LARGEFILE
-have any real place in openat2? I'd argue no.
-
-Also, once you want to add a new flag, then we get into the mess of how
-to document whether open/openat also support it. It'd be good to freeze
-changes on those syscalls and aim to only introduce new functionality in
-openat2.
-
-That would also allow us to drop some flags from openat2 that we really
-don't need, and maybe expand the flag space to 64 bits initially, to
-allow for expansion into the future.
-
-Thoughts?
-
-> + * @flags: O_* flags.
-> + * @mode: O_CREAT/O_TMPFILE file mode.
-> + * @upgrade_mask: UPGRADE_* flags (to restrict O_PATH re-opening).
-> + * @resolve: RESOLVE_* flags.
-> + */
-> +struct open_how {
-> +	__u32 flags;
-> +	union {
-> +		__u16 mode;
-> +		__u16 upgrade_mask;
-> +	};
-> +	__u16 resolve;
-> +};
-> +
-> +#define OPEN_HOW_SIZE_VER0	8 /* sizeof first published struct */
-> +
-
-Hmm, there is no version field. When you want to expand this in the
-future, what is the plan? Add a new flag to indicate that it's some
-length?
-
-
-> +/* how->resolve flags for openat2(2). */
-> +#define RESOLVE_NO_XDEV		0x01 /* Block mount-point crossings
-> +					(includes bind-mounts). */
-> +#define RESOLVE_NO_MAGICLINKS	0x02 /* Block traversal through procfs-style
-> +					"magic-links". */
-> +#define RESOLVE_NO_SYMLINKS	0x04 /* Block traversal through all symlinks
-> +					(implies OEXT_NO_MAGICLINKS) */
-> +#define RESOLVE_BENEATH		0x08 /* Block "lexical" trickery like
-> +					"..", symlinks, and absolute
-> +					paths which escape the dirfd. */
-> +#define RESOLVE_IN_ROOT		0x10 /* Make all jumps to "/" and ".."
-> +					be scoped inside the dirfd
-> +					(similar to chroot(2)). */
-> +
-> +/* how->upgrade flags for openat2(2). */
-> +/* First bit is reserved for a future UPGRADE_NOEXEC flag. */
-> +#define UPGRADE_NOREAD		0x02 /* Block re-opening with MAY_READ. */
-> +#define UPGRADE_NOWRITE		0x04 /* Block re-opening with MAY_WRITE. */
->  
->  #endif /* _UAPI_LINUX_FCNTL_H */
-
--- 
-Jeff Layton <jlayton@kernel.org>
-
+       Arnd
