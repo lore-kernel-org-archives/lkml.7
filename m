@@ -2,108 +2,272 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53805C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 02:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B75AEC43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 02:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28CDB20842
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 02:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80D3D208C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 02:30:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="wlCXz96P"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="piiNLL1/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393720AbfIGCPf (ORCPT
+        id S2391387AbfIGC37 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 22:15:35 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:19693 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732445AbfIGCPe (ORCPT
+        Fri, 6 Sep 2019 22:29:59 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:22115 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726829AbfIGC37 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 22:15:34 -0400
-Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x872FGVD027947
-        for <linux-kernel@vger.kernel.org>; Sat, 7 Sep 2019 11:15:17 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x872FGVD027947
+        Fri, 6 Sep 2019 22:29:59 -0400
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x872TqBS031519;
+        Sat, 7 Sep 2019 11:29:53 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x872TqBS031519
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1567822517;
-        bh=nuq0HAmBDFXooLNLzl7SJHQtZrnXNqCd5Q1OJYGkr20=;
+        s=dec2015msa; t=1567823393;
+        bh=ecpq39w1kLvt8KzSabpKqd9mUE8PScl47JDUsEouC00=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=wlCXz96PqicMIU02gSTkxZoawNPQZ9fvlE38/ui6fsxmsqZ6pVTdSS6YPMCSa16h+
-         k6a4TIjUsh3ws9Joa8dejUtbzlz7YBdX8Gm8s3oOeVWImnLss9QYN128CDBkEWKBJu
-         qHiP4b+jBSZ1WninM857eLwZ7WFZC1mgYmJDXuYWNHvOEh7NsrSCKVc8krjEauvON6
-         Ii12Mlc8dGGH695Izki8rQIC9B9jAWoK81X1Zzn9fxsqrOyXdOKOAoEn7X/aunFKfF
-         C4WFuQaHMLcQRVNffki/m9779aOM+ibSTkNAaK9G15Y3H/Umbng/V857bUqQrx8fxX
-         wBuYbpubW7BNA==
-X-Nifty-SrcIP: [209.85.221.177]
-Received: by mail-vk1-f177.google.com with SMTP id 70so795829vkz.8
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 19:15:16 -0700 (PDT)
-X-Gm-Message-State: APjAAAWidldSeLJlF43EEzMrBVVsw0BlfoLtVn1rzvZ2X2/w4XedfSC/
-        dyDWWpg9A2MwJqyO111xvX9g6GWN4fCA4ZK2ZL8=
-X-Google-Smtp-Source: APXvYqySpYdYSA+j3WmaAn6MslI3DJw6uIC3I6H42O2iHd+GetphhuJwWJCV6zcrAc46Z/ahcutWBOO4MmosqL6aaTQ=
-X-Received: by 2002:a1f:294a:: with SMTP id p71mr6166358vkp.74.1567822515710;
- Fri, 06 Sep 2019 19:15:15 -0700 (PDT)
+        b=piiNLL1/i7wf6MUv2WT5/hQG5Lpf/W1ZlRjxLuU72p77cStKIYVRlchMtFa+4RUPz
+         rv2Wkm8EFPi/wy6OkOZwcMCuXDtMXtXjIqqJp1m6l7NWHTGvcxXqftUmjfKiCAEK7j
+         t/S0oMvyzKwXIANaZMKZtFztbnIS8wzJSdar/NGDoGELztPDYywilJC3dwb18nRUvN
+         6BoxAILEE90KKIDUoI97Q/bOuPZCtCOWCL2i+fw4KYMFCQ3Dmh33uNlzvzxBvGz6Zu
+         7AZ99QSSC7EV3I2dIPQ82PBHQzJ66PWVCGYX0p0ZKYderMpO5EJLIMT7Qh+/wH66aj
+         oDFc1ffctxvRw==
+X-Nifty-SrcIP: [209.85.217.46]
+Received: by mail-vs1-f46.google.com with SMTP id q9so5332426vsl.4;
+        Fri, 06 Sep 2019 19:29:53 -0700 (PDT)
+X-Gm-Message-State: APjAAAVVGESHGGGZ+7xwab6K//MIp3gibhdxFi21gdxOPIowlF/vgKak
+        v/vbwiFXelpXCtRmhUrn9diIWlXTJwF1MvczpLI=
+X-Google-Smtp-Source: APXvYqwMq6WF7Zgz7faYgMdiTT7SWW5kG/vSlGHpe4CGvwG9idkwyC/+hQgoutyozZcDBOhfbX1NA749xdEXDSeBiOY=
+X-Received: by 2002:a67:f418:: with SMTP id p24mr6709049vsn.215.1567823391858;
+ Fri, 06 Sep 2019 19:29:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190906153700.2061625-1-arnd@arndb.de> <5ce4f4c7-f764-8937-75bf-83a4d4c57fa7@linux.com>
- <CAK8P3a1_m4R2Qz9A+B22vju_W3j8X1VbUrJT+Pnmfync8SoEQg@mail.gmail.com>
-In-Reply-To: <CAK8P3a1_m4R2Qz9A+B22vju_W3j8X1VbUrJT+Pnmfync8SoEQg@mail.gmail.com>
+References: <20190831162555.31887-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190831162555.31887-1-yamada.masahiro@socionext.com>
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 7 Sep 2019 11:14:39 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAT7PZhW43LvJXotME3-QcKWEHDGvwU66agTdGCD+8H=bA@mail.gmail.com>
-Message-ID: <CAK7LNAT7PZhW43LvJXotME3-QcKWEHDGvwU66agTdGCD+8H=bA@mail.gmail.com>
-Subject: Re: [PATCH] lz4: make LZ4HC_setExternalDict as non-static
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Denis Efremov <efremov@linux.com>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Sat, 7 Sep 2019 11:29:15 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQYYHni+_1cC8+dVozVgtzzpEqCDJ+-e5k=9yR-+dZTYg@mail.gmail.com>
+Message-ID: <CAK7LNAQYYHni+_1cC8+dVozVgtzzpEqCDJ+-e5k=9yR-+dZTYg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] kbuild: refactor scripts/Makefile.extrawarn
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 7, 2019 at 3:43 AM Arnd Bergmann <arnd@arndb.de> wrote:
+On Sun, Sep 1, 2019 at 1:26 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
 >
-> On Fri, Sep 6, 2019 at 6:21 PM Denis Efremov <efremov@linux.com> wrote:
-> >
-> > Hi,
-> >
-> > > kbuild warns for exported static symbols. This one seems to
-> > > be meant as an external API but does not have any in-kernel
-> > > users:
-> > >
-> > > WARNING: "LZ4HC_setExternalDict" [vmlinux] is a static EXPORT_SYMBOL
-> > >
-> > > I suppose the function should not just get removed since it would
-> > > be nice to stay close to the upstream version of lz4hc, so just
-> > > make it global.
-
-When you make the symbol global, you need to
-provide a prototype declaration in a global header.
-(include/linux/lz4.h in this case)
-
-Otherwise, nobody cannot call this function anyway.
-
-I prefer Denis's fix-up.
-
-
-
-
-> > I'm not sure what is better here. But just in case, I sent a different
-> > patch that removes EXPORT_SYMBOL from this function some time ago:
-> > https://lkml.org/lkml/2019/7/8/842
-> >
-> > I checked first that this functions is indeed static in the original lib[1]
-> > and this symbol is not used in kernel.
-> >
-> > [1] https://github.com/lz4/lz4/blob/dev/lib/lz4hc.c#L1054
+> Instead of the warning-[123] magic, let's accumulate compiler options
+> to KBUILD_CFLAGS directly as the top Makefile does. I think this makes
+> easier to understand what is going on in this file.
 >
-> Ah, good. Your patch is the better fix then.
+> This commit slightly changes the behavior, I think all of which are OK.
 >
->       Arnd
+> [1] Currently, cc-option calls are needlessly evaluated. For example,
+>       warning-3 += $(call cc-option, -Wpacked-bitfield-compat)
+>     needs evaluating only when W=3, but it is actually evaluated for
+>     W=1, W=2 as well. With this commit, only relevant cc-option calls
+>     will be evaluated. This is a slight optimization.
+>
+> [2] Currently, unsupported level like W=4 is checked by:
+>       $(error W=$(KBUILD_ENABLE_EXTRA_GCC_CHECKS) is unknown)
+>     This will no longer be checked, but I do not think it is a big
+>     deal.
+>
+> [3] Currently, 4 Clang warnings (Winitializer-overrides, Wformat,
+>     Wsign-compare, Wformat-zero-length) are shown by any of W=1, W=2,
+>     and W=3. With this commit, they will be warned only by W=1. I
+>     think this is a more correct behavior since each warning belongs
+>     to only one group.
+>
+> For understanding this commit correctly:
+>
+> We have 3 warning groups, W=1, W=2, and W=3. You may think W=3 has a
+> higher level than W=1, but they are actually independent. If you like,
+> you can combine them like W=13. To enable all the warnings, you can
+> pass W=123. It is shown by 'make help', but not noticed much. Since we
+> support W= combination, there should not exist intersection among the
+> three groups. If we enable Winitializer-overrides for W=1, we do not
+> need to for W=2 or W=3. This is the reason why I think the change [3]
+> makes sense.
+>
+> The documentation says -Winitializer-overrides is enabled by default.
+> (https://clang.llvm.org/docs/DiagnosticsReference.html#winitializer-overrides)
+> We negate it by passing -Wno-initializer-overrides for the normal
+> build, but we do not do that for W=1. This means, W=1 effectively
+> enables -Winitializer-overrides by the clang's default. The same for
+> the other three.
+>
+> Add comments in case people are confused with the code.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+> Acked-by: Nick Desaulniers <ndesaulniers@google.com>
+> Acked-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+> ---
 
+Both applied to linux-kbuild.
+
+
+> Changes in v3:
+>   - Added yet more comments.
+>     Fix grammatical mistake 'does' -> 'do'.
+>
+> Changes in v2:
+>   - Added comments and more commit log
+>
+>  scripts/Makefile.extrawarn | 106 ++++++++++++++++++++-----------------
+>  1 file changed, 56 insertions(+), 50 deletions(-)
+>
+> diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
+> index a74ce2e3c33e..d226c5fb13e2 100644
+> --- a/scripts/Makefile.extrawarn
+> +++ b/scripts/Makefile.extrawarn
+> @@ -1,14 +1,9 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  # ==========================================================================
+> -#
+>  # make W=... settings
+>  #
+> -# W=1 - warnings that may be relevant and does not occur too often
+> -# W=2 - warnings that occur quite often but may still be relevant
+> -# W=3 - the more obscure warnings, can most likely be ignored
+> -#
+> -# $(call cc-option, -W...) handles gcc -W.. options which
+> -# are not supported by all versions of the compiler
+> +# There are three warning groups enabled by W=1, W=2, W=3.
+> +# They are independent, and can be combined like W=12 or W=123.
+>  # ==========================================================================
+>
+>  KBUILD_CFLAGS += $(call cc-disable-warning, packed-not-aligned)
+> @@ -17,58 +12,69 @@ ifeq ("$(origin W)", "command line")
+>    export KBUILD_ENABLE_EXTRA_GCC_CHECKS := $(W)
+>  endif
+>
+> -ifdef KBUILD_ENABLE_EXTRA_GCC_CHECKS
+> -warning-  := $(empty)
+> +#
+> +# W=1 - warnings which may be relevant and do not occur too often
+> +#
+> +ifneq ($(findstring 1, $(KBUILD_ENABLE_EXTRA_GCC_CHECKS)),)
+>
+> -warning-1 := -Wextra -Wunused -Wno-unused-parameter
+> -warning-1 += -Wmissing-declarations
+> -warning-1 += -Wmissing-format-attribute
+> -warning-1 += -Wmissing-prototypes
+> -warning-1 += -Wold-style-definition
+> -warning-1 += -Wmissing-include-dirs
+> -warning-1 += $(call cc-option, -Wunused-but-set-variable)
+> -warning-1 += $(call cc-option, -Wunused-const-variable)
+> -warning-1 += $(call cc-option, -Wpacked-not-aligned)
+> -warning-1 += $(call cc-option, -Wstringop-truncation)
+> +KBUILD_CFLAGS += -Wextra -Wunused -Wno-unused-parameter
+> +KBUILD_CFLAGS += -Wmissing-declarations
+> +KBUILD_CFLAGS += -Wmissing-format-attribute
+> +KBUILD_CFLAGS += -Wmissing-prototypes
+> +KBUILD_CFLAGS += -Wold-style-definition
+> +KBUILD_CFLAGS += -Wmissing-include-dirs
+> +KBUILD_CFLAGS += $(call cc-option, -Wunused-but-set-variable)
+> +KBUILD_CFLAGS += $(call cc-option, -Wunused-const-variable)
+> +KBUILD_CFLAGS += $(call cc-option, -Wpacked-not-aligned)
+> +KBUILD_CFLAGS += $(call cc-option, -Wstringop-truncation)
+>  # The following turn off the warnings enabled by -Wextra
+> -warning-1 += -Wno-missing-field-initializers
+> -warning-1 += -Wno-sign-compare
+> -
+> -warning-2 += -Wcast-align
+> -warning-2 += -Wdisabled-optimization
+> -warning-2 += -Wnested-externs
+> -warning-2 += -Wshadow
+> -warning-2 += $(call cc-option, -Wlogical-op)
+> -warning-2 += -Wmissing-field-initializers
+> -warning-2 += -Wsign-compare
+> -warning-2 += $(call cc-option, -Wmaybe-uninitialized)
+> -warning-2 += $(call cc-option, -Wunused-macros)
+> -
+> -warning-3 := -Wbad-function-cast
+> -warning-3 += -Wcast-qual
+> -warning-3 += -Wconversion
+> -warning-3 += -Wpacked
+> -warning-3 += -Wpadded
+> -warning-3 += -Wpointer-arith
+> -warning-3 += -Wredundant-decls
+> -warning-3 += -Wswitch-default
+> -warning-3 += $(call cc-option, -Wpacked-bitfield-compat)
+> -
+> -warning := $(warning-$(findstring 1, $(KBUILD_ENABLE_EXTRA_GCC_CHECKS)))
+> -warning += $(warning-$(findstring 2, $(KBUILD_ENABLE_EXTRA_GCC_CHECKS)))
+> -warning += $(warning-$(findstring 3, $(KBUILD_ENABLE_EXTRA_GCC_CHECKS)))
+> -
+> -ifeq ("$(strip $(warning))","")
+> -        $(error W=$(KBUILD_ENABLE_EXTRA_GCC_CHECKS) is unknown)
+> -endif
+> +KBUILD_CFLAGS += -Wno-missing-field-initializers
+> +KBUILD_CFLAGS += -Wno-sign-compare
+>
+> -KBUILD_CFLAGS += $(warning)
+>  else
+>
+> +# Some diagnostics enabled by default are noisy.
+> +# Suppress them by using -Wno... except for W=1.
+> +
+>  ifdef CONFIG_CC_IS_CLANG
+>  KBUILD_CFLAGS += -Wno-initializer-overrides
+>  KBUILD_CFLAGS += -Wno-format
+>  KBUILD_CFLAGS += -Wno-sign-compare
+>  KBUILD_CFLAGS += -Wno-format-zero-length
+>  endif
+> +
+> +endif
+> +
+> +#
+> +# W=2 - warnings which occur quite often but may still be relevant
+> +#
+> +ifneq ($(findstring 2, $(KBUILD_ENABLE_EXTRA_GCC_CHECKS)),)
+> +
+> +KBUILD_CFLAGS += -Wcast-align
+> +KBUILD_CFLAGS += -Wdisabled-optimization
+> +KBUILD_CFLAGS += -Wnested-externs
+> +KBUILD_CFLAGS += -Wshadow
+> +KBUILD_CFLAGS += $(call cc-option, -Wlogical-op)
+> +KBUILD_CFLAGS += -Wmissing-field-initializers
+> +KBUILD_CFLAGS += -Wsign-compare
+> +KBUILD_CFLAGS += $(call cc-option, -Wmaybe-uninitialized)
+> +KBUILD_CFLAGS += $(call cc-option, -Wunused-macros)
+> +
+> +endif
+> +
+> +#
+> +# W=3 - more obscure warnings, can most likely be ignored
+> +#
+> +ifneq ($(findstring 3, $(KBUILD_ENABLE_EXTRA_GCC_CHECKS)),)
+> +
+> +KBUILD_CFLAGS += -Wbad-function-cast
+> +KBUILD_CFLAGS += -Wcast-qual
+> +KBUILD_CFLAGS += -Wconversion
+> +KBUILD_CFLAGS += -Wpacked
+> +KBUILD_CFLAGS += -Wpadded
+> +KBUILD_CFLAGS += -Wpointer-arith
+> +KBUILD_CFLAGS += -Wredundant-decls
+> +KBUILD_CFLAGS += -Wswitch-default
+> +KBUILD_CFLAGS += $(call cc-option, -Wpacked-bitfield-compat)
+> +
+>  endif
+> --
+> 2.17.1
+>
 
 
 -- 
