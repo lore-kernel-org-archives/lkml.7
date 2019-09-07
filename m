@@ -2,115 +2,86 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B91C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 11:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B28A4C43140
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 11:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B020620854
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 11:00:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E30B218DE
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 11:09:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390278AbfIGLAi (ORCPT
+        id S2390354AbfIGLJu convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 07:00:38 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:56556 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726407AbfIGLAi (ORCPT
+        Sat, 7 Sep 2019 07:09:50 -0400
+Received: from saturn.retrosnub.co.uk ([46.235.226.198]:44310 "EHLO
+        saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726012AbfIGLJt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 07:00:38 -0400
-Received: from fsav106.sakura.ne.jp (fsav106.sakura.ne.jp [27.133.134.233])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x87B0aHm093582;
-        Sat, 7 Sep 2019 20:00:36 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav106.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav106.sakura.ne.jp);
- Sat, 07 Sep 2019 20:00:36 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav106.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126227201116.bbtec.net [126.227.201.116])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x87B0aVu093579
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Sat, 7 Sep 2019 20:00:36 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Subject: Re: [PATCH] net/skbuff: silence warnings under memory pressure
-To:     Michal Hocko <mhocko@kernel.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Qian Cai <cai@lca.pw>, Eric Dumazet <eric.dumazet@gmail.com>,
-        davem@davemloft.net, netdev@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-References: <6109dab4-4061-8fee-96ac-320adf94e130@gmail.com>
- <1567178728.5576.32.camel@lca.pw>
- <229ebc3b-1c7e-474f-36f9-0fa603b889fb@gmail.com>
- <20190903132231.GC18939@dhcp22.suse.cz> <1567525342.5576.60.camel@lca.pw>
- <20190903185305.GA14028@dhcp22.suse.cz> <1567546948.5576.68.camel@lca.pw>
- <20190904061501.GB3838@dhcp22.suse.cz> <20190904064144.GA5487@jagdpanzerIV>
- <20190904070042.GA11968@jagdpanzerIV> <20190904082540.GI3838@dhcp22.suse.cz>
-From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Message-ID: <28040332-4639-375a-0832-b47759d1d2d8@I-love.SAKURA.ne.jp>
-Date:   Sat, 7 Sep 2019 20:00:34 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Sat, 7 Sep 2019 07:09:49 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id BBC109E6A6F;
+        Sat,  7 Sep 2019 12:09:47 +0100 (BST)
+Date:   Sat, 7 Sep 2019 12:09:46 +0100
+From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        =?UTF-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-iio@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 4.19 066/167] iio: adc: exynos-adc: Add S5PV210
+ variant
+Message-ID: <20190907120946.34c03331@archlinux>
+In-Reply-To: <20190903194654.GI5281@sasha-vm>
+References: <20190903162519.7136-1-sashal@kernel.org>
+        <20190903162519.7136-66-sashal@kernel.org>
+        <20190903185328.74299c4d@archlinux>
+        <20190903194654.GI5281@sasha-vm>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190904082540.GI3838@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/09/04 17:25, Michal Hocko wrote:
-> On Wed 04-09-19 16:00:42, Sergey Senozhatsky wrote:
->> On (09/04/19 15:41), Sergey Senozhatsky wrote:
->>> But the thing is different in case of dump_stack() + show_mem() +
->>> some other output. Because now we ratelimit not a single printk() line,
->>> but hundreds of them. The ratelimit becomes - 10 * $$$ lines in 5 seconds
->>> (IOW, now we talk about thousands of lines).
->>
->> And on devices with slow serial consoles this can be somewhat close to
->> "no ratelimit". *Suppose* that warn_alloc() adds 700 lines each time.
->> Within 5 seconds we can call warn_alloc() 10 times, which will add 7000
->> lines to the logbuf. If printk() can evict only 6000 lines in 5 seconds
->> then we have a growing number of pending logbuf messages.
-> 
-> Yes, ratelimit is problematic when the ratelimited operation is slow. I
-> guess that is a well known problem and we would need to rework both the
-> api and the implementation to make it work in those cases as well.
-> Essentially we need to make the ratelimit act as a gatekeeper to an
-> operation section - something like a critical section except you can
-> tolerate more code executions but not too many. So effectively
-> 
-> 	start_throttle(rate, number);
-> 	/* here goes your operation */
-> 	end_throttle();
-> 
-> one operation is not considered done until the whole section ends.
-> Or something along those lines.
+On Tue, 3 Sep 2019 15:46:54 -0400
+Sasha Levin <sashal@kernel.org> wrote:
 
-Regarding OOM killer which is serialized by oom_lock mutex, I proposed
-"mm, oom: More aggressively ratelimit dump_header()." at
-https://lkml.kernel.org/r/1550325895-9291-2-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp
-but it was ignored.
+> On Tue, Sep 03, 2019 at 06:53:28PM +0100, Jonathan Cameron wrote:
+> >On Tue,  3 Sep 2019 12:23:38 -0400
+> >Sasha Levin <sashal@kernel.org> wrote:
+> >  
+> >> From: Jonathan Bakker <xc-racer2@live.ca>
+> >>
+> >> [ Upstream commit 882bf52fdeab47dbe991cc0e564b0b51c571d0a3 ]
+> >>
+> >> S5PV210's ADC variant is almost the same as v1 except that it has 10
+> >> channels and doesn't require the pmu register
+> >>
+> >> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+> >> Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> >> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> >> Signed-off-by: Sasha Levin <sashal@kernel.org>  
+> >
+> >I have no particular objection to adding new IDs (which is more
+> >or less what this patch is), but I didn't know autosel was
+> >picking them up.  So a bit of surprise... If intentional
+> >then fine to apply to stable.  
+> 
+> I dragged it in because 103cda6a3b8d2 ("iio: adc: exynos-adc: Use proper
+> number of channels for Exynos4x12") which is tagged for stable depended
+> on this patch, and given it just adds new IDs which is part of what we
+> take for stable I just took it in as is.
+Ah fair enough!  Thanks for the explanation.
+
+Jonathan
 
 > 
-> In this particular case we can increase the rate limit parameters of
-> course but I think that longterm we need a better api.
-> 
-
-I proposed "printk: Introduce "store now but print later" prefix." at
-https://lkml.kernel.org/r/1550896930-12324-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp
-but it was not accepted.
-
-But I think that more better solution for warn_alloc() is to defer printing
- from allocating context (which may not be allowed to sleep) to WQ context.
-I proposed "mm,oom: Defer dump_tasks() output." at
-https://lkml.kernel.org/r/7de2310d-afbd-e616-e83a-d75103b986c6@i-love.sakura.ne.jp
-and answered to Michal's concerns. I hope we can apply the same thing for
-warn_alloc() and show_mem(). Then, we can minimize latency for both
-"memory allocation failures" and "OOM killer invocations".
+> --
+> Thanks,
+> Sasha
 
