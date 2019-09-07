@@ -2,133 +2,98 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 287BCC0030B
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 17:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC17C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 17:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 007E520578
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 17:50:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5465721871
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 17:53:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gwsp7VRn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JIU69Gj2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393505AbfIGRuX (ORCPT
+        id S2391173AbfIGRxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 13:50:23 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42787 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389229AbfIGRuX (ORCPT
+        Sat, 7 Sep 2019 13:53:45 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43674 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbfIGRxp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 13:50:23 -0400
-Received: by mail-pf1-f195.google.com with SMTP id w22so6596638pfi.9;
-        Sat, 07 Sep 2019 10:50:22 -0700 (PDT)
+        Sat, 7 Sep 2019 13:53:45 -0400
+Received: by mail-wr1-f65.google.com with SMTP id q17so4931963wrx.10;
+        Sat, 07 Sep 2019 10:53:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wK8kJ2udIf0g3BsyoIaHFt8dADR/WXvxfITihNsDeFg=;
-        b=Gwsp7VRn4r5cDdw7eygkYZ/sszfgRBn/LNffK8rKLuU3OXDMBJBQUafVm/8/Ym6kxl
-         K6awj9C0Ux8gpf0vABsHPwAIKvMSSj1HLTzzX71l0KzyvaROHC2yWEmvxZUqIwm2nmrV
-         lmAcCTAPwuKZNItjsz1tvAaLHs33eilTvmINw0ZqMFmLGcHNMeEFjmq9aeDH8XSCV7Je
-         T+U7wuABMQprBiDBJ/RIg7QDfuYLkWl0B7++OvQOJnlTCNrryYx3AgCOz1cGCJhWOuVk
-         XyZoKGE/8NngV3NN1lmVf04Gjw36Ts1U5JbkQX6QXEPMa5FYJCQ1regZqneDUa94+wOD
-         YkPg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YKzGXNoMiVxlqUxjXu5q/1sB2Sa9HHIsJwOXqdFSK2c=;
+        b=JIU69Gj2coPhLQ8h1Nf0FifUpIaP/2YUh/DZqI+EYnKebBIjEvpNnmE2atBKfaDgr1
+         dIL0Oi7VSCbGp0Fh2AR9sHkXMfWxl1IcAj5ncZZhah1yhDiTdwF4XoEWqh4zCzl5ecYY
+         QdkQGYPUNcztydTqmwakzmdMhvRp7CufSU7jvpqlZp7W6hPTn9+bC3aZW150tI0awCXW
+         P22JNJcg6l25VlJEAEajstYzekutPS6SlHe6B/31RlCjw5d/1HTSCZ/6e5bIt5/QKKeb
+         h38iCIFUM/84QaD5YqDhAVu4V+t/p6Sk6ZENpp4z5SIrJFfK9VqFlv0vmwnQMMfM0Clo
+         Ob7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wK8kJ2udIf0g3BsyoIaHFt8dADR/WXvxfITihNsDeFg=;
-        b=HYNn3an0qeFew7Jr+XWBsgd/0Yv3Sfa1Jbi7aRGhgwVM/pZlfjToeUwg1+2BrVH0Gs
-         aRhHhgBg8nnlAExKvDAdRv4pONYe/x5qJajGPvRZfcdg2++MRXI2qyn5INCvr5CIw6Bh
-         KrCz3YAbOMZxm6H2BiItegllOd4O2T/gutysZ82cp6h0re/q0wbj5tkDDlbEQBgg8Ca1
-         4tQcd+NyGiCt9PUCLOMC/jxbSkkMHmguJebHvD4Jr7L9okICFHEd5GuYcPoSVi600R5G
-         QznwpRoHdKR5f46BLln2ZmTOvbNxhJRsRjPdnonbYEybKBG0VTu+lXak0jJMQ9F/Iil3
-         M3zQ==
-X-Gm-Message-State: APjAAAXzcrXoLLbi0tsSa1x4iFKYN7nXfoGBpI6MDbqvTEpNy3o8NAZO
-        2jrqlakA3Bf2bWMfWElZ3rk=
-X-Google-Smtp-Source: APXvYqzafbPVLonS9mDnmRUFSlGT5UrLrAnZgt7eKA+ZXKBawYn/MhQ8WUF6BIH88qCUmZL2MEVRGA==
-X-Received: by 2002:a65:6795:: with SMTP id e21mr13501884pgr.428.1567878622201;
-        Sat, 07 Sep 2019 10:50:22 -0700 (PDT)
-Received: from localhost ([2601:1c0:5200:e554::8610])
-        by smtp.gmail.com with ESMTPSA id 11sm8401943pgo.43.2019.09.07.10.50.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Sep 2019 10:50:21 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     iommu@lists.linux-foundation.org
-Cc:     linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
-        Rob Clark <robdclark@chromium.org>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM SMMU DRIVERS),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] iommu/arm-smmu: fix "hang" when games exit
-Date:   Sat,  7 Sep 2019 10:50:13 -0700
-Message-Id: <20190907175013.24246-1-robdclark@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YKzGXNoMiVxlqUxjXu5q/1sB2Sa9HHIsJwOXqdFSK2c=;
+        b=uAzLsUWpkYSLCcYA/r+oCbSyRlogLmcAPkVeBjLZQtFv1D0myYCauDyxaphXOZgqYY
+         QMqckA6rPKzDPGoTV7hA6arO7z/HFA/bGz7cygH0s61zhfLu3X5jn6O01m8aekyNoWGW
+         Qn09DjcsgD49rcs4aqEp3y/vVPE44nYySec654XnyHnkWfn3d8ixQfnRBisLcX13ucvM
+         x5y7AqsKwrq73kkGoujQo1Vg/Y8xlq4nuhyyedohWLHpLfiZveCwIvtoM9U4DUhEK6wa
+         hQff0cQlFocZk5D7kcS3qG7JhFAH5mpBgw4P0eJtUZPMV3+BZxu3JWSuz/dQeJaSaRm+
+         EiGQ==
+X-Gm-Message-State: APjAAAXzRbqWXrKlOD4vtX8kqBlepjmeNGYqI4vJ7ycjMQAFunjlPE25
+        56OwuTRxS41OzjYjHo/ofis=
+X-Google-Smtp-Source: APXvYqwON0QZyTc/slBAnXZF2MVpu7fDOpaczP7dIghDSrGZbOPHtlEMfx9Sldugsdu+L5p1uFGQjQ==
+X-Received: by 2002:a5d:6585:: with SMTP id q5mr11363959wru.162.1567878822899;
+        Sat, 07 Sep 2019 10:53:42 -0700 (PDT)
+Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id p23sm5778566wma.18.2019.09.07.10.53.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 07 Sep 2019 10:53:42 -0700 (PDT)
+Date:   Sat, 7 Sep 2019 19:53:40 +0200
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        linux@armlinux.org.uk, mark.rutland@arm.com, robh+dt@kernel.org,
+        wens@csie.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 1/9] crypto: Add allwinner subdirectory
+Message-ID: <20190907175340.GA2628@Red>
+References: <20190906184551.17858-1-clabbe.montjoie@gmail.com>
+ <20190906184551.17858-2-clabbe.montjoie@gmail.com>
+ <20190907035453.urfqmdg3kg4kbtgc@flea>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190907035453.urfqmdg3kg4kbtgc@flea>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+On Sat, Sep 07, 2019 at 06:54:53AM +0300, Maxime Ripard wrote:
+> On Fri, Sep 06, 2019 at 08:45:43PM +0200, Corentin Labbe wrote:
+> > Since a second Allwinner crypto driver will be added, it is better to
+> > create a dedicated subdirectory.
+> >
+> > Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+> > ---
+> >  MAINTAINERS                      | 6 ++++++
+> >  drivers/crypto/Kconfig           | 2 ++
+> >  drivers/crypto/Makefile          | 1 +
+> >  drivers/crypto/allwinner/Kconfig | 6 ++++++
+> 
+> I guess it would make sense to move the sun4i driver there too?
+> 
+Yes it is planned.
+I will add this move patch in the next iteration.
 
-When games, browser, or anything using a lot of GPU buffers exits, there
-can be many hundreds or thousands of buffers to unmap and free.  If the
-GPU is otherwise suspended, this can cause arm-smmu to resume/suspend
-for each buffer, resulting 5-10 seconds worth of reprogramming the
-context bank (arm_smmu_write_context_bank()/arm_smmu_write_s2cr()/etc).
-To the user it would appear that the system is locked up.
-
-A simple solution is to use pm_runtime_put_autosuspend() instead, so we
-don't immediately suspend the SMMU device.
-
-Signed-off-by: Rob Clark <robdclark@chromium.org>
----
-Note: I've tied the autosuspend enable/delay to the consumer device,
-based on the reasoning that if the consumer device benefits from using
-an autosuspend delay, then it's corresponding SMMU probably does too.
-Maybe that is overkill and we should just unconditionally enable
-autosuspend.
-
- drivers/iommu/arm-smmu.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index c2733b447d9c..73a0dd53c8a3 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -289,7 +289,7 @@ static inline int arm_smmu_rpm_get(struct arm_smmu_device *smmu)
- static inline void arm_smmu_rpm_put(struct arm_smmu_device *smmu)
- {
- 	if (pm_runtime_enabled(smmu->dev))
--		pm_runtime_put(smmu->dev);
-+		pm_runtime_put_autosuspend(smmu->dev);
- }
- 
- static struct arm_smmu_domain *to_smmu_domain(struct iommu_domain *dom)
-@@ -1445,6 +1445,15 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
- 	/* Looks ok, so add the device to the domain */
- 	ret = arm_smmu_domain_add_master(smmu_domain, fwspec);
- 
-+#ifdef CONFIG_PM
-+	/* TODO maybe device_link_add() should do this for us? */
-+	if (dev->power.use_autosuspend) {
-+		pm_runtime_set_autosuspend_delay(smmu->dev,
-+			dev->power.autosuspend_delay);
-+		pm_runtime_use_autosuspend(smmu->dev);
-+	}
-+#endif
-+
- rpm_put:
- 	arm_smmu_rpm_put(smmu);
- 	return ret;
--- 
-2.21.0
-
+Regards
