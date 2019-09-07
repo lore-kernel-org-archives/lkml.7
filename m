@@ -3,43 +3,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80723C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 20:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A738C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 20:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F55B2178F
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 20:01:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B54B2178F
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 20:04:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406123AbfIGUBO (ORCPT
+        id S2395250AbfIGUEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 16:01:14 -0400
-Received: from smtprelay0096.hostedemail.com ([216.40.44.96]:36646 "EHLO
+        Sat, 7 Sep 2019 16:04:38 -0400
+Received: from smtprelay0031.hostedemail.com ([216.40.44.31]:48094 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2391561AbfIGUBN (ORCPT
+        by vger.kernel.org with ESMTP id S1728494AbfIGUEi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 16:01:13 -0400
+        Sat, 7 Sep 2019 16:04:38 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 6BB4B45DA;
-        Sat,  7 Sep 2019 20:01:12 +0000 (UTC)
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 513CD180A68C3;
+        Sat,  7 Sep 2019 20:04:37 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: clock12_449f447336531
-X-Filterd-Recvd-Size: 1691
+X-HE-Tag: stew81_626ed4401de14
+X-Filterd-Recvd-Size: 1248
 Received: from XPS-9350.home (unknown [47.151.152.152])
         (Authenticated sender: joe@perches.com)
-        by omf15.hostedemail.com (Postfix) with ESMTPA;
-        Sat,  7 Sep 2019 20:01:11 +0000 (UTC)
-Message-ID: <628cfe909375f444c33ef4da0b09a32dbff0303b.camel@perches.com>
+        by omf02.hostedemail.com (Postfix) with ESMTPA;
+        Sat,  7 Sep 2019 20:04:36 +0000 (UTC)
+Message-ID: <529940f5dd3ca0426f8e953d232a16b4eccfbfb7.camel@perches.com>
 Subject: Re: [PATCH] Fixed most indent issues in tty_io.c
 From:   Joe Perches <joe@perches.com>
-To:     Sandro Volery <sandro@volery.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org,
-        jslaby@suse.com
-Date:   Sat, 07 Sep 2019 13:01:10 -0700
-In-Reply-To: <9A23770B-49B8-4DB1-8B45-22F3650E0CB8@volery.com>
-References: <a99b7481f26138ea01de0d271e9aec2a525c0aed.camel@perches.com>
-         <9A23770B-49B8-4DB1-8B45-22F3650E0CB8@volery.com>
+To:     volery <sandro@volery.com>, gregkh@linuxfoundation.org,
+        jslaby@suse.com, linux-kernel@vger.kernel.org
+Date:   Sat, 07 Sep 2019 13:04:35 -0700
+In-Reply-To: <20190907090948.GA5824@volery>
+References: <20190907090948.GA5824@volery>
 Content-Type: text/plain; charset="ISO-8859-1"
 User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
@@ -49,27 +47,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-09-07 at 21:51 +0200, Sandro Volery wrote:
-> > On 7 Sep 2019, at 21:27, Joe Perches <joe@perches.com> wrote:
-[]
-> > As long as git diff -w shows no difference and a compiled
-> > object comparison before and after the change shows no
-> > difference, I think it's fine.
-> 
-> My thoughts, too. I didn't feel comfortable arguing as a newbie tho
-> so I'll see what I can do once I get home.
+On Sat, 2019-09-07 at 11:09 +0200, volery wrote:
+> There were a lot of styling problems using space then tab or spaces
+> instead of tabs in that file. Especially the entire function at line
+> 2677.
+> Also added a space before the : on line 2221.
 
-If you do that, it's important to mention both elements in
-the commit message:
+You do not have an appropriate subject line.
 
-	1: git diff -w shows no difference
-	2: pre and post compilation objects are identical
+This subject should probably be something like:
 
-It is also good to verify that allyesconfig and defconfig
-objects with the minimal CONFIG_ required for compilation
-are also identical.
+[PATCH] tty: tty_io: Use normal indentation
 
-Whitespace only changes should only change horizontal
-spacing and should not have vertical line changes.
+Please make changes only in drivers/staging until you are
+really familiar with the linux kernel patch process.
 
 
