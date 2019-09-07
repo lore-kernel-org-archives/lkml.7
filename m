@@ -2,83 +2,101 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_SBL,URIBL_SBL_A,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09796C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 15:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF69C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 15:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D38322178F
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 15:39:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E64EF2178F
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 15:41:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="vUfqz5WR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k/JejIbC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436480AbfIGPja (ORCPT
+        id S2394778AbfIGPl0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 11:39:30 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:33170 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404320AbfIGPj3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 11:39:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=gWTaws7GkIELveuO4J7ApUiFTvutTKwoQ1Dz9lf04WM=; b=vUfqz5WRISCI/AerICsyIMOSjM
-        J4tbI2wRsu7cq/ogA968r+Vhb8sbg44nxZ1+othZEIspgWYrZC4AnvX+VB6Pk0Ym5r6bHagxJUOXc
-        d1z9Wr1ZETu+7dbX68cYy1t/Vbbi2XWbjgFtQJ5IPA33PZpSGmlGYDgMoAw9pww6tBZg=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1i6co3-00062t-6Q; Sat, 07 Sep 2019 17:39:19 +0200
-Date:   Sat, 7 Sep 2019 17:39:19 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>
-Cc:     davem@davemloft.net, robh+dt@kernel.org, f.fainelli@gmail.com,
+        Sat, 7 Sep 2019 11:41:26 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44833 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391833AbfIGPl0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Sep 2019 11:41:26 -0400
+Received: by mail-pg1-f196.google.com with SMTP id i18so5217021pgl.11;
+        Sat, 07 Sep 2019 08:41:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=h9jqyJ3/4GccGaL3G3P4ifJgltEHVSdYAm3P0EcL0t8=;
+        b=k/JejIbCVQAcADIOpNZKhtcNgDIEGunVSocdOjJYEJ9NhEQR6v3hRKXlzWz4CgA60z
+         SLK6EPoAAwwv5X5eWaYaIAiJKLlWQV6KSFPQgoytQSkDgWHQmWH5c5dhQpotz+u75ZNL
+         J3Y7FD6XWKx11oGLLA/rM164L8YoAXcfbF446dNaZ1/X4cvMg6oVHI2U8a0hfBvRN2rV
+         k4KLO5c85OH1r87Lg7nkawnLA3MmcLvRjk6n7W7S7qRcTIdswuK9GGm21RYRKJs/kwnk
+         Fjvtr4XJQvGGC9c0wfnD5yoAxmnB/QrFQLnlBFo9Zj/q2hiyOx9nbckv/9bYuGIgKsM0
+         hUUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=h9jqyJ3/4GccGaL3G3P4ifJgltEHVSdYAm3P0EcL0t8=;
+        b=R0jfZwftJPUTeaLuJT1JgtdPFf1eY2ep+zSZF0EgOHOMqSkoZnn1F+i/SXFbZPLovh
+         PmLJkeLgEBDiGUo7cpiEjr3zMiJsNiz9whooiAXgS+d7JRrNGzZGhuTM39A/Ow5Amn7A
+         SfvFaiaZ6nacuir7C1MGypvWmUBA78jJcHAVqXu9zOirtdOp1gO538dcxtVqDW2gWu3x
+         3ylFr/FjZDgrlRMS0PG82ZNbTCZZpCX9yvvdSZ7Og3qaSLGY2A8zgyZ/eeryGWNy0XzK
+         CzKkJa32bR6skCNDyR2OnpfRRKnzeT/B9cSQcACJTEbTSnRY9eTCTXk/PPOne81OjGaB
+         qE+g==
+X-Gm-Message-State: APjAAAWv9YJ/M/sVxn/P7GakEgN58e1JCWDQleUVr9J/2Q+Mjhh5rd57
+        pQiwof6iFbRzz9/e5TZ/WkNumnqlLlM=
+X-Google-Smtp-Source: APXvYqyK6KAb1DcRrnLw2wleDUcaH0w1XPCoN8plCnD+BDUrC6/X+ZvZfh5PgG/jhbB4fb/0xdifjw==
+X-Received: by 2002:a17:90a:3acf:: with SMTP id b73mr15077799pjc.88.1567870884998;
+        Sat, 07 Sep 2019 08:41:24 -0700 (PDT)
+Received: from [10.230.28.130] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id s5sm9176498pfe.52.2019.09.07.08.41.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 07 Sep 2019 08:41:24 -0700 (PDT)
+Subject: Re: [PATCH 1/2] net: phy: dp83867: Add documentation for SGMII mode
+ type
+To:     Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>,
+        Andrew Lunn <andrew@lunn.ch>
+Cc:     davem@davemloft.net, robh+dt@kernel.org,
         Mark Rutland <mark.rutland@arm.com>,
         Trent Piepho <tpiepho@impinj.com>, netdev@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] net: phy: dp83867: Add documentation for SGMII mode
- type
-Message-ID: <20190907153919.GC21922@lunn.ch>
 References: <1567700761-14195-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
  <1567700761-14195-2-git-send-email-vitaly.gaiduk@cloudbear.ru>
+ <20190906192919.GA2339@lunn.ch>
+ <23dc47ea-209f-9f51-d4a5-161e62e2a69e@cloudbear.ru>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Message-ID: <8055f8ce-5a8e-fa53-311d-3f27a72f58bd@gmail.com>
+Date:   Sat, 7 Sep 2019 08:41:22 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1567700761-14195-2-git-send-email-vitaly.gaiduk@cloudbear.ru>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <23dc47ea-209f-9f51-d4a5-161e62e2a69e@cloudbear.ru>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 07:26:00PM +0300, Vitaly Gaiduk wrote:
-> Add documentation of ti,sgmii-type which can be used to select
-> SGMII mode type (4 or 6-wire).
+
+
+On 9/6/2019 1:45 PM, Vitaly Gaiduk wrote:
+> Hi, Andrew.
 > 
-> Signed-off-by: Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>
-> ---
->  Documentation/devicetree/bindings/net/ti,dp83867.txt | 1 +
->  1 file changed, 1 insertion(+)
+> I'm not familiar with generic PHY HW archs but suppose that it is
+> proprietary to TI.
 > 
-> diff --git a/Documentation/devicetree/bindings/net/ti,dp83867.txt b/Documentation/devicetree/bindings/net/ti,dp83867.txt
-> index db6aa3f2215b..18e7fd52897f 100644
-> --- a/Documentation/devicetree/bindings/net/ti,dp83867.txt
-> +++ b/Documentation/devicetree/bindings/net/ti,dp83867.txt
-> @@ -37,6 +37,7 @@ Optional property:
->  			      for applicable values.  The CLK_OUT pin can also
->  			      be disabled by this property.  When omitted, the
->  			      PHY's default will be left as is.
-> +	- ti,sgmii-type - This denotes the fact which SGMII mode is used (4 or 6-wire).
+> I'v never seen such feature so moved it in TI dts field.
 
-Hi Vitaly
-
-You probably want to make this a Boolean. I don't think SGMII type is
-a good idea. This is about enabling the receive clock to be passed to
-the MAC. So how about ti,sgmii-ref-clock-output-enable.
-
-    Andrew
+My search engine results seem to indicate that this is indeed TI
+specific only and this is not something that exists with other vendors
+apparently. The "ti," prefix is therefore appropriate.
+-- 
+Florian
