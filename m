@@ -2,94 +2,123 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE18AC43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 21:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05455C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 21:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90D7D208C3
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 21:13:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567890824;
-	bh=quLzeutJ0LxF9NYR8EzYXWZfe2MsUzOP+cm5HAod3c8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=vRBotj6u5z+o7587a1tLo9o5C2V73opHLulW5CAIxVwV2vEOMbFIcxDQYh9mvGQvk
-	 OLAEu2DQB858A5Iiy81is9nnxQ7vTLQjodzxzR7BJLfMGUlnGPyeHzVDQPHqXLgbLO
-	 Z5EaVciT+Ild87cZTD+UqYs/N3UvE4d++P7cuG7A=
+	by mail.kernel.org (Postfix) with ESMTP id D254D2173B
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 21:17:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436728AbfIGVNn (ORCPT
+        id S2406315AbfIGVRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 17:13:43 -0400
-Received: from mail-lj1-f179.google.com ([209.85.208.179]:40689 "EHLO
-        mail-lj1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406397AbfIGVNm (ORCPT
+        Sat, 7 Sep 2019 17:17:40 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:49680 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727008AbfIGVRj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 17:13:42 -0400
-Received: by mail-lj1-f179.google.com with SMTP id 7so9123171ljw.7
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Sep 2019 14:13:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Urb2igNOM/k6LW8dmJ+dmnoxLtpMZlnMIvradymUuao=;
-        b=NalrJQYnS2Lq6ipdTM/V2zDvgV3EzpivFmapu6nOmlZXtGrOWZT/MsiOTOHZP6edNd
-         8v1DSeBJh1/V6FHPBzvk0lk2EdavevsknTPiTrDqATOLgRGrwlgRqsW7yWmlE1lBMktF
-         Q53las5gIYHKoSHAWlKCGfNOobRxKF5amXtBU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Urb2igNOM/k6LW8dmJ+dmnoxLtpMZlnMIvradymUuao=;
-        b=OgpS63iKrkgBAPtwyUj4h85GndTrmqD62Tyyhu2fidm/WmwCiyRjc5T2cGiBNnCd64
-         X39GotIAATktciby9jFrwQPlIgvkWzBP38pRXV6oXPlqlvHUE5JlfVJi8x69BufxM8u6
-         cjGXkWaY7ZuQjX7oLBrwPHmlnroqnAycJtYAPi9G5+8WwJgDb7vYsELV9lPGiGq9Zy/o
-         iWUGYm67LZA/TtedvBWNkdLJJfRtcZ8y1FXWS3QDBRsaIUqUuLVHn9oReIxyB+SYDQjy
-         BU6CEXcSpVNDHNy+Giqora4bKCKOg1jjvQSRWuFoPfFDdFvuGI45oVQgu7/pyudEgwPO
-         HPcg==
-X-Gm-Message-State: APjAAAU53fxIAWxcvC9Vp2rfwefvlfQ6N5gpo15PEmJqxThhMrN+padG
-        ohJRbDKh5Cbf9qk6hqEuNvDPmeA1tcI=
-X-Google-Smtp-Source: APXvYqxiJWSyX5kuz2QgrBqp1rovpmOgQ6zU0ySdoC8OPgXMMSEXlJfoArT6lpaN6wyNvDvnZiZ3iw==
-X-Received: by 2002:a2e:99cc:: with SMTP id l12mr10341820ljj.5.1567890820106;
-        Sat, 07 Sep 2019 14:13:40 -0700 (PDT)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
-        by smtp.gmail.com with ESMTPSA id 6sm1855713ljr.63.2019.09.07.14.13.39
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 07 Sep 2019 14:13:39 -0700 (PDT)
-Received: by mail-lj1-f180.google.com with SMTP id e17so9097471ljf.13
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Sep 2019 14:13:39 -0700 (PDT)
-X-Received: by 2002:a2e:814d:: with SMTP id t13mr10530428ljg.72.1567890818839;
- Sat, 07 Sep 2019 14:13:38 -0700 (PDT)
+        Sat, 7 Sep 2019 17:17:39 -0400
+Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i6i5E-0001ul-5L; Sat, 07 Sep 2019 23:17:24 +0200
+Date:   Sat, 7 Sep 2019 23:17:22 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Markus Heiser <markus.heiser@darmarit.de>
+cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Sven Eckelmann <sven@narfation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Doug Smythies <doug.smythies@gmail.com>,
+        =?ISO-8859-15?Q?Aur=E9lien_Cedeyn?= <aurelien.cedeyn@gmail.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-doc@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Armijn Hemel <armijn@tjaldur.nl>, Jiri Olsa <jolsa@redhat.com>,
+        =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        Allison Randal <allison@lohutok.net>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: Re: [PATCH 0/6] Address issues with SPDX requirements and PEP-263
+In-Reply-To: <686101df-f40c-916e-2730-353a3852cc84@darmarit.de>
+Message-ID: <alpine.DEB.2.21.1909072308060.1902@nanos.tec.linutronix.de>
+References: <cover.1567712829.git.mchehab+samsung@kernel.org> <20190907073419.6a88e318@lwn.net> <be329f0e-ec5b-f5ec-823d-66e58699da73@darmarit.de> <20190907132259.3199c8a2@coco.lan> <a08c5807-38e7-dfb3-ff3c-f78a498455e6@darmarit.de> <20190907150442.583b44c2@coco.lan>
+ <686101df-f40c-916e-2730-353a3852cc84@darmarit.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <CAHk-=wi_nBULUyO=OKtNBCZ+VSqdOcEiUeFqXTQY_D5ga5k4gQ@mail.gmail.com>
- <156785100521.13300.14461504732265570003@skylake-alporthouse-com>
- <alpine.DEB.2.21.1909071628420.1902@nanos.tec.linutronix.de>
- <156786727951.13300.15226856788926071603@skylake-alporthouse-com>
- <alpine.DEB.2.21.1909071657430.1902@nanos.tec.linutronix.de>
- <CAHk-=wikdDMYqhygJYkoWw7YxpGNx7O2kFRxbG91NNeFO7yu3w@mail.gmail.com> <alpine.DEB.2.21.1909072243570.1902@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1909072243570.1902@nanos.tec.linutronix.de>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 7 Sep 2019 14:13:22 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg5dS9QsC5Ay0BpLBQdBRcy0qCE2hP=K4_nJ4b6Lumf_Q@mail.gmail.com>
-Message-ID: <CAHk-=wg5dS9QsC5Ay0BpLBQdBRcy0qCE2hP=K4_nJ4b6Lumf_Q@mail.gmail.com>
-Subject: Re: Linux 5.3-rc7
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Bandan Das <bsd@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 7, 2019 at 1:44 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> That's what I just replied to Chris. Can you do it right away or should I queue it up?
+On Sat, 7 Sep 2019, Markus Heiser wrote:
+> Am 07.09.19 um 20:04 schrieb Mauro Carvalho Chehab:
+> > No idea. I would actually prefer to just remove the restriction, and let
+> > the SPDX header to be anywhere inside the first comment block inside a
+> > file [2].
+> 
+> > That's basically how this thread started: other developers think
+> > that it is a good idea to be pedantic. So, be it, but let's then fix
+> > the documentation, as the way it is, it is implicitly forbidding the
+> > addition of encoding lines for Python scripts.
+> > 
+> > [2] I *suspect* that the restriction was added in order to make
+> >      ./scripts/spdxcheck.py to run faster and to avoid false positives.
+> >      Right now, if the maximum limit is removed (or set to a very high
+> >      value), there will be one false positive:
 
-Done.
+Nope. The intention was to have a well define place and format instead of
+everyone and his dog deciding to put it somewhere. SPDX is not intended to
+replace the existing licensing mess with some other randomly placed and
+formatted licensing mess.
+
+> > > - write a shebang line if this file is called directly from the
+> > >     command line .. but we do not need shebangs on py modules which
+> > >     are imported from other modules or scripts
+> > > 
+> > > - write a encoding line if it is need or helpful / mostly it is helpful
+> > >     to know the encoding of a text/code file.
+> > > 
+> > > - add a SPDX tag
+> > 
+> > Yes, but this violates the current documentation, as it doesn't allow the
+> > SPDX tag after line #2.
+> 
+> Thats what I mean: The documentation was written with only a small use-cases
+> in mind .. there is no real need for SPDX to be in line one or two ... lets
+> fix the documentation as I described before.
+
+If there is a requirement from the language to have 2 lines right at the
+top for conveying information then there is of course no reason to insist
+on the SPDX identifier being on line 2.
+
+So the documentation should say:
+
+   The SPDX identifier must be at the first possible line at the top of the
+   file which is not occupied by information which is required to be
+   immediately at the top of the file by system constraints, e.g. shebang,
+   or by the language, e.g. the encoding information for python.
+
+or something to that effect.
 
 Thanks,
-          Linus
+
+	tglx
