@@ -2,244 +2,151 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 996DEC43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 11:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A96C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 11:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68CEA21920
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 11:36:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7330C21871
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 11:55:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="SYqjFOmb"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="ONs/Eqc8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405882AbfIGLgA (ORCPT
+        id S2405897AbfIGLz2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 07:36:00 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:45636 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392111AbfIGLf5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 07:35:57 -0400
-Received: by mail-qt1-f194.google.com with SMTP id r15so10350162qtn.12
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Sep 2019 04:35:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=ZfMCqtRG3776EYn97WT0OsP3uu6yPWIiXZtP2HYxXjQ=;
-        b=SYqjFOmb1lorXoSExxnMnW2j/lfll6fQ4bkI8ipQTc6lg65BdeoAudUEhWZoQ7J3ji
-         nRHofsMHtX4i65qp8p8NR0kj2p4KH590SM8hLFWBFYCv3wYs1W/TjOpqGODP3bUSZNLJ
-         ifvznN3u5tbI+zfMhhwz1fZQIW0cCI8W6CNVn0obW+aWt4Xkzesj/WDfhLJvVMoRVtAd
-         gTMvwGq4QmG7j+8rLHjXhGIKUXZK+9exAxb5rc52K3nD2J0kki6miNzlHRv48KkYs1+V
-         8XG+6UG7a7riG/U1WTFQHilUrnEHrQfwlZkCNAAI0GvfHthev4ml7SEIBLARfC6cmfqa
-         m6sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=ZfMCqtRG3776EYn97WT0OsP3uu6yPWIiXZtP2HYxXjQ=;
-        b=ivxL7mOrZmMXq0E52r3+TYbYLdCFu+Kctfvd8rf9N1Nh6npNHdxYqC/yKq3l6r2T+6
-         AJCJi8/jSZF8IPm7rSPr9cHRgbd72lw08qw3rdRxMQ5LHpz62rbbDUpF0C1ShAfiOETd
-         e0dQZSGj9djHvcvESEkg7mjwpCOKOp0dvOPzqJRUcTP++My4D8vCU/GBhEq5rUtYbXMT
-         bbT5Xv2dmfsrDLpalgNRQj46//P1rHpqbO41ijd9Hd/JZQiFcUqx6ZB/UA3NUiEelutN
-         d4csC8kZd6lRt5LiRKJX+SM5j6kdM1j0IBHdz4X3/xUKPg5X+fkdFN5bYQc8gush/Yfk
-         nnZA==
-X-Gm-Message-State: APjAAAWtki68sNDwYLa2Fqe78O7SlwNqP4dEkbrRt8iDJ//DhmpK9jU6
-        2UVOk2nhT9a0KVnHPMsbEkvVMA==
-X-Google-Smtp-Source: APXvYqwitwvx6V2pj9mK/oeRTft1UMVSefAlLIqnVI4hN2v3+Pt/MLuW6b+CrfJxqXKkM9TTfHXVdw==
-X-Received: by 2002:ac8:13c2:: with SMTP id i2mr13231243qtj.211.1567856156566;
-        Sat, 07 Sep 2019 04:35:56 -0700 (PDT)
-Received: from qians-mbp.fios-router.home (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id r55sm4897634qtj.86.2019.09.07.04.35.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 07 Sep 2019 04:35:55 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v2] powerpc/lockdep: fix a false positive warning
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <20190907070505.GA88784@gmail.com>
-Date:   Sat, 7 Sep 2019 07:35:54 -0400
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Zijlstra <peterz@infradead.org>, bvanassche@acm.org,
-        arnd@arndb.de, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
+        Sat, 7 Sep 2019 07:55:28 -0400
+Received: from mout.web.de ([212.227.17.12]:45147 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726027AbfIGLz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Sep 2019 07:55:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1567857323;
+        bh=uCBhPrOjyBKadbfdXhZIgALigPb6thWyt6L0OnaNf6o=;
+        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
+        b=ONs/Eqc8vJ4EH6vTyiZs9cFSQ1VcaFYZZuDAaPSrWbhgGlS7IYdJ1ledwp7DEDIVr
+         WE186PEd+BrHeIS3IQKd1W+YTN3jjNX0Ul//YNX5i1HsnMjFbZVWgtBKsVcKaLjEQ4
+         AaeV71ljxg8WU+IAahgk5M6FTpnp6cP/MFClSAMo=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.243.16.142]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MF3nL-1hukfR3sIV-00GJIc; Sat, 07
+ Sep 2019 13:55:23 +0200
+To:     linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] spi-gpio: Use PTR_ERR_OR_ZERO() in spi_gpio_request()
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
+ +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
+ mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
+ lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
+ YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
+ GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
+ rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
+ 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
+ jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
+ BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
+ cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
+ Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
+ g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
+ OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
+ CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
+ LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
+ sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
+ kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
+ i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
+ g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
+ q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
+ NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
+ nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
+ 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
+ 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
+ wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
+ riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
+ DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
+ fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
+ 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
+ xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
+ qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
+ Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
+ Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
+ +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
+ hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
+ /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
+ tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
+ qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
+ Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
+ x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
+ pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
+Message-ID: <b2dd074a-1693-3aea-42b4-da1f5ec155c4@web.de>
+Date:   Sat, 7 Sep 2019 13:55:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <420D09F4-FC19-421C-AE46-4B2A9157FAE3@lca.pw>
-References: <20190906231754.830-1-cai@lca.pw>
- <20190907070505.GA88784@gmail.com>
-To:     Ingo Molnar <mingo@kernel.org>
-X-Mailer: Apple Mail (2.3445.104.11)
+X-Provags-ID: V03:K1:Vol/cHTZVAcZ9iV8Ta9uaMh49++iaihMT5bs/zlSgl0Mbd2sX+8
+ whcF7OIJVwr6EkJo81cwT2Z4cQDxecDk9iIgm9kE76m7Gqig2WYRLDoCqRNO5Da4OfXe9rD
+ nZn8vVhuO9Tfgr6xJbGRTZCpyl9Vo0MUSlOJNAFxx08m1E+aM5yz4m9IwvcSO5ZMGoZSwcz
+ AHFc+th+SzRnvkEOVW/PQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ae8NsPK3tBk=:kca7CW0oDqiIH5pbPmy6bn
+ AZd0NQ+5Un6rkZrcxnSATJhN9gRSdOXL+d7xL4m/VqIP856xxzpmaFtM0eFV1T1NywX2SBNU8
+ vQ4kTCrqokyrNn9dRxId8d1qAM2WsgclxPOJhfTpcFPBmzbdUG+R5yCRfHApfpiPV9Z1AxMIy
+ ps2KILPUPWgBVPgISSfh20AW9szaoxAbpsmWDmzujEGDczLgvvCa1pbFcCyUVbRA23I09KMbn
+ A4MkbrerR5spiIwSpPXGA0DfN13ZiDQmJ755Fswnj258B4CMPv/M6x+9ctiTeZ8mbOMYFqJuC
+ zHI3IkPeyWbniV6Nvp8LdB5bfjGeoFx763OiFN7r6lNqagoi3iMXfKrkOmZ2Ze/2j1uMyiOAe
+ e088q2hOy4RjpMCs4JW3I6Q+k4/gDzY/keNnVvQOFkSBabSbumPqR2R6x3IbyEivzdEschH2v
+ O6OYYqyzONfG2lzT3NM1WnG7ti33a71GQcV4gNEEOiLj570TKGgddCDk6wAVdhGmjrolfgT/Y
+ qRmKfzx41+RO0iNmxtl4+ncJsLKjF0JQln3vhSEQfagt0qlN71V5/ySUFzDw3u4IRduoAaW3V
+ /StHYW+Ivsh/jEzKHZgT+6/ZF1+ryfj35cPylegXRk5nO7HqaXcT+NAICNV9dGL/1HEJqMUYt
+ 9ZEy47PwjLN/+y/lYGTKcGpA5IJAzBK+ytG/i7BvxIPvxLidz2Ixj1bGGTmGPE9ADo9QrDnu7
+ 9k8U3m1MK3LMaajVS1TQsyVGYFu8zXDPvsJ9SseAaWPCH6aCbvFe4e3JVggQOZdhZ95yNZgdF
+ V0rsK2SFe1f1gOZ3KGwMQc3ZbQDIV4gdtLZZtp+tjwtBG6HBKxchn9r9ulNuYU/q/oMlWDnNe
+ oMLNltc3uwW6UlIPhPf6ZhcJHTkz9WTHdrxymW/Bt6wigRigo6IjUdCgyi8pusuX6jmubRFxW
+ /g2lFcga5dfYIGoZAwqQGt9EnGsBwn2gDjihC13UwNInR19GRqVr4hoh9qyLDRgzCizwh3TWZ
+ cdj0KV0tO9lhH8Jq4TUjUkzhyXOeZS0uk4FybI0wgF9SXDbPzWjZ/k4BBsct+T33skKas8Oix
+ x9NBXePUt7XiLM0isjfqfJPw88Cr4ZaQunsc3TW8O2JB+n+WxaeD1E+IdZQ0+mX2i/RhUYjJK
+ Y0F4s2GX/H1PQ3l9RvzfsHcQR3QXH7wd69TM/JfsWSpH8BN19tKmXXid6A31JDghVyj6cNv5Z
+ qCKjBIWy+u+5tJHt0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Sat, 7 Sep 2019 13:51:16 +0200
 
+Simplify this function implementation by using a known function.
 
-> On Sep 7, 2019, at 3:05 AM, Ingo Molnar <mingo@kernel.org> wrote:
->=20
->=20
-> * Qian Cai <cai@lca.pw> wrote:
->=20
->> The commit 108c14858b9e ("locking/lockdep: Add support for dynamic
->> keys") introduced a boot warning on powerpc below, because since the
->> commit 2d4f567103ff ("KVM: PPC: Introduce kvm_tmp framework") adds
->> kvm_tmp[] into the .bss section and then free the rest of unused =
-spaces
->> back to the page allocator.
->>=20
->> kernel_init
->>  kvm_guest_init
->>    kvm_free_tmp
->>      free_reserved_area
->>        free_unref_page
->>          free_unref_page_prepare
->>=20
->> Later, alloc_workqueue() happens to allocate some pages from there =
-and
->> trigger the warning at,
->>=20
->> if (WARN_ON_ONCE(static_obj(key)))
->>=20
->> Fix it by adding a generic helper arch_is_bss_hole() to skip those =
-areas
->> in static_obj(). Since kvm_free_tmp() is only done early during the
->> boot, just go lockless to make the implementation simple for now.
->>=20
->> WARNING: CPU: 0 PID: 13 at kernel/locking/lockdep.c:1120
->> Workqueue: events work_for_cpu_fn
->> Call Trace:
->>  lockdep_register_key+0x68/0x200
->>  wq_init_lockdep+0x40/0xc0
->>  trunc_msg+0x385f9/0x4c30f (unreliable)
->>  wq_init_lockdep+0x40/0xc0
->>  alloc_workqueue+0x1e0/0x620
->>  scsi_host_alloc+0x3d8/0x490
->>  ata_scsi_add_hosts+0xd0/0x220 [libata]
->>  ata_host_register+0x178/0x400 [libata]
->>  ata_host_activate+0x17c/0x210 [libata]
->>  ahci_host_activate+0x84/0x250 [libahci]
->>  ahci_init_one+0xc74/0xdc0 [ahci]
->>  local_pci_probe+0x78/0x100
->>  work_for_cpu_fn+0x40/0x70
->>  process_one_work+0x388/0x750
->>  process_scheduled_works+0x50/0x90
->>  worker_thread+0x3d0/0x570
->>  kthread+0x1b8/0x1e0
->>  ret_from_kernel_thread+0x5c/0x7c
->>=20
->> Fixes: 108c14858b9e ("locking/lockdep: Add support for dynamic keys")
->> Signed-off-by: Qian Cai <cai@lca.pw>
->> ---
->>=20
->> v2: No need to actually define arch_is_bss_hole() powerpc64 only.
->>=20
->> arch/powerpc/include/asm/sections.h | 11 +++++++++++
->> arch/powerpc/kernel/kvm.c           |  5 +++++
->> include/asm-generic/sections.h      |  7 +++++++
->> kernel/locking/lockdep.c            |  3 +++
->> 4 files changed, 26 insertions(+)
->>=20
->> diff --git a/arch/powerpc/include/asm/sections.h =
-b/arch/powerpc/include/asm/sections.h
->> index 4a1664a8658d..4f5d69c42017 100644
->> --- a/arch/powerpc/include/asm/sections.h
->> +++ b/arch/powerpc/include/asm/sections.h
->> @@ -5,8 +5,19 @@
->>=20
->> #include <linux/elf.h>
->> #include <linux/uaccess.h>
->> +
->> +#define arch_is_bss_hole arch_is_bss_hole
->> +
->> #include <asm-generic/sections.h>
->>=20
->> +extern void *bss_hole_start, *bss_hole_end;
->> +
->> +static inline int arch_is_bss_hole(unsigned long addr)
->> +{
->> +	return addr >=3D (unsigned long)bss_hole_start &&
->> +	       addr < (unsigned long)bss_hole_end;
->> +}
->> +
->> extern char __head_end[];
->>=20
->> #ifdef __powerpc64__
->> diff --git a/arch/powerpc/kernel/kvm.c b/arch/powerpc/kernel/kvm.c
->> index b7b3a5e4e224..89e0e522e125 100644
->> --- a/arch/powerpc/kernel/kvm.c
->> +++ b/arch/powerpc/kernel/kvm.c
->> @@ -66,6 +66,7 @@
->> static bool kvm_patching_worked =3D true;
->> char kvm_tmp[1024 * 1024];
->> static int kvm_tmp_index;
->> +void *bss_hole_start, *bss_hole_end;
->>=20
->> static inline void kvm_patch_ins(u32 *inst, u32 new_inst)
->> {
->> @@ -707,6 +708,10 @@ static __init void kvm_free_tmp(void)
->> 	 */
->> 	kmemleak_free_part(&kvm_tmp[kvm_tmp_index],
->> 			   ARRAY_SIZE(kvm_tmp) - kvm_tmp_index);
->> +
->> +	bss_hole_start =3D &kvm_tmp[kvm_tmp_index];
->> +	bss_hole_end =3D &kvm_tmp[ARRAY_SIZE(kvm_tmp)];
->> +
->> 	free_reserved_area(&kvm_tmp[kvm_tmp_index],
->> 			   &kvm_tmp[ARRAY_SIZE(kvm_tmp)], -1, NULL);
->> }
->> diff --git a/include/asm-generic/sections.h =
-b/include/asm-generic/sections.h
->> index d1779d442aa5..4d8b1f2c5fd9 100644
->> --- a/include/asm-generic/sections.h
->> +++ b/include/asm-generic/sections.h
->> @@ -91,6 +91,13 @@ static inline int =
-arch_is_kernel_initmem_freed(unsigned long addr)
->> }
->> #endif
->>=20
->> +#ifndef arch_is_bss_hole
->> +static inline int arch_is_bss_hole(unsigned long addr)
->> +{
->> +	return 0;
->> +}
->> +#endif
->> +
->> /**
->>  * memory_contains - checks if an object is contained within a memory =
-region
->>  * @begin: virtual address of the beginning of the memory region
->> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
->> index 4861cf8e274b..cd75b51f15ce 100644
->> --- a/kernel/locking/lockdep.c
->> +++ b/kernel/locking/lockdep.c
->> @@ -675,6 +675,9 @@ static int static_obj(const void *obj)
->> 	if (arch_is_kernel_initmem_freed(addr))
->> 		return 0;
->>=20
->> +	if (arch_is_bss_hole(addr))
->> +		return 0;
->=20
-> arch_is_bss_hole() should use a 'bool' - but other than that, this=20
-> looks good to me, if the PowerPC maintainers agree too.
+Generated by: scripts/coccinelle/api/ptr_ret.cocci
 
-I thought about making it a bool in the first place, but since all other =
-similar helpers
-(arch_is_kernel_initmem_freed(), arch_is_kernel_text(), =
-arch_is_kernel_data() etc)
-could be bool too but are not, I kept arch_is_bss_hole() just to be =
-=E2=80=9Cint=E2=80=9D for consistent.
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/spi/spi-gpio.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-Although then there is is_kernel_rodata() which is bool. I suppose =
-I=E2=80=99ll change
-arch_is_bss_hole() to bool, and then could have a follow-up patch to =
-covert all similar
-helpers to return boo instead.
+diff --git a/drivers/spi/spi-gpio.c b/drivers/spi/spi-gpio.c
+index 9eb82150666e..1d3e23ec20a6 100644
+=2D-- a/drivers/spi/spi-gpio.c
++++ b/drivers/spi/spi-gpio.c
+@@ -290,10 +290,7 @@ static int spi_gpio_request(struct device *dev, struc=
+t spi_gpio *spi_gpio)
+ 		return PTR_ERR(spi_gpio->miso);
+
+ 	spi_gpio->sck =3D devm_gpiod_get(dev, "sck", GPIOD_OUT_LOW);
+-	if (IS_ERR(spi_gpio->sck))
+-		return PTR_ERR(spi_gpio->sck);
+-
+-	return 0;
++	return PTR_ERR_OR_ZERO(spi_gpio->sck);
+ }
+
+ #ifdef CONFIG_OF
+=2D-
+2.23.0
 
