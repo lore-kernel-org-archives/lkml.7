@@ -2,274 +2,125 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B75AEC43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 02:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BAEAC43140
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 02:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80D3D208C3
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 02:30:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="piiNLL1/"
+	by mail.kernel.org (Postfix) with ESMTP id EC39B2173E
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 02:33:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567823617;
+	bh=BwjNmug7VeOX+mmJrtk2ttRDMPf6uUoGERmIXwKE2hI=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=sXlMhkwuyyOPu1in8PLDXdjSTP6thMqmLfJeZRDw6yoGtaYajLoT4N7Lb3Z/DVn4i
+	 lhgo3moYsyVTGwVsUtrqOj7mppcCXzMoHBlzOlkFhLlXY95jIa/8PFEm5fLn26rvBQ
+	 nWPj5k0we/Mibjj6kSH4q8MRzcpaumWCiPcdqHpY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391387AbfIGC37 (ORCPT
+        id S2393789AbfIGCdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 22:29:59 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:22115 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726829AbfIGC37 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 22:29:59 -0400
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x872TqBS031519;
-        Sat, 7 Sep 2019 11:29:53 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x872TqBS031519
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1567823393;
-        bh=ecpq39w1kLvt8KzSabpKqd9mUE8PScl47JDUsEouC00=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=piiNLL1/i7wf6MUv2WT5/hQG5Lpf/W1ZlRjxLuU72p77cStKIYVRlchMtFa+4RUPz
-         rv2Wkm8EFPi/wy6OkOZwcMCuXDtMXtXjIqqJp1m6l7NWHTGvcxXqftUmjfKiCAEK7j
-         t/S0oMvyzKwXIANaZMKZtFztbnIS8wzJSdar/NGDoGELztPDYywilJC3dwb18nRUvN
-         6BoxAILEE90KKIDUoI97Q/bOuPZCtCOWCL2i+fw4KYMFCQ3Dmh33uNlzvzxBvGz6Zu
-         7AZ99QSSC7EV3I2dIPQ82PBHQzJ66PWVCGYX0p0ZKYderMpO5EJLIMT7Qh+/wH66aj
-         oDFc1ffctxvRw==
-X-Nifty-SrcIP: [209.85.217.46]
-Received: by mail-vs1-f46.google.com with SMTP id q9so5332426vsl.4;
-        Fri, 06 Sep 2019 19:29:53 -0700 (PDT)
-X-Gm-Message-State: APjAAAVVGESHGGGZ+7xwab6K//MIp3gibhdxFi21gdxOPIowlF/vgKak
-        v/vbwiFXelpXCtRmhUrn9diIWlXTJwF1MvczpLI=
-X-Google-Smtp-Source: APXvYqwMq6WF7Zgz7faYgMdiTT7SWW5kG/vSlGHpe4CGvwG9idkwyC/+hQgoutyozZcDBOhfbX1NA749xdEXDSeBiOY=
-X-Received: by 2002:a67:f418:: with SMTP id p24mr6709049vsn.215.1567823391858;
- Fri, 06 Sep 2019 19:29:51 -0700 (PDT)
+        Fri, 6 Sep 2019 22:33:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55772 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726940AbfIGCdf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 22:33:35 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9886020854;
+        Sat,  7 Sep 2019 02:33:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567823615;
+        bh=BwjNmug7VeOX+mmJrtk2ttRDMPf6uUoGERmIXwKE2hI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=bEDreOAlktrm6KaQ3jHTr3cLhHR6sdnvq6DGfurJdIcNNcdKYlIlfsNrpeLzmzSM5
+         /MKKVaMraiBq/1KZt/QHC+HRrcJybobfGugCdSx/zAJbq45JWrIxrah455BUd8rik9
+         GbAh4hPQ8AyU9tXic1d5T3KTruMk/z3tr7QgkHB4=
+Subject: Re: [PATCH] kunit: Fix '--build_dir' option
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        SeongJae Park <sj38.park@gmail.com>
+Cc:     "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        shuah <shuah@kernel.org>
+References: <CAEjAshr=JqVpF651eSZYFhwVAMNZ29LWcfrH07K_M9GU=hPnvg@mail.gmail.com>
+ <1567786314-12330-1-git-send-email-sj38.park@gmail.com>
+ <CAFd5g44=8TV4VciMkcD2DHR+UsnpwyEFbw2Xucwo7-as6Py_4g@mail.gmail.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <1bc1c5da-2810-60d3-4e76-8d0b73fdd521@kernel.org>
+Date:   Fri, 6 Sep 2019 20:33:33 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190831162555.31887-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190831162555.31887-1-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 7 Sep 2019 11:29:15 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQYYHni+_1cC8+dVozVgtzzpEqCDJ+-e5k=9yR-+dZTYg@mail.gmail.com>
-Message-ID: <CAK7LNAQYYHni+_1cC8+dVozVgtzzpEqCDJ+-e5k=9yR-+dZTYg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] kbuild: refactor scripts/Makefile.extrawarn
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAFd5g44=8TV4VciMkcD2DHR+UsnpwyEFbw2Xucwo7-as6Py_4g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 1, 2019 at 1:26 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> Instead of the warning-[123] magic, let's accumulate compiler options
-> to KBUILD_CFLAGS directly as the top Makefile does. I think this makes
-> easier to understand what is going on in this file.
->
-> This commit slightly changes the behavior, I think all of which are OK.
->
-> [1] Currently, cc-option calls are needlessly evaluated. For example,
->       warning-3 += $(call cc-option, -Wpacked-bitfield-compat)
->     needs evaluating only when W=3, but it is actually evaluated for
->     W=1, W=2 as well. With this commit, only relevant cc-option calls
->     will be evaluated. This is a slight optimization.
->
-> [2] Currently, unsupported level like W=4 is checked by:
->       $(error W=$(KBUILD_ENABLE_EXTRA_GCC_CHECKS) is unknown)
->     This will no longer be checked, but I do not think it is a big
->     deal.
->
-> [3] Currently, 4 Clang warnings (Winitializer-overrides, Wformat,
->     Wsign-compare, Wformat-zero-length) are shown by any of W=1, W=2,
->     and W=3. With this commit, they will be warned only by W=1. I
->     think this is a more correct behavior since each warning belongs
->     to only one group.
->
-> For understanding this commit correctly:
->
-> We have 3 warning groups, W=1, W=2, and W=3. You may think W=3 has a
-> higher level than W=1, but they are actually independent. If you like,
-> you can combine them like W=13. To enable all the warnings, you can
-> pass W=123. It is shown by 'make help', but not noticed much. Since we
-> support W= combination, there should not exist intersection among the
-> three groups. If we enable Winitializer-overrides for W=1, we do not
-> need to for W=2 or W=3. This is the reason why I think the change [3]
-> makes sense.
->
-> The documentation says -Winitializer-overrides is enabled by default.
-> (https://clang.llvm.org/docs/DiagnosticsReference.html#winitializer-overrides)
-> We negate it by passing -Wno-initializer-overrides for the normal
-> build, but we do not do that for W=1. This means, W=1 effectively
-> enables -Winitializer-overrides by the clang's default. The same for
-> the other three.
->
-> Add comments in case people are confused with the code.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-> Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-> Acked-by: Nick Desaulniers <ndesaulniers@google.com>
-> Acked-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-> ---
+On 9/6/19 7:16 PM, Brendan Higgins wrote:
+> On Fri, Sep 6, 2019 at 9:12 AM SeongJae Park <sj38.park@gmail.com> wrote:
+>>
+>> Running kunit with '--build_dir' option gives following error message:
+>>
+>> ```
+>> $ ./tools/testing/kunit/kunit.py run --build_dir ../linux.out.kunit/
+>> [00:57:24] Building KUnit Kernel ...
+>> [00:57:29] Starting KUnit Kernel ...
+>> Traceback (most recent call last):
+>>    File "./tools/testing/kunit/kunit.py", line 136, in <module>
+>>      main(sys.argv[1:])
+>>    File "./tools/testing/kunit/kunit.py", line 129, in main
+>>      result = run_tests(linux, request)
+>>    File "./tools/testing/kunit/kunit.py", line 68, in run_tests
+>>      test_result = kunit_parser.parse_run_tests(kunit_output)
+>>    File "/home/sjpark/linux/tools/testing/kunit/kunit_parser.py", line
+>> 283, in parse_run_tests
+>>      test_result =
+>> parse_test_result(list(isolate_kunit_output(kernel_output)))
+>>    File "/home/sjpark/linux/tools/testing/kunit/kunit_parser.py", line
+>> 54, in isolate_kunit_output
+>>      for line in kernel_output:
+>>    File "/home/sjpark/linux/tools/testing/kunit/kunit_kernel.py", line
+>> 145, in run_kernel
+>>      process = self._ops.linux_bin(args, timeout, build_dir)
+>>    File "/home/sjpark/linux/tools/testing/kunit/kunit_kernel.py", line
+>> 69, in linux_bin
+>>      stderr=subprocess.PIPE)
+>>    File "/usr/lib/python3.5/subprocess.py", line 947, in __init__
+>>      restore_signals, start_new_session)
+>>    File "/usr/lib/python3.5/subprocess.py", line 1551, in _execute_child
+>>      raise child_exception_type(errno_num, err_msg)
+>> FileNotFoundError: [Errno 2] No such file or directory: './linux'
+>> ```
+>>
+>> This error occurs because the '--build_dir' option value is not passed
+>> to the 'run_kernel()' function.  Consequently, the function assumes
+>> the kernel image that built for the tests, which is under the
+>> '--build_dir' directory, is in kernel source directory and finally raises
+>> the 'FileNotFoundError'.
+>>
+>> This commit fixes the problem by properly passing the '--build_dir'
+>> option value to the 'run_kernel()'.
+>>
+>> Signed-off-by: SeongJae Park <sj38.park@gmail.com>
+> 
+> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+> Tested-by: Brendan Higgins <brendanhiggins@google.com>
+> 
+> Thanks!
+> 
 
-Both applied to linux-kbuild.
+Thanks Brendan! I will apply the patch for 5.4-rc1.
 
+SeongJae Park! In the future, please send tag versions. This should
+have been [PATCH v2].
 
-> Changes in v3:
->   - Added yet more comments.
->     Fix grammatical mistake 'does' -> 'do'.
->
-> Changes in v2:
->   - Added comments and more commit log
->
->  scripts/Makefile.extrawarn | 106 ++++++++++++++++++++-----------------
->  1 file changed, 56 insertions(+), 50 deletions(-)
->
-> diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-> index a74ce2e3c33e..d226c5fb13e2 100644
-> --- a/scripts/Makefile.extrawarn
-> +++ b/scripts/Makefile.extrawarn
-> @@ -1,14 +1,9 @@
->  # SPDX-License-Identifier: GPL-2.0
->  # ==========================================================================
-> -#
->  # make W=... settings
->  #
-> -# W=1 - warnings that may be relevant and does not occur too often
-> -# W=2 - warnings that occur quite often but may still be relevant
-> -# W=3 - the more obscure warnings, can most likely be ignored
-> -#
-> -# $(call cc-option, -W...) handles gcc -W.. options which
-> -# are not supported by all versions of the compiler
-> +# There are three warning groups enabled by W=1, W=2, W=3.
-> +# They are independent, and can be combined like W=12 or W=123.
->  # ==========================================================================
->
->  KBUILD_CFLAGS += $(call cc-disable-warning, packed-not-aligned)
-> @@ -17,58 +12,69 @@ ifeq ("$(origin W)", "command line")
->    export KBUILD_ENABLE_EXTRA_GCC_CHECKS := $(W)
->  endif
->
-> -ifdef KBUILD_ENABLE_EXTRA_GCC_CHECKS
-> -warning-  := $(empty)
-> +#
-> +# W=1 - warnings which may be relevant and do not occur too often
-> +#
-> +ifneq ($(findstring 1, $(KBUILD_ENABLE_EXTRA_GCC_CHECKS)),)
->
-> -warning-1 := -Wextra -Wunused -Wno-unused-parameter
-> -warning-1 += -Wmissing-declarations
-> -warning-1 += -Wmissing-format-attribute
-> -warning-1 += -Wmissing-prototypes
-> -warning-1 += -Wold-style-definition
-> -warning-1 += -Wmissing-include-dirs
-> -warning-1 += $(call cc-option, -Wunused-but-set-variable)
-> -warning-1 += $(call cc-option, -Wunused-const-variable)
-> -warning-1 += $(call cc-option, -Wpacked-not-aligned)
-> -warning-1 += $(call cc-option, -Wstringop-truncation)
-> +KBUILD_CFLAGS += -Wextra -Wunused -Wno-unused-parameter
-> +KBUILD_CFLAGS += -Wmissing-declarations
-> +KBUILD_CFLAGS += -Wmissing-format-attribute
-> +KBUILD_CFLAGS += -Wmissing-prototypes
-> +KBUILD_CFLAGS += -Wold-style-definition
-> +KBUILD_CFLAGS += -Wmissing-include-dirs
-> +KBUILD_CFLAGS += $(call cc-option, -Wunused-but-set-variable)
-> +KBUILD_CFLAGS += $(call cc-option, -Wunused-const-variable)
-> +KBUILD_CFLAGS += $(call cc-option, -Wpacked-not-aligned)
-> +KBUILD_CFLAGS += $(call cc-option, -Wstringop-truncation)
->  # The following turn off the warnings enabled by -Wextra
-> -warning-1 += -Wno-missing-field-initializers
-> -warning-1 += -Wno-sign-compare
-> -
-> -warning-2 += -Wcast-align
-> -warning-2 += -Wdisabled-optimization
-> -warning-2 += -Wnested-externs
-> -warning-2 += -Wshadow
-> -warning-2 += $(call cc-option, -Wlogical-op)
-> -warning-2 += -Wmissing-field-initializers
-> -warning-2 += -Wsign-compare
-> -warning-2 += $(call cc-option, -Wmaybe-uninitialized)
-> -warning-2 += $(call cc-option, -Wunused-macros)
-> -
-> -warning-3 := -Wbad-function-cast
-> -warning-3 += -Wcast-qual
-> -warning-3 += -Wconversion
-> -warning-3 += -Wpacked
-> -warning-3 += -Wpadded
-> -warning-3 += -Wpointer-arith
-> -warning-3 += -Wredundant-decls
-> -warning-3 += -Wswitch-default
-> -warning-3 += $(call cc-option, -Wpacked-bitfield-compat)
-> -
-> -warning := $(warning-$(findstring 1, $(KBUILD_ENABLE_EXTRA_GCC_CHECKS)))
-> -warning += $(warning-$(findstring 2, $(KBUILD_ENABLE_EXTRA_GCC_CHECKS)))
-> -warning += $(warning-$(findstring 3, $(KBUILD_ENABLE_EXTRA_GCC_CHECKS)))
-> -
-> -ifeq ("$(strip $(warning))","")
-> -        $(error W=$(KBUILD_ENABLE_EXTRA_GCC_CHECKS) is unknown)
-> -endif
-> +KBUILD_CFLAGS += -Wno-missing-field-initializers
-> +KBUILD_CFLAGS += -Wno-sign-compare
->
-> -KBUILD_CFLAGS += $(warning)
->  else
->
-> +# Some diagnostics enabled by default are noisy.
-> +# Suppress them by using -Wno... except for W=1.
-> +
->  ifdef CONFIG_CC_IS_CLANG
->  KBUILD_CFLAGS += -Wno-initializer-overrides
->  KBUILD_CFLAGS += -Wno-format
->  KBUILD_CFLAGS += -Wno-sign-compare
->  KBUILD_CFLAGS += -Wno-format-zero-length
->  endif
-> +
-> +endif
-> +
-> +#
-> +# W=2 - warnings which occur quite often but may still be relevant
-> +#
-> +ifneq ($(findstring 2, $(KBUILD_ENABLE_EXTRA_GCC_CHECKS)),)
-> +
-> +KBUILD_CFLAGS += -Wcast-align
-> +KBUILD_CFLAGS += -Wdisabled-optimization
-> +KBUILD_CFLAGS += -Wnested-externs
-> +KBUILD_CFLAGS += -Wshadow
-> +KBUILD_CFLAGS += $(call cc-option, -Wlogical-op)
-> +KBUILD_CFLAGS += -Wmissing-field-initializers
-> +KBUILD_CFLAGS += -Wsign-compare
-> +KBUILD_CFLAGS += $(call cc-option, -Wmaybe-uninitialized)
-> +KBUILD_CFLAGS += $(call cc-option, -Wunused-macros)
-> +
-> +endif
-> +
-> +#
-> +# W=3 - more obscure warnings, can most likely be ignored
-> +#
-> +ifneq ($(findstring 3, $(KBUILD_ENABLE_EXTRA_GCC_CHECKS)),)
-> +
-> +KBUILD_CFLAGS += -Wbad-function-cast
-> +KBUILD_CFLAGS += -Wcast-qual
-> +KBUILD_CFLAGS += -Wconversion
-> +KBUILD_CFLAGS += -Wpacked
-> +KBUILD_CFLAGS += -Wpadded
-> +KBUILD_CFLAGS += -Wpointer-arith
-> +KBUILD_CFLAGS += -Wredundant-decls
-> +KBUILD_CFLAGS += -Wswitch-default
-> +KBUILD_CFLAGS += $(call cc-option, -Wpacked-bitfield-compat)
-> +
->  endif
-> --
-> 2.17.1
->
-
-
--- 
-Best Regards
-Masahiro Yamada
+thanks,
+-- Shuah
