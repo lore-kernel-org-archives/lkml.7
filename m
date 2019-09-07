@@ -2,130 +2,107 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 495DCC4332F
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 23:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A88C4332F
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 23:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FDFE2178F
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 23:48:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="rtj5kdv9"
+	by mail.kernel.org (Postfix) with ESMTP id 4E64821835
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 23:53:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567900390;
+	bh=KU+yu1dnpjqMkvaxD0NQ/62kFYi8GAP69zuvLWhpBPg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=k980cCyRaJJQkfODQXWbINp+KygZm+Zbaa0g+vThhcBoASUcNCWVgf0C1u6ZDBoMv
+	 Fh+St5ixnn9lYzM3TZi6R3sLIJDt+pB/pb56LADnNSlJFjFVBsn+P2K2sEZb0leLqS
+	 e5n5LAUENJknFmq8ckFlgpYQpV+ShgLQZm/qQeJ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436693AbfIGXsG (ORCPT
+        id S2387612AbfIGXxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 19:48:06 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:33276 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726635AbfIGXsF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 19:48:05 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x87NkxF5070522;
-        Sat, 7 Sep 2019 23:47:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=corp-2019-08-05;
- bh=a1Q/cZrBiYqtJgS1w+MNIlqMTk5J3IGv7ywqLf6HB3E=;
- b=rtj5kdv9FDAGURwQWvLJJDOOwwEDaK/sugbUq8/XcHoumftrrtaZWH+67Waa+qftYRso
- gK+XHItOhb6e0CaXtxiUf8+3fus3LF1IZ/elkjNI2TQuxkAUtb6YIjEc2RZtTq1ws8Kt
- ICA2PgJ7afEXkdrUAPv9dGUJnzUdmb8/uQliMiXOP8TaocWCgvFlgezSL3WajmuHMomf
- qhUJwooU69X0NKx933YiknFhORlfTaUtORNppOXZtm2AgL67Z2/yOK/Z6vuJDcKg8sAF
- 1vpIckVgBZsvZ3pblLwbwM8q4aV3uhiybb6g5zqTibSgYlPFEDiQeCD9AQT0dbepecaQ MA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2uvpg28026-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 07 Sep 2019 23:47:56 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x87NhCmn145447;
-        Sat, 7 Sep 2019 23:45:56 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2uve9bcsqt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 07 Sep 2019 23:45:56 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x87NjsqO013728;
-        Sat, 7 Sep 2019 23:45:54 GMT
-Received: from paddy.uk.oracle.com (/10.175.163.125)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 07 Sep 2019 16:45:53 -0700
-From:   Joao Martins <joao.m.martins@oracle.com>
-To:     linux-pm@vger.kernel.org
-Cc:     Joao Martins <joao.m.martins@oracle.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        Marcelo Tosatti <mtosatti@redhat.com>, kvm@vger.kernel.org
-Subject: [PATCH v3 0/4] cpuidle, haltpoll: governor switching on idle register
-Date:   Sun,  8 Sep 2019 00:45:20 +0100
-Message-Id: <20190907234524.5577-1-joao.m.martins@oracle.com>
-X-Mailer: git-send-email 2.11.0
+        Sat, 7 Sep 2019 19:53:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46882 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726881AbfIGXxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Sep 2019 19:53:09 -0400
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F734206C3
+        for <linux-kernel@vger.kernel.org>; Sat,  7 Sep 2019 23:53:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567900388;
+        bh=KU+yu1dnpjqMkvaxD0NQ/62kFYi8GAP69zuvLWhpBPg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=iQhzSJ+9oXgDhIW7PRJgS7OAd27+ApcmlwV1Pr1t7tIdVxFSSbNmEPtHB+EVkx/QI
+         3oFy7UEQ8OJz3CxRjUYWmyWOwvSBH4uR+n5qkd1ZBcZeaqG5m2rMeo15JOhhtEIi6O
+         gZUNlX9yNbmazWAWH7DCrTZAkCxjkeJuFftVnO9s=
+Received: by mail-wm1-f53.google.com with SMTP id t9so10749522wmi.5
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Sep 2019 16:53:08 -0700 (PDT)
+X-Gm-Message-State: APjAAAV5zr6sGHvFNRXfr6UM5bVWv0h+XxAI0+rRIsXa3iWgMSPEiijn
+        hCdCaQ6lfgIrJj+mkJLSb9kvudS7Z7UjmODUoWY=
+X-Google-Smtp-Source: APXvYqz/EaoziXhxATPtaiz7WMpDkudp2uTSNKWYfbpcDLkqo0GVOyZavKTFmq2PKcMvW87cxTCwTetw/AbRtRbW9aM=
+X-Received: by 2002:a1c:f007:: with SMTP id a7mr12784687wmb.172.1567900386906;
+ Sat, 07 Sep 2019 16:53:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9373 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=837
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1909070260
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9373 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=967 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1909070260
+References: <20190321163623.20219-1-julien.grall@arm.com> <20190321163623.20219-12-julien.grall@arm.com>
+ <0dfe120b-066a-2ac8-13bc-3f5a29e2caa3@arm.com> <CAJF2gTTXHHgDboaexdHA284y6kNZVSjLis5-Q2rDnXCxr4RSmA@mail.gmail.com>
+ <c871a5ae-914f-a8bb-9474-1dcfec5d45bf@arm.com> <20190619091219.GB7767@fuggles.cambridge.arm.com>
+ <CAJF2gTTmFq3yYa9UrdZRAFwJgC=KmKTe2_NFy_UZBUQovqQJPg@mail.gmail.com>
+ <20190619123939.GF7767@fuggles.cambridge.arm.com> <CAJF2gTSiiiewTLwVAXvPLO7rTSUw1rg8VtFLzANdP2S2EEbTjg@mail.gmail.com>
+ <20190624104006.lvm32nahemaqklxc@willie-the-truck>
+In-Reply-To: <20190624104006.lvm32nahemaqklxc@willie-the-truck>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Sun, 8 Sep 2019 07:52:55 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTSC1sGgmiTCgzKUTdPyUZ3LG4H7N8YbMyWr-E+eifGuYg@mail.gmail.com>
+Message-ID: <CAJF2gTSC1sGgmiTCgzKUTdPyUZ3LG4H7N8YbMyWr-E+eifGuYg@mail.gmail.com>
+Subject: Re: [PATCH RFC 11/14] arm64: Move the ASID allocator code in a
+ separate file
+To:     Will Deacon <will@kernel.org>
+Cc:     Will Deacon <will.deacon@arm.com>, julien.thierry@arm.com,
+        aou@eecs.berkeley.edu, james.morse@arm.com,
+        Arnd Bergmann <arnd@arndb.de>, suzuki.poulose@arm.com,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Anup Patel <anup.Patel@wdc.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Julien Grall <julien.grall@arm.com>,
+        Palmer Dabbelt <palmer@sifive.com>, gary@garyguo.net,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        christoffer.dall@arm.com, linux-riscv@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey,
+Thx Will,
 
-Presented herewith a series with aims to tie in together the haltpoll
-idle driver and governor, without sacrificing previous governor setups.
-In addition, there are a few fixes with respect to module loading for
-cpuidle-haltpoll. 
+On Mon, Jun 24, 2019 at 6:40 PM Will Deacon <will@kernel.org> wrote:
+> > I'll keep my system use the same ASID for SMP + IOMMU :P
+>
+> You will want a separate allocator for that:
+>
+> https://lkml.kernel.org/r/20190610184714.6786-2-jean-philippe.brucker@arm.com
 
-The series is organized as follows:
+Yes, it is hard to maintain ASID between IOMMU and CPUMMU or different
+system, because it's difficult to synchronize the IO_ASID when the CPU
+ASID is rollover.
+But we could still use hardware broadcast TLB invalidation instruction
+to uniformly manage the ASID and IO_ASID, or OTHER_ASID in our IOMMU.
 
- Patch 1: Allows idle driver stating a preferred governor that it
-          wants to use, based on discussion here:
+Welcome to join our disscusion:
+"Introduce an implementation of IOMMU in linux-riscv"
+9 Sep 2019, 10:45 Jade-room-I&II (Corinthia Hotel Lisbon) RISC-V MC
 
-  https://lore.kernel.org/kvm/457e8ca1-beb3-ca39-b257-e7bc6bb35d4d@oracle.com/
+--
+Best Regards
+ Guo Ren
 
- Patch 2: Decrease rating of governor, and allows previous defaults
-	  to be as before haltpoll, while using @governor to switch to haltpoll
-	  when haltpoll driver is registered;
-
- Patch 3 - 4: Module loading fixes. first is the incorrect error
-	      reporting and second is supportting module unloading.
-
-Thanks,
-	Joao
-
-v3:
-* Fixed ARM build issues.
-
-v2:
-* Add missing Fixes tag on patches 3 and 4.
-
-Joao Martins (4):
-  cpuidle: allow governor switch on cpuidle_register_driver()
-  cpuidle-haltpoll: set haltpoll as preferred governor
-  cpuidle-haltpoll: return -ENODEV on modinit failure
-  cpuidle-haltpoll: do not set an owner to allow modunload
-
- drivers/cpuidle/cpuidle-haltpoll.c   |  4 ++--
- drivers/cpuidle/cpuidle.h            |  2 ++
- drivers/cpuidle/driver.c             | 25 +++++++++++++++++++++++++
- drivers/cpuidle/governor.c           |  7 ++++---
- drivers/cpuidle/governors/haltpoll.c |  2 +-
- include/linux/cpuidle.h              |  3 +++
- 6 files changed, 37 insertions(+), 6 deletions(-)
-
--- 
-2.17.1
-
+ML: https://lore.kernel.org/linux-csky/
