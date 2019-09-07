@@ -2,66 +2,77 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57AE6C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 21:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C19C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 21:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3591020863
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 21:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FFC8208C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 21:13:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DVGWCL11"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406354AbfIGVIW (ORCPT
+        id S2436693AbfIGVNF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 17:08:22 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:36148 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727467AbfIGVIW (ORCPT
+        Sat, 7 Sep 2019 17:13:05 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:38227 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406264AbfIGVNF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 17:08:22 -0400
-Received: by mail-lj1-f193.google.com with SMTP id l20so9153470ljj.3;
-        Sat, 07 Sep 2019 14:08:20 -0700 (PDT)
+        Sat, 7 Sep 2019 17:13:05 -0400
+Received: by mail-qk1-f193.google.com with SMTP id x5so9138053qkh.5
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Sep 2019 14:13:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WZ40lQLRZ9Qku3eSrX7Z1ZfXZh74jtidVt6YdPRI94A=;
+        b=DVGWCL11t9HhKdvGMIS39j3Cx0wFP0iI/b1YY7TvHHbrpLSjFusy12jTARGG5Y0lcK
+         2xOv5PTooPZpTuxcuzHszX5CigRZ14xFaCAyEXJrNQfr6aAgH9dcsKhDAn1mSJEHU7gY
+         L0XnCQlN3riT2nbtGPOMaulYkpBzNLZLrnB9lgqzl9Os17U7mFLKUZ3Tj05488FZHSES
+         3Urg71yfxLx8cWTPq7v6KXoWeqT5L1YjQ/Tv6ZTuz4hSiaxxsrbmKf2Oq49Bf5F2htOY
+         Mf8ot7Pj6fFJRqFoVLKNQjMA9EAFwlPq4Ns9465haSx845wo4r5z4NDu+Wrb29A79Oft
+         FNBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=7p6Mkwi8jPdC84liskcX2qQwFroVmsh1A1rK00DXSks=;
-        b=kmRGyr9MYo8cy8gopztfcoajVSZVBX7QajsZi/7v5mzhMDl1Aiswjo/IFFwqlmguPd
-         bttG71LOGpBRiuieX9BkIHlaWkIHAXJ96VMJmDMHvM5TsD92Kzt1y4vAH93+Ll1zMz3h
-         0o/Gqk/rJRU3/qyh9SqIg+LP4BNCEJmkRbt6mDBstaHpSOOhUNWX3bybFnn9GyemX0WR
-         jj5XoOICpTvDM41T75xZRRlX9KW1ArCS6rEFxgWvDxUhHrsT2wuDjSpNAlPC50oUVzzu
-         Y23DLKtdTfs+UuTCeJ85zG5uUCUe0gnt5zom09cVDiDBEC92L9bgnSbdQtjhWa4Juy8H
-         Q7Ww==
-X-Gm-Message-State: APjAAAUF1WHmHo2SNGsWdo7uYZ4RTue4qiLbFhLpCc+3ZY5mZMd0uLPm
-        ZuFnYz3qTD6LePPHPmwAp4aa7Juc
-X-Google-Smtp-Source: APXvYqz/NmOOdgdrVIowmSKYH7GmkmZ4I4/x7k+JKza60QVoHDRFTAuTG5GRNh9rfNVC9PtOhEBwMw==
-X-Received: by 2002:a2e:9a54:: with SMTP id k20mr3407321ljj.14.1567890499955;
-        Sat, 07 Sep 2019 14:08:19 -0700 (PDT)
-Received: from [192.168.1.8] ([31.173.86.136])
-        by smtp.gmail.com with ESMTPSA id w18sm981784lji.94.2019.09.07.14.08.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 07 Sep 2019 14:08:19 -0700 (PDT)
-Subject: Re: [PATCH] mostpost: don't warn about symbols from another file
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>
-Cc:     Emil Velikov <emil.l.velikov@gmail.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        WANG Chao <chao.wang@ucloud.cn>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190906151059.1077708-1-arnd@arndb.de>
-From:   Denis Efremov <efremov@linux.com>
-Message-ID: <aa79df36-8698-3490-ef7f-f9c6a90c34c6@linux.com>
-Date:   Sun, 8 Sep 2019 00:08:14 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
+        bh=WZ40lQLRZ9Qku3eSrX7Z1ZfXZh74jtidVt6YdPRI94A=;
+        b=tgD4bFdJg/RclYIqZEFP7Ybf8X+ptoND3i6mmSKoL/wHfzkGxM8q85C6bSTzVu+HNL
+         gxGtaAgBRqcpTCdEz+Pnio8OtKvf/XbCEkwvvXa3hJ9uUvDRY9v+2QjW+enlfuXkPTxZ
+         kgbpHBtGi5YFUaaJ/skn9MspaFlfHRO7KvaPBza/ZyApoZZRr3tTIQP0QnzA4+quKaat
+         uu3HwIRwqOUQ/MGXzI2mq5Y0JT0kix09OWefaV7JVWgCHHWr4lgI4aeh1OMFQ3762WDA
+         AiKgsthb7RWqV5aPy5IPuB5sP2OtdyVGsw16hjz/FLyLmJNdhzLYKZ8zfZN3TaBJBMtE
+         6aOQ==
+X-Gm-Message-State: APjAAAVfYlGIU5uWJ4MB1iamHhv6S6tGqSyrw8SqW6aNQfaq/CqwgGtE
+        tJfOuJ+FyAQNW6Y7CTtR9Ztk48s=
+X-Google-Smtp-Source: APXvYqxWFMdVYFWxwuOVLAOfZrJlRePmiCgwwz+3EBRllub6N5d9x8F3XqBSm+6ziOpFShPFABJHVw==
+X-Received: by 2002:a05:620a:1494:: with SMTP id w20mr16249585qkj.317.1567890783557;
+        Sat, 07 Sep 2019 14:13:03 -0700 (PDT)
+Received: from [192.168.1.99] ([92.117.172.145])
+        by smtp.googlemail.com with ESMTPSA id 29sm5135881qkp.86.2019.09.07.14.13.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 07 Sep 2019 14:13:02 -0700 (PDT)
+Subject: Re: [PATCH v6 1/4] ftrace: Implement fs notification for
+ tracing_max_latency
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
+References: <20190905132548.5116-1-viktor.rosendahl@gmail.com>
+ <20190905132548.5116-2-viktor.rosendahl@gmail.com>
+ <20190906141740.GA250796@google.com>
+From:   Viktor Rosendahl <viktor.rosendahl@gmail.com>
+Message-ID: <c35722db-bb79-7e09-ac02-e82ab827e1e3@gmail.com>
+Date:   Sat, 7 Sep 2019 23:12:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190906151059.1077708-1-arnd@arndb.de>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190906141740.GA250796@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -69,94 +80,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 06.09.2019 18:10, Arnd Bergmann wrote:
-> On architectures such as ARM that have a list of symbols exported
-> from assembler in a separate C file, we get a lot of new warnings:
+On 9/6/19 4:17 PM, Joel Fernandes wrote:
+> On Thu, Sep 05, 2019 at 03:25:45PM +0200, Viktor Rosendahl wrote:
+<clip>
+>> +
+>> +__init static int latency_fsnotify_init(void)
+>> +{
+>> +	fsnotify_wq = alloc_workqueue("tr_max_lat_wq",
+>> +				      WQ_UNBOUND | WQ_HIGHPRI, 0);
+>> +	if (!fsnotify_wq) {
+>> +		pr_err("Unable to allocate tr_max_lat_wq\n");
+>> +		return -ENOMEM;
+>> +	}
 > 
-> WARNING: "__ashrdi3" [vmlinux] is a static (unknown) WARNING:
-> "__lshrdi3" [vmlinux] is a static (unknown) WARNING: "__aeabi_llsr"
-> [vmlinux] is a static (unknown) WARNING: "__aeabi_lasr" [vmlinux] is
-> a static (unknown) WARNING: "__aeabi_uidivmod" [vmlinux] is a static
-> (unknown) WARNING: "__udivsi3" [vmlinux] is a static (unknown) 
-> WARNING: "_change_bit" [vmlinux] is a static (unknown) WARNING:
-> "__aeabi_idiv" [vmlinux] is a static (unknown) WARNING: "__umodsi3"
-> [vmlinux] is a static (unknown) WARNING: "__aeabi_uidiv" [vmlinux] is
-> a static (unknown) WARNING: "__aeabi_idivmod" [vmlinux] is a static
-> (unknown) WARNING: "__muldi3" [vmlinux] is a static (unknown) 
-> WARNING: "__aeabi_ulcmp" [vmlinux] is a static (unknown) WARNING:
-> "__raw_writesb" [vmlinux] is a static (unknown) WARNING:
-> "__raw_readsb" [vmlinux] is a static (unknown) ...
+> Why not just use the system workqueue instead of adding another workqueue?
 > 
-> This is not helpful, as these are clearly not static symbols at all.
-> Suppress the warning in a case like this.
-> 
-> Fixes: 15bfc2348d54 ("modpost: check for static EXPORT_SYMBOL*
-> functions") Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Tested-by: Denis Efremov <efremov@linux.com>
+For the the latency-collector to work properly in the worst case, when a
+new latency occurs immediately, the fsnotify must be received in less
+time than what the threshold is set to. If we always are slower we will
+always lose certain latencies.
 
-What I could add here is that all these symbols are:
-$ nm vmlinux | grep '__ashrdi3\|__lshrdi3\|__aeabi_llsr\|...'
-cd63c845 A __crc___aeabi_lasr
-76cf47f6 A __crc___aeabi_llsl
-8a4fa83b A __crc___aeabi_llsr
-44643b93 A __crc___aeabi_lmul
-f564412a A __crc___aeabi_ulcmp
-40f07981 A __crc___ashldi3
-edd9106d A __crc___ashrdi3
-389ecf9e A __crc___bswapdi2
-f1ea6f1c A __crc___bswapsi2
-14d4a9c5 A __crc__change_bit
-ff67b37f A __crc___lshrdi3
-800e4ffa A __crc___muldi3
-f7163ec9 A __crc___raw_readsb
-f0ed2ef4 A __crc___raw_writesb
-ffb94ef0 A __crc__test_and_change_bit
-7cc035a7 A __crc___ucmpdi2
+My intention was to minimize latency in some important cases, so that
+user space receives the notification sooner rather than later.
 
-There is no ksymtab, kstrtab for them and there is
-no the exact symbols, only crc.
+There doesn't seem to be any system workqueue with WQ_UNBOUND and
+WQ_HIGHPRI. My thinking was that WQ_UNBOUND might help with the latency
+in some important cases.
 
-Thus they get to the symbolhash table from
-handle_modversions() -> sym_update_crc().
+If we use:
 
-Since there is no the exact symbols, e.g. like
-nm vmlinux | grep __kmalloc
-2d6fcc06 A __crc___kmalloc
-c01c922d T __kmalloc           <---
-c0749192 r __kstrtab___kmalloc
-c073c7c4 r __ksymtab___kmalloc
+queue_work(system_highpri_wq, &tr->fsnotify_work);
 
-we can't check them in this cycle:
-// check for static EXPORT_SYMBOL_* functions && global vars
-for (sym = info.symtab_start; sym < info.symtab_stop; sym++) {
+then the work will (almost) always execute on the same CPU but if we are
+unlucky that CPU could be too busy while there could be another CPU in
+the system that would be able to process the work soon enough.
 
-and they are automatically marked as static.
+queue_work_on() could be used to queue the work on another CPU but it
+seems difficult to select the right CPU.
 
-That's all so far, I don't know is it correct to have only
-__crc* or not for a symbol.
+best regards,
 
-Just a sidenote:
-arch/arm/kernel/armksyms.c states that these are
-/*
- * libgcc functions - functions that are used internally by the
- * compiler...
-
-
-Thanks,
-Denis
-
-> --- scripts/mod/modpost.c | 2 +- 1 file changed, 1 insertion(+), 1
-> deletion(-)
-> 
-> diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c index
-> 76c221dd9b2b..4265dd924933 100644 --- a/scripts/mod/modpost.c +++
-> b/scripts/mod/modpost.c @@ -2543,7 +2543,7 @@ int main(int argc, char
-> **argv) struct symbol *s = symbolhash[n];
-> 
-> while (s) { -			if (s->is_static) +			if (s->is_static && s->export
-> != export_unknown) warn("\"%s\" [%s] is a static %s\n", s->name,
-> s->module->name, export_str(s->export));
-> 
+Viktor
