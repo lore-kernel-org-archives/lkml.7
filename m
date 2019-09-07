@@ -2,97 +2,94 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98EADC43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 17:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 765D0C0030B
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 17:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 729DE218AE
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 17:12:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FD4B218DE
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 17:20:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395128AbfIGRMz (ORCPT
+        id S2392507AbfIGRUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 13:12:55 -0400
-Received: from mga12.intel.com ([192.55.52.136]:50196 "EHLO mga12.intel.com"
+        Sat, 7 Sep 2019 13:20:50 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:58786 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731167AbfIGRMz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 13:12:55 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Sep 2019 10:12:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,478,1559545200"; 
-   d="scan'208";a="199750399"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga001.fm.intel.com with ESMTP; 07 Sep 2019 10:12:52 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1i6eGZ-00008r-D3; Sat, 07 Sep 2019 20:12:51 +0300
-Date:   Sat, 7 Sep 2019 20:12:51 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] software node: implement reference properties
-Message-ID: <20190907171251.GL2680@smile.fi.intel.com>
-References: <20190906222611.223532-1-dmitry.torokhov@gmail.com>
- <20190907160819.GH2680@smile.fi.intel.com>
- <20190907163240.GA27112@dtor-ws>
+        id S1729790AbfIGRUu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Sep 2019 13:20:50 -0400
+Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1i6eOF-0006wv-1N; Sat, 07 Sep 2019 19:20:47 +0200
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Andrey Pronin <apronin@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Alexander Steffen <Alexander.Steffen@infineon.com>
+Subject: Re: [PATCH v6 4/4] tpm: tpm_tis_spi: Support cr50 devices
+Date:   Sat, 07 Sep 2019 19:20:46 +0200
+Message-ID: <3727576.e4YuOxhLfb@diego>
+In-Reply-To: <8a6f05b76c37968d494fce9e555f9c21cca83003.camel@linux.intel.com>
+References: <20190829224110.91103-1-swboyd@chromium.org> <5d6e9a38.1c69fb81.ad03c.cb4c@mx.google.com> <8a6f05b76c37968d494fce9e555f9c21cca83003.camel@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190907163240.GA27112@dtor-ws>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 07, 2019 at 09:32:40AM -0700, Dmitry Torokhov wrote:
-> On Sat, Sep 07, 2019 at 07:08:19PM +0300, Andy Shevchenko wrote:
-> > On Fri, Sep 06, 2019 at 03:26:09PM -0700, Dmitry Torokhov wrote:
+Hi Jarkko,
 
-> > > +	} else if (src->type == DEV_PROP_REF) {
-> > > +		/* All reference properties must be arrays */
-> > > +		return -EINVAL;
-> > 
-> > Hmm... What about to duplicate pointer under value union and use is_array to
-> > distinguish which one to use? Because...
+Am Samstag, 7. September 2019, 19:04:15 CEST schrieb Jarkko Sakkinen:
+> On Tue, 2019-09-03 at 09:52 -0700, Stephen Boyd wrote:
+> > That's fair. I'll put the Kconfig option back. There's still the small
+> > issue of what to do about the module name. Should I rename the
+> > tpm_tis_spi.c file to something else so that the module can keep the
+> > same name? Or was the tpm_tis_spi_mod.ko trick from v5 good enough?
 > 
-> Then we have to special-case copying this entry, similar to the pains we
-> are going with the strings.
-
-I can't see it as a pain. Simple do the same kmemdup() for the case when
-is_array = false and DEV_TYPE_REF?
-
-By the way, don't we need to update property_entry_{get,set}_pointer()?
-
-> > > +	.is_array = true,						\
-> > 
-> > I really don't like this "cheating".
+> Not sure I understood the question correctly but how I think
+> this should be deployed is:
 > 
-> This is not cheating. Any single value can be represented as an array of
-> one element. Actually, the only reason we have this "is_array" business
-> is because for scalar values and short strings it is much cheaper to
-> store single value in-line instead of out of line + pointer, especially
-> on 64 bit arches.
+> - A boolean CONFIG_TCG_TIS_SPI_CR50.
+> - tpm_tis_spi_cr50.c that gets compiled in as part of tpm_tis_spi
+>   when the config option is selected.
+> 
+> I think this would best follow the conventions that are in place
+> already. Please tell if I got something wrong or if there is some
+> bottleneck in this framework but this is anyway what I would prefer
+> with the knowledge I have...
 
-Yes, and this is a lot of benefit!
+There is an implementation detail to iron out:
 
-> If you want we can change is_array into is_inline.
+Doing
 
-Nope, is_array is exactly what it tells us about the content. Its functional
-load is to distinguish which union (value vs. pointer) we are using.
+	obj-$(CONFIG_TCG_TIS_SPI) += tpm_tis_spi.o cr50_spi.o
 
--- 
-With Best Regards,
-Andy Shevchenko
+as in this patch results in it failing to build as a module, due to them
+getting compiled to separate modules, yt sharing code. So I guess doing
+
+	obj-$(CONFIG_TCG_TIS_SPI) += tpm_tis_spi.o
+	obj-$(CONFIG_TCG_TIS_SPI_CR50) += cr50_spi.o
+
+will result in the same error, hence the question of doing something like
+
+	obj-$(CONFIG_TCG_TIS_SPI) += tpm_tis_spi_mod.o
+	tpm_tis_spi_mod-y := tpm_tis_spi.o
+	tpm_tis_spi_mod-$(CONFIG_TCG_TIS_SPI_CR50) += cr50_spi.o
+
+so that sources get compiled and the module getting build from the result.
+
+
+Heiko
 
 
