@@ -2,116 +2,80 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 590B0C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 17:07:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A207C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 17:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2483A218AE
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 17:07:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567876069;
-	bh=W6F7Mkf6oMUfeq/tnd7a5zhL8K7SHq1XA/JZa7RAXhs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cDfo4FVt/e1wMspINZeQGsQTt5iZ9Egtw4HSTcYwX1cLzboRyZ3AMWvdyKTygzqRB
-	 F4Y17s0+v4YXtKjySc5Eve32xmE8aCOKTEGITLZ060sOipb/OyA0sqGV7ibtGFBsO4
-	 YoDOn/povjSA8auonJCU7/ilMyIlN1R5VqNKSrPA=
+	by mail.kernel.org (Postfix) with ESMTP id 23E7A218AE
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 17:08:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395105AbfIGRHs (ORCPT
+        id S2436522AbfIGRIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 13:07:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57036 "EHLO mail.kernel.org"
+        Sat, 7 Sep 2019 13:08:44 -0400
+Received: from muru.com ([72.249.23.125]:60132 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389011AbfIGRHs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 13:07:48 -0400
-Received: from localhost (unknown [80.251.162.164])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8CF321835;
-        Sat,  7 Sep 2019 17:07:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567876067;
-        bh=W6F7Mkf6oMUfeq/tnd7a5zhL8K7SHq1XA/JZa7RAXhs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aYaWtn/du38ppga6SBpybBH2UzNkMh9ANBwr9nC+7wT2mekgO83TwU3imN0qZLmyg
-         Sh5uMOYbjfO4WqptFtvnYKeQ6lr1kSg80o3wPN6mMYsumqHxlqv/cUtBMz33QagT/N
-         ZDv6a5a/nedqM2VdwLvdRG8+UCH1i/4SoegeXpKs=
-Date:   Sat, 7 Sep 2019 18:07:44 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     volery <sandro@volery.com>
-Cc:     jslaby@suse.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Fixed most indent issues in tty_io.c
-Message-ID: <20190907170744.GA17100@kroah.com>
-References: <20190907090948.GA5824@volery>
+        id S2394938AbfIGRIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Sep 2019 13:08:43 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 79F03805C;
+        Sat,  7 Sep 2019 17:09:11 +0000 (UTC)
+Date:   Sat, 7 Sep 2019 10:08:38 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        =?utf-8?B?QW5kcsOp?= Roth <neolynx@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Enric Balletbo i Serra <eballetbo@gmail.com>,
+        Javier Martinez Canillas <javier@dowhile0.org>,
+        Roger Quadros <rogerq@ti.com>,
+        Teresa Remmet <t.remmet@phytec.de>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 1/4] cpufreq: ti-cpufreq: add support for omap34xx and
+ omap36xx
+Message-ID: <20190907170838.GH52127@atomide.com>
+References: <cover.1567839375.git.hns@goldelico.com>
+ <0eb7129f6148faac0150d6299ac97347484c7125.1567839375.git.hns@goldelico.com>
+ <F12B47AA-DED2-4BD9-B144-2463A2AE6094@goldelico.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190907090948.GA5824@volery>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <F12B47AA-DED2-4BD9-B144-2463A2AE6094@goldelico.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 07, 2019 at 11:09:48AM +0200, volery wrote:
-> There were a lot of styling problems using space then tab or spaces
-> instead of tabs in that file. Especially the entire function at line
-> 2677.
-> Also added a space before the : on line 2221.
+* H. Nikolaus Schaller <hns@goldelico.com> [190907 07:38]:
+> > Am 07.09.2019 um 08:56 schrieb H. Nikolaus Schaller <hns@goldelico.com>:
+> > @@ -190,6 +272,11 @@ static const struct of_device_id ti_cpufreq_of_match[] = {
+> > 	{ .compatible = "ti,am33xx", .data = &am3x_soc_data, },
+> > 	{ .compatible = "ti,am43", .data = &am4x_soc_data, },
+> > 	{ .compatible = "ti,dra7", .data = &dra7_soc_data },
+> > +	{ .compatible = "ti,omap34xx", .data = &omap34xx_soc_data, },
+> > +	{ .compatible = "ti,omap36xx", .data = &omap36xx_soc_data, },
+> > +	/* legacy */
+> > +	{ .compatible = "ti,omap3430", .data = &omap34xx_soc_data, },
+> > +	{ .compatible = "ti,omap3630", .data = &omap36xx_soc_data, },
 > 
-> Signed-off-by: Sandro Volery <sandro@volery.com>
-> ---
->  drivers/tty/tty_io.c | 60 ++++++++++++++++++++++----------------------
->  1 file changed, 30 insertions(+), 30 deletions(-)
+> Well, I just realized that with the latest DTS changes,
+> 
+> ti,omap34xx and ti,omap36xx are legacy and
+> ti,omap3430 and ti,omap3630 are now official.
 
-Hi,
+Heh :) Anyways, with that changed, this looks good to me:
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
-
-You are receiving this message because of the following common error(s)
-as indicated below:
-
-- Your patch breaks the build.
-
-- Your patch did many different things all at once, making it difficult
-  to review.  All Linux kernel patches need to only do one thing at a
-  time.  If you need to do multiple things (such as clean up all coding
-  style issues in a file/driver), do it in a sequence of patches, each
-  one doing only one thing.  This will make it easier to review the
-  patches to ensure that they are correct, and to help alleviate any
-  merge issues that larger patches can cause.
-
-- You did not specify a description of why the patch is needed, or
-  possibly, any description at all, in the email body.  Please read the
-  section entitled "The canonical patch format" in the kernel file,
-  Documentation/SubmittingPatches for what is needed in order to
-  properly describe the change.
-
-- You did not write a descriptive Subject: for the patch, allowing Greg,
-  and everyone else, to know what this patch is all about.  Please read
-  the section entitled "The canonical patch format" in the kernel file,
-  Documentation/SubmittingPatches for what a proper Subject: line should
-  look like.
-
-- It looks like you did not use your "real" name for the patch on either
-  the Signed-off-by: line, or the From: line (both of which have to
-  match).  Please read the kernel file, Documentation/SubmittingPatches
-  for how to do this correctly.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
+Reviewed-by: Tony Lindgren <tony@atomide.com>
