@@ -2,123 +2,133 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D1EFC43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 18:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48044C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 18:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75780208C3
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 18:08:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17FBC218AE
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 18:13:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PfzVUKLs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391007AbfIGSIB (ORCPT
+        id S2387709AbfIGSN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 14:08:01 -0400
-Received: from correo.us.es ([193.147.175.20]:40076 "EHLO mail.us.es"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730739AbfIGSIB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 14:08:01 -0400
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id 34E2511EB2B
-        for <linux-kernel@vger.kernel.org>; Sat,  7 Sep 2019 20:07:55 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 1FA05FF6EC
-        for <linux-kernel@vger.kernel.org>; Sat,  7 Sep 2019 20:07:55 +0200 (CEST)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id 12522FF6DE; Sat,  7 Sep 2019 20:07:55 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id C82DAB8004;
-        Sat,  7 Sep 2019 20:07:52 +0200 (CEST)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Sat, 07 Sep 2019 20:07:52 +0200 (CEST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (sys.soleta.eu [212.170.55.40])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id 99FD04265A5A;
-        Sat,  7 Sep 2019 20:07:52 +0200 (CEST)
-Date:   Sat, 7 Sep 2019 20:07:54 +0200
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        wenxu <wenxu@ucloud.cn>, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] netfilter: nf_tables: avoid excessive stack
- usage
-Message-ID: <20190907180754.dz7gstqfj7djlbrs@salvia>
-References: <20190906151242.1115282-1-arnd@arndb.de>
+        Sat, 7 Sep 2019 14:13:58 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40105 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727014AbfIGSN6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Sep 2019 14:13:58 -0400
+Received: by mail-pf1-f193.google.com with SMTP id x127so6618209pfb.7;
+        Sat, 07 Sep 2019 11:13:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wqHYZLutmMZ+3gMlYgMzWUPkTeS750+QJLG76FxtJNo=;
+        b=PfzVUKLsocbeEuSnj5bm9x2dSTwd6yGnAoCLr2qVD/CzhZDjgXDb89INZPRVJWcKdT
+         RmPdJPvTRHgGKmA2ct92WGUdd9AsR23aFrVUGmxdumk7OiNJ8bFX7OXZk8r4dW0bBBGN
+         yrpW67nboPeh3hhnY67GAuzKvN++UE9V7lQFmfot6wp0ntmn0F7t42ddrWFiDTNDxiMC
+         ECUS1Ecu43EU2twm6uT22eMGnznpotrYUJVzxdS/4wLi6cEB/xLj6VAP2gOrhBnBvktM
+         /JN6pExBYaB1qfCz3Q7R6GPzpUkl8DPkX00ykb0VYhUGXJ2fqCMyy1wX2f+OZjaaOWEw
+         dJlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wqHYZLutmMZ+3gMlYgMzWUPkTeS750+QJLG76FxtJNo=;
+        b=MY2xKtxGdv10YlEFHYzowRt6toK+WS6yiUuXANY/JR1DoEiGs5x6MhLzc2/NCo0tks
+         zEteqXACMdbDiCtdKrAxk/mJf4iwW6S1zBgO4v36MzHSgTZaUE+dZTdotCNBOr3UHkpw
+         7NjrIafnl8iderHOHj385Pb4FyhAoxpzw08Xd2ARDMA3xJ5Vuw6S/WHoIsVYaG0goN5x
+         1sbvEhtFX3prygeQUAZcCmTGC5aQW28DL3moNdWV6x0E7XLpko8oCOYt5ajCeT/DIphF
+         06MkW6x8As/aTnyBBt485kwojHIyEDHK/HWuaAcuL7JF5YxJcKmIgfUmfmdfA7JFKM+F
+         r2Kw==
+X-Gm-Message-State: APjAAAX1sGl/1yLudSaFltC3yOT75ieIiBYmJ305jb1LnWbLPD26aeiu
+        uwruWXwAMyi6zoOKqPm5HaADBDicfXeeMRZaRcAFrfV9td82jQ==
+X-Google-Smtp-Source: APXvYqxm8X4QtH8Tq84PuuUvLoXlsR+q0q7eYbFRmZ3IWrN6O2FiF6cJY3g7HFULHm1lDTI5P8sk2m8wFeYlVY6usYI=
+X-Received: by 2002:a17:90a:338b:: with SMTP id n11mr16965169pjb.132.1567880037349;
+ Sat, 07 Sep 2019 11:13:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="lclypf5uqwm62nbj"
-Content-Disposition: inline
-In-Reply-To: <20190906151242.1115282-1-arnd@arndb.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Virus-Scanned: ClamAV using ClamSMTP
+References: <20190905120311.15286-1-prarit@redhat.com> <e02287479ad936142a21cbd7c6c00947ca0c5088.camel@linux.intel.com>
+In-Reply-To: <e02287479ad936142a21cbd7c6c00947ca0c5088.camel@linux.intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 7 Sep 2019 21:13:45 +0300
+Message-ID: <CAHp75Vf3KWLue_2UfNTNhDrXBX0YA+FRindbfX0sOzjhUcwKTg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/9] tools-power-x86-intel-speed-select: Fixes and
+ updates for output
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc:     Prarit Bhargava <prarit@redhat.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Andriy Shevchenko <andriy.shevchenko@intel.com>,
+        David Arcari <darcari@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---lclypf5uqwm62nbj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi Arnd,
-
-On Fri, Sep 06, 2019 at 05:12:30PM +0200, Arnd Bergmann wrote:
-> The nft_offload_ctx structure is much too large to put on the
-> stack:
-> 
-> net/netfilter/nf_tables_offload.c:31:23: error: stack frame size of 1200 bytes in function 'nft_flow_rule_create' [-Werror,-Wframe-larger-than=]
-> 
-> Use dynamic allocation here, as we do elsewhere in the same
-> function.
+On Fri, Sep 6, 2019 at 10:58 AM Srinivas Pandruvada
+<srinivas.pandruvada@linux.intel.com> wrote:
 >
-> Fixes: c9626a2cbdb2 ("netfilter: nf_tables: add hardware offload support")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> Since we only really care about two members of the structure, an
-> alternative would be a larger rewrite, but that is probably too
-> late for v5.4.
+> On Thu, 2019-09-05 at 08:03 -0400, Prarit Bhargava wrote:
+> > Some general fixes and updates for intel-speed-select.  Fixes include
+> > some
+> > typos as well as an off-by-one cpu count reporting error.  Updates
+> > for the
+> > output are
+> >
+> > - switching to MHz as a standard
+> > - reporting CPU frequencies instead of ratios as a standard
+> > - viewing a human-readable CPU list.
+> > - avoiding reporting "0|1" as success|fail as these can be confusing
+> > for a
+> >   user.
+> >
+> > v2: Add additional patch to fix memory leak and remove help text in
+> > 8/9.
+>
+> For the series
+>
+> Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+>
 
-Thanks for this patch.
+Pushed to my review and testing queue, thanks!
 
-I'm attaching a patch to reduce this structure size a bit. Do you
-think this alternative patch is ok until this alternative rewrite
-happens? Anyway I agree we should to get this structure away from the
-stack, even after this is still large, so your patch (or a variant of
-it) will be useful sooner than later I think.
 
---lclypf5uqwm62nbj
-Content-Type: text/x-diff; charset=us-ascii
-Content-Disposition: attachment; filename="x.patch"
+> >
+> > Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> > Cc: David Arcari <darcari@redhat.com>
+> > Cc: linux-kernel@vger.kernel.org
+> >
+> > Prarit Bhargava (9):
+> >   tools/power/x86/intel-speed-select: Fix package typo
+> >   tools/power/x86/intel-speed-select: Fix help option typo
+> >   tools/power/x86/intel-speed-select: Fix cpu-count output
+> >   tools/power/x86/intel-speed-select: Simplify output for turbo-freq
+> > and
+> >     base-freq
+> >   tools/power/x86/intel-speed-select: Switch output to MHz
+> >   tools/power/x86/intel-speed-select: Change turbo ratio output to
+> >     maximum turbo frequency
+> >   tools/power/x86/intel-speed-select: Output human readable CPU list
+> >   tools/power/x86/intel-speed-select: Output success/failed for
+> > command
+> >     output
+> >   tools/power/x86/intel-speed-select: Fix memory leak
+> >
+> >  .../x86/intel-speed-select/isst-config.c      |  21 +--
+> >  .../x86/intel-speed-select/isst-display.c     | 120 +++++++++++++---
+> > --
+> >  2 files changed, 98 insertions(+), 43 deletions(-)
+> >
+>
 
-diff --git a/include/net/netfilter/nf_tables_offload.h b/include/net/netfilter/nf_tables_offload.h
-index db104665a9e4..cc44d29e9fd7 100644
---- a/include/net/netfilter/nf_tables_offload.h
-+++ b/include/net/netfilter/nf_tables_offload.h
-@@ -5,10 +5,10 @@
- #include <net/netfilter/nf_tables.h>
- 
- struct nft_offload_reg {
--	u32		key;
--	u32		len;
--	u32		base_offset;
--	u32		offset;
-+	u8		key;
-+	u8		len;
-+	u8		base_offset;
-+	u8		offset;
- 	struct nft_data data;
- 	struct nft_data	mask;
- };
 
---lclypf5uqwm62nbj--
+--
+With Best Regards,
+Andy Shevchenko
