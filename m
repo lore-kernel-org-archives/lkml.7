@@ -2,163 +2,225 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA99C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 06:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F2BC43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 07:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1368D2082C
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 06:58:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qf5Doi01"
+	by mail.kernel.org (Postfix) with ESMTP id CD2EA2173B
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 07:05:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567839913;
+	bh=AC9x/qIhfHW6BgDZGYM32PcF905EjiBvR1LWPs9JvLQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YdrhO/iq4HiplQWXN9rniV4Yhh68212iRNoXDGUvQ3lGNQ4V+iILytzFS0V03j02x
+	 fqhZB3ofpc5KbpdzwSCQPAszV+79oFh4wkuVR3YfVZGDe5ZN/eZK/C5C4oNlxMDDVR
+	 X3vEzkdl6Npov25d6fKlWm/0uc9MVcOmnGb1Z5DM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394491AbfIGG6v (ORCPT
+        id S2404752AbfIGHFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 02:58:51 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40227 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392638AbfIGG6u (ORCPT
+        Sat, 7 Sep 2019 03:05:12 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38963 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388335AbfIGHFM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 02:58:50 -0400
-Received: by mail-pg1-f193.google.com with SMTP id w10so4784402pgj.7
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 23:58:50 -0700 (PDT)
+        Sat, 7 Sep 2019 03:05:12 -0400
+Received: by mail-wr1-f66.google.com with SMTP id t16so8678451wra.6;
+        Sat, 07 Sep 2019 00:05:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=N02a6SJaJeYR37VzYoDKnadMvJWEcIznSEEE8d04rEE=;
-        b=Qf5Doi01nKGhv7f3si1yFpTepVFa5JxTA2UqN4wP/dJfHftsEloVB6XKK3GcM3XAb7
-         DP72ege/1iO6QSzha/ans+5zh7VXW1IoGl6ru0NjcSJ4KAulwjSVtX8RH9IA2qkSf8jF
-         Rg1kxlu6nJdi5J2k14OrCtUPhAknHidGbUcpdiX/9ZuHJjWzEb9cysmjzNdYZOv0uI4n
-         pci+Nj2TvS2sXpqAWZC3fezKdHLT91bJaXmdYYICCvg+42gh8Yo5wpUNSwX6QfidBZCT
-         slQvr9BAsKuL/rqoY6Aa3RHLQXBVAd8F7Q0pRg6GVmgJu/+0d8yxUzJrm1i1zfUhXyrj
-         QSLA==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=uG/4ee4QFvxtO6YqUj4/6hf8mT0/4TZPno4rf5+gn9c=;
+        b=FTOUBe3b1iLDFD2AKBcM8gwSBoborf46EBl+4RqfL4+qEcQADfnDxAvRimNSy67ajc
+         HSa7h6Wd5HRTv2meUD6p5JyNaGopTZEAMaLB+/NMbKg4YF6s0L45Z5pE2cYIF36GcRNM
+         5Sw/KbZd43ZYCoVuX0ExAqSukr41d7f20Eh6PLm7AXzTCA7h/wg+8lsj2wWWTQkNJLgF
+         Zsm/nib5GR08vatVvtUOAjq+jATcrWADIPt2LCZOgVUSIGV+VYm19M4tFm+I0qK0RGMI
+         jf7D1ce8NTz5gXeBVc/AsDIGc+zy7ZYV5aVfrA61qZKiFuWGzTd12gDNP423t9kz7sKr
+         wb2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=N02a6SJaJeYR37VzYoDKnadMvJWEcIznSEEE8d04rEE=;
-        b=hj7tAhVSujEE9XLIaRjBaGpKV7BUmq9UDiYWxAPcUU9deBh9rHwTof8v5dTU0OP0Vp
-         Tg+gIVRF0YZTPG5yGoeEwL3HDVdCan1hyBPnd2MGonSSt16A5MT3ZKpBm/WvK83uKgdr
-         uMyfPrDcTXiaD8srTCU9Dfs0Sz/aJse7DTCCYVMRuBzZgHWg7pJiub6pkwwTPWBaW8rJ
-         9LyhHmQ2DYcsJcrTtPW4Ac3BaVsGQjmZeJ2kKtDzINbOgWS5gilog9pWE6n3dnzjJERj
-         L+q/r7R2+IvGTnQ+gChakdo52UAmGvKopiL/Wd7oRB990ILLLAr+Tw/B7h/ym3n4JjME
-         rG+A==
-X-Gm-Message-State: APjAAAVnfUBGN48/SoYAUWPIUZ+GCEFJQYLgEbsgw89E7qSTbAwI9/CV
-        vuFJE69wocRAeMLwvnQIcxs=
-X-Google-Smtp-Source: APXvYqxOOt+yaEGgywJTK0jRWElyhevOBHqFAv/XWvIyqlht6wV30m4joc2tTqddtHjKRYjKSOGIxw==
-X-Received: by 2002:a63:484d:: with SMTP id x13mr11267132pgk.122.1567839529962;
-        Fri, 06 Sep 2019 23:58:49 -0700 (PDT)
-Received: from localhost.localdomain (ip-103-85-38-221.syd.xi.com.au. [103.85.38.221])
-        by smtp.gmail.com with ESMTPSA id l31sm10084629pgm.63.2019.09.06.23.58.47
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uG/4ee4QFvxtO6YqUj4/6hf8mT0/4TZPno4rf5+gn9c=;
+        b=qbOLch6PYmePBCLSxDdLO4EdaeSrc6CgpUm9MIBJEsMKPqrAlS/WuAPbQtYhDVfqVW
+         SAM6V9tghABeoXldf24mYjaHuJOGu0rFqgR1g7iU63IdNhrpa2tClaIOK+ByCO85dXQn
+         0CTtZNQIC2qm/uWwCLqUt0KTv2oPBpvAM6CYi0u2NvosrDS0d4ox5UBhCmDbNioDVmtK
+         B0rToDhoVMbs3JYVZuCe7/YbSbVIJRWMS2hRSvlDUjXzTd2mqW5rE8lyTeLlDQUW4sSn
+         1fIT7h0jYB2gdJDD3llEj/GpLZqfmutX71C7HByL7JwAV5oM0xnrjrPTWphVr/2+FqqI
+         vI5w==
+X-Gm-Message-State: APjAAAVynj/dOuw+ALzxbILhQI89SO5sgznZE8fFesjErqwfTM4kHwhj
+        16KDc5MO2Ba5H1zUgS3iw/4=
+X-Google-Smtp-Source: APXvYqw2AY9QlhJaEyP4D5m/vtc4Ci+Vs0emJ7CXSHVzaCW1j53cQKUHcAWB5KeOXdAr8Zbn6dkS/g==
+X-Received: by 2002:a5d:438c:: with SMTP id i12mr9716673wrq.238.1567839908891;
+        Sat, 07 Sep 2019 00:05:08 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id b184sm16203809wmg.47.2019.09.07.00.05.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Sep 2019 23:58:49 -0700 (PDT)
-From:   Adam Zerella <adam.zerella@gmail.com>
-Cc:     joro@8bytes.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, adam.zerella@gmail.com
-Subject: [PATCH] iommu/amd: Fix sparse warnings
-Date:   Sat,  7 Sep 2019 16:58:12 +1000
-Message-Id: <20190907065812.19505-1-adam.zerella@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Sat, 07 Sep 2019 00:05:07 -0700 (PDT)
+Date:   Sat, 7 Sep 2019 09:05:05 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     mpe@ellerman.id.au, peterz@infradead.org, bvanassche@acm.org,
+        arnd@arndb.de, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>
+Subject: Re: [PATCH v2] powerpc/lockdep: fix a false positive warning
+Message-ID: <20190907070505.GA88784@gmail.com>
+References: <20190906231754.830-1-cai@lca.pw>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190906231754.830-1-cai@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There was some simple Sparse warnings related to making some
-signatures static.
 
-Signed-off-by: Adam Zerella <adam.zerella@gmail.com>
----
- drivers/iommu/amd_iommu.c      |  4 ++--
- drivers/iommu/amd_iommu_init.c | 12 ++++++------
- 2 files changed, 8 insertions(+), 8 deletions(-)
+* Qian Cai <cai@lca.pw> wrote:
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index b607a92791d3..a9e40001720a 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -84,7 +84,7 @@ LIST_HEAD(acpihid_map);
-  * Domain for untranslated devices - only allocated
-  * if iommu=pt passed on kernel cmd line.
-  */
--const struct iommu_ops amd_iommu_ops;
-+static const struct iommu_ops amd_iommu_ops;
- 
- static ATOMIC_NOTIFIER_HEAD(ppr_notifier);
- int amd_iommu_max_glx_val = -1;
-@@ -3201,7 +3201,7 @@ static void amd_iommu_iotlb_range_add(struct iommu_domain *domain,
- {
- }
- 
--const struct iommu_ops amd_iommu_ops = {
-+static const struct iommu_ops amd_iommu_ops = {
- 	.capable = amd_iommu_capable,
- 	.domain_alloc = amd_iommu_domain_alloc,
- 	.domain_free  = amd_iommu_domain_free,
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index 4413aa67000e..f32627cadfd7 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -3050,7 +3050,7 @@ bool amd_iommu_v2_supported(void)
- }
- EXPORT_SYMBOL(amd_iommu_v2_supported);
- 
--struct amd_iommu *get_amd_iommu(unsigned int idx)
-+static struct amd_iommu *get_amd_iommu(unsigned int idx)
- {
- 	unsigned int i = 0;
- 	struct amd_iommu *iommu;
-@@ -3069,7 +3069,7 @@ EXPORT_SYMBOL(get_amd_iommu);
-  *
-  ****************************************************************************/
- 
--u8 amd_iommu_pc_get_max_banks(unsigned int idx)
-+static u8 amd_iommu_pc_get_max_banks(unsigned int idx)
- {
- 	struct amd_iommu *iommu = get_amd_iommu(idx);
- 
-@@ -3080,13 +3080,13 @@ u8 amd_iommu_pc_get_max_banks(unsigned int idx)
- }
- EXPORT_SYMBOL(amd_iommu_pc_get_max_banks);
- 
--bool amd_iommu_pc_supported(void)
-+static bool amd_iommu_pc_supported(void)
- {
- 	return amd_iommu_pc_present;
- }
- EXPORT_SYMBOL(amd_iommu_pc_supported);
- 
--u8 amd_iommu_pc_get_max_counters(unsigned int idx)
-+static u8 amd_iommu_pc_get_max_counters(unsigned int idx)
- {
- 	struct amd_iommu *iommu = get_amd_iommu(idx);
- 
-@@ -3135,7 +3135,7 @@ static int iommu_pc_get_set_reg(struct amd_iommu *iommu, u8 bank, u8 cntr,
- 	return 0;
- }
- 
--int amd_iommu_pc_get_reg(struct amd_iommu *iommu, u8 bank, u8 cntr, u8 fxn, u64 *value)
-+static int amd_iommu_pc_get_reg(struct amd_iommu *iommu, u8 bank, u8 cntr, u8 fxn, u64 *value)
- {
- 	if (!iommu)
- 		return -EINVAL;
-@@ -3144,7 +3144,7 @@ int amd_iommu_pc_get_reg(struct amd_iommu *iommu, u8 bank, u8 cntr, u8 fxn, u64
- }
- EXPORT_SYMBOL(amd_iommu_pc_get_reg);
- 
--int amd_iommu_pc_set_reg(struct amd_iommu *iommu, u8 bank, u8 cntr, u8 fxn, u64 *value)
-+static int amd_iommu_pc_set_reg(struct amd_iommu *iommu, u8 bank, u8 cntr, u8 fxn, u64 *value)
- {
- 	if (!iommu)
- 		return -EINVAL;
--- 
-2.21.0
+> The commit 108c14858b9e ("locking/lockdep: Add support for dynamic
+> keys") introduced a boot warning on powerpc below, because since the
+> commit 2d4f567103ff ("KVM: PPC: Introduce kvm_tmp framework") adds
+> kvm_tmp[] into the .bss section and then free the rest of unused spaces
+> back to the page allocator.
+> 
+> kernel_init
+>   kvm_guest_init
+>     kvm_free_tmp
+>       free_reserved_area
+>         free_unref_page
+>           free_unref_page_prepare
+> 
+> Later, alloc_workqueue() happens to allocate some pages from there and
+> trigger the warning at,
+> 
+> if (WARN_ON_ONCE(static_obj(key)))
+> 
+> Fix it by adding a generic helper arch_is_bss_hole() to skip those areas
+> in static_obj(). Since kvm_free_tmp() is only done early during the
+> boot, just go lockless to make the implementation simple for now.
+> 
+> WARNING: CPU: 0 PID: 13 at kernel/locking/lockdep.c:1120
+> Workqueue: events work_for_cpu_fn
+> Call Trace:
+>   lockdep_register_key+0x68/0x200
+>   wq_init_lockdep+0x40/0xc0
+>   trunc_msg+0x385f9/0x4c30f (unreliable)
+>   wq_init_lockdep+0x40/0xc0
+>   alloc_workqueue+0x1e0/0x620
+>   scsi_host_alloc+0x3d8/0x490
+>   ata_scsi_add_hosts+0xd0/0x220 [libata]
+>   ata_host_register+0x178/0x400 [libata]
+>   ata_host_activate+0x17c/0x210 [libata]
+>   ahci_host_activate+0x84/0x250 [libahci]
+>   ahci_init_one+0xc74/0xdc0 [ahci]
+>   local_pci_probe+0x78/0x100
+>   work_for_cpu_fn+0x40/0x70
+>   process_one_work+0x388/0x750
+>   process_scheduled_works+0x50/0x90
+>   worker_thread+0x3d0/0x570
+>   kthread+0x1b8/0x1e0
+>   ret_from_kernel_thread+0x5c/0x7c
+> 
+> Fixes: 108c14858b9e ("locking/lockdep: Add support for dynamic keys")
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+> 
+> v2: No need to actually define arch_is_bss_hole() powerpc64 only.
+> 
+>  arch/powerpc/include/asm/sections.h | 11 +++++++++++
+>  arch/powerpc/kernel/kvm.c           |  5 +++++
+>  include/asm-generic/sections.h      |  7 +++++++
+>  kernel/locking/lockdep.c            |  3 +++
+>  4 files changed, 26 insertions(+)
+> 
+> diff --git a/arch/powerpc/include/asm/sections.h b/arch/powerpc/include/asm/sections.h
+> index 4a1664a8658d..4f5d69c42017 100644
+> --- a/arch/powerpc/include/asm/sections.h
+> +++ b/arch/powerpc/include/asm/sections.h
+> @@ -5,8 +5,19 @@
+>  
+>  #include <linux/elf.h>
+>  #include <linux/uaccess.h>
+> +
+> +#define arch_is_bss_hole arch_is_bss_hole
+> +
+>  #include <asm-generic/sections.h>
+>  
+> +extern void *bss_hole_start, *bss_hole_end;
+> +
+> +static inline int arch_is_bss_hole(unsigned long addr)
+> +{
+> +	return addr >= (unsigned long)bss_hole_start &&
+> +	       addr < (unsigned long)bss_hole_end;
+> +}
+> +
+>  extern char __head_end[];
+>  
+>  #ifdef __powerpc64__
+> diff --git a/arch/powerpc/kernel/kvm.c b/arch/powerpc/kernel/kvm.c
+> index b7b3a5e4e224..89e0e522e125 100644
+> --- a/arch/powerpc/kernel/kvm.c
+> +++ b/arch/powerpc/kernel/kvm.c
+> @@ -66,6 +66,7 @@
+>  static bool kvm_patching_worked = true;
+>  char kvm_tmp[1024 * 1024];
+>  static int kvm_tmp_index;
+> +void *bss_hole_start, *bss_hole_end;
+>  
+>  static inline void kvm_patch_ins(u32 *inst, u32 new_inst)
+>  {
+> @@ -707,6 +708,10 @@ static __init void kvm_free_tmp(void)
+>  	 */
+>  	kmemleak_free_part(&kvm_tmp[kvm_tmp_index],
+>  			   ARRAY_SIZE(kvm_tmp) - kvm_tmp_index);
+> +
+> +	bss_hole_start = &kvm_tmp[kvm_tmp_index];
+> +	bss_hole_end = &kvm_tmp[ARRAY_SIZE(kvm_tmp)];
+> +
+>  	free_reserved_area(&kvm_tmp[kvm_tmp_index],
+>  			   &kvm_tmp[ARRAY_SIZE(kvm_tmp)], -1, NULL);
+>  }
+> diff --git a/include/asm-generic/sections.h b/include/asm-generic/sections.h
+> index d1779d442aa5..4d8b1f2c5fd9 100644
+> --- a/include/asm-generic/sections.h
+> +++ b/include/asm-generic/sections.h
+> @@ -91,6 +91,13 @@ static inline int arch_is_kernel_initmem_freed(unsigned long addr)
+>  }
+>  #endif
+>  
+> +#ifndef arch_is_bss_hole
+> +static inline int arch_is_bss_hole(unsigned long addr)
+> +{
+> +	return 0;
+> +}
+> +#endif
+> +
+>  /**
+>   * memory_contains - checks if an object is contained within a memory region
+>   * @begin: virtual address of the beginning of the memory region
+> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+> index 4861cf8e274b..cd75b51f15ce 100644
+> --- a/kernel/locking/lockdep.c
+> +++ b/kernel/locking/lockdep.c
+> @@ -675,6 +675,9 @@ static int static_obj(const void *obj)
+>  	if (arch_is_kernel_initmem_freed(addr))
+>  		return 0;
+>  
+> +	if (arch_is_bss_hole(addr))
+> +		return 0;
 
+arch_is_bss_hole() should use a 'bool' - but other than that, this 
+looks good to me, if the PowerPC maintainers agree too.
+
+Thanks,
+
+	Ingo
