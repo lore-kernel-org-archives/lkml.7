@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 772CAC0030B
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 09:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6AA7C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 09:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 472AE218AF
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 09:20:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFFFA218AE
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 09:20:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567848027;
-	bh=YW3cSp+6yaPlzX+R34NGx4VQpIygRBkmXy1O+2BFvhA=;
-	h=From:To:Subject:Date:List-ID:From;
-	b=w2fwFka/dpE9d/J0gSEC3w3dy+1vfebjDfuYR4TpWfahQeJL705zITZQPkBzy5/ij
-	 3QsgwwLrhFOFYDjTfUl72RSmC+sifRfjVqJIyOV0P8s3ePlRpEXD6DH9NQmtsnHCGx
-	 bNGf9/9FMDvt9kUOySZScrMC7TraSVmHGyl92m/Y=
+	s=default; t=1567848034;
+	bh=kNGAeMnxvdXlA5z3Dc2JoX9K2D1dYgnE5dY/Pa4e/rU=;
+	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mAoD1iT4TH44j5YdiWed7ke99WkriaalUM8VW5t1F7anOqVhKez1KK8wvxwyd3ODx
+	 OGgPHuDYFG+7gtmAREPuy7vAb0feQvZl+BukGLBWnfdLsn4IEGzmOZf+BKoQpS1MCi
+	 66vGDo/pQvaYcawmOVDdYB58sveYMtety0nHU6Lk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406562AbfIGJU0 (ORCPT
+        id S2406578AbfIGJUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 05:20:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59092 "EHLO mail.kernel.org"
+        Sat, 7 Sep 2019 05:20:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388924AbfIGJU0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 05:20:26 -0400
+        id S2388924AbfIGJUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Sep 2019 05:20:30 -0400
 Received: from localhost.localdomain (unknown [194.230.155.145])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 611E621871;
-        Sat,  7 Sep 2019 09:20:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C39321907;
+        Sat,  7 Sep 2019 09:20:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567848024;
-        bh=YW3cSp+6yaPlzX+R34NGx4VQpIygRBkmXy1O+2BFvhA=;
-        h=From:To:Subject:Date:From;
-        b=POZiDSpXI7YV72+/U/6LtF4K3W/T9FkK8K54DJ88Shvk2AtYu+l7PLeqS1hE8lnCR
-         g75LZzcdJ09m2BIoMitqPtX0Pk1z2Qs56q5UCZAaOJRP5uXX+lddzdnHTYxJg/d5+A
-         4H9fFHbsnqfF2dOCv+kWFlf1CDnikg2Hz5fFu494=
+        s=default; t=1567848029;
+        bh=kNGAeMnxvdXlA5z3Dc2JoX9K2D1dYgnE5dY/Pa4e/rU=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=RlXjtBMtEIK7dgmUEEbVbHPMJxgMv1gIygNPsQYOqbZqaGfPssGUrAa9QjlDviHOF
+         iMRoC4mMevtJGnxRtl33iH5GH3ALBZsHNLCVBnhqa8/oKQr/OcBvoAvsPyLLJacH0n
+         DC2y9AjIo/A6nbZIEPodP55H6rN++sLeHbm57s5Y=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -56,16 +56,18 @@ To:     Rob Herring <robh+dt@kernel.org>,
         linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-iio@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-rtc@vger.kernel.org
-Subject: [PATCH v2 01/11] dt-bindings: power: syscon-reboot: Convert bindings to json-schema
-Date:   Sat,  7 Sep 2019 11:19:57 +0200
-Message-Id: <20190907092007.9946-1-krzk@kernel.org>
+Subject: [PATCH v2 02/11] dt-bindings: power: syscon-poweroff: Convert bindings to json-schema
+Date:   Sat,  7 Sep 2019 11:19:58 +0200
+Message-Id: <20190907092007.9946-2-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190907092007.9946-1-krzk@kernel.org>
+References: <20190907092007.9946-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the Syscon reboot bindings to DT schema format using
+Convert the Syscon poweroff bindings to DT schema format using
 json-schema.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
@@ -76,30 +78,30 @@ Changes since v1:
 1. Remove unneeded maxItems from uint32 fields,
 2. Simplify if-else-then.
 ---
- .../bindings/power/reset/syscon-reboot.txt    | 30 ----------
- .../bindings/power/reset/syscon-reboot.yaml   | 60 +++++++++++++++++++
+ .../bindings/power/reset/syscon-poweroff.txt  | 30 ----------
+ .../bindings/power/reset/syscon-poweroff.yaml | 60 +++++++++++++++++++
  2 files changed, 60 insertions(+), 30 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
- create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
+ delete mode 100644 Documentation/devicetree/bindings/power/reset/syscon-poweroff.txt
+ create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-poweroff.yaml
 
-diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+diff --git a/Documentation/devicetree/bindings/power/reset/syscon-poweroff.txt b/Documentation/devicetree/bindings/power/reset/syscon-poweroff.txt
 deleted file mode 100644
-index e23dea8344f8..000000000000
---- a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+index 022ed1f3bc80..000000000000
+--- a/Documentation/devicetree/bindings/power/reset/syscon-poweroff.txt
 +++ /dev/null
 @@ -1,30 +0,0 @@
--Generic SYSCON mapped register reset driver
+-Generic SYSCON mapped register poweroff driver
 -
--This is a generic reset driver using syscon to map the reset register.
--The reset is generally performed with a write to the reset register
+-This is a generic poweroff driver using syscon to map the poweroff register.
+-The poweroff is generally performed with a write to the poweroff register
 -defined by the register map pointed by syscon reference plus the offset
--with the value and mask defined in the reboot node.
+-with the value and mask defined in the poweroff node.
 -
 -Required properties:
--- compatible: should contain "syscon-reboot"
+-- compatible: should contain "syscon-poweroff"
 -- regmap: this is phandle to the register map node
--- offset: offset in the register map for the reboot register (in bytes)
--- value: the reset value written to the reboot register (32 bit access)
+-- offset: offset in the register map for the poweroff register (in bytes)
+-- value: the poweroff value written to the poweroff register (32 bit access)
 -
 -Optional properties:
 -- mask: update only the register bits defined by the mask (32 bit)
@@ -112,39 +114,39 @@ index e23dea8344f8..000000000000
 -
 -Examples:
 -
--	reboot {
--	   compatible = "syscon-reboot";
+-	poweroff {
+-	   compatible = "syscon-poweroff";
 -	   regmap = <&regmapnode>;
 -	   offset = <0x0>;
--	   mask = <0x1>;
+-	   mask = <0x7a>;
 -	};
-diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml b/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
+diff --git a/Documentation/devicetree/bindings/power/reset/syscon-poweroff.yaml b/Documentation/devicetree/bindings/power/reset/syscon-poweroff.yaml
 new file mode 100644
-index 000000000000..a7920f5eef79
+index 000000000000..fb812937b534
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
++++ b/Documentation/devicetree/bindings/power/reset/syscon-poweroff.yaml
 @@ -0,0 +1,60 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/power/reset/syscon-reboot.yaml#
++$id: http://devicetree.org/schemas/power/reset/syscon-poweroff.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Generic SYSCON mapped register reset driver
++title: Generic SYSCON mapped register poweroff driver
 +
 +maintainers:
 +  - Sebastian Reichel <sre@kernel.org>
 +
 +description: |+
-+  This is a generic reset driver using syscon to map the reset register.
-+  The reset is generally performed with a write to the reset register
++  This is a generic poweroff driver using syscon to map the poweroff register.
++  The poweroff is generally performed with a write to the poweroff register
 +  defined by the register map pointed by syscon reference plus the offset
-+  with the value and mask defined in the reboot node.
++  with the value and mask defined in the poweroff node.
 +  Default will be little endian mode, 32 bit access only.
 +
 +properties:
 +  compatible:
-+    const: syscon-reboot
++    const: syscon-poweroff
 +
 +  mask:
 +    $ref: /schemas/types.yaml#/definitions/uint32
@@ -152,7 +154,7 @@ index 000000000000..a7920f5eef79
 +
 +  offset:
 +    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Offset in the register map for the reboot register (in bytes).
++    description: Offset in the register map for the poweroff register (in bytes).
 +
 +  regmap:
 +    $ref: /schemas/types.yaml#/definitions/phandle
@@ -160,7 +162,7 @@ index 000000000000..a7920f5eef79
 +
 +  value:
 +    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: The reset value written to the reboot register (32 bit access).
++    description: The poweroff value written to the poweroff register (32 bit access).
 +
 +required:
 +  - compatible
@@ -178,11 +180,11 @@ index 000000000000..a7920f5eef79
 +
 +examples:
 +  - |
-+    reboot {
-+      compatible = "syscon-reboot";
++    poweroff {
++      compatible = "syscon-poweroff";
 +      regmap = <&regmapnode>;
 +      offset = <0x0>;
-+      mask = <0x1>;
++      mask = <0x7a>;
 +    };
 -- 
 2.17.1
