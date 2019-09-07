@@ -2,90 +2,93 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DE6C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 14:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD2DC43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 14:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED7F0218AF
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 14:45:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567867555;
-	bh=xwF/NMtim/ONqBCJ2ccw0i+PrFhjbooHiKBxOMf6rhw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KK/4uM8aShs0yeF/Ik4VZU5gyiZrAWU4+oVOznMCV1Ghrhlt+c3hDY73svY9ifKqA
-	 rVN9abspgG/u4KGGCCi5qLrqpV+8lYLU/lddSX5Yp48E5zBnifF7P68VGHosoUZ7EN
-	 WMCsvQtse7ukzaQmQXf4+6aUKTVZPydtEYAvvQE8=
+	by mail.kernel.org (Postfix) with ESMTP id D3E782178F
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 14:48:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406042AbfIGOpy (ORCPT
+        id S2394688AbfIGOsc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 10:45:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52542 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726626AbfIGOpw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 10:45:52 -0400
-Received: from localhost.localdomain (unknown [194.230.155.145])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E78CB2178F;
-        Sat,  7 Sep 2019 14:45:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567867551;
-        bh=xwF/NMtim/ONqBCJ2ccw0i+PrFhjbooHiKBxOMf6rhw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2ven4TqF0BAZitzuK9/vTK74xh9k7bqoMjFNIrxUTELtO/rgSZBVOvDi+lSSrr/Xo
-         neSSnL4Dn+6v9MRFu6ISDGxs319/zf/P98nr/LdDesm/D903kkn3jUkYgSUJBg4Vnp
-         oDyu9FuYVh9RZOejCBNQHepPtNMQhJuToVXRc36Q=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+        Sat, 7 Sep 2019 10:48:32 -0400
+Received: from mxout014.mail.hostpoint.ch ([217.26.49.174]:36075 "EHLO
+        mxout014.mail.hostpoint.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2391160AbfIGOsb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Sep 2019 10:48:31 -0400
+Received: from [10.0.2.46] (helo=asmtp013.mail.hostpoint.ch)
+        by mxout014.mail.hostpoint.ch with esmtp (Exim 4.92.2 (FreeBSD))
+        (envelope-from <sandro@volery.com>)
+        id 1i6c0k-0001B0-95; Sat, 07 Sep 2019 16:48:22 +0200
+Received: from 145-126.cable.senselan.ch ([83.222.145.126] helo=[192.168.1.99])
+        by asmtp013.mail.hostpoint.ch with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92.2 (FreeBSD))
+        (envelope-from <sandro@volery.com>)
+        id 1i6c0k-000Oar-4s; Sat, 07 Sep 2019 16:48:22 +0200
+X-Authenticated-Sender-Id: sandro@volery.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+From:   Sandro Volery <sandro@volery.com>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] Fixed parentheses malpractice in apex_driver.c
+Date:   Sat, 7 Sep 2019 16:48:21 +0200
+Message-Id: <C3F8799B-2CFE-4F3B-A01A-DFDF248BA01F@volery.com>
+References: <20190907143849.GA30834@kadam>
+Cc:     rspringer@google.com, toddpoynor@google.com, benchan@chromium.org,
+        gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 2/2] dt-bindings: watchdog: Add missing clocks requirement in Samsung SoC watchdog
-Date:   Sat,  7 Sep 2019 16:45:41 +0200
-Message-Id: <20190907144541.16949-2-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190907144541.16949-1-krzk@kernel.org>
-References: <20190907144541.16949-1-krzk@kernel.org>
+In-Reply-To: <20190907143849.GA30834@kadam>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+X-Mailer: iPhone Mail (17A5572a)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Samsung SoC watchdog driver always required providing a clock
-(either through platform data or from DT).  However when bindings were
-added in commit 9487a9cc7140 ("watchdog: s3c2410: Add support for device
-tree based probe"), they missed the requirement of clock.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- .../devicetree/bindings/watchdog/samsung-wdt.yaml          | 7 +++++++
- 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml b/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml
-index 39f1ca3bc4db..9edde497b040 100644
---- a/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml
-+++ b/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml
-@@ -26,6 +26,13 @@ properties:
-   reg:
-     maxItems: 1
- 
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: watchdog
-+
-   interrupts:
-     maxItems: 1
- 
--- 
-2.17.1
+> On 7 Sep 2019, at 16:39, Dan Carpenter <dan.carpenter@oracle.com> wrote:
+> 
+> ﻿You need a subject prefix.  It should be something like:
+> 
+> [PATCH] Staging: gasket: Fix parentheses malpractice in apex_driver.c
+> 
 
+Thanks for the reply! I'll try to do that better for my next patch.
+
+> Generally "Fix" is considered better style than "Fixed".  We aren't
+> going to care about that in staging, but the patch prefix is mandatory
+> so you will need to redo it anyway and might as well fix that as well.
+> 
+>> On Fri, Sep 06, 2019 at 08:38:01PM +0200, volery wrote:
+>> There were some parentheses at the end of lines, which I took care of.
+>> This is my first patch.
+>  ^^^^^^^^^^^^^^^^^^^^^^
+> Put this sort of comments after the --- cut off line
+> 
+>> 
+>> Signed-off-by: Sandro Volery <sandro@volery.com>
+>> ---
+>  ^^^
+> Put it here.  It will be removed when we apply the patch so it won't
+> be recorded in the git log.
+> 
+
+Alright :)
+
+>> drivers/staging/gasket/apex_driver.c | 9 ++++++---
+>> 1 file changed, 6 insertions(+), 3 deletions(-)
+> 
+> Joe's comments are, of course, correct as well.
+> 
+> regards,
+> dan carpenter
+> 
+
+I'll take a look at Joe's suggestions too sometime tonight. I'd feel kinda bad tho if I just apply his work and send it in?
+
+- Sandro Volery
