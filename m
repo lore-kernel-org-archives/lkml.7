@@ -2,193 +2,116 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0EEBC43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 09:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33896C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 10:05:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B110C21835
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 09:56:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16CCE20854
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 10:05:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729565AbfIGJ4I (ORCPT
+        id S1730171AbfIGKFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 05:56:08 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:53364 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726935AbfIGJ4H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 05:56:07 -0400
-Received: by mail-io1-f71.google.com with SMTP id l21so10943547iob.20
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Sep 2019 02:56:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=WO555lkaxvVn5IWJ49GqqEscmE5LpyLr2xvoh4L9LSI=;
-        b=MU/TuyjGm257jV/4z2jZpaFWRXVZIqSgcApEn3ZOZ/WUDPN+lZme9vMpowXOHMPHcE
-         7Y8o7GA67vV2YFbShWxX0b9hkfMKtwP8xb8hDPMMA2TgKz+Kb+lfQydoevKJ4m26oqe7
-         qMsNQeVubaXmO0FLbP3UZW+Y1/XhzKstnc2EZTNg3RSX9Ph0v1MfzSisK4EsmrghoEjk
-         FnPauxCcL/ZwBpFd7EROMSAHhLQCXMCGdljr+MSJUwBNzT4ga8WBMS9CLottTXYcDss5
-         dX3WN2N2lWHw/9fo5qqY/6yVEyBGuvTUrf1CvUq7uoXmJlq5jpZnnx7t2FDW30b2DjKf
-         Sjbg==
-X-Gm-Message-State: APjAAAWufiPdUw4JpEEl2WdehB8caVmzXf39n3IW2Z3+1XjxcrxemeDV
-        nyxwSv0GPC1DBXgqmBZh6bA1yoxjpoUaJQeBjq6hM2ws6BjE
-X-Google-Smtp-Source: APXvYqy4MVY5KW7kK4pg8kLzexOHFvtn3VQRTYhL8wLXxtoQmIKW/IM08ajWX5hDnCNRm51ux3VqzaZeyaq+NJAR1soMRBrreGg6
+        Sat, 7 Sep 2019 06:05:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:35908 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726012AbfIGKFt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Sep 2019 06:05:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA1641576;
+        Sat,  7 Sep 2019 03:05:48 -0700 (PDT)
+Received: from [10.37.12.3] (unknown [10.37.12.3])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 85A3F3F59C;
+        Sat,  7 Sep 2019 03:05:46 -0700 (PDT)
+Subject: Re: [Xen-devel] [PATCH] ARM: xen: unexport HYPERVISOR_platform_op
+ function
+To:     Andrew Cooper <andrew.cooper3@citrix.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     Stefano Stabellini <sstabellini@kernel.org>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Denis Efremov <efremov@linux.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        xen-devel <xen-devel@lists.xenproject.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <20190906153948.2160342-1-arnd@arndb.de>
+ <7abad95e-ea47-c068-d91c-ba503f2530b9@citrix.com>
+ <CAK8P3a1qkMLW_Wnn-N0seUw4N5bPwTU7Dy7CwOWxzS6NTnTmiQ@mail.gmail.com>
+ <bda2a05b-e2d0-feee-761b-88deeeac2449@citrix.com>
+From:   Julien Grall <julien.grall@arm.com>
+Message-ID: <95dbd972-fe78-d0ca-f7b4-1a6bdd418eab@arm.com>
+Date:   Sat, 7 Sep 2019 11:05:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9c0b:: with SMTP id 11mr10843494ioe.192.1567850166289;
- Sat, 07 Sep 2019 02:56:06 -0700 (PDT)
-Date:   Sat, 07 Sep 2019 02:56:06 -0700
-In-Reply-To: <000000000000a26437057e4915ff@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000390e940591f390a6@google.com>
-Subject: Re: INFO: rcu detected stall in igmp_ifc_timer_expire
-From:   syzbot <syzbot+041483004a7f45f1f20a@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, herbert@gondor.apana.org.au, jhs@mojatatu.com,
-        jiri@resnulli.us, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, steffen.klassert@secunet.com,
-        syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <bda2a05b-e2d0-feee-761b-88deeeac2449@citrix.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+Hi Andrew,
 
-HEAD commit:    1e3778cb Merge tag 'scsi-fixes' of git://git.kernel.org/pu..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12df164e600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b89bb446a3faaba4
-dashboard link: https://syzkaller.appspot.com/bug?extid=041483004a7f45f1f20a
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=148c3001600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13b12cd1600000
+On 9/6/19 6:20 PM, Andrew Cooper wrote:
+> On 06/09/2019 17:00, Arnd Bergmann wrote:
+>> On Fri, Sep 6, 2019 at 5:55 PM Andrew Cooper <andrew.cooper3@citrix.com> wrote:
+>>> On 06/09/2019 16:39, Arnd Bergmann wrote:
+>>>> HYPERVISOR_platform_op() is an inline function and should not
+>>>> be exported. Since commit 15bfc2348d54 ("modpost: check for
+>>>> static EXPORT_SYMBOL* functions"), this causes a warning:
+>>>>
+>>>> WARNING: "HYPERVISOR_platform_op" [vmlinux] is a static EXPORT_SYMBOL_GPL
+>>>>
+>>>> Remove the extraneous export.
+>>>>
+>>>> Fixes: 15bfc2348d54 ("modpost: check for static EXPORT_SYMBOL* functions")
+>>>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>>> Something is wonky.  That symbol is (/ really ought to be) in the
+>>> hypercall page and most definitely not inline.
+>>>
+>>> Which tree is that changeset from?  I can't find the SHA.
+>> This is from linux-next, I think from the kbuild tree.
+> 
+> Thanks.
+> 
+> Julien/Stefano: Why are any of these hypercalls out-of-line?  ARM
+> doesn't use the hypercall page, and there is no argument translation
+> (not even in arm32 as there are no 5-argument hypercalls declared).
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+041483004a7f45f1f20a@syzkaller.appspotmail.com
+I am not sure how the hypercall page makes things different. You still 
+have to store the arguments in the correct register so...
 
-rcu: INFO: rcu_preempt self-detected stall on CPU
-rcu: 	1-...!: (1 GPs behind) idle=b8e/0/0x3 softirq=12119/12122 fqs=6
-	(t=10500 jiffies g=10289 q=55)
-rcu: rcu_preempt kthread starved for 10480 jiffies! g10289 f0x0  
-RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=0
-rcu: RCU grace-period kthread stack dump:
-rcu_preempt     I29520    10      2 0x80004000
-Call Trace:
-  context_switch kernel/sched/core.c:3254 [inline]
-  __schedule+0x755/0x1580 kernel/sched/core.c:3880
-  schedule+0xd9/0x260 kernel/sched/core.c:3947
-  schedule_timeout+0x486/0xc50 kernel/time/timer.c:1807
-  rcu_gp_fqs_loop kernel/rcu/tree.c:1611 [inline]
-  rcu_gp_kthread+0x9b2/0x18c0 kernel/rcu/tree.c:1768
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-NMI backtrace for cpu 1
-CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.3.0-rc7+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  <IRQ>
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  nmi_cpu_backtrace.cold+0x70/0xb2 lib/nmi_backtrace.c:101
-  nmi_trigger_cpumask_backtrace+0x23b/0x28b lib/nmi_backtrace.c:62
-  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
-  trigger_single_cpu_backtrace include/linux/nmi.h:164 [inline]
-  rcu_dump_cpu_stacks+0x183/0x1cf kernel/rcu/tree_stall.h:254
-  print_cpu_stall kernel/rcu/tree_stall.h:455 [inline]
-  check_cpu_stall kernel/rcu/tree_stall.h:529 [inline]
-  rcu_pending kernel/rcu/tree.c:2736 [inline]
-  rcu_sched_clock_irq.cold+0x4dd/0xc13 kernel/rcu/tree.c:2183
-  update_process_times+0x32/0x80 kernel/time/timer.c:1639
-  tick_sched_handle+0xa2/0x190 kernel/time/tick-sched.c:167
-  tick_sched_timer+0x53/0x140 kernel/time/tick-sched.c:1296
-  __run_hrtimer kernel/time/hrtimer.c:1389 [inline]
-  __hrtimer_run_queues+0x364/0xe40 kernel/time/hrtimer.c:1451
-  hrtimer_interrupt+0x314/0x770 kernel/time/hrtimer.c:1509
-  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1106 [inline]
-  smp_apic_timer_interrupt+0x160/0x610 arch/x86/kernel/apic/apic.c:1131
-  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
-RIP: 0010:__list_del_entry_valid+0xb3/0xf5 lib/list_debug.c:54
-Code: 75 53 49 8b 14 24 4c 39 f2 0f 85 99 00 00 00 49 8d 7d 08 48 b8 00 00  
-00 00 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 24 <49> 8b 55 08 4c  
-39 f2 0f 85 aa 00 00 00 41 5c b8 01 00 00 00 41 5d
-RSP: 0018:ffff8880ae909010 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
-RAX: dffffc0000000000 RBX: ffff88808c064338 RCX: ffffffff85c65b39
-RDX: 1ffff1101180c87b RSI: ffffffff85c66006 RDI: ffff88808c0643d8
-RBP: ffff8880ae909028 R08: ffff8880a98d6340 R09: 0000000000000000
-R10: fffffbfff134afaf R11: ffff8880a98d6340 R12: ffff88808c0643d0
-R13: ffff88808c0643d0 R14: ffff88808c064338 R15: 0000000000000000
-  __list_del_entry include/linux/list.h:131 [inline]
-  list_move_tail include/linux/list.h:213 [inline]
-  hhf_dequeue+0x5c5/0xa20 net/sched/sch_hhf.c:439
-  dequeue_skb net/sched/sch_generic.c:258 [inline]
-  qdisc_restart net/sched/sch_generic.c:361 [inline]
-  __qdisc_run+0x1e7/0x19d0 net/sched/sch_generic.c:379
-  __dev_xmit_skb net/core/dev.c:3533 [inline]
-  __dev_queue_xmit+0x16f1/0x3650 net/core/dev.c:3838
-  dev_queue_xmit+0x18/0x20 net/core/dev.c:3902
-  br_dev_queue_push_xmit+0x3f3/0x5c0 net/bridge/br_forward.c:52
-  NF_HOOK include/linux/netfilter.h:305 [inline]
-  NF_HOOK include/linux/netfilter.h:299 [inline]
-  br_forward_finish+0xfa/0x400 net/bridge/br_forward.c:65
-  NF_HOOK include/linux/netfilter.h:305 [inline]
-  NF_HOOK include/linux/netfilter.h:299 [inline]
-  __br_forward+0x641/0xb00 net/bridge/br_forward.c:109
-  deliver_clone+0x61/0xc0 net/bridge/br_forward.c:125
-  maybe_deliver+0x2c7/0x390 net/bridge/br_forward.c:181
-  br_flood+0x13a/0x3d0 net/bridge/br_forward.c:223
-  br_dev_xmit+0x98c/0x15a0 net/bridge/br_device.c:100
-  __netdev_start_xmit include/linux/netdevice.h:4406 [inline]
-  netdev_start_xmit include/linux/netdevice.h:4420 [inline]
-  xmit_one net/core/dev.c:3280 [inline]
-  dev_hard_start_xmit+0x1a3/0x9c0 net/core/dev.c:3296
-  __dev_queue_xmit+0x2b15/0x3650 net/core/dev.c:3869
-  dev_queue_xmit+0x18/0x20 net/core/dev.c:3902
-  neigh_hh_output include/net/neighbour.h:500 [inline]
-  neigh_output include/net/neighbour.h:509 [inline]
-  ip_finish_output2+0x1726/0x2570 net/ipv4/ip_output.c:228
-  __ip_finish_output net/ipv4/ip_output.c:308 [inline]
-  __ip_finish_output+0x5fc/0xb90 net/ipv4/ip_output.c:290
-  ip_finish_output+0x38/0x1f0 net/ipv4/ip_output.c:318
-  NF_HOOK_COND include/linux/netfilter.h:294 [inline]
-  ip_output+0x21f/0x640 net/ipv4/ip_output.c:432
-  dst_output include/net/dst.h:436 [inline]
-  ip_local_out+0xbb/0x190 net/ipv4/ip_output.c:125
-  igmpv3_sendpack+0x1b5/0x2c0 net/ipv4/igmp.c:426
-  igmpv3_send_cr net/ipv4/igmp.c:721 [inline]
-  igmp_ifc_timer_expire+0x687/0xa00 net/ipv4/igmp.c:809
-  call_timer_fn+0x1ac/0x780 kernel/time/timer.c:1322
-  expire_timers kernel/time/timer.c:1366 [inline]
-  __run_timers kernel/time/timer.c:1685 [inline]
-  __run_timers kernel/time/timer.c:1653 [inline]
-  run_timer_softirq+0x697/0x17a0 kernel/time/timer.c:1698
-  __do_softirq+0x262/0x98c kernel/softirq.c:292
-  invoke_softirq kernel/softirq.c:373 [inline]
-  irq_exit+0x19b/0x1e0 kernel/softirq.c:413
-  exiting_irq arch/x86/include/asm/apic.h:537 [inline]
-  smp_apic_timer_interrupt+0x1a3/0x610 arch/x86/kernel/apic/apic.c:1133
-  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
-  </IRQ>
-RIP: 0010:native_safe_halt+0xe/0x10 arch/x86/include/asm/irqflags.h:61
-Code: 38 73 6e fa eb 8a 90 90 90 90 90 90 e9 07 00 00 00 0f 00 2d 24 1b 4a  
-00 f4 c3 66 90 e9 07 00 00 00 0f 00 2d 14 1b 4a 00 fb f4 <c3> 90 55 48 89  
-e5 41 57 41 56 41 55 41 54 53 e8 ee 32 22 fa e8 39
-RSP: 0018:ffff8880a98e7d68 EFLAGS: 00000286 ORIG_RAX: ffffffffffffff13
-RAX: 1ffffffff11a5e8d RBX: ffff8880a98d6340 RCX: 1ffffffff134b5ee
-RDX: dffffc0000000000 RSI: ffffffff8177f14e RDI: ffffffff873e050c
-RBP: ffff8880a98e7d98 R08: ffff8880a98d6340 R09: ffffed101531ac69
-R10: ffffed101531ac68 R11: ffff8880a98d6347 R12: dffffc0000000000
-R13: ffffffff89a57d78 R14: 0000000000000000 R15: 0000000000000001
-  arch_cpu_idle+0xa/0x10 arch/x86/kernel/process.c:571
-  default_idle_call+0x84/0xb0 kernel/sched/idle.c:94
-  cpuidle_idle_call kernel/sched/idle.c:154 [inline]
-  do_idle+0x413/0x760 kernel/sched/idle.c:263
-  cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:354
-  start_secondary+0x315/0x430 arch/x86/kernel/smpboot.c:264
-  secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:241
+> 
+> They'd surely be easier to implement with a few static inlines and some
+> common code, than to try and replicate the x86 side hypercall_page
+> interface ?
 
+... I don't think they will be easier to implement with a few static 
+inlines. The implementation will likely end up to be similar to 
+arch/x86/asm/xen/hypercall.h.
+
+Furthermore, one of the downside of per-arch static inline is it is more 
+difficult to ensure the prototype match for all the architectures. 
+Although, it might be possible to make them common by only requesting 
+per-arch to implement HYPERCALL_N(...).
+
+So I think the code is better as it is.
+
+While looking at the code, I also realized that the implementation of 
+HYPERCALL_dm_op might be incorrect for Arm32. Similarly do privcmd call, 
+I think dm_op call should enable user access as they will be used by 
+userspace.
+
+We don't use dm_op on Arm so far, hence why I think this was unnoticed. 
+I will see if I can reproduce it and send a patch.
+
+Cheers,
+
+-- 
+Julien Grall
