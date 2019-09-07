@@ -2,109 +2,103 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FECCC43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 13:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DEE7C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 13:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FE8321835
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 13:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1391721835
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 13:34:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406723AbfIGNLr (ORCPT
+        id S2393160AbfIGNeW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 09:11:47 -0400
-Received: from gate.crashing.org ([63.228.1.57]:53617 "EHLO gate.crashing.org"
+        Sat, 7 Sep 2019 09:34:22 -0400
+Received: from ms.lwn.net ([45.79.88.28]:42594 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406704AbfIGNLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 09:11:47 -0400
-Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x87DBShZ025586;
-        Sat, 7 Sep 2019 08:11:29 -0500
-Received: (from segher@localhost)
-        by gate.crashing.org (8.14.1/8.14.1/Submit) id x87DBR20025585;
-        Sat, 7 Sep 2019 08:11:27 -0500
-X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
-Date:   Sat, 7 Sep 2019 08:11:27 -0500
-From:   Segher Boessenkool <segher@kernel.crashing.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Jakub Jelinek <jakub@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "gcc-patches@gcc.gnu.org" <gcc-patches@gcc.gnu.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH v2 4/6] compiler-gcc.h: add asm_inline definition
-Message-ID: <20190907131127.GH9749@gate.crashing.org>
-References: <CANiq72=3Vz-_6ctEzDQgTA44jmfSn_XZTS8wP1GHgm31Xm8ECw@mail.gmail.com> <20190906163028.GC9749@gate.crashing.org> <20190906163918.GJ2120@tucnak> <CAKwvOd=MT_=U250tR+t0jTtj7SxKJjnEZ1FmR3ir_PHjcXFLVw@mail.gmail.com> <20190906220347.GD9749@gate.crashing.org> <CAKwvOdnWBV35SCRHwMwXf+nrFc+D1E7BfRddb20zoyVJSdecCA@mail.gmail.com> <20190906225606.GF9749@gate.crashing.org> <CAKwvOdk-AQVJnD6-=Z0eUQ6KPvDp2eS2zUV=-oL2K2JBCYaOeQ@mail.gmail.com> <20190907001411.GG9749@gate.crashing.org> <CAKwvOdnaBD3Dg3pmZqX2-=Cd0n30ByMT7KUNZKhq0bsDdFeXpg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdnaBD3Dg3pmZqX2-=Cd0n30ByMT7KUNZKhq0bsDdFeXpg@mail.gmail.com>
-User-Agent: Mutt/1.4.2.3i
+        id S1731344AbfIGNeW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Sep 2019 09:34:22 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 6B6A82BD;
+        Sat,  7 Sep 2019 13:34:20 +0000 (UTC)
+Date:   Sat, 7 Sep 2019 07:34:19 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Sven Eckelmann <sven@narfation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Doug Smythies <doug.smythies@gmail.com>,
+        =?UTF-8?B?QXVyw6lsaWVu?= Cedeyn <aurelien.cedeyn@gmail.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-doc@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Armijn Hemel <armijn@tjaldur.nl>, Jiri Olsa <jolsa@redhat.com>,
+        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        Allison Randal <allison@lohutok.net>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Subject: Re: [PATCH 0/6] Address issues with SPDX requirements and PEP-263
+Message-ID: <20190907073419.6a88e318@lwn.net>
+In-Reply-To: <cover.1567712829.git.mchehab+samsung@kernel.org>
+References: <cover.1567712829.git.mchehab+samsung@kernel.org>
+Organization: LWN.net
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 06, 2019 at 06:04:54PM -0700, Nick Desaulniers wrote:
-> On Fri, Sep 6, 2019 at 5:14 PM Segher Boessenkool
-> <segher@kernel.crashing.org> wrote:
-> > On Fri, Sep 06, 2019 at 04:42:58PM -0700, Nick Desaulniers via gcc-patches wrote:
-> > > Just to prove my point about version checks being brittle, it looks
-> > > like Rasmus' version check isn't even right.  GCC supported `asm
-> > > inline` back in the 8.3 release, not 9.1 as in this patch:
-> >
-> > Yes, I backported it so that it is available in 7.5, 8.3, and 9.1, so
-> > that more users will have this available sooner.  (7.5 has not been
-> > released yet, but asm inline has been supported in GCC 7 since Jan 2
-> > this year).
+On Thu,  5 Sep 2019 16:57:47 -0300
+Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
+
+> The  description at Documentation/process/license-rules.rst is very strict
+> with regards to the position where the SPDX tags should be.
 > 
-> Ah, ok that makes sense.
+> In the past several developers and maintainers interpreted it on a
+> more permissive way, placing the SPDX header between lines 1 to 15, 
+> with are the ones which the  scripts/spdxcheck.py script verifies.
 > 
-> How would you even write a version check for that?
-
-I wouldn't.  Please stop using that straw man.  I'm not saying version
-checks are good, or useful for most things.  I am saying they are not.
-
-Predefined compiler symbols to do version checking (of a feature) is
-just a lesser instance of the same problem though.  (And it causes its
-own more or less obvious problems as well).
-
-> > > Or was it "broken" until 9.1?  Lord knows, as `asm inline` wasn't in
-> > > any release notes or bug reports I can find:
-> >
-> > https://gcc.gnu.org/ml/gcc-patches/2019-02/msg01143.html
-> >
-> > It never was accepted, and I dropped the ball.
+> However, recently, devs are becoming more strict about such
+> requirement and want it to strictly follow the rule, with states that
+> the SPDX rule should be at the first line ever on most files, and
+> at the second line for scripts.
 > 
-> Ah, ok, that's fine, so documentation was at least written.  Tracking
-> when and where patches land (or don't) is difficult when patch files
-> are emailed around.  I try to keep track of when and where our kernel
-> patches land, but I frequently drop the ball there.
-
-I keep track of most things just fine...  But the release notes are part
-of our web content, which is in a separate CVS repository (still nicer
-than SVN :-) ), and since I don't use it very often it falls outside of
-all my normal procedures.
-
-> your preference).  I'm already subscribed to more mailing lists than I
-> have time to read.
+> Well, for Python script, such requirement causes violation to PEP-263, 
+> making regressions on scripts that contain encoding lines, as PEP-263
+> also states about the same.
 > 
-> > But I'll try to remember, sure.
-> > Not that I am involved in all such discussions myself, mind.
-> 
-> But you _did_ implement `asm inline`. ;)
+> This series addresses it.
 
-That started as just
+So I really don't want to be overly difficult here, but I would like to
+approach this from yet another angle...
 
-+       /* If this asm is asm inline, count anything as minimum size.  */
-+       if (gimple_asm_inline_p (as_a <gasm *> (stmt)))
-+         count = MIN (1, count);
+> Patches 1 to 3 fix some Python scripts that violates PEP-263;
 
-(in estimate_num_insns) but then things ballooned.  Like such things do.
+I just checked all of those scripts, and they are all just plain ASCII.
+So it really doesn't matter whether the environment defaults to UTF-8 or
+ASCII here.  So, in other words, we really shouldn't need to define the
+encoding at all.
 
+This suggests to me that we're adding a bunch of complications that we
+don't necessarily need.  What am I missing here?
 
-Segher
+Educate me properly and I'll not try to stand in the way of all this...
+
+Thanks,
+
+jon
