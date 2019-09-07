@@ -2,88 +2,99 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1507BC43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 15:00:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB4FFC43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 15:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E42B62178F
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 15:00:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96A4721920
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 15:02:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="TtZYR2EF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394712AbfIGPAW (ORCPT
+        id S2406074AbfIGPCS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 11:00:22 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:49349 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391215AbfIGPAV (ORCPT
+        Sat, 7 Sep 2019 11:02:18 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:43132 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391215AbfIGPCS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 11:00:21 -0400
-Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1i6cCI-0007dS-9H; Sat, 07 Sep 2019 17:00:18 +0200
-Date:   Sat, 7 Sep 2019 17:00:17 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Bandan Das <bsd@redhat.com>
-Subject: Re: Linux 5.3-rc7
-In-Reply-To: <156786727951.13300.15226856788926071603@skylake-alporthouse-com>
-Message-ID: <alpine.DEB.2.21.1909071657430.1902@nanos.tec.linutronix.de>
-References: <CAHk-=wi_nBULUyO=OKtNBCZ+VSqdOcEiUeFqXTQY_D5ga5k4gQ@mail.gmail.com> <156785100521.13300.14461504732265570003@skylake-alporthouse-com> <alpine.DEB.2.21.1909071628420.1902@nanos.tec.linutronix.de>
- <156786727951.13300.15226856788926071603@skylake-alporthouse-com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sat, 7 Sep 2019 11:02:18 -0400
+Received: by mail-ot1-f66.google.com with SMTP id b2so8504710otq.10;
+        Sat, 07 Sep 2019 08:02:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vQuUa7SD4x8TPRd4rEMdVFipQdAElSjSwWznDJwYZRs=;
+        b=TtZYR2EFApgjge1T6n3joQtpMqyYmTxuLma+kCVNN7wn/Td2sozX4uMMJyJOBh7cW4
+         kuejU+OweVVkrAGmTKoS9jy8O7VSEzhwrKsu/XQYz4JGiLlb4/v9Oj2K61iItcV03uxD
+         XGbdCpzAYDZDHIfItszdiml7ALRrPBQy7oYrMe1M0q9v5OmefhcPQP6bdBjS2OFHuIHp
+         s2aIyVQhQV7q5e5QDOqkOc5hFXeTww48b2ucrRtyI2y5k+8+dElAjTG39dpzMzVHV+ZF
+         8mGjwrC0tO9qU5v86blecaWHXjKJC2KfzoeW8mWAmuyr6tKzygm8r2rBxPtqpw1GAF8z
+         ByfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vQuUa7SD4x8TPRd4rEMdVFipQdAElSjSwWznDJwYZRs=;
+        b=b0l7Rd5eJHMRAw5GyE2p+BAv99UVQQHRVLuwARkAHjabdqYJ4KyU+KdLUsh0oMh+Wu
+         6HwZ6ilvHbXYYXdzegOZiIRm6po/cO8GyAurfI2QaWpVPSXS71EfciIt80v7nebsrnq5
+         5dUrpud8ETgRQNYlSJJJxMdHnBFIQVe+KLBDTujFbUAbUz8tEzdi/pfXfp9cjapfI2qw
+         x5Yv3VY4Ulb2BSqsE5oB9AyYOlWpbKtRG77XY/Cjy69blUB6nVxcZYZJEnPlW2ohlL1b
+         lOF2L0t0mY+05pnC2Bm59F7+xbIVi3wwsEzu1a3wpuOZBfDSjZYmMxIsMSXyfRrWv76J
+         RFRA==
+X-Gm-Message-State: APjAAAW0LE3wJCn7sCO1jrHI+8Bb9S9eH7R1zkwQipOwuateUZBJh4qj
+        GcRl1dYep7hEELnkNShfiBmNyLNsKJ143m6gCSs=
+X-Google-Smtp-Source: APXvYqzw933n7nrVPDE4QwDETJQm86n4LQrpvyL7WcPRzCKuuvqnDMkVghSGxwDP0EhrM2T8GOZ8diF0Pz2476G3pcE=
+X-Received: by 2002:a9d:5c0f:: with SMTP id o15mr12429347otk.81.1567868537282;
+ Sat, 07 Sep 2019 08:02:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <1567667251-33466-1-git-send-email-jianxin.pan@amlogic.com>
+ <1567667251-33466-5-git-send-email-jianxin.pan@amlogic.com>
+ <CAFBinCBSmW4y-Dz7EkJMV8HOU4k6Z0G-K6T77XnVrHyubaSsdg@mail.gmail.com> <be032a85-b60d-f7f0-8404-b27784d809df@amlogic.com>
+In-Reply-To: <be032a85-b60d-f7f0-8404-b27784d809df@amlogic.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Sat, 7 Sep 2019 17:02:06 +0200
+Message-ID: <CAFBinCD7gFzOsmZCB8T1KJKVsgL7WMhoEkj3dRzyqwAnjC0CNA@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] arm64: dts: add support for A1 based Amlogic AD401
+To:     Jianxin Pan <jianxin.pan@amlogic.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Carlo Caione <carlo@caione.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Tao Zeng <tao.zeng@amlogic.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 7 Sep 2019, Chris Wilson wrote:
-> Quoting Thomas Gleixner (2019-09-07 15:29:19)
-> > On Sat, 7 Sep 2019, Chris Wilson wrote:
-> > > Quoting Linus Torvalds (2019-09-02 18:28:26)
-> > > > Bandan Das:
-> > > >       x86/apic: Include the LDR when clearing out APIC registers
-> > > 
-> > > Apologies if this is known already, I'm way behind on email.
-> > > 
-> > > I've bisected
-> > > 
-> > > [   18.693846] smpboot: CPU 0 is now offline
-> > > [   19.707737] smpboot: Booting Node 0 Processor 0 APIC 0x0
-> > > [   29.707602] smpboot: do_boot_cpu failed(-1) to wakeup CPU#0
-> > > 
-> > > https://intel-gfx-ci.01.org/tree/drm-tip/igt@perf_pmu@cpu-hotplug.html
-> > > 
-> > > to 558682b52919. (Reverts cleanly and fixes the problem.)
-> > > 
-> > > I'm guessing that this is also behind the suspend failures, missing
-> > > /dev/cpu/0/msr, and random perf_event_open() failures we have observed
-> > > in our CI since -rc7 across all generations of Intel cpus.
-> > 
-> > So is this on bare metal or in a VM?
-> 
-> Our single virtualised piece of kit doesn't support cpu hotplug, so this
-> test is not being run. We have failures on
-> icl (2019), glk (2017), kbl (2017), bxt (2016), skl (2015),
-> bsw (2016), hsw (2013), byt (2013), snb (2011), elk (2008),
-> bwr (2006), blb (2007)
+Hi Jianxin,
 
-Ok let me find a testbox to figure out whats wrong there.
+On Fri, Sep 6, 2019 at 7:58 AM Jianxin Pan <jianxin.pan@amlogic.com> wrote:
+[...]
+> > also I'm a bit surprised to see no busses (like aobus, cbus, periphs, ...) here
+> > aren't there any busses defined in the A1 SoC implementation or are
+> > were you planning to add them later?
+> Unlike previous series,there is no Cortex-M3 AO CPU in A1, and there is no AO/EE power domain.
+> Most of the registers are on the apb_32b bus.  aobus, cbus and periphs are not used in A1.
+OK, thank you for the explanation
+since you're going to re-send the patch anyways: can you please
+include the apb_32b bus?
+all other upstream Amlogic .dts are using the bus definitions, so that
+will make A1 consistent with the other SoCs
 
-Does this only happen with that CPU0 hotplug stuff enabled or on CPUs other
-than CPU0 as well? That hotplug CPU0 stuff is a bandaid so I wouldn't be
-surprised if we broke that somehow.
 
-Thanks,
-
-	tglx
+Martin
