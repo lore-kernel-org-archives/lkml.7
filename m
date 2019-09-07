@@ -2,160 +2,85 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D72BAC43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 17:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E45C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 17:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4BE9218AC
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 17:42:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="Ahrc72PG"
+	by mail.kernel.org (Postfix) with ESMTP id 2A5BB21907
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 17:42:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567878157;
+	bh=GHJAVT2/iebWv8cgiLcaT3iJsHValcnDCOHaDLgxd3s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vILacs0CloLeHzG02CEDsByTDjhYOcnMgEDKM6Eg80KWxylGE2Eu+x0sAjeGt0rsC
+	 qhsEA8K1FnMRGLLjBuIRXLNw4j5GyMv2L7KbFz2R4SdNaCh5k6cVB+nA9rfDfqy/b1
+	 QzA9XO9kQlB/5reJTTRa5P1yF2vZp/3z0AuhLzNA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406240AbfIGRm2 (ORCPT
+        id S2406268AbfIGRmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 13:42:28 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39152 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393312AbfIGRm1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 13:42:27 -0400
-Received: by mail-pl1-f193.google.com with SMTP id bd8so4658586plb.6
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Sep 2019 10:42:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=zOxFxXxkeAXBLA4hmpQx5p2K1SwU8yRrMWsF/vzne4c=;
-        b=Ahrc72PGzKNYWoLbwpqpkb4sblxxhLeem6jebRPHiC48yikyu8YdaM5Oje1cRKpGrE
-         B1aFxjVmVluxNvScD9M4WSgd+3044EW5n5U/PFuuVmQG4Hbymvgt22zE94vbhcs9R725
-         YmVhBFQvI6AY2jzBjl65iE1N91bXW5n21nVFyaplmtDp+2SiGPjY7BdJbCgTW6FOdyps
-         WzpWqeuBT7oibyk4x8aGykU8dzYGBQ3SiApw6VGFkEO8SPi7/aZ892rQXq+Pb+3b5ZeC
-         PbzZzd392k2TpO4uq92p9v5vThdZeJX5HF5wKk1rRbCSaXdBoZUNJaEVn/U3I0P9Ilwr
-         6irw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=zOxFxXxkeAXBLA4hmpQx5p2K1SwU8yRrMWsF/vzne4c=;
-        b=IBbJuBFjH6ZY1yIXZQTVRvvetwfV+3vS7g9f8OVORpHPTx/wfq0LH4d+f+3aEQrgBW
-         5vy5UijFQpio46rnVDFVhFGB5dhGwdHcwF77OrBJnGGcFxSkWNbQUtYu4Ta0Gz+MeMzP
-         76MdcbkwzN7LOsxIvLNmb20Stb9xxarHIL7eMbOUG0UeHmZX+PEiTvmATAahtV662f8Q
-         5vIwXlY+rFO7JfrVjXAQtF9ZQ3RR5A0Wt23dccxwvsIXqQezTZjFjgPSz2xGriEs9Plx
-         mU7oLMXXcPKusZunvC+UFQbYNeX2OBFhvHWuZn283oIet2t8Gp+0f9R15KZMgqQ3J86e
-         TvOw==
-X-Gm-Message-State: APjAAAUrGgUDlmP3hjfjqOy83zv3gS7B4QqWKugnjPiLnC5OX1YbB6d0
-        hPbMbeHD6MtJtJf5xMITkDwh4Q==
-X-Google-Smtp-Source: APXvYqy9Whfn7uTg3BOXXtKo+Xb13mslF8Px0gcix7JC2yC4OfYP4K4dJzWw76A+9fC6aflAwbUnzg==
-X-Received: by 2002:a17:902:421:: with SMTP id 30mr16087280ple.105.1567878146356;
-        Sat, 07 Sep 2019 10:42:26 -0700 (PDT)
-Received: from ?IPv6:2600:100f:b121:da37:bc66:d4de:83c7:e0cd? ([2600:100f:b121:da37:bc66:d4de:83c7:e0cd])
-        by smtp.gmail.com with ESMTPSA id h11sm8785567pgv.5.2019.09.07.10.42.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 07 Sep 2019 10:42:25 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v12 11/12] open: openat2(2) syscall
-From:   Andy Lutomirski <luto@amacapital.net>
-X-Mailer: iPhone Mail (16G102)
-In-Reply-To: <CAHk-=whZx97Nm-gUK0ppofj2RA2LLz2vmaDUTKSSV-+yYB9q_Q@mail.gmail.com>
-Date:   Sat, 7 Sep 2019 10:42:23 -0700
-Cc:     Jeff Layton <jlayton@kernel.org>, Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian@brauner.io>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        alpha <linux-alpha@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-ia64@vger.kernel.org,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <C81D6D29-F6BF-48E6-A15E-3ABCB2C992E5@amacapital.net>
-References: <20190904201933.10736-1-cyphar@cyphar.com> <20190904201933.10736-12-cyphar@cyphar.com> <7236f382d72130f2afbbe8940e72cc67e5c6dce0.camel@kernel.org> <CAHk-=whZx97Nm-gUK0ppofj2RA2LLz2vmaDUTKSSV-+yYB9q_Q@mail.gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
+        Sat, 7 Sep 2019 13:42:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38130 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728507AbfIGRmf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Sep 2019 13:42:35 -0400
+Received: from localhost (unknown [80.251.162.164])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97BAF218AE;
+        Sat,  7 Sep 2019 17:42:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567878155;
+        bh=GHJAVT2/iebWv8cgiLcaT3iJsHValcnDCOHaDLgxd3s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YegHihmOrO7HqZ8bbVS3tGIm+iTrMZL4wtxB3E9/+Q1wZcSR8euLNe94MGe7MNf40
+         6do0qipds9FaHV9diRE/V8AXcgsINqBopWBfhEuPMo5cn3kmDafSCK4Cp1F2f/jJ5/
+         A60rHL6eAzIF7SOOfAsEvG10E8lDZgWJCYnX5Olg=
+Date:   Sat, 7 Sep 2019 18:42:32 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Sandro Volery <sandro@volery.com>
+Cc:     linux-kernel@vger.kernel.org, jslaby@suse.com
+Subject: Re: [PATCH] Fixed most indent issues in tty_io.c
+Message-ID: <20190907174232.GA20070@kroah.com>
+References: <20190907172944.GB18166@kroah.com>
+ <B45E122D-2B8B-43DA-8658-889E30CB2F0F@volery.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <B45E122D-2B8B-43DA-8658-889E30CB2F0F@volery.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Sep 07, 2019 at 07:35:42PM +0200, Sandro Volery wrote:
+> 
+> 
+> >>> On 7 Sep 2019, at 19:29, Greg KH <gregkh@linuxfoundation.org> wrote:
+> >> ﻿On Sat, Sep 07, 2019 at 07:23:59PM +0200, Sandro Volery wrote:
+> >> Dear Greg,
+> >> I am pretty sure the issue was, that I did too many things at once. However, all the things I did are related to spaces / tabs, maybe that still works?
+> > 
+> > <snip>
+> > 
+> > For some reason you sent this only to me, which is a bit rude to
+> > everyone else on the mailing list.  I'll be glad to respond if you
+> > resend it to everyone.
+> 
+> I'm sorry, newbie here. I thought it'd be better to not annoy everyone with responses but learning things everyday I guess :)
 
+No problem, but you should also line-wrap your emails :)
 
-> On Sep 7, 2019, at 9:58 AM, Linus Torvalds <torvalds@linux-foundation.org>=
- wrote:
->=20
->> On Sat, Sep 7, 2019 at 5:40 AM Jeff Layton <jlayton@kernel.org> wrote:
->>=20
->> After thinking about this a bit, I wonder if we might be better served
->> with a new set of OA2_* flags instead of repurposing the O_* flags?
->=20
-> I'd hate to have yet _another_ set of translation functions, and
-> another chance of people just getting it wrong either in user space or
-> the kernel.
->=20
-> So no. Let's not make another set of flags that has no sane way to
-> have type-safety to avoid more confusion.
->=20
-> The new flags that _only_ work with openat2() might be named with a
-> prefix/suffix to mark that, but I'm not sure it's a huge deal.
->=20
->           =20
+> I am pretty sure the issue with my patch was that there was too many changes, however all of them were spaces and tabs related, so I think this could be fine?
 
-I agree with the philosophy, but I think it doesn=E2=80=99t apply in this ca=
-se.  Here are the flags:
+As the bot said, break it out into "one patch per logical change", and
+"fix all whitespace issues" is not "one logical change".
 
-O_RDONLY, O_WRONLY, O_RDWR: not even a proper bitmask. The kernel already ha=
-s the FMODE_ bits to make this make sense. How about we make the openat2 per=
-mission bits consistent with the internal representation and let the O_ perm=
-ission bits remain as an awful translation.  The kernel already translates l=
-ike this, and it already sucks.
+thanks,
 
-O_CREAT, O_TMPFILE, O_NOCTTY, O_TRUNC: not modes on the fd at all.  These af=
-fect the meaning of open().  Heck, for openat2, NOCTTY should be this defaul=
-t.
-
-O_EXCL: hopelessly overloaded.
-
-O_APPEND, O_DIRECT, O_SYNC, O_DSYNC, O_LARGEFILE, O_NOATIME, O_PATH, O_NONBL=
-OCK: genuine mode bits
-
-O_CLOEXEC: special because it affects the fd, not the struct file.
-
-Linus, you rejected resolveat() because you wanted a *nice* API that people w=
-ould use and that might even be adopted by other OSes. Let=E2=80=99s please n=
-ot make openat2() be a giant pile of crap in the name of consistency with op=
-en().  open(), frankly, is horrible.
-
+greg k-h
