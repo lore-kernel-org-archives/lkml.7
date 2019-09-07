@@ -2,161 +2,147 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MIME_QP_LONG_LINE,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB2BFC43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 18:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 186CDC43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 18:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B575B208C3
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 18:15:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E23B621848
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 18:18:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="gPB2S/s2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PZc+/AEr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbfIGSPN (ORCPT
+        id S2389682AbfIGSSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 14:15:13 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41757 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388745AbfIGSPM (ORCPT
+        Sat, 7 Sep 2019 14:18:25 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33067 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730750AbfIGSSY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 14:15:12 -0400
-Received: by mail-pg1-f194.google.com with SMTP id x15so5351730pgg.8
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Sep 2019 11:15:12 -0700 (PDT)
+        Sat, 7 Sep 2019 14:18:24 -0400
+Received: by mail-pl1-f195.google.com with SMTP id t11so4703801plo.0;
+        Sat, 07 Sep 2019 11:18:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=yCXO2IUW/xP5rGitFpbGKrkQxCFizP24AMzmcKYJo+k=;
-        b=gPB2S/s21fOdrhZkZvzaMRRbkTHlbc79vLkQ8L7Cpmmu8hvbAG6eoC0Dm32QXRGYMY
-         +1LPES8i+LJBkfY/p1yzpRzMMv2odDchTO0YHOkxwFiie7OsEOHDwtOH8zJJ6F9AZyk5
-         MkZFVhvuxPxeMIKfq+G9obcmbfsQBob0Nc70jrYQVbX0W8tNU0vMgyrejbOLHj/PJBII
-         8jO1EQn6kWKOgkBib76U4yxHBzWI3KaSO/lLhJIPi5x1WrjQ3kHOZysmKhg2Dv2MsCh4
-         N/OxZH40a7P6xhJ/lAgfa+dSsRZSJmy+02UKql6Xb3VKWtRKJq/2ht+J5tBxXcxSYFTB
-         1GhQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5KpXd8+E0H56p8I4bFGmpPfO+KfUXqH1zeKBuS+WLBA=;
+        b=PZc+/AErWKEp8Lf0CLmFpEsSwHYWZh1SVOV1LGkWNAe/8yzB9kF0/jQykiDIgt5Y6U
+         5X+N4Yja1Y/y6yUoXbA8ByP1KfYcybE1o48/SZ2tGz3g187M1Z+I8ygv7yvyX2MsJsSx
+         8sSL7lAi2PrJxygDeNja7dP39C4lwtJzx97rt1x9solRgyV8pnZqCq3N6wYJDtqHg9B8
+         Af3YJy7FBtplXzILhbcloIiy+Qhx46VgjcaeikDt6bKu5LDhOGIE0AQFtsZdg3iP2VMU
+         gO9D5A3FbiFWpCbe3l5mM/AzHcwChFz43JtAE3O8bB+7jBwp4/3nEImW54zjdXjAgNqW
+         IJug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=yCXO2IUW/xP5rGitFpbGKrkQxCFizP24AMzmcKYJo+k=;
-        b=asZt369uBcWFtj7ZrlMSgiYRcHK6YW8oytpODJG9KvXRZK2I0KNu150tWhH55GDMkG
-         QhaVpc2w1r08svhQTXhfxqfrs4HuS0t73IgJumCtF76ENlWgBPe9hcHRZWvKXSGB7U2c
-         2jyY6jGOik2mbYvCQAT2BI6MR5I9PMtxMuHLzNYlgGZVlVTNXAvsMUT3cKLu9TvWxuc8
-         QDWSGRlhrf4GX41lLJH0aQsNRGm0j8C4zgTKNmqd1uh3jvaYhguAkppbrDLJv/Ku1Cn4
-         RNuqix5sLr/j4CgBFCfC7kE89mw51SdvbswO75VK0mtlx7QbYWtB7uUAOOOost64yEzn
-         BTIA==
-X-Gm-Message-State: APjAAAV+zhEjL8a4peF04oznMKInhrKBRv8NO3qvaCL/NNdY7Djsni03
-        KADlmyUS0M6vZCZcFuVRSKgJVA==
-X-Google-Smtp-Source: APXvYqwtLHTxDBZPI4nj5nW8UmB/sRAqU0rGQe5gnm9Rg561yB9Atb14l/OoZSzCcZVB4Qk4BIIw8Q==
-X-Received: by 2002:aa7:8b09:: with SMTP id f9mr13154710pfd.23.1567880111917;
-        Sat, 07 Sep 2019 11:15:11 -0700 (PDT)
-Received: from ?IPv6:2600:100f:b121:da37:bc66:d4de:83c7:e0cd? ([2600:100f:b121:da37:bc66:d4de:83c7:e0cd])
-        by smtp.gmail.com with ESMTPSA id x5sm10495873pfn.149.2019.09.07.11.15.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 07 Sep 2019 11:15:11 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v12 11/12] open: openat2(2) syscall
-From:   Andy Lutomirski <luto@amacapital.net>
-X-Mailer: iPhone Mail (16G102)
-In-Reply-To: <CAHk-=whe90Ec_RRrMRLE0=bJOHNS9YmVwcytVxmrfK3oCuZF6A@mail.gmail.com>
-Date:   Sat, 7 Sep 2019 11:15:09 -0700
-Cc:     Jeff Layton <jlayton@kernel.org>, Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian@brauner.io>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        alpha <linux-alpha@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-ia64@vger.kernel.org,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <EE7399FD-7587-407B-B628-1D92CFD6B120@amacapital.net>
-References: <20190904201933.10736-1-cyphar@cyphar.com> <20190904201933.10736-12-cyphar@cyphar.com> <7236f382d72130f2afbbe8940e72cc67e5c6dce0.camel@kernel.org> <CAHk-=whZx97Nm-gUK0ppofj2RA2LLz2vmaDUTKSSV-+yYB9q_Q@mail.gmail.com> <C81D6D29-F6BF-48E6-A15E-3ABCB2C992E5@amacapital.net> <CAHk-=whe90Ec_RRrMRLE0=bJOHNS9YmVwcytVxmrfK3oCuZF6A@mail.gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5KpXd8+E0H56p8I4bFGmpPfO+KfUXqH1zeKBuS+WLBA=;
+        b=m74z8a+4jHVDRt0YbVbIleE/t4EGnU+mAxr8cv14g/YuCgUfBl67okvvDq0dksv+Jp
+         TrBbZi54IvSAUpmxSHssdEIcLHIIF3ElOfu324g1Chz7P0FQ+JwUrb/fcEK2nuQC+qeG
+         W9T04hb+uHAUFcYW3WdB54CyvUlb53dKdsfq98oRllj6kc/doCqgziDXkDaujxe/aw+m
+         3qdRCGNAYkK2ZNA7U4SgHUpzNXfiiM9r43CySNUXS0N212ZKWoDdMuu1uCjbT7fMMIt8
+         lmT+lJOwycKIKU0Tp/HWDvaB2aqm9Z4Eq6S1O8ZcOCRvQzm8L5iW+vUW6kT717CiH3eX
+         UFJw==
+X-Gm-Message-State: APjAAAXFWoxaLHrbjtvpBo+tiump+/oepz36Es+4jKqktZHhum3rAXss
+        NA6yXceji+n56lPxfD+QCmzXvcqgs0cYV5f/ilM=
+X-Google-Smtp-Source: APXvYqwphaPzifCYArwcPAZCl2cUc6xY8wK8sS2Kvf2ZG7LnsD3XmU/MV5GZ6E5Y5q4JUlNCEWHcHHqy9svvakb0wHU=
+X-Received: by 2002:a17:902:9349:: with SMTP id g9mr15522432plp.262.1567880304287;
+ Sat, 07 Sep 2019 11:18:24 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190905233748.6822-1-srinivas.pandruvada@linux.intel.com>
+ <20190905233748.6822-2-srinivas.pandruvada@linux.intel.com>
+ <780a3faf-9e44-64f4-a354-bdee39af3af5@redhat.com> <20190906134655.GU2680@smile.fi.intel.com>
+ <6b576770a4bbe6c24ea524083dec5a16bf3c9e94.camel@linux.intel.com> <b8c7bd1204f7b4f75a5bccec4d7c41b1225928f7.camel@linux.intel.com>
+In-Reply-To: <b8c7bd1204f7b4f75a5bccec4d7c41b1225928f7.camel@linux.intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 7 Sep 2019 21:18:13 +0300
+Message-ID: <CAHp75Vc9xMPW38Toh2jKv9YYYNV16837aAcXKMP6WaM-L8zcSQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] tools/power/x86/intel-speed-select: Display core
+ count for bucket
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Prarit Bhargava <prarit@redhat.com>,
+        David Arcari <darcari@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Sep 6, 2019 at 10:47 PM Srinivas Pandruvada
+<srinivas.pandruvada@linux.intel.com> wrote:
+>
+> On Fri, 2019-09-06 at 07:50 -0700, Srinivas Pandruvada wrote:
+> > On Fri, 2019-09-06 at 16:46 +0300, Andy Shevchenko wrote:
+> > > On Fri, Sep 06, 2019 at 05:39:54AM -0400, Prarit Bhargava wrote:
+> > > > On 9/5/19 7:37 PM, Srinivas Pandruvada wrote:
+> > > > > Read the bucket and core count relationship via MSR and display
+> > > > > when displaying turbo ratio limits.
+> > > > > +       ret = isst_send_msr_command(cpu, 0x1ae, 0,
+> > > > > buckets_info);
+> > > >
+> > > > ^^^ you can get rid of the magic number 0x1ae by doing (sorry for
+> > > > the cut-and-paste)
+> > > >
+> > > > diff --git a/tools/power/x86/intel-speed-select/Makefile
+> > > > b/tools/power/x86/intel
+> > > > index 12c6939dca2a..087d802ad844 100644
+> > > > --- a/tools/power/x86/intel-speed-select/Makefile
+> > > > +++ b/tools/power/x86/intel-speed-select/Makefile
+> > > > @@ -15,6 +15,8 @@ endif
+> > > >  MAKEFLAGS += -r
+> > > >
+> > > >  override CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
+> > > > +override CFLAGS += -I../../../include
+> > > > +override CFLAGS +=
+> > > > -DMSRHEADER='"../../../../arch/x86/include/asm/msr-index.h"'
+> >
+> > No, we can't use msr_index.
+> This comment was meant for use of /dev/cpu/X/msr not msr_index.
+> I didn't want to bring in dependency on msr-index.h for couple of 2
+> MSRs and the names in msr-index.h doesn't really reflect the actual
+> processing, they are doing. For example MSR_TURBO_RATIO_LIMIT1 for
+> 0x1ae. The definition of 0x1AE is different on cpu model 0x55 and
+> beyond.
+>
+> >
 
-> On Sep 7, 2019, at 10:45 AM, Linus Torvalds <torvalds@linux-foundation.org=
-> wrote:
->=20
->> On Sat, Sep 7, 2019 at 10:42 AM Andy Lutomirski <luto@amacapital.net> wro=
-te:
->>=20
->> Linus, you rejected resolveat() because you wanted a *nice* API
->=20
-> No. I rejected resoveat() because it was a completely broken garbage
-> API that couldn't do even basic stuff right (like O_CREAT).
->=20
-> We have a ton of flag space in the new openat2() model, we might as
-> well leave the old flags alone that people are (a) used to and (b) we
-> have code to support _anyway_.
->=20
-> Making up a new flag namespace is only going to cause us - and users -
-> more work, and more confusion. For no actual advantage. It's not going
-> to be "cleaner". It's just going to be worse.
->=20
->=20
+It seems not applicable on top of tools patch series I had applied before.
 
-If we keep all the flag bits in the same mask with the same values, then we=E2=
-=80=99re stuck with O_RDONLY=3D0 and everything that implies.  We=E2=80=99ll=
- have UPGRADE_READ that works differently from the missing plain-old-READ bi=
-t, and we can=E2=80=99t express execute-only-no-read-or-write. This sucks.
+> > >
+> > > I guess it can be done in more neat way.
+> > >
+> > > > As I've been looking at this code I have been wondering why
+> > > > didn't
+> > > > you just use
+> > > > the standard /dev/cpu/X/msr interface that other x86 power
+> > > > utilities (turbostat,
+> > > > x86_energy_perf_policy) use?  Implementing msr_read() is trivial
+> > > > (warning
+> > > > untested and uncompiled code)
+> >
+> > No. We can't. The MSR interface is disabled on several distribution
+> > and
+> > platforms with secured boot. So some special MSRs are only allowed
+> > via
+> > this IOCTL interface.
+> >
+> > Thanks,
+> > Srinivas
+> >
+> >
+> > >
+> > > Actually good point!
+> > >
+>
 
-Can we at least split the permission bits into their own mask and make bits 0=
- and 1 illegal in the main set of flags in openat2?
 
-There=E2=80=99s another thread going on right now about adding a bit along t=
-he lines of =E2=80=9CMAYEXEC=E2=80=9D, and one of the conclusions was that i=
-t should wait for openat2 so that it can have same semantics. If we=E2=80=99=
-re stuck with O_RDONLY and friends, then MAYEXEC is doomed to being at least=
- a bit nonsensical.
-
-As an analogy, AMD64 introduced bigger PTEs but kept the same nonsense encod=
-ing of read and write permission. And then we got NX, and now we=E2=80=99re g=
-etting little holes in the encoding stolen by CET to mean new silly things. =
- I don=E2=80=99t know if you=E2=80=99ve been following the various rounds of=
- patches, but it is truly horrible. The mapping from meaning to the actual b=
-its is *shit*, and AMD64 should have made a clean break instead.
-
-open()=E2=80=99s permission bits are basically the same situation. And the k=
-ernel *already* has a non-type-safe translation layer. Please, please let op=
-enat2() at least get rid of the turd in open()=E2=80=99s bits 0 and 1.
-
+-- 
+With Best Regards,
+Andy Shevchenko
