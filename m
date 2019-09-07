@@ -2,76 +2,166 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB76C0030B
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 12:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD98C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 13:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8BFF218AE
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 12:57:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F988218AF
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 13:07:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406672AbfIGM55 (ORCPT
+        id S2406704AbfIGNHJ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 08:57:57 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:34725 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406595AbfIGM55 (ORCPT
+        Sat, 7 Sep 2019 09:07:09 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:45287 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405979AbfIGNHJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 08:57:57 -0400
-Received: by mail-qt1-f196.google.com with SMTP id a13so10597873qtj.1;
-        Sat, 07 Sep 2019 05:57:56 -0700 (PDT)
+        Sat, 7 Sep 2019 09:07:09 -0400
+Received: by mail-qt1-f194.google.com with SMTP id r15so10510263qtn.12;
+        Sat, 07 Sep 2019 06:07:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LhiCADZkNTCl+mm69LYUXtAdkguFcYYbHWtAbXegPkM=;
-        b=HWwNllgxl2B7QRXENDzO2VLH1y/AZFNTcUOM0EVmpAfco4x+wr8afvNL9z9D9eiXAR
-         eFlmQT8m4HzH5/yENm7M6f7aKUeovbYJHLyJX26RIaLguHgNFzCIi11/UyCJz3n9sU9F
-         MS/lFJgFx+Kmt++JtAM++Entu9ESOZD/Tq2uSXp4eAe6nugp+O6cLu9NBEk2fGAAJPKz
-         HzLXLAckqy5aQseFo5RDmGcV5eY+xJzsu3Og997SdInztlsfLuwpH46p+ikZ16FWlpAa
-         NqaYk3EnSmEyDNkMKAQI1ZZr4hSfdFkgm+BmN/srtErlUovBaEBr+BM4MWhoXpwYQGzj
-         4Cuw==
-X-Gm-Message-State: APjAAAUYUlPf9VtHPhP0HMGhdCm4Y8sCR1+zquGoVRkx7i8T5HOjeb+2
-        c2Zw3FBMGmBlssNaKc11h+wyTvMA+qyivtiuiBU=
-X-Google-Smtp-Source: APXvYqw7dfoTYXQwYJdtzA6jA6FZqRmNasLKy5B2BO+iWICFBiVzzPZ43kTTDxIulAH3bIsGUDOu99EI8pTHRL0SBVY=
-X-Received: by 2002:ac8:342a:: with SMTP id u39mr14294033qtb.7.1567861076453;
- Sat, 07 Sep 2019 05:57:56 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=D8xpnUonO9ittQ1fvcy5psrt/hDZYfyPpChwIepSzR4=;
+        b=JZKiPTIEw/FrcEZr9N+XpxWVITNNl2/ZtEnI343Sy1YKi7GhaQN0/bQfeYJ6fMQRi/
+         i2iNexINfOgWmsBeGxsA9oEmQxFnk1Btwnkn5FgyazU3s2VUaab4BffspQ4Csad7YU0U
+         TO28GcyOYB9f4u73DErmbcXYWPCfoEtReGBj8x9iIeJKLmLi5oLJMTXxXACX5uX0Eslk
+         RsOFKg3GNsCL+ghGJZd7DWaDzbjnHboRV9Hwd0KLkbxoErWy/44gNB1Xr/vmUXL8lqwh
+         wTMXeSf9ZETL97hwXrnbUF2p8rghEEwe9JdutzeVcHF7LCZNQkeRfiBGHq5q4QkTKMHX
+         KBLg==
+X-Gm-Message-State: APjAAAXgiFkt4VG9+azw7O01xvhk65vJe8BGIVs7x4iKxCHOVg8C1fUj
+        xFYFH+MERcpJ13QeiM7EjTOraJ+GciMHS6CqabE=
+X-Google-Smtp-Source: APXvYqzFHsUZIR4dt5P3Hjmbp9ave6Nqb35MMPRXJtrbS0GvnfMEOm5b96OnKqB/zfumlG9w1sEeetW4FsMWLlG3YgI=
+X-Received: by 2002:aed:2842:: with SMTP id r60mr13927377qtd.142.1567861627709;
+ Sat, 07 Sep 2019 06:07:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190906151028.1064531-1-arnd@arndb.de> <20190907073444.GB3873@mellanox.com>
-In-Reply-To: <20190907073444.GB3873@mellanox.com>
+References: <20190906151059.1077708-1-arnd@arndb.de> <7fc19dd4-93fb-fa15-3d36-3079cd42cf7c@linux.com>
+ <17ee4877-d24a-12ad-5836-411e3e525933@linux.com>
+In-Reply-To: <17ee4877-d24a-12ad-5836-411e3e525933@linux.com>
 From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Sat, 7 Sep 2019 14:57:40 +0200
-Message-ID: <CAK8P3a1jy9gmyM=8LDTVep_zqxfhG05dgCyxvn=69NVR+Xmnqw@mail.gmail.com>
-Subject: Re: [PATCH] rdma/siw: fix NOMMU build
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Bernard Metzler <bmt@zurich.ibm.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+Date:   Sat, 7 Sep 2019 15:06:51 +0200
+Message-ID: <CAK8P3a1kpLgTBqd_VC8_V7UL_gvf7kZmyaSjbbHpqsaFQ00KyQ@mail.gmail.com>
+Subject: Re: [PATCH] mostpost: don't warn about symbols from another file
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        WANG Chao <chao.wang@ucloud.cn>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 7, 2019 at 9:34 AM Jason Gunthorpe <jgg@mellanox.com> wrote:
-> > @@ -374,7 +374,7 @@ struct siw_umem *siw_umem_get(u64 start, u64 len, bool writable)
-> >       unsigned int foll_flags = FOLL_WRITE;
-> >       int num_pages, num_chunks, i, rv = 0;
+On Sat, Sep 7, 2019 at 7:28 AM Denis Efremov <efremov@linux.com> wrote:
+> On 07.09.2019 01:39, Denis Efremov wrote:
+> >> This is not helpful, as these are clearly not static symbols
+> >> at all. Suppress the warning in a case like this.
+> >>
 > >
-> > -     if (!can_do_mlock())
-> > +     if (!IS_ENABLED(CONFIG_MMU) || !can_do_mlock())
-> >               return ERR_PTR(-EPERM);
+> > It looks very similar to this discussion https://lkml.org/lkml/2019/7/30/112
+> >
+> > Could you please write the steps to reproduce the warnings?
 >
-> I feel like !CONFIG_MMU should provide a dummy inline stub for can_do_mlock
-> instead?
+> > Now, I'm trying to build linux-next (host Ubuntu 19.04 x86_64) with:
+> > $ make ARCH=arm CROSS_COMPILE=/usr/bin/arm-linux-gnueabi-
+> > But I can't get these warnings.
+>
+> Tried defconfig, allyesconfig.
 
-Fair enough. I've added that to my test tree in place of my first patch
-and will send it after some more build testing.
+I only have one randconfig build that caused these, see
+http://paste.ubuntu.com/p/D6w8RNS7MG/ for the .config
+
+I was building linux-next with the clang-9 toolchain from http://apt.llvm.org,
+but that should not matter here.
+
+> > I would like to check the type of this asm symbols. It seems like they
+> > are STT_NOTYPE. In this case the fix could also involve ELF_ST_TYPE check.
+> >
+>
+> Ah, I forgot that we don't check the type at all, so this is not the case.
+> But still, I would like to test what if the remove binding check at all?
+> diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+> index 76c221dd9b2b..97dbcebf2338 100644
+> --- a/scripts/mod/modpost.c
+> +++ b/scripts/mod/modpost.c
+> @@ -1987,14 +1987,12 @@ static void read_symbols(const char *modname)
+>         for (sym = info.symtab_start; sym < info.symtab_stop; sym++) {
+>                 unsigned char bind = ELF_ST_BIND(sym->st_info);
+>
+> -               if (bind == STB_GLOBAL || bind == STB_WEAK) {
+>                         struct symbol *s =
+>                                 find_symbol(remove_dot(info.strtab +
+>                                                        sym->st_name));
+>
+>                         if (s)
+>                                 s->is_static = 0;
+> -               }
+>         }
+>
+>         if (!is_vmlinux(modname) || vmlinux_section_warnings)
+
+Unfortunately, I still get the same warnings, plus one about modpost.c:
+
+scripts/mod/modpost.c:1988:17: warning: unused variable ‘bind’
+[-Wunused-variable]
+WARNING: "__ashrdi3" [vmlinux] is a static (unknown)
+WARNING: "__lshrdi3" [vmlinux] is a static (unknown)
+WARNING: "__aeabi_llsr" [vmlinux] is a static (unknown)
+WARNING: "__aeabi_lasr" [vmlinux] is a static (unknown)
+WARNING: "__aeabi_uidivmod" [vmlinux] is a static (unknown)
+WARNING: "__udivsi3" [vmlinux] is a static (unknown)
+WARNING: "_change_bit" [vmlinux] is a static (unknown)
+WARNING: "__aeabi_idiv" [vmlinux] is a static (unknown)
+WARNING: "__umodsi3" [vmlinux] is a static (unknown)
+WARNING: "__aeabi_uidiv" [vmlinux] is a static (unknown)
+WARNING: "__aeabi_idivmod" [vmlinux] is a static (unknown)
+WARNING: "__muldi3" [vmlinux] is a static (unknown)
+WARNING: "__aeabi_ulcmp" [vmlinux] is a static (unknown)
+WARNING: "__raw_writesb" [vmlinux] is a static (unknown)
+WARNING: "__raw_readsb" [vmlinux] is a static (unknown)
+WARNING: "__ucmpdi2" [vmlinux] is a static (unknown)
+WARNING: "__aeabi_lmul" [vmlinux] is a static (unknown)
+WARNING: "__divsi3" [vmlinux] is a static (unknown)
+WARNING: "__modsi3" [vmlinux] is a static (unknown)
+WARNING: "_test_and_change_bit" [vmlinux] is a static (unknown)
+WARNING: "__bswapdi2" [vmlinux] is a static (unknown)
+WARNING: "__bswapsi2" [vmlinux] is a static (unknown)
+WARNING: "__ashldi3" [vmlinux] is a static (unknown)
+WARNING: "__aeabi_llsl" [vmlinux] is a static (unknown)
+WARNING: "__ashrdi3" [vmlinux] is a static (unknown)
+WARNING: "__lshrdi3" [vmlinux] is a static (unknown)
+WARNING: "__aeabi_llsr" [vmlinux] is a static (unknown)
+WARNING: "__aeabi_lasr" [vmlinux] is a static (unknown)
+WARNING: "__aeabi_uidivmod" [vmlinux] is a static (unknown)
+WARNING: "__udivsi3" [vmlinux] is a static (unknown)
+WARNING: "_change_bit" [vmlinux] is a static (unknown)
+WARNING: "__aeabi_idiv" [vmlinux] is a static (unknown)
+WARNING: "__umodsi3" [vmlinux] is a static (unknown)
+WARNING: "__aeabi_uidiv" [vmlinux] is a static (unknown)
+WARNING: "__aeabi_idivmod" [vmlinux] is a static (unknown)
+WARNING: "__muldi3" [vmlinux] is a static (unknown)
+WARNING: "__aeabi_ulcmp" [vmlinux] is a static (unknown)
+WARNING: "__raw_writesb" [vmlinux] is a static (unknown)
+WARNING: "__raw_readsb" [vmlinux] is a static (unknown)
+WARNING: "__ucmpdi2" [vmlinux] is a static (unknown)
+WARNING: "__aeabi_lmul" [vmlinux] is a static (unknown)
+WARNING: "__divsi3" [vmlinux] is a static (unknown)
+WARNING: "__modsi3" [vmlinux] is a static (unknown)
+WARNING: "_test_and_change_bit" [vmlinux] is a static (unknown)
+WARNING: "__bswapdi2" [vmlinux] is a static (unknown)
+WARNING: "__bswapsi2" [vmlinux] is a static (unknown)
+WARNING: "__ashldi3" [vmlinux] is a static (unknown)
+WARNING: "__aeabi_llsl" [vmlinux] is a static (unknown)
 
      Arnd
