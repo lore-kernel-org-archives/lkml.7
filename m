@@ -2,166 +2,115 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD98C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 13:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7EABC43140
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 13:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F988218AF
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 13:07:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9660C2196E
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 13:10:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406704AbfIGNHJ convert rfc822-to-8bit (ORCPT
+        id S2406712AbfIGNK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 09:07:09 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:45287 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405979AbfIGNHJ (ORCPT
+        Sat, 7 Sep 2019 09:10:28 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:57860 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389683AbfIGNK2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 09:07:09 -0400
-Received: by mail-qt1-f194.google.com with SMTP id r15so10510263qtn.12;
-        Sat, 07 Sep 2019 06:07:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=D8xpnUonO9ittQ1fvcy5psrt/hDZYfyPpChwIepSzR4=;
-        b=JZKiPTIEw/FrcEZr9N+XpxWVITNNl2/ZtEnI343Sy1YKi7GhaQN0/bQfeYJ6fMQRi/
-         i2iNexINfOgWmsBeGxsA9oEmQxFnk1Btwnkn5FgyazU3s2VUaab4BffspQ4Csad7YU0U
-         TO28GcyOYB9f4u73DErmbcXYWPCfoEtReGBj8x9iIeJKLmLi5oLJMTXxXACX5uX0Eslk
-         RsOFKg3GNsCL+ghGJZd7DWaDzbjnHboRV9Hwd0KLkbxoErWy/44gNB1Xr/vmUXL8lqwh
-         wTMXeSf9ZETL97hwXrnbUF2p8rghEEwe9JdutzeVcHF7LCZNQkeRfiBGHq5q4QkTKMHX
-         KBLg==
-X-Gm-Message-State: APjAAAXgiFkt4VG9+azw7O01xvhk65vJe8BGIVs7x4iKxCHOVg8C1fUj
-        xFYFH+MERcpJ13QeiM7EjTOraJ+GciMHS6CqabE=
-X-Google-Smtp-Source: APXvYqzFHsUZIR4dt5P3Hjmbp9ave6Nqb35MMPRXJtrbS0GvnfMEOm5b96OnKqB/zfumlG9w1sEeetW4FsMWLlG3YgI=
-X-Received: by 2002:aed:2842:: with SMTP id r60mr13927377qtd.142.1567861627709;
- Sat, 07 Sep 2019 06:07:07 -0700 (PDT)
+        Sat, 7 Sep 2019 09:10:28 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 8C93D8183B; Sat,  7 Sep 2019 15:10:11 +0200 (CEST)
+Date:   Sat, 7 Sep 2019 15:10:24 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Jiri Slaby <jslaby@suse.cz>
+Cc:     bp@alien8.de, tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 1/2] x86/asm/suspend: Get rid of bogus_64_magic
+Message-ID: <20190907131024.GA4430@amd>
+References: <20190906075550.23435-1-jslaby@suse.cz>
 MIME-Version: 1.0
-References: <20190906151059.1077708-1-arnd@arndb.de> <7fc19dd4-93fb-fa15-3d36-3079cd42cf7c@linux.com>
- <17ee4877-d24a-12ad-5836-411e3e525933@linux.com>
-In-Reply-To: <17ee4877-d24a-12ad-5836-411e3e525933@linux.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Sat, 7 Sep 2019 15:06:51 +0200
-Message-ID: <CAK8P3a1kpLgTBqd_VC8_V7UL_gvf7kZmyaSjbbHpqsaFQ00KyQ@mail.gmail.com>
-Subject: Re: [PATCH] mostpost: don't warn about symbols from another file
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        WANG Chao <chao.wang@ucloud.cn>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="45Z9DzgjV8m4Oswq"
+Content-Disposition: inline
+In-Reply-To: <20190906075550.23435-1-jslaby@suse.cz>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 7, 2019 at 7:28 AM Denis Efremov <efremov@linux.com> wrote:
-> On 07.09.2019 01:39, Denis Efremov wrote:
-> >> This is not helpful, as these are clearly not static symbols
-> >> at all. Suppress the warning in a case like this.
-> >>
-> >
-> > It looks very similar to this discussion https://lkml.org/lkml/2019/7/30/112
-> >
-> > Could you please write the steps to reproduce the warnings?
->
-> > Now, I'm trying to build linux-next (host Ubuntu 19.04 x86_64) with:
-> > $ make ARCH=arm CROSS_COMPILE=/usr/bin/arm-linux-gnueabi-
-> > But I can't get these warnings.
->
-> Tried defconfig, allyesconfig.
 
-I only have one randconfig build that caused these, see
-http://paste.ubuntu.com/p/D6w8RNS7MG/ for the .config
+--45Z9DzgjV8m4Oswq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I was building linux-next with the clang-9 toolchain from http://apt.llvm.org,
-but that should not matter here.
+On Fri 2019-09-06 09:55:49, Jiri Slaby wrote:
+> bogus_64_magic is only a dead-end loop. There is no need for an
+> out-of-order function (and unannotated local label), so just handle it
+> in-place and also store 0xbad-m-a-g-i-c to rcx beforehand.
+>=20
+> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Len Brown <lenb@kernel.org>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: x86@kernel.org
+> Cc: linux-pm@vger.kernel.org
+> ---
+>  arch/x86/kernel/acpi/wakeup_64.S | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/arch/x86/kernel/acpi/wakeup_64.S b/arch/x86/kernel/acpi/wake=
+up_64.S
+> index b0715c3ac18d..7f9ade13bbcf 100644
+> --- a/arch/x86/kernel/acpi/wakeup_64.S
+> +++ b/arch/x86/kernel/acpi/wakeup_64.S
+> @@ -18,8 +18,13 @@ ENTRY(wakeup_long64)
+>  	movq	saved_magic, %rax
+>  	movq	$0x123456789abcdef0, %rdx
+>  	cmpq	%rdx, %rax
+> -	jne	bogus_64_magic
+> +	je	2f
+> =20
+> +	/* stop here on a saved_magic mismatch */
+> +	movq $0xbad6d61676963, %rcx
+> +1:
+> +	jmp 1b
+> +2:
 
-> > I would like to check the type of this asm symbols. It seems like they
-> > are STT_NOTYPE. In this case the fix could also involve ELF_ST_TYPE check.
-> >
->
-> Ah, I forgot that we don't check the type at all, so this is not the case.
-> But still, I would like to test what if the remove binding check at all?
-> diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-> index 76c221dd9b2b..97dbcebf2338 100644
-> --- a/scripts/mod/modpost.c
-> +++ b/scripts/mod/modpost.c
-> @@ -1987,14 +1987,12 @@ static void read_symbols(const char *modname)
->         for (sym = info.symtab_start; sym < info.symtab_stop; sym++) {
->                 unsigned char bind = ELF_ST_BIND(sym->st_info);
->
-> -               if (bind == STB_GLOBAL || bind == STB_WEAK) {
->                         struct symbol *s =
->                                 find_symbol(remove_dot(info.strtab +
->                                                        sym->st_name));
->
->                         if (s)
->                                 s->is_static = 0;
-> -               }
->         }
->
->         if (!is_vmlinux(modname) || vmlinux_section_warnings)
+btw I suspect you can simply do here
 
-Unfortunately, I still get the same warnings, plus one about modpost.c:
+1b:  jne 1b
 
-scripts/mod/modpost.c:1988:17: warning: unused variable ‘bind’
-[-Wunused-variable]
-WARNING: "__ashrdi3" [vmlinux] is a static (unknown)
-WARNING: "__lshrdi3" [vmlinux] is a static (unknown)
-WARNING: "__aeabi_llsr" [vmlinux] is a static (unknown)
-WARNING: "__aeabi_lasr" [vmlinux] is a static (unknown)
-WARNING: "__aeabi_uidivmod" [vmlinux] is a static (unknown)
-WARNING: "__udivsi3" [vmlinux] is a static (unknown)
-WARNING: "_change_bit" [vmlinux] is a static (unknown)
-WARNING: "__aeabi_idiv" [vmlinux] is a static (unknown)
-WARNING: "__umodsi3" [vmlinux] is a static (unknown)
-WARNING: "__aeabi_uidiv" [vmlinux] is a static (unknown)
-WARNING: "__aeabi_idivmod" [vmlinux] is a static (unknown)
-WARNING: "__muldi3" [vmlinux] is a static (unknown)
-WARNING: "__aeabi_ulcmp" [vmlinux] is a static (unknown)
-WARNING: "__raw_writesb" [vmlinux] is a static (unknown)
-WARNING: "__raw_readsb" [vmlinux] is a static (unknown)
-WARNING: "__ucmpdi2" [vmlinux] is a static (unknown)
-WARNING: "__aeabi_lmul" [vmlinux] is a static (unknown)
-WARNING: "__divsi3" [vmlinux] is a static (unknown)
-WARNING: "__modsi3" [vmlinux] is a static (unknown)
-WARNING: "_test_and_change_bit" [vmlinux] is a static (unknown)
-WARNING: "__bswapdi2" [vmlinux] is a static (unknown)
-WARNING: "__bswapsi2" [vmlinux] is a static (unknown)
-WARNING: "__ashldi3" [vmlinux] is a static (unknown)
-WARNING: "__aeabi_llsl" [vmlinux] is a static (unknown)
-WARNING: "__ashrdi3" [vmlinux] is a static (unknown)
-WARNING: "__lshrdi3" [vmlinux] is a static (unknown)
-WARNING: "__aeabi_llsr" [vmlinux] is a static (unknown)
-WARNING: "__aeabi_lasr" [vmlinux] is a static (unknown)
-WARNING: "__aeabi_uidivmod" [vmlinux] is a static (unknown)
-WARNING: "__udivsi3" [vmlinux] is a static (unknown)
-WARNING: "_change_bit" [vmlinux] is a static (unknown)
-WARNING: "__aeabi_idiv" [vmlinux] is a static (unknown)
-WARNING: "__umodsi3" [vmlinux] is a static (unknown)
-WARNING: "__aeabi_uidiv" [vmlinux] is a static (unknown)
-WARNING: "__aeabi_idivmod" [vmlinux] is a static (unknown)
-WARNING: "__muldi3" [vmlinux] is a static (unknown)
-WARNING: "__aeabi_ulcmp" [vmlinux] is a static (unknown)
-WARNING: "__raw_writesb" [vmlinux] is a static (unknown)
-WARNING: "__raw_readsb" [vmlinux] is a static (unknown)
-WARNING: "__ucmpdi2" [vmlinux] is a static (unknown)
-WARNING: "__aeabi_lmul" [vmlinux] is a static (unknown)
-WARNING: "__divsi3" [vmlinux] is a static (unknown)
-WARNING: "__modsi3" [vmlinux] is a static (unknown)
-WARNING: "_test_and_change_bit" [vmlinux] is a static (unknown)
-WARNING: "__bswapdi2" [vmlinux] is a static (unknown)
-WARNING: "__bswapsi2" [vmlinux] is a static (unknown)
-WARNING: "__ashldi3" [vmlinux] is a static (unknown)
-WARNING: "__aeabi_llsl" [vmlinux] is a static (unknown)
+=2E.. if someone is looking with gdb, he'll understand what is going
+on. no need to bother with special %rcx, %rdx is already rather magic.
 
-     Arnd
+Best regards,
+								Pavel
+							=09
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--45Z9DzgjV8m4Oswq
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl1zrEAACgkQMOfwapXb+vIeZACfcTkUyDEalzzN3zbqAS5xl2CF
+HUwAn0YkpbYtbVUqojF84r5VTahwheAo
+=lKXd
+-----END PGP SIGNATURE-----
+
+--45Z9DzgjV8m4Oswq--
