@@ -2,79 +2,117 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B8BFC43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 19:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0871FC43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 19:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3340E21744
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 19:40:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D12FA20863
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 19:50:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390111AbfIGTkn (ORCPT
+        id S2404887AbfIGTuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 15:40:43 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:42001 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727174AbfIGTkn (ORCPT
+        Sat, 7 Sep 2019 15:50:11 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:42642 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727012AbfIGTuL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 15:40:43 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 4D6EF8106D; Sat,  7 Sep 2019 21:40:27 +0200 (CEST)
-Date:   Sat, 7 Sep 2019 21:40:40 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Lubomir Rintel <lkundrak@v3.sk>, arnd@arndb.de
-Cc:     Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/6] ARM: dts: mmp2: devicetree updates
-Message-ID: <20190907194040.GB25459@amd>
-References: <20190828072629.285760-1-lkundrak@v3.sk>
+        Sat, 7 Sep 2019 15:50:11 -0400
+Received: by mail-qt1-f195.google.com with SMTP id c9so11229705qth.9;
+        Sat, 07 Sep 2019 12:50:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=br9UBkhsYmfKwHbwURIhiwHEx2D7U37IxyJBS+CBOqM=;
+        b=pnwv4tuNZ+rEoKqdMq2my6Lgk3lrXCDFBGRsI6LurPfHJ4PX5UCB5eCwCyy7drhdHT
+         +jdBo55/BV69ZL7tEJUHbos+aX4Kd+oobPzlu5lLflTJ+0v1vXdup9qcKA6RmnoKFtHc
+         UQG+I/EOi/gnIdkAFRfTZTp6rnb4zGbOxUTVVAL4RvQWVSI/Gshd8q9myh9zG7wnl+kM
+         j7dk59crHqSqLAR35EIbfYGDzGQClYfVlqeDCv7Nv0ED4d9rs8DKjEaRQoLWuorcbNbq
+         HpQX+D+MzKUIVy1avW5+sduNyrTIKsMiE0lL9Xc4MuX55C2rskapH5rCNS75/d+J7Dry
+         Xzgw==
+X-Gm-Message-State: APjAAAVBum+N26AnvuxgHDiUpD20YN/AWWFkENGnDsPflk63+F/6sFoF
+        3+5A8bz9r4Sh5hzZcVLoj727K5Rq3OO4fMRmYEMfLkmoOlY=
+X-Google-Smtp-Source: APXvYqyl+z2FYOtULkvTxobEJ/eyXJNphR9eq/S4BLy0tFekKn44sikIPCRSd1Di8uSwbGOfr/NMwGERySpoQo3jO4I=
+X-Received: by 2002:ac8:342a:: with SMTP id u39mr15931998qtb.7.1567885809360;
+ Sat, 07 Sep 2019 12:50:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="/NkBOFFp2J2Af1nK"
-Content-Disposition: inline
-In-Reply-To: <20190828072629.285760-1-lkundrak@v3.sk>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20190905152155.1392871-1-arnd@arndb.de> <20190905152155.1392871-2-arnd@arndb.de>
+In-Reply-To: <20190905152155.1392871-2-arnd@arndb.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Sat, 7 Sep 2019 21:49:53 +0200
+Message-ID: <CAK8P3a3KkH3MeU4H0SJmrs-jQ9ZA5HksG2uGDfe-=NTXh1UeHQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] ipc: fix sparc64 ipc() wrapper
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Christian Brauner <christian@brauner.io>,
+        Manfred Spraul <manfred@colorfullife.com>,
+        Davidlohr Bueso <dave@stgolabs.net>
+Cc:     linux-arch <linux-arch@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Matt Turner <mattst88@gmail.com>,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Anatolij Gustschin <agust@denx.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Sep 5, 2019 at 5:24 PM Arnd Bergmann <arnd@arndb.de> wrote:
 
---/NkBOFFp2J2Af1nK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> diff --git a/arch/sparc/kernel/sys_sparc_64.c b/arch/sparc/kernel/sys_sparc_64.c
+> index ccc88926bc00..5ad0494df367 100644
+> --- a/arch/sparc/kernel/sys_sparc_64.c
+> +++ b/arch/sparc/kernel/sys_sparc_64.c
+> @@ -340,21 +340,21 @@ SYSCALL_DEFINE6(sparc_ipc, unsigned int, call, int, first, unsigned long, second
+>         if (call <= SEMTIMEDOP) {
+>                 switch (call) {
+>                 case SEMOP:
+> -                       err = sys_semtimedop(first, ptr,
+> -                                            (unsigned int)second, NULL);
+> +                       err = ksys_semtimedop(first, ptr,
+> +                                             (unsigned int)second, NULL);
+>                         goto out;
 
+The zero-day bot found a link error in sparc64 allnoconfig:
 
-> Here's a couple of updates for the MMP2 SoC devicetree files.
-> I'm wondering if they could be applied to the armsoc tree?
->=20
-> Compared to previous submission, the only change is the addition of
-> Acks from Pavel.
+   arch/sparc/kernel/sys_sparc_64.o: In function `__se_sys_sparc_ipc':
+>> sys_sparc_64.c:(.text+0x724): undefined reference to `ksys_semtimedop'
+>> sys_sparc_64.c:(.text+0x76c): undefined reference to `ksys_old_msgctl'
+>> sys_sparc_64.c:(.text+0x7a8): undefined reference to `ksys_semget'
+>> sys_sparc_64.c:(.text+0x7c8): undefined reference to `ksys_old_semctl'
+>> sys_sparc_64.c:(.text+0x7e4): undefined reference to `ksys_msgsnd'
+>> sys_sparc_64.c:(.text+0x7fc): undefined reference to `ksys_shmget'
+>> sys_sparc_64.c:(.text+0x808): undefined reference to `ksys_shmdt'
+   sys_sparc_64.c:(.text+0x828): undefined reference to `ksys_semtimedop'
+>> sys_sparc_64.c:(.text+0x844): undefined reference to `ksys_old_shmctl'
+>> sys_sparc_64.c:(.text+0x858): undefined reference to `ksys_msgget'
+>> sys_sparc_64.c:(.text+0x86c): undefined reference to `ksys_msgrcv'
 
-Any news here? Having up-to-date dts is kind-of useful....
+I've added this hunk to my patch and plan to send both fixes to Linus
+in the next few days, after I get a positive report from the bot as well:
 
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+--- a/arch/sparc/kernel/sys_sparc_64.c
++++ b/arch/sparc/kernel/sys_sparc_64.c
+@@ -336,6 +336,9 @@ SYSCALL_DEFINE6(sparc_ipc, unsigned int, call,
+int, first, unsigned long, second
+ {
+        long err;
 
---/NkBOFFp2J2Af1nK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
++       if (!IS_ENABLED(CONFIG_SYSVIPC))
++               return -ENOSYS;
++
+        /* No need for backward compatibility. We can start fresh... */
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl10B7gACgkQMOfwapXb+vL57QCePr8u74aSYcjohldUqTvltb7V
-yXgAn3R0Z3XkdBPdQ/o0vDjj9hQh9Seh
-=BYLZ
------END PGP SIGNATURE-----
-
---/NkBOFFp2J2Af1nK--
+        if (call <= SEMTIMEDOP) {
+                switch (call) {
