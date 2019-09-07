@@ -2,200 +2,244 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4849C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 11:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 996DEC43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 11:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EFF5218AF
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 11:35:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567856156;
-	bh=DjGNzh+fr05rUNc5wWkela8s+FXQ7EbFjXm5r11Xvyc=;
-	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XR6WvEBVhGuuJbbouQYWzod2uNSf++JokKt4vcej0VNIS+hgu6JFnFyd26CU+rLuc
-	 Ez0exZa12Hws3pIeAJTvFkAFcOJEZ8cuJozaTUDeHJIEbbYTSkz6Ue5evnbVcvtWoK
-	 6Amf49ECn0keIRfoOhKm5/EGm5Da6UCo1sgY66MY=
+	by mail.kernel.org (Postfix) with ESMTP id 68CEA21920
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 11:36:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="SYqjFOmb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392081AbfIGLfz (ORCPT
+        id S2405882AbfIGLgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 07:35:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38118 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725947AbfIGLfx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 07:35:53 -0400
-Received: from localhost.localdomain (unknown [194.230.155.145])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 644A1218DE;
-        Sat,  7 Sep 2019 11:35:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567856153;
-        bh=DjGNzh+fr05rUNc5wWkela8s+FXQ7EbFjXm5r11Xvyc=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=oYl9n3KGIMIMS1LOa9ZVQvBI/H9n1aUdAJDb3KjNRbqgnEl+dZbPGV+XiymmuY7VZ
-         5JksdBRRVgctcWZOhKh5KOktCCXBONxgMwbjDIZtne29kk74BOJyP32e1Aga/dm3mL
-         HFdQdkI2/X0lKBMru+Gejm6N095z07tn7mwiUBsQ=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH 2/2] dt-bindings: sram: Convert Samsung Exynos SYSRAM bindings to json-schema
-Date:   Sat,  7 Sep 2019 13:35:42 +0200
-Message-Id: <20190907113542.4096-2-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190907113542.4096-1-krzk@kernel.org>
-References: <20190907113542.4096-1-krzk@kernel.org>
+        Sat, 7 Sep 2019 07:36:00 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:45636 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392111AbfIGLf5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Sep 2019 07:35:57 -0400
+Received: by mail-qt1-f194.google.com with SMTP id r15so10350162qtn.12
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Sep 2019 04:35:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=ZfMCqtRG3776EYn97WT0OsP3uu6yPWIiXZtP2HYxXjQ=;
+        b=SYqjFOmb1lorXoSExxnMnW2j/lfll6fQ4bkI8ipQTc6lg65BdeoAudUEhWZoQ7J3ji
+         nRHofsMHtX4i65qp8p8NR0kj2p4KH590SM8hLFWBFYCv3wYs1W/TjOpqGODP3bUSZNLJ
+         ifvznN3u5tbI+zfMhhwz1fZQIW0cCI8W6CNVn0obW+aWt4Xkzesj/WDfhLJvVMoRVtAd
+         gTMvwGq4QmG7j+8rLHjXhGIKUXZK+9exAxb5rc52K3nD2J0kki6miNzlHRv48KkYs1+V
+         8XG+6UG7a7riG/U1WTFQHilUrnEHrQfwlZkCNAAI0GvfHthev4ml7SEIBLARfC6cmfqa
+         m6sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=ZfMCqtRG3776EYn97WT0OsP3uu6yPWIiXZtP2HYxXjQ=;
+        b=ivxL7mOrZmMXq0E52r3+TYbYLdCFu+Kctfvd8rf9N1Nh6npNHdxYqC/yKq3l6r2T+6
+         AJCJi8/jSZF8IPm7rSPr9cHRgbd72lw08qw3rdRxMQ5LHpz62rbbDUpF0C1ShAfiOETd
+         e0dQZSGj9djHvcvESEkg7mjwpCOKOp0dvOPzqJRUcTP++My4D8vCU/GBhEq5rUtYbXMT
+         bbT5Xv2dmfsrDLpalgNRQj46//P1rHpqbO41ijd9Hd/JZQiFcUqx6ZB/UA3NUiEelutN
+         d4csC8kZd6lRt5LiRKJX+SM5j6kdM1j0IBHdz4X3/xUKPg5X+fkdFN5bYQc8gush/Yfk
+         nnZA==
+X-Gm-Message-State: APjAAAWtki68sNDwYLa2Fqe78O7SlwNqP4dEkbrRt8iDJ//DhmpK9jU6
+        2UVOk2nhT9a0KVnHPMsbEkvVMA==
+X-Google-Smtp-Source: APXvYqwitwvx6V2pj9mK/oeRTft1UMVSefAlLIqnVI4hN2v3+Pt/MLuW6b+CrfJxqXKkM9TTfHXVdw==
+X-Received: by 2002:ac8:13c2:: with SMTP id i2mr13231243qtj.211.1567856156566;
+        Sat, 07 Sep 2019 04:35:56 -0700 (PDT)
+Received: from qians-mbp.fios-router.home (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id r55sm4897634qtj.86.2019.09.07.04.35.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 07 Sep 2019 04:35:55 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH v2] powerpc/lockdep: fix a false positive warning
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <20190907070505.GA88784@gmail.com>
+Date:   Sat, 7 Sep 2019 07:35:54 -0400
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>, bvanassche@acm.org,
+        arnd@arndb.de, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <420D09F4-FC19-421C-AE46-4B2A9157FAE3@lca.pw>
+References: <20190906231754.830-1-cai@lca.pw>
+ <20190907070505.GA88784@gmail.com>
+To:     Ingo Molnar <mingo@kernel.org>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert Samsung Exynos SYSRAM bindings to DT schema format using
-json-schema.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
----
+> On Sep 7, 2019, at 3:05 AM, Ingo Molnar <mingo@kernel.org> wrote:
+>=20
+>=20
+> * Qian Cai <cai@lca.pw> wrote:
+>=20
+>> The commit 108c14858b9e ("locking/lockdep: Add support for dynamic
+>> keys") introduced a boot warning on powerpc below, because since the
+>> commit 2d4f567103ff ("KVM: PPC: Introduce kvm_tmp framework") adds
+>> kvm_tmp[] into the .bss section and then free the rest of unused =
+spaces
+>> back to the page allocator.
+>>=20
+>> kernel_init
+>>  kvm_guest_init
+>>    kvm_free_tmp
+>>      free_reserved_area
+>>        free_unref_page
+>>          free_unref_page_prepare
+>>=20
+>> Later, alloc_workqueue() happens to allocate some pages from there =
+and
+>> trigger the warning at,
+>>=20
+>> if (WARN_ON_ONCE(static_obj(key)))
+>>=20
+>> Fix it by adding a generic helper arch_is_bss_hole() to skip those =
+areas
+>> in static_obj(). Since kvm_free_tmp() is only done early during the
+>> boot, just go lockless to make the implementation simple for now.
+>>=20
+>> WARNING: CPU: 0 PID: 13 at kernel/locking/lockdep.c:1120
+>> Workqueue: events work_for_cpu_fn
+>> Call Trace:
+>>  lockdep_register_key+0x68/0x200
+>>  wq_init_lockdep+0x40/0xc0
+>>  trunc_msg+0x385f9/0x4c30f (unreliable)
+>>  wq_init_lockdep+0x40/0xc0
+>>  alloc_workqueue+0x1e0/0x620
+>>  scsi_host_alloc+0x3d8/0x490
+>>  ata_scsi_add_hosts+0xd0/0x220 [libata]
+>>  ata_host_register+0x178/0x400 [libata]
+>>  ata_host_activate+0x17c/0x210 [libata]
+>>  ahci_host_activate+0x84/0x250 [libahci]
+>>  ahci_init_one+0xc74/0xdc0 [ahci]
+>>  local_pci_probe+0x78/0x100
+>>  work_for_cpu_fn+0x40/0x70
+>>  process_one_work+0x388/0x750
+>>  process_scheduled_works+0x50/0x90
+>>  worker_thread+0x3d0/0x570
+>>  kthread+0x1b8/0x1e0
+>>  ret_from_kernel_thread+0x5c/0x7c
+>>=20
+>> Fixes: 108c14858b9e ("locking/lockdep: Add support for dynamic keys")
+>> Signed-off-by: Qian Cai <cai@lca.pw>
+>> ---
+>>=20
+>> v2: No need to actually define arch_is_bss_hole() powerpc64 only.
+>>=20
+>> arch/powerpc/include/asm/sections.h | 11 +++++++++++
+>> arch/powerpc/kernel/kvm.c           |  5 +++++
+>> include/asm-generic/sections.h      |  7 +++++++
+>> kernel/locking/lockdep.c            |  3 +++
+>> 4 files changed, 26 insertions(+)
+>>=20
+>> diff --git a/arch/powerpc/include/asm/sections.h =
+b/arch/powerpc/include/asm/sections.h
+>> index 4a1664a8658d..4f5d69c42017 100644
+>> --- a/arch/powerpc/include/asm/sections.h
+>> +++ b/arch/powerpc/include/asm/sections.h
+>> @@ -5,8 +5,19 @@
+>>=20
+>> #include <linux/elf.h>
+>> #include <linux/uaccess.h>
+>> +
+>> +#define arch_is_bss_hole arch_is_bss_hole
+>> +
+>> #include <asm-generic/sections.h>
+>>=20
+>> +extern void *bss_hole_start, *bss_hole_end;
+>> +
+>> +static inline int arch_is_bss_hole(unsigned long addr)
+>> +{
+>> +	return addr >=3D (unsigned long)bss_hole_start &&
+>> +	       addr < (unsigned long)bss_hole_end;
+>> +}
+>> +
+>> extern char __head_end[];
+>>=20
+>> #ifdef __powerpc64__
+>> diff --git a/arch/powerpc/kernel/kvm.c b/arch/powerpc/kernel/kvm.c
+>> index b7b3a5e4e224..89e0e522e125 100644
+>> --- a/arch/powerpc/kernel/kvm.c
+>> +++ b/arch/powerpc/kernel/kvm.c
+>> @@ -66,6 +66,7 @@
+>> static bool kvm_patching_worked =3D true;
+>> char kvm_tmp[1024 * 1024];
+>> static int kvm_tmp_index;
+>> +void *bss_hole_start, *bss_hole_end;
+>>=20
+>> static inline void kvm_patch_ins(u32 *inst, u32 new_inst)
+>> {
+>> @@ -707,6 +708,10 @@ static __init void kvm_free_tmp(void)
+>> 	 */
+>> 	kmemleak_free_part(&kvm_tmp[kvm_tmp_index],
+>> 			   ARRAY_SIZE(kvm_tmp) - kvm_tmp_index);
+>> +
+>> +	bss_hole_start =3D &kvm_tmp[kvm_tmp_index];
+>> +	bss_hole_end =3D &kvm_tmp[ARRAY_SIZE(kvm_tmp)];
+>> +
+>> 	free_reserved_area(&kvm_tmp[kvm_tmp_index],
+>> 			   &kvm_tmp[ARRAY_SIZE(kvm_tmp)], -1, NULL);
+>> }
+>> diff --git a/include/asm-generic/sections.h =
+b/include/asm-generic/sections.h
+>> index d1779d442aa5..4d8b1f2c5fd9 100644
+>> --- a/include/asm-generic/sections.h
+>> +++ b/include/asm-generic/sections.h
+>> @@ -91,6 +91,13 @@ static inline int =
+arch_is_kernel_initmem_freed(unsigned long addr)
+>> }
+>> #endif
+>>=20
+>> +#ifndef arch_is_bss_hole
+>> +static inline int arch_is_bss_hole(unsigned long addr)
+>> +{
+>> +	return 0;
+>> +}
+>> +#endif
+>> +
+>> /**
+>>  * memory_contains - checks if an object is contained within a memory =
+region
+>>  * @begin: virtual address of the beginning of the memory region
+>> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+>> index 4861cf8e274b..cd75b51f15ce 100644
+>> --- a/kernel/locking/lockdep.c
+>> +++ b/kernel/locking/lockdep.c
+>> @@ -675,6 +675,9 @@ static int static_obj(const void *obj)
+>> 	if (arch_is_kernel_initmem_freed(addr))
+>> 		return 0;
+>>=20
+>> +	if (arch_is_bss_hole(addr))
+>> +		return 0;
+>=20
+> arch_is_bss_hole() should use a 'bool' - but other than that, this=20
+> looks good to me, if the PowerPC maintainers agree too.
 
-TODO:
-The node naming should be probably fixed (sysram->sram)
----
- .../devicetree/bindings/sram/samsung-sram.txt | 38 ------------
- .../bindings/sram/samsung-sram.yaml           | 58 +++++++++++++++++++
- MAINTAINERS                                   |  2 +-
- 3 files changed, 59 insertions(+), 39 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sram/samsung-sram.txt
- create mode 100644 Documentation/devicetree/bindings/sram/samsung-sram.yaml
+I thought about making it a bool in the first place, but since all other =
+similar helpers
+(arch_is_kernel_initmem_freed(), arch_is_kernel_text(), =
+arch_is_kernel_data() etc)
+could be bool too but are not, I kept arch_is_bss_hole() just to be =
+=E2=80=9Cint=E2=80=9D for consistent.
 
-diff --git a/Documentation/devicetree/bindings/sram/samsung-sram.txt b/Documentation/devicetree/bindings/sram/samsung-sram.txt
-deleted file mode 100644
-index 61a9bbed303d..000000000000
---- a/Documentation/devicetree/bindings/sram/samsung-sram.txt
-+++ /dev/null
-@@ -1,38 +0,0 @@
--Samsung Exynos SYSRAM for SMP bringup:
--------------------------------------
--
--Samsung SMP-capable Exynos SoCs use part of the SYSRAM for the bringup
--of the secondary cores. Once the core gets powered up it executes the
--code that is residing at some specific location of the SYSRAM.
--
--Therefore reserved section sub-nodes have to be added to the mmio-sram
--declaration. These nodes are of two types depending upon secure or
--non-secure execution environment.
--
--Required sub-node properties:
--- compatible : depending upon boot mode, should be
--		"samsung,exynos4210-sysram" : for Secure SYSRAM
--		"samsung,exynos4210-sysram-ns" : for Non-secure SYSRAM
--
--The rest of the properties should follow the generic mmio-sram discription
--found in Documentation/devicetree/bindings/sram/sram.txt
--
--Example:
--
--	sysram@2020000 {
--		compatible = "mmio-sram";
--		reg = <0x02020000 0x54000>;
--		#address-cells = <1>;
--		#size-cells = <1>;
--		ranges = <0 0x02020000 0x54000>;
--
--		smp-sysram@0 {
--			compatible = "samsung,exynos4210-sysram";
--			reg = <0x0 0x1000>;
--		};
--
--		smp-sysram@53000 {
--			compatible = "samsung,exynos4210-sysram-ns";
--			reg = <0x53000 0x1000>;
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/sram/samsung-sram.yaml b/Documentation/devicetree/bindings/sram/samsung-sram.yaml
-new file mode 100644
-index 000000000000..501d299a554e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sram/samsung-sram.yaml
-@@ -0,0 +1,58 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sram/samsung-sram.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Samsung Exynos SoC SYSRAM for SMP bringup
-+
-+maintainers:
-+  - Krzysztof Kozlowski <krzk@kernel.org>
-+
-+description: |+
-+  Samsung SMP-capable Exynos SoCs use part of the SYSRAM for the bringup
-+  of the secondary cores. Once the core gets powered up it executes the
-+  code that is residing at some specific location of the SYSRAM.
-+
-+  Therefore reserved section sub-nodes have to be added to the mmio-sram
-+  declaration. These nodes are of two types depending upon secure or
-+  non-secure execution environment.
-+
-+allOf:
-+  - $ref: "sram.yaml#"
-+
-+properties:
-+  $nodename:
-+    pattern: "^sysram(@.*)?"
-+
-+patternProperties:
-+  "^([a-z]*-)?sysram@[a-f0-9]$":
-+    type: object
-+
-+    properties:
-+      compatible:
-+        description:
-+          Depending upon boot mode
-+        enum:
-+          - samsung,exynos4210-sysram                 # for Secure SYSRAM
-+          - samsung,exynos4210-sysram-ns              # for Non-secure SYSRAM
-+
-+examples:
-+  - |
-+    sysram@2020000 {
-+      compatible = "mmio-sram";
-+      reg = <0x02020000 0x54000>;
-+      #address-cells = <1>;
-+      #size-cells = <1>;
-+      ranges = <0 0x02020000 0x54000>;
-+
-+      smp-sysram@0 {
-+        compatible = "samsung,exynos4210-sysram";
-+        reg = <0x0 0x1000>;
-+      };
-+
-+      smp-sysram@53000 {
-+        compatible = "samsung,exynos4210-sysram-ns";
-+        reg = <0x53000 0x1000>;
-+      };
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index cdd2f1f3e1f4..36c30f31bdf2 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2225,7 +2225,7 @@ F:	drivers/soc/samsung/
- F:	include/linux/soc/samsung/
- F:	Documentation/arm/samsung/
- F:	Documentation/devicetree/bindings/arm/samsung/
--F:	Documentation/devicetree/bindings/sram/samsung-sram.txt
-+F:	Documentation/devicetree/bindings/sram/samsung-sram.yaml
- F:	Documentation/devicetree/bindings/power/pd-samsung.txt
- N:	exynos
- 
--- 
-2.17.1
+Although then there is is_kernel_rodata() which is bool. I suppose =
+I=E2=80=99ll change
+arch_is_bss_hole() to bool, and then could have a follow-up patch to =
+covert all similar
+helpers to return boo instead.
 
