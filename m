@@ -2,94 +2,89 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D521FC43140
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 00:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A731C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 00:01:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B978321835
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 00:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C635208C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 00:01:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406329AbfIGAAZ (ORCPT
+        id S2406359AbfIGABR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 20:00:25 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43151 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405572AbfIGAAW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 20:00:22 -0400
-Received: by mail-oi1-f194.google.com with SMTP id t84so6448340oih.10;
-        Fri, 06 Sep 2019 17:00:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=CTESiiiEsvvGtzHjMvt+Vs+YyinAgG2nRdj8V0GoeRI=;
-        b=Pq81b9Tzy56Piznk485w3DSx9Fz/UgdOXrizeHAIFpTL8PJ0NJv5WiM8mM/HzVPNSc
-         ZZeUPpM8TK+5Zdn0436NfXkG6nbwB2PKnnEq3TkExuWzap53mmZiY+PnksG6XBEAtQHl
-         E4VsnTLamUyT+R5jTBEudkUhJdsjXQio5vMnxoKyXOxoyil6mK/y1NjA2N6/2m+A+ruf
-         BO2bWtg5BLmymucCJAc5RV/eVNY1HDeBtD4hFtWlZlfnxYR1HyquvJ5qD0cL8XLGu9J6
-         USkNtgVNehtnZjnpdiHpIrFSI3cuz9A8ub2u6SZ8I6QD8QRdbXchaVJyKtQxvm1cwr4i
-         fo4w==
-X-Gm-Message-State: APjAAAWIm1Id4mN4gCUHz9oc9MPjBWFsFs/bglgL0yuVMDD1OfG94Em1
-        dHhJcob7dNih+JmpOWBGYCA=
-X-Google-Smtp-Source: APXvYqxVnW04a3pr7A6Hae0d1zkxWcP9AgzgoZUhAC/S/OwAbr5Y/KKWFoseJliFrz3GXCxEwxRWkA==
-X-Received: by 2002:aca:6707:: with SMTP id z7mr2532791oix.12.1567814421581;
-        Fri, 06 Sep 2019 17:00:21 -0700 (PDT)
-Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
-        by smtp.gmail.com with ESMTPSA id i20sm2195084oie.13.2019.09.06.17.00.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 06 Sep 2019 17:00:20 -0700 (PDT)
-Subject: Re: [PATCH v8 13/13] nvmet-passthru: support block accounting
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
-        Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20190828215429.4572-1-logang@deltatee.com>
- <20190828215429.4572-14-logang@deltatee.com>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <92d61426-65a2-827c-936b-55f12f3d6afb@grimberg.me>
-Date:   Fri, 6 Sep 2019 17:00:18 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 6 Sep 2019 20:01:17 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41288 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405473AbfIGABR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 20:01:17 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 75B9FA46C07;
+        Sat,  7 Sep 2019 00:01:16 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-16.pek2.redhat.com [10.72.8.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 764675D9CA;
+        Sat,  7 Sep 2019 00:01:06 +0000 (UTC)
+Date:   Sat, 7 Sep 2019 08:01:01 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Sagi Grimberg <sagi@grimberg.me>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Keith Busch <keith.busch@intel.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-scsi@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Long Li <longli@microsoft.com>,
+        John Garry <john.garry@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-nvme@lists.infradead.org, Jens Axboe <axboe@fb.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 1/4] softirq: implement IRQ flood detection mechanism
+Message-ID: <20190907000100.GC12290@ming.t460p>
+References: <6b88719c-782a-4a63-db9f-bf62734a7874@linaro.org>
+ <20190903072848.GA22170@ming.t460p>
+ <dd96def4-1121-afbe-2431-9e516a06850c@linaro.org>
+ <6f3b6557-1767-8c80-f786-1ea667179b39@acm.org>
+ <2a8bd278-5384-d82f-c09b-4fce236d2d95@linaro.org>
+ <20190905090617.GB4432@ming.t460p>
+ <6a36ccc7-24cd-1d92-fef1-2c5e0f798c36@linaro.org>
+ <20190906014819.GB27116@ming.t460p>
+ <ffefcfa0-09b6-9af5-f94e-8e7ddd2eef16@linaro.org>
+ <6eb2a745-7b92-73ce-46f5-cc6a5ef08abc@grimberg.me>
 MIME-Version: 1.0
-In-Reply-To: <20190828215429.4572-14-logang@deltatee.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6eb2a745-7b92-73ce-46f5-cc6a5ef08abc@grimberg.me>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Sat, 07 Sep 2019 00:01:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Sep 06, 2019 at 11:30:57AM -0700, Sagi Grimberg wrote:
+> 
+> > 
+> > Ok, so the real problem is per-cpu bounded tasks.
+> > 
+> > I share Thomas opinion about a NAPI like approach.
+> 
+> We already have that, its irq_poll, but it seems that for this
+> use-case, we get lower performance for some reason. I'm not
+> entirely sure why that is, maybe its because we need to mask interrupts
+> because we don't have an "arm" register in nvme like network devices
+> have?
 
-> Support block disk accounting by setting the RQF_IO_STAT flag
-> and gendisk in the request.
-> 
-> After this change, IO counts will be reflected correctly in
-> /proc/diskstats for drives being used by passthru.
-> 
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-> ---
->   drivers/nvme/target/io-cmd-passthru.c | 5 ++++-
->   1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/nvme/target/io-cmd-passthru.c b/drivers/nvme/target/io-cmd-passthru.c
-> index 7557927a3451..63f12750a80d 100644
-> --- a/drivers/nvme/target/io-cmd-passthru.c
-> +++ b/drivers/nvme/target/io-cmd-passthru.c
-> @@ -410,6 +410,9 @@ static struct request *nvmet_passthru_blk_make_request(struct nvmet_req *req,
->   	if (unlikely(IS_ERR(rq)))
->   		return rq;
->   
-> +	if (blk_queue_io_stat(q) && cmd->common.opcode != nvme_cmd_flush)
-> +		rq->rq_flags |= RQF_IO_STAT;
+Long observed that IOPS drops much too by switching to threaded irq. If
+softirqd is waken up for handing softirq, the performance shouldn't
+be better than threaded irq. Especially, Long found that context
+switch is increased a lot after applying your irq poll patch.
 
-Does flush has data bytes in the request? Why the special casing?
+http://lists.infradead.org/pipermail/linux-nvme/2019-August/026788.html
+
+Thanks,
+Ming
