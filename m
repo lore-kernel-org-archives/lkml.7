@@ -2,126 +2,139 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA1FC4332F
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 23:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A0FC433EF
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 23:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9D8E21744
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 23:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D88412178F
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 23:46:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="aeYLQSYq"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HaLkMCNB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395269AbfIGXiF (ORCPT
+        id S2395344AbfIGXqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 19:38:05 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36302 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbfIGXiE (ORCPT
+        Sat, 7 Sep 2019 19:46:11 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:59928 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726877AbfIGXqL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 19:38:04 -0400
-Received: by mail-pg1-f196.google.com with SMTP id l21so5579325pgm.3
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Sep 2019 16:38:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=O8KRr1lIqMqniA1MwlfijdRSpaSsSbMrc32dOS+yii0=;
-        b=aeYLQSYqq1hi7dlyiv7kq2PH0uqNHpAVG2BBHub6DSIlUvT1Mti4f5OnYhV9Armd2t
-         Q29qqYcmUTRkG3OdVfuyKRZSeeg7aaqSUkLThFqXs01tj24YYM8/gteq04P4bezynKPh
-         NjmoNg8QYMkbE2XApsWshcVCJs+x22hH9+U0c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=O8KRr1lIqMqniA1MwlfijdRSpaSsSbMrc32dOS+yii0=;
-        b=lPqe7U7kpq5kWM0+lWk/ps24oDhDnm1AQSDbA+FZDUnjcfwfdE4U5a50aSsO6GyHS7
-         f7ohfq1x42IpTZ3zbHh2ouzzv1W+ibxf389JhPA+MQbPd6BdCq+jNQQszC+Zp/5WFnT5
-         qNXl8YDOd5T34wJHBfyTQ9wp60S3jNeROcTGbozTkdep69cwwbHmhdaLMj/1r+8a/2p0
-         Yc51907LtU+Xn6SBns8mxjibo2kCPP+q3x3TNMXOoLaeeP9v0dykTB898cy2/N30DYdo
-         flMHkOnbr6sHtfA1ly93Wyv73RmD1koAtg6Rz1BYBacYq6/EOlZU81pYKeM/LMxK0rMa
-         2Vsg==
-X-Gm-Message-State: APjAAAVIKQQAtnkZJmZf4dd1w+JtwRqK3kS8pw2yoEcNxgvYP1AoRVq/
-        Xoey8KsjXlz13Jr/YwhveLqUuQ==
-X-Google-Smtp-Source: APXvYqy1/DrQJAPddhhSYSLAnm6bco9ZVAeKlhqYO9+qU0Tf/LXOeMbTXTiqX2GA3oq/Ckjis5/K+w==
-X-Received: by 2002:a63:5550:: with SMTP id f16mr15262675pgm.426.1567899483709;
-        Sat, 07 Sep 2019 16:38:03 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id x8sm9870655pfm.35.2019.09.07.16.38.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Sep 2019 16:38:03 -0700 (PDT)
-Date:   Sat, 7 Sep 2019 19:38:01 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Viktor Rosendahl <viktor.rosendahl@gmail.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 1/4] ftrace: Implement fs notification for
- tracing_max_latency
-Message-ID: <20190907233801.GA117656@google.com>
-References: <20190905132548.5116-1-viktor.rosendahl@gmail.com>
- <20190905132548.5116-2-viktor.rosendahl@gmail.com>
- <20190906141740.GA250796@google.com>
- <c35722db-bb79-7e09-ac02-e82ab827e1e3@gmail.com>
+        Sat, 7 Sep 2019 19:46:11 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x87NjAND069463;
+        Sat, 7 Sep 2019 23:46:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=+VllEEyT4iEiGSQ5dF27BA09Kf2mwJdY7Ifdj5cpMaE=;
+ b=HaLkMCNBYcTJhPbF+AiY8d39WFYakio5kiz0orHEzgnI+uczKoH3Pha4uAYsieNIHTes
+ pn/jxabXHbykShY8u7k9OpJgMLu6SsplufVBo8maoceWvoN8H2d5lUaKvk7yanJlxe/D
+ Ax9YQgMQngHHgbvIxGV6TNj3a7BSsjwNw2CT8VjRTMG3XOFRPPg9arJyhRZbAvyyr+Nq
+ UTVlgoV5o2HrbOWMj6X81ZmeRhTSTyPQbl2MLTNpQ1437ecqolCdkuRvw/K+JdRwdQSa
+ 3GbV5q7qprOefzd22z52544/gPY8METfBgQ1d752t0ewP4H4h36/l4W+S6qUqPK4fyVE Lw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2uvpg2800s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 07 Sep 2019 23:45:59 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x87NhqZo144306;
+        Sat, 7 Sep 2019 23:45:59 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2uv4d0hqfw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 07 Sep 2019 23:45:59 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x87NjwsH011017;
+        Sat, 7 Sep 2019 23:45:58 GMT
+Received: from paddy.uk.oracle.com (/10.175.163.125)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 07 Sep 2019 16:45:58 -0700
+From:   Joao Martins <joao.m.martins@oracle.com>
+To:     linux-pm@vger.kernel.org
+Cc:     Joao Martins <joao.m.martins@oracle.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-kernel@vger.kernel.org,
+        Marcelo Tosatti <mtosatti@redhat.com>, kvm@vger.kernel.org
+Subject: [PATCH v3 2/4] cpuidle-haltpoll: set haltpoll as preferred governor
+Date:   Sun,  8 Sep 2019 00:45:22 +0100
+Message-Id: <20190907234524.5577-3-joao.m.martins@oracle.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20190907234524.5577-1-joao.m.martins@oracle.com>
+References: <20190907234524.5577-1-joao.m.martins@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c35722db-bb79-7e09-ac02-e82ab827e1e3@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9373 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=332
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1909070260
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9373 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=386 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1909070260
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 07, 2019 at 11:12:59PM +0200, Viktor Rosendahl wrote:
-> On 9/6/19 4:17 PM, Joel Fernandes wrote:
-> > On Thu, Sep 05, 2019 at 03:25:45PM +0200, Viktor Rosendahl wrote:
-> <clip>
-> > > +
-> > > +__init static int latency_fsnotify_init(void)
-> > > +{
-> > > +	fsnotify_wq = alloc_workqueue("tr_max_lat_wq",
-> > > +				      WQ_UNBOUND | WQ_HIGHPRI, 0);
-> > > +	if (!fsnotify_wq) {
-> > > +		pr_err("Unable to allocate tr_max_lat_wq\n");
-> > > +		return -ENOMEM;
-> > > +	}
-> > 
-> > Why not just use the system workqueue instead of adding another workqueue?
-> > 
-> 
-> For the the latency-collector to work properly in the worst case, when a
-> new latency occurs immediately, the fsnotify must be received in less
-> time than what the threshold is set to. If we always are slower we will
-> always lose certain latencies.
-> 
-> My intention was to minimize latency in some important cases, so that
-> user space receives the notification sooner rather than later.
-> 
-> There doesn't seem to be any system workqueue with WQ_UNBOUND and
-> WQ_HIGHPRI. My thinking was that WQ_UNBOUND might help with the latency
-> in some important cases.
-> 
-> If we use:
-> 
-> queue_work(system_highpri_wq, &tr->fsnotify_work);
-> 
-> then the work will (almost) always execute on the same CPU but if we are
-> unlucky that CPU could be too busy while there could be another CPU in
-> the system that would be able to process the work soon enough.
-> 
-> queue_work_on() could be used to queue the work on another CPU but it
-> seems difficult to select the right CPU.
+Right now, guest current governors have the following ratings:
 
-Ok, a separate WQ is fine with me as such since the preempt/irq events are on
-a debug kernel anyway.
+ * ladder            -> 10
+ * teo               -> 19
+ * menu              -> 20
+ * haltpoll          -> 21
+ * ladder + nohz=off -> 25
 
-I'll keep reviewing your patches next few days, I am at the LPC conference so
-might be a bit slow. Overall I think the series look like its maturing and
-getting close.
+haltpoll governor got introduced and it is now the default governor given
+its highest rating -- with ladder+nohz being the exception -- regardless of
+idle driver in the guest. An example of an undesirable case is x86 KVM
+guests with MWAIT which have intel_idle registered first, and consequently
+will have haltpoll be used as governor which would get limited to a poll
+state and state 1 and the other states wouldn't get used.
 
-thanks,
+To keep the previous defaults we decrease rating of governor to 9 (below
+current lowest rating) and thus rely on @governor switch on
+cpuidle_register_driver() to tie in haltpoll idle driver and governor
+together.
 
- - Joel
+Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
+---
+ drivers/cpuidle/cpuidle-haltpoll.c   | 1 +
+ drivers/cpuidle/governors/haltpoll.c | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/cpuidle/cpuidle-haltpoll.c b/drivers/cpuidle/cpuidle-haltpoll.c
+index 56d8ab814466..519e90d125cf 100644
+--- a/drivers/cpuidle/cpuidle-haltpoll.c
++++ b/drivers/cpuidle/cpuidle-haltpoll.c
+@@ -34,6 +34,7 @@ static int default_enter_idle(struct cpuidle_device *dev,
+ 
+ static struct cpuidle_driver haltpoll_driver = {
+ 	.name = "haltpoll",
++	.governor = "haltpoll",
+ 	.owner = THIS_MODULE,
+ 	.states = {
+ 		{ /* entry 0 is for polling */ },
+diff --git a/drivers/cpuidle/governors/haltpoll.c b/drivers/cpuidle/governors/haltpoll.c
+index 797477bda486..7a703d2e0064 100644
+--- a/drivers/cpuidle/governors/haltpoll.c
++++ b/drivers/cpuidle/governors/haltpoll.c
+@@ -133,7 +133,7 @@ static int haltpoll_enable_device(struct cpuidle_driver *drv,
+ 
+ static struct cpuidle_governor haltpoll_governor = {
+ 	.name =			"haltpoll",
+-	.rating =		21,
++	.rating =		9,
+ 	.enable =		haltpoll_enable_device,
+ 	.select =		haltpoll_select,
+ 	.reflect =		haltpoll_reflect,
+-- 
+2.17.1
 
