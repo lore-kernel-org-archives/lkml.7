@@ -2,164 +2,245 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC0BC43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 12:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB89FC43140
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 12:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A22721871
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 12:37:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="RnUi+SKW"
+	by mail.kernel.org (Postfix) with ESMTP id 7B94A206BB
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 12:40:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567860055;
+	bh=8CdC9s2J+EXRB9t2P5assmBfzpxHrY6X7806hW2vZbI=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=PbXJvUcyZZpzh1Gv9H6X/4/kSCgWOxkY8ZhHoRFtchyyZ8Yv3ZnhuJS0iqzUFB6dI
+	 KaUnl/uxg+DZPPaAe8JPl+1ttv1NYs0k8NMrK7r42KsKxk+zt3FVnJTDbku1ykzMPz
+	 ftMOddPgTmX8h+5hwYEgi9pgY9b9WqvVp+Ty5Gpw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392321AbfIGMh2 (ORCPT
+        id S2405938AbfIGMky (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 08:37:28 -0400
-Received: from mout.web.de ([212.227.17.11]:33143 "EHLO mout.web.de"
+        Sat, 7 Sep 2019 08:40:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731870AbfIGMh2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 08:37:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1567859793;
-        bh=PSaXtgJwZd1CREWlBeOAL7J9z8nB0xiLbtFGD4xfehg=;
-        h=X-UI-Sender-Class:To:From:Subject:Cc:Date;
-        b=RnUi+SKWOZtSlr0mk9oIdV6GDmV2xrIKq7vIdyW0CX2LMWYKpCwIbucjuwpt4hpCJ
-         YN/SJh6p454BNwbAG20ttRaBcN20ZBqx2gpFNigZp2TI8+WK1C17Ksirouv+JYGTWm
-         jqHzkYbjdHga/kxEywPwXzGe1FXeyTRX3hX5llZA=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.243.16.142]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MK24P-1i7Otx3PmP-001SEO; Sat, 07
- Sep 2019 14:36:32 +0200
-To:     linux-scsi@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>,
-        Allison Randal <allison@lohutok.net>,
+        id S1731870AbfIGMkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Sep 2019 08:40:53 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CE4A21871;
+        Sat,  7 Sep 2019 12:40:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567860051;
+        bh=8CdC9s2J+EXRB9t2P5assmBfzpxHrY6X7806hW2vZbI=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=BMvFV1UX5X6Uy9Wv1qL/PSUiseB7R2rehCkF1jManrfGr8YI9PSHDWUn9L+S2pFuv
+         RCN9fVNO1dVgQYKSzjsx39Mxn3GBmfn+uxlg8EP9mU5AYcsQNbkdlUXvr6YJL1XW0i
+         aq/hmJ23hyXTE39ZyvTfy0uteQUqAjbcN+eR3HO4=
+Message-ID: <7236f382d72130f2afbbe8940e72cc67e5c6dce0.camel@kernel.org>
+Subject: Re: [PATCH v12 11/12] open: openat2(2) syscall
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Aleksa Sarai <cyphar@cyphar.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        Avri Altman <avri.altman@wdc.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "James E. J. Bottomley" <jejb@linux.ibm.com>,
-        Kangjie Lu <kjlu@umn.edu>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wei Li <liwei213@huawei.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] scsi: ufs-hisi: Use PTR_ERR_OR_ZERO() in
- ufs_hisi_get_resource()
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Message-ID: <9e667f19-434e-ed30-78cb-9ddc6323c51e@web.de>
-Date:   Sat, 7 Sep 2019 14:36:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christian Brauner <christian@brauner.io>
+Cc:     Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Date:   Sat, 07 Sep 2019 08:40:47 -0400
+In-Reply-To: <20190904201933.10736-12-cyphar@cyphar.com>
+References: <20190904201933.10736-1-cyphar@cyphar.com>
+         <20190904201933.10736-12-cyphar@cyphar.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:cNHpQ+jeTfGeWICOYA7wmoDby9yvgIX7UhM/m3fSlfN7oMw/2ym
- ilwADzk5hP655UAnuaAmIrKzAEh2HBl+GrPSYAjucFFtWt2aDAbXkNtnX+VhtoXbSwQls8o
- uEnrVc0p+jCAaITPlmhPCYBYZKaXH9vanin3blftx93cOqNpCh1dlEimmG8Y97e7K07Zhtj
- 9ZqNT0He5LjDkd+NW5e6g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:jAwdniN09rM=:0lOI9WIzG8hBLi9MmX3NSa
- xbps9oevGfM1rgQXm+xJYs3zEXrjXqa7Ru7/aM8oZbVH6I8sCgXO1EHe8CCHbFg+HXapuhKid
- RhZ94fyNCkaHlazVq3rYLyO8pcSUsrdxq/4vvTOZwoaBHIvP+wkB5tgf9Wa4tronZtX0n471Z
- +gQ7PmZIZBtrZ4RbtZal+tx38W61gw9CVppchmouFVxJFjtsOQI3GLIgO8I8vcBBgMOCWDxRK
- fAG4PXOfRG23ILLcT2JKRCXWYqlY7llxVb9sMTHB5Vdt6ZXUHW2R/bGbxeYC4mX1GRq0PQEfY
- +JOZx4CjKiyxXYL0hO+OGeNWtLUKu3zOSyq1iYEQfNRoFqtZ+ck1zQNdnrj66d46FPE/xYuST
- cbd2z7wEoj+b0QQz4hc+bIRy7xEOYPk1amfRg58muKNIMx3LEeCAXnnKbBKODdCqC8E6I+MbE
- KsdU+QVtn/W3P8HK+5CPbQOuI5qvshZ+/OIrnxkhy2JAEwyuuMlEjMxtwj1VCX9NJLIvfXy9U
- PKCa+fCCHAo7W143I1SwdXJuEn29XJ57T8X6Jx5EYwmTFWwOJvSylu2Mz6TMmbWXa3uBFOzgF
- 1Jgts0C2ntx9pN541r3DJvHinpeH4yWrBw97NOvfV/5XNQ2FA5HJVxJbzmxhEzvhOwmUaOCpT
- 8A2dcbpq9JLrSg+IoV0UQ2x4fAdH783PTCqrwyBBqbY1gmmR6n266sXrbGPpyzrl9J16oMmDu
- vkTYD36RWZTgiw0/tvH6IbPbPPBGn6evG37l37uYXz8+Nrim/0psKHu+Nez02gY5IvAHAGfDr
- vfRlpXci73AfhdrNG8fKfihHth3vLDdSEcRIVYAjFvDpb/vUOsgk4LczOtXp6sQnZ5ucXGejt
- g+0ORVJ4G6bYqCrJMqP1BQKilB9T85N3bTkGKPT2uedFy0CfPeI+lnx/mZ5xIX7z6eZGd/k0b
- UjXDcR/rITzSLf8c2fErsmBYs40zjF5SxeNYGQGO1T6Nc3wBSvKHNI29T7Choi37CtP+R2ZCm
- +s3y2KToIRJa4foNAgcg7Ur8Kdjmq2SQcUE+3lKQSUXyKW/E7SdO99F6SsimhU6/Ts6SqbT8o
- xG411pYVzOiZ+p5jbxAMRPkP/bVK44/tX3RY6sLNZJVe3lfBDzI3iAFhBKf+P6f5mIcIumGH2
- 6wqKHg2ZmZD1NwA5GQwmowZKJcNvFc+4+WjPlUI6v4Dft+nTVJ3095NqDgFgGVJsRAJQWb/lH
- JYjNJ+9LOa3z0RWhN
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Sat, 7 Sep 2019 14:25:31 +0200
+On Thu, 2019-09-05 at 06:19 +1000, Aleksa Sarai wrote:
+> The most obvious syscall to add support for the new LOOKUP_* scoping
+> flags would be openat(2). However, there are a few reasons why this is
+> not the best course of action:
+> 
+>  * The new LOOKUP_* flags are intended to be security features, and
+>    openat(2) will silently ignore all unknown flags. This means that
+>    users would need to avoid foot-gunning themselves constantly when
+>    using this interface if it were part of openat(2). This can be fixed
+>    by having userspace libraries handle this for users[1], but should be
+>    avoided if possible.
+> 
+>  * Resolution scoping feels like a different operation to the existing
+>    O_* flags. And since openat(2) has limited flag space, it seems to be
+>    quite wasteful to clutter it with 5 flags that are all
+>    resolution-related. Arguably O_NOFOLLOW is also a resolution flag but
+>    its entire purpose is to error out if you encounter a trailing
+>    symlink -- not to scope resolution.
+> 
+>  * Other systems would be able to reimplement this syscall allowing for
+>    cross-OS standardisation rather than being hidden amongst O_* flags
+>    which may result in it not being used by all the parties that might
+>    want to use it (file servers, web servers, container runtimes, etc).
+> 
+>  * It gives us the opportunity to iterate on the O_PATH interface. In
+>    particular, the new @how->upgrade_mask field for fd re-opening is
+>    only possible because we have a clean slate without needing to re-use
+>    the ACC_MODE flag design nor the existing openat(2) @mode semantics.
+> 
+> To this end, we introduce the openat2(2) syscall. It provides all of the
+> features of openat(2) through the @how->flags argument, but also
+> also provides a new @how->resolve argument which exposes RESOLVE_* flags
+> that map to our new LOOKUP_* flags. It also eliminates the long-standing
+> ugliness of variadic-open(2) by embedding it in a struct.
+> 
+> In order to allow for userspace to lock down their usage of file
+> descriptor re-opening, openat2(2) has the ability for users to disallow
+> certain re-opening modes through @how->upgrade_mask. At the moment,
+> there is no UPGRADE_NOEXEC.
+> 
+> [1]: https://github.com/openSUSE/libpathrs
+> 
+> Suggested-by: Christian Brauner <christian@brauner.io>
+> Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+> ---
+>  arch/alpha/kernel/syscalls/syscall.tbl      |  1 +
+>  arch/arm/tools/syscall.tbl                  |  1 +
+>  arch/arm64/include/asm/unistd.h             |  2 +-
+>  arch/arm64/include/asm/unistd32.h           |  2 +
+>  arch/ia64/kernel/syscalls/syscall.tbl       |  1 +
+>  arch/m68k/kernel/syscalls/syscall.tbl       |  1 +
+>  arch/microblaze/kernel/syscalls/syscall.tbl |  1 +
+>  arch/mips/kernel/syscalls/syscall_n32.tbl   |  1 +
+>  arch/mips/kernel/syscalls/syscall_n64.tbl   |  1 +
+>  arch/mips/kernel/syscalls/syscall_o32.tbl   |  1 +
+>  arch/parisc/kernel/syscalls/syscall.tbl     |  1 +
+>  arch/powerpc/kernel/syscalls/syscall.tbl    |  1 +
+>  arch/s390/kernel/syscalls/syscall.tbl       |  1 +
+>  arch/sh/kernel/syscalls/syscall.tbl         |  1 +
+>  arch/sparc/kernel/syscalls/syscall.tbl      |  1 +
+>  arch/x86/entry/syscalls/syscall_32.tbl      |  1 +
+>  arch/x86/entry/syscalls/syscall_64.tbl      |  1 +
+>  arch/xtensa/kernel/syscalls/syscall.tbl     |  1 +
+>  fs/open.c                                   | 94 ++++++++++++++++-----
+>  include/linux/fcntl.h                       | 19 ++++-
+>  include/linux/fs.h                          |  4 +-
+>  include/linux/syscalls.h                    | 14 ++-
+>  include/uapi/asm-generic/unistd.h           |  5 +-
+>  include/uapi/linux/fcntl.h                  | 42 +++++++++
+>  24 files changed, 168 insertions(+), 30 deletions(-)
+> 
 
-Simplify this function implementation by using a known function.
+[...]
 
-Generated by: scripts/coccinelle/api/ptr_ret.cocci
+> diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
+> index 1d338357df8a..479baf2da10e 100644
+> --- a/include/uapi/linux/fcntl.h
+> +++ b/include/uapi/linux/fcntl.h
+> @@ -93,5 +93,47 @@
+>  
+>  #define AT_RECURSIVE		0x8000	/* Apply to the entire subtree */
+>  
+> +/**
+> + * Arguments for how openat2(2) should open the target path. If @resolve is
+> + * zero, then openat2(2) operates identically to openat(2).
+> + *
+> + * However, unlike openat(2), unknown bits in @flags result in -EINVAL rather
+> + * than being silently ignored. In addition, @mode (or @upgrade_mask) must be
+> + * zero unless one of {O_CREAT, O_TMPFILE, O_PATH} are set.
+> + *
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/scsi/ufs/ufs-hisi.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+After thinking about this a bit, I wonder if we might be better served
+with a new set of OA2_* flags instead of repurposing the O_* flags?
 
-diff --git a/drivers/scsi/ufs/ufs-hisi.c b/drivers/scsi/ufs/ufs-hisi.c
-index f4d1dca962c4..a0ea57c19dbc 100644
-=2D-- a/drivers/scsi/ufs/ufs-hisi.c
-+++ b/drivers/scsi/ufs/ufs-hisi.c
-@@ -454,10 +454,7 @@ static int ufs_hisi_get_resource(struct ufs_hisi_host=
- *host)
- 	/* get resource of ufs sys ctrl */
- 	mem_res =3D platform_get_resource(pdev, IORESOURCE_MEM, 1);
- 	host->ufs_sys_ctrl =3D devm_ioremap_resource(dev, mem_res);
--	if (IS_ERR(host->ufs_sys_ctrl))
--		return PTR_ERR(host->ufs_sys_ctrl);
--
--	return 0;
-+	return PTR_ERR_OR_ZERO(host->ufs_sys_ctrl);
- }
+Yes, those flags are familiar, but this is an entirely new syscall. We
+have a chance to make a fresh start. Does something like O_LARGEFILE
+have any real place in openat2? I'd argue no.
 
- static void ufs_hisi_set_pm_lvl(struct ufs_hba *hba)
-=2D-
-2.23.0
+Also, once you want to add a new flag, then we get into the mess of how
+to document whether open/openat also support it. It'd be good to freeze
+changes on those syscalls and aim to only introduce new functionality in
+openat2.
+
+That would also allow us to drop some flags from openat2 that we really
+don't need, and maybe expand the flag space to 64 bits initially, to
+allow for expansion into the future.
+
+Thoughts?
+
+> + * @flags: O_* flags.
+> + * @mode: O_CREAT/O_TMPFILE file mode.
+> + * @upgrade_mask: UPGRADE_* flags (to restrict O_PATH re-opening).
+> + * @resolve: RESOLVE_* flags.
+> + */
+> +struct open_how {
+> +	__u32 flags;
+> +	union {
+> +		__u16 mode;
+> +		__u16 upgrade_mask;
+> +	};
+> +	__u16 resolve;
+> +};
+> +
+> +#define OPEN_HOW_SIZE_VER0	8 /* sizeof first published struct */
+> +
+
+Hmm, there is no version field. When you want to expand this in the
+future, what is the plan? Add a new flag to indicate that it's some
+length?
+
+
+> +/* how->resolve flags for openat2(2). */
+> +#define RESOLVE_NO_XDEV		0x01 /* Block mount-point crossings
+> +					(includes bind-mounts). */
+> +#define RESOLVE_NO_MAGICLINKS	0x02 /* Block traversal through procfs-style
+> +					"magic-links". */
+> +#define RESOLVE_NO_SYMLINKS	0x04 /* Block traversal through all symlinks
+> +					(implies OEXT_NO_MAGICLINKS) */
+> +#define RESOLVE_BENEATH		0x08 /* Block "lexical" trickery like
+> +					"..", symlinks, and absolute
+> +					paths which escape the dirfd. */
+> +#define RESOLVE_IN_ROOT		0x10 /* Make all jumps to "/" and ".."
+> +					be scoped inside the dirfd
+> +					(similar to chroot(2)). */
+> +
+> +/* how->upgrade flags for openat2(2). */
+> +/* First bit is reserved for a future UPGRADE_NOEXEC flag. */
+> +#define UPGRADE_NOREAD		0x02 /* Block re-opening with MAY_READ. */
+> +#define UPGRADE_NOWRITE		0x04 /* Block re-opening with MAY_WRITE. */
+>  
+>  #endif /* _UAPI_LINUX_FCNTL_H */
+
+-- 
+Jeff Layton <jlayton@kernel.org>
 
