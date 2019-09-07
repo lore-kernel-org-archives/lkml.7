@@ -2,103 +2,251 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51BBBC00306
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 10:19:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37295C43140
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 10:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BCC8206BB
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 10:19:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F33B21907
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 10:32:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="IAcvYCxB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387964AbfIGKTO (ORCPT
+        id S2388258AbfIGKcz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 06:19:14 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:58341 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726019AbfIGKTO (ORCPT
+        Sat, 7 Sep 2019 06:32:55 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35420 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726654AbfIGKcy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 06:19:14 -0400
-Received: from localhost ([46.78.15.232]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MPXlM-1hk5H72K0I-00Mdi2; Sat, 07 Sep 2019 12:18:51 +0200
-Date:   Sat, 7 Sep 2019 12:18:50 +0200
-From:   Andreas Klinger <ak@it-klinger.de>
-To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] iio: adc: hx711: remove unnecessary returns
-Message-ID: <20190907101848.hl4vgaostftr4ddj@arbad>
+        Sat, 7 Sep 2019 06:32:54 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 100so8192953otn.2
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Sep 2019 03:32:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=b/cX7xITRlwawwj8ZZAOJ/YBqGb0dFQASFM/0pTz2tk=;
+        b=IAcvYCxB9Y3lVd1dPhXunwMoEDwpz4gg8XVqE56TpNAUSsOCUeuEFcSpt6hKnNhR1R
+         yNLrn5ZooPklEbP+DfaHCUNl9mMiqyV/EKvJEhC2SCwXESng+X82fWXjAnPLtWRtgtUn
+         IRASeKFCB/qyD3FWtmQtDzUpKZzjzuCrADoV0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b/cX7xITRlwawwj8ZZAOJ/YBqGb0dFQASFM/0pTz2tk=;
+        b=b0AhDHhSCQqSaBAZkE78dx/RFwE5ExCc0rPOimXuTYb5I94zihex4fY8loT1PttafW
+         mCdT80JErvGx7i5e+CLDoKzsqpFUevMFVxab0KeCoMRqjXd+B85PmezdgazttLtPerFP
+         Aul7KWhozg1IOYrr8GrFEq5o3xFoVri2myhX4fP1t6mQQGODnO4TGQmm2rcqd8jDAPpS
+         H0nyCeq3oZrEJAiQWxsU/DbDQEG8L77qeGhry1iT4p2vqUoAFTi7A+77ZXV/wUltKcxM
+         axM9BCKxZ7dr/xq2KGo2CRpqoY2YfDesG8wkYmokaBt0vCuNFCfeHs3bhD75BW9/O6D5
+         1Dyw==
+X-Gm-Message-State: APjAAAVM8XrzPL+FxxXojUdYAj+/YFb/qManrrq6kK//h1KXfoqHUbrS
+        5xh+QrMg3eL1voikwU26xaHkY/AyCclH7H426bj6uw==
+X-Google-Smtp-Source: APXvYqyVoNQgJNSVxxO4W3K/xguX20n0h0ihJY8BhZ+1HPnwkcskYodYDNcREPZNQLxNM7GZkCySZwZwTYcEzEqbzMc=
+X-Received: by 2002:a05:6830:10d8:: with SMTP id z24mr218837oto.281.1567852372299;
+ Sat, 07 Sep 2019 03:32:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Provags-ID: V03:K1:j9n30ghBHU5Pbg82DQrU7DqahcuCtaXSZNag+SbTi+EIN1PZ6kt
- zwz7zg5Hnz3XFjDSE/OHkpmTLTS7Y9STm/wd0Xr+e5DQGIwTuVM7ZdGl8/uLi7Dou00+E++
- FcJSkKK5H8zD67b4bwE38wucxQKAvQQ1jM0rXWggtUSok0lKI4DrTNmhA+rUxdHUyCttG0t
- D64Qn+aFR9XNcT1BIewJw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:gtdGpxCIa+s=:G2AsiXA6l0rJtlhNZ2YqbX
- gW8qhWvNWNJrVl5eiPkKSD48IOEr230tb6gptvH4VhsMnM7VqusEXAIga3JsvAEbI8VU3/614
- 3+bvXhD0E8W6iswi5EfraACfByUXPr63px3+xFFP/Rxk4J2roKH3rThcCnd1eN5WyHAiAJu3R
- HTPi1S5rEgSmwrP0FqdK8SGgkrhRpoWvTySZTPbecGVLwzGhv62zKYkLmyayklxl0EWuYYRIp
- UkxygjCt00+S/5+yuv/ozRtcuoZeKIsiCKcywMMuNU/0FCGHPUhqmtpeoIaaYTS8IAfuG+oXG
- avGxQ4NdZLsHndz1UsWI5EzspPr827gnYgoI3b1fE+npOFXkILpEBn3DI586CrdMhxO5HCfre
- dIc+7ZM5nGwzeVCxCU9AnlqEnolEjP2FIlH2V2VhsBYJeRfoJNgJcojzCy5AYSQRF20Ek5MSC
- qFstw1FKRhBpE2U3q225SN2VHwHO42YwdVTzvQ0K/U5Sa/aWwUJAwuR55DE+7uK94R1as3Eoi
- G5A0JEwF7OvZNhm3Lq57Wq6fTqsqymGTXngdpIMotaBvhYMaKcC2olcKEjfl9e4LtM5/up08A
- Uj9rgXSPKxwPrk0UfWo/lwzxKFWc2Sy0MnnO7mdyyEYHkdQIrBv1pxMM3uigMzR9NpVOMN8xM
- vs8AeA5gZz0PZTZ2ylljYfO/AI/rm544kFcfwgC9/CPz7Wwqtud5OwB47lkgSCN7hh1Nu+8LZ
- 4z1qSizFvdJB0iqqCAx+iQY8tW4qesrJv6PWw/bLXN+5h3+5W3lzDlPY78iRkmKaZWTDI1iIb
- iqa2WRiiBlnhuZnOZxxobmeUVPAFv2tbxXUaiJi8iZBXGwGXhc=
+References: <20190907090534.GB1712@pc-sasha.localdomain>
+In-Reply-To: <20190907090534.GB1712@pc-sasha.localdomain>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Sat, 7 Sep 2019 12:32:41 +0200
+Message-ID: <CAKMK7uHYdXwruQxxBM12Q5MVeH9fjFpZvxZz06BSo7YrCQbM2w@mail.gmail.com>
+Subject: Re: Kernel panic during drm/nouveau init 5.3.0-rc7-next-20190903
+To:     Alexander Kapshuk <alexander.kapshuk@gmail.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-next <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, Dave Airlie <airlied@linux.ie>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Optimize use of return in hx711_set_gain_for_channel().
+On Sat, Sep 7, 2019 at 11:05 AM Alexander Kapshuk
+<alexander.kapshuk@gmail.com> wrote:
+>
+> To Whom It May Concern
+>
+> Every kernel I have built since 5.3.0-rc2-next-20190730 and up to
+> 5.3.0-rc7-next-20190903 has resulted in the kernel panic described below.
+>
+> The panic occurs early on in the boot process, so no records of it get
+> written on disk. I resourted to taking photos and videos to get the info
+> for debugging.
+>
+> [Kernel panic]
+> Code: 00 48 83 bb f0 00 00 00 00 74 16 48 83 c3 18 b9 17 00 00 00 31 c0 48 89 df f3 48 ab 5b 41 5c 5d c3 4c 89 a3 f0 00 00 00 eb e1 <0f> 0b 0f 1f 40 00 55 48 89 e5 41 54 49 89 d4 53 48 89 f3 e8 7e ff
+>
+> Kernel panic - Not syncing: Attempted to kill init! exitcode=0x0000000b.
+>
+> Top of call stack:
+> __drm_fb_helper_initial_config_and_unlock
+> drm_fb_helper_initial_config
+>
+> <scripts/decodecode <~/tmp/panic_code.txt
+> Code: 00 48 83 bb f0 00 00 00 00 74 16 48 83 c3 18 b9 17 00 00 00 31 c0 48 89 df f3 48 ab 5b 41 5c 5d c3 4c 89 a3 f0 00 00 00 eb e1 <0f> 0b 0f 1f 40 00 55 48 89 e5 41 54 49 89 d4 53 48 89 f3 e8 7e ff
+> All code
+> ========
+>    0:   00 48 83                add    %cl,-0x7d(%rax)
+>    3:   bb f0 00 00 00          mov    $0xf0,%ebx
+>    8:   00 74 16 48             add    %dh,0x48(%rsi,%rdx,1)
+>    c:   83 c3 18                add    $0x18,%ebx
+>    f:   b9 17 00 00 00          mov    $0x17,%ecx
+>   14:   31 c0                   xor    %eax,%eax
+>   16:   48 89 df                mov    %rbx,%rdi
+>   19:   f3 48 ab                rep stos %rax,%es:(%rdi)
+>   1c:   5b                      pop    %rbx
+>   1d:   41 5c                   pop    %r12
+>   1f:   5d                      pop    %rbp
+>   20:   c3                      retq
+>   21:   4c 89 a3 f0 00 00 00    mov    %r12,0xf0(%rbx)
+>   28:   eb e1                   jmp    0xb
+>   2a:*  0f 0b                   ud2             <-- trapping instruction
+>   2c:   0f 1f 40 00             nopl   0x0(%rax)
+>   30:   55                      push   %rbp
+>   31:   48 89 e5                mov    %rsp,%rbp
+>   34:   41 54                   push   %r12
+>   36:   49 89 d4                mov    %rdx,%r12
+>   39:   53                      push   %rbx
+>   3a:   48 89 f3                mov    %rsi,%rbx
+>   3d:   e8                      .byte 0xe8
+>   3e:   7e ff                   jle    0x3f
+>
+> Code starting with the faulting instruction
+> ===========================================
+>    0:   0f 0b                   ud2
+>    2:   0f 1f 40 00             nopl   0x0(%rax)
+>    6:   55                      push   %rbp
+>    7:   48 89 e5                mov    %rsp,%rbp
+>    a:   41 54                   push   %r12
+>    c:   49 89 d4                mov    %rdx,%r12
+>    f:   53                      push   %rbx
+>   10:   48 89 f3                mov    %rsi,%rbx
+>   13:   e8                      .byte 0xe8
+>   14:   7e ff                   jle    0x15
+>
+> The panic occurs after the 'Driver supports precise vblank timestamp
+> query.' line gets printed to console:
+> [    2.858970] Linux agpgart interface v0.103
+> [    2.859308] nouveau 0000:01:00.0: NVIDIA G84 (084300a2)
+> [    2.968950] nouveau 0000:01:00.0: bios: version 60.84.68.00.19
+> [    2.989923] nouveau 0000:01:00.0: bios: M0203T not found
+> [    2.990010] nouveau 0000:01:00.0: bios: M0203E not matched!
+> [    2.990096] nouveau 0000:01:00.0: fb: 512 MiB DDR2
+> [    3.062362] [TTM] Zone  kernel: Available graphics memory: 2015014 KiB
+> [    3.062494] [TTM] Initializing pool allocator
+> [    3.062581] [TTM] Initializing DMA pool allocator
+> [    3.062683] nouveau 0000:01:00.0: DRM: VRAM: 512 MiB
+> [    3.062769] nouveau 0000:01:00.0: DRM: GART: 1048576 MiB
+> [    3.062859] nouveau 0000:01:00.0: DRM: TMDS table version 2.0
+> [    3.062944] nouveau 0000:01:00.0: DRM: DCB version 4.0
+> [    3.063030] nouveau 0000:01:00.0: DRM: DCB outp 00: 02000300 00000028
+> [    3.063117] nouveau 0000:01:00.0: DRM: DCB outp 01: 01000302 00000030
+> [    3.063203] nouveau 0000:01:00.0: DRM: DCB outp 02: 04011310 00000028
+> [    3.063290] nouveau 0000:01:00.0: DRM: DCB outp 03: 02011312 00c000b0
+> [    3.063377] nouveau 0000:01:00.0: DRM: DCB conn 00: 1030
+> [    3.063462] nouveau 0000:01:00.0: DRM: DCB conn 01: 2130
+> [    3.065982] nouveau 0000:01:00.0: DRM: MM: using CRYPT for buffer copies
+> [    3.066622] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
+> [    3.066754] [drm] Driver supports precise vblank timestamp query.
+>
+> I was not able to capture the value of RIP for this crash.
+>
+> With drm_kms_helper.fbdev_emulation=0 enabled, as documented in
+> the commentary to function drm_fb_helper_initial_config defined in
+> drivers/gpu/drm/drm_fb_helper.c, I get the following output:
+>
+> RIP: 0010: _raw_spin_lock+0x7/0x20
+> Code: ba ff 00 00 00 f0 0f b1 17 75 01 c3 55 48 89 e5 e8 23 a2 6d ff 5d c3 66 66 2e 0f 1f 84 00 00 00 00 00 90 31 c0 ba 01 00 00 00 <f0> 0f b1 17 75 01 c3 55 89 c6 40 89 e5 e8 e7 8f 6d ff 5d c3 0f 1f
+>
+> <scripts/decodecode <~/tmp/panic_code.txt
+> Code: ba ff 00 00 00 f0 0f b1 17 75 01 c3 55 48 89 e5 e8 23 a2 6d ff 5d c3 66 66 2e 0f 1f 84 00 00 00 00 00 90 31 c0 ba 01 00 00 00 <f0> 0f b1 17 75 01 c3 55 89 c6 40 89 e5 e8 e7 8f 6d ff 5d c3 0f 1f
+> All code
+> ========
+>    0:   ba ff 00 00 00          mov    $0xff,%edx
+>    5:   f0 0f b1 17             lock cmpxchg %edx,(%rdi)
+>    9:   75 01                   jne    0xc
+>    b:   c3                      retq
+>    c:   55                      push   %rbp
+>    d:   48 89 e5                mov    %rsp,%rbp
+>   10:   e8 23 a2 6d ff          callq  0xffffffffff6da238
+>   15:   5d                      pop    %rbp
+>   16:   c3                      retq
+>   17:   66 66 2e 0f 1f 84 00    data16 nopw %cs:0x0(%rax,%rax,1)
+>   1e:   00 00 00 00
+>   22:   90                      nop
+>   23:   31 c0                   xor    %eax,%eax
+>   25:   ba 01 00 00 00          mov    $0x1,%edx
+>   2a:*  f0 0f b1 17             lock cmpxchg %edx,(%rdi)                <-- trapping instruction
+>   2e:   75 01                   jne    0x31
+>   30:   c3                      retq
+>   31:   55                      push   %rbp
+>   32:   89 c6                   mov    %eax,%esi
+>   34:   40 89 e5                rex mov %esp,%ebp
+>   37:   e8 e7 8f 6d ff          callq  0xffffffffff6d9023
+>   3c:   5d                      pop    %rbp
+>   3d:   c3                      retq
+>   3e:   0f                      .byte 0xf
+>   3f:   1f                      (bad)
+>
+> Code starting with the faulting instruction
+> ===========================================
+>    0:   f0 0f b1 17             lock cmpxchg %edx,(%rdi)
+>    4:   75 01                   jne    0x7
+>    6:   c3                      retq
+>    7:   55                      push   %rbp
+>    8:   89 c6                   mov    %eax,%esi
+>    a:   40 89 e5                rex mov %esp,%ebp
+>    d:   e8 e7 8f 6d ff          callq  0xffffffffff6d8ff9
+>   12:   5d                      pop    %rbp
+>   13:   c3                      retq
+>   14:   0f                      .byte 0xf
+>   15:   1f                      (bad)
+>
+> (gdb) list *(_raw_spin_lock+0x7)
+> 0xffffffff81a13b27 is in _raw_spin_lock (./arch/x86/include/asm/atomic.h:200).
+> 195     }
+> 196
+> 197     #define arch_atomic_try_cmpxchg arch_atomic_try_cmpxchg
+> 198     static __always_inline bool arch_atomic_try_cmpxchg(atomic_t *v, int *old, int new)
+> 199     {
+> 200             return try_cmpxchg(&v->counter, old, new);
+> 201     }
+> 202
+> 203     static inline int arch_atomic_xchg(atomic_t *v, int new)
+> 204     {
+>
+> (gdb) disassemble _raw_spin_lock+0x7
+> Dump of assembler code for function _raw_spin_lock:
+>    0xffffffff81a13b20 <+0>:     xor    %eax,%eax
+>    0xffffffff81a13b22 <+2>:     mov    $0x1,%edx
+>    0xffffffff81a13b27 <+7>:     lock cmpxchg %edx,(%rdi)
+>    0xffffffff81a13b2b <+11>:    jne    0xffffffff81a13b2e <_raw_spin_lock+14>
+>    0xffffffff81a13b2d <+13>:    retq
+>    0xffffffff81a13b2e <+14>:    push   %rbp
+>    0xffffffff81a13b2f <+15>:    mov    %eax,%esi
+>    0xffffffff81a13b31 <+17>:    mov    %rsp,%rbp
+>    0xffffffff81a13b34 <+20>:    callq  0xffffffff810ecb20 <queued_spin_lock_slowpath>
+>    0xffffffff81a13b39 <+25>:    pop    %rbp
+>    0xffffffff81a13b3a <+26>:    retq
+> End of assembler dump.
+>
+> Any pointers on how to proceed with this would be appreciated.
+> See the files attached for copies of my .config and output of ver_linux.
 
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
----
- drivers/iio/adc/hx711.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/iio/adc/hx711.c b/drivers/iio/adc/hx711.c
-index c8686558429b..20c249f502c0 100644
---- a/drivers/iio/adc/hx711.c
-+++ b/drivers/iio/adc/hx711.c
-@@ -213,7 +213,7 @@ static int hx711_reset(struct hx711_data *hx711_data)
- 
- static int hx711_set_gain_for_channel(struct hx711_data *hx711_data, int chan)
- {
--	int ret;
-+	int ret = 0;
- 
- 	if (chan == 0) {
- 		if (hx711_data->gain_set == 32) {
-@@ -224,8 +224,6 @@ static int hx711_set_gain_for_channel(struct hx711_data *hx711_data, int chan)
- 				return ret;
- 
- 			ret = hx711_wait_for_ready(hx711_data);
--			if (ret)
--				return ret;
- 		}
- 	} else {
- 		if (hx711_data->gain_set != 32) {
-@@ -236,12 +234,10 @@ static int hx711_set_gain_for_channel(struct hx711_data *hx711_data, int chan)
- 				return ret;
- 
- 			ret = hx711_wait_for_ready(hx711_data);
--			if (ret)
--				return ret;
- 		}
- 	}
- 
--	return 0;
-+	return ret;
- }
- 
- static int hx711_reset_read(struct hx711_data *hx711_data, int chan)
+Lotta people are travelling to plumbers now for next week, so might be
+slow responses. One option would be to try to bisect where things
+broke. You've collected a lot of data here painstakingly, but from
+looking at it I'm not really connecting the docs. Knowing which change
+broke your machine can help enormously.
+-Daniel
 -- 
-2.13.3
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
