@@ -2,102 +2,100 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36DD2C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 08:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B7A3C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 08:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13FAC208C3
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 08:13:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567844028;
-	bh=mafzhMPZiGWkW1SiBA8276/Vtqm3xN/GmkS2BBdN6Ig=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=nWYRIDA3jCiA7N8lgMcBU4cs8biVCkgbCG6NQDvJX58StGe/kUp+m52aA9/k6b6ot
-	 sloYqhxqpTizaCIi9gAv8EOgLv8Y5JphTfew+3D+NmCFepYvMpcPLoEjwkPomIubjy
-	 GxpTyG44nPVmr70h4LUmI/tgVKppm1KGyGaPcjSQ=
+	by mail.kernel.org (Postfix) with ESMTP id 1814A208C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 08:17:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387652AbfIGINp (ORCPT
+        id S2404921AbfIGIR0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 04:13:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42070 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726133AbfIGINp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 04:13:45 -0400
-Received: from localhost (unknown [223.226.124.26])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0C2E208C3;
-        Sat,  7 Sep 2019 08:13:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567844024;
-        bh=mafzhMPZiGWkW1SiBA8276/Vtqm3xN/GmkS2BBdN6Ig=;
-        h=Date:From:To:Cc:Subject:From;
-        b=KB03eYeDvaxU+Me6/wa2AU7K9BUABrwYNk7bY1FRTbLN/Czwrm+ZAM7AUlMmwNHFq
-         905pl8Nw6WiuqP+aybBaD7CkspJVeOiteiMarC7JPRWS5DYDKpb70QOMLoIvV6CrIK
-         sT0ArO8IW/hxqi59ChT1Psofs0mXeMaxlX4Yqc3I=
-Date:   Sat, 7 Sep 2019 13:42:34 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     dma <dmaengine@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] dmaengine late fixes for 5.3
-Message-ID: <20190907081234.GJ2672@vkoul-mobl>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.0 (2019-05-25)
+        Sat, 7 Sep 2019 04:17:26 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:48416 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388830AbfIGIRZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Sep 2019 04:17:25 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8788jAX055124;
+        Sat, 7 Sep 2019 08:17:13 GMT
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2uv8c402e0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 07 Sep 2019 08:17:12 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x878DuMM117766;
+        Sat, 7 Sep 2019 08:15:12 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2uv4d04wjf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 07 Sep 2019 08:15:12 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x878FBJj018841;
+        Sat, 7 Sep 2019 08:15:11 GMT
+Received: from localhost.localdomain (/10.191.19.203)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 07 Sep 2019 01:15:10 -0700
+From:   rain.1986.08.12@gmail.com
+To:     mchehab+samsung@kernel.org, davem@davemloft.net,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        rain.1986.08.12@gmail.com
+Subject: [PATCH 1/1] MAINTAINERS: update FORCEDETH MAINTAINERS info
+Date:   Sat,  7 Sep 2019 16:14:46 +0800
+Message-Id: <20190907081446.3865-1-rain.1986.08.12@gmail.com>
+X-Mailer: git-send-email 2.17.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9372 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=865
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1909070089
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9372 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1034
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=933 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1909070089
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Heya Linus,
+From: Rain River <rain.1986.08.12@gmail.com>
 
-I would like you to pull for couple of simple dmaengine driver fixes we
-got in last few days.
+Many FORCEDETH NICs are used in our hosts. Several bugs are fixed and
+some features are developed for FORCEDETH NICs. And I have been
+reviewing patches for FORCEDETH NIC for several months. Mark me as the
+FORCEDETH NIC maintainer. I will send out the patches and maintain
+FORCEDETH NIC.
 
-The following changes since commit d1abaeb3be7b5fa6d7a1fbbd2e14e3310005c4c1:
+Signed-off-by: Rain River <rain.1986.08.12@gmail.com>
+---
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-  Linux 5.3-rc5 (2019-08-18 14:31:08 -0700)
-
-are available in the Git repository at:
-
-  git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-fix-5.3
-
-for you to fetch changes up to cf24aac38698bfa1d021afd3883df3c4c65143a4:
-
-  dmaengine: rcar-dmac: Fix DMACHCLR handling if iommu is mapped (2019-09-04 11:35:58 +0530)
-
-----------------------------------------------------------------
-dmaengine late fixes for 5.3
-
-Some late fixes for drivers:
- - memory leak in ti crossbar dma driver
- - cleanup of omap dma probe
- - Fix for link list configuration in sprd dma driver
- - Handling fixed for DMACHCLR if iommu is mapped in rcar dma
-
-----------------------------------------------------------------
-Baolin Wang (1):
-      dmaengine: sprd: Fix the DMA link-list configuration
-
-Wenwen Wang (2):
-      dmaengine: ti: dma-crossbar: Fix a memory leak bug
-      dmaengine: ti: omap-dma: Add cleanup in omap_dma_probe()
-
-Yoshihiro Shimoda (1):
-      dmaengine: rcar-dmac: Fix DMACHCLR handling if iommu is mapped
-
- drivers/dma/sh/rcar-dmac.c    | 28 +++++++++++++++++++---------
- drivers/dma/sprd-dma.c        | 10 ++++++++--
- drivers/dma/ti/dma-crossbar.c |  4 +++-
- drivers/dma/ti/omap-dma.c     |  4 +++-
- 4 files changed, 33 insertions(+), 13 deletions(-)
-
-Thanks
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e7a47b5210fd..0a28090df677 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -649,6 +649,12 @@ M:	Lino Sanfilippo <LinoSanfilippo@gmx.de>
+ S:	Maintained
+ F:	drivers/net/ethernet/alacritech/*
+ 
++FORCEDETH GIGABIT ETHERNET DRIVER
++M:	Rain River <rain.1986.08.12@gmail.com>
++L:	netdev@vger.kernel.org
++S:	Maintained
++F:	drivers/net/ethernet/nvidia/*
++
+ ALCATEL SPEEDTOUCH USB DRIVER
+ M:	Duncan Sands <duncan.sands@free.fr>
+ L:	linux-usb@vger.kernel.org
 -- 
-~Vinod
+2.17.1
+
