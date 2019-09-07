@@ -2,129 +2,267 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E49C0030B
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 18:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D31C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 18:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28C91218AE
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 18:03:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF6C5208C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 18:05:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567879500;
+	bh=gyIJvGgIhCHizpI2J+UMz/V5jreaJAyU0OkeQzHU7M0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=hGjUCV7przHdtDP+OIKpzTWLJ0i59Te5sHxA+tjFdW8OZvounRssdaShbjLZmqB6O
+	 z4uMq8yBbJ/cvRLp6o8JanQckjqPcRjNJ0QDcKIzbd/sltfnB00pA182Wx959RFF2b
+	 TLPXzfK+6oKfXpOjoc5RYRGXV1yQ1qKgONYoSRC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394012AbfIGSDw (ORCPT
+        id S2394121AbfIGSE5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 14:03:52 -0400
-Received: from mga03.intel.com ([134.134.136.65]:26223 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389581AbfIGSDw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 14:03:52 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Sep 2019 11:03:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,478,1559545200"; 
-   d="scan'208";a="335189350"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga004.jf.intel.com with ESMTP; 07 Sep 2019 11:03:49 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1i6f3s-0001D0-9T; Sat, 07 Sep 2019 21:03:48 +0300
-Date:   Sat, 7 Sep 2019 21:03:48 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] software node: implement reference properties
-Message-ID: <20190907180348.GM2680@smile.fi.intel.com>
-References: <20190906222611.223532-1-dmitry.torokhov@gmail.com>
- <20190907160819.GH2680@smile.fi.intel.com>
- <20190907163240.GA27112@dtor-ws>
- <20190907171251.GL2680@smile.fi.intel.com>
- <20190907173724.GA145199@dtor-ws>
+        Sat, 7 Sep 2019 14:04:57 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59112 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732265AbfIGSE5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Sep 2019 14:04:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=6xS0f4CtI6zw+Et+eztOUQ1ClHlFcCpURJzmhA/JTKE=; b=BeYD15oLfhmgrS7L4I7UXAkup
+        LTcH+6m15mBaQXqUJIWamnP7FLwh/8I8oVtH4XqnUBGocssofx4I7A2IO8PeJzCMDHr+oovZDerlF
+        bXDtsbE1lS6AZdiBcX4/dSI5ybdf6/KgA+3qZQrviQ5BquxnF19zqNNZ75H2ipBVHEni6hKWSDPrf
+        zvOq7D/n0my4tala+D15WhWowWF2txTbvsFj/bcePrwzJpJpHfhr2q7TiiMM73VqnAryADrXpUxF8
+        hpL115wTojjqRxLqf+zN3WQnSu0VpXnWXEll8XYsWjc7SpJb0kVMMMjBDzn2jP3s1BUM+kCHPBZHx
+        YeltX/hkg==;
+Received: from [177.133.16.239] (helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i6f4s-00078E-OV; Sat, 07 Sep 2019 18:04:51 +0000
+Date:   Sat, 7 Sep 2019 15:04:42 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Markus Heiser <markus.heiser@darmarit.de>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Sven Eckelmann <sven@narfation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Doug Smythies <doug.smythies@gmail.com>,
+        =?UTF-8?B?QXVyw6lsaWVu?= Cedeyn <aurelien.cedeyn@gmail.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-doc@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Armijn Hemel <armijn@tjaldur.nl>, Jiri Olsa <jolsa@redhat.com>,
+        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        Allison Randal <allison@lohutok.net>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: Re: [PATCH 0/6] Address issues with SPDX requirements and PEP-263
+Message-ID: <20190907150442.583b44c2@coco.lan>
+In-Reply-To: <a08c5807-38e7-dfb3-ff3c-f78a498455e6@darmarit.de>
+References: <cover.1567712829.git.mchehab+samsung@kernel.org>
+        <20190907073419.6a88e318@lwn.net>
+        <be329f0e-ec5b-f5ec-823d-66e58699da73@darmarit.de>
+        <20190907132259.3199c8a2@coco.lan>
+        <a08c5807-38e7-dfb3-ff3c-f78a498455e6@darmarit.de>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190907173724.GA145199@dtor-ws>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 07, 2019 at 10:37:24AM -0700, Dmitry Torokhov wrote:
-> On Sat, Sep 07, 2019 at 08:12:51PM +0300, Andy Shevchenko wrote:
-> > On Sat, Sep 07, 2019 at 09:32:40AM -0700, Dmitry Torokhov wrote:
-> > > On Sat, Sep 07, 2019 at 07:08:19PM +0300, Andy Shevchenko wrote:
-> > > > On Fri, Sep 06, 2019 at 03:26:09PM -0700, Dmitry Torokhov wrote:
+Em Sat, 7 Sep 2019 19:33:06 +0200
+Markus Heiser <markus.heiser@darmarit.de> escreveu:
+
+> Am 07.09.19 um 18:22 schrieb Mauro Carvalho Chehab:
+> > Em Sat, 7 Sep 2019 16:36:36 +0200
+> > Markus Heiser <markus.heiser@darmarit.de> escreveu:
+> >   
+> >> Am 07.09.19 um 15:34 schrieb Jonathan Corbet:  
+> >>> On Thu,  5 Sep 2019 16:57:47 -0300
+> >>> Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
+> >>>      
+> >>>> The  description at Documentation/process/license-rules.rst is very strict
+> >>>> with regards to the position where the SPDX tags should be.
+> >>>>
+> >>>> In the past several developers and maintainers interpreted it on a
+> >>>> more permissive way, placing the SPDX header between lines 1 to 15,
+> >>>> with are the ones which the  scripts/spdxcheck.py script verifies.
+> >>>>
+> >>>> However, recently, devs are becoming more strict about such
+> >>>> requirement and want it to strictly follow the rule, with states that
+> >>>> the SPDX rule should be at the first line ever on most files, and
+> >>>> at the second line for scripts.
+> >>>>
+> >>>> Well, for Python script, such requirement causes violation to PEP-263,
+> >>>> making regressions on scripts that contain encoding lines, as PEP-263
+> >>>> also states about the same.
+> >>>>
+> >>>> This series addresses it.  
+> >>>
+> >>> So I really don't want to be overly difficult here, but I would like to
+> >>> approach this from yet another angle...
+> >>>      
+> >>>> Patches 1 to 3 fix some Python scripts that violates PEP-263;  
+> >>>
+> >>> I just checked all of those scripts, and they are all just plain ASCII.
+> >>> So it really doesn't matter whether the environment defaults to UTF-8 or
+> >>> ASCII here.  So, in other words, we really shouldn't need to define the
+> >>> encoding at all.  
 > > 
-> > > > > +	} else if (src->type == DEV_PROP_REF) {
-> > > > > +		/* All reference properties must be arrays */
-> > > > > +		return -EINVAL;
-> > > > 
-> > > > Hmm... What about to duplicate pointer under value union and use is_array to
-> > > > distinguish which one to use? Because...
-> > > 
-> > > Then we have to special-case copying this entry, similar to the pains we
-> > > are going with the strings.
+> > I'm not a python expert, but, from what I researched, and from what I
+> > understood from Markus, if a script tries to print an UTF-8 but the
+> > system's encoding is ASCII (or some other encoding), the python script
+> > will crash.  
+> 
+> An (uncatched) exception is thrown, when writing UTF-8 to a stream which
+> do not support UTF-8 .. this is not a crash, it mostly indicates that the
+> developper makes some wrong assumption about the use-case.
+
+A not-handled exception is a crash in Python. I've seen python scripts
+crash countless times with non-English names.
+
+> There exists
+> also the possibility to encode the UTF-8 to ASCII and replace unknown
+> code points in the out-stream, or to catch the exception.
+
+Yeah, but getting this right is very painful. I use patchwork since 2013.
+It took *years* for it to not crash with non-ASCII chars[1]. That's, btw,
+the primary reason why I don't usually use python: with other languages,
+an alien char doesn't cause a crash.
+
+[1] I might be wrong, but the last patch I saw addressing an issue
+    there was applied this year.
+
+> 
+> But this was only academical, where do we have such problems in practice?
+> 
+> > At least on media, we define that some Kernel strings can be UTF-8.
+> > See, for example the model field at the media_entity struct:
 > > 
-> > I can't see it as a pain. Simple do the same kmemdup() for the case when
-> > is_array = false and DEV_TYPE_REF?
-> 
-> And then you need to make sure it is freed on error paths and when we
-> remove property entries. This requires more checks and code. In contrast
-> we already know how to handle out of line objects of arbitrary size.
-
-We can put it one level up to be a sibling to value / pointer unions.
-In that case is_array can be anything (we just don't care).
-
-Actually strings aren't inlined.
-
-> > By the way, don't we need to update property_entry_{get,set}_pointer()?
-> 
-> I do not see these, where are they?
-
-swnode.c. I meant property_{get,set}_pointer().
-
-> > > > > +	.is_array = true,						\
-> > > > 
-> > > > I really don't like this "cheating".
-> > > 
-> > > This is not cheating. Any single value can be represented as an array of
-> > > one element. Actually, the only reason we have this "is_array" business
-> > > is because for scalar values and short strings it is much cheaper to
-> > > store single value in-line instead of out of line + pointer, especially
-> > > on 64 bit arches.
+> > 	https://linuxtv.org/downloads/v4l-dvb-apis/kapi/mc-core.html
 > > 
-> > Yes, and this is a lot of benefit!
-> 
-> Yes, nobody argues against it. Here however we are dealing with a larger
-> structure. There is absolutely no benefit of trying to separate single
-> value vs array here.
-
-Thus, moving to upper layer makes more sense. Right?
-
-> > > If you want we can change is_array into is_inline.
+> > As stated there:
 > > 
-> > Nope, is_array is exactly what it tells us about the content. Its functional
-> > load is to distinguish which union (value vs. pointer) we are using.
+> > 	"media_entity.model must be filled with the device model name as
+> > 	 a NUL-terminated UTF-8 string. The device/model revision must
+> > 	 not be stored in this field."
+> > 
+> > I've no idea if the two perf scripts that contain the encoding data are
+> > meant to print some strings that may be UTF-8 encoding (like those that
+> > we have at the media subsystem), or if it is just that whomever added
+> > were using e-macs and wanted to make his life simpler. As it is better
+> > to be safe then sorry, on patches 2 and 3, I'm assuming the first case.  
 > 
-> No, it signifies whether the value is stored within property entry or
-> outside. I can fit probably 8 bytes arrays into property entry
-> structure, in which case is_array will definitely not reflect the data
-> type.
+> Hm, I'am unsure if I understand you correct: Using UTF-8 in the .rst
+> files are fine .. where do we have scripts generating UTF-8 outputs?
+> (except the HTML output).
 
-Nope, since strings are not inlined AFAICS.
+In thesis, perf scripts may be reading strings from the Kernel, with 
+might be using UTF-8 encoding.
 
-> It is the type-specific accessors that know how to parse and fetch data
-> from properties.
+> 
+> > 
+> > In any case, we do need the encoding line at Sphinx extensions,
+> > although there, the shebang line is optional.
+> > 
+> > In other words, we have those alternatives:
+> > 
+> > 1) Neither shebang nor coding -> SPDX will be at first line;
+> > 2) shebang + SPDX -> SPDX will be at the second line;
+> > 3) shebang + coding + SPDX -> SPDX will be at the third line;
+> > 4) coding + SPDX
+> > 
+> >     This is something that only makes sense for Sphinx extensions.
+> > 
+> >     IMHO, I would place SPDX at the second line too, but I *guess* Python
+> >     may accept it at the first line and would still properly evaluate
+> >     coding (as this technically satisfies the text at PEP-263).  
+> 
+> Why you are so restrictive .. 
 
--- 
-With Best Regards,
-Andy Shevchenko
+No idea. I would actually prefer to just remove the restriction, and let
+the SPDX header to be anywhere inside the first comment block inside a 
+file [2].
+
+That's basically how this thread started: other developers think 
+that it is a good idea to be pedantic. So, be it, but let's then fix
+the documentation, as the way it is, it is implicitly forbidding the
+addition of encoding lines for Python scripts.
+
+[2] I *suspect* that the restriction was added in order to make
+    ./scripts/spdxcheck.py to run faster and to avoid false positives.
+    Right now, if the maximum limit is removed (or set to a very high
+    value), there will be one false positive:
+
+	Documentation/dev-tools/kselftest.rst
+
+    This doc has a SPDX-like tag at line 230, asking people to add SPDX
+    headers on files, but the file itself doesn't have its own SPDX tag. 
+	
+> what we normal do:
+> 
+> - write a shebang line if this file is called directly from the
+>    command line .. but we do not need shebangs on py modules which
+>    are imported from other modules or scripts
+> 
+> - write a encoding line if it is need or helpful / mostly it is helpful
+>    to know the encoding of a text/code file.
+> 
+> - add a SPDX tag
+
+Yes, but this violates the current documentation, as it doesn't allow the
+SPDX tag after line #2.
+
+> 
+> At the end we will have files with one, two or all three of this lines.
+> And the oder of this lines is, what I wrote:
+> 
+> >>
+> >> Thats what I mean [1] .. lets patch the description in the license-rules.rst::
+> >>
+> >> - first line for the OS (shebang)
+> >> - second line for environment (python-encoding, editor-mode, ...)
+> >> - third and more lines for application (SPDX use) ..
+> >>
+> >> [1] https://www.mail-archive.com/linux-doc@vger.kernel.org/msg33240.html
+> >>
+> >> -- Markus --
+> >>  
+> >>> This suggests to me that we're adding a bunch of complications that we
+> >>> don't necessarily need.  What am I missing here?
+> >>>
+> >>> Educate me properly and I'll not try to stand in the way of all this...
+> >>>  
+> 
+> 
+> It seems like it is not only me who is mising something .. what are
+> the use-cases we have py-Exceptions, what are the use-cases to be so
+> restrictive as you described above.
+> 
+> .. or did alice get lost in the cave?
+> 
+> Thanks for your patience with me
+> 
+> -- Markus --
 
 
+
+Thanks,
+Mauro
