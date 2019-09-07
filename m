@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA40C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 09:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE660C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 09:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CB7021920
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 09:20:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A91D921907
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 09:20:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567848041;
-	bh=1zaK6ZnV3wsv8dMEaWUfHEylVS6eBCTk6h3i1YXK4uQ=;
+	s=default; t=1567848049;
+	bh=FKDNpqBcuyt8PrcvNXXOdfOUsrAaU52nYkpwBFFp2hw=;
 	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mV4lLvc0kBMQl+jDaHDlpnE/W5IBzTdGcuRyf30eMxfrmznPeD63RMSPw4eqxttF0
-	 N7sP+vkOwXFBjaAeCIK9cOpMKBbqdBE6qkmFs252u6Pw7jvY/NMXqZNErE6RzTHFu5
-	 xJqRv+NzZqKKKESO5fevAvAsBpzU8sVgvtValNa4=
+	b=n5D+dHwa+iUlMGIqZPPvcCniYUeckqXR7SIacxYi/FB8okJvw0K+//RIX1LS1edlx
+	 zeO5i0IlvtYu+leBIQ3L90px3Th0aS8J8glAi4i317D7NlYRHeAtIkUkmy2Y+ZcWqt
+	 WJFeqbHw+GyV4PJ2MZ3JCieaVEnKnvOLLGcJprgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406595AbfIGJUk (ORCPT
+        id S2406625AbfIGJUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 05:20:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59292 "EHLO mail.kernel.org"
+        Sat, 7 Sep 2019 05:20:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388924AbfIGJUg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 05:20:36 -0400
+        id S2406600AbfIGJUp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Sep 2019 05:20:45 -0400
 Received: from localhost.localdomain (unknown [194.230.155.145])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FFAF218AC;
-        Sat,  7 Sep 2019 09:20:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAB5A218AE;
+        Sat,  7 Sep 2019 09:20:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567848034;
-        bh=1zaK6ZnV3wsv8dMEaWUfHEylVS6eBCTk6h3i1YXK4uQ=;
+        s=default; t=1567848044;
+        bh=FKDNpqBcuyt8PrcvNXXOdfOUsrAaU52nYkpwBFFp2hw=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=o5fI3CLlWUzHpiRrTouagu6VEeEpLNcEU9zq7cde/Sn7u0CTvhermqrM8prEWH5IZ
-         c8eHcGigQv9y8MTlPUiKar4JrjmdpSdQc/o3RBQxP1Zc2iC2Ad3SewfJtFSYyTwLph
-         YemWuDElUfrtW4B8MzArJeHRVXJzv6B22GaBjneA=
+        b=jLsyVOCxyNfQThyEvBYXsqSUPxMD2FyRgLjXnwq+p9yFu/1cdHOQ1HGwWnI+rhA1S
+         adTYpVVTsi2hhc2qCOqfmjCjBs343Y4p0/6mN+3/IMCQNhdmucZSY+cjcZvsH4tKmQ
+         WMzI1vSGd4cDGBjz+ULrfv1+hY8AH/H0p/b4rhos=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -56,9 +56,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-iio@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-rtc@vger.kernel.org
-Subject: [PATCH v2 03/11] dt-bindings: arm: samsung: Convert Samsung board/soc bindings to json-schema
-Date:   Sat,  7 Sep 2019 11:19:59 +0200
-Message-Id: <20190907092007.9946-3-krzk@kernel.org>
+Subject: [PATCH v2 05/11] dt-bindings: arm: samsung: Document missing Exynos7 boards bindings
+Date:   Sat,  7 Sep 2019 11:20:01 +0200
+Message-Id: <20190907092007.9946-5-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190907092007.9946-1-krzk@kernel.org>
 References: <20190907092007.9946-1-krzk@kernel.org>
@@ -67,324 +67,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert Samsung S5P and Exynos SoC bindings to DT schema format using
-json-schema.  This is purely conversion of already documented bindings
-so it does not cover all of DTS in the Linux kernel (few S5P/Exynos and
-all S3C are missing).
+Add missing documentation of ARMv8 Samsung Exynos7 SoC based boards
+bindings.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-
 ---
+ .../devicetree/bindings/arm/samsung/samsung-boards.yaml     | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Changes since v1:
-1. Make Google boards latest revision as const.
-2. Split secure firmware into separate schema.
----
- .../bindings/arm/samsung/samsung-boards.txt   |  83 ---------
- .../bindings/arm/samsung/samsung-boards.yaml  | 165 ++++++++++++++++++
- .../arm/samsung/samsung-secure-firmware.yaml  |  31 ++++
- 3 files changed, 196 insertions(+), 83 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
- create mode 100644 Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml
- create mode 100644 Documentation/devicetree/bindings/arm/samsung/samsung-secure-firmware.yaml
-
-diff --git a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
-deleted file mode 100644
-index 56021bf2a916..000000000000
---- a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
-+++ /dev/null
-@@ -1,83 +0,0 @@
--* Samsung's Exynos and S5P SoC based boards
--
--Required root node properties:
--    - compatible = should be one or more of the following.
--	- "samsung,aries"	- for S5PV210-based Samsung Aries board.
--	- "samsung,fascinate4g"	- for S5PV210-based Samsung Galaxy S Fascinate 4G (SGH-T959P) board.
--	- "samsung,galaxys"	- for S5PV210-based Samsung Galaxy S (i9000)  board.
--	- "samsung,artik5"	- for Exynos3250-based Samsung ARTIK5 module.
--	- "samsung,artik5-eval" - for Exynos3250-based Samsung ARTIK5 eval board.
--	- "samsung,monk"	- for Exynos3250-based Samsung Simband board.
--	- "samsung,rinato"	- for Exynos3250-based Samsung Gear2 board.
--	- "samsung,smdkv310"	- for Exynos4210-based Samsung SMDKV310 eval board.
--	- "samsung,trats"	- for Exynos4210-based Tizen Reference board.
--	- "samsung,universal_c210" - for Exynos4210-based Samsung board.
--	- "samsung,i9300"          - for Exynos4412-based Samsung GT-I9300 board.
--	- "samsung,i9305"          - for Exynos4412-based Samsung GT-I9305 board.
--	- "samsung,midas"       - for Exynos4412-based Samsung Midas board.
--	- "samsung,smdk4412",	- for Exynos4412-based Samsung SMDK4412 eval board.
--	- "samsung,n710x"          - for Exynos4412-based Samsung GT-N7100/GT-N7105 board.
--	- "samsung,trats2"	- for Exynos4412-based Tizen Reference board.
--	- "samsung,smdk5250"	- for Exynos5250-based Samsung SMDK5250 eval board.
--	- "samsung,xyref5260"	- for Exynos5260-based Samsung board.
--	- "samsung,smdk5410"	- for Exynos5410-based Samsung SMDK5410 eval board.
--	- "samsung,smdk5420"	- for Exynos5420-based Samsung SMDK5420 eval board.
--	- "samsung,tm2"		- for Exynos5433-based Samsung TM2 board.
--	- "samsung,tm2e"	- for Exynos5433-based Samsung TM2E board.
--
--* Other companies Exynos SoC based
--  * FriendlyARM
--	- "friendlyarm,tiny4412"  - for Exynos4412-based FriendlyARM
--				    TINY4412 board.
--  * TOPEET
--	- "topeet,itop4412-elite" - for Exynos4412-based TOPEET
--                                    Elite base board.
--
--  * Google
--	- "google,pi"		- for Exynos5800-based Google Peach Pi
--				  Rev 10+ board,
--	  also: "google,pi-rev16", "google,pi-rev15", "google,pi-rev14",
--		"google,pi-rev13", "google,pi-rev12", "google,pi-rev11",
--		"google,pi-rev10", "google,peach".
--
--	- "google,pit"		- for Exynos5420-based Google Peach Pit
--				  Rev 6+ (Exynos5420),
--	  also: "google,pit-rev16", "google,pit-rev15", "google,pit-rev14",
--		"google,pit-rev13", "google,pit-rev12", "google,pit-rev11",
--		"google,pit-rev10", "google,pit-rev9", "google,pit-rev8",
--		"google,pit-rev7", "google,pit-rev6", "google,peach".
--
--	- "google,snow-rev4"	- for Exynos5250-based Google Snow board,
--	  also: "google,snow"
--	- "google,snow-rev5"	- for Exynos5250-based Google Snow
--				  Rev 5+ board.
--	- "google,spring"	- for Exynos5250-based Google Spring board.
--
--  * Hardkernel
--	- "hardkernel,odroid-u3"  - for Exynos4412-based Hardkernel Odroid U3.
--	- "hardkernel,odroid-x"   - for Exynos4412-based Hardkernel Odroid X.
--	- "hardkernel,odroid-x2"  - for Exynos4412-based Hardkernel Odroid X2.
--	- "hardkernel,odroid-xu"  - for Exynos5410-based Hardkernel Odroid XU.
--	- "hardkernel,odroid-xu3" - for Exynos5422-based Hardkernel Odroid XU3.
--	- "hardkernel,odroid-xu3-lite" - for Exynos5422-based Hardkernel
--					 Odroid XU3 Lite board.
--	- "hardkernel,odroid-xu4" - for Exynos5422-based Hardkernel Odroid XU4.
--	- "hardkernel,odroid-hc1" - for Exynos5422-based Hardkernel Odroid HC1.
--
--  * Insignal
--	- "insignal,arndale"      - for Exynos5250-based Insignal Arndale board.
--	- "insignal,arndale-octa" - for Exynos5420-based Insignal Arndale
--				    Octa board.
--	- "insignal,origen"       - for Exynos4210-based Insignal Origen board.
--	- "insignal,origen4412"   - for Exynos4412-based Insignal Origen board.
--
--
--Optional nodes:
--    - firmware node, specifying presence and type of secure firmware:
--        - compatible: only "samsung,secure-firmware" is currently supported
--        - reg: address of non-secure SYSRAM used for communication with firmware
--
--	firmware@203f000 {
--		compatible = "samsung,secure-firmware";
--		reg = <0x0203F000 0x1000>;
--	};
 diff --git a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml
-new file mode 100644
-index 000000000000..d8811edf7b7a
---- /dev/null
+index 98401a6db2a0..63acd57c4799 100644
+--- a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml
 +++ b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml
-@@ -0,0 +1,165 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/arm/samsung/samsung-boards.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Samsung Exynos and S5P SoC based boards
-+
-+maintainers:
-+  - Krzysztof Kozlowski <krzk@kernel.org>
-+
-+properties:
-+  $nodename:
-+    const: '/'
-+  compatible:
-+    oneOf:
-+      - description: S5PV210 based Aries boards
+@@ -171,5 +171,11 @@ properties:
+               - samsung,tm2e                    # Samsung TM2E
+           - const: samsung,exynos5433
+ 
++      - description: Exynos7 based boards
 +        items:
 +          - enum:
-+              - samsung,fascinate4g             # Samsung Galaxy S Fascinate 4G (SGH-T959P)
-+              - samsung,galaxys                 # Samsung Galaxy S (i9000)
-+          - const: samsung,aries
-+          - const: samsung,s5pv210
++              - samsung,exynos7-espresso        # Samsung Exynos7 Espresso
++          - const: samsung,exynos7
 +
-+      - description: Exynos3250 based boards
-+        items:
-+          - enum:
-+              - samsung,monk                    # Samsung Simband
-+              - samsung,rinato                  # Samsung Gear2
-+          - const: samsung,exynos3250
-+          - const: samsung,exynos3
-+
-+      - description: Samsung ARTIK5 boards
-+        items:
-+          - enum:
-+              - samsung,artik5-eval             # Samsung ARTIK5 eval board
-+          - const: samsung,artik5               # Samsung ARTIK5 module
-+          - const: samsung,exynos3250
-+          - const: samsung,exynos3
-+
-+      - description: Exynos4210 based boards
-+        items:
-+          - enum:
-+              - insignal,origen                 # Insignal Origen
-+              - samsung,smdkv310                # Samsung SMDKV310 eval
-+              - samsung,trats                   # Samsung Tizen Reference
-+              - samsung,universal_c210          # Samsung C210
-+          - const: samsung,exynos4210
-+          - const: samsung,exynos4
-+
-+      - description: Exynos4412 based boards
-+        items:
-+          - enum:
-+              - friendlyarm,tiny4412            # FriendlyARM TINY4412
-+              - hardkernel,odroid-u3            # Hardkernel Odroid U3
-+              - hardkernel,odroid-x             # Hardkernel Odroid X
-+              - hardkernel,odroid-x2            # Hardkernel Odroid X2
-+              - insignal,origen4412             # Insignal Origen
-+              - samsung,smdk4412                # Samsung SMDK4412 eval
-+              - topeet,itop4412-elite           # TOPEET Elite base
-+          - const: samsung,exynos4412
-+          - const: samsung,exynos4
-+
-+      - description: Samsung Midas family boards
-+        items:
-+          - enum:
-+              - samsung,i9300                   # Samsung GT-I9300
-+              - samsung,i9305                   # Samsung GT-I9305
-+              - samsung,n710x                   # Samsung GT-N7100/GT-N7105
-+              - samsung,trats2                  # Samsung Tizen Reference
-+          - const: samsung,midas
-+          - const: samsung,exynos4412
-+          - const: samsung,exynos4
-+
-+      - description: Exynos5250 based boards
-+        items:
-+          - enum:
-+              - google,snow-rev5                # Google Snow Rev 5+
-+              - google,spring                   # Google Spring
-+              - insignal,arndale                # Insignal Arndale
-+              - samsung,smdk5250                # Samsung SMDK5250 eval
-+          - const: samsung,exynos5250
-+          - const: samsung,exynos5
-+
-+      - description: Google Snow Boards (Rev 4+)
-+        items:
-+          - const: google,snow-rev4
-+          - const: google,snow
-+          - const: samsung,exynos5250
-+          - const: samsung,exynos5
-+
-+      - description: Exynos5260 based boards
-+        items:
-+          - enum:
-+              - samsung,xyref5260               # Samsung Xyref5260 eval
-+          - const: samsung,exynos5260
-+          - const: samsung,exynos5
-+
-+      - description: Exynos5410 based boards
-+        items:
-+          - enum:
-+              - hardkernel,odroid-xu            # Hardkernel Odroid XU
-+              - samsung,smdk5410                # Samsung SMDK5410 eval
-+          - const: samsung,exynos5410
-+          - const: samsung,exynos5
-+
-+      - description: Exynos5420 based boards
-+        items:
-+          - enum:
-+              - insignal,arndale-octa           # Insignal Arndale Octa
-+              - samsung,smdk5420                # Samsung SMDK5420 eval
-+          - const: samsung,exynos5420
-+          - const: samsung,exynos5
-+
-+      - description: Google Peach Pit Boards (Rev 6+)
-+        items:
-+          - const: google,pit-rev16
-+          - const: google,pit-rev15
-+          - const: google,pit-rev14
-+          - const: google,pit-rev13
-+          - const: google,pit-rev12
-+          - const: google,pit-rev11
-+          - const: google,pit-rev10
-+          - const: google,pit-rev9
-+          - const: google,pit-rev8
-+          - const: google,pit-rev7
-+          - const: google,pit-rev6
-+          - const: google,pit
-+          - const: google,peach
-+          - const: samsung,exynos5420
-+          - const: samsung,exynos5
-+
-+      - description: Exynos5800 based boards
-+        items:
-+          - enum:
-+              - hardkernel,odroid-xu3           # Hardkernel Odroid XU3
-+              - hardkernel,odroid-xu3-lite      # Hardkernel Odroid XU3 Lite
-+              - hardkernel,odroid-xu4           # Hardkernel Odroid XU4
-+              - hardkernel,odroid-hc1           # Hardkernel Odroid HC1
-+          - const: samsung,exynos5800
-+          - const: samsung,exynos5
-+
-+      - description: Google Peach Pi Boards (Rev 10+)
-+        items:
-+          - const: google,pi-rev16
-+          - const: google,pi-rev15
-+          - const: google,pi-rev14
-+          - const: google,pi-rev13
-+          - const: google,pi-rev12
-+          - const: google,pi-rev11
-+          - const: google,pi-rev10
-+          - const: google,pi
-+          - const: google,peach
-+          - const: samsung,exynos5800
-+          - const: samsung,exynos5
-+
-+      - description: Exynos5433 based boards
-+        items:
-+          - enum:
-+              - samsung,tm2                     # Samsung TM2
-+              - samsung,tm2e                    # Samsung TM2E
-+          - const: samsung,exynos5433
-+
-+required:
-+  - compatible
-diff --git a/Documentation/devicetree/bindings/arm/samsung/samsung-secure-firmware.yaml b/Documentation/devicetree/bindings/arm/samsung/samsung-secure-firmware.yaml
-new file mode 100644
-index 000000000000..51d23b6f8a94
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/samsung/samsung-secure-firmware.yaml
-@@ -0,0 +1,31 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/arm/samsung/samsung-secure-firmware.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Samsung Exynos Secure Firmware
-+
-+maintainers:
-+  - Krzysztof Kozlowski <krzk@kernel.org>
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: samsung,secure-firmware
-+
-+  reg:
-+    description:
-+      Address of non-secure SYSRAM used for communication with firmware.
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    firmware@203f000 {
-+      compatible = "samsung,secure-firmware";
-+      reg = <0x0203f000 0x1000>;
-+    };
+ required:
+   - compatible
 -- 
 2.17.1
 
