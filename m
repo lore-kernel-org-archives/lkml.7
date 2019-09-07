@@ -2,107 +2,98 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2563C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 20:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB449C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 20:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ED2821835
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 20:24:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 861A721835
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 20:28:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RLvcUd52"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pZBPAUHM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391614AbfIGUYH (ORCPT
+        id S2395254AbfIGU2n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 16:24:07 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33058 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727012AbfIGUYG (ORCPT
+        Sat, 7 Sep 2019 16:28:43 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:46250 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390111AbfIGU2n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 16:24:06 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q10so6725178pfl.0;
-        Sat, 07 Sep 2019 13:24:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kSwXjXzZYKJiCqywH51dxpo2qwU9GV6iT5gLa0TXjcw=;
-        b=RLvcUd52lld4E+8udQ1d806EtK4KC7v/TKuhinRSgzE3aRETZCt2Gq4C35mRt0DHhI
-         3a38H9fkszjh52jqcN7Sf9eNmLFIV5gIgGHa28FjiPrM0EX1Y8fttthqtUrLC59XTuCh
-         WKk+ZzHgzL0d05FkMU8Ha0r8lFt5BjYy7FXJ72HfZ23mI4AHlw5WKVfIG2iouipgiUAY
-         mNCoRsilN7ixpWv+DrOENtYFR8Z3Jmw2ujry6Z7C89SkBXr2M2TUI5ClToGRC5LROBnG
-         1iEItEAmCc5fl9pYRy2Kp4TrelFSEE2mZ6QN/6WLoUbhk5Of41erqjuDxvHpDr4xcvtN
-         kOFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kSwXjXzZYKJiCqywH51dxpo2qwU9GV6iT5gLa0TXjcw=;
-        b=BQ+IHwjDA7nYMtPcwA/X6v/oyuI/3UOP4d/CgkxVKkrripZ+ojin0yn2nqu0ndx/ul
-         dY5zhuR1c/06boHsgpqGbBuqDlrNLrDIUxvCnlzm/cu8nhsaLy7HJi+umHvW35VDSAoa
-         ADcqQ6csWtSE2xEebqToDF4QtQtpsa3TBASDJRUgX1Gprw2ck3CcAv8KrOYlJ0CwMG+j
-         LF3KW+7IyTeDzXfcNf76Ma0RT3LUINFOffCK3ZYKK+juQgdmLVhY7ib+w0Pf++vfjffX
-         MA2UoU1AozsBCom8Qeo8t7geYNxScJUfexDT3dPLrZblDyXYgUOvF97cFzBilOrkXQcA
-         YkTQ==
-X-Gm-Message-State: APjAAAV1wOa4VE+XAV3agSQU28k4Lr+hjJ9JVl/yDpIF1yEui1lts2XS
-        FhxX0jklbEZPXz+inU2OSwkqkpX05RKrEJdBXy5zBNRh
-X-Google-Smtp-Source: APXvYqy7iVRX8NOM2h1P14zFXDH9B6tkp/Hu+ZIT9lRPjZPyaNK0MS3qTgc/lr78H/XX/OQCAU785UiqT1I6AInkvmM=
-X-Received: by 2002:a62:c141:: with SMTP id i62mr18689338pfg.64.1567887845980;
- Sat, 07 Sep 2019 13:24:05 -0700 (PDT)
+        Sat, 7 Sep 2019 16:28:43 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x87KRAWb139849;
+        Sat, 7 Sep 2019 20:28:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=w8NgimeHa/Lsf8fTUxQ2Y+BMdVpCSWzmI3yjOlLde5c=;
+ b=pZBPAUHM0agyXTXCgChTvKXB5y4VyI1gbjmCEUxkKQz37a/DrNRUNbCV5iIiF+ljG8mV
+ 1pYZzkUG2il44BCmT7dJ668kvcLT2oB+CGI/p/6wB/aD+FtR5pTNckMHt/t6dHyGKrIP
+ L5+fR6ZslDnyNjZwPsL3yTLJU1H1oISMQ8zqzIZMcMiIeolIcdSWf2QLTokA3rKPdcWq
+ silDeiHwd6sZkpKBIZ+5R6qJds/X6XnO1QUN+T3OiFPwLloGwwm/VbRe8A0blQpU340g
+ LDWhwuOfcf5Q6bfwdon++YYxJbGP0xyFTkiYfM07ujGtw7up6xK1WHm0jErMaN5LbdTp /Q== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2uvkb2r0nc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 07 Sep 2019 20:28:32 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x87KSUY0024420;
+        Sat, 7 Sep 2019 20:28:32 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2uv2kxhcue-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 07 Sep 2019 20:28:31 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x87KRbhv007608;
+        Sat, 7 Sep 2019 20:27:37 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 07 Sep 2019 13:27:36 -0700
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     James Smart <james.smart@broadcom.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        linux-scsi@vger.kernel.org, Joe Perches <joe@perches.com>,
+        Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
+        rafael@kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH 1/1] scsi: lpfc: Convert existing %pf users to %ps
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190904160423.3865-1-sakari.ailus@linux.intel.com>
+Date:   Sat, 07 Sep 2019 16:27:34 -0400
+In-Reply-To: <20190904160423.3865-1-sakari.ailus@linux.intel.com> (Sakari
+        Ailus's message of "Wed, 4 Sep 2019 19:04:23 +0300")
+Message-ID: <yq1lfuzkg21.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-References: <a68114afb134b8633905f5a25ae7c4e6799ce8f1.camel@perches.com>
-In-Reply-To: <a68114afb134b8633905f5a25ae7c4e6799ce8f1.camel@perches.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 7 Sep 2019 23:23:53 +0300
-Message-ID: <CAHp75Vc=hSTWzSDToijXJGWxiHA1JOA2e8R0YYmETQ+tTfVhYw@mail.gmail.com>
-Subject: Re: [PATCH] docs: printk-formats: Stop encouraging use of unnecessary
- %h[xudi] and %hh[xudi]
-To:     Joe Perches <joe@perches.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Linux Documentation List <linux-doc@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Louis Taylor <louis@kragniz.eu>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9373 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=680
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1909070223
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9373 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=764 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1909070222
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 7, 2019 at 9:15 PM Joe Perches <joe@perches.com> wrote:
->
-> Standard integer promotion is already done and %hx and %hhx is useless
-> so do not encourage the use of %hh[xudi] or %h[xudi].
->
-> As Linus said in:
-> Link: https://lore.kernel.org/lkml/CAHk-=wgoxnmsj8GEVFJSvTwdnWm8wVJthefNk2n6+4TC=20e0Q@mail.gmail.com/
->
-> It's a pointless warning, making for more complex code, and
-> making people remember esoteric printf format details that have no
-> reason for existing.
->
-> The "h" and "hh" things should never be used. The only reason for them
-> being used if if you have an "int", but you want to print it out as a
-> "char" (and honestly, that is a really bad reason, you'd be better off
-> just using a proper cast to make the code more obvious).
->
-> So if what you have a "char" (or unsigned char) you should always just
-> print it out as an "int", knowing that the compiler already did the
-> proper type conversion.
 
-> -               char                    %hhd or %hhx
-> -               short int               %hd or %hx
-> +               char                    %d or %x
-> +               short int               %d or %x
+Sakari,
 
-> +               s8                      %d or %x
-> +               s16                     %d or %x
+> Convert the remaining %pf users to %ps to prepare for the removal of
+> the old %pf conversion specifier support.
 
-This is incorrect. Integral promotions promotes also sign, which will
-produce too many f:s.
+Applied to 5.4/scsi-queue, thanks!
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Martin K. Petersen	Oracle Linux Engineering
