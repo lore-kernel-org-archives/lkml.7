@@ -2,133 +2,161 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MIME_QP_LONG_LINE,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48044C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 18:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB2BFC43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 18:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17FBC218AE
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 18:13:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B575B208C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 18:15:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PfzVUKLs"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="gPB2S/s2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387709AbfIGSN6 (ORCPT
+        id S1727014AbfIGSPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 14:13:58 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40105 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727014AbfIGSN6 (ORCPT
+        Sat, 7 Sep 2019 14:15:13 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41757 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388745AbfIGSPM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 14:13:58 -0400
-Received: by mail-pf1-f193.google.com with SMTP id x127so6618209pfb.7;
-        Sat, 07 Sep 2019 11:13:57 -0700 (PDT)
+        Sat, 7 Sep 2019 14:15:12 -0400
+Received: by mail-pg1-f194.google.com with SMTP id x15so5351730pgg.8
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Sep 2019 11:15:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wqHYZLutmMZ+3gMlYgMzWUPkTeS750+QJLG76FxtJNo=;
-        b=PfzVUKLsocbeEuSnj5bm9x2dSTwd6yGnAoCLr2qVD/CzhZDjgXDb89INZPRVJWcKdT
-         RmPdJPvTRHgGKmA2ct92WGUdd9AsR23aFrVUGmxdumk7OiNJ8bFX7OXZk8r4dW0bBBGN
-         yrpW67nboPeh3hhnY67GAuzKvN++UE9V7lQFmfot6wp0ntmn0F7t42ddrWFiDTNDxiMC
-         ECUS1Ecu43EU2twm6uT22eMGnznpotrYUJVzxdS/4wLi6cEB/xLj6VAP2gOrhBnBvktM
-         /JN6pExBYaB1qfCz3Q7R6GPzpUkl8DPkX00ykb0VYhUGXJ2fqCMyy1wX2f+OZjaaOWEw
-         dJlQ==
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=yCXO2IUW/xP5rGitFpbGKrkQxCFizP24AMzmcKYJo+k=;
+        b=gPB2S/s21fOdrhZkZvzaMRRbkTHlbc79vLkQ8L7Cpmmu8hvbAG6eoC0Dm32QXRGYMY
+         +1LPES8i+LJBkfY/p1yzpRzMMv2odDchTO0YHOkxwFiie7OsEOHDwtOH8zJJ6F9AZyk5
+         MkZFVhvuxPxeMIKfq+G9obcmbfsQBob0Nc70jrYQVbX0W8tNU0vMgyrejbOLHj/PJBII
+         8jO1EQn6kWKOgkBib76U4yxHBzWI3KaSO/lLhJIPi5x1WrjQ3kHOZysmKhg2Dv2MsCh4
+         N/OxZH40a7P6xhJ/lAgfa+dSsRZSJmy+02UKql6Xb3VKWtRKJq/2ht+J5tBxXcxSYFTB
+         1GhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wqHYZLutmMZ+3gMlYgMzWUPkTeS750+QJLG76FxtJNo=;
-        b=MY2xKtxGdv10YlEFHYzowRt6toK+WS6yiUuXANY/JR1DoEiGs5x6MhLzc2/NCo0tks
-         zEteqXACMdbDiCtdKrAxk/mJf4iwW6S1zBgO4v36MzHSgTZaUE+dZTdotCNBOr3UHkpw
-         7NjrIafnl8iderHOHj385Pb4FyhAoxpzw08Xd2ARDMA3xJ5Vuw6S/WHoIsVYaG0goN5x
-         1sbvEhtFX3prygeQUAZcCmTGC5aQW28DL3moNdWV6x0E7XLpko8oCOYt5ajCeT/DIphF
-         06MkW6x8As/aTnyBBt485kwojHIyEDHK/HWuaAcuL7JF5YxJcKmIgfUmfmdfA7JFKM+F
-         r2Kw==
-X-Gm-Message-State: APjAAAX1sGl/1yLudSaFltC3yOT75ieIiBYmJ305jb1LnWbLPD26aeiu
-        uwruWXwAMyi6zoOKqPm5HaADBDicfXeeMRZaRcAFrfV9td82jQ==
-X-Google-Smtp-Source: APXvYqxm8X4QtH8Tq84PuuUvLoXlsR+q0q7eYbFRmZ3IWrN6O2FiF6cJY3g7HFULHm1lDTI5P8sk2m8wFeYlVY6usYI=
-X-Received: by 2002:a17:90a:338b:: with SMTP id n11mr16965169pjb.132.1567880037349;
- Sat, 07 Sep 2019 11:13:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190905120311.15286-1-prarit@redhat.com> <e02287479ad936142a21cbd7c6c00947ca0c5088.camel@linux.intel.com>
-In-Reply-To: <e02287479ad936142a21cbd7c6c00947ca0c5088.camel@linux.intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 7 Sep 2019 21:13:45 +0300
-Message-ID: <CAHp75Vf3KWLue_2UfNTNhDrXBX0YA+FRindbfX0sOzjhUcwKTg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/9] tools-power-x86-intel-speed-select: Fixes and
- updates for output
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc:     Prarit Bhargava <prarit@redhat.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Andriy Shevchenko <andriy.shevchenko@intel.com>,
-        David Arcari <darcari@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=yCXO2IUW/xP5rGitFpbGKrkQxCFizP24AMzmcKYJo+k=;
+        b=asZt369uBcWFtj7ZrlMSgiYRcHK6YW8oytpODJG9KvXRZK2I0KNu150tWhH55GDMkG
+         QhaVpc2w1r08svhQTXhfxqfrs4HuS0t73IgJumCtF76ENlWgBPe9hcHRZWvKXSGB7U2c
+         2jyY6jGOik2mbYvCQAT2BI6MR5I9PMtxMuHLzNYlgGZVlVTNXAvsMUT3cKLu9TvWxuc8
+         QDWSGRlhrf4GX41lLJH0aQsNRGm0j8C4zgTKNmqd1uh3jvaYhguAkppbrDLJv/Ku1Cn4
+         RNuqix5sLr/j4CgBFCfC7kE89mw51SdvbswO75VK0mtlx7QbYWtB7uUAOOOost64yEzn
+         BTIA==
+X-Gm-Message-State: APjAAAV+zhEjL8a4peF04oznMKInhrKBRv8NO3qvaCL/NNdY7Djsni03
+        KADlmyUS0M6vZCZcFuVRSKgJVA==
+X-Google-Smtp-Source: APXvYqwtLHTxDBZPI4nj5nW8UmB/sRAqU0rGQe5gnm9Rg561yB9Atb14l/OoZSzCcZVB4Qk4BIIw8Q==
+X-Received: by 2002:aa7:8b09:: with SMTP id f9mr13154710pfd.23.1567880111917;
+        Sat, 07 Sep 2019 11:15:11 -0700 (PDT)
+Received: from ?IPv6:2600:100f:b121:da37:bc66:d4de:83c7:e0cd? ([2600:100f:b121:da37:bc66:d4de:83c7:e0cd])
+        by smtp.gmail.com with ESMTPSA id x5sm10495873pfn.149.2019.09.07.11.15.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 07 Sep 2019 11:15:11 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v12 11/12] open: openat2(2) syscall
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16G102)
+In-Reply-To: <CAHk-=whe90Ec_RRrMRLE0=bJOHNS9YmVwcytVxmrfK3oCuZF6A@mail.gmail.com>
+Date:   Sat, 7 Sep 2019 11:15:09 -0700
+Cc:     Jeff Layton <jlayton@kernel.org>, Aleksa Sarai <cyphar@cyphar.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christian Brauner <christian@brauner.io>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Aleksa Sarai <asarai@suse.de>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        alpha <linux-alpha@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-ia64@vger.kernel.org,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <EE7399FD-7587-407B-B628-1D92CFD6B120@amacapital.net>
+References: <20190904201933.10736-1-cyphar@cyphar.com> <20190904201933.10736-12-cyphar@cyphar.com> <7236f382d72130f2afbbe8940e72cc67e5c6dce0.camel@kernel.org> <CAHk-=whZx97Nm-gUK0ppofj2RA2LLz2vmaDUTKSSV-+yYB9q_Q@mail.gmail.com> <C81D6D29-F6BF-48E6-A15E-3ABCB2C992E5@amacapital.net> <CAHk-=whe90Ec_RRrMRLE0=bJOHNS9YmVwcytVxmrfK3oCuZF6A@mail.gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 6, 2019 at 10:58 AM Srinivas Pandruvada
-<srinivas.pandruvada@linux.intel.com> wrote:
->
-> On Thu, 2019-09-05 at 08:03 -0400, Prarit Bhargava wrote:
-> > Some general fixes and updates for intel-speed-select.  Fixes include
-> > some
-> > typos as well as an off-by-one cpu count reporting error.  Updates
-> > for the
-> > output are
-> >
-> > - switching to MHz as a standard
-> > - reporting CPU frequencies instead of ratios as a standard
-> > - viewing a human-readable CPU list.
-> > - avoiding reporting "0|1" as success|fail as these can be confusing
-> > for a
-> >   user.
-> >
-> > v2: Add additional patch to fix memory leak and remove help text in
-> > 8/9.
->
-> For the series
->
-> Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
->
 
-Pushed to my review and testing queue, thanks!
+> On Sep 7, 2019, at 10:45 AM, Linus Torvalds <torvalds@linux-foundation.org=
+> wrote:
+>=20
+>> On Sat, Sep 7, 2019 at 10:42 AM Andy Lutomirski <luto@amacapital.net> wro=
+te:
+>>=20
+>> Linus, you rejected resolveat() because you wanted a *nice* API
+>=20
+> No. I rejected resoveat() because it was a completely broken garbage
+> API that couldn't do even basic stuff right (like O_CREAT).
+>=20
+> We have a ton of flag space in the new openat2() model, we might as
+> well leave the old flags alone that people are (a) used to and (b) we
+> have code to support _anyway_.
+>=20
+> Making up a new flag namespace is only going to cause us - and users -
+> more work, and more confusion. For no actual advantage. It's not going
+> to be "cleaner". It's just going to be worse.
+>=20
+>=20
 
+If we keep all the flag bits in the same mask with the same values, then we=E2=
+=80=99re stuck with O_RDONLY=3D0 and everything that implies.  We=E2=80=99ll=
+ have UPGRADE_READ that works differently from the missing plain-old-READ bi=
+t, and we can=E2=80=99t express execute-only-no-read-or-write. This sucks.
 
-> >
-> > Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> > Cc: David Arcari <darcari@redhat.com>
-> > Cc: linux-kernel@vger.kernel.org
-> >
-> > Prarit Bhargava (9):
-> >   tools/power/x86/intel-speed-select: Fix package typo
-> >   tools/power/x86/intel-speed-select: Fix help option typo
-> >   tools/power/x86/intel-speed-select: Fix cpu-count output
-> >   tools/power/x86/intel-speed-select: Simplify output for turbo-freq
-> > and
-> >     base-freq
-> >   tools/power/x86/intel-speed-select: Switch output to MHz
-> >   tools/power/x86/intel-speed-select: Change turbo ratio output to
-> >     maximum turbo frequency
-> >   tools/power/x86/intel-speed-select: Output human readable CPU list
-> >   tools/power/x86/intel-speed-select: Output success/failed for
-> > command
-> >     output
-> >   tools/power/x86/intel-speed-select: Fix memory leak
-> >
-> >  .../x86/intel-speed-select/isst-config.c      |  21 +--
-> >  .../x86/intel-speed-select/isst-display.c     | 120 +++++++++++++---
-> > --
-> >  2 files changed, 98 insertions(+), 43 deletions(-)
-> >
->
+Can we at least split the permission bits into their own mask and make bits 0=
+ and 1 illegal in the main set of flags in openat2?
 
+There=E2=80=99s another thread going on right now about adding a bit along t=
+he lines of =E2=80=9CMAYEXEC=E2=80=9D, and one of the conclusions was that i=
+t should wait for openat2 so that it can have same semantics. If we=E2=80=99=
+re stuck with O_RDONLY and friends, then MAYEXEC is doomed to being at least=
+ a bit nonsensical.
 
---
-With Best Regards,
-Andy Shevchenko
+As an analogy, AMD64 introduced bigger PTEs but kept the same nonsense encod=
+ing of read and write permission. And then we got NX, and now we=E2=80=99re g=
+etting little holes in the encoding stolen by CET to mean new silly things. =
+ I don=E2=80=99t know if you=E2=80=99ve been following the various rounds of=
+ patches, but it is truly horrible. The mapping from meaning to the actual b=
+its is *shit*, and AMD64 should have made a clean break instead.
+
+open()=E2=80=99s permission bits are basically the same situation. And the k=
+ernel *already* has a non-type-safe translation layer. Please, please let op=
+enat2() at least get rid of the turd in open()=E2=80=99s bits 0 and 1.
+
