@@ -2,146 +2,83 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCFD7C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 07:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0A4C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 07:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7EF221871
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 07:38:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="Oyq38yqZ"
+	by mail.kernel.org (Postfix) with ESMTP id 4D92B21835
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 07:42:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405826AbfIGHiB (ORCPT
+        id S2394491AbfIGHmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 03:38:01 -0400
-Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.102]:27252 "EHLO
-        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404968AbfIGHiA (ORCPT
+        Sat, 7 Sep 2019 03:42:06 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:40350 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389509AbfIGHmG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 03:38:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1567841878;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=anVLX26Fedx+F6HcQmrODjYuvY8o8srVCOa6nrVkXYQ=;
-        b=Oyq38yqZrg4JLBZWSSzRgh+RCemrCYqhwEhoKco9QzcBPS62wkJ/olGpggNmAKe3FX
-        Yz5wGjzu46YALHF7YTvA0pGv5FEx3JTy5vvmiJSeBDp+Y17PjlF1Hut3nB4JxL8sOauB
-        q+evpEBdd/dVSmTFaLxmVqSArtlLIW9wzt8vnDICcwX/NgKN/og+/H+sX8omTvKek/Ox
-        7hH2HgufzINcIzoiYb780kyiaV3jD2YrUF3iwhy2ZiosEEQInv3UM5XZkdhEMYim6Cf1
-        XvucdDAdRxvIok/n/KMNDOUribclycUgAVj4umQOzZbqCg4oSOsM5uCJoAzpSAqyeqa8
-        1GBA==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDVCaXAwLbA=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 44.27.0 DYNA|AUTH)
-        with ESMTPSA id u036f9v877bdqba
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Sat, 7 Sep 2019 09:37:39 +0200 (CEST)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [Letux-kernel] [RFC PATCH 0/3] Enable 1GHz support on omap36xx
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <CAHCN7xLW58ggx3CpVL=HdCVHWo6D-MCTB91A_9rtSRoZQ+xJuQ@mail.gmail.com>
-Date:   Sat, 7 Sep 2019 09:37:39 +0200
-Cc:     =?utf-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andreas Kemnade <andreas@kemnade.info>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <FA2920FE-B76A-4D44-A264-862A1CCBF7FC@goldelico.com>
-References: <20190801012823.28730-1-neolynx@gmail.com> <CAHCN7x+nD0J6KZYtfH+0ApQTPO5byO2obMkUwc9Uf4WubyRbTw@mail.gmail.com> <C04F49BA-1229-4E96-9FCF-4FC662D1DB11@goldelico.com> <CAHCN7x+Ye6sB_YqO0sAX1OJDw64B-qGS3pL545v3Xk5z914cwQ@mail.gmail.com> <0C1EF64E-B33C-4BFA-A7D3-471DD1B9EE86@goldelico.com> <515048DE-138D-4400-8168-F2B7D61F1005@goldelico.com> <CAHCN7xLPCX9rZ0+7KVBiA_bgZ6tg6VeCXqD-UXu+6iwpFMPVrA@mail.gmail.com> <7B3D1D77-3E8C-444F-90B9-6DF2641178B8@goldelico.com> <CAHCN7xLW58ggx3CpVL=HdCVHWo6D-MCTB91A_9rtSRoZQ+xJuQ@mail.gmail.com>
-To:     Adam Ford <aford173@gmail.com>
-X-Mailer: Apple Mail (2.3124)
+        Sat, 7 Sep 2019 03:42:06 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1i6VM4-00062S-Mj; Sat, 07 Sep 2019 07:41:56 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Bard Liao <bardliao@realtek.com>,
+        Oder Chiou <oder_chiou@realtek.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: rt1305: make array pd static const, makes object smaller
+Date:   Sat,  7 Sep 2019 08:41:56 +0100
+Message-Id: <20190907074156.21907-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adam,
+From: Colin Ian King <colin.king@canonical.com>
 
-> Am 02.09.2019 um 23:10 schrieb Adam Ford <aford173@gmail.com>:
->=20
-> On Mon, Sep 2, 2019 at 10:46 AM H. Nikolaus Schaller =
-<hns@goldelico.com> wrote:
->>=20
->>=20
->>=20
->> But my tests show that decoding works now. So you already might give =
-it a try.
->=20
-> I am traveling all this week, but I have an omap3530, DM3730
-> (omap3630), and an AM3517 that I use for testing.
+Don't populate the array pd on the stack but instead make it
+static const. Makes the object code smaller by 93 bytes.
 
-now as the omap3430 and omap3630 opp-v2 tables are installed,
-we could add am35x7 as well.
+Before:
+   text	   data	    bss	    dec	    hex	filename
+  38961	   9784	     64	  48809	   bea9	sound/soc/codecs/rt1305.o
 
-What needs to be done:
+After:
+   text	   data	    bss	    dec	    hex	filename
+  38804	   9848	     64	  48716	   be4c	sound/soc/codecs/rt1305.o
 
-1. add OPP-v2 table to am3517.dtsi
+(gcc version 9.2.1, amd64)
 
-for example copy skeleton from omap36xx.dtsi
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ sound/soc/codecs/rt1305.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-and define reasonable clock speeds. I would think about
-150 MHz, 300 MHz, 600MHz.
+diff --git a/sound/soc/codecs/rt1305.c b/sound/soc/codecs/rt1305.c
+index 9909369483f0..e27742abfa76 100644
+--- a/sound/soc/codecs/rt1305.c
++++ b/sound/soc/codecs/rt1305.c
+@@ -608,7 +608,8 @@ static const struct snd_soc_dapm_route rt1305_dapm_routes[] = {
+ 
+ static int rt1305_get_clk_info(int sclk, int rate)
+ {
+-	int i, pd[] = {1, 2, 3, 4, 6, 8, 12, 16};
++	int i;
++	static const int pd[] = {1, 2, 3, 4, 6, 8, 12, 16};
+ 
+ 	if (sclk <= 0 || rate <= 0)
+ 		return -EINVAL;
+-- 
+2.20.1
 
-Debatable is if we need a clock-latency definition.
-
-2. change all voltages to 1.2V
-
-			opp-microvolt =3D <1200000 1200000 1200000>;
-
-There is no point to specify 3 voltages <target min max> here since we
-will never need a min and a max value.
-
-			opp-microvolt =3D <1200000>;
-
-should also be ok (AFAIK, parser handles single-value records).
-
-3. AFAIK there is no speed binned eFuse...
-
-But the ti-cpufreq driver always wants to read some eFuse register.
-
-So please check if you can read 0x4800244C and 0x4830A204
-like on omap36xx and if they produce stable values (and not
-random noise).
-
-If yes, we simply assume that am3517 is similar enough to omap3630,
-ignore that there is no eFuse, but read the register anyways and
-then ignore the bit if it is 0 or 1.
-
-This means that all OPPs can get
-
-			opp-supported-hw =3D <0xffffffff 0xffffffff>;
-
-There could also be a default handler if this property is missing,
-but I have not researched this.
-
-4. add compatible to ti-cpufreq
-and share the register offsets, bit masks etc. with omap3630:
-
-	{ .compatible =3D "ti,am33xx", .data =3D &am3x_soc_data, },
-	{ .compatible =3D "ti,am3517", .data =3D &omap36xx_soc_data, },
-	{ .compatible =3D "ti,am43", .data =3D &am4x_soc_data, },
-	{ .compatible =3D "ti,dra7", .data =3D &dra7_soc_data },
-	{ .compatible =3D "ti,omap3430", .data =3D &omap34xx_soc_data, =
-},
-	{ .compatible =3D "ti,omap3630", .data =3D &omap36xx_soc_data, =
-},
-
-5. configure for CONFIG_ARM_TI_CPUFREQ=3Dy
-
-This should IMHO suffice.
-
-Since I can't test anything I can't define working OPP points
-and therefore I can't provide patches myself. Hope you can make
-it work this way.
-
-BR,
-Nikolaus=
