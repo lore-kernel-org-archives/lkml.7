@@ -2,66 +2,61 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C13C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 15:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E74C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 15:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94E54206A5
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 15:27:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 765B62178F
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 15:34:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394769AbfIGP1W (ORCPT
+        id S2391808AbfIGPeY convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 11:27:22 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:46124 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389504AbfIGP1W (ORCPT
+        Sat, 7 Sep 2019 11:34:24 -0400
+Received: from mxout013.mail.hostpoint.ch ([217.26.49.173]:13139 "EHLO
+        mxout013.mail.hostpoint.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388322AbfIGPeY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 11:27:22 -0400
-Received: from localhost (unknown [88.214.184.0])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id A2579152EECB1;
-        Sat,  7 Sep 2019 08:27:19 -0700 (PDT)
-Date:   Sat, 07 Sep 2019 17:27:17 +0200 (CEST)
-Message-Id: <20190907.172717.2255158302516232597.davem@davemloft.net>
-To:     stefanc@marvell.com
-Cc:     linux@armlinux.org.uk, andrew@lunn.ch, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, shaulb@marvell.com,
-        nadavh@marvell.com, ymarkman@marvell.com, marcin@marvell.com
-Subject: Re: [PATCH] net: phylink: Fix flow control resolution
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1567701978-16056-1-git-send-email-stefanc@marvell.com>
-References: <1567701978-16056-1-git-send-email-stefanc@marvell.com>
-X-Mailer: Mew version 6.8 on Emacs 26.2
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 07 Sep 2019 08:27:21 -0700 (PDT)
+        Sat, 7 Sep 2019 11:34:24 -0400
+Received: from [10.0.2.45] (helo=asmtp012.mail.hostpoint.ch)
+        by mxout013.mail.hostpoint.ch with esmtp (Exim 4.92.2 (FreeBSD))
+        (envelope-from <sandro@volery.com>)
+        id 1i6cjG-000AGh-Kk; Sat, 07 Sep 2019 17:34:22 +0200
+Received: from [213.55.224.80] (helo=[100.100.89.92])
+        by asmtp012.mail.hostpoint.ch with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92.2 (FreeBSD))
+        (envelope-from <sandro@volery.com>)
+        id 1i6cjG-000K7v-GD; Sat, 07 Sep 2019 17:34:22 +0200
+X-Authenticated-Sender-Id: sandro@volery.com
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+From:   Sandro Volery <sandro@volery.com>
+Mime-Version: 1.0 (1.0)
+Date:   Sat, 7 Sep 2019 17:34:21 +0200
+Subject: Re: [PATCH] Fixed parentheses malpractice in apex_driver.c
+Message-Id: <534DB087-C4DC-49A7-93AA-6C7C437DA794@volery.com>
+Cc:     linux-kernel@vger.kernel.org
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+X-Mailer: iPhone Mail (17A5572a)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: <stefanc@marvell.com>
-Date: Thu, 5 Sep 2019 19:46:18 +0300
 
-> From: Stefan Chulski <stefanc@marvell.com>
-> 
-> Regarding to IEEE 802.3-2015 standard section 2
-> 28B.3 Priority resolution - Table 28-3 - Pause resolution
-> 
-> In case of Local device Pause=1 AsymDir=0, Link partner
-> Pause=1 AsymDir=1, Local device resolution should be enable PAUSE
-> transmit, disable PAUSE receive.
-> And in case of Local device Pause=1 AsymDir=1, Link partner
-> Pause=1 AsymDir=0, Local device resolution should be enable PAUSE
-> receive, disable PAUSE transmit.
-> 
-> Signed-off-by: Stefan Chulski <stefanc@marvell.com>
-> Reported-by: Shaul Ben-Mayor <shaulb@marvell.com>
 
-Applied and queued up for -stable, thanks.
+> On 7 Sep 2019, at 16:52, Dan Carpenter <dan.carpenter@oracle.com> wrote:
+> 
+
+Alright, thanks!
+
+Some stupid other question:
+
+On patchwork I entered 'volery' as my username because I didn't know better, and now checkpatch always complains when I add 'signed-off-by' with my actual full name.
+
+How can I avoid that?
+
+Regards,
+Sandro V.
