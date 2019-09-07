@@ -2,91 +2,147 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80383C43140
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 22:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAA2C433EF
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 22:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DBEF218AC
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 22:04:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567893892;
-	bh=yiwL59PzzZwDqWaxr+QzIl79z/yYj6BVf3CAazvxQa4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dkNfDYbtkGpsVn3V51bHeYfFH3SqyCVJCkpOHbgnBP9luKTFvnQe2anVE8kSkMPAz
-	 dTkilkEKTqoaie+wIOERltMUuH0FxlRZ+liBAANP5+3hkN/raowJ0+HNPk9H7Cmk4l
-	 fX92PCHLrAKRrdjtyC006ji0XRwIAzs0bwW8lGIw=
+	by mail.kernel.org (Postfix) with ESMTP id 3E0D721835
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 22:45:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395308AbfIGWEv (ORCPT
+        id S2392433AbfIGWpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 18:04:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48930 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727736AbfIGWEv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 18:04:51 -0400
-Received: from localhost (unknown [62.28.240.114])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68A18208C3;
-        Sat,  7 Sep 2019 22:04:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567893890;
-        bh=yiwL59PzzZwDqWaxr+QzIl79z/yYj6BVf3CAazvxQa4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Xb1cdUK+gOyCZxk6wzqajZPJ3U5XmY5rN//nLEvUtI2t3QxrBR6ALsvM2aDgnsboD
-         fmHB+3Q9GZ0K4B8/B/2hFEizl3jwiZs7zjELO8TbmimVKSAFk67e7VwFUSJP/JgyCJ
-         NqEUenQppKK/MntPBcZcACUH0A3M3j8JI/6nNs0c=
-Date:   Sat, 7 Sep 2019 18:04:48 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Doug Anderson <dianders@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "# 4.0+" <stable@vger.kernel.org>,
-        Vadim Sukhomlinov <sukhomlinov@google.com>,
-        linux-integrity@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>
-Subject: Re: [PATCH AUTOSEL 4.19 126/167] tpm: Fix TPM 1.2 Shutdown sequence
- to prevent future TPM operations
-Message-ID: <20190907220448.GB2012@sasha-vm>
-References: <20190903162519.7136-1-sashal@kernel.org>
- <20190903162519.7136-126-sashal@kernel.org>
- <CAD=FV=W0YodeoOCiCv9zmv+-gswuU8U_XgrBnesE=wynTbDBiA@mail.gmail.com>
- <20190903165346.hwqlrin77cmzjiti@cantor>
- <20190903194335.GG5281@sasha-vm>
- <f2224c094836a4b8989c1cd6243a0b7ad1261a87.camel@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <f2224c094836a4b8989c1cd6243a0b7ad1261a87.camel@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sat, 7 Sep 2019 18:45:43 -0400
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:59180 "EHLO
+        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727008AbfIGWpn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Sep 2019 18:45:43 -0400
+Received: from mr5.cc.vt.edu (mr5.cc.vt.edu [IPv6:2607:b400:92:8400:0:72:232:758b])
+        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x87Mjfje020111
+        for <linux-kernel@vger.kernel.org>; Sat, 7 Sep 2019 18:45:41 -0400
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+        by mr5.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x87MjZTR031239
+        for <linux-kernel@vger.kernel.org>; Sat, 7 Sep 2019 18:45:40 -0400
+Received: by mail-qt1-f197.google.com with SMTP id n59so11030033qtd.8
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Sep 2019 15:45:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-transfer-encoding:date:message-id;
+        bh=/6kA56aQB2rpYIanrtLDCa2hCGf5VimosArLW5oScDM=;
+        b=Apquphsi2yfZGee7Cmq1+mH9luA+Efqm9iM9a3nTmM0xgWkRkvLA0xwOR3iIwZr6IB
+         h//NaP7RLucUnn6kjmfYc8qOI5AposYLK5iohlUT/qKT6fKRRJOKTsEQJHml+jx7XMbV
+         yAgLz0fiptF6SMLh1B04PBRRhyd8Vvhy6H2oornIxYWvwLevxrE/11Y/iLUcogVkUvaG
+         IIO1lThE6SIRwN70zbtjnXdA13ZKlHgbHc8eF5z8FR0H28Z6P/nbs4gLtYQ2Vxuj7Ztr
+         ZSIIDigtfmMwoeOEfKABef5YWp2Glx8Q9O+ZVc4o3sfTTp8CipeaC4h/5oD/nbYm/2Lv
+         VvFQ==
+X-Gm-Message-State: APjAAAWq80XetbPJrZsZn2cZ0vQE6C+Nye8Iu/SXTw1QmYsJEwGwSeoq
+        RW/21hel2fHr4dbD+/RRzahwWJ1x+0fyzJ1cnY8ZUWHMRwapWlboTQYiKi3vSonGd3rVCKsH4G5
+        d5B4iqD+yAG1HNEBnIAuq/7gpsonEvP2Ixsk=
+X-Received: by 2002:ae9:f015:: with SMTP id l21mr15414572qkg.35.1567896335563;
+        Sat, 07 Sep 2019 15:45:35 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwCoUfhCNUjzUPYyc+PfkgUSd3QU8LrT71A/JqRfAqS/yaYDJKlaSf3EmKKI6wExKDziiSqCw==
+X-Received: by 2002:ae9:f015:: with SMTP id l21mr15414557qkg.35.1567896335317;
+        Sat, 07 Sep 2019 15:45:35 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:4341::359])
+        by smtp.gmail.com with ESMTPSA id n187sm4651747qkc.98.2019.09.07.15.45.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 Sep 2019 15:45:33 -0700 (PDT)
+From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Theodore Dubois <tbodt@google.com>
+Cc:     a.p.zijlstra@chello.nl, linux-kernel@vger.kernel.org,
+        kernelnewbies@kernelnewbies.org
+Subject: Re: perf_event wakeup_events = 0
+In-Reply-To: <123C743E-C322-45DB-8796-BF6B6EE9CA80@google.com>
+References: <CAN3rvwA+Dnqj4O79f6rNfO50VjbAC3YwJ7CW2ze2aBLzkSJRgQ@mail.gmail.com> <943813.1567863629@turing-police>
+ <123C743E-C322-45DB-8796-BF6B6EE9CA80@google.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="==_Exmh_1567896330_4251P";
+         micalg=pgp-sha1; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 7bit
+Date:   Sat, 07 Sep 2019 18:45:31 -0400
+Message-ID: <972489.1567896331@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 07, 2019 at 09:55:18PM +0300, Jarkko Sakkinen wrote:
->On Tue, 2019-09-03 at 15:43 -0400, Sasha Levin wrote:
->> Right. I gave a go at backporting a few patches and this happens to be
->> one of them. It will be a while before it goes in a stable tree
->> (probably way after after LPC).
->
->It *semantically* depends on
->
->db4d8cb9c9f2 ("tpm: use tpm_try_get_ops() in tpm-sysfs.c.")
->
->I.e. can cause crashes without the above patch. As a code change your
->patch is fine but it needs the above patch backported to work in stable
->manner.
->
->So... either I can backport that one (because ultimately I have
->responsibility to do that as the maintainer) but if you want to finish
->this one that is what you need to backport in addition and then it
->should be fine.
+--==_Exmh_1567896330_4251P
+Content-Type: text/plain; charset=us-ascii
 
-If you're ok with the backport of this commit, I can just add
-db4d8cb9c9f2 on top.
+On Sat, 07 Sep 2019 09:14:49 -0700, Theodore Dubois said:
 
---
-Thanks,
-Sasha
+Reading what it actually says rather than what I thought it said.. :)
+
+       Events come in two flavors: counting and sampled.  A counting event  is
+       one  that  is  used  for  counting  the aggregate number of events that
+       occur.  In general, counting event results are gathered with a  read(2)
+       call.   A  sampling  event periodically writes measurements to a buffer
+       that can then be accessed via mmap(2).
+
+For some reason, I was thinking counting events.  -ENOCAFFEINE. :)
+
+> sample_freq is 4000 (and freq is 1). Here’s the man page on this field:
+>
+>        sample_period, sample_freq
+>               A "sampling" event is one that generates an  overflow  notifica‐
+>               tion  every N events, where N is given by sample_period.  A sam‐
+>               pling event has sample_period > 0.
+
+There's this part:
+>               pling event has sample_period > 0.   When  an  overflow  occurs,
+>               requested  data is recorded in the mmap buffer.  The sample_type
+>               field controls what data is recorded on each overflow.
+
+So an entry is made in the buffer. It's not clear that this immediately triggers
+a signal...
+
+   MMAP layout
+       When using perf_event_open() in sampled mode, asynchronous events (like
+       counter overflow or PROT_EXEC mmap tracking) are logged  into  a  ring-
+       buffer.  This ring-buffer is created and accessed through mmap(2).
+
+       The mmap size should be 1+2^n pages, where the first page is a metadata
+       page (struct perf_event_mmap_page) that contains various bits of infor?
+       mation such as where the ring-buffer head is.
+
+So you need to look at what size mmap buffer is being allocated.  It's *probably*
+on the order of megabytes, so that you can buffer a fairly large number of entries
+and not take several user/kernel transitions on every single entry...
+
+> If I’m reading this right, this is a sampling event which overflows 4000 times a second.
+
+And 4,000 entries are made in the buffer per second..
+
+> But perf then does a poll call which wakes up on this FD with POLLIN after
+> 1.637 seconds, instead of 0.00025 seconds
+
+At which point perf goes and looks at several thousand entries in the ring buffer...
+
+--==_Exmh_1567896330_4251P
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Comment: Exmh version 2.9.0 11/07/2018
+
+iQIVAwUBXXQzCgdmEQWDXROgAQKDoxAAkZ+wx9S0PL9octbbGAiuxv0CpxWngMqC
+fEIT+8vDMnOoc15M4RlUUOtSsvsZ3NPjyqY1xJAx3WpW9735VQ3gS5KP/g8Th2r4
+qus8R8bYrGyfumYGjMWimSkyxEauElyKHv+WjSmIzsWg9jtc5qdBhlFYuigu2TN7
+/9I6WzUsGPxLIp39psSOWJO7YoC8y1DIPeyU9Tk+kUOBBZj76lQ6Z6zIT2Plb7R0
+BRBq7wO6LqIiuC8Zg5UkyoyllXs8KNuFCtxMwYxUxeGtQe2i82U2UGQcBPigiv/F
+N5Jc4ps48o8xaVs0B+l8KKRJ3B/NmGw9nf1LXBeQgrgLhFxcbnm6q16sPkhiWyK2
+diwcL7Xl2hbtAKDTozWWXgg0Iid+Dy9Qt6nQY6Li/XPWEiF4xV9CRED2qv/Y717x
+PCCDxTE9JhCng15yPBwR67cjWQYE7hNtxf06ZaaFHAHtiZju6UqCCpAfM9UiUzUh
+YEjRkMhAML3fS3G+NwJmjBBc71sBluNMMkPcmdX3E8aEnxkkMzeWN33klN5ux4bE
+WHGXAuCHe9wPybfHpbJo/xhHFwYSvAJfc7wKDS/AIiJimn5gGvMaah3e5fWqJLXp
+juIlpBc5P0pbJv51TWuuHYjZW4R0yRdpxlNfJtCFV9VPdR15SqQWMBJ5fAG/jdDh
+cCc9IpFngjo=
+=OaMg
+-----END PGP SIGNATURE-----
+
+--==_Exmh_1567896330_4251P--
