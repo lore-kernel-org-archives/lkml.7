@@ -2,405 +2,190 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1357C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 02:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF0EC43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 02:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F4E92186A
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 02:48:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3557C20842
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 02:53:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="EonH+7o5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388694AbfIGCso (ORCPT
+        id S2389971AbfIGCx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 22:48:44 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:45931 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733080AbfIGCso (ORCPT
+        Fri, 6 Sep 2019 22:53:27 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:30159 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726940AbfIGCx0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 22:48:44 -0400
-Received: by mail-io1-f66.google.com with SMTP id f12so17184439iog.12;
-        Fri, 06 Sep 2019 19:48:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Jdnn1qcqf+HDYLu8f6vKIBbz4GYFW8dtq9yIl2VgXDE=;
-        b=BXOy6gf+IUrONzYrnaC2L0TV37PA2azZ57IFd4MDYnOylamWSMxD8ymd9iXtm5W2+H
-         wevc2VTheCTzyHMZBYvIuq1ea4Spkh3yOhRBRrirNWVyk1+Nqme8JDA3nxtBkYl9g1AK
-         6TPQEQchsTzB5GbQCiKc1nRKLYLbhc2oR2YaZx7qzy8En+WiIiqtJHval3LarsqZJiEF
-         C/sJyeKPu+8FpIyBzsl9mDjxet147rGQUgs6+UTkHbl1VOQhOAPLsCHwFL4T5IEb6Yc9
-         ZRO7aA43puicvMtBPdMxBjiJ53BDXz8w+XARKEzR3j8A8IyZSP7S2FRr31lgLtEzoNPX
-         PCNg==
-X-Gm-Message-State: APjAAAXLSni2uNdqVrI8LX2hZM9NQVfVwYdIg3UxRQ7WyQ0UldUdb4lq
-        Zn1cire5lO54GtHiRp3PXCC6FrwkzQ7VfjOzJRc=
-X-Google-Smtp-Source: APXvYqy6s93HUiOJEwd8rZymGSwnhkZmw58+50IrBSzo0kJr8BHG9v7CPA+R3CuYQgwkmExqy/tEKi8altIOQatC26Y=
-X-Received: by 2002:a5d:8f86:: with SMTP id l6mr370367iol.270.1567824522658;
- Fri, 06 Sep 2019 19:48:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190905144316.12527-1-jiaxun.yang@flygoat.com> <20190905144316.12527-15-jiaxun.yang@flygoat.com>
-In-Reply-To: <20190905144316.12527-15-jiaxun.yang@flygoat.com>
-From:   Huacai Chen <chenhc@lemote.com>
-Date:   Sat, 7 Sep 2019 10:53:17 +0800
-Message-ID: <CAAhV-H7jzUZr9fGHF_=F3pri9F3zN3ygHhd3xWZevOugaStcfA@mail.gmail.com>
-Subject: Re: [PATCH v2 14/19] MIPS: Loongson64: Add generic dts
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     "open list:MIPS" <linux-mips@vger.kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.co>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 6 Sep 2019 22:53:26 -0400
+Received: from grover.flets-west.jp (softbank126125143222.bbtec.net [126.125.143.222]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id x872qesW001419;
+        Sat, 7 Sep 2019 11:52:40 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x872qesW001419
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1567824760;
+        bh=PZoVAwxKRkB7MOfjTWAYsfkZTV9kTLCPSHxAD3utiuY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=EonH+7o5xKFuLJ5IxqfdqYayAom+ScKrLvK7VWcGlHqNtGlulbEYWqKAEI6ekCkUi
+         nLtSLhAW+8615lzL5tUNGXLK8gxQ4wr4CzCUN97Qnj5D6BcRnPFjCr0WyaDEmuVoDP
+         M4/ApHJh2pCXelDO7eC+bjEm0RyV/pZ6zX9xBWJYTWZMQY5l6Q71vg/QxUUOtzyJou
+         JiyCJz/NvJVnvIpAJzovT2SFoPfxNKeWLCuIA2Sm+AlrGAfCKN7KGdJC1DW1SbxQE3
+         bKlQ8aJj5Nj4spQkuNEKpxAy9N5cMgDk9HZA0gNEhCuFjRFf9zI+GpB+g3gqPr27gV
+         NQ1PIr8KuWHjw==
+X-Nifty-SrcIP: [126.125.143.222]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] kbuild: allow Clang to find unused static inline functions for W=1 build
+Date:   Sat,  7 Sep 2019 11:52:36 +0900
+Message-Id: <20190907025236.31393-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 5, 2019 at 10:47 PM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
->
-> Add generic device dts for Loongson-3 devices.
-> They seems identical but will be different later.
->
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
->  arch/mips/Kconfig                           |  4 +-
->  arch/mips/boot/dts/Makefile                 |  1 +
->  arch/mips/boot/dts/loongson/3a-package.dtsi | 69 +++++++++++++++++++++
->  arch/mips/boot/dts/loongson/3a1000_780e.dts | 10 +++
->  arch/mips/boot/dts/loongson/3a2000_780e.dts | 10 +++
->  arch/mips/boot/dts/loongson/3a3000_780e.dts | 10 +++
->  arch/mips/boot/dts/loongson/3b-package.dtsi | 69 +++++++++++++++++++++
->  arch/mips/boot/dts/loongson/3b1x00_780e.dts | 10 +++
->  arch/mips/boot/dts/loongson/Makefile        |  5 ++
->  arch/mips/boot/dts/loongson/rs780e-pch.dtsi | 35 +++++++++++
->  10 files changed, 222 insertions(+), 1 deletion(-)
->  create mode 100644 arch/mips/boot/dts/loongson/3a-package.dtsi
->  create mode 100644 arch/mips/boot/dts/loongson/3a1000_780e.dts
->  create mode 100644 arch/mips/boot/dts/loongson/3a2000_780e.dts
->  create mode 100644 arch/mips/boot/dts/loongson/3a3000_780e.dts
->  create mode 100644 arch/mips/boot/dts/loongson/3b-package.dtsi
->  create mode 100644 arch/mips/boot/dts/loongson/3b1x00_780e.dts
->  create mode 100644 arch/mips/boot/dts/loongson/Makefile
->  create mode 100644 arch/mips/boot/dts/loongson/rs780e-pch.dtsi
->
-> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-> index b6bdd96ec74e..5bad9aafcbdf 100644
-> --- a/arch/mips/Kconfig
-> +++ b/arch/mips/Kconfig
-> @@ -489,6 +489,8 @@ config MACH_LOONGSON64
->         select SYS_SUPPORTS_LITTLE_ENDIAN
->         select ZONE_DMA32
->         select SYS_SUPPORTS_ZBOOT
-> +       select USE_OF
-> +       select BUILTIN_DTB
->         help
->           This enables the support of Loongson-3A/3B/2-series-soc processors
->
-> @@ -3047,7 +3049,7 @@ endchoice
->  choice
->         prompt "Kernel command line type" if !CMDLINE_OVERRIDE
->         default MIPS_CMDLINE_FROM_DTB if USE_OF && !ATH79 && !MACH_INGENIC && \
-> -                                        !MIPS_MALTA && \
-> +                                        !MACH_LOONGSON64 && !MIPS_MALTA && \
->                                          !CAVIUM_OCTEON_SOC
->         default MIPS_CMDLINE_FROM_BOOTLOADER
->
-> diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
-> index 1e79cab8e269..d429a69bfe30 100644
-> --- a/arch/mips/boot/dts/Makefile
-> +++ b/arch/mips/boot/dts/Makefile
-> @@ -4,6 +4,7 @@ subdir-y        += cavium-octeon
->  subdir-y       += img
->  subdir-y       += ingenic
->  subdir-y       += lantiq
-> +subdir-y       += loongson
->  subdir-y       += mscc
->  subdir-y       += mti
->  subdir-y       += netlogic
-> diff --git a/arch/mips/boot/dts/loongson/3a-package.dtsi b/arch/mips/boot/dts/loongson/3a-package.dtsi
-> new file mode 100644
-> index 000000000000..739cf43c7310
-> --- /dev/null
-> +++ b/arch/mips/boot/dts/loongson/3a-package.dtsi
-> @@ -0,0 +1,69 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +/ {
-> +       #address-cells = <2>;
-> +       #size-cells = <2>;
-> +
-> +       cpuintc: interrupt-controller {
-> +               #address-cells = <0>;
-> +               #interrupt-cells = <1>;
-> +               interrupt-controller;
-> +               compatible = "mti,cpu-interrupt-controller";
-> +       };
-> +
-> +       package@0 {
-> +               compatible = "simple-bus";
-> +               #address-cells = <2>;
-> +               #size-cells = <1>;
-> +               ranges = <0 0x1fe00000 0 0x1fe00000 0x100000
-> +                               0 0x3ff00000 0 0x3ff00000 0x100000
-> +                               0xEFD 0xFB000000 0xEFD 0xFB000000 0x10000000 /* 3A HT Config Space */>;
-> +
-> +               iointc: interrupt-controller@3ff01400 {
-> +                       compatible = "loongson,ls3-iointc";
-> +                       reg = <0 0x3ff01400 0x64>;
-> +
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <2>;
-> +
-> +                       interrupt-parent = <&cpuintc>;
-> +                       interrupts = <2>;
-> +                       };
-> +
-> +               cpu_uart0: serial@1fe001e0 {
-> +                       device_type = "serial";
-> +                       compatible = "ns16550a";
-> +                       reg = <0 0x1fe001e0 0x8>;
-> +                       clock-frequency = <33000000>;
-> +                       interrupt-parent = <&iointc>;
-> +                       interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
-> +                       no-loopback-test;
-> +               };
-> +
-> +               cpu_uart1: serial@1fe001e8 {
-> +                       status = "disabled";
-> +                       device_type = "serial";
-> +                       compatible = "ns16550a";
-> +                       reg = <0 0x1fe001e8 0x8>;
-> +                       clock-frequency = <33000000>;
-> +                       interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
-> +                       interrupt-parent = <&iointc>;
-> +                       no-loopback-test;
-> +               };
-> +
-> +               htintc: interrupt-controller@0xEFDFB000080 {
-> +                       compatible = "loongson,ls3-htintc";
-> +                       reg = <0xEFD 0xFB000080 0x100>;
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <1>;
-> +
-> +                       interrupt-parent = <&iointc>;
-> +                       interrupts = <24 IRQ_TYPE_LEVEL_HIGH>,
-> +                                               <25 IRQ_TYPE_LEVEL_HIGH>,
-> +                                               <26 IRQ_TYPE_LEVEL_HIGH>,
-> +                                               <27 IRQ_TYPE_LEVEL_HIGH>;
-> +               };
-> +       };
-> +};
+GCC and Clang have different policy for -Wunused-function; GCC does not
+warn unused static inline functions at all whereas Clang does if they
+are defined in source files instead of included headers although it has
+been suppressed since commit abb2ea7dfd82 ("compiler, clang: suppress
+warning for unused static inline functions").
 
-Hi, Jiaxun,
+We often miss to delete unused functions where 'static inline' is used
+in *.c files since there is no tool to detect them. Unused code remains
+until somebody notices. For example, commit 075ddd75680f ("regulator:
+core: remove unused rdev_get_supply()").
 
-I'm very glad to see that dts files become less in this version, but I
-think we also don't need to distinguish cpu types (i.e.,
-3a1000/3b1500/3a2000/3a3000). Then, we only need three dts files
-(loongson3_ls2h.dts, loongson3_ls7a.dts, loongson3_rs780.dts) which is
-the same as in our own git repository. If we really need to
-distinguish cpu type, PRID or CPUCFG in Loongson-3A4000 is more
-suitable than dts. In other words, I want dts only do as minimal as
-possible.
+Let's remove __maybe_unused from the inline macro to allow Clang to
+start finding unused static inline functions. For now, we do this only
+for W=1 build since it is not a good idea to sprinkle warnings for the
+normal build (e.g. 35 warnings for arch/x86/configs/x86_64_defconfig).
 
-Huacai
+My initial attempt was to add -Wno-unused-function for no W= build
+(https://lore.kernel.org/patchwork/patch/1120594/)
 
-> diff --git a/arch/mips/boot/dts/loongson/3a1000_780e.dts b/arch/mips/boot/dts/loongson/3a1000_780e.dts
-> new file mode 100644
-> index 000000000000..dc1afe9410c8
-> --- /dev/null
-> +++ b/arch/mips/boot/dts/loongson/3a1000_780e.dts
-> @@ -0,0 +1,10 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/dts-v1/;
-> +
-> +#include "3a-package.dtsi"
-> +#include "rs780e-pch.dtsi"
-> +
-> +/ {
-> +       compatible = "loongson,ls3a1000-780e";
-> +};
-> diff --git a/arch/mips/boot/dts/loongson/3a2000_780e.dts b/arch/mips/boot/dts/loongson/3a2000_780e.dts
-> new file mode 100644
-> index 000000000000..621e0d3b5fbd
-> --- /dev/null
-> +++ b/arch/mips/boot/dts/loongson/3a2000_780e.dts
-> @@ -0,0 +1,10 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/dts-v1/;
-> +
-> +#include "3a-package.dtsi"
-> +#include "rs780e-pch.dtsi"
-> +
-> +/ {
-> +       compatible = "loongson,ls3a2000-780e";
-> +};
-> diff --git a/arch/mips/boot/dts/loongson/3a3000_780e.dts b/arch/mips/boot/dts/loongson/3a3000_780e.dts
-> new file mode 100644
-> index 000000000000..f170f1c2189d
-> --- /dev/null
-> +++ b/arch/mips/boot/dts/loongson/3a3000_780e.dts
-> @@ -0,0 +1,10 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/dts-v1/;
-> +
-> +#include "3a-package.dtsi"
-> +#include "rs780e-pch.dtsi"
-> +
-> +/ {
-> +       compatible = "loongson,ls3a3000-780e";
-> +};
-> diff --git a/arch/mips/boot/dts/loongson/3b-package.dtsi b/arch/mips/boot/dts/loongson/3b-package.dtsi
-> new file mode 100644
-> index 000000000000..af6e115d33c0
-> --- /dev/null
-> +++ b/arch/mips/boot/dts/loongson/3b-package.dtsi
-> @@ -0,0 +1,69 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +/ {
-> +       #address-cells = <2>;
-> +       #size-cells = <2>;
-> +
-> +       cpuintc: interrupt-controller {
-> +               #address-cells = <0>;
-> +               #interrupt-cells = <1>;
-> +               interrupt-controller;
-> +               compatible = "mti,cpu-interrupt-controller";
-> +       };
-> +
-> +       package@0 {
-> +               compatible = "simple-bus";
-> +               #address-cells = <2>;
-> +               #size-cells = <1>;
-> +               ranges = <0 0x1fe00000 0 0x1fe00000 0x100000
-> +                               0 0x3ff00000 0 0x3ff00000 0x100000
-> +                               0x1EFD 0xFB000000 0x1EFD 0xFB000000 0x10000000 /* 3B HT Config Space */>;
-> +
-> +               iointc: interrupt-controller@3ff01400 {
-> +                       compatible = "loongson,ls3-iointc";
-> +                       reg = <0 0x3ff01400 0x64>;
-> +
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <2>;
-> +
-> +                       interrupt-parent = <&cpuintc>;
-> +                       interrupts = <2>;
-> +                       };
-> +
-> +               cpu_uart0: serial@1fe001e0 {
-> +                       device_type = "serial";
-> +                       compatible = "ns16550a";
-> +                       reg = <0 0x1fe001e0 0x8>;
-> +                       clock-frequency = <33000000>;
-> +                       interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
-> +                       interrupt-parent = <&iointc>;
-> +                       no-loopback-test;
-> +               };
-> +
-> +               cpu_uart1: serial@1fe001e8 {
-> +                       status = "disabled";
-> +                       device_type = "serial";
-> +                       compatible = "ns16550a";
-> +                       reg = <0 0x1fe001e8 0x8>;
-> +                       clock-frequency = <33000000>;
-> +                       interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
-> +                       interrupt-parent = <&iointc>;
-> +                       no-loopback-test;
-> +               };
-> +
-> +               htintc: interrupt-controller@0x1EFDFB000080 {
-> +                       compatible = "loongson,ls3-htintc";
-> +                       reg = <0x1EFD 0xFB000080 0x100>;
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <1>;
-> +
-> +                       interrupt-parent = <&iointc>;
-> +                       interrupts = <24 IRQ_TYPE_LEVEL_HIGH>,
-> +                                               <25 IRQ_TYPE_LEVEL_HIGH>,
-> +                                               <26 IRQ_TYPE_LEVEL_HIGH>,
-> +                                               <27 IRQ_TYPE_LEVEL_HIGH>;
-> +               };
-> +       };
-> +};
-> diff --git a/arch/mips/boot/dts/loongson/3b1x00_780e.dts b/arch/mips/boot/dts/loongson/3b1x00_780e.dts
-> new file mode 100644
-> index 000000000000..9b0dff0b1482
-> --- /dev/null
-> +++ b/arch/mips/boot/dts/loongson/3b1x00_780e.dts
-> @@ -0,0 +1,10 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/dts-v1/;
-> +
-> +#include "3b-package.dtsi"
-> +#include "rs780e-pch.dtsi"
-> +
-> +/ {
-> +       compatible = "loongson,ls3b-780e";
-> +};
-> diff --git a/arch/mips/boot/dts/loongson/Makefile b/arch/mips/boot/dts/loongson/Makefile
-> new file mode 100644
-> index 000000000000..a225d84a521e
-> --- /dev/null
-> +++ b/arch/mips/boot/dts/loongson/Makefile
-> @@ -0,0 +1,5 @@
-> +# SPDX_License_Identifier: GPL_2.0
-> +dtb-$(CONFIG_MACH_LOONGSON64)  += 3a1000_780e.dtb 3a2000_780e.dtb 3a3000_780e.dtb 3b1x00_780e.dtb \
-> +
-> +
-> +obj-$(CONFIG_BUILTIN_DTB)      += $(addsuffix .o, $(dtb-y))
-> diff --git a/arch/mips/boot/dts/loongson/rs780e-pch.dtsi b/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
-> new file mode 100644
-> index 000000000000..915363eafa2f
-> --- /dev/null
-> +++ b/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
-> @@ -0,0 +1,35 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/ {
-> +       pch {
-> +               compatible = "simple-bus";
-> +               #address-cells = <2>;
-> +               #size-cells = <1>;
-> +               ranges = <0x000 0x10000000 0x000 0x10000000 0x10000000
-> +                         0x000 0x40000000 0x000 0x40000000 0x40000000>;
-> +
-> +               isa {
-> +                       compatible = "isa";
-> +                       #address-cells = <2>;
-> +                       #size-cells = <1>;
-> +                       ranges = <1 0 0 0 0x1000>;
-> +
-> +                       i8259: interrupt-controller@20 {
-> +                               compatible = "intel,i8259";
-> +                               interrupt-controller;
-> +                               #interrupt-cells = <1>;
-> +                               plat-poll;
-> +                               interrupts = <0>, <1>, <2>, <3>, <4>, <5>, <6>, <7>,
-> +                                                       <8>, <9>, <10>, <11>, <12>, <13>, <14>, <15>;
-> +                               interrupt-parent = <&htintc>;
-> +                       };
-> +
-> +                       rtc0: rtc@70 {
-> +                               compatible = "motorola,mc146818";
-> +                               reg = <1 0x70 0x8>;
-> +                               interrupts = <8>;
-> +                               interrupt-parent = <&i8259>;
-> +                       };
-> +               };
-> +       };
-> +};
-> --
-> 2.22.0
->
+Nathan Chancellor pointed out that would weaken Clang's checks since
+we would no longer get -Wunused-function without W=1. It is true GCC
+would catch unused static non-inline functions, but it would weaken
+Clang as a standalone compiler, at least.
+
+Hence, here is a counter implementation. The current problem is, W=...
+only controls compiler flags, which are globally effective. There is
+no way to address only 'static inline' functions.
+
+This commit defines KBUILD_EXTRA_WARN[123] corresponding to W=[123].
+When KBUILD_EXTRA_WARN1 is defined, __maybe_unused is omitted from
+the 'inline' macro.
+
+The new macro __inline_maybe_unused makes the code a bit uglier, so I
+hope we can remove it entirely after fixing most of the warnings.
+
+If you contribute to code clean-up, please run "make CC=clang W=1"
+and check -Wunused-function warnings. You will find lots of unused
+functions.
+
+Some of them are false-positives because the call-sites are disabled
+by #ifdef. I do not like to abuse the inline keyword for suppressing
+unused-function warnings because it is intended to be a hint for the
+compiler optimization. I prefer #ifdef around the definition, or
+__maybe_unused if #ifdef would make the code too ugly.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+
+Changes in v2:
+ - Rebase on top of https://patchwork.kernel.org/patch/11124933/
+
+ include/linux/compiler_types.h | 20 ++++++++++++++------
+ scripts/Makefile.extrawarn     |  6 ++++++
+ 2 files changed, 20 insertions(+), 6 deletions(-)
+
+diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+index 599c27b56c29..b056a40116da 100644
+--- a/include/linux/compiler_types.h
++++ b/include/linux/compiler_types.h
+@@ -130,10 +130,6 @@ struct ftrace_likely_data {
+ 
+ /*
+  * Force always-inline if the user requests it so via the .config.
+- * GCC does not warn about unused static inline functions for
+- * -Wunused-function.  This turns out to avoid the need for complex #ifdef
+- * directives.  Suppress the warning in clang as well by using "unused"
+- * function attribute, which is redundant but not harmful for gcc.
+  * Prefer gnu_inline, so that extern inline functions do not emit an
+  * externally visible function. This makes extern inline behave as per gnu89
+  * semantics rather than c99. This prevents multiple symbol definition errors
+@@ -144,15 +140,27 @@ struct ftrace_likely_data {
+  */
+ #if !defined(CONFIG_OPTIMIZE_INLINING)
+ #define inline inline __attribute__((__always_inline__)) __gnu_inline \
+-	__maybe_unused notrace
++	__inline_maybe_unused notrace
+ #else
+ #define inline inline                                    __gnu_inline \
+-	__maybe_unused notrace
++	__inline_maybe_unused notrace
+ #endif
+ 
+ #define __inline__ inline
+ #define __inline   inline
+ 
++/*
++ * GCC does not warn about unused static inline functions for -Wunused-function.
++ * Suppress the warning in clang as well by using __maybe_unused, but enable it
++ * for W=1 build. This will allow clang to find unused functions. Remove the
++ * __inline_maybe_unused entirely after fixing most of -Wunused-function warnings.
++ */
++#ifdef KBUILD_EXTRA_WARN1
++#define __inline_maybe_unused
++#else
++#define __inline_maybe_unused __maybe_unused
++#endif
++
+ /*
+  * Rather then using noinline to prevent stack consumption, use
+  * noinline_for_stack instead.  For documentation reasons.
+diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
+index 53eb7e0c6a5a..ecddf83ac142 100644
+--- a/scripts/Makefile.extrawarn
++++ b/scripts/Makefile.extrawarn
+@@ -36,6 +36,8 @@ KBUILD_CFLAGS += $(call cc-option, -Wstringop-truncation)
+ KBUILD_CFLAGS += -Wno-missing-field-initializers
+ KBUILD_CFLAGS += -Wno-sign-compare
+ 
++KBUILD_CPPFLAGS += -DKBUILD_EXTRA_WARN1
++
+ else
+ 
+ # Some diagnostics enabled by default are noisy.
+@@ -65,6 +67,8 @@ KBUILD_CFLAGS += -Wsign-compare
+ KBUILD_CFLAGS += $(call cc-option, -Wmaybe-uninitialized)
+ KBUILD_CFLAGS += $(call cc-option, -Wunused-macros)
+ 
++KBUILD_CPPFLAGS += -DKBUILD_EXTRA_WARN2
++
+ endif
+ 
+ #
+@@ -82,4 +86,6 @@ KBUILD_CFLAGS += -Wredundant-decls
+ KBUILD_CFLAGS += -Wswitch-default
+ KBUILD_CFLAGS += $(call cc-option, -Wpacked-bitfield-compat)
+ 
++KBUILD_CPPFLAGS += -DKBUILD_EXTRA_WARN3
++
+ endif
+-- 
+2.17.1
+
