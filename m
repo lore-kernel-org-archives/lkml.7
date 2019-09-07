@@ -2,145 +2,180 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 768B7C00306
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 09:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF811C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 09:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50A6E208C3
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 09:08:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sA6scNG5"
+	by mail.kernel.org (Postfix) with ESMTP id 8ACD7208C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 09:09:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394588AbfIGJI4 (ORCPT
+        id S2394601AbfIGJJz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 05:08:56 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44448 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726027AbfIGJI4 (ORCPT
+        Sat, 7 Sep 2019 05:09:55 -0400
+Received: from mxout012.mail.hostpoint.ch ([217.26.49.172]:38559 "EHLO
+        mxout012.mail.hostpoint.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726027AbfIGJJz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 05:08:56 -0400
-Received: by mail-lj1-f194.google.com with SMTP id u14so8140484ljj.11;
-        Sat, 07 Sep 2019 02:08:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=57pJ4no4y9N9rdXaPnbc6NKFvi7Sztl7VDY6EouK97c=;
-        b=sA6scNG5yXnhj8Uegl1+IgPLtcdsp033+yXU14Qvq0obowVGM2Ize3/9ManY4kNpCs
-         dNfzGsc+pxK18EAkrX6+NufgjUjrI0qzxG9qcuWwh6VBvpMn5s2y+oD2ClVUNacfcWb/
-         jxFMkrex6wCqhSJK5rRS+kWjz8wCaeUq4AvBhhOlLYHZn6u9DEmKcs7VaRCEeGAzpeEo
-         9k21j1lkPT+Mp73aaiikYYU1FnhNewBjae9F1IzGk4HPHZWtxa0SsMcqtoVF9RfVf3j/
-         /BHqklrPJIBA6pESqIj7TxlYvejNiubWPEvlSFqEKyal7XjqQ89qXX85g8YvfEUr3yum
-         QUfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=57pJ4no4y9N9rdXaPnbc6NKFvi7Sztl7VDY6EouK97c=;
-        b=pzEIZIGsTlJDyCaMKQyM8e6B0IcKa2dFy9x8wtxCaXjJYCqZtAhLq7g/Xh33hoa9zn
-         T4/HdmiWd5r/1rBxVFnNFOVcRaTxlbUBIsM0wpgOXN1DRg4Z+yrsCfZFz8qi1Hogfv59
-         IKe126tt2hFhogpf7TCH6MwrQ5z1sQ0m5gvcvRoalc9XM6uMgXf/1Anm+X6y9JDPGaYR
-         hJiAKt5uw3Ft8XfvLPj36yNJ46xmuEmEA/mmJ+s+MNsRZ67FD4xmr6Bg0+2s6aGX+pNb
-         I3DHga36rpbs45zJaRTvW59Wmnq/USQyVfvYCgrdRHelDpUV/rqzYvlQqgg9fT2p8rLQ
-         LcNg==
-X-Gm-Message-State: APjAAAX+3X/j0IfpJv4hVCcNR3pOaGHbX2/KUghV1/DRZ6d3K6kHkc+L
-        KrdxZMDmYjgpnhX2eaDpms/vEwBhsmDDTrE+DLI=
-X-Google-Smtp-Source: APXvYqx0vCqXuT6U9buB7r0r2uh65Ik//yileB7tiom+hol9mqP/t6XtaTjNszHtlETH4QtB8/isVNDz0EDrUpQk1+c=
-X-Received: by 2002:a2e:9012:: with SMTP id h18mr8660506ljg.45.1567847333996;
- Sat, 07 Sep 2019 02:08:53 -0700 (PDT)
+        Sat, 7 Sep 2019 05:09:55 -0400
+Received: from [10.0.2.45] (helo=asmtp012.mail.hostpoint.ch)
+        by mxout012.mail.hostpoint.ch with esmtp (Exim 4.92.2 (FreeBSD))
+        (envelope-from <sandro@volery.com>)
+        id 1i6Wj8-000Npv-5z; Sat, 07 Sep 2019 11:09:50 +0200
+Received: from 145-126.cable.senselan.ch ([83.222.145.126] helo=volery)
+        by asmtp012.mail.hostpoint.ch with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92.2 (FreeBSD))
+        (envelope-from <sandro@volery.com>)
+        id 1i6Wj8-000CZ5-24; Sat, 07 Sep 2019 11:09:50 +0200
+X-Authenticated-Sender-Id: sandro@volery.com
+Date:   Sat, 7 Sep 2019 11:09:48 +0200
+From:   volery <sandro@volery.com>
+To:     gregkh@linuxfoundation.org, jslaby@suse.com,
+        linux-kernel@vger.kernel.org
+Cc:     sandro@volery.com
+Subject: [PATCH] Fixed most indent issues in tty_io.c
+Message-ID: <20190907090948.GA5824@volery>
 MIME-Version: 1.0
-References: <CAEjAshr=JqVpF651eSZYFhwVAMNZ29LWcfrH07K_M9GU=hPnvg@mail.gmail.com>
- <1567786314-12330-1-git-send-email-sj38.park@gmail.com> <CAFd5g44=8TV4VciMkcD2DHR+UsnpwyEFbw2Xucwo7-as6Py_4g@mail.gmail.com>
- <1bc1c5da-2810-60d3-4e76-8d0b73fdd521@kernel.org>
-In-Reply-To: <1bc1c5da-2810-60d3-4e76-8d0b73fdd521@kernel.org>
-From:   SeongJae Park <sj38.park@gmail.com>
-Date:   Sat, 7 Sep 2019 11:08:27 +0200
-Message-ID: <CAEjAshqmSG8FdUvBpv892jvMyWy5=YqXjEEU65=Z=9URBRCQ9A@mail.gmail.com>
-Subject: Re: [PATCH] kunit: Fix '--build_dir' option
-To:     shuah <shuah@kernel.org>
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 7, 2019 at 4:33 AM shuah <shuah@kernel.org> wrote:
->
-> On 9/6/19 7:16 PM, Brendan Higgins wrote:
-> > On Fri, Sep 6, 2019 at 9:12 AM SeongJae Park <sj38.park@gmail.com> wrote:
-> >>
-> >> Running kunit with '--build_dir' option gives following error message:
-> >>
-> >> ```
-> >> $ ./tools/testing/kunit/kunit.py run --build_dir ../linux.out.kunit/
-> >> [00:57:24] Building KUnit Kernel ...
-> >> [00:57:29] Starting KUnit Kernel ...
-> >> Traceback (most recent call last):
-> >>    File "./tools/testing/kunit/kunit.py", line 136, in <module>
-> >>      main(sys.argv[1:])
-> >>    File "./tools/testing/kunit/kunit.py", line 129, in main
-> >>      result = run_tests(linux, request)
-> >>    File "./tools/testing/kunit/kunit.py", line 68, in run_tests
-> >>      test_result = kunit_parser.parse_run_tests(kunit_output)
-> >>    File "/home/sjpark/linux/tools/testing/kunit/kunit_parser.py", line
-> >> 283, in parse_run_tests
-> >>      test_result =
-> >> parse_test_result(list(isolate_kunit_output(kernel_output)))
-> >>    File "/home/sjpark/linux/tools/testing/kunit/kunit_parser.py", line
-> >> 54, in isolate_kunit_output
-> >>      for line in kernel_output:
-> >>    File "/home/sjpark/linux/tools/testing/kunit/kunit_kernel.py", line
-> >> 145, in run_kernel
-> >>      process = self._ops.linux_bin(args, timeout, build_dir)
-> >>    File "/home/sjpark/linux/tools/testing/kunit/kunit_kernel.py", line
-> >> 69, in linux_bin
-> >>      stderr=subprocess.PIPE)
-> >>    File "/usr/lib/python3.5/subprocess.py", line 947, in __init__
-> >>      restore_signals, start_new_session)
-> >>    File "/usr/lib/python3.5/subprocess.py", line 1551, in _execute_child
-> >>      raise child_exception_type(errno_num, err_msg)
-> >> FileNotFoundError: [Errno 2] No such file or directory: './linux'
-> >> ```
-> >>
-> >> This error occurs because the '--build_dir' option value is not passed
-> >> to the 'run_kernel()' function.  Consequently, the function assumes
-> >> the kernel image that built for the tests, which is under the
-> >> '--build_dir' directory, is in kernel source directory and finally raises
-> >> the 'FileNotFoundError'.
-> >>
-> >> This commit fixes the problem by properly passing the '--build_dir'
-> >> option value to the 'run_kernel()'.
-> >>
-> >> Signed-off-by: SeongJae Park <sj38.park@gmail.com>
-> >
-> > Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-> > Tested-by: Brendan Higgins <brendanhiggins@google.com>
-> >
-> > Thanks!
-> >
->
-> Thanks Brendan! I will apply the patch for 5.4-rc1.
+There were a lot of styling problems using space then tab or spaces
+instead of tabs in that file. Especially the entire function at line
+2677.
+Also added a space before the : on line 2221.
 
-Thank you both!
+Signed-off-by: Sandro Volery <sandro@volery.com>
+---
+ drivers/tty/tty_io.c | 60 ++++++++++++++++++++++----------------------
+ 1 file changed, 30 insertions(+), 30 deletions(-)
 
->
-> SeongJae Park! In the future, please send tag versions. This should
-> have been [PATCH v2].
+diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
+index 566728fbaf3c..38c36ff7221b 100644
+--- a/drivers/tty/tty_io.c
++++ b/drivers/tty/tty_io.c
+@@ -33,7 +33,7 @@
+  *	-- Nick Holloway <alfie@dcs.warwick.ac.uk>, 27th May 1993.
+  *
+  * Rewrote canonical mode and added more termios flags.
+- * 	-- julian@uhunix.uhcc.hawaii.edu (J. Cowley), 13Jan94
++ *	-- julian@uhunix.uhcc.hawaii.edu (J. Cowley), 13Jan94
+  *
+  * Reorganized FASYNC support so mouse code can share it.
+  *	-- ctm@ardi.com, 9Sep95
+@@ -1026,13 +1026,13 @@ static ssize_t tty_write(struct file *file, const char __user *buf,
+ 						size_t count, loff_t *ppos)
+ {
+ 	struct tty_struct *tty = file_tty(file);
+- 	struct tty_ldisc *ld;
++	struct tty_ldisc *ld;
+ 	ssize_t ret;
+ 
+ 	if (tty_paranoia_check(tty, file_inode(file), "tty_write"))
+ 		return -EIO;
+ 	if (!tty || !tty->ops->write ||	tty_io_error(tty))
+-			return -EIO;
++		return -EIO;
+ 	/* Short term debug to catch buggy drivers */
+ 	if (tty->ops->write_room == NULL)
+ 		tty_err(tty, "missing write_room method\n");
+@@ -1247,8 +1247,8 @@ static void tty_driver_remove_tty(struct tty_driver *driver, struct tty_struct *
+ }
+ 
+ /*
+- * 	tty_reopen()	- fast re-open of an open tty
+- * 	@tty	- the tty to open
++ *	tty_reopen()	- fast re-open of an open tty
++ *	@tty	- the tty to open
+  *
+  *	Return 0 on success, -errno on error.
+  *	Re-opens on master ptys are not allowed and return -EIO.
+@@ -1829,8 +1829,8 @@ static struct tty_struct *tty_open_current_tty(dev_t device, struct file *filp)
+  *	@index: index for the device in the @return driver
+  *	@return: driver for this inode (with increased refcount)
+  *
+- * 	If @return is not erroneous, the caller is responsible to decrement the
+- * 	refcount by tty_driver_kref_put.
++ *	If @return is not erroneous, the caller is responsible to decrement the
++ *	refcount by tty_driver_kref_put.
+  *
+  *	Locking: tty_mutex protects get_tty_driver
+  */
+@@ -2218,7 +2218,7 @@ static int tiocgwinsz(struct tty_struct *tty, struct winsize __user *arg)
+ 	err = copy_to_user(arg, &tty->winsize, sizeof(*arg));
+ 	mutex_unlock(&tty->winsize_mutex);
+ 
+-	return err ? -EFAULT: 0;
++	return err ? -EFAULT : 0;
+ }
+ 
+ /**
+@@ -2674,25 +2674,25 @@ long tty_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ #ifdef CONFIG_COMPAT
+ 
+ struct serial_struct32 {
+-        compat_int_t    type;
+-        compat_int_t    line;
+-        compat_uint_t   port;
+-        compat_int_t    irq;
+-        compat_int_t    flags;
+-        compat_int_t    xmit_fifo_size;
+-        compat_int_t    custom_divisor;
+-        compat_int_t    baud_base;
+-        unsigned short  close_delay;
+-        char    io_type;
+-        char    reserved_char[1];
+-        compat_int_t    hub6;
+-        unsigned short  closing_wait; /* time to wait before closing */
+-        unsigned short  closing_wait2; /* no longer used... */
+-        compat_uint_t   iomem_base;
+-        unsigned short  iomem_reg_shift;
+-        unsigned int    port_high;
++	compat_int_t    type;
++	compat_int_t    line;
++	compat_uint_t   port;
++	compat_int_t    irq;
++	compat_int_t    flags;
++	compat_int_t    xmit_fifo_size;
++	compat_int_t    custom_divisor;
++	compat_int_t    baud_base;
++	unsigned short  close_delay;
++	char    io_type;
++	char    reserved_char[1];
++	compat_int_t    hub6;
++	unsigned short  closing_wait; /* time to wait before closing */
++	unsigned short  closing_wait2; /* no longer used... */
++	compat_uint_t   iomem_base;
++	unsigned short  iomem_reg_shift;
++	unsigned int    port_high;
+      /* compat_ulong_t  iomap_base FIXME */
+-        compat_int_t    reserved[1];
++	compat_int_t    reserved[1];
+ };
+ 
+ static int compat_tty_tiocsserial(struct tty_struct *tty,
+@@ -3176,11 +3176,11 @@ struct device *tty_register_device_attr(struct tty_driver *driver,
+ EXPORT_SYMBOL_GPL(tty_register_device_attr);
+ 
+ /**
+- * 	tty_unregister_device - unregister a tty device
+- * 	@driver: the tty driver that describes the tty device
+- * 	@index: the index in the tty driver for this tty device
++ *	tty_unregister_device - unregister a tty device
++ *	@driver: the tty driver that describes the tty device
++ *	@index: the index in the tty driver for this tty device
+  *
+- * 	If a tty device is registered with a call to tty_register_device() then
++ *	If a tty device is registered with a call to tty_register_device() then
+  *	this function must be called when the tty device is gone.
+  *
+  *	Locking: ??
+-- 
+2.23.0
 
-Yes, I will.
-
-
-Thanks,
-SeongJae Park
-
->
-> thanks,
-> -- Shuah
