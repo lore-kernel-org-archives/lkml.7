@@ -2,109 +2,129 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B10E7C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 17:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE3BC43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 17:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9020221A49
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 17:45:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8014218AC
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 17:45:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bEOcjr7F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406272AbfIGRpQ (ORCPT
+        id S2406324AbfIGRpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 13:45:16 -0400
-Received: from www1102.sakura.ne.jp ([219.94.129.142]:47962 "EHLO
-        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730303AbfIGRpQ (ORCPT
+        Sat, 7 Sep 2019 13:45:20 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38618 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730303AbfIGRpT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 13:45:16 -0400
-Received: from fsav401.sakura.ne.jp (fsav401.sakura.ne.jp [133.242.250.100])
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x87Hj6mw009250;
-        Sun, 8 Sep 2019 02:45:06 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Received: from www1102.sakura.ne.jp (219.94.129.142)
- by fsav401.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav401.sakura.ne.jp);
- Sun, 08 Sep 2019 02:45:06 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav401.sakura.ne.jp)
-Received: from localhost.localdomain (118.153.231.153.ap.dti.ne.jp [153.231.153.118])
-        (authenticated bits=0)
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x87Hj3KZ009238
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Sun, 8 Sep 2019 02:45:06 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
-To:     Mark Brown <broonie@kernel.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Subject: [PATCH] SoC: simple-card-utils: set 0Hz to sysclk when shutdown
-Date:   Sun,  8 Sep 2019 02:45:01 +0900
-Message-Id: <20190907174501.19833-1-katsuhiro@katsuster.net>
-X-Mailer: git-send-email 2.23.0.rc1
+        Sat, 7 Sep 2019 13:45:19 -0400
+Received: by mail-pl1-f196.google.com with SMTP id w11so4686675plp.5;
+        Sat, 07 Sep 2019 10:45:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dcg38ZTiMrbxT3AvbPS3tOl5wkZh4p2pcA3bffhrVNk=;
+        b=bEOcjr7FFB3y9addvHDX1u+EPWhTG5fD6au4RfmqTKvtXselpGmjl2BUIqlnr6N/Qp
+         qLW7db1mV/dSommLrKeAJo/uKUZqH57RG6FtWG6f0oTHMpMrwmIcxFO/8KJmSoTeVjLF
+         Dp4DZXgmltmiMAhiCnAPwLV80hrf2bmMKFtCGqbsT4Ej1TZ7aOzOk61HI/35rPlB0qcc
+         qXIxR/RheLLysuBRv6iM+cxZc2Rkc6e/WsWh/L6Q6FEuX0Cno9G4pb2mPXKdC8iOF7Ah
+         yt5HGwHwar30N7+CVUP8hGjghGCprrcWxZornrFahTyp6o78AcwmKeXWcvp6+jF67iqg
+         JuPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dcg38ZTiMrbxT3AvbPS3tOl5wkZh4p2pcA3bffhrVNk=;
+        b=I3H8dik33A+ExBtDLELLjfX4GEEiFoVH3AwkSFabbxU6v/M+z19hS6G5aJlsFXaoqq
+         SuBh8+xGWMKMIJ7hZlbtarZE55S/m9fqk/lR1/HBkjoNXfrcQb46va/XSudXFik6RG8x
+         6ySOq2uB2wNLbonuKj7z1wxqoRSDW5TkzUc3gbE9oQ42p/7gRapNTtFpRL0aan/oCZUL
+         P5/nOZ3Vw+ArjvuSm2LCu8EE8jFTF8a4DSKGfJan6Bau3MWF8MPQPqm7TUaFHyZinLR1
+         3JagrN0vTLEX7COF5dO7u+3NUWoN5A56nWpHYhLo4iJVyD/+It7DWDihY7Ypd+Nj0vTe
+         ckHg==
+X-Gm-Message-State: APjAAAXO8TAe44htElLUM/eV0yUCFiV874no3uRYTNN5ORXAB+QNDvAk
+        XPrSYb3Oc9g4oDiLIYvd/r74FFURXHMRy16KD9w=
+X-Google-Smtp-Source: APXvYqxZC4NL5fRb6BMOtqUaWq/8HnctZgYXCTqd1vOY3IlF9NFrVol7pLk+j6hJOWUWQdXrglEnwuB+BgmViCHVVjA=
+X-Received: by 2002:a17:902:9895:: with SMTP id s21mr15436348plp.255.1567878318332;
+ Sat, 07 Sep 2019 10:45:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190823174815.27861-1-hdegoede@redhat.com> <20190823174815.27861-2-hdegoede@redhat.com>
+In-Reply-To: <20190823174815.27861-2-hdegoede@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 7 Sep 2019 20:45:07 +0300
+Message-ID: <CAHp75VeJ9Ur9Z4o-pxNApdkb22Zb4sj2AJYRxWO6UFjN292DiA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] platform/x86: intel_int0002_vgpio: Use device_init_wakeup
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch set 0Hz to sysclk when shutdown the card.
+On Fri, Aug 23, 2019 at 8:48 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Use device_init_wakeup and pm_wakeup_hard_event instead of directly
+> calling pm_system_wakeup(). This is the preferred way to do this and
+> this will allow the user to disable wakeup through INT0002 events
+> through sysfs.
+>
 
-Some codecs set rate constraints that derives from sysclk. This
-mechanism works correctly if machine drivers give fixed frequency.
+Pushed to my review and testing queue, thanks!
 
-But simple-audio and audio-graph card set variable clock rate if
-'mclk-fs' property exists. In this case, rate constraints will go
-bad scenario. For example a codec accepts three limited rates
-(mclk / 256, mclk / 384, mclk / 512).
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/platform/x86/intel_int0002_vgpio.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platform/x86/intel_int0002_vgpio.c
+> index 9ea1a2a19f86..f9fee682a8a2 100644
+> --- a/drivers/platform/x86/intel_int0002_vgpio.c
+> +++ b/drivers/platform/x86/intel_int0002_vgpio.c
+> @@ -122,7 +122,7 @@ static irqreturn_t int0002_irq(int irq, void *data)
+>         generic_handle_irq(irq_find_mapping(chip->irq.domain,
+>                                             GPE0A_PME_B0_VIRT_GPIO_PIN));
+>
+> -       pm_system_wakeup();
+> +       pm_wakeup_hard_event(chip->parent);
+>
+>         return IRQ_HANDLED;
+>  }
+> @@ -217,6 +217,13 @@ static int int0002_probe(struct platform_device *pdev)
+>
+>         gpiochip_set_chained_irqchip(chip, irq_chip, irq, NULL);
+>
+> +       device_init_wakeup(dev, true);
+> +       return 0;
+> +}
+> +
+> +static int int0002_remove(struct platform_device *pdev)
+> +{
+> +       device_init_wakeup(&pdev->dev, false);
+>         return 0;
+>  }
+>
+> @@ -232,6 +239,7 @@ static struct platform_driver int0002_driver = {
+>                 .acpi_match_table       = int0002_acpi_ids,
+>         },
+>         .probe  = int0002_probe,
+> +       .remove = int0002_remove,
+>  };
+>
+>  module_platform_driver(int0002_driver);
+> --
+> 2.22.0
+>
 
-Bad scenario as follows (mclk-fs = 256):
-   - Initialize sysclk by correct value (Ex. 12.288MHz)
-     - Codec set constraints of PCM rate by sysclk
-       48kHz (1/256), 32kHz (1/384), 24kHz (1/512)
-   - Play 48kHz sound, it's acceptable
-   - Sysclk is not changed
 
-   - Play 32kHz sound, it's acceptable
-   - Set sysclk to 8.192MHz (= fs * mclk-fs = 32k * 256)
-     - Codec set constraints of PCM rate by sysclk
-       32kHz (1/256), 21.33kHz (1/384), 16kHz (1/512)
-
-   - Play 48kHz again, but it's NOT acceptable because constraints
-     do not allow 48kHz
-
-So codecs treat 0Hz sysclk as signal of applying no constraints to
-avoid this problem.
-
-Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
----
- sound/soc/generic/simple-card-utils.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/sound/soc/generic/simple-card-utils.c b/sound/soc/generic/simple-card-utils.c
-index 556b1a789629..9b794775df53 100644
---- a/sound/soc/generic/simple-card-utils.c
-+++ b/sound/soc/generic/simple-card-utils.c
-@@ -213,10 +213,17 @@ EXPORT_SYMBOL_GPL(asoc_simple_startup);
- void asoc_simple_shutdown(struct snd_pcm_substream *substream)
- {
- 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_dai *codec_dai = rtd->codec_dai;
-+	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
- 	struct asoc_simple_priv *priv = snd_soc_card_get_drvdata(rtd->card);
- 	struct simple_dai_props *dai_props =
- 		simple_priv_to_props(priv, rtd->num);
- 
-+	if (dai_props->mclk_fs) {
-+		snd_soc_dai_set_sysclk(codec_dai, 0, 0, SND_SOC_CLOCK_IN);
-+		snd_soc_dai_set_sysclk(cpu_dai, 0, 0, SND_SOC_CLOCK_OUT);
-+	}
-+
- 	asoc_simple_clk_disable(dai_props->cpu_dai);
- 
- 	asoc_simple_clk_disable(dai_props->codec_dai);
--- 
-2.23.0.rc1
-
+--
+With Best Regards,
+Andy Shevchenko
