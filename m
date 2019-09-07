@@ -2,184 +2,146 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9B6C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 16:23:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2F5C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 16:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C5B521835
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 16:23:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567873399;
-	bh=LVFrpTVLmYGCgyU/qCdIpO4T9W8DoEj3i819CgyJImI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=YLi7MbhpWFzLa3NqQFE7Mra8ZcJW10wtNvrlw0IfvKI/UocPNfO1KRQ4QghZxi9DX
-	 ntkrIZW82yAImFiaQ0oHBKN0q6VeHwJSAVYQ9oVBsi58DAoJ3DWzFn4z0pPFJ0yDgI
-	 9YRlIRkfMWCas+CLJNAAFSj7tbI6UHizTrj5WL7w=
+	by mail.kernel.org (Postfix) with ESMTP id DEDD1206BB
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 16:32:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YAACSMo4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394979AbfIGQXS (ORCPT
+        id S2394938AbfIGQcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 12:23:18 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40404 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392078AbfIGQXS (ORCPT
+        Sat, 7 Sep 2019 12:32:45 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46328 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392683AbfIGQco (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 12:23:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=DUATQb/4Kt5UtzFMuKXpM32TnVKDb+wrr2MKcNLhAy4=; b=nMK1wEaWji3PRt5xL9Kox8NjE
-        Rjyqm/mQkFylU5ec/NK4vfs+gKo/by/cx4IoIMr+gp7aqobEmMGev6OPJ4U1FMKKqctNgiITIwnop
-        hBxhh/MZ0NIPyVwEyRJTq0WbjyZFnsfNeDfuIgFrYw/kYxmpyaVUMbSNtQcp3QH/HL+CaKXR24qoU
-        NGYbZC0pFAk8sVW4RXTEiyaIAZqMQINVFlMHEdguA/qlR/ke2JqByZ1Kr0y7kr4uWYu1xu13xlYJ4
-        a3IAopPBcWUPMvblb1hE5mmLoCXsC31gPePs04UqcORlhnUHVm8iFog1jfLrHocp3YKp1SoxJh3Yb
-        UJtI6cNRw==;
-Received: from [177.133.16.239] (helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i6dUU-0003rg-3E; Sat, 07 Sep 2019 16:23:10 +0000
-Date:   Sat, 7 Sep 2019 13:22:59 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Markus Heiser <markus.heiser@darmarit.de>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Sven Eckelmann <sven@narfation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Doug Smythies <doug.smythies@gmail.com>,
-        =?UTF-8?B?QXVyw6lsaWVu?= Cedeyn <aurelien.cedeyn@gmail.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-doc@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Armijn Hemel <armijn@tjaldur.nl>, Jiri Olsa <jolsa@redhat.com>,
-        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        Allison Randal <allison@lohutok.net>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: Re: [PATCH 0/6] Address issues with SPDX requirements and PEP-263
-Message-ID: <20190907132259.3199c8a2@coco.lan>
-In-Reply-To: <be329f0e-ec5b-f5ec-823d-66e58699da73@darmarit.de>
-References: <cover.1567712829.git.mchehab+samsung@kernel.org>
-        <20190907073419.6a88e318@lwn.net>
-        <be329f0e-ec5b-f5ec-823d-66e58699da73@darmarit.de>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Sat, 7 Sep 2019 12:32:44 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q5so6522326pfg.13;
+        Sat, 07 Sep 2019 09:32:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OWKMTVEpcjEgU67HpPrX0ZG66N8BrYaoMAyOS7ISkKw=;
+        b=YAACSMo4u3WzOCuq9vZYRponMeG5TUtWEDgBWfe/TC9c4cqYfea+DvSZObHWa6pdj7
+         Pe8jbcM+PEovYy1lKjoUxBiZYaYIF2jZGHHmEh08NcFiDNhAYRS3W+4aLhqYjaJ/cnk/
+         2BOlurNIp59gDSJdp0JD5HmeYez6Yb78SbbheEH4qZANHgT6lvSmgJf5huBLfWN1Sh8i
+         bxXUvaaPRY3dgHI5J9yXD1T2Zcs6pzy7Zc/IaIhWdvpwu7Z8eFUYW9N25Slu9gw520SP
+         v0QDigl/lOLbSkWYwausocQxD6JAdD+cyDPToU2QOohsVZJoj1itwxDh6SWbTZ8Bu6mc
+         /AaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OWKMTVEpcjEgU67HpPrX0ZG66N8BrYaoMAyOS7ISkKw=;
+        b=VIidkEbtriuXV2gL5lvzba3vUYXs9VcFCU8CWPoPwZALYO1QnzeEJ6bfoy3aULdwLP
+         VE4XXrZIAXAcNxrGnw3SOyw6MnhDjJioG8eWRIKOQmquBQLq4TTuWdtTvAoIsrINHKuj
+         kGsSVPe65EaZ7/R48wogddP98EcMZJharPmdtGxTX8xn/WSjnHwC6Bu6tRdHvWnZ0YbY
+         UNldEv4YT/YJr7YS1enT1N66JHAYuKhjBNZJbHx/23OAYTubDyTuCtvInbNs1DsziKb2
+         ueq2HWh48LpFr/M0VkABUfJf9I/Muc545F9OfvpdBgZ2bSbYFubJ64gLl1D20xAItgiz
+         QaOw==
+X-Gm-Message-State: APjAAAV7vYnaAlduUkTHLaGz+hwkS4GYyiDVZ6neHeXUVj4jw2m6aolg
+        AH7CaVNJfa2g+XGxxm5er5w=
+X-Google-Smtp-Source: APXvYqzHa92DDO9jXGHTroP2d6b2wkphlnLlSVKLHITC01IKwgahaaAGNPHPJsuQ6/zKIPGyykwEFA==
+X-Received: by 2002:a63:5648:: with SMTP id g8mr13024920pgm.81.1567873963790;
+        Sat, 07 Sep 2019 09:32:43 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id c125sm13601189pfa.107.2019.09.07.09.32.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 Sep 2019 09:32:43 -0700 (PDT)
+Date:   Sat, 7 Sep 2019 09:32:40 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] software node: implement reference properties
+Message-ID: <20190907163240.GA27112@dtor-ws>
+References: <20190906222611.223532-1-dmitry.torokhov@gmail.com>
+ <20190907160819.GH2680@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190907160819.GH2680@smile.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Sat, 7 Sep 2019 16:36:36 +0200
-Markus Heiser <markus.heiser@darmarit.de> escreveu:
-
-> Am 07.09.19 um 15:34 schrieb Jonathan Corbet:
-> > On Thu,  5 Sep 2019 16:57:47 -0300
-> > Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
-> >   
-> >> The  description at Documentation/process/license-rules.rst is very strict
-> >> with regards to the position where the SPDX tags should be.
-> >>
-> >> In the past several developers and maintainers interpreted it on a
-> >> more permissive way, placing the SPDX header between lines 1 to 15,
-> >> with are the ones which the  scripts/spdxcheck.py script verifies.
-> >>
-> >> However, recently, devs are becoming more strict about such
-> >> requirement and want it to strictly follow the rule, with states that
-> >> the SPDX rule should be at the first line ever on most files, and
-> >> at the second line for scripts.
-> >>
-> >> Well, for Python script, such requirement causes violation to PEP-263,
-> >> making regressions on scripts that contain encoding lines, as PEP-263
-> >> also states about the same.
-> >>
-> >> This series addresses it.  
+On Sat, Sep 07, 2019 at 07:08:19PM +0300, Andy Shevchenko wrote:
+> On Fri, Sep 06, 2019 at 03:26:09PM -0700, Dmitry Torokhov wrote:
+> > It is possible to store references to software nodes in the same fashion as
+> > other static properties, so that users do not need to define separate
+> > structures:
 > > 
-> > So I really don't want to be overly difficult here, but I would like to
-> > approach this from yet another angle...
-> >   
-> >> Patches 1 to 3 fix some Python scripts that violates PEP-263;  
+> > static const struct software_node gpio_bank_b_node = {
+> > 	.name = "B",
+> > };
 > > 
-> > I just checked all of those scripts, and they are all just plain ASCII.
-> > So it really doesn't matter whether the environment defaults to UTF-8 or
-> > ASCII here.  So, in other words, we really shouldn't need to define the
-> > encoding at all.
-
-I'm not a python expert, but, from what I researched, and from what I 
-understood from Markus, if a script tries to print an UTF-8 but the
-system's encoding is ASCII (or some other encoding), the python script
-will crash.
-
-At least on media, we define that some Kernel strings can be UTF-8. 
-See, for example the model field at the media_entity struct:
-
-	https://linuxtv.org/downloads/v4l-dvb-apis/kapi/mc-core.html
-
-As stated there:
-
-	"media_entity.model must be filled with the device model name as
-	 a NUL-terminated UTF-8 string. The device/model revision must
-	 not be stored in this field."
-
-I've no idea if the two perf scripts that contain the encoding data are
-meant to print some strings that may be UTF-8 encoding (like those that
-we have at the media subsystem), or if it is just that whomever added
-were using e-macs and wanted to make his life simpler. As it is better
-to be safe then sorry, on patches 2 and 3, I'm assuming the first case.
-
-In any case, we do need the encoding line at Sphinx extensions, 
-although there, the shebang line is optional.
-
-In other words, we have those alternatives:
-
-1) Neither shebang nor coding -> SPDX will be at first line;
-2) shebang + SPDX -> SPDX will be at the second line;
-3) shebang + coding + SPDX -> SPDX will be at the third line;
-4) coding + SPDX
-
-   This is something that only makes sense for Sphinx extensions.
-
-   IMHO, I would place SPDX at the second line too, but I *guess* Python
-   may accept it at the first line and would still properly evaluate
-   coding (as this technically satisfies the text at PEP-263).
-
-> >   
-> 
-> Thats what I mean [1] .. lets patch the description in the license-rules.rst::
-> 
-> - first line for the OS (shebang)
-> - second line for environment (python-encoding, editor-mode, ...)
-> - third and more lines for application (SPDX use) ..
-> 
-> [1] https://www.mail-archive.com/linux-doc@vger.kernel.org/msg33240.html
-> 
-> -- Markus --
-> 
-> > This suggests to me that we're adding a bunch of complications that we
-> > don't necessarily need.  What am I missing here?
+> > static const struct property_entry simone_key_enter_props[] = {
+> > 	PROPERTY_ENTRY_U32("linux,code", KEY_ENTER),
+> > 	PROPERTY_ENTRY_STRING("label", "enter"),
+> > 	PROPERTY_ENTRY_REF("gpios", &gpio_bank_b_node, 123, GPIO_ACTIVE_LOW),
+> > 	{ }
+> > };
 > > 
-> > Educate me properly and I'll not try to stand in the way of all this...
-> > 
-> > Thanks,
-> > 
-> > jon
-> >   
+> 
+> Thanks for an update, my comments below.
+> 
+> > +	} else if (src->type == DEV_PROP_REF) {
+> > +		/* All reference properties must be arrays */
+> > +		return -EINVAL;
+> 
+> Hmm... What about to duplicate pointer under value union and use is_array to
+> distinguish which one to use? Because...
 
+Then we have to special-case copying this entry, similar to the pains we
+are going with the strings.
 
+> 
+> 
+> > @@ -240,6 +254,7 @@ struct property_entry {
+> >  			const u32 *u32_data;
+> >  			const u64 *u64_data;
+> >  			const char * const *str;
+> > +			const struct software_node_ref_args *ref;
+> >  		} pointer;
+> 
+> > +#define PROPERTY_ENTRY_REF(_name_, _ref_, ...)				\
+> > +(struct property_entry) {						\
+> > +	.name = _name_,							\
+> 
+> > +	.length = sizeof(struct software_node_ref_args),		\
+> 
+> Is it correct?
 
-Thanks,
-Mauro
+Yes, we length is element size * number of elements.
+
+> 
+> > +	.type = DEV_PROP_REF,						\
+> 
+> > +	.is_array = true,						\
+> 
+> I really don't like this "cheating".
+
+This is not cheating. Any single value can be represented as an array of
+one element. Actually, the only reason we have this "is_array" business
+is because for scalar values and short strings it is much cheaper to
+store single value in-line instead of out of line + pointer, especially
+on 64 bit arches.
+
+If you want we can change is_array into is_inline.
+
+Thanks.
+
+-- 
+Dmitry
