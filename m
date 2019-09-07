@@ -2,145 +2,80 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A35ACC43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 13:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 672BFC43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 13:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E8EF218AC
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 13:53:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567864413;
-	bh=YeRNe1rluI3yMB6/V2dkM0kBajo5PtaHZdGNp3VCpyg=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=HleSqVUaKyuDgE4yhdQP1yXZkkqsmbBKpJHcw9mb2XUFCC1GSUmkSvCT2dTzCRC06
-	 LzULIk+RO+OKqwug9CTvDiNg231xRATd1CjWzFo3V3mkUMFLZ4aeKXb8RSKJVWAhPg
-	 XV7GOC5Q3sSLc9ci6hkHGsAW9hVd3C2rcrSP2z5g=
+	by mail.kernel.org (Postfix) with ESMTP id 48C30218AC
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 13:54:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388921AbfIGNxc (ORCPT
+        id S2404294AbfIGNy6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 09:53:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38302 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727381AbfIGNxc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 09:53:32 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D62B218AC;
-        Sat,  7 Sep 2019 13:53:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567864411;
-        bh=YeRNe1rluI3yMB6/V2dkM0kBajo5PtaHZdGNp3VCpyg=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=zNDd39ybWgjYOe9VEGhsX62tbfMNc3A1p2Q6twOxcTnTF9SBnHihzQ1WzFgu6JZX8
-         lKp6Kguap9ifBpV6BU530v0ohGULpnCLKpUam2KL8+yruj3f3YXAVL7sjcRS+s6+eT
-         GlDpk5odXkYIc+APk+Wk+8uZ9zpiN4wp29HOCc0I=
-Message-ID: <afce4ec5a02c17121e615423a2e7e1b664aa77a3.camel@kernel.org>
-Subject: Re: [PATCH] ceph: allow object copies across different filesystems
- in the same cluster
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Luis Henriques <lhenriques@suse.com>
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Sat, 07 Sep 2019 09:53:29 -0400
-In-Reply-To: <87sgp9o0fo.fsf@suse.com>
-References: <20190906135750.29543-1-lhenriques@suse.com>
-         <30b09cb015563913d073c488c8de8ba0cceedd7b.camel@kernel.org>
-         <87sgp9o0fo.fsf@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
-MIME-Version: 1.0
+        Sat, 7 Sep 2019 09:54:58 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:45056 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388238AbfIGNy6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Sep 2019 09:54:58 -0400
+Received: from localhost (unknown [88.214.184.0])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id C1D9B152788C9;
+        Sat,  7 Sep 2019 06:54:55 -0700 (PDT)
+Date:   Sat, 07 Sep 2019 15:54:54 +0200 (CEST)
+Message-Id: <20190907.155454.629859380717886153.davem@davemloft.net>
+To:     wang.yi59@zte.com.cn
+Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        xue.zhihong@zte.com.cn, wang.liang82@zte.com.cn,
+        cheng.lin130@zte.com.cn
+Subject: Re: [PATCH v3] ipv6: Not to probe neighbourless routes
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1567145476-33802-1-git-send-email-wang.yi59@zte.com.cn>
+References: <1567145476-33802-1-git-send-email-wang.yi59@zte.com.cn>
+X-Mailer: Mew version 6.8 on Emacs 26.2
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 07 Sep 2019 06:54:57 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-09-06 at 17:26 +0100, Luis Henriques wrote:
-> "Jeff Layton" <jlayton@kernel.org> writes:
-> 
-> > On Fri, 2019-09-06 at 14:57 +0100, Luis Henriques wrote:
-> > > OSDs are able to perform object copies across different pools.  Thus,
-> > > there's no need to prevent copy_file_range from doing remote copies if the
-> > > source and destination superblocks are different.  Only return -EXDEV if
-> > > they have different fsid (the cluster ID).
-> > > 
-> > > Signed-off-by: Luis Henriques <lhenriques@suse.com>
-> > > ---
-> > >  fs/ceph/file.c | 23 +++++++++++++++++++----
-> > >  1 file changed, 19 insertions(+), 4 deletions(-)
-> > > 
-> > > Hi!
-> > > 
-> > > I've finally managed to run some tests using multiple filesystems, both
-> > > within a single cluster and also using two different clusters.  The
-> > > behaviour of copy_file_range (with this patch, of course) was what I
-> > > expected:
-> > > 
-> > >   - Object copies work fine across different filesystems within the same
-> > >     cluster (even with pools in different PGs);
-> > >   - -EXDEV is returned if the fsid is different
-> > > 
-> > > (OT: I wonder why the cluster ID is named 'fsid'; historical reasons?
-> > >  Because this is actually what's in ceph.conf fsid in "[global]"
-> > >  section.  Anyway...)
-> > > 
-> > > So, what's missing right now is (I always mention this when I have the
-> > > opportunity!) to merge https://github.com/ceph/ceph/pull/25374 :-)
-> > > And add the corresponding support for the new flag to the kernel
-> > > client, of course.
-> > > 
-> > > Cheers,
-> > > --
-> > > Luis
-> > > 
-> > > diff --git a/fs/ceph/file.c b/fs/ceph/file.c
-> > > index 685a03cc4b77..88d116893c2b 100644
-> > > --- a/fs/ceph/file.c
-> > > +++ b/fs/ceph/file.c
-> > > @@ -1904,6 +1904,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
-> > >  	struct ceph_inode_info *src_ci = ceph_inode(src_inode);
-> > >  	struct ceph_inode_info *dst_ci = ceph_inode(dst_inode);
-> > >  	struct ceph_cap_flush *prealloc_cf;
-> > > +	struct ceph_fs_client *src_fsc = ceph_inode_to_client(src_inode);
-> > >  	struct ceph_object_locator src_oloc, dst_oloc;
-> > >  	struct ceph_object_id src_oid, dst_oid;
-> > >  	loff_t endoff = 0, size;
-> > > @@ -1915,8 +1916,22 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
-> > >  
-> > >  	if (src_inode == dst_inode)
-> > >  		return -EINVAL;
-> > > -	if (src_inode->i_sb != dst_inode->i_sb)
-> > > -		return -EXDEV;
-> > > +	if (src_inode->i_sb != dst_inode->i_sb) {
-> > > +		struct ceph_fs_client *dst_fsc = ceph_inode_to_client(dst_inode);
-> > > +
-> > > +		if (!src_fsc->client->have_fsid || !dst_fsc->client->have_fsid) {
-> > > +			dout("No fsid in a fs client\n");
-> > > +			return -EXDEV;
-> > > +		}
-> > 
-> > In what situation is there no fsid? Old cluster version?
-> > 
-> > If there is no fsid, can we take that to indicate that there is only a
-> > single filesystem possible in the cluster and that we should attempt the
-> > copy anyway?
-> 
-> TBH I'm not sure if 'have_fsid' can ever be 'false' in this call.  It is
-> set to 'true' when handling the monmap, and it's never changed back to
-> 'false'.  Since I don't think copy_file_range will be invoked *before*
-> we get the monmap, it should be safe to drop this check.  Maybe it could
-> be replaced it by a WARN_ON()?
-> 
+From: Cheng Lin <wang.yi59@zte.com.cn>
+Date: Fri, 30 Aug 2019 14:11:16 +0800
 
-Yeah. I think the have_fsid flag just allows us to avoid the pr_err msg
-in ceph_check_fsid when the client is initially created. Maybe there is
-some better way to achieve that?
+> Originally, Router Reachability Probing require a neighbour entry
+> existed. Commit 2152caea7196 ("ipv6: Do not depend on rt->n in
+> rt6_probe().") removed the requirement for a neighbour entry. And
+> commit f547fac624be ("ipv6: rate-limit probes for neighbourless
+> routes") adds rate-limiting for neighbourless routes.
 
-In any case, I'd just drop that condition here.
--- 
-Jeff Layton <jlayton@kernel.org>
+I am not going to apply this patch.
 
+The reason we handle neighbourless routes is because due to the
+disconnect between routes and neighbour entries, we would lose
+information with your suggested change.
+
+Originally, all routes held a reference to a neighbour entry.
+Therefore we'd always have a neigh entry for any neigh message
+matching a route.
+
+But these two object pools (routes and neigh entries) are completely
+disconnected.  We only look up a neigh entry when sending a packet
+on behalf of a route.
+
+Therfore, neigh entries can be purged arbitrarily even if hundreds of
+routes refer to them.  And this means it is very important to accept
+and process probes even for neighbourless routes.
+
+I would also not recommend, in the future, reading RFC requirements
+literally without taking into consideration the details of Linux's
+specific implementation of ipv6 routing and neighbours.
+
+Thank you.
