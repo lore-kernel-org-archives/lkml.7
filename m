@@ -2,156 +2,94 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96BC7C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 21:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F98C0030B
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 21:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7084F2173B
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 21:26:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4217B2178F
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 21:41:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EF6LYsvW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406810AbfIGV00 (ORCPT
+        id S2406817AbfIGVlS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 17:26:26 -0400
-Received: from mga12.intel.com ([192.55.52.136]:60603 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727420AbfIGV00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 17:26:26 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Sep 2019 14:26:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,478,1559545200"; 
-   d="scan'208";a="195779482"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by orsmga002.jf.intel.com with ESMTP; 07 Sep 2019 14:26:24 -0700
-Date:   Sat, 7 Sep 2019 14:26:10 -0700
-From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To:     Brendan Shanks <bshanks@codeweavers.com>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-Subject: Re: [PATCH] x86/umip: Add emulation for 64-bit processes
-Message-ID: <20190907212610.GA30930@ranerica-svr.sc.intel.com>
-References: <20190905232222.14900-1-bshanks@codeweavers.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190905232222.14900-1-bshanks@codeweavers.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Sat, 7 Sep 2019 17:41:18 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:42856 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732468AbfIGVlS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Sep 2019 17:41:18 -0400
+Received: by mail-pl1-f194.google.com with SMTP id y1so4760475plp.9;
+        Sat, 07 Sep 2019 14:41:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=wEzd7dh/YfO3zGLSxxCdwFOAGiIma8fe0owdbCkXYmQ=;
+        b=EF6LYsvWkXNSwOEXeE/6qHUB7pHfQ83htTle+NmPGwqybQ6Pt0jKRg4Wa27sovW/ni
+         NmrFujKRHtQXBDBdP9pkAfvI/6w4T+Y436JlzgoPW7FqV4ThEqdq7dako9+HV19cPW4n
+         /uZifgpZfEjT1YGD9+BmbMXz3a54nSaZZ/2PoVfnygssJ6+GC5SuurZ99ysJED63QoPf
+         act/g/bReiNpFjOvKy+IJTpJWLw4EZQb53OaOxz4GoJb+2ZCDr1qolmeiWXw2XPvBuxu
+         XKQ/cNXPoDcQN5fBaoqD+XzWJqozOZfyfMy9465SkLtiM2n+LCifhb0iKgepQvpSwQcs
+         px7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=wEzd7dh/YfO3zGLSxxCdwFOAGiIma8fe0owdbCkXYmQ=;
+        b=MS1UI8OoFx+YmORGsCwmZ0B+DjXnYly08qstRQoad9xVx25uNhmKpNQSaACIVnYzIO
+         QrKOQ5cBTtApEnaF8Mzv1M7xj9p0UY+5HVLhCzOcQ6MumR45JiLanJOp87kUvY8YALvW
+         FYhhXH6GSo1IpO4zBCB9xbOzjRn4ea2pkchzcMNRBj+mAP3Ad+92+4uP1M3w9ChLm04W
+         ucx676jPeseQlgnr9G5h0E6ptGoPyeNd47R+9tnEq/WlYwF9fN0bldYh57Rz87jdIihQ
+         uGG8C39fdOwWk7C9vHqFOZu5XwpJNr6K2kTE4NEMe2fuR03yK6SWxJUMYAOKCB9ty/Hq
+         ISLg==
+X-Gm-Message-State: APjAAAUCqQKAvZf9kzc/ARSx9eoPk+QDA2owT8Kk6YjE2LBpVoXTAdOJ
+        zAK7RUj6DXR8HxV7JmUM0GM=
+X-Google-Smtp-Source: APXvYqz+VvW5vydphQSj0ObTAVGfP2jazOrVP9sq7QamakSG2pDZ3tjxjHqAy590l89owgeU1hfKhg==
+X-Received: by 2002:a17:902:8686:: with SMTP id g6mr16403651plo.175.1567892477461;
+        Sat, 07 Sep 2019 14:41:17 -0700 (PDT)
+Received: from localhost.localdomain ([112.79.80.177])
+        by smtp.gmail.com with ESMTPSA id h11sm9078516pgv.5.2019.09.07.14.41.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sat, 07 Sep 2019 14:41:15 -0700 (PDT)
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org, boris.ostrovsky@oracle.com, jgross@suse.com,
+        sstabellini@kernel.org, akpm@linux-foundation.org,
+        david@redhat.com, osalvador@suse.com, mhocko@suse.com,
+        pasha.tatashin@soleen.com, dan.j.williams@intel.com,
+        richard.weiyang@gmail.com, cai@lca.pw
+Cc:     linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Souptick Joarder <jrdr.linux@gmail.com>
+Subject: [PATCH 0/3] Remove __online_page_set_limits()
+Date:   Sun,  8 Sep 2019 03:17:01 +0530
+Message-Id: <cover.1567889743.git.jrdr.linux@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 04:22:21PM -0700, Brendan Shanks wrote:
-> Add emulation of the sgdt, sidt, and smsw instructions for 64-bit
-> processes.
-> 
-> Wine users have encountered a number of 64-bit Windows games that use
-> these instructions (particularly sgdt), and were crashing when run on
-> UMIP-enabled systems.
+__online_page_set_limits() is a dummy function and an extra call
+to this can be avoided.
 
-Emulation support for 64-bit processes was not initially included
-because no use cases had been identified. Brendan has found one.
+As both of the callers are now removed, __online_page_set_limits()
+can be removed permanently.
 
-Here is the relevant e-mail thread: https://lkml.org/lkml/2017/1/26/12
+Souptick Joarder (3):
+  hv_ballon: Avoid calling dummy function __online_page_set_limits()
+  xen/ballon: Avoid calling dummy function __online_page_set_limits()
+  mm/memory_hotplug.c: Remove __online_page_set_limits()
 
-FWIW,
+ drivers/hv/hv_balloon.c        | 1 -
+ drivers/xen/balloon.c          | 1 -
+ include/linux/memory_hotplug.h | 1 -
+ mm/memory_hotplug.c            | 5 -----
+ 4 files changed, 8 deletions(-)
 
-Reviewed-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+-- 
+1.9.1
 
-Only one minor comment below...
-
-> 
-> Originally-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-> Signed-off-by: Brendan Shanks <bshanks@codeweavers.com>
-> ---
->  arch/x86/kernel/umip.c | 55 +++++++++++++++++++++++++-----------------
->  1 file changed, 33 insertions(+), 22 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/umip.c b/arch/x86/kernel/umip.c
-> index 5b345add550f..1812e95d2f55 100644
-> --- a/arch/x86/kernel/umip.c
-> +++ b/arch/x86/kernel/umip.c
-> @@ -51,9 +51,7 @@
->   * The instruction smsw is emulated to return the value that the register CR0
->   * has at boot time as set in the head_32.
->   *
-> - * Also, emulation is provided only for 32-bit processes; 64-bit processes
-> - * that attempt to use the instructions that UMIP protects will receive the
-> - * SIGSEGV signal issued as a consequence of the general protection fault.
-> + * Emulation is provided for both 32-bit and 64-bit processes.
->   *
->   * Care is taken to appropriately emulate the results when segmentation is
->   * used. That is, rather than relying on USER_DS and USER_CS, the function
-> @@ -63,17 +61,18 @@
->   * application uses a local descriptor table.
->   */
->  
-> -#define UMIP_DUMMY_GDT_BASE 0xfffe0000
-> -#define UMIP_DUMMY_IDT_BASE 0xffff0000
-> +#define UMIP_DUMMY_GDT_BASE 0xfffffffffffe0000ULL
-> +#define UMIP_DUMMY_IDT_BASE 0xffffffffffff0000ULL
->  
->  /*
->   * The SGDT and SIDT instructions store the contents of the global descriptor
->   * table and interrupt table registers, respectively. The destination is a
->   * memory operand of X+2 bytes. X bytes are used to store the base address of
-> - * the table and 2 bytes are used to store the limit. In 32-bit processes, the
-> - * only processes for which emulation is provided, X has a value of 4.
-> + * the table and 2 bytes are used to store the limit. In 32-bit processes X
-> + * has a value of 4, in 64-bit processes X has a value of 8.
->   */
-> -#define UMIP_GDT_IDT_BASE_SIZE 4
-> +#define UMIP_GDT_IDT_BASE_SIZE_64BIT 8
-> +#define UMIP_GDT_IDT_BASE_SIZE_32BIT 4
->  #define UMIP_GDT_IDT_LIMIT_SIZE 2
->  
->  #define	UMIP_INST_SGDT	0	/* 0F 01 /0 */
-> @@ -189,6 +188,7 @@ static int identify_insn(struct insn *insn)
->   * @umip_inst:	A constant indicating the instruction to emulate
->   * @data:	Buffer into which the dummy result is stored
->   * @data_size:	Size of the emulated result
-> + * @x86_64:     true if process is 64-bit, false otherwise
->   *
->   * Emulate an instruction protected by UMIP and provide a dummy result. The
->   * result of the emulation is saved in @data. The size of the results depends
-> @@ -202,11 +202,8 @@ static int identify_insn(struct insn *insn)
->   * 0 on success, -EINVAL on error while emulating.
->   */
->  static int emulate_umip_insn(struct insn *insn, int umip_inst,
-> -			     unsigned char *data, int *data_size)
-> +			     unsigned char *data, int *data_size, bool x86_64)
->  {
-> -	unsigned long dummy_base_addr, dummy_value;
-> -	unsigned short dummy_limit = 0;
-> -
->  	if (!data || !data_size || !insn)
->  		return -EINVAL;
->  	/*
-> @@ -219,6 +216,9 @@ static int emulate_umip_insn(struct insn *insn, int umip_inst,
->  	 * is always returned irrespective of the operand size.
->  	 */
->  	if (umip_inst == UMIP_INST_SGDT || umip_inst == UMIP_INST_SIDT) {
-> +		u64 dummy_base_addr;
-> +		u16 dummy_limit = 0;
-> +
->  		/* SGDT and SIDT do not use registers operands. */
->  		if (X86_MODRM_MOD(insn->modrm.value) == 3)
->  			return -EINVAL;
-> @@ -228,13 +228,24 @@ static int emulate_umip_insn(struct insn *insn, int umip_inst,
->  		else
->  			dummy_base_addr = UMIP_DUMMY_IDT_BASE;
->  
-> -		*data_size = UMIP_GDT_IDT_LIMIT_SIZE + UMIP_GDT_IDT_BASE_SIZE;
-
-Maybe a blank line here?
-
-Thanks and BR,
-Ricardo
