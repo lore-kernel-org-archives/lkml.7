@@ -2,110 +2,91 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8393AC43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 22:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80383C43140
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 22:04:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B58820693
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 22:00:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DBEF218AC
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 22:04:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567893892;
+	bh=yiwL59PzzZwDqWaxr+QzIl79z/yYj6BVf3CAazvxQa4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dkNfDYbtkGpsVn3V51bHeYfFH3SqyCVJCkpOHbgnBP9luKTFvnQe2anVE8kSkMPAz
+	 dTkilkEKTqoaie+wIOERltMUuH0FxlRZ+liBAANP5+3hkN/raowJ0+HNPk9H7Cmk4l
+	 fX92PCHLrAKRrdjtyC006ji0XRwIAzs0bwW8lGIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395254AbfIGWAc (ORCPT
+        id S2395308AbfIGWEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 18:00:32 -0400
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:33018 "EHLO
-        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728155AbfIGWAc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 18:00:32 -0400
-Received: from mr4.cc.vt.edu (mr4.cc.ipv6.vt.edu [IPv6:2607:b400:92:8300:0:7b:e2b1:6a29])
-        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x87M0UdC028728
-        for <linux-kernel@vger.kernel.org>; Sat, 7 Sep 2019 18:00:30 -0400
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-        by mr4.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x87M0PlP021097
-        for <linux-kernel@vger.kernel.org>; Sat, 7 Sep 2019 18:00:30 -0400
-Received: by mail-qk1-f198.google.com with SMTP id 11so11296233qkh.15
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Sep 2019 15:00:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-transfer-encoding:date:message-id;
-        bh=d5RC79Buy5HMk4tZvkA/Hlr/NOCgip4Ja28CcC6gZL0=;
-        b=uGz/qWusjqikKO6PTwGMZ9KYigC9p0gvRARThsO5bsf+AFyFeLFhi2g8LwVBdCFUbV
-         9Ilj83om9oZMbcQCWoyPwc6Eo7NV0tnWRtA6HYYp9AuuHgBlPFmgAmam/mRJ+tSduLCJ
-         EjuGYsHAeggvsM9C7QfApdDbVh/UzfnPQZzXZjyGBqb2yGsYYubOwFI6IXb+Y7BQ5/x4
-         iI/XNJyAs1Y+okT0ULIPcjjToANDUdAhd6ye4strJc+QIhsMSessmzF/goLtOwwrTiu9
-         jrOYpZke+Cfs+BYhEqTl1HKCMss10DeTWhdo5Q+CiZeDQymoBiqeEN1xRIkBZxwRFfi7
-         NnvA==
-X-Gm-Message-State: APjAAAWb/vNNjXy5hvXMWZhHdEtAojd8mP+0rj14jAlkP0YFGdC4Ix96
-        OTrquVAI/F1rrTcSKG98u+5NsbP7D27P0e5chIJz3KN7Sl2xezvYfhDb5S0OIqi4bZG11wXE6Ew
-        p5EUNxPun/JTDJtgdmHcPycGpImjDHTl3mIo=
-X-Received: by 2002:ac8:4787:: with SMTP id k7mr15943212qtq.58.1567893625332;
-        Sat, 07 Sep 2019 15:00:25 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqz6L5IMHBnhHbnmSs5yG97dUOtsTFLjPBVLfrc+3iUsFrpar4JJxW1ohr/+/X7T10ZBULYWSQ==
-X-Received: by 2002:ac8:4787:: with SMTP id k7mr15943194qtq.58.1567893625099;
-        Sat, 07 Sep 2019 15:00:25 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:4341::359])
-        by smtp.gmail.com with ESMTPSA id t32sm4064196qtb.64.2019.09.07.15.00.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Sep 2019 15:00:23 -0700 (PDT)
-From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Theodore Dubois <tbodt@google.com>
-Cc:     a.p.zijlstra@chello.nl, linux-kernel@vger.kernel.org,
-        kernelnewbies@kernelnewbies.org
-Subject: Re: perf_event wakeup_events = 0
-In-Reply-To: <123C743E-C322-45DB-8796-BF6B6EE9CA80@google.com>
-References: <CAN3rvwA+Dnqj4O79f6rNfO50VjbAC3YwJ7CW2ze2aBLzkSJRgQ@mail.gmail.com> <943813.1567863629@turing-police>
- <123C743E-C322-45DB-8796-BF6B6EE9CA80@google.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1567893622_4251P";
-         micalg=pgp-sha1; protocol="application/pgp-signature"
-Content-Transfer-Encoding: 7bit
-Date:   Sat, 07 Sep 2019 18:00:22 -0400
-Message-ID: <970896.1567893622@turing-police>
+        Sat, 7 Sep 2019 18:04:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48930 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727736AbfIGWEv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Sep 2019 18:04:51 -0400
+Received: from localhost (unknown [62.28.240.114])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68A18208C3;
+        Sat,  7 Sep 2019 22:04:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567893890;
+        bh=yiwL59PzzZwDqWaxr+QzIl79z/yYj6BVf3CAazvxQa4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Xb1cdUK+gOyCZxk6wzqajZPJ3U5XmY5rN//nLEvUtI2t3QxrBR6ALsvM2aDgnsboD
+         fmHB+3Q9GZ0K4B8/B/2hFEizl3jwiZs7zjELO8TbmimVKSAFk67e7VwFUSJP/JgyCJ
+         NqEUenQppKK/MntPBcZcACUH0A3M3j8JI/6nNs0c=
+Date:   Sat, 7 Sep 2019 18:04:48 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Doug Anderson <dianders@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "# 4.0+" <stable@vger.kernel.org>,
+        Vadim Sukhomlinov <sukhomlinov@google.com>,
+        linux-integrity@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>
+Subject: Re: [PATCH AUTOSEL 4.19 126/167] tpm: Fix TPM 1.2 Shutdown sequence
+ to prevent future TPM operations
+Message-ID: <20190907220448.GB2012@sasha-vm>
+References: <20190903162519.7136-1-sashal@kernel.org>
+ <20190903162519.7136-126-sashal@kernel.org>
+ <CAD=FV=W0YodeoOCiCv9zmv+-gswuU8U_XgrBnesE=wynTbDBiA@mail.gmail.com>
+ <20190903165346.hwqlrin77cmzjiti@cantor>
+ <20190903194335.GG5281@sasha-vm>
+ <f2224c094836a4b8989c1cd6243a0b7ad1261a87.camel@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <f2224c094836a4b8989c1cd6243a0b7ad1261a87.camel@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==_Exmh_1567893622_4251P
-Content-Type: text/plain; charset=us-ascii
+On Sat, Sep 07, 2019 at 09:55:18PM +0300, Jarkko Sakkinen wrote:
+>On Tue, 2019-09-03 at 15:43 -0400, Sasha Levin wrote:
+>> Right. I gave a go at backporting a few patches and this happens to be
+>> one of them. It will be a while before it goes in a stable tree
+>> (probably way after after LPC).
+>
+>It *semantically* depends on
+>
+>db4d8cb9c9f2 ("tpm: use tpm_try_get_ops() in tpm-sysfs.c.")
+>
+>I.e. can cause crashes without the above patch. As a code change your
+>patch is fine but it needs the above patch backported to work in stable
+>manner.
+>
+>So... either I can backport that one (because ultimately I have
+>responsibility to do that as the maintainer) but if you want to finish
+>this one that is what you need to backport in addition and then it
+>should be fine.
 
-On Sat, 07 Sep 2019 09:14:49 -0700, Theodore Dubois said:
+If you're ok with the backport of this commit, I can just add
+db4d8cb9c9f2 on top.
 
-> If I’m reading this right, this is a sampling event which overflows 4000
-> times a second. But perf then does a poll call which wakes up on this FD with
-> POLLIN after 1.637 seconds, instead of 0.00025 seconds.
-
-No, it *takes a sample* 4,000 times a second.  For instance, number of cache line
-misses since the last sample.  You get an overflow when the counter wraps because
-there have been more than 2^32 events since you read the counter.
-
-At least that's my understanding of it.
-
---==_Exmh_1567893622_4251P
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Comment: Exmh version 2.9.0 11/07/2018
-
-iQIVAwUBXXQodQdmEQWDXROgAQJ+QA//Y7bnaoeVIZUihrGcDtSkFVLns70+qzqW
-VaXsX9cgCMTTJqYPRSaIN4+9nmtpQgHJ5eLHgDSg8rL4A8dbEp3hsjIADB4hF8fv
-bkzmM/6WPQ/CWIaXr5kDNCE39LO6iYIIGx9YNc6xoomGocLXGZ/KSpoUUhrumFmP
-s5H7NHk3IbsSTrua2iz5N74WTeLEiKbeQplG/l6VVkCH0FpWNRepzxAuRieThBkN
-qoVMXmxxAdv9J1xcH7NIfLWSfRe5wLelBO8vMTg3FjgJGF9NrNXWfYBMaqj5/6Bx
-FtQfOSpP6Uv1ndlZvoHdmSDPVdvgNdsmFVlm+pKVSfkJYRGHkb7UydVht7mZfUAS
-cHNWYYe66vWTJtV6e2za/FmtWkkYcc9zYvjmPuDRHJ/SWM3z0s6JbmHRdRaUgWoU
-UTkPGbR4arxxdElV6BslNg0ingBz5oTOqbiJNcxh8SbLlyBC/IlLA2w7NSdfuchW
-WTjljZfBaGSk7Aj4b1DDKuZxnJsqGL4rTz63qbGFUOyDB8DirxOH51gNcxe64rBz
-87k5lI8Z9X4jp7sExqZ3GtHj+0MnnZWPXemIOdWzZaO3x95hKjCNNLN7PRuZkUGx
-5a4AgX4VnQPF72KNEsiArKdjT5XE4vOVwkc4Nb8fhhpzGXumFwPEPk40mF+crSm6
-toSJHUUPC3o=
-=5Lt7
------END PGP SIGNATURE-----
-
---==_Exmh_1567893622_4251P--
+--
+Thanks,
+Sasha
