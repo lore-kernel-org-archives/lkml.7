@@ -2,105 +2,148 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81801C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 00:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 287F7C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 00:14:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5948E208C3
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 00:13:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Ms8Y1p4g"
+	by mail.kernel.org (Postfix) with ESMTP id F271E208C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 00:14:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393343AbfIGANs (ORCPT
+        id S2393396AbfIGAOG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 20:13:48 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45933 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392970AbfIGANr (ORCPT
+        Fri, 6 Sep 2019 20:14:06 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6366 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1733029AbfIGAOF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 20:13:47 -0400
-Received: by mail-pf1-f195.google.com with SMTP id y72so5601392pfb.12
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 17:13:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=Spvdc33clcoI+a6vwSzgftHLqivHojmlm8yoJkvlMzU=;
-        b=Ms8Y1p4gyEo0DXVX5rev360ZCZyD0SDw+Y87Hf6XX4cugwvj7vCB9Lsza2DOdKD3jq
-         lr7MZCM0fGBPsLl9mKd8Y2d7YH4Sikv41Zx4IQjNm6ZDogLQGveBPsRDdNEKUWD+Cerm
-         TKGVUd4/6qwaZBD0+fbHXSHmir9VZX5qtAIfk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=Spvdc33clcoI+a6vwSzgftHLqivHojmlm8yoJkvlMzU=;
-        b=qr0TlqgrvEiGyKlFXqAisTt9zSrumg5ff2AEoO8pQkXFaOskMtDpVuie2+USdfE92+
-         koxRf6oACDr/oD+YYuR+x+uFyhyHJeJYtbf7zRwBxWLzHpZsX8sGAS/l7lNH8VeeaLNf
-         mJ65bMakaCpTyCKuU45zEDFIHbGplPBRmITexISeYQj5/oBEaoJOLO4taHoRWISMLVw4
-         5GXaKM4O/ELRVmadcziQ09/jnWhm7RI95CtkJYtQEPw81z7mDFF/3M98oLhnpz7f2PgV
-         noYgQIP8QMOQ1AoxqMQiPwt0VPnkzyKRLYvU01C7oYxmoSsTO2p4B82GrAKXszdECrk2
-         wVfg==
-X-Gm-Message-State: APjAAAX4SoTZc2pAz5qBXzaTrmS096p6uc0T41o60Lq46hyHARFE8pSK
-        c0V0TnMODFGm8SkCwAlB89oaoUtLC4rcsJzdu5ygr93jd/yJztpPLtK55EoSAxwRPU8MBVe2pbp
-        TY3FJxM2hN+TKBTRgfjP3J4uZl4qlMPKYA0kqjluajLF69LmVXXppDcc7J/2cdkULp7h5at6y6n
-        2K51c=
-X-Google-Smtp-Source: APXvYqwHMYt2NA8Keg2hMSHk1i0NAI1EvBz+X7y74Qq0MJVHD+jKY8xfnoV2v5mCJiF/nyKcxcDpdg==
-X-Received: by 2002:a63:595d:: with SMTP id j29mr10443950pgm.134.1567815226830;
-        Fri, 06 Sep 2019 17:13:46 -0700 (PDT)
-Received: from [10.69.45.46] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id i9sm17103419pgo.46.2019.09.06.17.13.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 06 Sep 2019 17:13:46 -0700 (PDT)
-Subject: Re: [GIT PULL] SCSI fixes for 5.3-rc7
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <1567802352.26275.3.camel@HansenPartnership.com>
- <CAHk-=wiqV2T03rOx=8DTttZkL-N8b-anRkvT2F_w7hOGfjH92Q@mail.gmail.com>
-From:   James Smart <james.smart@broadcom.com>
-Message-ID: <63ffa77c-8a60-05ae-4694-e0b7b0e679a1@broadcom.com>
-Date:   Fri, 6 Sep 2019 17:13:45 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <CAHk-=wiqV2T03rOx=8DTttZkL-N8b-anRkvT2F_w7hOGfjH92Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        Fri, 6 Sep 2019 20:14:05 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8707cvU014844;
+        Fri, 6 Sep 2019 20:13:57 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2uv1jrrden-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 06 Sep 2019 20:13:57 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x87092bj017643;
+        Fri, 6 Sep 2019 20:13:56 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2uv1jrrdee-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 06 Sep 2019 20:13:56 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8709OHn006177;
+        Sat, 7 Sep 2019 00:13:56 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma04dal.us.ibm.com with ESMTP id 2uqgh7t8ya-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 07 Sep 2019 00:13:56 +0000
+Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x870Drx652887816
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 7 Sep 2019 00:13:53 GMT
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 427A8124053;
+        Sat,  7 Sep 2019 00:13:53 +0000 (GMT)
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B21D5124052;
+        Sat,  7 Sep 2019 00:13:52 +0000 (GMT)
+Received: from oc4221205838.ibm.com (unknown [9.85.134.207])
+        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
+        Sat,  7 Sep 2019 00:13:52 +0000 (GMT)
+From:   Matthew Rosato <mjrosato@linux.ibm.com>
+To:     sebott@linux.ibm.com
+Cc:     gerald.schaefer@de.ibm.com, pasic@linux.ibm.com,
+        borntraeger@de.ibm.com, walling@linux.ibm.com,
+        linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org,
+        joro@8bytes.org, linux-kernel@vger.kernel.org,
+        alex.williamson@redhat.com, kvm@vger.kernel.org,
+        heiko.carstens@de.ibm.com, robin.murphy@arm.com, gor@linux.ibm.com,
+        cohuck@redhat.com, pmorel@linux.ibm.com
+Subject: [PATCH v4 0/4] Retrieving zPCI specific info with VFIO
+Date:   Fri,  6 Sep 2019 20:13:47 -0400
+Message-Id: <1567815231-17940-1-git-send-email-mjrosato@linux.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-06_11:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909070000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/6/2019 4:18 PM, Linus Torvalds wrote:
-> On Fri, Sep 6, 2019 at 1:39 PM James Bottomley
-> <James.Bottomley@hansenpartnership.com> wrote:
->>
->> diff --git a/drivers/scsi/lpfc/lpfc_attr.c b/drivers/scsi/lpfc/lpfc_attr.c
->> index 8d8c495b5b60..d65558619ab0 100644
->> --- a/drivers/scsi/lpfc/lpfc_attr.c
->> +++ b/drivers/scsi/lpfc/lpfc_attr.c
->> @@ -5715,7 +5715,7 @@ LPFC_ATTR_RW(nvme_embed_cmd, 1, 0, 2,
->>    *      0    = Set nr_hw_queues by the number of CPUs or HW queues.
->>    *      1,128 = Manually specify the maximum nr_hw_queue value to be set,
->>    *
->> - * Value range is [0,128]. Default value is 8.
->> + * Value range is [0,256]. Default value is 8.
->>    */
-> Shouldn't that "1,128 = Manually specify.." line also have been updated?
->
-> Not that I really care, and I'll pul this, but..
->
->                        Linus
+Note: These patches by Pierre got lost in the ether a few months back
+as he has been unavailable to carry them forward.  I've made changes
+based upon comments received on his last version.
 
-Yes - thanks
+We define a new configuration entry for VFIO/PCI, VFIO_PCI_ZDEV
+to configure access to a zPCI region dedicated for retrieving
+zPCI features.
 
--- james
+When the VFIO_PCI_ZDEV feature is configured we initialize
+a new device region, VFIO_REGION_SUBTYPE_ZDEV_CLP, to hold
+the information from the ZPCI device the userland needs to
+give to a guest driving the zPCI function.
+
+
+Note that in the current state we do not use the CLP instructions
+to access the firmware but get the information directly from
+the zdev device.
+
+-This means that the patch 1, "s390: pci: Exporting access to CLP PCI
+function and PCI group" is not used and can be let out of this series
+without denying the good working of the other patches.
+- But we will need this later, eventually in the next iteration
+  to retrieve values not being saved inside the zdev structure.
+  like maxstbl and the PCI supported version
+
+To share the code with arch/s390/pci/pci_clp.c the original functions
+in pci_clp.c to query PCI functions and PCI functions group are
+modified so that they can be exported.
+
+A new function clp_query_pci() replaces clp_query_pci_fn() and
+the previous calls to clp_query_pci_fn() and clp_query_pci_fngrp()
+are replaced with calls to zdev_query_pci_fn() and zdev_query_pci_fngrp()
+using a zdev pointer as argument.
+
+Changes since v3:
+- New patch: define maxstbl
+- Remove CLP_UTIL_STR_LEN references from uapi header
+- Fix broken ifdef CONFIG_VFIO_PCI_ZDEV
+- Change Kconfig option from tristate to bool
+- Remove VFIO_REGION_TYPE_IBM_ZDEV, move VFIO_REGION_SUBTYPE_ZDEV_CLP to a 1014 subtype
+- reject iswrite in .rw callback
+- Remove rw restriction on identical buffer sizes
+- Allow arbitrary sized read
+
+Pierre Morel (4):
+  s390: pci: Exporting access to CLP PCI function and PCI group
+  s390: pci: Define the maxstbl CLP response entry
+  vfio: zpci: defining the VFIO headers
+  vfio: pci: Using a device region to retrieve zPCI information
+
+ arch/s390/include/asm/pci.h         |  3 ++
+ arch/s390/include/asm/pci_clp.h     |  2 +-
+ arch/s390/pci/pci_clp.c             | 71 ++++++++++++++++---------------
+ drivers/vfio/pci/Kconfig            |  7 +++
+ drivers/vfio/pci/Makefile           |  1 +
+ drivers/vfio/pci/vfio_pci.c         |  9 ++++
+ drivers/vfio/pci/vfio_pci_private.h | 10 +++++
+ drivers/vfio/pci/vfio_pci_zdev.c    | 85 +++++++++++++++++++++++++++++++++++++
+ include/uapi/linux/vfio.h           |  1 +
+ include/uapi/linux/vfio_zdev.h      | 35 +++++++++++++++
+ 10 files changed, 189 insertions(+), 35 deletions(-)
+ create mode 100644 drivers/vfio/pci/vfio_pci_zdev.c
+ create mode 100644 include/uapi/linux/vfio_zdev.h
+
+-- 
+1.8.3.1
 
