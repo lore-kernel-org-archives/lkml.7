@@ -2,117 +2,91 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF10C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 19:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 081A9C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 19:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79F1820854
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 19:18:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567883895;
-	bh=sXmEqe+gF7DQG/nO4tf+XPyNl6rsBfqXAl0wIiPFHDQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cnsW3GEHZjPfrSnRX/lD9ngAbm3Z1pJY8Hsp/9+9uEgCVX1psLkZ3lkN1XZSoCpzw
-	 XtnNWwoltzf2IuDYhXpOu85NyIMPvQ8vNfR2V7R+FW0N2D0nc22SWCGEknUbSajSsL
-	 Y2TXLkw3lkqGWI1vQ1DH7rIJ6EfVuuBvQN2Re0rw=
+	by mail.kernel.org (Postfix) with ESMTP id CF3A320854
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 19:24:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403876AbfIGTSO (ORCPT
+        id S2404751AbfIGTYG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 15:18:14 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:35483 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727012AbfIGTSO (ORCPT
+        Sat, 7 Sep 2019 15:24:06 -0400
+Received: from smtprelay0224.hostedemail.com ([216.40.44.224]:41709 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727014AbfIGTYG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 15:18:14 -0400
-Received: by mail-lf1-f65.google.com with SMTP id w6so7603792lfl.2
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Sep 2019 12:18:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XwVbZgJQjdxitsafoMUeKLcgUzEgG9R7QqVMwklal/s=;
-        b=h72a+hFu/Zrtkr7IEOdoaFQVcAKgITVe4PwvPJrxmJNE0AHbgKbD9XjdcwnwjJAucH
-         6BbnZQ/rTq8tDmpU7xCayzD/IZRN/j3J6NKokW/Y1049M+5VDRh0TebNf+ecwWON1Zne
-         nWiWEyrt0FdOpg7OY9f91xiqkONTjPW6jhtsg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XwVbZgJQjdxitsafoMUeKLcgUzEgG9R7QqVMwklal/s=;
-        b=DcVtRG/us4Zhf/xhnocSky+sBm1YPHbUcIoVl3+LAelbc796BB1t2UozL520ZhmrOQ
-         Pu7xjHkQXyqoqxo45xf/5DQus6YxASzZiw3dzlMOaJrt1JCkxktqTngbohMEYPZrg9FR
-         zDTK5Q2FZjagI/bOcS97t8f/5I7+w2pfh5NAeaC0F13Twabx5lUpi1L0/GFE79bycGhd
-         d7z8tvBMYhRmlFDgfKjVxCizuuIx72LoFg8H+7U5IICBNZFBt28iVvcLMQGy2Kif8Abn
-         ShgsCkrH3acBH4xDToO/ejEesuRQG9oIpy08yGlZgQobE1fPB4uQE29Ihksb6bdo2PlX
-         T00w==
-X-Gm-Message-State: APjAAAVWExGX7lveQLMF+fuRDiWlYWUH4jEzQhG38hkpQVCfnbbCJSEM
-        adZ80feBAMHw7RGmM6XeKQqncZoSGHQ=
-X-Google-Smtp-Source: APXvYqxTkY6bbtMSKzF9PABTMxvvIG0dapysVToFfBMUKbhYjrttvpGzpMlTD6n3lLz2AaIFcaYiww==
-X-Received: by 2002:a19:3f47:: with SMTP id m68mr10564190lfa.108.1567883891663;
-        Sat, 07 Sep 2019 12:18:11 -0700 (PDT)
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
-        by smtp.gmail.com with ESMTPSA id h19sm275667ljj.19.2019.09.07.12.18.10
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 07 Sep 2019 12:18:10 -0700 (PDT)
-Received: by mail-lf1-f44.google.com with SMTP id q27so7557539lfo.10
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Sep 2019 12:18:10 -0700 (PDT)
-X-Received: by 2002:ac2:5c11:: with SMTP id r17mr10932128lfp.61.1567883889956;
- Sat, 07 Sep 2019 12:18:09 -0700 (PDT)
+        Sat, 7 Sep 2019 15:24:06 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 97A12837F24A;
+        Sat,  7 Sep 2019 19:24:04 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: clam79_2374d17e87c29
+X-Filterd-Recvd-Size: 2175
+Received: from XPS-9350.home (unknown [47.151.152.152])
+        (Authenticated sender: joe@perches.com)
+        by omf20.hostedemail.com (Postfix) with ESMTPA;
+        Sat,  7 Sep 2019 19:24:03 +0000 (UTC)
+Message-ID: <564f4da0f0a9cf9eb91ee46bf10531ea04a37750.camel@perches.com>
+Subject: Re: [PATCH 2/2] staging: exfat: cleanup spacing for casts
+From:   Joe Perches <joe@perches.com>
+To:     Valentin Vidic <vvidic@valentin-vidic.from.hr>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Date:   Sat, 07 Sep 2019 12:24:02 -0700
+In-Reply-To: <20190907185833.11910-2-vvidic@valentin-vidic.from.hr>
+References: <20190907185833.11910-1-vvidic@valentin-vidic.from.hr>
+         <20190907185833.11910-2-vvidic@valentin-vidic.from.hr>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-References: <CAHk-=wi_nBULUyO=OKtNBCZ+VSqdOcEiUeFqXTQY_D5ga5k4gQ@mail.gmail.com>
- <156785100521.13300.14461504732265570003@skylake-alporthouse-com>
- <alpine.DEB.2.21.1909071628420.1902@nanos.tec.linutronix.de>
- <156786727951.13300.15226856788926071603@skylake-alporthouse-com> <alpine.DEB.2.21.1909071657430.1902@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1909071657430.1902@nanos.tec.linutronix.de>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 7 Sep 2019 12:17:54 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wikdDMYqhygJYkoWw7YxpGNx7O2kFRxbG91NNeFO7yu3w@mail.gmail.com>
-Message-ID: <CAHk-=wikdDMYqhygJYkoWw7YxpGNx7O2kFRxbG91NNeFO7yu3w@mail.gmail.com>
-Subject: Re: Linux 5.3-rc7
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Bandan Das <bsd@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 7, 2019 at 8:00 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Ok let me find a testbox to figure out whats wrong there.
+On Sat, 2019-09-07 at 18:58 +0000, Valentin Vidic wrote:
+> Fixes checkpatch.pl warnings:
+> 
+>   CHECK: No space is necessary after a cast
 
-Honestly, it looks like we should just revert that commit, since we
-never used to clear the LDR bits before either, and the bug it "fixes"
-doesn't really seem to be a bug (well, it's a bug in KVM, but that's a
-different thing).
+Please always try to improve the code rather
+than shutup checkpatch warnings.
 
-And I wouldn't be at all surprised if it confuses some BIOS code.
+> diff --git a/drivers/staging/exfat/exfat_core.c b/drivers/staging/exfat/exfat_core.c
+[]
+> @@ -204,7 +204,7 @@ s32 fat_alloc_cluster(struct super_block *sb, s32 num_alloc,
+>  
+>  			if ((--num_alloc) == 0) {
+>  				p_fs->clu_srch_ptr = new_clu;
+> -				if (p_fs->used_clusters != (u32) ~0)
+> +				if (p_fs->used_clusters != (u32)~0)
 
-We use the LDR bits ourselves in smp_get_logical_apicid(), and so
-clearing them out seems entirely bogus.
+Probably better as UINT_MAX
+etc...
 
-At a guess, it's wakeup_cpu_via_init_nmi() that does that
+> @@ -3678,7 +3678,7 @@ static int parse_options(char *options, int silent, int *debug,
+>  	opts->fs_uid = current_uid();
+>  	opts->fs_gid = current_gid();
+>  	opts->fs_fmask = opts->fs_dmask = current->fs->umask;
+> -	opts->allow_utime = (unsigned short) -1;
+> +	opts->allow_utime = (unsigned short)-1;
 
-                if (apic->dest_logical == APIC_DEST_LOGICAL)
-                        id = cpu0_logical_apicid;
-                else
-                        id = apicid;
+and maybe U16_MAX
 
-and now that we've cleared the APIC LDR bits, we no longer wake the
-BSP. We send the NMI to the _old_ APIC ID, but we've overwritten it
-with 0 when we put it to sleep, so now nothing happens.
+> @@ -3770,7 +3770,7 @@ static int parse_options(char *options, int silent, int *debug,
+>  	}
+>  
+>  out:
+> -	if (opts->allow_utime == (unsigned short) -1)
+> +	if (opts->allow_utime == (unsigned short)-1)
+>  		opts->allow_utime = ~opts->fs_dmask & 0022;
+>  
+>  	return 0;
 
-I'm really not clear on why it's a good idea to clear the LDR bits on
-shutdown, and commit 558682b52919 ("x86/apic: Include the LDR when
-clearing out APIC registers") just looks pointless. And now it has
-proven to break some machines.
 
-So why wouldn't we just revert it?
-
-                 Linus
