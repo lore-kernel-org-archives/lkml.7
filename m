@@ -2,82 +2,83 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 437C7C00306
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 07:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37527C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 07:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 110382186A
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 07:50:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567842604;
-	bh=5pobKH5kpChuhb/hM732oKQFMLUdUp2FcOEoh5JNV+c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LdhDRCyqibvbctETBVW8rZcHTR3XX+Vn2M6Q0nOnPVdlf1jDNpAWAOaN29GaI3kS4
-	 fPauu7KuEmIHYebtbaTlYROG/eqRq62hPKlucBKVePF+6hVpnKb63P311Hgb7NlrrP
-	 G4D5VEMlHSJdzuFWxYRgkqb10gaKxixIEdzuOP1U=
+	by mail.kernel.org (Postfix) with ESMTP id 195B12186A
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 07:50:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394550AbfIGHuC (ORCPT
+        id S2394512AbfIGHuC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sat, 7 Sep 2019 03:50:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35590 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726133AbfIGHuB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 03:50:01 -0400
-Received: from localhost (unknown [223.226.124.26])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 736AF2173B;
-        Sat,  7 Sep 2019 07:50:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567842601;
-        bh=5pobKH5kpChuhb/hM732oKQFMLUdUp2FcOEoh5JNV+c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Y1RHYCWEnvXTeOyiRb38s1MMJsTSJ675b7qH4gEY1A5qMA6HuEMmxGvK20+MR5E3t
-         /RJ5n1WiwHrqbCs3QqOgBeozMtvICz1QmjXSn1iTKlkD9I7WLzgFljcU/iZtmZqghu
-         XPWi4Oi7/RAda5UVzirbaPHRsz1FNGneG6kxX78A=
-Date:   Sat, 7 Sep 2019 13:18:52 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] clk: qcom: gcc-qcs404: Use floor ops for sdcc clks
-Message-ID: <20190907074852.GI2672@vkoul-mobl>
-References: <20190906045659.20621-1-vkoul@kernel.org>
- <20190906203827.A2259208C3@mail.kernel.org>
+Received: from youngberry.canonical.com ([91.189.89.112]:40447 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725852AbfIGHqn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Sep 2019 03:46:43 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1i6VQY-0006LA-Co; Sat, 07 Sep 2019 07:46:34 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Bard Liao <bardliao@realtek.com>,
+        Oder Chiou <oder_chiou@realtek.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: rt1308: make array pd static const, makes object smaller
+Date:   Sat,  7 Sep 2019 08:46:34 +0100
+Message-Id: <20190907074634.22144-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190906203827.A2259208C3@mail.kernel.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06-09-19, 13:38, Stephen Boyd wrote:
-> Quoting Vinod Koul (2019-09-05 21:56:59)
-> > Update the gcc qcs404 clock driver to use floor ops for sdcc clocks. As
-> > disuccsed in [1] it is good idea to use floor ops for sdcc clocks as we
-> > dont want the clock rates to do round up.
-> > 
-> > [1]: https://lore.kernel.org/linux-arm-msm/20190830195142.103564-1-swboyd@chromium.org/
-> > 
-> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> > ---
-> 
-> Is Taniya writing the rest? Please don't dribble it out over the next
-> few weeks!
+From: Colin Ian King <colin.king@canonical.com>
 
-Taniya is Cced. Since I upstream qcs404 driver and have a board handy to
-test, did that :) 
+Don't populate the array pd on the stack but instead make it
+static const. Makes the object code smaller by 82 bytes.
 
-Thanks
+Before:
+   text	   data	    bss	    dec	    hex	filename
+  26548	   7288	     64	  33900	   846c	sound/soc/codecs/rt1308.o
+
+After:
+   text	   data	    bss	    dec	    hex	filename
+  26370	   7384	     64	  33818	   841a	sound/soc/codecs/rt1308.o
+
+(gcc version 9.2.1, amd64)
+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ sound/soc/codecs/rt1308.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/sound/soc/codecs/rt1308.c b/sound/soc/codecs/rt1308.c
+index 6f2ee6809dbb..b75931a69a1c 100644
+--- a/sound/soc/codecs/rt1308.c
++++ b/sound/soc/codecs/rt1308.c
+@@ -436,7 +436,8 @@ static const struct snd_soc_dapm_route rt1308_dapm_routes[] = {
+ 
+ static int rt1308_get_clk_info(int sclk, int rate)
+ {
+-	int i, pd[] = {1, 2, 3, 4, 6, 8, 12, 16};
++	int i;
++	static const int pd[] = {1, 2, 3, 4, 6, 8, 12, 16};
+ 
+ 	if (sclk <= 0 || rate <= 0)
+ 		return -EINVAL;
 -- 
-~Vinod
+2.20.1
+
