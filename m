@@ -2,67 +2,94 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D9AC43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 00:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D521FC43140
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 00:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A91F421835
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 00:00:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567814418;
-	bh=UaWZFtU9Ab9mseZ6UX4hS+GHMGl8hpfVexJdB7uH0s0=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=QhTGdocZUM7YE2SR7BJyN3EQyLVe2lX4WYawBJEsta0Se9YWvU4eG1WlVihXWK3md
-	 ez0938InP7t810W9zxbSu9CW3UsJXlwtyHy1nKQ4j5yHCngQZO3Dw7STT84rzz+V92
-	 v+iOAMQ6p4v3avhBEWVwEu3jL3qmO+Vr3IufudJ0=
+	by mail.kernel.org (Postfix) with ESMTP id B978321835
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 00:00:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406248AbfIGAAP (ORCPT
+        id S2406329AbfIGAAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 20:00:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46174 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405572AbfIGAAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 20:00:09 -0400
-Subject: Re: [git pull] Input updates for v5.3-rc7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567814409;
-        bh=UaWZFtU9Ab9mseZ6UX4hS+GHMGl8hpfVexJdB7uH0s0=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=iZMyjVe56hOpDfAWH3vxJ/yBCoNPwpkKFFJrqRWaqVysRE9bwwnULe7S7xb2NHFtt
-         blPjVwd4r2yfm/p66FdxtjyLdqj3U4MV+OK6aH03Jm6GwsbXBFo6kf731kav0ewkqK
-         gn+iP848mEqiUPxn/W2UF1CI2YOswXQSmCRJXOck=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190906224827.GA211076@dtor-ws>
-References: <20190906224827.GA211076@dtor-ws>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190906224827.GA211076@dtor-ws>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git for-linus
-X-PR-Tracked-Commit-Id: 0c043d70d04711fe6c380df9065fdc44192c49bf
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 9772152b4b3cd32a1aadf75e3d1a16a072d3e4a5
-Message-Id: <156781440893.2933.2000532621333509214.pr-tracker-bot@kernel.org>
-Date:   Sat, 07 Sep 2019 00:00:08 +0000
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+        Fri, 6 Sep 2019 20:00:25 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:43151 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405572AbfIGAAW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 20:00:22 -0400
+Received: by mail-oi1-f194.google.com with SMTP id t84so6448340oih.10;
+        Fri, 06 Sep 2019 17:00:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CTESiiiEsvvGtzHjMvt+Vs+YyinAgG2nRdj8V0GoeRI=;
+        b=Pq81b9Tzy56Piznk485w3DSx9Fz/UgdOXrizeHAIFpTL8PJ0NJv5WiM8mM/HzVPNSc
+         ZZeUPpM8TK+5Zdn0436NfXkG6nbwB2PKnnEq3TkExuWzap53mmZiY+PnksG6XBEAtQHl
+         E4VsnTLamUyT+R5jTBEudkUhJdsjXQio5vMnxoKyXOxoyil6mK/y1NjA2N6/2m+A+ruf
+         BO2bWtg5BLmymucCJAc5RV/eVNY1HDeBtD4hFtWlZlfnxYR1HyquvJ5qD0cL8XLGu9J6
+         USkNtgVNehtnZjnpdiHpIrFSI3cuz9A8ub2u6SZ8I6QD8QRdbXchaVJyKtQxvm1cwr4i
+         fo4w==
+X-Gm-Message-State: APjAAAWIm1Id4mN4gCUHz9oc9MPjBWFsFs/bglgL0yuVMDD1OfG94Em1
+        dHhJcob7dNih+JmpOWBGYCA=
+X-Google-Smtp-Source: APXvYqxVnW04a3pr7A6Hae0d1zkxWcP9AgzgoZUhAC/S/OwAbr5Y/KKWFoseJliFrz3GXCxEwxRWkA==
+X-Received: by 2002:aca:6707:: with SMTP id z7mr2532791oix.12.1567814421581;
+        Fri, 06 Sep 2019 17:00:21 -0700 (PDT)
+Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
+        by smtp.gmail.com with ESMTPSA id i20sm2195084oie.13.2019.09.06.17.00.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 06 Sep 2019 17:00:20 -0700 (PDT)
+Subject: Re: [PATCH v8 13/13] nvmet-passthru: support block accounting
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc:     Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
+        Jens Axboe <axboe@fb.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190828215429.4572-1-logang@deltatee.com>
+ <20190828215429.4572-14-logang@deltatee.com>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <92d61426-65a2-827c-936b-55f12f3d6afb@grimberg.me>
+Date:   Fri, 6 Sep 2019 17:00:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190828215429.4572-14-logang@deltatee.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 6 Sep 2019 15:48:27 -0700:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git for-linus
+> Support block disk accounting by setting the RQF_IO_STAT flag
+> and gendisk in the request.
+> 
+> After this change, IO counts will be reflected correctly in
+> /proc/diskstats for drives being used by passthru.
+> 
+> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> ---
+>   drivers/nvme/target/io-cmd-passthru.c | 5 ++++-
+>   1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/nvme/target/io-cmd-passthru.c b/drivers/nvme/target/io-cmd-passthru.c
+> index 7557927a3451..63f12750a80d 100644
+> --- a/drivers/nvme/target/io-cmd-passthru.c
+> +++ b/drivers/nvme/target/io-cmd-passthru.c
+> @@ -410,6 +410,9 @@ static struct request *nvmet_passthru_blk_make_request(struct nvmet_req *req,
+>   	if (unlikely(IS_ERR(rq)))
+>   		return rq;
+>   
+> +	if (blk_queue_io_stat(q) && cmd->common.opcode != nvme_cmd_flush)
+> +		rq->rq_flags |= RQF_IO_STAT;
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/9772152b4b3cd32a1aadf75e3d1a16a072d3e4a5
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Does flush has data bytes in the request? Why the special casing?
