@@ -2,98 +2,58 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E5AC43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 20:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F7B4C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 20:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0572E206A5
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 20:44:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aprS0A+p"
+	by mail.kernel.org (Postfix) with ESMTP id 7B19C206A5
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 20:45:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406266AbfIGUo2 (ORCPT
+        id S2406307AbfIGUo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 16:44:28 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:53680 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727251AbfIGUo1 (ORCPT
+        Sat, 7 Sep 2019 16:44:59 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:49657 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404588AbfIGUo7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 16:44:27 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x87KhwgS166981;
-        Sat, 7 Sep 2019 20:43:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=FjfyYykhnGr9m5yu7nJC4bKVeUM/Qe4ndBCysAda6/A=;
- b=aprS0A+pVWPv67znjyxqeJhZIgo2Sm5g8vUbnYyNLwpqj/oHUIkGFX7wT5EdmPHIx/O0
- m7zveaQqlFIMd5RGDa+yQP8MN6rfa+1ynI9cVCYBdEQXSeIPNHA6AtyJgLjTV+q0mF62
- aQamyk9y9QySun8B3J5F9tACLfAVNB0JCxfGrQBnJGPNsurlH5ocE2KlBbPOq83ke/I0
- SViclQWgalOmcnd99108xSw97oiJgSwEx4Q8nvcxVV5B1QxYvZsFAQu4QBVyRBcHxxDG
- 8eogD7AusnzO4kE6CDDkdevnPFccsSp0EDHBki4pZxWtGZ7Ao1NwoDhaDTqNa4KisLqk Sw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2uvkpug0am-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 07 Sep 2019 20:43:58 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x87KhEp9098532;
-        Sat, 7 Sep 2019 20:43:57 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2uv4d0fj3h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 07 Sep 2019 20:43:57 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x87KhsdK014475;
-        Sat, 7 Sep 2019 20:43:55 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 07 Sep 2019 13:43:54 -0700
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     <alim.akhtar@samsung.com>, <avri.altman@wdc.com>,
-        <pedrom.sousa@synopsys.com>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <liwei213@huawei.com>,
-        <dimitrysh@google.com>, <kjlu@umn.edu>, <tglx@linutronix.de>,
-        <manivannan.sadhasivam@linaro.org>, <stanley.chu@mediatek.com>,
-        <arnd@arndb.de>, <linux-scsi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -next] scsi: ufs-hisi: use devm_platform_ioremap_resource() to simplify code
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190904130457.24744-1-yuehaibing@huawei.com>
-Date:   Sat, 07 Sep 2019 16:43:51 -0400
-In-Reply-To: <20190904130457.24744-1-yuehaibing@huawei.com>
-        (yuehaibing@huawei.com's message of "Wed, 4 Sep 2019 21:04:57 +0800")
-Message-ID: <yq1v9u3j0qg.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Sat, 7 Sep 2019 16:44:59 -0400
+Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i6hZo-0001mK-TF; Sat, 07 Sep 2019 22:44:57 +0200
+Date:   Sat, 7 Sep 2019 22:44:51 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+cc:     Chris Wilson <chris@chris-wilson.co.uk>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Bandan Das <bsd@redhat.com>
+Subject: Re: Linux 5.3-rc7
+In-Reply-To: <CAHk-=wikdDMYqhygJYkoWw7YxpGNx7O2kFRxbG91NNeFO7yu3w@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1909072243570.1902@nanos.tec.linutronix.de>
+References: <CAHk-=wi_nBULUyO=OKtNBCZ+VSqdOcEiUeFqXTQY_D5ga5k4gQ@mail.gmail.com> <156785100521.13300.14461504732265570003@skylake-alporthouse-com> <alpine.DEB.2.21.1909071628420.1902@nanos.tec.linutronix.de> <156786727951.13300.15226856788926071603@skylake-alporthouse-com>
+ <alpine.DEB.2.21.1909071657430.1902@nanos.tec.linutronix.de> <CAHk-=wikdDMYqhygJYkoWw7YxpGNx7O2kFRxbG91NNeFO7yu3w@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9373 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1909070226
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9373 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1909070226
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, 7 Sep 2019, Linus Torvalds wrote:
+> On Sat, Sep 7, 2019 at 8:00 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> 
+> So why wouldn't we just revert it?
 
-YueHaibing,
+That's what I just replied to Chris. Can you do it right away or should I queue it up?
 
-> Use devm_platform_ioremap_resource() to simplify the code a bit.
-> This is detected by coccinelle.
+Thanks,
 
-Applied to 5.4/scsi-queue, thanks.
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+	tglx
