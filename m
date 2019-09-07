@@ -2,113 +2,76 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BAA0C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 14:39:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9753DC43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 14:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1565721871
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 14:39:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iSuHLhQJ"
+	by mail.kernel.org (Postfix) with ESMTP id 74845218AC
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 14:41:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406003AbfIGOjc (ORCPT
+        id S2394652AbfIGOle convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 10:39:32 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:42866 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726669AbfIGOjb (ORCPT
+        Sat, 7 Sep 2019 10:41:34 -0400
+Received: from mail.fireflyinternet.com ([109.228.58.192]:57260 "EHLO
+        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727381AbfIGOle (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 10:39:31 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x87EdQQl082101;
-        Sat, 7 Sep 2019 14:39:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=s9aXxI7sA4me/ycb0JLeHZ2uDjHcFtgU9B3Kh9Cf838=;
- b=iSuHLhQJwF9e7CB3TviGpt1E4HkfhqMvBAPwkCPFb4jMd40mMwZ+PeAAQk3bJSKJ7nFS
- yznndfF+cG5gcqz/2EK9GJ5Pq4xM/dv5GCpqMsZ1DN57/h6hHTDDFXC0KbXFYPPUjojH
- sZ4XHpgXho2gnAga45cd3ykizzgHz1aXuoQKrYSZxfnQuw4Qqv65uNaZSH9mBYzQ7uYC
- PlBZVAl+zN8W4ljOiq5X5bbynr/fXjHeBfuVACUw9IOlMHImcmGA04+Avw4krAnpRY24
- OrgyuPmTpDMpU0x7WW2ScygnPyGHbii+QI9Bkv3JzGow4zpqH5VNSs5Ck8tR/wW99H/l jQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2uve1c01rm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 07 Sep 2019 14:39:26 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x87EdN8K127952;
-        Sat, 7 Sep 2019 14:39:25 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2uve9b0a34-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 07 Sep 2019 14:39:24 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x87Ecudq009512;
-        Sat, 7 Sep 2019 14:38:56 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 07 Sep 2019 07:38:55 -0700
-Date:   Sat, 7 Sep 2019 17:38:49 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     volery <sandro@volery.com>
-Cc:     rspringer@google.com, toddpoynor@google.com, benchan@chromium.org,
-        gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Fixed parentheses malpractice in apex_driver.c
-Message-ID: <20190907143849.GA30834@kadam>
-References: <20190906183801.GA2456@volery>
+        Sat, 7 Sep 2019 10:41:34 -0400
+X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
+Received: from localhost (unverified [78.156.65.138]) 
+        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 18409534-1500050 
+        for multiple; Sat, 07 Sep 2019 15:41:21 +0100
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190906183801.GA2456@volery>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9373 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1909070157
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9373 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1909070157
+Content-Transfer-Encoding: 8BIT
+To:     Thomas Gleixner <tglx@linutronix.de>
+From:   Chris Wilson <chris@chris-wilson.co.uk>
+In-Reply-To: <alpine.DEB.2.21.1909071628420.1902@nanos.tec.linutronix.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Bandan Das <bsd@redhat.com>
+References: <CAHk-=wi_nBULUyO=OKtNBCZ+VSqdOcEiUeFqXTQY_D5ga5k4gQ@mail.gmail.com>
+ <156785100521.13300.14461504732265570003@skylake-alporthouse-com>
+ <alpine.DEB.2.21.1909071628420.1902@nanos.tec.linutronix.de>
+Message-ID: <156786727951.13300.15226856788926071603@skylake-alporthouse-com>
+User-Agent: alot/0.6
+Subject: Re: Linux 5.3-rc7
+Date:   Sat, 07 Sep 2019 15:41:19 +0100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-You need a subject prefix.  It should be something like:
-
-[PATCH] Staging: gasket: Fix parentheses malpractice in apex_driver.c
-
-Generally "Fix" is considered better style than "Fixed".  We aren't
-going to care about that in staging, but the patch prefix is mandatory
-so you will need to redo it anyway and might as well fix that as well.
-
-On Fri, Sep 06, 2019 at 08:38:01PM +0200, volery wrote:
-> There were some parentheses at the end of lines, which I took care of.
-> This is my first patch.
-  ^^^^^^^^^^^^^^^^^^^^^^
-
-Put this sort of comments after the --- cut off line
-
+Quoting Thomas Gleixner (2019-09-07 15:29:19)
+> On Sat, 7 Sep 2019, Chris Wilson wrote:
+> > Quoting Linus Torvalds (2019-09-02 18:28:26)
+> > > Bandan Das:
+> > >       x86/apic: Include the LDR when clearing out APIC registers
+> > 
+> > Apologies if this is known already, I'm way behind on email.
+> > 
+> > I've bisected
+> > 
+> > [   18.693846] smpboot: CPU 0 is now offline
+> > [   19.707737] smpboot: Booting Node 0 Processor 0 APIC 0x0
+> > [   29.707602] smpboot: do_boot_cpu failed(-1) to wakeup CPU#0
+> > 
+> > https://intel-gfx-ci.01.org/tree/drm-tip/igt@perf_pmu@cpu-hotplug.html
+> > 
+> > to 558682b52919. (Reverts cleanly and fixes the problem.)
+> > 
+> > I'm guessing that this is also behind the suspend failures, missing
+> > /dev/cpu/0/msr, and random perf_event_open() failures we have observed
+> > in our CI since -rc7 across all generations of Intel cpus.
 > 
-> Signed-off-by: Sandro Volery <sandro@volery.com>
-> ---
-  ^^^
-Put it here.  It will be removed when we apply the patch so it won't
-be recorded in the git log.
+> So is this on bare metal or in a VM?
 
->  drivers/staging/gasket/apex_driver.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
-
-Joe's comments are, of course, correct as well.
-
-regards,
-dan carpenter
-
+Our single virtualised piece of kit doesn't support cpu hotplug, so this
+test is not being run. We have failures on
+icl (2019), glk (2017), kbl (2017), bxt (2016), skl (2015),
+bsw (2016), hsw (2013), byt (2013), snb (2011), elk (2008),
+bwr (2006), blb (2007)
+-Chris
