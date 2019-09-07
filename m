@@ -2,113 +2,138 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E73C00307
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 00:44:04 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E25262178F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB35DC43331
 	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 00:44:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n7/teM7m"
+Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
+	by mail.kernel.org (Postfix) with ESMTP id C313D2173B
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 00:44:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393551AbfIGAoB (ORCPT
+        id S2393418AbfIGAdl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 20:44:01 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43829 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729121AbfIGAoA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 20:44:00 -0400
-Received: by mail-pf1-f193.google.com with SMTP id d15so5651602pfo.10
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Sep 2019 17:44:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Qq+ViY1LzTKSZu7bhAccIqZ/Vrzl8d1032PbomfEyFI=;
-        b=n7/teM7m5aZbE1shei+cdfMkg1tdBR1zKLy2TcRf4qFA/v75LU483wyCY0kuW4fasm
-         bN/U3dSFZ4TbNy62Z05NOELMTUHQavfaiZqchmgH9E+RL4jPMFy2VLEkyaq9ca9pr0+a
-         ZtJVrhe+xaj2XOVmemaHzu4vlvc6I5+qzRPaNW9Qn/xqDysDhAG2o452neAD5n++i5pc
-         w0dokgJeE+NPPJTcIyIErlfWZTS4yYfJQuO6qj6PftV/CI8Kl2mlEh5olkp8HBhpTCP3
-         QSTPAsailtOOs1KCcL1ZhUdXYh+JQanFd19NbVdG3YvcKcqKaAwZFjD7MM+IsbXn+F4i
-         fkwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Qq+ViY1LzTKSZu7bhAccIqZ/Vrzl8d1032PbomfEyFI=;
-        b=YmjXJTktL8AglbGiB/SI2jrCXaVa1wlLQWjVlwpo3QlRYlIa0W99jUkSwl+JmEXDyu
-         +srq2/Q00zwk7GXDwkFI4t2g5j40gGcwRAwvwg8FNZqLxMWopx8qCKn5EFYDncHFO/Oq
-         NrrNw+O3UI1Q+O4R2Y076Xjy70fcMeSxlEurlH3HHmFMV1ocEdOvJOhWz5o5Ih7LNIXy
-         1ByVLGrkcUGRdlWjtofjKmQnKn7rMZF1spmWjaFUBITDcWiELImu23rT6ni2LOovq8Ae
-         7jjlOfwpJHLDnVoGDMPv4K9EPxA0tRKlVkOHp0iIZ8F7vSEcdYHdAiFYWbqjf7ILr18D
-         cjqQ==
-X-Gm-Message-State: APjAAAVIwjH5ECyK3RexN7dYkUrp6fKEdMs3g5B1WhuB4gkAjk2RUyMD
-        n8HAsY7KLXbIwFsNJn/SCt644nDq+lxvhzRzTMDVtQ==
-X-Google-Smtp-Source: APXvYqxNP6gWOyjr1acOuCGc/GdMi0xFXjEM4HZgQ5wAy7E8EJDZcEtr9GXcq4irNMIDrGsZSm1SJQndC627Tp7FRAk=
-X-Received: by 2002:a17:90a:7f01:: with SMTP id k1mr12133159pjl.84.1567817039262;
- Fri, 06 Sep 2019 17:43:59 -0700 (PDT)
+        Fri, 6 Sep 2019 20:33:41 -0400
+Received: from mga12.intel.com ([192.55.52.136]:28273 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731527AbfIGAdk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 20:33:40 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Sep 2019 17:33:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,474,1559545200"; 
+   d="scan'208";a="213333308"
+Received: from araj-mobl1.jf.intel.com ([10.251.147.175])
+  by fmsmga002.fm.intel.com with ESMTP; 06 Sep 2019 17:33:39 -0700
+Date:   Fri, 6 Sep 2019 17:33:38 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Johannes Erdfelt <johannes@erdfelt.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Mihai Carabas <mihai.carabas@oracle.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jon Grimm <Jon.Grimm@amd.com>, kanth.ghatraju@oracle.com,
+        konrad.wilk@oracle.com, patrick.colp@oracle.com,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        x86-ml <x86@kernel.org>, linux-kernel@vger.kernel.org,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH] x86/microcode: Add an option to reload microcode even if
+ revision is unchanged
+Message-ID: <20190907003338.GA14807@araj-mobl1.jf.intel.com>
+References: <41cee473-321c-2758-032a-ccf0f01359dc@oracle.com>
+ <D8A3D2BD-1FD4-4183-8663-3EF02A6099F3@alien8.de>
+ <20190905002132.GA26568@otc-nc-03>
+ <20190905072029.GB19246@zn.tnic>
+ <20190905194044.GA3663@otc-nc-03>
+ <alpine.DEB.2.21.1909052316130.1902@nanos.tec.linutronix.de>
+ <20190905222706.GA4422@otc-nc-03>
+ <alpine.DEB.2.21.1909061431330.1902@nanos.tec.linutronix.de>
+ <20190906144039.GA29569@sventech.com>
+ <alpine.DEB.2.21.1909062237580.1902@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20190906152800.1662489-1-arnd@arndb.de> <5dfe1bfc-0236-25cf-756b-ce05f7110136@linuxfoundation.org>
- <CAK8P3a3ynubySZ3A5M7D__B6R+caMjys=v+GVjqA78rppOJQQQ@mail.gmail.com> <67f4fe26-7d6a-68f2-dc45-af358be590df@linuxfoundation.org>
-In-Reply-To: <67f4fe26-7d6a-68f2-dc45-af358be590df@linuxfoundation.org>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Fri, 6 Sep 2019 17:43:48 -0700
-Message-ID: <CAFd5g47uH-6Bn53Dd8VsFMVn7o26txY2rrUe_XmU3+E4VV_B=A@mail.gmail.com>
-Subject: Re: [PATCH] kunit: add PRINTK dependency
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        shuah <shuah@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1909062237580.1902@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 6, 2019 at 9:08 AM Shuah Khan <skhan@linuxfoundation.org> wrote:
->
-> On 9/6/19 10:02 AM, Arnd Bergmann wrote:
-> > On Fri, Sep 6, 2019 at 5:39 PM Shuah Khan <skhan@linuxfoundation.org> wrote:
-> >
-> >>>    config KUNIT
-> >>>        bool "Enable support for unit tests (KUnit)"
-> >>> +     depends on PRINTK
-> >>>        help
-> >>>          Enables support for kernel unit tests (KUnit), a lightweight unit
-> >>>          testing and mocking framework for the Linux kernel. These tests are
-> >>>
-> >>
-> >> Hi Arnd,
-> >>
-> >> This is found and fixed already. I am just about to apply Berndan's
-> >> patch that fixes this dependency. All of this vprintk_emit() stuff
-> >> is redone.
-> >
-> > Ok, perfect. Unfortunately I only started testing the coming
-> > linux-next release after Stephen went on his break, so
-> > I'm missing some updates.
-> >
->
-> No worries. I am pushing it now - should be there in 5-10 mins.
->
-> Please use linuxk-kselftest next.
->
-> Let me know if you see any issues. Thanks for testing it.
+On Fri, Sep 06, 2019 at 11:16:00PM +0200, Thomas Gleixner wrote:
+> 
+> So if we want to do late microcode loading in a sane way then there are
+> only a few options and none of them exist today:
+> 
+>  1) Micro-code contains a description of CPUID bits which are going to be
+>     exposed after the load. Then the kernel can sanity check whether this
+>     changes anything relevant or not. If there is a relevant change it can
+>     reject the load and tell the admin that a reboot is required.
 
-Hi Arnd, Shuah accepted my version of the fix earlier today.
-Nevertheless, I really appreciate you looking into this. Sorry for
-wasting your time.
+This is pretty much what we had in mind when we suggested to the uCode teams.
 
-Please let me know if you run into any additional issues.
+Just a process of providing a meta data file to accompany every uCode release.
 
-Thanks!
+IMO new cpuid bits are probably less harmful than old ones dissappearing.
+
+
+
+> 
+>  2) Rework CPUID feature handling so that it can reevaluate and reconfigure
+>     the running system safely. There are a lot of things you need for that:
+> 
+>     A) Introduce a safe state for CPUs to reach which guarantees that none
+>        of the CPUs will return from that state via a code path which
+>        depends on previous state and might now go the other route with data
+>        on the stack which only fits the previous configuration.
+> 
+>     B) Make all the cpufeature thingies run time switchable. That means
+>        that you need to keep quite some code around which is currently init
+>        only. That also means that you have to provide backout code for
+>        things which set up data corresponding to cpu feature bits and so
+>        forth.
+> 
+> So #2 might be finished in about 20 years from now with the result that
+> some of the code pathes might simply still have a
+
+Maybe we can catch the kernel side in 20 years.. user space would still be 
+busted, or have a fault way to control new cpuid much like how we do for
+VM's. 
+
+> 
+>      if (cpufeature_changed())
+>      	   panic();
+> 
+> because there are things which you cannot back out. So the only sane
+> solution is to panic. Which is not a solution as it would be much more sane
+> to prevent late loading upfront and force people to reboot proper.
+> 
+> Now #1 is actually a sensible and feasible solution which can be pulled off
+> in a reasonably short time frame, avoids all the bound to be ugly and
+> failure laden attempts of fixing late loading completely and provides a
+> usable and safe solution for joe user, jack admin and the super experts at
+> big-cloud corporate.
+> 
+> That is not requiring any new format of microcode payload, as this can be
+> nicely done as a metadata package which comes with the microcode
+> payload. So you get the following backwards compatible states:
+> 
+>   Kernel  metadata	  result
+> 
+>   old	  don't care	  refuse late load
+> 
+>   new	  No   		  refuse late load
+> 
+>   new	  Yes		  decide based on metadata
+> 
+> Thoughts?
+
+This is 100% in line with what we proposed... 
+
+Cheers,
+Ashok
