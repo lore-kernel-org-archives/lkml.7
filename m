@@ -3,104 +3,159 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A97B4C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 17:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D72BAC43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 17:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 771D4218AC
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 17:42:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4BE9218AC
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 17:42:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ocs8/0bk"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="Ahrc72PG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406204AbfIGRmJ (ORCPT
+        id S2406240AbfIGRm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 13:42:09 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33266 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389269AbfIGRmI (ORCPT
+        Sat, 7 Sep 2019 13:42:28 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39152 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393312AbfIGRm1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 13:42:08 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q10so6612656pfl.0;
-        Sat, 07 Sep 2019 10:42:08 -0700 (PDT)
+        Sat, 7 Sep 2019 13:42:27 -0400
+Received: by mail-pl1-f193.google.com with SMTP id bd8so4658586plb.6
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Sep 2019 10:42:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=A6Yx4Q7ZNAktHMtoIkw9cxLVNxvnMooP+6PjQIzFBLc=;
-        b=ocs8/0bksVzpQ95cJR3AwWOOV9i513yrPdmP6gDKvtyQvEXcoG71bn2ge1hJqtpafb
-         tfWqJoBj7iR/Wor7Z3xKECddouy9Z8L+UZdcazQK/pQWia1N6UV4qH7K7uBBk3SElx9Y
-         IlgPgsHN0XLa0c+Z7HapbhZKTtVViNB8hvxMvYbHssYfeCQclFUi+PlNW9sR3xSrRFNM
-         nYlpLTgAOSCoaovHrZ1p3cEMv1v0EbUpWeKRg4VYyxeTL2sAf+0/kF3nr2h27su6Mp9Z
-         m5ink4/eWgbxr2HIrt9ZkvHJ8iuxJJcIbLAYTEU/EgatG2Dm5m4yPA+OWpuxDuqNg43F
-         lQVw==
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=zOxFxXxkeAXBLA4hmpQx5p2K1SwU8yRrMWsF/vzne4c=;
+        b=Ahrc72PGzKNYWoLbwpqpkb4sblxxhLeem6jebRPHiC48yikyu8YdaM5Oje1cRKpGrE
+         B1aFxjVmVluxNvScD9M4WSgd+3044EW5n5U/PFuuVmQG4Hbymvgt22zE94vbhcs9R725
+         YmVhBFQvI6AY2jzBjl65iE1N91bXW5n21nVFyaplmtDp+2SiGPjY7BdJbCgTW6FOdyps
+         WzpWqeuBT7oibyk4x8aGykU8dzYGBQ3SiApw6VGFkEO8SPi7/aZ892rQXq+Pb+3b5ZeC
+         PbzZzd392k2TpO4uq92p9v5vThdZeJX5HF5wKk1rRbCSaXdBoZUNJaEVn/U3I0P9Ilwr
+         6irw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=A6Yx4Q7ZNAktHMtoIkw9cxLVNxvnMooP+6PjQIzFBLc=;
-        b=ILO0fyuRhsqvtjrWXotOPlD08el5l8i0R41p+zpNy+lIoS8G/EvZVzgtFdX5P5haKR
-         EyJUDqJagocl6nItrIWUEQX/d4adSub7RsEwLzS9pWIyWWQtvUvbfAWWKT6WbJHeHDiA
-         N3ExXjJkRBxhdOiGsD9XI1VHf6ZjaHH0jzoTN3w7qJO8A+aq86H9Ac0UZ2W6bKyMhXrX
-         3uLaBOviSlrNnbjDNLvxZQLlwyXzUZ/POEL2yPs8xDH4CICXbGkXZq9fYCZ/HYuFdvSn
-         gyHmfMrEJhAcda8bc/vpygowabrWZvlRj3E/q6lbciCpFEz5dgEI9GO4XVFGWdDFM9kH
-         4MDQ==
-X-Gm-Message-State: APjAAAUCN4BlTs19TpH9Nl+16To7AR21dB4JPmKOvUa7UinXdY4pM5gJ
-        gbQd/ByAne2k5Qf6YnkcVk4Qn2tJwpr+ijYwJ4M=
-X-Google-Smtp-Source: APXvYqzvmObvTUN4HY8G5nCEBvOUJFUN0TPumuiDt3SoNIdH2vPal13U8d3/ofd0kPyX4GXtuJs30GluvtL4ZAoNjTc=
-X-Received: by 2002:a63:1020:: with SMTP id f32mr14018816pgl.203.1567878128129;
- Sat, 07 Sep 2019 10:42:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAHp75Ver=TNKxh8rdJs1xQYSLNsRLfEoFtcGG6hViug=cF6s_g@mail.gmail.com>
- <20190628033413.8058-1-rajatja@google.com> <CACK8Z6GYwPhz-+7zxxe-aG673Tbin=GYUvVZyL9cTgjqk_EXqA@mail.gmail.com>
-In-Reply-To: <CACK8Z6GYwPhz-+7zxxe-aG673Tbin=GYUvVZyL9cTgjqk_EXqA@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 7 Sep 2019 20:41:57 +0300
-Message-ID: <CAHp75VdPY83U5dWJbca_ZCJwT6z8L+V4R+fY0aZTOkM=vNweYQ@mail.gmail.com>
-Subject: Re: [PATCH v7] platform/x86: intel_pmc_core: Attach using APCI HID "INT33A1"
-To:     Rajat Jain <rajatja@google.com>
-Cc:     Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
-        Vishwanath Somayaji <vishwanath.somayaji@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rafael J Wysocki <rafael.j.wysocki@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Evan Green <evgreen@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=zOxFxXxkeAXBLA4hmpQx5p2K1SwU8yRrMWsF/vzne4c=;
+        b=IBbJuBFjH6ZY1yIXZQTVRvvetwfV+3vS7g9f8OVORpHPTx/wfq0LH4d+f+3aEQrgBW
+         5vy5UijFQpio46rnVDFVhFGB5dhGwdHcwF77OrBJnGGcFxSkWNbQUtYu4Ta0Gz+MeMzP
+         76MdcbkwzN7LOsxIvLNmb20Stb9xxarHIL7eMbOUG0UeHmZX+PEiTvmATAahtV662f8Q
+         5vIwXlY+rFO7JfrVjXAQtF9ZQ3RR5A0Wt23dccxwvsIXqQezTZjFjgPSz2xGriEs9Plx
+         mU7oLMXXcPKusZunvC+UFQbYNeX2OBFhvHWuZn283oIet2t8Gp+0f9R15KZMgqQ3J86e
+         TvOw==
+X-Gm-Message-State: APjAAAUrGgUDlmP3hjfjqOy83zv3gS7B4QqWKugnjPiLnC5OX1YbB6d0
+        hPbMbeHD6MtJtJf5xMITkDwh4Q==
+X-Google-Smtp-Source: APXvYqy9Whfn7uTg3BOXXtKo+Xb13mslF8Px0gcix7JC2yC4OfYP4K4dJzWw76A+9fC6aflAwbUnzg==
+X-Received: by 2002:a17:902:421:: with SMTP id 30mr16087280ple.105.1567878146356;
+        Sat, 07 Sep 2019 10:42:26 -0700 (PDT)
+Received: from ?IPv6:2600:100f:b121:da37:bc66:d4de:83c7:e0cd? ([2600:100f:b121:da37:bc66:d4de:83c7:e0cd])
+        by smtp.gmail.com with ESMTPSA id h11sm8785567pgv.5.2019.09.07.10.42.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 07 Sep 2019 10:42:25 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v12 11/12] open: openat2(2) syscall
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16G102)
+In-Reply-To: <CAHk-=whZx97Nm-gUK0ppofj2RA2LLz2vmaDUTKSSV-+yYB9q_Q@mail.gmail.com>
+Date:   Sat, 7 Sep 2019 10:42:23 -0700
+Cc:     Jeff Layton <jlayton@kernel.org>, Aleksa Sarai <cyphar@cyphar.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christian Brauner <christian@brauner.io>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Aleksa Sarai <asarai@suse.de>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        alpha <linux-alpha@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-ia64@vger.kernel.org,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <C81D6D29-F6BF-48E6-A15E-3ABCB2C992E5@amacapital.net>
+References: <20190904201933.10736-1-cyphar@cyphar.com> <20190904201933.10736-12-cyphar@cyphar.com> <7236f382d72130f2afbbe8940e72cc67e5c6dce0.camel@kernel.org> <CAHk-=whZx97Nm-gUK0ppofj2RA2LLz2vmaDUTKSSV-+yYB9q_Q@mail.gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 1:44 AM Rajat Jain <rajatja@google.com> wrote:
->
-> On Thu, Jun 27, 2019 at 8:34 PM Rajat Jain <rajatja@google.com> wrote:
-> >
-> > Most modern platforms already have the ACPI device "INT33A1" that could
-> > be used to attach to the driver. Switch the driver to using that and
-> > thus make the intel_pmc_core.c a pure platform_driver.
-> >
-> > Some of the legacy platforms though, may still not have this ACPI device
-> > in their ACPI tables. Thus for such platforms, move the code to manually
-> > instantiate a platform_device into a new file of its own. This would
-> > instantiate the intel_pmc_core platform device and thus attach to
-> > the driver, if the ACPI device for the same ("INT33A1") is not present
-> > in a system where it should be. This was discussed here:
-> > https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1966991.html
->
->
-> HI Andy, Rajneesh, this seems to have fallen through the cracks. Any
-> comments here on this patch?
 
-% git tag --list v5.3* --contains b02f6a2ef0a1
-v5.3-rc1
 
--- 
-With Best Regards,
-Andy Shevchenko
+> On Sep 7, 2019, at 9:58 AM, Linus Torvalds <torvalds@linux-foundation.org>=
+ wrote:
+>=20
+>> On Sat, Sep 7, 2019 at 5:40 AM Jeff Layton <jlayton@kernel.org> wrote:
+>>=20
+>> After thinking about this a bit, I wonder if we might be better served
+>> with a new set of OA2_* flags instead of repurposing the O_* flags?
+>=20
+> I'd hate to have yet _another_ set of translation functions, and
+> another chance of people just getting it wrong either in user space or
+> the kernel.
+>=20
+> So no. Let's not make another set of flags that has no sane way to
+> have type-safety to avoid more confusion.
+>=20
+> The new flags that _only_ work with openat2() might be named with a
+> prefix/suffix to mark that, but I'm not sure it's a huge deal.
+>=20
+>           =20
+
+I agree with the philosophy, but I think it doesn=E2=80=99t apply in this ca=
+se.  Here are the flags:
+
+O_RDONLY, O_WRONLY, O_RDWR: not even a proper bitmask. The kernel already ha=
+s the FMODE_ bits to make this make sense. How about we make the openat2 per=
+mission bits consistent with the internal representation and let the O_ perm=
+ission bits remain as an awful translation.  The kernel already translates l=
+ike this, and it already sucks.
+
+O_CREAT, O_TMPFILE, O_NOCTTY, O_TRUNC: not modes on the fd at all.  These af=
+fect the meaning of open().  Heck, for openat2, NOCTTY should be this defaul=
+t.
+
+O_EXCL: hopelessly overloaded.
+
+O_APPEND, O_DIRECT, O_SYNC, O_DSYNC, O_LARGEFILE, O_NOATIME, O_PATH, O_NONBL=
+OCK: genuine mode bits
+
+O_CLOEXEC: special because it affects the fd, not the struct file.
+
+Linus, you rejected resolveat() because you wanted a *nice* API that people w=
+ould use and that might even be adopted by other OSes. Let=E2=80=99s please n=
+ot make openat2() be a giant pile of crap in the name of consistency with op=
+en().  open(), frankly, is horrible.
+
