@@ -2,156 +2,115 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC99DC43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 00:14:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70197C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 00:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C645208C3
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 00:14:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FF6F208C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 00:14:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393540AbfIGAOW (ORCPT
+        id S2393621AbfIGAOf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 20:14:22 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38258 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2393425AbfIGAOJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 20:14:09 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8707KAq042339;
-        Fri, 6 Sep 2019 20:13:59 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uuwcnqq2e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 06 Sep 2019 20:13:59 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8708NVT044333;
-        Fri, 6 Sep 2019 20:13:58 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uuwcnqq1x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 06 Sep 2019 20:13:58 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8709NrN029092;
-        Sat, 7 Sep 2019 00:13:57 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma02wdc.us.ibm.com with ESMTP id 2uqgh7pr3s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 07 Sep 2019 00:13:57 +0000
-Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x870DtQm54722900
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 7 Sep 2019 00:13:55 GMT
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1C696124054;
-        Sat,  7 Sep 2019 00:13:55 +0000 (GMT)
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8AAF2124053;
-        Sat,  7 Sep 2019 00:13:54 +0000 (GMT)
-Received: from oc4221205838.ibm.com (unknown [9.85.134.207])
-        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
-        Sat,  7 Sep 2019 00:13:54 +0000 (GMT)
-From:   Matthew Rosato <mjrosato@linux.ibm.com>
-To:     sebott@linux.ibm.com
-Cc:     gerald.schaefer@de.ibm.com, pasic@linux.ibm.com,
-        borntraeger@de.ibm.com, walling@linux.ibm.com,
-        linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org,
-        joro@8bytes.org, linux-kernel@vger.kernel.org,
-        alex.williamson@redhat.com, kvm@vger.kernel.org,
-        heiko.carstens@de.ibm.com, robin.murphy@arm.com, gor@linux.ibm.com,
-        cohuck@redhat.com, pmorel@linux.ibm.com
-Subject: [PATCH v4 3/4] vfio: zpci: defining the VFIO headers
-Date:   Fri,  6 Sep 2019 20:13:50 -0400
-Message-Id: <1567815231-17940-4-git-send-email-mjrosato@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1567815231-17940-1-git-send-email-mjrosato@linux.ibm.com>
-References: <1567815231-17940-1-git-send-email-mjrosato@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-06_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=852 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909070000
+        Fri, 6 Sep 2019 20:14:35 -0400
+Received: from gate.crashing.org ([63.228.1.57]:60775 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2393514AbfIGAOf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 20:14:35 -0400
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x870ECjk029556;
+        Fri, 6 Sep 2019 19:14:13 -0500
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id x870EBLS029555;
+        Fri, 6 Sep 2019 19:14:11 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Fri, 6 Sep 2019 19:14:11 -0500
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Jakub Jelinek <jakub@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "gcc-patches@gcc.gnu.org" <gcc-patches@gcc.gnu.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH v2 4/6] compiler-gcc.h: add asm_inline definition
+Message-ID: <20190907001411.GG9749@gate.crashing.org>
+References: <CANiq72nXXBgwKcs36R+uau2o1YypfSFKAYWV2xmcRZgz8LRQww@mail.gmail.com> <20190906122349.GZ9749@gate.crashing.org> <CANiq72=3Vz-_6ctEzDQgTA44jmfSn_XZTS8wP1GHgm31Xm8ECw@mail.gmail.com> <20190906163028.GC9749@gate.crashing.org> <20190906163918.GJ2120@tucnak> <CAKwvOd=MT_=U250tR+t0jTtj7SxKJjnEZ1FmR3ir_PHjcXFLVw@mail.gmail.com> <20190906220347.GD9749@gate.crashing.org> <CAKwvOdnWBV35SCRHwMwXf+nrFc+D1E7BfRddb20zoyVJSdecCA@mail.gmail.com> <20190906225606.GF9749@gate.crashing.org> <CAKwvOdk-AQVJnD6-=Z0eUQ6KPvDp2eS2zUV=-oL2K2JBCYaOeQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdk-AQVJnD6-=Z0eUQ6KPvDp2eS2zUV=-oL2K2JBCYaOeQ@mail.gmail.com>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre Morel <pmorel@linux.ibm.com>
+On Fri, Sep 06, 2019 at 04:42:58PM -0700, Nick Desaulniers via gcc-patches wrote:
+> On Fri, Sep 6, 2019 at 3:56 PM Segher Boessenkool
+> <segher@kernel.crashing.org> wrote:
+> Oh, I misunderstood.  I see your point.  Define the symbol as a number
+> for what level of output flags you support (ie. the __cplusplus
+> macro).
 
-We define a new device region in vfio.h to be able to
-get the ZPCI CLP information by reading this region from
-userland.
+That works if history is linear.  I guess with enough effort we can make
+that work in most cases (for backports it is a problem, if you want to
+support a new feature -- or bugfix! -- you need to support all previous
+ones as well...  Distros are going to hate us, too ;-) )
 
-We create a new file, vfio_zdev.h to define the structure
-of the new region we defined in vfio.h
+> > > I don't think so.  Can you show me an example codebase that proves me wrong?
+> >
+> > No, of course not, because we aren't silly enough to implement something
+> > like that.
+> 
+> I still don't think feature detection is worse than version detection
+> (until you find your feature broken in a way that forces the use of
+> version detection).
 
-Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
----
- include/uapi/linux/vfio.h      |  1 +
- include/uapi/linux/vfio_zdev.h | 35 +++++++++++++++++++++++++++++++++++
- 2 files changed, 36 insertions(+)
- create mode 100644 include/uapi/linux/vfio_zdev.h
+*You* bring up version detection.  I don't.  You want some halfway thing,
+with some macros that say what version some part of your compiler is.
 
-diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-index 8f10748..8328c87 100644
---- a/include/uapi/linux/vfio.h
-+++ b/include/uapi/linux/vfio.h
-@@ -371,6 +371,7 @@ struct vfio_region_gfx_edid {
-  * to do TLB invalidation on a GPU.
-  */
- #define VFIO_REGION_SUBTYPE_IBM_NVLINK2_ATSD	(1)
-+#define VFIO_REGION_SUBTYPE_ZDEV_CLP		(2)
- 
- /*
-  * The MSIX mappable capability informs that MSIX data of a BAR can be mmapped
-diff --git a/include/uapi/linux/vfio_zdev.h b/include/uapi/linux/vfio_zdev.h
-new file mode 100644
-index 0000000..55e0d6d
---- /dev/null
-+++ b/include/uapi/linux/vfio_zdev.h
-@@ -0,0 +1,35 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+/*
-+ * Region definition for ZPCI devices
-+ *
-+ * Copyright IBM Corp. 2019
-+ *
-+ * Author(s): Pierre Morel <pmorel@linux.ibm.com>
-+ */
-+
-+#ifndef _VFIO_ZDEV_H_
-+#define _VFIO_ZDEV_H_
-+
-+#include <linux/types.h>
-+
-+/**
-+ * struct vfio_region_zpci_info - ZPCI information.
-+ *
-+ */
-+struct vfio_region_zpci_info {
-+	__u64 dasm;
-+	__u64 start_dma;
-+	__u64 end_dma;
-+	__u64 msi_addr;
-+	__u64 flags;
-+	__u16 pchid;
-+	__u16 mui;
-+	__u16 noi;
-+	__u16 maxstbl;
-+	__u8 version;
-+	__u8 gid;
-+#define VFIO_PCI_ZDEV_FLAGS_REFRESH 1
-+	__u8 util_str[];
-+} __packed;
-+
-+#endif
--- 
-1.8.3.1
+I say to just detect the feature you want, and if it actually works the
+way you want it, etc.
 
+> Just to prove my point about version checks being brittle, it looks
+> like Rasmus' version check isn't even right.  GCC supported `asm
+> inline` back in the 8.3 release, not 9.1 as in this patch:
+
+Yes, I backported it so that it is available in 7.5, 8.3, and 9.1, so
+that more users will have this available sooner.  (7.5 has not been
+released yet, but asm inline has been supported in GCC 7 since Jan 2
+this year).
+
+> Or was it "broken" until 9.1?  Lord knows, as `asm inline` wasn't in
+> any release notes or bug reports I can find:
+
+https://gcc.gnu.org/ml/gcc-patches/2019-02/msg01143.html
+
+It never was accepted, and I dropped the ball.
+
+> Ah, here it is:
+> https://github.com/gcc-mirror/gcc/commit/6de46ad5326fc5e6b730a2feb8c62d09c1561f92
+> Which looks like the qualifier was added to this page:
+> https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html
+
+Sure, it is part of the documentation just fine.  And it works just fine
+too, it is a *very* simple feature.  By design.
+
+> I like many of the GNU C extensions, and I want to help support them
+> in Clang so that they can be used in more places, but the current
+> process (and questions I have when I implement some of them) leaves me
+> with the sense that there's probably room for improvement on some of
+> these things before they go out the door.
+> 
+> Segher, next time there's discussion about new C extensions for the
+> kernel, can you please include me in the discussions?
+
+You can lurk on gcc-patches@ and/or gcc@?  But I'll try to remember, sure.
+Not that I am involved in all such discussions myself, mind.
+
+
+Segher
