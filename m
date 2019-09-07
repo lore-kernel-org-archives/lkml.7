@@ -2,118 +2,75 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A771DC43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 18:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA11FC43140
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 18:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E26221835
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 18:52:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2A6921835
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 18:55:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394442AbfIGSwp (ORCPT
+        id S2395126AbfIGSzX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 14:52:45 -0400
-Received: from correo.us.es ([193.147.175.20]:44704 "EHLO mail.us.es"
+        Sat, 7 Sep 2019 14:55:23 -0400
+Received: from mga18.intel.com ([134.134.136.126]:50138 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392530AbfIGSwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 14:52:45 -0400
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id 3FBFF11EB22
-        for <linux-kernel@vger.kernel.org>; Sat,  7 Sep 2019 20:52:41 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 31B9BFF2EB
-        for <linux-kernel@vger.kernel.org>; Sat,  7 Sep 2019 20:52:41 +0200 (CEST)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id 24C3CB8004; Sat,  7 Sep 2019 20:52:41 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 09FE7B7FF6;
-        Sat,  7 Sep 2019 20:52:39 +0200 (CEST)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Sat, 07 Sep 2019 20:52:39 +0200 (CEST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (sys.soleta.eu [212.170.55.40])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id D7E514265A5A;
-        Sat,  7 Sep 2019 20:52:38 +0200 (CEST)
-Date:   Sat, 7 Sep 2019 20:52:40 +0200
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        wenxu <wenxu@ucloud.cn>,
-        netfilter-devel <netfilter-devel@vger.kernel.org>,
-        coreteam@netfilter.org, Networking <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next] netfilter: nf_tables: avoid excessive stack
- usage
-Message-ID: <20190907185240.goswawbhq4tbmyox@salvia>
-References: <20190906151242.1115282-1-arnd@arndb.de>
- <20190907180754.dz7gstqfj7djlbrs@salvia>
- <CAK8P3a04ic_VP6L_=N5P7vfQG1VDV25g3KvUpuCVdX483hx_cA@mail.gmail.com>
+        id S2393429AbfIGSzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Sep 2019 14:55:22 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Sep 2019 11:55:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,478,1559545200"; 
+   d="scan'208";a="186096982"
+Received: from bemmett-mobl.amr.corp.intel.com ([10.249.37.206])
+  by orsmga003.jf.intel.com with ESMTP; 07 Sep 2019 11:55:19 -0700
+Message-ID: <f2224c094836a4b8989c1cd6243a0b7ad1261a87.camel@linux.intel.com>
+Subject: Re: [PATCH AUTOSEL 4.19 126/167] tpm: Fix TPM 1.2 Shutdown sequence
+ to prevent future TPM operations
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sasha Levin <sashal@kernel.org>,
+        Doug Anderson <dianders@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "# 4.0+" <stable@vger.kernel.org>,
+        Vadim Sukhomlinov <sukhomlinov@google.com>,
+        linux-integrity@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>
+Date:   Sat, 07 Sep 2019 21:55:18 +0300
+In-Reply-To: <20190903194335.GG5281@sasha-vm>
+References: <20190903162519.7136-1-sashal@kernel.org>
+         <20190903162519.7136-126-sashal@kernel.org>
+         <CAD=FV=W0YodeoOCiCv9zmv+-gswuU8U_XgrBnesE=wynTbDBiA@mail.gmail.com>
+         <20190903165346.hwqlrin77cmzjiti@cantor> <20190903194335.GG5281@sasha-vm>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.2-1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a04ic_VP6L_=N5P7vfQG1VDV25g3KvUpuCVdX483hx_cA@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 07, 2019 at 08:41:22PM +0200, Arnd Bergmann wrote:
-> On Sat, Sep 7, 2019 at 8:07 PM Pablo Neira Ayuso <pablo@netfilter.org> wrote:
-> >
-> > Hi Arnd,
-> >
-> > On Fri, Sep 06, 2019 at 05:12:30PM +0200, Arnd Bergmann wrote:
-> > > The nft_offload_ctx structure is much too large to put on the
-> > > stack:
-> > >
-> > > net/netfilter/nf_tables_offload.c:31:23: error: stack frame size of 1200 bytes in function 'nft_flow_rule_create' [-Werror,-Wframe-larger-than=]
-> > >
-> > > Use dynamic allocation here, as we do elsewhere in the same
-> > > function.
-> > >
-> > > Fixes: c9626a2cbdb2 ("netfilter: nf_tables: add hardware offload support")
-> > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > > ---
-> > > Since we only really care about two members of the structure, an
-> > > alternative would be a larger rewrite, but that is probably too
-> > > late for v5.4.
-> >
-> > Thanks for this patch.
-> >
-> > I'm attaching a patch to reduce this structure size a bit. Do you
-> > think this alternative patch is ok until this alternative rewrite
-> > happens?
-> 
-> I haven't tried it yet, but it looks like that would save 8 of the
-> 48 bytes in each for each of the 24 registers (12 bytes on m68k
-> or i386, which only use 4 byte alignment for nft_data), so
-> this wouldn't make too much difference.
+On Tue, 2019-09-03 at 15:43 -0400, Sasha Levin wrote:
+> Right. I gave a go at backporting a few patches and this happens to be
+> one of them. It will be a while before it goes in a stable tree
+> (probably way after after LPC).
 
-I'll take your patch as is.
+It *semantically* depends on
 
-> > Anyway I agree we should to get this structure away from the
-> > stack, even after this is still large, so your patch (or a variant of
-> > it) will be useful sooner than later I think.
-> 
-> What I was thinking for a possible smaller fix would be to not
-> pass the ctx into the expr->ops->offload callback but
-> only pass the 'dep' member. Since I've never seen this code
-> before, I have no idea if that would be an improvement
-> in the end.
+db4d8cb9c9f2 ("tpm: use tpm_try_get_ops() in tpm-sysfs.c.")
 
-We might need this more fields of this context structure, this code is
-very new, still under development, let's revisit this later.
+I.e. can cause crashes without the above patch. As a code change your
+patch is fine but it needs the above patch backported to work in stable
+manner.
 
-Thanks.
+So... either I can backport that one (because ultimately I have
+responsibility to do that as the maintainer) but if you want to finish
+this one that is what you need to backport in addition and then it
+should be fine.
+
+/Jarkko
+
