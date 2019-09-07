@@ -6,39 +6,53 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE41C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 15:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A9AC43140
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 15:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2B0F2178F
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 15:44:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC8A2218AC
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 15:50:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436485AbfIGPoq (ORCPT
+        id S2406742AbfIGPuj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 11:44:46 -0400
-Received: from smtprelay0215.hostedemail.com ([216.40.44.215]:47553 "EHLO
+        Sat, 7 Sep 2019 11:50:39 -0400
+Received: from smtprelay0226.hostedemail.com ([216.40.44.226]:35198 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390962AbfIGPop (ORCPT
+        by vger.kernel.org with ESMTP id S2392067AbfIGPuj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 11:44:45 -0400
+        Sat, 7 Sep 2019 11:50:39 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 965A018225DF5;
-        Sat,  7 Sep 2019 15:44:44 +0000 (UTC)
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id CD557180A884B;
+        Sat,  7 Sep 2019 15:50:37 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: legs34_c33b289dfa42
-X-Filterd-Recvd-Size: 1227
+X-HE-Tag: rake73_3f7a51a030944
+X-Filterd-Recvd-Size: 1669
 Received: from XPS-9350.home (unknown [47.151.152.152])
         (Authenticated sender: joe@perches.com)
-        by omf19.hostedemail.com (Postfix) with ESMTPA;
-        Sat,  7 Sep 2019 15:44:43 +0000 (UTC)
-Message-ID: <25c248afff16f2b16b1c7ca4209e8ab727113f0d.camel@perches.com>
-Subject: Re: [PATCH] Fixed parentheses malpractice in apex_driver.c
+        by omf04.hostedemail.com (Postfix) with ESMTPA;
+        Sat,  7 Sep 2019 15:50:36 +0000 (UTC)
+Message-ID: <b387b7ea498eb96d94f47b22ac4b11c75518513a.camel@perches.com>
+Subject: Re: [PATCH AUTOSEL 4.19 044/167] drm/amdgpu: validate user pitch
+ alignment
 From:   Joe Perches <joe@perches.com>
-To:     Sandro Volery <sandro@volery.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     linux-kernel@vger.kernel.org
-Date:   Sat, 07 Sep 2019 08:44:42 -0700
-In-Reply-To: <534DB087-C4DC-49A7-93AA-6C7C437DA794@volery.com>
-References: <534DB087-C4DC-49A7-93AA-6C7C437DA794@volery.com>
+To:     Sasha Levin <sashal@kernel.org>,
+        Michel =?ISO-8859-1?Q?D=E4nzer?= <michel@daenzer.net>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, Dave Airlie <airlied@linux.ie>,
+        Yu Zhao <yuzhao@google.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        stable <stable@vger.kernel.org>
+Date:   Sat, 07 Sep 2019 08:50:34 -0700
+In-Reply-To: <20190904120823.GW5281@sasha-vm>
+References: <20190903162519.7136-1-sashal@kernel.org>
+         <20190903162519.7136-44-sashal@kernel.org>
+         <7957107d-634f-4771-327e-99fdd5e6474e@daenzer.net>
+         <20190903170347.GA24357@kroah.com> <20190903200139.GJ5281@sasha-vm>
+         <CAKMK7uFpBnkF4xABdkDMZ8TYhL4jg6ZuGyHGyVeBxc9rkyUtXQ@mail.gmail.com>
+         <829c5912-cf80-81d0-7400-d01d286861fc@daenzer.net>
+         <20190904120823.GW5281@sasha-vm>
 Content-Type: text/plain; charset="ISO-8859-1"
 User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
@@ -48,15 +62,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-09-07 at 17:34 +0200, Sandro Volery wrote:
-> On patchwork I entered 'volery' as my username because I didn't know better, and now checkpatch always complains when I add 'signed-off-by' with my actual full name.
+On Wed, 2019-09-04 at 08:08 -0400, Sasha Levin wrote:
+> it's better to get
+> it right rather than to be done quickly :)
 
-How does checkpatch complain?
-There is no connection between patchwork
-and checkpatch.
+That also applies to the initial selection of
+patches for the stable trees.
 
-And do please set your email client to use shorter line lengths
-or remember to add returns.
-
-72 or so is typical.
 
