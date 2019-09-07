@@ -2,109 +2,125 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D30A2C00307
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 03:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 990A5C43140
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 03:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B09D82173E
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 03:14:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70A26208C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 03:15:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="S4Y7LQrw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KEmSCTrF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406458AbfIGDO4 (ORCPT
+        id S2394109AbfIGDPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 23:14:56 -0400
-Received: from forward105j.mail.yandex.net ([5.45.198.248]:39912 "EHLO
-        forward105j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726940AbfIGDOz (ORCPT
+        Fri, 6 Sep 2019 23:15:32 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:36130 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389123AbfIGDPc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 23:14:55 -0400
-Received: from mxback1g.mail.yandex.net (mxback1g.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:162])
-        by forward105j.mail.yandex.net (Yandex) with ESMTP id EF329B208EF;
-        Sat,  7 Sep 2019 06:14:51 +0300 (MSK)
-Received: from smtp4j.mail.yandex.net (smtp4j.mail.yandex.net [2a02:6b8:0:1619::15:6])
-        by mxback1g.mail.yandex.net (nwsmtp/Yandex) with ESMTP id 2JKCtu78lv-EpdWVWF0;
-        Sat, 07 Sep 2019 06:14:51 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1567826091;
-        bh=tcgGh/VZT5QIu1UNGlfycg1MLojs4whv2stVJZ09gQQ=;
-        h=In-Reply-To:From:To:Subject:Cc:Date:References:Message-ID;
-        b=S4Y7LQrwUYkeQkmnwJ5juysEF5QAalUf3/9h3ETa1gOzQmmUt98t8PxI3JLHgXZ5b
-         9pZ0q8Zph7d3x6kuUT5oHCG1TXKIA2GLsG0uFxYTN94SQuIA/5g7k7gMcmeLHC3gt2
-         0N8UQxZdqkn4qOk0g7VsA7qkm41KLxXz5Yfw8v/M=
-Authentication-Results: mxback1g.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by smtp4j.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id 1wa3aXpB17-EK4Kh1TM;
-        Sat, 07 Sep 2019 06:14:50 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH v2 14/19] MIPS: Loongson64: Add generic dts
-To:     Huacai Chen <chenhc@lemote.com>
-Cc:     "open list:MIPS" <linux-mips@vger.kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.co>, devicetree@vger.kernel.org
-References: <20190905144316.12527-1-jiaxun.yang@flygoat.com>
- <20190905144316.12527-15-jiaxun.yang@flygoat.com>
- <CAAhV-H7jzUZr9fGHF_=F3pri9F3zN3ygHhd3xWZevOugaStcfA@mail.gmail.com>
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <182a271e-6a66-ed71-2d68-509d8e85d857@flygoat.com>
-Date:   Sat, 7 Sep 2019 11:14:09 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 6 Sep 2019 23:15:32 -0400
+Received: by mail-io1-f66.google.com with SMTP id b136so17373308iof.3;
+        Fri, 06 Sep 2019 20:15:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0SbxJSZH3xErImLG80umcUNoBk+9xCCDmjHpdYfWSdI=;
+        b=KEmSCTrFRi5v4BfEGIMfu73TLPv6udM3bR6gfWTZy/5zzC65y2+/mWvG8YBtmoq2b2
+         ERoPBzhsKJlm5uBrYKabXRRYM2dJNsBLY3jqJukp6HFhXq2qxCM+BwiwdrXidPTNUrTY
+         BQ/M1eUI/QsJqAjkHiTdxL+62a1i4ha/Wq/gs6a2vwAiTiOJq7eec9Cv+ttD9ElMyy83
+         bW19dkXFsucLiuSSZMmL8G5CF/8GHuDYD9RYM/WI+DU5hpMth22geGxtrMPbAmP/oa1t
+         cO8vc0IR+L1V1dBgIAqvD2OMtmyjm8q8zNsy6ROkqQovCiIfc82c6P45TZp279DIIvvy
+         PN4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0SbxJSZH3xErImLG80umcUNoBk+9xCCDmjHpdYfWSdI=;
+        b=VFqqAnEI5xGV8Qjv+UmRROuCSTARqIiV+vqWIvWlkpGF72fZmjHgGgJ3/56n+A6CqD
+         7F+umU00BZutO2zHWdBFxEH4BkWyDbVBts+h6L0Aax7wJjLzbWlLgTqqS2eHKrukal+i
+         TLffQPIcofFSyU6ffayf0vq6zDxVXad5TQGdEyGa3ZSEhqF7mbl2xYAvVoFv5WlixuLl
+         uekbnGpWbunRfY4Tjj7rYWpuVP1ObV5JU7zJOZsdneK1REY9MbBw3BucfeCNt4uQtCtt
+         fevng5bgPp8+jqaJz5++NVV2cr6qspDCY2xeYwIKFyycEOCojNKPyXGvUnGpCOS2aY3u
+         DOCA==
+X-Gm-Message-State: APjAAAX9e1YkJlJN7LOLaWad4KfnMxnxifl2XytqAEOuN1Q/G+xypSym
+        Yf1jkYJUQtPXI55T8oSPDQiVrtrnKDvazy2WtIw=
+X-Google-Smtp-Source: APXvYqzMKQWDegw54LhTAG2I7IbZAeamrmRENinp3sOSixubhuWe2/Lb4c7+X+JTMG4bueI+YTKM2zJypOUVeylKJ4Y=
+X-Received: by 2002:a5d:91ce:: with SMTP id k14mr2399826ior.95.1567826131164;
+ Fri, 06 Sep 2019 20:15:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H7jzUZr9fGHF_=F3pri9F3zN3ygHhd3xWZevOugaStcfA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20190906145213.32552.30160.stgit@localhost.localdomain> <20190906112155-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20190906112155-mutt-send-email-mst@kernel.org>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Fri, 6 Sep 2019 20:15:20 -0700
+Message-ID: <CAKgT0UcuZQPzcQ6cA5tKPG3+4yQP2jk+AHYcjoyrMXq0pBAiBw@mail.gmail.com>
+Subject: Re: [PATCH v8 0/7] mm / virtio: Provide support for unused page reporting
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        virtio-dev@lists.oasis-open.org,
+        Oscar Salvador <osalvador@suse.de>,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Pankaj Gupta <pagupta@redhat.com>,
+        Rik van Riel <riel@surriel.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        lcapitulino@redhat.com, "Wang, Wei W" <wei.w.wang@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2019/9/7 上午10:53, Huacai Chen wrote:
-> On Thu, Sep 5, 2019 at 10:47 PM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
->> Add generic device dts for Loongson-3 devices.
->> They seems identical but will be different later.
->>
->> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> Hi, Jiaxun,
+On Fri, Sep 6, 2019 at 8:23 AM Michael S. Tsirkin <mst@redhat.com> wrote:
 >
-> I'm very glad to see that dts files become less in this version, but I
-> think we also don't need to distinguish cpu types (i.e.,
-> 3a1000/3b1500/3a2000/3a3000). Then, we only need three dts files
-> (loongson3_ls2h.dts, loongson3_ls7a.dts, loongson3_rs780.dts) which is
-> the same as in our own git repository. If we really need to
-> distinguish cpu type, PRID or CPUCFG in Loongson-3A4000 is more
-> suitable than dts. In other words, I want dts only do as minimal as
-> possible.
-
-Hi Huacai,
-
-I have the  same consideration with you. However, the reason why I split 
-this dts is that these chips have significant differences.
-
-For example, 3B1x00 have different memory and config registers layout, 
-Their HT config space is a delicate node, HTMSI interrupts is not 
-functional until 3A3000, and their syscon registers are not identical.
-
-You may say they can be identified by PRID, but I'm not intend to spread 
-PRID all the way in other subsystems, thus I think dts is still the best 
-way to tell these differences.
-
-Thanks
-
---
-
-Jiaxun Yang
-
+> On Fri, Sep 06, 2019 at 07:53:21AM -0700, Alexander Duyck wrote:
+> > This series provides an asynchronous means of reporting to a hypervisor
+> > that a guest page is no longer in use and can have the data associated
+> > with it dropped. To do this I have implemented functionality that allows
+> > for what I am referring to as unused page reporting
+> >
+> > The functionality for this is fairly simple. When enabled it will allocate
+> > statistics to track the number of reported pages in a given free area.
+> > When the number of free pages exceeds this value plus a high water value,
+> > currently 32, it will begin performing page reporting which consists of
+> > pulling pages off of free list and placing them into a scatter list. The
+> > scatterlist is then given to the page reporting device and it will perform
+> > the required action to make the pages "reported", in the case of
+> > virtio-balloon this results in the pages being madvised as MADV_DONTNEED
+> > and as such they are forced out of the guest. After this they are placed
+> > back on the free list, and an additional bit is added if they are not
+> > merged indicating that they are a reported buddy page instead of a
+> > standard buddy page. The cycle then repeats with additional non-reported
+> > pages being pulled until the free areas all consist of reported pages.
+> >
+> > I am leaving a number of things hard-coded such as limiting the lowest
+> > order processed to PAGEBLOCK_ORDER, and have left it up to the guest to
+> > determine what the limit is on how many pages it wants to allocate to
+> > process the hints. The upper limit for this is based on the size of the
+> > queue used to store the scattergather list.
 >
-> Huacai
->
+> I queued this  so this gets tested on linux-next but the mm core changes
+> need acks from appropriate people.
+
+Looks like there was a couple issues on arm64 and ia64 architectures.
+I believe I have those fixed up and will submit a v9 in the morning
+after my test runs have completed.
+
+Thanks.
+
+- Alex
