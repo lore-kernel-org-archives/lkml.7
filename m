@@ -2,72 +2,70 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F4E1C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 15:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 131DDC43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 16:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA372218AC
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 15:58:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="SgzlbGJd"
+	by mail.kernel.org (Postfix) with ESMTP id DEE6B206CD
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 16:02:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394782AbfIGP6M (ORCPT
+        id S2394812AbfIGQCr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 11:58:12 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:33204 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389788AbfIGP6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 11:58:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=BPFXfTuuawVcjqRBXwYB+uvmu3LaIBpabNB/L8tEuH4=; b=SgzlbGJd4j88MtGVS43gBMnuLu
-        XKe4CVre5r5GJddgaZVQi1ahyys42kNPIRfYtUqus9TOytgAJLnx+bF8qftjE4+PGzmRyFrETbfbV
-        Gm65NRetYptC8o2hohyjqIKhIFErcabz0tRZC9eI6/GGRJLY5jketl66+TSVy4al1gi8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1i6d6D-0006Bx-KJ; Sat, 07 Sep 2019 17:58:05 +0200
-Date:   Sat, 7 Sep 2019 17:58:05 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     zhong jiang <zhongjiang@huawei.com>
-Cc:     davem@davemloft.net, kstewart@linuxfoundation.org,
-        gregkh@linuxfoundation.org, netdev@vger.kernel.org,
+        Sat, 7 Sep 2019 12:02:47 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:46538 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394788AbfIGQCq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Sep 2019 12:02:46 -0400
+Received: from localhost (unknown [88.214.184.0])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id A15F613EB2C91;
+        Sat,  7 Sep 2019 09:02:44 -0700 (PDT)
+Date:   Sat, 07 Sep 2019 18:02:43 +0200 (CEST)
+Message-Id: <20190907.180243.1465656624015319439.davem@davemloft.net>
+To:     colin.king@canonical.com
+Cc:     sathya.perla@broadcom.com, ajit.khaparde@broadcom.com,
+        sriharsha.basavapatna@broadcom.com, somnath.kotur@broadcom.com,
+        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ethernet: micrel: Use DIV_ROUND_CLOSEST directly to make
- it readable
-Message-ID: <20190907155805.GE21922@lunn.ch>
-References: <1567698828-26825-1-git-send-email-zhongjiang@huawei.com>
- <20190906194050.GB2339@lunn.ch>
- <5D732078.6080902@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5D732078.6080902@huawei.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Subject: Re: [PATCH] be2net: make two arrays static const, makes object
+ smaller
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190906111943.5285-1-colin.king@canonical.com>
+References: <20190906111943.5285-1-colin.king@canonical.com>
+X-Mailer: Mew version 6.8 on Emacs 26.2
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 07 Sep 2019 09:02:46 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 07, 2019 at 11:14:00AM +0800, zhong jiang wrote:
-> On 2019/9/7 3:40, Andrew Lunn wrote:
-> > On Thu, Sep 05, 2019 at 11:53:48PM +0800, zhong jiang wrote:
-> >> The kernel.h macro DIV_ROUND_CLOSEST performs the computation (x + d/2)/d
-> >> but is perhaps more readable.
-> > Hi Zhong
-> >
-> > Did you find this by hand, or did you use a tool. If a tool is used,
-> > it is normal to give some credit to the tool.
-> With the following help of Coccinelle. 
+From: Colin King <colin.king@canonical.com>
+Date: Fri,  6 Sep 2019 12:19:43 +0100
 
-It is good to mention Coccinelle or other such tools. They often exist
-because of university research work, and funding for such tools does
-depend on publicity of the tools, getting the credit they deserve.
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Don't populate the arrays on the stack but instead make them
+> static const. Makes the object code smaller by 281 bytes.
+> 
+> Before:
+>    text	   data	    bss	    dec	    hex	filename
+>   87553	   5672	      0	  93225	  16c29	benet/be_cmds.o
+> 
+> After:
+>    text	   data	    bss	    dec	    hex	filename
+>   87112	   5832	      0	  92944	  16b10	benet/be_cmds.o
+> 
+> (gcc version 9.2.1, amd64)
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-       Andrew
+Applied.
