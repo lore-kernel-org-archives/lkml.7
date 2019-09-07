@@ -2,85 +2,81 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E45C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 17:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96872C43140
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 17:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A5BB21907
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 17:42:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567878157;
-	bh=GHJAVT2/iebWv8cgiLcaT3iJsHValcnDCOHaDLgxd3s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vILacs0CloLeHzG02CEDsByTDjhYOcnMgEDKM6Eg80KWxylGE2Eu+x0sAjeGt0rsC
-	 qhsEA8K1FnMRGLLjBuIRXLNw4j5GyMv2L7KbFz2R4SdNaCh5k6cVB+nA9rfDfqy/b1
-	 QzA9XO9kQlB/5reJTTRa5P1yF2vZp/3z0AuhLzNA=
+	by mail.kernel.org (Postfix) with ESMTP id 78AF1218AC
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 17:43:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406268AbfIGRmg (ORCPT
+        id S2392220AbfIGRn6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 13:42:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38130 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728507AbfIGRmf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 13:42:35 -0400
-Received: from localhost (unknown [80.251.162.164])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97BAF218AE;
-        Sat,  7 Sep 2019 17:42:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567878155;
-        bh=GHJAVT2/iebWv8cgiLcaT3iJsHValcnDCOHaDLgxd3s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YegHihmOrO7HqZ8bbVS3tGIm+iTrMZL4wtxB3E9/+Q1wZcSR8euLNe94MGe7MNf40
-         6do0qipds9FaHV9diRE/V8AXcgsINqBopWBfhEuPMo5cn3kmDafSCK4Cp1F2f/jJ5/
-         A60rHL6eAzIF7SOOfAsEvG10E8lDZgWJCYnX5Olg=
-Date:   Sat, 7 Sep 2019 18:42:32 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Sandro Volery <sandro@volery.com>
-Cc:     linux-kernel@vger.kernel.org, jslaby@suse.com
-Subject: Re: [PATCH] Fixed most indent issues in tty_io.c
-Message-ID: <20190907174232.GA20070@kroah.com>
-References: <20190907172944.GB18166@kroah.com>
- <B45E122D-2B8B-43DA-8658-889E30CB2F0F@volery.com>
+        Sat, 7 Sep 2019 13:43:58 -0400
+Received: from www1102.sakura.ne.jp ([219.94.129.142]:36587 "EHLO
+        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727053AbfIGRn6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Sep 2019 13:43:58 -0400
+Received: from fsav402.sakura.ne.jp (fsav402.sakura.ne.jp [133.242.250.101])
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x87Hhbm7008546;
+        Sun, 8 Sep 2019 02:43:37 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Received: from www1102.sakura.ne.jp (219.94.129.142)
+ by fsav402.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav402.sakura.ne.jp);
+ Sun, 08 Sep 2019 02:43:37 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav402.sakura.ne.jp)
+Received: from localhost.localdomain (118.153.231.153.ap.dti.ne.jp [153.231.153.118])
+        (authenticated bits=0)
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x87HhYmW008539
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Sun, 8 Sep 2019 02:43:37 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Subject: [PATCH] ASoC: rockchip: ignore 0Hz sysclk
+Date:   Sun,  8 Sep 2019 02:43:32 +0900
+Message-Id: <20190907174332.19586-1-katsuhiro@katsuster.net>
+X-Mailer: git-send-email 2.23.0.rc1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <B45E122D-2B8B-43DA-8658-889E30CB2F0F@volery.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 07, 2019 at 07:35:42PM +0200, Sandro Volery wrote:
-> 
-> 
-> >>> On 7 Sep 2019, at 19:29, Greg KH <gregkh@linuxfoundation.org> wrote:
-> >> ﻿On Sat, Sep 07, 2019 at 07:23:59PM +0200, Sandro Volery wrote:
-> >> Dear Greg,
-> >> I am pretty sure the issue was, that I did too many things at once. However, all the things I did are related to spaces / tabs, maybe that still works?
-> > 
-> > <snip>
-> > 
-> > For some reason you sent this only to me, which is a bit rude to
-> > everyone else on the mailing list.  I'll be glad to respond if you
-> > resend it to everyone.
-> 
-> I'm sorry, newbie here. I thought it'd be better to not annoy everyone with responses but learning things everyday I guess :)
+This patch ignores sysclk setting if it is 0Hz.
 
-No problem, but you should also line-wrap your emails :)
+Some codecs treat 0Hz sysclk as signal of applying no constraints.
+This driver does not have such feature but current implementation
+outputs 'Failed to set mclk' error message if machine driver sets
+0Hz sysclk to this driver.
 
-> I am pretty sure the issue with my patch was that there was too many changes, however all of them were spaces and tabs related, so I think this could be fine?
+Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+---
+ sound/soc/rockchip/rockchip_i2s.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-As the bot said, break it out into "one patch per logical change", and
-"fix all whitespace issues" is not "one logical change".
+diff --git a/sound/soc/rockchip/rockchip_i2s.c b/sound/soc/rockchip/rockchip_i2s.c
+index 88ebaf6e1880..af2d5a6124c8 100644
+--- a/sound/soc/rockchip/rockchip_i2s.c
++++ b/sound/soc/rockchip/rockchip_i2s.c
+@@ -419,6 +419,9 @@ static int rockchip_i2s_set_sysclk(struct snd_soc_dai *cpu_dai, int clk_id,
+ 	struct rk_i2s_dev *i2s = to_info(cpu_dai);
+ 	int ret;
+ 
++	if (freq == 0)
++		return 0;
++
+ 	ret = clk_set_rate(i2s->mclk, freq);
+ 	if (ret)
+ 		dev_err(i2s->dev, "Fail to set mclk %d\n", ret);
+-- 
+2.23.0.rc1
 
-thanks,
-
-greg k-h
