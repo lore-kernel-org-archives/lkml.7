@@ -2,121 +2,97 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C00FAC43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 21:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F36C0030B
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 21:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 944FF21835
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 21:41:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LCqusXSt"
+	by mail.kernel.org (Postfix) with ESMTP id 003AC21835
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 21:44:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567892647;
+	bh=iHxNrFDrUPq2AVFeF6M8IQ206vRYKnDZO+TntEBxw4I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=0jlTD2NPnj7+a3xAGGxW6bTPZWnD/e7OCM3ohxtueL+MdiLM1fgFcl5F0fPJG8TAV
+	 PueDdL6U6zSohb1NL9svBoOUWrgwV6nChoEIkC1/aKvPjLJnaViKEk9N1620fgrgRI
+	 skehSgDH1aPN4sSMbAI8LMjquKVxjqkWvUK8Oy3Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406853AbfIGVlk (ORCPT
+        id S2395307AbfIGVoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 17:41:40 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44367 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732468AbfIGVlj (ORCPT
+        Sat, 7 Sep 2019 17:44:06 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:34422 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727500AbfIGVoG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 17:41:39 -0400
-Received: by mail-pg1-f193.google.com with SMTP id i18so5475231pgl.11;
-        Sat, 07 Sep 2019 14:41:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=roF+iHytDA2OpX6EAs6vae/MbSREfIb/2EmgYW70LGY=;
-        b=LCqusXStz2S5t5Jo03KSnHbdxvW5JnsBIMaaxJRM/k++WE4/icVGE/B9clTcqDPqzr
-         e+6bcZNXENyZPcxqezTzfGSBa1s2TTVHZSswaU1Q/gsVktt+7t4uh6VhJs2wcOEH+rK2
-         7EINf8UFuBSovxqmpSsvGmkG7tPc2yxjQt9m58rxPK7IS7zOWR4d+Fv0Qwyp7lzd0wnl
-         KHjiirC1iZTH9ejrMEEPJ859Vod3vSehrRREj21RGvtTebumbB5EmAPCweCBjVlNlnoX
-         xhc2cIqSXEGo0SCZjGNrGJGibWee8BvXhvv/LQ1Qyc2aoKu/JzyGwG0fBb4wq6PYyw7Q
-         Nl1Q==
+        Sat, 7 Sep 2019 17:44:06 -0400
+Received: by mail-oi1-f195.google.com with SMTP id g128so7842625oib.1;
+        Sat, 07 Sep 2019 14:44:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=roF+iHytDA2OpX6EAs6vae/MbSREfIb/2EmgYW70LGY=;
-        b=eXoLuH2Dby45oU59CT8moiJknDpAkjkkFsRiue53F/xi99ERb/gzhf5Mhs1sm4tXip
-         S2C3Rr3pQn2iK2of3BAvHlKVR41LrgvE2z7sDjSxVg6qJxtnSubOES8kr4DA6HteAYTB
-         na9UzszQgk7oKqSmAnN/Ug1mDzPGaSIODvT8EvZvFWjWWDibZxa/GZZ8ewv8y41sofkQ
-         4vem8XpjJGcPNcvWFTKXmV9krUGrJcjcnOdxqCjo8aLGKME6L/cZ21EGPMO+gmGjPRFp
-         erSAIf9PsarnES5/ppMvKL+scsfBjMRa5y7DK9P0d9XN7CWS0B5QbpgzNf+6KYFoOXvw
-         BxwQ==
-X-Gm-Message-State: APjAAAXZeEzi8LC3lQAZFTGFehkmerQJGDCerLwmG7rAJlRxNxjXQ4Hp
-        +5DDB/d1cIUrcugTOAVwRnU=
-X-Google-Smtp-Source: APXvYqyFSnMx/7lAMSE2e3lPA0RN+xaQcUoIMVlsQ0qfqgUp72SQW3UUmlrUThMTSeTxYPzNir9e5Q==
-X-Received: by 2002:aa7:955d:: with SMTP id w29mr18821170pfq.60.1567892498622;
-        Sat, 07 Sep 2019 14:41:38 -0700 (PDT)
-Received: from localhost.localdomain ([112.79.80.177])
-        by smtp.gmail.com with ESMTPSA id h11sm9078516pgv.5.2019.09.07.14.41.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sat, 07 Sep 2019 14:41:37 -0700 (PDT)
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org, boris.ostrovsky@oracle.com, jgross@suse.com,
-        sstabellini@kernel.org, akpm@linux-foundation.org,
-        david@redhat.com, osalvador@suse.com, mhocko@suse.com,
-        pasha.tatashin@soleen.com, dan.j.williams@intel.com,
-        richard.weiyang@gmail.com, cai@lca.pw
-Cc:     linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Souptick Joarder <jrdr.linux@gmail.com>
-Subject: [PATCH 3/3] mm/memory_hotplug.c: Remove __online_page_set_limits()
-Date:   Sun,  8 Sep 2019 03:17:04 +0530
-Message-Id: <9afe6c5a18158f3884a6b302ac2c772f3da49ccc.1567889743.git.jrdr.linux@gmail.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1567889743.git.jrdr.linux@gmail.com>
-References: <cover.1567889743.git.jrdr.linux@gmail.com>
-In-Reply-To: <cover.1567889743.git.jrdr.linux@gmail.com>
-References: <cover.1567889743.git.jrdr.linux@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0lGLCZPFaINcLtxScVujk7xJFWveGfY1hBRQvY6nRng=;
+        b=Nv043mDe4w5TLDvfBbAGEKjz/jiuhxwn1mTXZmv5epaQzhXuHkYqX5YwOW6RxavdRy
+         sSdc60rLYApj5KxirFipp+Ft93kDIW6n0ODk35/3C/PLeVdL9uipIdZ9zUyQ4It56Ju8
+         YX9icn4obIPLMbJUKeZlXyeyUhxC/53QKNaqECvPZILC2ybF877MXQVufUpXuzvEBMJp
+         3Y9tzki2PdVxDVkFmuicF8HV1xLNAH6Vf05l6VSIzvOBuANKwOGJikFeL48n3B7vdwbW
+         8GtoytM8xAMYerXuO8XeGp+gimh2g1W/z/xt2SGY4rKa2BjFNpCanuukV9DLVoUsuaK/
+         9bGA==
+X-Gm-Message-State: APjAAAUbHs4TDRNY9YuggXqzr2QYwTHNTyGXFAKrnjPrhap8IrmYO0IF
+        TJGZFEr7k+SwKN2bB67Aj9B4zWrEyIFgrGw/7/Y=
+X-Google-Smtp-Source: APXvYqxI2VNjRqYr3XshJRYdDTMSyilEDy5yw0MO4dyZyuT1tzoqTI8vdxbY2Z8Ycpywkny1Mrj5eKP33PK+bPSs9RQ=
+X-Received: by 2002:aca:da86:: with SMTP id r128mr12645246oig.103.1567892644996;
+ Sat, 07 Sep 2019 14:44:04 -0700 (PDT)
+MIME-Version: 1.0
+References: <3087ddf7-b0cc-fdf1-4dd2-5d6c630bdbba@linuxfoundation.org>
+In-Reply-To: <3087ddf7-b0cc-fdf1-4dd2-5d6c630bdbba@linuxfoundation.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Sat, 7 Sep 2019 23:43:53 +0200
+Message-ID: <CAJZ5v0ieuq_LPaoM3Nfh8bdK+a-reHBPkFK+bArre-FcMEJD=g@mail.gmail.com>
+Subject: Re: [GIT PULL] cpupower update for Linux 5.4-rc1
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Thomas Renninger <trenn@suse.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As both the callers of this dummy __online_page_set_limits()
-is removed, this can be removed permanently.
+Hi Shuah,
 
-Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
----
- include/linux/memory_hotplug.h | 1 -
- mm/memory_hotplug.c            | 5 -----
- 2 files changed, 6 deletions(-)
+On Fri, Sep 6, 2019 at 5:36 PM Shuah Khan <skhan@linuxfoundation.org> wrote:
+>
+> Hi Rafael,
+>
+> Please pull the following update for Linux 5.4-rc1 or 5.4-rc2 depending
+> on your pull request schedule for Linus.
+>
+> This cpupower update for Linux 5.4-rc1 consists of bug fixes and
+> German translation updates from Benjamin Weis.
+>
+> diff is attached.
+>
+> thanks,
+> -- Shuah
+>
+> ----------------------------------------------------------------
+> The following changes since commit a55aa89aab90fae7c815b0551b07be37db359d76:
+>
+>    Linux 5.3-rc6 (2019-08-25 12:01:23 -0700)
+>
+> are available in the Git repository at:
+>
+>    git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux
+> tags/linux-cpupower-5.4-rc1
+>
+> for you to fetch changes up to 87ce243206944a57383309dcbcdcc5750e6c905b:
+>
+>    cpupower: update German translation (2019-08-29 10:18:52 -0600)
 
-diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-index f46ea71..8ee3a2a 100644
---- a/include/linux/memory_hotplug.h
-+++ b/include/linux/memory_hotplug.h
-@@ -105,7 +105,6 @@ extern unsigned long __offline_isolated_pages(unsigned long start_pfn,
- extern int set_online_page_callback(online_page_callback_t callback);
- extern int restore_online_page_callback(online_page_callback_t callback);
- 
--extern void __online_page_set_limits(struct page *page);
- extern void __online_page_increment_counters(struct page *page);
- extern void __online_page_free(struct page *page);
- 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index c73f099..dc0118f 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -604,11 +604,6 @@ int restore_online_page_callback(online_page_callback_t callback)
- }
- EXPORT_SYMBOL_GPL(restore_online_page_callback);
- 
--void __online_page_set_limits(struct page *page)
--{
--}
--EXPORT_SYMBOL_GPL(__online_page_set_limits);
--
- void __online_page_increment_counters(struct page *page)
- {
- 	adjust_managed_page_count(page, 1);
--- 
-1.9.1
-
+Pulled, thanks!
