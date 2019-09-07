@@ -2,135 +2,116 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94027C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 16:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01C55C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 16:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 617BB218AF
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 16:58:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567875526;
-	bh=B009PTRLUBN8wurk7CoBAwKLSysKQ4xtBud+BIdBHwM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=EZOX88N/qaB6DDnR0nsiuZLYGC6PpkMMKxK2/Q158OpI8H2/vf0R/ZzCrw5WrfsTg
-	 hfMcPZYoVozMXAqF7c0qxKtl9oIQqP0ehBNJ8Wtda2lMnCQU8hheDVpKYhOsLcPdgo
-	 g44eMKlmCdEETy+NErXMDp9KebKKsHGgHVOledyE=
+	by mail.kernel.org (Postfix) with ESMTP id CB20C218AF
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 16:59:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZJ9Cm7Yd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395051AbfIGQ6p (ORCPT
+        id S2395071AbfIGQ7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 12:58:45 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40928 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392087AbfIGQ6o (ORCPT
+        Sat, 7 Sep 2019 12:59:34 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:35567 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2395031AbfIGQ7e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 12:58:44 -0400
-Received: by mail-lf1-f66.google.com with SMTP id u29so7426042lfk.7
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Sep 2019 09:58:43 -0700 (PDT)
+        Sat, 7 Sep 2019 12:59:34 -0400
+Received: by mail-pl1-f195.google.com with SMTP id gn20so4638043plb.2;
+        Sat, 07 Sep 2019 09:59:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=VaxRwZcXIqBCeM77ijL8A1h5NduVbQyHYByckmz1gJk=;
-        b=Ldlyq4Px8HcWw652TFUFBz92WQlbW6hSwxMlCjQQ7ArJ4KZCkRlTmS1rpYbWoVnDTP
-         m2fPZeqordNjkxzXe2jf1KmkqKcGf1nJr407YEJX5jdvDfinEa81A2+g7kiafJJQtJkb
-         2rcL8ecVWF8zjmoPoJgLSziuzeA0NFXkftsDk=
+        bh=Nup+ZritHyxNFOCaObFAN5rNMYLIMSIpxWMsEmTd4U0=;
+        b=ZJ9Cm7YdCiVNQDjVm9Khq/SRfUjWWxNHECtZmmijLOGwxobAsiKMLeoGPMc5wff2SL
+         a/1fcN7Qir3ZHKbhXTNSax116NB/A1WnnFuNTE1zWQnNgyOAwa/SvH9J/Ulrw4vQ0Ook
+         0RqNUsqPRZ+B5MlB7P8G5Yf/PvFPNgpn5Q+Tf1scq+wFnGUB5Tk94d5KBotsu2g0rr5q
+         hVn3/vU7ZSetJeV2JmPaeRJuAQpeS1dJeW6sRNNRtJl6f/ULl3nq584CUlEGskTMQCzZ
+         VwWKUwgcc/ixaDbIF6cxCnL27sa54d7NzD0yYuhSkg15ZDgKviC/AVxAbqeJm8fGwq25
+         hx7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=VaxRwZcXIqBCeM77ijL8A1h5NduVbQyHYByckmz1gJk=;
-        b=kJ56XFnkosrSSITq/DyDgqOrRxIcRfNZVz9EoYQIftY19KaX7lbt2vFL6omKnbXdWx
-         7BzP9GKWWlYDQClm5QK0kFmuxmm+zqmk91EHLm3myJ48BJ8HuE7V36KQrxYSQOkqvCeR
-         Lhg++QDE9t3acMC69IZUmT63UjcIu2mjbuCa0OY4aBizQC4JVEw+eUG3yvHmLGpY90Ex
-         pK7NKqPocQNk5P0t7xRgBNHrIrZXvOtU14SQMhOAh4GZod2vvdsxV34FnhSf6YRzFh9K
-         lNT5BwGFTLUA4ZG9BSWRVdHbpdQJW20S/VPTkM3mt2fHguLaGqw9VwIKz9i20YcSX9Gz
-         YP3w==
-X-Gm-Message-State: APjAAAX/MTKLv0gfiB1HZm4E3ixMVAVzKK4QRtUarGG6KsV3rIwV9KSP
-        x1RqADkgIBPM/yBBrg87qaylaZXVuvg=
-X-Google-Smtp-Source: APXvYqzY/j9Oyy35tIIqOeuxtHwggE0fx0sXZQiwLW8qgscyWJJPF73lAIvtcaKMXFKMgDKJgPSapQ==
-X-Received: by 2002:ac2:414b:: with SMTP id c11mr10127868lfi.159.1567875522546;
-        Sat, 07 Sep 2019 09:58:42 -0700 (PDT)
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
-        by smtp.gmail.com with ESMTPSA id u1sm1786531lfi.83.2019.09.07.09.58.40
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 07 Sep 2019 09:58:42 -0700 (PDT)
-Received: by mail-lf1-f51.google.com with SMTP id x80so7451871lff.3
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Sep 2019 09:58:40 -0700 (PDT)
-X-Received: by 2002:a19:f204:: with SMTP id q4mr5583225lfh.29.1567875518853;
- Sat, 07 Sep 2019 09:58:38 -0700 (PDT)
+        bh=Nup+ZritHyxNFOCaObFAN5rNMYLIMSIpxWMsEmTd4U0=;
+        b=HJkSr2is/gx+ack19VlPyiKMBs7W/eR0bRNdr9dBtSjoOJ7IDzu4vQJaBYOcJuJV5R
+         JhGzA3AwJNOFsaIX3zbpo64dhv5qOjtv0Yqg363D4eJKSqyR06qw0LsmemRtlDwXtwP0
+         UYZfJ3Bq2+FbDRyWe2o09kxhmBzsLzq6JvFGEoncZU4CpBsFD3udaAlVQlyYjxxXHb4Q
+         q3BRF43v+TgGmgDb1XT6Lo7duT8UjcDlkjrx+K0F37ROUJzmXF9aDU5SrEd7GGCfDfXM
+         0EXP6JXvN2hUth1F2Zyku5x/eZTFuOtjOG/u9SDPSB2cY1cUgxcx01mZSnQDxgLgReaX
+         4ksQ==
+X-Gm-Message-State: APjAAAV5e4Wyqyp0dYsyy4QEJLvXfVQKrvK3NDBUF9bAH/TmUqfzNXqO
+        wdorqm+WMvU6QmA+xxs0zFG6l/rdhTa7u04xTfs=
+X-Google-Smtp-Source: APXvYqz8m5qBUTGbwRtcM+UGu19F9+AcMyyOgN2P4e7wCb8USywVjvO0seu44C4/n2mjTkrOC62Wsr29m/rpqsKqVqQ=
+X-Received: by 2002:a17:902:9349:: with SMTP id g9mr15239214plp.262.1567875573606;
+ Sat, 07 Sep 2019 09:59:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190904201933.10736-1-cyphar@cyphar.com> <20190904201933.10736-12-cyphar@cyphar.com>
- <7236f382d72130f2afbbe8940e72cc67e5c6dce0.camel@kernel.org>
-In-Reply-To: <7236f382d72130f2afbbe8940e72cc67e5c6dce0.camel@kernel.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 7 Sep 2019 09:58:23 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whZx97Nm-gUK0ppofj2RA2LLz2vmaDUTKSSV-+yYB9q_Q@mail.gmail.com>
-Message-ID: <CAHk-=whZx97Nm-gUK0ppofj2RA2LLz2vmaDUTKSSV-+yYB9q_Q@mail.gmail.com>
-Subject: Re: [PATCH v12 11/12] open: openat2(2) syscall
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian@brauner.io>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        alpha <linux-alpha@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-ia64@vger.kernel.org,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+References: <20190818110451.20571-1-hdegoede@redhat.com>
+In-Reply-To: <20190818110451.20571-1-hdegoede@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 7 Sep 2019 19:59:22 +0300
+Message-ID: <CAHp75VehBvaPHSQS3wMWKEXWDC_e3a_7w0V6YJkmyrSE5Pa=RQ@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add info for the Trekstor
+ Primebook C11B 2-in-1
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Hiller <thomas.hiller@gmx.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 7, 2019 at 5:40 AM Jeff Layton <jlayton@kernel.org> wrote:
+On Sun, Aug 18, 2019 at 2:05 PM Hans de Goede <hdegoede@redhat.com> wrote:
 >
-> After thinking about this a bit, I wonder if we might be better served
-> with a new set of OA2_* flags instead of repurposing the O_* flags?
+> Add touchscreen info for the Trekstor Primebook C11B 2-in-1, note the C11B
+> used the same touchscreen as the regular C11, so we only add a new DMI
+> match.
+>
 
-I'd hate to have yet _another_ set of translation functions, and
-another chance of people just getting it wrong either in user space or
-the kernel.
+Pushed to my review and testing queue, thanks!
 
-So no. Let's not make another set of flags that has no sane way to
-have type-safety to avoid more confusion.
+> Cc: Thomas Hiller <thomas.hiller@gmx.de>
+> Reported-and-tested-by: Thomas Hiller <thomas.hiller@gmx.de>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/platform/x86/touchscreen_dmi.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+> index 20a943f519dd..8255273b6972 100644
+> --- a/drivers/platform/x86/touchscreen_dmi.c
+> +++ b/drivers/platform/x86/touchscreen_dmi.c
+> @@ -981,6 +981,14 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+>                         DMI_MATCH(DMI_PRODUCT_NAME, "Primebook C11"),
+>                 },
+>         },
+> +       {
+> +               /* Trekstor Primebook C11B (same touchscreen as the C11) */
+> +               .driver_data = (void *)&trekstor_primebook_c11_data,
+> +               .matches = {
+> +                       DMI_MATCH(DMI_SYS_VENDOR, "TREKSTOR"),
+> +                       DMI_MATCH(DMI_PRODUCT_NAME, "PRIMEBOOK C11B"),
+> +               },
+> +       },
+>         {
+>                 /* Trekstor Primebook C13 */
+>                 .driver_data = (void *)&trekstor_primebook_c13_data,
+> --
+> 2.23.0.rc2
+>
 
-The new flags that _only_ work with openat2() might be named with a
-prefix/suffix to mark that, but I'm not sure it's a huge deal.
 
-                 Linus
+-- 
+With Best Regards,
+Andy Shevchenko
