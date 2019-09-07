@@ -2,363 +2,368 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 062FEC43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 10:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E85C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 10:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B271A21871
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 10:51:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=kolabnow.com header.i=@kolabnow.com header.b="emQ/hvXD"
+	by mail.kernel.org (Postfix) with ESMTP id F1E3B20854
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 10:54:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389763AbfIGKvZ (ORCPT
+        id S2390034AbfIGKyr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 06:51:25 -0400
-Received: from mx.kolabnow.com ([95.128.36.42]:55148 "EHLO mx.kolabnow.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389098AbfIGKvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 06:51:24 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by ext-mx-out003.mykolab.com (Postfix) with ESMTP id 87219404D5;
-        Sat,  7 Sep 2019 12:51:20 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kolabnow.com; h=
-        content-transfer-encoding:mime-version:message-id:date:date
-        :subject:subject:from:from:received:received:received; s=
-        dkim20160331; t=1567853479; x=1569667880; bh=i8w7LjKB4tOUg5tMud4
-        hYP3mdSM5cQstrz/mfiLpV20=; b=emQ/hvXDnO56K0NYr5+vKhxNRQz1i81Ptby
-        20OJhH2wvnNcjsVq5/cmjJujiKaA4L8oq4/kUOOjanS3eYZJTY8QEtFmPoqC3JIN
-        RxUHAXVepjCQuyIWe3rRVqmqpVokMvEgOxjcAbr1Xpce5/T9AVSJuRj0oltZ7orE
-        OtKF7mvTL9WkxRgIROaVe+iIZ/tYiMNXqG1N+D9B7fic8TcQlAXNNgAy2pnWG8kz
-        Rwy7+kkiwrkWbnA6Yscj9g9q5gwUka3xfFKazUn0F8jUfM8S6U89Ar08F1d2EOz2
-        Qfn05fV4FuLUSsZgM+lH65b7jxE/0NhykTJslIl4dlxwBwGHKLRMzPEwiNuZRMDI
-        88JBdD9oDzrswMYBYZBdhu1bHlvIound69XHXbTE+Nx5dLRDiqofiaqyOiRgg3JW
-        QUNmVfTwHzyDQpFPtfngE1F8EiIdei/tpNSlSldvdoE7YUU7xlFmMfl+lgISRFy6
-        4RqhBvmY3B4CrvByXIpty589J4yE9FzDngPpgfp1vvFjM5eDYh5UY2yH+DgK6EXI
-        E8cepjCZgaCFZVgmVaU14O8nU+GAqcSRSn0Ua0MyUrJzKH8k217/Dz4SSM4ZKTYl
-        TfTyf+n6/FDtXYVloPJK30JrnIKDLDsGvvBduUGtpCSdmQEkrxpkqyHuoJMV1KIL
-        0SIxge7M=
-X-Virus-Scanned: amavisd-new at mykolab.com
-Received: from mx.kolabnow.com ([127.0.0.1])
-        by localhost (ext-mx-out003.mykolab.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id jMOGCgfi-Bzb; Sat,  7 Sep 2019 12:51:19 +0200 (CEST)
-Received: from int-mx003.mykolab.com (unknown [10.9.13.3])
-        by ext-mx-out003.mykolab.com (Postfix) with ESMTPS id 4CFF0403F4;
-        Sat,  7 Sep 2019 12:51:19 +0200 (CEST)
-Received: from ext-subm003.mykolab.com (unknown [10.9.6.3])
-        by int-mx003.mykolab.com (Postfix) with ESMTPS id E37A33CB7;
-        Sat,  7 Sep 2019 12:51:18 +0200 (CEST)
-From:   Federico Vaga <federico.vaga@vaga.pv.it>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        Federico Vaga <federico.vaga@vaga.pv.it>
-Subject: [PATCH] doc: replace IFF abbreviation  with 'if and only if'
-Date:   Sat,  7 Sep 2019 12:51:16 +0200
-Message-Id: <20190907105116.19183-1-federico.vaga@vaga.pv.it>
+        Sat, 7 Sep 2019 06:54:47 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:52103 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729133AbfIGKyr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Sep 2019 06:54:47 -0400
+Received: from fsav302.sakura.ne.jp (fsav302.sakura.ne.jp [153.120.85.133])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x87Asc2N089321;
+        Sat, 7 Sep 2019 19:54:38 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav302.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav302.sakura.ne.jp);
+ Sat, 07 Sep 2019 19:54:38 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav302.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126227201116.bbtec.net [126.227.201.116])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x87AsYNQ089307
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Sat, 7 Sep 2019 19:54:38 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: [PATCH (resend)] mm,oom: Defer dump_tasks() output.
+To:     linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+References: <1567159493-5232-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <7de2310d-afbd-e616-e83a-d75103b986c6@i-love.sakura.ne.jp>
+Date:   Sat, 7 Sep 2019 19:54:32 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1567159493-5232-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In a normal piece of text the use of 'iff' does not guarantee a correct
-interpretation because it is easy to confuse it for a typo (if or iff?).
+(Resending to LKML as linux-mm ML dropped my posts.)
 
-I believe that IFF should not be used outside a logical/mathematical
-expression. For this reason with this patch I am replacing 'iff' with
-'if an only if' in text, and I am leaving it as it is in logical formulae.
+If /proc/sys/vm/oom_dump_tasks != 0, dump_header() can become very slow
+because dump_tasks() synchronously reports all OOM victim candidates, and
+as a result ratelimit test for dump_header() cannot work as expected.
 
-Signed-off-by: Federico Vaga <federico.vaga@vaga.pv.it>
+This patch defers dump_tasks() output till oom_lock is released. As a
+result of this patch, the latency between out_of_memory() is called and
+SIGKILL is sent (and the OOM reaper starts reclaiming memory) will be
+significantly reduced.
+
+Since CONFIG_PRINTK_CALLER was introduced, concurrent printk() became less
+problematic. But we still need to correlate synchronously printed messages
+and asynchronously printed messages if we defer dump_tasks() messages.
+Thus, this patch also prefixes OOM killer messages using "OOM[$serial]:"
+format. As a result, OOM killer messages would look like below.
+
+  [   31.935015][   T71] OOM[1]: kworker/4:1 invoked oom-killer: gfp_mask=0xcc0(GFP_KERNEL), order=-1, oom_score_adj=0
+  (...snipped....)
+  [   32.052635][   T71] OOM[1]: oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),global_oom,task_memcg=/,task=firewalld,pid=737,uid=0
+  [   32.056886][   T71] OOM[1]: Out of memory: Killed process 737 (firewalld) total-vm:358672kB, anon-rss:22640kB, file-rss:12328kB, shmem-rss:0kB, UID:0 pgtables:421888kB oom_score_adj:0
+  [   32.064291][   T71] OOM[1]: Tasks state (memory values in pages):
+  [   32.067807][   T71] OOM[1]: [  pid  ]   uid  tgid total_vm      rss pgtables_bytes swapents oom_score_adj name
+  [   32.070057][   T54] oom_reaper: reaped process 737 (firewalld), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
+  [   32.072417][   T71] OOM[1]: [    548]     0   548     9772     1172   110592        0             0 systemd-journal
+  (...snipped....)
+  [   32.139566][   T71] OOM[1]: [    737]     0   737    89668     8742   421888        0             0 firewalld
+  (...snipped....)
+  [   32.221990][   T71] OOM[1]: [   1300]    48  1300    63025     1788   532480        0             0 httpd
+
+This patch might affect panic behavior triggered by panic_on_oom or no
+OOM-killable tasks, for dump_header(oc, NULL) will not report OOM victim
+candidates if there are not-yet-reported OOM victim candidates from past
+rounds of OOM killer invocations. I don't know if that matters.
+
+For now this patch embeds "struct oom_task_info" into each
+"struct task_struct". In order to avoid bloating "struct task_struct",
+future patch might detach from "struct task_struct" because one
+"struct oom_task_info" for one "struct signal_struct" will be enough.
+
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 ---
- .../admin-guide/cgroup-v1/blkio-controller.rst         |  2 +-
- Documentation/admin-guide/cgroup-v1/cgroups.rst        |  2 +-
- .../admin-guide/cgroup-v1/freezer-subsystem.rst        |  4 ++--
- Documentation/admin-guide/cgroup-v2.rst                |  2 +-
- Documentation/devicetree/bindings/media/st-rc.txt      |  4 ++--
- Documentation/devicetree/bindings/net/ibm,emac.txt     | 10 +++++-----
- .../devicetree/bindings/pinctrl/pinctrl-st.txt         |  2 +-
- Documentation/driver-api/libata.rst                    |  2 +-
- Documentation/i2c/i2c-topology.rst                     | 10 +++++-----
- Documentation/ioctl/hdio.rst                           |  2 +-
- Documentation/locking/spinlocks.rst                    |  4 ++--
- Documentation/locking/ww-mutex-design.rst              |  2 +-
- Documentation/scsi/scsi_eh.txt                         |  4 ++--
- Documentation/spi/spidev.rst                           |  4 ++--
- Documentation/virtual/kvm/api.txt                      |  2 +-
- Documentation/virtual/kvm/halt-polling.txt             |  2 +-
- 16 files changed, 29 insertions(+), 29 deletions(-)
+ include/linux/sched.h |  17 +++++-
+ mm/oom_kill.c         | 149 +++++++++++++++++++++++++++++++++++---------------
+ 2 files changed, 121 insertions(+), 45 deletions(-)
 
-diff --git a/Documentation/admin-guide/cgroup-v1/blkio-controller.rst b/Documentation/admin-guide/cgroup-v1/blkio-controller.rst
-index 36d43ae7dc13..8f187396c534 100644
---- a/Documentation/admin-guide/cgroup-v1/blkio-controller.rst
-+++ b/Documentation/admin-guide/cgroup-v1/blkio-controller.rst
-@@ -52,7 +52,7 @@ Hierarchical Cgroups
- ====================
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index b6ec130dff9b..8960e7dc2077 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -639,6 +639,21 @@ struct wake_q_node {
+ 	struct wake_q_node *next;
+ };
  
- Throttling implements hierarchy support; however,
--throttling's hierarchy support is enabled iff "sane_behavior" is
-+throttling's hierarchy support is enabled if and only if "sane_behavior" is
- enabled from cgroup side, which currently is a development option and
- not publicly available.
++/* Memory usage and misc info as of invocation of OOM killer. */
++struct oom_task_info {
++	struct list_head list;
++	unsigned int seq;
++	char comm[TASK_COMM_LEN];
++	pid_t pid;
++	uid_t uid;
++	pid_t tgid;
++	unsigned long total_vm;
++	unsigned long mm_rss;
++	unsigned long pgtables_bytes;
++	unsigned long swapents;
++	int score_adj;
++};
++
+ struct task_struct {
+ #ifdef CONFIG_THREAD_INFO_IN_TASK
+ 	/*
+@@ -1260,7 +1275,7 @@ struct task_struct {
+ #ifdef CONFIG_MMU
+ 	struct task_struct		*oom_reaper_list;
+ #endif
+-	struct list_head		oom_victim_list;
++	struct oom_task_info		oom_task_info;
+ #ifdef CONFIG_VMAP_STACK
+ 	struct vm_struct		*stack_vm_area;
+ #endif
+diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+index 93eae768a475..fbe17007fb76 100644
+--- a/mm/oom_kill.c
++++ b/mm/oom_kill.c
+@@ -377,16 +377,80 @@ static void select_bad_process(struct oom_control *oc)
+ 	}
+ }
  
-diff --git a/Documentation/admin-guide/cgroup-v1/cgroups.rst b/Documentation/admin-guide/cgroup-v1/cgroups.rst
-index b0688011ed06..15bb3ea6a597 100644
---- a/Documentation/admin-guide/cgroup-v1/cgroups.rst
-+++ b/Documentation/admin-guide/cgroup-v1/cgroups.rst
-@@ -573,7 +573,7 @@ cgroup_for_each_descendant_pre() for details.
- ``void css_offline(struct cgroup *cgrp);``
- (cgroup_mutex held by caller)
++static unsigned int oom_killer_seq; /* Serialized by oom_lock. */
++static LIST_HEAD(oom_candidate_list); /* Serialized by oom_lock. */
  
--This is the counterpart of css_online() and called iff css_online()
-+This is the counterpart of css_online() and called if and only if css_online()
- has succeeded on @cgrp. This signifies the beginning of the end of
- @cgrp. @cgrp is being removed and the subsystem should start dropping
- all references it's holding on @cgrp. When all references are dropped,
-diff --git a/Documentation/admin-guide/cgroup-v1/freezer-subsystem.rst b/Documentation/admin-guide/cgroup-v1/freezer-subsystem.rst
-index 582d3427de3f..1c49e87a14d3 100644
---- a/Documentation/admin-guide/cgroup-v1/freezer-subsystem.rst
-+++ b/Documentation/admin-guide/cgroup-v1/freezer-subsystem.rst
-@@ -56,7 +56,7 @@ expected.
- The cgroup freezer is hierarchical. Freezing a cgroup freezes all
- tasks belonging to the cgroup and all its descendant cgroups. Each
- cgroup has its own state (self-state) and the state inherited from the
--parent (parent-state). Iff both states are THAWED, the cgroup is
-+parent (parent-state). If and only if both states are THAWED, the cgroup is
- THAWED.
+ static int add_candidate_task(struct task_struct *p, void *arg)
+ {
+-	if (!oom_unkillable_task(p)) {
+-		get_task_struct(p);
+-		list_add_tail(&p->oom_victim_list, (struct list_head *) arg);
+-	}
++	struct oom_control *oc = arg;
++	struct mm_struct *mm;
++	struct oom_task_info *oti;
++
++	if (oom_unkillable_task(p))
++		return 0;
++	/* p may not have freeable memory in nodemask */
++	if (!is_memcg_oom(oc) && !oom_cpuset_eligible(p, oc))
++		return 0;
++	/* All of p's threads might have already detached their mm's. */
++	p = find_lock_task_mm(p);
++	if (!p)
++		return 0;
++	get_task_struct(p);
++	oti = &p->oom_task_info;
++	mm = p->mm;
++	oti->seq = oom_killer_seq;
++	memcpy(oti->comm, p->comm, sizeof(oti->comm));
++	oti->pid = task_pid_nr(p);
++	oti->uid = from_kuid(&init_user_ns, task_uid(p));
++	oti->tgid = p->tgid;
++	oti->total_vm = mm->total_vm;
++	oti->mm_rss = get_mm_rss(mm);
++	oti->pgtables_bytes = mm_pgtables_bytes(mm);
++	oti->swapents = get_mm_counter(mm, MM_SWAPENTS);
++	oti->score_adj = p->signal->oom_score_adj;
++	task_unlock(p);
++	list_add_tail(&oti->list, &oom_candidate_list);
+ 	return 0;
+ }
  
- The following cgroupfs files are created by cgroup freezer.
-@@ -87,7 +87,7 @@ The following cgroupfs files are created by cgroup freezer.
- * freezer.self_freezing: Read only.
++static void dump_candidate_tasks(struct work_struct *work)
++{
++	bool first = true;
++	unsigned int seq;
++	struct oom_task_info *oti;
++
++	if (work) /* Serialize only if asynchronous. */
++		mutex_lock(&oom_lock);
++	while (!list_empty(&oom_candidate_list)) {
++		oti = list_first_entry(&oom_candidate_list,
++				       struct oom_task_info, list);
++		seq = oti->seq;
++		if (first) {
++			pr_info("OOM[%u]: Tasks state (memory values in pages):\n",
++				seq);
++			pr_info("OOM[%u]: [  pid  ]   uid  tgid total_vm      rss pgtables_bytes swapents oom_score_adj name\n",
++				seq);
++			first = false;
++		}
++		pr_info("OOM[%u]: [%7d] %5d %5d %8lu %8lu %8ld %8lu         %5hd %s\n",
++			seq, oti->pid, oti->uid, oti->tgid, oti->total_vm,
++			oti->mm_rss, oti->pgtables_bytes, oti->swapents,
++			oti->score_adj, oti->comm);
++		list_del(&oti->list);
++		if (work)
++			mutex_unlock(&oom_lock);
++		put_task_struct(container_of(oti, struct task_struct,
++					     oom_task_info));
++		cond_resched();
++		if (work)
++			mutex_lock(&oom_lock);
++	}
++	if (work)
++		mutex_unlock(&oom_lock);
++}
++
++static DECLARE_WORK(oom_dump_candidates_work, dump_candidate_tasks);
++
+ /**
+  * dump_tasks - dump current memory state of all system tasks
+  * @oc: pointer to struct oom_control
+@@ -399,49 +463,41 @@ static int add_candidate_task(struct task_struct *p, void *arg)
+  */
+ static void dump_tasks(struct oom_control *oc)
+ {
+-	LIST_HEAD(list);
+ 	struct task_struct *p;
+-	struct task_struct *t;
  
-   Shows the self-state. 0 if the self-state is THAWED; otherwise, 1.
--  This value is 1 iff the last write to freezer.state was "FROZEN".
-+  This value is 1 if and only if the last write to freezer.state was "FROZEN".
++	/*
++	 * Suppress as long as there is any OOM victim candidate from past
++	 * rounds of OOM killer invocations. We could change this to suppress
++	 * only if there is an OOM victim candidate in the same OOM domain if
++	 * we want to see OOM victim candidates from different OOM domains.
++	 * But since dump_header() is already ratelimited, I don't know whether
++	 * it makes difference to suppress OOM victim candidates from different
++	 * OOM domains...
++	 */
++	if (!list_empty(&oom_candidate_list))
++		return;
+ 	if (is_memcg_oom(oc))
+-		mem_cgroup_scan_tasks(oc->memcg, add_candidate_task, &list);
++		mem_cgroup_scan_tasks(oc->memcg, add_candidate_task, oc);
+ 	else {
+ 		rcu_read_lock();
+ 		for_each_process(p)
+-			add_candidate_task(p, &list);
++			add_candidate_task(p, oc);
+ 		rcu_read_unlock();
+ 	}
+-	pr_info("Tasks state (memory values in pages):\n");
+-	pr_info("[  pid  ]   uid  tgid total_vm      rss pgtables_bytes swapents oom_score_adj name\n");
+-	list_for_each_entry(p, &list, oom_victim_list) {
+-		cond_resched();
+-		/* p may not have freeable memory in nodemask */
+-		if (!is_memcg_oom(oc) && !oom_cpuset_eligible(p, oc))
+-			continue;
+-		/* All of p's threads might have already detached their mm's. */
+-		t = find_lock_task_mm(p);
+-		if (!t)
+-			continue;
+-		pr_info("[%7d] %5d %5d %8lu %8lu %8ld %8lu         %5hd %s\n",
+-			t->pid, from_kuid(&init_user_ns, task_uid(t)),
+-			t->tgid, t->mm->total_vm, get_mm_rss(t->mm),
+-			mm_pgtables_bytes(t->mm),
+-			get_mm_counter(t->mm, MM_SWAPENTS),
+-			t->signal->oom_score_adj, t->comm);
+-		task_unlock(t);
+-	}
+-	list_for_each_entry_safe(p, t, &list, oom_victim_list) {
+-		list_del(&p->oom_victim_list);
+-		put_task_struct(p);
+-	}
++	/*
++	 * Report OOM victim candidates after SIGKILL is sent to OOM victims
++	 * and the OOM reaper started reclaiming.
++	 */
++	if (!list_empty(&oom_candidate_list))
++		queue_work(system_long_wq, &oom_dump_candidates_work);
+ }
  
- * freezer.parent_freezing: Read only.
+ static void dump_oom_summary(struct oom_control *oc, struct task_struct *victim)
+ {
+ 	/* one line summary of the oom killer context. */
+-	pr_info("oom-kill:constraint=%s,nodemask=%*pbl",
+-			oom_constraint_text[oc->constraint],
+-			nodemask_pr_args(oc->nodemask));
++	pr_info("OOM[%u]: oom-kill:constraint=%s,nodemask=%*pbl",
++		oom_killer_seq, oom_constraint_text[oc->constraint],
++		nodemask_pr_args(oc->nodemask));
+ 	cpuset_print_current_mems_allowed();
+ 	mem_cgroup_print_oom_context(oc->memcg, victim);
+ 	pr_cont(",task=%s,pid=%d,uid=%d\n", victim->comm, victim->pid,
+@@ -450,11 +506,11 @@ static void dump_oom_summary(struct oom_control *oc, struct task_struct *victim)
  
-diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
-index 3b29005aa981..822f9e0971b7 100644
---- a/Documentation/admin-guide/cgroup-v2.rst
-+++ b/Documentation/admin-guide/cgroup-v2.rst
-@@ -1180,7 +1180,7 @@ PAGE_SIZE multiple when read back.
- 		Failed allocation in its turn could be returned into
- 		userspace as -ENOMEM or silently ignored in cases like
- 		disk readahead.  For now OOM in memory cgroup kills
--		tasks iff shortage has happened inside page fault.
-+		tasks if and only if shortage has happened inside page fault.
+ static void dump_header(struct oom_control *oc, struct task_struct *p)
+ {
+-	pr_warn("%s invoked oom-killer: gfp_mask=%#x(%pGg), order=%d, oom_score_adj=%hd\n",
+-		current->comm, oc->gfp_mask, &oc->gfp_mask, oc->order,
+-			current->signal->oom_score_adj);
++	pr_warn("OOM[%u]: %s invoked oom-killer: gfp_mask=%#x(%pGg), order=%d, oom_score_adj=%hd\n",
++		oom_killer_seq, current->comm, oc->gfp_mask, &oc->gfp_mask,
++		oc->order, current->signal->oom_score_adj);
+ 	if (!IS_ENABLED(CONFIG_COMPACTION) && oc->order)
+-		pr_warn("COMPACTION is disabled!!!\n");
++		pr_warn("OOM[%u]: COMPACTION is disabled!!!\n", oom_killer_seq);
  
- 		This event is not raised if the OOM killer is not
- 		considered as an option, e.g. for failed high-order
-diff --git a/Documentation/devicetree/bindings/media/st-rc.txt b/Documentation/devicetree/bindings/media/st-rc.txt
-index 05c432d08bca..a9438902f6c6 100644
---- a/Documentation/devicetree/bindings/media/st-rc.txt
-+++ b/Documentation/devicetree/bindings/media/st-rc.txt
-@@ -9,10 +9,10 @@ Required properties:
- 	  controller parent.
- 	- rx-mode: can be "infrared" or "uhf". This property specifies the L1
- 	  protocol used for receiving remote control signals. rx-mode should
--	  be present iff the rx pins are wired up.
-+	  be present if and only if the rx pins are wired up.
- 	- tx-mode: should be "infrared". This property specifies the L1
- 	  protocol used for transmitting remote control signals. tx-mode should
--	  be present iff the tx pins are wired up.
-+	  be present if and only if the tx pins are wired up.
+ 	dump_stack();
+ 	if (is_memcg_oom(oc))
+@@ -883,8 +939,9 @@ static void __oom_kill_process(struct task_struct *victim, const char *message)
+ 	 */
+ 	do_send_sig_info(SIGKILL, SEND_SIG_PRIV, victim, PIDTYPE_TGID);
+ 	mark_oom_victim(victim);
+-	pr_err("%s: Killed process %d (%s) total-vm:%lukB, anon-rss:%lukB, file-rss:%lukB, shmem-rss:%lukB, UID:%u pgtables:%lukB oom_score_adj:%hd\n",
+-		message, task_pid_nr(victim), victim->comm, K(mm->total_vm),
++	pr_err("OOM[%u]: %s: Killed process %d (%s) total-vm:%lukB, anon-rss:%lukB, file-rss:%lukB, shmem-rss:%lukB, UID:%u pgtables:%lukB oom_score_adj:%hd\n",
++	       oom_killer_seq, message, task_pid_nr(victim), victim->comm,
++	       K(mm->total_vm),
+ 		K(get_mm_counter(mm, MM_ANONPAGES)),
+ 		K(get_mm_counter(mm, MM_FILEPAGES)),
+ 		K(get_mm_counter(mm, MM_SHMEMPAGES)),
+@@ -910,9 +967,9 @@ static void __oom_kill_process(struct task_struct *victim, const char *message)
+ 		if (is_global_init(p)) {
+ 			can_oom_reap = false;
+ 			set_bit(MMF_OOM_SKIP, &mm->flags);
+-			pr_info("oom killer %d (%s) has mm pinned by %d (%s)\n",
+-					task_pid_nr(victim), victim->comm,
+-					task_pid_nr(p), p->comm);
++			pr_info("OOM[%u]: oom killer %d (%s) has mm pinned by %d (%s)\n",
++				oom_killer_seq, task_pid_nr(victim),
++				victim->comm, task_pid_nr(p), p->comm);
+ 			continue;
+ 		}
+ 		/*
+@@ -1012,6 +1069,7 @@ static void check_panic_on_oom(struct oom_control *oc)
+ 	if (is_sysrq_oom(oc))
+ 		return;
+ 	dump_header(oc, NULL);
++	dump_candidate_tasks(NULL);
+ 	panic("Out of memory: %s panic_on_oom is enabled\n",
+ 		sysctl_panic_on_oom == 2 ? "compulsory" : "system-wide");
+ }
+@@ -1074,6 +1132,7 @@ bool out_of_memory(struct oom_control *oc)
+ 	if (oc->gfp_mask && !(oc->gfp_mask & __GFP_FS) && !is_memcg_oom(oc))
+ 		return true;
  
- Optional properties:
- 	- pinctrl-names, pinctrl-0: the pincontrol settings to configure muxing
-diff --git a/Documentation/devicetree/bindings/net/ibm,emac.txt b/Documentation/devicetree/bindings/net/ibm,emac.txt
-index c0c14aa3f97c..4f0f38edf205 100644
---- a/Documentation/devicetree/bindings/net/ibm,emac.txt
-+++ b/Documentation/devicetree/bindings/net/ibm,emac.txt
-@@ -45,17 +45,17 @@
- 			  Supported values are: "mii", "rmii", "smii", "rgmii",
- 			  "tbi", "gmii", rtbi", "sgmii".
- 			  For Axon on CAB, it is "rgmii"
--    - mdio-device       : 1 cell, required iff using shared MDIO registers
-+    - mdio-device       : 1 cell, required if and only if using shared MDIO registers
- 			  (440EP).  phandle of the EMAC to use to drive the
- 			  MDIO lines for the PHY used by this EMAC.
--    - zmii-device       : 1 cell, required iff connected to a ZMII.  phandle of
-+    - zmii-device       : 1 cell, required if and only if connected to a ZMII.  phandle of
- 			  the ZMII device node
--    - zmii-channel      : 1 cell, required iff connected to a ZMII.  Which ZMII
-+    - zmii-channel      : 1 cell, required if and only if connected to a ZMII.  Which ZMII
- 			  channel or 0xffffffff if ZMII is only used for MDIO.
--    - rgmii-device      : 1 cell, required iff connected to an RGMII. phandle
-+    - rgmii-device      : 1 cell, required if and only if connected to an RGMII. phandle
- 			  of the RGMII device node.
- 			  For Axon: phandle of plb5/plb4/opb/rgmii
--    - rgmii-channel     : 1 cell, required iff connected to an RGMII.  Which
-+    - rgmii-channel     : 1 cell, required if and only if connected to an RGMII.  Which
- 			  RGMII channel is used by this EMAC.
- 			  Fox Axon: present, whatever value is appropriate for each
- 			  EMAC, that is the content of the current (bogus) "phy-port"
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-st.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-st.txt
-index 48b9be48af18..e56c28ba265f 100644
---- a/Documentation/devicetree/bindings/pinctrl/pinctrl-st.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-st.txt
-@@ -62,7 +62,7 @@ Optional properties:
-   interrupt wired up for this gpio bank.
- 
- - interrupt-controller : Indicates this device is a interrupt controller. GPIO
--  bank can be an interrupt controller iff one of the interrupt type either via
-+  bank can be an interrupt controller if and only if one of the interrupt type either via
- irqmux or a dedicated interrupt per bank is specified.
- 
- - #interrupt-cells: the value of this property should be 2.
-diff --git a/Documentation/driver-api/libata.rst b/Documentation/driver-api/libata.rst
-index 70e180e6b93d..8d2dab0d92cf 100644
---- a/Documentation/driver-api/libata.rst
-+++ b/Documentation/driver-api/libata.rst
-@@ -917,7 +917,7 @@ device depends on situation but the following scheme is recommended.
- 
- HBA resetting is implementation specific. For a controller complying to
- taskfile/BMDMA PCI IDE, stopping active DMA transaction may be
--sufficient iff BMDMA state is the only HBA context. But even mostly
-+sufficient if and only if BMDMA state is the only HBA context. But even mostly
- taskfile/BMDMA PCI IDE complying controllers may have implementation
- specific requirements and mechanism to reset themselves. This must be
- addressed by specific drivers.
-diff --git a/Documentation/i2c/i2c-topology.rst b/Documentation/i2c/i2c-topology.rst
-index 0c1ae95f6a97..6c14675da52b 100644
---- a/Documentation/i2c/i2c-topology.rst
-+++ b/Documentation/i2c/i2c-topology.rst
-@@ -41,22 +41,22 @@ following list was correct at the time of writing:
- 
- In drivers/i2c/muxes/:
- 
--======================    =============================================
-+======================    =================================================
- i2c-arb-gpio-challenge    Parent-locked
--i2c-mux-gpio              Normally parent-locked, mux-locked iff
-+i2c-mux-gpio              Normally parent-locked, mux-locked if and only if
-                           all involved gpio pins are controlled by the
-                           same i2c root adapter that they mux.
--i2c-mux-gpmux             Normally parent-locked, mux-locked iff
-+i2c-mux-gpmux             Normally parent-locked, mux-locked if and only if
-                           specified in device-tree.
- i2c-mux-ltc4306           Mux-locked
- i2c-mux-mlxcpld           Parent-locked
- i2c-mux-pca9541           Parent-locked
- i2c-mux-pca954x           Parent-locked
--i2c-mux-pinctrl           Normally parent-locked, mux-locked iff
-+i2c-mux-pinctrl           Normally parent-locked, mux-locked if and only if
-                           all involved pinctrl devices are controlled
-                           by the same i2c root adapter that they mux.
- i2c-mux-reg               Parent-locked
--======================    =============================================
-+======================    =================================================
- 
- In drivers/iio/:
- 
-diff --git a/Documentation/ioctl/hdio.rst b/Documentation/ioctl/hdio.rst
-index e822e3dff176..ad02f450d057 100644
---- a/Documentation/ioctl/hdio.rst
-+++ b/Documentation/ioctl/hdio.rst
-@@ -830,7 +830,7 @@ HDIO_DRIVE_TASKFILE
- 	    ============	===============================================
- 
- 	  Taskfile registers are read back from the drive into
--	  {io|hob}_ports[] after the command completes iff one of the
-+	  {io|hob}_ports[] after the command completes if and only if one of the
- 	  following conditions is met; otherwise, the original values
- 	  will be written back, unchanged.
- 
-diff --git a/Documentation/locking/spinlocks.rst b/Documentation/locking/spinlocks.rst
-index 66e3792f8a36..895a24cd3f1c 100644
---- a/Documentation/locking/spinlocks.rst
-+++ b/Documentation/locking/spinlocks.rst
-@@ -106,8 +106,8 @@ and on other architectures it can be worse).
- 
- If you have a case where you have to protect a data structure across
- several CPU's and you want to use spinlocks you can potentially use
--cheaper versions of the spinlocks. IFF you know that the spinlocks are
--never used in interrupt handlers, you can use the non-irq versions::
-+cheaper versions of the spinlocks. If and only if you know that the spinlocks
-+are never used in interrupt handlers, you can use the non-irq versions::
- 
- 	spin_lock(&lock);
- 	...
-diff --git a/Documentation/locking/ww-mutex-design.rst b/Documentation/locking/ww-mutex-design.rst
-index 1846c199da23..6e5a7e460e73 100644
---- a/Documentation/locking/ww-mutex-design.rst
-+++ b/Documentation/locking/ww-mutex-design.rst
-@@ -112,7 +112,7 @@ Usage
- 
- The algorithm (Wait-Die vs Wound-Wait) is chosen by using either
- DEFINE_WW_CLASS() (Wound-Wait) or DEFINE_WD_CLASS() (Wait-Die)
--As a rough rule of thumb, use Wound-Wait iff you
-+As a rough rule of thumb, use Wound-Wait if and only if you
- expect the number of simultaneous competing transactions to be typically small,
- and you want to reduce the number of rollbacks.
- 
-diff --git a/Documentation/scsi/scsi_eh.txt b/Documentation/scsi/scsi_eh.txt
-index 1b7436932a2b..035f76730565 100644
---- a/Documentation/scsi/scsi_eh.txt
-+++ b/Documentation/scsi/scsi_eh.txt
-@@ -214,7 +214,7 @@ all unrecovered devices.
-    scmds.  e.g. resetting a device recovers all failed scmds on the
-    device.
- 
-- - Higher severity actions are taken iff eh_work_q is not empty after
-+ - Higher severity actions are taken if and only if eh_work_q is not empty after
-    lower severity actions are complete.
- 
-  - EH reuses failed scmds to issue commands for recovery.  For
-@@ -227,7 +227,7 @@ recovered (eh_work_q is empty), scsi_eh_flush_done_q() is invoked to
- either retry or error-finish (notify upper layer of failure) recovered
- scmds.
- 
-- scmds are retried iff its sdev is still online (not offlined during
-+ scmds are retried if and only if its sdev is still online (not offlined during
- EH), REQ_FAILFAST is not set and ++scmd->retries is less than
- scmd->allowed.
- 
-diff --git a/Documentation/spi/spidev.rst b/Documentation/spi/spidev.rst
-index f05dbc5ccdbc..1b549f966365 100644
---- a/Documentation/spi/spidev.rst
-+++ b/Documentation/spi/spidev.rst
-@@ -93,8 +93,8 @@ settings for data transfer parameters:
- 	pass a pointer to a byte which will
- 	return (RD) or assign (WR) the SPI transfer mode.  Use the constants
- 	SPI_MODE_0..SPI_MODE_3; or if you prefer you can combine SPI_CPOL
--	(clock polarity, idle high iff this is set) or SPI_CPHA (clock phase,
--	sample on trailing edge iff this is set) flags.
-+	(clock polarity, idle high if and only if this is set) or SPI_CPHA (clock phase,
-+	sample on trailing edge if and only if this is set) flags.
- 	Note that this request is limited to SPI mode flags that fit in a
- 	single byte.
- 
-diff --git a/Documentation/virtual/kvm/api.txt b/Documentation/virtual/kvm/api.txt
-index e54a3f51ddc5..1e5b519f5f6f 100644
---- a/Documentation/virtual/kvm/api.txt
-+++ b/Documentation/virtual/kvm/api.txt
-@@ -5014,7 +5014,7 @@ kvm_vcpu_events, which allows userspace to distinguish between pending
- and injected exceptions.
- 
- 
--* For the new DR6 bits, note that bit 16 is set iff the #DB exception
-+* For the new DR6 bits, note that bit 16 is set if and only if the #DB exception
-   will clear DR6.RTM.
- 
- 7.18 KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2
-diff --git a/Documentation/virtual/kvm/halt-polling.txt b/Documentation/virtual/kvm/halt-polling.txt
-index 4f791b128dd2..4bc425b6769b 100644
---- a/Documentation/virtual/kvm/halt-polling.txt
-+++ b/Documentation/virtual/kvm/halt-polling.txt
-@@ -61,7 +61,7 @@ interval then the host will never poll for long enough (limited by the global
- max) to wakeup during the polling interval so it may as well be shrunk in order
- to avoid pointless polling. The polling interval is shrunk in the function
- shrink_halt_poll_ns() and is divided by the module parameter
--halt_poll_ns_shrink, or set to 0 iff halt_poll_ns_shrink == 0.
-+halt_poll_ns_shrink, or set to 0 if and only if halt_poll_ns_shrink == 0.
- 
- It is worth noting that this adjustment process attempts to hone in on some
- steady state polling interval but will only really do a good job for wakeups
++	oom_killer_seq++;
+ 	/*
+ 	 * Check if there were limitations on the allocation (only relevant for
+ 	 * NUMA and memcg) that may require different handling.
+@@ -1103,8 +1162,10 @@ bool out_of_memory(struct oom_control *oc)
+ 		 * system level, we cannot survive this and will enter
+ 		 * an endless loop in the allocator. Bail out now.
+ 		 */
+-		if (!is_sysrq_oom(oc) && !is_memcg_oom(oc))
++		if (!is_sysrq_oom(oc) && !is_memcg_oom(oc)) {
++			dump_candidate_tasks(NULL);
+ 			panic("System is deadlocked on memory\n");
++		}
+ 	}
+ 	if (oc->chosen && oc->chosen != (void *)-1UL)
+ 		oom_kill_process(oc, !is_memcg_oom(oc) ? "Out of memory" :
 -- 
-2.21.0
+2.16.5
+
 
