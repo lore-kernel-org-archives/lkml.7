@@ -6,54 +6,91 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F7B4C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 20:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6DB9C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 20:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B19C206A5
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 20:45:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71E31218AC
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 20:48:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406307AbfIGUo7 (ORCPT
+        id S2406341AbfIGUsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 16:44:59 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:49657 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404588AbfIGUo7 (ORCPT
+        Sat, 7 Sep 2019 16:48:00 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:58511 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727309AbfIGUsA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 16:44:59 -0400
-Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1i6hZo-0001mK-TF; Sat, 07 Sep 2019 22:44:57 +0200
-Date:   Sat, 7 Sep 2019 22:44:51 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-cc:     Chris Wilson <chris@chris-wilson.co.uk>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Bandan Das <bsd@redhat.com>
-Subject: Re: Linux 5.3-rc7
-In-Reply-To: <CAHk-=wikdDMYqhygJYkoWw7YxpGNx7O2kFRxbG91NNeFO7yu3w@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1909072243570.1902@nanos.tec.linutronix.de>
-References: <CAHk-=wi_nBULUyO=OKtNBCZ+VSqdOcEiUeFqXTQY_D5ga5k4gQ@mail.gmail.com> <156785100521.13300.14461504732265570003@skylake-alporthouse-com> <alpine.DEB.2.21.1909071628420.1902@nanos.tec.linutronix.de> <156786727951.13300.15226856788926071603@skylake-alporthouse-com>
- <alpine.DEB.2.21.1909071657430.1902@nanos.tec.linutronix.de> <CAHk-=wikdDMYqhygJYkoWw7YxpGNx7O2kFRxbG91NNeFO7yu3w@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sat, 7 Sep 2019 16:48:00 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 5D3F9802B9; Sat,  7 Sep 2019 22:47:39 +0200 (CEST)
+Date:   Sat, 7 Sep 2019 22:47:52 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Lubomir Rintel <lkundrak@v3.sk>, Olof Johansson <olof@lixom.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 0/6] ARM: dts: mmp2: devicetree updates
+Message-ID: <20190907204752.GA7919@amd>
+References: <20190828072629.285760-1-lkundrak@v3.sk>
+ <20190907194040.GB25459@amd>
+ <CAK8P3a0nNEoy31oxFL11Y2VHw-O=m8e8JuuQk+FjiPh94GikoA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="a8Wt8u1KmwUX3Y2C"
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a0nNEoy31oxFL11Y2VHw-O=m8e8JuuQk+FjiPh94GikoA@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 7 Sep 2019, Linus Torvalds wrote:
-> On Sat, Sep 7, 2019 at 8:00 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> 
-> So why wouldn't we just revert it?
 
-That's what I just replied to Chris. Can you do it right away or should I queue it up?
+--a8Wt8u1KmwUX3Y2C
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
+On Sat 2019-09-07 21:57:42, Arnd Bergmann wrote:
+> On Sat, Sep 7, 2019 at 9:40 PM Pavel Machek <pavel@ucw.cz> wrote:
+> >
+> >
+> > > Here's a couple of updates for the MMP2 SoC devicetree files.
+> > > I'm wondering if they could be applied to the armsoc tree?
+> > >
+> > > Compared to previous submission, the only change is the addition of
+> > > Acks from Pavel.
+> >
+> > Any news here? Having up-to-date dts is kind-of useful....
+>=20
+> Thanks for adding me to Cc on your reply. I'm doing the merged for 5.4
+> and had not noticed this series earlier (I found the mmp3 series by
+> accident, but that one looked like it was not meant as a submission
+> for inclusion yet).
+>=20
+> I've added the six patches to the arm/late branch in the soc tree
+> now, they will be in 5.4.
 
-	tglx
+That was quick, thank you!
+								Pavel
+							=09
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--a8Wt8u1KmwUX3Y2C
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl10F3gACgkQMOfwapXb+vL0iwCeKnLVYDl45xCxTQmr6GfIec3S
+/nMAoLneu6hLNmE6/QadQfhQkaNlwULX
+=8gHX
+-----END PGP SIGNATURE-----
+
+--a8Wt8u1KmwUX3Y2C--
