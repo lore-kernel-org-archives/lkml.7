@@ -2,132 +2,110 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 302ADC43140
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 21:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8393AC43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 22:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1277C208C3
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 21:49:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B58820693
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 22:00:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729209AbfIGVtQ (ORCPT
+        id S2395254AbfIGWAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 17:49:16 -0400
-Received: from mga05.intel.com ([192.55.52.43]:28678 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727632AbfIGVtP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 17:49:15 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Sep 2019 14:49:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,478,1559545200"; 
-   d="scan'208";a="177970505"
-Received: from dpotapen-mobl1.ger.corp.intel.com ([10.252.53.110])
-  by orsmga008.jf.intel.com with ESMTP; 07 Sep 2019 14:49:12 -0700
-Message-ID: <180a3a0fd33cbac9df8adf65999c53a9ddc20bf5.camel@linux.intel.com>
-Subject: Re: [PATCH] tpm_crb: fix fTPM on AMD Zen+ CPUs
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     ivan.lazeev@gmail.com
-Cc:     Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Sun, 08 Sep 2019 00:49:11 +0300
-In-Reply-To: <20190904190332.25019-1-ivan.lazeev@gmail.com>
-References: <20190904190332.25019-1-ivan.lazeev@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.2-1 
-MIME-Version: 1.0
+        Sat, 7 Sep 2019 18:00:32 -0400
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:33018 "EHLO
+        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728155AbfIGWAc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Sep 2019 18:00:32 -0400
+Received: from mr4.cc.vt.edu (mr4.cc.ipv6.vt.edu [IPv6:2607:b400:92:8300:0:7b:e2b1:6a29])
+        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x87M0UdC028728
+        for <linux-kernel@vger.kernel.org>; Sat, 7 Sep 2019 18:00:30 -0400
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+        by mr4.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x87M0PlP021097
+        for <linux-kernel@vger.kernel.org>; Sat, 7 Sep 2019 18:00:30 -0400
+Received: by mail-qk1-f198.google.com with SMTP id 11so11296233qkh.15
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Sep 2019 15:00:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-transfer-encoding:date:message-id;
+        bh=d5RC79Buy5HMk4tZvkA/Hlr/NOCgip4Ja28CcC6gZL0=;
+        b=uGz/qWusjqikKO6PTwGMZ9KYigC9p0gvRARThsO5bsf+AFyFeLFhi2g8LwVBdCFUbV
+         9Ilj83om9oZMbcQCWoyPwc6Eo7NV0tnWRtA6HYYp9AuuHgBlPFmgAmam/mRJ+tSduLCJ
+         EjuGYsHAeggvsM9C7QfApdDbVh/UzfnPQZzXZjyGBqb2yGsYYubOwFI6IXb+Y7BQ5/x4
+         iI/XNJyAs1Y+okT0ULIPcjjToANDUdAhd6ye4strJc+QIhsMSessmzF/goLtOwwrTiu9
+         jrOYpZke+Cfs+BYhEqTl1HKCMss10DeTWhdo5Q+CiZeDQymoBiqeEN1xRIkBZxwRFfi7
+         NnvA==
+X-Gm-Message-State: APjAAAWb/vNNjXy5hvXMWZhHdEtAojd8mP+0rj14jAlkP0YFGdC4Ix96
+        OTrquVAI/F1rrTcSKG98u+5NsbP7D27P0e5chIJz3KN7Sl2xezvYfhDb5S0OIqi4bZG11wXE6Ew
+        p5EUNxPun/JTDJtgdmHcPycGpImjDHTl3mIo=
+X-Received: by 2002:ac8:4787:: with SMTP id k7mr15943212qtq.58.1567893625332;
+        Sat, 07 Sep 2019 15:00:25 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqz6L5IMHBnhHbnmSs5yG97dUOtsTFLjPBVLfrc+3iUsFrpar4JJxW1ohr/+/X7T10ZBULYWSQ==
+X-Received: by 2002:ac8:4787:: with SMTP id k7mr15943194qtq.58.1567893625099;
+        Sat, 07 Sep 2019 15:00:25 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:4341::359])
+        by smtp.gmail.com with ESMTPSA id t32sm4064196qtb.64.2019.09.07.15.00.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 Sep 2019 15:00:23 -0700 (PDT)
+From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Theodore Dubois <tbodt@google.com>
+Cc:     a.p.zijlstra@chello.nl, linux-kernel@vger.kernel.org,
+        kernelnewbies@kernelnewbies.org
+Subject: Re: perf_event wakeup_events = 0
+In-Reply-To: <123C743E-C322-45DB-8796-BF6B6EE9CA80@google.com>
+References: <CAN3rvwA+Dnqj4O79f6rNfO50VjbAC3YwJ7CW2ze2aBLzkSJRgQ@mail.gmail.com> <943813.1567863629@turing-police>
+ <123C743E-C322-45DB-8796-BF6B6EE9CA80@google.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="==_Exmh_1567893622_4251P";
+         micalg=pgp-sha1; protocol="application/pgp-signature"
 Content-Transfer-Encoding: 7bit
+Date:   Sat, 07 Sep 2019 18:00:22 -0400
+Message-ID: <970896.1567893622@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-09-04 at 22:03 +0300, ivan.lazeev@gmail.com wrote:
-> From: Ivan Lazeev <ivan.lazeev@gmail.com>
-> 
-> Bug link: https://bugzilla.kernel.org/show_bug.cgi?id=195657
-> 
-> cmd/rsp buffers are expected to be in the same ACPI region.
-> For Zen+ CPUs BIOS's might report two different regions, some of
-> them also report region sizes inconsistent with values from TPM
-> registers.
-> 
-> Work around the issue by storing ACPI regions declared for the
-> device in a list, then using it to find entry corresponding
-> to each buffer. Use information from the entry to map each resource
-> at most once and make buffer size consistent with the length of the
-> region.
-> 
-> Signed-off-by: Ivan Lazeev <ivan.lazeev@gmail.com>
+--==_Exmh_1567893622_4251P
+Content-Type: text/plain; charset=us-ascii
 
-Can you add the relevant pieces of /proc/iomem output to the commit
-message so we can see the memory configuration? I don't have the
-hardware available where this kind of situation occurs.
+On Sat, 07 Sep 2019 09:14:49 -0700, Theodore Dubois said:
 
-> ---
-> 
-> Tested on ASRock x470 ITX motherboard with Ryzen 2600X CPU.
-> However, I don't have any other hardware to test the changes on and no
-> expertise to be sure that other TPMs won't break as a result.
+> If I’m reading this right, this is a sampling event which overflows 4000
+> times a second. But perf then does a poll call which wakes up on this FD with
+> POLLIN after 1.637 seconds, instead of 0.00025 seconds.
 
-You can still ask yourself that if the hardware describes the memory
-with only one region do the code flows reduce mostly to do the same as
-before this patch. It is not the same as testing with such hardware but
-it is still a good mental exercise.
+No, it *takes a sample* 4,000 times a second.  For instance, number of cache line
+misses since the last sample.  You get an overflow when the counter wraps because
+there have been more than 2^32 events since you read the counter.
 
-To summarize, I do get "not having hardware" part but completely
-disqualify "not having expertise" part as the expertise needed here has
-nothing specific to do with TPMs :-)
+At least that's my understanding of it.
 
-> 
->  drivers/char/tpm/tpm_crb.c | 137 +++++++++++++++++++++++++++----------
->  1 file changed, 101 insertions(+), 36 deletions(-)
-> 
-> diff --git a/drivers/char/tpm/tpm_crb.c b/drivers/char/tpm/tpm_crb.c
-> index e59f1f91d7f3..0bcfe52db5d6 100644
-> --- a/drivers/char/tpm/tpm_crb.c
-> +++ b/drivers/char/tpm/tpm_crb.c
-> @@ -91,7 +91,6 @@ enum crb_status {
->  struct crb_priv {
->  	u32 sm;
->  	const char *hid;
-> -	void __iomem *iobase;
->  	struct crb_regs_head __iomem *regs_h;
->  	struct crb_regs_tail __iomem *regs_t;
->  	u8 __iomem *cmd;
-> @@ -108,6 +107,12 @@ struct tpm2_crb_smc {
->  	u32 smc_func_id;
->  };
->  
-> +struct crb_resource {
-> +	struct resource io_res;
-> +	void __iomem *iobase;
-> +	struct list_head node;
-> +};
+--==_Exmh_1567893622_4251P
+Content-Type: application/pgp-signature
 
-Please rename 'node' as 'list' for the sake of coherency with the rest
-of the kernel and io_res as iores for the sake of coherency with the
-other fields.
+-----BEGIN PGP SIGNATURE-----
+Comment: Exmh version 2.9.0 11/07/2018
 
-I think it would be cleaner to do the following:
+iQIVAwUBXXQodQdmEQWDXROgAQJ+QA//Y7bnaoeVIZUihrGcDtSkFVLns70+qzqW
+VaXsX9cgCMTTJqYPRSaIN4+9nmtpQgHJ5eLHgDSg8rL4A8dbEp3hsjIADB4hF8fv
+bkzmM/6WPQ/CWIaXr5kDNCE39LO6iYIIGx9YNc6xoomGocLXGZ/KSpoUUhrumFmP
+s5H7NHk3IbsSTrua2iz5N74WTeLEiKbeQplG/l6VVkCH0FpWNRepzxAuRieThBkN
+qoVMXmxxAdv9J1xcH7NIfLWSfRe5wLelBO8vMTg3FjgJGF9NrNXWfYBMaqj5/6Bx
+FtQfOSpP6Uv1ndlZvoHdmSDPVdvgNdsmFVlm+pKVSfkJYRGHkb7UydVht7mZfUAS
+cHNWYYe66vWTJtV6e2za/FmtWkkYcc9zYvjmPuDRHJ/SWM3z0s6JbmHRdRaUgWoU
+UTkPGbR4arxxdElV6BslNg0ingBz5oTOqbiJNcxh8SbLlyBC/IlLA2w7NSdfuchW
+WTjljZfBaGSk7Aj4b1DDKuZxnJsqGL4rTz63qbGFUOyDB8DirxOH51gNcxe64rBz
+87k5lI8Z9X4jp7sExqZ3GtHj+0MnnZWPXemIOdWzZaO3x95hKjCNNLN7PRuZkUGx
+5a4AgX4VnQPF72KNEsiArKdjT5XE4vOVwkc4Nb8fhhpzGXumFwPEPk40mF+crSm6
+toSJHUUPC3o=
+=5Lt7
+-----END PGP SIGNATURE-----
 
-1. Start with empty resource list.
-2. Everytime crb_map_res() is called it does check the existing
-   resources and does a ACPI walk on need basis at most adding
-   one new entry.
-
-In other words, crb_map_res() gets the list and appends one entry when
-necessary.
-
-Overhead of doing multiple walks is irrelevant here. The simplicity and
-clarity win.
-
-/Jarkko
-
+--==_Exmh_1567893622_4251P--
