@@ -2,105 +2,59 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.4 required=3.0 tests=DATE_IN_PAST_12_24,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B51A6C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 08:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A9AEC4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 08:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DD7821479
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 08:51:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46ABC20678
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 08:52:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727528AbfIHIvh (ORCPT
+        id S1727624AbfIHIw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 04:51:37 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:37380 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727359AbfIHIvh (ORCPT
+        Sun, 8 Sep 2019 04:52:27 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:36718 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727497AbfIHIw1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 04:51:37 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 2057981F98; Sun,  8 Sep 2019 10:51:20 +0200 (CEST)
-Date:   Sun, 8 Sep 2019 10:51:33 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     johan@kernel.org, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        linux-gpio@vger.kernel.org, sfr@canb.auug.org.au
-Subject: next-20190904: build failure in cp210x usb serial, gpio related?
-Message-ID: <20190908085133.GA7233@amd>
+        Sun, 8 Sep 2019 04:52:27 -0400
+Received: from callcc.thunk.org (110.8.30.213.rev.vodafone.pt [213.30.8.110])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x888qH5V025743
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 8 Sep 2019 04:52:19 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 31D9042049E; Sat,  7 Sep 2019 11:57:47 -0400 (EDT)
+Date:   Sat, 7 Sep 2019 11:57:47 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Ayush Ranjan <ayush.ranjan98@gmail.com>
+Cc:     Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jonathan Corbet <corbet@lwn.net>, linux-ext4@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Ext4 Docs: Add missing bigalloc documentation.
+Message-ID: <20190907155747.GA23683@mit.edu>
+References: <20190831154419.GA30357@fa19-cs241-404.cs.illinois.edu>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="pWyiEgJYm5f9v55/"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190831154419.GA30357@fa19-cs241-404.cs.illinois.edu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Aug 31, 2019 at 10:44:19AM -0500, Ayush Ranjan wrote:
+> There was a broken link for bigalloc. The page
+> https://ext4.wiki.kernel.org/index.php/Bigalloc was not migrated into
+> the current documentation sources. This patch adds the contents of that
+> missing page into the section for Bigalloc itself.
+> 
+> Signed-off-by: Ayush Ranjan <ayushr2@illinois.edu>
 
---pWyiEgJYm5f9v55/
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks, applied.
 
-Hi!
-
-I'm getting this compiling the -next:
-
-  CC      drivers/net/wireless/intel/iwlwifi/mvm/mac80211.o
-  In file included from drivers/usb/serial/cp210x.c:23:
-  ./include/linux/gpio/driver.h:722:19: error: static declaration of
-  =E2=80=98gpiochip_lock_as_irq=E2=80=99 follows non-static declaration
-    722 | static inline int gpiochip_lock_as_irq(struct gpio_chip
-  *chip,
-        |                   ^~~~~~~~~~~~~~~~~~~~
-	./include/linux/gpio/driver.h:706:5: note: previous
-  declaration of =E2=80=98gpiochip_lock_as_irq=E2=80=99 was here
-    706 | int gpiochip_lock_as_irq(struct gpio_chip *chip, unsigned
-  int offset);
-        |     ^~~~~~~~~~~~~~~~~~~~
-	./include/linux/gpio/driver.h:729:20: error: static
-  declaration of =E2=80=98gpiochip_unlock_as_irq=E2=80=99 follows non-static
-  declaration
-    729 | static inline void gpiochip_unlock_as_irq(struct gpio_chip
-  *chip,
-        |                    ^~~~~~~~~~~~~~~~~~~~~~
-	./include/linux/gpio/driver.h:707:6: note: previous
-  declaration of =E2=80=98gpiochip_unlock_as_irq=E2=80=99 was here
-    707 | void gpiochip_unlock_as_irq(struct gpio_chip *chip, unsigned
-  int offset);
-        |      ^~~~~~~~~~~~~~~~~~~~~~
-	make[3]: *** [scripts/Makefile.build:265:
-  drivers/usb/serial/cp210x.o] Error 1
-  make[2]: *** [scripts/Makefile.build:509: drivers/usb/serial] Error
-  2
-  make[2]: *** Waiting for unfinished jobs....
-    CC      drivers/gpu/drm/ttm/ttm_page_alloc.o
-      AR      drivers/usb/storage/built-in.a
-
-
-Sounds like some fixes are needed in gpio headers?
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---pWyiEgJYm5f9v55/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl10wRUACgkQMOfwapXb+vLlawCgqNaKqkY7OUYCIvmBJpOo5ED/
-fnYAoMN62O2sGHsH/wpY5Yak8O6eapEL
-=Kujg
------END PGP SIGNATURE-----
-
---pWyiEgJYm5f9v55/--
+					- Ted
