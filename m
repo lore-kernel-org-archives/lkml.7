@@ -2,180 +2,327 @@ Return-Path: <SRS0=QEJJ=XC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF811C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 09:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E3E0C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 09:15:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ACD7208C3
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 09:09:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 035AE2178F
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Sep 2019 09:15:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567847751;
+	bh=Avz7AjP9esMzR9cbOTRed+IhVqSBbqqcJLWr4ZOFE8M=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Tocy6NCNF0dTPcfxF5RSuRrawu6l3emP5+YvyVu3PBpheHJjBqMgA+ERCfg2ptf43
+	 kxJklJvpAFD86c6LAD8UnIT8xRceGL+rQSiqU+unxHEkT/9sFyjj+11wxcMDrzk7yq
+	 4dJGxlue2eqz1ysKRg1v7PntquIg4KkGh8lWd+6k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394601AbfIGJJz (ORCPT
+        id S2394613AbfIGJPu convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 05:09:55 -0400
-Received: from mxout012.mail.hostpoint.ch ([217.26.49.172]:38559 "EHLO
-        mxout012.mail.hostpoint.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726027AbfIGJJz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 05:09:55 -0400
-Received: from [10.0.2.45] (helo=asmtp012.mail.hostpoint.ch)
-        by mxout012.mail.hostpoint.ch with esmtp (Exim 4.92.2 (FreeBSD))
-        (envelope-from <sandro@volery.com>)
-        id 1i6Wj8-000Npv-5z; Sat, 07 Sep 2019 11:09:50 +0200
-Received: from 145-126.cable.senselan.ch ([83.222.145.126] helo=volery)
-        by asmtp012.mail.hostpoint.ch with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92.2 (FreeBSD))
-        (envelope-from <sandro@volery.com>)
-        id 1i6Wj8-000CZ5-24; Sat, 07 Sep 2019 11:09:50 +0200
-X-Authenticated-Sender-Id: sandro@volery.com
-Date:   Sat, 7 Sep 2019 11:09:48 +0200
-From:   volery <sandro@volery.com>
-To:     gregkh@linuxfoundation.org, jslaby@suse.com,
-        linux-kernel@vger.kernel.org
-Cc:     sandro@volery.com
-Subject: [PATCH] Fixed most indent issues in tty_io.c
-Message-ID: <20190907090948.GA5824@volery>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Sat, 7 Sep 2019 05:15:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:35502 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726486AbfIGJPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Sep 2019 05:15:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BB41028;
+        Sat,  7 Sep 2019 02:15:48 -0700 (PDT)
+Received: from big-swifty.misterjones.org (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EDEAC3F59C;
+        Sat,  7 Sep 2019 02:15:45 -0700 (PDT)
+Date:   Sat, 07 Sep 2019 10:15:44 +0100
+Message-ID: <86h85osbzz.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     "Jianyong Wu (Arm Technology China)" <Jianyong.Wu@arm.com>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "richardcochran@gmail.com" <richardcochran@gmail.com>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Will Deacon <Will.Deacon@arm.com>,
+        Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Steve Capper <Steve.Capper@arm.com>,
+        "Kaly Xin (Arm Technology China)" <Kaly.Xin@arm.com>,
+        "Justin He (Arm Technology China)" <Justin.He@arm.com>
+Subject: Re: [RFC PATCH 3/3] Enable ptp_kvm for arm64
+In-Reply-To: <HE1PR0801MB16768ED94EA50010EEF634EAF4BA0@HE1PR0801MB1676.eurprd08.prod.outlook.com>
+References: <20190829063952.18470-1-jianyong.wu@arm.com>
+        <20190829063952.18470-4-jianyong.wu@arm.com>
+        <4d04867c-2188-9574-fbd1-2356c6b99b7d@kernel.org>
+        <HE1PR0801MB16768ED94EA50010EEF634EAF4BA0@HE1PR0801MB1676.eurprd08.prod.outlook.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Organization: Approximate
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There were a lot of styling problems using space then tab or spaces
-instead of tabs in that file. Especially the entire function at line
-2677.
-Also added a space before the : on line 2221.
+On Fri, 06 Sep 2019 12:58:15 +0100,
+"Jianyong Wu (Arm Technology China)" <Jianyong.Wu@arm.com> wrote:
+> 
+> Hi Marc,
+> 
+> Very sorry to have missed this comments.
+> 
+> > -----Original Message-----
+> > From: Marc Zyngier <maz@kernel.org>
+> > Sent: Thursday, August 29, 2019 6:33 PM
+> > To: Jianyong Wu (Arm Technology China) <Jianyong.Wu@arm.com>;
+> > netdev@vger.kernel.org; pbonzini@redhat.com;
+> > sean.j.christopherson@intel.com; richardcochran@gmail.com; Mark Rutland
+> > <Mark.Rutland@arm.com>; Will Deacon <Will.Deacon@arm.com>; Suzuki
+> > Poulose <Suzuki.Poulose@arm.com>
+> > Cc: linux-kernel@vger.kernel.org; Steve Capper <Steve.Capper@arm.com>;
+> > Kaly Xin (Arm Technology China) <Kaly.Xin@arm.com>; Justin He (Arm
+> > Technology China) <Justin.He@arm.com>
+> > Subject: Re: [RFC PATCH 3/3] Enable ptp_kvm for arm64
+> >
+> > On 29/08/2019 07:39, Jianyong Wu wrote:
+> > > Currently in arm64 virtualization environment, there is no mechanism
+> > > to keep time sync between guest and host. Time in guest will drift
+> > > compared with host after boot up as they may both use third party time
+> > > sources to correct their time respectively. The time deviation will be
+> > > in order of milliseconds but some scenarios ask for higher time
+> > > precision, like in cloud envirenment, we want all the VMs running in
+> > > the host aquire the same level accuracy from host clock.
+> > >
+> > > Use of kvm ptp clock, which choose the host clock source clock as a
+> > > reference clock to sync time clock between guest and host has been
+> > > adopted by x86 which makes the time sync order from milliseconds to
+> > nanoseconds.
+> > >
+> > > This patch enable kvm ptp on arm64 and we get the similar clock drift
+> > > as found with x86 with kvm ptp.
+> > >
+> > > Test result comparison between with kvm ptp and without it in arm64
+> > > are as follows. This test derived from the result of command 'chronyc
+> > > sources'. we should take more cure of the last sample column which
+> > > shows the offset between the local clock and the source at the last
+> > measurement.
+> > >
+> > > no kvm ptp in guest:
+> > > MS Name/IP address   Stratum Poll Reach LastRx Last sample
+> > >
+> > ==========================================================
+> > ==============
+> > > ^* dns1.synet.edu.cn      2   6   377    13  +1040us[+1581us] +/-   21ms
+> > > ^* dns1.synet.edu.cn      2   6   377    21  +1040us[+1581us] +/-   21ms
+> > > ^* dns1.synet.edu.cn      2   6   377    29  +1040us[+1581us] +/-   21ms
+> > > ^* dns1.synet.edu.cn      2   6   377    37  +1040us[+1581us] +/-   21ms
+> > > ^* dns1.synet.edu.cn      2   6   377    45  +1040us[+1581us] +/-   21ms
+> > > ^* dns1.synet.edu.cn      2   6   377    53  +1040us[+1581us] +/-   21ms
+> > > ^* dns1.synet.edu.cn      2   6   377    61  +1040us[+1581us] +/-   21ms
+> > > ^* dns1.synet.edu.cn      2   6   377     4   -130us[ +796us] +/-   21ms
+> > > ^* dns1.synet.edu.cn      2   6   377    12   -130us[ +796us] +/-   21ms
+> > > ^* dns1.synet.edu.cn      2   6   377    20   -130us[ +796us] +/-   21ms
+> > >
+> > > in host:
+> > > MS Name/IP address   Stratum Poll Reach LastRx Last sample
+> > >
+> > ==========================================================
+> > ==============
+> > > ^* 120.25.115.20          2   7   377    72   -470us[ -603us] +/-   18ms
+> > > ^* 120.25.115.20          2   7   377    92   -470us[ -603us] +/-   18ms
+> > > ^* 120.25.115.20          2   7   377   112   -470us[ -603us] +/-   18ms
+> > > ^* 120.25.115.20          2   7   377     2   +872ns[-6808ns] +/-   17ms
+> > > ^* 120.25.115.20          2   7   377    22   +872ns[-6808ns] +/-   17ms
+> > > ^* 120.25.115.20          2   7   377    43   +872ns[-6808ns] +/-   17ms
+> > > ^* 120.25.115.20          2   7   377    63   +872ns[-6808ns] +/-   17ms
+> > > ^* 120.25.115.20          2   7   377    83   +872ns[-6808ns] +/-   17ms
+> > > ^* 120.25.115.20          2   7   377   103   +872ns[-6808ns] +/-   17ms
+> > > ^* 120.25.115.20          2   7   377   123   +872ns[-6808ns] +/-   17ms
+> > >
+> > > The dns1.synet.edu.cn is the network reference clock for guest and
+> > > 120.25.115.20 is the network reference clock for host. we can't get
+> > > the clock error between guest and host directly, but a roughly
+> > > estimated value will be in order of hundreds of us to ms.
+> > >
+> > > with kvm ptp in guest:
+> > > chrony has been disabled in host to remove the disturb by network clock.
+> >
+> > Is that a realistic use case? Why should the host not use NTP?
+> >
+> 
+> Not really, NTP will change the the host clock which will contaminate the data of sync between
+> Host and guest. But in reality, we will keep NTP online.
+> 
+> > >
+> > > MS Name/IP address         Stratum Poll Reach LastRx Last sample
+> > >
+> > ==========================================================
+> > ==============
+> > > * PHC0                    0   3   377     8     -7ns[   +1ns] +/-    3ns
+> > > * PHC0                    0   3   377     8     +1ns[  +16ns] +/-    3ns
+> > > * PHC0                    0   3   377     6     -4ns[   -0ns] +/-    6ns
+> > > * PHC0                    0   3   377     6     -8ns[  -12ns] +/-    5ns
+> > > * PHC0                    0   3   377     5     +2ns[   +4ns] +/-    4ns
+> > > * PHC0                    0   3   377    13     +2ns[   +4ns] +/-    4ns
+> > > * PHC0                    0   3   377    12     -4ns[   -6ns] +/-    4ns
+> > > * PHC0                    0   3   377    11     -8ns[  -11ns] +/-    6ns
+> > > * PHC0                    0   3   377    10    -14ns[  -20ns] +/-    4ns
+> > > * PHC0                    0   3   377     8     +4ns[   +5ns] +/-    4ns
+> > >
+> > > The PHC0 is the ptp clock which choose the host clock as its source
+> > > clock. So we can be sure to say that the clock error between host and
+> > > guest is in order of ns.
+> > >
+> > > Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
+> > > ---
+> > >  arch/arm64/include/asm/arch_timer.h  |  3 ++
+> > >  arch/arm64/kvm/arch_ptp_kvm.c        | 76
+> > ++++++++++++++++++++++++++++
+> > >  drivers/clocksource/arm_arch_timer.c |  6 ++-
+> > >  drivers/ptp/Kconfig                  |  2 +-
+> > >  include/linux/arm-smccc.h            | 14 +++++
+> > >  virt/kvm/arm/psci.c                  | 17 +++++++
+> > >  6 files changed, 115 insertions(+), 3 deletions(-)  create mode
+> > > 100644 arch/arm64/kvm/arch_ptp_kvm.c
+> >
+> > Please split this patch into two parts: the hypervisor code in a patch and the
+> > guest code in another patch. Having both of them together is confusing.
+> >
+> Ok,  really better.
+> 
+> > >
+> > > diff --git a/arch/arm64/include/asm/arch_timer.h
+> > > b/arch/arm64/include/asm/arch_timer.h
+> > > index 6756178c27db..880576a814b6 100644
+> > > --- a/arch/arm64/include/asm/arch_timer.h
+> > > +++ b/arch/arm64/include/asm/arch_timer.h
+> > > @@ -229,4 +229,7 @@ static inline int arch_timer_arch_init(void)
+> > >     return 0;
+> > >  }
+> > >
+> > > +extern struct clocksource clocksource_counter; extern u64
+> > > +arch_counter_read(struct clocksource *cs);
+> >
+> > I'm definitely not keen on exposing the internals of the arch_timer driver to
+> > random subsystems. Furthermore, you seem to expect that the guest kernel
+> > will only use the arch timer as a clocksource, and nothing really guarantees
+> > that (in which case get_device_system_crosststamp will fail).
+> >
+> The code here is really ugly, I need a better solution to offer a clock source
+> For the guest.
+> 
+> > It looks to me that we'd be better off exposing a core timekeeping API that
+> > populates a struct system_counterval_t based on the *current* timekeeper
+> > monotonic clocksource. This would simplify the split between generic and
+> > arch-specific code.
+> >
+> I think it really necessary.
+> 
+> > Whether or not tglx will be happy with the idea is another problem, but I'm
+> > certainly not taking any change to the arch timer code based on this.
+> >
+> I can have a try, but the detail is not clear for me now.
 
-Signed-off-by: Sandro Volery <sandro@volery.com>
+Something along those lines:
+
+From 5f1c061e55c691d64012bc7c1490a1a8c4432c67 Mon Sep 17 00:00:00 2001
+From: Marc Zyngier <maz@kernel.org>
+Date: Sat, 7 Sep 2019 10:11:49 +0100
+Subject: [PATCH] timekeeping: Expose API allowing retrival of current
+ clocksource and counter value
+
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/tty/tty_io.c | 60 ++++++++++++++++++++++----------------------
- 1 file changed, 30 insertions(+), 30 deletions(-)
+ include/linux/timekeeping.h |  5 +++++
+ kernel/time/timekeeping.c   | 12 ++++++++++++
+ 2 files changed, 17 insertions(+)
 
-diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
-index 566728fbaf3c..38c36ff7221b 100644
---- a/drivers/tty/tty_io.c
-+++ b/drivers/tty/tty_io.c
-@@ -33,7 +33,7 @@
-  *	-- Nick Holloway <alfie@dcs.warwick.ac.uk>, 27th May 1993.
-  *
-  * Rewrote canonical mode and added more termios flags.
-- * 	-- julian@uhunix.uhcc.hawaii.edu (J. Cowley), 13Jan94
-+ *	-- julian@uhunix.uhcc.hawaii.edu (J. Cowley), 13Jan94
-  *
-  * Reorganized FASYNC support so mouse code can share it.
-  *	-- ctm@ardi.com, 9Sep95
-@@ -1026,13 +1026,13 @@ static ssize_t tty_write(struct file *file, const char __user *buf,
- 						size_t count, loff_t *ppos)
- {
- 	struct tty_struct *tty = file_tty(file);
-- 	struct tty_ldisc *ld;
-+	struct tty_ldisc *ld;
- 	ssize_t ret;
+diff --git a/include/linux/timekeeping.h b/include/linux/timekeeping.h
+index b27e2ffa96c1..6df26a913711 100644
+--- a/include/linux/timekeeping.h
++++ b/include/linux/timekeeping.h
+@@ -275,6 +275,11 @@ extern int get_device_system_crosststamp(
+ 			struct system_time_snapshot *history,
+ 			struct system_device_crosststamp *xtstamp);
  
- 	if (tty_paranoia_check(tty, file_inode(file), "tty_write"))
- 		return -EIO;
- 	if (!tty || !tty->ops->write ||	tty_io_error(tty))
--			return -EIO;
-+		return -EIO;
- 	/* Short term debug to catch buggy drivers */
- 	if (tty->ops->write_room == NULL)
- 		tty_err(tty, "missing write_room method\n");
-@@ -1247,8 +1247,8 @@ static void tty_driver_remove_tty(struct tty_driver *driver, struct tty_struct *
- }
- 
++/*
++ * Obtain current monotonic clock and its counter value
++ */
++extern void get_current_counterval(struct system_counterval_t *sc);
++
  /*
-- * 	tty_reopen()	- fast re-open of an open tty
-- * 	@tty	- the tty to open
-+ *	tty_reopen()	- fast re-open of an open tty
-+ *	@tty	- the tty to open
-  *
-  *	Return 0 on success, -errno on error.
-  *	Re-opens on master ptys are not allowed and return -EIO.
-@@ -1829,8 +1829,8 @@ static struct tty_struct *tty_open_current_tty(dev_t device, struct file *filp)
-  *	@index: index for the device in the @return driver
-  *	@return: driver for this inode (with increased refcount)
-  *
-- * 	If @return is not erroneous, the caller is responsible to decrement the
-- * 	refcount by tty_driver_kref_put.
-+ *	If @return is not erroneous, the caller is responsible to decrement the
-+ *	refcount by tty_driver_kref_put.
-  *
-  *	Locking: tty_mutex protects get_tty_driver
+  * Simultaneously snapshot realtime and monotonic raw clocks
   */
-@@ -2218,7 +2218,7 @@ static int tiocgwinsz(struct tty_struct *tty, struct winsize __user *arg)
- 	err = copy_to_user(arg, &tty->winsize, sizeof(*arg));
- 	mutex_unlock(&tty->winsize_mutex);
- 
--	return err ? -EFAULT: 0;
-+	return err ? -EFAULT : 0;
+diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+index d911c8470149..de689bbd3808 100644
+--- a/kernel/time/timekeeping.c
++++ b/kernel/time/timekeeping.c
+@@ -1098,6 +1098,18 @@ static bool cycle_between(u64 before, u64 test, u64 after)
+ 	return false;
  }
  
++/**
++ * get_current_counterval - Snapshot the current clocksource and counter value
++ * @sc:	Pointer to a struct containing the current clocksource and its value
++ */
++void get_current_counterval(struct system_counterval_t *sc)
++{
++	struct timekeeper *tk = &tk_core.timekeeper;
++
++	sc->cs = READ_ONCE(tk->tkr_mono.clock);
++	sc->cycles = sc->cs->read(sc->cs);
++}
++
  /**
-@@ -2674,25 +2674,25 @@ long tty_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- #ifdef CONFIG_COMPAT
- 
- struct serial_struct32 {
--        compat_int_t    type;
--        compat_int_t    line;
--        compat_uint_t   port;
--        compat_int_t    irq;
--        compat_int_t    flags;
--        compat_int_t    xmit_fifo_size;
--        compat_int_t    custom_divisor;
--        compat_int_t    baud_base;
--        unsigned short  close_delay;
--        char    io_type;
--        char    reserved_char[1];
--        compat_int_t    hub6;
--        unsigned short  closing_wait; /* time to wait before closing */
--        unsigned short  closing_wait2; /* no longer used... */
--        compat_uint_t   iomem_base;
--        unsigned short  iomem_reg_shift;
--        unsigned int    port_high;
-+	compat_int_t    type;
-+	compat_int_t    line;
-+	compat_uint_t   port;
-+	compat_int_t    irq;
-+	compat_int_t    flags;
-+	compat_int_t    xmit_fifo_size;
-+	compat_int_t    custom_divisor;
-+	compat_int_t    baud_base;
-+	unsigned short  close_delay;
-+	char    io_type;
-+	char    reserved_char[1];
-+	compat_int_t    hub6;
-+	unsigned short  closing_wait; /* time to wait before closing */
-+	unsigned short  closing_wait2; /* no longer used... */
-+	compat_uint_t   iomem_base;
-+	unsigned short  iomem_reg_shift;
-+	unsigned int    port_high;
-      /* compat_ulong_t  iomap_base FIXME */
--        compat_int_t    reserved[1];
-+	compat_int_t    reserved[1];
- };
- 
- static int compat_tty_tiocsserial(struct tty_struct *tty,
-@@ -3176,11 +3176,11 @@ struct device *tty_register_device_attr(struct tty_driver *driver,
- EXPORT_SYMBOL_GPL(tty_register_device_attr);
- 
- /**
-- * 	tty_unregister_device - unregister a tty device
-- * 	@driver: the tty driver that describes the tty device
-- * 	@index: the index in the tty driver for this tty device
-+ *	tty_unregister_device - unregister a tty device
-+ *	@driver: the tty driver that describes the tty device
-+ *	@index: the index in the tty driver for this tty device
-  *
-- * 	If a tty device is registered with a call to tty_register_device() then
-+ *	If a tty device is registered with a call to tty_register_device() then
-  *	this function must be called when the tty device is gone.
-  *
-  *	Locking: ??
--- 
-2.23.0
+  * get_device_system_crosststamp - Synchronously capture system/device timestamp
+  * @get_time_fn:	Callback to get simultaneous device time and
 
+which should do the right thing.
+
+>
+> > > +
+> > >  #endif
+> > > diff --git a/arch/arm64/kvm/arch_ptp_kvm.c
+> > > b/arch/arm64/kvm/arch_ptp_kvm.c
+> >
+> > We don't put non-hypervisor in arch/arm64/kvm. Please move it back to
+> > drivers/ptp (as well as its x86 counterpart), and just link the two parts there.
+> > This should also allow this to be enabled for 32bit guests.
+> >
+> Err, sorry, what's mean of "link the two parts there"? should I add
+> another two file update driver/ptp/ Both for arm64 and x86 to
+> contains these arch-specific code or pack them all into ptp_kvm.c?
+
+What I'm suggesting is that you have 3 files:
+
+  drivers/ptp/ptp_kvm.c
+  drivers/ptp/ptp_kvm_x86.c
+  drivers/ptp/ptp_kvm_arm.c
+
+and let the Makefile combine them.
+
+[...]
+
+> > Other questions: how does this works with VM migration? Specially when
+> > moving from a hypervisor that supports the feature to one that doesn't?
+> >
+> I think it won't solve the problem generated by VM migration and
+> only for VMs in a single machine.  Ptp_kvm only works for VMs in the
+> same machine.  But using ptp (not ptp_kvm) clock, all the machines
+> in a low latency network environment can keep time sync in high
+> precision, Then VMs move from one machine to another will obtain a
+> high precision time sync.
+
+That's a problem. Migration must be possible from one host to another,
+even if that means temporarily loosing some (or a lot of)
+precision. The service must be discoverable from userspace on the host
+so that the MVV can decie whether a migration is possible or not.
+
+Thanks,
+
+	M.
+
+-- 
+Jazz is not dead, it just smells funny.
