@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 246D7C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DEABC4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7BCD20644
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B2822067B
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:56:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947383;
-	bh=fbuhbY+84QNU6mdKZxyLD88VMblL578XwdT02sU+kjo=;
+	s=default; t=1567947392;
+	bh=xzhvNgPOnKLO2KBOGOD9nwNjAXRdz3y0dUwmmtZ1gOo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0NupSSacQO7sRytCfxlx7WkWG+QVtwyWkvZAshOxEqtc7I+XiMPiTyBukHBOIey54
-	 kEo72W8fmMA29N1C7a9ZQGO4tBUJNakrn/7cqkocBRFm+KZyhdatjjSfOyVbvV9N9c
-	 sNo+Ou7Zela8uk9T7o3UyXFVyzosOdWNPLZR4Ng4=
+	b=xdeXaECr6nZOPNLuyS0zm+3vXwxQ+jvqG3X80wX8cMbIJ6iIpJbrRvVfDeTp9nN+w
+	 +Leh+t72IdXLFfn+gp0x3CQaadlfE4DhkAz+EZyuxU7gxoFNi/A9jon6TNR6Klvrf5
+	 cD0FfIyb2RkKIFeTmKl4WNkLpSOE+wXwMRdDFGGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731670AbfIHMtp (ORCPT
+        id S1725928AbfIHM4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:49:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39824 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:56:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731624AbfIHMtk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:49:40 -0400
+        id S1731537AbfIHMtc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:49:32 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA0C521A4C;
-        Sun,  8 Sep 2019 12:49:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6668218AF;
+        Sun,  8 Sep 2019 12:49:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946980;
-        bh=fbuhbY+84QNU6mdKZxyLD88VMblL578XwdT02sU+kjo=;
+        s=default; t=1567946972;
+        bh=xzhvNgPOnKLO2KBOGOD9nwNjAXRdz3y0dUwmmtZ1gOo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=itYqEfw2H0lOYyk6KfsBcsdQRIvs7OulkDyNwbDlLrd4ACySQJ4YmjxzfEWwFi3bq
-         KzW7TcdqRaB7AiL/O7+nVeBp6nALeQy23WGW/HITnNHh9ZrdO4X/GyMSJav+a3O/4J
-         gppUxWIZJxJpXM7AGJLq3TApQIC1bucueEXLi1PY=
+        b=I26IUVBOHVSCMwZzyu8HtdeTMJ7rRXjo6l3gnEK696AAc6mRXxeTIf9ggtEfIA3Ob
+         mkYv9zDSfkOlnBa24q2qTjglYAVnFgck9qP37hL8hl1yEVZoeGg4hyDL7VYi5RjSXd
+         VqNP5OArYOzatL0dW+zRpdaGiF8mxh76ifRod53E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 16/94] net: dsa: tag_8021q: Future-proof the reserved fields in the custom VID
-Date:   Sun,  8 Sep 2019 13:41:12 +0100
-Message-Id: <20190908121150.897345047@linuxfoundation.org>
+Subject: [PATCH 5.2 05/94] net: stmmac: dwmac-rk: Dont fail if phy regulator is absent
+Date:   Sun,  8 Sep 2019 13:41:01 +0100
+Message-Id: <20190908121150.585264776@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
 References: <20190908121150.420989666@linuxfoundation.org>
@@ -60,47 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <olteanv@gmail.com>
+From: Chen-Yu Tsai <wens@csie.org>
 
-[ Upstream commit bcccb0a535bb99616e4b992568371efab1ab14e8 ]
+[ Upstream commit 3b25528e1e355c803e73aa326ce657b5606cda73 ]
 
-After witnessing the discussion in https://lkml.org/lkml/2019/8/14/151
-w.r.t. ioctl extensibility, it became clear that such an issue might
-prevent that the 3 RSV bits inside the DSA 802.1Q tag might also suffer
-the same fate and be useless for further extension.
+The devicetree binding lists the phy phy as optional. As such, the
+driver should not bail out if it can't find a regulator. Instead it
+should just skip the remaining regulator related code and continue
+on normally.
 
-So clearly specify that the reserved bits should currently be
-transmitted as zero and ignored on receive. The DSA tagger already does
-this (and has always did), and is the only known user so far (no
-Wireshark dissection plugin, etc). So there should be no incompatibility
-to speak of.
+Skip the remainder of phy_power_on() if a regulator supply isn't
+available. This also gets rid of the bogus return code.
 
-Fixes: 0471dd429cea ("net: dsa: tag_8021q: Create a stable binary format")
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Fixes: 2e12f536635f ("net: stmmac: dwmac-rk: Use standard devicetree property for phy regulator")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/dsa/tag_8021q.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/net/dsa/tag_8021q.c
-+++ b/net/dsa/tag_8021q.c
-@@ -28,6 +28,7 @@
-  *
-  * RSV - VID[9]:
-  *	To be used for further expansion of SWITCH_ID or for other purposes.
-+ *	Must be transmitted as zero and ignored on receive.
-  *
-  * SWITCH_ID - VID[8:6]:
-  *	Index of switch within DSA tree. Must be between 0 and
-@@ -35,6 +36,7 @@
-  *
-  * RSV - VID[5:4]:
-  *	To be used for further expansion of PORT or for other purposes.
-+ *	Must be transmitted as zero and ignored on receive.
-  *
-  * PORT - VID[3:0]:
-  *	Index of switch port. Must be between 0 and DSA_MAX_PORTS - 1.
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+@@ -1194,10 +1194,8 @@ static int phy_power_on(struct rk_priv_d
+ 	int ret;
+ 	struct device *dev = &bsp_priv->pdev->dev;
+ 
+-	if (!ldo) {
+-		dev_err(dev, "no regulator found\n");
+-		return -1;
+-	}
++	if (!ldo)
++		return 0;
+ 
+ 	if (enable) {
+ 		ret = regulator_enable(ldo);
 
 
