@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6521C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A76C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:53:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80ABB218AC
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:53:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE88C20693
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:53:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947220;
-	bh=li+mlqNCT+zPV19GtP8i7kOq2Zs5YM2+qdvcWNoWoNI=;
+	s=default; t=1567947224;
+	bh=2LOeju+fO134tMo7NuDC68/erkLik4eZPU8wzgwt80M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zyk2kRoi23PBVBdVRAhdy2PIj73RMSqdAQvSvQ2reL4xqsvPyQT+o3Rz4fmdHUSMA
-	 m7rWpnL+Q6NbYeWqWlwAut1elhIvvA83kqWilkDKJlXTUWaTpJ+2JlIdW96NqbMIwY
-	 bVW0fusEmIHp4/xclwjTJHTm4fUflCwhyyYLXxA4=
+	b=0Bb0izZVBElEQF9rVPmW+tiObIpWLauhlTx25D5g9WLg0mw0B3wQa0NrUMup/PW2B
+	 D4AY2Ft758NNY6BfzkJvR+fK/+APrCcoMi3k8/qVMdmO5JO86nU+M+RjD7zces255d
+	 OcBAuik7olNIiDERr2mb+Qevic6PohjzilnLppmw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387554AbfIHMxR (ORCPT
+        id S2387478AbfIHMxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:53:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46066 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:53:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387515AbfIHMxO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:53:14 -0400
+        id S2387431AbfIHMxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:53:06 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AA7821924;
-        Sun,  8 Sep 2019 12:53:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59BCC21479;
+        Sun,  8 Sep 2019 12:53:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567947193;
-        bh=li+mlqNCT+zPV19GtP8i7kOq2Zs5YM2+qdvcWNoWoNI=;
+        s=default; t=1567947185;
+        bh=2LOeju+fO134tMo7NuDC68/erkLik4eZPU8wzgwt80M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1cu7xGIq1tmcm56Y3/EEHRMwhFS29ff/v7Vqix3IM6w7XP8DPy2230DhRUVK9j+0Y
-         cB29BykmdMhk/ZC9ADV4mjjO2o+6b6C8QS9uppEds0VSD2/7FMC8JuCHJFPtl7O8Db
-         ynscghZAk30i9kYK7agQ4gfgYThYNUnbG/HvJka0=
+        b=kZhJYDrsV0IJdsA0bxHHdnSRxs6wF06KHEU8WJfS8PxwmUo3b5PKDoUyv3fUXNVYU
+         vXTTwAW+p3ZbGB+RSz1AHSbNWFTT3KvZGyZD7irJ7n0zANw6Vjmt98Ai7OACGBWSzI
+         ugYAoXUVYNb+7e1h2kcikutC6d8b+5nJvmT/jRVk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Bill ODonnell <billodo@redhat.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Bandan Das <bsd@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 56/94] vfs: fix page locking deadlocks when deduping files
-Date:   Sun,  8 Sep 2019 13:41:52 +0100
-Message-Id: <20190908121152.039054428@linuxfoundation.org>
+Subject: [PATCH 5.2 92/94] Revert "x86/apic: Include the LDR when clearing out APIC registers"
+Date:   Sun,  8 Sep 2019 13:42:28 +0100
+Message-Id: <20190908121153.061234422@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
 References: <20190908121150.420989666@linuxfoundation.org>
@@ -62,112 +62,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit edc58dd0123b552453a74369bd0c8d890b497b4b ]
+[ Upstream commit 950b07c14e8c59444e2359f15fd70ed5112e11a0 ]
 
-When dedupe wants to use the page cache to compare parts of two files
-for dedupe, we must be very careful to handle locking correctly.  The
-current code doesn't do this.  It must lock and unlock the page only
-once if the two pages are the same, since the overlapping range check
-doesn't catch this when blocksize < pagesize.  If the pages are distinct
-but from the same file, we must observe page locking order and lock them
-in order of increasing offset to avoid clashing with writeback locking.
+This reverts commit 558682b5291937a70748d36fd9ba757fb25b99ae.
 
-Fixes: 876bec6f9bbfcb3 ("vfs: refactor clone/dedupe_file_range common functions")
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Bill O'Donnell <billodo@redhat.com>
-Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Chris Wilson reports that it breaks his CPU hotplug test scripts.  In
+particular, it breaks offlining and then re-onlining the boot CPU, which
+we treat specially (and the BIOS does too).
+
+The symptoms are that we can offline the CPU, but it then does not come
+back online again:
+
+    smpboot: CPU 0 is now offline
+    smpboot: Booting Node 0 Processor 0 APIC 0x0
+    smpboot: do_boot_cpu failed(-1) to wakeup CPU#0
+
+Thomas says he knows why it's broken (my personal suspicion: our magic
+handling of the "cpu0_logical_apicid" thing), but for 5.3 the right fix
+is to just revert it, since we've never touched the LDR bits before, and
+it's not worth the risk to do anything else at this stage.
+
+[ Hotpluging of the boot CPU is special anyway, and should be off by
+  default. See the "BOOTPARAM_HOTPLUG_CPU0" config option and the
+  cpu0_hotplug kernel parameter.
+
+  In general you should not do it, and it has various known limitations
+  (hibernate and suspend require the boot CPU, for example).
+
+  But it should work, even if the boot CPU is special and needs careful
+  treatment       - Linus ]
+
+Link: https://lore.kernel.org/lkml/156785100521.13300.14461504732265570003@skylake-alporthouse-com/
+Reported-by: Chris Wilson <chris@chris-wilson.co.uk>
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Bandan Das <bsd@redhat.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/read_write.c | 49 +++++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 41 insertions(+), 8 deletions(-)
+ arch/x86/kernel/apic/apic.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/fs/read_write.c b/fs/read_write.c
-index c543d965e2880..e8b0f1192a3a4 100644
---- a/fs/read_write.c
-+++ b/fs/read_write.c
-@@ -1776,10 +1776,7 @@ static int generic_remap_check_len(struct inode *inode_in,
- 	return (remap_flags & REMAP_FILE_DEDUP) ? -EBADE : -EINVAL;
- }
- 
--/*
-- * Read a page's worth of file data into the page cache.  Return the page
-- * locked.
-- */
-+/* Read a page's worth of file data into the page cache. */
- static struct page *vfs_dedupe_get_page(struct inode *inode, loff_t offset)
- {
- 	struct page *page;
-@@ -1791,10 +1788,32 @@ static struct page *vfs_dedupe_get_page(struct inode *inode, loff_t offset)
- 		put_page(page);
- 		return ERR_PTR(-EIO);
- 	}
--	lock_page(page);
- 	return page;
- }
- 
-+/*
-+ * Lock two pages, ensuring that we lock in offset order if the pages are from
-+ * the same file.
-+ */
-+static void vfs_lock_two_pages(struct page *page1, struct page *page2)
-+{
-+	/* Always lock in order of increasing index. */
-+	if (page1->index > page2->index)
-+		swap(page1, page2);
-+
-+	lock_page(page1);
-+	if (page1 != page2)
-+		lock_page(page2);
-+}
-+
-+/* Unlock two pages, being careful not to unlock the same page twice. */
-+static void vfs_unlock_two_pages(struct page *page1, struct page *page2)
-+{
-+	unlock_page(page1);
-+	if (page1 != page2)
-+		unlock_page(page2);
-+}
-+
- /*
-  * Compare extents of two files to see if they are the same.
-  * Caller must have locked both inodes to prevent write races.
-@@ -1832,10 +1851,24 @@ static int vfs_dedupe_file_range_compare(struct inode *src, loff_t srcoff,
- 		dest_page = vfs_dedupe_get_page(dest, destoff);
- 		if (IS_ERR(dest_page)) {
- 			error = PTR_ERR(dest_page);
--			unlock_page(src_page);
- 			put_page(src_page);
- 			goto out_error;
- 		}
-+
-+		vfs_lock_two_pages(src_page, dest_page);
-+
-+		/*
-+		 * Now that we've locked both pages, make sure they're still
-+		 * mapped to the file data we're interested in.  If not,
-+		 * someone is invalidating pages on us and we lose.
-+		 */
-+		if (!PageUptodate(src_page) || !PageUptodate(dest_page) ||
-+		    src_page->mapping != src->i_mapping ||
-+		    dest_page->mapping != dest->i_mapping) {
-+			same = false;
-+			goto unlock;
-+		}
-+
- 		src_addr = kmap_atomic(src_page);
- 		dest_addr = kmap_atomic(dest_page);
- 
-@@ -1847,8 +1880,8 @@ static int vfs_dedupe_file_range_compare(struct inode *src, loff_t srcoff,
- 
- 		kunmap_atomic(dest_addr);
- 		kunmap_atomic(src_addr);
--		unlock_page(dest_page);
--		unlock_page(src_page);
-+unlock:
-+		vfs_unlock_two_pages(src_page, dest_page);
- 		put_page(dest_page);
- 		put_page(src_page);
- 
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 97c3a1c9502e7..2f067b443326e 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -1152,10 +1152,6 @@ void clear_local_APIC(void)
+ 	apic_write(APIC_LVT0, v | APIC_LVT_MASKED);
+ 	v = apic_read(APIC_LVT1);
+ 	apic_write(APIC_LVT1, v | APIC_LVT_MASKED);
+-	if (!x2apic_enabled()) {
+-		v = apic_read(APIC_LDR) & ~APIC_LDR_MASK;
+-		apic_write(APIC_LDR, v);
+-	}
+ 	if (maxlvt >= 4) {
+ 		v = apic_read(APIC_LVTPC);
+ 		apic_write(APIC_LVTPC, v | APIC_LVT_MASKED);
 -- 
 2.20.1
 
