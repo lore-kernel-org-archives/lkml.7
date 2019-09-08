@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 263C0C433EF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A5ECC4332F
 	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 10:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00A1620863
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 10:13:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7461321479
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 10:13:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XFSAECu6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mcwgjbdp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbfIHKNA (ORCPT
+        id S1728291AbfIHKNA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sun, 8 Sep 2019 06:13:00 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45282 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728188AbfIHKMy (ORCPT
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:46237 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728200AbfIHKM4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 06:12:54 -0400
-Received: by mail-lj1-f195.google.com with SMTP id l1so9850037lji.12
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 03:12:53 -0700 (PDT)
+        Sun, 8 Sep 2019 06:12:56 -0400
+Received: by mail-lf1-f65.google.com with SMTP id t8so8222398lfc.13
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 03:12:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=IS0lVdK7iQppkNRcA/eyYIxzfqUhjc4kqGnbAO0Nu8w=;
-        b=XFSAECu6eOchqjUmGfyiFNgZMWo+bvmAT0zhqDXFcxcLzZrltHNIhcmRSv6/JryE1v
-         O7KAHIvW8AEktgkrl5abCIN6g137fTZuN4+UmVwn4Dj2e2sNi9d2vV/hsiwPd60aQTFH
-         XvqkGnJe7W7dOLIGZdBWH4Hh8IqcxzSxuI6G+wN6mcnHoOlW2p6DxoTimAa2YJiDD9gc
-         j3GVp5WR9XwBthfZyvCewUxTDky7uxpl5uaHcw0fRYk5TMEe4Mdm00mLfgPWbaVLnGc9
-         kLxXihevliSWwN6eOghy0521aMhpFk72hI395y5Jn7kPWbXKLcP4MaCBH2xufp3mlztK
-         VoTA==
+        bh=UBQNfgH478Agi6Qq65UuCm0AdFgtpDY1/4Ukd7tPN04=;
+        b=Mcwgjbdp32PK8AZUMsmSzkK40Pkz9/HfpmUTEvkfaXJir+M1fqFP9wGs7zB3qW+3by
+         X5GgXP39/Npz/F+rDuxpX5aPchObiqqORL9ZlkuVhbpwB+GFTVF7lub61Evi0KKMCezt
+         Dqw6YkxkDH/JmWHtRO/poQ31ezNS6Psl/exogXW7T0ppn4elIzW2We2net4M5m9JGbHu
+         g3aACABD48I4MJnMvQk/ClIIG2b67EDRyRtu1/O5m8QGdNBfBol/CPk5DbIfeeHSs8Ap
+         2nqZDZM+ZAlZEhT9VcPp+fUkBFIMMBx4t5RzmA0fGreFt8Pje7ZKBQ8S/7rcd5abLAY0
+         0pSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=IS0lVdK7iQppkNRcA/eyYIxzfqUhjc4kqGnbAO0Nu8w=;
-        b=kqfe7IZfU3B+Imkt0mZLpHBrDDwP1riPws6tlg9Q1bo+D05yIV+qunnyJMPZ/sZZa3
-         nxu6o3JKxD7ribd5wzegDxEBZJPW3dmFzUYtkeiItMhhw/FDmxujD4Fei6rgYRzjwVyB
-         nXAIlaBI2682cYNqCd//7QzrrCfAqm0KEy6LeGX2nek7OPeRpJlbA63phl3M2q7BL3pG
-         AFOoIRCv6zOdX8ylgBOZUWlPQnpefCghGVFeO86L/CyS3+1iLz+mZPEEXMQVGtTxwmev
-         81HMISBDK4XJeP70A8gq1CEJ+MTn9wXczqBYtm0R6zvlHl+0h2cUYrHZn+6F5Yd82uuK
-         9gow==
-X-Gm-Message-State: APjAAAWxKOyk+xwAxHVYmRcevYfEaKSWd6JCZpzyDfQNGv0LC2UKL6re
-        DFoAH9/DTublj/0gJkW+KnZREQ==
-X-Google-Smtp-Source: APXvYqzGa5ufeqoMMCyIUrEeU7LqbusZnxDO1ItjP4toDSXg19lvkKmBEh9+NqDHY2u1hfysc1HBJg==
-X-Received: by 2002:a2e:b1c4:: with SMTP id e4mr12099214lja.101.1567937572577;
-        Sun, 08 Sep 2019 03:12:52 -0700 (PDT)
+        bh=UBQNfgH478Agi6Qq65UuCm0AdFgtpDY1/4Ukd7tPN04=;
+        b=eJJtrIYGre5ofLmQ48+eYs7dWHp1WQbldLHEVywF4nbp8KGxbxoNDN2qfP+nKalhzc
+         7mEfb8txLxRYYUzwwSxMvcYkvMaEr9lJW97uGPQdJ3XVZw5LVLz1tZvkQ9j+wEiehMr7
+         usJ4CfmsAPZYhNlWhA/6WqwertHav+MuFSN4i3vfa7BvCV+XnbvhLH8ZXsTfhnrJzSX1
+         BumIKTKotH4Jk/MLicp9VAVYq39fOZ+PKM8LGoykSYHzSfK1aeFRxVq+VAA7BhmOm73E
+         QEYTArgvAQSPTdSu0LiaDfKyeF5IPW9OT2p56m3d91qlMGSLabQ6RHtjYSvbU8P4X5Da
+         A7+A==
+X-Gm-Message-State: APjAAAV79CgJodl20uadiznHXtL096jfAI5cWPwlyQ5hmcU51k6BMCn5
+        cMq8Y17cXPhS9Hb9YivnEGiwoVlGpUvBpg==
+X-Google-Smtp-Source: APXvYqwAZcqc8OF77Bx7ciHC787UfAzR/Jk/8p6iWyWeRbk6Ie4qBOLjOvzlPaRvFZEofbuug/3pUQ==
+X-Received: by 2002:ac2:4a82:: with SMTP id l2mr12357581lfp.85.1567937573894;
+        Sun, 08 Sep 2019 03:12:53 -0700 (PDT)
 Received: from localhost.localdomain ([185.122.190.73])
-        by smtp.gmail.com with ESMTPSA id h25sm2444849lfj.81.2019.09.08.03.12.51
+        by smtp.gmail.com with ESMTPSA id h25sm2444849lfj.81.2019.09.08.03.12.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Sep 2019 03:12:52 -0700 (PDT)
+        Sun, 08 Sep 2019 03:12:53 -0700 (PDT)
 From:   Ulf Hansson <ulf.hansson@linaro.org>
 To:     linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
@@ -65,9 +65,9 @@ Cc:     Shawn Lin <shawn.lin@rock-chips.com>,
         Yong Mao <yong.mao@mediatek.com>,
         Chaotian Jing <chaotian.jing@mediatek.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 08/11] mmc: core: Fixup processing of SDIO IRQs during system suspend/resume
-Date:   Sun,  8 Sep 2019 12:12:33 +0200
-Message-Id: <20190908101236.2802-9-ulf.hansson@linaro.org>
+Subject: [PATCH v2 09/11] mmc: sdhci: Drop redundant check in sdhci_ack_sdio_irq()
+Date:   Sun,  8 Sep 2019 12:12:34 +0200
+Message-Id: <20190908101236.2802-10-ulf.hansson@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190908101236.2802-1-ulf.hansson@linaro.org>
 References: <20190908101236.2802-1-ulf.hansson@linaro.org>
@@ -76,79 +76,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-System suspend/resume of SDIO cards, with SDIO IRQs enabled and when using
-MMC_CAP2_SDIO_IRQ_NOTHREAD is unfortunate still suffering from a fragile
-behaviour. Some problems have been taken care of so far, but more issues
-remains.
+The sdhci_ack_sdio_irq() is called only when SDIO IRQs are enabled.
+Therefore, let's drop the redundant check of the internal
+SDHCI_SDIO_IRQ_ENABLED flag and just re-enable the IRQs immediately.
 
-For example, calling the ->ack_sdio_irq() callback to let host drivers
-re-enable the SDIO IRQs is a bad idea, unless the IRQ have been consumed,
-which may not be the case during system suspend/resume. This may lead to
-that a host driver re-signals the same SDIO IRQ over and over again,
-causing a storm of IRQs and gives a ping-pong effect towards the
-sdio_irq_work().
-
-Moreover, calling the ->enable_sdio_irq() callback at system resume to
-re-enable already enabled SDIO IRQs for the host, causes the runtime PM
-count for some host drivers to become in-balanced. This then leads to the
-host to remain runtime resumed, no matter if it's needed or not.
-
-To fix these problems, let's check if process_sdio_pending_irqs() actually
-consumed the SDIO IRQ, before we continue to ack the IRQ by invoking the
-->ack_sdio_irq() callback.
-
-Additionally, there should be no need to re-enable SDIO IRQs as the host
-driver already knows if they were enabled at system suspend, thus also
-whether it needs to re-enable them at system resume. For this reason, drop
-the call to ->enable_sdio_irq() during system resume.
-
-In regards to these changes there is yet another issue, which is when there
-is an SDIO IRQ being signaled by the host driver, but after the SDIO card
-has been system suspended. Currently these IRQs are just thrown away, while
-we should at least make sure to try to consume them when the SDIO card has
-been system resumed. Fix this by queueing a sdio_irq_work() after we system
-resumed the SDIO card.
-
-Tested-by: Matthias Kaehlcke <mka@chromium.org>
 Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 ---
+ drivers/mmc/host/sdhci.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Changes in v2:
-	- Queue a sdio_irq_work() rather using sdio_signal_irq().
-
----
- drivers/mmc/core/sdio.c     | 2 +-
- drivers/mmc/core/sdio_irq.c | 3 ++-
- 2 files changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/mmc/core/sdio.c b/drivers/mmc/core/sdio.c
-index c557f1519b77..26cabd53ddc5 100644
---- a/drivers/mmc/core/sdio.c
-+++ b/drivers/mmc/core/sdio.c
-@@ -1015,7 +1015,7 @@ static int mmc_sdio_resume(struct mmc_host *host)
- 		if (!(host->caps2 & MMC_CAP2_SDIO_IRQ_NOTHREAD))
- 			wake_up_process(host->sdio_irq_thread);
- 		else if (host->caps & MMC_CAP_SDIO_IRQ)
--			host->ops->enable_sdio_irq(host, 1);
-+			queue_delayed_work(system_wq, &host->sdio_irq_work, 0);
- 	}
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index d814dc004bad..efa6cda8c991 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -2163,8 +2163,7 @@ static void sdhci_ack_sdio_irq(struct mmc_host *mmc)
+ 	unsigned long flags;
  
- out:
-diff --git a/drivers/mmc/core/sdio_irq.c b/drivers/mmc/core/sdio_irq.c
-index d7965b53a6d2..900871073bd7 100644
---- a/drivers/mmc/core/sdio_irq.c
-+++ b/drivers/mmc/core/sdio_irq.c
-@@ -115,7 +115,8 @@ static void sdio_run_irqs(struct mmc_host *host)
- 	mmc_claim_host(host);
- 	if (host->sdio_irqs) {
- 		process_sdio_pending_irqs(host);
--		host->ops->ack_sdio_irq(host);
-+		if (!host->sdio_irq_pending)
-+			host->ops->ack_sdio_irq(host);
- 	}
- 	mmc_release_host(host);
+ 	spin_lock_irqsave(&host->lock, flags);
+-	if (host->flags & SDHCI_SDIO_IRQ_ENABLED)
+-		sdhci_enable_sdio_irq_nolock(host, true);
++	sdhci_enable_sdio_irq_nolock(host, true);
+ 	spin_unlock_irqrestore(&host->lock, flags);
  }
+ 
 -- 
 2.17.1
 
