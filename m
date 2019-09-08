@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52ABFC433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1FEC4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A05321BE5
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:44:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BED3C21907
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:44:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946670;
-	bh=0OjlmtzajQP3fonjsDscpmVG6sUf8ItzbOVzKh6nRrA=;
+	s=default; t=1567946672;
+	bh=GpRnmNX5Yy8YYLy/7hh6hDMrhJzNRC4rXonoaYC5ipo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lveC1JHCOQhqK5J6qPIrzS/Q30lePhwVlTlneHgBPCOjLyYJeGJIkw3rJgwHMWxGt
-	 7w5bQXALd4V3fFqRqMOoehpOvaSleN4orO4+nvbRk0BEs/QzBPgqaKvLPn1Tw3Ju13
-	 VQPDWXHQy0zdjPpfH8LhtzCzGXndNCngSJ/KmsHo=
+	b=aavffsYnCHgVXhIdKPErtH0eWmfy+67fDTvzTAtOL+G1rzX1W/vQ4aGKv9ehls8QQ
+	 lgAocmOpztO+F+m+2bH9Pj0tRneLt/M0IMfXC6hS+/5ftykyLUtNTSMCCS2hf5jjad
+	 VlsXeaPQ6JnulZA6sLmcLVKuOoKL9BUVMEV86dTs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729812AbfIHMo3 (ORCPT
+        id S1729824AbfIHMoc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:44:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59112 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:44:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729789AbfIHMoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:44:25 -0400
+        id S1729789AbfIHMoa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:44:30 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35B2C218AE;
-        Sun,  8 Sep 2019 12:44:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61DA92196E;
+        Sun,  8 Sep 2019 12:44:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946664;
-        bh=0OjlmtzajQP3fonjsDscpmVG6sUf8ItzbOVzKh6nRrA=;
+        s=default; t=1567946669;
+        bh=GpRnmNX5Yy8YYLy/7hh6hDMrhJzNRC4rXonoaYC5ipo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hf9oqWTqeTU8NtHrAblE8GCeGlqXufOGAPSEJK8OD1+noGlOqOdz9nGBJXyNg0EDH
-         9AWRiYnY0zu9vOu5iFBoEVadwidJFyBOqCbpUN0gRONf5G+6jBz+vvH31EGvLmq4D5
-         f6aro5Q1G+K0+uhi/SvdcIFn2l4d/7tQbViz3g9o=
+        b=xB5h6NUq4QINrTOjoHZfhapiLGd4IzoIYgDZZkXKqE61SCZsCIbtpJ4VA+YpTE90u
+         jme3Ivb6u+k8hFuR+dkd24yW7NrpUa4BxI8U9UZyAYBNPYLv6bKusQsGiWpTstIYVJ
+         GqLF2YFojreCJB8UZxO3lNOO7zAr3UfA+rlsRxLs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hubert Denkmair <h.denkmair@intence.de>,
-        Martin Sperl <kernel@martin.sperl.org>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Bandan Das <bsd@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 20/26] spi: bcm2835aux: remove dangerous uncontrolled read of fifo
-Date:   Sun,  8 Sep 2019 13:41:59 +0100
-Message-Id: <20190908121109.989894140@linuxfoundation.org>
+Subject: [PATCH 4.9 22/26] Revert "x86/apic: Include the LDR when clearing out APIC registers"
+Date:   Sun,  8 Sep 2019 13:42:01 +0100
+Message-Id: <20190908121110.627865125@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121057.216802689@linuxfoundation.org>
 References: <20190908121057.216802689@linuxfoundation.org>
@@ -62,42 +62,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c7de8500fd8ecbb544846dd5f11dca578c3777e1 ]
+[ Upstream commit 950b07c14e8c59444e2359f15fd70ed5112e11a0 ]
 
-This read of the fifo is a potential candidate for a race condition
-as the spi transfer is not necessarily finished and so can lead to
-an early read of the fifo that still misses data.
+This reverts commit 558682b5291937a70748d36fd9ba757fb25b99ae.
 
-So it has been removed.
+Chris Wilson reports that it breaks his CPU hotplug test scripts.  In
+particular, it breaks offlining and then re-onlining the boot CPU, which
+we treat specially (and the BIOS does too).
 
-Fixes: 1ea29b39f4c812ec ("spi: bcm2835aux: add bcm2835 auxiliary spi device...")
-Suggested-by: Hubert Denkmair <h.denkmair@intence.de>
-Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
-Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+The symptoms are that we can offline the CPU, but it then does not come
+back online again:
+
+    smpboot: CPU 0 is now offline
+    smpboot: Booting Node 0 Processor 0 APIC 0x0
+    smpboot: do_boot_cpu failed(-1) to wakeup CPU#0
+
+Thomas says he knows why it's broken (my personal suspicion: our magic
+handling of the "cpu0_logical_apicid" thing), but for 5.3 the right fix
+is to just revert it, since we've never touched the LDR bits before, and
+it's not worth the risk to do anything else at this stage.
+
+[ Hotpluging of the boot CPU is special anyway, and should be off by
+  default. See the "BOOTPARAM_HOTPLUG_CPU0" config option and the
+  cpu0_hotplug kernel parameter.
+
+  In general you should not do it, and it has various known limitations
+  (hibernate and suspend require the boot CPU, for example).
+
+  But it should work, even if the boot CPU is special and needs careful
+  treatment       - Linus ]
+
+Link: https://lore.kernel.org/lkml/156785100521.13300.14461504732265570003@skylake-alporthouse-com/
+Reported-by: Chris Wilson <chris@chris-wilson.co.uk>
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Bandan Das <bsd@redhat.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-bcm2835aux.c | 7 -------
- 1 file changed, 7 deletions(-)
+ arch/x86/kernel/apic/apic.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/spi/spi-bcm2835aux.c b/drivers/spi/spi-bcm2835aux.c
-index 97cb3beb9cc62..4454d9c6a3dd4 100644
---- a/drivers/spi/spi-bcm2835aux.c
-+++ b/drivers/spi/spi-bcm2835aux.c
-@@ -194,13 +194,6 @@ static void bcm2835aux_spi_transfer_helper(struct bcm2835aux_spi *bs)
- 		  BCM2835_AUX_SPI_STAT_TX_FULL))) {
- 		bcm2835aux_wr_fifo(bs);
- 	}
--
--	/* and check if we have reached "done" */
--	while (bs->rx_len &&
--	       (!(bcm2835aux_rd(bs, BCM2835_AUX_SPI_STAT) &
--		  BCM2835_AUX_SPI_STAT_BUSY))) {
--		bcm2835aux_rd_fifo(bs);
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 37666c5367415..928ffdc21873c 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -1067,10 +1067,6 @@ void clear_local_APIC(void)
+ 	apic_write(APIC_LVT0, v | APIC_LVT_MASKED);
+ 	v = apic_read(APIC_LVT1);
+ 	apic_write(APIC_LVT1, v | APIC_LVT_MASKED);
+-	if (!x2apic_enabled()) {
+-		v = apic_read(APIC_LDR) & ~APIC_LDR_MASK;
+-		apic_write(APIC_LDR, v);
 -	}
- }
- 
- static irqreturn_t bcm2835aux_spi_interrupt(int irq, void *dev_id)
+ 	if (maxlvt >= 4) {
+ 		v = apic_read(APIC_LVTPC);
+ 		apic_write(APIC_LVTPC, v | APIC_LVT_MASKED);
 -- 
 2.20.1
 
