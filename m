@@ -2,111 +2,125 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A65EC43217
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 03:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADDA7C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 04:04:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22A9321882
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 03:57:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84250218AC
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 04:04:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="jzPMYzEG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730425AbfIHD5q (ORCPT
+        id S1726885AbfIHEEn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 23:57:46 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2235 "EHLO huawei.com"
+        Sun, 8 Sep 2019 00:04:43 -0400
+Received: from mail-eopbgr720065.outbound.protection.outlook.com ([40.107.72.65]:38605
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726706AbfIHD5q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 23:57:46 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 974D8DA47A9BF00C3F41;
-        Sun,  8 Sep 2019 11:57:41 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Sun, 8 Sep 2019 11:57:32 +0800
-From:   Kefeng Wang <wangkefeng.wang@huawei.com>
-To:     <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH] media: vim2m: Fix BUG_ON in vim2m_device_release()
-Date:   Sun, 8 Sep 2019 12:12:54 +0800
-Message-ID: <20190908041254.12286-1-wangkefeng.wang@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        id S1726217AbfIHEEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 00:04:43 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IkNrrRea4FJKYLrFHWuxKZSlIyoeZM2j0vFDIsuvwroHtMU46uMac5Em3QqLs8kFKADMMW+xzcjzDV6sGYhGGbP7OsLiDc5CgV22qmsdgue7gd5SpSHPqlNbVhWGOdDOsZ8j51Xw/IjDmn43/88MgUiYDFuRPlMXkZ87VK4LUeCmHYAGpRB67L2v4U9VFyqBVei8Yhd0ntctdPdzbHQQ8VpD+WotApt8jl7cj3WfmXgCbypwSmdVgSsob2Z1gcvWy0aSSL3mbL2Ekq91hcMPaCGiP/UjcdVUvglbOlLT1BGpC+A4pOfQymWcUY+Moc46cBDK/wwAs+t4zxNDnluGzQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BPkz2sgxjacut4Ek9F/FUjzA5rnOBtK5FYbYM2YP8Ws=;
+ b=bhacAonLHJlbftgv42wxoq9s+r7A/nwRpJIQQ5JVRj5JMRVIJ6ixJeSqkhI4EPLktCRDCiS1uPfnwsBI3Ub/KnKKCSDnQfyBuOT6p0c+5linws1dwjJH+WiJSQcKcd8xvcD6tOU908XPL9Fsr2ry9Cm4F6SFIRdz4a44oj8mRbqjSJMaTNMt7TIgQsrQOmWyNWlTFX6b0/fFDHzjK5VU9aO9qYEvQpbN52z+GceD293mI1bmwrQiJb7qg71H75Rcs5uOjxM1VAHdu17DfaMD/Z70hzWW+M6TNZdJ60RN9h9ZZlMix6FJ8VIDVQxIlAARc8qwWum9JaAxRlQ7KoOAoA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
+ dkim=pass header.d=vmware.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BPkz2sgxjacut4Ek9F/FUjzA5rnOBtK5FYbYM2YP8Ws=;
+ b=jzPMYzEGFr20zjI7fezWSLL3TYPSHdKlxmrBXdf6cLZE6qC6aEaXS3g9mhcBiI8QucX3S3BaEOQsFhHalSXACiP3SDfAB6oWInl+nrEl8b1/y9scpGV+Z/UuPA85SMZarfzZ4lLFDcLXru6khKZ5ZPc8PgYCfrFWIlEXqkF4lX0=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB4071.namprd05.prod.outlook.com (52.135.201.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.11; Sun, 8 Sep 2019 04:04:39 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::b5c9:9c17:bcf1:1310]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::b5c9:9c17:bcf1:1310%5]) with mapi id 15.20.2263.005; Sun, 8 Sep 2019
+ 04:04:39 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Arnd Bergmann <arnd@arndb.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Francois Rigault <rigault.francois@gmail.com>,
+        Jorgen Hansen <jhansen@vmware.com>,
+        Adit Ranadive <aditr@vmware.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Vishnu Dasa <vdasa@vmware.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH] VMCI: Release resource if the work is already queued
+Thread-Topic: [PATCH] VMCI: Release resource if the work is already queued
+Thread-Index: AQHVV9M92cuVvHPAEkm/BdBD/5MxaacgqaqAgACbwAA=
+Date:   Sun, 8 Sep 2019 04:04:39 +0000
+Message-ID: <00CA348F-5ACC-4A17-A5F6-9B36C92A95E7@vmware.com>
+References: <20190820202638.49003-1-namit@vmware.com>
+ <20190907184711.GA30206@kroah.com>
+In-Reply-To: <20190907184711.GA30206@kroah.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [77.137.80.205]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 45e83235-cd86-4420-49a5-08d73411abb0
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB4071;
+x-ms-traffictypediagnostic: BYAPR05MB4071:|BYAPR05MB4071:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR05MB4071A5FD96D0776A5FBF42B4D0B40@BYAPR05MB4071.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0154C61618
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(136003)(346002)(366004)(39860400002)(199004)(189003)(6116002)(86362001)(71200400001)(71190400001)(486006)(6436002)(14454004)(6486002)(5660300002)(446003)(6916009)(66946007)(66476007)(66556008)(64756008)(66446008)(66066001)(229853002)(11346002)(2616005)(476003)(25786009)(102836004)(26005)(186003)(4326008)(256004)(316002)(54906003)(6506007)(478600001)(7736002)(305945005)(53546011)(8676002)(91956017)(76116006)(81166006)(81156014)(6512007)(53936002)(8936002)(2906002)(33656002)(76176011)(3846002)(99286004)(6246003)(4744005)(36756003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB4071;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: AHe8X6PdXn9gXQtzsZuw8E4jE+z4Pfu+4AbUSRBr75q8Dc3xlL+FMzA9D1oUlZB+FPNru1n/Qw3SMUqS2NSbTKjsJeMlWPMO899y7VP9MTVa6kV5aVv24yHFaIHXAd0m8VuaMoxSXccGNNE4PZ3eIGjShykac3v3S594fY4DGZmSdNzQ6ljGiB94p6hWSTsXWRpUHx9Tlz4Hp+WJ7B4/ykaDNW9zve7X80fTAEByP2I1AgLud6Gps8UkYoMeJa8rH9BAynlnPYUREmnMkQXgy6rrbH6+pUaLVTiNI2L31S5hKX//tQYoi/XG+6qhZU06Ohmgf0Ln7e7mQcOMXW9bNGvaTgzALthQy1Vzf54/DGGRfpe0pExHxEn7wMe52jERGRXrsEzERSRMA08FYwWva5MIRfVWosV39ycyr998v+k=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <AA2425E2852CDE49BCFAA35837E6127E@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 45e83235-cd86-4420-49a5-08d73411abb0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Sep 2019 04:04:39.3544
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 3QYoszYmLdqYcsGVJqh3ZQ+mcEqiZ4gjah2yUTw5aBF8BXPhbx7DbXBPgydpfi005Bkt8katNTPJ2x5GpE4+QA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4071
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If v4l2_m2m_init() fails, m2m_dev pointer will be set ERR_PTR(-ENOMEM),
-then kfree m2m_dev will triger BUG_ON, see below, fix it by setting m2m_dev
-to NULL.
+> On Sep 7, 2019, at 9:47 PM, Greg Kroah-Hartman <gregkh@linuxfoundation.or=
+g> wrote:
+>=20
+> On Tue, Aug 20, 2019 at 01:26:38PM -0700, Nadav Amit wrote:
+>> Francois reported that VMware balloon gets stuck after a balloon reset,
+>> when the VMCI doorbell is removed. A similar error can occur when the
+>> balloon driver is removed with the following splat:
+>=20
+> <snip>
+>=20
+> Note, google thinks your email is spam as you are not sending this from
+> a valid vmware.com email server.  Please fix this up if you want to make
+> sure your patches actually make it through...
 
-  vim2m vim2m.0: Failed to init mem2mem device
-  ------------[ cut here ]------------
-  kernel BUG at mm/slub.c:3944!
-  invalid opcode: 0000 [#1] SMP PTI
-  CPU: 11 PID: 9061 Comm: insmod Tainted: G            E     5.2.0-rc2 #81
-  Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
-  RIP: 0010:kfree+0x11a/0x160
+I used gmail servers since I get complaints (mainly from Linus) that our
+email servers use DMARC, and this causes mailing list postings to be
+rejected.
 
-  Call Trace:
-   vim2m_device_release+0x3f/0x50 [vim2m]
-   device_release+0x27/0x80
-   kobject_release+0x68/0x190
-   vim2m_probe+0x20f/0x280 [vim2m]
-   platform_drv_probe+0x37/0x90
-   really_probe+0xef/0x3d0
-   driver_probe_device+0x110/0x120
-   device_driver_attach+0x4f/0x60
-   __driver_attach+0x9a/0x140
-   ? device_driver_attach+0x60/0x60
-   bus_for_each_dev+0x76/0xc0
-   ? klist_add_tail+0x57/0x70
-   bus_add_driver+0x141/0x210
-   driver_register+0x5b/0xe0
-   vim2m_init+0x29/0x1000 [vim2m]
-   do_one_initcall+0x46/0x1f4
-   ? __slab_alloc+0x1c/0x30
-   ? kmem_cache_alloc_trace+0x167/0x1b0
-   do_init_module+0x5b/0x21f
-   load_module+0x1add/0x1fb0
-   ? __do_sys_finit_module+0xe9/0x110
-   __do_sys_finit_module+0xe9/0x110
-   do_syscall_64+0x5b/0x1c0
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Fixes: ea6c7e34f3b2 ("media: vim2m: replace devm_kzalloc by kzalloc")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
----
- drivers/media/platform/vim2m.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/media/platform/vim2m.c b/drivers/media/platform/vim2m.c
-index acd3bd48c7e2..eb8f398d41f4 100644
---- a/drivers/media/platform/vim2m.c
-+++ b/drivers/media/platform/vim2m.c
-@@ -1343,6 +1343,7 @@ static int vim2m_probe(struct platform_device *pdev)
- 	if (IS_ERR(dev->m2m_dev)) {
- 		v4l2_err(&dev->v4l2_dev, "Failed to init mem2mem device\n");
- 		ret = PTR_ERR(dev->m2m_dev);
-+		dev->m2m_dev = NULL;
- 		goto error_dev;
- 	}
- 
--- 
-2.20.1
+I will check again if our open source people got to a solution, or I
+would just send it using my gmail identity, while keeping the vmware
+authorship.
 
