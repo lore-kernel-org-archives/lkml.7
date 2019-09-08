@@ -2,89 +2,143 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 895CFC4360D
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 22:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 206D5C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 22:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60CFD216C8
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 22:20:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA914207FC
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 22:50:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rx5BVXil"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731098AbfIHWUI (ORCPT
+        id S1731182AbfIHWuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 18:20:08 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:46456 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726626AbfIHWUI (ORCPT
+        Sun, 8 Sep 2019 18:50:04 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43264 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbfIHWuD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 18:20:08 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1i75XG-00036h-AF; Sun, 08 Sep 2019 22:19:54 +0000
-Date:   Sun, 8 Sep 2019 23:19:54 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
-        linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        David Drysdale <drysdale@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
-        John Johansen <john.johansen@canonical.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>, Tejun Heo <tj@kernel.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Thomas Graf <tgraf@suug.ch>, Tycho Andersen <tycho@tycho.ws>,
-        Will Drewry <wad@chromium.org>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH bpf-next v10 06/10] bpf,landlock: Add a new map type:
- inode
-Message-ID: <20190908221954.GD1131@ZenIV.linux.org.uk>
-References: <20190721213116.23476-1-mic@digikod.net>
- <20190721213116.23476-7-mic@digikod.net>
- <20190727014048.3czy3n2hi6hfdy3m@ast-mbp.dhcp.thefacebook.com>
- <a870c2c9-d2f7-e0fa-c8cc-35dbf8b5b87d@ssi.gouv.fr>
- <894922a2-1150-366c-3f08-c8b759da0742@digikod.net>
+        Sun, 8 Sep 2019 18:50:03 -0400
+Received: by mail-pl1-f193.google.com with SMTP id 4so5685875pld.10;
+        Sun, 08 Sep 2019 15:50:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Zc4prSozmeKbnSZHIJYYrGC0uThZMJbf0rfXZs2gRuc=;
+        b=rx5BVXilh5x+kRjvZQh4DX2UbjJADGeTe+BbUZf3e/u7923mLTg6caRcqiN3UvOE2E
+         fEuFrooLdkvU/ng5z/9pz4gCQUQNB1OM7GU2OJD9xx73TeFPEikdxK0wWsJJkpuUfd+X
+         Ytwfb21T7dxFAmUnYpSA0Fihc3P4nfKtwECUh5vGW/jj8l95XFHP0BqQfNRiD0pTxtON
+         N0moGlCrc9A3MwXO/12MTW9fLFBfLdp3kWJdhHAccu08L+37hzN4IJ4leXKxt9n6y3gq
+         k3Hali75459nzgvRWstOIznk5jLyjwCR7cHPSI2zeSrd9CPtp0J8ohdlxgOqz9VlrbEM
+         FQYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Zc4prSozmeKbnSZHIJYYrGC0uThZMJbf0rfXZs2gRuc=;
+        b=cZwl0WEkRbYa2AFPyxWdBFPZjhPginoX9IrUOhgAOKDcH3FDMnVmYQuYNiMxnBOOQz
+         +fC9RxOS1kDpNMmh+8rZ2DiBhBgGHpAkwjrhu7vBBobg/zV6mPeUoGzWLUVjKbTKsxaD
+         tPsivvsbgopzgRiom4TfSdKjVbhYi6OqCrppef/+q7ERmxo7MVvBkKoAgyqHsb4VKzBP
+         J2uMNK4AmWZIxHJoveWvRMAL4xulUyLv5iRA3NGWR0Vif91wdd9OdAx9narSo86ADZZ8
+         QQH8rOPZXgG9bJcORMCrYBjCXFHE5F6U4g3xXNH44Ofo3ZPS3lsKFxNAmOga1T9p0KnJ
+         EtRQ==
+X-Gm-Message-State: APjAAAXV8jtf+8rFoA91qUNI29d7WFN9vwRDzJ9Z3QBiI9kI3UUPI0VG
+        m1mKIrB/YTd5WvJ9YDTmsdo=
+X-Google-Smtp-Source: APXvYqyZWgMeXD5bZSjMytAriy55BnkPYNQ96x2udTDsuxlkXo33O6MVK1Rx9/86s1TQ7FGSLD7ANw==
+X-Received: by 2002:a17:902:8a81:: with SMTP id p1mr20477142plo.71.1567983002858;
+        Sun, 08 Sep 2019 15:50:02 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id l72sm24380246pjb.7.2019.09.08.15.50.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 08 Sep 2019 15:50:01 -0700 (PDT)
+Subject: Re: [PATCH 1/2] watchdog: pm8916_wdt: fix pretimeout registration
+ flow
+To:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        wim@linux-watchdog.org
+Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bjorn.andersson@linaro.org, Loic Poulain <loic.poulain@linaro.org>
+References: <20190906203054.26725-1-jorge.ramirez-ortiz@linaro.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <4231aab1-c538-a14f-cea1-ceb28781c7bb@roeck-us.net>
+Date:   Sun, 8 Sep 2019 15:50:00 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <894922a2-1150-366c-3f08-c8b759da0742@digikod.net>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190906203054.26725-1-jorge.ramirez-ortiz@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 09, 2019 at 12:09:57AM +0200, Mickaël Salaün wrote:
+On 9/6/19 1:30 PM, Jorge Ramirez-Ortiz wrote:
+> When an IRQ is present in the dts, the probe function shall fail if
+> the interrupt can not be registered.
+> 
 
-> >>> +    rcu_read_lock();
-> >>> +    ptr = htab_map_lookup_elem(map, &inode);
-> >>> +    iput(inode);
+The author intended differently, and did not want registration to fail
+in this situation, following the logic that it is better to have a
+standard watchdog without pretimeout than no watchdog at all.
 
-Wait a sec.  You are doing _what_ under rcu_read_lock()?
+Copying the author; I am not inclined to accept such a change without
+input from the driver author.
 
-> >>> +    if (IS_ERR(ptr)) {
-> >>> +            ret = PTR_ERR(ptr);
-> >>> +    } else if (!ptr) {
-> >>> +            ret = -ENOENT;
-> >>> +    } else {
-> >>> +            ret = 0;
-> >>> +            copy_map_value(map, value, ptr);
-> >>> +    }
-> >>> +    rcu_read_unlock();
+Similar, for the deferred probe, we'll need to know from the driver author
+if this is a concern. In general it is, but there are cases where
+-EPROBE_DEFFER is never returned in practice (eg for some SoC watchdog
+drivers).
+
+Guenter
+
+> The probe function shall also be retried if getting the irq is being
+> deferred.
+> 
+> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> ---
+>   drivers/watchdog/pm8916_wdt.c | 16 ++++++++++++----
+>   1 file changed, 12 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/watchdog/pm8916_wdt.c b/drivers/watchdog/pm8916_wdt.c
+> index 2d3652004e39..cb5304c26ac3 100644
+> --- a/drivers/watchdog/pm8916_wdt.c
+> +++ b/drivers/watchdog/pm8916_wdt.c
+> @@ -163,9 +163,18 @@ static int pm8916_wdt_probe(struct platform_device *pdev)
+>   
+>   	irq = platform_get_irq(pdev, 0);
+>   	if (irq > 0) {
+> -		if (devm_request_irq(dev, irq, pm8916_wdt_isr, 0, "pm8916_wdt",
+> -				     wdt))
+> -			irq = 0;
+> +		err = devm_request_irq(dev, irq, pm8916_wdt_isr, 0,
+> +				       "pm8916_wdt", wdt);
+> +		if (err)
+> +			return err;
+> +
+> +		wdt->wdev.info = &pm8916_wdt_pt_ident;
+> +
+> +	} else {
+> +		if (irq == -EPROBE_DEFER)
+> +			return -EPROBE_DEFER;
+> +
+> +		wdt->wdev.info = &pm8916_wdt_ident;
+>   	}
+>   
+>   	/* Configure watchdog to hard-reset mode */
+> @@ -177,7 +186,6 @@ static int pm8916_wdt_probe(struct platform_device *pdev)
+>   		return err;
+>   	}
+>   
+> -	wdt->wdev.info = (irq > 0) ? &pm8916_wdt_pt_ident : &pm8916_wdt_ident,
+>   	wdt->wdev.ops = &pm8916_wdt_ops,
+>   	wdt->wdev.parent = dev;
+>   	wdt->wdev.min_timeout = PM8916_WDT_MIN_TIMEOUT;
+> 
+
