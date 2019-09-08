@@ -2,125 +2,100 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADDA7C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 04:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C0AC4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 04:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84250218AC
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 04:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D7A5214DB
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 04:48:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="jzPMYzEG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I3nPu8RM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbfIHEEn (ORCPT
+        id S1727038AbfIHEgh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 00:04:43 -0400
-Received: from mail-eopbgr720065.outbound.protection.outlook.com ([40.107.72.65]:38605
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726217AbfIHEEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 00:04:43 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IkNrrRea4FJKYLrFHWuxKZSlIyoeZM2j0vFDIsuvwroHtMU46uMac5Em3QqLs8kFKADMMW+xzcjzDV6sGYhGGbP7OsLiDc5CgV22qmsdgue7gd5SpSHPqlNbVhWGOdDOsZ8j51Xw/IjDmn43/88MgUiYDFuRPlMXkZ87VK4LUeCmHYAGpRB67L2v4U9VFyqBVei8Yhd0ntctdPdzbHQQ8VpD+WotApt8jl7cj3WfmXgCbypwSmdVgSsob2Z1gcvWy0aSSL3mbL2Ekq91hcMPaCGiP/UjcdVUvglbOlLT1BGpC+A4pOfQymWcUY+Moc46cBDK/wwAs+t4zxNDnluGzQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BPkz2sgxjacut4Ek9F/FUjzA5rnOBtK5FYbYM2YP8Ws=;
- b=bhacAonLHJlbftgv42wxoq9s+r7A/nwRpJIQQ5JVRj5JMRVIJ6ixJeSqkhI4EPLktCRDCiS1uPfnwsBI3Ub/KnKKCSDnQfyBuOT6p0c+5linws1dwjJH+WiJSQcKcd8xvcD6tOU908XPL9Fsr2ry9Cm4F6SFIRdz4a44oj8mRbqjSJMaTNMt7TIgQsrQOmWyNWlTFX6b0/fFDHzjK5VU9aO9qYEvQpbN52z+GceD293mI1bmwrQiJb7qg71H75Rcs5uOjxM1VAHdu17DfaMD/Z70hzWW+M6TNZdJ60RN9h9ZZlMix6FJ8VIDVQxIlAARc8qwWum9JaAxRlQ7KoOAoA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
- dkim=pass header.d=vmware.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BPkz2sgxjacut4Ek9F/FUjzA5rnOBtK5FYbYM2YP8Ws=;
- b=jzPMYzEGFr20zjI7fezWSLL3TYPSHdKlxmrBXdf6cLZE6qC6aEaXS3g9mhcBiI8QucX3S3BaEOQsFhHalSXACiP3SDfAB6oWInl+nrEl8b1/y9scpGV+Z/UuPA85SMZarfzZ4lLFDcLXru6khKZ5ZPc8PgYCfrFWIlEXqkF4lX0=
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
- BYAPR05MB4071.namprd05.prod.outlook.com (52.135.201.22) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.11; Sun, 8 Sep 2019 04:04:39 +0000
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::b5c9:9c17:bcf1:1310]) by BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::b5c9:9c17:bcf1:1310%5]) with mapi id 15.20.2263.005; Sun, 8 Sep 2019
- 04:04:39 +0000
-From:   Nadav Amit <namit@vmware.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Arnd Bergmann <arnd@arndb.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Francois Rigault <rigault.francois@gmail.com>,
-        Jorgen Hansen <jhansen@vmware.com>,
-        Adit Ranadive <aditr@vmware.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Vishnu Dasa <vdasa@vmware.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH] VMCI: Release resource if the work is already queued
-Thread-Topic: [PATCH] VMCI: Release resource if the work is already queued
-Thread-Index: AQHVV9M92cuVvHPAEkm/BdBD/5MxaacgqaqAgACbwAA=
-Date:   Sun, 8 Sep 2019 04:04:39 +0000
-Message-ID: <00CA348F-5ACC-4A17-A5F6-9B36C92A95E7@vmware.com>
-References: <20190820202638.49003-1-namit@vmware.com>
- <20190907184711.GA30206@kroah.com>
-In-Reply-To: <20190907184711.GA30206@kroah.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=namit@vmware.com; 
-x-originating-ip: [77.137.80.205]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 45e83235-cd86-4420-49a5-08d73411abb0
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB4071;
-x-ms-traffictypediagnostic: BYAPR05MB4071:|BYAPR05MB4071:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR05MB4071A5FD96D0776A5FBF42B4D0B40@BYAPR05MB4071.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0154C61618
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(136003)(346002)(366004)(39860400002)(199004)(189003)(6116002)(86362001)(71200400001)(71190400001)(486006)(6436002)(14454004)(6486002)(5660300002)(446003)(6916009)(66946007)(66476007)(66556008)(64756008)(66446008)(66066001)(229853002)(11346002)(2616005)(476003)(25786009)(102836004)(26005)(186003)(4326008)(256004)(316002)(54906003)(6506007)(478600001)(7736002)(305945005)(53546011)(8676002)(91956017)(76116006)(81166006)(81156014)(6512007)(53936002)(8936002)(2906002)(33656002)(76176011)(3846002)(99286004)(6246003)(4744005)(36756003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB4071;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: AHe8X6PdXn9gXQtzsZuw8E4jE+z4Pfu+4AbUSRBr75q8Dc3xlL+FMzA9D1oUlZB+FPNru1n/Qw3SMUqS2NSbTKjsJeMlWPMO899y7VP9MTVa6kV5aVv24yHFaIHXAd0m8VuaMoxSXccGNNE4PZ3eIGjShykac3v3S594fY4DGZmSdNzQ6ljGiB94p6hWSTsXWRpUHx9Tlz4Hp+WJ7B4/ykaDNW9zve7X80fTAEByP2I1AgLud6Gps8UkYoMeJa8rH9BAynlnPYUREmnMkQXgy6rrbH6+pUaLVTiNI2L31S5hKX//tQYoi/XG+6qhZU06Ohmgf0Ln7e7mQcOMXW9bNGvaTgzALthQy1Vzf54/DGGRfpe0pExHxEn7wMe52jERGRXrsEzERSRMA08FYwWva5MIRfVWosV39ycyr998v+k=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <AA2425E2852CDE49BCFAA35837E6127E@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Sun, 8 Sep 2019 00:36:37 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46280 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbfIHEgg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 00:36:36 -0400
+Received: by mail-pg1-f195.google.com with SMTP id m3so5780049pgv.13
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Sep 2019 21:36:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RtKloxjFpA2t5GP1ywopBt0f8T0oeF2HbZwg4ACNdgA=;
+        b=I3nPu8RMFPAOjfzb+RUf8Mi5gIkb+Cu56HHzE+93Xw25Xn1IgtLQblsyCgVYhfhfaf
+         1wh7RGmFtbt1LbBcG3sqfpAPGJbV4nKGpXkvHL7W1Jbz2JCHvacL1js3Kny6IWT6lF4X
+         NNzQTygYqAYbriWrmvEwl2KqraJ9weRhQPeFhi1fOX53BVG0lgCjV3NLg2kzug4TEQRc
+         KPZkGTbYLEXreZrYkpPuPNKZ94ZYHNSnUPsDWfqqAnic7ePQAjjQKft1Yf1xiSyqMJQa
+         AmkJJ52qBm1rLO3hF/659y3XDTahKd7azIvAmZcOR7EHtWc2vboqgjx9vq7FZRLZH5Md
+         kV9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RtKloxjFpA2t5GP1ywopBt0f8T0oeF2HbZwg4ACNdgA=;
+        b=Zp8/13XOZMKdh60q9NUF5vfrbAUQ+2Zsv5N51shNBfV6RRlyYbjwq2YjPpGMN51YsC
+         O87Gw8+faGwhQpnnLutqav2BJlHT/zadkh2hR3QvJhm7Z+cf/ylcFtVOKxIXUAZFMFvT
+         7tty9UaMA4WJlhOz654Vb+czrAclQPLGfXUTMv7p4kydg+3C3jRfFuKS9aWSa/BhqOEV
+         xog4FV7fzP7xeEIjFpPH6dBSyiIoYcd11tKVcrzPkpNbdYoCxFyxsaFl3/a3+i/nblfR
+         9prPDnIzuW+uPLTppn9DHy5CUGHzwKyd6WdwzG/8xHKuIWEI+Sr2uWKpQbUIHR2anQvT
+         vFLA==
+X-Gm-Message-State: APjAAAUe9g0yycG6vKXI2vjhXmJVaH9qRW7rQNtQlgo0NYwPzt1ZQr/2
+        6mD/4lMfRHSbH7YG3YzDDSxhubQSzMLejA==
+X-Google-Smtp-Source: APXvYqyw3tU05UDMXdb6AFEITR7kgX4+Eq37oNhLv/4hoo+Qf91BgNisp1ZeprOqEnZ4Y7w2V8QLTQ==
+X-Received: by 2002:a63:2349:: with SMTP id u9mr12722661pgm.214.1567917395763;
+        Sat, 07 Sep 2019 21:36:35 -0700 (PDT)
+Received: from localhost.localdomain (ip-103-85-38-221.syd.xi.com.au. [103.85.38.221])
+        by smtp.gmail.com with ESMTPSA id v184sm8435643pgd.34.2019.09.07.21.36.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 Sep 2019 21:36:34 -0700 (PDT)
+From:   Adam Zerella <adam.zerella@gmail.com>
+To:     labbott@redhat.com, sumit.semwal@linaro.org
+Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-kernel@vger.kernel.org, Adam Zerella <adam.zerella@gmail.com>
+Subject: [PATCH] staging: android: ion: Replace strncpy() for stracpy()
+Date:   Sun,  8 Sep 2019 14:34:50 +1000
+Message-Id: <20190908043450.1078-1-adam.zerella@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 45e83235-cd86-4420-49a5-08d73411abb0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Sep 2019 04:04:39.3544
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 3QYoszYmLdqYcsGVJqh3ZQ+mcEqiZ4gjah2yUTw5aBF8BXPhbx7DbXBPgydpfi005Bkt8katNTPJ2x5GpE4+QA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4071
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Sep 7, 2019, at 9:47 PM, Greg Kroah-Hartman <gregkh@linuxfoundation.or=
-g> wrote:
->=20
-> On Tue, Aug 20, 2019 at 01:26:38PM -0700, Nadav Amit wrote:
->> Francois reported that VMware balloon gets stuck after a balloon reset,
->> when the VMCI doorbell is removed. A similar error can occur when the
->> balloon driver is removed with the following splat:
->=20
-> <snip>
->=20
-> Note, google thinks your email is spam as you are not sending this from
-> a valid vmware.com email server.  Please fix this up if you want to make
-> sure your patches actually make it through...
+Using strncpy() does not always terminate the destination string.
+stracpy() is a alternative function that does, by using this new
+function we will no longer need to insert a null separator.
 
-I used gmail servers since I get complaints (mainly from Linus) that our
-email servers use DMARC, and this causes mailing list postings to be
-rejected.
+Signed-off-by: Adam Zerella <adam.zerella@gmail.com>
+---
+ drivers/staging/android/ion/ion.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-I will check again if our open source people got to a solution, or I
-would just send it using my gmail identity, while keeping the vmware
-authorship.
+diff --git a/drivers/staging/android/ion/ion.c b/drivers/staging/android/ion/ion.c
+index e6b1ca141b93..17901bd626be 100644
+--- a/drivers/staging/android/ion/ion.c
++++ b/drivers/staging/android/ion/ion.c
+@@ -433,8 +433,7 @@ static int ion_query_heaps(struct ion_heap_query *query)
+ 	max_cnt = query->cnt;
+ 
+ 	plist_for_each_entry(heap, &dev->heaps, node) {
+-		strncpy(hdata.name, heap->name, MAX_HEAP_NAME);
+-		hdata.name[sizeof(hdata.name) - 1] = '\0';
++		stracpy(hdata.name, heap->name, MAX_HEAP_NAME);
+ 		hdata.type = heap->type;
+ 		hdata.heap_id = heap->id;
+ 
+-- 
+2.21.0
 
