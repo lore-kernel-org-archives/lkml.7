@@ -2,52 +2,53 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE5DDC4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 657B0C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D77721927
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:50:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DEA621924
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:50:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947040;
-	bh=zK8YeOYZRaVUJOgEQ5lJtHGcObCvzZmLvjmPpmxixIA=;
+	s=default; t=1567947044;
+	bh=5+II5HNYrMrDE2tZb894YLsh8Bk2aDw3oznzM2GPMHU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=acQEQs7W18EWf0k/sWbfFaKul7m5g5F1f0fz0wAZ4B/kuX1D8Y+JRxjc+BGXR+Nl8
-	 sveNcT0K6GqfRWJJQeHT2uFHy9+fP/7TZz7tkTDbqIx64vf9t+TFyf3y2Z0RlBK87k
-	 0lNUUYjgSOIh2H7Hn4tC4Nxn/2V71OFeaj5XVRSI=
+	b=FDSTal5Glyw/jxoUqrFEUsyVlekPk+WKM38zskFJD2rXJkR3wwjncTS23ctHruW5D
+	 v6AroPiSMxhBZESmb24eq1ih72mXyN8SCM0PlRIZtajxq4qWLkjZXj4WFTg+J0O9wO
+	 vbvK8oiC3Ee/haUlh/jVtTDmQIfNgaJkRp2wcoo0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732211AbfIHMuj (ORCPT
+        id S1732236AbfIHMun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:50:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41424 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:50:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731378AbfIHMua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:50:30 -0400
+        id S1732150AbfIHMud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:50:33 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 704C221A49;
-        Sun,  8 Sep 2019 12:50:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 132D121A49;
+        Sun,  8 Sep 2019 12:50:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567947029;
-        bh=zK8YeOYZRaVUJOgEQ5lJtHGcObCvzZmLvjmPpmxixIA=;
+        s=default; t=1567947032;
+        bh=5+II5HNYrMrDE2tZb894YLsh8Bk2aDw3oznzM2GPMHU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fXFRx7BIK8kDQFK3ACkCd/pxDm37o5iSC4eUKHWsK/2G7yn55LbdAVHcu6T3+BWSt
-         uqDN+MZJZ1bWGQSr0aBHArQzK3i+fllfRFEnGwNAVmOkwGy2uGPK0J5A5aCieOzfJh
-         P/wsMfO/me45TJ5asR6fpaUoFDspYHXtNQwmBvGk=
+        b=W0N8Ir1nP+cqprKw9e3K4Tb+n07X815TDOZ/mgai1B0E7ljZRNXhF2oEE2pr3NNGe
+         dcFYnqOJ9TZRWU/668SlIqDBXQi3GHR+RtRWQe0MPKgbcqi2sJIs1jOCJE7CE+lm3B
+         WpN04QriAu1vj26D5JUsfKwfh8zGL6JKeyTf3N7Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 34/94] hv_netvsc: Fix a warning of suspicious RCU usage
-Date:   Sun,  8 Sep 2019 13:41:30 +0100
-Message-Id: <20190908121151.415104561@linuxfoundation.org>
+Subject: [PATCH 5.2 35/94] net: tc35815: Explicitly check NET_IP_ALIGN is not zero in tc35815_rx
+Date:   Sun,  8 Sep 2019 13:41:31 +0100
+Message-Id: <20190908121151.442955738@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
 References: <20190908121150.420989666@linuxfoundation.org>
@@ -60,50 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6d0d779dca73cd5acb649c54f81401f93098b298 ]
+[ Upstream commit 125b7e0949d4e72b15c2b1a1590f8cece985a918 ]
 
-This fixes a warning of "suspicious rcu_dereference_check() usage"
-when nload runs.
+clang warns:
 
-Fixes: 776e726bfb34 ("netvsc: fix RCU warning in get_stats")
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
+drivers/net/ethernet/toshiba/tc35815.c:1507:30: warning: use of logical
+'&&' with constant operand [-Wconstant-logical-operand]
+                        if (!HAVE_DMA_RXALIGN(lp) && NET_IP_ALIGN)
+                                                  ^  ~~~~~~~~~~~~
+drivers/net/ethernet/toshiba/tc35815.c:1507:30: note: use '&' for a
+bitwise operation
+                        if (!HAVE_DMA_RXALIGN(lp) && NET_IP_ALIGN)
+                                                  ^~
+                                                  &
+drivers/net/ethernet/toshiba/tc35815.c:1507:30: note: remove constant to
+silence this warning
+                        if (!HAVE_DMA_RXALIGN(lp) && NET_IP_ALIGN)
+                                                 ~^~~~~~~~~~~~~~~
+1 warning generated.
+
+Explicitly check that NET_IP_ALIGN is not zero, which matches how this
+is checked in other parts of the tree. Because NET_IP_ALIGN is a build
+time constant, this check will be constant folded away during
+optimization.
+
+Fixes: 82a9928db560 ("tc35815: Enable StripCRC feature")
+Link: https://github.com/ClangBuiltLinux/linux/issues/608
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hyperv/netvsc_drv.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/toshiba/tc35815.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index 3544e19915792..e8fce6d715ef0 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -1239,12 +1239,15 @@ static void netvsc_get_stats64(struct net_device *net,
- 			       struct rtnl_link_stats64 *t)
- {
- 	struct net_device_context *ndev_ctx = netdev_priv(net);
--	struct netvsc_device *nvdev = rcu_dereference_rtnl(ndev_ctx->nvdev);
-+	struct netvsc_device *nvdev;
- 	struct netvsc_vf_pcpu_stats vf_tot;
- 	int i;
- 
-+	rcu_read_lock();
-+
-+	nvdev = rcu_dereference(ndev_ctx->nvdev);
- 	if (!nvdev)
--		return;
-+		goto out;
- 
- 	netdev_stats_to_stats64(t, &net->stats);
- 
-@@ -1283,6 +1286,8 @@ static void netvsc_get_stats64(struct net_device *net,
- 		t->rx_packets	+= packets;
- 		t->multicast	+= multicast;
- 	}
-+out:
-+	rcu_read_unlock();
- }
- 
- static int netvsc_set_mac_addr(struct net_device *ndev, void *p)
+diff --git a/drivers/net/ethernet/toshiba/tc35815.c b/drivers/net/ethernet/toshiba/tc35815.c
+index c50a9772f4aff..3b5a26b05295f 100644
+--- a/drivers/net/ethernet/toshiba/tc35815.c
++++ b/drivers/net/ethernet/toshiba/tc35815.c
+@@ -1504,7 +1504,7 @@ tc35815_rx(struct net_device *dev, int limit)
+ 			pci_unmap_single(lp->pci_dev,
+ 					 lp->rx_skbs[cur_bd].skb_dma,
+ 					 RX_BUF_SIZE, PCI_DMA_FROMDEVICE);
+-			if (!HAVE_DMA_RXALIGN(lp) && NET_IP_ALIGN)
++			if (!HAVE_DMA_RXALIGN(lp) && NET_IP_ALIGN != 0)
+ 				memmove(skb->data, skb->data - NET_IP_ALIGN,
+ 					pkt_len);
+ 			data = skb_put(skb, pkt_len);
 -- 
 2.20.1
 
