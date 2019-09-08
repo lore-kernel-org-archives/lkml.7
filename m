@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDBEEC4360D
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 657A5C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA0A92190F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:50:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E16421D79
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:50:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947019;
-	bh=tGLxt853tx3yqdgy409J0Zbq+dfq+TyDsgOM80UyRuE=;
+	s=default; t=1567947024;
+	bh=oq/+oiyUJyElf9Wc29SfbD7i+AyeyKT8DPGrtYYrP/Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jkeBpdcaFejbQSos+8U+vXp5Zt5u8xPE1eHPdLk7JhC7mU8Fudayh/HwcohCe4Bf6
-	 0T9vH+RqHcaW0oVMMPVK8meb8BzCw/UUGsN4ROaeiM1/PAMXTQVJq9U6NXKHWHdD5e
-	 1YXsXoRi+yHWMByvx2xXo8stfpctJt8JQaNlP+m0=
+	b=VjR6M4BCGwz8rKHmG466FAefamIsAUAhld/EZpImjbd22h4WNz+eLiHDxuBYl/CZr
+	 AOLBUer05a6lsV17SGwx6hm0sZC/vtoAFJ/0fQzutlTTInOSimvBwybOevQVY/brCE
+	 DE+omNYG1sb/W/9uEMnSZQf59CpW3pOyrYF/UClk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732039AbfIHMuO (ORCPT
+        id S1732093AbfIHMuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:50:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40846 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:50:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731998AbfIHMuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:50:12 -0400
+        id S1731584AbfIHMuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:50:19 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D21A2190F;
-        Sun,  8 Sep 2019 12:50:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A9E12190F;
+        Sun,  8 Sep 2019 12:50:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567947011;
-        bh=tGLxt853tx3yqdgy409J0Zbq+dfq+TyDsgOM80UyRuE=;
+        s=default; t=1567947016;
+        bh=oq/+oiyUJyElf9Wc29SfbD7i+AyeyKT8DPGrtYYrP/Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kaIeswMPvOqPxfJWV+CapR2N83k9wByyyYH7EiHDAWGZvgU6mJBIWwXWNmoMF0s1i
-         ZmrVXbPZEJNTOf4iwwylZnMqnkyPFdIsqmmnq0lwG6KYzTxpK55Gb/EpNj7prTd68e
-         9eL7PT9anLi2sn7x9WZn/zjuquoFPLRJrdVbqkBc=
+        b=XuB+mp5WoBzNtVTlb2rWLXWWUpC11FH1ZLvH3D1gprPgf/PPxsgsjXW4GZLXJ8W1Y
+         kDikLMGWtdvQwe2QGpP2DfBYu6QkDfbfe9wFJQ6z7DlU1T24MxV/9QeEFTbd9qIVn2
+         lWSloyHF1SeTJZ6QR/6ICFtiapmf8Pmvrc8nLy10=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 27/94] clk: samsung: exynos542x: Move MSCL subsystem clocks to its sub-CMU
-Date:   Sun,  8 Sep 2019 13:41:23 +0100
-Message-Id: <20190908121151.219083615@linuxfoundation.org>
+Subject: [PATCH 5.2 29/94] netfilter: nf_tables: use-after-free in failing rule with bound set
+Date:   Sun,  8 Sep 2019 13:41:25 +0100
+Message-Id: <20190908121151.274657412@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
 References: <20190908121150.420989666@linuxfoundation.org>
@@ -62,121 +59,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit baf7b79e1ad79a41fafd8ab8597b9a96962d822d ]
+[ Upstream commit 6a0a8d10a3661a036b55af695542a714c429ab7c ]
 
-M2M scaler clocks require special handling of their parent bus clock during
-power domain on/off sequences. MSCL clocks were not initially added to the
-sub-CMU handler, because that time there was no driver for the M2M scaler
-device and it was not possible to test it.
+If a rule that has already a bound anonymous set fails to be added, the
+preparation phase releases the rule and the bound set. However, the
+transaction object from the abort path still has a reference to the set
+object that is stale, leading to a use-after-free when checking for the
+set->bound field. Add a new field to the transaction that specifies if
+the set is bound, so the abort path can skip releasing it since the rule
+command owns it and it takes care of releasing it. After this update,
+the set->bound field is removed.
 
-This patch fixes this issue. Parent clock for M2M scaler devices is now
-properly preserved during MSC power domain on/off sequence. This gives M2M
-scaler devices proper performance: fullHD XRGB32 image 1000 rotations test
-takes 3.17s instead of 45.08s.
+[   24.649883] Unable to handle kernel paging request at virtual address 0000000000040434
+[   24.657858] Mem abort info:
+[   24.660686]   ESR = 0x96000004
+[   24.663769]   Exception class = DABT (current EL), IL = 32 bits
+[   24.669725]   SET = 0, FnV = 0
+[   24.672804]   EA = 0, S1PTW = 0
+[   24.675975] Data abort info:
+[   24.678880]   ISV = 0, ISS = 0x00000004
+[   24.682743]   CM = 0, WnR = 0
+[   24.685723] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000428952000
+[   24.692207] [0000000000040434] pgd=0000000000000000
+[   24.697119] Internal error: Oops: 96000004 [#1] SMP
+[...]
+[   24.889414] Call trace:
+[   24.891870]  __nf_tables_abort+0x3f0/0x7a0
+[   24.895984]  nf_tables_abort+0x20/0x40
+[   24.899750]  nfnetlink_rcv_batch+0x17c/0x588
+[   24.904037]  nfnetlink_rcv+0x13c/0x190
+[   24.907803]  netlink_unicast+0x18c/0x208
+[   24.911742]  netlink_sendmsg+0x1b0/0x350
+[   24.915682]  sock_sendmsg+0x4c/0x68
+[   24.919185]  ___sys_sendmsg+0x288/0x2c8
+[   24.923037]  __sys_sendmsg+0x7c/0xd0
+[   24.926628]  __arm64_sys_sendmsg+0x2c/0x38
+[   24.930744]  el0_svc_common.constprop.0+0x94/0x158
+[   24.935556]  el0_svc_handler+0x34/0x90
+[   24.939322]  el0_svc+0x8/0xc
+[   24.942216] Code: 37280300 f9404023 91014262 aa1703e0 (f9401863)
+[   24.948336] ---[ end trace cebbb9dcbed3b56f ]---
 
-Fixes: b06a532bf1fa ("clk: samsung: Add Exynos5 sub-CMU clock driver")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Link: https://lkml.kernel.org/r/20190808121839.23892-1-m.szyprowski@samsung.com
-Acked-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fixes: f6ac85858976 ("netfilter: nf_tables: unbind set in rule from commit path")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/samsung/clk-exynos5420.c | 48 ++++++++++++++++++++--------
- 1 file changed, 34 insertions(+), 14 deletions(-)
+ include/net/netfilter/nf_tables.h |  9 +++++++--
+ net/netfilter/nf_tables_api.c     | 15 ++++++++++-----
+ 2 files changed, 17 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-index 5eb0ce4b2648b..893697e00d2aa 100644
---- a/drivers/clk/samsung/clk-exynos5420.c
-+++ b/drivers/clk/samsung/clk-exynos5420.c
-@@ -870,9 +870,6 @@ static const struct samsung_div_clock exynos5x_div_clks[] __initconst = {
- 	/* GSCL Block */
- 	DIV(0, "dout_gscl_blk_333", "aclk333_432_gscl", DIV2_RATIO0, 6, 2),
- 
--	/* MSCL Block */
--	DIV(0, "dout_mscl_blk", "aclk400_mscl", DIV2_RATIO0, 28, 2),
--
- 	/* PSGEN */
- 	DIV(0, "dout_gen_blk", "mout_user_aclk266", DIV2_RATIO0, 8, 1),
- 	DIV(0, "dout_jpg_blk", "aclk166", DIV2_RATIO0, 20, 1),
-@@ -1136,17 +1133,6 @@ static const struct samsung_gate_clock exynos5x_gate_clks[] __initconst = {
- 	GATE(CLK_FIMC_LITE3, "fimc_lite3", "aclk333_432_gscl",
- 			GATE_IP_GSCL1, 17, 0, 0),
- 
--	/* MSCL Block */
--	GATE(CLK_MSCL0, "mscl0", "aclk400_mscl", GATE_IP_MSCL, 0, 0, 0),
--	GATE(CLK_MSCL1, "mscl1", "aclk400_mscl", GATE_IP_MSCL, 1, 0, 0),
--	GATE(CLK_MSCL2, "mscl2", "aclk400_mscl", GATE_IP_MSCL, 2, 0, 0),
--	GATE(CLK_SMMU_MSCL0, "smmu_mscl0", "dout_mscl_blk",
--			GATE_IP_MSCL, 8, 0, 0),
--	GATE(CLK_SMMU_MSCL1, "smmu_mscl1", "dout_mscl_blk",
--			GATE_IP_MSCL, 9, 0, 0),
--	GATE(CLK_SMMU_MSCL2, "smmu_mscl2", "dout_mscl_blk",
--			GATE_IP_MSCL, 10, 0, 0),
--
- 	/* ISP */
- 	GATE(CLK_SCLK_UART_ISP, "sclk_uart_isp", "dout_uart_isp",
- 			GATE_TOP_SCLK_ISP, 0, CLK_SET_RATE_PARENT, 0),
-@@ -1229,6 +1215,28 @@ static struct exynos5_subcmu_reg_dump exynos5x_mfc_suspend_regs[] = {
- 	{ DIV4_RATIO, 0, 0x3 },			/* DIV dout_mfc_blk */
+diff --git a/include/net/netfilter/nf_tables.h b/include/net/netfilter/nf_tables.h
+index 5b8624ae4a27f..930d062940b7d 100644
+--- a/include/net/netfilter/nf_tables.h
++++ b/include/net/netfilter/nf_tables.h
+@@ -419,8 +419,7 @@ struct nft_set {
+ 	unsigned char			*udata;
+ 	/* runtime data below here */
+ 	const struct nft_set_ops	*ops ____cacheline_aligned;
+-	u16				flags:13,
+-					bound:1,
++	u16				flags:14,
+ 					genmask:2;
+ 	u8				klen;
+ 	u8				dlen;
+@@ -1333,12 +1332,15 @@ struct nft_trans_rule {
+ struct nft_trans_set {
+ 	struct nft_set			*set;
+ 	u32				set_id;
++	bool				bound;
  };
  
-+static const struct samsung_gate_clock exynos5x_mscl_gate_clks[] __initconst = {
-+	/* MSCL Block */
-+	GATE(CLK_MSCL0, "mscl0", "aclk400_mscl", GATE_IP_MSCL, 0, 0, 0),
-+	GATE(CLK_MSCL1, "mscl1", "aclk400_mscl", GATE_IP_MSCL, 1, 0, 0),
-+	GATE(CLK_MSCL2, "mscl2", "aclk400_mscl", GATE_IP_MSCL, 2, 0, 0),
-+	GATE(CLK_SMMU_MSCL0, "smmu_mscl0", "dout_mscl_blk",
-+			GATE_IP_MSCL, 8, 0, 0),
-+	GATE(CLK_SMMU_MSCL1, "smmu_mscl1", "dout_mscl_blk",
-+			GATE_IP_MSCL, 9, 0, 0),
-+	GATE(CLK_SMMU_MSCL2, "smmu_mscl2", "dout_mscl_blk",
-+			GATE_IP_MSCL, 10, 0, 0),
-+};
-+
-+static const struct samsung_div_clock exynos5x_mscl_div_clks[] __initconst = {
-+	DIV(0, "dout_mscl_blk", "aclk400_mscl", DIV2_RATIO0, 28, 2),
-+};
-+
-+static struct exynos5_subcmu_reg_dump exynos5x_mscl_suspend_regs[] = {
-+	{ GATE_IP_MSCL, 0xffffffff, 0xffffffff }, /* MSCL gates */
-+	{ SRC_TOP3, 0, BIT(4) },		/* MUX mout_user_aclk400_mscl */
-+	{ DIV2_RATIO0, 0, 0x30000000 },		/* DIV dout_mscl_blk */
-+};
+ #define nft_trans_set(trans)	\
+ 	(((struct nft_trans_set *)trans->data)->set)
+ #define nft_trans_set_id(trans)	\
+ 	(((struct nft_trans_set *)trans->data)->set_id)
++#define nft_trans_set_bound(trans)	\
++	(((struct nft_trans_set *)trans->data)->bound)
  
- static const struct samsung_gate_clock exynos5800_mau_gate_clks[] __initconst = {
- 	GATE(CLK_MAU_EPLL, "mau_epll", "mout_user_mau_epll",
-@@ -1273,6 +1281,16 @@ static const struct exynos5_subcmu_info exynos5x_mfc_subcmu = {
- 	.pd_name	= "MFC",
+ struct nft_trans_chain {
+ 	bool				update;
+@@ -1369,12 +1371,15 @@ struct nft_trans_table {
+ struct nft_trans_elem {
+ 	struct nft_set			*set;
+ 	struct nft_set_elem		elem;
++	bool				bound;
  };
  
-+static const struct exynos5_subcmu_info exynos5x_mscl_subcmu = {
-+	.div_clks	= exynos5x_mscl_div_clks,
-+	.nr_div_clks	= ARRAY_SIZE(exynos5x_mscl_div_clks),
-+	.gate_clks	= exynos5x_mscl_gate_clks,
-+	.nr_gate_clks	= ARRAY_SIZE(exynos5x_mscl_gate_clks),
-+	.suspend_regs	= exynos5x_mscl_suspend_regs,
-+	.nr_suspend_regs = ARRAY_SIZE(exynos5x_mscl_suspend_regs),
-+	.pd_name	= "MSC",
-+};
-+
- static const struct exynos5_subcmu_info exynos5800_mau_subcmu = {
- 	.gate_clks	= exynos5800_mau_gate_clks,
- 	.nr_gate_clks	= ARRAY_SIZE(exynos5800_mau_gate_clks),
-@@ -1285,12 +1303,14 @@ static const struct exynos5_subcmu_info *exynos5x_subcmus[] = {
- 	&exynos5x_disp_subcmu,
- 	&exynos5x_gsc_subcmu,
- 	&exynos5x_mfc_subcmu,
-+	&exynos5x_mscl_subcmu,
- };
+ #define nft_trans_elem_set(trans)	\
+ 	(((struct nft_trans_elem *)trans->data)->set)
+ #define nft_trans_elem(trans)	\
+ 	(((struct nft_trans_elem *)trans->data)->elem)
++#define nft_trans_elem_set_bound(trans)	\
++	(((struct nft_trans_elem *)trans->data)->bound)
  
- static const struct exynos5_subcmu_info *exynos5800_subcmus[] = {
- 	&exynos5x_disp_subcmu,
- 	&exynos5x_gsc_subcmu,
- 	&exynos5x_mfc_subcmu,
-+	&exynos5x_mscl_subcmu,
- 	&exynos5800_mau_subcmu,
- };
+ struct nft_trans_obj {
+ 	struct nft_object		*obj;
+diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+index bcf17fb46d965..8e4cdae2c4f14 100644
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -136,9 +136,14 @@ static void nft_set_trans_bind(const struct nft_ctx *ctx, struct nft_set *set)
+ 		return;
  
+ 	list_for_each_entry_reverse(trans, &net->nft.commit_list, list) {
+-		if (trans->msg_type == NFT_MSG_NEWSET &&
+-		    nft_trans_set(trans) == set) {
+-			set->bound = true;
++		switch (trans->msg_type) {
++		case NFT_MSG_NEWSET:
++			if (nft_trans_set(trans) == set)
++				nft_trans_set_bound(trans) = true;
++			break;
++		case NFT_MSG_NEWSETELEM:
++			if (nft_trans_elem_set(trans) == set)
++				nft_trans_elem_set_bound(trans) = true;
+ 			break;
+ 		}
+ 	}
+@@ -6849,7 +6854,7 @@ static int __nf_tables_abort(struct net *net)
+ 			break;
+ 		case NFT_MSG_NEWSET:
+ 			trans->ctx.table->use--;
+-			if (nft_trans_set(trans)->bound) {
++			if (nft_trans_set_bound(trans)) {
+ 				nft_trans_destroy(trans);
+ 				break;
+ 			}
+@@ -6861,7 +6866,7 @@ static int __nf_tables_abort(struct net *net)
+ 			nft_trans_destroy(trans);
+ 			break;
+ 		case NFT_MSG_NEWSETELEM:
+-			if (nft_trans_elem_set(trans)->bound) {
++			if (nft_trans_elem_set_bound(trans)) {
+ 				nft_trans_destroy(trans);
+ 				break;
+ 			}
 -- 
 2.20.1
 
