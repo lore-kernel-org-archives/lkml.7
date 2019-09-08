@@ -2,100 +2,140 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C81C3C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 08:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 663CCC4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 08:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C2A12081B
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 08:10:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 387432081B
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 08:10:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ELop5NzE"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="HzOGhYLr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbfIHIKB (ORCPT
+        id S1726961AbfIHIKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 04:10:01 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41896 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726887AbfIHIKB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 04:10:01 -0400
-Received: by mail-lj1-f193.google.com with SMTP id a4so9738328ljk.8
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 01:09:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rK3idBChgXpZBYEMCk4smWWhaKLMi7X3IKqLIeI2HXw=;
-        b=ELop5NzEmw8P2dhvnHe7o1eUrVsiLJI/cSOVdZqbI5Wo2ejzGRFGW3h9c/WvRte4q/
-         mHYhwBl9IpsuIaT9p7pUYt/+3+wxzJr3NERGAtY3USrOgzkZGj/rQmgquTme7pRjru16
-         u4k8OstlsaHDDw+vP+T2uNAFQ8vD806YJQuy5p/3TR7hBQFig3cec+VhkjkoOhb+uF4+
-         kpLRw43nux7w+XVgVyKWwTa1PqAHFQAn1juU7NRxVj+UZz6uI/uDqEEgcXJtxZSTIQu2
-         EXcL1Fk+q70zVG4baK4yQdHELKHdf8bgPwc4iOGXgDXH5BzCntFeq79d92I9DHUe90Pm
-         zA4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rK3idBChgXpZBYEMCk4smWWhaKLMi7X3IKqLIeI2HXw=;
-        b=Tfcm2dmjpa++EXeU7abJYwm4rbL3DhnMmD5Dt1dDsVqI4N7A7tNzauZf4sDFIlttpL
-         vQ1KVu/dD9xTGUHbYjn9RcRKtblr567R+GXWqeFmIVhESnA2zsUjSxECP9ED6/RAXyVY
-         ey0OgNt/mjDSK36GBeIyHra6QEZaDsJZd5Fu67j9dbDrcx/7NIiSLTiWY57H7P5kFR3Q
-         +/TCh/FcGG6MtVIkskZj1ilYBEgC9D9Eyp856CMNkRAr9cpZmvG3BAN1X5+zpTE/+6No
-         z/WoQqFqJtXDLtGZX4kX+Fl289RXk0Mb4bfZwfBznJzGDZ9GNNVLSXvaCEdunEMoRqHP
-         wVgg==
-X-Gm-Message-State: APjAAAWG655q1yNmHLiMH2QxsQLmPcmMnlvic9iXc/oq9lUBK+83q+Cx
-        kcxrtfOV0S9kecYMmZfWw0I68kkwFJ7qXeHptKY7ZfWJ3Fp2tQ==
-X-Google-Smtp-Source: APXvYqwQ4r+VRrfjdBn6nVPHnlf3wdFS7wvaHGxSg7UmgOUz8Ir+bHVwQpF3laZCpkO2TkPU4AWjbK20Ax50t3J5XsQ=
-X-Received: by 2002:a2e:9dc3:: with SMTP id x3mr7787513ljj.108.1567930198762;
- Sun, 08 Sep 2019 01:09:58 -0700 (PDT)
+        Sun, 8 Sep 2019 04:10:31 -0400
+Received: from mail-eopbgr30084.outbound.protection.outlook.com ([40.107.3.84]:26343
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726887AbfIHIKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 04:10:30 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=R/c3+BGgXbQoAeP10ZAWY/o8KZqOchfTIXvQKbTW0BZN1jx1hHV9IryXnBhyRfCHguTfOYQNI7LB6ebmWs1tnUDZrFNSoOyAtCoJA1NEo4GEyPCyS3m1lwS0abIhuFiZEVY4fkaWLf2zb7wVKQJhM54M1uINfOJfGAgrBP/H45VEWXYJSxk9+e00ClyIxelP/OBQbqhMZj/FIr06+TavF9EWmUtsMBmK9qYi8zV+/kkO1FCSaZ739pqNq0S7QjkgtsRIhms6D484M2c5a/iIQhsNRccGr0ES35iBOToO076qwox7LP0hPUBrs/Zp1KCAipT3PDmJZFk1RgoubXuzgA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=50kO4/Gp3LkG2Rky5u0yz5FbBmLLNh2EUDsvE6XbuSQ=;
+ b=UEihqBUnWEwuIHbn1EURrUFjhzmO4URqiYR4FgB6Xano7vj88L3GpeP8i9llzgqBWpqjWtit56MncYPNu+FE6TWJBF+eTo9k3GRjDW4ZhWpJSZwNp9V4Si34vTq1tnkqWQaJy1X6uvdrFoXO9lh7IZ3Ib+uLR5ps6jPvbfDd1thi0zLeUOXNv8LjCq+dutVud36Sxh7Hi3WCmrFconu2bLx/UPCyUMDlpDG+3s0RgFxjyKVvpa66h/tLGKhDnJtv4F1HWY8JOQyVVwHlVOu8uGYaoDRVx88yrW6ucip9IJebO44KTDohzAUhQmODezdLRSZ81WwEXS5XPw5U7tmnIQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=50kO4/Gp3LkG2Rky5u0yz5FbBmLLNh2EUDsvE6XbuSQ=;
+ b=HzOGhYLrwsVj4FrvgsgJITUDJdch9OtzlsKEgLNM8eA7pmya8mXyRKf9ZEBHZ83ajeUBWoZL0HxuOPjZ8jraWdkjmTb1MmFTI1I0t8PRSAyPvKW0Os2TUDsn7vKjI30MnJCSuRfoz68rXSuqXWTNIgdB1jiW36SSLrxgsaH09gM=
+Received: from AM4PR05MB3137.eurprd05.prod.outlook.com (10.171.188.155) by
+ AM4PR05MB3441.eurprd05.prod.outlook.com (10.171.188.160) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.21; Sun, 8 Sep 2019 08:10:26 +0000
+Received: from AM4PR05MB3137.eurprd05.prod.outlook.com
+ ([fe80::e826:7a52:5488:2b6f]) by AM4PR05MB3137.eurprd05.prod.outlook.com
+ ([fe80::e826:7a52:5488:2b6f%7]) with mapi id 15.20.2199.027; Sun, 8 Sep 2019
+ 08:10:26 +0000
+From:   Leon Romanovsky <leonro@mellanox.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Shiraz Saleem <shiraz.saleem@intel.com>,
+        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ib_umem: fix type mismatch
+Thread-Topic: [PATCH] ib_umem: fix type mismatch
+Thread-Index: AQHVZMnBKDP0iI/3WEGssN3nZ5iyQqchcCUA
+Date:   Sun, 8 Sep 2019 08:10:26 +0000
+Message-ID: <20190908081022.GD26697@unreal>
+References: <20190906154243.2282560-1-arnd@arndb.de>
+In-Reply-To: <20190906154243.2282560-1-arnd@arndb.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM4PR05CA0030.eurprd05.prod.outlook.com (2603:10a6:205::43)
+ To AM4PR05MB3137.eurprd05.prod.outlook.com (2603:10a6:205:8::27)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leonro@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [77.137.95.132]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 28323dd4-0562-4641-50f6-08d734340158
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM4PR05MB3441;
+x-ms-traffictypediagnostic: AM4PR05MB3441:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM4PR05MB3441D4EBCFED40AF2921F902B0B40@AM4PR05MB3441.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0154C61618
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(136003)(346002)(396003)(39850400004)(376002)(366004)(189003)(199004)(102836004)(186003)(446003)(25786009)(71200400001)(99286004)(316002)(5660300002)(66446008)(1076003)(476003)(66556008)(64756008)(86362001)(3846002)(66476007)(6116002)(66946007)(33656002)(966005)(11346002)(7736002)(33716001)(14454004)(478600001)(53936002)(6246003)(486006)(6512007)(2906002)(81156014)(81166006)(6486002)(66066001)(9686003)(6916009)(229853002)(6506007)(14444005)(26005)(256004)(8936002)(76176011)(386003)(6306002)(54906003)(52116002)(71190400001)(4326008)(305945005)(6436002)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM4PR05MB3441;H:AM4PR05MB3137.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: sgsm4ltbFEbuLpe+ICF3EO/WuSpKaz6vpkltwUnyZ5hOc1wulY0lHd3zSP/RYac+CGE+N6RC9b4x2zP2Y9ikKIsbP5XirLzMechhqtKWtnwl8pDqxf92lG5kOHl3dOOh2D06IkxitGUsKAtoZiTUyN0LxYFDKmORSm4MZbhAOk1UvTKVZKo3L7NbeeK0fgabu2dwt0A39LHJLHy3TJ8okrdwlu6VeAo5dUpTwg+YX3E44JWu8mFgagLksB/M/R8GOWIMVkWKVMZtf2p3XitMBdPmqG++kvitXckY7Q/HTwq7z2mKZVH+dzL9qqW0kje4o3q/XY2slwqT7hIpzUOjpUKKODotNwkjuEYgdK6gezKBXgoAbNS/bs8SKxsNiw4F2/7ysDmP5YR2umAczjB89Pz45bsVlHn+HEPpYQQBSyU=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <AA26B0A927FF7949822EDA1C4ACA620A@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <156776809772.24167.8650737097914479700.tip-bot2@tip-bot2>
-In-Reply-To: <156776809772.24167.8650737097914479700.tip-bot2@tip-bot2>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 8 Sep 2019 09:09:47 +0100
-Message-ID: <CACRpkdZs9KLaGnU7JrJDviyYwT1PX=pWb5z179t8-XE7ZSGjTA@mail.gmail.com>
-Subject: Re: [tip: irq/core] gpio/ixp4xx: Register the base PA instead of its
- VA in fwnode
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     linux-tip-commits@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Borislav Petkov <bp@alien8.de>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 28323dd4-0562-4641-50f6-08d734340158
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Sep 2019 08:10:26.6040
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: haUQg5nX1vFqJ/gcqFGHs6KAr+CdD93ZbfWCXB+o8CouUq97ufvv4Rsje9U2XwNsuoD+UaVJ1ZGskt4tmlj09g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR05MB3441
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 6, 2019 at 12:08 PM tip-bot2 for Marc Zyngier
-<tip-bot2@linutronix.de> wrote:
-
-> The following commit has been merged into the irq/core branch of tip:
+On Fri, Sep 06, 2019 at 05:42:37PM +0200, Arnd Bergmann wrote:
+> On some 32-bit architectures, size_t is defined as 'int' rather
+> than 'long', causing a harmless warning:
 >
-> Commit-ID:     daa19fe5b082779962988a5ba9e38509004db3de
-> Gitweb:        https://git.kernel.org/tip/daa19fe5b082779962988a5ba9e38509004db3de
-> Author:        Marc Zyngier <maz@kernel.org>
-> AuthorDate:    Wed, 31 Jul 2019 16:13:42 +01:00
-> Committer:     Marc Zyngier <maz@kernel.org>
-> CommitterDate: Wed, 07 Aug 2019 14:24:45 +01:00
+> drivers/infiniband/core/umem_odp.c:220:7: error: comparison of distinct p=
+ointer types ('typeof (umem_odp->umem.address) *' (aka 'unsigned long *') a=
+nd 'typeof (umem_odp->umem.length) *' (aka 'unsigned int *')) [-Werror,-Wco=
+mpare-distinct-pointer-types]
+>                 if (check_add_overflow(umem_odp->umem.address,
+>                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> include/linux/overflow.h:59:15: note: expanded from macro 'check_add_over=
+flow'
+>         (void) (&__a =3D=3D &__b);                  \
+>                 ~~~~ ^  ~~~~
 >
-> gpio/ixp4xx: Register the base PA instead of its VA in fwnode
+> As size_t is always the same length as unsigned long in all supported
+> architectures, change the structure definition to use the unsigned long
+> type for both.
 >
-> Do not expose the base VA (it appears in debugfs). Instead,
-> record the PA, which at least can be used to precisely identify
-> the associated irqchip and domain.
+> Fixes: 204e3e5630c5 ("RDMA/odp: Check for overflow when computing the ume=
+m_odp end")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  include/rdma/ib_umem.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Acked-by: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
 
-I think that patch is already in my gpio devel branch.
+Hi Arnd,
 
-But I guess it doesn't hurt either, git will figure it out.
+I had slightly different fix in my submission queue, which I think is
+better because it leaves length to be size_t.
 
-Yours,
-Linus Walleij
+https://lore.kernel.org/linux-rdma/20190908080726.30017-1-leon@kernel.org/T=
+/#u
+
+Thanks
