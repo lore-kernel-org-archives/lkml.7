@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 461DEC4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE120C4360D
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20DC020828
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEAD720854
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:43:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="YIGG+kJs"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="nG6KyFZy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728556AbfIHNn2 (ORCPT
+        id S1728585AbfIHNn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 09:43:28 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53886 "EHLO
+        Sun, 8 Sep 2019 09:43:29 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33922 "EHLO
         mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728326AbfIHNnL (ORCPT
+        with ESMTP id S1728335AbfIHNnL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 8 Sep 2019 09:43:11 -0400
-Received: by mail-wm1-f68.google.com with SMTP id q19so10916237wmc.3
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 06:43:10 -0700 (PDT)
+Received: by mail-wm1-f68.google.com with SMTP id y135so10877386wmc.1
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 06:43:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=QWP79fY1JKJ4Q8J2pghEAh/SdWHmEms4TAuDdfokLg8=;
-        b=YIGG+kJsJiFhCq3dqmypto366EH9ax3zhx8JVdur/EKxb+SmXYRhG28v5Z63pHp8zN
-         OCBmiFSYfe7EbgzmvvQaWF4jBUbNCHjb9U0uhY77dUiOkRvq2CMyuS33EiGQ1utr7OIc
-         FSZ93GRxpYLtF1fMwZa+LFkGEvZhyMQY8xVOcASm877jwvppWgo75O/hfqkKQO9lGgMA
-         YU3yblmv3OwAATFQ7hetuxDEb7YPDEjN6U0gFc2BopqhFn6UIR0AkAOHbFOuRMJSyIwx
-         OV9fpvur/5+VTfiqO6r29dWMVSjemOfYtPgj6bolH2f9y307wxErNay27xD8B2Elh0Vp
-         qhpA==
+        bh=GfU3+s0+ry1VaN8+GjjuqfUgRel0oGwdsijTY+FcD+E=;
+        b=nG6KyFZyzSd3lTnGM5OP0RP5rl1BXxFirerAxOlFlCgvkh9kgICw0TRsZNyrZG29rv
+         U50N5G0BoU62C/44fOS/2xXU9rtB9fYAQWqPxvprWVYUVpRN+qqdcnldv4sOj4FHRts+
+         Trz0KUu8QEiAdo9QNqxJ3X40hDGBW2E0pDWmNj3oZvQpwghUZA2SZAb4vrJ8T5S4nCdD
+         wcgN+MLFNgeSK24EQk6mrM+2bGQaVn3uSJR1uZeJxFShK/X4MKZdBJMs8moCLhj7PXuH
+         eLPQP1KEVSX+WZj+66OObsiGqJLAO3IPYgBqccEde9zB7MuyRFIXWb5JS5/ozFowccea
+         kW3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=QWP79fY1JKJ4Q8J2pghEAh/SdWHmEms4TAuDdfokLg8=;
-        b=m1Q8GgbNn/6QUzgQkOVlJJvmYzNP0RcsGoHULFdGIHO+dbNWKMYBl7xc87Mm4oJm5q
-         BGVDIZgFfDF4xEu/8hgD5vhfh8QRHQKzH9/7i6V8v7+CC1+PNWoP8Knl6PPKuf3qeqAu
-         /L+h0lJa28Gml9wJENuqqLpsmjPGqAD9TrDhYYXoL97h7MLsRHP62WMBgJTH0uh4QiyF
-         dbbHM21LkIF2LVoNzhdH/MgGV1k0LdShTzG32+BT/d9SDyO+sn/rU1lvvCyjYtwiVmXM
-         aU3WzbwL8d4j2HdvavYB8zsiag49fE3AnXbWiz15Zp/DMKcx1JTa70ydPtVwzXlyyBXY
-         6HKw==
-X-Gm-Message-State: APjAAAUBhn+tRvllt6fpBezTeCj1QphrEN7ns5ad3v6QuZqWXH+jp/w0
-        AbEp6gFgoPm5qjNsxokDPC2BiQ==
-X-Google-Smtp-Source: APXvYqwdzoUJ+xfSz6GH/LJMRb9Td9tMK7kXH9Jy2I+h19yDQS7ztmE9hdHBq8Oox4JtUbGCGnVL4w==
-X-Received: by 2002:a1c:ca02:: with SMTP id a2mr16087461wmg.127.1567950189470;
-        Sun, 08 Sep 2019 06:43:09 -0700 (PDT)
+        bh=GfU3+s0+ry1VaN8+GjjuqfUgRel0oGwdsijTY+FcD+E=;
+        b=IJRmzjgebjZ8/Y/5FiK6afPHWCvopSpwK6FdIkTf1M9uHDOF84ubYQfMWbGm9c5/SO
+         +tIqy8e/FbAJJOW+5nM0e3/WrXQ3/suJ+m4rlzH05JL1i0VoSHqlS6YI0KNCF02Xe7cf
+         V2w0A6fNRRGopLcp6z/sQQZaNv39wZOkonh6JyECSFta6JVMnRG11h0t3xm9+Kp1CSon
+         mZwT8VJoX/PS7qL4RCufvO2WKgUOIsMMTcmHBFslq73vidspL3Vr9yWKgl5gRs31RlCP
+         jiTM0QjIZgSAOvYlIPx8gBQnyUXW4vW8FqPUEa5rYRvKRmj0H/SPp3afXDl6JhB/czcM
+         u2Qg==
+X-Gm-Message-State: APjAAAV3ZBbupsqDxzlEoQyIgvuaqT43HORAzQ6i+eBfqOynQ+L5CXO9
+        EMF3/ObH1cDaUpKdkd9DIIEhqQ==
+X-Google-Smtp-Source: APXvYqzndw8eyWZ7iSFESAG+kDNagu9LNZEB3kEthX6tLxpNMOHYN2mWWFFVMXcjejH6Fuzlt9wymA==
+X-Received: by 2002:a1c:4082:: with SMTP id n124mr15773002wma.154.1567950188213;
+        Sun, 08 Sep 2019 06:43:08 -0700 (PDT)
 Received: from localhost.localdomain ([51.15.160.169])
-        by smtp.gmail.com with ESMTPSA id t203sm14313902wmf.42.2019.09.08.06.43.08
+        by smtp.gmail.com with ESMTPSA id t203sm14313902wmf.42.2019.09.08.06.43.06
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 08 Sep 2019 06:43:09 -0700 (PDT)
+        Sun, 08 Sep 2019 06:43:07 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     khilman@baylibre.com, bhelgaas@google.com,
         lorenzo.pieralisi@arm.com, yue.wang@Amlogic.com, kishon@ti.com
@@ -62,9 +62,9 @@ Cc:     repk@triplefau.lt, Neil Armstrong <narmstrong@baylibre.com>,
         maz@kernel.org, linux-amlogic@lists.infradead.org,
         linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 5/6] arm64: dts: meson-g12a: Add PCIe node
-Date:   Sun,  8 Sep 2019 13:42:57 +0000
-Message-Id: <1567950178-4466-6-git-send-email-narmstrong@baylibre.com>
+Subject: [PATCH 3/6] PCI: amlogic: meson: Add support for G12A
+Date:   Sun,  8 Sep 2019 13:42:55 +0000
+Message-Id: <1567950178-4466-4-git-send-email-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1567950178-4466-1-git-send-email-narmstrong@baylibre.com>
 References: <1567950178-4466-1-git-send-email-narmstrong@baylibre.com>
@@ -73,62 +73,216 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds the Amlogic G12A PCI Express controller node, also
-using the USB3+PCIe Combo PHY.
+Add support for the Amlogic G12A SoC using a separate shared PHY.
 
-The PHY mode selection is static, thus the USB3+PCIe Combo PHY
-phandle would need to be removed from the USB control node if the
-shared differentil lines are used for PCIe instead of USB3.
+This adds support for fetching a PHY phandle and call the PHY init,
+reset and power on/off calls instead of writing in the PHY register or
+toggling the PHY reset line.
+
+The MIPI clock is also made optional since it is used for setting up
+the PHY reference clock chared with the DSI controller on AXG.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- .../boot/dts/amlogic/meson-g12-common.dtsi    | 33 +++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ drivers/pci/controller/dwc/pci-meson.c | 101 ++++++++++++++++++++-----
+ 1 file changed, 84 insertions(+), 17 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-index 852cf9cf121b..7330dc37b7a6 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-@@ -95,6 +95,39 @@
- 		#size-cells = <2>;
- 		ranges;
+diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
+index ab79990798f8..3fadad381762 100644
+--- a/drivers/pci/controller/dwc/pci-meson.c
++++ b/drivers/pci/controller/dwc/pci-meson.c
+@@ -16,6 +16,7 @@
+ #include <linux/reset.h>
+ #include <linux/resource.h>
+ #include <linux/types.h>
++#include <linux/phy/phy.h>
  
-+		pcie: pcie@fc000000 {
-+			compatible = "amlogic,g12a-pcie", "snps,dw-pcie";
-+			reg = <0x0 0xfc000000 0x0 0x400000
-+			       0x0 0xff648000 0x0 0x2000
-+			       0x0 0xfc400000 0x0 0x200000>;
-+			reg-names = "elbi", "cfg", "config";
-+			interrupts = <GIC_SPI 221 IRQ_TYPE_LEVEL_HIGH>;
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0 0 0 0>;
-+			interrupt-map = <0 0 0 0 &gic GIC_SPI 223 IRQ_TYPE_LEVEL_HIGH>;
-+			bus-range = <0x0 0xff>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			device_type = "pci";
-+			ranges = <0x81000000 0 0 0x0 0xfc600000 0 0x00100000
-+				  0x82000000 0 0xfc700000 0x0 0xfc700000 0 0x1900000>;
+ #include "pcie-designware.h"
+ 
+@@ -96,12 +97,18 @@ struct meson_pcie_rc_reset {
+ 	struct reset_control *apb;
+ };
+ 
++struct meson_pcie_param {
++	bool has_shared_phy;
++};
 +
-+			clocks = <&clkc CLKID_PCIE_PHY
-+				  &clkc CLKID_PCIE_COMB
-+				  &clkc CLKID_PCIE_PLL>;
-+			clock-names = "general",
-+				      "pclk",
-+				      "port";
-+			resets = <&reset RESET_PCIE_CTRL_A>,
-+				 <&reset RESET_PCIE_APB>;
-+			reset-names = "port",
-+				      "apb";
-+			num-lanes = <1>;
-+			phys = <&usb3_pcie_phy PHY_TYPE_PCIE>;
-+			phy-names = "pcie";
-+			status = "disabled";
-+		};
+ struct meson_pcie {
+ 	struct dw_pcie pci;
+ 	struct meson_pcie_mem_res mem_res;
+ 	struct meson_pcie_clk_res clk_res;
+ 	struct meson_pcie_rc_reset mrst;
+ 	struct gpio_desc *reset_gpio;
++	struct phy *phy;
++	const struct meson_pcie_param *param;
+ };
+ 
+ static struct reset_control *meson_pcie_get_reset(struct meson_pcie *mp,
+@@ -123,10 +130,12 @@ static int meson_pcie_get_resets(struct meson_pcie *mp)
+ {
+ 	struct meson_pcie_rc_reset *mrst = &mp->mrst;
+ 
+-	mrst->phy = meson_pcie_get_reset(mp, "phy", PCIE_SHARED_RESET);
+-	if (IS_ERR(mrst->phy))
+-		return PTR_ERR(mrst->phy);
+-	reset_control_deassert(mrst->phy);
++	if (!mp->param->has_shared_phy) {
++		mrst->phy = meson_pcie_get_reset(mp, "phy", PCIE_SHARED_RESET);
++		if (IS_ERR(mrst->phy))
++			return PTR_ERR(mrst->phy);
++		reset_control_deassert(mrst->phy);
++	}
+ 
+ 	mrst->port = meson_pcie_get_reset(mp, "port", PCIE_NORMAL_RESET);
+ 	if (IS_ERR(mrst->port))
+@@ -180,6 +189,9 @@ static int meson_pcie_get_mems(struct platform_device *pdev,
+ 	if (IS_ERR(mp->mem_res.cfg_base))
+ 		return PTR_ERR(mp->mem_res.cfg_base);
+ 
++	if (mp->param->has_shared_phy)
++		return 0;
 +
- 		ethmac: ethernet@ff3f0000 {
- 			compatible = "amlogic,meson-axg-dwmac",
- 				     "snps,dwmac-3.70a",
+ 	/* Meson SoC has two PCI controllers use same phy register*/
+ 	mp->mem_res.phy_base = meson_pcie_get_mem_shared(pdev, mp, "phy");
+ 	if (IS_ERR(mp->mem_res.phy_base))
+@@ -188,19 +200,33 @@ static int meson_pcie_get_mems(struct platform_device *pdev,
+ 	return 0;
+ }
+ 
+-static void meson_pcie_power_on(struct meson_pcie *mp)
++static int meson_pcie_power_on(struct meson_pcie *mp)
+ {
+-	writel(MESON_PCIE_PHY_POWERUP, mp->mem_res.phy_base);
++	int ret = 0;
++
++	if (mp->param->has_shared_phy)
++		ret = phy_power_on(mp->phy);
++	else
++		writel(MESON_PCIE_PHY_POWERUP, mp->mem_res.phy_base);
++
++	return ret;
+ }
+ 
+-static void meson_pcie_reset(struct meson_pcie *mp)
++static int meson_pcie_reset(struct meson_pcie *mp)
+ {
+ 	struct meson_pcie_rc_reset *mrst = &mp->mrst;
+-
+-	reset_control_assert(mrst->phy);
+-	udelay(PCIE_RESET_DELAY);
+-	reset_control_deassert(mrst->phy);
+-	udelay(PCIE_RESET_DELAY);
++	int ret = 0;
++
++	if (mp->param->has_shared_phy) {
++		ret = phy_reset(mp->phy);
++		if (ret)
++			return ret;
++	} else {
++		reset_control_assert(mrst->phy);
++		udelay(PCIE_RESET_DELAY);
++		reset_control_deassert(mrst->phy);
++		udelay(PCIE_RESET_DELAY);
++	}
+ 
+ 	reset_control_assert(mrst->port);
+ 	reset_control_assert(mrst->apb);
+@@ -208,6 +234,8 @@ static void meson_pcie_reset(struct meson_pcie *mp)
+ 	reset_control_deassert(mrst->port);
+ 	reset_control_deassert(mrst->apb);
+ 	udelay(PCIE_RESET_DELAY);
++
++	return 0;
+ }
+ 
+ static inline struct clk *meson_pcie_probe_clock(struct device *dev,
+@@ -250,9 +278,11 @@ static int meson_pcie_probe_clocks(struct meson_pcie *mp)
+ 	if (IS_ERR(res->port_clk))
+ 		return PTR_ERR(res->port_clk);
+ 
+-	res->mipi_gate = meson_pcie_probe_clock(dev, "mipi", 0);
+-	if (IS_ERR(res->mipi_gate))
+-		return PTR_ERR(res->mipi_gate);
++	if (!mp->param->has_shared_phy) {
++		res->mipi_gate = meson_pcie_probe_clock(dev, "mipi", 0);
++		if (IS_ERR(res->mipi_gate))
++			return PTR_ERR(res->mipi_gate);
++	}
+ 
+ 	res->general_clk = meson_pcie_probe_clock(dev, "general", 0);
+ 	if (IS_ERR(res->general_clk))
+@@ -524,6 +554,7 @@ static const struct dw_pcie_ops dw_pcie_ops = {
+ 
+ static int meson_pcie_probe(struct platform_device *pdev)
+ {
++	const struct meson_pcie_param *match_data;
+ 	struct device *dev = &pdev->dev;
+ 	struct dw_pcie *pci;
+ 	struct meson_pcie *mp;
+@@ -537,6 +568,20 @@ static int meson_pcie_probe(struct platform_device *pdev)
+ 	pci->dev = dev;
+ 	pci->ops = &dw_pcie_ops;
+ 
++	match_data = of_device_get_match_data(dev);
++	if (!match_data) {
++		dev_err(dev, "failed to get match data\n");
++		return -ENODEV;
++	}
++	mp->param = match_data;
++
++	if (mp->param->has_shared_phy) {
++		mp->phy = devm_phy_get(dev, "pcie");
++		if (IS_ERR(mp->phy)) {
++			return PTR_ERR(mp->phy);
++		}
++	}
++
+ 	mp->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+ 	if (IS_ERR(mp->reset_gpio)) {
+ 		dev_err(dev, "get reset gpio failed\n");
+@@ -555,8 +600,17 @@ static int meson_pcie_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
+-	meson_pcie_power_on(mp);
+-	meson_pcie_reset(mp);
++	ret = meson_pcie_power_on(mp);
++	if (ret) {
++		dev_err(dev, "phy power on failed, %d\n", ret);
++		return ret;
++	}
++
++	ret = meson_pcie_reset(mp);
++	if (ret) {
++		dev_err(dev, "reset failed, %d\n", ret);
++		return ret;
++	}
+ 
+ 	ret = meson_pcie_probe_clocks(mp);
+ 	if (ret) {
+@@ -575,9 +629,22 @@ static int meson_pcie_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static struct meson_pcie_param meson_pcie_axg_param = {
++	.has_shared_phy = false,
++};
++
++static struct meson_pcie_param meson_pcie_g12a_param = {
++	.has_shared_phy = true,
++};
++
+ static const struct of_device_id meson_pcie_of_match[] = {
+ 	{
+ 		.compatible = "amlogic,axg-pcie",
++		.data = &meson_pcie_axg_param,
++	},
++	{
++		.compatible = "amlogic,g12a-pcie",
++		.data = &meson_pcie_g12a_param,
+ 	},
+ 	{},
+ };
 -- 
 2.17.1
 
