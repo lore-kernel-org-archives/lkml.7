@@ -2,155 +2,111 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B17AC4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 06:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D57DEC4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 06:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21988214D9
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 06:08:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A55E3214DB
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 06:27:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (4096-bit key) header.d=kolabnow.com header.i=@kolabnow.com header.b="k7HMG2uG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728348AbfIHGIm (ORCPT
+        id S1727793AbfIHG1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 02:08:42 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:34441 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726457AbfIHGIK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 02:08:10 -0400
-Received: by mail-io1-f72.google.com with SMTP id m25so13641019ioo.1
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Sep 2019 23:08:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=pme/QyPd22Xy2cwaK6YbwcbICE7ZavNElMJ6SFqTvEw=;
-        b=P2US/CxuMrKi8YXemgJGk8rSNTl8SJaech6py998/rNesIx9RKKzrvWzMJKuY4+B1H
-         0tQWIsqQ06AyWvDgVHvTWEMmhxfFweMnHAG4ICXrmiX05jp1cYsoNrkARR2xouoel8t0
-         MQ43J8K0LNZ1kWXnWlOjgkLAdHfPfqYfX2WKc0FqtIEd/P4jw4gJDDnZixuPLsElKNE4
-         UJkaMje5PP2TClhkfsdvxU1d8JSC3vq5NYMx5Qrtod/u8ighzKT8R0gmq5NLLiwfJPBT
-         dYyYuRHkf/DK/kCSjg3gD18xy4u33JOJJkeHh098JoqpgnQc/BJ7RjscQgie5Jr1nvP3
-         +eWg==
-X-Gm-Message-State: APjAAAUOfM7iKTO6w95RrwLj3EhB5dLuOl4Jt6DuLznQlgR8oT8OLjoQ
-        a2dH4JddT9vaS1ciQMBABGgPGhi7AQSGn5OA301odFGPJa7C
-X-Google-Smtp-Source: APXvYqyhXBluX4Epw8DMyHITdtSUARQAN6IyMuVguPAvBPmcn+W6hc9lTzPpawSouCjJ0Spf/aBn9uvslGB9EGBssBbRjbyER7X0
+        Sun, 8 Sep 2019 02:27:05 -0400
+Received: from mx.kolabnow.com ([95.128.36.42]:7426 "EHLO mx.kolabnow.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725787AbfIHG1F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 02:27:05 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by ext-mx-out001.mykolab.com (Postfix) with ESMTP id 4CEDC55C;
+        Sun,  8 Sep 2019 08:27:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kolabnow.com; h=
+        content-type:content-type:content-transfer-encoding:mime-version
+        :references:in-reply-to:message-id:date:date:subject:subject
+        :from:from:received:received:received; s=dkim20160331; t=
+        1567924022; x=1569738423; bh=loMIHDDy1oxTCVSwj4XybWzWNEfOxw9dOex
+        0dta1oSM=; b=k7HMG2uGGvIhtmuqKZsnUsM2+oDrz9NwVq1iuUC+OacaBKgtDpP
+        axLA6S7Tc9sofqvTTxU97FG4bevwoJdrZxhc/d3K8y8gffTEoSLRJ1S+tv4UTluy
+        lm8Lt90ajCaeCAIMhDp3md/KhhcoZ7DqWXlm9LoTaB3JIf9ui8+QbAKRUzFg5z9k
+        tXpX0m8Qx7MPsNPm2AfVB/rO2w5nbeQpp/mXVsAJnq8L8AK8d6/307BrkEsmbD9l
+        3ibajXbZ7aeMWG7u6f87f+JTjZ6E17WWNpd37kXRnDeVldAZd/BCpY8SfF6TL1Gd
+        21GvwmevjWmkNCGiwfp1jO7PBKyYP2ULt91E91zjF+bZw6xgKrK04Mwxsmv/qhHn
+        YbiJLJ2lBW23nsdbxMdxMVtHUtFPzXUf86GkL+uTxWhw5uDar4fDZWfWtTt+Lmgs
+        utXGUdHWqLGVS9K8tfC9TJImVVugvhkoFu5bRxdZEPL3lQBMPUK+7x0CAipuvBj+
+        /78BQ5O+iacEnSQSwkfB0x8HY0mcpy1mL3qwynk2wUHyGkVkU13Z7sd52XP/XxLB
+        VvfVQXoqY84MoKQIIYisK/rXpe6yNMYhyB+myeku2hVB670Mx0pyTkhg/eDvspY1
+        2QbDa6taMjhMqGWWjdLi0x9GahDCY2N/GsxlKEu0Z9gGk9pU7RMgNYwY=
+X-Virus-Scanned: amavisd-new at mykolab.com
+Received: from mx.kolabnow.com ([127.0.0.1])
+        by localhost (ext-mx-out001.mykolab.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id m9IlTzeRscVp; Sun,  8 Sep 2019 08:27:02 +0200 (CEST)
+Received: from int-mx001.mykolab.com (unknown [10.9.13.1])
+        by ext-mx-out001.mykolab.com (Postfix) with ESMTPS id BFB663FE;
+        Sun,  8 Sep 2019 08:27:02 +0200 (CEST)
+Received: from ext-subm002.mykolab.com (unknown [10.9.6.2])
+        by int-mx001.mykolab.com (Postfix) with ESMTPS id 60CED174B;
+        Sun,  8 Sep 2019 08:27:02 +0200 (CEST)
+From:   Federico Vaga <federico.vaga@vaga.pv.it>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v2] doc:lock: remove reference to clever use of read-write lock
+Date:   Sun, 08 Sep 2019 08:27:00 +0200
+Message-ID: <9118016.19PSEFGOkz@harkonnen>
+In-Reply-To: <20190907104841.18928-1-federico.vaga@vaga.pv.it>
+References: <20190907104841.18928-1-federico.vaga@vaga.pv.it>
 MIME-Version: 1.0
-X-Received: by 2002:a02:354b:: with SMTP id y11mr19669445jae.53.1567922888809;
- Sat, 07 Sep 2019 23:08:08 -0700 (PDT)
-Date:   Sat, 07 Sep 2019 23:08:08 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d2a5c60592047e58@google.com>
-Subject: general protection fault in cbs_destroy
-From:   syzbot <syzbot+3a8d6a998cbb73bcf337@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Ignore this, the commit message is incorrect. I am sending a V3
 
-syzbot found the following crash on:
-
-HEAD commit:    3b47fd5c Merge tag 'nfs-for-5.3-4' of git://git.linux-nfs...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14854e71600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=144488c6c6c6d2b6
-dashboard link: https://syzkaller.appspot.com/bug?extid=3a8d6a998cbb73bcf337
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-80fee25776c2fb61e74c1ecb1a523375c2500b69)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17998f9e600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10421efa600000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+3a8d6a998cbb73bcf337@syzkaller.appspotmail.com
-
-8021q: adding VLAN 0 to HW filter on device batadv0
-netlink: 24 bytes leftover after parsing attributes in process  
-`syz-executor457'.
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 9249 Comm: syz-executor457 Not tainted 5.3.0-rc7+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:__list_del_entry_valid+0x6b/0x100 lib/list_debug.c:51
-Code: 4c 89 f7 e8 97 d0 58 fe 48 ba 00 01 00 00 00 00 ad de 49 8b 1e 48 39  
-d3 74 54 48 83 c2 22 49 39 d7 74 5e 4c 89 f8 48 c1 e8 03 <42> 80 3c 20 00  
-74 08 4c 89 ff e8 66 d0 58 fe 49 8b 17 4c 39 f2 75
-RSP: 0018:ffff88809898f568 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000001
-RDX: dead000000000122 RSI: 0000000000000004 RDI: ffff88809fb5a7e8
-RBP: ffff88809898f588 R08: dffffc0000000000 R09: ffffed1013131ea8
-R10: ffffed1013131ea8 R11: 0000000000000000 R12: dffffc0000000000
-R13: ffff88809fb5a480 R14: ffff88809fb5a7e0 R15: 0000000000000000
-FS:  00005555568cb880(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000610 CR3: 00000000a3968000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  __list_del_entry include/linux/list.h:131 [inline]
-  list_del include/linux/list.h:139 [inline]
-  cbs_destroy+0x85/0x3e0 net/sched/sch_cbs.c:435
-  qdisc_create+0xff8/0x13e0 net/sched/sch_api.c:1302
-  tc_modify_qdisc+0x989/0x1ea0 net/sched/sch_api.c:1652
-  rtnetlink_rcv_msg+0x889/0xd40 net/core/rtnetlink.c:5223
-  netlink_rcv_skb+0x19e/0x3d0 net/netlink/af_netlink.c:2477
-  rtnetlink_rcv+0x1c/0x20 net/core/rtnetlink.c:5241
-  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
-  netlink_unicast+0x787/0x900 net/netlink/af_netlink.c:1328
-  netlink_sendmsg+0x993/0xc50 net/netlink/af_netlink.c:1917
-  sock_sendmsg_nosec net/socket.c:637 [inline]
-  sock_sendmsg net/socket.c:657 [inline]
-  ___sys_sendmsg+0x60d/0x910 net/socket.c:2311
-  __sys_sendmsg net/socket.c:2356 [inline]
-  __do_sys_sendmsg net/socket.c:2365 [inline]
-  __se_sys_sendmsg net/socket.c:2363 [inline]
-  __x64_sys_sendmsg+0x17c/0x200 net/socket.c:2363
-  do_syscall_64+0xfe/0x140 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x441b59
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b 10 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffe29572cf8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000441b59
-RDX: 0000000000000000 RSI: 0000000020000240 RDI: 0000000000000003
-RBP: 00007ffe29572d10 R08: 0000000001bbbbbb R09: 0000000001bbbbbb
-R10: 0000000001bbbbbb R11: 0000000000000246 R12: 0000000000000000
-R13: 00000000004030f0 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace 226030e488aca074 ]---
-RIP: 0010:__list_del_entry_valid+0x6b/0x100 lib/list_debug.c:51
-Code: 4c 89 f7 e8 97 d0 58 fe 48 ba 00 01 00 00 00 00 ad de 49 8b 1e 48 39  
-d3 74 54 48 83 c2 22 49 39 d7 74 5e 4c 89 f8 48 c1 e8 03 <42> 80 3c 20 00  
-74 08 4c 89 ff e8 66 d0 58 fe 49 8b 17 4c 39 f2 75
-RSP: 0018:ffff88809898f568 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000001
-RDX: dead000000000122 RSI: 0000000000000004 RDI: ffff88809fb5a7e8
-RBP: ffff88809898f588 R08: dffffc0000000000 R09: ffffed1013131ea8
-R10: ffffed1013131ea8 R11: 0000000000000000 R12: dffffc0000000000
-R13: ffff88809fb5a480 R14: ffff88809fb5a7e0 R15: 0000000000000000
-FS:  00005555568cb880(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000610 CR3: 00000000a3968000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+On Saturday, September 7, 2019 12:48:41 PM CEST Federico Vaga wrote:
+> Remove the clever example about read-write lock because these type of
+> lock is not reccomended anymore (according to the very same document).
+> So there is no reason to teach cleaver things that people should not do.
+> 
+> (and by the way there was a little typo)
+> 
+> Signed-off-by: Federico Vaga <federico.vaga@vaga.pv.it>
+> ---
+>  Documentation/locking/spinlocks.rst | 12 ------------
+>  1 file changed, 12 deletions(-)
+> 
+> diff --git a/Documentation/locking/spinlocks.rst
+> b/Documentation/locking/spinlocks.rst index e93ec6645238..66e3792f8a36
+> 100644
+> --- a/Documentation/locking/spinlocks.rst
+> +++ b/Documentation/locking/spinlocks.rst
+> @@ -139,18 +139,6 @@ on other CPU's, because an interrupt on another CPU
+> doesn't interrupt the CPU that holds the lock, so the lock-holder can
+> continue and eventually releases the lock).
+> 
+> -Note that you can be clever with read-write locks and interrupts. For
+> -example, if you know that the interrupt only ever gets a read-lock, then
+> -you can use a non-irq version of read locks everywhere - because they
+> -don't block on each other (and thus there is no dead-lock wrt interrupts.
+> -But when you do the write-lock, you have to use the irq-safe version.
+> -
+> -For an example of being clever with rw-locks, see the "waitqueue_lock"
+> -handling in kernel/sched/core.c - nothing ever _changes_ a wait-queue from
+> -within an interrupt, they only read the queue in order to know whom to
+> -wake up. So read-locks are safe (which is good: they are very common
+> -indeed), while write-locks need to protect themselves against interrupts.
+> -
+>  		Linus
+> 
+>  ----
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+
