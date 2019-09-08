@@ -2,107 +2,267 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_SBL,URIBL_SBL_A,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC9EC433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 08:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB2B0C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 09:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D9C920678
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 08:54:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B52020578
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 09:01:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="d03zQhpQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FNFLt32A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727700AbfIHIy3 (ORCPT
+        id S1727734AbfIHJBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 04:54:29 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:34380 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727312AbfIHIy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 04:54:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=8MiUPlhtzPdP7++tuRHoQSctPszJcQsc3WCeGa9AaEU=; b=d03zQhpQmDFSPjhUb2/9/79IQP
-        UYf8/RWDS4BF53TskUruVNUrJQ27U0ubN9PbDZGBquczqaTeP+iGsyL5DnQQFukDuQRprkclUjY9Y
-        oghrO6sJDBRCotthUA2CE5puTJ+F5uT8hiPwhbX7SKOap3UllAKoure5V2NIj1UFBY4E=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1i6sxd-0007SP-74; Sun, 08 Sep 2019 10:54:17 +0200
-Date:   Sun, 8 Sep 2019 10:54:17 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>
-Cc:     "davem@davemloft.net" <davem@davemloft.net>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Trent Piepho <tpiepho@impinj.com>
-Subject: Re: [PATCH 1/2] net: phy: dp83867: Add documentation for SGMII mode
- type
-Message-ID: <20190908085417.GA28580@lunn.ch>
-References: <20190907153919.GC21922@lunn.ch>
- <1567700761-14195-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
- <1567700761-14195-2-git-send-email-vitaly.gaiduk@cloudbear.ru>
- <2894361567896439@iva5-be053096037b.qloud-c.yandex.net>
+        Sun, 8 Sep 2019 05:01:09 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:45967 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727608AbfIHJBJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 05:01:09 -0400
+Received: by mail-lf1-f66.google.com with SMTP id r134so8157630lff.12
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 02:01:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=e5hoZiMp+CY6V2MQtNA4HHBCXJ44xB0RevxC0GbZ74M=;
+        b=FNFLt32AHnefLNgi49Z3RHWcL+NYqoykP1lBPvhVn8ZE6c4me3xdjTw6DkLrHc/Mum
+         G/otQJ94JRkvxKFN6sUaGioQtYV11t1pFG/QUy09v5+fEIu3s5LUBPRmkwMQSZuk/ZaC
+         Lywh3qBADvt/PbzwMoaWGQFdwOdpPpcKciMWhw0JLhQTtgZgJzAt8z4H+Z5B9/zCBdWe
+         T+G2BryZ8pqmgQgZAjg5VmRhHAk9RUOnxgxQ9boaCzVtO13BFhS56IvvQEw5RJTXgsbE
+         3SloA//tj1hM56cznpnBjA2fw5IvDnS4dk60NbjwbNAjFCmiIxsRIFNVRrwEvotZ+Cot
+         wesg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=e5hoZiMp+CY6V2MQtNA4HHBCXJ44xB0RevxC0GbZ74M=;
+        b=Lq2ypy1IgeNaWzRmutNRhpcmjZoCAm55YUClqFeUF2fgp2g9J5wS9NmvH5SgG0Uaax
+         xm9URQurWiLn5tqOZmK4GzzPHoP4P2fXoKYUJRozinAPPCXvmrNQJEdAmBEQINnbE8jd
+         +81Gd5rSra4+iRUTT8pKkole3GwmEejMyLe7KFrKKyIOiWViWAcqFcJmAVwlTRtLkxFg
+         eoeqaRG0n8rkBqSQ2uX2ZzQneBC3Ke6QwAW8LBPfOIystgR+okMR8DEMfXQXVZJnByzJ
+         zWeLsBD7B+e5XBDOtEzjpgySpgrQ/nMci5ml2SSpRox3SCsJSlahlgpU752CyZWHzgs1
+         J6IQ==
+X-Gm-Message-State: APjAAAWFfXa7IIdHwkbJYCxg8P7K4Lip9C4ZA/4VEG3mRgtyl+Xzqg6v
+        Mg6epyj7lRlYiW2qCR4gbjc=
+X-Google-Smtp-Source: APXvYqydJCaqOLxm7NEFIT/cCRYfeD4m9RV7VkoJw/6jfum3fe49XsdNtZaXAThrGP7zKpFyADk6mQ==
+X-Received: by 2002:a19:4912:: with SMTP id w18mr12302133lfa.93.1567933266597;
+        Sun, 08 Sep 2019 02:01:06 -0700 (PDT)
+Received: from alpha (ppp78-37-236-177.pppoe.avangarddsl.ru. [78.37.236.177])
+        by smtp.gmail.com with ESMTPSA id m18sm2147812lfb.73.2019.09.08.02.01.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Sep 2019 02:01:05 -0700 (PDT)
+Received: (nullmailer pid 2701 invoked by uid 1000);
+        Sun, 08 Sep 2019 09:01:12 -0000
+From:   Ivan Safonov <insafonov@gmail.com>
+To:     Larry Finger <Larry.Finger@lwfinger.net>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michael Straube <straube.linux@gmail.com>,
+        =?UTF-8?q?Robert=20W=C4=99c=C5=82awski?= <r.weclawski@gmail.com>,
+        Nishka Dasgupta <nishkadg.linux@gmail.com>,
+        =?UTF-8?q?Florian=20B=C3=BCstgens?= <flbue@gmx.de>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Ivan Safonov <insafonov@gmail.com>
+Subject: [PATCH] staging: r8188eu: replace rtw_malloc() with it's definition
+Date:   Sun,  8 Sep 2019 12:00:26 +0300
+Message-Id: <20190908090026.2656-1-insafonov@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <2894361567896439@iva5-be053096037b.qloud-c.yandex.net>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 08, 2019 at 01:47:19AM +0300, Vitaly Gaiduk wrote:
-> Hi, Andrew.<div>I=E2=80=99m ready to do this property with such name but =
-is it good practice to do such long names? :)</div><div>Also, Trent Piepho =
-wrote about sgmii-clk and merged all ideas we have =E2=80=9Cti,sgmii-ref-cl=
-k=E2=80=9D.</div><div>It=E2=80=99s better, isn=E2=80=99t it?</div><div>Vita=
-ly.</div><div><div><br />07.09.2019, 18:39, "Andrew Lunn" &lt;andrew@lunn.c=
-h&gt;:<br /><blockquote><p>On Thu, Sep 05, 2019 at 07:26:00PM +0300, Vitaly=
- Gaiduk wrote:<br /></p><blockquote class=3D"b4fd5cf2ec92bc68cb898700bb8135=
-5fwmi-quote">=C2=A0Add documentation of ti,sgmii-type which can be used to =
-select<br />=C2=A0SGMII mode type (4 or 6-wire).<br /><br />=C2=A0Signed-of=
-f-by: Vitaly Gaiduk &lt;<a href=3D"mailto:vitaly.gaiduk@cloudbear.ru">vital=
-y.gaiduk@cloudbear.ru</a>&gt;<br />=C2=A0---<br />=C2=A0=C2=A0Documentation=
-/devicetree/bindings/net/ti,dp83867.txt | 1 +<br />=C2=A0=C2=A01 file chang=
-ed, 1 insertion(+)<br /><br />=C2=A0diff --git a/Documentation/devicetree/b=
-indings/net/ti,dp83867.txt b/Documentation/devicetree/bindings/net/ti,dp838=
-67.txt<br />=C2=A0index db6aa3f2215b..18e7fd52897f 100644<br />=C2=A0--- a/=
-Documentation/devicetree/bindings/net/ti,dp83867.txt<br />=C2=A0+++ b/Docum=
-entation/devicetree/bindings/net/ti,dp83867.txt<br />=C2=A0@@ -37,6 +37,7 @=
-@ Optional property:<br />=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0for ap=
-plicable values.  The CLK_OUT pin can also<br />=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0be disabled by this property.  When omitted, the<br />=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0PHY's default will be left as is.<br />=
-=C2=A0+	- ti,sgmii-type - This denotes the fact which SGMII mode is used (4=
- or 6-wire).<br /></blockquote><p><br />Hi Vitaly<br /><br />You probably w=
-ant to make this a Boolean. I don't think SGMII type is<br />a good idea. T=
-his is about enabling the receive clock to be passed to<br />the MAC. So ho=
-w about ti,sgmii-ref-clock-output-enable.<br /><br />=C2=A0=C2=A0=C2=A0=C2=
-=A0Andrew<br /></p></blockquote></div></div>
+rtw_malloc prevents the use of kmemdup/kzalloc and others.
 
-Hi Vitaly
+Signed-off-by: Ivan Safonov <insafonov@gmail.com>
+---
+ drivers/staging/rtl8188eu/core/rtw_ap.c        |  4 ++--
+ drivers/staging/rtl8188eu/core/rtw_mlme_ext.c  |  2 +-
+ .../staging/rtl8188eu/include/osdep_service.h  |  3 ---
+ drivers/staging/rtl8188eu/os_dep/ioctl_linux.c | 18 +++++++++---------
+ drivers/staging/rtl8188eu/os_dep/mlme_linux.c  |  2 +-
+ .../staging/rtl8188eu/os_dep/osdep_service.c   |  7 +------
+ 6 files changed, 14 insertions(+), 22 deletions(-)
 
-Please reconfigure your mail client to not obfuscate with HTML.
+diff --git a/drivers/staging/rtl8188eu/core/rtw_ap.c b/drivers/staging/rtl8188eu/core/rtw_ap.c
+index 51a5b71f8c25..c9c57379b7a2 100644
+--- a/drivers/staging/rtl8188eu/core/rtw_ap.c
++++ b/drivers/staging/rtl8188eu/core/rtw_ap.c
+@@ -104,7 +104,7 @@ static void update_BCNTIM(struct adapter *padapter)
+ 	}
+ 
+ 	if (remainder_ielen > 0) {
+-		pbackup_remainder_ie = rtw_malloc(remainder_ielen);
++		pbackup_remainder_ie = kmalloc(remainder_ielen, in_interrupt() ? GFP_ATOMIC : GFP_KERNEL);
+ 		if (pbackup_remainder_ie && premainder_ie)
+ 			memcpy(pbackup_remainder_ie, premainder_ie,
+ 			       remainder_ielen);
+@@ -1168,7 +1168,7 @@ static void update_bcn_wps_ie(struct adapter *padapter)
+ 	remainder_ielen = ielen - wps_offset - wps_ielen;
+ 
+ 	if (remainder_ielen > 0) {
+-		pbackup_remainder_ie = rtw_malloc(remainder_ielen);
++		pbackup_remainder_ie = kmalloc(remainder_ielen, in_interrupt() ? GFP_ATOMIC : GFP_KERNEL);
+ 		if (pbackup_remainder_ie)
+ 			memcpy(pbackup_remainder_ie, premainder_ie, remainder_ielen);
+ 	}
+diff --git a/drivers/staging/rtl8188eu/core/rtw_mlme_ext.c b/drivers/staging/rtl8188eu/core/rtw_mlme_ext.c
+index 18dc9fc1c04a..759a37a5a167 100644
+--- a/drivers/staging/rtl8188eu/core/rtw_mlme_ext.c
++++ b/drivers/staging/rtl8188eu/core/rtw_mlme_ext.c
+@@ -2573,7 +2573,7 @@ static unsigned int OnBeacon(struct adapter *padapter,
+ 	if (!memcmp(GetAddr3Ptr(pframe), pnetwork->MacAddress, ETH_ALEN)) {
+ 		if (pmlmeinfo->state & WIFI_FW_AUTH_NULL) {
+ 			/* we should update current network before auth, or some IE is wrong */
+-			pbss = (struct wlan_bssid_ex *)rtw_malloc(sizeof(struct wlan_bssid_ex));
++			pbss = kmalloc(sizeof(*pbss), in_interrupt() ? GFP_ATOMIC : GFP_KERNEL);
+ 			if (pbss) {
+ 				if (collect_bss_info(padapter, precv_frame, pbss) == _SUCCESS) {
+ 					update_network(&pmlmepriv->cur_network.network, pbss, padapter, true);
+diff --git a/drivers/staging/rtl8188eu/include/osdep_service.h b/drivers/staging/rtl8188eu/include/osdep_service.h
+index c0114ad79788..dcaa7917b783 100644
+--- a/drivers/staging/rtl8188eu/include/osdep_service.h
++++ b/drivers/staging/rtl8188eu/include/osdep_service.h
+@@ -61,9 +61,6 @@ static inline int rtw_netif_queue_stopped(struct net_device *pnetdev)
+ 		netif_tx_queue_stopped(netdev_get_tx_queue(pnetdev, 3));
+ }
+ 
+-u8 *_rtw_malloc(u32 sz);
+-#define rtw_malloc(sz)			_rtw_malloc((sz))
+-
+ void _rtw_init_queue(struct __queue *pqueue);
+ 
+ struct rtw_netdev_priv_indicator {
+diff --git a/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c b/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
+index ec5835d1aa8c..04ec73be0cce 100644
+--- a/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
++++ b/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
+@@ -392,7 +392,7 @@ static int wpa_set_encryption(struct net_device *dev, struct ieee_param *param,
+ 		if (wep_key_len > 0) {
+ 			wep_key_len = wep_key_len <= 5 ? 5 : 13;
+ 			wep_total_len = wep_key_len + offsetof(struct ndis_802_11_wep, KeyMaterial);
+-			pwep = (struct ndis_802_11_wep *)rtw_malloc(wep_total_len);
++			pwep = kmalloc(wep_total_len, in_interrupt() ? GFP_ATOMIC : GFP_KERNEL);
+ 			if (!pwep) {
+ 				RT_TRACE(_module_rtl871x_ioctl_os_c, _drv_err_, (" wpa_set_encryption: pwep allocate fail !!!\n"));
+ 				goto exit;
+@@ -1862,7 +1862,7 @@ static int rtw_wx_set_enc_ext(struct net_device *dev,
+ 	int ret = 0;
+ 
+ 	param_len = sizeof(struct ieee_param) + pext->key_len;
+-	param = (struct ieee_param *)rtw_malloc(param_len);
++	param = kmalloc(param_len, in_interrupt() ? GFP_ATOMIC : GFP_KERNEL);
+ 	if (!param)
+ 		return -1;
+ 
+@@ -2027,7 +2027,7 @@ static int wpa_supplicant_ioctl(struct net_device *dev, struct iw_point *p)
+ 		goto out;
+ 	}
+ 
+-	param = (struct ieee_param *)rtw_malloc(p->length);
++	param = kmalloc(p->length, in_interrupt() ? GFP_ATOMIC : GFP_KERNEL);
+ 	if (!param) {
+ 		ret = -ENOMEM;
+ 		goto out;
+@@ -2236,7 +2236,7 @@ static int rtw_set_encryption(struct net_device *dev, struct ieee_param *param,
+ 		if (wep_key_len > 0) {
+ 			wep_key_len = wep_key_len <= 5 ? 5 : 13;
+ 			wep_total_len = wep_key_len + offsetof(struct ndis_802_11_wep, KeyMaterial);
+-			pwep = (struct ndis_802_11_wep *)rtw_malloc(wep_total_len);
++			pwep = kmalloc(wep_total_len, in_interrupt() ? GFP_ATOMIC : GFP_KERNEL);
+ 			if (!pwep) {
+ 				DBG_88E(" r871x_set_encryption: pwep allocate fail !!!\n");
+ 				goto exit;
+@@ -2652,7 +2652,7 @@ static int rtw_set_wps_beacon(struct net_device *dev, struct ieee_param *param,
+ 	pmlmepriv->wps_beacon_ie = NULL;
+ 
+ 	if (ie_len > 0) {
+-		pmlmepriv->wps_beacon_ie = rtw_malloc(ie_len);
++		pmlmepriv->wps_beacon_ie = kmalloc(ie_len, in_interrupt() ? GFP_ATOMIC : GFP_KERNEL);
+ 		pmlmepriv->wps_beacon_ie_len = ie_len;
+ 		if (!pmlmepriv->wps_beacon_ie) {
+ 			DBG_88E("%s()-%d: rtw_malloc() ERROR!\n", __func__, __LINE__);
+@@ -2686,7 +2686,7 @@ static int rtw_set_wps_probe_resp(struct net_device *dev, struct ieee_param *par
+ 	pmlmepriv->wps_probe_resp_ie = NULL;
+ 
+ 	if (ie_len > 0) {
+-		pmlmepriv->wps_probe_resp_ie = rtw_malloc(ie_len);
++		pmlmepriv->wps_probe_resp_ie = kmalloc(ie_len, in_interrupt() ? GFP_ATOMIC : GFP_KERNEL);
+ 		pmlmepriv->wps_probe_resp_ie_len = ie_len;
+ 		if (!pmlmepriv->wps_probe_resp_ie) {
+ 			DBG_88E("%s()-%d: rtw_malloc() ERROR!\n", __func__, __LINE__);
+@@ -2715,7 +2715,7 @@ static int rtw_set_wps_assoc_resp(struct net_device *dev, struct ieee_param *par
+ 	pmlmepriv->wps_assoc_resp_ie = NULL;
+ 
+ 	if (ie_len > 0) {
+-		pmlmepriv->wps_assoc_resp_ie = rtw_malloc(ie_len);
++		pmlmepriv->wps_assoc_resp_ie = kmalloc(ie_len, in_interrupt() ? GFP_ATOMIC : GFP_KERNEL);
+ 		pmlmepriv->wps_assoc_resp_ie_len = ie_len;
+ 		if (!pmlmepriv->wps_assoc_resp_ie) {
+ 			DBG_88E("%s()-%d: rtw_malloc() ERROR!\n", __func__, __LINE__);
+@@ -2814,7 +2814,7 @@ static int rtw_hostapd_ioctl(struct net_device *dev, struct iw_point *p)
+ 		goto out;
+ 	}
+ 
+-	param = (struct ieee_param *)rtw_malloc(p->length);
++	param = kmalloc(p->length, in_interrupt() ? GFP_ATOMIC : GFP_KERNEL);
+ 	if (!param) {
+ 		ret = -ENOMEM;
+ 		goto out;
+@@ -2924,7 +2924,7 @@ static int rtw_wx_set_priv(struct net_device *dev,
+ 			kfree(pmlmepriv->wps_probe_req_ie);
+ 			pmlmepriv->wps_probe_req_ie = NULL;
+ 
+-			pmlmepriv->wps_probe_req_ie = rtw_malloc(cp_sz);
++			pmlmepriv->wps_probe_req_ie = kmalloc(cp_sz, in_interrupt() ? GFP_ATOMIC : GFP_KERNEL);
+ 			if (!pmlmepriv->wps_probe_req_ie) {
+ 				pr_info("%s()-%d: rtw_malloc() ERROR!\n", __func__, __LINE__);
+ 				ret =  -EINVAL;
+diff --git a/drivers/staging/rtl8188eu/os_dep/mlme_linux.c b/drivers/staging/rtl8188eu/os_dep/mlme_linux.c
+index 321b2c46479c..e6065fff276f 100644
+--- a/drivers/staging/rtl8188eu/os_dep/mlme_linux.c
++++ b/drivers/staging/rtl8188eu/os_dep/mlme_linux.c
+@@ -93,7 +93,7 @@ void rtw_report_sec_ie(struct adapter *adapter, u8 authmode, u8 *sec_ie)
+ 	if (authmode == _WPA_IE_ID_) {
+ 		RT_TRACE(_module_mlme_osdep_c_, _drv_info_,
+ 			 ("%s, authmode=%d\n", __func__, authmode));
+-		buff = rtw_malloc(IW_CUSTOM_MAX);
++		buff = kmalloc(IW_CUSTOM_MAX, in_interrupt() ? GFP_ATOMIC : GFP_KERNEL);
+ 		if (!buff)
+ 			return;
+ 		memset(buff, 0, IW_CUSTOM_MAX);
+diff --git a/drivers/staging/rtl8188eu/os_dep/osdep_service.c b/drivers/staging/rtl8188eu/os_dep/osdep_service.c
+index 69d4b1d66b6f..ce6d3929b0d6 100644
+--- a/drivers/staging/rtl8188eu/os_dep/osdep_service.c
++++ b/drivers/staging/rtl8188eu/os_dep/osdep_service.c
+@@ -13,11 +13,6 @@
+ #include <linux/vmalloc.h>
+ #include <rtw_ioctl_set.h>
+ 
+-u8 *_rtw_malloc(u32 sz)
+-{
+-	return kmalloc(sz, in_interrupt() ? GFP_ATOMIC : GFP_KERNEL);
+-}
+-
+ void _rtw_init_queue(struct __queue *pqueue)
+ {
+ 	INIT_LIST_HEAD(&pqueue->queue);
+@@ -79,7 +74,7 @@ void rtw_buf_update(u8 **buf, u32 *buf_len, u8 *src, u32 src_len)
+ 		goto keep_ori;
+ 
+ 	/* duplicate src */
+-	dup = rtw_malloc(src_len);
++	dup = kmalloc(src_len, in_interrupt() ? GFP_ATOMIC : GFP_KERNEL);
+ 	if (dup) {
+ 		dup_len = src_len;
+ 		memcpy(dup, src, dup_len);
+-- 
+2.21.0
 
-The length should be O.K. For a PHY node, it should not be too deeply
-indented, unless it happens to be part of an Ethernet switch.
-
-	  Andrew
