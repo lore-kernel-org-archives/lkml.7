@@ -2,56 +2,58 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA91FC4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:49:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED2C4C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3DEC21924
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:49:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6B652190F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:49:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946964;
-	bh=VKIhn3t5HKFT55uxxSW0rh1RrHK5MQdyDgOmvlyntj8=;
+	s=default; t=1567946966;
+	bh=hQkkUKBVEgJx9TYb+9IwtLkkG5cRMyivysh7kjH0juk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MksjYhYFoawUFFNXH7Bw7LVnIaGZqGS6T/DM5JaZLqTpVl1O9F2QAUdz4heZHIACP
-	 Mi608W9Oyg+UJXbAFmsJLkkzx2Ucs0dXABuzjXAddvCIS7euakriDAA6cFiVtRy9W8
-	 7STlj0C2JxunvFC4qCJhG7Z/rlpi3I3i2iXbPR0c=
+	b=Pe9uxweoFcO9SZXerNBfxFlY7Ot5oVADtqs9jVJQ6fhWXKLruBWvajoXM4VGFnoh1
+	 zkO4CB/HDMczP+Q/GIipzAR/+UtyHBRJRZnwBCSk/hiwipLahh2YuMy3ny1fD1B18j
+	 M6tfrVqr06hEzpRH25qcaQGFuyTau2SFeW6XWPcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731442AbfIHMtX (ORCPT
+        id S1729443AbfIHMt0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:49:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39168 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:49:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731349AbfIHMtT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:49:19 -0400
+        id S1731431AbfIHMtX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:49:23 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8789218AF;
-        Sun,  8 Sep 2019 12:49:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72D3321971;
+        Sun,  8 Sep 2019 12:49:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946959;
-        bh=VKIhn3t5HKFT55uxxSW0rh1RrHK5MQdyDgOmvlyntj8=;
+        s=default; t=1567946961;
+        bh=hQkkUKBVEgJx9TYb+9IwtLkkG5cRMyivysh7kjH0juk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0lT6xbbN/ddtt9NQWpOtf5e2oTantfASktLwLCEjAPCr77K3vkhiD1i6G582o4CGN
-         RZfXKqFdSRn3Y0U6rS7SJ5NtCnX13IFoR0discukQJsN0EyiMck2FHtygE5y7Qi7r9
-         /sYgwwQ3WotrSwJhbmW5rO2I3o9ga+z+j/QQN12E=
+        b=z6fqImRaiudI2GzaumZhGfc5fE00HxI1iaAU0ppZokSTltt7JH8/juL6RoAePPXC8
+         ZYGvDBNNE9mQA/BZpH6mpEwFD+I1mDTWa8YrYAflDZb5oB1sqSLQwPAxUM00vUNwx4
+         7KEIhEax6J7os5xUTm3Flj1tgcbgWBiwHR51VU3Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 32/57] cx82310_eth: fix a memory leak bug
-Date:   Sun,  8 Sep 2019 13:41:56 +0100
-Message-Id: <20190908121138.415856296@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.2 01/94] mld: fix memory leak in mld_del_delrec()
+Date:   Sun,  8 Sep 2019 13:40:57 +0100
+Message-Id: <20190908121150.470693460@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190908121125.608195329@linuxfoundation.org>
-References: <20190908121125.608195329@linuxfoundation.org>
+In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
+References: <20190908121150.420989666@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,38 +62,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1eca92eef18719027d394bf1a2d276f43e7cf886 ]
+From: Eric Dumazet <edumazet@google.com>
 
-In cx82310_bind(), 'dev->partial_data' is allocated through kmalloc().
-Then, the execution waits for the firmware to become ready. If the firmware
-is not ready in time, the execution is terminated. However, the allocated
-'dev->partial_data' is not deallocated on this path, leading to a memory
-leak bug. To fix this issue, free 'dev->partial_data' before returning the
-error.
+[ Upstream commit a84d016479896b5526a2cc54784e6ffc41c9d6f6 ]
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Similar to the fix done for IPv4 in commit e5b1c6c6277d
+("igmp: fix memory leak in igmpv3_del_delrec()"), we need to
+make sure mca_tomb and mca_sources are not blindly overwritten.
+
+Using swap() then a call to ip6_mc_clear_src() will take care
+of the missing free.
+
+BUG: memory leak
+unreferenced object 0xffff888117d9db00 (size 64):
+  comm "syz-executor247", pid 6918, jiffies 4294943989 (age 25.350s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 fe 88 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<000000005b463030>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
+    [<000000005b463030>] slab_post_alloc_hook mm/slab.h:522 [inline]
+    [<000000005b463030>] slab_alloc mm/slab.c:3319 [inline]
+    [<000000005b463030>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3548
+    [<00000000939cbf94>] kmalloc include/linux/slab.h:552 [inline]
+    [<00000000939cbf94>] kzalloc include/linux/slab.h:748 [inline]
+    [<00000000939cbf94>] ip6_mc_add1_src net/ipv6/mcast.c:2236 [inline]
+    [<00000000939cbf94>] ip6_mc_add_src+0x31f/0x420 net/ipv6/mcast.c:2356
+    [<00000000d8972221>] ip6_mc_source+0x4a8/0x600 net/ipv6/mcast.c:449
+    [<000000002b203d0d>] do_ipv6_setsockopt.isra.0+0x1b92/0x1dd0 net/ipv6/ipv6_sockglue.c:748
+    [<000000001f1e2d54>] ipv6_setsockopt+0x89/0xd0 net/ipv6/ipv6_sockglue.c:944
+    [<00000000c8f7bdf9>] udpv6_setsockopt+0x4e/0x90 net/ipv6/udp.c:1558
+    [<000000005a9a0c5e>] sock_common_setsockopt+0x38/0x50 net/core/sock.c:3139
+    [<00000000910b37b2>] __sys_setsockopt+0x10f/0x220 net/socket.c:2084
+    [<00000000e9108023>] __do_sys_setsockopt net/socket.c:2100 [inline]
+    [<00000000e9108023>] __se_sys_setsockopt net/socket.c:2097 [inline]
+    [<00000000e9108023>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2097
+    [<00000000f4818160>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:296
+    [<000000008d367e8f>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Fixes: 1666d49e1d41 ("mld: do not remove mld souce list info when set link down")
+Fixes: 9c8bb163ae78 ("igmp, mld: Fix memory leak in igmpv3/mld_del_delrec()")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/cx82310_eth.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/ipv6/mcast.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/usb/cx82310_eth.c b/drivers/net/usb/cx82310_eth.c
-index 947bea81d9241..dfbdea22fbad9 100644
---- a/drivers/net/usb/cx82310_eth.c
-+++ b/drivers/net/usb/cx82310_eth.c
-@@ -175,7 +175,8 @@ static int cx82310_bind(struct usbnet *dev, struct usb_interface *intf)
+--- a/net/ipv6/mcast.c
++++ b/net/ipv6/mcast.c
+@@ -787,14 +787,15 @@ static void mld_del_delrec(struct inet6_
+ 	if (pmc) {
+ 		im->idev = pmc->idev;
+ 		if (im->mca_sfmode == MCAST_INCLUDE) {
+-			im->mca_tomb = pmc->mca_tomb;
+-			im->mca_sources = pmc->mca_sources;
++			swap(im->mca_tomb, pmc->mca_tomb);
++			swap(im->mca_sources, pmc->mca_sources);
+ 			for (psf = im->mca_sources; psf; psf = psf->sf_next)
+ 				psf->sf_crcount = idev->mc_qrv;
+ 		} else {
+ 			im->mca_crcount = idev->mc_qrv;
+ 		}
+ 		in6_dev_put(pmc->idev);
++		ip6_mc_clear_src(pmc);
+ 		kfree(pmc);
  	}
- 	if (!timeout) {
- 		dev_err(&udev->dev, "firmware not ready in time\n");
--		return -ETIMEDOUT;
-+		ret = -ETIMEDOUT;
-+		goto err;
- 	}
- 
- 	/* enable ethernet mode (?) */
--- 
-2.20.1
-
+ 	spin_unlock_bh(&im->mca_lock);
 
 
