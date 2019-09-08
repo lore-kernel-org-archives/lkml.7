@@ -2,179 +2,76 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E17C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 11:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2427FC4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 11:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C0B820854
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 11:19:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F35D121479
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 11:28:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728854AbfIHLTh (ORCPT
+        id S1728885AbfIHL2f convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 07:19:37 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2238 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728753AbfIHLTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 07:19:37 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id BD2365A0B3E889342FE2;
-        Sun,  8 Sep 2019 19:19:35 +0800 (CST)
-Received: from [10.45.2.172] (10.45.2.172) by smtp.huawei.com (10.3.19.211)
- with Microsoft SMTP Server id 14.3.439.0; Sun, 8 Sep 2019 19:19:31 +0800
-Subject: Re: [Virtio-fs] [PATCH 16/18] virtiofs: Use virtio_fs_mutex for races
- w.r.t ->remove and mount path
-To:     Vivek Goyal <vgoyal@redhat.com>, <linux-fsdevel@vger.kernel.org>,
-        <virtualization@lists.linux-foundation.org>, <miklos@szeredi.hu>
-CC:     <mst@redhat.com>, <linux-kernel@vger.kernel.org>,
-        <virtio-fs@redhat.com>
-References: <20190905194859.16219-1-vgoyal@redhat.com>
- <20190905194859.16219-17-vgoyal@redhat.com>
-From:   piaojun <piaojun@huawei.com>
-Message-ID: <62d8b7fb-9024-a6c9-73b8-727aacfe8544@huawei.com>
-Date:   Sun, 8 Sep 2019 19:19:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 8 Sep 2019 07:28:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48666 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726186AbfIHL2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 07:28:35 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B8A8018C891B;
+        Sun,  8 Sep 2019 11:28:34 +0000 (UTC)
+Received: from carbon (ovpn-200-20.brq.redhat.com [10.40.200.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7786D5C1D4;
+        Sun,  8 Sep 2019 11:28:23 +0000 (UTC)
+Date:   Sun, 8 Sep 2019 13:28:22 +0200
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?= <toke@redhat.com>
+Cc:     brouer@redhat.com, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net, hawk@kernel.org,
+        jakub.kicinski@netronome.com, john.fastabend@gmail.com,
+        kafai@fb.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com,
+        syzbot+4e7a85b1432052e8d6f8@syzkaller.appspotmail.com
+Subject: Re: [PATCH bpf-next] xdp: Fix race in dev_map_hash_update_elem()
+ when replacing element
+Message-ID: <20190908132822.5ac2fbe1@carbon>
+In-Reply-To: <20190908082016.17214-1-toke@redhat.com>
+References: <0000000000005091a70591d3e1d9@google.com>
+        <20190908082016.17214-1-toke@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190905194859.16219-17-vgoyal@redhat.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.45.2.172]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Sun, 08 Sep 2019 11:28:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun,  8 Sep 2019 09:20:16 +0100
+Toke Høiland-Jørgensen <toke@redhat.com> wrote:
 
-
-On 2019/9/6 3:48, Vivek Goyal wrote:
-> It is possible that a mount is in progress and device is being removed at
-> the same time. Use virtio_fs_mutex to avoid races.
+> syzbot found a crash in dev_map_hash_update_elem(), when replacing an
+> element with a new one. Jesper correctly identified the cause of the crash
+> as a race condition between the initial lookup in the map (which is done
+> before taking the lock), and the removal of the old element.
 > 
-> This also takes care of bunch of races and removes some TODO items.
+> Rather than just add a second lookup into the hashmap after taking the
+> lock, fix this by reworking the function logic to take the lock before the
+> initial lookup.
 > 
-> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-> ---
->  fs/fuse/virtio_fs.c | 32 ++++++++++++++++++++++----------
->  1 file changed, 22 insertions(+), 10 deletions(-)
-> 
-> diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
-> index 29ec2f5bbbe2..c483482185b6 100644
-> --- a/fs/fuse/virtio_fs.c
-> +++ b/fs/fuse/virtio_fs.c
-> @@ -13,7 +13,9 @@
->  #include <linux/highmem.h>
->  #include "fuse_i.h"
->  
-> -/* List of virtio-fs device instances and a lock for the list */
-> +/* List of virtio-fs device instances and a lock for the list. Also provides
-> + * mutual exclusion in device removal and mounting path
-> + */
->  static DEFINE_MUTEX(virtio_fs_mutex);
->  static LIST_HEAD(virtio_fs_instances);
->  
-> @@ -72,17 +74,19 @@ static void release_virtiofs_obj(struct kref *ref)
->  	kfree(vfs);
->  }
->  
-> +/* Make sure virtiofs_mutex is held */
+> Fixes: 6f9d451ab1a3 ("xdp: Add devmap_hash map type for looking up devices by hashed index")
+> Reported-and-tested-by: syzbot+4e7a85b1432052e8d6f8@syzkaller.appspotmail.com
+> Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
 
-Typo? virtiofs_mutex->virtio_fs_mutex
+Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
 
-Jun
-
->  static void virtiofs_put(struct virtio_fs *fs)
->  {
-> -	mutex_lock(&virtio_fs_mutex);
->  	kref_put(&fs->refcount, release_virtiofs_obj);
-> -	mutex_unlock(&virtio_fs_mutex);
->  }
->  
->  static void virtio_fs_put(struct fuse_iqueue *fiq)
->  {
->  	struct virtio_fs *vfs = fiq->priv;
-> +
-> +	mutex_lock(&virtio_fs_mutex);
->  	virtiofs_put(vfs);
-> +	mutex_unlock(&virtio_fs_mutex);
->  }
->  
->  static void virtio_fs_drain_queue(struct virtio_fs_vq *fsvq)
-> @@ -596,9 +600,8 @@ static void virtio_fs_remove(struct virtio_device *vdev)
->  	struct virtio_fs *fs = vdev->priv;
->  
->  	mutex_lock(&virtio_fs_mutex);
-> +	/* This device is going away. No one should get new reference */
->  	list_del_init(&fs->list);
-> -	mutex_unlock(&virtio_fs_mutex);
-> -
->  	virtio_fs_stop_all_queues(fs);
->  	virtio_fs_drain_all_queues(fs);
->  	vdev->config->reset(vdev);
-> @@ -607,6 +610,7 @@ static void virtio_fs_remove(struct virtio_device *vdev)
->  	vdev->priv = NULL;
->  	/* Put device reference on virtio_fs object */
->  	virtiofs_put(fs);
-> +	mutex_unlock(&virtio_fs_mutex);
->  }
->  
->  #ifdef CONFIG_PM_SLEEP
-> @@ -978,10 +982,15 @@ static int virtio_fs_fill_super(struct super_block *sb)
->  		.no_force_umount = true,
->  	};
->  
-> -	/* TODO lock */
-> -	if (fs->vqs[VQ_REQUEST].fud) {
-> -		pr_err("virtio-fs: device already in use\n");
-> -		err = -EBUSY;
-> +	mutex_lock(&virtio_fs_mutex);
-> +
-> +	/* After holding mutex, make sure virtiofs device is still there.
-> +	 * Though we are holding a refernce to it, drive ->remove might
-> +	 * still have cleaned up virtual queues. In that case bail out.
-> +	 */
-> +	err = -EINVAL;
-> +	if (list_empty(&fs->list)) {
-> +		pr_info("virtio-fs: tag <%s> not found\n", fs->tag);
->  		goto err;
->  	}
->  
-> @@ -1007,7 +1016,6 @@ static int virtio_fs_fill_super(struct super_block *sb)
->  
->  	fc = fs->vqs[VQ_REQUEST].fud->fc;
->  
-> -	/* TODO take fuse_mutex around this loop? */
->  	for (i = 0; i < fs->nvqs; i++) {
->  		struct virtio_fs_vq *fsvq = &fs->vqs[i];
->  
-> @@ -1020,6 +1028,7 @@ static int virtio_fs_fill_super(struct super_block *sb)
->  	/* Previous unmount will stop all queues. Start these again */
->  	virtio_fs_start_all_queues(fs);
->  	fuse_send_init(fc, init_req);
-> +	mutex_unlock(&virtio_fs_mutex);
->  	return 0;
->  
->  err_free_init_req:
-> @@ -1027,6 +1036,7 @@ static int virtio_fs_fill_super(struct super_block *sb)
->  err_free_fuse_devs:
->  	virtio_fs_free_devs(fs);
->  err:
-> +	mutex_unlock(&virtio_fs_mutex);
->  	return err;
->  }
->  
-> @@ -1100,7 +1110,9 @@ static int virtio_fs_get_tree(struct fs_context *fsc)
->  
->  	fc = kzalloc(sizeof(struct fuse_conn), GFP_KERNEL);
->  	if (!fc) {
-> +		mutex_lock(&virtio_fs_mutex);
->  		virtiofs_put(fs);
-> +		mutex_unlock(&virtio_fs_mutex);
->  		return -ENOMEM;
->  	}
->  
-> 
+-- 
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
