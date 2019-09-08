@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5AFBC433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A468C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4B4B2067B
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:59:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC2002067B
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:00:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947593;
-	bh=Arer8dkUm8lSgpruEGvxWHMeV2nlWuAorFR9XbNy6OE=;
+	s=default; t=1567947601;
+	bh=E9KGdhC/jcBFobfc9mLhrYNF/oc4OdTm3fqc8AkqMOg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xZEbxKlh2SHqCk5MwPyCoMtWxci12IdjzvhkezhDO5+9HgHkkYMdZUZLWdvh1qVF7
-	 noXk95mEnMTOkubcD8tsHhBADDRTcRmvmyI7i65ZhGKUYsN7kfVJ93gnFUz7M8rduT
-	 6YWZit+LHQGz7W6jIZy8Ns+SLa8upJwfwey5uC6U=
+	b=e5X7vzG+u8snkJu7SzfNqWEsiair80nyOVR7RAAjBUV83JzYepSmEwHbBsVNAOTjY
+	 mUA+G4O7+aoLGSJuWES+uILwyHPCVOip4msFtZlUoERAm7NltX/s1RmHM2bwa4n4Z4
+	 ujNFCcvq5JhLYqI+fT4Tg7rn+TARnnD2taoPcqnc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730071AbfIHMpV (ORCPT
+        id S1730057AbfIHMpS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:45:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60376 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:45:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730024AbfIHMpM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:45:12 -0400
+        id S1729995AbfIHMpO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:45:14 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 232B221927;
-        Sun,  8 Sep 2019 12:45:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B783C218AE;
+        Sun,  8 Sep 2019 12:45:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946711;
-        bh=Arer8dkUm8lSgpruEGvxWHMeV2nlWuAorFR9XbNy6OE=;
+        s=default; t=1567946714;
+        bh=E9KGdhC/jcBFobfc9mLhrYNF/oc4OdTm3fqc8AkqMOg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LIDvl5bfntqIGMbrLzYdT9DYvlCAGuOaZ1ZaAAInBGRoHx15ZoZkEWc2wqIa5pxzI
-         rcERjSpsRO140jIVt205V2zjWC5Eu1Sy7DSlUN7VFUaLZsGCA/rSprhH9VxoCqBbhs
-         30qzew/+obywwX8c/GPuG/6dbqU+yVZk6PnqpE9Q=
+        b=YJ7So3+dwyI0Icen4lHmGxZSAexQ6r849UEkUmesDcw2zgQ6oqJ8pbF2F0Bfl7nqc
+         0pTJYOrRNfzuxEgzTE2Zw+Hyf9/Y1soporHYZRROj6tSVxLCigifrkaEB/UbWnmD2o
+         B2pviNgGvfozampM+s5LPeQD09v8gADqWYX2bejE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 12/40] net: myri10ge: fix memory leaks
-Date:   Sun,  8 Sep 2019 13:41:45 +0100
-Message-Id: <20190908121120.447555029@linuxfoundation.org>
+Subject: [PATCH 4.14 13/40] lan78xx: Fix memory leaks
+Date:   Sun,  8 Sep 2019 13:41:46 +0100
+Message-Id: <20190908121121.017746007@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121114.260662089@linuxfoundation.org>
 References: <20190908121114.260662089@linuxfoundation.org>
@@ -60,34 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 20fb7c7a39b5c719e2e619673b5f5729ee7d2306 ]
+[ Upstream commit b9cbf8a64865b50fd0f4a3915fa00ac7365cdf8f ]
 
-In myri10ge_probe(), myri10ge_alloc_slices() is invoked to allocate slices
-related structures. Later on, myri10ge_request_irq() is used to get an irq.
-However, if this process fails, the allocated slices related structures are
-not deallocated, leading to memory leaks. To fix this issue, revise the
-target label of the goto statement to 'abort_with_slices'.
+In lan78xx_probe(), a new urb is allocated through usb_alloc_urb() and
+saved to 'dev->urb_intr'. However, in the following execution, if an error
+occurs, 'dev->urb_intr' is not deallocated, leading to memory leaks. To fix
+this issue, invoke usb_free_urb() to free the allocated urb before
+returning from the function.
 
 Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/myricom/myri10ge/myri10ge.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/usb/lan78xx.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/myricom/myri10ge/myri10ge.c b/drivers/net/ethernet/myricom/myri10ge/myri10ge.c
-index b171ed2015fe4..a0a555052d8ca 100644
---- a/drivers/net/ethernet/myricom/myri10ge/myri10ge.c
-+++ b/drivers/net/ethernet/myricom/myri10ge/myri10ge.c
-@@ -3922,7 +3922,7 @@ static int myri10ge_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	 * setup (if available). */
- 	status = myri10ge_request_irq(mgp);
- 	if (status != 0)
--		goto abort_with_firmware;
-+		goto abort_with_slices;
- 	myri10ge_free_irq(mgp);
+diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
+index b62c41114e34e..24b994c68bccd 100644
+--- a/drivers/net/usb/lan78xx.c
++++ b/drivers/net/usb/lan78xx.c
+@@ -3645,7 +3645,7 @@ static int lan78xx_probe(struct usb_interface *intf,
+ 	ret = register_netdev(netdev);
+ 	if (ret != 0) {
+ 		netif_err(dev, probe, netdev, "couldn't register the device\n");
+-		goto out3;
++		goto out4;
+ 	}
  
- 	/* Save configuration space to be restored if the
+ 	usb_set_intfdata(intf, dev);
+@@ -3660,12 +3660,14 @@ static int lan78xx_probe(struct usb_interface *intf,
+ 
+ 	ret = lan78xx_phy_init(dev);
+ 	if (ret < 0)
+-		goto out4;
++		goto out5;
+ 
+ 	return 0;
+ 
+-out4:
++out5:
+ 	unregister_netdev(netdev);
++out4:
++	usb_free_urb(dev->urb_intr);
+ out3:
+ 	lan78xx_unbind(dev, intf);
+ out2:
 -- 
 2.20.1
 
