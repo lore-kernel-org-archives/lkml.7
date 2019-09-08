@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47848C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A67C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19BC5218AF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:43:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DBE821927
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:43:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946611;
-	bh=VKIhn3t5HKFT55uxxSW0rh1RrHK5MQdyDgOmvlyntj8=;
+	s=default; t=1567946614;
+	bh=w2MmB0TGNdTTQo9XjSIhZEyJjp2+5TCwC5sI3zA9Jww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1iUCjUZOgpSwAyOEzrELpUNjclPQmRkz1YpdpWuqKcbLL76BRryNPUGHj8VCvzXwe
-	 YNT6i438XtI5HaF10j+J8xpK7s/qUKE9SunOUXpYEUw7FJCRggf78vYLGqVquN3pjp
-	 vsKNzuSZcZJDIcG9oTsNyg2PeNYnXZGnS92E8Lvo=
+	b=QP0UddwDzpIONXiIkeWgms8lQEcYroIrEaR6mpgx3JZJoFdaIeuZljKy1dGDL2TJQ
+	 z8nzT9tnl3+VeP8NP5DuHrrw1vCvpgbXpinDVQ0GAa75pWg3MK1YkABPC+3dUhNtmk
+	 LU0nU6ev3CwXXFpII3teO4yyAG77T+ltS+ySteQg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729489AbfIHMna (ORCPT
+        id S1729501AbfIHMnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:43:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57096 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:43:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729431AbfIHMnX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:43:23 -0400
+        id S1729431AbfIHMnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:43:31 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C29E1218AE;
-        Sun,  8 Sep 2019 12:43:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F170218AE;
+        Sun,  8 Sep 2019 12:43:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946602;
-        bh=VKIhn3t5HKFT55uxxSW0rh1RrHK5MQdyDgOmvlyntj8=;
+        s=default; t=1567946610;
+        bh=w2MmB0TGNdTTQo9XjSIhZEyJjp2+5TCwC5sI3zA9Jww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KuWwnp5XAL4VzO30OKM2N+mayaYQgpIIlZlpbucWqhIJttcwyXWHBeycdNVwoPcsk
-         AFQgGKOtDKZftUDk77J8eLbydwncdZ+0rDCxQeAlMUHQXd5/Sew2jP+dKPIbyLJoC6
-         xbRmTEX0x0gzdv4Lyq/aSPTED0TIUfZCc2aNCQ6A=
+        b=zPMm0kaerSC95CqJeFOKC2vjEDfGSicc2RrtRMTGetU/g77ZiEGmxCrtwJd2ZMcj1
+         /FI4Cwp/S+V6NFTIKqAiOKHfoeEh8U6IHYDxzIYphvmKB32PXl2lPxhCOEYhbMQbak
+         2A+ZUOnB3XEdrb3MA8l247RFumwTfG6059qoaPHY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Luis Henriques <lhenriques@suse.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 08/23] cx82310_eth: fix a memory leak bug
-Date:   Sun,  8 Sep 2019 13:41:43 +0100
-Message-Id: <20190908121056.539096222@linuxfoundation.org>
+Subject: [PATCH 4.4 16/23] libceph: allow ceph_buffer_put() to receive a NULL ceph_buffer
+Date:   Sun,  8 Sep 2019 13:41:51 +0100
+Message-Id: <20190908121100.477137033@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121052.898169328@linuxfoundation.org>
 References: <20190908121052.898169328@linuxfoundation.org>
@@ -60,36 +61,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1eca92eef18719027d394bf1a2d276f43e7cf886 ]
+[ Upstream commit 5c498950f730aa17c5f8a2cdcb903524e4002ed2 ]
 
-In cx82310_bind(), 'dev->partial_data' is allocated through kmalloc().
-Then, the execution waits for the firmware to become ready. If the firmware
-is not ready in time, the execution is terminated. However, the allocated
-'dev->partial_data' is not deallocated on this path, leading to a memory
-leak bug. To fix this issue, free 'dev->partial_data' before returning the
-error.
-
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/cx82310_eth.c | 3 ++-
+ include/linux/ceph/buffer.h | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/usb/cx82310_eth.c b/drivers/net/usb/cx82310_eth.c
-index 947bea81d9241..dfbdea22fbad9 100644
---- a/drivers/net/usb/cx82310_eth.c
-+++ b/drivers/net/usb/cx82310_eth.c
-@@ -175,7 +175,8 @@ static int cx82310_bind(struct usbnet *dev, struct usb_interface *intf)
- 	}
- 	if (!timeout) {
- 		dev_err(&udev->dev, "firmware not ready in time\n");
--		return -ETIMEDOUT;
-+		ret = -ETIMEDOUT;
-+		goto err;
- 	}
+diff --git a/include/linux/ceph/buffer.h b/include/linux/ceph/buffer.h
+index 07ca15e761001..dada47a4360ff 100644
+--- a/include/linux/ceph/buffer.h
++++ b/include/linux/ceph/buffer.h
+@@ -29,7 +29,8 @@ static inline struct ceph_buffer *ceph_buffer_get(struct ceph_buffer *b)
  
- 	/* enable ethernet mode (?) */
+ static inline void ceph_buffer_put(struct ceph_buffer *b)
+ {
+-	kref_put(&b->kref, ceph_buffer_release);
++	if (b)
++		kref_put(&b->kref, ceph_buffer_release);
+ }
+ 
+ extern int ceph_decode_buffer(struct ceph_buffer **b, void **p, void *end);
 -- 
 2.20.1
 
