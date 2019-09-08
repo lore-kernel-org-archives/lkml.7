@@ -2,51 +2,51 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F35C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49109C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92CF920693
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E9C4218AC
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:51:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947086;
-	bh=qiMYYrfTPi075togGcZvOW8cKQL36BR/ZK0ZrlNGj24=;
+	s=default; t=1567947091;
+	bh=849ghA3tHGvQiAT6aMSTPsQUQKktl4Z5P9iopykH5GU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wRelcCeuX3O9WthOofNfYohMH+9KxIu08s2TIRhMI/8lYx1+JY9B6mbvs7+1VRI/k
-	 96lBJrCfZpSSu260K0Vo4clMpYEoVHmrLW/8SfVx+/WLiuVF+cuqIlqHrppNnKAXjE
-	 np2nghydM4mGJlyPS5DDHn7VrZbelkwErdmvEMKY=
+	b=HExJCFs3tByIqcoHFWN1lmCAjLiGdcyMqtKlp3++Xs9oW7Xwy+yaBjhoQlUnoyA6N
+	 DAiL3q5k8L9QmWy6q2prO53fv6WdrqrpHHwIGZ1JM1wQporgG2zS3cDUKP205fWtiK
+	 iIQI7aMTOTc/5a2vqVs4y44s8ae8DhFuNzWPmUTc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732600AbfIHMvZ (ORCPT
+        id S1732634AbfIHMva (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:51:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42614 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:51:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732530AbfIHMvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:51:17 -0400
+        id S1732558AbfIHMvT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:51:19 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 417D2218AC;
-        Sun,  8 Sep 2019 12:51:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB5DA20863;
+        Sun,  8 Sep 2019 12:51:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567947076;
-        bh=qiMYYrfTPi075togGcZvOW8cKQL36BR/ZK0ZrlNGj24=;
+        s=default; t=1567947079;
+        bh=849ghA3tHGvQiAT6aMSTPsQUQKktl4Z5P9iopykH5GU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A7OOM72bpwltCJef6EEBxtpWO5t4FW1u7S6rNbF3EmX4va1pdIUjc/ujBeNjUViGR
-         oCFkWeXvYEMwrgPZ9Ehy3st2TQnMkk/1FTnKZLhrxZbKD1QSD1MC831o+/iZvjfzcp
-         gtBSc8ehrtyXaX0+3Rj1tzOJvzCc6sUENpvbI6gg=
+        b=0vYPywalov4mLVF4FomsbLOiBxPCTQxH34QPmMYZ17B09wM9eMLS+NxrAE2G+4oXS
+         cWmc3Y3dPMDEdasphUbtKfuPvnJJa/rIk8O3RdqGUtS/0viWjYZMjFW1PnUW/Yypik
+         CqAXN4lL4x8mwx+NuP0OlCcQU1BtU+rjEmsHS5ew=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 50/94] selftests: kvm: fix vmx_set_nested_state_test
-Date:   Sun,  8 Sep 2019 13:41:46 +0100
-Message-Id: <20190908121151.871633476@linuxfoundation.org>
+        stable@vger.kernel.org, Hayes Wang <hayeswang@realtek.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.2 11/94] r8152: remove calling netif_napi_del
+Date:   Sun,  8 Sep 2019 13:41:07 +0100
+Message-Id: <20190908121150.756359393@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
 References: <20190908121150.420989666@linuxfoundation.org>
@@ -59,75 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c930e19790bbbff31c018009907c813fa0925f63 ]
+From: Hayes Wang <hayeswang@realtek.com>
 
-vmx_set_nested_state_test is trying to use the KVM_STATE_NESTED_EVMCS without
-enabling enlightened VMCS first.  Correct the outcome of the test, and actually
-test that it succeeds after the capability is enabled.
+[ Upstream commit 973dc6cfc0e2c43ff29ca5645ceaf1ae694ea110 ]
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Remove unnecessary use of netif_napi_del. This also avoids to call
+napi_disable() after netif_napi_del().
+
+Signed-off-by: Hayes Wang <hayeswang@realtek.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- .../kvm/x86_64/vmx_set_nested_state_test.c      | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ drivers/net/usb/r8152.c |    2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c b/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
-index a99fc66dafeb6..853e370e8a394 100644
---- a/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
-@@ -25,6 +25,8 @@
- #define VMCS12_REVISION 0x11e57ed0
- #define VCPU_ID 5
+--- a/drivers/net/usb/r8152.c
++++ b/drivers/net/usb/r8152.c
+@@ -5309,7 +5309,6 @@ static int rtl8152_probe(struct usb_inte
+ 	return 0;
  
-+bool have_evmcs;
-+
- void test_nested_state(struct kvm_vm *vm, struct kvm_nested_state *state)
- {
- 	vcpu_nested_state_set(vm, VCPU_ID, state, false);
-@@ -75,8 +77,9 @@ void set_default_vmx_state(struct kvm_nested_state *state, int size)
- {
- 	memset(state, 0, size);
- 	state->flags = KVM_STATE_NESTED_GUEST_MODE  |
--			KVM_STATE_NESTED_RUN_PENDING |
--			KVM_STATE_NESTED_EVMCS;
-+			KVM_STATE_NESTED_RUN_PENDING;
-+	if (have_evmcs)
-+		state->flags |= KVM_STATE_NESTED_EVMCS;
- 	state->format = 0;
- 	state->size = size;
- 	state->hdr.vmx.vmxon_pa = 0x1000;
-@@ -126,13 +129,19 @@ void test_vmx_nested_state(struct kvm_vm *vm)
- 	/*
- 	 * Setting vmxon_pa == -1ull and vmcs_pa == -1ull exits early without
- 	 * setting the nested state but flags other than eVMCS must be clear.
-+	 * The eVMCS flag can be set if the enlightened VMCS capability has
-+	 * been enabled.
- 	 */
- 	set_default_vmx_state(state, state_sz);
- 	state->hdr.vmx.vmxon_pa = -1ull;
- 	state->hdr.vmx.vmcs12_pa = -1ull;
- 	test_nested_state_expect_einval(vm, state);
+ out1:
+-	netif_napi_del(&tp->napi);
+ 	usb_set_intfdata(intf, NULL);
+ out:
+ 	free_netdev(netdev);
+@@ -5327,7 +5326,6 @@ static void rtl8152_disconnect(struct us
+ 		if (udev->state == USB_STATE_NOTATTACHED)
+ 			set_bit(RTL8152_UNPLUG, &tp->flags);
  
--	state->flags = KVM_STATE_NESTED_EVMCS;
-+	state->flags &= KVM_STATE_NESTED_EVMCS;
-+	if (have_evmcs) {
-+		test_nested_state_expect_einval(vm, state);
-+		vcpu_enable_evmcs(vm, VCPU_ID);
-+	}
- 	test_nested_state(vm, state);
- 
- 	/* It is invalid to have vmxon_pa == -1ull and SMM flags non-zero. */
-@@ -217,6 +226,8 @@ int main(int argc, char *argv[])
- 	struct kvm_nested_state state;
- 	struct kvm_cpuid_entry2 *entry = kvm_get_supported_cpuid_entry(1);
- 
-+	have_evmcs = kvm_check_cap(KVM_CAP_HYPERV_ENLIGHTENED_VMCS);
-+
- 	if (!kvm_check_cap(KVM_CAP_NESTED_STATE)) {
- 		printf("KVM_CAP_NESTED_STATE not available, skipping test\n");
- 		exit(KSFT_SKIP);
--- 
-2.20.1
-
+-		netif_napi_del(&tp->napi);
+ 		unregister_netdev(tp->netdev);
+ 		cancel_delayed_work_sync(&tp->hw_phy_work);
+ 		tp->rtl_ops.unload(tp);
 
 
