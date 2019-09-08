@@ -7,53 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED2C4C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 491A5C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6B652190F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:49:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F66B218AF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:49:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946966;
-	bh=hQkkUKBVEgJx9TYb+9IwtLkkG5cRMyivysh7kjH0juk=;
+	s=default; t=1567946971;
+	bh=bJ0k3ILoIt5GOaVgDgkaBUsemy5WapQCN3Gaw5S1tgs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pe9uxweoFcO9SZXerNBfxFlY7Ot5oVADtqs9jVJQ6fhWXKLruBWvajoXM4VGFnoh1
-	 zkO4CB/HDMczP+Q/GIipzAR/+UtyHBRJRZnwBCSk/hiwipLahh2YuMy3ny1fD1B18j
-	 M6tfrVqr06hEzpRH25qcaQGFuyTau2SFeW6XWPcE=
+	b=OygLxtWEQFy+SQtaEZttXl64pPjKld3BrO+yyNKU0SBmSygG2kemMx6cdXucDaBUx
+	 gDyC8r4VCVMRohPn/NUSaDS+AahOLZjd/Cukrb6En3ENSHBxpMRos1KI7st9qHZIW/
+	 q9iv11iRs2r0GH+syredIzjLGjGhsXtlkrVWT5V0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729443AbfIHMt0 (ORCPT
+        id S1731515AbfIHMta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:49:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39232 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:49:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731431AbfIHMtX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:49:23 -0400
+        id S1731431AbfIHMt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:49:27 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72D3321971;
-        Sun,  8 Sep 2019 12:49:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3CD1218AF;
+        Sun,  8 Sep 2019 12:49:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946961;
-        bh=hQkkUKBVEgJx9TYb+9IwtLkkG5cRMyivysh7kjH0juk=;
+        s=default; t=1567946967;
+        bh=bJ0k3ILoIt5GOaVgDgkaBUsemy5WapQCN3Gaw5S1tgs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z6fqImRaiudI2GzaumZhGfc5fE00HxI1iaAU0ppZokSTltt7JH8/juL6RoAePPXC8
-         ZYGvDBNNE9mQA/BZpH6mpEwFD+I1mDTWa8YrYAflDZb5oB1sqSLQwPAxUM00vUNwx4
-         7KEIhEax6J7os5xUTm3Flj1tgcbgWBiwHR51VU3Q=
+        b=h1/eR6f0mA0VdqhLAJJsOSuGUhEPlZ2wuMYXCHiY3ijkF7nVaKTf80CLaxuTTECTs
+         M6Nnxm4lGoeLbj5J/4sOHKoqh2sIIxeemcB/3nexl1bnQw0f4m+6RTwTU9kloywsbW
+         1s/9beeTpvI1RVt+hzwgnJugeeR6vT7dtwLawqvQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+        stable@vger.kernel.org, Vlad Buslov <vladbu@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 01/94] mld: fix memory leak in mld_del_delrec()
-Date:   Sun,  8 Sep 2019 13:40:57 +0100
-Message-Id: <20190908121150.470693460@linuxfoundation.org>
+Subject: [PATCH 5.2 03/94] net: sched: act_sample: fix psample group handling on overwrite
+Date:   Sun,  8 Sep 2019 13:40:59 +0100
+Message-Id: <20190908121150.529366497@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
 References: <20190908121150.420989666@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,73 +59,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Vlad Buslov <vladbu@mellanox.com>
 
-[ Upstream commit a84d016479896b5526a2cc54784e6ffc41c9d6f6 ]
+[ Upstream commit dbf47a2a094edf58983265e323ca4bdcdb58b5ee ]
 
-Similar to the fix done for IPv4 in commit e5b1c6c6277d
-("igmp: fix memory leak in igmpv3_del_delrec()"), we need to
-make sure mca_tomb and mca_sources are not blindly overwritten.
+Action sample doesn't properly handle psample_group pointer in overwrite
+case. Following issues need to be fixed:
 
-Using swap() then a call to ip6_mc_clear_src() will take care
-of the missing free.
+- In tcf_sample_init() function RCU_INIT_POINTER() is used to set
+  s->psample_group, even though we neither setting the pointer to NULL, nor
+  preventing concurrent readers from accessing the pointer in some way.
+  Use rcu_swap_protected() instead to safely reset the pointer.
 
-BUG: memory leak
-unreferenced object 0xffff888117d9db00 (size 64):
-  comm "syz-executor247", pid 6918, jiffies 4294943989 (age 25.350s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 fe 88 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<000000005b463030>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
-    [<000000005b463030>] slab_post_alloc_hook mm/slab.h:522 [inline]
-    [<000000005b463030>] slab_alloc mm/slab.c:3319 [inline]
-    [<000000005b463030>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3548
-    [<00000000939cbf94>] kmalloc include/linux/slab.h:552 [inline]
-    [<00000000939cbf94>] kzalloc include/linux/slab.h:748 [inline]
-    [<00000000939cbf94>] ip6_mc_add1_src net/ipv6/mcast.c:2236 [inline]
-    [<00000000939cbf94>] ip6_mc_add_src+0x31f/0x420 net/ipv6/mcast.c:2356
-    [<00000000d8972221>] ip6_mc_source+0x4a8/0x600 net/ipv6/mcast.c:449
-    [<000000002b203d0d>] do_ipv6_setsockopt.isra.0+0x1b92/0x1dd0 net/ipv6/ipv6_sockglue.c:748
-    [<000000001f1e2d54>] ipv6_setsockopt+0x89/0xd0 net/ipv6/ipv6_sockglue.c:944
-    [<00000000c8f7bdf9>] udpv6_setsockopt+0x4e/0x90 net/ipv6/udp.c:1558
-    [<000000005a9a0c5e>] sock_common_setsockopt+0x38/0x50 net/core/sock.c:3139
-    [<00000000910b37b2>] __sys_setsockopt+0x10f/0x220 net/socket.c:2084
-    [<00000000e9108023>] __do_sys_setsockopt net/socket.c:2100 [inline]
-    [<00000000e9108023>] __se_sys_setsockopt net/socket.c:2097 [inline]
-    [<00000000e9108023>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2097
-    [<00000000f4818160>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:296
-    [<000000008d367e8f>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+- Old value of s->psample_group is not released or deallocated in any way,
+  which results resource leak. Use psample_group_put() on non-NULL value
+  obtained with rcu_swap_protected().
 
-Fixes: 1666d49e1d41 ("mld: do not remove mld souce list info when set link down")
-Fixes: 9c8bb163ae78 ("igmp, mld: Fix memory leak in igmpv3/mld_del_delrec()")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+- The function psample_group_put() that released reference to struct
+  psample_group pointed by rcu-pointer s->psample_group doesn't respect rcu
+  grace period when deallocating it. Extend struct psample_group with rcu
+  head and use kfree_rcu when freeing it.
+
+Fixes: 5c5670fae430 ("net/sched: Introduce sample tc action")
+Signed-off-by: Vlad Buslov <vladbu@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/mcast.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ include/net/psample.h  |    1 +
+ net/psample/psample.c  |    2 +-
+ net/sched/act_sample.c |    6 +++++-
+ 3 files changed, 7 insertions(+), 2 deletions(-)
 
---- a/net/ipv6/mcast.c
-+++ b/net/ipv6/mcast.c
-@@ -787,14 +787,15 @@ static void mld_del_delrec(struct inet6_
- 	if (pmc) {
- 		im->idev = pmc->idev;
- 		if (im->mca_sfmode == MCAST_INCLUDE) {
--			im->mca_tomb = pmc->mca_tomb;
--			im->mca_sources = pmc->mca_sources;
-+			swap(im->mca_tomb, pmc->mca_tomb);
-+			swap(im->mca_sources, pmc->mca_sources);
- 			for (psf = im->mca_sources; psf; psf = psf->sf_next)
- 				psf->sf_crcount = idev->mc_qrv;
- 		} else {
- 			im->mca_crcount = idev->mc_qrv;
- 		}
- 		in6_dev_put(pmc->idev);
-+		ip6_mc_clear_src(pmc);
- 		kfree(pmc);
+--- a/include/net/psample.h
++++ b/include/net/psample.h
+@@ -11,6 +11,7 @@ struct psample_group {
+ 	u32 group_num;
+ 	u32 refcount;
+ 	u32 seq;
++	struct rcu_head rcu;
+ };
+ 
+ struct psample_group *psample_group_get(struct net *net, u32 group_num);
+--- a/net/psample/psample.c
++++ b/net/psample/psample.c
+@@ -154,7 +154,7 @@ static void psample_group_destroy(struct
+ {
+ 	psample_group_notify(group, PSAMPLE_CMD_DEL_GROUP);
+ 	list_del(&group->list);
+-	kfree(group);
++	kfree_rcu(group, rcu);
+ }
+ 
+ static struct psample_group *
+--- a/net/sched/act_sample.c
++++ b/net/sched/act_sample.c
+@@ -102,13 +102,17 @@ static int tcf_sample_init(struct net *n
+ 	goto_ch = tcf_action_set_ctrlact(*a, parm->action, goto_ch);
+ 	s->rate = rate;
+ 	s->psample_group_num = psample_group_num;
+-	RCU_INIT_POINTER(s->psample_group, psample_group);
++	rcu_swap_protected(s->psample_group, psample_group,
++			   lockdep_is_held(&s->tcf_lock));
+ 
+ 	if (tb[TCA_SAMPLE_TRUNC_SIZE]) {
+ 		s->truncate = true;
+ 		s->trunc_size = nla_get_u32(tb[TCA_SAMPLE_TRUNC_SIZE]);
  	}
- 	spin_unlock_bh(&im->mca_lock);
+ 	spin_unlock_bh(&s->tcf_lock);
++
++	if (psample_group)
++		psample_group_put(psample_group);
+ 	if (goto_ch)
+ 		tcf_chain_put_by_act(goto_ch);
+ 
 
 
