@@ -2,95 +2,141 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 704C2C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 10:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D653C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 10:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FD5C21479
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 10:19:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567937990;
-	bh=6RGr8PQOWyIaRgGxUQE2vaEpQ+DEkWmYACF+abzXrlY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yBCGESAdTTjBXsUv/gV+93l8TOZkBGhPQhO4vcECZVw8KwefAT/Jy+dKRUAX1YI1l
-	 b//IE0brBrfBcTyoLfXinv/M2tCyIfsdr7SJrjhoxiCL/2uONVYyU2Ks84tkpHvSR5
-	 Mi2KnA9qcBCosFNo2qcWA202vmCbO3W9NOPYJTZs=
+	by mail.kernel.org (Postfix) with ESMTP id 2BCBB207FC
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 10:20:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728310AbfIHKTt (ORCPT
+        id S1728330AbfIHKUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 06:19:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38888 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727945AbfIHKTt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 06:19:49 -0400
-Received: from localhost (unknown [80.251.162.164])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61D16207FC;
-        Sun,  8 Sep 2019 10:19:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567937988;
-        bh=6RGr8PQOWyIaRgGxUQE2vaEpQ+DEkWmYACF+abzXrlY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=z21jSOBc7GcRT7upD69/SoJVXAzLu+gFubq/+1gt0mGjPmIgDuwHqITBFp9FO6dxu
-         H6pe8exAT6zC28KhfuWK9yv3SFsdXSO4gJh+r4hwdBoVw7r8pNFIKRyFwonFg6pS3C
-         9w8d6Ck/ePoM9RR6R2qzt4bMWDmNoHNIwDBCoYjg=
-Date:   Sun, 8 Sep 2019 11:19:44 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Nadav Amit <namit@vmware.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Francois Rigault <rigault.francois@gmail.com>,
-        Jorgen Hansen <jhansen@vmware.com>,
-        Adit Ranadive <aditr@vmware.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Vishnu Dasa <vdasa@vmware.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH] VMCI: Release resource if the work is already queued
-Message-ID: <20190908101944.GA16596@kroah.com>
-References: <20190820202638.49003-1-namit@vmware.com>
- <20190907184711.GA30206@kroah.com>
- <00CA348F-5ACC-4A17-A5F6-9B36C92A95E7@vmware.com>
+        Sun, 8 Sep 2019 06:20:54 -0400
+Received: from mail.parknet.co.jp ([210.171.160.6]:41980 "EHLO
+        mail.parknet.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726186AbfIHKUx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 06:20:53 -0400
+Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
+        by mail.parknet.co.jp (Postfix) with ESMTPSA id 09FB615CBF0;
+        Sun,  8 Sep 2019 19:20:52 +0900 (JST)
+Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
+        by ibmpc.myhome.or.jp (8.15.2/8.15.2/Debian-14) with ESMTPS id x88AKoOj022349
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Sun, 8 Sep 2019 19:20:51 +0900
+Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
+        by devron.myhome.or.jp (8.15.2/8.15.2/Debian-14) with ESMTPS id x88AKoLY011844
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Sun, 8 Sep 2019 19:20:50 +0900
+Received: (from hirofumi@localhost)
+        by devron.myhome.or.jp (8.15.2/8.15.2/Submit) id x88AKnVe011843;
+        Sun, 8 Sep 2019 19:20:49 +0900
+From:   OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+To:     Jan Stancek <jstancek@redhat.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fat: fix corruption in fat_alloc_new_dir()
+References: <fc8878aeefea128c105c49671b2a1ac4694e1f48.1567468225.git.jstancek@redhat.com>
+Date:   Sun, 08 Sep 2019 19:20:49 +0900
+In-Reply-To: <fc8878aeefea128c105c49671b2a1ac4694e1f48.1567468225.git.jstancek@redhat.com>
+        (Jan Stancek's message of "Tue, 3 Sep 2019 01:59:36 +0200")
+Message-ID: <87v9u3xf5q.fsf@mail.parknet.co.jp>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.0.50 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00CA348F-5ACC-4A17-A5F6-9B36C92A95E7@vmware.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 08, 2019 at 04:04:39AM +0000, Nadav Amit wrote:
-> > On Sep 7, 2019, at 9:47 PM, Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-> > 
-> > On Tue, Aug 20, 2019 at 01:26:38PM -0700, Nadav Amit wrote:
-> >> Francois reported that VMware balloon gets stuck after a balloon reset,
-> >> when the VMCI doorbell is removed. A similar error can occur when the
-> >> balloon driver is removed with the following splat:
-> > 
-> > <snip>
-> > 
-> > Note, google thinks your email is spam as you are not sending this from
-> > a valid vmware.com email server.  Please fix this up if you want to make
-> > sure your patches actually make it through...
-> 
-> I used gmail servers since I get complaints (mainly from Linus) that our
-> email servers use DMARC, and this causes mailing list postings to be
-> rejected.
+Jan Stancek <jstancek@redhat.com> writes:
 
-Well the email servers might not reject it now, but gmail itself sure
-does as you are lying about what your domain is :(
+> sb_getblk does not guarantee that buffer_head is uptodate. If there is
+> async read running in parallel for same buffer_head, it can overwrite
+> just initialized msdos_dir_entry, leading to corruption:
+>   FAT-fs (loop0): error, corrupted directory (invalid entries)
+>   FAT-fs (loop0): Filesystem has been set read-only
+>
+> This can happen for example during LTP statx04, which creates loop
+> device, formats it (mkfs.vfat), mounts it and immediately creates
+> a new directory. In parallel, systemd-udevd is probing new block
+> device, which leads to async read.
+>
+>   do_mkdirat                      ksys_read
+>    vfs_mkdir                       vfs_read
+>     vfat_mkdir                      __vfs_read
+>      fat_alloc_new_dir               new_sync_read
+>        /* init de[0], de[1] */        blkdev_read_iter
+>                                        generic_file_read_iter
+>                                         generic_file_buffered_read
+>                                          blkdev_readpage
+>                                           block_read_full_page
+>
+> Faster reproducer (based on LTP statx04):
+>
+> int main(void)
+> {
+> 	int i, j, ret, fd, loop_fd, ctrl_fd;
+> 	int loop_num;
+> 	char loopdev[256], tmp[256], testfile[256];
+>
+> 	mkdir("/tmp/mntpoint", 0777);
+> 	for (i = 0; ; i++) {
+> 		printf("Iteration: %d\n", i);
+> 		sprintf(testfile, "/tmp/test.img.%d", getpid());
+>
+> 		ctrl_fd = open("/dev/loop-control", O_RDWR);
+> 		loop_num = ioctl(ctrl_fd, LOOP_CTL_GET_FREE);
+> 		close(ctrl_fd);
+> 		sprintf(loopdev, "/dev/loop%d", loop_num);
+>
+> 		fd = open(testfile, O_WRONLY|O_CREAT|O_TRUNC, 0600);
+> 		fallocate(fd, 0, 0, 256*1024*1024);
+> 		close(fd);
+>
+> 		fd = open(testfile, O_RDWR);
+> 		loop_fd = open(loopdev, O_RDWR);
+> 		ioctl(loop_fd, LOOP_SET_FD, fd);
+> 		close(loop_fd);
+> 		close(fd);
+>
+> 		sprintf(tmp, "mkfs.vfat %s", loopdev);
+> 		system(tmp);
+> 		mount(loopdev, "/tmp/mntpoint", "vfat", 0, NULL);
+>
+> 		for (j = 0; j < 200; j++) {
+> 			sprintf(tmp, "/tmp/mntpoint/testdir%d", j);
+> 			ret = mkdir(tmp, 0777);
+> 			if (ret) {
+> 				perror("mkdir");
+> 				break;
+> 			}
+> 		}
+>
+> 		umount("/tmp/mntpoint");
+> 		loop_fd = open(loopdev, O_RDWR);
+> 		ioctl(loop_fd, LOOP_CLR_FD, fd);
+> 		close(loop_fd);
+> 		unlink(testfile);
+>
+> 		if (ret)
+> 			break;
+> 	}
+>
+> 	return 0;
+> }
+>
+> Issue triggers within minute on HPE Apollo 70 (arm64, 64GB RAM, 224 CPUs).
 
-> I will check again if our open source people got to a solution, or I
-> would just send it using my gmail identity, while keeping the vmware
-> authorship.
+Using the device while mounting same device doesn't work reliably like
+this race.  (getblk() is intentionally used to get the buffer to write
+new data.)
 
-Please do, this is not a viable workflow.
+mount(2) internally opens the device by EXCL mode, so I guess udev opens
+without EXCL (I dont know if it is intent or not).
 
-thanks,
-
-greg k-h
+Thanks.
+-- 
+OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
