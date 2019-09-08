@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D8AC4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F1BC4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2F9220693
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 971EB20693
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:55:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947335;
-	bh=f9EaQB8NKK81G74W+yQBBG01ebObGkVRd5nEVCE8xSE=;
+	s=default; t=1567947340;
+	bh=kEXN2/3YS7Ynx52gemwFGv4fzO2/5fA67UFxm/tWoD4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G301ohFr2ytjRuLY9S+aXOW1Ka5S8Zm3HrW4u+B2j0dO8Yz7wkv+bFePDSLyVub1X
-	 1BB8AJnB31w9PbDwIOTcg1thihIvf6ivhjmU6pBauTyndVdwe2A7wR13jxsLC3+mF7
-	 N5cJ1eJtrLyWNyOOsddyaa3Y/ns2fddG5AKwlJEQ=
+	b=WeeTpZ1CXAeRt+XBSGiJ6OE5ts3AV/gldmPm+f0jou2qyUzzduU3PC0d7prHf7ZsB
+	 K/Tyww2Jhb/PEjk7uv9d1Q1KnkG+HDRz+mSQ48KgigIhZJpfChxBgIdi6iKsnnBJdR
+	 KTCjaxHT0o+reONYoWs3hRvsPZ8ONulbCm1JUKks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387906AbfIHMze (ORCPT
+        id S2387928AbfIHMzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:55:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42046 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:55:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732348AbfIHMux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:50:53 -0400
+        id S1732304AbfIHMus (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:50:48 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B65B4218AC;
-        Sun,  8 Sep 2019 12:50:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB704218AC;
+        Sun,  8 Sep 2019 12:50:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567947053;
-        bh=f9EaQB8NKK81G74W+yQBBG01ebObGkVRd5nEVCE8xSE=;
+        s=default; t=1567947048;
+        bh=kEXN2/3YS7Ynx52gemwFGv4fzO2/5fA67UFxm/tWoD4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dglhExxyWHyoSVi6jKLgVlxglDzWoaIZIawPpCtX4fKC69Gf27YMXencDm0k2ttys
-         F5XZl2jGDzFVA5FuydBJ076IBBDpq7EJCVIaxqMefBOePoELcbhux3luzZJKdUXYGV
-         QNLstqyHm0gfWNvduSscEl1W90iHB3aRJ+np8oog=
+        b=PIi7mrxdn3oOO3FWc6ZQv20o0DdTkwGmnMlu5M/61bMjPjOmLm0VacThEDT5Xy+Sp
+         B2L3lL74w6cyiS/Jl34O2DSRQO+mZEpltgeJqk3LsW+gIbLy97Q88MyLSP0KhL2Tv5
+         2b8xuCelvyeJlYbF0YtbBilR3iiDKixWO7A895jg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
+        Thomas Falcon <tlfalcon@linux.ibm.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 42/94] netfilter: nft_flow_offload: skip tcp rst and fin packets
-Date:   Sun,  8 Sep 2019 13:41:38 +0100
-Message-Id: <20190908121151.643252159@linuxfoundation.org>
+Subject: [PATCH 5.2 40/94] ibmveth: Convert multicast list size for little-endian system
+Date:   Sun,  8 Sep 2019 13:41:36 +0100
+Message-Id: <20190908121151.585970925@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
 References: <20190908121150.420989666@linuxfoundation.org>
@@ -59,59 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit dfe42be15fde16232340b8b2a57c359f51cc10d9 ]
+[ Upstream commit 66cf4710b23ab2adda11155684a2c8826f4fe732 ]
 
-TCP rst and fin packets do not qualify to place a flow into the
-flowtable. Most likely there will be no more packets after connection
-closure. Without this patch, this flow entry expires and connection
-tracking picks up the entry in ESTABLISHED state using the fixup
-timeout, which makes this look inconsistent to the user for a connection
-that is actually already closed.
+The ibm,mac-address-filters property defines the maximum number of
+addresses the hypervisor's multicast filter list can support. It is
+encoded as a big-endian integer in the OF device tree, but the virtual
+ethernet driver does not convert it for use by little-endian systems.
+As a result, the driver is not behaving as it should on affected systems
+when a large number of multicast addresses are assigned to the device.
 
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Reported-by: Hangbin Liu <liuhangbin@gmail.com>
+Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_flow_offload.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/ibm/ibmveth.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/net/netfilter/nft_flow_offload.c b/net/netfilter/nft_flow_offload.c
-index aa5f571d43619..060a4ed46d5e6 100644
---- a/net/netfilter/nft_flow_offload.c
-+++ b/net/netfilter/nft_flow_offload.c
-@@ -72,11 +72,11 @@ static void nft_flow_offload_eval(const struct nft_expr *expr,
- {
- 	struct nft_flow_offload *priv = nft_expr_priv(expr);
- 	struct nf_flowtable *flowtable = &priv->flowtable->data;
-+	struct tcphdr _tcph, *tcph = NULL;
- 	enum ip_conntrack_info ctinfo;
- 	struct nf_flow_route route;
- 	struct flow_offload *flow;
- 	enum ip_conntrack_dir dir;
--	bool is_tcp = false;
- 	struct nf_conn *ct;
- 	int ret;
+diff --git a/drivers/net/ethernet/ibm/ibmveth.c b/drivers/net/ethernet/ibm/ibmveth.c
+index d654c234aaf75..c5be4ebd84373 100644
+--- a/drivers/net/ethernet/ibm/ibmveth.c
++++ b/drivers/net/ethernet/ibm/ibmveth.c
+@@ -1605,7 +1605,7 @@ static int ibmveth_probe(struct vio_dev *dev, const struct vio_device_id *id)
+ 	struct net_device *netdev;
+ 	struct ibmveth_adapter *adapter;
+ 	unsigned char *mac_addr_p;
+-	unsigned int *mcastFilterSize_p;
++	__be32 *mcastFilterSize_p;
+ 	long ret;
+ 	unsigned long ret_attr;
  
-@@ -89,7 +89,10 @@ static void nft_flow_offload_eval(const struct nft_expr *expr,
- 
- 	switch (ct->tuplehash[IP_CT_DIR_ORIGINAL].tuple.dst.protonum) {
- 	case IPPROTO_TCP:
--		is_tcp = true;
-+		tcph = skb_header_pointer(pkt->skb, pkt->xt.thoff,
-+					  sizeof(_tcph), &_tcph);
-+		if (unlikely(!tcph || tcph->fin || tcph->rst))
-+			goto out;
- 		break;
- 	case IPPROTO_UDP:
- 		break;
-@@ -115,7 +118,7 @@ static void nft_flow_offload_eval(const struct nft_expr *expr,
- 	if (!flow)
- 		goto err_flow_alloc;
- 
--	if (is_tcp) {
-+	if (tcph) {
- 		ct->proto.tcp.seen[0].flags |= IP_CT_TCP_FLAG_BE_LIBERAL;
- 		ct->proto.tcp.seen[1].flags |= IP_CT_TCP_FLAG_BE_LIBERAL;
+@@ -1627,8 +1627,9 @@ static int ibmveth_probe(struct vio_dev *dev, const struct vio_device_id *id)
+ 		return -EINVAL;
  	}
+ 
+-	mcastFilterSize_p = (unsigned int *)vio_get_attribute(dev,
+-						VETH_MCAST_FILTER_SIZE, NULL);
++	mcastFilterSize_p = (__be32 *)vio_get_attribute(dev,
++							VETH_MCAST_FILTER_SIZE,
++							NULL);
+ 	if (!mcastFilterSize_p) {
+ 		dev_err(&dev->dev, "Can't find VETH_MCAST_FILTER_SIZE "
+ 			"attribute\n");
+@@ -1645,7 +1646,7 @@ static int ibmveth_probe(struct vio_dev *dev, const struct vio_device_id *id)
+ 
+ 	adapter->vdev = dev;
+ 	adapter->netdev = netdev;
+-	adapter->mcastFilterSize = *mcastFilterSize_p;
++	adapter->mcastFilterSize = be32_to_cpu(*mcastFilterSize_p);
+ 	adapter->pool_config = 0;
+ 
+ 	netif_napi_add(netdev, &adapter->napi, ibmveth_poll, 16);
 -- 
 2.20.1
 
