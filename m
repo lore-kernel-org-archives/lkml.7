@@ -2,149 +2,147 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48CD2C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 01:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E10C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 01:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11972206BB
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 01:31:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F67E21744
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 01:51:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kZjaefs2"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NRLREOs6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390276AbfIHBbC (ORCPT
+        id S1729782AbfIHBvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 21:31:02 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34337 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732135AbfIHBbC (ORCPT
+        Sat, 7 Sep 2019 21:51:01 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46332 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbfIHBvB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 21:31:02 -0400
-Received: by mail-pg1-f196.google.com with SMTP id n9so5667778pgc.1
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Sep 2019 18:31:02 -0700 (PDT)
+        Sat, 7 Sep 2019 21:51:01 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q5so6912685pfg.13
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Sep 2019 18:51:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=poARC7nH5qyqXeO1x1xXars1F6UE2Nd7PqDJ8pU4Urk=;
-        b=kZjaefs2zu6FFETZgXJy9uQeDexA+5X+zHA3jNCd7M5n3DBm6A8/1M4Z0unIUxLTdy
-         P8VsVJElFxrAtU5jH3hsz9R9rA06yp3G1VaOcb4t0XbrmEZjwH3Vp9ft31CtZrJuwu7d
-         KEr7FH1haPzjq1rvLWNztwhnxjS3GGe7VI+sltejF1AvKppydtPcEZ16+UbrzMMXUBLW
-         r7irjhYhHHoBG0bIWiamPlp6vvvL/QFcv069dG4QDeofGeTI7NBF7ZHiEnRpsnIgbPkj
-         foQ2yEkJXphrgvUJY5NaizJ9EbLmyCkm6b58gaooRVz9N0XN4c/uXmOF/M0B0sqoaUiS
-         t8qQ==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=KbxwZEXlmK2EHfzsJ8Z4ohJVr62bCYur63EuvHNOgHw=;
+        b=NRLREOs6ZqJDZfHKwII31iUClnrqOfpMCT4wTorPp5hP830PZYXWCNqWaE6xo1XFcy
+         C8wYyPFPma81I1fp90Ywbtgq0LpKsmkn53EjDm/W5zgQ6B9NFWVk9CcG9O/Q00yG2S4Z
+         WIC9WSRr9I79GmSRwYbjxU3yr0/WIXU/RIUhDuhnBrC80ltNkpJCjTAKN4AuzvwN2y4U
+         fKTIQR11ICnHQ5wSe7u4WKXRh4Q6OstlU0ExHGsL/Nq9SOT31ajGjSDP4gn2d5HKNf/+
+         C5sLLV95qLMBEarM1rGAmyyZ4UxYjhaI/Tbb5YVfKKmk0qMEY6T9XAXlMUGoDkwCuEej
+         cNhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=poARC7nH5qyqXeO1x1xXars1F6UE2Nd7PqDJ8pU4Urk=;
-        b=kbDV+WaRXTi3Y6/KGWE+uNFmIWLog5hQA5lwx0hYJrDQXZgFCdtd4M0CK1cu+VtTTh
-         VYvPjg0lamFb/mwmaEUMEGXotSIie8fZsZi0uBHaFsXqiGb1HvBwaO8MdkQx4Xz3kV7u
-         rP9jy3lCHN8G9wc6YjF4nUVFH8ZCFGltOMfa3N3R3czAhHSf93X5Z7gMfHUDyQsrqxO3
-         d+Wj8wi8kwU+AnvYCazBrUL2Adi8Az+5mPRUmRzZJb7lqDJ0hMB1zGvgaxBhJrnS2Sl2
-         u1Fe7wdGi3i6p0Ud5vJfE5Zoq+rdkjiauwOGSngDkdD2MlQyjSOzXaOrtOl8k7NjaJ55
-         2VuQ==
-X-Gm-Message-State: APjAAAVLoYogD6WO5/yuySXG7WXqqVTmjpc6suB4S9DbdD/YFoP7OV3U
-        jq73fwmq7QohkwCnMK/ZzPQ=
-X-Google-Smtp-Source: APXvYqwpSiBHk13x0CBCroReB4e0aIeJ3WDsV98VZtO/j/eSiS9nW/gVnPUvagx3S8Dxa88f1zyGeg==
-X-Received: by 2002:a65:6288:: with SMTP id f8mr14645161pgv.292.1567906261589;
-        Sat, 07 Sep 2019 18:31:01 -0700 (PDT)
-Received: from mail.google.com ([149.28.153.17])
-        by smtp.gmail.com with ESMTPSA id j10sm9805008pjn.3.2019.09.07.18.30.58
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=KbxwZEXlmK2EHfzsJ8Z4ohJVr62bCYur63EuvHNOgHw=;
+        b=qA+ItD05BFZH9CB8SK8995+/wWscuT6yZK9SdlorF5I1YyXoiY/XRXfS53bpLIYKbI
+         ehqJKJffLOeqf/+gb/Zmzpt6e95tKjTjZ3CcJr5J1u3utX/wYDnFwLkd4e0JFKTpzoNQ
+         R6AcyPuPGWvqgEkIZMCvcKVDycD+ryRHLOJXMjrBWURgzfzIH0ALyqL+zsloRIwdH5M+
+         ta7f21ynRPxaAm4+uxf1xXTypqTIdc4jtg09svPxSGotDhcGcB17QRZvIo91Oc66k5Q3
+         0o4LxSXVHtZcApL06Ho0LFnCVz1ZcLFF5U4H/saJ1u1dsKc9kihhKw+Q5V1x7lr1Fh7w
+         Z3gA==
+X-Gm-Message-State: APjAAAVk7uYEe7941yybIBv1CXDARTd32Z+sFpqoshTmg6uW2tPKL+VT
+        S3Dv88HeXysvVZdmaZiofcPKrQ==
+X-Google-Smtp-Source: APXvYqyHIRUGqUEVgtpS5Qd1RlYBK10Uualc5xWB54lKewaqTzAfMyNDqIxsgeUahNEYZWNGD8Qp+A==
+X-Received: by 2002:a17:90a:fc8:: with SMTP id 66mr18058273pjz.134.1567907459337;
+        Sat, 07 Sep 2019 18:50:59 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id s186sm14149893pfb.126.2019.09.07.18.50.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Sep 2019 18:31:01 -0700 (PDT)
-Date:   Sun, 8 Sep 2019 09:30:54 +0800
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/8] kconfig/hacking: make 'kernel hacking' menu better
- structured
-Message-ID: <20190908013053.zqwivb5t4fcepcey@mail.google.com>
-References: <20190908012800.12979-1-changbin.du@gmail.com>
+        Sat, 07 Sep 2019 18:50:58 -0700 (PDT)
+Date:   Sat, 7 Sep 2019 18:50:57 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Michal Hocko <mhocko@suse.com>, Mel Gorman <mgorman@suse.de>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+Subject: Re: [patch for-5.3 0/4] revert immediate fallback to remote
+ hugepages
+In-Reply-To: <CAHk-=wifuQ68e6Q4F2txGS48WgcoX2REE4te5_j36ypV-T2ZKw@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1909071829440.200558@chino.kir.corp.google.com>
+References: <alpine.DEB.2.21.1909041252230.94813@chino.kir.corp.google.com> <CAHk-=wjmF_MGe5sBDmQB1WGpr+QFWkqboHpL37JYB5WgnG8nMA@mail.gmail.com> <alpine.DEB.2.21.1909051345030.217933@chino.kir.corp.google.com> <alpine.DEB.2.21.1909071249180.81471@chino.kir.corp.google.com>
+ <CAHk-=wifuQ68e6Q4F2txGS48WgcoX2REE4te5_j36ypV-T2ZKw@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190908012800.12979-1-changbin.du@gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, 7 Sep 2019, Linus Torvalds wrote:
 
-This is a preview:
-  │ ┌───────────────────────────────────────────────────────────────────┐ │
-  │ │        printk and dmesg options  --->                             │ │
-  │ │        Compile-time checks and compiler options  --->             │ │
-  │ │        Generic Kernel Debugging Instruments  --->                 │ │
-  │ │    -*- Kernel debugging                                           │ │
-  │ │    [*]   Miscellaneous debug code                                 │ │
-  │ │        Memory Debugging  --->                                     │ │
-  │ │        IRQ Debugging  --->                                        │ │
-  │ │        Debug Oops, Lockups and Hangs  --->                        │ │
-  │ │        Scheduler Debugging  --->                                  │ │
-  │ │    [*] Enable extra timekeeping sanity checking                   │ │
-  │ │        Lock Debugging (spinlocks, mutexes, etc...)  --->          │ │
-  │ │    -*- Stack backtrace support                                    │ │
-  │ │    [ ] Warn for all uses of unseeded randomness                   │ │
-  │ │    [ ] kobject debugging                                          │ │
-  │ │        Debug kernel data structures  --->                         │ │
-  │ │    [ ] Debug notifier call chains                                 │ │
-  │ │    [ ] Debug credential management                                │ │
-  │ │        RCU Debugging  --->                                        │ │
-  │ │    [ ] Force round-robin CPU selection for unbound work items     │ │
-  │ │    [ ] Force extended block device numbers and spread them        │ │
-  │ │    [ ] Enable CPU hotplug state control                           │ │
-  │ │    [*] Latency measuring infrastructure                           │ │
-  │ │    [*] Tracers  --->                                              │ │
-  │ │    [ ] Remote debugging over FireWire early on boot               │ │
-  │ │    [*] Sample kernel code  --->                                   │ │
-  │ │    [*] Filter access to /dev/mem                                  │ │
-  │ │    [ ]   Filter I/O access to /dev/mem                            │ │
-  │ │        x86 Debugging  --->                                        │ │
-  │ │        Kernel Testing and Coverage  --->                          │ │
-  │ │                                                                   │ │
-  │ │                                                                   │ │
-  │ └───────────────────────────────────────────────────────────────────┘ │
-  ├───────────────────────────────────────────────────────────────────────┤
-  │       <Select>    < Exit >    < Help >    < Save >    < Load >        │
-  └───────────────────────────────────────────────────────────────────────┘
-
-On Sun, Sep 08, 2019 at 09:27:52AM +0800, Changbin Du wrote:
-> This series is a trivial improvment for the layout of 'kernel hacking'
-> configuration menu. Now we have many items in it which makes takes
-> a little time to look up them since they are not well structured yet.
+> > Andrea acknowledges the swap storm that he reported would be fixed with
+> > the last two patches in this series
 > 
-> Early discussion is here:
-> https://lkml.org/lkml/2019/9/1/39
-> 
-> Changbin Du (8):
->   kconfig/hacking: Group sysrq/kgdb/ubsan into 'Generic Kernel Debugging
->     Instruments'
->   kconfig/hacking: Create submenu for arch special debugging options
->   kconfig/hacking: Group kernel data structures debugging together
->   kconfig/hacking: Move kernel testing and coverage options to same
->     submenu
->   kconfig/hacking: Move Oops into 'Lockups and Hangs'
->   kconfig/hacking: Move SCHED_STACK_END_CHECK after DEBUG_STACK_USAGE
->   kconfig/hacking: Create a submenu for scheduler debugging options
->   kconfig/hacking: Move DEBUG_BUGVERBOSE to 'printk and dmesg options'
-> 
->  lib/Kconfig.debug | 627 ++++++++++++++++++++++++----------------------
->  1 file changed, 324 insertions(+), 303 deletions(-)
-> 
-> -- 
-> 2.20.1
+> The problem is that even you aren't arguing that those patches should
+> go into 5.3.
 > 
 
--- 
-Cheers,
-Changbin Du
+For three reasons: (a) we lack a test result from Andrea, (b) there's 
+on-going discussion, particularly based on Vlastimil's feedback, and 
+(c) the patches will be refreshed incorporating that feedback as well as 
+Mike's suggestion to exempt __GFP_RETRY_MAYFAIL for hugetlb.
+
+> So those fixes aren't going in, so "the swap storms would be fixed"
+> argument isn't actually an argument at all as far as 5.3 is concerned.
+> 
+
+It indicates that progress has been made to address the actual bug without 
+introducing long-lived access latency regressions for others, particularly 
+those who use MADV_HUGEPAGE.  In the worst case, some systems running 
+5.3-rc4 and 5.3-rc5 have the same amount of memory backed by hugepages but 
+on 5.3-rc5 the vast majority of it is allocated remotely.  This incurs a 
+signficant performance regression regardless of platform; the only thing 
+needed to induce this is a fragmented local node that would otherwise be 
+compacted in 5.3-rc4 rather than quickly allocate remote on 5.3-rc5.
+
+> End result: we'd have the qemu-kvm instance performance problem in 5.3
+> that apparently causes distros to apply those patches that you want to
+> revert anyway.
+> 
+> So reverting would just make distros not use 5.3 in that form.
+> 
+
+I'm arguing to revert 5.3 back to the behavior that we have had for years 
+and actually fix the bug that everybody else seems to be ignoring and then 
+*backport* those fixes to 5.3 stable and every other stable tree that can 
+use them.  Introducing a new mempolicy for NUMA locality into 5.3.0 that 
+will subsequently changed in future 5.3 stable kernels and differs from 
+all kernels from the past few years is not in anybody's best interest if 
+the actual problem can be fixed.  It requires more feedback than a 
+one-line "the swap storms would be fixed with this."  That collaboration 
+takes time and isn't something that should be rushed into 5.3-rc5.
+
+Yes, we can fix NUMA locality of hugepages when a workload like qemu is 
+larger than a single socket; the vast majority of workloads in the 
+datacenter are small than a socket and *cannot* incur the performance 
+penalty if local memory is fragmented that 5.3-rc5 introduces.
+
+In other words, 5.3-rc5 is only fixing a highly specialized usecase where 
+remote allocation is acceptable because the workload is larger than a 
+socket *and* remote memory is not low on memory or fragmented.  If you 
+consider the opposite of that, workloads smaller than a socket or local 
+compaction actually works, this has introduced a measurable regression for 
+everybody else.
+
+I'm not sure why we are ignoring a painfully obvious bug in the page 
+allocator because of a poor feedback loop between itself and memory 
+compaction and rather papering over it by falling back to remote memory 
+when NUMA actually does matter.  If you release 5.3 without the first two 
+patches in this series, I wouldn't expect any additional feedback or test 
+results to fix this bug considering all we have gotten so far is "this 
+would fix this swap storms" and not collaborating to fix the issue for 
+everybody rather than only caring about their own workloads.  At least my 
+patches acknowledge and try to fix the issue the other is encountering.
