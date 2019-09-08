@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4101C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 10:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 263C0C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 10:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC13020863
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 10:12:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00A1620863
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 10:13:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IQz6usR0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XFSAECu6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728221AbfIHKM6 (ORCPT
+        id S1728257AbfIHKNA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 06:12:58 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43282 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728154AbfIHKMu (ORCPT
+        Sun, 8 Sep 2019 06:13:00 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45282 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728188AbfIHKMy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 06:12:50 -0400
-Received: by mail-lj1-f193.google.com with SMTP id d5so9880843lja.10
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 03:12:49 -0700 (PDT)
+        Sun, 8 Sep 2019 06:12:54 -0400
+Received: by mail-lj1-f195.google.com with SMTP id l1so9850037lji.12
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 03:12:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=pKTLA8BPyKLX9YHHuPwtPhpXH4h+0Jxv8uz/z0H2wn8=;
-        b=IQz6usR0dVKguJznE5uwgQrDgBPq+1KDURHrwgj3B68bVWnvG2HpejbwXV9o6x03hg
-         pyD2rFKEQDWaN6d7CyUM3W+CVs5ggKUaha1XE9GRYfAOzqxXfMBEVIZm8lk/DrYuUQnn
-         K7l1WXgCWy6jJdGeZBSzs/1QfBLwMWj2atFZx/+W7lS9Xvdzrn5uMXDX9WHecRub2lvS
-         ELZw9+sZ4PTrhnXh7MyZKGtpHyHieSHzeOS0SepU5vOln6djN8SVpBgfE7uFQUFvv2TD
-         fr88VUn+pZjfn552rf6/wS00NR7kdexqpXWiL3uAZQcwUfAW5HmaY+1p0i6F2nBnxLPS
-         RQeA==
+        bh=IS0lVdK7iQppkNRcA/eyYIxzfqUhjc4kqGnbAO0Nu8w=;
+        b=XFSAECu6eOchqjUmGfyiFNgZMWo+bvmAT0zhqDXFcxcLzZrltHNIhcmRSv6/JryE1v
+         O7KAHIvW8AEktgkrl5abCIN6g137fTZuN4+UmVwn4Dj2e2sNi9d2vV/hsiwPd60aQTFH
+         XvqkGnJe7W7dOLIGZdBWH4Hh8IqcxzSxuI6G+wN6mcnHoOlW2p6DxoTimAa2YJiDD9gc
+         j3GVp5WR9XwBthfZyvCewUxTDky7uxpl5uaHcw0fRYk5TMEe4Mdm00mLfgPWbaVLnGc9
+         kLxXihevliSWwN6eOghy0521aMhpFk72hI395y5Jn7kPWbXKLcP4MaCBH2xufp3mlztK
+         VoTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=pKTLA8BPyKLX9YHHuPwtPhpXH4h+0Jxv8uz/z0H2wn8=;
-        b=r8hjoB2xtnxOjdG9GG0oSGyMhSrWrA+YQz5szefDPCqzWikpq5hSdgmNh4qqgywNkq
-         7WB9XytQNFnebpnirB8zWVNwO9kA6c6OrHGnA4u3e62IOgRsFllS+bTzzWp7NPH1jTsJ
-         7A/CoinYIeUae2rFHKrk3jAT7puIThNJ7l+QcJeyIeNCwUQiYpW8LPL6Ow4QHMVCFykR
-         ol+MaE5cDWMWN/GzMvpTegYx7pi6pXCYcdh9765IvPUC3j2WGiHVCIODecPzp9AIUCPF
-         kf7J2UdgJ/HjlEIHbOI3rXFIlVakL+8HH1mjgye15spxUUxHErq81OL9/XKJ199zl2Ty
-         pQWA==
-X-Gm-Message-State: APjAAAVn9S5kEqXGZcmn+IzC3eTmxoNXJhwLi9M2KT2XXAsB/8PbXdtX
-        BCXUxc4V+mtUksDSA2tJ+L+oQg==
-X-Google-Smtp-Source: APXvYqzIBrVCzTFMAkkD8zaEddXTkXDJL2QuHMc/BkCaUp14332Xlp3p1Xir6bNKkkBPWLadqtU6RA==
-X-Received: by 2002:a2e:958c:: with SMTP id w12mr11761091ljh.98.1567937568383;
-        Sun, 08 Sep 2019 03:12:48 -0700 (PDT)
+        bh=IS0lVdK7iQppkNRcA/eyYIxzfqUhjc4kqGnbAO0Nu8w=;
+        b=kqfe7IZfU3B+Imkt0mZLpHBrDDwP1riPws6tlg9Q1bo+D05yIV+qunnyJMPZ/sZZa3
+         nxu6o3JKxD7ribd5wzegDxEBZJPW3dmFzUYtkeiItMhhw/FDmxujD4Fei6rgYRzjwVyB
+         nXAIlaBI2682cYNqCd//7QzrrCfAqm0KEy6LeGX2nek7OPeRpJlbA63phl3M2q7BL3pG
+         AFOoIRCv6zOdX8ylgBOZUWlPQnpefCghGVFeO86L/CyS3+1iLz+mZPEEXMQVGtTxwmev
+         81HMISBDK4XJeP70A8gq1CEJ+MTn9wXczqBYtm0R6zvlHl+0h2cUYrHZn+6F5Yd82uuK
+         9gow==
+X-Gm-Message-State: APjAAAWxKOyk+xwAxHVYmRcevYfEaKSWd6JCZpzyDfQNGv0LC2UKL6re
+        DFoAH9/DTublj/0gJkW+KnZREQ==
+X-Google-Smtp-Source: APXvYqzGa5ufeqoMMCyIUrEeU7LqbusZnxDO1ItjP4toDSXg19lvkKmBEh9+NqDHY2u1hfysc1HBJg==
+X-Received: by 2002:a2e:b1c4:: with SMTP id e4mr12099214lja.101.1567937572577;
+        Sun, 08 Sep 2019 03:12:52 -0700 (PDT)
 Received: from localhost.localdomain ([185.122.190.73])
-        by smtp.gmail.com with ESMTPSA id h25sm2444849lfj.81.2019.09.08.03.12.47
+        by smtp.gmail.com with ESMTPSA id h25sm2444849lfj.81.2019.09.08.03.12.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Sep 2019 03:12:47 -0700 (PDT)
+        Sun, 08 Sep 2019 03:12:52 -0700 (PDT)
 From:   Ulf Hansson <ulf.hansson@linaro.org>
 To:     linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
@@ -65,9 +65,9 @@ Cc:     Shawn Lin <shawn.lin@rock-chips.com>,
         Yong Mao <yong.mao@mediatek.com>,
         Chaotian Jing <chaotian.jing@mediatek.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 05/11] mmc: core: Clarify sdio_irq_pending flag for MMC_CAP2_SDIO_IRQ_NOTHREAD
-Date:   Sun,  8 Sep 2019 12:12:30 +0200
-Message-Id: <20190908101236.2802-6-ulf.hansson@linaro.org>
+Subject: [PATCH v2 08/11] mmc: core: Fixup processing of SDIO IRQs during system suspend/resume
+Date:   Sun,  8 Sep 2019 12:12:33 +0200
+Message-Id: <20190908101236.2802-9-ulf.hansson@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190908101236.2802-1-ulf.hansson@linaro.org>
 References: <20190908101236.2802-1-ulf.hansson@linaro.org>
@@ -76,31 +76,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sdio_irq_pending flag is used to let host drivers indicate that it has
-signaled an IRQ. If that is the case and we only have a single SDIO func
-that have claimed an SDIO IRQ, our assumption is that we can avoid reading
-the SDIO_CCCR_INTx register and just call the SDIO func irq handler
-immediately. This makes sense, but the flag is set/cleared in a somewhat
-messy order, let's fix that up according to below.
+System suspend/resume of SDIO cards, with SDIO IRQs enabled and when using
+MMC_CAP2_SDIO_IRQ_NOTHREAD is unfortunate still suffering from a fragile
+behaviour. Some problems have been taken care of so far, but more issues
+remains.
 
-First, the flag is currently set in sdio_run_irqs(), which is executed as a
-work that was scheduled from sdio_signal_irq(). To make it more implicit
-that the host have signaled an IRQ, let's instead immediately set the flag
-in sdio_signal_irq(). This also makes the behavior consistent with host
-drivers that uses the legacy, mmc_signal_sdio_irq() API. This have no
-functional impact, because we don't expect host drivers to call
-sdio_signal_irq() until after the work (sdio_run_irqs()) have been executed
-anyways.
+For example, calling the ->ack_sdio_irq() callback to let host drivers
+re-enable the SDIO IRQs is a bad idea, unless the IRQ have been consumed,
+which may not be the case during system suspend/resume. This may lead to
+that a host driver re-signals the same SDIO IRQ over and over again,
+causing a storm of IRQs and gives a ping-pong effect towards the
+sdio_irq_work().
 
-Second, currently we never clears the flag when using the sdio_run_irqs()
-work, but only when using the sdio_irq_thread(). Let make the behavior
-consistent, by moving the flag to be cleared inside the common
-process_sdio_pending_irqs() function. Additionally, tweak the behavior of
-the flag slightly, by avoiding to clear it unless we processed the SDIO
-IRQ. The purpose with this at this point, is to keep the information about
-whether there have been an SDIO IRQ signaled by the host, so at system
-resume we can decide to process it without reading the SDIO_CCCR_INTx
-register.
+Moreover, calling the ->enable_sdio_irq() callback at system resume to
+re-enable already enabled SDIO IRQs for the host, causes the runtime PM
+count for some host drivers to become in-balanced. This then leads to the
+host to remain runtime resumed, no matter if it's needed or not.
+
+To fix these problems, let's check if process_sdio_pending_irqs() actually
+consumed the SDIO IRQ, before we continue to ack the IRQ by invoking the
+->ack_sdio_irq() callback.
+
+Additionally, there should be no need to re-enable SDIO IRQs as the host
+driver already knows if they were enabled at system suspend, thus also
+whether it needs to re-enable them at system resume. For this reason, drop
+the call to ->enable_sdio_irq() during system resume.
+
+In regards to these changes there is yet another issue, which is when there
+is an SDIO IRQ being signaled by the host driver, but after the SDIO card
+has been system suspended. Currently these IRQs are just thrown away, while
+we should at least make sure to try to consume them when the SDIO card has
+been system resumed. Fix this by queueing a sdio_irq_work() after we system
+resumed the SDIO card.
 
 Tested-by: Matthias Kaehlcke <mka@chromium.org>
 Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
@@ -108,66 +115,40 @@ Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 ---
 
 Changes in v2:
-	- Re-wrote changelog.
+	- Queue a sdio_irq_work() rather using sdio_signal_irq().
 
 ---
- drivers/mmc/core/sdio_irq.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/mmc/core/sdio.c     | 2 +-
+ drivers/mmc/core/sdio_irq.c | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/mmc/core/sdio.c b/drivers/mmc/core/sdio.c
+index c557f1519b77..26cabd53ddc5 100644
+--- a/drivers/mmc/core/sdio.c
++++ b/drivers/mmc/core/sdio.c
+@@ -1015,7 +1015,7 @@ static int mmc_sdio_resume(struct mmc_host *host)
+ 		if (!(host->caps2 & MMC_CAP2_SDIO_IRQ_NOTHREAD))
+ 			wake_up_process(host->sdio_irq_thread);
+ 		else if (host->caps & MMC_CAP_SDIO_IRQ)
+-			host->ops->enable_sdio_irq(host, 1);
++			queue_delayed_work(system_wq, &host->sdio_irq_work, 0);
+ 	}
+ 
+ out:
 diff --git a/drivers/mmc/core/sdio_irq.c b/drivers/mmc/core/sdio_irq.c
-index f75043266984..0962a4357d54 100644
+index d7965b53a6d2..900871073bd7 100644
 --- a/drivers/mmc/core/sdio_irq.c
 +++ b/drivers/mmc/core/sdio_irq.c
-@@ -59,6 +59,7 @@ static int process_sdio_pending_irqs(struct mmc_host *host)
- {
- 	struct mmc_card *card = host->card;
- 	int i, ret, count;
-+	bool sdio_irq_pending = host->sdio_irq_pending;
- 	unsigned char pending;
- 	struct sdio_func *func;
- 
-@@ -66,13 +67,16 @@ static int process_sdio_pending_irqs(struct mmc_host *host)
- 	if (mmc_card_suspended(card))
- 		return 0;
- 
-+	/* Clear the flag to indicate that we have processed the IRQ. */
-+	host->sdio_irq_pending = false;
-+
- 	/*
- 	 * Optimization, if there is only 1 function interrupt registered
- 	 * and we know an IRQ was signaled then call irq handler directly.
- 	 * Otherwise do the full probe.
- 	 */
- 	func = card->sdio_single_irq;
--	if (func && host->sdio_irq_pending) {
-+	if (func && sdio_irq_pending) {
- 		func->irq_handler(func);
- 		return 1;
- 	}
-@@ -110,7 +114,6 @@ static void sdio_run_irqs(struct mmc_host *host)
- {
+@@ -115,7 +115,8 @@ static void sdio_run_irqs(struct mmc_host *host)
  	mmc_claim_host(host);
  	if (host->sdio_irqs) {
--		host->sdio_irq_pending = true;
  		process_sdio_pending_irqs(host);
- 		if (host->ops->ack_sdio_irq)
- 			host->ops->ack_sdio_irq(host);
-@@ -128,6 +131,7 @@ void sdio_irq_work(struct work_struct *work)
- 
- void sdio_signal_irq(struct mmc_host *host)
- {
-+	host->sdio_irq_pending = true;
- 	queue_delayed_work(system_wq, &host->sdio_irq_work, 0);
+-		host->ops->ack_sdio_irq(host);
++		if (!host->sdio_irq_pending)
++			host->ops->ack_sdio_irq(host);
+ 	}
+ 	mmc_release_host(host);
  }
- EXPORT_SYMBOL_GPL(sdio_signal_irq);
-@@ -173,7 +177,6 @@ static int sdio_irq_thread(void *_host)
- 		if (ret)
- 			break;
- 		ret = process_sdio_pending_irqs(host);
--		host->sdio_irq_pending = false;
- 		mmc_release_host(host);
- 
- 		/*
 -- 
 2.17.1
 
