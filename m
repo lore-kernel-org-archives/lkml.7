@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E6BC433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 731FAC4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:59:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFB6A2067B
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:59:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 433E02067B
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:59:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947571;
-	bh=Iffmu/M6+lQoKrI0DFGrssagIyz2C7NxWvv4sBm3VdU=;
+	s=default; t=1567947577;
+	bh=/1+YFRA8MRn5iJdk3k+ittjd4Ien8qJzrzDQDKkmjQg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TqsqGxTryStfBzer8Z6xQrN9TiaO5tTFJo9bxic2k4uuJogR1ru7lQY0Hns5CsG6L
-	 P1qYAFXoDxHSQBW3GeQA5kWDRqjO0iKQyhvvvK5g59jrvNOWjsn4QKaISgkx+gaD2S
-	 A+YaLowu1i6FSCUsYaHFk6f1sfu3JaJ0PNyiohpY=
+	b=KoWnBLTax8SSu1ImFestHq0ri21lLT+lmpr9b9QOXzk7nbb+J7dEvWwCjZXxIHxjI
+	 Sc5hMOEcwApeS9wXCNJ2OlngLLZGCxWMGefrEB88aDf/KpET64FyvdBARIoJPSxBfA
+	 tzm1n+MyqNjMdrnICdd4BFhbUF31M/Btg107RhHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730220AbfIHMps (ORCPT
+        id S1730178AbfIHMpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:45:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32976 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:45:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730203AbfIHMpq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:45:46 -0400
+        id S1730156AbfIHMpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:45:38 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C33E218AC;
-        Sun,  8 Sep 2019 12:45:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24D91216C8;
+        Sun,  8 Sep 2019 12:45:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946745;
-        bh=Iffmu/M6+lQoKrI0DFGrssagIyz2C7NxWvv4sBm3VdU=;
+        s=default; t=1567946737;
+        bh=/1+YFRA8MRn5iJdk3k+ittjd4Ien8qJzrzDQDKkmjQg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N3ett3RPgSLgULMsInEMTjhUlpUzVAs4k1Dn+t8qc/YDpF892AKPxVTvLzHnU3Sh7
-         GP7dZzl7Zks6RJYuS+U00Sn2XialPk/2iY2dX5JCmoc7HVaQD1RJQJCG87asdNsxxd
-         dAWS6F0I3mF6HtEv3cvlkyrllceFfCa7pLMqgWbo=
+        b=ZaWAG1vaEHqgTalMfBkcKdhSmicmLpQmHRefyLbpZLVKliLWtL41if9UiR4zuacIe
+         VFpDiV0WCCwwKv0w0+oX4EiJk7EUjiEvflGAFJku0sZe0NiyOa3DqMR5usZBkFQ3tG
+         xjB7NRHk2P7bV45tSQ1TbQuheP8qxItmaP9OanJE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luis Henriques <lhenriques@suse.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
+        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 24/40] ceph: fix buffer free while holding i_ceph_lock in __ceph_setxattr()
-Date:   Sun,  8 Sep 2019 13:41:57 +0100
-Message-Id: <20190908121125.307609324@linuxfoundation.org>
+Subject: [PATCH 4.14 04/40] Bluetooth: btqca: Add a short delay before downloading the NVM
+Date:   Sun,  8 Sep 2019 13:41:37 +0100
+Message-Id: <20190908121115.297090022@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121114.260662089@linuxfoundation.org>
 References: <20190908121114.260662089@linuxfoundation.org>
@@ -61,89 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 86968ef21596515958d5f0a40233d02be78ecec0 ]
+[ Upstream commit 8059ba0bd0e4694e51c2ee6438a77b325f06c0d5 ]
 
-Calling ceph_buffer_put() in __ceph_setxattr() may end up freeing the
-i_xattrs.prealloc_blob buffer while holding the i_ceph_lock.  This can be
-fixed by postponing the call until later, when the lock is released.
+On WCN3990 downloading the NVM sometimes fails with a "TLV response
+size mismatch" error:
 
-The following backtrace was triggered by fstests generic/117.
+[  174.949955] Bluetooth: btqca.c:qca_download_firmware() hci0: QCA Downloading qca/crnv21.bin
+[  174.958718] Bluetooth: btqca.c:qca_tlv_send_segment() hci0: QCA TLV response size mismatch
 
-  BUG: sleeping function called from invalid context at mm/vmalloc.c:2283
-  in_atomic(): 1, irqs_disabled(): 0, pid: 650, name: fsstress
-  3 locks held by fsstress/650:
-   #0: 00000000870a0fe8 (sb_writers#8){.+.+}, at: mnt_want_write+0x20/0x50
-   #1: 00000000ba0c4c74 (&type->i_mutex_dir_key#6){++++}, at: vfs_setxattr+0x55/0xa0
-   #2: 000000008dfbb3f2 (&(&ci->i_ceph_lock)->rlock){+.+.}, at: __ceph_setxattr+0x297/0x810
-  CPU: 1 PID: 650 Comm: fsstress Not tainted 5.2.0+ #437
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58-prebuilt.qemu.org 04/01/2014
-  Call Trace:
-   dump_stack+0x67/0x90
-   ___might_sleep.cold+0x9f/0xb1
-   vfree+0x4b/0x60
-   ceph_buffer_release+0x1b/0x60
-   __ceph_setxattr+0x2b4/0x810
-   __vfs_setxattr+0x66/0x80
-   __vfs_setxattr_noperm+0x59/0xf0
-   vfs_setxattr+0x81/0xa0
-   setxattr+0x115/0x230
-   ? filename_lookup+0xc9/0x140
-   ? rcu_read_lock_sched_held+0x74/0x80
-   ? rcu_sync_lockdep_assert+0x2e/0x60
-   ? __sb_start_write+0x142/0x1a0
-   ? mnt_want_write+0x20/0x50
-   path_setxattr+0xba/0xd0
-   __x64_sys_lsetxattr+0x24/0x30
-   do_syscall_64+0x50/0x1c0
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  RIP: 0033:0x7ff23514359a
+It seems the controller needs a short time after downloading the
+firmware before it is ready for the NVM. A delay as short as 1 ms
+seems sufficient, make it 10 ms just in case. No event is received
+during the delay, hence we don't just silently drop an extra event.
 
-Signed-off-by: Luis Henriques <lhenriques@suse.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/xattr.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/bluetooth/btqca.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
-index 0376db8a74f85..932c6cdc22d66 100644
---- a/fs/ceph/xattr.c
-+++ b/fs/ceph/xattr.c
-@@ -955,6 +955,7 @@ int __ceph_setxattr(struct inode *inode, const char *name,
- 	struct ceph_inode_info *ci = ceph_inode(inode);
- 	struct ceph_mds_client *mdsc = ceph_sb_to_client(inode->i_sb)->mdsc;
- 	struct ceph_cap_flush *prealloc_cf = NULL;
-+	struct ceph_buffer *old_blob = NULL;
- 	int issued;
- 	int err;
- 	int dirty = 0;
-@@ -1023,13 +1024,15 @@ retry:
- 		struct ceph_buffer *blob;
- 
- 		spin_unlock(&ci->i_ceph_lock);
--		dout(" preaallocating new blob size=%d\n", required_blob_size);
-+		ceph_buffer_put(old_blob); /* Shouldn't be required */
-+		dout(" pre-allocating new blob size=%d\n", required_blob_size);
- 		blob = ceph_buffer_new(required_blob_size, GFP_NOFS);
- 		if (!blob)
- 			goto do_sync_unlocked;
- 		spin_lock(&ci->i_ceph_lock);
-+		/* prealloc_blob can't be released while holding i_ceph_lock */
- 		if (ci->i_xattrs.prealloc_blob)
--			ceph_buffer_put(ci->i_xattrs.prealloc_blob);
-+			old_blob = ci->i_xattrs.prealloc_blob;
- 		ci->i_xattrs.prealloc_blob = blob;
- 		goto retry;
- 	}
-@@ -1045,6 +1048,7 @@ retry:
+diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
+index 0bbdfcef2aa84..a48a61f22f823 100644
+--- a/drivers/bluetooth/btqca.c
++++ b/drivers/bluetooth/btqca.c
+@@ -363,6 +363,9 @@ int qca_uart_setup_rome(struct hci_dev *hdev, uint8_t baudrate)
+ 		return err;
  	}
  
- 	spin_unlock(&ci->i_ceph_lock);
-+	ceph_buffer_put(old_blob);
- 	if (lock_snap_rwsem)
- 		up_read(&mdsc->snap_rwsem);
- 	if (dirty)
++	/* Give the controller some time to get ready to receive the NVM */
++	msleep(10);
++
+ 	/* Download NVM configuration */
+ 	config.type = TLV_TYPE_NVM;
+ 	snprintf(config.fwname, sizeof(config.fwname), "qca/nvm_%08x.bin",
 -- 
 2.20.1
 
