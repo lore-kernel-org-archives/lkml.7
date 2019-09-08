@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB0A0C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5BBC4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93A6B21971
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6528821971
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:53:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947178;
-	bh=FxbGv5hFJ/w8muR36FY4ddff9aeMidj+SEbT1AxUP8U=;
+	s=default; t=1567947183;
+	bh=27jcVKK/qpC0ilYCPfzWwVPw9oGhG5I+khgjFLMDj+A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JX/uBt1mhFqjyy1wMuioBM3v2zobpjynAQFYHB4zZeX+p+I802ILmH5DVxfcOpOnc
-	 P/h0EGiEOHQ3g78ubZrCnhPj9aUQEJ3Ka5ovyd3JHlO7/u7wvnC/MO4CP0YRnzglkc
-	 0ncFbvzMZwYfsF2x9zguoBgq1Opk83/IutuelfqY=
+	b=ujo/usF7ZZAAdE81FGspQE+aP+N9ucBUTc/3yQRzTzZVS5gL1hBvBMjVO0EAKEEnd
+	 yAWOOqQkHV3atH5VlG514QI3LYI1N8WLMMm7i61yLVQ2EvbN1vKK/H/9bFEpS18cKf
+	 9Krkt7g0kYiWQbXp/2rlHdkEqujrm1Dlx5FXDoo0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732588AbfIHMw5 (ORCPT
+        id S2387401AbfIHMxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:52:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45464 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:53:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733249AbfIHMwy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:52:54 -0400
+        id S1733282AbfIHMw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:52:58 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AE0621479;
-        Sun,  8 Sep 2019 12:52:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C27B21920;
+        Sun,  8 Sep 2019 12:52:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567947172;
-        bh=FxbGv5hFJ/w8muR36FY4ddff9aeMidj+SEbT1AxUP8U=;
+        s=default; t=1567947178;
+        bh=27jcVKK/qpC0ilYCPfzWwVPw9oGhG5I+khgjFLMDj+A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JuK4QcRKmEqBDbmGrh3BG8Rxty98Vgp5ditT3DeuLVO8jY4S+5YqN6+l1YpnXdq3/
-         QTn7WfCytrKmZouLiYc0i907CmGI8kdurnYWPh1eyFTJhm8In1ZM1u53JNj94Gi+Ng
-         ahBJv0MlPIbHAqfpQdaQrqzGYkPc50eyv5KR3DOA=
+        b=hNtcPsXDjIPsWKUE/zN2qEAvOMfqSLR6Yuxpu0/TTnCVbExkHqjQwpTu/kqSmbb2f
+         lMLormT56/p+YsbW58sBSg95p0ia87Y9/9y1i+w4hvAxIoq00i71lSJB7gArrEEgUd
+         /9+EWEBIs0wnWLPHlTbwxv+j40WYg8VowwJv3uw8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Wei Xu <xuwei5@hisilicon.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 88/94] gpio: Fix irqchip initialization order
-Date:   Sun,  8 Sep 2019 13:42:24 +0100
-Message-Id: <20190908121152.950273533@linuxfoundation.org>
+Subject: [PATCH 5.2 90/94] x86/boot/compressed/64: Fix missing initialization in find_trampoline_placement()
+Date:   Sun,  8 Sep 2019 13:42:26 +0100
+Message-Id: <20190908121153.005775685@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
 References: <20190908121150.420989666@linuxfoundation.org>
@@ -63,107 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 48057ed1840fde9239b1e000bea1a0a1f07c5e99 ]
+[ Upstream commit c96e8483cb2da6695c8b8d0896fe7ae272a07b54 ]
 
-The new API for registering a gpio_irq_chip along with a
-gpio_chip has a different semantic ordering than the old
-API which added the irqchip explicitly after registering
-the gpio_chip.
+Gustavo noticed that 'new' can be left uninitialized if 'bios_start'
+happens to be less or equal to 'entry->addr + entry->size'.
 
-Move the calls to add the gpio_irq_chip *last* in the
-function, so that the different hooks setting up OF and
-ACPI and machine gpio_chips are called *before* we try
-to register the interrupts, preserving the elder semantic
-order.
+Initialize the variable at the begin of the iteration to the current value
+of 'bios_start'.
 
-This cropped up in the PL061 driver which used to work
-fine with no special ACPI quirks, but started to misbehave
-using the new API.
-
-Fixes: e0d897289813 ("gpio: Implement tighter IRQ chip integration")
-Cc: Thierry Reding <treding@nvidia.com>
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reported-by: Wei Xu <xuwei5@hisilicon.com>
-Tested-by: Wei Xu <xuwei5@hisilicon.com>
-Reported-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://lore.kernel.org/r/20190820080527.11796-1-linus.walleij@linaro.org
+Fixes: 0a46fff2f910 ("x86/boot/compressed/64: Fix boot on machines with broken E820 table")
+Reported-by: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190826133326.7cxb4vbmiawffv2r@box
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpiolib.c | 30 +++++++++++++++---------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+ arch/x86/boot/compressed/pgtable_64.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 7f9f752011382..f272b51439977 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1373,21 +1373,13 @@ int gpiochip_add_data_with_key(struct gpio_chip *chip, void *data,
- 	if (status)
- 		goto err_remove_from_list;
+diff --git a/arch/x86/boot/compressed/pgtable_64.c b/arch/x86/boot/compressed/pgtable_64.c
+index f0537a1f7fc25..76e1edf5bf12a 100644
+--- a/arch/x86/boot/compressed/pgtable_64.c
++++ b/arch/x86/boot/compressed/pgtable_64.c
+@@ -73,7 +73,7 @@ static unsigned long find_trampoline_placement(void)
  
--	status = gpiochip_irqchip_init_valid_mask(chip);
--	if (status)
--		goto err_remove_from_list;
--
- 	status = gpiochip_alloc_valid_mask(chip);
- 	if (status)
--		goto err_remove_irqchip_mask;
--
--	status = gpiochip_add_irqchip(chip, lock_key, request_key);
--	if (status)
--		goto err_free_gpiochip_mask;
-+		goto err_remove_from_list;
+ 	/* Find the first usable memory region under bios_start. */
+ 	for (i = boot_params->e820_entries - 1; i >= 0; i--) {
+-		unsigned long new;
++		unsigned long new = bios_start;
  
- 	status = of_gpiochip_add(chip);
- 	if (status)
--		goto err_remove_chip;
-+		goto err_free_gpiochip_mask;
+ 		entry = &boot_params->e820_table[i];
  
- 	status = gpiochip_init_valid_mask(chip);
- 	if (status)
-@@ -1413,6 +1405,14 @@ int gpiochip_add_data_with_key(struct gpio_chip *chip, void *data,
- 
- 	machine_gpiochip_add(chip);
- 
-+	status = gpiochip_irqchip_init_valid_mask(chip);
-+	if (status)
-+		goto err_remove_acpi_chip;
-+
-+	status = gpiochip_add_irqchip(chip, lock_key, request_key);
-+	if (status)
-+		goto err_remove_irqchip_mask;
-+
- 	/*
- 	 * By first adding the chardev, and then adding the device,
- 	 * we get a device node entry in sysfs under
-@@ -1424,21 +1424,21 @@ int gpiochip_add_data_with_key(struct gpio_chip *chip, void *data,
- 	if (gpiolib_initialized) {
- 		status = gpiochip_setup_dev(gdev);
- 		if (status)
--			goto err_remove_acpi_chip;
-+			goto err_remove_irqchip;
- 	}
- 	return 0;
- 
-+err_remove_irqchip:
-+	gpiochip_irqchip_remove(chip);
-+err_remove_irqchip_mask:
-+	gpiochip_irqchip_free_valid_mask(chip);
- err_remove_acpi_chip:
- 	acpi_gpiochip_remove(chip);
- err_remove_of_chip:
- 	gpiochip_free_hogs(chip);
- 	of_gpiochip_remove(chip);
--err_remove_chip:
--	gpiochip_irqchip_remove(chip);
- err_free_gpiochip_mask:
- 	gpiochip_free_valid_mask(chip);
--err_remove_irqchip_mask:
--	gpiochip_irqchip_free_valid_mask(chip);
- err_remove_from_list:
- 	spin_lock_irqsave(&gpio_lock, flags);
- 	list_del(&gdev->list);
 -- 
 2.20.1
 
