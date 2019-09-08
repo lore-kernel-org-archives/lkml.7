@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65EC3C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE82DC433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3912C218AE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:46:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92896218AF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:46:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946765;
-	bh=rBYyaw2fFXbK2tMlFMR++K1OgXVKO8FT5BhnKRKLqZg=;
+	s=default; t=1567946769;
+	bh=eux4fIGlT+5peVgOwVIJoXwTvuLrYXt5ySKlTBOOM2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vAbcnEuMeQwrkZAYfK97MO6GQ01m7syKjx6WIuHSiBwQYqsEudN77/8fJ9diX4rl3
-	 uJJLmDlVvE7WCutZE1jCm9w713GPgUuup2VGXAbU4iUAyegB7gzlolw8iqXxnzMJhu
-	 51XBmhHC0AlBLnv4pyjzbIKRgMSw5RI6LxqLrvGw=
+	b=yLBETZ66Pf7w5Wip4UBrlkSUVR3MXQzVimSaKEJPvw3iDxrGIWt6HGheufh/V+12e
+	 1xfFz82JKR5QJZl8amIwb/c9LeoZpX9xXZ9QrGZ3xeX+HPpuZoeBpLQqKzZtxVkBdg
+	 45Op5OLJ0DZYD3FbnCzRr6+45jmRqRS9JEFVY1Q0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729825AbfIHMqD (ORCPT
+        id S1730171AbfIHMqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:46:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33308 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:46:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730258AbfIHMp7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:45:59 -0400
+        id S1730281AbfIHMqE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:46:04 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E3CB21A49;
-        Sun,  8 Sep 2019 12:45:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43D5C20644;
+        Sun,  8 Sep 2019 12:46:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946758;
-        bh=rBYyaw2fFXbK2tMlFMR++K1OgXVKO8FT5BhnKRKLqZg=;
+        s=default; t=1567946763;
+        bh=eux4fIGlT+5peVgOwVIJoXwTvuLrYXt5ySKlTBOOM2M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yfJpDcTtM9R1YDr8nRObhWNu6FCZWftAOlbkQBWmKiaWlxSfTB7/q1U+pvWgJ9gWl
-         EE9HX1Rn564bcZ0YmDZSjMDVmkc7chz84fAwonnUp+N5cSXTben+MDedzS30dFxJrE
-         YGPn3x8ZliRPg2wIDNXklRqsMkXnjJh3Bz6MZB7U=
+        b=Ie5CUb+5EU6OTELYUKnSMThPg8hc+wmBSzMl1wLdv7uPBD+AGW7FBg9SFYAqxv6lg
+         0P6evliIt+BcH3sNCai+LDguoqSfrKID+7tuyDQ/VsnanXdiGVob4MPoevx59BeKYu
+         aASCOxOfLtEF1NZuehgxD+n/POBwJjHLGpohSWQM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Sperl <kernel@martin.sperl.org>,
+        stable@vger.kernel.org, Hubert Denkmair <h.denkmair@intence.de>,
+        Martin Sperl <kernel@martin.sperl.org>,
         Stefan Wahren <stefan.wahren@i2se.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 29/40] spi: bcm2835aux: unifying code between polling and interrupt driven code
-Date:   Sun,  8 Sep 2019 13:42:02 +0100
-Message-Id: <20190908121128.223401411@linuxfoundation.org>
+Subject: [PATCH 4.14 31/40] spi: bcm2835aux: fix corruptions for longer spi transfers
+Date:   Sun,  8 Sep 2019 13:42:04 +0100
+Message-Id: <20190908121128.572126490@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121114.260662089@linuxfoundation.org>
 References: <20190908121114.260662089@linuxfoundation.org>
@@ -61,123 +62,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7188a6f0eee3f1fae5d826cfc6d569657ff950ec ]
+[ Upstream commit 73b114ee7db1750c0b535199fae383b109bd61d0 ]
 
-Sharing more code between polling and interrupt-driven mode.
+On long running tests with a mcp2517fd can controller it showed that
+on rare occations the data read shows corruptions for longer spi transfers.
 
+Example of a 22 byte transfer:
+
+expected (as captured on logic analyzer):
+FF FF 78 00 00 00 08 06 00 00 91 20 77 56 84 85 86 87 88 89 8a 8b
+
+read by the driver:
+FF FF 78 00 00 00 08 06 00 00 91 20 77 56 84 88 89 8a 00 00 8b 9b
+
+To fix this use BCM2835_AUX_SPI_STAT_RX_LVL to determine when we may
+read data from the fifo reliably without any corruption.
+
+Surprisingly the only values ever empirically read in
+BCM2835_AUX_SPI_STAT_RX_LVL are 0x00, 0x10, 0x20 and 0x30.
+So whenever the mask is not 0 we can read from the fifo in a safe manner.
+
+The patch has now been tested intensively and we are no longer
+able to reproduce the "RX" issue any longer.
+
+Fixes: 1ea29b39f4c812ec ("spi: bcm2835aux: add bcm2835 auxiliary spi device...")
+Reported-by: Hubert Denkmair <h.denkmair@intence.de>
 Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
 Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-bcm2835aux.c | 51 +++++++++++++-----------------------
- 1 file changed, 18 insertions(+), 33 deletions(-)
+ drivers/spi/spi-bcm2835aux.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/spi/spi-bcm2835aux.c b/drivers/spi/spi-bcm2835aux.c
-index bd00b7cc8b78b..97cb3beb9cc62 100644
+index 4454d9c6a3dd4..5c89bbb05441b 100644
 --- a/drivers/spi/spi-bcm2835aux.c
 +++ b/drivers/spi/spi-bcm2835aux.c
-@@ -178,23 +178,13 @@ static void bcm2835aux_spi_reset_hw(struct bcm2835aux_spi *bs)
- 		      BCM2835_AUX_SPI_CNTL0_CLEARFIFO);
- }
+@@ -180,12 +180,12 @@ static void bcm2835aux_spi_reset_hw(struct bcm2835aux_spi *bs)
  
--static irqreturn_t bcm2835aux_spi_interrupt(int irq, void *dev_id)
-+static void bcm2835aux_spi_transfer_helper(struct bcm2835aux_spi *bs)
+ static void bcm2835aux_spi_transfer_helper(struct bcm2835aux_spi *bs)
  {
--	struct spi_master *master = dev_id;
--	struct bcm2835aux_spi *bs = spi_master_get_devdata(master);
--	irqreturn_t ret = IRQ_NONE;
--
--	/* IRQ may be shared, so return if our interrupts are disabled */
--	if (!(bcm2835aux_rd(bs, BCM2835_AUX_SPI_CNTL1) &
--	      (BCM2835_AUX_SPI_CNTL1_TXEMPTY | BCM2835_AUX_SPI_CNTL1_IDLE)))
--		return ret;
--
++	u32 stat = bcm2835aux_rd(bs, BCM2835_AUX_SPI_STAT);
++
  	/* check if we have data to read */
- 	while (bs->rx_len &&
- 	       (!(bcm2835aux_rd(bs, BCM2835_AUX_SPI_STAT) &
- 		  BCM2835_AUX_SPI_STAT_RX_EMPTY))) {
+-	while (bs->rx_len &&
+-	       (!(bcm2835aux_rd(bs, BCM2835_AUX_SPI_STAT) &
+-		  BCM2835_AUX_SPI_STAT_RX_EMPTY))) {
++	for (; bs->rx_len && (stat & BCM2835_AUX_SPI_STAT_RX_LVL);
++	     stat = bcm2835aux_rd(bs, BCM2835_AUX_SPI_STAT))
  		bcm2835aux_rd_fifo(bs);
--		ret = IRQ_HANDLED;
- 	}
+-	}
  
  	/* check if we have data to write */
-@@ -203,7 +193,6 @@ static irqreturn_t bcm2835aux_spi_interrupt(int irq, void *dev_id)
- 	       (!(bcm2835aux_rd(bs, BCM2835_AUX_SPI_STAT) &
- 		  BCM2835_AUX_SPI_STAT_TX_FULL))) {
- 		bcm2835aux_wr_fifo(bs);
--		ret = IRQ_HANDLED;
- 	}
- 
- 	/* and check if we have reached "done" */
-@@ -211,8 +200,21 @@ static irqreturn_t bcm2835aux_spi_interrupt(int irq, void *dev_id)
- 	       (!(bcm2835aux_rd(bs, BCM2835_AUX_SPI_STAT) &
- 		  BCM2835_AUX_SPI_STAT_BUSY))) {
- 		bcm2835aux_rd_fifo(bs);
--		ret = IRQ_HANDLED;
- 	}
-+}
-+
-+static irqreturn_t bcm2835aux_spi_interrupt(int irq, void *dev_id)
-+{
-+	struct spi_master *master = dev_id;
-+	struct bcm2835aux_spi *bs = spi_master_get_devdata(master);
-+
-+	/* IRQ may be shared, so return if our interrupts are disabled */
-+	if (!(bcm2835aux_rd(bs, BCM2835_AUX_SPI_CNTL1) &
-+	      (BCM2835_AUX_SPI_CNTL1_TXEMPTY | BCM2835_AUX_SPI_CNTL1_IDLE)))
-+		return IRQ_NONE;
-+
-+	/* do common fifo handling */
-+	bcm2835aux_spi_transfer_helper(bs);
- 
- 	if (!bs->tx_len) {
- 		/* disable tx fifo empty interrupt */
-@@ -226,8 +228,7 @@ static irqreturn_t bcm2835aux_spi_interrupt(int irq, void *dev_id)
- 		complete(&master->xfer_completion);
- 	}
- 
--	/* and return */
--	return ret;
-+	return IRQ_HANDLED;
- }
- 
- static int __bcm2835aux_spi_transfer_one_irq(struct spi_master *master,
-@@ -273,7 +274,6 @@ static int bcm2835aux_spi_transfer_one_poll(struct spi_master *master,
- {
- 	struct bcm2835aux_spi *bs = spi_master_get_devdata(master);
- 	unsigned long timeout;
--	u32 stat;
- 
- 	/* configure spi */
- 	bcm2835aux_wr(bs, BCM2835_AUX_SPI_CNTL1, bs->cntl[1]);
-@@ -284,24 +284,9 @@ static int bcm2835aux_spi_transfer_one_poll(struct spi_master *master,
- 
- 	/* loop until finished the transfer */
- 	while (bs->rx_len) {
--		/* read status */
--		stat = bcm2835aux_rd(bs, BCM2835_AUX_SPI_STAT);
--
--		/* fill in tx fifo with remaining data */
--		if ((bs->tx_len) && (!(stat & BCM2835_AUX_SPI_STAT_TX_FULL))) {
--			bcm2835aux_wr_fifo(bs);
--			continue;
--		}
- 
--		/* read data from fifo for both cases */
--		if (!(stat & BCM2835_AUX_SPI_STAT_RX_EMPTY)) {
--			bcm2835aux_rd_fifo(bs);
--			continue;
--		}
--		if (!(stat & BCM2835_AUX_SPI_STAT_BUSY)) {
--			bcm2835aux_rd_fifo(bs);
--			continue;
--		}
-+		/* do common fifo handling */
-+		bcm2835aux_spi_transfer_helper(bs);
- 
- 		/* there is still data pending to read check the timeout */
- 		if (bs->rx_len && time_after(jiffies, timeout)) {
+ 	while (bs->tx_len &&
 -- 
 2.20.1
 
