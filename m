@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFFC8C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D26BC433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B34A0218DE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:44:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1495216C8
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:44:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946676;
-	bh=qVOrtOdpDjM5Dq9VnccAmG5LI4niAYI3RxO3b0EbaIs=;
+	s=default; t=1567946679;
+	bh=22Rb2Y7xrw3/Gtts6Ht4aQGQWJUvu8zbil6E54p+okY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s3UbmWzP4Oa74sA9cBOrIEquRp1xKel3QIMIMnRx4/TWBCZJ26STNj7dWg2JNCaV0
-	 W0QBSgrPBPcUlDW/8ItV3JmbaNBY8e7PLNWn4yZmw/+1lHg99+fSyhFn3q4Qg6/hFa
-	 yrglhplavwEYxRrwHezKbT9ZzvcMbSOI95vkb8nU=
+	b=y2xwkfyw8us+FxfZ+OAHunf6iDxJfYFTS4t5j/CfCSCMxOHO4Pmw89tTCVg0ri78o
+	 Kq+i3lkGOSrgofHoCOkQZ/zPNXbsa4UTHsVw968tvzEfoJm/txHUWUVyx3Tp7EZL1v
+	 wchxg28nOnfyfF+CN+mcVRkPp/DgkWZUlYCbhUhU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729843AbfIHMog (ORCPT
+        id S1729857AbfIHMoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:44:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59328 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:44:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729789AbfIHMod (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:44:33 -0400
+        id S1729832AbfIHMof (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:44:35 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF3CA218DE;
-        Sun,  8 Sep 2019 12:44:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FA5D218AF;
+        Sun,  8 Sep 2019 12:44:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946672;
-        bh=qVOrtOdpDjM5Dq9VnccAmG5LI4niAYI3RxO3b0EbaIs=;
+        s=default; t=1567946675;
+        bh=22Rb2Y7xrw3/Gtts6Ht4aQGQWJUvu8zbil6E54p+okY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fV7JfA4iVcAPxuETP/Tbwkrfrm1wyPTTFa0fKY/9783I9B8WzEZEi9bhsWT/YbJDe
-         bBZNm6YQJ8wjc6FshjfeZ12B/QI1cKxDJ58L6IGDbrRyJ2jXWeA0jofasqh0mBOvLr
-         Yf08lMppwZFNag7X4RVYZOshcAwoYjGgKYDsByJE=
+        b=jK+GT+zmOvMOa22d1pK095qSwEElw0FVDNzAzIHqLTeS31VBDvgAYURVqqpVye2co
+         rgZhl4tE3JZJvh1cdxH7cm0RVs/TUhDeQe5Gl7p6sanVzMuktYg74BfTx805tAW9CH
+         mkZa/1PuZmcgFVhjerMfZtqvrikO9XzUNB4WgrMw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Feng Sun <loyou85@gmail.com>,
-        Xiaojun Zhao <xiaojunzhao141@gmail.com>,
+        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 23/26] net: fix skb use after free in netpoll
-Date:   Sun,  8 Sep 2019 13:42:02 +0100
-Message-Id: <20190908121110.869208347@linuxfoundation.org>
+Subject: [PATCH 4.9 24/26] net: stmmac: dwmac-rk: Dont fail if phy regulator is absent
+Date:   Sun,  8 Sep 2019 13:42:03 +0100
+Message-Id: <20190908121111.064092323@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121057.216802689@linuxfoundation.org>
 References: <20190908121057.216802689@linuxfoundation.org>
@@ -60,90 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Feng Sun <loyou85@gmail.com>
+From: Chen-Yu Tsai <wens@csie.org>
 
-[ Upstream commit 2c1644cf6d46a8267d79ed95cb9b563839346562 ]
+[ Upstream commit 3b25528e1e355c803e73aa326ce657b5606cda73 ]
 
-After commit baeababb5b85d5c4e6c917efe2a1504179438d3b
-("tun: return NET_XMIT_DROP for dropped packets"),
-when tun_net_xmit drop packets, it will free skb and return NET_XMIT_DROP,
-netpoll_send_skb_on_dev will run into following use after free cases:
-1. retry netpoll_start_xmit with freed skb;
-2. queue freed skb in npinfo->txq.
-queue_process will also run into use after free case.
+The devicetree binding lists the phy phy as optional. As such, the
+driver should not bail out if it can't find a regulator. Instead it
+should just skip the remaining regulator related code and continue
+on normally.
 
-hit netpoll_send_skb_on_dev first case with following kernel log:
+Skip the remainder of phy_power_on() if a regulator supply isn't
+available. This also gets rid of the bogus return code.
 
-[  117.864773] kernel BUG at mm/slub.c:306!
-[  117.864773] invalid opcode: 0000 [#1] SMP PTI
-[  117.864774] CPU: 3 PID: 2627 Comm: loop_printmsg Kdump: loaded Tainted: P           OE     5.3.0-050300rc5-generic #201908182231
-[  117.864775] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
-[  117.864775] RIP: 0010:kmem_cache_free+0x28d/0x2b0
-[  117.864781] Call Trace:
-[  117.864781]  ? tun_net_xmit+0x21c/0x460
-[  117.864781]  kfree_skbmem+0x4e/0x60
-[  117.864782]  kfree_skb+0x3a/0xa0
-[  117.864782]  tun_net_xmit+0x21c/0x460
-[  117.864782]  netpoll_start_xmit+0x11d/0x1b0
-[  117.864788]  netpoll_send_skb_on_dev+0x1b8/0x200
-[  117.864789]  __br_forward+0x1b9/0x1e0 [bridge]
-[  117.864789]  ? skb_clone+0x53/0xd0
-[  117.864790]  ? __skb_clone+0x2e/0x120
-[  117.864790]  deliver_clone+0x37/0x50 [bridge]
-[  117.864790]  maybe_deliver+0x89/0xc0 [bridge]
-[  117.864791]  br_flood+0x6c/0x130 [bridge]
-[  117.864791]  br_dev_xmit+0x315/0x3c0 [bridge]
-[  117.864792]  netpoll_start_xmit+0x11d/0x1b0
-[  117.864792]  netpoll_send_skb_on_dev+0x1b8/0x200
-[  117.864792]  netpoll_send_udp+0x2c6/0x3e8
-[  117.864793]  write_msg+0xd9/0xf0 [netconsole]
-[  117.864793]  console_unlock+0x386/0x4e0
-[  117.864793]  vprintk_emit+0x17e/0x280
-[  117.864794]  vprintk_default+0x29/0x50
-[  117.864794]  vprintk_func+0x4c/0xbc
-[  117.864794]  printk+0x58/0x6f
-[  117.864795]  loop_fun+0x24/0x41 [printmsg_loop]
-[  117.864795]  kthread+0x104/0x140
-[  117.864795]  ? 0xffffffffc05b1000
-[  117.864796]  ? kthread_park+0x80/0x80
-[  117.864796]  ret_from_fork+0x35/0x40
-
-Signed-off-by: Feng Sun <loyou85@gmail.com>
-Signed-off-by: Xiaojun Zhao <xiaojunzhao141@gmail.com>
+Fixes: 2e12f536635f ("net: stmmac: dwmac-rk: Use standard devicetree property for phy regulator")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/netpoll.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/net/core/netpoll.c
-+++ b/net/core/netpoll.c
-@@ -122,7 +122,7 @@ static void queue_process(struct work_st
- 		txq = netdev_get_tx_queue(dev, q_index);
- 		HARD_TX_LOCK(dev, txq, smp_processor_id());
- 		if (netif_xmit_frozen_or_stopped(txq) ||
--		    netpoll_start_xmit(skb, dev, txq) != NETDEV_TX_OK) {
-+		    !dev_xmit_complete(netpoll_start_xmit(skb, dev, txq))) {
- 			skb_queue_head(&npinfo->txq, skb);
- 			HARD_TX_UNLOCK(dev, txq);
- 			local_irq_restore(flags);
-@@ -357,7 +357,7 @@ void netpoll_send_skb_on_dev(struct netp
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+@@ -771,10 +771,8 @@ static int phy_power_on(struct rk_priv_d
+ 	int ret;
+ 	struct device *dev = &bsp_priv->pdev->dev;
  
- 				HARD_TX_UNLOCK(dev, txq);
+-	if (!ldo) {
+-		dev_err(dev, "no regulator found\n");
+-		return -1;
+-	}
++	if (!ldo)
++		return 0;
  
--				if (status == NETDEV_TX_OK)
-+				if (dev_xmit_complete(status))
- 					break;
- 
- 			}
-@@ -374,7 +374,7 @@ void netpoll_send_skb_on_dev(struct netp
- 
- 	}
- 
--	if (status != NETDEV_TX_OK) {
-+	if (!dev_xmit_complete(status)) {
- 		skb_queue_tail(&npinfo->txq, skb);
- 		schedule_delayed_work(&npinfo->tx_work,0);
- 	}
+ 	if (enable) {
+ 		ret = regulator_enable(ldo);
 
 
