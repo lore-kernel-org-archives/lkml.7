@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 264F5C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D31EC4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F09EA218AF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:44:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56BD4218AE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:45:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946698;
-	bh=VKIhn3t5HKFT55uxxSW0rh1RrHK5MQdyDgOmvlyntj8=;
+	s=default; t=1567946700;
+	bh=eA1UmvITMznGUO3OQCWlkolxcB0kVV3odZ9xjZWeUHY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f3jZ0YkNb4VVhdoVpPf00AXiB8IYQHINENUpG2v0iNiUkJLKIhwNKLZKMaoBYqbBN
-	 8tX1/88H+SAw3YYLoqB2g5VK2MHFkFNoGIpPU58UvC+mJ8guIljOx8ws84hgJj+xbw
-	 fS2IqsR2+JKpJ8KI6n83A3wzVT2skkCB5tPdBUbo=
+	b=LNTHsMTRAIk1bQvuPIZw8ZHY7r930ffJekVppX/+Ve9zB1QwHS02YuIhUFWr+jSom
+	 2YU8cIhPbF4i4pjHagNF2wvG06WF9NYX7TS0ZP73MyhNbQ4+M4YczAxzK07SuoXxp5
+	 bYmRDqxdQxB5IBQeBjHxCzPsAwBTGfaikTblIdBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbfIHMo5 (ORCPT
+        id S1729971AbfIHMo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:44:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59822 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:44:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729904AbfIHMox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:44:53 -0400
+        id S1729954AbfIHMo5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:44:57 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D81462081B;
-        Sun,  8 Sep 2019 12:44:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CD85218AE;
+        Sun,  8 Sep 2019 12:44:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946693;
-        bh=VKIhn3t5HKFT55uxxSW0rh1RrHK5MQdyDgOmvlyntj8=;
+        s=default; t=1567946696;
+        bh=eA1UmvITMznGUO3OQCWlkolxcB0kVV3odZ9xjZWeUHY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bH4Sur2J/l6tUO5K7npIiGBlpEMeyC/Hv0Qbq2z2TA3UXS2p7PV5m2Ey25MYzn1Yx
-         Xgd0rAjO8BzzUY/zHcYHGP0c47x0iZut1NXnp4lF1lQMNZ1HBGQUxR7YjAtdPsQGco
-         RDSffXP/vIIgf+15AR8E5u0kzWbIO6iheJ+aSNMw=
+        b=tunCprI/EXKp+G3UWpYmzJ67/TIIIswcBpnIOBLbLqfAS5Ki/+BgpepwjG0U7TPE9
+         wHWrR4Y5vN/FtL7chXWhoMj19N2gSoJhxrWiNnSoMcTBD3twQgrih6oHPhVNWJ/BSv
+         lasLffunLVXBi5nrWfRjCsdoj1q6E+gXVT8VHzi4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 08/26] cx82310_eth: fix a memory leak bug
-Date:   Sun,  8 Sep 2019 13:41:47 +0100
-Message-Id: <20190908121100.249977437@linuxfoundation.org>
+Subject: [PATCH 4.9 09/26] net: kalmia: fix memory leaks
+Date:   Sun,  8 Sep 2019 13:41:48 +0100
+Message-Id: <20190908121100.592440132@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121057.216802689@linuxfoundation.org>
 References: <20190908121057.216802689@linuxfoundation.org>
@@ -60,36 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1eca92eef18719027d394bf1a2d276f43e7cf886 ]
+[ Upstream commit f1472cb09f11ddb41d4be84f0650835cb65a9073 ]
 
-In cx82310_bind(), 'dev->partial_data' is allocated through kmalloc().
-Then, the execution waits for the firmware to become ready. If the firmware
-is not ready in time, the execution is terminated. However, the allocated
-'dev->partial_data' is not deallocated on this path, leading to a memory
-leak bug. To fix this issue, free 'dev->partial_data' before returning the
-error.
+In kalmia_init_and_get_ethernet_addr(), 'usb_buf' is allocated through
+kmalloc(). In the following execution, if the 'status' returned by
+kalmia_send_init_packet() is not 0, 'usb_buf' is not deallocated, leading
+to memory leaks. To fix this issue, add the 'out' label to free 'usb_buf'.
 
 Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/cx82310_eth.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/usb/kalmia.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/usb/cx82310_eth.c b/drivers/net/usb/cx82310_eth.c
-index 947bea81d9241..dfbdea22fbad9 100644
---- a/drivers/net/usb/cx82310_eth.c
-+++ b/drivers/net/usb/cx82310_eth.c
-@@ -175,7 +175,8 @@ static int cx82310_bind(struct usbnet *dev, struct usb_interface *intf)
- 	}
- 	if (!timeout) {
- 		dev_err(&udev->dev, "firmware not ready in time\n");
--		return -ETIMEDOUT;
-+		ret = -ETIMEDOUT;
-+		goto err;
- 	}
+diff --git a/drivers/net/usb/kalmia.c b/drivers/net/usb/kalmia.c
+index 3e37724d30ae7..0c4f4190c58ee 100644
+--- a/drivers/net/usb/kalmia.c
++++ b/drivers/net/usb/kalmia.c
+@@ -117,16 +117,16 @@ kalmia_init_and_get_ethernet_addr(struct usbnet *dev, u8 *ethernet_addr)
+ 	status = kalmia_send_init_packet(dev, usb_buf, sizeof(init_msg_1)
+ 		/ sizeof(init_msg_1[0]), usb_buf, 24);
+ 	if (status != 0)
+-		return status;
++		goto out;
  
- 	/* enable ethernet mode (?) */
+ 	memcpy(usb_buf, init_msg_2, 12);
+ 	status = kalmia_send_init_packet(dev, usb_buf, sizeof(init_msg_2)
+ 		/ sizeof(init_msg_2[0]), usb_buf, 28);
+ 	if (status != 0)
+-		return status;
++		goto out;
+ 
+ 	memcpy(ethernet_addr, usb_buf + 10, ETH_ALEN);
+-
++out:
+ 	kfree(usb_buf);
+ 	return status;
+ }
 -- 
 2.20.1
 
