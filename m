@@ -2,137 +2,112 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E40C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42256C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0900207FC
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C67C207FC
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:52:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gVLsd+T0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DjexVd6d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728774AbfIHNvb (ORCPT
+        id S1728811AbfIHNwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 09:51:31 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:44774 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728068AbfIHNva (ORCPT
+        Sun, 8 Sep 2019 09:52:16 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42123 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728068AbfIHNwP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 09:51:30 -0400
-Received: by mail-ua1-f67.google.com with SMTP id z8so3446512uaq.11
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 06:51:28 -0700 (PDT)
+        Sun, 8 Sep 2019 09:52:15 -0400
+Received: by mail-wr1-f67.google.com with SMTP id q14so11013631wrm.9;
+        Sun, 08 Sep 2019 06:52:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/OjUEd4QSp7PdF6VW4aQrBE3Z+/uVpO6ArZ5TFedKOc=;
-        b=gVLsd+T0GXYo4KXD8R+kiCVmUyc3iXlvJ5SL3N90TjeV223lfZq0lpVImmm1TQPLvr
-         biVG3B/n3OMziPN/L+IVvhgX7Ge1Bk7hcW/JG/CkZ9zrfy4+DonIP5+MTrsf/9lW9zj+
-         GDyNN76Ur/2fW2BBK/M7SqE9yXZfqSEsSHkh4=
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=LGw90/UVGk+QEa0OVvDfU9BMlKodboT6J/WmPDm8rBg=;
+        b=DjexVd6dz7KQq1XfdAg/oG77YUvvXel7yrm0iiwfoGp0qXQIfveg00d78JiMuC3OZ1
+         ROwc3acSTsoME5EtB5PPKpkjr76BFxzmo4o7NjyGXDC5U0D8LEbh2PD3PUlGEQwX4Uc4
+         UodPmMInKBsCL0LQd8DZK/nVB9YnSL9b7n2YJMNhnsntL8xMFgjhZWrMVwaJ2jXNgaEG
+         8im7OgoHNTyqEtHIJoCmY+cfgws4kH1+rufkClRa8wi3Ffw2/C4gXIEjsH1sOCgLVyr7
+         OAscnqbo2cMEQBeDdSMzE7rRxFmxOOqmbu+uHKMM1+rX6/YjwfOMvhMUR5p9TjoHT9ti
+         EFnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/OjUEd4QSp7PdF6VW4aQrBE3Z+/uVpO6ArZ5TFedKOc=;
-        b=p4uIUfBB1nkAbLkOmiApCFc8jKarxk7RngsOgfTQ3kaaqd8fETDIAd9Of1siBxpcoB
-         9aMgP8R6wcZyR5E78OVKuTqIOHM2S+nGsSZUn7zO+tOaAAi2FNtgiGKKlj5q6Hai9oB2
-         QgexKMkU+dDvFTq59CTwl3jGLhhdIY4IiiLA1lmJyHXyGbY/sEq9cgCiiXXAvB7rOAni
-         aRA9XLoMxSUuj2eSiRLmOkEUtnSbRpa5esUhwoe9CYWMEEL1ghpmMSawjtKnCtv2zZYc
-         2cxsxSKie2vOQUdAXyMC1QttlcSrbdumfKdfIr3phCZ7ZsEqIuwvIe6W5gZevrkwvtKQ
-         r3Ww==
-X-Gm-Message-State: APjAAAW2Rh3sht/Phi+1IAwiCHWbzsfPB8RlxgXNCBeZxr4a1xKbpZyK
-        Enx0NggGgSUX7v2Q6uotKWESFoP/w9+7cK5LvVuMRQ==
-X-Google-Smtp-Source: APXvYqz0WcmHMeiK6IT+v7kmZTAGTgr1Hd/fvxS4YbL4elq2hJMpg584VDsJiFFWnsbRAAo6uqeDZQp5p3+XGhBLzrU=
-X-Received: by 2002:ab0:7c3:: with SMTP id d3mr8981573uaf.131.1567950687342;
- Sun, 08 Sep 2019 06:51:27 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to;
+        bh=LGw90/UVGk+QEa0OVvDfU9BMlKodboT6J/WmPDm8rBg=;
+        b=AjApqOE+90GYugHcv13oW+56EzlNRz+zCIuNTe4phOawLXweD/iSgqZNZYg93RCN6Q
+         a3cOZReSeiGuTiCjcT/PEGzXy0DtP9RwPyDHhjPn6l76chF9OlIsiplG5Y2tugCGtH9S
+         MbV77ngnLPS9hBoPAgLD1RB5R4wtf+bJ0MuhQ9x8W4/FGgYgyYESn/DYYj5BuZ3HGEBW
+         ywjMjhDDdSUY11/xbg+BzoQkU1mXioOylB9LNX+j5fO9Uc/edDZtPnKorA7VsliOW1WM
+         LUDRrYIBoIW8OIwqXgDETOHh8SxMvIuvNgx6YJ304HvFkEZtFYnVowsPMMcqsXCHRtnz
+         soEg==
+X-Gm-Message-State: APjAAAXdKjsBaCKEwSU6RGeUWOBrmAm9rCSmavv1uJL/u9UmW6HfhT6V
+        z/7I3zpYOZzOdqWm/bh2fM4=
+X-Google-Smtp-Source: APXvYqyZOsK+aqWwElzB2LaKFVuHA0OEwoqV7Sx+6abFRm0Y3xDPiiunSMXqYyE63hrScoKhhsu+xA==
+X-Received: by 2002:adf:fa10:: with SMTP id m16mr9858082wrr.322.1567950731822;
+        Sun, 08 Sep 2019 06:52:11 -0700 (PDT)
+Received: from rocinante (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
+        by smtp.gmail.com with ESMTPSA id r28sm16854635wrr.94.2019.09.08.06.52.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Sep 2019 06:52:11 -0700 (PDT)
+Date:   Sun, 8 Sep 2019 15:52:09 +0200
+From:   Krzysztof Wilczynski <kw@linux.com>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: light: bh1750: Move static keyword to the front of
+ declaration
+Message-ID: <20190908135208.GA29162@rocinante>
+References: <20190902113132.26658-1-kw@linux.com>
+ <20190908114944.18bb78e3@archlinux>
 MIME-Version: 1.0
-References: <20190717083327.47646-1-cychiang@chromium.org> <CA+Px+wX4gbntkd6y8NN8xwXpZLD4MH9rTeHcW9+Ndtw=3_mWBw@mail.gmail.com>
- <CAFv8NwLiY+ro0L4c5vjSOGN8jA-Qr4zm2OWvVHkiuoa7_4e2Fg@mail.gmail.com>
-In-Reply-To: <CAFv8NwLiY+ro0L4c5vjSOGN8jA-Qr4zm2OWvVHkiuoa7_4e2Fg@mail.gmail.com>
-From:   Cheng-yi Chiang <cychiang@chromium.org>
-Date:   Sun, 8 Sep 2019 21:51:01 +0800
-Message-ID: <CAFv8NwJjG4mwfnYO=M3O9nZN48D6aY72nQuqEFpZL68dh5727w@mail.gmail.com>
-Subject: Re: [PATCH v5 0/5] Add HDMI jack support on RK3288
-To:     Tzung-Bi Shih <tzungbi@google.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Douglas Anderson <dianders@chromium.org>,
-        Dylan Reid <dgreid@chromium.org>, tzungbi@chromium.org,
-        ALSA development <alsa-devel@alsa-project.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190908114944.18bb78e3@archlinux>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 10:55 AM Cheng-yi Chiang <cychiang@chromium.org> wrote:
->
-> On Wed, Jul 17, 2019 at 6:28 PM Tzung-Bi Shih <tzungbi@google.com> wrote:
-> >
-> > On Wed, Jul 17, 2019 at 4:33 PM Cheng-Yi Chiang <cychiang@chromium.org> wrote:
-> > >
-> > > This patch series supports HDMI jack reporting on RK3288, which uses
-> > > DRM dw-hdmi driver and hdmi-codec codec driver.
-> > >
-> > > The previous discussion about reporting jack status using hdmi-notifier
-> > > and drm_audio_component is at
-> > >
-> > > https://lore.kernel.org/patchwork/patch/1083027/
-> > >
-> > > The new approach is to use a callback mechanism that is
-> > > specific to hdmi-codec.
-> > >
-> > > Changes from v4 to v5:
-> > > - synopsys/Kconfig: Remove the incorrect dependency change in v4.
-> > > - rockchip/Kconfig: Add dependency of hdmi-codec when it is really need
-> > >   for jack support.
-> > >
-> > > Cheng-Yi Chiang (5):
-> > >   ASoC: hdmi-codec: Add an op to set callback function for plug event
-> > >   drm: bridge: dw-hdmi: Report connector status using callback
-> > >   drm: dw-hdmi-i2s: Use fixed id for codec device
-> > >   ASoC: rockchip_max98090: Add dai_link for HDMI
-> > >   ASoC: rockchip_max98090: Add HDMI jack support
-> > >
-> > LGTM.
-> >
-> > Reviewed-by: Tzung-Bi Shih <tzungbi@google.com>
->
-> Hi Daniel,
-> Do you have further concern on this patch series related to hdmi-codec
-> and drm part ?
-> We would like to merge this patch series if possible.
-> They will be needed in many future chrome projects for HDMI audio jack
-> detection.
-> Thanks a lot!
+Hello Jonathan,
 
-Hi Neil,
-I am not sure if this patch series is under your radar.
-Would you mind taking a look ?
-This patch series has been following great suggestions from various
-reviewers, so I hope it is fine now.
+Thank you for feedback.
 
-Audio jack reporting for HDMI might not be needed for other OS, but it
-is a must on ChromeOS.
-We have many previous projects using different local patch sets to
-achieve HDMI jack reporting.
-I hope that we can achieve a proper way and really get the patches
-merged to mainline.
-Thanks a lot!
+[...]
+> > drivers/iio/light/bh1750.c:64:1: warning:
+> >   ‘static’ is not at beginning of declaration [-Wold-style-declaration]
+[...]
+> This one has me confused.  The warning seems to be false as static
+> is at the beginning of the declaration....
+> 
+> Sure we "could" combine the declaration with the definition as you have
+> done here, but that has nothing much to do with the warning.
+[...]
+
+I only moved the "static const" at the front, I haven't changed the
+code as it's already has been a declaration and definition.  There is
+no semicolon there and the original author put a newline to separate
+things which makes it look as if these were separate.
+
+Simple example based on the existing code:
+
+  https://godbolt.org/z/hV4HP7
+
+I hope this helps to illustrate the change in the patch.  I apologise
+if my approach was incorrect.
+
+As part of the patch I removed the newline in an aim to make it less
+confusing to anyone who will read the code in the future.  Especially,
+since it makes it a bit awkward to read and when using things like
+grep.
+
+Krzysztof
