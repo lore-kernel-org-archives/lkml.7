@@ -2,163 +2,503 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D998EC433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5EF7C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E0F221971
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:49:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="II1LDTk9"
+	by mail.kernel.org (Postfix) with ESMTP id 6FFDC21971
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:49:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567946979;
+	bh=7oDFNL8EfZut0Psa7/EqF+RPWlc/tWu6gzBaK2OFQIE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=nRbvp9sOg3Y9AaLUwnHbyPfrrbcyA8FfVnpmkMz8kE2KnCk4tnqIxCYbZuxFOLNxN
+	 +9Pil4Pc0WVHCXwUdS+q1gwu442YeGQ34og27QF5rYTOJHILNJWiCpte+mn5FCPIlD
+	 oTJu4O2ylsjCnjQpDM03eKXRPc05DqT8oeY1RVRI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731578AbfIHMtg (ORCPT
+        id S1731610AbfIHMti (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:49:36 -0400
-Received: from mout.web.de ([212.227.15.14]:35579 "EHLO mout.web.de"
+        Sun, 8 Sep 2019 08:49:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731526AbfIHMtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:49:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1567946931;
-        bh=64n2i/+x9VuLbn5y3oTsEsYv5qVvKCd8Jhx5xBFFssc=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=II1LDTk9KldM1ji4hrCt6moQ9aNn5H5aQjeeYD2zwgtCZdYAxF3EUcs7s9jbx1oq1
-         s4YzcF/6xit+VspAD/CfuaXyogByNk6+viqc/RwjX6Yd4lygNijBPkE9ei+Toaivp2
-         PYU7/0Fpf63Obv12HC67b6f89i9mN/cau/8++JMg=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.171.128]) by smtp.web.de (mrweb004
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MEqOg-1hwR9l2khe-00G2ED; Sun, 08
- Sep 2019 14:48:51 +0200
-Subject: Re: Coccinelle: pci_free_consistent: Checking when constraints
-To:     Julia Lawall <julia.lawall@lip6.fr>,
-        Coccinelle <cocci@systeme.lip6.fr>
-Cc:     Gilles Muller <Gilles.Muller@lip6.fr>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Petr Strnad <strnape1@fel.cvut.cz>,
-        Wen Yang <wen.yang99@zte.com.cn>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Allison Randal <allison@lohutok.net>,
-        Enrico Weigelt <lkml@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Yi Wang <wang.yi59@zte.com.cn>
-References: <9666134d-0ff6-81eb-b088-f0086a0e61b1@web.de>
- <alpine.DEB.2.21.1909081019020.3340@hadrien>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <63e433b4-06cf-cecc-46e0-9f31226f71d0@web.de>
-Date:   Sun, 8 Sep 2019 14:48:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
+        id S1731555AbfIHMtg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:49:36 -0400
+Received: from localhost (unknown [62.28.240.114])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A52B218AF;
+        Sun,  8 Sep 2019 12:49:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567946975;
+        bh=7oDFNL8EfZut0Psa7/EqF+RPWlc/tWu6gzBaK2OFQIE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=R3wp1BA1p8enVL0pF9cXFpaVRSntIBAR/3MdZbaXKaIZgBUmb4fWeaPAjYQuIOv6g
+         FuKDnEUwbMpxCjPKgp4swMJJqLofScNLL8F3Hw1e1Hva94e1/6yL3W1ChypXJfyUjH
+         cXPvGswnIkgo74geMiPQhCQfk9f6sqgO9Z66FsR8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 5.2 00/94] 5.2.14-stable review
+Date:   Sun,  8 Sep 2019 13:40:56 +0100
+Message-Id: <20190908121150.420989666@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1909081019020.3340@hadrien>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Provags-ID: V03:K1:cnUzcmv9Op0ghjjuTrlV117lBDIKYvwwuyfCVyH3UAvZKyJV6B5
- E47QIPoKZ/UWVUZTGQcnFXTv8TOV5/qPfSGyr/ixIqRZVRfBhX7rF4G4BFsECckIisl/htP
- 2q6IgoAPBjJDgAaCdXVldWyvRIZ3WQ9WGvFWgZFTM+G9LbZUyEHWnq/VWAS0E7Qu4goTcul
- yHwYGZltV5+fytDtEpDqQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:MeUWalmLQzg=:UNbC3T7JRvjkSf59YfVk/E
- ZQr/HDj63eah6c4aMB/C1Gv8wXYv8i3XC2zIY5zCy64lHsh4CAV8UZ1quJugXOBmEbNY0Wtmg
- aEAtKn9rtSmLHXEIOj0fmE1UfoeBca1jKCjtbmXLID07nIkD7SB9B2/2cv0WBy/zchcrxPAyH
- dac/2C6K1q5uchsWgYEvKNLh0Z5ZxM2cNB7+/HiTyQAQ63Rdj/eFkFHBqFOlrIMECpnJLqd9e
- 77j8UMjGnDgJfC4Di0h5a5kfVgOFzOEr6pjP5wRYIpqLSTRXbfwekuJsBXiy/ahA9Gk3y65VE
- v8I4oXJYwPUGNMYQHLalLR57vqzB71Tae35RPzO93Y5LmSXiv2cLJ8R4/hWy7F4qopn4fE2dn
- 4gyP+Ng8aEFg8haj9Mnf5upnqJwAqntflt9VfXlTBkjF5kT2aQYJCwoLTPqG5tGEqLZr4WScj
- oXqdOHlothqsI/wHFlgCLs+OE4Fqcf30fqxM2bkXREA/V/EoGfgCwmvakmudFNWY//yoIo5kK
- o8Hner3w1joABRlpBojB7OX9jBeugnok5NE0e4wnki/4S4noNZeTGCNsIH3/43xsEoVLDjav5
- 9GQS0gaN8BKUl75i1dNaj04Vnmy4+litqC3pmZ7tdSiCYj5lXyM0is7t/vS746kI0k/vUQ77N
- GXFcizzPUTuoe5fLSOYdboOu32frZcy4wbhaq8AZ13hqPq8v9FY4LZ+psrRjHZQn8dtm3dy+y
- 57qIxqL/itD+I+m00fv6Mv4Cy88UcokH7/QCsUewzWu7uzoMnnExjLqjsSgvaaaYmbQd3Ov33
- vVPbTjAcLFi7OaWjnckU8phMsvbfID18oPdnhXCr3LQ2pN2T4bmS3zu/pn0nC0hEczp9HcuiL
- f70otUGlxUWmLlJ3AulaawWS4O0Q0ss4gg/S1zFew1sccsdjBmNEEEAPphjI3R4WUYWrz8xqe
- TOpVXHtnPzOnh01U0XM//MXdOzMAfrxX5Tv2pnP38nSniMfpotbgOGut0m1erCRAIFW3Rk8MQ
- y+hAPy3K949o9hvaL4tugzMz3L+zdOf7/B/n+OxBnfJnEMHE8LU9a5ty0RoDjtYCcmfaZlsZc
- BE5GECy52qLgUn+BMH7GcgNNHqJc2pP4+CVgx3lla2KlXuDIUmEi9mvi0ZGrg77XX782rT/i0
- +rmNO590jqZ6oPNvMeFFFDr+xPJmjgoDrLsvOujabww0czc5OQr5w70nfgJggEIFZTyucgi+J
- RE4LJ50fOqg2DCbU2
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.2.14-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.2.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.2.14-rc1
+X-KernelTest-Deadline: 2019-09-10T12:11+00:00
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> The when exists below these lines has an impact.
+This is the start of the stable review cycle for the 5.2.14 release.
+There are 94 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-This parameter should result in a desirable effect.
+Responses should be made by Tue 10 Sep 2019 12:09:36 PM UTC.
+Anything received after that time might be too late.
+
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.14-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
+and the diffstat can be found below.
+
+thanks,
+
+greg k-h
+
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 5.2.14-rc1
+
+Jan Kaisrlik <ja.kaisrlik@gmail.com>
+    Revert "mmc: core: do not retry CMD6 in __mmc_switch()"
+
+John S. Gruber <JohnSGruber@gmail.com>
+    x86/boot: Preserve boot_params.secure_boot from sanitizing
+
+Linus Torvalds <torvalds@linux-foundation.org>
+    Revert "x86/apic: Include the LDR when clearing out APIC registers"
+
+Luis Henriques <lhenriques@suse.com>
+    libceph: allow ceph_buffer_put() to receive a NULL ceph_buffer
+
+Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+    x86/boot/compressed/64: Fix missing initialization in find_trampoline_placement()
+
+Andre Przywara <andre.przywara@arm.com>
+    KVM: arm/arm64: VGIC: Properly initialise private IRQ affinity
+
+Linus Walleij <linus.walleij@linaro.org>
+    gpio: Fix irqchip initialization order
+
+Selvin Xavier <selvin.xavier@broadcom.com>
+    RDMA/bnxt_re: Fix stack-out-of-bounds in bnxt_qplib_rcfw_send_message
+
+YueHaibing <yuehaibing@huawei.com>
+    afs: use correct afs_call_type in yfs_fs_store_opaque_acl2
+
+Marc Dionne <marc.dionne@auristor.com>
+    afs: Fix possible oops in afs_lookup trace event
+
+David Howells <dhowells@redhat.com>
+    afs: Fix leak in afs_lookup_cell_rcu()
+
+Andrew Jones <drjones@redhat.com>
+    KVM: arm/arm64: Only skip MMIO insn once
+
+Luis Henriques <lhenriques@suse.com>
+    ceph: fix buffer free while holding i_ceph_lock in fill_inode()
+
+Luis Henriques <lhenriques@suse.com>
+    ceph: fix buffer free while holding i_ceph_lock in __ceph_build_xattrs_blob()
+
+Luis Henriques <lhenriques@suse.com>
+    ceph: fix buffer free while holding i_ceph_lock in __ceph_setxattr()
+
+Nicolai Hähnle <nicolai.haehnle@amd.com>
+    drm/amdgpu: prevent memory leaks in AMDGPU_CS ioctl
+
+Vitaly Kuznetsov <vkuznets@redhat.com>
+    selftests/kvm: make platform_info_test pass on AMD
+
+Paolo Bonzini <pbonzini@redhat.com>
+    selftests: kvm: fix state save/load on processors without XSAVE
+
+Wenwen Wang <wenwen@cs.uga.edu>
+    infiniband: hfi1: fix memory leaks
+
+Wenwen Wang <wenwen@cs.uga.edu>
+    infiniband: hfi1: fix a memory leak bug
+
+Wenwen Wang <wenwen@cs.uga.edu>
+    IB/mlx4: Fix memory leaks
+
+zhengbin <zhengbin13@huawei.com>
+    RDMA/cma: fix null-ptr-deref Read in cma_cleanup
+
+Guilherme G. Piccoli <gpiccoli@canonical.com>
+    nvme: Fix cntlid validation when not using NVMEoF
+
+Anton Eidelman <anton@lightbitslabs.com>
+    nvme-multipath: fix possible I/O hang when paths are updated
+
+Vitaly Kuznetsov <vkuznets@redhat.com>
+    Tools: hv: kvp: eliminate 'may be used uninitialized' warning
+
+Dexuan Cui <decui@microsoft.com>
+    Input: hyperv-keyboard: Use in-place iterator API in the channel callback
+
+James Smart <jsmart2021@gmail.com>
+    scsi: lpfc: Mitigate high memory pre-allocation by SCSI-MQ
+
+Kirill A. Shutemov <kirill@shutemov.name>
+    x86/boot/compressed/64: Fix boot on machines with broken E820 table
+
+Benjamin Tissoires <benjamin.tissoires@redhat.com>
+    HID: cp2112: prevent sleeping function called from invalid context
+
+Even Xu <even.xu@intel.com>
+    HID: intel-ish-hid: ipc: add EHL device id
+
+Andrea Righi <andrea.righi@canonical.com>
+    kprobes: Fix potential deadlock in kprobe_optimizer()
+
+Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+    sched/core: Schedule new worker even if PI-blocked
+
+Tho Vu <tho.vu.wh@rvc.renesas.com>
+    ravb: Fix use-after-free ravb_tstamp_skb
+
+Wenwen Wang <wenwen@cs.uga.edu>
+    wimax/i2400m: fix a memory leak bug
+
+Stephen Hemminger <stephen@networkplumber.org>
+    net: cavium: fix driver name
+
+Thomas Falcon <tlfalcon@linux.ibm.com>
+    ibmvnic: Unmap DMA address of TX descriptor buffers after use
+
+Wenwen Wang <wenwen@cs.uga.edu>
+    net: kalmia: fix memory leaks
+
+Wenwen Wang <wenwen@cs.uga.edu>
+    cx82310_eth: fix a memory leak bug
+
+Darrick J. Wong <darrick.wong@oracle.com>
+    vfs: fix page locking deadlocks when deduping files
+
+Wenwen Wang <wenwen@cs.uga.edu>
+    lan78xx: Fix memory leaks
+
+Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+    clk: Fix potential NULL dereference in clk_fetch_parent_index()
+
+Stephen Boyd <sboyd@kernel.org>
+    clk: Fix falling back to legacy parent string matching
+
+Wenwen Wang <wenwen@cs.uga.edu>
+    net: myri10ge: fix memory leaks
+
+Wenwen Wang <wenwen@cs.uga.edu>
+    liquidio: add cleanup in octeon_setup_iq()
+
+Paolo Bonzini <pbonzini@redhat.com>
+    selftests: kvm: fix vmx_set_nested_state_test
+
+Paolo Bonzini <pbonzini@redhat.com>
+    selftests: kvm: provide common function to enable eVMCS
+
+Paolo Bonzini <pbonzini@redhat.com>
+    selftests: kvm: do not try running the VM in vmx_set_nested_state_test
+
+Wenwen Wang <wenwen@cs.uga.edu>
+    cxgb4: fix a memory leak bug
+
+Dmitry Fomichev <dmitry.fomichev@wdc.com>
+    scsi: target: tcmu: avoid use-after-free after command timeout
+
+Bill Kuzeja <William.Kuzeja@stratus.com>
+    scsi: qla2xxx: Fix gnl.l memory leak on adapter init failure
+
+Alexandre Courbot <acourbot@chromium.org>
+    drm/mediatek: set DMA max segment size
+
+Alexandre Courbot <acourbot@chromium.org>
+    drm/mediatek: use correct device to import PRIME buffers
+
+Pablo Neira Ayuso <pablo@netfilter.org>
+    netfilter: nft_flow_offload: skip tcp rst and fin packets
+
+YueHaibing <yuehaibing@huawei.com>
+    gpio: Fix build error of function redefinition
+
+Thomas Falcon <tlfalcon@linux.ibm.com>
+    ibmveth: Convert multicast list size for little-endian system
+
+Julian Wiedmann <jwi@linux.ibm.com>
+    s390/qeth: serialize cmd reply with concurrent timeout
+
+Fabian Henneke <fabian.henneke@gmail.com>
+    Bluetooth: hidp: Let hidp_send_message return number of queued bytes
+
+Harish Bandi <c-hbandi@codeaurora.org>
+    Bluetooth: hci_qca: Send VS pre shutdown command.
+
+Matthias Kaehlcke <mka@chromium.org>
+    Bluetooth: btqca: Add a short delay before downloading the NVM
+
+Nathan Chancellor <natechancellor@gmail.com>
+    net: tc35815: Explicitly check NET_IP_ALIGN is not zero in tc35815_rx
+
+Dexuan Cui <decui@microsoft.com>
+    hv_netvsc: Fix a warning of suspicious RCU usage
+
+Taehee Yoo <ap420073@gmail.com>
+    ixgbe: fix possible deadlock in ixgbe_service_task()
+
+Jakub Kicinski <jakub.kicinski@netronome.com>
+    tools: bpftool: fix error message (prog -> object)
+
+Pablo Neira Ayuso <pablo@netfilter.org>
+    netfilter: nf_flow_table: teardown flow timeout race
+
+Pablo Neira Ayuso <pablo@netfilter.org>
+    netfilter: nf_flow_table: conntrack picks up expired flows
+
+Pablo Neira Ayuso <pablo@netfilter.org>
+    netfilter: nf_tables: use-after-free in failing rule with bound set
+
+Fuqian Huang <huangfq.daxian@gmail.com>
+    net: tundra: tsi108: use spin_lock_irqsave instead of spin_lock_irq in IRQ context
+
+Marek Szyprowski <m.szyprowski@samsung.com>
+    clk: samsung: exynos542x: Move MSCL subsystem clocks to its sub-CMU
+
+Sylwester Nawrocki <s.nawrocki@samsung.com>
+    clk: samsung: exynos5800: Move MAU subsystem clocks to MAU sub-CMU
+
+Sylwester Nawrocki <s.nawrocki@samsung.com>
+    clk: samsung: Change signature of exynos5_subcmus_init() function
+
+Aya Levin <ayal@mellanox.com>
+    net/mlx5e: Fix error flow of CQE recovery on tx reporter
+
+Florian Westphal <fw@strlen.de>
+    netfilter: nf_flow_table: fix offload for flows that are subject to xfrm
+
+Andrii Nakryiko <andriin@fb.com>
+    libbpf: set BTF FD for prog only when there is supported .BTF.ext data
+
+Andrii Nakryiko <andriin@fb.com>
+    libbpf: fix erroneous multi-closing of BTF FD
+
+Sven Eckelmann <sven@narfation.org>
+    batman-adv: Fix netlink dumping of all mcast_flags buckets
+
+Ka-Cheong Poon <ka-cheong.poon@oracle.com>
+    net/rds: Fix info leak in rds6_inc_info_copy()
+
+Davide Caratti <dcaratti@redhat.com>
+    net/sched: pfifo_fast: fix wrong dereference when qdisc is reset
+
+Davide Caratti <dcaratti@redhat.com>
+    net/sched: pfifo_fast: fix wrong dereference in pfifo_fast_enqueue
+
+Vladimir Oltean <olteanv@gmail.com>
+    net: dsa: tag_8021q: Future-proof the reserved fields in the custom VID
+
+Marco Hartmann <marco.hartmann@nxp.com>
+    Add genphy_c45_config_aneg() function to phy-c45.c
+
+Vladimir Oltean <olteanv@gmail.com>
+    net/sched: cbs: Set default link speed to 10 Mbps in cbs_set_port_rate
+
+Vladimir Oltean <olteanv@gmail.com>
+    taprio: Set default link speed to 10 Mbps in taprio_set_picos_per_byte
+
+Vladimir Oltean <olteanv@gmail.com>
+    taprio: Fix kernel panic in taprio_destroy
+
+Hayes Wang <hayeswang@realtek.com>
+    r8152: remove calling netif_napi_del
+
+Hayes Wang <hayeswang@realtek.com>
+    Revert "r8152: napi hangup fix after disconnect"
+
+John Hurley <john.hurley@netronome.com>
+    nfp: flower: handle neighbour events on internal ports
+
+John Hurley <john.hurley@netronome.com>
+    nfp: flower: prevent ingress block binds on internal ports
+
+Eric Dumazet <edumazet@google.com>
+    tcp: remove empty skb from write queue in error cases
+
+Willem de Bruijn <willemb@google.com>
+    tcp: inherit timestamp on mtu probe
+
+Chen-Yu Tsai <wens@csie.org>
+    net: stmmac: dwmac-rk: Don't fail if phy regulator is absent
+
+Cong Wang <xiyou.wangcong@gmail.com>
+    net_sched: fix a NULL pointer deref in ipt action
+
+Vlad Buslov <vladbu@mellanox.com>
+    net: sched: act_sample: fix psample group handling on overwrite
+
+Feng Sun <loyou85@gmail.com>
+    net: fix skb use after free in netpoll
+
+Eric Dumazet <edumazet@google.com>
+    mld: fix memory leak in mld_del_delrec()
 
 
-> I believe that the rule is ok as is.
+-------------
 
-I wonder about the relevance of the shown double if statement exclusion.
+Diffstat:
+
+ Makefile                                           |   4 +-
+ arch/x86/boot/compressed/pgtable_64.c              |  13 +-
+ arch/x86/include/asm/bootparam_utils.h             |   1 +
+ arch/x86/kernel/apic/apic.c                        |   4 -
+ drivers/bluetooth/btqca.c                          |  24 +++
+ drivers/bluetooth/btqca.h                          |   7 +
+ drivers/bluetooth/hci_qca.c                        |   3 +
+ drivers/clk/clk.c                                  |  49 +++++--
+ drivers/clk/samsung/clk-exynos5-subcmu.c           |  16 +-
+ drivers/clk/samsung/clk-exynos5-subcmu.h           |   2 +-
+ drivers/clk/samsung/clk-exynos5250.c               |   7 +-
+ drivers/clk/samsung/clk-exynos5420.c               | 162 ++++++++++++++-------
+ drivers/gpio/gpiolib.c                             |  30 ++--
+ drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c             |   9 +-
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c             |  49 ++++++-
+ drivers/gpu/drm/mediatek/mtk_drm_drv.h             |   2 +
+ drivers/hid/hid-cp2112.c                           |   8 +-
+ drivers/hid/intel-ish-hid/ipc/hw-ish.h             |   1 +
+ drivers/hid/intel-ish-hid/ipc/pci-ish.c            |   1 +
+ drivers/infiniband/core/cma.c                      |   6 +-
+ drivers/infiniband/hw/bnxt_re/qplib_rcfw.c         |   8 +-
+ drivers/infiniband/hw/bnxt_re/qplib_rcfw.h         |  11 +-
+ drivers/infiniband/hw/hfi1/fault.c                 |  12 +-
+ drivers/infiniband/hw/mlx4/mad.c                   |   4 +-
+ drivers/input/serio/hyperv-keyboard.c              |  35 +----
+ drivers/mmc/core/mmc_ops.c                         |   2 +-
+ drivers/net/ethernet/cavium/common/cavium_ptp.c    |   2 +-
+ .../net/ethernet/cavium/liquidio/request_manager.c |   4 +-
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c |   4 +-
+ drivers/net/ethernet/ibm/ibmveth.c                 |   9 +-
+ drivers/net/ethernet/ibm/ibmvnic.c                 |  11 +-
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c      |   5 +-
+ .../ethernet/mellanox/mlx5/core/en/reporter_tx.c   |  12 +-
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c  |   1 -
+ drivers/net/ethernet/myricom/myri10ge/myri10ge.c   |   2 +-
+ .../net/ethernet/netronome/nfp/flower/offload.c    |   7 +-
+ .../ethernet/netronome/nfp/flower/tunnel_conf.c    |   8 +-
+ drivers/net/ethernet/renesas/ravb_main.c           |   8 +-
+ drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c     |   6 +-
+ drivers/net/ethernet/toshiba/tc35815.c             |   2 +-
+ drivers/net/ethernet/tundra/tsi108_eth.c           |   5 +-
+ drivers/net/hyperv/netvsc_drv.c                    |   9 +-
+ drivers/net/phy/phy-c45.c                          |  26 ++++
+ drivers/net/phy/phy.c                              |   2 +-
+ drivers/net/usb/cx82310_eth.c                      |   3 +-
+ drivers/net/usb/kalmia.c                           |   6 +-
+ drivers/net/usb/lan78xx.c                          |   8 +-
+ drivers/net/usb/r8152.c                            |   5 +-
+ drivers/net/wimax/i2400m/fw.c                      |   4 +-
+ drivers/nvme/host/core.c                           |   4 +-
+ drivers/nvme/host/multipath.c                      |   1 +
+ drivers/s390/net/qeth_core.h                       |   1 +
+ drivers/s390/net/qeth_core_main.c                  |  20 +++
+ drivers/scsi/lpfc/lpfc.h                           |   1 +
+ drivers/scsi/lpfc/lpfc_attr.c                      |  15 ++
+ drivers/scsi/lpfc/lpfc_init.c                      |  10 +-
+ drivers/scsi/lpfc/lpfc_sli4.h                      |   5 +
+ drivers/scsi/qla2xxx/qla_attr.c                    |   2 +
+ drivers/scsi/qla2xxx/qla_os.c                      |  11 +-
+ drivers/target/target_core_user.c                  |   9 +-
+ fs/afs/cell.c                                      |   4 +
+ fs/afs/dir.c                                       |   3 +-
+ fs/afs/yfsclient.c                                 |   2 +-
+ fs/ceph/caps.c                                     |   5 +-
+ fs/ceph/inode.c                                    |   7 +-
+ fs/ceph/snap.c                                     |   4 +-
+ fs/ceph/super.h                                    |   2 +-
+ fs/ceph/xattr.c                                    |  19 ++-
+ fs/read_write.c                                    |  49 ++++++-
+ include/linux/ceph/buffer.h                        |   3 +-
+ include/linux/gpio.h                               |  24 ---
+ include/linux/phy.h                                |   1 +
+ include/net/act_api.h                              |   4 +-
+ include/net/netfilter/nf_tables.h                  |   9 +-
+ include/net/psample.h                              |   1 +
+ kernel/kprobes.c                                   |   8 +-
+ kernel/sched/core.c                                |   5 +-
+ net/batman-adv/multicast.c                         |   2 +-
+ net/bluetooth/hidp/core.c                          |   9 +-
+ net/core/netpoll.c                                 |   6 +-
+ net/dsa/tag_8021q.c                                |   2 +
+ net/ipv4/tcp.c                                     |  30 ++--
+ net/ipv4/tcp_output.c                              |   3 +-
+ net/ipv6/mcast.c                                   |   5 +-
+ net/netfilter/nf_flow_table_core.c                 |  43 ++++--
+ net/netfilter/nf_flow_table_ip.c                   |  43 ++++++
+ net/netfilter/nf_tables_api.c                      |  15 +-
+ net/netfilter/nft_flow_offload.c                   |   9 +-
+ net/psample/psample.c                              |   2 +-
+ net/rds/recv.c                                     |   5 +-
+ net/sched/act_bpf.c                                |   2 +-
+ net/sched/act_connmark.c                           |   2 +-
+ net/sched/act_csum.c                               |   2 +-
+ net/sched/act_gact.c                               |   2 +-
+ net/sched/act_ife.c                                |   2 +-
+ net/sched/act_ipt.c                                |  11 +-
+ net/sched/act_mirred.c                             |   2 +-
+ net/sched/act_nat.c                                |   2 +-
+ net/sched/act_pedit.c                              |   2 +-
+ net/sched/act_police.c                             |   2 +-
+ net/sched/act_sample.c                             |   8 +-
+ net/sched/act_simple.c                             |   2 +-
+ net/sched/act_skbedit.c                            |   2 +-
+ net/sched/act_skbmod.c                             |   2 +-
+ net/sched/act_tunnel_key.c                         |   2 +-
+ net/sched/act_vlan.c                               |   2 +-
+ net/sched/sch_cbs.c                                |  19 ++-
+ net/sched/sch_generic.c                            |  19 ++-
+ net/sched/sch_taprio.c                             |  31 ++--
+ tools/bpf/bpftool/common.c                         |   2 +-
+ tools/hv/hv_kvp_daemon.c                           |   2 +-
+ tools/lib/bpf/libbpf.c                             |  15 +-
+ tools/testing/selftests/kvm/include/evmcs.h        |   2 +
+ tools/testing/selftests/kvm/lib/x86_64/processor.c |  16 +-
+ tools/testing/selftests/kvm/lib/x86_64/vmx.c       |  20 +++
+ tools/testing/selftests/kvm/x86_64/evmcs_test.c    |  15 +-
+ tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c  |  12 +-
+ .../selftests/kvm/x86_64/platform_info_test.c      |   2 +-
+ .../kvm/x86_64/vmx_set_nested_state_test.c         |  32 ++--
+ virt/kvm/arm/mmio.c                                |   7 +
+ virt/kvm/arm/vgic/vgic-init.c                      |  30 ++--
+ 121 files changed, 872 insertions(+), 421 deletions(-)
 
 
-> A single path may have no call to pci_free_consistent,
-
-We come along different views around the provided software functionality
-once more.
-
-
-> but if it has that call under one of the mentioned ifs,
-> then the path is still ok,
-
-I find that this information can need further clarification.
-
-
-> and not something that an error should be reported about.
-
-I do not expect an error message from the SmPL script execution here.
-
-I just try again to clarify if the specification of a single function call
-exclusion can (and should) be sufficient also at this place.
-
-Regards,
-Markus
