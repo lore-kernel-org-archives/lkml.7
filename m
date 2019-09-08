@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEFC6C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F1A1C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9E252190F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:53:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 149F120693
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:53:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947204;
-	bh=VnDTNW2U2KdhHuH5M6/sg2lRl5aXNXIxGTMDipz/QRw=;
+	s=default; t=1567947210;
+	bh=6bw/7DLwCJ+tcJ/MtAGG0BRvVdqLRy+kRlXfBgIdE9c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PeXn0ub+1pVViThqrKSeq5s5KqE0alF9pbShhQOp/n5EqmfQnKN7s5xbClnEdlktD
-	 c5qeveJo+iNEv6RoLvsV2D385fTfIzXdoI4jGK9I+nKpxR2ImW/VusAeOusfD6iCjl
-	 YBX+pxEo9bwDYj78lxak8rA2rhb5jWqb9iWqkmR0=
+	b=lIj+f7VQOI+z/aK2BdYAqWMq2U7u+n/PTwS9O1eTvDBiMkZdC70wPqXf/qp+NeKJ6
+	 /6BN3oQ66jGXH+z9h9W/1we/N1htQ46SJnYniEx0uObSsIHtz+I++R8FxBwGMO1PuL
+	 DE6X2R9KtndZ+Z9b3kv26ccHY5r10Hegq9uFPuw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387615AbfIHMxY (ORCPT
+        id S2387644AbfIHMx3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:53:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46258 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:53:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387559AbfIHMxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:53:21 -0400
+        id S2387559AbfIHMxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:53:24 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9FED21479;
-        Sun,  8 Sep 2019 12:53:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A8D3218AC;
+        Sun,  8 Sep 2019 12:53:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567947201;
-        bh=VnDTNW2U2KdhHuH5M6/sg2lRl5aXNXIxGTMDipz/QRw=;
+        s=default; t=1567947203;
+        bh=6bw/7DLwCJ+tcJ/MtAGG0BRvVdqLRy+kRlXfBgIdE9c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TRHhFN7ZBC18zsF3kWus6Gf6+UjQL6FmOdpuvK8JqjB4wRhOPhfMC0pl1iu4xRmgd
-         sMRJQW3bCccOOm08kwUDEkGdzNHSJf8ULGISME/pq/nWdiARxKBi1vFMngBcComv8X
-         zm73rhKey2KGV4mgvuFdGM7aqzoneyBDeiVGLiXc=
+        b=H7H8y78noEF0KxvAR0oTnn10yTnaDcocyr6IzW+HDZxOTDZILx9Cg8xJb7md/Rw7/
+         6BZ8Wx2Nvklc9z/DhZmeREgkLE7pD5iUaPij9anO//DwuBGcc8c5p2Lb6DtC5ddyUX
+         scEdcTHopmilMiwF8cCMQjnJVS5WDj3RKXWEXzek=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
-        "Devesh K. Singh" <devesh_singh@in.ibm.com>,
-        Thomas Falcon <tlfalcon@linux.ibm.com>,
+        stable@vger.kernel.org,
+        Stephen Hemminger <stephen@networkplumber.org>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 59/94] ibmvnic: Unmap DMA address of TX descriptor buffers after use
-Date:   Sun,  8 Sep 2019 13:41:55 +0100
-Message-Id: <20190908121152.123591233@linuxfoundation.org>
+Subject: [PATCH 5.2 60/94] net: cavium: fix driver name
+Date:   Sun,  8 Sep 2019 13:41:56 +0100
+Message-Id: <20190908121152.151128338@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
 References: <20190908121150.420989666@linuxfoundation.org>
@@ -62,59 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 80f0fe0934cd3daa13a5e4d48a103f469115b160 ]
+[ Upstream commit 3434341004a380f4e47c3a03d4320d43982162a0 ]
 
-There's no need to wait until a completion is received to unmap
-TX descriptor buffers that have been passed to the hypervisor.
-Instead unmap it when the hypervisor call has completed. This patch
-avoids the possibility that a buffer will not be unmapped because
-a TX completion is lost or mishandled.
+The driver name gets exposed in sysfs under /sys/bus/pci/drivers
+so it should look like other devices. Change it to be common
+format (instead of "Cavium PTP").
 
-Reported-by: Abdul Haleem <abdhalee@linux.vnet.ibm.com>
-Tested-by: Devesh K. Singh <devesh_singh@in.ibm.com>
-Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
+This is a trivial fix that was observed by accident because
+Debian kernels were building this driver into kernel (bug).
+
+Signed-off-by: Stephen Hemminger <stephen@networkplumber.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ibm/ibmvnic.c | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
+ drivers/net/ethernet/cavium/common/cavium_ptp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
-index 3da6800732656..cebd20f3128d4 100644
---- a/drivers/net/ethernet/ibm/ibmvnic.c
-+++ b/drivers/net/ethernet/ibm/ibmvnic.c
-@@ -1568,6 +1568,8 @@ static netdev_tx_t ibmvnic_xmit(struct sk_buff *skb, struct net_device *netdev)
- 		lpar_rc = send_subcrq_indirect(adapter, handle_array[queue_num],
- 					       (u64)tx_buff->indir_dma,
- 					       (u64)num_entries);
-+		dma_unmap_single(dev, tx_buff->indir_dma,
-+				 sizeof(tx_buff->indir_arr), DMA_TO_DEVICE);
- 	} else {
- 		tx_buff->num_entries = num_entries;
- 		lpar_rc = send_subcrq(adapter, handle_array[queue_num],
-@@ -2788,7 +2790,6 @@ static int ibmvnic_complete_tx(struct ibmvnic_adapter *adapter,
- 	union sub_crq *next;
- 	int index;
- 	int i, j;
--	u8 *first;
+diff --git a/drivers/net/ethernet/cavium/common/cavium_ptp.c b/drivers/net/ethernet/cavium/common/cavium_ptp.c
+index 73632b8437498..b821c9e1604cf 100644
+--- a/drivers/net/ethernet/cavium/common/cavium_ptp.c
++++ b/drivers/net/ethernet/cavium/common/cavium_ptp.c
+@@ -10,7 +10,7 @@
  
- restart_loop:
- 	while (pending_scrq(adapter, scrq)) {
-@@ -2818,14 +2819,6 @@ restart_loop:
+ #include "cavium_ptp.h"
  
- 				txbuff->data_dma[j] = 0;
- 			}
--			/* if sub_crq was sent indirectly */
--			first = &txbuff->indir_arr[0].generic.first;
--			if (*first == IBMVNIC_CRQ_CMD) {
--				dma_unmap_single(dev, txbuff->indir_dma,
--						 sizeof(txbuff->indir_arr),
--						 DMA_TO_DEVICE);
--				*first = 0;
--			}
+-#define DRV_NAME	"Cavium PTP Driver"
++#define DRV_NAME "cavium_ptp"
  
- 			if (txbuff->last_frag) {
- 				dev_kfree_skb_any(txbuff->skb);
+ #define PCI_DEVICE_ID_CAVIUM_PTP	0xA00C
+ #define PCI_DEVICE_ID_CAVIUM_RST	0xA00E
 -- 
 2.20.1
 
