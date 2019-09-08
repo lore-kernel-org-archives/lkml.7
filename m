@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C35C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 377E6C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBD30218AF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:45:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 125B6218DE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:45:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946730;
-	bh=fk9LczRr7FZJUTcD7jFe3t8VYw1EEj2ASjGrURari88=;
+	s=default; t=1567946732;
+	bh=pUdoNrICP2SZo2LI0cSNdDd/xTZ1ndo1yuzh48q9PEg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=crmGqqV5XzZhhf7XE01Iq0hruAISfiSRSKwtZcGuj3KIteyTpRprWOBvJJ07/QuM2
-	 GyAczJDER1MIBRF5uJdaWRcwX4hWH5mCrAT1yEwz03u35BtHrB5TWnkXKgszTwrgaZ
-	 CT9+UTqVBBXjluIu1eoSsSlkuukwGA8uXDK534aM=
+	b=Iy8VkVePR5a3Qq6M/QK+op0Av8LCRzPrTF1m3juIFE5z1s/+LRLXt2ITo4n6YjVbX
+	 RHjtA4YOhUhyYW9wJtC0E9u/X1DIXue40tFL9HnhP44VJNN41hv37tNn1/lxI/m2G2
+	 aKxMIjb0/ls5RFBWRy+O7nxKW2Zgo4OPxLUJ0oNY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730116AbfIHMp2 (ORCPT
+        id S1730132AbfIHMpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:45:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60674 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:45:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730100AbfIHMpZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:45:25 -0400
+        id S1730105AbfIHMp1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:45:27 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D145218DE;
-        Sun,  8 Sep 2019 12:45:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4EE4216C8;
+        Sun,  8 Sep 2019 12:45:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946724;
-        bh=fk9LczRr7FZJUTcD7jFe3t8VYw1EEj2ASjGrURari88=;
+        s=default; t=1567946727;
+        bh=pUdoNrICP2SZo2LI0cSNdDd/xTZ1ndo1yuzh48q9PEg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sX+IbNn7x6AMCnVNLXIDiF+j1Ibg4IcXDZoZPjXC9iP6qx/QycaaE5djWfhWKfa88
-         X419Os2d2piQ73Q+fgeQU2rg5zG3XrFvL6Q8LxfrQMZ3YiRSbuuY6QULw+1RBOB9CF
-         DqEzF5DppgYX11tDJGXrUgpK0q4TLs+Q/30RNV3U=
+        b=LITkyuu6IO6P4gGBPvLW+wwn3Wi7DjuNudjEqm4bCg9a4MAHm3Y3E8jMnJ3lyLlDS
+         FPO0ABlOQUfGEutevKXFX2/UGFfJkE3ps/AwHph7/jNf4P3Z9dswYNEothHoJIm9/J
+         bmhaX8fZ/ngDIRD8YHoNIyS1CzDAMXKgGXe2HUtw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
+        stable@vger.kernel.org, Tho Vu <tho.vu.wh@rvc.renesas.com>,
+        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 17/40] wimax/i2400m: fix a memory leak bug
-Date:   Sun,  8 Sep 2019 13:41:50 +0100
-Message-Id: <20190908121122.127215844@linuxfoundation.org>
+Subject: [PATCH 4.14 18/40] ravb: Fix use-after-free ravb_tstamp_skb
+Date:   Sun,  8 Sep 2019 13:41:51 +0100
+Message-Id: <20190908121122.295865967@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121114.260662089@linuxfoundation.org>
 References: <20190908121114.260662089@linuxfoundation.org>
@@ -60,42 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 44ef3a03252844a8753479b0cea7f29e4a804bdc ]
+[ Upstream commit cfef46d692efd852a0da6803f920cc756eea2855 ]
 
-In i2400m_barker_db_init(), 'options_orig' is allocated through kstrdup()
-to hold the original command line options. Then, the options are parsed.
-However, if an error occurs during the parsing process, 'options_orig' is
-not deallocated, leading to a memory leak bug. To fix this issue, free
-'options_orig' before returning the error.
+When a Tx timestamp is requested, a pointer to the skb is stored in the
+ravb_tstamp_skb struct. This was done without an skb_get. There exists
+the possibility that the skb could be freed by ravb_tx_free (when
+ravb_tx_free is called from ravb_start_xmit) before the timestamp was
+processed, leading to a use-after-free bug.
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Use skb_get when filling a ravb_tstamp_skb struct, and add appropriate
+frees/consumes when a ravb_tstamp_skb struct is freed.
+
+Fixes: c156633f1353 ("Renesas Ethernet AVB driver proper")
+Signed-off-by: Tho Vu <tho.vu.wh@rvc.renesas.com>
+Signed-off-by: Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wimax/i2400m/fw.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/renesas/ravb_main.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wimax/i2400m/fw.c b/drivers/net/wimax/i2400m/fw.c
-index a89b5685e68b3..4577ee5bbddd6 100644
---- a/drivers/net/wimax/i2400m/fw.c
-+++ b/drivers/net/wimax/i2400m/fw.c
-@@ -351,13 +351,15 @@ int i2400m_barker_db_init(const char *_options)
+diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
+index ce79af4a7f6fb..d73617cc3b159 100644
+--- a/drivers/net/ethernet/renesas/ravb_main.c
++++ b/drivers/net/ethernet/renesas/ravb_main.c
+@@ -1,6 +1,6 @@
+ /* Renesas Ethernet AVB device driver
+  *
+- * Copyright (C) 2014-2015 Renesas Electronics Corporation
++ * Copyright (C) 2014-2019 Renesas Electronics Corporation
+  * Copyright (C) 2015 Renesas Solutions Corp.
+  * Copyright (C) 2015-2016 Cogent Embedded, Inc. <source@cogentembedded.com>
+  *
+@@ -513,7 +513,10 @@ static void ravb_get_tx_tstamp(struct net_device *ndev)
+ 			kfree(ts_skb);
+ 			if (tag == tfa_tag) {
+ 				skb_tstamp_tx(skb, &shhwtstamps);
++				dev_consume_skb_any(skb);
+ 				break;
++			} else {
++				dev_kfree_skb_any(skb);
  			}
- 			result = i2400m_barker_db_add(barker);
- 			if (result < 0)
--				goto error_add;
-+				goto error_parse_add;
  		}
- 		kfree(options_orig);
+ 		ravb_modify(ndev, TCCR, TCCR_TFR, TCCR_TFR);
+@@ -1576,7 +1579,7 @@ static netdev_tx_t ravb_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 					 DMA_TO_DEVICE);
+ 			goto unmap;
+ 		}
+-		ts_skb->skb = skb;
++		ts_skb->skb = skb_get(skb);
+ 		ts_skb->tag = priv->ts_skb_tag++;
+ 		priv->ts_skb_tag &= 0x3ff;
+ 		list_add_tail(&ts_skb->list, &priv->ts_skb_list);
+@@ -1704,6 +1707,7 @@ static int ravb_close(struct net_device *ndev)
+ 	/* Clear the timestamp list */
+ 	list_for_each_entry_safe(ts_skb, ts_skb2, &priv->ts_skb_list, list) {
+ 		list_del(&ts_skb->list);
++		kfree_skb(ts_skb->skb);
+ 		kfree(ts_skb);
  	}
- 	return 0;
  
-+error_parse_add:
- error_parse:
-+	kfree(options_orig);
- error_add:
- 	kfree(i2400m_barker_db);
- 	return result;
 -- 
 2.20.1
 
