@@ -2,107 +2,133 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E276C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 08:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA2AC4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 08:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E43122082C
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 08:00:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B2wFFBVZ"
+	by mail.kernel.org (Postfix) with ESMTP id 688BB20854
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 08:03:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbfIHIAl (ORCPT
+        id S1726634AbfIHIDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 04:00:41 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:38107 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726438AbfIHIAk (ORCPT
+        Sun, 8 Sep 2019 04:03:09 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:53214 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbfIHIDJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 04:00:40 -0400
-Received: by mail-lj1-f193.google.com with SMTP id y23so9400667ljn.5
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 01:00:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=wbSNJrCAMMQJMsBoL29fGN+8+5asXhPwIIrH+qFROu0=;
-        b=B2wFFBVZS2tQgIEY42dR7+c/26RYg5hKQMiSxHnvNKlrT6w3VfP/D65XHDWF3tU4PT
-         o+O/04SVby78Gqwmhit7Hlzjc4iuPS96ybm3db4WncHo9d+beRsfBVBn8/JwV48aRasa
-         H0OaF765vXtU/lHYIh660Uc8tpckvZdA3/PfFlcT8pm5caheaiGAnc7ifkplWaTC7v41
-         1GbHhdLJXOltgKZfkd2rj1KcDLarIlyv2kGYQMZEaMUOrwzscGnq9J2MNc0Y/n5GdU3F
-         5EZIZ1K3tM1W7S+TbY2+EPUiV5NJqlI7TE5/YXH+OoHvnHm+Ui99lVN1mybTVa4PGFsI
-         3yDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=wbSNJrCAMMQJMsBoL29fGN+8+5asXhPwIIrH+qFROu0=;
-        b=neVlYWb3+a4y+EL3dDbWAxqlRTXvhoXp/VipekbDG9pI+SQvkJxQJxZL5b6FjFXFE3
-         7A1KtyYdIjXHepKdPwf/J6ld2Whpy0GOiFtJKaAnVnPUA37X5fnO3U6OuaBVC89IqZFk
-         NUER2NegMF4TAfsbRcL/0ACEEvj8/AK82y5u9KtfV7Co7Oj4FAA7tYS5Nx3/zSxTo+PB
-         PVpZIYNtBZSBvujRcJXhGAcKt3gk7dGO/1MLi3x19LusWv5lyBs6HFSzlKCTo36b1jME
-         5760EIAk+kNMXvwuPCR/M1jqGHmHUK9Ba0ct7BQukxyxZgLMYvpe5gkvUvWMdGPzOz9Y
-         cbTw==
-X-Gm-Message-State: APjAAAXdhbzXsw1XhkOnLWCkHaJDdL+ZTFf4CP2pskI/cE/YxCqohMeL
-        6wfaHU392eK3SRHQTXW1KiMpg/93qXesMjsOlTcxO2aYO+KKGwMQ
-X-Google-Smtp-Source: APXvYqw6wtbItyTMNxmQSL+6YPhMyTlVsY65bMRTcpjMt+/ghv8xzVMdU/PSxMDbEwBprdXJ3iVlsITqi2bH0hvmdzc=
-X-Received: by 2002:a2e:884d:: with SMTP id z13mr11211958ljj.62.1567929638593;
- Sun, 08 Sep 2019 01:00:38 -0700 (PDT)
+        Sun, 8 Sep 2019 04:03:09 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id A619C80534; Sun,  8 Sep 2019 10:02:52 +0200 (CEST)
+Date:   Sun, 8 Sep 2019 10:03:05 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        kernel list <linux-kernel@vger.kernel.org>, sre@kernel.org,
+        nekit1000@gmail.com, mpartap@gmx.net, merlijn@wizzup.org,
+        Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org
+Subject: Re: [FYI] lm3532: right registration to work with LED-backlight
+Message-ID: <20190908080305.GC25459@amd>
+References: <20190827215205.59677-1-tony@atomide.com>
+ <20190828085339.GB2923@amd>
+ <c3ac1863-9cdb-1ba6-d5a4-df1c4cfecbe1@gmail.com>
 MIME-Version: 1.0
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 8 Sep 2019 09:00:26 +0100
-Message-ID: <CACRpkdYEPBOFnKvNiH0kSOZWTujMaMNhQQgRTGSZUosbbqAdkQ@mail.gmail.com>
-Subject: [GIT PULL] GPIO fixes for v5.3
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="3siQDZowHQqNOShm"
+Content-Disposition: inline
+In-Reply-To: <c3ac1863-9cdb-1ba6-d5a4-df1c4cfecbe1@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
 
-some (hopefully last) small GPIO fix for the v5.3 series.
-Just affecting PCA953x expanders. Details in the tag.
+--3siQDZowHQqNOShm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Please pull it in!
+On Wed 2019-08-28 22:32:57, Jacek Anaszewski wrote:
+> On 8/28/19 10:53 AM, Pavel Machek wrote:
+> > Hi!
+> >=20
+> > Eventually, these will be needed.
+> >=20
+> > Best regards,
+> > 								Pavel
+> >=20
+> > commit 38d956977a7d6cbdc811676f9b4033da7487e045
+> > Author: Pavel <pavel@ucw.cz>
+> > Date:   Wed Aug 7 12:43:52 2019 +0200
+> >=20
+> >     d4: lm3532 needs to use right register function for backlight to wo=
+rk.
+> >=20
+> > diff --git a/drivers/leds/leds-lm3532.c b/drivers/leds/leds-lm3532.c
+> > index 365a22a5..f98e657 100644
+> > --- a/drivers/leds/leds-lm3532.c
+> > +++ b/drivers/leds/leds-lm3532.c
+> > @@ -629,7 +629,7 @@ static int lm3532_parse_node(struct lm3532_data *pr=
+iv)
+> > =20
+> >  		lm3532_init_registers(led);
+> > =20
+> > -		ret =3D devm_led_classdev_register(priv->dev, &led->led_dev);
+> > +		ret =3D devm_of_led_classdev_register(priv->dev, to_of_node(child), =
+&led->led_dev);
+>=20
+> We no longer have devm_of_led_classdev_register(). You must use
+> devm_led_classdev_register_ext().
 
-Yours,
-Linus Walleij
+Something like this (untested)?
 
-The following changes since commit a55aa89aab90fae7c815b0551b07be37db359d76:
+								Pavel
 
-  Linux 5.3-rc6 (2019-08-25 12:01:23 -0700)
+diff --git a/drivers/leds/leds-lm3532.c b/drivers/leds/leds-lm3532.c
+index 62ace66..6340d5b 100644
+--- a/drivers/leds/leds-lm3532.c
++++ b/drivers/leds/leds-lm3532.c
+@@ -577,6 +577,11 @@ static int lm3532_parse_node(struct lm3532_data *priv)
+ 		priv->runtime_ramp_down =3D lm3532_get_ramp_index(ramp_time);
+=20
+ 	device_for_each_child_node(priv->dev, child) {
++		struct led_init_data idata =3D {
++			.fwnode =3D child,
++			.default_label =3D "backlight",
++		};
++
+ 		led =3D &priv->leds[i];
+=20
+ 		ret =3D fwnode_property_read_u32(child, "reg", &control_bank);
+@@ -648,7 +653,7 @@ static int lm3532_parse_node(struct lm3532_data *priv)
+ 		led->led_dev.name =3D led->label;
+ 		led->led_dev.brightness_set_blocking =3D lm3532_brightness_set;
+=20
+-		ret =3D devm_led_classdev_register(priv->dev, &led->led_dev);
++		ret =3D devm_led_classdev_register_ext(priv->dev, &led->led_dev, &idata);
+ 		if (ret) {
+ 			dev_err(&priv->client->dev, "led register err: %d\n",
+ 				ret);
 
-are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
-tags/gpio-v5.3-5
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-for you to fetch changes up to 89f2c0425cb51e38d6b39795c08d55421bec680c:
+--3siQDZowHQqNOShm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-  Merge tag 'gpio-v5.3-rc7-fixes-for-linus' of
-git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux into fixes
-(2019-08-30 15:28:04 +0200)
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-----------------------------------------------------------------
-GPIO fixes for the v5.3 series:
-all related to the PCA953x driver when handling chips with
-more than 8 ports, now that works again.
+iEYEARECAAYFAl10tbgACgkQMOfwapXb+vLbkACfVHJPljIY8z+7ENHAWo1e8ar3
+CakAni8uQLaz+4Y9a4FODGqVon8Q8B5n
+=DZYk
+-----END PGP SIGNATURE-----
 
-----------------------------------------------------------------
-David Jander (2):
-      gpio: pca953x: correct type of reg_direction
-      gpio: pca953x: use pca953x_read_regs instead of regmap_bulk_read
-
-Linus Walleij (1):
-      Merge tag 'gpio-v5.3-rc7-fixes-for-linus' of
-git://git.kernel.org/.../brgl/linux into fixes
-
- drivers/gpio/gpio-pca953x.c | 15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+--3siQDZowHQqNOShm--
