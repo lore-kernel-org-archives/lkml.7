@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B283FC4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A377C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86141218AF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:47:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5430B218AC
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:48:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946877;
-	bh=A9IErmwm/sY8MQkwbPXh+/Q0dPv8y4x2fUnBeVQcIVs=;
+	s=default; t=1567946883;
+	bh=C1/xTk2w9kLHGUjT2ARTupMkA1Nis33kKJuHdUq1S18=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fx2ZGsI8JPV8izXfivHc4EWPyv+mYS0QE8Pk3pb+Wv1HV7nL6WrJ5/M742zYzMako
-	 h9KLS+DuuzthMQibuhvozSqhhuIl65/TZ14kJgpLXycfBHWYvIFvIoVshjjBiIdAcy
-	 XgDWMcq8/yGn1pb699+lgOwl32CJcVsC1YcMeli8=
+	b=CVTemB+Z16BseYgN+3jSsSsBqhtgMNKdkEByHtPZ0fHEJpNp1obhIVm2QU4lA7Igb
+	 aJ3vlQdHFkpDBANitFw7MKDj5qWLqfzF4wJhfr9iGGMrZ24tYIVPpGFYygQzT6+rML
+	 tPHnEgAn0fBj+1BDAdWRoUuLx/IZHNW+Qgmd1VlA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730834AbfIHMr4 (ORCPT
+        id S1730870AbfIHMsC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:47:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36462 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:48:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730787AbfIHMrt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:47:49 -0400
+        id S1730847AbfIHMr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:47:59 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC0FD21927;
-        Sun,  8 Sep 2019 12:47:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28218218AC;
+        Sun,  8 Sep 2019 12:47:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946868;
-        bh=A9IErmwm/sY8MQkwbPXh+/Q0dPv8y4x2fUnBeVQcIVs=;
+        s=default; t=1567946878;
+        bh=C1/xTk2w9kLHGUjT2ARTupMkA1Nis33kKJuHdUq1S18=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1dcIke9dyjf43vYcuqd/+0HT94JQSkvCgswlVFJqxfJKT8ZYd5B+YTWmJdct5V6DF
-         yKVq1N8qXJ0Pua1eOMf5dFz2gVoW9RHj2Xk+Uy4rQlN3YhUwp72RlO5zrQBGC7q3fT
-         YKKSVDxggQRDljH47B5BXEEaXAjPPV/2w3QGf/7w=
+        b=b9I7SfUmWXAprlnbkayk52Eml3c4JfsbmmE5XqJHQNo6o8uOln9JKutmkMhSAPc1B
+         XUak4dXFnEXIGcASg6P11Y56VRGziYJeA85q0jc2fGAcqC26HZs9N1o9mfCqIggiMG
+         N9erc6T71WZ1TZUCq3W7UB9YeRsupJ4xz15ig3LY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vlad Buslov <vladbu@mellanox.com>,
+        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 03/57] net: sched: act_sample: fix psample group handling on overwrite
-Date:   Sun,  8 Sep 2019 13:41:27 +0100
-Message-Id: <20190908121127.301930233@linuxfoundation.org>
+Subject: [PATCH 4.19 05/57] net: stmmac: dwmac-rk: Dont fail if phy regulator is absent
+Date:   Sun,  8 Sep 2019 13:41:29 +0100
+Message-Id: <20190908121127.550413578@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121125.608195329@linuxfoundation.org>
 References: <20190908121125.608195329@linuxfoundation.org>
@@ -59,78 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vlad Buslov <vladbu@mellanox.com>
+From: Chen-Yu Tsai <wens@csie.org>
 
-[ Upstream commit dbf47a2a094edf58983265e323ca4bdcdb58b5ee ]
+[ Upstream commit 3b25528e1e355c803e73aa326ce657b5606cda73 ]
 
-Action sample doesn't properly handle psample_group pointer in overwrite
-case. Following issues need to be fixed:
+The devicetree binding lists the phy phy as optional. As such, the
+driver should not bail out if it can't find a regulator. Instead it
+should just skip the remaining regulator related code and continue
+on normally.
 
-- In tcf_sample_init() function RCU_INIT_POINTER() is used to set
-  s->psample_group, even though we neither setting the pointer to NULL, nor
-  preventing concurrent readers from accessing the pointer in some way.
-  Use rcu_swap_protected() instead to safely reset the pointer.
+Skip the remainder of phy_power_on() if a regulator supply isn't
+available. This also gets rid of the bogus return code.
 
-- Old value of s->psample_group is not released or deallocated in any way,
-  which results resource leak. Use psample_group_put() on non-NULL value
-  obtained with rcu_swap_protected().
-
-- The function psample_group_put() that released reference to struct
-  psample_group pointed by rcu-pointer s->psample_group doesn't respect rcu
-  grace period when deallocating it. Extend struct psample_group with rcu
-  head and use kfree_rcu when freeing it.
-
-Fixes: 5c5670fae430 ("net/sched: Introduce sample tc action")
-Signed-off-by: Vlad Buslov <vladbu@mellanox.com>
+Fixes: 2e12f536635f ("net: stmmac: dwmac-rk: Use standard devicetree property for phy regulator")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/psample.h  |    1 +
- net/psample/psample.c  |    2 +-
- net/sched/act_sample.c |    5 ++++-
- 3 files changed, 6 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/include/net/psample.h
-+++ b/include/net/psample.h
-@@ -12,6 +12,7 @@ struct psample_group {
- 	u32 group_num;
- 	u32 refcount;
- 	u32 seq;
-+	struct rcu_head rcu;
- };
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+@@ -1203,10 +1203,8 @@ static int phy_power_on(struct rk_priv_d
+ 	int ret;
+ 	struct device *dev = &bsp_priv->pdev->dev;
  
- struct psample_group *psample_group_get(struct net *net, u32 group_num);
---- a/net/psample/psample.c
-+++ b/net/psample/psample.c
-@@ -156,7 +156,7 @@ static void psample_group_destroy(struct
- {
- 	psample_group_notify(group, PSAMPLE_CMD_DEL_GROUP);
- 	list_del(&group->list);
--	kfree(group);
-+	kfree_rcu(group, rcu);
- }
+-	if (!ldo) {
+-		dev_err(dev, "no regulator found\n");
+-		return -1;
+-	}
++	if (!ldo)
++		return 0;
  
- static struct psample_group *
---- a/net/sched/act_sample.c
-+++ b/net/sched/act_sample.c
-@@ -99,7 +99,8 @@ static int tcf_sample_init(struct net *n
- 	s->tcf_action = parm->action;
- 	s->rate = rate;
- 	s->psample_group_num = psample_group_num;
--	RCU_INIT_POINTER(s->psample_group, psample_group);
-+	rcu_swap_protected(s->psample_group, psample_group,
-+			   lockdep_is_held(&s->tcf_lock));
- 
- 	if (tb[TCA_SAMPLE_TRUNC_SIZE]) {
- 		s->truncate = true;
-@@ -107,6 +108,8 @@ static int tcf_sample_init(struct net *n
- 	}
- 	spin_unlock_bh(&s->tcf_lock);
- 
-+	if (psample_group)
-+		psample_group_put(psample_group);
- 	if (ret == ACT_P_CREATED)
- 		tcf_idr_insert(tn, *a);
- 	return ret;
+ 	if (enable) {
+ 		ret = regulator_enable(ldo);
 
 
