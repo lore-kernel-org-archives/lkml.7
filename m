@@ -2,149 +2,160 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1174AC433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4231FC433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D97F5218AC
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:05:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S+7OJ9UU"
+	by mail.kernel.org (Postfix) with ESMTP id 1CE3F218AC
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:07:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567944473;
+	bh=FQIOzMKN32+D7EXQBVmHC45HY6/y00at8hGjE4IjboU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rjCUpav4MUp017Ic7by8dEHdy4/7fV99JnlajDuEmIN0njpjJvYW3hlWJTGAZ1fLs
+	 dsCXhbK2Y8FOqc+tSmeWFX3me2oGkT3rSJS2jihPTZXXw7rxAuz0PEaleNLttktVXc
+	 dkVOT1zSByX0oViZxw5OZfq5fyRHu76kYl+vI9VI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728955AbfIHMF5 (ORCPT
+        id S1728976AbfIHMHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:05:57 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:39685 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728935AbfIHMF4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:05:56 -0400
-Received: by mail-pl1-f196.google.com with SMTP id bd8so5282364plb.6
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 05:05:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pocKy7bl+9/9OQKHIyv1k4AbSxuOk9ge9kKmyhR5kl0=;
-        b=S+7OJ9UU0EX1d47DhqK4fa1fzUmL9aIhmNjnArnbNCikxuPW07LemUdK6WLNQ+RkPM
-         QSR1tr+fOOqLWmKP58c7yyBTFrT5WCB5Nh3Hmc3/8GeDRV2rSE5FBJfMZrecvr63oKr1
-         GU6X++U46LiOtZvICPkJ87VfC2nMV8XRiKeyGpZk5AMPNntUgu2llIz0W5/rzblE3mQJ
-         ruOnuLSkdGeZVbHuiX6W99BEW1ksVVqXrTUO05jqM0qfTieNJu/M95nzJCSZKu4VkcUZ
-         6gPtGFSejr+3CYtt1pwoCqofstto0aT50+g+n2Ai6I+qsnjP9WNsJQ3fI2fVykbHAlxB
-         w/PA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pocKy7bl+9/9OQKHIyv1k4AbSxuOk9ge9kKmyhR5kl0=;
-        b=heMBwAzgwn8XdVhaCbD1Ng4Uhm24fu3PD0f++rp0QCS4ocmUB7CCQ3ls9B7sQgLWFd
-         Mqu3fNqYl+iVSDsFHXYSjwQGnyET7Qn9f5PCriK2UI4cnMp3Ervb2CNWUnwD5VsabPB2
-         XZ1sP5dNqANc1hFKsGoCWvnInqjTw7OtzCBQKun+TdKTWvF1ivTN6l6JDGl3Udn+5pmm
-         p7DmhzZ04JeIGjIhNACTQxtRtNYllSVYHu7wg/CpqwxrAoNYWDDiopHAwpBYSKAt08uh
-         z+2r2xdYGFp71rvZlAp8VvziQY63CPBrm58EPg0d9acyA1fYPNVN9FM7144sY/0NVgCC
-         l/Tw==
-X-Gm-Message-State: APjAAAVkJPprSQA/BLpTz31bqHNKJE/D32s8upd55bg7jif7m2wLYoJb
-        YdQ9c103P7rmt8Bu7qfT0WU=
-X-Google-Smtp-Source: APXvYqxLIyU2FkUeL9Wj0l/iDK5k40wl6THEYMKwThp3gzWLaoWZITTgsFoF6CkwDk0sTt4fWSHkKQ==
-X-Received: by 2002:a17:902:b40c:: with SMTP id x12mr19300553plr.236.1567944356110;
-        Sun, 08 Sep 2019 05:05:56 -0700 (PDT)
-Received: from localhost.localdomain ([149.28.153.17])
-        by smtp.gmail.com with ESMTPSA id v22sm9327843pgk.69.2019.09.08.05.05.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Sep 2019 05:05:55 -0700 (PDT)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH] ftrace: simplify ftrace hash lookup code
-Date:   Sun,  8 Sep 2019 20:05:45 +0800
-Message-Id: <20190908120545.11614-1-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Sun, 8 Sep 2019 08:07:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38886 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728667AbfIHMHv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:07:51 -0400
+Received: from localhost (unknown [122.182.221.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61E13218AC;
+        Sun,  8 Sep 2019 12:07:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567944470;
+        bh=FQIOzMKN32+D7EXQBVmHC45HY6/y00at8hGjE4IjboU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hj/S8W0Iw2hthBawZ0Uqi9DFTpTMB0Do4oHMemh6k/LXiFOcQ9x5LM3RWgJD4OU94
+         kf0+kE+gyDCgsb9mbppiRJUabFKuyu95v1ag1Ik+2cdyrdeT+gUxYgLrwa1sWoYTxK
+         ZWaShKc+sdLCZuZXVa6oBWesMWrw6X7e5elNOg6E=
+Date:   Sun, 8 Sep 2019 17:36:42 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     robh+dt@kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dan.j.williams@intel.com,
+        devicetree@vger.kernel.org
+Subject: Re: [RFC 1/3] dt-bindings: dma: Add documentation for DMA domains
+Message-ID: <20190908120642.GK2672@vkoul-mobl>
+References: <20190906141816.24095-1-peter.ujfalusi@ti.com>
+ <20190906141816.24095-2-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190906141816.24095-2-peter.ujfalusi@ti.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Function ftrace_lookup_ip() will check empty hash table. So we don't
-need extra check outside.
+On 06-09-19, 17:18, Peter Ujfalusi wrote:
+> On systems where multiple DMA controllers available, none Slave (for example
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
----
- kernel/trace/ftrace.c | 15 ++++-----------
- kernel/trace/trace.h  |  6 ------
- 2 files changed, 4 insertions(+), 17 deletions(-)
+On systems with multiple DMA controllers, non Slave...
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index f9821a3374e9..85115deca667 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -1461,10 +1461,8 @@ static bool hash_contains_ip(unsigned long ip,
- 	 * considered a match for the filter hash, but an empty
- 	 * notrace hash is considered not in the notrace hash.
- 	 */
--	return (ftrace_hash_empty(hash->filter_hash) ||
--		__ftrace_lookup_ip(hash->filter_hash, ip)) &&
--		(ftrace_hash_empty(hash->notrace_hash) ||
--		 !__ftrace_lookup_ip(hash->notrace_hash, ip));
-+	return ftrace_lookup_ip(hash->filter_hash, ip) &&
-+	       !ftrace_lookup_ip(hash->notrace_hash, ip);
- }
- 
- /*
-@@ -2890,8 +2888,7 @@ ops_references_rec(struct ftrace_ops *ops, struct dyn_ftrace *rec)
- 		return true;
- 
- 	/* The function must be in the filter */
--	if (!ftrace_hash_empty(ops->func_hash->filter_hash) &&
--	    !__ftrace_lookup_ip(ops->func_hash->filter_hash, rec->ip))
-+	if (!ftrace_lookup_ip(ops->func_hash->filter_hash, rec->ip))
- 		return false;
- 
- 	/* If in notrace hash, we ignore it too */
-@@ -6036,11 +6033,7 @@ clear_func_from_hash(struct ftrace_init_func *func, struct ftrace_hash *hash)
- {
- 	struct ftrace_func_entry *entry;
- 
--	if (ftrace_hash_empty(hash))
--		return;
--
--	entry = __ftrace_lookup_ip(hash, func->ip);
--
-+	entry = ftrace_lookup_ip(hash, func->ip);
- 	/*
- 	 * Do not allow this rec to match again.
- 	 * Yeah, it may waste some memory, but will be removed
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 005f08629b8b..74162bc4024d 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -941,11 +941,6 @@ static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
- 
- 	preempt_disable_notrace();
- 
--	if (ftrace_hash_empty(ftrace_graph_hash)) {
--		ret = 1;
--		goto out;
--	}
--
- 	if (ftrace_lookup_ip(ftrace_graph_hash, addr)) {
- 
- 		/*
-@@ -967,7 +962,6 @@ static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
- 		ret = 1;
- 	}
- 
--out:
- 	preempt_enable_notrace();
- 	return ret;
- }
+> memcpy operation) users can not be described in DT as there is no device
+> involved from the DMA controller's point of view, DMA binding is not usable.
+> However in these systems still a peripheral might need to be serviced by or
+> it is better to serviced by specific DMA controller.
+> When a memcpy is used to/from a memory mapped region for example a DMA in the
+> same domain can perform better.
+> For generic software modules doing mem 2 mem operations it also matter that
+> they will get a channel from a controller which is faster in DDR to DDR mode
+> rather then from the first controller happen to be loaded.
+> 
+> This property is inherited, so it may be specified in a device node or in any
+> of its parent nodes.
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> ---
+>  .../devicetree/bindings/dma/dma-domain.yaml   | 59 +++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/dma-domain.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/dma-domain.yaml b/Documentation/devicetree/bindings/dma/dma-domain.yaml
+> new file mode 100644
+> index 000000000000..c2f182f30081
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/dma-domain.yaml
+> @@ -0,0 +1,59 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/dma-controller.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: DMA Domain Controller Definition
+> +
+> +maintainers:
+> +  - Vinod Koul <vkoul@kernel.org>
+> +
+> +allOf:
+> +  - $ref: "dma-controller.yaml#"
+> +
+> +description:
+> +  On systems where multiple DMA controllers available, none Slave (for example
+> +  memcpy operation) users can not be described in DT as there is no device
+> +  involved from the DMA controller's point of view, DMA binding is not usable.
+> +  However in these systems still a peripheral might need to be serviced by or
+> +  it is better to serviced by specific DMA controller.
+> +  When a memcpy is used to/from a memory mapped region for example a DMA in the
+> +  same domain can perform better.
+> +  For generic software modules doing mem 2 mem operations it also matter that
+> +  they will get a channel from a controller which is faster in DDR to DDR mode
+> +  rather then from the first controller happen to be loaded.
+> +
+> +  This property is inherited, so it may be specified in a device node or in any
+> +  of its parent nodes.
+> +
+> +properties:
+> +  $dma-domain-controller:
+> +    $ref: /schemas/types.yaml#definitions/phandle
+> +    description:
+> +      phande to the DMA controller node which should be used for the device or
+> +      domain.
+> +
+> +examples:
+> +  - |
+> +    / {
+> +        model = "Texas Instruments K3 AM654 SoC";
+> +        compatible = "ti,am654";
+> +        interrupt-parent = <&gic500>;
+> +        /* For modules without device, DDR to DDR is faster on main UDMAP */
+> +        dma-domain-controller = <&main_udmap>;
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +        ...
+> +    };
+> +
+> +    &cbass_main {
+> +        /* For modules within MAIN domain, use main UDMAP */
+> +        dma-domain-controller = <&main_udmap>;
+> +    };
+> +
+> +    &cbass_mcu {
+> +        /* For modules within MCU domain, use mcu UDMAP */
+> +        dma-domain-controller = <&mcu_udmap>;
+
+perhaps add the example of main_udmap and mcu_udmap as well
+
+> +    };
+> +...
+> -- 
+> Peter
+> 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
 -- 
-2.20.1
-
+~Vinod
