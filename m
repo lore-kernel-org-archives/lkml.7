@@ -5,52 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C679C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F9CC433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E169B216C8
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61237218AE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:47:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946815;
-	bh=mn1PwR13D/qs8bMX7TRDKEZZ9TcCMuF895PMQM9Labk=;
+	s=default; t=1567946823;
+	bh=EsMyl5SLsBQmn7rvg7jiR+z1VA3Kknj+Hjo5z4HdEcY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q4QFcYRuDM5Ke9DTmz00KGld10XVkpvfhRuAzhW6aVEHAv1/cSjr1OlcFgbcjprte
-	 soIE/jWRlpp4CnU2PF4/7W2SXm39Kt/TP1PfFsp0uH7mSL2R9BFl+15xPj0WYiaFct
-	 Cn9MGmlNZzzDuarG/U4abOEljK+TU+J8MnY8PM80=
+	b=UC+WuJFxU1hWremFFpN/rg4Jk756A1PXNmijoR1cXl2C+aPIg9oIga/47l/Yi6Jwa
+	 D8L+fF94psBIjN9s+rt52NIaLvL5eGX1tc7SxPcLTi6E8Nsy5Mf/XSnqvsdSVxXZ+e
+	 JrBHPDalL0Xhh3O8k29/WobeIp7oW5D6nahEiF9k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730515AbfIHMqx (ORCPT
+        id S1730562AbfIHMrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:46:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34712 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:47:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730483AbfIHMqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:46:48 -0400
+        id S1729184AbfIHMq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:46:59 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7BDB2190F;
-        Sun,  8 Sep 2019 12:46:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36E2020644;
+        Sun,  8 Sep 2019 12:46:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946808;
-        bh=mn1PwR13D/qs8bMX7TRDKEZZ9TcCMuF895PMQM9Labk=;
+        s=default; t=1567946818;
+        bh=EsMyl5SLsBQmn7rvg7jiR+z1VA3Kknj+Hjo5z4HdEcY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tbCm2YOhCab/LRO+Y5ww0bR4iN/0HsIfi9M/j++0X+VcuHuvdF7CvH8+2FmP9T1TQ
-         Z/vyp2Eze1m4qd4DZ5BxvGTGsLkHHXH8vXzHIoOtvKXn1WE4V7E2RbqTsRW3wBmKhl
-         vsQaGaCNyjiFRKqj/8Xi1Wi/zq8ROXIGCC9e3FXI=
+        b=cN+Qer+wmrGyY6cncDaTJfKRvmJ2wAlmQ+O5G5ibNnAR+4x3rAKKbAbnuE9HyoY+Z
+         Iji24WDxbd8X2jgWCzVZ+DMzUpZA69YFhecxr1g7pDyq27W1GbjW6QuVzqzNx+VJlV
+         xhgpP7qjR280Sfn34egpnrE5vjyEzzmB2+m88kZY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Hubert Denkmair <h.denkmair@intence.de>,
+        Martin Sperl <kernel@martin.sperl.org>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 02/40] hv_netvsc: Fix a warning of suspicious RCU usage
-Date:   Sun,  8 Sep 2019 13:41:35 +0100
-Message-Id: <20190908121114.719816254@linuxfoundation.org>
+Subject: [PATCH 4.19 12/57] spi: bcm2835aux: fix corruptions for longer spi transfers
+Date:   Sun,  8 Sep 2019 13:41:36 +0100
+Message-Id: <20190908121129.539776629@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190908121114.260662089@linuxfoundation.org>
-References: <20190908121114.260662089@linuxfoundation.org>
+In-Reply-To: <20190908121125.608195329@linuxfoundation.org>
+References: <20190908121125.608195329@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,50 +62,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6d0d779dca73cd5acb649c54f81401f93098b298 ]
+[ Upstream commit 73b114ee7db1750c0b535199fae383b109bd61d0 ]
 
-This fixes a warning of "suspicious rcu_dereference_check() usage"
-when nload runs.
+On long running tests with a mcp2517fd can controller it showed that
+on rare occations the data read shows corruptions for longer spi transfers.
 
-Fixes: 776e726bfb34 ("netvsc: fix RCU warning in get_stats")
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Example of a 22 byte transfer:
+
+expected (as captured on logic analyzer):
+FF FF 78 00 00 00 08 06 00 00 91 20 77 56 84 85 86 87 88 89 8a 8b
+
+read by the driver:
+FF FF 78 00 00 00 08 06 00 00 91 20 77 56 84 88 89 8a 00 00 8b 9b
+
+To fix this use BCM2835_AUX_SPI_STAT_RX_LVL to determine when we may
+read data from the fifo reliably without any corruption.
+
+Surprisingly the only values ever empirically read in
+BCM2835_AUX_SPI_STAT_RX_LVL are 0x00, 0x10, 0x20 and 0x30.
+So whenever the mask is not 0 we can read from the fifo in a safe manner.
+
+The patch has now been tested intensively and we are no longer
+able to reproduce the "RX" issue any longer.
+
+Fixes: 1ea29b39f4c812ec ("spi: bcm2835aux: add bcm2835 auxiliary spi device...")
+Reported-by: Hubert Denkmair <h.denkmair@intence.de>
+Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
+Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hyperv/netvsc_drv.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/spi/spi-bcm2835aux.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index eb92720dd1c4a..33c1f6548fb79 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -1170,12 +1170,15 @@ static void netvsc_get_stats64(struct net_device *net,
- 			       struct rtnl_link_stats64 *t)
+diff --git a/drivers/spi/spi-bcm2835aux.c b/drivers/spi/spi-bcm2835aux.c
+index b4217f9480014..12c1fa5b06c5b 100644
+--- a/drivers/spi/spi-bcm2835aux.c
++++ b/drivers/spi/spi-bcm2835aux.c
+@@ -180,12 +180,12 @@ static void bcm2835aux_spi_reset_hw(struct bcm2835aux_spi *bs)
+ 
+ static void bcm2835aux_spi_transfer_helper(struct bcm2835aux_spi *bs)
  {
- 	struct net_device_context *ndev_ctx = netdev_priv(net);
--	struct netvsc_device *nvdev = rcu_dereference_rtnl(ndev_ctx->nvdev);
-+	struct netvsc_device *nvdev;
- 	struct netvsc_vf_pcpu_stats vf_tot;
- 	int i;
- 
-+	rcu_read_lock();
++	u32 stat = bcm2835aux_rd(bs, BCM2835_AUX_SPI_STAT);
 +
-+	nvdev = rcu_dereference(ndev_ctx->nvdev);
- 	if (!nvdev)
--		return;
-+		goto out;
+ 	/* check if we have data to read */
+-	while (bs->rx_len &&
+-	       (!(bcm2835aux_rd(bs, BCM2835_AUX_SPI_STAT) &
+-		  BCM2835_AUX_SPI_STAT_RX_EMPTY))) {
++	for (; bs->rx_len && (stat & BCM2835_AUX_SPI_STAT_RX_LVL);
++	     stat = bcm2835aux_rd(bs, BCM2835_AUX_SPI_STAT))
+ 		bcm2835aux_rd_fifo(bs);
+-	}
  
- 	netdev_stats_to_stats64(t, &net->stats);
- 
-@@ -1214,6 +1217,8 @@ static void netvsc_get_stats64(struct net_device *net,
- 		t->rx_packets	+= packets;
- 		t->multicast	+= multicast;
- 	}
-+out:
-+	rcu_read_unlock();
- }
- 
- static int netvsc_set_mac_addr(struct net_device *ndev, void *p)
+ 	/* check if we have data to write */
+ 	while (bs->tx_len &&
 -- 
 2.20.1
 
