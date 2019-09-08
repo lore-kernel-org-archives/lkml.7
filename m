@@ -2,112 +2,226 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,FROM_EXCESS_BASE64,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6077C4360D
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 19:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A6CC433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 19:41:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 722CE216C8
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 19:40:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=valentin-vidic.from.hr header.i=@valentin-vidic.from.hr header.b="jlQNJiAX"
+	by mail.kernel.org (Postfix) with ESMTP id 7B9552067D
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 19:41:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728181AbfIHTk0 (ORCPT
+        id S1728691AbfIHTlJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 15:40:26 -0400
-Received: from valentin-vidic.from.hr ([94.229.67.141]:41383 "EHLO
-        valentin-vidic.from.hr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbfIHTk0 (ORCPT
+        Sun, 8 Sep 2019 15:41:09 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:42452 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726080AbfIHTlJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 15:40:26 -0400
-X-Virus-Scanned: Debian amavisd-new at valentin-vidic.from.hr
-Received: by valentin-vidic.from.hr (Postfix, from userid 1000)
-        id 4B168214; Sun,  8 Sep 2019 19:40:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-        d=valentin-vidic.from.hr; s=2017; t=1567971623;
-        bh=Vd55c8Am4HzVLce0/fah1MmvqNZ1LcggOOpKi92SLsU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jlQNJiAXGoSPD3Gv3UhryuubeenyTJ7bW9tuV6fjpF0Ya86MkuKfo2dgHdlLvox6z
-         HO7n/Que7mZTYuaHFfLDX5CGRQXPmXwsYELvRfFKHAuWW2zrHaPGUWsRGTugMLxmRM
-         FA7xyVhz17EhD/M2GftvSV+/WgVcu2pDOwt4YEl+kzo0/pV7k0fjecVQ8vfWVOS2UV
-         ZM9FJblzxlbnOUYevffii2GAuXXKGlC9vwCDaF18HUKODDei36GzjgVC30Xl+82GA3
-         MtZOTxpPBU1WaCjSGZgUyvRAqKwOJWXKqgewm+08eYPjvP6HgjyIP/j98BZHug8yQ+
-         E0gA9b7X7dQ6Q==
-Date:   Sun, 8 Sep 2019 19:40:23 +0000
-From:   Valentin =?utf-8?B?VmlkacSH?= <vvidic@valentin-vidic.from.hr>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     devel@driverdev.osuosl.org,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/4] staging: exfat: drop duplicate date_time_t struct
-Message-ID: <20190908194023.GE7664@valentin-vidic.from.hr>
-References: <20190908173539.26963-1-vvidic@valentin-vidic.from.hr>
- <20190908173539.26963-2-vvidic@valentin-vidic.from.hr>
- <20190908185031.GA10011@kroah.com>
+        Sun, 8 Sep 2019 15:41:09 -0400
+Received: from [37.161.91.50] (port=52536 helo=[192.168.42.162])
+        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1i733V-006HQN-QX; Sun, 08 Sep 2019 21:41:02 +0200
+Subject: Re: [RFC,v2 2/6] i2c: add I2C Address Translator (ATR) support
+To:     Peter Rosin <peda@axentia.se>, jacopo mondi <jacopo@jmondi.org>
+Cc:     "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Vladimir Zapolskiy <vz@mleia.com>
+References: <20190723203723.11730-1-luca@lucaceresoli.net>
+ <20190723203723.11730-3-luca@lucaceresoli.net>
+ <20190901143101.humomdehy5ee73sk@vino>
+ <20bac324-c4d3-270c-5175-0a7f261fd760@lucaceresoli.net>
+ <51dede3c-545b-b66a-5e89-9e889d784eb9@axentia.se>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <2d770b36-9521-820d-726a-bc9b52048ef8@lucaceresoli.net>
+Date:   Sun, 8 Sep 2019 21:40:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190908185031.GA10011@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <51dede3c-545b-b66a-5e89-9e889d784eb9@axentia.se>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 08, 2019 at 07:50:31PM +0100, Greg Kroah-Hartman wrote:
-> Wait, how are these "duplicate"?  The fields are in different order,
-> don't these refer to things on-disk?
+Hi Peter,
 
-On-disk combines the values from these structures in a different form:
+On 04/09/19 10:09, Peter Rosin wrote:> Hi!
+>
+> [ Sorry about my absence. I've been meaning to comment on this series
+>   for a long time, but work and family keep interfering... ]
 
-          offset  bits
-DoubleSeconds  0  5
-Minute         5  6
-Hour          11  5
-Day           16  5
-Month         21  4
-Year          25  7
+No problem, thanks for your comments. See below my reply.
 
-> Did you test this?
+>
+> On 2019-09-03 09:31, Luca Ceresoli wrote:
+>> Hi Jacopo,
+>>
+>> thanks for your feedback.
+>>
+>> On 01/09/19 16:31, jacopo mondi wrote:
+>>> Hi Luca,
+>>>    thanks for keep pushing this series! I hope we can use part of this
+>>> for the (long time) on-going GMSL work...
+>>>
+>>> I hope you will be patient enough to provide (another :) overview
+>>> of this work during the BoF Wolfram has organized at LPC for the next
+>>> week.
+>>
+>> Sure!
+>>
+>>> In the meantime I would have some comments after having a read at the
+>>> series and trying to apply its concept to GMSL
+>>>
+>>> On Tue, Jul 23, 2019 at 10:37:19PM +0200, Luca Ceresoli wrote:
+>>>> An ATR is a device that looks similar to an i2c-mux: it has an I2C
+>>>> slave "upstream" port and N master "downstream" ports, and forwards
+>>>> transactions from upstream to the appropriate downstream port. But is
+>>>> is different in that the forwarded transaction has a different slave
+>>>> address. The address used on the upstream bus is called the "alias"
+>>>> and is (potentially) different from the physical slave address of the
+>>>> downstream chip.
+>>>>
+>>>> Add a helper file (just like i2c-mux.c for a mux or switch) to allow
+>>>> implementing ATR features in a device driver. The helper takes care or
+>>>> adapter creation/destruction and translates addresses at each
+transaction.
+>>>>
+>>>> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+>>>>
+>>>> ---
+>>>>
+>>>> Changes RFCv1 -> RFCv2:
+>>>>
+>>>>  RFCv1 was implemented inside i2c-mux.c and added yet more complexity
+>>>>  there. RFCv2 creates a new file on its own, i2c-atr.c. Since many ATR
+>>>>  features are not in a MUX and vice versa, the overlapping is low.
+This was
+>>>>  almost a complete rewrite, but for the records here are the main
+>>>>  differences from the old implementation:
+>>>
+>>> I'm not an i2c expert, but this looks very similar to me to an
+>>> augmented i2c-mux with the following additional features:
+>>> - automatic selection of the i2c address to use for the children
+>>>   behind the mux
+>>> - automatic translation of the addresses the logical aliases to
+>>>   the actual physical addresses of the slaves (with the help of the
+>>>   deserializer address translation feature in this case).
+>>
+>> A notable difference in the hardware is that a mux needs an explicit
+>> procedure to select a port. That's why the select() op is mandatory for
+>> muxes. The ATR, at least in the DS90UB9xx case, selects the port
+>> automatically based on the slave address. So I added an optional
+>> select() op in the atr, but I suspect it's useless for "real" ATRs.
+>>
+>> More differences derive from how Linux implements muxes. The i2c-mux
+>> code has several flags for different locking schemes, and it has a
+>
+> It's two locking schemes if you count them carefully, so several is
+> a bit of an exaggeration. But agreed, two is more than I prefer.
 
-Just compile tested for now.
+Right, sorry for the exaggeration. Actually the most annoying part of
+the mux code to me was not quite the two locking schemes, but rather the
+DT parsing, which had some backward-compatibility to maintain.
 
-> > -struct date_time_t {
-> > -	u16      Year;
-> > -	u16      Month;
-> > -	u16      Day;
-> > -	u16      Hour;
-> > -	u16      Minute;
-> > -	u16      Second;
-> > -	u16      MilliSecond;
-> > -};
-> > -
-> >  struct part_info_t {
-> >  	u32      Offset;    /* start sector number of the partition */
-> >  	u32      Size;      /* in sectors */
-> > @@ -289,6 +279,16 @@ struct file_id_t {
-> >  	u32      hint_last_clu;
-> >  };
-> >  
-> > +struct timestamp_t {
-> > +	u16      millisec;   /* 0 ~ 999              */
-> > +	u16      sec;        /* 0 ~ 59               */
-> > +	u16      min;        /* 0 ~ 59               */
-> > +	u16      hour;       /* 0 ~ 23               */
-> > +	u16      day;        /* 1 ~ 31               */
-> > +	u16      mon;        /* 1 ~ 12               */
-> > +	u16      year;       /* 0 ~ 127 (since 1980) */
-> > +};
-> 
-> They really look "backwards" to me, how are these the same?  What am I
-> missing?
+>> fairly complex DT parsing scheme. These are mostly a historical burden.
+>> Adding the ATR features to i2c-mux.c was very tricky and error-prone due
+>> to all of this code, that's why I have moved ATR to its own file in
+RFCv2.
+>
+> Anyway, the locking in i2c-mux may be complex, but it does solve real
+> problems. The way I read this series, these problems are not dealt with
+> and therefore the ATR code will not function in all surroundings.
+>
+> Some things to think about:
+> - What happens when you put a mux behind an ATR?
+> - What happens when you put an ATR behind a mux?
+> - What happens when you put an ATR between two muxes?
+> - Does it make a difference if the mux is parent-locked or mux-locked?
+> - What happens if client drivers lock the adapter in order to silence the
+>   bus for some reason or to keep two xfers together or something, and
+>   then do unlocked xfers?
+> - Can you put an ATR behind another ATR?
+> etc
 
-date_time_t was only used in a few functions and there was a lot of
-copying of the same fields between the two structs. Also some code was
-duplicated to do the same thing for each of the structs.
+I still have to examine in depth all of the problems in the i2c-mux
+documented in Documentation/i2c/i2c-topology (thanks for having written
+those docs!), but at first sight it looks like the ATR is not going to
+introduce big problems because of how it works.
+
+An I2C mux works by electrically connecting the parent bus to one of the
+child busses. But this implies any transactions happening on the parent
+bus can leak through the mux and cause the problems you documented. The
+Maxim GMSL serdes chips work de facto in the same way, even though there
+is no simple electrical connection between the busses.
+
+An ATR, at least the one in the TI serdes chips, uses a store-and-forward
+technique:
+
+ 1. when a transaction starts on the parent bus, it waits for the first
+    8 bits
+ 2. it checks if the slave address matches one of the aliases assigned
+    to the remote chips; if it doesn't, it does not drive the child bus
+    wires at all and ignores the rest of the transaction
+ 3. if there's a match it stretches the parent bus SCL and issues a
+    {start + chip address + R/W} on the child bus, but replacing the
+    alias with the physical chip address
+ 4. it then waits for an the ack on the child bus, then issues an ack on
+    the parent bus
+ 5. for write transactions, it repeats until a stop condition or an
+    error is seen: wait for an entire byte on parent bus, clock
+    stretching on the parent bus, send the byte on the child bus, wait
+    for ack on the child bus, send ack on the parent bus
+ 6. for read transactions it does the same as point 5 but with "parent
+    bus" and "child bus" swapped
+
+This technique does not leak any transaction to a child bus unless it's
+directed to it. So it should have many less problems than the muxes, if any.
+
+> I'm not saying that these things must be handled, and maybe they are
+> handled already, and maybe some of the combinations are not valid at
+> all. But the possibilities and limitations should be understood. And
+> preferably documented.
+>
+> My gut feeling (without spending much time on it) is that ATR as
+> implemented in this series behave approximately like mux-locked muxes,
+> meaning that it is not obviously safe to put a parent-locked mux behind
+> an ATR and making it impossible for client devices behind an ATR to force
+> xfers to happen back-to-back from the root adapter.
+
+For what I described above I don't expect the ATR + parent-locked mux
+would have the same problems as the mux-locked mux + parent-locked mux.
+The ATR will not let transaction on the root adapter leak through and
+reach the mux, unless they are targeted at the child bus where the mux is.
+
+Do you think this is correct? As I said, I still have to analyse all the
+possible combinations.
 
 -- 
-Valentin
+Luca
