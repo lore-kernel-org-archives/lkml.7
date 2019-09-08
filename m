@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6664FC4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAEE6C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E466218AE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:44:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C017C218AF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:44:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946683;
-	bh=P8Yd1Sc/SPvquJKLyFn26fzA2S+zk+6qu6FEiDUmT5I=;
+	s=default; t=1567946685;
+	bh=i0KQj4flXuocLpw+5+pNDsTA/Ti5gXeouuUUqgiGBHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E67IAaV34ny7//T+HX3eG/fyz5UQx9bJoWpuyTHRh13koGFFhZPIJBGpWJkOCKXWU
-	 vcStvoM0r8OHZiK3gZI3Kfv6AXOW32stx4o2vX01b7CXTBF9ATvEMRnp6PKCl7Ohgs
-	 Xd3zN969ap7By2LJaFAzHKvMT/Dr+0YlIkuNCsAk=
+	b=yXJpeipSWOpVo8ysm86Np/10DmTXrEH9Nly+WIlJk9HI3e1yfHFwYWN3vErEea5kj
+	 ceWXyhndXGOt9W9yD5GUrm01Iy896Pzd/S6jMl1kF/sHcifp/4Ijj2RUHLoIE01ruu
+	 oNHW1oqXHs7iHwgIWc2mFswNWM83qfb7pPye3lew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729887AbfIHMom (ORCPT
+        id S1729898AbfIHMop (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:44:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59528 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:44:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729868AbfIHMok (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:44:40 -0400
+        id S1728979AbfIHMon (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:44:43 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4FCE218AE;
-        Sun,  8 Sep 2019 12:44:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D21F2081B;
+        Sun,  8 Sep 2019 12:44:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946680;
-        bh=P8Yd1Sc/SPvquJKLyFn26fzA2S+zk+6qu6FEiDUmT5I=;
+        s=default; t=1567946683;
+        bh=i0KQj4flXuocLpw+5+pNDsTA/Ti5gXeouuUUqgiGBHE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UKoiPh4VZb8eFWr+P9FokfcYuaR/x3yTnHqU4DCyrzbV1t+VZtNMf4l0rL+Ns05cw
-         sZ3O7ugO5J+i+UjSXD1tI0rn33/vApyKL01mgFY6fGydAn8S+VPoaknD6+v8B3T05I
-         91swHz5FAIRSDD+3uAmHA/MVQqoIMSadN2dI5k+U=
+        b=UOn8Ybz0E7WsznOv+uMm/KSahZPt1kZfVexDWxjrs5SxZbYz5Q6T3P6J1Gu++Vj9W
+         JtU1nuSYwhBpSrCL3hFrV9RwgEzWYvJ/YmIRM9F04oGUWZzW/vJaCsOctNoMuRoSXO
+         J79oXsW0rkG+jOChAHse3skVhCeNNEzM2wnfBp9o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
+        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
+        Thomas Falcon <tlfalcon@linux.ibm.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 03/26] Bluetooth: btqca: Add a short delay before downloading the NVM
-Date:   Sun,  8 Sep 2019 13:41:42 +0100
-Message-Id: <20190908121058.173792870@linuxfoundation.org>
+Subject: [PATCH 4.9 04/26] ibmveth: Convert multicast list size for little-endian system
+Date:   Sun,  8 Sep 2019 13:41:43 +0100
+Message-Id: <20190908121058.402845762@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121057.216802689@linuxfoundation.org>
 References: <20190908121057.216802689@linuxfoundation.org>
@@ -60,40 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8059ba0bd0e4694e51c2ee6438a77b325f06c0d5 ]
+[ Upstream commit 66cf4710b23ab2adda11155684a2c8826f4fe732 ]
 
-On WCN3990 downloading the NVM sometimes fails with a "TLV response
-size mismatch" error:
+The ibm,mac-address-filters property defines the maximum number of
+addresses the hypervisor's multicast filter list can support. It is
+encoded as a big-endian integer in the OF device tree, but the virtual
+ethernet driver does not convert it for use by little-endian systems.
+As a result, the driver is not behaving as it should on affected systems
+when a large number of multicast addresses are assigned to the device.
 
-[  174.949955] Bluetooth: btqca.c:qca_download_firmware() hci0: QCA Downloading qca/crnv21.bin
-[  174.958718] Bluetooth: btqca.c:qca_tlv_send_segment() hci0: QCA TLV response size mismatch
-
-It seems the controller needs a short time after downloading the
-firmware before it is ready for the NVM. A delay as short as 1 ms
-seems sufficient, make it 10 ms just in case. No event is received
-during the delay, hence we don't just silently drop an extra event.
-
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Reported-by: Hangbin Liu <liuhangbin@gmail.com>
+Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/btqca.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/ibm/ibmveth.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
-index 28afd5d585f95..b7dfa4afd5169 100644
---- a/drivers/bluetooth/btqca.c
-+++ b/drivers/bluetooth/btqca.c
-@@ -363,6 +363,9 @@ int qca_uart_setup_rome(struct hci_dev *hdev, uint8_t baudrate)
- 		return err;
+diff --git a/drivers/net/ethernet/ibm/ibmveth.c b/drivers/net/ethernet/ibm/ibmveth.c
+index 955f658f3b65f..de9897c8e9331 100644
+--- a/drivers/net/ethernet/ibm/ibmveth.c
++++ b/drivers/net/ethernet/ibm/ibmveth.c
+@@ -1557,7 +1557,7 @@ static int ibmveth_probe(struct vio_dev *dev, const struct vio_device_id *id)
+ 	struct net_device *netdev;
+ 	struct ibmveth_adapter *adapter;
+ 	unsigned char *mac_addr_p;
+-	unsigned int *mcastFilterSize_p;
++	__be32 *mcastFilterSize_p;
+ 	long ret;
+ 	unsigned long ret_attr;
+ 
+@@ -1579,8 +1579,9 @@ static int ibmveth_probe(struct vio_dev *dev, const struct vio_device_id *id)
+ 		return -EINVAL;
  	}
  
-+	/* Give the controller some time to get ready to receive the NVM */
-+	msleep(10);
-+
- 	/* Download NVM configuration */
- 	config.type = TLV_TYPE_NVM;
- 	snprintf(config.fwname, sizeof(config.fwname), "qca/nvm_%08x.bin",
+-	mcastFilterSize_p = (unsigned int *)vio_get_attribute(dev,
+-						VETH_MCAST_FILTER_SIZE, NULL);
++	mcastFilterSize_p = (__be32 *)vio_get_attribute(dev,
++							VETH_MCAST_FILTER_SIZE,
++							NULL);
+ 	if (!mcastFilterSize_p) {
+ 		dev_err(&dev->dev, "Can't find VETH_MCAST_FILTER_SIZE "
+ 			"attribute\n");
+@@ -1597,7 +1598,7 @@ static int ibmveth_probe(struct vio_dev *dev, const struct vio_device_id *id)
+ 
+ 	adapter->vdev = dev;
+ 	adapter->netdev = netdev;
+-	adapter->mcastFilterSize = *mcastFilterSize_p;
++	adapter->mcastFilterSize = be32_to_cpu(*mcastFilterSize_p);
+ 	adapter->pool_config = 0;
+ 
+ 	netif_napi_add(netdev, &adapter->napi, ibmveth_poll, 16);
 -- 
 2.20.1
 
