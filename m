@@ -2,415 +2,268 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=FROM_EXCESS_BASE64,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC5C8C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 17:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDFF9C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 18:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99A6F214DB
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 17:53:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G4BAQw3j"
+	by mail.kernel.org (Postfix) with ESMTP id 9D82D20828
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 18:18:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730685AbfIHRxE (ORCPT
+        id S1730743AbfIHSSb convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 13:53:04 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44419 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730651AbfIHRxE (ORCPT
+        Sun, 8 Sep 2019 14:18:31 -0400
+Received: from mailoutvs27.siol.net ([185.57.226.218]:51253 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730694AbfIHSSa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 13:53:04 -0400
-Received: by mail-pl1-f194.google.com with SMTP id k1so5500344pls.11
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 10:53:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=8hexIeF0LOmscVfTQjmfddiTigHgr4BlT+skvWAN1Og=;
-        b=G4BAQw3j0GQQWbsKVWhroLRFnzED0L7Hw7dC29djQ7/plisprtGUDWFf6giaWtEsB+
-         27llYDLeYzY5iHGp6eEcEA5puGTRR+6nmSgiLXHEjEj/Ta+SYd6slK4PmSbCXTbTLqhL
-         +rW29QcdmAPeDGshPk77wZwN9tf2yHzwtIhRumv94LtUreB0C6e1wLMbqKci6sszJVqU
-         x/AO7DadrIk4S95DoRfphgLIufpkQIuXqj33vWf9lHD00AZh4X0ju/PtZ1L6oBA29sSy
-         GLeukWrJRIvddTKjFxIDjpaK9ryBSpXonTXM/cJr58kpZ4y0McFhKdpFDvQmyEDetZAh
-         Ce6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=8hexIeF0LOmscVfTQjmfddiTigHgr4BlT+skvWAN1Og=;
-        b=uKZFcvDtNjfdmjiXuSYSpr5AWzcx6RXFU2AHfcV6wrzg19TTushHRuGijU+XGIyGmA
-         OmZK/YqmYcvaXsyM6RUKajSG4y1LLQEgeowVWNSh0pLHViF+9JwKBZUOiiYnTlffIijR
-         9onecGD2q2C2Kt/OBeWJCFx4HtIwDRTkeE/rtZuFRb6PCadi1ebCUpGAt/Gg0B2/wWzk
-         cxzUZhb0UPPD8qhmBTDDh33lCPSJAS0hcrtHShj2g7bWR+KxGx01bxc5P2M+5UgxKcO/
-         P8E28CS86P2X534GZGOEgRvCspDCn1vvflvx0thLrxTUMSeaer3G5wDXwDA7Wwn7q7FW
-         /qOQ==
-X-Gm-Message-State: APjAAAV/YiOVwZqoX7BRIbqgZfcZSpON8Ozr2s6Yji8wHEQ/2fXwPaZx
-        wVFZptCqGfdXPvQomwRxQ6M7snS5
-X-Google-Smtp-Source: APXvYqzqPIZIJb6BMRx8A/L2DiNdq6VgyduGMU067Pq8bO65Tzl1I/l7d3t9LNz6/nnTUOIQrupbZg==
-X-Received: by 2002:a17:902:166:: with SMTP id 93mr20584679plb.320.1567965183315;
-        Sun, 08 Sep 2019 10:53:03 -0700 (PDT)
-Received: from SD ([106.222.6.141])
-        by smtp.gmail.com with ESMTPSA id 185sm14038434pfd.125.2019.09.08.10.52.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Sep 2019 10:53:02 -0700 (PDT)
-Date:   Sun, 8 Sep 2019 23:22:47 +0530
-From:   Saiyam Doshi <saiyamdoshi.in@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] staging: emxx_udc: remove local TRUE/FALSE definition
-Message-ID: <20190908175247.GA20699@SD>
+        Sun, 8 Sep 2019 14:18:30 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id BDE15521902;
+        Sun,  8 Sep 2019 20:18:24 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta11.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta11.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id o4k1JOI9WerN; Sun,  8 Sep 2019 20:18:24 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id F1747521802;
+        Sun,  8 Sep 2019 20:18:23 +0200 (CEST)
+Received: from jernej-laptop.localnet (cpe-86-58-59-25.static.triera.net [86.58.59.25])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id 698C7521902;
+        Sun,  8 Sep 2019 20:18:19 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Cheng-Yi Chiang <cychiang@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, a.hajda@samsung.com,
+        Laurent.pinchart@ideasonboard.com, airlied@linux.ie,
+        daniel@ffwll.ch, kuninori.morimoto.gx@renesas.com,
+        sam@ravnborg.org, dianders@chromium.org, dgreid@chromium.org,
+        tzungbi@chromium.org, zhengxing@rock-chips.com,
+        cain.cai@rock-chips.com, eddie.cai@rock-chips.com,
+        jeffy.chen@rock-chips.com, kuankuan.y@gmail.com,
+        enric.balletbo@collabora.com, dri-devel@lists.freedesktop.org,
+        jonas@kwiboo.se, Yakir Yang <ykk@rock-chips.com>
+Subject: Re: [PATCH v2] drm: bridge/dw_hdmi: add audio sample channel status setting
+Date:   Sun, 08 Sep 2019 20:18:19 +0200
+Message-ID: <7000610.EoTGzQ87Ws@jernej-laptop>
+In-Reply-To: <20190905094325.33156-1-cychiang@chromium.org>
+References: <20190905094325.33156-1-cychiang@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As the function argument and variables are defined as type 'bool',
-remove local TRUE/FALSE define and change usage of those macros
-with boolean value.
+Dne četrtek, 05. september 2019 ob 11:43:25 CEST je Cheng-Yi Chiang 
+napisal(a):
+> From: Yakir Yang <ykk@rock-chips.com>
+> 
+> When transmitting IEC60985 linear PCM audio, we configure the
+> Aduio Sample Channel Status information of all the channel
+> status bits in the IEC60958 frame.
+> Refer to 60958-3 page 10 for frequency, original frequency, and
+> wordlength setting.
+> 
+> This fix the issue that audio does not come out on some monitors
+> (e.g. LG 22CV241)
+> 
+> Note that these registers are only for interfaces:
+> I2S audio interface, General Purpose Audio (GPA), or AHB audio DMA
+> (AHBAUDDMA).
+> For S/PDIF interface this information comes from the stream.
+> 
+> Currently this function dw_hdmi_set_channel_status is only called
+> from dw-hdmi-i2s-audio in I2S setup.
+> 
+> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+> Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+> ---
+>  Original patch by Yakir Yang is at
+> 
+>  https://lore.kernel.org/patchwork/patch/539653/
+> 
+>  Change from v1 to v2:
+>  1. Remove the version check because this will only be called by
+>     dw-hdmi-i2s-audio, and the registers are available in I2S setup.
+>  2. Set these registers in dw_hdmi_i2s_hw_params.
+>  3. Fix the sample width setting so it can use 16 or 24 bits.
+> 
+>  .../drm/bridge/synopsys/dw-hdmi-i2s-audio.c   |  1 +
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c     | 70 +++++++++++++++++++
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.h     | 20 ++++++
+>  include/drm/bridge/dw_hdmi.h                  |  2 +
+>  4 files changed, 93 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
+> b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c index
+> 34d8e837555f..b801a28b0f17 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
+> @@ -102,6 +102,7 @@ static int dw_hdmi_i2s_hw_params(struct device *dev,
+> void *data, }
+> 
+>  	dw_hdmi_set_sample_rate(hdmi, hparms->sample_rate);
+> +	dw_hdmi_set_channel_status(hdmi, hparms->sample_width);
+>  	dw_hdmi_set_channel_count(hdmi, hparms->channels);
+>  	dw_hdmi_set_channel_allocation(hdmi, hparms-
+>cea.channel_allocation);
+> 
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c index
+> bd65d0479683..d1daa369c8ae 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> @@ -582,6 +582,76 @@ static unsigned int hdmi_compute_n(unsigned int freq,
+> unsigned long pixel_clk) return n;
+>  }
+> 
+> +/*
+> + * When transmitting IEC60958 linear PCM audio, these registers allow to
+> + * configure the channel status information of all the channel status
+> + * bits in the IEC60958 frame. For the moment this configuration is only
+> + * used when the I2S audio interface, General Purpose Audio (GPA),
+> + * or AHB audio DMA (AHBAUDDMA) interface is active
+> + * (for S/PDIF interface this information comes from the stream).
+> + */
+> +void dw_hdmi_set_channel_status(struct dw_hdmi *hdmi,
+> +				unsigned int sample_width)
+> +{
+> +	u8 aud_schnl_samplerate;
+> +	u8 aud_schnl_8;
+> +	u8 word_length_bits;
+> +
+> +	switch (hdmi->sample_rate) {
+> +	case 32000:
+> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_32K;
+> +		break;
+> +	case 44100:
+> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_44K1;
+> +		break;
+> +	case 48000:
+> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_48K;
+> +		break;
+> +	case 88200:
+> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_88K2;
+> +		break;
+> +	case 96000:
+> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_96K;
+> +		break;
+> +	case 176400:
+> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_176K4;
+> +		break;
+> +	case 192000:
+> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_192K;
+> +		break;
+> +	case 768000:
+> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_768K;
+> +		break;
+> +	default:
+> +		dev_warn(hdmi->dev, "Unsupported audio sample rate (%u)
+\n",
+> +			 hdmi->sample_rate);
+> +		return;
+> +	}
+> +
+> +	/* set channel status register */
+> +	hdmi_modb(hdmi, aud_schnl_samplerate, 
+HDMI_FC_AUDSCHNLS7_SMPRATE_MASK,
+> +		  HDMI_FC_AUDSCHNLS7);
+> +
+> +	/*
+> +	 * Set original frequency to be the same as frequency.
+> +	 * Use one-complement value as stated in IEC60958-3 page 13.
+> +	 */
+> +	aud_schnl_8 = (~aud_schnl_samplerate) <<
+> +			HDMI_FC_AUDSCHNLS8_ORIGSAMPFREQ_OFFSET;
+> +
+> +	/*
+> +	 * Refer to IEC60958-3 page 12. We can accept 16 bits or 24 bits.
+> +	 * Otherwise, set the register to 0t o indicate using default 
+value.
 
-Signed-off-by: Saiyam Doshi <saiyamdoshi.in@gmail.com>
----
- drivers/staging/emxx_udc/emxx_udc.c | 76 ++++++++++++++---------------
- drivers/staging/emxx_udc/emxx_udc.h |  5 --
- 2 files changed, 38 insertions(+), 43 deletions(-)
+Nit: "0t 0" -> "0 to"
 
-diff --git a/drivers/staging/emxx_udc/emxx_udc.c b/drivers/staging/emxx_udc/emxx_udc.c
-index 489cde4e915e..147481bf680c 100644
---- a/drivers/staging/emxx_udc/emxx_udc.c
-+++ b/drivers/staging/emxx_udc/emxx_udc.c
-@@ -165,7 +165,7 @@ static void _nbu2ss_create_ep0_packet(struct nbu2ss_udc *udc,
- 	udc->ep0_req.req.buf		= p_buf;
- 	udc->ep0_req.req.length		= length;
- 	udc->ep0_req.req.dma		= 0;
--	udc->ep0_req.req.zero		= TRUE;
-+	udc->ep0_req.req.zero		= true;
- 	udc->ep0_req.req.complete	= _nbu2ss_ep0_complete;
- 	udc->ep0_req.req.status		= -EINPROGRESS;
- 	udc->ep0_req.req.context	= udc;
-@@ -668,7 +668,7 @@ static int _nbu2ss_ep0_in_transfer(struct nbu2ss_udc *udc,
- 		if ((req->req.actual % EP0_PACKETSIZE) == 0) {
- 			if (req->zero) {
- 				req->zero = false;
--				EP0_send_NULL(udc, FALSE);
-+				EP0_send_NULL(udc, false);
- 				return 1;
- 			}
- 		}
-@@ -695,7 +695,7 @@ static int _nbu2ss_ep0_in_transfer(struct nbu2ss_udc *udc,
- 	i_remain_size -= result;
- 
- 	if (i_remain_size == 0) {
--		EP0_send_NULL(udc, FALSE);
-+		EP0_send_NULL(udc, false);
- 		return result;
- 	}
- 
-@@ -754,7 +754,7 @@ static int _nbu2ss_ep0_out_transfer(struct nbu2ss_udc *udc,
- 		if ((req->req.actual % EP0_PACKETSIZE) == 0) {
- 			if (req->zero) {
- 				req->zero = false;
--				EP0_receive_NULL(udc, FALSE);
-+				EP0_receive_NULL(udc, false);
- 				return 1;
- 			}
- 		}
-@@ -799,7 +799,7 @@ static int _nbu2ss_out_dma(struct nbu2ss_udc *udc, struct nbu2ss_req *req,
- 	if (req->dma_flag)
- 		return 1;		/* DMA is forwarded */
- 
--	req->dma_flag = TRUE;
-+	req->dma_flag = true;
- 	p_buffer = req->req.dma;
- 	p_buffer += req->req.actual;
- 
-@@ -997,7 +997,7 @@ static int _nbu2ss_in_dma(struct nbu2ss_udc *udc, struct nbu2ss_ep *ep,
- 	if (req->req.actual == 0)
- 		_nbu2ss_dma_map_single(udc, ep, req, USB_DIR_IN);
- #endif
--	req->dma_flag = TRUE;
-+	req->dma_flag = true;
- 
- 	/* MAX Packet Size */
- 	mpkt = _nbu2ss_readl(&preg->EP_REGS[num].EP_PCKT_ADRS) & EPN_MPKT;
-@@ -1166,7 +1166,7 @@ static int _nbu2ss_start_transfer(struct nbu2ss_udc *udc,
- {
- 	int		nret = -EINVAL;
- 
--	req->dma_flag = FALSE;
-+	req->dma_flag = false;
- 	req->div_len = 0;
- 
- 	if (req->req.length == 0) {
-@@ -1190,7 +1190,7 @@ static int _nbu2ss_start_transfer(struct nbu2ss_udc *udc,
- 			break;
- 
- 		case EP0_IN_STATUS_PHASE:
--			nret = EP0_send_NULL(udc, TRUE);
-+			nret = EP0_send_NULL(udc, true);
- 			break;
- 
- 		default:
-@@ -1216,7 +1216,7 @@ static int _nbu2ss_start_transfer(struct nbu2ss_udc *udc,
- static void _nbu2ss_restert_transfer(struct nbu2ss_ep *ep)
- {
- 	u32		length;
--	bool	bflag = FALSE;
-+	bool	bflag = false;
- 	struct nbu2ss_req *req;
- 
- 	req = list_first_entry_or_null(&ep->queue, struct nbu2ss_req, queue);
-@@ -1229,7 +1229,7 @@ static void _nbu2ss_restert_transfer(struct nbu2ss_ep *ep)
- 
- 		length &= EPN_LDATA;
- 		if (length < ep->ep.maxpacket)
--			bflag = TRUE;
-+			bflag = true;
- 	}
- 
- 	_nbu2ss_start_transfer(ep->udc, ep, req, bflag);
-@@ -1280,7 +1280,7 @@ static void _nbu2ss_set_endpoint_stall(struct nbu2ss_udc *udc,
- 
- 		if (bstall) {
- 			/* Set STALL */
--			ep->halted = TRUE;
-+			ep->halted = true;
- 
- 			if (ep_adrs & USB_DIR_IN)
- 				data = EPN_BCLR | EPN_ISTL;
-@@ -1290,7 +1290,7 @@ static void _nbu2ss_set_endpoint_stall(struct nbu2ss_udc *udc,
- 			_nbu2ss_bitset(&preg->EP_REGS[num].EP_CONTROL, data);
- 		} else {
- 			/* Clear STALL */
--			ep->stalled = FALSE;
-+			ep->stalled = false;
- 			if (ep_adrs & USB_DIR_IN) {
- 				_nbu2ss_bitclr(&preg->EP_REGS[num].EP_CONTROL
- 						, EPN_ISTL);
-@@ -1305,9 +1305,9 @@ static void _nbu2ss_set_endpoint_stall(struct nbu2ss_udc *udc,
- 						, data);
- 			}
- 
--			ep->stalled = FALSE;
-+			ep->stalled = false;
- 			if (ep->halted) {
--				ep->halted = FALSE;
-+				ep->halted = false;
- 				_nbu2ss_restert_transfer(ep);
- 			}
- 		}
-@@ -1533,13 +1533,13 @@ static int std_req_get_status(struct nbu2ss_udc *udc)
- /*-------------------------------------------------------------------------*/
- static int std_req_clear_feature(struct nbu2ss_udc *udc)
- {
--	return _nbu2ss_req_feature(udc, FALSE);
-+	return _nbu2ss_req_feature(udc, false);
- }
- 
- /*-------------------------------------------------------------------------*/
- static int std_req_set_feature(struct nbu2ss_udc *udc)
- {
--	return _nbu2ss_req_feature(udc, TRUE);
-+	return _nbu2ss_req_feature(udc, true);
- }
- 
- /*-------------------------------------------------------------------------*/
-@@ -1601,7 +1601,7 @@ static inline void _nbu2ss_read_request_data(struct nbu2ss_udc *udc, u32 *pdata)
- /*-------------------------------------------------------------------------*/
- static inline int _nbu2ss_decode_request(struct nbu2ss_udc *udc)
- {
--	bool			bcall_back = TRUE;
-+	bool			bcall_back = true;
- 	int			nret = -EINVAL;
- 	struct usb_ctrlrequest	*p_ctrl;
- 
-@@ -1623,22 +1623,22 @@ static inline int _nbu2ss_decode_request(struct nbu2ss_udc *udc)
- 		switch (p_ctrl->bRequest) {
- 		case USB_REQ_GET_STATUS:
- 			nret = std_req_get_status(udc);
--			bcall_back = FALSE;
-+			bcall_back = false;
- 			break;
- 
- 		case USB_REQ_CLEAR_FEATURE:
- 			nret = std_req_clear_feature(udc);
--			bcall_back = FALSE;
-+			bcall_back = false;
- 			break;
- 
- 		case USB_REQ_SET_FEATURE:
- 			nret = std_req_set_feature(udc);
--			bcall_back = FALSE;
-+			bcall_back = false;
- 			break;
- 
- 		case USB_REQ_SET_ADDRESS:
- 			nret = std_req_set_address(udc);
--			bcall_back = FALSE;
-+			bcall_back = false;
- 			break;
- 
- 		case USB_REQ_SET_CONFIGURATION:
-@@ -1655,7 +1655,7 @@ static inline int _nbu2ss_decode_request(struct nbu2ss_udc *udc)
- 			if (nret >= 0) {
- 				/*--------------------------------------*/
- 				/* Status Stage */
--				nret = EP0_send_NULL(udc, TRUE);
-+				nret = EP0_send_NULL(udc, true);
- 			}
- 		}
- 
-@@ -1688,7 +1688,7 @@ static inline int _nbu2ss_ep0_in_data_stage(struct nbu2ss_udc *udc)
- 	nret = _nbu2ss_ep0_in_transfer(udc, req);
- 	if (nret == 0) {
- 		udc->ep0state = EP0_OUT_STATUS_PAHSE;
--		EP0_receive_NULL(udc, TRUE);
-+		EP0_receive_NULL(udc, true);
- 	}
- 
- 	return 0;
-@@ -1708,7 +1708,7 @@ static inline int _nbu2ss_ep0_out_data_stage(struct nbu2ss_udc *udc)
- 	nret = _nbu2ss_ep0_out_transfer(udc, req);
- 	if (nret == 0) {
- 		udc->ep0state = EP0_IN_STATUS_PHASE;
--		EP0_send_NULL(udc, TRUE);
-+		EP0_send_NULL(udc, true);
- 
- 	} else if (nret < 0) {
- 		_nbu2ss_bitset(&udc->p_regs->EP0_CONTROL, EP0_BCLR);
-@@ -1817,7 +1817,7 @@ static inline void _nbu2ss_ep0_int(struct nbu2ss_udc *udc)
- 
- 	if (nret < 0) {
- 		/* Send Stall */
--		_nbu2ss_set_endpoint_stall(udc, 0, TRUE);
-+		_nbu2ss_set_endpoint_stall(udc, 0, true);
- 	}
- }
- 
-@@ -1925,7 +1925,7 @@ static inline void _nbu2ss_epn_in_dma_int(struct nbu2ss_udc *udc,
- 
- 	preq->actual += req->div_len;
- 	req->div_len = 0;
--	req->dma_flag = FALSE;
-+	req->dma_flag = false;
- 
- #ifdef USE_DMA
- 	_nbu2ss_dma_unmap_single(udc, ep, req, USB_DIR_IN);
-@@ -1961,7 +1961,7 @@ static inline void _nbu2ss_epn_out_dma_int(struct nbu2ss_udc *udc,
- 	if (req->req.actual == req->req.length) {
- 		if ((req->req.length % ep->ep.maxpacket) && !req->zero) {
- 			req->div_len = 0;
--			req->dma_flag = FALSE;
-+			req->dma_flag = false;
- 			_nbu2ss_ep_done(ep, req, 0);
- 			return;
- 		}
-@@ -1990,7 +1990,7 @@ static inline void _nbu2ss_epn_out_dma_int(struct nbu2ss_udc *udc,
- 	if ((req->req.actual % ep->ep.maxpacket) > 0) {
- 		if (req->req.actual == req->div_len) {
- 			req->div_len = 0;
--			req->dma_flag = FALSE;
-+			req->dma_flag = false;
- 			_nbu2ss_ep_done(ep, req, 0);
- 			return;
- 		}
-@@ -1998,7 +1998,7 @@ static inline void _nbu2ss_epn_out_dma_int(struct nbu2ss_udc *udc,
- 
- 	req->req.actual += req->div_len;
- 	req->div_len = 0;
--	req->dma_flag = FALSE;
-+	req->dma_flag = false;
- 
- 	_nbu2ss_epn_out_int(udc, ep, req);
- }
-@@ -2187,7 +2187,7 @@ static int _nbu2ss_enable_controller(struct nbu2ss_udc *udc)
- 	/* USB Interrupt Enable */
- 	_nbu2ss_bitset(&udc->p_regs->USB_INT_ENA, USB_INT_EN_BIT);
- 
--	udc->udc_enabled = TRUE;
-+	udc->udc_enabled = true;
- 
- 	return 0;
- }
-@@ -2203,7 +2203,7 @@ static void _nbu2ss_reset_controller(struct nbu2ss_udc *udc)
- static void _nbu2ss_disable_controller(struct nbu2ss_udc *udc)
- {
- 	if (udc->udc_enabled) {
--		udc->udc_enabled = FALSE;
-+		udc->udc_enabled = false;
- 		_nbu2ss_reset_controller(udc);
- 		_nbu2ss_bitset(&udc->p_regs->EPCTR, (DIRPD | EPC_RST));
- 	}
-@@ -2456,8 +2456,8 @@ static int nbu2ss_ep_enable(struct usb_ep *_ep,
- 	ep->direct = desc->bEndpointAddress & USB_ENDPOINT_DIR_MASK;
- 	ep->ep_type = ep_type;
- 	ep->wedged = 0;
--	ep->halted = FALSE;
--	ep->stalled = FALSE;
-+	ep->halted = false;
-+	ep->stalled = false;
- 
- 	ep->ep.maxpacket = le16_to_cpu(desc->wMaxPacketSize);
- 
-@@ -2588,9 +2588,9 @@ static int nbu2ss_ep_queue(struct usb_ep *_ep,
- 
- #ifdef USE_DMA
- 	if ((uintptr_t)req->req.buf & 0x3)
--		req->unaligned = TRUE;
-+		req->unaligned = true;
- 	else
--		req->unaligned = FALSE;
-+		req->unaligned = false;
- 
- 	if (req->unaligned) {
- 		if (!ep->virt_buf)
-@@ -2616,7 +2616,7 @@ static int nbu2ss_ep_queue(struct usb_ep *_ep,
- 	list_add_tail(&req->queue, &ep->queue);
- 
- 	if (bflag && !ep->stalled) {
--		result = _nbu2ss_start_transfer(udc, ep, req, FALSE);
-+		result = _nbu2ss_start_transfer(udc, ep, req, false);
- 		if (result < 0) {
- 			dev_err(udc->dev, " *** %s, result = %d\n", __func__,
- 				result);
-@@ -2704,12 +2704,12 @@ static int nbu2ss_ep_set_halt(struct usb_ep *_ep, int value)
- 	ep_adrs = ep->epnum | ep->direct;
- 	if (value == 0) {
- 		_nbu2ss_set_endpoint_stall(udc, ep_adrs, value);
--		ep->stalled = FALSE;
-+		ep->stalled = false;
- 	} else {
- 		if (list_empty(&ep->queue))
- 			_nbu2ss_epn_set_stall(udc, ep);
- 		else
--			ep->stalled = TRUE;
-+			ep->stalled = true;
- 	}
- 
- 	if (value == 0)
-diff --git a/drivers/staging/emxx_udc/emxx_udc.h b/drivers/staging/emxx_udc/emxx_udc.h
-index b8c3dee5626c..9c2671cb32f7 100644
---- a/drivers/staging/emxx_udc/emxx_udc.h
-+++ b/drivers/staging/emxx_udc/emxx_udc.h
-@@ -19,11 +19,6 @@
- #define	USE_DMA	1
- #define USE_SUSPEND_WAIT	1
- 
--#ifndef TRUE
--#define TRUE	1
--#define FALSE	0
--#endif
--
- /*------------ Board dependence(Resource) */
- #define	VBUS_VALUE		GPIO_VBUS
- 
--- 
-2.20.1
+With that fixed, this patch is:
+Reviewed-by: Jernej Skrabec <jernej.skrabec@siol.net>
+
+Best regards,
+Jernej
+
+> +	 */
+> +	word_length_bits = (sample_width == 16) ? 0x2 :
+> +			    ((sample_width == 24) ? 0xb : 0);
+> +
+> +	aud_schnl_8 |= word_length_bits << 
+HDMI_FC_AUDSCHNLS8_WORDLEGNTH_OFFSET;
+> +
+> +	hdmi_writeb(hdmi, aud_schnl_8, HDMI_FC_AUDSCHNLS8);
+> +}
+> +EXPORT_SYMBOL_GPL(dw_hdmi_set_channel_status);
+> +
+>  static void hdmi_set_clk_regenerator(struct dw_hdmi *hdmi,
+>  	unsigned long pixel_clk, unsigned int sample_rate)
+>  {
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
+> b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h index
+> 6988f12d89d9..619ebc1c8354 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
+> @@ -158,6 +158,17 @@
+>  #define HDMI_FC_SPDDEVICEINF                    0x1062
+>  #define HDMI_FC_AUDSCONF                        0x1063
+>  #define HDMI_FC_AUDSSTAT                        0x1064
+> +#define HDMI_FC_AUDSV                           0x1065
+> +#define HDMI_FC_AUDSU                           0x1066
+> +#define HDMI_FC_AUDSCHNLS0                      0x1067
+> +#define HDMI_FC_AUDSCHNLS1                      0x1068
+> +#define HDMI_FC_AUDSCHNLS2                      0x1069
+> +#define HDMI_FC_AUDSCHNLS3                      0x106a
+> +#define HDMI_FC_AUDSCHNLS4                      0x106b
+> +#define HDMI_FC_AUDSCHNLS5                      0x106c
+> +#define HDMI_FC_AUDSCHNLS6                      0x106d
+> +#define HDMI_FC_AUDSCHNLS7                      0x106e
+> +#define HDMI_FC_AUDSCHNLS8                      0x106f
+>  #define HDMI_FC_DATACH0FILL                     0x1070
+>  #define HDMI_FC_DATACH1FILL                     0x1071
+>  #define HDMI_FC_DATACH2FILL                     0x1072
+> @@ -706,6 +717,15 @@ enum {
+>  /* HDMI_FC_AUDSCHNLS7 field values */
+>  	HDMI_FC_AUDSCHNLS7_ACCURACY_OFFSET = 4,
+>  	HDMI_FC_AUDSCHNLS7_ACCURACY_MASK = 0x30,
+> +	HDMI_FC_AUDSCHNLS7_SMPRATE_MASK = 0x0f,
+> +	HDMI_FC_AUDSCHNLS7_SMPRATE_192K = 0xe,
+> +	HDMI_FC_AUDSCHNLS7_SMPRATE_176K4 = 0xc,
+> +	HDMI_FC_AUDSCHNLS7_SMPRATE_96K = 0xa,
+> +	HDMI_FC_AUDSCHNLS7_SMPRATE_768K = 0x9,
+> +	HDMI_FC_AUDSCHNLS7_SMPRATE_88K2 = 0x8,
+> +	HDMI_FC_AUDSCHNLS7_SMPRATE_32K = 0x3,
+> +	HDMI_FC_AUDSCHNLS7_SMPRATE_48K = 0x2,
+> +	HDMI_FC_AUDSCHNLS7_SMPRATE_44K1 = 0x0,
+> 
+>  /* HDMI_FC_AUDSCHNLS8 field values */
+>  	HDMI_FC_AUDSCHNLS8_ORIGSAMPFREQ_MASK = 0xf0,
+> diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
+> index cf528c289857..12144d2f80f4 100644
+> --- a/include/drm/bridge/dw_hdmi.h
+> +++ b/include/drm/bridge/dw_hdmi.h
+> @@ -156,6 +156,8 @@ void dw_hdmi_setup_rx_sense(struct dw_hdmi *hdmi, bool
+> hpd, bool rx_sense);
+> 
+>  void dw_hdmi_set_sample_rate(struct dw_hdmi *hdmi, unsigned int rate);
+>  void dw_hdmi_set_channel_count(struct dw_hdmi *hdmi, unsigned int cnt);
+> +void dw_hdmi_set_channel_status(struct dw_hdmi *hdmi,
+> +				unsigned int sample_width);
+>  void dw_hdmi_set_channel_allocation(struct dw_hdmi *hdmi, unsigned int ca);
+> void dw_hdmi_audio_enable(struct dw_hdmi *hdmi);
+>  void dw_hdmi_audio_disable(struct dw_hdmi *hdmi);
+
+
+
 
