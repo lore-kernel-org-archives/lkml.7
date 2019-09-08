@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B2E5C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 511E2C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D24E920644
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:46:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A555218AE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:46:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946794;
-	bh=6DDScwfq0M2R98a1hKbJLf7PU528/6ltcmq5C0Q0Zrs=;
+	s=default; t=1567946798;
+	bh=LtTjOxgtRGF6LCCtjHjnp/619AMlBzyRmzOQMaARqIw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AVmtKHgAsEVgophKiLmx9Pl3vXreCPzLXEoisMu3m7cjz/JeAaFGq6NdCxJfwliq0
-	 P3Uo1Hac0i+Jaka9siVOZmOZPhFY5nvWZBnP2EwL/YQzn9a+1z0CNlqrr5Glr5y+DS
-	 oFqYfKO4ah/t4NWH6pwJWoc8vFqIqBiycqlucRI8=
+	b=T6a/RSaHHPAMA0aEx9gW9P9x3lUdGK9BN8Gj0+tDXnmQ1CGv7RiaVF846LraRJSWi
+	 pytZaQymcdF87EpTMi2qaxgH65/nM6iaBhiHMN37JWZPJvHunLEE8Rt9bxuJjtOOjc
+	 wnTKkZJa9o2tJ495dyTYHTi1AGN5FCYjw0QwfnTc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730417AbfIHMqd (ORCPT
+        id S1730430AbfIHMqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:46:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34020 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:46:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730369AbfIHMqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:46:25 -0400
+        id S1730389AbfIHMqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:46:30 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04885218AE;
-        Sun,  8 Sep 2019 12:46:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF6EE218AE;
+        Sun,  8 Sep 2019 12:46:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946784;
-        bh=6DDScwfq0M2R98a1hKbJLf7PU528/6ltcmq5C0Q0Zrs=;
+        s=default; t=1567946789;
+        bh=LtTjOxgtRGF6LCCtjHjnp/619AMlBzyRmzOQMaARqIw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VhCUyrPzqC/d36MpxobTbXjuNmtKo8OWJ5R7LpYtPY1J3+ZFjkEMWu1EakajCm4nY
-         DTjuSEMF7R5QlUu61SRPEi54ZHsjeZZGPp4I0CTWMdoB2kYSphkaea9NhDnTm5lejz
-         Rzqm6LfG1UvUd7vFzF/xhZx1Q+JTm9F2VKc49MYM=
+        b=n3oOGTwg/w3qVY4gu05fuUaV829mV5/zaqOzLxEhePJ5ZD6AopAC0ZGrb6AveIimu
+         YJQyigA+dgwbKrenneyNMH/uP9MjyvIZoE0zw/QdzxZfH15+lhYnG5b7uarsclM/mw
+         B2143Ny67JWdJ3exvlWYxA8+kpabDUNrADdzYSio=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vlad Buslov <vladbu@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 38/40] net: sched: act_sample: fix psample group handling on overwrite
-Date:   Sun,  8 Sep 2019 13:42:11 +0100
-Message-Id: <20190908121132.358667202@linuxfoundation.org>
+        stable@vger.kernel.org, "John S. Gruber" <JohnSGruber@gmail.com>,
+        Borislav Petkov <bp@suse.de>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        Mark Brown <broonie@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>
+Subject: [PATCH 4.14 40/40] x86/boot: Preserve boot_params.secure_boot from sanitizing
+Date:   Sun,  8 Sep 2019 13:42:13 +0100
+Message-Id: <20190908121132.874903916@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121114.260662089@linuxfoundation.org>
 References: <20190908121114.260662089@linuxfoundation.org>
@@ -59,77 +64,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vlad Buslov <vladbu@mellanox.com>
+From: John S. Gruber <JohnSGruber@gmail.com>
 
-[ Upstream commit dbf47a2a094edf58983265e323ca4bdcdb58b5ee ]
+commit 29d9a0b50736768f042752070e5cdf4e4d4c00df upstream.
 
-Action sample doesn't properly handle psample_group pointer in overwrite
-case. Following issues need to be fixed:
+Commit
 
-- In tcf_sample_init() function RCU_INIT_POINTER() is used to set
-  s->psample_group, even though we neither setting the pointer to NULL, nor
-  preventing concurrent readers from accessing the pointer in some way.
-  Use rcu_swap_protected() instead to safely reset the pointer.
+  a90118c445cc ("x86/boot: Save fields explicitly, zero out everything else")
 
-- Old value of s->psample_group is not released or deallocated in any way,
-  which results resource leak. Use psample_group_put() on non-NULL value
-  obtained with rcu_swap_protected().
+now zeroes the secure boot setting information (enabled/disabled/...)
+passed by the boot loader or by the kernel's EFI handover mechanism.
 
-- The function psample_group_put() that released reference to struct
-  psample_group pointed by rcu-pointer s->psample_group doesn't respect rcu
-  grace period when deallocating it. Extend struct psample_group with rcu
-  head and use kfree_rcu when freeing it.
+The problem manifests itself with signed kernels using the EFI handoff
+protocol with grub and the kernel loses the information whether secure
+boot is enabled in the firmware, i.e., the log message "Secure boot
+enabled" becomes "Secure boot could not be determined".
 
-Fixes: 5c5670fae430 ("net/sched: Introduce sample tc action")
-Signed-off-by: Vlad Buslov <vladbu@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+efi_main() arch/x86/boot/compressed/eboot.c sets this field early but it
+is subsequently zeroed by the above referenced commit.
+
+Include boot_params.secure_boot in the preserve field list.
+
+ [ bp: restructure commit message and massage. ]
+
+Fixes: a90118c445cc ("x86/boot: Save fields explicitly, zero out everything else")
+Signed-off-by: John S. Gruber <JohnSGruber@gmail.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: stable <stable@vger.kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/CAPotdmSPExAuQcy9iAHqX3js_fc4mMLQOTr5RBGvizyCOPcTQQ@mail.gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/net/psample.h  |    1 +
- net/psample/psample.c  |    2 +-
- net/sched/act_sample.c |    5 ++++-
- 3 files changed, 6 insertions(+), 2 deletions(-)
 
---- a/include/net/psample.h
-+++ b/include/net/psample.h
-@@ -12,6 +12,7 @@ struct psample_group {
- 	u32 group_num;
- 	u32 refcount;
- 	u32 seq;
-+	struct rcu_head rcu;
- };
- 
- struct psample_group *psample_group_get(struct net *net, u32 group_num);
---- a/net/psample/psample.c
-+++ b/net/psample/psample.c
-@@ -156,7 +156,7 @@ static void psample_group_destroy(struct
- {
- 	psample_group_notify(group, PSAMPLE_CMD_DEL_GROUP);
- 	list_del(&group->list);
--	kfree(group);
-+	kfree_rcu(group, rcu);
- }
- 
- static struct psample_group *
---- a/net/sched/act_sample.c
-+++ b/net/sched/act_sample.c
-@@ -92,13 +92,16 @@ static int tcf_sample_init(struct net *n
- 			tcf_idr_release(*a, bind);
- 		return -ENOMEM;
- 	}
--	RCU_INIT_POINTER(s->psample_group, psample_group);
-+	rcu_swap_protected(s->psample_group, psample_group,
-+			   lockdep_is_held(&s->tcf_lock));
- 
- 	if (tb[TCA_SAMPLE_TRUNC_SIZE]) {
- 		s->truncate = true;
- 		s->trunc_size = nla_get_u32(tb[TCA_SAMPLE_TRUNC_SIZE]);
- 	}
- 
-+	if (psample_group)
-+		psample_group_put(psample_group);
- 	if (ret == ACT_P_CREATED)
- 		tcf_idr_insert(tn, *a);
- 	return ret;
+---
+ arch/x86/include/asm/bootparam_utils.h |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/arch/x86/include/asm/bootparam_utils.h
++++ b/arch/x86/include/asm/bootparam_utils.h
+@@ -71,6 +71,7 @@ static void sanitize_boot_params(struct
+ 			BOOT_PARAM_PRESERVE(eddbuf_entries),
+ 			BOOT_PARAM_PRESERVE(edd_mbr_sig_buf_entries),
+ 			BOOT_PARAM_PRESERVE(edd_mbr_sig_buffer),
++			BOOT_PARAM_PRESERVE(secure_boot),
+ 			BOOT_PARAM_PRESERVE(hdr),
+ 			BOOT_PARAM_PRESERVE(e820_table),
+ 			BOOT_PARAM_PRESERVE(eddbuf),
 
 
