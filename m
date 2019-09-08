@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED5B4C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B9DC4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:47:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C218D2190F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:47:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F77D218AF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:47:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946851;
-	bh=SAHsHnMvyscJ7r82CopdaOIYpTmE+pyunMQT2p9mYVg=;
+	s=default; t=1567946855;
+	bh=nwkRrgxWKfz0mUWoAEQETgxxEmFC+2XRWGejen9Xk1s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dxxj/6NIVY8ABcIFyB60Wryecyw/QV7JN0c0i7MV9QV1BH7Qf8SPbPSp77hPliFtn
-	 HQupaB5k2WNR5yBJZow8qPfBfFmAP9shHfXgcksrJJLkoSJbu1J7PErzV+c1yoyGWw
-	 W8kiKnsi36G+sC1yBNwJlQYO5mkbqpiBOPuEz7jQ=
+	b=0LhkVh1m7td3P3P33jkmpmbx/l4FyParFlkMFqa/iaHykv+THWJTqMszWm9cV6mo0
+	 8N87X7p7oKsPHu0Zfi7OhBBox4X0zn6YbOmgLIFx81pXkLnY8YsCpD8XZUe612RNIp
+	 pp6VeVOigg1Mgg4UT0/gmZf0eoL473e50zpDmbog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730700AbfIHMra (ORCPT
+        id S1730720AbfIHMre (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:47:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35844 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:47:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730670AbfIHMr1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:47:27 -0400
+        id S1730694AbfIHMra (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:47:30 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE9B2218AC;
-        Sun,  8 Sep 2019 12:47:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7038C218AF;
+        Sun,  8 Sep 2019 12:47:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946847;
-        bh=SAHsHnMvyscJ7r82CopdaOIYpTmE+pyunMQT2p9mYVg=;
+        s=default; t=1567946850;
+        bh=nwkRrgxWKfz0mUWoAEQETgxxEmFC+2XRWGejen9Xk1s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nkv4jSiTT/hZkVgxIPI9w5ArJKwejJwyAMEw9tu+UuU5w5aZkA8k1X816WqklHymP
-         vEMCdXJ5Y7Xhfc9aNHTegrIIbOqm37KB8Y15FocBes0JapnFhb3JGkJ/ToHfttSlks
-         a56Le9uqVgmtcRtNIymngf1pnPZ8H55NicNzkfys=
+        b=eXQe9hrDbDeEqIqOixZKcopyy8RVc7OCNZmYOtgoLE5pqeqyKNGNCEald9gudq5jz
+         zWp990Ud0gZPX01EUliwBzDFx9VIoVwVvGKhIMsShGVh4mIpRKrX9q/9CEd5UTarmO
+         PDmpEmC9Aedh9Aec+M/7L4TxncbyDAjogZ8ul8ok=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 22/57] netfilter: nft_flow_offload: skip tcp rst and fin packets
-Date:   Sun,  8 Sep 2019 13:41:46 +0100
-Message-Id: <20190908121134.633656644@linuxfoundation.org>
+        stable@vger.kernel.org, Alexandre Courbot <acourbot@chromium.org>,
+        CK Hu <ck.hu@mediatek.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 23/57] drm/mediatek: use correct device to import PRIME buffers
+Date:   Sun,  8 Sep 2019 13:41:47 +0100
+Message-Id: <20190908121134.861158277@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121125.608195329@linuxfoundation.org>
 References: <20190908121125.608195329@linuxfoundation.org>
@@ -59,59 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit dfe42be15fde16232340b8b2a57c359f51cc10d9 ]
+[ Upstream commit 4c6f3196e6ea111c456c6086dc3f57d4706b0b2d ]
 
-TCP rst and fin packets do not qualify to place a flow into the
-flowtable. Most likely there will be no more packets after connection
-closure. Without this patch, this flow entry expires and connection
-tracking picks up the entry in ESTABLISHED state using the fixup
-timeout, which makes this look inconsistent to the user for a connection
-that is actually already closed.
+PRIME buffers should be imported using the DMA device. To this end, use
+a custom import function that mimics drm_gem_prime_import_dev(), but
+passes the correct device.
 
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: 119f5173628aa ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
+Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
+Signed-off-by: CK Hu <ck.hu@mediatek.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_flow_offload.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nft_flow_offload.c b/net/netfilter/nft_flow_offload.c
-index 6e0c26025ab13..69decbe2c9884 100644
---- a/net/netfilter/nft_flow_offload.c
-+++ b/net/netfilter/nft_flow_offload.c
-@@ -71,11 +71,11 @@ static void nft_flow_offload_eval(const struct nft_expr *expr,
- {
- 	struct nft_flow_offload *priv = nft_expr_priv(expr);
- 	struct nf_flowtable *flowtable = &priv->flowtable->data;
-+	struct tcphdr _tcph, *tcph = NULL;
- 	enum ip_conntrack_info ctinfo;
- 	struct nf_flow_route route;
- 	struct flow_offload *flow;
- 	enum ip_conntrack_dir dir;
--	bool is_tcp = false;
- 	struct nf_conn *ct;
- 	int ret;
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+index fd83046d8376b..ffb997440851d 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+@@ -327,6 +327,18 @@ static const struct file_operations mtk_drm_fops = {
+ 	.compat_ioctl = drm_compat_ioctl,
+ };
  
-@@ -88,7 +88,10 @@ static void nft_flow_offload_eval(const struct nft_expr *expr,
- 
- 	switch (ct->tuplehash[IP_CT_DIR_ORIGINAL].tuple.dst.protonum) {
- 	case IPPROTO_TCP:
--		is_tcp = true;
-+		tcph = skb_header_pointer(pkt->skb, pkt->xt.thoff,
-+					  sizeof(_tcph), &_tcph);
-+		if (unlikely(!tcph || tcph->fin || tcph->rst))
-+			goto out;
- 		break;
- 	case IPPROTO_UDP:
- 		break;
-@@ -115,7 +118,7 @@ static void nft_flow_offload_eval(const struct nft_expr *expr,
- 	if (!flow)
- 		goto err_flow_alloc;
- 
--	if (is_tcp) {
-+	if (tcph) {
- 		ct->proto.tcp.seen[0].flags |= IP_CT_TCP_FLAG_BE_LIBERAL;
- 		ct->proto.tcp.seen[1].flags |= IP_CT_TCP_FLAG_BE_LIBERAL;
- 	}
++/*
++ * We need to override this because the device used to import the memory is
++ * not dev->dev, as drm_gem_prime_import() expects.
++ */
++struct drm_gem_object *mtk_drm_gem_prime_import(struct drm_device *dev,
++						struct dma_buf *dma_buf)
++{
++	struct mtk_drm_private *private = dev->dev_private;
++
++	return drm_gem_prime_import_dev(dev, dma_buf, private->dma_dev);
++}
++
+ static struct drm_driver mtk_drm_driver = {
+ 	.driver_features = DRIVER_MODESET | DRIVER_GEM | DRIVER_PRIME |
+ 			   DRIVER_ATOMIC,
+@@ -338,7 +350,7 @@ static struct drm_driver mtk_drm_driver = {
+ 	.prime_handle_to_fd = drm_gem_prime_handle_to_fd,
+ 	.prime_fd_to_handle = drm_gem_prime_fd_to_handle,
+ 	.gem_prime_export = drm_gem_prime_export,
+-	.gem_prime_import = drm_gem_prime_import,
++	.gem_prime_import = mtk_drm_gem_prime_import,
+ 	.gem_prime_get_sg_table = mtk_gem_prime_get_sg_table,
+ 	.gem_prime_import_sg_table = mtk_gem_prime_import_sg_table,
+ 	.gem_prime_mmap = mtk_drm_gem_mmap_buf,
 -- 
 2.20.1
 
