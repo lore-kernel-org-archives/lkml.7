@@ -2,52 +2,52 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE48C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C6BC433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45ACD218AC
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:55:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E027218AC
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:55:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947301;
-	bh=IqEauNs7qeUy74R3qRiokvDUb9O7TGDvPagbktP5iyk=;
+	s=default; t=1567947307;
+	bh=j6EGaUgINAbUeHJRDMaId7xXvK70U2UclSJg0QPS1sw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xg278UMlIHYPB3n0upCxHKArThjvE6Af6F7UoZsirydrznYENO0CgsADHTjcUbwTK
-	 H2WmA4SVMwxxyF0QQ9RGCx7p2VejqvJk6Xz9N+ErLFataXmosU0sNPSCviNRKuXrKM
-	 xmelxMog/B7tFdjper6Dujf2lSlZUD33BSloTI9w=
+	b=J/4O74jbIGoF3TbM3wJ3eKqNSG5+UWXCC+5MaSzyas1+hkOtoIEWBo4R84B3oKGDP
+	 55OX6XhbGTyex0VEWkL8XawYLzlWvmYodD9Bx56bJx0aCTxTjermW/BbG02EpXt5aQ
+	 1G4+vA8PTa0N8FRJsavA+hOL1sGgb+1RGg2RzIxE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387715AbfIHMzA (ORCPT
+        id S2387735AbfIHMzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:55:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43242 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:55:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732693AbfIHMvh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:51:37 -0400
+        id S1732631AbfIHMva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:51:30 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B8C820693;
-        Sun,  8 Sep 2019 12:51:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E8E620693;
+        Sun,  8 Sep 2019 12:51:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567947097;
-        bh=IqEauNs7qeUy74R3qRiokvDUb9O7TGDvPagbktP5iyk=;
+        s=default; t=1567947089;
+        bh=j6EGaUgINAbUeHJRDMaId7xXvK70U2UclSJg0QPS1sw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wudm01kpAa9u3eVm5n6yX5CuWtG2uxJENHDEkZyz+1MafKCNT0AB15c5Dqi4ln+fD
-         +MndrkVlhBFRpXDJGBB0Xamg53bSrnafXRBQc4pmcHRMhKIIpaXE7cinAxoociKieH
-         43MqbP/w5mDnEbqxcilb0kXTgrnRJy6/tMJ5H5TA=
+        b=LIl4AAv9JaImaNsNsE9BtGTa61TSKrWmULHt/e3tad5mfuc0yLVlBTcdKzDzq4vyO
+         ve4gmQPwS310DkAOwN5jhwtH611fmr9vmrhm7l8MzSMKA5Rbsl0dLUye8R4DTcPlcO
+         rfeKZfIRmQNZzsfLEgR1LOgqhiDAdm2QHYYi0kIc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 61/94] wimax/i2400m: fix a memory leak bug
-Date:   Sun,  8 Sep 2019 13:41:57 +0100
-Message-Id: <20190908121152.178684260@linuxfoundation.org>
+        stable@vger.kernel.org, Marco Hartmann <marco.hartmann@nxp.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.2 15/94] Add genphy_c45_config_aneg() function to phy-c45.c
+Date:   Sun,  8 Sep 2019 13:41:11 +0100
+Message-Id: <20190908121150.869039333@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
 References: <20190908121150.420989666@linuxfoundation.org>
@@ -60,44 +60,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 44ef3a03252844a8753479b0cea7f29e4a804bdc ]
+From: Marco Hartmann <marco.hartmann@nxp.com>
 
-In i2400m_barker_db_init(), 'options_orig' is allocated through kstrdup()
-to hold the original command line options. Then, the options are parsed.
-However, if an error occurs during the parsing process, 'options_orig' is
-not deallocated, leading to a memory leak bug. To fix this issue, free
-'options_orig' before returning the error.
+[ Upstream commit 2ebb991641d3f64b70fec0156e2b6933810177e9 ]
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Commit 34786005eca3 ("net: phy: prevent PHYs w/o Clause 22 regs from calling
+genphy_config_aneg") introduced a check that aborts phy_config_aneg()
+if the phy is a C45 phy.
+This causes phy_state_machine() to call phy_error() so that the phy
+ends up in PHY_HALTED state.
+
+Instead of returning -EOPNOTSUPP, call genphy_c45_config_aneg()
+(analogous to the C22 case) so that the state machine can run
+correctly.
+
+genphy_c45_config_aneg() closely resembles mv3310_config_aneg()
+in drivers/net/phy/marvell10g.c, excluding vendor specific
+configurations for 1000BaseT.
+
+Fixes: 22b56e827093 ("net: phy: replace genphy_10g_driver with genphy_c45_driver")
+
+Signed-off-by: Marco Hartmann <marco.hartmann@nxp.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/wimax/i2400m/fw.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/phy/phy-c45.c |   26 ++++++++++++++++++++++++++
+ drivers/net/phy/phy.c     |    2 +-
+ include/linux/phy.h       |    1 +
+ 3 files changed, 28 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wimax/i2400m/fw.c b/drivers/net/wimax/i2400m/fw.c
-index e9fc168bb7345..489cba9b284d1 100644
---- a/drivers/net/wimax/i2400m/fw.c
-+++ b/drivers/net/wimax/i2400m/fw.c
-@@ -351,13 +351,15 @@ int i2400m_barker_db_init(const char *_options)
- 			}
- 			result = i2400m_barker_db_add(barker);
- 			if (result < 0)
--				goto error_add;
-+				goto error_parse_add;
- 		}
- 		kfree(options_orig);
- 	}
- 	return 0;
+--- a/drivers/net/phy/phy-c45.c
++++ b/drivers/net/phy/phy-c45.c
+@@ -523,6 +523,32 @@ int genphy_c45_read_status(struct phy_de
+ }
+ EXPORT_SYMBOL_GPL(genphy_c45_read_status);
  
-+error_parse_add:
- error_parse:
-+	kfree(options_orig);
- error_add:
- 	kfree(i2400m_barker_db);
- 	return result;
--- 
-2.20.1
-
++/**
++ * genphy_c45_config_aneg - restart auto-negotiation or forced setup
++ * @phydev: target phy_device struct
++ *
++ * Description: If auto-negotiation is enabled, we configure the
++ *   advertising, and then restart auto-negotiation.  If it is not
++ *   enabled, then we force a configuration.
++ */
++int genphy_c45_config_aneg(struct phy_device *phydev)
++{
++	bool changed = false;
++	int ret;
++
++	if (phydev->autoneg == AUTONEG_DISABLE)
++		return genphy_c45_pma_setup_forced(phydev);
++
++	ret = genphy_c45_an_config_aneg(phydev);
++	if (ret < 0)
++		return ret;
++	if (ret > 0)
++		changed = true;
++
++	return genphy_c45_check_and_restart_aneg(phydev, changed);
++}
++EXPORT_SYMBOL_GPL(genphy_c45_config_aneg);
++
+ /* The gen10g_* functions are the old Clause 45 stub */
+ 
+ int gen10g_config_aneg(struct phy_device *phydev)
+--- a/drivers/net/phy/phy.c
++++ b/drivers/net/phy/phy.c
+@@ -499,7 +499,7 @@ static int phy_config_aneg(struct phy_de
+ 	 * allowed to call genphy_config_aneg()
+ 	 */
+ 	if (phydev->is_c45 && !(phydev->c45_ids.devices_in_package & BIT(0)))
+-		return -EOPNOTSUPP;
++		return genphy_c45_config_aneg(phydev);
+ 
+ 	return genphy_config_aneg(phydev);
+ }
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -1108,6 +1108,7 @@ int genphy_c45_an_disable_aneg(struct ph
+ int genphy_c45_read_mdix(struct phy_device *phydev);
+ int genphy_c45_pma_read_abilities(struct phy_device *phydev);
+ int genphy_c45_read_status(struct phy_device *phydev);
++int genphy_c45_config_aneg(struct phy_device *phydev);
+ 
+ /* The gen10g_* functions are the old Clause 45 stub */
+ int gen10g_config_aneg(struct phy_device *phydev);
 
 
