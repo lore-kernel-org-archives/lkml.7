@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B64FDC4360D
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 855B3C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:43:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F493216C8
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CBF1218AF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:43:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946578;
-	bh=2fdT2buXK4qxQxi7JGkNKCI9a4Uv/K2b4Yi8LjjcKoE=;
+	s=default; t=1567946581;
+	bh=WUYooGrCEDe8VW9BAEf19OtWWMbZj/Ab7oU1AJQaYIA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uzq/uRFPD7OlWG7y22yYiUppDiZyNXooyIlc/8QTDBAMqgtRd6BLO1JWtTy32xPjA
-	 1v7XJLeuA1ezKnZDMu/XA2xkmkmyLKZmOSYho0HhARyH/WTw0rwDYB4SCFgUAzBSsT
-	 UUTV+WJOebKuU9P0wkJg3U3xUrUFBwY19/S6g3OM=
+	b=1NxDoIGA7Pl7IOENGALw24Kl1iAfzwmv0HrirQLcCO2CG6sI6CSgjA7hFBS1SQSWh
+	 kP6R8aFIF6eX5rBm0qfBXph8Tit228F5oZRSTiaYV1XNBGe13KnVS364c+ruv8btNC
+	 juu30MJxNebqtPABvBROEDNBtyAkkiBzhotZa25Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729321AbfIHMm5 (ORCPT
+        id S1729336AbfIHMnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:42:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56294 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:43:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726329AbfIHMm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:42:56 -0400
+        id S1726329AbfIHMm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:42:59 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58E38216C8;
-        Sun,  8 Sep 2019 12:42:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 087E52081B;
+        Sun,  8 Sep 2019 12:42:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946575;
-        bh=2fdT2buXK4qxQxi7JGkNKCI9a4Uv/K2b4Yi8LjjcKoE=;
+        s=default; t=1567946578;
+        bh=WUYooGrCEDe8VW9BAEf19OtWWMbZj/Ab7oU1AJQaYIA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mlt9b2DFesaKBtMopYQgiUt6PcwJ8vcWSB31NeFZWRGfey/5PvHX7KPn+QClDl6Lc
-         n9LoWGEcCx27sk04rNJqwWqbOjEWRt27BO2MIHRCt/tWWV4Qso7qI1NwdliHzhpb03
-         ieTDFlpLw9TUhwXssGb+VXfeSCy9RE0ZboEisKs4=
+        b=ObvHlIsj4WwBxYvWBZCGUNo1FqDJTOxMFmF7oRm+nLD8UMsY0yYz7JRMictTU0Lep
+         I0PuOXA7y7uBLfvwGaV9OZlTFvzuJJBSCmVAJfe5Q2Z/sEbFY6ZOlX5IBjzBe7wlb4
+         HrUYZEMKWOAbFGagGVmPFeRMB0xiJKQ1vgcZnv74=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tho Vu <tho.vu.wh@rvc.renesas.com>,
-        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 11/23] ravb: Fix use-after-free ravb_tstamp_skb
-Date:   Sun,  8 Sep 2019 13:41:46 +0100
-Message-Id: <20190908121057.045577967@linuxfoundation.org>
+Subject: [PATCH 4.4 12/23] Tools: hv: kvp: eliminate may be used uninitialized warning
+Date:   Sun,  8 Sep 2019 13:41:47 +0100
+Message-Id: <20190908121058.583528895@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121052.898169328@linuxfoundation.org>
 References: <20190908121052.898169328@linuxfoundation.org>
@@ -62,67 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cfef46d692efd852a0da6803f920cc756eea2855 ]
+[ Upstream commit 89eb4d8d25722a0a0194cf7fa47ba602e32a6da7 ]
 
-When a Tx timestamp is requested, a pointer to the skb is stored in the
-ravb_tstamp_skb struct. This was done without an skb_get. There exists
-the possibility that the skb could be freed by ravb_tx_free (when
-ravb_tx_free is called from ravb_start_xmit) before the timestamp was
-processed, leading to a use-after-free bug.
+When building hv_kvp_daemon GCC-8.3 complains:
 
-Use skb_get when filling a ravb_tstamp_skb struct, and add appropriate
-frees/consumes when a ravb_tstamp_skb struct is freed.
+hv_kvp_daemon.c: In function ‘kvp_get_ip_info.constprop’:
+hv_kvp_daemon.c:812:30: warning: ‘ip_buffer’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+  struct hv_kvp_ipaddr_value *ip_buffer;
 
-Fixes: c156633f1353 ("Renesas Ethernet AVB driver proper")
-Signed-off-by: Tho Vu <tho.vu.wh@rvc.renesas.com>
-Signed-off-by: Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+this seems to be a false positive: we only use ip_buffer when
+op == KVP_OP_GET_IP_INFO and it is only unset when op == KVP_OP_ENUMERATE.
+
+Silence the warning by initializing ip_buffer to NULL.
+
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/renesas/ravb_main.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ tools/hv/hv_kvp_daemon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
-index 29d31eb995d7f..fedfd94699cb8 100644
---- a/drivers/net/ethernet/renesas/ravb_main.c
-+++ b/drivers/net/ethernet/renesas/ravb_main.c
-@@ -1,6 +1,6 @@
- /* Renesas Ethernet AVB device driver
-  *
-- * Copyright (C) 2014-2015 Renesas Electronics Corporation
-+ * Copyright (C) 2014-2019 Renesas Electronics Corporation
-  * Copyright (C) 2015 Renesas Solutions Corp.
-  * Copyright (C) 2015 Cogent Embedded, Inc. <source@cogentembedded.com>
-  *
-@@ -501,7 +501,10 @@ static void ravb_get_tx_tstamp(struct net_device *ndev)
- 			kfree(ts_skb);
- 			if (tag == tfa_tag) {
- 				skb_tstamp_tx(skb, &shhwtstamps);
-+				dev_consume_skb_any(skb);
- 				break;
-+			} else {
-+				dev_kfree_skb_any(skb);
- 			}
- 		}
- 		ravb_write(ndev, ravb_read(ndev, TCCR) | TCCR_TFR, TCCR);
-@@ -1382,7 +1385,7 @@ static netdev_tx_t ravb_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 					 DMA_TO_DEVICE);
- 			goto unmap;
- 		}
--		ts_skb->skb = skb;
-+		ts_skb->skb = skb_get(skb);
- 		ts_skb->tag = priv->ts_skb_tag++;
- 		priv->ts_skb_tag &= 0x3ff;
- 		list_add_tail(&ts_skb->list, &priv->ts_skb_list);
-@@ -1514,6 +1517,7 @@ static int ravb_close(struct net_device *ndev)
- 	/* Clear the timestamp list */
- 	list_for_each_entry_safe(ts_skb, ts_skb2, &priv->ts_skb_list, list) {
- 		list_del(&ts_skb->list);
-+		kfree_skb(ts_skb->skb);
- 		kfree(ts_skb);
- 	}
- 
+diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
+index fffc7c4184599..834008639c4bb 100644
+--- a/tools/hv/hv_kvp_daemon.c
++++ b/tools/hv/hv_kvp_daemon.c
+@@ -878,7 +878,7 @@ kvp_get_ip_info(int family, char *if_name, int op,
+ 	int sn_offset = 0;
+ 	int error = 0;
+ 	char *buffer;
+-	struct hv_kvp_ipaddr_value *ip_buffer;
++	struct hv_kvp_ipaddr_value *ip_buffer = NULL;
+ 	char cidr_mask[5]; /* /xyz */
+ 	int weight;
+ 	int i;
 -- 
 2.20.1
 
