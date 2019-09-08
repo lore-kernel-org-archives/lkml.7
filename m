@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D095CC4360D
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 09:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D4DC433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 09:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A99A721479
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 09:25:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CD2221479
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 09:29:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567934708;
-	bh=PCTAy83waN3ZgE9Lk46050Vd0yttrDaO/Vn+ZQT+h+g=;
+	s=default; t=1567934958;
+	bh=g3MzwCNbs4e/QTBt4lYQwYk1fLLibbwie2HBzi2uKSA=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=0UUsA3vxIps/lqtWVKMPvrK2KFVw5s1c0VDZsLS83E/3zU6TYp2Kmza26cSUPI37M
-	 JGAEjJQapETFM9GvcY6TWxr6zrIYliRGOIGGX8L4lB3Ey1ehnfIqOlxka9srFXTsEF
-	 c8dhVnMD1f+HSmAOsD6RNA1IdgTYMhMZjrg4CqIE=
+	b=lc/f+GlMCbqAlRggXsejXsJj5ZHeMoF+itmFBd4WtN7ovxmrdpkQRG88pCu29idTX
+	 rsa80yBloCI9/j6vTC+21a6mkd4Xq45mVafmaZ7VYY37iI7lqluLiAcRQVgiG1jacE
+	 y7SftpweGs+ohlBfUW6m56CB/41Q5UMK0asE/Hho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbfIHJZF (ORCPT
+        id S1727913AbfIHJ3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 05:25:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50640 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 05:29:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727608AbfIHJZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 05:25:04 -0400
+        id S1727018AbfIHJ3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 05:29:17 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 663E520863;
-        Sun,  8 Sep 2019 09:25:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EBFE20863;
+        Sun,  8 Sep 2019 09:29:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567934703;
-        bh=PCTAy83waN3ZgE9Lk46050Vd0yttrDaO/Vn+ZQT+h+g=;
+        s=default; t=1567934956;
+        bh=g3MzwCNbs4e/QTBt4lYQwYk1fLLibbwie2HBzi2uKSA=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YSKEmhtTLs+xsDKKy+f3CokAyyeMnOktDvQHiJwmlxpczkT5JazPpu+TUCdsF/Jq5
-         +tdNOVQdP185EAVZ4H42WOS9GRNnKqieWtoBLDs1F+uEmKsnLFFH58gc8EvrP+GKjD
-         F85oWwxbK9oqbXGWqVVl8ZmQx3SLVLQjC2ySc4uU=
-Date:   Sun, 8 Sep 2019 10:24:58 +0100
+        b=ixfILe8lZ19CywYVxuO2JOuSLRqrUR8pMi3EHFJiPb4E1IPioKe2bQOk4+jRO7jMf
+         rSV6in/ryJZMLXdqQoJDwgTsgoG1oACM8LVZrfJxB/7yuwGw3v9DAW4rMLJ2UEGc+d
+         7OFtJPVwrtodmH7qLN0xt+ghp+IN6IfAUbVLrVDA=
+Date:   Sun, 8 Sep 2019 10:29:11 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
 To:     Stefan Popa <stefan.popa@analog.com>
 Cc:     <Michael.Hennerich@analog.com>, <knaack.h@gmx.de>,
         <lars@metafoo.de>, <pmeerw@pmeerw.net>,
         <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH 1/3] iio: accel: adxl372: Fix/remove limitation for FIFO
+Subject: Re: [PATCH 2/3] iio: accel: adxl372: Fix push to buffers lost
  samples
-Message-ID: <20190908102458.7ef6f1ed@archlinux>
-In-Reply-To: <1567502287-10199-1-git-send-email-stefan.popa@analog.com>
-References: <1567502287-10199-1-git-send-email-stefan.popa@analog.com>
+Message-ID: <20190908102911.17981f71@archlinux>
+In-Reply-To: <1567502313-10314-1-git-send-email-stefan.popa@analog.com>
+References: <1567502313-10314-1-git-send-email-stefan.popa@analog.com>
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -59,56 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 3 Sep 2019 12:18:07 +0300
+On Tue, 3 Sep 2019 12:18:33 +0300
 Stefan Popa <stefan.popa@analog.com> wrote:
 
-> Currently, the driver sets the FIFO_SAMPLES register with the number of
-> sample sets (maximum of 170 for 3 axis data, 256 for 2-axis and 512 for
-> single axis). However, the FIFO_SAMPLES register should store the number
-> of samples, regardless of how the FIFO format is configured.
+> One in two sample sets was lost by multiplying fifo_set_size with
+> sizeof(u16). Also, the double number of available samples were pushed to
+> the iio buffers.
 > 
 > Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+Looks right to me.   Will pick up once we've resolved the questions
+on patch 1.
 
-This st->watermark field is also used to provide the hwfifo_watermark
-sysfs attribute value.   That value should be 'sets' not individual
-samples.  I'm not sure that's the case here.  Note this also effects
-the max and min values which will change depending on which channels
-are enabled.
-
-I've just checked the docs and watermark is clearly stated to be in
-scans but the hwfifo_watermark is not.   Which is unfortunate if
-there are drivers interpreting it as being in samples as a result.
-
-I haven't looked yet to see what other drivers have this interpreted
-as...
-
-Gah.
+Thanks,
 
 Jonathan
 
-
 > ---
->  drivers/iio/accel/adxl372.c | 9 ---------
->  1 file changed, 9 deletions(-)
+>  drivers/iio/accel/adxl372.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
 > diff --git a/drivers/iio/accel/adxl372.c b/drivers/iio/accel/adxl372.c
-> index 055227cb..adec37b 100644
+> index adec37b..72d3f45 100644
 > --- a/drivers/iio/accel/adxl372.c
 > +++ b/drivers/iio/accel/adxl372.c
-> @@ -805,15 +805,6 @@ static int adxl372_buffer_postenable(struct iio_dev *indio_dev)
->  	st->fifo_format = adxl372_axis_lookup_table[i].fifo_format;
->  	st->fifo_set_size = bitmap_weight(indio_dev->active_scan_mask,
->  					  indio_dev->masklength);
-> -	/*
-> -	 * The 512 FIFO samples can be allotted in several ways, such as:
-> -	 * 170 sample sets of concurrent 3-axis data
-> -	 * 256 sample sets of concurrent 2-axis data (user selectable)
-> -	 * 512 sample sets of single-axis data
-> -	 */
-> -	if ((st->watermark * st->fifo_set_size) > ADXL372_FIFO_SIZE)
-> -		st->watermark = (ADXL372_FIFO_SIZE  / st->fifo_set_size);
-> -
->  	st->fifo_mode = ADXL372_FIFO_STREAMED;
+> @@ -548,8 +548,7 @@ static irqreturn_t adxl372_trigger_handler(int irq, void  *p)
+>  			goto err;
 >  
->  	ret = adxl372_configure_fifo(st);
+>  		/* Each sample is 2 bytes */
+> -		for (i = 0; i < fifo_entries * sizeof(u16);
+> -		     i += st->fifo_set_size * sizeof(u16))
+> +		for (i = 0; i < fifo_entries; i += st->fifo_set_size)
+>  			iio_push_to_buffers(indio_dev, &st->fifo_buf[i]);
+>  	}
+>  err:
 
