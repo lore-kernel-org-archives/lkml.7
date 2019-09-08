@@ -2,139 +2,137 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8373CC4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E40C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B88E207FC
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:49:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567950568;
-	bh=uc60KOZWV5guRBPrvX5cZcJk9hyhbSRiAGv78v+FNz8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=DGRWEBgcDRuHI7Kz69GhB2DmY+WGCMdlvTvGbF81RagZmPUgoa1PxXkjYfbpuNGDp
-	 f+rsn3AFa9PhMiI//Jc85mjKBDeFuUtoAbJ1yOV9oQI3Q76LkZqxKrxohJzcSqsvU/
-	 RAIAI9C83b07C0oN/l06SuSpkimL54t2gTxBKzTA=
+	by mail.kernel.org (Postfix) with ESMTP id F0900207FC
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:51:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gVLsd+T0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728744AbfIHNt1 (ORCPT
+        id S1728774AbfIHNvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 09:49:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35630 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726462AbfIHNt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 09:49:27 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BB6020854;
-        Sun,  8 Sep 2019 13:49:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567950566;
-        bh=uc60KOZWV5guRBPrvX5cZcJk9hyhbSRiAGv78v+FNz8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=H+sDSlQQC6cTC/DJSI2an1gJzM2V0TZrScPZGYOJyd43jn9jn+ovbKGg06cI/qBub
-         dbU9o2OOaRGGZTBvFwLfly1SyETu7UwMFRggWGsH3A9I/C8KWWjc1oFKyzjQ//yrUz
-         UQuVe5foCRNmCNJC+VwnqN87kjzPo+eW4pNO/J84=
-Date:   Sun, 8 Sep 2019 14:49:22 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Andreas Klinger <ak@it-klinger.de>
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] iio: adc: hx711: optimize sampling of data
-Message-ID: <20190908144922.51ba448e@archlinux>
-In-Reply-To: <20190907101759.kft6xwsqc5lf4acq@arbad>
-References: <20190907101759.kft6xwsqc5lf4acq@arbad>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 8 Sep 2019 09:51:31 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:44774 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728068AbfIHNva (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 09:51:30 -0400
+Received: by mail-ua1-f67.google.com with SMTP id z8so3446512uaq.11
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 06:51:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/OjUEd4QSp7PdF6VW4aQrBE3Z+/uVpO6ArZ5TFedKOc=;
+        b=gVLsd+T0GXYo4KXD8R+kiCVmUyc3iXlvJ5SL3N90TjeV223lfZq0lpVImmm1TQPLvr
+         biVG3B/n3OMziPN/L+IVvhgX7Ge1Bk7hcW/JG/CkZ9zrfy4+DonIP5+MTrsf/9lW9zj+
+         GDyNN76Ur/2fW2BBK/M7SqE9yXZfqSEsSHkh4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/OjUEd4QSp7PdF6VW4aQrBE3Z+/uVpO6ArZ5TFedKOc=;
+        b=p4uIUfBB1nkAbLkOmiApCFc8jKarxk7RngsOgfTQ3kaaqd8fETDIAd9Of1siBxpcoB
+         9aMgP8R6wcZyR5E78OVKuTqIOHM2S+nGsSZUn7zO+tOaAAi2FNtgiGKKlj5q6Hai9oB2
+         QgexKMkU+dDvFTq59CTwl3jGLhhdIY4IiiLA1lmJyHXyGbY/sEq9cgCiiXXAvB7rOAni
+         aRA9XLoMxSUuj2eSiRLmOkEUtnSbRpa5esUhwoe9CYWMEEL1ghpmMSawjtKnCtv2zZYc
+         2cxsxSKie2vOQUdAXyMC1QttlcSrbdumfKdfIr3phCZ7ZsEqIuwvIe6W5gZevrkwvtKQ
+         r3Ww==
+X-Gm-Message-State: APjAAAW2Rh3sht/Phi+1IAwiCHWbzsfPB8RlxgXNCBeZxr4a1xKbpZyK
+        Enx0NggGgSUX7v2Q6uotKWESFoP/w9+7cK5LvVuMRQ==
+X-Google-Smtp-Source: APXvYqz0WcmHMeiK6IT+v7kmZTAGTgr1Hd/fvxS4YbL4elq2hJMpg584VDsJiFFWnsbRAAo6uqeDZQp5p3+XGhBLzrU=
+X-Received: by 2002:ab0:7c3:: with SMTP id d3mr8981573uaf.131.1567950687342;
+ Sun, 08 Sep 2019 06:51:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190717083327.47646-1-cychiang@chromium.org> <CA+Px+wX4gbntkd6y8NN8xwXpZLD4MH9rTeHcW9+Ndtw=3_mWBw@mail.gmail.com>
+ <CAFv8NwLiY+ro0L4c5vjSOGN8jA-Qr4zm2OWvVHkiuoa7_4e2Fg@mail.gmail.com>
+In-Reply-To: <CAFv8NwLiY+ro0L4c5vjSOGN8jA-Qr4zm2OWvVHkiuoa7_4e2Fg@mail.gmail.com>
+From:   Cheng-yi Chiang <cychiang@chromium.org>
+Date:   Sun, 8 Sep 2019 21:51:01 +0800
+Message-ID: <CAFv8NwJjG4mwfnYO=M3O9nZN48D6aY72nQuqEFpZL68dh5727w@mail.gmail.com>
+Subject: Re: [PATCH v5 0/5] Add HDMI jack support on RK3288
+To:     Tzung-Bi Shih <tzungbi@google.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Douglas Anderson <dianders@chromium.org>,
+        Dylan Reid <dgreid@chromium.org>, tzungbi@chromium.org,
+        ALSA development <alsa-devel@alsa-project.org>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 7 Sep 2019 12:18:00 +0200
-Andreas Klinger <ak@it-klinger.de> wrote:
+On Fri, Aug 30, 2019 at 10:55 AM Cheng-yi Chiang <cychiang@chromium.org> wrote:
+>
+> On Wed, Jul 17, 2019 at 6:28 PM Tzung-Bi Shih <tzungbi@google.com> wrote:
+> >
+> > On Wed, Jul 17, 2019 at 4:33 PM Cheng-Yi Chiang <cychiang@chromium.org> wrote:
+> > >
+> > > This patch series supports HDMI jack reporting on RK3288, which uses
+> > > DRM dw-hdmi driver and hdmi-codec codec driver.
+> > >
+> > > The previous discussion about reporting jack status using hdmi-notifier
+> > > and drm_audio_component is at
+> > >
+> > > https://lore.kernel.org/patchwork/patch/1083027/
+> > >
+> > > The new approach is to use a callback mechanism that is
+> > > specific to hdmi-codec.
+> > >
+> > > Changes from v4 to v5:
+> > > - synopsys/Kconfig: Remove the incorrect dependency change in v4.
+> > > - rockchip/Kconfig: Add dependency of hdmi-codec when it is really need
+> > >   for jack support.
+> > >
+> > > Cheng-Yi Chiang (5):
+> > >   ASoC: hdmi-codec: Add an op to set callback function for plug event
+> > >   drm: bridge: dw-hdmi: Report connector status using callback
+> > >   drm: dw-hdmi-i2s: Use fixed id for codec device
+> > >   ASoC: rockchip_max98090: Add dai_link for HDMI
+> > >   ASoC: rockchip_max98090: Add HDMI jack support
+> > >
+> > LGTM.
+> >
+> > Reviewed-by: Tzung-Bi Shih <tzungbi@google.com>
+>
+> Hi Daniel,
+> Do you have further concern on this patch series related to hdmi-codec
+> and drm part ?
+> We would like to merge this patch series if possible.
+> They will be needed in many future chrome projects for HDMI audio jack
+> detection.
+> Thanks a lot!
 
-> Fix bug in sampling function hx711_cycle() when interrupt occures while
-> PD_SCK is high. If PD_SCK is high for at least 60 us power down mode of
-> the sensor is entered which in turn leads to a wrong measurement.
-> 
-> Move query of DOUT at the latest point of time which is at the end of
-> PD_SCK low period.
-> 
-> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+Hi Neil,
+I am not sure if this patch series is under your radar.
+Would you mind taking a look ?
+This patch series has been following great suggestions from various
+reviewers, so I hope it is fine now.
 
-Hi Andreas,
-
-One thing I'm not clear on from these is how much a 'fix' they
-are.  That just effects whether we mark them for stable / push them
-out as quickly as possible or not.  So has this been seen in 
-normal operation?
-
-+ please add fixes tags to the two fixes.
-
-For patch 3, it's in the very low importance category so it may
-well get forgotten if these two go through the fixes tree
-(up to you to remind me!)
-
-Thanks,
-
-Jonathan
-
-> ---
->  drivers/iio/adc/hx711.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/hx711.c b/drivers/iio/adc/hx711.c
-> index 88c7fe15003b..0678964dbd21 100644
-> --- a/drivers/iio/adc/hx711.c
-> +++ b/drivers/iio/adc/hx711.c
-> @@ -101,13 +101,14 @@ struct hx711_data {
->  static int hx711_cycle(struct hx711_data *hx711_data)
->  {
->  	int val;
-> +	unsigned long flags;
->  
->  	/*
->  	 * if preempted for more then 60us while PD_SCK is high:
->  	 * hx711 is going in reset
->  	 * ==> measuring is false
->  	 */
-> -	preempt_disable();
-> +	local_irq_save(flags);
->  	gpiod_set_value(hx711_data->gpiod_pd_sck, 1);
->  
->  	/*
-> @@ -117,7 +118,6 @@ static int hx711_cycle(struct hx711_data *hx711_data)
->  	 */
->  	ndelay(hx711_data->data_ready_delay_ns);
->  
-> -	val = gpiod_get_value(hx711_data->gpiod_dout);
->  	/*
->  	 * here we are not waiting for 0.2 us as suggested by the datasheet,
->  	 * because the oscilloscope showed in a test scenario
-> @@ -125,7 +125,7 @@ static int hx711_cycle(struct hx711_data *hx711_data)
->  	 * and 0.56 us for PD_SCK low on TI Sitara with 800 MHz
->  	 */
->  	gpiod_set_value(hx711_data->gpiod_pd_sck, 0);
-> -	preempt_enable();
-> +	local_irq_restore(flags);
->  
->  	/*
->  	 * make it a square wave for addressing cases with capacitance on
-> @@ -133,7 +133,8 @@ static int hx711_cycle(struct hx711_data *hx711_data)
->  	 */
->  	ndelay(hx711_data->data_ready_delay_ns);
->  
-> -	return val;
-> +	/* sample as late as possible */
-> +	return gpiod_get_value(hx711_data->gpiod_dout);
->  }
->  
->  static int hx711_read(struct hx711_data *hx711_data)
-
+Audio jack reporting for HDMI might not be needed for other OS, but it
+is a must on ChromeOS.
+We have many previous projects using different local patch sets to
+achieve HDMI jack reporting.
+I hope that we can achieve a proper way and really get the patches
+merged to mainline.
+Thanks a lot!
