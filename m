@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE82DC433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D479C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92896218AF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:46:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FFA0216C8
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:46:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946769;
-	bh=eux4fIGlT+5peVgOwVIJoXwTvuLrYXt5ySKlTBOOM2M=;
+	s=default; t=1567946773;
+	bh=Tk8dIqRke1IbYjoHn69l7nfqUpiVrAjm93Y2qhs4iEs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yLBETZ66Pf7w5Wip4UBrlkSUVR3MXQzVimSaKEJPvw3iDxrGIWt6HGheufh/V+12e
-	 1xfFz82JKR5QJZl8amIwb/c9LeoZpX9xXZ9QrGZ3xeX+HPpuZoeBpLQqKzZtxVkBdg
-	 45Op5OLJ0DZYD3FbnCzRr6+45jmRqRS9JEFVY1Q0=
+	b=0GlNiJsJDtsODsE+RQ174vWhx6HiqejI+ObT2imsoyMxXOHyeXjRfSkCFSyYDoT0y
+	 Y0LEimMxt8XaHUIbeElwsZrUqb6IVxgqygi9kSFFaGwjPkaUqtJUjWFElzWdUbop6o
+	 l8o9McFq/hP4h1KcRJVWP1hLPOS3TYwcG3IysiPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730171AbfIHMqI (ORCPT
+        id S1730306AbfIHMqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:46:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33474 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:46:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730281AbfIHMqE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:46:04 -0400
+        id S1729546AbfIHMqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:46:06 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43D5C20644;
-        Sun,  8 Sep 2019 12:46:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0FB6218AF;
+        Sun,  8 Sep 2019 12:46:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946763;
-        bh=eux4fIGlT+5peVgOwVIJoXwTvuLrYXt5ySKlTBOOM2M=;
+        s=default; t=1567946766;
+        bh=Tk8dIqRke1IbYjoHn69l7nfqUpiVrAjm93Y2qhs4iEs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ie5CUb+5EU6OTELYUKnSMThPg8hc+wmBSzMl1wLdv7uPBD+AGW7FBg9SFYAqxv6lg
-         0P6evliIt+BcH3sNCai+LDguoqSfrKID+7tuyDQ/VsnanXdiGVob4MPoevx59BeKYu
-         aASCOxOfLtEF1NZuehgxD+n/POBwJjHLGpohSWQM=
+        b=sHNmXYtlkXIcklvft5B3/GW6uSryojaijvizssE9t8AKXRw5GOaFILg3I1qBNaCo2
+         y8hKXXAC0kpmGebbzvLomwQ5sLbwFXYRb72ZJvF2cdwIdbKDvwSJEEQ1G81HGkBshD
+         IorQY1OvNaev7UkDXf825jKM3DMtbhKvn0UPD40k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hubert Denkmair <h.denkmair@intence.de>,
-        Martin Sperl <kernel@martin.sperl.org>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Fabian Henneke <fabian.henneke@gmail.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 31/40] spi: bcm2835aux: fix corruptions for longer spi transfers
-Date:   Sun,  8 Sep 2019 13:42:04 +0100
-Message-Id: <20190908121128.572126490@linuxfoundation.org>
+Subject: [PATCH 4.14 05/40] Bluetooth: hidp: Let hidp_send_message return number of queued bytes
+Date:   Sun,  8 Sep 2019 13:41:38 +0100
+Message-Id: <20190908121115.759608557@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121114.260662089@linuxfoundation.org>
 References: <20190908121114.260662089@linuxfoundation.org>
@@ -62,60 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 73b114ee7db1750c0b535199fae383b109bd61d0 ]
+[ Upstream commit 48d9cc9d85dde37c87abb7ac9bbec6598ba44b56 ]
 
-On long running tests with a mcp2517fd can controller it showed that
-on rare occations the data read shows corruptions for longer spi transfers.
+Let hidp_send_message return the number of successfully queued bytes
+instead of an unconditional 0.
 
-Example of a 22 byte transfer:
+With the return value fixed to 0, other drivers relying on hidp, such as
+hidraw, can not return meaningful values from their respective
+implementations of write(). In particular, with the current behavior, a
+hidraw device's write() will have different return values depending on
+whether the device is connected via USB or Bluetooth, which makes it
+harder to abstract away the transport layer.
 
-expected (as captured on logic analyzer):
-FF FF 78 00 00 00 08 06 00 00 91 20 77 56 84 85 86 87 88 89 8a 8b
-
-read by the driver:
-FF FF 78 00 00 00 08 06 00 00 91 20 77 56 84 88 89 8a 00 00 8b 9b
-
-To fix this use BCM2835_AUX_SPI_STAT_RX_LVL to determine when we may
-read data from the fifo reliably without any corruption.
-
-Surprisingly the only values ever empirically read in
-BCM2835_AUX_SPI_STAT_RX_LVL are 0x00, 0x10, 0x20 and 0x30.
-So whenever the mask is not 0 we can read from the fifo in a safe manner.
-
-The patch has now been tested intensively and we are no longer
-able to reproduce the "RX" issue any longer.
-
-Fixes: 1ea29b39f4c812ec ("spi: bcm2835aux: add bcm2835 auxiliary spi device...")
-Reported-by: Hubert Denkmair <h.denkmair@intence.de>
-Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
-Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Fabian Henneke <fabian.henneke@gmail.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-bcm2835aux.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ net/bluetooth/hidp/core.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-bcm2835aux.c b/drivers/spi/spi-bcm2835aux.c
-index 4454d9c6a3dd4..5c89bbb05441b 100644
---- a/drivers/spi/spi-bcm2835aux.c
-+++ b/drivers/spi/spi-bcm2835aux.c
-@@ -180,12 +180,12 @@ static void bcm2835aux_spi_reset_hw(struct bcm2835aux_spi *bs)
- 
- static void bcm2835aux_spi_transfer_helper(struct bcm2835aux_spi *bs)
+diff --git a/net/bluetooth/hidp/core.c b/net/bluetooth/hidp/core.c
+index b21fcc838784d..f6bffb3a95116 100644
+--- a/net/bluetooth/hidp/core.c
++++ b/net/bluetooth/hidp/core.c
+@@ -101,6 +101,7 @@ static int hidp_send_message(struct hidp_session *session, struct socket *sock,
  {
-+	u32 stat = bcm2835aux_rd(bs, BCM2835_AUX_SPI_STAT);
-+
- 	/* check if we have data to read */
--	while (bs->rx_len &&
--	       (!(bcm2835aux_rd(bs, BCM2835_AUX_SPI_STAT) &
--		  BCM2835_AUX_SPI_STAT_RX_EMPTY))) {
-+	for (; bs->rx_len && (stat & BCM2835_AUX_SPI_STAT_RX_LVL);
-+	     stat = bcm2835aux_rd(bs, BCM2835_AUX_SPI_STAT))
- 		bcm2835aux_rd_fifo(bs);
--	}
+ 	struct sk_buff *skb;
+ 	struct sock *sk = sock->sk;
++	int ret;
  
- 	/* check if we have data to write */
- 	while (bs->tx_len &&
+ 	BT_DBG("session %p data %p size %d", session, data, size);
+ 
+@@ -114,13 +115,17 @@ static int hidp_send_message(struct hidp_session *session, struct socket *sock,
+ 	}
+ 
+ 	skb_put_u8(skb, hdr);
+-	if (data && size > 0)
++	if (data && size > 0) {
+ 		skb_put_data(skb, data, size);
++		ret = size;
++	} else {
++		ret = 0;
++	}
+ 
+ 	skb_queue_tail(transmit, skb);
+ 	wake_up_interruptible(sk_sleep(sk));
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ static int hidp_send_ctrl_message(struct hidp_session *session,
 -- 
 2.20.1
 
