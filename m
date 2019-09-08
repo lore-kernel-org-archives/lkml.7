@@ -2,53 +2,56 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D31C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF02EC433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E0C9218AC
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B46FF21971
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:53:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947186;
-	bh=SHPKLkyJkeRbcX+FRqPqt5fBERaFbyTjQBQ+1tmaYwo=;
+	s=default; t=1567947191;
+	bh=sMY8CX+ke/0X1cozkbi0shNM3husLo0be0Fv4RKdw+E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xrA4T2iVLI6Ndd3tvgXqFWlFs5BjuoB9UWV60hEWGfJSFIsj1AMes8HfFmVA9k+cx
-	 vsjDsFHv+kaIhkXvN3llTOZ4qyBbe5H3Bp6CDOlQQZ++D+FQRYGR4zGGfMC3OF7K1O
-	 MfoJHbC+QNuTqDUb0Nl3taJnF8abK3BpwpVhMAu0=
+	b=tGulbziz3o4eDTuYQwP2VSipcflpPJ47uvCTvOfngfZ/eOnaIFwElaD/yef201Sri
+	 8j/m00IX6bSWJrfjL2Ii8or7ZcpMi7zRU9hyWbUg0xuW4+YAmdin2t/oilFXn6S+1I
+	 oV3FunKwYB+qFRON+ikvLXy5X94RNO3OXbczwgH8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387425AbfIHMxF (ORCPT
+        id S2387497AbfIHMxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:53:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45774 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:53:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733282AbfIHMxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:53:03 -0400
+        id S2387448AbfIHMxI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:53:08 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC9AC218AC;
-        Sun,  8 Sep 2019 12:53:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C617E218AC;
+        Sun,  8 Sep 2019 12:53:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567947183;
-        bh=SHPKLkyJkeRbcX+FRqPqt5fBERaFbyTjQBQ+1tmaYwo=;
+        s=default; t=1567947188;
+        bh=sMY8CX+ke/0X1cozkbi0shNM3husLo0be0Fv4RKdw+E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2I2LPIRNQSXg19Pg/JPRCiG2NVz4s/pegRxm7LZmNhN7xU0z3pfVnsU5AacQjCjJC
-         byvbS1/NhPfcMXgCA2kobfmlppjMbQXLWVVqraojLM7iiwLRJxgwwtsoD6R8redsqB
-         L/81DQKI3vkPna9L9vHHSnx/7T2ddZ5GLNtOPsqg=
+        b=WuwVJPWELoSMcaN/5ZROyvgF3ZZElyCQV7Ki8O8pvPMh8F8r+wEmZtn+mCMVow5Ei
+         /mxs2wVrfs3zqM07vzvUZ9GAJFo/GjMCuJgV9XSft1hRcvo28xYTAlTko5sWNPWJuK
+         3T8i2I8K6LjmivC8o9t1T1e3AF8xWW434nr85X1U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luis Henriques <lhenriques@suse.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 91/94] libceph: allow ceph_buffer_put() to receive a NULL ceph_buffer
-Date:   Sun,  8 Sep 2019 13:42:27 +0100
-Message-Id: <20190908121153.033078574@linuxfoundation.org>
+        stable@vger.kernel.org, "John S. Gruber" <JohnSGruber@gmail.com>,
+        Borislav Petkov <bp@suse.de>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        Mark Brown <broonie@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>
+Subject: [PATCH 5.2 93/94] x86/boot: Preserve boot_params.secure_boot from sanitizing
+Date:   Sun,  8 Sep 2019 13:42:29 +0100
+Message-Id: <20190908121153.089539744@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
 References: <20190908121150.420989666@linuxfoundation.org>
@@ -61,32 +64,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5c498950f730aa17c5f8a2cdcb903524e4002ed2 ]
+From: John S. Gruber <JohnSGruber@gmail.com>
 
-Signed-off-by: Luis Henriques <lhenriques@suse.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+commit 29d9a0b50736768f042752070e5cdf4e4d4c00df upstream.
+
+Commit
+
+  a90118c445cc ("x86/boot: Save fields explicitly, zero out everything else")
+
+now zeroes the secure boot setting information (enabled/disabled/...)
+passed by the boot loader or by the kernel's EFI handover mechanism.
+
+The problem manifests itself with signed kernels using the EFI handoff
+protocol with grub and the kernel loses the information whether secure
+boot is enabled in the firmware, i.e., the log message "Secure boot
+enabled" becomes "Secure boot could not be determined".
+
+efi_main() arch/x86/boot/compressed/eboot.c sets this field early but it
+is subsequently zeroed by the above referenced commit.
+
+Include boot_params.secure_boot in the preserve field list.
+
+ [ bp: restructure commit message and massage. ]
+
+Fixes: a90118c445cc ("x86/boot: Save fields explicitly, zero out everything else")
+Signed-off-by: John S. Gruber <JohnSGruber@gmail.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: stable <stable@vger.kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/CAPotdmSPExAuQcy9iAHqX3js_fc4mMLQOTr5RBGvizyCOPcTQQ@mail.gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- include/linux/ceph/buffer.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/bootparam_utils.h |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/ceph/buffer.h b/include/linux/ceph/buffer.h
-index 5e58bb29b1a36..11cdc7c60480f 100644
---- a/include/linux/ceph/buffer.h
-+++ b/include/linux/ceph/buffer.h
-@@ -30,7 +30,8 @@ static inline struct ceph_buffer *ceph_buffer_get(struct ceph_buffer *b)
- 
- static inline void ceph_buffer_put(struct ceph_buffer *b)
- {
--	kref_put(&b->kref, ceph_buffer_release);
-+	if (b)
-+		kref_put(&b->kref, ceph_buffer_release);
- }
- 
- extern int ceph_decode_buffer(struct ceph_buffer **b, void **p, void *end);
--- 
-2.20.1
-
+--- a/arch/x86/include/asm/bootparam_utils.h
++++ b/arch/x86/include/asm/bootparam_utils.h
+@@ -70,6 +70,7 @@ static void sanitize_boot_params(struct
+ 			BOOT_PARAM_PRESERVE(eddbuf_entries),
+ 			BOOT_PARAM_PRESERVE(edd_mbr_sig_buf_entries),
+ 			BOOT_PARAM_PRESERVE(edd_mbr_sig_buffer),
++			BOOT_PARAM_PRESERVE(secure_boot),
+ 			BOOT_PARAM_PRESERVE(hdr),
+ 			BOOT_PARAM_PRESERVE(e820_table),
+ 			BOOT_PARAM_PRESERVE(eddbuf),
 
 
