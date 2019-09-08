@@ -2,52 +2,51 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57385C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED5B4C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D332218AC
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C218D2190F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:47:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946846;
-	bh=qUm4Hz3UlfFJcoxfNGwaaABMr5AHGadsYX+6XAWtEKk=;
+	s=default; t=1567946851;
+	bh=SAHsHnMvyscJ7r82CopdaOIYpTmE+pyunMQT2p9mYVg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vlLWFtDsiLDdsIQ8Vv3Q8PmRCMqpFmodFqeyXojKnBdccZLhB9/YDRCg6cifu438x
-	 8I0zvqOoSNm23Iu2qX+theLpTw25FIH9+E/Uf1Tz1XML4ydh3OLQ5bRGUdLwk7MmpF
-	 PIQiohs9dCVn/w9g0yLEIdh2ADK0zO4lguYTZWEc=
+	b=Dxxj/6NIVY8ABcIFyB60Wryecyw/QV7JN0c0i7MV9QV1BH7Qf8SPbPSp77hPliFtn
+	 HQupaB5k2WNR5yBJZow8qPfBfFmAP9shHfXgcksrJJLkoSJbu1J7PErzV+c1yoyGWw
+	 W8kiKnsi36G+sC1yBNwJlQYO5mkbqpiBOPuEz7jQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729730AbfIHMrY (ORCPT
+        id S1730700AbfIHMra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:47:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35594 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:47:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730611AbfIHMrT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:47:19 -0400
+        id S1730670AbfIHMr1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:47:27 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCAD6218AC;
-        Sun,  8 Sep 2019 12:47:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE9B2218AC;
+        Sun,  8 Sep 2019 12:47:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946839;
-        bh=qUm4Hz3UlfFJcoxfNGwaaABMr5AHGadsYX+6XAWtEKk=;
+        s=default; t=1567946847;
+        bh=SAHsHnMvyscJ7r82CopdaOIYpTmE+pyunMQT2p9mYVg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yrLQ7IotFCX6xr8AHmA8JeB12CDEbv/OgSdfRlSXxaNm1ybfIZeIHAZRe6pcnoEz/
-         3IVqYU8X6cXMkt3Rz7p8hfMk+haTehSE1qfDcknZzyqcqESayQqcK58kdN50v77OBh
-         7gXwjvwKW2iqodKQ6HPxMDco4upZ99xuBUwTTCms=
+        b=nkv4jSiTT/hZkVgxIPI9w5ArJKwejJwyAMEw9tu+UuU5w5aZkA8k1X816WqklHymP
+         vEMCdXJ5Y7Xhfc9aNHTegrIIbOqm37KB8Y15FocBes0JapnFhb3JGkJ/ToHfttSlks
+         a56Le9uqVgmtcRtNIymngf1pnPZ8H55NicNzkfys=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Feng Sun <loyou85@gmail.com>,
-        Xiaojun Zhao <xiaojunzhao141@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 02/57] net: fix skb use after free in netpoll
-Date:   Sun,  8 Sep 2019 13:41:26 +0100
-Message-Id: <20190908121127.158072530@linuxfoundation.org>
+        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 22/57] netfilter: nft_flow_offload: skip tcp rst and fin packets
+Date:   Sun,  8 Sep 2019 13:41:46 +0100
+Message-Id: <20190908121134.633656644@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121125.608195329@linuxfoundation.org>
 References: <20190908121125.608195329@linuxfoundation.org>
@@ -60,90 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Feng Sun <loyou85@gmail.com>
+[ Upstream commit dfe42be15fde16232340b8b2a57c359f51cc10d9 ]
 
-[ Upstream commit 2c1644cf6d46a8267d79ed95cb9b563839346562 ]
+TCP rst and fin packets do not qualify to place a flow into the
+flowtable. Most likely there will be no more packets after connection
+closure. Without this patch, this flow entry expires and connection
+tracking picks up the entry in ESTABLISHED state using the fixup
+timeout, which makes this look inconsistent to the user for a connection
+that is actually already closed.
 
-After commit baeababb5b85d5c4e6c917efe2a1504179438d3b
-("tun: return NET_XMIT_DROP for dropped packets"),
-when tun_net_xmit drop packets, it will free skb and return NET_XMIT_DROP,
-netpoll_send_skb_on_dev will run into following use after free cases:
-1. retry netpoll_start_xmit with freed skb;
-2. queue freed skb in npinfo->txq.
-queue_process will also run into use after free case.
-
-hit netpoll_send_skb_on_dev first case with following kernel log:
-
-[  117.864773] kernel BUG at mm/slub.c:306!
-[  117.864773] invalid opcode: 0000 [#1] SMP PTI
-[  117.864774] CPU: 3 PID: 2627 Comm: loop_printmsg Kdump: loaded Tainted: P           OE     5.3.0-050300rc5-generic #201908182231
-[  117.864775] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
-[  117.864775] RIP: 0010:kmem_cache_free+0x28d/0x2b0
-[  117.864781] Call Trace:
-[  117.864781]  ? tun_net_xmit+0x21c/0x460
-[  117.864781]  kfree_skbmem+0x4e/0x60
-[  117.864782]  kfree_skb+0x3a/0xa0
-[  117.864782]  tun_net_xmit+0x21c/0x460
-[  117.864782]  netpoll_start_xmit+0x11d/0x1b0
-[  117.864788]  netpoll_send_skb_on_dev+0x1b8/0x200
-[  117.864789]  __br_forward+0x1b9/0x1e0 [bridge]
-[  117.864789]  ? skb_clone+0x53/0xd0
-[  117.864790]  ? __skb_clone+0x2e/0x120
-[  117.864790]  deliver_clone+0x37/0x50 [bridge]
-[  117.864790]  maybe_deliver+0x89/0xc0 [bridge]
-[  117.864791]  br_flood+0x6c/0x130 [bridge]
-[  117.864791]  br_dev_xmit+0x315/0x3c0 [bridge]
-[  117.864792]  netpoll_start_xmit+0x11d/0x1b0
-[  117.864792]  netpoll_send_skb_on_dev+0x1b8/0x200
-[  117.864792]  netpoll_send_udp+0x2c6/0x3e8
-[  117.864793]  write_msg+0xd9/0xf0 [netconsole]
-[  117.864793]  console_unlock+0x386/0x4e0
-[  117.864793]  vprintk_emit+0x17e/0x280
-[  117.864794]  vprintk_default+0x29/0x50
-[  117.864794]  vprintk_func+0x4c/0xbc
-[  117.864794]  printk+0x58/0x6f
-[  117.864795]  loop_fun+0x24/0x41 [printmsg_loop]
-[  117.864795]  kthread+0x104/0x140
-[  117.864795]  ? 0xffffffffc05b1000
-[  117.864796]  ? kthread_park+0x80/0x80
-[  117.864796]  ret_from_fork+0x35/0x40
-
-Signed-off-by: Feng Sun <loyou85@gmail.com>
-Signed-off-by: Xiaojun Zhao <xiaojunzhao141@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/netpoll.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/netfilter/nft_flow_offload.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/net/core/netpoll.c
-+++ b/net/core/netpoll.c
-@@ -122,7 +122,7 @@ static void queue_process(struct work_st
- 		txq = netdev_get_tx_queue(dev, q_index);
- 		HARD_TX_LOCK(dev, txq, smp_processor_id());
- 		if (netif_xmit_frozen_or_stopped(txq) ||
--		    netpoll_start_xmit(skb, dev, txq) != NETDEV_TX_OK) {
-+		    !dev_xmit_complete(netpoll_start_xmit(skb, dev, txq))) {
- 			skb_queue_head(&npinfo->txq, skb);
- 			HARD_TX_UNLOCK(dev, txq);
- 			local_irq_restore(flags);
-@@ -335,7 +335,7 @@ void netpoll_send_skb_on_dev(struct netp
+diff --git a/net/netfilter/nft_flow_offload.c b/net/netfilter/nft_flow_offload.c
+index 6e0c26025ab13..69decbe2c9884 100644
+--- a/net/netfilter/nft_flow_offload.c
++++ b/net/netfilter/nft_flow_offload.c
+@@ -71,11 +71,11 @@ static void nft_flow_offload_eval(const struct nft_expr *expr,
+ {
+ 	struct nft_flow_offload *priv = nft_expr_priv(expr);
+ 	struct nf_flowtable *flowtable = &priv->flowtable->data;
++	struct tcphdr _tcph, *tcph = NULL;
+ 	enum ip_conntrack_info ctinfo;
+ 	struct nf_flow_route route;
+ 	struct flow_offload *flow;
+ 	enum ip_conntrack_dir dir;
+-	bool is_tcp = false;
+ 	struct nf_conn *ct;
+ 	int ret;
  
- 				HARD_TX_UNLOCK(dev, txq);
+@@ -88,7 +88,10 @@ static void nft_flow_offload_eval(const struct nft_expr *expr,
  
--				if (status == NETDEV_TX_OK)
-+				if (dev_xmit_complete(status))
- 					break;
+ 	switch (ct->tuplehash[IP_CT_DIR_ORIGINAL].tuple.dst.protonum) {
+ 	case IPPROTO_TCP:
+-		is_tcp = true;
++		tcph = skb_header_pointer(pkt->skb, pkt->xt.thoff,
++					  sizeof(_tcph), &_tcph);
++		if (unlikely(!tcph || tcph->fin || tcph->rst))
++			goto out;
+ 		break;
+ 	case IPPROTO_UDP:
+ 		break;
+@@ -115,7 +118,7 @@ static void nft_flow_offload_eval(const struct nft_expr *expr,
+ 	if (!flow)
+ 		goto err_flow_alloc;
  
- 			}
-@@ -352,7 +352,7 @@ void netpoll_send_skb_on_dev(struct netp
- 
+-	if (is_tcp) {
++	if (tcph) {
+ 		ct->proto.tcp.seen[0].flags |= IP_CT_TCP_FLAG_BE_LIBERAL;
+ 		ct->proto.tcp.seen[1].flags |= IP_CT_TCP_FLAG_BE_LIBERAL;
  	}
- 
--	if (status != NETDEV_TX_OK) {
-+	if (!dev_xmit_complete(status)) {
- 		skb_queue_tail(&npinfo->txq, skb);
- 		schedule_delayed_work(&npinfo->tx_work,0);
- 	}
+-- 
+2.20.1
+
 
 
