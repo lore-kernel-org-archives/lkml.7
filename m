@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D55C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F66C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8195D21924
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:49:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F4AA218AC
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:49:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946982;
-	bh=W1koJkvkMYnVS+GM1B7GyDGkTgqgk2lOuB3FVKbM4qY=;
+	s=default; t=1567946987;
+	bh=LP2tWWU6SNcc0eaVpBGE6cJjoSO6JWYhOXJUvaUUgV8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xr8dOehpCl+nn5bHpKxizXU/W/OkDxskeo02k5VoQUEHnMFS+QCJSp0h5pPs+OUyp
-	 SsPvxtBFgFSZcg4ew8b/hJBFnz/Ew+hwmVjwZ3pQwYgqm+y0gKOgSKuH20Ohs+oOya
-	 aqyzchanx6Nriy7NNPypra+y3p6YIH38ELWQn5K4=
+	b=dN6QlHCo2f/tpIYMQtIJOIWyzPf94fELYoieORHJexTTcu050mgouNYVTn6bMYStH
+	 EDUxQW/z9jcP6WdtSCidmw0e4WhYG9chfdsui2gPeYPqTh3nJ+4FYNr0yH643dxUZF
+	 gW10WQnCzoqgisNyx+l3ZYxCEvtPsY0t/QC8yucE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731635AbfIHMtl (ORCPT
+        id S1731698AbfIHMtq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:49:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39708 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:49:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731594AbfIHMti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:49:38 -0400
+        id S1731594AbfIHMtn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:49:43 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2350B21924;
-        Sun,  8 Sep 2019 12:49:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D836218AC;
+        Sun,  8 Sep 2019 12:49:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946977;
-        bh=W1koJkvkMYnVS+GM1B7GyDGkTgqgk2lOuB3FVKbM4qY=;
+        s=default; t=1567946982;
+        bh=LP2tWWU6SNcc0eaVpBGE6cJjoSO6JWYhOXJUvaUUgV8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P4LzuvUkoZiaBcsek8gTNhAEcc1H6X4lwHh+R2p6xCfHMnzzbZPSGgchH7/LvCk4V
-         hr7OYMgO9I46bRTSQmVyFeYAPsASVrLSwNfQGpQbggNieVuvdFYHIJuDcfGSd12p3C
-         fSy9vV/vJID3ZhKA2C1uJ9Z/34TZzSHdcEwucSZw=
+        b=IfS0boKZm0gbsCgEjmWv604AMJosNj/0czasfci8Ri4WS2j7JC9Whbi2/NTs4JJ+g
+         YPGxhEEPTWEB+Bg+7Sks4GbRhADNgtnXbjV2Yeb7JYUVl+ZILm0OTMLZXb2tsCNxb0
+         jg2wv0SWThNW5TI6rEOLMVAHM4NTDpuPnrH5w7uE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Jason Baron <jbaron@akamai.com>,
-        Vladimir Rutsky <rutsky@google.com>,
-        Soheil Hassas Yeganeh <soheil@google.com>,
-        Neal Cardwell <ncardwell@google.com>,
+        stable@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
+        Stefano Brivio <sbrivio@redhat.com>,
+        Li Shuang <shuali@redhat.com>,
+        Davide Caratti <dcaratti@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 07/94] tcp: remove empty skb from write queue in error cases
-Date:   Sun,  8 Sep 2019 13:41:03 +0100
-Message-Id: <20190908121150.642000321@linuxfoundation.org>
+Subject: [PATCH 5.2 17/94] net/sched: pfifo_fast: fix wrong dereference in pfifo_fast_enqueue
+Date:   Sun,  8 Sep 2019 13:41:13 +0100
+Message-Id: <20190908121150.925637761@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
 References: <20190908121150.420989666@linuxfoundation.org>
@@ -63,90 +62,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Davide Caratti <dcaratti@redhat.com>
 
-[ Upstream commit fdfc5c8594c24c5df883583ebd286321a80e0a67 ]
+[ Upstream commit 092e22e586236bba106a82113826a68080a03506 ]
 
-Vladimir Rutsky reported stuck TCP sessions after memory pressure
-events. Edge Trigger epoll() user would never receive an EPOLLOUT
-notification allowing them to retry a sendmsg().
+Now that 'TCQ_F_CPUSTATS' bit can be cleared, depending on the value of
+'TCQ_F_NOLOCK' bit in the parent qdisc, we can't assume anymore that
+per-cpu counters are there in the error path of skb_array_produce().
+Otherwise, the following splat can be seen:
 
-Jason tested the case of sk_stream_alloc_skb() returning NULL,
-but there are other paths that could lead both sendmsg() and sendpage()
-to return -1 (EAGAIN), with an empty skb queued on the write queue.
+ Unable to handle kernel paging request at virtual address 0000600dea430008
+ Mem abort info:
+   ESR = 0x96000005
+   Exception class = DABT (current EL), IL = 32 bits
+   SET = 0, FnV = 0
+   EA = 0, S1PTW = 0
+ Data abort info:
+   ISV = 0, ISS = 0x00000005
+   CM = 0, WnR = 0
+ user pgtable: 64k pages, 48-bit VAs, pgdp = 000000007b97530e
+ [0000600dea430008] pgd=0000000000000000, pud=0000000000000000
+ Internal error: Oops: 96000005 [#1] SMP
+[...]
+ pstate: 10000005 (nzcV daif -PAN -UAO)
+ pc : pfifo_fast_enqueue+0x524/0x6e8
+ lr : pfifo_fast_enqueue+0x46c/0x6e8
+ sp : ffff800d39376fe0
+ x29: ffff800d39376fe0 x28: 1ffff001a07d1e40
+ x27: ffff800d03e8f188 x26: ffff800d03e8f200
+ x25: 0000000000000062 x24: ffff800d393772f0
+ x23: 0000000000000000 x22: 0000000000000403
+ x21: ffff800cca569a00 x20: ffff800d03e8ee00
+ x19: ffff800cca569a10 x18: 00000000000000bf
+ x17: 0000000000000000 x16: 0000000000000000
+ x15: 0000000000000000 x14: ffff1001a726edd0
+ x13: 1fffe4000276a9a4 x12: 0000000000000000
+ x11: dfff200000000000 x10: ffff800d03e8f1a0
+ x9 : 0000000000000003 x8 : 0000000000000000
+ x7 : 00000000f1f1f1f1 x6 : ffff1001a726edea
+ x5 : ffff800cca56a53c x4 : 1ffff001bf9a8003
+ x3 : 1ffff001bf9a8003 x2 : 1ffff001a07d1dcb
+ x1 : 0000600dea430000 x0 : 0000600dea430008
+ Process ping (pid: 6067, stack limit = 0x00000000dc0aa557)
+ Call trace:
+  pfifo_fast_enqueue+0x524/0x6e8
+  htb_enqueue+0x660/0x10e0 [sch_htb]
+  __dev_queue_xmit+0x123c/0x2de0
+  dev_queue_xmit+0x24/0x30
+  ip_finish_output2+0xc48/0x1720
+  ip_finish_output+0x548/0x9d8
+  ip_output+0x334/0x788
+  ip_local_out+0x90/0x138
+  ip_send_skb+0x44/0x1d0
+  ip_push_pending_frames+0x5c/0x78
+  raw_sendmsg+0xed8/0x28d0
+  inet_sendmsg+0xc4/0x5c0
+  sock_sendmsg+0xac/0x108
+  __sys_sendto+0x1ac/0x2a0
+  __arm64_sys_sendto+0xc4/0x138
+  el0_svc_handler+0x13c/0x298
+  el0_svc+0x8/0xc
+ Code: f9402e80 d538d081 91002000 8b010000 (885f7c03)
 
-This patch makes sure we remove this empty skb so that
-Jason code can detect that the queue is empty, and
-call sk->sk_write_space(sk) accordingly.
+Fix this by testing the value of 'TCQ_F_CPUSTATS' bit in 'qdisc->flags',
+before dereferencing 'qdisc->cpu_qstats'.
 
-Fixes: ce5ec440994b ("tcp: ensure epoll edge trigger wakeup when write queue is empty")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Jason Baron <jbaron@akamai.com>
-Reported-by: Vladimir Rutsky <rutsky@google.com>
-Cc: Soheil Hassas Yeganeh <soheil@google.com>
-Cc: Neal Cardwell <ncardwell@google.com>
-Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
-Acked-by: Neal Cardwell <ncardwell@google.com>
+Fixes: 8a53e616de29 ("net: sched: when clearing NOLOCK, clear TCQ_F_CPUSTATS, too")
+CC: Paolo Abeni <pabeni@redhat.com>
+CC: Stefano Brivio <sbrivio@redhat.com>
+Reported-by: Li Shuang <shuali@redhat.com>
+Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+Acked-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/tcp.c |   30 ++++++++++++++++++++----------
- 1 file changed, 20 insertions(+), 10 deletions(-)
+ net/sched/sch_generic.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -935,6 +935,22 @@ static int tcp_send_mss(struct sock *sk,
- 	return mss_now;
- }
+--- a/net/sched/sch_generic.c
++++ b/net/sched/sch_generic.c
+@@ -624,8 +624,12 @@ static int pfifo_fast_enqueue(struct sk_
  
-+/* In some cases, both sendpage() and sendmsg() could have added
-+ * an skb to the write queue, but failed adding payload on it.
-+ * We need to remove it to consume less memory, but more
-+ * importantly be able to generate EPOLLOUT for Edge Trigger epoll()
-+ * users.
-+ */
-+static void tcp_remove_empty_skb(struct sock *sk, struct sk_buff *skb)
-+{
-+	if (skb && !skb->len) {
-+		tcp_unlink_write_queue(skb, sk);
-+		if (tcp_write_queue_empty(sk))
-+			tcp_chrono_stop(sk, TCP_CHRONO_BUSY);
-+		sk_wmem_free_skb(sk, skb);
+ 	err = skb_array_produce(q, skb);
+ 
+-	if (unlikely(err))
+-		return qdisc_drop_cpu(skb, qdisc, to_free);
++	if (unlikely(err)) {
++		if (qdisc_is_percpu_stats(qdisc))
++			return qdisc_drop_cpu(skb, qdisc, to_free);
++		else
++			return qdisc_drop(skb, qdisc, to_free);
 +	}
-+}
-+
- ssize_t do_tcp_sendpages(struct sock *sk, struct page *page, int offset,
- 			 size_t size, int flags)
- {
-@@ -1064,6 +1080,7 @@ out:
- 	return copied;
  
- do_error:
-+	tcp_remove_empty_skb(sk, tcp_write_queue_tail(sk));
- 	if (copied)
- 		goto out;
- out_err:
-@@ -1388,18 +1405,11 @@ out_nopush:
- 	sock_zerocopy_put(uarg);
- 	return copied + copied_syn;
- 
-+do_error:
-+	skb = tcp_write_queue_tail(sk);
- do_fault:
--	if (!skb->len) {
--		tcp_unlink_write_queue(skb, sk);
--		/* It is the one place in all of TCP, except connection
--		 * reset, where we can be unlinking the send_head.
--		 */
--		if (tcp_write_queue_empty(sk))
--			tcp_chrono_stop(sk, TCP_CHRONO_BUSY);
--		sk_wmem_free_skb(sk, skb);
--	}
-+	tcp_remove_empty_skb(sk, skb);
- 
--do_error:
- 	if (copied + copied_syn)
- 		goto out;
- out_err:
+ 	qdisc_update_stats_at_enqueue(qdisc, pkt_len);
+ 	return NET_XMIT_SUCCESS;
 
 
