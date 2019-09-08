@@ -2,52 +2,53 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E90C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28385C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B3022067B
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:59:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E60FF2067B
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:59:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947556;
-	bh=qVOrtOdpDjM5Dq9VnccAmG5LI4niAYI3RxO3b0EbaIs=;
+	s=default; t=1567947560;
+	bh=SHPKLkyJkeRbcX+FRqPqt5fBERaFbyTjQBQ+1tmaYwo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t8e2X1pnH7ita4vmrbCOT+a6eNOkBM00OnOh/rovp+nKhj+pm9SDE8BOQqHVYvw6A
-	 qUDyG1KhO3Ejj+HO9hlGIGj7KS33LespPzI3WyUfvrRvWo0eUdoyzc8Wu2Yxz4ytSI
-	 VQuoKBOhW+0qA32sjAYAMgrsEySbJzBmA7M/XJ4o=
+	b=0XolWgGjXP6nLm1sYczpDxb1I7+UluKE2YrXhO1WSQfRrw5I+D0+P6t8QV3r9aV65
+	 RHtKyJFjSA3lls7YMQKZpg/ji2IrGc6w8wR7v7xy59SKXvBNAbP8YUwmedWua5CI6e
+	 4TNh9sB/doQIN5G98q5DGLfivcnvhYPB8JYAO9+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730326AbfIHMqQ (ORCPT
+        id S1730270AbfIHMqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:46:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33696 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:46:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730305AbfIHMqM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:46:12 -0400
+        id S1730231AbfIHMp4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:45:56 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AE2C2190F;
-        Sun,  8 Sep 2019 12:46:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EB2D20644;
+        Sun,  8 Sep 2019 12:45:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946771;
-        bh=qVOrtOdpDjM5Dq9VnccAmG5LI4niAYI3RxO3b0EbaIs=;
+        s=default; t=1567946755;
+        bh=SHPKLkyJkeRbcX+FRqPqt5fBERaFbyTjQBQ+1tmaYwo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DC1bMGonTQ1l1mmyOoEXyzwHS6D3w59gpN4n27WBObeYIe4Yc69OszcmoyA2SrIjP
-         6rkYOTBlVu1HQ8u8+gWTFJw73sHanF3afd57zqyTfuvrzCBUu6QnDrrc2W+4S0PcV1
-         /AGXJ0QRVeyYmGh9liuiYHuqsRz+Po2chISq0P7I=
+        b=ir57lXJKsP8Vt/kxo901kb0edxfUaFw1sRxNHI6L8FtOj9/mkbKrAuRlpyMqjLxKm
+         bzT+uZ87ZmssvJbrWcFn9fRUK7luo0cDyWCWUIlmzEN5lkRW0gKIaCidcmCtLrnxyy
+         ElIsYrEgO4XjIIQmJoxNbovLOPpZoOd78A96iu98=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Feng Sun <loyou85@gmail.com>,
-        Xiaojun Zhao <xiaojunzhao141@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 33/40] net: fix skb use after free in netpoll
-Date:   Sun,  8 Sep 2019 13:42:06 +0100
-Message-Id: <20190908121129.116364551@linuxfoundation.org>
+        stable@vger.kernel.org, Luis Henriques <lhenriques@suse.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 28/40] libceph: allow ceph_buffer_put() to receive a NULL ceph_buffer
+Date:   Sun,  8 Sep 2019 13:42:01 +0100
+Message-Id: <20190908121128.111462356@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121114.260662089@linuxfoundation.org>
 References: <20190908121114.260662089@linuxfoundation.org>
@@ -60,90 +61,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Feng Sun <loyou85@gmail.com>
+[ Upstream commit 5c498950f730aa17c5f8a2cdcb903524e4002ed2 ]
 
-[ Upstream commit 2c1644cf6d46a8267d79ed95cb9b563839346562 ]
-
-After commit baeababb5b85d5c4e6c917efe2a1504179438d3b
-("tun: return NET_XMIT_DROP for dropped packets"),
-when tun_net_xmit drop packets, it will free skb and return NET_XMIT_DROP,
-netpoll_send_skb_on_dev will run into following use after free cases:
-1. retry netpoll_start_xmit with freed skb;
-2. queue freed skb in npinfo->txq.
-queue_process will also run into use after free case.
-
-hit netpoll_send_skb_on_dev first case with following kernel log:
-
-[  117.864773] kernel BUG at mm/slub.c:306!
-[  117.864773] invalid opcode: 0000 [#1] SMP PTI
-[  117.864774] CPU: 3 PID: 2627 Comm: loop_printmsg Kdump: loaded Tainted: P           OE     5.3.0-050300rc5-generic #201908182231
-[  117.864775] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
-[  117.864775] RIP: 0010:kmem_cache_free+0x28d/0x2b0
-[  117.864781] Call Trace:
-[  117.864781]  ? tun_net_xmit+0x21c/0x460
-[  117.864781]  kfree_skbmem+0x4e/0x60
-[  117.864782]  kfree_skb+0x3a/0xa0
-[  117.864782]  tun_net_xmit+0x21c/0x460
-[  117.864782]  netpoll_start_xmit+0x11d/0x1b0
-[  117.864788]  netpoll_send_skb_on_dev+0x1b8/0x200
-[  117.864789]  __br_forward+0x1b9/0x1e0 [bridge]
-[  117.864789]  ? skb_clone+0x53/0xd0
-[  117.864790]  ? __skb_clone+0x2e/0x120
-[  117.864790]  deliver_clone+0x37/0x50 [bridge]
-[  117.864790]  maybe_deliver+0x89/0xc0 [bridge]
-[  117.864791]  br_flood+0x6c/0x130 [bridge]
-[  117.864791]  br_dev_xmit+0x315/0x3c0 [bridge]
-[  117.864792]  netpoll_start_xmit+0x11d/0x1b0
-[  117.864792]  netpoll_send_skb_on_dev+0x1b8/0x200
-[  117.864792]  netpoll_send_udp+0x2c6/0x3e8
-[  117.864793]  write_msg+0xd9/0xf0 [netconsole]
-[  117.864793]  console_unlock+0x386/0x4e0
-[  117.864793]  vprintk_emit+0x17e/0x280
-[  117.864794]  vprintk_default+0x29/0x50
-[  117.864794]  vprintk_func+0x4c/0xbc
-[  117.864794]  printk+0x58/0x6f
-[  117.864795]  loop_fun+0x24/0x41 [printmsg_loop]
-[  117.864795]  kthread+0x104/0x140
-[  117.864795]  ? 0xffffffffc05b1000
-[  117.864796]  ? kthread_park+0x80/0x80
-[  117.864796]  ret_from_fork+0x35/0x40
-
-Signed-off-by: Feng Sun <loyou85@gmail.com>
-Signed-off-by: Xiaojun Zhao <xiaojunzhao141@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/netpoll.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ include/linux/ceph/buffer.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/core/netpoll.c
-+++ b/net/core/netpoll.c
-@@ -122,7 +122,7 @@ static void queue_process(struct work_st
- 		txq = netdev_get_tx_queue(dev, q_index);
- 		HARD_TX_LOCK(dev, txq, smp_processor_id());
- 		if (netif_xmit_frozen_or_stopped(txq) ||
--		    netpoll_start_xmit(skb, dev, txq) != NETDEV_TX_OK) {
-+		    !dev_xmit_complete(netpoll_start_xmit(skb, dev, txq))) {
- 			skb_queue_head(&npinfo->txq, skb);
- 			HARD_TX_UNLOCK(dev, txq);
- 			local_irq_restore(flags);
-@@ -357,7 +357,7 @@ void netpoll_send_skb_on_dev(struct netp
+diff --git a/include/linux/ceph/buffer.h b/include/linux/ceph/buffer.h
+index 5e58bb29b1a36..11cdc7c60480f 100644
+--- a/include/linux/ceph/buffer.h
++++ b/include/linux/ceph/buffer.h
+@@ -30,7 +30,8 @@ static inline struct ceph_buffer *ceph_buffer_get(struct ceph_buffer *b)
  
- 				HARD_TX_UNLOCK(dev, txq);
+ static inline void ceph_buffer_put(struct ceph_buffer *b)
+ {
+-	kref_put(&b->kref, ceph_buffer_release);
++	if (b)
++		kref_put(&b->kref, ceph_buffer_release);
+ }
  
--				if (status == NETDEV_TX_OK)
-+				if (dev_xmit_complete(status))
- 					break;
- 
- 			}
-@@ -374,7 +374,7 @@ void netpoll_send_skb_on_dev(struct netp
- 
- 	}
- 
--	if (status != NETDEV_TX_OK) {
-+	if (!dev_xmit_complete(status)) {
- 		skb_queue_tail(&npinfo->txq, skb);
- 		schedule_delayed_work(&npinfo->tx_work,0);
- 	}
+ extern int ceph_decode_buffer(struct ceph_buffer **b, void **p, void *end);
+-- 
+2.20.1
+
 
 
