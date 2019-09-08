@@ -4,51 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A67C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC5DC433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DBE821927
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:43:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FA6E21907
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:43:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946614;
-	bh=w2MmB0TGNdTTQo9XjSIhZEyJjp2+5TCwC5sI3zA9Jww=;
+	s=default; t=1567946618;
+	bh=YZJIXJ17E7a0+EEK2SrgMQvwGAvnZmivE5QpgZgWL18=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QP0UddwDzpIONXiIkeWgms8lQEcYroIrEaR6mpgx3JZJoFdaIeuZljKy1dGDL2TJQ
-	 z8nzT9tnl3+VeP8NP5DuHrrw1vCvpgbXpinDVQ0GAa75pWg3MK1YkABPC+3dUhNtmk
-	 LU0nU6ev3CwXXFpII3teO4yyAG77T+ltS+ySteQg=
+	b=p9IXLRNTHNCYlrAM+wj7jgLwK9UaHHDGJJzJTKAm9h76B8Odc6GozRwII690ZFntp
+	 fbnF9qvm2y6yaxcRGrZAEOZxVDjJsFxp422M5Ig6AjCtKJogOxJRRMQjnSCbYrQQQr
+	 yGCaDXgNuphlYvod2JQ0CcpeslODlnUSfNPXj764=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729501AbfIHMnd (ORCPT
+        id S1729515AbfIHMng (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:43:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57304 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:43:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729431AbfIHMnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:43:31 -0400
+        id S1729431AbfIHMne (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:43:34 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F170218AE;
-        Sun,  8 Sep 2019 12:43:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B0E5218AE;
+        Sun,  8 Sep 2019 12:43:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946610;
-        bh=w2MmB0TGNdTTQo9XjSIhZEyJjp2+5TCwC5sI3zA9Jww=;
+        s=default; t=1567946612;
+        bh=YZJIXJ17E7a0+EEK2SrgMQvwGAvnZmivE5QpgZgWL18=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zPMm0kaerSC95CqJeFOKC2vjEDfGSicc2RrtRMTGetU/g77ZiEGmxCrtwJd2ZMcj1
-         /FI4Cwp/S+V6NFTIKqAiOKHfoeEh8U6IHYDxzIYphvmKB32PXl2lPxhCOEYhbMQbak
-         2A+ZUOnB3XEdrb3MA8l247RFumwTfG6059qoaPHY=
+        b=sJPQiuctj6q06P97XlnT7X3ZvfZePzwL2AzOgd6W+yTGY0bxENK/gSSq80wm2eode
+         vsG7sGKc3N80gjm4jTzgb4b3H1RfVNA69DwnCCqlU8NeTfjotGMQezjddCYbCQTFfB
+         2UVCp3LBPMvlBuU42pC3Z2FV2tZNJhERcjnLedIw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luis Henriques <lhenriques@suse.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 16/23] libceph: allow ceph_buffer_put() to receive a NULL ceph_buffer
-Date:   Sun,  8 Sep 2019 13:41:51 +0100
-Message-Id: <20190908121100.477137033@linuxfoundation.org>
+        stable@vger.kernel.org, Alexander Graf <agraf@suse.de>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Mark Brown <broonie@kernel.org>, Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-spi@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 17/23] spi: bcm2835aux: ensure interrupts are enabled for shared handler
+Date:   Sun,  8 Sep 2019 13:41:52 +0100
+Message-Id: <20190908121100.841586731@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121052.898169328@linuxfoundation.org>
 References: <20190908121052.898169328@linuxfoundation.org>
@@ -61,30 +68,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5c498950f730aa17c5f8a2cdcb903524e4002ed2 ]
+[ Upstream commit bc519d9574618e47a0c788000fb78da95e18d953 ]
 
-Signed-off-by: Luis Henriques <lhenriques@suse.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+The BCM2835 AUX SPI has a shared interrupt line (with AUX UART).
+Downstream fixes this with an AUX irqchip to demux the IRQ sources and a
+DT change which breaks compatibility with older kernels. The AUX irqchip
+was already rejected for upstream[1] and the DT change would break
+working systems if the DTB is updated to a newer one. The latter issue
+was brought to my attention by Alex Graf.
+
+The root cause however is a bug in the shared handler. Shared handlers
+must check that interrupts are actually enabled before servicing the
+interrupt. Add a check that the TXEMPTY or IDLE interrupts are enabled.
+
+[1] https://patchwork.kernel.org/patch/9781221/
+
+Cc: Alexander Graf <agraf@suse.de>
+Cc: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Eric Anholt <eric@anholt.net>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Ray Jui <rjui@broadcom.com>
+Cc: Scott Branden <sbranden@broadcom.com>
+Cc: bcm-kernel-feedback-list@broadcom.com
+Cc: linux-spi@vger.kernel.org
+Cc: linux-rpi-kernel@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Eric Anholt <eric@anholt.net>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/ceph/buffer.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/spi/spi-bcm2835aux.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/include/linux/ceph/buffer.h b/include/linux/ceph/buffer.h
-index 07ca15e761001..dada47a4360ff 100644
---- a/include/linux/ceph/buffer.h
-+++ b/include/linux/ceph/buffer.h
-@@ -29,7 +29,8 @@ static inline struct ceph_buffer *ceph_buffer_get(struct ceph_buffer *b)
+diff --git a/drivers/spi/spi-bcm2835aux.c b/drivers/spi/spi-bcm2835aux.c
+index 7de6f8472a810..6f4c6aa801f14 100644
+--- a/drivers/spi/spi-bcm2835aux.c
++++ b/drivers/spi/spi-bcm2835aux.c
+@@ -187,6 +187,11 @@ static irqreturn_t bcm2835aux_spi_interrupt(int irq, void *dev_id)
+ 	struct bcm2835aux_spi *bs = spi_master_get_devdata(master);
+ 	irqreturn_t ret = IRQ_NONE;
  
- static inline void ceph_buffer_put(struct ceph_buffer *b)
- {
--	kref_put(&b->kref, ceph_buffer_release);
-+	if (b)
-+		kref_put(&b->kref, ceph_buffer_release);
- }
- 
- extern int ceph_decode_buffer(struct ceph_buffer **b, void **p, void *end);
++	/* IRQ may be shared, so return if our interrupts are disabled */
++	if (!(bcm2835aux_rd(bs, BCM2835_AUX_SPI_CNTL1) &
++	      (BCM2835_AUX_SPI_CNTL1_TXEMPTY | BCM2835_AUX_SPI_CNTL1_IDLE)))
++		return ret;
++
+ 	/* check if we have data to read */
+ 	while (bs->rx_len &&
+ 	       (!(bcm2835aux_rd(bs, BCM2835_AUX_SPI_STAT) &
 -- 
 2.20.1
 
