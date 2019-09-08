@@ -2,277 +2,174 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F5DC433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD08CC4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 378F12190F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:45:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 950A92081B
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:45:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946716;
-	bh=k4hjebs/uUf3jvaMMdAe0vCKrtxgMQ31qkqp6YxsfKI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=O+SB1L5SZUJ+3b41RZF/xEQfgjSnZEns2UvgCGYC0faty9IE61vbpq93SAHcn4yAx
-	 eWjRB4hkj/VIOEpNZidojYeFFbbVgK6HZhnjNtTXZqWDUTRFM5RE/djjpKUpWKTvGz
-	 W8e3/aoalrXUQXAvjutjRYYBpj6lMW6yxPlgPNyw=
+	s=default; t=1567946723;
+	bh=KbH5ChOBjcIWqsXWjjoaJyYcDXLRXH80frt6AgaOd78=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=d/XRJ87XIQ3wd5H2qmoTx+iBMUFUdU7fC+8pPG6zCSz0WFmHjkKwEzUwY8kpQumOc
+	 YGP53J/K6McFCtOKoa2EHdmnYf1oI9NdNSoJVHGkoYAlO263vYdKr1oO3yI/F4Ntty
+	 nXxFPDge7j+XVd4Mrip5j48qnksZro+4Vi7ir9dk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730022AbfIHMpL (ORCPT
+        id S1730085AbfIHMpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:45:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60248 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:45:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729409AbfIHMpH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:45:07 -0400
+        id S1730054AbfIHMpR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:45:17 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19210218AF;
-        Sun,  8 Sep 2019 12:45:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 520BD21927;
+        Sun,  8 Sep 2019 12:45:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946706;
-        bh=k4hjebs/uUf3jvaMMdAe0vCKrtxgMQ31qkqp6YxsfKI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=lQCIOgbE544nhE3gbMHOMc2aATqCTBhMUftaAdRgjUN8TuJ431Av6BFzkLN6k+0sc
-         SXTIKCZthI4twn58Yx4p4xljsM9JtC5WAEP53lnvKfeVCdTtqQZ08oLSSYj7OlBSpk
-         Sv6ZKwAgS7p3dzPNmiiEGZozyDHewK43Fn036JK0=
+        s=default; t=1567946716;
+        bh=KbH5ChOBjcIWqsXWjjoaJyYcDXLRXH80frt6AgaOd78=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pJXSrVlmvOOb8rUOX/xr62YNZpCAPoYBB3bBOiFPcdBec1WiwHEWI8wMY5bo6A8dI
+         I8exPFPAT5XX6DwzlHlpdKjhriDtMC4CMsYcxwwhrpSRU/p4zyHLNLuEVtsKmXlS9n
+         +hVY2ceU1zvj0ISe5ELOqKrWgr2LYwj/7q8jrWSo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.14 00/40] 4.14.143-stable review
-Date:   Sun,  8 Sep 2019 13:41:33 +0100
-Message-Id: <20190908121114.260662089@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Bill ODonnell <billodo@redhat.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 14/40] vfs: fix page locking deadlocks when deduping files
+Date:   Sun,  8 Sep 2019 13:41:47 +0100
+Message-Id: <20190908121121.267771539@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
+In-Reply-To: <20190908121114.260662089@linuxfoundation.org>
+References: <20190908121114.260662089@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.143-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.143-rc1
-X-KernelTest-Deadline: 2019-09-10T12:11+00:00
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.14.143 release.
-There are 40 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+[ Upstream commit edc58dd0123b552453a74369bd0c8d890b497b4b ]
 
-Responses should be made by Tue 10 Sep 2019 12:09:36 PM UTC.
-Anything received after that time might be too late.
+When dedupe wants to use the page cache to compare parts of two files
+for dedupe, we must be very careful to handle locking correctly.  The
+current code doesn't do this.  It must lock and unlock the page only
+once if the two pages are the same, since the overlapping range check
+doesn't catch this when blocksize < pagesize.  If the pages are distinct
+but from the same file, we must observe page locking order and lock them
+in order of increasing offset to avoid clashing with writeback locking.
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.143-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-and the diffstat can be found below.
+Fixes: 876bec6f9bbfcb3 ("vfs: refactor clone/dedupe_file_range common functions")
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Bill O'Donnell <billodo@redhat.com>
+Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/read_write.c | 49 +++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 41 insertions(+), 8 deletions(-)
 
-thanks,
+diff --git a/fs/read_write.c b/fs/read_write.c
+index d6f8bfb0f7942..38a8bcccf0dd0 100644
+--- a/fs/read_write.c
++++ b/fs/read_write.c
+@@ -1882,10 +1882,7 @@ int vfs_clone_file_range(struct file *file_in, loff_t pos_in,
+ }
+ EXPORT_SYMBOL(vfs_clone_file_range);
+ 
+-/*
+- * Read a page's worth of file data into the page cache.  Return the page
+- * locked.
+- */
++/* Read a page's worth of file data into the page cache. */
+ static struct page *vfs_dedupe_get_page(struct inode *inode, loff_t offset)
+ {
+ 	struct address_space *mapping;
+@@ -1901,10 +1898,32 @@ static struct page *vfs_dedupe_get_page(struct inode *inode, loff_t offset)
+ 		put_page(page);
+ 		return ERR_PTR(-EIO);
+ 	}
+-	lock_page(page);
+ 	return page;
+ }
+ 
++/*
++ * Lock two pages, ensuring that we lock in offset order if the pages are from
++ * the same file.
++ */
++static void vfs_lock_two_pages(struct page *page1, struct page *page2)
++{
++	/* Always lock in order of increasing index. */
++	if (page1->index > page2->index)
++		swap(page1, page2);
++
++	lock_page(page1);
++	if (page1 != page2)
++		lock_page(page2);
++}
++
++/* Unlock two pages, being careful not to unlock the same page twice. */
++static void vfs_unlock_two_pages(struct page *page1, struct page *page2)
++{
++	unlock_page(page1);
++	if (page1 != page2)
++		unlock_page(page2);
++}
++
+ /*
+  * Compare extents of two files to see if they are the same.
+  * Caller must have locked both inodes to prevent write races.
+@@ -1942,10 +1961,24 @@ int vfs_dedupe_file_range_compare(struct inode *src, loff_t srcoff,
+ 		dest_page = vfs_dedupe_get_page(dest, destoff);
+ 		if (IS_ERR(dest_page)) {
+ 			error = PTR_ERR(dest_page);
+-			unlock_page(src_page);
+ 			put_page(src_page);
+ 			goto out_error;
+ 		}
++
++		vfs_lock_two_pages(src_page, dest_page);
++
++		/*
++		 * Now that we've locked both pages, make sure they're still
++		 * mapped to the file data we're interested in.  If not,
++		 * someone is invalidating pages on us and we lose.
++		 */
++		if (!PageUptodate(src_page) || !PageUptodate(dest_page) ||
++		    src_page->mapping != src->i_mapping ||
++		    dest_page->mapping != dest->i_mapping) {
++			same = false;
++			goto unlock;
++		}
++
+ 		src_addr = kmap_atomic(src_page);
+ 		dest_addr = kmap_atomic(dest_page);
+ 
+@@ -1957,8 +1990,8 @@ int vfs_dedupe_file_range_compare(struct inode *src, loff_t srcoff,
+ 
+ 		kunmap_atomic(dest_addr);
+ 		kunmap_atomic(src_addr);
+-		unlock_page(dest_page);
+-		unlock_page(src_page);
++unlock:
++		vfs_unlock_two_pages(src_page, dest_page);
+ 		put_page(dest_page);
+ 		put_page(src_page);
+ 
+-- 
+2.20.1
 
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.14.143-rc1
-
-John S. Gruber <JohnSGruber@gmail.com>
-    x86/boot: Preserve boot_params.secure_boot from sanitizing
-
-Eric Dumazet <edumazet@google.com>
-    mld: fix memory leak in mld_del_delrec()
-
-Vlad Buslov <vladbu@mellanox.com>
-    net: sched: act_sample: fix psample group handling on overwrite
-
-Eric Dumazet <edumazet@google.com>
-    tcp: remove empty skb from write queue in error cases
-
-Willem de Bruijn <willemb@google.com>
-    tcp: inherit timestamp on mtu probe
-
-Chen-Yu Tsai <wens@csie.org>
-    net: stmmac: dwmac-rk: Don't fail if phy regulator is absent
-
-Cong Wang <xiyou.wangcong@gmail.com>
-    net_sched: fix a NULL pointer deref in ipt action
-
-Feng Sun <loyou85@gmail.com>
-    net: fix skb use after free in netpoll
-
-Linus Torvalds <torvalds@linux-foundation.org>
-    Revert "x86/apic: Include the LDR when clearing out APIC registers"
-
-Martin Sperl <kernel@martin.sperl.org>
-    spi: bcm2835aux: fix corruptions for longer spi transfers
-
-Martin Sperl <kernel@martin.sperl.org>
-    spi: bcm2835aux: remove dangerous uncontrolled read of fifo
-
-Martin Sperl <kernel@martin.sperl.org>
-    spi: bcm2835aux: unifying code between polling and interrupt driven code
-
-Luis Henriques <lhenriques@suse.com>
-    libceph: allow ceph_buffer_put() to receive a NULL ceph_buffer
-
-Andrew Jones <drjones@redhat.com>
-    KVM: arm/arm64: Only skip MMIO insn once
-
-Luis Henriques <lhenriques@suse.com>
-    ceph: fix buffer free while holding i_ceph_lock in fill_inode()
-
-Luis Henriques <lhenriques@suse.com>
-    ceph: fix buffer free while holding i_ceph_lock in __ceph_build_xattrs_blob()
-
-Luis Henriques <lhenriques@suse.com>
-    ceph: fix buffer free while holding i_ceph_lock in __ceph_setxattr()
-
-Wenwen Wang <wenwen@cs.uga.edu>
-    IB/mlx4: Fix memory leaks
-
-Vitaly Kuznetsov <vkuznets@redhat.com>
-    Tools: hv: kvp: eliminate 'may be used uninitialized' warning
-
-Dexuan Cui <decui@microsoft.com>
-    Input: hyperv-keyboard: Use in-place iterator API in the channel callback
-
-Benjamin Tissoires <benjamin.tissoires@redhat.com>
-    HID: cp2112: prevent sleeping function called from invalid context
-
-Andrea Righi <andrea.righi@canonical.com>
-    kprobes: Fix potential deadlock in kprobe_optimizer()
-
-Tho Vu <tho.vu.wh@rvc.renesas.com>
-    ravb: Fix use-after-free ravb_tstamp_skb
-
-Wenwen Wang <wenwen@cs.uga.edu>
-    wimax/i2400m: fix a memory leak bug
-
-Wenwen Wang <wenwen@cs.uga.edu>
-    net: kalmia: fix memory leaks
-
-Wenwen Wang <wenwen@cs.uga.edu>
-    cx82310_eth: fix a memory leak bug
-
-Darrick J. Wong <darrick.wong@oracle.com>
-    vfs: fix page locking deadlocks when deduping files
-
-Wenwen Wang <wenwen@cs.uga.edu>
-    lan78xx: Fix memory leaks
-
-Wenwen Wang <wenwen@cs.uga.edu>
-    net: myri10ge: fix memory leaks
-
-Wenwen Wang <wenwen@cs.uga.edu>
-    liquidio: add cleanup in octeon_setup_iq()
-
-Wenwen Wang <wenwen@cs.uga.edu>
-    cxgb4: fix a memory leak bug
-
-Alexandre Courbot <acourbot@chromium.org>
-    drm/mediatek: set DMA max segment size
-
-Alexandre Courbot <acourbot@chromium.org>
-    drm/mediatek: use correct device to import PRIME buffers
-
-YueHaibing <yuehaibing@huawei.com>
-    gpio: Fix build error of function redefinition
-
-Thomas Falcon <tlfalcon@linux.ibm.com>
-    ibmveth: Convert multicast list size for little-endian system
-
-Fabian Henneke <fabian.henneke@gmail.com>
-    Bluetooth: hidp: Let hidp_send_message return number of queued bytes
-
-Matthias Kaehlcke <mka@chromium.org>
-    Bluetooth: btqca: Add a short delay before downloading the NVM
-
-Nathan Chancellor <natechancellor@gmail.com>
-    net: tc35815: Explicitly check NET_IP_ALIGN is not zero in tc35815_rx
-
-Dexuan Cui <decui@microsoft.com>
-    hv_netvsc: Fix a warning of suspicious RCU usage
-
-Fuqian Huang <huangfq.daxian@gmail.com>
-    net: tundra: tsi108: use spin_lock_irqsave instead of spin_lock_irq in IRQ context
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |  4 +-
- arch/x86/include/asm/bootparam_utils.h             |  1 +
- arch/x86/kernel/apic/apic.c                        |  4 --
- drivers/bluetooth/btqca.c                          |  3 ++
- drivers/gpu/drm/mediatek/mtk_drm_drv.c             | 49 +++++++++++++++--
- drivers/gpu/drm/mediatek/mtk_drm_drv.h             |  2 +
- drivers/hid/hid-cp2112.c                           |  8 ++-
- drivers/infiniband/hw/mlx4/mad.c                   |  4 +-
- drivers/input/serio/hyperv-keyboard.c              | 35 +++---------
- .../net/ethernet/cavium/liquidio/request_manager.c |  4 +-
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c |  4 +-
- drivers/net/ethernet/ibm/ibmveth.c                 |  9 ++--
- drivers/net/ethernet/myricom/myri10ge/myri10ge.c   |  2 +-
- drivers/net/ethernet/renesas/ravb_main.c           |  8 ++-
- drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c     |  6 +--
- drivers/net/ethernet/toshiba/tc35815.c             |  2 +-
- drivers/net/ethernet/tundra/tsi108_eth.c           |  5 +-
- drivers/net/hyperv/netvsc_drv.c                    |  9 +++-
- drivers/net/usb/cx82310_eth.c                      |  3 +-
- drivers/net/usb/kalmia.c                           |  6 +--
- drivers/net/usb/lan78xx.c                          |  8 +--
- drivers/net/wimax/i2400m/fw.c                      |  4 +-
- drivers/spi/spi-bcm2835aux.c                       | 62 +++++++---------------
- fs/ceph/caps.c                                     |  5 +-
- fs/ceph/inode.c                                    |  7 +--
- fs/ceph/snap.c                                     |  4 +-
- fs/ceph/super.h                                    |  2 +-
- fs/ceph/xattr.c                                    | 19 +++++--
- fs/read_write.c                                    | 49 ++++++++++++++---
- include/linux/ceph/buffer.h                        |  3 +-
- include/linux/gpio.h                               | 24 ---------
- include/net/act_api.h                              |  4 +-
- include/net/psample.h                              |  1 +
- kernel/kprobes.c                                   |  8 +--
- net/bluetooth/hidp/core.c                          |  9 +++-
- net/core/netpoll.c                                 |  6 +--
- net/ipv4/tcp.c                                     | 29 ++++++----
- net/ipv4/tcp_output.c                              |  3 +-
- net/ipv6/mcast.c                                   |  5 +-
- net/psample/psample.c                              |  2 +-
- net/sched/act_bpf.c                                |  2 +-
- net/sched/act_connmark.c                           |  2 +-
- net/sched/act_csum.c                               |  2 +-
- net/sched/act_gact.c                               |  2 +-
- net/sched/act_ife.c                                |  2 +-
- net/sched/act_ipt.c                                | 11 ++--
- net/sched/act_mirred.c                             |  2 +-
- net/sched/act_nat.c                                |  2 +-
- net/sched/act_pedit.c                              |  2 +-
- net/sched/act_police.c                             |  2 +-
- net/sched/act_sample.c                             |  7 ++-
- net/sched/act_simple.c                             |  2 +-
- net/sched/act_skbedit.c                            |  2 +-
- net/sched/act_skbmod.c                             |  2 +-
- net/sched/act_tunnel_key.c                         |  2 +-
- net/sched/act_vlan.c                               |  2 +-
- tools/hv/hv_kvp_daemon.c                           |  2 +-
- virt/kvm/arm/mmio.c                                |  7 +++
- 58 files changed, 278 insertions(+), 199 deletions(-)
 
 
