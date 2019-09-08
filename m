@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D16C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE5DDC4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BE0A2190F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:50:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D77721927
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:50:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947029;
-	bh=5P2vYLW9yNgQm5/Lp/2chgu9C1k0IkkpVYigawtSh4k=;
+	s=default; t=1567947040;
+	bh=zK8YeOYZRaVUJOgEQ5lJtHGcObCvzZmLvjmPpmxixIA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HqQsWwWOckqJBj40xoWMLak7X5j1adjPtrw9raW8qVnB9LdqtUrBd7n/fYh0TUGuW
-	 ToWZy62p3dX+KzLi32WRRuBAEjFsO20yilHFZ9XyYERWG2UeJ2fFPDURXewQL+Lsxi
-	 WFDslC3GGmnlg49BzQC3YmVcgKqI5vk7V1wTOn0g=
+	b=acQEQs7W18EWf0k/sWbfFaKul7m5g5F1f0fz0wAZ4B/kuX1D8Y+JRxjc+BGXR+Nl8
+	 sveNcT0K6GqfRWJJQeHT2uFHy9+fP/7TZz7tkTDbqIx64vf9t+TFyf3y2Z0RlBK87k
+	 0lNUUYjgSOIh2H7Hn4tC4Nxn/2V71OFeaj5XVRSI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732120AbfIHMu1 (ORCPT
+        id S1732211AbfIHMuj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:50:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41190 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:50:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732084AbfIHMuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:50:22 -0400
+        id S1731378AbfIHMua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:50:30 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8874021A49;
-        Sun,  8 Sep 2019 12:50:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 704C221A49;
+        Sun,  8 Sep 2019 12:50:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567947022;
-        bh=5P2vYLW9yNgQm5/Lp/2chgu9C1k0IkkpVYigawtSh4k=;
+        s=default; t=1567947029;
+        bh=zK8YeOYZRaVUJOgEQ5lJtHGcObCvzZmLvjmPpmxixIA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PqwzxGtdj/eIX9Wm8YPcQDV7XX4oYG2RSWzdGWr9u9Mr3Oc7EfU0xUAG6j+dqvct0
-         n88PDbWFqcVauIN6fwLtbOOEEzzDV+wj8uGAawElXh1niYvSdaWs0LLDTRlobQ5YTT
-         E1AO2rdQKmIz5the+wgKhmzxGIUBdKORK2sHS/kY=
+        b=fXFRx7BIK8kDQFK3ACkCd/pxDm37o5iSC4eUKHWsK/2G7yn55LbdAVHcu6T3+BWSt
+         uqDN+MZJZ1bWGQSr0aBHArQzK3i+fllfRFEnGwNAVmOkwGy2uGPK0J5A5aCieOzfJh
+         P/wsMfO/me45TJ5asR6fpaUoFDspYHXtNQwmBvGk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 31/94] netfilter: nf_flow_table: teardown flow timeout race
-Date:   Sun,  8 Sep 2019 13:41:27 +0100
-Message-Id: <20190908121151.330655724@linuxfoundation.org>
+Subject: [PATCH 5.2 34/94] hv_netvsc: Fix a warning of suspicious RCU usage
+Date:   Sun,  8 Sep 2019 13:41:30 +0100
+Message-Id: <20190908121151.415104561@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
 References: <20190908121150.420989666@linuxfoundation.org>
@@ -59,102 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1e5b2471bcc4838df298080ae1ec042c2cbc9ce9 ]
+[ Upstream commit 6d0d779dca73cd5acb649c54f81401f93098b298 ]
 
-Flows that are in teardown state (due to RST / FIN TCP packet) still
-have their offload flag set on. Hence, the conntrack garbage collector
-may race to undo the timeout adjustment that the fixup routine performs,
-leaving the conntrack entry in place with the internal offload timeout
-(one day).
+This fixes a warning of "suspicious rcu_dereference_check() usage"
+when nload runs.
 
-Update teardown flow state to ESTABLISHED and set tracking to liberal,
-then once the offload bit is cleared, adjust timeout if it is more than
-the default fixup timeout (conntrack might already have set a lower
-timeout from the packet path).
-
-Fixes: da5984e51063 ("netfilter: nf_flow_table: add support for sending flows back to the slow path")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: 776e726bfb34 ("netvsc: fix RCU warning in get_stats")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_flow_table_core.c | 34 ++++++++++++++++++++++--------
- 1 file changed, 25 insertions(+), 9 deletions(-)
+ drivers/net/hyperv/netvsc_drv.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/net/netfilter/nf_flow_table_core.c b/net/netfilter/nf_flow_table_core.c
-index 4254e42605135..49248fe5847a1 100644
---- a/net/netfilter/nf_flow_table_core.c
-+++ b/net/netfilter/nf_flow_table_core.c
-@@ -112,15 +112,16 @@ static void flow_offload_fixup_tcp(struct ip_ct_tcp *tcp)
- #define NF_FLOWTABLE_TCP_PICKUP_TIMEOUT	(120 * HZ)
- #define NF_FLOWTABLE_UDP_PICKUP_TIMEOUT	(30 * HZ)
- 
--static void flow_offload_fixup_ct(struct nf_conn *ct)
-+static inline __s32 nf_flow_timeout_delta(unsigned int timeout)
-+{
-+	return (__s32)(timeout - (u32)jiffies);
-+}
-+
-+static void flow_offload_fixup_ct_timeout(struct nf_conn *ct)
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index 3544e19915792..e8fce6d715ef0 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -1239,12 +1239,15 @@ static void netvsc_get_stats64(struct net_device *net,
+ 			       struct rtnl_link_stats64 *t)
  {
- 	const struct nf_conntrack_l4proto *l4proto;
-+	int l4num = nf_ct_protonum(ct);
- 	unsigned int timeout;
--	int l4num;
--
--	l4num = nf_ct_protonum(ct);
--	if (l4num == IPPROTO_TCP)
--		flow_offload_fixup_tcp(&ct->proto.tcp);
+ 	struct net_device_context *ndev_ctx = netdev_priv(net);
+-	struct netvsc_device *nvdev = rcu_dereference_rtnl(ndev_ctx->nvdev);
++	struct netvsc_device *nvdev;
+ 	struct netvsc_vf_pcpu_stats vf_tot;
+ 	int i;
  
- 	l4proto = nf_ct_l4proto_find(l4num);
- 	if (!l4proto)
-@@ -133,7 +134,20 @@ static void flow_offload_fixup_ct(struct nf_conn *ct)
- 	else
- 		return;
- 
--	ct->timeout = nfct_time_stamp + timeout;
-+	if (nf_flow_timeout_delta(ct->timeout) > (__s32)timeout)
-+		ct->timeout = nfct_time_stamp + timeout;
-+}
++	rcu_read_lock();
 +
-+static void flow_offload_fixup_ct_state(struct nf_conn *ct)
-+{
-+	if (nf_ct_protonum(ct) == IPPROTO_TCP)
-+		flow_offload_fixup_tcp(&ct->proto.tcp);
-+}
-+
-+static void flow_offload_fixup_ct(struct nf_conn *ct)
-+{
-+	flow_offload_fixup_ct_state(ct);
-+	flow_offload_fixup_ct_timeout(ct);
++	nvdev = rcu_dereference(ndev_ctx->nvdev);
+ 	if (!nvdev)
+-		return;
++		goto out;
+ 
+ 	netdev_stats_to_stats64(t, &net->stats);
+ 
+@@ -1283,6 +1286,8 @@ static void netvsc_get_stats64(struct net_device *net,
+ 		t->rx_packets	+= packets;
+ 		t->multicast	+= multicast;
+ 	}
++out:
++	rcu_read_unlock();
  }
  
- void flow_offload_free(struct flow_offload *flow)
-@@ -211,7 +225,7 @@ EXPORT_SYMBOL_GPL(flow_offload_add);
- 
- static inline bool nf_flow_has_expired(const struct flow_offload *flow)
- {
--	return (__s32)(flow->timeout - (u32)jiffies) <= 0;
-+	return nf_flow_timeout_delta(flow->timeout) <= 0;
- }
- 
- static void flow_offload_del(struct nf_flowtable *flow_table,
-@@ -231,6 +245,8 @@ static void flow_offload_del(struct nf_flowtable *flow_table,
- 
- 	if (nf_flow_has_expired(flow))
- 		flow_offload_fixup_ct(e->ct);
-+	else if (flow->flags & FLOW_OFFLOAD_TEARDOWN)
-+		flow_offload_fixup_ct_timeout(e->ct);
- 
- 	flow_offload_free(flow);
- }
-@@ -242,7 +258,7 @@ void flow_offload_teardown(struct flow_offload *flow)
- 	flow->flags |= FLOW_OFFLOAD_TEARDOWN;
- 
- 	e = container_of(flow, struct flow_offload_entry, flow);
--	flow_offload_fixup_ct(e->ct);
-+	flow_offload_fixup_ct_state(e->ct);
- }
- EXPORT_SYMBOL_GPL(flow_offload_teardown);
- 
+ static int netvsc_set_mac_addr(struct net_device *ndev, void *p)
 -- 
 2.20.1
 
