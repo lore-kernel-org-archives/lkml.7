@@ -2,112 +2,117 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
+	DKIM_SIGNED,FROM_EXCESS_BASE64,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE50C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 14:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 520D6C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 14:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13474218AC
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 14:46:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 194DF214DB
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 14:47:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=valentin-vidic.from.hr header.i=@valentin-vidic.from.hr header.b="Cx4tVznf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728811AbfIHOqk (ORCPT
+        id S1729016AbfIHOrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 10:46:40 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:50303 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725928AbfIHOqk (ORCPT
+        Sun, 8 Sep 2019 10:47:40 -0400
+Received: from valentin-vidic.from.hr ([94.229.67.141]:34659 "EHLO
+        valentin-vidic.from.hr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726334AbfIHOrk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 10:46:40 -0400
-Received: from 195-23-252-147.net.novis.pt ([195.23.252.147] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1i6ySS-0004DN-Lg; Sun, 08 Sep 2019 16:46:28 +0200
-Date:   Sun, 8 Sep 2019 15:46:16 +0100 (WEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Matthew Wilcox <willy@infradead.org>
-cc:     Markus Heiser <markus.heiser@darmarit.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Sven Eckelmann <sven@narfation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Doug Smythies <doug.smythies@gmail.com>,
-        =?ISO-8859-15?Q?Aur=E9lien_Cedeyn?= <aurelien.cedeyn@gmail.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-doc@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Armijn Hemel <armijn@tjaldur.nl>, Jiri Olsa <jolsa@redhat.com>,
-        =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        Allison Randal <allison@lohutok.net>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH 0/6] Address issues with SPDX requirements and PEP-263
-In-Reply-To: <20190908100328.GB29434@bombadil.infradead.org>
-Message-ID: <alpine.DEB.2.21.1909081541520.2134@nanos.tec.linutronix.de>
-References: <cover.1567712829.git.mchehab+samsung@kernel.org> <20190907073419.6a88e318@lwn.net> <be329f0e-ec5b-f5ec-823d-66e58699da73@darmarit.de> <20190907132259.3199c8a2@coco.lan> <a08c5807-38e7-dfb3-ff3c-f78a498455e6@darmarit.de> <20190907150442.583b44c2@coco.lan>
- <686101df-f40c-916e-2730-353a3852cc84@darmarit.de> <alpine.DEB.2.21.1909072308060.1902@nanos.tec.linutronix.de> <20190908100328.GB29434@bombadil.infradead.org>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sun, 8 Sep 2019 10:47:40 -0400
+X-Virus-Scanned: Debian amavisd-new at valentin-vidic.from.hr
+Received: by valentin-vidic.from.hr (Postfix, from userid 1000)
+        id 7B1A3214; Sun,  8 Sep 2019 14:47:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+        d=valentin-vidic.from.hr; s=2017; t=1567954055;
+        bh=iMps8Hv8V4ycg9xT22lBI+Z06VFOIDLw6qNSazuJrT0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Cx4tVznfdjeZdz28aPWZ3k9UBKvN6GBRXxF72OBawL83EUURclkIuwlD3DK+vphOz
+         wHMUZAMncttgL5exHo3NW72E7kQLhRTz1J3VKSzVlImZoxrTPPQbZQIWyx+RYkbE0/
+         NkbYoTewDhJxhrK24z4LSw5Acfy8eVJxx2ls8BI75hFXThx16wGvJIBNSC/9AaQ42S
+         WG5DM4+VvzMeFFlzFoG6NVUbbIhnSGeC2UetULCFalu1EiUvom496NV2hMEfLDvJf9
+         yIMUBUV35FvlWxPu7iH/P8QyJWDrvDcfUyzj2pVBiqShavMUPlanMw06M5iTGPT8le
+         1ckjQN4qs2a6A==
+Date:   Sun, 8 Sep 2019 14:47:35 +0000
+From:   Valentin =?utf-8?B?VmlkacSH?= <vvidic@valentin-vidic.from.hr>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     devel@driverdev.osuosl.org,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: exfat: add millisecond support
+Message-ID: <20190908144735.GA7664@valentin-vidic.from.hr>
+References: <20190908124808.23739-1-vvidic@valentin-vidic.from.hr>
+ <20190908130337.GA9056@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190908130337.GA9056@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 8 Sep 2019, Matthew Wilcox wrote:
-> On Sat, Sep 07, 2019 at 11:17:22PM +0200, Thomas Gleixner wrote:
-> > On Sat, 7 Sep 2019, Markus Heiser wrote:
-> > > Am 07.09.19 um 20:04 schrieb Mauro Carvalho Chehab:
-> > > > No idea. I would actually prefer to just remove the restriction, and let
-> > > > the SPDX header to be anywhere inside the first comment block inside a
-> > > > file [2].
-> > > > [2] I *suspect* that the restriction was added in order to make
-> > > >      ./scripts/spdxcheck.py to run faster and to avoid false positives.
-> > > >      Right now, if the maximum limit is removed (or set to a very high
-> > > >      value), there will be one false positive:
-> > 
-> > Nope. The intention was to have a well define place and format instead of
-> > everyone and his dog deciding to put it somewhere. SPDX is not intended to
-> > replace the existing licensing mess with some other randomly placed and
-> > formatted licensing mess.
-> 
-> I find the current style quite unaesthetic:
-> 
-> // SPDX-License-Identifier: GPL-2.0-only
-> /*
->  *  linux/mm/memory.c
->  *
->  *  Copyright (C) 1991, 1992, 1993, 1994  Linus Torvalds
->  */
-> 
-> I'd much rather see
-> 
-> /*
->  * SPDX-License-Identifier: GPL-2.0-only
->  * Copyright (C) 1991, 1992, 1993, 1994  Linus Torvalds
->  */
-> 
-> but I appreciate the desire to force it to be on the first line if at all
-> possible.
+On Sun, Sep 08, 2019 at 02:03:37PM +0100, Greg Kroah-Hartman wrote:
+> Please run checkpatch on your patches so that we don't have to go and
+> fix up those issues later on.
 
-That style is inflicted upon you by Penguin Emperor Decree. :)
+Strange, it did not report anything for me:
 
+total: 0 errors, 0 warnings, 0 checks, 439 lines checked
+0001-staging-exfat-add-millisecond-support.patch has no obvious style problems and is ready for submission.
 
+> Also, can you break this up into smaller patches please?  You are doing
+> multiple things all at once.
 
+Sure, I was just trying to improve the code a bit :)
 
+> And, are you sure about the millisecond field for access time stuff?  It
+> was obviously added for some reason (there are lots in the spec that the
+> code does not yet cover, this seems odd being the other way around).
+> Did you test it against any other operating system exfat images to
+> ensure that it really is not being used at all?  If so, which ones?
+
+Don't really have access to another OS, but here is what exfat-fuse has:
+
+struct exfat_entry_meta1                        /* file or directory info (part 1) */
+{
+        uint8_t type;                                   /* EXFAT_ENTRY_FILE */
+        uint8_t continuations;
+        le16_t checksum;
+        le16_t attrib;                                  /* combination of EXFAT_ATTRIB_xxx */
+        le16_t __unknown1;
+        le16_t crtime, crdate;                  /* creation date and time */
+        le16_t mtime, mdate;                    /* latest modification date and time */
+        le16_t atime, adate;                    /* latest access date and time */
+        uint8_t crtime_cs;                              /* creation time in cs (centiseconds) */
+        uint8_t mtime_cs;                               /* latest modification time in cs */
+        uint8_t __unknown2[10];
+}
+
+The spec matches this and defines 3 additional UtcOffset fields that we don't use:
+
+EntryType
+SecondaryCount
+SetChecksum
+FileAttributes
+Reserved1
+CreateTimestamp
+LastModifiedTimestamp
+LastAccessedTimestamp
+Create10msIncrement
+LastModified10msIncrement
+
+CreateUtcOffset (1 byte)
+LastModifiedUtcOffset (1 byte)
+LastAccessedUtcOffset (1 byte)
+Reserved2 (7 bytes)
+
+So I'm not sure where access_time_ms came from. In any case it was always set to
+0 so it should not matter much?
+
+-- 
+Valentin
