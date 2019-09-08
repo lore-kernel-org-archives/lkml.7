@@ -2,112 +2,103 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42256C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4A73C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C67C207FC
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B51D3207FC
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:55:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DjexVd6d"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NH6YvOJS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728811AbfIHNwQ (ORCPT
+        id S1728823AbfIHNzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 09:52:16 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42123 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728068AbfIHNwP (ORCPT
+        Sun, 8 Sep 2019 09:55:47 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:41484 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbfIHNzr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 09:52:15 -0400
-Received: by mail-wr1-f67.google.com with SMTP id q14so11013631wrm.9;
-        Sun, 08 Sep 2019 06:52:12 -0700 (PDT)
+        Sun, 8 Sep 2019 09:55:47 -0400
+Received: by mail-lf1-f68.google.com with SMTP id j4so8445995lfh.8
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 06:55:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=LGw90/UVGk+QEa0OVvDfU9BMlKodboT6J/WmPDm8rBg=;
-        b=DjexVd6dz7KQq1XfdAg/oG77YUvvXel7yrm0iiwfoGp0qXQIfveg00d78JiMuC3OZ1
-         ROwc3acSTsoME5EtB5PPKpkjr76BFxzmo4o7NjyGXDC5U0D8LEbh2PD3PUlGEQwX4Uc4
-         UodPmMInKBsCL0LQd8DZK/nVB9YnSL9b7n2YJMNhnsntL8xMFgjhZWrMVwaJ2jXNgaEG
-         8im7OgoHNTyqEtHIJoCmY+cfgws4kH1+rufkClRa8wi3Ffw2/C4gXIEjsH1sOCgLVyr7
-         OAscnqbo2cMEQBeDdSMzE7rRxFmxOOqmbu+uHKMM1+rX6/YjwfOMvhMUR5p9TjoHT9ti
-         EFnA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sF4vWdoCClkvUWmjG7SmHm1u0cF208Pq+GV3iOlmbEI=;
+        b=NH6YvOJSA9BJfe/rK/M7Q6vmL9hZIe9PTLc+Y+OMDga80Q/mee05priLhuNAkAUkSz
+         DrsUwg4SDM1aGyMx82DnFOxjPj1ss713Rbztz7ExMqNR7ylXtnymBcAUftlrMvEKo6Dm
+         mMJnh5q7MKqwES2oTvbszAwrHAu+mQdRnh345RvbVsujxWUPSpi4cJFQ21nd/8yHZyGM
+         HNDCM6uTyCNUp83BFOh0nnUbapnrvbjZecH9/yLUh9nmswm0Di10QUR17VxsM1Wg+5Y3
+         05QA/4KgLlLkQ/GWvrbM1hoZ6oRLBOwxXGieCxhavj/+t0Yzr8FzBCB/nVGWN4YDHxGq
+         0sSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to;
-        bh=LGw90/UVGk+QEa0OVvDfU9BMlKodboT6J/WmPDm8rBg=;
-        b=AjApqOE+90GYugHcv13oW+56EzlNRz+zCIuNTe4phOawLXweD/iSgqZNZYg93RCN6Q
-         a3cOZReSeiGuTiCjcT/PEGzXy0DtP9RwPyDHhjPn6l76chF9OlIsiplG5Y2tugCGtH9S
-         MbV77ngnLPS9hBoPAgLD1RB5R4wtf+bJ0MuhQ9x8W4/FGgYgyYESn/DYYj5BuZ3HGEBW
-         ywjMjhDDdSUY11/xbg+BzoQkU1mXioOylB9LNX+j5fO9Uc/edDZtPnKorA7VsliOW1WM
-         LUDRrYIBoIW8OIwqXgDETOHh8SxMvIuvNgx6YJ304HvFkEZtFYnVowsPMMcqsXCHRtnz
-         soEg==
-X-Gm-Message-State: APjAAAXdKjsBaCKEwSU6RGeUWOBrmAm9rCSmavv1uJL/u9UmW6HfhT6V
-        z/7I3zpYOZzOdqWm/bh2fM4=
-X-Google-Smtp-Source: APXvYqyZOsK+aqWwElzB2LaKFVuHA0OEwoqV7Sx+6abFRm0Y3xDPiiunSMXqYyE63hrScoKhhsu+xA==
-X-Received: by 2002:adf:fa10:: with SMTP id m16mr9858082wrr.322.1567950731822;
-        Sun, 08 Sep 2019 06:52:11 -0700 (PDT)
-Received: from rocinante (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
-        by smtp.gmail.com with ESMTPSA id r28sm16854635wrr.94.2019.09.08.06.52.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Sep 2019 06:52:11 -0700 (PDT)
-Date:   Sun, 8 Sep 2019 15:52:09 +0200
-From:   Krzysztof Wilczynski <kw@linux.com>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: light: bh1750: Move static keyword to the front of
- declaration
-Message-ID: <20190908135208.GA29162@rocinante>
-References: <20190902113132.26658-1-kw@linux.com>
- <20190908114944.18bb78e3@archlinux>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sF4vWdoCClkvUWmjG7SmHm1u0cF208Pq+GV3iOlmbEI=;
+        b=lQ7xVlZIt9uNFaZ5pzxe7ssFpeA+GtBQcbhlf4ts0Fkm88vaUXStcSeLFYdeJZ2YpU
+         minvDud3E6SXLvyozXw/r/nDaEQ2XrD9QznDaxJ23YpDkjlsUFZSZdx43rlaxBlYKIMn
+         ddoXpTswT3xlPT2dgyWuDPNHqinMQT4dcHrU4ZLrbAd3Bwrx/W1PCWHVTxSe3F36xhrP
+         1I4MV/q7UB+0FOd4TiLAu16d8WgQ1e6fRFufgRF9T4fMoewSPwTi3miS3hGbdFJQHXyH
+         xNNRpjUZs8TXNCD4mYydd+FIaMguR7CQBQ4R6spWQx/YCIFSrHXcI+sJt1x82LsG04I2
+         aFnA==
+X-Gm-Message-State: APjAAAXdiccctJ9UUFaoJGm7Zq1/X8Vgi1tuMV2XJtZQeW88Fs+Q6DbX
+        1bcP8vd2qfP+e8sMZQkkvBHyUMm/I7aYdfhjrig=
+X-Google-Smtp-Source: APXvYqweWXLeq4LzhqyDNqliYFHtyK9Rz1+KwlfjzswVUbkk6p/lViBjVMzcjWYmwtJjzoQcn1znEGBtnYAE1wlsJvo=
+X-Received: by 2002:a19:428f:: with SMTP id p137mr13288714lfa.149.1567950945057;
+ Sun, 08 Sep 2019 06:55:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190908114944.18bb78e3@archlinux>
+References: <CANiq72=3Vz-_6ctEzDQgTA44jmfSn_XZTS8wP1GHgm31Xm8ECw@mail.gmail.com>
+ <20190906163028.GC9749@gate.crashing.org> <20190906163918.GJ2120@tucnak>
+ <CAKwvOd=MT_=U250tR+t0jTtj7SxKJjnEZ1FmR3ir_PHjcXFLVw@mail.gmail.com>
+ <20190906220347.GD9749@gate.crashing.org> <CAKwvOdnWBV35SCRHwMwXf+nrFc+D1E7BfRddb20zoyVJSdecCA@mail.gmail.com>
+ <20190906225606.GF9749@gate.crashing.org> <CAKwvOdk-AQVJnD6-=Z0eUQ6KPvDp2eS2zUV=-oL2K2JBCYaOeQ@mail.gmail.com>
+ <20190907001411.GG9749@gate.crashing.org> <CAKwvOdnaBD3Dg3pmZqX2-=Cd0n30ByMT7KUNZKhq0bsDdFeXpg@mail.gmail.com>
+ <20190907131127.GH9749@gate.crashing.org>
+In-Reply-To: <20190907131127.GH9749@gate.crashing.org>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Sun, 8 Sep 2019 15:55:33 +0200
+Message-ID: <CANiq72=qXM=jEULGsWup+AtUTMTd_T-LHLY8iNna5y+zN3E6UA@mail.gmail.com>
+Subject: Re: [PATCH v2 4/6] compiler-gcc.h: add asm_inline definition
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Jakub Jelinek <jakub@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "gcc-patches@gcc.gnu.org" <gcc-patches@gcc.gnu.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Jonathan,
+On Sat, Sep 7, 2019 at 3:11 PM Segher Boessenkool
+<segher@kernel.crashing.org> wrote:
+>
+> I wouldn't.  Please stop using that straw man.  I'm not saying version
+> checks are good, or useful for most things.  I am saying they are not.
+>
+> Predefined compiler symbols to do version checking (of a feature) is
+> just a lesser instance of the same problem though.  (And it causes its
+> own more or less obvious problems as well).
 
-Thank you for feedback.
+That is fair enough, but what are you suggesting we use, then?
 
-[...]
-> > drivers/iio/light/bh1750.c:64:1: warning:
-> >   ‘static’ is not at beginning of declaration [-Wold-style-declaration]
-[...]
-> This one has me confused.  The warning seems to be false as static
-> is at the beginning of the declaration....
-> 
-> Sure we "could" combine the declaration with the definition as you have
-> done here, but that has nothing much to do with the warning.
-[...]
+Because "testing to do X to know if you can do X" cannot work with
+source code alone and implies each project has to redo this work in
+its build system for each compiler, plus each project ends up with
+different names for these macros. The C++20 approach of having
+standardized macros for major features is way better (whether we have
+one macro per feature or a __has_feature(X) macro). Note this does not
+mean we need to take this to the extreme and have a feature-test macro
+for *every* feature, bugfix or behavior change as a macro.
 
-I only moved the "static const" at the front, I haven't changed the
-code as it's already has been a declaration and definition.  There is
-no semicolon there and the original author put a newline to separate
-things which makes it look as if these were separate.
-
-Simple example based on the existing code:
-
-  https://godbolt.org/z/hV4HP7
-
-I hope this helps to illustrate the change in the patch.  I apologise
-if my approach was incorrect.
-
-As part of the patch I removed the newline in an aim to make it less
-confusing to anyone who will read the code in the future.  Especially,
-since it makes it a bit awkward to read and when using things like
-grep.
-
-Krzysztof
+Cheers,
+Miguel
