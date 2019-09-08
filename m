@@ -2,76 +2,111 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2427FC4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 11:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B29FC433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 11:34:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F35D121479
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 11:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1C3321734
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 11:34:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567942444;
+	bh=73dqUp1UuFijMCdNUSXFQ3ADngSEc+MwZNdBG1PT9zY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=OyZtnBhEnkCKCGGK6eAo+uNrkeJ6FH0kh1/ueCQiYiWz4DdjHhsF0G6S/X14zwcBL
+	 rqX7HAcg/J808hJ59gDnkHFD25EtAOUPkYy2i/pgOMFVG80Xz9bvR7PM6KegQvV4eg
+	 kAcuw3dQIGMxH8/tou2iEBmS9fJ1nxjOp3+j8rOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728885AbfIHL2f convert rfc822-to-8bit (ORCPT
+        id S1728891AbfIHLeD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 07:28:35 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48666 "EHLO mx1.redhat.com"
+        Sun, 8 Sep 2019 07:34:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726186AbfIHL2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 07:28:35 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1728740AbfIHLeD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 07:34:03 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B8A8018C891B;
-        Sun,  8 Sep 2019 11:28:34 +0000 (UTC)
-Received: from carbon (ovpn-200-20.brq.redhat.com [10.40.200.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7786D5C1D4;
-        Sun,  8 Sep 2019 11:28:23 +0000 (UTC)
-Date:   Sun, 8 Sep 2019 13:28:22 +0200
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?= <toke@redhat.com>
-Cc:     brouer@redhat.com, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, davem@davemloft.net, hawk@kernel.org,
-        jakub.kicinski@netronome.com, john.fastabend@gmail.com,
-        kafai@fb.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com,
-        syzbot+4e7a85b1432052e8d6f8@syzkaller.appspotmail.com
-Subject: Re: [PATCH bpf-next] xdp: Fix race in dev_map_hash_update_elem()
- when replacing element
-Message-ID: <20190908132822.5ac2fbe1@carbon>
-In-Reply-To: <20190908082016.17214-1-toke@redhat.com>
-References: <0000000000005091a70591d3e1d9@google.com>
-        <20190908082016.17214-1-toke@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 30899206BB;
+        Sun,  8 Sep 2019 11:34:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567942442;
+        bh=73dqUp1UuFijMCdNUSXFQ3ADngSEc+MwZNdBG1PT9zY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Fh9uEAA0cOTgjt6bxZJBiFsr599jUiyznIekxWDCAeOPDXWR7GQ6ITjWeEt+g0JuP
+         /iStZTilcO/8dc9VpLYxeswMBb2VLsjzaFxOIiF4cudpG8rsRu72ApdEBSit7stduT
+         3OQEHjmxGqFUeEuy9wExsOz/oCillPPrfz5uOSr4=
+Date:   Sun, 8 Sep 2019 12:33:56 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Elie Roudninski <xademax@gmail.com>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: adc: meson_saradc: Fix memory allocation order
+Message-ID: <20190908123356.2cd844a3@archlinux>
+In-Reply-To: <CAJJ5kavS6RU1tK-BqgWD-VmJzPuG114y+pNApYay=+xwCtAwQg@mail.gmail.com>
+References: <20190901105410.23567-1-repk@triplefau.lt>
+        <CAFBinCD96nJBPnyNgWA6CgwE2kZrkXB3-cgbV9aQLB=JtbrN2w@mail.gmail.com>
+        <CAJJ5kavS6RU1tK-BqgWD-VmJzPuG114y+pNApYay=+xwCtAwQg@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Sun, 08 Sep 2019 11:28:35 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun,  8 Sep 2019 09:20:16 +0100
-Toke Høiland-Jørgensen <toke@redhat.com> wrote:
+On Mon, 2 Sep 2019 21:40:49 +0100
+Elie Roudninski <xademax@gmail.com> wrote:
 
-> syzbot found a crash in dev_map_hash_update_elem(), when replacing an
-> element with a new one. Jesper correctly identified the cause of the crash
-> as a race condition between the initial lookup in the map (which is done
-> before taking the lock), and the removal of the old element.
+> On Sun, Sep 1, 2019 at 12:29 PM Martin Blumenstingl
+> <martin.blumenstingl@googlemail.com> wrote:
+> >
+> > On Sun, Sep 1, 2019 at 12:45 PM Remi Pommarel <repk@triplefau.lt> wrote:  
+> > >
+> > > meson_saradc's irq handler uses priv->regmap so make sure that it is
+> > > allocated before the irq get enabled.
+> > >
+> > > This also fixes crash when CONFIG_DEBUG_SHIRQ is enabled, as device
+> > > managed resources are freed in the inverted order they had been
+> > > allocated, priv->regmap was freed before the spurious fake irq that
+> > > CONFIG_DEBUG_SHIRQ adds called the handler.
+> > >  
+> >
+> > Fixes: 3af109131b7eb8 ("iio: adc: meson-saradc: switch from polling to
+> > interrupt mode")  
+> > > Reported-by: Elie Roudninski <xademax@gmail.com>
+> > > Signed-off-by: Remi Pommarel <repk@triplefau.lt>  
+> > Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> >
+> > thank you for fixing this!  
+> The patch fixed the kernel panic I had, i can now successfully boot my
+> meson-gxl-s905x-libretech-cc boad using patched linux 5.2.11
 > 
-> Rather than just add a second lookup into the hashmap after taking the
-> lock, fix this by reworking the function logic to take the lock before the
-> initial lookup.
+> Tested-by: Elie ROUDNINSKI <xademax@gmail.com>
+Rather than rush through a quick pull request I'm going to hold this one
+until after the merge window.
+
+Applied to the fixes-togreg branch of iio.git (which is now based
+on staging-next).
+
+Thanks,
+
+Jonathan
+
 > 
-> Fixes: 6f9d451ab1a3 ("xdp: Add devmap_hash map type for looking up devices by hashed index")
-> Reported-and-tested-by: syzbot+4e7a85b1432052e8d6f8@syzkaller.appspotmail.com
-> Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+> Elie
+> >
+> >
+> > Martin  
 
-Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
-
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
