@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F66C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF839C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F4AA218AC
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A946F218AC
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:49:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946987;
-	bh=LP2tWWU6SNcc0eaVpBGE6cJjoSO6JWYhOXJUvaUUgV8=;
+	s=default; t=1567946989;
+	bh=eQlVCz7A4VtsmN4UIi6xwVpu5z5TDNmOHLMxu/wasDE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dN6QlHCo2f/tpIYMQtIJOIWyzPf94fELYoieORHJexTTcu050mgouNYVTn6bMYStH
-	 EDUxQW/z9jcP6WdtSCidmw0e4WhYG9chfdsui2gPeYPqTh3nJ+4FYNr0yH643dxUZF
-	 gW10WQnCzoqgisNyx+l3ZYxCEvtPsY0t/QC8yucE=
+	b=I9fI/XPWPbsbzy3/zDCFMd2WehTljMWhTUY6SCGdrlB0+kRCvwUKpPN57AJ5VaZqW
+	 0hxiBbMf9ftKrtWD8QpiGwZrLipLTGTW+BD/Antg9/YoHBFoNGiH56dTd0kQEpSrNQ
+	 msZZoylKU+LdUvCwn6bCjK49mD7zarxUGHl0cUoY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731698AbfIHMtq (ORCPT
+        id S1731736AbfIHMts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:49:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39902 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:49:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731594AbfIHMtn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:49:43 -0400
+        id S1731679AbfIHMtq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:49:46 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D836218AC;
-        Sun,  8 Sep 2019 12:49:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 015D9218AC;
+        Sun,  8 Sep 2019 12:49:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946982;
-        bh=LP2tWWU6SNcc0eaVpBGE6cJjoSO6JWYhOXJUvaUUgV8=;
+        s=default; t=1567946985;
+        bh=eQlVCz7A4VtsmN4UIi6xwVpu5z5TDNmOHLMxu/wasDE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IfS0boKZm0gbsCgEjmWv604AMJosNj/0czasfci8Ri4WS2j7JC9Whbi2/NTs4JJ+g
-         YPGxhEEPTWEB+Bg+7Sks4GbRhADNgtnXbjV2Yeb7JYUVl+ZILm0OTMLZXb2tsCNxb0
-         jg2wv0SWThNW5TI6rEOLMVAHM4NTDpuPnrH5w7uE=
+        b=yPFehOyL9TRXpfLVWwRTTgR8e6cDI4YQjm9tktSTgKgYKlNaEB8MbxuT2MMWmLFQ3
+         oxx0gCbiuSZ2CY/9pLwqEUyz5AP8agvQIGo23CVfiOJv0abP1qFsynzuUJ+T69tKcI
+         y1/ArGsqaU6EvpEdYAYlc/1iqrHc4Vp2Y/oe6mW0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
-        Stefano Brivio <sbrivio@redhat.com>,
         Li Shuang <shuali@redhat.com>,
         Davide Caratti <dcaratti@redhat.com>,
+        Stefano Brivio <sbrivio@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 17/94] net/sched: pfifo_fast: fix wrong dereference in pfifo_fast_enqueue
-Date:   Sun,  8 Sep 2019 13:41:13 +0100
-Message-Id: <20190908121150.925637761@linuxfoundation.org>
+Subject: [PATCH 5.2 18/94] net/sched: pfifo_fast: fix wrong dereference when qdisc is reset
+Date:   Sun,  8 Sep 2019 13:41:14 +0100
+Message-Id: <20190908121150.955754187@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
 References: <20190908121150.420989666@linuxfoundation.org>
@@ -64,97 +64,117 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Davide Caratti <dcaratti@redhat.com>
 
-[ Upstream commit 092e22e586236bba106a82113826a68080a03506 ]
+[ Upstream commit 04d37cf46a773910f75fefaa9f9488f42bfe1fe2 ]
 
 Now that 'TCQ_F_CPUSTATS' bit can be cleared, depending on the value of
-'TCQ_F_NOLOCK' bit in the parent qdisc, we can't assume anymore that
-per-cpu counters are there in the error path of skb_array_produce().
-Otherwise, the following splat can be seen:
+'TCQ_F_NOLOCK' bit in the parent qdisc, we need to be sure that per-cpu
+counters are present when 'reset()' is called for pfifo_fast qdiscs.
+Otherwise, the following script:
 
- Unable to handle kernel paging request at virtual address 0000600dea430008
+ # tc q a dev lo handle 1: root htb default 100
+ # tc c a dev lo parent 1: classid 1:100 htb \
+ > rate 95Mbit ceil 100Mbit burst 64k
+ [...]
+ # tc f a dev lo parent 1: protocol arp basic classid 1:100
+ [...]
+ # tc q a dev lo parent 1:100 handle 100: pfifo_fast
+ [...]
+ # tc q d dev lo root
+
+can generate the following splat:
+
+ Unable to handle kernel paging request at virtual address dfff2c01bd148000
  Mem abort info:
-   ESR = 0x96000005
+   ESR = 0x96000004
    Exception class = DABT (current EL), IL = 32 bits
    SET = 0, FnV = 0
    EA = 0, S1PTW = 0
  Data abort info:
-   ISV = 0, ISS = 0x00000005
+   ISV = 0, ISS = 0x00000004
    CM = 0, WnR = 0
- user pgtable: 64k pages, 48-bit VAs, pgdp = 000000007b97530e
- [0000600dea430008] pgd=0000000000000000, pud=0000000000000000
- Internal error: Oops: 96000005 [#1] SMP
-[...]
- pstate: 10000005 (nzcV daif -PAN -UAO)
- pc : pfifo_fast_enqueue+0x524/0x6e8
- lr : pfifo_fast_enqueue+0x46c/0x6e8
- sp : ffff800d39376fe0
- x29: ffff800d39376fe0 x28: 1ffff001a07d1e40
- x27: ffff800d03e8f188 x26: ffff800d03e8f200
- x25: 0000000000000062 x24: ffff800d393772f0
- x23: 0000000000000000 x22: 0000000000000403
- x21: ffff800cca569a00 x20: ffff800d03e8ee00
- x19: ffff800cca569a10 x18: 00000000000000bf
- x17: 0000000000000000 x16: 0000000000000000
- x15: 0000000000000000 x14: ffff1001a726edd0
- x13: 1fffe4000276a9a4 x12: 0000000000000000
- x11: dfff200000000000 x10: ffff800d03e8f1a0
- x9 : 0000000000000003 x8 : 0000000000000000
- x7 : 00000000f1f1f1f1 x6 : ffff1001a726edea
- x5 : ffff800cca56a53c x4 : 1ffff001bf9a8003
- x3 : 1ffff001bf9a8003 x2 : 1ffff001a07d1dcb
- x1 : 0000600dea430000 x0 : 0000600dea430008
- Process ping (pid: 6067, stack limit = 0x00000000dc0aa557)
+ [dfff2c01bd148000] address between user and kernel address ranges
+ Internal error: Oops: 96000004 [#1] SMP
+ [...]
+ pstate: 80000005 (Nzcv daif -PAN -UAO)
+ pc : pfifo_fast_reset+0x280/0x4d8
+ lr : pfifo_fast_reset+0x21c/0x4d8
+ sp : ffff800d09676fa0
+ x29: ffff800d09676fa0 x28: ffff200012ee22e4
+ x27: dfff200000000000 x26: 0000000000000000
+ x25: ffff800ca0799958 x24: ffff1001940f332b
+ x23: 0000000000000007 x22: ffff200012ee1ab8
+ x21: 0000600de8a40000 x20: 0000000000000000
+ x19: ffff800ca0799900 x18: 0000000000000000
+ x17: 0000000000000002 x16: 0000000000000000
+ x15: 0000000000000000 x14: 0000000000000000
+ x13: 0000000000000000 x12: ffff1001b922e6e2
+ x11: 1ffff001b922e6e1 x10: 0000000000000000
+ x9 : 1ffff001b922e6e1 x8 : dfff200000000000
+ x7 : 0000000000000000 x6 : 0000000000000000
+ x5 : 1fffe400025dc45c x4 : 1fffe400025dc357
+ x3 : 00000c01bd148000 x2 : 0000600de8a40000
+ x1 : 0000000000000007 x0 : 0000600de8a40004
  Call trace:
-  pfifo_fast_enqueue+0x524/0x6e8
-  htb_enqueue+0x660/0x10e0 [sch_htb]
-  __dev_queue_xmit+0x123c/0x2de0
-  dev_queue_xmit+0x24/0x30
-  ip_finish_output2+0xc48/0x1720
-  ip_finish_output+0x548/0x9d8
-  ip_output+0x334/0x788
-  ip_local_out+0x90/0x138
-  ip_send_skb+0x44/0x1d0
-  ip_push_pending_frames+0x5c/0x78
-  raw_sendmsg+0xed8/0x28d0
-  inet_sendmsg+0xc4/0x5c0
-  sock_sendmsg+0xac/0x108
-  __sys_sendto+0x1ac/0x2a0
-  __arm64_sys_sendto+0xc4/0x138
-  el0_svc_handler+0x13c/0x298
-  el0_svc+0x8/0xc
- Code: f9402e80 d538d081 91002000 8b010000 (885f7c03)
+  pfifo_fast_reset+0x280/0x4d8
+  qdisc_reset+0x6c/0x370
+  htb_reset+0x150/0x3b8 [sch_htb]
+  qdisc_reset+0x6c/0x370
+  dev_deactivate_queue.constprop.5+0xe0/0x1a8
+  dev_deactivate_many+0xd8/0x908
+  dev_deactivate+0xe4/0x190
+  qdisc_graft+0x88c/0xbd0
+  tc_get_qdisc+0x418/0x8a8
+  rtnetlink_rcv_msg+0x3a8/0xa78
+  netlink_rcv_skb+0x18c/0x328
+  rtnetlink_rcv+0x28/0x38
+  netlink_unicast+0x3c4/0x538
+  netlink_sendmsg+0x538/0x9a0
+  sock_sendmsg+0xac/0xf8
+  ___sys_sendmsg+0x53c/0x658
+  __sys_sendmsg+0xc8/0x140
+  __arm64_sys_sendmsg+0x74/0xa8
+  el0_svc_handler+0x164/0x468
+  el0_svc+0x10/0x14
+ Code: 910012a0 92400801 d343fc03 11000c21 (38fb6863)
 
 Fix this by testing the value of 'TCQ_F_CPUSTATS' bit in 'qdisc->flags',
 before dereferencing 'qdisc->cpu_qstats'.
 
+Changes since v1:
+ - coding style improvements, thanks to Stefano Brivio
+
 Fixes: 8a53e616de29 ("net: sched: when clearing NOLOCK, clear TCQ_F_CPUSTATS, too")
 CC: Paolo Abeni <pabeni@redhat.com>
-CC: Stefano Brivio <sbrivio@redhat.com>
 Reported-by: Li Shuang <shuali@redhat.com>
 Signed-off-by: Davide Caratti <dcaratti@redhat.com>
 Acked-by: Paolo Abeni <pabeni@redhat.com>
+Reviewed-by: Stefano Brivio <sbrivio@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/sch_generic.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ net/sched/sch_generic.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
 --- a/net/sched/sch_generic.c
 +++ b/net/sched/sch_generic.c
-@@ -624,8 +624,12 @@ static int pfifo_fast_enqueue(struct sk_
+@@ -692,11 +692,14 @@ static void pfifo_fast_reset(struct Qdis
+ 			kfree_skb(skb);
+ 	}
  
- 	err = skb_array_produce(q, skb);
+-	for_each_possible_cpu(i) {
+-		struct gnet_stats_queue *q = per_cpu_ptr(qdisc->cpu_qstats, i);
++	if (qdisc_is_percpu_stats(qdisc)) {
++		for_each_possible_cpu(i) {
++			struct gnet_stats_queue *q;
  
--	if (unlikely(err))
--		return qdisc_drop_cpu(skb, qdisc, to_free);
-+	if (unlikely(err)) {
-+		if (qdisc_is_percpu_stats(qdisc))
-+			return qdisc_drop_cpu(skb, qdisc, to_free);
-+		else
-+			return qdisc_drop(skb, qdisc, to_free);
-+	}
+-		q->backlog = 0;
+-		q->qlen = 0;
++			q = per_cpu_ptr(qdisc->cpu_qstats, i);
++			q->backlog = 0;
++			q->qlen = 0;
++		}
+ 	}
+ }
  
- 	qdisc_update_stats_at_enqueue(qdisc, pkt_len);
- 	return NET_XMIT_SUCCESS;
 
 
