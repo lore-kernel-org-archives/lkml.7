@@ -4,113 +4,133 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6AFCC433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF0FDC4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC9BF218AC
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD090218AC
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:23:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567944977;
-	bh=I6rWRHaNedcvLoxTXZr5u4VVQbWS7vhOw83Pfjw9FPE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FqKgDgJgNGcXgI+TiKOVz/TTgvT5Z1FdyiWL4CHDSIz5ndgMdBFDCBUQ5B3KL50Xw
-	 xoqLYz0OFaHovJZiBFp30kVJ+p4G1kugUDJbD05kFvFEBMrFFxGkMtjXCHfPs6Rsmt
-	 oy+05yBTWvaZDzGY6pJAJX+aOl1Snm6qshGUEszM=
+	s=default; t=1567945413;
+	bh=FFTPH1hK521flPp+HMa0C8RHLbAzeRkBtWuGqrpCCds=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Qk1BWPoT5usAk8zpcvztGg9H+oV0/WqkMJbsDWz8Vx2zgyu4NdOLopTe9OHuV7HBg
+	 bZ3sz5e12UnYzq7Cpbnn1gtQ/vqA/KpX30y9tHO75o8pgmjeoGuOXlYLdZjqmPatk1
+	 tf0vdB6LhUzWHYKDOacd1pvXZHUqmJ19WX6oyiJ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729062AbfIHMQR (ORCPT
+        id S1729077AbfIHMXc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:16:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42946 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:23:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729045AbfIHMQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:16:16 -0400
-Received: from localhost (unknown [122.182.221.179])
+        id S1728818AbfIHMXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:23:32 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41670214D9;
-        Sun,  8 Sep 2019 12:16:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9ADF0214D9;
+        Sun,  8 Sep 2019 12:23:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567944976;
-        bh=I6rWRHaNedcvLoxTXZr5u4VVQbWS7vhOw83Pfjw9FPE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hfE6J2n16FueM2f5TUyJrXOXzAoDGX+5c9xf+UpDNVDwAXuRF5fVantJky4mDcWCy
-         xnlsN4a5JMT2n0m2eStrpqi6TM0O0PXk2d8xc43HettTdqH14OQzPfm9r/29BA3ik0
-         ulNfG32fmow5KfRZE/6hFEfCrS/8I6OollYJ4dnQ=
-Date:   Sun, 8 Sep 2019 17:45:07 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     robh+dt@kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dan.j.williams@intel.com,
-        devicetree@vger.kernel.org
-Subject: Re: [RFC 3/3] dmaengine: Support for requesting channels preferring
- DMA domain controller
-Message-ID: <20190908121507.GN2672@vkoul-mobl>
-References: <20190906141816.24095-1-peter.ujfalusi@ti.com>
- <20190906141816.24095-4-peter.ujfalusi@ti.com>
+        s=default; t=1567945411;
+        bh=FFTPH1hK521flPp+HMa0C8RHLbAzeRkBtWuGqrpCCds=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=krovOf2JrLy1vbGCYbmK0DXP76Wo+0vDt6LFOvNDQ51gJPQj0Rx4MG00wTjlp9DNf
+         +5TptjDvBSpXkT1T/raY0vigf4wDWSGEzV3LdEGQfueGHzSHzIAIKLbI+tum++4VRm
+         f9rpQ+l/wA7+Akm39xOkPnvoN565FPfZyuvQUpoI=
+Date:   Sun, 8 Sep 2019 13:23:24 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Artur Rojek <contact@artur-rojek.eu>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: iio/adc: Add a compatible string
+ for JZ4770 SoC ADC
+Message-ID: <20190908132324.787d1005@archlinux>
+In-Reply-To: <5dd8172ff664fa1795a10ef40960ba54@artur-rojek.eu>
+References: <20190727195940.14010-1-contact@artur-rojek.eu>
+        <20190728094523.2a161231@archlinux>
+        <5dd8172ff664fa1795a10ef40960ba54@artur-rojek.eu>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190906141816.24095-4-peter.ujfalusi@ti.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06-09-19, 17:18, Peter Ujfalusi wrote:
-> In case the channel is not requested via the slave API, use the
-> of_find_dma_domain() to see if a system default DMA controller is
-> specified.
-> 
-> Add new function which can be used by clients to request channels by mask
-> from their DMA domain controller if specified.
-> 
-> Client drivers can take advantage of the domain support by moving from
-> dma_request_chan_by_mask() to dma_domain_request_chan_by_mask()
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->  drivers/dma/dmaengine.c   | 17 ++++++++++++-----
->  include/linux/dmaengine.h |  9 ++++++---
->  2 files changed, 18 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-> index 6baddf7dcbfd..087450eed68c 100644
-> --- a/drivers/dma/dmaengine.c
-> +++ b/drivers/dma/dmaengine.c
-> @@ -640,6 +640,10 @@ struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
->  	struct dma_device *device, *_d;
->  	struct dma_chan *chan = NULL;
->  
-> +	/* If np is not specified, get the default DMA domain controller */
-> +	if (!np)
-> +		np = of_find_dma_domain(NULL);
-> +
->  	/* Find a channel */
->  	mutex_lock(&dma_list_mutex);
->  	list_for_each_entry_safe(device, _d, &dma_device_list, global_node) {
-> @@ -751,19 +755,22 @@ struct dma_chan *dma_request_slave_channel(struct device *dev,
->  EXPORT_SYMBOL_GPL(dma_request_slave_channel);
->  
->  /**
-> - * dma_request_chan_by_mask - allocate a channel satisfying certain capabilities
-> - * @mask: capabilities that the channel must satisfy
-> + * dma_domain_request_chan_by_mask - allocate a channel by mask from DMA domain
-> + * @dev:	pointer to client device structure
-> + * @mask:	capabilities that the channel must satisfy
->   *
->   * Returns pointer to appropriate DMA channel on success or an error pointer.
->   */
-> -struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask)
-> +struct dma_chan *dma_domain_request_chan_by_mask(struct device *dev,
-> +						 const dma_cap_mask_t *mask)
+On Tue, 03 Sep 2019 21:09:24 +0200
+Artur Rojek <contact@artur-rojek.eu> wrote:
 
-should we really use dma_request_chan_by_mask() why not create a new api
-dma_request_chan_by_domain() and use that, it falls back to
-dma_request_chan_by_mask() if it doesnt find a valid domain!
+> Hi Jonathan,
+> 
+> Just reminding you of this patch set.
+> 
+> Artur
 
--- 
-~Vinod
+Hi Artur,
+
+Thanks for the reminder.  As you'd no doubt concluded, I'd
+dropped it down the back of the sofa.
+
+Unfortunately it's now just missed my last pull for 5.4 (probably)
+so I've queued it up for the 5.5 cycle.
+
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to play with it.
+
+Thanks,
+
+Jonathan
+
+> 
+> On 2019-07-28 10:45, Jonathan Cameron wrote:
+> > On Sat, 27 Jul 2019 21:59:38 +0200
+> > Artur Rojek <contact@artur-rojek.eu> wrote:
+> >   
+> >> Add a compatible string for the ADC controller present on
+> >> Ingenic JZ4770 SoC.
+> >> 
+> >> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+> >> Reviewed-by: Rob Herring <robh@kernel.org>  
+> > 
+> > Hi Artur,
+> > 
+> > I'll have to hold this series for a few weeks as the fix for the
+> > clock rate divider isn't in my upstream for the togreg branch yet
+> > (as I haven't sent a pull request since the merge window).
+> > 
+> > Give me a poke if I seem to have forgotten these in a few weeks
+> > time.
+> > 
+> > Thanks,
+> > 
+> > Jonathan
+> >   
+> >> ---
+> >> 
+> >> Changes:
+> >> 
+> >> v2: no change
+> >> 
+> >>  Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt | 1 +
+> >>  1 file changed, 1 insertion(+)
+> >> 
+> >> diff --git a/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt 
+> >> b/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
+> >> index f01159f20d87..cd9048cf9dcf 100644
+> >> --- a/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
+> >> +++ b/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
+> >> @@ -5,6 +5,7 @@ Required properties:
+> >>  - compatible: Should be one of:
+> >>    * ingenic,jz4725b-adc
+> >>    * ingenic,jz4740-adc
+> >> +  * ingenic,jz4770-adc
+> >>  - reg: ADC controller registers location and length.
+> >>  - clocks: phandle to the SoC's ADC clock.
+> >>  - clock-names: Must be set to "adc".  
+
