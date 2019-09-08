@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A136C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A08EC433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47C7521479
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:51:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A2B620693
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:52:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947118;
-	bh=1k/BVrCS6n1SgWMHr/Nc9aR6j1n7/VUeMm+uIyN0rWY=;
+	s=default; t=1567947122;
+	bh=GtZ1QyGmnGcackSwHi14x+wKZew0gFtJ0eiFWT+vkwI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dWI36ka4kgqB995QszFVrTjkrIyiodSrSlNoL0y7Jpvvhdy8Dbak9vBXxik8n89kg
-	 5LPHqXy6oHgwZRhmtD/y8/Ry8dB/lcmisLzd0xXV8zEqVSyUYNctxfegiwDEKM3CxI
-	 DAL6ZpvDP4iTmnuQtac0OeJ9mi+OM0V0p9etv8aM=
+	b=FDcTzfVmQv8+YNWCCBHVP4YoE2ybGU6GtY7uObPOXsoR2e6lTMlK9qTfBhDh9dN0H
+	 kBd5H6Ge9L3L2FFldvD1+yx4j+hjaPmfzg2HMnFET8kIvoaPUIEZwbnLDymcrIoF/o
+	 9qarjHggmKhhLVOgDodgG4nMbUn3t3h8D8A+SdTE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732819AbfIHMv5 (ORCPT
+        id S1732855AbfIHMwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:51:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43578 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:52:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732776AbfIHMvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:51:48 -0400
+        id S1732802AbfIHMvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:51:51 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B5E8218AC;
-        Sun,  8 Sep 2019 12:51:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6C4C218AC;
+        Sun,  8 Sep 2019 12:51:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567947107;
-        bh=1k/BVrCS6n1SgWMHr/Nc9aR6j1n7/VUeMm+uIyN0rWY=;
+        s=default; t=1567947110;
+        bh=GtZ1QyGmnGcackSwHi14x+wKZew0gFtJ0eiFWT+vkwI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TLETWWtKus4zcb4ZwXWmqwiFJ/9NUnlUjFj4RrohWogDbR7Ert8X/Yeg0ax57snc+
-         pbbnXNrybWD2jGCWxn0O+EVfnwLwCR6gvHZRohHsZaSnuAzgvzueT1X/YBnTHz+oOf
-         8teRHb9g0bDH9yJwSOSVpWCUYw+oviP1FUKqPvUY=
+        b=sy7te74dhRFpQOL51+B7ph6nvkaKX1MFjwBewJ70YwEY3dYiPo7IdYPIW7ppBHPt7
+         CvA1pk0LlfXw/FR0fdI/voRBPBM8GbicMsYSSwhRZCdPgXrvPJrc7xmtA63hYs3bBP
+         iVaDAaFvAlGJgn8bG0zk0/r/9UbXUIrqEfQMV1bk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Even Xu <even.xu@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        stable@vger.kernel.org,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
         Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 65/94] HID: intel-ish-hid: ipc: add EHL device id
-Date:   Sun,  8 Sep 2019 13:42:01 +0100
-Message-Id: <20190908121152.295812075@linuxfoundation.org>
+Subject: [PATCH 5.2 66/94] HID: cp2112: prevent sleeping function called from invalid context
+Date:   Sun,  8 Sep 2019 13:42:02 +0100
+Message-Id: <20190908121152.324236353@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
 References: <20190908121150.420989666@linuxfoundation.org>
@@ -60,44 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b640be5bc8e4673dc8049cf74176ddedecea5597 ]
+[ Upstream commit 2d05dba2b25ecb0f8fc3a0b4eb2232da6454a47b ]
 
-EHL is a new platform using ishtp solution, add its device id
-to support list.
+When calling request_threaded_irq() with a CP2112, the function
+cp2112_gpio_irq_startup() is called in a IRQ context.
 
-Signed-off-by: Even Xu <even.xu@intel.com>
-Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Therefore we can not sleep, and we can not call
+cp2112_gpio_direction_input() there.
+
+Move the call to cp2112_gpio_direction_input() earlier to have a working
+driver.
+
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/intel-ish-hid/ipc/hw-ish.h  | 1 +
- drivers/hid/intel-ish-hid/ipc/pci-ish.c | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/hid/hid-cp2112.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hid/intel-ish-hid/ipc/hw-ish.h b/drivers/hid/intel-ish-hid/ipc/hw-ish.h
-index 1065692f90e20..5792a104000a9 100644
---- a/drivers/hid/intel-ish-hid/ipc/hw-ish.h
-+++ b/drivers/hid/intel-ish-hid/ipc/hw-ish.h
-@@ -24,6 +24,7 @@
- #define ICL_MOBILE_DEVICE_ID	0x34FC
- #define SPT_H_DEVICE_ID		0xA135
- #define CML_LP_DEVICE_ID	0x02FC
-+#define EHL_Ax_DEVICE_ID	0x4BB3
+diff --git a/drivers/hid/hid-cp2112.c b/drivers/hid/hid-cp2112.c
+index 8bbe3d0cbe5d9..8fd44407a0df7 100644
+--- a/drivers/hid/hid-cp2112.c
++++ b/drivers/hid/hid-cp2112.c
+@@ -1152,8 +1152,6 @@ static unsigned int cp2112_gpio_irq_startup(struct irq_data *d)
  
- #define	REVISION_ID_CHT_A0	0x6
- #define	REVISION_ID_CHT_Ax_SI	0x0
-diff --git a/drivers/hid/intel-ish-hid/ipc/pci-ish.c b/drivers/hid/intel-ish-hid/ipc/pci-ish.c
-index 17ae49fba920f..8cce3cfe28e08 100644
---- a/drivers/hid/intel-ish-hid/ipc/pci-ish.c
-+++ b/drivers/hid/intel-ish-hid/ipc/pci-ish.c
-@@ -33,6 +33,7 @@ static const struct pci_device_id ish_pci_tbl[] = {
- 	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, ICL_MOBILE_DEVICE_ID)},
- 	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, SPT_H_DEVICE_ID)},
- 	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, CML_LP_DEVICE_ID)},
-+	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, EHL_Ax_DEVICE_ID)},
- 	{0, }
- };
- MODULE_DEVICE_TABLE(pci, ish_pci_tbl);
+ 	INIT_DELAYED_WORK(&dev->gpio_poll_worker, cp2112_gpio_poll_callback);
+ 
+-	cp2112_gpio_direction_input(gc, d->hwirq);
+-
+ 	if (!dev->gpio_poll) {
+ 		dev->gpio_poll = true;
+ 		schedule_delayed_work(&dev->gpio_poll_worker, 0);
+@@ -1201,6 +1199,12 @@ static int __maybe_unused cp2112_allocate_irq(struct cp2112_device *dev,
+ 		return PTR_ERR(dev->desc[pin]);
+ 	}
+ 
++	ret = cp2112_gpio_direction_input(&dev->gc, pin);
++	if (ret < 0) {
++		dev_err(dev->gc.parent, "Failed to set GPIO to input dir\n");
++		goto err_desc;
++	}
++
+ 	ret = gpiochip_lock_as_irq(&dev->gc, pin);
+ 	if (ret) {
+ 		dev_err(dev->gc.parent, "Failed to lock GPIO as interrupt\n");
 -- 
 2.20.1
 
