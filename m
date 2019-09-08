@@ -6,84 +6,68 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CDEC433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 21:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6079AC4360D
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 21:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE180216C8
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 21:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 426AC214DB
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 21:46:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730815AbfIHV1R (ORCPT
+        id S1730918AbfIHVqK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 17:27:17 -0400
-Received: from foss.arm.com ([217.140.110.172]:43278 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727235AbfIHV1R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 17:27:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C23C2337;
-        Sun,  8 Sep 2019 14:27:16 -0700 (PDT)
-Received: from huawei_p9_lite.cambridge.arm.com (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AC4243F67D;
-        Sun,  8 Sep 2019 14:27:13 -0700 (PDT)
-Date:   Sun, 8 Sep 2019 22:27:11 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     hch@lst.de, wahrenst@gmx.net, marc.zyngier@arm.com,
-        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-        Will Deacon <will@kernel.org>, f.fainelli@gmail.com,
-        robin.murphy@arm.com, linux-kernel@vger.kernel.org,
-        mbrugger@suse.com, linux-rpi-kernel@lists.infradead.org,
-        phill@raspberrypi.org, m.szyprowski@samsung.com
-Subject: Re: [PATCH v4 3/4] arm64: use both ZONE_DMA and ZONE_DMA32
-Message-ID: <20190908212711.GA84759@huawei_p9_lite.cambridge.arm.com>
-References: <20190906120617.18836-1-nsaenzjulienne@suse.de>
- <20190906120617.18836-4-nsaenzjulienne@suse.de>
+        Sun, 8 Sep 2019 17:46:10 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:45980 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730816AbfIHVqK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 17:46:10 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1i750T-00022V-AW; Sun, 08 Sep 2019 21:46:01 +0000
+Date:   Sun, 8 Sep 2019 22:46:01 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     kernel test robot <rong.a.chen@intel.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, lkp@01.org
+Subject: Re: [vfs]  8bb3c61baf:  vm-scalability.median -23.7% regression
+Message-ID: <20190908214601.GC1131@ZenIV.linux.org.uk>
+References: <20190903084122.GH15734@shao2-debian>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190906120617.18836-4-nsaenzjulienne@suse.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190903084122.GH15734@shao2-debian>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 06, 2019 at 02:06:14PM +0200, Nicolas Saenz Julienne wrote:
-> @@ -430,7 +454,7 @@ void __init arm64_memblock_init(void)
->  
->  	high_memory = __va(memblock_end_of_DRAM() - 1) + 1;
->  
-> -	dma_contiguous_reserve(arm64_dma32_phys_limit);
-> +	dma_contiguous_reserve(arm64_dma_phys_limit ? : arm64_dma32_phys_limit);
->  }
->  
->  void __init bootmem_init(void)
-> @@ -534,6 +558,7 @@ static void __init free_unused_memmap(void)
->  void __init mem_init(void)
->  {
->  	if (swiotlb_force == SWIOTLB_FORCE ||
-> +	    max_pfn > (arm64_dma_phys_limit >> PAGE_SHIFT) ||
->  	    max_pfn > (arm64_dma32_phys_limit >> PAGE_SHIFT))
->  		swiotlb_init(1);
+On Tue, Sep 03, 2019 at 04:41:22PM +0800, kernel test robot wrote:
+> Greeting,
+> 
+> FYI, we noticed a -23.7% regression of vm-scalability.median due to commit:
+> 
+> 
+> commit: 8bb3c61bafa8c1cd222ada602bb94ff23119e738 ("vfs: Convert ramfs, shmem, tmpfs, devtmpfs, rootfs to use the new mount API")
+> https://kernel.googlesource.com/pub/scm/linux/kernel/git/viro/vfs.git work.mount
+> 
+> in testcase: vm-scalability
+> on test machine: 88 threads Intel(R) Xeon(R) CPU E5-2699 v4 @ 2.20GHz with 128G memory
+> with following parameters:
+> 
+> 	runtime: 300s
+> 	size: 16G
+> 	test: shm-pread-rand
+> 	cpufreq_governor: performance
+> 	ucode: 0xb000036
 
-So here we want to initialise the swiotlb only if we need bounce
-buffers. Prior to this patch, we assumed that swiotlb is needed if
-max_pfn is beyond the reach of 32-bit devices. With ZONE_DMA, we need to
-lower this limit to arm64_dma_phys_limit.
+That thing loses size=... option.  Both size= and nr_blocks= affect the
+same thing (->max_blocks), but the parser keeps track of the options
+it has seen and applying the parsed data to superblock checks only
+whether nr_blocks= had been there.  IOW, size= gets parsed, but the
+result goes nowhere.
 
-If ZONE_DMA is enabled, just comparing max_pfn with arm64_dma_phys_limit
-is sufficient since the dma32 one limit always higher. However, if
-ZONE_DMA is disabled, arm64_dma_phys_limit is 0, so we may initialise
-swiotlb unnecessarily. I guess you need a similar check to the
-dma_contiguous_reserve() above.
-
-With that:
-
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-
-Unless there are other objections, I can queue this series for 5.5 in a
-few weeks time (too late for 5.4).
-
--- 
-Catalin
+I'm not sure whether it's better to fix the patch up or redo it from
+scratch - it needs to be carved up anyway and it's highly non-transparent,
+so I'm probably going to replace the damn thing entirely with something
+that would be easier to follow.
