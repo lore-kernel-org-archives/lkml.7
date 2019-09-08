@@ -2,348 +2,163 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27474C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D998EC433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E557D2190F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:49:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946975;
-	bh=e9P1I9L0bD7Yl1MFtBW3wq1+o92Zsxf4JMj8ZGWlWBk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t+aqzAiEN71NinjwKGAXcpPvQHBl7qszPp16YnjAm97bbaTMaN1A8ScamBh9hjpm/
-	 ttnPHEHKSXICQlaE8TJTPHp8LVO/g1MpIidewx+O5p51MRkfBbOQlWrt7IicLKL4Ow
-	 vAb10KJuFpMJwqIh9fOUZI3yZb1dT+eEI0R4k07k=
+	by mail.kernel.org (Postfix) with ESMTP id 9E0F221971
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:49:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="II1LDTk9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731545AbfIHMte (ORCPT
+        id S1731578AbfIHMtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:49:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39474 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:49:36 -0400
+Received: from mout.web.de ([212.227.15.14]:35579 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731505AbfIHMta (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:49:30 -0400
-Received: from localhost (unknown [62.28.240.114])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 408E92190F;
-        Sun,  8 Sep 2019 12:49:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946969;
-        bh=e9P1I9L0bD7Yl1MFtBW3wq1+o92Zsxf4JMj8ZGWlWBk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aonj+/KL5UAWT/K9PRPKjQjjGuydMnDuTgvy0r6mibtVUQin6qtkk7FnA9IUwh212
-         l8Bde2DOActlFESorSU81K+WtzUTzuou9vlwoiRaxKNE0JpRDIUt6pHH+ZANFoYrpQ
-         aR+9xf5LU/XO32bHW+ZpPmwuVqtHRva0kxZgeYc8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, itugrok@yahoo.com
-Subject: [PATCH 5.2 04/94] net_sched: fix a NULL pointer deref in ipt action
-Date:   Sun,  8 Sep 2019 13:41:00 +0100
-Message-Id: <20190908121150.556749111@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
-References: <20190908121150.420989666@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1731526AbfIHMtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:49:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1567946931;
+        bh=64n2i/+x9VuLbn5y3oTsEsYv5qVvKCd8Jhx5xBFFssc=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=II1LDTk9KldM1ji4hrCt6moQ9aNn5H5aQjeeYD2zwgtCZdYAxF3EUcs7s9jbx1oq1
+         s4YzcF/6xit+VspAD/CfuaXyogByNk6+viqc/RwjX6Yd4lygNijBPkE9ei+Toaivp2
+         PYU7/0Fpf63Obv12HC67b6f89i9mN/cau/8++JMg=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.131.171.128]) by smtp.web.de (mrweb004
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MEqOg-1hwR9l2khe-00G2ED; Sun, 08
+ Sep 2019 14:48:51 +0200
+Subject: Re: Coccinelle: pci_free_consistent: Checking when constraints
+To:     Julia Lawall <julia.lawall@lip6.fr>,
+        Coccinelle <cocci@systeme.lip6.fr>
+Cc:     Gilles Muller <Gilles.Muller@lip6.fr>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Petr Strnad <strnape1@fel.cvut.cz>,
+        Wen Yang <wen.yang99@zte.com.cn>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Allison Randal <allison@lohutok.net>,
+        Enrico Weigelt <lkml@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yi Wang <wang.yi59@zte.com.cn>
+References: <9666134d-0ff6-81eb-b088-f0086a0e61b1@web.de>
+ <alpine.DEB.2.21.1909081019020.3340@hadrien>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
+ +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
+ mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
+ lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
+ YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
+ GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
+ rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
+ 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
+ jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
+ BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
+ cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
+ Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
+ g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
+ OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
+ CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
+ LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
+ sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
+ kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
+ i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
+ g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
+ q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
+ NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
+ nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
+ 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
+ 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
+ wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
+ riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
+ DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
+ fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
+ 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
+ xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
+ qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
+ Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
+ Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
+ +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
+ hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
+ /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
+ tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
+ qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
+ Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
+ x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
+ pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
+Message-ID: <63e433b4-06cf-cecc-46e0-9f31226f71d0@web.de>
+Date:   Sun, 8 Sep 2019 14:48:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <alpine.DEB.2.21.1909081019020.3340@hadrien>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+X-Provags-ID: V03:K1:cnUzcmv9Op0ghjjuTrlV117lBDIKYvwwuyfCVyH3UAvZKyJV6B5
+ E47QIPoKZ/UWVUZTGQcnFXTv8TOV5/qPfSGyr/ixIqRZVRfBhX7rF4G4BFsECckIisl/htP
+ 2q6IgoAPBjJDgAaCdXVldWyvRIZ3WQ9WGvFWgZFTM+G9LbZUyEHWnq/VWAS0E7Qu4goTcul
+ yHwYGZltV5+fytDtEpDqQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:MeUWalmLQzg=:UNbC3T7JRvjkSf59YfVk/E
+ ZQr/HDj63eah6c4aMB/C1Gv8wXYv8i3XC2zIY5zCy64lHsh4CAV8UZ1quJugXOBmEbNY0Wtmg
+ aEAtKn9rtSmLHXEIOj0fmE1UfoeBca1jKCjtbmXLID07nIkD7SB9B2/2cv0WBy/zchcrxPAyH
+ dac/2C6K1q5uchsWgYEvKNLh0Z5ZxM2cNB7+/HiTyQAQ63Rdj/eFkFHBqFOlrIMECpnJLqd9e
+ 77j8UMjGnDgJfC4Di0h5a5kfVgOFzOEr6pjP5wRYIpqLSTRXbfwekuJsBXiy/ahA9Gk3y65VE
+ v8I4oXJYwPUGNMYQHLalLR57vqzB71Tae35RPzO93Y5LmSXiv2cLJ8R4/hWy7F4qopn4fE2dn
+ 4gyP+Ng8aEFg8haj9Mnf5upnqJwAqntflt9VfXlTBkjF5kT2aQYJCwoLTPqG5tGEqLZr4WScj
+ oXqdOHlothqsI/wHFlgCLs+OE4Fqcf30fqxM2bkXREA/V/EoGfgCwmvakmudFNWY//yoIo5kK
+ o8Hner3w1joABRlpBojB7OX9jBeugnok5NE0e4wnki/4S4noNZeTGCNsIH3/43xsEoVLDjav5
+ 9GQS0gaN8BKUl75i1dNaj04Vnmy4+litqC3pmZ7tdSiCYj5lXyM0is7t/vS746kI0k/vUQ77N
+ GXFcizzPUTuoe5fLSOYdboOu32frZcy4wbhaq8AZ13hqPq8v9FY4LZ+psrRjHZQn8dtm3dy+y
+ 57qIxqL/itD+I+m00fv6Mv4Cy88UcokH7/QCsUewzWu7uzoMnnExjLqjsSgvaaaYmbQd3Ov33
+ vVPbTjAcLFi7OaWjnckU8phMsvbfID18oPdnhXCr3LQ2pN2T4bmS3zu/pn0nC0hEczp9HcuiL
+ f70otUGlxUWmLlJ3AulaawWS4O0Q0ss4gg/S1zFew1sccsdjBmNEEEAPphjI3R4WUYWrz8xqe
+ TOpVXHtnPzOnh01U0XM//MXdOzMAfrxX5Tv2pnP38nSniMfpotbgOGut0m1erCRAIFW3Rk8MQ
+ y+hAPy3K949o9hvaL4tugzMz3L+zdOf7/B/n+OxBnfJnEMHE8LU9a5ty0RoDjtYCcmfaZlsZc
+ BE5GECy52qLgUn+BMH7GcgNNHqJc2pP4+CVgx3lla2KlXuDIUmEi9mvi0ZGrg77XX782rT/i0
+ +rmNO590jqZ6oPNvMeFFFDr+xPJmjgoDrLsvOujabww0czc5OQr5w70nfgJggEIFZTyucgi+J
+ RE4LJ50fOqg2DCbU2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+> The when exists below these lines has an impact.
 
-[ Upstream commit 981471bd3abf4d572097645d765391533aac327d ]
-
-The net pointer in struct xt_tgdtor_param is not explicitly
-initialized therefore is still NULL when dereferencing it.
-So we have to find a way to pass the correct net pointer to
-ipt_destroy_target().
-
-The best way I find is just saving the net pointer inside the per
-netns struct tcf_idrinfo, which could make this patch smaller.
-
-Fixes: 0c66dc1ea3f0 ("netfilter: conntrack: register hooks in netns when needed by ruleset")
-Reported-and-tested-by: itugrok@yahoo.com
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-Cc: Jiri Pirko <jiri@resnulli.us>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/net/act_api.h      |    4 +++-
- net/sched/act_bpf.c        |    2 +-
- net/sched/act_connmark.c   |    2 +-
- net/sched/act_csum.c       |    2 +-
- net/sched/act_gact.c       |    2 +-
- net/sched/act_ife.c        |    2 +-
- net/sched/act_ipt.c        |   11 ++++++-----
- net/sched/act_mirred.c     |    2 +-
- net/sched/act_nat.c        |    2 +-
- net/sched/act_pedit.c      |    2 +-
- net/sched/act_police.c     |    2 +-
- net/sched/act_sample.c     |    2 +-
- net/sched/act_simple.c     |    2 +-
- net/sched/act_skbedit.c    |    2 +-
- net/sched/act_skbmod.c     |    2 +-
- net/sched/act_tunnel_key.c |    2 +-
- net/sched/act_vlan.c       |    2 +-
- 17 files changed, 24 insertions(+), 21 deletions(-)
-
---- a/include/net/act_api.h
-+++ b/include/net/act_api.h
-@@ -15,6 +15,7 @@
- struct tcf_idrinfo {
- 	struct mutex	lock;
- 	struct idr	action_idr;
-+	struct net	*net;
- };
- 
- struct tc_action_ops;
-@@ -108,7 +109,7 @@ struct tc_action_net {
- };
- 
- static inline
--int tc_action_net_init(struct tc_action_net *tn,
-+int tc_action_net_init(struct net *net, struct tc_action_net *tn,
- 		       const struct tc_action_ops *ops)
- {
- 	int err = 0;
-@@ -117,6 +118,7 @@ int tc_action_net_init(struct tc_action_
- 	if (!tn->idrinfo)
- 		return -ENOMEM;
- 	tn->ops = ops;
-+	tn->idrinfo->net = net;
- 	mutex_init(&tn->idrinfo->lock);
- 	idr_init(&tn->idrinfo->action_idr);
- 	return err;
---- a/net/sched/act_bpf.c
-+++ b/net/sched/act_bpf.c
-@@ -422,7 +422,7 @@ static __net_init int bpf_init_net(struc
- {
- 	struct tc_action_net *tn = net_generic(net, bpf_net_id);
- 
--	return tc_action_net_init(tn, &act_bpf_ops);
-+	return tc_action_net_init(net, tn, &act_bpf_ops);
- }
- 
- static void __net_exit bpf_exit_net(struct list_head *net_list)
---- a/net/sched/act_connmark.c
-+++ b/net/sched/act_connmark.c
-@@ -231,7 +231,7 @@ static __net_init int connmark_init_net(
- {
- 	struct tc_action_net *tn = net_generic(net, connmark_net_id);
- 
--	return tc_action_net_init(tn, &act_connmark_ops);
-+	return tc_action_net_init(net, tn, &act_connmark_ops);
- }
- 
- static void __net_exit connmark_exit_net(struct list_head *net_list)
---- a/net/sched/act_csum.c
-+++ b/net/sched/act_csum.c
-@@ -714,7 +714,7 @@ static __net_init int csum_init_net(stru
- {
- 	struct tc_action_net *tn = net_generic(net, csum_net_id);
- 
--	return tc_action_net_init(tn, &act_csum_ops);
-+	return tc_action_net_init(net, tn, &act_csum_ops);
- }
- 
- static void __net_exit csum_exit_net(struct list_head *net_list)
---- a/net/sched/act_gact.c
-+++ b/net/sched/act_gact.c
-@@ -278,7 +278,7 @@ static __net_init int gact_init_net(stru
- {
- 	struct tc_action_net *tn = net_generic(net, gact_net_id);
- 
--	return tc_action_net_init(tn, &act_gact_ops);
-+	return tc_action_net_init(net, tn, &act_gact_ops);
- }
- 
- static void __net_exit gact_exit_net(struct list_head *net_list)
---- a/net/sched/act_ife.c
-+++ b/net/sched/act_ife.c
-@@ -890,7 +890,7 @@ static __net_init int ife_init_net(struc
- {
- 	struct tc_action_net *tn = net_generic(net, ife_net_id);
- 
--	return tc_action_net_init(tn, &act_ife_ops);
-+	return tc_action_net_init(net, tn, &act_ife_ops);
- }
- 
- static void __net_exit ife_exit_net(struct list_head *net_list)
---- a/net/sched/act_ipt.c
-+++ b/net/sched/act_ipt.c
-@@ -61,12 +61,13 @@ static int ipt_init_target(struct net *n
- 	return 0;
- }
- 
--static void ipt_destroy_target(struct xt_entry_target *t)
-+static void ipt_destroy_target(struct xt_entry_target *t, struct net *net)
- {
- 	struct xt_tgdtor_param par = {
- 		.target   = t->u.kernel.target,
- 		.targinfo = t->data,
- 		.family   = NFPROTO_IPV4,
-+		.net      = net,
- 	};
- 	if (par.target->destroy != NULL)
- 		par.target->destroy(&par);
-@@ -78,7 +79,7 @@ static void tcf_ipt_release(struct tc_ac
- 	struct tcf_ipt *ipt = to_ipt(a);
- 
- 	if (ipt->tcfi_t) {
--		ipt_destroy_target(ipt->tcfi_t);
-+		ipt_destroy_target(ipt->tcfi_t, a->idrinfo->net);
- 		kfree(ipt->tcfi_t);
- 	}
- 	kfree(ipt->tcfi_tname);
-@@ -180,7 +181,7 @@ static int __tcf_ipt_init(struct net *ne
- 
- 	spin_lock_bh(&ipt->tcf_lock);
- 	if (ret != ACT_P_CREATED) {
--		ipt_destroy_target(ipt->tcfi_t);
-+		ipt_destroy_target(ipt->tcfi_t, net);
- 		kfree(ipt->tcfi_tname);
- 		kfree(ipt->tcfi_t);
- 	}
-@@ -350,7 +351,7 @@ static __net_init int ipt_init_net(struc
- {
- 	struct tc_action_net *tn = net_generic(net, ipt_net_id);
- 
--	return tc_action_net_init(tn, &act_ipt_ops);
-+	return tc_action_net_init(net, tn, &act_ipt_ops);
- }
- 
- static void __net_exit ipt_exit_net(struct list_head *net_list)
-@@ -399,7 +400,7 @@ static __net_init int xt_init_net(struct
- {
- 	struct tc_action_net *tn = net_generic(net, xt_net_id);
- 
--	return tc_action_net_init(tn, &act_xt_ops);
-+	return tc_action_net_init(net, tn, &act_xt_ops);
- }
- 
- static void __net_exit xt_exit_net(struct list_head *net_list)
---- a/net/sched/act_mirred.c
-+++ b/net/sched/act_mirred.c
-@@ -432,7 +432,7 @@ static __net_init int mirred_init_net(st
- {
- 	struct tc_action_net *tn = net_generic(net, mirred_net_id);
- 
--	return tc_action_net_init(tn, &act_mirred_ops);
-+	return tc_action_net_init(net, tn, &act_mirred_ops);
- }
- 
- static void __net_exit mirred_exit_net(struct list_head *net_list)
---- a/net/sched/act_nat.c
-+++ b/net/sched/act_nat.c
-@@ -327,7 +327,7 @@ static __net_init int nat_init_net(struc
- {
- 	struct tc_action_net *tn = net_generic(net, nat_net_id);
- 
--	return tc_action_net_init(tn, &act_nat_ops);
-+	return tc_action_net_init(net, tn, &act_nat_ops);
- }
- 
- static void __net_exit nat_exit_net(struct list_head *net_list)
---- a/net/sched/act_pedit.c
-+++ b/net/sched/act_pedit.c
-@@ -498,7 +498,7 @@ static __net_init int pedit_init_net(str
- {
- 	struct tc_action_net *tn = net_generic(net, pedit_net_id);
- 
--	return tc_action_net_init(tn, &act_pedit_ops);
-+	return tc_action_net_init(net, tn, &act_pedit_ops);
- }
- 
- static void __net_exit pedit_exit_net(struct list_head *net_list)
---- a/net/sched/act_police.c
-+++ b/net/sched/act_police.c
-@@ -371,7 +371,7 @@ static __net_init int police_init_net(st
- {
- 	struct tc_action_net *tn = net_generic(net, police_net_id);
- 
--	return tc_action_net_init(tn, &act_police_ops);
-+	return tc_action_net_init(net, tn, &act_police_ops);
- }
- 
- static void __net_exit police_exit_net(struct list_head *net_list)
---- a/net/sched/act_sample.c
-+++ b/net/sched/act_sample.c
-@@ -269,7 +269,7 @@ static __net_init int sample_init_net(st
- {
- 	struct tc_action_net *tn = net_generic(net, sample_net_id);
- 
--	return tc_action_net_init(tn, &act_sample_ops);
-+	return tc_action_net_init(net, tn, &act_sample_ops);
- }
- 
- static void __net_exit sample_exit_net(struct list_head *net_list)
---- a/net/sched/act_simple.c
-+++ b/net/sched/act_simple.c
-@@ -232,7 +232,7 @@ static __net_init int simp_init_net(stru
- {
- 	struct tc_action_net *tn = net_generic(net, simp_net_id);
- 
--	return tc_action_net_init(tn, &act_simp_ops);
-+	return tc_action_net_init(net, tn, &act_simp_ops);
- }
- 
- static void __net_exit simp_exit_net(struct list_head *net_list)
---- a/net/sched/act_skbedit.c
-+++ b/net/sched/act_skbedit.c
-@@ -336,7 +336,7 @@ static __net_init int skbedit_init_net(s
- {
- 	struct tc_action_net *tn = net_generic(net, skbedit_net_id);
- 
--	return tc_action_net_init(tn, &act_skbedit_ops);
-+	return tc_action_net_init(net, tn, &act_skbedit_ops);
- }
- 
- static void __net_exit skbedit_exit_net(struct list_head *net_list)
---- a/net/sched/act_skbmod.c
-+++ b/net/sched/act_skbmod.c
-@@ -287,7 +287,7 @@ static __net_init int skbmod_init_net(st
- {
- 	struct tc_action_net *tn = net_generic(net, skbmod_net_id);
- 
--	return tc_action_net_init(tn, &act_skbmod_ops);
-+	return tc_action_net_init(net, tn, &act_skbmod_ops);
- }
- 
- static void __net_exit skbmod_exit_net(struct list_head *net_list)
---- a/net/sched/act_tunnel_key.c
-+++ b/net/sched/act_tunnel_key.c
-@@ -600,7 +600,7 @@ static __net_init int tunnel_key_init_ne
- {
- 	struct tc_action_net *tn = net_generic(net, tunnel_key_net_id);
- 
--	return tc_action_net_init(tn, &act_tunnel_key_ops);
-+	return tc_action_net_init(net, tn, &act_tunnel_key_ops);
- }
- 
- static void __net_exit tunnel_key_exit_net(struct list_head *net_list)
---- a/net/sched/act_vlan.c
-+++ b/net/sched/act_vlan.c
-@@ -334,7 +334,7 @@ static __net_init int vlan_init_net(stru
- {
- 	struct tc_action_net *tn = net_generic(net, vlan_net_id);
- 
--	return tc_action_net_init(tn, &act_vlan_ops);
-+	return tc_action_net_init(net, tn, &act_vlan_ops);
- }
- 
- static void __net_exit vlan_exit_net(struct list_head *net_list)
+This parameter should result in a desirable effect.
 
 
+> I believe that the rule is ok as is.
+
+I wonder about the relevance of the shown double if statement exclusion.
+
+
+> A single path may have no call to pci_free_consistent,
+
+We come along different views around the provided software functionality
+once more.
+
+
+> but if it has that call under one of the mentioned ifs,
+> then the path is still ok,
+
+I find that this information can need further clarification.
+
+
+> and not something that an error should be reported about.
+
+I do not expect an error message from the SmPL script execution here.
+
+I just try again to clarify if the specification of a single function call
+exclusion can (and should) be sufficient also at this place.
+
+Regards,
+Markus
