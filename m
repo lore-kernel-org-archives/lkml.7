@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4E1C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDEEC4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FB6E218DE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF3BF218AE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:45:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946735;
-	bh=l4gihC0EG1LPrmRUkSJRdFlEevjeyYnCovbSKbMjJJo=;
+	s=default; t=1567946744;
+	bh=XAXN7wp/eN76jJ2kLwNLkTG7oRPMZDQceWcjXgmL2LE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hpy9eTCgQIEpYocHi1rNFzff7qBh0UxUZqoLH20hY3vgTd8eqDZMjLRjxZzfYri9J
-	 Hc6LbyXYqClVuvpFoixtdWCQp9gUgYvLCRQZamMGEdXbtzH6BIXqPFFoyReu7y0+Wu
-	 0Eii3xZvZwTQ9aaJ7pMDLjQNbddkAZNdbgxpSYKg=
+	b=eMF3uEfm6pGwkl2HDTf1lgjih4sslwIXj4ZI+TfpPOsTlxGFKh8o8pQdU4nZjyjPM
+	 Y3N+vxW52C/d2ymqPrkEIQmXgheL8w8En/gg4ltIdMTy6EmmMkxyECFWn08bnmxzXT
+	 8OdAc0w6qAqPbKfqtuedj+AT0ihsYKV0Zl+3fyis=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730146AbfIHMpe (ORCPT
+        id S1730192AbfIHMpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:45:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60904 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:45:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730105AbfIHMpc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:45:32 -0400
+        id S1730174AbfIHMpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:45:40 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3170216C8;
-        Sun,  8 Sep 2019 12:45:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2455216C8;
+        Sun,  8 Sep 2019 12:45:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946732;
-        bh=l4gihC0EG1LPrmRUkSJRdFlEevjeyYnCovbSKbMjJJo=;
+        s=default; t=1567946740;
+        bh=XAXN7wp/eN76jJ2kLwNLkTG7oRPMZDQceWcjXgmL2LE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LOaYVji4OwvUzU/+RgqZ7AJCIJBQwq2f0T1v3MVUDZodUG2dDG2q6fUjUFb+OuUtC
-         vv9V7hdYss6BUU9ehadG0HhDZoLf1jvwPvc359SSXnALvoxuKAR//90GTWFjIAg8Lw
-         Jvc0tMlELu6tbZdhXrwD5KTJtN3/ufwaN3l7zp0Y=
+        b=pVVgj3O/AxQ6WPRAwhhKM6nZL3eoXeGyukx7WW/FHOO4xv5DnIQ8i2481OovDU2d2
+         Jh/sxwWt+nHXXP/cIVIgOgauQ5UL6enRWY2gg5eDVjSsanwMtFfceImdU7qeXZaxX/
+         1rxqAMK1pLytqNt+UPpdBmz0gol87dl4sF6VGb6o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 20/40] HID: cp2112: prevent sleeping function called from invalid context
-Date:   Sun,  8 Sep 2019 13:41:53 +0100
-Message-Id: <20190908121122.560928004@linuxfoundation.org>
+        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 22/40] Tools: hv: kvp: eliminate may be used uninitialized warning
+Date:   Sun,  8 Sep 2019 13:41:55 +0100
+Message-Id: <20190908121122.896892120@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121114.260662089@linuxfoundation.org>
 References: <20190908121114.260662089@linuxfoundation.org>
@@ -60,50 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2d05dba2b25ecb0f8fc3a0b4eb2232da6454a47b ]
+[ Upstream commit 89eb4d8d25722a0a0194cf7fa47ba602e32a6da7 ]
 
-When calling request_threaded_irq() with a CP2112, the function
-cp2112_gpio_irq_startup() is called in a IRQ context.
+When building hv_kvp_daemon GCC-8.3 complains:
 
-Therefore we can not sleep, and we can not call
-cp2112_gpio_direction_input() there.
+hv_kvp_daemon.c: In function ‘kvp_get_ip_info.constprop’:
+hv_kvp_daemon.c:812:30: warning: ‘ip_buffer’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+  struct hv_kvp_ipaddr_value *ip_buffer;
 
-Move the call to cp2112_gpio_direction_input() earlier to have a working
-driver.
+this seems to be a false positive: we only use ip_buffer when
+op == KVP_OP_GET_IP_INFO and it is only unset when op == KVP_OP_ENUMERATE.
 
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Silence the warning by initializing ip_buffer to NULL.
+
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-cp2112.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ tools/hv/hv_kvp_daemon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-cp2112.c b/drivers/hid/hid-cp2112.c
-index 4e940a096b2ac..abf1079457664 100644
---- a/drivers/hid/hid-cp2112.c
-+++ b/drivers/hid/hid-cp2112.c
-@@ -1149,8 +1149,6 @@ static unsigned int cp2112_gpio_irq_startup(struct irq_data *d)
- 
- 	INIT_DELAYED_WORK(&dev->gpio_poll_worker, cp2112_gpio_poll_callback);
- 
--	cp2112_gpio_direction_input(gc, d->hwirq);
--
- 	if (!dev->gpio_poll) {
- 		dev->gpio_poll = true;
- 		schedule_delayed_work(&dev->gpio_poll_worker, 0);
-@@ -1198,6 +1196,12 @@ static int __maybe_unused cp2112_allocate_irq(struct cp2112_device *dev,
- 		return PTR_ERR(dev->desc[pin]);
- 	}
- 
-+	ret = cp2112_gpio_direction_input(&dev->gc, pin);
-+	if (ret < 0) {
-+		dev_err(dev->gc.parent, "Failed to set GPIO to input dir\n");
-+		goto err_desc;
-+	}
-+
- 	ret = gpiochip_lock_as_irq(&dev->gc, pin);
- 	if (ret) {
- 		dev_err(dev->gc.parent, "Failed to lock GPIO as interrupt\n");
+diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
+index 0ef215061fb50..1b917eaffad8d 100644
+--- a/tools/hv/hv_kvp_daemon.c
++++ b/tools/hv/hv_kvp_daemon.c
+@@ -867,7 +867,7 @@ kvp_get_ip_info(int family, char *if_name, int op,
+ 	int sn_offset = 0;
+ 	int error = 0;
+ 	char *buffer;
+-	struct hv_kvp_ipaddr_value *ip_buffer;
++	struct hv_kvp_ipaddr_value *ip_buffer = NULL;
+ 	char cidr_mask[5]; /* /xyz */
+ 	int weight;
+ 	int i;
 -- 
 2.20.1
 
