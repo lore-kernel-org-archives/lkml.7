@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B65C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2977CC4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1E0621924
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:51:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F33DB20693
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947102;
-	bh=R4TG00Gp+qz4loKg0EFU3QYEx6+A4QxhkV1zPIdgigM=;
+	s=default; t=1567947112;
+	bh=gZVmyGNN3awcb8D19eauWMRQw0XXcTPKXUb62OgyKc0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gWzeaptgMO1eDRBXwekY53Rg97qbnLQrhxXcVby4kURQRHWXonXpnGQcRnOtCRIBH
-	 enUIa++3j2BY7uTOWd7iJVjirTlHpUOErXmwZGjXo17d34SIB1n3BnkM+aFhn3rpxL
-	 NN0gaWUcg0JBane7oSSOfz9cM5Ad/HcXwrj/cphM=
+	b=TB1bo8aUYHH6Y9Of2HRqXaSl3fMQW1ESH+QxZrad7O3W2DmODtCWBug/9ZOyJ3RMD
+	 217ysY17JsuwVHCadlHRyH7tS61bXCetDLj8oGPGIZm7v7s3yGbxGllRsS1CYOTv6e
+	 lz3VttpbzrAxNXqhPu9DpJECOotRctiUF8VFWiYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732726AbfIHMvl (ORCPT
+        id S1732786AbfIHMvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:51:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43164 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:51:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732675AbfIHMvf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:51:35 -0400
+        id S1732675AbfIHMvn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:51:43 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C2CC2196F;
-        Sun,  8 Sep 2019 12:51:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28EAE20693;
+        Sun,  8 Sep 2019 12:51:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567947094;
-        bh=R4TG00Gp+qz4loKg0EFU3QYEx6+A4QxhkV1zPIdgigM=;
+        s=default; t=1567947102;
+        bh=gZVmyGNN3awcb8D19eauWMRQw0XXcTPKXUb62OgyKc0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T1I1ej9dyVDxndFYuVPnyXFJOyS6uxPh1a4LIxm8WOOiTLCsL06RyGlBfjd42NlFW
-         08dXIw5HM+9GWkZeBW9wxJqx0wqPU18LyZF7G5jYHBfNKng28oGXQ/iwpLdNrXibuX
-         q8TjS7eVAvKZ3tRytK+4QhacVufrJVJemTVNSTns=
+        b=PVWoal+aRtJZIPF2BcyEmLMazuQrR05pQy5SSz04FpN7zuqLjGqpD1PVgGUAlT3lt
+         DrIUlvtqEuC0+7h3rcrzeSBC/EeAyx5z076nRzh/I6Q8cCAyE3CfzAwv382m1fOMgP
+         JI4zCHcaMco44LzMw75VlurWGb/MsBCV4oWbcQF8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 52/94] net: myri10ge: fix memory leaks
-Date:   Sun,  8 Sep 2019 13:41:48 +0100
-Message-Id: <20190908121151.926741421@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 63/94] sched/core: Schedule new worker even if PI-blocked
+Date:   Sun,  8 Sep 2019 13:41:59 +0100
+Message-Id: <20190908121152.237568541@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
 References: <20190908121150.420989666@linuxfoundation.org>
@@ -60,34 +63,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 20fb7c7a39b5c719e2e619673b5f5729ee7d2306 ]
+[ Upstream commit b0fdc01354f45d43f082025636ef808968a27b36 ]
 
-In myri10ge_probe(), myri10ge_alloc_slices() is invoked to allocate slices
-related structures. Later on, myri10ge_request_irq() is used to get an irq.
-However, if this process fails, the allocated slices related structures are
-not deallocated, leading to memory leaks. To fix this issue, revise the
-target label of the goto statement to 'abort_with_slices'.
+If a task is PI-blocked (blocking on sleeping spinlock) then we don't want to
+schedule a new kworker if we schedule out due to lock contention because !RT
+does not do that as well. A spinning spinlock disables preemption and a worker
+does not schedule out on lock contention (but spin).
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+On RT the RW-semaphore implementation uses an rtmutex so
+tsk_is_pi_blocked() will return true if a task blocks on it. In this case we
+will now start a new worker which may deadlock if one worker is waiting on
+progress from another worker. Since a RW-semaphore starts a new worker on !RT,
+we should do the same on RT.
+
+XFS is able to trigger this deadlock.
+
+Allow to schedule new worker if the current worker is PI-blocked.
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/20190816160626.12742-1-bigeasy@linutronix.de
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/myricom/myri10ge/myri10ge.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/sched/core.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/myricom/myri10ge/myri10ge.c b/drivers/net/ethernet/myricom/myri10ge/myri10ge.c
-index d8b7fba96d58e..337b0cbfd153e 100644
---- a/drivers/net/ethernet/myricom/myri10ge/myri10ge.c
-+++ b/drivers/net/ethernet/myricom/myri10ge/myri10ge.c
-@@ -3919,7 +3919,7 @@ static int myri10ge_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	 * setup (if available). */
- 	status = myri10ge_request_irq(mgp);
- 	if (status != 0)
--		goto abort_with_firmware;
-+		goto abort_with_slices;
- 	myri10ge_free_irq(mgp);
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 4d5962232a553..42bc2986520d7 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3469,7 +3469,7 @@ void __noreturn do_task_dead(void)
  
- 	/* Save configuration space to be restored if the
+ static inline void sched_submit_work(struct task_struct *tsk)
+ {
+-	if (!tsk->state || tsk_is_pi_blocked(tsk))
++	if (!tsk->state)
+ 		return;
+ 
+ 	/*
+@@ -3485,6 +3485,9 @@ static inline void sched_submit_work(struct task_struct *tsk)
+ 		preempt_enable_no_resched();
+ 	}
+ 
++	if (tsk_is_pi_blocked(tsk))
++		return;
++
+ 	/*
+ 	 * If we are going to sleep and we have plugged IO queued,
+ 	 * make sure to submit it to avoid deadlocks.
 -- 
 2.20.1
 
