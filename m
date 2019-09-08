@@ -2,55 +2,58 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5E4C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 486EEC4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87B262067B
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 222372067B
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:56:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947396;
-	bh=qUm4Hz3UlfFJcoxfNGwaaABMr5AHGadsYX+6XAWtEKk=;
+	s=default; t=1567947403;
+	bh=YjrcaMHDpD0i46urK4YSroz51TwSMsewD04w4Z/pCw8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ohJg4hTgTB5DDMMXcr8zTJ9rNYv6bcRRrruA2bPd+EIV3o0qgvonjQbQfhQXPsaDA
-	 BtTaCFUnEBFCS9SGBgmFp5ntYK4pJnJSBs8Na3nfBGpyy1GVPtOS0cEucU7piaJco8
-	 8QZzKu9QhC1acAHDu2mcIaI3fPW5odBKluw0v6/o=
+	b=Vv8eaYqgImgaxdi0H3OL8n1VzQsmykrYReYtzvEk5NRyq5ysi0YbjEav4Str2/1OX
+	 KwG9mGKXIda2t3duZDwMLvcGzF+5Rgu8GXmbjEohB54nsSffJOt6TZGrG60W61Sjtj
+	 3okLtEoqB3M0TgmoR4jZXHZInWiu9dvQoc/Vtyx8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731485AbfIHMt3 (ORCPT
+        id S1731400AbfIHMtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:49:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39308 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:49:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731452AbfIHMtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:49:25 -0400
+        id S1731349AbfIHMtO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:49:14 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F4FA218AF;
-        Sun,  8 Sep 2019 12:49:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A101B2190F;
+        Sun,  8 Sep 2019 12:49:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946964;
-        bh=qUm4Hz3UlfFJcoxfNGwaaABMr5AHGadsYX+6XAWtEKk=;
+        s=default; t=1567946954;
+        bh=YjrcaMHDpD0i46urK4YSroz51TwSMsewD04w4Z/pCw8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J4q89psdWXUXiRYmNuWomw1StBamUTsVWzHpEV3jOk55rtFAAIUm6wQ7bRM1gw3WG
-         O1hiCm0NAMKsBECjKXW3gWrFiba8G31FW6Im8xwIhdaX3OxQY7LGGgo4h4/8SCpcr8
-         o1XUaqaVA+SBi6Ao+6JePKKfhIk0M/HiEk2kf27o=
+        b=A4g7xyTJSjtInzgv22vXdjl65CIHcJcroyv4jl/+qoi+AcsJkwMI6Mm72IecXcCtD
+         +pZdrmaAZwATBCUtFRLBc5effKGaBex6j5TOUzaumIkKt0bbKYNGM5hEvyROzNeD3P
+         br98jj3U24WTaScKudyaptPBCcUwdP3lobOFoQJU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Feng Sun <loyou85@gmail.com>,
-        Xiaojun Zhao <xiaojunzhao141@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 02/94] net: fix skb use after free in netpoll
-Date:   Sun,  8 Sep 2019 13:40:58 +0100
-Message-Id: <20190908121150.500931264@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 40/57] x86/boot/compressed/64: Fix boot on machines with broken E820 table
+Date:   Sun,  8 Sep 2019 13:42:04 +0100
+Message-Id: <20190908121144.033654811@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
-References: <20190908121150.420989666@linuxfoundation.org>
+In-Reply-To: <20190908121125.608195329@linuxfoundation.org>
+References: <20190908121125.608195329@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,90 +63,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Feng Sun <loyou85@gmail.com>
+[ Upstream commit 0a46fff2f9108c2c44218380a43a736cf4612541 ]
 
-[ Upstream commit 2c1644cf6d46a8267d79ed95cb9b563839346562 ]
+BIOS on Samsung 500C Chromebook reports very rudimentary E820 table that
+consists of 2 entries:
 
-After commit baeababb5b85d5c4e6c917efe2a1504179438d3b
-("tun: return NET_XMIT_DROP for dropped packets"),
-when tun_net_xmit drop packets, it will free skb and return NET_XMIT_DROP,
-netpoll_send_skb_on_dev will run into following use after free cases:
-1. retry netpoll_start_xmit with freed skb;
-2. queue freed skb in npinfo->txq.
-queue_process will also run into use after free case.
+  BIOS-e820: [mem 0x0000000000000000-0x0000000000000fff] usable
+  BIOS-e820: [mem 0x00000000fffff000-0x00000000ffffffff] reserved
 
-hit netpoll_send_skb_on_dev first case with following kernel log:
+It breaks logic in find_trampoline_placement(): bios_start lands on the
+end of the first 4k page and trampoline start gets placed below 0.
 
-[  117.864773] kernel BUG at mm/slub.c:306!
-[  117.864773] invalid opcode: 0000 [#1] SMP PTI
-[  117.864774] CPU: 3 PID: 2627 Comm: loop_printmsg Kdump: loaded Tainted: P           OE     5.3.0-050300rc5-generic #201908182231
-[  117.864775] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
-[  117.864775] RIP: 0010:kmem_cache_free+0x28d/0x2b0
-[  117.864781] Call Trace:
-[  117.864781]  ? tun_net_xmit+0x21c/0x460
-[  117.864781]  kfree_skbmem+0x4e/0x60
-[  117.864782]  kfree_skb+0x3a/0xa0
-[  117.864782]  tun_net_xmit+0x21c/0x460
-[  117.864782]  netpoll_start_xmit+0x11d/0x1b0
-[  117.864788]  netpoll_send_skb_on_dev+0x1b8/0x200
-[  117.864789]  __br_forward+0x1b9/0x1e0 [bridge]
-[  117.864789]  ? skb_clone+0x53/0xd0
-[  117.864790]  ? __skb_clone+0x2e/0x120
-[  117.864790]  deliver_clone+0x37/0x50 [bridge]
-[  117.864790]  maybe_deliver+0x89/0xc0 [bridge]
-[  117.864791]  br_flood+0x6c/0x130 [bridge]
-[  117.864791]  br_dev_xmit+0x315/0x3c0 [bridge]
-[  117.864792]  netpoll_start_xmit+0x11d/0x1b0
-[  117.864792]  netpoll_send_skb_on_dev+0x1b8/0x200
-[  117.864792]  netpoll_send_udp+0x2c6/0x3e8
-[  117.864793]  write_msg+0xd9/0xf0 [netconsole]
-[  117.864793]  console_unlock+0x386/0x4e0
-[  117.864793]  vprintk_emit+0x17e/0x280
-[  117.864794]  vprintk_default+0x29/0x50
-[  117.864794]  vprintk_func+0x4c/0xbc
-[  117.864794]  printk+0x58/0x6f
-[  117.864795]  loop_fun+0x24/0x41 [printmsg_loop]
-[  117.864795]  kthread+0x104/0x140
-[  117.864795]  ? 0xffffffffc05b1000
-[  117.864796]  ? kthread_park+0x80/0x80
-[  117.864796]  ret_from_fork+0x35/0x40
+Detect underflow and don't touch bios_start for such cases. It makes
+kernel ignore E820 table on machines that doesn't have two usable pages
+below BIOS_START_MAX.
 
-Signed-off-by: Feng Sun <loyou85@gmail.com>
-Signed-off-by: Xiaojun Zhao <xiaojunzhao141@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 1b3a62643660 ("x86/boot/compressed/64: Validate trampoline placement against E820")
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=203463
+Link: https://lkml.kernel.org/r/20190813131654.24378-1-kirill.shutemov@linux.intel.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/netpoll.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/boot/compressed/pgtable_64.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
---- a/net/core/netpoll.c
-+++ b/net/core/netpoll.c
-@@ -122,7 +122,7 @@ static void queue_process(struct work_st
- 		txq = netdev_get_tx_queue(dev, q_index);
- 		HARD_TX_LOCK(dev, txq, smp_processor_id());
- 		if (netif_xmit_frozen_or_stopped(txq) ||
--		    netpoll_start_xmit(skb, dev, txq) != NETDEV_TX_OK) {
-+		    !dev_xmit_complete(netpoll_start_xmit(skb, dev, txq))) {
- 			skb_queue_head(&npinfo->txq, skb);
- 			HARD_TX_UNLOCK(dev, txq);
- 			local_irq_restore(flags);
-@@ -335,7 +335,7 @@ void netpoll_send_skb_on_dev(struct netp
+diff --git a/arch/x86/boot/compressed/pgtable_64.c b/arch/x86/boot/compressed/pgtable_64.c
+index f8debf7aeb4c1..f0537a1f7fc25 100644
+--- a/arch/x86/boot/compressed/pgtable_64.c
++++ b/arch/x86/boot/compressed/pgtable_64.c
+@@ -73,6 +73,8 @@ static unsigned long find_trampoline_placement(void)
  
- 				HARD_TX_UNLOCK(dev, txq);
+ 	/* Find the first usable memory region under bios_start. */
+ 	for (i = boot_params->e820_entries - 1; i >= 0; i--) {
++		unsigned long new;
++
+ 		entry = &boot_params->e820_table[i];
  
--				if (status == NETDEV_TX_OK)
-+				if (dev_xmit_complete(status))
- 					break;
+ 		/* Skip all entries above bios_start. */
+@@ -85,15 +87,20 @@ static unsigned long find_trampoline_placement(void)
  
- 			}
-@@ -352,7 +352,7 @@ void netpoll_send_skb_on_dev(struct netp
+ 		/* Adjust bios_start to the end of the entry if needed. */
+ 		if (bios_start > entry->addr + entry->size)
+-			bios_start = entry->addr + entry->size;
++			new = entry->addr + entry->size;
  
+ 		/* Keep bios_start page-aligned. */
+-		bios_start = round_down(bios_start, PAGE_SIZE);
++		new = round_down(new, PAGE_SIZE);
+ 
+ 		/* Skip the entry if it's too small. */
+-		if (bios_start - TRAMPOLINE_32BIT_SIZE < entry->addr)
++		if (new - TRAMPOLINE_32BIT_SIZE < entry->addr)
+ 			continue;
+ 
++		/* Protect against underflow. */
++		if (new - TRAMPOLINE_32BIT_SIZE > bios_start)
++			break;
++
++		bios_start = new;
+ 		break;
  	}
  
--	if (status != NETDEV_TX_OK) {
-+	if (!dev_xmit_complete(status)) {
- 		skb_queue_tail(&npinfo->txq, skb);
- 		schedule_delayed_work(&npinfo->tx_work,0);
- 	}
+-- 
+2.20.1
+
 
 
