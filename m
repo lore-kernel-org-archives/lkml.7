@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F556C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9088FC433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 755A8216C8
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:44:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 691BE21920
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:44:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946651;
-	bh=DvVYqYUaj9K1osWAXxsJERxzuQkLKgj2IShm+No0HVA=;
+	s=default; t=1567946655;
+	bh=iejLXIzsQWG4O2QH/XUHoRjQ/Jdtj5frW4VmGXCLBE0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xJE7moNgBqmMEeP0Y8Y/uFBeny0CFOkakt6KWuqh6gLQblDaMIGByRFxDlIHPsqgf
-	 vVA2JIExjHHQGTVManVgd3jC9a3P04jE9zNxQU85oj7SE+h1OQRvZhJYaW4GeHhdHt
-	 YTqYFcdvdvfiaU7XAx8lvEtCzswaoFs9SKBKG73E=
+	b=rLSVG8/FWQ6AnZ5hzVKnDMTrpYtd/+y2pJa1ZaTGyMTaK8GypSE4sE/2QoJLeXk/c
+	 baqYYrYSbto1cfVGFYN0mueVwmAWj7H7K4Ta9MZoaajbYVVTkxBILE4lETiM6tXHHo
+	 f50yLR4SbxbSQzfd+wAhdZhZ9QpoXcglgE/3K1qU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729715AbfIHMoK (ORCPT
+        id S1729733AbfIHMoO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:44:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58554 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:44:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729695AbfIHMoH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:44:07 -0400
+        id S1729705AbfIHMoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:44:10 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53D43218AE;
-        Sun,  8 Sep 2019 12:44:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F31BE216C8;
+        Sun,  8 Sep 2019 12:44:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946646;
-        bh=DvVYqYUaj9K1osWAXxsJERxzuQkLKgj2IShm+No0HVA=;
+        s=default; t=1567946649;
+        bh=iejLXIzsQWG4O2QH/XUHoRjQ/Jdtj5frW4VmGXCLBE0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ov2AD3mSgDIXbr9G0fK2uE6fG7ZFT5cYTxWLdUwG3OK5Y73rOEI+M5a5DnaGo5C+L
-         No53VtArtBzALHnzdvBoopm5/aOvi/Flj0By9TVBlmg2krBYtWElAgOB9ZIYj52uG3
-         g3BSz9KcL+PnxEvZFAdThDSo097kFATJMMKLoOMw=
+        b=m7yyIdVLVtMxuvVNx61HI4PgC2SRaCPRfK0Sm7Z+Uq2Mq3X/Th9w6K20/vswOHDDT
+         S0JzEwjrLK+OtST3xJ6Jdzvl3M32KDaWneXPx9Az5wntD6F3w6RcmCyTUgxNItlVNC
+         OD5rqbYiryM03FUqEj5wUa8QMTGcYKC1NaGxaYPU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jeff Layton <jlayton@kernel.org>,
         Ilya Dryomov <idryomov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 14/26] ceph: fix buffer free while holding i_ceph_lock in __ceph_setxattr()
-Date:   Sun,  8 Sep 2019 13:41:53 +0100
-Message-Id: <20190908121103.866933575@linuxfoundation.org>
+Subject: [PATCH 4.9 15/26] ceph: fix buffer free while holding i_ceph_lock in fill_inode()
+Date:   Sun,  8 Sep 2019 13:41:54 +0100
+Message-Id: <20190908121105.796241516@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121057.216802689@linuxfoundation.org>
 References: <20190908121057.216802689@linuxfoundation.org>
@@ -61,89 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 86968ef21596515958d5f0a40233d02be78ecec0 ]
+[ Upstream commit af8a85a41734f37b67ba8ce69d56b685bee4ac48 ]
 
-Calling ceph_buffer_put() in __ceph_setxattr() may end up freeing the
-i_xattrs.prealloc_blob buffer while holding the i_ceph_lock.  This can be
-fixed by postponing the call until later, when the lock is released.
+Calling ceph_buffer_put() in fill_inode() may result in freeing the
+i_xattrs.blob buffer while holding the i_ceph_lock.  This can be fixed by
+postponing the call until later, when the lock is released.
 
-The following backtrace was triggered by fstests generic/117.
+The following backtrace was triggered by fstests generic/070.
 
   BUG: sleeping function called from invalid context at mm/vmalloc.c:2283
-  in_atomic(): 1, irqs_disabled(): 0, pid: 650, name: fsstress
-  3 locks held by fsstress/650:
-   #0: 00000000870a0fe8 (sb_writers#8){.+.+}, at: mnt_want_write+0x20/0x50
-   #1: 00000000ba0c4c74 (&type->i_mutex_dir_key#6){++++}, at: vfs_setxattr+0x55/0xa0
-   #2: 000000008dfbb3f2 (&(&ci->i_ceph_lock)->rlock){+.+.}, at: __ceph_setxattr+0x297/0x810
-  CPU: 1 PID: 650 Comm: fsstress Not tainted 5.2.0+ #437
+  in_atomic(): 1, irqs_disabled(): 0, pid: 3852, name: kworker/0:4
+  6 locks held by kworker/0:4/3852:
+   #0: 000000004270f6bb ((wq_completion)ceph-msgr){+.+.}, at: process_one_work+0x1b8/0x5f0
+   #1: 00000000eb420803 ((work_completion)(&(&con->work)->work)){+.+.}, at: process_one_work+0x1b8/0x5f0
+   #2: 00000000be1c53a4 (&s->s_mutex){+.+.}, at: dispatch+0x288/0x1476
+   #3: 00000000559cb958 (&mdsc->snap_rwsem){++++}, at: dispatch+0x2eb/0x1476
+   #4: 000000000d5ebbae (&req->r_fill_mutex){+.+.}, at: dispatch+0x2fc/0x1476
+   #5: 00000000a83d0514 (&(&ci->i_ceph_lock)->rlock){+.+.}, at: fill_inode.isra.0+0xf8/0xf70
+  CPU: 0 PID: 3852 Comm: kworker/0:4 Not tainted 5.2.0+ #441
   Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58-prebuilt.qemu.org 04/01/2014
+  Workqueue: ceph-msgr ceph_con_workfn
   Call Trace:
    dump_stack+0x67/0x90
    ___might_sleep.cold+0x9f/0xb1
    vfree+0x4b/0x60
    ceph_buffer_release+0x1b/0x60
-   __ceph_setxattr+0x2b4/0x810
-   __vfs_setxattr+0x66/0x80
-   __vfs_setxattr_noperm+0x59/0xf0
-   vfs_setxattr+0x81/0xa0
-   setxattr+0x115/0x230
-   ? filename_lookup+0xc9/0x140
-   ? rcu_read_lock_sched_held+0x74/0x80
-   ? rcu_sync_lockdep_assert+0x2e/0x60
-   ? __sb_start_write+0x142/0x1a0
-   ? mnt_want_write+0x20/0x50
-   path_setxattr+0xba/0xd0
-   __x64_sys_lsetxattr+0x24/0x30
-   do_syscall_64+0x50/0x1c0
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  RIP: 0033:0x7ff23514359a
+   fill_inode.isra.0+0xa9b/0xf70
+   ceph_fill_trace+0x13b/0xc70
+   ? dispatch+0x2eb/0x1476
+   dispatch+0x320/0x1476
+   ? __mutex_unlock_slowpath+0x4d/0x2a0
+   ceph_con_workfn+0xc97/0x2ec0
+   ? process_one_work+0x1b8/0x5f0
+   process_one_work+0x244/0x5f0
+   worker_thread+0x4d/0x3e0
+   kthread+0x105/0x140
+   ? process_one_work+0x5f0/0x5f0
+   ? kthread_park+0x90/0x90
+   ret_from_fork+0x3a/0x50
 
 Signed-off-by: Luis Henriques <lhenriques@suse.com>
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/xattr.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ fs/ceph/inode.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
-index 81144a8c09275..18b999deed03b 100644
---- a/fs/ceph/xattr.c
-+++ b/fs/ceph/xattr.c
-@@ -951,6 +951,7 @@ int __ceph_setxattr(struct inode *inode, const char *name,
- 	struct ceph_inode_info *ci = ceph_inode(inode);
- 	struct ceph_mds_client *mdsc = ceph_sb_to_client(inode->i_sb)->mdsc;
- 	struct ceph_cap_flush *prealloc_cf = NULL;
+diff --git a/fs/ceph/inode.c b/fs/ceph/inode.c
+index 7a4052501866d..339fdf6355df7 100644
+--- a/fs/ceph/inode.c
++++ b/fs/ceph/inode.c
+@@ -741,6 +741,7 @@ static int fill_inode(struct inode *inode, struct page *locked_page,
+ 	int issued = 0, implemented, new_issued;
+ 	struct timespec mtime, atime, ctime;
+ 	struct ceph_buffer *xattr_blob = NULL;
 +	struct ceph_buffer *old_blob = NULL;
- 	int issued;
- 	int err;
- 	int dirty = 0;
-@@ -1019,13 +1020,15 @@ retry:
- 		struct ceph_buffer *blob;
- 
- 		spin_unlock(&ci->i_ceph_lock);
--		dout(" preaallocating new blob size=%d\n", required_blob_size);
-+		ceph_buffer_put(old_blob); /* Shouldn't be required */
-+		dout(" pre-allocating new blob size=%d\n", required_blob_size);
- 		blob = ceph_buffer_new(required_blob_size, GFP_NOFS);
- 		if (!blob)
- 			goto do_sync_unlocked;
- 		spin_lock(&ci->i_ceph_lock);
-+		/* prealloc_blob can't be released while holding i_ceph_lock */
- 		if (ci->i_xattrs.prealloc_blob)
--			ceph_buffer_put(ci->i_xattrs.prealloc_blob);
-+			old_blob = ci->i_xattrs.prealloc_blob;
- 		ci->i_xattrs.prealloc_blob = blob;
- 		goto retry;
- 	}
-@@ -1041,6 +1044,7 @@ retry:
- 	}
- 
- 	spin_unlock(&ci->i_ceph_lock);
+ 	struct ceph_string *pool_ns = NULL;
+ 	struct ceph_cap *new_cap = NULL;
+ 	int err = 0;
+@@ -858,7 +859,7 @@ static int fill_inode(struct inode *inode, struct page *locked_page,
+ 	if ((ci->i_xattrs.version == 0 || !(issued & CEPH_CAP_XATTR_EXCL))  &&
+ 	    le64_to_cpu(info->xattr_version) > ci->i_xattrs.version) {
+ 		if (ci->i_xattrs.blob)
+-			ceph_buffer_put(ci->i_xattrs.blob);
++			old_blob = ci->i_xattrs.blob;
+ 		ci->i_xattrs.blob = xattr_blob;
+ 		if (xattr_blob)
+ 			memcpy(ci->i_xattrs.blob->vec.iov_base,
+@@ -1004,8 +1005,8 @@ static int fill_inode(struct inode *inode, struct page *locked_page,
+ out:
+ 	if (new_cap)
+ 		ceph_put_cap(mdsc, new_cap);
+-	if (xattr_blob)
+-		ceph_buffer_put(xattr_blob);
 +	ceph_buffer_put(old_blob);
- 	if (lock_snap_rwsem)
- 		up_read(&mdsc->snap_rwsem);
- 	if (dirty)
++	ceph_buffer_put(xattr_blob);
+ 	ceph_put_string(pool_ns);
+ 	return err;
+ }
 -- 
 2.20.1
 
