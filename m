@@ -4,58 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F4BCC433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95BDEC4360D
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B18621924
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 666B021920
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:44:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946662;
-	bh=jaiPO4WwP8gIgvXqmYmnleiQmHpvd5tKNuZEiZG9TLo=;
+	s=default; t=1567946664;
+	bh=w2MmB0TGNdTTQo9XjSIhZEyJjp2+5TCwC5sI3zA9Jww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x/ohW48+FpY2T46QvSWNh5Hl06/+XDCEeRKP/FaWMhao8R42EZ827fTD5+/Rnv1UR
-	 afbJXbKncdguHUFOt2jP4wUfr1JrmkdLijoMAmH3yINbIRBhM3gOQzxWWzyQsPJK3A
-	 szUNvSF3IzxdNjjwYwtMfOJdUgBiSNAs7zsyoRBY=
+	b=egIidQ/iF5GIkjNAZJ7Cn2ciblJomsln5kIsaiJzA6Y2u4AaTM6GvjuoNy4Wp5F4g
+	 0D+LeK4CgJCGQp5moNxsH/9BBZMr2UNKHdI2RenVkBdtRwl8yZKDNZPf+iOJPnq1vn
+	 LI+MkpZMUiHTgFdv71ch3hWyaMliqefXwApzvyZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729766AbfIHMoV (ORCPT
+        id S1729784AbfIHMoX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:44:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58818 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:44:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729735AbfIHMoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:44:17 -0400
+        id S1729705AbfIHMoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:44:15 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8848421920;
-        Sun,  8 Sep 2019 12:44:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E0CB216C8;
+        Sun,  8 Sep 2019 12:44:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946657;
-        bh=jaiPO4WwP8gIgvXqmYmnleiQmHpvd5tKNuZEiZG9TLo=;
+        s=default; t=1567946654;
+        bh=w2MmB0TGNdTTQo9XjSIhZEyJjp2+5TCwC5sI3zA9Jww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E6pfAWU5T9bTWVElJ+z1PWlpPX5uM6C7rb/qEhsxB1vyoOLyMrnNphnNkIBheQbjZ
-         5oSWYr2AWRobd+JlNO74LlTuHXGjaOjGNTw3m1VM/MYihwZVz0p1vEhSGmEY2ESoW2
-         Qan1hTRBIjOCP0lVJckGyiG7e3jhJogNyvNZVNCg=
+        b=LGfYHYXZhS48Rl6rgRou1ujGXQsokb+YjXHSnyDuNXO3EDSmsw5pJwj8yR5KvdtCv
+         lqFxvGIdxZHlckoLhHyDsWJyzc0r5aF0IWqhE/5BOfpS9KuTMWNnFZ46hKlaQmBSf9
+         12FrXshGctasnmvqTouhHdh47GHc836jOu0ClDsg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Graf <agraf@suse.de>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Mark Brown <broonie@kernel.org>, Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-spi@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 18/26] spi: bcm2835aux: ensure interrupts are enabled for shared handler
-Date:   Sun,  8 Sep 2019 13:41:57 +0100
-Message-Id: <20190908121108.502407891@linuxfoundation.org>
+        stable@vger.kernel.org, Luis Henriques <lhenriques@suse.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 17/26] libceph: allow ceph_buffer_put() to receive a NULL ceph_buffer
+Date:   Sun,  8 Sep 2019 13:41:56 +0100
+Message-Id: <20190908121106.586997084@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121057.216802689@linuxfoundation.org>
 References: <20190908121057.216802689@linuxfoundation.org>
@@ -68,57 +61,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bc519d9574618e47a0c788000fb78da95e18d953 ]
+[ Upstream commit 5c498950f730aa17c5f8a2cdcb903524e4002ed2 ]
 
-The BCM2835 AUX SPI has a shared interrupt line (with AUX UART).
-Downstream fixes this with an AUX irqchip to demux the IRQ sources and a
-DT change which breaks compatibility with older kernels. The AUX irqchip
-was already rejected for upstream[1] and the DT change would break
-working systems if the DTB is updated to a newer one. The latter issue
-was brought to my attention by Alex Graf.
-
-The root cause however is a bug in the shared handler. Shared handlers
-must check that interrupts are actually enabled before servicing the
-interrupt. Add a check that the TXEMPTY or IDLE interrupts are enabled.
-
-[1] https://patchwork.kernel.org/patch/9781221/
-
-Cc: Alexander Graf <agraf@suse.de>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Eric Anholt <eric@anholt.net>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Ray Jui <rjui@broadcom.com>
-Cc: Scott Branden <sbranden@broadcom.com>
-Cc: bcm-kernel-feedback-list@broadcom.com
-Cc: linux-spi@vger.kernel.org
-Cc: linux-rpi-kernel@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Eric Anholt <eric@anholt.net>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-bcm2835aux.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ include/linux/ceph/buffer.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-bcm2835aux.c b/drivers/spi/spi-bcm2835aux.c
-index 7428091d3f5b8..bd00b7cc8b78b 100644
---- a/drivers/spi/spi-bcm2835aux.c
-+++ b/drivers/spi/spi-bcm2835aux.c
-@@ -184,6 +184,11 @@ static irqreturn_t bcm2835aux_spi_interrupt(int irq, void *dev_id)
- 	struct bcm2835aux_spi *bs = spi_master_get_devdata(master);
- 	irqreturn_t ret = IRQ_NONE;
+diff --git a/include/linux/ceph/buffer.h b/include/linux/ceph/buffer.h
+index 07ca15e761001..dada47a4360ff 100644
+--- a/include/linux/ceph/buffer.h
++++ b/include/linux/ceph/buffer.h
+@@ -29,7 +29,8 @@ static inline struct ceph_buffer *ceph_buffer_get(struct ceph_buffer *b)
  
-+	/* IRQ may be shared, so return if our interrupts are disabled */
-+	if (!(bcm2835aux_rd(bs, BCM2835_AUX_SPI_CNTL1) &
-+	      (BCM2835_AUX_SPI_CNTL1_TXEMPTY | BCM2835_AUX_SPI_CNTL1_IDLE)))
-+		return ret;
-+
- 	/* check if we have data to read */
- 	while (bs->rx_len &&
- 	       (!(bcm2835aux_rd(bs, BCM2835_AUX_SPI_STAT) &
+ static inline void ceph_buffer_put(struct ceph_buffer *b)
+ {
+-	kref_put(&b->kref, ceph_buffer_release);
++	if (b)
++		kref_put(&b->kref, ceph_buffer_release);
+ }
+ 
+ extern int ceph_decode_buffer(struct ceph_buffer **b, void **p, void *end);
 -- 
 2.20.1
 
