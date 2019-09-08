@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05067C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EADB4C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C526120693
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3FB520693
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:58:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947512;
-	bh=DDRBfrNOnnNyPPEaw7z11TCRBuBCJY42KwC9RympBBQ=;
+	s=default; t=1567947515;
+	bh=ZJN68VxSrx5dGkmzWdbcqEqcy2uPSNkw2+KGn8/N7/U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yURVwCr917uyvtBFns6mB7LxYNwjsfcRrLu1c7xX+fOCadonhm6b3PA+3m2/IXuPY
-	 p75iA2Hv2o3+L9vSJPj04a9VgwwyreQ1QmsKtn2CGkqV41gNMoqKQ31mutc2i305ne
-	 RVewJgKotAyCb7T/e2vycbyc9NKiY9Qi7tS084DE=
+	b=XUG5W9KM80aKGlMNyNqblSZqM7w1r9dk8Xb90aIYdxFRQQpgw1u460iqLTwORAduX
+	 Ma/uE+8bwvri/gES67pP1+kOp+7n0leqTG+f+3x+QUkZUGY16yEYsFgPJ20PBFXZ6v
+	 OUPEhUSuR4WIxXQpnq3wZEAKma1xigO2Ec+6Lki8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbfIHM6c (ORCPT
+        id S1730545AbfIHMq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:58:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35156 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:46:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726294AbfIHMrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:47:06 -0400
+        id S1730513AbfIHMqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:46:54 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1611218AF;
-        Sun,  8 Sep 2019 12:47:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E7802081B;
+        Sun,  8 Sep 2019 12:46:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946826;
-        bh=DDRBfrNOnnNyPPEaw7z11TCRBuBCJY42KwC9RympBBQ=;
+        s=default; t=1567946813;
+        bh=ZJN68VxSrx5dGkmzWdbcqEqcy2uPSNkw2+KGn8/N7/U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j9smrZ7DlNUm2bPDAqtrBDenVJmd0gR3tHL3OstFPcO+4iCO9mU/ns7O9PopOnhRB
-         Ihn1nHy2yS9oUTcxp2wbaox/B2NGT9kjWSI6YhoAlwwB2zDT/pFxRcBg15Yay6/hSZ
-         0xE2DM59xzQxHMdf5HwAVQap19iKvzuops132aXc=
+        b=rb6JSlZ+ndr0RjocE5QU0+yjgoGcY53vhSiuX7jyt6gbzztJK0HlZTm/nVbIEtakT
+         037OsCbP/o89QeMnE5Lv1jpiNbg2K8A3itEvb/Fy8mQVerqaZi/VguCm7Akjbu5z6y
+         Tkgf4SvOsjtcgHWW8C3U8W57DrvZ8skvInawavws=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org, Martin Sperl <kernel@martin.sperl.org>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 15/57] tools: bpftool: fix error message (prog -> object)
-Date:   Sun,  8 Sep 2019 13:41:39 +0100
-Message-Id: <20190908121131.936905876@linuxfoundation.org>
+Subject: [PATCH 4.19 10/57] spi: bcm2835aux: unifying code between polling and interrupt driven code
+Date:   Sun,  8 Sep 2019 13:41:34 +0100
+Message-Id: <20190908121128.728857006@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121125.608195329@linuxfoundation.org>
 References: <20190908121125.608195329@linuxfoundation.org>
@@ -62,33 +61,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b3e78adcbf991a4e8b2ebb23c9889e968ec76c5f ]
+[ Upstream commit 7188a6f0eee3f1fae5d826cfc6d569657ff950ec ]
 
-Change an error message to work for any object being
-pinned not just programs.
+Sharing more code between polling and interrupt-driven mode.
 
-Fixes: 71bb428fe2c1 ("tools: bpf: add bpftool")
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reviewed-by: Quentin Monnet <quentin.monnet@netronome.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
+Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/bpf/bpftool/common.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spi-bcm2835aux.c | 51 +++++++++++++-----------------------
+ 1 file changed, 18 insertions(+), 33 deletions(-)
 
-diff --git a/tools/bpf/bpftool/common.c b/tools/bpf/bpftool/common.c
-index fcaf00621102f..be7aebff0c1e5 100644
---- a/tools/bpf/bpftool/common.c
-+++ b/tools/bpf/bpftool/common.c
-@@ -238,7 +238,7 @@ int do_pin_any(int argc, char **argv, int (*get_fd_by_id)(__u32))
+diff --git a/drivers/spi/spi-bcm2835aux.c b/drivers/spi/spi-bcm2835aux.c
+index 3094d818cf06d..79306e654f735 100644
+--- a/drivers/spi/spi-bcm2835aux.c
++++ b/drivers/spi/spi-bcm2835aux.c
+@@ -178,23 +178,13 @@ static void bcm2835aux_spi_reset_hw(struct bcm2835aux_spi *bs)
+ 		      BCM2835_AUX_SPI_CNTL0_CLEARFIFO);
+ }
  
- 	fd = get_fd_by_id(id);
- 	if (fd < 0) {
--		p_err("can't get prog by id (%u): %s", id, strerror(errno));
-+		p_err("can't open object by id (%u): %s", id, strerror(errno));
- 		return -1;
+-static irqreturn_t bcm2835aux_spi_interrupt(int irq, void *dev_id)
++static void bcm2835aux_spi_transfer_helper(struct bcm2835aux_spi *bs)
+ {
+-	struct spi_master *master = dev_id;
+-	struct bcm2835aux_spi *bs = spi_master_get_devdata(master);
+-	irqreturn_t ret = IRQ_NONE;
+-
+-	/* IRQ may be shared, so return if our interrupts are disabled */
+-	if (!(bcm2835aux_rd(bs, BCM2835_AUX_SPI_CNTL1) &
+-	      (BCM2835_AUX_SPI_CNTL1_TXEMPTY | BCM2835_AUX_SPI_CNTL1_IDLE)))
+-		return ret;
+-
+ 	/* check if we have data to read */
+ 	while (bs->rx_len &&
+ 	       (!(bcm2835aux_rd(bs, BCM2835_AUX_SPI_STAT) &
+ 		  BCM2835_AUX_SPI_STAT_RX_EMPTY))) {
+ 		bcm2835aux_rd_fifo(bs);
+-		ret = IRQ_HANDLED;
  	}
  
+ 	/* check if we have data to write */
+@@ -203,7 +193,6 @@ static irqreturn_t bcm2835aux_spi_interrupt(int irq, void *dev_id)
+ 	       (!(bcm2835aux_rd(bs, BCM2835_AUX_SPI_STAT) &
+ 		  BCM2835_AUX_SPI_STAT_TX_FULL))) {
+ 		bcm2835aux_wr_fifo(bs);
+-		ret = IRQ_HANDLED;
+ 	}
+ 
+ 	/* and check if we have reached "done" */
+@@ -211,8 +200,21 @@ static irqreturn_t bcm2835aux_spi_interrupt(int irq, void *dev_id)
+ 	       (!(bcm2835aux_rd(bs, BCM2835_AUX_SPI_STAT) &
+ 		  BCM2835_AUX_SPI_STAT_BUSY))) {
+ 		bcm2835aux_rd_fifo(bs);
+-		ret = IRQ_HANDLED;
+ 	}
++}
++
++static irqreturn_t bcm2835aux_spi_interrupt(int irq, void *dev_id)
++{
++	struct spi_master *master = dev_id;
++	struct bcm2835aux_spi *bs = spi_master_get_devdata(master);
++
++	/* IRQ may be shared, so return if our interrupts are disabled */
++	if (!(bcm2835aux_rd(bs, BCM2835_AUX_SPI_CNTL1) &
++	      (BCM2835_AUX_SPI_CNTL1_TXEMPTY | BCM2835_AUX_SPI_CNTL1_IDLE)))
++		return IRQ_NONE;
++
++	/* do common fifo handling */
++	bcm2835aux_spi_transfer_helper(bs);
+ 
+ 	if (!bs->tx_len) {
+ 		/* disable tx fifo empty interrupt */
+@@ -226,8 +228,7 @@ static irqreturn_t bcm2835aux_spi_interrupt(int irq, void *dev_id)
+ 		complete(&master->xfer_completion);
+ 	}
+ 
+-	/* and return */
+-	return ret;
++	return IRQ_HANDLED;
+ }
+ 
+ static int __bcm2835aux_spi_transfer_one_irq(struct spi_master *master,
+@@ -273,7 +274,6 @@ static int bcm2835aux_spi_transfer_one_poll(struct spi_master *master,
+ {
+ 	struct bcm2835aux_spi *bs = spi_master_get_devdata(master);
+ 	unsigned long timeout;
+-	u32 stat;
+ 
+ 	/* configure spi */
+ 	bcm2835aux_wr(bs, BCM2835_AUX_SPI_CNTL1, bs->cntl[1]);
+@@ -284,24 +284,9 @@ static int bcm2835aux_spi_transfer_one_poll(struct spi_master *master,
+ 
+ 	/* loop until finished the transfer */
+ 	while (bs->rx_len) {
+-		/* read status */
+-		stat = bcm2835aux_rd(bs, BCM2835_AUX_SPI_STAT);
+-
+-		/* fill in tx fifo with remaining data */
+-		if ((bs->tx_len) && (!(stat & BCM2835_AUX_SPI_STAT_TX_FULL))) {
+-			bcm2835aux_wr_fifo(bs);
+-			continue;
+-		}
+ 
+-		/* read data from fifo for both cases */
+-		if (!(stat & BCM2835_AUX_SPI_STAT_RX_EMPTY)) {
+-			bcm2835aux_rd_fifo(bs);
+-			continue;
+-		}
+-		if (!(stat & BCM2835_AUX_SPI_STAT_BUSY)) {
+-			bcm2835aux_rd_fifo(bs);
+-			continue;
+-		}
++		/* do common fifo handling */
++		bcm2835aux_spi_transfer_helper(bs);
+ 
+ 		/* there is still data pending to read check the timeout */
+ 		if (bs->rx_len && time_after(jiffies, timeout)) {
 -- 
 2.20.1
 
