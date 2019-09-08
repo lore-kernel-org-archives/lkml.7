@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D30C4360D
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 178BEC4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50A60218AC
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D96DC20693
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:52:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947170;
-	bh=5f3tIEcfN6OHbaef9X5xk4AMcyhVxSEKQEVstQVO5Lc=;
+	s=default; t=1567947174;
+	bh=iWdWvQj/QygSKnUvQWENMH98qfzOfZ2rLxO+WiunLmM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oA6SmG7Bm+AWHGwFqn4nUH5x2aYeA2iBmAJa2IivalwxXwC5/HQGJcFAhnOkCQ1aQ
-	 27po4/a9ZdXTuLpmqTHFK/8Y/b4H/jWiLDwO6OAPivbvFv6l1se7X774BZYugjzqXY
-	 GD6gE6RqdJLLNjwWPtqQFj4BjSc0CJyIeb5HGC9Q=
+	b=aJkt9FiqNvTFIXSCCJNhXTa7FG5sb107QKxBLa+02Y/7BQPRIW/bL1A4itNjQPHAg
+	 hPW5Ge7LczVakEUqVef3qTGVOmP1bINpJQ4lSRd87/dDMGwcCYCw9ko/tpONfS9Qx2
+	 TMf63Qw+J6vnBiVKLyDm/+AqsndwiXywgANYlfEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733222AbfIHMwt (ORCPT
+        id S1733242AbfIHMww (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:52:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45174 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:52:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733170AbfIHMwn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:52:43 -0400
+        id S1733204AbfIHMws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:52:48 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 085DB2190F;
-        Sun,  8 Sep 2019 12:52:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 362A820693;
+        Sun,  8 Sep 2019 12:52:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567947162;
-        bh=5f3tIEcfN6OHbaef9X5xk4AMcyhVxSEKQEVstQVO5Lc=;
+        s=default; t=1567947167;
+        bh=iWdWvQj/QygSKnUvQWENMH98qfzOfZ2rLxO+WiunLmM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nr0nkbaqUBXLK+0cnNa6GGo8yLCT6SdD6W+3BfA3pBCtnHe4z0HjT1CqKJDF8XMq2
-         B4iZNuVnnvCiiVomzrzaMDwUwQ47UjR9MTNzCpRzxI19viQIyAyMNcoEUBmns1kkUa
-         FPf3Rs7JevYoo+nJ//dwqUicfnmMUx8tum4fFhNE=
+        b=ndRi8wD2Clzos6Me8Qn3LH4TfkDYP8DNNzn7Hjp296PC+B66K+ATD4YksZHb1gkS9
+         bEKr/YfcbFyPoWehOhH318mZygTl27/w2zC4YOlLavwSnbyZvShIYQnsaymf/iIgmL
+         FEEU6zJGc5hTTgPJV7nT3PQleCjEmts4aNbtcF5c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        David Howells <dhowells@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 84/94] afs: Fix leak in afs_lookup_cell_rcu()
-Date:   Sun,  8 Sep 2019 13:42:20 +0100
-Message-Id: <20190908121152.838191654@linuxfoundation.org>
+Subject: [PATCH 5.2 86/94] afs: use correct afs_call_type in yfs_fs_store_opaque_acl2
+Date:   Sun,  8 Sep 2019 13:42:22 +0100
+Message-Id: <20190908121152.893198930@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
 References: <20190908121150.420989666@linuxfoundation.org>
@@ -59,64 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a5fb8e6c02d6a518fb2b1a2b8c2471fa77b69436 ]
+[ Upstream commit 7533be858f5b9a036b9f91556a3ed70786abca8e ]
 
-Fix a leak on the cell refcount in afs_lookup_cell_rcu() due to
-non-clearance of the default error in the case a NULL cell name is passed
-and the workstation default cell is used.
+It seems that 'yfs_RXYFSStoreOpaqueACL2' should be use in
+yfs_fs_store_opaque_acl2().
 
-Also put a bit at the end to make sure we don't leak a cell ref if we're
-going to be returning an error.
-
-This leak results in an assertion like the following when the kafs module is
-unloaded:
-
-	AFS: Assertion failed
-	2 == 1 is false
-	0x2 == 0x1 is false
-	------------[ cut here ]------------
-	kernel BUG at fs/afs/cell.c:770!
-	...
-	RIP: 0010:afs_manage_cells+0x220/0x42f [kafs]
-	...
-	 process_one_work+0x4c2/0x82c
-	 ? pool_mayday_timeout+0x1e1/0x1e1
-	 ? do_raw_spin_lock+0x134/0x175
-	 worker_thread+0x336/0x4a6
-	 ? rescuer_thread+0x4af/0x4af
-	 kthread+0x1de/0x1ee
-	 ? kthread_park+0xd4/0xd4
-	 ret_from_fork+0x24/0x30
-
-Fixes: 989782dcdc91 ("afs: Overhaul cell database management")
+Fixes: f5e4546347bc ("afs: Implement YFS ACL setting")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/cell.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/afs/yfsclient.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/afs/cell.c b/fs/afs/cell.c
-index a2a87117d2626..fd5133e26a38b 100644
---- a/fs/afs/cell.c
-+++ b/fs/afs/cell.c
-@@ -74,6 +74,7 @@ struct afs_cell *afs_lookup_cell_rcu(struct afs_net *net,
- 			cell = rcu_dereference_raw(net->ws_cell);
- 			if (cell) {
- 				afs_get_cell(cell);
-+				ret = 0;
- 				break;
- 			}
- 			ret = -EDESTADDRREQ;
-@@ -108,6 +109,9 @@ struct afs_cell *afs_lookup_cell_rcu(struct afs_net *net,
+diff --git a/fs/afs/yfsclient.c b/fs/afs/yfsclient.c
+index 18722aaeda33a..a1baf3f1f14d1 100644
+--- a/fs/afs/yfsclient.c
++++ b/fs/afs/yfsclient.c
+@@ -2155,7 +2155,7 @@ int yfs_fs_store_opaque_acl2(struct afs_fs_cursor *fc, const struct afs_acl *acl
+ 	       key_serial(fc->key), vnode->fid.vid, vnode->fid.vnode);
  
- 	done_seqretry(&net->cells_lock, seq);
- 
-+	if (ret != 0 && cell)
-+		afs_put_cell(net, cell);
-+
- 	return ret == 0 ? cell : ERR_PTR(ret);
- }
- 
+ 	size = round_up(acl->size, 4);
+-	call = afs_alloc_flat_call(net, &yfs_RXYFSStoreStatus,
++	call = afs_alloc_flat_call(net, &yfs_RXYFSStoreOpaqueACL2,
+ 				   sizeof(__be32) * 2 +
+ 				   sizeof(struct yfs_xdr_YFSFid) +
+ 				   sizeof(__be32) + size,
 -- 
 2.20.1
 
