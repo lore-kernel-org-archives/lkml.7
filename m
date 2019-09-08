@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD5BC4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56FEDC433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E75420693
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DF152067B
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:55:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947350;
-	bh=t8vTz3bm7817MJk+R8f5YXtg/XCw3/+FCCFUyKitszE=;
+	s=default; t=1567947355;
+	bh=1Hz3gvQ0f2YPPR+1FUpI7H+4HAKYesWoaGOm0olvD3E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CP6MZ7RbxLnM5flbcsTB40asPDH5yWnEbZU0fGvt6wHGJp8tB0eBOpAhpux/imETn
-	 ZGV/MEHG3jlEYO9e/n4lxldq1uj6i8zO5P1wOd9/Pv7sTiqBFzz7rWQNKPtVyBv6Va
-	 Z/RXZHjeTppovdQjfNCTBywik9oOa8Go0Qejat3Y=
+	b=yZ9SsoLvYHfzrA7eFzcJbtmHl3dtraeJNg8H9RrQlp5MP208bVaBUUYxpTpStX46d
+	 K5soUdCO6ET3dCx/CgDSexDHod5V+nKH2KEkKAS37PDmpZLiPDdEMj1r/ipEkIJNVc
+	 SOuXiw2vyEVBVpp0aUyXmdoHcDv3WCMxZtA8xsts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732181AbfIHMug (ORCPT
+        id S2387961AbfIHMzx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:50:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41332 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:55:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732119AbfIHMu2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:50:28 -0400
+        id S1732193AbfIHMui (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:50:38 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3E752190F;
-        Sun,  8 Sep 2019 12:50:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48FB8218AC;
+        Sun,  8 Sep 2019 12:50:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567947027;
-        bh=t8vTz3bm7817MJk+R8f5YXtg/XCw3/+FCCFUyKitszE=;
+        s=default; t=1567947037;
+        bh=1Hz3gvQ0f2YPPR+1FUpI7H+4HAKYesWoaGOm0olvD3E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SCvxVucCCWczsMl/hPhqMkeKhphExrOsuqT8oHI1suNXuJYHIRtcp+M2s+DwPf2p7
-         AnoMs9A1K7gI1iPCmB8NXT7EMcJIFjtduE5CNiM4M0PfkxCDq3hZo37xCg3hd8+U5+
-         CLG96OcY2eAY6RFWRttKjEBzarBet57nKdSw2yY8=
+        b=jCn5zNkwhq28bmhIPWkZOShqr7jwWttqgb/TpJJ8zCW9wyVobtyQuzniBJmBZA5ey
+         odcHBUDSR8RNIPsM62dqPGCQ0o870UU8QZYAshEYORVKfxjcQhgjN9QKl47V8PmHnj
+         Z4iE/Bf9W/7y4wGy8NraJOMXyLCrEoe6JkWy8e44=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 33/94] ixgbe: fix possible deadlock in ixgbe_service_task()
-Date:   Sun,  8 Sep 2019 13:41:29 +0100
-Message-Id: <20190908121151.386928027@linuxfoundation.org>
+Subject: [PATCH 5.2 36/94] Bluetooth: btqca: Add a short delay before downloading the NVM
+Date:   Sun,  8 Sep 2019 13:41:32 +0100
+Message-Id: <20190908121151.472382621@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
 References: <20190908121150.420989666@linuxfoundation.org>
@@ -62,39 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8b6381600d59871fbe44d36522272f961ab42410 ]
+[ Upstream commit 8059ba0bd0e4694e51c2ee6438a77b325f06c0d5 ]
 
-ixgbe_service_task() calls unregister_netdev() under rtnl_lock().
-But unregister_netdev() internally calls rtnl_lock().
-So deadlock would occur.
+On WCN3990 downloading the NVM sometimes fails with a "TLV response
+size mismatch" error:
 
-Fixes: 59dd45d550c5 ("ixgbe: firmware recovery mode")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+[  174.949955] Bluetooth: btqca.c:qca_download_firmware() hci0: QCA Downloading qca/crnv21.bin
+[  174.958718] Bluetooth: btqca.c:qca_tlv_send_segment() hci0: QCA TLV response size mismatch
+
+It seems the controller needs a short time after downloading the
+firmware before it is ready for the NVM. A delay as short as 1 ms
+seems sufficient, make it 10 ms just in case. No event is received
+during the delay, hence we don't just silently drop an extra event.
+
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/bluetooth/btqca.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-index 57fd9ee6de665..f7c049559c1a5 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-@@ -7893,11 +7893,8 @@ static void ixgbe_service_task(struct work_struct *work)
- 		return;
+diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
+index aff1d22223bd4..0ee5acb685a10 100644
+--- a/drivers/bluetooth/btqca.c
++++ b/drivers/bluetooth/btqca.c
+@@ -350,6 +350,9 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
+ 		return err;
  	}
- 	if (ixgbe_check_fw_error(adapter)) {
--		if (!test_bit(__IXGBE_DOWN, &adapter->state)) {
--			rtnl_lock();
-+		if (!test_bit(__IXGBE_DOWN, &adapter->state))
- 			unregister_netdev(adapter->netdev);
--			rtnl_unlock();
--		}
- 		ixgbe_service_event_complete(adapter);
- 		return;
- 	}
+ 
++	/* Give the controller some time to get ready to receive the NVM */
++	msleep(10);
++
+ 	/* Download NVM configuration */
+ 	config.type = TLV_TYPE_NVM;
+ 	if (qca_is_wcn399x(soc_type))
 -- 
 2.20.1
 
