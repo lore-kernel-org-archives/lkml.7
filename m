@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A5ECC4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 10:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27273C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 10:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7461321479
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 10:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0CEF20863
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 10:13:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mcwgjbdp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fLGdd4+B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbfIHKNA (ORCPT
+        id S1728330AbfIHKNE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 06:13:00 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:46237 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728200AbfIHKM4 (ORCPT
+        Sun, 8 Sep 2019 06:13:04 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:38683 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728213AbfIHKM6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 06:12:56 -0400
-Received: by mail-lf1-f65.google.com with SMTP id t8so8222398lfc.13
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 03:12:54 -0700 (PDT)
+        Sun, 8 Sep 2019 06:12:58 -0400
+Received: by mail-lf1-f68.google.com with SMTP id c12so8245598lfh.5
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 03:12:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=UBQNfgH478Agi6Qq65UuCm0AdFgtpDY1/4Ukd7tPN04=;
-        b=Mcwgjbdp32PK8AZUMsmSzkK40Pkz9/HfpmUTEvkfaXJir+M1fqFP9wGs7zB3qW+3by
-         X5GgXP39/Npz/F+rDuxpX5aPchObiqqORL9ZlkuVhbpwB+GFTVF7lub61Evi0KKMCezt
-         Dqw6YkxkDH/JmWHtRO/poQ31ezNS6Psl/exogXW7T0ppn4elIzW2We2net4M5m9JGbHu
-         g3aACABD48I4MJnMvQk/ClIIG2b67EDRyRtu1/O5m8QGdNBfBol/CPk5DbIfeeHSs8Ap
-         2nqZDZM+ZAlZEhT9VcPp+fUkBFIMMBx4t5RzmA0fGreFt8Pje7ZKBQ8S/7rcd5abLAY0
-         0pSQ==
+        bh=3w96KtsEyQIf1hGAVsd0wnGyK35jZHwym8BrQsTbnec=;
+        b=fLGdd4+BgfMFa2gyfbBQXvCUukG5s+sE/ms976Wf2QRgaMPYjEzEyWGYVWAPY5Grdr
+         +3vSvz+rJQTCMmu7qd+DM0m5dasetQHBbMpOWzIkE9yWH5udVAC+2qjqKuYd4Tu0we5M
+         ErE26ZXoCKnSk2fSQcsXmvVyB7XdJ9FSieot7Hn9AFLkUeTjA5vLWjPpeC7KwlEgiCYZ
+         1FLHq+8xlEXxx+A1TOko8hMSDhfTmSyXxjigJ7MS9muhjwiHEGZ6mOGwKIVJhhbQv6eY
+         vNf0aIlnQpAOBPJNpHdlV5HFzUuGa4nltukhJbeoiWL1T+FPuAnF65iVfkOHI28c4WXR
+         1CQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=UBQNfgH478Agi6Qq65UuCm0AdFgtpDY1/4Ukd7tPN04=;
-        b=eJJtrIYGre5ofLmQ48+eYs7dWHp1WQbldLHEVywF4nbp8KGxbxoNDN2qfP+nKalhzc
-         7mEfb8txLxRYYUzwwSxMvcYkvMaEr9lJW97uGPQdJ3XVZw5LVLz1tZvkQ9j+wEiehMr7
-         usJ4CfmsAPZYhNlWhA/6WqwertHav+MuFSN4i3vfa7BvCV+XnbvhLH8ZXsTfhnrJzSX1
-         BumIKTKotH4Jk/MLicp9VAVYq39fOZ+PKM8LGoykSYHzSfK1aeFRxVq+VAA7BhmOm73E
-         QEYTArgvAQSPTdSu0LiaDfKyeF5IPW9OT2p56m3d91qlMGSLabQ6RHtjYSvbU8P4X5Da
-         A7+A==
-X-Gm-Message-State: APjAAAV79CgJodl20uadiznHXtL096jfAI5cWPwlyQ5hmcU51k6BMCn5
-        cMq8Y17cXPhS9Hb9YivnEGiwoVlGpUvBpg==
-X-Google-Smtp-Source: APXvYqwAZcqc8OF77Bx7ciHC787UfAzR/Jk/8p6iWyWeRbk6Ie4qBOLjOvzlPaRvFZEofbuug/3pUQ==
-X-Received: by 2002:ac2:4a82:: with SMTP id l2mr12357581lfp.85.1567937573894;
-        Sun, 08 Sep 2019 03:12:53 -0700 (PDT)
+        bh=3w96KtsEyQIf1hGAVsd0wnGyK35jZHwym8BrQsTbnec=;
+        b=LjL9AfX4U8H4CDyNg9ui6sv+utUWKRYDkiuVy8+Z1TuVeZ8aoxWJCrskvydkpMxBT6
+         E2qkFVzbL0mTDsJX6kRi5Gs629xcZFIvJundNtSq6GPnqNXQX7cr+Css49K0yuw+ag8u
+         J5ohQ0VoPrZMYPqXMBGm0Oc70Sy34/vVMXAc5DIa08qlhN0mtzBrMjQIbbYG+zvfJg+B
+         bPDuZ9uDYcGlR7fRLOO4m45jeyQAj0jRHZcjaZ+MT0y3pS9nfaAwepqMkb7vIEvduXl4
+         f/ZSh6vNeTuY/6FK4jAQPNA2clrQU7n9dH4lBp+lk22Y49e1TsNCMjIN5Cg2SthSk52Y
+         fMnQ==
+X-Gm-Message-State: APjAAAXU1jDJZOX4CF0C5Uh+ZdYNUDZOKf1dFtO6Iu/lBb41FX5VptZ4
+        GuVxUJkyaslLRIJZTECQZzQogg==
+X-Google-Smtp-Source: APXvYqxC+7Ix/scWWeDIi59L/pZevcfUOeJNswESUdyorlg79fmFVsljPaZy8gFr/5NJfCk+RW/2fg==
+X-Received: by 2002:a19:3fd1:: with SMTP id m200mr12542682lfa.18.1567937576585;
+        Sun, 08 Sep 2019 03:12:56 -0700 (PDT)
 Received: from localhost.localdomain ([185.122.190.73])
-        by smtp.gmail.com with ESMTPSA id h25sm2444849lfj.81.2019.09.08.03.12.52
+        by smtp.gmail.com with ESMTPSA id h25sm2444849lfj.81.2019.09.08.03.12.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Sep 2019 03:12:53 -0700 (PDT)
+        Sun, 08 Sep 2019 03:12:55 -0700 (PDT)
 From:   Ulf Hansson <ulf.hansson@linaro.org>
 To:     linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
@@ -65,9 +65,9 @@ Cc:     Shawn Lin <shawn.lin@rock-chips.com>,
         Yong Mao <yong.mao@mediatek.com>,
         Chaotian Jing <chaotian.jing@mediatek.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 09/11] mmc: sdhci: Drop redundant check in sdhci_ack_sdio_irq()
-Date:   Sun,  8 Sep 2019 12:12:34 +0200
-Message-Id: <20190908101236.2802-10-ulf.hansson@linaro.org>
+Subject: [PATCH v2 11/11] mmc: sdhci: Convert to use sdio_irq_claimed()
+Date:   Sun,  8 Sep 2019 12:12:36 +0200
+Message-Id: <20190908101236.2802-12-ulf.hansson@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190908101236.2802-1-ulf.hansson@linaro.org>
 References: <20190908101236.2802-1-ulf.hansson@linaro.org>
@@ -76,30 +76,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sdhci_ack_sdio_irq() is called only when SDIO IRQs are enabled.
-Therefore, let's drop the redundant check of the internal
-SDHCI_SDIO_IRQ_ENABLED flag and just re-enable the IRQs immediately.
+Instead of keeping track of whether SDIO IRQs have been enabled via an
+internal sdhci status flag, avoid the open-coding and convert into using
+sdio_irq_claimed().
 
 Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 ---
- drivers/mmc/host/sdhci.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/mmc/host/sdhci.c | 7 +------
+ drivers/mmc/host/sdhci.h | 1 -
+ 2 files changed, 1 insertion(+), 7 deletions(-)
 
 diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index d814dc004bad..efa6cda8c991 100644
+index 4c4285387b47..4b297f397326 100644
 --- a/drivers/mmc/host/sdhci.c
 +++ b/drivers/mmc/host/sdhci.c
-@@ -2163,8 +2163,7 @@ static void sdhci_ack_sdio_irq(struct mmc_host *mmc)
- 	unsigned long flags;
+@@ -2144,11 +2144,6 @@ void sdhci_enable_sdio_irq(struct mmc_host *mmc, int enable)
+ 		pm_runtime_get_noresume(host->mmc->parent);
  
  	spin_lock_irqsave(&host->lock, flags);
--	if (host->flags & SDHCI_SDIO_IRQ_ENABLED)
--		sdhci_enable_sdio_irq_nolock(host, true);
-+	sdhci_enable_sdio_irq_nolock(host, true);
+-	if (enable)
+-		host->flags |= SDHCI_SDIO_IRQ_ENABLED;
+-	else
+-		host->flags &= ~SDHCI_SDIO_IRQ_ENABLED;
+-
+ 	sdhci_enable_sdio_irq_nolock(host, enable);
  	spin_unlock_irqrestore(&host->lock, flags);
- }
  
+@@ -3382,7 +3377,7 @@ int sdhci_runtime_resume_host(struct sdhci_host *host, int soft_reset)
+ 	host->runtime_suspended = false;
+ 
+ 	/* Enable SDIO IRQ */
+-	if (host->flags & SDHCI_SDIO_IRQ_ENABLED)
++	if (sdio_irq_claimed(mmc))
+ 		sdhci_enable_sdio_irq_nolock(host, true);
+ 
+ 	/* Enable Card Detection */
+diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+index 8effaac61c3a..a29c4cd2d92e 100644
+--- a/drivers/mmc/host/sdhci.h
++++ b/drivers/mmc/host/sdhci.h
+@@ -512,7 +512,6 @@ struct sdhci_host {
+ #define SDHCI_AUTO_CMD12	(1<<6)	/* Auto CMD12 support */
+ #define SDHCI_AUTO_CMD23	(1<<7)	/* Auto CMD23 support */
+ #define SDHCI_PV_ENABLED	(1<<8)	/* Preset value enabled */
+-#define SDHCI_SDIO_IRQ_ENABLED	(1<<9)	/* SDIO irq enabled */
+ #define SDHCI_USE_64_BIT_DMA	(1<<12)	/* Use 64-bit DMA */
+ #define SDHCI_HS400_TUNING	(1<<13)	/* Tuning for HS400 */
+ #define SDHCI_SIGNALING_330	(1<<14)	/* Host is capable of 3.3V signaling */
 -- 
 2.17.1
 
