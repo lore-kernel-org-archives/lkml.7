@@ -4,56 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B1EC4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55BABC4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75AEA218DE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F4FF218AF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:42:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946572;
-	bh=K6Vxcy2bvDEdCfKEJXIVSSgrnO14kMUndq2rRyG9TWM=;
+	s=default; t=1567946576;
+	bh=mqnRnbDGslsvYo8EJuwu7K/kmlaG/SNDh43N8rER6D4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cWqzxEMcYMsutKBlqUZwD/ueAV1zyiFo6MP/Gl+L7vPbU8A1hYcEx5rdyfWP0aoS+
-	 RoOPov7UBmxRgQ/QE5boyB8OHocPAq01jqjKOpgeVmz9hNGcyNnbbD9iEaOtsukdbv
-	 8qaz8M4NSKxbDT0uSMk/LD3Yekh+QvRdJ0Z1r7GQ=
+	b=QGUS0qlZUp738BjSsSfS6Kng0FYYPkV90yjZVMIx/Z49IG2SU8ha4dk8GDviYCocf
+	 lXHaNGIkFpfVLV/VytfcjKvThaz5F0gVQgov2PmQOn7pwg3s5HvolPnPRVL9HYcJdr
+	 BUVcqX3WrQ1TuMUutGB8yyH6xm22vhAe2ySQ2loY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729291AbfIHMmv (ORCPT
+        id S1729305AbfIHMmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:42:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56136 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:42:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726329AbfIHMmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:42:51 -0400
+        id S1726329AbfIHMmx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:42:53 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 289CF2081B;
-        Sun,  8 Sep 2019 12:42:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFF622081B;
+        Sun,  8 Sep 2019 12:42:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946570;
-        bh=K6Vxcy2bvDEdCfKEJXIVSSgrnO14kMUndq2rRyG9TWM=;
+        s=default; t=1567946573;
+        bh=mqnRnbDGslsvYo8EJuwu7K/kmlaG/SNDh43N8rER6D4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lzmj+HFdvIme6Ns2wBynHuqGc0lLcMO2Pb+HNB4kmCQfMAyeDXVJGSy9HXkE5uu6m
-         TZOJEfCHeMKmK2O3Q6UaHBSvjIKK6x1kAI8eKn6ipqX62I7GOTWJMrRjWI92+d2Elx
-         U8/NZbZZ/VU9kH1iFFKmep8XGZ7LPa3+yEbNRpuc=
+        b=tWxvkTNABsdX3aY4XSNH0mtf/Y7S2b+ojdLFgz5+np6jl8ROfyVrkCbdIabfAGqrl
+         wnvs3CENhDE+ysNdxCo1vCu19eUGq3ezO5B3d7nhRdWnj0iWE3XaNefvvGBrJ06Oe9
+         1W3ujeord9w4uB5WrI3aNQ8OGUQQ3sP47YoM+3y0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fuqian Huang <huangfq.daxian@gmail.com>,
+        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 01/23] net: tundra: tsi108: use spin_lock_irqsave instead of spin_lock_irq in IRQ context
-Date:   Sun,  8 Sep 2019 13:41:36 +0100
-Message-Id: <20190908121054.303637970@linuxfoundation.org>
+Subject: [PATCH 4.4 10/23] wimax/i2400m: fix a memory leak bug
+Date:   Sun,  8 Sep 2019 13:41:45 +0100
+Message-Id: <20190908121056.869762137@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121052.898169328@linuxfoundation.org>
 References: <20190908121052.898169328@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,46 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8c25d0887a8bd0e1ca2074ac0c6dff173787a83b ]
+[ Upstream commit 44ef3a03252844a8753479b0cea7f29e4a804bdc ]
 
-As spin_unlock_irq will enable interrupts.
-Function tsi108_stat_carry is called from interrupt handler tsi108_irq.
-Interrupts are enabled in interrupt handler.
-Use spin_lock_irqsave/spin_unlock_irqrestore instead of spin_(un)lock_irq
-in IRQ context to avoid this.
+In i2400m_barker_db_init(), 'options_orig' is allocated through kstrdup()
+to hold the original command line options. Then, the options are parsed.
+However, if an error occurs during the parsing process, 'options_orig' is
+not deallocated, leading to a memory leak bug. To fix this issue, free
+'options_orig' before returning the error.
 
-Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/tundra/tsi108_eth.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/wimax/i2400m/fw.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/tundra/tsi108_eth.c b/drivers/net/ethernet/tundra/tsi108_eth.c
-index 520cf50a3d5a1..93fe0da0f15ea 100644
---- a/drivers/net/ethernet/tundra/tsi108_eth.c
-+++ b/drivers/net/ethernet/tundra/tsi108_eth.c
-@@ -379,9 +379,10 @@ tsi108_stat_carry_one(int carry, int carry_bit, int carry_shift,
- static void tsi108_stat_carry(struct net_device *dev)
- {
- 	struct tsi108_prv_data *data = netdev_priv(dev);
-+	unsigned long flags;
- 	u32 carry1, carry2;
+diff --git a/drivers/net/wimax/i2400m/fw.c b/drivers/net/wimax/i2400m/fw.c
+index c9c711dcd0e6b..0e6c665a4de82 100644
+--- a/drivers/net/wimax/i2400m/fw.c
++++ b/drivers/net/wimax/i2400m/fw.c
+@@ -351,13 +351,15 @@ int i2400m_barker_db_init(const char *_options)
+ 			}
+ 			result = i2400m_barker_db_add(barker);
+ 			if (result < 0)
+-				goto error_add;
++				goto error_parse_add;
+ 		}
+ 		kfree(options_orig);
+ 	}
+ 	return 0;
  
--	spin_lock_irq(&data->misclock);
-+	spin_lock_irqsave(&data->misclock, flags);
- 
- 	carry1 = TSI_READ(TSI108_STAT_CARRY1);
- 	carry2 = TSI_READ(TSI108_STAT_CARRY2);
-@@ -449,7 +450,7 @@ static void tsi108_stat_carry(struct net_device *dev)
- 			      TSI108_STAT_TXPAUSEDROP_CARRY,
- 			      &data->tx_pause_drop);
- 
--	spin_unlock_irq(&data->misclock);
-+	spin_unlock_irqrestore(&data->misclock, flags);
- }
- 
- /* Read a stat counter atomically with respect to carries.
++error_parse_add:
+ error_parse:
++	kfree(options_orig);
+ error_add:
+ 	kfree(i2400m_barker_db);
+ 	return result;
 -- 
 2.20.1
 
