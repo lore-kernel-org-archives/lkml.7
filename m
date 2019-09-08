@@ -2,138 +2,96 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29443C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 08:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F86C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 08:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78E032082C
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 08:20:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACCEE206CD
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 08:24:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbfIHIUt (ORCPT
+        id S1727018AbfIHIYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 04:20:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49656 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726438AbfIHIUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 04:20:49 -0400
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com [209.85.208.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 89EF6793E5
-        for <linux-kernel@vger.kernel.org>; Sun,  8 Sep 2019 08:20:48 +0000 (UTC)
-Received: by mail-ed1-f70.google.com with SMTP id a7so2121674edt.13
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 01:20:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=tDUlvgh3TJNH+HOn7EG167U749zEBUbsuQdh4Cjmd8A=;
-        b=fHrs9Wa19oC2tf6GmUNbhLSKfwPLkzPYVepw1OV3qx87rOO9xWoMPRJqPBIFq6gw3P
-         WS/93q4mRGTN+ArisWXP4NjqB9Dynx1bA/0wVdAzCy9QG3GjMydyfOuIq2JNXEv4F49g
-         QNh64RDzF+NSyzaK9iBuoZ8K15VvBrlOC/0lZb2Xoo0ima8JXj7kpET5FGY2asWwjxVj
-         GCMgBgnxMwsrlF7Cntxk9dNpNsmGTwtWy5Y5bj9PXN06t0/EH4LIJN3YCiBTE+uO9ssf
-         0qv87vm+QkVQ4fnK66JHYPI9LENuZDLt98XsoOrmHYu7XhPMlOy9/64M6P+qtDFi2US2
-         5/uQ==
-X-Gm-Message-State: APjAAAXFMYYmUUH8rEDLxey7aSIOMgZSJ9yNuAg7LtYEPS5xKic3DAdQ
-        1Qe0e3nYJCBK5pcBGwPCEm24FR59OFa3itEtEFH4F6DcYhlDW7tsoic3QZST0kJh1bIxksBQLqn
-        O/YxIvyJgcGWr2mqdThwyF9+M
-X-Received: by 2002:aa7:da18:: with SMTP id r24mr18610333eds.37.1567930847320;
-        Sun, 08 Sep 2019 01:20:47 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyUine6UkF8vYruWsm1TkYCnL+NgjVhuiXx0uWhrtbmqhr23a4HHNDbcMc+Zio0U1jaFUENZQ==
-X-Received: by 2002:aa7:da18:: with SMTP id r24mr18610313eds.37.1567930847128;
-        Sun, 08 Sep 2019 01:20:47 -0700 (PDT)
-Received: from alrua-x1.borgediget.toke.dk (borgediget.toke.dk. [85.204.121.218])
-        by smtp.gmail.com with ESMTPSA id t21sm1364896ejs.37.2019.09.08.01.20.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Sep 2019 01:20:46 -0700 (PDT)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id 0F739180615; Sun,  8 Sep 2019 09:20:44 +0100 (WEST)
-From:   =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     make-wifi-fast@lists.bufferbloat.net,
-        linux-wireless@vger.kernel.org, ast@kernel.org,
-        bpf@vger.kernel.org, daniel@iogearbox.net, davem@davemloft.net,
-        hawk@kernel.org, jakub.kicinski@netronome.com,
-        john.fastabend@gmail.com, kafai@fb.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
-Cc:     =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        syzbot+4e7a85b1432052e8d6f8@syzkaller.appspotmail.com
-Subject: [PATCH bpf-next] xdp: Fix race in dev_map_hash_update_elem() when replacing element
-Date:   Sun,  8 Sep 2019 09:20:16 +0100
-Message-Id: <20190908082016.17214-1-toke@redhat.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <0000000000005091a70591d3e1d9@google.com>
-References: <0000000000005091a70591d3e1d9@google.com>
+        Sun, 8 Sep 2019 04:24:01 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:30645 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726267AbfIHIYB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 04:24:01 -0400
+X-IronPort-AV: E=Sophos;i="5.64,481,1559512800"; 
+   d="scan'208";a="400736864"
+Received: from abo-12-105-68.mrs.modulonet.fr (HELO hadrien) ([85.68.105.12])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Sep 2019 10:23:58 +0200
+Date:   Sun, 8 Sep 2019 10:23:58 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     Markus Elfring <Markus.Elfring@web.de>
+cc:     Coccinelle <cocci@systeme.lip6.fr>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Petr Strnad <strnape1@fel.cvut.cz>,
+        Wen Yang <wen.yang99@zte.com.cn>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Allison Randal <allison@lohutok.net>,
+        Enrico Weigelt <lkml@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yi Wang <wang.yi59@zte.com.cn>
+Subject: Re: Coccinelle: pci_free_consistent: Checking when constraints
+In-Reply-To: <9666134d-0ff6-81eb-b088-f0086a0e61b1@web.de>
+Message-ID: <alpine.DEB.2.21.1909081019020.3340@hadrien>
+References: <9666134d-0ff6-81eb-b088-f0086a0e61b1@web.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="8323329-349894428-1567931038=:3340"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot found a crash in dev_map_hash_update_elem(), when replacing an
-element with a new one. Jesper correctly identified the cause of the crash
-as a race condition between the initial lookup in the map (which is done
-before taking the lock), and the removal of the old element.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Rather than just add a second lookup into the hashmap after taking the
-lock, fix this by reworking the function logic to take the lock before the
-initial lookup.
+--8323329-349894428-1567931038=:3340
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 
-Fixes: 6f9d451ab1a3 ("xdp: Add devmap_hash map type for looking up devices by hashed index")
-Reported-and-tested-by: syzbot+4e7a85b1432052e8d6f8@syzkaller.appspotmail.com
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
----
- kernel/bpf/devmap.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
-index 9af048a932b5..d27f3b60ff6d 100644
---- a/kernel/bpf/devmap.c
-+++ b/kernel/bpf/devmap.c
-@@ -650,19 +650,22 @@ static int __dev_map_hash_update_elem(struct net *net, struct bpf_map *map,
- 	u32 ifindex = *(u32 *)value;
- 	u32 idx = *(u32 *)key;
- 	unsigned long flags;
-+	int err = -EEXIST;
- 
- 	if (unlikely(map_flags > BPF_EXIST || !ifindex))
- 		return -EINVAL;
- 
-+	spin_lock_irqsave(&dtab->index_lock, flags);
-+
- 	old_dev = __dev_map_hash_lookup_elem(map, idx);
- 	if (old_dev && (map_flags & BPF_NOEXIST))
--		return -EEXIST;
-+		goto out_err;
- 
- 	dev = __dev_map_alloc_node(net, dtab, ifindex, idx);
--	if (IS_ERR(dev))
--		return PTR_ERR(dev);
--
--	spin_lock_irqsave(&dtab->index_lock, flags);
-+	if (IS_ERR(dev)) {
-+		err = PTR_ERR(dev);
-+		goto out_err;
-+	}
- 
- 	if (old_dev) {
- 		hlist_del_rcu(&old_dev->index_hlist);
-@@ -683,6 +686,10 @@ static int __dev_map_hash_update_elem(struct net *net, struct bpf_map *map,
- 		call_rcu(&old_dev->rcu, __dev_map_entry_free);
- 
- 	return 0;
-+
-+out_err:
-+	spin_unlock_irqrestore(&dtab->index_lock, flags);
-+	return err;
- }
- 
- static int dev_map_hash_update_elem(struct bpf_map *map, void *key, void *value,
--- 
-2.23.0
 
+On Sun, 8 Sep 2019, Markus Elfring wrote:
+
+> Hello,
+>
+> I have taken another look at a known script for the semantic patch language.
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/scripts/coccinelle/free/pci_free_consistent.cocci?id=950b07c14e8c59444e2359f15fd70ed5112e11a0#n2
+>
+> The following SmPL code is used there so far.
+>
+> …
+> ... when != pci_free_consistent(x,y,id,z)
+>     when != if (id) { ... pci_free_consistent(x,y,id,z) ... }
+>     when != if (y) { ... pci_free_consistent(x,y,id,z) ... }
+> …
+>
+>
+> It is specified that a specific function call should be excluded
+> in a source code search.
+> I do not see a need to repeat the specification twice that such a call
+> could eventually happen also within a branch of another if statement.
+> How do you think about to omit possibly redundant SmPL code at this place?
+
+Have you actually run the rule and checked the impact of your proposed
+change?
+
+The when exists below these lines has an impact.  I believe that the rule
+is ok as is.  A single path may have no call to pci_free_consistent, but
+if it has that call under one of the mentioned ifs, then the path is still
+ok, and not something that an error should be reported about.
+
+julia
+--8323329-349894428-1567931038=:3340--
