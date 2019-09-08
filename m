@@ -2,80 +2,112 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84321C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 070F1C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 528792081B
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:33:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D58732081B
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:41:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RytNBVV3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729188AbfIHMdD (ORCPT
+        id S1729198AbfIHMl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:33:03 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:33773 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728955AbfIHMdD (ORCPT
+        Sun, 8 Sep 2019 08:41:29 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33800 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728770AbfIHMl2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:33:03 -0400
-Received: by mail-io1-f71.google.com with SMTP id 5so14418634ion.0
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 05:33:01 -0700 (PDT)
+        Sun, 8 Sep 2019 08:41:28 -0400
+Received: by mail-pg1-f196.google.com with SMTP id n9so6184916pgc.1;
+        Sun, 08 Sep 2019 05:41:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=s/uUNSET5cdcr9MP+ioNfRXeHELFVouyjnHy8zcY4NM=;
+        b=RytNBVV3d3qtpwVlZKF9JsFPcA9qJBXwAzy9eqR3/VLYYpsSX/d4MIkPC9mOvINeeS
+         h5oaijAL/poczro1/XQ7utZuwF9iRqDBLRsvUB21uC146xQ5c5cp5l6XQoQSQ2Brd3LH
+         b7ODPRHrCcf1uVYrpruzcmiTjHEsGELLo8YO9uT+qK+gT9rv56GB5gmEz/xoEkOQzg0j
+         nl+ri8nYu/ypaJ9hntz9eglAhVSuZyVOYsF/rFg4O0ScEGti/Ko25PAEKyxtdIhVkLYD
+         Uu02Qe1LpCLBaxE93/mKIYBf6D5PE7QyfQhmd11nTCAO6N/PruEji1oP7XS8HXJ6VbRv
+         H4yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=Dlrt7nF+QMrAeB++A6Ck3UTmsUjVxvwblcY1dMvaVGw=;
-        b=pVK20o1staP1eJsS690j1tKrw2+SpbQDrMHUga392uwnNOfbKVsXqI4cV5XRgLQeiu
-         coGfMXOvind2gnOXsI52k1veSsPI0W4iX7H5lR3RdJVldBBhxLO1IN3kLsXu+EryeZgM
-         Oyt+jYos3fptmkyjb8Jt/s/mjXUVDRHmBFdiz6ryz3UwcBay+shOnbmt/VEiaZPHRtjK
-         jYfDaDQCvPkoKLj+pu+gsPGJXZaKzFm6wYXqmT73AbyouIB0bmdB4GJzd+sHIakPJ5M4
-         Lq07QVohiRj+1yPjSEoQRnxsBOtD/SxsyIGcbgO+/cn3FMHZQnGGc0Jb4ZMcevjFWPl+
-         OC/w==
-X-Gm-Message-State: APjAAAUDWAsMjlIN7KnPS/knWjhQH6GHa+iyCi8jJ6G+s7OXOwe8rGYn
-        JqB0ZOixRL4TZjnRBaC9B8JQ0aXo3+6PU3mx0AMk2C90BAKY
-X-Google-Smtp-Source: APXvYqxLRIrArmm5jACs2Lrk6VJ5eg+Ycgp5MA+m/Uphdu7Qq3nvbW1MwZilaMC6yRKZe3KSnSSU1qER9VS/0ttQsNbDjxeHCSFq
-MIME-Version: 1.0
-X-Received: by 2002:a05:6638:a12:: with SMTP id 18mr16975290jan.123.1567945980605;
- Sun, 08 Sep 2019 05:33:00 -0700 (PDT)
-Date:   Sun, 08 Sep 2019 05:33:00 -0700
-In-Reply-To: <000000000000d2a5c60592047e58@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000337872059209df41@google.com>
-Subject: Re: general protection fault in cbs_destroy
-From:   syzbot <syzbot+3a8d6a998cbb73bcf337@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, hdanton@sina.com, jhs@mojatatu.com,
-        jiri@resnulli.us, leandro.maciel.dorileo@intel.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, vedang.patel@intel.com,
-        xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=s/uUNSET5cdcr9MP+ioNfRXeHELFVouyjnHy8zcY4NM=;
+        b=A9CUd8ED96b/Z7fUX91IzJAbkYZbZQVz4bz6yqA1jbwcuzTmA02UFufFdCRtCZeX7G
+         fRQ3qHwzxN2hMwpkkfwvTE6elsRbFrOjD4ufd0L9Si5zyw3xTZfsIdIFvGTGb2aMN7SX
+         XA9mMjTdrTGi5M9mF/CafN6zTKR8sPUSt/+M/BSE9p4H+ME5YYfl5p0lSghLscb/2fHK
+         COYv53b/4egGtd7WzbOwyue4/lLdOu+b6KIMCgJMIeQCrrVrUxkVmSG4Rl+NfJg73o3K
+         fGM/SSHIcKQwEx1cJ0Eol2C+vTQZhTRljjQsZ3X2UT7QO8UBu/VtZoHlj+hqivEO7vuA
+         Uh7A==
+X-Gm-Message-State: APjAAAUVUMDBKZrwH5AalwzmbFsR4uh9RYOP7psn7hiT1lMBo7E7Fyhv
+        RtFUzvwmGwLJLeyLYCFk09LRP+tj
+X-Google-Smtp-Source: APXvYqyIRKncxESF4fbN0LmT5WXmFVB0OcHeYMSrMwIKmTyqtYclH7gVBz80d6/9E89rDx4bRkgv9w==
+X-Received: by 2002:a63:124a:: with SMTP id 10mr16783420pgs.254.1567946487775;
+        Sun, 08 Sep 2019 05:41:27 -0700 (PDT)
+Received: from localhost.localdomain ([240f:34:212d:1:cae:1d92:a912:df67])
+        by smtp.gmail.com with ESMTPSA id s7sm10879582pjn.8.2019.09.08.05.41.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 08 Sep 2019 05:41:26 -0700 (PDT)
+From:   Akinobu Mita <akinobu.mita@gmail.com>
+To:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH 0/5] leds: fix /sys/class/leds/<led>/trigger and add new api
+Date:   Sun,  8 Sep 2019 21:41:07 +0900
+Message-Id: <1567946472-10075-1-git-send-email-akinobu.mita@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+Reading /sys/class/leds/<led>/trigger returns all available LED triggers.
+However, the size of this file is limited to PAGE_SIZE because of the
+limitation for sysfs attribute.
 
-commit e0a7683d30e91e30ee6cf96314ae58a0314a095e
-Author: Leandro Dorileo <leandro.maciel.dorileo@intel.com>
-Date:   Mon Apr 8 17:12:18 2019 +0000
+Enabling LED CPU trigger on systems with thousands of CPUs easily hits
+PAGE_SIZE limit, and makes it impossible to see all available LED triggers
+and which trigger is currently activated.
 
-     net/sched: cbs: fix port_rate miscalculation
+The first patch in this series converts /sys/class/leds/<led>/trigger to
+bin attribute and removes the PAGE_SIZE limitation.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=158f3c01600000
-start commit:   3b47fd5c Merge tag 'nfs-for-5.3-4' of git://git.linux-nfs...
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=178f3c01600000
-console output: https://syzkaller.appspot.com/x/log.txt?x=138f3c01600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=144488c6c6c6d2b6
-dashboard link: https://syzkaller.appspot.com/bug?extid=3a8d6a998cbb73bcf337
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17998f9e600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10421efa600000
+The rest of series provides a new /sys/class/triggers/ directory and
+/sys/class/leds/<led>/current-trigger. The new api follows the "one value
+per file" rule of sysfs.
 
-Reported-by: syzbot+3a8d6a998cbb73bcf337@syzkaller.appspotmail.com
-Fixes: e0a7683d30e9 ("net/sched: cbs: fix port_rate miscalculation")
+Akinobu Mita (5):
+  leds: remove PAGE_SIZE limit of /sys/class/leds/<led>/trigger
+  leds: make sure leds_class is initialized before triggers are
+    registered
+  driver core: class: add function to create /sys/class/<class>/foo
+    directory
+  leds: add /sys/class/triggers/ that contains trigger sub-directories
+  leds: add /sys/class/leds/<led>/current-trigger
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+ Documentation/ABI/testing/sysfs-class-led |  22 +++++
+ drivers/base/class.c                      |   7 ++
+ drivers/leds/led-class.c                  |  49 +++++++++--
+ drivers/leds/led-triggers.c               | 139 +++++++++++++++++++++++++-----
+ drivers/leds/leds.h                       |  12 +++
+ include/linux/device.h                    |   3 +
+ include/linux/leds.h                      |   6 +-
+ 7 files changed, 207 insertions(+), 31 deletions(-)
+
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Dan Murphy <dmurphy@ti.com>
+-- 
+2.7.4
+
