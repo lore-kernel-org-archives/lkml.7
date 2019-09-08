@@ -2,51 +2,52 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B74E2C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE07AC4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86BC82067B
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:58:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7D5C20693
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:59:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947539;
-	bh=sQ4dfnDcjH8d9tQ+CCUtld6pKau5HKXGqpYZhRRicCM=;
+	s=default; t=1567947544;
+	bh=gdF4uvgwLqBk17amB8Ul2Jm1qxH0Aqoc/x4M99Un1q4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mTy2YVnpd+RVfTJw9wd0YMp6jzJufeskI3zlhNL8hDv7kE8EN6lt5Zvyrx6LBNKv0
-	 OHaq11Je1nw5onBr9bEnqeF88RZBMybVNXOvL7uGNpizKRZtibCjQfr8uvUcMZ1iI5
-	 A+oyvTEJnjXchlpVckHKzjYB/TS1Ez/TCws1mTGg=
+	b=YYX3gAP/MXrIazEBX0YWZSNTK690nplR2DG9lidcZIyq9XF8xwkDgir3b7aHN8CHe
+	 uqYBKgJZqTQcssjN1FPdi6R7PgOKw5H6q9Ir24LMwqGn9kQWA7XwF3OBcJgkDxSyDV
+	 /Sqonyn3RK+Pvzm2BTfLU3/aXzKIXuCR/c23KpbY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbfIHM67 (ORCPT
+        id S1730397AbfIHMqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:58:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34398 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:46:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730433AbfIHMqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:46:38 -0400
+        id S1726687AbfIHMq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:46:27 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE4F62081B;
-        Sun,  8 Sep 2019 12:46:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D0BA20644;
+        Sun,  8 Sep 2019 12:46:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946798;
-        bh=sQ4dfnDcjH8d9tQ+CCUtld6pKau5HKXGqpYZhRRicCM=;
+        s=default; t=1567946786;
+        bh=gdF4uvgwLqBk17amB8Ul2Jm1qxH0Aqoc/x4M99Un1q4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FvLMX7aHBWutans+0rMzpL/bx6874K36MMI/ofw5MELrnnTC/vUydnP6vqxOnjeB0
-         w7jAAKWTHeHD7kuSL+85KUgARJ80PzTcOzvMjM3TABwDhVhKd4NFnqQLG/DUrcBjjd
-         vbzLBjsUV2S7sLU2iNcfI70//53ICtjnK+XTMEJA=
+        b=MC/KQxFxuef7TzAWbtzMfSOB6pHKJpF2I+ucI0KhwBG/urS5mV7WK4GqFAktWQPI1
+         ZUnbb30rfz6Tf3/60CugURV7DJw5IqDwKTpZGtKjRqeHnGMxTOb5feeUGDSmwFeyI6
+         lMEmu/Lep0v64QQqEx7AkNbR4kC/SctTJcyP/A6w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexandre Courbot <acourbot@chromium.org>,
-        CK Hu <ck.hu@mediatek.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 08/40] drm/mediatek: use correct device to import PRIME buffers
-Date:   Sun,  8 Sep 2019 13:41:41 +0100
-Message-Id: <20190908121117.957075712@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 39/40] mld: fix memory leak in mld_del_delrec()
+Date:   Sun,  8 Sep 2019 13:42:12 +0100
+Message-Id: <20190908121132.593371325@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121114.260662089@linuxfoundation.org>
 References: <20190908121114.260662089@linuxfoundation.org>
@@ -59,54 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4c6f3196e6ea111c456c6086dc3f57d4706b0b2d ]
+From: Eric Dumazet <edumazet@google.com>
 
-PRIME buffers should be imported using the DMA device. To this end, use
-a custom import function that mimics drm_gem_prime_import_dev(), but
-passes the correct device.
+[ Upstream commit a84d016479896b5526a2cc54784e6ffc41c9d6f6 ]
 
-Fixes: 119f5173628aa ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
-Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
-Signed-off-by: CK Hu <ck.hu@mediatek.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Similar to the fix done for IPv4 in commit e5b1c6c6277d
+("igmp: fix memory leak in igmpv3_del_delrec()"), we need to
+make sure mca_tomb and mca_sources are not blindly overwritten.
+
+Using swap() then a call to ip6_mc_clear_src() will take care
+of the missing free.
+
+BUG: memory leak
+unreferenced object 0xffff888117d9db00 (size 64):
+  comm "syz-executor247", pid 6918, jiffies 4294943989 (age 25.350s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 fe 88 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<000000005b463030>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
+    [<000000005b463030>] slab_post_alloc_hook mm/slab.h:522 [inline]
+    [<000000005b463030>] slab_alloc mm/slab.c:3319 [inline]
+    [<000000005b463030>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3548
+    [<00000000939cbf94>] kmalloc include/linux/slab.h:552 [inline]
+    [<00000000939cbf94>] kzalloc include/linux/slab.h:748 [inline]
+    [<00000000939cbf94>] ip6_mc_add1_src net/ipv6/mcast.c:2236 [inline]
+    [<00000000939cbf94>] ip6_mc_add_src+0x31f/0x420 net/ipv6/mcast.c:2356
+    [<00000000d8972221>] ip6_mc_source+0x4a8/0x600 net/ipv6/mcast.c:449
+    [<000000002b203d0d>] do_ipv6_setsockopt.isra.0+0x1b92/0x1dd0 net/ipv6/ipv6_sockglue.c:748
+    [<000000001f1e2d54>] ipv6_setsockopt+0x89/0xd0 net/ipv6/ipv6_sockglue.c:944
+    [<00000000c8f7bdf9>] udpv6_setsockopt+0x4e/0x90 net/ipv6/udp.c:1558
+    [<000000005a9a0c5e>] sock_common_setsockopt+0x38/0x50 net/core/sock.c:3139
+    [<00000000910b37b2>] __sys_setsockopt+0x10f/0x220 net/socket.c:2084
+    [<00000000e9108023>] __do_sys_setsockopt net/socket.c:2100 [inline]
+    [<00000000e9108023>] __se_sys_setsockopt net/socket.c:2097 [inline]
+    [<00000000e9108023>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2097
+    [<00000000f4818160>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:296
+    [<000000008d367e8f>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Fixes: 1666d49e1d41 ("mld: do not remove mld souce list info when set link down")
+Fixes: 9c8bb163ae78 ("igmp, mld: Fix memory leak in igmpv3/mld_del_delrec()")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_drv.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ net/ipv6/mcast.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-index cada1c75c41cd..4a89cd2e4f1c5 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-@@ -287,6 +287,18 @@ static const struct file_operations mtk_drm_fops = {
- 	.compat_ioctl = drm_compat_ioctl,
- };
- 
-+/*
-+ * We need to override this because the device used to import the memory is
-+ * not dev->dev, as drm_gem_prime_import() expects.
-+ */
-+struct drm_gem_object *mtk_drm_gem_prime_import(struct drm_device *dev,
-+						struct dma_buf *dma_buf)
-+{
-+	struct mtk_drm_private *private = dev->dev_private;
-+
-+	return drm_gem_prime_import_dev(dev, dma_buf, private->dma_dev);
-+}
-+
- static struct drm_driver mtk_drm_driver = {
- 	.driver_features = DRIVER_MODESET | DRIVER_GEM | DRIVER_PRIME |
- 			   DRIVER_ATOMIC,
-@@ -298,7 +310,7 @@ static struct drm_driver mtk_drm_driver = {
- 	.prime_handle_to_fd = drm_gem_prime_handle_to_fd,
- 	.prime_fd_to_handle = drm_gem_prime_fd_to_handle,
- 	.gem_prime_export = drm_gem_prime_export,
--	.gem_prime_import = drm_gem_prime_import,
-+	.gem_prime_import = mtk_drm_gem_prime_import,
- 	.gem_prime_get_sg_table = mtk_gem_prime_get_sg_table,
- 	.gem_prime_import_sg_table = mtk_gem_prime_import_sg_table,
- 	.gem_prime_mmap = mtk_drm_gem_mmap_buf,
--- 
-2.20.1
-
+--- a/net/ipv6/mcast.c
++++ b/net/ipv6/mcast.c
+@@ -772,12 +772,13 @@ static void mld_del_delrec(struct inet6_
+ 		im->idev = pmc->idev;
+ 		im->mca_crcount = idev->mc_qrv;
+ 		if (im->mca_sfmode == MCAST_INCLUDE) {
+-			im->mca_tomb = pmc->mca_tomb;
+-			im->mca_sources = pmc->mca_sources;
++			swap(im->mca_tomb, pmc->mca_tomb);
++			swap(im->mca_sources, pmc->mca_sources);
+ 			for (psf = im->mca_sources; psf; psf = psf->sf_next)
+ 				psf->sf_crcount = im->mca_crcount;
+ 		}
+ 		in6_dev_put(pmc->idev);
++		ip6_mc_clear_src(pmc);
+ 		kfree(pmc);
+ 	}
+ 	spin_unlock_bh(&im->mca_lock);
 
 
