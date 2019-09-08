@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A468C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:00:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E5FC433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC2002067B
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:00:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5C552067B
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:00:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947601;
-	bh=E9KGdhC/jcBFobfc9mLhrYNF/oc4OdTm3fqc8AkqMOg=;
+	s=default; t=1567947602;
+	bh=VKIhn3t5HKFT55uxxSW0rh1RrHK5MQdyDgOmvlyntj8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e5X7vzG+u8snkJu7SzfNqWEsiair80nyOVR7RAAjBUV83JzYepSmEwHbBsVNAOTjY
-	 mUA+G4O7+aoLGSJuWES+uILwyHPCVOip4msFtZlUoERAm7NltX/s1RmHM2bwa4n4Z4
-	 ujNFCcvq5JhLYqI+fT4Tg7rn+TARnnD2taoPcqnc=
+	b=cwMFu4zVyO8/nl/tsAL/JTmfbAXQDRTNH8VMAVfFlQX0CZYeuqaGNJtvaLJPrJySQ
+	 maCJRnBU4mJ++5HhFZ4nTR4l2EHx/4ApEXcVwzgJEu4AJ6FosXIjfjupnm46m7nIKV
+	 J6iz94vOzVG/9qyc+oEUeNGQNbT+pB5BUyifvXM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730057AbfIHMpS (ORCPT
+        id S1727168AbfIHNAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:45:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60420 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 09:00:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729995AbfIHMpO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:45:14 -0400
+        id S1730062AbfIHMpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:45:19 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B783C218AE;
-        Sun,  8 Sep 2019 12:45:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEEA02081B;
+        Sun,  8 Sep 2019 12:45:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946714;
-        bh=E9KGdhC/jcBFobfc9mLhrYNF/oc4OdTm3fqc8AkqMOg=;
+        s=default; t=1567946719;
+        bh=VKIhn3t5HKFT55uxxSW0rh1RrHK5MQdyDgOmvlyntj8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YJ7So3+dwyI0Icen4lHmGxZSAexQ6r849UEkUmesDcw2zgQ6oqJ8pbF2F0Bfl7nqc
-         0pTJYOrRNfzuxEgzTE2Zw+Hyf9/Y1soporHYZRROj6tSVxLCigifrkaEB/UbWnmD2o
-         B2pviNgGvfozampM+s5LPeQD09v8gADqWYX2bejE=
+        b=RIjOlm28n9bAd9uETz6fM4dbXsKJ+p6YfpAZI/2x8jGAPMVGSEcPuVRNGT/5S2Yop
+         si5rJSbG1H2RHE5ybGqrhvcbI9NaDhhGNWYa08vnagM64cewVDA2jG376cBtIBNwR0
+         +yob3CnuKKYPhFHjJfYz/AI/VvB4bTkEGWaSwwXk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 13/40] lan78xx: Fix memory leaks
-Date:   Sun,  8 Sep 2019 13:41:46 +0100
-Message-Id: <20190908121121.017746007@linuxfoundation.org>
+Subject: [PATCH 4.14 15/40] cx82310_eth: fix a memory leak bug
+Date:   Sun,  8 Sep 2019 13:41:48 +0100
+Message-Id: <20190908121121.763191475@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121114.260662089@linuxfoundation.org>
 References: <20190908121114.260662089@linuxfoundation.org>
@@ -60,51 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b9cbf8a64865b50fd0f4a3915fa00ac7365cdf8f ]
+[ Upstream commit 1eca92eef18719027d394bf1a2d276f43e7cf886 ]
 
-In lan78xx_probe(), a new urb is allocated through usb_alloc_urb() and
-saved to 'dev->urb_intr'. However, in the following execution, if an error
-occurs, 'dev->urb_intr' is not deallocated, leading to memory leaks. To fix
-this issue, invoke usb_free_urb() to free the allocated urb before
-returning from the function.
+In cx82310_bind(), 'dev->partial_data' is allocated through kmalloc().
+Then, the execution waits for the firmware to become ready. If the firmware
+is not ready in time, the execution is terminated. However, the allocated
+'dev->partial_data' is not deallocated on this path, leading to a memory
+leak bug. To fix this issue, free 'dev->partial_data' before returning the
+error.
 
 Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/lan78xx.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/net/usb/cx82310_eth.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index b62c41114e34e..24b994c68bccd 100644
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -3645,7 +3645,7 @@ static int lan78xx_probe(struct usb_interface *intf,
- 	ret = register_netdev(netdev);
- 	if (ret != 0) {
- 		netif_err(dev, probe, netdev, "couldn't register the device\n");
--		goto out3;
-+		goto out4;
+diff --git a/drivers/net/usb/cx82310_eth.c b/drivers/net/usb/cx82310_eth.c
+index 947bea81d9241..dfbdea22fbad9 100644
+--- a/drivers/net/usb/cx82310_eth.c
++++ b/drivers/net/usb/cx82310_eth.c
+@@ -175,7 +175,8 @@ static int cx82310_bind(struct usbnet *dev, struct usb_interface *intf)
+ 	}
+ 	if (!timeout) {
+ 		dev_err(&udev->dev, "firmware not ready in time\n");
+-		return -ETIMEDOUT;
++		ret = -ETIMEDOUT;
++		goto err;
  	}
  
- 	usb_set_intfdata(intf, dev);
-@@ -3660,12 +3660,14 @@ static int lan78xx_probe(struct usb_interface *intf,
- 
- 	ret = lan78xx_phy_init(dev);
- 	if (ret < 0)
--		goto out4;
-+		goto out5;
- 
- 	return 0;
- 
--out4:
-+out5:
- 	unregister_netdev(netdev);
-+out4:
-+	usb_free_urb(dev->urb_intr);
- out3:
- 	lan78xx_unbind(dev, intf);
- out2:
+ 	/* enable ethernet mode (?) */
 -- 
 2.20.1
 
