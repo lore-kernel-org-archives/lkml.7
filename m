@@ -2,75 +2,100 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91515C49ED5
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 20:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9974C4360D
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 20:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 610B4218AF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 20:37:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94163218AF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 20:44:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="gWNUGaQH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vd8B1p6v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729684AbfIHUhW (ORCPT
+        id S1729885AbfIHUor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 16:37:22 -0400
-Received: from mail.andi.de1.cc ([85.214.55.253]:33304 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729263AbfIHUhV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 16:37:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=WLNvj34w1pMydEMVCJGWGNCq90dYkz0edkv/6Infxco=; b=gWNUGaQHNjgOqY5zrZ+BPjNJ/t
-        nXKXYK8g5xv+b4o4OJ7PoWuZ4TdtVR+ADL8078ghBlGq5JIn7GX3YYYNPdBCd8dnAgS+fOnizKSk0
-        HOxJnNH3asiCrxW4OycyeZrRHWupr6FrA8586BBGINUZMWm25lwruT06eEB7eCFMQRMY=;
-Received: from p200300ccff4729001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff47:2900:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1i73vn-0000wL-Aw; Sun, 08 Sep 2019 22:37:07 +0200
-Received: from andi by aktux with local (Exim 4.92)
-        (envelope-from <andreas@kemnade.info>)
-        id 1i73vm-0007rN-W2; Sun, 08 Sep 2019 22:37:07 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     lee.jones@linaro.org, daniel.thompson@linaro.org,
-        jingoohan1@gmail.com, jacek.anaszewski@gmail.com, pavel@ucw.cz,
-        dmurphy@ti.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH 0/2] backlight_lm3630a: add enable_gpios property
-Date:   Sun,  8 Sep 2019 22:37:02 +0200
-Message-Id: <20190908203704.30147-1-andreas@kemnade.info>
-X-Mailer: git-send-email 2.20.1
+        Sun, 8 Sep 2019 16:44:47 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:42199 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729263AbfIHUor (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 16:44:47 -0400
+Received: by mail-lj1-f196.google.com with SMTP id y23so10688669lje.9
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 13:44:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1juM/iMQ96QooUUt3f77LO+IV8A/P1jdeBRL84BbUZU=;
+        b=vd8B1p6vAgV+BtAIEf0xv0O+Y4Vm/xhVfRv4TU+EyRD9QBl/R8GaZu4HLoGkEtk5e6
+         oHp0+VcNHewZ4JRNXZRhAZEwgrV2uESOmdeVVr3fytPmTmBj9rhHIhz3jtvUAgBH5jjt
+         SOImtUAKCMn/kRf5v1wa2/0dld4ICc+ZUEV+fF0u5sX5a+D2yUPsDZZHFXtYwqGguiyr
+         UAWhgas7L840y2sXbDf+W2jJwY9UeFTBpR4NA6fWqRODuARyElMF3+m2TfA8jgSnahjW
+         dUbg9pmU3ftyKRD6vOcUGDoN+bvtJ2C+b0rujLRZ5YdyNQpbJu5ahSir2rFBEtLpGUqC
+         wvtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1juM/iMQ96QooUUt3f77LO+IV8A/P1jdeBRL84BbUZU=;
+        b=mIqb1ZKxvik5qLokJcI7gEZKksa0IPqehQZ1z/QYBKpC+Dmwy+kG4XYjTSR9Wz9Wtv
+         unLqoHGJI+Tz39OJxrzbf46agt6FIsXIu3WuG387Mch1SXZxNR9OqLrzAVxUBCyg1lpu
+         +FvCCyT0J/tYdCTuZaTGyfnuA/zVFjnv3qvn9FV2/jbqSY8FOB28jilSeIIAQ3dBI4gS
+         ohJiU24liQhkZljaHe0vRxsoUf+SQQNC0SVQ87CUNe3RYMz41uOIBu6AydvX/JtaB5Ht
+         uVoRpS6kCM2PHKRUC2Mqv7TMGBq4i2aVWFdERru6jgzID5duV1l9gFA8oKuhksLQL727
+         Il5w==
+X-Gm-Message-State: APjAAAXgp9CN9hYrFWFJTyJ6PBjk/+stunKCBFooad6IuCS+px0egnh6
+        wxVZDqKIwsBeotM0YIatIXhGSNVM3Tzk13/Iae7TDV8V
+X-Google-Smtp-Source: APXvYqwlv/wBgFFrFzrC4IrBPrmdeLAs0UNxrB4MpaAENwAGnvMZb8JChTPKYfY8wUlnapiIlX1xsEqLNddVi3ZOIMY=
+X-Received: by 2002:a2e:90c7:: with SMTP id o7mr13234884ljg.73.1567975485166;
+ Sun, 08 Sep 2019 13:44:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190908162919.830388dc7404d1e2c80f4095@gmail.com> <1ed46a95-12bc-d8ee-0770-43057a09f0d9@maciej.szmigiero.name>
+In-Reply-To: <1ed46a95-12bc-d8ee-0770-43057a09f0d9@maciej.szmigiero.name>
+From:   Vitaly Wool <vitalywool@gmail.com>
+Date:   Sun, 8 Sep 2019 23:44:33 +0300
+Message-ID: <CAMJBoFPVmZ=9G0hYz0YYeVH=cMZ=F1urMorvRtm8ZwV7fc4haA@mail.gmail.com>
+Subject: Re: [PATCH] z3fold: fix retry mechanism in page reclaim
+To:     "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+Cc:     Linux-MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Agust=C3=ADn_Dall=CA=BCAlba?= <agustin@dallalba.com.ar>,
+        Dan Streetman <ddstreet@ieee.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Markus Linnala <markus.linnala@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To be able to handle the HWEN pin of the lm3630a, add
-an enable gpio to the driver and a property.
+On Sun, Sep 8, 2019 at 4:56 PM Maciej S. Szmigiero
+<mail@maciej.szmigiero.name> wrote:
+>
+> On 08.09.2019 15:29, Vitaly Wool wrote:
+> > z3fold_page_reclaim()'s retry mechanism is broken: on a second
+> > iteration it will have zhdr from the first one so that zhdr
+> > is no longer in line with struct page. That leads to crashes when
+> > the system is stressed.
+> >
+> > Fix that by moving zhdr assignment up.
+> >
+> > While at it, protect against using already freed handles by using
+> > own local slots structure in z3fold_page_reclaim().
+> >
+> > Reported-by: Markus Linnala <markus.linnala@gmail.com>
+> > Reported-by: Chris Murphy <bugzilla@colorremedies.com>
+> > Reported-by: Agustin Dall'Alba <agustin@dallalba.com.ar>
+> > Signed-off-by: Vitaly Wool <vitalywool@gmail.com>
+> > ---
+>
+> Shouldn't this be CC'ed to stable@ ?
 
-Tested on Kobo Clara HD
+I guess :)
 
-Andreas Kemnade (2):
-  backlight: lm3630a: add an enable gpio for the HWEN pin
-  dt-bindings: backlight: lm3630a: add enable_gpios
-
- .../leds/backlight/lm3630a-backlight.yaml      |  4 ++++
- drivers/video/backlight/lm3630a_bl.c           | 18 ++++++++++++++++++
- 2 files changed, 22 insertions(+)
-
--- 
-2.20.1
-
+Thanks,
+   Vitaly
