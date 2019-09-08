@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07BD2C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEDD1C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5FB12082C
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:57:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F9572081B
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:57:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947437;
-	bh=cC6LQjRnHIQNzCIffnzsBRuYfQC1vJcIUY6FOGwSNwE=;
+	s=default; t=1567947440;
+	bh=bYNoIsYH8WNrjujjR32MTckT4/nfiXejLG6XX+LltxQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RVKsL6ZQlJNG54AZqTS57QM9pHwwJJqHeSvumzG9B3wo6PHBVPCP7m8AjNtBY4/i/
-	 aQosfm8iOTwdjCgkXvagEuwQHzOYUCapukW0yq9a7p4dXtP+w8m7dUSxaqQYuuIZ5h
-	 /ZVRZms1/GgFclBylQbZYUPv4uIeXs3zOWKX+vBQ=
+	b=GqzaiTK037vtRXeoP42/iYHXTtJSXtnkdqFvMXbJtYw2av+9dncglZaf2zKd5AdDr
+	 PN/AjLYhKdop+cLCdRnFq1Lu+2Yn92Aho1vjZZXF77CoMgyCeVB6z3zA9QQHIjLZ+w
+	 jJkAHsZe4vq2jwOGp18H6GeDRz7QlkUdZtLTOqe0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731041AbfIHMs2 (ORCPT
+        id S1727006AbfIHMs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:48:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37518 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:48:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730954AbfIHMsZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:48:25 -0400
+        id S1730963AbfIHMsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:48:19 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D1EA21924;
-        Sun,  8 Sep 2019 12:48:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F021C218AC;
+        Sun,  8 Sep 2019 12:48:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946904;
-        bh=cC6LQjRnHIQNzCIffnzsBRuYfQC1vJcIUY6FOGwSNwE=;
+        s=default; t=1567946899;
+        bh=bYNoIsYH8WNrjujjR32MTckT4/nfiXejLG6XX+LltxQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vGKOid3D3ClGYqtI62yIZP1Y/9c2uwHNX1wE2eDeyWP1LoViRyjL89lRwC0OZ/8BV
-         IS96NQ/N3aHSygZ8hWA4Mgdww5dkegK1tZ69F49dvNdYwGXyZ95RDQU8W2nmWoMPRP
-         E5l3NPIjcokk3FFGlQXaHrr+4DRvZiQNPhylMKQM=
+        b=bryIcsCHNDvibD79cml9zjilpuU6NSOO82J3WmfqUyh/3lfseADDLsQptn/C0tfAP
+         /4djmVT+wj5QaWFhG/2luv7n+8t6RkGHNIG7TChdyNO7qM4CxXvj83VxNY+3ercKYh
+         7mmk0NhA3mRw7CTt0s1cJ14AQDSNk+GjYoRAfdDw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Anton Eidelman <anton@lightbitslabs.com>,
+        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 45/57] infiniband: hfi1: fix a memory leak bug
-Date:   Sun,  8 Sep 2019 13:42:09 +0100
-Message-Id: <20190908121145.368492256@linuxfoundation.org>
+Subject: [PATCH 4.19 43/57] nvme-multipath: fix possible I/O hang when paths are updated
+Date:   Sun,  8 Sep 2019 13:42:07 +0100
+Message-Id: <20190908121144.811442789@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121125.608195329@linuxfoundation.org>
 References: <20190908121125.608195329@linuxfoundation.org>
@@ -62,43 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b08afa064c320e5d85cdc27228426b696c4c8dae ]
+[ Upstream commit 504db087aaccdb32af61539916409f7dca31ceb5 ]
 
-In fault_opcodes_read(), 'data' is not deallocated if debugfs_file_get()
-fails, leading to a memory leak. To fix this bug, introduce the 'free_data'
-label to free 'data' before returning the error.
+nvme_state_set_live() making a path available triggers requeue_work
+in order to resubmit requests that ended up on requeue_list when no
+paths were available.
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Acked-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Link: https://lore.kernel.org/r/1566156571-4335-1-git-send-email-wenwen@cs.uga.edu
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+This requeue_work may race with concurrent nvme_ns_head_make_request()
+that do not observe the live path yet.
+Such concurrent requests may by made by either:
+- New IO submission.
+- Requeue_work triggered by nvme_failover_req() or another ana_work.
+
+A race may cause requeue_work capture the state of requeue_list before
+more requests get onto the list. These requests will stay on the list
+forever unless requeue_work is triggered again.
+
+In order to prevent such race, nvme_state_set_live() should
+synchronize_srcu(&head->srcu) before triggering the requeue_work and
+prevent nvme_ns_head_make_request referencing an old snapshot of the
+path list.
+
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Anton Eidelman <anton@lightbitslabs.com>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hfi1/fault.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/nvme/host/multipath.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/infiniband/hw/hfi1/fault.c b/drivers/infiniband/hw/hfi1/fault.c
-index 7eaff4dcbfd77..72ca0dc5f3b59 100644
---- a/drivers/infiniband/hw/hfi1/fault.c
-+++ b/drivers/infiniband/hw/hfi1/fault.c
-@@ -214,7 +214,7 @@ static ssize_t fault_opcodes_read(struct file *file, char __user *buf,
- 		return -ENOMEM;
- 	ret = debugfs_file_get(file->f_path.dentry);
- 	if (unlikely(ret))
--		return ret;
-+		goto free_data;
- 	bit = find_first_bit(fault->opcodes, bitsize);
- 	while (bit < bitsize) {
- 		zero = find_next_zero_bit(fault->opcodes, bitsize, bit);
-@@ -232,6 +232,7 @@ static ssize_t fault_opcodes_read(struct file *file, char __user *buf,
- 	data[size - 1] = '\n';
- 	data[size] = '\0';
- 	ret = simple_read_from_buffer(buf, len, pos, data, size);
-+free_data:
- 	kfree(data);
- 	return ret;
+diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+index 05d6371c7f385..f57feb8fdea45 100644
+--- a/drivers/nvme/host/multipath.c
++++ b/drivers/nvme/host/multipath.c
+@@ -323,6 +323,7 @@ static void nvme_mpath_set_live(struct nvme_ns *ns)
+ 				 "failed to create id group.\n");
+ 	}
+ 
++	synchronize_srcu(&ns->head->srcu);
+ 	kblockd_schedule_work(&ns->head->requeue_work);
  }
+ 
 -- 
 2.20.1
 
