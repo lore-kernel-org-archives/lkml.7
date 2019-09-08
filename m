@@ -2,189 +2,94 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69588C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 10:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 951CBC4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 10:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43E9E214D9
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 10:52:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567939955;
-	bh=nSk+dg79VdbUQ4naEBFxS3SSqiViSa6cJTOoCuPqFyk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=WxONg1l3HCfZrQhPMdOCwOE8a5kCQ4BPstvChw4DhvQJ/A71VK6PkcnMxsy+DVQGj
-	 UNnEGiaMvXnD/QXCjWDimF+YItzFKA6gRgC12J6xh4ZSc0aHqfeMGw8sbKYAfWeDH7
-	 /f4pGH/onbyCt2H7MgweA/upyuR91DKQKQL/8sTg=
+	by mail.kernel.org (Postfix) with ESMTP id 62478206BB
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 10:58:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GynCgb4C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728647AbfIHKwe (ORCPT
+        id S1728667AbfIHK6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 06:52:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48378 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728310AbfIHKwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 06:52:34 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8897206BB;
-        Sun,  8 Sep 2019 10:52:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567939952;
-        bh=nSk+dg79VdbUQ4naEBFxS3SSqiViSa6cJTOoCuPqFyk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=VaQbGPvuiox2ZtggKtLK+s7qOJB0c5CLKynfGeeyasnlTV9p+kV1fw7u2CwJb3n7N
-         uTabPwHrel9xNfrunXbNeMXIqJBD2VgBsQaHSKEIL3nQVombqD8ibtvflJjJ5va1FS
-         E6eTiM3sT3+CjfNh9iyBwGH8xp36tHEyZMMLDHGg=
-Date:   Sun, 8 Sep 2019 11:52:27 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Cc:     Rodrigo Carvalho <rodrigorsdc@gmail.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        alexandru.ardelean@analog.com, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com
-Subject: Re: [PATCH 1/2] dt-bindings: iio: accel: add binding documentation
- for ADIS16240
-Message-ID: <20190908115227.65046733@archlinux>
-In-Reply-To: <20190902171417.qbj7rwi43tr77mr5@smtp.gmail.com>
-References: <20190902005938.7734-1-rodrigorsdc@gmail.com>
-        <20190902171417.qbj7rwi43tr77mr5@smtp.gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 8 Sep 2019 06:58:18 -0400
+Received: from mail-ed1-f46.google.com ([209.85.208.46]:43303 "EHLO
+        mail-ed1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726186AbfIHK6R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 06:58:17 -0400
+Received: by mail-ed1-f46.google.com with SMTP id c19so10423091edy.10;
+        Sun, 08 Sep 2019 03:58:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=lnxSRRi7ihBfaL8hYYdSikodKNd1ngPSvDfR2tbzNbw=;
+        b=GynCgb4CidXL14RYKSChHe0YOMgrjWOSeVelayQIe6u9D5yl9LGsQ2HjEUc1P61F9E
+         E/Y4/Cb0pyfEDTqAVIWizaFHUtaJm22jaTK3j21Y2P6c+35hLoGFjEebVoPGqHW6fJ+M
+         Ygb1lKQwqC4/UoPgmjaVYyjAXSjEIl3h5gkyxo9Q0ZdzBr8f32wMntc83C/eGXpkLy7M
+         xxiy93VXUjn4wiv3MAL36GaGQJT9iixLyBXHx8Hj8ZvqryVGJ6+n3rBLqUzpMhef/YDR
+         ijqTLBOVmZJ+FaA9qWfAeVBzd6WVuzkhooBbmCxXBJ/Wbzym5KYubMwPsScbvWtPGdiF
+         jCMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=lnxSRRi7ihBfaL8hYYdSikodKNd1ngPSvDfR2tbzNbw=;
+        b=lk8aqUApBYKQj0R+z3l0pqI/mi6GjL5hVP3I9yEDR+t6TxCTF/UX4RLAD6w9u4Of7T
+         gsQVrszhT2g5OfxG0nWyUBqgAuJb1K4p61zQ2HpIQedbQ9rEEyesdmg0JZ/KGxgJjy/y
+         /q+OkLye6GDL2T+p6VaXYwV7YeYwbeDmz7SUBZ35YmOOms4yFm8jYQ86CaW00jWrczBh
+         7fweBdh6c2gUx47ZLwedq/nglSEnoW/s6r5NN/yWQ3O2VSbV3wyIje5y0xHIyHdcIon3
+         LDCJd1j/HeK4HLSdHgY5CnLy1BipO7VRYkao41PrL9Tkh6CKLeqMCYyQ9vhtUHy7FB8t
+         OFUw==
+X-Gm-Message-State: APjAAAVmmRo00DamBBfaRG9TQMUCZWF6nJ6E+LyfFbhTKrAJ2LuW9Uos
+        bpgQPyWLGwLf3l+2cUqBUk0Cs59ytKgicz5pdbC0zhkF
+X-Google-Smtp-Source: APXvYqzDQdpgAr7aUjs4Th1K+AlF1rZ/Pj++/IoGxk0U5Zi0Uc75LDHXn6VJB0/75JVYVvIiwxprGfBQRL3xNcTL1dA=
+X-Received: by 2002:a17:906:c304:: with SMTP id s4mr14906836ejz.71.1567940295596;
+ Sun, 08 Sep 2019 03:58:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From:   Anatoly Pugachev <matorola@gmail.com>
+Date:   Sun, 8 Sep 2019 13:58:08 +0300
+Message-ID: <CADxRZqxmvfE9gYoT+1oLV6-o_BbUsay_U45qmMEYL3vErTCCLA@mail.gmail.com>
+Subject: [sparc64] Kernel unaligned access at TPC lzo1x_1_do_compress
+To:     Sparc kernel list <sparclinux@vger.kernel.org>
+Cc:     Linux Kernel list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2 Sep 2019 14:14:18 -0300
-Marcelo Schmitt <marcelo.schmitt1@gmail.com> wrote:
+Hello!
 
-> Hi Rodrigo,
-> 
-> This dt doc looks overal fine IMHO.
-> I would just add some inline comments about the cpha and cpol
-> properties.
-> 
-> On 09/01, Rodrigo Carvalho wrote:
-> > This patch add device tree binding documentation for ADIS16240.
-> > 
-> > Signed-off-by: Rodrigo Ribeiro Carvalho <rodrigorsdc@gmail.com>
-> > ---
-> > I have doubt about what maintainer I may to put in that documentation. I
-> > put Alexandru as maintainer because he reviewed my last patch on this
-> > driver, so I think that he is a good candidate.
-> >  .../bindings/iio/accel/adi,adis16240.yaml     | 55 +++++++++++++++++++
-> >  1 file changed, 55 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
-> > new file mode 100644
-> > index 000000000000..08019b51611c
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
-> > @@ -0,0 +1,55 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/iio/accel/adi,adis16240.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: ADIS16240 Programmable Impact Sensor and Recorder driver
-> > +
-> > +maintainers:
-> > +  - Alexandru Ardelean <alexandru.ardelean@analog.com>
-> > +
-> > +description: |
-> > +  ADIS16240 Programmable Impact Sensor and Recorder driver that supports
-> > +  SPI interface.
-> > +    https://www.analog.com/en/products/adis16240.html
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - adi,adis16240
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  spi-cpha: true
-> > +
-> > +  spi-cpol: true  
-> Boolean properties don't require to be explicitly set. It would also be
-> nice to add a description pointing to the spi-bus documentation. Like
-> this:
-> 
->   spi-cpha:
->     description: |
->       See Documentation/devicetree/bindings/spi/spi-bus.txt
->     maxItems: 1
-> 
->   spi-cpol:
->     description: |
->       See Documentation/devicetree/bindings/spi/spi-bus.txt
->     maxItems: 1
-> 
-> As far as I know, spi-cpol and spi-cpha stand for SPI chip polarity and
-> SPI chip phase respectively. By default, it is assumed that SPI
-> input/output data is available at uprising clock edges, however, some
-> chips may work with different configuration (taking input data and/or
-> push it out in falling edges). I'm not 100% sure but, from what I've
-> seen on IIO, cpol is set to invert the input/output logic (making IO be
-> taken on falling edges) while cpha is usually set when MISO valid out
-> data is available on SCLK falling edge. If anyone has more comments
-> about this please, add them here, I'm curious about it. :)
-> 
+trying to use zram block device, shows the following:
 
-They may well be constant for a given device (some will cope with
-several combinations).  So the binding should reflect if they 'must'
-be set.
+# zramctl -f -s 16g
+# cat /sys/block/zram0/comp_algorithm
+lzo [lzo-rle] lz4 lz4hc 842 zstd
+# zramctl
+NAME       ALGORITHM DISKSIZE  DATA COMPR TOTAL STREAMS MOUNTPOINT
+/dev/zram0 lzo-rle        16G 10.4M    4K  112K      32
 
-Adding the cross reference is indeed nice.
+# mkfs.xfs /dev/zram0
+...
 
-Jonathan
+[   71.095998] zram: Added device: zram0
+[   71.765591] zram0: detected capacity change from 0 to 17179869184
+[   80.058772] Kernel unaligned access at TPC[8f2534]
+lzo1x_1_do_compress+0x1b4/0x820
+[   80.073832] Kernel unaligned access at TPC[8f2534]
+lzo1x_1_do_compress+0x1b4/0x820
+[   80.073866] Kernel unaligned access at TPC[8f2534]
+lzo1x_1_do_compress+0x1b4/0x820
+[   80.074709] Kernel unaligned access at TPC[8f2534]
+lzo1x_1_do_compress+0x1b4/0x820
+[   80.074923] Kernel unaligned access at TPC[8f2534]
+lzo1x_1_do_compress+0x1b4/0x820
 
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/gpio/gpio.h>
-> > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > +    spi0 {
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +
-> > +        /* Example for a SPI device node */
-> > +        accelerometer@0 {
-> > +            compatible = "adi,adis16240";
-> > +            reg = <0>;
-> > +            spi-max-frequency = <2500000>;
-> > +            spi-cpol;
-> > +            spi-cpha;
-> > +            interrupt-parent = <&gpio0>;
-> > +            interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-> > +        };
-> > +    };
-> > -- 
-> > 2.23.0.rc1
-> > 
-> > -- 
-> > You received this message because you are subscribed to the Google Groups "Kernel USP" group.
-> > To unsubscribe from this group and stop receiving emails from it, send an email to kernel-usp+unsubscribe@googlegroups.com.
-> > To view this discussion on the web visit https://groups.google.com/d/msgid/kernel-usp/20190902005938.7734-1-rodrigorsdc%40gmail.com.  
 
+all other tested compression algorithms (lzo, lz4, lz4hc, deflate,
+842) work without producing kernel TPC.
