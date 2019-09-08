@@ -2,100 +2,125 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B83D4C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 11:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B7CC4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 11:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BF2A21479
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 11:38:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567942709;
-	bh=UACYLLIPEn9E879/MO6pj3oCzTpjS5SHXEfvpF4kCcQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=uLBhnfZQbGkuvWI9ytAYyJErM2d/XFnInwlJqtgU9h37HKF1PhYIP6QNgnsA/45Qc
-	 Q1bmt1zAM4GVBGV8X1o4eHzvSQDLrVXTcDo5N/UhMYeugf6xera8FXo6hYTVOSA3mn
-	 R43fpmAcSq6xPMqI9x1/mpaat4DzNzKs+PhZyvjw=
+	by mail.kernel.org (Postfix) with ESMTP id AB311214D9
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 11:39:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728907AbfIHLi2 (ORCPT
+        id S1728922AbfIHLjM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 07:38:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60304 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 07:39:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35918 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728862AbfIHLi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 07:38:28 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728908AbfIHLjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 07:39:11 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2425F206BB;
-        Sun,  8 Sep 2019 11:38:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567942707;
-        bh=UACYLLIPEn9E879/MO6pj3oCzTpjS5SHXEfvpF4kCcQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=dz8/tv8jmzNACaTmoUNcwEVWgFEMWMHLuKrsh+nRlp8xeajjZK5KC0Y0egznEe4hL
-         sIJyD23LVIPiRyzXHhTxJiJR7FxmpHyCXpMggqZRxQ/Fdgiyh+J9//iW0yvdHDgRoj
-         K7H17FVcIImzTgHqVxX7w2/3OI1YFKCr3OpXigZ0=
-Date:   Sun, 8 Sep 2019 12:38:22 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Kevin Tsai <ktsai@capellamicro.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: light: cm36651: redundant assignment to variable
- ret
-Message-ID: <20190908123822.7a17b7cc@archlinux>
-In-Reply-To: <20190901152749.12916-1-colin.king@canonical.com>
-References: <20190901152749.12916-1-colin.king@canonical.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4D2CA2F366C;
+        Sun,  8 Sep 2019 11:39:10 +0000 (UTC)
+Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B74AB600C6;
+        Sun,  8 Sep 2019 11:39:08 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     "Chuck Lever" <chuck.lever@oracle.com>
+Cc:     "Jason L Tibbitts III" <tibbs@math.uh.edu>,
+        "Bruce Fields" <bfields@fieldses.org>,
+        "Wolfgang Walter" <linux@stwm.de>,
+        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
+        km@cm4all.com, linux-kernel@vger.kernel.org
+Subject: Re: Regression in 5.1.20: Reading long directory fails
+Date:   Sun, 08 Sep 2019 07:39:08 -0400
+Message-ID: <A862CFCD-76A2-4373-8F44-F156DB38E6A5@redhat.com>
+In-Reply-To: <75F810C6-E99E-40C3-B5E1-34BA2CC42773@oracle.com>
+References: <ufak1bhyuew.fsf@epithumia.math.uh.edu>
+ <4418877.15LTP4gqqJ@stwm.de> <ufapnkhqjwm.fsf@epithumia.math.uh.edu>
+ <4198657.JbNDGbLXiX@h2o.as.studentenwerk.mhn.de>
+ <ufad0ggrfrk.fsf@epithumia.math.uh.edu> <20190906144837.GD17204@fieldses.org>
+ <ufapnkdw3s3.fsf@epithumia.math.uh.edu>
+ <75F810C6-E99E-40C3-B5E1-34BA2CC42773@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; format=flowed
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Sun, 08 Sep 2019 11:39:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun,  1 Sep 2019 16:27:49 +0100
-Colin King <colin.king@canonical.com> wrote:
+On 6 Sep 2019, at 16:50, Chuck Lever wrote:
 
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Variable ret is being assigned a value that is never read and
-> is being re-assigned a little later on. The assignment is redundant
-> and hence can be removed.
-> 
-> Addresses-Coverity: ("Ununsed value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>> On Sep 6, 2019, at 4:47 PM, Jason L Tibbitts III <tibbs@math.uh.edu> 
+>> wrote:
+>>
+>>>>>>> "JBF" == J Bruce Fields <bfields@fieldses.org> writes:
+>>
+>> JBF> Those readdir changes were client-side, right?  Based on that 
+>> I'd
+>> JBF> been assuming a client bug, but maybe it'd be worth getting a 
+>> full
+>> JBF> packet capture of the readdir reply to make sure it's legit.
+>>
+>> I have been working with bcodding on IRC for the past couple of days 
+>> on
+>> this.  Fortunately I was able to come up with way to fill up a 
+>> directory
+>> in such a way that it will fail with certainty and as a bonus doesn't
+>> include any user data so I can feel OK about sharing packet captures. 
+>>  I
+>> have a capture alongside a kernel trace of the problematic operation 
+>> in
+>> https://www.math.uh.edu/~tibbs/nfs/.  Not that I can particularly 
+>> tell
+>> anything useful from that, but bcodding says that it seems to point 
+>> to
+>> some issue in sunrpc.
+>>
+>> And because I can easily reproduce this and I was able to do a 
+>> bisect:
+>>
+>> 2c94b8eca1a26cd46010d6e73a23da5f2e93a19d is the first bad commit
+>> commit 2c94b8eca1a26cd46010d6e73a23da5f2e93a19d
+>> Author: Chuck Lever <chuck.lever@oracle.com>
+>> Date:   Mon Feb 11 11:25:41 2019 -0500
+>>
+>>    SUNRPC: Use au_rslack when computing reply buffer size
+>>
+>>    au_rslack is significantly smaller than (au_cslack << 2). Using
+>>    that value results in smaller receive buffers. In some cases this
+>>    eliminates an extra segment in Reply chunks (RPC/RDMA).
+>>
+>>    Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+>>    Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+>>
+>> :040000 040000 d4d1ce2fbe0035c5bd9df976b8c448df85dcb505 
+>> 7011a792dfe72ff9cd70d66e45d353f3d7817e3e M      net
+>>
+>> But of course, I can't say whether this is the actual bad commit or
+>> whether it just introduced a behavior change which alters the 
+>> conditions
+>> under which the problem appears.
+>
+> The first place I'd start looking is the XDR constants at the head of 
+> fs/nfs/nfs4xdr.c
+> having to do with READDIR.
+>
+> The report of behavior changes with the use of krb5p also makes this 
+> commit plausible.
 
-Applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to do not much with it.
+After sprinkling the printk's, we're coming up one word short in the 
+receive
+buffer.  I think we're not accounting for the xdr pad of buf->pages for 
+NFS4
+readdir -- but I need to check the RFCs.  Anyone know if v4 READDIR 
+results
+have to be aligned?
 
-Thanks,
+Also need to check just why krb5i is the only auth that cares..
 
-Jonathan
-
-> ---
->  drivers/iio/light/cm36651.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/light/cm36651.c b/drivers/iio/light/cm36651.c
-> index 1019d625adb1..90e38fcc974b 100644
-> --- a/drivers/iio/light/cm36651.c
-> +++ b/drivers/iio/light/cm36651.c
-> @@ -532,7 +532,7 @@ static int cm36651_write_prox_event_config(struct iio_dev *indio_dev,
->  					int state)
->  {
->  	struct cm36651_data *cm36651 = iio_priv(indio_dev);
-> -	int cmd, ret = -EINVAL;
-> +	int cmd, ret;
->  
->  	mutex_lock(&cm36651->lock);
->  
-
+Ben
