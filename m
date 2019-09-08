@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62633C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC98C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33A2E218AC
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 037B821920
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:52:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947148;
-	bh=2Y+6CDgrKEz6Cux0z2cDSXvMPHzCVWlx+iOsPn0mNl8=;
+	s=default; t=1567947152;
+	bh=9/U4RluLwjBShHS6HkVe0tSSUjQVbvUK7awAmo+VLKY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p2RKx9k8dIxy942lYDLCrKvippLaH5lcX96KcoOIkkf5x0s9VoIazDDHOBFOCItW+
-	 QRCJlp3yNfmDSCtxXLv8W9nQ8Q7mTnQBgAUnRjNqIMYOwE91IAcVhaKLmbDvAhi8Jf
-	 FBZyiAX26vUJE9zTO2D4cxifjHHk7ecpnJh808Lk=
+	b=j0qO9bczKljpl/K9gqbmqxRZYFqgrWcMnFyiMC3ie5Sp5h8MmnqiPu4ie5eQqMNbP
+	 H+2hmgQuyIxqP6ZmB4lLINZuZOfIfEm7KORWkW+D/XXlpay91S8CenCa3C3BRuVQx/
+	 LqKDw3zaNxpC9NL+w0MLdicsD1bdslLwBh30QIEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733039AbfIHMw1 (ORCPT
+        id S1733066AbfIHMwa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:52:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44640 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:52:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733013AbfIHMwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:52:24 -0400
+        id S1733013AbfIHMw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:52:28 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA2042082C;
-        Sun,  8 Sep 2019 12:52:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B9BC2082C;
+        Sun,  8 Sep 2019 12:52:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567947144;
-        bh=2Y+6CDgrKEz6Cux0z2cDSXvMPHzCVWlx+iOsPn0mNl8=;
+        s=default; t=1567947147;
+        bh=9/U4RluLwjBShHS6HkVe0tSSUjQVbvUK7awAmo+VLKY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CbhXJoIvDIWhKsOoUKteSIEe4W0LFeemdT2xJwlmPyr7CbtIlVj7qsQmqcYECVrGm
-         2hmWtf85OueRcwIJkF9PYuZnTNaAfHOX3butvJPDjfrUy5ZLnS7r6zHYNCh8eKbuHq
-         kNl1s9la6Y5qJVNI27rQiw+bwL453C0W+/u9jeQo=
+        b=kBS3RmX7ExHuwNJvIhRr09Xh7DM8SWe34toJQO2schG0KDT1UctOJ1wwQj/K5hDtJ
+         03E2HxHNy/X2ira6k6wYVEY+bUzsbKlr0evLVXvm7aTOBAVV1QFjM/gnRUZJfYXcmB
+         IoH8v1eRZOVcKDAX6eqsLMC7qdZ0xuxCbxu0N+Gw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Nicolai=20H=C3=A4hnle?= <nicolai.haehnle@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 78/94] selftests/kvm: make platform_info_test pass on AMD
-Date:   Sun,  8 Sep 2019 13:42:14 +0100
-Message-Id: <20190908121152.669381097@linuxfoundation.org>
+Subject: [PATCH 5.2 79/94] drm/amdgpu: prevent memory leaks in AMDGPU_CS ioctl
+Date:   Sun,  8 Sep 2019 13:42:15 +0100
+Message-Id: <20190908121152.696934330@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
 References: <20190908121150.420989666@linuxfoundation.org>
@@ -60,34 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e4427372398c31f57450565de277f861a4db5b3b ]
+[ Upstream commit 1a701ea924815b0518733aa8d5d05c1f6fa87062 ]
 
-test_msr_platform_info_disabled() generates EXIT_SHUTDOWN but VMCB state
-is undefined after that so an attempt to launch this guest again from
-test_msr_platform_info_enabled() fails. Reorder the tests to make test
-pass.
+Error out if the AMDGPU_CS ioctl is called with multiple SYNCOBJ_OUT and/or
+TIMELINE_SIGNAL chunks, since otherwise the last chunk wins while the
+allocated array as well as the reference counts of sync objects are leaked.
 
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Nicolai Hähnle <nicolai.haehnle@amd.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/kvm/x86_64/platform_info_test.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/x86_64/platform_info_test.c b/tools/testing/selftests/kvm/x86_64/platform_info_test.c
-index 40050e44ec0ac..f9334bd3cce9f 100644
---- a/tools/testing/selftests/kvm/x86_64/platform_info_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/platform_info_test.c
-@@ -99,8 +99,8 @@ int main(int argc, char *argv[])
- 	msr_platform_info = vcpu_get_msr(vm, VCPU_ID, MSR_PLATFORM_INFO);
- 	vcpu_set_msr(vm, VCPU_ID, MSR_PLATFORM_INFO,
- 		msr_platform_info | MSR_PLATFORM_INFO_MAX_TURBO_RATIO);
--	test_msr_platform_info_disabled(vm);
- 	test_msr_platform_info_enabled(vm);
-+	test_msr_platform_info_disabled(vm);
- 	vcpu_set_msr(vm, VCPU_ID, MSR_PLATFORM_INFO, msr_platform_info);
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
+index fe028561dc0e6..bc40d6eabce7d 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
+@@ -1192,6 +1192,9 @@ static int amdgpu_cs_process_syncobj_out_dep(struct amdgpu_cs_parser *p,
+ 	num_deps = chunk->length_dw * 4 /
+ 		sizeof(struct drm_amdgpu_cs_chunk_sem);
  
- 	kvm_vm_free(vm);
++	if (p->post_deps)
++		return -EINVAL;
++
+ 	p->post_deps = kmalloc_array(num_deps, sizeof(*p->post_deps),
+ 				     GFP_KERNEL);
+ 	p->num_post_deps = 0;
+@@ -1215,8 +1218,7 @@ static int amdgpu_cs_process_syncobj_out_dep(struct amdgpu_cs_parser *p,
+ 
+ 
+ static int amdgpu_cs_process_syncobj_timeline_out_dep(struct amdgpu_cs_parser *p,
+-						      struct amdgpu_cs_chunk
+-						      *chunk)
++						      struct amdgpu_cs_chunk *chunk)
+ {
+ 	struct drm_amdgpu_cs_chunk_syncobj *syncobj_deps;
+ 	unsigned num_deps;
+@@ -1226,6 +1228,9 @@ static int amdgpu_cs_process_syncobj_timeline_out_dep(struct amdgpu_cs_parser *p
+ 	num_deps = chunk->length_dw * 4 /
+ 		sizeof(struct drm_amdgpu_cs_chunk_syncobj);
+ 
++	if (p->post_deps)
++		return -EINVAL;
++
+ 	p->post_deps = kmalloc_array(num_deps, sizeof(*p->post_deps),
+ 				     GFP_KERNEL);
+ 	p->num_post_deps = 0;
 -- 
 2.20.1
 
