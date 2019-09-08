@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21138C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F12CC4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDE2820693
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:53:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30CF420693
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:53:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947213;
-	bh=2IMqh2I9r0/tQn3n3KrKnfXUTdJBdIYC20ZWkmNy9+4=;
+	s=default; t=1567947217;
+	bh=oJTbKzxJkcEwZQlCxpeyvfC1qpG9Tz2Sjk5W6hTvbxM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RzExBXD1lpltydIXw0a5qxvcTHarXiiLDc8LqeSC/NMPl9JOfkRRtwTWqzTm90MyH
-	 emo/lITr/HMvJdrEQiFL1KS6f8hbaXKcKglfVVZAEDEeqmuAQ7ylv7xPvUss8gnvnj
-	 eut1gwqtEcZ4dHGOuhqeLh71b4owRAQg+9Z+iymI=
+	b=Sqyna99aC3oiy7QCKJwtC2lO/HGUdsOSve0hMxjR6/RGPkLmfy7Y4H9RKktaVVJeK
+	 ulymEbONUwGHK/reGZdrKv7OX3ehFSqNxPD9mECJGDxjV4rntp0W/NybT/YSgulL+r
+	 INyYY+LiN6k0Hn3BxJr6ophLy6LNXvFolJH1yP20=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387668AbfIHMxc (ORCPT
+        id S2387568AbfIHMxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:53:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46426 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:53:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387617AbfIHMx0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:53:26 -0400
+        id S2387546AbfIHMxQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:53:16 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BABB2190F;
-        Sun,  8 Sep 2019 12:53:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA6BC21479;
+        Sun,  8 Sep 2019 12:53:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567947206;
-        bh=2IMqh2I9r0/tQn3n3KrKnfXUTdJBdIYC20ZWkmNy9+4=;
+        s=default; t=1567947196;
+        bh=oJTbKzxJkcEwZQlCxpeyvfC1qpG9Tz2Sjk5W6hTvbxM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KhVci2Vk6j+R76eKhDgmT6QNwKcnLd76v8sbH06rlTxXsPP/hF8Its7+qfQ0D7EQP
-         ZvEV8QfBX/z2rfGvdQAadjjp7gXcucQMAUPRA2UWxfTdAxXFwcjYj7hEJ22x8GSrwV
-         vpvhkLu58ULOHp12MucdeFyiSn3hmUzFeUzbfpBg=
+        b=I5N+UIv8YmvRQe6bitKlrRnUJi6UI9Rmmt4HXIuYcDK4Us6MEX5LvwWDnru6rngQ4
+         1kZDr6dFArGyVXZvCciGUVzfoP0B67tS7ZIqZzQ4ga+l7IYSj2VDUSrU+gEvgISyU/
+         hNFpWze28OML4vguQDWN5sDLJ7bMtaHJx0rjVvlU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 51/94] liquidio: add cleanup in octeon_setup_iq()
-Date:   Sun,  8 Sep 2019 13:41:47 +0100
-Message-Id: <20190908121151.899401924@linuxfoundation.org>
+Subject: [PATCH 5.2 57/94] cx82310_eth: fix a memory leak bug
+Date:   Sun,  8 Sep 2019 13:41:53 +0100
+Message-Id: <20190908121152.067123010@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
 References: <20190908121150.420989666@linuxfoundation.org>
@@ -60,35 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6f967f8b1be7001b31c46429f2ee7d275af2190f ]
+[ Upstream commit 1eca92eef18719027d394bf1a2d276f43e7cf886 ]
 
-If oct->fn_list.enable_io_queues() fails, no cleanup is executed, leading
-to memory/resource leaks. To fix this issue, invoke
-octeon_delete_instr_queue() before returning from the function.
+In cx82310_bind(), 'dev->partial_data' is allocated through kmalloc().
+Then, the execution waits for the firmware to become ready. If the firmware
+is not ready in time, the execution is terminated. However, the allocated
+'dev->partial_data' is not deallocated on this path, leading to a memory
+leak bug. To fix this issue, free 'dev->partial_data' before returning the
+error.
 
 Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/cavium/liquidio/request_manager.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/usb/cx82310_eth.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/cavium/liquidio/request_manager.c b/drivers/net/ethernet/cavium/liquidio/request_manager.c
-index fcf20a8f92d94..6a823710987da 100644
---- a/drivers/net/ethernet/cavium/liquidio/request_manager.c
-+++ b/drivers/net/ethernet/cavium/liquidio/request_manager.c
-@@ -239,8 +239,10 @@ int octeon_setup_iq(struct octeon_device *oct,
+diff --git a/drivers/net/usb/cx82310_eth.c b/drivers/net/usb/cx82310_eth.c
+index 5519248a791eb..32b08b18e1208 100644
+--- a/drivers/net/usb/cx82310_eth.c
++++ b/drivers/net/usb/cx82310_eth.c
+@@ -163,7 +163,8 @@ static int cx82310_bind(struct usbnet *dev, struct usb_interface *intf)
+ 	}
+ 	if (!timeout) {
+ 		dev_err(&udev->dev, "firmware not ready in time\n");
+-		return -ETIMEDOUT;
++		ret = -ETIMEDOUT;
++		goto err;
  	}
  
- 	oct->num_iqs++;
--	if (oct->fn_list.enable_io_queues(oct))
-+	if (oct->fn_list.enable_io_queues(oct)) {
-+		octeon_delete_instr_queue(oct, iq_no);
- 		return 1;
-+	}
- 
- 	return 0;
- }
+ 	/* enable ethernet mode (?) */
 -- 
 2.20.1
 
