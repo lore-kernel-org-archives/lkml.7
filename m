@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E889C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBD5C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF74F20644
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97926218AC
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:46:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946782;
-	bh=HNtAo6suQtfGvCkYmB3ViuLyFeRqmPGB5i7Q0TdwHjA=;
+	s=default; t=1567946786;
+	bh=8cxZQoccA38riXltPcjcux5V2PVhcAp6o3vBVpqBvV4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q/8hCJzeWMMnC+++yJVs3M4l1IRd/Zps+QVnpZYdvo5/Jb95MyqBKTgft+KiAjt3X
-	 0tOhb1As4yjaTktkb8/Om1x+/GzFceKoeRRKZ/IIkZpbKc82YWcXv5wls+NdK4XuTG
-	 TD9mTZG8RXb7E+6enYo5a4HYe4UQ+GJYqMIN8ufk=
+	b=1kW0qTib8vh0Mq6/tEUqcdE53sve915GQ/N437U27U2vxzfaqCgvmyrmEifhuy8YM
+	 5fzCm9VbO7he1lmflvhH25pxdeGJ2iJ2enilQGRrnICwKKsVscjmjwW/IvRvPqLhJV
+	 F2YdJmxA7eMDls7fg4zSH2laU4RbOlorD3a1vHE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730363AbfIHMqW (ORCPT
+        id S1727171AbfIHMqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:46:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33860 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:46:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730330AbfIHMqR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:46:17 -0400
+        id S1730361AbfIHMqW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:46:22 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EE4020644;
-        Sun,  8 Sep 2019 12:46:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8584D218AC;
+        Sun,  8 Sep 2019 12:46:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946776;
-        bh=HNtAo6suQtfGvCkYmB3ViuLyFeRqmPGB5i7Q0TdwHjA=;
+        s=default; t=1567946781;
+        bh=8cxZQoccA38riXltPcjcux5V2PVhcAp6o3vBVpqBvV4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fG1LgaszzxJFKgdSRU26naR08NY1apkXvzYZyCAnFaDW+L/z2UztJA4cjf/+OdMmi
-         +fsy218c003YJJz1M9ZVl5TcpOzEjjBA3SoYQ5NiaxlpAJTtTSlAXSgKR/TKYkECId
-         U54q7mNBnRuyibz5yARD2cU+QAnc2ayrteu0LFjY=
+        b=B4zSU3CKkxo452lctryN9nZB3nAUvimCLefJSEl7qLdqE+jFGi+hhR3FTAaY7xNvE
+         OztdnVBBhWAsKD33ORFd6ASzGdjj4aoRbBS7YeyTt+dvJkP+O3L0xL8XHQ4zeenpRt
+         TTivcMUwfnDVn+273TvPrtGZCKP4+7/cvH75gArs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Jason Baron <jbaron@akamai.com>,
+        Vladimir Rutsky <rutsky@google.com>,
+        Soheil Hassas Yeganeh <soheil@google.com>,
+        Neal Cardwell <ncardwell@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 35/40] net: stmmac: dwmac-rk: Dont fail if phy regulator is absent
-Date:   Sun,  8 Sep 2019 13:42:08 +0100
-Message-Id: <20190908121129.901030610@linuxfoundation.org>
+Subject: [PATCH 4.14 37/40] tcp: remove empty skb from write queue in error cases
+Date:   Sun,  8 Sep 2019 13:42:10 +0100
+Message-Id: <20190908121132.072577101@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121114.260662089@linuxfoundation.org>
 References: <20190908121114.260662089@linuxfoundation.org>
@@ -59,40 +63,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 3b25528e1e355c803e73aa326ce657b5606cda73 ]
+[ Upstream commit fdfc5c8594c24c5df883583ebd286321a80e0a67 ]
 
-The devicetree binding lists the phy phy as optional. As such, the
-driver should not bail out if it can't find a regulator. Instead it
-should just skip the remaining regulator related code and continue
-on normally.
+Vladimir Rutsky reported stuck TCP sessions after memory pressure
+events. Edge Trigger epoll() user would never receive an EPOLLOUT
+notification allowing them to retry a sendmsg().
 
-Skip the remainder of phy_power_on() if a regulator supply isn't
-available. This also gets rid of the bogus return code.
+Jason tested the case of sk_stream_alloc_skb() returning NULL,
+but there are other paths that could lead both sendmsg() and sendpage()
+to return -1 (EAGAIN), with an empty skb queued on the write queue.
 
-Fixes: 2e12f536635f ("net: stmmac: dwmac-rk: Use standard devicetree property for phy regulator")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+This patch makes sure we remove this empty skb so that
+Jason code can detect that the queue is empty, and
+call sk->sk_write_space(sk) accordingly.
+
+Fixes: ce5ec440994b ("tcp: ensure epoll edge trigger wakeup when write queue is empty")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Jason Baron <jbaron@akamai.com>
+Reported-by: Vladimir Rutsky <rutsky@google.com>
+Cc: Soheil Hassas Yeganeh <soheil@google.com>
+Cc: Neal Cardwell <ncardwell@google.com>
+Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
+Acked-by: Neal Cardwell <ncardwell@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ net/ipv4/tcp.c |   29 ++++++++++++++++++++---------
+ 1 file changed, 20 insertions(+), 9 deletions(-)
 
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-@@ -1145,10 +1145,8 @@ static int phy_power_on(struct rk_priv_d
- 	int ret;
- 	struct device *dev = &bsp_priv->pdev->dev;
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -914,6 +914,22 @@ static int tcp_send_mss(struct sock *sk,
+ 	return mss_now;
+ }
  
--	if (!ldo) {
--		dev_err(dev, "no regulator found\n");
--		return -1;
++/* In some cases, both sendpage() and sendmsg() could have added
++ * an skb to the write queue, but failed adding payload on it.
++ * We need to remove it to consume less memory, but more
++ * importantly be able to generate EPOLLOUT for Edge Trigger epoll()
++ * users.
++ */
++static void tcp_remove_empty_skb(struct sock *sk, struct sk_buff *skb)
++{
++	if (skb && !skb->len) {
++		tcp_unlink_write_queue(skb, sk);
++		if (tcp_write_queue_empty(sk))
++			tcp_chrono_stop(sk, TCP_CHRONO_BUSY);
++		sk_wmem_free_skb(sk, skb);
++	}
++}
++
+ ssize_t do_tcp_sendpages(struct sock *sk, struct page *page, int offset,
+ 			 size_t size, int flags)
+ {
+@@ -1034,6 +1050,7 @@ out:
+ 	return copied;
+ 
+ do_error:
++	tcp_remove_empty_skb(sk, tcp_write_queue_tail(sk));
+ 	if (copied)
+ 		goto out;
+ out_err:
+@@ -1412,17 +1429,11 @@ out_nopush:
+ 	sock_zerocopy_put(uarg);
+ 	return copied + copied_syn;
+ 
++do_error:
++	skb = tcp_write_queue_tail(sk);
+ do_fault:
+-	if (!skb->len) {
+-		tcp_unlink_write_queue(skb, sk);
+-		/* It is the one place in all of TCP, except connection
+-		 * reset, where we can be unlinking the send_head.
+-		 */
+-		tcp_check_send_head(sk, skb);
+-		sk_wmem_free_skb(sk, skb);
 -	}
-+	if (!ldo)
-+		return 0;
++	tcp_remove_empty_skb(sk, skb);
  
- 	if (enable) {
- 		ret = regulator_enable(ldo);
+-do_error:
+ 	if (copied + copied_syn)
+ 		goto out;
+ out_err:
 
 
