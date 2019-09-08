@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4599C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3DFC433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD68421920
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:49:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91789218AF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:49:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946954;
-	bh=VRPsPuIBY4yMxezp/2v4CZXX5VnhYHXSUl8WZGQ8Cno=;
+	s=default; t=1567946962;
+	bh=oDdfqgKInsvQwkihMaj/Qp0wp3abAtLMkvHrNt4kDic=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I4Uu5qCsokqJtLp3RsHQRWZ7dVuxQQFX9Pf6+Pcrbh5u1Mj6hreIXkjJkAROuuW6i
-	 e0A1Vme5v+qecCsN07PoiIE8Ab4hOLRwm+6R1ErG010HJT3TXmTh8tbfVSvoBhRvLP
-	 ImfhVC//TSkB+VKHblNOX4nM3Bi45KTlX3CyKJzE=
+	b=idMWJ7/xO4G/ItnmL64JFNl+X+obtUX4JdIoosIlMQLbWh09a7kGkLk1FOmjRDN+x
+	 jX+nOpiPXh2zcAcOxr6S6XRnOtMZ1zX2sSOktuAdqz9f2FeDj/8E9Q682jarrWuXTa
+	 HbrZbOcznlzlaGAkVatGJ4TGush36b4Ijc18V7GM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731347AbfIHMtN (ORCPT
+        id S1731425AbfIHMtV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:49:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38740 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:49:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731305AbfIHMtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:49:06 -0400
+        id S1731368AbfIHMtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:49:17 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D470E218AC;
-        Sun,  8 Sep 2019 12:49:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46F6921971;
+        Sun,  8 Sep 2019 12:49:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946946;
-        bh=VRPsPuIBY4yMxezp/2v4CZXX5VnhYHXSUl8WZGQ8Cno=;
+        s=default; t=1567946956;
+        bh=oDdfqgKInsvQwkihMaj/Qp0wp3abAtLMkvHrNt4kDic=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M6B3cEMx3Yh1SAZD3aDSmh4daWtPF83vpMHqgh9+3koEmtneU7uVH40yqS6oLxQMB
-         N1Cbk3bXitfxczGc0g/nFArCXBvotkUkd/0yS4UnnHEMpCkwbtulD2qdYy6hsa7sgJ
-         5Px7zHXy+mV/vWSIDt1a+VaX4BsvDFlMxW7MHy8E=
+        b=FE+GpWfX6UC8DgpbrOfFm4kttNogidi4lyTJY97zwpcxsQiQh05o8fFunL/B0BQND
+         LHXG6TvPrFJe9oiOS6El+S1/ppkmR5G4FHsvl4gHQ1j2E+hXZd/Wv6nLw4UFqYyR/K
+         0kWaxEhATIc5SPRepfMaWaA72rxKdxaorkDjFIBU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tho Vu <tho.vu.wh@rvc.renesas.com>,
-        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 37/57] ravb: Fix use-after-free ravb_tstamp_skb
-Date:   Sun,  8 Sep 2019 13:42:01 +0100
-Message-Id: <20190908121141.858142099@linuxfoundation.org>
+Subject: [PATCH 4.19 41/57] Input: hyperv-keyboard: Use in-place iterator API in the channel callback
+Date:   Sun,  8 Sep 2019 13:42:05 +0100
+Message-Id: <20190908121144.160459197@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121125.608195329@linuxfoundation.org>
 References: <20190908121125.608195329@linuxfoundation.org>
@@ -62,67 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cfef46d692efd852a0da6803f920cc756eea2855 ]
+[ Upstream commit d09bc83640d524b8467a660db7b1d15e6562a1de ]
 
-When a Tx timestamp is requested, a pointer to the skb is stored in the
-ravb_tstamp_skb struct. This was done without an skb_get. There exists
-the possibility that the skb could be freed by ravb_tx_free (when
-ravb_tx_free is called from ravb_start_xmit) before the timestamp was
-processed, leading to a use-after-free bug.
+Simplify the ring buffer handling with the in-place API.
 
-Use skb_get when filling a ravb_tstamp_skb struct, and add appropriate
-frees/consumes when a ravb_tstamp_skb struct is freed.
+Also avoid the dynamic allocation and the memory leak in the channel
+callback function.
 
-Fixes: c156633f1353 ("Renesas Ethernet AVB driver proper")
-Signed-off-by: Tho Vu <tho.vu.wh@rvc.renesas.com>
-Signed-off-by: Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/renesas/ravb_main.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/input/serio/hyperv-keyboard.c | 35 +++++----------------------
+ 1 file changed, 6 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
-index 5f092bbd05148..5462d2e8a1b71 100644
---- a/drivers/net/ethernet/renesas/ravb_main.c
-+++ b/drivers/net/ethernet/renesas/ravb_main.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- /* Renesas Ethernet AVB device driver
-  *
-- * Copyright (C) 2014-2015 Renesas Electronics Corporation
-+ * Copyright (C) 2014-2019 Renesas Electronics Corporation
-  * Copyright (C) 2015 Renesas Solutions Corp.
-  * Copyright (C) 2015-2016 Cogent Embedded, Inc. <source@cogentembedded.com>
-  *
-@@ -514,7 +514,10 @@ static void ravb_get_tx_tstamp(struct net_device *ndev)
- 			kfree(ts_skb);
- 			if (tag == tfa_tag) {
- 				skb_tstamp_tx(skb, &shhwtstamps);
-+				dev_consume_skb_any(skb);
- 				break;
-+			} else {
-+				dev_kfree_skb_any(skb);
- 			}
- 		}
- 		ravb_modify(ndev, TCCR, TCCR_TFR, TCCR_TFR);
-@@ -1556,7 +1559,7 @@ static netdev_tx_t ravb_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 					 DMA_TO_DEVICE);
- 			goto unmap;
- 		}
--		ts_skb->skb = skb;
-+		ts_skb->skb = skb_get(skb);
- 		ts_skb->tag = priv->ts_skb_tag++;
- 		priv->ts_skb_tag &= 0x3ff;
- 		list_add_tail(&ts_skb->list, &priv->ts_skb_list);
-@@ -1685,6 +1688,7 @@ static int ravb_close(struct net_device *ndev)
- 	/* Clear the timestamp list */
- 	list_for_each_entry_safe(ts_skb, ts_skb2, &priv->ts_skb_list, list) {
- 		list_del(&ts_skb->list);
-+		kfree_skb(ts_skb->skb);
- 		kfree(ts_skb);
+diff --git a/drivers/input/serio/hyperv-keyboard.c b/drivers/input/serio/hyperv-keyboard.c
+index a8b9be3e28db7..7d0a5ccf57751 100644
+--- a/drivers/input/serio/hyperv-keyboard.c
++++ b/drivers/input/serio/hyperv-keyboard.c
+@@ -245,40 +245,17 @@ static void hv_kbd_handle_received_packet(struct hv_device *hv_dev,
+ 
+ static void hv_kbd_on_channel_callback(void *context)
+ {
++	struct vmpacket_descriptor *desc;
+ 	struct hv_device *hv_dev = context;
+-	void *buffer;
+-	int bufferlen = 0x100; /* Start with sensible size */
+ 	u32 bytes_recvd;
+ 	u64 req_id;
+-	int error;
+ 
+-	buffer = kmalloc(bufferlen, GFP_ATOMIC);
+-	if (!buffer)
+-		return;
+-
+-	while (1) {
+-		error = vmbus_recvpacket_raw(hv_dev->channel, buffer, bufferlen,
+-					     &bytes_recvd, &req_id);
+-		switch (error) {
+-		case 0:
+-			if (bytes_recvd == 0) {
+-				kfree(buffer);
+-				return;
+-			}
+-
+-			hv_kbd_handle_received_packet(hv_dev, buffer,
+-						      bytes_recvd, req_id);
+-			break;
++	foreach_vmbus_pkt(desc, hv_dev->channel) {
++		bytes_recvd = desc->len8 * 8;
++		req_id = desc->trans_id;
+ 
+-		case -ENOBUFS:
+-			kfree(buffer);
+-			/* Handle large packet */
+-			bufferlen = bytes_recvd;
+-			buffer = kmalloc(bytes_recvd, GFP_ATOMIC);
+-			if (!buffer)
+-				return;
+-			break;
+-		}
++		hv_kbd_handle_received_packet(hv_dev, desc, bytes_recvd,
++					      req_id);
  	}
+ }
  
 -- 
 2.20.1
