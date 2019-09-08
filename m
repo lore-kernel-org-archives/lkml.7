@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 486EEC4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E460DC4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 222372067B
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF0792067B
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:56:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947403;
-	bh=YjrcaMHDpD0i46urK4YSroz51TwSMsewD04w4Z/pCw8=;
+	s=default; t=1567947405;
+	bh=uZUdd3IGYUQS/CNgapUdkPFnu06tnrUf79ahH4sF9g4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vv8eaYqgImgaxdi0H3OL8n1VzQsmykrYReYtzvEk5NRyq5ysi0YbjEav4Str2/1OX
-	 KwG9mGKXIda2t3duZDwMLvcGzF+5Rgu8GXmbjEohB54nsSffJOt6TZGrG60W61Sjtj
-	 3okLtEoqB3M0TgmoR4jZXHZInWiu9dvQoc/Vtyx8=
+	b=DVmW9tN1ykzCRuDXb74dxkTYnD8wn5RIuRlDb8IK1dC3PoP1oN4QzOeNSuAKXThty
+	 BWhtXapwa4z/pTpP2EOBt9y7VrUTbdBAWBJFlILdu28qXhqhE0F2pc+uudv5AM931O
+	 hlUfbnG4GYgAvm+VkXV/YQYmcvcDOUPM7vPt0Rks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731400AbfIHMtT (ORCPT
+        id S1731379AbfIHMtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:49:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39012 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:49:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731349AbfIHMtO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:49:14 -0400
+        id S1731330AbfIHMtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:49:12 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A101B2190F;
-        Sun,  8 Sep 2019 12:49:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E1962190F;
+        Sun,  8 Sep 2019 12:49:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946954;
-        bh=YjrcaMHDpD0i46urK4YSroz51TwSMsewD04w4Z/pCw8=;
+        s=default; t=1567946951;
+        bh=uZUdd3IGYUQS/CNgapUdkPFnu06tnrUf79ahH4sF9g4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A4g7xyTJSjtInzgv22vXdjl65CIHcJcroyv4jl/+qoi+AcsJkwMI6Mm72IecXcCtD
-         +pZdrmaAZwATBCUtFRLBc5effKGaBex6j5TOUzaumIkKt0bbKYNGM5hEvyROzNeD3P
-         br98jj3U24WTaScKudyaptPBCcUwdP3lobOFoQJU=
+        b=s+qf8Bs4xJNTf199EomGm6Y8jwflbmxmvd/UaCNExVI7cInaAtvEBFJYjMld/+gJ8
+         dn7d7wYqeBWKi9pI3CkoI+9jnG9qnHaiOcg1rSeUlxgMFQJzqHODnXwhlfrmgjTW89
+         A5JevdSVBxGWUg56thABw8uT4f9fLgAR/TLSSCc4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 40/57] x86/boot/compressed/64: Fix boot on machines with broken E820 table
-Date:   Sun,  8 Sep 2019 13:42:04 +0100
-Message-Id: <20190908121144.033654811@linuxfoundation.org>
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 39/57] HID: cp2112: prevent sleeping function called from invalid context
+Date:   Sun,  8 Sep 2019 13:42:03 +0100
+Message-Id: <20190908121143.628821353@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121125.608195329@linuxfoundation.org>
 References: <20190908121125.608195329@linuxfoundation.org>
@@ -63,72 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0a46fff2f9108c2c44218380a43a736cf4612541 ]
+[ Upstream commit 2d05dba2b25ecb0f8fc3a0b4eb2232da6454a47b ]
 
-BIOS on Samsung 500C Chromebook reports very rudimentary E820 table that
-consists of 2 entries:
+When calling request_threaded_irq() with a CP2112, the function
+cp2112_gpio_irq_startup() is called in a IRQ context.
 
-  BIOS-e820: [mem 0x0000000000000000-0x0000000000000fff] usable
-  BIOS-e820: [mem 0x00000000fffff000-0x00000000ffffffff] reserved
+Therefore we can not sleep, and we can not call
+cp2112_gpio_direction_input() there.
 
-It breaks logic in find_trampoline_placement(): bios_start lands on the
-end of the first 4k page and trampoline start gets placed below 0.
+Move the call to cp2112_gpio_direction_input() earlier to have a working
+driver.
 
-Detect underflow and don't touch bios_start for such cases. It makes
-kernel ignore E820 table on machines that doesn't have two usable pages
-below BIOS_START_MAX.
-
-Fixes: 1b3a62643660 ("x86/boot/compressed/64: Validate trampoline placement against E820")
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=203463
-Link: https://lkml.kernel.org/r/20190813131654.24378-1-kirill.shutemov@linux.intel.com
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/boot/compressed/pgtable_64.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ drivers/hid/hid-cp2112.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/pgtable_64.c b/arch/x86/boot/compressed/pgtable_64.c
-index f8debf7aeb4c1..f0537a1f7fc25 100644
---- a/arch/x86/boot/compressed/pgtable_64.c
-+++ b/arch/x86/boot/compressed/pgtable_64.c
-@@ -73,6 +73,8 @@ static unsigned long find_trampoline_placement(void)
+diff --git a/drivers/hid/hid-cp2112.c b/drivers/hid/hid-cp2112.c
+index 271f31461da42..6f65f52572368 100644
+--- a/drivers/hid/hid-cp2112.c
++++ b/drivers/hid/hid-cp2112.c
+@@ -1160,8 +1160,6 @@ static unsigned int cp2112_gpio_irq_startup(struct irq_data *d)
  
- 	/* Find the first usable memory region under bios_start. */
- 	for (i = boot_params->e820_entries - 1; i >= 0; i--) {
-+		unsigned long new;
-+
- 		entry = &boot_params->e820_table[i];
+ 	INIT_DELAYED_WORK(&dev->gpio_poll_worker, cp2112_gpio_poll_callback);
  
- 		/* Skip all entries above bios_start. */
-@@ -85,15 +87,20 @@ static unsigned long find_trampoline_placement(void)
- 
- 		/* Adjust bios_start to the end of the entry if needed. */
- 		if (bios_start > entry->addr + entry->size)
--			bios_start = entry->addr + entry->size;
-+			new = entry->addr + entry->size;
- 
- 		/* Keep bios_start page-aligned. */
--		bios_start = round_down(bios_start, PAGE_SIZE);
-+		new = round_down(new, PAGE_SIZE);
- 
- 		/* Skip the entry if it's too small. */
--		if (bios_start - TRAMPOLINE_32BIT_SIZE < entry->addr)
-+		if (new - TRAMPOLINE_32BIT_SIZE < entry->addr)
- 			continue;
- 
-+		/* Protect against underflow. */
-+		if (new - TRAMPOLINE_32BIT_SIZE > bios_start)
-+			break;
-+
-+		bios_start = new;
- 		break;
+-	cp2112_gpio_direction_input(gc, d->hwirq);
+-
+ 	if (!dev->gpio_poll) {
+ 		dev->gpio_poll = true;
+ 		schedule_delayed_work(&dev->gpio_poll_worker, 0);
+@@ -1209,6 +1207,12 @@ static int __maybe_unused cp2112_allocate_irq(struct cp2112_device *dev,
+ 		return PTR_ERR(dev->desc[pin]);
  	}
  
++	ret = cp2112_gpio_direction_input(&dev->gc, pin);
++	if (ret < 0) {
++		dev_err(dev->gc.parent, "Failed to set GPIO to input dir\n");
++		goto err_desc;
++	}
++
+ 	ret = gpiochip_lock_as_irq(&dev->gc, pin);
+ 	if (ret) {
+ 		dev_err(dev->gc.parent, "Failed to lock GPIO as interrupt\n");
 -- 
 2.20.1
 
