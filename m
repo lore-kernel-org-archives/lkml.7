@@ -2,120 +2,111 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E4F3C43217
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 10:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C2DBC433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 10:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78B7A21479
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 10:49:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567939790;
-	bh=+w/QuT5L4Ow9ftifoOWm4Sae4CkvZuplB/gI2gFR8bs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=f55uHoT+GbSaFjDoU5OPQDqxBenraO2mBnYDvV6nbBpFHuAehLd/UBUFaKcv5FOfO
-	 Izc8TQFe/4im6cfKWDfuNQJH4cX2ps2dME4k1hylk8AK76vtWdSV7eDULfJf9wFvHr
-	 qR/Zs2eQLhMDQKBOxkssus6gQH21Hm1J1FvdMTeY=
+	by mail.kernel.org (Postfix) with ESMTP id 2F52320863
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 10:50:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728623AbfIHKtt (ORCPT
+        id S1728646AbfIHKu1 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 06:49:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47564 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728514AbfIHKtt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 06:49:49 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E23F20863;
-        Sun,  8 Sep 2019 10:49:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567939788;
-        bh=+w/QuT5L4Ow9ftifoOWm4Sae4CkvZuplB/gI2gFR8bs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jAiftC9iSBodWKXEs9ctWPujlcYnoAYiAp3gheIoyh7VpYOe12FONlSEvEVvW81hv
-         ZXEu7Mvee9IaF/wKqgMGm6ylh9tWsawvYW7qDjj3xCpYj0oTYY+OXd3I2wp927uq4b
-         ptR2fk9NDTo5mWAkZOO2tBio2vxg9lzOTVJinaz0=
-Date:   Sun, 8 Sep 2019 11:49:44 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Krzysztof Wilczynski <kw@linux.com>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: light: bh1750: Move static keyword to the front of
- declaration
-Message-ID: <20190908114944.18bb78e3@archlinux>
-In-Reply-To: <20190902113132.26658-1-kw@linux.com>
-References: <20190902113132.26658-1-kw@linux.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 8 Sep 2019 06:50:27 -0400
+Received: from mail.parknet.co.jp ([210.171.160.6]:42000 "EHLO
+        mail.parknet.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728514AbfIHKu0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 06:50:26 -0400
+Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
+        by mail.parknet.co.jp (Postfix) with ESMTPSA id 971D415CBF0;
+        Sun,  8 Sep 2019 19:50:25 +0900 (JST)
+Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
+        by ibmpc.myhome.or.jp (8.15.2/8.15.2/Debian-14) with ESMTPS id x88AoOmC022487
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Sun, 8 Sep 2019 19:50:25 +0900
+Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
+        by devron.myhome.or.jp (8.15.2/8.15.2/Debian-14) with ESMTPS id x88AoODr012279
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Sun, 8 Sep 2019 19:50:24 +0900
+Received: (from hirofumi@localhost)
+        by devron.myhome.or.jp (8.15.2/8.15.2/Submit) id x88AoH8K012277;
+        Sun, 8 Sep 2019 19:50:17 +0900
+From:   OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        Christoph Hellwig <hch@infradead.org>,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers/staging/exfat - by default, prohibit mount of
+ fat/vfat
+References: <245727.1567183359@turing-police>
+        <20190830164503.GA12978@infradead.org>
+        <267691.1567212516@turing-police>
+        <20190831064616.GA13286@infradead.org>
+        <295233.1567247121@turing-police>
+        <20190902073525.GA18988@infradead.org>
+        <20190902152524.GA4964@kroah.com> <501797.1567450817@turing-police>
+        <20190902190619.GA25019@kroah.com>
+Date:   Sun, 08 Sep 2019 19:50:16 +0900
+In-Reply-To: <20190902190619.GA25019@kroah.com> (Greg Kroah-Hartman's message
+        of "Mon, 2 Sep 2019 21:06:19 +0200")
+Message-ID: <87muffxdsn.fsf@mail.parknet.co.jp>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.0.50 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  2 Sep 2019 13:31:32 +0200
-Krzysztof Wilczynski <kw@linux.com> wrote:
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
 
-> Move the static keyword to the front of declaration of
-> bh1750_chip_info_tbl, and resolve the following compiler
-> warning that can be seen when building with warnings
-> enabled (W=3D1):
->=20
-> drivers/iio/light/bh1750.c:64:1: warning:
->   =E2=80=98static=E2=80=99 is not at beginning of declaration [-Wold-styl=
-e-declaration]
->=20
-> Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+> On Mon, Sep 02, 2019 at 03:00:17PM -0400, Valdis Klētnieks wrote:
+>> On Mon, 02 Sep 2019 17:25:24 +0200, Greg Kroah-Hartman said:
+>> 
+>> > I dug up my old discussion with the current vfat maintainer and he said
+>> > something to the affect of, "leave the existing code alone, make a new
+>> > filesystem, I don't want anything to do with exfat".
+>> >
+>> > And I don't blame them, vfat is fine as-is and stable and shouldn't be
+>> > touched for new things.
+>> >
+>> > We can keep non-vfat filesystems from being mounted with the exfat
+>> > codebase, and make things simpler for everyone involved.
+>> 
+>> Ogawa:
+>> 
+>> Is this still your position, that you want exfat to be a separate module?
+>
+> Personally I agree that this should be separate at least for quite some
+> time to shake things out at the very least.  But I'll defer to Ogawa if
+> he thinks things should be merged.
 
-This one has me confused.  The warning seems to be false as static
-is at the beginning of the declaration....
+I'm not reading whole of this thread, so I can be pointless though. I
+can't recall the discussion of exfat with you. My history about exfat
+is,
 
-Sure we "could" combine the declaration with the definition as you have
-done here, but that has nothing much to do with the warning.
+   write read-only exfat from on-disk data -> MS published patent to
+   their site or such -> stopped about exfat -> recently looks like MS
+   changed mind
 
-What am I missing?
+Well, if you are going to developing actively, IMO it would be better to
+drop historically bad decisions in fat driver (some stuff would be hard
+to fix without user visible changes), and re-think from basic
+implementation design.
 
-Jonathan
+And I can't recall the detail of exfat format though, IIRC, the common
+code is not so big, but some stuff can be shared with fat (timestamp
+stuff, fatent stuff, IIRC). So IMO it is better to be different driver
+basically, however on other hand, it is better to share the code for
+same on-disk format if possible.
 
-> ---
-> Related: https://lore.kernel.org/r/20190827233017.GK9987@google.com
->=20
->  drivers/iio/light/bh1750.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/iio/light/bh1750.c b/drivers/iio/light/bh1750.c
-> index 28347df78cff..460c0013f1a9 100644
-> --- a/drivers/iio/light/bh1750.c
-> +++ b/drivers/iio/light/bh1750.c
-> @@ -42,7 +42,7 @@ struct bh1750_data {
->  	u16 mtreg;
->  };
-> =20
-> -struct bh1750_chip_info {
-> +static const struct bh1750_chip_info {
->  	u16 mtreg_min;
->  	u16 mtreg_max;
->  	u16 mtreg_default;
-> @@ -59,9 +59,7 @@ struct bh1750_chip_info {
-> =20
->  	u16 int_time_low_mask;
->  	u16 int_time_high_mask;
-> -}
-> -
-> -static const bh1750_chip_info_tbl[] =3D {
-Looks like the beginning fo the declaration to me!
+Anyway, I don't have strong opinion about it.
 
-Jonathan
-
-> +} bh1750_chip_info_tbl[] =3D {
->  	[BH1710] =3D { 140, 1022, 300, 400,  250000000, 2, 0x001F, 0x03E0 },
->  	[BH1721] =3D { 140, 1020, 300, 400,  250000000, 2, 0x0010, 0x03E0 },
->  	[BH1750] =3D { 31,  254,  69,  1740, 57500000,  1, 0x001F, 0x00E0 },
-
+Thanks.
+-- 
+OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
