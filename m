@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDBCC4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 535D2C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F14721920
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29FA3218AF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:48:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946919;
-	bh=+ViCpTWVPKWPysN1s86/uNEgSImk78bymXGcG1jnfZ0=;
+	s=default; t=1567946925;
+	bh=KWZV9V7Opd0cyayWHpW09W4ht3B17plXKleRQXc50GY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N8dP7GUe/a9P6zjYspQNyAxpksZ6v3NpXdsVxnNQ1y/s1lN9pzZJQBsmMLdvlv45q
-	 j9aOXQzONqKTSpp07CTCfWIIkkbFTfij8aRCxceCuXk0TgA6AmtB55iBxkD05WZ/AZ
-	 AHnuV11GC3mIuacj/DE/qek5f2NfXvx3aMIKSpdw=
+	b=aE2b4oVwxVgV2agpjUJl65nX2xAHvJm1s71m4/a1e78GTiA3NOTbWknkM2UTfVTpI
+	 8kjvSrs8lMqfp9I8MrFDGX5bPKThsChe5GjOyXMpQ9j49YphJ+GZUHLAThT1KcdqlH
+	 IWBfYgx8NPsT3TrUgC8YH0e7+0wP8G4TmofYEibY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731100AbfIHMsh (ORCPT
+        id S1731136AbfIHMsn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:48:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37718 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:48:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731069AbfIHMsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:48:32 -0400
+        id S1731087AbfIHMsf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:48:35 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7BB8218AC;
-        Sun,  8 Sep 2019 12:48:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 778F1218AC;
+        Sun,  8 Sep 2019 12:48:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946912;
-        bh=+ViCpTWVPKWPysN1s86/uNEgSImk78bymXGcG1jnfZ0=;
+        s=default; t=1567946915;
+        bh=KWZV9V7Opd0cyayWHpW09W4ht3B17plXKleRQXc50GY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BuyCT+X5jhO3KXJ0tc4TMOeCbKE9NSQBCHWuFnnUeKcXJQvg/dDYfIgnrHYZl5k2N
-         ntyJsfsUT4FWn6BYUPJ9HVlYN1rRsw3ZMFjiEdlPIFlojwem8zwwWIGlu5d7Czt8B0
-         q62X1rFdS4QY9OFgPkQvlXs45Sd6AfpFWptdntv4=
+        b=BbWDY4g0deD33res5Yp9CTC8uSUTIlPzVtLJy8GhwIXqFYPiDL1PkK8WhZgrHzrDP
+         9TaekDcXMITHiWoZMbzM3+v+/Dyjq6giggRHdG82tPSvDaacuni0/qXX2TAehz5Fpr
+         nBvZZRpZ06Q1jFGhI4jicDbCL5Kh/sLwVSnuqHzA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
+        stable@vger.kernel.org, Luis Henriques <lhenriques@suse.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 48/57] selftests/kvm: make platform_info_test pass on AMD
-Date:   Sun,  8 Sep 2019 13:42:12 +0100
-Message-Id: <20190908121145.741948715@linuxfoundation.org>
+Subject: [PATCH 4.19 49/57] ceph: fix buffer free while holding i_ceph_lock in __ceph_setxattr()
+Date:   Sun,  8 Sep 2019 13:42:13 +0100
+Message-Id: <20190908121145.803649405@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121125.608195329@linuxfoundation.org>
 References: <20190908121125.608195329@linuxfoundation.org>
@@ -60,34 +61,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e4427372398c31f57450565de277f861a4db5b3b ]
+[ Upstream commit 86968ef21596515958d5f0a40233d02be78ecec0 ]
 
-test_msr_platform_info_disabled() generates EXIT_SHUTDOWN but VMCB state
-is undefined after that so an attempt to launch this guest again from
-test_msr_platform_info_enabled() fails. Reorder the tests to make test
-pass.
+Calling ceph_buffer_put() in __ceph_setxattr() may end up freeing the
+i_xattrs.prealloc_blob buffer while holding the i_ceph_lock.  This can be
+fixed by postponing the call until later, when the lock is released.
 
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+The following backtrace was triggered by fstests generic/117.
+
+  BUG: sleeping function called from invalid context at mm/vmalloc.c:2283
+  in_atomic(): 1, irqs_disabled(): 0, pid: 650, name: fsstress
+  3 locks held by fsstress/650:
+   #0: 00000000870a0fe8 (sb_writers#8){.+.+}, at: mnt_want_write+0x20/0x50
+   #1: 00000000ba0c4c74 (&type->i_mutex_dir_key#6){++++}, at: vfs_setxattr+0x55/0xa0
+   #2: 000000008dfbb3f2 (&(&ci->i_ceph_lock)->rlock){+.+.}, at: __ceph_setxattr+0x297/0x810
+  CPU: 1 PID: 650 Comm: fsstress Not tainted 5.2.0+ #437
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58-prebuilt.qemu.org 04/01/2014
+  Call Trace:
+   dump_stack+0x67/0x90
+   ___might_sleep.cold+0x9f/0xb1
+   vfree+0x4b/0x60
+   ceph_buffer_release+0x1b/0x60
+   __ceph_setxattr+0x2b4/0x810
+   __vfs_setxattr+0x66/0x80
+   __vfs_setxattr_noperm+0x59/0xf0
+   vfs_setxattr+0x81/0xa0
+   setxattr+0x115/0x230
+   ? filename_lookup+0xc9/0x140
+   ? rcu_read_lock_sched_held+0x74/0x80
+   ? rcu_sync_lockdep_assert+0x2e/0x60
+   ? __sb_start_write+0x142/0x1a0
+   ? mnt_want_write+0x20/0x50
+   path_setxattr+0xba/0xd0
+   __x64_sys_lsetxattr+0x24/0x30
+   do_syscall_64+0x50/0x1c0
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  RIP: 0033:0x7ff23514359a
+
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/kvm/platform_info_test.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ceph/xattr.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/platform_info_test.c b/tools/testing/selftests/kvm/platform_info_test.c
-index 3764e71212650..65db510dddc34 100644
---- a/tools/testing/selftests/kvm/platform_info_test.c
-+++ b/tools/testing/selftests/kvm/platform_info_test.c
-@@ -100,8 +100,8 @@ int main(int argc, char *argv[])
- 	msr_platform_info = vcpu_get_msr(vm, VCPU_ID, MSR_PLATFORM_INFO);
- 	vcpu_set_msr(vm, VCPU_ID, MSR_PLATFORM_INFO,
- 		msr_platform_info | MSR_PLATFORM_INFO_MAX_TURBO_RATIO);
--	test_msr_platform_info_disabled(vm);
- 	test_msr_platform_info_enabled(vm);
-+	test_msr_platform_info_disabled(vm);
- 	vcpu_set_msr(vm, VCPU_ID, MSR_PLATFORM_INFO, msr_platform_info);
+diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
+index 0a2d4898ee163..71ea45b0231f9 100644
+--- a/fs/ceph/xattr.c
++++ b/fs/ceph/xattr.c
+@@ -1011,6 +1011,7 @@ int __ceph_setxattr(struct inode *inode, const char *name,
+ 	struct ceph_inode_info *ci = ceph_inode(inode);
+ 	struct ceph_mds_client *mdsc = ceph_sb_to_client(inode->i_sb)->mdsc;
+ 	struct ceph_cap_flush *prealloc_cf = NULL;
++	struct ceph_buffer *old_blob = NULL;
+ 	int issued;
+ 	int err;
+ 	int dirty = 0;
+@@ -1084,13 +1085,15 @@ retry:
+ 		struct ceph_buffer *blob;
  
- 	kvm_vm_free(vm);
+ 		spin_unlock(&ci->i_ceph_lock);
+-		dout(" preaallocating new blob size=%d\n", required_blob_size);
++		ceph_buffer_put(old_blob); /* Shouldn't be required */
++		dout(" pre-allocating new blob size=%d\n", required_blob_size);
+ 		blob = ceph_buffer_new(required_blob_size, GFP_NOFS);
+ 		if (!blob)
+ 			goto do_sync_unlocked;
+ 		spin_lock(&ci->i_ceph_lock);
++		/* prealloc_blob can't be released while holding i_ceph_lock */
+ 		if (ci->i_xattrs.prealloc_blob)
+-			ceph_buffer_put(ci->i_xattrs.prealloc_blob);
++			old_blob = ci->i_xattrs.prealloc_blob;
+ 		ci->i_xattrs.prealloc_blob = blob;
+ 		goto retry;
+ 	}
+@@ -1106,6 +1109,7 @@ retry:
+ 	}
+ 
+ 	spin_unlock(&ci->i_ceph_lock);
++	ceph_buffer_put(old_blob);
+ 	if (lock_snap_rwsem)
+ 		up_read(&mdsc->snap_rwsem);
+ 	if (dirty)
 -- 
 2.20.1
 
