@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE783C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47848C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8639218DE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19BC5218AF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:43:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946605;
-	bh=Z3/hYNa9hLaR25pImy5L8T05rp//UxTQxjH0Rnzk0ok=;
+	s=default; t=1567946611;
+	bh=VKIhn3t5HKFT55uxxSW0rh1RrHK5MQdyDgOmvlyntj8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eOzRHlGPooN8JIHGlcSv+QwnQgdMC4Hx/lxeECoPC2xQw7PJJtk8Kw6z//CuHUmdD
-	 CwheUWn5PKVOqlrmidUCM2oNhf4iNHEi+e0E28d0nN1jbqPV4ZnMWGd80x6CXDPX4W
-	 5priAXmJSoVSa0DCm1gIBGztT3fASRilE51oZBlk=
+	b=1iUCjUZOgpSwAyOEzrELpUNjclPQmRkz1YpdpWuqKcbLL76BRryNPUGHj8VCvzXwe
+	 YNT6i438XtI5HaF10j+J8xpK7s/qUKE9SunOUXpYEUw7FJCRggf78vYLGqVquN3pjp
+	 vsKNzuSZcZJDIcG9oTsNyg2PeNYnXZGnS92E8Lvo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729440AbfIHMnV (ORCPT
+        id S1729489AbfIHMna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:43:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56996 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:43:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729384AbfIHMnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:43:18 -0400
+        id S1729431AbfIHMnX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:43:23 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90B62218AE;
-        Sun,  8 Sep 2019 12:43:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C29E1218AE;
+        Sun,  8 Sep 2019 12:43:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946597;
-        bh=Z3/hYNa9hLaR25pImy5L8T05rp//UxTQxjH0Rnzk0ok=;
+        s=default; t=1567946602;
+        bh=VKIhn3t5HKFT55uxxSW0rh1RrHK5MQdyDgOmvlyntj8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hfkr+MRfzqJwbdf3nGJ02374T0booPugc0LF/Wm8ju4CQWJWjlnPjBXYrns2efywb
-         XrSWmBRBelOOPkF6FmeHoi2BMJKHeUplDjpGXsVs5eDX4Dz6eevDFNoXgktXlj7GR4
-         oZX0yokrNpbf6eF4tg6jab7s83zS62ldrAqIOETQ=
+        b=KuWwnp5XAL4VzO30OKM2N+mayaYQgpIIlZlpbucWqhIJttcwyXWHBeycdNVwoPcsk
+         AFQgGKOtDKZftUDk77J8eLbydwncdZ+0rDCxQeAlMUHQXd5/Sew2jP+dKPIbyLJoC6
+         xbRmTEX0x0gzdv4Lyq/aSPTED0TIUfZCc2aNCQ6A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 06/23] cxgb4: fix a memory leak bug
-Date:   Sun,  8 Sep 2019 13:41:41 +0100
-Message-Id: <20190908121056.047922709@linuxfoundation.org>
+Subject: [PATCH 4.4 08/23] cx82310_eth: fix a memory leak bug
+Date:   Sun,  8 Sep 2019 13:41:43 +0100
+Message-Id: <20190908121056.539096222@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121052.898169328@linuxfoundation.org>
 References: <20190908121052.898169328@linuxfoundation.org>
@@ -60,35 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c554336efa9bbc28d6ec14efbee3c7d63c61a34f ]
+[ Upstream commit 1eca92eef18719027d394bf1a2d276f43e7cf886 ]
 
-In blocked_fl_write(), 't' is not deallocated if bitmap_parse_user() fails,
-leading to a memory leak bug. To fix this issue, free t before returning
-the error.
+In cx82310_bind(), 'dev->partial_data' is allocated through kmalloc().
+Then, the execution waits for the firmware to become ready. If the firmware
+is not ready in time, the execution is terminated. However, the allocated
+'dev->partial_data' is not deallocated on this path, leading to a memory
+leak bug. To fix this issue, free 'dev->partial_data' before returning the
+error.
 
 Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/usb/cx82310_eth.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
-index 4269944c5db53..129d6095749a4 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
-@@ -2673,8 +2673,10 @@ static ssize_t blocked_fl_write(struct file *filp, const char __user *ubuf,
- 		return -ENOMEM;
+diff --git a/drivers/net/usb/cx82310_eth.c b/drivers/net/usb/cx82310_eth.c
+index 947bea81d9241..dfbdea22fbad9 100644
+--- a/drivers/net/usb/cx82310_eth.c
++++ b/drivers/net/usb/cx82310_eth.c
+@@ -175,7 +175,8 @@ static int cx82310_bind(struct usbnet *dev, struct usb_interface *intf)
+ 	}
+ 	if (!timeout) {
+ 		dev_err(&udev->dev, "firmware not ready in time\n");
+-		return -ETIMEDOUT;
++		ret = -ETIMEDOUT;
++		goto err;
+ 	}
  
- 	err = bitmap_parse_user(ubuf, count, t, adap->sge.egr_sz);
--	if (err)
-+	if (err) {
-+		kvfree(t);
- 		return err;
-+	}
- 
- 	bitmap_copy(adap->sge.blocked_fl, t, adap->sge.egr_sz);
- 	t4_free_mem(t);
+ 	/* enable ethernet mode (?) */
 -- 
 2.20.1
 
