@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42537C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A8C0C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:50:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DF942082C
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F96421479
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:50:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947053;
-	bh=gLSeBiYtRW05Fgp8Wur43XLorR7RRR+t7EZkK1UFHcI=;
+	s=default; t=1567947057;
+	bh=q54WEmURkkkwIjLKPzleqdQLu47tYN82atWMJMqBdwU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ANU81ZsWI6M3ACvhDyFjE3EzPOVuT/M1x2gvlUDf77+WS5jiGVtONn5UrhlxuCzVg
-	 lxMt5mI2FWlswjnBxjBfwu/m6GKUZ4I/JjduiTiQxqmch0/H9GXR6o/CszxXfLBzff
-	 bPMpMXIuFPZHQBxUwJNd+E66mSltNe+zDkwzg/p4=
+	b=gAwhQ0Ad/EvrDznJyHsafcH3cKSidt2jdkIE0YVcoVcrK9a2CmHlzKwLzZCiaNDrn
+	 1qiylrRH1KsIKQwsxV3qxf+HTvuX56cgAeBbTf6KXeB/5CHV7nzSRvudxX9QWMlrpC
+	 vXOGIcXtla8byHB6woF80dLrpkzfI72qa51wwXJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732344AbfIHMuw (ORCPT
+        id S1732391AbfIHMu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:50:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41832 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:50:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732280AbfIHMus (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:50:48 -0400
+        id S1732329AbfIHMuv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:50:51 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C29A2196F;
-        Sun,  8 Sep 2019 12:50:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56FB02196F;
+        Sun,  8 Sep 2019 12:50:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567947045;
-        bh=gLSeBiYtRW05Fgp8Wur43XLorR7RRR+t7EZkK1UFHcI=;
+        s=default; t=1567947050;
+        bh=q54WEmURkkkwIjLKPzleqdQLu47tYN82atWMJMqBdwU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G0qXX3utMDzh4t8i/4irVz0MjMor0o0S8OuT7GEp2MYHj0scQ8vTczPIzgBVfGtsI
-         XY5NXO/sSZ0KLIb0MuWStXRP+vfI8cZxBOCNUPJhSxm/gA7U6T1qJihEC+5bm3SSCX
-         deEcGwWz4oI0a7pLq7r+NPivJFZSZ+UNKb+ypDjM=
+        b=Gsge2rNhswBnjrN69bcy/kNHqwQVHxx2XrLh2+rDlU+tOIBlzpHeSJEtQhvFhoeUF
+         Z2djA+4IJMUqqlZ4VL9cp84I6Xwiz2E1yy1oGKy6JicyvOaHmHgovwcr4FI+DvmibZ
+         KIS59hEFeVz8mBY00sN9ZMR2lTZGpEaZxn6T8T24=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 39/94] s390/qeth: serialize cmd reply with concurrent timeout
-Date:   Sun,  8 Sep 2019 13:41:35 +0100
-Message-Id: <20190908121151.557585474@linuxfoundation.org>
+Subject: [PATCH 5.2 41/94] gpio: Fix build error of function redefinition
+Date:   Sun,  8 Sep 2019 13:41:37 +0100
+Message-Id: <20190908121151.615238950@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
 References: <20190908121150.420989666@linuxfoundation.org>
@@ -60,94 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 072f79400032f74917726cf76f4248367ea2b5b8 ]
+[ Upstream commit 68e03b85474a51ec1921b4d13204782594ef7223 ]
 
-Callbacks for a cmd reply run outside the protection of card->lock, to
-allow for additional cmds to be issued & enqueued in parallel.
+when do randbuilding, I got this error:
 
-When qeth_send_control_data() bails out for a cmd without having
-received a reply (eg. due to timeout), its callback may concurrently be
-processing a reply that just arrived. In this case, the callback
-potentially accesses a stale reply->reply_param area that eg. was
-on-stack and has already been released.
+In file included from drivers/hwmon/pmbus/ucd9000.c:19:0:
+./include/linux/gpio/driver.h:576:1: error: redefinition of gpiochip_add_pin_range
+ gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
+ ^~~~~~~~~~~~~~~~~~~~~~
+In file included from drivers/hwmon/pmbus/ucd9000.c:18:0:
+./include/linux/gpio.h:245:1: note: previous definition of gpiochip_add_pin_range was here
+ gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
+ ^~~~~~~~~~~~~~~~~~~~~~
 
-To avoid this race, add some locking so that qeth_send_control_data()
-can (1) wait for a concurrently running callback, and (2) zap any
-pending callback that still wants to run.
-
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 964cb341882f ("gpio: move pincontrol calls to <linux/gpio/driver.h>")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Link: https://lore.kernel.org/r/20190731123814.46624-1-yuehaibing@huawei.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_core.h      |  1 +
- drivers/s390/net/qeth_core_main.c | 20 ++++++++++++++++++++
- 2 files changed, 21 insertions(+)
+ include/linux/gpio.h | 24 ------------------------
+ 1 file changed, 24 deletions(-)
 
-diff --git a/drivers/s390/net/qeth_core.h b/drivers/s390/net/qeth_core.h
-index 784a2e76a1b04..c5f60f95e8db9 100644
---- a/drivers/s390/net/qeth_core.h
-+++ b/drivers/s390/net/qeth_core.h
-@@ -640,6 +640,7 @@ struct qeth_seqno {
- struct qeth_reply {
- 	struct list_head list;
- 	struct completion received;
-+	spinlock_t lock;
- 	int (*callback)(struct qeth_card *, struct qeth_reply *,
- 		unsigned long);
- 	u32 seqno;
-diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index b1823d75dd35c..6b8f99e7d8a81 100644
---- a/drivers/s390/net/qeth_core_main.c
-+++ b/drivers/s390/net/qeth_core_main.c
-@@ -548,6 +548,7 @@ static struct qeth_reply *qeth_alloc_reply(struct qeth_card *card)
- 	if (reply) {
- 		refcount_set(&reply->refcnt, 1);
- 		init_completion(&reply->received);
-+		spin_lock_init(&reply->lock);
- 	}
- 	return reply;
+diff --git a/include/linux/gpio.h b/include/linux/gpio.h
+index 39745b8bdd65d..b3115d1a7d494 100644
+--- a/include/linux/gpio.h
++++ b/include/linux/gpio.h
+@@ -240,30 +240,6 @@ static inline int irq_to_gpio(unsigned irq)
+ 	return -EINVAL;
  }
-@@ -832,6 +833,13 @@ static void qeth_issue_next_read_cb(struct qeth_card *card,
  
- 	if (!reply->callback) {
- 		rc = 0;
-+		goto no_callback;
-+	}
-+
-+	spin_lock_irqsave(&reply->lock, flags);
-+	if (reply->rc) {
-+		/* Bail out when the requestor has already left: */
-+		rc = reply->rc;
- 	} else {
- 		if (cmd) {
- 			reply->offset = (u16)((char *)cmd - (char *)iob->data);
-@@ -840,7 +848,9 @@ static void qeth_issue_next_read_cb(struct qeth_card *card,
- 			rc = reply->callback(card, reply, (unsigned long)iob);
- 		}
- 	}
-+	spin_unlock_irqrestore(&reply->lock, flags);
- 
-+no_callback:
- 	if (rc <= 0)
- 		qeth_notify_reply(reply, rc);
- 	qeth_put_reply(reply);
-@@ -1880,6 +1890,16 @@ static int qeth_send_control_data(struct qeth_card *card, int len,
- 		rc = (timeout == -ERESTARTSYS) ? -EINTR : -ETIME;
- 
- 	qeth_dequeue_reply(card, reply);
-+
-+	if (reply_cb) {
-+		/* Wait until the callback for a late reply has completed: */
-+		spin_lock_irq(&reply->lock);
-+		if (rc)
-+			/* Zap any callback that's still pending: */
-+			reply->rc = rc;
-+		spin_unlock_irq(&reply->lock);
-+	}
-+
- 	if (!rc)
- 		rc = reply->rc;
- 	qeth_put_reply(reply);
+-static inline int
+-gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
+-		       unsigned int gpio_offset, unsigned int pin_offset,
+-		       unsigned int npins)
+-{
+-	WARN_ON(1);
+-	return -EINVAL;
+-}
+-
+-static inline int
+-gpiochip_add_pingroup_range(struct gpio_chip *chip,
+-			struct pinctrl_dev *pctldev,
+-			unsigned int gpio_offset, const char *pin_group)
+-{
+-	WARN_ON(1);
+-	return -EINVAL;
+-}
+-
+-static inline void
+-gpiochip_remove_pin_ranges(struct gpio_chip *chip)
+-{
+-	WARN_ON(1);
+-}
+-
+ static inline int devm_gpio_request(struct device *dev, unsigned gpio,
+ 				    const char *label)
+ {
 -- 
 2.20.1
 
