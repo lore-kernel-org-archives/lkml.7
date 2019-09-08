@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECAEBC4360D
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A10C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDCA921D79
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C44421971
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:48:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946891;
-	bh=LPBjogdDxQGRxl0QqqPik9edUm0vEPbU7w0GpYfhx30=;
+	s=default; t=1567946895;
+	bh=LtTjOxgtRGF6LCCtjHjnp/619AMlBzyRmzOQMaARqIw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lkZxUg6nyaufBoODAsqUghlYQ9fCP1q8CaophxX2gQXoYqqrPTAkvNYdhPa7K8kU4
-	 MZtPKBLaR6i/nnFuO1OyXxzO+dWvn12WpOMHh3pHrWNk1ixCLUQInRUHq+JVnYBGDE
-	 gCxem7bqk5R3IlU7gTkd5ArUkedKchBjmWGKqREE=
+	b=AdJZh9LcByF95+N+TTwp75uNQmOXHzcvBVNNfZ+3YSquiX1bRp/LBdhhHU5VX7i/t
+	 1mhhDWHv2k0ivQDYqaxTdB7ZOq9WJW0RrJquJAqOpGzJXrRUju6TsE+F+YWGKRYWWQ
+	 ezOLCtzGlRxYdMhLMR3MVWhwVE/a9fMWD//vmL70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730915AbfIHMsK (ORCPT
+        id S1730936AbfIHMsN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:48:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37002 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:48:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730891AbfIHMsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:48:07 -0400
+        id S1730906AbfIHMsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:48:09 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09C83218AC;
-        Sun,  8 Sep 2019 12:48:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7674A21924;
+        Sun,  8 Sep 2019 12:48:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946886;
-        bh=LPBjogdDxQGRxl0QqqPik9edUm0vEPbU7w0GpYfhx30=;
+        s=default; t=1567946889;
+        bh=LtTjOxgtRGF6LCCtjHjnp/619AMlBzyRmzOQMaARqIw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nvoLUSdy/gD3PcKkQjk+U3RtZwQy8LS+47M085bW6gm56i5qZkjBSwFPEqC08p1oZ
-         o3aY/0RJokaz7yC6OJNIC3ajzjZa7j54fVpO6OUnWn2hQYSgQL8JiPWFBcfz8x6Unh
-         xIYQIbZzBLSWLZ3K/lGDbdOLwcrgS5c6AIFrtv/Y=
+        b=vinwsjBEhay72i69lhxAyqZZZrQlQMAfvyGiVnQJxJ2nKQ/l4mEI5EVKlvl/N2V9z
+         DSRTDdKEPoCQ87jOKRbUvNHLCR76/0kbX4WUsur8jc112JJmntUO+1sq4vyD/IUXUW
+         ZoKOE6zJwWNSseyAxXvamFguggxfsqhj8XWQH7lA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?=E9=BB=84ID=E8=9D=B4=E8=9D=B6?= 
-        <butterflyhuangxx@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Ka-Cheong Poon <ka-cheong.poon@oracle.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 08/57] net/rds: Fix info leak in rds6_inc_info_copy()
-Date:   Sun,  8 Sep 2019 13:41:32 +0100
-Message-Id: <20190908121128.197012518@linuxfoundation.org>
+        stable@vger.kernel.org, "John S. Gruber" <JohnSGruber@gmail.com>,
+        Borislav Petkov <bp@suse.de>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        Mark Brown <broonie@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>
+Subject: [PATCH 4.19 09/57] x86/boot: Preserve boot_params.secure_boot from sanitizing
+Date:   Sun,  8 Sep 2019 13:41:33 +0100
+Message-Id: <20190908121128.536275429@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121125.608195329@linuxfoundation.org>
 References: <20190908121125.608195329@linuxfoundation.org>
@@ -64,51 +64,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ka-Cheong Poon <ka-cheong.poon@oracle.com>
+From: John S. Gruber <JohnSGruber@gmail.com>
 
-[ Upstream commit 7d0a06586b2686ba80c4a2da5f91cb10ffbea736 ]
+commit 29d9a0b50736768f042752070e5cdf4e4d4c00df upstream.
 
-The rds6_inc_info_copy() function has a couple struct members which
-are leaking stack information.  The ->tos field should hold actual
-information and the ->flags field needs to be zeroed out.
+Commit
 
-Fixes: 3eb450367d08 ("rds: add type of service(tos) infrastructure")
-Fixes: b7ff8b1036f0 ("rds: Extend RDS API for IPv6 support")
-Reported-by: 黄ID蝴蝶 <butterflyhuangxx@gmail.com>
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Ka-Cheong Poon <ka-cheong.poon@oracle.com>
-Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+  a90118c445cc ("x86/boot: Save fields explicitly, zero out everything else")
+
+now zeroes the secure boot setting information (enabled/disabled/...)
+passed by the boot loader or by the kernel's EFI handover mechanism.
+
+The problem manifests itself with signed kernels using the EFI handoff
+protocol with grub and the kernel loses the information whether secure
+boot is enabled in the firmware, i.e., the log message "Secure boot
+enabled" becomes "Secure boot could not be determined".
+
+efi_main() arch/x86/boot/compressed/eboot.c sets this field early but it
+is subsequently zeroed by the above referenced commit.
+
+Include boot_params.secure_boot in the preserve field list.
+
+ [ bp: restructure commit message and massage. ]
+
+Fixes: a90118c445cc ("x86/boot: Save fields explicitly, zero out everything else")
+Signed-off-by: John S. Gruber <JohnSGruber@gmail.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: stable <stable@vger.kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/CAPotdmSPExAuQcy9iAHqX3js_fc4mMLQOTr5RBGvizyCOPcTQQ@mail.gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/rds/recv.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/net/rds/recv.c
-+++ b/net/rds/recv.c
-@@ -1,5 +1,5 @@
- /*
-- * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
-+ * Copyright (c) 2006, 2019 Oracle and/or its affiliates. All rights reserved.
-  *
-  * This software is available to you under a choice of one of two
-  * licenses.  You may choose to be licensed under the terms of the GNU
-@@ -803,6 +803,7 @@ void rds6_inc_info_copy(struct rds_incom
- 
- 	minfo6.seq = be64_to_cpu(inc->i_hdr.h_sequence);
- 	minfo6.len = be32_to_cpu(inc->i_hdr.h_len);
-+	minfo6.tos = 0;
- 
- 	if (flip) {
- 		minfo6.laddr = *daddr;
-@@ -816,6 +817,8 @@ void rds6_inc_info_copy(struct rds_incom
- 		minfo6.fport = inc->i_hdr.h_dport;
- 	}
- 
-+	minfo6.flags = 0;
-+
- 	rds_info_copy(iter, &minfo6, sizeof(minfo6));
- }
- #endif
+---
+ arch/x86/include/asm/bootparam_utils.h |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/arch/x86/include/asm/bootparam_utils.h
++++ b/arch/x86/include/asm/bootparam_utils.h
+@@ -71,6 +71,7 @@ static void sanitize_boot_params(struct
+ 			BOOT_PARAM_PRESERVE(eddbuf_entries),
+ 			BOOT_PARAM_PRESERVE(edd_mbr_sig_buf_entries),
+ 			BOOT_PARAM_PRESERVE(edd_mbr_sig_buffer),
++			BOOT_PARAM_PRESERVE(secure_boot),
+ 			BOOT_PARAM_PRESERVE(hdr),
+ 			BOOT_PARAM_PRESERVE(e820_table),
+ 			BOOT_PARAM_PRESERVE(eddbuf),
 
 
