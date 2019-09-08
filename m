@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 782CDC433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE463C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5158221920
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D9A6218AC
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:51:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947094;
-	bh=1HgWfFEiXK+kna90PfsnfcU1m1Ld0CmnpIk7xow7eLQ=;
+	s=default; t=1567947097;
+	bh=l2YNntziq5/IXjI2hxmN5NXKaQAoKbhgICVAzS5Y+CM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pVy6qQPtYR050OLiZB4PHcvKETypNx6+iMboa/u+wCEK9eX2/4E1P/n9dcE17MbH5
-	 4u3yy8QqLiP9UDd1pWp2d1NA2b4gjr+Gcr2EGvIA8IcWQ0MZGg2i3RvOUW7w1FVNSV
-	 1kvE2K+ikwmOqXzxoHSwfq/p1k9YK5GSS8daCK7M=
+	b=VtmuT9p1NfaFzqloMlDDhufKg5UDj6F/FHQx8s6C6/hEjMxQk+nDC/l/+R2I+C+Hz
+	 jDqcNmAsdoxw1+gg/LbbGpCsznLAW9dP7u3/3MyjmQ60KPtOT4HYPqL58diGb12VeO
+	 C++qPEfy2YcZNEgiouyzQ2OfeqajU3Huj04OqmFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732660AbfIHMvc (ORCPT
+        id S1732686AbfIHMvg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:51:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42718 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:51:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732577AbfIHMvW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:51:22 -0400
+        id S1732615AbfIHMv1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:51:27 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 709A320863;
-        Sun,  8 Sep 2019 12:51:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C4A2218AC;
+        Sun,  8 Sep 2019 12:51:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567947081;
-        bh=1HgWfFEiXK+kna90PfsnfcU1m1Ld0CmnpIk7xow7eLQ=;
+        s=default; t=1567947087;
+        bh=l2YNntziq5/IXjI2hxmN5NXKaQAoKbhgICVAzS5Y+CM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rsRZtJTgB4xE8Hdqw0Au8OZGTd9V7HWi5s0eYBWaCF219DrOQx1cDwyY+qR6OdgJ7
-         Q/0gViy7PS6LPGzcryvEc9thVYPtzPA309o8ewXhykBcgYRupOdUTXz+CtFR67FCAN
-         dbIb9gmR9jxjBijQxE8IzGHjj+F31O5MQXSflOhk=
+        b=I5n9xi+BI24PLCGydYhBoeEgPSctlt6He3El4rr/WhlmX4BB+ghUWsQWSv3bLpenl
+         Qu+tOy67IMFabdkzW4yVwtW0/h3LpJlMEXq8Bdr+TYe7iDisgfW8ZZgMT3XHdlQ7pB
+         /9Be6D69pL09o3CzlyCFDZpP+TQfzwUxNO1Xtjlg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Leandro Dorileo <leandro.maciel.dorileo@intel.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
         Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 12/94] taprio: Fix kernel panic in taprio_destroy
-Date:   Sun,  8 Sep 2019 13:41:08 +0100
-Message-Id: <20190908121150.784656515@linuxfoundation.org>
+Subject: [PATCH 5.2 14/94] net/sched: cbs: Set default link speed to 10 Mbps in cbs_set_port_rate
+Date:   Sun,  8 Sep 2019 13:41:10 +0100
+Message-Id: <20190908121150.841099193@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
 References: <20190908121150.420989666@linuxfoundation.org>
@@ -64,52 +64,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Vladimir Oltean <olteanv@gmail.com>
 
-taprio_init may fail earlier than this line:
-
-	list_add(&q->taprio_list, &taprio_list);
-
-i.e. due to the net device not being multi queue.
-
-Attempting to remove q from the global taprio_list when it is not part
-of it will result in a kernel panic.
-
-Fix it by matching list_add and list_del better to one another in the
-order of operations. This way we can keep the deletion unconditional
-and with lower complexity - O(1).
+The discussion to be made is absolutely the same as in the case of
+previous patch ("taprio: Set default link speed to 10 Mbps in
+taprio_set_picos_per_byte"). Nothing is lost when setting a default.
 
 Cc: Leandro Dorileo <leandro.maciel.dorileo@intel.com>
-Fixes: 7b9eba7ba0c1 ("net/sched: taprio: fix picos_per_byte miscalculation")
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+Fixes: e0a7683d30e9 ("net/sched: cbs: fix port_rate miscalculation")
 Acked-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/sch_taprio.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ net/sched/sch_cbs.c |   19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
---- a/net/sched/sch_taprio.c
-+++ b/net/sched/sch_taprio.c
-@@ -903,6 +903,10 @@ static int taprio_init(struct Qdisc *sch
- 	 */
- 	q->clockid = -1;
+--- a/net/sched/sch_cbs.c
++++ b/net/sched/sch_cbs.c
+@@ -181,11 +181,6 @@ static struct sk_buff *cbs_dequeue_soft(
+ 	s64 credits;
+ 	int len;
  
-+	spin_lock(&taprio_list_lock);
-+	list_add(&q->taprio_list, &taprio_list);
-+	spin_unlock(&taprio_list_lock);
-+
- 	if (sch->parent != TC_H_ROOT)
- 		return -EOPNOTSUPP;
- 
-@@ -920,10 +924,6 @@ static int taprio_init(struct Qdisc *sch
- 	if (!opt)
- 		return -EINVAL;
- 
--	spin_lock(&taprio_list_lock);
--	list_add(&q->taprio_list, &taprio_list);
--	spin_unlock(&taprio_list_lock);
+-	if (atomic64_read(&q->port_rate) == -1) {
+-		WARN_ONCE(1, "cbs: dequeue() called with unknown port rate.");
+-		return NULL;
+-	}
 -
- 	for (i = 0; i < dev->num_tx_queues; i++) {
- 		struct netdev_queue *dev_queue;
- 		struct Qdisc *qdisc;
+ 	if (q->credits < 0) {
+ 		credits = timediff_to_credits(now - q->last, q->idleslope);
+ 
+@@ -303,11 +298,19 @@ static int cbs_enable_offload(struct net
+ static void cbs_set_port_rate(struct net_device *dev, struct cbs_sched_data *q)
+ {
+ 	struct ethtool_link_ksettings ecmd;
++	int speed = SPEED_10;
+ 	int port_rate = -1;
++	int err;
++
++	err = __ethtool_get_link_ksettings(dev, &ecmd);
++	if (err < 0)
++		goto skip;
++
++	if (ecmd.base.speed != SPEED_UNKNOWN)
++		speed = ecmd.base.speed;
+ 
+-	if (!__ethtool_get_link_ksettings(dev, &ecmd) &&
+-	    ecmd.base.speed != SPEED_UNKNOWN)
+-		port_rate = ecmd.base.speed * 1000 * BYTES_PER_KBIT;
++skip:
++	port_rate = speed * 1000 * BYTES_PER_KBIT;
+ 
+ 	atomic64_set(&q->port_rate, port_rate);
+ 	netdev_dbg(dev, "cbs: set %s's port_rate to: %lld, linkspeed: %d\n",
 
 
