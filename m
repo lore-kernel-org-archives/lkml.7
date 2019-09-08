@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF56C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AEE8C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 995C120863
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34F66218AC
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:51:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947061;
-	bh=A4ZmiyPIF1uZo86eOM9WHNPb7h48PAF4MTOpjvOFQf0=;
+	s=default; t=1567947066;
+	bh=ACc+YmBwGbHCLj2cy/Y2CoS3DCdMEMMLQoOqdBRoTdU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NRkWwtNbRCix348RNpeV9HH3n4TKERyxgZ3O/YfEe9UBIqXRuXB0gP74ChvN0FC/f
-	 KnWibWBSOnX7lxI4YdWqPGR2u/ojQ8/xFWSVS9b4i8Shd9ULn4FUxJc7l4BtFUvvwF
-	 BcSPbliI+SFuFJXjZGFojPs0sXh+7IIIkb59uDDU=
+	b=sAXTJhOSsTPulvsKJCA6kh1VmvS7O80zVFBpyTSBNxKmu+fg/IPmzipSYf0TJcbHw
+	 QxKKeKD79vNriNwRuSbZ2V+3OkUX1h4gSToUSoR35sJgo4b3oW19ZQMyWKq+S3B72G
+	 hqNLhKfBSm1zw9RAw8nvcyieyETsrH9HAlEp1Bws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732421AbfIHMvA (ORCPT
+        id S1732446AbfIHMvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:51:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42128 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:51:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732388AbfIHMu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:50:56 -0400
+        id S1732405AbfIHMvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:51:00 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63EB120863;
-        Sun,  8 Sep 2019 12:50:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00E8920863;
+        Sun,  8 Sep 2019 12:50:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567947055;
-        bh=A4ZmiyPIF1uZo86eOM9WHNPb7h48PAF4MTOpjvOFQf0=;
+        s=default; t=1567947058;
+        bh=ACc+YmBwGbHCLj2cy/Y2CoS3DCdMEMMLQoOqdBRoTdU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ByJrTQ6XmZdIKlk89PFKFUIXmiOpZ2kBABBvk+YMwIq3EeDjU2lgB/0bTBW0LFBfw
-         zkVo2MVH5UFlhag9lkwTlUjgJoS5y8AXPwdmzTqb2mHSxWE10EN26GfauSlOAntUTE
-         mRKBAZIqboJoEBa0ONgL1FZfoFnGggePQ76fd6sw=
+        b=npPJHzgBqA8g6GLeLfwnXO3/Sod+GZPpnOfJasKY8GoXz7j5ShEfY0QiqNIaKuq/Z
+         zXzl0sxl/JFA8VKox/XrRzxy2eMnsWsszieCqIZxKgiFCEV3DwAuZ9TI0B+O88ZAgI
+         KJrW84BssZunLd5P5tlb8fg/0QPJrhuma4wHpAds=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Alexandre Courbot <acourbot@chromium.org>,
-        CK Hu <ck.hu@mediatek.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 43/94] drm/mediatek: use correct device to import PRIME buffers
-Date:   Sun,  8 Sep 2019 13:41:39 +0100
-Message-Id: <20190908121151.671441758@linuxfoundation.org>
+        Tomasz Figa <tfiga@chromium.org>, CK Hu <ck.hu@mediatek.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 44/94] drm/mediatek: set DMA max segment size
+Date:   Sun,  8 Sep 2019 13:41:40 +0100
+Message-Id: <20190908121151.699854408@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
 References: <20190908121150.420989666@linuxfoundation.org>
@@ -59,52 +60,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4c6f3196e6ea111c456c6086dc3f57d4706b0b2d ]
+[ Upstream commit 070955558e820b9a89c570b91b1f21762f62b288 ]
 
-PRIME buffers should be imported using the DMA device. To this end, use
-a custom import function that mimics drm_gem_prime_import_dev(), but
-passes the correct device.
+This driver requires imported PRIME buffers to appear contiguously in
+its IO address space. Make sure this is the case by setting the maximum
+DMA segment size to a more suitable value than the default 64KB.
 
-Fixes: 119f5173628aa ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
 Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
+Reviewed-by: Tomasz Figa <tfiga@chromium.org>
 Signed-off-by: CK Hu <ck.hu@mediatek.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_drv.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c | 35 ++++++++++++++++++++++++--
+ drivers/gpu/drm/mediatek/mtk_drm_drv.h |  2 ++
+ 2 files changed, 35 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-index 95fdbd0fbcace..8b18a00a58c7e 100644
+index 8b18a00a58c7e..c021d4c8324f5 100644
 --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
 +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-@@ -320,6 +320,18 @@ static const struct file_operations mtk_drm_fops = {
- 	.compat_ioctl = drm_compat_ioctl,
+@@ -213,6 +213,7 @@ static int mtk_drm_kms_init(struct drm_device *drm)
+ 	struct mtk_drm_private *private = drm->dev_private;
+ 	struct platform_device *pdev;
+ 	struct device_node *np;
++	struct device *dma_dev;
+ 	int ret;
+ 
+ 	if (!iommu_present(&platform_bus_type))
+@@ -275,7 +276,29 @@ static int mtk_drm_kms_init(struct drm_device *drm)
+ 		goto err_component_unbind;
+ 	}
+ 
+-	private->dma_dev = &pdev->dev;
++	dma_dev = &pdev->dev;
++	private->dma_dev = dma_dev;
++
++	/*
++	 * Configure the DMA segment size to make sure we get contiguous IOVA
++	 * when importing PRIME buffers.
++	 */
++	if (!dma_dev->dma_parms) {
++		private->dma_parms_allocated = true;
++		dma_dev->dma_parms =
++			devm_kzalloc(drm->dev, sizeof(*dma_dev->dma_parms),
++				     GFP_KERNEL);
++	}
++	if (!dma_dev->dma_parms) {
++		ret = -ENOMEM;
++		goto err_component_unbind;
++	}
++
++	ret = dma_set_max_seg_size(dma_dev, (unsigned int)DMA_BIT_MASK(32));
++	if (ret) {
++		dev_err(dma_dev, "Failed to set DMA segment size\n");
++		goto err_unset_dma_parms;
++	}
+ 
+ 	/*
+ 	 * We don't use the drm_irq_install() helpers provided by the DRM
+@@ -285,13 +308,16 @@ static int mtk_drm_kms_init(struct drm_device *drm)
+ 	drm->irq_enabled = true;
+ 	ret = drm_vblank_init(drm, MAX_CRTC);
+ 	if (ret < 0)
+-		goto err_component_unbind;
++		goto err_unset_dma_parms;
+ 
+ 	drm_kms_helper_poll_init(drm);
+ 	drm_mode_config_reset(drm);
+ 
+ 	return 0;
+ 
++err_unset_dma_parms:
++	if (private->dma_parms_allocated)
++		dma_dev->dma_parms = NULL;
+ err_component_unbind:
+ 	component_unbind_all(drm->dev, drm);
+ err_config_cleanup:
+@@ -302,9 +328,14 @@ err_config_cleanup:
+ 
+ static void mtk_drm_kms_deinit(struct drm_device *drm)
+ {
++	struct mtk_drm_private *private = drm->dev_private;
++
+ 	drm_kms_helper_poll_fini(drm);
+ 	drm_atomic_helper_shutdown(drm);
+ 
++	if (private->dma_parms_allocated)
++		private->dma_dev->dma_parms = NULL;
++
+ 	component_unbind_all(drm->dev, drm);
+ 	drm_mode_config_cleanup(drm);
+ }
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.h b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
+index 598ff3e704465..e03fea12ff598 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_drv.h
++++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
+@@ -51,6 +51,8 @@ struct mtk_drm_private {
+ 	} commit;
+ 
+ 	struct drm_atomic_state *suspend_state;
++
++	bool dma_parms_allocated;
  };
  
-+/*
-+ * We need to override this because the device used to import the memory is
-+ * not dev->dev, as drm_gem_prime_import() expects.
-+ */
-+struct drm_gem_object *mtk_drm_gem_prime_import(struct drm_device *dev,
-+						struct dma_buf *dma_buf)
-+{
-+	struct mtk_drm_private *private = dev->dev_private;
-+
-+	return drm_gem_prime_import_dev(dev, dma_buf, private->dma_dev);
-+}
-+
- static struct drm_driver mtk_drm_driver = {
- 	.driver_features = DRIVER_MODESET | DRIVER_GEM | DRIVER_PRIME |
- 			   DRIVER_ATOMIC,
-@@ -331,7 +343,7 @@ static struct drm_driver mtk_drm_driver = {
- 	.prime_handle_to_fd = drm_gem_prime_handle_to_fd,
- 	.prime_fd_to_handle = drm_gem_prime_fd_to_handle,
- 	.gem_prime_export = drm_gem_prime_export,
--	.gem_prime_import = drm_gem_prime_import,
-+	.gem_prime_import = mtk_drm_gem_prime_import,
- 	.gem_prime_get_sg_table = mtk_gem_prime_get_sg_table,
- 	.gem_prime_import_sg_table = mtk_gem_prime_import_sg_table,
- 	.gem_prime_mmap = mtk_drm_gem_mmap_buf,
+ extern struct platform_driver mtk_ddp_driver;
 -- 
 2.20.1
 
