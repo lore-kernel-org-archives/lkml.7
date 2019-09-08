@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F588C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FDB9C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2EA4216C8
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:44:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A75B2081B
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:44:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946646;
-	bh=WUYooGrCEDe8VW9BAEf19OtWWMbZj/Ab7oU1AJQaYIA=;
+	s=default; t=1567946648;
+	bh=HM9I2ffD9LQJGexsoxHofaVsblIDD/6Fu2IluB17Fco=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MIu0d3LHJmYvOE/ZOmJKKMQ7mazGHpxlCSu6Y4esPhgPtsKtHFvZ0LkQzzm/h14vh
-	 9xZaGMN+rBgxlLUsUkZX64PmShh7RR90ww7SHtwlnrN5BowApd+uKJuH+rjG1QPrUb
-	 9MzqL1on8jwyllRAkvkvMNLChOk2Md06o0NdEOwI=
+	b=k+KrhUTxAnJ5P2pPOzodGLJbJndtRiWhx16cp1hHNbs+t/bA/nJqrWJzFm6M8VgAu
+	 arBJrM55dLgvuz+VigCapeUyUWpgELkS6Ns0OPWfBtm0soJV+6L1nGg5zYZQun9FCw
+	 GIBwYg17BB41QC3RB9dprgr4qfhi3mnZ/7zqZLo4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729685AbfIHMoE (ORCPT
+        id S1729698AbfIHMoH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:44:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58414 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:44:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729665AbfIHMoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:44:02 -0400
+        id S1729665AbfIHMoF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:44:05 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17F9D218AE;
-        Sun,  8 Sep 2019 12:44:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B22B32081B;
+        Sun,  8 Sep 2019 12:44:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946641;
-        bh=WUYooGrCEDe8VW9BAEf19OtWWMbZj/Ab7oU1AJQaYIA=;
+        s=default; t=1567946644;
+        bh=HM9I2ffD9LQJGexsoxHofaVsblIDD/6Fu2IluB17Fco=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZH8lsSN7RV2T5wt7Jc9ko2fjOoldq7er2rlif9tkO+pSrfCzF95BUJ7uirZegvqRM
-         p3m4CZUYyks/e16uIZP58Wsv5Y85lEpsrV2DPobk2LpNPQOnMBcx3MOxdXL0mW064z
-         NapVhZAPuyCufIH5PLJaJyIEDW2ExAn5QGl20Qy8=
+        b=kaBpULwFupqoa9dQmEIqsJjQfCMzx42P7IxDhUXTtOgY7cyz0KJ/OqXDZI3qyBf1G
+         XHZJ0NQrNmkY+cDU+E1XpHGPEt7kpQ6T4K1BFruVhEBisUoXjQCQkdIoWC03hJT1lR
+         8n90SHqYU0DAprmr9XIXk+ZMr0Bh7xxuauj35464=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
+        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 12/26] Tools: hv: kvp: eliminate may be used uninitialized warning
-Date:   Sun,  8 Sep 2019 13:41:51 +0100
-Message-Id: <20190908121103.079450650@linuxfoundation.org>
+Subject: [PATCH 4.9 13/26] IB/mlx4: Fix memory leaks
+Date:   Sun,  8 Sep 2019 13:41:52 +0100
+Message-Id: <20190908121103.480232305@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121057.216802689@linuxfoundation.org>
 References: <20190908121057.216802689@linuxfoundation.org>
@@ -59,38 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 89eb4d8d25722a0a0194cf7fa47ba602e32a6da7 ]
+[ Upstream commit 5c1baaa82cea2c815a5180ded402a7cd455d1810 ]
 
-When building hv_kvp_daemon GCC-8.3 complains:
+In mlx4_ib_alloc_pv_bufs(), 'tun_qp->tx_ring' is allocated through
+kcalloc(). However, it is not always deallocated in the following execution
+if an error occurs, leading to memory leaks. To fix this issue, free
+'tun_qp->tx_ring' whenever an error occurs.
 
-hv_kvp_daemon.c: In function ‘kvp_get_ip_info.constprop’:
-hv_kvp_daemon.c:812:30: warning: ‘ip_buffer’ may be used uninitialized in this function [-Wmaybe-uninitialized]
-  struct hv_kvp_ipaddr_value *ip_buffer;
-
-this seems to be a false positive: we only use ip_buffer when
-op == KVP_OP_GET_IP_INFO and it is only unset when op == KVP_OP_ENUMERATE.
-
-Silence the warning by initializing ip_buffer to NULL.
-
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Acked-by: Leon Romanovsky <leonro@mellanox.com>
+Link: https://lore.kernel.org/r/1566159781-4642-1-git-send-email-wenwen@cs.uga.edu
+Signed-off-by: Doug Ledford <dledford@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/hv/hv_kvp_daemon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/hw/mlx4/mad.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
-index fffc7c4184599..834008639c4bb 100644
---- a/tools/hv/hv_kvp_daemon.c
-+++ b/tools/hv/hv_kvp_daemon.c
-@@ -878,7 +878,7 @@ kvp_get_ip_info(int family, char *if_name, int op,
- 	int sn_offset = 0;
- 	int error = 0;
- 	char *buffer;
--	struct hv_kvp_ipaddr_value *ip_buffer;
-+	struct hv_kvp_ipaddr_value *ip_buffer = NULL;
- 	char cidr_mask[5]; /* /xyz */
- 	int weight;
- 	int i;
+diff --git a/drivers/infiniband/hw/mlx4/mad.c b/drivers/infiniband/hw/mlx4/mad.c
+index d9323d7c479c3..f32ffd74ec476 100644
+--- a/drivers/infiniband/hw/mlx4/mad.c
++++ b/drivers/infiniband/hw/mlx4/mad.c
+@@ -1643,8 +1643,6 @@ tx_err:
+ 				    tx_buf_size, DMA_TO_DEVICE);
+ 		kfree(tun_qp->tx_ring[i].buf.addr);
+ 	}
+-	kfree(tun_qp->tx_ring);
+-	tun_qp->tx_ring = NULL;
+ 	i = MLX4_NUM_TUNNEL_BUFS;
+ err:
+ 	while (i > 0) {
+@@ -1653,6 +1651,8 @@ err:
+ 				    rx_buf_size, DMA_FROM_DEVICE);
+ 		kfree(tun_qp->ring[i].addr);
+ 	}
++	kfree(tun_qp->tx_ring);
++	tun_qp->tx_ring = NULL;
+ 	kfree(tun_qp->ring);
+ 	tun_qp->ring = NULL;
+ 	return -ENOMEM;
 -- 
 2.20.1
 
