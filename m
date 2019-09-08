@@ -2,287 +2,112 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE120C4360D
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89CD7C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEAD720854
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:43:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EC04207FC
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:46:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="nG6KyFZy"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="VnkAPl5V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbfIHNn3 (ORCPT
+        id S1728605AbfIHNqG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 09:43:29 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:33922 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728335AbfIHNnL (ORCPT
+        Sun, 8 Sep 2019 09:46:06 -0400
+Received: from mail.efficios.com ([167.114.142.138]:35956 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbfIHNqG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 09:43:11 -0400
-Received: by mail-wm1-f68.google.com with SMTP id y135so10877386wmc.1
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 06:43:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=GfU3+s0+ry1VaN8+GjjuqfUgRel0oGwdsijTY+FcD+E=;
-        b=nG6KyFZyzSd3lTnGM5OP0RP5rl1BXxFirerAxOlFlCgvkh9kgICw0TRsZNyrZG29rv
-         U50N5G0BoU62C/44fOS/2xXU9rtB9fYAQWqPxvprWVYUVpRN+qqdcnldv4sOj4FHRts+
-         Trz0KUu8QEiAdo9QNqxJ3X40hDGBW2E0pDWmNj3oZvQpwghUZA2SZAb4vrJ8T5S4nCdD
-         wcgN+MLFNgeSK24EQk6mrM+2bGQaVn3uSJR1uZeJxFShK/X4MKZdBJMs8moCLhj7PXuH
-         eLPQP1KEVSX+WZj+66OObsiGqJLAO3IPYgBqccEde9zB7MuyRFIXWb5JS5/ozFowccea
-         kW3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=GfU3+s0+ry1VaN8+GjjuqfUgRel0oGwdsijTY+FcD+E=;
-        b=IJRmzjgebjZ8/Y/5FiK6afPHWCvopSpwK6FdIkTf1M9uHDOF84ubYQfMWbGm9c5/SO
-         +tIqy8e/FbAJJOW+5nM0e3/WrXQ3/suJ+m4rlzH05JL1i0VoSHqlS6YI0KNCF02Xe7cf
-         V2w0A6fNRRGopLcp6z/sQQZaNv39wZOkonh6JyECSFta6JVMnRG11h0t3xm9+Kp1CSon
-         mZwT8VJoX/PS7qL4RCufvO2WKgUOIsMMTcmHBFslq73vidspL3Vr9yWKgl5gRs31RlCP
-         jiTM0QjIZgSAOvYlIPx8gBQnyUXW4vW8FqPUEa5rYRvKRmj0H/SPp3afXDl6JhB/czcM
-         u2Qg==
-X-Gm-Message-State: APjAAAV3ZBbupsqDxzlEoQyIgvuaqT43HORAzQ6i+eBfqOynQ+L5CXO9
-        EMF3/ObH1cDaUpKdkd9DIIEhqQ==
-X-Google-Smtp-Source: APXvYqzndw8eyWZ7iSFESAG+kDNagu9LNZEB3kEthX6tLxpNMOHYN2mWWFFVMXcjejH6Fuzlt9wymA==
-X-Received: by 2002:a1c:4082:: with SMTP id n124mr15773002wma.154.1567950188213;
-        Sun, 08 Sep 2019 06:43:08 -0700 (PDT)
-Received: from localhost.localdomain ([51.15.160.169])
-        by smtp.gmail.com with ESMTPSA id t203sm14313902wmf.42.2019.09.08.06.43.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 08 Sep 2019 06:43:07 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     khilman@baylibre.com, bhelgaas@google.com,
-        lorenzo.pieralisi@arm.com, yue.wang@Amlogic.com, kishon@ti.com
-Cc:     repk@triplefau.lt, Neil Armstrong <narmstrong@baylibre.com>,
-        maz@kernel.org, linux-amlogic@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/6] PCI: amlogic: meson: Add support for G12A
-Date:   Sun,  8 Sep 2019 13:42:55 +0000
-Message-Id: <1567950178-4466-4-git-send-email-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1567950178-4466-1-git-send-email-narmstrong@baylibre.com>
-References: <1567950178-4466-1-git-send-email-narmstrong@baylibre.com>
+        Sun, 8 Sep 2019 09:46:06 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id F2997BB6E6;
+        Sun,  8 Sep 2019 09:46:04 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id SDwi9Cc2bS1S; Sun,  8 Sep 2019 09:46:04 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 91283BB6D7;
+        Sun,  8 Sep 2019 09:46:04 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 91283BB6D7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1567950364;
+        bh=RtYW8mNlt4nyumfk2QzAyZTi27oLj8xDc9s9E18+RQc=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=VnkAPl5VLTdBfJxPX5n0N29js1k0OuylSmcf5ZTg5wC3Z16IrvE1dl7ocTrczZxG1
+         9H8dScuRSKmZmVqCNKFldubRgnuGJuHDyDxt4EUflT5wK/pe2RXC0z7Pvb2d5aTbZD
+         RgMXnmjt8DXLqfCZtbcaEkybnKEBYy6wqfWVlb2Nd8VQ0r70z4K3EHPLJjobKwJuTG
+         jp9tytdZEJeqCG4QvOxzFYyNJytaxfEkDjyZVHCcnRJK7m18S5r0UJl4X+95D4cCfb
+         lTmKb5jk17DhvMMA/92ql+jmTG6o0oPIY8Uy/+dZGgNz0bAiK1/ebBGgkSMc7RQZJY
+         X5pjsKoQw8nyg==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id 8R2v8rLpzIBE; Sun,  8 Sep 2019 09:46:04 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 73183BB6CC;
+        Sun,  8 Sep 2019 09:46:04 -0400 (EDT)
+Date:   Sun, 8 Sep 2019 09:46:04 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     paulmck <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Russell King, ARM Linux" <linux@armlinux.org.uk>,
+        Chris Metcalf <cmetcalf@ezchip.com>,
+        Chris Lameter <cl@linux.com>, Kirill Tkhai <tkhai@yandex.ru>,
+        Mike Galbraith <efault@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Message-ID: <509773035.243.1567950364367.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20190904111126.GB24568@redhat.com>
+References: <20190903201135.1494-1-mathieu.desnoyers@efficios.com> <20190904111126.GB24568@redhat.com>
+Subject: Re: [RFC PATCH 1/2] Fix: sched/membarrier: p->mm->membarrier_state
+ racy load
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.15_GA_3829 (ZimbraWebClient - FF68 (Linux)/8.8.15_GA_3829)
+Thread-Topic: sched/membarrier: p->mm->membarrier_state racy load
+Thread-Index: hl0su7l7NtggmKLLVhxEGtpIeL4A9A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for the Amlogic G12A SoC using a separate shared PHY.
+----- On Sep 4, 2019, at 12:11 PM, Oleg Nesterov oleg@redhat.com wrote:
 
-This adds support for fetching a PHY phandle and call the PHY init,
-reset and power on/off calls instead of writing in the PHY register or
-toggling the PHY reset line.
+> with or without these changes...
+> 
+> Why do membarrier_register_*_expedited() check get_nr_threads() == 1?
+> This makes no sense to me, atomic_read(mm_users) == 1 should be enough.
+> 
+> 
+> And I am not sure I understand membarrier_mm_sync_core_before_usermode().
+> OK, membarrier_private_expedited() can race with user -> kernel -> user
+> transition, but we do not care unless both user's above have the same mm?
+> Shouldn't membarrier_mm_sync_core_before_usermode() do
+> 
+>	if (current->mm != mm)
+>		return;
+> 
+> at the start to make it more clear and avoid sync_core_before_usermode()
+> if possible?
 
-The MIPI clock is also made optional since it is used for setting up
-the PHY reference clock chared with the DSI controller on AXG.
+I think I missed replying to your email. Indeed, you are right, I've added
+2 cleanup patches taking care of this in my latest round.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/pci/controller/dwc/pci-meson.c | 101 ++++++++++++++++++++-----
- 1 file changed, 84 insertions(+), 17 deletions(-)
+Thanks,
 
-diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
-index ab79990798f8..3fadad381762 100644
---- a/drivers/pci/controller/dwc/pci-meson.c
-+++ b/drivers/pci/controller/dwc/pci-meson.c
-@@ -16,6 +16,7 @@
- #include <linux/reset.h>
- #include <linux/resource.h>
- #include <linux/types.h>
-+#include <linux/phy/phy.h>
- 
- #include "pcie-designware.h"
- 
-@@ -96,12 +97,18 @@ struct meson_pcie_rc_reset {
- 	struct reset_control *apb;
- };
- 
-+struct meson_pcie_param {
-+	bool has_shared_phy;
-+};
-+
- struct meson_pcie {
- 	struct dw_pcie pci;
- 	struct meson_pcie_mem_res mem_res;
- 	struct meson_pcie_clk_res clk_res;
- 	struct meson_pcie_rc_reset mrst;
- 	struct gpio_desc *reset_gpio;
-+	struct phy *phy;
-+	const struct meson_pcie_param *param;
- };
- 
- static struct reset_control *meson_pcie_get_reset(struct meson_pcie *mp,
-@@ -123,10 +130,12 @@ static int meson_pcie_get_resets(struct meson_pcie *mp)
- {
- 	struct meson_pcie_rc_reset *mrst = &mp->mrst;
- 
--	mrst->phy = meson_pcie_get_reset(mp, "phy", PCIE_SHARED_RESET);
--	if (IS_ERR(mrst->phy))
--		return PTR_ERR(mrst->phy);
--	reset_control_deassert(mrst->phy);
-+	if (!mp->param->has_shared_phy) {
-+		mrst->phy = meson_pcie_get_reset(mp, "phy", PCIE_SHARED_RESET);
-+		if (IS_ERR(mrst->phy))
-+			return PTR_ERR(mrst->phy);
-+		reset_control_deassert(mrst->phy);
-+	}
- 
- 	mrst->port = meson_pcie_get_reset(mp, "port", PCIE_NORMAL_RESET);
- 	if (IS_ERR(mrst->port))
-@@ -180,6 +189,9 @@ static int meson_pcie_get_mems(struct platform_device *pdev,
- 	if (IS_ERR(mp->mem_res.cfg_base))
- 		return PTR_ERR(mp->mem_res.cfg_base);
- 
-+	if (mp->param->has_shared_phy)
-+		return 0;
-+
- 	/* Meson SoC has two PCI controllers use same phy register*/
- 	mp->mem_res.phy_base = meson_pcie_get_mem_shared(pdev, mp, "phy");
- 	if (IS_ERR(mp->mem_res.phy_base))
-@@ -188,19 +200,33 @@ static int meson_pcie_get_mems(struct platform_device *pdev,
- 	return 0;
- }
- 
--static void meson_pcie_power_on(struct meson_pcie *mp)
-+static int meson_pcie_power_on(struct meson_pcie *mp)
- {
--	writel(MESON_PCIE_PHY_POWERUP, mp->mem_res.phy_base);
-+	int ret = 0;
-+
-+	if (mp->param->has_shared_phy)
-+		ret = phy_power_on(mp->phy);
-+	else
-+		writel(MESON_PCIE_PHY_POWERUP, mp->mem_res.phy_base);
-+
-+	return ret;
- }
- 
--static void meson_pcie_reset(struct meson_pcie *mp)
-+static int meson_pcie_reset(struct meson_pcie *mp)
- {
- 	struct meson_pcie_rc_reset *mrst = &mp->mrst;
--
--	reset_control_assert(mrst->phy);
--	udelay(PCIE_RESET_DELAY);
--	reset_control_deassert(mrst->phy);
--	udelay(PCIE_RESET_DELAY);
-+	int ret = 0;
-+
-+	if (mp->param->has_shared_phy) {
-+		ret = phy_reset(mp->phy);
-+		if (ret)
-+			return ret;
-+	} else {
-+		reset_control_assert(mrst->phy);
-+		udelay(PCIE_RESET_DELAY);
-+		reset_control_deassert(mrst->phy);
-+		udelay(PCIE_RESET_DELAY);
-+	}
- 
- 	reset_control_assert(mrst->port);
- 	reset_control_assert(mrst->apb);
-@@ -208,6 +234,8 @@ static void meson_pcie_reset(struct meson_pcie *mp)
- 	reset_control_deassert(mrst->port);
- 	reset_control_deassert(mrst->apb);
- 	udelay(PCIE_RESET_DELAY);
-+
-+	return 0;
- }
- 
- static inline struct clk *meson_pcie_probe_clock(struct device *dev,
-@@ -250,9 +278,11 @@ static int meson_pcie_probe_clocks(struct meson_pcie *mp)
- 	if (IS_ERR(res->port_clk))
- 		return PTR_ERR(res->port_clk);
- 
--	res->mipi_gate = meson_pcie_probe_clock(dev, "mipi", 0);
--	if (IS_ERR(res->mipi_gate))
--		return PTR_ERR(res->mipi_gate);
-+	if (!mp->param->has_shared_phy) {
-+		res->mipi_gate = meson_pcie_probe_clock(dev, "mipi", 0);
-+		if (IS_ERR(res->mipi_gate))
-+			return PTR_ERR(res->mipi_gate);
-+	}
- 
- 	res->general_clk = meson_pcie_probe_clock(dev, "general", 0);
- 	if (IS_ERR(res->general_clk))
-@@ -524,6 +554,7 @@ static const struct dw_pcie_ops dw_pcie_ops = {
- 
- static int meson_pcie_probe(struct platform_device *pdev)
- {
-+	const struct meson_pcie_param *match_data;
- 	struct device *dev = &pdev->dev;
- 	struct dw_pcie *pci;
- 	struct meson_pcie *mp;
-@@ -537,6 +568,20 @@ static int meson_pcie_probe(struct platform_device *pdev)
- 	pci->dev = dev;
- 	pci->ops = &dw_pcie_ops;
- 
-+	match_data = of_device_get_match_data(dev);
-+	if (!match_data) {
-+		dev_err(dev, "failed to get match data\n");
-+		return -ENODEV;
-+	}
-+	mp->param = match_data;
-+
-+	if (mp->param->has_shared_phy) {
-+		mp->phy = devm_phy_get(dev, "pcie");
-+		if (IS_ERR(mp->phy)) {
-+			return PTR_ERR(mp->phy);
-+		}
-+	}
-+
- 	mp->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
- 	if (IS_ERR(mp->reset_gpio)) {
- 		dev_err(dev, "get reset gpio failed\n");
-@@ -555,8 +600,17 @@ static int meson_pcie_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	meson_pcie_power_on(mp);
--	meson_pcie_reset(mp);
-+	ret = meson_pcie_power_on(mp);
-+	if (ret) {
-+		dev_err(dev, "phy power on failed, %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = meson_pcie_reset(mp);
-+	if (ret) {
-+		dev_err(dev, "reset failed, %d\n", ret);
-+		return ret;
-+	}
- 
- 	ret = meson_pcie_probe_clocks(mp);
- 	if (ret) {
-@@ -575,9 +629,22 @@ static int meson_pcie_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static struct meson_pcie_param meson_pcie_axg_param = {
-+	.has_shared_phy = false,
-+};
-+
-+static struct meson_pcie_param meson_pcie_g12a_param = {
-+	.has_shared_phy = true,
-+};
-+
- static const struct of_device_id meson_pcie_of_match[] = {
- 	{
- 		.compatible = "amlogic,axg-pcie",
-+		.data = &meson_pcie_axg_param,
-+	},
-+	{
-+		.compatible = "amlogic,g12a-pcie",
-+		.data = &meson_pcie_g12a_param,
- 	},
- 	{},
- };
+Mathieu
+
+
 -- 
-2.17.1
-
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
