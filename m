@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC98C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FBCC4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 037B821920
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BE7221920
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:52:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947152;
-	bh=9/U4RluLwjBShHS6HkVe0tSSUjQVbvUK7awAmo+VLKY=;
+	s=default; t=1567947156;
+	bh=kVhIA2VRlTtUs/TO0Zv+rRP6M6nsaEFIOYgZBjeOGxM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j0qO9bczKljpl/K9gqbmqxRZYFqgrWcMnFyiMC3ie5Sp5h8MmnqiPu4ie5eQqMNbP
-	 H+2hmgQuyIxqP6ZmB4lLINZuZOfIfEm7KORWkW+D/XXlpay91S8CenCa3C3BRuVQx/
-	 LqKDw3zaNxpC9NL+w0MLdicsD1bdslLwBh30QIEE=
+	b=ekfC/D48hMMa8rQvq+HBFHqYRQ4PXaCCZV3tsTzY/NLvLPc1cHzJeCmqqP82ovKmj
+	 4TjKmTD++GepPG1Sd21r0aAITjdT9TRNWs+/ZJIJ0Ob8lRSIs0WtOnjsczyuOHGcNL
+	 tQzFygK5S/W8qZXD4CYEvBwHiKgk8JGbkP7kX2cE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733066AbfIHMwa (ORCPT
+        id S1733119AbfIHMwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:52:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44736 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:52:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733013AbfIHMw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:52:28 -0400
+        id S1733079AbfIHMwc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:52:32 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B9BC2082C;
-        Sun,  8 Sep 2019 12:52:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A06772082C;
+        Sun,  8 Sep 2019 12:52:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567947147;
-        bh=9/U4RluLwjBShHS6HkVe0tSSUjQVbvUK7awAmo+VLKY=;
+        s=default; t=1567947152;
+        bh=kVhIA2VRlTtUs/TO0Zv+rRP6M6nsaEFIOYgZBjeOGxM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kBS3RmX7ExHuwNJvIhRr09Xh7DM8SWe34toJQO2schG0KDT1UctOJ1wwQj/K5hDtJ
-         03E2HxHNy/X2ira6k6wYVEY+bUzsbKlr0evLVXvm7aTOBAVV1QFjM/gnRUZJfYXcmB
-         IoH8v1eRZOVcKDAX6eqsLMC7qdZ0xuxCbxu0N+Gw=
+        b=NSeFCyHMxJeSXUPb8xEqB5Qr+d7CNLfcNetaTpj2znDYUsfWbkFmGwThU1huLYnyJ
+         w0QkIy5Jj1bCncSrU7CFmb+wqtZYuHd5hEtEsPZapAbjoBSxix/gOl3+AvMDTpn5XX
+         OXhONOqxBiAEenti3fHrrLvwfns3AjI6XxevZulM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Nicolai=20H=C3=A4hnle?= <nicolai.haehnle@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 79/94] drm/amdgpu: prevent memory leaks in AMDGPU_CS ioctl
-Date:   Sun,  8 Sep 2019 13:42:15 +0100
-Message-Id: <20190908121152.696934330@linuxfoundation.org>
+Subject: [PATCH 5.2 54/94] clk: Fix potential NULL dereference in clk_fetch_parent_index()
+Date:   Sun,  8 Sep 2019 13:41:50 +0100
+Message-Id: <20190908121151.983360317@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
 References: <20190908121150.420989666@linuxfoundation.org>
@@ -62,54 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1a701ea924815b0518733aa8d5d05c1f6fa87062 ]
+[ Upstream commit 24876f09a7dfe36a82f53d304d8c1bceb3257a0f ]
 
-Error out if the AMDGPU_CS ioctl is called with multiple SYNCOBJ_OUT and/or
-TIMELINE_SIGNAL chunks, since otherwise the last chunk wins while the
-allocated array as well as the reference counts of sync objects are leaked.
+Don't compare the parent clock name with a NULL name in the
+clk_parent_map. This prevents a kernel crash when passing NULL
+core->parents[i].name to strcmp().
 
-Signed-off-by: Nicolai Hähnle <nicolai.haehnle@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+An example which triggered this is a mux clock with four parents when
+each of them is referenced in the clock driver using
+clk_parent_data.fw_name and then calling clk_set_parent(clk, 3rd_parent)
+on this mux.
+In this case the first parent is also the HW default so
+core->parents[i].hw is populated when the clock is registered. Calling
+clk_set_parent(clk, 3rd_parent) will then go through all parents and
+skip the first parent because it's hw pointer doesn't match. For the
+second parent no hw pointer is cached yet and clk_core_get(core, 1)
+returns a non-matching pointer (which is correct because we are comparing
+the second with the third parent). Comparing the result of
+clk_core_get(core, 2) with the requested parent gives a match. However
+we don't reach this point because right after the clk_core_get(core, 1)
+mismatch the old code tried to !strcmp(parent->name, NULL) (where the
+second argument is actually core->parents[i].name, but that was never
+populated by the clock driver).
+
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Link: https://lkml.kernel.org/r/20190815223155.21384-1-martin.blumenstingl@googlemail.com
+Fixes: fc0c209c147f ("clk: Allow parents to be specified without string names")
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/clk/clk.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
-index fe028561dc0e6..bc40d6eabce7d 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
-@@ -1192,6 +1192,9 @@ static int amdgpu_cs_process_syncobj_out_dep(struct amdgpu_cs_parser *p,
- 	num_deps = chunk->length_dw * 4 /
- 		sizeof(struct drm_amdgpu_cs_chunk_sem);
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index 498cd7bbe8984..3a4961dc58313 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -1657,7 +1657,8 @@ static int clk_fetch_parent_index(struct clk_core *core,
+ 			break;
  
-+	if (p->post_deps)
-+		return -EINVAL;
-+
- 	p->post_deps = kmalloc_array(num_deps, sizeof(*p->post_deps),
- 				     GFP_KERNEL);
- 	p->num_post_deps = 0;
-@@ -1215,8 +1218,7 @@ static int amdgpu_cs_process_syncobj_out_dep(struct amdgpu_cs_parser *p,
+ 		/* Fallback to comparing globally unique names */
+-		if (!strcmp(parent->name, core->parents[i].name))
++		if (core->parents[i].name &&
++		    !strcmp(parent->name, core->parents[i].name))
+ 			break;
+ 	}
  
- 
- static int amdgpu_cs_process_syncobj_timeline_out_dep(struct amdgpu_cs_parser *p,
--						      struct amdgpu_cs_chunk
--						      *chunk)
-+						      struct amdgpu_cs_chunk *chunk)
- {
- 	struct drm_amdgpu_cs_chunk_syncobj *syncobj_deps;
- 	unsigned num_deps;
-@@ -1226,6 +1228,9 @@ static int amdgpu_cs_process_syncobj_timeline_out_dep(struct amdgpu_cs_parser *p
- 	num_deps = chunk->length_dw * 4 /
- 		sizeof(struct drm_amdgpu_cs_chunk_syncobj);
- 
-+	if (p->post_deps)
-+		return -EINVAL;
-+
- 	p->post_deps = kmalloc_array(num_deps, sizeof(*p->post_deps),
- 				     GFP_KERNEL);
- 	p->num_post_deps = 0;
 -- 
 2.20.1
 
