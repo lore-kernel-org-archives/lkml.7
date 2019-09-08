@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 377E6C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4E1C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 125B6218DE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:45:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FB6E218DE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:45:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946732;
-	bh=pUdoNrICP2SZo2LI0cSNdDd/xTZ1ndo1yuzh48q9PEg=;
+	s=default; t=1567946735;
+	bh=l4gihC0EG1LPrmRUkSJRdFlEevjeyYnCovbSKbMjJJo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Iy8VkVePR5a3Qq6M/QK+op0Av8LCRzPrTF1m3juIFE5z1s/+LRLXt2ITo4n6YjVbX
-	 RHjtA4YOhUhyYW9wJtC0E9u/X1DIXue40tFL9HnhP44VJNN41hv37tNn1/lxI/m2G2
-	 aKxMIjb0/ls5RFBWRy+O7nxKW2Zgo4OPxLUJ0oNY=
+	b=hpy9eTCgQIEpYocHi1rNFzff7qBh0UxUZqoLH20hY3vgTd8eqDZMjLRjxZzfYri9J
+	 Hc6LbyXYqClVuvpFoixtdWCQp9gUgYvLCRQZamMGEdXbtzH6BIXqPFFoyReu7y0+Wu
+	 0Eii3xZvZwTQ9aaJ7pMDLjQNbddkAZNdbgxpSYKg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730132AbfIHMpb (ORCPT
+        id S1730146AbfIHMpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:45:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60748 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:45:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730105AbfIHMp1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:45:27 -0400
+        id S1730105AbfIHMpc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:45:32 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4EE4216C8;
-        Sun,  8 Sep 2019 12:45:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3170216C8;
+        Sun,  8 Sep 2019 12:45:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946727;
-        bh=pUdoNrICP2SZo2LI0cSNdDd/xTZ1ndo1yuzh48q9PEg=;
+        s=default; t=1567946732;
+        bh=l4gihC0EG1LPrmRUkSJRdFlEevjeyYnCovbSKbMjJJo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LITkyuu6IO6P4gGBPvLW+wwn3Wi7DjuNudjEqm4bCg9a4MAHm3Y3E8jMnJ3lyLlDS
-         FPO0ABlOQUfGEutevKXFX2/UGFfJkE3ps/AwHph7/jNf4P3Z9dswYNEothHoJIm9/J
-         bmhaX8fZ/ngDIRD8YHoNIyS1CzDAMXKgGXe2HUtw=
+        b=LOaYVji4OwvUzU/+RgqZ7AJCIJBQwq2f0T1v3MVUDZodUG2dDG2q6fUjUFb+OuUtC
+         vv9V7hdYss6BUU9ehadG0HhDZoLf1jvwPvc359SSXnALvoxuKAR//90GTWFjIAg8Lw
+         Jvc0tMlELu6tbZdhXrwD5KTJtN3/ufwaN3l7zp0Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tho Vu <tho.vu.wh@rvc.renesas.com>,
-        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 18/40] ravb: Fix use-after-free ravb_tstamp_skb
-Date:   Sun,  8 Sep 2019 13:41:51 +0100
-Message-Id: <20190908121122.295865967@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 20/40] HID: cp2112: prevent sleeping function called from invalid context
+Date:   Sun,  8 Sep 2019 13:41:53 +0100
+Message-Id: <20190908121122.560928004@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121114.260662089@linuxfoundation.org>
 References: <20190908121114.260662089@linuxfoundation.org>
@@ -62,67 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cfef46d692efd852a0da6803f920cc756eea2855 ]
+[ Upstream commit 2d05dba2b25ecb0f8fc3a0b4eb2232da6454a47b ]
 
-When a Tx timestamp is requested, a pointer to the skb is stored in the
-ravb_tstamp_skb struct. This was done without an skb_get. There exists
-the possibility that the skb could be freed by ravb_tx_free (when
-ravb_tx_free is called from ravb_start_xmit) before the timestamp was
-processed, leading to a use-after-free bug.
+When calling request_threaded_irq() with a CP2112, the function
+cp2112_gpio_irq_startup() is called in a IRQ context.
 
-Use skb_get when filling a ravb_tstamp_skb struct, and add appropriate
-frees/consumes when a ravb_tstamp_skb struct is freed.
+Therefore we can not sleep, and we can not call
+cp2112_gpio_direction_input() there.
 
-Fixes: c156633f1353 ("Renesas Ethernet AVB driver proper")
-Signed-off-by: Tho Vu <tho.vu.wh@rvc.renesas.com>
-Signed-off-by: Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Move the call to cp2112_gpio_direction_input() earlier to have a working
+driver.
+
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/renesas/ravb_main.c | 8 ++++++--
+ drivers/hid/hid-cp2112.c | 8 ++++++--
  1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
-index ce79af4a7f6fb..d73617cc3b159 100644
---- a/drivers/net/ethernet/renesas/ravb_main.c
-+++ b/drivers/net/ethernet/renesas/ravb_main.c
-@@ -1,6 +1,6 @@
- /* Renesas Ethernet AVB device driver
-  *
-- * Copyright (C) 2014-2015 Renesas Electronics Corporation
-+ * Copyright (C) 2014-2019 Renesas Electronics Corporation
-  * Copyright (C) 2015 Renesas Solutions Corp.
-  * Copyright (C) 2015-2016 Cogent Embedded, Inc. <source@cogentembedded.com>
-  *
-@@ -513,7 +513,10 @@ static void ravb_get_tx_tstamp(struct net_device *ndev)
- 			kfree(ts_skb);
- 			if (tag == tfa_tag) {
- 				skb_tstamp_tx(skb, &shhwtstamps);
-+				dev_consume_skb_any(skb);
- 				break;
-+			} else {
-+				dev_kfree_skb_any(skb);
- 			}
- 		}
- 		ravb_modify(ndev, TCCR, TCCR_TFR, TCCR_TFR);
-@@ -1576,7 +1579,7 @@ static netdev_tx_t ravb_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 					 DMA_TO_DEVICE);
- 			goto unmap;
- 		}
--		ts_skb->skb = skb;
-+		ts_skb->skb = skb_get(skb);
- 		ts_skb->tag = priv->ts_skb_tag++;
- 		priv->ts_skb_tag &= 0x3ff;
- 		list_add_tail(&ts_skb->list, &priv->ts_skb_list);
-@@ -1704,6 +1707,7 @@ static int ravb_close(struct net_device *ndev)
- 	/* Clear the timestamp list */
- 	list_for_each_entry_safe(ts_skb, ts_skb2, &priv->ts_skb_list, list) {
- 		list_del(&ts_skb->list);
-+		kfree_skb(ts_skb->skb);
- 		kfree(ts_skb);
+diff --git a/drivers/hid/hid-cp2112.c b/drivers/hid/hid-cp2112.c
+index 4e940a096b2ac..abf1079457664 100644
+--- a/drivers/hid/hid-cp2112.c
++++ b/drivers/hid/hid-cp2112.c
+@@ -1149,8 +1149,6 @@ static unsigned int cp2112_gpio_irq_startup(struct irq_data *d)
+ 
+ 	INIT_DELAYED_WORK(&dev->gpio_poll_worker, cp2112_gpio_poll_callback);
+ 
+-	cp2112_gpio_direction_input(gc, d->hwirq);
+-
+ 	if (!dev->gpio_poll) {
+ 		dev->gpio_poll = true;
+ 		schedule_delayed_work(&dev->gpio_poll_worker, 0);
+@@ -1198,6 +1196,12 @@ static int __maybe_unused cp2112_allocate_irq(struct cp2112_device *dev,
+ 		return PTR_ERR(dev->desc[pin]);
  	}
  
++	ret = cp2112_gpio_direction_input(&dev->gc, pin);
++	if (ret < 0) {
++		dev_err(dev->gc.parent, "Failed to set GPIO to input dir\n");
++		goto err_desc;
++	}
++
+ 	ret = gpiochip_lock_as_irq(&dev->gc, pin);
+ 	if (ret) {
+ 		dev_err(dev->gc.parent, "Failed to lock GPIO as interrupt\n");
 -- 
 2.20.1
 
