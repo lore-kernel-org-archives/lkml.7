@@ -2,54 +2,52 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1FEC4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFFC8C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:44:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BED3C21907
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B34A0218DE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:44:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946672;
-	bh=GpRnmNX5Yy8YYLy/7hh6hDMrhJzNRC4rXonoaYC5ipo=;
+	s=default; t=1567946676;
+	bh=qVOrtOdpDjM5Dq9VnccAmG5LI4niAYI3RxO3b0EbaIs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aavffsYnCHgVXhIdKPErtH0eWmfy+67fDTvzTAtOL+G1rzX1W/vQ4aGKv9ehls8QQ
-	 lgAocmOpztO+F+m+2bH9Pj0tRneLt/M0IMfXC6hS+/5ftykyLUtNTSMCCS2hf5jjad
-	 VlsXeaPQ6JnulZA6sLmcLVKuOoKL9BUVMEV86dTs=
+	b=s3UbmWzP4Oa74sA9cBOrIEquRp1xKel3QIMIMnRx4/TWBCZJ26STNj7dWg2JNCaV0
+	 W0QBSgrPBPcUlDW/8ItV3JmbaNBY8e7PLNWn4yZmw/+1lHg99+fSyhFn3q4Qg6/hFa
+	 yrglhplavwEYxRrwHezKbT9ZzvcMbSOI95vkb8nU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729824AbfIHMoc (ORCPT
+        id S1729843AbfIHMog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:44:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59252 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:44:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729789AbfIHMoa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:44:30 -0400
+        id S1729789AbfIHMod (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:44:33 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61DA92196E;
-        Sun,  8 Sep 2019 12:44:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF3CA218DE;
+        Sun,  8 Sep 2019 12:44:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946669;
-        bh=GpRnmNX5Yy8YYLy/7hh6hDMrhJzNRC4rXonoaYC5ipo=;
+        s=default; t=1567946672;
+        bh=qVOrtOdpDjM5Dq9VnccAmG5LI4niAYI3RxO3b0EbaIs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xB5h6NUq4QINrTOjoHZfhapiLGd4IzoIYgDZZkXKqE61SCZsCIbtpJ4VA+YpTE90u
-         jme3Ivb6u+k8hFuR+dkd24yW7NrpUa4BxI8U9UZyAYBNPYLv6bKusQsGiWpTstIYVJ
-         GqLF2YFojreCJB8UZxO3lNOO7zAr3UfA+rlsRxLs=
+        b=fV7JfA4iVcAPxuETP/Tbwkrfrm1wyPTTFa0fKY/9783I9B8WzEZEi9bhsWT/YbJDe
+         bBZNm6YQJ8wjc6FshjfeZ12B/QI1cKxDJ58L6IGDbrRyJ2jXWeA0jofasqh0mBOvLr
+         Yf08lMppwZFNag7X4RVYZOshcAwoYjGgKYDsByJE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Bandan Das <bsd@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 22/26] Revert "x86/apic: Include the LDR when clearing out APIC registers"
-Date:   Sun,  8 Sep 2019 13:42:01 +0100
-Message-Id: <20190908121110.627865125@linuxfoundation.org>
+        stable@vger.kernel.org, Feng Sun <loyou85@gmail.com>,
+        Xiaojun Zhao <xiaojunzhao141@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 23/26] net: fix skb use after free in netpoll
+Date:   Sun,  8 Sep 2019 13:42:02 +0100
+Message-Id: <20190908121110.869208347@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121057.216802689@linuxfoundation.org>
 References: <20190908121057.216802689@linuxfoundation.org>
@@ -62,63 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 950b07c14e8c59444e2359f15fd70ed5112e11a0 ]
+From: Feng Sun <loyou85@gmail.com>
 
-This reverts commit 558682b5291937a70748d36fd9ba757fb25b99ae.
+[ Upstream commit 2c1644cf6d46a8267d79ed95cb9b563839346562 ]
 
-Chris Wilson reports that it breaks his CPU hotplug test scripts.  In
-particular, it breaks offlining and then re-onlining the boot CPU, which
-we treat specially (and the BIOS does too).
+After commit baeababb5b85d5c4e6c917efe2a1504179438d3b
+("tun: return NET_XMIT_DROP for dropped packets"),
+when tun_net_xmit drop packets, it will free skb and return NET_XMIT_DROP,
+netpoll_send_skb_on_dev will run into following use after free cases:
+1. retry netpoll_start_xmit with freed skb;
+2. queue freed skb in npinfo->txq.
+queue_process will also run into use after free case.
 
-The symptoms are that we can offline the CPU, but it then does not come
-back online again:
+hit netpoll_send_skb_on_dev first case with following kernel log:
 
-    smpboot: CPU 0 is now offline
-    smpboot: Booting Node 0 Processor 0 APIC 0x0
-    smpboot: do_boot_cpu failed(-1) to wakeup CPU#0
+[  117.864773] kernel BUG at mm/slub.c:306!
+[  117.864773] invalid opcode: 0000 [#1] SMP PTI
+[  117.864774] CPU: 3 PID: 2627 Comm: loop_printmsg Kdump: loaded Tainted: P           OE     5.3.0-050300rc5-generic #201908182231
+[  117.864775] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
+[  117.864775] RIP: 0010:kmem_cache_free+0x28d/0x2b0
+[  117.864781] Call Trace:
+[  117.864781]  ? tun_net_xmit+0x21c/0x460
+[  117.864781]  kfree_skbmem+0x4e/0x60
+[  117.864782]  kfree_skb+0x3a/0xa0
+[  117.864782]  tun_net_xmit+0x21c/0x460
+[  117.864782]  netpoll_start_xmit+0x11d/0x1b0
+[  117.864788]  netpoll_send_skb_on_dev+0x1b8/0x200
+[  117.864789]  __br_forward+0x1b9/0x1e0 [bridge]
+[  117.864789]  ? skb_clone+0x53/0xd0
+[  117.864790]  ? __skb_clone+0x2e/0x120
+[  117.864790]  deliver_clone+0x37/0x50 [bridge]
+[  117.864790]  maybe_deliver+0x89/0xc0 [bridge]
+[  117.864791]  br_flood+0x6c/0x130 [bridge]
+[  117.864791]  br_dev_xmit+0x315/0x3c0 [bridge]
+[  117.864792]  netpoll_start_xmit+0x11d/0x1b0
+[  117.864792]  netpoll_send_skb_on_dev+0x1b8/0x200
+[  117.864792]  netpoll_send_udp+0x2c6/0x3e8
+[  117.864793]  write_msg+0xd9/0xf0 [netconsole]
+[  117.864793]  console_unlock+0x386/0x4e0
+[  117.864793]  vprintk_emit+0x17e/0x280
+[  117.864794]  vprintk_default+0x29/0x50
+[  117.864794]  vprintk_func+0x4c/0xbc
+[  117.864794]  printk+0x58/0x6f
+[  117.864795]  loop_fun+0x24/0x41 [printmsg_loop]
+[  117.864795]  kthread+0x104/0x140
+[  117.864795]  ? 0xffffffffc05b1000
+[  117.864796]  ? kthread_park+0x80/0x80
+[  117.864796]  ret_from_fork+0x35/0x40
 
-Thomas says he knows why it's broken (my personal suspicion: our magic
-handling of the "cpu0_logical_apicid" thing), but for 5.3 the right fix
-is to just revert it, since we've never touched the LDR bits before, and
-it's not worth the risk to do anything else at this stage.
-
-[ Hotpluging of the boot CPU is special anyway, and should be off by
-  default. See the "BOOTPARAM_HOTPLUG_CPU0" config option and the
-  cpu0_hotplug kernel parameter.
-
-  In general you should not do it, and it has various known limitations
-  (hibernate and suspend require the boot CPU, for example).
-
-  But it should work, even if the boot CPU is special and needs careful
-  treatment       - Linus ]
-
-Link: https://lore.kernel.org/lkml/156785100521.13300.14461504732265570003@skylake-alporthouse-com/
-Reported-by: Chris Wilson <chris@chris-wilson.co.uk>
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Bandan Das <bsd@redhat.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Feng Sun <loyou85@gmail.com>
+Signed-off-by: Xiaojun Zhao <xiaojunzhao141@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/kernel/apic/apic.c | 4 ----
- 1 file changed, 4 deletions(-)
+ net/core/netpoll.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index 37666c5367415..928ffdc21873c 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -1067,10 +1067,6 @@ void clear_local_APIC(void)
- 	apic_write(APIC_LVT0, v | APIC_LVT_MASKED);
- 	v = apic_read(APIC_LVT1);
- 	apic_write(APIC_LVT1, v | APIC_LVT_MASKED);
--	if (!x2apic_enabled()) {
--		v = apic_read(APIC_LDR) & ~APIC_LDR_MASK;
--		apic_write(APIC_LDR, v);
--	}
- 	if (maxlvt >= 4) {
- 		v = apic_read(APIC_LVTPC);
- 		apic_write(APIC_LVTPC, v | APIC_LVT_MASKED);
--- 
-2.20.1
-
+--- a/net/core/netpoll.c
++++ b/net/core/netpoll.c
+@@ -122,7 +122,7 @@ static void queue_process(struct work_st
+ 		txq = netdev_get_tx_queue(dev, q_index);
+ 		HARD_TX_LOCK(dev, txq, smp_processor_id());
+ 		if (netif_xmit_frozen_or_stopped(txq) ||
+-		    netpoll_start_xmit(skb, dev, txq) != NETDEV_TX_OK) {
++		    !dev_xmit_complete(netpoll_start_xmit(skb, dev, txq))) {
+ 			skb_queue_head(&npinfo->txq, skb);
+ 			HARD_TX_UNLOCK(dev, txq);
+ 			local_irq_restore(flags);
+@@ -357,7 +357,7 @@ void netpoll_send_skb_on_dev(struct netp
+ 
+ 				HARD_TX_UNLOCK(dev, txq);
+ 
+-				if (status == NETDEV_TX_OK)
++				if (dev_xmit_complete(status))
+ 					break;
+ 
+ 			}
+@@ -374,7 +374,7 @@ void netpoll_send_skb_on_dev(struct netp
+ 
+ 	}
+ 
+-	if (status != NETDEV_TX_OK) {
++	if (!dev_xmit_complete(status)) {
+ 		skb_queue_tail(&npinfo->txq, skb);
+ 		schedule_delayed_work(&npinfo->tx_work,0);
+ 	}
 
 
