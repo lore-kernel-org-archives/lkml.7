@@ -2,53 +2,53 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F1BC4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1189BC433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 971EB20693
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:55:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEA562082C
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:55:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947340;
-	bh=kEXN2/3YS7Ynx52gemwFGv4fzO2/5fA67UFxm/tWoD4=;
+	s=default; t=1567947343;
+	bh=OU5sRkIuCfKQiVSPfsr9XsoOMgGbWeD8aZXvsxeh+Cc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WeeTpZ1CXAeRt+XBSGiJ6OE5ts3AV/gldmPm+f0jou2qyUzzduU3PC0d7prHf7ZsB
-	 K/Tyww2Jhb/PEjk7uv9d1Q1KnkG+HDRz+mSQ48KgigIhZJpfChxBgIdi6iKsnnBJdR
-	 KTCjaxHT0o+reONYoWs3hRvsPZ8ONulbCm1JUKks=
+	b=NtmeJew00uchFe5uJdycGRilTM37pTd52eV3trdV4YBlwDbMmCV8opKpbGYuG/aRw
+	 8FYSvzk06ZfNizpY0OdIr8JT24knBMdUBa2IsR9pNyGyLgTpkV4yNPssn8a6xBUFMn
+	 K8J+vRJ8obbQB/fKoZC+v6cu0RxQrnewDM+yDuN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387928AbfIHMzj (ORCPT
+        id S1732284AbfIHMur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:55:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41892 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:50:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732304AbfIHMus (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:50:48 -0400
+        id S1732167AbfIHMuf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:50:35 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB704218AC;
-        Sun,  8 Sep 2019 12:50:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B222D218AC;
+        Sun,  8 Sep 2019 12:50:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567947048;
-        bh=kEXN2/3YS7Ynx52gemwFGv4fzO2/5fA67UFxm/tWoD4=;
+        s=default; t=1567947035;
+        bh=OU5sRkIuCfKQiVSPfsr9XsoOMgGbWeD8aZXvsxeh+Cc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PIi7mrxdn3oOO3FWc6ZQv20o0DdTkwGmnMlu5M/61bMjPjOmLm0VacThEDT5Xy+Sp
-         B2L3lL74w6cyiS/Jl34O2DSRQO+mZEpltgeJqk3LsW+gIbLy97Q88MyLSP0KhL2Tv5
-         2b8xuCelvyeJlYbF0YtbBilR3iiDKixWO7A895jg=
+        b=ucVqttKA8ZJqHYHY6hZWPF8jFPUbP9oqzazcxyBKWsvFThun2POZOvElUxQ8ANmmt
+         tvsRGLuBY4EHqP+VFQ5OpfKhffKJd3b5hN39F+H6dJEnYB63SXMGy+vCsYgW/EyCJL
+         XWL4Z2lFUrTfUZvOpeZbMOuJCrKesFf96wWrN2WY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
-        Thomas Falcon <tlfalcon@linux.ibm.com>,
+        stable@vger.kernel.org, John Hurley <john.hurley@netronome.com>,
+        Simon Horman <simon.horman@netronome.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 40/94] ibmveth: Convert multicast list size for little-endian system
-Date:   Sun,  8 Sep 2019 13:41:36 +0100
-Message-Id: <20190908121151.585970925@linuxfoundation.org>
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.2 09/94] nfp: flower: handle neighbour events on internal ports
+Date:   Sun,  8 Sep 2019 13:41:05 +0100
+Message-Id: <20190908121150.697700293@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
 References: <20190908121150.420989666@linuxfoundation.org>
@@ -61,59 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 66cf4710b23ab2adda11155684a2c8826f4fe732 ]
+From: John Hurley <john.hurley@netronome.com>
 
-The ibm,mac-address-filters property defines the maximum number of
-addresses the hypervisor's multicast filter list can support. It is
-encoded as a big-endian integer in the OF device tree, but the virtual
-ethernet driver does not convert it for use by little-endian systems.
-As a result, the driver is not behaving as it should on affected systems
-when a large number of multicast addresses are assigned to the device.
+[ Upstream commit e8024cb483abb2b0290b3ef5e34c736e9de2492f ]
 
-Reported-by: Hangbin Liu <liuhangbin@gmail.com>
-Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
+Recent code changes to NFP allowed the offload of neighbour entries to FW
+when the next hop device was an internal port. This allows for offload of
+tunnel encap when the end-point IP address is applied to such a port.
+
+Unfortunately, the neighbour event handler still rejects events that are
+not associated with a repr dev and so the firmware neighbour table may get
+out of sync for internal ports.
+
+Fix this by allowing internal port neighbour events to be correctly
+processed.
+
+Fixes: 45756dfedab5 ("nfp: flower: allow tunnels to output to internal port")
+Signed-off-by: John Hurley <john.hurley@netronome.com>
+Reviewed-by: Simon Horman <simon.horman@netronome.com>
+Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/ibm/ibmveth.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/ibm/ibmveth.c b/drivers/net/ethernet/ibm/ibmveth.c
-index d654c234aaf75..c5be4ebd84373 100644
---- a/drivers/net/ethernet/ibm/ibmveth.c
-+++ b/drivers/net/ethernet/ibm/ibmveth.c
-@@ -1605,7 +1605,7 @@ static int ibmveth_probe(struct vio_dev *dev, const struct vio_device_id *id)
- 	struct net_device *netdev;
- 	struct ibmveth_adapter *adapter;
- 	unsigned char *mac_addr_p;
--	unsigned int *mcastFilterSize_p;
-+	__be32 *mcastFilterSize_p;
- 	long ret;
- 	unsigned long ret_attr;
+--- a/drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c
++++ b/drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c
+@@ -329,13 +329,13 @@ nfp_tun_neigh_event_handler(struct notif
  
-@@ -1627,8 +1627,9 @@ static int ibmveth_probe(struct vio_dev *dev, const struct vio_device_id *id)
- 		return -EINVAL;
- 	}
+ 	flow.daddr = *(__be32 *)n->primary_key;
  
--	mcastFilterSize_p = (unsigned int *)vio_get_attribute(dev,
--						VETH_MCAST_FILTER_SIZE, NULL);
-+	mcastFilterSize_p = (__be32 *)vio_get_attribute(dev,
-+							VETH_MCAST_FILTER_SIZE,
-+							NULL);
- 	if (!mcastFilterSize_p) {
- 		dev_err(&dev->dev, "Can't find VETH_MCAST_FILTER_SIZE "
- 			"attribute\n");
-@@ -1645,7 +1646,7 @@ static int ibmveth_probe(struct vio_dev *dev, const struct vio_device_id *id)
+-	/* Only concerned with route changes for representors. */
+-	if (!nfp_netdev_is_nfp_repr(n->dev))
+-		return NOTIFY_DONE;
+-
+ 	app_priv = container_of(nb, struct nfp_flower_priv, tun.neigh_nb);
+ 	app = app_priv->app;
  
- 	adapter->vdev = dev;
- 	adapter->netdev = netdev;
--	adapter->mcastFilterSize = *mcastFilterSize_p;
-+	adapter->mcastFilterSize = be32_to_cpu(*mcastFilterSize_p);
- 	adapter->pool_config = 0;
- 
- 	netif_napi_add(netdev, &adapter->napi, ibmveth_poll, 16);
--- 
-2.20.1
-
++	if (!nfp_netdev_is_nfp_repr(n->dev) &&
++	    !nfp_flower_internal_port_can_offload(app, n->dev))
++		return NOTIFY_DONE;
++
+ 	/* Only concerned with changes to routes already added to NFP. */
+ 	if (!nfp_tun_has_route(app, flow.daddr))
+ 		return NOTIFY_DONE;
 
 
