@@ -2,54 +2,51 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C42ABC4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50267C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CC5B20693
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:55:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25A6D20693
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:55:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947314;
-	bh=Rgs42PFfzdIpzs4KOGf8Sr8EMe4g8KFqWNrmHyaoglA=;
+	s=default; t=1567947322;
+	bh=m/x0V6kE7E/90WMQ2msln4SAuZm1+BwYiGXmGrNHTQY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HUJfjBwei6aAdnW/e/keP5fQm+2itpOhpKFi4Qq484qXZ4LL/36wX5JHYE0MNZmT9
-	 WWJLg3YCYanBl3FlXmtDy9BNFRP4+AY26RyusrjNgiHDxJENy3OkSOsKZqWj8eURHe
-	 Rgs6Ibdhz7f61jiUU6YbZ/IaOWvoe1WPm0BuXUKs=
+	b=HW/cHzp602wv10x+1tERgphxipuwHk1eae45881L7O8l4zlvxSLhZqqgBcJFn6kfc
+	 QZ8VLmjMQMmhhDgRCy73B3naTHO5NrvNZl/vp0KrRUZtLUM3ecJN9DGL0+b1uM+I2y
+	 IkfgkqWzRWCgV0gvQRTaEbcqxifUQh/dhFN8vB1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387776AbfIHMzN (ORCPT
+        id S2387876AbfIHMzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:55:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42798 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:55:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732586AbfIHMvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:51:25 -0400
+        id S1732507AbfIHMvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:51:15 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09F13218AC;
-        Sun,  8 Sep 2019 12:51:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A36BF20863;
+        Sun,  8 Sep 2019 12:51:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567947084;
-        bh=Rgs42PFfzdIpzs4KOGf8Sr8EMe4g8KFqWNrmHyaoglA=;
+        s=default; t=1567947074;
+        bh=m/x0V6kE7E/90WMQ2msln4SAuZm1+BwYiGXmGrNHTQY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RlzC1DEnz7t7SMQDKhUWMFORKckzju0GPjuIJF269hXPW+y/7QeUq3cmz8SsGQN8I
-         85s0fLSJhViOwZCx9H/wmNrHmWR1hFBVnmcotRfxrH1EriTFjz0ETePd93kpk4P4Qa
-         4uJ/RE+ptxWHlQCis+pk/L1dBkH2wAom1tENjqUk=
+        b=o86nnPbgzuFh3fS53pMNtWAeiAKRWD09Ikmv9a3U2i2j4dDKccorMuD6EFHpV5SNs
+         OxXcYcvnQ0e2ufnJ/tm4WdADC1DIiXJQnP+u3A1LS950rYh30gnrxTtVJ2e5I4PZ4T
+         WDfM9E6BrYhz1cowFzUu02lSfFat9eVeBMx8p3kc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Leandro Dorileo <leandro.maciel.dorileo@intel.com>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 13/94] taprio: Set default link speed to 10 Mbps in taprio_set_picos_per_byte
-Date:   Sun,  8 Sep 2019 13:41:09 +0100
-Message-Id: <20190908121150.812652806@linuxfoundation.org>
+        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 49/94] selftests: kvm: provide common function to enable eVMCS
+Date:   Sun,  8 Sep 2019 13:41:45 +0100
+Message-Id: <20190908121151.841583971@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
 References: <20190908121150.420989666@linuxfoundation.org>
@@ -62,118 +59,149 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <olteanv@gmail.com>
+[ Upstream commit 65efa61dc0d536d5f0602c33ee805a57cc07e9dc ]
 
-The taprio budget needs to be adapted at runtime according to interface
-link speed. But that handling is problematic.
+There are two tests already enabling eVMCS and a third is coming.
+Add a function that enables the capability and tests the result.
 
-For one thing, installing a qdisc on an interface that doesn't have
-carrier is not illegal. But taprio prints the following stack trace:
-
-[   31.851373] ------------[ cut here ]------------
-[   31.856024] WARNING: CPU: 1 PID: 207 at net/sched/sch_taprio.c:481 taprio_dequeue+0x1a8/0x2d4
-[   31.864566] taprio: dequeue() called with unknown picos per byte.
-[   31.864570] Modules linked in:
-[   31.873701] CPU: 1 PID: 207 Comm: tc Not tainted 5.3.0-rc5-01199-g8838fe023cd6 #1689
-[   31.881398] Hardware name: Freescale LS1021A
-[   31.885661] [<c03133a4>] (unwind_backtrace) from [<c030d8cc>] (show_stack+0x10/0x14)
-[   31.893368] [<c030d8cc>] (show_stack) from [<c10ac958>] (dump_stack+0xb4/0xc8)
-[   31.900555] [<c10ac958>] (dump_stack) from [<c0349d04>] (__warn+0xe0/0xf8)
-[   31.907395] [<c0349d04>] (__warn) from [<c0349d64>] (warn_slowpath_fmt+0x48/0x6c)
-[   31.914841] [<c0349d64>] (warn_slowpath_fmt) from [<c0f38db4>] (taprio_dequeue+0x1a8/0x2d4)
-[   31.923150] [<c0f38db4>] (taprio_dequeue) from [<c0f227b0>] (__qdisc_run+0x90/0x61c)
-[   31.930856] [<c0f227b0>] (__qdisc_run) from [<c0ec82ac>] (net_tx_action+0x12c/0x2bc)
-[   31.938560] [<c0ec82ac>] (net_tx_action) from [<c0302298>] (__do_softirq+0x130/0x3c8)
-[   31.946350] [<c0302298>] (__do_softirq) from [<c03502a0>] (irq_exit+0xbc/0xd8)
-[   31.953536] [<c03502a0>] (irq_exit) from [<c03a4808>] (__handle_domain_irq+0x60/0xb4)
-[   31.961328] [<c03a4808>] (__handle_domain_irq) from [<c0754478>] (gic_handle_irq+0x58/0x9c)
-[   31.969638] [<c0754478>] (gic_handle_irq) from [<c0301a8c>] (__irq_svc+0x6c/0x90)
-[   31.977076] Exception stack(0xe8167b20 to 0xe8167b68)
-[   31.982100] 7b20: e9d4bd80 00000cc0 000000cf 00000000 e9d4bd80 c1f38958 00000cc0 c1f38960
-[   31.990234] 7b40: 00000001 000000cf 00000004 e9dc0800 00000000 e8167b70 c0f478ec c0f46d94
-[   31.998363] 7b60: 60070013 ffffffff
-[   32.001833] [<c0301a8c>] (__irq_svc) from [<c0f46d94>] (netlink_trim+0x18/0xd8)
-[   32.009104] [<c0f46d94>] (netlink_trim) from [<c0f478ec>] (netlink_broadcast_filtered+0x34/0x414)
-[   32.017930] [<c0f478ec>] (netlink_broadcast_filtered) from [<c0f47cec>] (netlink_broadcast+0x20/0x28)
-[   32.027102] [<c0f47cec>] (netlink_broadcast) from [<c0eea378>] (rtnetlink_send+0x34/0x88)
-[   32.035238] [<c0eea378>] (rtnetlink_send) from [<c0f25890>] (notify_and_destroy+0x2c/0x44)
-[   32.043461] [<c0f25890>] (notify_and_destroy) from [<c0f25e08>] (qdisc_graft+0x398/0x470)
-[   32.051595] [<c0f25e08>] (qdisc_graft) from [<c0f27a00>] (tc_modify_qdisc+0x3a4/0x724)
-[   32.059470] [<c0f27a00>] (tc_modify_qdisc) from [<c0ee4c84>] (rtnetlink_rcv_msg+0x260/0x2ec)
-[   32.067864] [<c0ee4c84>] (rtnetlink_rcv_msg) from [<c0f4a988>] (netlink_rcv_skb+0xb8/0x110)
-[   32.076172] [<c0f4a988>] (netlink_rcv_skb) from [<c0f4a170>] (netlink_unicast+0x1b4/0x22c)
-[   32.084392] [<c0f4a170>] (netlink_unicast) from [<c0f4a5e4>] (netlink_sendmsg+0x33c/0x380)
-[   32.092614] [<c0f4a5e4>] (netlink_sendmsg) from [<c0ea9f40>] (sock_sendmsg+0x14/0x24)
-[   32.100403] [<c0ea9f40>] (sock_sendmsg) from [<c0eaa780>] (___sys_sendmsg+0x214/0x228)
-[   32.108279] [<c0eaa780>] (___sys_sendmsg) from [<c0eabad0>] (__sys_sendmsg+0x50/0x8c)
-[   32.116068] [<c0eabad0>] (__sys_sendmsg) from [<c0301000>] (ret_fast_syscall+0x0/0x54)
-[   32.123938] Exception stack(0xe8167fa8 to 0xe8167ff0)
-[   32.128960] 7fa0:                   b6fa68c8 000000f8 00000003 bea142d0 00000000 00000000
-[   32.137093] 7fc0: b6fa68c8 000000f8 0052154c 00000128 5d6468a2 00000000 00000028 00558c9c
-[   32.145224] 7fe0: 00000070 bea14278 00530d64 b6e17e64
-[   32.150659] ---[ end trace 2139c9827c3e5177 ]---
-
-This happens because the qdisc ->dequeue callback gets called. Which
-again is not illegal, the qdisc will dequeue even when the interface is
-up but doesn't have carrier (and hence SPEED_UNKNOWN), and the frames
-will be dropped further down the stack in dev_direct_xmit().
-
-And, at the end of the day, for what? For calculating the initial budget
-of an interface which is non-operational at the moment and where frames
-will get dropped anyway.
-
-So if we can't figure out the link speed, default to SPEED_10 and move
-along. We can also remove the runtime check now.
-
-Cc: Leandro Dorileo <leandro.maciel.dorileo@intel.com>
-Fixes: 7b9eba7ba0c1 ("net/sched: taprio: fix picos_per_byte miscalculation")
-Acked-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/sch_taprio.c |   23 +++++++++++++----------
- 1 file changed, 13 insertions(+), 10 deletions(-)
+ tools/testing/selftests/kvm/include/evmcs.h   |  2 ++
+ tools/testing/selftests/kvm/lib/x86_64/vmx.c  | 20 +++++++++++++++++++
+ .../testing/selftests/kvm/x86_64/evmcs_test.c | 15 ++------------
+ .../selftests/kvm/x86_64/hyperv_cpuid.c       | 12 ++++-------
+ 4 files changed, 28 insertions(+), 21 deletions(-)
 
---- a/net/sched/sch_taprio.c
-+++ b/net/sched/sch_taprio.c
-@@ -205,11 +205,6 @@ static struct sk_buff *taprio_dequeue(st
- 	u32 gate_mask;
- 	int i;
+diff --git a/tools/testing/selftests/kvm/include/evmcs.h b/tools/testing/selftests/kvm/include/evmcs.h
+index 4059014d93ea1..4912d23844bc6 100644
+--- a/tools/testing/selftests/kvm/include/evmcs.h
++++ b/tools/testing/selftests/kvm/include/evmcs.h
+@@ -220,6 +220,8 @@ struct hv_enlightened_vmcs {
+ struct hv_enlightened_vmcs *current_evmcs;
+ struct hv_vp_assist_page *current_vp_assist;
  
--	if (atomic64_read(&q->picos_per_byte) == -1) {
--		WARN_ONCE(1, "taprio: dequeue() called with unknown picos per byte.");
--		return NULL;
--	}
--
- 	rcu_read_lock();
- 	entry = rcu_dereference(q->current_entry);
- 	/* if there's no entry, it means that the schedule didn't
-@@ -665,12 +660,20 @@ static void taprio_set_picos_per_byte(st
- 				      struct taprio_sched *q)
++int vcpu_enable_evmcs(struct kvm_vm *vm, int vcpu_id);
++
+ static inline int enable_vp_assist(uint64_t vp_assist_pa, void *vp_assist)
  {
- 	struct ethtool_link_ksettings ecmd;
--	int picos_per_byte = -1;
-+	int speed = SPEED_10;
-+	int picos_per_byte;
-+	int err;
-+
-+	err = __ethtool_get_link_ksettings(dev, &ecmd);
-+	if (err < 0)
-+		goto skip;
-+
-+	if (ecmd.base.speed != SPEED_UNKNOWN)
-+		speed = ecmd.base.speed;
+ 	u64 val = (vp_assist_pa & HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_MASK) |
+diff --git a/tools/testing/selftests/kvm/lib/x86_64/vmx.c b/tools/testing/selftests/kvm/lib/x86_64/vmx.c
+index fe56d159d65fd..52b6491ed7061 100644
+--- a/tools/testing/selftests/kvm/lib/x86_64/vmx.c
++++ b/tools/testing/selftests/kvm/lib/x86_64/vmx.c
+@@ -14,6 +14,26 @@
  
--	if (!__ethtool_get_link_ksettings(dev, &ecmd) &&
--	    ecmd.base.speed != SPEED_UNKNOWN)
--		picos_per_byte = div64_s64(NSEC_PER_SEC * 1000LL * 8,
--					   ecmd.base.speed * 1000 * 1000);
-+skip:
-+	picos_per_byte = div64_s64(NSEC_PER_SEC * 1000LL * 8,
-+				   speed * 1000 * 1000);
+ bool enable_evmcs;
  
- 	atomic64_set(&q->picos_per_byte, picos_per_byte);
- 	netdev_dbg(dev, "taprio: set %s's picos_per_byte to: %lld, linkspeed: %d\n",
++int vcpu_enable_evmcs(struct kvm_vm *vm, int vcpu_id)
++{
++	uint16_t evmcs_ver;
++
++	struct kvm_enable_cap enable_evmcs_cap = {
++		.cap = KVM_CAP_HYPERV_ENLIGHTENED_VMCS,
++		 .args[0] = (unsigned long)&evmcs_ver
++	};
++
++	vcpu_ioctl(vm, vcpu_id, KVM_ENABLE_CAP, &enable_evmcs_cap);
++
++	/* KVM should return supported EVMCS version range */
++	TEST_ASSERT(((evmcs_ver >> 8) >= (evmcs_ver & 0xff)) &&
++		    (evmcs_ver & 0xff) > 0,
++		    "Incorrect EVMCS version range: %x:%x\n",
++		    evmcs_ver & 0xff, evmcs_ver >> 8);
++
++	return evmcs_ver;
++}
++
+ /* Allocate memory regions for nested VMX tests.
+  *
+  * Input Args:
+diff --git a/tools/testing/selftests/kvm/x86_64/evmcs_test.c b/tools/testing/selftests/kvm/x86_64/evmcs_test.c
+index 241919ef1eaca..9f250c39c9bb8 100644
+--- a/tools/testing/selftests/kvm/x86_64/evmcs_test.c
++++ b/tools/testing/selftests/kvm/x86_64/evmcs_test.c
+@@ -79,11 +79,6 @@ int main(int argc, char *argv[])
+ 	struct kvm_x86_state *state;
+ 	struct ucall uc;
+ 	int stage;
+-	uint16_t evmcs_ver;
+-	struct kvm_enable_cap enable_evmcs_cap = {
+-		.cap = KVM_CAP_HYPERV_ENLIGHTENED_VMCS,
+-		 .args[0] = (unsigned long)&evmcs_ver
+-	};
+ 
+ 	/* Create VM */
+ 	vm = vm_create_default(VCPU_ID, 0, guest_code);
+@@ -96,13 +91,7 @@ int main(int argc, char *argv[])
+ 		exit(KSFT_SKIP);
+ 	}
+ 
+-	vcpu_ioctl(vm, VCPU_ID, KVM_ENABLE_CAP, &enable_evmcs_cap);
+-
+-	/* KVM should return supported EVMCS version range */
+-	TEST_ASSERT(((evmcs_ver >> 8) >= (evmcs_ver & 0xff)) &&
+-		    (evmcs_ver & 0xff) > 0,
+-		    "Incorrect EVMCS version range: %x:%x\n",
+-		    evmcs_ver & 0xff, evmcs_ver >> 8);
++	vcpu_enable_evmcs(vm, VCPU_ID);
+ 
+ 	run = vcpu_state(vm, VCPU_ID);
+ 
+@@ -146,7 +135,7 @@ int main(int argc, char *argv[])
+ 		kvm_vm_restart(vm, O_RDWR);
+ 		vm_vcpu_add(vm, VCPU_ID, 0, 0);
+ 		vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
+-		vcpu_ioctl(vm, VCPU_ID, KVM_ENABLE_CAP, &enable_evmcs_cap);
++		vcpu_enable_evmcs(vm, VCPU_ID);
+ 		vcpu_load_state(vm, VCPU_ID, state);
+ 		run = vcpu_state(vm, VCPU_ID);
+ 		free(state);
+diff --git a/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c b/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c
+index f72b3043db0eb..ee59831fbc984 100644
+--- a/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c
++++ b/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c
+@@ -18,6 +18,7 @@
+ #include "test_util.h"
+ #include "kvm_util.h"
+ #include "processor.h"
++#include "vmx.h"
+ 
+ #define VCPU_ID 0
+ 
+@@ -106,12 +107,7 @@ int main(int argc, char *argv[])
+ {
+ 	struct kvm_vm *vm;
+ 	int rv;
+-	uint16_t evmcs_ver;
+ 	struct kvm_cpuid2 *hv_cpuid_entries;
+-	struct kvm_enable_cap enable_evmcs_cap = {
+-		.cap = KVM_CAP_HYPERV_ENLIGHTENED_VMCS,
+-		 .args[0] = (unsigned long)&evmcs_ver
+-	};
+ 
+ 	/* Tell stdout not to buffer its content */
+ 	setbuf(stdout, NULL);
+@@ -136,14 +132,14 @@ int main(int argc, char *argv[])
+ 
+ 	free(hv_cpuid_entries);
+ 
+-	rv = _vcpu_ioctl(vm, VCPU_ID, KVM_ENABLE_CAP, &enable_evmcs_cap);
+-
+-	if (rv) {
++	if (!kvm_check_cap(KVM_CAP_HYPERV_ENLIGHTENED_VMCS)) {
+ 		fprintf(stderr,
+ 			"Enlightened VMCS is unsupported, skip related test\n");
+ 		goto vm_free;
+ 	}
+ 
++	vcpu_enable_evmcs(vm, VCPU_ID);
++
+ 	hv_cpuid_entries = kvm_get_supported_hv_cpuid(vm);
+ 	if (!hv_cpuid_entries)
+ 		return 1;
+-- 
+2.20.1
+
 
 
