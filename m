@@ -2,135 +2,108 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60FBCC433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8437BC4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B1CA2190F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:12:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DEC8218AE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:13:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567944730;
-	bh=UmeDjAzR6/3LB9jjoTbqWWv9lFExcVwjpss84j0OuUM=;
+	s=default; t=1567944813;
+	bh=b9en/9rG4wcN1G6wUTo8gNUs67YXhaBqqvg54OuV+Ec=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0zM1pYmIXmx+TYeEen7sQJntG4YJUg+DD1zEgqdvG30Dy234uQSSbYm35x22x/NGL
-	 /m2nrDnHtua1kMe8kBnOCtwf6sp7Q6kvxHb/lrBT0EXdTrWBGCSFupgfb3HB6S44vr
-	 0o6TUH31upMI7itFhfyLmqkMNbWjI4B965hNZ1v0=
+	b=UWrmVfiFg6Ccfgz4ctQTsF2/iOq9Se7k/sPRo/7dFJOjtlOJA+BzoTTyAKKCkVVaC
+	 +W/9S5flLKByX+35P1hGeNQxkfJ+I+1+zMcH0AHQAm0LgnApHXayOS31OJv9oCVWvV
+	 NdYmPPPGflEhAWTOU/n1Kd0V21mdGvgZd+WDPs2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729001AbfIHMMJ (ORCPT
+        id S1729019AbfIHMNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:12:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39470 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:13:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728818AbfIHMMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:12:09 -0400
-Received: from localhost (unknown [122.182.221.179])
+        id S1729003AbfIHMNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:13:32 -0400
+Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4146320863;
-        Sun,  8 Sep 2019 12:12:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13A18218AC;
+        Sun,  8 Sep 2019 12:13:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567944728;
-        bh=UmeDjAzR6/3LB9jjoTbqWWv9lFExcVwjpss84j0OuUM=;
+        s=default; t=1567944811;
+        bh=b9en/9rG4wcN1G6wUTo8gNUs67YXhaBqqvg54OuV+Ec=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PCditvPD0UQC6dVxIKH3ICuj3ZIA1Dy+Dle+f8rL1WQecFnEwS/c5Tvxeg8OHPjZJ
-         /v8+4LCoekmWFchXedhGGwXcdlR2c74fCa51qg6FqmzK2y/yPDRa4llpTfXpBBVT/T
-         kt8JpNhlZRuyb4HwSLIkwv/ZJO3qm7JX/kDhX+J4=
-Date:   Sun, 8 Sep 2019 17:40:58 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     robh+dt@kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dan.j.williams@intel.com,
-        devicetree@vger.kernel.org
-Subject: Re: [RFC 1/3] dt-bindings: dma: Add documentation for DMA domains
-Message-ID: <20190908121058.GL2672@vkoul-mobl>
-References: <20190906141816.24095-1-peter.ujfalusi@ti.com>
- <20190906141816.24095-2-peter.ujfalusi@ti.com>
- <961d30ea-d707-1120-7ecf-f51c11c41891@ti.com>
+        b=dlVE1kQUukPZGmwUhyYUD+88EyRdY6CgRLIA9KX91jmDmhBvDLM5RVuEQpVddv56G
+         TIct7dWy2WDm7N4twMfGK4/MawAhyvsjPK7gMF6tvUsMzooYK45gFrRyA2Yb2dibWq
+         7irPoQ+oFCpVeWbU1b3oEbdGp+w9ACGhSyHGjT+s=
+Date:   Sun, 8 Sep 2019 08:13:29 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 0/9] Enhance the hv_vmbus driver to support hibernation
+Message-ID: <20190908121329.GD2012@sasha-vm>
+References: <1567724446-30990-1-git-send-email-decui@microsoft.com>
+ <20190906200325.GD1528@sasha-vm>
+ <PU1P153MB01697512A097B489E0440E13BFBA0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <961d30ea-d707-1120-7ecf-f51c11c41891@ti.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <PU1P153MB01697512A097B489E0440E13BFBA0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08-09-19, 10:47, Peter Ujfalusi wrote:
-> 
-> 
-> On 06/09/2019 17.18, Peter Ujfalusi wrote:
-> > On systems where multiple DMA controllers available, none Slave (for example
-> > memcpy operation) users can not be described in DT as there is no device
-> > involved from the DMA controller's point of view, DMA binding is not usable.
-> > However in these systems still a peripheral might need to be serviced by or
-> > it is better to serviced by specific DMA controller.
-> > When a memcpy is used to/from a memory mapped region for example a DMA in the
-> > same domain can perform better.
-> > For generic software modules doing mem 2 mem operations it also matter that
-> > they will get a channel from a controller which is faster in DDR to DDR mode
-> > rather then from the first controller happen to be loaded.
-> > 
-> > This property is inherited, so it may be specified in a device node or in any
-> > of its parent nodes.
-> > 
-> > Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> > ---
-> >  .../devicetree/bindings/dma/dma-domain.yaml   | 59 +++++++++++++++++++
-> >  1 file changed, 59 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/dma/dma-domain.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/dma/dma-domain.yaml b/Documentation/devicetree/bindings/dma/dma-domain.yaml
-> > new file mode 100644
-> > index 000000000000..c2f182f30081
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/dma/dma-domain.yaml
-> > @@ -0,0 +1,59 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/dma/dma-controller.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: DMA Domain Controller Definition
-> > +
-> > +maintainers:
-> > +  - Vinod Koul <vkoul@kernel.org>
-> > +
-> > +allOf:
-> > +  - $ref: "dma-controller.yaml#"
-> > +
-> > +description:
-> > +  On systems where multiple DMA controllers available, none Slave (for example
-> > +  memcpy operation) users can not be described in DT as there is no device
-> > +  involved from the DMA controller's point of view, DMA binding is not usable.
-> > +  However in these systems still a peripheral might need to be serviced by or
-> > +  it is better to serviced by specific DMA controller.
-> > +  When a memcpy is used to/from a memory mapped region for example a DMA in the
-> > +  same domain can perform better.
-> > +  For generic software modules doing mem 2 mem operations it also matter that
-> > +  they will get a channel from a controller which is faster in DDR to DDR mode
-> > +  rather then from the first controller happen to be loaded.
-> > +
-> > +  This property is inherited, so it may be specified in a device node or in any
-> > +  of its parent nodes.
-> > +
-> > +properties:
-> > +  $dma-domain-controller:
-> 
-> or domain-dma-controller?
+On Fri, Sep 06, 2019 at 10:45:31PM +0000, Dexuan Cui wrote:
+>> From: Sasha Levin <sashal@kernel.org>
+>> Sent: Friday, September 6, 2019 1:03 PM
+>> On Thu, Sep 05, 2019 at 11:01:14PM +0000, Dexuan Cui wrote:
+>> >This patchset (consisting of 9 patches) was part of the v4 patchset (consisting
+>> >of 12 patches):
+>> >
+>> >The other 3 patches in v4 are posted in another patchset, which will go
+>> >through the tip.git tree.
+>> >
+>> >All the 9 patches here are now rebased to the hyperv tree's hyperv-next
+>> branch, and all the 9 patches have Michael Kelley's Signed-off-by's.
+>> >
+>> >Please review.
+>>
+>> Given that these two series depend on each other, I'd much prefer for
+>> them to go through one tree.
+>
+>Hi Sasha,
+>Yeah, that would be ideal. The problem here is: the other patchset conflicts
+>with the existing patches in the tip.git tree's timers/core branch, so IMO
+>the 3 patches have to go through the tip tree:
+>
+>[PATCH v5 1/3] x86/hyper-v: Suspend/resume the hypercall page for hibernation
+>[PATCH v5 2/3] x86/hyper-v: Implement hv_is_hibernation_supported()
+>[PATCH v5 3/3] clocksource/drivers: Suspend/resume Hyper-V clocksource for hibernation
+>
+>> But, I may be wrong, and I'm going to see if a scenario such as this
+>> make sense. I've queued this one to the hyperv-next, but I'll wait for
+>> the x86 folks to send their pull request to Linus first before I do it
+>> for these patches.
+>
+>Actually IMHO you don't need to wait, because there is not a build
+>dependency, so either patchset can go into the Linus's tree first.
 
-I feel dma-domain-controller sounds fine as we are defining domains for
-dmaengine. Another thought which comes here is that why not extend this to
-slave as well and define dma-domain-controller for them as use that for
-filtering, that is what we really need along with slave id in case a
-specific channel is to be used by a peripheral
+It'll build, sure. But did anyone actually test one without the other?
+What happens if Thomas doesn't send his batch at all during the merge
+window?
 
-Thoughts..?
-
--- 
-~Vinod
+--
+Thanks,
+Sasha
