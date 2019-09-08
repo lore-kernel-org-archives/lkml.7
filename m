@@ -2,108 +2,163 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8437BC4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDED0C4360D
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DEC8218AE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98A45218DE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:13:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567944813;
-	bh=b9en/9rG4wcN1G6wUTo8gNUs67YXhaBqqvg54OuV+Ec=;
+	s=default; t=1567944823;
+	bh=Hw3q1ag0I8CbUon0M+dF8zfRHhWR8pPixExolxzfN4Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UWrmVfiFg6Ccfgz4ctQTsF2/iOq9Se7k/sPRo/7dFJOjtlOJA+BzoTTyAKKCkVVaC
-	 +W/9S5flLKByX+35P1hGeNQxkfJ+I+1+zMcH0AHQAm0LgnApHXayOS31OJv9oCVWvV
-	 NdYmPPPGflEhAWTOU/n1Kd0V21mdGvgZd+WDPs2g=
+	b=LETYgIhCGvMSyyM99bkk/jWSeDxnGhEK6P33U0GlciSdM/8fImwsVW6a1G2+GO42w
+	 2hlaLJnm/ZnvkGnUXDbnl0tYWj7vWXD9A+mPi23t4jvtf+w74vp32jE6dj8Ik2IgtV
+	 UUJguOCSlSlk9VQmA0eiDPKSVj5Ttt6YiXSl5rno=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729019AbfIHMNc (ORCPT
+        id S1729040AbfIHMNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:13:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39898 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:13:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729003AbfIHMNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:13:32 -0400
-Received: from localhost (unknown [62.28.240.114])
+        id S1729003AbfIHMNm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:13:42 -0400
+Received: from localhost (unknown [122.182.221.179])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13A18218AC;
-        Sun,  8 Sep 2019 12:13:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7997218AC;
+        Sun,  8 Sep 2019 12:13:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567944811;
-        bh=b9en/9rG4wcN1G6wUTo8gNUs67YXhaBqqvg54OuV+Ec=;
+        s=default; t=1567944821;
+        bh=Hw3q1ag0I8CbUon0M+dF8zfRHhWR8pPixExolxzfN4Y=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dlVE1kQUukPZGmwUhyYUD+88EyRdY6CgRLIA9KX91jmDmhBvDLM5RVuEQpVddv56G
-         TIct7dWy2WDm7N4twMfGK4/MawAhyvsjPK7gMF6tvUsMzooYK45gFrRyA2Yb2dibWq
-         7irPoQ+oFCpVeWbU1b3oEbdGp+w9ACGhSyHGjT+s=
-Date:   Sun, 8 Sep 2019 08:13:29 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 0/9] Enhance the hv_vmbus driver to support hibernation
-Message-ID: <20190908121329.GD2012@sasha-vm>
-References: <1567724446-30990-1-git-send-email-decui@microsoft.com>
- <20190906200325.GD1528@sasha-vm>
- <PU1P153MB01697512A097B489E0440E13BFBA0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+        b=vnz+wlEPnfhzYmcMiY0M0iFU/ND4by/c+ETjEbVH94MIbRMJxEjlf/RlibWPTTYvv
+         mxp2ma8QPh1DTLUPmDPLnC4Fy/c0LBVqM9zkRrlR+OhDaCx8ihym5PeQ44ogsTPlZ+
+         w6lpJqw70sy1ApNDt8mO+oAmcs100jE9EHazoj9w=
+Date:   Sun, 8 Sep 2019 17:42:33 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     robh+dt@kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dan.j.williams@intel.com,
+        devicetree@vger.kernel.org
+Subject: Re: [RFC 2/3] dmaengine: of_dma: Function to look up the DMA domain
+ of a client
+Message-ID: <20190908121233.GM2672@vkoul-mobl>
+References: <20190906141816.24095-1-peter.ujfalusi@ti.com>
+ <20190906141816.24095-3-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <PU1P153MB01697512A097B489E0440E13BFBA0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190906141816.24095-3-peter.ujfalusi@ti.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 06, 2019 at 10:45:31PM +0000, Dexuan Cui wrote:
->> From: Sasha Levin <sashal@kernel.org>
->> Sent: Friday, September 6, 2019 1:03 PM
->> On Thu, Sep 05, 2019 at 11:01:14PM +0000, Dexuan Cui wrote:
->> >This patchset (consisting of 9 patches) was part of the v4 patchset (consisting
->> >of 12 patches):
->> >
->> >The other 3 patches in v4 are posted in another patchset, which will go
->> >through the tip.git tree.
->> >
->> >All the 9 patches here are now rebased to the hyperv tree's hyperv-next
->> branch, and all the 9 patches have Michael Kelley's Signed-off-by's.
->> >
->> >Please review.
->>
->> Given that these two series depend on each other, I'd much prefer for
->> them to go through one tree.
->
->Hi Sasha,
->Yeah, that would be ideal. The problem here is: the other patchset conflicts
->with the existing patches in the tip.git tree's timers/core branch, so IMO
->the 3 patches have to go through the tip tree:
->
->[PATCH v5 1/3] x86/hyper-v: Suspend/resume the hypercall page for hibernation
->[PATCH v5 2/3] x86/hyper-v: Implement hv_is_hibernation_supported()
->[PATCH v5 3/3] clocksource/drivers: Suspend/resume Hyper-V clocksource for hibernation
->
->> But, I may be wrong, and I'm going to see if a scenario such as this
->> make sense. I've queued this one to the hyperv-next, but I'll wait for
->> the x86 folks to send their pull request to Linus first before I do it
->> for these patches.
->
->Actually IMHO you don't need to wait, because there is not a build
->dependency, so either patchset can go into the Linus's tree first.
+On 06-09-19, 17:18, Peter Ujfalusi wrote:
+> Find the DMA domain controller of the client device by iterating up in
+> device tree looking for the closest 'dma-domain-controller' property.
+> 
+> If the client's node is not provided then check the DT root for the
+> controller.
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> ---
+>  drivers/dma/of-dma.c   | 42 ++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/of_dma.h |  7 +++++++
+>  2 files changed, 49 insertions(+)
+> 
+> diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
+> index c2d779daa4b5..04b5795cd76b 100644
+> --- a/drivers/dma/of-dma.c
+> +++ b/drivers/dma/of-dma.c
+> @@ -18,6 +18,48 @@
+>  static LIST_HEAD(of_dma_list);
+>  static DEFINE_MUTEX(of_dma_lock);
+>  
+> +/**
+> + * of_find_dma_domain - Get the domain DMA controller
+> + * @np:		device node of the client device
+> + *
+> + * Look up the DMA controller of the domain the client device is part of.
+> + * Finds the dma-domain controller the client device belongs to. It is used when
+> + * requesting non slave channels (like channel for memcpy) to make sure that the
+> + * channel can be request from a DMA controller which can service the given
+> + * domain best.
+> + *
+> + * Returns the device_node pointer of the DMA controller or succes or NULL on
+> + * error.
+> + */
+> +struct device_node *of_find_dma_domain(struct device_node *np)
+> +{
+> +	struct device_node *dma_domain = NULL;
+> +	phandle dma_phandle;
+> +
+> +	/*
+> +	 * If no device_node is provided look at the root level for system
+> +	 * default DMA controller for modules.
+> +	 */
+> +	if (!np)
+> +		np = of_root;
+> +
+> +	if (!np || !of_node_get(np))
+> +		return NULL;
+> +
+> +	do {
+> +		if (of_property_read_u32(np, "dma-domain-controller",
+> +					 &dma_phandle))
+> +			np = of_get_next_parent(np);
 
-It'll build, sure. But did anyone actually test one without the other?
-What happens if Thomas doesn't send his batch at all during the merge
-window?
+lets have braces around if as well please
 
---
-Thanks,
-Sasha
+> +		else {
+> +			dma_domain = of_find_node_by_phandle(dma_phandle);
+> +			of_node_put(np);
+> +		}
+> +	} while (!dma_domain && np);
+> +
+> +	return dma_domain;
+> +}
+> +EXPORT_SYMBOL_GPL(of_find_dma_domain);
+> +
+>  /**
+>   * of_dma_find_controller - Get a DMA controller in DT DMA helpers list
+>   * @dma_spec:	pointer to DMA specifier as found in the device tree
+> diff --git a/include/linux/of_dma.h b/include/linux/of_dma.h
+> index fd706cdf255c..6eab0a8d3335 100644
+> --- a/include/linux/of_dma.h
+> +++ b/include/linux/of_dma.h
+> @@ -32,6 +32,8 @@ struct of_dma_filter_info {
+>  };
+>  
+>  #ifdef CONFIG_DMA_OF
+> +extern struct device_node *of_find_dma_domain(struct device_node *np);
+> +
+>  extern int of_dma_controller_register(struct device_node *np,
+>  		struct dma_chan *(*of_dma_xlate)
+>  		(struct of_phandle_args *, struct of_dma *),
+> @@ -52,6 +54,11 @@ extern struct dma_chan *of_dma_xlate_by_chan_id(struct of_phandle_args *dma_spec
+>  		struct of_dma *ofdma);
+>  
+>  #else
+> +static inline struct device_node *of_find_dma_domain(struct device_node *np)
+> +{
+> +	return NULL;
+> +}
+> +
+>  static inline int of_dma_controller_register(struct device_node *np,
+>  		struct dma_chan *(*of_dma_xlate)
+>  		(struct of_phandle_args *, struct of_dma *),
+> -- 
+> Peter
+> 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
+-- 
+~Vinod
