@@ -2,53 +2,52 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 657B0C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F34C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DEA621924
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:50:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47411218AC
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:50:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947044;
-	bh=5+II5HNYrMrDE2tZb894YLsh8Bk2aDw3oznzM2GPMHU=;
+	s=default; t=1567947050;
+	bh=BDvf22p4KU00IGDfpcqeWyUuwRPJWPNJhTSf+CQatsA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FDSTal5Glyw/jxoUqrFEUsyVlekPk+WKM38zskFJD2rXJkR3wwjncTS23ctHruW5D
-	 v6AroPiSMxhBZESmb24eq1ih72mXyN8SCM0PlRIZtajxq4qWLkjZXj4WFTg+J0O9wO
-	 vbvK8oiC3Ee/haUlh/jVtTDmQIfNgaJkRp2wcoo0=
+	b=o/iCjRr9+8eNdeV2UwAfXWo62Ez2GQn3kMha2MxpxNrxywIwS76lwgbDhFngMr+8j
+	 4QPE5qQxkhNL4YfKzXmtVNnYxKd+5qPLGdOmq3A3d/a/14CpXfln9uBZbYF3KzOguJ
+	 /QrJRbor4dyvbShhpzR0KiKj998xqz4JfbHq8fMQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732236AbfIHMun (ORCPT
+        id S1732319AbfIHMut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:50:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41472 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:50:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732150AbfIHMud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:50:33 -0400
+        id S1732231AbfIHMun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:50:43 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 132D121A49;
-        Sun,  8 Sep 2019 12:50:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84C50218AC;
+        Sun,  8 Sep 2019 12:50:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567947032;
-        bh=5+II5HNYrMrDE2tZb894YLsh8Bk2aDw3oznzM2GPMHU=;
+        s=default; t=1567947043;
+        bh=BDvf22p4KU00IGDfpcqeWyUuwRPJWPNJhTSf+CQatsA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W0N8Ir1nP+cqprKw9e3K4Tb+n07X815TDOZ/mgai1B0E7ljZRNXhF2oEE2pr3NNGe
-         dcFYnqOJ9TZRWU/668SlIqDBXQi3GHR+RtRWQe0MPKgbcqi2sJIs1jOCJE7CE+lm3B
-         WpN04QriAu1vj26D5JUsfKwfh8zGL6JKeyTf3N7Q=
+        b=AOC367zIpjMKNU3eNJch4iK+TroVHLJxtQvdsiCKYoZiqKj6gACqI7oC9jEK92KoI
+         i4VKXa/zXIhmMWR0knZId+yUSQTi4p4lcwlnNc6HTQyGj9WXQgzguBhFa+JsPvzsPC
+         sz4WcV+YIO/qMw0LhylXxcIfhRvPnRo48gz+Or64=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Fabian Henneke <fabian.henneke@gmail.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 35/94] net: tc35815: Explicitly check NET_IP_ALIGN is not zero in tc35815_rx
-Date:   Sun,  8 Sep 2019 13:41:31 +0100
-Message-Id: <20190908121151.442955738@linuxfoundation.org>
+Subject: [PATCH 5.2 38/94] Bluetooth: hidp: Let hidp_send_message return number of queued bytes
+Date:   Sun,  8 Sep 2019 13:41:34 +0100
+Message-Id: <20190908121151.529315142@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
 References: <20190908121150.420989666@linuxfoundation.org>
@@ -61,52 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 125b7e0949d4e72b15c2b1a1590f8cece985a918 ]
+[ Upstream commit 48d9cc9d85dde37c87abb7ac9bbec6598ba44b56 ]
 
-clang warns:
+Let hidp_send_message return the number of successfully queued bytes
+instead of an unconditional 0.
 
-drivers/net/ethernet/toshiba/tc35815.c:1507:30: warning: use of logical
-'&&' with constant operand [-Wconstant-logical-operand]
-                        if (!HAVE_DMA_RXALIGN(lp) && NET_IP_ALIGN)
-                                                  ^  ~~~~~~~~~~~~
-drivers/net/ethernet/toshiba/tc35815.c:1507:30: note: use '&' for a
-bitwise operation
-                        if (!HAVE_DMA_RXALIGN(lp) && NET_IP_ALIGN)
-                                                  ^~
-                                                  &
-drivers/net/ethernet/toshiba/tc35815.c:1507:30: note: remove constant to
-silence this warning
-                        if (!HAVE_DMA_RXALIGN(lp) && NET_IP_ALIGN)
-                                                 ~^~~~~~~~~~~~~~~
-1 warning generated.
+With the return value fixed to 0, other drivers relying on hidp, such as
+hidraw, can not return meaningful values from their respective
+implementations of write(). In particular, with the current behavior, a
+hidraw device's write() will have different return values depending on
+whether the device is connected via USB or Bluetooth, which makes it
+harder to abstract away the transport layer.
 
-Explicitly check that NET_IP_ALIGN is not zero, which matches how this
-is checked in other parts of the tree. Because NET_IP_ALIGN is a build
-time constant, this check will be constant folded away during
-optimization.
-
-Fixes: 82a9928db560 ("tc35815: Enable StripCRC feature")
-Link: https://github.com/ClangBuiltLinux/linux/issues/608
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Fabian Henneke <fabian.henneke@gmail.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/toshiba/tc35815.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/bluetooth/hidp/core.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/toshiba/tc35815.c b/drivers/net/ethernet/toshiba/tc35815.c
-index c50a9772f4aff..3b5a26b05295f 100644
---- a/drivers/net/ethernet/toshiba/tc35815.c
-+++ b/drivers/net/ethernet/toshiba/tc35815.c
-@@ -1504,7 +1504,7 @@ tc35815_rx(struct net_device *dev, int limit)
- 			pci_unmap_single(lp->pci_dev,
- 					 lp->rx_skbs[cur_bd].skb_dma,
- 					 RX_BUF_SIZE, PCI_DMA_FROMDEVICE);
--			if (!HAVE_DMA_RXALIGN(lp) && NET_IP_ALIGN)
-+			if (!HAVE_DMA_RXALIGN(lp) && NET_IP_ALIGN != 0)
- 				memmove(skb->data, skb->data - NET_IP_ALIGN,
- 					pkt_len);
- 			data = skb_put(skb, pkt_len);
+diff --git a/net/bluetooth/hidp/core.c b/net/bluetooth/hidp/core.c
+index 5abd423b55fa9..8d889969ae7ed 100644
+--- a/net/bluetooth/hidp/core.c
++++ b/net/bluetooth/hidp/core.c
+@@ -101,6 +101,7 @@ static int hidp_send_message(struct hidp_session *session, struct socket *sock,
+ {
+ 	struct sk_buff *skb;
+ 	struct sock *sk = sock->sk;
++	int ret;
+ 
+ 	BT_DBG("session %p data %p size %d", session, data, size);
+ 
+@@ -114,13 +115,17 @@ static int hidp_send_message(struct hidp_session *session, struct socket *sock,
+ 	}
+ 
+ 	skb_put_u8(skb, hdr);
+-	if (data && size > 0)
++	if (data && size > 0) {
+ 		skb_put_data(skb, data, size);
++		ret = size;
++	} else {
++		ret = 0;
++	}
+ 
+ 	skb_queue_tail(transmit, skb);
+ 	wake_up_interruptible(sk_sleep(sk));
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ static int hidp_send_ctrl_message(struct hidp_session *session,
 -- 
 2.20.1
 
