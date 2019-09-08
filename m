@@ -2,112 +2,93 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5909C4360D
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 22:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB832C4360D
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 23:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B349216C8
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 22:54:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bny6LTGI"
+	by mail.kernel.org (Postfix) with ESMTP id 9697320828
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 23:18:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567984726;
+	bh=FxEKbz5lcvL7U59ZQw9i2X+8b1UWgWWC/e1PbuEqGdU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=vFmRrjf0WmnudGKlyu4xGEmYrLWhjUod9JewwCJD+CufmE0kpVdK9bKq7XzyR9My8
+	 6dFKl3iBIbsb/+fNJ7tQCEIjLl7WcDF0C1SMasPCUEVYdcsGtpXk5G30HEXkXWo4RY
+	 i6Ga2PcUM1xDu9EdWFJBIbHL+F+uLaHzSAHSsx4I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731203AbfIHWyM (ORCPT
+        id S1731238AbfIHXSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 18:54:12 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41098 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731040AbfIHWyL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 18:54:11 -0400
-Received: by mail-pg1-f195.google.com with SMTP id x15so6675419pgg.8;
-        Sun, 08 Sep 2019 15:54:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Z0iRHKmBiQinItAoOCV7Xvfd0DCa69kHaha34GlOuj0=;
-        b=bny6LTGIHPRrJwBt5jhBkz4wzOU1vAha1VqqWgPVQT033BrFy2fDtuQ2EzpLnwbOF1
-         u35Uv+uBX1K9EUOieN7EdMkQ5n9G//jgX5TLRMw+l+R7toxtJp1RXvtqnm5wYze4W1Jk
-         NGFHGGDWWpsoTRk/3XgDkD8D7HMMPZLvDLGsY8lGNeCEEhpWt7Cahf5IfypYMPGD57vq
-         +AQbkBn7Oh/D4XA6+sNXs5CTu+AY7rwxltvUXfxRsn3+Y2T4z4v9O713SpYemDyYqLil
-         35aIpIju3u+ugcAaDXdQ4/X1tANHmDMI4CJJCfkOOUn7d3zN4BMhFhQD2wZuAHzvqn0K
-         /7IA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Z0iRHKmBiQinItAoOCV7Xvfd0DCa69kHaha34GlOuj0=;
-        b=ljCRzf++zKkE5dML4X072vhTsFexIMSt6+dAyZo19Zids0N5+0FOeix/bkLzbreLpF
-         TmB66bg38Y7MF2HJFflquI9WjhZ65KdyRv7/Okoyqo56denmELuwc8G0+fUFxh3FXoo1
-         v6UR3LGpibr/oMElqMFtFzRYNEoSp71p/J7aaIwXhpbyvqbx6N8OpSsUBanCdRvcsbAp
-         FhO6YrpTcqewLiLiO6H5QyaaRePb9eZtfjG789+hNmtOMcu1j2G2mHVhQtf7Em2qOELu
-         S5yL8IkzIIuNgLr6hgf6ScWvU51OFsjVtdLFonyhrYkdb8zzdZP0RiaQZZSHiE52C6tg
-         jfIg==
-X-Gm-Message-State: APjAAAWxvTzluzaCH00v5fbv6xkgEc7LWAq08qwUzwqwUHPwRN5ETpLk
-        SriObO6UeT+SK/MBkvmiwfbIg0eh
-X-Google-Smtp-Source: APXvYqxsowHN4lJTdDkAxGwi+22TzZUhytrgtNf8CHWTBgfa+l+sd8xnHMZkWBzb5zOuq7jFQEiewQ==
-X-Received: by 2002:a62:76d1:: with SMTP id r200mr23938758pfc.27.1567983249347;
-        Sun, 08 Sep 2019 15:54:09 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 30sm17871611pjk.25.2019.09.08.15.54.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 08 Sep 2019 15:54:08 -0700 (PDT)
-Subject: Re: [PATCH 2/2] watchdog: pm8916_wdt: fix missing include
-To:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        wim@linux-watchdog.org
-Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bjorn.andersson@linaro.org
-References: <20190906203054.26725-1-jorge.ramirez-ortiz@linaro.org>
- <20190906203054.26725-2-jorge.ramirez-ortiz@linaro.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <50a36f88-ab09-44a1-db69-b4fa66e73534@roeck-us.net>
-Date:   Sun, 8 Sep 2019 15:54:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 8 Sep 2019 19:18:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51690 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731201AbfIHXSO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 19:18:14 -0400
+Received: from earth.universe (bl10-94-171.dsl.telepac.pt [85.243.94.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15F4720828;
+        Sun,  8 Sep 2019 23:18:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567984694;
+        bh=FxEKbz5lcvL7U59ZQw9i2X+8b1UWgWWC/e1PbuEqGdU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=UuSwRV0C8jh+MxBesClQ/bbEmYh/cbjbAnRvcx/ZABBsbATJjVgivORzaOVUkO66X
+         iqOHpGTeJxobkduQJVARXe0L/mfbCaGQxDaysUw1aOumkydZAhnfYQNeRMEqL0jlky
+         AXXASEENA+NZK1ZbeJucjCQoNPaDYy87kijaLCyg=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 56CD73C0CFA; Sun,  8 Sep 2019 14:10:39 +0200 (CEST)
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        kbuild test robot <lkp@intel.com>,
+        Han Nandor <nandor.han@vaisala.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] nvmem: core: fix nvmem_cell_write inline function
+Date:   Sun,  8 Sep 2019 14:10:38 +0200
+Message-Id: <20190908121038.6877-1-sre@kernel.org>
+X-Mailer: git-send-email 2.23.0.rc1
 MIME-Version: 1.0
-In-Reply-To: <20190906203054.26725-2-jorge.ramirez-ortiz@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/6/19 1:30 PM, Jorge Ramirez-Ortiz wrote:
-> As per Documentation/process/submit-checklist.rst, when using  a
-> facility #include the file that defines/declares  that facility.
-> 
-> Don't depend on other header files pulling in ones that you use.
-> 
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-Correct, but then also don't include header files you don't use.
-In this case, the include of linux/bitops.h is no longer necessary
-if linux/bits.h is included since the driver doesn't really use bit
-operations, only bit masks.
+nvmem_cell_write's buf argument uses different types based on
+the configuration of CONFIG_NVMEM. The function prototype for
+enabled NVMEM uses 'void *' type, but the static dummy function
+for disabled NVMEM uses 'const char *' instead. Fix the different
+behaviour by always expecting a 'void *' typed buf argument.
 
-Guenter
+Fixes: 7a78a7f7695b ("power: reset: nvmem-reboot-mode: use NVMEM as reboot mode write interface")
+Reported-by: kbuild test robot <lkp@intel.com>
+Cc: Han Nandor <nandor.han@vaisala.com>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+---
+ include/linux/nvmem-consumer.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> ---
->   drivers/watchdog/pm8916_wdt.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/watchdog/pm8916_wdt.c b/drivers/watchdog/pm8916_wdt.c
-> index cb5304c26ac3..b8d9df0f96f7 100644
-> --- a/drivers/watchdog/pm8916_wdt.c
-> +++ b/drivers/watchdog/pm8916_wdt.c
-> @@ -1,5 +1,6 @@
->   // SPDX-License-Identifier: GPL-2.0
->   #include <linux/bitops.h>
-> +#include <linux/bits.h>
->   #include <linux/interrupt.h>
->   #include <linux/kernel.h>
->   #include <linux/module.h>
-> 
+diff --git a/include/linux/nvmem-consumer.h b/include/linux/nvmem-consumer.h
+index 8f8be5b00060..5c17cb733224 100644
+--- a/include/linux/nvmem-consumer.h
++++ b/include/linux/nvmem-consumer.h
+@@ -118,7 +118,7 @@ static inline void *nvmem_cell_read(struct nvmem_cell *cell, size_t *len)
+ }
+ 
+ static inline int nvmem_cell_write(struct nvmem_cell *cell,
+-				    const char *buf, size_t len)
++				   void *buf, size_t len)
+ {
+ 	return -EOPNOTSUPP;
+ }
+-- 
+2.23.0.rc1
 
