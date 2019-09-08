@@ -2,52 +2,51 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D479C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E889C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FFA0216C8
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:46:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF74F20644
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:46:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946773;
-	bh=Tk8dIqRke1IbYjoHn69l7nfqUpiVrAjm93Y2qhs4iEs=;
+	s=default; t=1567946782;
+	bh=HNtAo6suQtfGvCkYmB3ViuLyFeRqmPGB5i7Q0TdwHjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0GlNiJsJDtsODsE+RQ174vWhx6HiqejI+ObT2imsoyMxXOHyeXjRfSkCFSyYDoT0y
-	 Y0LEimMxt8XaHUIbeElwsZrUqb6IVxgqygi9kSFFaGwjPkaUqtJUjWFElzWdUbop6o
-	 l8o9McFq/hP4h1KcRJVWP1hLPOS3TYwcG3IysiPk=
+	b=Q/8hCJzeWMMnC+++yJVs3M4l1IRd/Zps+QVnpZYdvo5/Jb95MyqBKTgft+KiAjt3X
+	 0tOhb1As4yjaTktkb8/Om1x+/GzFceKoeRRKZ/IIkZpbKc82YWcXv5wls+NdK4XuTG
+	 TD9mTZG8RXb7E+6enYo5a4HYe4UQ+GJYqMIN8ufk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730306AbfIHMqL (ORCPT
+        id S1730363AbfIHMqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:46:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33558 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:46:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729546AbfIHMqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:46:06 -0400
+        id S1730330AbfIHMqR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:46:17 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0FB6218AF;
-        Sun,  8 Sep 2019 12:46:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EE4020644;
+        Sun,  8 Sep 2019 12:46:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946766;
-        bh=Tk8dIqRke1IbYjoHn69l7nfqUpiVrAjm93Y2qhs4iEs=;
+        s=default; t=1567946776;
+        bh=HNtAo6suQtfGvCkYmB3ViuLyFeRqmPGB5i7Q0TdwHjA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sHNmXYtlkXIcklvft5B3/GW6uSryojaijvizssE9t8AKXRw5GOaFILg3I1qBNaCo2
-         y8hKXXAC0kpmGebbzvLomwQ5sLbwFXYRb72ZJvF2cdwIdbKDvwSJEEQ1G81HGkBshD
-         IorQY1OvNaev7UkDXf825jKM3DMtbhKvn0UPD40k=
+        b=fG1LgaszzxJFKgdSRU26naR08NY1apkXvzYZyCAnFaDW+L/z2UztJA4cjf/+OdMmi
+         +fsy218c003YJJz1M9ZVl5TcpOzEjjBA3SoYQ5NiaxlpAJTtTSlAXSgKR/TKYkECId
+         U54q7mNBnRuyibz5yARD2cU+QAnc2ayrteu0LFjY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabian Henneke <fabian.henneke@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 05/40] Bluetooth: hidp: Let hidp_send_message return number of queued bytes
-Date:   Sun,  8 Sep 2019 13:41:38 +0100
-Message-Id: <20190908121115.759608557@linuxfoundation.org>
+        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 35/40] net: stmmac: dwmac-rk: Dont fail if phy regulator is absent
+Date:   Sun,  8 Sep 2019 13:42:08 +0100
+Message-Id: <20190908121129.901030610@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121114.260662089@linuxfoundation.org>
 References: <20190908121114.260662089@linuxfoundation.org>
@@ -60,59 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 48d9cc9d85dde37c87abb7ac9bbec6598ba44b56 ]
+From: Chen-Yu Tsai <wens@csie.org>
 
-Let hidp_send_message return the number of successfully queued bytes
-instead of an unconditional 0.
+[ Upstream commit 3b25528e1e355c803e73aa326ce657b5606cda73 ]
 
-With the return value fixed to 0, other drivers relying on hidp, such as
-hidraw, can not return meaningful values from their respective
-implementations of write(). In particular, with the current behavior, a
-hidraw device's write() will have different return values depending on
-whether the device is connected via USB or Bluetooth, which makes it
-harder to abstract away the transport layer.
+The devicetree binding lists the phy phy as optional. As such, the
+driver should not bail out if it can't find a regulator. Instead it
+should just skip the remaining regulator related code and continue
+on normally.
 
-Signed-off-by: Fabian Henneke <fabian.henneke@gmail.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Skip the remainder of phy_power_on() if a regulator supply isn't
+available. This also gets rid of the bogus return code.
+
+Fixes: 2e12f536635f ("net: stmmac: dwmac-rk: Use standard devicetree property for phy regulator")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/bluetooth/hidp/core.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/net/bluetooth/hidp/core.c b/net/bluetooth/hidp/core.c
-index b21fcc838784d..f6bffb3a95116 100644
---- a/net/bluetooth/hidp/core.c
-+++ b/net/bluetooth/hidp/core.c
-@@ -101,6 +101,7 @@ static int hidp_send_message(struct hidp_session *session, struct socket *sock,
- {
- 	struct sk_buff *skb;
- 	struct sock *sk = sock->sk;
-+	int ret;
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+@@ -1145,10 +1145,8 @@ static int phy_power_on(struct rk_priv_d
+ 	int ret;
+ 	struct device *dev = &bsp_priv->pdev->dev;
  
- 	BT_DBG("session %p data %p size %d", session, data, size);
+-	if (!ldo) {
+-		dev_err(dev, "no regulator found\n");
+-		return -1;
+-	}
++	if (!ldo)
++		return 0;
  
-@@ -114,13 +115,17 @@ static int hidp_send_message(struct hidp_session *session, struct socket *sock,
- 	}
- 
- 	skb_put_u8(skb, hdr);
--	if (data && size > 0)
-+	if (data && size > 0) {
- 		skb_put_data(skb, data, size);
-+		ret = size;
-+	} else {
-+		ret = 0;
-+	}
- 
- 	skb_queue_tail(transmit, skb);
- 	wake_up_interruptible(sk_sleep(sk));
- 
--	return 0;
-+	return ret;
- }
- 
- static int hidp_send_ctrl_message(struct hidp_session *session,
--- 
-2.20.1
-
+ 	if (enable) {
+ 		ret = regulator_enable(ldo);
 
 
