@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50267C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0C9C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25A6D20693
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:55:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4EF120693
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:55:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947322;
-	bh=m/x0V6kE7E/90WMQ2msln4SAuZm1+BwYiGXmGrNHTQY=;
+	s=default; t=1567947330;
+	bh=8SZwjoZv3NR0lY6S8VHhs1KtMMtLt3oxXNII1RkK9KQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HW/cHzp602wv10x+1tERgphxipuwHk1eae45881L7O8l4zlvxSLhZqqgBcJFn6kfc
-	 QZ8VLmjMQMmhhDgRCy73B3naTHO5NrvNZl/vp0KrRUZtLUM3ecJN9DGL0+b1uM+I2y
-	 IkfgkqWzRWCgV0gvQRTaEbcqxifUQh/dhFN8vB1c=
+	b=v4OJjKeBXvmjEdj7F9Tlff+dNGl7lYdm0u8LCQDY0TTeSgmsvxkCM8Ct7EB8bncqE
+	 vWiPzXty8u7h3Nb0aPH3fvGVz7o1/GlFz3pbEXj9jRtCpxpdg1bGN5j/M2g1LIbZwh
+	 bLJgYLG3fhihOYHhdmQRQCSfOGsdSWtPfYNdj4Jk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387876AbfIHMzU (ORCPT
+        id S2387904AbfIHMz3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:55:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42562 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:55:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732507AbfIHMvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:51:15 -0400
+        id S1732385AbfIHMvB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:51:01 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A36BF20863;
-        Sun,  8 Sep 2019 12:51:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D4E821479;
+        Sun,  8 Sep 2019 12:51:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567947074;
-        bh=m/x0V6kE7E/90WMQ2msln4SAuZm1+BwYiGXmGrNHTQY=;
+        s=default; t=1567947061;
+        bh=8SZwjoZv3NR0lY6S8VHhs1KtMMtLt3oxXNII1RkK9KQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o86nnPbgzuFh3fS53pMNtWAeiAKRWD09Ikmv9a3U2i2j4dDKccorMuD6EFHpV5SNs
-         OxXcYcvnQ0e2ufnJ/tm4WdADC1DIiXJQnP+u3A1LS950rYh30gnrxTtVJ2e5I4PZ4T
-         WDfM9E6BrYhz1cowFzUu02lSfFat9eVeBMx8p3kc=
+        b=BdtimrFb9eJ2tWWGfsz2RaWR38SAcUUHaYvNAS++UQkkKnF+4UoYzu47GX4FJ9FwH
+         Q7O00ZBLVsLt0iOV3LrLC/uJb7SZGWaqJNvqgJCtD6AMZNjffhfAF1eC7Y7FHTGrrm
+         ENiydsotg7dt/yBh1pxEOuhz+KBdpsSWrw98DSj8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        stable@vger.kernel.org, Bill Kuzeja <william.kuzeja@stratus.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 49/94] selftests: kvm: provide common function to enable eVMCS
-Date:   Sun,  8 Sep 2019 13:41:45 +0100
-Message-Id: <20190908121151.841583971@linuxfoundation.org>
+Subject: [PATCH 5.2 45/94] scsi: qla2xxx: Fix gnl.l memory leak on adapter init failure
+Date:   Sun,  8 Sep 2019 13:41:41 +0100
+Message-Id: <20190908121151.729595387@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
 References: <20190908121150.420989666@linuxfoundation.org>
@@ -59,147 +61,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 65efa61dc0d536d5f0602c33ee805a57cc07e9dc ]
+[ Upstream commit 26fa656e9a0cbccddf7db132ea020d2169dbe46e ]
 
-There are two tests already enabling eVMCS and a third is coming.
-Add a function that enables the capability and tests the result.
+If HBA initialization fails unexpectedly (exiting via probe_failed:), we
+may fail to free vha->gnl.l. So that we don't attempt to double free, set
+this pointer to NULL after a free and check for NULL at probe_failed: so we
+know whether or not to call dma_free_coherent.
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Bill Kuzeja <william.kuzeja@stratus.com>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/kvm/include/evmcs.h   |  2 ++
- tools/testing/selftests/kvm/lib/x86_64/vmx.c  | 20 +++++++++++++++++++
- .../testing/selftests/kvm/x86_64/evmcs_test.c | 15 ++------------
- .../selftests/kvm/x86_64/hyperv_cpuid.c       | 12 ++++-------
- 4 files changed, 28 insertions(+), 21 deletions(-)
+ drivers/scsi/qla2xxx/qla_attr.c |  2 ++
+ drivers/scsi/qla2xxx/qla_os.c   | 11 ++++++++++-
+ 2 files changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/kvm/include/evmcs.h b/tools/testing/selftests/kvm/include/evmcs.h
-index 4059014d93ea1..4912d23844bc6 100644
---- a/tools/testing/selftests/kvm/include/evmcs.h
-+++ b/tools/testing/selftests/kvm/include/evmcs.h
-@@ -220,6 +220,8 @@ struct hv_enlightened_vmcs {
- struct hv_enlightened_vmcs *current_evmcs;
- struct hv_vp_assist_page *current_vp_assist;
+diff --git a/drivers/scsi/qla2xxx/qla_attr.c b/drivers/scsi/qla2xxx/qla_attr.c
+index 8d560c562e9c0..6b7b390b2e522 100644
+--- a/drivers/scsi/qla2xxx/qla_attr.c
++++ b/drivers/scsi/qla2xxx/qla_attr.c
+@@ -2956,6 +2956,8 @@ qla24xx_vport_delete(struct fc_vport *fc_vport)
+ 	dma_free_coherent(&ha->pdev->dev, vha->gnl.size, vha->gnl.l,
+ 	    vha->gnl.ldma);
  
-+int vcpu_enable_evmcs(struct kvm_vm *vm, int vcpu_id);
++	vha->gnl.l = NULL;
 +
- static inline int enable_vp_assist(uint64_t vp_assist_pa, void *vp_assist)
- {
- 	u64 val = (vp_assist_pa & HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_MASK) |
-diff --git a/tools/testing/selftests/kvm/lib/x86_64/vmx.c b/tools/testing/selftests/kvm/lib/x86_64/vmx.c
-index fe56d159d65fd..52b6491ed7061 100644
---- a/tools/testing/selftests/kvm/lib/x86_64/vmx.c
-+++ b/tools/testing/selftests/kvm/lib/x86_64/vmx.c
-@@ -14,6 +14,26 @@
+ 	vfree(vha->scan.l);
  
- bool enable_evmcs;
+ 	if (vha->qpair && vha->qpair->vp_idx == vha->vp_idx) {
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index d056f5e7cf930..794478e5f7ec8 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -3440,6 +3440,12 @@ skip_dpc:
+ 	return 0;
  
-+int vcpu_enable_evmcs(struct kvm_vm *vm, int vcpu_id)
-+{
-+	uint16_t evmcs_ver;
+ probe_failed:
++	if (base_vha->gnl.l) {
++		dma_free_coherent(&ha->pdev->dev, base_vha->gnl.size,
++				base_vha->gnl.l, base_vha->gnl.ldma);
++		base_vha->gnl.l = NULL;
++	}
 +
-+	struct kvm_enable_cap enable_evmcs_cap = {
-+		.cap = KVM_CAP_HYPERV_ENLIGHTENED_VMCS,
-+		 .args[0] = (unsigned long)&evmcs_ver
-+	};
-+
-+	vcpu_ioctl(vm, vcpu_id, KVM_ENABLE_CAP, &enable_evmcs_cap);
-+
-+	/* KVM should return supported EVMCS version range */
-+	TEST_ASSERT(((evmcs_ver >> 8) >= (evmcs_ver & 0xff)) &&
-+		    (evmcs_ver & 0xff) > 0,
-+		    "Incorrect EVMCS version range: %x:%x\n",
-+		    evmcs_ver & 0xff, evmcs_ver >> 8);
-+
-+	return evmcs_ver;
-+}
-+
- /* Allocate memory regions for nested VMX tests.
-  *
-  * Input Args:
-diff --git a/tools/testing/selftests/kvm/x86_64/evmcs_test.c b/tools/testing/selftests/kvm/x86_64/evmcs_test.c
-index 241919ef1eaca..9f250c39c9bb8 100644
---- a/tools/testing/selftests/kvm/x86_64/evmcs_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/evmcs_test.c
-@@ -79,11 +79,6 @@ int main(int argc, char *argv[])
- 	struct kvm_x86_state *state;
- 	struct ucall uc;
- 	int stage;
--	uint16_t evmcs_ver;
--	struct kvm_enable_cap enable_evmcs_cap = {
--		.cap = KVM_CAP_HYPERV_ENLIGHTENED_VMCS,
--		 .args[0] = (unsigned long)&evmcs_ver
--	};
- 
- 	/* Create VM */
- 	vm = vm_create_default(VCPU_ID, 0, guest_code);
-@@ -96,13 +91,7 @@ int main(int argc, char *argv[])
- 		exit(KSFT_SKIP);
- 	}
- 
--	vcpu_ioctl(vm, VCPU_ID, KVM_ENABLE_CAP, &enable_evmcs_cap);
+ 	if (base_vha->timer_active)
+ 		qla2x00_stop_timer(base_vha);
+ 	base_vha->flags.online = 0;
+@@ -3673,7 +3679,7 @@ qla2x00_remove_one(struct pci_dev *pdev)
+ 	if (!atomic_read(&pdev->enable_cnt)) {
+ 		dma_free_coherent(&ha->pdev->dev, base_vha->gnl.size,
+ 		    base_vha->gnl.l, base_vha->gnl.ldma);
 -
--	/* KVM should return supported EVMCS version range */
--	TEST_ASSERT(((evmcs_ver >> 8) >= (evmcs_ver & 0xff)) &&
--		    (evmcs_ver & 0xff) > 0,
--		    "Incorrect EVMCS version range: %x:%x\n",
--		    evmcs_ver & 0xff, evmcs_ver >> 8);
-+	vcpu_enable_evmcs(vm, VCPU_ID);
++		base_vha->gnl.l = NULL;
+ 		scsi_host_put(base_vha->host);
+ 		kfree(ha);
+ 		pci_set_drvdata(pdev, NULL);
+@@ -3713,6 +3719,8 @@ qla2x00_remove_one(struct pci_dev *pdev)
+ 	dma_free_coherent(&ha->pdev->dev,
+ 		base_vha->gnl.size, base_vha->gnl.l, base_vha->gnl.ldma);
  
- 	run = vcpu_state(vm, VCPU_ID);
- 
-@@ -146,7 +135,7 @@ int main(int argc, char *argv[])
- 		kvm_vm_restart(vm, O_RDWR);
- 		vm_vcpu_add(vm, VCPU_ID, 0, 0);
- 		vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
--		vcpu_ioctl(vm, VCPU_ID, KVM_ENABLE_CAP, &enable_evmcs_cap);
-+		vcpu_enable_evmcs(vm, VCPU_ID);
- 		vcpu_load_state(vm, VCPU_ID, state);
- 		run = vcpu_state(vm, VCPU_ID);
- 		free(state);
-diff --git a/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c b/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c
-index f72b3043db0eb..ee59831fbc984 100644
---- a/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c
-+++ b/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c
-@@ -18,6 +18,7 @@
- #include "test_util.h"
- #include "kvm_util.h"
- #include "processor.h"
-+#include "vmx.h"
- 
- #define VCPU_ID 0
- 
-@@ -106,12 +107,7 @@ int main(int argc, char *argv[])
- {
- 	struct kvm_vm *vm;
- 	int rv;
--	uint16_t evmcs_ver;
- 	struct kvm_cpuid2 *hv_cpuid_entries;
--	struct kvm_enable_cap enable_evmcs_cap = {
--		.cap = KVM_CAP_HYPERV_ENLIGHTENED_VMCS,
--		 .args[0] = (unsigned long)&evmcs_ver
--	};
- 
- 	/* Tell stdout not to buffer its content */
- 	setbuf(stdout, NULL);
-@@ -136,14 +132,14 @@ int main(int argc, char *argv[])
- 
- 	free(hv_cpuid_entries);
- 
--	rv = _vcpu_ioctl(vm, VCPU_ID, KVM_ENABLE_CAP, &enable_evmcs_cap);
--
--	if (rv) {
-+	if (!kvm_check_cap(KVM_CAP_HYPERV_ENLIGHTENED_VMCS)) {
- 		fprintf(stderr,
- 			"Enlightened VMCS is unsupported, skip related test\n");
- 		goto vm_free;
- 	}
- 
-+	vcpu_enable_evmcs(vm, VCPU_ID);
++	base_vha->gnl.l = NULL;
 +
- 	hv_cpuid_entries = kvm_get_supported_hv_cpuid(vm);
- 	if (!hv_cpuid_entries)
- 		return 1;
+ 	vfree(base_vha->scan.l);
+ 
+ 	if (IS_QLAFX00(ha))
+@@ -4817,6 +4825,7 @@ struct scsi_qla_host *qla2x00_create_host(struct scsi_host_template *sht,
+ 		    "Alloc failed for scan database.\n");
+ 		dma_free_coherent(&ha->pdev->dev, vha->gnl.size,
+ 		    vha->gnl.l, vha->gnl.ldma);
++		vha->gnl.l = NULL;
+ 		scsi_remove_host(vha->host);
+ 		return NULL;
+ 	}
 -- 
 2.20.1
 
