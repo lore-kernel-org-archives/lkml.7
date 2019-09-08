@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B8CC433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B501C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DD2A218AF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66887216C8
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:44:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946691;
-	bh=YC4A5FicODasF8B4WHyElnHgEqlJvrcGPU58B1FKcsY=;
+	s=default; t=1567946693;
+	bh=CBgd7xi3Ai8eCnUNKbO38SUCBBHWDgb0XXYEoNLAykA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ykZv9OzoEKRxeSLHStORu1rQqfyoVnY1fWMTbOvwqu5Ss2e/+hXYF+iSzz8ogrzzX
-	 1RLH+knq73QNybzAOk3dpBN1IqDeiHazLD3s7uEluxVCBrpxOXo/Kxy/sZzbpmstob
-	 hBTPvumu0+4Fg4DQjpEG91f1l+xUjY/s7sAlOFOQ=
+	b=RwC80Os/P/HT8u6H1quQhOcyZo42PBvSBL6f0X8FN1dYoRb9rYDdy3EXDoygVVJhy
+	 yXIijl1Wen1E6Tv4D5K5abZq7LMaRpDcClA0BczCYU/dVVUUKQ6yC6ExI8SI7S+v7x
+	 WjswOZWz+IU3abpge1R1irAHMaWuqpvfOili05/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729914AbfIHMou (ORCPT
+        id S1729929AbfIHMow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:44:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59648 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:44:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728979AbfIHMoq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:44:46 -0400
+        id S1729904AbfIHMos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:44:48 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BC4C2081B;
-        Sun,  8 Sep 2019 12:44:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7266216C8;
+        Sun,  8 Sep 2019 12:44:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946685;
-        bh=YC4A5FicODasF8B4WHyElnHgEqlJvrcGPU58B1FKcsY=;
+        s=default; t=1567946688;
+        bh=CBgd7xi3Ai8eCnUNKbO38SUCBBHWDgb0XXYEoNLAykA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=px6YvWiqb3nfw6Mv/5IHeAAgfuyuP8Ub2AN/F7ufKGyTkk4uQndM6Gvyj+mXYiOWy
-         McpFdIXNTrEQ74NvZgxeGa7cWcfO82Px1oRSqwdxoe+AMo9wefOMQ4jSGsioupkGyF
-         2R2AIlo8HTLQ6GMJCdzrdUD93rVNGYmiW4avNDWI=
+        b=UnDePMFckLign7/Wc0Uy2JVGiHayQunlApIfP6d6t4d6DquVMN/BtdjcoDawCAkiL
+         zpTfs7xTWa82upPcbN9FqV03H/exRbdpWvIqM+HUOi1usDc/gxVqKhx+tB15R+N9ti
+         C/iWOMcoOH2ly8fLVTVKhWP2km3h4pWFC5B5yc+o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 05/26] gpio: Fix build error of function redefinition
-Date:   Sun,  8 Sep 2019 13:41:44 +0100
-Message-Id: <20190908121058.510766060@linuxfoundation.org>
+Subject: [PATCH 4.9 06/26] cxgb4: fix a memory leak bug
+Date:   Sun,  8 Sep 2019 13:41:45 +0100
+Message-Id: <20190908121058.681724248@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121057.216802689@linuxfoundation.org>
 References: <20190908121057.216802689@linuxfoundation.org>
@@ -61,64 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 68e03b85474a51ec1921b4d13204782594ef7223 ]
+[ Upstream commit c554336efa9bbc28d6ec14efbee3c7d63c61a34f ]
 
-when do randbuilding, I got this error:
+In blocked_fl_write(), 't' is not deallocated if bitmap_parse_user() fails,
+leading to a memory leak bug. To fix this issue, free t before returning
+the error.
 
-In file included from drivers/hwmon/pmbus/ucd9000.c:19:0:
-./include/linux/gpio/driver.h:576:1: error: redefinition of gpiochip_add_pin_range
- gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
- ^~~~~~~~~~~~~~~~~~~~~~
-In file included from drivers/hwmon/pmbus/ucd9000.c:18:0:
-./include/linux/gpio.h:245:1: note: previous definition of gpiochip_add_pin_range was here
- gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
- ^~~~~~~~~~~~~~~~~~~~~~
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 964cb341882f ("gpio: move pincontrol calls to <linux/gpio/driver.h>")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Link: https://lore.kernel.org/r/20190731123814.46624-1-yuehaibing@huawei.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/gpio.h | 24 ------------------------
- 1 file changed, 24 deletions(-)
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/gpio.h b/include/linux/gpio.h
-index d12b5d566e4b1..11555bd821b73 100644
---- a/include/linux/gpio.h
-+++ b/include/linux/gpio.h
-@@ -229,30 +229,6 @@ static inline int irq_to_gpio(unsigned irq)
- 	return -EINVAL;
- }
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
+index 20455d082cb80..61c55621b9589 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
+@@ -2781,8 +2781,10 @@ static ssize_t blocked_fl_write(struct file *filp, const char __user *ubuf,
+ 		return -ENOMEM;
  
--static inline int
--gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
--		       unsigned int gpio_offset, unsigned int pin_offset,
--		       unsigned int npins)
--{
--	WARN_ON(1);
--	return -EINVAL;
--}
--
--static inline int
--gpiochip_add_pingroup_range(struct gpio_chip *chip,
--			struct pinctrl_dev *pctldev,
--			unsigned int gpio_offset, const char *pin_group)
--{
--	WARN_ON(1);
--	return -EINVAL;
--}
--
--static inline void
--gpiochip_remove_pin_ranges(struct gpio_chip *chip)
--{
--	WARN_ON(1);
--}
--
- static inline int devm_gpio_request(struct device *dev, unsigned gpio,
- 				    const char *label)
- {
+ 	err = bitmap_parse_user(ubuf, count, t, adap->sge.egr_sz);
+-	if (err)
++	if (err) {
++		kvfree(t);
+ 		return err;
++	}
+ 
+ 	bitmap_copy(adap->sge.blocked_fl, t, adap->sge.egr_sz);
+ 	t4_free_mem(t);
 -- 
 2.20.1
 
