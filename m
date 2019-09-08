@@ -2,52 +2,52 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F05C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2127C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4C99216C8
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A228320693
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:57:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947453;
-	bh=HcGSro/bVINMTqXcmyDPCbmvI42TSvHeyoJFat3J3Os=;
+	s=default; t=1567947460;
+	bh=AseTGtoaOnMVx1Y9ccsbVx9ZHHRjZZEswyRIdKubALI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DK0Oe5GYLsUPMghpRPrLcT7uA1JFJ/cAh8w6ZW0jAOUEihcNGo5+wh2ACVBMNWpys
-	 qOfODJt/2zSFkvWfU4aUSt2phD+qfkatE8VIzPLxqyYX9ekirSvs+sCEIqHQH+vilo
-	 kGZKqYqu06I5RMQizDxDhzfY65yTmyLOxQvzpZbY=
+	b=WFPIzHq8hm1q+9l6XXPcKKje/3nqB0ZCALvV85+zr9DfNTBTSpQof2G8bwLFXSeCp
+	 it9fGrGVq3kliYIy2/PGTOp3KSrOElCAIa8hBzqWn+Ob/UvuknufS9oary2ABtW8+d
+	 rswNdZOstC6n7OAqOLX1trPLM8WR33AexDmcTtCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730962AbfIHMsT (ORCPT
+        id S1730883AbfIHMsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:48:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37246 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:48:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730906AbfIHMsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:48:14 -0400
+        id S1730864AbfIHMsB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:48:01 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D069A218AC;
-        Sun,  8 Sep 2019 12:48:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3B9F21924;
+        Sun,  8 Sep 2019 12:48:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946894;
-        bh=HcGSro/bVINMTqXcmyDPCbmvI42TSvHeyoJFat3J3Os=;
+        s=default; t=1567946881;
+        bh=AseTGtoaOnMVx1Y9ccsbVx9ZHHRjZZEswyRIdKubALI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TkYQDLlcy7uSlqlRmldDKvVFlmbgpwK/6StmxD6CMGTe8QAq6E26EYlKjjbxiPtjb
-         r999dA+zDtwxpvMTfyKdTG4Drxc2oGUqtZ+GqM56KxD9/re3DZzS9I0haL7vKmPA8W
-         1yXdsVcmsRPKcHQRcQMv3unKgpOP1lf75C2LgG7U=
+        b=vO5au8Z3458b1/y52lh8YXfLnt2ZBX70C9Y/Tl5afYI6pZ4DgOpST4+JrtAC99IY7
+         1ZYL7DA6wCBqGgau/Auz5qxqQWcSA/t8nsIgX0oud5jnAq2tip2gDT/HFoLLWWVGxX
+         5TqTax0LfNHj52dhx52fVlb8vbf1VHhwue5hd78A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 33/57] net: kalmia: fix memory leaks
-Date:   Sun,  8 Sep 2019 13:41:57 +0100
-Message-Id: <20190908121140.283695606@linuxfoundation.org>
+        stable@vger.kernel.org, Willem de Bruijn <willemb@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 06/57] tcp: inherit timestamp on mtu probe
+Date:   Sun,  8 Sep 2019 13:41:30 +0100
+Message-Id: <20190908121127.673678005@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121125.608195329@linuxfoundation.org>
 References: <20190908121125.608195329@linuxfoundation.org>
@@ -60,46 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f1472cb09f11ddb41d4be84f0650835cb65a9073 ]
+From: Willem de Bruijn <willemb@google.com>
 
-In kalmia_init_and_get_ethernet_addr(), 'usb_buf' is allocated through
-kmalloc(). In the following execution, if the 'status' returned by
-kalmia_send_init_packet() is not 0, 'usb_buf' is not deallocated, leading
-to memory leaks. To fix this issue, add the 'out' label to free 'usb_buf'.
+[ Upstream commit 888a5c53c0d8be6e98bc85b677f179f77a647873 ]
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+TCP associates tx timestamp requests with a byte in the bytestream.
+If merging skbs in tcp_mtu_probe, migrate the tstamp request.
+
+Similar to MSG_EOR, do not allow moving a timestamp from any segment
+in the probe but the last. This to avoid merging multiple timestamps.
+
+Tested with the packetdrill script at
+https://github.com/wdebruij/packetdrill/commits/mtu_probe-1
+
+Link: http://patchwork.ozlabs.org/patch/1143278/#2232897
+Fixes: 4ed2d765dfac ("net-timestamp: TCP timestamping")
+Signed-off-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/kalmia.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/ipv4/tcp_output.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/usb/kalmia.c b/drivers/net/usb/kalmia.c
-index bd2ba36590288..0cc6993c279a2 100644
---- a/drivers/net/usb/kalmia.c
-+++ b/drivers/net/usb/kalmia.c
-@@ -117,16 +117,16 @@ kalmia_init_and_get_ethernet_addr(struct usbnet *dev, u8 *ethernet_addr)
- 	status = kalmia_send_init_packet(dev, usb_buf, ARRAY_SIZE(init_msg_1),
- 					 usb_buf, 24);
- 	if (status != 0)
--		return status;
-+		goto out;
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -2046,7 +2046,7 @@ static bool tcp_can_coalesce_send_queue_
+ 		if (len <= skb->len)
+ 			break;
  
- 	memcpy(usb_buf, init_msg_2, 12);
- 	status = kalmia_send_init_packet(dev, usb_buf, ARRAY_SIZE(init_msg_2),
- 					 usb_buf, 28);
- 	if (status != 0)
--		return status;
-+		goto out;
+-		if (unlikely(TCP_SKB_CB(skb)->eor))
++		if (unlikely(TCP_SKB_CB(skb)->eor) || tcp_has_tx_tstamp(skb))
+ 			return false;
  
- 	memcpy(ethernet_addr, usb_buf + 10, ETH_ALEN);
--
-+out:
- 	kfree(usb_buf);
- 	return status;
- }
--- 
-2.20.1
-
+ 		len -= skb->len;
+@@ -2162,6 +2162,7 @@ static int tcp_mtu_probe(struct sock *sk
+ 			 * we need to propagate it to the new skb.
+ 			 */
+ 			TCP_SKB_CB(nskb)->eor = TCP_SKB_CB(skb)->eor;
++			tcp_skb_collapse_tstamp(nskb, skb);
+ 			tcp_unlink_write_queue(skb, sk);
+ 			sk_wmem_free_skb(sk, skb);
+ 		} else {
 
 
