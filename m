@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCEC3C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30AA3C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B69772081B
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 056D82067B
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:58:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947481;
-	bh=kN9NqGek8Ie0c9DhttnXTmjhCO23MVeD6mXmL3G6P9I=;
+	s=default; t=1567947487;
+	bh=q54WEmURkkkwIjLKPzleqdQLu47tYN82atWMJMqBdwU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fTPyNoiDbumF/PXSZvWvQEn5VOLU34XyTSYL3WkXYaCYMYI/4qE5yNpB7QenqiU0i
-	 jWODvnWleUpIUQYypenMWLKFydhmX5U8McEQKryY9at94pLuYuVN8EOAEZ8WYb2Zyh
-	 6WOQXkcGfIM13t+7FXJZF4uPF7EeL1iTFt8csj4U=
+	b=qHe02KdXg5S46yZe7g7buN/ghkPXUHTEkfrLgUOi39EvkGd0M/KC8kTClVMY5UrBe
+	 sSyfCvamAgdTs36EcR3d99S+xSb5nWW8IPMFBHsur90WeGt6shJmdTpeBPWOoEHXXF
+	 uz3S+cQ4eETD9jINU2SYzvg+zzECZPcaT7ItfI14=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730734AbfIHMrg (ORCPT
+        id S1730685AbfIHMr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:47:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35982 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:47:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730705AbfIHMrd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:47:33 -0400
+        id S1730667AbfIHMrZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:47:25 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E11B218AC;
-        Sun,  8 Sep 2019 12:47:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 075CD2190F;
+        Sun,  8 Sep 2019 12:47:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946852;
-        bh=kN9NqGek8Ie0c9DhttnXTmjhCO23MVeD6mXmL3G6P9I=;
+        s=default; t=1567946844;
+        bh=q54WEmURkkkwIjLKPzleqdQLu47tYN82atWMJMqBdwU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yICrmf+PAG1glvTLZXPKeWTp6X4D4Fwa/00vCaRs/VHBa2bLdBozF5YOU8sCMa9cS
-         UGJjtnwIkc/D7eZsLkF7h3EW422BeENKz9z/c1Pa7MM4zkifKCfyi3hwGaJtVFiDka
-         Uhj9SliTdJXWpa11RRH4fi5Jed58LOLcCv2pIGh8=
+        b=Hgadf7nvMOacRQa8duS5HR9qn+vg5OnRPOD8HYUCb0lk7/Bww8HYpddSsBxzuOsB+
+         XsMdkPghgmJE7Hb+/0cgQgoGFqApC/aph6HtLr0S/FTI/NAdlBdDdiifB5gcMRsK64
+         FprWAfEvJls7DV584aYdPVG7Fg9nca3yC4GaGP4s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexandre Courbot <acourbot@chromium.org>,
-        Tomasz Figa <tfiga@chromium.org>, CK Hu <ck.hu@mediatek.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 24/57] drm/mediatek: set DMA max segment size
-Date:   Sun,  8 Sep 2019 13:41:48 +0100
-Message-Id: <20190908121135.503944150@linuxfoundation.org>
+Subject: [PATCH 4.19 21/57] gpio: Fix build error of function redefinition
+Date:   Sun,  8 Sep 2019 13:41:45 +0100
+Message-Id: <20190908121134.504042593@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121125.608195329@linuxfoundation.org>
 References: <20190908121125.608195329@linuxfoundation.org>
@@ -60,110 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 070955558e820b9a89c570b91b1f21762f62b288 ]
+[ Upstream commit 68e03b85474a51ec1921b4d13204782594ef7223 ]
 
-This driver requires imported PRIME buffers to appear contiguously in
-its IO address space. Make sure this is the case by setting the maximum
-DMA segment size to a more suitable value than the default 64KB.
+when do randbuilding, I got this error:
 
-Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
-Reviewed-by: Tomasz Figa <tfiga@chromium.org>
-Signed-off-by: CK Hu <ck.hu@mediatek.com>
+In file included from drivers/hwmon/pmbus/ucd9000.c:19:0:
+./include/linux/gpio/driver.h:576:1: error: redefinition of gpiochip_add_pin_range
+ gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
+ ^~~~~~~~~~~~~~~~~~~~~~
+In file included from drivers/hwmon/pmbus/ucd9000.c:18:0:
+./include/linux/gpio.h:245:1: note: previous definition of gpiochip_add_pin_range was here
+ gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
+ ^~~~~~~~~~~~~~~~~~~~~~
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 964cb341882f ("gpio: move pincontrol calls to <linux/gpio/driver.h>")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Link: https://lore.kernel.org/r/20190731123814.46624-1-yuehaibing@huawei.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_drv.c | 35 ++++++++++++++++++++++++--
- drivers/gpu/drm/mediatek/mtk_drm_drv.h |  2 ++
- 2 files changed, 35 insertions(+), 2 deletions(-)
+ include/linux/gpio.h | 24 ------------------------
+ 1 file changed, 24 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-index ffb997440851d..f6389479fccb5 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-@@ -220,6 +220,7 @@ static int mtk_drm_kms_init(struct drm_device *drm)
- 	struct mtk_drm_private *private = drm->dev_private;
- 	struct platform_device *pdev;
- 	struct device_node *np;
-+	struct device *dma_dev;
- 	int ret;
- 
- 	if (!iommu_present(&platform_bus_type))
-@@ -282,7 +283,29 @@ static int mtk_drm_kms_init(struct drm_device *drm)
- 		goto err_component_unbind;
- 	}
- 
--	private->dma_dev = &pdev->dev;
-+	dma_dev = &pdev->dev;
-+	private->dma_dev = dma_dev;
-+
-+	/*
-+	 * Configure the DMA segment size to make sure we get contiguous IOVA
-+	 * when importing PRIME buffers.
-+	 */
-+	if (!dma_dev->dma_parms) {
-+		private->dma_parms_allocated = true;
-+		dma_dev->dma_parms =
-+			devm_kzalloc(drm->dev, sizeof(*dma_dev->dma_parms),
-+				     GFP_KERNEL);
-+	}
-+	if (!dma_dev->dma_parms) {
-+		ret = -ENOMEM;
-+		goto err_component_unbind;
-+	}
-+
-+	ret = dma_set_max_seg_size(dma_dev, (unsigned int)DMA_BIT_MASK(32));
-+	if (ret) {
-+		dev_err(dma_dev, "Failed to set DMA segment size\n");
-+		goto err_unset_dma_parms;
-+	}
- 
- 	/*
- 	 * We don't use the drm_irq_install() helpers provided by the DRM
-@@ -292,13 +315,16 @@ static int mtk_drm_kms_init(struct drm_device *drm)
- 	drm->irq_enabled = true;
- 	ret = drm_vblank_init(drm, MAX_CRTC);
- 	if (ret < 0)
--		goto err_component_unbind;
-+		goto err_unset_dma_parms;
- 
- 	drm_kms_helper_poll_init(drm);
- 	drm_mode_config_reset(drm);
- 
- 	return 0;
- 
-+err_unset_dma_parms:
-+	if (private->dma_parms_allocated)
-+		dma_dev->dma_parms = NULL;
- err_component_unbind:
- 	component_unbind_all(drm->dev, drm);
- err_config_cleanup:
-@@ -309,9 +335,14 @@ err_config_cleanup:
- 
- static void mtk_drm_kms_deinit(struct drm_device *drm)
- {
-+	struct mtk_drm_private *private = drm->dev_private;
-+
- 	drm_kms_helper_poll_fini(drm);
- 	drm_atomic_helper_shutdown(drm);
- 
-+	if (private->dma_parms_allocated)
-+		private->dma_dev->dma_parms = NULL;
-+
- 	component_unbind_all(drm->dev, drm);
- 	drm_mode_config_cleanup(drm);
+diff --git a/include/linux/gpio.h b/include/linux/gpio.h
+index 39745b8bdd65d..b3115d1a7d494 100644
+--- a/include/linux/gpio.h
++++ b/include/linux/gpio.h
+@@ -240,30 +240,6 @@ static inline int irq_to_gpio(unsigned irq)
+ 	return -EINVAL;
  }
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.h b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
-index ecc00ca3221da..8fa60d46f8605 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.h
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
-@@ -59,6 +59,8 @@ struct mtk_drm_private {
- 	} commit;
  
- 	struct drm_atomic_state *suspend_state;
-+
-+	bool dma_parms_allocated;
- };
- 
- extern struct platform_driver mtk_ddp_driver;
+-static inline int
+-gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
+-		       unsigned int gpio_offset, unsigned int pin_offset,
+-		       unsigned int npins)
+-{
+-	WARN_ON(1);
+-	return -EINVAL;
+-}
+-
+-static inline int
+-gpiochip_add_pingroup_range(struct gpio_chip *chip,
+-			struct pinctrl_dev *pctldev,
+-			unsigned int gpio_offset, const char *pin_group)
+-{
+-	WARN_ON(1);
+-	return -EINVAL;
+-}
+-
+-static inline void
+-gpiochip_remove_pin_ranges(struct gpio_chip *chip)
+-{
+-	WARN_ON(1);
+-}
+-
+ static inline int devm_gpio_request(struct device *dev, unsigned gpio,
+ 				    const char *label)
+ {
 -- 
 2.20.1
 
