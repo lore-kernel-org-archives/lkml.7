@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCCA5C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD5BC4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A457B20693
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E75420693
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:55:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947347;
-	bh=YSXZWV+tAL8H6krWwzUXKGwSzN9btsq9wHqwHHtu+Gk=;
+	s=default; t=1567947350;
+	bh=t8vTz3bm7817MJk+R8f5YXtg/XCw3/+FCCFUyKitszE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hhh0AGcBupzOI0K+dbt07UVunn7SHus4/qOp8GegrDf9hcQcAeeY7r8pKFT95l12F
-	 VUQuz/eM5GBWNraxTXgg5pm0HaRqK0Zh5V/k5yNTnOhOKMCxugKH26vQYbD7q128Wr
-	 3xBLpjCIm/NUM8jbBNd44mbXMDShDC4aArxG+ZdI=
+	b=CP6MZ7RbxLnM5flbcsTB40asPDH5yWnEbZU0fGvt6wHGJp8tB0eBOpAhpux/imETn
+	 ZGV/MEHG3jlEYO9e/n4lxldq1uj6i8zO5P1wOd9/Pv7sTiqBFzz7rWQNKPtVyBv6Va
+	 Z/RXZHjeTppovdQjfNCTBywik9oOa8Go0Qejat3Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387945AbfIHMzq (ORCPT
+        id S1732181AbfIHMug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:55:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41658 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:50:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732216AbfIHMul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:50:41 -0400
+        id S1732119AbfIHMu2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:50:28 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6DEA2196F;
-        Sun,  8 Sep 2019 12:50:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3E752190F;
+        Sun,  8 Sep 2019 12:50:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567947040;
-        bh=YSXZWV+tAL8H6krWwzUXKGwSzN9btsq9wHqwHHtu+Gk=;
+        s=default; t=1567947027;
+        bh=t8vTz3bm7817MJk+R8f5YXtg/XCw3/+FCCFUyKitszE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M9cQmPyeiO76XKwk4se52wCdny7EaOU+Yr1eBPLMYiF6KWsp39X185qpys9t2jA3u
-         q92yE+KwttgYR18xtq04Lo7un7A83J73KGBn35KFpRb1Ui1KJ5niilWckzQJq8z1VR
-         iQhBdypGZ5P1yDWqsmGt/fsDFHUHWo0Y7OGOU5NU=
+        b=SCvxVucCCWczsMl/hPhqMkeKhphExrOsuqT8oHI1suNXuJYHIRtcp+M2s+DwPf2p7
+         AnoMs9A1K7gI1iPCmB8NXT7EMcJIFjtduE5CNiM4M0PfkxCDq3hZo37xCg3hd8+U5+
+         CLG96OcY2eAY6RFWRttKjEBzarBet57nKdSw2yY8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Harish Bandi <c-hbandi@codeaurora.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 37/94] Bluetooth: hci_qca: Send VS pre shutdown command.
-Date:   Sun,  8 Sep 2019 13:41:33 +0100
-Message-Id: <20190908121151.501534181@linuxfoundation.org>
+Subject: [PATCH 5.2 33/94] ixgbe: fix possible deadlock in ixgbe_service_task()
+Date:   Sun,  8 Sep 2019 13:41:29 +0100
+Message-Id: <20190908121151.386928027@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
 References: <20190908121150.420989666@linuxfoundation.org>
@@ -60,97 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a2780889e247561744dd8efbd3478a1999b72ae3 ]
+[ Upstream commit 8b6381600d59871fbe44d36522272f961ab42410 ]
 
-WCN399x chips are coex chips, it needs a VS pre shutdown
-command while turning off the BT. So that chip can inform
-BT is OFF to other active clients.
+ixgbe_service_task() calls unregister_netdev() under rtnl_lock().
+But unregister_netdev() internally calls rtnl_lock().
+So deadlock would occur.
 
-Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Fixes: 59dd45d550c5 ("ixgbe: firmware recovery mode")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/btqca.c   | 21 +++++++++++++++++++++
- drivers/bluetooth/btqca.h   |  7 +++++++
- drivers/bluetooth/hci_qca.c |  3 +++
- 3 files changed, 31 insertions(+)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
-index 0ee5acb685a10..ee25e6ae1a098 100644
---- a/drivers/bluetooth/btqca.c
-+++ b/drivers/bluetooth/btqca.c
-@@ -99,6 +99,27 @@ static int qca_send_reset(struct hci_dev *hdev)
- 	return 0;
- }
- 
-+int qca_send_pre_shutdown_cmd(struct hci_dev *hdev)
-+{
-+	struct sk_buff *skb;
-+	int err;
-+
-+	bt_dev_dbg(hdev, "QCA pre shutdown cmd");
-+
-+	skb = __hci_cmd_sync(hdev, QCA_PRE_SHUTDOWN_CMD, 0,
-+				NULL, HCI_INIT_TIMEOUT);
-+	if (IS_ERR(skb)) {
-+		err = PTR_ERR(skb);
-+		bt_dev_err(hdev, "QCA preshutdown_cmd failed (%d)", err);
-+		return err;
-+	}
-+
-+	kfree_skb(skb);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(qca_send_pre_shutdown_cmd);
-+
- static void qca_tlv_check_data(struct rome_config *config,
- 				const struct firmware *fw)
- {
-diff --git a/drivers/bluetooth/btqca.h b/drivers/bluetooth/btqca.h
-index e9c9999596035..f2a9e576a86ce 100644
---- a/drivers/bluetooth/btqca.h
-+++ b/drivers/bluetooth/btqca.h
-@@ -13,6 +13,7 @@
- #define EDL_PATCH_TLV_REQ_CMD		(0x1E)
- #define EDL_NVM_ACCESS_SET_REQ_CMD	(0x01)
- #define MAX_SIZE_PER_TLV_SEGMENT	(243)
-+#define QCA_PRE_SHUTDOWN_CMD		(0xFC08)
- 
- #define EDL_CMD_REQ_RES_EVT		(0x00)
- #define EDL_PATCH_VER_RES_EVT		(0x19)
-@@ -130,6 +131,7 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
- 		   enum qca_btsoc_type soc_type, u32 soc_ver);
- int qca_read_soc_version(struct hci_dev *hdev, u32 *soc_version);
- int qca_set_bdaddr(struct hci_dev *hdev, const bdaddr_t *bdaddr);
-+int qca_send_pre_shutdown_cmd(struct hci_dev *hdev);
- static inline bool qca_is_wcn399x(enum qca_btsoc_type soc_type)
- {
- 	return soc_type == QCA_WCN3990 || soc_type == QCA_WCN3998;
-@@ -161,4 +163,9 @@ static inline bool qca_is_wcn399x(enum qca_btsoc_type soc_type)
- {
- 	return false;
- }
-+
-+static inline int qca_send_pre_shutdown_cmd(struct hci_dev *hdev)
-+{
-+	return -EOPNOTSUPP;
-+}
- #endif
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index f41fb2c02e4fd..d88b024eaf566 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -1319,6 +1319,9 @@ static int qca_power_off(struct hci_dev *hdev)
- {
- 	struct hci_uart *hu = hci_get_drvdata(hdev);
- 
-+	/* Perform pre shutdown command */
-+	qca_send_pre_shutdown_cmd(hdev);
-+
- 	qca_power_shutdown(hu);
- 	return 0;
- }
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+index 57fd9ee6de665..f7c049559c1a5 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+@@ -7893,11 +7893,8 @@ static void ixgbe_service_task(struct work_struct *work)
+ 		return;
+ 	}
+ 	if (ixgbe_check_fw_error(adapter)) {
+-		if (!test_bit(__IXGBE_DOWN, &adapter->state)) {
+-			rtnl_lock();
++		if (!test_bit(__IXGBE_DOWN, &adapter->state))
+ 			unregister_netdev(adapter->netdev);
+-			rtnl_unlock();
+-		}
+ 		ixgbe_service_event_complete(adapter);
+ 		return;
+ 	}
 -- 
 2.20.1
 
