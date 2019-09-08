@@ -2,201 +2,105 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0FCFC4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A399AC433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:00:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC5242067B
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:00:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BC062067B
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:00:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947610;
-	bh=n/0lyfJOa3wZ0kRGY42coXLNNldSRdf2AbtECWKgLyw=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=nXno17HKUUfW8UWy3TC6H19hzSqxDp7noYWUFl0JDvOiVEqmO+xXkG7psR9IZ7hbx
-	 1ONqNJQN7yFD37hm8sTtK1Z1+T0T4T74pzovKly27+sevzWHFt/4LSHxFs9DLYZkEL
-	 uqmjDDjt2OGwYQpAg15j3fOLxIjzvRkSChehBS0E=
+	s=default; t=1567947624;
+	bh=/Q7HlGJnekc1Ftvo7Rzqe8mCBBoL7JmB5U5mLKnD57U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=nQzpfDzr1QUKbb6ah0P4cH0Cr6T2h655tT1XcMVaG5sNs9lktftwd3csa/cnpBHBm
+	 //O9oSOoZgtvT06nlqMeRGA1vp+/TbaRTHWFrAv8qJCW8uHAZm2Zcr5niK80HoRY/S
+	 N5j+lJGaHSULuYl4qE8wF1uEar5ugMWSJjaGlBm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729981AbfIHMpD (ORCPT
+        id S1729873AbfIHMol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:45:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60004 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:44:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729964AbfIHMo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:44:59 -0400
+        id S1729846AbfIHMoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:44:38 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C47D2081B;
-        Sun,  8 Sep 2019 12:44:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BD9B218AF;
+        Sun,  8 Sep 2019 12:44:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946698;
-        bh=n/0lyfJOa3wZ0kRGY42coXLNNldSRdf2AbtECWKgLyw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=tK7CYibeeXvTk+lU4/h/yCL2lVtGZomRTIOqcRoERFLcH8n3swbDmuc5kNbB5DYta
-         Hmq/NUUz2sry7KDlk5/Zc2nc1yhMi9uVpCAvFhlileMwhejCAuhosmn1TnqsgGIIDR
-         csbyq43ZBycDIM5p/a1xYn+LBEydqaK8GE1nnbiI=
+        s=default; t=1567946677;
+        bh=/Q7HlGJnekc1Ftvo7Rzqe8mCBBoL7JmB5U5mLKnD57U=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yEHrAR1bmByBnaXjo7gQvsPLWO/dIUxop0trqCtY5soG759IElzvh+h9vXkS7noe1
+         pFMkO9H1wcYuc1EeSuNATpyIChmrMqtpfun4Z0mH41frtTnt501h6xS4eEs3H967db
+         knMGE1VcAWDJwzq+Dhv9pLdP7rL368eZXhDJ5CAM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.9 00/26] 4.9.192-stable review
-Date:   Sun,  8 Sep 2019 13:41:39 +0100
-Message-Id: <20190908121057.216802689@linuxfoundation.org>
+        stable@vger.kernel.org, Willem de Bruijn <willemb@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 25/26] tcp: inherit timestamp on mtu probe
+Date:   Sun,  8 Sep 2019 13:42:04 +0100
+Message-Id: <20190908121111.224659994@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
+In-Reply-To: <20190908121057.216802689@linuxfoundation.org>
+References: <20190908121057.216802689@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.192-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.9.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.9.192-rc1
-X-KernelTest-Deadline: 2019-09-10T12:11+00:00
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.9.192 release.
-There are 26 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+From: Willem de Bruijn <willemb@google.com>
 
-Responses should be made by Tue 10 Sep 2019 12:09:36 PM UTC.
-Anything received after that time might be too late.
+[ Upstream commit 888a5c53c0d8be6e98bc85b677f179f77a647873 ]
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.192-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
-and the diffstat can be found below.
+TCP associates tx timestamp requests with a byte in the bytestream.
+If merging skbs in tcp_mtu_probe, migrate the tstamp request.
 
-thanks,
+Similar to MSG_EOR, do not allow moving a timestamp from any segment
+in the probe but the last. This to avoid merging multiple timestamps.
 
-greg k-h
+Tested with the packetdrill script at
+https://github.com/wdebruij/packetdrill/commits/mtu_probe-1
 
--------------
-Pseudo-Shortlog of commits:
+Link: http://patchwork.ozlabs.org/patch/1143278/#2232897
+Fixes: 4ed2d765dfac ("net-timestamp: TCP timestamping")
+Signed-off-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/ipv4/tcp_output.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.9.192-rc1
-
-Eric Dumazet <edumazet@google.com>
-    mld: fix memory leak in mld_del_delrec()
-
-Willem de Bruijn <willemb@google.com>
-    tcp: inherit timestamp on mtu probe
-
-Chen-Yu Tsai <wens@csie.org>
-    net: stmmac: dwmac-rk: Don't fail if phy regulator is absent
-
-Feng Sun <loyou85@gmail.com>
-    net: fix skb use after free in netpoll
-
-Linus Torvalds <torvalds@linux-foundation.org>
-    Revert "x86/apic: Include the LDR when clearing out APIC registers"
-
-Martin Sperl <kernel@martin.sperl.org>
-    spi: bcm2835aux: fix corruptions for longer spi transfers
-
-Martin Sperl <kernel@martin.sperl.org>
-    spi: bcm2835aux: remove dangerous uncontrolled read of fifo
-
-Martin Sperl <kernel@martin.sperl.org>
-    spi: bcm2835aux: unifying code between polling and interrupt driven code
-
-Rob Herring <robh@kernel.org>
-    spi: bcm2835aux: ensure interrupts are enabled for shared handler
-
-Luis Henriques <lhenriques@suse.com>
-    libceph: allow ceph_buffer_put() to receive a NULL ceph_buffer
-
-Andrew Jones <drjones@redhat.com>
-    KVM: arm/arm64: Only skip MMIO insn once
-
-Luis Henriques <lhenriques@suse.com>
-    ceph: fix buffer free while holding i_ceph_lock in fill_inode()
-
-Luis Henriques <lhenriques@suse.com>
-    ceph: fix buffer free while holding i_ceph_lock in __ceph_setxattr()
-
-Wenwen Wang <wenwen@cs.uga.edu>
-    IB/mlx4: Fix memory leaks
-
-Vitaly Kuznetsov <vkuznets@redhat.com>
-    Tools: hv: kvp: eliminate 'may be used uninitialized' warning
-
-Tho Vu <tho.vu.wh@rvc.renesas.com>
-    ravb: Fix use-after-free ravb_tstamp_skb
-
-Wenwen Wang <wenwen@cs.uga.edu>
-    wimax/i2400m: fix a memory leak bug
-
-Wenwen Wang <wenwen@cs.uga.edu>
-    net: kalmia: fix memory leaks
-
-Wenwen Wang <wenwen@cs.uga.edu>
-    cx82310_eth: fix a memory leak bug
-
-Wenwen Wang <wenwen@cs.uga.edu>
-    net: myri10ge: fix memory leaks
-
-Wenwen Wang <wenwen@cs.uga.edu>
-    cxgb4: fix a memory leak bug
-
-YueHaibing <yuehaibing@huawei.com>
-    gpio: Fix build error of function redefinition
-
-Thomas Falcon <tlfalcon@linux.ibm.com>
-    ibmveth: Convert multicast list size for little-endian system
-
-Matthias Kaehlcke <mka@chromium.org>
-    Bluetooth: btqca: Add a short delay before downloading the NVM
-
-Nathan Chancellor <natechancellor@gmail.com>
-    net: tc35815: Explicitly check NET_IP_ALIGN is not zero in tc35815_rx
-
-Fuqian Huang <huangfq.daxian@gmail.com>
-    net: tundra: tsi108: use spin_lock_irqsave instead of spin_lock_irq in IRQ context
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |  4 +-
- arch/arm/kvm/mmio.c                                |  7 +++
- arch/x86/kernel/apic/apic.c                        |  4 --
- drivers/bluetooth/btqca.c                          |  3 ++
- drivers/infiniband/hw/mlx4/mad.c                   |  4 +-
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c |  4 +-
- drivers/net/ethernet/ibm/ibmveth.c                 |  9 ++--
- drivers/net/ethernet/myricom/myri10ge/myri10ge.c   |  2 +-
- drivers/net/ethernet/renesas/ravb_main.c           |  8 ++-
- drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c     |  6 +--
- drivers/net/ethernet/toshiba/tc35815.c             |  2 +-
- drivers/net/ethernet/tundra/tsi108_eth.c           |  5 +-
- drivers/net/usb/cx82310_eth.c                      |  3 +-
- drivers/net/usb/kalmia.c                           |  6 +--
- drivers/net/wimax/i2400m/fw.c                      |  4 +-
- drivers/spi/spi-bcm2835aux.c                       | 57 ++++++++--------------
- fs/ceph/inode.c                                    |  7 +--
- fs/ceph/xattr.c                                    |  8 ++-
- include/linux/ceph/buffer.h                        |  3 +-
- include/linux/gpio.h                               | 24 ---------
- net/core/netpoll.c                                 |  6 +--
- net/ipv4/tcp_output.c                              |  3 +-
- net/ipv6/mcast.c                                   |  5 +-
- tools/hv/hv_kvp_daemon.c                           |  2 +-
- 24 files changed, 84 insertions(+), 102 deletions(-)
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -1943,7 +1943,7 @@ static bool tcp_can_coalesce_send_queue_
+ 		if (len <= skb->len)
+ 			break;
+ 
+-		if (unlikely(TCP_SKB_CB(skb)->eor))
++		if (unlikely(TCP_SKB_CB(skb)->eor) || tcp_has_tx_tstamp(skb))
+ 			return false;
+ 
+ 		len -= skb->len;
+@@ -2066,6 +2066,7 @@ static int tcp_mtu_probe(struct sock *sk
+ 			 * we need to propagate it to the new skb.
+ 			 */
+ 			TCP_SKB_CB(nskb)->eor = TCP_SKB_CB(skb)->eor;
++			tcp_skb_collapse_tstamp(nskb, skb);
+ 			tcp_unlink_write_queue(skb, sk);
+ 			sk_wmem_free_skb(sk, skb);
+ 		} else {
 
 
