@@ -2,112 +2,89 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62006C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 11:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B71C2C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 11:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 426AE207FC
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 11:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 916A6214D9
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 11:16:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728802AbfIHLKZ (ORCPT
+        id S1728818AbfIHLQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 07:10:25 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2237 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726186AbfIHLKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 07:10:24 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 933D21FDA77EC739305C;
-        Sun,  8 Sep 2019 19:10:22 +0800 (CST)
-Received: from [10.45.2.172] (10.45.2.172) by smtp.huawei.com (10.3.19.210)
- with Microsoft SMTP Server id 14.3.439.0; Sun, 8 Sep 2019 19:10:21 +0800
-Subject: Re: [Virtio-fs] [PATCH 15/18] virtiofs: Make virtio_fs object
- refcounted
-To:     Vivek Goyal <vgoyal@redhat.com>, <linux-fsdevel@vger.kernel.org>,
-        <virtualization@lists.linux-foundation.org>, <miklos@szeredi.hu>
-CC:     <mst@redhat.com>, <linux-kernel@vger.kernel.org>,
-        <virtio-fs@redhat.com>
-References: <20190905194859.16219-1-vgoyal@redhat.com>
- <20190905194859.16219-16-vgoyal@redhat.com>
-From:   piaojun <piaojun@huawei.com>
-Message-ID: <a8ddb168-5fdb-b35a-5357-3c75e0226049@huawei.com>
-Date:   Sun, 8 Sep 2019 19:10:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 8 Sep 2019 07:16:26 -0400
+Received: from saturn.retrosnub.co.uk ([46.235.226.198]:52996 "EHLO
+        saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728753AbfIHLQ0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 07:16:26 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id C92309E74EA;
+        Sun,  8 Sep 2019 12:16:22 +0100 (BST)
+Date:   Sun, 8 Sep 2019 12:15:24 +0100
+From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     David Lechner <david@lechnology.com>, linux-iio@vger.kernel.org,
+        linux-omap@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?B?QmVub8OudA==?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v3 1/6] bus/ti-pwmss: move TI PWMSS driver from PWM to
+ bus subsystem
+Message-ID: <20190908121524.49b4874d@archlinux>
+In-Reply-To: <20190902150245.GE1445@ulmo>
+References: <20190901225827.12301-1-david@lechnology.com>
+        <20190901225827.12301-2-david@lechnology.com>
+        <20190902150245.GE1445@ulmo>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190905194859.16219-16-vgoyal@redhat.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.45.2.172]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 2 Sep 2019 17:02:45 +0200
+Thierry Reding <thierry.reding@gmail.com> wrote:
 
+> On Sun, Sep 01, 2019 at 05:58:22PM -0500, David Lechner wrote:
+> > The TI PWMSS driver is a simple bus driver for providing power
+> > power management for the PWM peripherals on TI AM33xx SoCs, namely
+> > eCAP, eHRPWM and eQEP. The eQEP is a counter rather than a PWM, so
+> > it does not make sense to have the bus driver in the PWM subsystem
+> > since the PWMSS is not exclusive to PWM devices.
+> > 
+> > Signed-off-by: David Lechner <david@lechnology.com>
+> > ---
+> > 
+> > v3 changes:
+> > - none
+> > v2 changes:
+> > - new patch
+> > 
+> >  drivers/bus/Kconfig                           | 9 +++++++++
+> >  drivers/bus/Makefile                          | 1 +
+> >  drivers/{pwm/pwm-tipwmss.c => bus/ti-pwmss.c} | 0
+> >  drivers/pwm/Kconfig                           | 9 ---------
+> >  drivers/pwm/Makefile                          | 1 -
+> >  5 files changed, 10 insertions(+), 10 deletions(-)
+> >  rename drivers/{pwm/pwm-tipwmss.c => bus/ti-pwmss.c} (100%)  
+> 
+> Acked-by: Thierry Reding <thierry.reding@gmail.com>
 
-On 2019/9/6 3:48, Vivek Goyal wrote:
-> This object is used both by fuse_connection as well virt device. So make
-> this object reference counted and that makes it easy to define life cycle
-> of the object.
-> 
-> Now deivce can be removed while filesystem is still mounted. This will
-> cleanup all the virtqueues but virtio_fs object will still be around and
-> will be cleaned when filesystem is unmounted and sb/fc drops its reference.
-> 
-> Removing a device also stops all virt queues and any new reuqest gets
-> error -ENOTCONN. All existing in flight requests are drained before
-> ->remove returns.
-> 
-> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-> ---
->  fs/fuse/virtio_fs.c | 52 +++++++++++++++++++++++++++++++++++++--------
->  1 file changed, 43 insertions(+), 9 deletions(-)
-> 
-> diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
-> index 01bbf2c0e144..29ec2f5bbbe2 100644
-> --- a/fs/fuse/virtio_fs.c
-> +++ b/fs/fuse/virtio_fs.c
-> @@ -37,6 +37,7 @@ struct virtio_fs_vq {
->  
->  /* A virtio-fs device instance */
->  struct virtio_fs {
-> +	struct kref refcount;
->  	struct list_head list;    /* on virtio_fs_instances */
->  	char *tag;
->  	struct virtio_fs_vq *vqs;
-> @@ -63,6 +64,27 @@ static inline struct fuse_pqueue *vq_to_fpq(struct virtqueue *vq)
->  	return &vq_to_fsvq(vq)->fud->pq;
->  }
->  
-> +static void release_virtiofs_obj(struct kref *ref)
-> +{
-> +	struct virtio_fs *vfs = container_of(ref, struct virtio_fs, refcount);
-> +
-> +	kfree(vfs->vqs);
-> +	kfree(vfs);
-> +}
-> +
-> +static void virtio_fs_put(struct virtio_fs *fs)
-> +{
-> +	mutex_lock(&virtio_fs_mutex);
-> +	kref_put(&fs->refcount, release_virtiofs_obj);
-> +	mutex_unlock(&virtio_fs_mutex);
-> +}
-> +
-> +static void virtio_fs_put(struct fuse_iqueue *fiq)
-> +{
-> +	struct virtio_fs *vfs = fiq->priv;
-> +	virtiofs_put(vfs);
-> +}
-
-It's a little confusing that virtiofs_put() looks like virtiofs_put(),
-and could we use __virtio_fs_put to replace virtio_fs_put?
+Do we need an immutable branch for these precursor patches to the
+driver addition? It's not going to make 5.4 via my tree as cutting it
+too fine so we'll be in the position of holding these in a non obvious
+tree for a whole cycle. 
 
 Thanks,
-Jun
+
+Jonathan
+
+
