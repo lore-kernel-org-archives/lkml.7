@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6BE7C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 01:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83553C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 01:28:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A833021871
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 01:28:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B18621744
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 01:28:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rNSou3uH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="idqshwqd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391941AbfIHB2a (ORCPT
+        id S2393233AbfIHB2h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 21:28:30 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43356 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725846AbfIHB22 (ORCPT
+        Sat, 7 Sep 2019 21:28:37 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45737 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725846AbfIHB2d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 21:28:28 -0400
-Received: by mail-pf1-f193.google.com with SMTP id d15so6901213pfo.10
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Sep 2019 18:28:28 -0700 (PDT)
+        Sat, 7 Sep 2019 21:28:33 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y72so6887948pfb.12
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Sep 2019 18:28:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=H/og7QWBk3tTPC1uU6UPyqBtYUYQLNyBfN0kn6w31nc=;
-        b=rNSou3uHGlI9AWB5kprRiAT76DLABO920K6HFBjHc3PNgEQdZEURoKNKSRRcEAB/Cz
-         nOJUzAAd/8ahJF4RKE5/7Hw0Svz59Y8PsiSTWozs1NZBSIyGhHpM6sKj5ANiLr2VToRo
-         xhLuC0o7tu92Cn1LqgfRegLH7aRXFpKd84KSzllHam6QyrrGlpssE5pHYXDOghIxUz0a
-         +Acx5DtQtftpUFajXsr3kCwxskTkB8C0rCflEzhD0cVGgzftY6gw5p12oQp58qr87JIh
-         apibBFE5LT72zkh5XyiD+LHb7tdTRLSlhafaTzkdoh6nIA7OP9GhfV3B9eOAy8mc2c52
-         oj/A==
+        bh=mg3rD7UYoQohcNlJDhvas+f5gcb8SahIBcKJEgl17NA=;
+        b=idqshwqdoBLOeLVNPz9c5arwrGAf6HFGQkcV7H0h/m185HR5I2kwaEGTeIWoJKzeOX
+         X4Y9eZL6j5AIDaa2hFKMmWuSo4xWwO/B0w/DlS3QD2w8dews+oejGU9qK2d1QSWeIy8P
+         PW/Wo8OzbBDyH7Ha4miD86HHpw8HeTI1N25VfR7joDYwIPCJhr4sRPpGoRsxCxUEiFPC
+         YuLuNQU8Jc5kIdNE7iex4A8iRMVZayvpf/137nOep5NcRApqf6dy2HJUBS0neOFFG2PT
+         rzZ5rtnqCUqhikApoPqLar9eHIYoE6iFX0AoSf1MF25aV1BdSHVs4HPzHVaziBT+OmGo
+         TqwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=H/og7QWBk3tTPC1uU6UPyqBtYUYQLNyBfN0kn6w31nc=;
-        b=MRw6Vvgm4ffYqgdadGrIyZ2dV4nTogwpLBZF9s5dVTPfG/bl9Nv0YArrWyf5zc+XrE
-         1aHPZasSyDZ71zlsH58DAtOU7hWe1i04C7FcKex9s8vpL0a0eEwlOCfGtQsOh2gF9rhV
-         bAUiAjiKsehapCe1CztXoOzmX2VEndCCSojVnk79AbW+VHZPaBxRmC1kLn6swx4eCy20
-         9RU2qH0Su7yP0tSjalHU2HDjhvCZW3DBzpDNFkOQ8anBHwmcanmupSBMyyx10skqU02P
-         Qd6DmSJehwgfEC9aqLnTit7psd5EonHI99CwIgRIN/yKxqQVuNNinofK8WxfYniGZKXn
-         4k6w==
-X-Gm-Message-State: APjAAAWCOLSN8v+67l6CdHK9vtX46HUtzH7oyahXPkC3VfBwlTyqfJde
-        2Kf97TEjlD/ZRONB+73Q3omcGLm6QDI=
-X-Google-Smtp-Source: APXvYqwMtbajqxtDr/c+qIAbqUGBUa+5zROlULv6RnsfhCqgsKzd2rPOSO+fVYJn5xuvwW1xKiPGsQ==
-X-Received: by 2002:a63:70d:: with SMTP id 13mr15270256pgh.326.1567906108163;
-        Sat, 07 Sep 2019 18:28:28 -0700 (PDT)
+        bh=mg3rD7UYoQohcNlJDhvas+f5gcb8SahIBcKJEgl17NA=;
+        b=fBIRFwr5FryxXW7JeBZLgunoC7w7CEecI+ZCkTr8cAdpoAdeQqvp6ZIqj8mjS510n8
+         kRv5PKW/lzPHiNJJOEwi0IsrBtPwA/w+fjxr/U6dvEX8RgUUrt/NvSMVKJKqV/gTe0ne
+         SwPsiGlmCWM6VPqC2JyzAMAH/gfXNFcTwo6xTvmQtPJvZmCp+RzDPZe+2yrK9Fpl1cdM
+         0gEB9z4aOnX8ZZjkEULv3w00GHnFgQ78ItpbC8BL/l0Q+TSAjOOYHIWtC3R+IldinmyQ
+         T852ozbbRor4jpMCWhkL0GPBfLPXoh4LZI8cVxi8LI4rvYMUoRYeiaQd+xUTlwzKu73o
+         cO+A==
+X-Gm-Message-State: APjAAAU7HBXYFKHULYmVmvpwBmruo6aKQpXWbHavipdsesChgRnfxv+w
+        1dWVii84r2ZQ3+jZy3NdlMjJIi0cGDo=
+X-Google-Smtp-Source: APXvYqwiao79zpcoqVrF0PAKbwXBaUkV1yAiPaEbCaovZ1A/R8Y4wI4pfDpATG5o9MAIoXTmDxYDlw==
+X-Received: by 2002:a17:90b:34a:: with SMTP id fh10mr9799400pjb.35.1567906112283;
+        Sat, 07 Sep 2019 18:28:32 -0700 (PDT)
 Received: from localhost.localdomain ([149.28.153.17])
-        by smtp.gmail.com with ESMTPSA id s1sm18367884pjs.31.2019.09.07.18.28.24
+        by smtp.gmail.com with ESMTPSA id s1sm18367884pjs.31.2019.09.07.18.28.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Sep 2019 18:28:27 -0700 (PDT)
+        Sat, 07 Sep 2019 18:28:31 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
         Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH 2/8] kconfig/hacking: Create submenu for arch special debugging options
-Date:   Sun,  8 Sep 2019 09:27:54 +0800
-Message-Id: <20190908012800.12979-3-changbin.du@gmail.com>
+Subject: [PATCH 3/8] kconfig/hacking: Group kernel data structures debugging together
+Date:   Sun,  8 Sep 2019 09:27:55 +0800
+Message-Id: <20190908012800.12979-4-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190908012800.12979-1-changbin.du@gmail.com>
 References: <20190908012800.12979-1-changbin.du@gmail.com>
@@ -74,28 +74,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The arch special options are a little long, so create a submenu for them.
+Group these similar runtime data structures verification options together.
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 ---
- lib/Kconfig.debug | 4 ++++
- 1 file changed, 4 insertions(+)
+ lib/Kconfig.debug | 24 ++++++++++++++----------
+ 1 file changed, 14 insertions(+), 10 deletions(-)
 
 diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 868fa64a0901..96047140be93 100644
+index 96047140be93..3c9674483ec2 100644
 --- a/lib/Kconfig.debug
 +++ b/lib/Kconfig.debug
-@@ -2146,6 +2146,10 @@ config IO_STRICT_DEVMEM
+@@ -1374,6 +1374,8 @@ config DEBUG_BUGVERBOSE
+ 	  of the BUG call as well as the EIP and oops trace.  This aids
+ 	  debugging but costs about 70-100K of memory.
  
- 	  If in doubt, say Y.
- 
-+menu "$(SRCARCH) Debugging"
++menu "Debug kernel data structures"
 +
- source "arch/$(SRCARCH)/Kconfig.debug"
+ config DEBUG_LIST
+ 	bool "Debug linked list manipulation"
+ 	depends on DEBUG_KERNEL || BUG_ON_DATA_CORRUPTION
+@@ -1403,6 +1405,18 @@ config DEBUG_SG
  
+ 	  If unsure, say N.
+ 
++config BUG_ON_DATA_CORRUPTION
++	bool "Trigger a BUG when data corruption is detected"
++	select DEBUG_LIST
++	help
++	  Select this option if the kernel should BUG when it encounters
++	  data corruption in kernel memory structures when they get checked
++	  for validity.
++
++	  If unsure, say N.
++
 +endmenu
 +
- endmenu # Kernel hacking
+ config DEBUG_NOTIFIERS
+ 	bool "Debug notifier call chains"
+ 	depends on DEBUG_KERNEL
+@@ -2095,16 +2109,6 @@ config MEMTEST
+ 	        memtest=17, mean do 17 test patterns.
+ 	  If you are unsure how to answer this question, answer N.
+ 
+-config BUG_ON_DATA_CORRUPTION
+-	bool "Trigger a BUG when data corruption is detected"
+-	select DEBUG_LIST
+-	help
+-	  Select this option if the kernel should BUG when it encounters
+-	  data corruption in kernel memory structures when they get checked
+-	  for validity.
+-
+-	  If unsure, say N.
+-
+ source "samples/Kconfig"
+ 
+ config ARCH_HAS_DEVMEM_IS_ALLOWED
 -- 
 2.20.1
 
