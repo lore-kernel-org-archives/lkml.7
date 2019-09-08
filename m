@@ -2,70 +2,106 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCC9C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 08:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C93C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 08:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 030C62082C
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 08:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C727D20863
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 08:33:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567931584;
+	bh=W6Ls3HKvcrmmViZom75tznDE5bcFkk/XXbmPxygk+fc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uhwVvh1XtW1C6qijUDeBNpsBX05aHDt4st6e5VFdeUZ/0zFbKz+uvSDOXOlFiOi0D
+	 uCmKT/DAKNt+3wb4FTixu+P3SqNyI9dM9qM7d7JIY7i50hnS43/+5BYPLoBh3da7dU
+	 VC77qUUaJh5TS0+kvkMK5XnUIdtOC8L1Gj89sOy8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbfIHIZF (ORCPT
+        id S1727205AbfIHIdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 04:25:05 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:46791 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727046AbfIHIZE (ORCPT
+        Sun, 8 Sep 2019 04:33:03 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42260 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbfIHIdD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 04:25:04 -0400
-Received: by mail-qk1-f194.google.com with SMTP id 201so9824055qkd.13;
-        Sun, 08 Sep 2019 01:25:04 -0700 (PDT)
+        Sun, 8 Sep 2019 04:33:03 -0400
+Received: by mail-wr1-f68.google.com with SMTP id q14so10561834wrm.9;
+        Sun, 08 Sep 2019 01:33:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=Dvenms9Y7ILBHUAT3jSNMNmZR/R8ixW/QNiX0T3fndY=;
+        b=Xy0s84Epf/0r5ThM7KFlOlfZVD9d9Ci5oqr03zZd2VEm3Wi/ir6LN98a2DQWDX1j8/
+         TLY4i4EW/VS7X/9Qk5MR6xTXW5Xwp/Yk42/OKbtWmzAEnbbMOHgwhnEIGXoRWJiJPvaW
+         keLOxQ3LcKHLh8Sjw+k/LOLV7qVHUjsciT7T5sqN5+1E9yLr7Xp1Ls3SUahRLTXCGKuZ
+         TN8O6j+iE5YBIikJvz8S5jBB8UsSE/lzygxaC5IiN6jne2TV4m+DkcsFdCYtcdGfD7RL
+         Z+RWoW0KaAYISaO9iSHM71cX9bH2mGEa/l9VSmK19bTHtSWd9XX/VSVDjo+1zerG/v50
+         cMXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DaQ63NtAxqwHK4xTDUWbmOw1jK7uOrCrWnm8XarMV5k=;
-        b=g/cg51IZZ0klTptjL9fCYAM5Lj0TQcwmItZJrz+szF4P+zgklxigRdxsGI392qJpQB
-         DLfyoMllILkUpEhK6ioZ86krV2uNrhH+0Eiy6TCLHz8H2d30FNnXzL7ZOJ9EYpEpVegd
-         pNzF8dd/49yeUaQYPHkH9VtcG0SI7OlViyKwv4PfmMOPgnZ955LaRsSD7Llneu3YjKuU
-         C9x0kxE2UwPja5h597u9S9UKxa530wP3sHgezuILJ7Q+s4cjB0DJ9zciACIxMbNn3MQs
-         UoLSTROwnLbkmkV9n5fqMObHXU1fxl3sSZPUhMCD3jb21PfR/8Q6mIJEcCIOcsxCVRME
-         O5qg==
-X-Gm-Message-State: APjAAAUEKl1mZZ+BAaU38J8jsOqdlfatq1oGAfNbvkDoRcqYpp1tiPlV
-        /PjFHyTtWSM1m9Q5/SEFip7y26XVHC9kxaPRt40=
-X-Google-Smtp-Source: APXvYqwqFALvmetqBzu/1tm7tKbbZp+CVEOqVcsvvWtKSZ29qdhHzMFKWbuSMAMIsD6eeaGkqnHTpOL8S6V6d6DoGFc=
-X-Received: by 2002:a37:4b0d:: with SMTP id y13mr17267142qka.3.1567931103659;
- Sun, 08 Sep 2019 01:25:03 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=Dvenms9Y7ILBHUAT3jSNMNmZR/R8ixW/QNiX0T3fndY=;
+        b=Q5RdJoBh1GVY3SL4JTs8NjnkJrjGq4qC7CFIQMfMHz0C4bthroWtYlWtMohiL4iN/B
+         M5GfO/LW2S0axAWFPtEA9JUDIFB9MVzgcGva8NYokXHhpUlHdQNlFUMt+DAG3rW5nn89
+         SfTSBcsCq9pQgnqGhXxudaxo4kxTAvY3v5IvyyItL/PHexwGAKPvCu4RBdDVmMVqJ27b
+         V0UATyvFmMOEXUdm9ae6V/2XpKppJR7lvqfFN5EXnq7skomiuFT/8pVfBnt8CS8mI3rW
+         gXrhgAfQabM/91MXrKFUY6+YOprWHTY5Q6Ts9PtSBNPCMBJMSk6FjAq5eMvSuZndprF8
+         SeEQ==
+X-Gm-Message-State: APjAAAUcWRx3QK3d+ZKDcZKrug8BnPV82HybtdJmvqQhFfcppjUMh/kr
+        Vx7X5qrO7+y7wf6J7vGJObI=
+X-Google-Smtp-Source: APXvYqxmEXYD4KfHG33ISQrdtsla0hWkLH3IEJfmTrLErV0Ihc/bV5nsvOMFY9z0b/uum8iYI9GRGw==
+X-Received: by 2002:a5d:49c2:: with SMTP id t2mr13914364wrs.351.1567931581038;
+        Sun, 08 Sep 2019 01:33:01 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id u68sm17085458wmu.12.2019.09.08.01.32.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Sep 2019 01:33:00 -0700 (PDT)
+Date:   Sun, 8 Sep 2019 10:32:58 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>, bvanassche@acm.org,
+        arnd@arndb.de, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>
+Subject: Re: [PATCH v2] powerpc/lockdep: fix a false positive warning
+Message-ID: <20190908083257.GA126088@gmail.com>
+References: <20190906231754.830-1-cai@lca.pw>
+ <20190907070505.GA88784@gmail.com>
+ <420D09F4-FC19-421C-AE46-4B2A9157FAE3@lca.pw>
 MIME-Version: 1.0
-References: <20190906154243.2282560-1-arnd@arndb.de> <20190908081022.GD26697@unreal>
-In-Reply-To: <20190908081022.GD26697@unreal>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Sun, 8 Sep 2019 10:24:44 +0200
-Message-ID: <CAK8P3a2Rbn=of3=1G9kfmL8ZJOJriCAk-M6xy6u3K82PykVUFA@mail.gmail.com>
-Subject: Re: [PATCH] ib_umem: fix type mismatch
-To:     Leon Romanovsky <leonro@mellanox.com>
-Cc:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Shiraz Saleem <shiraz.saleem@intel.com>,
-        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <420D09F4-FC19-421C-AE46-4B2A9157FAE3@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 8, 2019 at 10:10 AM Leon Romanovsky <leonro@mellanox.com> wrote:
-> On Fri, Sep 06, 2019 at 05:42:37PM +0200, Arnd Bergmann wrote:
->
-> I had slightly different fix in my submission queue, which I think is
-> better because it leaves length to be size_t.
->
-> https://lore.kernel.org/linux-rdma/20190908080726.30017-1-leon@kernel.org/T/#u
 
-Ok, I'm dropping my patch from my local test tree in favor of that one then.
+* Qian Cai <cai@lca.pw> wrote:
 
-       Arnd
+> I thought about making it a bool in the first place, but since all 
+> other similar helpers (arch_is_kernel_initmem_freed(), 
+> arch_is_kernel_text(), arch_is_kernel_data() etc) could be bool too but 
+> are not, I kept arch_is_bss_hole() just to be “int” for consistent.
+> 
+> Although then there is is_kernel_rodata() which is bool. I suppose I’ll 
+> change arch_is_bss_hole() to bool, and then could have a follow-up 
+> patch to covert all similar helpers to return boo instead.
+
+Sounds good to me.
+
+Thanks,
+
+	Ingo
