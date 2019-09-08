@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A5B1C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 951E8C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48B732082C
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:54:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DF5421A4A
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:54:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947284;
-	bh=AhQPHzaq5nt+1yIqizAqPSmHJXm4UO0QbpW66fd8Kfk=;
+	s=default; t=1567947291;
+	bh=gBU7cPMlTcDiExfIMsj69Ty9FJ+Gh1Uspzhac7yQTXQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Te1cG7W6VAUOZGCGTNwQknfUd3p1m2lzzlHO2SUsYSD0vZ+19v/LFNfaLTWuLHFF3
-	 ZYeKFZ+Q707RCMLjZAKkUPrFh6Sn7tYoC2EmdBL2pr69Ud6RM13KvIMxbxmQrkjBnx
-	 wzISA8NEU/rIo+KvOcq6jsMXlFHIEcurKuqoYtjA=
+	b=ksHBW47RLPry+ms/6ayJrgLgKVYDKWD8osVnwuXJbfS7N+rbnS9FVWQQKnqigAF7R
+	 Xhpe1RUplEWo+T+Nxlvz5M5kKvXmmgm8WexmGXx+UfErRzY5fm+gIs3EAdhFmeCZ1Q
+	 kkPsQdaPr5++JQmlY+x9kCFYG8TB9nOqsVjGESqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387846AbfIHMyn (ORCPT
+        id S1731753AbfIHMvp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:54:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44114 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:51:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732891AbfIHMwG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:52:06 -0400
+        id S1732721AbfIHMvk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:51:40 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FC4420693;
-        Sun,  8 Sep 2019 12:52:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98B252082C;
+        Sun,  8 Sep 2019 12:51:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567947126;
-        bh=AhQPHzaq5nt+1yIqizAqPSmHJXm4UO0QbpW66fd8Kfk=;
+        s=default; t=1567947100;
+        bh=gBU7cPMlTcDiExfIMsj69Ty9FJ+Gh1Uspzhac7yQTXQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m0/tXrMc/7tEmMFj9MEPDje0+kz3MpavLg8QVSzDObhpatARN/KBXlxK4BaDH6gtO
-         1gToAbJiF4qyDXgNDwsN8Ng1qg5vz71z72wtiFJI/RzAeA670CLXKh3ZxCQYY8FAwa
-         FE3t6B/W9HSyzv3UYFHbgMKcs1WrA+IEvcHjlxwQ=
+        b=SQFrcVhBYk0x9mk+VNYEnOB0CcHE6jNERg0aWxXwIcs/88x8/79XyHVfCWL5ZQ/tq
+         hnZ23ySUnG62z7FFr/LDb3Qwv7QAjPo29akYoxmIBYUI/BupXI0/Dsz4CJis9dae3I
+         OAC9pFAuF/b5E2JwKwoSJR5bAuBswZVspjFULw8Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Anton Eidelman <anton@lightbitslabs.com>,
-        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org, Tho Vu <tho.vu.wh@rvc.renesas.com>,
+        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 71/94] nvme-multipath: fix possible I/O hang when paths are updated
-Date:   Sun,  8 Sep 2019 13:42:07 +0100
-Message-Id: <20190908121152.466141598@linuxfoundation.org>
+Subject: [PATCH 5.2 62/94] ravb: Fix use-after-free ravb_tstamp_skb
+Date:   Sun,  8 Sep 2019 13:41:58 +0100
+Message-Id: <20190908121152.206284553@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
 References: <20190908121150.420989666@linuxfoundation.org>
@@ -61,47 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 504db087aaccdb32af61539916409f7dca31ceb5 ]
+[ Upstream commit cfef46d692efd852a0da6803f920cc756eea2855 ]
 
-nvme_state_set_live() making a path available triggers requeue_work
-in order to resubmit requests that ended up on requeue_list when no
-paths were available.
+When a Tx timestamp is requested, a pointer to the skb is stored in the
+ravb_tstamp_skb struct. This was done without an skb_get. There exists
+the possibility that the skb could be freed by ravb_tx_free (when
+ravb_tx_free is called from ravb_start_xmit) before the timestamp was
+processed, leading to a use-after-free bug.
 
-This requeue_work may race with concurrent nvme_ns_head_make_request()
-that do not observe the live path yet.
-Such concurrent requests may by made by either:
-- New IO submission.
-- Requeue_work triggered by nvme_failover_req() or another ana_work.
+Use skb_get when filling a ravb_tstamp_skb struct, and add appropriate
+frees/consumes when a ravb_tstamp_skb struct is freed.
 
-A race may cause requeue_work capture the state of requeue_list before
-more requests get onto the list. These requests will stay on the list
-forever unless requeue_work is triggered again.
-
-In order to prevent such race, nvme_state_set_live() should
-synchronize_srcu(&head->srcu) before triggering the requeue_work and
-prevent nvme_ns_head_make_request referencing an old snapshot of the
-path list.
-
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Anton Eidelman <anton@lightbitslabs.com>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: c156633f1353 ("Renesas Ethernet AVB driver proper")
+Signed-off-by: Tho Vu <tho.vu.wh@rvc.renesas.com>
+Signed-off-by: Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/multipath.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/renesas/ravb_main.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index 747c0d4f9ff5b..304aa8a65f2f8 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -420,6 +420,7 @@ static void nvme_mpath_set_live(struct nvme_ns *ns)
- 		srcu_read_unlock(&head->srcu, srcu_idx);
+diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
+index ef8f08931fe8b..6cacd5e893aca 100644
+--- a/drivers/net/ethernet/renesas/ravb_main.c
++++ b/drivers/net/ethernet/renesas/ravb_main.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Renesas Ethernet AVB device driver
+  *
+- * Copyright (C) 2014-2015 Renesas Electronics Corporation
++ * Copyright (C) 2014-2019 Renesas Electronics Corporation
+  * Copyright (C) 2015 Renesas Solutions Corp.
+  * Copyright (C) 2015-2016 Cogent Embedded, Inc. <source@cogentembedded.com>
+  *
+@@ -513,7 +513,10 @@ static void ravb_get_tx_tstamp(struct net_device *ndev)
+ 			kfree(ts_skb);
+ 			if (tag == tfa_tag) {
+ 				skb_tstamp_tx(skb, &shhwtstamps);
++				dev_consume_skb_any(skb);
+ 				break;
++			} else {
++				dev_kfree_skb_any(skb);
+ 			}
+ 		}
+ 		ravb_modify(ndev, TCCR, TCCR_TFR, TCCR_TFR);
+@@ -1564,7 +1567,7 @@ static netdev_tx_t ravb_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 			}
+ 			goto unmap;
+ 		}
+-		ts_skb->skb = skb;
++		ts_skb->skb = skb_get(skb);
+ 		ts_skb->tag = priv->ts_skb_tag++;
+ 		priv->ts_skb_tag &= 0x3ff;
+ 		list_add_tail(&ts_skb->list, &priv->ts_skb_list);
+@@ -1693,6 +1696,7 @@ static int ravb_close(struct net_device *ndev)
+ 	/* Clear the timestamp list */
+ 	list_for_each_entry_safe(ts_skb, ts_skb2, &priv->ts_skb_list, list) {
+ 		list_del(&ts_skb->list);
++		kfree_skb(ts_skb->skb);
+ 		kfree(ts_skb);
  	}
- 
-+	synchronize_srcu(&ns->head->srcu);
- 	kblockd_schedule_work(&ns->head->requeue_work);
- }
  
 -- 
 2.20.1
