@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16FADC4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17FF6C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA69E20693
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:54:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E72DA20693
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:54:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947246;
-	bh=33mGaRZWrHhwiqP9nSj/0YhKLqDFGd9MZYXKhyZajIY=;
+	s=default; t=1567947253;
+	bh=pEWb1TUCuivT+YtcbI7Em3eJfbxDUNm9ErQGstMhP64=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=urGQYht0w/tqEuGnW/zmlMMArtvoXfIKBUqYHr+JIPIfvwZrsA4ZU0Gmv42YFYAm8
-	 OgWSfCGOf2yU6DUUd4ziNMLPUfl6K+af18/cUeu0Zbm9DfPmfW6NhuUHzoLPo2sGaW
-	 ZExNHcZLikQzhla1fcOHVu5ArcTgqFdtTY9Axy6M=
+	b=NH7xHKk77sSe50qCypCAeP9dDVFMJnfLS498bof7gxuctwhgwhAkRsr1dfMCHIDoP
+	 QDEsBsFJ3urW9JX3cZ9kgZ1JalyuowdeYOcsX3Bhu1aqJwb91pP4eQooEPi2BhG1m3
+	 zy1+DSp7SaWmtOz+5N+bX7cZM20O0LIChfNtnYIs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387685AbfIHMyF (ORCPT
+        id S1733094AbfIHMwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:54:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45258 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:52:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733189AbfIHMwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:52:45 -0400
+        id S1733062AbfIHMwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:52:31 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E1572190F;
-        Sun,  8 Sep 2019 12:52:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16C25218AC;
+        Sun,  8 Sep 2019 12:52:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567947165;
-        bh=33mGaRZWrHhwiqP9nSj/0YhKLqDFGd9MZYXKhyZajIY=;
+        s=default; t=1567947149;
+        bh=pEWb1TUCuivT+YtcbI7Em3eJfbxDUNm9ErQGstMhP64=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cdzh4pUVZXQsWVhFwZRsJJrrqBqoDZpbSgEowDg87ZEdO3KgZXd/j9x0z4JH0Uhoy
-         lVZ7XqWJ4ZNsqN/pWl9d3EIKvq1R9I08eH+A59Rqw+1VEEi+cssD044LpXTNzJdMY4
-         4ewV7Nuktxv1Y5KLtmorHML+kjDSaAvYKUJKtxRA=
+        b=gY8mfgBYfG2eLFR8Q25Kmkd0yvJRVlBPSeZfTT2aW3I3BRTc6L4m30n5aEX/00y5l
+         e68x/Mz4SnK6pLv1hWLobpsRIEeJp3MN6G5FkberbbZChd4mX91OYvQOXgZ/eibkWC
+         7HMlK0cJc4cdKm/y6gTBijFAug306nqNX88PafEw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Dionne <marc.dionne@auristor.com>,
-        David Howells <dhowells@redhat.com>,
+        stable@vger.kernel.org, Luis Henriques <lhenriques@suse.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 85/94] afs: Fix possible oops in afs_lookup trace event
-Date:   Sun,  8 Sep 2019 13:42:21 +0100
-Message-Id: <20190908121152.865634230@linuxfoundation.org>
+Subject: [PATCH 5.2 80/94] ceph: fix buffer free while holding i_ceph_lock in __ceph_setxattr()
+Date:   Sun,  8 Sep 2019 13:42:16 +0100
+Message-Id: <20190908121152.725866690@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
 References: <20190908121150.420989666@linuxfoundation.org>
@@ -60,47 +61,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c4c613ff08d92e72bf64a65ec35a2c3aa1cfcd06 ]
+[ Upstream commit 86968ef21596515958d5f0a40233d02be78ecec0 ]
 
-The afs_lookup trace event can cause the following:
+Calling ceph_buffer_put() in __ceph_setxattr() may end up freeing the
+i_xattrs.prealloc_blob buffer while holding the i_ceph_lock.  This can be
+fixed by postponing the call until later, when the lock is released.
 
-[  216.576777] BUG: kernel NULL pointer dereference, address: 000000000000023b
-[  216.576803] #PF: supervisor read access in kernel mode
-[  216.576813] #PF: error_code(0x0000) - not-present page
-...
-[  216.576913] RIP: 0010:trace_event_raw_event_afs_lookup+0x9e/0x1c0 [kafs]
+The following backtrace was triggered by fstests generic/117.
 
-If the inode from afs_do_lookup() is an error other than ENOENT, or if it
-is ENOENT and afs_try_auto_mntpt() returns an error, the trace event will
-try to dereference the error pointer as a valid pointer.
+  BUG: sleeping function called from invalid context at mm/vmalloc.c:2283
+  in_atomic(): 1, irqs_disabled(): 0, pid: 650, name: fsstress
+  3 locks held by fsstress/650:
+   #0: 00000000870a0fe8 (sb_writers#8){.+.+}, at: mnt_want_write+0x20/0x50
+   #1: 00000000ba0c4c74 (&type->i_mutex_dir_key#6){++++}, at: vfs_setxattr+0x55/0xa0
+   #2: 000000008dfbb3f2 (&(&ci->i_ceph_lock)->rlock){+.+.}, at: __ceph_setxattr+0x297/0x810
+  CPU: 1 PID: 650 Comm: fsstress Not tainted 5.2.0+ #437
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58-prebuilt.qemu.org 04/01/2014
+  Call Trace:
+   dump_stack+0x67/0x90
+   ___might_sleep.cold+0x9f/0xb1
+   vfree+0x4b/0x60
+   ceph_buffer_release+0x1b/0x60
+   __ceph_setxattr+0x2b4/0x810
+   __vfs_setxattr+0x66/0x80
+   __vfs_setxattr_noperm+0x59/0xf0
+   vfs_setxattr+0x81/0xa0
+   setxattr+0x115/0x230
+   ? filename_lookup+0xc9/0x140
+   ? rcu_read_lock_sched_held+0x74/0x80
+   ? rcu_sync_lockdep_assert+0x2e/0x60
+   ? __sb_start_write+0x142/0x1a0
+   ? mnt_want_write+0x20/0x50
+   path_setxattr+0xba/0xd0
+   __x64_sys_lsetxattr+0x24/0x30
+   do_syscall_64+0x50/0x1c0
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  RIP: 0033:0x7ff23514359a
 
-Use IS_ERR_OR_NULL to only pass a valid pointer for the trace, or NULL.
-
-Ideally the trace would include the error value, but for now just avoid
-the oops.
-
-Fixes: 80548b03991f ("afs: Add more tracepoints")
-Signed-off-by: Marc Dionne <marc.dionne@auristor.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/dir.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/ceph/xattr.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/fs/afs/dir.c b/fs/afs/dir.c
-index 9620f19308f58..9bd5c067d55d1 100644
---- a/fs/afs/dir.c
-+++ b/fs/afs/dir.c
-@@ -960,7 +960,8 @@ static struct dentry *afs_lookup(struct inode *dir, struct dentry *dentry,
- 				 inode ? AFS_FS_I(inode) : NULL);
- 	} else {
- 		trace_afs_lookup(dvnode, &dentry->d_name,
--				 inode ? AFS_FS_I(inode) : NULL);
-+				 IS_ERR_OR_NULL(inode) ? NULL
-+				 : AFS_FS_I(inode));
+diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
+index 0619adbcbe14c..8382299fc2d84 100644
+--- a/fs/ceph/xattr.c
++++ b/fs/ceph/xattr.c
+@@ -1028,6 +1028,7 @@ int __ceph_setxattr(struct inode *inode, const char *name,
+ 	struct ceph_inode_info *ci = ceph_inode(inode);
+ 	struct ceph_mds_client *mdsc = ceph_sb_to_client(inode->i_sb)->mdsc;
+ 	struct ceph_cap_flush *prealloc_cf = NULL;
++	struct ceph_buffer *old_blob = NULL;
+ 	int issued;
+ 	int err;
+ 	int dirty = 0;
+@@ -1101,13 +1102,15 @@ retry:
+ 		struct ceph_buffer *blob;
+ 
+ 		spin_unlock(&ci->i_ceph_lock);
+-		dout(" preaallocating new blob size=%d\n", required_blob_size);
++		ceph_buffer_put(old_blob); /* Shouldn't be required */
++		dout(" pre-allocating new blob size=%d\n", required_blob_size);
+ 		blob = ceph_buffer_new(required_blob_size, GFP_NOFS);
+ 		if (!blob)
+ 			goto do_sync_unlocked;
+ 		spin_lock(&ci->i_ceph_lock);
++		/* prealloc_blob can't be released while holding i_ceph_lock */
+ 		if (ci->i_xattrs.prealloc_blob)
+-			ceph_buffer_put(ci->i_xattrs.prealloc_blob);
++			old_blob = ci->i_xattrs.prealloc_blob;
+ 		ci->i_xattrs.prealloc_blob = blob;
+ 		goto retry;
  	}
- 	return d;
- }
+@@ -1123,6 +1126,7 @@ retry:
+ 	}
+ 
+ 	spin_unlock(&ci->i_ceph_lock);
++	ceph_buffer_put(old_blob);
+ 	if (lock_snap_rwsem)
+ 		up_read(&mdsc->snap_rwsem);
+ 	if (dirty)
 -- 
 2.20.1
 
