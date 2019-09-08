@@ -2,137 +2,291 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8477CC4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB5ECC4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 14:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60BD4216C8
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B016214DB
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 14:13:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hbYYV7Iz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728852AbfIHN46 (ORCPT
+        id S1728922AbfIHONO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 09:56:58 -0400
-Received: from vps-vb.mhejs.net ([37.28.154.113]:34202 "EHLO vps-vb.mhejs.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725872AbfIHN45 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 09:56:57 -0400
-Received: from MUA
-        by vps-vb.mhejs.net with esmtps (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92.2)
-        (envelope-from <mail@maciej.szmigiero.name>)
-        id 1i6xgQ-0001io-S1; Sun, 08 Sep 2019 15:56:50 +0200
-Subject: Re: [PATCH] z3fold: fix retry mechanism in page reclaim
-To:     Vitaly Wool <vitalywool@gmail.com>
-Cc:     Linux-MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?Q?Agust=c3=adn_Dall=ca=bcAlba?= <agustin@dallalba.com.ar>,
-        Dan Streetman <ddstreet@ieee.org>,
-        Vlastimil Babka <vbabka@suse.cz>, markus.linnala@gmail.com
-References: <20190908162919.830388dc7404d1e2c80f4095@gmail.com>
-From:   "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mail@maciej.szmigiero.name; prefer-encrypt=mutual; keydata=
- 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 PA==
-Message-ID: <1ed46a95-12bc-d8ee-0770-43057a09f0d9@maciej.szmigiero.name>
-Date:   Sun, 8 Sep 2019 15:56:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 8 Sep 2019 10:13:14 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41366 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725921AbfIHONO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 10:13:14 -0400
+Received: by mail-lj1-f193.google.com with SMTP id a4so10178051ljk.8;
+        Sun, 08 Sep 2019 07:13:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Rl68yzDtiXjk+0mVtpDfigDDjvTqEJDktzLp9GLqTHA=;
+        b=hbYYV7IzPg9tAtxiX5tge8NaZg0ebITZtuz+KGDjo6fUj7MTNK08DjY7ZDf5KYA5kL
+         YHJx2gWK2Csa04Mxv2fdM8ljDW51EIdTvXLFIDHrIvSOHegN+xrFJ9Z+hY7kRhaun25k
+         Sf+zNP9fnz8JVhSeIqR948aAuVM1K8L75LeGg1iqYtymnqMJmhGAew5oz7qMaNhHCx8F
+         mtiCpzDjaH6tRyb/VfhJTHsY8H8Ro9+Oz8COTtrMI9y39euKJE681jHHEr/An6m4AFyQ
+         c6RPN3X+5wbt2gINIPWLxZLLvnAOGAhi3LV3OCRam6oIIq103EDX6oux3UdQFg8QwrML
+         RQCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Rl68yzDtiXjk+0mVtpDfigDDjvTqEJDktzLp9GLqTHA=;
+        b=DzbGQmsWTld8QoPF7crGOqaLRcFNvgYJEM2nTod5SvN4nLfbs4qB1s//IM1OCSHa0V
+         tGFsd14Fv5xnVk5TOcLk0AZFWAlox8fLxSx2ULAEHq9gBQHDTfnqe6CF0hlZUdj8T+Xa
+         ZakWpH2c68KqslHa6t713Yk3H5bjSrK+qs2DczttkWSa7ru6AJDmWs5TBDVMHmTbqgy+
+         PWhWdgY8NMwy+ZN7puR9QkkN+JGojd+SaHU6FPgoIL9WwmtYUFExSTiQOVlX3NyzyzFZ
+         m04gthsYbH1Coru1Wo2S78lw1tVdRonriPftGjqwlacICqdhRZA/hbMeOSCJWMc6iyxh
+         F55A==
+X-Gm-Message-State: APjAAAXJmmBGhQS5IGHUq1ox2Nftyc3OzzOHvz0Ag7eH2+Wp57DL1pRL
+        xTVmspedtJqDZlSJi2XwwsSyAd0FMKA=
+X-Google-Smtp-Source: APXvYqwIeBK/gvrerEGu1X8ZuW7Za5m7LCWytTK/LPXvbWpqsXrle8/zJ99H3fZPqflVgqVA/nx8gA==
+X-Received: by 2002:a2e:9a18:: with SMTP id o24mr12518417lji.123.1567951990419;
+        Sun, 08 Sep 2019 07:13:10 -0700 (PDT)
+Received: from pc-sasha.localdomain ([95.47.123.158])
+        by smtp.gmail.com with ESMTPSA id d25sm2244780lfj.15.2019.09.08.07.13.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Sep 2019 07:13:09 -0700 (PDT)
+Date:   Sun, 8 Sep 2019 17:13:07 +0300
+From:   Alexander Kapshuk <alexander.kapshuk@gmail.com>
+To:     Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org
+Cc:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        sean@poorly.run, airlied@linux.ie
+Subject: Re: Kernel panic during drm/nouveau init 5.3.0-rc7-next-20190903
+Message-ID: <20190908141307.GA7115@pc-sasha.localdomain>
+References: <20190907090534.GB1712@pc-sasha.localdomain>
+ <CAKMK7uHYdXwruQxxBM12Q5MVeH9fjFpZvxZz06BSo7YrCQbM2w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190908162919.830388dc7404d1e2c80f4095@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKMK7uHYdXwruQxxBM12Q5MVeH9fjFpZvxZz06BSo7YrCQbM2w@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08.09.2019 15:29, Vitaly Wool wrote:
-> z3fold_page_reclaim()'s retry mechanism is broken: on a second
-> iteration it will have zhdr from the first one so that zhdr
-> is no longer in line with struct page. That leads to crashes when
-> the system is stressed.
+On Sat, Sep 07, 2019 at 12:32:41PM +0200, Daniel Vetter wrote:
+> On Sat, Sep 7, 2019 at 11:05 AM Alexander Kapshuk
+> <alexander.kapshuk@gmail.com> wrote:
+> >
+> > To Whom It May Concern
+> >
+> > Every kernel I have built since 5.3.0-rc2-next-20190730 and up to
+> > 5.3.0-rc7-next-20190903 has resulted in the kernel panic described below.
+> >
+> > The panic occurs early on in the boot process, so no records of it get
+> > written on disk. I resourted to taking photos and videos to get the info
+> > for debugging.
+> >
+> > [Kernel panic]
+> > Code: 00 48 83 bb f0 00 00 00 00 74 16 48 83 c3 18 b9 17 00 00 00 31 c0 48 89 df f3 48 ab 5b 41 5c 5d c3 4c 89 a3 f0 00 00 00 eb e1 <0f> 0b 0f 1f 40 00 55 48 89 e5 41 54 49 89 d4 53 48 89 f3 e8 7e ff
+> >
+> > Kernel panic - Not syncing: Attempted to kill init! exitcode=0x0000000b.
+> >
+> > Top of call stack:
+> > __drm_fb_helper_initial_config_and_unlock
+> > drm_fb_helper_initial_config
+> >
+> > <scripts/decodecode <~/tmp/panic_code.txt
+> > Code: 00 48 83 bb f0 00 00 00 00 74 16 48 83 c3 18 b9 17 00 00 00 31 c0 48 89 df f3 48 ab 5b 41 5c 5d c3 4c 89 a3 f0 00 00 00 eb e1 <0f> 0b 0f 1f 40 00 55 48 89 e5 41 54 49 89 d4 53 48 89 f3 e8 7e ff
+> > All code
+> > ========
+> >    0:   00 48 83                add    %cl,-0x7d(%rax)
+> >    3:   bb f0 00 00 00          mov    $0xf0,%ebx
+> >    8:   00 74 16 48             add    %dh,0x48(%rsi,%rdx,1)
+> >    c:   83 c3 18                add    $0x18,%ebx
+> >    f:   b9 17 00 00 00          mov    $0x17,%ecx
+> >   14:   31 c0                   xor    %eax,%eax
+> >   16:   48 89 df                mov    %rbx,%rdi
+> >   19:   f3 48 ab                rep stos %rax,%es:(%rdi)
+> >   1c:   5b                      pop    %rbx
+> >   1d:   41 5c                   pop    %r12
+> >   1f:   5d                      pop    %rbp
+> >   20:   c3                      retq
+> >   21:   4c 89 a3 f0 00 00 00    mov    %r12,0xf0(%rbx)
+> >   28:   eb e1                   jmp    0xb
+> >   2a:*  0f 0b                   ud2             <-- trapping instruction
+> >   2c:   0f 1f 40 00             nopl   0x0(%rax)
+> >   30:   55                      push   %rbp
+> >   31:   48 89 e5                mov    %rsp,%rbp
+> >   34:   41 54                   push   %r12
+> >   36:   49 89 d4                mov    %rdx,%r12
+> >   39:   53                      push   %rbx
+> >   3a:   48 89 f3                mov    %rsi,%rbx
+> >   3d:   e8                      .byte 0xe8
+> >   3e:   7e ff                   jle    0x3f
+> >
+> > Code starting with the faulting instruction
+> > ===========================================
+> >    0:   0f 0b                   ud2
+> >    2:   0f 1f 40 00             nopl   0x0(%rax)
+> >    6:   55                      push   %rbp
+> >    7:   48 89 e5                mov    %rsp,%rbp
+> >    a:   41 54                   push   %r12
+> >    c:   49 89 d4                mov    %rdx,%r12
+> >    f:   53                      push   %rbx
+> >   10:   48 89 f3                mov    %rsi,%rbx
+> >   13:   e8                      .byte 0xe8
+> >   14:   7e ff                   jle    0x15
+> >
+> > The panic occurs after the 'Driver supports precise vblank timestamp
+> > query.' line gets printed to console:
+> > [    2.858970] Linux agpgart interface v0.103
+> > [    2.859308] nouveau 0000:01:00.0: NVIDIA G84 (084300a2)
+> > [    2.968950] nouveau 0000:01:00.0: bios: version 60.84.68.00.19
+> > [    2.989923] nouveau 0000:01:00.0: bios: M0203T not found
+> > [    2.990010] nouveau 0000:01:00.0: bios: M0203E not matched!
+> > [    2.990096] nouveau 0000:01:00.0: fb: 512 MiB DDR2
+> > [    3.062362] [TTM] Zone  kernel: Available graphics memory: 2015014 KiB
+> > [    3.062494] [TTM] Initializing pool allocator
+> > [    3.062581] [TTM] Initializing DMA pool allocator
+> > [    3.062683] nouveau 0000:01:00.0: DRM: VRAM: 512 MiB
+> > [    3.062769] nouveau 0000:01:00.0: DRM: GART: 1048576 MiB
+> > [    3.062859] nouveau 0000:01:00.0: DRM: TMDS table version 2.0
+> > [    3.062944] nouveau 0000:01:00.0: DRM: DCB version 4.0
+> > [    3.063030] nouveau 0000:01:00.0: DRM: DCB outp 00: 02000300 00000028
+> > [    3.063117] nouveau 0000:01:00.0: DRM: DCB outp 01: 01000302 00000030
+> > [    3.063203] nouveau 0000:01:00.0: DRM: DCB outp 02: 04011310 00000028
+> > [    3.063290] nouveau 0000:01:00.0: DRM: DCB outp 03: 02011312 00c000b0
+> > [    3.063377] nouveau 0000:01:00.0: DRM: DCB conn 00: 1030
+> > [    3.063462] nouveau 0000:01:00.0: DRM: DCB conn 01: 2130
+> > [    3.065982] nouveau 0000:01:00.0: DRM: MM: using CRYPT for buffer copies
+> > [    3.066622] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
+> > [    3.066754] [drm] Driver supports precise vblank timestamp query.
+> >
+> > I was not able to capture the value of RIP for this crash.
+> >
+> > With drm_kms_helper.fbdev_emulation=0 enabled, as documented in
+> > the commentary to function drm_fb_helper_initial_config defined in
+> > drivers/gpu/drm/drm_fb_helper.c, I get the following output:
+> >
+> > RIP: 0010: _raw_spin_lock+0x7/0x20
+> > Code: ba ff 00 00 00 f0 0f b1 17 75 01 c3 55 48 89 e5 e8 23 a2 6d ff 5d c3 66 66 2e 0f 1f 84 00 00 00 00 00 90 31 c0 ba 01 00 00 00 <f0> 0f b1 17 75 01 c3 55 89 c6 40 89 e5 e8 e7 8f 6d ff 5d c3 0f 1f
+> >
+> > <scripts/decodecode <~/tmp/panic_code.txt
+> > Code: ba ff 00 00 00 f0 0f b1 17 75 01 c3 55 48 89 e5 e8 23 a2 6d ff 5d c3 66 66 2e 0f 1f 84 00 00 00 00 00 90 31 c0 ba 01 00 00 00 <f0> 0f b1 17 75 01 c3 55 89 c6 40 89 e5 e8 e7 8f 6d ff 5d c3 0f 1f
+> > All code
+> > ========
+> >    0:   ba ff 00 00 00          mov    $0xff,%edx
+> >    5:   f0 0f b1 17             lock cmpxchg %edx,(%rdi)
+> >    9:   75 01                   jne    0xc
+> >    b:   c3                      retq
+> >    c:   55                      push   %rbp
+> >    d:   48 89 e5                mov    %rsp,%rbp
+> >   10:   e8 23 a2 6d ff          callq  0xffffffffff6da238
+> >   15:   5d                      pop    %rbp
+> >   16:   c3                      retq
+> >   17:   66 66 2e 0f 1f 84 00    data16 nopw %cs:0x0(%rax,%rax,1)
+> >   1e:   00 00 00 00
+> >   22:   90                      nop
+> >   23:   31 c0                   xor    %eax,%eax
+> >   25:   ba 01 00 00 00          mov    $0x1,%edx
+> >   2a:*  f0 0f b1 17             lock cmpxchg %edx,(%rdi)                <-- trapping instruction
+> >   2e:   75 01                   jne    0x31
+> >   30:   c3                      retq
+> >   31:   55                      push   %rbp
+> >   32:   89 c6                   mov    %eax,%esi
+> >   34:   40 89 e5                rex mov %esp,%ebp
+> >   37:   e8 e7 8f 6d ff          callq  0xffffffffff6d9023
+> >   3c:   5d                      pop    %rbp
+> >   3d:   c3                      retq
+> >   3e:   0f                      .byte 0xf
+> >   3f:   1f                      (bad)
+> >
+> > Code starting with the faulting instruction
+> > ===========================================
+> >    0:   f0 0f b1 17             lock cmpxchg %edx,(%rdi)
+> >    4:   75 01                   jne    0x7
+> >    6:   c3                      retq
+> >    7:   55                      push   %rbp
+> >    8:   89 c6                   mov    %eax,%esi
+> >    a:   40 89 e5                rex mov %esp,%ebp
+> >    d:   e8 e7 8f 6d ff          callq  0xffffffffff6d8ff9
+> >   12:   5d                      pop    %rbp
+> >   13:   c3                      retq
+> >   14:   0f                      .byte 0xf
+> >   15:   1f                      (bad)
+> >
+> > (gdb) list *(_raw_spin_lock+0x7)
+> > 0xffffffff81a13b27 is in _raw_spin_lock (./arch/x86/include/asm/atomic.h:200).
+> > 195     }
+> > 196
+> > 197     #define arch_atomic_try_cmpxchg arch_atomic_try_cmpxchg
+> > 198     static __always_inline bool arch_atomic_try_cmpxchg(atomic_t *v, int *old, int new)
+> > 199     {
+> > 200             return try_cmpxchg(&v->counter, old, new);
+> > 201     }
+> > 202
+> > 203     static inline int arch_atomic_xchg(atomic_t *v, int new)
+> > 204     {
+> >
+> > (gdb) disassemble _raw_spin_lock+0x7
+> > Dump of assembler code for function _raw_spin_lock:
+> >    0xffffffff81a13b20 <+0>:     xor    %eax,%eax
+> >    0xffffffff81a13b22 <+2>:     mov    $0x1,%edx
+> >    0xffffffff81a13b27 <+7>:     lock cmpxchg %edx,(%rdi)
+> >    0xffffffff81a13b2b <+11>:    jne    0xffffffff81a13b2e <_raw_spin_lock+14>
+> >    0xffffffff81a13b2d <+13>:    retq
+> >    0xffffffff81a13b2e <+14>:    push   %rbp
+> >    0xffffffff81a13b2f <+15>:    mov    %eax,%esi
+> >    0xffffffff81a13b31 <+17>:    mov    %rsp,%rbp
+> >    0xffffffff81a13b34 <+20>:    callq  0xffffffff810ecb20 <queued_spin_lock_slowpath>
+> >    0xffffffff81a13b39 <+25>:    pop    %rbp
+> >    0xffffffff81a13b3a <+26>:    retq
+> > End of assembler dump.
+> >
+> > Any pointers on how to proceed with this would be appreciated.
+> > See the files attached for copies of my .config and output of ver_linux.
 > 
-> Fix that by moving zhdr assignment up.
-> 
-> While at it, protect against using already freed handles by using
-> own local slots structure in z3fold_page_reclaim().
-> 
-> Reported-by: Markus Linnala <markus.linnala@gmail.com>
-> Reported-by: Chris Murphy <bugzilla@colorremedies.com>
-> Reported-by: Agustin Dall'Alba <agustin@dallalba.com.ar>
-> Signed-off-by: Vitaly Wool <vitalywool@gmail.com>
-> ---
+> Lotta people are travelling to plumbers now for next week, so might be
+> slow responses. One option would be to try to bisect where things
+> broke. You've collected a lot of data here painstakingly, but from
+> looking at it I'm not really connecting the docs. Knowing which change
+> broke your machine can help enormously.
+> -Daniel
+> -- 
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> +41 (0) 79 365 57 48 - http://blog.ffwll.ch
 
-Shouldn't this be CC'ed to stable@ ?
+Thanks for your prompt reply, Daniel.
+This is my first bisect. Here's what I've tried so far and based on the
+output I got, I seem to be taken in the opposit direction.
 
-Maciej
+git bisect start
+git bisect bad				# 7dc4585e0378:next-20190903
+git bisect good next-20190730	#70f4b4ac1655
+
+Instead of being shown commits between 70f4b4ac1655 and 7dc4585e0378,
+I got this:
+Bisecting: a merge base must be tested
+[5d21595b17f693dce313b58f9617a8ea2a45b1b1] pinctrl: Ingenic: Add pinctrl driver for X1500.
+
+git show 5d21595b17f6 | grep -i date
+Date:   Sun Jul 14 11:53:56 2019 +0800
+
+I went ahead and actually built that kernel, which ended up being
+5.3.0-rc1-00010-g5d21595b17f6, which booted just fine.
+So, I said:
+git bisect good 5d21595b17f6
+
+And got:
+Bisecting: a merge base must be tested
+[8c4407de3be44c2a0ec3e316cd3e4a711bc2aaba] pinctrl: aspeed: Make aspeed_pinmux_ips static
+
+git show 8c4407de3be4 | grep -i date
+Date:   Thu Jul 11 22:24:57 2019 +0800
+
+Clearly, I'm doing something wrong there.
+I'd appreciate being pointed in the right direction.
