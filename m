@@ -4,54 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D17A1C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 07:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C552CC433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 07:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97C9321479
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 07:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FDC721479
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 07:19:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727648AbfIHHTI (ORCPT
+        id S1728449AbfIHHTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 03:19:08 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:45685 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbfIHHTI (ORCPT
+        Sun, 8 Sep 2019 03:19:12 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:57095 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727371AbfIHHTI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 8 Sep 2019 03:19:08 -0400
-Received: by mail-io1-f70.google.com with SMTP id k4so13634631iok.12
+Received: by mail-io1-f69.google.com with SMTP id i13so13598287iol.23
         for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 00:19:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=kz0vhgRFYmThzN5JafOjW4aOMyhmABAepE/cD0jdxIQ=;
-        b=khpXks7gyYYZy7VRUchqaXECSC2fM6iVD/hcmZNy/wpUCUXDvbNKllAIduXXYZumWL
-         5tyhCKlZHPA2tMruGSP8ExEzqC00XJtnh9wKcsOmvBpJyQ8HipMU6hhElzT15lCJbW3Q
-         W28qk5yEJLDEtaXg9VLZrYbVyZZ8J5wvAuplTyejVeV1bdxXEWYz28nnUrw/BAXumME/
-         DE0xHZxGc6m4zPESp8ogXUpxUOTPckMCmPq2ahDOgnXoa+KM3iiktiClJifjAJBEQjVa
-         DlYAURKdPeVwSfftCiMRGn/R/Ew/fS6BKOc5+tmjHpqF0JOFuPLe50IrylNYuP8DVj6P
-         Bxxw==
-X-Gm-Message-State: APjAAAXb73xmemNjdFh+QSoFPlQiB7EN7qgqW+K4I1rVQYsWKMpfIIPW
-        wPkSFpBXLINjRw/xntMioCjhsqvzX5WzvosVd2K8DjOYF00A
-X-Google-Smtp-Source: APXvYqzHtxztR8QiqTs1lIO91ApAAiJKG3FXkcWh0zrBCr6vV5ZtHOqspFlvf44O90NGyJcVaaDe6CiAlr6iQK4I0fp0xQIJ2jUs
+        bh=NHe3HdeOboHxOXm9q/0iOWUOymEceDARktK/4vRh+EQ=;
+        b=LnQXxN7DlmQd7uS+/X7ABKGtrJoiW26RTovloGIFuM0ORZcW5vmWroMsfpypgh/BPC
+         rsOzTAa4gf3k+Km9lTYyYlAV2/ETkzasYWsqnCI0gVhpcws1BbB7DtJY7SsAiMnwlRlV
+         ubAAFk2GjHj4ZzdfU5rjzZN4K1C6MadfBMuBiLcNpd7Z9NADHVidu4uswDQHVhN+9qKz
+         Ek8TZiSAX2X6JHqLXShxYQF7TTeY2D6XiD9UfAAB1690Zko2J8zIUA/3aynuY1TQCSrw
+         zkST+ECbeJjbsslZaxR4kzhwwkl6oiy8g73qrHBTbyd0gR8QehgY7simP2huU/xc77On
+         m3DA==
+X-Gm-Message-State: APjAAAVgxcVVNTdKhXv5doVDkEfsnLLtK7Dz9RNodZPDJpWreNPs+hwd
+        BeAt3K9cu5yDKf94EwAvrdPkCWa5/C+vsp6AyNXX0vn7FFwU
+X-Google-Smtp-Source: APXvYqwhJ+BLrkzL3nxneqIJmbHbd5+7qymv+JpnHISB6Hd0XdsuD569HphfNNAvHdn5sT4G0/i5A7IWP7soh0MbjQoezukD0Q2H
 MIME-Version: 1.0
-X-Received: by 2002:a02:ccb3:: with SMTP id t19mr19421402jap.13.1567927147005;
- Sun, 08 Sep 2019 00:19:07 -0700 (PDT)
+X-Received: by 2002:a5d:8d0b:: with SMTP id p11mr19681465ioj.136.1567927146723;
+ Sun, 08 Sep 2019 00:19:06 -0700 (PDT)
 Date:   Sun, 08 Sep 2019 00:19:06 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a193cd0592057cc8@google.com>
-Subject: BUG: soft lockup in rt6_probe_deferred
-From:   syzbot <syzbot+73944791f9cee53358f6@syzkaller.appspotmail.com>
-To:     aarcange@redhat.com, akpm@linux-foundation.org,
-        arunks@codeaurora.org, christian@brauner.io,
-        elena.reshetova@intel.com, guro@fb.com, joel@joelfernandes.org,
-        keescook@chromium.org, ldv@altlinux.org,
-        linux-kernel@vger.kernel.org, luto@amacapital.net, mhocko@suse.com,
-        mingo@kernel.org, namit@vmware.com, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        wad@chromium.org
+Message-ID: <0000000000009d480e0592057c7c@google.com>
+Subject: INFO: rcu detected stall in pppoe_sendmsg
+From:   syzbot <syzbot+55be5f513bed37fc4367@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -62,59 +57,80 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    3b47fd5c Merge tag 'nfs-for-5.3-4' of git://git.linux-nfs...
+HEAD commit:    1e3778cb Merge tag 'scsi-fixes' of git://git.kernel.org/pu..
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=128438d1600000
+console output: https://syzkaller.appspot.com/x/log.txt?x=137b2971600000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=b89bb446a3faaba4
-dashboard link: https://syzkaller.appspot.com/bug?extid=73944791f9cee53358f6
+dashboard link: https://syzkaller.appspot.com/bug?extid=55be5f513bed37fc4367
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
 Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+73944791f9cee53358f6@syzkaller.appspotmail.com
+Reported-by: syzbot+55be5f513bed37fc4367@syzkaller.appspotmail.com
 
-watchdog: BUG: soft lockup - CPU#0 stuck for 123s! [kworker/0:5:10035]
-Modules linked in:
-irq event stamp: 0
-hardirqs last  enabled at (0): [<0000000000000000>] 0x0
-hardirqs last disabled at (0): [<ffffffff81436da5>]  
-copy_process+0x1815/0x6b00 kernel/fork.c:1960
-softirqs last  enabled at (0): [<ffffffff81436e4c>]  
-copy_process+0x18bc/0x6b00 kernel/fork.c:1963
-softirqs last disabled at (0): [<0000000000000000>] 0x0
-CPU: 0 PID: 10035 Comm: kworker/0:5 Not tainted 5.3.0-rc7+ #0
+rcu: INFO: rcu_preempt self-detected stall on CPU
+rcu: 	0-...!: (10501 ticks this GP) idle=06a/1/0x4000000000000002  
+softirq=173683/173683 fqs=0
+	(t=10502 jiffies g=271749 q=3228)
+rcu: rcu_preempt kthread starved for 10503 jiffies! g271749 f0x0  
+RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=0
+rcu: RCU grace-period kthread stack dump:
+rcu_preempt     I29160    10      2 0x80004000
+Call Trace:
+  context_switch kernel/sched/core.c:3254 [inline]
+  __schedule+0x755/0x1580 kernel/sched/core.c:3880
+  schedule+0xd9/0x260 kernel/sched/core.c:3947
+  schedule_timeout+0x486/0xc50 kernel/time/timer.c:1807
+  rcu_gp_fqs_loop kernel/rcu/tree.c:1611 [inline]
+  rcu_gp_kthread+0x9b2/0x18c0 kernel/rcu/tree.c:1768
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+NMI backtrace for cpu 0
+CPU: 0 PID: 4124 Comm: syz-executor.2 Not tainted 5.3.0-rc7+ #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
-Workqueue: events rt6_probe_deferred
-RIP: 0010:cpu_relax arch/x86/include/asm/processor.h:656 [inline]
-RIP: 0010:virt_spin_lock arch/x86/include/asm/qspinlock.h:84 [inline]
-RIP: 0010:native_queued_spin_lock_slowpath+0x132/0x9f0  
-kernel/locking/qspinlock.c:325
-Code: 00 00 00 48 8b 45 d0 65 48 33 04 25 28 00 00 00 0f 85 37 07 00 00 48  
-81 c4 98 00 00 00 5b 41 5c 41 5d 41 5e 41 5f 5d c3 f3 90 <e9> 73 ff ff ff  
-8b 45 98 4c 8d 65 d8 3d 00 01 00 00 0f 84 e5 00 00
-RSP: 0018:ffff88805f6e6d90 EFLAGS: 00000202 ORIG_RAX: ffffffffffffff13
-RAX: 0000000000000000 RBX: ffff88808bb57328 RCX: ffffffff81595c37
-RDX: 0000000000000000 RSI: 0000000000000004 RDI: ffff88808bb57328
-RBP: ffff88805f6e6e50 R08: 1ffff1101176ae65 R09: ffffed101176ae66
-R10: ffffed101176ae65 R11: ffff88808bb5732b R12: 0000000000000001
-R13: 0000000000000003 R14: ffffed101176ae65 R15: 0000000000000001
-FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f6c537e8000 CR3: 000000009a0c6000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
-  pv_queued_spin_lock_slowpath arch/x86/include/asm/paravirt.h:654 [inline]
-  queued_spin_lock_slowpath arch/x86/include/asm/qspinlock.h:50 [inline]
-  queued_spin_lock include/asm-generic/qspinlock.h:81 [inline]
-  do_raw_spin_lock+0x20e/0x2e0 kernel/locking/spinlock_debug.c:113
-  __raw_spin_lock include/linux/spinlock_api_smp.h:143 [inline]
-  _raw_spin_lock+0x37/0x40 kernel/locking/spinlock.c:151
-  spin_lock include/linux/spinlock.h:338 [inline]
-  __dev_xmit_skb net/core/dev.c:3502 [inline]
-  __dev_queue_xmit+0x14b8/0x3650 net/core/dev.c:3838
+  <IRQ>
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  nmi_cpu_backtrace.cold+0x70/0xb2 lib/nmi_backtrace.c:101
+  nmi_trigger_cpumask_backtrace+0x23b/0x28b lib/nmi_backtrace.c:62
+  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
+  trigger_single_cpu_backtrace include/linux/nmi.h:164 [inline]
+  rcu_dump_cpu_stacks+0x183/0x1cf kernel/rcu/tree_stall.h:254
+  print_cpu_stall kernel/rcu/tree_stall.h:455 [inline]
+  check_cpu_stall kernel/rcu/tree_stall.h:529 [inline]
+  rcu_pending kernel/rcu/tree.c:2736 [inline]
+  rcu_sched_clock_irq.cold+0x4dd/0xc13 kernel/rcu/tree.c:2183
+  update_process_times+0x32/0x80 kernel/time/timer.c:1639
+  tick_sched_handle+0xa2/0x190 kernel/time/tick-sched.c:167
+  tick_sched_timer+0x53/0x140 kernel/time/tick-sched.c:1296
+  __run_hrtimer kernel/time/hrtimer.c:1389 [inline]
+  __hrtimer_run_queues+0x364/0xe40 kernel/time/hrtimer.c:1451
+  hrtimer_interrupt+0x314/0x770 kernel/time/hrtimer.c:1509
+  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1106 [inline]
+  smp_apic_timer_interrupt+0x160/0x610 arch/x86/kernel/apic/apic.c:1131
+  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
+  </IRQ>
+RIP: 0010:preempt_count arch/x86/include/asm/preempt.h:26 [inline]
+RIP: 0010:check_kcov_mode kernel/kcov.c:68 [inline]
+RIP: 0010:__sanitizer_cov_trace_pc+0xd/0x50 kernel/kcov.c:102
+Code: 6d 9f e9 ff 48 c7 05 1e 4d 19 09 00 00 00 00 e9 77 e9 ff ff 90 90 90  
+90 90 90 90 90 90 55 48 89 e5 65 48 8b 04 25 40 fe 01 00 <65> 8b 15 04 89  
+8f 7e 81 e2 00 01 1f 00 48 8b 75 08 75 2b 8b 90 f0
+RSP: 0018:ffff88821b02f098 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
+RAX: ffff88806c8524c0 RBX: ffff888096f52c38 RCX: ffffc9000bf4d000
+RDX: 0000000000000000 RSI: ffffffff85c65fd2 RDI: ffff888096f52cec
+RBP: ffff88821b02f098 R08: ffff88806c8524c0 R09: 0000000000000000
+R10: fffffbfff134afaf R11: ffff88806c8524c0 R12: dffffc0000000000
+R13: ffff888096f52940 R14: 0000000000000000 R15: 0000000000000000
+  hhf_dequeue+0x586/0xa20 net/sched/sch_hhf.c:438
+  dequeue_skb net/sched/sch_generic.c:258 [inline]
+  qdisc_restart net/sched/sch_generic.c:361 [inline]
+  __qdisc_run+0x1e7/0x19d0 net/sched/sch_generic.c:379
+  __dev_xmit_skb net/core/dev.c:3533 [inline]
+  __dev_queue_xmit+0x16f1/0x3650 net/core/dev.c:3838
   dev_queue_xmit+0x18/0x20 net/core/dev.c:3902
   br_dev_queue_push_xmit+0x3f3/0x5c0 net/bridge/br_forward.c:52
   NF_HOOK include/linux/netfilter.h:305 [inline]
@@ -123,127 +139,34 @@ Call Trace:
   NF_HOOK include/linux/netfilter.h:305 [inline]
   NF_HOOK include/linux/netfilter.h:299 [inline]
   __br_forward+0x641/0xb00 net/bridge/br_forward.c:109
-  deliver_clone+0x61/0xc0 net/bridge/br_forward.c:125
-  maybe_deliver+0x2c7/0x390 net/bridge/br_forward.c:181
-  br_flood+0x13a/0x3d0 net/bridge/br_forward.c:223
-  br_dev_xmit+0x98c/0x15a0 net/bridge/br_device.c:100
+  br_forward+0x47c/0x500 net/bridge/br_forward.c:158
+  br_dev_xmit+0xbf0/0x15a0 net/bridge/br_device.c:102
   __netdev_start_xmit include/linux/netdevice.h:4406 [inline]
   netdev_start_xmit include/linux/netdevice.h:4420 [inline]
   xmit_one net/core/dev.c:3280 [inline]
   dev_hard_start_xmit+0x1a3/0x9c0 net/core/dev.c:3296
   __dev_queue_xmit+0x2b15/0x3650 net/core/dev.c:3869
   dev_queue_xmit+0x18/0x20 net/core/dev.c:3902
-  neigh_hh_output include/net/neighbour.h:500 [inline]
-  neigh_output include/net/neighbour.h:509 [inline]
-  ip6_finish_output2+0xf58/0x2520 net/ipv6/ip6_output.c:116
-  __ip6_finish_output+0x444/0xa50 net/ipv6/ip6_output.c:142
-  ip6_finish_output+0x38/0x1f0 net/ipv6/ip6_output.c:152
-  NF_HOOK_COND include/linux/netfilter.h:294 [inline]
-  ip6_output+0x235/0x7c0 net/ipv6/ip6_output.c:175
-  dst_output include/net/dst.h:436 [inline]
-  NF_HOOK include/linux/netfilter.h:305 [inline]
-  ndisc_send_skb+0xf29/0x1450 net/ipv6/ndisc.c:504
-  ndisc_send_ns+0x3a9/0x850 net/ipv6/ndisc.c:646
-  rt6_probe_deferred+0xe3/0x1a0 net/ipv6/route.c:615
-  process_one_work+0x9af/0x1740 kernel/workqueue.c:2269
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Sending NMI from CPU 0 to CPUs 1:
-INFO: NMI handler (nmi_cpu_backtrace_handler) took too long to run: 1.530  
-msecs
-NMI backtrace for cpu 1
-CPU: 1 PID: 10038 Comm: kworker/1:3 Not tainted 5.3.0-rc7+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events rt6_probe_deferred
-RIP: 0010:__list_del_entry_valid+0x74/0xf5 lib/list_debug.c:51
-Code: 00 48 b8 00 01 00 00 00 00 ad de 4d 8b 2e 49 39 c5 0f 84 e1 00 00 00  
-48 b8 22 01 00 00 00 00 ad de 49 39 c4 0f 84 e2 00 00 00 <48> b8 00 00 00  
-00 00 fc ff df 4c 89 e2 48 c1 ea 03 80 3c 02 00 75
-RSP: 0018:ffff8880ae908b20 EFLAGS: 00000212
-RAX: dead000000000122 RBX: ffff88808bb57538 RCX: ffffffff85c64b39
-RDX: 1ffff1101176aea7 RSI: ffffffff85c65006 RDI: ffff88808bb57540
-RBP: ffff8880ae908b38 R08: ffff88805c72e500 R09: 0000000000000000
-R10: fffffbfff134af8f R11: ffff88805c72e500 R12: ffff88808bb575d0
-R13: ffff88808bb575d0 R14: ffff88808bb57538 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f6c537e8000 CR3: 000000009a0c6000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  <IRQ>
-  __list_del_entry include/linux/list.h:131 [inline]
-  list_move_tail include/linux/list.h:213 [inline]
-  hhf_dequeue+0x5c5/0xa20 net/sched/sch_hhf.c:439
-  dequeue_skb net/sched/sch_generic.c:258 [inline]
-  qdisc_restart net/sched/sch_generic.c:361 [inline]
-  __qdisc_run+0x1e7/0x19d0 net/sched/sch_generic.c:379
-  __dev_xmit_skb net/core/dev.c:3533 [inline]
-  __dev_queue_xmit+0x16f1/0x3650 net/core/dev.c:3838
-  dev_queue_xmit+0x18/0x20 net/core/dev.c:3902
-  br_dev_queue_push_xmit+0x3f3/0x5c0 net/bridge/br_forward.c:52
-  br_nf_dev_queue_xmit+0x34e/0x1470 net/bridge/br_netfilter_hooks.c:796
-  NF_HOOK include/linux/netfilter.h:305 [inline]
-  NF_HOOK include/linux/netfilter.h:299 [inline]
-  br_nf_post_routing+0x1502/0x1d30 net/bridge/br_netfilter_hooks.c:844
-  nf_hook_entry_hookfn include/linux/netfilter.h:135 [inline]
-  nf_hook_slow+0xbc/0x1e0 net/netfilter/core.c:512
-  nf_hook include/linux/netfilter.h:260 [inline]
-  NF_HOOK include/linux/netfilter.h:303 [inline]
-  br_forward_finish+0x215/0x400 net/bridge/br_forward.c:65
-  br_nf_hook_thresh+0x2e9/0x370 net/bridge/br_netfilter_hooks.c:1015
-  br_nf_forward_finish+0x66c/0xa90 net/bridge/br_netfilter_hooks.c:560
-  NF_HOOK include/linux/netfilter.h:305 [inline]
-  NF_HOOK include/linux/netfilter.h:299 [inline]
-  br_nf_forward_ip net/bridge/br_netfilter_hooks.c:630 [inline]
-  br_nf_forward_ip+0xc74/0x21e0 net/bridge/br_netfilter_hooks.c:571
-  nf_hook_entry_hookfn include/linux/netfilter.h:135 [inline]
-  nf_hook_slow+0xbc/0x1e0 net/netfilter/core.c:512
-  nf_hook include/linux/netfilter.h:260 [inline]
-  NF_HOOK include/linux/netfilter.h:303 [inline]
-  __br_forward+0x393/0xb00 net/bridge/br_forward.c:109
-  deliver_clone+0x61/0xc0 net/bridge/br_forward.c:125
-  br_flood+0x325/0x3d0 net/bridge/br_forward.c:232
-  br_handle_frame_finish+0xb46/0x1670 net/bridge/br_input.c:162
-  br_nf_hook_thresh+0x2e9/0x370 net/bridge/br_netfilter_hooks.c:1015
-  br_nf_pre_routing_finish_ipv6+0x6fb/0xd80  
-net/bridge/br_netfilter_ipv6.c:206
-  NF_HOOK include/linux/netfilter.h:305 [inline]
-  br_nf_pre_routing_ipv6+0x456/0x832 net/bridge/br_netfilter_ipv6.c:236
-  br_nf_pre_routing+0x1743/0x2355 net/bridge/br_netfilter_hooks.c:501
-  nf_hook_entry_hookfn include/linux/netfilter.h:135 [inline]
-  nf_hook_bridge_pre net/bridge/br_input.c:223 [inline]
-  br_handle_frame+0x806/0x133e net/bridge/br_input.c:348
-  __netif_receive_skb_core+0xfc1/0x3060 net/core/dev.c:4905
-  __netif_receive_skb_one_core+0xa8/0x1a0 net/core/dev.c:5002
-  __netif_receive_skb+0x2c/0x1d0 net/core/dev.c:5118
-  process_backlog+0x206/0x750 net/core/dev.c:5929
-  napi_poll net/core/dev.c:6352 [inline]
-  net_rx_action+0x4d6/0x1030 net/core/dev.c:6418
-  __do_softirq+0x262/0x98c kernel/softirq.c:292
-  do_softirq_own_stack+0x2a/0x40 arch/x86/entry/entry_64.S:1082
-  </IRQ>
-  do_softirq.part.0+0x11a/0x170 kernel/softirq.c:337
-  do_softirq kernel/softirq.c:329 [inline]
-  __local_bh_enable_ip+0x211/0x270 kernel/softirq.c:189
-  local_bh_enable include/linux/bottom_half.h:32 [inline]
-  rcu_read_unlock_bh include/linux/rcupdate.h:681 [inline]
-  ip6_finish_output2+0x10a0/0x2520 net/ipv6/ip6_output.c:117
-  __ip6_finish_output+0x444/0xa50 net/ipv6/ip6_output.c:142
-  ip6_finish_output+0x38/0x1f0 net/ipv6/ip6_output.c:152
-  NF_HOOK_COND include/linux/netfilter.h:294 [inline]
-  ip6_output+0x235/0x7c0 net/ipv6/ip6_output.c:175
-  dst_output include/net/dst.h:436 [inline]
-  NF_HOOK include/linux/netfilter.h:305 [inline]
-  ndisc_send_skb+0xf29/0x1450 net/ipv6/ndisc.c:504
-  ndisc_send_ns+0x3a9/0x850 net/ipv6/ndisc.c:646
-  rt6_probe_deferred+0xe3/0x1a0 net/ipv6/route.c:615
-  process_one_work+0x9af/0x1740 kernel/workqueue.c:2269
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+  pppoe_sendmsg+0x661/0x7f0 drivers/net/ppp/pppoe.c:899
+  sock_sendmsg_nosec net/socket.c:637 [inline]
+  sock_sendmsg+0xd7/0x130 net/socket.c:657
+  ___sys_sendmsg+0x3e2/0x920 net/socket.c:2311
+  __sys_sendmmsg+0x1bf/0x4d0 net/socket.c:2413
+  __do_sys_sendmmsg net/socket.c:2442 [inline]
+  __se_sys_sendmmsg net/socket.c:2439 [inline]
+  __x64_sys_sendmmsg+0x9d/0x100 net/socket.c:2439
+  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4598e9
+Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f20901b4c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000133
+RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 00000000004598e9
+RDX: 000000000000033b RSI: 000000002000d180 RDI: 0000000000000003
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f20901b56d4
+R13: 00000000004c70a7 R14: 00000000004dc768 R15: 00000000ffffffff
 
 
 ---
