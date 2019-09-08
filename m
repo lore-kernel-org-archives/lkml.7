@@ -2,187 +2,126 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D71EAC433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 10:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47DF5C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 10:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEC5820863
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 10:11:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14A4020863
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 10:12:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WOsvPiUn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbfIHKLj (ORCPT
+        id S1728115AbfIHKMo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 06:11:39 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2236 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728068AbfIHKLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 06:11:39 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 8BE5337150F992917632;
-        Sun,  8 Sep 2019 18:11:36 +0800 (CST)
-Received: from [10.45.6.3] (10.45.6.3) by smtp.huawei.com (10.3.19.207) with
- Microsoft SMTP Server id 14.3.439.0; Sun, 8 Sep 2019 18:11:32 +0800
-Subject: Re: [Virtio-fs] [PATCH 08/18] virtiofs: Drain all pending requests
- during ->remove time
-To:     Vivek Goyal <vgoyal@redhat.com>, <linux-fsdevel@vger.kernel.org>,
-        <virtualization@lists.linux-foundation.org>, <miklos@szeredi.hu>
-CC:     <mst@redhat.com>, <linux-kernel@vger.kernel.org>,
-        <virtio-fs@redhat.com>
-References: <20190905194859.16219-1-vgoyal@redhat.com>
- <20190905194859.16219-9-vgoyal@redhat.com>
-From:   piaojun <piaojun@huawei.com>
-Message-ID: <cdcb9860-2088-f92b-e15b-92689deafe80@huawei.com>
-Date:   Sun, 8 Sep 2019 18:11:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190905194859.16219-9-vgoyal@redhat.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.45.6.3]
-X-CFilter-Loop: Reflected
+        Sun, 8 Sep 2019 06:12:44 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38122 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727975AbfIHKMn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 06:12:43 -0400
+Received: by mail-lj1-f193.google.com with SMTP id y23so9550452ljn.5
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 03:12:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=1FZWc1l7HaSC+LrTIXPB2a9G73blmWE/aBz0iAX4uUs=;
+        b=WOsvPiUncXIZqvxIApQgpCdpHVQb6ExjjUfUELzyS23qTnBbvN/xlPPFg6YFqSjAQk
+         3UOXIMKw+RrnSp0HOm4XQWwI+u0P7bQi+49+SbLTZD0ZSng1wCi5vDWUpKgJtuqaEKfN
+         Ninav7/5GzTRQftW8Pdryq5edF5eiM1k+C5FdR6g6hFzA3Vpm6cHAk5Z90Hv7xZE9iXu
+         qpE4pKoNwFJMPDyjJjX1Rd8coNL9GW2k1pI8pnTnfmbUKH5hkZb4FSyEf05EzNx1C9/n
+         pYiNPo3fUO/RTXSxdXXX9PWtt+ZHIe0VvUTfFVwpEco2ZVSy2WbS9l+1hnY1q34MAWcP
+         0F+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=1FZWc1l7HaSC+LrTIXPB2a9G73blmWE/aBz0iAX4uUs=;
+        b=QfQw9SH4RkZxmkWwSHjA5QzM8Cp8ChCuoLAPLQrpuiL0IJCSLZH3hGlKC15CRBUCGs
+         HzpYaFlwTU2R2bdK9SaYyUqtTSuY7LkH1lJqWWfyUxbe3AqQiCI0j2wcUMmvWZmp1TwT
+         TZ3oUw+h/TUhuzCjrqU5+qgNCgktpD5GzITduGZALJMPZcc9gyd+FECCkegjhFc1UdsZ
+         ydFevzn+JDk2NIonFCE5dvRfw5PWAPcmUpU+3q9VieCr9UsuLrGTkEYb6JxYMe1m4UOh
+         sFVRfrYV66YIoKhUnzL3fXR/RSxYdBuiQaysn6Qsh4vz6Sfro7LktGmTi6VH4cVhKdCA
+         dpMA==
+X-Gm-Message-State: APjAAAWGakuypCjF13TSZvCHsXPA3ARnw3MyZYPCVVaRNWaiGCA4Kan5
+        PWXcI14CTvQoJY+TuHVSGH/Nkw==
+X-Google-Smtp-Source: APXvYqyPDM2h2WAHw6dtKXlkzKVCCzbGVcDt15Oo/IvNMUVlrwBFocCJhR6QMkOF+Ftr65RWCZ3Ygw==
+X-Received: by 2002:a05:651c:292:: with SMTP id b18mr12295924ljo.131.1567937561969;
+        Sun, 08 Sep 2019 03:12:41 -0700 (PDT)
+Received: from localhost.localdomain ([185.122.190.73])
+        by smtp.gmail.com with ESMTPSA id h25sm2444849lfj.81.2019.09.08.03.12.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Sep 2019 03:12:41 -0700 (PDT)
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+To:     linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Cc:     Shawn Lin <shawn.lin@rock-chips.com>,
+        Jaehoon Chung <jh80.chung@samsung.com>,
+        Yong Mao <yong.mao@mediatek.com>,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 00/11] mmc: core: PM fixes/improvements for SDIO IRQs 
+Date:   Sun,  8 Sep 2019 12:12:25 +0200
+Message-Id: <20190908101236.2802-1-ulf.hansson@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Changes in v2:
+	- Added reviewed/tested-by tags.
+	- Updated some changelogs.
+	- Renamed sdio_irq_enabled() to sdio_irq_claimed().
+	- Don't set sdio_irq_pending when resuming SDIO card, but just queue the
+	work.
+
+The power management support for SDIO cards have slowly been improved, but
+there are still quite some serious problems, especially when dealing with the
+so called SDIO IRQs during system suspend/resume.
+
+This series makes some additional improvements to this code in the mmc core,
+but also includes some needed adaptations for the sdhci, the dw_mmc and the
+mtk-sd host drivers.
+
+The series is also available at:
+git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git sdio_irq_suspend_next_v2
+
+Kind regards
+Uffe
 
 
-On 2019/9/6 3:48, Vivek Goyal wrote:
-> When device is going away, drain all pending requests.
-> 
-> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-> ---
->  fs/fuse/virtio_fs.c | 83 ++++++++++++++++++++++++++++-----------------
->  1 file changed, 51 insertions(+), 32 deletions(-)
-> 
-> diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
-> index 90e7b2f345e5..d5730a50b303 100644
-> --- a/fs/fuse/virtio_fs.c
-> +++ b/fs/fuse/virtio_fs.c
-> @@ -63,6 +63,55 @@ static inline struct fuse_pqueue *vq_to_fpq(struct virtqueue *vq)
->  	return &vq_to_fsvq(vq)->fud->pq;
->  }
->  
-> +static void virtio_fs_drain_queue(struct virtio_fs_vq *fsvq)
-> +{
-> +	WARN_ON(fsvq->in_flight < 0);
-> +
-> +	/* Wait for in flight requests to finish.*/
+Matthias Kaehlcke (1):
+  mmc: core: Move code to get pending SDIO IRQs to a function
 
-blank space missed after *finish.*.
+Ulf Hansson (10):
+  mmc: core: Add helper function to indicate if SDIO IRQs is enabled
+  mmc: dw_mmc: Re-store SDIO IRQs mask at system resume
+  mmc: mtk-sd: Re-store SDIO IRQs mask at system resume
+  mmc: core: Clarify sdio_irq_pending flag for
+    MMC_CAP2_SDIO_IRQ_NOTHREAD
+  mmc: core: Clarify that the ->ack_sdio_irq() callback is mandatory
+  mmc: core: WARN if SDIO IRQs are enabled for non-powered card in
+    suspend
+  mmc: core: Fixup processing of SDIO IRQs during system suspend/resume
+  mmc: sdhci: Drop redundant check in sdhci_ack_sdio_irq()
+  mmc: sdhci: Drop redundant code for SDIO IRQs
+  mmc: sdhci: Convert to use sdio_irq_claimed()
 
-> +	while (1) {
-> +		spin_lock(&fsvq->lock);
-> +		if (!fsvq->in_flight) {
-> +			spin_unlock(&fsvq->lock);
-> +			break;
-> +		}
-> +		spin_unlock(&fsvq->lock);
-> +		usleep_range(1000, 2000);
-> +	}
-> +
-> +	flush_work(&fsvq->done_work);
-> +	flush_delayed_work(&fsvq->dispatch_work);
-> +}
-> +
-> +static inline void drain_hiprio_queued_reqs(struct virtio_fs_vq *fsvq)
+ drivers/mmc/core/sdio.c            |  4 ++-
+ drivers/mmc/core/sdio_irq.c        | 57 +++++++++++++++++++-----------
+ drivers/mmc/host/dw_mmc.c          |  4 +++
+ drivers/mmc/host/mtk-sd.c          |  3 ++
+ drivers/mmc/host/sdhci-esdhc-imx.c | 34 ++++++++----------
+ drivers/mmc/host/sdhci.c           | 12 ++-----
+ drivers/mmc/host/sdhci.h           |  6 ----
+ include/linux/mmc/host.h           | 10 ++++++
+ 8 files changed, 75 insertions(+), 55 deletions(-)
 
-Should we add *virtio_fs* prefix for this function? And I wonder if
-there are only forget reqs to drain? Maybe we should call it
-*virtio_fs_drain_queued_forget_reqs* or someone containing *forget_reqs*.
+-- 
+2.17.1
 
-Thanks,
-Jun
-
-> +{
-> +	struct virtio_fs_forget *forget;
-> +
-> +	spin_lock(&fsvq->lock);
-> +	while (1) {
-> +		forget = list_first_entry_or_null(&fsvq->queued_reqs,
-> +						struct virtio_fs_forget, list);
-> +		if (!forget)
-> +			break;
-> +		list_del(&forget->list);
-> +		kfree(forget);
-> +	}
-> +	spin_unlock(&fsvq->lock);
-> +}
-> +
-> +static void virtio_fs_drain_all_queues(struct virtio_fs *fs)
-> +{
-> +	struct virtio_fs_vq *fsvq;
-> +	int i;
-> +
-> +	for (i = 0; i < fs->nvqs; i++) {
-> +		fsvq = &fs->vqs[i];
-> +		if (i == VQ_HIPRIO)
-> +			drain_hiprio_queued_reqs(fsvq);
-> +
-> +		virtio_fs_drain_queue(fsvq);
-> +	}
-> +}
-> +
->  /* Add a new instance to the list or return -EEXIST if tag name exists*/
->  static int virtio_fs_add_instance(struct virtio_fs *fs)
->  {
-> @@ -511,6 +560,7 @@ static void virtio_fs_remove(struct virtio_device *vdev)
->  	struct virtio_fs *fs = vdev->priv;
->  
->  	virtio_fs_stop_all_queues(fs);
-> +	virtio_fs_drain_all_queues(fs);
->  	vdev->config->reset(vdev);
->  	virtio_fs_cleanup_vqs(vdev, fs);
->  
-> @@ -865,37 +915,6 @@ __releases(fiq->waitq.lock)
->  	}
->  }
->  
-> -static void virtio_fs_flush_hiprio_queue(struct virtio_fs_vq *fsvq)
-> -{
-> -	struct virtio_fs_forget *forget;
-> -
-> -	WARN_ON(fsvq->in_flight < 0);
-> -
-> -	/* Go through pending forget requests and free them */
-> -	spin_lock(&fsvq->lock);
-> -	while (1) {
-> -		forget = list_first_entry_or_null(&fsvq->queued_reqs,
-> -					struct virtio_fs_forget, list);
-> -		if (!forget)
-> -			break;
-> -		list_del(&forget->list);
-> -		kfree(forget);
-> -	}
-> -
-> -	spin_unlock(&fsvq->lock);
-> -
-> -	/* Wait for in flight requests to finish.*/
-> -	while (1) {
-> -		spin_lock(&fsvq->lock);
-> -		if (!fsvq->in_flight) {
-> -			spin_unlock(&fsvq->lock);
-> -			break;
-> -		}
-> -		spin_unlock(&fsvq->lock);
-> -		usleep_range(1000, 2000);
-> -	}
-> -}
-> -
->  const static struct fuse_iqueue_ops virtio_fs_fiq_ops = {
->  	.wake_forget_and_unlock		= virtio_fs_wake_forget_and_unlock,
->  	.wake_interrupt_and_unlock	= virtio_fs_wake_interrupt_and_unlock,
-> @@ -988,7 +1007,7 @@ static void virtio_kill_sb(struct super_block *sb)
->  	spin_lock(&fsvq->lock);
->  	fsvq->connected = false;
->  	spin_unlock(&fsvq->lock);
-> -	virtio_fs_flush_hiprio_queue(fsvq);
-> +	virtio_fs_drain_all_queues(vfs);
->  
->  	fuse_kill_sb_anon(sb);
->  	virtio_fs_free_devs(vfs);
-> 
