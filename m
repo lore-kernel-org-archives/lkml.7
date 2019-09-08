@@ -2,104 +2,189 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C66E7C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F4002C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95D542082C
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA7E22081B
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:01:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947671;
-	bh=YRrPemDElYE2BQ99Hoa7t0QckQoqDn3L4miAj+9x7LQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YS6JztzYNRxV9p3w3KLF2j6JNdApWpujZMThlRIopC6yVdCdsoOogFE1BPeTygYlw
-	 T3NTVTVcCU1VxHDJaZzy1PYKQYD8i57+vQMxHszm6N/WeMthPgyJOcDkZ7PLnnSEXF
-	 MqQ+EiiAEMr3jCqixb75aSbSFrCrLqEZ8N4fA0No=
+	s=default; t=1567947674;
+	bh=PnhBP1vWNikRpYfJVvJEstJmOEjb/LN9D5E85rcI69w=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=AAuE7vzYQ/+nfavEwseU6K+p9wOU3RIB3eusp2MsOHudhQCpgC033qQ0xZjk4WDoR
+	 b8aeExospIbunu5d2XORIwP2NLUHQaQHFwbjcZ0Rj+oFFIykttmiYWG0xDrTXbJNfc
+	 q5idhVKL39eScOfz4LZXVAUev/xZjB0nV71uzXmE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729477AbfIHMn2 (ORCPT
+        id S1727400AbfIHNBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:43:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57162 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 09:01:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726229AbfIHMnZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:43:25 -0400
+        id S1729464AbfIHMn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:43:28 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B484218AF;
-        Sun,  8 Sep 2019 12:43:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DA042190F;
+        Sun,  8 Sep 2019 12:43:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946604;
-        bh=YRrPemDElYE2BQ99Hoa7t0QckQoqDn3L4miAj+9x7LQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vA2TnnTJy1iQaRyeJspINS5MSG4NWzSR0LSLWUuLAtDoRQC4mTdLRdZ/mhsRlbLI/
-         TeMadWdnzeqKo0cOYT3KvYrzYDg45mxfea2DV8S7zJ2J/t/JB6WTTbkgUHQim8E23h
-         dK3dlr8Up7KV+TcNL+yPYlszQ3C9mGDdidX2wgSc=
+        s=default; t=1567946607;
+        bh=PnhBP1vWNikRpYfJVvJEstJmOEjb/LN9D5E85rcI69w=;
+        h=From:To:Cc:Subject:Date:From;
+        b=uPeEueIlzSgUwhDsPYJx/I5G5cW8EbAztWFMFFxMdLPw6+ueB90NmkjMqeZE4fnoJ
+         JVlx5t/PEKIdt6OJWeBzOh8XglSZImd/upQhR/unV5nSJ2tE163bwxTzBfqTsi1rH5
+         y/Y9beqJiCjieSK3jMUjtoRF3Q+nY6UGrKDaGBpc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 09/23] net: kalmia: fix memory leaks
-Date:   Sun,  8 Sep 2019 13:41:44 +0100
-Message-Id: <20190908121056.700368519@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.4 00/23] 4.4.192-stable review
+Date:   Sun,  8 Sep 2019 13:41:35 +0100
+Message-Id: <20190908121052.898169328@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190908121052.898169328@linuxfoundation.org>
-References: <20190908121052.898169328@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.192-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.4.192-rc1
+X-KernelTest-Deadline: 2019-09-10T12:11+00:00
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f1472cb09f11ddb41d4be84f0650835cb65a9073 ]
+This is the start of the stable review cycle for the 4.4.192 release.
+There are 23 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-In kalmia_init_and_get_ethernet_addr(), 'usb_buf' is allocated through
-kmalloc(). In the following execution, if the 'status' returned by
-kalmia_send_init_packet() is not 0, 'usb_buf' is not deallocated, leading
-to memory leaks. To fix this issue, add the 'out' label to free 'usb_buf'.
+Responses should be made by Tue 10 Sep 2019 12:09:36 PM UTC.
+Anything received after that time might be too late.
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/usb/kalmia.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.192-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+and the diffstat can be found below.
 
-diff --git a/drivers/net/usb/kalmia.c b/drivers/net/usb/kalmia.c
-index 5662babf05832..d385b67258c79 100644
---- a/drivers/net/usb/kalmia.c
-+++ b/drivers/net/usb/kalmia.c
-@@ -117,16 +117,16 @@ kalmia_init_and_get_ethernet_addr(struct usbnet *dev, u8 *ethernet_addr)
- 	status = kalmia_send_init_packet(dev, usb_buf, sizeof(init_msg_1)
- 		/ sizeof(init_msg_1[0]), usb_buf, 24);
- 	if (status != 0)
--		return status;
-+		goto out;
- 
- 	memcpy(usb_buf, init_msg_2, 12);
- 	status = kalmia_send_init_packet(dev, usb_buf, sizeof(init_msg_2)
- 		/ sizeof(init_msg_2[0]), usb_buf, 28);
- 	if (status != 0)
--		return status;
-+		goto out;
- 
- 	memcpy(ethernet_addr, usb_buf + 10, ETH_ALEN);
--
-+out:
- 	kfree(usb_buf);
- 	return status;
- }
--- 
-2.20.1
+thanks,
 
+greg k-h
+
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.4.192-rc1
+
+Chen-Yu Tsai <wens@csie.org>
+    net: stmmac: dwmac-rk: Don't fail if phy regulator is absent
+
+Feng Sun <loyou85@gmail.com>
+    net: fix skb use after free in netpoll
+
+Linus Torvalds <torvalds@linux-foundation.org>
+    Revert "x86/apic: Include the LDR when clearing out APIC registers"
+
+Martin Sperl <kernel@martin.sperl.org>
+    spi: bcm2835aux: fix corruptions for longer spi transfers
+
+Martin Sperl <kernel@martin.sperl.org>
+    spi: bcm2835aux: remove dangerous uncontrolled read of fifo
+
+Martin Sperl <kernel@martin.sperl.org>
+    spi: bcm2835aux: unifying code between polling and interrupt driven code
+
+Rob Herring <robh@kernel.org>
+    spi: bcm2835aux: ensure interrupts are enabled for shared handler
+
+Luis Henriques <lhenriques@suse.com>
+    libceph: allow ceph_buffer_put() to receive a NULL ceph_buffer
+
+Andrew Jones <drjones@redhat.com>
+    KVM: arm/arm64: Only skip MMIO insn once
+
+Luis Henriques <lhenriques@suse.com>
+    ceph: fix buffer free while holding i_ceph_lock in __ceph_setxattr()
+
+Wenwen Wang <wenwen@cs.uga.edu>
+    IB/mlx4: Fix memory leaks
+
+Vitaly Kuznetsov <vkuznets@redhat.com>
+    Tools: hv: kvp: eliminate 'may be used uninitialized' warning
+
+Tho Vu <tho.vu.wh@rvc.renesas.com>
+    ravb: Fix use-after-free ravb_tstamp_skb
+
+Wenwen Wang <wenwen@cs.uga.edu>
+    wimax/i2400m: fix a memory leak bug
+
+Wenwen Wang <wenwen@cs.uga.edu>
+    net: kalmia: fix memory leaks
+
+Wenwen Wang <wenwen@cs.uga.edu>
+    cx82310_eth: fix a memory leak bug
+
+Wenwen Wang <wenwen@cs.uga.edu>
+    net: myri10ge: fix memory leaks
+
+Wenwen Wang <wenwen@cs.uga.edu>
+    cxgb4: fix a memory leak bug
+
+YueHaibing <yuehaibing@huawei.com>
+    gpio: Fix build error of function redefinition
+
+Thomas Falcon <tlfalcon@linux.ibm.com>
+    ibmveth: Convert multicast list size for little-endian system
+
+Matthias Kaehlcke <mka@chromium.org>
+    Bluetooth: btqca: Add a short delay before downloading the NVM
+
+Nathan Chancellor <natechancellor@gmail.com>
+    net: tc35815: Explicitly check NET_IP_ALIGN is not zero in tc35815_rx
+
+Fuqian Huang <huangfq.daxian@gmail.com>
+    net: tundra: tsi108: use spin_lock_irqsave instead of spin_lock_irq in IRQ context
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                           |  4 +-
+ arch/arm/kvm/mmio.c                                |  7 +++
+ arch/x86/kernel/apic/apic.c                        |  4 --
+ drivers/bluetooth/btqca.c                          |  3 ++
+ drivers/infiniband/hw/mlx4/mad.c                   |  4 +-
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c |  4 +-
+ drivers/net/ethernet/ibm/ibmveth.c                 |  9 ++--
+ drivers/net/ethernet/myricom/myri10ge/myri10ge.c   |  2 +-
+ drivers/net/ethernet/renesas/ravb_main.c           |  8 ++-
+ drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c     |  6 +--
+ drivers/net/ethernet/toshiba/tc35815.c             |  2 +-
+ drivers/net/ethernet/tundra/tsi108_eth.c           |  5 +-
+ drivers/net/usb/cx82310_eth.c                      |  3 +-
+ drivers/net/usb/kalmia.c                           |  6 +--
+ drivers/net/wimax/i2400m/fw.c                      |  4 +-
+ drivers/spi/spi-bcm2835aux.c                       | 57 ++++++++--------------
+ fs/ceph/xattr.c                                    |  8 ++-
+ include/linux/ceph/buffer.h                        |  3 +-
+ include/linux/gpio.h                               | 24 ---------
+ net/core/netpoll.c                                 |  6 +--
+ tools/hv/hv_kvp_daemon.c                           |  2 +-
+ 21 files changed, 75 insertions(+), 96 deletions(-)
 
 
