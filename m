@@ -2,58 +2,57 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04426C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 578EFC433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C499F2190F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3388D2190F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:45:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946708;
-	bh=b/6p2K6OwCQ9VHvH/z3IInmSI+583pXbS1SgOG8OycQ=;
+	s=default; t=1567946714;
+	bh=GTyJzGWec36HbGl1F9Y+ExAf/bHMcu9a8jpB7Pvlt4Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gvIRO0Iy8tUvU6MN1PCvIOVV3Q9M570GnP27E1jOIXdfECHzJPaMH9DgEcZd8s4Oj
-	 i7pdtWsF/+pY0CdDZB2VDrEcNbOBYbTg4cm+5/a3GcRn3Ui7E5MJAU1/27nINu/GHp
-	 Enh7Mtli7KGBKaGxgGXxJAj4pr1yd60U+0IZjSF0=
+	b=Qq3r04mT3z7Vs7+I52wZs79WhPKPCC3/He7UJdJtDjLFlBPkPKCCDrch6F/tYzGnu
+	 wo1zfy76kjbYaX+4Ch/u3yJuVRY1B9f75GT+FLU3IZLSTFXCZZVXSE/SzhDDhAZI+x
+	 +aWCBcRMQjcBLNj3BkaJ3p8XfkMNGx8bUV5qnQhE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730007AbfIHMpH (ORCPT
+        id S1730039AbfIHMpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:45:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60160 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:45:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729995AbfIHMpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:45:04 -0400
+        id S1729995AbfIHMpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:45:09 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DBB2218AF;
-        Sun,  8 Sep 2019 12:45:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90D92218AE;
+        Sun,  8 Sep 2019 12:45:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946704;
-        bh=b/6p2K6OwCQ9VHvH/z3IInmSI+583pXbS1SgOG8OycQ=;
+        s=default; t=1567946709;
+        bh=GTyJzGWec36HbGl1F9Y+ExAf/bHMcu9a8jpB7Pvlt4Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ElDaWKl0oamOoYXJNqFPLAYf9l+iYRlxyqQBE54FDuwrprcy7ePfL/YdQVSd21o18
-         LZDQewRL/CJrd0xfXISoI8PQaxPFvZ8GoQrhqP+++Wi0NZaquPldCpzOima7Ngncsd
-         yernQIWp7DrBY5MI8ghmUtI8Rfxqi0W2eJC7E4eE=
+        b=xyoelmzkhfXlv+Gh71CaV/uY53wFx/zrKrw5pYLjWiDVaen8oqSvWJOxYFs/8GnOj
+         aD6q+ICUfPlcruoV0Udiq1UVHjNbC0gURjjxnR1LF5FLz4ZAbV8hN8JQqdznCNDWSa
+         rOrodTuBpPlzUh0OE8haxioYlvNvwU65p/M2luJY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fuqian Huang <huangfq.daxian@gmail.com>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 01/40] net: tundra: tsi108: use spin_lock_irqsave instead of spin_lock_irq in IRQ context
-Date:   Sun,  8 Sep 2019 13:41:34 +0100
-Message-Id: <20190908121114.485236005@linuxfoundation.org>
+Subject: [PATCH 4.14 03/40] net: tc35815: Explicitly check NET_IP_ALIGN is not zero in tc35815_rx
+Date:   Sun,  8 Sep 2019 13:41:36 +0100
+Message-Id: <20190908121115.210630056@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121114.260662089@linuxfoundation.org>
 References: <20190908121114.260662089@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,46 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8c25d0887a8bd0e1ca2074ac0c6dff173787a83b ]
+[ Upstream commit 125b7e0949d4e72b15c2b1a1590f8cece985a918 ]
 
-As spin_unlock_irq will enable interrupts.
-Function tsi108_stat_carry is called from interrupt handler tsi108_irq.
-Interrupts are enabled in interrupt handler.
-Use spin_lock_irqsave/spin_unlock_irqrestore instead of spin_(un)lock_irq
-in IRQ context to avoid this.
+clang warns:
 
-Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+drivers/net/ethernet/toshiba/tc35815.c:1507:30: warning: use of logical
+'&&' with constant operand [-Wconstant-logical-operand]
+                        if (!HAVE_DMA_RXALIGN(lp) && NET_IP_ALIGN)
+                                                  ^  ~~~~~~~~~~~~
+drivers/net/ethernet/toshiba/tc35815.c:1507:30: note: use '&' for a
+bitwise operation
+                        if (!HAVE_DMA_RXALIGN(lp) && NET_IP_ALIGN)
+                                                  ^~
+                                                  &
+drivers/net/ethernet/toshiba/tc35815.c:1507:30: note: remove constant to
+silence this warning
+                        if (!HAVE_DMA_RXALIGN(lp) && NET_IP_ALIGN)
+                                                 ~^~~~~~~~~~~~~~~
+1 warning generated.
+
+Explicitly check that NET_IP_ALIGN is not zero, which matches how this
+is checked in other parts of the tree. Because NET_IP_ALIGN is a build
+time constant, this check will be constant folded away during
+optimization.
+
+Fixes: 82a9928db560 ("tc35815: Enable StripCRC feature")
+Link: https://github.com/ClangBuiltLinux/linux/issues/608
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/tundra/tsi108_eth.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/toshiba/tc35815.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/tundra/tsi108_eth.c b/drivers/net/ethernet/tundra/tsi108_eth.c
-index c2d15d9c0c33b..455979e47424c 100644
---- a/drivers/net/ethernet/tundra/tsi108_eth.c
-+++ b/drivers/net/ethernet/tundra/tsi108_eth.c
-@@ -381,9 +381,10 @@ tsi108_stat_carry_one(int carry, int carry_bit, int carry_shift,
- static void tsi108_stat_carry(struct net_device *dev)
- {
- 	struct tsi108_prv_data *data = netdev_priv(dev);
-+	unsigned long flags;
- 	u32 carry1, carry2;
- 
--	spin_lock_irq(&data->misclock);
-+	spin_lock_irqsave(&data->misclock, flags);
- 
- 	carry1 = TSI_READ(TSI108_STAT_CARRY1);
- 	carry2 = TSI_READ(TSI108_STAT_CARRY2);
-@@ -451,7 +452,7 @@ static void tsi108_stat_carry(struct net_device *dev)
- 			      TSI108_STAT_TXPAUSEDROP_CARRY,
- 			      &data->tx_pause_drop);
- 
--	spin_unlock_irq(&data->misclock);
-+	spin_unlock_irqrestore(&data->misclock, flags);
- }
- 
- /* Read a stat counter atomically with respect to carries.
+diff --git a/drivers/net/ethernet/toshiba/tc35815.c b/drivers/net/ethernet/toshiba/tc35815.c
+index cce9c9ed46aa9..9146068979d2c 100644
+--- a/drivers/net/ethernet/toshiba/tc35815.c
++++ b/drivers/net/ethernet/toshiba/tc35815.c
+@@ -1497,7 +1497,7 @@ tc35815_rx(struct net_device *dev, int limit)
+ 			pci_unmap_single(lp->pci_dev,
+ 					 lp->rx_skbs[cur_bd].skb_dma,
+ 					 RX_BUF_SIZE, PCI_DMA_FROMDEVICE);
+-			if (!HAVE_DMA_RXALIGN(lp) && NET_IP_ALIGN)
++			if (!HAVE_DMA_RXALIGN(lp) && NET_IP_ALIGN != 0)
+ 				memmove(skb->data, skb->data - NET_IP_ALIGN,
+ 					pkt_len);
+ 			data = skb_put(skb, pkt_len);
 -- 
 2.20.1
 
