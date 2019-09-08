@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9DEEC4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B43C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9578F21907
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B43A2218AE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:43:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="D3va8Eqd"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="1YogVn8k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728477AbfIHNnN (ORCPT
+        id S1728513AbfIHNnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 09:43:13 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34937 "EHLO
+        Sun, 8 Sep 2019 09:43:16 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36954 "EHLO
         mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728327AbfIHNnK (ORCPT
+        with ESMTP id S1728362AbfIHNnN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 09:43:10 -0400
-Received: by mail-wr1-f65.google.com with SMTP id g7so11058758wrx.2
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 06:43:07 -0700 (PDT)
+        Sun, 8 Sep 2019 09:43:13 -0400
+Received: by mail-wr1-f65.google.com with SMTP id i1so10430947wro.4
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 06:43:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=P9spBEsBHUZ9g/u9RtVBlcb3OiOFBO3IyBThdfZnhU8=;
-        b=D3va8EqdexPnI1YV301Nv++203bL9hC6gwxXh+dK1X5wRenRC3TfHRPf1e5JASy+Rq
-         ta+CoZVk6/SrkqN6BZi5/JeiRdTnHEDdeyD3mbgS1x/ANHOA+m5f/kidvGTOAdJ0YTSP
-         ++RYNZWZWx56VWpfjqXFxF3I/WW5KI4F2tG6u86x9ISHYLtDmO24gMjeFk3pAtaIeoF4
-         2Y7a+oL9BaU5BZaOAlg1u/iUx2Bf8pDD8YGZ3pUIi47YqW5ZWP3j00W0qo045IBTWWfV
-         q9kQu5qxY/XQyENHpAevcyqj6CaeO5EOKTCsDNLlywYtw/M5MBzGJS15AxI6NWV3OcRe
-         TyAg==
+        bh=MPMNuIvBDuMpXWllYYYQc+uQUL5Apc6pCcccd/3M7DI=;
+        b=1YogVn8kGos8KYTq7iFgHl8nNKzFAwaR62cZ1BnEPVcRFJF/CtzJpgnRxieBcmpBns
+         BMc+Ppn2v3xM9ZWWG42Iv9Q3g4cpCEhC44zuVO585NDvAuOTD9b19ZhQwh34UD98voaj
+         daaCrnsdN+1Egwx4tVBs5FD/Xy8l2Odfcz1gsIPIhaHoE8jDpfkxr1Vip00kqwk4dDIz
+         LXhm/1DtkeWECYKe1P3ceIHzK57O3oL5PRURDiSYO/WIg1QTpKSZXlwRwamN+hzQ9M3g
+         hNQPVbxrvwxM6klB5rCKV0ZIUA/qOfK49v2dI3LSrgfECoW6bUUlaLUbCExtmLmEc5oc
+         s2AA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=P9spBEsBHUZ9g/u9RtVBlcb3OiOFBO3IyBThdfZnhU8=;
-        b=a4NomZY+tLWsKZx5R2QdYtKG3EI2tHr4EZGZgPIXoJL524BrCK4RuuTyniETA2KU/x
-         s7D1PwLYyCvKto3ay2smanNyV/OfkGF36Me/krL0SE8NuQNcc5p2vvRrYy3ykaaAMWjf
-         HG8qA/P+Vpr5J//XXFsKDgry0xDAWsFX4KY9etLe53HM4jfJ+PzMJnVq5z/LatsGLZ7G
-         xr80AXHQewjaMt65UL8CCW9T7eZG3iIYggnozqfvfPV6SIt5Sa5SUBwAQF1e0O9gNnN/
-         70QseAPaUD9EGoHD0ealQqWZ4KFTq/XvP05eWExEwoZXM+5eir2c46Ev4E+vDRmjeTDD
-         qI5g==
-X-Gm-Message-State: APjAAAXqdSXv8yW3JVgnS3XjLi54FJznmZ/u3syuepGvypY6kJbYa+I+
-        4h6N4ZT955yOmp5EEZW3e9UJyQ==
-X-Google-Smtp-Source: APXvYqytEYFBR5k51dO2xW5tElr8MGpnA540xchKrS2qKXOg2WYwyMiu0TYkC6h7nI39i2dMwEc84g==
-X-Received: by 2002:a05:6000:128e:: with SMTP id f14mr14632709wrx.28.1567950186850;
-        Sun, 08 Sep 2019 06:43:06 -0700 (PDT)
+        bh=MPMNuIvBDuMpXWllYYYQc+uQUL5Apc6pCcccd/3M7DI=;
+        b=WrFBfDlwJkta5rtP80/xWZOC5bfakMHMfZdC6JOIQvG+WVCTR+itqMwzHezTn16VrF
+         1G1ENq3YoXfKEtRIIuMhYk2owgc9j5vdhowJGZGTGPAh9y7u0KQdq/m8bp9ZV4BmwRwm
+         cF3Nn9IhkpfFnFO8qi7+yOHGBcahe2ZLg/GTUTo6nm5VIknG12eDJr6PJG3q8EmXgzzQ
+         1BNTmXMEJQ0+r2lNd2P6KlQkpoq4g950AdNYwnp943LunRfdudxx4GM4skn8mk3XIAg8
+         qIu713eLDeAoDwYFrn65JiB+g1dvJT/uvr+1vgFHsG2+l2bLnlGBgjYGPb7qAWnOCfS5
+         LxZA==
+X-Gm-Message-State: APjAAAU7wFdQGnZpbx25Q7wuh1IsbQykuIruOCr71ZQjxk5MpaEfCprJ
+        n3hXjlB5C7Jk9YnyvBDdg5GeWw==
+X-Google-Smtp-Source: APXvYqwNyG0t5TErz2/QR2NwfTw/s/xk+uFaC9e+6aRneeul+t9o7Pn0tGNVJy66USrGio+WoOlNeg==
+X-Received: by 2002:adf:f482:: with SMTP id l2mr15178200wro.103.1567950190158;
+        Sun, 08 Sep 2019 06:43:10 -0700 (PDT)
 Received: from localhost.localdomain ([51.15.160.169])
-        by smtp.gmail.com with ESMTPSA id t203sm14313902wmf.42.2019.09.08.06.43.05
+        by smtp.gmail.com with ESMTPSA id t203sm14313902wmf.42.2019.09.08.06.43.09
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 08 Sep 2019 06:43:05 -0700 (PDT)
+        Sun, 08 Sep 2019 06:43:09 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     khilman@baylibre.com, bhelgaas@google.com,
         lorenzo.pieralisi@arm.com, yue.wang@Amlogic.com, kishon@ti.com
@@ -62,9 +62,9 @@ Cc:     repk@triplefau.lt, Neil Armstrong <narmstrong@baylibre.com>,
         maz@kernel.org, linux-amlogic@lists.infradead.org,
         linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 2/6] PCI: amlogic: Fix probed clock names
-Date:   Sun,  8 Sep 2019 13:42:54 +0000
-Message-Id: <1567950178-4466-3-git-send-email-narmstrong@baylibre.com>
+Subject: [PATCH 6/6] arm64: dts: khadas-vim3: add commented support for PCIe
+Date:   Sun,  8 Sep 2019 13:42:58 +0000
+Message-Id: <1567950178-4466-7-git-send-email-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1567950178-4466-1-git-send-email-narmstrong@baylibre.com>
 References: <1567950178-4466-1-git-send-email-narmstrong@baylibre.com>
@@ -73,38 +73,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the clock names used in the probe function according
-to the bindings.
+The VIM3 on-board  MCU can mux the PCIe/USB3.0 shared differential
+lines using a FUSB340TMX USB 3.1 SuperSpeed Data Switch between
+an USB3.0 Type A connector and a M.2 Key M slot.
+The PHY driving these differential lines is shared between
+the USB3.0 controller and the PCIe Controller, thus only
+a single controller can use it.
 
-Fixes: 9c0ef6d34fdb ("PCI: amlogic: Add the Amlogic Meson PCIe controller driver")
+The needed DT configuration when the MCU is configured to mux
+the PCIe/USB3.0 differential lines to the M.2 Key M slot is
+added commented and may uncommented to disable USB3.0 from the
+USB Complex and enable the PCIe controller.
+
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/pci/controller/dwc/pci-meson.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ .../amlogic/meson-g12b-a311d-khadas-vim3.dts  | 22 +++++++++++++++++++
+ .../amlogic/meson-g12b-s922x-khadas-vim3.dts  | 22 +++++++++++++++++++
+ .../boot/dts/amlogic/meson-khadas-vim3.dtsi   |  4 ++++
+ .../dts/amlogic/meson-sm1-khadas-vim3l.dts    | 22 +++++++++++++++++++
+ 4 files changed, 70 insertions(+)
 
-diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
-index 541f37a6f6a5..ab79990798f8 100644
---- a/drivers/pci/controller/dwc/pci-meson.c
-+++ b/drivers/pci/controller/dwc/pci-meson.c
-@@ -250,15 +250,15 @@ static int meson_pcie_probe_clocks(struct meson_pcie *mp)
- 	if (IS_ERR(res->port_clk))
- 		return PTR_ERR(res->port_clk);
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-khadas-vim3.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-khadas-vim3.dts
+index 3a6a1e0c1e32..0577b1435cbb 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-khadas-vim3.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-khadas-vim3.dts
+@@ -14,3 +14,25 @@
+ / {
+ 	compatible = "khadas,vim3", "amlogic,a311d", "amlogic,g12b";
+ };
++
++/*
++ * The VIM3 on-board  MCU can mux the PCIe/USB3.0 shared differential
++ * lines using a FUSB340TMX USB 3.1 SuperSpeed Data Switch between
++ * an USB3.0 Type A connector and a M.2 Key M slot.
++ * The PHY driving these differential lines is shared between
++ * the USB3.0 controller and the PCIe Controller, thus only
++ * a single controller can use it.
++ * If the MCU is configured to mux the PCIe/USB3.0 differential lines
++ * to the M.2 Key M slot, uncomment the following block to disable
++ * USB3.0 from the USB Complex and enable the PCIe controller.
++ */
++/*
++&pcie {
++	status = "okay";
++};
++
++&usb {
++	phys = <&usb2_phy0>, <&usb2_phy1>;
++	phy-names = "usb2-phy0", "usb2-phy1";
++};
++ */
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-s922x-khadas-vim3.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-s922x-khadas-vim3.dts
+index b73deb282120..1ef5c2f04f67 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12b-s922x-khadas-vim3.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-g12b-s922x-khadas-vim3.dts
+@@ -14,3 +14,25 @@
+ / {
+ 	compatible = "khadas,vim3", "amlogic,s922x", "amlogic,g12b";
+ };
++
++/*
++ * The VIM3 on-board  MCU can mux the PCIe/USB3.0 shared differential
++ * lines using a FUSB340TMX USB 3.1 SuperSpeed Data Switch between
++ * an USB3.0 Type A connector and a M.2 Key M slot.
++ * The PHY driving these differential lines is shared between
++ * the USB3.0 controller and the PCIe Controller, thus only
++ * a single controller can use it.
++ * If the MCU is configured to mux the PCIe/USB3.0 differential lines
++ * to the M.2 Key M slot, uncomment the following block to disable
++ * USB3.0 from the USB Complex and enable the PCIe controller.
++ */
++/*
++&pcie {
++	status = "okay";
++};
++
++&usb {
++	phys = <&usb2_phy0>, <&usb2_phy1>;
++	phy-names = "usb2-phy0", "usb2-phy1";
++};
++ */
+diff --git a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+index 8647da7d6609..eac5720dc15f 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+@@ -246,6 +246,10 @@
+ 	linux,rc-map-name = "rc-khadas";
+ };
  
--	res->mipi_gate = meson_pcie_probe_clock(dev, "pcie_mipi_en", 0);
-+	res->mipi_gate = meson_pcie_probe_clock(dev, "mipi", 0);
- 	if (IS_ERR(res->mipi_gate))
- 		return PTR_ERR(res->mipi_gate);
- 
--	res->general_clk = meson_pcie_probe_clock(dev, "pcie_general", 0);
-+	res->general_clk = meson_pcie_probe_clock(dev, "general", 0);
- 	if (IS_ERR(res->general_clk))
- 		return PTR_ERR(res->general_clk);
- 
--	res->clk = meson_pcie_probe_clock(dev, "pcie", 0);
-+	res->clk = meson_pcie_probe_clock(dev, "pclk", 0);
- 	if (IS_ERR(res->clk))
- 		return PTR_ERR(res->clk);
- 
++&pcie {
++	reset-gpios = <&gpio GPIOA_8 GPIO_ACTIVE_LOW>;
++};
++
+ &pwm_ef {
+         status = "okay";
+         pinctrl-0 = <&pwm_e_pins>;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
+index 5233bd7cacfb..d9c7cbedce53 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
+@@ -68,3 +68,25 @@
+ 	clock-names = "clkin1";
+ 	status = "okay";
+ };
++
++/*
++ * The VIM3 on-board  MCU can mux the PCIe/USB3.0 shared differential
++ * lines using a FUSB340TMX USB 3.1 SuperSpeed Data Switch between
++ * an USB3.0 Type A connector and a M.2 Key M slot.
++ * The PHY driving these differential lines is shared between
++ * the USB3.0 controller and the PCIe Controller, thus only
++ * a single controller can use it.
++ * If the MCU is configured to mux the PCIe/USB3.0 differential lines
++ * to the M.2 Key M slot, uncomment the following block to disable
++ * USB3.0 from the USB Complex and enable the PCIe controller.
++ */
++/*
++&pcie {
++	status = "okay";
++};
++
++&usb {
++	phys = <&usb2_phy0>, <&usb2_phy1>;
++	phy-names = "usb2-phy0", "usb2-phy1";
++};
++ */
 -- 
 2.17.1
 
