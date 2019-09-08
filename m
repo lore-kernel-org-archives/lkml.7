@@ -2,54 +2,53 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B97C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D55C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AFB620693
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:57:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E373216C8
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:57:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947464;
-	bh=BE1PsLywpsazAx69c7rAKAN5MCKzJisnv2Hf7MFQlnY=;
+	s=default; t=1567947467;
+	bh=hhJZjnhO0gbZWh267gIF1j2JqtZxTdXiaBXe+D+oK1Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vb3DNt4mSyTLvdSSCjZO83kpkNK5L3Sq8EPq+PXJPylMJAZ9s+rEMEreHf5r8qBYf
-	 J8CI8EllFkrHwihQlbVTxWokflAC8z4eSIVZNNo9wi6dY45E2yZOghYwGcjmebkJKF
-	 YU8bgBwyTcDpznf5U24MK2QablYfwUhtG5Qqdtsk=
+	b=D9mSSFNkLK4jGGtugBWH5GMEwemqrR5wtJNxRxDRxDH+3EaUzvqfjMxUO/CcdoMAe
+	 PMMkhoqqq+j+To1UdnJdEsYVTOCIDU51JZfVpdJwFyFFKYwCvPQZmfT1L4ezQa6BUg
+	 a6EBjQmxe3d+T+p0l5XKqKKcZkCXx+c8rEJYcqqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730852AbfIHMr7 (ORCPT
+        id S1726653AbfIHM5q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:47:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36614 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:57:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728551AbfIHMry (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:47:54 -0400
+        id S1730833AbfIHMr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:47:57 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDA02218AF;
-        Sun,  8 Sep 2019 12:47:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A460218AC;
+        Sun,  8 Sep 2019 12:47:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946873;
-        bh=BE1PsLywpsazAx69c7rAKAN5MCKzJisnv2Hf7MFQlnY=;
+        s=default; t=1567946876;
+        bh=hhJZjnhO0gbZWh267gIF1j2JqtZxTdXiaBXe+D+oK1Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YPoaQr8VCc/JymH+l545ZCl0YJMhe9RWn0hnFZhCKNNKLLyJBjPwsZC5NeC0HVP3E
-         peGs5HQw79YAGtGmeO7SSPCi6luPmz4C6x5zlqlqqWH1Z0s3CV5X5TQtiG8lvJ8CAC
-         lR/W1cVFg+onUUdQu3z+5dcfzQMN7PIRcfP9igRw=
+        b=n6av6M2dHlFIfBqsExYhiF+yjovin6W2/0VmqvdxH+qEFVMS/Af/HHF+qIKPlOJdd
+         Hr+p/OrUfFLB4DfJGNGHKgg0lzY/Stz+PWr5iPYGmYssXPXZqOd/TwlKy/hqegrXJV
+         DbnY4rTcJtabSWSouNH55g+v/v2u525CehzQexAU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Bill ODonnell <billodo@redhat.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 31/57] vfs: fix page locking deadlocks when deduping files
-Date:   Sun,  8 Sep 2019 13:41:55 +0100
-Message-Id: <20190908121137.427908611@linuxfoundation.org>
+        stable@vger.kernel.org, Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, itugrok@yahoo.com
+Subject: [PATCH 4.19 04/57] net_sched: fix a NULL pointer deref in ipt action
+Date:   Sun,  8 Sep 2019 13:41:28 +0100
+Message-Id: <20190908121127.430691416@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121125.608195329@linuxfoundation.org>
 References: <20190908121125.608195329@linuxfoundation.org>
@@ -62,114 +61,289 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit edc58dd0123b552453a74369bd0c8d890b497b4b ]
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-When dedupe wants to use the page cache to compare parts of two files
-for dedupe, we must be very careful to handle locking correctly.  The
-current code doesn't do this.  It must lock and unlock the page only
-once if the two pages are the same, since the overlapping range check
-doesn't catch this when blocksize < pagesize.  If the pages are distinct
-but from the same file, we must observe page locking order and lock them
-in order of increasing offset to avoid clashing with writeback locking.
+[ Upstream commit 981471bd3abf4d572097645d765391533aac327d ]
 
-Fixes: 876bec6f9bbfcb3 ("vfs: refactor clone/dedupe_file_range common functions")
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Bill O'Donnell <billodo@redhat.com>
-Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The net pointer in struct xt_tgdtor_param is not explicitly
+initialized therefore is still NULL when dereferencing it.
+So we have to find a way to pass the correct net pointer to
+ipt_destroy_target().
+
+The best way I find is just saving the net pointer inside the per
+netns struct tcf_idrinfo, which could make this patch smaller.
+
+Fixes: 0c66dc1ea3f0 ("netfilter: conntrack: register hooks in netns when needed by ruleset")
+Reported-and-tested-by: itugrok@yahoo.com
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>
+Cc: Jiri Pirko <jiri@resnulli.us>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/read_write.c | 49 +++++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 41 insertions(+), 8 deletions(-)
+ include/net/act_api.h      |    4 +++-
+ net/sched/act_bpf.c        |    2 +-
+ net/sched/act_connmark.c   |    2 +-
+ net/sched/act_csum.c       |    2 +-
+ net/sched/act_gact.c       |    2 +-
+ net/sched/act_ife.c        |    2 +-
+ net/sched/act_ipt.c        |   11 ++++++-----
+ net/sched/act_mirred.c     |    2 +-
+ net/sched/act_nat.c        |    2 +-
+ net/sched/act_pedit.c      |    2 +-
+ net/sched/act_police.c     |    2 +-
+ net/sched/act_sample.c     |    2 +-
+ net/sched/act_simple.c     |    2 +-
+ net/sched/act_skbedit.c    |    2 +-
+ net/sched/act_skbmod.c     |    2 +-
+ net/sched/act_tunnel_key.c |    2 +-
+ net/sched/act_vlan.c       |    2 +-
+ 17 files changed, 24 insertions(+), 21 deletions(-)
 
-diff --git a/fs/read_write.c b/fs/read_write.c
-index 85fd7a8ee29eb..5fb5ee5b8cd70 100644
---- a/fs/read_write.c
-+++ b/fs/read_write.c
-@@ -1888,10 +1888,7 @@ int vfs_clone_file_range(struct file *file_in, loff_t pos_in,
- }
- EXPORT_SYMBOL(vfs_clone_file_range);
+--- a/include/net/act_api.h
++++ b/include/net/act_api.h
+@@ -15,6 +15,7 @@
+ struct tcf_idrinfo {
+ 	spinlock_t	lock;
+ 	struct idr	action_idr;
++	struct net	*net;
+ };
  
--/*
-- * Read a page's worth of file data into the page cache.  Return the page
-- * locked.
-- */
-+/* Read a page's worth of file data into the page cache. */
- static struct page *vfs_dedupe_get_page(struct inode *inode, loff_t offset)
+ struct tc_action_ops;
+@@ -107,7 +108,7 @@ struct tc_action_net {
+ };
+ 
+ static inline
+-int tc_action_net_init(struct tc_action_net *tn,
++int tc_action_net_init(struct net *net, struct tc_action_net *tn,
+ 		       const struct tc_action_ops *ops)
  {
- 	struct address_space *mapping;
-@@ -1907,10 +1904,32 @@ static struct page *vfs_dedupe_get_page(struct inode *inode, loff_t offset)
- 		put_page(page);
- 		return ERR_PTR(-EIO);
- 	}
--	lock_page(page);
- 	return page;
+ 	int err = 0;
+@@ -116,6 +117,7 @@ int tc_action_net_init(struct tc_action_
+ 	if (!tn->idrinfo)
+ 		return -ENOMEM;
+ 	tn->ops = ops;
++	tn->idrinfo->net = net;
+ 	spin_lock_init(&tn->idrinfo->lock);
+ 	idr_init(&tn->idrinfo->action_idr);
+ 	return err;
+--- a/net/sched/act_bpf.c
++++ b/net/sched/act_bpf.c
+@@ -413,7 +413,7 @@ static __net_init int bpf_init_net(struc
+ {
+ 	struct tc_action_net *tn = net_generic(net, bpf_net_id);
+ 
+-	return tc_action_net_init(tn, &act_bpf_ops);
++	return tc_action_net_init(net, tn, &act_bpf_ops);
  }
  
-+/*
-+ * Lock two pages, ensuring that we lock in offset order if the pages are from
-+ * the same file.
-+ */
-+static void vfs_lock_two_pages(struct page *page1, struct page *page2)
-+{
-+	/* Always lock in order of increasing index. */
-+	if (page1->index > page2->index)
-+		swap(page1, page2);
-+
-+	lock_page(page1);
-+	if (page1 != page2)
-+		lock_page(page2);
-+}
-+
-+/* Unlock two pages, being careful not to unlock the same page twice. */
-+static void vfs_unlock_two_pages(struct page *page1, struct page *page2)
-+{
-+	unlock_page(page1);
-+	if (page1 != page2)
-+		unlock_page(page2);
-+}
-+
- /*
-  * Compare extents of two files to see if they are the same.
-  * Caller must have locked both inodes to prevent write races.
-@@ -1948,10 +1967,24 @@ int vfs_dedupe_file_range_compare(struct inode *src, loff_t srcoff,
- 		dest_page = vfs_dedupe_get_page(dest, destoff);
- 		if (IS_ERR(dest_page)) {
- 			error = PTR_ERR(dest_page);
--			unlock_page(src_page);
- 			put_page(src_page);
- 			goto out_error;
- 		}
-+
-+		vfs_lock_two_pages(src_page, dest_page);
-+
-+		/*
-+		 * Now that we've locked both pages, make sure they're still
-+		 * mapped to the file data we're interested in.  If not,
-+		 * someone is invalidating pages on us and we lose.
-+		 */
-+		if (!PageUptodate(src_page) || !PageUptodate(dest_page) ||
-+		    src_page->mapping != src->i_mapping ||
-+		    dest_page->mapping != dest->i_mapping) {
-+			same = false;
-+			goto unlock;
-+		}
-+
- 		src_addr = kmap_atomic(src_page);
- 		dest_addr = kmap_atomic(dest_page);
+ static void __net_exit bpf_exit_net(struct list_head *net_list)
+--- a/net/sched/act_connmark.c
++++ b/net/sched/act_connmark.c
+@@ -215,7 +215,7 @@ static __net_init int connmark_init_net(
+ {
+ 	struct tc_action_net *tn = net_generic(net, connmark_net_id);
  
-@@ -1963,8 +1996,8 @@ int vfs_dedupe_file_range_compare(struct inode *src, loff_t srcoff,
+-	return tc_action_net_init(tn, &act_connmark_ops);
++	return tc_action_net_init(net, tn, &act_connmark_ops);
+ }
  
- 		kunmap_atomic(dest_addr);
- 		kunmap_atomic(src_addr);
--		unlock_page(dest_page);
--		unlock_page(src_page);
-+unlock:
-+		vfs_unlock_two_pages(src_page, dest_page);
- 		put_page(dest_page);
- 		put_page(src_page);
+ static void __net_exit connmark_exit_net(struct list_head *net_list)
+--- a/net/sched/act_csum.c
++++ b/net/sched/act_csum.c
+@@ -678,7 +678,7 @@ static __net_init int csum_init_net(stru
+ {
+ 	struct tc_action_net *tn = net_generic(net, csum_net_id);
  
--- 
-2.20.1
-
+-	return tc_action_net_init(tn, &act_csum_ops);
++	return tc_action_net_init(net, tn, &act_csum_ops);
+ }
+ 
+ static void __net_exit csum_exit_net(struct list_head *net_list)
+--- a/net/sched/act_gact.c
++++ b/net/sched/act_gact.c
+@@ -263,7 +263,7 @@ static __net_init int gact_init_net(stru
+ {
+ 	struct tc_action_net *tn = net_generic(net, gact_net_id);
+ 
+-	return tc_action_net_init(tn, &act_gact_ops);
++	return tc_action_net_init(net, tn, &act_gact_ops);
+ }
+ 
+ static void __net_exit gact_exit_net(struct list_head *net_list)
+--- a/net/sched/act_ife.c
++++ b/net/sched/act_ife.c
+@@ -887,7 +887,7 @@ static __net_init int ife_init_net(struc
+ {
+ 	struct tc_action_net *tn = net_generic(net, ife_net_id);
+ 
+-	return tc_action_net_init(tn, &act_ife_ops);
++	return tc_action_net_init(net, tn, &act_ife_ops);
+ }
+ 
+ static void __net_exit ife_exit_net(struct list_head *net_list)
+--- a/net/sched/act_ipt.c
++++ b/net/sched/act_ipt.c
+@@ -65,12 +65,13 @@ static int ipt_init_target(struct net *n
+ 	return 0;
+ }
+ 
+-static void ipt_destroy_target(struct xt_entry_target *t)
++static void ipt_destroy_target(struct xt_entry_target *t, struct net *net)
+ {
+ 	struct xt_tgdtor_param par = {
+ 		.target   = t->u.kernel.target,
+ 		.targinfo = t->data,
+ 		.family   = NFPROTO_IPV4,
++		.net      = net,
+ 	};
+ 	if (par.target->destroy != NULL)
+ 		par.target->destroy(&par);
+@@ -82,7 +83,7 @@ static void tcf_ipt_release(struct tc_ac
+ 	struct tcf_ipt *ipt = to_ipt(a);
+ 
+ 	if (ipt->tcfi_t) {
+-		ipt_destroy_target(ipt->tcfi_t);
++		ipt_destroy_target(ipt->tcfi_t, a->idrinfo->net);
+ 		kfree(ipt->tcfi_t);
+ 	}
+ 	kfree(ipt->tcfi_tname);
+@@ -182,7 +183,7 @@ static int __tcf_ipt_init(struct net *ne
+ 
+ 	spin_lock_bh(&ipt->tcf_lock);
+ 	if (ret != ACT_P_CREATED) {
+-		ipt_destroy_target(ipt->tcfi_t);
++		ipt_destroy_target(ipt->tcfi_t, net);
+ 		kfree(ipt->tcfi_tname);
+ 		kfree(ipt->tcfi_t);
+ 	}
+@@ -353,7 +354,7 @@ static __net_init int ipt_init_net(struc
+ {
+ 	struct tc_action_net *tn = net_generic(net, ipt_net_id);
+ 
+-	return tc_action_net_init(tn, &act_ipt_ops);
++	return tc_action_net_init(net, tn, &act_ipt_ops);
+ }
+ 
+ static void __net_exit ipt_exit_net(struct list_head *net_list)
+@@ -403,7 +404,7 @@ static __net_init int xt_init_net(struct
+ {
+ 	struct tc_action_net *tn = net_generic(net, xt_net_id);
+ 
+-	return tc_action_net_init(tn, &act_xt_ops);
++	return tc_action_net_init(net, tn, &act_xt_ops);
+ }
+ 
+ static void __net_exit xt_exit_net(struct list_head *net_list)
+--- a/net/sched/act_mirred.c
++++ b/net/sched/act_mirred.c
+@@ -419,7 +419,7 @@ static __net_init int mirred_init_net(st
+ {
+ 	struct tc_action_net *tn = net_generic(net, mirred_net_id);
+ 
+-	return tc_action_net_init(tn, &act_mirred_ops);
++	return tc_action_net_init(net, tn, &act_mirred_ops);
+ }
+ 
+ static void __net_exit mirred_exit_net(struct list_head *net_list)
+--- a/net/sched/act_nat.c
++++ b/net/sched/act_nat.c
+@@ -317,7 +317,7 @@ static __net_init int nat_init_net(struc
+ {
+ 	struct tc_action_net *tn = net_generic(net, nat_net_id);
+ 
+-	return tc_action_net_init(tn, &act_nat_ops);
++	return tc_action_net_init(net, tn, &act_nat_ops);
+ }
+ 
+ static void __net_exit nat_exit_net(struct list_head *net_list)
+--- a/net/sched/act_pedit.c
++++ b/net/sched/act_pedit.c
+@@ -488,7 +488,7 @@ static __net_init int pedit_init_net(str
+ {
+ 	struct tc_action_net *tn = net_generic(net, pedit_net_id);
+ 
+-	return tc_action_net_init(tn, &act_pedit_ops);
++	return tc_action_net_init(net, tn, &act_pedit_ops);
+ }
+ 
+ static void __net_exit pedit_exit_net(struct list_head *net_list)
+--- a/net/sched/act_police.c
++++ b/net/sched/act_police.c
+@@ -342,7 +342,7 @@ static __net_init int police_init_net(st
+ {
+ 	struct tc_action_net *tn = net_generic(net, police_net_id);
+ 
+-	return tc_action_net_init(tn, &act_police_ops);
++	return tc_action_net_init(net, tn, &act_police_ops);
+ }
+ 
+ static void __net_exit police_exit_net(struct list_head *net_list)
+--- a/net/sched/act_sample.c
++++ b/net/sched/act_sample.c
+@@ -258,7 +258,7 @@ static __net_init int sample_init_net(st
+ {
+ 	struct tc_action_net *tn = net_generic(net, sample_net_id);
+ 
+-	return tc_action_net_init(tn, &act_sample_ops);
++	return tc_action_net_init(net, tn, &act_sample_ops);
+ }
+ 
+ static void __net_exit sample_exit_net(struct list_head *net_list)
+--- a/net/sched/act_simple.c
++++ b/net/sched/act_simple.c
+@@ -215,7 +215,7 @@ static __net_init int simp_init_net(stru
+ {
+ 	struct tc_action_net *tn = net_generic(net, simp_net_id);
+ 
+-	return tc_action_net_init(tn, &act_simp_ops);
++	return tc_action_net_init(net, tn, &act_simp_ops);
+ }
+ 
+ static void __net_exit simp_exit_net(struct list_head *net_list)
+--- a/net/sched/act_skbedit.c
++++ b/net/sched/act_skbedit.c
+@@ -316,7 +316,7 @@ static __net_init int skbedit_init_net(s
+ {
+ 	struct tc_action_net *tn = net_generic(net, skbedit_net_id);
+ 
+-	return tc_action_net_init(tn, &act_skbedit_ops);
++	return tc_action_net_init(net, tn, &act_skbedit_ops);
+ }
+ 
+ static void __net_exit skbedit_exit_net(struct list_head *net_list)
+--- a/net/sched/act_skbmod.c
++++ b/net/sched/act_skbmod.c
+@@ -277,7 +277,7 @@ static __net_init int skbmod_init_net(st
+ {
+ 	struct tc_action_net *tn = net_generic(net, skbmod_net_id);
+ 
+-	return tc_action_net_init(tn, &act_skbmod_ops);
++	return tc_action_net_init(net, tn, &act_skbmod_ops);
+ }
+ 
+ static void __net_exit skbmod_exit_net(struct list_head *net_list)
+--- a/net/sched/act_tunnel_key.c
++++ b/net/sched/act_tunnel_key.c
+@@ -579,7 +579,7 @@ static __net_init int tunnel_key_init_ne
+ {
+ 	struct tc_action_net *tn = net_generic(net, tunnel_key_net_id);
+ 
+-	return tc_action_net_init(tn, &act_tunnel_key_ops);
++	return tc_action_net_init(net, tn, &act_tunnel_key_ops);
+ }
+ 
+ static void __net_exit tunnel_key_exit_net(struct list_head *net_list)
+--- a/net/sched/act_vlan.c
++++ b/net/sched/act_vlan.c
+@@ -324,7 +324,7 @@ static __net_init int vlan_init_net(stru
+ {
+ 	struct tc_action_net *tn = net_generic(net, vlan_net_id);
+ 
+-	return tc_action_net_init(tn, &act_vlan_ops);
++	return tc_action_net_init(net, tn, &act_vlan_ops);
+ }
+ 
+ static void __net_exit vlan_exit_net(struct list_head *net_list)
 
 
