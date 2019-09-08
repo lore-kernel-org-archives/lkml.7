@@ -2,154 +2,144 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 789F3C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 14:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC002C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 14:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46F2A20854
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 14:39:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lBDsvcqq"
+	by mail.kernel.org (Postfix) with ESMTP id 980BA20854
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 14:42:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727415AbfIHOjK (ORCPT
+        id S1727911AbfIHOmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 10:39:10 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:35050 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726752AbfIHOjK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 10:39:10 -0400
-Received: by mail-lf1-f67.google.com with SMTP id w6so8533048lfl.2;
-        Sun, 08 Sep 2019 07:39:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FmmHtAJUP2a/sLNIvsEgkXzhFS+gIz57sAKIuY6RAn8=;
-        b=lBDsvcqqCALrs7Asc/HmKgFWFmwGNUKXuO1TAhKJ5Csl+ugUwRosyWCH334U7DF+ZF
-         dcoLrwnMGGWEpFSOiyHsNBBRLoSjg97E2KnqWfDOV4ZIavS1O0CNzvZFJhRlUU6deFCS
-         rMCFjQV/LyfaP0/59T1/0LlgAivaQpSrPCCk5LAJvkt7WHPFkVo6eS4szqHZNAQrGvxK
-         LHXyEbIFlqq+lVSU6OZ6pJC8prWZ8mk0H+7gtoYydJpgt6dNrc+PdesE+N0mUu65ogSu
-         vkkkXx3SIF2SWg+LALK7c/dINDV5wP70vX9NWMxYhgM9MdGv4vaJlLDWtFKjKYbWFxLp
-         Q6jA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FmmHtAJUP2a/sLNIvsEgkXzhFS+gIz57sAKIuY6RAn8=;
-        b=AESS/ByH986uYrOHabsob0Pp6LJLKvj92cCCxZnhoIbspcvkSRfijR8vwcrWWcmn0K
-         TJCmHPs9F+LSvLLrDlYmIXc9aO5mWSgL5qVCSS3PN3IFJO4qPd973Pnp/AVU69uKYRaY
-         epFqXM48UrsLf3++SPDHDky25wSwisDXfley5XMHY5V/1zawflOd2cGYbWwboLK6YHCY
-         KNU99z3zBOI2Fqc8UsSSF4tDdVDrX9tCWKZrTk5G875IOEBUUUnQQc+Y/g8rudfWVsZr
-         ixgBxV+8Dj5XFEgTvhaS21GPw+Pi42jw8TXr1ebtLnXn0Jy7KF4fWx9ujhMYYg+WdQJZ
-         ryxA==
-X-Gm-Message-State: APjAAAX4pKP15RS8xhmtApSHWDuMaJzf07ybO4q73DxZPloHMSXQQSpt
-        AhuBnZ4yDwxx4dyNBAYUSVo=
-X-Google-Smtp-Source: APXvYqxcbaQS8WynGpl53n+pakgNA0lHVLZrKm5k4Gn6oLQe8fn3KHnNy1mTo5IscKem22QUoBsyRg==
-X-Received: by 2002:a19:5f55:: with SMTP id a21mr13732991lfj.56.1567953547645;
-        Sun, 08 Sep 2019 07:39:07 -0700 (PDT)
-Received: from alpha (ppp78-37-236-177.pppoe.avangarddsl.ru. [78.37.236.177])
-        by smtp.gmail.com with ESMTPSA id p12sm2007088ljn.15.2019.09.08.07.39.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Sep 2019 07:39:06 -0700 (PDT)
-Received: (nullmailer pid 19711 invoked by uid 1000);
-        Sun, 08 Sep 2019 14:40:43 -0000
-From:   Ivan Safonov <insafonov@gmail.com>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ivan Safonov <insafonov@gmail.com>
-Subject: [PATCH] cgroup: use kv(malloc|free) instead of pidlist_(allocate|free)
-Date:   Sun,  8 Sep 2019 17:40:41 +0300
-Message-Id: <20190908144041.19667-1-insafonov@gmail.com>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sun, 8 Sep 2019 10:42:51 -0400
+Received: from mga06.intel.com ([134.134.136.31]:48794 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725928AbfIHOmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 10:42:51 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Sep 2019 07:42:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,481,1559545200"; 
+   d="scan'208";a="213661486"
+Received: from spandruv-mobl.amr.corp.intel.com ([10.252.4.36])
+  by fmsmga002.fm.intel.com with ESMTP; 08 Sep 2019 07:42:45 -0700
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     andy.shevchenko@gmail.com
+Cc:     andriy.shevchenko@intel.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [UPDATE][PATCH 2/2] tools/power/x86/intel-speed-select: Display core count for bucket
+Date:   Sun,  8 Sep 2019 07:42:25 -0700
+Message-Id: <20190908144225.14574-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.17.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Resolve TODO:
-> The following two functions "fix" the issue where there are more pids
-> than kmalloc will give memory for; in such cases, we use vmalloc/vfree.
-> TODO: replace with a kernel-wide solution to this problem
+Read the bucket and core count relationship via MSR and display
+when displaying turbo ratio limits.
 
-kv(malloc|free) is appropriate replacement for pidlist_(allocate|free).
-
-Signed-off-by: Ivan Safonov <insafonov@gmail.com>
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- kernel/cgroup/cgroup-v1.c | 27 ++++-----------------------
- 1 file changed, 4 insertions(+), 23 deletions(-)
+Change:
+Rebased on top of
+git://git.infradead.org/linux-platform-drivers-x86.git remotes/origin/review-andy
 
-diff --git a/kernel/cgroup/cgroup-v1.c b/kernel/cgroup/cgroup-v1.c
-index 88006be40ea3..1f25f35af2c4 100644
---- a/kernel/cgroup/cgroup-v1.c
-+++ b/kernel/cgroup/cgroup-v1.c
-@@ -193,25 +193,6 @@ struct cgroup_pidlist {
- 	struct delayed_work destroy_dwork;
- };
+ .../power/x86/intel-speed-select/isst-core.c  | 22 +++++++++++++++++++
+ .../x86/intel-speed-select/isst-display.c     |  6 ++---
+ tools/power/x86/intel-speed-select/isst.h     |  1 +
+ 3 files changed, 26 insertions(+), 3 deletions(-)
+
+diff --git a/tools/power/x86/intel-speed-select/isst-core.c b/tools/power/x86/intel-speed-select/isst-core.c
+index f724322856ed..0bf341ad9697 100644
+--- a/tools/power/x86/intel-speed-select/isst-core.c
++++ b/tools/power/x86/intel-speed-select/isst-core.c
+@@ -188,6 +188,24 @@ int isst_get_get_trl(int cpu, int level, int avx_level, int *trl)
+ 	return 0;
+ }
  
--/*
-- * The following two functions "fix" the issue where there are more pids
-- * than kmalloc will give memory for; in such cases, we use vmalloc/vfree.
-- * TODO: replace with a kernel-wide solution to this problem
-- */
--#define PIDLIST_TOO_LARGE(c) ((c) * sizeof(pid_t) > (PAGE_SIZE * 2))
--static void *pidlist_allocate(int count)
--{
--	if (PIDLIST_TOO_LARGE(count))
--		return vmalloc(array_size(count, sizeof(pid_t)));
--	else
--		return kmalloc_array(count, sizeof(pid_t), GFP_KERNEL);
--}
--
--static void pidlist_free(void *p)
--{
--	kvfree(p);
--}
--
- /*
-  * Used to destroy all pidlists lingering waiting for destroy timer.  None
-  * should be left afterwards.
-@@ -244,7 +225,7 @@ static void cgroup_pidlist_destroy_work_fn(struct work_struct *work)
- 	 */
- 	if (!delayed_work_pending(dwork)) {
- 		list_del(&l->links);
--		pidlist_free(l->list);
-+		kvfree(l->list);
- 		put_pid_ns(l->key.ns);
- 		tofree = l;
- 	}
-@@ -365,7 +346,7 @@ static int pidlist_array_load(struct cgroup *cgrp, enum cgroup_filetype type,
- 	 * show up until sometime later on.
- 	 */
- 	length = cgroup_task_count(cgrp);
--	array = pidlist_allocate(length);
-+	array = kvmalloc(array_size(length, sizeof(pid_t)), GFP_KERNEL);
- 	if (!array)
- 		return -ENOMEM;
- 	/* now, populate the array */
-@@ -390,12 +371,12 @@ static int pidlist_array_load(struct cgroup *cgrp, enum cgroup_filetype type,
++int isst_get_trl_bucket_info(int cpu, unsigned long long *buckets_info)
++{
++	int ret;
++
++	debug_printf("cpu:%d bucket info via MSR\n", cpu);
++
++	*buckets_info = 0;
++
++	ret = isst_send_msr_command(cpu, 0x1ae, 0, buckets_info);
++	if (ret)
++		return ret;
++
++	debug_printf("cpu:%d bucket info via MSR successful 0x%llx\n", cpu,
++		     *buckets_info);
++
++	return 0;
++}
++
+ int isst_set_tdp_level_msr(int cpu, int tdp_level)
+ {
+ 	unsigned long long level = tdp_level;
+@@ -563,6 +581,10 @@ int isst_get_process_ctdp(int cpu, int tdp_level, struct isst_pkg_ctdp *pkg_dev)
+ 		if (ret)
+ 			return ret;
  
- 	l = cgroup_pidlist_find_create(cgrp, type);
- 	if (!l) {
--		pidlist_free(array);
-+		kvfree(array);
- 		return -ENOMEM;
- 	}
++		ret = isst_get_trl_bucket_info(cpu, &ctdp_level->buckets_info);
++		if (ret)
++			return ret;
++
+ 		ret = isst_get_get_trl(cpu, i, 0,
+ 				       ctdp_level->trl_sse_active_cores);
+ 		if (ret)
+diff --git a/tools/power/x86/intel-speed-select/isst-display.c b/tools/power/x86/intel-speed-select/isst-display.c
+index 8500cf2997a6..df4aa99c4e92 100644
+--- a/tools/power/x86/intel-speed-select/isst-display.c
++++ b/tools/power/x86/intel-speed-select/isst-display.c
+@@ -372,7 +372,7 @@ void isst_ctdp_display_information(int cpu, FILE *outf, int tdp_level,
+ 			format_and_print(outf, base_level + 5, header, NULL);
  
- 	/* store array, freeing old if necessary */
--	pidlist_free(l->list);
-+	kvfree(l->list);
- 	l->list = array;
- 	l->length = length;
- 	*lp = l;
+ 			snprintf(header, sizeof(header), "core-count");
+-			snprintf(value, sizeof(value), "%d", j);
++			snprintf(value, sizeof(value), "%llu", (ctdp_level->buckets_info >> (j * 8)) & 0xff);
+ 			format_and_print(outf, base_level + 6, header, value);
+ 
+ 			snprintf(header, sizeof(header),
+@@ -389,7 +389,7 @@ void isst_ctdp_display_information(int cpu, FILE *outf, int tdp_level,
+ 			format_and_print(outf, base_level + 5, header, NULL);
+ 
+ 			snprintf(header, sizeof(header), "core-count");
+-			snprintf(value, sizeof(value), "%d", j);
++			snprintf(value, sizeof(value), "%llu", (ctdp_level->buckets_info >> (j * 8)) & 0xff);
+ 			format_and_print(outf, base_level + 6, header, value);
+ 
+ 			snprintf(header, sizeof(header),
+@@ -407,7 +407,7 @@ void isst_ctdp_display_information(int cpu, FILE *outf, int tdp_level,
+ 			format_and_print(outf, base_level + 5, header, NULL);
+ 
+ 			snprintf(header, sizeof(header), "core-count");
+-			snprintf(value, sizeof(value), "%d", j);
++			snprintf(value, sizeof(value), "%llu", (ctdp_level->buckets_info >> (j * 8)) & 0xff);
+ 			format_and_print(outf, base_level + 6, header, value);
+ 
+ 			snprintf(header, sizeof(header),
+diff --git a/tools/power/x86/intel-speed-select/isst.h b/tools/power/x86/intel-speed-select/isst.h
+index 221881761609..2f7f62765eb6 100644
+--- a/tools/power/x86/intel-speed-select/isst.h
++++ b/tools/power/x86/intel-speed-select/isst.h
+@@ -134,6 +134,7 @@ struct isst_pkg_ctdp_level_info {
+ 	size_t core_cpumask_size;
+ 	cpu_set_t *core_cpumask;
+ 	int cpu_count;
++	unsigned long long buckets_info;
+ 	int trl_sse_active_cores[ISST_TRL_MAX_ACTIVE_CORES];
+ 	int trl_avx_active_cores[ISST_TRL_MAX_ACTIVE_CORES];
+ 	int trl_avx_512_active_cores[ISST_TRL_MAX_ACTIVE_CORES];
 -- 
-2.21.0
+2.17.2
 
