@@ -2,147 +2,108 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E10C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 01:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 145AEC4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 01:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F67E21744
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 01:51:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NRLREOs6"
+	by mail.kernel.org (Postfix) with ESMTP id E2F8D21744
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 01:59:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729782AbfIHBvB (ORCPT
+        id S2388474AbfIHB67 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 21:51:01 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46332 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbfIHBvB (ORCPT
+        Sat, 7 Sep 2019 21:58:59 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:40461 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726060AbfIHB67 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 21:51:01 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q5so6912685pfg.13
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Sep 2019 18:51:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=KbxwZEXlmK2EHfzsJ8Z4ohJVr62bCYur63EuvHNOgHw=;
-        b=NRLREOs6ZqJDZfHKwII31iUClnrqOfpMCT4wTorPp5hP830PZYXWCNqWaE6xo1XFcy
-         C8wYyPFPma81I1fp90Ywbtgq0LpKsmkn53EjDm/W5zgQ6B9NFWVk9CcG9O/Q00yG2S4Z
-         WIC9WSRr9I79GmSRwYbjxU3yr0/WIXU/RIUhDuhnBrC80ltNkpJCjTAKN4AuzvwN2y4U
-         fKTIQR11ICnHQ5wSe7u4WKXRh4Q6OstlU0ExHGsL/Nq9SOT31ajGjSDP4gn2d5HKNf/+
-         C5sLLV95qLMBEarM1rGAmyyZ4UxYjhaI/Tbb5YVfKKmk0qMEY6T9XAXlMUGoDkwCuEej
-         cNhw==
+        Sat, 7 Sep 2019 21:58:59 -0400
+Received: by mail-vs1-f67.google.com with SMTP id v10so3320272vsc.7
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Sep 2019 18:58:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=KbxwZEXlmK2EHfzsJ8Z4ohJVr62bCYur63EuvHNOgHw=;
-        b=qA+ItD05BFZH9CB8SK8995+/wWscuT6yZK9SdlorF5I1YyXoiY/XRXfS53bpLIYKbI
-         ehqJKJffLOeqf/+gb/Zmzpt6e95tKjTjZ3CcJr5J1u3utX/wYDnFwLkd4e0JFKTpzoNQ
-         R6AcyPuPGWvqgEkIZMCvcKVDycD+ryRHLOJXMjrBWURgzfzIH0ALyqL+zsloRIwdH5M+
-         ta7f21ynRPxaAm4+uxf1xXTypqTIdc4jtg09svPxSGotDhcGcB17QRZvIo91Oc66k5Q3
-         0o4LxSXVHtZcApL06Ho0LFnCVz1ZcLFF5U4H/saJ1u1dsKc9kihhKw+Q5V1x7lr1Fh7w
-         Z3gA==
-X-Gm-Message-State: APjAAAVk7uYEe7941yybIBv1CXDARTd32Z+sFpqoshTmg6uW2tPKL+VT
-        S3Dv88HeXysvVZdmaZiofcPKrQ==
-X-Google-Smtp-Source: APXvYqyHIRUGqUEVgtpS5Qd1RlYBK10Uualc5xWB54lKewaqTzAfMyNDqIxsgeUahNEYZWNGD8Qp+A==
-X-Received: by 2002:a17:90a:fc8:: with SMTP id 66mr18058273pjz.134.1567907459337;
-        Sat, 07 Sep 2019 18:50:59 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id s186sm14149893pfb.126.2019.09.07.18.50.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Sep 2019 18:50:58 -0700 (PDT)
-Date:   Sat, 7 Sep 2019 18:50:57 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Michal Hocko <mhocko@suse.com>, Mel Gorman <mgorman@suse.de>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>
-Subject: Re: [patch for-5.3 0/4] revert immediate fallback to remote
- hugepages
-In-Reply-To: <CAHk-=wifuQ68e6Q4F2txGS48WgcoX2REE4te5_j36ypV-T2ZKw@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1909071829440.200558@chino.kir.corp.google.com>
-References: <alpine.DEB.2.21.1909041252230.94813@chino.kir.corp.google.com> <CAHk-=wjmF_MGe5sBDmQB1WGpr+QFWkqboHpL37JYB5WgnG8nMA@mail.gmail.com> <alpine.DEB.2.21.1909051345030.217933@chino.kir.corp.google.com> <alpine.DEB.2.21.1909071249180.81471@chino.kir.corp.google.com>
- <CAHk-=wifuQ68e6Q4F2txGS48WgcoX2REE4te5_j36ypV-T2ZKw@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9wvcp3nV7La4YoI+ieadHx02sDBCIHvis3wKPKJAabs=;
+        b=b6HiGLnU9c7DdRS2rxcupMjmCs9fFhUZamLF97Axg54X2UqhBrg58HEi5PNBQ6fxzn
+         my02Hvw7Z33rRD8svkRf6HT4pmCSZ8VP7yJupuH5styJ6mobAAy7Ih2e4g+R9tAMpLLf
+         BRKsStguEpfQGKkBR+xQqblSxWX5v5OHF1QPV5md7tfVUCllgY+sSlkU3Cw2wGjunibS
+         57yASjQpOf5K4H8sYUUflZrA4elX1cI152czf2vkiLFxPDtw+sC7vgR6jlhQwIu9rmv8
+         ah9nLTVC+OTTxYr+xgc4slKo6Qy7T5GbcYx2jWozpnR0caX2ErYTMKW1WFXceLB7cKV0
+         JYlg==
+X-Gm-Message-State: APjAAAV1zc/99h5FXlUcLsEJFmdwcakURZnwyAMpjBtKWc800weY9TD6
+        FCgVraMo1I/rWaRK9Tu0+DxB3UfDpEWhgqJZvl4=
+X-Google-Smtp-Source: APXvYqylZV390V/V1oizqnab5+4dm12EOj8yZUV8cYoKWUvOfP7UehtT5iz9+JYf89ReeVrKsPeKsLwhqt0H+c6F8EM=
+X-Received: by 2002:a67:db12:: with SMTP id z18mr7697263vsj.18.1567907937861;
+ Sat, 07 Sep 2019 18:58:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20190805140119.7337-1-kraxel@redhat.com> <20190805140119.7337-9-kraxel@redhat.com>
+ <20190813151115.GA29955@ulmo> <20190814055827.6hrxj6daovxxnnvw@sirius.home.kraxel.org>
+ <20190814093524.GA31345@ulmo> <20190814101411.lj3p6zjzbjvnnjf4@sirius.home.kraxel.org>
+ <CACAvsv5Rar9F=Wf-9HBpndY4QaQZcGCx05j0esvV9pitM=JoGg@mail.gmail.com> <20190821115523.GA21839@ulmo>
+In-Reply-To: <20190821115523.GA21839@ulmo>
+From:   Ilia Mirkin <imirkin@alum.mit.edu>
+Date:   Sat, 7 Sep 2019 21:58:46 -0400
+Message-ID: <CAKb7UvjXq0ptiPYu5EGH6sJAbbRjN3X4f_knrxyOHD1Zi7P1BA@mail.gmail.com>
+Subject: Re: [Nouveau] [Intel-gfx] [PATCH v6 08/17] drm/ttm: use gem vma_node
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Ben Skeggs <skeggsb@gmail.com>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        ML nouveau <nouveau@lists.freedesktop.org>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx mailing list <amd-gfx@lists.freedesktop.org>,
+        linux-graphics-maintainer@vmware.com,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        spice-devel@lists.freedesktop.org, Ben Skeggs <bskeggs@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 7 Sep 2019, Linus Torvalds wrote:
+On Wed, Aug 21, 2019 at 7:55 AM Thierry Reding <thierry.reding@gmail.com> wrote:
+>
+> On Wed, Aug 21, 2019 at 04:33:58PM +1000, Ben Skeggs wrote:
+> > On Wed, 14 Aug 2019 at 20:14, Gerd Hoffmann <kraxel@redhat.com> wrote:
+> > >
+> > >   Hi,
+> > >
+> > > > > Changing the order doesn't look hard.  Patch attached (untested, have no
+> > > > > test hardware).  But maybe I missed some detail ...
+> > > >
+> > > > I came up with something very similar by splitting up nouveau_bo_new()
+> > > > into allocation and initialization steps, so that when necessary the GEM
+> > > > object can be initialized in between. I think that's slightly more
+> > > > flexible and easier to understand than a boolean flag.
+> > >
+> > > Yes, that should work too.
+> > >
+> > > Acked-by: Gerd Hoffmann <kraxel@redhat.com>
+> > Acked-by: Ben Skeggs <bskeggs@redhat.com>
+>
+> Thanks guys, applied to drm-misc-next.
 
-> > Andrea acknowledges the swap storm that he reported would be fixed with
-> > the last two patches in this series
-> 
-> The problem is that even you aren't arguing that those patches should
-> go into 5.3.
-> 
+Hi Thierry,
 
-For three reasons: (a) we lack a test result from Andrea, (b) there's 
-on-going discussion, particularly based on Vlastimil's feedback, and 
-(c) the patches will be refreshed incorporating that feedback as well as 
-Mike's suggestion to exempt __GFP_RETRY_MAYFAIL for hugetlb.
+Initial investigations suggest that this commit currently in drm-next
 
-> So those fixes aren't going in, so "the swap storms would be fixed"
-> argument isn't actually an argument at all as far as 5.3 is concerned.
-> 
+commit 019cbd4a4feb3aa3a917d78e7110e3011bbff6d5
+Author: Thierry Reding <treding@nvidia.com>
+Date:   Wed Aug 14 11:00:48 2019 +0200
 
-It indicates that progress has been made to address the actual bug without 
-introducing long-lived access latency regressions for others, particularly 
-those who use MADV_HUGEPAGE.  In the worst case, some systems running 
-5.3-rc4 and 5.3-rc5 have the same amount of memory backed by hugepages but 
-on 5.3-rc5 the vast majority of it is allocated remotely.  This incurs a 
-signficant performance regression regardless of platform; the only thing 
-needed to induce this is a fragmented local node that would otherwise be 
-compacted in 5.3-rc4 rather than quickly allocate remote on 5.3-rc5.
+    drm/nouveau: Initialize GEM object before TTM object
 
-> End result: we'd have the qemu-kvm instance performance problem in 5.3
-> that apparently causes distros to apply those patches that you want to
-> revert anyway.
-> 
-> So reverting would just make distros not use 5.3 in that form.
-> 
+breaks nouveau userspace which tries to allocate GEM objects with a
+non-page-aligned size. Previously nouveau_gem_new would just call
+nouveau_bo_init which would call nouveau_bo_fixup_align before
+initializing the GEM object. With this change, it is done after. What
+do you think -- OK to just move that bit of logic into the new
+nouveau_bo_alloc() (and make size/align be pointers so that they can
+be fixed up?)
 
-I'm arguing to revert 5.3 back to the behavior that we have had for years 
-and actually fix the bug that everybody else seems to be ignoring and then 
-*backport* those fixes to 5.3 stable and every other stable tree that can 
-use them.  Introducing a new mempolicy for NUMA locality into 5.3.0 that 
-will subsequently changed in future 5.3 stable kernels and differs from 
-all kernels from the past few years is not in anybody's best interest if 
-the actual problem can be fixed.  It requires more feedback than a 
-one-line "the swap storms would be fixed with this."  That collaboration 
-takes time and isn't something that should be rushed into 5.3-rc5.
+Cheers,
 
-Yes, we can fix NUMA locality of hugepages when a workload like qemu is 
-larger than a single socket; the vast majority of workloads in the 
-datacenter are small than a socket and *cannot* incur the performance 
-penalty if local memory is fragmented that 5.3-rc5 introduces.
-
-In other words, 5.3-rc5 is only fixing a highly specialized usecase where 
-remote allocation is acceptable because the workload is larger than a 
-socket *and* remote memory is not low on memory or fragmented.  If you 
-consider the opposite of that, workloads smaller than a socket or local 
-compaction actually works, this has introduced a measurable regression for 
-everybody else.
-
-I'm not sure why we are ignoring a painfully obvious bug in the page 
-allocator because of a poor feedback loop between itself and memory 
-compaction and rather papering over it by falling back to remote memory 
-when NUMA actually does matter.  If you release 5.3 without the first two 
-patches in this series, I wouldn't expect any additional feedback or test 
-results to fix this bug considering all we have gotten so far is "this 
-would fix this swap storms" and not collaborating to fix the issue for 
-everybody rather than only caring about their own workloads.  At least my 
-patches acknowledge and try to fix the issue the other is encountering.
+  -ilia
