@@ -2,185 +2,109 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C01AEC4360D
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 20:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE49C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 20:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EDFE218AE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 20:45:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="otTM7bYv"
+	by mail.kernel.org (Postfix) with ESMTP id 7201E21479
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 20:53:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729979AbfIHUpS (ORCPT
+        id S1730102AbfIHUxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 16:45:18 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46159 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729263AbfIHUpS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 16:45:18 -0400
-Received: by mail-pl1-f194.google.com with SMTP id t1so5602323plq.13
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 13:45:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=YFDt2p4CFgyTp80Sbfxw8GrfHYWi+qSB2/ENmbYz5BM=;
-        b=otTM7bYvBhBq3Yv3RVix/LtrdR8BElsdYKEA+1pvcDJFJvhP1buipkD+FlibLgdvU+
-         0txjlK8gu+jVXrEcYOSIQm5SPwB/zoC+AtdWfewqk6Jne0NCEx59fw/SmKAI5Aecm9uv
-         flnhtV5lPsv/5Aq8jtaLJeGDw3Y8Kbki7cp97+Y+RJmUUeMH7vTzeyoY9kE6l+DjMWUo
-         eaERwBrPv6+zlKiLYiUmkBXQ2WPWLzB92K8VOkReLfQv/kxaQlQcHBDT9cQ5+VBAUuIj
-         C+GOKtkFOKEn4WEwreZqdPQvSd/bG8FWSlKHRDsgR5mBs5CVIymR2og/H7EoEe21/5Br
-         tytw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=YFDt2p4CFgyTp80Sbfxw8GrfHYWi+qSB2/ENmbYz5BM=;
-        b=EIYgtjtb7+IvPElRQrz+RxtTE8viRxL8FvGZSxiJF9GaWp3O4vXuOmo+jQudTTbkQQ
-         bPWQCY92+OntuCA5zbBrWiQ74fHhI1RKeyTLCNmSPCX14r5t4/ez4uck6j5kAZm7vwTs
-         kLKevqiVFtvwTl6bXV9HgmLU5nUbYbjCIj6gqvVpzhmgr0oflQBc6Q4jkD1IG8OyKpDM
-         wtG+M+ahZZqHrDjXrRTyMVZcmDyJIUgKf0FoZ79EV1QsYe21f0E5heXzZxGpHxa0jtzY
-         aYd/j04oMB2BEluA32fm4S3v/eE4s1ISJyYZZuyjvoSVKTbsS+TOTs/SMW/ZPYFvF6ZA
-         I6Vg==
-X-Gm-Message-State: APjAAAWhoK8S8mP6+3jO79sa91HbgbBOhlYNGiCFK2mMcps9RDwGhMeZ
-        W4Kc4GSFMYnL2stpamuxJKKqvg==
-X-Google-Smtp-Source: APXvYqwnj4ZZ9mNJnkBMoiehgQjiZomwZ11H6cpGoTbTEDARRAcvax5jQ5ZSiuIWRT1qrdfGhl+W3w==
-X-Received: by 2002:a17:902:a98b:: with SMTP id bh11mr20839738plb.40.1567975515397;
-        Sun, 08 Sep 2019 13:45:15 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id q204sm18643828pfc.11.2019.09.08.13.45.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Sep 2019 13:45:14 -0700 (PDT)
-Date:   Sun, 8 Sep 2019 13:45:13 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Vlastimil Babka <vbabka@suse.cz>
-cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Michal Hocko <mhocko@suse.com>, Mel Gorman <mgorman@suse.de>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>
-Subject: Re: [patch for-5.3 0/4] revert immediate fallback to remote
- hugepages
-In-Reply-To: <d76f8cc3-97aa-8da5-408d-397467ea768b@suse.cz>
-Message-ID: <alpine.DEB.2.21.1909081328220.178796@chino.kir.corp.google.com>
-References: <alpine.DEB.2.21.1909041252230.94813@chino.kir.corp.google.com> <CAHk-=wjmF_MGe5sBDmQB1WGpr+QFWkqboHpL37JYB5WgnG8nMA@mail.gmail.com> <alpine.DEB.2.21.1909051345030.217933@chino.kir.corp.google.com> <alpine.DEB.2.21.1909071249180.81471@chino.kir.corp.google.com>
- <CAHk-=wifuQ68e6Q4F2txGS48WgcoX2REE4te5_j36ypV-T2ZKw@mail.gmail.com> <alpine.DEB.2.21.1909071829440.200558@chino.kir.corp.google.com> <d76f8cc3-97aa-8da5-408d-397467ea768b@suse.cz>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sun, 8 Sep 2019 16:53:55 -0400
+Received: from mleia.com ([178.79.152.223]:39424 "EHLO mail.mleia.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729671AbfIHUxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 16:53:54 -0400
+X-Greylist: delayed 477 seconds by postgrey-1.27 at vger.kernel.org; Sun, 08 Sep 2019 16:53:53 EDT
+Received: from mail.mleia.com (localhost [127.0.0.1])
+        by mail.mleia.com (Postfix) with ESMTP id 7F37739C7AA;
+        Sun,  8 Sep 2019 20:45:55 +0000 (UTC)
+Subject: Re: [RFC,v2 2/6] i2c: add I2C Address Translator (ATR) support
+To:     jacopo mondi <jacopo@jmondi.org>,
+        Luca Ceresoli <luca@lucaceresoli.net>,
+        Wolfram Sang <wsa@the-dreams.de>, Peter Rosin <peda@axentia.se>
+Cc:     linux-media@vger.kernel.org, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>
+References: <20190723203723.11730-1-luca@lucaceresoli.net>
+ <20190723203723.11730-3-luca@lucaceresoli.net>
+ <20190901143101.humomdehy5ee73sk@vino>
+From:   Vladimir Zapolskiy <vz@mleia.com>
+Message-ID: <aedad45b-16d6-d189-b045-329727440ca5@mleia.com>
+Date:   Sun, 8 Sep 2019 23:45:53 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190901143101.humomdehy5ee73sk@vino>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-49551924 
+X-CRM114-CacheID: sfid-20190908_204555_547256_CA8083BE 
+X-CRM114-Status: GOOD (  19.32  )
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 8 Sep 2019, Vlastimil Babka wrote:
+Hi Luca, Jacopo, Wolfram, Peter,
 
-> > On Sat, 7 Sep 2019, Linus Torvalds wrote:
-> > 
-> >>> Andrea acknowledges the swap storm that he reported would be fixed with
-> >>> the last two patches in this series
-> >>
-> >> The problem is that even you aren't arguing that those patches should
-> >> go into 5.3.
-> >>
-> > 
-> > For three reasons: (a) we lack a test result from Andrea,
+On 09/01/2019 05:31 PM, jacopo mondi wrote:
+> Hi Luca,
+>    thanks for keep pushing this series! I hope we can use part of this
+> for the (long time) on-going GMSL work...
 > 
-> That's argument against the rfc patches 3+4s, no? But not for including
-> the reverts of reverts of reverts (patches 1+2).
+> I hope you will be patient enough to provide (another :) overview
+> of this work during the BoF Wolfram has organized at LPC for the next
+> week.
+> 
+> In the meantime I would have some comments after having a read at the
+> series and trying to apply its concept to GMSL
 > 
 
-Yes, thanks: I would strongly prefer not to propose rfc patches 3-4 
-without a testing result from Andrea and collaboration to fix the 
-underlying issue.  My suggestion to Linus is to merge patches 1-2 so we 
-don't have additional semantics for MADV_HUGEPAGE or thp enabled=always 
-configs based on kernel version, especially since they are already 
-conflated.
+I won't attend the LPC, however I would appreciate if you book some
+time to review my original / alternative implementation of the TI
+DS90Ux9xx I2C bridge device driver.
 
-> > (b) there's 
-> > on-going discussion, particularly based on Vlastimil's feedback, and 
-> 
-> I doubt this will be finished and tested with reasonable confidence even
-> for the 5.4 merge window.
-> 
+For your convenience the links to the driver are given below:
+* dt bindings: https://lore.kernel.org/lkml/20181012060314.GU4939@dell/T/#mead5ea226550b
+* driver code: https://lore.kernel.org/lkml/20181012060314.GU4939@dell/T/#m2fe3664c5f884
+* usage example: https://lore.kernel.org/lkml/20181012060314.GU4939@dell/T/#m56c146f5decdc
 
-Depends, but I probably suspect the same.  If the reverts to 5.3 are not 
-applied, then I'm not at all confident that forward progress on this issue 
-will be made: my suggestion about changes to the page allocator when the 
-patches were initially proposed went unresponded to, as did the ping on 
-those suggestions, and now we have a simplistic "this will fix the swap 
-storms" but no active involvement from Andrea to improve this; he likely 
-is quite content on lumping NUMA policy onto an already overloaded madvise 
-mode.
+The reasons why my driver is better/more flexible/more functional are
+discussed earlier, please let me know, if you expect anything else
+from me to add, also I would be happy to get a summary of your offline
+discussion.
 
- [ NOTE! The rest of this email and my responses are about how to address
-   the default page allocation behavior which we can continue to discuss
-   but I'd prefer it separated from the discussion of reverts for 5.3
-   which needs to be done to not conflate madvise modes with mempolicies
-   for a subset of kernel versions. ]
+The undeniable fact is that the device tree bindings in my I2C bridge
+implementation can be improved further, thanks to Luca for the comments.
 
-> > It indicates that progress has been made to address the actual bug without 
-> > introducing long-lived access latency regressions for others, particularly 
-> > those who use MADV_HUGEPAGE.  In the worst case, some systems running 
-> > 5.3-rc4 and 5.3-rc5 have the same amount of memory backed by hugepages but 
-> > on 5.3-rc5 the vast majority of it is allocated remotely.  This incurs a
-> 
-> It's been said before, but such sensitive code generally relies on
-> mempolicies or node reclaim mode, not THP __GFP_THISNODE implementation
-> details. Or if you know there's enough free memory and just needs to be
-> compacted, you could do it once via sysfs before starting up your workload.
-> 
+> On Tue, Jul 23, 2019 at 10:37:19PM +0200, Luca Ceresoli wrote:
+>> An ATR is a device that looks similar to an i2c-mux: it has an I2C
+>> slave "upstream" port and N master "downstream" ports, and forwards
+>> transactions from upstream to the appropriate downstream port. But is
+>> is different in that the forwarded transaction has a different slave
+>> address. The address used on the upstream bus is called the "alias"
+>> and is (potentially) different from the physical slave address of the
+>> downstream chip.
+>>
+>> Add a helper file (just like i2c-mux.c for a mux or switch) to allow
+>> implementing ATR features in a device driver. The helper takes care or
+>> adapter creation/destruction and translates addresses at each transaction.
+>>
+>> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+>>
 
-This entire discussion is based on the long standing and default behavior 
-of page allocation for transparent hugepages.  Your suggestions are not 
-possible for two reasons: (1) I cannot enforce a mempolicy of MPOL_BIND 
-because this doesn't allow fallback at all and would oom kill if the local 
-node is oom, and (2) node reclaim mode is a system-wide setting so all 
-workloads are affected for every page allocation, not only users of 
-MADV_HUGEPAGE who specifically opt-in to expensive allocation.
-
-We could make the argument that Andrea's qemu usecase could simply use 
-MPOL_PREFERRED for memory that should be faulted remotely which would 
-provide more control and would work for all versions of Linux regardless 
-of MADV_HUGEPAGE or not; that's a much more simple workaround than 
-conflating MADV_HUGEPAGE for NUMA locality, asking users who are adversely 
-affected by 5.3 to create new mempolicies to work around something that 
-has always worked fine, or asking users to tune page allocator policies 
-with sysctls.
-
-> > I'm arguing to revert 5.3 back to the behavior that we have had for years 
-> > and actually fix the bug that everybody else seems to be ignoring and then 
-> > *backport* those fixes to 5.3 stable and every other stable tree that can 
-> > use them.  Introducing a new mempolicy for NUMA locality into 5.3.0 that
-> 
-> I think it's rather removing the problematic implicit mempolicy of
-> __GFP_THISNODE.
-> 
-
-I'm referring to a solution that is backwards compatible for existing 
-users which 5.3 is certainly not.
-
-> I might have missed something, but you were asked for a reproducer of
-> your use case so others can develop patches with it in mind? Mel did
-> provide a simple example that shows the swap storms very easily.
-> 
-
-Are you asking for a synthetic kernel module that you can inject to induce 
-fragmentation on a local node where memory compaction would be possible 
-and then a userspace program that uses MADV_HUGEPAGE and fits within that 
-node?  The regression I'm reporting is for workloads that fit within a 
-socket, it requires local fragmentation to show a regression.
-
-For the qemu case, it's quite easy to fill a local node and require 
-additional hugepage allocations with MADV_HUGEPAGE in a test case, but for
-without synthetically inducing fragmentation I cannot provide a testcase 
-that will show performance regression because memory is quickly faulted 
-remotely rather than compacting locally.
+--
+Best wishes,
+Vladimir
