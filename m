@@ -2,408 +2,239 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49AD3C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 16:10:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D92C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 16:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C5AB218AE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 16:10:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92F93214DB
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 16:17:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=valentin-vidic.from.hr header.i=@valentin-vidic.from.hr header.b="JGykRtoP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y07CNuZz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729312AbfIHQKX (ORCPT
+        id S1729440AbfIHQRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 12:10:23 -0400
-Received: from valentin-vidic.from.hr ([94.229.67.141]:47997 "EHLO
-        valentin-vidic.from.hr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729240AbfIHQKX (ORCPT
+        Sun, 8 Sep 2019 12:17:36 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39134 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729409AbfIHQRf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 12:10:23 -0400
-X-Virus-Scanned: Debian amavisd-new at valentin-vidic.from.hr
-Received: by valentin-vidic.from.hr (Postfix, from userid 1000)
-        id 30DAC214; Sun,  8 Sep 2019 16:10:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-        d=valentin-vidic.from.hr; s=2017; t=1567959017;
-        bh=sxZx2w1XNWPndSRJ8NNxw7MGGnoe/Lw4VpfMTF/K3ds=;
-        h=From:To:Cc:Subject:Date:From;
-        b=JGykRtoPjtFtyFePhbqXRNlerrWPxrRTzPEJX4G8jWmZxejMfvc5J2Md1aAjy2L5O
-         MpuVdnTTe05jNuYfdYbcwzdo3hqQisqQ4u1z/P8jgBWsv0rXTidyBxYvJq2MfuKHhP
-         MOEP9SY6M6akLwh1ZVT60oFWQPtBW2prdRoKLokA93pxu0qzuwrjRHfpn9WUlCaMgl
-         V32clUMNoag/zFN88Q4YW62MlQ9viKAZXd+RcJpFAki0OhF/zjyVuCs2fpXEWwAW6Y
-         euOGr4MUDz2AOnw3ATZxUiSgxo6JVVZhgo5jt/6yX8hkUOifAkWvBwLM3bVcXsCMZ7
-         dSsOGgWr7nplg==
-From:   Valentin Vidic <vvidic@valentin-vidic.from.hr>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Valentin Vidic <vvidic@valentin-vidic.from.hr>
-Subject: [PATCH v2 1/3] staging: exfat: drop duplicate date_time_t struct
-Date:   Sun,  8 Sep 2019 16:10:13 +0000
-Message-Id: <20190908161015.26000-1-vvidic@valentin-vidic.from.hr>
-X-Mailer: git-send-email 2.20.1
+        Sun, 8 Sep 2019 12:17:35 -0400
+Received: by mail-wr1-f65.google.com with SMTP id t16so11253453wra.6;
+        Sun, 08 Sep 2019 09:17:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=34Gm+mqacQT9Dg5F66EbtT1u+Ti5scHvGTdVQxEaWAY=;
+        b=Y07CNuZzY9bsIMmUCgO8/vzqf1BW2TPIbdHKcvzyPIaVgOGBsRBOscGLcejjLkmuMy
+         iHEfeGzkVxjtHcl9DW1+awr8dZiFDwwnsSm3AponcWls+yjSRO6fnPQ+BfVpT7hVtwna
+         3hTEsiXHoBO5mxR+cNuEph7ODod63QftR2l+wiX7Hl2GI33rvkouuhnphkztG9aZBRuQ
+         L58e9jgEILSJU8edSxKlHpMz+4CR7Au+e+BIVIdTn3j/4LDtSRc8q+X44pu0Ma8CE5A9
+         c9SqPkggGXorNDcwKGD3sdi0T7LxL5EMBo2tORl0Yh8jlfX112g666plHIDFLLgH9In1
+         TXMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=34Gm+mqacQT9Dg5F66EbtT1u+Ti5scHvGTdVQxEaWAY=;
+        b=a/j0U01HoaB3IEk3Qm6+kHbxSshRAb8ntYEbh4Xm/DbhI7568vTYixxgTu2BLhCmwL
+         nVRGnkYRbXg3VaMFKgXOHefFRNYH5WxHSIkfjTbAFWveGQm2/+hRDUttcCoLLuXB0ARu
+         o/Y8JeznXs5G6fZBbnezpcEycSeC/gt18xUr6/ekvkMBQhVIq60mQ1hS4IOYudvMbw5H
+         RLh7Ln/eZCMutr9UWy9iH//IQpkr30kdZqZl3AhUhjZfIbZrSAK3KKbLt3C92UJ6tntI
+         ubzdWoRLnnxC1VkuHr3nr17hPfl1cYrzDi1DaBuMzXP/Euk/tA6Z/7hdhf5904SRdepZ
+         peCw==
+X-Gm-Message-State: APjAAAVv/HHeBMp6YLzUKU3Y6RO+aKSeqOn2njLbo3q2h+XPDcoRv9r0
+        LmGYnEuWD0weaFuHxUAjr6jya6v5
+X-Google-Smtp-Source: APXvYqzYub7QtpY9k0T98+d/JC8P0GnCDBEfZGdNsLe02qkeBKAkLaGdIZEoqc5KaI7AgiGrbZnF9g==
+X-Received: by 2002:a5d:5345:: with SMTP id t5mr13193531wrv.30.1567959452082;
+        Sun, 08 Sep 2019 09:17:32 -0700 (PDT)
+Received: from [192.168.1.19] (bdt94.neoplus.adsl.tpnet.pl. [83.28.5.94])
+        by smtp.gmail.com with ESMTPSA id m3sm10459017wmc.44.2019.09.08.09.17.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 08 Sep 2019 09:17:31 -0700 (PDT)
+Subject: Re: [FYI] lm3532: right registration to work with LED-backlight
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        kernel list <linux-kernel@vger.kernel.org>, sre@kernel.org,
+        nekit1000@gmail.com, mpartap@gmx.net, merlijn@wizzup.org,
+        Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org
+References: <20190827215205.59677-1-tony@atomide.com>
+ <20190828085339.GB2923@amd> <c3ac1863-9cdb-1ba6-d5a4-df1c4cfecbe1@gmail.com>
+ <20190908080305.GC25459@amd>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <390760c1-de39-9328-bb23-cbf791094718@gmail.com>
+Date:   Sun, 8 Sep 2019 18:17:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190908080305.GC25459@amd>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use timestamp_t for everything and cleanup duplicate code.
+On 9/8/19 10:03 AM, Pavel Machek wrote:
+> On Wed 2019-08-28 22:32:57, Jacek Anaszewski wrote:
+>> On 8/28/19 10:53 AM, Pavel Machek wrote:
+>>> Hi!
+>>>
+>>> Eventually, these will be needed.
+>>>
+>>> Best regards,
+>>> 								Pavel
+>>>
+>>> commit 38d956977a7d6cbdc811676f9b4033da7487e045
+>>> Author: Pavel <pavel@ucw.cz>
+>>> Date:   Wed Aug 7 12:43:52 2019 +0200
+>>>
+>>>     d4: lm3532 needs to use right register function for backlight to work.
+>>>
+>>> diff --git a/drivers/leds/leds-lm3532.c b/drivers/leds/leds-lm3532.c
+>>> index 365a22a5..f98e657 100644
+>>> --- a/drivers/leds/leds-lm3532.c
+>>> +++ b/drivers/leds/leds-lm3532.c
+>>> @@ -629,7 +629,7 @@ static int lm3532_parse_node(struct lm3532_data *priv)
+>>>  
+>>>  		lm3532_init_registers(led);
+>>>  
+>>> -		ret = devm_led_classdev_register(priv->dev, &led->led_dev);
+>>> +		ret = devm_of_led_classdev_register(priv->dev, to_of_node(child), &led->led_dev);
+>>
+>> We no longer have devm_of_led_classdev_register(). You must use
+>> devm_led_classdev_register_ext().
+> 
+> Something like this (untested)?
+> 
+> 								Pavel
+> 
+> diff --git a/drivers/leds/leds-lm3532.c b/drivers/leds/leds-lm3532.c
+> index 62ace66..6340d5b 100644
+> --- a/drivers/leds/leds-lm3532.c
+> +++ b/drivers/leds/leds-lm3532.c
+> @@ -577,6 +577,11 @@ static int lm3532_parse_node(struct lm3532_data *priv)
+>  		priv->runtime_ramp_down = lm3532_get_ramp_index(ramp_time);
+>  
+>  	device_for_each_child_node(priv->dev, child) {
+> +		struct led_init_data idata = {
+> +			.fwnode = child,
+> +			.default_label = "backlight",
+> +		};
+> +
 
-Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
----
-v2: split up into multiple patches
+If you want to properly switch to the new extended LED registration
+API, then you need:
 
- drivers/staging/exfat/exfat.h       |  35 +++---
- drivers/staging/exfat/exfat_super.c | 174 ++++++++--------------------
- 2 files changed, 61 insertions(+), 148 deletions(-)
+.default_label = ":",
+.devicename = led->client->name;
 
-diff --git a/drivers/staging/exfat/exfat.h b/drivers/staging/exfat/exfat.h
-index 0aa14dea4e09..58e1e889779f 100644
---- a/drivers/staging/exfat/exfat.h
-+++ b/drivers/staging/exfat/exfat.h
-@@ -241,16 +241,6 @@ static inline u16 get_row_index(u16 i)
- #define UNI_PAR_DIR_NAME        "\0.\0."
- #endif
- 
--struct date_time_t {
--	u16      Year;
--	u16      Month;
--	u16      Day;
--	u16      Hour;
--	u16      Minute;
--	u16      Second;
--	u16      MilliSecond;
--};
--
- struct part_info_t {
- 	u32      Offset;    /* start sector number of the partition */
- 	u32      Size;      /* in sectors */
-@@ -289,6 +279,16 @@ struct file_id_t {
- 	u32      hint_last_clu;
- };
- 
-+struct timestamp_t {
-+	u16      millisec;   /* 0 ~ 999              */
-+	u16      sec;        /* 0 ~ 59               */
-+	u16      min;        /* 0 ~ 59               */
-+	u16      hour;       /* 0 ~ 23               */
-+	u16      day;        /* 1 ~ 31               */
-+	u16      mon;        /* 1 ~ 12               */
-+	u16      year;       /* 0 ~ 127 (since 1980) */
-+};
-+
- struct dir_entry_t {
- 	char Name[MAX_NAME_LENGTH * MAX_CHARSET_SIZE];
- 
-@@ -298,18 +298,9 @@ struct dir_entry_t {
- 	u32 Attr;
- 	u64 Size;
- 	u32 NumSubdirs;
--	struct date_time_t CreateTimestamp;
--	struct date_time_t ModifyTimestamp;
--	struct date_time_t AccessTimestamp;
--};
--
--struct timestamp_t {
--	u16      sec;        /* 0 ~ 59               */
--	u16      min;        /* 0 ~ 59               */
--	u16      hour;       /* 0 ~ 23               */
--	u16      day;        /* 1 ~ 31               */
--	u16      mon;        /* 1 ~ 12               */
--	u16      year;       /* 0 ~ 127 (since 1980) */
-+	struct timestamp_t CreateTimestamp;
-+	struct timestamp_t ModifyTimestamp;
-+	struct timestamp_t AccessTimestamp;
- };
- 
- /* MS_DOS FAT partition boot record (512 bytes) */
-diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
-index 60dfea73a7a4..54b6c2ff3c96 100644
---- a/drivers/staging/exfat/exfat_super.c
-+++ b/drivers/staging/exfat/exfat_super.c
-@@ -56,18 +56,16 @@ static void exfat_write_super(struct super_block *sb);
- #define UNIX_SECS_2108    4354819200L
- 
- /* Convert a FAT time/date pair to a UNIX date (seconds since 1 1 70). */
--static void exfat_time_fat2unix(struct exfat_sb_info *sbi,
--				struct timespec64 *ts, struct date_time_t *tp)
-+static void exfat_time_fat2unix(struct timespec64 *ts, struct timestamp_t *tp)
- {
--	ts->tv_sec = mktime64(tp->Year + 1980, tp->Month + 1, tp->Day,
--			      tp->Hour, tp->Minute, tp->Second);
-+	ts->tv_sec = mktime64(tp->year + 1980, tp->mon + 1, tp->day,
-+			      tp->hour, tp->min, tp->sec);
- 
--	ts->tv_nsec = tp->MilliSecond * NSEC_PER_MSEC;
-+	ts->tv_nsec = tp->millisec * NSEC_PER_MSEC;
- }
- 
- /* Convert linear UNIX date to a FAT time/date pair. */
--static void exfat_time_unix2fat(struct exfat_sb_info *sbi,
--				struct timespec64 *ts, struct date_time_t *tp)
-+static void exfat_time_unix2fat(struct timespec64 *ts, struct timestamp_t *tp)
- {
- 	time64_t second = ts->tv_sec;
- 	struct tm tm;
-@@ -75,69 +73,42 @@ static void exfat_time_unix2fat(struct exfat_sb_info *sbi,
- 	time64_to_tm(second, 0, &tm);
- 
- 	if (second < UNIX_SECS_1980) {
--		tp->MilliSecond = 0;
--		tp->Second	= 0;
--		tp->Minute	= 0;
--		tp->Hour	= 0;
--		tp->Day		= 1;
--		tp->Month	= 1;
--		tp->Year	= 0;
-+		tp->millisec	= 0;
-+		tp->sec		= 0;
-+		tp->min		= 0;
-+		tp->hour	= 0;
-+		tp->day		= 1;
-+		tp->mon		= 1;
-+		tp->year	= 0;
- 		return;
- 	}
- 
- 	if (second >= UNIX_SECS_2108) {
--		tp->MilliSecond = 999;
--		tp->Second	= 59;
--		tp->Minute	= 59;
--		tp->Hour	= 23;
--		tp->Day		= 31;
--		tp->Month	= 12;
--		tp->Year	= 127;
-+		tp->millisec	= 999;
-+		tp->sec		= 59;
-+		tp->min		= 59;
-+		tp->hour	= 23;
-+		tp->day		= 31;
-+		tp->mon		= 12;
-+		tp->year	= 127;
- 		return;
- 	}
- 
--	tp->MilliSecond = ts->tv_nsec / NSEC_PER_MSEC;
--	tp->Second	= tm.tm_sec;
--	tp->Minute	= tm.tm_min;
--	tp->Hour	= tm.tm_hour;
--	tp->Day		= tm.tm_mday;
--	tp->Month	= tm.tm_mon + 1;
--	tp->Year	= tm.tm_year + 1900 - 1980;
-+	tp->millisec	= ts->tv_nsec / NSEC_PER_MSEC;
-+	tp->sec		= tm.tm_sec;
-+	tp->min		= tm.tm_min;
-+	tp->hour	= tm.tm_hour;
-+	tp->day		= tm.tm_mday;
-+	tp->mon		= tm.tm_mon + 1;
-+	tp->year	= tm.tm_year + 1900 - 1980;
- }
- 
- struct timestamp_t *tm_current(struct timestamp_t *tp)
- {
--	time64_t second = ktime_get_real_seconds();
--	struct tm tm;
--
--	time64_to_tm(second, 0, &tm);
-+	struct timespec64 ts;
- 
--	if (second < UNIX_SECS_1980) {
--		tp->sec  = 0;
--		tp->min  = 0;
--		tp->hour = 0;
--		tp->day  = 1;
--		tp->mon  = 1;
--		tp->year = 0;
--		return tp;
--	}
--
--	if (second >= UNIX_SECS_2108) {
--		tp->sec  = 59;
--		tp->min  = 59;
--		tp->hour = 23;
--		tp->day  = 31;
--		tp->mon  = 12;
--		tp->year = 127;
--		return tp;
--	}
--
--	tp->sec  = tm.tm_sec;
--	tp->min  = tm.tm_min;
--	tp->hour = tm.tm_hour;
--	tp->day  = tm.tm_mday;
--	tp->mon  = tm.tm_mon + 1;
--	tp->year = tm.tm_year + 1900 - 1980;
-+	ktime_get_real_ts64(&ts);
-+	exfat_time_unix2fat(&ts, tp);
- 
- 	return tp;
- }
-@@ -1502,7 +1473,6 @@ static int ffsReadStat(struct inode *inode, struct dir_entry_t *info)
- 	int ret = FFS_SUCCESS;
- 	struct chain_t dir;
- 	struct uni_name_t uni_name;
--	struct timestamp_t tm;
- 	struct dentry_t *ep, *ep2;
- 	struct super_block *sb = inode->i_sb;
- 	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
-@@ -1520,11 +1490,11 @@ static int ffsReadStat(struct inode *inode, struct dir_entry_t *info)
- 		    (fid->entry == -1)) {
- 			info->Attr = ATTR_SUBDIR;
- 			memset((char *)&info->CreateTimestamp, 0,
--			       sizeof(struct date_time_t));
-+			       sizeof(struct timestamp_t));
- 			memset((char *)&info->ModifyTimestamp, 0,
--			       sizeof(struct date_time_t));
-+			       sizeof(struct timestamp_t));
- 			memset((char *)&info->AccessTimestamp, 0,
--			       sizeof(struct date_time_t));
-+			       sizeof(struct timestamp_t));
- 			strcpy(info->ShortName, ".");
- 			strcpy(info->Name, ".");
- 
-@@ -1575,25 +1545,9 @@ static int ffsReadStat(struct inode *inode, struct dir_entry_t *info)
- 	/* set FILE_INFO structure using the acquired struct dentry_t */
- 	info->Attr = p_fs->fs_func->get_entry_attr(ep);
- 
--	p_fs->fs_func->get_entry_time(ep, &tm, TM_CREATE);
--	info->CreateTimestamp.Year = tm.year;
--	info->CreateTimestamp.Month = tm.mon;
--	info->CreateTimestamp.Day = tm.day;
--	info->CreateTimestamp.Hour = tm.hour;
--	info->CreateTimestamp.Minute = tm.min;
--	info->CreateTimestamp.Second = tm.sec;
--	info->CreateTimestamp.MilliSecond = 0;
--
--	p_fs->fs_func->get_entry_time(ep, &tm, TM_MODIFY);
--	info->ModifyTimestamp.Year = tm.year;
--	info->ModifyTimestamp.Month = tm.mon;
--	info->ModifyTimestamp.Day = tm.day;
--	info->ModifyTimestamp.Hour = tm.hour;
--	info->ModifyTimestamp.Minute = tm.min;
--	info->ModifyTimestamp.Second = tm.sec;
--	info->ModifyTimestamp.MilliSecond = 0;
--
--	memset((char *) &info->AccessTimestamp, 0, sizeof(struct date_time_t));
-+	p_fs->fs_func->get_entry_time(ep, &info->CreateTimestamp, TM_CREATE);
-+	p_fs->fs_func->get_entry_time(ep, &info->ModifyTimestamp, TM_MODIFY);
-+	memset((char *)&info->AccessTimestamp, 0, sizeof(struct timestamp_t));
- 
- 	*(uni_name.name) = 0x0;
- 	/* XXX this is very bad for exfat cuz name is already included in es.
-@@ -1652,7 +1606,6 @@ static int ffsWriteStat(struct inode *inode, struct dir_entry_t *info)
- {
- 	sector_t sector = 0;
- 	int ret = FFS_SUCCESS;
--	struct timestamp_t tm;
- 	struct dentry_t *ep, *ep2;
- 	struct entry_set_cache_t *es = NULL;
- 	struct super_block *sb = inode->i_sb;
-@@ -1699,22 +1652,8 @@ static int ffsWriteStat(struct inode *inode, struct dir_entry_t *info)
- 	p_fs->fs_func->set_entry_attr(ep, info->Attr);
- 
- 	/* set FILE_INFO structure using the acquired struct dentry_t */
--	tm.sec  = info->CreateTimestamp.Second;
--	tm.min  = info->CreateTimestamp.Minute;
--	tm.hour = info->CreateTimestamp.Hour;
--	tm.day  = info->CreateTimestamp.Day;
--	tm.mon  = info->CreateTimestamp.Month;
--	tm.year = info->CreateTimestamp.Year;
--	p_fs->fs_func->set_entry_time(ep, &tm, TM_CREATE);
--
--	tm.sec  = info->ModifyTimestamp.Second;
--	tm.min  = info->ModifyTimestamp.Minute;
--	tm.hour = info->ModifyTimestamp.Hour;
--	tm.day  = info->ModifyTimestamp.Day;
--	tm.mon  = info->ModifyTimestamp.Month;
--	tm.year = info->ModifyTimestamp.Year;
--	p_fs->fs_func->set_entry_time(ep, &tm, TM_MODIFY);
--
-+	p_fs->fs_func->set_entry_time(ep, &info->CreateTimestamp, TM_CREATE);
-+	p_fs->fs_func->set_entry_time(ep, &info->ModifyTimestamp, TM_MODIFY);
- 	p_fs->fs_func->set_entry_size(ep2, info->Size);
- 
- 	if (p_fs->vol_type != EXFAT) {
-@@ -1941,7 +1880,6 @@ static int ffsReadDir(struct inode *inode, struct dir_entry_t *dir_entry)
- 	sector_t sector;
- 	struct chain_t dir, clu;
- 	struct uni_name_t uni_name;
--	struct timestamp_t tm;
- 	struct dentry_t *ep;
- 	struct super_block *sb = inode->i_sb;
- 	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
-@@ -2038,26 +1976,12 @@ static int ffsReadDir(struct inode *inode, struct dir_entry_t *dir_entry)
- 			buf_lock(sb, sector);
- 			dir_entry->Attr = fs_func->get_entry_attr(ep);
- 
--			fs_func->get_entry_time(ep, &tm, TM_CREATE);
--			dir_entry->CreateTimestamp.Year = tm.year;
--			dir_entry->CreateTimestamp.Month = tm.mon;
--			dir_entry->CreateTimestamp.Day = tm.day;
--			dir_entry->CreateTimestamp.Hour = tm.hour;
--			dir_entry->CreateTimestamp.Minute = tm.min;
--			dir_entry->CreateTimestamp.Second = tm.sec;
--			dir_entry->CreateTimestamp.MilliSecond = 0;
--
--			fs_func->get_entry_time(ep, &tm, TM_MODIFY);
--			dir_entry->ModifyTimestamp.Year = tm.year;
--			dir_entry->ModifyTimestamp.Month = tm.mon;
--			dir_entry->ModifyTimestamp.Day = tm.day;
--			dir_entry->ModifyTimestamp.Hour = tm.hour;
--			dir_entry->ModifyTimestamp.Minute = tm.min;
--			dir_entry->ModifyTimestamp.Second = tm.sec;
--			dir_entry->ModifyTimestamp.MilliSecond = 0;
--
-+			fs_func->get_entry_time(ep, &dir_entry->CreateTimestamp,
-+						TM_CREATE);
-+			fs_func->get_entry_time(ep, &dir_entry->ModifyTimestamp,
-+						TM_MODIFY);
- 			memset((char *)&dir_entry->AccessTimestamp, 0,
--			       sizeof(struct date_time_t));
-+			       sizeof(struct timestamp_t));
- 
- 			*(uni_name.name) = 0x0;
- 			fs_func->get_uni_name_from_ext_entry(sb, &dir, dentry,
-@@ -3349,9 +3273,9 @@ static int exfat_fill_inode(struct inode *inode, struct file_id_t *fid)
- 	inode->i_blocks = ((i_size_read(inode) + (p_fs->cluster_size - 1))
- 				& ~((loff_t)p_fs->cluster_size - 1)) >> 9;
- 
--	exfat_time_fat2unix(sbi, &inode->i_mtime, &info.ModifyTimestamp);
--	exfat_time_fat2unix(sbi, &inode->i_ctime, &info.CreateTimestamp);
--	exfat_time_fat2unix(sbi, &inode->i_atime, &info.AccessTimestamp);
-+	exfat_time_fat2unix(&inode->i_mtime, &info.ModifyTimestamp);
-+	exfat_time_fat2unix(&inode->i_ctime, &info.CreateTimestamp);
-+	exfat_time_fat2unix(&inode->i_atime, &info.AccessTimestamp);
- 
- 	return 0;
- }
-@@ -3412,8 +3336,6 @@ static void exfat_destroy_inode(struct inode *inode)
- 
- static int exfat_write_inode(struct inode *inode, struct writeback_control *wbc)
- {
--	struct super_block *sb = inode->i_sb;
--	struct exfat_sb_info *sbi = EXFAT_SB(sb);
- 	struct dir_entry_t info;
- 
- 	if (inode->i_ino == EXFAT_ROOT_INO)
-@@ -3422,9 +3344,9 @@ static int exfat_write_inode(struct inode *inode, struct writeback_control *wbc)
- 	info.Attr = exfat_make_attr(inode);
- 	info.Size = i_size_read(inode);
- 
--	exfat_time_unix2fat(sbi, &inode->i_mtime, &info.ModifyTimestamp);
--	exfat_time_unix2fat(sbi, &inode->i_ctime, &info.CreateTimestamp);
--	exfat_time_unix2fat(sbi, &inode->i_atime, &info.AccessTimestamp);
-+	exfat_time_unix2fat(&inode->i_mtime, &info.ModifyTimestamp);
-+	exfat_time_unix2fat(&inode->i_ctime, &info.CreateTimestamp);
-+	exfat_time_unix2fat(&inode->i_atime, &info.AccessTimestamp);
- 
- 	ffsWriteStat(inode, &info);
- 
+and in addition to that you need to remove old way of composing
+the LED name. Something like patch [0] for leds-lm3692x.c.
+And also patch for DT for consistency would be needed (like [1]).
+
+However it will not change anything in LED naming in comparison
+to the existing code, except that it will enable the possibility
+of using 'function' and 'color' DT properties instead of deprecated
+'label'.
+
+I suppose that you expected some extra bonus by passing
+DT node, but I'm not sure what exactly. Possibly you confused
+this with the patch set [2] that allows for instantiating
+backlight device on top of LED class device (it has been forgotten
+btw and will miss 5.4).
+
+And for lm3532 - it was just relying on the glue provided by
+ledtrig-backlight, as pointed out by Tony in [3].
+
+
+>  		led = &priv->leds[i];
+>  
+>  		ret = fwnode_property_read_u32(child, "reg", &control_bank);
+> @@ -648,7 +653,7 @@ static int lm3532_parse_node(struct lm3532_data *priv)
+>  		led->led_dev.name = led->label;
+>  		led->led_dev.brightness_set_blocking = lm3532_brightness_set;
+>  
+> -		ret = devm_led_classdev_register(priv->dev, &led->led_dev);
+> +		ret = devm_led_classdev_register_ext(priv->dev, &led->led_dev, &idata);
+>  		if (ret) {
+>  			dev_err(&priv->client->dev, "led register err: %d\n",
+>  				ret);
+> 
+> 
+
+[0]
+https://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git/commit/?h=for-next&id=a50ff28348934913c46feb7945571329e46c70b3
+[1]
+https://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git/commit/?h=for-next&id=4dcbc8f8c59f4b618d651f5ba884ee5bf562c8de
+[2]
+https://lore.kernel.org/linux-leds/20190717141514.21171-1-jjhiblot@ti.com/
+[3] https://lore.kernel.org/linux-leds/20190403235500.GU49658@atomide.com/
 -- 
-2.20.1
-
+Best regards,
+Jacek Anaszewski
