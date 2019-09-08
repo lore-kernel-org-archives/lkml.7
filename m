@@ -2,93 +2,132 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB832C4360D
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 23:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 765EDC433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 23:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9697320828
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 23:18:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567984726;
-	bh=FxEKbz5lcvL7U59ZQw9i2X+8b1UWgWWC/e1PbuEqGdU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=vFmRrjf0WmnudGKlyu4xGEmYrLWhjUod9JewwCJD+CufmE0kpVdK9bKq7XzyR9My8
-	 6dFKl3iBIbsb/+fNJ7tQCEIjLl7WcDF0C1SMasPCUEVYdcsGtpXk5G30HEXkXWo4RY
-	 i6Ga2PcUM1xDu9EdWFJBIbHL+F+uLaHzSAHSsx4I=
+	by mail.kernel.org (Postfix) with ESMTP id 584F7214DB
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 23:31:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731238AbfIHXSP (ORCPT
+        id S1731329AbfIHXb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 19:18:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51690 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731201AbfIHXSO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 19:18:14 -0400
-Received: from earth.universe (bl10-94-171.dsl.telepac.pt [85.243.94.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15F4720828;
-        Sun,  8 Sep 2019 23:18:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567984694;
-        bh=FxEKbz5lcvL7U59ZQw9i2X+8b1UWgWWC/e1PbuEqGdU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=UuSwRV0C8jh+MxBesClQ/bbEmYh/cbjbAnRvcx/ZABBsbATJjVgivORzaOVUkO66X
-         iqOHpGTeJxobkduQJVARXe0L/mfbCaGQxDaysUw1aOumkydZAhnfYQNeRMEqL0jlky
-         AXXASEENA+NZK1ZbeJucjCQoNPaDYy87kijaLCyg=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 56CD73C0CFA; Sun,  8 Sep 2019 14:10:39 +0200 (CEST)
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        kbuild test robot <lkp@intel.com>,
-        Han Nandor <nandor.han@vaisala.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] nvmem: core: fix nvmem_cell_write inline function
-Date:   Sun,  8 Sep 2019 14:10:38 +0200
-Message-Id: <20190908121038.6877-1-sre@kernel.org>
-X-Mailer: git-send-email 2.23.0.rc1
-MIME-Version: 1.0
+        Sun, 8 Sep 2019 19:31:26 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60298 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731203AbfIHXb0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 19:31:26 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x88NRIK5103061
+        for <linux-kernel@vger.kernel.org>; Sun, 8 Sep 2019 19:31:24 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2uw8jgbuwn-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 19:31:24 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Mon, 9 Sep 2019 00:31:22 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 9 Sep 2019 00:31:19 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x88NVIGt45547968
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 8 Sep 2019 23:31:18 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 58576AE04D;
+        Sun,  8 Sep 2019 23:31:18 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 78A1CAE053;
+        Sun,  8 Sep 2019 23:31:17 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.159.93])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sun,  8 Sep 2019 23:31:17 +0000 (GMT)
+Subject: Re: [RFC][PATCH 1/1] Carry ima measurement log for arm64 via
+ kexec_file_load
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     prsriva <prsriva@linux.microsoft.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-integrity@vger.kernel.org, jmorris@namei.org
+Date:   Sun, 08 Sep 2019 19:31:16 -0400
+In-Reply-To: <0c7453d4-620d-2d98-3fda-f902b18da535@linux.microsoft.com>
+References: <20190829200532.13545-1-prsriva@linux.microsoft.com>
+         <20190829200532.13545-2-prsriva@linux.microsoft.com>
+         <87r252kxc8.fsf@morokweng.localdomain>
+         <0c7453d4-620d-2d98-3fda-f902b18da535@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19090823-4275-0000-0000-00000362F7CD
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19090823-4276-0000-0000-000038754646
+Message-Id: <1567985476.4614.224.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-08_15:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909080260
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
+Hi Prakhar,
 
-nvmem_cell_write's buf argument uses different types based on
-the configuration of CONFIG_NVMEM. The function prototype for
-enabled NVMEM uses 'void *' type, but the static dummy function
-for disabled NVMEM uses 'const char *' instead. Fix the different
-behaviour by always expecting a 'void *' typed buf argument.
+On Fri, 2019-09-06 at 16:56 -0700, prsriva wrote:
+> On 8/30/19 5:11 PM, Thiago Jung Bauermann wrote:
+> > Hello Prakhar,
+> >
+> > Answering this part from the cover letter:
+> >
+> >> The code is in most part same as powerpc, i want to get feedback as to
+> >> how/correct way to refactor the code so that cross architecture
+> >> partial helpers can be put in a common place.
+> 
+> I started refactoring code to bring helpers under drivers/of, but
+> 
+> i soon reliazed the current implementation can be changed a bit
+> 
+> so that some of the additional functions can be sourced from
+> 
+> existing fdt_*/of_* functions since the fdt_ima was seeming to be
+> 
+> an overkill. I have done so in the V1 patch and also addressed
+> 
+> comments you have.
+> 
+> Hopefully its(v1) is a cleaner approach.
+> 
+> - Thanks for the review, and guidance.
 
-Fixes: 7a78a7f7695b ("power: reset: nvmem-reboot-mode: use NVMEM as reboot mode write interface")
-Reported-by: kbuild test robot <lkp@intel.com>
-Cc: Han Nandor <nandor.han@vaisala.com>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
----
- include/linux/nvmem-consumer.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+"Carrying over the ima log during kexec_file_load" was originally
+posted on 5/10 and 5/31 without a cover letter. On 8/29 it was
+reposted as an RFC with a cover letter.  The cover letter was v1, but
+the patch itself was not.  In the future, please use the "git format-
+patch "-subject-prefix" option to add the version number to both the
+cover letter and the patches.
 
-diff --git a/include/linux/nvmem-consumer.h b/include/linux/nvmem-consumer.h
-index 8f8be5b00060..5c17cb733224 100644
---- a/include/linux/nvmem-consumer.h
-+++ b/include/linux/nvmem-consumer.h
-@@ -118,7 +118,7 @@ static inline void *nvmem_cell_read(struct nvmem_cell *cell, size_t *len)
- }
- 
- static inline int nvmem_cell_write(struct nvmem_cell *cell,
--				    const char *buf, size_t len)
-+				   void *buf, size_t len)
- {
- 	return -EOPNOTSUPP;
- }
--- 
-2.23.0.rc1
+The comments you received were based on the 8/29 version.  I haven't
+seen anything after that. 
+
+Mimi
+
+
+> > That's a great idea. If it could go to drivers/of/ as Stephen Boyd
+> > mentioned in the other email that would be great.
+> >
+> > More comments below.
+> > -Addressed those in the v1 patch
+> > Prakhar Srivastava <prsriva@linux.microsoft.com> writes:
+> >
 
