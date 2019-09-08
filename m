@@ -2,56 +2,53 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 511E2C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BF5C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:46:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A555218AE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:46:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B01B218AE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:46:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946798;
-	bh=LtTjOxgtRGF6LCCtjHjnp/619AMlBzyRmzOQMaARqIw=;
+	s=default; t=1567946801;
+	bh=eFNmMDPU9oj+b/aRj0PIa7n2EuJNoiT010yd3l8TnhE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T6a/RSaHHPAMA0aEx9gW9P9x3lUdGK9BN8Gj0+tDXnmQ1CGv7RiaVF846LraRJSWi
-	 pytZaQymcdF87EpTMi2qaxgH65/nM6iaBhiHMN37JWZPJvHunLEE8Rt9bxuJjtOOjc
-	 wnTKkZJa9o2tJ495dyTYHTi1AGN5FCYjw0QwfnTc=
+	b=i1l8Wjrkq1OPzX//qGyHkY6p+Av2omBRm0bkNtFhIiMBczFUXCP6E53DFGY2jqdTm
+	 YKPxXMAdD4kmkAx2DoOT3j2G583tT88Xiu40LmdnzF6t496euRzT/MhvGIQMXf9BRC
+	 KXXnGTh6PWqYasiPB9zM/41/oQ9EE+yzFS8cVFXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730430AbfIHMqh (ORCPT
+        id S1730444AbfIHMqk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:46:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34166 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:46:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730389AbfIHMqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:46:30 -0400
+        id S1730411AbfIHMqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:46:33 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF6EE218AE;
-        Sun,  8 Sep 2019 12:46:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0F9420644;
+        Sun,  8 Sep 2019 12:46:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946789;
-        bh=LtTjOxgtRGF6LCCtjHjnp/619AMlBzyRmzOQMaARqIw=;
+        s=default; t=1567946793;
+        bh=eFNmMDPU9oj+b/aRj0PIa7n2EuJNoiT010yd3l8TnhE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n3oOGTwg/w3qVY4gu05fuUaV829mV5/zaqOzLxEhePJ5ZD6AopAC0ZGrb6AveIimu
-         YJQyigA+dgwbKrenneyNMH/uP9MjyvIZoE0zw/QdzxZfH15+lhYnG5b7uarsclM/mw
-         B2143Ny67JWdJ3exvlWYxA8+kpabDUNrADdzYSio=
+        b=pr9mexGO8EMy7B+jkA9yFc2Rg1F/VOvItAVUg7EN+x8b6XkWjsd6aqfbhkMi+L2ee
+         uHWzKSGm5WnoJgRt93YJQHpAcZgnb079/u8FB/S5iVVWoEJNHI0WYSDt+r445UTQFO
+         YVzN8y6W7lqyncEZc/zUoLQiSCkamfTRPYILEOJA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "John S. Gruber" <JohnSGruber@gmail.com>,
-        Borislav Petkov <bp@suse.de>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Juergen Gross <jgross@suse.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>
-Subject: [PATCH 4.14 40/40] x86/boot: Preserve boot_params.secure_boot from sanitizing
-Date:   Sun,  8 Sep 2019 13:42:13 +0100
-Message-Id: <20190908121132.874903916@linuxfoundation.org>
+        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
+        Thomas Falcon <tlfalcon@linux.ibm.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 06/40] ibmveth: Convert multicast list size for little-endian system
+Date:   Sun,  8 Sep 2019 13:41:39 +0100
+Message-Id: <20190908121117.101933925@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121114.260662089@linuxfoundation.org>
 References: <20190908121114.260662089@linuxfoundation.org>
@@ -64,56 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John S. Gruber <JohnSGruber@gmail.com>
+[ Upstream commit 66cf4710b23ab2adda11155684a2c8826f4fe732 ]
 
-commit 29d9a0b50736768f042752070e5cdf4e4d4c00df upstream.
+The ibm,mac-address-filters property defines the maximum number of
+addresses the hypervisor's multicast filter list can support. It is
+encoded as a big-endian integer in the OF device tree, but the virtual
+ethernet driver does not convert it for use by little-endian systems.
+As a result, the driver is not behaving as it should on affected systems
+when a large number of multicast addresses are assigned to the device.
 
-Commit
-
-  a90118c445cc ("x86/boot: Save fields explicitly, zero out everything else")
-
-now zeroes the secure boot setting information (enabled/disabled/...)
-passed by the boot loader or by the kernel's EFI handover mechanism.
-
-The problem manifests itself with signed kernels using the EFI handoff
-protocol with grub and the kernel loses the information whether secure
-boot is enabled in the firmware, i.e., the log message "Secure boot
-enabled" becomes "Secure boot could not be determined".
-
-efi_main() arch/x86/boot/compressed/eboot.c sets this field early but it
-is subsequently zeroed by the above referenced commit.
-
-Include boot_params.secure_boot in the preserve field list.
-
- [ bp: restructure commit message and massage. ]
-
-Fixes: a90118c445cc ("x86/boot: Save fields explicitly, zero out everything else")
-Signed-off-by: John S. Gruber <JohnSGruber@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: stable <stable@vger.kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/CAPotdmSPExAuQcy9iAHqX3js_fc4mMLQOTr5RBGvizyCOPcTQQ@mail.gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: Hangbin Liu <liuhangbin@gmail.com>
+Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/bootparam_utils.h |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/ibm/ibmveth.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/arch/x86/include/asm/bootparam_utils.h
-+++ b/arch/x86/include/asm/bootparam_utils.h
-@@ -71,6 +71,7 @@ static void sanitize_boot_params(struct
- 			BOOT_PARAM_PRESERVE(eddbuf_entries),
- 			BOOT_PARAM_PRESERVE(edd_mbr_sig_buf_entries),
- 			BOOT_PARAM_PRESERVE(edd_mbr_sig_buffer),
-+			BOOT_PARAM_PRESERVE(secure_boot),
- 			BOOT_PARAM_PRESERVE(hdr),
- 			BOOT_PARAM_PRESERVE(e820_table),
- 			BOOT_PARAM_PRESERVE(eddbuf),
+diff --git a/drivers/net/ethernet/ibm/ibmveth.c b/drivers/net/ethernet/ibm/ibmveth.c
+index 754dff4c1771e..880d925438c17 100644
+--- a/drivers/net/ethernet/ibm/ibmveth.c
++++ b/drivers/net/ethernet/ibm/ibmveth.c
+@@ -1618,7 +1618,7 @@ static int ibmveth_probe(struct vio_dev *dev, const struct vio_device_id *id)
+ 	struct net_device *netdev;
+ 	struct ibmveth_adapter *adapter;
+ 	unsigned char *mac_addr_p;
+-	unsigned int *mcastFilterSize_p;
++	__be32 *mcastFilterSize_p;
+ 	long ret;
+ 	unsigned long ret_attr;
+ 
+@@ -1640,8 +1640,9 @@ static int ibmveth_probe(struct vio_dev *dev, const struct vio_device_id *id)
+ 		return -EINVAL;
+ 	}
+ 
+-	mcastFilterSize_p = (unsigned int *)vio_get_attribute(dev,
+-						VETH_MCAST_FILTER_SIZE, NULL);
++	mcastFilterSize_p = (__be32 *)vio_get_attribute(dev,
++							VETH_MCAST_FILTER_SIZE,
++							NULL);
+ 	if (!mcastFilterSize_p) {
+ 		dev_err(&dev->dev, "Can't find VETH_MCAST_FILTER_SIZE "
+ 			"attribute\n");
+@@ -1658,7 +1659,7 @@ static int ibmveth_probe(struct vio_dev *dev, const struct vio_device_id *id)
+ 
+ 	adapter->vdev = dev;
+ 	adapter->netdev = netdev;
+-	adapter->mcastFilterSize = *mcastFilterSize_p;
++	adapter->mcastFilterSize = be32_to_cpu(*mcastFilterSize_p);
+ 	adapter->pool_config = 0;
+ 
+ 	netif_napi_add(netdev, &adapter->napi, ibmveth_poll, 16);
+-- 
+2.20.1
+
 
 
