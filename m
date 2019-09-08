@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F6F0C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B74E2C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF9CE20693
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:58:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86BC82067B
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:58:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947531;
-	bh=unn06WB5Q3arhJ/2MJCg37Gwfm61AYem3C57a8cNxxc=;
+	s=default; t=1567947539;
+	bh=sQ4dfnDcjH8d9tQ+CCUtld6pKau5HKXGqpYZhRRicCM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gi4ImmGOPhipizqUrVEr8Q1V56hQo6Y54ME9JBNjvNfLkdUiOKaBEsG+5o4LjMsII
-	 J5usR6VPwPaNr+uUoVjdG7sPHUgzcKUehi+ErPoFjKKKOqcmN82HOf8FZjFvTiZWT0
-	 jz6lLaXXsOtwKzXe7zqNJ4wPOpRRgH5ISFD6rhBA=
+	b=mTy2YVnpd+RVfTJw9wd0YMp6jzJufeskI3zlhNL8hDv7kE8EN6lt5Zvyrx6LBNKv0
+	 OHaq11Je1nw5onBr9bEnqeF88RZBMybVNXOvL7uGNpizKRZtibCjQfr8uvUcMZ1iI5
+	 A+oyvTEJnjXchlpVckHKzjYB/TS1Ez/TCws1mTGg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbfIHM6u (ORCPT
+        id S1728217AbfIHM67 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:58:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34548 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:58:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730466AbfIHMqn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:46:43 -0400
+        id S1730433AbfIHMqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:46:38 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF0852081B;
-        Sun,  8 Sep 2019 12:46:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE4F62081B;
+        Sun,  8 Sep 2019 12:46:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946803;
-        bh=unn06WB5Q3arhJ/2MJCg37Gwfm61AYem3C57a8cNxxc=;
+        s=default; t=1567946798;
+        bh=sQ4dfnDcjH8d9tQ+CCUtld6pKau5HKXGqpYZhRRicCM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PoQ8i7KTZCwCHkam02E7VWL+7SVitkuS+cVAZQVj6nkAmkN4eUfaxFmA/5qWvVJGT
-         WiqSL3JXKQP1emsvd5l3pkdsACR41kbOj5svh3iw25Olvr6nIvxe5xFF6FM+r9+FhK
-         GhJeqX54wbxaJB0QXL2JPssu5yMNXaTykBog6Z5M=
+        b=FvLMX7aHBWutans+0rMzpL/bx6874K36MMI/ofw5MELrnnTC/vUydnP6vqxOnjeB0
+         w7jAAKWTHeHD7kuSL+85KUgARJ80PzTcOzvMjM3TABwDhVhKd4NFnqQLG/DUrcBjjd
+         vbzLBjsUV2S7sLU2iNcfI70//53ICtjnK+XTMEJA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 10/40] cxgb4: fix a memory leak bug
-Date:   Sun,  8 Sep 2019 13:41:43 +0100
-Message-Id: <20190908121119.873316497@linuxfoundation.org>
+        stable@vger.kernel.org, Alexandre Courbot <acourbot@chromium.org>,
+        CK Hu <ck.hu@mediatek.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 08/40] drm/mediatek: use correct device to import PRIME buffers
+Date:   Sun,  8 Sep 2019 13:41:41 +0100
+Message-Id: <20190908121117.957075712@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121114.260662089@linuxfoundation.org>
 References: <20190908121114.260662089@linuxfoundation.org>
@@ -60,35 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c554336efa9bbc28d6ec14efbee3c7d63c61a34f ]
+[ Upstream commit 4c6f3196e6ea111c456c6086dc3f57d4706b0b2d ]
 
-In blocked_fl_write(), 't' is not deallocated if bitmap_parse_user() fails,
-leading to a memory leak bug. To fix this issue, free t before returning
-the error.
+PRIME buffers should be imported using the DMA device. To this end, use
+a custom import function that mimics drm_gem_prime_import_dev(), but
+passes the correct device.
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 119f5173628aa ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
+Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
+Signed-off-by: CK Hu <ck.hu@mediatek.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
-index 76540b0e082d3..9e5cd18e7358c 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
-@@ -2777,8 +2777,10 @@ static ssize_t blocked_fl_write(struct file *filp, const char __user *ubuf,
- 		return -ENOMEM;
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+index cada1c75c41cd..4a89cd2e4f1c5 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+@@ -287,6 +287,18 @@ static const struct file_operations mtk_drm_fops = {
+ 	.compat_ioctl = drm_compat_ioctl,
+ };
  
- 	err = bitmap_parse_user(ubuf, count, t, adap->sge.egr_sz);
--	if (err)
-+	if (err) {
-+		kvfree(t);
- 		return err;
-+	}
- 
- 	bitmap_copy(adap->sge.blocked_fl, t, adap->sge.egr_sz);
- 	kvfree(t);
++/*
++ * We need to override this because the device used to import the memory is
++ * not dev->dev, as drm_gem_prime_import() expects.
++ */
++struct drm_gem_object *mtk_drm_gem_prime_import(struct drm_device *dev,
++						struct dma_buf *dma_buf)
++{
++	struct mtk_drm_private *private = dev->dev_private;
++
++	return drm_gem_prime_import_dev(dev, dma_buf, private->dma_dev);
++}
++
+ static struct drm_driver mtk_drm_driver = {
+ 	.driver_features = DRIVER_MODESET | DRIVER_GEM | DRIVER_PRIME |
+ 			   DRIVER_ATOMIC,
+@@ -298,7 +310,7 @@ static struct drm_driver mtk_drm_driver = {
+ 	.prime_handle_to_fd = drm_gem_prime_handle_to_fd,
+ 	.prime_fd_to_handle = drm_gem_prime_fd_to_handle,
+ 	.gem_prime_export = drm_gem_prime_export,
+-	.gem_prime_import = drm_gem_prime_import,
++	.gem_prime_import = mtk_drm_gem_prime_import,
+ 	.gem_prime_get_sg_table = mtk_gem_prime_get_sg_table,
+ 	.gem_prime_import_sg_table = mtk_gem_prime_import_sg_table,
+ 	.gem_prime_mmap = mtk_drm_gem_mmap_buf,
 -- 
 2.20.1
 
