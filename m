@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A334EC4360D
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA43C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79113218AF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 438AA218AC
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:48:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946930;
-	bh=cuk9IKddEYJFNC0reOXs5WcbRFOnRLMgpOZPlixQSzk=;
+	s=default; t=1567946935;
+	bh=kJJEls0zE+yCJG3m7FXJFdOvv+wrcq/shPk5k9x5QvM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hU5Bk63VofdfZA5H2bphR7BpvF/GgpHqVSN/ITIkVG82ah1sW23Af0yecSX10Nr2a
-	 Cxil85dqI4kfkhoxtjZcYVDmtCQtf8VsHmBL/NmyY1lWo68fhU4pVCGJwIT9oOXRlQ
-	 WX4EGZHeRlyJ/TVzsauxf3y/e404KpaY8cFHvMr8=
+	b=02l1U05AnU3UV0BXj+rqUGqAj7t4p+BXdW4AMrw+jUF7imchXuf5wNG9CWTNi7qM8
+	 lLkgzAjwuNhlcbs0/OQSAh3ABC6iMSodkCpr39dYb1RkNpiOyHTymTkcJMJceEbvqG
+	 akqs4gcsyLCu1Bn4YediJ/LeOz2+iiP2cwYyi8BQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731183AbfIHMst (ORCPT
+        id S1731230AbfIHMsx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:48:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38108 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:48:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731155AbfIHMsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:48:46 -0400
+        id S1731155AbfIHMsv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:48:51 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8E54218AC;
-        Sun,  8 Sep 2019 12:48:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E56F218AC;
+        Sun,  8 Sep 2019 12:48:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946925;
-        bh=cuk9IKddEYJFNC0reOXs5WcbRFOnRLMgpOZPlixQSzk=;
+        s=default; t=1567946930;
+        bh=kJJEls0zE+yCJG3m7FXJFdOvv+wrcq/shPk5k9x5QvM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=No9oo9WYMAdWys/KpE3UJn4iQ8TZ1XQwWp9qoet48YjwZK6lOMTtmnR9ruo5l04V8
-         ITgu+xXRPbb/D2JfHtcDQSZRCMm/bVkB6IOsN/Q+jMxdhsk/6fOQ7yA1MOf67TbPUz
-         Zi/8kWP5DkVmPRURAhvs/6834fkowwbmz+wmXVfg=
+        b=J3OBcYlF1JRRdwAMwkW2DhsG9JdaivdH5W82lvjoOWZuCpn1S2ZyRowUYMnmXOSwD
+         Gx05dAa3EN+dtWPVZS4mHbJjYhN7drXc1fGC6s8dQ8lW+qGHPzY+obvsuhmwF/eHMr
+         LI3HPRWw95n3fafpPNM8MCfoR/kT30AwQ4M8dnr4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Andrew Jones <drjones@redhat.com>,
+        stable@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
+        Dave Martin <dave.martin@arm.com>,
+        Julien Grall <julien.grall@arm.com>,
         Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 52/57] KVM: arm/arm64: Only skip MMIO insn once
-Date:   Sun,  8 Sep 2019 13:42:16 +0100
-Message-Id: <20190908121146.131070216@linuxfoundation.org>
+Subject: [PATCH 4.19 54/57] KVM: arm/arm64: VGIC: Properly initialise private IRQ affinity
+Date:   Sun,  8 Sep 2019 13:42:18 +0100
+Message-Id: <20190908121146.398527354@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121125.608195329@linuxfoundation.org>
 References: <20190908121125.608195329@linuxfoundation.org>
@@ -60,54 +61,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2113c5f62b7423e4a72b890bd479704aa85c81ba ]
+[ Upstream commit 2e16f3e926ed48373c98edea85c6ad0ef69425d1 ]
 
-If after an MMIO exit to userspace a VCPU is immediately run with an
-immediate_exit request, such as when a signal is delivered or an MMIO
-emulation completion is needed, then the VCPU completes the MMIO
-emulation and immediately returns to userspace. As the exit_reason
-does not get changed from KVM_EXIT_MMIO in these cases we have to
-be careful not to complete the MMIO emulation again, when the VCPU is
-eventually run again, because the emulation does an instruction skip
-(and doing too many skips would be a waste of guest code :-) We need
-to use additional VCPU state to track if the emulation is complete.
-As luck would have it, we already have 'mmio_needed', which even
-appears to be used in this way by other architectures already.
+At the moment we initialise the target *mask* of a virtual IRQ to the
+VCPU it belongs to, even though this mask is only defined for GICv2 and
+quickly runs out of bits for many GICv3 guests.
+This behaviour triggers an UBSAN complaint for more than 32 VCPUs:
+------
+[ 5659.462377] UBSAN: Undefined behaviour in virt/kvm/arm/vgic/vgic-init.c:223:21
+[ 5659.471689] shift exponent 32 is too large for 32-bit type 'unsigned int'
+------
+Also for GICv3 guests the reporting of TARGET in the "vgic-state" debugfs
+dump is wrong, due to this very same problem.
 
-Fixes: 0d640732dbeb ("arm64: KVM: Skip MMIO insn after emulation")
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Andrew Jones <drjones@redhat.com>
+Because there is no requirement to create the VGIC device before the
+VCPUs (and QEMU actually does it the other way round), we can't safely
+initialise mpidr or targets in kvm_vgic_vcpu_init(). But since we touch
+every private IRQ for each VCPU anyway later (in vgic_init()), we can
+just move the initialisation of those fields into there, where we
+definitely know the VGIC type.
+
+On the way make sure we really have either a VGICv2 or a VGICv3 device,
+since the existing code is just checking for "VGICv3 or not", silently
+ignoring the uninitialised case.
+
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Reported-by: Dave Martin <dave.martin@arm.com>
+Tested-by: Julien Grall <julien.grall@arm.com>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- virt/kvm/arm/mmio.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ virt/kvm/arm/vgic/vgic-init.c | 30 ++++++++++++++++++++----------
+ 1 file changed, 20 insertions(+), 10 deletions(-)
 
-diff --git a/virt/kvm/arm/mmio.c b/virt/kvm/arm/mmio.c
-index 08443a15e6be8..3caee91bca089 100644
---- a/virt/kvm/arm/mmio.c
-+++ b/virt/kvm/arm/mmio.c
-@@ -98,6 +98,12 @@ int kvm_handle_mmio_return(struct kvm_vcpu *vcpu, struct kvm_run *run)
- 	unsigned int len;
- 	int mask;
+diff --git a/virt/kvm/arm/vgic/vgic-init.c b/virt/kvm/arm/vgic/vgic-init.c
+index 8196e4f8731fb..cd75df25fe140 100644
+--- a/virt/kvm/arm/vgic/vgic-init.c
++++ b/virt/kvm/arm/vgic/vgic-init.c
+@@ -19,6 +19,7 @@
+ #include <linux/cpu.h>
+ #include <linux/kvm_host.h>
+ #include <kvm/arm_vgic.h>
++#include <asm/kvm_emulate.h>
+ #include <asm/kvm_mmu.h>
+ #include "vgic.h"
  
-+	/* Detect an already handled MMIO return */
-+	if (unlikely(!vcpu->mmio_needed))
-+		return 0;
-+
-+	vcpu->mmio_needed = 0;
-+
- 	if (!run->mmio.is_write) {
- 		len = run->mmio.len;
- 		if (len > sizeof(unsigned long))
-@@ -200,6 +206,7 @@ int io_mem_abort(struct kvm_vcpu *vcpu, struct kvm_run *run,
- 	run->mmio.is_write	= is_write;
- 	run->mmio.phys_addr	= fault_ipa;
- 	run->mmio.len		= len;
-+	vcpu->mmio_needed	= 1;
+@@ -175,12 +176,18 @@ static int kvm_vgic_dist_init(struct kvm *kvm, unsigned int nr_spis)
+ 		irq->vcpu = NULL;
+ 		irq->target_vcpu = vcpu0;
+ 		kref_init(&irq->refcount);
+-		if (dist->vgic_model == KVM_DEV_TYPE_ARM_VGIC_V2) {
++		switch (dist->vgic_model) {
++		case KVM_DEV_TYPE_ARM_VGIC_V2:
+ 			irq->targets = 0;
+ 			irq->group = 0;
+-		} else {
++			break;
++		case KVM_DEV_TYPE_ARM_VGIC_V3:
+ 			irq->mpidr = 0;
+ 			irq->group = 1;
++			break;
++		default:
++			kfree(dist->spis);
++			return -EINVAL;
+ 		}
+ 	}
+ 	return 0;
+@@ -220,7 +227,6 @@ int kvm_vgic_vcpu_init(struct kvm_vcpu *vcpu)
+ 		irq->intid = i;
+ 		irq->vcpu = NULL;
+ 		irq->target_vcpu = vcpu;
+-		irq->targets = 1U << vcpu->vcpu_id;
+ 		kref_init(&irq->refcount);
+ 		if (vgic_irq_is_sgi(i)) {
+ 			/* SGIs */
+@@ -230,11 +236,6 @@ int kvm_vgic_vcpu_init(struct kvm_vcpu *vcpu)
+ 			/* PPIs */
+ 			irq->config = VGIC_CONFIG_LEVEL;
+ 		}
+-
+-		if (dist->vgic_model == KVM_DEV_TYPE_ARM_VGIC_V3)
+-			irq->group = 1;
+-		else
+-			irq->group = 0;
+ 	}
  
- 	if (!ret) {
- 		/* We handled the access successfully in the kernel. */
+ 	if (!irqchip_in_kernel(vcpu->kvm))
+@@ -297,10 +298,19 @@ int vgic_init(struct kvm *kvm)
+ 
+ 		for (i = 0; i < VGIC_NR_PRIVATE_IRQS; i++) {
+ 			struct vgic_irq *irq = &vgic_cpu->private_irqs[i];
+-			if (dist->vgic_model == KVM_DEV_TYPE_ARM_VGIC_V3)
++			switch (dist->vgic_model) {
++			case KVM_DEV_TYPE_ARM_VGIC_V3:
+ 				irq->group = 1;
+-			else
++				irq->mpidr = kvm_vcpu_get_mpidr_aff(vcpu);
++				break;
++			case KVM_DEV_TYPE_ARM_VGIC_V2:
+ 				irq->group = 0;
++				irq->targets = 1U << idx;
++				break;
++			default:
++				ret = -EINVAL;
++				goto out;
++			}
+ 		}
+ 	}
+ 
 -- 
 2.20.1
 
