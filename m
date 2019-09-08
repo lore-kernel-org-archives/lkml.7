@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F9CC433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF72C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61237218AE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:47:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE88321907
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:47:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567946823;
-	bh=EsMyl5SLsBQmn7rvg7jiR+z1VA3Kknj+Hjo5z4HdEcY=;
+	s=default; t=1567946827;
+	bh=kSqMGHyg1W2oethdFZqZVxeL8kfYmJOhZvlsHmcgIY4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UC+WuJFxU1hWremFFpN/rg4Jk756A1PXNmijoR1cXl2C+aPIg9oIga/47l/Yi6Jwa
-	 D8L+fF94psBIjN9s+rt52NIaLvL5eGX1tc7SxPcLTi6E8Nsy5Mf/XSnqvsdSVxXZ+e
-	 JrBHPDalL0Xhh3O8k29/WobeIp7oW5D6nahEiF9k=
+	b=rJlRiA5LxjLQfi4tvRwVHNUSNJ1gWps4v/ZZ/N817mdG5w1yj3aItLiQ3aYkzOLIn
+	 OwCpd90C+VLs/Z81woDwOMYKrRq6WcHTy/cX4VvVeOd9RmpM3g4e9fa40jF3D6VNPW
+	 5ypTfCLySqvK4RihK2Sr+Rnm8XqQa5/o9J+GKDgw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730562AbfIHMrC (ORCPT
+        id S1727915AbfIHMrG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:47:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34988 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:47:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729184AbfIHMq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:46:59 -0400
+        id S1730556AbfIHMrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:47:01 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36E2020644;
-        Sun,  8 Sep 2019 12:46:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C086F218AC;
+        Sun,  8 Sep 2019 12:47:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946818;
-        bh=EsMyl5SLsBQmn7rvg7jiR+z1VA3Kknj+Hjo5z4HdEcY=;
+        s=default; t=1567946821;
+        bh=kSqMGHyg1W2oethdFZqZVxeL8kfYmJOhZvlsHmcgIY4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cN+Qer+wmrGyY6cncDaTJfKRvmJ2wAlmQ+O5G5ibNnAR+4x3rAKKbAbnuE9HyoY+Z
-         Iji24WDxbd8X2jgWCzVZ+DMzUpZA69YFhecxr1g7pDyq27W1GbjW6QuVzqzNx+VJlV
-         xhgpP7qjR280Sfn34egpnrE5vjyEzzmB2+m88kZY=
+        b=zw1BV56Hnak2QJVqfgHwDmJbdDttGxWZtdc/JzWa8DIGoMJOPnu5AuP9h3xyVhClQ
+         izm97P40kvCrtG0DhwI352YxUCNkxb+Dw/c/TLp8PLOZ+kwDmOeG+/8z8Plshmlhki
+         PU3K/Qi4+tCVFmR9eyC5hMvGpPlBxVgUKPqnCxgI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hubert Denkmair <h.denkmair@intence.de>,
-        Martin Sperl <kernel@martin.sperl.org>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Fuqian Huang <huangfq.daxian@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 12/57] spi: bcm2835aux: fix corruptions for longer spi transfers
-Date:   Sun,  8 Sep 2019 13:41:36 +0100
-Message-Id: <20190908121129.539776629@linuxfoundation.org>
+Subject: [PATCH 4.19 13/57] net: tundra: tsi108: use spin_lock_irqsave instead of spin_lock_irq in IRQ context
+Date:   Sun,  8 Sep 2019 13:41:37 +0100
+Message-Id: <20190908121129.795695286@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121125.608195329@linuxfoundation.org>
 References: <20190908121125.608195329@linuxfoundation.org>
@@ -62,60 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 73b114ee7db1750c0b535199fae383b109bd61d0 ]
+[ Upstream commit 8c25d0887a8bd0e1ca2074ac0c6dff173787a83b ]
 
-On long running tests with a mcp2517fd can controller it showed that
-on rare occations the data read shows corruptions for longer spi transfers.
+As spin_unlock_irq will enable interrupts.
+Function tsi108_stat_carry is called from interrupt handler tsi108_irq.
+Interrupts are enabled in interrupt handler.
+Use spin_lock_irqsave/spin_unlock_irqrestore instead of spin_(un)lock_irq
+in IRQ context to avoid this.
 
-Example of a 22 byte transfer:
-
-expected (as captured on logic analyzer):
-FF FF 78 00 00 00 08 06 00 00 91 20 77 56 84 85 86 87 88 89 8a 8b
-
-read by the driver:
-FF FF 78 00 00 00 08 06 00 00 91 20 77 56 84 88 89 8a 00 00 8b 9b
-
-To fix this use BCM2835_AUX_SPI_STAT_RX_LVL to determine when we may
-read data from the fifo reliably without any corruption.
-
-Surprisingly the only values ever empirically read in
-BCM2835_AUX_SPI_STAT_RX_LVL are 0x00, 0x10, 0x20 and 0x30.
-So whenever the mask is not 0 we can read from the fifo in a safe manner.
-
-The patch has now been tested intensively and we are no longer
-able to reproduce the "RX" issue any longer.
-
-Fixes: 1ea29b39f4c812ec ("spi: bcm2835aux: add bcm2835 auxiliary spi device...")
-Reported-by: Hubert Denkmair <h.denkmair@intence.de>
-Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
-Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-bcm2835aux.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/tundra/tsi108_eth.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-bcm2835aux.c b/drivers/spi/spi-bcm2835aux.c
-index b4217f9480014..12c1fa5b06c5b 100644
---- a/drivers/spi/spi-bcm2835aux.c
-+++ b/drivers/spi/spi-bcm2835aux.c
-@@ -180,12 +180,12 @@ static void bcm2835aux_spi_reset_hw(struct bcm2835aux_spi *bs)
- 
- static void bcm2835aux_spi_transfer_helper(struct bcm2835aux_spi *bs)
+diff --git a/drivers/net/ethernet/tundra/tsi108_eth.c b/drivers/net/ethernet/tundra/tsi108_eth.c
+index edcd1e60b30d1..f076050c8ad37 100644
+--- a/drivers/net/ethernet/tundra/tsi108_eth.c
++++ b/drivers/net/ethernet/tundra/tsi108_eth.c
+@@ -383,9 +383,10 @@ tsi108_stat_carry_one(int carry, int carry_bit, int carry_shift,
+ static void tsi108_stat_carry(struct net_device *dev)
  {
-+	u32 stat = bcm2835aux_rd(bs, BCM2835_AUX_SPI_STAT);
-+
- 	/* check if we have data to read */
--	while (bs->rx_len &&
--	       (!(bcm2835aux_rd(bs, BCM2835_AUX_SPI_STAT) &
--		  BCM2835_AUX_SPI_STAT_RX_EMPTY))) {
-+	for (; bs->rx_len && (stat & BCM2835_AUX_SPI_STAT_RX_LVL);
-+	     stat = bcm2835aux_rd(bs, BCM2835_AUX_SPI_STAT))
- 		bcm2835aux_rd_fifo(bs);
--	}
+ 	struct tsi108_prv_data *data = netdev_priv(dev);
++	unsigned long flags;
+ 	u32 carry1, carry2;
  
- 	/* check if we have data to write */
- 	while (bs->tx_len &&
+-	spin_lock_irq(&data->misclock);
++	spin_lock_irqsave(&data->misclock, flags);
+ 
+ 	carry1 = TSI_READ(TSI108_STAT_CARRY1);
+ 	carry2 = TSI_READ(TSI108_STAT_CARRY2);
+@@ -453,7 +454,7 @@ static void tsi108_stat_carry(struct net_device *dev)
+ 			      TSI108_STAT_TXPAUSEDROP_CARRY,
+ 			      &data->tx_pause_drop);
+ 
+-	spin_unlock_irq(&data->misclock);
++	spin_unlock_irqrestore(&data->misclock, flags);
+ }
+ 
+ /* Read a stat counter atomically with respect to carries.
 -- 
 2.20.1
 
