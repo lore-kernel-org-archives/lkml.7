@@ -2,80 +2,110 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F2BC433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D390C4332F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4539820693
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:18:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567948717;
-	bh=p6ViJo0+CiEMG/cqTINO2SFUlUYVi3ntsgDEGW0lad8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e0A3B062t8NgoA3bmgWo5utlyA7/z8/yXqNaz1N2w3mxg/eD1VIy7KLPZReyOX1Wi
-	 GPjH2quQ7PIPHY+iCqt+4Ej4v0ti91FLwwF+PruruvLVztQI+qDsAAbezznkXWsY5Z
-	 GfnXzoqBaL/wXYpZQyznejloI3kyahxfV7kTAHCM=
+	by mail.kernel.org (Postfix) with ESMTP id 53D4B20693
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 13:19:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YUOsc7nE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727953AbfIHNSg (ORCPT
+        id S1728008AbfIHNT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 09:18:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56354 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727864AbfIHNSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 09:18:36 -0400
-Received: from localhost (unknown [62.28.240.114])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABD8F20693;
-        Sun,  8 Sep 2019 13:18:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567948714;
-        bh=p6ViJo0+CiEMG/cqTINO2SFUlUYVi3ntsgDEGW0lad8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=egCtlfemTWIVvzur5VBMFnU7DsBZQbi+YMNXvFDIbeIFodvkWX8XGhIAa8Y7N8rLf
-         V+jjKRvuxUJRUcgFQ4BpfL8M2kLKVnutBV9gBBOYnJkMA1O6WHLGG+qcZ6XSxkQ7Ew
-         MPEdx01OULQC8iWzKsOS4DXr/nJ5X90QzSh3KvaM=
-Date:   Sun, 8 Sep 2019 14:18:26 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Akinobu Mita <akinobu.mita@gmail.com>
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH 1/5] leds: remove PAGE_SIZE limit of
- /sys/class/leds/<led>/trigger
-Message-ID: <20190908131826.GA10679@kroah.com>
-References: <1567946472-10075-1-git-send-email-akinobu.mita@gmail.com>
- <1567946472-10075-2-git-send-email-akinobu.mita@gmail.com>
+        Sun, 8 Sep 2019 09:19:27 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50504 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727376AbfIHNT1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 09:19:27 -0400
+Received: by mail-wm1-f65.google.com with SMTP id c10so10923231wmc.0
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 06:19:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=rfaHrbONJalqk5Rglnc/sSZrvOVVtEVDgToC07/vRfw=;
+        b=YUOsc7nEEG6/3I5boErH3RGSSQO0fyI5oD3arLtc/ndNOma9V4dZ1kW3FiMkfF4gcG
+         Bx6uV2uWNKd3l6HPlZj1znXxvpNNbaDzAyoLcsw12/2pa1mqYDIuw8l5Lu9imuveCDLh
+         lQQSj/rFqf7AKyAJ6d+Kl+mSsjN7sQ/7NUlLLuhQAVddUVs5THTj8dU8+8LgQCZwUiqX
+         no0rNCYjhz72fLZ3I1A9/tRYIqR2ybFDwmLkO8ha50ZWhFxqlSLkbu3zYDGgk/YPOFOn
+         JW3DFQybfBNtFPzKXBUu2bUSzlMYgnOWaZ4ca2G79N7EbRcyAfQD5dr+SUnOOEBUZPR0
+         eAtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=rfaHrbONJalqk5Rglnc/sSZrvOVVtEVDgToC07/vRfw=;
+        b=MfwfJkeB+6YdtvJQzfaopjfBPc7x85A6KY2V8SJeDz3F02VQMVVGsFhoD0i01dZwts
+         sCv+6NHJVA5gCUXJEi/X4yJdzoJTFhbnQZITl7sp0akt6hjCB2BNZEmQNd2+9B3rMxsA
+         64RGf4zVP7ciLqzZQYLx3ybta2G1YbJRaDEb4XuEd8XT8KrlKFnVg/gu997PJXwudSCj
+         Eqc7bqGdYPuW5WsDWi9q/kk0wv2LgYZvX48k/Kjc1hVs4Z32NoQh2fiIzGcp6n6ZV2g+
+         wi3sQLSYmRx5wdVvhqyhX6A9jFKToyw4GhZrfYDVWphL2Kp7n8PiJE4SwVxNkXLI5L5L
+         oqjQ==
+X-Gm-Message-State: APjAAAXrUodbW6kGhr6DdxS0cR0xL+lr8wfN+QRg0Kd4kfPZqqEn6F45
+        hflLr8gYXYIg7cdJqjFR3Xc=
+X-Google-Smtp-Source: APXvYqwC1sKtwnFtDzrrTs9o23o7zhCpoCqyAFr8nmlOTsxFB9FrHLZis4ZF8N4gcyhgqvNvShsZgw==
+X-Received: by 2002:a7b:c752:: with SMTP id w18mr14393484wmk.129.1567948765033;
+        Sun, 08 Sep 2019 06:19:25 -0700 (PDT)
+Received: from gmail.com ([134.209.253.200])
+        by smtp.gmail.com with ESMTPSA id l10sm12630675wrh.20.2019.09.08.06.19.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 08 Sep 2019 06:19:24 -0700 (PDT)
+Date:   Sun, 8 Sep 2019 15:19:02 +0200
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Will Deacon <will@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Paul Burton <paul.burton@mips.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] compiler-attributes for v5.3-rc8
+Message-ID: <20190908131902.GA21291@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1567946472-10075-2-git-send-email-akinobu.mita@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+User-Agent: elm/2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 08, 2019 at 09:41:08PM +0900, Akinobu Mita wrote:
-> Reading /sys/class/leds/<led>/trigger returns all available LED triggers.
-> However, the size of this file is limited to PAGE_SIZE because of the
-> limitation for sysfs attribute.
-> 
-> Enabling LED CPU trigger on systems with thousands of CPUs easily hits
-> PAGE_SIZE limit, and makes it impossible to see all available LED triggers
-> and which trigger is currently activated.
-> 
-> This converts /sys/class/leds/<led>/trigger to bin attribute and removes
-> the PAGE_SIZE limitation.
+Hi Linus,
 
-Can you also put the "this really is not a good idea" type wording here
-in the changelog text as well?  Just want to try to make it explicitly
-clear that this should never be copied by anyone else.
+Here it is the Oops-fixing cherry-picked commit for -rc8 from the __section
+cleanup series.
 
-thanks,
+Cheers,
+Miguel
 
-greg k-h
+The following changes since commit 089cf7f6ecb266b6a4164919a2e69bd2f938374a:
+
+  Linux 5.3-rc7 (2019-09-02 09:57:40 -0700)
+
+are available in the Git repository at:
+
+  https://github.com/ojeda/linux.git tags/clang-format-for-linus-v5.3-rc8
+
+for you to fetch changes up to bfafddd8de426d894fcf3e062370b1efaa195ebc:
+
+  include/linux/compiler.h: fix Oops for Clang-compiled kernels (2019-09-08 14:53:58 +0200)
+
+----------------------------------------------------------------
+Fix Oops in Clang-compiled kernels (Nick Desaulniers)
+
+----------------------------------------------------------------
+Nick Desaulniers (1):
+      include/linux/compiler.h: fix Oops for Clang-compiled kernels
+
+ include/linux/compiler.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
