@@ -2,172 +2,283 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 507C5C433EF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 18:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8025CC4360D
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 18:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B3CD20828
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 18:28:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C46B214DB
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 18:38:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RxUfVa0G"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="0K8xsQpz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730784AbfIHS2f (ORCPT
+        id S1730816AbfIHSiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 14:28:35 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:47914 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727391AbfIHS2e (ORCPT
+        Sun, 8 Sep 2019 14:38:16 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:42248 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729973AbfIHSiP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 14:28:34 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x88IOKn4001194;
-        Sun, 8 Sep 2019 18:28:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=OlQJhhI3Rw85P0kimCh55K1Tmm4RmgUtpzuQYdYEmCE=;
- b=RxUfVa0G/B3LSMDUe64IPpe2UPB0muBTS1GyHJdpmn1PUPcufkH3G/AO6HDz0ZjbRTxO
- bwMSV5+92dMIdF02hIKov3jyt0XtNo5cCDQbBX1tuicJhkhZ2LJFU5xjSS7ypSs2DeKe
- cPk7db/NKwWrCzA3RJfEd8xadh1iFNxGg3I9Y+TCDmWsYX+E/RmLTis86kXJd/i8Xgx7
- pvy/a2JxNLtHSGaf44kxVIEXxf909aurTpRprIoTYcbH81GwtprNxTw8Zvl8XRYJM6lO
- xYdAxgsGGITbL5rGCxA31D8JiNL8U0g4TEFbnsTdHI/1Lq5KXRqPyxQawKSdKkTMqk3f jQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2uw1jk0k0m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 08 Sep 2019 18:28:27 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x88IORoq018168;
-        Sun, 8 Sep 2019 18:28:26 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2uv4d10axr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 08 Sep 2019 18:28:26 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x88ISOob001977;
-        Sun, 8 Sep 2019 18:28:25 GMT
-Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 08 Sep 2019 11:28:24 -0700
-Subject: Re: [PATCH] xen/pci: try to reserve MCFG areas earlier
-To:     Igor Druzhinin <igor.druzhinin@citrix.com>,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-Cc:     jgross@suse.com
-References: <1567556431-9809-1-git-send-email-igor.druzhinin@citrix.com>
- <5054ad91-5b87-652c-873a-b31758948bd7@oracle.com>
- <e3114d56-51cd-b973-1ada-f6a60a7e99cc@citrix.com>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=boris.ostrovsky@oracle.com; prefer-encrypt=mutual; keydata=
- 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
- Jg6OxFYd01z+a+oL
-Message-ID: <43b7da04-5c42-80d8-898b-470ee1c91ed2@oracle.com>
-Date:   Sun, 8 Sep 2019 14:28:15 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Sun, 8 Sep 2019 14:38:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ET7ieJFoegM1tM4/QqDzgswUMxtQx71qgXt8DoFaoWk=; b=0K8xsQpz/1zFDb7y0gmqVWZOy
+        lTGgvTR6DE989anIM1Im8UOnQCXgX3FI1Gnl1t/E2fxuI7rfzU55ebHNJiA3OD22pYdXUkOtndeiV
+        DJhbH0muPLu+GMTIiOUFGAY8lhB/fz5G8z7ldi2bXtZBRdL9B6x7pSlsRtV9qELOPzM4bS6zeJoGL
+        TcNEPbdReT0S56fDmY+nU79dpWu2Vz56gemlD7F0/JA3f8r3qdxDjisq9NSdQbpfGeW4N04jjMbkW
+        +XMDU9e+1Bi6LzitEJK6R+Bt3pdGblT+/ULYMI+3F9y66P1dLDBKboGX1nR0CHkzLoSTO/FhpmlL6
+        6ny+bdz+g==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:37114)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1i724Z-0006KP-1n; Sun, 08 Sep 2019 19:38:03 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1i724K-0000LT-Ud; Sun, 08 Sep 2019 19:37:48 +0100
+Date:   Sun, 8 Sep 2019 19:37:48 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Cheng-Yi Chiang <cychiang@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
+        kuninori.morimoto.gx@renesas.com, airlied@linux.ie,
+        dri-devel@lists.freedesktop.org, cain.cai@rock-chips.com,
+        a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com,
+        Yakir Yang <ykk@rock-chips.com>, sam@ravnborg.org,
+        zhengxing@rock-chips.com, linux-rockchip@lists.infradead.org,
+        dgreid@chromium.org, tzungbi@chromium.org, jonas@kwiboo.se,
+        jeffy.chen@rock-chips.com, eddie.cai@rock-chips.com,
+        linux-arm-kernel@lists.infradead.org, jernej.skrabec@siol.net,
+        dianders@chromium.org, daniel@ffwll.ch,
+        enric.balletbo@collabora.com, kuankuan.y@gmail.com
+Subject: Re: [PATCH v2] drm: bridge/dw_hdmi: add audio sample channel status
+ setting
+Message-ID: <20190908183748.GN13294@shell.armlinux.org.uk>
+References: <20190905094325.33156-1-cychiang@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <e3114d56-51cd-b973-1ada-f6a60a7e99cc@citrix.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9374 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1909080202
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9374 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1909080202
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190905094325.33156-1-cychiang@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/6/19 7:00 PM, Igor Druzhinin wrote:
->
-> On 06/09/2019 23:30, Boris Ostrovsky wrote:
->> On 9/3/19 8:20 PM, Igor Druzhinin wrote:
->>> If MCFG area is not reserved in E820, Xen by default will defer its usage
->>> until Dom0 registers it explicitly after ACPI parser recognizes it as
->>> a reserved resource in DSDT. Having it reserved in E820 is not
->>> mandatory according to "PCI Firmware Specification, rev 3.2" (par. 4.1.2)
->>> and firmware is free to keep a hole E820 in that place. Xen doesn't know
->>> what exactly is inside this hole since it lacks full ACPI view of the
->>> platform therefore it's potentially harmful to access MCFG region
->>> without additional checks as some machines are known to provide
->>> inconsistent information on the size of the region.
->>>
->>> Now xen_mcfg_late() runs after acpi_init() which is too late as some basic
->>> PCI enumeration starts exactly there. Trying to register a device prior
->>> to MCFG reservation causes multiple problems with PCIe extended
->>> capability initializations in Xen (e.g. SR-IOV VF BAR sizing). There are
->>> no convenient hooks for us to subscribe to so try to register MCFG
->>> areas earlier upon the first invocation of xen_add_device(). 
->>
->> Where is MCFG parsed? pci_arch_init()?
-> It happens twice:
-> 1) first time early one in pci_arch_init() that is arch_initcall - that
-> time pci_mmcfg_list will be freed immediately there because MCFG area is
-> not reserved in E820;
-> 2) second time late one in acpi_init() which is subsystem_initcall right
-> before where PCI enumeration starts - this time ACPI tables will be
-> checked for a reserved resource and pci_mmcfg_list will be finally
-> populated.
->
-> The problem is that on a system that doesn't have MCFG area reserved in
-> E820 pci_mmcfg_list is empty before acpi_init() and our PCI hooks are
-> called in the same place. So MCFG is still not in use by Xen at this
-> point since we haven't reached our xen_mcfg_late().
+On Thu, Sep 05, 2019 at 05:43:25PM +0800, Cheng-Yi Chiang wrote:
+> From: Yakir Yang <ykk@rock-chips.com>
+> 
+> When transmitting IEC60985 linear PCM audio, we configure the
+> Aduio Sample Channel Status information of all the channel
+> status bits in the IEC60958 frame.
+> Refer to 60958-3 page 10 for frequency, original frequency, and
+> wordlength setting.
+> 
+> This fix the issue that audio does not come out on some monitors
+> (e.g. LG 22CV241)
+> 
+> Note that these registers are only for interfaces:
+> I2S audio interface, General Purpose Audio (GPA), or AHB audio DMA
+> (AHBAUDDMA).
+> For S/PDIF interface this information comes from the stream.
+> 
+> Currently this function dw_hdmi_set_channel_status is only called
+> from dw-hdmi-i2s-audio in I2S setup.
+> 
+> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+> Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+> ---
+>  Original patch by Yakir Yang is at
+> 
+>  https://lore.kernel.org/patchwork/patch/539653/
+> 
+>  Change from v1 to v2:
+>  1. Remove the version check because this will only be called by
+>     dw-hdmi-i2s-audio, and the registers are available in I2S setup.
+>  2. Set these registers in dw_hdmi_i2s_hw_params.
+>  3. Fix the sample width setting so it can use 16 or 24 bits.
+> 
+>  .../drm/bridge/synopsys/dw-hdmi-i2s-audio.c   |  1 +
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c     | 70 +++++++++++++++++++
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.h     | 20 ++++++
+>  include/drm/bridge/dw_hdmi.h                  |  2 +
+>  4 files changed, 93 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
+> index 34d8e837555f..b801a28b0f17 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
+> @@ -102,6 +102,7 @@ static int dw_hdmi_i2s_hw_params(struct device *dev, void *data,
+>  	}
+>  
+>  	dw_hdmi_set_sample_rate(hdmi, hparms->sample_rate);
+> +	dw_hdmi_set_channel_status(hdmi, hparms->sample_width);
+>  	dw_hdmi_set_channel_count(hdmi, hparms->channels);
+>  	dw_hdmi_set_channel_allocation(hdmi, hparms->cea.channel_allocation);
+>  
 
+dw_hdmi_i2s_hw_params() is passed the channel status data in
+hparams->iec.status  Rather than re-creating it afresh in the driver,
+I'd recommend programming the already supplied channel status data
+into the registers.
 
-Would it be possible for us to parse MCFG ourselves in pci_xen_init()? I
-realize that we'd be doing this twice (or maybe even three times since
-apparently both pci_arch_init()  and acpi_ini() do it).
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> index bd65d0479683..d1daa369c8ae 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> @@ -582,6 +582,76 @@ static unsigned int hdmi_compute_n(unsigned int freq, unsigned long pixel_clk)
+>  	return n;
+>  }
+>  
+> +/*
+> + * When transmitting IEC60958 linear PCM audio, these registers allow to
+> + * configure the channel status information of all the channel status
+> + * bits in the IEC60958 frame. For the moment this configuration is only
+> + * used when the I2S audio interface, General Purpose Audio (GPA),
+> + * or AHB audio DMA (AHBAUDDMA) interface is active
+> + * (for S/PDIF interface this information comes from the stream).
+> + */
+> +void dw_hdmi_set_channel_status(struct dw_hdmi *hdmi,
+> +				unsigned int sample_width)
+> +{
+> +	u8 aud_schnl_samplerate;
+> +	u8 aud_schnl_8;
+> +	u8 word_length_bits;
+> +
+> +	switch (hdmi->sample_rate) {
+> +	case 32000:
+> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_32K;
+> +		break;
+> +	case 44100:
+> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_44K1;
+> +		break;
+> +	case 48000:
+> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_48K;
+> +		break;
+> +	case 88200:
+> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_88K2;
+> +		break;
+> +	case 96000:
+> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_96K;
+> +		break;
+> +	case 176400:
+> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_176K4;
+> +		break;
+> +	case 192000:
+> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_192K;
+> +		break;
+> +	case 768000:
+> +		aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_768K;
+> +		break;
+> +	default:
+> +		dev_warn(hdmi->dev, "Unsupported audio sample rate (%u)\n",
+> +			 hdmi->sample_rate);
+> +		return;
+> +	}
+> +
+> +	/* set channel status register */
+> +	hdmi_modb(hdmi, aud_schnl_samplerate, HDMI_FC_AUDSCHNLS7_SMPRATE_MASK,
+> +		  HDMI_FC_AUDSCHNLS7);
+> +
+> +	/*
+> +	 * Set original frequency to be the same as frequency.
+> +	 * Use one-complement value as stated in IEC60958-3 page 13.
+> +	 */
+> +	aud_schnl_8 = (~aud_schnl_samplerate) <<
+> +			HDMI_FC_AUDSCHNLS8_ORIGSAMPFREQ_OFFSET;
+> +
+> +	/*
+> +	 * Refer to IEC60958-3 page 12. We can accept 16 bits or 24 bits.
+> +	 * Otherwise, set the register to 0t o indicate using default value.
+> +	 */
+> +	word_length_bits = (sample_width == 16) ? 0x2 :
+> +			    ((sample_width == 24) ? 0xb : 0);
+> +
+> +	aud_schnl_8 |= word_length_bits << HDMI_FC_AUDSCHNLS8_WORDLEGNTH_OFFSET;
+> +
+> +	hdmi_writeb(hdmi, aud_schnl_8, HDMI_FC_AUDSCHNLS8);
+> +}
+> +EXPORT_SYMBOL_GPL(dw_hdmi_set_channel_status);
 
--boris
+As mentioned above, the channel status data is actually already
+provided - so we don't really need the above at all.  It just
+needs the data programmed into the registers.
+
+> +
+>  static void hdmi_set_clk_regenerator(struct dw_hdmi *hdmi,
+>  	unsigned long pixel_clk, unsigned int sample_rate)
+>  {
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
+> index 6988f12d89d9..619ebc1c8354 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
+> @@ -158,6 +158,17 @@
+>  #define HDMI_FC_SPDDEVICEINF                    0x1062
+>  #define HDMI_FC_AUDSCONF                        0x1063
+>  #define HDMI_FC_AUDSSTAT                        0x1064
+> +#define HDMI_FC_AUDSV                           0x1065
+> +#define HDMI_FC_AUDSU                           0x1066
+> +#define HDMI_FC_AUDSCHNLS0                      0x1067
+> +#define HDMI_FC_AUDSCHNLS1                      0x1068
+> +#define HDMI_FC_AUDSCHNLS2                      0x1069
+> +#define HDMI_FC_AUDSCHNLS3                      0x106a
+> +#define HDMI_FC_AUDSCHNLS4                      0x106b
+> +#define HDMI_FC_AUDSCHNLS5                      0x106c
+> +#define HDMI_FC_AUDSCHNLS6                      0x106d
+> +#define HDMI_FC_AUDSCHNLS7                      0x106e
+> +#define HDMI_FC_AUDSCHNLS8                      0x106f
+>  #define HDMI_FC_DATACH0FILL                     0x1070
+>  #define HDMI_FC_DATACH1FILL                     0x1071
+>  #define HDMI_FC_DATACH2FILL                     0x1072
+> @@ -706,6 +717,15 @@ enum {
+>  /* HDMI_FC_AUDSCHNLS7 field values */
+>  	HDMI_FC_AUDSCHNLS7_ACCURACY_OFFSET = 4,
+>  	HDMI_FC_AUDSCHNLS7_ACCURACY_MASK = 0x30,
+> +	HDMI_FC_AUDSCHNLS7_SMPRATE_MASK = 0x0f,
+> +	HDMI_FC_AUDSCHNLS7_SMPRATE_192K = 0xe,
+> +	HDMI_FC_AUDSCHNLS7_SMPRATE_176K4 = 0xc,
+> +	HDMI_FC_AUDSCHNLS7_SMPRATE_96K = 0xa,
+> +	HDMI_FC_AUDSCHNLS7_SMPRATE_768K = 0x9,
+> +	HDMI_FC_AUDSCHNLS7_SMPRATE_88K2 = 0x8,
+> +	HDMI_FC_AUDSCHNLS7_SMPRATE_32K = 0x3,
+> +	HDMI_FC_AUDSCHNLS7_SMPRATE_48K = 0x2,
+> +	HDMI_FC_AUDSCHNLS7_SMPRATE_44K1 = 0x0,
+
+These look very much like the IEC958_AES* consumer definitions in
+include/sound/asoundef.h.
+
+>  /* HDMI_FC_AUDSCHNLS8 field values */
+>  	HDMI_FC_AUDSCHNLS8_ORIGSAMPFREQ_MASK = 0xf0,
+> diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
+> index cf528c289857..12144d2f80f4 100644
+> --- a/include/drm/bridge/dw_hdmi.h
+> +++ b/include/drm/bridge/dw_hdmi.h
+> @@ -156,6 +156,8 @@ void dw_hdmi_setup_rx_sense(struct dw_hdmi *hdmi, bool hpd, bool rx_sense);
+>  
+>  void dw_hdmi_set_sample_rate(struct dw_hdmi *hdmi, unsigned int rate);
+>  void dw_hdmi_set_channel_count(struct dw_hdmi *hdmi, unsigned int cnt);
+> +void dw_hdmi_set_channel_status(struct dw_hdmi *hdmi,
+> +				unsigned int sample_width);
+>  void dw_hdmi_set_channel_allocation(struct dw_hdmi *hdmi, unsigned int ca);
+>  void dw_hdmi_audio_enable(struct dw_hdmi *hdmi);
+>  void dw_hdmi_audio_disable(struct dw_hdmi *hdmi);
+> -- 
+> 2.23.0.187.g17f5b7556c-goog
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
