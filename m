@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A93B0C433EF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6BE7C4332F
 	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 01:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FDEE21744
+	by mail.kernel.org (Postfix) with ESMTP id A833021871
 	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 01:28:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qUbVsBcm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rNSou3uH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388034AbfIHB2Z (ORCPT
+        id S2391941AbfIHB2a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Sep 2019 21:28:25 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34231 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725846AbfIHB2Y (ORCPT
+        Sat, 7 Sep 2019 21:28:30 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:43356 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725846AbfIHB22 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Sep 2019 21:28:24 -0400
-Received: by mail-pg1-f193.google.com with SMTP id n9so5665921pgc.1
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Sep 2019 18:28:24 -0700 (PDT)
+        Sat, 7 Sep 2019 21:28:28 -0400
+Received: by mail-pf1-f193.google.com with SMTP id d15so6901213pfo.10
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Sep 2019 18:28:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=UQmPIIwegPGz83zJAyixQuensfgfppyDFNw1ZRwmARE=;
-        b=qUbVsBcmH0kCMHpbVD0J8rKDB2eVbH6FL4rkfPBVRAYWOdJZ4ht+Fo6/CQN98y5lYk
-         agBgVCHYGbexJ9XjDEW3lxskyAHgA5Ej+9B+6KYTArYjBlBCDOsWgceJLKqzK+3xJLrV
-         giGW1D/OO8aRtbBR6Vbli3xx/zWS6ZtV0aWzDZ8tl5/pJRsfPGPxV9BAQSMPMLvbPk8b
-         2kaPuY+cedl+TWibolEjYjEaMJ3Zle5ft2/eOy4BUj1sTEcsbiwfbzjHENlCO3jS2e9k
-         ozW3N+r3I6YuGiJnO7iuRa8GGhtmyl4DLlj+OmXc7lufonKHaqGFJiuw0xfCob8fMj24
-         LaDA==
+        bh=H/og7QWBk3tTPC1uU6UPyqBtYUYQLNyBfN0kn6w31nc=;
+        b=rNSou3uHGlI9AWB5kprRiAT76DLABO920K6HFBjHc3PNgEQdZEURoKNKSRRcEAB/Cz
+         nOJUzAAd/8ahJF4RKE5/7Hw0Svz59Y8PsiSTWozs1NZBSIyGhHpM6sKj5ANiLr2VToRo
+         xhLuC0o7tu92Cn1LqgfRegLH7aRXFpKd84KSzllHam6QyrrGlpssE5pHYXDOghIxUz0a
+         +Acx5DtQtftpUFajXsr3kCwxskTkB8C0rCflEzhD0cVGgzftY6gw5p12oQp58qr87JIh
+         apibBFE5LT72zkh5XyiD+LHb7tdTRLSlhafaTzkdoh6nIA7OP9GhfV3B9eOAy8mc2c52
+         oj/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=UQmPIIwegPGz83zJAyixQuensfgfppyDFNw1ZRwmARE=;
-        b=LBiQPHe701UOKNDFGFhalO9Cp6uC5KCwwax3SAP/S9x7mKcKlZcgTBhG9RCrjptkTk
-         ZZknZL9tKJ13H2ZbDb5epCio3KIHAr4iCZ2r00MZz7OWbLzlSTM3NxjpqksoLyz0A7e7
-         QhaVtpN2K3FcqTvZY99Srzd77ETpaZeJi7YRp4QXBlB7UJqnGRA40DU9R97GeJMsQHpO
-         TkluyvCAAqpmJlpqAKWA0LLHEwIvsW5qhMKWJW50lxwVHde5xL++kYLRC9ibIYX+5efl
-         wrdRPX+e5Ddea6Dq0vzxu9e14qJ1L+h5Q5IZFUR8RdHqniAnNuewPPcOqZrZCb/+j3rL
-         XZ+A==
-X-Gm-Message-State: APjAAAUV6XyigzGNkLduruoa4isi1C9kNohzwEYGIGyo7/REqDOkDev/
-        aeO7suEmnnHsJEiLB7zWybY=
-X-Google-Smtp-Source: APXvYqynOr9m2w/R0nv3+tWdQ/O105ZBC46A9Ia77kwyjrZmNrYxEz56qeyuCkBrGsyHHJNaKcBGSA==
-X-Received: by 2002:a63:6947:: with SMTP id e68mr15040995pgc.60.1567906103848;
-        Sat, 07 Sep 2019 18:28:23 -0700 (PDT)
+        bh=H/og7QWBk3tTPC1uU6UPyqBtYUYQLNyBfN0kn6w31nc=;
+        b=MRw6Vvgm4ffYqgdadGrIyZ2dV4nTogwpLBZF9s5dVTPfG/bl9Nv0YArrWyf5zc+XrE
+         1aHPZasSyDZ71zlsH58DAtOU7hWe1i04C7FcKex9s8vpL0a0eEwlOCfGtQsOh2gF9rhV
+         bAUiAjiKsehapCe1CztXoOzmX2VEndCCSojVnk79AbW+VHZPaBxRmC1kLn6swx4eCy20
+         9RU2qH0Su7yP0tSjalHU2HDjhvCZW3DBzpDNFkOQ8anBHwmcanmupSBMyyx10skqU02P
+         Qd6DmSJehwgfEC9aqLnTit7psd5EonHI99CwIgRIN/yKxqQVuNNinofK8WxfYniGZKXn
+         4k6w==
+X-Gm-Message-State: APjAAAWCOLSN8v+67l6CdHK9vtX46HUtzH7oyahXPkC3VfBwlTyqfJde
+        2Kf97TEjlD/ZRONB+73Q3omcGLm6QDI=
+X-Google-Smtp-Source: APXvYqwMtbajqxtDr/c+qIAbqUGBUa+5zROlULv6RnsfhCqgsKzd2rPOSO+fVYJn5xuvwW1xKiPGsQ==
+X-Received: by 2002:a63:70d:: with SMTP id 13mr15270256pgh.326.1567906108163;
+        Sat, 07 Sep 2019 18:28:28 -0700 (PDT)
 Received: from localhost.localdomain ([149.28.153.17])
-        by smtp.gmail.com with ESMTPSA id s1sm18367884pjs.31.2019.09.07.18.28.20
+        by smtp.gmail.com with ESMTPSA id s1sm18367884pjs.31.2019.09.07.18.28.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Sep 2019 18:28:23 -0700 (PDT)
+        Sat, 07 Sep 2019 18:28:27 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
         Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH 1/8] kconfig/hacking: Group sysrq/kgdb/ubsan into 'Generic Kernel Debugging Instruments'
-Date:   Sun,  8 Sep 2019 09:27:53 +0800
-Message-Id: <20190908012800.12979-2-changbin.du@gmail.com>
+Subject: [PATCH 2/8] kconfig/hacking: Create submenu for arch special debugging options
+Date:   Sun,  8 Sep 2019 09:27:54 +0800
+Message-Id: <20190908012800.12979-3-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190908012800.12979-1-changbin.du@gmail.com>
 References: <20190908012800.12979-1-changbin.du@gmail.com>
@@ -74,51 +74,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Group generic kernel debugging instruments sysrq/kgdb/ubsan together into
-a new submenu.
+The arch special options are a little long, so create a submenu for them.
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 ---
- lib/Kconfig.debug | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ lib/Kconfig.debug | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 5960e2980a8a..868fa64a0901 100644
+index 868fa64a0901..96047140be93 100644
 --- a/lib/Kconfig.debug
 +++ b/lib/Kconfig.debug
-@@ -419,6 +419,8 @@ config DEBUG_FORCE_WEAK_PER_CPU
+@@ -2146,6 +2146,10 @@ config IO_STRICT_DEVMEM
  
- endmenu # "Compiler options"
+ 	  If in doubt, say Y.
  
-+menu "Generic Kernel Debugging Instruments"
++menu "$(SRCARCH) Debugging"
 +
- config MAGIC_SYSRQ
- 	bool "Magic SysRq key"
- 	depends on !UML
-@@ -452,6 +454,12 @@ config MAGIC_SYSRQ_SERIAL
- 	  This option allows you to decide whether you want to enable the
- 	  magic SysRq key.
+ source "arch/$(SRCARCH)/Kconfig.debug"
  
-+source "lib/Kconfig.kgdb"
-+
-+source "lib/Kconfig.ubsan"
-+
 +endmenu
 +
- config DEBUG_KERNEL
- 	bool "Kernel debugging"
- 	help
-@@ -2099,10 +2107,6 @@ config BUG_ON_DATA_CORRUPTION
- 
- source "samples/Kconfig"
- 
--source "lib/Kconfig.kgdb"
--
--source "lib/Kconfig.ubsan"
--
- config ARCH_HAS_DEVMEM_IS_ALLOWED
- 	bool
- 
+ endmenu # Kernel hacking
 -- 
 2.20.1
 
