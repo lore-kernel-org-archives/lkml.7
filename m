@@ -2,58 +2,58 @@ Return-Path: <SRS0=sd1o=XD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC04C4332F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83608C433EF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A30D2082C
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59D112067B
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Sep 2019 12:58:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567947517;
-	bh=eIbeOftyQXBdmxXqS7PwYcLCk+wCf3Iq8ZXhWoYHCfY=;
+	s=default; t=1567947520;
+	bh=9zkCM/mi2gR3OHMRRpaCRsuGG0uWPCXUQDHBve/+Mgw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MP6lpPc3bnfXugZlGCW0G1fJac30XFkd+VpM0hagv+KeL8LtKqBj9rGW+3JuFcrM5
-	 s44Rr9rKajy6pLkVsWcpysDxVkmTOwXayNvFHpRwCciohD009rqpnxxN7YHB7ENxw8
-	 EGJO1bxydzUF9vvAnS64HNTZKEhPhgBaGRY+AHRw=
+	b=KPABUFnAgv1ZjUT6nmitN0HiIOjh0vmIGuFVy4+HPwEfCz8fEfkTQdh/a4L1CtEKz
+	 cwPK7xF94XnHjBW2a0wHiiHU2cZeXjTqsVEyBrrvxQMSMOIPV7CWqNAgipWlPHZiyy
+	 mGKVdnVB1c5kVz+u5zEdW1URbfBfK9diysObz/nA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730530AbfIHMq5 (ORCPT
+        id S1727045AbfIHM6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 08:46:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34780 "EHLO mail.kernel.org"
+        Sun, 8 Sep 2019 08:58:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730502AbfIHMqv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:46:51 -0400
+        id S1730528AbfIHMq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:46:56 -0400
 Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F4A220644;
-        Sun,  8 Sep 2019 12:46:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1D23216C8;
+        Sun,  8 Sep 2019 12:46:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567946810;
-        bh=eIbeOftyQXBdmxXqS7PwYcLCk+wCf3Iq8ZXhWoYHCfY=;
+        s=default; t=1567946816;
+        bh=9zkCM/mi2gR3OHMRRpaCRsuGG0uWPCXUQDHBve/+Mgw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k+ivneOoQYjA+QxgeWMo9dwhSi/TYoAmIp8vlneHhiEq57W/qTXfvz43wH+b5Xi3G
-         nDqB7IYEanrOFALIeQDDhF/YuTRo2nhQTRnfkxkmV7hcluqBbEne+66EM4uKBLG+OM
-         Uqy+8lKwlj6MDnWUnGvbrcVVjVlGONO/Xxlh6YTY=
+        b=icKt4V6PQxU1Y50rDLWvRp+5n5wtyJpSotSUaoAM/4ZyEufN/ImrWOxqghvvbbcl3
+         agNJ5fUJLeWQGKzevXSQtyMIqjkKldC/GgMesRghJ2e6jtZVfll6CGASCFS7IrLqMB
+         jC9m2eGg/bPNW120YZv1W2kHotG2Q/06qOr4UC6c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 01/57] mld: fix memory leak in mld_del_delrec()
-Date:   Sun,  8 Sep 2019 13:41:25 +0100
-Message-Id: <20190908121125.887269605@linuxfoundation.org>
+        stable@vger.kernel.org, Hubert Denkmair <h.denkmair@intence.de>,
+        Martin Sperl <kernel@martin.sperl.org>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 11/57] spi: bcm2835aux: remove dangerous uncontrolled read of fifo
+Date:   Sun,  8 Sep 2019 13:41:35 +0100
+Message-Id: <20190908121128.976826503@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190908121125.608195329@linuxfoundation.org>
 References: <20190908121125.608195329@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,73 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+[ Upstream commit c7de8500fd8ecbb544846dd5f11dca578c3777e1 ]
 
-[ Upstream commit a84d016479896b5526a2cc54784e6ffc41c9d6f6 ]
+This read of the fifo is a potential candidate for a race condition
+as the spi transfer is not necessarily finished and so can lead to
+an early read of the fifo that still misses data.
 
-Similar to the fix done for IPv4 in commit e5b1c6c6277d
-("igmp: fix memory leak in igmpv3_del_delrec()"), we need to
-make sure mca_tomb and mca_sources are not blindly overwritten.
+So it has been removed.
 
-Using swap() then a call to ip6_mc_clear_src() will take care
-of the missing free.
-
-BUG: memory leak
-unreferenced object 0xffff888117d9db00 (size 64):
-  comm "syz-executor247", pid 6918, jiffies 4294943989 (age 25.350s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 fe 88 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<000000005b463030>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
-    [<000000005b463030>] slab_post_alloc_hook mm/slab.h:522 [inline]
-    [<000000005b463030>] slab_alloc mm/slab.c:3319 [inline]
-    [<000000005b463030>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3548
-    [<00000000939cbf94>] kmalloc include/linux/slab.h:552 [inline]
-    [<00000000939cbf94>] kzalloc include/linux/slab.h:748 [inline]
-    [<00000000939cbf94>] ip6_mc_add1_src net/ipv6/mcast.c:2236 [inline]
-    [<00000000939cbf94>] ip6_mc_add_src+0x31f/0x420 net/ipv6/mcast.c:2356
-    [<00000000d8972221>] ip6_mc_source+0x4a8/0x600 net/ipv6/mcast.c:449
-    [<000000002b203d0d>] do_ipv6_setsockopt.isra.0+0x1b92/0x1dd0 net/ipv6/ipv6_sockglue.c:748
-    [<000000001f1e2d54>] ipv6_setsockopt+0x89/0xd0 net/ipv6/ipv6_sockglue.c:944
-    [<00000000c8f7bdf9>] udpv6_setsockopt+0x4e/0x90 net/ipv6/udp.c:1558
-    [<000000005a9a0c5e>] sock_common_setsockopt+0x38/0x50 net/core/sock.c:3139
-    [<00000000910b37b2>] __sys_setsockopt+0x10f/0x220 net/socket.c:2084
-    [<00000000e9108023>] __do_sys_setsockopt net/socket.c:2100 [inline]
-    [<00000000e9108023>] __se_sys_setsockopt net/socket.c:2097 [inline]
-    [<00000000e9108023>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2097
-    [<00000000f4818160>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:296
-    [<000000008d367e8f>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Fixes: 1666d49e1d41 ("mld: do not remove mld souce list info when set link down")
-Fixes: 9c8bb163ae78 ("igmp, mld: Fix memory leak in igmpv3/mld_del_delrec()")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 1ea29b39f4c812ec ("spi: bcm2835aux: add bcm2835 auxiliary spi device...")
+Suggested-by: Hubert Denkmair <h.denkmair@intence.de>
+Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
+Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv6/mcast.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/spi/spi-bcm2835aux.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
---- a/net/ipv6/mcast.c
-+++ b/net/ipv6/mcast.c
-@@ -791,14 +791,15 @@ static void mld_del_delrec(struct inet6_
- 	if (pmc) {
- 		im->idev = pmc->idev;
- 		if (im->mca_sfmode == MCAST_INCLUDE) {
--			im->mca_tomb = pmc->mca_tomb;
--			im->mca_sources = pmc->mca_sources;
-+			swap(im->mca_tomb, pmc->mca_tomb);
-+			swap(im->mca_sources, pmc->mca_sources);
- 			for (psf = im->mca_sources; psf; psf = psf->sf_next)
- 				psf->sf_crcount = idev->mc_qrv;
- 		} else {
- 			im->mca_crcount = idev->mc_qrv;
- 		}
- 		in6_dev_put(pmc->idev);
-+		ip6_mc_clear_src(pmc);
- 		kfree(pmc);
+diff --git a/drivers/spi/spi-bcm2835aux.c b/drivers/spi/spi-bcm2835aux.c
+index 79306e654f735..b4217f9480014 100644
+--- a/drivers/spi/spi-bcm2835aux.c
++++ b/drivers/spi/spi-bcm2835aux.c
+@@ -194,13 +194,6 @@ static void bcm2835aux_spi_transfer_helper(struct bcm2835aux_spi *bs)
+ 		  BCM2835_AUX_SPI_STAT_TX_FULL))) {
+ 		bcm2835aux_wr_fifo(bs);
  	}
- 	spin_unlock_bh(&im->mca_lock);
+-
+-	/* and check if we have reached "done" */
+-	while (bs->rx_len &&
+-	       (!(bcm2835aux_rd(bs, BCM2835_AUX_SPI_STAT) &
+-		  BCM2835_AUX_SPI_STAT_BUSY))) {
+-		bcm2835aux_rd_fifo(bs);
+-	}
+ }
+ 
+ static irqreturn_t bcm2835aux_spi_interrupt(int irq, void *dev_id)
+-- 
+2.20.1
+
 
 
