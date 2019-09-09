@@ -2,144 +2,221 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF74C433EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:13:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8381C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3F292089F
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D14521D7B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:13:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="YM4sNYFO"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Wy9JBMoI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403945AbfIILNP (ORCPT
+        id S2403970AbfIILNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 07:13:15 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:63327 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731027AbfIILNO (ORCPT
+        Mon, 9 Sep 2019 07:13:32 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:43813 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731105AbfIILNc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 07:13:14 -0400
+        Mon, 9 Sep 2019 07:13:32 -0400
+Received: by mail-qk1-f193.google.com with SMTP id h126so4895910qke.10
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 04:13:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1568027593; x=1599563593;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=F9WoBKV+oWdvDBwrEieyAZ8tIJPF4Cx6CuXAUeqFsQk=;
-  b=YM4sNYFOJvl1c6aVtpZ5jJV9DG55cDh+WJmP1lArz9A7Khhu1N+msu/d
-   xOZyLhcBlT/BRpp4XnYOvKpXPxBDDNDBdQoh/6nsGG38H/pcK46Tj6bkE
-   8x9pMojCzjnRZIfzFe6T8hiXDIYRS6X+VcaajL5xR0C0Bwn+HUXTS+bnY
-   U=;
-X-IronPort-AV: E=Sophos;i="5.64,484,1559520000"; 
-   d="scan'208";a="414286943"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-74cf8b49.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 09 Sep 2019 11:13:12 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-74cf8b49.us-east-1.amazon.com (Postfix) with ESMTPS id 57341C0934;
-        Mon,  9 Sep 2019 11:13:06 +0000 (UTC)
-Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 9 Sep 2019 11:13:05 +0000
-Received: from [10.125.238.52] (10.43.161.152) by EX13D01EUB001.ant.amazon.com
- (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Mon, 9 Sep
- 2019 11:12:54 +0000
-Subject: Re: [PATCH 2/3] soc: amazon: al-pos: Introduce Amazon's Annapurna
- Labs POS driver
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        gregkh <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Patrick Venture" <venture@google.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "Olof Johansson" <olof@lixom.net>,
-        Maxime Ripard <mripard@kernel.org>,
-        "Santosh Shilimkar" <ssantosh@kernel.org>,
-        <paul.kocialkowski@bootlin.com>, <mjourdan@baylibre.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "Will Deacon" <will@kernel.org>, DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        <hhhawa@amazon.com>, <ronenk@amazon.com>, <jonnyc@amazon.com>,
-        <hanochu@amazon.com>, <barakw@amazon.com>
-References: <1568020220-7758-1-git-send-email-talel@amazon.com>
- <1568020220-7758-3-git-send-email-talel@amazon.com>
- <CAK8P3a3UF7xPV1U3eW6Jdu754P1bzG208UxD9KUxEm1JjZudww@mail.gmail.com>
-From:   "Shenhar, Talel" <talel@amazon.com>
-Message-ID: <98f0028e-5653-3116-fdaa-1385ecdf0289@amazon.com>
-Date:   Mon, 9 Sep 2019 14:12:48 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lzbLF6sbAfnYGWD1gps2x+aTn+RTiERXdUTulw6z7hQ=;
+        b=Wy9JBMoInEpqgAuxp685QyKa5ze/CdmRctwNIx+YUn3diwI2ekQH827hLTqILdGdpH
+         ijLDyH3iJaljZelFRRQpN0VMLFiFqRG7FeEzjWX8yVrdWas01LjLQMvIseG8b818neLa
+         PDAylHjNa9xQapcnZV67KChPZj571VnAwAIdA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lzbLF6sbAfnYGWD1gps2x+aTn+RTiERXdUTulw6z7hQ=;
+        b=oRlYBDOD7U6Aw6xl5icjIlk4euqxxUsvF0G0IpbD0g3FJWuHv3sgkMZa2pE0w/Jze+
+         VfuYijMmoGMvSf63p7I7Vk90XvVAl3t4zCVqDy0YWzwbRDxy0CtW/4jHuH64D+1EhmFQ
+         SyEj+CLAc4Ra0HNv2PsOXBhYcgmSfE6ofcu6wJaEwvVAYm3/7/ytwiVIdLMjsr5dCr/h
+         9jHj+4KkvHLSw+kzyeIXBuviWEGwhthXmUeIpX4ohO0LlgvmBXSxHRVXRDZSiQl8TGg5
+         GXjMXsGBWPyUPcE4g4NtbgwvVnBtVFL2g//nH+eG3cQBFSr3sSnr++Eacxma6hP2gXJg
+         kxQQ==
+X-Gm-Message-State: APjAAAWFWN60gSMvUsmUiZQBgpjMMZo347H5A4FXTxUKAJrciN1jmJDD
+        IUjLuGMfcQGts+IZIeDHVsLHhIt4BAFVDxQS7y0qKA==
+X-Google-Smtp-Source: APXvYqyq3aUpXGkyGgaCMRUaagfPTK6C+li0tdEdPnVUTi7iZ7wtjzbPg5aluymGe3qw3C73YRQ0Nw6f3LWEw1sUDMk=
+X-Received: by 2002:a37:9b0e:: with SMTP id d14mr21627093qke.315.1568027611116;
+ Mon, 09 Sep 2019 04:13:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a3UF7xPV1U3eW6Jdu754P1bzG208UxD9KUxEm1JjZudww@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.43.161.152]
-X-ClientProxiedBy: EX13D16UWB001.ant.amazon.com (10.43.161.17) To
- EX13D01EUB001.ant.amazon.com (10.43.166.194)
+References: <1557494826-6044-1-git-send-email-michael.kao@mediatek.com> <1557494826-6044-8-git-send-email-michael.kao@mediatek.com>
+In-Reply-To: <1557494826-6044-8-git-send-email-michael.kao@mediatek.com>
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+Date:   Mon, 9 Sep 2019 19:13:05 +0800
+Message-ID: <CAJMQK-jNAX_ADa1jAXBeB-eyqNJKqNLtCJ54nGkB=n1A=fGZxw@mail.gmail.com>
+Subject: Re: [PATCH v2 7/8] thermal: mediatek: add another get_temp ops for
+ thermal sensors
+To:     "michael.kao" <michael.kao@mediatek.com>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pm@vger.kernel.org,
+        Devicetree List <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 9/9/2019 12:44 PM, Arnd Bergmann wrote:
-> On Mon, Sep 9, 2019 at 11:14 AM Talel Shenhar <talel@amazon.com> wrote:
->> The Amazon's Annapurna Labs SoCs includes Point Of Serialization error
->> logging unit that reports an error in case write error (e.g. attempt to
->> write to a read only register).
->> This patch introduces the support for this unit.
->>
->> Signed-off-by: Talel Shenhar <talel@amazon.com>
-> Looks ok overall, juts a few minor comments:
-Thanks.
+On Fri, May 10, 2019 at 9:27 PM michael.kao <michael.kao@mediatek.com> wrote:
 >
->> +MODULE_LICENSE("GPL v2");
->> +MODULE_AUTHOR("Talel Shenhar");
->> +MODULE_DESCRIPTION("Amazon's Annapurna Labs POS driver");
-> These usually go to the end of the file.
-Ack, Will move them as part of v2.
+> From: Michael Kao <michael.kao@mediatek.com>
 >
->> +       log1 = readl_relaxed(pos->mmio_base + AL_POS_ERROR_LOG_1);
->> +       if (!FIELD_GET(AL_POS_ERROR_LOG_1_VALID, log1))
->> +               return IRQ_NONE;
->> +
->> +       log0 = readl_relaxed(pos->mmio_base + AL_POS_ERROR_LOG_0);
->> +       writel_relaxed(0, pos->mmio_base + AL_POS_ERROR_LOG_1);
-> Why do you require _relaxed() accessors here? Please add a comment
-> explaining that, or use the regular readl()/writel().
-
-I don't think commenting is needed here as there is nothing special in 
-this type of access.
-
-I don't see this is common to comment the use of the _relaxed accessors.
-
-This driver is for SoC using arm64 cpu.
-
-If one uses the non-relaxed version of readl while running on arm64, he 
-shall cause read barrier, which is then doing dsm(ld).. This barrier is 
-not needed here, so we spare the use of the more heavy readl in favor of 
-the less "harmful" one.
-
-Let me know what you think.
-
+> Provide thermal zone to read thermal sensor
+> in the SoC. We can read all the thermal sensors
+> value in the SoC by the node /sys/class/thermal/
 >
->> +       resource = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +       pos->mmio_base = devm_ioremap_resource(&pdev->dev, resource);
-> This can be simplified to devm_platform_ioremap_resource().
-Ack, Will simplify them in v2.
+> Signed-off-by: Michael Kao <michael.kao@mediatek.com>
+> ---
+>  drivers/thermal/mtk_thermal.c | 68 ++++++++++++++++++++++++++++++++++++++-----
+>  1 file changed, 60 insertions(+), 8 deletions(-)
 >
->> +       pos->irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
-> And this is usually written as platform_get_irq()
-Ack, Will replace them with platform_get_irq() in v2.
+> diff --git a/drivers/thermal/mtk_thermal.c b/drivers/thermal/mtk_thermal.c
+> index cb41e46..d5c78b0 100644
+> --- a/drivers/thermal/mtk_thermal.c
+> +++ b/drivers/thermal/mtk_thermal.c
+> @@ -230,6 +230,11 @@ enum {
 >
->         Arnd
+>  struct mtk_thermal;
+>
+> +struct mtk_thermal_zone {
+> +       struct mtk_thermal *mt;
+> +       int id;
+> +};
+> +
+>  struct thermal_bank_cfg {
+>         unsigned int num_sensors;
+>         const int *sensors;
+> @@ -612,7 +617,7 @@ static int mtk_thermal_bank_temperature(struct mtk_thermal_bank *bank)
+>                  * not immediately shut down.
+>                  */
+>                 if (temp > 200000)
+> -                       temp = 0;
+> +                       temp = -EACCES;
+Should we return -EAGAIN here? Otherwise there would be warning:
+[    0.344167] thermal thermal_zone5: failed to read out thermal zone (-13)
+
+Since first read is bogus value, I think EAGAIN also makes sense here.
+>
+>                 if (temp > max)
+>                         max = temp;
+> @@ -623,7 +628,8 @@ static int mtk_thermal_bank_temperature(struct mtk_thermal_bank *bank)
+>
+>  static int mtk_read_temp(void *data, int *temperature)
+>  {
+> -       struct mtk_thermal *mt = data;
+> +       struct mtk_thermal_zone *tz = data;
+> +       struct mtk_thermal *mt = tz->mt;
+>         int i;
+>         int tempmax = INT_MIN;
+>
+> @@ -636,16 +642,48 @@ static int mtk_read_temp(void *data, int *temperature)
+>
+>                 mtk_thermal_put_bank(bank);
+>         }
+> -
+>         *temperature = tempmax;
+>
+>         return 0;
+>  }
+>
+> +static int mtk_read_sensor_temp(void *data, int *temperature)
+> +{
+> +       struct mtk_thermal_zone *tz = data;
+> +       struct mtk_thermal *mt = tz->mt;
+> +       const struct mtk_thermal_data *conf = mt->conf;
+> +       int id = tz->id - 1;
+> +       int temp = INT_MIN;
+> +       u32 raw;
+> +
+> +       if (id < 0)
+> +               return  -EACCES;
+> +
+> +       raw = readl(mt->thermal_base + conf->msr[id]);
+> +
+> +       temp = raw_to_mcelsius(mt, id, raw);
+> +
+> +       /*
+> +        * The first read of a sensor often contains very high bogus
+> +        * temperature value. Filter these out so that the system does
+> +        * not immediately shut down.
+> +        */
+> +
+> +       if (temp > 200000)
+> +               return  -EACCES;
+Same here.
+> +
+> +       *temperature = temp;
+> +       return 0;
+> +}
+> +
+>  static const struct thermal_zone_of_device_ops mtk_thermal_ops = {
+>         .get_temp = mtk_read_temp,
+>  };
+>
+> +static const struct thermal_zone_of_device_ops mtk_thermal_sensor_ops = {
+> +       .get_temp = mtk_read_sensor_temp,
+> +};
+> +
+>  static void mtk_thermal_init_bank(struct mtk_thermal *mt, int num,
+>                                   u32 apmixed_phys_base, u32 auxadc_phys_base,
+>                                   int ctrl_id)
+> @@ -878,6 +916,7 @@ static int mtk_thermal_probe(struct platform_device *pdev)
+>         struct resource *res;
+>         u64 auxadc_phys_base, apmixed_phys_base;
+>         struct thermal_zone_device *tzdev;
+> +       struct mtk_thermal_zone *tz;
+>
+>         mt = devm_kzalloc(&pdev->dev, sizeof(*mt), GFP_KERNEL);
+>         if (!mt)
+> @@ -959,11 +998,24 @@ static int mtk_thermal_probe(struct platform_device *pdev)
+>
+>         platform_set_drvdata(pdev, mt);
+>
+> -       tzdev = devm_thermal_zone_of_sensor_register(&pdev->dev, 0, mt,
+> -                                                    &mtk_thermal_ops);
+> -       if (IS_ERR(tzdev)) {
+> -               ret = PTR_ERR(tzdev);
+> -               goto err_disable_clk_peri_therm;
+> +       for (i = 0; i < mt->conf->num_sensors + 1; i++) {
+> +               tz = kmalloc(sizeof(*tz), GFP_KERNEL);
+> +               if (!tz)
+> +                       return -ENOMEM;
+> +
+> +               tz->mt = mt;
+> +               tz->id = i;
+> +
+> +               tzdev = devm_thermal_zone_of_sensor_register(&pdev->dev, i,
+> +                               tz, (i == 0) ?
+> +                               &mtk_thermal_ops : &mtk_thermal_sensor_ops);
+> +
+> +               if (IS_ERR(tzdev)) {
+> +                       if (IS_ERR(tzdev) != -EACCES) {
+> +                               ret = PTR_ERR(tzdev);
+> +                               goto err_disable_clk_peri_therm;
+> +                       }
+> +               }
+>         }
+>
+>         return 0;
+> --
+> 2.6.4
+>
