@@ -2,145 +2,214 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 838B4C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F38C4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BF8620863
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:35:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85EDA21924
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:35:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=semmle.com header.i=@semmle.com header.b="m1cb7jr/"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="wHAxZhcK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388348AbfIIPfU (ORCPT
+        id S2388386AbfIIPfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 11:35:20 -0400
-Received: from mail-lj1-f172.google.com ([209.85.208.172]:39481 "EHLO
-        mail-lj1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725818AbfIIPfU (ORCPT
+        Mon, 9 Sep 2019 11:35:34 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:34290 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726581AbfIIPfe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 11:35:20 -0400
-Received: by mail-lj1-f172.google.com with SMTP id j16so13229768ljg.6
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 08:35:17 -0700 (PDT)
+        Mon, 9 Sep 2019 11:35:34 -0400
+Received: by mail-ed1-f67.google.com with SMTP id c20so4353985eds.1
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 08:35:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=semmle.com; s=google;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=1OJ5Ls++kke6dDPvYuq3RzXiUNTgE8GTz0O1j/nW6Gc=;
-        b=m1cb7jr/vqsvV2RXgqjMv/eS49bh1YBw88FeJcN5FOBzuV0N5m+s2skCighCh++q2b
-         o/mFLsrWb39HurMkLUHO13uankOEWWv+klVcQ6GPWMQpx2PLCYhJkswQN+DSLUFxSwRi
-         ptLonsLRqwpiToeDnjvwNA2UwuJGWVGkVzZIY=
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MTFOT5bdM6X72YjVAZIbcsExbwxE+XqxokMEIsUljgM=;
+        b=wHAxZhcK+gVPgAgJF9PbCYhlVGAsrovsuFXW5bqK8U3w5EFk2zZCX1PS4KAWztk+tV
+         aZPQUgB2szFFTowwsoVdApg2W0IWLJC/PYf3C5DTflhYhuY+iO5/3mwiha3DgnVu+Gnx
+         v7L3al5qh8zdC+vfxTXAPiBMUhFc8k3n4NzOwwxptdbzgwK+T4XW/yezGIalQ9lX0P7U
+         zpPoMANq/LhN3bwqGkzdrMNI2S7izV0couusSwfyWmSfxsP24uBJ1IzeHkipd6qvJrDP
+         qP3aTxM2VI4aaPYi2lI4N2kG0/wn8MF3cHPJGzk9gZILa1VAr8ILUgrz4z2kJLX/t/vz
+         1Hfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=1OJ5Ls++kke6dDPvYuq3RzXiUNTgE8GTz0O1j/nW6Gc=;
-        b=MlOAiH+skZlAH1ZZURW9RuF/ZDcyrQHtddzd30ije5A3uG23jz1bini3qUCXlcno1w
-         lV8W9lcK0kCwNT7s9lRJxHApE2b+NxlkfYMpUJ1vVzX3T+/1PGIyuSsTFf79MBSdDhDR
-         MU2JpoVG3/JyJd7jgbzhUWNfrj4YQwS1twxKpFGNI1URpFg61FZRWDTBrScegF/3+tHT
-         5Md+TF6gvIxpKcGPORSXzV35kbB6iH5AX4P8vOEk62rLyJZlOgfKS4Gmz9otftEaetAp
-         48sFBZXxx9rsdIr0QAVQWGBCzGeaez5mrGWGzoN6+jCI3EXF+t9aGfilmdAwle/2Fymi
-         37Cg==
-X-Gm-Message-State: APjAAAXxKgFUzrN4up/jzeHkxK2NKiEM568M0O82jg+Xjh+lAdS+EaTq
-        VffnLp/fpIn2trVGeQ6hdtuRU0LKKDL/ekDWCNFr4d/W2que
-X-Google-Smtp-Source: APXvYqxbjYbRaG8qWhfQ1nSG6I435cweJ19t5pZ+hYMFcdIt4QRXkF+2T117QGu5UJeJCHiQVXNgqkBkqvahhWszS/Y=
-X-Received: by 2002:a2e:8592:: with SMTP id b18mr15548714lji.18.1568043316474;
- Mon, 09 Sep 2019 08:35:16 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MTFOT5bdM6X72YjVAZIbcsExbwxE+XqxokMEIsUljgM=;
+        b=ZVn6qH9fSyGRz2L1JNibqHf9VRcoykUQgm/G+uml2WnPKJYPowyF8UIRgY+b57E9Qh
+         qDl0Ogk83NKu0+l/S4KH1odF6FN8iiBjqppKiJRAf4pzOrArql4OhrxuESOBuzb3c+t2
+         qn8n4cJxqB4c+jZY7WkHZFJyH0bZvcfajkB4ZAKwancCAVHRksekjR/K5v2/rxmgkvtJ
+         Wfg3AD0io2kUq6hf5r1Gdlo5dhJugR6X47R5oMnYPoBedBGruE0g3TyIV+YTIHXc8H6T
+         Sdwehnj7/R5cJMFPkfeDqn98oPGmhmTuQpIYpjbcBs/pNj86WkAT2cw1aEvvrj4OKzW7
+         s0+Q==
+X-Gm-Message-State: APjAAAVrm2CCMBDzaYexjDM49S1GpzRSlYp0yc85D4OID7W+gUssjioN
+        Ly1dFpM21E4jukF9mpApcXtjWg==
+X-Google-Smtp-Source: APXvYqwJ7k9v4XDLW5K97XhqdK5YLrM7D4qHSrwZ/QMa9DMyngci97EGxAlQTwRoMZkMga2tS9GZKw==
+X-Received: by 2002:a50:d084:: with SMTP id v4mr25600401edd.48.1568043331860;
+        Mon, 09 Sep 2019 08:35:31 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id j5sm3017703edj.62.2019.09.09.08.35.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 09 Sep 2019 08:35:31 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id CD6C71003B5; Mon,  9 Sep 2019 18:35:29 +0300 (+03)
+Date:   Mon, 9 Sep 2019 18:35:29 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
+        virtio-dev@lists.oasis-open.org, kvm@vger.kernel.org,
+        mst@redhat.com, catalin.marinas@arm.com, david@redhat.com,
+        dave.hansen@intel.com, linux-kernel@vger.kernel.org,
+        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org, osalvador@suse.de,
+        yang.zhang.wz@gmail.com, pagupta@redhat.com,
+        konrad.wilk@oracle.com, nitesh@redhat.com, riel@surriel.com,
+        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        ying.huang@intel.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com, fengguang.wu@intel.com,
+        kirill.shutemov@linux.intel.com
+Subject: Re: [PATCH v9 2/8] mm: Adjust shuffle code to allow for future
+ coalescing
+Message-ID: <20190909153529.3crs74uraos27ffh@box>
+References: <20190907172225.10910.34302.stgit@localhost.localdomain>
+ <20190907172520.10910.83100.stgit@localhost.localdomain>
+ <20190909094700.bbslsxpuwvxmodal@box>
+ <22a896255cba877cf820f552667e1bc14268fa20.camel@linux.intel.com>
 MIME-Version: 1.0
-From:   Semmle Security Reports <security-reports@semmle.com>
-Date:   Mon, 9 Sep 2019 12:35:05 -0300
-Message-ID: <CADJ_3a8WFrs5NouXNqS5WYe7rebFP+_A5CheeqAyD_p7DFJJcg@mail.gmail.com>
-Subject: Multiple NULL deref on alloc_workqueue
-To:     linux-kernel@vger.kernel.org,
-        Semmle vulnerability research team - reports 
-        <security-reports@semmle.com>
-Content-Type: multipart/mixed; boundary="000000000000df67d60592208814"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <22a896255cba877cf820f552667e1bc14268fa20.camel@linux.intel.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---000000000000df67d60592208814
-Content-Type: text/plain; charset="UTF-8"
+On Mon, Sep 09, 2019 at 08:22:11AM -0700, Alexander Duyck wrote:
+> > > +	area = &zone->free_area[order];
+> > > +	if (is_shuffle_order(order) ? shuffle_pick_tail() :
+> > > +	    buddy_merge_likely(pfn, buddy_pfn, page, order))
+> > 
+> > Too loaded condition to my taste. Maybe
+> > 
+> > 	bool to_tail;
+> > 	...
+> > 	if (is_shuffle_order(order))
+> > 		to_tail = shuffle_pick_tail();
+> > 	else if (buddy_merge_likely(pfn, buddy_pfn, page, order))
+> > 		to_tail = true;
+> > 	else
+> > 		to_tail = false;
+> 
+> I can do that, although I would tweak this slightly and do something more
+> like:
+>         if (is_shuffle_order(order))
+>                 to_tail = shuffle_pick_tail();
+>         else
+>                 to_tail = buddy+_merge_likely(pfn, buddy_pfn, page, order);
 
-There are multiple points in the Linux Kernel where alloc_workqueue is
-not getting checked for errors and as a result, a potential NULL
-dereference could occur.
+Okay. Looks fine.
 
-I'm attaching a patch for some of them.
-There are two cases I left untouched that requires a bit more refactoring:
-https://github.com/torvalds/linux/blob/master/drivers/net/wireless/intel/iwlwifi/pcie/trans.c#L3656
-https://github.com/torvalds/linux/blob/master/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c#L4508
+> > 	if (to_tail)
+> > 		add_to_free_area_tail(page, area, migratetype);
+> > 	else
+> > 		add_to_free_area(page, area, migratetype);
+> > 
+> > > +		add_to_free_area_tail(page, area, migratetype);
+> > >  	else
+> > > -		add_to_free_area(page, &zone->free_area[order], migratetype);
+> > > -
+> > > +		add_to_free_area(page, area, migratetype);
+> > >  }
+> > >  
+> > >  /*
+> > > diff --git a/mm/shuffle.c b/mm/shuffle.c
+> > > index 9ba542ecf335..345cb4347455 100644
+> > > --- a/mm/shuffle.c
+> > > +++ b/mm/shuffle.c
+> > > @@ -4,7 +4,6 @@
+> > >  #include <linux/mm.h>
+> > >  #include <linux/init.h>
+> > >  #include <linux/mmzone.h>
+> > > -#include <linux/random.h>
+> > >  #include <linux/moduleparam.h>
+> > >  #include "internal.h"
+> > >  #include "shuffle.h"
+> > 
+> > Why do you move #include <linux/random.h> from .c to .h?
+> > It's not obvious to me.
+> 
+> Because I had originally put the shuffle logic in an inline function. I
+> can undo that now as I when back to doing the randomness in the .c
+> sometime v5 I believe.
 
-Regards,
-Semmle security team
+Yes, please. It's needless change now.
 
---000000000000df67d60592208814
-Content-Type: text/plain; charset="US-ASCII"; name="patch_nullderef.txt"
-Content-Disposition: attachment; filename="patch_nullderef.txt"
-Content-Transfer-Encoding: base64
-Content-ID: <f_k0ckh3ee0>
-X-Attachment-Id: f_k0ckh3ee0
+> 
+> > > @@ -190,8 +189,7 @@ struct batched_bit_entropy {
+> > >  
+> > >  static DEFINE_PER_CPU(struct batched_bit_entropy, batched_entropy_bool);
+> > >  
+> > > -void add_to_free_area_random(struct page *page, struct free_area *area,
+> > > -		int migratetype)
+> > > +bool __shuffle_pick_tail(void)
+> > >  {
+> > >  	struct batched_bit_entropy *batch;
+> > >  	unsigned long entropy;
+> > > @@ -213,8 +211,5 @@ void add_to_free_area_random(struct page *page, struct free_area *area,
+> > >  	batch->position = position;
+> > >  	entropy = batch->entropy_bool;
+> > >  
+> > > -	if (1ul & (entropy >> position))
+> > > -		add_to_free_area(page, area, migratetype);
+> > > -	else
+> > > -		add_to_free_area_tail(page, area, migratetype);
+> > > +	return 1ul & (entropy >> position);
+> > >  }
+> > > diff --git a/mm/shuffle.h b/mm/shuffle.h
+> > > index 777a257a0d2f..0723eb97f22f 100644
+> > > --- a/mm/shuffle.h
+> > > +++ b/mm/shuffle.h
+> > > @@ -3,6 +3,7 @@
+> > >  #ifndef _MM_SHUFFLE_H
+> > >  #define _MM_SHUFFLE_H
+> > >  #include <linux/jump_label.h>
+> > > +#include <linux/random.h>
+> > >  
+> > >  /*
+> > >   * SHUFFLE_ENABLE is called from the command line enabling path, or by
+> > > @@ -22,6 +23,7 @@ enum mm_shuffle_ctl {
+> > >  DECLARE_STATIC_KEY_FALSE(page_alloc_shuffle_key);
+> > >  extern void page_alloc_shuffle(enum mm_shuffle_ctl ctl);
+> > >  extern void __shuffle_free_memory(pg_data_t *pgdat);
+> > > +extern bool __shuffle_pick_tail(void);
+> > >  static inline void shuffle_free_memory(pg_data_t *pgdat)
+> > >  {
+> > >  	if (!static_branch_unlikely(&page_alloc_shuffle_key))
+> > > @@ -43,6 +45,11 @@ static inline bool is_shuffle_order(int order)
+> > >  		return false;
+> > >  	return order >= SHUFFLE_ORDER;
+> > >  }
+> > > +
+> > > +static inline bool shuffle_pick_tail(void)
+> > > +{
+> > > +	return __shuffle_pick_tail();
+> > > +}
+> > 
+> > I don't see a reason in __shuffle_pick_tail() existing if you call it
+> > unconditionally.
+> 
+> That is for compilation purposes. The function is not used in the
+> shuffle_pick_tail below that always returns false.
 
-ZGlmZiAtLWdpdCBhL2xpbnV4L2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1ka2ZkL2tmZF9pbnRlcnJ1
-cHQuYyBiL2IvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRrZmQva2ZkX2ludGVycnVwdC5jCmluZGV4
-IGM1NmFjNDcuLjI1MmM1N2UgMTAwNjQ0Ci0tLSBhL2xpbnV4L2RyaXZlcnMvZ3B1L2RybS9hbWQv
-YW1ka2ZkL2tmZF9pbnRlcnJ1cHQuYworKysgYi9iL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1ka2Zk
-L2tmZF9pbnRlcnJ1cHQuYwpAQCAtNjIsNiArNjIsMTEgQEAgaW50IGtmZF9pbnRlcnJ1cHRfaW5p
-dChzdHJ1Y3Qga2ZkX2RldiAqa2ZkKQogCX0KIAogCWtmZC0+aWhfd3EgPSBhbGxvY193b3JrcXVl
-dWUoIktGRCBJSCIsIFdRX0hJR0hQUkksIDEpOworCWlmKCAha2ZkLT5paF93cSApIHsKKwkJa2Zp
-Zm9fZnJlZSgma2ZkLT5paF9maWZvKTsKKwkJZGV2X2VycihrZmRfY2hhcmRldigpLCAiRmFpbGVk
-IHRvIGFsbG9jYXRlIEtGRCBJSCB3b3JrcXVldWVcbiIpOworCQlyZXR1cm4ga2ZkLT5paF93cTsK
-Kwl9CiAJc3Bpbl9sb2NrX2luaXQoJmtmZC0+aW50ZXJydXB0X2xvY2spOwogCiAJSU5JVF9XT1JL
-KCZrZmQtPmludGVycnVwdF93b3JrLCBpbnRlcnJ1cHRfd3EpOwpkaWZmIC0tZ2l0IGEvbGludXgv
-ZHJpdmVycy9ncHUvZHJtL3JhZGVvbi9yYWRlb25fZGlzcGxheS5jIGIvYi9kcml2ZXJzL2dwdS9k
-cm0vcmFkZW9uL3JhZGVvbl9kaXNwbGF5LmMKaW5kZXggYmQ1MmYxNS4uMWE0OTAzMCAxMDA2NDQK
-LS0tIGEvbGludXgvZHJpdmVycy9ncHUvZHJtL3JhZGVvbi9yYWRlb25fZGlzcGxheS5jCisrKyBi
-L2IvZHJpdmVycy9ncHUvZHJtL3JhZGVvbi9yYWRlb25fZGlzcGxheS5jCkBAIC02ODMsNiArNjgz
-LDExIEBAIHN0YXRpYyB2b2lkIHJhZGVvbl9jcnRjX2luaXQoc3RydWN0IGRybV9kZXZpY2UgKmRl
-diwgaW50IGluZGV4KQogCWRybV9tb2RlX2NydGNfc2V0X2dhbW1hX3NpemUoJnJhZGVvbl9jcnRj
-LT5iYXNlLCAyNTYpOwogCXJhZGVvbl9jcnRjLT5jcnRjX2lkID0gaW5kZXg7CiAJcmFkZW9uX2Ny
-dGMtPmZsaXBfcXVldWUgPSBhbGxvY193b3JrcXVldWUoInJhZGVvbi1jcnRjIiwgV1FfSElHSFBS
-SSwgMCk7CisJaWYoICFyYWRlb25fY3J0Yy0+ZmxpcF9xdWV1ZSkgeworCQlrZnJlZShyYWRlb25f
-Y3J0Yyk7CisJCXJldHVybjsKKworCX0KIAlyZGV2LT5tb2RlX2luZm8uY3J0Y3NbaW5kZXhdID0g
-cmFkZW9uX2NydGM7CiAKIAlpZiAocmRldi0+ZmFtaWx5ID49IENISVBfQk9OQUlSRSkgewpkaWZm
-IC0tZ2l0IGEvbGludXgvZHJpdmVycy9uZXQvZmplcy9mamVzX21haW4uYyBiL2IvZHJpdmVycy9u
-ZXQvZmplcy9mamVzX21haW4uYwppbmRleCBiYmJjMWRjLi5kODUwYjE3IDEwMDY0NAotLS0gYS9s
-aW51eC9kcml2ZXJzL25ldC9mamVzL2ZqZXNfbWFpbi5jCisrKyBiL2IvZHJpdmVycy9uZXQvZmpl
-cy9mamVzX21haW4uYwpAQCAtMTIzNyw4ICsxMjM3LDE1IEBAIHN0YXRpYyBpbnQgZmplc19wcm9i
-ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwbGF0X2RldikKIAlhZGFwdGVyLT5vcGVuX2d1YXJk
-ID0gZmFsc2U7CiAKIAlhZGFwdGVyLT50eHJ4X3dxID0gYWxsb2Nfd29ya3F1ZXVlKERSVl9OQU1F
-ICIvdHhyeCIsIFdRX01FTV9SRUNMQUlNLCAwKTsKKwlpZighYWRhcHRlci0+dHhyeF93cSkgewor
-CQkgZ290byBlcnJfZnJlZV9uZXRkZXY7CQkKKwl9CiAJYWRhcHRlci0+Y29udHJvbF93cSA9IGFs
-bG9jX3dvcmtxdWV1ZShEUlZfTkFNRSAiL2NvbnRyb2wiLAogCQkJCQkgICAgICBXUV9NRU1fUkVD
-TEFJTSwgMCk7CisJaWYoIWFkYXB0ZXItPmNvbnRyb2xfd3EpIHsKKwkJIGRlc3Ryb3lfd29ya3F1
-ZXVlKGFkYXB0ZXItPnR4cnhfd3EpOworCQkgZ290byBlcnJfZnJlZV9uZXRkZXY7CisJfQogCiAJ
-SU5JVF9XT1JLKCZhZGFwdGVyLT50eF9zdGFsbF90YXNrLCBmamVzX3R4X3N0YWxsX3Rhc2spOwog
-CUlOSVRfV09SSygmYWRhcHRlci0+cmFpc2VfaW50cl9yeGRhdGFfdGFzaywKZGlmZiAtLWdpdCBh
-L2xpbnV4L2RyaXZlcnMvbmV0L3dpcmVsZXNzL21hcnZlbGwvbGliZXJ0YXMvaWZfc2Rpby5jIGIv
-Yi9kcml2ZXJzL25ldC93aXJlbGVzcy9tYXJ2ZWxsL2xpYmVydGFzL2lmX3NkaW8uYwppbmRleCAy
-NDJkODg0Li4wMzA4M2ViIDEwMDY0NAotLS0gYS9saW51eC9kcml2ZXJzL25ldC93aXJlbGVzcy9t
-YXJ2ZWxsL2xpYmVydGFzL2lmX3NkaW8uYworKysgYi9iL2RyaXZlcnMvbmV0L3dpcmVsZXNzL21h
-cnZlbGwvbGliZXJ0YXMvaWZfc2Rpby5jCkBAIC0xMTc5LDYgKzExNzksMTAgQEAgc3RhdGljIGlu
-dCBpZl9zZGlvX3Byb2JlKHN0cnVjdCBzZGlvX2Z1bmMgKmZ1bmMsCiAKIAlzcGluX2xvY2tfaW5p
-dCgmY2FyZC0+bG9jayk7CiAJY2FyZC0+d29ya3F1ZXVlID0gYWxsb2Nfd29ya3F1ZXVlKCJsaWJl
-cnRhc19zZGlvIiwgV1FfTUVNX1JFQ0xBSU0sIDApOworCWlmKCFjYXJkLT53b3JrcXVldWUpIHsK
-KwkJcmV0ID0gLUVOT01FTTsKKwkJZ290byBmcmVlX2JlZm9yZV9xdWV1ZTo7CisJfQogCUlOSVRf
-V09SSygmY2FyZC0+cGFja2V0X3dvcmtlciwgaWZfc2Rpb19ob3N0X3RvX2NhcmRfd29ya2VyKTsK
-IAlpbml0X3dhaXRxdWV1ZV9oZWFkKCZjYXJkLT5wd3Jvbl93YWl0cSk7CiAKQEAgLTEyMzAsNiAr
-MTIzNCw3IEBAIGVycl9hY3RpdmF0ZV9jYXJkOgogCWxic19yZW1vdmVfY2FyZChwcml2KTsKIGZy
-ZWU6CiAJZGVzdHJveV93b3JrcXVldWUoY2FyZC0+d29ya3F1ZXVlKTsKK2ZyZWVfYmVmb3JlX3F1
-ZXVlOgogCXdoaWxlIChjYXJkLT5wYWNrZXRzKSB7CiAJCXBhY2tldCA9IGNhcmQtPnBhY2tldHM7
-CiAJCWNhcmQtPnBhY2tldHMgPSBjYXJkLT5wYWNrZXRzLT5uZXh0OwpkaWZmIC0tZ2l0IGEvbGlu
-dXgvZHJpdmVycy9zY3NpL3FsYTJ4eHgvcWxhX29zLmMgYi9iL2RyaXZlcnMvc2NzaS9xbGEyeHh4
-L3FsYV9vcy5jCmluZGV4IDk4ZTYwYTMuLjhmMjg1YzUgMTAwNjQ0Ci0tLSBhL2xpbnV4L2RyaXZl
-cnMvc2NzaS9xbGEyeHh4L3FsYV9vcy5jCisrKyBiL2IvZHJpdmVycy9zY3NpL3FsYTJ4eHgvcWxh
-X29zLmMKQEAgLTMyMzIsNiArMzIzMiwxMCBAQCBxbGEyeDAwX3Byb2JlX29uZShzdHJ1Y3QgcGNp
-X2RldiAqcGRldiwgY29uc3Qgc3RydWN0IHBjaV9kZXZpY2VfaWQgKmlkKQogCSAgICByZXEtPnJl
-cV9xX2luLCByZXEtPnJlcV9xX291dCwgcnNwLT5yc3BfcV9pbiwgcnNwLT5yc3BfcV9vdXQpOwog
-CiAJaGEtPndxID0gYWxsb2Nfd29ya3F1ZXVlKCJxbGEyeHh4X3dxIiwgMCwgMCk7CisJaWYoIWhh
-LT53cSkgeyAKKwkJcmV0ID0gLUVOT01FTTsKKwkJZ290byBwcm9iZV9mYWlsZWQ7CisJfQogCiAJ
-aWYgKGhhLT5pc3Bfb3BzLT5pbml0aWFsaXplX2FkYXB0ZXIoYmFzZV92aGEpKSB7CiAJCXFsX2xv
-ZyhxbF9sb2dfZmF0YWwsIGJhc2VfdmhhLCAweDAwZDYsCg==
---000000000000df67d60592208814--
+Wouldn't it be the same if you rename __shuffle_pick_tail() to
+shuffle_pick_tail() and put its declaration under the same #ifdef?
+
+-- 
+ Kirill A. Shutemov
