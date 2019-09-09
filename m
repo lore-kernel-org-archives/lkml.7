@@ -2,110 +2,102 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F50C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 20:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CAB6C4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 20:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B48882086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 20:52:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="FxmLNSsx"
+	by mail.kernel.org (Postfix) with ESMTP id 06B7C218AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 20:57:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406019AbfIIUv1 (ORCPT
+        id S1727803AbfIIU51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 16:51:27 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:39988 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728204AbfIIUv1 (ORCPT
+        Mon, 9 Sep 2019 16:57:27 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:51977 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726806AbfIIU51 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 16:51:27 -0400
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id x89KnfaC027339
-        for <linux-kernel@vger.kernel.org>; Mon, 9 Sep 2019 13:51:25 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=5xZuDgxXFkU1bj7orI6uy6eYQF7vmCZw+o4m3LprmoU=;
- b=FxmLNSsxgTNh9mKyPiueOjHG8u/a4SsgJqj+7Lta2tRAP/V6cC5jNcEdu7VfagVpLTfA
- em+XRZF9gJM0oPosM0Ez4v+FAEd3FPhAYWv7p3VHlAqBwfyBQE9bJucvuhScxvGgTP9n
- fT0mK29StUyqiDhbrG5BGQt4EoSiikcDQz0= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by m0089730.ppops.net with ESMTP id 2uv820ha85-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 13:51:25 -0700
-Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 9 Sep 2019 13:51:24 -0700
-Received: by devvm1794.vll1.facebook.com (Postfix, from userid 150176)
-        id A7AE321AB8FB; Mon,  9 Sep 2019 13:48:46 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Tao Ren <taoren@fb.com>
-Smtp-Origin-Hostname: devvm1794.vll1.facebook.com
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Arun Parameswaran <arun.parameswaran@broadcom.com>,
-        Justin Chen <justinpopo6@gmail.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <openbmc@lists.ozlabs.org>
-CC:     Tao Ren <taoren@fb.com>
-Smtp-Origin-Cluster: vll1c12
-Subject: [PATCH net-next v8 1/3] net: phy: modify assignment to OR for dev_flags in phy_attach_direct
-Date:   Mon, 9 Sep 2019 13:48:45 -0700
-Message-ID: <20190909204845.2190885-1-taoren@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Mon, 9 Sep 2019 16:57:27 -0400
+Received: from fsav302.sakura.ne.jp (fsav302.sakura.ne.jp [153.120.85.133])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x89KvPPi038871;
+        Tue, 10 Sep 2019 05:57:26 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav302.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav302.sakura.ne.jp);
+ Tue, 10 Sep 2019 05:57:25 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav302.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126227201116.bbtec.net [126.227.201.116])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x89KvPGd038866
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Tue, 10 Sep 2019 05:57:25 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Subject: Re: [PATCH] mm: avoid slub allocation while holding list_lock
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Yu Zhao <yuzhao@google.com>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20190909061016.173927-1-yuzhao@google.com>
+ <20190909160052.cxpfdmnrqucsilz2@box>
+From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Message-ID: <e5e25aa3-651d-92b4-ac82-c5011c66a7cb@I-love.SAKURA.ne.jp>
+Date:   Tue, 10 Sep 2019 05:57:22 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-09_07:2019-09-09,2019-09-09 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=818
- lowpriorityscore=0 spamscore=0 bulkscore=0 clxscore=1015 phishscore=0
- adultscore=0 malwarescore=0 mlxscore=0 impostorscore=0 suspectscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1906280000 definitions=main-1909090204
-X-FB-Internal: deliver
+In-Reply-To: <20190909160052.cxpfdmnrqucsilz2@box>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Modify the assignment to OR when dealing with phydev->dev_flags in
-phy_attach_direct function, and this is to make sure dev_flags set in
-driver's probe callback won't be lost.
+On 2019/09/10 1:00, Kirill A. Shutemov wrote:
+> On Mon, Sep 09, 2019 at 12:10:16AM -0600, Yu Zhao wrote:
+>> If we are already under list_lock, don't call kmalloc(). Otherwise we
+>> will run into deadlock because kmalloc() also tries to grab the same
+>> lock.
+>>
+>> Instead, allocate pages directly. Given currently page->objects has
+>> 15 bits, we only need 1 page. We may waste some memory but we only do
+>> so when slub debug is on.
+>>
+>>   WARNING: possible recursive locking detected
+>>   --------------------------------------------
+>>   mount-encrypted/4921 is trying to acquire lock:
+>>   (&(&n->list_lock)->rlock){-.-.}, at: ___slab_alloc+0x104/0x437
+>>
+>>   but task is already holding lock:
+>>   (&(&n->list_lock)->rlock){-.-.}, at: __kmem_cache_shutdown+0x81/0x3cb
+>>
+>>   other info that might help us debug this:
+>>    Possible unsafe locking scenario:
+>>
+>>          CPU0
+>>          ----
+>>     lock(&(&n->list_lock)->rlock);
+>>     lock(&(&n->list_lock)->rlock);
+>>
+>>    *** DEADLOCK ***
+>>
+>> Signed-off-by: Yu Zhao <yuzhao@google.com>
+> 
+> Looks sane to me:
+> 
+> Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> 
 
-Suggested-by: Andrew Lunn <andrew@lunn.ch>
-CC: Heiner Kallweit <hkallweit1@gmail.com>
-CC: Vladimir Oltean <olteanv@gmail.com>
-Signed-off-by: Tao Ren <taoren@fb.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
----
- Changes:
-  - nothing is changed in v1-v7: it's given v8 to align with the version
-    of patch series.
+Really?
 
- drivers/net/phy/phy_device.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index d347ddcac45b..8933f07d39e9 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -1270,7 +1270,7 @@ int phy_attach_direct(struct net_device *dev, struct phy_device *phydev,
- 			phydev_err(phydev, "error creating 'phy_standalone' sysfs entry\n");
- 	}
- 
--	phydev->dev_flags = flags;
-+	phydev->dev_flags |= flags;
- 
- 	phydev->interface = interface;
- 
--- 
-2.17.1
-
+Since page->objects is handled as bitmap, alignment should be BITS_PER_LONG
+than BITS_PER_BYTE (though in this particular case, get_order() would
+implicitly align BITS_PER_BYTE * PAGE_SIZE). But get_order(0) is an
+undefined behavior.
