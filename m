@@ -2,154 +2,104 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 147B2C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4A5C4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFD642089F
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:39:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ekf6GuV0"
+	by mail.kernel.org (Postfix) with ESMTP id E53C02089F
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:41:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568043708;
+	bh=fM4JbSVJbGXAjoftVI6cCaz2ZaDS1dmEdNr69EQNLl4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=nZRY305Xz5lsZWR/BdhkKCFnS7ucmf912fv9y99bP8NaBQldHowCZvR8Ez0q2iVO7
+	 YUShuUNZ3Btzzb+RZTPWvSi5GMFS30PpIOvDPQnx6Ket2K9/1YlljhnTp/NxqZlvjz
+	 6ZmbJ1X9pIp5EacbpR51ugJlMYQ0/AZvf+C+iSZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388543AbfIIPje (ORCPT
+        id S2388575AbfIIPlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 11:39:34 -0400
-Received: from mail-eopbgr130083.outbound.protection.outlook.com ([40.107.13.83]:22915
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727003AbfIIPje (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 11:39:34 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YRBJ4vRg25cZD2EvCjwsb4hdE0O44rHj2j1kJdTQ0eSzzMG3WfllMjjbPqkcl78N1wGG1yVkM3Jq4mbBizeDUSMfUehW/pEDqv4QAcWCXai9MN8nKCLaQJOMN4c8m1lPT53HVhyn+NW+2L6MVkVa877WwnJRDXyRoM6OFfdHBfIMGRT6/Tu03ECAtMuK4Y6WHMGPljp7pvn1CrZ4r5wIET425PFHUyfxNQLb9XsrOO2dq7E6HpzvLYcO1x3a4XsU/Jt8e3SnRNPAtfOcU9QbH1eSYKx+4XRQBLk18o/uR8/UG4X0HIEmPHUzJwxZ825DhvcW8lxXSy2dKt/mVW998Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=apYNX4yOZvoV/22R2FMeu1jf8YYXt1rkrjcxM2wyi68=;
- b=AI0MvaJlgeh00UF8px96mUaWfG4IiVmCpBelmpJt0uhuO1Ev+9FqXxjYG7qXNn6gu+xZVsJ81SxVRw7ckNessunwOAD1EqPReJ6PVo7D22rBEpQ8BinJjc3F9Hd1rf1PrXXPvVTMplRE1Xf76kmCRPKx3+2vYnUpS1WQhjDMFJZNZVm2AKYwVhbiaRuiAvG/E7sgL2GC7Mt18+vBKlRDCBj0d8y5DBKQZqprbfRjmP1vyiheqeUWwNWod7kG/M0uymYUjvz79phOnRQH41B2xewwAamMfMP7w7Xd67eVghK7Xfvo/BrK2RpnQ5uYu0eYdgt08zVMEF+Pz3VpfvufGg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=apYNX4yOZvoV/22R2FMeu1jf8YYXt1rkrjcxM2wyi68=;
- b=ekf6GuV0iaOLJA3WWNZeudRY4KisiO3XwLQtipDzlILDzpzTQgJ7S+TpoVf82y8OCJuwy6eXTaDgBoMRGtMvZgbo1aXKGTtdGcscBBLV8EyzoxHcXg1uwFpvnt0buaFwFSpPhcPYYAgVhr/B5EdZ1+3/D+yFhFpyM5/Oo78ckLs=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB2863.eurprd04.prod.outlook.com (10.175.20.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.18; Mon, 9 Sep 2019 15:39:26 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::c1a3:2946:8fa8:bfc5]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::c1a3:2946:8fa8:bfc5%3]) with mapi id 15.20.2241.018; Mon, 9 Sep 2019
- 15:39:26 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
-CC:     Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 07/12] crypto: caam - use devres to de-initialize the RNG
-Thread-Topic: [PATCH 07/12] crypto: caam - use devres to de-initialize the RNG
-Thread-Index: AQHVYslzat3rKGnTJkeyvK0f97ip2w==
-Date:   Mon, 9 Sep 2019 15:39:26 +0000
-Message-ID: <VI1PR0402MB3485C8B22FD2B66F8FD9653E98B70@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <20190904023515.7107-1-andrew.smirnov@gmail.com>
- <20190904023515.7107-8-andrew.smirnov@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8e3af14a-8ed6-4733-5c3a-08d7353be57f
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB2863;
-x-ms-traffictypediagnostic: VI1PR0402MB2863:|VI1PR0402MB2863:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB2863ECD469AD3FF49FE1505698B70@VI1PR0402MB2863.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 01559F388D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(376002)(136003)(366004)(396003)(189003)(199004)(5660300002)(25786009)(64756008)(305945005)(66556008)(8936002)(81156014)(81166006)(446003)(53546011)(8676002)(229853002)(6506007)(102836004)(486006)(76176011)(478600001)(54906003)(110136005)(186003)(7696005)(6436002)(476003)(14454004)(99286004)(74316002)(316002)(66446008)(66476007)(7736002)(66946007)(2906002)(76116006)(91956017)(26005)(2501003)(86362001)(44832011)(52536014)(9686003)(6246003)(53936002)(3846002)(55016002)(6116002)(71190400001)(71200400001)(66066001)(4326008)(256004)(33656002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2863;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: zCSMw1fqKumW8I+MZWyQxTcDe4dLpdrcKbSA/R+nFiGaZenQw8x9Ek/OVjsulZp9UFi/zTHZ3GbchDaP7z72SwussXYmQrRia4EUC87Ls0gxn42yYdUYw6JlXDiWG1XuS7yM6rVmZldkf5Em5e+92VJ2mFy8gd7mmbZTksCc/WwON4JlPNMnKLRWHVgW8hWBsw4d4M3pTDNDcQJ1hROklD+XVEg6ZlRgbSZbYKT3h8BkN65z1cTvcPEGZZQSwr/E8pgxn/HA0zMei4tRf3wU3VqoEdQt8TxH+hjRK4Qqxv+0jmrnbBz1udQ5BbJfedpO2mpSpkvbkB7xgU0ng/WrK9ynZbuoKoWds+1s0VrUa/z9vVP6Tgvu0DOJJJKWW8KQ9F2w0ZxlLdlk4CxgVS/MlsS/RIxCcoza5V/7Ea9hoJQ=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 9 Sep 2019 11:41:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60478 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725846AbfIIPlq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 11:41:46 -0400
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 142F32089F
+        for <linux-kernel@vger.kernel.org>; Mon,  9 Sep 2019 15:41:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568043706;
+        bh=fM4JbSVJbGXAjoftVI6cCaz2ZaDS1dmEdNr69EQNLl4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QHv+pIF0WkKCXPobKnhnm+m3bLWKtzErPwv9PJb/Q9LP2fL+MarhCoXM/uwRzAUgE
+         zD+eK2DD1rxsaNWmHnvUfoa5cFmfJWNWBmNP1TCG6ZGdM/k7ePwCma0B3v0gMbRo3c
+         IiRiUAseAivRcmSGGSDHZgXCSbLvGJdZVJ35g0d0=
+Received: by mail-qt1-f169.google.com with SMTP id n7so16682551qtb.6
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 08:41:46 -0700 (PDT)
+X-Gm-Message-State: APjAAAWGr5Tgcq4VV3o6gS9SFxuToDK4WLYVfkQn10JukFidlKZt04P+
+        zbithCOEmr4C0hYGWicduHRkwqPbeWPwBuUGXQ==
+X-Google-Smtp-Source: APXvYqz141Z8J3amoWSNvEnWBMcRo8P2gwc1042x2UJzSiJd8NyLDaEMcfylKvyhtyaKCZweTwgZC/eZ9i/0FZ1Xa0s=
+X-Received: by 2002:ac8:4a05:: with SMTP id x5mr12045321qtq.110.1568043705274;
+ Mon, 09 Sep 2019 08:41:45 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e3af14a-8ed6-4733-5c3a-08d7353be57f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Sep 2019 15:39:26.5446
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: UbcMtxe4+KCaEIzsSZ5BNvNzxxRGMIq6WU7InZda1BNOmZqxkcRD6ka9Xrz1azEY6WkL7DVvLFLiIvhnWhOVdQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2863
+References: <20190904123032.23263-1-broonie@kernel.org> <ccd81530-2dbd-3c02-ca0a-1085b00663b5@arm.com>
+In-Reply-To: <ccd81530-2dbd-3c02-ca0a-1085b00663b5@arm.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 9 Sep 2019 16:41:32 +0100
+X-Gmail-Original-Message-ID: <CAL_JsqKWEe=+X5AYRJ-_8peTzfrOrRBfFWgk8c6h3TN6f0ZHtA@mail.gmail.com>
+Message-ID: <CAL_JsqKWEe=+X5AYRJ-_8peTzfrOrRBfFWgk8c6h3TN6f0ZHtA@mail.gmail.com>
+Subject: Re: [PATCH] drm/panfrost: Fix regulator_get_optional() misuse
+To:     Steven Price <steven.price@arm.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/4/2019 5:35 AM, Andrey Smirnov wrote:=0A=
-> Use devres to de-initialize the RNG and drop explicit de-initialization=
-=0A=
-> code in caam_remove().=0A=
-> =0A=
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>=0A=
-> Cc: Chris Healy <cphealy@gmail.com>=0A=
-> Cc: Lucas Stach <l.stach@pengutronix.de>=0A=
-> Cc: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
-> Cc: Herbert Xu <herbert@gondor.apana.org.au>=0A=
-> Cc: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
-> Cc: linux-crypto@vger.kernel.org=0A=
-> Cc: linux-kernel@vger.kernel.org=0A=
-> ---=0A=
->  drivers/crypto/caam/ctrl.c | 129 ++++++++++++++++++++-----------------=
-=0A=
->  1 file changed, 70 insertions(+), 59 deletions(-)=0A=
-> =0A=
-> diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c=0A=
-> index 254963498abc..25f8f76551a5 100644=0A=
-> --- a/drivers/crypto/caam/ctrl.c=0A=
-> +++ b/drivers/crypto/caam/ctrl.c=0A=
-> @@ -175,6 +175,73 @@ static inline int run_descriptor_deco0(struct device=
- *ctrldev, u32 *desc,=0A=
->  	return 0;=0A=
->  }=0A=
->  =0A=
-> +/*=0A=
-> + * deinstantiate_rng - builds and executes a descriptor on DECO0,=0A=
-> + *		       which deinitializes the RNG block.=0A=
-> + * @ctrldev - pointer to device=0A=
-> + * @state_handle_mask - bitmask containing the instantiation status=0A=
-> + *			for the RNG4 state handles which exist in=0A=
-> + *			the RNG4 block: 1 if it's been instantiated=0A=
-> + *=0A=
-> + * Return: - 0 if no error occurred=0A=
-> + *	   - -ENOMEM if there isn't enough memory to allocate the descriptor=
-=0A=
-> + *	   - -ENODEV if DECO0 couldn't be acquired=0A=
-> + *	   - -EAGAIN if an error occurred when executing the descriptor=0A=
-> + */=0A=
-> +static int deinstantiate_rng(struct device *ctrldev, int state_handle_ma=
-sk)=0A=
-I assume this function is not modified, only moved further up=0A=
-to avoid forward declaration.=0A=
-=0A=
-> +	if (!ret) {=0A=
-> +		ret =3D devm_add_action_or_reset(ctrldev, devm_deinstantiate_rng,=0A=
-> +					       ctrldev);=0A=
->  	}=0A=
-Braces not needed.=0A=
-=0A=
-Is there any guidance wrt. when *not* to use devres?=0A=
-=0A=
-Horia=0A=
+On Fri, Sep 6, 2019 at 4:23 PM Steven Price <steven.price@arm.com> wrote:
+>
+> On 04/09/2019 13:30, Mark Brown wrote:
+> > The panfrost driver requests a supply using regulator_get_optional()
+> > but both the name of the supply and the usage pattern suggest that it is
+> > being used for the main power for the device and is not at all optional
+> > for the device for function, there is no meaningful handling for absent
+> > supplies.  Such regulators should use the vanilla regulator_get()
+> > interface, it will ensure that even if a supply is not described in the
+> > system integration one will be provided in software.
+> >
+> > Signed-off-by: Mark Brown <broonie@kernel.org>
+>
+> Tested-by: Steven Price <steven.price@arm.com>
+>
+> Looks like my approach to this was wrong - so we should also revert the
+> changes I made previously.
+>
+> ----8<----
+> From fe20f8abcde8444bb41a8f72fb35de943a27ec5c Mon Sep 17 00:00:00 2001
+> From: Steven Price <steven.price@arm.com>
+> Date: Fri, 6 Sep 2019 15:20:53 +0100
+> Subject: [PATCH] drm/panfrost: Revert changes to cope with NULL regulator
+>
+> Handling a NULL return from devm_regulator_get_optional() doesn't seem
+> like the correct way of handling this. Instead revert the changes in
+> favour of switching to using devm_regulator_get() which will return a
+> dummy regulator instead.
+>
+> Reverts commit 52282163dfa6 ("drm/panfrost: Add missing check for pfdev->regulator")
+> Reverts commit e21dd290881b ("drm/panfrost: Enable devfreq to work without regulator")
+
+Does a straight revert of these 2 patches not work? If it does work,
+can you do that and send to the list. I don't want my hand slapped
+again reverting things.
+
+Rob
