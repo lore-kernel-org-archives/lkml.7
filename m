@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD48C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D30C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94F282086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A4862086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:02:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QFAKdO2+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GYHTVFkc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733201AbfIIPCf (ORCPT
+        id S1733251AbfIIPCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 11:02:35 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33331 "EHLO
+        Mon, 9 Sep 2019 11:02:40 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33912 "EHLO
         mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733140AbfIIPCe (ORCPT
+        with ESMTP id S1733073AbfIIPCc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 11:02:34 -0400
-Received: by mail-wr1-f68.google.com with SMTP id u16so14266953wrr.0;
-        Mon, 09 Sep 2019 08:02:32 -0700 (PDT)
+        Mon, 9 Sep 2019 11:02:32 -0400
+Received: by mail-wr1-f68.google.com with SMTP id a11so4455635wrx.1;
+        Mon, 09 Sep 2019 08:02:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=PZPdLQeLOEyJtkoSAS2YhSEAdoTAaUvZCMb2Qa3U3f4=;
-        b=QFAKdO2+MqvIwbO2LZ8+o2T69rCPUwEqSgPmIkPR9J08dm02Y84WAZidtVqsBtLIxd
-         /fIKRGSbKAkpWXv3JMLBUGprFPFZVhI1aSVS/VCa8IVxMWoET8/5PaZZF3p97MMWn3lZ
-         2sw+5tlyHn7fv1pH7nGrj5e0luBJtq4a3x3QHsp0xXiomSEKj7LVJ4+PC8KwAyHMLTAA
-         hMF/eo+znis+fYXcM/HkLLbLCe7CMqKiAs5t7r5Pg03rJuulmXXGEs9qPLuTzOssKN1F
-         yl9jpIzXnl/soAYoonErCvjQfwHRQlegZgQHo6nuCUyQlnGH3MhCjzFaPf8yc5TLevc/
-         /KeQ==
+        bh=X2M403PGzeHsgRfWBo9vriBLfSezzprBCgW0woIy9ug=;
+        b=GYHTVFkcpkNuI6btoryG5kJHIVq3FGm7RQG6Kt3SOKd9P38AyaGq+dTvlsDKvUyWek
+         A3Pv3+LOSbh9y4yZM5QuT9aH19qUYHWsZjRExqhN1KmM8oZIbbd98hOPI0Zw9+jE/i8U
+         aVYzbE7iNoQy472GtVvkj9uyfg3YhPqYvbJ7XVJcArQtncN5RHk6kOrIL3olOO/cfV81
+         V0rRXjOajeXMr7H+3GsHen/EgR+7zEJDcOfnYoUYXnXPagQlbpzNbITYYg+b4dG61QIP
+         N+xj4woJHg/ZIcxiYpWA0kE09rcyB03Jm4sW9/bRkmNQHdiCIAGqFl7OsyceuU7bFrIa
+         nC4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=PZPdLQeLOEyJtkoSAS2YhSEAdoTAaUvZCMb2Qa3U3f4=;
-        b=TrcpmAVQMER9shCEgASg8OECup81Q+klhnGvgu0dWWT5U0bWsNcVXmmP94lEE38gyA
-         KT2QrC6q5TRdiq/y1Iz7YQxs+/KaPh3u9WjQrIxTkUySbucZy1VtQPT3BXdNpM/6KgNb
-         VBT41mYXcLLXly46Pt0xKokkXJTYJFuMoYL4UB48SiFsx/flWUfOAansdb3BvfO2ie8E
-         zc4jhi83R8w4CgFEKWo5WZiaczTzKKB/uGw6lJLWSc7U6fbifyTjCMuMA5YKpCiQw8HI
-         2/xGT0WBTOKfNExmt8ZA+/a3+B9soI8CVQcbWTujn8bnXOuUoJgrE3uyjLXIs602AbmB
-         np3A==
-X-Gm-Message-State: APjAAAVxvrM68jkwC1H7o1x7cPXB3cCIJm2dZsqm4BpkLXrRbb+kP3PX
-        uqw4BH4oXdeJqsPMxb27s68=
-X-Google-Smtp-Source: APXvYqwkXa05gD+0n/Wm1U/GTv1nqjlBkf/38URHAZzWapXaKegLzhdiBoCJMBhOXltgJda6pNiYzA==
-X-Received: by 2002:adf:f3c8:: with SMTP id g8mr10269237wrp.58.1568041352095;
-        Mon, 09 Sep 2019 08:02:32 -0700 (PDT)
+        bh=X2M403PGzeHsgRfWBo9vriBLfSezzprBCgW0woIy9ug=;
+        b=FhzfDRsnkWW0gQkRb/UiLzC7zaIL76UHDWrvemy8hLBM/h/s3+hIULErU7CIpVCZZU
+         FlRRU9gCvwHGtZ3TbL5/FVCiRPRjtRvr7YMaciMymQtbQ2NgEHlSDgWISHNr8bsxrUsE
+         evdcA3hEe1jbjlMdJZdHn7z6RrY8fI5fgQ2tfcBYl6IUdm0p63AF/R+jHEZwv2YKiJIC
+         2XBDIFo7yUyCjjBJAaqFeEjAqbA/ct5hYaoahCVeUWZnLQA+iOViGpLjplixnw+TUeJa
+         CnPvQtYQ47H5tLQh1vQP25/GDPBHYnAnuzkuuAO/jic2+kSrmqprOTaMkoP8eIrebrBK
+         jQOA==
+X-Gm-Message-State: APjAAAUrhSfBQGG/gcqRxm7m4TyJKOIz9EWcWSuhNEy9tkERnNiG+NkT
+        jpKBHfAhFUdqVHgoCgM7gsU=
+X-Google-Smtp-Source: APXvYqzDmQ/HWnchUAb8AIL0X1Ko3tv+V7JpQ2AA+3yPhXgaA0+6kuTVTl66RxXE9TlWF+A3mcdY/w==
+X-Received: by 2002:a5d:5389:: with SMTP id d9mr19862411wrv.119.1568041349772;
+        Mon, 09 Sep 2019 08:02:29 -0700 (PDT)
 Received: from localhost.localdomain ([94.204.252.234])
-        by smtp.gmail.com with ESMTPSA id s26sm27755397wrs.63.2019.09.09.08.02.30
+        by smtp.gmail.com with ESMTPSA id s26sm27755397wrs.63.2019.09.09.08.02.27
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 09 Sep 2019 08:02:31 -0700 (PDT)
+        Mon, 09 Sep 2019 08:02:29 -0700 (PDT)
 From:   Christian Hewitt <christianshewitt@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -63,9 +63,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Chrisitian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH 6/6] arm64: dts: meson: libretech-cc: update model and compatible
-Date:   Mon,  9 Sep 2019 19:01:27 +0400
-Message-Id: <1568041287-7805-7-git-send-email-christianshewitt@gmail.com>
+Subject: [PATCH 5/6] dt-bindings: arm: amlogic: update libretech-cc compatible
+Date:   Mon,  9 Sep 2019 19:01:26 +0400
+Message-Id: <1568041287-7805-6-git-send-email-christianshewitt@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1568041287-7805-1-git-send-email-christianshewitt@gmail.com>
 References: <1568041287-7805-1-git-send-email-christianshewitt@gmail.com>
@@ -74,31 +74,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Shorten the model description to improve readability in some app GUIs
-that show the string. Update compatible to be more descriptive, using
-the format of the LaFrite board in meson-gxl-s805x-libretech-ac.dts.
+Update the compatible for the Libre Computer aml-s905x-cc to be more
+descriptive using the format introduced with the aml-s805x-ac board.
 
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/arm/amlogic.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-index 4b8ce73..e8348b2 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-@@ -12,8 +12,9 @@
- #include "meson-gxl-s905x.dtsi"
- 
- / {
--	compatible = "libretech,cc", "amlogic,s905x", "amlogic,meson-gxl";
--	model = "Libre Computer Board AML-S905X-CC";
-+	compatible = "libretech,aml-s905x-cc", "amlogic,s905x",
-+		     "amlogic,meson-gxl";
-+	model = "Libre Computer AML-S905X-CC";
- 
- 	aliases {
- 		serial0 = &uart_AO;
+diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
+index 325c6fd..b3c9dbb 100644
+--- a/Documentation/devicetree/bindings/arm/amlogic.yaml
++++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
+@@ -95,7 +95,7 @@ properties:
+               - amlogic,p212
+               - hwacom,amazetv
+               - khadas,vim
+-              - libretech,cc
++              - libretech,aml-s905x-cc
+               - nexbox,a95x
+               - seirobotics,sei510
+           - const: amlogic,s905x
 -- 
 2.7.4
 
