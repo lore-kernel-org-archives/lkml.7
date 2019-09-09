@@ -2,188 +2,166 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2556C433EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 06:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E44E8C00307
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 06:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63D2B21A4A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 06:00:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="T4LyxrSN"
+	by mail.kernel.org (Postfix) with ESMTP id ADC5421924
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 06:00:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727488AbfIIGAM (ORCPT
+        id S1727520AbfIIGAo convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 02:00:12 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:40686 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726823AbfIIGAL (ORCPT
+        Mon, 9 Sep 2019 02:00:44 -0400
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:56605 "EHLO
+        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726823AbfIIGAn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 02:00:11 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x896037P018182;
-        Mon, 9 Sep 2019 01:00:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568008803;
-        bh=pnXFM66Qh5N+U8iCAu7F+S6mhz0Xw9FlLW/1OOH/KqA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=T4LyxrSNjZr1Ub1b8n0itm1xg7t6MGXisYTFMXwfdt6RGEddUfQvsGqHbFT1vZbdD
-         zlan87HDVIrS9oWl0PInuP7bs9VL1x7q85siOIaaUOrexYW33nf8xZjZ+K+22TNJ9G
-         16mR1jNIcV60O4BC3q68VR/DNtdaBrR2youe0mrc=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x89602fj074302
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 9 Sep 2019 01:00:03 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 9 Sep
- 2019 01:00:00 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 9 Sep 2019 01:00:00 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x895xwnh059683;
-        Mon, 9 Sep 2019 00:59:58 -0500
-Subject: Re: [RFC 1/3] dt-bindings: dma: Add documentation for DMA domains
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     <robh+dt@kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dan.j.williams@intel.com>,
-        <devicetree@vger.kernel.org>
-References: <20190906141816.24095-1-peter.ujfalusi@ti.com>
- <20190906141816.24095-2-peter.ujfalusi@ti.com>
- <20190908120642.GK2672@vkoul-mobl>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <26072f6f-e099-9cd6-6cca-0175870c0c30@ti.com>
-Date:   Mon, 9 Sep 2019 09:00:29 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 9 Sep 2019 02:00:43 -0400
+Received: from mailgate02.nec.co.jp ([114.179.233.122])
+        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x89606CC012624
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Mon, 9 Sep 2019 15:00:06 +0900
+Received: from mailsv02.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
+        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x89606kU007159;
+        Mon, 9 Sep 2019 15:00:06 +0900
+Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
+        by mailsv02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x895o1x2017817;
+        Mon, 9 Sep 2019 15:00:06 +0900
+Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.151] [10.38.151.151]) by mail03.kamome.nec.co.jp with ESMTP id BT-MMP-853262; Mon, 9 Sep 2019 14:48:36 +0900
+Received: from BPXM20GP.gisp.nec.co.jp ([10.38.151.212]) by
+ BPXC23GP.gisp.nec.co.jp ([10.38.151.151]) with mapi id 14.03.0439.000; Mon, 9
+ Sep 2019 14:48:35 +0900
+From:   Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
+To:     David Hildenbrand <david@redhat.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>
+CC:     Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "mhocko@kernel.org" <mhocko@kernel.org>,
+        "adobriyan@gmail.com" <adobriyan@gmail.com>,
+        "hch@lst.de" <hch@lst.de>,
+        "longman@redhat.com" <longman@redhat.com>,
+        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
+        "mst@redhat.com" <mst@redhat.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Junichi Nomura <j-nomura@ce.jp.nec.com>
+Subject: Re: [RFC PATCH v2] mm: initialize struct pages reserved by
+ ZONE_DEVICE driver.
+Thread-Topic: [RFC PATCH v2] mm: initialize struct pages reserved by
+ ZONE_DEVICE driver.
+Thread-Index: AQHVZIp2xk1cU6nEkk+ez7kL5reVFKcdvuyAgAAVnwCAAAk8gIAEZuMA
+Date:   Mon, 9 Sep 2019 05:48:34 +0000
+Message-ID: <6a99e003-e1ab-b9e8-7b25-bc5605ab0eb2@vx.jp.nec.com>
+References: <20190906081027.15477-1-t-fukasawa@vx.jp.nec.com>
+ <b7732a55-4a10-2c1d-c2f5-ca38ee60964d@redhat.com>
+ <e762ee45-43e3-975a-ad19-065f07d1440f@vx.jp.nec.com>
+ <40a1ce2e-1384-b869-97d0-7195b5b47de0@redhat.com>
+In-Reply-To: <40a1ce2e-1384-b869-97d0-7195b5b47de0@redhat.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.34.125.135]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <17BE49E6AA775C488AB78E3047A82E32@gisp.nec.co.jp>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <20190908120642.GK2672@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 08/09/2019 15.06, Vinod Koul wrote:
-> On 06-09-19, 17:18, Peter Ujfalusi wrote:
->> On systems where multiple DMA controllers available, none Slave (for example
+On 2019/09/06 19:35, David Hildenbrand wrote:
+> On 06.09.19 12:02, Toshiki Fukasawa wrote:
+>> Thank you for your feedback.
+>>
+>> On 2019/09/06 17:45, David Hildenbrand wrote:
+>>> On 06.09.19 10:09, Toshiki Fukasawa wrote:
+>>>> A kernel panic is observed during reading
+>>>> /proc/kpage{cgroup,count,flags} for first few pfns allocated by
+>>>> pmem namespace:
+>>>>
+>>>> BUG: unable to handle page fault for address: fffffffffffffffe
+>>>> [  114.495280] #PF: supervisor read access in kernel mode
+>>>> [  114.495738] #PF: error_code(0x0000) - not-present page
+>>>> [  114.496203] PGD 17120e067 P4D 17120e067 PUD 171210067 PMD 0
+>>>> [  114.496713] Oops: 0000 [#1] SMP PTI
+>>>> [  114.497037] CPU: 9 PID: 1202 Comm: page-types Not tainted 5.3.0-rc1
+>>>> [  114.497621] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.0-0-g63451fca13-prebuilt.qemu-project.org 04/01/2014
+>>>> [  114.498706] RIP: 0010:stable_page_flags+0x27/0x3f0
+>>>> [  114.499142] Code: 82 66 90 66 66 66 66 90 48 85 ff 0f 84 d1 03 00 00 41 54 55 48 89 fd 53 48 8b 57 08 48 8b 1f 48 8d 42 ff 83 e2 01 48 0f 44 c7 <48> 8b 00 f6 c4 02 0f 84 57 03 00 00 45 31 e4 48 8b 55 08 48 89 ef
+>>>> [  114.500788] RSP: 0018:ffffa5e601a0fe60 EFLAGS: 00010202
+>>>> [  114.501373] RAX: fffffffffffffffe RBX: ffffffffffffffff RCX: 0000000000000000
+>>>> [  114.502009] RDX: 0000000000000001 RSI: 00007ffca13a7310 RDI: ffffd07489000000
+>>>> [  114.502637] RBP: ffffd07489000000 R08: 0000000000000001 R09: 0000000000000000
+>>>> [  114.503270] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000240000
+>>>> [  114.503896] R13: 0000000000080000 R14: 00007ffca13a7310 R15: ffffa5e601a0ff08
+>>>> [  114.504530] FS:  00007f0266c7f540(0000) GS:ffff962dbbac0000(0000) knlGS:0000000000000000
+>>>> [  114.505245] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>>> [  114.505754] CR2: fffffffffffffffe CR3: 000000023a204000 CR4: 00000000000006e0
+>>>> [  114.506401] Call Trace:
+>>>> [  114.506660]  kpageflags_read+0xb1/0x130
+>>>> [  114.507051]  proc_reg_read+0x39/0x60
+>>>> [  114.507387]  vfs_read+0x8a/0x140
+>>>> [  114.507686]  ksys_pread64+0x61/0xa0
+>>>> [  114.508021]  do_syscall_64+0x5f/0x1a0
+>>>> [  114.508372]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>>>> [  114.508844] RIP: 0033:0x7f0266ba426b
+>>>>
+>>>> The first few pages of ZONE_DEVICE expressed as the range
+>>>> (altmap->base_pfn) to (altmap->base_pfn + altmap->reserve) are
+>>>> skipped by struct page initialization. Some pfn walkers like
+>>>> /proc/kpage{cgroup, count, flags} can't handle these uninitialized
+>>>> struct pages, which causes the error.
+>>>>
+>>>> In previous discussion, Dan seemed to have concern that the struct
+>>>> page area of some pages indicated by vmem_altmap->reserve may not
+>>>> be allocated. (See https://lore.kernel.org/lkml/CAPcyv4i5FjTOnPbXNcTzvt+e6RQYow0JRQwSFuxaa62LSuvzHQ@mail.gmail.com/)
+>>>> However, arch_add_memory() called by devm_memremap_pages() allocates
+>>>> struct page area for pages containing addresses in the range
+>>>> (res.start) to (res.start + resource_size(res)), which include the
+>>>> pages indicated by vmem_altmap->reserve. If I read correctly, it is
+>>>> allocated as requested at least on x86_64. Also, memmap_init_zone()
+>>>> initializes struct pages in the same range.
+>>>> So I think the struct pages should be initialized.>
+>>>
+>>> For !ZONE_DEVICE memory, the memmap is valid with SECTION_IS_ONLINE -
+>>> for the whole section. For ZONE_DEVICE memory we have no such
+>>> indication. In any section that is !SECTION_IS_ONLINE and
+>>> SECTION_MARKED_PRESENT, we could have any subsections initialized. >
+>>> The only indication I am aware of is pfn_zone_device_reserved() - which
+>>> seems to check exactly what you are trying to skip here.
+>>>
+>>> Can't you somehow use pfn_zone_device_reserved() ? Or if you considered
+>>> that already, why did you decide against it?
+>>
+>> No, in current approach this function is no longer needed.
+>> The reason why we change the approach is that all pfn walkers
+>> have to be aware of the uninitialized struct pages.
 > 
-> On systems with multiple DMA controllers, non Slave...
+> We should use the same strategy for all pfn walkers then (effectively
+> get rid of pfn_zone_device_reserved() if that's what we want).
 
-Sure.
-
->> memcpy operation) users can not be described in DT as there is no device
->> involved from the DMA controller's point of view, DMA binding is not usable.
->> However in these systems still a peripheral might need to be serviced by or
->> it is better to serviced by specific DMA controller.
->> When a memcpy is used to/from a memory mapped region for example a DMA in the
->> same domain can perform better.
->> For generic software modules doing mem 2 mem operations it also matter that
->> they will get a channel from a controller which is faster in DDR to DDR mode
->> rather then from the first controller happen to be loaded.
->>
->> This property is inherited, so it may be specified in a device node or in any
->> of its parent nodes.
->>
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->> ---
->>  .../devicetree/bindings/dma/dma-domain.yaml   | 59 +++++++++++++++++++
->>  1 file changed, 59 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/dma/dma-domain.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/dma/dma-domain.yaml b/Documentation/devicetree/bindings/dma/dma-domain.yaml
->> new file mode 100644
->> index 000000000000..c2f182f30081
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/dma/dma-domain.yaml
->> @@ -0,0 +1,59 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/dma/dma-controller.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: DMA Domain Controller Definition
->> +
->> +maintainers:
->> +  - Vinod Koul <vkoul@kernel.org>
->> +
->> +allOf:
->> +  - $ref: "dma-controller.yaml#"
->> +
->> +description:
->> +  On systems where multiple DMA controllers available, none Slave (for example
->> +  memcpy operation) users can not be described in DT as there is no device
->> +  involved from the DMA controller's point of view, DMA binding is not usable.
->> +  However in these systems still a peripheral might need to be serviced by or
->> +  it is better to serviced by specific DMA controller.
->> +  When a memcpy is used to/from a memory mapped region for example a DMA in the
->> +  same domain can perform better.
->> +  For generic software modules doing mem 2 mem operations it also matter that
->> +  they will get a channel from a controller which is faster in DDR to DDR mode
->> +  rather then from the first controller happen to be loaded.
->> +
->> +  This property is inherited, so it may be specified in a device node or in any
->> +  of its parent nodes.
->> +
->> +properties:
->> +  $dma-domain-controller:
->> +    $ref: /schemas/types.yaml#definitions/phandle
->> +    description:
->> +      phande to the DMA controller node which should be used for the device or
->> +      domain.
->> +
->> +examples:
->> +  - |
->> +    / {
->> +        model = "Texas Instruments K3 AM654 SoC";
->> +        compatible = "ti,am654";
->> +        interrupt-parent = <&gic500>;
->> +        /* For modules without device, DDR to DDR is faster on main UDMAP */
->> +        dma-domain-controller = <&main_udmap>;
->> +        #address-cells = <2>;
->> +        #size-cells = <2>;
->> +        ...
->> +    };
->> +
->> +    &cbass_main {
->> +        /* For modules within MAIN domain, use main UDMAP */
->> +        dma-domain-controller = <&main_udmap>;
->> +    };
->> +
->> +    &cbass_mcu {
->> +        /* For modules within MCU domain, use mcu UDMAP */
->> +        dma-domain-controller = <&mcu_udmap>;
-> 
-> perhaps add the example of main_udmap and mcu_udmap as well
-
-I can populate the tree with the main/mcu_udmap and on MCU I can also
-add the OSPI node.
-The idea is to specify the dma controller to be used for non slave
-channels on every device on MAIN/MCU domain.
-UDMAPs do not need this property specified, it is needed for clients.
+True, but this patch replaces "/proc/kpageflags: do not use uninitialized
+struct pages". If we initialize the uninitialized struct pages, no pfn walker
+will need to be aware of them.
 
 > 
->> +    };
->> +...
->> -- 
->> Peter
 >>
->> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
->> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>> As for SECTION_IS_ONLINE, I'm not sure now.
+>> I will look into it next week.
 > 
+> SECTION_IS_ONLINE does currently not apply to ZONE_DEVICE and due to
+> sub-section support for ZONE_DEVICE, it cannot easily be reused.
+> 
+It seems that SECTION_IS_ONLINE and SECTION_MARKED_PRESENT can be used to
+distinguish uninitialized struct pages if we can apply them to ZONE_DEVICE,
+but that is no longer necessary with this approach.
 
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Thanks,
+Toshiki Fukasawa
