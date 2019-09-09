@@ -2,131 +2,152 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7CC6C433EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 08:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66363C00307
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 08:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CE042086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 08:50:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ChMYNjOE"
+	by mail.kernel.org (Postfix) with ESMTP id 40B0B2086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 08:52:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727266AbfIIIuX (ORCPT
+        id S1732554AbfIIIwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 04:50:23 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51609 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbfIIIuX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 04:50:23 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 7so3141531wme.1;
-        Mon, 09 Sep 2019 01:50:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=TyudP/VRC3LbsAYBLp6egmY8gzAh/9aWbYA7KdCUhLo=;
-        b=ChMYNjOE7Wvi27lqZVRkcvUyEcvNbcguAcSSHe9t0QGM6NeptCo3EQofn7R9/AlD2k
-         uQWDIZGs1a4KahbPRTEBCp5t9kR8D/ipgtrWvPXTOg1HH/Tg20tX6+wDn19E9AnJFm7j
-         rZtOnmqqAIg9qaY+8uI22adLwX9+pVwAFhoSC/inc/OnXYoB7Cxh80E6S1irw87ss9yj
-         fFjlHhUJHoyOEfr/y9n2Q3dR1GVO/9J+qr23Mi/eyKmZKd5SU2FeAluKHmB9uag+HcRe
-         1Ulf0OJqZV1LtN2/FQenwg7kgyjFWq5u9bGe8z7AyV6lC8Y/GyFHf4UL2XfDGqUo/jdF
-         3aag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=TyudP/VRC3LbsAYBLp6egmY8gzAh/9aWbYA7KdCUhLo=;
-        b=XRGArx+dF/nItJ2D4pH2EpjhC/m2YjPiVMz7aNe6nH+cZMtbspcgSrS+o/cmR6xGsC
-         YcaGHGyjnLwWLsIq4q3qSivMHQ48knGLknoyvD4MFcoywG9JvfuT+xfFblWM3Rp0lbj8
-         z9PEvb+WNGmkuG/xppsgTYnrkqiOGQSVDnrWECeRzppsJ+8ReRiw9RFGx5tH9i5AXfWW
-         HupZrBE7/ye9NWwhMRjKe37BlfzhCbog7OcldOu5gmF6yXELWn+rJRc2BAsy5Hp1mwzj
-         Q9yJwATXp2trEGPfzXPRO5aaOwmouABveVIc1ySrPsfya25TTJMQ8qkxJaCDMH491qEp
-         KhGw==
-X-Gm-Message-State: APjAAAUwpvdaBissyNwtnFy67eoZuGMzOS/rXpM+m89TFg8WycAnK5Aq
-        Pac3m4BdZc9+ntZuilkpju8=
-X-Google-Smtp-Source: APXvYqyLQP9dt2/pAYw8P428X5pwdQen7RwrjQIYQbGEF7sH1Cr7J/nn46Q7UtZDu0Am8oYSsEnxDg==
-X-Received: by 2002:a05:600c:cf:: with SMTP id u15mr18878455wmm.168.1568019020765;
-        Mon, 09 Sep 2019 01:50:20 -0700 (PDT)
-Received: from dahern-DO-macbook.local ([148.69.85.38])
-        by smtp.googlemail.com with ESMTPSA id v4sm22052149wrg.56.2019.09.09.01.50.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 09 Sep 2019 01:50:20 -0700 (PDT)
-Subject: Re: [PATCH] Add input file_name support for perf sched
- {map|latency|replay|timehist}
-To:     =?UTF-8?B?56a56Iif6ZSu?= <ufo19890607@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Milian Wolff <milian.wolff@kdab.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        windyu@tencent.com, Adrian Hunter <adrian.hunter@intel.com>,
-        Wang Nan <wangnan0@huawei.com>
-Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        acme@redhat.com
-References: <20190903085535.23913-1-ufo19890607@gmail.com>
- <CAHCio2iLvOSDEJ8JSnBx6w_65yekWNWu0B8wTAWbLDjy65J9JQ@mail.gmail.com>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <37eecde1-52de-0d7a-608f-8b8125ee1155@gmail.com>
-Date:   Mon, 9 Sep 2019 09:50:18 +0100
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
+        Mon, 9 Sep 2019 04:52:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46758 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727298AbfIIIwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 04:52:21 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 07CB630860DA;
+        Mon,  9 Sep 2019 08:52:20 +0000 (UTC)
+Received: from [10.36.116.173] (ovpn-116-173.ams2.redhat.com [10.36.116.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 45A7B5D9D6;
+        Mon,  9 Sep 2019 08:52:07 +0000 (UTC)
+Subject: Re: [PATCH v9 5/8] arm64: Move hugetlb related definitions out of
+ pgtable.h to page-defs.h
+To:     Alexander Duyck <alexander.duyck@gmail.com>,
+        virtio-dev@lists.oasis-open.org, kvm@vger.kernel.org,
+        mst@redhat.com, catalin.marinas@arm.com, dave.hansen@intel.com,
+        linux-kernel@vger.kernel.org, willy@infradead.org,
+        mhocko@kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org,
+        will@kernel.org, linux-arm-kernel@lists.infradead.org,
+        osalvador@suse.de
+Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com,
+        konrad.wilk@oracle.com, nitesh@redhat.com, riel@surriel.com,
+        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        ying.huang@intel.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com, fengguang.wu@intel.com,
+        alexander.h.duyck@linux.intel.com, kirill.shutemov@linux.intel.com
+References: <20190907172225.10910.34302.stgit@localhost.localdomain>
+ <20190907172545.10910.88045.stgit@localhost.localdomain>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <90785d30-cde9-f380-5f4a-8af989b11729@redhat.com>
+Date:   Mon, 9 Sep 2019 10:52:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAHCio2iLvOSDEJ8JSnBx6w_65yekWNWu0B8wTAWbLDjy65J9JQ@mail.gmail.com>
+In-Reply-To: <20190907172545.10910.88045.stgit@localhost.localdomain>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Mon, 09 Sep 2019 08:52:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/9/19 4:49 AM, 禹舟键 wrote:
->> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
->> index 025151dcb651..8e51fbb88549 100644
->> --- a/tools/perf/builtin-sched.c
->> +++ b/tools/perf/builtin-sched.c
->> @@ -3374,6 +3374,7 @@ int cmd_sched(int argc, const char **argv)
->>         const struct option latency_options[] = {
->>         OPT_STRING('s', "sort", &sched.sort_order, "key[,key2...]",
->>                    "sort by key(s): runtime, switch, avg, max"),
->> +       OPT_STRING('i', "input", &input_name, "file", "input file name"),
->>         OPT_INTEGER('C', "CPU", &sched.profile_cpu,
->>                     "CPU to profile on"),
->>         OPT_BOOLEAN('p', "pids", &sched.skip_merge,
->> @@ -3381,11 +3382,13 @@ int cmd_sched(int argc, const char **argv)
->>         OPT_PARENT(sched_options)
->>         };
->>         const struct option replay_options[] = {
->> +       OPT_STRING('i', "input", &input_name, "file", "input file name"),
->>         OPT_UINTEGER('r', "repeat", &sched.replay_repeat,
->>                      "repeat the workload replay N times (-1: infinite)"),
->>         OPT_PARENT(sched_options)
->>         };
->>         const struct option map_options[] = {
->> +       OPT_STRING('i', "input", &input_name, "file", "input file name"),
->>         OPT_BOOLEAN(0, "compact", &sched.map.comp,
->>                     "map output in compact mode"),
->>         OPT_STRING(0, "color-pids", &sched.map.color_pids_str, "pids",
->> @@ -3397,6 +3400,7 @@ int cmd_sched(int argc, const char **argv)
->>         OPT_PARENT(sched_options)
->>         };
->>         const struct option timehist_options[] = {
->> +       OPT_STRING('i', "input", &input_name, "file", "input file name"),
->>         OPT_STRING('k', "vmlinux", &symbol_conf.vmlinux_name,
->>                    "file", "vmlinux pathname"),
->>         OPT_STRING(0, "kallsyms", &symbol_conf.kallsyms_name,
->> --
->> 2.23.0.37.g745f681
->>
+On 07.09.19 19:25, Alexander Duyck wrote:
+> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> 
+> Move the static definition for things such as HUGETLB_PAGE_ORDER out of
+> asm/pgtable.h and place it in page-defs.h. By doing this the includes
+> become much easier to deal with as currently arm64 is the only architecture
+> that didn't include this definition in the asm/page.h file or a file
+> included by it.
+> 
+> It also makes logical sense as PAGE_SHIFT was already defined in
+> page-defs.h so now we also have HPAGE_SHIFT defined there as well.
+> 
+> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> ---
+>  arch/arm64/include/asm/page-def.h |    9 +++++++++
+>  arch/arm64/include/asm/pgtable.h  |    9 ---------
+>  2 files changed, 9 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/page-def.h b/arch/arm64/include/asm/page-def.h
+> index f99d48ecbeef..1c5b079e2482 100644
+> --- a/arch/arm64/include/asm/page-def.h
+> +++ b/arch/arm64/include/asm/page-def.h
+> @@ -20,4 +20,13 @@
+>  #define CONT_SIZE		(_AC(1, UL) << (CONT_SHIFT + PAGE_SHIFT))
+>  #define CONT_MASK		(~(CONT_SIZE-1))
+>  
+> +/*
+> + * Hugetlb definitions.
+> + */
+> +#define HUGE_MAX_HSTATE		4
+> +#define HPAGE_SHIFT		PMD_SHIFT
+> +#define HPAGE_SIZE		(_AC(1, UL) << HPAGE_SHIFT)
+> +#define HPAGE_MASK		(~(HPAGE_SIZE - 1))
+> +#define HUGETLB_PAGE_ORDER	(HPAGE_SHIFT - PAGE_SHIFT)
+> +
 
-This is not needed; -i already works with timehist (and others as I
-recall). I believe OPT_PARENT passes the option to the subcommand.
+I wonder if you should initially limit "config PAGE_REPORTING" to x86
+only and unlock it for the other targets once we actually test it there.
+Or did you test PAGE_REPORTING on other architectures as well?
 
+-- 
+
+Thanks,
+
+David / dhildenb
