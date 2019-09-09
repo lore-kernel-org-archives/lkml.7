@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36640C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C8AEC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:07:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06B7821A4C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:07:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DA7921A4C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:07:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568023677;
-	bh=XnpdOvNxtEE8X28vFgjJ6m4Qz6m4Tn6qujf1i3oUNNg=;
+	s=default; t=1568023679;
+	bh=FuNr+wCnPVF+u29lSFTsihKdutUNsbIAoO7WbcW5dJU=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=M7yf2XyM5qdsbmRtas7u/BjpPx5gamSRsvo3NhMdmPtdVLNmvIY1qLo30R7+qrHuY
-	 gemrWrxV1EM4X3xP7HLBHurLtn7YY0x28c/uYoCxt4ipWvPkJlLOHaeVdHjVSQ0/u0
-	 0875o/NK48VfARfRr3ZD91GY8hf8ZAdwWVD4emTY=
+	b=xWmgr8neygYFARmZqwEplpGM9sBLB6vcp8kDEIX8mxMRIRwfitJcoCjL+c+Yo7chq
+	 TKHEURgiYmVQHPyQ924DSooz+40q3ZOQ4zmk+D3yVDQ4lZcWu2b5KTPMOexLFYFGzr
+	 Vs8z7chig58deoPx6CPMFxbv8/9uKa0oKKu8P7cM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729624AbfIIKH4 (ORCPT
+        id S2390358AbfIIKHx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 06:07:56 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56126 "EHLO
+        Mon, 9 Sep 2019 06:07:53 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56116 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729654AbfIIKH1 (ORCPT
+        with ESMTP id S1728993AbfIIKH1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 9 Sep 2019 06:07:27 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,29 +34,28 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=zt/n4eTpMG9sUtHcd96OLuRnzRxpm+JT0DN15WfWCf4=; b=i7BuxHtRk6Sa
-        iRDp2uZEvLGrY0pa8cfnzwjY9VOGIuYSM6mxUla7k84MFaKCaBytxLhCwojfVdvng6476uUOKAycv
-        2aUfz5YNtiTgmOz3AOn1wRymCyc5nFXe5mAu5Z2AFMLH+URQsA0GtCuVXWgmpU0rHIUeE+ZyiwieS
-        urfRc=;
+        List-Archive; bh=qvEqsVB11jXmmerUvV31z20Vlpx17lLYw1fsBAjdagI=; b=pXNo7qq2UWBq
+        spzRhEcGVj6jjCwtX6iq9ax3WlEaALupG2KGNADYj377FRXB5YK4B4iPhuIcB7TK+5I3QetDm0iRm
+        ZVttrfHQEuFTtXHUzTXds1OPS6QUk+fk4ykoDpRgEFTR2APfm+NXYLjMvX5IUAhAJJZqEDQhZQQ0B
+        KE+Z4=;
 Received: from [148.69.85.38] (helo=fitzroy.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1i7GZv-0001tm-7Q; Mon, 09 Sep 2019 10:07:23 +0000
+        id 1i7GZq-0001s5-0D; Mon, 09 Sep 2019 10:07:18 +0000
 Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id A00A9D02D18; Mon,  9 Sep 2019 11:07:22 +0100 (BST)
+        id 559AED02D83; Mon,  9 Sep 2019 11:07:17 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        support.opensource@diasemi.com
-Subject: Applied "regulator: slg51000: use devm_gpiod_get_optional() in probe" to the regulator tree
-In-Reply-To: <20190904214200.GA66118@dtor-ws>
+To:     Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Cc:     alsa-devel@alsa-project.org, Daniel Drake <drake@endlessm.com>,
+        David Yang <yangxiaohua@everest-semi.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: es8316: support fixed and variable both clock rates" to the asoc tree
+In-Reply-To: <20190907163653.9382-2-katsuhiro@katsuster.net>
 X-Patchwork-Hint: ignore
-Message-Id: <20190909100722.A00A9D02D18@fitzroy.sirena.org.uk>
-Date:   Mon,  9 Sep 2019 11:07:22 +0100 (BST)
+Message-Id: <20190909100717.559AED02D83@fitzroy.sirena.org.uk>
+Date:   Mon,  9 Sep 2019 11:07:17 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -64,11 +63,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: slg51000: use devm_gpiod_get_optional() in probe
+   ASoC: es8316: support fixed and variable both clock rates
 
-has been applied to the regulator tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.4
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -89,64 +88,109 @@ to this mail.
 Thanks,
 Mark
 
-From c0b913447b75538c3cf4b8016fd2e06509895020 Mon Sep 17 00:00:00 2001
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Date: Wed, 4 Sep 2019 14:42:00 -0700
-Subject: [PATCH] regulator: slg51000: use devm_gpiod_get_optional() in probe
+From ebe02a5b9ef05e3b812af3d628cdf6206d9ba610 Mon Sep 17 00:00:00 2001
+From: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Date: Sun, 8 Sep 2019 01:36:53 +0900
+Subject: [PATCH] ASoC: es8316: support fixed and variable both clock rates
 
-The CS GPIO line is clearly optional GPIO (and marked as such in the
-binding document) and we should handle it accordingly. The current code
-treats all errors as meaning that there is no GPIO defined, which is
-wrong, as it does not handle deferrals raised by the underlying code
-properly, nor does it recognize non-existing GPIO from any other
-initialization error.
+This patch supports some type of machine drivers that set 0 to mclk
+when sound device goes to idle state. After applied this patch,
+sysclk == 0 means there is no constraint of sound rate and other
+values will set constraints which is derived by sysclk setting.
 
-As far as I can see the only reason the driver, unlike all others,
-is using OF-specific devm_gpiod_get_from_of_node() so that it can
-assign a custom label to the selected GPIO line. Given that noone else
-needs that, it should not be doing that either.
+Original code refuses sysclk == 0 setting. But some boards and SoC
+(such as RockPro64 and RockChip I2S) has connected SoC MCLK out to
+ES8316 MCLK in. In this case, SoC side I2S will choose suitable
+frequency of MCLK such as fs * mclk-fs when user starts playing or
+capturing.
 
-Let's switch to using more appropriate devm_gpiod_get_optional().
+Bad scenario as follows (mclk-fs = 256):
+  - Initialize sysclk by correct value (Ex. 12.288MHz)
+    - ES8316 set constraints of PCM rate by sysclk
+      48kHz (1/256), 32kHz (1/384), 30.720kHz (1/400),
+      24kHz (1/512), 16kHz (1/768), 12kHz (1/1024)
+  - Play 48kHz sound, it's acceptable
+  - Sysclk is not changed
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Link: https://lore.kernel.org/r/20190904214200.GA66118@dtor-ws
+  - Play 32kHz sound, it's acceptable
+  - Set sysclk by 8.192MHz (= fs * mclk-fs = 32k * 256)
+    - ES8316 set constraints of PCM rate by sysclk
+      32kHz (1/256), 21.33kHz (1/384), 20.48kHz (1/400),
+      16kHz (1/512), 10.66kHz (1/768), 8kHz (1/1024)
+
+  - Play 48kHz again, but it's NOT acceptable because constraints
+    list does not allow 48kHz
+
+Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Link: https://lore.kernel.org/r/20190907163653.9382-2-katsuhiro@katsuster.net
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/slg51000-regulator.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ sound/soc/codecs/es8316.c | 35 ++++++++++++++++++++---------------
+ 1 file changed, 20 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/regulator/slg51000-regulator.c b/drivers/regulator/slg51000-regulator.c
-index 4d859fef55e6..a0565daecace 100644
---- a/drivers/regulator/slg51000-regulator.c
-+++ b/drivers/regulator/slg51000-regulator.c
-@@ -447,19 +447,20 @@ static int slg51000_i2c_probe(struct i2c_client *client,
- {
- 	struct device *dev = &client->dev;
- 	struct slg51000 *chip;
--	struct gpio_desc *cs_gpiod = NULL;
-+	struct gpio_desc *cs_gpiod;
- 	int error, ret;
+diff --git a/sound/soc/codecs/es8316.c b/sound/soc/codecs/es8316.c
+index e9fa4981ccef..9150e7068467 100644
+--- a/sound/soc/codecs/es8316.c
++++ b/sound/soc/codecs/es8316.c
+@@ -367,8 +367,12 @@ static int es8316_set_dai_sysclk(struct snd_soc_dai *codec_dai,
  
- 	chip = devm_kzalloc(dev, sizeof(struct slg51000), GFP_KERNEL);
- 	if (!chip)
- 		return -ENOMEM;
+ 	es8316->sysclk = freq;
  
--	cs_gpiod = devm_gpiod_get_from_of_node(dev, dev->of_node,
--					       "dlg,cs-gpios", 0,
--					       GPIOD_OUT_HIGH
--					       | GPIOD_FLAGS_BIT_NONEXCLUSIVE,
--					       "slg51000-cs");
--	if (!IS_ERR(cs_gpiod)) {
-+	cs_gpiod = devm_gpiod_get_optional(dev, "dlg,cs",
-+					   GPIOD_OUT_HIGH |
-+						GPIOD_FLAGS_BIT_NONEXCLUSIVE);
-+	if (IS_ERR(cs_gpiod))
-+		return PTR_ERR(cs_gpiod);
+-	if (freq == 0)
++	if (freq == 0) {
++		es8316->sysclk_constraints.list = NULL;
++		es8316->sysclk_constraints.count = 0;
 +
-+	if (cs_gpiod) {
- 		dev_info(dev, "Found chip selector property\n");
- 		chip->cs_gpiod = cs_gpiod;
+ 		return 0;
++	}
+ 
+ 	ret = clk_set_rate(es8316->mclk, freq);
+ 	if (ret)
+@@ -447,17 +451,10 @@ static int es8316_pcm_startup(struct snd_pcm_substream *substream,
+ 	struct snd_soc_component *component = dai->component;
+ 	struct es8316_priv *es8316 = snd_soc_component_get_drvdata(component);
+ 
+-	if (es8316->sysclk == 0) {
+-		dev_err(component->dev, "No sysclk provided\n");
+-		return -EINVAL;
+-	}
+-
+-	/* The set of sample rates that can be supported depends on the
+-	 * MCLK supplied to the CODEC.
+-	 */
+-	snd_pcm_hw_constraint_list(substream->runtime, 0,
+-				   SNDRV_PCM_HW_PARAM_RATE,
+-				   &es8316->sysclk_constraints);
++	if (es8316->sysclk_constraints.list)
++		snd_pcm_hw_constraint_list(substream->runtime, 0,
++					   SNDRV_PCM_HW_PARAM_RATE,
++					   &es8316->sysclk_constraints);
+ 
+ 	return 0;
+ }
+@@ -469,11 +466,19 @@ static int es8316_pcm_hw_params(struct snd_pcm_substream *substream,
+ 	struct snd_soc_component *component = dai->component;
+ 	struct es8316_priv *es8316 = snd_soc_component_get_drvdata(component);
+ 	u8 wordlen = 0;
++	int i;
+ 
+-	if (!es8316->sysclk) {
+-		dev_err(component->dev, "No MCLK configured\n");
+-		return -EINVAL;
++	/* Validate supported sample rates that are autodetected from MCLK */
++	for (i = 0; i < NR_SUPPORTED_MCLK_LRCK_RATIOS; i++) {
++		const unsigned int ratio = supported_mclk_lrck_ratios[i];
++
++		if (es8316->sysclk % ratio != 0)
++			continue;
++		if (es8316->sysclk / ratio == params_rate(params))
++			break;
  	}
++	if (i == NR_SUPPORTED_MCLK_LRCK_RATIOS)
++		return -EINVAL;
+ 
+ 	switch (params_format(params)) {
+ 	case SNDRV_PCM_FORMAT_S16_LE:
 -- 
 2.20.1
 
