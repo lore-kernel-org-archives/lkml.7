@@ -2,161 +2,210 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1805AC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 18:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E674C4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 18:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2ED821924
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 18:11:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D58ED21D82
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 18:12:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="GGlcUb07"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="JU3sdhxL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405270AbfIISL1 (ORCPT
+        id S2405406AbfIISMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 14:11:27 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:31021 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730049AbfIISL1 (ORCPT
+        Mon, 9 Sep 2019 14:12:25 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:40226 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730049AbfIISMZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 14:11:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1568052685;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=T0u92L3DaiGAvp/L3DT0N2IIOq/jhYuL1EviDkLmgUQ=;
-        b=GGlcUb07OgfgYiPVljCteSKG/foci+KLDKsArITTavnj9b+GYiV62uJ26f1bQVXusy
-        50tdecQndTvE9WEDBOvoRRL+valnxlitcCZggjO2b4X7ATh6NDrZELGBnbNzQWjTS3Ur
-        EGV48KrwxGYNsWc28rbpEDuwXk9mmIfJMd9exs90Ogn8vs+lZw524wg4VPRuHr4j06KA
-        dAgtvQ7h7FkbyvPNv5mu6ve3uqMV5Ny5GhIXtXpMfvT8n3R2DwLX7qxBnFrhkzOlVHKg
-        Cdl2BwbLzzZNFDWWWJWMop8mt8Pon8aT5R3a2P3Z3I1YT5otsK4O53yYo+wfhhvxWiLn
-        Iv5w==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmMnw4vkig=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 44.27.0 DYNA|AUTH)
-        with ESMTPSA id u036f9v89IBDy5H
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Mon, 9 Sep 2019 20:11:13 +0200 (CEST)
-Content-Type: text/plain; charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [Letux-kernel] [RFC PATCH 0/3] Enable 1GHz support on omap36xx
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <E001F74D-724E-4C50-9265-CBD33C4F2918@goldelico.com>
-Date:   Mon, 9 Sep 2019 20:11:13 +0200
-Cc:     Adam Ford <aford173@gmail.com>,
-        =?utf-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Nishanth Menon <nm@ti.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <F8F08882-8011-441C-9581-ECCE9772EC21@goldelico.com>
-References: <C04F49BA-1229-4E96-9FCF-4FC662D1DB11@goldelico.com> <CAHCN7x+Ye6sB_YqO0sAX1OJDw64B-qGS3pL545v3Xk5z914cwQ@mail.gmail.com> <0C1EF64E-B33C-4BFA-A7D3-471DD1B9EE86@goldelico.com> <515048DE-138D-4400-8168-F2B7D61F1005@goldelico.com> <CAHCN7xLPCX9rZ0+7KVBiA_bgZ6tg6VeCXqD-UXu+6iwpFMPVrA@mail.gmail.com> <7B3D1D77-3E8C-444F-90B9-6DF2641178B8@goldelico.com> <CAHCN7xLW58ggx3CpVL=HdCVHWo6D-MCTB91A_9rtSRoZQ+xJuQ@mail.gmail.com> <FA2920FE-B76A-4D44-A264-862A1CCBF7FC@goldelico.com> <CAHCN7xJsPa0i+Z+qpCkWcdAh9+udmGT0RPNchdDsfB=8ptd3Nw@mail.gmail.com> <87420DBD-770F-4C32-9499-A3AEA5876E8A@goldelico.com> <20190909163236.GP52127@atomide.com> <E001F74D-724E-4C50-9265-CBD33C4F2918@goldelico.com>
-To:     Tony Lindgren <tony@atomide.com>
-X-Mailer: Apple Mail (2.3124)
+        Mon, 9 Sep 2019 14:12:25 -0400
+Received: by mail-qt1-f194.google.com with SMTP id g4so17287721qtq.7
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 11:12:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bHW6yWQ7UW+zE64/WnOR0Njpl5GgnEnN/6DGhYBHVKU=;
+        b=JU3sdhxLJfxvSVBs3bFdU2e4zLi8oAmSQDOExSf/O4iwr/3/8XkTrTYiJAME9KMSqq
+         g95sXFHrej2UYw7bd0AxF56vJamNB+gtzsZnv0LaU8Wr325f811eQzeQCAEiut+kvxiL
+         83v4KQgVt6omgbqgIQ3ocINWrA9ndgIQGDQO4c5bZOWVbJ+ek7o/OgNS37zB8aTjiGQw
+         aWOsWdhwbkR30CynP/7acBvWe6RzMFhmYU2QfKX/uWYIjwOzp4BW7WcfaV8c+DQ8pK2K
+         5EImhK5mvI4RBh+A1rWDEFtE3zROb4tT5Dm473Zeal2lS0t0rltfiOcLtNMqp0v5bHWB
+         IGOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bHW6yWQ7UW+zE64/WnOR0Njpl5GgnEnN/6DGhYBHVKU=;
+        b=rT6rrSPvFNRijsStXIsv9RiZkH71yqjD8Ye4EX8nvDQfaA6JmFUiT3kI++2UI1ws0g
+         hfzn6n+o8VtALgxhaAIPH+1/PkfbyBx862GnmmF5o9KV2X08Jr6dXxCBpmE9mkxVehxj
+         yvxb+3x1YLzXcHCHCSRnzUdcxXMmxtZkpy9JXsxDaaLlAaFMCIBXT8+Ht2aaozFW5jYi
+         KuNfqByW/iswCvWLegUmKn2ARkR8Cxzm1CfTPa7XYELOhVpo6HEqFvYbVK79E0oikUIJ
+         R9xA48cmLMMSaN1ww14ZbwDg3mmW7/roziaZfJOkEFj2bK0I0POvKY7Ui7XYU6LwqxyJ
+         9sUA==
+X-Gm-Message-State: APjAAAUYwJQlzfMGhcdurse5h+nWQGkLLnqAyp4GNoO+RNpeMcViysuY
+        5IQOTUMNGeaVAqlc4I3D6okOWA==
+X-Google-Smtp-Source: APXvYqxG+TIFdHDE4E3CtIW89ZhOmN9Ul0/qBQpcK8s8bWc+75DnjRjIbii0jaXyV2uFOZAwnh6oJQ==
+X-Received: by 2002:ac8:6684:: with SMTP id d4mr24552690qtp.286.1568052744047;
+        Mon, 09 Sep 2019 11:12:24 -0700 (PDT)
+Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
+        by smtp.gmail.com with ESMTPSA id q8sm5611310qtj.76.2019.09.09.11.12.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Sep 2019 11:12:23 -0700 (PDT)
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
+        ebiederm@xmission.com, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org, corbet@lwn.net,
+        catalin.marinas@arm.com, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
+        james.morse@arm.com, vladimir.murzin@arm.com,
+        matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org,
+        mark.rutland@arm.com
+Subject: [PATCH v4 00/17] arm64: MMU enabled kexec relocation
+Date:   Mon,  9 Sep 2019 14:12:04 -0400
+Message-Id: <20190909181221.309510-1-pasha.tatashin@soleen.com>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Changelog:
+v4:
+	- Addressed comments from James Morse.
+	- Split "check pgd table allocation" into two patches, and moved to
+	  the beginning of series  for simpler backport of the fixes.
+	  Added "Fixes:" tags to commit logs.
+	- Changed "arm64, hibernate:" to "arm64: hibernate:"
+	- Added Reviewed-by's
+	- Moved "add PUD_SECT_RDONLY" earlier in series to be with other
+	  clean-ups
+	- Added "Derived from:" to arch/arm64/mm/trans_pgd.c
+	- Removed "flags" from trans_info
+	- Changed .trans_alloc_page assumption to return zeroed page.
+	- Simplify changes to trans_pgd_map_page(), by keeping the old
+	  code.
+	- Simplify changes to trans_pgd_create_copy, by keeping the old
+	  code.
+	- Removed: "add trans_pgd_create_empty"
+	- replace init_mm with NULL, and keep using non "__" version of
+	  populate functions.
+v3:
+	- Split changes to create_safe_exec_page() into several patches for
+	  easier review as request by Mark Rutland. This is why this series
+	  has 3 more patches.
+	- Renamed trans_table to tans_pgd as agreed with Mark. The header
+	  comment in trans_pgd.c explains that trans stands for
+	  transitional page tables. Meaning they are used in transition
+	  between two kernels.
+v2:
+	- Fixed hibernate bug reported by James Morse
+	- Addressed comments from James Morse:
+	  * More incremental changes to trans_table
+	  * Removed TRANS_FORCEMAP
+	  * Added kexec reboot data for image with 380M in size.
 
-> Am 09.09.2019 um 18:54 schrieb H. Nikolaus Schaller =
-<hns@goldelico.com>:
->=20
-> Hi Tony,
->=20
->> Am 09.09.2019 um 18:32 schrieb Tony Lindgren <tony@atomide.com>:
->>=20
->> Hi,
->>=20
->> * H. Nikolaus Schaller <hns@goldelico.com> [190909 14:57]:
->>> Another question that came up by private mail from Andr=C3=A9 was if =
-we
->>> should better disable the turbo OPPs of omap34xx and 36xx by default
->>> (status =3D "disabled";) because there are concerns about =
-overheating
->>> the chips and we have no thermal regulation like for omap4 & 5.
->>>=20
->>> But this would mean that every board DTS would have to set it =
-explicitly
->>> to "enabled".
->>=20
->> Yes I started thinking about that too. I think there is a requirement
->> to do the scaling via the voltage processor for the higher modes.
->=20
-> It depends on how you read the little footnotes...
->=20
-> Table 4-18. Processor Voltages Without SmartReflex:
->=20
-> 	=E2=80=A2 This table defines the safe VDD1 (vdd_mpu_iva) voltage =
-ranges to be used before using the SmartReflex AVS feature for OPPs =
-calibration.
-> 	=E2=80=A2 Values are defined when SmartReflexTM feature is =
-deactivated. They can be lower when SmartReflexTM is activated.
-> 	=E2=80=A2 OPP130 and OPP1G are not available above TJ of 90C.
-> 	=E2=80=A2 (6)  OPP1G is a high performance operating point which =
-has following requirements:
-> 		=E2=80=A2 =E2=80=93  ABB LDO must be set to FBB (Forward =
-Body Bias) mode when switching to this OPP. It requires having a 1 F =
-capacitor connected to cap_vdd_bb_mpu_iva.
-> 		=E2=80=A2 =E2=80=93  AVS (Adaptive Voltage Scaling) =
-power technique must be used to achieve optimum operating voltage.
->=20
-> So I read this as:
->=20
-> * OPP130 and OPP1G should be guarded by 90=C2=B0C thermal framework
-> * OPP1G should also set the ABB LDO to FBB mode
-> * AVS does only reduce voltage levels (to save energy =3D heat =3D =
-problem)
-> * only if we want "optimum operating voltage" (read as: "lowest =
-possible voltage" =3D "highest energy saving") we must use AVS
->=20
-> I.e. we do not necessarily need AVS or SmartReflex or help from the
-> twl4030 (except for changing the voltage).
->=20
->> And there needs to be some way to automatically change to a lower
->> OPP in some cases.
->=20
-> That should probably be done through the thermal framework like
-> on omap4 & omap5?
->=20
->>=20
->> For normal OPPs, using the twl regulator directly should be OK.
->=20
-> Maybe for the turbo OPPs as well.
->=20
->> For the higher modes, maybe we could pass the callback functions
->> from arch/arm/mach-omap2/voltage.c for the twl regulator so the
->> voltage processor hardware can handle them directly. Or add a
->> separate regulator driver operating the voltages like Nishanth
->> posted patches for earlier.
->=20
-> So in my (limited) understanding it would suffice to set the ABB LDO
-> to FBB mode for OPP1G.
+Enable MMU during kexec relocation in order to improve reboot performance.
 
-Ok, we have to check if the ti,abb-v2 "LDO" driver=20
-drivers/regulator/ti-abb-regulator.c
-can handle that with a DT entry similar to:
+If kexec functionality is used for a fast system update, with a minimal
+downtime, the relocation of kernel + initramfs takes a significant portion
+of reboot.
 
-=
-https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/omap5.dts=
-i#L365
+The reason for slow relocation is because it is done without MMU, and thus
+not benefiting from D-Cache.
 
-Needs a little time to add to a new version of the patch set.
+Performance data
+----------------
+For this experiment, the size of kernel plus initramfs is small, only 25M.
+If initramfs was larger, than the improvements would be greater, as time
+spent in relocation is proportional to the size of relocation.
 
-> And make sure that the TJ does not exceed 90=C2=B0C by reducing the =
-cpufreq
-> through the thermal framework. But: the thermal sensors of the omap3
-> are quite odd (they seem to jump up by 10=C2=B0 after first use).
+Previously:
+kernel shutdown	0.022131328s
+relocation	0.440510736s
+kernel startup	0.294706768s
 
-I'll leave this out for the moment for future study.
+Relocation was taking: 58.2% of reboot time
 
-BR and thanks,
-Nikolaus
+Now:
+kernel shutdown	0.032066576s
+relocation	0.022158152s
+kernel startup	0.296055880s
+
+Now: Relocation takes 6.3% of reboot time
+
+Total reboot is x2.16 times faster.
+
+With bigger userland (fitImage 380M), the reboot time is improved by 3.57s,
+and is reduced from 3.9s down to 0.33s
+
+Previous approaches and discussions
+-----------------------------------
+https://lore.kernel.org/lkml/20190821183204.23576-1-pasha.tatashin@soleen.com/
+version 3 of this series
+
+https://lore.kernel.org/lkml/20190817024629.26611-1-pasha.tatashin@soleen.com
+version 2 of this series
+
+https://lore.kernel.org/lkml/20190801152439.11363-1-pasha.tatashin@soleen.com
+version 1 of this series
+
+https://lore.kernel.org/lkml/20190709182014.16052-1-pasha.tatashin@soleen.com
+reserve space for kexec to avoid relocation, involves changes to generic code
+to optimize a problem that exists on arm64 only:
+
+https://lore.kernel.org/lkml/20190716165641.6990-1-pasha.tatashin@soleen.com
+The first attempt to enable MMU, some bugs that prevented performance
+improvement. The page tables unnecessary configured idmap for the whole
+physical space.
+
+https://lore.kernel.org/lkml/20190731153857.4045-1-pasha.tatashin@soleen.com
+No linear copy, bug with EL2 reboots.
+
+Pavel Tatashin (17):
+  kexec: quiet down kexec reboot
+  arm64: hibernate: pass the allocated pgdp to ttbr0
+  arm64: hibernate: check pgd table allocation
+  arm64: hibernate: use get_safe_page directly
+  arm64: hibernate: remove gotos in create_safe_exec_page
+  arm64: hibernate: rename dst to page in create_safe_exec_page
+  arm64: hibernate: add PUD_SECT_RDONLY
+  arm64: hibernate: add trans_pgd public functions
+  arm64: hibernate: move page handling function to new trans_pgd.c
+  arm64: trans_pgd: make trans_pgd_map_page generic
+  arm64: trans_pgd: pass allocator trans_pgd_create_copy
+  arm64: trans_pgd: pass NULL instead of init_mm to *_populate functions
+  kexec: add machine_kexec_post_load()
+  arm64: kexec: move relocation function setup and clean up
+  arm64: kexec: add expandable argument to relocation function
+  arm64: kexec: configure trans_pgd page table for kexec
+  arm64: kexec: enable MMU during kexec relocation
+
+ arch/arm64/Kconfig                     |   4 +
+ arch/arm64/include/asm/kexec.h         |  51 +++++-
+ arch/arm64/include/asm/pgtable-hwdef.h |   1 +
+ arch/arm64/include/asm/trans_pgd.h     |  43 +++++
+ arch/arm64/kernel/asm-offsets.c        |  14 ++
+ arch/arm64/kernel/cpu-reset.S          |   4 +-
+ arch/arm64/kernel/cpu-reset.h          |   8 +-
+ arch/arm64/kernel/hibernate.c          | 239 ++++---------------------
+ arch/arm64/kernel/machine_kexec.c      | 195 ++++++++++++++++----
+ arch/arm64/kernel/relocate_kernel.S    | 196 ++++++++++----------
+ arch/arm64/mm/Makefile                 |   1 +
+ arch/arm64/mm/trans_pgd.c              | 225 +++++++++++++++++++++++
+ kernel/kexec.c                         |   4 +
+ kernel/kexec_core.c                    |   8 +-
+ kernel/kexec_file.c                    |   4 +
+ kernel/kexec_internal.h                |   2 +
+ 16 files changed, 658 insertions(+), 341 deletions(-)
+ create mode 100644 arch/arm64/include/asm/trans_pgd.h
+ create mode 100644 arch/arm64/mm/trans_pgd.c
+
+-- 
+2.23.0
 
