@@ -2,107 +2,178 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA04C49ED4
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 01:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C23BEC4360D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 01:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C48BA216C8
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 01:28:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CB4220863
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 01:34:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e/hI7Abt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZDhIp3D3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732271AbfIIB2p (ORCPT
+        id S1732306AbfIIBeE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 21:28:45 -0400
-Received: from mail-pf1-f176.google.com ([209.85.210.176]:41745 "EHLO
-        mail-pf1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732062AbfIIB2p (ORCPT
+        Sun, 8 Sep 2019 21:34:04 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:41088 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731948AbfIIBeE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 21:28:45 -0400
-Received: by mail-pf1-f176.google.com with SMTP id b13so8086292pfo.8
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 18:28:44 -0700 (PDT)
+        Sun, 8 Sep 2019 21:34:04 -0400
+Received: by mail-lf1-f65.google.com with SMTP id j4so9127476lfh.8
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 18:34:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=e21MJlkm97ORelJAhgeLaoLq/TpNVvuy8j3w5P3pM6c=;
-        b=e/hI7Abt5WCT7EnPRBljdZfQIVy4E7GM/CJIe7sqAJT95VsX/n3chVf0kWesNmNk7A
-         KoGlFiM5jWnk6+kAz6vW9VWnx2FhhUliBtyh3WlEK4OyRTxj62kR2ldJlgfRsLkrG7Ks
-         9EScgN0L6dpr1Se09nHh9AgKoL8BxarGKZr6zCHyUbxUw7Lwjn22ShQ9anpdWujPDCzR
-         iB7J/Zgr9QQtS5J2fvUZX/500hqlstrVM042IuHA4bcKziafNQ+ARq1M1UFmVuX51JVS
-         Oal4K7OeBd8UWYxIASA4xmiFXxwe7rUJ9Yys0Oku6+brghXPqq5WM/Xe5JCpRcWatNhn
-         huog==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=/FtBE5vj6y6aRaahSnO4O7TNJUGWPE04BVWV9bB+9rg=;
+        b=ZDhIp3D36gkx0L8LBeNBNBWt+d/82dBlSSrFH4f4MdaP81ZZ97dTxFhuvAchCGZnpu
+         1qkIPVMsGHSXHSaupPiIV7UK47XNF8gZCAxgh0zLcbRS/K/2hAirRNTwo6n7IUMT7j6n
+         Gov6o1Nva109tVLIbZAEjedaOgR8tzqkZ02s9EE8miT8gcmXNpZ/c9sUO1o774VMDolJ
+         iXrxKiQwu8CwxuCsu5H6kfKzBT+9zRZ/MV//L+ageIpdD7EOD9+CS6ieBWdZ0OkvPiJj
+         yZACUwNDgmDG7VY9+J1iqPFxnF+u4V71cE62bGBS4vIbH1MOGxT/AFvoxssMgTPeKMtA
+         k3MA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=e21MJlkm97ORelJAhgeLaoLq/TpNVvuy8j3w5P3pM6c=;
-        b=lR9EX/LTh9Om2xLSGLlT8JZPPrg3ZEGUpbIVDKckmRcATQ5ey+D5/mKWlJ4onF0TaL
-         IzJCA0ZtuaAWMVt66AroZAdz1gWUo5xDW+r7ghr6a+xNCQdHdaOtgevGNQZA15XwKje+
-         xJgbT/4O9EZDSbJujhLOzADiixmZvspUR8D1h0jQxSO6Dqf1TOrugv6Pr7wCdGJCHqJW
-         HDvtd6YCDjgkJpb9hveFwt8h4h3+NkbO5KFfbLWPjbykckvUBoB9XVnN7drb7UMqP6Ot
-         46riN/XG54tRF+Z22LrbGvDtF4k311QW3cizwrcwgL4LToXKWITmSUNFA0Aua5ENCZkX
-         VdVw==
-X-Gm-Message-State: APjAAAVyaG1wm+Huql4fgHE1L0XVw23U97e2yhVKLytdC5208hx2BpZU
-        0qREt4LA2qt7qTKguRKN9Ob9UQ==
-X-Google-Smtp-Source: APXvYqx1BUlBFXDbSTAJ4FHqjnXhSwvMdZclJEz/cyFfeg5DWf8xPDztYLw3PeyJ+BINXL72AjpNVQ==
-X-Received: by 2002:aa7:9a97:: with SMTP id w23mr24116070pfi.148.1567992523975;
-        Sun, 08 Sep 2019 18:28:43 -0700 (PDT)
-Received: from google.com ([2620:15c:2cb:1:e90c:8e54:c2b4:29e7])
-        by smtp.gmail.com with ESMTPSA id a3sm279452pjo.18.2019.09.08.18.28.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Sep 2019 18:28:43 -0700 (PDT)
-Date:   Sun, 8 Sep 2019 18:28:37 -0700
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     Knut Omang <knut.omang@oracle.com>
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        Shuah Khan <shuah@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shreyans Devendra Doshi <0xinfosect0r@gmail.com>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Hidenori Yamaji <hidenori.yamaji@sony.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Timothy Bird <Tim.Bird@sony.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>, Daniel Vetter <daniel@ffwll.ch>,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [RFC 03/19] ktf: Introduce a generic netlink protocol for test
- result communication
-Message-ID: <20190909012837.GA33048@google.com>
-References: <cover.92d76bb4f6dcedc971d0b72a49e8e459a98bca54.1565676440.git-series.knut.omang@oracle.com>
- <a29b3d27234a7ad3f5d6f7571d08167077dc0350.1565676440.git-series.knut.omang@oracle.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=/FtBE5vj6y6aRaahSnO4O7TNJUGWPE04BVWV9bB+9rg=;
+        b=NOLh0TdlNHCGkrD4zSsN0zL8uWWqRNaZfreRhmqEOXJS9X31KzxA1kqqTn5LoabHrb
+         b4kXI0p/aLPEho5bBP+HmrDao9E+gzmZKTBxeSt9elQSSdZbFc6mmbskr+cgn6IWE51+
+         AwvMTDibH9/4Xcokfj3/MDF1n+hjLSoPN5YWI1T++jl7lpxoxW6d8x8RrUuSO8cPPEEr
+         uq+JWvfnoysDYRyWTQZXALuT8JEkMErKFI9bjX9eW/vw14p3psqiYePTMEfqEeKT7ran
+         8IKufGwcu6tCa4Yr0iIpHVDeE+pq0V7xeULkWordtda+i7mBrciOcb2h6eKJMC8yE2zz
+         ZTwg==
+X-Gm-Message-State: APjAAAXTV+LZqSQN0Kf3/pL+v28QDLNGF0z5f4PdVYxLaCCXr2Xv+l2Y
+        QgHUKnXtPNg622sDOiPzPvCdoYRnc6FzSI1fPQ4rWGDT088=
+X-Google-Smtp-Source: APXvYqzqm+/O8rhwjPyTPNiNG541bfU6r/Zzag3Lk5NRSryPGdXalQU8CCPYMy4epWtRFmqetBA6GXrB4V0W77XkLKw=
+X-Received: by 2002:a19:8017:: with SMTP id b23mr14084158lfd.132.1567992842060;
+ Sun, 08 Sep 2019 18:34:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a29b3d27234a7ad3f5d6f7571d08167077dc0350.1565676440.git-series.knut.omang@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190908121057.216802689@linuxfoundation.org>
+In-Reply-To: <20190908121057.216802689@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Mon, 9 Sep 2019 07:03:50 +0530
+Message-ID: <CA+G9fYvdFQfKXtP1GguaP-k7YYqxEMrjO+7Gg-d13pzLnDspZA@mail.gmail.com>
+Subject: Re: [PATCH 4.9 00/26] 4.9.192-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 08:09:18AM +0200, Knut Omang wrote:
-> The generic netlink protocol used to communicate between
-> kernel and user space about tests and test results, as well as some
-> means for configuring tests within the kernel.
-> 
-> Unlike other kernel side test code in the kernel, ktf does not print
-> anything from inside the kernel (except for optional debugging
-> features to help "internal" debugging of ktf or ktf tests).
-> Instead all test results are communicated back to the user space
-> frontend, which decides how to do the reporting.
+On Sun, 8 Sep 2019 at 18:15, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.9.192 release.
+> There are 26 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Tue 10 Sep 2019 12:09:36 PM UTC.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.9.192-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.9.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-So why netlink? Why not just a file interface?
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-[...]
+Summary
+------------------------------------------------------------------------
 
-Cheers
+kernel: 4.9.192-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.9.y
+git commit: e2a45fc6bf15db630000dee73d525ccec5cf6617
+git describe: v4.9.191-27-ge2a45fc6bf15
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
+ld/v4.9.191-27-ge2a45fc6bf15
+
+
+No regressions (compared to build v4.9.191)
+
+
+No fixes (compared to build v4.9.191)
+
+Ran 21791 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* network-basic-tests
+* ltp-open-posix-tests
+* prep-tmp-disk
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+* ssuite
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
