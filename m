@@ -2,214 +2,154 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB25C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F108AC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5810021479
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:53:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C35B5222C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:54:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="EyHKJvqA"
+	dkim=pass (2048-bit key) header.d=ssi.gouv.fr header.i=@ssi.gouv.fr header.b="bsPrfe3f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731953AbfIIKxo (ORCPT
+        id S2390201AbfIIKyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 06:53:44 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:54371 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729342AbfIIKxm (ORCPT
+        Mon, 9 Sep 2019 06:54:20 -0400
+Received: from smtp-out.ssi.gouv.fr ([86.65.182.90]:53148 "EHLO
+        smtp-out.ssi.gouv.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728358AbfIIKyU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 06:53:42 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id x89ArI1M010864;
-        Mon, 9 Sep 2019 19:53:19 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x89ArI1M010864
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1568026399;
-        bh=TPeYKnTEdhTSobLdVu97GXYNke2Sz7pzo6o03rxMrF8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EyHKJvqAnMJPsStPeeSPGtTcYtAW8I8GPAqQrIO3Mue5DpnJA5t9UTUaMgF6VLA5N
-         80apDHEZgfWGdQI+8qKe/6/m8EvFKM7nNPE+qRyUdVFZZ9sZxIB9lBm4yDS5bgnkPY
-         Pmu9LReTTNraDcA4z7F5IpA44ZK3xEKdQib7bgBtiWV5QLpNC1DkEuTqmN+QPkvlkG
-         700n/RyJ5GBNAUL8HTRPJYyuiEAvYUFZG4AqNNy9fsVxCkzLeue49Vfap5QWSqNfU2
-         OXmxEu5XU7B59rwPY5UuX+IGQ1OiSQA9IQNhKe1f/0xfTZKIJt+2CcUz2CPQivQkli
-         P53suwAxUT7fA==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Denis Efremov <efremov@linux.com>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] export.h, genksyms: do not make genksyms calculate CRC of trimmed symbols
-Date:   Mon,  9 Sep 2019 19:53:17 +0900
-Message-Id: <20190909105317.20473-2-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190909105317.20473-1-yamada.masahiro@socionext.com>
-References: <20190909105317.20473-1-yamada.masahiro@socionext.com>
+        Mon, 9 Sep 2019 06:54:20 -0400
+Received: from smtp-out.ssi.gouv.fr (localhost [127.0.0.1])
+        by smtp-out.ssi.gouv.fr (Postfix) with ESMTP id 68FEDD00069;
+        Mon,  9 Sep 2019 12:54:18 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ssi.gouv.fr;
+        s=20160407; t=1568026458;
+        bh=lsE8Nf8H8eP9Ra9FaOYEExhywlR7G0uudTTjxz1hvFc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To:From:Subject;
+        b=bsPrfe3facITGSy7DMYPy8YYzwh1VjblL+C13Jn98z/Ykyq4WF4HusFGQluS1lRBd
+         QYYlffK04WUyhAEq8eXB0G3SbxesMMAAm5maeRLiYC+OGgwGm/UFnzGlEJmS5yTjgv
+         eDWHr12JCE7LIy1AnpTqixcRdqDzgwzq7JGzTrSFVJXeir6LdPgy/jMps6OeNW1+Ba
+         aChlFqI2Rwdfl7KYY82HfNbR9YLCc/r3WdWUMbTIopvQs4RYI2ecpdxUeyJYeoZrak
+         hYdIFTmBcuxxlC16cK/J4YqCEyLJQ1AbFThzUt7fkCISGm2XqYe9FM8OenXBMO8HEi
+         fKi53bdY2BZXA==
+Subject: Re: [PATCH v2 1/5] fs: Add support for an O_MAYEXEC flag on
+ sys_open()
+To:     James Morris <jmorris@namei.org>
+CC:     Jeff Layton <jlayton@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
+        <linux-kernel@vger.kernel.org>, Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Eric Chiang <ericchiang@google.com>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
+        <kernel-hardening@lists.openwall.com>, <linux-api@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>
+References: <20190906152455.22757-1-mic@digikod.net>
+ <20190906152455.22757-2-mic@digikod.net>
+ <87ef0te7v3.fsf@oldenburg2.str.redhat.com>
+ <75442f3b-a3d8-12db-579a-2c5983426b4d@ssi.gouv.fr>
+ <f53ec45fd253e96d1c8d0ea6f9cca7f68afa51e3.camel@kernel.org>
+ <1fbf54f6-7597-3633-a76c-11c4b2481add@ssi.gouv.fr>
+ <5a59b309f9d0603d8481a483e16b5d12ecb77540.camel@kernel.org>
+ <alpine.LRH.2.21.1909061202070.18660@namei.org>
+ <49e98ece-e85f-3006-159b-2e04ba67019e@ssi.gouv.fr>
+ <alpine.LRH.2.21.1909090309260.27895@namei.org>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>
+Message-ID: <073cb831-7c6b-1882-9b7d-eb810a2ef955@ssi.gouv.fr>
+Date:   Mon, 9 Sep 2019 12:54:16 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.0
+MIME-Version: 1.0
+In-Reply-To: <alpine.LRH.2.21.1909090309260.27895@namei.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arnd Bergmann reported false-positive modpost warnings detected by
-his randconfig testing of linux-next:
 
-  https://lkml.org/lkml/2019/9/6/619
+On 09/09/2019 12:12, James Morris wrote:
+> On Mon, 9 Sep 2019, Micka=C3=ABl Sala=C3=BCn wrote:
+>
+>>
+>> On 06/09/2019 21:03, James Morris wrote:
+>>> On Fri, 6 Sep 2019, Jeff Layton wrote:
+>>>
+>>>> The fact that open and openat didn't vet unknown flags is really a bug=
+.
+>>>>
+>>>> Too late to fix it now, of course, and as Aleksa points out, we've
+>>>> worked around that in the past. Now though, we have a new openat2
+>>>> syscall on the horizon. There's little need to continue these sorts of
+>>>> hacks.
+>>>>
+>>>> New open flags really have no place in the old syscalls, IMO.
+>>>
+>>> Agree here. It's unfortunate but a reality and Linus will reject any su=
+ch
+>>> changes which break existing userspace.
+>>
+>> Do you mean that adding new flags to open(2) is not possible?
+>>
+>> Does it means that unspecified behaviors are definitely part of the
+>> Linux specification and can't be fixed?
+>
+> This is my understanding.
+>
+>>
+>> As I said, O_MAYEXEC should be ignored if it is not supported by the
+>> kernel, which perfectly fit with the current open(2) flags behavior, and
+>> should also behave the same with openat2(2).
+>
+> The problem here is programs which are already using the value of
+> O_MAYEXEC, which will break.  Hence, openat2(2).
 
-Actually, this happens under the combination of CONFIG_MODVERSIONS=y
-and CONFIG_TRIM_UNUSED_KSYMS=y since commit 15bfc2348d54 ("modpost:
-check for static EXPORT_SYMBOL* functions").
+Well, it still depends on the sysctl, which doesn't enforce anything by
+default, hence doesn't break existing behavior, and this unused flags
+could be fixed/removed or reported by sysadmins or distro developers.
 
-For example, arch/arm/config/multi_v7_defconfig + CONFIG_MODVERSIONS=y
-+ CONFIG_TRIM_UNUSED_KSYMS=y produces the following false-positives:
 
-WARNING: "__lshrdi3" [vmlinux] is a static (unknown)
-WARNING: "__ashrdi3" [vmlinux] is a static (unknown)
-WARNING: "__aeabi_lasr" [vmlinux] is a static (unknown)
-WARNING: "__aeabi_llsr" [vmlinux] is a static (unknown)
-WARNING: "ftrace_set_clr_event" [vmlinux] is a static (unknown)
-WARNING: "__muldi3" [vmlinux] is a static (unknown)
-WARNING: "__aeabi_ulcmp" [vmlinux] is a static (unknown)
-WARNING: "__ucmpdi2" [vmlinux] is a static (unknown)
-WARNING: "__aeabi_lmul" [vmlinux] is a static (unknown)
-WARNING: "__bswapsi2" [vmlinux] is a static (unknown)
-WARNING: "__bswapdi2" [vmlinux] is a static (unknown)
-WARNING: "__ashldi3" [vmlinux] is a static (unknown)
-WARNING: "__aeabi_llsl" [vmlinux] is a static (unknown)
+--
+Micka=C3=ABl Sala=C3=BCn
 
-The root cause of the problem is not in the modpost, but in the
-implementation of CONFIG_TRIM_UNUSED_KSYMS.
-
-If there is at least one untrimmed symbol in the file, genksyms is
-invoked to calculate CRC of *all* the symbols in that file even if
-some of them have been trimmed due to no caller existing.
-
-As a result, .tmp_*.ver files contain CRC of trimmed symbols, thus
-unneeded __crc* symbols are added to objects. It has been harmless
-until recently.
-
-Since commit 15bfc2348d54 ("modpost: check for static EXPORT_SYMBOL*
-functions"), it is harmful because the bogus __crc* symbols make
-modpost call sym_update_crc(), and then new_symbol(), but there is
-no one that clears the ->is_static member.
-
-I gave Fixes to the first commit that uncovered the issue, but the
-potential problem has long existed since commit f235541699bc
-("export.h: allow for per-symbol configurable EXPORT_SYMBOL()").
-
-Fixes: 15bfc2348d54 ("modpost: check for static EXPORT_SYMBOL* functions")
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
- include/linux/export.h      | 42 ++++++++++++++-----------------------
- scripts/genksyms/keywords.c |  6 +-----
- 2 files changed, 17 insertions(+), 31 deletions(-)
-
-diff --git a/include/linux/export.h b/include/linux/export.h
-index cdd98a0d918c..7d8c112a8b61 100644
---- a/include/linux/export.h
-+++ b/include/linux/export.h
-@@ -18,9 +18,6 @@ extern struct module __this_module;
- #define THIS_MODULE ((struct module *)0)
- #endif
- 
--#ifdef CONFIG_MODULES
--
--#if !defined(__GENKSYMS__)
- #ifdef CONFIG_MODVERSIONS
- /* Mark the CRC weak since genksyms apparently decides not to
-  * generate a checksums for some symbols */
-@@ -74,6 +71,12 @@ struct kernel_symbol {
- };
- #endif
- 
-+#ifdef __GENKSYMS__
-+
-+#define ___EXPORT_SYMBOL(sym, sec)	__GENKSYMS_EXPORT_SYMBOL(sym)
-+
-+#else
-+
- /* For every exported symbol, place a struct in the __ksymtab section */
- #define ___EXPORT_SYMBOL(sym, sec)					\
- 	extern typeof(sym) sym;						\
-@@ -83,7 +86,9 @@ struct kernel_symbol {
- 	= #sym;								\
- 	__KSYMTAB_ENTRY(sym, sec)
- 
--#if defined(__DISABLE_EXPORTS)
-+#endif
-+
-+#if !defined(CONFIG_MODULES) || defined(__DISABLE_EXPORTS)
- 
- /*
-  * Allow symbol exports to be disabled completely so that C code may
-@@ -117,37 +122,22 @@ struct kernel_symbol {
- #define __cond_export_sym_0(sym, sec) /* nothing */
- 
- #else
--#define __EXPORT_SYMBOL ___EXPORT_SYMBOL
--#endif
- 
--#define EXPORT_SYMBOL(sym)					\
--	__EXPORT_SYMBOL(sym, "")
-+#define __EXPORT_SYMBOL(sym, sec)	___EXPORT_SYMBOL(sym, sec)
- 
--#define EXPORT_SYMBOL_GPL(sym)					\
--	__EXPORT_SYMBOL(sym, "_gpl")
--
--#define EXPORT_SYMBOL_GPL_FUTURE(sym)				\
--	__EXPORT_SYMBOL(sym, "_gpl_future")
-+#endif /* CONFIG_MODULES */
- 
-+#define EXPORT_SYMBOL(sym)		__EXPORT_SYMBOL(sym, "")
-+#define EXPORT_SYMBOL_GPL(sym)		__EXPORT_SYMBOL(sym, "_gpl")
-+#define EXPORT_SYMBOL_GPL_FUTURE(sym)	__EXPORT_SYMBOL(sym, "_gpl_future")
- #ifdef CONFIG_UNUSED_SYMBOLS
--#define EXPORT_UNUSED_SYMBOL(sym) __EXPORT_SYMBOL(sym, "_unused")
--#define EXPORT_UNUSED_SYMBOL_GPL(sym) __EXPORT_SYMBOL(sym, "_unused_gpl")
-+#define EXPORT_UNUSED_SYMBOL(sym)	__EXPORT_SYMBOL(sym, "_unused")
-+#define EXPORT_UNUSED_SYMBOL_GPL(sym)	__EXPORT_SYMBOL(sym, "_unused_gpl")
- #else
- #define EXPORT_UNUSED_SYMBOL(sym)
- #define EXPORT_UNUSED_SYMBOL_GPL(sym)
- #endif
- 
--#endif	/* __GENKSYMS__ */
--
--#else /* !CONFIG_MODULES... */
--
--#define EXPORT_SYMBOL(sym)
--#define EXPORT_SYMBOL_GPL(sym)
--#define EXPORT_SYMBOL_GPL_FUTURE(sym)
--#define EXPORT_UNUSED_SYMBOL(sym)
--#define EXPORT_UNUSED_SYMBOL_GPL(sym)
--
--#endif /* CONFIG_MODULES */
- #endif /* !__ASSEMBLY__ */
- 
- #endif /* _LINUX_EXPORT_H */
-diff --git a/scripts/genksyms/keywords.c b/scripts/genksyms/keywords.c
-index c586d32dd2c3..7a85c4e21175 100644
---- a/scripts/genksyms/keywords.c
-+++ b/scripts/genksyms/keywords.c
-@@ -3,11 +3,7 @@ static struct resword {
- 	const char *name;
- 	int token;
- } keywords[] = {
--	{ "EXPORT_SYMBOL", EXPORT_SYMBOL_KEYW },
--	{ "EXPORT_SYMBOL_GPL", EXPORT_SYMBOL_KEYW },
--	{ "EXPORT_SYMBOL_GPL_FUTURE", EXPORT_SYMBOL_KEYW },
--	{ "EXPORT_UNUSED_SYMBOL", EXPORT_SYMBOL_KEYW },
--	{ "EXPORT_UNUSED_SYMBOL_GPL", EXPORT_SYMBOL_KEYW },
-+	{ "__GENKSYMS_EXPORT_SYMBOL", EXPORT_SYMBOL_KEYW },
- 	{ "__asm", ASM_KEYW },
- 	{ "__asm__", ASM_KEYW },
- 	{ "__attribute", ATTRIBUTE_KEYW },
--- 
-2.17.1
-
+Les donn=C3=A9es =C3=A0 caract=C3=A8re personnel recueillies et trait=C3=A9=
+es dans le cadre de cet =C3=A9change, le sont =C3=A0 seule fin d=E2=80=99ex=
+=C3=A9cution d=E2=80=99une relation professionnelle et s=E2=80=99op=C3=A8re=
+nt dans cette seule finalit=C3=A9 et pour la dur=C3=A9e n=C3=A9cessaire =C3=
+=A0 cette relation. Si vous souhaitez faire usage de vos droits de consulta=
+tion, de rectification et de suppression de vos donn=C3=A9es, veuillez cont=
+acter contact.rgpd@sgdsn.gouv.fr. Si vous avez re=C3=A7u ce message par err=
+eur, nous vous remercions d=E2=80=99en informer l=E2=80=99exp=C3=A9diteur e=
+t de d=C3=A9truire le message. The personal data collected and processed du=
+ring this exchange aims solely at completing a business relationship and is=
+ limited to the necessary duration of that relationship. If you wish to use=
+ your rights of consultation, rectification and deletion of your data, plea=
+se contact: contact.rgpd@sgdsn.gouv.fr. If you have received this message i=
+n error, we thank you for informing the sender and destroying the message.
