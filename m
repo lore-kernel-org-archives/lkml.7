@@ -2,109 +2,87 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 216F6C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90458C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED35F2086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:26:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568028411;
-	bh=CzvWQDxQFxAcoWDb+NO6txjLfQDdjFSb8XYgqiljobM=;
-	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
-	b=osA3EkIlNbpLLgKKNK6eURM6HeGXxP/1rp0SWJMdyX/pb8ykJpeU3LN7dFPfJYzEw
-	 6Z3XzLxiX4bzMmFepxUmXnMCbicHMjS6t/h9XSniGMFQEAk/YDzRc13U400oqYevgC
-	 TPPVeNaneo3OG4BddfujWvBec6h8NXCfYTmTiI6c=
+	by mail.kernel.org (Postfix) with ESMTP id 6419C218AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:32:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404106AbfIIL0u (ORCPT
+        id S2404111AbfIILch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 07:26:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35832 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404056AbfIIL0p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 07:26:45 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F45221920;
-        Mon,  9 Sep 2019 11:26:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568028404;
-        bh=CzvWQDxQFxAcoWDb+NO6txjLfQDdjFSb8XYgqiljobM=;
-        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
-        b=kvzX7qLSplsgsgUWn4yyHhNROmcTc5k6WN1dv59DBIULtGwy2meVArtgl0m/8lmRr
-         TyR3gK+kLnZ8DnlXrsEjbphw6VwVxegB8AYDEqKP2D93g6JX68ePhkopSBkD9megyO
-         Na5BZLtRvJAGUjH1BrymBbixAZM6azhebrFKr3/w=
-Content-Type: text/plain; charset="utf-8"
+        Mon, 9 Sep 2019 07:32:37 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2178 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2391070AbfIILch (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 07:32:37 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 7A50E883CF089CC4CB43;
+        Mon,  9 Sep 2019 19:32:35 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 9 Sep 2019
+ 19:32:34 +0800
+Subject: Re: [f2fs-dev] [PATCH 1/2] f2fs: do not select same victim right
+ again
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20190909012532.20454-1-jaegeuk@kernel.org>
+ <69933b7f-48cc-47f9-ba6f-b5ca8f733cba@huawei.com>
+ <20190909080654.GD21625@jaegeuk-macbookpro.roam.corp.google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <97237da2-897a-8420-94de-812e94aa751f@huawei.com>
+Date:   Mon, 9 Sep 2019 19:32:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190826062127.GH2672@vkoul-mobl>
-References: <20190822170140.7615-1-vkoul@kernel.org> <20190822170140.7615-3-vkoul@kernel.org> <20190824063115.GW26807@tuxbook-pro> <20190826062127.GH2672@vkoul-mobl>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v3 2/4] clk: qcom: clk-rpmh: Convert to parent data scheme
-User-Agent: alot/0.8.1
-Date:   Mon, 09 Sep 2019 04:26:43 -0700
-Message-Id: <20190909112644.4F45221920@mail.kernel.org>
+In-Reply-To: <20190909080654.GD21625@jaegeuk-macbookpro.roam.corp.google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Vinod Koul (2019-08-25 23:21:27)
-> On 23-08-19, 23:31, Bjorn Andersson wrote:
-> > On Thu 22 Aug 10:01 PDT 2019, Vinod Koul wrote:
-> >=20
-> > > Convert the rpmh clock driver to use the new parent data scheme by
-> > > specifying the parent data for board clock.
-> > >=20
-> > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> > > ---
-> > >  drivers/clk/qcom/clk-rpmh.c | 10 ++++++++--
-> > >  1 file changed, 8 insertions(+), 2 deletions(-)
-> > >=20
-> > > diff --git a/drivers/clk/qcom/clk-rpmh.c b/drivers/clk/qcom/clk-rpmh.c
-> > > index c3fd632af119..0bced7326a20 100644
-> > > --- a/drivers/clk/qcom/clk-rpmh.c
-> > > +++ b/drivers/clk/qcom/clk-rpmh.c
-> > > @@ -95,7 +95,10 @@ static DEFINE_MUTEX(rpmh_clk_lock);
-> > >             .hw.init =3D &(struct clk_init_data){                    =
- \
-> > >                     .ops =3D &clk_rpmh_ops,                          =
- \
-> > >                     .name =3D #_name,                                =
- \
-> > > -                   .parent_names =3D (const char *[]){ "xo_board" },=
- \
-> > > +                   .parent_data =3D  &(const struct clk_parent_data)=
-{ \
-> > > +                                   .fw_name =3D "xo_board",         =
- \
-> > > +                                   .name =3D "xo_board",            =
- \
-> >=20
-> > Iiuc .name here refers to the global clock namespace and .fw_name refers
-> > to the device_node local name space. As such I really prefer this to be:
-> >=20
-> >   .fw_name =3D "xo",
-> >   .name =3D "xo_board",
-> >=20
-> > This ensures the backwards compatibility (when using global lookup),
-> > without complicating the node-local naming.
->=20
-> Sure, while thinking more on this, should we finalize the name as xo or
-> cxo, I see latter being also used at few places. It would be great to
-> get a name and stick to it for longer time :)
-> --=20
+On 2019/9/9 16:06, Jaegeuk Kim wrote:
+> On 09/09, Chao Yu wrote:
+>> On 2019/9/9 9:25, Jaegeuk Kim wrote:
+>>> GC must avoid select the same victim again.
+>>
+>> Blocks in previous victim will occupy addition free segment, I doubt after this
+>> change, FGGC may encounter out-of-free space issue more frequently.
+> 
+> Hmm, actually this change seems wrong by sec_usage_check().
+> We may be able to avoid this only in the suspicious loop?
+> 
+> ---
+>  fs/f2fs/gc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+> index e88f98ddf396..5877bd729689 100644
+> --- a/fs/f2fs/gc.c
+> +++ b/fs/f2fs/gc.c
+> @@ -1326,7 +1326,7 @@ int f2fs_gc(struct f2fs_sb_info *sbi, bool sync,
+>  		round++;
+>  	}
+>  
+> -	if (gc_type == FG_GC)
+> +	if (gc_type == FG_GC && seg_freed)
 
-I would name it 'cxo' because that's the pin name on this platform.
+That's original solution Sahitya provided to avoid infinite loop of GC, but I
+suggest to find the root cause first, then we added .invalid_segmap for that
+purpose.
 
+Thanks,
+
+>  		sbi->cur_victim_sec = NULL_SEGNO;
+>  
+>  	if (sync)
+> 
