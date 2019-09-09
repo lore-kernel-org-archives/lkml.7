@@ -2,152 +2,117 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FAFC00307
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF3C7C433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6AE32086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:53:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bdcic7+l"
+	by mail.kernel.org (Postfix) with ESMTP id A4175218AC
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:53:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568022833;
+	bh=mfW3P6BM6CBGA1YX46u5V3xopt1sEe7eeb7Ur0aYW/E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UioXk1natBzTIzdC0lNQLrri04ix7L5XoqGvqKyQMoGyK4C9RepP5yJ6euIZ/SuAu
+	 EIfgsAHu1pAseLEI6eDvzJ4sScENNewcmSUEws/6RzdkOX8hQPOmQwIrmIFVH/bLbV
+	 +UpK825ViydVXW7Cj8wl0ibTA4Fa3RpW0HRaMWpI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728951AbfIIJxJ (ORCPT
+        id S2390033AbfIIJxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 05:53:09 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51334 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728373AbfIIJxJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 05:53:09 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 7so3383905wme.1
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 02:53:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=q0Bu4MUr8Rse6QepVD+Mo7/VVrikFAdvAtW78HC8sMg=;
-        b=Bdcic7+lcLbSMXP63HOL8yGDSyRidRn33ahnPC9DyBQXs/uzkjDWHM6b+3k/T5b8rP
-         B0EcqGZmUCTyCvJUwQmSpboPIL7qnlQNvmgn6UBWaCeq8OxhRiPa784Gi4iG4ziivAHe
-         40DI6CbEhX8vC6FpHJuao5Ia8QbiRsojJzGqRn4PvkWrgyaQRQW8cqHcQ+fq9pvmnn57
-         OTr9M3sOnmtmha2JM6yxCnLPt3ol5O/t3/kjj+47pamlrROJHzvMxkTNqp0WRQoja+4U
-         NN+IVCqxOSJmxpEQRTn+Od7PnTqjxD4F9bnN/lmRbb0qrsSzeSADIEW/BnF3aXzyqR4y
-         dEIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=q0Bu4MUr8Rse6QepVD+Mo7/VVrikFAdvAtW78HC8sMg=;
-        b=JEhAaYT6lR7f41LqwOWflCACs0QbahTikU+aOa9iFEPW3IqsPI8HTC7bs2NCuEzvFX
-         6Ucbz+QO7x5HTv5e69x90R9VRgV6PeuCRUWY/HyJ2f770vHnySE7dsBSfuGDLX4KwpXY
-         LtbN09b3XzFgIEtlNtXyxbP5XS2FDsDm50RG807JjkVdjGYtV3MQt/5imn1cpm/FyoBw
-         0slY4IoDh2XfI9Nne9N3/q8dYK88xcQadO+TsqB2f9Q0bqdGEPlm0zUtCb3JE+aJVXmP
-         lyQl1BB68oqyYjmg2aLKOap3e6N51fCcMl2hqrs6S0IaVxeoR2ch67O/z2gkf5b7TsnC
-         TFvQ==
-X-Gm-Message-State: APjAAAXlpz2PEzQZoxoyda+HcVPKzrheAlzrj8eEVVku6ocL9/o5vnF4
-        bE1ksL4ZwNjrQzg5Eu3YLx7FBQ==
-X-Google-Smtp-Source: APXvYqyD7rIWfK15PwhuVw8tOpuuhFAqh0A4/sE3kYWn0d2L0pLoNlfPN6HlEweSVm7rZWqOpmvIXg==
-X-Received: by 2002:a1c:1d85:: with SMTP id d127mr19129801wmd.14.1568022787085;
-        Mon, 09 Sep 2019 02:53:07 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id q15sm12234012wmb.28.2019.09.09.02.53.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Sep 2019 02:53:06 -0700 (PDT)
-Date:   Mon, 9 Sep 2019 10:53:04 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Jean-Jacques Hiblot <jjhiblot@ti.com>
-Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
-        mark.rutland@arm.com, lee.jones@linaro.org, jingoohan1@gmail.com,
-        dmurphy@ti.com, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        tomi.valkeinen@ti.com
-Subject: Re: [PATCH v4 4/4] backlight: add led-backlight driver
-Message-ID: <20190909095304.67ehnpg6gckwpno4@holly.lan>
-References: <20190717141514.21171-1-jjhiblot@ti.com>
- <20190717141514.21171-5-jjhiblot@ti.com>
+        Mon, 9 Sep 2019 05:53:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35362 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728824AbfIIJxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 05:53:52 -0400
+Received: from localhost (110.8.30.213.rev.vodafone.pt [213.30.8.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D81BD2086D;
+        Mon,  9 Sep 2019 09:53:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568022831;
+        bh=mfW3P6BM6CBGA1YX46u5V3xopt1sEe7eeb7Ur0aYW/E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FgKUzvgE5HNfDIvO9Qi3YA1Zd9md6gM0IBsMl0CISOLizY2LyeEv2AdWh63DKwtTC
+         k5py76lfpUGigj+4JdUcjWEP2yVzOMhFFqYW1H81jBscvvyNyktIXyRcX204k4jCms
+         W+gFgfHpIRZjwcb4FnP8ycLFlkeomRC2kkgrcJ/k=
+Date:   Mon, 9 Sep 2019 10:53:47 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Yunsheng Lin <linyunsheng@huawei.com>
+Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org,
+        peterz@infradead.org, mingo@kernel.org, mhocko@kernel.org,
+        linuxarm@huawei.com
+Subject: Re: [PATCH] driver core: ensure a device has valid node id in
+ device_add()
+Message-ID: <20190909095347.GB6314@kroah.com>
+References: <1568009063-77714-1-git-send-email-linyunsheng@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190717141514.21171-5-jjhiblot@ti.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1568009063-77714-1-git-send-email-linyunsheng@huawei.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 04:15:14PM +0200, Jean-Jacques Hiblot wrote:
-> From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+On Mon, Sep 09, 2019 at 02:04:23PM +0800, Yunsheng Lin wrote:
+> Currently a device does not belong to any of the numa nodes
+> (dev->numa_node is NUMA_NO_NODE) when the node id is neither
+> specified by fw nor by virtual device layer and the device has
+> no parent device.
+
+Is this really a problem?
+
+> According to discussion in [1]:
+> Even if a device's numa node is not specified, the device really
+> does belong to a node.
+
+But as we do not know the node, can we cause more harm by randomly
+picking one (i.e. putting it all in node 0)?
+
+> This patch sets the device node to node 0 in device_add() if the
+> device's node id is not specified and it either has no parent
+> device, or the parent device also does not have a valid node id.
 > 
-> This patch adds a led-backlight driver (led_bl), which is similar to
-> pwm_bl except the driver uses a LED class driver to adjust the
-> brightness in the HW. Multiple LEDs can be used for a single backlight.
+> [1] https://lkml.org/lkml/2019/9/2/466
 > 
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
-> Acked-by: Pavel Machek <pavel@ucw.cz>
+> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 > ---
->  drivers/video/backlight/Kconfig  |   7 +
->  drivers/video/backlight/Makefile |   1 +
->  drivers/video/backlight/led_bl.c | 268 +++++++++++++++++++++++++++++++
->  3 files changed, 276 insertions(+)
->  create mode 100644 drivers/video/backlight/led_bl.c
+> Changelog RFC -> v1:
+> 1. Drop log error message and use a "if" instead of "? :".
+> 2. Drop the RFC tag.
+> ---
+>  drivers/base/core.c  | 10 +++++++---
+>  include/linux/numa.h |  2 ++
+>  2 files changed, 9 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/video/backlight/led_bl.c b/drivers/video/backlight/led_bl.c
-> new file mode 100644
-> index 000000000000..ac5ff78e7859
-> --- /dev/null
-> +++ b/drivers/video/backlight/led_bl.c
-> @@ -0,0 +1,268 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2015-2019 Texas Instruments Incorporated -  http://www.ti.com/
-> + * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> + *
-> + * Based on pwm_bl.c
-> + */
-> +
-> +#include <linux/backlight.h>
-> +#include <linux/gpio/consumer.h>
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index 1669d41..f79ad20 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -2107,9 +2107,13 @@ int device_add(struct device *dev)
+>  	if (kobj)
+>  		dev->kobj.parent = kobj;
+>  
+> -	/* use parent numa_node */
+> -	if (parent && (dev_to_node(dev) == NUMA_NO_NODE))
+> -		set_dev_node(dev, dev_to_node(parent));
+> +	/* use parent numa_node or default node 0 */
+> +	if (!numa_node_valid(dev_to_node(dev))) {
+> +		if (parent && numa_node_valid(dev_to_node(parent)))
+> +			set_dev_node(dev, dev_to_node(parent));
+> +		else
+> +			set_dev_node(dev, 0);
+> +	}
 
-Why do we need this header file?
+Again, is this going to cause more harm than good?  What happens if we
+leave it as "unknown", isn't that better than thinking we "know" it is
+in node 0?
 
-> +#include <linux/leds.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +
-> +#define BKL_FULL_BRIGHTNESS 255
+thanks,
 
-If we really need to have a full intensity constant then shouldn't we
-use LED_FULL directly.
-
-> +
-> +struct led_bl_data {
-> +	struct device		*dev;
-> +	struct backlight_device	*bl_dev;
-> +	struct led_classdev	**leds;
-> +	bool			enabled;
-> +	int			nb_leds;
-> +	unsigned int		*levels;
-> +	unsigned int		default_brightness;
-> +	unsigned int		max_brightness;
-> +};
-> +
-> +static int to_led_brightness(struct led_classdev *led, int value)
-> +{
-> +	return (value * led->max_brightness) / BKL_FULL_BRIGHTNESS;
-
-This code looks broken.
-
-For example led->max_brightness is 127 then the value this
-function will pick values is in the interval 0..63 which is
-wrong since we are not using the full range of the LED.
-
-Similarly led->max_brightness is > 255 then we'll generate values
-that are out-of-range
-
-
-Daniel.
+greg k-h
