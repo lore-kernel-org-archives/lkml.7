@@ -2,76 +2,86 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACBF4C4360D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 02:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE69FC4360D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 02:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84FCB20578
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 02:30:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A15722190F
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 02:37:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733060AbfIICaz (ORCPT
+        id S1733078AbfIICha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 22:30:55 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41970 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732560AbfIICaz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 22:30:55 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 278F160ACF;
-        Mon,  9 Sep 2019 02:30:55 +0000 (UTC)
-Received: from [10.72.12.61] (ovpn-12-61.pek2.redhat.com [10.72.12.61])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7B5E560166;
-        Mon,  9 Sep 2019 02:30:24 +0000 (UTC)
-Subject: Re: [PATCH 2/2] vhost: re-introducing metadata acceleration through
- kernel virtual address
-From:   Jason Wang <jasowang@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jgg@mellanox.com, aarcange@redhat.com, jglisse@redhat.com,
-        linux-mm@kvack.org,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        David Miller <davem@davemloft.net>,
-        linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org
-References: <20190905122736.19768-1-jasowang@redhat.com>
- <20190905122736.19768-3-jasowang@redhat.com>
- <20190908063618-mutt-send-email-mst@kernel.org>
- <1cb5aa8d-6213-5fce-5a77-fcada572c882@redhat.com>
-Message-ID: <868bfaed-ede4-6da8-0247-af2a03ea121d@redhat.com>
-Date:   Mon, 9 Sep 2019 10:30:20 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <1cb5aa8d-6213-5fce-5a77-fcada572c882@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Mon, 09 Sep 2019 02:30:55 +0000 (UTC)
+        Sun, 8 Sep 2019 22:37:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54580 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731928AbfIICh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 22:37:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id BCA83AE5E;
+        Mon,  9 Sep 2019 02:37:27 +0000 (UTC)
+From:   Giovanni Gherdovich <ggherdovich@suse.cz>
+To:     srinivas.pandruvada@linux.intel.com, tglx@linutronix.de,
+        mingo@redhat.com, peterz@infradead.org, bp@suse.de,
+        lenb@kernel.org, rjw@rjwysocki.net
+Cc:     x86@kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mgorman@techsingularity.net,
+        matt@codeblueprint.co.uk, viresh.kumar@linaro.org,
+        juri.lelli@redhat.com, pjt@google.com, vincent.guittot@linaro.org,
+        qperret@qperret.net, dietmar.eggemann@arm.com,
+        Giovanni Gherdovich <ggherdovich@suse.cz>
+Subject: [PATCH 0/2] Add support for frequency invariance for (some) x86
+Date:   Mon,  9 Sep 2019 04:42:14 +0200
+Message-Id: <20190909024216.5942-1-ggherdovich@suse.cz>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is a resend with of Peter Zijlstra's patch to support frequency
+scale-invariance on x86 from May 2018 [see 1]. I've added some modifications
+and included performance test results. If Peter doesn't mind, I'm slapping my
+name on it :)
 
-On 2019/9/9 上午10:18, Jason Wang wrote:
->>>
->>> On a elder CPU Sandy Bridge without SMAP support. TX PPS doesn't see
->>> any difference.
->> Why is not Kaby Lake with SMAP off the same as Sandy Bridge?
->
->
-> I don't know, I guess it was because the atomic is l 
+The changes from Peter's original implementation are:
 
+1) normalizing against the 4-cores turbo level instead or 1-core turbo
+2) removing the run-time search for when the above value isn't found in the
+   various Intel MSRs -- the base frequency value is taken in that case.
 
-Sorry, I meant atomic costs less for Kaby Lake.
+The section "4. KNOWN LIMITATIONS" in the first patch commit message addresses
+the reason why this approach was dropped back in 2018, and explains that the
+performance gains outweight that issue.
 
-Thanks
+The second patch from Srinivas is taken verbatim from the May 2018 submission
+as it still applies.
 
+I apologies for the length of patch #1 commit message; I've made a table of
+contents with summaries of each section that should make easier to skim
+through the content.
+
+This submission incorporates the feedback and requests for additional tests
+received during the presentation made at OSPM 2019 in Pisa three months ago.
+
+[1] https://lore.kernel.org/lkml/20180516044911.28797-2-srinivas.pandruvada@linux.intel.com/
+
+Giovanni Gherdovich (1):
+  x86,sched: Add support for frequency invariance
+
+Srinivas Pandruvada (1):
+  cpufreq: intel_pstate: Conditional frequency invariant accounting
+
+ arch/x86/include/asm/topology.h |  29 +++++++
+ arch/x86/kernel/smpboot.c       | 180 +++++++++++++++++++++++++++++++++++++++-
+ drivers/cpufreq/intel_pstate.c  |   5 ++
+ kernel/sched/core.c             |   1 +
+ kernel/sched/sched.h            |   7 ++
+ 5 files changed, 221 insertions(+), 1 deletion(-)
+
+-- 
+2.16.4
 
