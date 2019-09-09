@@ -2,128 +2,152 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5784C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 19:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 425AEC4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 19:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4ED721A4A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 19:30:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568057424;
-	bh=nmVjDiFEPjOun2GAl5FyRhqaLZ9PnQH+QNxrazFr5HA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=baRoHX2mOhmOjfZWlwpZt5VdjUVSotFo72bRwbg6JmkamxYroKTU8eZ5StF2Bgj1b
-	 KEGStwWHzJWgpr/mRU1gUE6Vt3n0sHBsGsY6s5kBn6aQOQJ5Xsj2meib3Xb6KZM8at
-	 ln0Bp2ks0y3ZIQ/PGby+TnfcAOFz2o/MNcxQ5t5s=
+	by mail.kernel.org (Postfix) with ESMTP id 1275821A4C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 19:33:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SNgoAJZV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405599AbfIITaX (ORCPT
+        id S2405673AbfIITdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 15:30:23 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40628 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730416AbfIITaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 15:30:23 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A4E75B621;
-        Mon,  9 Sep 2019 19:30:21 +0000 (UTC)
-Date:   Mon, 9 Sep 2019 21:30:20 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Rientjes <rientjes@google.com>
-Cc:     Andrea Arcangeli <aarcange@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [patch for-5.3 0/4] revert immediate fallback to remote hugepages
-Message-ID: <20190909193020.GD2063@dhcp22.suse.cz>
-References: <alpine.DEB.2.21.1909041252230.94813@chino.kir.corp.google.com>
- <20190904205522.GA9871@redhat.com>
- <alpine.DEB.2.21.1909051400380.217933@chino.kir.corp.google.com>
+        Mon, 9 Sep 2019 15:33:08 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:45476 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731005AbfIITdH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 15:33:07 -0400
+Received: by mail-pf1-f194.google.com with SMTP id y72so9809787pfb.12
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 12:33:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RaRE1Iu5KUHw2kF5I9xN2ziSWnzUpRlWSz3BZK7PqtY=;
+        b=SNgoAJZV+5ID24jcq/ogL56EPLG4XLHTtbcwvdtCs9cUwEwB2vLUrcHV4GJlssFvXQ
+         Md/WdrXDCljdGL5we81h69jFBMqoPNiL8xqYd0364AOhk8+o+QbJWMEx5hbwlU84qjFg
+         Se/5NSBh8EzJau8pPX4eQCSWUrg2iGs2/Dz0I0v6WCqFN1MT0i2DwRay31CUK4cRQeW7
+         WaDsUaXSWQBsJGlzFuoSOEa978uMLZtLAfv0aP2IlV4mANsWdhVHMaXESBnmAoEINP/T
+         Z10c1D1HtdFkDYDvEy/N0cqnZrWc+ENOwCwUtbqIUNO7/DZP5nD+2/aqg5+kDjUtlgnJ
+         wJZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RaRE1Iu5KUHw2kF5I9xN2ziSWnzUpRlWSz3BZK7PqtY=;
+        b=Py9K/jrin/2Qmmtied1iW//zUndnLxnznCAE7IuSuWsLAxiroSYqnqX289YmMlz9sj
+         gmkfZXmHXo/bD63rH0XkKoY5+/20VI8XSSXUETB4+p5c9KQalPHeyskOtbCdURX2gQPY
+         qgeK9LJbwBjusQtRimXXpEvY8/FPNX3LOPeMdYMvhOHb52zLTYxhnMSsY42c8K5mupVK
+         akp+WRUw1DGzEA0nzjYKVjzsavsaK/j7a8M+Y+BaO3856Xqi2Gqup8nWzZG7fqAJ7Wah
+         o5YVXis6O7Lcq049WeWR5u8aApc+s9AU/grZsHHpHzJbE8qHhi3z3Tqh6OKNfPejNJvg
+         kgJg==
+X-Gm-Message-State: APjAAAVNLVZPBPCLAgS3Ru+HmuSRikblGApZ+r7mXv87mxxzOzfMIJBx
+        H+lupaEXsScWTI2qbxrnVYmaf3L/
+X-Google-Smtp-Source: APXvYqzuJVmL1KvgW96Px+WaNpFc/h8svQlg6lkb9PFH4vxlAq1B2IJsKu8U1pC/pdAjqH18ms2EnA==
+X-Received: by 2002:a65:63c4:: with SMTP id n4mr7060143pgv.44.1568057585214;
+        Mon, 09 Sep 2019 12:33:05 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id w11sm19308266pfd.116.2019.09.09.12.33.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 09 Sep 2019 12:33:05 -0700 (PDT)
+Date:   Mon, 9 Sep 2019 12:32:38 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Daniel Baluta <daniel.baluta@gmail.com>
+Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Mihai Serban <mihai.serban@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mihai Serban <mihai.serban@gmail.com>
+Subject: Re: [alsa-devel] [PATCH] ASoC: fsl_sai: Fix noise when using EDMA
+Message-ID: <20190909193238.GA10344@Asurada-Nvidia.nvidia.com>
+References: <20190830200900.19668-1-daniel.baluta@nxp.com>
+ <20190906012438.GA17926@Asurada-Nvidia.nvidia.com>
+ <CAEnQRZBTc=beU7CX747RsM7KEsJethfZ0fPv=CkLQ1e3ofHMkA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1909051400380.217933@chino.kir.corp.google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAEnQRZBTc=beU7CX747RsM7KEsJethfZ0fPv=CkLQ1e3ofHMkA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 05-09-19 14:06:28, David Rientjes wrote:
-> On Wed, 4 Sep 2019, Andrea Arcangeli wrote:
+On Fri, Sep 06, 2019 at 09:46:12AM +0300, Daniel Baluta wrote:
+> On Fri, Sep 6, 2019 at 4:25 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
+> >
+> > On Fri, Aug 30, 2019 at 11:09:00PM +0300, Daniel Baluta wrote:
+> > > From: Mihai Serban <mihai.serban@nxp.com>
+> > >
+> > > EDMA requires the period size to be multiple of maxburst. Otherwise the
+> > > remaining bytes are not transferred and thus noise is produced.
+> > >
+> > > We can handle this issue by adding a constraint on
+> > > SNDRV_PCM_HW_PARAM_PERIOD_SIZE to be multiple of tx/rx maxburst value.
+> > >
+> > > Cc: NXP Linux Team <linux-imx@nxp.com>
+> > > Signed-off-by: Mihai Serban <mihai.serban@nxp.com>
+> > > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> > > ---
+> > >  sound/soc/fsl/fsl_sai.c | 15 +++++++++++++++
+> > >  sound/soc/fsl/fsl_sai.h |  1 +
+> > >  2 files changed, 16 insertions(+)
+> > >
+> > > diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
+> > > index 728307acab90..fe126029f4e3 100644
+> > > --- a/sound/soc/fsl/fsl_sai.c
+> > > +++ b/sound/soc/fsl/fsl_sai.c
+> > > @@ -612,6 +612,16 @@ static int fsl_sai_startup(struct snd_pcm_substream *substream,
+> > >                          FSL_SAI_CR3_TRCE_MASK,
+> > >                          FSL_SAI_CR3_TRCE);
+> > >
+> > > +     /*
+> > > +      * some DMA controllers need period size to be a multiple of
+> > > +      * tx/rx maxburst
+> > > +      */
+> > > +     if (sai->soc_data->use_constraint_period_size)
+> > > +             snd_pcm_hw_constraint_step(substream->runtime, 0,:
+> > > +                                        SNDRV_PCM_HW_PARAM_PERIOD_SIZE,
+> > > +                                        tx ? sai->dma_params_tx.maxburst :
+> > > +                                        sai->dma_params_rx.maxburst);
+> >
+> > I feel that PERIOD_SIZE could be used for some other cases than
+> > being related to maxburst....
+> >
+> > >  static const struct of_device_id fsl_sai_ids[] = {
+> > > diff --git a/sound/soc/fsl/fsl_sai.h b/sound/soc/fsl/fsl_sai.h
+> > > index b89b0ca26053..3a3f6f8e5595 100644
+> > > --- a/sound/soc/fsl/fsl_sai.h
+> > > +++ b/sound/soc/fsl/fsl_sai.h
+> > > @@ -157,6 +157,7 @@
+> > >
+> > >  struct fsl_sai_soc_data {
+> > >       bool use_imx_pcm;
+> > > +     bool use_constraint_period_size;
+> >
+> > ....so maybe the soc specific flag here could be something like
+> >         bool use_edma;
+> >
+> > What do you think?
 > 
-> > > This is an admittedly hacky solution that shouldn't cause anybody to 
-> > > regress based on NUMA and the semantics of MADV_HUGEPAGE for the past 
-> > > 4 1/2 years for users whose workload does fit within a socket.
-> > 
-> > How can you live with the below if you can't live with 5.3-rc6? Here
-> > you allocate remote THP if the local THP allocation fails.
-> > 
-> > >  			page = __alloc_pages_node(hpage_node,
-> > >  						gfp | __GFP_THISNODE, order);
-> > > +
-> > > +			/*
-> > > +			 * If hugepage allocations are configured to always
-> > > +			 * synchronous compact or the vma has been madvised
-> > > +			 * to prefer hugepage backing, retry allowing remote
-> > > +			 * memory as well.
-> > > +			 */
-> > > +			if (!page && (gfp & __GFP_DIRECT_RECLAIM))
-> > > +				page = __alloc_pages_node(hpage_node,
-> > > +						gfp | __GFP_NORETRY, order);
-> > > +
-> > 
-> > You're still going to get THP allocate remote _before_ you have a
-> > chance to allocate 4k local this way. __GFP_NORETRY won't make any
-> > difference when there's THP immediately available in the remote nodes.
-> > 
-> 
-> This is incorrect: the fallback allocation here is only if the initial 
-> allocation with __GFP_THISNODE fails.  In that case, we were able to 
-> compact memory to make a local hugepage available without incurring 
-> excessive swap based on the RFC patch that appears as patch 3 in this 
-> series.
+> I think your suggestion is a little bit better than what we have. But what if
 
-That patch is quite obscure and specific to pageblock_order+ sizes and
-for some reason requires __GPF_IO without any explanation on why. The
-problem is not THP specific, right? Any other high order has the same
-problem AFAICS. So it is just a hack and that's why it is hard to reason
-about.
+The better part of using "edma" word, I felt, is to match this
+"soc" word in the structure name.
 
-I believe it would be the best to start by explaining why we do not see
-the same problem with order-0 requests. We do not enter the slow path
-and thus the memory reclaim if there is any other node to pass through
-watermakr as well right? So essentially we are relying on kswapd to keep
-nodes balanced so that allocation request can be satisfied from a local
-node. We do have kcompactd to do background compaction. Why do we want
-to rely on the direct compaction instead? What is the fundamental
-difference?
+> in the future another DMA controler (not eDMA) will need the same constraint.
 
-Your changelog goes in length about some problems in the compaction but
-I really do not see the underlying problem description. We cannot do any
-sensible fix/heuristic without capturing that IMHO. Either there is
-some fundamental difference between direct and background compaction
-and doing a the former one is necessary and we should be doing that by
-default for all higher order requests that are sleepable (aka
-__GFP_DIRECT_RECLAIM) or there is something to fix for the background
-compaction to be more pro-active.
- 
-> > I said one good thing about this patch series, that it fixes the swap
-> > storms. But upstream 5.3 fixes the swap storms too and what you sent
-> > is not nearly equivalent to the mempolicy that Michal was willing
-> > to provide you and that we thought you needed to get bigger guarantees
-> > of getting only local 2m or local 4k pages.
-> > 
-> 
-> I haven't seen such a patch series, is there a link?
-
-not yet unfortunatelly. So far I haven't heard that you are even
-interested in that policy. You have never commented on that IIRC.
--- 
-Michal Hocko
-SUSE Labs
+That sounds like a valid point to me, I don't feel it'd happen
+that often though. I'd be okay if you insist to keep yours :)
