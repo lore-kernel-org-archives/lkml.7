@@ -8,64 +8,65 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA937C00307
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 08:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D21A0C433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 08:16:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AF1920678
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 08:16:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D31320678
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 08:16:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O7XU/JSn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sq6dXyBV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388994AbfIIIQO (ORCPT
+        id S2389017AbfIIIQR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 04:16:14 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:37611 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388946AbfIIIQM (ORCPT
+        Mon, 9 Sep 2019 04:16:17 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43793 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388970AbfIIIQO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 04:16:12 -0400
-Received: by mail-pg1-f193.google.com with SMTP id d1so7380637pgp.4;
-        Mon, 09 Sep 2019 01:16:12 -0700 (PDT)
+        Mon, 9 Sep 2019 04:16:14 -0400
+Received: by mail-pg1-f195.google.com with SMTP id u72so7364116pgb.10;
+        Mon, 09 Sep 2019 01:16:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=tME0Q4cNinqlG8VwvZjBQfALZ3g9avp+5J7AvfOF0Ik=;
-        b=O7XU/JSnZyh0ihNBIabyaeKW8xwilNoaMj+dCaSbM1saIjrQCKvE7vbjYLLm6Yza/A
-         g3aXAeCoddq4Cv8leAH4E/SuQBlHWA8DuBRQKMhnlymy12LeYQwM5skDrlc5b/9e2KLU
-         KsD3gSJHST7hvQ8P9IKEs/cUMeyZ/+IlxStHkRtsGqmhtqxVr6OvmdPLnhqWloNekMx5
-         Zb+9CPCasy0zj0vhIs4WG/r9Ss1aGMkXimpXEydrJSdDWDd5+snjs+NSaj718h5XM6NP
-         Ra1B50tYl2k9Q0kfSVUJSkB1g7rB1nTvy4I5nDiUJyX3eEyj5qcouvoeACXXAcCFgJxh
-         xfjA==
+        bh=l9SexI8nasVLgeuYZYcGyM3Easa+d7jbfdU+iQ5eqQk=;
+        b=sq6dXyBVTiW5dDplPWSvVD0Cb99T91Vj2r/kBxYePgU/RnGsn5aATmKiTvRWk0acDI
+         GoF26DGwsNPtoqsH5EuOSAfZF62iyAe5tLoMzrH11VcBXqcvWGsCkDFSKIQwfnmlUVvT
+         2gYb9gXbz+f2EDJOGRJ0Tl3hJItQ7Se65I6xYWwcbStMq66OR8sDZmVBjthRdUbbAtp4
+         bSnaf6E5n2KDkMNVs5eBE6YjZTAXvozRJNn2sEFGhMk8fzpDK1eJLmvsH4aFl2xA05Ya
+         ZZaD6jXU3LDPIIsg0kOr5ZDMstuKhGisQ655AW0I6inMp2sb6hVOtOujF7iXKkUxBud6
+         /rIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=tME0Q4cNinqlG8VwvZjBQfALZ3g9avp+5J7AvfOF0Ik=;
-        b=HhoEDwjGkl9/LLvPV79MQ1cQWUaBntASx7XrZAUYf+nsk+XRsSkJDhb9tIHeH6RhuV
-         f83hez2z92umPmKVqQ2VTdUqfbaAryPDC/G89jz9uxjQ1M/Uyz4w26xByhzENCxNySTz
-         bXamJbwGREtCf0OB1PGAXuxbwrXECq7wkFQH3IyXokUaQx8HAa7j69WTIsLVw3zIgrgu
-         ByNOrbDSkaYqRp0g7wddIbs6myItE34vYEZzCjg3KW/DdHWNrgRbc1yYQ1XfFYrL809v
-         /gscC6/OboVlv2snWW2DxaCwKD0WIau2TnoDDUMItSD6VsAWor3KXVwcMZDENFEeuquY
-         yLnQ==
-X-Gm-Message-State: APjAAAXKrfcNIJgls/JjdRwc32m8K782Man+4VmHZB54gsoQxo9/9e3E
-        0YUFEYz3tPKcg25RDkw42fU=
-X-Google-Smtp-Source: APXvYqzBHUwYwhNM18kBXsaeIfdEuaNX4tWsi3xnMBedSuY72okTuyhvxcUKWdN+CKWF3wtMtwryVA==
-X-Received: by 2002:a17:90a:fa3:: with SMTP id 32mr24277488pjz.35.1568016971873;
-        Mon, 09 Sep 2019 01:16:11 -0700 (PDT)
+        bh=l9SexI8nasVLgeuYZYcGyM3Easa+d7jbfdU+iQ5eqQk=;
+        b=e0EzOIyFLw6r8x0g3eSWNo8oGW8PmM5v8ZqqBCxPEIMUeb1OtWTfWFmAWnuXCd/7/r
+         oTG6Dk/Uibn21fmtFKTfgwnSn1PBbD9HK/tvszIVAZtGjOTliCo7tgbZbszizewIh/Xz
+         lVWLqIEQJNhnZQ0Cz29rdH8Tummc4WGpGJOjuDBerSF5vc5xuzXsoIstPhC/oqrFhxW7
+         3+dWzG83Nz6v12oE5xaSo2jdmRJ4B7h2Rd6M08JLDxZH/S/VUUvDbUoA2V4WIRR4iLBu
+         QjY71loNapf09yRNVdl3K3YfPPc8gEAmtwdO3vo8N8tcCEtAMtFv6Rm5dCi2j5IGIt4d
+         ubgA==
+X-Gm-Message-State: APjAAAVwZSAb0L6ndgJS338BuS+GT+Bd59z6rnbBUpqSlj3OQ5Cabv7X
+        sAaDr/ktgxSX20c+0qMpK0U=
+X-Google-Smtp-Source: APXvYqzsr9e/FIkGAUX7UV75DQNvUOtMF3SkGBzhgOChHGSUEE8KjIW8KEsdRVapfbZEmwppgoE/DA==
+X-Received: by 2002:aa7:91d3:: with SMTP id z19mr26081486pfa.135.1568016973523;
+        Mon, 09 Sep 2019 01:16:13 -0700 (PDT)
 Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id u65sm12686669pfu.104.2019.09.09.01.16.10
+        by smtp.gmail.com with ESMTPSA id u65sm12686669pfu.104.2019.09.09.01.16.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Sep 2019 01:16:10 -0700 (PDT)
+        Mon, 09 Sep 2019 01:16:12 -0700 (PDT)
 From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH v3 07/13] software node: simplify property_entry_read_string_array()
-Date:   Mon,  9 Sep 2019 01:15:51 -0700
-Message-Id: <20190909081557.93766-8-dmitry.torokhov@gmail.com>
+Subject: [PATCH v3 08/13] software node: introduce PROPERTY_ENTRY_ARRAY_XXX_LEN()
+Date:   Mon,  9 Sep 2019 01:15:52 -0700
+Message-Id: <20190909081557.93766-9-dmitry.torokhov@gmail.com>
 X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
 In-Reply-To: <20190909081557.93766-1-dmitry.torokhov@gmail.com>
 References: <20190909081557.93766-1-dmitry.torokhov@gmail.com>
@@ -76,54 +77,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no need to treat string arrays and single strings separately, we can go
-exclusively by the element length in relation to data type size.
+Sometimes we want to initialize property entry array from a regular
+pointer, when we can't determine length automatically via ARRAY_SIZE.
+Let's introduce PROPERTY_ENTRY_ARRAY_XXX_LEN macros that take explicit
+"len" argument.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/base/swnode.c | 21 +++++++--------------
- 1 file changed, 7 insertions(+), 14 deletions(-)
+ include/linux/property.h | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index a0629365972d..2dfeeab919d4 100644
---- a/drivers/base/swnode.c
-+++ b/drivers/base/swnode.c
-@@ -173,28 +173,21 @@ static int property_entry_read_string_array(const struct property_entry *props,
- 					    const char *propname,
- 					    const char **strings, size_t nval)
- {
--	const struct property_entry *prop;
- 	const void *pointer;
--	size_t array_len, length;
-+	size_t length;
-+	int array_len;
+diff --git a/include/linux/property.h b/include/linux/property.h
+index 911ace267247..793d05cbc3b2 100644
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -280,6 +280,25 @@ struct property_entry {
+ #define PROPERTY_ENTRY_STRING_ARRAY(_name_, _val_)			\
+ 	PROPERTY_ENTRY_ARRAY(_name_, str, STRING, _val_)
  
- 	/* Find out the array length. */
--	prop = property_entry_get(props, propname);
--	if (!prop)
--		return -EINVAL;
--
--	if (prop->is_array)
--		/* Find the length of an array. */
--		array_len = property_entry_count_elems_of_size(props, propname,
--							  sizeof(const char *));
--	else
--		/* The array length for a non-array string property is 1. */
--		array_len = 1;
-+	array_len = property_entry_count_elems_of_size(props, propname,
-+						       sizeof(const char *));
-+	if (array_len < 0)
-+		return array_len;
- 
- 	/* Return how many there are if strings is NULL. */
- 	if (!strings)
- 		return array_len;
- 
--	array_len = min(nval, array_len);
-+	array_len = min_t(size_t, nval, array_len);
- 	length = array_len * sizeof(*strings);
- 
- 	pointer = property_entry_find(props, propname, length);
++#define PROPERTY_ENTRY_ARRAY_LEN(_name_, _elem_, _Type_, _val_, _len_)	\
++(struct property_entry) {						\
++	.name = _name_,							\
++	.length = (_len_) * PROPERTY_ENTRY_ELSIZE(_elem_),	\
++	.type = DEV_PROP_##_Type_,					\
++	.pointer._elem_ = _val_,					\
++}
++
++#define PROPERTY_ENTRY_U8_ARRAY_LEN(_name_, _val_, _len_)		\
++	PROPERTY_ENTRY_ARRAY_LEN(_name_, u8_data, U8, _val_, _len_)
++#define PROPERTY_ENTRY_U16_ARRAY_LEN(_name_, _val_, _len_)		\
++	PROPERTY_ENTRY_ARRAY_LEN(_name_, u16_data, U16, _val_, _len_)
++#define PROPERTY_ENTRY_U32_ARRAY_LEN(_name_, _val_, _len_)		\
++	PROPERTY_ENTRY_ARRAY_LEN(_name_, u32_data, U32, _val_, _len_)
++#define PROPERTY_ENTRY_U64_ARRAY_LEN(_name_, _val_, _len_)		\
++	PROPERTY_ENTRY_ARRAY_LEN(_name_, u64_data, U64, _val_, _len_)
++#define PROPERTY_ENTRY_STRING_ARRAY_LEN(_name_, _val_, _len_)		\
++	PROPERTY_ENTRY_ARRAY_LEN(_name_, str, STRING, _val_, _len_)
++
+ #define PROPERTY_ENTRY_ELEMENT(_name_, _elem_, _Type_, _val_)	\
+ (struct property_entry) {					\
+ 	.name = _name_,						\
 -- 
 2.23.0.187.g17f5b7556c-goog
 
