@@ -2,107 +2,99 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 408CCC433EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EADCAC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DA5E218AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:45:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2D3A21920
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:46:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="JnJGdpWX"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TQVx9b+v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732490AbfIILpB (ORCPT
+        id S2404387AbfIILq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 07:45:01 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:44706 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731989AbfIILpA (ORCPT
+        Mon, 9 Sep 2019 07:46:57 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:49912 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732500AbfIILq4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 07:45:00 -0400
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x89BiilT010794;
-        Mon, 9 Sep 2019 20:44:45 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x89BiilT010794
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1568029485;
-        bh=I3CsomKgu9imQxkvjbyNpxE/dZyao6xzfj9/GBFFAeg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=JnJGdpWX656H/7JUXEDl6GjrR8XxkO/uv90E/8WhpSNDAQlPRfhHyfpe4QxQ4VL8G
-         aEZ+DGxuzXyCefb059uPDNngUiOoBPYaZHoYri9J/QM/wdbaYMCy7IZjqxfLWDXu/4
-         8yhLceDcRouc1pKQum5E1mbBxNuNJ9Be5TDeP8wRoXbP1BWNYJM5rnjLzKB+Ccjj8T
-         aeRO15Fqv0qP/AhHcbi4UJSbHKMRflU+KigBR47OdnNS04UCtopoo+NKNJXuWRA2j5
-         T4GJ45qVOw0WXu0XagbLXPvKopOScIxcVoqvr9fdLdb9pkvXEgQUbIYknVYYsmr5GI
-         5o3G/bKd/wrBw==
-X-Nifty-SrcIP: [209.85.221.169]
-Received: by mail-vk1-f169.google.com with SMTP id 82so2622132vkf.11;
-        Mon, 09 Sep 2019 04:44:45 -0700 (PDT)
-X-Gm-Message-State: APjAAAWzPA6iwnbR2PfkUvqSgu8LeaI0hVnqszguD5uZJTVPccy8Jjq8
-        OUGjsub8tiQGXcbnoH8hsq9FS01P3NNXsZjNARo=
-X-Google-Smtp-Source: APXvYqx6xE3Ak7n9uhq+LlGdwoa0XIG2mkHcWi624WGm18rnlIfGcU/3qQByUAHVhIiDsRFOUb28reEwcs4bOx4373k=
-X-Received: by 2002:a1f:998f:: with SMTP id b137mr10651098vke.0.1568029484310;
- Mon, 09 Sep 2019 04:44:44 -0700 (PDT)
+        Mon, 9 Sep 2019 07:46:56 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x89BkgW1100884;
+        Mon, 9 Sep 2019 06:46:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568029602;
+        bh=/jq7cijuT/yDbpHrSFnEokOE16TAsFzPk4/mkz+03ls=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=TQVx9b+vbNf7GOrnZJ6mDALVH/JtzscMXZD/nhzHIkt+7C4u/3HvSNAhBxvNjuVqj
+         b35zJA++dtztR1odxrms4/wHESHcUNSDB/NO4gsUWIBK8oGiWi9lYttusrmKHCxd5q
+         Vie9lZS06lwE6m5DOXNXwJVLTy16oD6++4PItUEY=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x89Bkghq027347;
+        Mon, 9 Sep 2019 06:46:42 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 9 Sep
+ 2019 06:46:42 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 9 Sep 2019 06:46:42 -0500
+Received: from [10.250.98.129] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x89BkeNh062197;
+        Mon, 9 Sep 2019 06:46:40 -0500
+Subject: Re: Status of led-backlight driver
+To:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>
+CC:     kernel list <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        <linux-omap@vger.kernel.org>, <tony@atomide.com>, <sre@kernel.org>,
+        <nekit1000@gmail.com>, <mpartap@gmx.net>, <merlijn@wizzup.org>,
+        <tomi.valkeinen@ti.com>
+References: <20190907100726.GA12763@amd>
+ <20190909111410.dwqvg6b4lgxymn2o@holly.lan>
+From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
+Message-ID: <e40fcd10-85ef-9e04-0960-210736075f1f@ti.com>
+Date:   Mon, 9 Sep 2019 13:46:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190726021058.4212-1-yamada.masahiro@socionext.com> <20190726021058.4212-3-yamada.masahiro@socionext.com>
-In-Reply-To: <20190726021058.4212-3-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Mon, 9 Sep 2019 20:44:08 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASdBGk+xQDe3Q+MhE++unwfiRcuVEhNsmMffY7AMwf7Pw@mail.gmail.com>
-Message-ID: <CAK7LNASdBGk+xQDe3Q+MhE++unwfiRcuVEhNsmMffY7AMwf7Pw@mail.gmail.com>
-Subject: Re: [PATCH 2/5] integrity: remove pointless subdir-$(CONFIG_...)
-To:     Mimi Zohar <zohar@linux.ibm.com>, linux-integrity@vger.kernel.org
-Cc:     Dave Howells <dhowells@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        Josh Boyer <jwboyer@fedoraproject.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190909111410.dwqvg6b4lgxymn2o@holly.lan>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 11:12 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> The ima/ and evm/ sub-directories contain built-in objects, so
-> obj-$(CONFIG_...) is the correct way to descend into them.
->
-> subdir-$(CONFIG_...) is redundant.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
+Hi Daniel,
 
-Ping.
+On 09/09/2019 13:14, Daniel Thompson wrote:
+> On Sat, Sep 07, 2019 at 12:07:27PM +0200, Pavel Machek wrote:
+>> Hi!
+>>
+>> I don't see the LED-backlight driver in -next. Could it be pushed? It
+>> is one of last pieces to get working backlight on Motorola Droid 4...
+> Sorry, I dropped the ball on this and was therefore rather late
+> reviewing this patchset.
+>
+> Assuming I have read the code correctly I think there are some
+> problems with the max_brightness handling in the backlight code.
 
+Can you comment this? I'll be happy to fix the problem.
+
+Reading the v4 again, I noticed that that I still had not removed the 
+brightness scaling. Is that the problem ?
+
+JJ
 
 >
->  security/integrity/Makefile | 2 --
->  1 file changed, 2 deletions(-)
+> Daniel.
 >
-> diff --git a/security/integrity/Makefile b/security/integrity/Makefile
-> index b6d6273a4176..35e6ca773734 100644
-> --- a/security/integrity/Makefile
-> +++ b/security/integrity/Makefile
-> @@ -14,7 +14,5 @@ integrity-$(CONFIG_LOAD_UEFI_KEYS) += platform_certs/efi_parser.o \
->                                         platform_certs/load_uefi.o
->  integrity-$(CONFIG_LOAD_IPL_KEYS) += platform_certs/load_ipl_s390.o
 >
-> -subdir-$(CONFIG_IMA)                   += ima
->  obj-$(CONFIG_IMA)                      += ima/
-> -subdir-$(CONFIG_EVM)                   += evm
->  obj-$(CONFIG_EVM)                      += evm/
-> --
-> 2.17.1
->
-
-
--- 
-Best Regards
-Masahiro Yamada
