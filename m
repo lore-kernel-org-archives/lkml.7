@@ -2,98 +2,213 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F20C49ED6
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13524C4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04DF72089F
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD18B2089F
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:12:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H3OftagE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728562AbfIIRK1 (ORCPT
+        id S2390530AbfIIRMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 13:10:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43740 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727332AbfIIRK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 13:10:26 -0400
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CDB5D81DEB
-        for <linux-kernel@vger.kernel.org>; Mon,  9 Sep 2019 17:10:25 +0000 (UTC)
-Received: by mail-wr1-f71.google.com with SMTP id x12so7672169wrs.0
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 10:10:25 -0700 (PDT)
+        Mon, 9 Sep 2019 13:12:25 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36040 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728958AbfIIRMZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 13:12:25 -0400
+Received: by mail-wr1-f67.google.com with SMTP id y19so14783583wrd.3
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 10:12:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jqdidbzPeA/sgt3s+DYxvSvIwPPs0smJm/TWV8LV8WA=;
+        b=H3OftagEfFDm375McT0XbKcLTDfqJHbzZnQHwb0rA1h8doy/xHjSC9X0c5D+htCHWG
+         d3hFKxdBvz0XJR1VYgPZ71ZxU6vs2svcVObFBW9pjRVLQne3RWi9X2Wf+RbRqwNl2cai
+         G0mBpLKVsMczLpBRdH2Ud7cOoSVlZnkaCnsN4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vktWNuZwbJFGpFqKeMcs/0LdSEYrwQogjSjWjrJcDWk=;
-        b=OBoZplGENERX+RPjhjuE60BKlvnxu8ZEAEAb7Yt9ljLBQWaL5ZbcMcBKOYt9JhMnfM
-         jJQnret67hgWo2VA+UJYpYpFaY+QCSWJGUphJaHdUerq1Ia17FkLy/yj0Gfl6RRFNnfw
-         Al2V3bKO87zy8h/bDzbQWzKVPUEklPfEAUFU1cgvRlijcqBkT3Wew3ijlGFlqkZaYpGj
-         4bhUQPV3a1u8XBeFcH6H6GwXab8fSP7ATJwtVsn611KrDMYs9ujfDoETt12AS4zYozys
-         XWWeS7kdxVkVANg0nCkP00bcGtgu9GiTRlXunQJzC96x8Hh7e565rIc6yVT20w0mQ5Df
-         qd9A==
-X-Gm-Message-State: APjAAAVDu5Ay0s6Vr0stEoJhtc3JIfy8mmWmb5THi52lfY9+T79+hYwI
-        K+dQXbLMazJ03I9BqoqqMk4h908VCQh9nHTn/UswzNaJmkqdrivlob0Xi4Go3QWwwE88/YF7/tf
-        ErbE8v55bcgm/M/xFj5v0dxLW
-X-Received: by 2002:a5d:6703:: with SMTP id o3mr19299892wru.335.1568049024382;
-        Mon, 09 Sep 2019 10:10:24 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqz1n8Q55r7pA74Rbm16weqpXyq4cX1HxgIYP07KC/z/TIvITLwn+XU8NsN4rLzMHK0+7mHPAA==
-X-Received: by 2002:a5d:6703:: with SMTP id o3mr19299855wru.335.1568049024123;
-        Mon, 09 Sep 2019 10:10:24 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:4580:a289:2f55:eec1? ([2001:b07:6468:f312:4580:a289:2f55:eec1])
-        by smtp.gmail.com with ESMTPSA id g73sm292338wme.10.2019.09.09.10.10.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Sep 2019 10:10:23 -0700 (PDT)
-Subject: Re: [PATCH RESEND v4 8/9] KVM: MMU: Enable Lazy mode SPPT setup
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sean.j.christopherson@intel.com, mst@redhat.com,
-        rkrcmar@redhat.com, jmattson@google.com, yu.c.zhang@intel.com,
-        alazar@bitdefender.com
-References: <20190814070403.6588-1-weijiang.yang@intel.com>
- <20190814070403.6588-9-weijiang.yang@intel.com>
- <63f8952b-2497-16ec-ff55-1da017c50a8c@redhat.com>
- <20190820131214.GD4828@local-michael-cet-test.sh.intel.com>
- <20190904134925.GA25149@local-michael-cet-test.sh.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <6cdea038-8d6f-6d75-47b2-bb23ff1c9f15@redhat.com>
-Date:   Mon, 9 Sep 2019 19:10:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jqdidbzPeA/sgt3s+DYxvSvIwPPs0smJm/TWV8LV8WA=;
+        b=NbLkEVlLBtfwgXFZGn8oD0ZapQpQ4i28Mn6sOHQFUH4Vb9vCM/RHPecDwlQShAP3L8
+         4j14xotCO7vjImM+OvZzsSUPpj0du3t3Zh5kYdjLem+SPX0gjF0WpEokI4RNqqN9Z1mF
+         sjv1hCuj9CAiqlN33eitEhxPMCEcsD/Sxh+XGzxKAMjBD6jGRtkmgV6C5lT7u5yBUlHN
+         aqu2yoMLwMzH73CEq+XFimxrGCGX43fxF2gw2bCLrVVCRr42lhksVNMpPzEcDIOoPGY9
+         qvVglQmRFqjmzDE/Yu2M0zAYtcqjbn62L12icWbeBsoCKSxeYyMwJRDuvFBL3MitURuX
+         FJgQ==
+X-Gm-Message-State: APjAAAVPpijh+WlhGR33+X8EgXmh9jJrpmZiI9cgA/Wz/4NLL7Cz++8E
+        iWZtpnK/dpune/HzuuKAxryk02+3sOEZNjR4vlUrNw==
+X-Google-Smtp-Source: APXvYqxRYqXaWD9NPcEGlHG2PQGB7kVycmg6gplz6JAGUJ9RYnlUeXsXl8u0K9fNh8PZ078dfQoUs/gEHoU+sQ2Dst8=
+X-Received: by 2002:adf:fa10:: with SMTP id m16mr14700174wrr.322.1568049140887;
+ Mon, 09 Sep 2019 10:12:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190904134925.GA25149@local-michael-cet-test.sh.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190829212417.257397-1-davidriley@chromium.org>
+ <20190905220008.75488-1-davidriley@chromium.org> <20190906051847.75mj4772nqwdper6@sirius.home.kraxel.org>
+In-Reply-To: <20190906051847.75mj4772nqwdper6@sirius.home.kraxel.org>
+From:   David Riley <davidriley@chromium.org>
+Date:   Mon, 9 Sep 2019 10:12:09 -0700
+Message-ID: <CAASgrz2tPPEiArFb=HaTJwoshrdS9xaOaLYtG1Ah43Rfcb=iSA@mail.gmail.com>
+Subject: Re: [PATCH v2] drm/virtio: Use vmalloc for command buffer allocations.
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Gurchetan Singh <gurchetansingh@chromium.org>,
+        =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/09/19 15:49, Yang Weijiang wrote:
->>> This would not enable SPP if the guest is backed by huge pages.
->>> Instead, either the PT_PAGE_TABLE_LEVEL level must be forced for all
->>> pages covered by SPP ranges, or (better) kvm_enable_spp_protection must
->>> be able to cover multiple pages at once.
->>>
->>> Paolo
->> OK, I'll figure out how to make it, thanks!
-> Hi, Paolo,
-> Regarding this change, I have some concerns, splitting EPT huge page
-> entries(e.g., 1GB page)will take long time compared with normal EPT page
-> fault processing, especially for multiple vcpus/pages,so the in-flight time increases,
-> but HW walks EPT for translations in the meantime, would it bring any side effect? 
-> or there's a way to mitigate it?
+On Thu, Sep 5, 2019 at 10:18 PM Gerd Hoffmann <kraxel@redhat.com> wrote:
+>
+> > +/* How many bytes left in this page. */
+> > +static unsigned int rest_of_page(void *data)
+> > +{
+> > +     return PAGE_SIZE - offset_in_page(data);
+> > +}
+>
+> Not needed.
+>
+> > +/* Create sg_table from a vmalloc'd buffer. */
+> > +static struct sg_table *vmalloc_to_sgt(char *data, uint32_t size, int *sg_ents)
+> > +{
+> > +     int nents, ret, s, i;
+> > +     struct sg_table *sgt;
+> > +     struct scatterlist *sg;
+> > +     struct page *pg;
+> > +
+> > +     *sg_ents = 0;
+> > +
+> > +     sgt = kmalloc(sizeof(*sgt), GFP_KERNEL);
+> > +     if (!sgt)
+> > +             return NULL;
+> > +
+> > +     nents = DIV_ROUND_UP(size, PAGE_SIZE) + 1;
+>
+> Why +1?
 
-Sub-page permissions are only defined on EPT PTEs, not on large pages.
-Therefore, in order to allow subpage permissions the EPT page tables
-must already be split.
+This is part of handling offsets within the vmalloc buffer and to
+maintain parity with the !is_vmalloc_addr/existing case (sg_init_one
+handles offsets within pages internally).  I had left it in because
+this is being used for all sg/descriptor generation and I wasn't sure
+if someone in the future might do something like:
+buf = vmemdup_user()
+offset = find_interesting(buf)
+queue(buf + offset)
 
-Paolo
+To respond specifically to your question, if we handle offsets, a
+vmalloc_to_sgt(size = PAGE_SIZE + 2) could end up with 3 sg_ents with
+the +1 being to account for that extra page.
+
+I'll just remove all support for offsets in v3 of the patch and
+comment that functionality will be different based on where the buffer
+was originally allocated from.
+
+>
+> > +     ret = sg_alloc_table(sgt, nents, GFP_KERNEL);
+> > +     if (ret) {
+> > +             kfree(sgt);
+> > +             return NULL;
+> > +     }
+> > +
+> > +     for_each_sg(sgt->sgl, sg, nents, i) {
+> > +             pg = vmalloc_to_page(data);
+> > +             if (!pg) {
+> > +                     sg_free_table(sgt);
+> > +                     kfree(sgt);
+> > +                     return NULL;
+> > +             }
+> > +
+> > +             s = rest_of_page(data);
+> > +             if (s > size)
+> > +                     s = size;
+>
+> vmalloc memory is page aligned, so:
+
+As per above, will remove with v3.
+
+>
+>                 s = min(PAGE_SIZE, size);
+>
+> > +             sg_set_page(sg, pg, s, offset_in_page(data));
+>
+> Offset is always zero.
+
+As per above, will remove with v3.
+>
+> > +
+> > +             size -= s;
+> > +             data += s;
+> > +             *sg_ents += 1;
+>
+> sg_ents isn't used anywhere.
+
+It's used for outcnt.
+
+>
+> > +
+> > +             if (size) {
+> > +                     sg_unmark_end(sg);
+> > +             } else {
+> > +                     sg_mark_end(sg);
+> > +                     break;
+> > +             }
+>
+> That looks a bit strange.  I guess you need only one of the two because
+> the other is the default?
+
+I was being overly paranoid and not wanting to make assumptions about
+the initial state of the table.  I'll simplify.
+>
+> >  static int virtio_gpu_queue_fenced_ctrl_buffer(struct virtio_gpu_device *vgdev,
+> >                                              struct virtio_gpu_vbuffer *vbuf,
+> >                                              struct virtio_gpu_ctrl_hdr *hdr,
+> >                                              struct virtio_gpu_fence *fence)
+> >  {
+> >       struct virtqueue *vq = vgdev->ctrlq.vq;
+> > +     struct scatterlist *vout = NULL, sg;
+> > +     struct sg_table *sgt = NULL;
+> >       int rc;
+> > +     int outcnt = 0;
+> > +
+> > +     if (vbuf->data_size) {
+> > +             if (is_vmalloc_addr(vbuf->data_buf)) {
+> > +                     sgt = vmalloc_to_sgt(vbuf->data_buf, vbuf->data_size,
+> > +                                          &outcnt);
+> > +                     if (!sgt)
+> > +                             return -ENOMEM;
+> > +                     vout = sgt->sgl;
+> > +             } else {
+> > +                     sg_init_one(&sg, vbuf->data_buf, vbuf->data_size);
+> > +                     vout = &sg;
+> > +                     outcnt = 1;
+>
+> outcnt must be set in both cases.
+
+outcnt is set by vmalloc_to_sgt.
+
+>
+> > +static int virtio_gpu_queue_ctrl_buffer(struct virtio_gpu_device *vgdev,
+> > +                                     struct virtio_gpu_vbuffer *vbuf)
+> > +{
+> > +     return virtio_gpu_queue_fenced_ctrl_buffer(vgdev, vbuf, NULL, NULL);
+> > +}
+>
+> Changing virtio_gpu_queue_ctrl_buffer to call
+> virtio_gpu_queue_fenced_ctrl_buffer should be done in a separate patch.
+
+Will do.
+
+Thanks,
+David
