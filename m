@@ -2,78 +2,140 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C62D7C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE0CC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9377220863
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:31:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="kU+pQQQE"
+	by mail.kernel.org (Postfix) with ESMTP id 7D1F420863
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:31:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388236AbfIIPbt (ORCPT
+        id S2388285AbfIIPbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 11:31:49 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:59150 "EHLO mail.skyhub.de"
+        Mon, 9 Sep 2019 11:31:52 -0400
+Received: from mga06.intel.com ([134.134.136.31]:40300 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727674AbfIIPbt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 11:31:49 -0400
-Received: from zn.tnic (p200300EC2F063A00610A87590F9D5C05.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:3a00:610a:8759:f9d:5c05])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1A4DE1EC0691;
-        Mon,  9 Sep 2019 17:31:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1568043104;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Ex7SfPjpPGrCEdpGE4bZ7WX94CX3cwfuYEx/SwwYycY=;
-        b=kU+pQQQExRjbKXisXC64gqVB3LDU+uNq4O/QqPIADJbspOhwSUSCu/So98PUDjvCnHHfv2
-        RzYSJzK+ffABXh+RHznFAp8aJAzgxGczKyW5NBygz8a9AG8ptuezLhBGcO2suVI2rREypj
-        u86ykC3UarqEHMzJ/lPNN8U7ubxcLlg=
-Date:   Mon, 9 Sep 2019 17:31:37 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-Cc:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH v3 08/10] EDAC/amd64: Gather hardware information
- early
-Message-ID: <20190909153137.GA22225@zn.tnic>
-References: <20190821235938.118710-1-Yazen.Ghannam@amd.com>
- <20190821235938.118710-9-Yazen.Ghannam@amd.com>
- <20190829092241.GB1312@zn.tnic>
- <SN6PR12MB26393DDA0F1818DCDD2D7953F8BA0@SN6PR12MB2639.namprd12.prod.outlook.com>
- <20190906203519.GN19008@zn.tnic>
- <SN6PR12MB2639232DF612AD2B02CFAAA4F8BA0@SN6PR12MB2639.namprd12.prod.outlook.com>
+        id S1727674AbfIIPbw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 11:31:52 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Sep 2019 08:31:51 -0700
+X-IronPort-AV: E=Sophos;i="5.64,486,1559545200"; 
+   d="scan'208";a="359515642"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Sep 2019 08:31:51 -0700
+Message-ID: <f9c1abd93b9546885eb10d0cd62ee7421b484ba2.camel@linux.intel.com>
+Subject: Re: [PATCH v9 7/8] virtio-balloon: Pull page poisoning config out
+ of free page hinting
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     David Hildenbrand <david@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        virtio-dev@lists.oasis-open.org, kvm@vger.kernel.org,
+        mst@redhat.com, catalin.marinas@arm.com, dave.hansen@intel.com,
+        linux-kernel@vger.kernel.org, willy@infradead.org,
+        mhocko@kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org,
+        will@kernel.org, linux-arm-kernel@lists.infradead.org,
+        osalvador@suse.de
+Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com,
+        konrad.wilk@oracle.com, nitesh@redhat.com, riel@surriel.com,
+        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        ying.huang@intel.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com, fengguang.wu@intel.com,
+        kirill.shutemov@linux.intel.com
+Date:   Mon, 09 Sep 2019 08:31:51 -0700
+In-Reply-To: <4dfcf372-97be-65ab-1349-75f24aa4f98a@redhat.com>
+References: <20190907172225.10910.34302.stgit@localhost.localdomain>
+         <20190907172601.10910.95355.stgit@localhost.localdomain>
+         <4dfcf372-97be-65ab-1349-75f24aa4f98a@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <SN6PR12MB2639232DF612AD2B02CFAAA4F8BA0@SN6PR12MB2639.namprd12.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 06, 2019 at 08:49:52PM +0000, Ghannam, Yazen wrote:
-> All the fields are register values, and there are unique instances for
-> each channel. They can potentially all be different.
+On Mon, 2019-09-09 at 10:59 +0200, David Hildenbrand wrote:
+> On 07.09.19 19:26, Alexander Duyck wrote:
+> > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > 
+> > Currently the page poisoning setting wasn't being enabled unless free page
+> > hinting was enabled. However we will need the page poisoning tracking logic
+> > as well for unused page reporting. As such pull it out and make it a
+> > separate bit of config in the probe function.
+> > 
+> > In addition we can actually wrap the code in a check for NO_SANITY. If we
+> > don't care what is actually in the page we can just default to 0 and leave
+> > it there.
+> > 
+> > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > ---
+> >  drivers/virtio/virtio_balloon.c |   22 +++++++++++++++-------
+> >  1 file changed, 15 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+> > index 226fbb995fb0..d2547df7de93 100644
+> > --- a/drivers/virtio/virtio_balloon.c
+> > +++ b/drivers/virtio/virtio_balloon.c
+> > @@ -842,7 +842,6 @@ static int virtio_balloon_register_shrinker(struct virtio_balloon *vb)
+> >  static int virtballoon_probe(struct virtio_device *vdev)
+> >  {
+> >  	struct virtio_balloon *vb;
+> > -	__u32 poison_val;
+> >  	int err;
+> >  
+> >  	if (!vdev->config->get) {
+> > @@ -909,11 +908,18 @@ static int virtballoon_probe(struct virtio_device *vdev)
+> >  						  VIRTIO_BALLOON_CMD_ID_STOP);
+> >  		spin_lock_init(&vb->free_page_list_lock);
+> >  		INIT_LIST_HEAD(&vb->free_page_list);
+> > -		if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_PAGE_POISON)) {
+> > -			memset(&poison_val, PAGE_POISON, sizeof(poison_val));
+> > -			virtio_cwrite(vb->vdev, struct virtio_balloon_config,
+> > -				      poison_val, &poison_val);
+> > -		}
+> > +	}
+> > +	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_PAGE_POISON)) {
+> > +		__u32 poison_val;
+> > +
+> > +		/*
+> > +		 * Let hypervisor know that we are expecting a specific
+> > +		 * value to be written back in unused pages.
+> > +		 */
+> 
+> "Let the hypervisor know" ... ?
+> 
+> > +		memset(&poison_val, PAGE_POISON, sizeof(poison_val));
+> > +
+> > +		virtio_cwrite(vb->vdev, struct virtio_balloon_config,
+> > +			      poison_val, &poison_val);
+> >  	}
+> >  	/*
+> >  	 * We continue to use VIRTIO_BALLOON_F_DEFLATE_ON_OOM to decide if a
+> > @@ -1014,7 +1020,9 @@ static int virtballoon_restore(struct virtio_device *vdev)
+> >  
+> >  static int virtballoon_validate(struct virtio_device *vdev)
+> >  {
+> > -	if (!page_poisoning_enabled())
+> > +	/* Notify host if we care about poison value */
+> 
+> "Tell the host whether we care about poisoned pages." ?
+> 
+> > +	if (IS_ENABLED(CONFIG_PAGE_POISONING_NO_SANITY) ||
+> > +	    !page_poisoning_enabled())
+> >  		__virtio_clear_bit(vdev, VIRTIO_BALLOON_F_PAGE_POISON);
+> >  
+> >  	__virtio_clear_bit(vdev, VIRTIO_F_IOMMU_PLATFORM);
+> > 
+> 
+> Reviewed-by: David Hildenbrand <david@redhat.com>
+> 
 
-Hmm, ok, that's 160 bytes more per node. And on !Rome it is wasted. Oh
-well, let's remain conservative then and allocate it only where needed.
+Thanks. I will update the comments for v10.
 
-Btw, upon a second look, compute_num_umcs() can be made part of
-get_hardware_info() instead of having this as a separate function which
-gets called only once before probe_one_instance().
+- Alex
 
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
