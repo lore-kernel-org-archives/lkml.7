@@ -2,100 +2,134 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 349D6C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD174C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AC2321D6C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:00:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EF1C21479
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:01:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="bC1iKUUA"
+	dkim=pass (1024-bit key) header.d=cloudbear.ru header.i=@cloudbear.ru header.b="qvXsmizE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391334AbfIIRAk (ORCPT
+        id S2405162AbfIIRBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 13:00:40 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:42107 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728529AbfIIRAk (ORCPT
+        Mon, 9 Sep 2019 13:01:34 -0400
+Received: from forward103o.mail.yandex.net ([37.140.190.177]:52994 "EHLO
+        forward103o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728529AbfIIRBe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 13:00:40 -0400
-Received: by mail-ed1-f67.google.com with SMTP id y91so13603267ede.9
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 10:00:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ndNymM6S7tmHE+n2EfAPZaAIl9m2k/Hd15vX5tVSFn0=;
-        b=bC1iKUUAEbStsWoLLyFmH5e3Rn8L60J3eOAqn15+XFheVcXT1DobBZSZOvDsKrkPto
-         BZiYeUcnpJuBt0piDhdzCsqC3hIod7bQagzUG9EjXBu0ESLXWCVV2X7T0c81KPLM1Uf5
-         0f7ixvlLeBdwKRO29lKj8JclH/y5G451SsJIj+y1zKjGQqQ4t1XF2xWUTa0iI02AECtm
-         UGFfXMsdzSC33aaEpg621gISPu5F5vPOIUSC4aFqzcjw2P7AvkYRRZ7AgQ3ewr5RQp3C
-         b5f90jb1+egIK7q+SbO3Y6RqrcCAr280k27p746RhVM2R7SGmgTERnkk1Axx5L/3rZx+
-         Tu5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ndNymM6S7tmHE+n2EfAPZaAIl9m2k/Hd15vX5tVSFn0=;
-        b=mmuEkfWeYBKb2bi1WbPbasryfXxgEPRl9CqeVMWi8dGG9yrVLAg38ZEMwr7eEYudk7
-         qvwyEOCH13QDqFrmZFHh86uxM4uiKxbPqYJfWI0HL7I8eFn5uktTeFV8ivJCV/DoOqTT
-         Jv6WmZUjvnp8n6Pj911xnHXsBFTwkBrw6zEDUJQ6oIJc2Ogpbw44MiKJZsZ5kXGTe+if
-         rZK6KSf50KKmFqL9et8bFkRCipmjK/hLG7e0otHfdpawpw2vHIzkBbTckZJUR0nfhLT6
-         WVTQQZrKuBfsyh0XcWPL3lDuImJPW+Hv8Zj3D+80I/Vq3wqVFKbukiahVQalsz8NKhRv
-         N8ig==
-X-Gm-Message-State: APjAAAWBKpHs1p+c20yCeRpdaH0CRNKKMwI+H+DB7AZJThHLtxxa07aq
-        WUryV1hY2WeGyAovjjOjf0F4xg==
-X-Google-Smtp-Source: APXvYqwrMgzfqO4cc8VaH4OYBbPyjLCLYVUXkYW0y564TeNoEu15jhrHaKYbf96/6CjMmoqhLR3q1Q==
-X-Received: by 2002:a17:906:35c2:: with SMTP id p2mr10087253ejb.241.1568048438153;
-        Mon, 09 Sep 2019 10:00:38 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id ot4sm1832093ejb.43.2019.09.09.10.00.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 09 Sep 2019 10:00:37 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 4F3861029C4; Mon,  9 Sep 2019 20:00:36 +0300 (+03)
-Date:   Mon, 9 Sep 2019 20:00:36 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
-        virtio-dev@lists.oasis-open.org, kvm@vger.kernel.org,
-        mst@redhat.com, catalin.marinas@arm.com, david@redhat.com,
-        dave.hansen@intel.com, linux-kernel@vger.kernel.org,
-        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org, osalvador@suse.de,
-        yang.zhang.wz@gmail.com, pagupta@redhat.com,
-        konrad.wilk@oracle.com, nitesh@redhat.com, riel@surriel.com,
-        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        ying.huang@intel.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com, fengguang.wu@intel.com,
-        kirill.shutemov@linux.intel.com
-Subject: Re: [PATCH v9 2/8] mm: Adjust shuffle code to allow for future
- coalescing
-Message-ID: <20190909170036.t3gvjar3qjywjquc@box>
-References: <20190907172225.10910.34302.stgit@localhost.localdomain>
- <20190907172520.10910.83100.stgit@localhost.localdomain>
- <20190909094700.bbslsxpuwvxmodal@box>
- <171e0e86cde2012e8bda647c0370e902768ba0b5.camel@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <171e0e86cde2012e8bda647c0370e902768ba0b5.camel@linux.intel.com>
-User-Agent: NeoMutt/20180716
+        Mon, 9 Sep 2019 13:01:34 -0400
+X-Greylist: delayed 543 seconds by postgrey-1.27 at vger.kernel.org; Mon, 09 Sep 2019 13:01:31 EDT
+Received: from mxback28g.mail.yandex.net (mxback28g.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:328])
+        by forward103o.mail.yandex.net (Yandex) with ESMTP id D2C785F815FC;
+        Mon,  9 Sep 2019 19:52:26 +0300 (MSK)
+Received: from smtp2o.mail.yandex.net (smtp2o.mail.yandex.net [2a02:6b8:0:1a2d::26])
+        by mxback28g.mail.yandex.net (nwsmtp/Yandex) with ESMTP id XWZQwjux5k-qQKiwCRN;
+        Mon, 09 Sep 2019 19:52:26 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cloudbear.ru; s=mail; t=1568047946;
+        bh=k8swhfH/56jurkc7C5cLy1ftu0/fKHmRA39ehTChfM8=;
+        h=In-Reply-To:Subject:To:From:Cc:References:Date:Message-Id;
+        b=qvXsmizEqwj4U4oAE1Etz1OuSoxNXcRKg9VaSl1/zJkXw8FGHddDyywR6lQ6pV8tP
+         Gv6iPeWL8bk+eMSLDi4r92Vsaxo8WgKmj1vNVUkNu9ty0P4AUr4xGURUYH1gZjIC25
+         bmT0JFU7LTIFF52BO2fR64xefQLXsvBY4Hh1IgKI=
+Authentication-Results: mxback28g.mail.yandex.net; dkim=pass header.i=@cloudbear.ru
+Received: by smtp2o.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id aUn2Pn2Gxb-qPtC6UCe;
+        Mon, 09 Sep 2019 19:52:25 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (Client certificate not present)
+From:   Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>
+To:     davem@davemloft.net, robh+dt@kernel.org, f.fainelli@gmail.com
+Cc:     Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Trent Piepho <tpiepho@impinj.com>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 2/2] net: phy: dp83867: Add SGMII mode type switching
+Date:   Mon,  9 Sep 2019 19:52:18 +0300
+Message-Id: <1568047940-14490-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1568026945-3857-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
+References: <1568026945-3857-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 09, 2019 at 09:43:00AM -0700, Alexander Duyck wrote:
-> I'm not sure I follow what you are saying about the free_area definition.
-> It looks like it is a part of the zone structure so I would think it still
-> needs to be defined in the header.
+This patch adds ability to switch beetween two PHY SGMII modes.
+Some hardware, for example, FPGA IP designs may use 6-wire mode
+which enables differential SGMII clock to MAC.
 
-Yeah, you are right. I didn't noticed this.
+Signed-off-by: Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>
+---
+Changes in v3:
+- Fixed retaining DP83867_SGMII_TYPE bit
 
--- 
- Kirill A. Shutemov
+ drivers/net/phy/dp83867.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
+index 1f1ecee..37fceaf 100644
+--- a/drivers/net/phy/dp83867.c
++++ b/drivers/net/phy/dp83867.c
+@@ -37,6 +37,7 @@
+ #define DP83867_STRAP_STS2	0x006f
+ #define DP83867_RGMIIDCTL	0x0086
+ #define DP83867_IO_MUX_CFG	0x0170
++#define DP83867_SGMIICTL	0x00D3
+ #define DP83867_10M_SGMII_CFG   0x016F
+ #define DP83867_10M_SGMII_RATE_ADAPT_MASK BIT(7)
+
+@@ -61,6 +62,9 @@
+ #define DP83867_RGMII_TX_CLK_DELAY_EN		BIT(1)
+ #define DP83867_RGMII_RX_CLK_DELAY_EN		BIT(0)
+
++/* SGMIICTL bits */
++#define DP83867_SGMII_TYPE		BIT(14)
++
+ /* STRAP_STS1 bits */
+ #define DP83867_STRAP_STS1_RESERVED		BIT(11)
+
+@@ -109,6 +113,7 @@ struct dp83867_private {
+ 	bool rxctrl_strap_quirk;
+ 	bool set_clk_output;
+ 	u32 clk_output_sel;
++	bool sgmii_ref_clk_en;
+ };
+
+ static int dp83867_ack_interrupt(struct phy_device *phydev)
+@@ -197,6 +202,9 @@ static int dp83867_of_init(struct phy_device *phydev)
+ 	dp83867->rxctrl_strap_quirk = of_property_read_bool(of_node,
+ 					"ti,dp83867-rxctrl-strap-quirk");
+
++	dp83867->sgmii_ref_clk_en = of_property_read_bool(of_node,
++					"ti,sgmii-ref-clock-output-enable");
++
+ 	/* Existing behavior was to use default pin strapping delay in rgmii
+ 	 * mode, but rgmii should have meant no delay.  Warn existing users.
+ 	 */
+@@ -389,6 +397,17 @@ static int dp83867_config_init(struct phy_device *phydev)
+
+ 		if (ret)
+ 			return ret;
++
++		val = phy_read_mmd(phydev, DP83867_DEVADDR, DP83867_SGMIICTL);
++		/* SGMII type is set to 4-wire mode by default.
++		 * If we place appropriate property in dts (see above)
++		 * switch on 6-wire mode.
++		 */
++		if (dp83867->sgmii_ref_clk_en)
++			val |= DP83867_SGMII_TYPE;
++		else
++			val &= ~DP83867_SGMII_TYPE;
++		phy_write_mmd(phydev, DP83867_DEVADDR, DP83867_SGMIICTL, val);
+ 	}
+
+ 	/* Enable Interrupt output INT_OE in CFG3 register */
+--
+2.7.4
+
