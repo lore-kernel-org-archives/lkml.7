@@ -2,101 +2,94 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C027EC433EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF14C00307
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C31F20863
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:01:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D714521920
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:02:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568019742;
+	bh=iWg5Zbyj/IVYCTFHJJ9TmCz/4IVIEKIjEN2VJ1mqKtg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aXqrGYks3ZgtzpF4IvRmRnqWu9rm1orcxE7cUsOMI0uaAoZ6Tf3JdP3f7RTQQeRxA
+	 jhAzBFxqaJt3FBtkUhWb7auphWPtWOzWFGsmewCpaP5J4uYqYP2VmDAQhwI4msbcjT
+	 Degyn4me1R2RxZag+DtvPxsicaF+zVnJY6RYKd5I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389401AbfIIJBG (ORCPT
+        id S2389583AbfIIJCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 05:01:06 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:32804 "EHLO inva020.nxp.com"
+        Mon, 9 Sep 2019 05:02:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726847AbfIIJBF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 05:01:05 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id DC9E31A026E;
-        Mon,  9 Sep 2019 11:01:03 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E22451A000C;
-        Mon,  9 Sep 2019 11:00:58 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 82D10402CF;
-        Mon,  9 Sep 2019 17:00:52 +0800 (SGT)
-From:   Yinbo Zhu <yinbo.zhu@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     yinbo.zhu@nxp.com, xiaobo.xie@nxp.com, jiafei.pan@nxp.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ran Wang <ran.wang_1@nxp.com>
-Subject: [PATCH v1] usb: dwc3: enable otg mode for dwc3 usb ip on layerscape
-Date:   Mon,  9 Sep 2019 17:02:44 +0800
-Message-Id: <20190909090244.42543-1-yinbo.zhu@nxp.com>
-X-Mailer: git-send-email 2.17.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1726847AbfIIJCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 05:02:21 -0400
+Received: from localhost (unknown [148.69.85.38])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4222C2089F;
+        Mon,  9 Sep 2019 09:02:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568019740;
+        bh=iWg5Zbyj/IVYCTFHJJ9TmCz/4IVIEKIjEN2VJ1mqKtg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KKm7XVw5mBryqlCrM9yzsCmJgFhzsfWnLyBUH1aLO+RMFtjtNj2Zedy8sWFrCGBXp
+         LvVdpmVyUW2B9SIqRkhrbKmr728AbXBePAyppYlu62lQZbrW1KTVHhjAB2t0mLlqg5
+         JaMvK8L51FQrG+HNtRLGTnJlqvDF1VEH4VCMfEps=
+Date:   Mon, 9 Sep 2019 10:02:18 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Subject: Re: [PATCH 5.2 00/94] 5.2.14-stable review
+Message-ID: <20190909090218.GA1970@kroah.com>
+References: <20190908121150.420989666@linuxfoundation.org>
+ <CA+G9fYuQzkppyLeS0zhoaZxnT8A4d9jyErN_ehFBQRwKLA8nXA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G9fYuQzkppyLeS0zhoaZxnT8A4d9jyErN_ehFBQRwKLA8nXA@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-layerscape otg function should be supported HNP SRP and ADP protocol
-accroing to rm doc, but dwc3 code not realize it and use id pin to
-detect who is host or device(0 is host 1 is device) this patch is to
-enable OTG mode on ls1028ardb ls1088ardb and ls1046ardb in dts
+On Mon, Sep 09, 2019 at 11:24:19AM +0530, Naresh Kamboju wrote:
+> On Sun, 8 Sep 2019 at 18:19, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > This is the start of the stable review cycle for the 5.2.14 release.
+> > There are 94 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Tue 10 Sep 2019 12:09:36 PM UTC.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.14-rc1.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
+> 
+> Results from Linaro’s test farm.
+> No regressions on arm64, arm, x86_64, and i386.
 
-Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 2 +-
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 2 +-
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+Thanks for testing all of these and letting me know.
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index 7975519b4f56..5810d0400dbc 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -320,7 +320,7 @@
- 			compatible = "fsl,ls1028a-dwc3", "snps,dwc3";
- 			reg = <0x0 0x3110000 0x0 0x10000>;
- 			interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
--			dr_mode = "host";
-+			dr_mode = "otg";
- 			snps,dis_rxdet_inp3_quirk;
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index b0ef08b090dd..ecce6151b9b0 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -582,7 +582,7 @@
- 			compatible = "snps,dwc3";
- 			reg = <0x0 0x3000000 0x0 0x10000>;
- 			interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
--			dr_mode = "host";
-+			dr_mode = "otg";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
- 			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index dacd8cf03a7f..4b5413f7c90c 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -385,7 +385,7 @@
- 			compatible = "snps,dwc3";
- 			reg = <0x0 0x3110000 0x0 0x10000>;
- 			interrupts = <0 81 IRQ_TYPE_LEVEL_HIGH>;
--			dr_mode = "host";
-+			dr_mode = "otg";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
- 			status = "disabled";
--- 
-2.17.1
-
+greg k-h
