@@ -2,173 +2,85 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 010A7C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC592C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9FE221920
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:28:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEC9421920
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:28:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728338AbfIIQ2M (ORCPT
+        id S1728676AbfIIQ2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 12:28:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35904 "EHLO mx1.redhat.com"
+        Mon, 9 Sep 2019 12:28:14 -0400
+Received: from mga11.intel.com ([192.55.52.93]:61682 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726148AbfIIQ2L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 12:28:11 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9E1F020EF;
-        Mon,  9 Sep 2019 16:28:10 +0000 (UTC)
-Received: from rh2.redhat.com (ovpn-124-7.rdu2.redhat.com [10.10.124.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6D2B75D6B7;
-        Mon,  9 Sep 2019 16:28:09 +0000 (UTC)
-From:   Mike Christie <mchristi@redhat.com>
-To:     axboe@kernel.dk, James.Bottomley@HansenPartnership.com,
-        martin.petersen@oracle.com, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-block@vger.kernel.org
-Cc:     Mike Christie <mchristi@redhat.com>
-Subject: [RFC PATCH] Add proc interface to set PF_MEMALLOC flags
-Date:   Mon,  9 Sep 2019 11:28:04 -0500
-Message-Id: <20190909162804.5694-1-mchristi@redhat.com>
+        id S1726148AbfIIQ2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 12:28:13 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Sep 2019 09:28:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,486,1559545200"; 
+   d="scan'208";a="213975881"
+Received: from pstarove-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.38.118])
+  by fmsmga002.fm.intel.com with ESMTP; 09 Sep 2019 09:28:09 -0700
+Date:   Mon, 9 Sep 2019 17:28:08 +0100
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Doug Anderson <dianders@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "# 4.0+" <stable@vger.kernel.org>,
+        Vadim Sukhomlinov <sukhomlinov@google.com>,
+        linux-integrity@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>
+Subject: Re: [PATCH AUTOSEL 4.19 126/167] tpm: Fix TPM 1.2 Shutdown sequence
+ to prevent future TPM operations
+Message-ID: <20190909162808.ggcnrtvbvor7deqy@linux.intel.com>
+References: <20190903162519.7136-1-sashal@kernel.org>
+ <20190903162519.7136-126-sashal@kernel.org>
+ <CAD=FV=W0YodeoOCiCv9zmv+-gswuU8U_XgrBnesE=wynTbDBiA@mail.gmail.com>
+ <20190903165346.hwqlrin77cmzjiti@cantor>
+ <20190903194335.GG5281@sasha-vm>
+ <f2224c094836a4b8989c1cd6243a0b7ad1261a87.camel@linux.intel.com>
+ <20190907220448.GB2012@sasha-vm>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Mon, 09 Sep 2019 16:28:10 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190907220448.GB2012@sasha-vm>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are several storage drivers like dm-multipath, iscsi, and nbd that
-have userspace components that can run in the IO path. For example,
-iscsi and nbd's userspace deamons may need to recreate a socket and/or
-send IO on it, and dm-multipath's daemon multipathd may need to send IO
-to figure out the state of paths and re-set them up.
+On Sat, Sep 07, 2019 at 06:04:48PM -0400, Sasha Levin wrote:
+> On Sat, Sep 07, 2019 at 09:55:18PM +0300, Jarkko Sakkinen wrote:
+> > On Tue, 2019-09-03 at 15:43 -0400, Sasha Levin wrote:
+> > > Right. I gave a go at backporting a few patches and this happens to be
+> > > one of them. It will be a while before it goes in a stable tree
+> > > (probably way after after LPC).
+> > 
+> > It *semantically* depends on
+> > 
+> > db4d8cb9c9f2 ("tpm: use tpm_try_get_ops() in tpm-sysfs.c.")
+> > 
+> > I.e. can cause crashes without the above patch. As a code change your
+> > patch is fine but it needs the above patch backported to work in stable
+> > manner.
+> > 
+> > So... either I can backport that one (because ultimately I have
+> > responsibility to do that as the maintainer) but if you want to finish
+> > this one that is what you need to backport in addition and then it
+> > should be fine.
+> 
+> If you're ok with the backport of this commit, I can just add
+> db4d8cb9c9f2 on top.
 
-In the kernel these drivers have access to GFP_NOIO/GFP_NOFS and the
-memalloc_*_save/restore functions to control the allocation behavior,
-but for userspace we would end up hitting a allocation that ended up
-writing data back to the same device we are trying to allocate for.
+Sure, I've already gave my promise to do that :-)
 
-This patch allows the userspace deamon to set the PF_MEMALLOC* flags
-through procfs. It currently only supports PF_MEMALLOC_NOIO, but
-depending on what other drivers and userspace file systems need, for
-the final version I can add the other flags for that file or do a file
-per flag or just do a memalloc_noio file.
-
-Signed-off-by: Mike Christie <mchristi@redhat.com>
----
- Documentation/filesystems/proc.txt |  6 ++++
- fs/proc/base.c                     | 53 ++++++++++++++++++++++++++++++
- 2 files changed, 59 insertions(+)
-
-diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
-index 99ca040e3f90..b5456a61a013 100644
---- a/Documentation/filesystems/proc.txt
-+++ b/Documentation/filesystems/proc.txt
-@@ -46,6 +46,7 @@ Table of Contents
-   3.10  /proc/<pid>/timerslack_ns - Task timerslack value
-   3.11	/proc/<pid>/patch_state - Livepatch patch operation state
-   3.12	/proc/<pid>/arch_status - Task architecture specific information
-+  3.13  /proc/<pid>/memalloc - Control task's memory reclaim behavior
- 
-   4	Configuring procfs
-   4.1	Mount options
-@@ -1980,6 +1981,11 @@ Example
-  $ cat /proc/6753/arch_status
-  AVX512_elapsed_ms:      8
- 
-+3.13 /proc/<pid>/memalloc - Control task's memory reclaim behavior
-+-----------------------------------------------------------------------
-+A value of "noio" indicates that when a task allocates memory it will not
-+reclaim memory that requires starting phisical IO.
-+
- Description
- -----------
- 
-diff --git a/fs/proc/base.c b/fs/proc/base.c
-index ebea9501afb8..c4faa3464602 100644
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -1223,6 +1223,57 @@ static const struct file_operations proc_oom_score_adj_operations = {
- 	.llseek		= default_llseek,
- };
- 
-+static ssize_t memalloc_read(struct file *file, char __user *buf, size_t count,
-+			     loff_t *ppos)
-+{
-+	struct task_struct *task;
-+	ssize_t rc = 0;
-+
-+	task = get_proc_task(file_inode(file));
-+	if (!task)
-+		return -ESRCH;
-+
-+	if (task->flags & PF_MEMALLOC_NOIO)
-+		rc = simple_read_from_buffer(buf, count, ppos, "noio", 4);
-+	put_task_struct(task);
-+	return rc;
-+}
-+
-+static ssize_t memalloc_write(struct file *file, const char __user *buf,
-+			      size_t count, loff_t *ppos)
-+{
-+	struct task_struct *task;
-+	char buffer[5];
-+	int rc = count;
-+
-+	memset(buffer, 0, sizeof(buffer));
-+	if (count != sizeof(buffer) - 1)
-+		return -EINVAL;
-+
-+	if (copy_from_user(buffer, buf, count))
-+		return -EFAULT;
-+	buffer[count] = '\0';
-+
-+	task = get_proc_task(file_inode(file));
-+	if (!task)
-+		return -ESRCH;
-+
-+	if (!strcmp(buffer, "noio")) {
-+		task->flags |= PF_MEMALLOC_NOIO;
-+	} else {
-+		rc = -EINVAL;
-+	}
-+
-+	put_task_struct(task);
-+	return rc;
-+}
-+
-+static const struct file_operations proc_memalloc_operations = {
-+	.read		= memalloc_read,
-+	.write		= memalloc_write,
-+	.llseek		= default_llseek,
-+};
-+
- #ifdef CONFIG_AUDIT
- #define TMPBUFLEN 11
- static ssize_t proc_loginuid_read(struct file * file, char __user * buf,
-@@ -3097,6 +3148,7 @@ static const struct pid_entry tgid_base_stuff[] = {
- #ifdef CONFIG_PROC_PID_ARCH_STATUS
- 	ONE("arch_status", S_IRUGO, proc_pid_arch_status),
- #endif
-+	REG("memalloc", S_IRUGO|S_IWUSR, proc_memalloc_operations),
- };
- 
- static int proc_tgid_base_readdir(struct file *file, struct dir_context *ctx)
-@@ -3487,6 +3539,7 @@ static const struct pid_entry tid_base_stuff[] = {
- #ifdef CONFIG_PROC_PID_ARCH_STATUS
- 	ONE("arch_status", S_IRUGO, proc_pid_arch_status),
- #endif
-+	REG("memalloc", S_IRUGO|S_IWUSR, proc_memalloc_operations),
- };
- 
- static int proc_tid_base_readdir(struct file *file, struct dir_context *ctx)
--- 
-2.21.0
-
+/Jarkko
