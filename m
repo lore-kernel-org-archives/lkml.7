@@ -2,134 +2,88 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BAAC4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C40FDC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED5D320863
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:34:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9275120863
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:34:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hT7S2S3A"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="ZSKBUntz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389006AbfIIWea (ORCPT
+        id S2389088AbfIIWeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 18:34:30 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:45461 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388905AbfIIWe3 (ORCPT
+        Mon, 9 Sep 2019 18:34:36 -0400
+Received: from mail.codeweavers.com ([50.203.203.244]:54140 "EHLO
+        mail.codeweavers.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389010AbfIIWeg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 18:34:29 -0400
-Received: by mail-ua1-f65.google.com with SMTP id j6so4879365uae.12
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 15:34:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9uKn57lFOcZJRC0waWtjBCYVHQrktLOwjpylqAIocBE=;
-        b=hT7S2S3A5LRDDsAHmdxFXDuEqQuO8/hNDC6KOuDOvVekoEombOVU8xLQeyM47bKn1O
-         rNW9mVx9vCfFumzrMoUNac6RM4UoMUPMMMhvICFRVk8gMI7yg1AB5eRnB5d3uO53034N
-         tjqfLDf+VRf8bA0Y9TNXW35HiKT38bz1QOhuE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9uKn57lFOcZJRC0waWtjBCYVHQrktLOwjpylqAIocBE=;
-        b=uQ4ruzfHqJqZ8t/1uR3z2uEH/hXf11uV3es4AGLYQrVG0HlerXrv9Kedwf+KwfbmFR
-         NKOFzBD0I1wLl81iErRdxh0xJsDYnJodpGCK8D67AqazKr7qzJU6ZMkWwkkyDEkLJcbE
-         OOMEdovSZIiaHeHqI8KVutdKzqdisqbwwkZKuIlJnD6DlQ6IVsqecTZ2vgnNNgwzvZzh
-         23S5D8SAFYpwQbOu1RlCsYuFXBWA/0HkE+Ct+kOiulLx5jwSUeoK8FWs5vA+Z1rfydP8
-         DDF6GpbKmBTaqPouyRdoUrymcviwTWFYg7XmlyGYXur8WAYeJxARm3tSwoTT+WscbYZP
-         tq7Q==
-X-Gm-Message-State: APjAAAX+7HwUiYP7X3UedTOwAEauefGyrk/VBKhl0G0gqPPCBXG+GfCC
-        EUpApjjmv5KHZCsErt83GHp1vUwZYnA=
-X-Google-Smtp-Source: APXvYqy/9bcDexEQ4KKxXovS5fv81mHTijSSvzKSjJraU3YAp6CGixvhP3OKog5Ao4S8kstUqSVtdQ==
-X-Received: by 2002:a9f:2404:: with SMTP id 4mr119865uaq.60.1568068468032;
-        Mon, 09 Sep 2019 15:34:28 -0700 (PDT)
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com. [209.85.221.172])
-        by smtp.gmail.com with ESMTPSA id c5sm16485713vke.47.2019.09.09.15.34.27
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Sep 2019 15:34:27 -0700 (PDT)
-Received: by mail-vk1-f172.google.com with SMTP id b25so3114089vkk.3
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 15:34:27 -0700 (PDT)
-X-Received: by 2002:a1f:5e4f:: with SMTP id s76mr1414955vkb.4.1568068466575;
- Mon, 09 Sep 2019 15:34:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190908101236.2802-1-ulf.hansson@linaro.org> <20190908101236.2802-9-ulf.hansson@linaro.org>
-In-Reply-To: <20190908101236.2802-9-ulf.hansson@linaro.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 9 Sep 2019 15:34:15 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=U+eqnMX9TuyBhi7r_qjG39P9dtHHO9=PvKOvRKuoOvKw@mail.gmail.com>
-Message-ID: <CAD=FV=U+eqnMX9TuyBhi7r_qjG39P9dtHHO9=PvKOvRKuoOvKw@mail.gmail.com>
-Subject: Re: [PATCH v2 08/11] mmc: core: Fixup processing of SDIO IRQs during
- system suspend/resume
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Linux MMC List <linux-mmc@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        Yong Mao <yong.mao@mediatek.com>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 9 Sep 2019 18:34:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=codeweavers.com; s=6377696661; h=To:References:Message-Id:
+        Content-Transfer-Encoding:Cc:Date:In-Reply-To:From:Subject:Mime-Version:
+        Content-Type:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=9KscsWAaBE1jNLn+Rl6HyrO5x40q+4spa6O3IhEemW8=; b=ZSKBUntzMqekIqdvviTztD4gS
+        fkTNNLm6wtkTBXwaU7DwIRNVgk5FHBxPO5Qd5yrQXOWGzgbbumsyUfKx+FagwKgNpmVYDAoaSAlfq
+        VbMB0zqFaGHdazhNhw7bxV8xb8c49lsDz1vgn/RTl4drn1CzrWdlaOuz4WiSf8FFBsi6M=;
+Received: from cpe-107-184-2-226.socal.res.rr.com ([107.184.2.226] helo=[192.168.2.132])
+        by mail.codeweavers.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <bshanks@codeweavers.com>)
+        id 1i7SEx-0000Es-SN; Mon, 09 Sep 2019 17:34:32 -0500
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] x86/umip: Add emulation for 64-bit processes
+From:   Brendan Shanks <bshanks@codeweavers.com>
+In-Reply-To: <20190907212610.GA30930@ranerica-svr.sc.intel.com>
+Date:   Mon, 9 Sep 2019 15:34:28 -0700
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <317243DA-3BAE-4620-8E31-5F23145DD992@codeweavers.com>
+References: <20190905232222.14900-1-bshanks@codeweavers.com>
+ <20190907212610.GA30930@ranerica-svr.sc.intel.com>
+To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On Sun, Sep 8, 2019 at 3:12 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
->
-> System suspend/resume of SDIO cards, with SDIO IRQs enabled and when using
-> MMC_CAP2_SDIO_IRQ_NOTHREAD is unfortunate still suffering from a fragile
-> behaviour. Some problems have been taken care of so far, but more issues
-> remains.
->
-> For example, calling the ->ack_sdio_irq() callback to let host drivers
-> re-enable the SDIO IRQs is a bad idea, unless the IRQ have been consumed,
-> which may not be the case during system suspend/resume. This may lead to
-> that a host driver re-signals the same SDIO IRQ over and over again,
-> causing a storm of IRQs and gives a ping-pong effect towards the
-> sdio_irq_work().
->
-> Moreover, calling the ->enable_sdio_irq() callback at system resume to
-> re-enable already enabled SDIO IRQs for the host, causes the runtime PM
-> count for some host drivers to become in-balanced. This then leads to the
-> host to remain runtime resumed, no matter if it's needed or not.
->
-> To fix these problems, let's check if process_sdio_pending_irqs() actually
-> consumed the SDIO IRQ, before we continue to ack the IRQ by invoking the
-> ->ack_sdio_irq() callback.
->
-> Additionally, there should be no need to re-enable SDIO IRQs as the host
-> driver already knows if they were enabled at system suspend, thus also
-> whether it needs to re-enable them at system resume. For this reason, drop
-> the call to ->enable_sdio_irq() during system resume.
->
-> In regards to these changes there is yet another issue, which is when there
-> is an SDIO IRQ being signaled by the host driver, but after the SDIO card
-> has been system suspended. Currently these IRQs are just thrown away, while
-> we should at least make sure to try to consume them when the SDIO card has
-> been system resumed. Fix this by queueing a sdio_irq_work() after we system
-> resumed the SDIO card.
->
-> Tested-by: Matthias Kaehlcke <mka@chromium.org>
-> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> ---
->
-> Changes in v2:
->         - Queue a sdio_irq_work() rather using sdio_signal_irq().
->
-> ---
->  drivers/mmc/core/sdio.c     | 2 +-
->  drivers/mmc/core/sdio_irq.c | 3 ++-
->  2 files changed, 3 insertions(+), 2 deletions(-)
+> On Sep 7, 2019, at 2:26 PM, Ricardo Neri =
+<ricardo.neri-calderon@linux.intel.com> wrote:
+>=20
+> On Thu, Sep 05, 2019 at 04:22:21PM -0700, Brendan Shanks wrote:
+>>=20
+>> 	if (umip_inst =3D=3D UMIP_INST_SGDT || umip_inst =3D=3D =
+UMIP_INST_SIDT) {
+>> +		u64 dummy_base_addr;
+>> +		u16 dummy_limit =3D 0;
+>> +
+>> 		/* SGDT and SIDT do not use registers operands. */
+>> 		if (X86_MODRM_MOD(insn->modrm.value) =3D=3D 3)
+>> 			return -EINVAL;
+>> @@ -228,13 +228,24 @@ static int emulate_umip_insn(struct insn *insn, =
+int umip_inst,
+>> 		else
+>> 			dummy_base_addr =3D UMIP_DUMMY_IDT_BASE;
+>>=20
+>> -		*data_size =3D UMIP_GDT_IDT_LIMIT_SIZE + =
+UMIP_GDT_IDT_BASE_SIZE;
+>=20
+> Maybe a blank line here?
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Adding a blank line in place of the removed line? I=E2=80=99m not sure I =
+see the need for it, there=E2=80=99s already a blank line above, and =
+it's followed by the block comment.
+
+Brendan=
