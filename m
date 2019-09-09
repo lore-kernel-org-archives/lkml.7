@@ -2,113 +2,151 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD002C49ED6
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D30DC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE8F22086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:22:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06BE72086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:23:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389386AbfIIQWp convert rfc822-to-8bit (ORCPT
+        id S2389447AbfIIQW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 12:22:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43210 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389271AbfIIQWo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 12:22:44 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C41ABACC1;
-        Mon,  9 Sep 2019 16:22:42 +0000 (UTC)
-Date:   Mon, 9 Sep 2019 18:22:42 +0200
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH] mips: sgi-ip27: switch from DISCONTIGMEM to SPARSEMEM
-Message-Id: <20190909182242.c1ef9717d14b20212ef75954@suse.de>
-In-Reply-To: <20190906130223.GA17704@rapoport-lnx>
-References: <1567662477-27404-1-git-send-email-rppt@kernel.org>
-        <20190905152150.f7ff6ef70726085de63df828@suse.de>
-        <20190905133251.GA3650@rapoport-lnx>
-        <20190905154831.88b7853b47ba7db7bd7626bd@suse.de>
-        <20190905154747.GB3650@rapoport-lnx>
-        <20190905233800.0f6b3fb3722cde2f5a88663a@suse.de>
-        <20190906130223.GA17704@rapoport-lnx>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-suse-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8BIT
+        Mon, 9 Sep 2019 12:22:59 -0400
+Received: from foss.arm.com ([217.140.110.172]:53372 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389271AbfIIQW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 12:22:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9777728;
+        Mon,  9 Sep 2019 09:22:57 -0700 (PDT)
+Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C93633F59C;
+        Mon,  9 Sep 2019 09:22:56 -0700 (PDT)
+From:   Steven Price <steven.price@arm.com>
+Subject: Re: [PATCH] drm/panfrost: Fix regulator_get_optional() misuse
+To:     Rob Herring <robh@kernel.org>
+Cc:     Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        David Airlie <airlied@linux.ie>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Mark Brown <broonie@kernel.org>
+References: <20190904123032.23263-1-broonie@kernel.org>
+ <ccd81530-2dbd-3c02-ca0a-1085b00663b5@arm.com>
+ <CAL_JsqKWEe=+X5AYRJ-_8peTzfrOrRBfFWgk8c6h3TN6f0ZHtA@mail.gmail.com>
+Message-ID: <3e3a2c8a-b4fc-8af6-39e1-b26160db2c7c@arm.com>
+Date:   Mon, 9 Sep 2019 17:22:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <CAL_JsqKWEe=+X5AYRJ-_8peTzfrOrRBfFWgk8c6h3TN6f0ZHtA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 6 Sep 2019 16:02:24 +0300
-Mike Rapoport <rppt@kernel.org> wrote:
+On 09/09/2019 16:41, Rob Herring wrote:
+> On Fri, Sep 6, 2019 at 4:23 PM Steven Price <steven.price@arm.com> wrote:
+>>
+>> On 04/09/2019 13:30, Mark Brown wrote:
+>>> The panfrost driver requests a supply using regulator_get_optional()
+>>> but both the name of the supply and the usage pattern suggest that it is
+>>> being used for the main power for the device and is not at all optional
+>>> for the device for function, there is no meaningful handling for absent
+>>> supplies.  Such regulators should use the vanilla regulator_get()
+>>> interface, it will ensure that even if a supply is not described in the
+>>> system integration one will be provided in software.
+>>>
+>>> Signed-off-by: Mark Brown <broonie@kernel.org>
+>>
+>> Tested-by: Steven Price <steven.price@arm.com>
+>>
+>> Looks like my approach to this was wrong - so we should also revert the
+>> changes I made previously.
+>>
+>> ----8<----
+>> From fe20f8abcde8444bb41a8f72fb35de943a27ec5c Mon Sep 17 00:00:00 2001
+>> From: Steven Price <steven.price@arm.com>
+>> Date: Fri, 6 Sep 2019 15:20:53 +0100
+>> Subject: [PATCH] drm/panfrost: Revert changes to cope with NULL regulator
+>>
+>> Handling a NULL return from devm_regulator_get_optional() doesn't seem
+>> like the correct way of handling this. Instead revert the changes in
+>> favour of switching to using devm_regulator_get() which will return a
+>> dummy regulator instead.
+>>
+>> Reverts commit 52282163dfa6 ("drm/panfrost: Add missing check for pfdev->regulator")
+>> Reverts commit e21dd290881b ("drm/panfrost: Enable devfreq to work without regulator")
+> 
+> Does a straight revert of these 2 patches not work? If it does work,
+> can you do that and send to the list. I don't want my hand slapped
+> again reverting things.
 
-> I suspect that unaligned access comes from __page_to_pfn, can you please
-> check what scripts/fadd2line reports for kernel_init_free_pages+0xcc/0x138?
+I wasn't sure what was best here - 52282163dfa6 is a bug fix, so
+reverting that followed by e21dd290881b would (re-)introduce a
+regression for that one commit (i.e. not completely bisectable).
+Reverting in the other order would work, but seems a little odd.
+Squashing the reverts seemed the neatest option - but it's not my hand
+at risk... :)
 
-kernel_init_free_pages+0xcc/0x138:
-pagefault_disabled_dec at include/linux/uaccess.h:173
-(inlined by) pagefault_enable at include/linux/uaccess.h:200
-(inlined by) __kunmap_atomic at include/linux/highmem.h:101
-(inlined by) clear_highpage at include/linux/highmem.h:215
-(inlined by) kernel_init_free_pages at mm/page_alloc.c:1124
+Perhaps it would be best to simply apply Mark's change followed by
+something like the following. That way it's not actually a revert!
+It also avoids (re-)adding the now redundant check in
+panfrost_devfreq_init().
 
-While making some sense out of this I booted the system a few times
-with the same kernel and I get different crashes (it even booted once
-to userspace).
+Steve
 
-Here a list (decoded with fadd2line)
+---8<----
+From fb2956acdf46ca04095ef11363c136dc94a1ab18 Mon Sep 17 00:00:00 2001
+From: Steven Price <steven.price@arm.com>
+Date: Fri, 6 Sep 2019 15:20:53 +0100
+Subject: [PATCH] drm/panfrost: Remove NULL checks for regulator
 
-cache_grow_begin+0x1bc/0x4b8:
-__section_mem_map_addr at include/linux/mmzone.h:1263
-(inlined by) lowmem_page_address at include/linux/mm.h:1302
-(inlined by) alloc_slabmgmt at mm/slab.c:2298
-(inlined by) cache_grow_begin at mm/slab.c:2625
+devm_regulator_get() is now used to populate pfdev->regulator which
+ensures that this cannot be NULL (a dummy regulator will be returned if
+necessary). So remove the checks in panfrost_devfreq_target().
 
-kfree+0x90/0x1d0:
-__section_mem_map_addr at include/linux/mmzone.h:1263
-(inlined by) virt_to_head_page at include/linux/mm.h:751
-(inlined by) virt_to_cache at mm/slab.h:408
-(inlined by) kfree at mm/slab.c:3748
+Signed-off-by: Steven Price <steven.price@arm.com>
+---
+ drivers/gpu/drm/panfrost/panfrost_devfreq.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-kfree+0xac/0x1d0:
-__read_once_size at include/linux/compiler.h:199
-(inlined by) compound_head at include/linux/page-flags.h:174
-(inlined by) virt_to_head_page at include/linux/mm.h:753
-(inlined by) virt_to_cache at mm/slab.h:408
-(inlined by) kfree at mm/slab.c:3748
-
-___cache_free+0x120/0x540:
-page_to_nid at include/linux/mm.h:1088
-(inlined by) cache_free_alien at mm/slab.c:785
-(inlined by) ___cache_free at mm/slab.c:3449
-
-free_block+0xe8/0x2c0:
-__read_once_size at include/linux/compiler.h:199
-(inlined by) compound_head at include/linux/page-flags.h:174
-(inlined by) virt_to_head_page at include/linux/mm.h:753
-(inlined by) free_block at mm/slab.c:3342
-
-copy_process+0x254/0x1738:
-__section_mem_map_addr at include/linux/mmzone.h:1263
-(inlined by) lowmem_page_address at include/linux/mm.h:1302
-(inlined by) alloc_thread_stack_node at kernel/fork.c:252
-(inlined by) dup_task_struct at kernel/fork.c:855
-(inlined by) copy_process at kernel/fork.c:1856
-
-I couldn't make real sense out of this yet, but maybe it gives
-a hint for you.
-
-Thomas.
-
+diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.c b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
+index a1f5fa6a742a..12ff77dacc95 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_devfreq.c
++++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
+@@ -39,7 +39,7 @@ static int panfrost_devfreq_target(struct device *dev, unsigned long *freq,
+ 	 * If frequency scaling from low to high, adjust voltage first.
+ 	 * If frequency scaling from high to low, adjust frequency first.
+ 	 */
+-	if (old_clk_rate < target_rate && pfdev->regulator) {
++	if (old_clk_rate < target_rate) {
+ 		err = regulator_set_voltage(pfdev->regulator, target_volt,
+ 					    target_volt);
+ 		if (err) {
+@@ -53,14 +53,12 @@ static int panfrost_devfreq_target(struct device *dev, unsigned long *freq,
+ 	if (err) {
+ 		dev_err(dev, "Cannot set frequency %lu (%d)\n", target_rate,
+ 			err);
+-		if (pfdev->regulator)
+-			regulator_set_voltage(pfdev->regulator,
+-					      pfdev->devfreq.cur_volt,
+-					      pfdev->devfreq.cur_volt);
++		regulator_set_voltage(pfdev->regulator, pfdev->devfreq.cur_volt,
++				      pfdev->devfreq.cur_volt);
+ 		return err;
+ 	}
+ 
+-	if (old_clk_rate > target_rate && pfdev->regulator) {
++	if (old_clk_rate > target_rate) {
+ 		err = regulator_set_voltage(pfdev->regulator, target_volt,
+ 					    target_volt);
+ 		if (err)
 -- 
-SUSE Software Solutions Germany GmbH
-HRB 247165 (AG München)
-Geschäftsführer: Felix Imendörffer
+2.20.1
+
