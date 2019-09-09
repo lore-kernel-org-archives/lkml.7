@@ -2,166 +2,250 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E44E8C00307
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 06:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45AC5C433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 06:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADC5421924
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 06:00:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 123A52067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 06:05:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ky7c9maZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727520AbfIIGAo convert rfc822-to-8bit (ORCPT
+        id S1727550AbfIIGFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 02:00:44 -0400
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:56605 "EHLO
-        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726823AbfIIGAn (ORCPT
+        Mon, 9 Sep 2019 02:05:41 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:41384 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726884AbfIIGFk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 02:00:43 -0400
-Received: from mailgate02.nec.co.jp ([114.179.233.122])
-        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x89606CC012624
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Mon, 9 Sep 2019 15:00:06 +0900
-Received: from mailsv02.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
-        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x89606kU007159;
-        Mon, 9 Sep 2019 15:00:06 +0900
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
-        by mailsv02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x895o1x2017817;
-        Mon, 9 Sep 2019 15:00:06 +0900
-Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.151] [10.38.151.151]) by mail03.kamome.nec.co.jp with ESMTP id BT-MMP-853262; Mon, 9 Sep 2019 14:48:36 +0900
-Received: from BPXM20GP.gisp.nec.co.jp ([10.38.151.212]) by
- BPXC23GP.gisp.nec.co.jp ([10.38.151.151]) with mapi id 14.03.0439.000; Mon, 9
- Sep 2019 14:48:35 +0900
-From:   Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
-To:     David Hildenbrand <david@redhat.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>
-CC:     Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "mhocko@kernel.org" <mhocko@kernel.org>,
-        "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        "hch@lst.de" <hch@lst.de>,
-        "longman@redhat.com" <longman@redhat.com>,
-        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
-        "mst@redhat.com" <mst@redhat.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Junichi Nomura <j-nomura@ce.jp.nec.com>
-Subject: Re: [RFC PATCH v2] mm: initialize struct pages reserved by
- ZONE_DEVICE driver.
-Thread-Topic: [RFC PATCH v2] mm: initialize struct pages reserved by
- ZONE_DEVICE driver.
-Thread-Index: AQHVZIp2xk1cU6nEkk+ez7kL5reVFKcdvuyAgAAVnwCAAAk8gIAEZuMA
-Date:   Mon, 9 Sep 2019 05:48:34 +0000
-Message-ID: <6a99e003-e1ab-b9e8-7b25-bc5605ab0eb2@vx.jp.nec.com>
-References: <20190906081027.15477-1-t-fukasawa@vx.jp.nec.com>
- <b7732a55-4a10-2c1d-c2f5-ca38ee60964d@redhat.com>
- <e762ee45-43e3-975a-ad19-065f07d1440f@vx.jp.nec.com>
- <40a1ce2e-1384-b869-97d0-7195b5b47de0@redhat.com>
-In-Reply-To: <40a1ce2e-1384-b869-97d0-7195b5b47de0@redhat.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.34.125.135]
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-ID: <17BE49E6AA775C488AB78E3047A82E32@gisp.nec.co.jp>
-Content-Transfer-Encoding: 8BIT
+        Mon, 9 Sep 2019 02:05:40 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8964wHK019358;
+        Mon, 9 Sep 2019 01:04:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568009098;
+        bh=NvIniZd7CzVPU0n1hR9ibj1hyMdPPpPDMXsdbCt6EVA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Ky7c9maZH4tiK1Odu0zOsoUzJ0T5KwJGMmn0Y6vO532sR8KLDMYEdyWV6aQ0GhfJS
+         cLusHceyJ6+7W8kYE+8IhR5m0rlPy97/1Hp5RP+gs4G81btYn8MM9d6+PafWOI7UI6
+         WF3MLZaMdifHSfztGD98rWYv0lkelA6e0ASVc66M=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8964wPL077235
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 9 Sep 2019 01:04:58 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 9 Sep
+ 2019 01:04:58 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 9 Sep 2019 01:04:58 -0500
+Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8964pSs092782;
+        Mon, 9 Sep 2019 01:04:52 -0500
+Subject: Re: [PATCH v2 2/3] mtd: spi-nor: cadence-quadspi: disable DMA and DAC
+ for Intel LGM
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        <linux-mtd@lists.infradead.org>
+CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <dwmw2@infradead.org>, <computersforpeace@gmail.com>,
+        <richard@nod.at>, <jwboyer@gmail.com>,
+        <boris.brezillon@free-electrons.com>, <cyrille.pitchen@atmel.com>,
+        <david.oberhollenzer@sigma-star.at>, <miquel.raynal@bootlin.com>,
+        <tudor.ambarus@gmail.com>, <andriy.shevchenko@intel.com>,
+        <cheol.yong.kim@intel.com>, <qi-ming.wu@intel.com>
+References: <20190827035827.21024-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190827035827.21024-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <2596ecd4-4ba6-ff7d-472f-1f6e664b4a97@ti.com>
+Date:   Mon, 9 Sep 2019 11:35:26 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-TM-AS-MML: disable
+In-Reply-To: <20190827035827.21024-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/09/06 19:35, David Hildenbrand wrote:
-> On 06.09.19 12:02, Toshiki Fukasawa wrote:
->> Thank you for your feedback.
->>
->> On 2019/09/06 17:45, David Hildenbrand wrote:
->>> On 06.09.19 10:09, Toshiki Fukasawa wrote:
->>>> A kernel panic is observed during reading
->>>> /proc/kpage{cgroup,count,flags} for first few pfns allocated by
->>>> pmem namespace:
->>>>
->>>> BUG: unable to handle page fault for address: fffffffffffffffe
->>>> [  114.495280] #PF: supervisor read access in kernel mode
->>>> [  114.495738] #PF: error_code(0x0000) - not-present page
->>>> [  114.496203] PGD 17120e067 P4D 17120e067 PUD 171210067 PMD 0
->>>> [  114.496713] Oops: 0000 [#1] SMP PTI
->>>> [  114.497037] CPU: 9 PID: 1202 Comm: page-types Not tainted 5.3.0-rc1
->>>> [  114.497621] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.0-0-g63451fca13-prebuilt.qemu-project.org 04/01/2014
->>>> [  114.498706] RIP: 0010:stable_page_flags+0x27/0x3f0
->>>> [  114.499142] Code: 82 66 90 66 66 66 66 90 48 85 ff 0f 84 d1 03 00 00 41 54 55 48 89 fd 53 48 8b 57 08 48 8b 1f 48 8d 42 ff 83 e2 01 48 0f 44 c7 <48> 8b 00 f6 c4 02 0f 84 57 03 00 00 45 31 e4 48 8b 55 08 48 89 ef
->>>> [  114.500788] RSP: 0018:ffffa5e601a0fe60 EFLAGS: 00010202
->>>> [  114.501373] RAX: fffffffffffffffe RBX: ffffffffffffffff RCX: 0000000000000000
->>>> [  114.502009] RDX: 0000000000000001 RSI: 00007ffca13a7310 RDI: ffffd07489000000
->>>> [  114.502637] RBP: ffffd07489000000 R08: 0000000000000001 R09: 0000000000000000
->>>> [  114.503270] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000240000
->>>> [  114.503896] R13: 0000000000080000 R14: 00007ffca13a7310 R15: ffffa5e601a0ff08
->>>> [  114.504530] FS:  00007f0266c7f540(0000) GS:ffff962dbbac0000(0000) knlGS:0000000000000000
->>>> [  114.505245] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>>> [  114.505754] CR2: fffffffffffffffe CR3: 000000023a204000 CR4: 00000000000006e0
->>>> [  114.506401] Call Trace:
->>>> [  114.506660]  kpageflags_read+0xb1/0x130
->>>> [  114.507051]  proc_reg_read+0x39/0x60
->>>> [  114.507387]  vfs_read+0x8a/0x140
->>>> [  114.507686]  ksys_pread64+0x61/0xa0
->>>> [  114.508021]  do_syscall_64+0x5f/0x1a0
->>>> [  114.508372]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
->>>> [  114.508844] RIP: 0033:0x7f0266ba426b
->>>>
->>>> The first few pages of ZONE_DEVICE expressed as the range
->>>> (altmap->base_pfn) to (altmap->base_pfn + altmap->reserve) are
->>>> skipped by struct page initialization. Some pfn walkers like
->>>> /proc/kpage{cgroup, count, flags} can't handle these uninitialized
->>>> struct pages, which causes the error.
->>>>
->>>> In previous discussion, Dan seemed to have concern that the struct
->>>> page area of some pages indicated by vmem_altmap->reserve may not
->>>> be allocated. (See https://lore.kernel.org/lkml/CAPcyv4i5FjTOnPbXNcTzvt+e6RQYow0JRQwSFuxaa62LSuvzHQ@mail.gmail.com/)
->>>> However, arch_add_memory() called by devm_memremap_pages() allocates
->>>> struct page area for pages containing addresses in the range
->>>> (res.start) to (res.start + resource_size(res)), which include the
->>>> pages indicated by vmem_altmap->reserve. If I read correctly, it is
->>>> allocated as requested at least on x86_64. Also, memmap_init_zone()
->>>> initializes struct pages in the same range.
->>>> So I think the struct pages should be initialized.>
->>>
->>> For !ZONE_DEVICE memory, the memmap is valid with SECTION_IS_ONLINE -
->>> for the whole section. For ZONE_DEVICE memory we have no such
->>> indication. In any section that is !SECTION_IS_ONLINE and
->>> SECTION_MARKED_PRESENT, we could have any subsections initialized. >
->>> The only indication I am aware of is pfn_zone_device_reserved() - which
->>> seems to check exactly what you are trying to skip here.
->>>
->>> Can't you somehow use pfn_zone_device_reserved() ? Or if you considered
->>> that already, why did you decide against it?
->>
->> No, in current approach this function is no longer needed.
->> The reason why we change the approach is that all pfn walkers
->> have to be aware of the uninitialized struct pages.
-> 
-> We should use the same strategy for all pfn walkers then (effectively
-> get rid of pfn_zone_device_reserved() if that's what we want).
+Hi,
 
-True, but this patch replaces "/proc/kpageflags: do not use uninitialized
-struct pages". If we initialize the uninitialized struct pages, no pfn walker
-will need to be aware of them.
+On 27/08/19 9:28 AM, Ramuthevar,Vadivel MuruganX wrote:
+> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> 
+> on Intel's Lightning Mountain(LGM) SoCs QSPI controller do not use
+> Direct Memory Access(DMA) and Direct Access Controller(DAC).
+> 
+> This patch introduces to properly disable the DMA and DAC
+> for data transfer instead it uses indirect data transfer.
+> 
+> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> ---
+>  drivers/mtd/spi-nor/Kconfig           |  2 +-
+>  drivers/mtd/spi-nor/cadence-quadspi.c | 21 ++++++++++++++++++---
+>  2 files changed, 19 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfig
+> index 6de83277ce8b..ba2e372ae514 100644
+> --- a/drivers/mtd/spi-nor/Kconfig
+> +++ b/drivers/mtd/spi-nor/Kconfig
+> @@ -34,7 +34,7 @@ config SPI_ASPEED_SMC
+>  
+>  config SPI_CADENCE_QUADSPI
+>  	tristate "Cadence Quad SPI controller"
+> -	depends on OF && (ARM || ARM64 || COMPILE_TEST)
+> +	depends on OF && (ARM || ARM64 || COMPILE_TEST || X86)
+>  	help
+>  	  Enable support for the Cadence Quad SPI Flash controller.
+>  
+> diff --git a/drivers/mtd/spi-nor/cadence-quadspi.c b/drivers/mtd/spi-nor/cadence-quadspi.c
+> index 67f15a1f16fd..69fa13e95110 100644
+> --- a/drivers/mtd/spi-nor/cadence-quadspi.c
+> +++ b/drivers/mtd/spi-nor/cadence-quadspi.c
+> @@ -517,12 +517,16 @@ static int cqspi_indirect_read_execute(struct spi_nor *nor, u8 *rxbuf,
+>  	struct cqspi_st *cqspi = f_pdata->cqspi;
+>  	void __iomem *reg_base = cqspi->iobase;
+>  	void __iomem *ahb_base = cqspi->ahb_base;
+> +	u32 trigger_address = cqspi->trigger_address;
+>  	unsigned int remaining = n_rx;
+>  	unsigned int mod_bytes = n_rx % 4;
+>  	unsigned int bytes_to_read = 0;
+>  	u8 *rxbuf_end = rxbuf + n_rx;
+>  	int ret = 0;
+>  
+> +	if (!f_pdata->use_direct_mode)
+> +		writel(trigger_address, reg_base + CQSPI_REG_INDIRECTTRIGGER);
+> +
 
-> 
->>
->> As for SECTION_IS_ONLINE, I'm not sure now.
->> I will look into it next week.
-> 
-> SECTION_IS_ONLINE does currently not apply to ZONE_DEVICE and due to
-> sub-section support for ZONE_DEVICE, it cannot easily be reused.
-> 
-It seems that SECTION_IS_ONLINE and SECTION_MARKED_PRESENT can be used to
-distinguish uninitialized struct pages if we can apply them to ZONE_DEVICE,
-but that is no longer necessary with this approach.
+Again, as I pointed out previously, this should not be needed.
+cqspi_controller_init() already does above configuration and no need to
+touch this register on every read.
 
-Thanks,
-Toshiki Fukasawa
+>  	writel(from_addr, reg_base + CQSPI_REG_INDIRECTRDSTARTADDR);
+>  	writel(remaining, reg_base + CQSPI_REG_INDIRECTRDBYTES);
+>  
+> @@ -609,6 +613,14 @@ static int cqspi_write_setup(struct spi_nor *nor)
+>  	struct cqspi_st *cqspi = f_pdata->cqspi;
+>  	void __iomem *reg_base = cqspi->iobase;
+>  
+> +	/* Disable the DMA and direct access controller */
+> +	if (!f_pdata->use_direct_mode) {
+> +		reg = readl(reg_base + CQSPI_REG_CONFIG);
+> +		reg &= ~CQSPI_REG_CONFIG_ENB_DIR_ACC_CTRL;
+> +		reg &= ~CQSPI_REG_CONFIG_DMA_MASK;
+> +		writel(reg, reg_base + CQSPI_REG_CONFIG);
+> +	}
+> +
+
+You did not respond to my previous comment. Why would you need to clear
+CQSPI_REG_CONFIG_DMA_MASK field, if reset default is 0 anyway?
+
+>  	/* Set opcode. */
+>  	reg = nor->program_opcode << CQSPI_REG_WR_INSTR_OPCODE_LSB;
+>  	writel(reg, reg_base + CQSPI_REG_WR_INSTR);
+> @@ -1171,7 +1183,8 @@ static int cqspi_of_get_pdata(struct platform_device *pdev)
+>  		return -ENXIO;
+>  	}
+>  
+> -	cqspi->rclk_en = of_property_read_bool(np, "cdns,rclk-en");
+> +	if (!of_device_is_compatible(np, "intel,lgm-qspi"))
+> +		cqspi->rclk_en = of_property_read_bool(np, "cdns,rclk-en");
+>  
+
+If you don't want to use this property, then just drop it from your DT.
+Don't override it in the driver based on compatible.
+
+>  	return 0;
+>  }
+> @@ -1301,7 +1314,8 @@ static int cqspi_setup_flash(struct cqspi_st *cqspi, struct device_node *np)
+>  		f_pdata->registered = true;
+>  
+>  		if (mtd->size <= cqspi->ahb_size) {
+> -			f_pdata->use_direct_mode = true;
+> +			f_pdata->use_direct_mode =
+> +				!(of_device_is_compatible(np, "intel,lgm-qspi"));
+
+Looks like, you haven't followed any of my advice. Please add a quirk
+flag to disable DAC mode. Something like:
+
+#define CQSPI_DISABLE_DAC_MODE BIT(1)
+
+static const struct cqspi_driver_platdata intel_lgm_qspi = {
+        .hwcaps_mask = CQSPI_BASE_HWCAPS_MASK,
+        .quirks = CQSPI_DISABLE_DAC_MODE,
+};
+
+static const struct of_device_id cqspi_dt_ids[] = {
+
+	...
+
+        {
+                .compatible = "intel,lgm-qspi",
+                .data = &intel_lgm_qspi,
+        },
+
+	...
+};
+
+
+Then in cqspi_setup_flash(),
+
+	if (mtd->size <= cqspi->ahb_size &&
+		!ddata->quirks & CQSPI_DISABLE_DAC_MODE) {
+		f_pdata->use_direct_mode = true;
+		...
+	}	
+
+
+>  			dev_dbg(nor->dev, "using direct mode for %s\n",
+>  				mtd->name);
+>  
+> @@ -1347,7 +1361,7 @@ static int cqspi_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	/* Obtain QSPI clock. */
+> -	cqspi->clk = devm_clk_get(dev, NULL);
+> +	cqspi->clk = devm_clk_get(dev, "qspi");
+
+This will break DT backward compatibility. Existing DTs don't have
+clock-names = "qspi". Hence, this code will error out.
+What I meant in the previous mail was: if device does not have multiple
+clk inputs then there is no need for clock-names and there is no need to
+touch this part of code.
+
+	cqspi->clk = devm_clk_get(dev, NULL);
+
+This should just work fine even on your board. So drop this hunk.
+
+>  	if (IS_ERR(cqspi->clk)) {
+>  		dev_err(dev, "Cannot claim QSPI clock.\n");
+>  		return PTR_ERR(cqspi->clk);
+> @@ -1369,6 +1383,7 @@ static int cqspi_probe(struct platform_device *pdev)
+>  		return PTR_ERR(cqspi->ahb_base);
+>  	}
+>  	cqspi->mmap_phys_base = (dma_addr_t)res_ahb->start;
+> +	cqspi->trigger_address = res_ahb->start;
+
+Nope, this is not needed. See:
+https://elixir.bootlin.com/linux/v5.3-rc6/source/drivers/mtd/spi-nor/cadence-quadspi.c#L1168
+
+Populate the trigger-address using cdns,trigger-address property in DT
+
+>  	cqspi->ahb_size = resource_size(res_ahb);
+>  
+>  	init_completion(&cqspi->transfer_complete);
+> 
+
+-- 
+Regards
+Vignesh
