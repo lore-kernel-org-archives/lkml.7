@@ -2,163 +2,78 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A19C00307
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 06:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6077AC433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 06:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B4DE20693
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 06:52:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WKgZcs86"
+	by mail.kernel.org (Postfix) with ESMTP id 446E320693
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 06:52:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731292AbfIIGwW (ORCPT
+        id S1731356AbfIIGwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 02:52:22 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:35744 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730555AbfIIGwW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 02:52:22 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x896qB1N051914;
-        Mon, 9 Sep 2019 01:52:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568011931;
-        bh=zG7j/FKdnKJGi5S4/+DCXgAmeaLRvacq3SV1zBDjDK8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=WKgZcs86xvkImDeZTlWxI+8ij8tctOXjcls20eW2N/bICrWbMQ8eXxRNUA6WGaDpd
-         UzRXpMUYomZH4/+IIuvhgioZDGynFptCHw5uKdFxLnliospaaChQs+WX8DzUHc2q5S
-         5StTng57b+ELtdUOKiZ9lnxXUmb9eldTeMb3K9Ww=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x896qARe005981
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 9 Sep 2019 01:52:11 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 9 Sep
- 2019 01:52:10 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 9 Sep 2019 01:52:10 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x896q69W031378;
-        Mon, 9 Sep 2019 01:52:07 -0500
-Subject: Re: [PATCH v2 04/14] dmaengine: Add metadata_ops for
- dma_async_tx_descriptor
-To:     Vinod Koul <vkoul@kernel.org>,
-        Radhey Shyam Pandey <radheys@xilinx.com>
-CC:     <robh+dt@kernel.org>, "Menon, Nishanth" <nm@ti.com>,
-        <ssantosh@kernel.org>, <dan.j.williams@intel.com>,
-        <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
-        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
-References: <20190730093450.12664-1-peter.ujfalusi@ti.com>
- <20190730093450.12664-5-peter.ujfalusi@ti.com>
- <20190908141207.GO2672@vkoul-mobl>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <0ccf3880-935f-be54-0f62-e57762141af1@ti.com>
-Date:   Mon, 9 Sep 2019 09:52:38 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 9 Sep 2019 02:52:25 -0400
+Received: from mga11.intel.com ([192.55.52.93]:16903 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730555AbfIIGwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 02:52:24 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Sep 2019 23:52:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,484,1559545200"; 
+   d="scan'208";a="188934357"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 08 Sep 2019 23:52:23 -0700
+Received: from [10.226.39.8] (ekotax-mobl.gar.corp.intel.com [10.226.39.8])
+        by linux.intel.com (Postfix) with ESMTP id E13FC5807FF;
+        Sun,  8 Sep 2019 23:52:20 -0700 (PDT)
+Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: intel: Add YAML schemas for the
+ PCIe RC controller
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, robh@kernel.org,
+        linux-pci@vger.kernel.org, hch@infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
+References: <cover.1567585181.git.eswara.kota@linux.intel.com>
+ <fe9549470bc06ea0d0dfc80f46a579baa49b911a.1567585181.git.eswara.kota@linux.intel.com>
+ <CAFBinCC5SH5OSUqOkLQhE2o7g5OhSuB_PBjsv93U2P=FNS5oPw@mail.gmail.com>
+ <20190906091950.GJ2680@smile.fi.intel.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <c6c50a77-d55c-5f5c-ee76-01728dbc2ca3@linux.intel.com>
+Date:   Mon, 9 Sep 2019 14:52:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-In-Reply-To: <20190908141207.GO2672@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190906091950.GJ2680@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+On 9/6/2019 5:19 PM, Andy Shevchenko wrote:
+> On Thu, Sep 05, 2019 at 10:31:29PM +0200, Martin Blumenstingl wrote:
+>> On Wed, Sep 4, 2019 at 12:11 PM Dilip Kota <eswara.kota@linux.intel.com> wrote:
+>>> +  phy-names:
+>>> +    const: pciephy
+>> the most popular choice in Documentation/devicetree/bindings/pci/ is "pcie-phy"
+>> if Rob is happy with "pciephy" (which is already part of two other
+>> bindings) then I'm happy with "pciephy" as well
+> I'm not Rob, though I consider more practical to have a hyphenated variant.
 
-On 08/09/2019 17.12, Vinod Koul wrote:
-> On 30-07-19, 12:34, Peter Ujfalusi wrote:
->> The metadata is best described as side band data or parameters traveling
->> alongside the data DMAd by the DMA engine. It is data
->> which is understood by the peripheral and the peripheral driver only, the
->> DMA engine see it only as data block and it is not interpreting it in any
->> way.
->>
->> The metadata can be different per descriptor as it is a parameter for the
->> data being transferred.
->>
->> If the DMA supports per descriptor metadata it can implement the attach,
->> get_ptr/set_len callbacks.
->>
->> Client drivers must only use either attach or get_ptr/set_len to avoid
->> misconfiguration.
->>
->> Client driver can check if a given metadata mode is supported by the
->> channel during probe time with
->> dmaengine_is_metadata_mode_supported(chan, DESC_METADATA_CLIENT);
->> dmaengine_is_metadata_mode_supported(chan, DESC_METADATA_ENGINE);
->>
->> and based on this information can use either mode.
->>
->> Wrappers are also added for the metadata_ops.
->>
->> To be used in DESC_METADATA_CLIENT mode:
->> dmaengine_desc_attach_metadata()
->>
->> To be used in DESC_METADATA_ENGINE mode:
->> dmaengine_desc_get_metadata_ptr()
->> dmaengine_desc_set_metadata_len()
->>
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->> ---
->>  drivers/dma/dmaengine.c   |  73 ++++++++++++++++++++++++++
->>  include/linux/dmaengine.h | 108 ++++++++++++++++++++++++++++++++++++++
->>  2 files changed, 181 insertions(+)
->>
->> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
->> index 03ac4b96117c..6baddf7dcbfd 100644
->> --- a/drivers/dma/dmaengine.c
->> +++ b/drivers/dma/dmaengine.c
->> @@ -1302,6 +1302,79 @@ void dma_async_tx_descriptor_init(struct dma_async_tx_descriptor *tx,
->>  }
->>  EXPORT_SYMBOL(dma_async_tx_descriptor_init);
->>  
->> +static inline int desc_check_and_set_metadata_mode(
->> +	struct dma_async_tx_descriptor *desc, enum dma_desc_metadata_mode mode)
->> +{
->> +	/* Make sure that the metadata mode is not mixed */
->> +	if (!desc->desc_metadata_mode) {
->> +		if (dmaengine_is_metadata_mode_supported(desc->chan, mode))
->> +			desc->desc_metadata_mode = mode;
-> 
-> So do we have different descriptors supporting different modes or is it
-> controlled based? For latter we can do this check at controller
-> registration!
+I am okay to "pcie-phy". I will update it in next patch version.
 
-It is actually on channel basis (in UDMAP):
-TR channel does not support metadata at all.
-Packet Mode channel have support for metadata, but it might not be
-available for certain remote peripherals. PDMAs for example does not use
-metadata.
-Any channel can be configured as TR or Packet Mode, any channel can
-service a peripheral which needs or does not need metadata.
+Regards,
+Dilip
 
-The reason we ended up per descriptor callbacks with Radhey (added to
-CC) is that all functions operate on the descriptor and it was natural
-to have them attached to the descriptor rather than add channel based
-callbacks which must also take the descriptor pointer in addition. The
-descriptor have pointer to the channel it is issued on.
-
-I only know if metadata is going to be supported when the channel is
-requested, based on the psil-config of the remote thread.
-
-Clients still can check and plan ahead on how to use the metadata.
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>
