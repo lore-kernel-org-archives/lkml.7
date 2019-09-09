@@ -2,175 +2,138 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA79C00307
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 05:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39580C433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 05:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE57621924
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 05:55:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 114BB21A4A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 05:56:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WLadTME2"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="m1EZ5Vq1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727277AbfIIFyf (ORCPT
+        id S1727322AbfIIF4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 01:54:35 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:44984 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727254AbfIIFye (ORCPT
+        Mon, 9 Sep 2019 01:56:25 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:39754 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727076AbfIIF4Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 01:54:34 -0400
-Received: by mail-lf1-f68.google.com with SMTP id y4so9438018lfe.11
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 22:54:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=7qYxqgJDwIoCELxjYRQsJBCV5/VRMnMAsms3cMrB440=;
-        b=WLadTME2icLq4x8Mxgvv0S3og5kAQKr9f+wvtZNLXhWgqVF1qqSOak5XWzKJ5Mowud
-         vDGH+5iqnQsLv/u6iiFjk8/q4JSIFGUyp2N0GzPIxUU3CcRHoAnJQbzJM5DzvJPTxC9S
-         QRu7bTGI642LLaftytBWtZTDXrI770rLFoaTmiYYWu4p5FgRnA++5ZANxt1JBy+ogAfS
-         HO5bh9g3yHv5TpnjPfANNem1slkJnUTx+ynR4zZ9xRFhtTm8E2SkRhYx39pX8lX1TwOs
-         Hau0XufatQEuboKuL8lQQ4Qm40mWMj3JsInPuhZPPnLxETWd0ZGNalxbmlIm8F2j9k+/
-         t84w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=7qYxqgJDwIoCELxjYRQsJBCV5/VRMnMAsms3cMrB440=;
-        b=Hgvm/eSNw9LQbN/EUaqYjJpE/NmW0cpjKl7pqIK8KcGMR7qrCCy8xY4yzF/0y7u8u1
-         edFYlNt6c9vWWJuCkye/ojykiwjVhUZN1u11r/fkIsFv5f4emf8C3JGrVneo6xrXtNtp
-         fZTE/VqeJABmMehmE5oJ4mtkYqO2JrGHsUQw3nx5eaZdg2fiQQooJm8zHbESrIvdu981
-         pKXBtIdBC39zGap6HOzFXld932TEF3hruHvBe4tnx3fQ61ld2hICZmVT/vQ4S+Akh7Mn
-         M3cdIs363MP6Bl5p6oQD752RTmE0fI312s/js51iztr84ucqPQ3o9aNStXDXIBx9xmtr
-         j4dw==
-X-Gm-Message-State: APjAAAW1dSkS53izSAOC7v21MNbwi+BhjUur9H+QvWJffvC5NwMBKa5T
-        SvQzK0nbfbni9H2jd/LfaQdbG3BL2WaBZYXg7YcmSA==
-X-Google-Smtp-Source: APXvYqylIHiXo3LR2aw6zlnrmWjTeSA14mfLZkAcdu7LK/oEkJNa9niulKgGv2lfcGzPQMpcm2ieCMVWoXxIjwn0F44=
-X-Received: by 2002:ac2:4352:: with SMTP id o18mr15415365lfl.164.1568008471345;
- Sun, 08 Sep 2019 22:54:31 -0700 (PDT)
+        Mon, 9 Sep 2019 01:56:25 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x895uLCs008703;
+        Mon, 9 Sep 2019 00:56:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568008581;
+        bh=2Bbb3tDAMJ9BxWKHx1geE957uzg9mJ+ZC0U5GDiSY3k=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=m1EZ5Vq1ZPJz9OE7eQAEVOmlORQmpY7fLibYXbHR5dvyr74H3agnzO+EOBbnq0dmz
+         wwAoadDzqYCLZSPWyyjATROcIXbA6BP5NMAljdzB3RXNIhn0z1ro/Ze/xkAXoLi/Wj
+         L081ZbJKatb/KQoySjJSKdO6ctxLQKYAfSQeAm2Q=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x895uLq4123510;
+        Mon, 9 Sep 2019 00:56:21 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 9 Sep
+ 2019 00:56:20 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 9 Sep 2019 00:56:20 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x895uIMK055091;
+        Mon, 9 Sep 2019 00:56:19 -0500
+Subject: Re: [RFC 3/3] dmaengine: Support for requesting channels preferring
+ DMA domain controller
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     <robh+dt@kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dan.j.williams@intel.com>,
+        <devicetree@vger.kernel.org>
+References: <20190906141816.24095-1-peter.ujfalusi@ti.com>
+ <20190906141816.24095-4-peter.ujfalusi@ti.com>
+ <20190908121507.GN2672@vkoul-mobl>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <0bd4d678-31be-bead-7591-0452b6fed5f2@ti.com>
+Date:   Mon, 9 Sep 2019 08:56:50 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190908121150.420989666@linuxfoundation.org>
-In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Mon, 9 Sep 2019 11:24:19 +0530
-Message-ID: <CA+G9fYuQzkppyLeS0zhoaZxnT8A4d9jyErN_ehFBQRwKLA8nXA@mail.gmail.com>
-Subject: Re: [PATCH 5.2 00/94] 5.2.14-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190908121507.GN2672@vkoul-mobl>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 8 Sep 2019 at 18:19, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.2.14 release.
-> There are 94 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Tue 10 Sep 2019 12:09:36 PM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.2.14-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.2.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
 
-Summary
-------------------------------------------------------------------------
+On 08/09/2019 15.15, Vinod Koul wrote:
+> On 06-09-19, 17:18, Peter Ujfalusi wrote:
+>> In case the channel is not requested via the slave API, use the
+>> of_find_dma_domain() to see if a system default DMA controller is
+>> specified.
+>>
+>> Add new function which can be used by clients to request channels by mask
+>> from their DMA domain controller if specified.
+>>
+>> Client drivers can take advantage of the domain support by moving from
+>> dma_request_chan_by_mask() to dma_domain_request_chan_by_mask()
+>>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>> ---
+>>  drivers/dma/dmaengine.c   | 17 ++++++++++++-----
+>>  include/linux/dmaengine.h |  9 ++++++---
+>>  2 files changed, 18 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+>> index 6baddf7dcbfd..087450eed68c 100644
+>> --- a/drivers/dma/dmaengine.c
+>> +++ b/drivers/dma/dmaengine.c
+>> @@ -640,6 +640,10 @@ struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
+>>  	struct dma_device *device, *_d;
+>>  	struct dma_chan *chan = NULL;
+>>  
+>> +	/* If np is not specified, get the default DMA domain controller */
+>> +	if (!np)
+>> +		np = of_find_dma_domain(NULL);
+>> +
+>>  	/* Find a channel */
+>>  	mutex_lock(&dma_list_mutex);
+>>  	list_for_each_entry_safe(device, _d, &dma_device_list, global_node) {
+>> @@ -751,19 +755,22 @@ struct dma_chan *dma_request_slave_channel(struct device *dev,
+>>  EXPORT_SYMBOL_GPL(dma_request_slave_channel);
+>>  
+>>  /**
+>> - * dma_request_chan_by_mask - allocate a channel satisfying certain capabilities
+>> - * @mask: capabilities that the channel must satisfy
+>> + * dma_domain_request_chan_by_mask - allocate a channel by mask from DMA domain
+>> + * @dev:	pointer to client device structure
+>> + * @mask:	capabilities that the channel must satisfy
+>>   *
+>>   * Returns pointer to appropriate DMA channel on success or an error pointer.
+>>   */
+>> -struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask)
+>> +struct dma_chan *dma_domain_request_chan_by_mask(struct device *dev,
+>> +						 const dma_cap_mask_t *mask)
+> 
+> should we really use dma_request_chan_by_mask() why not create a new api
+> dma_request_chan_by_domain() and use that, it falls back to
+> dma_request_chan_by_mask() if it doesnt find a valid domain!
 
-kernel: 5.2.14-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.2.y
-git commit: 562387856c86ea4a3aa5ba333cb9806f8065b6ab
-git describe: v5.2.12-97-g562387856c86
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.2-oe/bui=
-ld/v5.2.12-97-g562387856c86
+So:
+struct dma_chan *dma_request_chan_by_domain(struct device *dev,
+					    const dma_cap_mask_t *mask);
 
-No regressions (compared to build v5.2.12)
+?
 
-No fixes (compared to build v5.2.12)
+- Péter
 
-Ran 22530 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* network-basic-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-fs-tests
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
