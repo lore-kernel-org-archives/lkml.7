@@ -2,83 +2,101 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BCD1C433EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDD2C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3353921920
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:57:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="lvoWhoZg"
+	by mail.kernel.org (Postfix) with ESMTP id 21A22218DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:00:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404537AbfIIL47 (ORCPT
+        id S2404559AbfIIMAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 07:56:59 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:60833 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404502AbfIIL47 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 07:56:59 -0400
-Received: from [192.168.4.140] (38.85.69.148.rev.vodafone.pt [148.69.85.38] (may be forged))
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x89BuRWN2370009
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Mon, 9 Sep 2019 04:56:29 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com x89BuRWN2370009
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019081901; t=1568030190;
-        bh=amVw5RKHgQtC48TDjO25VF7TYKPY9dwQtCHHtmUiWLE=;
-        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
-        b=lvoWhoZgfNLoIKEG5HMqgj2INg4WXNd1HFaah1iCDp0Ax9O9xMwZxJ/tVCfuFPX+t
-         SovlpLHk3dL63OePhXjpdYrpwk+zhAKreqHglsT1DKolM9uMw0xDHftZf7qSL4I1dm
-         cU7ZrGpYRYdJ2X4B5koCF9HFHOui2BhRpbBaPn/ZZnBBOy3f+nO1AZCVONjlCGdd+J
-         R1sDya84Assf38LZxcJN9R9OQyM+Sj4Bw84Sp4RZPx4P8thdY9mXqTbQlvMyex5s4h
-         oiSiklz8bhpNWZlFyYKe0WXb8ToI7I4SnOw/otHQAnzM5ukV/GqffGMu5/wJKBrnRn
-         CoQCM9nw4hqSg==
-Date:   Mon, 09 Sep 2019 12:56:18 +0100
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20190908072248.GB16220@zn.tnic>
-References: <20190905232222.14900-1-bshanks@codeweavers.com> <20190907212610.GA30930@ranerica-svr.sc.intel.com> <20190908072248.GB16220@zn.tnic>
+        Mon, 9 Sep 2019 08:00:14 -0400
+Received: from hel-mailgw-01.vaisala.com ([193.143.230.17]:22527 "EHLO
+        hel-mailgw-01.vaisala.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404502AbfIIMAO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 08:00:14 -0400
+IronPort-SDR: XxhML/fkEbWh+Fdt5FqQN2xKL620r4U1w0nPZIzAxhs4OVQXX7BAimlpwRZqPsMKlj0kAakBOL
+ XlgoZ32Wbz6kF8D583rYmDWtrW0PKwnUye7w6AW61Hu1oZXxDNbbQsBd9Zv2YAV9ZT0qLj9vZS
+ HvcgEP56Bf6RqsRt8NoljuLtaEcWoeXypWDmYXPwi02X9Gu8oZlFXTkkkAb/S1gwJvM7jgCOGI
+ K4SuVOzvaC2pjTBkUiUr2arzr86kF+4XftmRqLXf+gcyN/NPxJGYKix/5G6pK8mfVPKHIgv4pf
+ 9kc=
+X-IronPort-AV: E=Sophos;i="5.64,484,1559509200"; 
+   d="scan'208";a="231521946"
+Subject: Re: [PATCH] nvmem: core: fix nvmem_cell_write inline function
+To:     Sebastian Reichel <sre@kernel.org>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        kbuild test robot <lkp@intel.com>,
+        linux-kernel@vger.kernel.org
+References: <20190908121038.6877-1-sre@kernel.org>
+ <d5017670-5622-283e-1376-8161d6e39dcd@vaisala.com>
+ <20190909101810.gtqouke7vyu63r7e@earth.universe>
+From:   Nandor Han <nandor.han@vaisala.com>
+Message-ID: <84877749-c335-5a66-51b8-6071353f2151@vaisala.com>
+Date:   Mon, 9 Sep 2019 15:00:09 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] x86/umip: Add emulation for 64-bit processes
-To:     Borislav Petkov <bp@alien8.de>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-CC:     Brendan Shanks <bshanks@codeweavers.com>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-From:   hpa@zytor.com
-Message-ID: <1E11E98F-4A38-4CDE-8549-64A2C28DC63E@zytor.com>
+In-Reply-To: <20190909101810.gtqouke7vyu63r7e@earth.universe>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-OriginalArrivalTime: 09 Sep 2019 12:00:09.0475 (UTC) FILETIME=[20C82530:01D56706]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On September 8, 2019 8:22:48 AM GMT+01:00, Borislav Petkov <bp@alien8=2Ede>=
- wrote:
->On Sat, Sep 07, 2019 at 02:26:10PM -0700, Ricardo Neri wrote:
->> > Wine users have encountered a number of 64-bit Windows games that
->use
->> > these instructions (particularly sgdt), and were crashing when run
->on
->> > UMIP-enabled systems=2E
->>=20
->> Emulation support for 64-bit processes was not initially included
->> because no use cases had been identified=2E
->
->AFAIR, we said at the time that 64-bit doesn't need it because this is
->legacy software only and 64-bit will get fixed properly not to use
->those
->insns=2E I can probably guess how that went =2E=2E=2E
+On 9/9/19 1:18 PM, Sebastian Reichel wrote:
+> Hi,
+> 
+> On Mon, Sep 09, 2019 at 12:26:06PM +0300, Nandor Han wrote:
+>> On 9/8/19 3:10 PM, Sebastian Reichel wrote:
+>>> From: Sebastian Reichel <sebastian.reichel@collabora.com>
+>>>
+>>> nvmem_cell_write's buf argument uses different types based on
+>>> the configuration of CONFIG_NVMEM. The function prototype for
+>>> enabled NVMEM uses 'void *' type, but the static dummy function
+>>> for disabled NVMEM uses 'const char *' instead. Fix the different
+>>> behaviour by always expecting a 'void *' typed buf argument.
+>>>
+>>> Fixes: 7a78a7f7695b ("power: reset: nvmem-reboot-mode: use NVMEM as reboot mode write interface")
+>>> Reported-by: kbuild test robot <lkp@intel.com>
+>>> Cc: Han Nandor <nandor.han@vaisala.com>
+>>> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>>> Cc: linux-kernel@vger.kernel.org
+>>> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+>>> ---
+>>>    include/linux/nvmem-consumer.h | 2 +-
+>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/include/linux/nvmem-consumer.h b/include/linux/nvmem-consumer.h
+>>> index 8f8be5b00060..5c17cb733224 100644
+>>> --- a/include/linux/nvmem-consumer.h
+>>> +++ b/include/linux/nvmem-consumer.h
+>>> @@ -118,7 +118,7 @@ static inline void *nvmem_cell_read(struct nvmem_cell *cell, size_t *len)
+>>>    }
+>>>    static inline int nvmem_cell_write(struct nvmem_cell *cell,
+>>> -				    const char *buf, size_t len)
+>>> +				   void *buf, size_t len)
+>>
+>> nitpick: alignment issue?
+> 
+> This actually fixes the alignment issue as a side-effect.
+> I guess I should have mentioned it in the changelog.
+> 
+>> Review-By: Han Nandor <nandor.han@vaisala.com>
+> 
+> I suppose you meant to write "Reviewed-by" instead of inventing your
+> own tag?
+> 
 
-I don't think Windows games was something we considered=2E However, needin=
-g to simulate these instructions is not a huge surprise=2E The important th=
-ing is that by simulating them, we can plug the leak of some very high valu=
-e kernel information =E2=80=93 mainly the GDT, IDT and TSS addresses=2E
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+Yes :)
+
+Nandor
+
+
