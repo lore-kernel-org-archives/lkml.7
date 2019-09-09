@@ -2,66 +2,105 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC35EC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D74C6C49ED6
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:05:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A62EA21920
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:05:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568045136;
-	bh=ZM2RJpTGUpdkPmZfDaBuYdCehqwWhVBMeNBjNenlNDM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=V1t/iCvrx6wM2D81DDPqxVD2I5OYpe7M8RA168KHowKFOzuib8Q2SvDyigTUAA04A
-	 mB6bZ7CvrFNYf5KL+isezD+RrKWqCY0W9Ye8Holpjy03O3n+fjj0Rmx/KKgO+BLuWL
-	 aYxbu/FgjAH+bKQfKN1VIQOZkEJyXh+moL6/Z+e8=
+	by mail.kernel.org (Postfix) with ESMTP id ADA1E2086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:05:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lElCnuM/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728887AbfIIQFe (ORCPT
+        id S1729762AbfIIQFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 12:05:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47736 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727495AbfIIQFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 12:05:33 -0400
-Received: from localhost (110.8.30.213.rev.vodafone.pt [213.30.8.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A3A82086D;
-        Mon,  9 Sep 2019 16:05:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568045131;
-        bh=ZM2RJpTGUpdkPmZfDaBuYdCehqwWhVBMeNBjNenlNDM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qDQpphoWoHCz5dF4oTyXhOcWfXLsHeL2or0Au9FtKYttEZ41CfLbNc9kRtVy0c3Mc
-         Aijpt06shRbWovqPFp1J2E6+XACJx2hd22sMPDSKJP5IbEXLpuJUUierlpqgmjQe8p
-         KfmQyZ5qoXUCaUL0do4+z30SJ6/VN0908wi28x30=
-Date:   Mon, 9 Sep 2019 17:05:28 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Bharath Vedartham <linux.bhar@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.2 00/94] 5.2.14-stable review
-Message-ID: <20190909160528.GA9727@kroah.com>
-References: <20190908121150.420989666@linuxfoundation.org>
- <20190909150036.GD4050@bharath12345-Inspiron-5559>
+        Mon, 9 Sep 2019 12:05:47 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41569 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727495AbfIIQFo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 12:05:44 -0400
+Received: by mail-pg1-f194.google.com with SMTP id x15so8078446pgg.8;
+        Mon, 09 Sep 2019 09:05:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hCEUuZTmH7JZSazgZauiNORQYEOZ09QkyRcwVeQ8pb8=;
+        b=lElCnuM/yk8u5jMO6suEdZBYPmjwu8chy23l7E6HJm4jvZ1dFx8vmP7GAVOP5wKIBp
+         WgliA0r1aKN4fNChItK6BSgX06QM0LLGrZt0TvdcmxRCkuNIzJYajKGxUSretj1tbHPb
+         jtNhGSWvesra0WBCfz4+SQ0DT3AHDn2Ku0cHTHssk6Jxu1f5b2zGpzjHVFdo+Prpb8MG
+         g+eJf2EPcrTpeKGIWgLWqe9KBpx8oMdRgxus0PF5vnoGeDO3l/ZHA2OBut0HTD1W3ToO
+         C3d05bhLrhY20xyTj+tLb3R/mwsJEZHVc5w+JIeMTihLl2qBWj5jPs71+q9kdrtXRlpA
+         CHwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hCEUuZTmH7JZSazgZauiNORQYEOZ09QkyRcwVeQ8pb8=;
+        b=UPQy4/GGbh9AvTZaRdckfLk7oX4FP/xQ5GbgmYM2JyCM/z7UWogueFer3Sfj6EVxe2
+         4oMaNkCB2KV/oxN/x4wXBKcDh/SS01mQb90Wh6pPHpPZt+NC2GJ81plD7EQXUQcXfVOH
+         wFytcAYIfHE+kFg2++fAtJf4P8lZ9o2QQD/XTYGn9EUH6ovbz0AD+69+//D5TTjqMxXw
+         bH84EzIE+aENIBqy1BXNdG2bZ6v87pxz2QHwGQyy56u+cjI5L0DMCKim7QEI7axn2Ivy
+         VqorzoZp59VebOA4M0CBRVnGKdVcthvxBUrtvuDnqE5yk3rkV0DDP5VtaJwfyabVW76z
+         074w==
+X-Gm-Message-State: APjAAAXcKzYjqFCksz+j9yVh25ADZC4w61xFtjxYQRXRSNCB96r8W6L9
+        B440CSPzLROeVzg7IWnWgek=
+X-Google-Smtp-Source: APXvYqy5qweVioephEKiH0izUHIYnTdxGqMdTN4qo3BtjRl9Wwi0YFrcMjmeztZHWUiwS6zU92mPGg==
+X-Received: by 2002:a17:90a:2243:: with SMTP id c61mr33978pje.39.1568045143137;
+        Mon, 09 Sep 2019 09:05:43 -0700 (PDT)
+Received: from localhost ([121.137.63.184])
+        by smtp.gmail.com with ESMTPSA id x8sm14913863pfm.35.2019.09.09.09.05.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Sep 2019 09:05:42 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Date:   Tue, 10 Sep 2019 01:05:39 +0900
+To:     20190819234111.9019-8-keescook@chromium.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Drew Davenport <ddavenport@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Feng Tang <feng.tang@intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Borislav Petkov <bp@suse.de>,
+        YueHaibing <yuehaibing@huawei.com>, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 7/7] bug: Move WARN_ON() "cut here" into exception
+ handler
+Message-ID: <20190909160539.GA989@tigerII.localdomain>
+References: <201908200943.601DD59DCE@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190909150036.GD4050@bharath12345-Inspiron-5559>
+In-Reply-To: <201908200943.601DD59DCE@keescook>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 09, 2019 at 08:30:36PM +0530, Bharath Vedartham wrote:
-> Built and booted on my x86 machine. No dmesg regressions found.
+On (08/20/19 09:47), Kees Cook wrote:
+[..]
+> @@ -181,6 +181,15 @@ enum bug_trap_type report_bug(unsigned long bugaddr, struct pt_regs *regs)
+>  		}
+>  	}
+>  
+> +	/*
+> +	 * BUG() and WARN_ON() families don't print a custom debug message
+> +	 * before triggering the exception handler, so we must add the
+> +	 * "cut here" line now. WARN() issues its own "cut here" before the
+> +	 * extra debugging message it writes before triggering the handler.
+> +	 */
+> +	if ((bug->flags & BUGFLAG_NO_CUT_HERE) == 0)
+> +		printk(KERN_DEFAULT CUT_HERE);
 
-THanks for testing a bunch of these and letting me know.
+Shouldn't this be pr_warn() or pr_crit()?
 
-greg k-h
+	-ss
