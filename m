@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F481C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B9AC433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05E482089F
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:23:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 348072089F
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:24:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="H2AxMfh6"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="hdrHIIyj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390656AbfIIKXx (ORCPT
+        id S2390734AbfIIKX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 06:23:53 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55833 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390615AbfIIKXv (ORCPT
+        Mon, 9 Sep 2019 06:23:59 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53564 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390670AbfIIKX5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 06:23:51 -0400
-Received: by mail-wm1-f68.google.com with SMTP id g207so13144594wmg.5
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 03:23:50 -0700 (PDT)
+        Mon, 9 Sep 2019 06:23:57 -0400
+Received: by mail-wm1-f67.google.com with SMTP id q19so13138535wmc.3
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 03:23:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=In6xjIv1qvZx6AHWSp+pYmS8Y+YcRx5T9VqtwgDDOao=;
-        b=H2AxMfh6lZl28VuEpAig+Ks6VvS2c/2mZ96FjkKszabA6MyJP9kHbQ1KKprSKyFSmJ
-         mN4OqbigiTeZ3SFvyoAWcicUp+ltfyiVQvI/5E+Fx8g5Lq1/q6CYklfhsHkBRI1QY/MU
-         dETvL5Cke5dXWfEWU3vBj8E8Ij/JfReNOs3Yy/sxO8XIGlENDWstC5iB0Ttzggciw8CK
-         qQ3SjJQjkpCNt+9wSAjQytMKAwbxIbfFWkxX+TPYPFag194n25iWz50I4ChcDlZEEPuv
-         KMYnXYd3ae0OtxC/b7wnIClKjO4keCcC049HzFNRzUbrsnSwkpz05DTvgEmahBkZQunG
-         FCRg==
+        bh=FNRbbp8G8eTiBWYxO3vdxym/3OjnixNj+aS47nL+0BI=;
+        b=hdrHIIyjAT+k8oXsgByuk1ULYIDO+Lqvl8Os8lSPNmqm+S5M/kr39Eu+i1bqKs0oqE
+         GbyGOXmIcEeO7lx6L7xndSmFNg19q/AHrkqXIniqCq9qxVfhEa5MWCqCMP6aCSbmGOFY
+         JI/eilxR5hDviGih9niYE5XoqIVGnwXZsTAwI2SeDmpFAijfmaRJIlmGFM9B5VOtST/N
+         8EJqVLfAj+4vORTmeH6VlvR5DN9zKPAqS4ZdYzpmdRI5HelsEGQcfB0teFgEQ9eI6D4D
+         HYGMrzj/9sxZHkiVXR2V0dR0nlWucvdBRwj/BFZ7F88N7t09MdvMgmMxKNQcdCB2lG6E
+         v7jQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=In6xjIv1qvZx6AHWSp+pYmS8Y+YcRx5T9VqtwgDDOao=;
-        b=ZBK8yMmFKPHPrF5mfo6ov59PAbxEsswYlALn4e7gGymP3mRdZDRj1MUTWf0EbQOjjr
-         W9yNmNTnb3tRAglNzyssDMQGDCioITWYx4OHcTdRjuuF4k+qu+jxHZ+HjWa2Pf5U+h4v
-         nqB3t43RvH0Re9NsqxhSvLTz8uhYLjFSPhiqoe/7eolVoH+snnvI45wGGzDF2XYbX3Gj
-         DpE8NJVIhWEjdfjsDKrTobZTiqo7ncQLs5jgE9CFdBLmrF5XDUVQKRyIDa/WTIU5J6dR
-         4n0FIT4uHZCLxWWDO+ute59GuF8a+gO1V8ZVbldPMCoE9+ZNpHBkmax+Ri6T2WzB3h4L
-         PGSA==
-X-Gm-Message-State: APjAAAX0ZzZi7HsKwkIiYSp5j7IkDD6JNmqyJ4vxEn9njvO94VWsftv1
-        E0G8UJz5zSJiwto1mNbokC0OxjlOrENPUQ==
-X-Google-Smtp-Source: APXvYqwodAb2hSbu1oBC3qnGuQjKRAYFo/bkD32ISS9HPSjmr8FMWLHhger1WxXkvavqQkINxe6skw==
-X-Received: by 2002:a7b:c5ca:: with SMTP id n10mr18393828wmk.138.1568024629199;
-        Mon, 09 Sep 2019 03:23:49 -0700 (PDT)
+        bh=FNRbbp8G8eTiBWYxO3vdxym/3OjnixNj+aS47nL+0BI=;
+        b=hZRSfrI5vZQTR4vEBSC85JLnQxERcIUrJOKxjYlZxypkeoFdvaRl9vSECDe2s4Q40z
+         PF6nE+6PZEolx+Bkc/yb/YuzU4MRYPlJMKK0GSQyHKbTd2wzlhJlkeg991Vn2I1Cpw+v
+         gVSYRCHAQtt1VIcnesaiuISoLAG/2o2ZJkSU9mgUhE1bygPTlP6CT2iXmDiGzKI8VoXH
+         APnJlrP2xtTOT+XBIIYGqKRjQoBS7eBRp7UN2wCYQfUuip6EmXeoUuLMyKg51rdUff6l
+         ZD+ZTNFdaZxUcJ9RW9FfVQvByzC5Ltt1m2Q2wC1tew4RRT4LTtMEaz1PjlHb5V9urnGg
+         hiAg==
+X-Gm-Message-State: APjAAAVXzhKNPCjEwP0uYE2UfcJMdKsgjykc+T/bcp5LV7kEY64r9A+x
+        OBjeO4gDMGYy2J0gMOveqAPrv3WszRHS+Q==
+X-Google-Smtp-Source: APXvYqxZzvWmASuH6w4UTwekMD7soXRGZno3Iw5SFEGT0uhY8x9yZWUYfyFpI1sm8te4R9c2x47VEA==
+X-Received: by 2002:a7b:c651:: with SMTP id q17mr17778107wmk.13.1568024634967;
+        Mon, 09 Sep 2019 03:23:54 -0700 (PDT)
 Received: from Mindolluin.localdomain ([148.69.85.38])
-        by smtp.gmail.com with ESMTPSA id d14sm1800008wrj.27.2019.09.09.03.23.47
+        by smtp.gmail.com with ESMTPSA id d14sm1800008wrj.27.2019.09.09.03.23.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Sep 2019 03:23:48 -0700 (PDT)
+        Mon, 09 Sep 2019 03:23:54 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -71,9 +71,9 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         containers@lists.linux-foundation.org,
         linux-fsdevel@vger.kernel.org
-Subject: [PATCH 4/9] select: Micro-optimise __estimate_accuracy()
-Date:   Mon,  9 Sep 2019 11:23:35 +0100
-Message-Id: <20190909102340.8592-5-dima@arista.com>
+Subject: [PATCH 8/9] select/restart_block: Convert poll's timeout to u64
+Date:   Mon,  9 Sep 2019 11:23:39 +0100
+Message-Id: <20190909102340.8592-9-dima@arista.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190909102340.8592-1-dima@arista.com>
 References: <20190909102340.8592-1-dima@arista.com>
@@ -84,41 +84,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Shift on s64 is faster than division, use it instead.
-
-As the result of the patch there is a hardly user-visible effect:
-poll(), select(), etc syscalls will be a bit more precise on ~2.3%
-than before because 1000 != 1024 :)
+All preparations have been done - now poll() can set u64 timeout in
+restart_block. It allows to do the next step - unifying all timeouts in
+restart_block and provide ptrace() API to read it.
 
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- fs/select.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ fs/select.c                   | 27 +++++++--------------------
+ include/linux/restart_block.h |  4 +---
+ 2 files changed, 8 insertions(+), 23 deletions(-)
 
 diff --git a/fs/select.c b/fs/select.c
-index 12cdefd3be2d..2477c202631e 100644
+index 4af88feaa2fe..ff2b9c4865cd 100644
 --- a/fs/select.c
 +++ b/fs/select.c
-@@ -51,15 +51,14 @@
- 
- static long __estimate_accuracy(ktime_t slack)
+@@ -1001,14 +1001,9 @@ static long do_restart_poll(struct restart_block *restart_block)
  {
--	int divfactor = 1000;
+ 	struct pollfd __user *ufds = restart_block->poll.ufds;
+ 	int nfds = restart_block->poll.nfds;
+-	ktime_t timeout = 0;
++	ktime_t timeout = restart_block->poll.timeout;
+ 	int ret;
+ 
+-	if (restart_block->poll.has_timeout) {
+-		timeout = ktime_set(restart_block->poll.tv_sec,
+-				    restart_block->poll.tv_nsec);
+-	}
 -
- 	if (slack < 0)
- 		return 0;
+ 	ret = do_sys_poll(ufds, nfds, timeout);
  
--	if (task_nice(current) > 0)
--		divfactor = divfactor / 5;
-+	/* A bit more precise than 0.1% */
-+	slack = slack >> 10;
+ 	if (ret == -ERESTARTNOHAND) {
+@@ -1021,14 +1016,12 @@ static long do_restart_poll(struct restart_block *restart_block)
+ SYSCALL_DEFINE3(poll, struct pollfd __user *, ufds, unsigned int, nfds,
+ 		int, timeout_msecs)
+ {
+-	struct timespec64 end_time;
+ 	ktime_t timeout = 0;
+ 	int ret;
  
--	slack = ktime_divns(slack, divfactor);
-+	if (task_nice(current) > 0)
-+		slack = slack * 5;
+ 	if (timeout_msecs >= 0) {
+-		poll_select_set_timeout(&end_time, timeout_msecs / MSEC_PER_SEC,
+-			NSEC_PER_MSEC * (timeout_msecs % MSEC_PER_SEC));
+-		timeout = timespec64_to_ktime(end_time);
++		timeout = ktime_add_ms(0, timeout_msecs);
++		timeout = ktime_add_safe(ktime_get(), timeout);
+ 	}
  
- 	if (slack > MAX_SLACK)
- 		return MAX_SLACK;
+ 	ret = do_sys_poll(ufds, nfds, timeout);
+@@ -1037,16 +1030,10 @@ SYSCALL_DEFINE3(poll, struct pollfd __user *, ufds, unsigned int, nfds,
+ 		struct restart_block *restart_block;
+ 
+ 		restart_block = &current->restart_block;
+-		restart_block->fn = do_restart_poll;
+-		restart_block->poll.ufds = ufds;
+-		restart_block->poll.nfds = nfds;
+-
+-		if (timeout_msecs >= 0) {
+-			restart_block->poll.tv_sec = end_time.tv_sec;
+-			restart_block->poll.tv_nsec = end_time.tv_nsec;
+-			restart_block->poll.has_timeout = 1;
+-		} else
+-			restart_block->poll.has_timeout = 0;
++		restart_block->fn		= do_restart_poll;
++		restart_block->poll.ufds	= ufds;
++		restart_block->poll.nfds	= nfds;
++		restart_block->poll.timeout	= timeout;
+ 
+ 		ret = -ERESTART_RESTARTBLOCK;
+ 	}
+diff --git a/include/linux/restart_block.h b/include/linux/restart_block.h
+index e66e982105f4..63d647b65395 100644
+--- a/include/linux/restart_block.h
++++ b/include/linux/restart_block.h
+@@ -49,11 +49,9 @@ struct restart_block {
+ 		} nanosleep;
+ 		/* For poll */
+ 		struct {
++			u64 timeout;
+ 			struct pollfd __user *ufds;
+ 			int nfds;
+-			int has_timeout;
+-			unsigned long tv_sec;
+-			unsigned long tv_nsec;
+ 		} poll;
+ 	};
+ };
 -- 
 2.23.0
 
