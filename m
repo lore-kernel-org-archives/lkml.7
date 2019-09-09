@@ -2,125 +2,161 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A713EC433EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 951FFC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7714D21920
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:04:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="kxwvyHu3"
+	by mail.kernel.org (Postfix) with ESMTP id 5B3AD2084D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:05:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568027158;
+	bh=5pLtNhWjUzk4shrDRq2YPZNtxpgUnPEI/ImOsolN2yk=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=m/9yup+h6FOFekpv6iw/qGPkCIlq+Au/Rwy99tegOUmzlZzXFnfrIdE7P9OSD9M9s
+	 xEPrZsr+tnAVcGIfswU0kC7gZJUXnnGQXbabVtui9IWn9MEXv6kuWFEvwzhmtC8kLq
+	 ApOWpw7ZvaGoMpDIWXpgka2BlTWH5FFJwk9/zxr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730671AbfIILEY (ORCPT
+        id S2390938AbfIILF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 07:04:24 -0400
-Received: from conuserg-07.nifty.com ([210.131.2.74]:59911 "EHLO
-        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728818AbfIILEV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 07:04:21 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id x89B4CjN031800;
-        Mon, 9 Sep 2019 20:04:13 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x89B4CjN031800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1568027053;
-        bh=AwcsD3ZLJ2Q2Scpzs7plI5pMSM3Ocr2iFmXNa65/pNI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kxwvyHu3BnCwEdbW0Qb5X1GnY64B8T9gRbB9fxOp7JraPaF2kxvsNO1Nt4CLZE1xh
-         AbOnW26f+TQGQnRlIIZ71msSX3jU+FR3MDliwJFeAfwITkp/vQIPrGhsE3Vf95ptvB
-         ekKCQ3Dr/k+7LTyBGOOamGD3GScz7bDi9bG2RZtfEjw0yB3tCkh6VvqdfnuBKqj6i4
-         FNTUUWNfZQwEzm462OzkiKhtx9a7vPjaaQiARU2Bah0zaoznzYMbBE/wwiIt2PNeIt
-         1ySkoQZNT6IUwAHRgYxWKCio30hi0wFdGcv5yql7GQVC25RoMIL8rJvOjXaayZwM/o
-         +MZb92uSXb7mg==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] module: move CONFIG_UNUSED_SYMBOLS to the sub-menu of MODULES
-Date:   Mon,  9 Sep 2019 20:04:08 +0900
-Message-Id: <20190909110408.21832-2-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190909110408.21832-1-yamada.masahiro@socionext.com>
-References: <20190909110408.21832-1-yamada.masahiro@socionext.com>
+        Mon, 9 Sep 2019 07:05:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46458 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729692AbfIILF5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 07:05:57 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCDBB206A5;
+        Mon,  9 Sep 2019 11:05:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568027156;
+        bh=5pLtNhWjUzk4shrDRq2YPZNtxpgUnPEI/ImOsolN2yk=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=k6UPqNn+dI17Ewt5HeMWR5STQJsha9lV3+KMjLJlP4woM+rbSX2xTt0ZJoLW+aahT
+         WZ5RRdrGkpxP49+04gipER2t6CDbloFNX0HW93pCyiKwCsFjtTLlZNXjujBOfgjz+p
+         tn0vrNHFdFMqDfKxFxyzuVRfYVd0CkSferH9TLjY=
+Message-ID: <30c007d0c735cd37121e3c2264c1ec3cfdcfd89f.camel@kernel.org>
+Subject: Re: [PATCH v2] ceph: allow object copies across different
+ filesystems in the same cluster
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Luis Henriques <lhenriques@suse.com>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>
+Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 09 Sep 2019 07:05:54 -0400
+In-Reply-To: <3f838e42a50575595c7310386cf698aca8f89607.camel@kernel.org>
+References: <87k1ahojri.fsf@suse.com>
+         <20190909102834.16246-1-lhenriques@suse.com>
+         <3f838e42a50575595c7310386cf698aca8f89607.camel@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CONFIG_MODULES is disabled, CONFIG_UNUSED_SYMBOLS is pointless,
-thus it should be invisible.
+On Mon, 2019-09-09 at 06:35 -0400, Jeff Layton wrote:
+> On Mon, 2019-09-09 at 11:28 +0100, Luis Henriques wrote:
+> > OSDs are able to perform object copies across different pools.  Thus,
+> > there's no need to prevent copy_file_range from doing remote copies if the
+> > source and destination superblocks are different.  Only return -EXDEV if
+> > they have different fsid (the cluster ID).
+> > 
+> > Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> > ---
+> >  fs/ceph/file.c | 18 ++++++++++++++----
+> >  1 file changed, 14 insertions(+), 4 deletions(-)
+> > 
+> > Hi,
+> > 
+> > Here's the patch changelog since initial submittion:
+> > 
+> > - Dropped have_fsid checks on client structs
+> > - Use %pU to print the fsid instead of raw hex strings (%*ph)
+> > - Fixed 'To:' field in email so that this time the patch hits vger
+> > 
+> > Cheers,
+> > --
+> > Luis
+> > 
+> > diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+> > index 685a03cc4b77..4a624a1dd0bb 100644
+> > --- a/fs/ceph/file.c
+> > +++ b/fs/ceph/file.c
+> > @@ -1904,6 +1904,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> >  	struct ceph_inode_info *src_ci = ceph_inode(src_inode);
+> >  	struct ceph_inode_info *dst_ci = ceph_inode(dst_inode);
+> >  	struct ceph_cap_flush *prealloc_cf;
+> > +	struct ceph_fs_client *src_fsc = ceph_inode_to_client(src_inode);
+> >  	struct ceph_object_locator src_oloc, dst_oloc;
+> >  	struct ceph_object_id src_oid, dst_oid;
+> >  	loff_t endoff = 0, size;
+> > @@ -1915,8 +1916,17 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> >  
+> >  	if (src_inode == dst_inode)
+> >  		return -EINVAL;
+> > -	if (src_inode->i_sb != dst_inode->i_sb)
+> > -		return -EXDEV;
+> > +	if (src_inode->i_sb != dst_inode->i_sb) {
+> > +		struct ceph_fs_client *dst_fsc = ceph_inode_to_client(dst_inode);
+> > +
+> > +		if (ceph_fsid_compare(&src_fsc->client->fsid,
+> > +				      &dst_fsc->client->fsid)) {
+> > +			dout("Copying object across different clusters:");
+> > +			dout("  src fsid: %pU dst fsid: %pU\n",
+> > +			     &src_fsc->client->fsid, &dst_fsc->client->fsid);
+> > +			return -EXDEV;
+> > +		}
+> > +	}
+> 
+> Just to be clear: what happens here if I mount two entirely separate
+> clusters, and their OSDs don't have any access to one another? Will this
+> fail at some later point with an error that we can catch so that we can
+> fall back?
+> 
 
-Instead of adding "depends on MODULES", I moved it to the sub-menu
-"Enable loadable module support", which is a better fit. I put it
-close to TRIM_UNUSED_KSYMS because it depends on !UNUSED_SYMBOLS.
+Duh, sorry I asked before I had a cup of coffee this morning. The whole
+point is to skip that case.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+That said...I wonder if it's possible to have an fsid collision across
+two separate clusters and this fail to catch that case? Aren't these
+things just allocated via a simple counter increment?
 
- init/Kconfig      | 16 ++++++++++++++++
- lib/Kconfig.debug | 16 ----------------
- 2 files changed, 16 insertions(+), 16 deletions(-)
+Probably not worth worrying about overmuch, but might be good to
+understand what would happen in that case if only to field mailing list
+reports.
 
-diff --git a/init/Kconfig b/init/Kconfig
-index 9e72cc6071f5..b3100aa3138f 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -2117,6 +2117,22 @@ config MODULE_COMPRESS_XZ
- 
- endchoice
- 
-+config UNUSED_SYMBOLS
-+	bool "Enable unused/obsolete exported symbols"
-+	default y if X86
-+	help
-+	  Unused but exported symbols make the kernel needlessly bigger.  For
-+	  that reason most of these unused exports will soon be removed.  This
-+	  option is provided temporarily to provide a transition period in case
-+	  some external kernel module needs one of these symbols anyway. If you
-+	  encounter such a case in your module, consider if you are actually
-+	  using the right API.  (rationale: since nobody in the kernel is using
-+	  this in a module, there is a pretty good chance it's actually the
-+	  wrong interface to use).  If you really need the symbol, please send a
-+	  mail to the linux kernel mailing list mentioning the symbol and why
-+	  you really need it, and what the merge plan to the mainline kernel for
-+	  your module is.
-+
- config TRIM_UNUSED_KSYMS
- 	bool "Trim unused exported kernel symbols"
- 	depends on !UNUSED_SYMBOLS
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 5960e2980a8a..e0e14780a13d 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -277,22 +277,6 @@ config READABLE_ASM
-           to keep kernel developers who have to stare a lot at assembler listings
-           sane.
- 
--config UNUSED_SYMBOLS
--	bool "Enable unused/obsolete exported symbols"
--	default y if X86
--	help
--	  Unused but exported symbols make the kernel needlessly bigger.  For
--	  that reason most of these unused exports will soon be removed.  This
--	  option is provided temporarily to provide a transition period in case
--	  some external kernel module needs one of these symbols anyway. If you
--	  encounter such a case in your module, consider if you are actually
--	  using the right API.  (rationale: since nobody in the kernel is using
--	  this in a module, there is a pretty good chance it's actually the
--	  wrong interface to use).  If you really need the symbol, please send a
--	  mail to the linux kernel mailing list mentioning the symbol and why
--	  you really need it, and what the merge plan to the mainline kernel for
--	  your module is.
--
- config DEBUG_FS
- 	bool "Debug Filesystem"
- 	help
+Other than that, this looks fine, modulo Ilya's comment about the two
+dout messages.
+
+> 
+> >  	if (ceph_snap(dst_inode) != CEPH_NOSNAP)
+> >  		return -EROFS;
+> >  
+> > @@ -1928,7 +1938,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> >  	 * efficient).
+> >  	 */
+> >  
+> > -	if (ceph_test_mount_opt(ceph_inode_to_client(src_inode), NOCOPYFROM))
+> > +	if (ceph_test_mount_opt(src_fsc, NOCOPYFROM))
+> >  		return -EOPNOTSUPP;
+> >  
+> >  	if ((src_ci->i_layout.stripe_unit != dst_ci->i_layout.stripe_unit) ||
+> > @@ -2044,7 +2054,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> >  				dst_ci->i_vino.ino, dst_objnum);
+> >  		/* Do an object remote copy */
+> >  		err = ceph_osdc_copy_from(
+> > -			&ceph_inode_to_client(src_inode)->client->osdc,
+> > +			&src_fsc->client->osdc,
+> >  			src_ci->i_vino.snap, 0,
+> >  			&src_oid, &src_oloc,
+> >  			CEPH_OSD_OP_FLAG_FADVISE_SEQUENTIAL |
+
 -- 
-2.17.1
+Jeff Layton <jlayton@kernel.org>
 
