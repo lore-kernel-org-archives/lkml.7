@@ -2,178 +2,169 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7040BC4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9586DC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AC66218DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:33:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A397218AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:37:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r2l4VOtQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aMjYbIgk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730394AbfIINdS (ORCPT
+        id S1729170AbfIINhX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 09:33:18 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37296 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbfIINdR (ORCPT
+        Mon, 9 Sep 2019 09:37:23 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:40991 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726529AbfIINhX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 09:33:17 -0400
-Received: by mail-ot1-f66.google.com with SMTP id s28so12417678otd.4;
-        Mon, 09 Sep 2019 06:33:17 -0700 (PDT)
+        Mon, 9 Sep 2019 09:37:23 -0400
+Received: by mail-io1-f65.google.com with SMTP id r26so28607681ioh.8;
+        Mon, 09 Sep 2019 06:37:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=SXwg9Qtd9z+yr6yuTIDFyYnzsJGyQ8uOB6q3KpRENWY=;
-        b=r2l4VOtQNE4LjXegCvsut/suXQO9n8TQxjRxoJuVtV3GkUmcm8yZmb2F9VZP/4bPt5
-         GMflUhEr6kS8wjIgBP+BZibygrDGaxn2vhlPuO2NvkJG1q3fQGzPXDk5BYPt8p+BrtsW
-         TE8KQhHhNcf7PIEcVJDYoS93zAiF6HhtBnqSRbX8FJeoZBildN1p5vro1Juf2XQNnPQ+
-         vpcpvB6/TT3FoLDLtrkJaIy2DCHOlHxsd+hUS70bP5eVQEsTSOTDoh+mFbp4QBc/b6Rs
-         BxtSY2ZS2+RHJPDU16KfW3pl8E24bHD2/AaH1X4DxcL71KEIDD44roInqj8H8o4xfT3d
-         XH0Q==
+         :cc;
+        bh=yh5I34I3F+kfotLecJXxZJWCxaSx2fVhdlna36vlC/Q=;
+        b=aMjYbIgkkBOM4kFGelnj0CRr0XsK616LuEIBdWHa9oQUjj0CAGINRicUeroEu9gczK
+         S4rD+z3DtU83yn88vV/t8iPfliEYHa29cYU0+0KKObloJYilOTnlM/Sa+sVi1JW4J5pX
+         v0E73NBQ8LSkMYfyRJSaimQ8uBE0hNloy9kq/q9JapEbnJa14f/df4kHpswzkb+F0E0A
+         mC6ki7e6q674qnVL5OrCPCgG24lGF5mnBpC7x7j92FeFALc37r2hywEdPpj23cySjR2e
+         C2QCUC47GcJrWxOMYvoXMUOXRn3zDs4IZsu3nCVxa6vYz3Bh9LoRSH1QKkvS2QfC0Axb
+         jiVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=SXwg9Qtd9z+yr6yuTIDFyYnzsJGyQ8uOB6q3KpRENWY=;
-        b=knvgg5q+19QgES3SVN0dlEda+lD5PnmKHYNSce8idx7J000Jdx3sMa5wnSrsN4tyh8
-         DjaxgO84i+XdR0ofynK/MfzhvDn4AXyEMlGIqeDb3+9T88M9H/+R0oF5ZtcsEqiGI7zv
-         0kCREVbSRz3oE76Rj0ketE7tH1G3qFHP7Zc14x5doIxT7m+TzQnVCRn4aq7LGrWlgpw+
-         omyZC36vye8f+u+aHiR/YNbJis/kl+lomV7B25S6qIx2awD+2A9H+0sd1kwq4jtCyjvf
-         GnLwkfNv7wNUU+Gxb8hWIDcsfZ/u5ZjOgWBJz0FpbGk3cQiYJdNM5cnamSqkat+/3W3d
-         C3Fw==
-X-Gm-Message-State: APjAAAV+8WXL6gCfCEbd5WJbfvWQxwM8mORpLTVv/Dze4qb/Rv0yF+hC
-        OXxosYZCzCgXSSTBXHqO55bfdClui2LL374Uew==
-X-Google-Smtp-Source: APXvYqwZbQgomN39nC020gDjS8z7VGgVlu1JFcYIZMXhF0OwkJPDxB8DMO/7h/YiIt3HFpS9ulPHcEbUjD/3jSRNG2A=
-X-Received: by 2002:a05:6830:146:: with SMTP id j6mr12438571otp.205.1568035996810;
- Mon, 09 Sep 2019 06:33:16 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=yh5I34I3F+kfotLecJXxZJWCxaSx2fVhdlna36vlC/Q=;
+        b=dZ0ofNr2RoRbCp1QUews2YdPDblFzpjwFcbxD4A3PSx1r6Pb7r+103M2UvwUm6vcQh
+         sk3rjBtdZQ1Y2TXaGuFmrPI8UKCvOxpzXALlg23coIlEnkRf7z4PJtufQnFWZW+f5O6M
+         n8SBEEJMRct/siXFGGiane4I5Rqeu7rNL4+WeE7tC52n6U7K//7isAZhRUBLj+a2WGzr
+         sWj6+MqHDUhjzo9TvW1CVzFJ5nLIRml3ED12dwFlTu+M3m7is6y903VTkrTDu5PZ9R9l
+         RWXvwVUjMrq1tejm52GFxhGb/4wIlLafQpNmp1Ny9yg/pC6uZTpDB1Gr7due/zVsIW7a
+         y1Jw==
+X-Gm-Message-State: APjAAAUsvOec/cqkAlL7vCm3avJGxmSlJiJ1SYzEMWXkp96XKQizmisF
+        lIpsMGtR3rzrCLskItkOMFKr7fpSglUNQf+2ieo=
+X-Google-Smtp-Source: APXvYqyp7hx2ZCMIfDI5DkTtuxBM/fx0HuShxFbt9jNMkXe/jgYYg8kF8aWEGdXk2I4SrI2LI8SYRU+FTsVSCybZo4Y=
+X-Received: by 2002:a6b:8e92:: with SMTP id q140mr4178546iod.205.1568036240538;
+ Mon, 09 Sep 2019 06:37:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190906213054.48908-1-george.mccollister@gmail.com>
- <20190906213054.48908-3-george.mccollister@gmail.com> <6d8a915f-5f05-c91c-c139-26497376147d@denx.de>
-In-Reply-To: <6d8a915f-5f05-c91c-c139-26497376147d@denx.de>
-From:   George McCollister <george.mccollister@gmail.com>
-Date:   Mon, 9 Sep 2019 08:33:05 -0500
-Message-ID: <CAFSKS=PMBQyAs_e_AVeOR2MaYgSM7OOUstg9V9e8D4zZngdjKw@mail.gmail.com>
-Subject: Re: [PATCH net-next 2/3] net: dsa: microchip: add ksz9567 to ksz9477 driver
-To:     Marek Vasut <marex@denx.de>
-Cc:     netdev@vger.kernel.org, Woojung Huh <woojung.huh@microchip.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Tristram Ha <Tristram.Ha@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        open list <linux-kernel@vger.kernel.org>
+References: <20190828150037.2640-1-aford173@gmail.com> <20190905230443.GA52127@atomide.com>
+ <CAHCN7xL0fbr=Sv+b=0AuGB1PPhAAFdAFLEd_iBM+ZMTkUw5sHQ@mail.gmail.com>
+In-Reply-To: <CAHCN7xL0fbr=Sv+b=0AuGB1PPhAAFdAFLEd_iBM+ZMTkUw5sHQ@mail.gmail.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Mon, 9 Sep 2019 08:37:09 -0500
+Message-ID: <CAHCN7xL-Gfxe0qF5w7BUsHnyhcNNpmCnchdKErnmiqggXfsLWw@mail.gmail.com>
+Subject: Re: [RFC] ARM: omap3: Enable HWMODS for HW Random Number Generator
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
+        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Adam Ford <adam.ford@logicpd.com>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Paul Walmsley <paul@pwsan.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 6, 2019 at 4:42 PM Marek Vasut <marex@denx.de> wrote:
+On Mon, Sep 9, 2019 at 7:13 AM Adam Ford <aford173@gmail.com> wrote:
 >
-> On 9/6/19 11:30 PM, George McCollister wrote:
-> > Add support for the KSZ9567 7-Port Gigabit Ethernet Switch to the
-> > ksz9477 driver. The KSZ9567 supports both SPI and I2C. Oddly the
-> > ksz9567 is already in the device tree binding documentation.
+> On Thu, Sep 5, 2019 at 6:04 PM Tony Lindgren <tony@atomide.com> wrote:
 > >
-> > Signed-off-by: George McCollister <george.mccollister@gmail.com>
-> > ---
-> >  drivers/net/dsa/microchip/ksz9477.c     | 9 +++++++++
-> >  drivers/net/dsa/microchip/ksz9477_i2c.c | 1 +
-> >  drivers/net/dsa/microchip/ksz9477_spi.c | 1 +
-> >  3 files changed, 11 insertions(+)
+> > Hi,
 > >
-> > diff --git a/drivers/net/dsa/microchip/ksz9477.c b/drivers/net/dsa/micr=
-ochip/ksz9477.c
-> > index 187be42de5f1..50ffc63d6231 100644
-> > --- a/drivers/net/dsa/microchip/ksz9477.c
-> > +++ b/drivers/net/dsa/microchip/ksz9477.c
-> > @@ -1529,6 +1529,15 @@ static const struct ksz_chip_data ksz9477_switch=
-_chips[] =3D {
-> >               .cpu_ports =3D 0x07,      /* can be configured as cpu por=
-t */
-> >               .port_cnt =3D 3,          /* total port count */
-> >       },
-> > +     {
-> > +             .chip_id =3D 0x00956700,
-> > +             .dev_name =3D "KSZ9567",
-> > +             .num_vlans =3D 4096,
-> > +             .num_alus =3D 4096,
-> > +             .num_statics =3D 16,
-> > +             .cpu_ports =3D 0x7F,      /* can be configured as cpu por=
-t */
-> > +             .port_cnt =3D 7,          /* total physical port count */
->
-> I might be wrong, and this is just an idea for future improvement, but
-> is .cpu_ports =3D GEN_MASK(.port_cnt, 0) always ?
-
-GENMASK, not GEN_MASK. And I think it would be .cpu_ports =3D
-GENMASK(.port_cnt - 1, 0).
-I'm not sure if it would always be that. TBH I'm not sure if 0x7F is
-even correct. For instance if a port has a PHY should it be excluded
-from this mask or only if it doesn't support tail tagging? Maybe
-someone would hook the CPU port up with a PHY instead of
-RGMII/MII/RMII but it seems quite an odd thing to do.
-
-On the KSZ9567R datasheet it shows 1-7 for this so if actually correct
-I believe all ports support tail tagging but maybe some other variants
-don't:
-Port Operation Control 0 Register
-Port N: 1-7
-Bit 2 - Tail Tag Enable
-When tail tagging is enabled for a port, it designates that port to be
-the =E2=80=9Chost=E2=80=9D or =E2=80=9CCPU=E2=80=9D port. Do not enable tai=
-l tagging for more than one
-port.
-
-My inclination is to leave it as is until a more compelling reason for
-changing it arises.
-
->
-> > +     },
-> >  };
+> > * Adam Ford <aford173@gmail.com> [190828 15:01]:
+> > > The datasheet for the AM3517 shows the RNG is connected to L4.
+> > > It shows the module address for the RNG is 0x480A0000, and it
+> > > matches the omap2.dtsi description.  Since the driver can support
+> > > omap2 and omap4, it seems reasonable to assume the omap3 would
+> > > use the same core for the RNG.
+> > >
+> > > This RFC, mimics much of the omap2 hwmods on the OMAP3. It
+> > > also adds the necessary clock for driving the RNG.  Unfortunately,
+> > > it appears non-functional.  If anyone has any suggestions on how
+> > > to finish the hwmod (or port it to the newer l4 device tree
+> > > format), feedback is requested.
 > >
-> >  static int ksz9477_switch_init(struct ksz_device *dev)
-> > diff --git a/drivers/net/dsa/microchip/ksz9477_i2c.c b/drivers/net/dsa/=
-microchip/ksz9477_i2c.c
-> > index 85fd0fb43941..c1548a43b60d 100644
-> > --- a/drivers/net/dsa/microchip/ksz9477_i2c.c
-> > +++ b/drivers/net/dsa/microchip/ksz9477_i2c.c
-> > @@ -77,6 +77,7 @@ MODULE_DEVICE_TABLE(i2c, ksz9477_i2c_id);
-> >  static const struct of_device_id ksz9477_dt_ids[] =3D {
-> >       { .compatible =3D "microchip,ksz9477" },
-> >       { .compatible =3D "microchip,ksz9897" },
-> > +     { .compatible =3D "microchip,ksz9567" },
-> >       {},
-> >  };
-> >  MODULE_DEVICE_TABLE(of, ksz9477_dt_ids);
-> > diff --git a/drivers/net/dsa/microchip/ksz9477_spi.c b/drivers/net/dsa/=
-microchip/ksz9477_spi.c
-> > index 2e402e4d866f..f4198d6f72be 100644
-> > --- a/drivers/net/dsa/microchip/ksz9477_spi.c
-> > +++ b/drivers/net/dsa/microchip/ksz9477_spi.c
-> > @@ -81,6 +81,7 @@ static const struct of_device_id ksz9477_dt_ids[] =3D=
- {
-> >       { .compatible =3D "microchip,ksz9893" },
-> >       { .compatible =3D "microchip,ksz9563" },
-> >       { .compatible =3D "microchip,ksz8563" },
-> > +     { .compatible =3D "microchip,ksz9567" },
-> >       {},
-> >  };
-> >  MODULE_DEVICE_TABLE(of, ksz9477_dt_ids);
+> > Yup I'll take the bait :) The patch below seems to do the trick
+> > for me on dm3730 based on translating your patch to probe with
+> > ti-sysc.
 > >
->
-> Reviewed-by: Marek Vasut <marex@denx.de>
+> > Not sure about 34xx, it seems we're missing rng_clk? Care
+> > to give it a try and attempt simlar patches for 34xx and
+> > 3517?
+> >
+> > At least I'm not needing the "ti,no-reset-on-init" property
+> > that your patch has a comment for. Maybe that's needed on
+> > some other omap3.
+> >
+> > Oh and this needs to default to status = "disabled" for
+> > HS devices like n900 as it needs to use the omap3-rom-rng.
+> >
+> > Regards,
+> >
+> > Tony
+> >
+> > 8< -----------------------
+> > diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap36xx.dtsi
+> > --- a/arch/arm/boot/dts/omap36xx.dtsi
+> > +++ b/arch/arm/boot/dts/omap36xx.dtsi
+> > @@ -140,6 +140,29 @@
+> >                         };
+> >                 };
+> >
+> > +               rng_target: target-module@480a0000 {
+> > +                       compatible = "ti,sysc-omap2", "ti,sysc";
+> > +                       reg = <0x480a003c 0x4>,
+> > +                             <0x480a0040 0x4>,
+> > +                             <0x480a0044 0x4>;
+> > +                       reg-names = "rev", "sysc", "syss";
+> > +                       ti,sysc-mask = <(SYSC_OMAP2_AUTOIDLE)>;
+> > +                       ti,sysc-sidle = <SYSC_IDLE_FORCE>,
+> > +                                       <SYSC_IDLE_NO>;
+> > +                       ti,syss-mask = <1>;
+> > +                       clocks = <&rng_ick>;
+> > +                       clock-names = "ick";
+> > +                       #address-cells = <1>;
+> > +                       #size-cells = <1>;
+> > +                       ranges = <0 0x480a0000 0x2000>;
+> > +
+> > +                       rng: rng@0 {
+> > +                               compatible = "ti,omap2-rng";
+> > +                               reg = <0x0 0x2000>;
+> > +                               interrupts = <52>;
+> > +                       };
+> > +               };
+> > +
 
-Thanks.
+I applied this on 5.3 and it is working.  I assume the same is true in for-next.
 
+Do you want to submit a formal patch?  I  can mark it as 'tested-by'
+This really helps speed up the startup sequence on boards with sshd
+because it delays for nearly 80 seconds waiting for entropy without
+the hwrng.
+
+adam
 >
-> --
-> Best regards,
-> Marek Vasut
+> Tony,
+>
+> Can you tell me what branch you're using?  I am not seeing the note
+> below, so I am not exactly sure what version to base my testing.
+>
+> ada,
+> >                 /*
+> >                  * Note that the sysconfig register layout is a subset of the
+> >                  * "ti,sysc-omap4" type register with just sidle and midle bits
