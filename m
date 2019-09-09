@@ -2,128 +2,153 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D16DC49ED6
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D68A5C4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04FE721920
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:00:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o5Mu6W+2"
+	by mail.kernel.org (Postfix) with ESMTP id B886E218AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:00:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391188AbfIINAu (ORCPT
+        id S2391210AbfIINAy convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 09:00:50 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36629 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbfIINAt (ORCPT
+        Mon, 9 Sep 2019 09:00:54 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:45501 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbfIINAw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 09:00:49 -0400
-Received: by mail-wm1-f65.google.com with SMTP id p13so14600700wmh.1;
-        Mon, 09 Sep 2019 06:00:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2mtaXV7efDqHnLl+I+7SAMFY03vfoRhhBlpiVGaFQk8=;
-        b=o5Mu6W+2SUKWlKCtvnhhXFy04FVwBepV5lS1KIj3m+C/9Og0pMUOcf++P4N0w8Yvzz
-         ir/ZcGOzKohQvKMr37eVmCE14/ggnYO0b1P390t10x43LCdDJdHdjZqrUflV7uwzOZRn
-         +1TN8GpHqhU2rz+SUJFx64QmBlUGeSATBH59Ljcptzl8/Q+sHGn7RFmwjZGlWGZN+Us7
-         7iLWHlGrZ5VwnYeMyGpg1YO+gsp424rYI+xCZuUwXzgPyO2UEV1vD2+ytTLbDxYkjFtd
-         dvbYvOmk2cm/gvj9uvv6gJGH9THmPDSzLHRJ7g3cEUCenkmjFqtpvjEnDlsvWbdX3whC
-         pKDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2mtaXV7efDqHnLl+I+7SAMFY03vfoRhhBlpiVGaFQk8=;
-        b=l2DqugTZP7E+gZijTyYuXKZjhUVWQxt89K4EAcm+i7q+ylCrdNGZo96wrpYr9lcQkU
-         fn6xjIH7xLfjOdIZ3zbYD+1z28cvt0QrL4L25hlbdpsyRWLQa4nKUgqu/MtiNhXcmaGK
-         WPB7H/rIycdz6ry9DPQEucOhWeU7XedXEbw94HDP8PL9hFMLr5Rg2l7VCL5P19c4fqto
-         4LbmQlAGOyUMZY19iohK3aA1tnT4XitKNwiIlh+QYOiOggyYbXxIlkzj500eD7tPdn3C
-         aRYPm4Af3beDEn+T8b55SUO8RK6Wt2tBzO89iFUj3mgc0egobJF83i+8hjaArayArpNb
-         khjA==
-X-Gm-Message-State: APjAAAX/GO6QyUDnC+Fb555EnHLs0IUOzFv67x4221nzWDi+adJfuPam
-        tKbUPcqc2/0Q1kiUWGGs5pM=
-X-Google-Smtp-Source: APXvYqwZNcsdhyfgf9pTofH/0xIuzvtR6S8IvHvjLtdXCPvCCUI3NCXN+ewuYCoam7pbMLdJp4XpPw==
-X-Received: by 2002:a1c:a713:: with SMTP id q19mr1412073wme.127.1568034047476;
-        Mon, 09 Sep 2019 06:00:47 -0700 (PDT)
-Received: from [132.199.67.133] (roam067133.uni-regensburg.de. [132.199.67.133])
-        by smtp.gmail.com with ESMTPSA id u8sm11518806wmj.3.2019.09.09.06.00.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 09 Sep 2019 06:00:46 -0700 (PDT)
-From:   Fabian Henneke <fabian.henneke@gmail.com>
-Subject: Re: [PATCH 4.19 19/57] Bluetooth: hidp: Let hidp_send_message return
- number of queued bytes
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>
-References: <20190908121125.608195329@linuxfoundation.org>
- <20190908121132.859238319@linuxfoundation.org> <20190909121555.GA18869@amd>
-Message-ID: <8e7731e0-f0ad-8cbb-799e-dd585e6b7ed6@gmail.com>
-Date:   Mon, 9 Sep 2019 15:00:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 9 Sep 2019 09:00:52 -0400
+Received: from localhost ([46.78.15.232]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1M42zo-1i7JHL3jMG-0007F9; Mon, 09 Sep 2019 15:00:24 +0200
+Date:   Mon, 9 Sep 2019 15:00:22 +0200
+From:   Andreas Klinger <ak@it-klinger.de>
+To:     =?utf-8?Q?Zbyn=C4=9Bk?= Kocur <zbynek.kocur@fel.cvut.cz>
+Cc:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: srf04: fix wrong limitation in distance measuring
+Message-ID: <20190909130022.chcnvaltoyskw2of@arbad>
+References: <20190623122909.hhzskp6k5vm4wify@arbad>
+ <20190626192134.4b7aed3c@archlinux>
+ <03D5EE82-D6C7-4A03-9404-45B48F1EF5B6@fel.cvut.cz>
+ <20190626204936.2756cefd@archlinux>
+ <3372AFA8-5AD0-4044-9718-D3E2B76EDFAE@fel.cvut.cz>
+ <20190907094632.kalkqtkxlfphdx4w@arbad>
+ <7FD0B694-64B5-433D-B451-A0FD4DF32AED@fel.cvut.cz>
 MIME-Version: 1.0
-In-Reply-To: <20190909121555.GA18869@amd>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <7FD0B694-64B5-433D-B451-A0FD4DF32AED@fel.cvut.cz>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Provags-ID: V03:K1:bsGjHdMszkx0a4a7YQPoMONJNPW9eYyrTzI1F6uNoMMb+rurgtM
+ BJg5R02pO1n1FNgtiAXSWiF7h1jsRwYgEo+vaUeeT7EaNH5Rf1O1/O5WqE3nE90Iyk1E07P
+ C2SsFWC+5PVlykKR5xuY/0I+oAwxrsJKt52HGfWOeDqT4caigNRbzxnuhqS50vWkoXEEj4C
+ Q5RhLeQ3Ld/SO1M8Hucgg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:0GlFt8KsmC4=:4+YvFIbJyOi1QLCPD+8b7o
+ 5VIE0Ke7gNfvCzfb4A2sxIo2TfbKUH3OVzjo0c15zfclDh193qg0lvCj6NJsLu5i/H0Ah+1qc
+ fs8ITWnMre4wr0nEVaQVXjO2JkXpmucNzM3Ivf5u+enuANDeGvU1lNTN2ZzFRkbJam6bDQohb
+ Cm185FO/kRrCvNlnJnEm9quYNS3U7wsemiVelbNqDL3E/Wd6j7y6/+1Eii1p/5tcaWcLu/xPU
+ PWbzrQh38SvTW0tU5nqJjtt4YxLtikYYAcPS8RmUsJ9QK3ffD9WhKslIp8+BK3TU+5yJ5Asan
+ +HcyFjUV0fNDRkGwYV7Is8QS6WdfDn76DYTe62A3Be4WFtv8CLZodHS0Qjth0aYl97abQU3dG
+ 8pRRhzUZMI4TdLsvFDlS7i/covPNVt9Hv5/ZxzlUxlzwW8t9xCMzH33pjd0xGarSSiAZAcPly
+ 6tBpqH6wuAFXsUwaH9lgqMOTQz/gFq1I0djkn/a8RX5sf+85OEYKKMKo7LMJQ7tHC5xZVjgyb
+ 9KR5gXiQasmGVLZXrQFPua7yTfP/Tg72Kz6COYro+lV3uh5whIM0H98ulMVevP1k79THqhOmf
+ 2FiEt4gZBx7Uz0HY1hURceTOYmtey3Vh042bYLph7yb3Qn31aCHo2aJFc/w61W8IOiPFraLux
+ PYhs2i5BELqbb6EGhNrMd13oP64w3dFooOPp1fZTGWEUtU9lQ9h7t6VDhloEF0PMtCIYZZw8W
+ qeNUKdqaXwzf3IRVrbFdW5m2+5eY+KxpILGtuPWcPDvBhQTf9ns0x2p1uzY4/QpFAxV7nURRh
+ TwIvCtY42XzeCO/CKOxT1XTxuUG1w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Zbyněk,
 
-On Mon, Sep 9, 2019 at 2:15 PM Pavel Machek <pavel@denx.de> wrote:
+thanks a lot for testing and sharing your results with us.
 
-> Hi!
->
-> > [ Upstream commit 48d9cc9d85dde37c87abb7ac9bbec6598ba44b56 ]
-> >
-> > Let hidp_send_message return the number of successfully queued bytes
-> > instead of an unconditional 0.
-> >
-> > With the return value fixed to 0, other drivers relying on hidp, such as
-> > hidraw, can not return meaningful values from their respective
-> > implementations of write(). In particular, with the current behavior, a
-> > hidraw device's write() will have different return values depending on
-> > whether the device is connected via USB or Bluetooth, which makes it
-> > harder to abstract away the transport layer.
->
-> So, does this change any actual behaviour?
->
-> Is it fixing a bug, or is it just preparation for a patch that is not
-> going to make it to stable?
->
+> I do not know how to do this in the development of drivers, whether it makes
+> sense to put a filter directly into the driver or at least pull the maximum
+> distance parameter as a variable?
 
-I created this patch specifically in order to ensure that user space
-applications can use HID devices with hidraw without needing to care about
-whether the transport is USB or Bluetooth. Without the patch, every
-hidraw-backed Bluetooth device needs to be treated specially as its write()
-violates the usual return value contract, which could be viewed as a bug.
+In this case one should read several times, remove spikes and calculate the
+average. This sounds to me as task for the userspace not for the driver.
 
-Please note that a later patch (
-https://www.spinics.net/lists/linux-input/msg63291.html) fixes some
-important error checks that were relying on the old behavior (and were
-unfortunately missed by me).
+Regards,
 
-Best regards,
-Fabian
+Andreas
 
->                                                         Pavel
->
-> --
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures)
-> http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
->
 
+Zbyněk Kocur <zbynek.kocur@fel.cvut.cz> schrieb am Mo, 09. Sep 08:53:
+> Hi Andreas,
+> 
+> I'm so sorry for the delay. I was working on another project now, and I wasn't entirely devoted to this. I looked at it at the weekend and the modified code is working. I have only tested OpenWRT in build - r10204-38b22b1, kernel 4.14.125. I do not expect complications on other platforms.
+> 
+> I tried it on several sensors. I was primarily interested in JSN-SR04T (https://www.makerguides.com/jsn-sr04t-arduino-tutorial/). I have also verified other designs (https://randomnerdtutorials.com/complete-guide-for-ultrasonic-sensor-hc-sr04/).
+> 
+> It generally works. Relatively accurate for the area up to 2.5 m. However, if the distance is longer, it starts to fizz, depending on the sensor design. It is a property of used HW and its construction.
+> 
+> I do not know how to do this in the development of drivers, whether it makes sense to put a filter directly into the driver or at least pull the maximum distance parameter as a variable?
+> 
+> Anyway, the change made works.
+> 
+> Zbynek
+> ---
+> email: zbynek.kocur@fel.cvut.cz
+> phone: +420 224 354 054
+> web: http://www.fel.cvut.cz
+> Department of Telecommunications Engineering
+> Faculty of Electrical Engineering
+> 
+> > On 7 Sep 2019, at 11:46, Andreas Klinger <ak@it-klinger.de> wrote:
+> > 
+> > Hi Zbynek,
+> > 
+> > do you have any feedback for us?
+> > 
+> > Thank you,
+> > 
+> > Andreas
+> > 
+> > 
+> > Zbyněk Kocur <zbynek.kocur@fel.cvut.cz> schrieb am Mi, 26. Jun 21:50:
+> >> Thank you, i will write a feedback after testing.
+> >> 
+> >> 
+> >> Zbynek
+> >> ---
+> >> email: zbynek.kocur@fel.cvut.cz
+> >> phone: +420 224 354 054
+> >> web: http://www.fel.cvut.cz
+> >> Department of Telecommunications Engineering
+> >> Faculty of Electrical Engineering
+> >> 
+> >>> On 26 Jun 2019, at 21:49, Jonathan Cameron <jic23@kernel.org> wrote:
+> >>> 
+> >>> No rush, it's a clear fix anyway so we can queue this up
+> >>> in the rc phase of the next kernel cycle!
+> >> 
+> > 
+> > -- 
+> > Andreas Klinger
+> > Grabenreith 27
+> > 84508 Burgkirchen
+> > +49 8623 919966
+> > ak@it-klinger.de
+> > www.it-klinger.de
+> > www.grabenreith.de
+> 
+
+
+
+-- 
+Andreas Klinger
+Grabenreith 27
+84508 Burgkirchen
++49 8623 919966
+ak@it-klinger.de
+www.it-klinger.de
+www.grabenreith.de
