@@ -2,99 +2,107 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D834C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B26C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FFEE21479
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:49:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gPGWsWd3";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="OwqJ9D6J"
+	by mail.kernel.org (Postfix) with ESMTP id A8C3921479
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:49:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390141AbfIIWtV (ORCPT
+        id S2390174AbfIIWt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 18:49:21 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:38586 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728945AbfIIWtV (ORCPT
+        Mon, 9 Sep 2019 18:49:56 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32358 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728945AbfIIWt4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 18:49:56 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x89Mmn9I178443;
         Mon, 9 Sep 2019 18:49:21 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 2AA706063A; Mon,  9 Sep 2019 22:49:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568069360;
-        bh=hyrKwj9FsNnKEJJvZNmfObjHJ2EoQlnM3HeyUSqoDcc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=gPGWsWd3lc9D17F205jQhOCzR+NuoRJyBrFOS19ItKyteJGkuCiDTgkuJx7LtC+Fs
-         zXznvnBlst9XR/VFe2CEpCMDEc5zpU1lOKhnPvTYNmPLw5/pE+23aGqL/liRTQPQc/
-         2LJZnK+LnVq3CLCbvlp05awQglVeZSPXE+SgOKaE=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id C7684602BC;
-        Mon,  9 Sep 2019 22:49:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568069359;
-        bh=hyrKwj9FsNnKEJJvZNmfObjHJ2EoQlnM3HeyUSqoDcc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OwqJ9D6JwHj0MYzLLI+aQnUIsoAD386KwWnmAUCAUaV0PO0rPeu3Pcp80AtkEPd6a
-         aeMxwNPjB7Cdp2KM+20kSHiY3AaQnO92CDny58tPFx/yEc/IkSN7x5KpN644XOC08l
-         6uVkXpdieIw/lvRKRszrBv1Rb1atuYrny4WduQVM=
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2uwxaatkgf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 09 Sep 2019 18:49:21 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x89MjHil016031;
+        Mon, 9 Sep 2019 22:49:21 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma01wdc.us.ibm.com with ESMTP id 2uv466x1k8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 09 Sep 2019 22:49:20 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x89MnJIl52691376
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 9 Sep 2019 22:49:19 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3D0197805E;
+        Mon,  9 Sep 2019 22:49:19 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7208E7805C;
+        Mon,  9 Sep 2019 22:49:16 +0000 (GMT)
+Received: from Juliets-MBP.attlocal.net (unknown [9.85.151.142])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Mon,  9 Sep 2019 22:49:16 +0000 (GMT)
+Subject: Re: [PATCH] net/ibmvnic: Fix missing { in __ibmvnic_reset
+To:     Michal Suchanek <msuchanek@suse.de>, netdev@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Falcon <tlfalcon@linux.ibm.com>,
+        John Allen <jallen@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20190909204451.7929-1-msuchanek@suse.de>
+From:   Juliet Kim <julietk@linux.vnet.ibm.com>
+Message-ID: <953ee49d-5d2f-90d2-bc6f-b738c0718c6f@linux.vnet.ibm.com>
+Date:   Mon, 9 Sep 2019 17:49:12 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20190909204451.7929-1-msuchanek@suse.de>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 09 Sep 2019 15:49:19 -0700
-From:   rishabhb@codeaurora.org
-To:     miklos@szeredi.hu, linux-unionfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     tsoni@codeaurora.org, psodagud@codeaurora.org,
-        jshriram@codeaurora.org
-Subject: Re: Bug at kernel/cred.c +443
-In-Reply-To: <083b3f61efeca1d73839ac96e396748e@codeaurora.org>
-References: <083b3f61efeca1d73839ac96e396748e@codeaurora.org>
-Message-ID: <7e14f9c6fa089da67ebc28d7048c369a@codeaurora.org>
-X-Sender: rishabhb@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-09_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909090214
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-09-09 15:47, rishabhb@codeaurora.org wrote:
-> Hi Miklos
-> 
-> In 4.19 kernel when we write to a file that doesn't exist we see the
-> following stack:
-> [  377.382745]  ovl_create_or_link+0xac/0x710
-> [  377.382745]  ovl_create_object+0xb8/0x110
-> [  377.382745]  ovl_create+0x34/0x40
-> [  377.382745]  path_openat+0xd44/0x15a8
-> [  377.382745]  do_filp_open+0x80/0x128
-> [  377.382745]  do_sys_open+0x140/0x250
-> [  377.382745]  __arm64_sys_openat+0x2c/0x38
-> 
-> If the override_cred flag = off, the ovl_override_cred and
-> ovl_revert_cred just returns NULL.
-> But there is another override_cred in between these two functions;
-> 		put_cred(override_creds(override_cred));
-> 		put_cred(override_cred);
-> 
-> This will override the credentials permanently as there is no
-> corresponding revert_cred associated.
-> So whenever we do commit_creds for this task, we see a BUG_ON at
-> kernel/cred.c +443.
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/cred.c#n443
-> 
-> Should this override_cred be changed to ovl_override_cred to maintain
-> consistency and avoid this
-> BUG_ON?
-> 
-> 
-> Thanks,
-> Rishabh
+On 9/9/19 3:44 PM, Michal Suchanek wrote:
+> Commit 1c2977c09499 ("net/ibmvnic: free reset work of removed device from queue")
+> adds a } without corresponding { causing build break.
+>
+> Fixes: 1c2977c09499 ("net/ibmvnic: free reset work of removed device from queue")
+> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
 
-Corrected line number in the subject.
+Reviewed-by: Juliet Kim <julietk@linux.vnet.ibm.com>
+
+> ---
+>  drivers/net/ethernet/ibm/ibmvnic.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
+> index 6644cabc8e75..5cb55ea671e3 100644
+> --- a/drivers/net/ethernet/ibm/ibmvnic.c
+> +++ b/drivers/net/ethernet/ibm/ibmvnic.c
+> @@ -1984,7 +1984,7 @@ static void __ibmvnic_reset(struct work_struct *work)
+>  	rwi = get_next_rwi(adapter);
+>  	while (rwi) {
+>  		if (adapter->state == VNIC_REMOVING ||
+> -		    adapter->state == VNIC_REMOVED)
+> +		    adapter->state == VNIC_REMOVED) {
+>  			kfree(rwi);
+>  			rc = EBUSY;
+>  			break;
