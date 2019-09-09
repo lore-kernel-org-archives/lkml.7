@@ -2,92 +2,99 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B5AC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE66C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70CF32086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:06:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02EA82086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:06:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="f4rs2BZg";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="IfQfu3JB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732292AbfIIQGT (ORCPT
+        id S1732958AbfIIQGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 12:06:19 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:37956 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729326AbfIIQGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 12:06:18 -0400
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1i7MB5-0004oJ-Iq; Mon, 09 Sep 2019 10:06:08 -0600
-To:     Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
-        Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20190828215429.4572-1-logang@deltatee.com>
- <20190828215429.4572-14-logang@deltatee.com>
- <92d61426-65a2-827c-936b-55f12f3d6afb@grimberg.me>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <ca4ebcd9-fa5d-5ddf-c2a7-70318410dd97@deltatee.com>
-Date:   Mon, 9 Sep 2019 10:06:03 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 9 Sep 2019 12:06:49 -0400
+Received: from pb-smtp21.pobox.com ([173.228.157.53]:57941 "EHLO
+        pb-smtp21.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729326AbfIIQGs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 12:06:48 -0400
+Received: from pb-smtp21.pobox.com (unknown [127.0.0.1])
+        by pb-smtp21.pobox.com (Postfix) with ESMTP id 5CA9991A03;
+        Mon,  9 Sep 2019 12:06:48 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
+        :cc:subject:in-reply-to:message-id:references:mime-version
+        :content-type; s=sasl; bh=Mw+zE4u1Nc8ITHHRwi48kwG1yI4=; b=f4rs2B
+        Zgm4cAJb8FKRYIXBdMnO6gcvaD87w8XiqSy+D5J2UeVZbvZ30b0BHTZ4Fwn0g7EP
+        k9Bxs07qYOxlAm152gKxR8gOiCRRXaKk/S2xWfrYJll7BtpMTcGR3R3ovF8v5lzL
+        AXcCScrAiIfhEa1wcaBGHmnNf2e1bBrWyroMQ=
+Received: from pb-smtp21.sea.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp21.pobox.com (Postfix) with ESMTP id 5350F91A02;
+        Mon,  9 Sep 2019 12:06:48 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
+ h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=f5W8o8MLNoQ4vC0NqI61uvY1XxY7d/L27+zthWmdDUg=; b=IfQfu3JBH+UDvExLwmHK02Itw89W3YcVj0Rhx1FTP1sjmItJuUKBjveOcIsB1NzLm7QgNVkvIS8HimHNSl5pJzO7BokEOBsAOd/76OZ037p/u6onufFozj2K4cz0SJN1IokCdlv/ZvCuUZWPaKhewG8HeosZ6S/w0AhRZGsnOHg=
+Received: from yoda.home (unknown [24.203.50.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pb-smtp21.pobox.com (Postfix) with ESMTPSA id 4498B91A01;
+        Mon,  9 Sep 2019 12:06:45 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+Received: from xanadu.home (xanadu.home [192.168.2.2])
+        by yoda.home (Postfix) with ESMTPSA id 6AB692DA01B6;
+        Mon,  9 Sep 2019 12:06:43 -0400 (EDT)
+Date:   Mon, 9 Sep 2019 12:06:43 -0400 (EDT)
+From:   Nicolas Pitre <nico@fluxnic.net>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Denis Efremov <efremov@linux.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] export.h: remove defined(__KERNEL__)
+In-Reply-To: <CAK7LNATC1pZ_2BQ-Uh2+qfUjJtL0mRpsm78N-sUQXhF0tDf6Hw@mail.gmail.com>
+Message-ID: <nycvar.YSQ.7.76.1909091158200.3091@knanqh.ubzr>
+References: <20190909105317.20473-1-yamada.masahiro@socionext.com> <nycvar.YSQ.7.76.1909090942420.3091@knanqh.ubzr> <CAK7LNATC1pZ_2BQ-Uh2+qfUjJtL0mRpsm78N-sUQXhF0tDf6Hw@mail.gmail.com>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <92d61426-65a2-827c-936b-55f12f3d6afb@grimberg.me>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: sbates@raithlin.com, maxg@mellanox.com, Chaitanya.Kulkarni@wdc.com, axboe@fb.com, kbusch@kernel.org, hch@lst.de, linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, sagi@grimberg.me
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v8 13/13] nvmet-passthru: support block accounting
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=US-ASCII
+X-Pobox-Relay-ID: D209E438-D31B-11E9-80EF-8D86F504CC47-78420484!pb-smtp21.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 9 Sep 2019, Masahiro Yamada wrote:
 
-
-On 2019-09-06 6:00 p.m., Sagi Grimberg wrote:
+> Hi Nicolas,
 > 
->> Support block disk accounting by setting the RQF_IO_STAT flag
->> and gendisk in the request.
->>
->> After this change, IO counts will be reflected correctly in
->> /proc/diskstats for drives being used by passthru.
->>
->> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
->> ---
->>   drivers/nvme/target/io-cmd-passthru.c | 5 ++++-
->>   1 file changed, 4 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/nvme/target/io-cmd-passthru.c b/drivers/nvme/target/io-cmd-passthru.c
->> index 7557927a3451..63f12750a80d 100644
->> --- a/drivers/nvme/target/io-cmd-passthru.c
->> +++ b/drivers/nvme/target/io-cmd-passthru.c
->> @@ -410,6 +410,9 @@ static struct request *nvmet_passthru_blk_make_request(struct nvmet_req *req,
->>   	if (unlikely(IS_ERR(rq)))
->>   		return rq;
->>   
->> +	if (blk_queue_io_stat(q) && cmd->common.opcode != nvme_cmd_flush)
->> +		rq->rq_flags |= RQF_IO_STAT;
+> On Mon, Sep 9, 2019 at 10:48 PM Nicolas Pitre <nico@fluxnic.net> wrote:
+> >
+> > On Mon, 9 Sep 2019, Masahiro Yamada wrote:
+> >
+> > > This line was touched by commit f235541699bc ("export.h: allow for
+> > > per-symbol configurable EXPORT_SYMBOL()"), but the commit log did
+> > > not explain why.
+> > >
+> > > CONFIG_TRIM_UNUSED_KSYMS works for me without defined(__KERNEL__).
+> >
+> > I'm pretty sure it was needed back then so not to interfere with users
+> > of this file. My fault for not documenting it.
+> 
+> Hmm, I did not see a problem in my quick build test.
+> 
+> Do you remember which file was causing the problem?
 
-Thanks for the review!
+If you build commit 7ec925701f5f with CONFIG_TRIM_UNUSED_KSYMS=y and the 
+defined(__KERNEL__) test removed then you'll get:
 
-> Does flush has data bytes in the request? Why the special casing?
+  HOSTCC  scripts/mod/modpost.o
+In file included from scripts/mod/modpost.c:24:
+scripts/mod/../../include/linux/export.h:81:10: fatal error: linux/kconfig.h: No such file or directory
 
-Well it was special cased in the vanilla blk account flow... But I think
-it's required to be special cased so the IO and in_flight counts don't
-count flushes (as they do not for regular block device traffic).
 
-Logan
-
+Nicolas
