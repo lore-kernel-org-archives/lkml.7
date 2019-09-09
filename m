@@ -2,111 +2,118 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 503D3C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 23:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B34D6C4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 23:15:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 186FF21A4C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 23:14:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dmb9B1P8"
+	by mail.kernel.org (Postfix) with ESMTP id 8E56921A4A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 23:15:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389088AbfIIXOt (ORCPT
+        id S2389605AbfIIXPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 19:14:49 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:37975 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732679AbfIIXOs (ORCPT
+        Mon, 9 Sep 2019 19:15:30 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40701 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730900AbfIIXP3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 19:14:48 -0400
-Received: by mail-pl1-f196.google.com with SMTP id p9so2719558plk.5;
-        Mon, 09 Sep 2019 16:14:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wnPYup0xw3Eb5njOd3rYqtDRxyOzB44nVNWIjyYBJh0=;
-        b=Dmb9B1P8407Yq8mUXGe89Uq8Ku8ZcvzXs4tEcEaovNwr6s+lHFcDXeccKwQnnxh7CN
-         LfQkcvWU9YcS5Gc/Tk9cdc7ZWs4OeTMTQFrbJCyJA3CVfArBJQg1NXvpUSmj3WV+hxeK
-         4zykZjo7x6k+QOHF7pVsW0GfGubPSnrNXLajBWs0hhNU6+DDsqBQfrxwi/Fxz30t3M7h
-         XScrwyUaICb+Q6J2exNFzEKD8o6Hz6mqc/MeWbIaKPt37RbvhTkAr3zlWjDKl5ksKlgJ
-         q05QYYNZzr8Orr8C9ixoYsRo4ko9OrHR+jOvZfXIDjmcRRE5r4xndEbINyf1QcORn4pT
-         6VTA==
+        Mon, 9 Sep 2019 19:15:29 -0400
+Received: by mail-ot1-f65.google.com with SMTP id y39so15201887ota.7;
+        Mon, 09 Sep 2019 16:15:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wnPYup0xw3Eb5njOd3rYqtDRxyOzB44nVNWIjyYBJh0=;
-        b=D8GsgtZnCcEhnZYSA2DC6AQuRkeS65Z1VYTR1xpzZ8EDXfVbypfWhTHiu8ignERi8Y
-         iSfCU1FzRyFU2vbg2gyFSOVDaSq83IUXsZ6sXJ3vdVLCILVwaneOPj+w8/hKmOpEKPoy
-         rant101HQYHScpFPM+Ka8eNOM5YeYzNbDFcYzLcBHJQdwJRhgfS7bCV33ZVVdLTJrNpq
-         hch3ygZ+nYHDt3sKnO6GdgTnUChwlY5wjqHJh6Eiti34YwA5KsWFbNxZ8CmQ1CP+8c8V
-         dLr4r4euXzB3/JBZ34qKD1sOASnL+ad9mzbhJadg+p2dWKrYdKOx84fYJ69Ntg093bS6
-         +P/g==
-X-Gm-Message-State: APjAAAXDVZD+UgBBaNQ3gzeKlqnSq4/nfRtJ1NiuL4Iy9ImwU/gV/k6o
-        DCaaDlbwrNobQrSluGOB8ydrZ1PDNKlFJB7RBvA=
-X-Google-Smtp-Source: APXvYqz/dAFZoyxZcRVZkheUZFz5AmaNatRrB+scZ01HX2m6bfaguo4wejgOrISJ2KaJSjBB4EX8ysDUynbeRywGRFU=
-X-Received: by 2002:a17:902:a5c5:: with SMTP id t5mr26041646plq.316.1568070887973;
- Mon, 09 Sep 2019 16:14:47 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=76+B0F+y6GF7x1pmO705M0ab149/3jefLlEAKzhXfdY=;
+        b=ny6T50Z+UdF6y8uSXXKKUc9fU1AC13p4lMW3Oy0elxaJ/rTHUfx1IkPZMvCf3vg/9G
+         /itfv5b9Z+e3KGNXqt4LG7SPUDI2PGGQwVhPSZGyaNEYGRXL3Ie3E5UkQbvirmunXOhR
+         qJ6LG2NxKaWvhA6ScbFbbbN7eRDoiq6nGBoIPdNpQu82c/ir5eT82opkojuAR2n7PX3T
+         mkLVSLjuL2w2AyXsfEjqUKY1awwvKlWBpY21t3kVGTebIoI1WLydiW9ATMs5WLWleZip
+         hbWBtwvVdl8SRhGaFdqvZ5AOnRNfd2iOHFJ7PRQ2upZs1/W4G+fnjBl9jWxpKZ5ZixQo
+         Vbpg==
+X-Gm-Message-State: APjAAAUjEfbgF4PNmae4/DaNcSNRoZZQOkT8QUzdKzYIdoUcBVxc3dCJ
+        HKmO0C6YT5LUfO7Sk0q4Hoo=
+X-Google-Smtp-Source: APXvYqw8MteVMDy0Cl8ZOyqZEdlruprk+5eF7K1KC+eC19R7iANjgOvPKaYiMx6uYRtoPSCqFx1Cbw==
+X-Received: by 2002:a9d:4815:: with SMTP id c21mr18066036otf.26.1568070928432;
+        Mon, 09 Sep 2019 16:15:28 -0700 (PDT)
+Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
+        by smtp.gmail.com with ESMTPSA id l30sm6462344otl.74.2019.09.09.16.15.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 09 Sep 2019 16:15:27 -0700 (PDT)
+Subject: Re: [PATCH v8 13/13] nvmet-passthru: support block accounting
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Stephen Bates <sbates@raithlin.com>, Jens Axboe <axboe@fb.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Christoph Hellwig <hch@lst.de>
+References: <20190828215429.4572-1-logang@deltatee.com>
+ <20190828215429.4572-14-logang@deltatee.com>
+ <92d61426-65a2-827c-936b-55f12f3d6afb@grimberg.me>
+ <ca4ebcd9-fa5d-5ddf-c2a7-70318410dd97@deltatee.com>
+ <7954e8a4-6026-2210-7192-94a4e483facf@grimberg.me>
+ <b23c72b2-c9db-cb8e-5519-63eb195b7fd4@deltatee.com>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <ca811aea-c4ae-10ee-15a5-2332d5a9e29a@grimberg.me>
+Date:   Mon, 9 Sep 2019 16:15:25 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <000000000000df42500592047e0a@google.com> <CAHk-=wgZneAegyitz7f+JLjB6=28ewtvT7M4xy_a-wqsTjOX_w@mail.gmail.com>
-In-Reply-To: <CAHk-=wgZneAegyitz7f+JLjB6=28ewtvT7M4xy_a-wqsTjOX_w@mail.gmail.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Mon, 9 Sep 2019 16:14:36 -0700
-Message-ID: <CAM_iQpU2Z0s8pJAa3AAMbq6S=MeuAAOVqRopVpmDnFLn9xU=UA@mail.gmail.com>
-Subject: Re: general protection fault in qdisc_put
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     syzbot <syzbot+d5870a903591faaca4ae@syzkaller.appspotmail.com>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Miller <davem@davemloft.net>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <b23c72b2-c9db-cb8e-5519-63eb195b7fd4@deltatee.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 8, 2019 at 10:19 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
-> I see two solutions:
->
->  (a) move the
->
->         q->qdisc = &noop_qdisc;
->
->      up earlier in sfb_init(), so that qdisc is always initialized
-> after sfb_init(), even on failure.
->
->  (b) just make qdisc_put(NULL) just silently work as a no-op.
->
->  (c) change all the semantics to not call ->destroy if ->init failed.
->
-> Honestly, (a) seems very fragile - do all the other init routines do
-> this? And (c) sounds like a big change, and very fragile too.
->
-> So I'd suggest that qdisc_put() be made to just ignore a NULL pointer
-> (and maybe an error pointer too?).
 
-I think (a) is the best solution here.
+>>>>> Support block disk accounting by setting the RQF_IO_STAT flag
+>>>>> and gendisk in the request.
+>>>>>
+>>>>> After this change, IO counts will be reflected correctly in
+>>>>> /proc/diskstats for drives being used by passthru.
+>>>>>
+>>>>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+>>>>> ---
+>>>>>     drivers/nvme/target/io-cmd-passthru.c | 5 ++++-
+>>>>>     1 file changed, 4 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/drivers/nvme/target/io-cmd-passthru.c b/drivers/nvme/target/io-cmd-passthru.c
+>>>>> index 7557927a3451..63f12750a80d 100644
+>>>>> --- a/drivers/nvme/target/io-cmd-passthru.c
+>>>>> +++ b/drivers/nvme/target/io-cmd-passthru.c
+>>>>> @@ -410,6 +410,9 @@ static struct request *nvmet_passthru_blk_make_request(struct nvmet_req *req,
+>>>>>     	if (unlikely(IS_ERR(rq)))
+>>>>>     		return rq;
+>>>>>     
+>>>>> +	if (blk_queue_io_stat(q) && cmd->common.opcode != nvme_cmd_flush)
+>>>>> +		rq->rq_flags |= RQF_IO_STAT;
+>>>
+>>> Thanks for the review!
+>>>
+>>>> Does flush has data bytes in the request? Why the special casing?
+>>>
+>>> Well it was special cased in the vanilla blk account flow... But I think
+>>> it's required to be special cased so the IO and in_flight counts don't
+>>> count flushes (as they do not for regular block device traffic).
+>>
+>> I think that the accounting exclude I/O that is yielded from the flush
+>> sequence. Don't think its relevant here...
+> 
+> What? Per blk_account_io_done(), RQF_FLUSH_SEQ will not be set by us for
+> passthru commands and I don't think it's appropriate to do so. Thus, if
+> we set RQF_IO_STAT for passthru flush commands, they will be counted
+> which we do not want.
 
-(c) changes too much, we already rely on this behavior.
-
-(b) is not bad either, just very slightly more risky.
-
-Alternatively, we can add a quick NULL check inside
-sfb_destroy().
-
-I can send out a patch if you don't.
-
-Thanks for looking at this!
+Have you considered to have nvmet_passthru_blk_make_request set RQF_FUA
+for nvme_cmd_flush? this way blk_insert_flush will be called and
+RQF_FLUSH_SEQ will be set and you don't need to worry about this
+special casing...
