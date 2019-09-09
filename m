@@ -4,39 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9881C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 21:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D9BBC4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 21:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A33E4218AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 21:45:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AE5321A4C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 21:45:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391904AbfIIVpG (ORCPT
+        id S2406093AbfIIVpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 17:45:06 -0400
-Received: from mail-out.m-online.net ([212.18.0.9]:49938 "EHLO
+        Mon, 9 Sep 2019 17:45:10 -0400
+Received: from mail-out.m-online.net ([212.18.0.9]:58285 "EHLO
         mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726930AbfIIVpE (ORCPT
+        with ESMTP id S2391889AbfIIVpH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 17:45:04 -0400
+        Mon, 9 Sep 2019 17:45:07 -0400
 Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 46S1sn3hK8z1rJh3;
-        Mon,  9 Sep 2019 23:45:01 +0200 (CEST)
+        by mail-out.m-online.net (Postfix) with ESMTP id 46S1sr3fJSz1rJgl;
+        Mon,  9 Sep 2019 23:45:04 +0200 (CEST)
 Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 46S1sn30ypz1qqkC;
-        Mon,  9 Sep 2019 23:45:01 +0200 (CEST)
+        by mail.m-online.net (Postfix) with ESMTP id 46S1sr2qdxz1qqkC;
+        Mon,  9 Sep 2019 23:45:04 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at mnet-online.de
 Received: from mail.mnet-online.de ([192.168.8.182])
         by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id Uo1AXD3odEqt; Mon,  9 Sep 2019 23:45:00 +0200 (CEST)
-X-Auth-Info: VL31DBZpNe6DmaUfr/0ypzHC8ZIDIaos77vCW/vqn44=
+        with ESMTP id qZ8-lsPCxhJx; Mon,  9 Sep 2019 23:45:03 +0200 (CEST)
+X-Auth-Info: Aeq2wPB2g8JLijVeAgGXkDVoKmffLOMiGQJTIMBEAIw=
 Received: from localhost.localdomain (85-222-111-42.dynamic.chello.pl [85.222.111.42])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Mon,  9 Sep 2019 23:45:00 +0200 (CEST)
+        Mon,  9 Sep 2019 23:45:02 +0200 (CEST)
 From:   Lukasz Majewski <lukma@denx.de>
 To:     Lee Jones <lee.jones@linaro.org>
 Cc:     linux-kernel@vger.kernel.org,
@@ -47,9 +47,9 @@ Cc:     linux-kernel@vger.kernel.org,
         linux-input@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Lukasz Majewski <lukma@denx.de>
-Subject: [PATCH v5 1/3] mfd: mc13xxx: Add mc34708 adc support
-Date:   Mon,  9 Sep 2019 23:44:38 +0200
-Message-Id: <20190909214440.30674-2-lukma@denx.de>
+Subject: [PATCH v5 3/3] input: touchscreen mc13xxx: Add mc34708 support
+Date:   Mon,  9 Sep 2019 23:44:40 +0200
+Message-Id: <20190909214440.30674-4-lukma@denx.de>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190909214440.30674-1-lukma@denx.de>
 References: <20190909214440.30674-1-lukma@denx.de>
@@ -60,211 +60,175 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sascha Hauer <s.hauer@pengutronix.de>
 
-The mc34708 has an improved adc. The older variants will always convert
-a fixed order of channels. The mc34708 can do up to eight conversions
-in arbitrary channel order. Currently this extended feature is not
-supported. We only support touchscreen conversions now, which will
-be sampled in a data format compatible to the older chips in order
-to keep the API between the mfd and the touchscreen driver.
+The mc34708 has a different bit to enable pen detection. This
+adds the driver data and devtype necessary to probe the device
+and to distinguish between the mc13783 and the mc34708.
 
 Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
 Signed-off-by: Lukasz Majewski <lukma@denx.de>
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
 ---
 Changes for v5:
-- Remove adc_do_conversion() callbacks from struct mc13xxx_variant
-- Remove duplicated MC13XXX_ADC_WORKING #define
+- None
 
 Changes for v4:
-- None
+- Remove type from struct mc13xx_chip
+- Add Acked-by from Dmitry
 
 Changes for v3:
-- None
+- Replace forward declaration of mc13xxx_driver_data with
+  structure definition
+- Rename mc13xxx_driver_data with mc13xxx_chip
+- Move static struct mc13xxx_chip mc13783_chip and mc34708_chip
+  closer to ID table
+- Do not check mc13xxx device type
 
 Changes for v2:
-- Change the return code patch when the mc13xxx ADC is performing conversion
+- Change nested if statements to a single one (with cr0 > ...)
+- Replace hardcoded max resistance value (4080) with a generic driver data
+  value.
 - Introduce new include/linux/mfd/mc34708.h header file for mc34708 specific
   defines
+- Define as driver data mask and value for accessing mc13xxx registers
 
-Changes from the original patches:
-- ADC conversion functions prototypes added to fix build error
-- Adjustments to make checkpatch clean (-ENOSYS, line over 80 char)
-
-This patch applies on top of Linux 5.3-rc8
-SHA1: f74c2bb98776e2de508f4d607cd519873065118e
+Changes from the original patch:
+- Simplify the mcXXXXX_set_pen_detection functions
+- Fix checkpatch warnings
 ---
- drivers/mfd/mc13xxx-core.c  | 98 ++++++++++++++++++++++++++++++++++++-
- include/linux/mfd/mc34708.h | 37 ++++++++++++++
- 2 files changed, 133 insertions(+), 2 deletions(-)
- create mode 100644 include/linux/mfd/mc34708.h
+---
+ drivers/input/touchscreen/mc13783_ts.c | 48 +++++++++++++++++++++++---
+ 1 file changed, 44 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/mfd/mc13xxx-core.c b/drivers/mfd/mc13xxx-core.c
-index 1abe7432aad8..b64c62366517 100644
---- a/drivers/mfd/mc13xxx-core.c
-+++ b/drivers/mfd/mc13xxx-core.c
-@@ -12,6 +12,7 @@
- #include <linux/of_device.h>
+diff --git a/drivers/input/touchscreen/mc13783_ts.c b/drivers/input/touchscreen/mc13783_ts.c
+index edd49e44e0c9..1dd8ed396225 100644
+--- a/drivers/input/touchscreen/mc13783_ts.c
++++ b/drivers/input/touchscreen/mc13783_ts.c
+@@ -10,6 +10,7 @@
+  */
  #include <linux/platform_device.h>
- #include <linux/mfd/core.h>
+ #include <linux/mfd/mc13783.h>
 +#include <linux/mfd/mc34708.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/input.h>
+@@ -30,6 +31,12 @@ MODULE_PARM_DESC(sample_tolerance,
+ 		"is supposed to be wrong and is discarded.  Set to 0 to "
+ 		"disable this check.");
  
- #include "mc13xxx.h"
++struct mc13xxx_chip {
++	int max_resistance;
++	u32 reg_mask;
++	u32 reg_value;
++};
++
+ struct mc13783_ts_priv {
+ 	struct input_dev *idev;
+ 	struct mc13xxx *mc13xxx;
+@@ -37,6 +44,7 @@ struct mc13783_ts_priv {
+ 	unsigned int sample[4];
+ 	u8 ato;
+ 	bool atox;
++	const struct mc13xxx_chip *chip;
+ };
  
-@@ -247,9 +248,9 @@ static irqreturn_t mc13xxx_handler_adcdone(int irq, void *data)
- 	return IRQ_HANDLED;
+ static irqreturn_t mc13783_ts_handler(int irq, void *data)
+@@ -93,6 +101,9 @@ static void mc13783_ts_report_sample(struct mc13783_ts_priv *priv)
+ 
+ 	cr0 = (cr0 + cr1) / 2;
+ 
++	if (cr0 > priv->chip->max_resistance)
++		cr0 = 0;
++
+ 	if (!cr0 || !sample_tolerance ||
+ 			(x2 - x0 < sample_tolerance &&
+ 			 y2 - y0 < sample_tolerance)) {
+@@ -102,14 +113,14 @@ static void mc13783_ts_report_sample(struct mc13783_ts_priv *priv)
+ 			input_report_abs(idev, ABS_Y, y1);
+ 
+ 			dev_dbg(&idev->dev, "report (%d, %d, %d)\n",
+-					x1, y1, 0x1000 - cr0);
++				x1, y1, priv->chip->max_resistance - cr0);
+ 			schedule_delayed_work(&priv->work, HZ / 50);
+ 		} else {
+ 			dev_dbg(&idev->dev, "report release\n");
+ 		}
+ 
+ 		input_report_abs(idev, ABS_PRESSURE,
+-				cr0 ? 0x1000 - cr0 : cr0);
++				 cr0 ? priv->chip->max_resistance - cr0 : 0);
+ 		input_report_key(idev, BTN_TOUCH, cr0);
+ 		input_sync(idev);
+ 	} else {
+@@ -146,7 +157,8 @@ static int mc13783_ts_open(struct input_dev *dev)
+ 		goto out;
+ 
+ 	ret = mc13xxx_reg_rmw(priv->mc13xxx, MC13XXX_ADC0,
+-			MC13XXX_ADC0_TSMOD_MASK, MC13XXX_ADC0_TSMOD0);
++			      priv->chip->reg_mask,
++			      priv->chip->reg_value);
+ 	if (ret)
+ 		mc13xxx_irq_free(priv->mc13xxx, MC13XXX_IRQ_TS, priv);
+ out:
+@@ -160,7 +172,7 @@ static void mc13783_ts_close(struct input_dev *dev)
+ 
+ 	mc13xxx_lock(priv->mc13xxx);
+ 	mc13xxx_reg_rmw(priv->mc13xxx, MC13XXX_ADC0,
+-			MC13XXX_ADC0_TSMOD_MASK, 0);
++			priv->chip->reg_mask, 0);
+ 	mc13xxx_irq_free(priv->mc13xxx, MC13XXX_IRQ_TS, priv);
+ 	mc13xxx_unlock(priv->mc13xxx);
+ 
+@@ -172,6 +184,7 @@ static int __init mc13783_ts_probe(struct platform_device *pdev)
+ 	struct mc13783_ts_priv *priv;
+ 	struct mc13xxx_ts_platform_data *pdata = dev_get_platdata(&pdev->dev);
+ 	struct input_dev *idev;
++	const struct platform_device_id *id = platform_get_device_id(pdev);
+ 	int ret = -ENOMEM;
+ 
+ 	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+@@ -182,6 +195,7 @@ static int __init mc13783_ts_probe(struct platform_device *pdev)
+ 	INIT_DELAYED_WORK(&priv->work, mc13783_ts_work);
+ 	priv->mc13xxx = dev_get_drvdata(pdev->dev.parent);
+ 	priv->idev = idev;
++	priv->chip = (void *)id->driver_data;
+ 
+ 	if (pdata) {
+ 		priv->atox = pdata->atox;
+@@ -228,7 +242,33 @@ static int mc13783_ts_remove(struct platform_device *pdev)
+ 	return 0;
  }
  
--#define MC13XXX_ADC_WORKING (1 << 0)
-+#define MC13XXX_ADC_WORKING BIT(0)
- 
--int mc13xxx_adc_do_conversion(struct mc13xxx *mc13xxx, unsigned int mode,
-+static int mc13xxx_adc_conversion(struct mc13xxx *mc13xxx, unsigned int mode,
- 		unsigned int channel, u8 ato, bool atox,
- 		unsigned int *sample)
- {
-@@ -358,6 +359,99 @@ int mc13xxx_adc_do_conversion(struct mc13xxx *mc13xxx, unsigned int mode,
- 
- 	return ret;
- }
++static struct mc13xxx_chip mc13783_chip = {
++	.max_resistance = 4096,
++	.reg_mask = MC13XXX_ADC0_TSMOD_MASK,
++	.reg_value = MC13XXX_ADC0_TSMOD0,
++};
 +
-+static int mc34708_adc_conversion(struct mc13xxx *mc13xxx, unsigned int mode,
-+		unsigned int channel, u8 ato, bool atox,
-+		unsigned int *sample)
-+{
-+	int ret, i;
-+	u32 adc0, adc3, adc1, old_adc0;
-+	struct mc13xxx_adcdone_data adcdone_data = {
-+		.mc13xxx = mc13xxx,
-+	};
++static struct mc13xxx_chip mc34708_chip = {
++	.max_resistance = 4080,
++	.reg_mask = MC34708_ADC0_TSMASK,
++	.reg_value = MC34708_ADC0_TSPENDETEN,
++};
 +
-+	switch (mode) {
-+	case MC13XXX_ADC_MODE_TS:
-+		adc0 = MC34708_ADC0_TSEN | MC34708_ADC0_TSSTART |
-+			MC34708_ADC0_TSSTOP(7);
-+
-+		adc1 = MC34708_ADC1_TSDLY1(0xf) |
-+			MC34708_ADC1_TSDLY2(0xf) |
-+			MC34708_ADC1_TSDLY3(0xf);
-+
-+		adc3 = MC34708_ADC3_TSSEL(0, MC34708_TS_X) |
-+			MC34708_ADC3_TSSEL(1, MC34708_TS_Y) |
-+			MC34708_ADC3_TSSEL(2, MC34708_TS_X) |
-+			MC34708_ADC3_TSSEL(3, MC34708_TS_Y) |
-+			MC34708_ADC3_TSSEL(4, MC34708_TS_X) |
-+			MC34708_ADC3_TSSEL(5, MC34708_TS_R) |
-+			MC34708_ADC3_TSSEL(6, MC34708_TS_Y) |
-+			MC34708_ADC3_TSSEL(7, MC34708_TS_R);
-+		break;
-+
-+	case MC13XXX_ADC_MODE_SINGLE_CHAN:
-+	case MC13XXX_ADC_MODE_MULT_CHAN:
-+	default:
-+		return -EINVAL;
++static const struct platform_device_id mc13xxx_ts_idtable[] = {
++	{
++		.name = "mc13783-ts",
++		.driver_data = (kernel_ulong_t)&mc13783_chip,
++	}, {
++		.name = "mc34708-ts",
++		.driver_data = (kernel_ulong_t)&mc34708_chip,
++	}, {
++		/* sentinel */
 +	}
++};
++MODULE_DEVICE_TABLE(platform, mc13xxx_ts_idtable);
 +
-+	init_completion(&adcdone_data.done);
-+
-+	mc13xxx_lock(mc13xxx);
-+
-+	if (mc13xxx->adcflags & MC13XXX_ADC_WORKING) {
-+		mc13xxx_unlock(mc13xxx);
-+		return -EBUSY;
-+	}
-+
-+	mc13xxx->adcflags |= MC13XXX_ADC_WORKING;
-+
-+	mc13xxx_reg_read(mc13xxx, MC13XXX_ADC0, &old_adc0);
-+
-+	mc13xxx_irq_request(mc13xxx, MC34708_IRQ_TSDONE,
-+			mc13xxx_handler_adcdone, __func__, &adcdone_data);
-+	mc13xxx_irq_ack(mc13xxx, MC34708_IRQ_TSDONE);
-+
-+	mc13xxx_reg_write(mc13xxx, MC34708_ADC3, adc3);
-+	mc13xxx_reg_write(mc13xxx, MC13XXX_ADC1, adc1);
-+	mc13xxx_reg_write(mc13xxx, MC13XXX_ADC0, adc0);
-+
-+	mc13xxx_unlock(mc13xxx);
-+
-+	ret = wait_for_completion_interruptible_timeout(&adcdone_data.done, HZ);
-+
-+	mc13xxx_lock(mc13xxx);
-+
-+	mc13xxx_irq_free(mc13xxx, MC34708_IRQ_TSDONE, &adcdone_data);
-+
-+	if (!ret) {
-+		ret = -ETIMEDOUT;
-+		goto out;
-+	}
-+
-+	for (i = 0; i < 4; i++)
-+		mc13xxx_reg_read(mc13xxx, MC34708_ADC4 + i, &sample[i]);
-+
-+out:
-+	ret = mc13xxx_reg_write(mc13xxx, MC13XXX_ADC0, old_adc0);
-+
-+	mc13xxx->adcflags &= ~MC13XXX_ADC_WORKING;
-+	mc13xxx_unlock(mc13xxx);
-+
-+	return ret;
-+}
-+
-+int mc13xxx_adc_do_conversion(struct mc13xxx *mc13xxx, unsigned int mode,
-+		unsigned int channel, u8 ato, bool atox,
-+		unsigned int *sample)
-+{
-+	if (!strcmp(mc13xxx_get_chipname(mc13xxx), "mc34708"))
-+		return mc34708_adc_conversion(mc13xxx, mode, channel, ato,
-+					      atox, sample);
-+	else
-+		return mc13xxx_adc_conversion(mc13xxx, mode, channel, ato,
-+					      atox, sample);
-+}
- EXPORT_SYMBOL_GPL(mc13xxx_adc_do_conversion);
- 
- static int mc13xxx_add_subdevice_pdata(struct mc13xxx *mc13xxx,
-diff --git a/include/linux/mfd/mc34708.h b/include/linux/mfd/mc34708.h
-new file mode 100644
-index 000000000000..536e133f4f97
---- /dev/null
-+++ b/include/linux/mfd/mc34708.h
-@@ -0,0 +1,37 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (C) 2019
-+ * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
-+ */
-+#ifndef __LINUX_MFD_MC34708_H
-+#define __LINUX_MFD_MC34708_H
-+
-+#define MC34708_ADC3			46
-+#define MC34708_ADC4			47
-+
-+#define MC34708_IRQ_TSDONE		1
-+
-+#define MC34708_ADC0_TSEN		BIT(12)
-+#define MC34708_ADC0_TSSTART		BIT(13)
-+#define MC34708_ADC0_TSCONT		BIT(14)
-+#define MC34708_ADC0_TSHOLD		BIT(15)
-+#define MC34708_ADC0_TSPENDETEN		BIT(20)
-+
-+#define MC34708_ADC0_TSMASK            (MC34708_ADC0_TSPENDETEN | \
-+					MC34708_ADC0_TSEN |       \
-+					MC34708_ADC0_TSSTART |    \
-+					MC34708_ADC0_TSCONT |     \
-+					MC34708_ADC0_TSHOLD)
-+
-+#define MC34708_ADC0_TSSTOP(x)		(((x) & 0x7) << 16)
-+
-+#define MC34708_ADC3_TSSEL(step, ch)	((ch) << (8 + 2 * (step)))
-+#define MC34708_ADC1_TSDLY1(d)		((d) << 12)
-+#define MC34708_ADC1_TSDLY2(d)		((d) << 16)
-+#define MC34708_ADC1_TSDLY3(d)		((d) << 20)
-+
-+#define MC34708_TS_X			1
-+#define MC34708_TS_Y			2
-+#define MC34708_TS_R			3
-+
-+#endif /* __LINUX_MFD_MC34708_H */
+ static struct platform_driver mc13783_ts_driver = {
++	.id_table	= mc13xxx_ts_idtable,
+ 	.remove		= mc13783_ts_remove,
+ 	.driver		= {
+ 		.name	= MC13783_TS_NAME,
 -- 
 2.20.1
 
