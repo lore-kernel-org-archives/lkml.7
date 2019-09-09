@@ -6,97 +6,75 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8464DC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F037C433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B9B121920
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:59:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6340E21479
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:00:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390908AbfIIK76 (ORCPT
+        id S2390939AbfIILAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 06:59:58 -0400
-Received: from foss.arm.com ([217.140.110.172]:47812 "EHLO foss.arm.com"
+        Mon, 9 Sep 2019 07:00:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35144 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390885AbfIIK74 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 06:59:56 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 72C9C1000;
-        Mon,  9 Sep 2019 03:59:55 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.194.52])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C01DC3F71F;
-        Mon,  9 Sep 2019 03:59:53 -0700 (PDT)
-Date:   Mon, 9 Sep 2019 11:59:51 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Jirka =?utf-8?Q?Hladk=C3=BD?= <jhladky@redhat.com>,
-        =?utf-8?B?SmnFmcOtIFZvesOhcg==?= <jvozar@redhat.com>,
-        x86@kernel.org
-Subject: Re: [PATCH 2/2] sched/debug: add sched_update_nr_running tracepoint
-Message-ID: <20190909105951.rycwzsaome4l5d5f@e107158-lin.cambridge.arm.com>
-References: <20190903154340.860299-1-rkrcmar@redhat.com>
- <20190903154340.860299-3-rkrcmar@redhat.com>
- <20190904143711.zorh2whdapymc5ng@e107158-lin.cambridge.arm.com>
- <20190904174841.GW2332@hirez.programming.kicks-ass.net>
+        id S1729481AbfIILAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 07:00:41 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DC12A34CC;
+        Mon,  9 Sep 2019 11:00:40 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.72])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 963F060A9D;
+        Mon,  9 Sep 2019 11:00:37 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Mon,  9 Sep 2019 13:00:40 +0200 (CEST)
+Date:   Mon, 9 Sep 2019 13:00:36 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Chris Metcalf <cmetcalf@ezchip.com>,
+        Christoph Lameter <cl@linux.com>,
+        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [RFC PATCH 4/4] Fix: sched/membarrier: p->mm->membarrier_state
+ racy load (v2)
+Message-ID: <20190909110036.GC6719@redhat.com>
+References: <20190906082305.GU2349@hirez.programming.kicks-ass.net>
+ <20190908134909.12389-1-mathieu.desnoyers@efficios.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190904174841.GW2332@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20190908134909.12389-1-mathieu.desnoyers@efficios.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Mon, 09 Sep 2019 11:00:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/04/19 19:48, Peter Zijlstra wrote:
-> On Wed, Sep 04, 2019 at 03:37:11PM +0100, Qais Yousef wrote:
-> 
-> > I managed to hook into sched_switch to get the nr_running of cfs tasks via
-> > eBPF.
-> > 
-> > ```
-> > int on_switch(struct sched_switch_args *args) {
-> >     struct task_struct *prev = (struct task_struct *)bpf_get_current_task();
-> >     struct cgroup *prev_cgroup = prev->cgroups->subsys[cpuset_cgrp_id]->cgroup;
-> >     const char *prev_cgroup_name = prev_cgroup->kn->name;
-> > 
-> >     if (prev_cgroup->kn->parent) {
-> >         bpf_trace_printk("sched_switch_ext: nr_running=%d prev_cgroup=%s\\n",
-> >                          prev->se.cfs_rq->nr_running,
-> >                          prev_cgroup_name);
-> >     } else {
-> >         bpf_trace_printk("sched_switch_ext: nr_running=%d prev_cgroup=/\\n",
-> >                          prev->se.cfs_rq->nr_running);
-> >     }
-> >     return 0;
-> > };
-> > ```
-> > 
-> > You can do something similar by attaching to the sched_switch tracepoint from
-> > a module and a create a new event to get the nr_running.
-> > 
-> > Now this is not as accurate as your proposed new tracepoint in terms where you
-> > sample nr_running, but should be good enough?
-> 
-> The above is after deactivate() and gives an up-to-date count for
-> decrements. Attach something to trace_sched_wakeup() to get the
-> increment update.
+On 09/08, Mathieu Desnoyers wrote:
+>
+> +static void sync_runqueues_membarrier_state(struct mm_struct *mm)
+> +{
+> +	int membarrier_state = atomic_read(&mm->membarrier_state);
+> +	bool fallback = false;
+> +	cpumask_var_t tmpmask;
+> +	int cpu;
+> +
+> +	if (atomic_read(&mm->mm_users) == 1 || num_online_cpus() == 1) {
+> +		WRITE_ONCE(this_rq()->membarrier_state, membarrier_state);
 
-I just remembered that sched_switch and sched_wakeup aren't
-EXPORT_TRACEPOINT*() so can't be attached to via out of tree module. But still
-accessible via eBPF.
+This doesn't look safe, this caller can migrate to another CPU after
+it calculates the per-cpu ptr.
 
-There has been several attempts to export these tracepoints but they were
-NACKed because there was no in-kernel module that needed them.
+I think you need do disable preemption or simply use this_cpu_write().
 
-https://lore.kernel.org/lkml/20150422130052.4996e231@gandalf.local.home/
+Oleg.
 
---
-Qais Yousef
