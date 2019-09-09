@@ -2,90 +2,158 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8574AC49ED4
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 07:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17293C00307
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 07:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52CFB218AC
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 07:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1960218AC
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 07:54:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388621AbfIIHyc (ORCPT
+        id S2388643AbfIIHyn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 03:54:32 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:32932 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388497AbfIIHya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 03:54:30 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1i7EVB-0007f7-DF; Mon, 09 Sep 2019 17:54:22 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Mon, 09 Sep 2019 17:54:20 +1000
-Date:   Mon, 9 Sep 2019 17:54:20 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>,
-        linux-crypto@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Keerthy <j-keerthy@ti.com>
-Subject: Re: [PATCH] random: Use wait_event_freezable() in
- add_hwgenerator_randomness()
-Message-ID: <20190909075420.GG21364@gondor.apana.org.au>
-References: <20190905164112.245886-1-swboyd@chromium.org>
+        Mon, 9 Sep 2019 03:54:43 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2176 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727008AbfIIHym (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 03:54:42 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 2CD8AFDD2F6759334CCE;
+        Mon,  9 Sep 2019 15:54:40 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 9 Sep 2019
+ 15:54:37 +0800
+Subject: Re: [f2fs-dev] [PATCH 2/2] f2fs: avoid infinite GC loop due to stale
+ atomic files
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20190909012532.20454-1-jaegeuk@kernel.org>
+ <20190909012532.20454-2-jaegeuk@kernel.org>
+ <f446ff29-38a5-61fd-4056-b4067b01c630@huawei.com>
+ <20190909073011.GA21625@jaegeuk-macbookpro.roam.corp.google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <5a473076-14b8-768a-62ac-f686e850d5a6@huawei.com>
+Date:   Mon, 9 Sep 2019 15:54:00 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190905164112.245886-1-swboyd@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190909073011.GA21625@jaegeuk-macbookpro.roam.corp.google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 09:41:12AM -0700, Stephen Boyd wrote:
-> Sebastian reports that after commit ff296293b353 ("random: Support freezable
-> kthreads in add_hwgenerator_randomness()") we can call might_sleep() when the
-> task state is TASK_INTERRUPTIBLE (state=1). This leads to the following warning.
+On 2019/9/9 15:30, Jaegeuk Kim wrote:
+> On 09/09, Chao Yu wrote:
+>> On 2019/9/9 9:25, Jaegeuk Kim wrote:
+>>> If committing atomic pages is failed when doing f2fs_do_sync_file(), we can
+>>> get commited pages but atomic_file being still set like:
+>>>
+>>> - inmem:    0, atomic IO:    4 (Max.   10), volatile IO:    0 (Max.    0)
+>>>
+>>> If GC selects this block, we can get an infinite loop like this:
+>>>
+>>> f2fs_submit_page_bio: dev = (253,7), ino = 2, page_index = 0x2359a8, oldaddr = 0x2359a8, newaddr = 0x2359a8, rw = READ(), type = COLD_DATA
+>>> f2fs_submit_read_bio: dev = (253,7)/(253,7), rw = READ(), DATA, sector = 18533696, size = 4096
+>>> f2fs_get_victim: dev = (253,7), type = No TYPE, policy = (Foreground GC, LFS-mode, Greedy), victim = 4355, cost = 1, ofs_unit = 1, pre_victim_secno = 4355, prefree = 0, free = 234
+>>> f2fs_iget: dev = (253,7), ino = 6247, pino = 5845, i_mode = 0x81b0, i_size = 319488, i_nlink = 1, i_blocks = 624, i_advise = 0x2c
+>>> f2fs_submit_page_bio: dev = (253,7), ino = 2, page_index = 0x2359a8, oldaddr = 0x2359a8, newaddr = 0x2359a8, rw = READ(), type = COLD_DATA
+>>> f2fs_submit_read_bio: dev = (253,7)/(253,7), rw = READ(), DATA, sector = 18533696, size = 4096
+>>> f2fs_get_victim: dev = (253,7), type = No TYPE, policy = (Foreground GC, LFS-mode, Greedy), victim = 4355, cost = 1, ofs_unit = 1, pre_victim_secno = 4355, prefree = 0, free = 234
+>>> f2fs_iget: dev = (253,7), ino = 6247, pino = 5845, i_mode = 0x81b0, i_size = 319488, i_nlink = 1, i_blocks = 624, i_advise = 0x2c
+>>>
+>>> In that moment, we can observe:
+>>>
+>>> [Before]
+>>> Try to move 5084219 blocks (BG: 384508)
+>>>   - data blocks : 4962373 (274483)
+>>>   - node blocks : 121846 (110025)
+>>> Skipped : atomic write 4534686 (10)
+>>>
+>>> [After]
+>>> Try to move 5088973 blocks (BG: 384508)
+>>>   - data blocks : 4967127 (274483)
+>>>   - node blocks : 121846 (110025)
+>>> Skipped : atomic write 4539440 (10)
+>>>
+>>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+>>> ---
+>>>  fs/f2fs/file.c | 10 +++++-----
+>>>  1 file changed, 5 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+>>> index 7ae2f3bd8c2f..68b6da734e5f 100644
+>>> --- a/fs/f2fs/file.c
+>>> +++ b/fs/f2fs/file.c
+>>> @@ -1997,11 +1997,11 @@ static int f2fs_ioc_commit_atomic_write(struct file *filp)
+>>>  			goto err_out;
+>>>  
+>>>  		ret = f2fs_do_sync_file(filp, 0, LLONG_MAX, 0, true);
+>>> -		if (!ret) {
+>>> -			clear_inode_flag(inode, FI_ATOMIC_FILE);
+>>> -			F2FS_I(inode)->i_gc_failures[GC_FAILURE_ATOMIC] = 0;
+>>> -			stat_dec_atomic_write(inode);
+>>> -		}
+>>> +
+>>> +		/* doesn't need to check error */
+>>> +		clear_inode_flag(inode, FI_ATOMIC_FILE);
+>>> +		F2FS_I(inode)->i_gc_failures[GC_FAILURE_ATOMIC] = 0;
+>>> +		stat_dec_atomic_write(inode);
+>>
+>> If there are still valid atomic write pages linked in .inmem_pages, it may cause
+>> memory leak when we just clear FI_ATOMIC_FILE flag.
 > 
->  do not call blocking ops when !TASK_RUNNING; state=1 set at [<00000000349d1489>] prepare_to_wait_event+0x5a/0x180
->  WARNING: CPU: 0 PID: 828 at kernel/sched/core.c:6741 __might_sleep+0x6f/0x80
->  Modules linked in:
-> 
->  CPU: 0 PID: 828 Comm: hwrng Not tainted 5.3.0-rc7-next-20190903+ #46
->  RIP: 0010:__might_sleep+0x6f/0x80
-> 
->  Call Trace:
->   kthread_freezable_should_stop+0x1b/0x60
->   add_hwgenerator_randomness+0xdd/0x130
->   hwrng_fillfn+0xbf/0x120
->   kthread+0x10c/0x140
->   ret_from_fork+0x27/0x50
-> 
-> We shouldn't call kthread_freezable_should_stop() from deep within the
-> wait_event code because the task state is still set as
-> TASK_INTERRUPTIBLE instead of TASK_RUNNING and
-> kthread_freezable_should_stop() will try to call into the freezer with
-> the task in the wrong state. Use wait_event_freezable() instead so that
-> it calls schedule() in the right place and tries to enter the freezer
-> when the task state is TASK_RUNNING instead.
-> 
-> Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> Tested-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> Cc: Keerthy <j-keerthy@ti.com>
-> Fixes: ff296293b353 ("random: Support freezable kthreads in add_hwgenerator_randomness()")
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
-> 
-> See https://lkml.kernel.org/r/20190904110038.2bx25byitrejlteu@flow for
-> context on the bug report.
-> 
->  drivers/char/random.c | 12 +++++-------
->  1 file changed, 5 insertions(+), 7 deletions(-)
+> f2fs_commit_inmem_pages() should have flushed them.
 
-Patch applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Oh, we failed to flush its nodes.
+
+However we won't clear such info if we failed to flush inmen pages, it looks
+inconsistent.
+
+Any interface needed to drop inmem pages or clear ATOMIC_FILE flag in that two
+error path? I'm not very clear how sqlite handle such error.
+
+Thanks,
+
+> 
+>>
+>> So my question is why below logic didn't handle such condition well?
+>>
+>> f2fs_gc()
+>>
+>> 	if (has_not_enough_free_secs(sbi, sec_freed, 0)) {
+>> 		if (skipped_round <= MAX_SKIP_GC_COUNT ||
+>> 					skipped_round * 2 < round) {
+>> 			segno = NULL_SEGNO;
+>> 			goto gc_more;
+>> 		}
+>>
+>> 		if (first_skipped < last_skipped &&
+>> 				(last_skipped - first_skipped) >
+>> 						sbi->skipped_gc_rwsem) {
+>> 			f2fs_drop_inmem_pages_all(sbi, true);
+> 
+> This is doing nothing, since f2fs_commit_inmem_pages() removed the inode
+> from inmem list.
+> 
+>> 			segno = NULL_SEGNO;
+>> 			goto gc_more;
+>> 		}
+>> 		if (gc_type == FG_GC && !is_sbi_flag_set(sbi, SBI_CP_DISABLED))
+>> 			ret = f2fs_write_checkpoint(sbi, &cpc);
+>> 	}
+>>
+>>>  	} else {
+>>>  		ret = f2fs_do_sync_file(filp, 0, LLONG_MAX, 1, false);
+>>>  	}
+>>>
+> .
+> 
