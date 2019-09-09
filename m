@@ -2,85 +2,127 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0446FC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C7C3C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4E1520640
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57F4220640
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:15:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387713AbfIIQO5 (ORCPT
+        id S2387917AbfIIQPI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 12:14:57 -0400
-Received: from smtprelay0206.hostedemail.com ([216.40.44.206]:44396 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726783AbfIIQO5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 12:14:57 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id F134B182CF674;
-        Mon,  9 Sep 2019 16:14:55 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: start11_652ceba729d49
-X-Filterd-Recvd-Size: 2096
-Received: from XPS-9350.home (unknown [47.151.152.152])
-        (Authenticated sender: joe@perches.com)
-        by omf10.hostedemail.com (Postfix) with ESMTPA;
-        Mon,  9 Sep 2019 16:14:55 +0000 (UTC)
-Message-ID: <fbd0c88d97bf10ba9245755210a5b21362e57520.camel@perches.com>
-Subject: Re: [PATCH] Fixed parentheses malpractice in apex_driver.c
-From:   Joe Perches <joe@perches.com>
-To:     Sandro Volery <sandro@volery.com>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 09 Sep 2019 09:14:53 -0700
-In-Reply-To: <6EC85D2C-F3B5-4637-8FCF-486F037E0DC2@volery.com>
-References: <8d6586f8772dd68695b9348ef977f2d9afa7645d.camel@perches.com>
-         <6EC85D2C-F3B5-4637-8FCF-486F037E0DC2@volery.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1-2 
+        Mon, 9 Sep 2019 12:15:08 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54622 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726783AbfIIQPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 12:15:08 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 866CB8D65C1;
+        Mon,  9 Sep 2019 16:15:07 +0000 (UTC)
+Received: from localhost (ovpn-117-107.ams2.redhat.com [10.36.117.107])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 60D745B6A5;
+        Mon,  9 Sep 2019 16:15:00 +0000 (UTC)
+Date:   Mon, 9 Sep 2019 18:14:55 +0200
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     piaojun <piaojun@huawei.com>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        linux-kernel@vger.kernel.org, virtio-fs@redhat.com,
+        linux-fsdevel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [Virtio-fs] [PATCH 00/18] virtiofs: Fix various races and
+ cleanups round 1
+Message-ID: <20190909161455.GG20875@stefanha-x1.localdomain>
+References: <20190905194859.16219-1-vgoyal@redhat.com>
+ <CAJfpegu8POz9gC4MDEcXxDWBD0giUNFgJhMEzntJX_u4+cS9Zw@mail.gmail.com>
+ <20190906103613.GH5900@stefanha-x1.localdomain>
+ <CAJfpegudNVZitQ5L8gPvA45mRPFDk9fhyboceVW6xShpJ4mLww@mail.gmail.com>
+ <866a1469-2c4b-59ce-cf3f-32f65e861b99@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="w/VI3ydZO+RcZ3Ux"
+Content-Disposition: inline
+In-Reply-To: <866a1469-2c4b-59ce-cf3f-32f65e861b99@huawei.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Mon, 09 Sep 2019 16:15:07 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-09-07 at 18:12 +0200, Sandro Volery wrote:
-> Alright, I'll do that when I get home tonight!
 
-I'm going to assume this is not an actual problem.
+--w/VI3ydZO+RcZ3Ux
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Thanks,
-> Sandro V
-> 
-> > On 7 Sep 2019, at 18:08, Joe Perches <joe@perches.com> wrote:
-> > 
-> > ﻿On Sat, 2019-09-07 at 17:56 +0200, Sandro Volery wrote:
-> > > > > On 7 Sep 2019, at 17:44, Joe Perches <joe@perches.com> wrote:
-> > > > 
-> > > > ﻿On Sat, 2019-09-07 at 17:34 +0200, Sandro Volery wrote:
-> > > > > On patchwork I entered 'volery' as my username because I didn't know better, and now checkpatch always complains when I add 'signed-off-by' with my actual full name.
-> > > > 
-> > > > How does checkpatch complain?
-> > > > There is no connection between patchwork
-> > > > and checkpatch.
-> > > 
-> > > Checkpatch tells me that I haven't used 'volery' as
-> > > my signed off name.
-> > 
-> > Please send the both the patch and the actual checkpatch output
-> > you get when running 'perl ./scripts/checkpatch.pl <patch>'
-> > 
-> > If this patch is a commit in your own local git tree:
-> > 
-> > $ git format-patch -1 --stdout <commit_id> > tmp
-> > $ perl ./scripts/checkpatch.pl --strict tmp
-> > 
-> > and send tmp and the checkpatch output.
-> > 
-> > 
+On Sun, Sep 08, 2019 at 07:53:55PM +0800, piaojun wrote:
+>=20
+>=20
+> On 2019/9/6 19:52, Miklos Szeredi wrote:
+> > On Fri, Sep 6, 2019 at 12:36 PM Stefan Hajnoczi <stefanha@redhat.com> w=
+rote:
+> >>
+> >> On Fri, Sep 06, 2019 at 10:15:14AM +0200, Miklos Szeredi wrote:
+> >>> On Thu, Sep 5, 2019 at 9:49 PM Vivek Goyal <vgoyal@redhat.com> wrote:
+> >>>>
+> >>>> Hi,
+> >>>>
+> >>>> Michael Tsirkin pointed out issues w.r.t various locking related TODO
+> >>>> items and races w.r.t device removal.
+> >>>>
+> >>>> In this first round of cleanups, I have taken care of most pressing
+> >>>> issues.
+> >>>>
+> >>>> These patches apply on top of following.
+> >>>>
+> >>>> git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git#virt=
+iofs-v4
+> >>>>
+> >>>> I have tested these patches with mount/umount and device removal usi=
+ng
+> >>>> qemu monitor. For example.
+> >>>
+> >>> Is device removal mandatory?  Can't this be made a non-removable
+> >>> device?  Is there a good reason why removing the virtio-fs device
+> >>> makes sense?
+> >>
+> >> Hot plugging and unplugging virtio PCI adapters is common.  I'd very
+> >> much like removal to work from the beginning.
+> >=20
+> > Can you give an example use case?
+>=20
+> I think VirtFS migration need hot plugging, or it may cause QEMU crash
+> or some problems.
 
+Live migration is currently unsupported.  Hot unplugging the virtio-fs
+device would allow the guest to live migrate successfully, so it's a
+useful feature to work around the missing live migration support.
+
+Is this what you mean?
+
+Stefan
+
+--w/VI3ydZO+RcZ3Ux
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl12en8ACgkQnKSrs4Gr
+c8j5Gwf+PMUBgG0DDiGxgIJ9i33+mYbozJP8G8CAlJzhYOlYXTssDTBCI4KVr4+L
+whMUfQBmjkS5vgoxrqktdwUX96bfRf1OgqwMe39jj82/GfFlyt3tF2kK/olvv7Ft
+3IRp3H9IjDbPQecA9uTK8sMphB+wz9oEIFBbdQ3TjXaKxsoybJ8fpneKbTdcAv9B
+0FVPgSuSCnTJfYZnMVaMO80HY9BDZet02NAKc1Pk1vcYoLrsjZkIjIHITI2FcKWs
+gw2scF509EL/gGlYnAIzTeZpdkvn24ukIsBUGOwSBggPDMC7/EiK9YXOm0DFJCvn
+m7UpoL8u4SB5YbzaQQBO1AAxjGbK4w==
+=wp+o
+-----END PGP SIGNATURE-----
+
+--w/VI3ydZO+RcZ3Ux--
