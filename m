@@ -2,253 +2,246 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E2FC433EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 660D7C00307
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AD53218DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:15:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2841E21924
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:18:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="rF1wGgNY"
+	dkim=pass (2048-bit key) header.d=ssi.gouv.fr header.i=@ssi.gouv.fr header.b="iyZXFpZI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389757AbfIIJPn (ORCPT
+        id S2389769AbfIIJSQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 05:15:43 -0400
-Received: from mail-eopbgr690057.outbound.protection.outlook.com ([40.107.69.57]:64775
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728908AbfIIJPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 05:15:42 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hAby2igZH9T4DwxKYPAaPA6REdu2YR2d0Iks+tU+tSlxfrxk1Xl1hpusc59461cEHuyhMaSGnxm3vucUUz1vXpzNjb1ZVT3z0ofnom1vJnnNTBKhBjg0hVedNkE2ZTS6K2cm+YbxY6HEz7XODD/sopChe+agIeJrevmmv62qFAQBBPJTJcW4v9yjl2oYpostZzrNrSzNpxvXouGpe/xDY6lx0s1+i6xjzxyhjkPkZeh40cgc+Kjli7HR1OrYJQN8A8UZTgmNce7k831YqHgF/CokXx0Z0wBnVe6QQM94rog8dLgXYHfH4H5OszwlrwbYENFqL3OWAJKj74CVgl6Ldw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LqG7NFb+UQuZKxzlLpckP/fp3nF7Sjilt/we7kKrU1w=;
- b=kqeodm2neNRUyp/JPsautYxDUZ9mUEdWoyurKOz+EG5VDIHEE3PGIQvTO+9O0DkMcMsW/syaZVLofEBk3XkMJ2e+WG3f0Rq2kNhhGcCzKeiX74SKVquafBihjhf0Rn6BdFg7rhHlwNMHw0nT28VLxqwXPPBHS+WcODXlWO3mkkCsbRlfy5yej5ymbBT6i0DwxVefzaJXVL3OG1jBCNaUGbEUzpeGDLae6CEd+wbe+gaiE1MeQI4ulWNbYJ3bXDS+ePeIOTqALkUgapgZTFRee6LbJaLFQ0pvEGoZP5puWdy1qX2sawO8XsFcynNDsTO3BP5orMEKsiJFaU+R2//i3A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LqG7NFb+UQuZKxzlLpckP/fp3nF7Sjilt/we7kKrU1w=;
- b=rF1wGgNYibd8SRokosCc2nfXHSeD5MGWyjS5Xc6hv1Tdphr/YZXBlci3P+andtLoJo9vloTg8MbFWSoi8/GfZm8wxZ6w3gWfspSwkVY2En/MQoI20w0dFsOFxQnpD1gQcwoBLf98zhE0TJbx71piB+3Et00bemJD1WbvQIkAzAw=
-Received: from DM5PR12MB1705.namprd12.prod.outlook.com (10.175.88.22) by
- DM5PR12MB1419.namprd12.prod.outlook.com (10.168.238.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.20; Mon, 9 Sep 2019 09:15:35 +0000
-Received: from DM5PR12MB1705.namprd12.prod.outlook.com
- ([fe80::9d43:b3d4:9ef:29fc]) by DM5PR12MB1705.namprd12.prod.outlook.com
- ([fe80::9d43:b3d4:9ef:29fc%8]) with mapi id 15.20.2241.018; Mon, 9 Sep 2019
- 09:15:35 +0000
-From:   "Koenig, Christian" <Christian.Koenig@amd.com>
-To:     Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-CC:     Hillf Danton <hdanton@sina.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Linux kernel <linux-kernel@vger.kernel.org>,
-        Alex Deucher <alexdeucher@gmail.com>,
-        "Wentland, Harry" <Harry.Wentland@amd.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: gnome-shell stuck because of amdgpu driver [5.3 RC5]
-Thread-Topic: gnome-shell stuck because of amdgpu driver [5.3 RC5]
-Thread-Index: AQHVY7+5HCgZEvEzpU+kGyEQuVz5sKciUBSAgADGqAA=
-Date:   Mon, 9 Sep 2019 09:15:35 +0000
-Message-ID: <1d23703e-f6df-e663-a205-45c98cd125e8@amd.com>
-References: <20190830032948.13516-1-hdanton@sina.com>
- <CABXGCsNywbo90+wgiZ64Srm-KexypTbjiviwTW_BsO9Pm11GKQ@mail.gmail.com>
- <5d6e2298.1c69fb81.b5532.8395SMTPIN_ADDED_MISSING@mx.google.com>
- <CABXGCsMG2YrybO4_5jHaFQQxy2ywB53pY63qRfXK=ZKx5qc2Bw@mail.gmail.com>
- <CAKMK7uH9q09XadTV5Ezm=9aODErD=w_+8feujviVnF5LO_fggA@mail.gmail.com>
- <5d6f10a6.1c69fb81.6b104.af73SMTPIN_ADDED_MISSING@mx.google.com>
- <20190904083747.GE2112@phenom.ffwll.local>
- <CABXGCsMEjP-UQ5A1xpL-xWHxtFEsOUO14+cmWJUS1ff1hgReFA@mail.gmail.com>
- <CAKMK7uHQFpQjE8qxw5UUDg6xdbzcr0zaZ7P6WsBK7m0ksKdg3g@mail.gmail.com>
- <CABXGCsN_r6614xDft_FY5N-B1QRFkhz27Q5U7nnr=mwtOWyCUw@mail.gmail.com>
-In-Reply-To: <CABXGCsN_r6614xDft_FY5N-B1QRFkhz27Q5U7nnr=mwtOWyCUw@mail.gmail.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-x-originating-ip: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
-x-clientproxiedby: AM3PR05CA0131.eurprd05.prod.outlook.com
- (2603:10a6:207:2::33) To DM5PR12MB1705.namprd12.prod.outlook.com
- (2603:10b6:3:10c::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Christian.Koenig@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 03ef1477-9a09-4ca5-a368-08d735064568
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM5PR12MB1419;
-x-ms-traffictypediagnostic: DM5PR12MB1419:
-x-ms-exchange-purlcount: 3
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR12MB141946AB13D3C3C830A1369283B70@DM5PR12MB1419.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1186;
-x-forefront-prvs: 01559F388D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(376002)(346002)(39860400002)(136003)(396003)(189003)(199004)(71190400001)(6512007)(6306002)(14444005)(6916009)(71200400001)(53936002)(76176011)(966005)(14454004)(66946007)(81166006)(5660300002)(64756008)(6436002)(446003)(2616005)(229853002)(66556008)(476003)(11346002)(46003)(66476007)(486006)(8936002)(66574012)(6486002)(52116002)(99286004)(81156014)(66446008)(8676002)(386003)(6506007)(53546011)(65806001)(65956001)(31696002)(36756003)(7736002)(4326008)(305945005)(31686004)(6246003)(6116002)(478600001)(45080400002)(54906003)(316002)(58126008)(25786009)(2906002)(186003)(86362001)(102836004)(256004)(10126625002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1419;H:DM5PR12MB1705.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ahlMfLrG3bTVhpt0oCZZHn+995uYxf+Be4DdOeDvE2SAZEny5+ImOJpS4gUMAx0qT/oXGV3wD0m2Rt7cVrk4Qrs8kdPfpsopxgJBXUECRO+NR7PBTe51p3ewqK9R/cI8XLTZiMeFLeHO4KDjkGn0ZI4yVEGg2KXRyY5p0/X3zcYNj4ro9wQYp9e8jzO+amSn2kIvHBQLyrhJYMHX/oqwDN88I6/1ZqdCqwCe5jsfYLzjkvGAJDNZaZEPOHWO9smvQ0/CtyMg6boLGStO3FsxzuBekyULi0FbCrtR1kvvr+TzZnqNljYJ32QgTAbXZkTqxnHrC8JpWOEWoDglm/ZEL+7FQGhvhBhXEp5xuzV+7aujmY5tsd3D2i0fo70zJYE5DgvrrxS/+uLkjjB72kzryEEYYXQlBUj7XvZXBXXmPDk=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <24239C0351D73447BC9DFF9D88449EA4@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 9 Sep 2019 05:18:16 -0400
+Received: from smtp-out.ssi.gouv.fr ([86.65.182.90]:58304 "EHLO
+        smtp-out.ssi.gouv.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728862AbfIIJSQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 05:18:16 -0400
+Received: from smtp-out.ssi.gouv.fr (localhost [127.0.0.1])
+        by smtp-out.ssi.gouv.fr (Postfix) with ESMTP id 15011D0006E;
+        Mon,  9 Sep 2019 11:18:14 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ssi.gouv.fr;
+        s=20160407; t=1568020694;
+        bh=Hd8aFaGZ8LQBGcIwXmzG1HYsGaSeWSLgJ8EpAZuMJ3A=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To:From:Subject;
+        b=iyZXFpZInIRGwmVAB22SLi6P+EoYbTo+dknvcERPzmCgHTyKGims0Y/Obn6CWg9N4
+         VBmU5dot5M8iovNNL18I4AaOWtrnmKcPIVp7Yt8k1lvVFfr+CmYeOQnQ/OuBH2NAB+
+         dH+A973s1mw+qVQ4VC/s/D6O2cwwpBf0AcGEX/P8si6kBidDZIkqqgLLUDOZ4eVrQk
+         kJbtssZZGlI9nW+ACQrAw0zXBuvVhmHHg62LeLbkRiOkbQzEYjQ1r1N0k0HZBot/DB
+         UbgddKG1L5STCziS4dmUnIQJQddzuUMLmI7puYWdU45MkbqYCvbh3QXrka0+6fjJXo
+         gMkCeV2jBj2mw==
+Subject: Re: [PATCH v2 1/5] fs: Add support for an O_MAYEXEC flag on
+ sys_open()
+To:     Andy Lutomirski <luto@amacapital.net>,
+        Jeff Layton <jlayton@kernel.org>
+CC:     Florian Weimer <fweimer@redhat.com>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
+        <linux-kernel@vger.kernel.org>, Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Eric Chiang <ericchiang@google.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
+        <kernel-hardening@lists.openwall.com>, <linux-api@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>
+References: <20190906152455.22757-1-mic@digikod.net>
+ <20190906152455.22757-2-mic@digikod.net>
+ <87ef0te7v3.fsf@oldenburg2.str.redhat.com>
+ <75442f3b-a3d8-12db-579a-2c5983426b4d@ssi.gouv.fr>
+ <f53ec45fd253e96d1c8d0ea6f9cca7f68afa51e3.camel@kernel.org>
+ <1fbf54f6-7597-3633-a76c-11c4b2481add@ssi.gouv.fr>
+ <5a59b309f9d0603d8481a483e16b5d12ecb77540.camel@kernel.org>
+ <D1212E06-773B-42B9-B7C3-C4C1C2A6111D@amacapital.net>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>
+Message-ID: <9e43ca3f-04c0-adba-1ab4-bbc8ed487934@ssi.gouv.fr>
+Date:   Mon, 9 Sep 2019 11:18:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 03ef1477-9a09-4ca5-a368-08d735064568
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Sep 2019 09:15:35.0864
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ddVU3XRWkmUVj9Mez4mFqr5LY6ADP8afiVlw83vf+FNhdxtlWzeQC9+QIDp7CAmb
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1419
+In-Reply-To: <D1212E06-773B-42B9-B7C3-C4C1C2A6111D@amacapital.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SSBhZ3JlZSB3aXRoIERhbmllbHMgYW5hbHlzaXMuDQoNCkl0IGxvb2tzIGxpa2UgdGhlIHByb2Js
-ZW0gaXMgc2ltcGx5IHRoYXQgUE0gdHVybnMgb2YgYSBibG9jayBiZWZvcmUgYWxsIA0Kd29yayBp
-cyBkb25lIG9uIHRoYXQgYmxvY2suDQoNCkhhdmUgeW91IG9wZW5lZCBhIGJ1ZyByZXBvcnQgeWV0
-PyBJZiBub3QgdGhlbiB0aGF0IHdvdWxkIGNlcnRhaW5seSBoZWxwIA0KY2F1c2UgaXQgaXMgcmVh
-bGx5IGhhcmQgdG8gZXh0cmFjdCBhbGwgbmVjZXNzYXJ5IGluZm9ybWF0aW9uIGZyb20gdGhhdCAN
-Cm1haWwgdGhyZWFkLg0KDQpSZWdhcmRzLA0KQ2hyaXN0aWFuLg0KDQpBbSAwOC4wOS4xOSB1bSAy
-MzoyNCBzY2hyaWViIE1pa2hhaWwgR2F2cmlsb3Y6DQo+IE9uIFRodSwgNSBTZXAgMjAxOSBhdCAx
-Mjo1OCwgRGFuaWVsIFZldHRlciA8ZGFuaWVsQGZmd2xsLmNoPiB3cm90ZToNCj4+IEkgdGhpbmsg
-dGhvc2UgZmVuY2VzIGFyZSBvbmx5IGVtaXR0ZWQgZm9yIENTLCBub3QgZGlzcGxheSByZWxhdGVk
-Lg0KPj4gQWRkaW5nIENocmlzdGlhbiBLw7ZuaWcuDQo+IE1vcmUgZnJlc2gga2VybmVsIGxvZyB3
-aXRoIDUuM1JDNyAtIHRoZSBpc3N1ZSBzdGlsbCBoYXBwZW5zLg0KPiBodHRwczovL3Bhc3RlYmlu
-LmNvbS90eXhrV0pZVg0KPg0KPg0KPiAtLQ0KPiBCZXN0IFJlZ2FyZHMsDQo+IE1pa2UgR2F2cmls
-b3YuDQo+DQo+IE9uIFRodSwgNSBTZXAgMjAxOSBhdCAxMjo1OCwgRGFuaWVsIFZldHRlciA8ZGFu
-aWVsQGZmd2xsLmNoPiB3cm90ZToNCj4+IE9uIFRodSwgU2VwIDUsIDIwMTkgYXQgMTI6MjcgQU0g
-TWlraGFpbCBHYXZyaWxvdg0KPj4gPG1pa2hhaWwudi5nYXZyaWxvdkBnbWFpbC5jb20+IHdyb3Rl
-Og0KPj4+IE9uIFdlZCwgNCBTZXAgMjAxOSBhdCAxMzozNywgRGFuaWVsIFZldHRlciA8ZGFuaWVs
-QGZmd2xsLmNoPiB3cm90ZToNCj4+Pj4gRXh0ZW5kIHlvdXIgYmFja3RyYWMgd2FybmluZyBzbGln
-aHRseSBsaWtlDQo+Pj4+DQo+Pj4+ICAgICAgICAgIFdBUk4ociwgIndlJ3JlIHN0dWNrIG9uIGZl
-bmNlICVwU1xuIiwgZmVuY2UtPm9wcyk7DQo+Pj4+DQo+Pj4+IEFsc28gYWRkaW5nIEhhcnJ5IGFu
-ZCBBbGV4LCBJJ20gbm90IHJlYWxseSB3b3JraW5nIG9uIGFtZGdwdSAuLi4NCj4+PiBbIDM1MTEu
-OTk4MzIwXSAtLS0tLS0tLS0tLS1bIGN1dCBoZXJlIF0tLS0tLS0tLS0tLS0NCj4+PiBbIDM1MTEu
-OTk4NzE0XSB3ZSdyZSBzdHVjayBvbiBmZW5jZQ0KPj4+IGFtZGdwdV9mZW5jZV9vcHMrMHgwLzB4
-ZmZmZmZmZmZmZmZmYzIyMCBbYW1kZ3B1XSQNCj4+IEkgdGhpbmsgdGhvc2UgZmVuY2VzIGFyZSBv
-bmx5IGVtaXR0ZWQgZm9yIENTLCBub3QgZGlzcGxheSByZWxhdGVkLg0KPj4gQWRkaW5nIENocmlz
-dGlhbiBLw7ZuaWcuDQo+PiAtRGFuaWVsDQo+Pg0KPj4+IFsgMzUxMS45OTg5OTFdIFdBUk5JTkc6
-IENQVTogMTAgUElEOiAxODExIGF0DQo+Pj4gZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1k
-Z3B1X2ZlbmNlLmM6MzMyDQo+Pj4gYW1kZ3B1X2ZlbmNlX3dhaXRfZW1wdHkrMHgxYzYvMHgyNDAg
-W2FtZGdwdV0NCj4+PiBbIDM1MTEuOTk5MDA5XSBNb2R1bGVzIGxpbmtlZCBpbjogcmZjb21tIGZ1
-c2UgeHRfQ0hFQ0tTVU0NCj4+PiB4dF9NQVNRVUVSQURFIG5mX25hdF90ZnRwIG5mX2Nvbm50cmFj
-a190ZnRwIHR1biBicmlkZ2Ugc3RwIGxsYw0KPj4+IG5mX2Nvbm50cmFja19uZXRiaW9zX25zIG5m
-X2Nvbm50cmFja19icm9hZGNhc3QgeHRfQ1QgaXA2dF9SRUpFQ1QNCj4+PiBuZl9yZWplY3RfaXB2
-NiBpcDZ0X3JwZmlsdGVyIGlwdF9SRUpFQ1QgbmZfcmVqZWN0X2lwdjQgeHRfY29ubnRyYWNrDQo+
-Pj4gZWJ0YWJsZV9uYXQgaXA2dGFibGVfbmF0IGlwNnRhYmxlX21hbmdsZSBpcDZ0YWJsZV9yYXcN
-Cj4+PiBpcDZ0YWJsZV9zZWN1cml0eSBpcHRhYmxlX25hdCBuZl9uYXQgaXB0YWJsZV9tYW5nbGUg
-aXB0YWJsZV9yYXcNCj4+PiBpcHRhYmxlX3NlY3VyaXR5IG5mX2Nvbm50cmFjayBuZl9kZWZyYWdf
-aXB2NiBuZl9kZWZyYWdfaXB2NCBsaWJjcmMzMmMNCj4+PiBpcF9zZXQgbmZuZXRsaW5rIGVidGFi
-bGVfZmlsdGVyIGVidGFibGVzIGlwNnRhYmxlX2ZpbHRlciBpcDZfdGFibGVzDQo+Pj4gaXB0YWJs
-ZV9maWx0ZXIgY21hYyBibmVwIHN1bnJwYyB2ZmF0IGZhdCBlZGFjX21jZV9hbWQga3ZtX2FtZA0K
-Pj4+IHNuZF9oZGFfY29kZWNfcmVhbHRlayBydHdwY2kgc25kX2hkYV9jb2RlY19nZW5lcmljIGt2
-bSBsZWR0cmlnX2F1ZGlvDQo+Pj4gc25kX2hkYV9jb2RlY19oZG1pIHV2Y3ZpZGVvIHJ0dzg4IHZp
-ZGVvYnVmMl92bWFsbG9jIHNuZF9oZGFfaW50ZWwNCj4+PiB2aWRlb2J1ZjJfbWVtb3BzIHZpZGVv
-YnVmMl92NGwyIGlycWJ5cGFzcyBzbmRfdXNiX2F1ZGlvIHNuZF9oZGFfY29kZWMNCj4+PiB2aWRl
-b2J1ZjJfY29tbW9uIGNyY3QxMGRpZl9wY2xtdWwgc25kX3VzYm1pZGlfbGliIGNyYzMyX3BjbG11
-bA0KPj4+IG1hYzgwMjExIHNuZF9yYXdtaWRpIHZpZGVvZGV2IHNuZF9oZGFfY29yZSBnaGFzaF9j
-bG11bG5pX2ludGVsIGJ0dXNiDQo+Pj4gc25kX2h3ZGVwIGJ0cnRsIHNuZF9zZXEgYnRiY20gYnRp
-bnRlbCBzbmRfc2VxX2RldmljZSBlZWVwY193bWkNCj4+PiBibHVldG9vdGggeHBhZCBqb3lkZXYg
-bWMgc25kX3BjbQ0KPj4+IFsgMzUxMS45OTkwNzZdICBhc3VzX3dtaSBmZl9tZW1sZXNzIGNmZzgw
-MjExIHNwYXJzZV9rZXltYXAgdmlkZW8NCj4+PiB3bWlfYm1vZiBlY2RoX2dlbmVyaWMgc25kX3Rp
-bWVyIGVjYyBzcDUxMDBfdGNvIGsxMHRlbXAgc25kIGkyY19waWl4NA0KPj4+IGNjcCByZmtpbGwg
-c291bmRjb3JlIGxpYmFyYzQgZ3Bpb19hbWRwdCBncGlvX2dlbmVyaWMgYWNwaV9jcHVmcmVxDQo+
-Pj4gYmluZm10X21pc2MgaXBfdGFibGVzIGhpZF9sb2dpdGVjaF9oaWRwcCBoaWRfbG9naXRlY2hf
-ZGogYW1kZ3B1DQo+Pj4gYW1kX2lvbW11X3YyIGdwdV9zY2hlZCB0dG0gZHJtX2ttc19oZWxwZXIg
-ZHJtIGNyYzMyY19pbnRlbCBpZ2IgZGNhDQo+Pj4gbnZtZSBpMmNfYWxnb19iaXQgbnZtZV9jb3Jl
-IHdtaSBwaW5jdHJsX2FtZA0KPj4+IFsgMzUxMS45OTkxMjZdIENQVTogMTAgUElEOiAxODExIENv
-bW06IFhvcmcgTm90IHRhaW50ZWQNCj4+PiA1LjMuMC0wLnJjNi5naXQyLjFjLmZjMzIueDg2XzY0
-ICMxDQo+Pj4gWyAzNTExLjk5OTEzMV0gSGFyZHdhcmUgbmFtZTogU3lzdGVtIG1hbnVmYWN0dXJl
-ciBTeXN0ZW0gUHJvZHVjdA0KPj4+IE5hbWUvUk9HIFNUUklYIFg0NzAtSSBHQU1JTkcsIEJJT1Mg
-MjcwMyAwOC8yMC8yMDE5DQo+Pj4gWyAzNTExLjk5OTI1M10gUklQOiAwMDEwOmFtZGdwdV9mZW5j
-ZV93YWl0X2VtcHR5KzB4MWM2LzB4MjQwIFthbWRncHVdDQo+Pj4gWyAzNTExLjk5OTI3OF0gQ29k
-ZTogZmUgZmYgZmYgMzEgYzAgYzMgNDggODkgZWYgZTggMzYgMjkgMDQgY2IgODQgYzANCj4+PiA3
-NCAwOCA0OCA4OSBlZiBlOCA4YSBhOSAyMSBjYiA0OCA4YiA3NSAwOCA0OCBjNyBjNyAyYyAxNiA4
-NiBjMCBlOCA4Mg0KPj4+IGI4IGI5IGNhIDwwZj4gMGIgYjggZWEgZmYgZmYgZmYgNWQgYzMgZTgg
-ZWMgNTcgYzMgY2EgODQgYzAgMGYgODUgNmYgZmYNCj4+PiBmZiBmZg0KPj4+IFsgMzUxMS45OTky
-ODJdIFJTUDogMDAxODpmZmZmYjljMDQxNzBmNzk4IEVGTEFHUzogMDAyMTAyODINCj4+PiBbIDM1
-MTEuOTk5Mjg4XSBSQVg6IDAwMDAwMDAwMDAwMDAwMDAgUkJYOiBmZmZmOGQyY2U1MjA1YTgwIFJD
-WDogMDAwMDAwMDAwMDAwMDAwNg0KPj4+IFsgMzUxMS45OTkyOTJdIFJEWDogMDAwMDAwMDAwMDAw
-MDAwNyBSU0k6IGZmZmY4ZDJjNWJlYTQwNzAgUkRJOiBmZmZmOGQyY2ZiNWQ5ZTAwDQo+Pj4gWyAz
-NTExLjk5OTI5Nl0gUkJQOiBmZmZmOGQyOGJlY2FlNDgwIFIwODogMDAwMDAzMzFiMzZmZDUwMyBS
-MDk6IDAwMDAwMDAwMDAwMDAwMDANCj4+PiBbIDM1MTEuOTk5Mjk5XSBSMTA6IDAwMDAwMDAwMDAw
-MDAwMDAgUjExOiAwMDAwMDAwMDAwMDAwMDAwIFIxMjogZmZmZjhkMmNlNTIwMDAwMA0KPj4+IFsg
-MzUxMS45OTkzMDNdIFIxMzogMDAwMDAwMDAwMDAwMDAwMCBSMTQ6IDAwMDAwMDAwMDAwMDAwMDAg
-UjE1OiBmZmZmOGQyY2UxNTQwMDAwDQo+Pj4gWyAzNTExLjk5OTMwOF0gRlM6ICAwMDAwN2Y1OWE1
-YmM2ZjAwKDAwMDApIEdTOmZmZmY4ZDJjZmI0MDAwMDAoMDAwMCkNCj4+PiBrbmxHUzowMDAwMDAw
-MDAwMDAwMDAwDQo+Pj4gWyAzNTExLjk5OTMxMV0gQ1M6ICAwMDEwIERTOiAwMDAwIEVTOiAwMDAw
-IENSMDogMDAwMDAwMDA4MDA1MDAzMw0KPj4+IFsgMzUxMS45OTkzMTVdIENSMjogMDAwMDExMDhi
-YzQ3NTk2MCBDUjM6IDAwMDAwMDA3NWJmMzIwMDAgQ1I0OiAwMDAwMDAwMDAwMzQwNmUwDQo+Pj4g
-WyAzNTExLjk5OTMxOV0gQ2FsbCBUcmFjZToNCj4+PiBbIDM1MTEuOTk5Mzk0XSAgYW1kZ3B1X3Bt
-X2NvbXB1dGVfY2xvY2tzKzB4NzAvMHg1ZjAgW2FtZGdwdV0NCj4+PiBbIDM1MTEuOTk5NTAzXSAg
-ZG1fcHBfYXBwbHlfZGlzcGxheV9yZXF1aXJlbWVudHMrMHgxYTgvMHgxYzAgW2FtZGdwdV0NCj4+
-PiBbIDM1MTEuOTk5NjA5XSAgZGNlMTJfdXBkYXRlX2Nsb2NrcysweGQ4LzB4MTEwIFthbWRncHVd
-DQo+Pj4gWyAzNTExLjk5OTcxMl0gIGRjX2NvbW1pdF9zdGF0ZSsweDQxNC8weDU5MCBbYW1kZ3B1
-XQ0KPj4+IFsgMzUxMS45OTk3MjVdICA/IGZpbmRfaGVsZF9sb2NrKzB4MzIvMHg5MA0KPj4+IFsg
-MzUxMS45OTk4MzJdICBhbWRncHVfZG1fYXRvbWljX2NvbW1pdF90YWlsKzB4ZDE4LzB4MWNmMCBb
-YW1kZ3B1XQ0KPj4+IFsgMzUxMS45OTk4NDRdICA/IHJlYWNxdWlyZV9oZWxkX2xvY2tzKzB4ZWQv
-MHgyMTANCj4+PiBbIDM1MTEuOTk5ODU5XSAgPyB0dG1fZXVfYmFja29mZl9yZXNlcnZhdGlvbisw
-eGE1LzB4MTYwIFt0dG1dDQo+Pj4gWyAzNTExLjk5OTg2Nl0gID8gZmluZF9oZWxkX2xvY2srMHgz
-Mi8weDkwDQo+Pj4gWyAzNTExLjk5OTg3Ml0gID8gZmluZF9oZWxkX2xvY2srMHgzMi8weDkwDQo+
-Pj4gWyAzNTExLjk5OTg4MV0gID8gX19sb2NrX2FjcXVpcmUrMHgyNDcvMHgxOTEwDQo+Pj4gWyAz
-NTExLjk5OTg5M10gID8gZmluZF9oZWxkX2xvY2srMHgzMi8weDkwDQo+Pj4gWyAzNTExLjk5OTkw
-MV0gID8gbWFya19oZWxkX2xvY2tzKzB4NTAvMHg4MA0KPj4+IFsgMzUxMS45OTk5MDddICA/IF9y
-YXdfc3Bpbl91bmxvY2tfaXJxKzB4MjkvMHg0MA0KPj4+IFsgMzUxMS45OTk5MTNdICA/IGxvY2tk
-ZXBfaGFyZGlycXNfb24rMHhmMC8weDE4MA0KPj4+IFsgMzUxMS45OTk5MTldICA/IF9yYXdfc3Bp
-bl91bmxvY2tfaXJxKzB4MjkvMHg0MA0KPj4+IFsgMzUxMS45OTk5MjRdICA/IHdhaXRfZm9yX2Nv
-bXBsZXRpb25fdGltZW91dCsweDc1LzB4MTkwDQo+Pj4gWyAzNTExLjk5OTk1Ml0gID8gY29tbWl0
-X3RhaWwrMHgzYy8weDcwIFtkcm1fa21zX2hlbHBlcl0NCj4+PiBbIDM1MTEuOTk5OTY2XSAgY29t
-bWl0X3RhaWwrMHgzYy8weDcwIFtkcm1fa21zX2hlbHBlcl0NCj4+PiBbIDM1MTEuOTk5OTc5XSAg
-ZHJtX2F0b21pY19oZWxwZXJfY29tbWl0KzB4ZTMvMHgxNTAgW2RybV9rbXNfaGVscGVyXQ0KPj4+
-IFsgMzUxMi4wMDAwMDJdICBkcm1fbW9kZV9hdG9taWNfaW9jdGwrMHg3OTMvMHg5YjAgW2RybV0N
-Cj4+PiBbIDM1MTIuMDAwMDE0XSAgPyBfX2xvY2tfYWNxdWlyZSsweDI0Ny8weDE5MTANCj4+PiBb
-IDM1MTIuMDAwMDQ0XSAgPyBkcm1fYXRvbWljX3NldF9wcm9wZXJ0eSsweGE1MC8weGE1MCBbZHJt
-XQ0KPj4+IFsgMzUxMi4wMDAwNjZdICBkcm1faW9jdGxfa2VybmVsKzB4YWEvMHhmMCBbZHJtXQ0K
-Pj4+IFsgMzUxMi4wMDAwODhdICBkcm1faW9jdGwrMHgyMDgvMHgzOTAgW2RybV0NCj4+PiBbIDM1
-MTIuMDAwMTA4XSAgPyBkcm1fYXRvbWljX3NldF9wcm9wZXJ0eSsweGE1MC8weGE1MCBbZHJtXQ0K
-Pj4+IFsgMzUxMi4wMDAxMjBdICA/IGxvY2tkZXBfaGFyZGlycXNfb24rMHhmMC8weDE4MA0KPj4+
-IFsgMzUxMi4wMDAyMDVdICBhbWRncHVfZHJtX2lvY3RsKzB4NDkvMHg4MCBbYW1kZ3B1XQ0KPj4+
-IFsgMzUxMi4wMDAyMTZdICBkb192ZnNfaW9jdGwrMHg0MTEvMHg3NTANCj4+PiBbIDM1MTIuMDAw
-MjI5XSAga3N5c19pb2N0bCsweDVlLzB4OTANCj4+PiBbIDM1MTIuMDAwMjM3XSAgX194NjRfc3lz
-X2lvY3RsKzB4MTYvMHgyMA0KPj4+IFsgMzUxMi4wMDAyNDJdICBkb19zeXNjYWxsXzY0KzB4NWMv
-MHhiMA0KPj4+IFsgMzUxMi4wMDAyNDldICBlbnRyeV9TWVNDQUxMXzY0X2FmdGVyX2h3ZnJhbWUr
-MHg0OS8weGJlDQo+Pj4gWyAzNTEyLjAwMDI1NF0gUklQOiAwMDMzOjB4N2Y1OWE2MDNkMDBiDQo+
-Pj4gWyAzNTEyLjAwMDI1OV0gQ29kZTogMGYgMWUgZmEgNDggOGIgMDUgN2QgOWUgMGMgMDAgNjQg
-YzcgMDAgMjYgMDAgMDANCj4+PiAwMCA0OCBjNyBjMCBmZiBmZiBmZiBmZiBjMyA2NiAwZiAxZiA0
-NCAwMCAwMCBmMyAwZiAxZSBmYSBiOCAxMCAwMCAwMA0KPj4+IDAwIDBmIDA1IDw0OD4gM2QgMDEg
-ZjAgZmYgZmYgNzMgMDEgYzMgNDggOGIgMGQgNGQgOWUgMGMgMDAgZjcgZDggNjQgODkNCj4+PiAw
-MSA0OA0KPj4+IFsgMzUxMi4wMDAyNjNdIFJTUDogMDAyYjowMDAwN2ZmYzQ5M2JjYzA4IEVGTEFH
-UzogMDAwMDAyNDYgT1JJR19SQVg6DQo+Pj4gMDAwMDAwMDAwMDAwMDAxMA0KPj4+IFsgMzUxMi4w
-MDAyNjddIFJBWDogZmZmZmZmZmZmZmZmZmZkYSBSQlg6IDAwMDA3ZmZjNDkzYmNjNTAgUkNYOiAw
-MDAwN2Y1OWE2MDNkMDBiDQo+Pj4gWyAzNTEyLjAwMDI3MV0gUkRYOiAwMDAwN2ZmYzQ5M2JjYzUw
-IFJTSTogMDAwMDAwMDBjMDM4NjRiYyBSREk6IDAwMDAwMDAwMDAwMDAwMGUNCj4+PiBbIDM1MTIu
-MDAwMjc1XSBSQlA6IDAwMDAwMDAwYzAzODY0YmMgUjA4OiAwMDAwNTVhYTYyZTQxZDAwIFIwOTog
-MDAwMDAwMDAwMDAwMDAwMQ0KPj4+IFsgMzUxMi4wMDAyNzhdIFIxMDogMDAwMDAwMDAwMDAwMDAw
-MSBSMTE6IDAwMDAwMDAwMDAwMDAyNDYgUjEyOiAwMDAwNTVhYTYxYTk5ZDAwDQo+Pj4gWyAzNTEy
-LjAwMDI4Ml0gUjEzOiAwMDAwMDAwMDAwMDAwMDBlIFIxNDogMDAwMDU1YWE2MjhmNzQzMCBSMTU6
-IDAwMDA1NWFhNjJlMzQ1NDANCj4+PiBbIDM1MTIuMDAwMjk3XSBpcnEgZXZlbnQgc3RhbXA6IDI1
-ODI4MzIzMg0KPj4+IFsgMzUxMi4wMDAzMDNdIGhhcmRpcnFzIGxhc3QgIGVuYWJsZWQgYXQgKDI1
-ODI4MzIzMSk6DQo+Pj4gWzxmZmZmZmZmZjhiMTcwYmViPl0gY29uc29sZV91bmxvY2srMHg0NmIv
-MHg1ZDANCj4+PiBbIDM1MTIuMDAwMzA5XSBoYXJkaXJxcyBsYXN0IGRpc2FibGVkIGF0ICgyNTgy
-ODMyMzIpOg0KPj4+IFs8ZmZmZmZmZmY4YjAwMzhkYT5dIHRyYWNlX2hhcmRpcnFzX29mZl90aHVu
-aysweDFhLzB4MjANCj4+PiBbIDM1MTIuMDAwMzE0XSBzb2Z0aXJxcyBsYXN0ICBlbmFibGVkIGF0
-ICgyNTgyODI0NDgpOg0KPj4+IFs8ZmZmZmZmZmY4YmUwMDM1ZD5dIF9fZG9fc29mdGlycSsweDM1
-ZC8weDQ1ZA0KPj4+IFsgMzUxMi4wMDAzMTldIHNvZnRpcnFzIGxhc3QgZGlzYWJsZWQgYXQgKDI1
-ODI4MjQxMyk6DQo+Pj4gWzxmZmZmZmZmZjhiMGYxZTU3Pl0gaXJxX2V4aXQrMHhmNy8weDEwMA0K
-Pj4+IFsgMzUxMi4wMDAzMjNdIC0tLVsgZW5kIHRyYWNlIDU1ZWQwYzgwYjk1YWVmOTkgXS0tLQ0K
-Pj4+DQo+Pj4gaHR0cHM6Ly9wYXN0ZWJpbi5jb20vRGZxVkdEZ2MNCj4+DQo+Pg0KPj4gLS0NCj4+
-IERhbmllbCBWZXR0ZXINCj4+IFNvZnR3YXJlIEVuZ2luZWVyLCBJbnRlbCBDb3Jwb3JhdGlvbg0K
-Pj4gKzQxICgwKSA3OSAzNjUgNTcgNDggLSBodHRwOi8vYmxvZy5mZndsbC5jaA0KDQo=
+
+On 06/09/2019 20:41, Andy Lutomirski wrote:
+>
+>
+>> On Sep 6, 2019, at 11:38 AM, Jeff Layton <jlayton@kernel.org> wrote:
+>>
+>>> On Fri, 2019-09-06 at 19:14 +0200, Micka=C3=ABl Sala=C3=BCn wrote:
+>>>> On 06/09/2019 18:48, Jeff Layton wrote:
+>>>>> On Fri, 2019-09-06 at 18:06 +0200, Micka=C3=ABl Sala=C3=BCn wrote:
+>>>>>> On 06/09/2019 17:56, Florian Weimer wrote:
+>>>>>> Let's assume I want to add support for this to the glibc dynamic loa=
+der,
+>>>>>> while still being able to run on older kernels.
+>>>>>>
+>>>>>> Is it safe to try the open call first, with O_MAYEXEC, and if that f=
+ails
+>>>>>> with EINVAL, try again without O_MAYEXEC?
+>>>>>
+>>>>> The kernel ignore unknown open(2) flags, so yes, it is safe even for
+>>>>> older kernel to use O_MAYEXEC.
+>>>>>
+>>>>
+>>>> Well...maybe. What about existing programs that are sending down bogus
+>>>> open flags? Once you turn this on, they may break...or provide a way t=
+o
+>>>> circumvent the protections this gives.
+>>>
+>>> Well, I don't think we should nor could care about bogus programs that
+>>> do not conform to the Linux ABI.
+>>>
+>>
+>> But they do conform. The ABI is just undefined here. Unknown flags are
+>> ignored so we never really know if $random_program may be setting them.
+>>
+>>>> Maybe this should be a new flag that is only usable in the new openat2=
+()
+>>>> syscall that's still under discussion? That syscall will enforce that
+>>>> all flags are recognized. You presumably wouldn't need the sysctl if y=
+ou
+>>>> went that route too.
+>>>
+>>> Here is a thread about a new syscall:
+>>> https://lore.kernel.org/lkml/1544699060.6703.11.camel@linux.ibm.com/
+>>>
+>>> I don't think it fit well with auditing nor integrity. Moreover using
+>>> the current open(2) behavior of ignoring unknown flags fit well with th=
+e
+>>> usage of O_MAYEXEC (because it is only a hint to the kernel about the
+>>> use of the *opened* file).
+>>>
+>>
+>> The fact that open and openat didn't vet unknown flags is really a bug.
+>>
+>> Too late to fix it now, of course, and as Aleksa points out, we've
+>> worked around that in the past. Now though, we have a new openat2
+>> syscall on the horizon. There's little need to continue these sorts of
+>> hacks.
+>>
+>> New open flags really have no place in the old syscalls, IMO.
+>>
+>>>> Anyone that wants to use this will have to recompile anyway. If the
+>>>> kernel doesn't support openat2 or if the flag is rejected then you kno=
+w
+>>>> that you have no O_MAYEXEC support and can decide what to do.
+>>>
+>>> If we want to enforce a security policy, we need to either be the syste=
+m
+>>> administrator or the distro developer. If a distro ship interpreters
+>>> using this flag, we don't need to recompile anything, but we need to be
+>>> able to control the enforcement according to the mount point
+>>> configuration (or an advanced MAC, or an IMA config). I don't see why a=
+n
+>>> userspace process should check if this flag is supported or not, it
+>>> should simply use it, and the sysadmin will enable an enforcement if it
+>>> makes sense for the whole system.
+>>>
+>>
+>> A userland program may need to do other risk mitigation if it sets
+>> O_MAYEXEC and the kernel doesn't recognize it.
+>>
+>> Personally, here's what I'd suggest:
+>>
+>> - Base this on top of the openat2 set
+>> - Change it that so that openat2() files are non-executable by default. =
+Anyone wanting to do that needs to set O_MAYEXEC or upgrade the fd somehow.
+>> - Only have the openat2 syscall pay attention to O_MAYEXEC. Let open and=
+ openat continue ignoring the new flag.
+>>
+>> That works around a whole pile of potential ABI headaches. Note that
+>> we'd need to make that decision before the openat2 patches are merged.
+>>
+>> Even better would be to declare the new flag in some openat2-only flag
+>> space, so there's no confusion about it being supported by legacy open
+>> calls.
+>>
+>> If glibc wants to implement an open -> openat2 wrapper in userland
+>> later, it can set that flag in the wrapper implicitly to emulate the old
+>> behavior.
+>>
+>> Given that you're going to have to recompile software to take advantage
+>> of this anyway, what's the benefit to changing legacy syscalls?
+>>
+>>>>>> Or do I risk disabling this security feature if I do that?
+>>>>>
+>>>>> It is only a security feature if the kernel support it, otherwise it =
+is
+>>>>> a no-op.
+>>>>>
+>>>>
+>>>> With a security feature, I think we really want userland to aware of
+>>>> whether it works.
+>>>
+>>> If userland would like to enforce something, it can already do it
+>>> without any kernel modification. The goal of the O_MAYEXEC flag is to
+>>> enable the kernel, hence sysadmins or system designers, to enforce a
+>>> global security policy that makes sense.
+>>>
+>>
+>> I don't see how this helps anything if you can't tell whether the kernel
+>> recognizes the damned thing. Also, our track record with global sysctl
+>> switches like this is pretty poor. They're an administrative headache as
+>> well as a potential attack vector.
+>
+> I tend to agree. The sysctl seems like it=E2=80=99s asking for trouble. I=
+ can see an ld.so.conf option to turn this thing off making sense.
+
+The sysctl is required to enable the adoption of this flag without
+breaking existing systems. Current systems may have "noexec" on mount
+points containing scripts. Without giving the ability to the sysadmin to
+control that behavior, updating to a newer version of an interpreter
+using O_MAYEXEC may break such systems.
+
+How would you do this with ld.so.conf ?
+
+
+--
+Micka=C3=ABl Sala=C3=BCn
+
+Les donn=C3=A9es =C3=A0 caract=C3=A8re personnel recueillies et trait=C3=A9=
+es dans le cadre de cet =C3=A9change, le sont =C3=A0 seule fin d=E2=80=99ex=
+=C3=A9cution d=E2=80=99une relation professionnelle et s=E2=80=99op=C3=A8re=
+nt dans cette seule finalit=C3=A9 et pour la dur=C3=A9e n=C3=A9cessaire =C3=
+=A0 cette relation. Si vous souhaitez faire usage de vos droits de consulta=
+tion, de rectification et de suppression de vos donn=C3=A9es, veuillez cont=
+acter contact.rgpd@sgdsn.gouv.fr. Si vous avez re=C3=A7u ce message par err=
+eur, nous vous remercions d=E2=80=99en informer l=E2=80=99exp=C3=A9diteur e=
+t de d=C3=A9truire le message. The personal data collected and processed du=
+ring this exchange aims solely at completing a business relationship and is=
+ limited to the necessary duration of that relationship. If you wish to use=
+ your rights of consultation, rectification and deletion of your data, plea=
+se contact: contact.rgpd@sgdsn.gouv.fr. If you have received this message i=
+n error, we thank you for informing the sender and destroying the message.
