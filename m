@@ -2,172 +2,101 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E41E9C49ED4
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4D3C00307
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC3F521920
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:07:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F4472089F
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:08:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="v8w3omLd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zK6YC8uR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389593AbfIIJHH (ORCPT
+        id S2389650AbfIIJI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 05:07:07 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:32992 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727674AbfIIJHG (ORCPT
+        Mon, 9 Sep 2019 05:08:58 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39406 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389597AbfIIJI5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 05:07:06 -0400
-Received: by mail-ed1-f67.google.com with SMTP id o9so12297560edq.0
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 02:07:04 -0700 (PDT)
+        Mon, 9 Sep 2019 05:08:57 -0400
+Received: by mail-wm1-f66.google.com with SMTP id q12so13704245wmj.4
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 02:08:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4SKyZYA96ZSRssF5bkYvn8/ZaoQgr/75nnF3v6r+aa4=;
-        b=v8w3omLdQptz1DFzG6nBTgRTann5rTwOgCIpzFAUG6tuIXQysQUnfXsX6/y/3pY3P9
-         uuS7yln7izn8sa95u0TM8CxgbGe80u+X7t+BlonTv/Ols4bkZ2vzfkF1DV9YLxLMbFWT
-         xMTJREdPJWH3jVZBD9E+ZKhbm9fxBa7VvxrMdRD31hii4MCogV1JmJclv2q1d2hOR8mU
-         ZmP3pZ6SwqNXdDC1we1lskq5l3t193Mkb/3/NHR7WEDq49Askf9VlLY7UIB/Uu8JTBTS
-         Nb6KVgXuECh0+jAIrDzxGYdOgJP/buaC0u2KcFllDTZyMTRwGgl/GCSf7CPvpXRD1ygX
-         8PnA==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+4BP5T9F1nQ04WHnHdo2p8zuW4F9kfRfYy2Oe7UAEX0=;
+        b=zK6YC8uR+gx2gtTbPZfrQvjTvhixWiVL06+lDRgRpep0OWa0qLpWHztn4WRtplHEyU
+         dQOdL99eUOl5HZrIxKhvz8dfoCAlkABvDPcWGJE4uSy83Zzmn2NfKPYVslAzh+QfpUWo
+         ybimlvKx5VDA92w9wUl/peF69vLGiurOdeQZruQLOv3G8a2aBXlxYz3yJueWUCk8pfF2
+         Fthtj+0kBNhsE8S2dvO2H6qCN7GXHeb46x6it+GSFJAJRgl25vEPcmAeyi6H913Yb/tY
+         DggHN5cjUxx6A+/nup96gQwTecH8lo3M6h8gbAJqjOac7MddbSYz9kNPcQ/LDv3A14BP
+         DNFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4SKyZYA96ZSRssF5bkYvn8/ZaoQgr/75nnF3v6r+aa4=;
-        b=d0BpUymTU7y0ByrVL5mOoDd8h13LZEqUyzcpB3AIFY1rKmQ3Dz1+zza/MjY2QGdVoL
-         vu4stewUeIXJSqJc+dPSxIt4mzdGA3luTEsGVEWnGl9Tt0+TB6/xw86DNesTPnuQ5Aff
-         bS4m0S3Uhtjawi3iVuLV1gACZbPYCj1mANjJd2X/NHfEqOvqxdebYnJbOgOKS+b3VePR
-         bH8ulaHkaxv0D5rXk9YFnfIPipp/OCdKlDF/QouFtMTZy7E0eHs2e3e8vB2oTIz2PU4x
-         C8uJ2tzi2e76+QWExXNE3cus2cnI2czYaj3VsT1de8ElClzucp22q1d4R3Rqnh0SvA9D
-         IDpA==
-X-Gm-Message-State: APjAAAXzXP2c70rZYG7xOvqO2DJdJS1OXB5KVV20bUI4EfRAZtWnSzsX
-        2NiSB+bxRyOEvLWq5K0rpo+Tog==
-X-Google-Smtp-Source: APXvYqyy8JsEYXIXPZAEHqSPlkNj11nYxwtRGAlvmsF3QvGEid/LtADgJQP/uhTJkNkMTa1lQpdZXQ==
-X-Received: by 2002:a17:906:af98:: with SMTP id mj24mr18377781ejb.199.1568020023846;
-        Mon, 09 Sep 2019 02:07:03 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id t21sm1658127ejs.37.2019.09.09.02.07.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 09 Sep 2019 02:07:03 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 94FB410022D; Mon,  9 Sep 2019 12:07:01 +0300 (+03)
-Date:   Mon, 9 Sep 2019 12:07:01 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     virtio-dev@lists.oasis-open.org, kvm@vger.kernel.org,
-        mst@redhat.com, catalin.marinas@arm.com, david@redhat.com,
-        dave.hansen@intel.com, linux-kernel@vger.kernel.org,
-        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org, osalvador@suse.de,
-        yang.zhang.wz@gmail.com, pagupta@redhat.com,
-        konrad.wilk@oracle.com, nitesh@redhat.com, riel@surriel.com,
-        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        ying.huang@intel.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com, fengguang.wu@intel.com,
-        alexander.h.duyck@linux.intel.com, kirill.shutemov@linux.intel.com
-Subject: Re: [PATCH v9 1/8] mm: Add per-cpu logic to page shuffling
-Message-ID: <20190909090701.7ebz4foxyu3rxzvc@box>
-References: <20190907172225.10910.34302.stgit@localhost.localdomain>
- <20190907172512.10910.74435.stgit@localhost.localdomain>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+4BP5T9F1nQ04WHnHdo2p8zuW4F9kfRfYy2Oe7UAEX0=;
+        b=RC51lR2PC6xgkcOl/+zmgsVz9g8FvYsY0wFhlZH0WyhKtSih6PpNluZlDYwKlhifo+
+         8295JASD7t7IWVdKZU0BWlv/MqUe+ETGaoS5QQ9aQW72B1m98Oe3oYwA6gcAOn+n/mLO
+         Zsy/y12ac9OWjIiWQ+P9PxJzi5P71ZZBUuZTBNLZie2oeotwKJNe23mz3kfWD+EByOut
+         3uR872SKwLhYfV1cGUp0XSUmxY6ElvoF/R4mNEL4+cgqBAG9nEbafgB8yjC6K0Easesz
+         zbLYPDJ+dy5xTg+QbepfNux1amBbxy6kTf9UhKya+9r3w07zLmCRbofZ7xwYKj0KfYNH
+         kZ6g==
+X-Gm-Message-State: APjAAAUbNPPzs/jdgGhs3QAiY2HRwmVWdtwb36XMfjchurZBDxBDadXs
+        T5K0Lmyza3bDTz4fSC8WbUb4DA==
+X-Google-Smtp-Source: APXvYqy4be4Dr2Cov1HiM8TXxugAZyZo8P+mQ23GodeQvo7+IfiZG3JqP+j/0SxUZhFRj9JeyQm2fA==
+X-Received: by 2002:a05:600c:228a:: with SMTP id 10mr18757070wmf.62.1568020134357;
+        Mon, 09 Sep 2019 02:08:54 -0700 (PDT)
+Received: from localhost.localdomain (69.red-83-35-113.dynamicip.rima-tde.net. [83.35.113.69])
+        by smtp.gmail.com with ESMTPSA id o12sm14734488wmh.43.2019.09.09.02.08.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 09 Sep 2019 02:08:53 -0700 (PDT)
+From:   Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+To:     jorge.ramirez-ortiz@linaro.org, agross@kernel.org,
+        jassisinghbrar@gmail.com
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bjorn.andersson@linaro.org, sboyd@kernel.org
+Subject: [PATCH v2] mailbox: qcom-apcs: fix max_register value
+Date:   Mon,  9 Sep 2019 11:08:50 +0200
+Message-Id: <20190909090850.10822-1-jorge.ramirez-ortiz@linaro.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190907172512.10910.74435.stgit@localhost.localdomain>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 07, 2019 at 10:25:12AM -0700, Alexander Duyck wrote:
-> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> 
-> Change the logic used to generate randomness in the suffle path so that we
+The mailbox length is 0x1000 hence the max_register value is 0xFFC.
 
-Typo.
+Fixes: c6a8b171ca8e ("mailbox: qcom: Convert APCS IPC driver to use
+regmap")
+Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+---
 
-> can avoid cache line bouncing. The previous logic was sharing the offset
-> and entropy word between all CPUs. As such this can result in cache line
-> bouncing and will ultimately hurt performance when enabled.
-> 
-> To resolve this I have moved to a per-cpu logic for maintaining a unsigned
-> long containing some amount of bits, and an offset value for which bit we
-> can use for entropy with each call.
-> 
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> ---
->  mm/shuffle.c |   33 +++++++++++++++++++++++----------
->  1 file changed, 23 insertions(+), 10 deletions(-)
-> 
-> diff --git a/mm/shuffle.c b/mm/shuffle.c
-> index 3ce12481b1dc..9ba542ecf335 100644
-> --- a/mm/shuffle.c
-> +++ b/mm/shuffle.c
-> @@ -183,25 +183,38 @@ void __meminit __shuffle_free_memory(pg_data_t *pgdat)
->  		shuffle_zone(z);
->  }
->  
-> +struct batched_bit_entropy {
-> +	unsigned long entropy_bool;
-> +	int position;
-> +};
-> +
-> +static DEFINE_PER_CPU(struct batched_bit_entropy, batched_entropy_bool);
-> +
->  void add_to_free_area_random(struct page *page, struct free_area *area,
->  		int migratetype)
->  {
-> -	static u64 rand;
-> -	static u8 rand_bits;
-> +	struct batched_bit_entropy *batch;
-> +	unsigned long entropy;
-> +	int position;
->  
->  	/*
-> -	 * The lack of locking is deliberate. If 2 threads race to
-> -	 * update the rand state it just adds to the entropy.
-> +	 * We shouldn't need to disable IRQs as the only caller is
-> +	 * __free_one_page and it should only be called with the zone lock
-> +	 * held and either from IRQ context or with local IRQs disabled.
->  	 */
-> -	if (rand_bits == 0) {
-> -		rand_bits = 64;
-> -		rand = get_random_u64();
-> +	batch = raw_cpu_ptr(&batched_entropy_bool);
-> +	position = batch->position;
-> +
-> +	if (--position < 0) {
-> +		batch->entropy_bool = get_random_long();
-> +		position = BITS_PER_LONG - 1;
->  	}
->  
-> -	if (rand & 1)
-> +	batch->position = position;
-> +	entropy = batch->entropy_bool;
-> +
-> +	if (1ul & (entropy >> position))
+ v2: added Fixes tag
+ 
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Maybe something like this would be more readble:
-
-	if (entropy & BIT(position))
-
->  		add_to_free_area(page, area, migratetype);
->  	else
->  		add_to_free_area_tail(page, area, migratetype);
-> -	rand_bits--;
-> -	rand >>= 1;
->  }
-> 
-> 
-
+diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+index 705e17a5479c..e5d6b1b70441 100644
+--- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
++++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+@@ -28,7 +28,7 @@ static const struct regmap_config apcs_regmap_config = {
+ 	.reg_bits = 32,
+ 	.reg_stride = 4,
+ 	.val_bits = 32,
+-	.max_register = 0x1000,
++	.max_register = 0xFFC,
+ 	.fast_io = true,
+ };
+ 
 -- 
- Kirill A. Shutemov
+2.23.0
+
