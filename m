@@ -2,107 +2,118 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B26C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4EE4C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:58:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8C3921479
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:49:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2D16218DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:58:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568069881;
+	bh=ieeg6N6SsihmRHhWQlCf1jmFz+Sgb4qasTIFr0xv6gA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=L+bP4cFtA4HTr7zzFK5qtKi845JYZhQi0h1qFiUT/4hDA2r+KPMbEbbW2gGX0+L4D
+	 4dZm7Rts/Lay4pV9PC0a6PrJqSru60MxuWPgwnTbIKCf4nzZDeLPTWUbYUcSpy8H0V
+	 fzF5VZ4an5fASKOlhloU9jpRQLfkg9ZPBme/jc7M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390174AbfIIWt4 (ORCPT
+        id S1729206AbfIIW6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 18:49:56 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32358 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728945AbfIIWt4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 18:49:56 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x89Mmn9I178443;
-        Mon, 9 Sep 2019 18:49:21 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2uwxaatkgf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 09 Sep 2019 18:49:21 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x89MjHil016031;
-        Mon, 9 Sep 2019 22:49:21 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma01wdc.us.ibm.com with ESMTP id 2uv466x1k8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 09 Sep 2019 22:49:20 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x89MnJIl52691376
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 9 Sep 2019 22:49:19 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3D0197805E;
-        Mon,  9 Sep 2019 22:49:19 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7208E7805C;
-        Mon,  9 Sep 2019 22:49:16 +0000 (GMT)
-Received: from Juliets-MBP.attlocal.net (unknown [9.85.151.142])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Mon,  9 Sep 2019 22:49:16 +0000 (GMT)
-Subject: Re: [PATCH] net/ibmvnic: Fix missing { in __ibmvnic_reset
-To:     Michal Suchanek <msuchanek@suse.de>, netdev@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Falcon <tlfalcon@linux.ibm.com>,
-        John Allen <jallen@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20190909204451.7929-1-msuchanek@suse.de>
-From:   Juliet Kim <julietk@linux.vnet.ibm.com>
-Message-ID: <953ee49d-5d2f-90d2-bc6f-b738c0718c6f@linux.vnet.ibm.com>
-Date:   Mon, 9 Sep 2019 17:49:12 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
+        Mon, 9 Sep 2019 18:58:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58942 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726393AbfIIW6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 18:58:00 -0400
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0040E21D6C
+        for <linux-kernel@vger.kernel.org>; Mon,  9 Sep 2019 22:57:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568069879;
+        bh=ieeg6N6SsihmRHhWQlCf1jmFz+Sgb4qasTIFr0xv6gA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=wOkecgI6RV5u48hhm18hrdmLwRuIBtqKQvwSlxoVggDjsyRThZrK66u2E93WU72eJ
+         18g74to+p/vEDPnTM1uZ8MNegAtf84hOMyg1KFpY26vJO32kjrQeq/7ummR/JH0Acw
+         A3diqOt9xrXDecZUJaH1VITNcNHmEZg4Nc7KDxjc=
+Received: by mail-wr1-f48.google.com with SMTP id q17so11588809wrx.10
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 15:57:58 -0700 (PDT)
+X-Gm-Message-State: APjAAAXAEg14awcH+k1HbmTgI3CE4AR+rYiQeE8Ne2ep/dRPtOZsRXkc
+        5MiDVYlbdrGhHFeYu4E8n6myVC+UH9hieGF5RxtCqw==
+X-Google-Smtp-Source: APXvYqwkK4QYU7FXrwSlH8ZO670dJg2wunQHvsqAekznrEWS6XGJSzG1Dw13PoaDb1OrneVUtTBLg8BHjXXLm7S3QWQ=
+X-Received: by 2002:adf:dcc4:: with SMTP id x4mr13767482wrm.221.1568069877467;
+ Mon, 09 Sep 2019 15:57:57 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190909204451.7929-1-msuchanek@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-09_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909090214
+References: <cover.1567126741.git.luto@kernel.org> <20190909094230.GB27626@amd>
+In-Reply-To: <20190909094230.GB27626@amd>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 9 Sep 2019 15:57:46 -0700
+X-Gmail-Original-Message-ID: <CALCETrXfDSjgNieM3Q9bVH-7gAePXT=SXWxvzOsyb8xp_2ymQA@mail.gmail.com>
+Message-ID: <CALCETrXfDSjgNieM3Q9bVH-7gAePXT=SXWxvzOsyb8xp_2ymQA@mail.gmail.com>
+Subject: Re: [PATCH 0/7] Rework random blocking
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Andy Lutomirski <luto@kernel.org>, Theodore Tso <tytso@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/9/19 3:44 PM, Michal Suchanek wrote:
-> Commit 1c2977c09499 ("net/ibmvnic: free reset work of removed device from queue")
-> adds a } without corresponding { causing build break.
+On Mon, Sep 9, 2019 at 2:42 AM Pavel Machek <pavel@ucw.cz> wrote:
 >
-> Fixes: 1c2977c09499 ("net/ibmvnic: free reset work of removed device from queue")
-> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-
-Reviewed-by: Juliet Kim <julietk@linux.vnet.ibm.com>
-
-> ---
->  drivers/net/ethernet/ibm/ibmvnic.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> On Thu 2019-08-29 18:11:35, Andy Lutomirski wrote:
+> > This makes two major semantic changes to Linux's random APIs:
+> >
+> > It adds getentropy(..., GRND_INSECURE).  This causes getentropy to
+> > always return *something*.  There is no guarantee whatsoever that
+> > the result will be cryptographically random or even unique, but the
+> > kernel will give the best quality random output it can.  The name is
+> > a big hint: the resulting output is INSECURE.
+> >
+> > The purpose of this is to allow programs that genuinely want
+> > best-effort entropy to get it without resorting to /dev/urandom.
+> > Plenty of programs do this because they need to do *something*
+> > during boot and they can't afford to wait.  Calling it "INSECURE" is
+> > probably the best we can do to discourage using this API for things
+> > that need security.
+> >
+> > This series also removes the blocking pool and makes /dev/random
+> > work just like getentropy(..., 0) and makes GRND_RANDOM a no-op.  I
+> > believe that Linux's blocking pool has outlived its usefulness.
+> > Linux's CRNG generates output that is good enough to use even for
+> > key generation.  The blocking pool is not stronger in any material
+> > way, and keeping it around requires a lot of infrastructure of
+> > dubious value.
 >
-> diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
-> index 6644cabc8e75..5cb55ea671e3 100644
-> --- a/drivers/net/ethernet/ibm/ibmvnic.c
-> +++ b/drivers/net/ethernet/ibm/ibmvnic.c
-> @@ -1984,7 +1984,7 @@ static void __ibmvnic_reset(struct work_struct *work)
->  	rwi = get_next_rwi(adapter);
->  	while (rwi) {
->  		if (adapter->state == VNIC_REMOVING ||
-> -		    adapter->state == VNIC_REMOVED)
-> +		    adapter->state == VNIC_REMOVED) {
->  			kfree(rwi);
->  			rc = EBUSY;
->  			break;
+> Could you give some more justification? If crng is good enough for
+> you, you can use /dev/urandom...
+
+Take a look at the diffstat.  The random code is extremely security
+sensitive, and it's made considerably more complicated by the need to
+support the blocking semantics for /dev/random.  My primary argument
+is that there is no real reason for the kernel to continue to support
+it.
+
+>
+>
+> are
+>
+> > This series should not break any existing programs.  /dev/urandom is
+> > unchanged.  /dev/random will still block just after booting, but it
+> > will block less than it used to.  getentropy() with existing flags
+> > will return output that is, for practical purposes, just as strong
+> > as before.
+>
+> So what is the exact semantic of /dev/random after your change?
+
+Reads return immediately if the CRNG is initialized, i.e reads return
+immediately if and only if getentropy(..., 0) would succeed.
+Otherwise reads block.
+
+--Andy
