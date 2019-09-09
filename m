@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC602C00307
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 03:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02220C433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 03:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B529B2196E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 03:33:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF32221A4C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 03:33:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q7Y9ASEg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bf60jgc9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387606AbfIIDdM (ORCPT
+        id S2387663AbfIIDdP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 23:33:12 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39621 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733222AbfIIDdM (ORCPT
+        Sun, 8 Sep 2019 23:33:15 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:43884 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387585AbfIIDdN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 23:33:12 -0400
-Received: by mail-lj1-f193.google.com with SMTP id j16so11227479ljg.6
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 20:33:10 -0700 (PDT)
+        Sun, 8 Sep 2019 23:33:13 -0400
+Received: by mail-lf1-f65.google.com with SMTP id q27so9259623lfo.10
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 20:33:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=sP3G2taks07JVJjYmcizqiN6Piw+vO0AmnF6NGNG57Y=;
-        b=Q7Y9ASEgdlE1BzyD/aFBl+4+vZ8213IHtDuRGgHumulm16aQ2cSUD2/WZYVSV/xdbu
-         X85Rcf6ekeLdErCj64l1aZ2QyaZM6/byjFRUX9a6EwVp23vwi+aCQ6z11ttGx6Vbp4Wg
-         hRL/Q4aRr4LYYZ5iykr/xGbTRGdPFS5pjsi1mZB4mi6xF5MT5FuPhDeNj8xAXdJvl2gZ
-         oxSRgfRUnYnR4RsT1c6O3I5ZXv3soxAmPmGMpnpHcPXWKQqPEUyzLYViVhsEXBwurnGs
-         cpIQq5u5YCfkVPyRi4dVhVDaD/NjIWhpPPu2l9tSh8AzHYpmeKHQW4p+2hlLRJbkTqqm
-         bEKA==
+        bh=/o6vLt7GIbUQdyckyHWDfK4HG927PsLZ3wVdNVov93Q=;
+        b=bf60jgc9U+mH+vWLl1PtoV3ZBpkdYgZmpnb6Hxza20mkVEtbxDDCQCb7zsC4VideSS
+         6vBlLuoL1JC9uOQy8Ta4GBER3Vis+jboLzFPDoo87GAlUNunSy1PckguIUdby4Th1KNl
+         jeD6mgwB3OoyhZ9rGWhAzSvmzLll6oP6pgviSghQo4I+B/iQijI4dRz1wKHwFUwwd3sR
+         lZqPqRLkCkBmI/HGD4VEa98U+A1YX7iUWCIZ3fuU0c8d+ns1NsWP5WMtLQZxEnaalnTJ
+         RIFnw13UjnTWXN/6O2sheajLtEfcRD+WJ8TnL7VZdZtUvdiuR3EW8dHtv7r3EwV2Z65z
+         qBUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=sP3G2taks07JVJjYmcizqiN6Piw+vO0AmnF6NGNG57Y=;
-        b=p1rqxULgIpDuhoxtHNrxUBZmBnCawr0s1+wZ3QZbpu1o6ZMOr6ZuilR2a1oypnX3Q/
-         5XfVHZqYZnIbCaD1p2qtJBuJX03jtA1pff0KBDmvgS7r8n+m+ricEdPDPmVtoHQKbDmo
-         tJkSqgGhAPjr6hEIn/T55vUaT413V/thX7vYvUC8OGFTQNP8Dx24vZKXrImLxx+y726y
-         O9YCw21IRZAWVWeBMt/92PvVgWvnvs3JMdl/WSIaW+7i7yeX3NVKIyuO/uCgxeSYEzPc
-         GAajEVG6Wan+5Xug9aSd6s7Tn/ixs230F3Iq8cjoV+IC6/F5qvxQXFKilqrFJvnfLqRc
-         Zm3g==
-X-Gm-Message-State: APjAAAVtl+EKeREFCjEwLfs8cZxe7jWoab7neB/21V1DpomVjkTxbSFF
-        MxoLcqr0JSUs3mbcDin6q5g=
-X-Google-Smtp-Source: APXvYqzF/aYZad0cwPAmeAVQ6b9F18Fz3nWgXR4xXVc7W7OTH0PM18U7UEws1Om9fL+N2HXAALVSlQ==
-X-Received: by 2002:a2e:5418:: with SMTP id i24mr14230917ljb.126.1567999989944;
-        Sun, 08 Sep 2019 20:33:09 -0700 (PDT)
+        bh=/o6vLt7GIbUQdyckyHWDfK4HG927PsLZ3wVdNVov93Q=;
+        b=D2V0xT4hCVXyrC7+ARsu/wLpWdgXEZBTtkJ4Ov5bBMXWAJYg3w0symahdqXuN2boR1
+         5Fh225BxupkIk7NfrVqeuvT8S4YC8Dro2nGltNK6BDwOyD41e4yRsfHr3WYk5OqKFQQ2
+         xZi/7AEt5a7b6FRT46C7/HI7yw5w65hAHIBnc4iEVN02GhvoJLQ9agaWKX1nXZSNcwoQ
+         5UOdRwuZ04UEnwueKO544MGZ8MVauv8mJjcct9q8s8WTeQy4zCAlliTijwxnmdMQSZH+
+         X03szMPi/5XqFrRxCdk8FJGZXecLj5K3mMmb3y/at5gfIYIt+7ElPau57okpqVphNnA1
+         5GaA==
+X-Gm-Message-State: APjAAAVD7LCCQ7GY8/B7sTyePLMKnKOCcnG37ylB1Dk0yJoLgZMWnEj6
+        PgkNaCXZLmY5/o05IB9vOhU=
+X-Google-Smtp-Source: APXvYqwp07U2bz1sBYCMgWfDdLWolOMbuv+nOiibrT8ZLwfUqwD7a7cgOru15dMNvUTqVyYcnZ2JXQ==
+X-Received: by 2002:a19:c396:: with SMTP id t144mr15001346lff.14.1567999991764;
+        Sun, 08 Sep 2019 20:33:11 -0700 (PDT)
 Received: from localhost.localdomain (128-73-37-85.broadband.corbina.ru. [128.73.37.85])
-        by smtp.gmail.com with ESMTPSA id f22sm2783605lfk.56.2019.09.08.20.33.08
+        by smtp.gmail.com with ESMTPSA id f22sm2783605lfk.56.2019.09.08.20.33.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Sep 2019 20:33:09 -0700 (PDT)
+        Sun, 08 Sep 2019 20:33:11 -0700 (PDT)
 From:   Yury Norov <yury.norov@gmail.com>
 To:     Andrew Morton <akpm@linux-foundation.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -77,9 +77,9 @@ To:     Andrew Morton <akpm@linux-foundation.org>,
         linux-kernel@vger.kernel.org
 Cc:     Yury Norov <yury.norov@gmail.com>, Jens Axboe <axboe@kernel.dk>,
         Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 1/7] lib/string: add strnchrnul()
-Date:   Sun,  8 Sep 2019 20:30:15 -0700
-Message-Id: <20190909033021.11600-2-yury.norov@gmail.com>
+Subject: [PATCH 2/7] bitops: more BITS_TO_* macros
+Date:   Sun,  8 Sep 2019 20:30:16 -0700
+Message-Id: <20190909033021.11600-3-yury.norov@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190909033021.11600-1-yury.norov@gmail.com>
 References: <20190909033021.11600-1-yury.norov@gmail.com>
@@ -90,55 +90,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-New function works like strchrnul() with a length limited strings.
+
+Introduce BITS_TO_U64, BITS_TO_U32 and BITS_TO_BYTES as they are handy
+in the following patches (BITS_TO_U32 specifically). Reimplement tools/
+version of the macros according to the kernel implementation.
+
+Also fix indentation for BITS_PER_TYPE definition.
 
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Yury Norov <yury.norov@gmail.com>
 ---
- include/linux/string.h |  1 +
- lib/string.c           | 17 +++++++++++++++++
- 2 files changed, 18 insertions(+)
+ include/linux/bitops.h       | 5 ++++-
+ tools/include/linux/bitops.h | 9 +++++----
+ 2 files changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/string.h b/include/linux/string.h
-index 3cf684db4bc6b..cf8f47efeb051 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -107,6 +107,7 @@ extern char * strchr(const char *,int);
- #ifndef __HAVE_ARCH_STRCHRNUL
- extern char * strchrnul(const char *,int);
- #endif
-+extern char * strnchrnul(const char *, size_t, int);
- #ifndef __HAVE_ARCH_STRNCHR
- extern char * strnchr(const char *, size_t, int);
- #endif
-diff --git a/lib/string.c b/lib/string.c
-index cd7a10c192109..75b10363e61f0 100644
---- a/lib/string.c
-+++ b/lib/string.c
-@@ -434,6 +434,23 @@ char *strchrnul(const char *s, int c)
- EXPORT_SYMBOL(strchrnul);
- #endif
+diff --git a/include/linux/bitops.h b/include/linux/bitops.h
+index cf074bce3eb32..e61c4e6142641 100644
+--- a/include/linux/bitops.h
++++ b/include/linux/bitops.h
+@@ -4,8 +4,11 @@
+ #include <asm/types.h>
+ #include <linux/bits.h>
  
-+/**
-+ * strnchrnul - Find and return a character in a length limited string,
-+ * or end of string
-+ * @s: The string to be searched
-+ * @count: The number of characters to be searched
-+ * @c: The character to search for
-+ *
-+ * Returns pointer to the first occurrence of 'c' in s. If c is not found,
-+ * then return a pointer to the last character of the string.
-+ */
-+char *strnchrnul(const char *s, size_t count, int c)
-+{
-+	while (count-- && *s && *s != (char)c)
-+		s++;
-+	return (char *)s;
-+}
-+
- #ifndef __HAVE_ARCH_STRRCHR
- /**
-  * strrchr - Find the last occurrence of a character in a string
+-#define BITS_PER_TYPE(type) (sizeof(type) * BITS_PER_BYTE)
++#define BITS_PER_TYPE(type)	(sizeof(type) * BITS_PER_BYTE)
+ #define BITS_TO_LONGS(nr)	DIV_ROUND_UP(nr, BITS_PER_TYPE(long))
++#define BITS_TO_U64(nr)		DIV_ROUND_UP(nr, BITS_PER_TYPE(u64))
++#define BITS_TO_U32(nr)		DIV_ROUND_UP(nr, BITS_PER_TYPE(u32))
++#define BITS_TO_BYTES(nr)	DIV_ROUND_UP(nr, BITS_PER_TYPE(char))
+ 
+ extern unsigned int __sw_hweight8(unsigned int w);
+ extern unsigned int __sw_hweight16(unsigned int w);
+diff --git a/tools/include/linux/bitops.h b/tools/include/linux/bitops.h
+index 140c8362f1139..5fca38fe1ba83 100644
+--- a/tools/include/linux/bitops.h
++++ b/tools/include/linux/bitops.h
+@@ -14,10 +14,11 @@
+ #include <linux/bits.h>
+ #include <linux/compiler.h>
+ 
+-#define BITS_TO_LONGS(nr)	DIV_ROUND_UP(nr, BITS_PER_BYTE * sizeof(long))
+-#define BITS_TO_U64(nr)		DIV_ROUND_UP(nr, BITS_PER_BYTE * sizeof(u64))
+-#define BITS_TO_U32(nr)		DIV_ROUND_UP(nr, BITS_PER_BYTE * sizeof(u32))
+-#define BITS_TO_BYTES(nr)	DIV_ROUND_UP(nr, BITS_PER_BYTE)
++#define BITS_PER_TYPE(type)	(sizeof(type) * BITS_PER_BYTE)
++#define BITS_TO_LONGS(nr)	DIV_ROUND_UP(nr, BITS_PER_TYPE(long))
++#define BITS_TO_U64(nr)		DIV_ROUND_UP(nr, BITS_PER_TYPE(u64))
++#define BITS_TO_U32(nr)		DIV_ROUND_UP(nr, BITS_PER_TYPE(u32))
++#define BITS_TO_BYTES(nr)	DIV_ROUND_UP(nr, BITS_PER_TYPE(char))
+ 
+ extern unsigned int __sw_hweight8(unsigned int w);
+ extern unsigned int __sw_hweight16(unsigned int w);
 -- 
 2.20.1
 
