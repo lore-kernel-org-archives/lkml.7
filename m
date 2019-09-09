@@ -1,84 +1,78 @@
 Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Level: **
+X-Spam-Status: No, score=2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLACK,URIBL_DBL_SPAM,URIBL_SBL,URIBL_SBL_A,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 638B9C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 23:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE867C4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 23:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DCA220678
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 23:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01FBF20678
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 23:04:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="a6YmcW0P"
+	dkim=pass (1024-bit key) header.d=ystp.ac.ir header.i=@ystp.ac.ir header.b="HA3WbcRh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729911AbfIIXAw (ORCPT
+        id S1730009AbfIIXED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 19:00:52 -0400
-Received: from onstation.org ([52.200.56.107]:44768 "EHLO onstation.org"
+        Mon, 9 Sep 2019 19:04:03 -0400
+Received: from ms3.ystp.ac.ir ([78.39.159.15]:42384 "EHLO ms3.ystp.ac.ir"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726474AbfIIXAw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 19:00:52 -0400
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 071EA3EECB;
-        Mon,  9 Sep 2019 23:00:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1568070051;
-        bh=6Kv4KMaygv0KswF7kk/EVVDG9vrBQXD7yG5Bil7Y34A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=a6YmcW0Ph4LLfgyO3jfVMFR5L6ufv/rzPUTiqRPgQ1puSrzqLxK+fq+ACbZrnbLLP
-         +iVuxSaP2nanO9bD4PA7tWbbZqxpHI4LsocCCxi3Np9LvSjOIbT1vfvpYP1+uY/tkP
-         rDgx16eprx9w9aRwXIqDbBsVXDLBOLzewb1/HHMY=
-Date:   Mon, 9 Sep 2019 19:00:50 -0400
-From:   Brian Masney <masneyb@onstation.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Enrico Weigelt <info@metux.net>,
-        Johan Hovold <johan@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpio: fix incorrect merge of linux/gpio/driver.h
-Message-ID: <20190909230050.GA5181@onstation.org>
-References: <20190909203512.675822-1-arnd@arndb.de>
+        id S1729106AbfIIXEC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 19:04:02 -0400
+X-Greylist: delayed 10208 seconds by postgrey-1.27 at vger.kernel.org; Mon, 09 Sep 2019 19:04:02 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by ms3.ystp.ac.ir (Postfix) with ESMTP id 1B7DBA28782;
+        Tue, 10 Sep 2019 00:13:11 +0430 (+0430)
+Received: from ms3.ystp.ac.ir ([127.0.0.1])
+        by localhost (ms3.ystp.ac.ir [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id PHQnXab1LkFt; Tue, 10 Sep 2019 00:13:10 +0430 (+0430)
+Received: from localhost (localhost [127.0.0.1])
+        by ms3.ystp.ac.ir (Postfix) with ESMTP id 5CDF1A2879A;
+        Tue, 10 Sep 2019 00:13:10 +0430 (+0430)
+DKIM-Filter: OpenDKIM Filter v2.10.3 ms3.ystp.ac.ir 5CDF1A2879A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ystp.ac.ir;
+        s=52244776-9648-11E6-8E52-D9F3D0CA04A5; t=1568058190;
+        bh=wPuP1NSjZjUlSu/QMiHkBCTxaZoX8lhWinmOQDpvWHM=;
+        h=To:From:Message-ID:Date:MIME-Version;
+        b=HA3WbcRhMFbGmbV7En5mpYUHZwQ3NHCURGAOTB+uyMkXiJURtmfxyNpNbQDkdwRA+
+         6wekgy6ZBHDCccQGWwx07jMb67Vv1bNBiXA+AYAepQxo2yjxoEDnipcNkbhv8RuHf4
+         q/1d8KI7wSYJyfahwCxg87t+BR3Sh+VdHDf3CefM=
+X-Virus-Scanned: amavisd-new at ms3.ystp.ac.ir
+Received: from ms3.ystp.ac.ir ([127.0.0.1])
+        by localhost (ms3.ystp.ac.ir [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 5HlmT_yIZvdr; Tue, 10 Sep 2019 00:13:10 +0430 (+0430)
+Received: from mail.ystp.ac.ir (unknown [176.12.161.66])
+        by ms3.ystp.ac.ir (Postfix) with ESMTPSA id DA214A28785;
+        Tue, 10 Sep 2019 00:13:04 +0430 (+0430)
+To:     "sweet and hot" <sweet_and_hot@pantiesparadise.de>,
+        "utf 8 B WmRlbsSbayBQb2zDoWNo" <zdenek@kaora.cz>,
+        "linux kernel" <linux-kernel@vger.kernel.org>,
+        "jepar" <jepar@hush.com>, "tdr" <tdr@hush.ai>,
+        "chickabomb" <chickabomb@pantiesparadise.de>,
+        "casting" <casting@spermafreunde.de>,
+        "hobbyhure" <hobbyhure@melideluxe.tv>,
+        "berndweber68" <berndweber68@yahoo.de>
+From:   Bernd Weber <shookuhi@ystp.ac.ir>
+Subject: =?UTF-8?Q?Fw=3A=F0=9F=94=93Na._wie_geht_es_?= =?UTF-8?Q?dir=3F?=
+Message-ID: <65e6e689-259e-4a7b-b111-27174e7c0ab8@ystp.ac.ir>
+Date:   Mon, 9 Sep 2019 11:38:26 -0800
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190909203512.675822-1-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 09, 2019 at 10:34:59PM +0200, Arnd Bergmann wrote:
-> Two otherwise correct patches got merged incorrectly, which leads to
-> build problems when CONFIG_GPIOLIB is disabled:
-> 
-> include/linux/gpio/driver.h:722:19: error: static declaration of 'gpiochip_lock_as_irq' follows non-static declaration
-> static inline int gpiochip_lock_as_irq(struct gpio_chip *chip,
->                   ^
-> include/linux/gpio/driver.h:706:5: note: previous declaration is here
-> int gpiochip_lock_as_irq(struct gpio_chip *chip, unsigned int offset);
->     ^
-> include/linux/gpio/driver.h:729:20: error: static declaration of 'gpiochip_unlock_as_irq' follows non-static declaration
-> static inline void gpiochip_unlock_as_irq(struct gpio_chip *chip,
->                    ^
-> include/linux/gpio/driver.h:707:6: note: previous declaration is here
-> void gpiochip_unlock_as_irq(struct gpio_chip *chip, unsigned int offset);
-> 
-> Fixes: 8a6abcd04e4c ("Merge tag 'gpio-v5.4-updates-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux into devel")
-> Fixes: 9091373ab7ea ("gpio: remove less important #ifdef around declarations")
-> Fixes: c7663fa2a663 ("gpio: Move gpiochip_lock/unlock_as_irq to gpio/driver.h")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Das ist unvorstellbar! http://dvcvhksp.Sefton158.xyz/index
 
-Reviewed-by: Brian Masney <masneyb@onstation.org>
+
+___
+Wiederschauen
+Bernd Weber
