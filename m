@@ -2,118 +2,96 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FAF4C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C16C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 802222082C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:10:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F045020640
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:11:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728887AbfIIQK5 (ORCPT
+        id S1731109AbfIIQLn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 12:10:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49674 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726784AbfIIQK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 12:10:56 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2841C31752A7;
-        Mon,  9 Sep 2019 16:10:56 +0000 (UTC)
-Received: from localhost (ovpn-117-107.ams2.redhat.com [10.36.117.107])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1F76C60BF4;
-        Mon,  9 Sep 2019 16:10:50 +0000 (UTC)
-Date:   Mon, 9 Sep 2019 18:10:45 +0200
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Vivek Goyal <vgoyal@redhat.com>, linux-fsdevel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, miklos@szeredi.hu,
-        linux-kernel@vger.kernel.org, virtio-fs@redhat.com,
-        dgilbert@redhat.com
-Subject: Re: [PATCH 08/18] virtiofs: Drain all pending requests during
- ->remove time
-Message-ID: <20190909161045.GD20875@stefanha-x1.localdomain>
-References: <20190905194859.16219-1-vgoyal@redhat.com>
- <20190905194859.16219-9-vgoyal@redhat.com>
- <20190906105210.GP5900@stefanha-x1.localdomain>
- <20190906141705.GF22083@redhat.com>
- <20190906101819-mutt-send-email-mst@kernel.org>
+        Mon, 9 Sep 2019 12:11:43 -0400
+Received: from mail-sh.amlogic.com ([58.32.228.43]:26745 "EHLO
+        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbfIIQLn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 12:11:43 -0400
+Received: from [192.168.0.108] (223.167.21.35) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 10 Sep
+ 2019 00:12:33 +0800
+Subject: Re: [PATCH v2 4/4] arm64: dts: add support for A1 based Amlogic AD401
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Kevin Hilman <khilman@baylibre.com>
+CC:     <linux-amlogic@lists.infradead.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Tao Zeng <tao.zeng@amlogic.com>
+References: <1567667251-33466-1-git-send-email-jianxin.pan@amlogic.com>
+ <1567667251-33466-5-git-send-email-jianxin.pan@amlogic.com>
+ <CAFBinCBSmW4y-Dz7EkJMV8HOU4k6Z0G-K6T77XnVrHyubaSsdg@mail.gmail.com>
+ <be032a85-b60d-f7f0-8404-b27784d809df@amlogic.com>
+ <CAFBinCD7gFzOsmZCB8T1KJKVsgL7WMhoEkj3dRzyqwAnjC0CNA@mail.gmail.com>
+ <1jv9u1ya3o.fsf@starbuckisacylon.baylibre.com>
+From:   Jianxin Pan <jianxin.pan@amlogic.com>
+Message-ID: <b8350c34-1fcc-76b8-6722-1e3309089c04@amlogic.com>
+Date:   Tue, 10 Sep 2019 00:12:32 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="d01dLTUuW90fS44H"
-Content-Disposition: inline
-In-Reply-To: <20190906101819-mutt-send-email-mst@kernel.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Mon, 09 Sep 2019 16:10:56 +0000 (UTC)
+In-Reply-To: <1jv9u1ya3o.fsf@starbuckisacylon.baylibre.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [223.167.21.35]
+X-ClientProxiedBy: mail-sh.amlogic.com (10.18.11.5) To mail-sh.amlogic.com
+ (10.18.11.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jerome,
 
---d01dLTUuW90fS44H
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2019/9/9 19:36, Jerome Brunet wrote:
+> 
+> On Sat 07 Sep 2019 at 17:02, Martin Blumenstingl wrote:
+> 
+>> Hi Jianxin,
+>>
+>> On Fri, Sep 6, 2019 at 7:58 AM Jianxin Pan <jianxin.pan@amlogic.com> wrote:
+>> [...]
+>>>> also I'm a bit surprised to see no busses (like aobus, cbus, periphs, ...) here
+>>>> aren't there any busses defined in the A1 SoC implementation or are
+>>>> were you planning to add them later?
+>>> Unlike previous series,there is no Cortex-M3 AO CPU in A1, and there is no AO/EE power domain.
+>>> Most of the registers are on the apb_32b bus.  aobus, cbus and periphs are not used in A1.
+>> OK, thank you for the explanation
+>> since you're going to re-send the patch anyways: can you please
+>> include the apb_32b bus?
+> 
+> unless there is an 64 bits apb bus as well, I suppose 'apb' would be enough ?
+>
+There is no 64bits apb bus in A1, only apb32. 
+Unlike the previous series, For A1 and C1, we can not get bus information for each register from the memmap and datesheet.
+Do we need to add bus description for them too? If yes, I can add 'apb' .  
+>> all other upstream Amlogic .dts are using the bus definitions, so that
+>> will make A1 consistent with the other SoCs
+>>
+>>
+>> Martin
+> 
+> .
+> 
 
-On Fri, Sep 06, 2019 at 10:18:49AM -0400, Michael S. Tsirkin wrote:
-> On Fri, Sep 06, 2019 at 10:17:05AM -0400, Vivek Goyal wrote:
-> > On Fri, Sep 06, 2019 at 11:52:10AM +0100, Stefan Hajnoczi wrote:
-> > > On Thu, Sep 05, 2019 at 03:48:49PM -0400, Vivek Goyal wrote:
-> > > > +static void virtio_fs_drain_queue(struct virtio_fs_vq *fsvq)
-> > > > +{
-> > > > +	WARN_ON(fsvq->in_flight < 0);
-> > > > +
-> > > > +	/* Wait for in flight requests to finish.*/
-> > > > +	while (1) {
-> > > > +		spin_lock(&fsvq->lock);
-> > > > +		if (!fsvq->in_flight) {
-> > > > +			spin_unlock(&fsvq->lock);
-> > > > +			break;
-> > > > +		}
-> > > > +		spin_unlock(&fsvq->lock);
-> > > > +		usleep_range(1000, 2000);
-> > > > +	}
-> > >=20
-> > > I think all contexts that call this allow sleeping so we could avoid
-> > > usleep here.
-> >=20
-> > usleep_range() is supposed to be used from non-atomic context.
-> >=20
-> > https://github.com/torvalds/linux/blob/master/Documentation/timers/time=
-rs-howto.rst
-> >=20
-> > What construct you are thinking of?
-> >=20
-> > Vivek
->=20
-> completion + signal on vq callback?
-
-Yes.  Time-based sleep() is sub-optimal because we could wake up exactly
-when in_flight is decremented from the vq callback.  This avoids
-unnecessary sleep wakeups and the extra time spent sleeping after
-in_flight has been decremented.
-
-Stefan
-
---d01dLTUuW90fS44H
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl12eYUACgkQnKSrs4Gr
-c8gSKQgAnEAvX9YIhk4yOMGl/UMlOnxBybw15xYg29qYtIPTCBl5Px/k0kPkDeK/
-iHnhS/2epJz36c5DV0GEfGGX1HCzcKt9zLHZ5RI7NKV5HV5pBKsftliW6gY0yo/p
-z0+lghQwP7izbE1EpPGWHichCu+hctoBnwlckg6TFmJxs+xWeSwdsDJ8Vya28tQl
-IXvedRgLh0fOX8F7ZkH0pRrmAkzcERWoXjf17QeOEsntwzWWZ9/1LYOwzMo/1imn
-exUSUMA7NFgVr4esi8G1LM3kHJRoaQcwCmSN9GGAc2dpUblNzwW04kmD6wAMpOXA
-DvrZS9U0BxnNqVjpKlNjyH7fRY7epA==
-=8+oH
------END PGP SIGNATURE-----
-
---d01dLTUuW90fS44H--
