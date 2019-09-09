@@ -5,54 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B44C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89382C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D10DF21D7D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:17:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D5D821A4A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:17:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568067459;
-	bh=mvLCPdH8ks+yBxxce7wpWGFYX0C27A1EL9Rft6B6j8A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tvUX0JgDIWsVmV6kpmvU//GZ1YcdmIJaS5RikSt3Fe+6Go7VuFOhtUHXosdZf9p7w
-	 VySwuWYIkgsG+AMJQK+Ix1s22ATQ2aviMCV+/t4mrqjwjhGRLzLyKN02z9UoONseCC
-	 6Ew+thf192gm6St6IXtscI6qHgFJm5C6KylyJWhw=
+	s=default; t=1568067462;
+	bh=L0xacNcsY2XpxXNLsk8K58LyQ1BNZxBNfKIvvTCiasE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=BCf16AFdkEzi6up4sWVTQh0Bw8djE+19a771pelccdZnBqSFtINxOoB/8rQAFLahD
+	 H7lmmb/4aPlqr283BJHQx5rQH4b7mrM+HT61Gia3OMXzFl7ZviwT0dBDigr6XsAOBg
+	 r/Jw6v298QLaxADYqoR9EICl2/M4r3XchJTXBRPc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406418AbfIIWRj (ORCPT
+        id S2406406AbfIIWRh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 18:17:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46826 "EHLO mail.kernel.org"
+        Mon, 9 Sep 2019 18:17:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406390AbfIIWRf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 18:17:35 -0400
+        id S2406370AbfIIWRd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 18:17:33 -0400
 Received: from sasha-vm.mshome.net (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58A2221A4A;
-        Mon,  9 Sep 2019 22:17:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69EE121D7D;
+        Mon,  9 Sep 2019 22:17:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568067455;
-        bh=mvLCPdH8ks+yBxxce7wpWGFYX0C27A1EL9Rft6B6j8A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZNg+e69h8YI4OH6y3c6cMVHzt4QpZ25sub5MT+DpEbUxOSTqtllSix42g1e/ZpAP2
-         A1VVHr5CZJFIwmtuX0JhlGCNpF262B6KJVnpEUQxdSi54iTqpoFH25cMrV1yKZPpwo
-         qTzc0O8UV40hD0SKNuEfWkzvqqA08xqHakXoGCUU=
+        s=default; t=1568067452;
+        bh=L0xacNcsY2XpxXNLsk8K58LyQ1BNZxBNfKIvvTCiasE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=tZZT7625XvUTqgHbQgm6cUenB8wtOPInb9ojr1BtpbUXh0ohJOnLvNIAGYXpMuMU6
+         tHNPrJltMA2DGWVSdpcigd5nNo+/0U6mxhPlO46Ex/7EMUPpVgaNRD3heblj+xhG9a
+         4fEC0mR0/tTUKQrfOnDpoIPes0r73XKYLqkJCnts=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hillf Danton <hdanton@sina.com>,
-        Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 2/2] keys: Fix missing null pointer check in request_key_auth_describe()
-Date:   Mon,  9 Sep 2019 11:42:21 -0400
-Message-Id: <20190909154221.31473-2-sashal@kernel.org>
+Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 1/2] dmaengine: ti: omap-dma: Add cleanup in omap_dma_probe()
+Date:   Mon,  9 Sep 2019 11:42:20 -0400
+Message-Id: <20190909154221.31473-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190909154221.31473-1-sashal@kernel.org>
-References: <20190909154221.31473-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,72 +58,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hillf Danton <hdanton@sina.com>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit d41a3effbb53b1bcea41e328d16a4d046a508381 ]
+[ Upstream commit 962411b05a6d3342aa649e39cda1704c1fc042c6 ]
 
-If a request_key authentication token key gets revoked, there's a window in
-which request_key_auth_describe() can see it with a NULL payload - but it
-makes no check for this and something like the following oops may occur:
+If devm_request_irq() fails to disable all interrupts, no cleanup is
+performed before retuning the error. To fix this issue, invoke
+omap_dma_free() to do the cleanup.
 
-	BUG: Kernel NULL pointer dereference at 0x00000038
-	Faulting instruction address: 0xc0000000004ddf30
-	Oops: Kernel access of bad area, sig: 11 [#1]
-	...
-	NIP [...] request_key_auth_describe+0x90/0xd0
-	LR [...] request_key_auth_describe+0x54/0xd0
-	Call Trace:
-	[...] request_key_auth_describe+0x54/0xd0 (unreliable)
-	[...] proc_keys_show+0x308/0x4c0
-	[...] seq_read+0x3d0/0x540
-	[...] proc_reg_read+0x90/0x110
-	[...] __vfs_read+0x3c/0x70
-	[...] vfs_read+0xb4/0x1b0
-	[...] ksys_read+0x7c/0x130
-	[...] system_call+0x5c/0x70
-
-Fix this by checking for a NULL pointer when describing such a key.
-
-Also make the read routine check for a NULL pointer to be on the safe side.
-
-[DH: Modified to not take already-held rcu lock and modified to also check
- in the read routine]
-
-Fixes: 04c567d9313e ("[PATCH] Keys: Fix race between two instantiators of a key")
-Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Signed-off-by: Hillf Danton <hdanton@sina.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Link: https://lore.kernel.org/r/1565938570-7528-1-git-send-email-wenwen@cs.uga.edu
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/keys/request_key_auth.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/dma/omap-dma.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/security/keys/request_key_auth.c b/security/keys/request_key_auth.c
-index 8882b729924dd..976deea0569e3 100644
---- a/security/keys/request_key_auth.c
-+++ b/security/keys/request_key_auth.c
-@@ -71,6 +71,9 @@ static void request_key_auth_describe(const struct key *key,
- {
- 	struct request_key_auth *rka = key->payload.data[0];
+diff --git a/drivers/dma/omap-dma.c b/drivers/dma/omap-dma.c
+index 1dfc71c90123f..57b6e6ca14a88 100644
+--- a/drivers/dma/omap-dma.c
++++ b/drivers/dma/omap-dma.c
+@@ -1199,8 +1199,10 @@ static int omap_dma_probe(struct platform_device *pdev)
  
-+	if (!rka)
-+		return;
-+
- 	seq_puts(m, "key:");
- 	seq_puts(m, key->description);
- 	if (key_is_positive(key))
-@@ -88,6 +91,9 @@ static long request_key_auth_read(const struct key *key,
- 	size_t datalen;
- 	long ret;
+ 		rc = devm_request_irq(&pdev->dev, irq, omap_dma_irq,
+ 				      IRQF_SHARED, "omap-dma-engine", od);
+-		if (rc)
++		if (rc) {
++			omap_dma_free(od);
+ 			return rc;
++		}
+ 	}
  
-+	if (!rka)
-+		return -EKEYREVOKED;
-+
- 	datalen = rka->callout_len;
- 	ret = datalen;
- 
+ 	rc = dma_async_device_register(&od->ddev);
 -- 
 2.20.1
 
