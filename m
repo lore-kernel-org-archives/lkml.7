@@ -2,117 +2,130 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D76ACC4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A32F8C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABB502089F
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:12:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78148218DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:19:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PR+Ffa7A"
+	dkim=pass (1024-bit key) header.d=cloudbear.ru header.i=@cloudbear.ru header.b="UJLQ8NG4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391414AbfIIRM5 (ORCPT
+        id S1728778AbfIIRTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 13:12:57 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:40692 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391274AbfIIRM5 (ORCPT
+        Mon, 9 Sep 2019 13:19:41 -0400
+Received: from forward103j.mail.yandex.net ([5.45.198.246]:55118 "EHLO
+        forward103j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726931AbfIIRTl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 13:12:57 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x89HCsgj003069;
-        Mon, 9 Sep 2019 12:12:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568049174;
-        bh=Qo7EHdIh7ZQkhD2ozFDd6uAbRhKY0yNrS7eb0wqVc2o=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=PR+Ffa7ASiwL02DtHXnWGBpKjzdQnFkiEc18lv8XLKf+a5k3tSbnAZ4ABYlSyOPvV
-         A0q842KiyYzfW6Oia1K6pXMm5pFj3AS2hOXTxhLi6IVyHfgOYamA6cWqVKOHI4P4U+
-         BlESWLgtPdh4LhqBJo1QRw3yA1f3BjU7lTspVQYQ=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x89HCsNS086186
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 9 Sep 2019 12:12:54 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 9 Sep
- 2019 12:12:54 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 9 Sep 2019 12:12:53 -0500
-Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with SMTP id x89HCsqq033234;
-        Mon, 9 Sep 2019 12:12:54 -0500
-Date:   Mon, 9 Sep 2019 12:14:57 -0500
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Joe Perches <joe@perches.com>
-CC:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Prabhakar Lad <prabhakar.csengg@gmail.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [Patch 09/13] media: am437x-vpfe: fix function trace debug log
-Message-ID: <20190909171457.louslicqvyv4vpde@ti.com>
-References: <20190909162743.30114-1-bparrot@ti.com>
- <20190909162743.30114-10-bparrot@ti.com>
- <ec66e477095bcddb86ffcc7ca10d3e0bbe72f943.camel@perches.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <ec66e477095bcddb86ffcc7ca10d3e0bbe72f943.camel@perches.com>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Mon, 9 Sep 2019 13:19:41 -0400
+Received: from mxback17g.mail.yandex.net (mxback17g.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:317])
+        by forward103j.mail.yandex.net (Yandex) with ESMTP id 862596741162;
+        Mon,  9 Sep 2019 20:19:35 +0300 (MSK)
+Received: from smtp4p.mail.yandex.net (smtp4p.mail.yandex.net [2a02:6b8:0:1402::15:6])
+        by mxback17g.mail.yandex.net (nwsmtp/Yandex) with ESMTP id VG426gUt4L-JYwa7EmW;
+        Mon, 09 Sep 2019 20:19:35 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cloudbear.ru; s=mail; t=1568049575;
+        bh=AwxsyEGDehcquIuiRTow6P2yBfFaC4ijyHy2rTy1NzI=;
+        h=In-Reply-To:Subject:To:From:Cc:References:Date:Message-Id;
+        b=UJLQ8NG4qpyrtLgoglVVGuVCmtJ56n0b7gPO2xGoAFjbpPkq9RA2ydWqZama7iW0k
+         rvfFmY3q2KnpZZOcBRXNA096aE5Qv5j4xKw2awe66bRHlygON0jDGMnBYN7zbpm65s
+         f45gSvuOHAuX7gsQDDfcay/6U5za9wG9b3ERQKf4=
+Authentication-Results: mxback17g.mail.yandex.net; dkim=pass header.i=@cloudbear.ru
+Received: by smtp4p.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id rCsZlLVxqi-JXTSsDoi;
+        Mon, 09 Sep 2019 20:19:34 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (Client certificate not present)
+From:   Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>
+To:     davem@davemloft.net, robh+dt@kernel.org, f.fainelli@gmail.com
+Cc:     Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Trent Piepho <tpiepho@impinj.com>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 2/2] net: phy: dp83867: Add SGMII mode type switching
+Date:   Mon,  9 Sep 2019 20:19:24 +0300
+Message-Id: <1568049566-16708-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1568047940-14490-2-git-send-email-vitaly.gaiduk@cloudbear.ru>
+References: <1568047940-14490-2-git-send-email-vitaly.gaiduk@cloudbear.ru>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Joe Perches <joe@perches.com> wrote on Mon [2019-Sep-09 09:54:56 -0700]:
-> On Mon, 2019-09-09 at 11:27 -0500, Benoit Parrot wrote:
-> > checkpatch.pl nows reports several:
-> > WARNING: Prefer using '"%s...", __func__' to using '<function name>',
-> > this function's name, in a string
-> > 
-> > So fix these for the whole driver.
-> 
-> Most of these seem to be function tracing comments
-> that should probably be removed instead.
-> 
-> The generic kernel facility ftrace works well.
+This patch adds ability to switch beetween two PHY SGMII modes.
+Some hardware, for example, FPGA IP designs may use 6-wire mode
+which enables differential SGMII clock to MAC.
 
-Yeah you are probably right, I should just remove them.
-My own laziness prevented me earlier... it's always easier to just enable
-debug dynamically in the driver then trying to remember how to use ftrace :)
-I obviously don't use often enough.
+Signed-off-by: Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>
+---
+ drivers/net/phy/dp83867.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-Benoit
+diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
+index 1f1ecee..37fceaf 100644
+--- a/drivers/net/phy/dp83867.c
++++ b/drivers/net/phy/dp83867.c
+@@ -37,6 +37,7 @@
+ #define DP83867_STRAP_STS2	0x006f
+ #define DP83867_RGMIIDCTL	0x0086
+ #define DP83867_IO_MUX_CFG	0x0170
++#define DP83867_SGMIICTL	0x00D3
+ #define DP83867_10M_SGMII_CFG   0x016F
+ #define DP83867_10M_SGMII_RATE_ADAPT_MASK BIT(7)
+ 
+@@ -61,6 +62,9 @@
+ #define DP83867_RGMII_TX_CLK_DELAY_EN		BIT(1)
+ #define DP83867_RGMII_RX_CLK_DELAY_EN		BIT(0)
+ 
++/* SGMIICTL bits */
++#define DP83867_SGMII_TYPE		BIT(14)
++
+ /* STRAP_STS1 bits */
+ #define DP83867_STRAP_STS1_RESERVED		BIT(11)
+ 
+@@ -109,6 +113,7 @@ struct dp83867_private {
+ 	bool rxctrl_strap_quirk;
+ 	bool set_clk_output;
+ 	u32 clk_output_sel;
++	bool sgmii_ref_clk_en;
+ };
+ 
+ static int dp83867_ack_interrupt(struct phy_device *phydev)
+@@ -197,6 +202,9 @@ static int dp83867_of_init(struct phy_device *phydev)
+ 	dp83867->rxctrl_strap_quirk = of_property_read_bool(of_node,
+ 					"ti,dp83867-rxctrl-strap-quirk");
+ 
++	dp83867->sgmii_ref_clk_en = of_property_read_bool(of_node,
++					"ti,sgmii-ref-clock-output-enable");
++
+ 	/* Existing behavior was to use default pin strapping delay in rgmii
+ 	 * mode, but rgmii should have meant no delay.  Warn existing users.
+ 	 */
+@@ -389,6 +397,17 @@ static int dp83867_config_init(struct phy_device *phydev)
+ 
+ 		if (ret)
+ 			return ret;
++
++		val = phy_read_mmd(phydev, DP83867_DEVADDR, DP83867_SGMIICTL);
++		/* SGMII type is set to 4-wire mode by default.
++		 * If we place appropriate property in dts (see above)
++		 * switch on 6-wire mode.
++		 */
++		if (dp83867->sgmii_ref_clk_en)
++			val |= DP83867_SGMII_TYPE;
++		else
++			val &= ~DP83867_SGMII_TYPE;
++		phy_write_mmd(phydev, DP83867_DEVADDR, DP83867_SGMIICTL, val);
+ 	}
+ 
+ 	/* Enable Interrupt output INT_OE in CFG3 register */
+-- 
+2.7.4
 
-> 
-> > diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
-> []
-> > @@ -466,7 +466,7 @@ static void vpfe_ccdc_config_ycbcr(struct vpfe_ccdc *ccdc)
-> >  	struct ccdc_params_ycbcr *params = &ccdc->ccdc_cfg.ycbcr;
-> >  	u32 syn_mode;
-> >  
-> > -	vpfe_dbg(3, vpfe, "vpfe_ccdc_config_ycbcr:\n");
-> > +	vpfe_dbg(3, vpfe, "%s:\n", __func__);
-> 
-> Remove this instead
-> 
-> >  	/*
-> >  	 * first restore the CCDC registers to default values
-> >  	 * This is important since we assume default values to be set in
-> > @@ -598,7 +598,7 @@ static void vpfe_ccdc_config_raw(struct vpfe_ccdc *ccdc)
-> >  	unsigned int syn_mode;
-> >  	unsigned int val;
-> >  
-> > -	vpfe_dbg(3, vpfe, "vpfe_ccdc_config_raw:\n");
-> > +	vpfe_dbg(3, vpfe, "%s:\n", __func__);
-> 
-> here too, etc...
-> 
-> 
