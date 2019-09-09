@@ -2,87 +2,118 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FE2C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FAF4C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77EC920640
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:10:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568045454;
-	bh=jv+lB6acHNmcxzA4svQYs31plQCvgdNvK7cuKzZn79s=;
-	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
-	b=peaiWPXhVamEfb+CYC7aS4/10plf5uWfEfWowfaih1KmOxrcXvxmiU3djQWsoyS+2
-	 VzKan4RkG117oLDslH3kJUxFjilz5vStf6zpPTcDBJ5sB1czvY78XJU53grN60N6n+
-	 3xIdUcxdujgRUMKyF1tSYcg1M6cTy8daOneKdkcc=
+	by mail.kernel.org (Postfix) with ESMTP id 802222082C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:10:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbfIIQKy (ORCPT
+        id S1728887AbfIIQK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 12:10:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50300 "EHLO mail.kernel.org"
+        Mon, 9 Sep 2019 12:10:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49674 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725832AbfIIQKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 12:10:53 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726784AbfIIQK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 12:10:56 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0FC62084D;
-        Mon,  9 Sep 2019 16:03:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568044986;
-        bh=jv+lB6acHNmcxzA4svQYs31plQCvgdNvK7cuKzZn79s=;
-        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
-        b=NHGQIQa6hXnkYMu8wrfBHNikhz5+XfEZxuV3XIBK8yIY7rWHVB46YkUaclIv0ba1g
-         bRRhXmBcPHP6POSR/izAQ9O7Kf0qYnzZmjvnHpalWk3Z/4UGuLkJyOkKeezuRkGsN7
-         zqZ7uv4XnG5O1PvoC3FQ57GfU96wQtG7GgiKChxU=
-Content-Type: text/plain; charset="utf-8"
+        by mx1.redhat.com (Postfix) with ESMTPS id 2841C31752A7;
+        Mon,  9 Sep 2019 16:10:56 +0000 (UTC)
+Received: from localhost (ovpn-117-107.ams2.redhat.com [10.36.117.107])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1F76C60BF4;
+        Mon,  9 Sep 2019 16:10:50 +0000 (UTC)
+Date:   Mon, 9 Sep 2019 18:10:45 +0200
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Vivek Goyal <vgoyal@redhat.com>, linux-fsdevel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, miklos@szeredi.hu,
+        linux-kernel@vger.kernel.org, virtio-fs@redhat.com,
+        dgilbert@redhat.com
+Subject: Re: [PATCH 08/18] virtiofs: Drain all pending requests during
+ ->remove time
+Message-ID: <20190909161045.GD20875@stefanha-x1.localdomain>
+References: <20190905194859.16219-1-vgoyal@redhat.com>
+ <20190905194859.16219-9-vgoyal@redhat.com>
+ <20190906105210.GP5900@stefanha-x1.localdomain>
+ <20190906141705.GF22083@redhat.com>
+ <20190906101819-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190826121453.21732-2-vkoul@kernel.org>
-References: <20190826121453.21732-1-vkoul@kernel.org> <20190826121453.21732-2-vkoul@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Vinod Koul <vkoul@kernel.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v4 1/4] dt-bindings: clock: Document the parent clocks
-User-Agent: alot/0.8.1
-Date:   Mon, 09 Sep 2019 09:03:05 -0700
-Message-Id: <20190909160305.E0FC62084D@mail.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="d01dLTUuW90fS44H"
+Content-Disposition: inline
+In-Reply-To: <20190906101819-mutt-send-email-mst@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Mon, 09 Sep 2019 16:10:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Vinod Koul (2019-08-26 05:14:50)
-> With clock parent data scheme we must specify the parent clocks for the
-> rpmhcc nodes. So describe the parent clock for rpmhcc in the bindings.
->=20
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt | 3 +++
->  1 file changed, 3 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt b/=
-Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
-> index 3c007653da31..8b97968f9c88 100644
-> --- a/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
-> +++ b/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
-> @@ -9,6 +9,9 @@ Required properties :
->  - compatible : shall contain "qcom,sdm845-rpmh-clk"
-> =20
->  - #clock-cells : must contain 1
-> +- clocks: a list of phandles and clock-specifier pairs,
-> +         one for each entry in clock-names.
-> +- clock-names: Parent board clock: "xo".
 
-Ok. xo is fine!
+--d01dLTUuW90fS44H
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Sep 06, 2019 at 10:18:49AM -0400, Michael S. Tsirkin wrote:
+> On Fri, Sep 06, 2019 at 10:17:05AM -0400, Vivek Goyal wrote:
+> > On Fri, Sep 06, 2019 at 11:52:10AM +0100, Stefan Hajnoczi wrote:
+> > > On Thu, Sep 05, 2019 at 03:48:49PM -0400, Vivek Goyal wrote:
+> > > > +static void virtio_fs_drain_queue(struct virtio_fs_vq *fsvq)
+> > > > +{
+> > > > +	WARN_ON(fsvq->in_flight < 0);
+> > > > +
+> > > > +	/* Wait for in flight requests to finish.*/
+> > > > +	while (1) {
+> > > > +		spin_lock(&fsvq->lock);
+> > > > +		if (!fsvq->in_flight) {
+> > > > +			spin_unlock(&fsvq->lock);
+> > > > +			break;
+> > > > +		}
+> > > > +		spin_unlock(&fsvq->lock);
+> > > > +		usleep_range(1000, 2000);
+> > > > +	}
+> > >=20
+> > > I think all contexts that call this allow sleeping so we could avoid
+> > > usleep here.
+> >=20
+> > usleep_range() is supposed to be used from non-atomic context.
+> >=20
+> > https://github.com/torvalds/linux/blob/master/Documentation/timers/time=
+rs-howto.rst
+> >=20
+> > What construct you are thinking of?
+> >=20
+> > Vivek
+>=20
+> completion + signal on vq callback?
+
+Yes.  Time-based sleep() is sub-optimal because we could wake up exactly
+when in_flight is decremented from the vq callback.  This avoids
+unnecessary sleep wakeups and the extra time spent sleeping after
+in_flight has been decremented.
+
+Stefan
+
+--d01dLTUuW90fS44H
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl12eYUACgkQnKSrs4Gr
+c8gSKQgAnEAvX9YIhk4yOMGl/UMlOnxBybw15xYg29qYtIPTCBl5Px/k0kPkDeK/
+iHnhS/2epJz36c5DV0GEfGGX1HCzcKt9zLHZ5RI7NKV5HV5pBKsftliW6gY0yo/p
+z0+lghQwP7izbE1EpPGWHichCu+hctoBnwlckg6TFmJxs+xWeSwdsDJ8Vya28tQl
+IXvedRgLh0fOX8F7ZkH0pRrmAkzcERWoXjf17QeOEsntwzWWZ9/1LYOwzMo/1imn
+exUSUMA7NFgVr4esi8G1LM3kHJRoaQcwCmSN9GGAc2dpUblNzwW04kmD6wAMpOXA
+DvrZS9U0BxnNqVjpKlNjyH7fRY7epA==
+=8+oH
+-----END PGP SIGNATURE-----
+
+--d01dLTUuW90fS44H--
