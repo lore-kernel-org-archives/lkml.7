@@ -2,116 +2,116 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 620AAC4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 167D2C4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29B58218DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:03:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDA7A2089F
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:07:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="SBWrOwEh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bfQesemg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405367AbfIIRDV (ORCPT
+        id S2391373AbfIIRHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 13:03:21 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.50]:35195 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727942AbfIIRDU (ORCPT
+        Mon, 9 Sep 2019 13:07:52 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:47041 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726671AbfIIRHv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 13:03:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1568048598;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=e4KiBjbBi2kS+5GZ+r+GKl60wpPTG+RMZvQ4YSIQcJQ=;
-        b=SBWrOwEhSNJbeJCi03w1API51CFxwZ/W+/FpZhaZEJjb7pJimVZQryt6iaRJU0a1od
-        d6L+c8E/wxDUKoRJ1VHkNLV4PGHHoU0R/frLmCdxSqWNWKXSiaVbeQkcZnBkjv72C3um
-        fgeSW4S43HgguuOz8kiLDZsLSt3ScBUUyt7lD1dUSWDOPJ1paooiJUNoMFKioD97KlpN
-        RP7Teb73OjDj2AMDGx37yDzVc19mq6yL2SPwIQtEASHwLtnXTodosDa9YPmmF9uAMcwP
-        Vi4AEY7wak1fr34cBQya2xY4RciWfQFJ25hY4jWriSPduQf8c094Zo6ieqHFEP3PYZJR
-        RAsw==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmMnw4vkig=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 44.27.0 DYNA|AUTH)
-        with ESMTPSA id u036f9v89H36xyC
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Mon, 9 Sep 2019 19:03:06 +0200 (CEST)
-Content-Type: text/plain; charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [Letux-kernel] [RFC PATCH 0/3] Enable 1GHz support on omap36xx
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <CAHCN7xLyeSFCMn=qhmYa0ZsqsQheHDz8zyBz38giECK9wixbuw@mail.gmail.com>
-Date:   Mon, 9 Sep 2019 19:03:06 +0200
-Cc:     Tony Lindgren <tony@atomide.com>,
-        =?utf-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Nishanth Menon <nm@ti.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D2882871-ABC5-40BC-8C9B-1F43F9C048EB@goldelico.com>
-References: <C04F49BA-1229-4E96-9FCF-4FC662D1DB11@goldelico.com> <CAHCN7x+Ye6sB_YqO0sAX1OJDw64B-qGS3pL545v3Xk5z914cwQ@mail.gmail.com> <0C1EF64E-B33C-4BFA-A7D3-471DD1B9EE86@goldelico.com> <515048DE-138D-4400-8168-F2B7D61F1005@goldelico.com> <CAHCN7xLPCX9rZ0+7KVBiA_bgZ6tg6VeCXqD-UXu+6iwpFMPVrA@mail.gmail.com> <7B3D1D77-3E8C-444F-90B9-6DF2641178B8@goldelico.com> <CAHCN7xLW58ggx3CpVL=HdCVHWo6D-MCTB91A_9rtSRoZQ+xJuQ@mail.gmail.com> <FA2920FE-B76A-4D44-A264-862A1CCBF7FC@goldelico.com> <CAHCN7xJsPa0i+Z+qpCkWcdAh9+udmGT0RPNchdDsfB=8ptd3Nw@mail.gmail.com> <87420DBD-770F-4C32-9499-A3AEA5876E8A@goldelico.com> <20190909163236.GP52127@atomide.com> <CAHCN7xLyeSFCMn=qhmYa0ZsqsQheHDz8zyBz38giECK9wixbuw@mail.gmail.com>
-To:     Adam Ford <aford173@gmail.com>
-X-Mailer: Apple Mail (2.3124)
+        Mon, 9 Sep 2019 13:07:51 -0400
+Received: by mail-pg1-f193.google.com with SMTP id m3so8137799pgv.13
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 10:07:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ya4un5YA0owQideI/MnR/HmIg6HIggVszRA4CHgSJSk=;
+        b=bfQesemgwud5nizYMr1grKMmyrd48AgVHvSmTFX3YLhGq0ftejWHsv0MINm76i5tkP
+         ahjuoLde76YMxLrU1imGriyhbxPRckv3CgiLiKghA4Ow3ZSAKJ/SFNXK1A/Tn6JSxxd8
+         EL2G4o4aTG8clSIR2eJcmlyL0oTxrRNm+IkBFr4HgVPUEbNRhRqD7ThhU/2cywFytlKz
+         R0FYTZ2ee5UrKVBHhtCWuB8RZlfZK4B6Jzq1RMpiy+nVfVTJ1Z62J9AEpxgzcfcQrA76
+         ZQGZvEqkfT64cI12flI8eZotZPdJaIuLl9y0HGAf/Xdkg+u82EyIkDTKT2eeHjrcOdtv
+         UH4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ya4un5YA0owQideI/MnR/HmIg6HIggVszRA4CHgSJSk=;
+        b=D/y2NWS1LzlfZywDXwSRCjeL3S5YqyKo7OkI74WVqP2PNCgmt98l+xDHw2GMOmZo9X
+         peC33ICjpkk6s5Hu3jNetAXsvOPfKGYQgAbAtVtPVb6Bu7TS0vz0eduLOLTDF7UV0DnV
+         aKIHkxpXrnqPuVk3/BmYtNAIkoZYWXkvT0dL5RsBPJTwFKGUD7mopwL4D/5wNnW9pJUo
+         XKFWvaKyhF+GTdxoGgP+qGzx3lCARAOqL3RiN3ZPU8aZD0LAyWMck/FtYceTfYcLhZtX
+         2FjQ+PCYy6+MpmLzeJG9V9ttNxi6FODVkN+MHwxUM173XWnAKmq5pY/aY/P+25r9Wb7i
+         1b6g==
+X-Gm-Message-State: APjAAAW6bY5xicToaP7euk66pEssQ/e1U9QlY/ilddo2+v7ub7ErRRtg
+        F7G1JX6Ea7N3f8peiNXT18g=
+X-Google-Smtp-Source: APXvYqz3vBlQUNXO/ZoZ7N3F3CgJYvVeA+Owe2P7RRBLPpKBiWdjqh2EzcIQTKhtuKJBDyw0X+BTtg==
+X-Received: by 2002:a62:1cd2:: with SMTP id c201mr29332690pfc.51.1568048870991;
+        Mon, 09 Sep 2019 10:07:50 -0700 (PDT)
+Received: from localhost.localdomain.localdomain ([2408:823c:c11:160:b8c3:8577:bf2f:3])
+        by smtp.gmail.com with ESMTPSA id b18sm107015pju.16.2019.09.09.10.07.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Sep 2019 10:07:50 -0700 (PDT)
+From:   Pengfei Li <lpf.vector@gmail.com>
+To:     akpm@linux-foundation.org
+Cc:     vbabka@suse.cz, cl@linux.com, penberg@kernel.org,
+        rientjes@google.com, iamjoonsoo.kim@lge.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Pengfei Li <lpf.vector@gmail.com>
+Subject: [PATCH v2 0/4] mm, slab: Make kmalloc_info[] contain all types of names
+Date:   Tue, 10 Sep 2019 01:07:11 +0800
+Message-Id: <20190909170715.32545-1-lpf.vector@gmail.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-> Am 09.09.2019 um 18:38 schrieb Adam Ford <aford173@gmail.com>:
->=20
-> On Mon, Sep 9, 2019 at 11:32 AM Tony Lindgren <tony@atomide.com> =
-wrote:
->>=20
->> Hi,
->>=20
->> * H. Nikolaus Schaller <hns@goldelico.com> [190909 14:57]:
->>> Another question that came up by private mail from Andr=C3=A9 was if =
-we
->>> should better disable the turbo OPPs of omap34xx and 36xx by default
->>> (status =3D "disabled";) because there are concerns about =
-overheating
->>> the chips and we have no thermal regulation like for omap4 & 5.
->=20
-> I thought there was a thermal sensor?
+Changes in v2
+--
+1. remove __initconst (patch 1/5)
+2. squash patch 2/5
+3. add ack tag from Vlastimil Babka
 
-Yes.
 
->=20
-> cpu_thermal: cpu_thermal {
->        polling-delay-passive =3D <250>; /* milliseconds */
->        polling-delay =3D <1000>; /* milliseconds */
->        coefficients =3D <0 20000>;
->=20
->                        /* sensor       ID */
->        thermal-sensors =3D <&bandgap     0>;
-> };
->=20
-> Can this driver somehow notify the cpufreq that we've hit some limit?
-> I know it's not as accurate as one would like, but even for non-1GHz
-> versions, having it downclock would be a good thing when running at
-> extreme temps.
+There are three types of kmalloc, KMALLOC_NORMAL, KMALLOC_RECLAIM
+and KMALLOC_DMA.
 
-Indeed it is not really reliable. For me it jumps up by 10=C2=B0 between =
-first
-reading within the next second (and seems to stay at this offset after =
-first use).
+The name of KMALLOC_NORMAL is contained in kmalloc_info[].name,
+but the names of KMALLOC_RECLAIM and KMALLOC_DMA are dynamically
+generated by kmalloc_cache_name().
 
-But yes, I think it should be possible to use it similar to =
-omap5-core-thermal.dtsi
+Patch1 predefines the names of all types of kmalloc to save
+the time spent dynamically generating names.
 
-Maybe we have to add "trips" and "core_crit". This must obviously be =
-linked to
-the cpufreq system. Or is it done automatically?
+The other 4 patches did some cleanup work.
 
-BR,
-Nikolaus
+These changes make sense, and the time spent by new_kmalloc_cache()
+has been reduced by approximately 36.3%.
+
+                         Time spent by
+                         new_kmalloc_cache()
+5.3-rc7                       66264
+5.3-rc7+patch                 42188
+
+Pengfei Li (4):
+  mm, slab: Make kmalloc_info[] contain all types of names
+  mm, slab: Remove unused kmalloc_size()
+  mm, slab_common: Make 'type' is enum kmalloc_cache_type
+  mm, slab_common: Make initializing KMALLOC_DMA start from 1
+
+ include/linux/slab.h |  20 ---------
+ mm/slab.c            |   7 +--
+ mm/slab.h            |   2 +-
+ mm/slab_common.c     | 103 +++++++++++++++++++++++--------------------
+ 4 files changed, 60 insertions(+), 72 deletions(-)
+
+-- 
+2.21.0
 
