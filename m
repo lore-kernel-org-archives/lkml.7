@@ -2,93 +2,90 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A169C00307
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 07:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C16C00307
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 07:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FB4E218AC
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 07:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C05D1218AC
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 07:22:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388082AbfIIHUS (ORCPT
+        id S2388096AbfIIHWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 03:20:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53142 "EHLO mx1.redhat.com"
+        Mon, 9 Sep 2019 03:22:10 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:32830 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387859AbfIIHUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 03:20:18 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CC5CC6907A;
-        Mon,  9 Sep 2019 07:20:17 +0000 (UTC)
-Received: from [10.72.12.61] (ovpn-12-61.pek2.redhat.com [10.72.12.61])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1925A5D6A7;
-        Mon,  9 Sep 2019 07:20:06 +0000 (UTC)
-Subject: Re: [RFC PATCH untested] vhost: block speculation of translated
- descriptors
-To:     "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org
-References: <20190908110521.4031-1-mst@redhat.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <db4d77d7-c467-935d-b4ae-1da7635e9b6b@redhat.com>
-Date:   Mon, 9 Sep 2019 15:19:55 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S2387412AbfIIHWJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 03:22:09 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
+        id 1i7Dzq-0007AB-Pk; Mon, 09 Sep 2019 17:21:59 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Mon, 09 Sep 2019 17:21:55 +1000
+Date:   Mon, 9 Sep 2019 17:21:55 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Horia Geanta <horia.geanta@nxp.com>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 01/12] crypto: caam - make sure clocks are enabled first
+Message-ID: <20190909072155.GA18825@gondor.apana.org.au>
+References: <20190904023515.7107-1-andrew.smirnov@gmail.com>
+ <20190904023515.7107-2-andrew.smirnov@gmail.com>
+ <VI1PR0402MB3485E5EBBC1DCEF17103964898BA0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20190908110521.4031-1-mst@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Mon, 09 Sep 2019 07:20:17 +0000 (UTC)
+In-Reply-To: <VI1PR0402MB3485E5EBBC1DCEF17103964898BA0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Sep 06, 2019 at 11:18:19AM +0000, Horia Geanta wrote:
+> On 9/4/2019 5:35 AM, Andrey Smirnov wrote:
+> > In order to access IP block's registers we need to enable appropriate
+> > clocks first, otherwise we are risking hanging the CPU.
+> > 
+> > The problem becomes very apparent when trying to use CAAM driver built
+> > as a kernel module. In that case caam_probe() gets called after
+> > clk_disable_unused() which means all of the necessary clocks are
+> > guaranteed to be disabled.
+> > 
+> > Coincidentally, this change also fixes iomap leak introduced by early
+> > return (instead of "goto iounmap_ctrl") in commit
+> > 41fc54afae70 ("crypto: caam - simplfy clock initialization")
+> > 
+> > Tested on ZII i.MX6Q+ RDU2
+> > 
+> > Fixes: 176435ad2ac7 ("crypto: caam - defer probing until QMan is available")
+> > Fixes: 41fc54afae70 ("crypto: caam - simplfy clock initialization")
+> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > Cc: Chris Healy <cphealy@gmail.com>
+> > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > Cc: Horia Geantă <horia.geanta@nxp.com>
+> > Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> > Cc: Iuliana Prodan <iuliana.prodan@nxp.com>
+> > Cc: linux-crypto@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> Tested-by: Horia Geantă <horia.geanta@nxp.com>
+> 
+> Considering this is a boot hang, in case this does not make into v5.4
+> I would appreciate appending:
+> Cc: <stable@vger.kernel.org>
 
-On 2019/9/8 下午7:05, Michael S. Tsirkin wrote:
-> iovec addresses coming from vhost are assumed to be
-> pre-validated, but in fact can be speculated to a value
-> out of range.
->
-> Userspace address are later validated with array_index_nospec so we can
-> be sure kernel info does not leak through these addresses, but vhost
-> must also not leak userspace info outside the allowed memory table to
-> guests.
->
-> Following the defence in depth principle, make sure
-> the address is not validated out of node range.
->
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> ---
->   drivers/vhost/vhost.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-> index 5dc174ac8cac..0ee375fb7145 100644
-> --- a/drivers/vhost/vhost.c
-> +++ b/drivers/vhost/vhost.c
-> @@ -2072,7 +2072,9 @@ static int translate_desc(struct vhost_virtqueue *vq, u64 addr, u32 len,
->   		size = node->size - addr + node->start;
->   		_iov->iov_len = min((u64)len - s, size);
->   		_iov->iov_base = (void __user *)(unsigned long)
-> -			(node->userspace_addr + addr - node->start);
-> +			(node->userspace_addr +
-> +			 array_index_nospec(addr - node->start,
-> +					    node->size));
->   		s += size;
->   		addr += size;
->   		++ret;
+This patch does not apply against cryptodev or crypto.
 
+Please rebase.
 
-I've tried this on Kaby Lake smap off metadata acceleration off using 
-testpmd (virtio-user) + vhost_net. I don't see obvious performance 
-difference with TX PPS.
-
-Thanks
-
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
