@@ -2,103 +2,93 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D52C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE25EC433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E2E22089F
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:21:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="D7Fs1Mvy"
+	by mail.kernel.org (Postfix) with ESMTP id BC4EC2089F
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:22:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568024536;
+	bh=Yk7S6QNE+0Vrk3XPrz/DAzAJIhloqdm30vmB81tUVmc=;
+	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
+	b=nqdqeEM17i5kugAkFUW+Q8+05C4tQ9GlrKqF46fAdOr0krnOs4CEKTmKTBM/V590l
+	 pPxVERboCj0OmwtHkwwtNnCUJEUJ6vEyhwsJ4OzHUaF45AjWqxsP1cxD/yJ4S+V1uR
+	 vpTAGXzPvllIIIoYSyXVa/CjUa6XF68416p7cjzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390460AbfIIKV5 (ORCPT
+        id S2390480AbfIIKWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 06:21:57 -0400
-Received: from ozlabs.org ([203.11.71.1]:44583 "EHLO ozlabs.org"
+        Mon, 9 Sep 2019 06:22:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727128AbfIIKV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 06:21:57 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1729660AbfIIKWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 06:22:15 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46RkjV2x3Mz9s4Y;
-        Mon,  9 Sep 2019 20:21:50 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1568024515;
-        bh=fyZY9MX63OH0n6q0z5DZK7nEg/98r9px2uwAS1QIXsE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=D7Fs1Mvyh3q7HoysKEaj3i1Mmt+6OADTYf3vTqhmBJ6L/LC5GJy/3h/Zjq7O/KnWX
-         vmD5qQYwiwJaAwaXnosX4joQeVlOM3cY/tzyINbkDlJby82pY5qCJ0w//EOSfk24j2
-         QHFmDDMvrft8PtIZU4FQVkwBHmgGzrpKiyJZE5LrSU5jRq9469FJHj3AodMCi544zr
-         FqESRpGNy567NB8OF29cENG8dqfn1jvor0H69YAC6ezWdPiDYNGTvd0rY+vJROQnE5
-         tSUn091oUa1EQBbtbywGY20MTgT7SKwu2vc8vLLqKCaDyWPnXINKJX3W5xZD1PSawZ
-         tTYhw3Cq2VHvA==
-Date:   Mon, 9 Sep 2019 20:21:28 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Alexander Kapshuk <alexander.kapshuk@gmail.com>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        sean@poorly.run, airlied@linux.ie
-Subject: Re: Kernel panic during drm/nouveau init 5.3.0-rc7-next-20190903
-Message-ID: <20190909202128.0c420ddd@canb.auug.org.au>
-In-Reply-To: <20190909201159.778590a0@canb.auug.org.au>
-References: <20190907090534.GB1712@pc-sasha.localdomain>
-        <CAKMK7uHYdXwruQxxBM12Q5MVeH9fjFpZvxZz06BSo7YrCQbM2w@mail.gmail.com>
-        <20190908141307.GA7115@pc-sasha.localdomain>
-        <20190909201159.778590a0@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id E0C302089F;
+        Mon,  9 Sep 2019 10:22:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568024535;
+        bh=Yk7S6QNE+0Vrk3XPrz/DAzAJIhloqdm30vmB81tUVmc=;
+        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
+        b=xeWuxUI0x22r5b6XuuqnFDHzLRt+ecSXo3CbmirAKjpDEispNoHfZjtxNPYLzxyCF
+         UnLOJ6EFsltO/FZ3L8d2aF7SO7kU+iM4v0HxtGCZEvJ4Qq8g9px80iB2ZoKhxnUO+A
+         yYdZMk3c72H41K6ixKQBh1QLHNB5N5lb9MAmFNlc=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/l+GqJrN4iAZNpgJN4bQkHoX";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190826164510.6425-3-jorge.ramirez-ortiz@linaro.org>
+References: <20190826164510.6425-1-jorge.ramirez-ortiz@linaro.org> <20190826164510.6425-3-jorge.ramirez-ortiz@linaro.org>
+Cc:     bjorn.andersson@linaro.org, niklas.cassel@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+To:     agross@kernel.org, jorge.ramirez-ortiz@linaro.org,
+        mturquette@baylibre.com
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 3/5] clk: qcom: hfpll: get parent clock names from DT
+User-Agent: alot/0.8.1
+Date:   Mon, 09 Sep 2019 03:22:14 -0700
+Message-Id: <20190909102214.E0C302089F@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/l+GqJrN4iAZNpgJN4bQkHoX
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Quoting Jorge Ramirez-Ortiz (2019-08-26 09:45:08)
+> diff --git a/drivers/clk/qcom/hfpll.c b/drivers/clk/qcom/hfpll.c
+> index a6de7101430c..87b7f46d27e0 100644
+> --- a/drivers/clk/qcom/hfpll.c
+> +++ b/drivers/clk/qcom/hfpll.c
+> @@ -52,6 +52,7 @@ static int qcom_hfpll_probe(struct platform_device *pde=
+v)
+>         void __iomem *base;
+>         struct regmap *regmap;
+>         struct clk_hfpll *h;
+> +       struct clk *pclk;
+>         struct clk_init_data init =3D {
+>                 .parent_names =3D (const char *[]){ "xo" },
+>                 .num_parents =3D 1,
+> @@ -75,6 +76,13 @@ static int qcom_hfpll_probe(struct platform_device *pd=
+ev)
+>                                           0, &init.name))
+>                 return -ENODEV;
+> =20
+> +       /* get parent clock from device tree (optional) */
+> +       pclk =3D devm_clk_get(dev, "xo");
+> +       if (!IS_ERR(pclk))
+> +               init.parent_names =3D (const char *[]){ __clk_get_name(pc=
+lk) };
+> +       else if (PTR_ERR(pclk) =3D=3D -EPROBE_DEFER)
+> +               return -EPROBE_DEFER;
+> +
 
-Hi,
+Can this use the "new" way of specifying parents of clks? That would be
+better than calling clk_get() on the XO clk to handle this.
 
-On Mon, 9 Sep 2019 20:11:59 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
->
-> If you are bisecting linux-next, I will suggest bisecting between the
-> stable branch on linux-next (which is just Linus' tree when I started
-> that day) and the top of the first linux-next that fails.  (Assuming
-> that the stable branch is good).
-
-Actually (since you won't be bisecting the latest linux-next), you
-probably want to use
-
-git merge-base stable next-20190903
-	(or whatever linux-next you are bisecting)
-
-as your first good commit (assuming it id good :-)).
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/l+GqJrN4iAZNpgJN4bQkHoX
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl12J6gACgkQAVBC80lX
-0GzcJgf/TuR5t/iDv0PgFYFYxLltTSfnfqvQNfWn5bh6AylC/2B62cPp6jgBOg0D
-gW0JT9Fp4kSAjFGR6KW0IMSXiJoLJAHO2b2atR6ET29yeAWQG/iPkZz6b9IimqIL
-4g1YdcQZ3iLtVCOqkf0QD0NDLdCukIVhkTNuyjXgs+boATWRt/+ppnA0l+hQSnjK
-WWI/oCviGpIwYcVfNVfRhstXWYoXmdEULvJ4AK0AsmPPlLOqnpTTl0rUnANgyC7p
-cKk73j1s15YO7KQzHkXLtXWzHF2/lj7dY/0soS/D5720h4F5SYBh/PdN8sXPo7Al
-NOwmDjgqOkd+N5jNrDM7mXr2N9xQ+g==
-=B+WT
------END PGP SIGNATURE-----
-
---Sig_/l+GqJrN4iAZNpgJN4bQkHoX--
+>         h->d =3D &hdata;
+>         h->clkr.hw.init =3D &init;
+>         spin_lock_init(&h->lock);
