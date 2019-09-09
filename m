@@ -2,191 +2,120 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D530C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB31C4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9BCF21A4A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:13:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="lqK7soM8"
+	by mail.kernel.org (Postfix) with ESMTP id B5DEC2196E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:17:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729004AbfIIPNv (ORCPT
+        id S1728727AbfIIPRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 11:13:51 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:40775 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728221AbfIIPNu (ORCPT
+        Mon, 9 Sep 2019 11:17:14 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:37314 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727049AbfIIPRN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 11:13:50 -0400
-Received: by mail-ed1-f66.google.com with SMTP id v38so13299857edm.7
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 08:13:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ptGQKrJwsC6QNZJxPTcIFHrTBzodlhROW8EV9Cr6mks=;
-        b=lqK7soM8Ql8EG2Ftn3h3hR+olO0M3L5hi5yR7FV9iLEmOGD4dckGUM3j+cW0/Dime1
-         tcaru2ydfakL0qOGX9NW71rS5xXhlEsWXHR5tZTvN8nAdg3jRR7H91vVYT27iUT4zLQL
-         /8sd6tx6RSZch+NQKzd2gDDMnTl6lfsTiDI17WOQGfxtCfWUReS2eIOCKDQqmHkeOOb6
-         CQ29hW9JyqW2659VgWaWS03hTBmcSoCzS6kj58DkCjvhtjcgvBnAojuQ6LW0JN5ngCCR
-         oxmuahVreVZAzOjjnErCDvkrgGlDpVGWckjhAKTQyS0XAzH5VKEiZW6qr15a3nTgG9T0
-         I28w==
+        Mon, 9 Sep 2019 11:17:13 -0400
+Received: by mail-qt1-f196.google.com with SMTP id g13so16167100qtj.4;
+        Mon, 09 Sep 2019 08:17:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ptGQKrJwsC6QNZJxPTcIFHrTBzodlhROW8EV9Cr6mks=;
-        b=KgyU/Pp3HQWUN7IkMQTADZIHrZO8Qwdybi8e2CKCqnfuuztYamtqrc+QvMMx8te+rX
-         J0jn1dP4xfqUB3RtVkI+QmPPyvJkUzs6KrgySDxy6ttv8n4g72Uf0BZCETEYXLfy0Fb7
-         M+fsVNe6dJtv1pgRLxCqkwx2g/4fCek/QML5H/LoQMTlns4e2QTWPvdVVgt3lqHAsDBf
-         46fxjOKq0Y7Cvk+VLpLpmFoAvNvhh6iw4LX0e12lRdEA668UHYzz5f+DdMmYoeucFBNs
-         qnLpdwhTasQeUT0Arvnem9qR4PpS1lnxcRh39jfgFoirej7KKa7aPPdnvn3nDIzhmlI/
-         lv6w==
-X-Gm-Message-State: APjAAAU1/tBIemy7TcesPMf6ygStFfSJ1WLONLqmC1zDJiTujAOVOGyE
-        cM2rJt4FHSkehXP+f3Pa5xQrRg==
-X-Google-Smtp-Source: APXvYqwJokBcl6isKFmA//BZZyEEgwoj2uNW2kTs0Tg/Y35qXurjsqN7Jks2aTze1VFcwFZl9Fv8+Q==
-X-Received: by 2002:a17:906:c304:: with SMTP id s4mr20002026ejz.71.1568042026870;
-        Mon, 09 Sep 2019 08:13:46 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id bf19sm3010529edb.23.2019.09.09.08.13.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 09 Sep 2019 08:13:46 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id CD9501003B5; Mon,  9 Sep 2019 18:13:44 +0300 (+03)
-Date:   Mon, 9 Sep 2019 18:13:44 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     Gerald Schaefer <gerald.schaefer@de.ibm.com>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] mm/pgtable/debug: Add test validating architecture
- page table helpers
-Message-ID: <20190909151344.ghfypjbgxyosjdk3@box>
-References: <1567497706-8649-1-git-send-email-anshuman.khandual@arm.com>
- <1567497706-8649-2-git-send-email-anshuman.khandual@arm.com>
- <20190904221618.1b624a98@thinkpad>
- <20e3044d-2af5-b27b-7653-cec53bdec941@arm.com>
- <20190905190629.523bdb87@thinkpad>
- <3c609e33-afbb-ffaf-481a-6d225a06d1d0@arm.com>
- <20190906210346.5ecbff01@thinkpad>
- <3d5de35f-8192-1c75-50a9-03e66e3b8e5c@arm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KzvdCYJMc3jcRY8kC6B+9ojaAy4hLNLNsDWcIiJdsf0=;
+        b=PY7CouA50Iz7CKDGalJa0mmP/1odJmBy34gBNthK//hj2p05RaMUs2IrgAMvyxCMT7
+         bcAmZub6yqb3dj7VpXDPutuxCeMgDEzGzI8rnY3fLQdijOeBz//WvbWPU1UpemxUKMLC
+         EMFmbcJBq6tS7ncb9Xnq9HWOSmFvOe0SMZfaU9NCjPwQT9z1EJLs+/rvKAD3oCQPM9d5
+         gH7TNTGcHh1JJK825KafyFrkYPqn7QYABDZEr/ZLgbdkDWaQPeLaGTIJ7kfB6On2kAUN
+         EPJFybi1tFh93//brTqW3NhwWVTaJU5f9oi4wBE+w3EmNesN908PKfSJP2SjqynnliDe
+         oQIw==
+X-Gm-Message-State: APjAAAWDRwOXt7uqgSJmYvk7Xcr7hmrklueutnVW33Lao8FihE7NhEeo
+        4k9iDodvMe0fKvEDfOgMpfe5AMlh+HamzpIzxAw=
+X-Google-Smtp-Source: APXvYqylECFPtzaWoRGJJ21CFA6Dl83bvtYMuTMRQbTeIMxr8YHGq6zdO6BvsdMD9Vg1HxNm8rA+F1PV06xkwvaeGL0=
+X-Received: by 2002:ac8:342a:: with SMTP id u39mr23896297qtb.7.1568042232506;
+ Mon, 09 Sep 2019 08:17:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3d5de35f-8192-1c75-50a9-03e66e3b8e5c@arm.com>
-User-Agent: NeoMutt/20180716
+References: <1568020220-7758-1-git-send-email-talel@amazon.com>
+ <1568020220-7758-3-git-send-email-talel@amazon.com> <CAK8P3a3UF7xPV1U3eW6Jdu754P1bzG208UxD9KUxEm1JjZudww@mail.gmail.com>
+ <98f0028e-5653-3116-fdaa-1385ecdf0289@amazon.com> <CAK8P3a1NVGwYa1bw_vjBatd1xe-i875X1Vq1M+2G_Zxd2Oqusg@mail.gmail.com>
+ <8f7840c3-a682-04a5-18bf-ac7a723725b0@amazon.com>
+In-Reply-To: <8f7840c3-a682-04a5-18bf-ac7a723725b0@amazon.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 9 Sep 2019 17:16:56 +0200
+Message-ID: <CAK8P3a1fbK-qoK+K1ZsWsU3rkxxZgZGaK8ywFAcM4va1GRn_FQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] soc: amazon: al-pos: Introduce Amazon's Annapurna
+ Labs POS driver
+To:     "Shenhar, Talel" <talel@amazon.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        gregkh <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Patrick Venture <venture@google.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Olof Johansson <olof@lixom.net>,
+        Maxime Ripard <mripard@kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        paul.kocialkowski@bootlin.com, mjourdan@baylibre.com,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        hhhawa@amazon.com, ronenk@amazon.com, jonnyc@amazon.com,
+        hanochu@amazon.com, barakw@amazon.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 09, 2019 at 11:56:50AM +0530, Anshuman Khandual wrote:
-> 
-> 
-> On 09/07/2019 12:33 AM, Gerald Schaefer wrote:
-> > On Fri, 6 Sep 2019 11:58:59 +0530
-> > Anshuman Khandual <anshuman.khandual@arm.com> wrote:
-> > 
-> >> On 09/05/2019 10:36 PM, Gerald Schaefer wrote:
-> >>> On Thu, 5 Sep 2019 14:48:14 +0530
-> >>> Anshuman Khandual <anshuman.khandual@arm.com> wrote:
-> >>>   
-> >>>>> [...]    
-> >>>>>> +
-> >>>>>> +#if !defined(__PAGETABLE_PMD_FOLDED) && !defined(__ARCH_HAS_4LEVEL_HACK)
-> >>>>>> +static void pud_clear_tests(pud_t *pudp)
-> >>>>>> +{
-> >>>>>> +	memset(pudp, RANDOM_NZVALUE, sizeof(pud_t));
-> >>>>>> +	pud_clear(pudp);
-> >>>>>> +	WARN_ON(!pud_none(READ_ONCE(*pudp)));
-> >>>>>> +}    
-> >>>>>
-> >>>>> For pgd/p4d/pud_clear(), we only clear if the page table level is present
-> >>>>> and not folded. The memset() here overwrites the table type bits, so
-> >>>>> pud_clear() will not clear anything on s390 and the pud_none() check will
-> >>>>> fail.
-> >>>>> Would it be possible to OR a (larger) random value into the table, so that
-> >>>>> the lower 12 bits would be preserved?    
-> >>>>
-> >>>> So the suggestion is instead of doing memset() on entry with RANDOM_NZVALUE,
-> >>>> it should OR a large random value preserving lower 12 bits. Hmm, this should
-> >>>> still do the trick for other platforms, they just need non zero value. So on
-> >>>> s390, the lower 12 bits on the page table entry already has valid value while
-> >>>> entering this function which would make sure that pud_clear() really does
-> >>>> clear the entry ?  
-> >>>
-> >>> Yes, in theory the table entry on s390 would have the type set in the last
-> >>> 4 bits, so preserving those would be enough. If it does not conflict with
-> >>> others, I would still suggest preserving all 12 bits since those would contain
-> >>> arch-specific flags in general, just to be sure. For s390, the pte/pmd tests
-> >>> would also work with the memset, but for consistency I think the same logic
-> >>> should be used in all pxd_clear_tests.  
-> >>
-> >> Makes sense but..
-> >>
-> >> There is a small challenge with this. Modifying individual bits on a given
-> >> page table entry from generic code like this test case is bit tricky. That
-> >> is because there are not enough helpers to create entries with an absolute
-> >> value. This would have been easier if all the platforms provided functions
-> >> like __pxx() which is not the case now. Otherwise something like this should
-> >> have worked.
-> >>
-> >>
-> >> pud_t pud = READ_ONCE(*pudp);
-> >> pud = __pud(pud_val(pud) | RANDOM_VALUE (keeping lower 12 bits 0))
-> >> WRITE_ONCE(*pudp, pud);
-> >>
-> >> But __pud() will fail to build in many platforms.
-> > 
-> > Hmm, I simply used this on my system to make pud_clear_tests() work, not
-> > sure if it works on all archs:
-> > 
-> > pud_val(*pudp) |= RANDOM_NZVALUE;
-> 
-> Which compiles on arm64 but then fails on x86 because of the way pmd_val()
-> has been defined there.
+On Mon, Sep 9, 2019 at 4:11 PM Shenhar, Talel <talel@amazon.com> wrote:
+> On 9/9/2019 4:41 PM, Arnd Bergmann wrote:
+>
+> In current implementation of v1, I am not doing any read barrier, Hence,
+> using the non-relaxed will add unneeded memory barrier.
+>
+> I have no strong objection moving to the non-relaxed version and have an
+> unneeded memory barrier, as this path is not "hot" one.
 
-Use instead
+Ok, then please add it.
 
-	*pudp = __pud(pud_val(*pudp) | RANDOM_NZVALUE);
+> Beside of avoiding the unneeded memory barrier, I would be happy to keep
+> common behavior for our drivers:
+>
+> e.g.
+>
+> https://github.com/torvalds/linux/blob/master/drivers/irqchip/irq-al-fic.c#L49
+>
+>
+> So what do you think we should go with? relaxed or non-relaxed?
 
-It *should* be more portable.
+The al_fic_set_trigger() function is clearly a slow-path and should use the
+non-relaxed functions. In case of al_fic_irq_handler(), the extra barrier
+might introduce a measurable overhead, but at the same time I'm
+not sure if that one is correct without the barrier:
 
--- 
- Kirill A. Shutemov
+If you have an MSI-type interrupt for notifying a device driver of
+a DMA completion, there might not be any other barrier between
+the arrival of the MSI message and the CPU accessing the data.
+Depending on how strict the hardware implements MSI and how
+the IRQ is chained, this could lead to data corruption.
+
+If the interrupt is only used for level or edge triggered interrupts,
+this is ok since you already need another register read in
+the driver before it can safely access a DMA buffer.
+
+In either case, if you can prove that it's safe to use the relaxed
+version here and you think that it may help, it would be good to
+add a comment explaining the reasoning.
+
+       Arnd
