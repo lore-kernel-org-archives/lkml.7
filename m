@@ -2,185 +2,128 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ADB8C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 21:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABFC5C49ED6
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 21:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1F80206A5
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 21:36:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D78921D79
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 21:39:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HooNS6Li"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JKwoMfpP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391858AbfIIVgC (ORCPT
+        id S1731902AbfIIVjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 17:36:02 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:39610 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728565AbfIIVgB (ORCPT
+        Mon, 9 Sep 2019 17:39:45 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:45926 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726804AbfIIVjp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 17:36:01 -0400
-Received: by mail-pl1-f195.google.com with SMTP id bd8so7279702plb.6
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 14:36:01 -0700 (PDT)
+        Mon, 9 Sep 2019 17:39:45 -0400
+Received: by mail-io1-f68.google.com with SMTP id f12so32458735iog.12
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 14:39:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AWfChiuUJemWX/xDu17NLd8EQGs1u1yuvhrocXkkuOg=;
-        b=HooNS6LiLAXvF9NxFE+eZmqZRW7ToWinYSCthOx4HHhPgE/cRzd5jeOMn2yr5WiqfB
-         WWlxDcwln3c9YsBFYGXWBlVEZ5flrg0DIwF8uyiFU1xecYdg0iM3B7HAOOG9dPpQXnQb
-         xfeUvSxsNN2yfg5eHVNBw2aaE7XZvNv+LAE2fZb99cS3FC30B+OOmiFzjSvTfmOEPbul
-         kmLdtJfpkj1ewRj4T47B1pgiuWnCGu/mCYZHCfP+iFQNfDHLyi3eGGgCva+7KRCA2qQk
-         9XUmCDuEPWSrnKjgUXKCem2BUmdBQUY9f3Cq7S8+c4ZB7mK1YvHTvKzeO5bcxg9HomkM
-         KujQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9A2W1+/pDxGxYRPcaK1DCduelqs+osiN4mh03CF6afg=;
+        b=JKwoMfpPDH1KZnGdzKvZxf1vzkwjCXbumdKbmZPQNRak4Swrz2KHspmWpXoCESTR3Q
+         14F35cfLl0FjFJmWqdSmg9fdXXd9iEhxbRlg/s6Rx5qNPV0/l0kplBGPQfh/2nA4wAkI
+         TJ0IKq2iz6DMMzQIfUYPcJzx6tD55/dPVNhazvHFq59H0gv4Cz/f2G2hRr+Sazi9p+Ju
+         30NN1+daZfVKX7iUYCmRQ0pluFvCr056vM23LZ4amDGPNQttybMzcp6LmaZ8t+xyZlsx
+         K78L8FIur8C/B7TF/GK9AsuGKlTWmQcHkG1W3HiFJTYQTrFFw+Iu/NzBXULGiM4Hy6PU
+         Cfog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AWfChiuUJemWX/xDu17NLd8EQGs1u1yuvhrocXkkuOg=;
-        b=a05KEQqQk3dnQWw6oGqyCnntcRn+MKXCU/wr7PbKyH2IPU/sgKkrErIPBXt9bDR5pa
-         JwWUvAFLH9I/MKBklaKqs2XGChrCHnBakl9sbkzi+u/cnJqIOQeHE3ThUf9RAXEu2PFV
-         um+jBjMpJHZP9BD6nk25AAMy1FTx3hB8MGZpo6MbwDJueYPju/8N3sO8wyt6jcWR7hsk
-         MqLeN9b+fTq2QUlNRSai54HZ2r9uUo/tpngpPwLwM3deqc6aEgUj4+ueFQyGKwk6tred
-         po5fexiGLyxbKZjgFNG2jDI1+M0Ake06GdOaA67dExu9cnZz9+BslKCbbnjGhOmiljV+
-         +3hg==
-X-Gm-Message-State: APjAAAXF5ZzU6RYriSESG73MY5dZlI6BzW/y5azxj84Kqa0qTS/S9hkb
-        9oPMVd+21VpLRE5/nLdlTTlTso+/m5LVQnj3uH2PRA==
-X-Google-Smtp-Source: APXvYqwkg+0VvgZLd1QcDeZiY87eDys4X4c+0f1blThj9icDKEd2DCXH7feptcBVwXIi9LLpUJncKLJuNiuB3WNbZ4E=
-X-Received: by 2002:a17:902:8484:: with SMTP id c4mr26519733plo.223.1568064960627;
- Mon, 09 Sep 2019 14:36:00 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9A2W1+/pDxGxYRPcaK1DCduelqs+osiN4mh03CF6afg=;
+        b=OnYtdU6ty52L1pN92QrRgYP955GycNXYYmMnBbJMT32FXpEqhHKm01jpDwKj5w/3Qo
+         jja9PhV3tc5bvmYFACfjaQXwnphomZd6YY4zBdn7e+QMmtHXqYe9fHHbxsVQKOtrQ9Ci
+         sd9ehV+wl+qWRCinIKsxazuY7jMj5UYGTsciWlRP63mPVrXONJukCDJRuehSDO16CI+6
+         4Pa5g++Iv+F7JVdGdquHuuo+Q1mz8LzjdtFWnLozjOHPUq7KsW2tY4Xyj+xGYKjDe+6j
+         Is3bVpzAztipv0E48sCD/l3kRxrHy+fcJBRMpts8lMOz0teqs1eezErj8yhYw3P5SlLs
+         C1Cg==
+X-Gm-Message-State: APjAAAVOaoWwNb7UWK3AQMbEsqcn6sSoCJgTGwkWhvvOkSCUQvfknDiL
+        rHjyjIIlP26VQPXzpgRY7yGiPQ==
+X-Google-Smtp-Source: APXvYqy6X7NR4sCyX1rBAqURyIjElt77BPKru3gblZURd6J93B8RZyjnubodlWDMQY6ac/kwfSLHGw==
+X-Received: by 2002:a02:aa84:: with SMTP id u4mr8262398jai.14.1568065182934;
+        Mon, 09 Sep 2019 14:39:42 -0700 (PDT)
+Received: from google.com ([2620:15c:183:0:9f3b:444a:4649:ca05])
+        by smtp.gmail.com with ESMTPSA id x26sm11702665iob.11.2019.09.09.14.39.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Sep 2019 14:39:42 -0700 (PDT)
+Date:   Mon, 9 Sep 2019 15:39:38 -0600
+From:   Yu Zhao <yuzhao@google.com>
+To:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: avoid slub allocation while holding list_lock
+Message-ID: <20190909213938.GA53078@google.com>
+References: <20190909061016.173927-1-yuzhao@google.com>
+ <20190909160052.cxpfdmnrqucsilz2@box>
+ <e5e25aa3-651d-92b4-ac82-c5011c66a7cb@I-love.SAKURA.ne.jp>
 MIME-Version: 1.0
-References: <20190909202153.144970-1-arnd@arndb.de> <CAKwvOdn90naN2qLx6qBCii67HNOYeJmVqTKEKuUpXcTXLEEaLA@mail.gmail.com>
-In-Reply-To: <CAKwvOdn90naN2qLx6qBCii67HNOYeJmVqTKEKuUpXcTXLEEaLA@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 9 Sep 2019 14:35:49 -0700
-Message-ID: <CAKwvOdnnsQHkLG02oa2hkP8JDEiqnaH_xsxLrWBxSs0bvZetsQ@mail.gmail.com>
-Subject: Re: [PATCH] arm64: fix unreachable code issue with cmpxchg
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e5e25aa3-651d-92b4-ac82-c5011c66a7cb@I-love.SAKURA.ne.jp>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 9, 2019 at 2:06 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
->
-> On Mon, Sep 9, 2019 at 1:21 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > On arm64 build with clang, sometimes the __cmpxchg_mb is not inlined
-> > when CONFIG_OPTIMIZE_INLINING is set.
-> > Clang then fails a compile-time assertion, because it cannot tell at
-> > compile time what the size of the argument is:
-> >
-> > mm/memcontrol.o: In function `__cmpxchg_mb':
-> > memcontrol.c:(.text+0x1a4c): undefined reference to `__compiletime_assert_175'
-> > memcontrol.c:(.text+0x1a4c): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `__compiletime_assert_175'
-> >
-> > Mark all of the cmpxchg() style functions as __always_inline to
-> > ensure that the compiler can see the result.
->
-> Acked-by: Nick Desaulniers <ndesaulniers@google.com>
+On Tue, Sep 10, 2019 at 05:57:22AM +0900, Tetsuo Handa wrote:
+> On 2019/09/10 1:00, Kirill A. Shutemov wrote:
+> > On Mon, Sep 09, 2019 at 12:10:16AM -0600, Yu Zhao wrote:
+> >> If we are already under list_lock, don't call kmalloc(). Otherwise we
+> >> will run into deadlock because kmalloc() also tries to grab the same
+> >> lock.
+> >>
+> >> Instead, allocate pages directly. Given currently page->objects has
+> >> 15 bits, we only need 1 page. We may waste some memory but we only do
+> >> so when slub debug is on.
+> >>
+> >>   WARNING: possible recursive locking detected
+> >>   --------------------------------------------
+> >>   mount-encrypted/4921 is trying to acquire lock:
+> >>   (&(&n->list_lock)->rlock){-.-.}, at: ___slab_alloc+0x104/0x437
+> >>
+> >>   but task is already holding lock:
+> >>   (&(&n->list_lock)->rlock){-.-.}, at: __kmem_cache_shutdown+0x81/0x3cb
+> >>
+> >>   other info that might help us debug this:
+> >>    Possible unsafe locking scenario:
+> >>
+> >>          CPU0
+> >>          ----
+> >>     lock(&(&n->list_lock)->rlock);
+> >>     lock(&(&n->list_lock)->rlock);
+> >>
+> >>    *** DEADLOCK ***
+> >>
+> >> Signed-off-by: Yu Zhao <yuzhao@google.com>
+> > 
+> > Looks sane to me:
+> > 
+> > Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> > 
+> 
+> Really?
+> 
+> Since page->objects is handled as bitmap, alignment should be BITS_PER_LONG
+> than BITS_PER_BYTE (though in this particular case, get_order() would
+> implicitly align BITS_PER_BYTE * PAGE_SIZE). But get_order(0) is an
+> undefined behavior.
 
-Also, I think a Link tag may be appropriate as I believe it fixes this report:
-
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/648
-
->
-> >
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > ---
-> >  arch/arm64/include/asm/cmpxchg.h | 15 ++++++++-------
-> >  1 file changed, 8 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/arch/arm64/include/asm/cmpxchg.h b/arch/arm64/include/asm/cmpxchg.h
-> > index a1398f2f9994..fd64dc8a235f 100644
-> > --- a/arch/arm64/include/asm/cmpxchg.h
-> > +++ b/arch/arm64/include/asm/cmpxchg.h
-> > @@ -19,7 +19,7 @@
-> >   * acquire+release for the latter.
-> >   */
-> >  #define __XCHG_CASE(w, sfx, name, sz, mb, nop_lse, acq, acq_lse, rel, cl)      \
-> > -static inline u##sz __xchg_case_##name##sz(u##sz x, volatile void *ptr)                \
-> > +static __always_inline u##sz __xchg_case_##name##sz(u##sz x, volatile void *ptr)\
-> >  {                                                                              \
-> >         u##sz ret;                                                              \
-> >         unsigned long tmp;                                                      \
-> > @@ -62,7 +62,7 @@ __XCHG_CASE( ,  ,  mb_, 64, dmb ish, nop,  , a, l, "memory")
-> >  #undef __XCHG_CASE
-> >
-> >  #define __XCHG_GEN(sfx)                                                        \
-> > -static inline unsigned long __xchg##sfx(unsigned long x,               \
-> > +static __always_inline  unsigned long __xchg##sfx(unsigned long x,     \
-> >                                         volatile void *ptr,             \
-> >                                         int size)                       \
-> >  {                                                                      \
-> > @@ -103,8 +103,9 @@ __XCHG_GEN(_mb)
-> >  #define arch_xchg_release(...) __xchg_wrapper(_rel, __VA_ARGS__)
-> >  #define arch_xchg(...)         __xchg_wrapper( _mb, __VA_ARGS__)
-> >
-> > -#define __CMPXCHG_CASE(name, sz)                       \
-> > -static inline u##sz __cmpxchg_case_##name##sz(volatile void *ptr,      \
-> > +#define __CMPXCHG_CASE(name, sz)                                       \
-> > +static __always_inline u##sz                                           \
-> > +__cmpxchg_case_##name##sz(volatile void *ptr,                          \
-> >                                               u##sz old,                \
-> >                                               u##sz new)                \
-> >  {                                                                      \
-> > @@ -148,7 +149,7 @@ __CMPXCHG_DBL(_mb)
-> >  #undef __CMPXCHG_DBL
-> >
-> >  #define __CMPXCHG_GEN(sfx)                                             \
-> > -static inline unsigned long __cmpxchg##sfx(volatile void *ptr,         \
-> > +static __always_inline unsigned long __cmpxchg##sfx(volatile void *ptr,        \
-> >                                            unsigned long old,           \
-> >                                            unsigned long new,           \
-> >                                            int size)                    \
-> > @@ -230,7 +231,7 @@ __CMPXCHG_GEN(_mb)
-> >  })
-> >
-> >  #define __CMPWAIT_CASE(w, sfx, sz)                                     \
-> > -static inline void __cmpwait_case_##sz(volatile void *ptr,             \
-> > +static __always_inline void __cmpwait_case_##sz(volatile void *ptr,    \
-> >                                        unsigned long val)               \
-> >  {                                                                      \
-> >         unsigned long tmp;                                              \
-> > @@ -255,7 +256,7 @@ __CMPWAIT_CASE( ,  , 64);
-> >  #undef __CMPWAIT_CASE
-> >
-> >  #define __CMPWAIT_GEN(sfx)                                             \
-> > -static inline void __cmpwait##sfx(volatile void *ptr,                  \
-> > +static __always_inline void __cmpwait##sfx(volatile void *ptr,         \
-> >                                   unsigned long val,                    \
-> >                                   int size)                             \
-> >  {                                                                      \
-> > --
-> > 2.20.0
-> >
-> > --
-> > You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> > To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> > To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20190909202153.144970-1-arnd%40arndb.de.
->
->
->
-> --
-> Thanks,
-> ~Nick Desaulniers
-
-
-
--- 
-Thanks,
-~Nick Desaulniers
+I think we can safely assume PAGE_SIZE is unsigned long aligned and
+page->objects is non-zero. But if you don't feel comfortable with these
+assumptions, I'd be happy to ensure them explicitly.
