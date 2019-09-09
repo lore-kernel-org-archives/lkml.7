@@ -3,120 +3,113 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF0BCC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB0A2C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C45D421924
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:24:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD8DD2086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:40:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="YHy1qrMk"
+	dkim=pass (1024-bit key) header.d=impinj.com header.i=@impinj.com header.b="JALSAh34"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729162AbfIIRYd (ORCPT
+        id S2390168AbfIIRkT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 13:24:33 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36455 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726864AbfIIRYc (ORCPT
+        Mon, 9 Sep 2019 13:40:19 -0400
+Received: from us-smtp-delivery-168.mimecast.com ([63.128.21.168]:29033 "EHLO
+        us-smtp-delivery-168.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725872AbfIIRkT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 13:24:32 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 67so13328917oto.3;
-        Mon, 09 Sep 2019 10:24:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6Wt1hD/MRsQkqqV33+GUQZHencJLKuHpXLwImoJRYqM=;
-        b=YHy1qrMkczFFQ67ktlriXxOyE29+Bp3XIJ4JoIRyg3btuchKYh3OUMaKdFI2UjMXQD
-         RrRefDltC3kmYcSXFqCYXX8o/i3xwLUGhJKwxrsdjspUD65Ya7wHxSH6XKvx5U4vSRBa
-         R+hO9dTTrFgUaQ+8YXuQHV1dOLkj8osB0WquDFeaCIDRWie5SvRJz1hmUQWSbHQpxDvZ
-         A16PEZ+me5Sa+F/aHm8nFPxB7n76Bj7m6w4LF8oG92BkZSQ/xLXI8oovo5IF8eUcl5z7
-         3QVyGjBIJpEK3RoUqlvuJqdp4nosMcmKI4FVpRdJSOYNH5QgZSq9OSHNmvPBLS/uFN0G
-         HJaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6Wt1hD/MRsQkqqV33+GUQZHencJLKuHpXLwImoJRYqM=;
-        b=MgmG8LdnN4madcniVDKBUxE/QDYCjBXhDB1R4OPhKLr8t8D4VNGBEkGkLzGw32fu0L
-         9FYrbWhHjUF7YfBKWFXyWRIbHxuV2zSkDcvUC5EArzD2z4K30eED67FZr098BDHUu2Eh
-         dNO6mfl3W1Z6L79g6qjQia3UPf93f10gsq8Xqh0ffaNT8OBcujMKhQirPejxQSbZhgQy
-         vigqaRbBZkKfVAvsHEVnvYA+EoUM+hpx1RnqLIJrBA+SfUC+KxEgiI8F4x3YfD+BWdOg
-         Zd+0/gG1dps1WNFDJY9VrTtXpEUlFgABoB/fOiEuzd5fSoh04Ef/jn6XrKF2rehyMgiL
-         dPeQ==
-X-Gm-Message-State: APjAAAXWoWxyteql+WHtkFeM4lwaN9Gkbw37xQdtunYsFsK1CGeUFmsG
-        8rjTkaVZh5rLqofr28uZQXizXwa9JUxAtQUwUqLnpw==
-X-Google-Smtp-Source: APXvYqx/wYKZsFCWHqjgcQBulyAf2hyBig9egcPMosBzQP1ky90Mmva1Ji9X/RYvJZ4uQspim2j2H9duJRW0qz6v1a8=
-X-Received: by 2002:a9d:5c0f:: with SMTP id o15mr21270768otk.81.1568049870233;
- Mon, 09 Sep 2019 10:24:30 -0700 (PDT)
+        Mon, 9 Sep 2019 13:40:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=impinj.com;
+        s=mimecast20190405; t=1568050817;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bGm8cFLECLLsTngjpe5Gi8z6a8eF/aJ7mMzplolIVHY=;
+        b=JALSAh34A+k9iugXDFMhLc1yGHidBjKVHDy+sTh5WVegq+ADgYOi0V5FzNS7p1uhQB0wY+
+        XjlOisgcEjqezXDZM688ckxtJE1yfKBToelck4z7HG4Ge0Al8xqxuGH4G5EkcwdfImUK8P
+        /pratiDFrmHjWf48+q+P2Wmjy3WRsWs=
+Received: from NAM05-BY2-obe.outbound.protection.outlook.com
+ (mail-by2nam05lp2054.outbound.protection.outlook.com [104.47.50.54]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ us-mta-168-fV-PFGkmM-6c0elrEQ5tcA-1; Mon, 09 Sep 2019 13:40:16 -0400
+Received: from MWHPR0601MB3708.namprd06.prod.outlook.com (10.167.236.38) by
+ MWHPR0601MB3660.namprd06.prod.outlook.com (10.167.236.26) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2241.20; Mon, 9 Sep 2019 17:40:11 +0000
+Received: from MWHPR0601MB3708.namprd06.prod.outlook.com
+ ([fe80::60b3:e38a:69b0:3f95]) by MWHPR0601MB3708.namprd06.prod.outlook.com
+ ([fe80::60b3:e38a:69b0:3f95%7]) with mapi id 15.20.2241.018; Mon, 9 Sep 2019
+ 17:40:11 +0000
+From:   Trent Piepho <tpiepho@impinj.com>
+To:     "vitaly.gaiduk@cloudbear.ru" <vitaly.gaiduk@cloudbear.ru>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+CC:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 2/2] net: phy: dp83867: Add SGMII mode type switching
+Thread-Topic: [PATCH v4 2/2] net: phy: dp83867: Add SGMII mode type switching
+Thread-Index: AQHVZzLGso1lPLk8MEK6S1hJcQkSf6cjnNsA
+Date:   Mon, 9 Sep 2019 17:40:11 +0000
+Message-ID: <1568050810.6344.13.camel@impinj.com>
+References: <1568047940-14490-2-git-send-email-vitaly.gaiduk@cloudbear.ru>
+         <1568049566-16708-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
+In-Reply-To: <1568049566-16708-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [216.207.205.253]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 00cfd251-b5eb-42b2-f9a5-08d7354cc39c
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR0601MB3660;
+x-ms-traffictypediagnostic: MWHPR0601MB3660:
+x-microsoft-antispam-prvs: <MWHPR0601MB3660B3B8B64424DD345CECABD3B70@MWHPR0601MB3660.namprd06.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 01559F388D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(199004)(189003)(66066001)(6246003)(6486002)(11346002)(446003)(26005)(2616005)(476003)(486006)(186003)(14454004)(53936002)(6512007)(256004)(66946007)(71200400001)(71190400001)(66476007)(66556008)(64756008)(66446008)(54906003)(110136005)(25786009)(76176011)(36756003)(4744005)(2201001)(5660300002)(86362001)(4326008)(229853002)(2906002)(102836004)(7736002)(305945005)(498600001)(6506007)(2501003)(6436002)(99286004)(6116002)(103116003)(3846002)(8676002)(8936002)(76116006)(91956017)(7416002)(81166006)(81156014);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR0601MB3660;H:MWHPR0601MB3708.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 12ETQ6/+gFRJQWkGLrDn7+BdwcJVPVKmEdM3d6kis1f4A/CuymXWelES9d3vjTyd58KHoh8YsUEmrWkS/Wt32BaN+oR/FyhQYOEJw1wvbDEHnLxflrTcezBn5otprRPp/1n6DTu57S0uLcyRXokiXYK08TgSYoJeHuWhb7rq8QK2ev88MLvGClcTcvzaA9DlKrqtGerCCXgXsUNFy7AoGVpU0aVyp1BoC7qRghzDgofcg+HeqhcrHN/jwMTGkSIjD/kK/JxOU5dIOLPrt0KpjBJlDq3yVhq8I50g8zR5dnFAR26VN2mL147hOPi0Xj60NhzLbxcJ4pFewVRSKforQvD5PDAXN8w0PIrmnQUEEIgog/XGIPUUDtvPW4GTEmCokxURjLofNdKEZ55aCtp8KARoBypePcXdMktBhgBZ9X8=
+x-ms-exchange-transport-forked: True
+Content-ID: <0D97D7714A6EC04584D8A4FBF64BAB87@namprd06.prod.outlook.com>
 MIME-Version: 1.0
-References: <1567667251-33466-1-git-send-email-jianxin.pan@amlogic.com>
- <1567667251-33466-5-git-send-email-jianxin.pan@amlogic.com>
- <CAFBinCBSmW4y-Dz7EkJMV8HOU4k6Z0G-K6T77XnVrHyubaSsdg@mail.gmail.com>
- <be032a85-b60d-f7f0-8404-b27784d809df@amlogic.com> <CAFBinCD7gFzOsmZCB8T1KJKVsgL7WMhoEkj3dRzyqwAnjC0CNA@mail.gmail.com>
- <a82336e2-44df-5682-1c86-daf8a8448d30@amlogic.com>
-In-Reply-To: <a82336e2-44df-5682-1c86-daf8a8448d30@amlogic.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Mon, 9 Sep 2019 19:24:19 +0200
-Message-ID: <CAFBinCAJG4=M3BSXfREGU+iadMPkc7=yt3AdcqA1KAhQx6Wh9w@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] arm64: dts: add support for A1 based Amlogic AD401
-To:     Jianxin Pan <jianxin.pan@amlogic.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Carlo Caione <carlo@caione.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Tao Zeng <tao.zeng@amlogic.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: impinj.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 00cfd251-b5eb-42b2-f9a5-08d7354cc39c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Sep 2019 17:40:11.1016
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 6de70f0f-7357-4529-a415-d8cbb7e93e5e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: AF0KlE9WzASCltDdpi0Rif/5lPQ8OLdgW0ar3Di66zFCiaMjdblUt4uwv5aKWkTDomsEtuogNy2nqd/hOEVo9Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR0601MB3660
+X-MC-Unique: fV-PFGkmM-6c0elrEQ5tcA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jianxin,
+T24gTW9uLCAyMDE5LTA5LTA5IGF0IDIwOjE5ICswMzAwLCBWaXRhbHkgR2FpZHVrIHdyb3RlOg0K
+PiBUaGlzIHBhdGNoIGFkZHMgYWJpbGl0eSB0byBzd2l0Y2ggYmVldHdlZW4gdHdvIFBIWSBTR01J
+SSBtb2Rlcy4NCj4gU29tZSBoYXJkd2FyZSwgZm9yIGV4YW1wbGUsIEZQR0EgSVAgZGVzaWducyBt
+YXkgdXNlIDYtd2lyZSBtb2RlDQo+IHdoaWNoIGVuYWJsZXMgZGlmZmVyZW50aWFsIFNHTUlJIGNs
+b2NrIHRvIE1BQy4NCj4gDQo+ICsNCj4gKwkJdmFsID0gcGh5X3JlYWRfbW1kKHBoeWRldiwgRFA4
+Mzg2N19ERVZBRERSLCBEUDgzODY3X1NHTUlJQ1RMKTsNCj4gKwkJLyogU0dNSUkgdHlwZSBpcyBz
+ZXQgdG8gNC13aXJlIG1vZGUgYnkgZGVmYXVsdC4NCj4gKwkJICogSWYgd2UgcGxhY2UgYXBwcm9w
+cmlhdGUgcHJvcGVydHkgaW4gZHRzIChzZWUgYWJvdmUpDQo+ICsJCSAqIHN3aXRjaCBvbiA2LXdp
+cmUgbW9kZS4NCj4gKwkJICovDQo+ICsJCWlmIChkcDgzODY3LT5zZ21paV9yZWZfY2xrX2VuKQ0K
+PiArCQkJdmFsIHw9IERQODM4NjdfU0dNSUlfVFlQRTsNCj4gKwkJZWxzZQ0KPiArCQkJdmFsICY9
+IH5EUDgzODY3X1NHTUlJX1RZUEU7DQo+ICsJCXBoeV93cml0ZV9tbWQocGh5ZGV2LCBEUDgzODY3
+X0RFVkFERFIsIERQODM4NjdfU0dNSUlDVEwsIHZhbCk7DQoNClNob3VsZCB1c2UgcGh5X21vZGlm
+eV9tbWQoKS4NCg==
 
-On Mon, Sep 9, 2019 at 2:03 PM Jianxin Pan <jianxin.pan@amlogic.com> wrote:
->
-> Hi Martin,
->
-> On 2019/9/7 23:02, Martin Blumenstingl wrote:
-> > Hi Jianxin,
-> >
-> > On Fri, Sep 6, 2019 at 7:58 AM Jianxin Pan <jianxin.pan@amlogic.com> wrote:
-> > [...]
-> >>> also I'm a bit surprised to see no busses (like aobus, cbus, periphs, ...) here
-> >>> aren't there any busses defined in the A1 SoC implementation or are
-> >>> were you planning to add them later?
-> >> Unlike previous series,there is no Cortex-M3 AO CPU in A1, and there is no AO/EE power domain.
-> >> Most of the registers are on the apb_32b bus.  aobus, cbus and periphs are not used in A1.
-> > OK, thank you for the explanation
-> > since you're going to re-send the patch anyways: can you please
-> > include the apb_32b bus?
-> > all other upstream Amlogic .dts are using the bus definitions, so that
-> > will make A1 consistent with the other SoCs
-> In A1 (and the later C1), BUS is not mentioned in the memmap and register spec.
-> Registers are organized and grouped by functions, and we can not find information about buses from the SoC document.
-do you know why the busses are not part of the documentation?
-
-> Maybe it's better to remove bus definitions for these chips.
-my understanding is that devicetree describes the hardware
-so if there's a bus in hardware (that we know about) then we should
-describe it in devicetree
-
-personally I think busses also make the .dts easier to read:
-instead of a huge .dts with all nodes on one level it's split into
-multiple smaller sub-nodes - thus making it easier to keep track of
-"where am I in this file".
-
-
-Martin
