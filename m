@@ -2,93 +2,148 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B748C433EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E791C433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2381A2089F
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:14:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jmPhYdOL"
+	by mail.kernel.org (Postfix) with ESMTP id 4C1532089F
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:15:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404031AbfIILOP (ORCPT
+        id S2404058AbfIILPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 07:14:15 -0400
-Received: from mail-wm1-f53.google.com ([209.85.128.53]:37459 "EHLO
-        mail-wm1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729483AbfIILOP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 07:14:15 -0400
-Received: by mail-wm1-f53.google.com with SMTP id r195so14191260wme.2
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 04:14:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=x4n6x9/qmmEjTTfyMxaFAIZOc+x6zgwe1HZT5rXoAW0=;
-        b=jmPhYdOL/Zxi9Qz5vYmk68b3cSiHJfLO4h07ekQYZ7UefcH13kMNa5NCQkZPcz7IFj
-         RBtOSND7FhodJf5EobnGmQoh7BqHBn/EgfMQT0opwbHi8hREbqRm5gbdgX5HgxZyEWaW
-         iImLvv0wzHsaEBx8hGfHFvRJ4wJYdF9eI8ZXVOMs9CPsFsmVoyO0sHbf5Vnm+azs3hxG
-         rqz65N9wmXtJ5OOqSgQsPtid3ubHRszYpq+uKARW+hMVU2KwPCMC64cXQvDrtA2OHbui
-         R/SFce0PYrqsbbQ2Z89hDYwru4jtBwvgn/KWC33/afLcVMISX+IhggznBQs9Gs/GhLsL
-         x5Cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=x4n6x9/qmmEjTTfyMxaFAIZOc+x6zgwe1HZT5rXoAW0=;
-        b=VivfR7HJm68+BXVUGRvDavADAAPktErHPoLcFvDO+o21gxPdqIw43VizIjrFVPRmxV
-         /oenJQ1UvZcKnzyTaSxSikPLaDNMO8tCNgBTv6g/3Wp8WQGUK6d/t7AuR3qEEk/254VC
-         HOCWiV6i8lABKVK2UoPiUx1aZrf+YW5HKH4GCDVGHdKg6lsFOpMsSD6qO2xbtsIq+e5l
-         hp0vqbEMKSREv6XqvXJPDt+BYH+9YiufImCMWPmd6PkG26PFveTsZOCg9O0P3Ul8TGi8
-         MQgUWn6MnuxSLJdJyg1FX11DBkH3KETeqgcxVnE+NkJVYPvRTSJRwsXRSi5VQMHxVDkX
-         VzPw==
-X-Gm-Message-State: APjAAAUNNHCDyYk7NnOGWZS6SqcqceRLLDWdYxzKbdBk61ZBaeedzG9D
-        D61i0oskakIkcLwudEXJou+Bmw==
-X-Google-Smtp-Source: APXvYqxZj8SqxMjLqHToVcM395HkhShweXt497/dFSmolXMFHfS1yWHepdCWoK4iNZVD8EKvctaAHg==
-X-Received: by 2002:a1c:4485:: with SMTP id r127mr17430162wma.59.1568027653085;
-        Mon, 09 Sep 2019 04:14:13 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id a15sm8198707wmj.25.2019.09.09.04.14.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Sep 2019 04:14:12 -0700 (PDT)
-Date:   Mon, 9 Sep 2019 12:14:10 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-omap@vger.kernel.org, tony@atomide.com, sre@kernel.org,
-        nekit1000@gmail.com, mpartap@gmx.net, merlijn@wizzup.org,
-        tomi.valkeinen@ti.com, jjhiblot@ti.com
-Subject: Re: Status of led-backlight driver
-Message-ID: <20190909111410.dwqvg6b4lgxymn2o@holly.lan>
-References: <20190907100726.GA12763@amd>
+        Mon, 9 Sep 2019 07:15:20 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40020 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731115AbfIILPT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 07:15:19 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 62961ACD9;
+        Mon,  9 Sep 2019 11:15:17 +0000 (UTC)
+From:   Luis Henriques <lhenriques@suse.com>
+To:     "Jeff Layton" <jlayton@kernel.org>
+Cc:     "IlyaDryomov" <idryomov@gmail.com>, "Sage Weil" <sage@redhat.com>,
+        <ceph-devel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] ceph: allow object copies across different filesystems in the same cluster
+References: <87k1ahojri.fsf@suse.com>
+        <20190909102834.16246-1-lhenriques@suse.com>
+        <3f838e42a50575595c7310386cf698aca8f89607.camel@kernel.org>
+Date:   Mon, 09 Sep 2019 12:15:16 +0100
+In-Reply-To: <3f838e42a50575595c7310386cf698aca8f89607.camel@kernel.org> (Jeff
+        Layton's message of "Mon, 09 Sep 2019 06:35:07 -0400")
+Message-ID: <87d0g9oh4r.fsf@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190907100726.GA12763@amd>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 07, 2019 at 12:07:27PM +0200, Pavel Machek wrote:
-> Hi!
-> 
-> I don't see the LED-backlight driver in -next. Could it be pushed? It
-> is one of last pieces to get working backlight on Motorola Droid 4...
+"Jeff Layton" <jlayton@kernel.org> writes:
 
-Sorry, I dropped the ball on this and was therefore rather late
-reviewing this patchset.
+> On Mon, 2019-09-09 at 11:28 +0100, Luis Henriques wrote:
+>> OSDs are able to perform object copies across different pools.  Thus,
+>> there's no need to prevent copy_file_range from doing remote copies if the
+>> source and destination superblocks are different.  Only return -EXDEV if
+>> they have different fsid (the cluster ID).
+>> 
+>> Signed-off-by: Luis Henriques <lhenriques@suse.com>
+>> ---
+>>  fs/ceph/file.c | 18 ++++++++++++++----
+>>  1 file changed, 14 insertions(+), 4 deletions(-)
+>> 
+>> Hi,
+>> 
+>> Here's the patch changelog since initial submittion:
+>> 
+>> - Dropped have_fsid checks on client structs
+>> - Use %pU to print the fsid instead of raw hex strings (%*ph)
+>> - Fixed 'To:' field in email so that this time the patch hits vger
+>> 
+>> Cheers,
+>> --
+>> Luis
+>> 
+>> diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+>> index 685a03cc4b77..4a624a1dd0bb 100644
+>> --- a/fs/ceph/file.c
+>> +++ b/fs/ceph/file.c
+>> @@ -1904,6 +1904,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>>  	struct ceph_inode_info *src_ci = ceph_inode(src_inode);
+>>  	struct ceph_inode_info *dst_ci = ceph_inode(dst_inode);
+>>  	struct ceph_cap_flush *prealloc_cf;
+>> +	struct ceph_fs_client *src_fsc = ceph_inode_to_client(src_inode);
+>>  	struct ceph_object_locator src_oloc, dst_oloc;
+>>  	struct ceph_object_id src_oid, dst_oid;
+>>  	loff_t endoff = 0, size;
+>> @@ -1915,8 +1916,17 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>>  
+>>  	if (src_inode == dst_inode)
+>>  		return -EINVAL;
+>> -	if (src_inode->i_sb != dst_inode->i_sb)
+>> -		return -EXDEV;
+>> +	if (src_inode->i_sb != dst_inode->i_sb) {
+>> +		struct ceph_fs_client *dst_fsc = ceph_inode_to_client(dst_inode);
+>> +
+>> +		if (ceph_fsid_compare(&src_fsc->client->fsid,
+>> +				      &dst_fsc->client->fsid)) {
+>> +			dout("Copying object across different clusters:");
+>> +			dout("  src fsid: %pU dst fsid: %pU\n",
+>> +			     &src_fsc->client->fsid, &dst_fsc->client->fsid);
+>> +			return -EXDEV;
+>> +		}
+>> +	}
+>
+> Just to be clear: what happens here if I mount two entirely separate
+> clusters, and their OSDs don't have any access to one another? Will this
+> fail at some later point with an error that we can catch so that we can
+> fall back?
 
-Assuming I have read the code correctly I think there are some
-problems with the max_brightness handling in the backlight code.
+This is exactly what this check prevents: if we have two CephFS from two
+unrelated clusters mounted and we try to copy a file across them, the
+operation will fail with -EXDEV[1] because the FSIDs for these two
+ceph_fs_client will be different.  OTOH, if these two filesystems are
+within the same cluster (and thus with the same FSID), then the OSDs are
+able to do 'copy-from' operations between them.
+
+I've tested all these scenarios and they seem to be handled correctly.
+Now, I'm assuming that *all* OSDs within the same ceph cluster can
+communicate between themselves; if this assumption is false, then this
+patch is broken.  But again, I'm not aware of any mechanism that
+prevents 2 OSDs from communicating between them.
+
+[1] Actually, the files will still be copied because we'll fallback into
+the default VFS generic_copy_file_range behaviour, which is to do
+reads+writes operations.
+
+Cheers,
+-- 
+Luis
 
 
-Daniel.
-
-
+>
+>
+>>  	if (ceph_snap(dst_inode) != CEPH_NOSNAP)
+>>  		return -EROFS;
+>>  
+>> @@ -1928,7 +1938,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>>  	 * efficient).
+>>  	 */
+>>  
+>> -	if (ceph_test_mount_opt(ceph_inode_to_client(src_inode), NOCOPYFROM))
+>> +	if (ceph_test_mount_opt(src_fsc, NOCOPYFROM))
+>>  		return -EOPNOTSUPP;
+>>  
+>>  	if ((src_ci->i_layout.stripe_unit != dst_ci->i_layout.stripe_unit) ||
+>> @@ -2044,7 +2054,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>>  				dst_ci->i_vino.ino, dst_objnum);
+>>  		/* Do an object remote copy */
+>>  		err = ceph_osdc_copy_from(
+>> -			&ceph_inode_to_client(src_inode)->client->osdc,
+>> +			&src_fsc->client->osdc,
+>>  			src_ci->i_vino.snap, 0,
+>>  			&src_oid, &src_oloc,
+>>  			CEPH_OSD_OP_FLAG_FADVISE_SEQUENTIAL |
