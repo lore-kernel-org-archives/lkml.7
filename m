@@ -2,84 +2,179 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF1DC433EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 03:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E98C433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 03:13:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 718582196F
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 03:11:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EE362196F
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 03:13:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="EA0bJFIw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O5lXIvrU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387403AbfIIDLg (ORCPT
+        id S2387447AbfIIDNH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 23:11:36 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:38920 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729790AbfIIDLg (ORCPT
+        Sun, 8 Sep 2019 23:13:07 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:34187 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387412AbfIIDNH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 23:11:36 -0400
-Received: by mail-qk1-f195.google.com with SMTP id 4so11674667qki.6
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 20:11:35 -0700 (PDT)
+        Sun, 8 Sep 2019 23:13:07 -0400
+Received: by mail-lf1-f68.google.com with SMTP id z21so9284281lfe.1
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 20:13:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ysUHgmNu9WMA8zL7iVWv/ObdOdJAcInEBYKpkc9uysc=;
-        b=EA0bJFIwM2SjnvAUk8RI0nFyjwZcV+73V6hkW0nl/potXqj6JTUzUTyaQd7OEzizOv
-         vyHEimncQN7YnHnfEUPp8I/UtaRujv1i5W762CvcziFum4ncZsXhYe+XQRxyw1WeLOLN
-         rSLD8ldV0GUgjGPCvuI8Y4KehrU3PVeG49DxLr19tTb/FohzTLCBu83AEL/ZXJ2smw/L
-         8s3EOcTJ4h7EQuTEMeFuq4y+mUCxkUEBTC4ggjorkPNRtmxMcf76UDUkfV424/Qy9i2h
-         Bwn92bWrujqZCt04DQmiu+pBJm03Q9wELvxVN+EtcPDS3ikIFtBmOAuQNpEsnIAorRMC
-         8dig==
+         :cc:content-transfer-encoding;
+        bh=3LfCbYav0GuA0YL9gmVzYCUuIMsC4Vv6UiM5Mn7c/LM=;
+        b=O5lXIvrUXnr+WXbBbwSSiq5gXFIIxXcbW9uQLIbQKyA4HtPBk/3jqsAppET63fAgm2
+         J5zOWrn6s8UnYjEgQrmrJJTcgVkm0KII5G3V1NNRzawSKm8+QdUOxR6i3B7YtgTMgfEo
+         /R+z7F95ftZMRK/Y9uR61G+BFg5193eFOH5VuARuJjOpHkpG2cERFZBFlC5/vmCTT7X5
+         p5eK2weHnDIkj0URyKTuUZQziSTLlqXT3AeRJls+hce8RKeRoYFxwQnVf2EDLhLZPScM
+         klAXg3oH8jPdm910u1kEP1bLQbCgfnnsvtVOAYXlFZnLCIuN1uVxiTk6HBWpDg6I5wIK
+         rQHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ysUHgmNu9WMA8zL7iVWv/ObdOdJAcInEBYKpkc9uysc=;
-        b=GQo6Eni7U3CSdk2eYBDRgWZlYqb5WepqXEuMtADC9fOLAuoWHzqOwM9onsmRxf1537
-         QN/OrZ9cbeIYJ5qc/WDAhaA8lsgTDfJsSPJxaS7P9MQ9WUWuYaq6uiYKJRcLh0BeTEFq
-         5hwv1UMXKbsPIhXwtFFSBm+EB5AyRGY66369lsoDJWrNfpVWNrD+mFzI6JCQy0R4mjlU
-         DSu1s56OJjk0vcIeSUC2aEJJISMLXpFqPu8DOX3uMvrtjvvvGaqv6R8thOPAu/yNuiqJ
-         27ePJPCpZbHLS7YMZEvAQcB6cshDOb/48LL8Ly9WVg3+aLarT24rCVKpn9kmXmapvgdp
-         ubXA==
-X-Gm-Message-State: APjAAAVH6P22gVdeCmDEvmM9dPNefE0XsGTMbNZ6LrshevzFygwBX40B
-        OFmxRLJQOZeSgo8OKB76ACDekklVyYRbLqEx4UobTw==
-X-Google-Smtp-Source: APXvYqxX0B/GZlqSYxDgtH13jNbbY+d3/QJQCEQPxrTROPkHoAlfS/Qfoz+sw1btsfsESznBrLnmdvq6rUNtzvgitZI=
-X-Received: by 2002:a37:9c57:: with SMTP id f84mr21728192qke.250.1567998695029;
- Sun, 08 Sep 2019 20:11:35 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3LfCbYav0GuA0YL9gmVzYCUuIMsC4Vv6UiM5Mn7c/LM=;
+        b=c7pacqgIrWsqD5ndZCLRl1BlOACZk3p8eEJB4ugDIVStLkdihiLr4oNhIB/nVNSSbJ
+         mrcnhvgMnlqwDTv6m/0+9anyABw46nVIRxgvyidt9Sy5n57PQCjVTst6k3mW7zxL8Wot
+         L6Px48DuKm9J/su7IHOcs1mtvywafQVtffhXeTtCkfCOL5Sp26XYXbE+q1k6EwSdm2Mx
+         8r7CFLw2xeWu2mO/24Bs/xxDK4+ENtbPnFexSW/EMrH/HSiOhYysx35LquVl75+8BTft
+         Rhui/MfBrAeu8MnkFAXTtWax2c2K03hgLc0/Cw/NRUJh9CtTgq4y+2qnT9+Ny7Y88wbF
+         PYsA==
+X-Gm-Message-State: APjAAAVDmcIjZFRUkzQVp+gBsBlwQqphuzuxhn/DT0R5msqP1qrHDLIh
+        0BBNw2b/5eT0mr3oTat8DNZHWZEbP54zY+0ZtmVoQNzgJG8=
+X-Google-Smtp-Source: APXvYqzTargLBkYl79X0rGmUOLaXZUdvMWAMG7oW/+CUGnU/EiQ1JEwEMQuXHB1GLY4nZD/63U4bbu8hdAXHZjWMZ84=
+X-Received: by 2002:ac2:4352:: with SMTP id o18mr15000583lfl.164.1567998783481;
+ Sun, 08 Sep 2019 20:13:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190906185231.1081695-1-arnd@arndb.de>
-In-Reply-To: <20190906185231.1081695-1-arnd@arndb.de>
-From:   Chris Chiu <chiu@endlessm.com>
-Date:   Mon, 9 Sep 2019 11:11:24 +0800
-Message-ID: <CAB4CAwfvPpdhp0oCnAkZEY9GqE+PA8OcD84wtR_P44CZ12p8-g@mail.gmail.com>
-Subject: Re: [PATCH] [v2] pinctrl: intel: mark intel_pin_to_gpio __maybe_unused
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
+References: <20190908121125.608195329@linuxfoundation.org>
+In-Reply-To: <20190908121125.608195329@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Mon, 9 Sep 2019 08:42:51 +0530
+Message-ID: <CA+G9fYttXw5buEQkt+PVH2By+S0OazBJZp6FJbDQXPZru_obew@mail.gmail.com>
+Subject: Re: [PATCH 4.19 00/57] 4.19.72-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 7, 2019 at 2:52 AM Arnd Bergmann <arnd@arndb.de> wrote:
+On Sun, 8 Sep 2019 at 18:20, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> The intel_pin_to_gpio() function is only called by the
-> PM support functions and causes a warning when those are disabled:
+> This is the start of the stable review cycle for the 4.19.72 release.
+> There are 57 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> drivers/pinctrl/intel/pinctrl-intel.c:841:12: error: unused function 'intel_pin_to_gpio' [-Werror,-Wunused-function]
+> Responses should be made by Tue 10 Sep 2019 12:09:36 PM UTC.
+> Anything received after that time might be too late.
 >
-> Mark it __maybe_unused to suppress the warning.
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.19.72-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.19.y
+> and the diffstat can be found below.
 >
-> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Chris Chiu <chiu@endlessm.com>
+> thanks,
+>
+> greg k-h
+>
+
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.19.72-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.19.y
+git commit: 20f1e9f544166cca04c111f8719286155a5b9b09
+git describe: v4.19.70-60-g20f1e9f54416
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
+ild/v4.19.70-60-g20f1e9f54416
+
+
+No regressions (compared to build v4.19.70)
+
+
+No fixes (compared to build v4.19.70)
+
+Ran 22190 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libgpiod
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* network-basic-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* ltp-open-posix-tests
+* kvm-unit-tests
+* ssuite
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
