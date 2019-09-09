@@ -2,210 +2,109 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65949C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 216F6C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39DDE2086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:26:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED35F2086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:26:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568028411;
+	bh=CzvWQDxQFxAcoWDb+NO6txjLfQDdjFSb8XYgqiljobM=;
+	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
+	b=osA3EkIlNbpLLgKKNK6eURM6HeGXxP/1rp0SWJMdyX/pb8ykJpeU3LN7dFPfJYzEw
+	 6Z3XzLxiX4bzMmFepxUmXnMCbicHMjS6t/h9XSniGMFQEAk/YDzRc13U400oqYevgC
+	 TPPVeNaneo3OG4BddfujWvBec6h8NXCfYTmTiI6c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404078AbfIIL0p (ORCPT
+        id S2404106AbfIIL0u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 9 Sep 2019 07:26:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35832 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404056AbfIIL0p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 9 Sep 2019 07:26:45 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:33910 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404031AbfIIL0p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 07:26:45 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 794725134C95325920F7;
-        Mon,  9 Sep 2019 19:26:43 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.213) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 9 Sep 2019
- 19:26:39 +0800
-Subject: Re: [f2fs-dev] [PATCH 2/2] f2fs: avoid infinite GC loop due to stale
- atomic files
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <20190909012532.20454-1-jaegeuk@kernel.org>
- <20190909012532.20454-2-jaegeuk@kernel.org>
- <f446ff29-38a5-61fd-4056-b4067b01c630@huawei.com>
- <20190909073011.GA21625@jaegeuk-macbookpro.roam.corp.google.com>
- <5a473076-14b8-768a-62ac-f686e850d5a6@huawei.com>
- <20190909080108.GC21625@jaegeuk-macbookpro.roam.corp.google.com>
- <bf0683d9-ac05-1edc-71ea-3d02f7b2fb55@huawei.com>
- <20190909082112.GA25724@jaegeuk-macbookpro.roam.corp.google.com>
- <2f5b844c-f722-6a80-a4ab-61bdd72b8be4@huawei.com>
- <20190909083844.GC25724@jaegeuk-macbookpro.roam.corp.google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <83759349-644a-b3a0-787d-e463b0565885@huawei.com>
-Date:   Mon, 9 Sep 2019 19:26:17 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F45221920;
+        Mon,  9 Sep 2019 11:26:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568028404;
+        bh=CzvWQDxQFxAcoWDb+NO6txjLfQDdjFSb8XYgqiljobM=;
+        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
+        b=kvzX7qLSplsgsgUWn4yyHhNROmcTc5k6WN1dv59DBIULtGwy2meVArtgl0m/8lmRr
+         TyR3gK+kLnZ8DnlXrsEjbphw6VwVxegB8AYDEqKP2D93g6JX68ePhkopSBkD9megyO
+         Na5BZLtRvJAGUjH1BrymBbixAZM6azhebrFKr3/w=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20190909083844.GC25724@jaegeuk-macbookpro.roam.corp.google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190826062127.GH2672@vkoul-mobl>
+References: <20190822170140.7615-1-vkoul@kernel.org> <20190822170140.7615-3-vkoul@kernel.org> <20190824063115.GW26807@tuxbook-pro> <20190826062127.GH2672@vkoul-mobl>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v3 2/4] clk: qcom: clk-rpmh: Convert to parent data scheme
+User-Agent: alot/0.8.1
+Date:   Mon, 09 Sep 2019 04:26:43 -0700
+Message-Id: <20190909112644.4F45221920@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/9/9 16:38, Jaegeuk Kim wrote:
-> On 09/09, Chao Yu wrote:
->> On 2019/9/9 16:21, Jaegeuk Kim wrote:
->>> On 09/09, Chao Yu wrote:
->>>> On 2019/9/9 16:01, Jaegeuk Kim wrote:
->>>>> On 09/09, Chao Yu wrote:
->>>>>> On 2019/9/9 15:30, Jaegeuk Kim wrote:
->>>>>>> On 09/09, Chao Yu wrote:
->>>>>>>> On 2019/9/9 9:25, Jaegeuk Kim wrote:
->>>>>>>>> If committing atomic pages is failed when doing f2fs_do_sync_file(), we can
->>>>>>>>> get commited pages but atomic_file being still set like:
->>>>>>>>>
->>>>>>>>> - inmem:    0, atomic IO:    4 (Max.   10), volatile IO:    0 (Max.    0)
->>>>>>>>>
->>>>>>>>> If GC selects this block, we can get an infinite loop like this:
->>>>>>>>>
->>>>>>>>> f2fs_submit_page_bio: dev = (253,7), ino = 2, page_index = 0x2359a8, oldaddr = 0x2359a8, newaddr = 0x2359a8, rw = READ(), type = COLD_DATA
->>>>>>>>> f2fs_submit_read_bio: dev = (253,7)/(253,7), rw = READ(), DATA, sector = 18533696, size = 4096
->>>>>>>>> f2fs_get_victim: dev = (253,7), type = No TYPE, policy = (Foreground GC, LFS-mode, Greedy), victim = 4355, cost = 1, ofs_unit = 1, pre_victim_secno = 4355, prefree = 0, free = 234
->>>>>>>>> f2fs_iget: dev = (253,7), ino = 6247, pino = 5845, i_mode = 0x81b0, i_size = 319488, i_nlink = 1, i_blocks = 624, i_advise = 0x2c
->>>>>>>>> f2fs_submit_page_bio: dev = (253,7), ino = 2, page_index = 0x2359a8, oldaddr = 0x2359a8, newaddr = 0x2359a8, rw = READ(), type = COLD_DATA
->>>>>>>>> f2fs_submit_read_bio: dev = (253,7)/(253,7), rw = READ(), DATA, sector = 18533696, size = 4096
->>>>>>>>> f2fs_get_victim: dev = (253,7), type = No TYPE, policy = (Foreground GC, LFS-mode, Greedy), victim = 4355, cost = 1, ofs_unit = 1, pre_victim_secno = 4355, prefree = 0, free = 234
->>>>>>>>> f2fs_iget: dev = (253,7), ino = 6247, pino = 5845, i_mode = 0x81b0, i_size = 319488, i_nlink = 1, i_blocks = 624, i_advise = 0x2c
->>>>>>>>>
->>>>>>>>> In that moment, we can observe:
->>>>>>>>>
->>>>>>>>> [Before]
->>>>>>>>> Try to move 5084219 blocks (BG: 384508)
->>>>>>>>>   - data blocks : 4962373 (274483)
->>>>>>>>>   - node blocks : 121846 (110025)
->>>>>>>>> Skipped : atomic write 4534686 (10)
->>>>>>>>>
->>>>>>>>> [After]
->>>>>>>>> Try to move 5088973 blocks (BG: 384508)
->>>>>>>>>   - data blocks : 4967127 (274483)
->>>>>>>>>   - node blocks : 121846 (110025)
->>>>>>>>> Skipped : atomic write 4539440 (10)
->>>>>>>>>
->>>>>>>>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
->>>>>>>>> ---
->>>>>>>>>  fs/f2fs/file.c | 10 +++++-----
->>>>>>>>>  1 file changed, 5 insertions(+), 5 deletions(-)
->>>>>>>>>
->>>>>>>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
->>>>>>>>> index 7ae2f3bd8c2f..68b6da734e5f 100644
->>>>>>>>> --- a/fs/f2fs/file.c
->>>>>>>>> +++ b/fs/f2fs/file.c
->>>>>>>>> @@ -1997,11 +1997,11 @@ static int f2fs_ioc_commit_atomic_write(struct file *filp)
->>>>>>>>>  			goto err_out;
->>>>>>>>>  
->>>>>>>>>  		ret = f2fs_do_sync_file(filp, 0, LLONG_MAX, 0, true);
->>>>>>>>> -		if (!ret) {
->>>>>>>>> -			clear_inode_flag(inode, FI_ATOMIC_FILE);
->>>>>>>>> -			F2FS_I(inode)->i_gc_failures[GC_FAILURE_ATOMIC] = 0;
->>>>>>>>> -			stat_dec_atomic_write(inode);
->>>>>>>>> -		}
->>>>>>>>> +
->>>>>>>>> +		/* doesn't need to check error */
->>>>>>>>> +		clear_inode_flag(inode, FI_ATOMIC_FILE);
->>>>>>>>> +		F2FS_I(inode)->i_gc_failures[GC_FAILURE_ATOMIC] = 0;
->>>>>>>>> +		stat_dec_atomic_write(inode);
->>>>>>>>
->>>>>>>> If there are still valid atomic write pages linked in .inmem_pages, it may cause
->>>>>>>> memory leak when we just clear FI_ATOMIC_FILE flag.
->>>>>>>
->>>>>>> f2fs_commit_inmem_pages() should have flushed them.
->>>>>>
->>>>>> Oh, we failed to flush its nodes.
->>>>>>
->>>>>> However we won't clear such info if we failed to flush inmen pages, it looks
->>>>>> inconsistent.
->>>>>>
->>>>>> Any interface needed to drop inmem pages or clear ATOMIC_FILE flag in that two
->>>>>> error path? I'm not very clear how sqlite handle such error.
->>>>>
->>>>> f2fs_drop_inmem_pages() did that, but not in this case.
->>>>
->>>> What I mean is, for any error returned from atomic_commit() interface, should
->>>> userspace application handle it with consistent way, like trigger
->>>> f2fs_drop_inmem_pages(), so we don't need to handle it inside atomic_commit().
->>>
->>> f2fs_ioc_abort_volatile_write() will be triggered.
->>
->> If userspace can do this, we can get rid of this patch, or am I missing sth?
-> 
-> We don't know when that will come. And, other threads are waiting for GC here.
+Quoting Vinod Koul (2019-08-25 23:21:27)
+> On 23-08-19, 23:31, Bjorn Andersson wrote:
+> > On Thu 22 Aug 10:01 PDT 2019, Vinod Koul wrote:
+> >=20
+> > > Convert the rpmh clock driver to use the new parent data scheme by
+> > > specifying the parent data for board clock.
+> > >=20
+> > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > > ---
+> > >  drivers/clk/qcom/clk-rpmh.c | 10 ++++++++--
+> > >  1 file changed, 8 insertions(+), 2 deletions(-)
+> > >=20
+> > > diff --git a/drivers/clk/qcom/clk-rpmh.c b/drivers/clk/qcom/clk-rpmh.c
+> > > index c3fd632af119..0bced7326a20 100644
+> > > --- a/drivers/clk/qcom/clk-rpmh.c
+> > > +++ b/drivers/clk/qcom/clk-rpmh.c
+> > > @@ -95,7 +95,10 @@ static DEFINE_MUTEX(rpmh_clk_lock);
+> > >             .hw.init =3D &(struct clk_init_data){                    =
+ \
+> > >                     .ops =3D &clk_rpmh_ops,                          =
+ \
+> > >                     .name =3D #_name,                                =
+ \
+> > > -                   .parent_names =3D (const char *[]){ "xo_board" },=
+ \
+> > > +                   .parent_data =3D  &(const struct clk_parent_data)=
+{ \
+> > > +                                   .fw_name =3D "xo_board",         =
+ \
+> > > +                                   .name =3D "xo_board",            =
+ \
+> >=20
+> > Iiuc .name here refers to the global clock namespace and .fw_name refers
+> > to the device_node local name space. As such I really prefer this to be:
+> >=20
+> >   .fw_name =3D "xo",
+> >   .name =3D "xo_board",
+> >=20
+> > This ensures the backwards compatibility (when using global lookup),
+> > without complicating the node-local naming.
+>=20
+> Sure, while thinking more on this, should we finalize the name as xo or
+> cxo, I see latter being also used at few places. It would be great to
+> get a name and stick to it for longer time :)
+> --=20
 
-Yes, however, even atomic_write won't be called sometimes... that's why we add
-handling logic in f2fs_gc().
+I would name it 'cxo' because that's the pin name on this platform.
 
-> 
->>
->> - f2fs_ioc_abort_volatile_write
->>  - f2fs_drop_inmem_pages
->>   - clear_inode_flag(inode, FI_ATOMIC_FILE);
->>   - fi->i_gc_failures[GC_FAILURE_ATOMIC] = 0;
->>   - stat_dec_atomic_write(inode);
->>
->>>
->>>>
->>>>>
->>>>>>
->>>>>> Thanks,
->>>>>>
->>>>>>>
->>>>>>>>
->>>>>>>> So my question is why below logic didn't handle such condition well?
->>>>>>>>
->>>>>>>> f2fs_gc()
->>>>>>>>
->>>>>>>> 	if (has_not_enough_free_secs(sbi, sec_freed, 0)) {
->>>>>>>> 		if (skipped_round <= MAX_SKIP_GC_COUNT ||
->>>>>>>> 					skipped_round * 2 < round) {
->>>>>>>> 			segno = NULL_SEGNO;
->>>>>>>> 			goto gc_more;
->>>>>>>> 		}
->>>>>>>>
->>>>>>>> 		if (first_skipped < last_skipped &&
->>>>>>>> 				(last_skipped - first_skipped) >
->>>>>>>> 						sbi->skipped_gc_rwsem) {
->>>>>>>> 			f2fs_drop_inmem_pages_all(sbi, true);
->>>>>>>
->>>>>>> This is doing nothing, since f2fs_commit_inmem_pages() removed the inode
->>>>>>> from inmem list.
-
-One possible solution is keeping inode in sbi->inode_lock[ATOMIC_FILE] list
-until f2fs_do_sync_file() return, then f2fs_drop_inmem_pages_all() can find and
-drop the inode.
-
-Thanks,
-
->>>>>>>
->>>>>>>> 			segno = NULL_SEGNO;
->>>>>>>> 			goto gc_more;
->>>>>>>> 		}
->>>>>>>> 		if (gc_type == FG_GC && !is_sbi_flag_set(sbi, SBI_CP_DISABLED))
->>>>>>>> 			ret = f2fs_write_checkpoint(sbi, &cpc);
->>>>>>>> 	}
->>>>>>>>
->>>>>>>>>  	} else {
->>>>>>>>>  		ret = f2fs_do_sync_file(filp, 0, LLONG_MAX, 1, false);
->>>>>>>>>  	}
->>>>>>>>>
->>>>>>> .
->>>>>>>
->>>>> .
->>>>>
->>> .
->>>
-> .
-> 
