@@ -2,105 +2,128 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B7A2C49ED6
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 19:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5784C4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 19:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DDEC21D6C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 19:26:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4ED721A4A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 19:30:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568057424;
+	bh=nmVjDiFEPjOun2GAl5FyRhqaLZ9PnQH+QNxrazFr5HA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=baRoHX2mOhmOjfZWlwpZt5VdjUVSotFo72bRwbg6JmkamxYroKTU8eZ5StF2Bgj1b
+	 KEGStwWHzJWgpr/mRU1gUE6Vt3n0sHBsGsY6s5kBn6aQOQJ5Xsj2meib3Xb6KZM8at
+	 ln0Bp2ks0y3ZIQ/PGby+TnfcAOFz2o/MNcxQ5t5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391529AbfIIT0k (ORCPT
+        id S2405599AbfIITaX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 15:26:40 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:32799 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729060AbfIIT0k (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 15:26:40 -0400
-Received: by mail-ot1-f66.google.com with SMTP id g25so12846551otl.0;
-        Mon, 09 Sep 2019 12:26:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gLM1CCeC9p531hDNHLzC8mfBfqp2fYYPYblncN2/1Rc=;
-        b=KKkXO0ezzEspIPk0w3BCC3YY19ntWXFIAilGUb6+Ma9tjL6+5+M2reVTsTXlIcndPN
-         GYxToW8uMLeylQ+bycJnoH8/UJvntB/OsFBTjJ+ax56cWOvDCbtYknq5BB9oA4lT1ybb
-         v5LJWnYm8k9JI0o1cX+vwwj1Kf6NLV4ewEYzHHkMJrojtMrRL27NBwjcvrrEmqm3ZRmj
-         sMeSgMrdbWusLM6pV76/+qjcntS9J/HqLj1UCyi9i1s9vL/w4zG36RLfxDcSK5DVeieE
-         GX7s8Tk+NXPBvTBbZNVW+9rPcuF9pT/ehmrmHDarjpwlMBbTC06Nk0DSzfNi72xEZIu4
-         oYNQ==
-X-Gm-Message-State: APjAAAW4N/0KSWBXwjHMT0KvrIrQqmOoEoge4Iq+Nqm/bAJg7mNd2hlA
-        w9EJv95+pYrkAJZcwq8FAjI=
-X-Google-Smtp-Source: APXvYqxvv9Dl8xhPxigif8op9MALNHTzy1+8Tpt1rHFifjQ8+bhuULtTy/MLAuruuc/2+om5BkVnKA==
-X-Received: by 2002:a9d:77c1:: with SMTP id w1mr5081503otl.9.1568057198903;
-        Mon, 09 Sep 2019 12:26:38 -0700 (PDT)
-Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
-        by smtp.gmail.com with ESMTPSA id k10sm2043237oij.16.2019.09.09.12.26.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 09 Sep 2019 12:26:37 -0700 (PDT)
-Subject: Re: [PATCH v8 13/13] nvmet-passthru: support block accounting
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Cc:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Stephen Bates <sbates@raithlin.com>, Jens Axboe <axboe@fb.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Christoph Hellwig <hch@lst.de>
-References: <20190828215429.4572-1-logang@deltatee.com>
- <20190828215429.4572-14-logang@deltatee.com>
- <92d61426-65a2-827c-936b-55f12f3d6afb@grimberg.me>
- <ca4ebcd9-fa5d-5ddf-c2a7-70318410dd97@deltatee.com>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <7954e8a4-6026-2210-7192-94a4e483facf@grimberg.me>
-Date:   Mon, 9 Sep 2019 12:26:35 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 9 Sep 2019 15:30:23 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40628 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730416AbfIITaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 15:30:23 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A4E75B621;
+        Mon,  9 Sep 2019 19:30:21 +0000 (UTC)
+Date:   Mon, 9 Sep 2019 21:30:20 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Rientjes <rientjes@google.com>
+Cc:     Andrea Arcangeli <aarcange@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [patch for-5.3 0/4] revert immediate fallback to remote hugepages
+Message-ID: <20190909193020.GD2063@dhcp22.suse.cz>
+References: <alpine.DEB.2.21.1909041252230.94813@chino.kir.corp.google.com>
+ <20190904205522.GA9871@redhat.com>
+ <alpine.DEB.2.21.1909051400380.217933@chino.kir.corp.google.com>
 MIME-Version: 1.0
-In-Reply-To: <ca4ebcd9-fa5d-5ddf-c2a7-70318410dd97@deltatee.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1909051400380.217933@chino.kir.corp.google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu 05-09-19 14:06:28, David Rientjes wrote:
+> On Wed, 4 Sep 2019, Andrea Arcangeli wrote:
+> 
+> > > This is an admittedly hacky solution that shouldn't cause anybody to 
+> > > regress based on NUMA and the semantics of MADV_HUGEPAGE for the past 
+> > > 4 1/2 years for users whose workload does fit within a socket.
+> > 
+> > How can you live with the below if you can't live with 5.3-rc6? Here
+> > you allocate remote THP if the local THP allocation fails.
+> > 
+> > >  			page = __alloc_pages_node(hpage_node,
+> > >  						gfp | __GFP_THISNODE, order);
+> > > +
+> > > +			/*
+> > > +			 * If hugepage allocations are configured to always
+> > > +			 * synchronous compact or the vma has been madvised
+> > > +			 * to prefer hugepage backing, retry allowing remote
+> > > +			 * memory as well.
+> > > +			 */
+> > > +			if (!page && (gfp & __GFP_DIRECT_RECLAIM))
+> > > +				page = __alloc_pages_node(hpage_node,
+> > > +						gfp | __GFP_NORETRY, order);
+> > > +
+> > 
+> > You're still going to get THP allocate remote _before_ you have a
+> > chance to allocate 4k local this way. __GFP_NORETRY won't make any
+> > difference when there's THP immediately available in the remote nodes.
+> > 
+> 
+> This is incorrect: the fallback allocation here is only if the initial 
+> allocation with __GFP_THISNODE fails.  In that case, we were able to 
+> compact memory to make a local hugepage available without incurring 
+> excessive swap based on the RFC patch that appears as patch 3 in this 
+> series.
 
->>> Support block disk accounting by setting the RQF_IO_STAT flag
->>> and gendisk in the request.
->>>
->>> After this change, IO counts will be reflected correctly in
->>> /proc/diskstats for drives being used by passthru.
->>>
->>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
->>> ---
->>>    drivers/nvme/target/io-cmd-passthru.c | 5 ++++-
->>>    1 file changed, 4 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/nvme/target/io-cmd-passthru.c b/drivers/nvme/target/io-cmd-passthru.c
->>> index 7557927a3451..63f12750a80d 100644
->>> --- a/drivers/nvme/target/io-cmd-passthru.c
->>> +++ b/drivers/nvme/target/io-cmd-passthru.c
->>> @@ -410,6 +410,9 @@ static struct request *nvmet_passthru_blk_make_request(struct nvmet_req *req,
->>>    	if (unlikely(IS_ERR(rq)))
->>>    		return rq;
->>>    
->>> +	if (blk_queue_io_stat(q) && cmd->common.opcode != nvme_cmd_flush)
->>> +		rq->rq_flags |= RQF_IO_STAT;
-> 
-> Thanks for the review!
-> 
->> Does flush has data bytes in the request? Why the special casing?
-> 
-> Well it was special cased in the vanilla blk account flow... But I think
-> it's required to be special cased so the IO and in_flight counts don't
-> count flushes (as they do not for regular block device traffic).
+That patch is quite obscure and specific to pageblock_order+ sizes and
+for some reason requires __GPF_IO without any explanation on why. The
+problem is not THP specific, right? Any other high order has the same
+problem AFAICS. So it is just a hack and that's why it is hard to reason
+about.
 
-I think that the accounting exclude I/O that is yielded from the flush
-sequence. Don't think its relevant here...
+I believe it would be the best to start by explaining why we do not see
+the same problem with order-0 requests. We do not enter the slow path
+and thus the memory reclaim if there is any other node to pass through
+watermakr as well right? So essentially we are relying on kswapd to keep
+nodes balanced so that allocation request can be satisfied from a local
+node. We do have kcompactd to do background compaction. Why do we want
+to rely on the direct compaction instead? What is the fundamental
+difference?
+
+Your changelog goes in length about some problems in the compaction but
+I really do not see the underlying problem description. We cannot do any
+sensible fix/heuristic without capturing that IMHO. Either there is
+some fundamental difference between direct and background compaction
+and doing a the former one is necessary and we should be doing that by
+default for all higher order requests that are sleepable (aka
+__GFP_DIRECT_RECLAIM) or there is something to fix for the background
+compaction to be more pro-active.
+ 
+> > I said one good thing about this patch series, that it fixes the swap
+> > storms. But upstream 5.3 fixes the swap storms too and what you sent
+> > is not nearly equivalent to the mempolicy that Michal was willing
+> > to provide you and that we thought you needed to get bigger guarantees
+> > of getting only local 2m or local 4k pages.
+> > 
+> 
+> I haven't seen such a patch series, is there a link?
+
+not yet unfortunatelly. So far I haven't heard that you are even
+interested in that policy. You have never commented on that IIRC.
+-- 
+Michal Hocko
+SUSE Labs
