@@ -2,107 +2,64 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=FAKE_REPLY_C,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27000C00307
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 06:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AED6C433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 06:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AE3B20828
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 06:21:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 770EE20828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 06:22:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727987AbfIIGVA (ORCPT
+        id S1727878AbfIIGWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 02:21:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48624 "EHLO mx1.redhat.com"
+        Mon, 9 Sep 2019 02:22:16 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:32804 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727898AbfIIGVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 02:21:00 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C3B4A30A00CF;
-        Mon,  9 Sep 2019 06:20:59 +0000 (UTC)
-Received: from rh (ovpn-116-55.phx2.redhat.com [10.3.116.55])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7E92110016EB;
-        Mon,  9 Sep 2019 06:20:59 +0000 (UTC)
-Received: from [::1] (helo=rh)
-        by rh with esmtps (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <dchinner@redhat.com>)
-        id 1i7D2i-0001wB-HC; Mon, 09 Sep 2019 16:20:52 +1000
-Date:   Mon, 9 Sep 2019 16:20:49 +1000
-From:   Dave Chinner <dchinner@redhat.com>
-To:     Rong Chen <rong.a.chen@intel.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        LKML <linux-kernel@vger.kernel.org>, linux-xfs@vger.kernel.org,
-        lkp@01.org
-Subject: Re: [xfs] 610125ab1e: fsmark.app_overhead -71.2% improvement
-Message-ID: <20190909062049.GQ2254@rh>
-References: <20190909015849.GN15734@shao2-debian>
- <20190909053236.GP2254@rh>
- <df5f4105-58a9-492d-882e-0963fd5cb23f@intel.com>
+        id S1728039AbfIIGWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 02:22:15 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
+        id 1i7D3C-0006NS-Ao; Mon, 09 Sep 2019 16:21:23 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Mon, 09 Sep 2019 16:21:11 +1000
+Date:   Mon, 9 Sep 2019 16:21:11 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     torvalds@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        tglx@linutronix.de, joel@joelfernandes.org,
+        stern@rowland.harvard.edu, rostedt@goodmis.org,
+        valentin.schneider@arm.com, linux-kernel@vger.kernel.org,
+        paulmck@linux.ibm.com, boqun.feng@gmail.com, will.deacon@arm.com,
+        dhowells@redhat.com
+Subject: Re: [PATCH 1/1] Fix: trace sched switch start/stop racy updates
+Message-ID: <20190909062111.GA14572@gondor.apana.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <df5f4105-58a9-492d-882e-0963fd5cb23f@intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Mon, 09 Sep 2019 06:20:59 +0000 (UTC)
+In-Reply-To: <20190820135612.GS2332@hirez.programming.kicks-ass.net>
+X-Newsgroups: apana.lists.os.linux.kernel
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 09, 2019 at 02:06:54PM +0800, Rong Chen wrote:
-> Hi Dave,
+Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> Paulmck actually has an example of that somewhere; ISTR that particular
+> case actually got fixed by GCC, but I'd really _love_ for some compiler
+> people (both GCC and LLVM) to state that their respective compilers will
+> not do load/store tearing for machine word sized load/stores.
 > 
-> On 9/9/19 1:32 PM, Dave Chinner wrote:
-> > On Mon, Sep 09, 2019 at 09:58:49AM +0800, kernel test robot wrote:
-> > > Greeting,
-> > > 
-> > > FYI, we noticed a -71.2% improvement of fsmark.app_overhead due to commit:
-> > A negative improvement? That's somewhat ambiguous...
-> 
-> Sorry for causing the misunderstanding, it's a improvement not a regression.
-> 
-> 
-> > 
-> > > 0e822255f95db400 610125ab1e4b1b48dcffe74d9d8
-> > > ---------------- ---------------------------
-> > >           %stddev     %change         %stddev
-> > >               \          |                \
-> > >   1.095e+08           -71.2%   31557568        fsmark.app_overhead
-> > >        6157           +95.5%      12034        fsmark.files_per_sec
-> > So, the files/s rate doubled, and the amount of time spent in
-> > userspace by the fsmark app dropped by 70%.
-> > 
-> > >      167.31           -47.3%      88.25        fsmark.time.elapsed_time
-> > >      167.31           -47.3%      88.25        fsmark.time.elapsed_time.max
-> > Wall time went down by 50%.
-> > 
-> > >       91.00            -8.8%      83.00        fsmark.time.percent_of_cpu_this_job_got
-> > >      148.15           -53.2%      69.38        fsmark.time.system_time
-> > As did system CPU.
-> > 
-> > IOWs, this change has changed create performance by a factor of 4 -
-> > the file create is 2x faster for half the CPU spent.
-> > 
-> > I don't think this is a negative improvement - it's a large positive
-> > improvement.  I suspect that you need to change the metric
-> > classifications for this workload...
-> To avoid misunderstanding, we'll use fsmark.files_per_sec instead of
-> fsmark.app_overhead in the subject.
+> Without this written guarantee (which supposedly was in older GCC
+> manuals but has since gone missing), I'm loathe to rely on it.
 
-Well, the two are separate ways of measuring improvement. A change
-in one without a change in the other is just as significant as
-a change in both...
+IIRC in that case gcc actually broke atomic writes even with a
+volatile keyword.  So even WRITE_ONCE wouldn't have saved us.
 
 Cheers,
-
-Dave.
 -- 
-Dave Chinner
-dchinner@redhat.com
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
