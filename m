@@ -5,54 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53372C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4471AC4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2542321D6C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:18:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EC7421D79
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:18:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568067507;
-	bh=e1h3js1akksNSdN7MbHfoSgbNrAbeyQ3zCDjASU0y00=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DDagD91ITW+haflwepBBj4PLw4Gr/nWF/sWmst3UU+2jgpQR4wUwuhj5cB9rqhXj5
-	 8FTyXjp6fkkCXKgXURuiJ1rCAfxqUpYwPP23ZXxkPb0W1j/yFSIXWHPJHKSkn14RVp
-	 GJlO9PVXBDsJgEemqnQHvoWqDznLpBkRga/ELIeE=
+	s=default; t=1568067511;
+	bh=566Bz2o9qSdYSA2i4UQw+4bzvn1OWackuqqOtUWjLro=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=y2NSk1/lJ+BYnmJ89Wg593TOyH3Q62unIFFelJozlJysHW6TDCQahgDuk/wYMdxl+
+	 48nQH+OFlkee65KbpoPft8og5qGgVa+6QIFBK7pD2XVUPfWQX2bPJB/8/oi4iPGgfi
+	 NhcaWBdU1OZtSkCFXs5W4+BfeCbYKch4neU0gcmc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406220AbfIIWQp (ORCPT
+        id S1728079AbfIIWSa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 18:16:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45344 "EHLO mail.kernel.org"
+        Mon, 9 Sep 2019 18:18:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406141AbfIIWQ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 18:16:27 -0400
+        id S2406149AbfIIWQg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 18:16:36 -0400
 Received: from sasha-vm.mshome.net (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DE292171F;
-        Mon,  9 Sep 2019 22:16:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 114392171F;
+        Mon,  9 Sep 2019 22:16:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568067387;
-        bh=e1h3js1akksNSdN7MbHfoSgbNrAbeyQ3zCDjASU0y00=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A0hMFG1jEQMDske5iVUdteeo8Pbl3A/5BzfHDREPMRlC8VqD6Ux2WTRdRnYUsxgm7
-         3CCRzzmhA0/WPmwNbh1HfoRD/hUbAfn3nFb4UCra757OrPAjvRP/Rv9rNIAV2fY3DC
-         mBk59k8XDTdUXdps6I6ulZcIcjiyR3/ZTXR/QmQ8=
+        s=default; t=1568067396;
+        bh=566Bz2o9qSdYSA2i4UQw+4bzvn1OWackuqqOtUWjLro=;
+        h=From:To:Cc:Subject:Date:From;
+        b=VWkrOhaOvDXXhvtmt1kK0+dH+KCBoOG/02z8Ly7R2U0Xk4RnwpNw17j1XpXGGGcPS
+         nvUOQXw7HGxo6jGUu7mh5hu/IdcrTRpI8qTsD8AhIeUuSpYyBmkf17DPidIPZ2Li88
+         iPsMr3da+UV7WV1fHgxr16kcEwyvD45IHs0GXM6s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hillf Danton <hdanton@sina.com>,
-        Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 10/12] keys: Fix missing null pointer check in request_key_auth_describe()
-Date:   Mon,  9 Sep 2019 11:40:50 -0400
-Message-Id: <20190909154052.30941-10-sashal@kernel.org>
+Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 1/8] dmaengine: ti: dma-crossbar: Fix a memory leak bug
+Date:   Mon,  9 Sep 2019 11:41:16 -0400
+Message-Id: <20190909154124.31146-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190909154052.30941-1-sashal@kernel.org>
-References: <20190909154052.30941-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,72 +58,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hillf Danton <hdanton@sina.com>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit d41a3effbb53b1bcea41e328d16a4d046a508381 ]
+[ Upstream commit 2c231c0c1dec42192aca0f87f2dc68b8f0cbc7d2 ]
 
-If a request_key authentication token key gets revoked, there's a window in
-which request_key_auth_describe() can see it with a NULL payload - but it
-makes no check for this and something like the following oops may occur:
+In ti_dra7_xbar_probe(), 'rsv_events' is allocated through kcalloc(). Then
+of_property_read_u32_array() is invoked to search for the property.
+However, if this process fails, 'rsv_events' is not deallocated, leading to
+a memory leak bug. To fix this issue, free 'rsv_events' before returning
+the error.
 
-	BUG: Kernel NULL pointer dereference at 0x00000038
-	Faulting instruction address: 0xc0000000004ddf30
-	Oops: Kernel access of bad area, sig: 11 [#1]
-	...
-	NIP [...] request_key_auth_describe+0x90/0xd0
-	LR [...] request_key_auth_describe+0x54/0xd0
-	Call Trace:
-	[...] request_key_auth_describe+0x54/0xd0 (unreliable)
-	[...] proc_keys_show+0x308/0x4c0
-	[...] seq_read+0x3d0/0x540
-	[...] proc_reg_read+0x90/0x110
-	[...] __vfs_read+0x3c/0x70
-	[...] vfs_read+0xb4/0x1b0
-	[...] ksys_read+0x7c/0x130
-	[...] system_call+0x5c/0x70
-
-Fix this by checking for a NULL pointer when describing such a key.
-
-Also make the read routine check for a NULL pointer to be on the safe side.
-
-[DH: Modified to not take already-held rcu lock and modified to also check
- in the read routine]
-
-Fixes: 04c567d9313e ("[PATCH] Keys: Fix race between two instantiators of a key")
-Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Signed-off-by: Hillf Danton <hdanton@sina.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Link: https://lore.kernel.org/r/1565938136-7249-1-git-send-email-wenwen@cs.uga.edu
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/keys/request_key_auth.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/dma/ti/dma-crossbar.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/security/keys/request_key_auth.c b/security/keys/request_key_auth.c
-index e45b5cf3b97fd..8491becb57270 100644
---- a/security/keys/request_key_auth.c
-+++ b/security/keys/request_key_auth.c
-@@ -66,6 +66,9 @@ static void request_key_auth_describe(const struct key *key,
- {
- 	struct request_key_auth *rka = get_request_key_auth(key);
+diff --git a/drivers/dma/ti/dma-crossbar.c b/drivers/dma/ti/dma-crossbar.c
+index 9272b173c7465..6574cb5a12fee 100644
+--- a/drivers/dma/ti/dma-crossbar.c
++++ b/drivers/dma/ti/dma-crossbar.c
+@@ -395,8 +395,10 @@ static int ti_dra7_xbar_probe(struct platform_device *pdev)
  
-+	if (!rka)
-+		return;
-+
- 	seq_puts(m, "key:");
- 	seq_puts(m, key->description);
- 	if (key_is_positive(key))
-@@ -83,6 +86,9 @@ static long request_key_auth_read(const struct key *key,
- 	size_t datalen;
- 	long ret;
+ 		ret = of_property_read_u32_array(node, pname, (u32 *)rsv_events,
+ 						 nelm * 2);
+-		if (ret)
++		if (ret) {
++			kfree(rsv_events);
+ 			return ret;
++		}
  
-+	if (!rka)
-+		return -EKEYREVOKED;
-+
- 	datalen = rka->callout_len;
- 	ret = datalen;
- 
+ 		for (i = 0; i < nelm; i++) {
+ 			ti_dra7_xbar_reserve(rsv_events[i][0], rsv_events[i][1],
 -- 
 2.20.1
 
