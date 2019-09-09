@@ -5,96 +5,70 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 099D1C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 20:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50341C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 20:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D24EB2086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 20:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 252482086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 20:45:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391716AbfIIUnG (ORCPT
+        id S2391744AbfIIUpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 16:43:06 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:42355 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728204AbfIIUnF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 16:43:05 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MQ5aw-1hlTmW3fuq-00M5vK; Mon, 09 Sep 2019 22:42:05 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-rdma@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] mm: add dummy can_do_mlock() helper
-Date:   Mon,  9 Sep 2019 22:41:40 +0200
-Message-Id: <20190909204201.931830-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Mon, 9 Sep 2019 16:45:00 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33440 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726806AbfIIUpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 16:45:00 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C19ABABB1;
+        Mon,  9 Sep 2019 20:44:57 +0000 (UTC)
+From:   Michal Suchanek <msuchanek@suse.de>
+To:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        Juliet Kim <julietk@linux.vnet.ibm.com>
+Cc:     Michal Suchanek <msuchanek@suse.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Falcon <tlfalcon@linux.ibm.com>,
+        John Allen <jallen@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] net/ibmvnic: Fix missing { in __ibmvnic_reset
+Date:   Mon,  9 Sep 2019 22:44:51 +0200
+Message-Id: <20190909204451.7929-1-msuchanek@suse.de>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190907.173714.1400426487600521308.davem@davemloft.net>
+References: 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:NMgxzMZvNg4wYSfExpvmPgKHwnZ0vKKpKYsDNKfr1gaPuEOGj13
- 9spfXcxohF5+owmMJ9nammIJCCQiu7DMpfXvuT2coJGiGarzO6vb/d3lF1fiLXjkdyRuL7M
- tOCQm7mRyhjjH61yIGaillDR5bdbqL0qWLgzJzWUMrVI0NVSW5RZF6brCLUjDNp06qKNCG5
- AiUHc8vd8nnf6RnUW6KSg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:e9wc4PuIlN8=:VQHamnwdDmOvm/t4sXsE4K
- rFPAvU6xvFooY2/BKW+q0CLtqQf4ht8iY6czqafmpju4onzJuZ7IQSatMoHAJYgqmI2TB+ZCM
- B8L0UDhX5J8JjL9khFaDkn/txs8rMFW6Mn/8sLWKz7PtYrHt+4BFO4b08zwzMm3xa1itXbzeX
- hYaBO7eNdiw92POSkthjxYpJwGeL596Z0fRcjczrM1pkOU9cIKkrI4Db+Ut2schd8k4n8NBRm
- IJGnm0qpCFT3T4Y7dwaJNSV3G06nxWpuex2MpCyKLycwLNnQdEmreptjIvQ3lapztT0TPCdJG
- f3Z2vt45S6MzHt9ueOqep8VNzKJoCFBei6oo6a5bASDfldb2rFnjdV1IndtVa8/qDiBdePISs
- uH2nwA2yI7tNl50aNnVQyEvoYqyFMIcIxdHzNHCveSz6kqZlpKllRJGH2MJIF/RP0OV8ldsTh
- 6KiRzEGwHm+QakSYpHSXlsNJkywC2R/kni9Me5LPxdG1h+jFXIar+YWb1Zx5JNmjvohRHzWYY
- Dgpe3/RHod2rQ0l3dgqXd1P0OWKb4EhuNbeWxILBuD73L2pu1Eh2Hs1YpRxmv+i1dmaslP83p
- koFevhO1UWPRbckA4ZxUkZOHLLWJtUilwTgKgtdCnllLQPjnFHsfQ4yv7mZzwpO5XziAZSWDz
- lg29yZOQyABLlNLZxpohs4FYc/FuKdHlS9jDFuh/425QhrYxkTWZpdZ/+iKxY2wpRcTDFRndL
- CnezSza2f0Np3nj3lo/SPBgwR3zs4sn2A/AkHDkoOIuw/OGkv7mPODwbd8l6mKxbuKiv/SZ0e
- RO3slh3ultmVdWp3eD8T31Z2dLgLVAY5FuUz5UqLV9e7exCahI=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On kernels without CONFIG_MMU, we get a link error for the siw
-driver:
+Commit 1c2977c09499 ("net/ibmvnic: free reset work of removed device from queue")
+adds a } without corresponding { causing build break.
 
-drivers/infiniband/sw/siw/siw_mem.o: In function `siw_umem_get':
-siw_mem.c:(.text+0x4c8): undefined reference to `can_do_mlock'
-
-This is probably not the only driver that needs the function
-and could otherwise build correctly without CONFIG_MMU, so
-add a dummy variant that always returns false.
-
-Fixes: 2251334dcac9 ("rdma/siw: application buffer management")
-Suggested-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Fixes: 1c2977c09499 ("net/ibmvnic: free reset work of removed device from queue")
+Signed-off-by: Michal Suchanek <msuchanek@suse.de>
 ---
- include/linux/mm.h | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/ibm/ibmvnic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 66f296181bcc..cc292273e6ba 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1424,7 +1424,11 @@ extern void pagefault_out_of_memory(void);
- 
- extern void show_free_areas(unsigned int flags, nodemask_t *nodemask);
- 
-+#ifdef CONFIG_MMU
- extern bool can_do_mlock(void);
-+#else
-+static inline bool can_do_mlock(void) { return false; }
-+#endif
- extern int user_shm_lock(size_t, struct user_struct *);
- extern void user_shm_unlock(size_t, struct user_struct *);
- 
+diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
+index 6644cabc8e75..5cb55ea671e3 100644
+--- a/drivers/net/ethernet/ibm/ibmvnic.c
++++ b/drivers/net/ethernet/ibm/ibmvnic.c
+@@ -1984,7 +1984,7 @@ static void __ibmvnic_reset(struct work_struct *work)
+ 	rwi = get_next_rwi(adapter);
+ 	while (rwi) {
+ 		if (adapter->state == VNIC_REMOVING ||
+-		    adapter->state == VNIC_REMOVED)
++		    adapter->state == VNIC_REMOVED) {
+ 			kfree(rwi);
+ 			rc = EBUSY;
+ 			break;
 -- 
-2.20.0
+2.22.0
 
