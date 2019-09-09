@@ -2,93 +2,67 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE25EC433EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C82C433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC4EC2089F
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:22:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568024536;
-	bh=Yk7S6QNE+0Vrk3XPrz/DAzAJIhloqdm30vmB81tUVmc=;
-	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
-	b=nqdqeEM17i5kugAkFUW+Q8+05C4tQ9GlrKqF46fAdOr0krnOs4CEKTmKTBM/V590l
-	 pPxVERboCj0OmwtHkwwtNnCUJEUJ6vEyhwsJ4OzHUaF45AjWqxsP1cxD/yJ4S+V1uR
-	 vpTAGXzPvllIIIoYSyXVa/CjUa6XF68416p7cjzI=
+	by mail.kernel.org (Postfix) with ESMTP id 6ABEA2089F
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:22:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390480AbfIIKWQ (ORCPT
+        id S2390497AbfIIKWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 06:22:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35224 "EHLO mail.kernel.org"
+        Mon, 9 Sep 2019 06:22:33 -0400
+Received: from mga18.intel.com ([134.134.136.126]:13693 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729660AbfIIKWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 06:22:15 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0C302089F;
-        Mon,  9 Sep 2019 10:22:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568024535;
-        bh=Yk7S6QNE+0Vrk3XPrz/DAzAJIhloqdm30vmB81tUVmc=;
-        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
-        b=xeWuxUI0x22r5b6XuuqnFDHzLRt+ecSXo3CbmirAKjpDEispNoHfZjtxNPYLzxyCF
-         UnLOJ6EFsltO/FZ3L8d2aF7SO7kU+iM4v0HxtGCZEvJ4Qq8g9px80iB2ZoKhxnUO+A
-         yYdZMk3c72H41K6ixKQBh1QLHNB5N5lb9MAmFNlc=
-Content-Type: text/plain; charset="utf-8"
+        id S1730276AbfIIKWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 06:22:33 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Sep 2019 03:22:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,484,1559545200"; 
+   d="scan'208";a="200034521"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 09 Sep 2019 03:22:29 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 09 Sep 2019 13:22:28 +0300
+Date:   Mon, 9 Sep 2019 13:22:28 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Chris Chiu <chiu@endlessm.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] [v2] pinctrl: intel: mark intel_pin_to_gpio
+ __maybe_unused
+Message-ID: <20190909102228.GD2608@lahna.fi.intel.com>
+References: <20190906185231.1081695-1-arnd@arndb.de>
+ <20190909092211.GN2680@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190826164510.6425-3-jorge.ramirez-ortiz@linaro.org>
-References: <20190826164510.6425-1-jorge.ramirez-ortiz@linaro.org> <20190826164510.6425-3-jorge.ramirez-ortiz@linaro.org>
-Cc:     bjorn.andersson@linaro.org, niklas.cassel@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-To:     agross@kernel.org, jorge.ramirez-ortiz@linaro.org,
-        mturquette@baylibre.com
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 3/5] clk: qcom: hfpll: get parent clock names from DT
-User-Agent: alot/0.8.1
-Date:   Mon, 09 Sep 2019 03:22:14 -0700
-Message-Id: <20190909102214.E0C302089F@mail.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190909092211.GN2680@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jorge Ramirez-Ortiz (2019-08-26 09:45:08)
-> diff --git a/drivers/clk/qcom/hfpll.c b/drivers/clk/qcom/hfpll.c
-> index a6de7101430c..87b7f46d27e0 100644
-> --- a/drivers/clk/qcom/hfpll.c
-> +++ b/drivers/clk/qcom/hfpll.c
-> @@ -52,6 +52,7 @@ static int qcom_hfpll_probe(struct platform_device *pde=
-v)
->         void __iomem *base;
->         struct regmap *regmap;
->         struct clk_hfpll *h;
-> +       struct clk *pclk;
->         struct clk_init_data init =3D {
->                 .parent_names =3D (const char *[]){ "xo" },
->                 .num_parents =3D 1,
-> @@ -75,6 +76,13 @@ static int qcom_hfpll_probe(struct platform_device *pd=
-ev)
->                                           0, &init.name))
->                 return -ENODEV;
-> =20
-> +       /* get parent clock from device tree (optional) */
-> +       pclk =3D devm_clk_get(dev, "xo");
-> +       if (!IS_ERR(pclk))
-> +               init.parent_names =3D (const char *[]){ __clk_get_name(pc=
-lk) };
-> +       else if (PTR_ERR(pclk) =3D=3D -EPROBE_DEFER)
-> +               return -EPROBE_DEFER;
-> +
+On Mon, Sep 09, 2019 at 12:22:11PM +0300, Andy Shevchenko wrote:
+> On Fri, Sep 06, 2019 at 08:51:59PM +0200, Arnd Bergmann wrote:
+> > The intel_pin_to_gpio() function is only called by the
+> > PM support functions and causes a warning when those are disabled:
+> > 
+> > drivers/pinctrl/intel/pinctrl-intel.c:841:12: error: unused function 'intel_pin_to_gpio' [-Werror,-Wunused-function]
+> > 
+> > Mark it __maybe_unused to suppress the warning.
+> > 
+> 
+> Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Can this use the "new" way of specifying parents of clks? That would be
-better than calling clk_get() on the XO clk to handle this.
-
->         h->d =3D &hdata;
->         h->clkr.hw.init =3D &init;
->         spin_lock_init(&h->lock);
+Applied, thanks!
