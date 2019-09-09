@@ -2,177 +2,87 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA8CC49ED6
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 988C3C4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6635E21479
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:54:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="RIpsg1uj"
+	by mail.kernel.org (Postfix) with ESMTP id 7725D21479
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:55:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391264AbfIIQye (ORCPT
+        id S2391278AbfIIQzA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 12:54:34 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:43714 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727866AbfIIQyc (ORCPT
+        Mon, 9 Sep 2019 12:55:00 -0400
+Received: from smtprelay0227.hostedemail.com ([216.40.44.227]:45554 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727781AbfIIQzA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 12:54:32 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id EB2B7C0196;
-        Mon,  9 Sep 2019 16:54:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1568048072; bh=ztU5cXLi0V4K5mhBVrPh5y1if4Ams78t+OFbPXBvR9E=;
-        h=From:To:Cc:Subject:Date:From;
-        b=RIpsg1ujBISZCK6V15inoKksfPMnzSXgBKiCvP3SBoKcYo2tSiaqiVXAVjoTKz6LT
-         G2nTzlz5HF9Dia7IQ96oqJRA/DqBbUKFmFimUb3oR/vkGLI8reJf5sopl3bGe0y8+c
-         c6O6+lqyAEsU71J2Fe0cRvbCZUXLvCquZiQsrYpaUPpKdLMQnRt2MvvolBHpJ40IhS
-         el/Mfq+W4iXG77c7vqT+VdG4edAdoOwcBRdf6RaW5oNhOYscLkA6piuVMhfFh+iCG4
-         8KGA2iGbImOqqih0IfeNIY4Flp4QNjhfAXoNs3OvOWmS8cC/wuGWz+ZOJ97EEgdrmw
-         M97Tz76vpaUcw==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id E1219A0057;
-        Mon,  9 Sep 2019 16:54:28 +0000 (UTC)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     netdev@vger.kernel.org
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next] net: stmmac: pci: Add HAPS support using GMAC5
-Date:   Mon,  9 Sep 2019 18:54:26 +0200
-Message-Id: <c37a55225e1ef66233b47c02b1441b91abeb3b76.1568047994.git.joabreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 9 Sep 2019 12:55:00 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id DD120100E86C0;
+        Mon,  9 Sep 2019 16:54:58 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: joke95_e38df7958c09
+X-Filterd-Recvd-Size: 2099
+Received: from XPS-9350.home (unknown [47.151.152.152])
+        (Authenticated sender: joe@perches.com)
+        by omf16.hostedemail.com (Postfix) with ESMTPA;
+        Mon,  9 Sep 2019 16:54:57 +0000 (UTC)
+Message-ID: <ec66e477095bcddb86ffcc7ca10d3e0bbe72f943.camel@perches.com>
+Subject: Re: [Patch 09/13] media: am437x-vpfe: fix function trace debug log
+From:   Joe Perches <joe@perches.com>
+To:     Benoit Parrot <bparrot@ti.com>, Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Prabhakar Lad <prabhakar.csengg@gmail.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 09 Sep 2019 09:54:56 -0700
+In-Reply-To: <20190909162743.30114-10-bparrot@ti.com>
+References: <20190909162743.30114-1-bparrot@ti.com>
+         <20190909162743.30114-10-bparrot@ti.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the support for Synopsys HAPS board that uses GMAC5.
+On Mon, 2019-09-09 at 11:27 -0500, Benoit Parrot wrote:
+> checkpatch.pl nows reports several:
+> WARNING: Prefer using '"%s...", __func__' to using '<function name>',
+> this function's name, in a string
+> 
+> So fix these for the whole driver.
 
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Most of these seem to be function tracing comments
+that should probably be removed instead.
 
----
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Jose Abreu <joabreu@synopsys.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: netdev@vger.kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c | 71 ++++++++++++++++++++++++
- 1 file changed, 71 insertions(+)
+The generic kernel facility ftrace works well.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-index 20906287b6d4..292045f4581f 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-@@ -375,6 +375,75 @@ static const struct stmmac_pci_info quark_pci_info = {
- 	.setup = quark_default_data,
- };
- 
-+static int snps_gmac5_default_data(struct pci_dev *pdev,
-+				   struct plat_stmmacenet_data *plat)
-+{
-+	int i;
-+
-+	plat->clk_csr = 5;
-+	plat->has_gmac4 = 1;
-+	plat->force_sf_dma_mode = 1;
-+	plat->tso_en = 1;
-+	plat->pmt = 1;
-+
-+	plat->mdio_bus_data->phy_mask = 0;
-+
-+	/* Set default value for multicast hash bins */
-+	plat->multicast_filter_bins = HASH_TABLE_SIZE;
-+
-+	/* Set default value for unicast filter entries */
-+	plat->unicast_filter_entries = 1;
-+
-+	/* Set the maxmtu to a default of JUMBO_LEN */
-+	plat->maxmtu = JUMBO_LEN;
-+
-+	/* Set default number of RX and TX queues to use */
-+	plat->tx_queues_to_use = 4;
-+	plat->rx_queues_to_use = 4;
-+
-+	plat->tx_sched_algorithm = MTL_TX_ALGORITHM_WRR;
-+	for (i = 0; i < plat->tx_queues_to_use; i++) {
-+		plat->tx_queues_cfg[i].use_prio = false;
-+		plat->tx_queues_cfg[i].mode_to_use = MTL_QUEUE_DCB;
-+		plat->tx_queues_cfg[i].weight = 25;
-+	}
-+
-+	plat->rx_sched_algorithm = MTL_RX_ALGORITHM_SP;
-+	for (i = 0; i < plat->rx_queues_to_use; i++) {
-+		plat->rx_queues_cfg[i].use_prio = false;
-+		plat->rx_queues_cfg[i].mode_to_use = MTL_QUEUE_DCB;
-+		plat->rx_queues_cfg[i].pkt_route = 0x0;
-+		plat->rx_queues_cfg[i].chan = i;
-+	}
-+
-+	plat->bus_id = 1;
-+	plat->phy_addr = -1;
-+	plat->interface = PHY_INTERFACE_MODE_GMII;
-+
-+	plat->dma_cfg->pbl = 32;
-+	plat->dma_cfg->pblx8 = true;
-+
-+	/* Axi Configuration */
-+	plat->axi = devm_kzalloc(&pdev->dev, sizeof(*plat->axi), GFP_KERNEL);
-+	if (!plat->axi)
-+		return -ENOMEM;
-+
-+	plat->axi->axi_wr_osr_lmt = 31;
-+	plat->axi->axi_rd_osr_lmt = 31;
-+
-+	plat->axi->axi_fb = false;
-+	plat->axi->axi_blen[0] = 4;
-+	plat->axi->axi_blen[1] = 8;
-+	plat->axi->axi_blen[2] = 16;
-+	plat->axi->axi_blen[3] = 32;
-+
-+	return 0;
-+}
-+
-+static const struct stmmac_pci_info snps_gmac5_pci_info = {
-+	.setup = snps_gmac5_default_data,
-+};
-+
- /**
-  * stmmac_pci_probe
-  *
-@@ -518,6 +587,7 @@ static SIMPLE_DEV_PM_OPS(stmmac_pm_ops, stmmac_pci_suspend, stmmac_pci_resume);
- #define STMMAC_EHL_RGMII1G_ID	0x4b30
- #define STMMAC_EHL_SGMII1G_ID	0x4b31
- #define STMMAC_TGL_SGMII1G_ID	0xa0ac
-+#define STMMAC_GMAC5_ID		0x7102
- 
- #define STMMAC_DEVICE(vendor_id, dev_id, info)	{	\
- 	PCI_VDEVICE(vendor_id, dev_id),			\
-@@ -531,6 +601,7 @@ static const struct pci_device_id stmmac_id_table[] = {
- 	STMMAC_DEVICE(INTEL, STMMAC_EHL_RGMII1G_ID, ehl_rgmii1g_pci_info),
- 	STMMAC_DEVICE(INTEL, STMMAC_EHL_SGMII1G_ID, ehl_sgmii1g_pci_info),
- 	STMMAC_DEVICE(INTEL, STMMAC_TGL_SGMII1G_ID, tgl_sgmii1g_pci_info),
-+	STMMAC_DEVICE(SYNOPSYS, STMMAC_GMAC5_ID, snps_gmac5_pci_info),
- 	{}
- };
- 
--- 
-2.7.4
+> diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
+[]
+> @@ -466,7 +466,7 @@ static void vpfe_ccdc_config_ycbcr(struct vpfe_ccdc *ccdc)
+>  	struct ccdc_params_ycbcr *params = &ccdc->ccdc_cfg.ycbcr;
+>  	u32 syn_mode;
+>  
+> -	vpfe_dbg(3, vpfe, "vpfe_ccdc_config_ycbcr:\n");
+> +	vpfe_dbg(3, vpfe, "%s:\n", __func__);
+
+Remove this instead
+
+>  	/*
+>  	 * first restore the CCDC registers to default values
+>  	 * This is important since we assume default values to be set in
+> @@ -598,7 +598,7 @@ static void vpfe_ccdc_config_raw(struct vpfe_ccdc *ccdc)
+>  	unsigned int syn_mode;
+>  	unsigned int val;
+>  
+> -	vpfe_dbg(3, vpfe, "vpfe_ccdc_config_raw:\n");
+> +	vpfe_dbg(3, vpfe, "%s:\n", __func__);
+
+here too, etc...
+
 
