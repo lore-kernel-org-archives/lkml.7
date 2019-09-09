@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 300BBC433EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 03:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34EE0C433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 03:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3BDB2196E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 03:40:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDF772196F
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 03:40:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="W4O8mwqP"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="XYFtd5jQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387860AbfIIDkS (ORCPT
+        id S2387895AbfIIDkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 23:40:18 -0400
-Received: from mail-eopbgr60081.outbound.protection.outlook.com ([40.107.6.81]:42057
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        Sun, 8 Sep 2019 23:40:21 -0400
+Received: from mail-eopbgr20065.outbound.protection.outlook.com ([40.107.2.65]:12275
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727530AbfIIDkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 23:40:17 -0400
+        id S1728389AbfIIDkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 23:40:20 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AqKDxZQIKGJTDbycYvfigpyl93mWc6188pkU/3AHwmj55t7qhEnaLRQxlTdJ1sno3Ww7UTzaCyj2ETPJK8bSwI7h9tjwKwnbkYg3h+b4nGddnIQ4h7e8y/pdINmjFbuPGO9XFH4j7/sO0SeqjSa4mvWnCp8aXQi/yi6BZk4kgpx+85t6+Mcy0mxkncriz6eEhLhsL5HF/wr/+/dkqwppdA3DdbbgTfpIw6lS0TvmbIZj2wJ8Mrify58l8hccDgIdpzX5uNy7bBPqTw6NW1AXu0vY3+oMfptYxOgXaw38VOqzagxLf/NA7brxdHxpjK1HSSV0g6DwJ4ZIb1g38N9Srg==
+ b=ZzOM9Rgc5hzpZ2hszR+vi5PY3vr+YD+N0B0NcX/Du7qhTN5urmMptIRlSrmcLnxRRAV6vNceuQ/99ve/igcSnD8qJP9Ez6CplppaeWz+b9pJ+E8p2EbDRiJyl3uQna/nmxBJ+Xr6TaSN1g2ZSIEr42Q+B87Zy+Ws2LjX3CJnCyStHH439rKKY0tq2ZN14sZOPJX1sohY1bLCafFEZeikdQNx4V5Z5o8sncqFxWs9c8Sa7EQQMtFfAuO3GkZ0Bf4YcJEYHkOASYo4DCdjD31lT+ysgchwPwixCzPYsTEx50vsQR3CKYMnzhxKCczfAUPmFN2/W2zVxG6rXiss2RKzYA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9aXmx041BybGXPoe0cYDBv9LJEwhslqrW0bn17QWeT0=;
- b=fX7p9fRZH2CnRZo9wUDLHvbNQNu8ZWH4sSYuIsvIBwc9NVh0s1Sb4xCScFFsvRIhpOWEW3U7JMzt15aIUanry3WUeZv6SUiaflkd/4I36qW1HxWE6FwCkce4efPqxEVFFpiU7VSIKLInjlIVHaSlFz8eepENK7B32/66CPaEnb6mxbPsDuX6dXPkQ2bmmju70noxChGZhTv/Y0UtGjninlgOBTfhN5yTww05UsVye2FNzcdVQaGNBSKUOvLYV2t9I/VflE2bojaw4dzgT18zN9TWjdNbcmO2MrIKSYnJjncul07X1mUrGahS0WmA2AEh85NHVPpdhtzvLnSL0/084g==
+ bh=q33wQNymR4+vJB/pc/bOj2rdH7HOEkJ6ySFDdRLt3DY=;
+ b=kuiF2pne9QUNf0xofi0sybxB33jPugYb89/nmTVBPjKGqAAYyeNDs9DrQMyyc/OnpzH3gVs4/DFlXZUGIPO0Ph0wiViocqfLHaC70KL06oIyCNAuCBauGMyh8lpZKrgsfXy/VBivkuK09iOAkuO2sXpRke4QEERMLLiytIO+S0MdWS6N7qcus5eWGAXwUvI2LpF37LZQCnDwUSk7yrqbKZ6D5H7Nt7vlrq1TNaJwWipeq005PVdZ4DCaSXeeAZzVTGRXOtGSwBqYCDGpGelxMeimOe+hlCdcWeIDfIet5rQJvjzkKa8JaIyJ49uqdT6j8lN0dNJy45ouj6Yyfzpu7Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9aXmx041BybGXPoe0cYDBv9LJEwhslqrW0bn17QWeT0=;
- b=W4O8mwqPJxva1AOdqAIc9jvpU9DXAbdDxfWtfmJ1vVvxSrJREnUJxUfJrxuAvu3B4mMeHDrR2R0bpq32PUo1chw2RzP5O2vxp7YmDq/NmbyTDyZcInV2AXDMyp5DPIXokppbQOibzd68KOWkfvJUmfvb0s55d4OQTV6igPYEY3w=
+ bh=q33wQNymR4+vJB/pc/bOj2rdH7HOEkJ6ySFDdRLt3DY=;
+ b=XYFtd5jQHSjxMf8kt8D6KPLJCSFcakJxtv86rwCZZDtrep+npVPJYNurbJcmWoCZyGmJZn2s7fuvM+MIrNlD4Wn3p+qnQUEDwQ8V1CAOyEbKh/OM6xvExLjTl0dhVvT/n/0QarxCcBDjRuLhMRQAZwu4iuuV2dv8m6AzXK2SgUA=
 Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
  AM0PR04MB6020.eurprd04.prod.outlook.com (20.179.32.17) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.19; Mon, 9 Sep 2019 03:39:34 +0000
+ 15.20.2241.19; Mon, 9 Sep 2019 03:39:45 +0000
 Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
  ([fe80::6ca2:ec08:2b37:8ab8]) by AM0PR04MB4481.eurprd04.prod.outlook.com
  ([fe80::6ca2:ec08:2b37:8ab8%6]) with mapi id 15.20.2241.018; Mon, 9 Sep 2019
- 03:39:34 +0000
+ 03:39:45 +0000
 From:   Peng Fan <peng.fan@nxp.com>
 To:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
         "sboyd@kernel.org" <sboyd@kernel.org>,
@@ -61,11 +61,11 @@ CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Leonard Crestez <leonard.crestez@nxp.com>,
         Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH V3 1/4] clk: imx: pll14xx: avoid glitch when set rate
-Thread-Topic: [PATCH V3 1/4] clk: imx: pll14xx: avoid glitch when set rate
-Thread-Index: AQHVZsAyq003b0x3bECm8z4jl80Scw==
-Date:   Mon, 9 Sep 2019 03:39:34 +0000
-Message-ID: <1568043491-20680-2-git-send-email-peng.fan@nxp.com>
+Subject: [PATCH V3 3/4] clk: imx: imx8mm: fix pll mux bit
+Thread-Topic: [PATCH V3 3/4] clk: imx: imx8mm: fix pll mux bit
+Thread-Index: AQHVZsA4ERpqffdI60SGSU5jC9Bhww==
+Date:   Mon, 9 Sep 2019 03:39:44 +0000
+Message-ID: <1568043491-20680-4-git-send-email-peng.fan@nxp.com>
 References: <1568043491-20680-1-git-send-email-peng.fan@nxp.com>
 In-Reply-To: <1568043491-20680-1-git-send-email-peng.fan@nxp.com>
 Accept-Language: en-US
@@ -81,30 +81,30 @@ authentication-results: spf=none (sender IP is )
 x-ms-exchange-messagesentrepresentingtype: 1
 x-originating-ip: [119.31.174.66]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2743aff7-5a43-4aa4-8d67-08d734d754f2
+x-ms-office365-filtering-correlation-id: 30e16abb-598a-4503-9225-08d734d75b27
 x-ms-office365-filtering-ht: Tenant
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB6020;
 x-ms-traffictypediagnostic: AM0PR04MB6020:|AM0PR04MB6020:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB60207EE3B61C488AC3EFE04C88B70@AM0PR04MB6020.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1751;
+x-microsoft-antispam-prvs: <AM0PR04MB602076F7E88C472AB81AB50088B70@AM0PR04MB6020.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
 x-forefront-prvs: 01559F388D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(39860400002)(376002)(136003)(346002)(199004)(189003)(43544003)(7736002)(186003)(26005)(54906003)(316002)(66446008)(64756008)(76176011)(14444005)(50226002)(446003)(2616005)(4326008)(6512007)(11346002)(44832011)(3846002)(6116002)(66946007)(102836004)(110136005)(2201001)(25786009)(8676002)(52116002)(2501003)(386003)(478600001)(36756003)(14454004)(99286004)(66556008)(5660300002)(66476007)(86362001)(71190400001)(6506007)(2906002)(256004)(476003)(486006)(53936002)(8936002)(6486002)(66066001)(81166006)(6436002)(71200400001)(81156014)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6020;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(39860400002)(376002)(136003)(346002)(199004)(189003)(7736002)(186003)(26005)(54906003)(316002)(66446008)(64756008)(76176011)(50226002)(446003)(2616005)(4326008)(6512007)(11346002)(44832011)(3846002)(6116002)(66946007)(102836004)(110136005)(2201001)(25786009)(8676002)(52116002)(2501003)(386003)(478600001)(36756003)(14454004)(99286004)(66556008)(5660300002)(66476007)(86362001)(71190400001)(6506007)(2906002)(256004)(476003)(486006)(53936002)(8936002)(6486002)(66066001)(81166006)(6436002)(71200400001)(81156014)(305945005)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6020;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: JhLG1AZ1XDjJ7WwuSQOg4OcDYqJ1ggyhnqOdXgbUqNdEljgeBa4FtxHEVH6wJGJ6Hj1oO4vy0ip0+zDIvJJJRHzMG9RZN6nf31n6GQL02bjodvLxxWHcreXKe43nkYlX79LK/TgLzxZtcr63zDbTW3vLMe8Ez0S/6+mQG5Fve9zC1rrCriQ4qjbyW33CDdrxNmd3z5o6qh1Oho4ClZYSw6egOBz7RtWa7T9QEkW6OYFWFWA7L90Pd1jkj2W/gZ1rcWXPganuUfBFazbqAXTDta+GmzHkgk4xEoI9rZSX2t1VBepVaX12jsFgtkK/yPFy/yW4d+SG5Wkuo1Wrq1HikodP2dsjFlXt74PLPS2zEaB7COeU3ReRpgFjDC0UzdAobro4/5A1tEmCzpbhKLzdPET/3MqRQP6rGvxeLxmzdQk=
+x-microsoft-antispam-message-info: 97c4oZ+WoE+SAW/4xBauLYgrMW0b0cK6tadIxsI8ayBmSvemj7YBAHREA4E68r96/rzhaVseJeihN0YQD/76pHEy/IoGgas1x2F8aL8SVRyYLM7Uc7QTDR5TuBFvm9UHnBGDuMWY1rcWgdtc5SmI0Srky1gUaJywlzInkfPwQ7CtKox8sbmqr6R0j7TYyuAAYzIalGdewsRsGOj73sl5103R/ev4SgUjY5D5QKmLssZkrVFRaFhXSBQ++nPWt/rNYMZKEjkwLiHd78JKAN2qZdgln/kmV8DJhbZZ3wpslXpIxZel2KTyEbmOur/le8seH0rc/mDzMFtt7r99mJ1MaGmOB+GC5cJoFavQWElJscM7aVEnRgy7LC273R1jKhMmb/kgzVkGU89gQEIu0a/v/XEL9NhMPH+v5/7y6rSdEGU=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2743aff7-5a43-4aa4-8d67-08d734d754f2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Sep 2019 03:39:34.5518
+X-MS-Exchange-CrossTenant-Network-Message-Id: 30e16abb-598a-4503-9225-08d734d75b27
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Sep 2019 03:39:44.9806
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vBceA4wgGAJMRRoBGzBtY+Ers2y3wCZb0ICcp4wTXGDjjXGTe1fINo2f8rBAKwvszkVHnjvy8T9Qo6rQZAaOgw==
+X-MS-Exchange-CrossTenant-userprincipalname: NvwImkMeIbRkv2OQnOx2w5dARSUVyxTLvZLRSrXT45tzo3TaRLPZVr21cTlK7hwY3ua1rqP6cq0WaaXd1X3OEA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6020
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -113,19 +113,16 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Peng Fan <peng.fan@nxp.com>
 
-According to PLL1443XA and PLL1416X spec,
-"When BYPASS is 0 and RESETB is changed from 0 to 1, FOUT starts to
-output unstable clock until lock time passes. PLL1416X/PLL1443XA may
-generate a glitch at FOUT."
+pll BYPASS bit should be kept inside pll driver for glitchless freq
+setting following spec. If exposing the bit, that means pll driver and
+clk driver has two paths to touch this bit, which is wrong.
 
-So set BYPASS when RESETB is changed from 0 to 1 to avoid glitch.
-In the end of set rate, BYPASS will be cleared.
+So use EXT_BYPASS bit here.
 
-When prepare clock, also need to take care to avoid glitch. So
-we also follow Spec to set BYPASS before RESETB changed from 0 to 1.
-And add a check if the RESETB is already 0, directly return 0;
+And drop uneeded set parent, because EXT_BYPASS default is 0.
 
-Fixes: 8646d4dcc7fb ("clk: imx: Add PLLs driver for imx8mm soc")
+Fixes: ba5625c3e272 ("clk: imx: Add clock driver support for imx8mm")
+Suggested-by: Jacky Bai <ping.bai@nxp.com>
 Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>
 Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
@@ -133,70 +130,98 @@ Signed-off-by: Peng Fan <peng.fan@nxp.com>
 V3:
  None
 V2:
-  Avoid glitch when prepare
-  update commit log
+ New patch
 
- drivers/clk/imx/clk-pll14xx.c | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/imx/clk-pll14xx.c b/drivers/clk/imx/clk-pll14xx.c
-index b7213023b238..656f48b002dd 100644
---- a/drivers/clk/imx/clk-pll14xx.c
-+++ b/drivers/clk/imx/clk-pll14xx.c
-@@ -191,6 +191,10 @@ static int clk_pll1416x_set_rate(struct clk_hw *hw, un=
-signed long drate,
- 	tmp &=3D ~RST_MASK;
- 	writel_relaxed(tmp, pll->base);
+ drivers/clk/imx/clk-imx8mm.c | 32 ++++++++++----------------------
+ 1 file changed, 10 insertions(+), 22 deletions(-)
+
+diff --git a/drivers/clk/imx/clk-imx8mm.c b/drivers/clk/imx/clk-imx8mm.c
+index 2758e3f0d15d..067ab876911d 100644
+--- a/drivers/clk/imx/clk-imx8mm.c
++++ b/drivers/clk/imx/clk-imx8mm.c
+@@ -408,28 +408,16 @@ static int imx8mm_clocks_probe(struct platform_device=
+ *pdev)
+ 	clks[IMX8MM_SYS_PLL3] =3D imx_clk_pll14xx("sys_pll3", "sys_pll3_ref_sel",=
+ base + 0x114, &imx8mm_sys_pll);
 =20
-+	/* Enable BYPASS */
-+	tmp |=3D BYPASS_MASK;
-+	writel(tmp, pll->base);
-+
- 	div_val =3D (rate->mdiv << MDIV_SHIFT) | (rate->pdiv << PDIV_SHIFT) |
- 		(rate->sdiv << SDIV_SHIFT);
- 	writel_relaxed(div_val, pll->base + 0x4);
-@@ -250,6 +254,10 @@ static int clk_pll1443x_set_rate(struct clk_hw *hw, un=
-signed long drate,
- 	tmp &=3D ~RST_MASK;
- 	writel_relaxed(tmp, pll->base);
+ 	/* PLL bypass out */
+-	clks[IMX8MM_AUDIO_PLL1_BYPASS] =3D imx_clk_mux_flags("audio_pll1_bypass",=
+ base, 4, 1, audio_pll1_bypass_sels, ARRAY_SIZE(audio_pll1_bypass_sels), CL=
+K_SET_RATE_PARENT);
+-	clks[IMX8MM_AUDIO_PLL2_BYPASS] =3D imx_clk_mux_flags("audio_pll2_bypass",=
+ base + 0x14, 4, 1, audio_pll2_bypass_sels, ARRAY_SIZE(audio_pll2_bypass_se=
+ls), CLK_SET_RATE_PARENT);
+-	clks[IMX8MM_VIDEO_PLL1_BYPASS] =3D imx_clk_mux_flags("video_pll1_bypass",=
+ base + 0x28, 4, 1, video_pll1_bypass_sels, ARRAY_SIZE(video_pll1_bypass_se=
+ls), CLK_SET_RATE_PARENT);
+-	clks[IMX8MM_DRAM_PLL_BYPASS] =3D imx_clk_mux_flags("dram_pll_bypass", bas=
+e + 0x50, 4, 1, dram_pll_bypass_sels, ARRAY_SIZE(dram_pll_bypass_sels), CLK=
+_SET_RATE_PARENT);
+-	clks[IMX8MM_GPU_PLL_BYPASS] =3D imx_clk_mux_flags("gpu_pll_bypass", base =
++ 0x64, 4, 1, gpu_pll_bypass_sels, ARRAY_SIZE(gpu_pll_bypass_sels), CLK_SET=
+_RATE_PARENT);
+-	clks[IMX8MM_VPU_PLL_BYPASS] =3D imx_clk_mux_flags("vpu_pll_bypass", base =
++ 0x74, 4, 1, vpu_pll_bypass_sels, ARRAY_SIZE(vpu_pll_bypass_sels), CLK_SET=
+_RATE_PARENT);
+-	clks[IMX8MM_ARM_PLL_BYPASS] =3D imx_clk_mux_flags("arm_pll_bypass", base =
++ 0x84, 4, 1, arm_pll_bypass_sels, ARRAY_SIZE(arm_pll_bypass_sels), CLK_SET=
+_RATE_PARENT);
+-	clks[IMX8MM_SYS_PLL1_BYPASS] =3D imx_clk_mux_flags("sys_pll1_bypass", bas=
+e + 0x94, 4, 1, sys_pll1_bypass_sels, ARRAY_SIZE(sys_pll1_bypass_sels), CLK=
+_SET_RATE_PARENT);
+-	clks[IMX8MM_SYS_PLL2_BYPASS] =3D imx_clk_mux_flags("sys_pll2_bypass", bas=
+e + 0x104, 4, 1, sys_pll2_bypass_sels, ARRAY_SIZE(sys_pll2_bypass_sels), CL=
+K_SET_RATE_PARENT);
+-	clks[IMX8MM_SYS_PLL3_BYPASS] =3D imx_clk_mux_flags("sys_pll3_bypass", bas=
+e + 0x114, 4, 1, sys_pll3_bypass_sels, ARRAY_SIZE(sys_pll3_bypass_sels), CL=
+K_SET_RATE_PARENT);
+-
+-	/* unbypass all the plls */
+-	clk_set_parent(clks[IMX8MM_AUDIO_PLL1_BYPASS], clks[IMX8MM_AUDIO_PLL1]);
+-	clk_set_parent(clks[IMX8MM_AUDIO_PLL2_BYPASS], clks[IMX8MM_AUDIO_PLL2]);
+-	clk_set_parent(clks[IMX8MM_VIDEO_PLL1_BYPASS], clks[IMX8MM_VIDEO_PLL1]);
+-	clk_set_parent(clks[IMX8MM_DRAM_PLL_BYPASS], clks[IMX8MM_DRAM_PLL]);
+-	clk_set_parent(clks[IMX8MM_GPU_PLL_BYPASS], clks[IMX8MM_GPU_PLL]);
+-	clk_set_parent(clks[IMX8MM_VPU_PLL_BYPASS], clks[IMX8MM_VPU_PLL]);
+-	clk_set_parent(clks[IMX8MM_ARM_PLL_BYPASS], clks[IMX8MM_ARM_PLL]);
+-	clk_set_parent(clks[IMX8MM_SYS_PLL1_BYPASS], clks[IMX8MM_SYS_PLL1]);
+-	clk_set_parent(clks[IMX8MM_SYS_PLL2_BYPASS], clks[IMX8MM_SYS_PLL2]);
+-	clk_set_parent(clks[IMX8MM_SYS_PLL3_BYPASS], clks[IMX8MM_SYS_PLL3]);
++	clks[IMX8MM_AUDIO_PLL1_BYPASS] =3D imx_clk_mux_flags("audio_pll1_bypass",=
+ base, 16, 1, audio_pll1_bypass_sels, ARRAY_SIZE(audio_pll1_bypass_sels), C=
+LK_SET_RATE_PARENT);
++	clks[IMX8MM_AUDIO_PLL2_BYPASS] =3D imx_clk_mux_flags("audio_pll2_bypass",=
+ base + 0x14, 16, 1, audio_pll2_bypass_sels, ARRAY_SIZE(audio_pll2_bypass_s=
+els), CLK_SET_RATE_PARENT);
++	clks[IMX8MM_VIDEO_PLL1_BYPASS] =3D imx_clk_mux_flags("video_pll1_bypass",=
+ base + 0x28, 16, 1, video_pll1_bypass_sels, ARRAY_SIZE(video_pll1_bypass_s=
+els), CLK_SET_RATE_PARENT);
++	clks[IMX8MM_DRAM_PLL_BYPASS] =3D imx_clk_mux_flags("dram_pll_bypass", bas=
+e + 0x50, 16, 1, dram_pll_bypass_sels, ARRAY_SIZE(dram_pll_bypass_sels), CL=
+K_SET_RATE_PARENT);
++	clks[IMX8MM_GPU_PLL_BYPASS] =3D imx_clk_mux_flags("gpu_pll_bypass", base =
++ 0x64, 28, 1, gpu_pll_bypass_sels, ARRAY_SIZE(gpu_pll_bypass_sels), CLK_SE=
+T_RATE_PARENT);
++	clks[IMX8MM_VPU_PLL_BYPASS] =3D imx_clk_mux_flags("vpu_pll_bypass", base =
++ 0x74, 28, 1, vpu_pll_bypass_sels, ARRAY_SIZE(vpu_pll_bypass_sels), CLK_SE=
+T_RATE_PARENT);
++	clks[IMX8MM_ARM_PLL_BYPASS] =3D imx_clk_mux_flags("arm_pll_bypass", base =
++ 0x84, 28, 1, arm_pll_bypass_sels, ARRAY_SIZE(arm_pll_bypass_sels), CLK_SE=
+T_RATE_PARENT);
++	clks[IMX8MM_SYS_PLL1_BYPASS] =3D imx_clk_mux_flags("sys_pll1_bypass", bas=
+e + 0x94, 28, 1, sys_pll1_bypass_sels, ARRAY_SIZE(sys_pll1_bypass_sels), CL=
+K_SET_RATE_PARENT);
++	clks[IMX8MM_SYS_PLL2_BYPASS] =3D imx_clk_mux_flags("sys_pll2_bypass", bas=
+e + 0x104, 28, 1, sys_pll2_bypass_sels, ARRAY_SIZE(sys_pll2_bypass_sels), C=
+LK_SET_RATE_PARENT);
++	clks[IMX8MM_SYS_PLL3_BYPASS] =3D imx_clk_mux_flags("sys_pll3_bypass", bas=
+e + 0x114, 28, 1, sys_pll3_bypass_sels, ARRAY_SIZE(sys_pll3_bypass_sels), C=
+LK_SET_RATE_PARENT);
 =20
-+	/* Enable BYPASS */
-+	tmp |=3D BYPASS_MASK;
-+	writel_relaxed(tmp, pll->base);
-+
- 	div_val =3D (rate->mdiv << MDIV_SHIFT) | (rate->pdiv << PDIV_SHIFT) |
- 		(rate->sdiv << SDIV_SHIFT);
- 	writel_relaxed(div_val, pll->base + 0x4);
-@@ -283,16 +291,28 @@ static int clk_pll14xx_prepare(struct clk_hw *hw)
- {
- 	struct clk_pll14xx *pll =3D to_clk_pll14xx(hw);
- 	u32 val;
-+	int ret;
-=20
- 	/*
- 	 * RESETB =3D 1 from 0, PLL starts its normal
- 	 * operation after lock time
- 	 */
- 	val =3D readl_relaxed(pll->base + GNRL_CTL);
-+	if (val & RST_MASK)
-+		return 0;
-+	val |=3D BYPASS_MASK;
-+	writel_relaxed(val, pll->base + GNRL_CTL);
- 	val |=3D RST_MASK;
- 	writel_relaxed(val, pll->base + GNRL_CTL);
-=20
--	return clk_pll14xx_wait_lock(pll);
-+	ret =3D clk_pll14xx_wait_lock(pll);
-+	if (ret)
-+		return ret;
-+
-+	val &=3D ~BYPASS_MASK;
-+	writel_relaxed(val, pll->base + GNRL_CTL);
-+
-+	return 0;
- }
-=20
- static int clk_pll14xx_is_prepared(struct clk_hw *hw)
+ 	/* PLL out gate */
+ 	clks[IMX8MM_AUDIO_PLL1_OUT] =3D imx_clk_gate("audio_pll1_out", "audio_pll=
+1_bypass", base, 13);
 --=20
 2.16.4
 
