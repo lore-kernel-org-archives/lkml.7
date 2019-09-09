@@ -7,179 +7,91 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6253C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 19:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4427EC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 19:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B2C4207FC
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 19:51:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20CAB21924
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 19:52:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405897AbfIITvT (ORCPT
+        id S2391546AbfIITwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 15:51:19 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:45409 "EHLO
+        Mon, 9 Sep 2019 15:52:11 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:50183 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731163AbfIITvS (ORCPT
+        with ESMTP id S1731163AbfIITwL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 15:51:18 -0400
+        Mon, 9 Sep 2019 15:52:11 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MHGPA-1huCGt3SO8-00DIaQ; Mon, 09 Sep 2019 21:51:03 +0200
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1N1x2P-1iIZj622rR-012H2S; Mon, 09 Sep 2019 21:52:01 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Leon Romanovsky <leon@kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Alex Vesker <valex@mellanox.com>,
-        Erez Shitrit <erezsh@mellanox.com>,
-        Mark Bloch <markb@mellanox.com>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Ariel Levkovich <lariel@mellanox.com>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH net-next 2/2] mlx5: fix type mismatch
-Date:   Mon,  9 Sep 2019 21:50:09 +0200
-Message-Id: <20190909195024.3268499-2-arnd@arndb.de>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Pan Xiuli <xiuli.pan@linux.intel.com>,
+        Evan Green <evgreen@chromium.org>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: SOF: Intel: work around snd_hdac_aligned_read link failure
+Date:   Mon,  9 Sep 2019 21:51:43 +0200
+Message-Id: <20190909195159.3326134-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20190909195024.3268499-1-arnd@arndb.de>
-References: <20190909195024.3268499-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:PcLYB5EynGg7nP72mzY6LT+H2emjpHAtDVecs5FMWdYr1xIOf36
- UxMZc47Smdk6LsNpYdbshbKA/JEPYc3mxKRVdU4o9MuxelAdu4hAvJNktUZVKp6/VISZNyN
- Mx27M8gQvQR/p5uQLfLF1Gj6DKSoBzPD2IFMCdKMaj662hbzPN8IHQeXF5/r5+m4szD+tIh
- 7l62FjgiK8f8JLL7KeD7Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:wnkiAefwb7k=:Qqul2Y3iOiGmrr9YJOxYdl
- XDPWPXmmdrzLym7phg8Z31+b3k9v6IGWIgS+DASqYyHJg1gWcCVzHN/SMfaYjKyzOR49o+Kkl
- f3g2gY9REmXZEPxsGh1u8oERc6qLGEcnCD0hCbDRmatiTpE5JmyoPV3dQ3pMSkaaT5PfF9iEu
- EVne0hTGpVaSzbgp9f3ztxoAWkg9JASSuD+Ylv7E+C77R6iqJkNetNfu+qXKo8z1oVEO9bzyR
- 3UWwX4s0imlugmvkcrfMuSpPQ17nU+Zu1ef6fKvEBkJi59F5TImKXFgNfM0BOXT6ve0oWlwng
- BAZnOjRqyB4zK9Q2sxkfa231VruiYgsc5cJekUzNg1OnoRPxxV0T0LsR/S2PlpofYP2dIINTX
- KTm/FU5Rib3tHmo1RNIKcdGn1UNoXTegBsLhaCkkaxYP1QCPNSwha2XVbW/3SdpMWxEnPpfvS
- mc63Gz8FXPTT2KubymxxjiysaYE7HvlX4+gRN4NOlsfKQAnytyFnmKQGfthffCmacyAPv6V1H
- DSa15Q2OBSdyv/uvFxQgO9rmHVZ7Ae9bi+kkDj1sNy5ah8LIjNUdRa/t/TjjCT9jBy6C2Ls6o
- /9ZsOo4O2IHoi9h5OxvlEy5P8rKaqKRZfutb7UVm9ftMCExJ+2pLOZMASvV5U34oyJ0QUKNfZ
- r6yNiRKp7HTbEvf2o3MnEQHrdsZhhD7cKpetFhsxYjiZN2PHv8CPebhGhBof5ITy+ErvOFMAj
- kei2UOMJJXoZdhrarj9QgEN4uupud+LoHdOxEG6ZNG87mEPpsQKjI6QoY0rD+ERw5XadDK7P6
- SaTJYfy9rhrstTD1h1REtVNCR3bbQar/MEGqW701GZnQyS7tkA=
+X-Provags-ID: V03:K1:gapkT++dW/u0T3Hv/dXCemLrT+qeHLxTRC7Df4YYvlCWiLXXb89
+ Z9FHg4c/nG9ra4DLNXZ0PcJkJ7cnzAgDLI6ZwLI2is1EJmyHtbzJ3bvrf9t7OAGaA1Xn95Q
+ +47ZpbYw45l5GBldArJvAbecHUuaQrpMktX/zG9Oevaff1iVX4FBt2UzsNtCup/0u7N+0+S
+ pB2ej5Z3stbRaf0bHVyaw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:5We9ZmG2fbc=:bEn6ODlb9DT5uU5/ve/uek
+ jLpamsrcMYhJNidVceg3twMkEVGkFUVfweyUIBg9ZjGWYw0KFGjM9oqjtjVEoU49fBkoBK2ar
+ cGn49aGt6XSME7QBKqMW0DZniDdBTMlReapev877tM6J1bfFRsDTIW97rXmCwV2AARRX/5iY/
+ XS+FjfaVDqJIBs8jNX6zd8sczJtRsEErVhwgWiq37BSVsFPfX65neuWJpFRhngDztD6MkziWd
+ 0XWXSIPcqcA8tjRybiYT+wZZVqGXgT6usyiGu+06UWY5pYL162znoOSEkLyYbLlXrZrmchloG
+ HKjT58PqGoPurmn7/cGfYjpc2aLBQQvSaRPBHLUMsXmyS/6S4wK2HD3tIvl0JVr89HxIRBq4L
+ PtvTyJhM6esx3WeQ/YpBhZ05IdQqC2o3mdgbarzPtD+KcPg4hdR1dI17NsuCOhNI6ZNYxSR4J
+ DyK7Vy5/9K0Lf7QRW8Av3VyEByNCql4GkifPCvW/JHCWebRJRcIrCnfN+PkzQ5kRMg1dzeIMR
+ gHqVFJ6gaHYT9xmqjt6iHqFrZdUDy0dUb3l1gk+AW2OpjZhawPPNIbpf7Lakvedm6TqL9sCK+
+ 6Vy5I7r6Ej40l2jlxkLSIZ5hexbkIhux9dX2fyWt/z1sIzDXNImJEXFXnoDTL0cOFUfY8ocSs
+ z831na6maxRBhKU/61FRzwoOSmWuLZ/qBTsDjLhiVJYFz61WkOslDA0j/EeEi3wjJq+zo/b7O
+ h7vPC8XdHnbLotL9o/RrE7BK4Mqg9fuupc7KB4/aMQM5/vFlk3mKByAIBFcBE3pEHHmED9YED
+ fBURvS36QpmMJaVD4SiLx8cfQOllWS04/4z7SCHagt7PzHHSs8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In mlx5, pointers to 'phys_addr_t' and 'u64' are mixed since the addition
-of the pool memory allocator, leading to incorrect behavior on 32-bit
-architectures and this compiler warning:
+When CONFIG_SND_HDA_ALIGNED_MMIO is selected by another driver
+(i.e. Tegra) that selects CONFIG_SND_HDA_CORE as a loadable
+module, but SND_SOC_SOF_HDA_COMMON is built-in, we get a
+link failure from some functions that access the hda register:
 
-drivers/net/ethernet/mellanox/mlx5/core/steering/dr_icm_pool.c:121:8: error: incompatible pointer types passing 'u64 *' (aka 'unsigned long long *') to parameter of type 'phys_addr_t *' (aka 'unsigned int *') [-Werror,-Wincompatible-pointer-types]
-                                   &icm_mr->dm.addr, &icm_mr->dm.obj_id);
-                                   ^~~~~~~~~~~~~~~~
-include/linux/mlx5/driver.h:1092:39: note: passing argument to parameter 'addr' here
-                         u64 length, u16 uid, phys_addr_t *addr, u32 *obj_id);
+sound/soc/sof/intel/hda.o: In function `hda_ipc_irq_dump':
+hda.c:(.text+0x784): undefined reference to `snd_hdac_aligned_read'
+sound/soc/sof/intel/hda-stream.o: In function `hda_dsp_stream_threaded_handler':
+hda-stream.c:(.text+0x12e4): undefined reference to `snd_hdac_aligned_read'
+hda-stream.c:(.text+0x12f8): undefined reference to `snd_hdac_aligned_write'
 
-Change the code to use 'u64' consistently in place of 'phys_addr_t' to
-fix this. The alternative of using phys_addr_t more would require a larger
-rework.
+Add an explicit 'select' statement as a workaround. This is
+not a great solution, but it's the easiest way I could come
+up with.
 
-Fixes: 29cf8febd185 ("net/mlx5: DR, ICM pool memory allocator")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/infiniband/hw/mlx5/cmd.c                 | 4 ++--
- drivers/infiniband/hw/mlx5/cmd.h                 | 4 ++--
- drivers/infiniband/hw/mlx5/mlx5_ib.h             | 2 +-
- drivers/net/ethernet/mellanox/mlx5/core/lib/dm.c | 4 ++--
- include/linux/mlx5/driver.h                      | 4 ++--
- 5 files changed, 9 insertions(+), 9 deletions(-)
+ sound/soc/sof/intel/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/infiniband/hw/mlx5/cmd.c b/drivers/infiniband/hw/mlx5/cmd.c
-index 4937947400cd..fbcad70ef6dc 100644
---- a/drivers/infiniband/hw/mlx5/cmd.c
-+++ b/drivers/infiniband/hw/mlx5/cmd.c
-@@ -82,7 +82,7 @@ int mlx5_cmd_modify_cong_params(struct mlx5_core_dev *dev,
- 	return mlx5_cmd_exec(dev, in, in_size, out, sizeof(out));
- }
- 
--int mlx5_cmd_alloc_memic(struct mlx5_dm *dm, phys_addr_t *addr,
-+int mlx5_cmd_alloc_memic(struct mlx5_dm *dm, u64 *addr,
- 			 u64 length, u32 alignment)
- {
- 	struct mlx5_core_dev *dev = dm->dev;
-@@ -157,7 +157,7 @@ int mlx5_cmd_alloc_memic(struct mlx5_dm *dm, phys_addr_t *addr,
- 	return -ENOMEM;
- }
- 
--int mlx5_cmd_dealloc_memic(struct mlx5_dm *dm, phys_addr_t addr, u64 length)
-+int mlx5_cmd_dealloc_memic(struct mlx5_dm *dm, u64 addr, u64 length)
- {
- 	struct mlx5_core_dev *dev = dm->dev;
- 	u64 hw_start_addr = MLX5_CAP64_DEV_MEM(dev, memic_bar_start_addr);
-diff --git a/drivers/infiniband/hw/mlx5/cmd.h b/drivers/infiniband/hw/mlx5/cmd.h
-index 169cab4915e3..2ea7a45a6abb 100644
---- a/drivers/infiniband/hw/mlx5/cmd.h
-+++ b/drivers/infiniband/hw/mlx5/cmd.h
-@@ -44,9 +44,9 @@ int mlx5_cmd_query_cong_params(struct mlx5_core_dev *dev, int cong_point,
- int mlx5_cmd_query_ext_ppcnt_counters(struct mlx5_core_dev *dev, void *out);
- int mlx5_cmd_modify_cong_params(struct mlx5_core_dev *mdev,
- 				void *in, int in_size);
--int mlx5_cmd_alloc_memic(struct mlx5_dm *dm, phys_addr_t *addr,
-+int mlx5_cmd_alloc_memic(struct mlx5_dm *dm, u64 *addr,
- 			 u64 length, u32 alignment);
--int mlx5_cmd_dealloc_memic(struct mlx5_dm *dm, phys_addr_t addr, u64 length);
-+int mlx5_cmd_dealloc_memic(struct mlx5_dm *dm, u64 addr, u64 length);
- void mlx5_cmd_dealloc_pd(struct mlx5_core_dev *dev, u32 pdn, u16 uid);
- void mlx5_cmd_destroy_tir(struct mlx5_core_dev *dev, u32 tirn, u16 uid);
- void mlx5_cmd_destroy_tis(struct mlx5_core_dev *dev, u32 tisn, u16 uid);
-diff --git a/drivers/infiniband/hw/mlx5/mlx5_ib.h b/drivers/infiniband/hw/mlx5/mlx5_ib.h
-index 2ceaef3ea3fb..476d4447f901 100644
---- a/drivers/infiniband/hw/mlx5/mlx5_ib.h
-+++ b/drivers/infiniband/hw/mlx5/mlx5_ib.h
-@@ -561,7 +561,7 @@ enum mlx5_ib_mtt_access_flags {
- 
- struct mlx5_ib_dm {
- 	struct ib_dm		ibdm;
--	phys_addr_t		dev_addr;
-+	u64			dev_addr;
- 	u32			type;
- 	size_t			size;
- 	union {
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lib/dm.c b/drivers/net/ethernet/mellanox/mlx5/core/lib/dm.c
-index e065c2f68f5a..ad4d7484fa63 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/lib/dm.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/dm.c
-@@ -90,7 +90,7 @@ void mlx5_dm_cleanup(struct mlx5_core_dev *dev)
- }
- 
- int mlx5_dm_sw_icm_alloc(struct mlx5_core_dev *dev, enum mlx5_sw_icm_type type,
--			 u64 length, u16 uid, phys_addr_t *addr, u32 *obj_id)
-+			 u64 length, u16 uid, u64 *addr, u32 *obj_id)
- {
- 	u32 num_blocks = DIV_ROUND_UP_ULL(length, MLX5_SW_ICM_BLOCK_SIZE(dev));
- 	u32 out[MLX5_ST_SZ_DW(general_obj_out_cmd_hdr)] = {};
-@@ -175,7 +175,7 @@ int mlx5_dm_sw_icm_alloc(struct mlx5_core_dev *dev, enum mlx5_sw_icm_type type,
- EXPORT_SYMBOL_GPL(mlx5_dm_sw_icm_alloc);
- 
- int mlx5_dm_sw_icm_dealloc(struct mlx5_core_dev *dev, enum mlx5_sw_icm_type type,
--			   u64 length, u16 uid, phys_addr_t addr, u32 obj_id)
-+			   u64 length, u16 uid, u64 addr, u32 obj_id)
- {
- 	u32 num_blocks = DIV_ROUND_UP_ULL(length, MLX5_SW_ICM_BLOCK_SIZE(dev));
- 	u32 out[MLX5_ST_SZ_DW(general_obj_out_cmd_hdr)] = {};
-diff --git a/include/linux/mlx5/driver.h b/include/linux/mlx5/driver.h
-index 3e80f03a387f..e07f9daf7d42 100644
---- a/include/linux/mlx5/driver.h
-+++ b/include/linux/mlx5/driver.h
-@@ -1089,9 +1089,9 @@ int mlx5_lag_query_cong_counters(struct mlx5_core_dev *dev,
- struct mlx5_uars_page *mlx5_get_uars_page(struct mlx5_core_dev *mdev);
- void mlx5_put_uars_page(struct mlx5_core_dev *mdev, struct mlx5_uars_page *up);
- int mlx5_dm_sw_icm_alloc(struct mlx5_core_dev *dev, enum mlx5_sw_icm_type type,
--			 u64 length, u16 uid, phys_addr_t *addr, u32 *obj_id);
-+			 u64 length, u16 uid, u64 *addr, u32 *obj_id);
- int mlx5_dm_sw_icm_dealloc(struct mlx5_core_dev *dev, enum mlx5_sw_icm_type type,
--			   u64 length, u16 uid, phys_addr_t addr, u32 obj_id);
-+			   u64 length, u16 uid, u64 addr, u32 obj_id);
- 
- #ifdef CONFIG_MLX5_CORE_IPOIB
- struct net_device *mlx5_rdma_netdev_alloc(struct mlx5_core_dev *mdev,
+diff --git a/sound/soc/sof/intel/Kconfig b/sound/soc/sof/intel/Kconfig
+index 479ba249e219..9180184026e1 100644
+--- a/sound/soc/sof/intel/Kconfig
++++ b/sound/soc/sof/intel/Kconfig
+@@ -248,6 +248,7 @@ config SND_SOC_SOF_HDA_COMMON
+ 	tristate
+ 	select SND_SOC_SOF_INTEL_COMMON
+ 	select SND_SOC_SOF_HDA_LINK_BASELINE
++	select SND_HDA_CORE if SND_HDA_ALIGNED_MMIO
+ 	help
+ 	  This option is not user-selectable but automagically handled by
+ 	  'select' statements at a higher level
 -- 
 2.20.0
 
