@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEEECC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B2EC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4ED72086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:19:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 430F9206CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:19:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k/fb9APg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="txgs9ojr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387824AbfIIOTL (ORCPT
+        id S1732088AbfIIOTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 10:19:11 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40041 "EHLO
+        Mon, 9 Sep 2019 10:19:18 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42934 "EHLO
         mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbfIIOTL (ORCPT
+        with ESMTP id S1726174AbfIIOTR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 10:19:11 -0400
-Received: by mail-pf1-f196.google.com with SMTP id x127so9247484pfb.7
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 07:19:11 -0700 (PDT)
+        Mon, 9 Sep 2019 10:19:17 -0400
+Received: by mail-pf1-f196.google.com with SMTP id w22so9245326pfi.9
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 07:19:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=xkCN1rfxn0GvijT8v/3iWlL1If0T/0iY7m3TA87+hZk=;
-        b=k/fb9APgpNF1Cxfqmh6BG7jswGs90KCYKKa3l7MODvWzCC0i29w1nUl3zwPBlLo8qh
-         I2lgN7se0yAOU0wswPN9BFJPGh9u2rHuYuoC2gjD5l+fJtjurI9DSD5I6KqO4h/H+TMY
-         ywoxb/VqxJyGzSQBksBAeOzeDCMOmaA+BInJH/HFcFM+9Mf88l385O/ae+A1MMCMbLVV
-         S4EfLxmK1M2C5J8h6qutUZYoxGGgWlUlosouGx1gIDklzWs3iOfFZBSqVEd5YQpHFItq
-         mhSahs5L0wVqdLiJXwcz8RVytuXxgrTnaedGk1vERFDkee33dBFJRN5k216rQk6JnUpi
-         1e0Q==
+        bh=SLkwCl+YmpuBIlfaQTzGPq6Ho+2QR3zhJrCiroUra5k=;
+        b=txgs9ojr9P5owVAhHlKESpWcIO60s8DwW5WWTBJPk/RCOmWJAqjgbC/jvgs1QRHiuV
+         /cD51WrbWrM0h2dI2CYibOVK1C5ZZJwR0Va9PhqNXMlOR7Cew/ZPomcHrFPARTZW7eR7
+         ntGK7VjgyvYdWb0awl1buYFMU026F53/6Bk+KlhSJ75reVXnGoY4Uy/f+ZDojuaDtZth
+         cWu8Q3dJ1vmO62t4zM9v3VZGK9uBDCKR9XejkpNTZnp6YlfL8wtnLfUhyFywZRB3bz/T
+         aMfqpz4Q28x4RqDAJnltpI0uveluPgS27aB6VGkfYFwfkXlyfLVEzRvKG5jPtdbQNqep
+         cSBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=xkCN1rfxn0GvijT8v/3iWlL1If0T/0iY7m3TA87+hZk=;
-        b=mtnIcDQeqZlGHuic+XKyrQzJD8w6Ts4Y1BHjiFnXEBScoEx+06J2S8CRZmP0uUEPi2
-         CI9ZKQFrYYMLb95cCo7p21FlEESvB6VnyioyKlW7IoiIxJSeh42jNrDUe4fSP72jA+wr
-         t6phBMtLUp22MuE5CcQ8CG6wUfbCuMpJJULFsYMq3u5TaDjyggHV6JCuxV7uKGh2bjhS
-         /wJP6oGw6kkXZSxY5wSJBAFki/BVjDYjOOX+43RB7+Hk5pLJr8KzQjujHxxsenPYxm2y
-         LVv6f9SjM43TJmiQbDOYt2DLso2BVw08hrSnO0p7DHsOIu4wYB83xgGyWyXqNIu+uFwB
-         Fv0Q==
-X-Gm-Message-State: APjAAAVEjh9RH4rghxEplYDMD4KmOFm7oK0fF0RAcDaame/2K/BrMgfS
-        K67/0KjKnxgMky8uloecfgI=
-X-Google-Smtp-Source: APXvYqymnLWaISyLDGw9e3VC4yEVPwGFGeOG/N3P4yZoxq5hJVj1A1HFELxcNjA7gkIEFMeqe5Hfhg==
-X-Received: by 2002:a63:b10f:: with SMTP id r15mr21647735pgf.230.1568038750771;
-        Mon, 09 Sep 2019 07:19:10 -0700 (PDT)
+        bh=SLkwCl+YmpuBIlfaQTzGPq6Ho+2QR3zhJrCiroUra5k=;
+        b=gb4rZD9QeEaNezdR2jogD7kKgSizAnK41eGxTxquds1mZ6szQlv9T2UWNtXMjRMPSu
+         F2A9TTxe6ejseIR6DSyTGBKTB4CoEcAHJsam76AgIsz8558B028ZkqdcvC9yAS9hQL31
+         xa/cfomskQfH024Jq0j7Sn5sbi2tPAb4cosRToSIN3ZxTblbtVwEcVUXgfSnj+PxdUP2
+         iZzcN2BIwBfoZX5AYrdDHtH44w+FTghs3oUqOQudxbeM9Vl6YmZox4y5IrRaiQE2Ck7/
+         hdlxesm/DFDkf5aPKPc4rqWVLN86d+LKqiIu2bXmWyBWl6HgLN33ond2xndg3B3AEkGI
+         70BA==
+X-Gm-Message-State: APjAAAWl9QDvMGiAlnNg3dDSRi49jm/Gpn8dtRs2e+MhrHPK7rTexE3I
+        4VO3R9V8obEJDcRaUL7rZhk=
+X-Google-Smtp-Source: APXvYqxDQy3r56uB0kyZEMb5mEb7knYttk7BhjWU5PweRZCdGzzcfCt41kcHbB6BGXpjieTdRxso7A==
+X-Received: by 2002:aa7:8bc2:: with SMTP id s2mr27073479pfd.13.1568038756398;
+        Mon, 09 Sep 2019 07:19:16 -0700 (PDT)
 Received: from localhost.localdomain ([149.28.153.17])
-        by smtp.gmail.com with ESMTPSA id w6sm34574695pfw.84.2019.09.09.07.19.06
+        by smtp.gmail.com with ESMTPSA id w6sm34574695pfw.84.2019.09.09.07.19.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Sep 2019 07:19:10 -0700 (PDT)
+        Mon, 09 Sep 2019 07:19:16 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     Andrew Morton <akpm@linux-foundation.org>,
         Randy Dunlap <rdunlap@infradead.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
         Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v2 6/9] kconfig/hacking: Move SCHED_STACK_END_CHECK after DEBUG_STACK_USAGE
-Date:   Mon,  9 Sep 2019 22:18:20 +0800
-Message-Id: <20190909141823.8638-7-changbin.du@gmail.com>
+Subject: [PATCH v2 7/9] kconfig/hacking: Create a submenu for scheduler debugging options
+Date:   Mon,  9 Sep 2019 22:18:21 +0800
+Message-Id: <20190909141823.8638-8-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190909141823.8638-1-changbin.du@gmail.com>
 References: <20190909141823.8638-1-changbin.du@gmail.com>
@@ -75,52 +75,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-They are both memory debug options to debug kernel stack issues.
+Create a submenu 'Scheduler Debugging' for scheduler debugging options.
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 ---
- lib/Kconfig.debug | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ lib/Kconfig.debug | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 1385e17122a1..ce545bb80ea2 100644
+index ce545bb80ea2..ce891713c914 100644
 --- a/lib/Kconfig.debug
 +++ b/lib/Kconfig.debug
-@@ -652,6 +652,18 @@ config DEBUG_STACK_USAGE
+@@ -991,6 +991,8 @@ config WQ_WATCHDOG
  
- 	  This option will slow down process creation somewhat.
+ endmenu # "Debug lockups and hangs"
  
-+config SCHED_STACK_END_CHECK
-+	bool "Detect stack corruption on calls to schedule()"
-+	depends on DEBUG_KERNEL
-+	default n
-+	help
-+	  This option checks for a stack overrun on calls to schedule().
-+	  If the stack end location is found to be over written always panic as
-+	  the content of the corrupted region can no longer be trusted.
-+	  This is to ensure no erroneous behaviour occurs which could result in
-+	  data corruption or a sporadic crash at a later stage once the region
-+	  is examined. The runtime overhead introduced is minimal.
++menu "Scheduler Debugging"
 +
- config DEBUG_VM
- 	bool "Debug VM"
- 	depends on DEBUG_KERNEL
-@@ -1005,18 +1017,6 @@ config SCHEDSTATS
+ config SCHED_DEBUG
+ 	bool "Collect scheduler debugging info"
+ 	depends on DEBUG_KERNEL && PROC_FS
+@@ -1017,6 +1019,8 @@ config SCHEDSTATS
  	  application, you can say N to avoid the very slight overhead
  	  this adds.
  
--config SCHED_STACK_END_CHECK
--	bool "Detect stack corruption on calls to schedule()"
--	depends on DEBUG_KERNEL
--	default n
--	help
--	  This option checks for a stack overrun on calls to schedule().
--	  If the stack end location is found to be over written always panic as
--	  the content of the corrupted region can no longer be trusted.
--	  This is to ensure no erroneous behaviour occurs which could result in
--	  data corruption or a sporadic crash at a later stage once the region
--	  is examined. The runtime overhead introduced is minimal.
--
++endmenu
++
  config DEBUG_TIMEKEEPING
  	bool "Enable extra timekeeping sanity checking"
  	help
