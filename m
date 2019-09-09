@@ -2,124 +2,119 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B97C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C6AC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC50F2086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:45:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NX3llKcB"
+	by mail.kernel.org (Postfix) with ESMTP id 44BB32086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:45:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730739AbfIIOpP (ORCPT
+        id S1731331AbfIIOpS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 10:45:15 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46281 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727191AbfIIOpO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 10:45:14 -0400
-Received: by mail-pg1-f195.google.com with SMTP id m3so7938315pgv.13
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 07:45:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=TVzAji3GW1QKfy7eDTvui/A8m2Rjy2R5WVJhQA7E3lY=;
-        b=NX3llKcB9Vfz5GwB3fe8lqYrjLwk+0rBxImcX4jZV11gkkeNnudXWi9WTJ2LsF/dA9
-         DpPaPmh+I8IoYZUHijkhyFRx2sbrMY6BU60KQMM1NngqyI0qEOCywLIbcuP+QO1LHH7y
-         watq9wRRMsMDIBA2+nO9gngjJ+gro0eqYITydnA4HlQHkzAsl6hKnM/85AQoxq0KzdDU
-         jOZlQhsiFaZq0XmEozny47pbhm4BpRC7jtYDEX42fqP6kpB8oMKe8yszFFUfJFbdkpwP
-         5K14pP5MVMJR4UOh82ZlcWGcZtOq8ZFGYuD9LsChM/GPzGyPoNoRsunPaR5Gf7lPFtIF
-         T6lg==
+        Mon, 9 Sep 2019 10:45:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51928 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727191AbfIIOpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 10:45:16 -0400
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6B0DB81F11
+        for <linux-kernel@vger.kernel.org>; Mon,  9 Sep 2019 14:45:15 +0000 (UTC)
+Received: by mail-wm1-f72.google.com with SMTP id r21so4554949wme.5
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 07:45:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=TVzAji3GW1QKfy7eDTvui/A8m2Rjy2R5WVJhQA7E3lY=;
-        b=Qv/n0qJ31kMEBgo30yFe1n1oXwRGiNObc4Vc6AZ45nEsXjygyJCuHG8bSEDxOLFLas
-         tyxrG+xoMJpW5qx8f/869Aq6dRO/c7MmwXgpkD5guQTPAd9t+hjBd/0yOsr5D38iGdrm
-         qgruzO0CKk3YrqhBDof7S/XNY1V2/6CufdfZOb06YQFuDgRH0rNwHethwa0KddA+SXlr
-         /Yf3d5GDbrHCtz48F8akAZ48tEs1Xxj/SZPwouV1OebSMI1KFvGxeNmkjtgwvG5IWddp
-         s7Q3tsJ2WbQEZDqdKuyBbKkPgIa2NUTFrNG/UMTIA7md/wrGUn6Ip1k5oS7IOYw8wSHk
-         TM3A==
-X-Gm-Message-State: APjAAAUCRXAHY/34gTn+lTPxUgNjQANHxJQmwwjUOf1iMJc6hBrQVYE4
-        wuYnrSCdUaKmhKriH4I035U=
-X-Google-Smtp-Source: APXvYqxiAhEjG4HZ/IFOCSeUKorah3JrKQ5eM6H+PJsFj7IK3XWu4Nsn334GnkakFyQuO6scOh8FsQ==
-X-Received: by 2002:a63:ee08:: with SMTP id e8mr22406175pgi.70.1568040313430;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=TIU8l9uNtqi5N363chjsQODAD8NExttwuYVEnSx0c3k=;
+        b=HWtHH1d11QxSTn/MqDRLKOsFTMKWkN5yXkeyfAlz0qDgxZpz+k/phLIe4OsbftBB31
+         3cAdtbnMbT3Da26HqQGyPPttPwFXGQ59krgRhQBwUyel+pfl47qCLeQYkRsohn+Ee1u9
+         CXGPTNQ8NxPAhaWM6J+HWMjx6YsFNb9/mt2UHgQTbNU5oyml9EUHJ4AndzNEqjgfntO2
+         M8jnblTwX9NT6caGWsfn1X9vXL4h7HoUZNpdaisa27bYt6GeXDSyiho95vyoHVqb5Vg2
+         9oFiyY23TbCKhaGgroMjmXphn51yvV5CJJFW4o2gkT8jmrnl2YTLJZc10CDWtjFNfWCd
+         5WiA==
+X-Gm-Message-State: APjAAAUz64FCkR2O3Go3Zqh0iWOFxrwPD0OZQXF0/X0ghn11wvGjQ/I1
+        +/2ZTlVaOak/+VWoRlEf9uNXdhzIzLiYsCo6vbVQ0R0RFJTj/TSg123Jdz6vWbQKr2L1IOlQRoT
+        rNF3jabpHWqShrAxiXCcQKwCz
+X-Received: by 2002:adf:eb4b:: with SMTP id u11mr12031965wrn.121.1568040313765;
         Mon, 09 Sep 2019 07:45:13 -0700 (PDT)
-Received: from localhost.localdomain ([149.28.153.17])
-        by smtp.gmail.com with ESMTPSA id t9sm15334693pgj.89.2019.09.09.07.45.09
+X-Google-Smtp-Source: APXvYqzcqag+ERBvSjIm6CpVOwAwyVlX8Vd50VjCvuAgwQi1q8tVVx/gSm4B5gLVsG6xNkiMwg2Qkg==
+X-Received: by 2002:adf:eb4b:: with SMTP id u11mr12031946wrn.121.1568040313584;
+        Mon, 09 Sep 2019 07:45:13 -0700 (PDT)
+Received: from redhat.com ([80.74.107.118])
+        by smtp.gmail.com with ESMTPSA id y14sm26560796wrd.84.2019.09.09.07.45.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Sep 2019 07:45:13 -0700 (PDT)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-        Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v3 1/9] hacking: Group sysrq/kgdb/ubsan into 'Generic Kernel Debugging Instruments'
-Date:   Mon,  9 Sep 2019 22:44:45 +0800
-Message-Id: <20190909144453.3520-2-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190909144453.3520-1-changbin.du@gmail.com>
-References: <20190909144453.3520-1-changbin.du@gmail.com>
+        Mon, 09 Sep 2019 07:45:12 -0700 (PDT)
+Date:   Mon, 9 Sep 2019 10:45:10 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Subject: Re: [RFC PATCH untested] vhost: block speculation of translated
+ descriptors
+Message-ID: <20190909104355-mutt-send-email-mst@kernel.org>
+References: <20190908110521.4031-1-mst@redhat.com>
+ <db4d77d7-c467-935d-b4ae-1da7635e9b6b@redhat.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <db4d77d7-c467-935d-b4ae-1da7635e9b6b@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Group generic kernel debugging instruments sysrq/kgdb/ubsan together into
-a new submenu.
+On Mon, Sep 09, 2019 at 03:19:55PM +0800, Jason Wang wrote:
+> 
+> On 2019/9/8 下午7:05, Michael S. Tsirkin wrote:
+> > iovec addresses coming from vhost are assumed to be
+> > pre-validated, but in fact can be speculated to a value
+> > out of range.
+> > 
+> > Userspace address are later validated with array_index_nospec so we can
+> > be sure kernel info does not leak through these addresses, but vhost
+> > must also not leak userspace info outside the allowed memory table to
+> > guests.
+> > 
+> > Following the defence in depth principle, make sure
+> > the address is not validated out of node range.
+> > 
+> > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> > ---
+> >   drivers/vhost/vhost.c | 4 +++-
+> >   1 file changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> > index 5dc174ac8cac..0ee375fb7145 100644
+> > --- a/drivers/vhost/vhost.c
+> > +++ b/drivers/vhost/vhost.c
+> > @@ -2072,7 +2072,9 @@ static int translate_desc(struct vhost_virtqueue *vq, u64 addr, u32 len,
+> >   		size = node->size - addr + node->start;
+> >   		_iov->iov_len = min((u64)len - s, size);
+> >   		_iov->iov_base = (void __user *)(unsigned long)
+> > -			(node->userspace_addr + addr - node->start);
+> > +			(node->userspace_addr +
+> > +			 array_index_nospec(addr - node->start,
+> > +					    node->size));
+> >   		s += size;
+> >   		addr += size;
+> >   		++ret;
+> 
+> 
+> I've tried this on Kaby Lake smap off metadata acceleration off using
+> testpmd (virtio-user) + vhost_net. I don't see obvious performance
+> difference with TX PPS.
+> 
+> Thanks
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
----
- lib/Kconfig.debug | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+Should I push this to Linus right now then? It's a security thing so
+maybe we better do it ASAP ... what's your opinion?
 
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 10023dbac8e4..bd3938483514 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -419,6 +419,8 @@ config DEBUG_FORCE_WEAK_PER_CPU
- 
- endmenu # "Compiler options"
- 
-+menu "Generic Kernel Debugging Instruments"
-+
- config MAGIC_SYSRQ
- 	bool "Magic SysRq key"
- 	depends on !UML
-@@ -452,6 +454,12 @@ config MAGIC_SYSRQ_SERIAL
- 	  This option allows you to decide whether you want to enable the
- 	  magic SysRq key.
- 
-+source "lib/Kconfig.kgdb"
-+
-+source "lib/Kconfig.ubsan"
-+
-+endmenu
-+
- config DEBUG_KERNEL
- 	bool "Kernel debugging"
- 	help
-@@ -2111,10 +2119,6 @@ config BUG_ON_DATA_CORRUPTION
- 
- source "samples/Kconfig"
- 
--source "lib/Kconfig.kgdb"
--
--source "lib/Kconfig.ubsan"
--
- config ARCH_HAS_DEVMEM_IS_ALLOWED
- 	bool
- 
 -- 
-2.20.1
-
+MST
