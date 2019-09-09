@@ -2,72 +2,119 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA769C433EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 04:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F11FBC00307
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 04:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 205082196E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 04:47:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=redchan.it header.i=@redchan.it header.b="UdAFgGv4"
+	by mail.kernel.org (Postfix) with ESMTP id C8A572196E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 04:56:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbfIIEry (ORCPT
+        id S1726804AbfIIE41 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 00:47:54 -0400
-Received: from mx1.cock.li ([185.10.68.5]:47195 "EHLO cock.li"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726695AbfIIEry (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 00:47:54 -0400
+        Mon, 9 Sep 2019 00:56:27 -0400
+Received: from mleia.com ([178.79.152.223]:40066 "EHLO mail.mleia.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725926AbfIIE40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 00:56:26 -0400
+Received: from mail.mleia.com (localhost [127.0.0.1])
+        by mail.mleia.com (Postfix) with ESMTP id CBC1639C7AA;
+        Mon,  9 Sep 2019 04:56:23 +0000 (UTC)
+Subject: Re: [RFC,v2 2/6] i2c: add I2C Address Translator (ATR) support
+From:   Vladimir Zapolskiy <vz@mleia.com>
+To:     jacopo mondi <jacopo@jmondi.org>,
+        Luca Ceresoli <luca@lucaceresoli.net>,
+        Wolfram Sang <wsa@the-dreams.de>, Peter Rosin <peda@axentia.se>
+Cc:     linux-media@vger.kernel.org, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>
+References: <20190723203723.11730-1-luca@lucaceresoli.net>
+ <20190723203723.11730-3-luca@lucaceresoli.net>
+ <20190901143101.humomdehy5ee73sk@vino>
+ <aedad45b-16d6-d189-b045-329727440ca5@mleia.com>
+Message-ID: <1fb71437-eaa2-99a7-885f-63ee769969aa@mleia.com>
+Date:   Mon, 9 Sep 2019 07:56:22 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.6.0
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=redchan.it; s=mail;
-        t=1568004470; bh=1XEKiW8lRosRp7rTNF760ZAE09CwkhitKBAyDD8ktjc=;
-        h=Date:From:To:Subject:From;
-        b=UdAFgGv4EHC1UpcVGtnj7odZ2sHmNomsV683a/IZu85PDdqDc9/X25545IknTf/Z/
-         gCzbQulJSiKimCajmHveGOhBFjzMqXTUFnlaRACdDe8+SvIJDA+2T9Uf9IZcjMjbVx
-         xTMJy3LhhSe/tgG/KA4Hu6xXg/zxENBgetV9N4FxonBKyAfXZRGcY7AA6gcZlYsG5z
-         caSB6fo1ruL4xvOOcX9HX0OHFCopH4KnlJsw49Q4CWMytos2KES5HbwCtkFOWye6mD
-         H2MWaQtoJPxos5bgF5uVUn2PjWVIsPV/OBpGPUoN2I7tb2/yY/dym3Pv/as7bloSTx
-         fbPKj1AkzEjxg==
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <aedad45b-16d6-d189-b045-329727440ca5@mleia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 09 Sep 2019 04:47:48 +0000
-From:   gameonlinux@redchan.it
-To:     rms@gnu.org, bruce@perens.com, linux-kernel@vger.kernel.org
-Subject: Why isn't Grsecurity being sued for its long standing GPL violations?
-Message-ID: <f71f6765806f56f5851ddcb9158a6277@redchan.it>
-X-Sender: gameonlinux@redchan.it
-User-Agent: Roundcube Webmail/1.3.6
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-49551924 
+X-CRM114-CacheID: sfid-20190909_045623_861624_81A29212 
+X-CRM114-Status: GOOD (  22.75  )
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, RMS and Bruce Perens;
+Hi Luca, Jacopo, Wolfram, Peter,
 
-I noticed that recently Grsecurity's Brad Spengler (who sued you, Bruce, 
-for speaking the truth), decided to "Flex" and basically advertise while 
-chastising the linux community:
+On 09/08/2019 11:45 PM, Vladimir Zapolskiy wrote:
+> Hi Luca, Jacopo, Wolfram, Peter,
+> 
+> On 09/01/2019 05:31 PM, jacopo mondi wrote:
+>> Hi Luca,
+>>    thanks for keep pushing this series! I hope we can use part of this
+>> for the (long time) on-going GMSL work...
+>>
+>> I hope you will be patient enough to provide (another :) overview
+>> of this work during the BoF Wolfram has organized at LPC for the next
+>> week.
+>>
+>> In the meantime I would have some comments after having a read at the
+>> series and trying to apply its concept to GMSL
+>>
+> 
+> I won't attend the LPC, however I would appreciate if you book some
+> time to review my original / alternative implementation of the TI
+> DS90Ux9xx I2C bridge device driver.
+> 
+> For your convenience the links to the driver are given below:
+> * dt bindings: https://lore.kernel.org/lkml/20181012060314.GU4939@dell/T/#mead5ea226550b
+> * driver code: https://lore.kernel.org/lkml/20181012060314.GU4939@dell/T/#m2fe3664c5f884
+> * usage example: https://lore.kernel.org/lkml/20181012060314.GU4939@dell/T/#m56c146f5decdc
+> 
+> The reasons why my driver is better/more flexible/more functional are
+> discussed earlier, please let me know, if you expect anything else
+> from me to add, also I would be happy to get a summary of your offline
+> discussion.
 
-news.ycombinator.com/item?id=20874470
+I forgot to repeat my main objection against Luca's approach, the TI
+DS90Ux9xx I2C bridge driver does not require to call i2c_add_adapter()
+or register a new mux/bus and then do run select/deselect in runtime to
+overcome the created handicap.
 
+> The undeniable fact is that the device tree bindings in my I2C bridge
+> implementation can be improved further, thanks to Luca for the comments.
+> 
+>> On Tue, Jul 23, 2019 at 10:37:19PM +0200, Luca Ceresoli wrote:
+>>> An ATR is a device that looks similar to an i2c-mux: it has an I2C
+>>> slave "upstream" port and N master "downstream" ports, and forwards
+>>> transactions from upstream to the appropriate downstream port. But is
+>>> is different in that the forwarded transaction has a different slave
+>>> address. The address used on the upstream bus is called the "alias"
+>>> and is (potentially) different from the physical slave address of the
+>>> downstream chip.
+>>>
+>>> Add a helper file (just like i2c-mux.c for a mux or switch) to allow
+>>> implementing ATR features in a device driver. The helper takes care or
+>>> adapter creation/destruction and translates addresses at each transaction.
+>>>
+>>> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+>>>
+> 
 
-Another poster then pointed out the history of Grsecurity's copyright 
-violations (as a derivative work that is restricting redistribution), 
-but said he didn't want to say to much, because he didn't want to get 
-sued. He referenced your good write-up on the situation: 
-perens.com/2017/06/28/warning-grsecurity-potential-contributory-infringement-risk-for-customers/
+--
+Best wishes,
+Vladimir
 
-(Which has not changed)
-
-Why isn't Grsecurity being sued for it's copyright violations? They've 
-been going on for years now. Clearly their scheme works: it can be shown 
-to a court both the attempt to restrict redistribution was tendered (the 
-agreement) and that said attempt has been successful.
-
-Also isn't Open Source Security simply an alter-ego of Brad Spengler? 
-Him being the only employee? Couldn't the corporate veil be pierced and 
-he be found personally liable for any damages?
