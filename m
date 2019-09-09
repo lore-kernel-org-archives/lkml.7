@@ -2,168 +2,178 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74118C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7040BC4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5088D218DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:32:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AC66218DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:33:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r2l4VOtQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728743AbfIINcg (ORCPT
+        id S1730394AbfIINdS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 09:32:36 -0400
-Received: from foss.arm.com ([217.140.110.172]:50188 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726863AbfIINcf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 09:32:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4238D28;
-        Mon,  9 Sep 2019 06:32:34 -0700 (PDT)
-Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D2C2C3F59C;
-        Mon,  9 Sep 2019 06:32:32 -0700 (PDT)
-Date:   Mon, 9 Sep 2019 14:32:30 +0100
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Jassi Brar <jassisinghbrar@gmail.com>
-Cc:     Peng Fan <peng.fan@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc for the
- ARM SMC/HVC mailbox
-Message-ID: <20190909143230.48b1143f@donnerap.cambridge.arm.com>
-In-Reply-To: <CABb+yY2t-oz6KqvCTsOJZqcMAUaR9Cbj014m7dCFXSBAMCojww@mail.gmail.com>
-References: <1567004515-3567-1-git-send-email-peng.fan@nxp.com>
-        <1567004515-3567-2-git-send-email-peng.fan@nxp.com>
-        <CABb+yY2tRjazjaogpM7irqgTD+PdwsfqCxk5hP-_czrET3V5xQ@mail.gmail.com>
-        <AM0PR04MB4481785CABB44A8C71CFB8D788BD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-        <CABb+yY2TREpO7+TFcGgsgQrkmMWwFAgtuJ4GnLPPQ+GEBuh07w@mail.gmail.com>
-        <AM0PR04MB448161C632722DF10989008088BD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-        <CABb+yY2SrMF8e1iLyLqb-rJyBx4ajA0hZ6D=LFtuMNtXYjgccA@mail.gmail.com>
-        <AM0PR04MB448133D1F4C887A82C679CEB88BD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-        <CABb+yY2t-oz6KqvCTsOJZqcMAUaR9Cbj014m7dCFXSBAMCojww@mail.gmail.com>
-Organization: ARM
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+        Mon, 9 Sep 2019 09:33:18 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37296 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726535AbfIINdR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 09:33:17 -0400
+Received: by mail-ot1-f66.google.com with SMTP id s28so12417678otd.4;
+        Mon, 09 Sep 2019 06:33:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=SXwg9Qtd9z+yr6yuTIDFyYnzsJGyQ8uOB6q3KpRENWY=;
+        b=r2l4VOtQNE4LjXegCvsut/suXQO9n8TQxjRxoJuVtV3GkUmcm8yZmb2F9VZP/4bPt5
+         GMflUhEr6kS8wjIgBP+BZibygrDGaxn2vhlPuO2NvkJG1q3fQGzPXDk5BYPt8p+BrtsW
+         TE8KQhHhNcf7PIEcVJDYoS93zAiF6HhtBnqSRbX8FJeoZBildN1p5vro1Juf2XQNnPQ+
+         vpcpvB6/TT3FoLDLtrkJaIy2DCHOlHxsd+hUS70bP5eVQEsTSOTDoh+mFbp4QBc/b6Rs
+         BxtSY2ZS2+RHJPDU16KfW3pl8E24bHD2/AaH1X4DxcL71KEIDD44roInqj8H8o4xfT3d
+         XH0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=SXwg9Qtd9z+yr6yuTIDFyYnzsJGyQ8uOB6q3KpRENWY=;
+        b=knvgg5q+19QgES3SVN0dlEda+lD5PnmKHYNSce8idx7J000Jdx3sMa5wnSrsN4tyh8
+         DjaxgO84i+XdR0ofynK/MfzhvDn4AXyEMlGIqeDb3+9T88M9H/+R0oF5ZtcsEqiGI7zv
+         0kCREVbSRz3oE76Rj0ketE7tH1G3qFHP7Zc14x5doIxT7m+TzQnVCRn4aq7LGrWlgpw+
+         omyZC36vye8f+u+aHiR/YNbJis/kl+lomV7B25S6qIx2awD+2A9H+0sd1kwq4jtCyjvf
+         GnLwkfNv7wNUU+Gxb8hWIDcsfZ/u5ZjOgWBJz0FpbGk3cQiYJdNM5cnamSqkat+/3W3d
+         C3Fw==
+X-Gm-Message-State: APjAAAV+8WXL6gCfCEbd5WJbfvWQxwM8mORpLTVv/Dze4qb/Rv0yF+hC
+        OXxosYZCzCgXSSTBXHqO55bfdClui2LL374Uew==
+X-Google-Smtp-Source: APXvYqwZbQgomN39nC020gDjS8z7VGgVlu1JFcYIZMXhF0OwkJPDxB8DMO/7h/YiIt3HFpS9ulPHcEbUjD/3jSRNG2A=
+X-Received: by 2002:a05:6830:146:: with SMTP id j6mr12438571otp.205.1568035996810;
+ Mon, 09 Sep 2019 06:33:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190906213054.48908-1-george.mccollister@gmail.com>
+ <20190906213054.48908-3-george.mccollister@gmail.com> <6d8a915f-5f05-c91c-c139-26497376147d@denx.de>
+In-Reply-To: <6d8a915f-5f05-c91c-c139-26497376147d@denx.de>
+From:   George McCollister <george.mccollister@gmail.com>
+Date:   Mon, 9 Sep 2019 08:33:05 -0500
+Message-ID: <CAFSKS=PMBQyAs_e_AVeOR2MaYgSM7OOUstg9V9e8D4zZngdjKw@mail.gmail.com>
+Subject: Re: [PATCH net-next 2/3] net: dsa: microchip: add ksz9567 to ksz9477 driver
+To:     Marek Vasut <marex@denx.de>
+Cc:     netdev@vger.kernel.org, Woojung Huh <woojung.huh@microchip.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Tristram Ha <Tristram.Ha@microchip.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 30 Aug 2019 03:12:29 -0500
-Jassi Brar <jassisinghbrar@gmail.com> wrote:
-
-Hi,
-
-> On Fri, Aug 30, 2019 at 3:07 AM Peng Fan <peng.fan@nxp.com> wrote:
-> >  
-> > > Subject: Re: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc for the ARM
-> > > SMC/HVC mailbox
-> > >
-> > > On Fri, Aug 30, 2019 at 2:37 AM Peng Fan <peng.fan@nxp.com> wrote:  
-> > > >
-> > > > Hi Jassi,
-> > > >  
-> > > > > Subject: Re: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc
-> > > > > for the ARM SMC/HVC mailbox
-> > > > >
-> > > > > On Fri, Aug 30, 2019 at 1:28 AM Peng Fan <peng.fan@nxp.com> wrote:
-> > > > >  
-> > > > > > > > +examples:
-> > > > > > > > +  - |
-> > > > > > > > +    sram@910000 {
-> > > > > > > > +      compatible = "mmio-sram";
-> > > > > > > > +      reg = <0x0 0x93f000 0x0 0x1000>;
-> > > > > > > > +      #address-cells = <1>;
-> > > > > > > > +      #size-cells = <1>;
-> > > > > > > > +      ranges = <0 0x0 0x93f000 0x1000>;
-> > > > > > > > +
-> > > > > > > > +      cpu_scp_lpri: scp-shmem@0 {
-> > > > > > > > +        compatible = "arm,scmi-shmem";
-> > > > > > > > +        reg = <0x0 0x200>;
-> > > > > > > > +      };
-> > > > > > > > +
-> > > > > > > > +      cpu_scp_hpri: scp-shmem@200 {
-> > > > > > > > +        compatible = "arm,scmi-shmem";
-> > > > > > > > +        reg = <0x200 0x200>;
-> > > > > > > > +      };
-> > > > > > > > +    };
-> > > > > > > > +
-> > > > > > > > +    firmware {
-> > > > > > > > +      smc_mbox: mailbox {
-> > > > > > > > +        #mbox-cells = <1>;
-> > > > > > > > +        compatible = "arm,smc-mbox";
-> > > > > > > > +        method = "smc";
-> > > > > > > > +        arm,num-chans = <0x2>;
-> > > > > > > > +        transports = "mem";
-> > > > > > > > +        /* Optional */
-> > > > > > > > +        arm,func-ids = <0xc20000fe>, <0xc20000ff>;
-> > > > > > > >  
-> > > > > > > SMC/HVC is synchronously(block) running in "secure mode", i.e,
-> > > > > > > there can only be one instance running platform wide. Right?  
-> > > > > >
-> > > > > > I think there could be channel for TEE, and channel for Linux.
-> > > > > > For virtualization case, there could be dedicated channel for each VM.
-> > > > > >  
-> > > > > I am talking from Linux pov. Functions 0xfe and 0xff above, can't
-> > > > > both be active at the same time, right?  
-> > > >
-> > > > If I get your point correctly,
-> > > > On UP, both could not be active. On SMP, tx/rx could be both active,
-> > > > anyway this depends on secure firmware and Linux firmware design.
-> > > >
-> > > > Do you have any suggestions about arm,func-ids here?
-> > > >  
-> > > I was thinking if this is just an instruction, why can't each channel be
-> > > represented as a controller, i.e, have exactly one func-id per controller node.
-> > > Define as many controllers as you need channels ?  
+On Fri, Sep 6, 2019 at 4:42 PM Marek Vasut <marex@denx.de> wrote:
+>
+> On 9/6/19 11:30 PM, George McCollister wrote:
+> > Add support for the KSZ9567 7-Port Gigabit Ethernet Switch to the
+> > ksz9477 driver. The KSZ9567 supports both SPI and I2C. Oddly the
+> > ksz9567 is already in the device tree binding documentation.
 > >
-> > I am ok, this could make driver code simpler. Something as below?
+> > Signed-off-by: George McCollister <george.mccollister@gmail.com>
+> > ---
+> >  drivers/net/dsa/microchip/ksz9477.c     | 9 +++++++++
+> >  drivers/net/dsa/microchip/ksz9477_i2c.c | 1 +
+> >  drivers/net/dsa/microchip/ksz9477_spi.c | 1 +
+> >  3 files changed, 11 insertions(+)
 > >
-> >     smc_tx_mbox: tx_mbox {
-> >       #mbox-cells = <0>;
-> >       compatible = "arm,smc-mbox";
-> >       method = "smc";
-> >       transports = "mem";
-> >       arm,func-id = <0xc20000fe>;
-> >     };
+> > diff --git a/drivers/net/dsa/microchip/ksz9477.c b/drivers/net/dsa/micr=
+ochip/ksz9477.c
+> > index 187be42de5f1..50ffc63d6231 100644
+> > --- a/drivers/net/dsa/microchip/ksz9477.c
+> > +++ b/drivers/net/dsa/microchip/ksz9477.c
+> > @@ -1529,6 +1529,15 @@ static const struct ksz_chip_data ksz9477_switch=
+_chips[] =3D {
+> >               .cpu_ports =3D 0x07,      /* can be configured as cpu por=
+t */
+> >               .port_cnt =3D 3,          /* total port count */
+> >       },
+> > +     {
+> > +             .chip_id =3D 0x00956700,
+> > +             .dev_name =3D "KSZ9567",
+> > +             .num_vlans =3D 4096,
+> > +             .num_alus =3D 4096,
+> > +             .num_statics =3D 16,
+> > +             .cpu_ports =3D 0x7F,      /* can be configured as cpu por=
+t */
+> > +             .port_cnt =3D 7,          /* total physical port count */
+>
+> I might be wrong, and this is just an idea for future improvement, but
+> is .cpu_ports =3D GEN_MASK(.port_cnt, 0) always ?
+
+GENMASK, not GEN_MASK. And I think it would be .cpu_ports =3D
+GENMASK(.port_cnt - 1, 0).
+I'm not sure if it would always be that. TBH I'm not sure if 0x7F is
+even correct. For instance if a port has a PHY should it be excluded
+from this mask or only if it doesn't support tail tagging? Maybe
+someone would hook the CPU port up with a PHY instead of
+RGMII/MII/RMII but it seems quite an odd thing to do.
+
+On the KSZ9567R datasheet it shows 1-7 for this so if actually correct
+I believe all ports support tail tagging but maybe some other variants
+don't:
+Port Operation Control 0 Register
+Port N: 1-7
+Bit 2 - Tail Tag Enable
+When tail tagging is enabled for a port, it designates that port to be
+the =E2=80=9Chost=E2=80=9D or =E2=80=9CCPU=E2=80=9D port. Do not enable tai=
+l tagging for more than one
+port.
+
+My inclination is to leave it as is until a more compelling reason for
+changing it arises.
+
+>
+> > +     },
+> >  };
 > >
-> >     smc_rx_mbox: rx_mbox {
-> >       #mbox-cells = <0>;
-> >       compatible = "arm,smc-mbox";
-> >       method = "smc";
-> >       transports = "mem";
-> >       arm,func-id = <0xc20000ff>;
-> >     };
+> >  static int ksz9477_switch_init(struct ksz_device *dev)
+> > diff --git a/drivers/net/dsa/microchip/ksz9477_i2c.c b/drivers/net/dsa/=
+microchip/ksz9477_i2c.c
+> > index 85fd0fb43941..c1548a43b60d 100644
+> > --- a/drivers/net/dsa/microchip/ksz9477_i2c.c
+> > +++ b/drivers/net/dsa/microchip/ksz9477_i2c.c
+> > @@ -77,6 +77,7 @@ MODULE_DEVICE_TABLE(i2c, ksz9477_i2c_id);
+> >  static const struct of_device_id ksz9477_dt_ids[] =3D {
+> >       { .compatible =3D "microchip,ksz9477" },
+> >       { .compatible =3D "microchip,ksz9897" },
+> > +     { .compatible =3D "microchip,ksz9567" },
+> >       {},
+> >  };
+> >  MODULE_DEVICE_TABLE(of, ksz9477_dt_ids);
+> > diff --git a/drivers/net/dsa/microchip/ksz9477_spi.c b/drivers/net/dsa/=
+microchip/ksz9477_spi.c
+> > index 2e402e4d866f..f4198d6f72be 100644
+> > --- a/drivers/net/dsa/microchip/ksz9477_spi.c
+> > +++ b/drivers/net/dsa/microchip/ksz9477_spi.c
+> > @@ -81,6 +81,7 @@ static const struct of_device_id ksz9477_dt_ids[] =3D=
+ {
+> >       { .compatible =3D "microchip,ksz9893" },
+> >       { .compatible =3D "microchip,ksz9563" },
+> >       { .compatible =3D "microchip,ksz8563" },
+> > +     { .compatible =3D "microchip,ksz9567" },
+> >       {},
+> >  };
+> >  MODULE_DEVICE_TABLE(of, ksz9477_dt_ids);
 > >
-> >     firmware {
-> >       scmi {
-> >         compatible = "arm,scmi";
-> >         mboxes = <&smc_tx_mbox>, <&smc_rx_mbox 1>;
-> >         mbox-names = "tx", "rx";
-> >         shmem = <&cpu_scp_lpri>, <&cpu_scp_hpri>;
-> >       };
-> >     };
-> >  
-> Yes, the channel part is good.
-> But I am not convinced by the need to have SCMI specific "transport" mode.
+>
+> Reviewed-by: Marek Vasut <marex@denx.de>
 
-Why would this be SCMI specific and what is the problem with having this property?
-By the very nature of the SMC/HVC call you would expect to also pass parameters in registers. However this limits the amount of data you can push, so the option of reverting to a memory based payload sounds very reasonable.
-On the other hand *just* using memory complicates things, in case you have a very simple protocol. You would need a memory region shared between firmware and OS, which is not always easily possible on every platform. Also this doesn't scale easily with multiple mailboxes and channels. Passing parameters via registers is also naturally consistent, as there would be no races and no need for synchronisation with other cores or other users of the mailbox.
+Thanks.
 
-So I clearly see the benefit of specifying *both* ways of payload transport. Given that this driver should be protocol agnostic, it makes a lot of sense to introduce both methods *now*, so in the future users can just use the register method, without extending the binding in a incompatible way later (earlier kernels would have the driver, but wouldn't know how to deal with this parameter).
-
-Cheers,
-Andre.
+>
+> --
+> Best regards,
+> Marek Vasut
