@@ -2,110 +2,87 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBD2C433EF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCADFC4360D
 	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 00:31:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91CF920828
+	by mail.kernel.org (Postfix) with ESMTP id AFFC12086D
 	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 00:31:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731894AbfIIA2U (ORCPT
+        id S1731922AbfIIAba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 20:28:20 -0400
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:34552 "EHLO
-        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731813AbfIIA2T (ORCPT
+        Sun, 8 Sep 2019 20:31:30 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:25281 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731753AbfIIAba (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 20:28:19 -0400
-Received: from mr2.cc.vt.edu (mr2.cc.vt.edu [IPv6:2607:b400:92:8400:0:90:e077:bf22])
-        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x890SIp7028329
-        for <linux-kernel@vger.kernel.org>; Sun, 8 Sep 2019 20:28:18 -0400
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-        by mr2.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x890SDKe028449
-        for <linux-kernel@vger.kernel.org>; Sun, 8 Sep 2019 20:28:18 -0400
-Received: by mail-qk1-f199.google.com with SMTP id 11so14317230qkh.15
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 17:28:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-transfer-encoding:date:message-id;
-        bh=2qj3aNALrf/f9RF7uRhfWtV/evjrLhtA15jCcsHYHxU=;
-        b=jUlp/DnEWwLfAwrbc3bW/CugEQE05Gvc6OeRmkKlUnVOtLaNcicBAk5kgsh2quJ9Fu
-         7/WIPcjgAfZ26IDRafET6qr9z8ibTwGQDF2WLmpMSazKAagj+XErlOZOVi3NhV26fHhC
-         GLcmpy8ljURxp/azJjmaCuyA1dMGahRKTyKcnE16UjgMZS1I5G3nfvbLZWOF6/LFdA3A
-         5ZiJcTbJly2Lxp32XKZSjb3uPDnbY+IkSGooY2OgU+EYlZbgXr2wlOKYqyLlEVviidfB
-         lAVj/pd2Z7bSZXLieNw27kqBMJMj4YiZ/aQzwwyPpUDycnvxBJ4esti3ENtXauLbJtrF
-         qemg==
-X-Gm-Message-State: APjAAAVHd5Hm/1hXU7u/ssarIYcpVKhgWFjPk1TNFVNuwc2HqiT/VuEn
-        4EUKcAfrfzee7BnoNA+JfGef9hfdWl8g1SF+XAaGIUZufcGHr5C+rtoImlHQ8YwsaS+sNxVV5Xp
-        SWY8mR1LAQeg1HskNDQ47j0DVpqKvmhvcB20=
-X-Received: by 2002:a37:a8b:: with SMTP id 133mr19973966qkk.365.1567988892810;
-        Sun, 08 Sep 2019 17:28:12 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzIPph+Hs7rM0sGOPlTKO9sE3dnlz13RZ/elpHjIRjiMU3X9F2wd1DsQawuYESSYZVup/Me/w==
-X-Received: by 2002:a37:a8b:: with SMTP id 133mr19973956qkk.365.1567988892613;
-        Sun, 08 Sep 2019 17:28:12 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:4341::359])
-        by smtp.gmail.com with ESMTPSA id f2sm5566650qkj.58.2019.09.08.17.28.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Sep 2019 17:28:11 -0700 (PDT)
-From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Valentin Vidic <vvidic@valentin-vidic.from.hr>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/4] staging: exfat: drop unused function parameter
-In-Reply-To: <20190908173539.26963-1-vvidic@valentin-vidic.from.hr>
-References: <20190908173539.26963-1-vvidic@valentin-vidic.from.hr>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1567988890_4251P";
-         micalg=pgp-sha1; protocol="application/pgp-signature"
-Content-Transfer-Encoding: 7bit
-Date:   Sun, 08 Sep 2019 20:28:10 -0400
-Message-ID: <1050051.1567988890@turing-police>
+        Sun, 8 Sep 2019 20:31:30 -0400
+Date:   09 Sep 2019 09:31:28 +0900
+X-IronPort-AV: E=Sophos;i="5.64,483,1559487600"; 
+   d="scan'208";a="25835082"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 09 Sep 2019 09:31:28 +0900
+Received: from morimoto-PC.renesas.com (unknown [10.166.18.140])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 2F791410CD53;
+        Mon,  9 Sep 2019 09:31:28 +0900 (JST)
+Message-ID: <87woei5mzj.wl-kuninori.morimoto.gx@renesas.com>
+From:   Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+To:     Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Cc:     Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] SoC: simple-card-utils: set 0Hz to sysclk when shutdown
+In-Reply-To: <20190907174501.19833-1-katsuhiro@katsuster.net>
+References: <20190907174501.19833-1-katsuhiro@katsuster.net>
+User-Agent: Wanderlust/2.15.9 Emacs/24.5 Mule/6.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==_Exmh_1567988890_4251P
-Content-Type: text/plain; charset=us-ascii
 
-On Sun, 08 Sep 2019 17:35:36 -0000, Valentin Vidic said:
-> sbi parameter not used inside the function so remove it.
-> Also cleanup unused variables generated by this change.
+Hi Katsuhiro
 
-Tread carefully with this sort of patch - there's still a lot of places in the code
-where we have matching pairs of exfat_foo() and fat_foo() functions which need
-to have the same signatures because they're called through a function pointer.
+> This patch set 0Hz to sysclk when shutdown the card.
+> 
+> Some codecs set rate constraints that derives from sysclk. This
+> mechanism works correctly if machine drivers give fixed frequency.
+> 
+> But simple-audio and audio-graph card set variable clock rate if
+> 'mclk-fs' property exists. In this case, rate constraints will go
+> bad scenario. For example a codec accepts three limited rates
+> (mclk / 256, mclk / 384, mclk / 512).
+> 
+> Bad scenario as follows (mclk-fs = 256):
+>    - Initialize sysclk by correct value (Ex. 12.288MHz)
+>      - Codec set constraints of PCM rate by sysclk
+>        48kHz (1/256), 32kHz (1/384), 24kHz (1/512)
+>    - Play 48kHz sound, it's acceptable
+>    - Sysclk is not changed
+> 
+>    - Play 32kHz sound, it's acceptable
+>    - Set sysclk to 8.192MHz (= fs * mclk-fs = 32k * 256)
+>      - Codec set constraints of PCM rate by sysclk
+>        32kHz (1/256), 21.33kHz (1/384), 16kHz (1/512)
+> 
+>    - Play 48kHz again, but it's NOT acceptable because constraints
+>      do not allow 48kHz
+> 
+> So codecs treat 0Hz sysclk as signal of applying no constraints to
+> avoid this problem.
+> 
+> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+> ---
 
-This particular one looks OK, but there's other functions that come in pairs that
-you need to watch out for...
+I'm not 100% understand your issue.
+.hw_params (= set mclk/sysclk) is not called in bad case ??
+Or it is called but Codec driver ignores it somehow ??
 
-
-
---==_Exmh_1567988890_4251P
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Comment: Exmh version 2.9.0 11/07/2018
-
-iQIVAwUBXXWcmQdmEQWDXROgAQJCng/8CeSZINMSRLpC4Gdwu5ZZVwb78Vt8Filw
-yK514YilCPGy4/6BcfJasIL9fXy1slV70sB0M5cup5pfExfkx5fAUConuZjvZNMt
-Nr3BPLvXONO/F4Ke+tipEchub130gzxZ47ztkk8/JsFB5dymzyV2Kx/i8h5LVWLA
-m+VnIgrs8ZTeYdci+a5HtWNUDnz+G0wjki6GHNFCyKhWFxaC7FvTiFRM0gPZB3g+
-MSafpcGC7Mg7UTA23nj8tYZf1goWtpCLiXYN71dUy21vyRQToISnyKffuL+zGS/m
-fp1cl5/5xQPMF5wrzhYdkVFQJP4CUutP5EGoELzfX9DTgQNbs0S12NXa861+ispM
-Woebtr6xNQk5nZdU/Zm+GlCUJWRu+uiFTTUWQyfSZ/UPton0zixOPX6IIADCfK6a
-+SBcP4Upp/Eks2Wzgr+SsRodxxv9NDWWCU8R9ApDHtvqi4eCLX4KWyG/6QXbPTFB
-Z7kr9J3LRr8vvSK6cO0DW1tfvE9Y3PbsGpl8d9mphGMxHlV3nWr58FxOWga9J1wm
-1+4qiXny97+QEJwy9oVtw7fRLhzILAlU57v7I2rzcAacZ006q9Xz5V8MO/rHZBKF
-rctgjt5bXZHRnW0qeKMf/N0sw+0YB1j5s0/zJWbk29fBAFQo3zvnX1CZ0jx7SdT+
-zQGWFyRUVzU=
-=mv4+
------END PGP SIGNATURE-----
-
---==_Exmh_1567988890_4251P--
+Thank you for your help !!
+Best regards
+---
+Kuninori Morimoto
