@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_PAST_06_12,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E01C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31CAFC4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AC8F2171F
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:18:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0253921A4A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:18:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568067482;
-	bh=m9stGIrurleB7teL5+inn8FM52zyFO2QE5pbq3KecwI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=MEBIQuHiKs+TWkxMLaCQEDSmDZtSK9AcEDokB9aB3w9OSXvHdajBd4EFDnmjCwnVK
-	 I2aL75kys2iX8w1qOlgDQ6ifH/PIVFvIkUgDeJ/afF4B9LMTq16PwOPus+DXcNpw9U
-	 3LtmiQtdLC+kYxqJAsdihhnB+hqhEHK5IJvBhhhM=
+	s=default; t=1568067485;
+	bh=wOfno92071SM8Zoy2bQQhGzk30UPTtn44awh7U17Mu0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=X0pbuWwTqOONo/dgdcMQgp1fgnWkRE6ROQtejfOPSVZUUo+3J5pZqZT1z+TdNsudW
+	 6nRYBivnPPmYNVO8hWgLmO5O6k4QdFwduwZYg+Xv+vlUrgWkQ9IVaNEFFBuYoDATa9
+	 +RKJ4i+Gpr1tmnQzqjbxB9XKVDGe0jUCGsM4vmnA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392157AbfIIWRN (ORCPT
+        id S2406423AbfIIWSE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 18:17:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45920 "EHLO mail.kernel.org"
+        Mon, 9 Sep 2019 18:18:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406277AbfIIWQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 18:16:58 -0400
+        id S2392142AbfIIWRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 18:17:13 -0400
 Received: from sasha-vm.mshome.net (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 214172171F;
-        Mon,  9 Sep 2019 22:16:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DC2F222C6;
+        Mon,  9 Sep 2019 22:17:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568067417;
-        bh=m9stGIrurleB7teL5+inn8FM52zyFO2QE5pbq3KecwI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=SIiLM6oImvJbZCljtWbW7BEMUJLcXdCy7fyNJCsdYwPgh4nkSNkSvDkhZCBhmhszo
-         Sd2Oh12pCr6/Ue9cIWeGQJWgx6cHPc7JIrCoDgdERQQ7F6P4cG9ZZHo9FQLOkRUByE
-         S6DhviK0bvMmbfeqSpDsXo4vnXGeCU4DRmq9evww=
+        s=default; t=1568067431;
+        bh=wOfno92071SM8Zoy2bQQhGzk30UPTtn44awh7U17Mu0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vz9dG4tnFq7Af0M7K4ysZhBmzHw7pyBdidQBHmtZ2VvPoRSkkqLh5cx4Yyym25PB6
+         YVphLaqnhQkQm0nL+Ft7hgiDxxp9FQg+MQelEmvEYa7c6+Z2EJdbfvi2xWJszQQ+7o
+         Dc7x4csB3uTpGt0PO49R22Jh+CIlgh+nIWhsjxhY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 1/8] dmaengine: ti: dma-crossbar: Fix a memory leak bug
-Date:   Mon,  9 Sep 2019 11:41:38 -0400
-Message-Id: <20190909154145.31263-1-sashal@kernel.org>
+Cc:     Stuart Hayes <stuart.w.hayes@gmail.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.14 7/8] iommu/amd: Flush old domains in kdump kernel
+Date:   Mon,  9 Sep 2019 11:41:44 -0400
+Message-Id: <20190909154145.31263-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190909154145.31263-1-sashal@kernel.org>
+References: <20190909154145.31263-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,41 +60,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Stuart Hayes <stuart.w.hayes@gmail.com>
 
-[ Upstream commit 2c231c0c1dec42192aca0f87f2dc68b8f0cbc7d2 ]
+[ Upstream commit 36b7200f67dfe75b416b5281ed4ace9927b513bc ]
 
-In ti_dra7_xbar_probe(), 'rsv_events' is allocated through kcalloc(). Then
-of_property_read_u32_array() is invoked to search for the property.
-However, if this process fails, 'rsv_events' is not deallocated, leading to
-a memory leak bug. To fix this issue, free 'rsv_events' before returning
-the error.
+When devices are attached to the amd_iommu in a kdump kernel, the old device
+table entries (DTEs), which were copied from the crashed kernel, will be
+overwritten with a new domain number.  When the new DTE is written, the IOMMU
+is told to flush the DTE from its internal cache--but it is not told to flush
+the translation cache entries for the old domain number.
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Link: https://lore.kernel.org/r/1565938136-7249-1-git-send-email-wenwen@cs.uga.edu
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Without this patch, AMD systems using the tg3 network driver fail when kdump
+tries to save the vmcore to a network system, showing network timeouts and
+(sometimes) IOMMU errors in the kernel log.
+
+This patch will flush IOMMU translation cache entries for the old domain when
+a DTE gets overwritten with a new domain number.
+
+Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+Fixes: 3ac3e5ee5ed5 ('iommu/amd: Copy old trans table from old kernel')
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/ti-dma-crossbar.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/iommu/amd_iommu.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/drivers/dma/ti-dma-crossbar.c b/drivers/dma/ti-dma-crossbar.c
-index 9272b173c7465..6574cb5a12fee 100644
---- a/drivers/dma/ti-dma-crossbar.c
-+++ b/drivers/dma/ti-dma-crossbar.c
-@@ -395,8 +395,10 @@ static int ti_dra7_xbar_probe(struct platform_device *pdev)
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index 684f7cdd814b6..822c85226a29f 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -1150,6 +1150,17 @@ static void amd_iommu_flush_tlb_all(struct amd_iommu *iommu)
+ 	iommu_completion_wait(iommu);
+ }
  
- 		ret = of_property_read_u32_array(node, pname, (u32 *)rsv_events,
- 						 nelm * 2);
--		if (ret)
-+		if (ret) {
-+			kfree(rsv_events);
- 			return ret;
-+		}
++static void amd_iommu_flush_tlb_domid(struct amd_iommu *iommu, u32 dom_id)
++{
++	struct iommu_cmd cmd;
++
++	build_inv_iommu_pages(&cmd, 0, CMD_INV_IOMMU_ALL_PAGES_ADDRESS,
++			      dom_id, 1);
++	iommu_queue_command(iommu, &cmd);
++
++	iommu_completion_wait(iommu);
++}
++
+ static void amd_iommu_flush_all(struct amd_iommu *iommu)
+ {
+ 	struct iommu_cmd cmd;
+@@ -1835,6 +1846,7 @@ static void set_dte_entry(u16 devid, struct protection_domain *domain, bool ats)
+ {
+ 	u64 pte_root = 0;
+ 	u64 flags = 0;
++	u32 old_domid;
  
- 		for (i = 0; i < nelm; i++) {
- 			ti_dra7_xbar_reserve(rsv_events[i][0], rsv_events[i][1],
+ 	if (domain->mode != PAGE_MODE_NONE)
+ 		pte_root = iommu_virt_to_phys(domain->pt_root);
+@@ -1877,8 +1889,20 @@ static void set_dte_entry(u16 devid, struct protection_domain *domain, bool ats)
+ 	flags &= ~DEV_DOMID_MASK;
+ 	flags |= domain->id;
+ 
++	old_domid = amd_iommu_dev_table[devid].data[1] & DEV_DOMID_MASK;
+ 	amd_iommu_dev_table[devid].data[1]  = flags;
+ 	amd_iommu_dev_table[devid].data[0]  = pte_root;
++
++	/*
++	 * A kdump kernel might be replacing a domain ID that was copied from
++	 * the previous kernel--if so, it needs to flush the translation cache
++	 * entries for the old domain ID that is being overwritten
++	 */
++	if (old_domid) {
++		struct amd_iommu *iommu = amd_iommu_rlookup_table[devid];
++
++		amd_iommu_flush_tlb_domid(iommu, old_domid);
++	}
+ }
+ 
+ static void clear_dte_entry(u16 devid)
 -- 
 2.20.1
 
