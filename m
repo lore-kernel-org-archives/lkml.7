@@ -2,102 +2,84 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0100C433EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 988E1C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7CCD218DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:38:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 704FC218DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:40:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404678AbfIIMic (ORCPT
+        id S1728300AbfIIMkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 08:38:32 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:45625 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727967AbfIIMib (ORCPT
+        Mon, 9 Sep 2019 08:40:11 -0400
+Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:42624 "EHLO
+        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726019AbfIIMkL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 08:38:31 -0400
-Received: from localhost ([46.78.15.232]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MsqMq-1iRBEX2R1k-00tA70; Mon, 09 Sep 2019 14:38:09 +0200
-Date:   Mon, 9 Sep 2019 14:38:08 +0200
-From:   Andreas Klinger <ak@it-klinger.de>
-To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] iio: adc: hx711: remove unnecessary returns
-Message-ID: <20190909123806.ewrxc7y5gmh5plmk@arbad>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Provags-ID: V03:K1:sYDxRPyTH6C963S9/gAb7OfPBbNXhNeJ1VYf7nec78X5l8tEuYz
- 89GJ3GsRA3UGY+lHLXgvDVrblbvhsuMpk3tdhjGV9YYmscCDr8C/3RS7cLhaMzcg0CrVjU3
- 1oHubHyyDAvunKH+hjjY1KGERUiW3P7AOfzdjn7CpafTqTJMUl4h82npocnVxPkqQ/cNkQm
- v8N1sbOksdpuhhrvbnr0A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:D1A/xcjwmhE=:2hJiZpX/Ug+t4LH3e2ULTW
- QW6BrjPYoO7hKtZuenuHvoBcsy6l9Bpwf4CW4ZlBjTUr+JVP+jcCHzQZjEmEPFtASvjAq8o7r
- pvR3Z5Ts93bNTsbC0sfIE3KQs2tN5w1xTyOSG19Tj0D3/VBEXTcBXYt190/gzElSbNxrVP7dE
- C/Xf5o5HviXcVwknJWXeZHKuDaIihd+BO4E/1vx6Sc5Y0lN6X5gG+3/6vfvJPmOB6+h01rcnN
- 1bH3MZIUM/RJKMGS/+4YQ3RtepBvxIxc4yhYNRJqigcH5d9ZvvOPNAPzGog+6HDAJyCe4+LKo
- vZJgs5MHfC219paPDGIdsto6xdx/KB3UtknvevYtSw0khpt/mZtHNSr635sOAYIVqNp8B8xBi
- sGWzdDO2eCGczM8U2i62u2olujLErvkTf9/A+LVEfYfsLHNKdnrKc9hxpQMUumHVvQ1Z9PpNb
- 7hXdmk9SrHu9wfOcYWHvO2+jR/u7Z2K7/LFgUI3nT8ev74Sh0oAXaD9M7FS4PU+V48f5i1I98
- HVukkycewsEv07Reh34/BBZ/F//TLPzFzX3oP2p2CQ91Nc4eNvZtz3YndLwuJVhOkrxhX2Iif
- IAgYg6ktZRYEEcoJVMMa6xqUt6QbnBjgCKpHLN0obphipe1eDX6R8xOyg4gHAHHVjuUpO0zZH
- seH3ZSUkw/eNtamEzfH1x0FvObNIuoxRTiDau171iIE+8UOHKQQYCayTfWM1OvDjEdFVX/EXM
- b/u71vAG3p48x7mEfIlzH99dF39Iv8fJ3Pztck/mtc2RpGiKoieeFX9gcEzujGG/FJLhgO+d8
- 4RI6bWnX0LYYSWPrTosoAxaS4yxLQ==
+        Mon, 9 Sep 2019 08:40:11 -0400
+Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
+        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id x89Ccft8029013;
+        Mon, 9 Sep 2019 15:38:41 +0300
+Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
+        id 7B83062A57; Mon,  9 Sep 2019 15:38:41 +0300 (IDT)
+From:   Tomer Maimon <tmaimon77@gmail.com>
+To:     mpm@selenic.com, herbert@gondor.apana.org.au, arnd@arndb.de,
+        gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, avifishman70@gmail.com,
+        tali.perry1@gmail.com, venture@google.com, yuenn@google.com,
+        benjaminfair@google.com, sumit.garg@linaro.org,
+        jens.wiklander@linaro.org, vkoul@kernel.org, tglx@linutronix.de,
+        joel@jms.id.au
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-crypto@vger.kernel.org, openbmc@lists.ozlabs.org,
+        Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v2 1/2] dt-binding: hwrng: add NPCM RNG documentation
+Date:   Mon,  9 Sep 2019 15:38:39 +0300
+Message-Id: <20190909123840.154745-2-tmaimon77@gmail.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20190909123840.154745-1-tmaimon77@gmail.com>
+References: <20190909123840.154745-1-tmaimon77@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Optimize use of return in hx711_set_gain_for_channel().
+Added device tree binding documentation for Nuvoton BMC
+NPCM Random Number Generator (RNG).
 
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
 ---
- drivers/iio/adc/hx711.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ .../bindings/rng/nuvoton,npcm-rng.txt           | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt
 
-diff --git a/drivers/iio/adc/hx711.c b/drivers/iio/adc/hx711.c
-index c8686558429b..20c249f502c0 100644
---- a/drivers/iio/adc/hx711.c
-+++ b/drivers/iio/adc/hx711.c
-@@ -213,7 +213,7 @@ static int hx711_reset(struct hx711_data *hx711_data)
- 
- static int hx711_set_gain_for_channel(struct hx711_data *hx711_data, int chan)
- {
--	int ret;
-+	int ret = 0;
- 
- 	if (chan == 0) {
- 		if (hx711_data->gain_set == 32) {
-@@ -224,8 +224,6 @@ static int hx711_set_gain_for_channel(struct hx711_data *hx711_data, int chan)
- 				return ret;
- 
- 			ret = hx711_wait_for_ready(hx711_data);
--			if (ret)
--				return ret;
- 		}
- 	} else {
- 		if (hx711_data->gain_set != 32) {
-@@ -236,12 +234,10 @@ static int hx711_set_gain_for_channel(struct hx711_data *hx711_data, int chan)
- 				return ret;
- 
- 			ret = hx711_wait_for_ready(hx711_data);
--			if (ret)
--				return ret;
- 		}
- 	}
- 
--	return 0;
-+	return ret;
- }
- 
- static int hx711_reset_read(struct hx711_data *hx711_data, int chan)
+diff --git a/Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt b/Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt
+new file mode 100644
+index 000000000000..a697b4425fb3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt
+@@ -0,0 +1,17 @@
++NPCM SoC Random Number Generator
++
++Required properties:
++- compatible  : "nuvoton,npcm750-rng" for the NPCM7XX BMC.
++- reg         : Specifies physical base address and size of the registers.
++
++Optional property:
++- quality : estimated number of bits of true entropy per 1024 bits
++			read from the rng.
++			If this property is not defined, it defaults to 1000.
++
++Example:
++
++rng: rng@f000b000 {
++	compatible = "nuvoton,npcm750-rng";
++	reg = <0xf000b000 0x8>;
++};
 -- 
-2.11.0
+2.18.0
+
