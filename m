@@ -2,131 +2,140 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAEFEC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35457C433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A54A721920
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C1FB21D79
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:59:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="NpG/2pyW"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Z0kR636W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390433AbfIIK7B (ORCPT
+        id S2390734AbfIIK7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 06:59:01 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:20659 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732685AbfIIK7B (ORCPT
+        Mon, 9 Sep 2019 06:59:44 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:37036 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390539AbfIIK7o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 06:59:01 -0400
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x89AwnPB011937;
-        Mon, 9 Sep 2019 19:58:49 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x89AwnPB011937
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1568026729;
-        bh=S+MPqiiGn4LeMb/joD8lDmJPCUqMxD5aET1rbJtbA3E=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=NpG/2pyWxvZrR+zTCmsx5S1z9V9SvNQHOc6MhtporV0ch3YQtgPe8BWpnv6KZ3OGp
-         B7b0WaBwuizVr0IwEw1SasqvU7YoxMRwsrM1bfd1yUhmQ9OpDp8sHRs6ebbSjCtSh8
-         4KUp4clsAKh/gWYkdLiLp6cN7R78TqU5xyl7UDzAxttrQ3MkSxkdXWuimOtVmMrH4A
-         gUXip+E7Wu2vEJK1Ed/MyHSi0ZrilDKRZfzTHEkuZpyoMwZszfQh0PPG8GD+iZriq7
-         mxYLn7NOA9Y3f1oQUk6W62WfxgK+t1ADD8V0dSGsFhGlg2Vyjy5nmw9Xm/WizeGaIS
-         3uVBu3uAeSBVQ==
-X-Nifty-SrcIP: [209.85.217.44]
-Received: by mail-vs1-f44.google.com with SMTP id v19so3290027vsv.3;
-        Mon, 09 Sep 2019 03:58:49 -0700 (PDT)
-X-Gm-Message-State: APjAAAUX2zLjO/UsWBWEpC3YEPbLdluY8ntIKVmGO3R21SjXmQ/mLNm2
-        1l0uPuskQnf2aMEzmuvUnOef8TdPod2YE2TijV0=
-X-Google-Smtp-Source: APXvYqw9/T+rWlyR5HmLkXqTF/IEN6zmlshds9MON4ldmzxUkO3UmoG47Ucs7zKVYJiS0/WfaAffsOgfqctDPTH4egI=
-X-Received: by 2002:a67:1a41:: with SMTP id a62mr12842610vsa.54.1568026728299;
- Mon, 09 Sep 2019 03:58:48 -0700 (PDT)
+        Mon, 9 Sep 2019 06:59:44 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x89AxSho114599;
+        Mon, 9 Sep 2019 05:59:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568026768;
+        bh=KVTZeU9q6U/tm8mHmG6WMtzijKTyoPy7zWy+jYJUN0w=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Z0kR636WsH3wXes0J12PD38D5hFweyoCxpR+fcSAcWqcaqyeR8AjIXhnnBvTZO8J4
+         yPyACWq001MyvsAYus3peKtwX6dQLmuEyzcfdcba/FuVxuwdMwElfDMGTVDMEkAvQH
+         /nfb7SUhIcjDJf//GEdyLAhd0tGpVvmHLFG6OG1s=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x89AxSEJ104990;
+        Mon, 9 Sep 2019 05:59:28 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 9 Sep
+ 2019 05:59:26 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 9 Sep 2019 05:59:25 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x89AxMHW108974;
+        Mon, 9 Sep 2019 05:59:23 -0500
+Subject: Re: [PATCH v2 06/14] dmaengine: ti: Add cppi5 header for UDMA
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
+        <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
+        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
+References: <20190730093450.12664-1-peter.ujfalusi@ti.com>
+ <20190730093450.12664-7-peter.ujfalusi@ti.com>
+ <20190908142528.GP2672@vkoul-mobl>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <8699f999-7834-a083-2c7b-3ea909b1e011@ti.com>
+Date:   Mon, 9 Sep 2019 13:59:54 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190906151059.1077708-1-arnd@arndb.de>
-In-Reply-To: <20190906151059.1077708-1-arnd@arndb.de>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Mon, 9 Sep 2019 19:58:12 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAR_6cQs33nOsJyVCmztw62dx=0W59KWo4WH+SoUnzOJoQ@mail.gmail.com>
-Message-ID: <CAK7LNAR_6cQs33nOsJyVCmztw62dx=0W59KWo4WH+SoUnzOJoQ@mail.gmail.com>
-Subject: Re: [PATCH] mostpost: don't warn about symbols from another file
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Denis Efremov <efremov@linux.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        WANG Chao <chao.wang@ucloud.cn>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190908142528.GP2672@vkoul-mobl>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 7, 2019 at 12:11 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On architectures such as ARM that have a list of symbols exported from
-> assembler in a separate C file, we get a lot of new warnings:
->
-> WARNING: "__ashrdi3" [vmlinux] is a static (unknown)
-> WARNING: "__lshrdi3" [vmlinux] is a static (unknown)
-> WARNING: "__aeabi_llsr" [vmlinux] is a static (unknown)
-> WARNING: "__aeabi_lasr" [vmlinux] is a static (unknown)
-> WARNING: "__aeabi_uidivmod" [vmlinux] is a static (unknown)
-> WARNING: "__udivsi3" [vmlinux] is a static (unknown)
-> WARNING: "_change_bit" [vmlinux] is a static (unknown)
-> WARNING: "__aeabi_idiv" [vmlinux] is a static (unknown)
-> WARNING: "__umodsi3" [vmlinux] is a static (unknown)
-> WARNING: "__aeabi_uidiv" [vmlinux] is a static (unknown)
-> WARNING: "__aeabi_idivmod" [vmlinux] is a static (unknown)
-> WARNING: "__muldi3" [vmlinux] is a static (unknown)
-> WARNING: "__aeabi_ulcmp" [vmlinux] is a static (unknown)
-> WARNING: "__raw_writesb" [vmlinux] is a static (unknown)
-> WARNING: "__raw_readsb" [vmlinux] is a static (unknown)
-> ...
->
-> This is not helpful, as these are clearly not static symbols
-> at all. Suppress the warning in a case like this.
->
-> Fixes: 15bfc2348d54 ("modpost: check for static EXPORT_SYMBOL* functions")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
 
-This patch is not root-causing the problem,
-rather it is hiding it.
+On 08/09/2019 17.25, Vinod Koul wrote:
+> On 30-07-19, 12:34, Peter Ujfalusi wrote:
+> 
+>> +/**
+>> + * Descriptor header, present in all types of descriptors
+>> + */
+>> +struct cppi5_desc_hdr_t {
+>> +	u32 pkt_info0;	/* Packet info word 0 (n/a in Buffer desc) */
+>> +	u32 pkt_info1;	/* Packet info word 1 (n/a in Buffer desc) */
+>> +	u32 pkt_info2;	/* Packet info word 2 Buffer reclamation info */
+>> +	u32 src_dst_tag; /* Packet info word 3 (n/a in Buffer desc) */
+> 
+> Can we move these comments to kernel-doc style please
 
-I posted a real fix:
-https://patchwork.kernel.org/patch/11137689/
+Sure, I'll move all struct and enums.
 
+>> +/**
+>> + * cppi5_desc_get_type - get descriptor type
+>> + * @desc_hdr: packet descriptor/TR header
+>> + *
+>> + * Returns descriptor type:
+>> + * CPPI5_INFO0_DESC_TYPE_VAL_HOST
+>> + * CPPI5_INFO0_DESC_TYPE_VAL_MONO
+>> + * CPPI5_INFO0_DESC_TYPE_VAL_TR
+>> + */
+>> +static inline u32 cppi5_desc_get_type(struct cppi5_desc_hdr_t *desc_hdr)
+>> +{
+>> +	WARN_ON(!desc_hdr);
+> 
+> why WARN_ON and not return error!
 
+these helpers were intended to be as simple as possible.
+I can go through with all of the WARN_ONs and replace them with if()
+pr_warn() and either just return or return with 0.
 
-> ---
->  scripts/mod/modpost.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-> index 76c221dd9b2b..4265dd924933 100644
-> --- a/scripts/mod/modpost.c
-> +++ b/scripts/mod/modpost.c
-> @@ -2543,7 +2543,7 @@ int main(int argc, char **argv)
->                 struct symbol *s = symbolhash[n];
->
->                 while (s) {
-> -                       if (s->is_static)
-> +                       if (s->is_static && s->export != export_unknown)
->                                 warn("\"%s\" [%s] is a static %s\n",
->                                      s->name, s->module->name,
->                                      export_str(s->export));
-> --
-> 2.20.0
->
+Would that be acceptable?
 
+>> +/**
+>> + * cppi5_hdesc_calc_size - Calculate Host Packet Descriptor size
+>> + * @epib: is EPIB present
+>> + * @psdata_size: PSDATA size
+>> + * @sw_data_size: SWDATA size
+>> + *
+>> + * Returns required Host Packet Descriptor size
+>> + * 0 - if PSDATA > CPPI5_INFO0_HDESC_PSDATA_MAX_SIZE
+>> + */
+>> +static inline u32 cppi5_hdesc_calc_size(bool epib, u32 psdata_size,
+>> +					u32 sw_data_size)
+>> +{
+>> +	u32 desc_size;
+>> +
+>> +	if (psdata_size > CPPI5_INFO0_HDESC_PSDATA_MAX_SIZE)
+>> +		return 0;
+>> +	//TODO_GS: align
+> 
+> :)
 
--- 
-Best Regards
-Masahiro Yamada
+Leftover TODO from Grygorii, the align is already done.
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
