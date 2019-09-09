@@ -4,313 +4,219 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA80C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CCAC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 419862084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:06:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35ED52084D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:06:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403812AbfIILGD (ORCPT
+        id S1730794AbfIILGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 07:06:03 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:42290 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729692AbfIILGC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 07:06:02 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id D0E9A9812A091B1CFB3D;
-        Mon,  9 Sep 2019 19:05:59 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 9 Sep 2019
- 19:05:57 +0800
-Subject: Re: [PATCH] f2fs: fix to avoid accessing uninitialized field of inode
- page in is_alive()
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     Chao Yu <chao@kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>
-References: <20190906105426.109151-1-yuchao0@huawei.com>
- <20190906234808.GC71848@jaegeuk-macbookpro.roam.corp.google.com>
- <080e8dee-4726-8294-622a-cac26e781083@kernel.org>
- <20190909074425.GB21625@jaegeuk-macbookpro.roam.corp.google.com>
- <79228eaa-776f-da89-89f8-a9b5a90034b6@huawei.com>
- <873f4c07-5694-6554-5266-81812a6bd617@huawei.com>
- <20190909083725.GB25724@jaegeuk-macbookpro.roam.corp.google.com>
- <05393d3c-b78d-3bb3-ff26-64d2d3939618@huawei.com>
- <20190909093355.GA27742@jaegeuk-macbookpro.roam.corp.google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <94ea2431-d4da-f1bf-d949-3c36948aeeca@huawei.com>
-Date:   Mon, 9 Sep 2019 19:05:48 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 9 Sep 2019 07:06:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41506 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730736AbfIILGL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 07:06:11 -0400
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 16405765BF
+        for <linux-kernel@vger.kernel.org>; Mon,  9 Sep 2019 11:06:11 +0000 (UTC)
+Received: by mail-wm1-f69.google.com with SMTP id r187so4411799wme.0
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 04:06:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7P1L82Hvd2CHZtV3y3+DuSRQWJRg8V37be+Beu7AiBw=;
+        b=UHtq+oTTBnhyLbjPPZv5oI8gNuLirPDd3P+4MIUTe5mIpqk/E1gPK67icjfm/Hfh8m
+         L1Td5JHNSqLiiWYYCuGsx4CtVAfR3Jm340KIq9shUqGR0zdR485aIaU6oT1iaRmgo+TI
+         7BPDGInvYuD79264iB6ssyMmBP1LFyx27f+EkTqIQutdKHklL4BSse3Gasx9mr+TFSV4
+         qElPhFE6DqjIC2JYZZlKC9a6pmQEF4ZHE/KPcbMykHBHzbV8CjqhVRfYC8XjbFbZOUOk
+         kkjs+yWTmzfTHt8ZRBDuPJ7XPO3EQq/2s9InYVLN7d0DhtvtfFno2NY6HFcLutNzvUig
+         xr8Q==
+X-Gm-Message-State: APjAAAWIOJpay6HAd4T2ie9URmQs6UcCbM9pMt+vVm1i8D4EDYlpaKej
+        KohykwBLLpNfzR2biqjOT6owKSmwrX42D14fVNYs3RHQOM83PjLbJ9L8bBdGf8f0/OLVVm3eTZQ
+        MwT5m0fmTEympQhkvoaCDLB0j
+X-Received: by 2002:adf:f284:: with SMTP id k4mr3118596wro.294.1568027169600;
+        Mon, 09 Sep 2019 04:06:09 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwpJObjRb41D20LhnQ/9bC6pyQl1DWX1ZWggr3xyk6OHo4dXPNZEDXNgLaeWrw8SqEtwG9mSQ==
+X-Received: by 2002:adf:f284:: with SMTP id k4mr3118569wro.294.1568027169308;
+        Mon, 09 Sep 2019 04:06:09 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:8dc1:ce1e:4b83:3ab7? ([2001:b07:6468:f312:8dc1:ce1e:4b83:3ab7])
+        by smtp.gmail.com with ESMTPSA id x5sm19207918wrg.69.2019.09.09.04.06.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Sep 2019 04:06:08 -0700 (PDT)
+Subject: Re: [PATCH] Revert "locking/pvqspinlock: Don't wait if vCPU is
+ preempted"
+To:     Waiman Long <longman@redhat.com>, Wanpeng Li <kernellwp@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, loobinliu@tencent.com,
+        stable@vger.kernel.org
+References: <1567993228-23668-1-git-send-email-wanpengli@tencent.com>
+ <29d04ee4-60e7-4df9-0c4f-fc29f2b0c6a8@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <fbf152a5-134b-0540-3345-cb6b0b66f1a1@redhat.com>
+Date:   Mon, 9 Sep 2019 13:06:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190909093355.GA27742@jaegeuk-macbookpro.roam.corp.google.com>
-Content-Type: text/plain; charset="windows-1252"
+In-Reply-To: <29d04ee4-60e7-4df9-0c4f-fc29f2b0c6a8@redhat.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/9/9 17:33, Jaegeuk Kim wrote:
-> On 09/09, Chao Yu wrote:
->> On 2019/9/9 16:37, Jaegeuk Kim wrote:
->>> On 09/09, Chao Yu wrote:
->>>> On 2019/9/9 15:58, Chao Yu wrote:
->>>>> On 2019/9/9 15:44, Jaegeuk Kim wrote:
->>>>>> On 09/07, Chao Yu wrote:
->>>>>>> On 2019-9-7 7:48, Jaegeuk Kim wrote:
->>>>>>>> On 09/06, Chao Yu wrote:
->>>>>>>>> If inode is newly created, inode page may not synchronize with inode cache,
->>>>>>>>> so fields like .i_inline or .i_extra_isize could be wrong, in below call
->>>>>>>>> path, we may access such wrong fields, result in failing to migrate valid
->>>>>>>>> target block.
->>>>>>>>
->>>>>>>> If data is valid, how can we get new inode page?
->>>>>>
->>>>>> Let me rephrase the question. If inode is newly created, is this data block
->>>>>> really valid to move in GC?
->>>>>
->>>>> I guess it's valid, let double check that.
->>>>
->>>> We can see inode page:
->>>>
->>>> - f2fs_create
->>>>  - f2fs_add_link
->>>>   - f2fs_add_dentry
->>>>    - f2fs_init_inode_metadata
->>>>     - f2fs_add_inline_entry
->>>>      - ipage = f2fs_new_inode_page
->>>>      - f2fs_put_page(ipage)   <---- after this
->>>
->>> Can you print out how many block was assigned to this inode?
+On 09/09/19 12:56, Waiman Long wrote:
+> On 9/9/19 2:40 AM, Wanpeng Li wrote:
+>> From: Wanpeng Li <wanpengli@tencent.com>
 >>
->> Add log like this:
+>> This patch reverts commit 75437bb304b20 (locking/pvqspinlock: Don't wait if 
+>> vCPU is preempted), we found great regression caused by this commit.
 >>
->> 		if (!test_and_set_bit(segno, SIT_I(sbi)->invalid_segmap)) {
->> 			if (is_inode) {
->> 				for (i = 0; i < 923 - 50; i++) {
->> 					__le32 *base = blkaddr_in_node(node);
->> 					unsigned ofs = offset_in_addr(inode);
+>> Xeon Skylake box, 2 sockets, 40 cores, 80 threads, three VMs, each is 80 vCPUs.
+>> The score of ebizzy -M can reduce from 13000-14000 records/s to 1700-1800 
+>> records/s with this commit.
 >>
->> 					printk("i:%u, addr:%x\n", i,
->> 						le32_to_cpu(*(base + i)));
->> 				}
->> 				printk("i_inline: %u\n", inode->i_inline);
->> 			}
+>>           Host                       Guest                score
 >>
->> It shows:
->> ...
->> i:10, addr:e66a
->> ...
->> i:46, addr:e66c
->> i:47, addr:e66d
->> i:48, addr:e66e
->> i:49, addr:e66f
->> i:50, addr:e670
->> i:51, addr:e671
->> i:52, addr:e672
->> i:53, addr:e673
->> i:54, addr:e674
->> i:55, addr:e675
->> i:56, addr:e676
->> ...
->> i:140, addr:2c35    <--- we want to migrate this block, however, without correct
->> .i_inline and .i_extra_isize value, we can just find i_addr[i:140-6] = NULL_ADDR
+>> vanilla + w/o kvm optimizes     vanilla               1700-1800 records/s
+>> vanilla + w/o kvm optimizes     vanilla + revert      13000-14000 records/s
+>> vanilla + w/ kvm optimizes      vanilla               4500-5000 records/s
+>> vanilla + w/ kvm optimizes      vanilla + revert      14000-15500 records/s
+>>
+>> Exit from aggressive wait-early mechanism can result in yield premature and 
+>> incur extra scheduling latency in over-subscribe scenario.
+>>
+>> kvm optimizes:
+>> [1] commit d73eb57b80b (KVM: Boost vCPUs that are delivering interrupts)
+>> [2] commit 266e85a5ec9 (KVM: X86: Boost queue head vCPU to mitigate lock waiter preemption)
+>>
+>> Tested-by: loobinliu@tencent.com
+>> Cc: Peter Zijlstra <peterz@infradead.org>
+>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>> Cc: Ingo Molnar <mingo@kernel.org>
+>> Cc: Waiman Long <longman@redhat.com>
+>> Cc: Paolo Bonzini <pbonzini@redhat.com>
+>> Cc: Radim Krčmář <rkrcmar@redhat.com>
+>> Cc: loobinliu@tencent.com
+>> Cc: stable@vger.kernel.org 
+>> Fixes: 75437bb304b20 (locking/pvqspinlock: Don't wait if vCPU is preempted)
+>> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+>> ---
+>>  kernel/locking/qspinlock_paravirt.h | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/kernel/locking/qspinlock_paravirt.h b/kernel/locking/qspinlock_paravirt.h
+>> index 89bab07..e84d21a 100644
+>> --- a/kernel/locking/qspinlock_paravirt.h
+>> +++ b/kernel/locking/qspinlock_paravirt.h
+>> @@ -269,7 +269,7 @@ pv_wait_early(struct pv_node *prev, int loop)
+>>  	if ((loop & PV_PREV_CHECK_MASK) != 0)
+>>  		return false;
+>>  
+>> -	return READ_ONCE(prev->state) != vcpu_running || vcpu_is_preempted(prev->cpu);
+>> +	return READ_ONCE(prev->state) != vcpu_running;
+>>  }
+>>  
+>>  /*
 > 
-> So, the theory is the block is indeed valid and the address was updated before
-> write_inode()?
-
-I guess so. :)
-
-Thanks,
-
+> There are several possibilities for this performance regression:
 > 
->> i:141, addr:2c38
->> i:142, addr:2c39
->> i:143, addr:2c3b
->> i:144, addr:2c3e
->> i:145, addr:2c40
->> i:146, addr:2c44
->> i:147, addr:2c48
->> i:148, addr:2c4a
->> i:149, addr:2c4c
->> i:150, addr:2c4f
->> i:151, addr:2c59
->> i:152, addr:2c5d
->> ...
->> i:188, addr:e677
->> i:189, addr:e678
->> i:190, addr:e679
->> i:191, addr:e67a
->> i:192, addr:e67b
->> i:193, addr:e67c
->> i:194, addr:e67d
->> i:195, addr:e67e
->> i:196, addr:e67f
->> i:197, addr:e680
->> i:198, addr:ffffffff
->> i:199, addr:ffffffff
->> i:200, addr:ffffffff
->> i:201, addr:ffffffff
->> i:202, addr:ffffffff
->> i:203, addr:ffffffff
->> i:204, addr:ffffffff
->> i:205, addr:ffffffff
->> i:206, addr:ffffffff
->> i:207, addr:ffffffff
->> i:208, addr:ffffffff
->> i:209, addr:ffffffff
->> i:210, addr:ffffffff
->> i:211, addr:ffffffff
->> i:212, addr:ffffffff
->> i:213, addr:ffffffff
->> i:214, addr:ffffffff
->> i:215, addr:ffffffff
->> i:216, addr:ffffffff
->> i:217, addr:ffffffff
->> i:218, addr:ffffffff
->> i:219, addr:ffffffff
->> i:220, addr:ffffffff
->> i:221, addr:ffffffff
->> i:222, addr:ffffffff
->> i:223, addr:ffffffff
->> i:224, addr:ffffffff
->> i:225, addr:ffffffff
->> i:226, addr:ffffffff
->> i:227, addr:ffffffff
->> i:228, addr:ffffffff
->> i:229, addr:ffffffff
->> i:230, addr:ffffffff
->> i:231, addr:ffffffff
->> i:232, addr:ffffffff
->> i:233, addr:ffffffff
->> i:234, addr:b032
->> i:235, addr:b033
->> i:236, addr:b034
->> i:237, addr:b035
->> i:238, addr:b036
->> i:239, addr:b038
->> ...
->> i:283, addr:e681
->> ...
->> i_inline: 0
->>
->> F2FS-fs (zram1): summary nid: 360, ofs: 134, ver: 0
->> F2FS-fs (zram1): blkaddr 2c35 (blkaddr in node 0) <-blkaddr in node is NULL_ADDR
->> F2FS-fs (zram1): expect: seg 14, ofs_in_seg: 53
->> F2FS-fs (zram1): real: seg 4294967295, ofs_in_seg: 0
->> F2FS-fs (zram1): ofs: 53, 0
->> F2FS-fs (zram1): node info ino:360, nid:360, nofs:0
->> F2FS-fs (zram1): ofs_in_addr: 0
->> F2FS-fs (zram1): end ========
->>
->>>
->>>>
->>>>>
->>>>>>
->>>>>>>
->>>>>>> is_alive()
->>>>>>> {
->>>>>>> ...
->>>>>>> 	node_page = f2fs_get_node_page(sbi, nid);  <--- inode page
->>>>>>
->>>>>> Aren't we seeing the below version warnings?
->>>>>>
->>>>>> if (sum->version != dni->version) {
->>>>>> 	f2fs_warn(sbi, "%s: valid data with mismatched node version.",
->>>>>>                            __func__);
->>>>>>         set_sbi_flag(sbi, SBI_NEED_FSCK);
->>>>>> }
->>>>
->>>> The version of summary and dni are all zero.
->>>
->>> Then, this node was allocated and removed without being flushed.
->>>
->>>>
->>>> summary nid: 613, ofs: 111, ver: 0
->>>> blkaddr 2436 (blkaddr in node 0)
->>>> expect: seg 10, ofs_in_seg: 54
->>>> real: seg 4294967295, ofs_in_seg: 0
->>>> ofs: 54, 0
->>>> node info ino:613, nid:613, nofs:0
->>>> ofs_in_addr: 0
->>>>
->>>> Thanks,
->>>>
->>>>>>
->>>>>>>
->>>>>>> 	source_blkaddr = datablock_addr(NULL, node_page, ofs_in_node);
->>>>>>
->>>>>> So, we're getting this? Does this incur infinite loop in GC?
->>>>>>
->>>>>> if (!test_and_set_bit(segno, SIT_I(sbi)->invalid_segmap)) {
->>>>>> 	f2fs_err(sbi, "mismatched blkaddr %u (source_blkaddr %u) in seg %u\n",
->>>>>> 	f2fs_bug_on(sbi, 1);
->>>>>> }
->>>>>
->>>>> Yes, I only get this with generic/269, rather than "valid data with mismatched
->>>>> node version.".
->>>
->>> Was this block moved as valid? In either way, is_alive() returns false, no?
->>> How about checking i_blocks to detect the page is initialized in is_alive()?
->>>
->>>>>
->>>>> With this patch, generic/269 won't panic again.
->>>>>
->>>>> Thanks,
->>>>>
->>>>>>
->>>>>>> ...
->>>>>>> }
->>>>>>>
->>>>>>> datablock_addr()
->>>>>>> {
->>>>>>> ...
->>>>>>> 	base = offset_in_addr(&raw_node->i);  <--- the base could be wrong here due to
->>>>>>> accessing uninitialized .i_inline of raw_node->i.
->>>>>>> ...
->>>>>>> }
->>>>>>>
->>>>>>> Thanks,
->>>>>>>
->>>>>>>>
->>>>>>>>>
->>>>>>>>> - gc_data_segment
->>>>>>>>>  - is_alive
->>>>>>>>>   - datablock_addr
->>>>>>>>>    - offset_in_addr
->>>>>>>>>
->>>>>>>>> Fixes: 7a2af766af15 ("f2fs: enhance on-disk inode structure scalability")
->>>>>>>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
->>>>>>>>> ---
->>>>>>>>>  fs/f2fs/dir.c | 3 +++
->>>>>>>>>  1 file changed, 3 insertions(+)
->>>>>>>>>
->>>>>>>>> diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
->>>>>>>>> index 765f13354d3f..b1840852967e 100644
->>>>>>>>> --- a/fs/f2fs/dir.c
->>>>>>>>> +++ b/fs/f2fs/dir.c
->>>>>>>>> @@ -479,6 +479,9 @@ struct page *f2fs_init_inode_metadata(struct inode *inode, struct inode *dir,
->>>>>>>>>  		if (IS_ERR(page))
->>>>>>>>>  			return page;
->>>>>>>>>  
->>>>>>>>> +		/* synchronize inode page's data from inode cache */
->>>>>>>>> +		f2fs_update_inode(inode, page);
->>>>>>>>> +
->>>>>>>>>  		if (S_ISDIR(inode->i_mode)) {
->>>>>>>>>  			/* in order to handle error case */
->>>>>>>>>  			get_page(page);
->>>>>>>>> -- 
->>>>>>>>> 2.18.0.rc1
->>>>>> .
->>>>>>
->>> .
->>>
-> .
+> 1) Multiple vcpus calling vcpu_is_preempted() repeatedly may cause some
+> cacheline contention issue depending on how that callback is implemented.
+
+Unlikely, it is a single percpu read.
+
+> 2) KVM may set the preempt flag for a short period whenver an vmexit
+> happens even if a vmenter is executed shortly after. In this case, we
+> may want to use a more durable vcpu suspend flag that indicates the vcpu
+> won't get a real vcpu back for a longer period of time.
+
+It sets it for exits to userspace, but they shouldn't really happen on a 
+properly-configured system.
+
+However, it's easy to test this theory:
+
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 2e302e977dac..feb6c75a7a88 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -3368,26 +3368,28 @@ void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
+ {
+ 	int idx;
+ 
+-	if (vcpu->preempted)
++	if (vcpu->preempted) {
+ 		vcpu->arch.preempted_in_kernel = !kvm_x86_ops->get_cpl(vcpu);
+ 
+-	/*
+-	 * Disable page faults because we're in atomic context here.
+-	 * kvm_write_guest_offset_cached() would call might_fault()
+-	 * that relies on pagefault_disable() to tell if there's a
+-	 * bug. NOTE: the write to guest memory may not go through if
+-	 * during postcopy live migration or if there's heavy guest
+-	 * paging.
+-	 */
+-	pagefault_disable();
+-	/*
+-	 * kvm_memslots() will be called by
+-	 * kvm_write_guest_offset_cached() so take the srcu lock.
+-	 */
+-	idx = srcu_read_lock(&vcpu->kvm->srcu);
+-	kvm_steal_time_set_preempted(vcpu);
+-	srcu_read_unlock(&vcpu->kvm->srcu, idx);
+-	pagefault_enable();
++		/*
++		 * Disable page faults because we're in atomic context here.
++		 * kvm_write_guest_offset_cached() would call might_fault()
++		 * that relies on pagefault_disable() to tell if there's a
++		 * bug. NOTE: the write to guest memory may not go through if
++		 * during postcopy live migration or if there's heavy guest
++		 * paging.
++		 */
++		pagefault_disable();
++		/*
++		 * kvm_memslots() will be called by
++		 * kvm_write_guest_offset_cached() so take the srcu lock.
++		 */
++		idx = srcu_read_lock(&vcpu->kvm->srcu);
++		kvm_steal_time_set_preempted(vcpu);
++		srcu_read_unlock(&vcpu->kvm->srcu, idx);
++		pagefault_enable();
++	}
++
+ 	kvm_x86_ops->vcpu_put(vcpu);
+ 	vcpu->arch.last_host_tsc = rdtsc();
+ 	/*
+
+Wanpeng, can you try?
+
+Paolo
+
+> Perhaps you can add a lock event counter to count the number of
+> wait_early events caused by vcpu_is_preempted() being true to see if it
+> really cause a lot more wait_early than without the vcpu_is_preempted()
+> call.
 > 
+> I have no objection to this, I just want to find out the root cause of it.
+> 
+> Cheers,
+> Longman
+> 
+
