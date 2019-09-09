@@ -2,109 +2,106 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 169EEC433EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 00:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC9E1C4360D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 00:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2C2F20863
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 00:05:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KSIlE6Wo"
+	by mail.kernel.org (Postfix) with ESMTP id 9AF3521479
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 00:17:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731702AbfIIAFN (ORCPT
+        id S1731815AbfIIAR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 20:05:13 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36571 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731443AbfIIAFN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 20:05:13 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y22so8039360pfr.3
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 17:05:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=x3ED2udYQj7z21wxhPjtTx0uq5M/bxOgQBiN+Fe7R7M=;
-        b=KSIlE6Woq6KlLFCFP2rT2L2upPFlGWpGebR71QsbqavbP20EqFo2NcPrTMHxvzuHLS
-         xj8pERDYQZVH+9OH9Qxg9eJFtHLipf2BHxPY3lmp11TBIXh5zq/pdstCxpk4SbC17hB2
-         Wkhl/p4y6E0TJKxsHw0mdEL19juKCd92fzQpRBxrmZmjwgFRPwEy2yaZmHDO6yLtXYwd
-         gckGNGJe+kKPzkMa75j0fQVFxXTRWvQqeSvyDpG8xts1OQQEReGKfNDwqrGtbJEdiFYr
-         KRvB16nwJ1NskSdvkwc74xa2upKqwjdrAPAXY7mRsXmxJ4F3haLsdmiA+KCUoPXedDjH
-         a+yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=x3ED2udYQj7z21wxhPjtTx0uq5M/bxOgQBiN+Fe7R7M=;
-        b=ciySb3Ahq0O02PRniZI6gUOU6fxL/IjdTy60/ud6WFv9dmZwHdtg1yhyZxXuxfxlrN
-         V+Rh3HO+cVqfB1r67vwVOH5um5WW6k5EvbmhNuLyqxfF2zO/x41fVhdBEgZaeafbLbBc
-         Md2x2D4jqZTm3YQduDzwZBEWPUYTh8HPTyDwL6ILL7z4AAnZUl5fQXROyBYtQix+lB4S
-         rMGzv4I/qt24avbiIqRBM2UKacsnQ/8h4wZgPSj6b3VVRHvGmHO4DabZuBhQp/kCdicX
-         jVXD+asbXkhaXM+Urx/v/D3JqMHrSK53ttQ9dfwvI+9l9ma2DeSH0/WIza9fVECJUmsp
-         r+rA==
-X-Gm-Message-State: APjAAAVTJ5RrQ+No+maMiN+53WsXkAPWxFNgWvPJBErWM9+FPzsWYvOk
-        d1m0fbQFiRvO8tL+UoOZJJPlIBn4FGO//g==
-X-Google-Smtp-Source: APXvYqz+4NjTLpOaPBQV8rx9vKuh8FufFq3VpIFcqS+nrRcIBjNVvOsG1MPpIovGFWwnIOF2UeK6lg==
-X-Received: by 2002:aa7:87ca:: with SMTP id i10mr3551591pfo.58.1567987511273;
-        Sun, 08 Sep 2019 17:05:11 -0700 (PDT)
-Received: from mail.google.com ([149.28.153.17])
-        by smtp.gmail.com with ESMTPSA id r27sm15024622pgn.25.2019.09.08.17.05.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Sep 2019 17:05:10 -0700 (PDT)
-Date:   Mon, 9 Sep 2019 08:05:03 +0800
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ftrace: simplify ftrace hash lookup code
-Message-ID: <20190909000501.mstkqzklma7pm76d@mail.google.com>
-References: <20190908120545.11614-1-changbin.du@gmail.com>
+        Sun, 8 Sep 2019 20:17:58 -0400
+Received: from namei.org ([65.99.196.166]:43320 "EHLO namei.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731443AbfIIAR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 20:17:58 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id x890GNJt027077;
+        Mon, 9 Sep 2019 00:16:24 GMT
+Date:   Sun, 8 Sep 2019 17:16:23 -0700 (PDT)
+From:   James Morris <jmorris@namei.org>
+To:     =?ISO-8859-15?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
+cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?ISO-8859-15?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?ISO-8859-15?Q?Philippe_Tr=E9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        Mimi Zohar <zohar@linux.vnet.ibm.com>
+Subject: Re: [PATCH v2 0/5] Add support for O_MAYEXEC
+In-Reply-To: <20190906152455.22757-1-mic@digikod.net>
+Message-ID: <alpine.LRH.2.21.1909081622240.20426@namei.org>
+References: <20190906152455.22757-1-mic@digikod.net>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190908120545.11614-1-changbin.du@gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Type: multipart/mixed; BOUNDARY="1665246916-1947903910-1567986261=:20426"
+Content-ID: <alpine.LRH.2.21.1909081645470.20426@namei.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 08, 2019 at 08:05:45PM +0800, Changbin Du wrote:
-> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-> index 005f08629b8b..74162bc4024d 100644
-> --- a/kernel/trace/trace.h
-> +++ b/kernel/trace/trace.h
-> @@ -941,11 +941,6 @@ static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
->  
->  	preempt_disable_notrace();
->  
-> -	if (ftrace_hash_empty(ftrace_graph_hash)) {
-> -		ret = 1;
-> -		goto out;
-> -	}
-> -
-Sorry, This remove is wrong. Will update change.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
->  	if (ftrace_lookup_ip(ftrace_graph_hash, addr)) {
->  
->  		/*
-> @@ -967,7 +962,6 @@ static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
->  		ret = 1;
->  	}
->  
-> -out:
->  	preempt_enable_notrace();
->  	return ret;
->  }
-> -- 
-> 2.20.1
-> 
+--1665246916-1947903910-1567986261=:20426
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
+Content-ID: <alpine.LRH.2.21.1909081645471.20426@namei.org>
+
+On Fri, 6 Sep 2019, Mickaël Salaün wrote:
+
+> Furthermore, the security policy can also be delegated to an LSM, either
+> a MAC system or an integrity system.  For instance, the new kernel
+> MAY_OPENEXEC flag closes a major IMA measurement/appraisal interpreter
+> integrity gap by bringing the ability to check the use of scripts [2].
+
+To clarify, scripts are already covered by IMA if they're executed 
+directly, and the gap is when invoking a script as a parameter to the 
+interpreter (and for any sourced files). In that case only the interpreter 
+is measured/appraised, unless there's a rule also covering the script 
+file(s).
+
+See:
+https://en.opensuse.org/SDB:Ima_evm#script-behaviour
+
+In theory you could probably also close the gap by modifying the 
+interpreters to check for the execute bit on any file opened for 
+interpretation (as earlier suggested by Steve Grubb), and then you could 
+have IMA measure/appraise all files with +x.  I suspect this could get 
+messy in terms of unwanted files being included, and the MAY_OPENEXEC flag 
+has cleaner semantics.
+
+
 
 -- 
-Cheers,
-Changbin Du
+James Morris
+<jmorris@namei.org>
+--1665246916-1947903910-1567986261=:20426--
