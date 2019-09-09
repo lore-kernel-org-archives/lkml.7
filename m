@@ -2,141 +2,182 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19364C00307
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 07:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72039C49ED5
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 07:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D43992086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 07:44:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568015071;
-	bh=tV24GOjNAYTiVFG97hQg62EZuXRnUTpyN7sGlS4Bo40=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cQq01b5m0MCSs0WbY+qE0Kx/tuo6lYVH98xOPsYVTM0ysPCZxExOHYB8ZJnphdT/v
-	 99eENHMqq/sYZK2WDdaYQZtTNbPhAfvyCrhXDtUWw/CdLB2F827I55OxVe2+UOpoXU
-	 6db+qbe/K03dR5AZQJyBXWfBVBEu+sfWITn9lZYA=
+	by mail.kernel.org (Postfix) with ESMTP id 3F9D720828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 07:44:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="CjcCoHAs";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="lJbIYUVw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388254AbfIIHob (ORCPT
+        id S2388279AbfIIHov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 03:44:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60334 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726026AbfIIHoa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 03:44:30 -0400
-Received: from localhost (unknown [148.69.85.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 9 Sep 2019 03:44:51 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:34116 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbfIIHov (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 03:44:51 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 5F2E86119D; Mon,  9 Sep 2019 07:44:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568015089;
+        bh=DT6Puv+VaCuHYQ8jgGXzuP0lzjcwptMaBuGRqDBanlI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=CjcCoHAsTOYltQu35Wu16H6kSJTltEG7Y6W89VDceG1k43niJL7FGz8wtKA2Xjwbi
+         YLUGo0dVaCoqWQ/MuR0cMjmGwH1eEGOFg3ZHd708JvNmZNvoSChNcYa6rw4Gfkc2hd
+         q70qdUKRLL78ZU8P7GUZASi9MyRyeGRir/U+g4fM=
+Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5F1E20828;
-        Mon,  9 Sep 2019 07:44:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568015070;
-        bh=tV24GOjNAYTiVFG97hQg62EZuXRnUTpyN7sGlS4Bo40=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wSKMB14HHy94yHAHJeWwQlxtq8Ja+zunbUz7s+CftQGOi42wdvZbRb682Q1hvFBym
-         5jTYNBRHWG0ve3MFS92nykxMNmwwGA0ABKofpcAqyXyDCIcjjOx+7xPvJuK6t5vf9B
-         vkHHwhh6Y/GWlW/l3ffOWSQSFgY1y6p7AAdRpA+w=
-Date:   Mon, 9 Sep 2019 08:44:25 +0100
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <chao@kernel.org>
-Cc:     Chao Yu <yuchao0@huawei.com>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] f2fs: fix to avoid accessing uninitialized field of
- inode page in is_alive()
-Message-ID: <20190909074425.GB21625@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20190906105426.109151-1-yuchao0@huawei.com>
- <20190906234808.GC71848@jaegeuk-macbookpro.roam.corp.google.com>
- <080e8dee-4726-8294-622a-cac26e781083@kernel.org>
+        (Authenticated sender: tdas@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B1D9C6115A;
+        Mon,  9 Sep 2019 07:44:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568015088;
+        bh=DT6Puv+VaCuHYQ8jgGXzuP0lzjcwptMaBuGRqDBanlI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=lJbIYUVwHyj4uh+5N4zw4Y51vFTNK1QK8jzJaOoHDru8k4RsHetuBM74ZsZvpJllI
+         YWWaU8ftl8o9dkuMTHSzRAfGjh2GhL3Ob2Mv3C69y4FLXXqVKY7v6WG+1BNYxgTwqY
+         HGKzk+AoLLBJiFR86dOO91Ww4aC8lgQ8Nzqbm6B4=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B1D9C6115A
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+From:   Taniya Das <tdas@codeaurora.org>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vkoul@kernel.org, Taniya Das <tdas@codeaurora.org>
+Subject: [PATCH] clk: qcom: gcc: Use floor ops for SDCC clocks
+Date:   Mon,  9 Sep 2019 13:14:10 +0530
+Message-Id: <20190909074410.18977-1-tdas@codeaurora.org>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <080e8dee-4726-8294-622a-cac26e781083@kernel.org>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/07, Chao Yu wrote:
-> On 2019-9-7 7:48, Jaegeuk Kim wrote:
-> > On 09/06, Chao Yu wrote:
-> >> If inode is newly created, inode page may not synchronize with inode cache,
-> >> so fields like .i_inline or .i_extra_isize could be wrong, in below call
-> >> path, we may access such wrong fields, result in failing to migrate valid
-> >> target block.
-> > 
-> > If data is valid, how can we get new inode page?
+Update global clock controller SDCC2/4 clocks to use the floor rcg ops,
+so as to use the rounded down clock rates for these clocks.
 
-Let me rephrase the question. If inode is newly created, is this data block
-really valid to move in GC?
+Signed-off-by: Taniya Das <tdas@codeaurora.org>
+---
+ drivers/clk/qcom/gcc-ipq8074.c | 2 +-
+ drivers/clk/qcom/gcc-msm8998.c | 4 ++--
+ drivers/clk/qcom/gcc-qcs404.c  | 2 +-
+ drivers/clk/qcom/gcc-sdm660.c  | 2 +-
+ drivers/clk/qcom/gcc-sdm845.c  | 2 +-
+ drivers/clk/qcom/gcc-sm8150.c  | 4 ++--
+ 6 files changed, 8 insertions(+), 8 deletions(-)
 
-> 
-> is_alive()
-> {
-> ...
-> 	node_page = f2fs_get_node_page(sbi, nid);  <--- inode page
+diff --git a/drivers/clk/qcom/gcc-ipq8074.c b/drivers/clk/qcom/gcc-ipq8074.c
+index 39ade58b4ada..e01f5f591d1e 100644
+--- a/drivers/clk/qcom/gcc-ipq8074.c
++++ b/drivers/clk/qcom/gcc-ipq8074.c
+@@ -1108,7 +1108,7 @@ static struct clk_rcg2 sdcc2_apps_clk_src = {
+ 		.name = "sdcc2_apps_clk_src",
+ 		.parent_names = gcc_xo_gpll0_gpll2_gpll0_out_main_div2,
+ 		.num_parents = 4,
+-		.ops = &clk_rcg2_ops,
++		.ops = &clk_rcg2_floor_ops,
+ 	},
+ };
 
-Aren't we seeing the below version warnings?
+diff --git a/drivers/clk/qcom/gcc-msm8998.c b/drivers/clk/qcom/gcc-msm8998.c
+index 033688264c7b..091acd59c1d6 100644
+--- a/drivers/clk/qcom/gcc-msm8998.c
++++ b/drivers/clk/qcom/gcc-msm8998.c
+@@ -1042,7 +1042,7 @@ static struct clk_rcg2 sdcc2_apps_clk_src = {
+ 		.name = "sdcc2_apps_clk_src",
+ 		.parent_names = gcc_parent_names_4,
+ 		.num_parents = 4,
+-		.ops = &clk_rcg2_ops,
++		.ops = &clk_rcg2_floor_ops,
+ 	},
+ };
 
-if (sum->version != dni->version) {
-	f2fs_warn(sbi, "%s: valid data with mismatched node version.",
-                           __func__);
-        set_sbi_flag(sbi, SBI_NEED_FSCK);
-}
+@@ -1066,7 +1066,7 @@ static struct clk_rcg2 sdcc4_apps_clk_src = {
+ 		.name = "sdcc4_apps_clk_src",
+ 		.parent_names = gcc_parent_names_1,
+ 		.num_parents = 3,
+-		.ops = &clk_rcg2_ops,
++		.ops = &clk_rcg2_floor_ops,
+ 	},
+ };
 
-> 
-> 	source_blkaddr = datablock_addr(NULL, node_page, ofs_in_node);
+diff --git a/drivers/clk/qcom/gcc-qcs404.c b/drivers/clk/qcom/gcc-qcs404.c
+index e12c04c09a6a..582c1e2cd420 100644
+--- a/drivers/clk/qcom/gcc-qcs404.c
++++ b/drivers/clk/qcom/gcc-qcs404.c
+@@ -1103,7 +1103,7 @@ static struct clk_rcg2 sdcc2_apps_clk_src = {
+ 		.name = "sdcc2_apps_clk_src",
+ 		.parent_names = gcc_parent_names_14,
+ 		.num_parents = 4,
+-		.ops = &clk_rcg2_ops,
++		.ops = &clk_rcg2_floor_ops,
+ 	},
+ };
 
-So, we're getting this? Does this incur infinite loop in GC?
+diff --git a/drivers/clk/qcom/gcc-sdm660.c b/drivers/clk/qcom/gcc-sdm660.c
+index 8827db23066f..bf5730832ef3 100644
+--- a/drivers/clk/qcom/gcc-sdm660.c
++++ b/drivers/clk/qcom/gcc-sdm660.c
+@@ -787,7 +787,7 @@ static struct clk_rcg2 sdcc2_apps_clk_src = {
+ 		.name = "sdcc2_apps_clk_src",
+ 		.parent_names = gcc_parent_names_xo_gpll0_gpll0_early_div_gpll4,
+ 		.num_parents = 4,
+-		.ops = &clk_rcg2_ops,
++		.ops = &clk_rcg2_floor_ops,
+ 	},
+ };
 
-if (!test_and_set_bit(segno, SIT_I(sbi)->invalid_segmap)) {
-	f2fs_err(sbi, "mismatched blkaddr %u (source_blkaddr %u) in seg %u\n",
-	f2fs_bug_on(sbi, 1);
-}
+diff --git a/drivers/clk/qcom/gcc-sdm845.c b/drivers/clk/qcom/gcc-sdm845.c
+index 7131dcf9b060..131160ace79c 100644
+--- a/drivers/clk/qcom/gcc-sdm845.c
++++ b/drivers/clk/qcom/gcc-sdm845.c
+@@ -709,7 +709,7 @@ static struct clk_rcg2 gcc_sdcc4_apps_clk_src = {
+ 		.name = "gcc_sdcc4_apps_clk_src",
+ 		.parent_names = gcc_parent_names_0,
+ 		.num_parents = 4,
+-		.ops = &clk_rcg2_ops,
++		.ops = &clk_rcg2_floor_ops,
+ 	},
+ };
 
-> ...
-> }
-> 
-> datablock_addr()
-> {
-> ...
-> 	base = offset_in_addr(&raw_node->i);  <--- the base could be wrong here due to
-> accessing uninitialized .i_inline of raw_node->i.
-> ...
-> }
-> 
-> Thanks,
-> 
-> > 
-> >>
-> >> - gc_data_segment
-> >>  - is_alive
-> >>   - datablock_addr
-> >>    - offset_in_addr
-> >>
-> >> Fixes: 7a2af766af15 ("f2fs: enhance on-disk inode structure scalability")
-> >> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> >> ---
-> >>  fs/f2fs/dir.c | 3 +++
-> >>  1 file changed, 3 insertions(+)
-> >>
-> >> diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
-> >> index 765f13354d3f..b1840852967e 100644
-> >> --- a/fs/f2fs/dir.c
-> >> +++ b/fs/f2fs/dir.c
-> >> @@ -479,6 +479,9 @@ struct page *f2fs_init_inode_metadata(struct inode *inode, struct inode *dir,
-> >>  		if (IS_ERR(page))
-> >>  			return page;
-> >>  
-> >> +		/* synchronize inode page's data from inode cache */
-> >> +		f2fs_update_inode(inode, page);
-> >> +
-> >>  		if (S_ISDIR(inode->i_mode)) {
-> >>  			/* in order to handle error case */
-> >>  			get_page(page);
-> >> -- 
-> >> 2.18.0.rc1
+diff --git a/drivers/clk/qcom/gcc-sm8150.c b/drivers/clk/qcom/gcc-sm8150.c
+index 12ca2d14797f..20877214acff 100644
+--- a/drivers/clk/qcom/gcc-sm8150.c
++++ b/drivers/clk/qcom/gcc-sm8150.c
+@@ -803,7 +803,7 @@ static struct clk_rcg2 gcc_sdcc2_apps_clk_src = {
+ 		.parent_data = gcc_parents_6,
+ 		.num_parents = 5,
+ 		.flags = CLK_SET_RATE_PARENT,
+-		.ops = &clk_rcg2_ops,
++		.ops = &clk_rcg2_floor_ops,
+ 	},
+ };
+
+@@ -828,7 +828,7 @@ static struct clk_rcg2 gcc_sdcc4_apps_clk_src = {
+ 		.parent_data = gcc_parents_3,
+ 		.num_parents = 3,
+ 		.flags = CLK_SET_RATE_PARENT,
+-		.ops = &clk_rcg2_ops,
++		.ops = &clk_rcg2_floor_ops,
+ 	},
+ };
+
+--
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the  Linux Foundation.
+
