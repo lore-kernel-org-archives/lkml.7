@@ -2,108 +2,88 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C868C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 20:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7486C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 20:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70656218AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 20:28:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 920E0218AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 20:34:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391550AbfIIU23 (ORCPT
+        id S2391564AbfIIUef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 16:28:29 -0400
-Received: from mxout017.mail.hostpoint.ch ([217.26.49.177]:19754 "EHLO
-        mxout017.mail.hostpoint.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731865AbfIIU23 (ORCPT
+        Mon, 9 Sep 2019 16:34:35 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:44185 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726806AbfIIUef (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 16:28:29 -0400
-Received: from [10.0.2.46] (helo=asmtp013.mail.hostpoint.ch)
-        by mxout017.mail.hostpoint.ch with esmtp (Exim 4.92.2 (FreeBSD))
-        (envelope-from <sandro@volery.com>)
-        id 1i7QGs-000PaI-EH; Mon, 09 Sep 2019 22:28:22 +0200
-Received: from 145-126.cable.senselan.ch ([83.222.145.126] helo=volery)
-        by asmtp013.mail.hostpoint.ch with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92.2 (FreeBSD))
-        (envelope-from <sandro@volery.com>)
-        id 1i7QGs-0000vJ-A9; Mon, 09 Sep 2019 22:28:22 +0200
-X-Authenticated-Sender-Id: sandro@volery.com
-Date:   Mon, 9 Sep 2019 22:28:20 +0200
-From:   Sandro Volery <sandro@volery.com>
-To:     rspringer@google.com, toddpoynor@google.com, benchan@chromium.org,
-        gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] Staging: gasket: Use temporaries to reduce line length.
-Message-ID: <20190909202820.GA5060@volery>
+        Mon, 9 Sep 2019 16:34:35 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MtO06-1iPVTp25eQ-00uoyd; Mon, 09 Sep 2019 22:34:11 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Jyri Sarha <jsarha@ti.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Sam Ravnborg <sam@ravnborg.org>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/tilcdc: include linux/pinctrl/consumer.h again
+Date:   Mon,  9 Sep 2019 22:33:57 +0200
+Message-Id: <20190909203409.652308-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:/QqqGQ82u5FnWbqdP+LbmWnNSFW6MUOsg6NDDvR5njC66ZcA0Je
+ L7djSnqII3g8lTGDbl/GBpLAil9uf6kZVGkLQaA2W9PzuLBzJEzWfDplIgVm2DyIO55lP5G
+ N1v+MoAA4QQoj7lQoIp2nvGAf4vgnF+K5TlgBHoJWygDbvoBkE+XZb0GSj5CuwK1LsJfhUp
+ 3xPnWIVWeU204B5Qa4L+w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:YzuEVwEdJVE=:YBZv/R62O3TVU0Kr2ntzvH
+ aEnQmenQ7MOIYP63yGzO2mA8M+3cIGxzLDgs7uKP6Crsz3wUv04WUwgdRwUNPWCe6boDSXxc5
+ gGTtdrweJQCgl5aTEywkkPWdJP3ZMMnuHY/ya60EnGIAUKohQ/baIN+CeL9gMkXf0EB7ksufZ
+ 3EqgH1Qyx7FQ13cWHNzBqk6ZF3tCkfzUIIMWqFPQopT/b6xGX7Owv0JHyaoxH1zK+33uQw9U/
+ W967y4S1+AWmCaEyHgAsFu/E0P4U66L7Gv+d9S9tNejzz9m+W38otjSxBjxaQOHPOgzbniAjS
+ HaKCNKyRtUxWLdsphRh23wn0ppnqpmS+JSH5pCltY20+OWbBGRUOcfciVhRxcqYLCLxQW8y8R
+ Ye3ymhXW0nulkvizvinLgcgXyTsBuYJNKziXMce6Qnzjtbar2TaOre/Aq3XESXFEbaw3bxStz
+ Lq+zQLlMKzfv1V4nw+4kVID77Bu0UIJ5wTra0UaIVVBcGuoBZxXUCjEXiBOSbsP0L8s65+eTN
+ RutaFlyLHKc5BZJvexf0QAxAQTGzo8vNn8k3EyubuR8/hEStCEf6WR2/cesO6GBMo+jcyczLi
+ JEdZp5FwSLTF+jDHh1CmXIoxEW+nVA32dkROzopTDuv6RZV12gRHNnHDFvWkpoQMQgn2AX7+R
+ PkJtWI5Y6ywaQF9th6ufH3BJWkxtYQC72oqleEdluMXxQA7dZJTBTWuDI+gV3O+yePzuPhrF4
+ YUagZp9JK/Vt2O90LAbN5j+zaYaFITkuuvkNhKjHVJXS+UZpzguYOJBIQg1XjUH7abnif/GIv
+ Jmr285ZZHI0n3k0l9iZvpYbzkcJWq8I2TD3L9zXuhYGrawYk34=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using temporaries for gasket_page_table entries to remove scnprintf()
-statements and reduce line length, as suggested by Joe Perches. Thanks!
+This was apparently dropped by accident in a recent
+cleanup, causing a build failure in some configurations now:
 
-Signed-off-by: Sandro Volery <sandro@volery.com>
+drivers/gpu/drm/tilcdc/tilcdc_tfp410.c:296:12: error: implicit declaration of function 'devm_pinctrl_get_select_default' [-Werror,-Wimplicit-function-declaration]
+
+Fixes: fcb57664172e ("drm/tilcdc: drop use of drmP.h")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/staging/gasket/apex_driver.c | 20 +++++++++-----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
+ drivers/gpu/drm/tilcdc/tilcdc_tfp410.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/staging/gasket/apex_driver.c b/drivers/staging/gasket/apex_driver.c
-index 2973bb920a26..16ac4329d65f 100644
---- a/drivers/staging/gasket/apex_driver.c
-+++ b/drivers/staging/gasket/apex_driver.c
-@@ -509,6 +509,8 @@ static ssize_t sysfs_show(struct device *device, struct device_attribute *attr,
- 	struct gasket_dev *gasket_dev;
- 	struct gasket_sysfs_attribute *gasket_attr;
- 	enum sysfs_attribute_type type;
-+	struct gasket_page_table *gpt;
-+	uint val;
+diff --git a/drivers/gpu/drm/tilcdc/tilcdc_tfp410.c b/drivers/gpu/drm/tilcdc/tilcdc_tfp410.c
+index 525dc1c0f1c1..9edcdd7f2b96 100644
+--- a/drivers/gpu/drm/tilcdc/tilcdc_tfp410.c
++++ b/drivers/gpu/drm/tilcdc/tilcdc_tfp410.c
+@@ -8,6 +8,7 @@
+ #include <linux/mod_devicetable.h>
+ #include <linux/of_gpio.h>
+ #include <linux/platform_device.h>
++#include <linux/pinctrl/consumer.h>
  
- 	gasket_dev = gasket_sysfs_get_device_data(device);
- 	if (!gasket_dev) {
-@@ -524,29 +526,25 @@ static ssize_t sysfs_show(struct device *device, struct device_attribute *attr,
- 	}
- 
- 	type = (enum sysfs_attribute_type)gasket_attr->data.attr_type;
-+	gpt = gasket_dev->page_table[0];
- 	switch (type) {
- 	case ATTR_KERNEL_HIB_PAGE_TABLE_SIZE:
--		ret = scnprintf(buf, PAGE_SIZE, "%u\n",
--				gasket_page_table_num_entries(
--					gasket_dev->page_table[0]));
-+		val = gasket_page_table_num_simple_entries(gpt);
- 		break;
- 	case ATTR_KERNEL_HIB_SIMPLE_PAGE_TABLE_SIZE:
--		ret = scnprintf(buf, PAGE_SIZE, "%u\n",
--				gasket_page_table_num_simple_entries(
--					gasket_dev->page_table[0]));
-+		val = gasket_page_table_num_simple_entries(gpt);
- 		break;
- 	case ATTR_KERNEL_HIB_NUM_ACTIVE_PAGES:
--		ret = scnprintf(buf, PAGE_SIZE, "%u\n",
--				gasket_page_table_num_active_pages(
--					gasket_dev->page_table[0]));
-+		val = gasket_page_table_num_active_pages(gpt);
- 		break;
- 	default:
- 		dev_dbg(gasket_dev->dev, "Unknown attribute: %s\n",
- 			attr->attr.name);
- 		ret = 0;
--		break;
-+		goto exit;
- 	}
--
-+	ret = scnprintf(buf, PAGE_SIZE, "%u\n", val);
-+exit:
- 	gasket_sysfs_put_attr(device, gasket_attr);
- 	gasket_sysfs_put_device_data(device, gasket_dev);
- 	return ret;
+ #include <drm/drm_atomic_helper.h>
+ #include <drm/drm_encoder.h>
 -- 
-2.23.0
+2.20.0
 
