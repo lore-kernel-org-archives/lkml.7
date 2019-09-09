@@ -2,114 +2,94 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE65C4360D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 00:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59869C433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 00:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 494FA20828
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 00:32:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21A082086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 00:44:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WwJljbZT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mNYWMeKW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731947AbfIIAck (ORCPT
+        id S1731959AbfIIAo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 20:32:40 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34564 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731753AbfIIAck (ORCPT
+        Sun, 8 Sep 2019 20:44:56 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33774 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731645AbfIIAoz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 20:32:40 -0400
-Received: by mail-pg1-f193.google.com with SMTP id n9so6784036pgc.1
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 17:32:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uWI+gzhvQ/sFr1tmoKeGjXR/vGqSIS/dhZvWWkXThpY=;
-        b=WwJljbZT7E8v22P6J6wXYmaqc58XRYZESj8eX5VdIG015eFHaHNOtSNKwABgRxRFWw
-         EnYbrt1LzeBZdGQ4QL5l51YHAzHbOglalONyNsNGrJb29nc4NHtXdrwXwSfRYBLI4/eV
-         wiVmdl1gHeAJKbzfpO2BtSJLYdzUHNgj4Ty6pBPPN8Bn2h6cZEQhxsguaaLQE1n0bXyr
-         bJWxPz0oQ2SrttfV7XHNEbd8xFfu6QpCp09w/Krz0mKgUV4LDNDQMZxHQqBWA9fEGY/a
-         lUwy6uIEYYMw7VUchN98DqBrdPtTvjOONLNRrV0eij2OpVLDopXyMfLjZRVM2JEt9CZz
-         9KvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uWI+gzhvQ/sFr1tmoKeGjXR/vGqSIS/dhZvWWkXThpY=;
-        b=sSepTzmDWEsGK61fnIfi5iDlC0cbFsYwGCpSuQO1jFSk3YkgFB5mG3v0Yh/usfyyhs
-         F4R+3YUcvOQGcXja4X5rryevYUNg54IEGp21IIr44PeaTW3BUx1QhVJc3OGBvUMz04k1
-         eosrQrbCKWUNF/gVglkXyPv63HMP1SferIyKausAMk8pE6IRv8YnEvRiVS8bxp0zsLph
-         iPfw9o0+N0gwJd8nKfFVzuBOjDcqPJy5ZumcPI7aV2BN3i/nCj/oTctNtUsoS6UTC2q8
-         1/P721mjBOJ/98PwDz8yH5fIAUPgmPciZMoZXIcpx6YMKR/dFkoxMcMuNRghUkOk+7zs
-         ivJw==
-X-Gm-Message-State: APjAAAUsaio9knGhCTHThJ5Y/Od44JCsSOY+e87F2x4g5+AhXY/TXiMd
-        HZlH7kYkHlwJrAKLAFY1Uo8=
-X-Google-Smtp-Source: APXvYqwVWPyyKcsOvgFGVfF4nLetC05tdxCvblMEYpjCP64DV8wKx/c0GbHMj3gmIB5qTU9PiNYEbg==
-X-Received: by 2002:a63:6c02:: with SMTP id h2mr19794497pgc.61.1567989159256;
-        Sun, 08 Sep 2019 17:32:39 -0700 (PDT)
-Received: from localhost.localdomain ([149.28.153.17])
-        by smtp.gmail.com with ESMTPSA id 7sm2033610pfi.91.2019.09.08.17.32.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Sep 2019 17:32:38 -0700 (PDT)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v2] ftrace: simplify ftrace hash lookup code
-Date:   Mon,  9 Sep 2019 08:31:59 +0800
-Message-Id: <20190909003159.10574-1-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Sun, 8 Sep 2019 20:44:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:
+        Subject:From:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ojsJuYEOGwGEQk6cZLIzzaB2BBsuAHmwETmV0gnscTA=; b=mNYWMeKWmGcS6bUQggEoI1cT5
+        mg1VV+DVS0DTG8mcTygfZxivN7itbRaGLrO2WwxQo1I2ZcRzd7H8bcSrnYTtg3ejKmtEdpAE94hot
+        t4tve982sADs5n45eIr9O4/rJOgd9kCe8rV5cTxjQ02SMKPjG5OFF5vcnbzSjElIRoKKKJN0AAKU/
+        AsgkJnYKcGAzIi7B1OjTNbsDoGR3dRMWnaPE09bkDoq/WEqp1Ll3oZYeKTVmMkdNfqJW/7YAwLct6
+        Jle4LDUBmMMN9xV8YguxI8M96C8ZYjeqhtcF8RomL+83uwFc6ujOeh5J2zatnAU2n9/rA0C5QF1wf
+        5OjVTwelg==;
+Received: from c-73-157-219-8.hsd1.or.comcast.net ([73.157.219.8] helo=[10.0.0.252])
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i77na-0001Ml-Qw; Mon, 09 Sep 2019 00:44:54 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH 0/8] kconfig/hacking: make 'kernel hacking' menu better
+ structured
+To:     Changbin Du <changbin.du@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
+References: <20190908012800.12979-1-changbin.du@gmail.com>
+Message-ID: <81a27c4e-98d4-bf6a-c81c-b85666c9a366@infradead.org>
+Date:   Sun, 8 Sep 2019 17:44:54 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190908012800.12979-1-changbin.du@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Function ftrace_lookup_ip() will check empty hash table. So we don't
-need extra check outside.
+On 9/7/19 6:27 PM, Changbin Du wrote:
+> This series is a trivial improvment for the layout of 'kernel hacking'
+> configuration menu. Now we have many items in it which makes takes
+> a little time to look up them since they are not well structured yet.
+> 
+> Early discussion is here:
+> https://lkml.org/lkml/2019/9/1/39
+> 
+> Changbin Du (8):
+>   kconfig/hacking: Group sysrq/kgdb/ubsan into 'Generic Kernel Debugging
+>     Instruments'
+>   kconfig/hacking: Create submenu for arch special debugging options
+>   kconfig/hacking: Group kernel data structures debugging together
+>   kconfig/hacking: Move kernel testing and coverage options to same
+>     submenu
+>   kconfig/hacking: Move Oops into 'Lockups and Hangs'
+>   kconfig/hacking: Move SCHED_STACK_END_CHECK after DEBUG_STACK_USAGE
+>   kconfig/hacking: Create a submenu for scheduler debugging options
+>   kconfig/hacking: Move DEBUG_BUGVERBOSE to 'printk and dmesg options'
+> 
+>  lib/Kconfig.debug | 627 ++++++++++++++++++++++++----------------------
+>  1 file changed, 324 insertions(+), 303 deletions(-)
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Hi,
 
----
-v2: fix incorrect code remove.
----
- kernel/trace/ftrace.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+Series applies to v5.3-rc7.  Has some problems applying to linux-next.
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index f9821a3374e9..92aab854d3b1 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -1463,8 +1463,7 @@ static bool hash_contains_ip(unsigned long ip,
- 	 */
- 	return (ftrace_hash_empty(hash->filter_hash) ||
- 		__ftrace_lookup_ip(hash->filter_hash, ip)) &&
--		(ftrace_hash_empty(hash->notrace_hash) ||
--		 !__ftrace_lookup_ip(hash->notrace_hash, ip));
-+	       !ftrace_lookup_ip(hash->notrace_hash, ip);
- }
- 
- /*
-@@ -6036,11 +6035,7 @@ clear_func_from_hash(struct ftrace_init_func *func, struct ftrace_hash *hash)
- {
- 	struct ftrace_func_entry *entry;
- 
--	if (ftrace_hash_empty(hash))
--		return;
--
--	entry = __ftrace_lookup_ip(hash, func->ip);
--
-+	entry = ftrace_lookup_ip(hash, func->ip);
- 	/*
- 	 * Do not allow this rec to match again.
- 	 * Yeah, it may waste some memory, but will be removed
+Under 'Compile-time checks and compiler options', "Debug Filesystem" does not belong here.
+Maybe move it under 'Generic Kernel Debugging Instruments'.
+
+I mostly like it.  I might have put 'Debug notifier call chains' under
+'Debug kernel data structures', but that's not a big deal.
+
 -- 
-2.20.1
-
+~Randy
