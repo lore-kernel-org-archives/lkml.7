@@ -2,87 +2,91 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90458C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 885E2C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:34:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6419C218AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:32:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 596BC218AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:34:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Q3fs9o3m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404111AbfIILch (ORCPT
+        id S2404136AbfIILei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 07:32:37 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2178 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2391070AbfIILch (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 07:32:37 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 7A50E883CF089CC4CB43;
-        Mon,  9 Sep 2019 19:32:35 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.207) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 9 Sep 2019
- 19:32:34 +0800
-Subject: Re: [f2fs-dev] [PATCH 1/2] f2fs: do not select same victim right
- again
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <20190909012532.20454-1-jaegeuk@kernel.org>
- <69933b7f-48cc-47f9-ba6f-b5ca8f733cba@huawei.com>
- <20190909080654.GD21625@jaegeuk-macbookpro.roam.corp.google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <97237da2-897a-8420-94de-812e94aa751f@huawei.com>
-Date:   Mon, 9 Sep 2019 19:32:07 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20190909080654.GD21625@jaegeuk-macbookpro.roam.corp.google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+        Mon, 9 Sep 2019 07:34:38 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:60097 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403880AbfIILeh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 07:34:37 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id x89BYPw6012688;
+        Mon, 9 Sep 2019 20:34:25 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x89BYPw6012688
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1568028866;
+        bh=MSarGlnW9YOaZQr8nLXdZ/RHsS9R64+NgW7cxT9Bbn8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Q3fs9o3m9BOg5J/DkalhKGRPjLgAx3UPUN9aKw0GqKRlVIKbiSp7e7d3zhEFeRFDq
+         PYL4zEMjhaovA7gYIYzpHk7DikEznHO6NusBsPzPkp0fVFIWIPZYgh1SmgBCOJ0IQ9
+         heD93HRUsOT23pmAaSlEHkVLjeWMNF4aWce9g6UWaYTuzcxY4VWkwPHX9ymmIMcfQU
+         ObWXb9arotJ1nJSH2MYM2schM0p+qyoyRQdUoFzSR4FmZVPNvDzDiJzj362QZ0RaWb
+         e8CqamjHtTQptro5TSaYEBs5UVr/7w7Zt0Xu5NBAMP+88E5UuUQ/KSI59WaojHNKAK
+         6b83kbWQDUCug==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Lucas De Marchi <lucas.demarchi@intel.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] modpost: use MODULE_INFO() for __module_depends
+Date:   Mon,  9 Sep 2019 20:34:22 +0900
+Message-Id: <20190909113423.2289-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/9/9 16:06, Jaegeuk Kim wrote:
-> On 09/09, Chao Yu wrote:
->> On 2019/9/9 9:25, Jaegeuk Kim wrote:
->>> GC must avoid select the same victim again.
->>
->> Blocks in previous victim will occupy addition free segment, I doubt after this
->> change, FGGC may encounter out-of-free space issue more frequently.
-> 
-> Hmm, actually this change seems wrong by sec_usage_check().
-> We may be able to avoid this only in the suspicious loop?
-> 
-> ---
->  fs/f2fs/gc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-> index e88f98ddf396..5877bd729689 100644
-> --- a/fs/f2fs/gc.c
-> +++ b/fs/f2fs/gc.c
-> @@ -1326,7 +1326,7 @@ int f2fs_gc(struct f2fs_sb_info *sbi, bool sync,
->  		round++;
->  	}
->  
-> -	if (gc_type == FG_GC)
-> +	if (gc_type == FG_GC && seg_freed)
+This makes *.mod.c much more readable. I confirmed depmod still
+produced the same modules.dep file.
 
-That's original solution Sahitya provided to avoid infinite loop of GC, but I
-suggest to find the root cause first, then we added .invalid_segmap for that
-purpose.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-Thanks,
+ scripts/mod/modpost.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
->  		sbi->cur_victim_sec = NULL_SEGNO;
->  
->  	if (sync)
-> 
+diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+index f277e116e0eb..480c7b60153b 100644
+--- a/scripts/mod/modpost.c
++++ b/scripts/mod/modpost.c
+@@ -2250,10 +2250,7 @@ static void add_depends(struct buffer *b, struct module *mod)
+ 			s->module->seen = is_vmlinux(s->module->name);
+ 
+ 	buf_printf(b, "\n");
+-	buf_printf(b, "static const char __module_depends[]\n");
+-	buf_printf(b, "__used\n");
+-	buf_printf(b, "__attribute__((section(\".modinfo\"))) =\n");
+-	buf_printf(b, "\"depends=");
++	buf_printf(b, "MODULE_INFO(depends, \"");
+ 	for (s = mod->unres; s; s = s->next) {
+ 		const char *p;
+ 		if (!s->module)
+@@ -2271,7 +2268,7 @@ static void add_depends(struct buffer *b, struct module *mod)
+ 		buf_printf(b, "%s%s", first ? "" : ",", p);
+ 		first = 0;
+ 	}
+-	buf_printf(b, "\";\n");
++	buf_printf(b, "\");\n");
+ }
+ 
+ static void add_srcversion(struct buffer *b, struct module *mod)
+-- 
+2.17.1
+
