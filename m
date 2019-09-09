@@ -2,150 +2,110 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A1C6C49ED6
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 21:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C94C4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 21:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05129218AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 21:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DD7B21670
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 21:14:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n/dhLxtI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406085AbfIIVH6 (ORCPT
+        id S2391778AbfIIVOf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 17:07:58 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:43901 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727435AbfIIVH5 (ORCPT
+        Mon, 9 Sep 2019 17:14:35 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43151 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731820AbfIIVOf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 17:07:57 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <alex.hung@canonical.com>)
-        id 1i7Qt9-0000hO-DU
-        for linux-kernel@vger.kernel.org; Mon, 09 Sep 2019 21:07:55 +0000
-Received: by mail-io1-f72.google.com with SMTP id o3so19935508iom.13
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 14:07:55 -0700 (PDT)
+        Mon, 9 Sep 2019 17:14:35 -0400
+Received: by mail-pf1-f196.google.com with SMTP id d15so10088135pfo.10
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 14:14:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SWyrMvKoZeJUW2jP4aEz7GUGLNj1qlvRlvfndO0mMoU=;
+        b=n/dhLxtIN4ODtKqmA0oAPdULbY5nCAefsuwhiWri29IT2iqWDPDfmAaLQnFIdhpG77
+         zvT2u5JlUG36JPdNQwIAQ7m6WYev/uOxL1+8DLrue694/L+6S0RgwvwvGgpz5ILPz/Q3
+         cAGwLymgmkNt49JM1aTwXIlFfG4Z3VSmS39p6ppM9H2534pwbWIeJnJpZ8Tlh289Pynq
+         0Rg7pytasouwqHvI/z0mffZkOAwBAQnwNHUTulwZ4O+TRZYtsA3VqBeori3JVnaR9gJD
+         Yh1exiYV6hBwGL7DXvlRd30A75CCYem0VmBoTmjGy4kaqz1Tneio3SsHHA3p2r3PfS2v
+         7aIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=LH+uWheH+pNq+IGQq8MSCBunzHNQ2Gt4vqh/uMjSZaM=;
-        b=NZK4hAPch5Rqe9IeJ9QXsJL0LhBphT++R08aNGf/S3TulYkDvVM/hOp3O9xtFj0uJJ
-         MA2VKLTk1riOa6gzIaooCVGuns+ewUnc82KVFQioqpDdpVfDr8bQTEZ9E2oSIKRW5d+R
-         MrAqOtzYTqLQL9ab3bGi4dKJ91fSUC3DjI4//aiTbYI0tAwXs6XP6BHLIKfdG+Oa5IJ4
-         BhQTOsTpBo/fGtJFauk2dj62rzxed9y8MXEuHreNbUCMWWlRCBC0zOw22COTCK1XO50r
-         6+4viafbiwRSFI8xhtRpV0L24mxnZuqmfOcDB0T1EoYk/YEpErY+bch0LYJ4w3besg3y
-         EMEg==
-X-Gm-Message-State: APjAAAVZpiynga5355cifR93bzO5khveRoXiGbREHn2Jp8s7vBschrFM
-        rnGSt7aOb+//8Z/wsgW9fLH8j17rCqxFduKNSlBTQ5i8pMFgXeCtb+EhpNfzkiaHpQku4soRW77
-        i6VHD/XD/4EFEq4ESmkvD7Kyp1zBQojKxLZ3dFaj599HLyNzZqbLjKKb70Q==
-X-Received: by 2002:a6b:c903:: with SMTP id z3mr16805274iof.204.1568063274537;
-        Mon, 09 Sep 2019 14:07:54 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxKNWzQ0qeqd46TPzcljhuQDj1lX4oa7QzaJ3YBpbWvIApG/65YcNAjmq5SCNk2sgQ90kAmSPWN8hgTzP4YqYw=
-X-Received: by 2002:a6b:c903:: with SMTP id z3mr16805248iof.204.1568063274320;
- Mon, 09 Sep 2019 14:07:54 -0700 (PDT)
+        bh=SWyrMvKoZeJUW2jP4aEz7GUGLNj1qlvRlvfndO0mMoU=;
+        b=XidsOsPJGCQ7Rz9TaXJPN9uTw+MnLXtMySFXSJM0iKE0ty5S96/4n1WkzoHeLtWpe3
+         StMZzyiH2LjKFdprrylkOsiFI2LFdEu/9IL4MQdPG87yOLqR4+06uH4FcxQ8JVsMQJBV
+         CpZhZyeQFk/Am6eNFjJrhZVFPghAhVZqxesA9GO9dXX2B96s1cKr+MGRGHfkH1Z9Icjf
+         ROncXhBkyBqx4qomAg/QiguxF6xslakryjPO8aW65s6cOdqDkXbfz0IVBQzWZmhGb/fA
+         6CGMrHCPqfbDMLxEizBEpDXA4blgpuKE0VtT6CeAfJMvupx457bXmfeQVOgN1RSPl3hG
+         Slig==
+X-Gm-Message-State: APjAAAUwLehx/Dn4CGLrBEHTzrJqRPGPriQd5p+bY8951nm+r1fbE/LK
+        nf2Q+nbnmj5IaCqSksF2vM7p5SXA2XMhLxCcGPgXyA==
+X-Google-Smtp-Source: APXvYqxkgk8vOif4+8dDVnGLiySdf3fh7WZMI0FF72SbNFcx1ZGNeTcmlZ2ofHtixjJ67n/0RGa9si6mjZLNF9PFjkQ=
+X-Received: by 2002:a63:6193:: with SMTP id v141mr24350262pgb.263.1568063673765;
+ Mon, 09 Sep 2019 14:14:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190814213118.28473-1-kherbst@redhat.com> <2215840.qs0dBhReda@kreacher>
- <CACO55ttC-o9bKU7nHNcfjm2YnffiupQ7UHUt7BYL3fu+yEyTbw@mail.gmail.com> <5228680.jBuKzensJx@kreacher>
-In-Reply-To: <5228680.jBuKzensJx@kreacher>
-From:   Alex Hung <alex.hung@canonical.com>
-Date:   Mon, 9 Sep 2019 22:07:42 +0100
-Message-ID: <CAJ=jquaLthK556Lqk-zc3GCOus90HoGs66tA=d9a1aju7iNpPw@mail.gmail.com>
-Subject: Re: [Nouveau] [PATCH 1/7] Revert "ACPI / OSI: Add OEM _OSI string to
- enable dGPU direct output"
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Karol Herbst <kherbst@redhat.com>, Dave Airlie <airlied@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Dave Airlie <airlied@redhat.com>
+References: <20190909195024.3268499-1-arnd@arndb.de> <20190909195513.GA94662@archlinux-threadripper>
+In-Reply-To: <20190909195513.GA94662@archlinux-threadripper>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 9 Sep 2019 14:14:23 -0700
+Message-ID: <CAKwvOdn5pR_j=NEUtrVSS_uZYtdwVuPAAd6CqF1BOL8akSFhcQ@mail.gmail.com>
+Subject: Re: [PATCH net-next 1/2] mlx5: steering: use correct enum type
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alex Vesker <valex@mellanox.com>,
+        Erez Shitrit <erezsh@mellanox.com>,
+        Mark Bloch <markb@mellanox.com>,
+        Network Development <netdev@vger.kernel.org>,
+        linux-rdma@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 5, 2019 at 5:26 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+On Mon, Sep 9, 2019 at 12:55 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
 >
-> On Thursday, September 5, 2019 5:51:23 PM CEST Karol Herbst wrote:
-> > is there any update on the testing with my patches? On the hardware I
-> > had access to those patches helped, but I can't know if it also helped
-> > on the hardware for which those workarounds where actually added.
->
-> Alex Hung and Mario need to answer this question I think.
-
-Sorry for taking a long time. I don't have full testing results yet
-but we found at least a regression occurred with _OSI string removed -
-it is not on nVidia hardware but on AMD PX one.
-
-I will try to collect and share more details.
-
->
-> > On Mon, Aug 19, 2019 at 11:52 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> > >
-> > > On Thursday, August 15, 2019 12:47:35 AM CEST Dave Airlie wrote:
-> > > > On Thu, 15 Aug 2019 at 07:31, Karol Herbst <kherbst@redhat.com> wrote:
-> > > > >
-> > > > > This reverts commit 28586a51eea666d5531bcaef2f68e4abbd87242c.
-> > > > >
-> > > > > The original commit message didn't even make sense. AMD _does_ support it and
-> > > > > it works with Nouveau as well.
-> > > > >
-> > > > > Also what was the issue being solved here? No references to any bugs and not
-> > > > > even explaining any issue at all isn't the way we do things.
-> > > > >
-> > > > > And even if it means a muxed design, then the fix is to make it work inside the
-> > > > > driver, not adding some hacky workaround through ACPI tricks.
-> > > > >
-> > > > > And what out of tree drivers do or do not support we don't care one bit anyway.
-> > > > >
-> > > >
-> > > > I think the reverts should be merged via Rafael's tree as the original
-> > > > patches went in via there, and we should get them in asap.
-> > > >
-> > > > Acked-by: Dave Airlie <airlied@redhat.com>
-> > >
-> > > The _OSI strings are to be dropped when all of the needed support is there in
-> > > drivers, so they should go away along with the requisite driver changes.
-> > >
+> On Mon, Sep 09, 2019 at 09:50:08PM +0200, Arnd Bergmann wrote:
+> > The newly added code triggers a harmless warning with
+> > clang:
 > >
-> > that goes beside the point. firmware level workarounds for GPU driver
-> > issues were pushed without consulting with upstream GPU developers.
-> > That's something which shouldn't have happened in the first place. And
-> > yes, I am personally annoyed by the fact, that people know about
-> > issues, but instead of contacting the proper persons and working on a
-> > proper fix, we end up with stupid firmware level workarounds. I can't
-> > see why we ever would have wanted such workarounds in the first place.
+> > drivers/net/ethernet/mellanox/mlx5/core/steering/dr_action.c:1080:9: error: implicit conversion from enumeration type 'enum mlx5_reformat_ctx_type' to different enumeration type 'enum mlx5dr_action_type' [-Werror,-Wenum-conversion]
+> >                         rt = MLX5_REFORMAT_TYPE_L2_TO_L2_TUNNEL;
+> >                            ~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > drivers/net/ethernet/mellanox/mlx5/core/steering/dr_action.c:1084:51: error: implicit conversion from enumeration type 'enum mlx5dr_action_type' to different enumeration type 'enum mlx5_reformat_ctx_type' [-Werror,-Wenum-conversion]
+> >                 ret = mlx5dr_cmd_create_reformat_ctx(dmn->mdev, rt, data_sz, data,
+> >                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~            ^~
 > >
-> > And I would be much happier if the next time something like that comes
-> > up, that the drm mailing list will be contacted as well or somebody
-> > involved.
+> > Change it to use mlx5_reformat_ctx_type instead of mlx5dr_action_type.
 > >
-> > We could have also just disable the feature inside the driver (and
-> > probably we should have done that a long time ago, so that is
-> > essentially our fault, but still....)
-> >
-> > > I'm all for dropping then when that's the case, so please feel free to add ACKs
-> > > from me to the patches in question at that point.
-> > >
-> > > Cheers,
-> > > Rafael
-> > >
-> > >
-> > >
-> >
+> > Fixes: 9db810ed2d37 ("net/mlx5: DR, Expose steering action functionality")
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 >
+> I sent the same fix a couple of days ago:
 >
+> https://lore.kernel.org/netdev/20190905014733.17564-1-natechancellor@gmail.com/
 >
+> I don't care which patch goes in since they are the same thing so:
 >
+> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 
-
+GCC recently gained support (via me scanning the commit logs for an
+unrelated feature) for -Wenum-warnings (though I think it's off by
+default) so hopefully these kinds of issues will taper off over time.
 -- 
-Cheers,
-Alex Hung
+Thanks,
+~Nick Desaulniers
