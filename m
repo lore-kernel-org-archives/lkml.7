@@ -2,101 +2,153 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDD2C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59FCCC4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21A22218DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:00:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BC152067B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:00:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404559AbfIIMAO (ORCPT
+        id S2404588AbfIIMAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 08:00:14 -0400
-Received: from hel-mailgw-01.vaisala.com ([193.143.230.17]:22527 "EHLO
-        hel-mailgw-01.vaisala.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404502AbfIIMAO (ORCPT
+        Mon, 9 Sep 2019 08:00:53 -0400
+Received: from orion.archlinux.org ([88.198.91.70]:59340 "EHLO
+        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404562AbfIIMAx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 08:00:14 -0400
-IronPort-SDR: XxhML/fkEbWh+Fdt5FqQN2xKL620r4U1w0nPZIzAxhs4OVQXX7BAimlpwRZqPsMKlj0kAakBOL
- XlgoZ32Wbz6kF8D583rYmDWtrW0PKwnUye7w6AW61Hu1oZXxDNbbQsBd9Zv2YAV9ZT0qLj9vZS
- HvcgEP56Bf6RqsRt8NoljuLtaEcWoeXypWDmYXPwi02X9Gu8oZlFXTkkkAb/S1gwJvM7jgCOGI
- K4SuVOzvaC2pjTBkUiUr2arzr86kF+4XftmRqLXf+gcyN/NPxJGYKix/5G6pK8mfVPKHIgv4pf
- 9kc=
-X-IronPort-AV: E=Sophos;i="5.64,484,1559509200"; 
-   d="scan'208";a="231521946"
-Subject: Re: [PATCH] nvmem: core: fix nvmem_cell_write inline function
-To:     Sebastian Reichel <sre@kernel.org>
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        kbuild test robot <lkp@intel.com>,
+        Mon, 9 Sep 2019 08:00:53 -0400
+Received: from orion.archlinux.org (localhost [127.0.0.1])
+        by orion.archlinux.org (Postfix) with ESMTP id D3433153D5647D;
+        Mon,  9 Sep 2019 12:00:50 +0000 (UTC)
+Received: from saetre (unknown [154.53.1.40])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: ffy00)
+        by orion.archlinux.org (Postfix) with ESMTPSA;
+        Mon,  9 Sep 2019 12:00:50 +0000 (UTC)
+Message-ID: <80785df1c804796a01bbfbae4b2aeda66f30d7c5.camel@archlinux.org>
+Subject: Re: [PATCH v5] hid-logitech-hidpp: read battery voltage from newer
+ devices
+From:   Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>
+To:     Pedro Vanzella <pedro@pedrovanzella.com>,
+        linux-input@vger.kernel.org
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
         linux-kernel@vger.kernel.org
-References: <20190908121038.6877-1-sre@kernel.org>
- <d5017670-5622-283e-1376-8161d6e39dcd@vaisala.com>
- <20190909101810.gtqouke7vyu63r7e@earth.universe>
-From:   Nandor Han <nandor.han@vaisala.com>
-Message-ID: <84877749-c335-5a66-51b8-6071353f2151@vaisala.com>
-Date:   Mon, 9 Sep 2019 15:00:09 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+In-Reply-To: <20190831175659.7404-1-pedro@pedrovanzella.com>
+References: <20190831175659.7404-1-pedro@pedrovanzella.com>
+Organization: Archlinux
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-j/3msCg/E48w4jA/Rc1b"
+Date:   Mon, 09 Sep 2019 13:00:49 +0100
 MIME-Version: 1.0
-In-Reply-To: <20190909101810.gtqouke7vyu63r7e@earth.universe>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-OriginalArrivalTime: 09 Sep 2019 12:00:09.0475 (UTC) FILETIME=[20C82530:01D56706]
+User-Agent: Evolution 3.32.4 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/9/19 1:18 PM, Sebastian Reichel wrote:
-> Hi,
-> 
-> On Mon, Sep 09, 2019 at 12:26:06PM +0300, Nandor Han wrote:
->> On 9/8/19 3:10 PM, Sebastian Reichel wrote:
->>> From: Sebastian Reichel <sebastian.reichel@collabora.com>
->>>
->>> nvmem_cell_write's buf argument uses different types based on
->>> the configuration of CONFIG_NVMEM. The function prototype for
->>> enabled NVMEM uses 'void *' type, but the static dummy function
->>> for disabled NVMEM uses 'const char *' instead. Fix the different
->>> behaviour by always expecting a 'void *' typed buf argument.
->>>
->>> Fixes: 7a78a7f7695b ("power: reset: nvmem-reboot-mode: use NVMEM as reboot mode write interface")
->>> Reported-by: kbuild test robot <lkp@intel.com>
->>> Cc: Han Nandor <nandor.han@vaisala.com>
->>> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>> Cc: linux-kernel@vger.kernel.org
->>> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
->>> ---
->>>    include/linux/nvmem-consumer.h | 2 +-
->>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/include/linux/nvmem-consumer.h b/include/linux/nvmem-consumer.h
->>> index 8f8be5b00060..5c17cb733224 100644
->>> --- a/include/linux/nvmem-consumer.h
->>> +++ b/include/linux/nvmem-consumer.h
->>> @@ -118,7 +118,7 @@ static inline void *nvmem_cell_read(struct nvmem_cell *cell, size_t *len)
->>>    }
->>>    static inline int nvmem_cell_write(struct nvmem_cell *cell,
->>> -				    const char *buf, size_t len)
->>> +				   void *buf, size_t len)
->>
->> nitpick: alignment issue?
-> 
-> This actually fixes the alignment issue as a side-effect.
-> I guess I should have mentioned it in the changelog.
-> 
->> Review-By: Han Nandor <nandor.han@vaisala.com>
-> 
-> I suppose you meant to write "Reviewed-by" instead of inventing your
-> own tag?
-> 
 
-Yes :)
+--=-j/3msCg/E48w4jA/Rc1b
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Nandor
+On Sat, 2019-08-31 at 13:56 -0400, Pedro Vanzella wrote:
+> +static int hidpp20_battery_map_status_voltage(u8 data[3], int
+> *voltage)
+> +{
+> +	int status;
+> +
+> +	switch (data[2]) {
+> +	case 0x00: /* discharging */
+> +		status =3D POWER_SUPPLY_STATUS_DISCHARGING;
+> +		break;
+> +	case 0x10: /* wireless charging */
+> +	case 0x80: /* charging */
+> +		status =3D POWER_SUPPLY_STATUS_CHARGING;
+> +		break;
+> +	case 0x81: /* fully charged */
+> +		status =3D POWER_SUPPLY_STATUS_FULL;
+> +		break;
+> +	default:
+> +		status =3D POWER_SUPPLY_STATUS_NOT_CHARGING;
+> +	}
+> +
+> +	*voltage =3D get_unaligned_be16(data);
+> +
+> +	return status;
+> +}
 
+Here's the missing specification:
 
++--------+-----------------------------------------------------------------=
+--------+
+|  byte  |                                    2                            =
+        |
++--------+--------------+------------+------------+----------+----------+--=
+--------+
+|   bit  |     0..2     |      3     |      4     |     5    |     6    |  =
+   7    |
++--------+--------------+------------+------------+----------+----------+--=
+--------+
+| buffer | chargeStatus | fastCharge | slowCharge | critical | (unused) | e=
+xtPower |
++--------+--------------+------------+------------+----------+----------+--=
+--------+
+Table 1 - battery voltage (0x1001), getBatteryInfo() (ASE 0), 3rd byte
+
++-------+--------------------------------------+
+| value |                meaning               |
++-------+--------------------------------------+
+|   0   | Charging                             |
++-------+--------------------------------------+
+|   1   | End of charge (100% charged)         |
++-------+--------------------------------------+
+|   2   | Charge stopped (any "normal" reason) |
++-------+--------------------------------------+
+|   7   | Hardware error                       |
++-------+--------------------------------------+
+Table 2 - chargeStatus value
+
+I know this is already on the 5th revision but could you please change
+hidpp20_battery_map_status_voltage() to properly handle the 3rd byte?
+Also, if you could make sure those values are properly exported via
+sysfs it would be great! We will need them for proper upower support.
+
+Sorry for not saying this in my first review. Since then I have done
+some testing and I discovered that if we want to get accurate upower
+support we will need the values exposed by the 3rd byte to be
+exported properly.
+
+I am not sure about the endianness of chargeStatus but you can find
+that easily.=20
+
+Thank you!
+Filipe La=C3=ADns
+
+--=-j/3msCg/E48w4jA/Rc1b
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0jW0leqs33gyftiw+JPGdIFqqV0FAl12PukACgkQ+JPGdIFq
+qV1jwg/9EttPOy1N0SJoxbvOgCYvj1PjcdoeWtCWBQJFM9Ng3pCg4yIn3yrwktYL
+XD5/VkorQzmbigfGmsL1u0E/CMnvWgJHHyX2b3iwIXUFrBgTWjLE5JJv3ZWjYduV
+xR6TzdRiePQiFEWPWqWp8OZ/DN/wG1b3jO91y50yxfsJzfkziSoUCYwlrB9Km+YU
+eCh+7PZFZRm4Vrp3fkhDK/lhNaUHRpwR9c/UPzsdBHjf+WmE8uxggRE5wRhmKFnA
+So85IpNKmBiTshIC9f0kJuFjck2QExVf45oSaxTPIOcd1khKbsIpLcvCVY8MpLK8
+iShsuPae+rHYVF+XUZzQS/SgeSYQzkWEzFzYm+l5IVFRoQCju7UcoOWGKApMyldV
+dS6CHEWviOFI83CttNr4fUYpoTNTnQS3ysYfTBXYd6cFB7Kbp4T0EK30fv/f3meC
+JYBXmIEafzjk9wm3pqBBufNtKHr/ONEuTPphgeWZK9SCOlwDzcMi3t1U3xCcNQsr
+tjTiG2nqsVduf7S5TW798gfamZ/yipmZuFgNBrpJd9oVB9dXPY4WB6uKJMzbYU54
+ipkM8IuiHmEFv3nSIFEGY9ZXjOJREk0fxx8IdTI6gjYMF0Sq+SfrtzGzdW1wx3NB
+bx+6ZoB8ySnwVVep8nWbCO6ocrIGRw6tu0LynPifCDGL/EE6VPQ=
+=EIku
+-----END PGP SIGNATURE-----
+
+--=-j/3msCg/E48w4jA/Rc1b--
