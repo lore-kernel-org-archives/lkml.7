@@ -2,113 +2,136 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48DDEC49ED6
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 153A3C4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AADC20640
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:17:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568045826;
-	bh=uM5pktdKKybWosqtld6GFR4HLQK6oDxEDVcHV3Wsg10=;
-	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
-	b=UBhTcc/vUIuf8Nyu5sj7H1CxglLPFiDq6bTGi4viEs2ACkkmG3xqmI45iy+908ltE
-	 n15C/howNqLWRYB5oOuQ6e5QHQBSdZdtkn2mcoKTU68xiv+68IAyR9g+nlvKjNTXuU
-	 isMUxTQ2cnttM9mTrjYSN6ae9Xyqb1srrSQ8B0OM=
+	by mail.kernel.org (Postfix) with ESMTP id E6F1920640
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:17:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388181AbfIIQRF (ORCPT
+        id S2388807AbfIIQRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 12:17:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52186 "EHLO mail.kernel.org"
+        Mon, 9 Sep 2019 12:17:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58580 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725800AbfIIQRF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 12:17:05 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2387494AbfIIQRf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 12:17:35 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07FAE20640;
-        Mon,  9 Sep 2019 16:17:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568045824;
-        bh=uM5pktdKKybWosqtld6GFR4HLQK6oDxEDVcHV3Wsg10=;
-        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
-        b=MNzXe8vkDgM3sXct2hf22C2hDzuWkQZIEgj4QV5QkcBsm2/PMX6bOSd2Kke6UbMo1
-         vX8mpbXuhg+SvXx/TEy3uJgu3DsEyKbhFpENPgnf5R4eWBQBNTf7OWAVTIuC7mHShB
-         MQhYynCU0bWeU/jBzhsHd/szMjHHA3AEv13Ixmec=
-Content-Type: text/plain; charset="utf-8"
+        by mx1.redhat.com (Postfix) with ESMTPS id 4B6673067285;
+        Mon,  9 Sep 2019 16:17:35 +0000 (UTC)
+Received: from localhost (unknown [10.43.2.182])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 76ED660BF3;
+        Mon,  9 Sep 2019 16:17:34 +0000 (UTC)
+Date:   Mon, 9 Sep 2019 18:17:32 +0200
+From:   Igor Mammedov <imammedo@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, borntraeger@de.ibm.com,
+        cohuck@redhat.com
+Subject: Re: [PATCH] kvm_s390_vm_start_migration: check dirty_bitmap before
+ using it as target for memset()
+Message-ID: <20190909181732.2d079536@redhat.com>
+In-Reply-To: <18230047-35d7-2dfb-948e-2645fcab18e7@redhat.com>
+References: <20190909145545.11759-1-imammedo@redhat.com>
+        <18230047-35d7-2dfb-948e-2645fcab18e7@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190909141740.GA23964@igloo>
-References: <20190826164510.6425-1-jorge.ramirez-ortiz@linaro.org> <20190826164510.6425-2-jorge.ramirez-ortiz@linaro.org> <20190909102117.245112089F@mail.kernel.org> <20190909141740.GA23964@igloo>
-Cc:     agross@kernel.org, jorge.ramirez-ortiz@linaro.org,
-        mturquette@baylibre.com, bjorn.andersson@linaro.org,
-        niklas.cassel@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     "Jorge Ramirez-Ortiz, Linaro" <jorge.ramirez-ortiz@linaro.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 2/5] clk: qcom: apcs-msm8916: get parent clock names from DT
-User-Agent: alot/0.8.1
-Date:   Mon, 09 Sep 2019 09:17:03 -0700
-Message-Id: <20190909161704.07FAE20640@mail.kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 09 Sep 2019 16:17:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jorge Ramirez-Ortiz, Linaro (2019-09-09 07:17:40)
-> On 09/09/19 03:21:16, Stephen Boyd wrote:
-> > Quoting Jorge Ramirez-Ortiz (2019-08-26 09:45:07)
-> > > @@ -76,10 +88,11 @@ static int qcom_apcs_msm8916_clk_probe(struct pla=
-tform_device *pdev)
-> > >         a53cc->src_shift =3D 8;
-> > >         a53cc->parent_map =3D gpll0_a53cc_map;
-> > > =20
-> > > -       a53cc->pclk =3D devm_clk_get(parent, NULL);
-> > > +       a53cc->pclk =3D of_clk_get(parent->of_node, pll_index);
-> >=20
-> > Presumably the PLL was always index 0, so why are we changing it to
-> > index 1 sometimes? Seems unnecessary.
-> >=20
->=20
-> it came as a personal preference. hope it is acceptable (I would
-> rather not change it)
->=20
-> apcs-msm8916.c declares the following
->=20
-> [..]
-> static const u32 gpll0_a53cc_map[] =3D { 4, 5 };
-> static const char *gpll0_a53cc[] =3D {
->        "gpll0_vote",
->         "a53pll",
->         };
-> [..]
->=20
->=20
-> now will be doing this
->=20
-> --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> @@ -429,7 +429,8 @@
->      compatible =3D "qcom,msm8916-apcs-kpss-global", "syscon";
->      reg =3D <0xb011000 0x1000>;
->      #mbox-cells =3D <1>;
-> -                   clocks =3D <&a53pll>;
-> +                 clocks =3D <&gcc GPLL0_VOTE>, <&a53pll>;
-> +                 clock-names =3D "aux", "pll";
->                       #clock-cells =3D <0>;
->                };
->                                                                          =
-                                      =20
->=20
-> so I chose to keep the consistency between the clocks definition and
-> just change the index before calling of_clk_get.
->=20
+On Mon, 9 Sep 2019 17:47:37 +0200
+David Hildenbrand <david@redhat.com> wrote:
 
-But now the binding is different for the same compatible. I'd prefer we
-keep using devm_clk_get() and use a device pointer here and reorder the
-map and parent arrays instead. The clocks property shouldn't change in a
-way that isn't "additive" so that we maintain backwards compatibility.
+> On 09.09.19 16:55, Igor Mammedov wrote:
+> > If userspace doesn't set KVM_MEM_LOG_DIRTY_PAGES on memslot before calling
+> > kvm_s390_vm_start_migration(), kernel will oops with:
+> >   
+> 
+> We usually have the subject in a "KVM: s390: ..." format. Like
+> 
+> "KVM: s390: check dirty_bitmap before using it as target for memset()"
+> 
+> >   Unable to handle kernel pointer dereference in virtual kernel address space
+> >   Failing address: 0000000000000000 TEID: 0000000000000483
+> >   Fault in home space mode while using kernel ASCE.
+> >   AS:0000000002a2000b R2:00000001bff8c00b R3:00000001bff88007 S:00000001bff91000 P:000000000000003d
+> >   Oops: 0004 ilc:2 [#1] SMP
+> >   ...
+> >   Call Trace:
+> >   ([<001fffff804ec552>] kvm_s390_vm_set_attr+0x347a/0x3828 [kvm])
+> >    [<001fffff804ecfc0>] kvm_arch_vm_ioctl+0x6c0/0x1998 [kvm]
+> >    [<001fffff804b67e4>] kvm_vm_ioctl+0x51c/0x11a8 [kvm]
+> >    [<00000000008ba572>] do_vfs_ioctl+0x1d2/0xe58
+> >    [<00000000008bb284>] ksys_ioctl+0x8c/0xb8
+> >    [<00000000008bb2e2>] sys_ioctl+0x32/0x40
+> >    [<000000000175552c>] system_call+0x2b8/0x2d8
+> >   INFO: lockdep is turned off.
+> >   Last Breaking-Event-Address:
+> >    [<0000000000dbaf60>] __memset+0xc/0xa0
+> > 
+> > due to ms->dirty_bitmap being NULL, which migh crash the host.  
+> 
+> s/migh/might/
+> 
+> > 
+> > Make sure that ms->dirty_bitmap is set before using it or
+> > print a warning and return -ENIVAL otherwise.
+> > 
+> > Signed-off-by: Igor Mammedov <imammedo@redhat.com>
+> > ---
+> > 
+> > PS:
+> >   keeping it private for now as issue might DoS host,
+> >   I'll leave it upto maintainers to decide if it should be handled as security
+> >   bug (I'm not sure what process for handling such bugs should be used).
+> > 
+> > 
+> >  arch/s390/kvm/kvm-s390.c | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> > 
+> > diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+> > index f329dcb3f44c..dfba51c9d60c 100644
+> > --- a/arch/s390/kvm/kvm-s390.c
+> > +++ b/arch/s390/kvm/kvm-s390.c
+> > @@ -1018,6 +1018,10 @@ static int kvm_s390_vm_start_migration(struct kvm *kvm)
+> >  	/* mark all the pages in active slots as dirty */
+> >  	for (slotnr = 0; slotnr < slots->used_slots; slotnr++) {
+> >  		ms = slots->memslots + slotnr;
+> > +		if (!ms->dirty_bitmap) {
+> > +			WARN(1, "ms->dirty_bitmap == NULL\n");
+> > +			return -EINVAL;
+> > +		}  
+> 
+> if (WARN_ON_ONCE(!ms->dirty_bitmap))
+> 	return -EINVAL;
+> 
+> But I wonder if the WARN is really needed. (or simply a wrong usage of the interface)
+I added WARN because of there is no any visible sign that something
+went wrong in userspace, this way at least we would have a trace of
+invalid API usage.
+
+But I can drop it if you prefer.
+
+> 
+> 
+> >  		/*
+> >  		 * The second half of the bitmap is only used on x86,
+> >  		 * and would be wasted otherwise, so we put it to good
+> >   
+> 
+> You should add
+> 
+> Fixes: afdad61615cc ("KVM: s390: Fix storage attributes migration with memory slots")
+> Cc: stable@vger.kernel.org # v4.19+
+> 
+> Thanks!
 
