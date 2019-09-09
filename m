@@ -2,99 +2,87 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A5BC433EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 02:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3837AC433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 02:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 680D72086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 02:55:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gregn.net header.i=@gregn.net header.b="BlfG1xld"
+	by mail.kernel.org (Postfix) with ESMTP id 1575B21907
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 02:57:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733222AbfIICzd (ORCPT
+        id S1733251AbfIIC5P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 22:55:33 -0400
-Received: from vserver.gregn.net ([174.136.110.154]:52110 "EHLO
-        vserver.gregn.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733198AbfIICzd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 22:55:33 -0400
-Received: from vbox.gregn.net (unknown [IPv6:2001:470:d:6c5:25fc:7f29:f51b:876c])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by vserver.gregn.net (Postfix) with ESMTPSA id 056412129;
-        Sun,  8 Sep 2019 19:55:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=gregn.net; s=default;
-        t=1567997758; bh=yasw5GiTAHxfDIbfiK6YMsktGcS73mmCaajaZVY6UW8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BlfG1xldAPhqEcm9W1RU9XyiH6SPlhwbH276UlDv1uqGeXf06uo4UrABs6bO8DTkF
-         P5gznjkvDbIya4pp1GtQTkTXhObelN6wgOVU9qddnHitVMns7USlB38fKLTdMCccoC
-         fA7nwYuCUpgOckYROartOU+iyEWQKtM8tyHS6zpAc2ZX+XaseBabZdeTtYjnsk80BR
-         +7raSF7MAACjoVTU5f5J4BEexH2IW2a0uLInU5Q0nUkMuT28uJx/GJ5qbOn5PdU6Hy
-         mCH5XhF73LiyvcKRgoLJYJJDs6lZqRy1ixz9fo9QN2oO9Dc4lzkpeCwcPGMDWvw3Pb
-         zja79zeP/exRA==
-Received: from greg by vbox.gregn.net with local (Exim 4.84_2)
-        (envelope-from <greg@gregn.net>)
-        id 1i79oz-0001P2-Qj; Sun, 08 Sep 2019 19:54:29 -0700
-Date:   Sun, 8 Sep 2019 19:54:29 -0700
-From:   Gregory Nowak <greg@gregn.net>
-To:     Okash Khawaja <okash.khawaja@gmail.com>
-Cc:     "Speakup is a screen review system for Linux." 
-        <speakup@linux-speakup.org>, devel@driverdev.osuosl.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Simon Dickson <simonhdickson@gmail.com>,
-        linux-kernel@vger.kernel.org, John Covici <covici@ccs.covici.com>
-Subject: Re: [HELP REQUESTED from the community] Was: Staging status of
- speakup
-Message-ID: <20190909025429.GA4144@gregn.net>
-References: <20190707065710.GA5560@kroah.com>
- <20190712083819.GA8862@kroah.com>
- <20190712092319.wmke4i7zqzr26tly@function>
- <20190713004623.GA9159@gregn.net>
- <20190725035352.GA7717@gregn.net>
- <875znqhia0.fsf@cmbmachine.messageid.invalid>
- <m3sgqucs1x.wl-covici@ccs.covici.com>
- <CAOtcWM0qynSjnF6TtY_s7a51B7JweDb7jwdxStEmPvB9tJFU4Q@mail.gmail.com>
- <20190821222209.GA4577@gregn.net>
- <CAOtcWM0Jzo+wew-uiOmde+eZXEWZ310L8wXscWjJv5OXqXJe6Q@mail.gmail.com>
+        Sun, 8 Sep 2019 22:57:15 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2174 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731983AbfIIC5O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 22:57:14 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 3F5596BA153CDAEA09DD;
+        Mon,  9 Sep 2019 10:57:12 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 9 Sep 2019
+ 10:57:09 +0800
+Subject: Re: [f2fs-dev] [PATCH 1/2] f2fs: do not select same victim right
+ again
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20190909012532.20454-1-jaegeuk@kernel.org>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <69933b7f-48cc-47f9-ba6f-b5ca8f733cba@huawei.com>
+Date:   Mon, 9 Sep 2019 10:56:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOtcWM0Jzo+wew-uiOmde+eZXEWZ310L8wXscWjJv5OXqXJe6Q@mail.gmail.com>
-X-PGP-Key: http://www.gregn.net/pubkey.asc
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-Virus-Scanned: clamav-milter 0.100.3 at vserver
-X-Virus-Status: Clean
+In-Reply-To: <20190909012532.20454-1-jaegeuk@kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 08, 2019 at 10:43:02AM +0100, Okash Khawaja wrote:
-> Sorry, I have only now got round to working on this. It's not complete
-> yet but I have assimilated the feedback and converted subjective
-> phrases, like "I think..." into objective statements or put them in
-> TODO: so that someone else may verify. I have attached it to this
-> email.
+On 2019/9/9 9:25, Jaegeuk Kim wrote:
+> GC must avoid select the same victim again.
 
-I think bleeps needs a TODO, since we don't know what values it accepts, or
-what difference those values make. Also, to keep things uniform, we
-should replace my "don't know" for trigger_time with a TODO. Looks
-good to me otherwise. Thanks.
+Blocks in previous victim will occupy addition free segment, I doubt after this
+change, FGGC may encounter out-of-free space issue more frequently.
 
-Greg
+Thanks,
 
-
--- 
-web site: http://www.gregn.net
-gpg public key: http://www.gregn.net/pubkey.asc
-skype: gregn1
-(authorization required, add me to your contacts list first)
-If we haven't been in touch before, e-mail me before adding me to your contacts.
-
---
-Free domains: http://www.eu.org/ or mail dns-manager@EU.org
+> 
+> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> ---
+>  fs/f2fs/gc.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+> index e88f98ddf396..15ca8bbb0b22 100644
+> --- a/fs/f2fs/gc.c
+> +++ b/fs/f2fs/gc.c
+> @@ -274,6 +274,9 @@ static unsigned int get_cb_cost(struct f2fs_sb_info *sbi, unsigned int segno)
+>  static inline unsigned int get_gc_cost(struct f2fs_sb_info *sbi,
+>  			unsigned int segno, struct victim_sel_policy *p)
+>  {
+> +	if (sbi->cur_victim_sec == GET_SEC_FROM_SEG(sbi, segno))
+> +		return UINT_MAX;
+> +
+>  	if (p->alloc_mode == SSR)
+>  		return get_seg_entry(sbi, segno)->ckpt_valid_blocks;
+>  
+> @@ -1326,9 +1329,6 @@ int f2fs_gc(struct f2fs_sb_info *sbi, bool sync,
+>  		round++;
+>  	}
+>  
+> -	if (gc_type == FG_GC)
+> -		sbi->cur_victim_sec = NULL_SEGNO;
+> -
+>  	if (sync)
+>  		goto stop;
+>  
+> 
