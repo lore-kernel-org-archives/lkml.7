@@ -2,201 +2,235 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C717C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 20:00:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DE1C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 20:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34A9C218AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 20:00:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07BA2218AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 20:02:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="dz52cer/";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Ly4E81vp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IrWT20fb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732609AbfIIUAV (ORCPT
+        id S2405957AbfIIUCX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 16:00:21 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:11376 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731972AbfIIUAU (ORCPT
+        Mon, 9 Sep 2019 16:02:23 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42779 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405890AbfIIUCW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 16:00:20 -0400
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id x89JfnKp028449;
-        Mon, 9 Sep 2019 13:00:03 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=LMymMa5k2CyJJyAWhW1S8xr496iweGFGF0ckn8b/UOA=;
- b=dz52cer/ZHiJUPBFARy3hDqWjHluLSpHAaHDDslLb68f4TaIgFNsm5P+sYCTLfiVkApZ
- 7dZiNiEvSooPAUT0fUSNrjQD7QOp77woQ4hzxPfFdroaj346IhfDuUFed+0mzBbpVt0s
- h4PO4x+zg5hWunmDQGkNUQbx7FDFcZiueOQ= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by m0001303.ppops.net with ESMTP id 2uv87nh461-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 09 Sep 2019 13:00:03 -0700
-Received: from prn-hub02.TheFacebook.com (2620:10d:c081:35::126) by
- prn-hub01.TheFacebook.com (2620:10d:c081:35::125) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Mon, 9 Sep 2019 13:00:02 -0700
-Received: from NAM01-SN1-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.26) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Mon, 9 Sep 2019 13:00:02 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ab6A9nQCcMqYOJig1WVcmyTJl7jhSQN6pl1NDKEZvumCHhVV9Uu6MxcJb3xN7FUDgRHcRfNo1Xtk6uE8MHaE3TEzJ9C9sMdLRwpeM96gL7EWKtINLtVK5TDZAM3afYo5OKm2xZeL0QALuqV7L+mSY56PAdv8KVpHIWZLTJua5sxvJKbnrjqgVjDtkrepB8pnzFlDQWaAVZuzOOBRucUWJBkBT5pw9rwuwRnFKZsQYkgeebiW70B3nXSg/9XFX3oLv6nlx0C57R31P5HMyIdBlZr1s8Gw9xYENtEsVY1uRbOv+pg+wYdOSfmfZqnx5sVz3lPoQ1HClkLRWhzYcVPx3Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LMymMa5k2CyJJyAWhW1S8xr496iweGFGF0ckn8b/UOA=;
- b=Np4mSOb8tEPr4DVvInYVTfhpPF5SACgkzuJsEeu7PJRpdYiVWlikBi9EqaAxkjuiqA+881blYAtEg3FxaalxSuwg+mna4bSxriq//5Caaxs1b3hAmJDXV6+zAH7UMbIk//9Jloxvv3WK1Ny45ax8IRTtpN7bhYTmYHJd/rYD8mbGWWDe/Gf/z0UzY3W+43lqq8HzMIjwEX8tcC21Hdp1uFMyQ82akWqTHVPFAO+5bTLfZA0eZwv2zvbfcbLj1CJMTK3pVv+JocTOYm3/iFzfCgMVTeYypGw5Nh0cUVAhp78bSYTqc1pnfUvhA7rW6KLYdGUQyIp1kTO1YgsPSSl39Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LMymMa5k2CyJJyAWhW1S8xr496iweGFGF0ckn8b/UOA=;
- b=Ly4E81vppH90256KQ82OsK+zLErsbzUvUMahRi6dSTq3GoCfHVcJaJfef/r4rFmquVS33izems9iXhIVqd4cRwPyMZaubK5VQBIPpyVYGvjqyIK0/OkimybdU9NqaCmWh9iToIgizGjAongMp1qz3odQjmcayI3zcPpyshVnkA8=
-Received: from BN8PR15MB2626.namprd15.prod.outlook.com (20.179.137.220) by
- BN8PR15MB2947.namprd15.prod.outlook.com (20.178.219.218) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.18; Mon, 9 Sep 2019 20:00:00 +0000
-Received: from BN8PR15MB2626.namprd15.prod.outlook.com
- ([fe80::5d2:6eec:98cc:76d2]) by BN8PR15MB2626.namprd15.prod.outlook.com
- ([fe80::5d2:6eec:98cc:76d2%3]) with mapi id 15.20.2241.018; Mon, 9 Sep 2019
- 20:00:00 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     Pengfei Li <lpf.vector@gmail.com>
-CC:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "vbabka@suse.cz" <vbabka@suse.cz>, "cl@linux.com" <cl@linux.com>,
-        "penberg@kernel.org" <penberg@kernel.org>,
-        "rientjes@google.com" <rientjes@google.com>,
-        "iamjoonsoo.kim@lge.com" <iamjoonsoo.kim@lge.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 3/4] mm, slab_common: Make 'type' is enum
- kmalloc_cache_type
-Thread-Topic: [PATCH v2 3/4] mm, slab_common: Make 'type' is enum
- kmalloc_cache_type
-Thread-Index: AQHVZzE0SUuLIOWnuUe4DGQG2id7Facjw+qA
-Date:   Mon, 9 Sep 2019 20:00:00 +0000
-Message-ID: <20190909195955.GA2181@tower.dhcp.thefacebook.com>
-References: <20190909170715.32545-1-lpf.vector@gmail.com>
- <20190909170715.32545-4-lpf.vector@gmail.com>
-In-Reply-To: <20190909170715.32545-4-lpf.vector@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR2201CA0093.namprd22.prod.outlook.com
- (2603:10b6:301:5e::46) To BN8PR15MB2626.namprd15.prod.outlook.com
- (2603:10b6:408:c7::28)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::1:2b5d]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9f1cbd64-0437-41fb-9cd7-08d735604bbf
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN8PR15MB2947;
-x-ms-traffictypediagnostic: BN8PR15MB2947:
-x-microsoft-antispam-prvs: <BN8PR15MB2947250E78CD973EC4B07D11BEB70@BN8PR15MB2947.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:534;
-x-forefront-prvs: 01559F388D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(346002)(376002)(396003)(136003)(366004)(189003)(199004)(229853002)(14444005)(54906003)(316002)(46003)(478600001)(6506007)(305945005)(7736002)(386003)(4326008)(186003)(256004)(1076003)(33656002)(6246003)(99286004)(76176011)(8676002)(2906002)(52116002)(9686003)(81156014)(81166006)(6512007)(53936002)(8936002)(6916009)(66446008)(64756008)(66556008)(66476007)(66946007)(446003)(6436002)(6116002)(86362001)(6486002)(5660300002)(14454004)(71190400001)(71200400001)(102836004)(25786009)(476003)(11346002)(486006);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR15MB2947;H:BN8PR15MB2626.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: zpAanssIGGp+bGyFCNGrJe8UXY7mdhS8JtaZKUlJBkREAa6cmeI3SL+m5qjowCLEBzPkAvdBRLmRAJj5S1Dtc9L1rp9x5zd0dLRE/r0+iAKbiAQ+C0fwgkhcRswH33UeseRcDDTXE8G3k+u9PC9dwW6X7CaHHYy31XmuQLjzWYXXwb1Ja8SdLRxuDU6JnqfqdFO9ek7DnElkghl+qe4hwxAivjpmxU4f9NUN7biKw4+CGOuPe4nd9XstErpTJ0n5EL5vAH1fVYOftEuYPQ4PNJyzZ2enwQt9lBhGO2WMaZ1FfKKh6KOqPn3IpgUckDreBv5PAtsDiTAlDcPjoTX6NPCPoeetZSnp2p4trg+PwCBmJ+QMuu6nHKWgYWbc2qLI/pcAPjqGZdJwv1ppacMaRFIfI2fLCQj14tYH85uQTJM=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <153F3585B42C304694B3B0667164B592@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 9 Sep 2019 16:02:22 -0400
+Received: by mail-pg1-f193.google.com with SMTP id p3so8436061pgb.9
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 13:02:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xW7EQcr0CjNApYbCMIe6HxKaG8AfbdjFuus/B7ASN4M=;
+        b=IrWT20fbQOnXyNKinqp5OPc/kpar1wnCgipwXSgm71GIDrbS2sjQCkbzspksAGbCLH
+         4i0o33F7A44k9WtSfCrUbvTAdNcg3yrKovUufCA2dtKvHtVka28le5119zq+0Cv2CIWw
+         SwA5UHo9Bu1YXk+jtQsx6EU71AtPmYqSFsiV3rZRmVdSPmwGZOoVtugLG/3yN4Uzq/NH
+         F70FnGSjwOeI1SAuHwBy0cn7IF+ly5AHiE6egoYGKDxl/UTvW4OhZrq2uoLTkkHAsbsE
+         t/EQefOrA5vf7HPDMVmHT7ohO9JVZk/JS38HeqYsWcb/4D4mGO9/C7EwUDIy1zRNq2KV
+         E0yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xW7EQcr0CjNApYbCMIe6HxKaG8AfbdjFuus/B7ASN4M=;
+        b=hAem55xbKtnKseT2AbeGEXgSVWKwcW+Wj1oHp7lQ3rhfNsJQzwj+RBCck+krnbZGPf
+         vTeQy7VS3ljkMvjn47KNUsqtxZSFIClCTs/XAvKu1JsQE6bFHdcQg9EeLhSttrOSzgh8
+         dMTyvgwd7h6tdF7W+Z/XXt6Kn1gSWMBvTstYraXxqZkGQCu52+eYUaWE6aGdDgKNz3ob
+         GE4ncNYbiS5ctufyELvihqRfDne65aoZ8rIJT3wz90i/XXPQ1AHn1LSYIRn/GmI6xOSZ
+         qRDPXhbmXvWCBZzId9SCGvYV2hG2yGK9l05IB4TH+sGK2siTOxF4PGJxwF3u7Gpk1q79
+         0l6A==
+X-Gm-Message-State: APjAAAXDxNKE/DmvgCr1ooNZUiHijxnuZEb6VPWiLJiOL5oTP5MGwz8S
+        033YTG0pi6Iz4jkqMsZCOXAkkTya
+X-Google-Smtp-Source: APXvYqzTkwJBa3F0RxKnqmT5gOH5RbcRfdaf81JN1nzvoeP3MdObNZQOet8DwV8ZjCgD7GTvPLYVBA==
+X-Received: by 2002:a63:3c5:: with SMTP id 188mr23042649pgd.394.1568059341642;
+        Mon, 09 Sep 2019 13:02:21 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id p17sm16111267pff.27.2019.09.09.13.02.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 09 Sep 2019 13:02:21 -0700 (PDT)
+Date:   Mon, 9 Sep 2019 13:01:57 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
+        lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] ASoC: fsl_asrc: Use in(out)put_format instead of
+ in(out)put_word_width
+Message-ID: <20190909200156.GB10344@Asurada-Nvidia.nvidia.com>
+References: <cover.1568025083.git.shengjiu.wang@nxp.com>
+ <65e96ca15afd4a282b122f3ea8b13642cf4614c7.1568025083.git.shengjiu.wang@nxp.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9f1cbd64-0437-41fb-9cd7-08d735604bbf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Sep 2019 20:00:00.2114
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 77njtViFhNLDLEkJP6otBl15B3x/EjAovW7ff+4j/WSFXHcm1OhuaxysymFnmwv0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR15MB2947
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-09_07:2019-09-09,2019-09-09 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=999
- clxscore=1011 phishscore=0 adultscore=0 suspectscore=0 priorityscore=1501
- bulkscore=0 lowpriorityscore=0 impostorscore=0 spamscore=0 mlxscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1906280000 definitions=main-1909090197
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <65e96ca15afd4a282b122f3ea8b13642cf4614c7.1568025083.git.shengjiu.wang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 01:07:14AM +0800, Pengfei Li wrote:
+On Mon, Sep 09, 2019 at 06:33:19PM -0400, Shengjiu Wang wrote:
+> snd_pcm_format_t is more formal than enum asrc_word_width, which has
+> two property, width and physical width, which is more accurate than
+> enum asrc_word_width. So it is better to use in(out)put_format
+> instead of in(out)put_word_width.
 
-Hi Pengfei!
+Hmm...I don't really see the benefit of using snd_pcm_format_t
+here...I mean, I know it's a generic one, and would understand
+if we use it as a param for a common API. But this patch merely
+packs the "width" by intentionally using this snd_pcm_format_t
+and then adds another translation to unpack it.. I feel it's a
+bit overcomplicated. Or am I missing something?
 
-> The 'type' of the function new_kmalloc_cache should be
-> enum kmalloc_cache_type instead of int, so correct it.
+And I feel it's not necessary to use ALSA common format in our
+own "struct asrc_config" since it is more IP/register specific. 
 
-I think you mean type of the 'i' variable, not the type of
-new_kmalloc_cache() function. Also the name of the patch is
-misleading. How about
-mm, slab_common: use enum kmalloc_cache_type to iterate over kmalloc caches=
- ?
-Or something like this.
+Thanks
+Nicolin
 
-The rest of the series looks good to me.
-
-Please, feel free to use
-Acked-by: Roman Gushchin <guro@fb.com>
-for patches [1-3] in the series after fixing this commit message and
-restoring __initconst.
-
-Patch [4] needs some additional clarifications, IMO.
-
-Thank you!
-
->=20
-> Signed-off-by: Pengfei Li <lpf.vector@gmail.com>
-> Acked-by: Vlastimil Babka <vbabka@suse.cz>
-
-
-
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 > ---
->  mm/slab_common.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->=20
-> diff --git a/mm/slab_common.c b/mm/slab_common.c
-> index cae27210e4c3..d64a64660f86 100644
-> --- a/mm/slab_common.c
-> +++ b/mm/slab_common.c
-> @@ -1192,7 +1192,7 @@ void __init setup_kmalloc_cache_index_table(void)
->  }
-> =20
->  static void __init
-> -new_kmalloc_cache(int idx, int type, slab_flags_t flags)
-> +new_kmalloc_cache(int idx, enum kmalloc_cache_type type, slab_flags_t fl=
-ags)
+>  sound/soc/fsl/fsl_asrc.c | 56 +++++++++++++++++++++++++++-------------
+>  sound/soc/fsl/fsl_asrc.h |  4 +--
+>  2 files changed, 40 insertions(+), 20 deletions(-)
+> 
+> diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
+> index cfa40ef6b1ca..4d3804a1ea55 100644
+> --- a/sound/soc/fsl/fsl_asrc.c
+> +++ b/sound/soc/fsl/fsl_asrc.c
+> @@ -265,6 +265,8 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair)
+>  	struct asrc_config *config = pair->config;
+>  	struct fsl_asrc *asrc_priv = pair->asrc_priv;
+>  	enum asrc_pair_index index = pair->index;
+> +	enum asrc_word_width input_word_width;
+> +	enum asrc_word_width output_word_width;
+>  	u32 inrate, outrate, indiv, outdiv;
+>  	u32 clk_index[2], div[2];
+>  	int in, out, channels;
+> @@ -283,9 +285,32 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair)
+>  		return -EINVAL;
+>  	}
+>  
+> -	/* Validate output width */
+> -	if (config->output_word_width == ASRC_WIDTH_8_BIT) {
+> -		pair_err("does not support 8bit width output\n");
+> +	switch (snd_pcm_format_width(config->input_format)) {
+> +	case 8:
+> +		input_word_width = ASRC_WIDTH_8_BIT;
+> +		break;
+> +	case 16:
+> +		input_word_width = ASRC_WIDTH_16_BIT;
+> +		break;
+> +	case 24:
+> +		input_word_width = ASRC_WIDTH_24_BIT;
+> +		break;
+> +	default:
+> +		pair_err("does not support this input format, %d\n",
+> +			 config->input_format);
+> +		return -EINVAL;
+> +	}
+> +
+> +	switch (snd_pcm_format_width(config->output_format)) {
+> +	case 16:
+> +		output_word_width = ASRC_WIDTH_16_BIT;
+> +		break;
+> +	case 24:
+> +		output_word_width = ASRC_WIDTH_24_BIT;
+> +		break;
+> +	default:
+> +		pair_err("does not support this output format, %d\n",
+> +			 config->output_format);
+>  		return -EINVAL;
+>  	}
+>  
+> @@ -383,8 +408,8 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair)
+>  	/* Implement word_width configurations */
+>  	regmap_update_bits(asrc_priv->regmap, REG_ASRMCR1(index),
+>  			   ASRMCR1i_OW16_MASK | ASRMCR1i_IWD_MASK,
+> -			   ASRMCR1i_OW16(config->output_word_width) |
+> -			   ASRMCR1i_IWD(config->input_word_width));
+> +			   ASRMCR1i_OW16(output_word_width) |
+> +			   ASRMCR1i_IWD(input_word_width));
+>  
+>  	/* Enable BUFFER STALL */
+>  	regmap_update_bits(asrc_priv->regmap, REG_ASRMCR(index),
+> @@ -497,13 +522,13 @@ static int fsl_asrc_dai_hw_params(struct snd_pcm_substream *substream,
+>  				  struct snd_soc_dai *dai)
 >  {
->  	if (type =3D=3D KMALLOC_RECLAIM)
->  		flags |=3D SLAB_RECLAIM_ACCOUNT;
-> @@ -1210,7 +1210,8 @@ new_kmalloc_cache(int idx, int type, slab_flags_t f=
-lags)
->   */
->  void __init create_kmalloc_caches(slab_flags_t flags)
->  {
-> -	int i, type;
-> +	int i;
-> +	enum kmalloc_cache_type type;
-> =20
->  	for (type =3D KMALLOC_NORMAL; type <=3D KMALLOC_RECLAIM; type++) {
->  		for (i =3D KMALLOC_SHIFT_LOW; i <=3D KMALLOC_SHIFT_HIGH; i++) {
-> --=20
+>  	struct fsl_asrc *asrc_priv = snd_soc_dai_get_drvdata(dai);
+> -	int width = params_width(params);
+>  	struct snd_pcm_runtime *runtime = substream->runtime;
+>  	struct fsl_asrc_pair *pair = runtime->private_data;
+>  	unsigned int channels = params_channels(params);
+>  	unsigned int rate = params_rate(params);
+>  	struct asrc_config config;
+> -	int word_width, ret;
+> +	snd_pcm_format_t format;
+> +	int ret;
+>  
+>  	ret = fsl_asrc_request_pair(channels, pair);
+>  	if (ret) {
+> @@ -513,15 +538,10 @@ static int fsl_asrc_dai_hw_params(struct snd_pcm_substream *substream,
+>  
+>  	pair->config = &config;
+>  
+> -	if (width == 16)
+> -		width = ASRC_WIDTH_16_BIT;
+> -	else
+> -		width = ASRC_WIDTH_24_BIT;
+> -
+>  	if (asrc_priv->asrc_width == 16)
+> -		word_width = ASRC_WIDTH_16_BIT;
+> +		format = SNDRV_PCM_FORMAT_S16_LE;
+>  	else
+> -		word_width = ASRC_WIDTH_24_BIT;
+> +		format = SNDRV_PCM_FORMAT_S24_LE;
+>  
+>  	config.pair = pair->index;
+>  	config.channel_num = channels;
+> @@ -529,13 +549,13 @@ static int fsl_asrc_dai_hw_params(struct snd_pcm_substream *substream,
+>  	config.outclk = OUTCLK_ASRCK1_CLK;
+>  
+>  	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
+> -		config.input_word_width   = width;
+> -		config.output_word_width  = word_width;
+> +		config.input_format   = params_format(params);
+> +		config.output_format  = format;
+>  		config.input_sample_rate  = rate;
+>  		config.output_sample_rate = asrc_priv->asrc_rate;
+>  	} else {
+> -		config.input_word_width   = word_width;
+> -		config.output_word_width  = width;
+> +		config.input_format   = format;
+> +		config.output_format  = params_format(params);
+>  		config.input_sample_rate  = asrc_priv->asrc_rate;
+>  		config.output_sample_rate = rate;
+>  	}
+> diff --git a/sound/soc/fsl/fsl_asrc.h b/sound/soc/fsl/fsl_asrc.h
+> index c60075112570..38af485bdd22 100644
+> --- a/sound/soc/fsl/fsl_asrc.h
+> +++ b/sound/soc/fsl/fsl_asrc.h
+> @@ -342,8 +342,8 @@ struct asrc_config {
+>  	unsigned int dma_buffer_size;
+>  	unsigned int input_sample_rate;
+>  	unsigned int output_sample_rate;
+> -	enum asrc_word_width input_word_width;
+> -	enum asrc_word_width output_word_width;
+> +	snd_pcm_format_t input_format;
+> +	snd_pcm_format_t output_format;
+>  	enum asrc_inclk inclk;
+>  	enum asrc_outclk outclk;
+>  };
+> -- 
 > 2.21.0
->=20
->=20
+> 
