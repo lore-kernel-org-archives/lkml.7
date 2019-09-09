@@ -2,109 +2,73 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D36C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 21:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB7BC4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 21:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12A8021924
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 21:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EA07218DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 21:23:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=redchan.it header.i=@redchan.it header.b="uSADzH9P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391795AbfIIVVg (ORCPT
+        id S2391820AbfIIVX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 17:21:36 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6940 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726930AbfIIVVg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 17:21:36 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x89LHMWW084360;
-        Mon, 9 Sep 2019 17:21:10 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uwx5srscx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 09 Sep 2019 17:21:10 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x89LKCWU022942;
-        Mon, 9 Sep 2019 21:21:09 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma04dal.us.ibm.com with ESMTP id 2uv466twy5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 09 Sep 2019 21:21:09 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x89LL7KI57672074
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 9 Sep 2019 21:21:07 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B78C4C605A;
-        Mon,  9 Sep 2019 21:21:07 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 189C6C6059;
-        Mon,  9 Sep 2019 21:21:06 +0000 (GMT)
-Received: from oc6857751186.ibm.com (unknown [9.80.200.46])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon,  9 Sep 2019 21:21:05 +0000 (GMT)
-Subject: Re: [PATCH] net/ibmvnic: Fix missing { in __ibmvnic_reset
-To:     Michal Suchanek <msuchanek@suse.de>, netdev@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Juliet Kim <julietk@linux.vnet.ibm.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Thomas Falcon <tlfalcon@linux.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        John Allen <jallen@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-References: <20190909204451.7929-1-msuchanek@suse.de>
-From:   Tyrel Datwyler <tyreld@linux.ibm.com>
-Message-ID: <060cae7c-48bf-bddd-5086-a2a0d8f02c1a@linux.ibm.com>
-Date:   Mon, 9 Sep 2019 14:21:04 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 9 Sep 2019 17:23:26 -0400
+Received: from mx1.cock.li ([185.10.68.5]:58913 "EHLO cock.li"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726930AbfIIVX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 17:23:26 -0400
 MIME-Version: 1.0
-In-Reply-To: <20190909204451.7929-1-msuchanek@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=redchan.it; s=mail;
+        t=1568064203; bh=1XEKiW8lRosRp7rTNF760ZAE09CwkhitKBAyDD8ktjc=;
+        h=Date:From:To:Subject:From;
+        b=uSADzH9PiLbC8Nd7LhtoeXHx+ru3qjS6/C0qq6wHdXRufGWUfITmYQCrfEGsszk1b
+         3M4eY/Amp2ynWQUQtQZ6yfrS1ggioa46HVOuP9VUbaVpKoqWlDsll4ijT/bdlmGfD9
+         PEy93cL/seQOwchXu+0dCq5J9L/VYPF/n5ErkwqbDq1NX93gFX+X5cvc1pCzZs/TRV
+         NA1SuE/vHMdVMps4rXUz2Rw2wWjkO57A2iueQJIQF7oRhzEaIuoSgmKFx0HABLhSyE
+         uvYSQkj184K/FeAhz1Y7nqYsTwo5dIxFqoMOU6AjBbjCPQewgj7CQQlCD+01sdDspv
+         NV6ARha3YaP6w==
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-09_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909090206
+Date:   Mon, 09 Sep 2019 21:23:22 +0000
+From:   gameonlinux@redchan.it
+To:     linux-kernel@vger.kernel.org
+Subject: Why isn't Grsecurity being sued for its long standing GPL
+ violations??
+Message-ID: <f009c26462922b125d65a21041e22f12@redchan.it>
+X-Sender: gameonlinux@redchan.it
+User-Agent: Roundcube Webmail/1.3.6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/9/19 1:44 PM, Michal Suchanek wrote:
-> Commit 1c2977c09499 ("net/ibmvnic: free reset work of removed device from queue")
-> adds a } without corresponding { causing build break.
-> 
-> Fixes: 1c2977c09499 ("net/ibmvnic: free reset work of removed device from queue")
-> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+Hi, RMS and Bruce Perens;
 
-Reviewed-by: Tyrel Datwyler <tyreld@linux.ibm.com>
+I noticed that recently Grsecurity's Brad Spengler (who sued you, Bruce, 
+for speaking the truth), decided to "Flex" and basically advertise while 
+chastising the linux community:
 
-> ---
->  drivers/net/ethernet/ibm/ibmvnic.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
-> index 6644cabc8e75..5cb55ea671e3 100644
-> --- a/drivers/net/ethernet/ibm/ibmvnic.c
-> +++ b/drivers/net/ethernet/ibm/ibmvnic.c
-> @@ -1984,7 +1984,7 @@ static void __ibmvnic_reset(struct work_struct *work)
->  	rwi = get_next_rwi(adapter);
->  	while (rwi) {
->  		if (adapter->state == VNIC_REMOVING ||
-> -		    adapter->state == VNIC_REMOVED)
-> +		    adapter->state == VNIC_REMOVED) {
->  			kfree(rwi);
->  			rc = EBUSY;
->  			break;
-> 
+news.ycombinator.com/item?id=20874470
 
+
+Another poster then pointed out the history of Grsecurity's copyright 
+violations (as a derivative work that is restricting redistribution), 
+but said he didn't want to say to much, because he didn't want to get 
+sued. He referenced your good write-up on the situation: 
+perens.com/2017/06/28/warning-grsecurity-potential-contributory-infringement-risk-for-customers/
+
+(Which has not changed)
+
+Why isn't Grsecurity being sued for it's copyright violations? They've 
+been going on for years now. Clearly their scheme works: it can be shown 
+to a court both the attempt to restrict redistribution was tendered (the 
+agreement) and that said attempt has been successful.
+
+Also isn't Open Source Security simply an alter-ego of Brad Spengler? 
+Him being the only employee? Couldn't the corporate veil be pierced and 
+he be found personally liable for any damages?
