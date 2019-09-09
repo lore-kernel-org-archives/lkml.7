@@ -6,125 +6,94 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4064C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F40C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B01E82054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:06:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C105321920
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:06:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729563AbfIIKGP (ORCPT
+        id S2390033AbfIIKG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 06:06:15 -0400
-Received: from mga12.intel.com ([192.55.52.136]:38333 "EHLO mga12.intel.com"
+        Mon, 9 Sep 2019 06:06:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48224 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729534AbfIIKGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 06:06:15 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Sep 2019 03:06:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,484,1559545200"; 
-   d="scan'208";a="208918441"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga004.fm.intel.com with ESMTP; 09 Sep 2019 03:06:10 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1i7GYi-0006Q9-Nv; Mon, 09 Sep 2019 13:06:08 +0300
-Date:   Mon, 9 Sep 2019 13:06:08 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Yury Norov <yury.norov@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Amritha Nambiar <amritha.nambiar@intel.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Tobin C . Harding" <tobin@kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Vineet Gupta <vineet.gupta1@synopsys.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Subject: Re: [PATCH 5/7] lib: rework bitmap_parse()
-Message-ID: <20190909100608.GR2680@smile.fi.intel.com>
-References: <20190909033021.11600-1-yury.norov@gmail.com>
- <20190909033021.11600-6-yury.norov@gmail.com>
+        id S1728993AbfIIKGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 06:06:55 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 56B3F3090FC2;
+        Mon,  9 Sep 2019 10:06:55 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-117-59.ams2.redhat.com [10.36.117.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E8DAA10018F8;
+        Mon,  9 Sep 2019 10:06:54 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 0588916E19; Mon,  9 Sep 2019 12:06:54 +0200 (CEST)
+Date:   Mon, 9 Sep 2019 12:06:53 +0200
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 05/17] drm: add mmap() to drm_gem_object_funcs
+Message-ID: <20190909100653.hyo4psakt3ccfwjk@sirius.home.kraxel.org>
+References: <20190808134417.10610-1-kraxel@redhat.com>
+ <20190808134417.10610-6-kraxel@redhat.com>
+ <20190903094859.GQ2112@phenom.ffwll.local>
+ <20190906121318.r4nvoacazvwukuun@sirius.home.kraxel.org>
+ <CAKMK7uHFS8uW15NMEzN92POD2hyhkvKFgePdjgL=D-noUAkq3Q@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190909033021.11600-6-yury.norov@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAKMK7uHFS8uW15NMEzN92POD2hyhkvKFgePdjgL=D-noUAkq3Q@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Mon, 09 Sep 2019 10:06:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 08, 2019 at 08:30:19PM -0700, Yury Norov wrote:
-> bitmap_parse() is ineffective and full of opaque variables and opencoded
-> parts. It leads to hard understanding and usage of it. This rework
-> includes:
->  - remove bitmap_shift_left() call from the cycle. Now it makes the
->    complexity of the algorithm as O(nbits^2). In the suggested approach
->    the input string is parsed in reverse direction, so no shifts needed;
->  - relax requirement on a single comma and no white spaces between chunks.
->    It is considered useful in scripting, and it aligns with
->    bitmap_parselist();
->  - split bitmap_parse() to small readable helpers;
->  - make an explicit calculation of the end of input line at the
->    beginning, so users of the bitmap_parse() won't bother doing this.
+  Hi,
 
-> +static const char *bitmap_get_x32_reverse(const char *start,
-> +					const char *end, u32 *num)
-> +{
-> +	u32 ret = 0;
-> +	int c, i;
-> +
+> > +               vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;
+> > +               vma->vm_page_prot = pgprot_writecombine(vm_get_page_prot(vma->vm_flags));
+> > +               vma->vm_page_prot = pgprot_decrypted(vma->vm_page_prot);
+> > +       }
+> 
+> Totally unrelated discussion around HMM lead me to a bit a chase, and
+> realizing that we probably want a
+> 
+>     WARN_ON(!(vma->vm_flags & VM_SPECIAL));
+> 
+> here, to make sure drivers set at least one of the "this is a special
+> vma, don't try to treat it like pagecache/anon memory". Just to be on
+> the safe side. Maybe we also want to keep the entire vma->vm_flags
+> assignment in the common code, but at least the WARN_ON would be a
+> good check I think. Maybe also check for VM_DONTEXPAND while at it
 
-> +	if (!isxdigit(*end))
-> +		return ERR_PTR(-EINVAL);
+Hmm.  VM_SPECIAL is this:
 
-This seems redundant...
+  #define VM_SPECIAL (VM_IO | VM_DONTEXPAND | VM_PFNMAP | VM_MIXEDMAP)
 
-> +
-> +	for (i = 0; i < 32; i += 4) {
+Requiring VM_DONTEXPAND makes sense for sure.  Dunno about the other
+ones.  For drm_gem_vram_helper VM_IO + VM_PFNMAP are needed.
 
-> +		c = hex_to_bin(*end--);
-> +		if (c < 0)
-> +			return ERR_PTR(-EINVAL);
+But we also have drm_gem_shmem_helper which backs objects with normal
+pages.  In fact drm_gem_shmem_mmap does this:
 
-...because this will do the same check.
+	/* VM_PFNMAP was set by drm_gem_mmap() */
+	vma->vm_flags &= ~VM_PFNMAP;
+	vma->vm_flags |= VM_MIXEDMAP;
 
-Am I right?
+include/linux/mm.h isn't very helpful in explaining how VM_MIXEDMAP
+should be used, only saying can be both "struct page" and pfnmap, so I'm
+not sure why VM_MIXEDMAP is set here, it should always be "struct page"
+for shmem, no?
 
-> +
-> +		ret |= c << i;
-> +
-> +		if (start > end || __end_of_region(*end))
-> +			goto out;
-> +	}
-> +
-
-> +	if (isxdigit(*end))
-> +		return ERR_PTR(-EOVERFLOW);
-
-hex_to_bin() doesn't rely on ctype array, won't drain caches.
-I guess it's not a fast path, so, either will work.
-
-> +out:
-> +	*num = ret;
-> +	return end;
-> +}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+cheers,
+  Gerd
 
