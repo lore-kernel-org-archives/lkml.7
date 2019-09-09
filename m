@@ -2,132 +2,146 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2904BC433EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9442FC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1EF52081B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:23:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568031805;
-	bh=j+nJAObCnTMbStMf0Ed0gMHQwTL69m4fItnMMBq3cXw=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=Ntx3IvAAnm8Gdd2+oG0dh9AFYY1F3mAbIW9XFC7NHowMsdspwKMlKF4363CSZqzqQ
-	 tQGBIjDviVRDOmpAQOA+oW2u2tcRu4tjzQUCYgzzBGc26Mrb/gkLjtKHERgTwAunly
-	 E+cVoIvv1FcRP6UEDdrm65WsB42eS86gOPq1KpT8=
+	by mail.kernel.org (Postfix) with ESMTP id 716AD2084D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:28:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404863AbfIIMXY (ORCPT
+        id S1727173AbfIIM2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 08:23:24 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58958 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726713AbfIIMXX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 08:23:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=g2Kl09/G8KmBIkN8NIh1/fww/rzbJVZdQXmIM8fX1Zw=; b=CHPumrqgM0Cz
-        +jJDrrtUXXEPXJELpNV654D9GqzTZYmk9HGir9R5tqphnF4UP3wz/c40MuH2mZ2cBJ/0Q8djh9fpF
-        Hu4k+LA46j478UYNTDAU72CqQaWB7N6sk+UN5bhYq+/QVBG1F5kFgvILUL0Gcxx45TumRhqGqhldf
-        f7gtU=;
-Received: from [148.69.85.38] (helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1i7IhS-0002Iv-MM; Mon, 09 Sep 2019 12:23:18 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 0F1E0D02D4C; Mon,  9 Sep 2019 13:23:18 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Keerthy <j-keerthy@ti.com>, Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: lp87565: Simplify lp87565_buck_set_ramp_delay" to the regulator tree
-In-Reply-To: <20190908035720.17748-1-axel.lin@ingics.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20190909122318.0F1E0D02D4C@fitzroy.sirena.org.uk>
-Date:   Mon,  9 Sep 2019 13:23:18 +0100 (BST)
+        Mon, 9 Sep 2019 08:28:19 -0400
+Received: from mx2.mailbox.org ([80.241.60.215]:38106 "EHLO mx2.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726377AbfIIM2T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 08:28:19 -0400
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx2.mailbox.org (Postfix) with ESMTPS id E3311A1563;
+        Mon,  9 Sep 2019 14:28:14 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter01.heinlein-hosting.de (spamfilter01.heinlein-hosting.de [80.241.56.115]) (amavisd-new, port 10030)
+        with ESMTP id P6hzAd9wlhqS; Mon,  9 Sep 2019 14:28:10 +0200 (CEST)
+Date:   Mon, 9 Sep 2019 22:28:02 +1000
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>
+Cc:     James Morris <jmorris@namei.org>, Jeff Layton <jlayton@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+        linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Eric Chiang <ericchiang@google.com>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Philippe =?utf-8?Q?Tr=C3=A9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] fs: Add support for an O_MAYEXEC flag on
+ sys_open()
+Message-ID: <20190909122802.imfx6wp4zeroktuz@yavin>
+References: <20190906152455.22757-2-mic@digikod.net>
+ <87ef0te7v3.fsf@oldenburg2.str.redhat.com>
+ <75442f3b-a3d8-12db-579a-2c5983426b4d@ssi.gouv.fr>
+ <f53ec45fd253e96d1c8d0ea6f9cca7f68afa51e3.camel@kernel.org>
+ <1fbf54f6-7597-3633-a76c-11c4b2481add@ssi.gouv.fr>
+ <5a59b309f9d0603d8481a483e16b5d12ecb77540.camel@kernel.org>
+ <alpine.LRH.2.21.1909061202070.18660@namei.org>
+ <49e98ece-e85f-3006-159b-2e04ba67019e@ssi.gouv.fr>
+ <alpine.LRH.2.21.1909090309260.27895@namei.org>
+ <073cb831-7c6b-1882-9b7d-eb810a2ef955@ssi.gouv.fr>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="no5u7udk75jfhvvn"
+Content-Disposition: inline
+In-Reply-To: <073cb831-7c6b-1882-9b7d-eb810a2ef955@ssi.gouv.fr>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
 
-   regulator: lp87565: Simplify lp87565_buck_set_ramp_delay
+--no5u7udk75jfhvvn
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-has been applied to the regulator tree at
+On 2019-09-09, Micka=EBl Sala=FCn <mickael.salaun@ssi.gouv.fr> wrote:
+> On 09/09/2019 12:12, James Morris wrote:
+> > On Mon, 9 Sep 2019, Micka=EBl Sala=FCn wrote:
+> >> As I said, O_MAYEXEC should be ignored if it is not supported by the
+> >> kernel, which perfectly fit with the current open(2) flags behavior, a=
+nd
+> >> should also behave the same with openat2(2).
+> >
+> > The problem here is programs which are already using the value of
+> > O_MAYEXEC, which will break.  Hence, openat2(2).
+>=20
+> Well, it still depends on the sysctl, which doesn't enforce anything by
+> default, hence doesn't break existing behavior, and this unused flags
+> could be fixed/removed or reported by sysadmins or distro developers.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.4
+Okay, but then this means that new programs which really want to enforce
+O_MAYEXEC (and know that they really do want this feature) won't be able
+to unless an admin has set the relevant sysctl. Not to mention that the
+old-kernel fallback will not cover the "it's disabled by the sysctl"
+case -- so the fallback handling would need to be:
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+    int fd =3D open("foo", O_MAYEXEC|O_RDONLY);
+    if (!(fcntl(fd, F_GETFL) & O_MAYEXEC))
+        fallback();
+    if (!sysctl_feature_is_enabled)
+        fallback();
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+However, there is still a race here -- if an administrator enables
+O_MAYEXEC after the program gets the fd, then you still won't hit the
+fallback (and you can't tell that O_MAYEXEC checks weren't done).
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+You could fix the issue with the sysctl by clearing O_MAYEXEC from
+f_flags if the sysctl is disabled. You could also avoid some of the
+problems with it being a global setting by making it a prctl(2) which
+processes can opt-in to (though this has its own major problems).
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Sorry, but I'm just really not a fan of this.
 
-Thanks,
-Mark
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
 
-From 6cadd8ae213678be654042ff8655630d84272ec3 Mon Sep 17 00:00:00 2001
-From: Axel Lin <axel.lin@ingics.com>
-Date: Sun, 8 Sep 2019 11:57:20 +0800
-Subject: [PATCH] regulator: lp87565: Simplify lp87565_buck_set_ramp_delay
+--no5u7udk75jfhvvn
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Use rdev->regmap/&rdev->dev instead of lp87565->regmap/lp87565->dev.
-In additional, the lp87565->dev actually is the parent mfd device,
-so the dev_err message is misleading here with lp87565->dev.
+-----BEGIN PGP SIGNATURE-----
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Link: https://lore.kernel.org/r/20190908035720.17748-1-axel.lin@ingics.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/regulator/lp87565-regulator.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXXZFTwAKCRCdlLljIbnQ
+EtYQAP92uUzYfjG2cN2Nhj9vRhmas2XNnL0JbyC5U6zyFRSNVgEAwyjwWaK6kTQb
+EJallcqZNlIhaATVDcNFHXkpq0QtTQ0=
+=Hxqm
+-----END PGP SIGNATURE-----
 
-diff --git a/drivers/regulator/lp87565-regulator.c b/drivers/regulator/lp87565-regulator.c
-index 0c440c5e2832..4ae12ac1f4c6 100644
---- a/drivers/regulator/lp87565-regulator.c
-+++ b/drivers/regulator/lp87565-regulator.c
-@@ -65,7 +65,6 @@ static int lp87565_buck_set_ramp_delay(struct regulator_dev *rdev,
- 				       int ramp_delay)
- {
- 	int id = rdev_get_id(rdev);
--	struct lp87565 *lp87565 = rdev_get_drvdata(rdev);
- 	unsigned int reg;
- 	int ret;
- 
-@@ -86,11 +85,11 @@ static int lp87565_buck_set_ramp_delay(struct regulator_dev *rdev,
- 	else
- 		reg = 0;
- 
--	ret = regmap_update_bits(lp87565->regmap, regulators[id].ctrl2_reg,
-+	ret = regmap_update_bits(rdev->regmap, regulators[id].ctrl2_reg,
- 				 LP87565_BUCK_CTRL_2_SLEW_RATE,
- 				 reg << __ffs(LP87565_BUCK_CTRL_2_SLEW_RATE));
- 	if (ret) {
--		dev_err(lp87565->dev, "SLEW RATE write failed: %d\n", ret);
-+		dev_err(&rdev->dev, "SLEW RATE write failed: %d\n", ret);
- 		return ret;
- 	}
- 
--- 
-2.20.1
-
+--no5u7udk75jfhvvn--
