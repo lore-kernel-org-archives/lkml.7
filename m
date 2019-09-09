@@ -2,68 +2,92 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C05EC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 19:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAFFBC4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 19:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 206C921D79
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 19:40:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568058009;
-	bh=l9yk5C9PIOyhPJqJ+6kH32ph1DRKYAUwjm1iJI+zw9k=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=VmBavKyz7ThPSRghV18OGhn+MLjI7KCDU/k9ZMkmlZulCxW+K3RT6KbARRi5rbgoi
-	 YioSbldJQMi/u7AV1NwZEHBd8W4yp/FlTc2G/lqiNXZYZKwZjyXWPWKkNliPYJwBaF
-	 MHpBnVY90NhBMruVJn/B0yFErblCPueOwS1utpqQ=
+	by mail.kernel.org (Postfix) with ESMTP id C3F4021924
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 19:40:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t5udcyTT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405821AbfIITkI (ORCPT
+        id S2405841AbfIITkN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 15:40:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40126 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405742AbfIITkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 15:40:07 -0400
-Subject: Re: [GIT PULL] regulator fixes for 5.3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568058006;
-        bh=l9yk5C9PIOyhPJqJ+6kH32ph1DRKYAUwjm1iJI+zw9k=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=tLtj/Yohggg28i176KYvl0eKqKjjd2/GEGIFmVq2UeyUCcO16LME6gbNmSor+d30C
-         gi67oSiztUyvZKwTZoWDd5cZnNhbk7NSXkrbCnUBqlVpoXpjuKip4/utCcEHq73euM
-         YbKL78OkqCG5s1jYs+t9gjfBKeme5fu5Vx7EBH64=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190909141604.GI2036@sirena.org.uk>
-References: <20190909141604.GI2036@sirena.org.uk>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190909141604.GI2036@sirena.org.uk>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git
- tags/regulator-fix-v5.3-rc8
-X-PR-Tracked-Commit-Id: 3829100a63724f6dbf264b2a7f06e7f638ed952d
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 56037cadf60461b4a2996b4d8f0057c4d343c17c
-Message-Id: <156805800683.31009.6693230726754417981.pr-tracker-bot@kernel.org>
-Date:   Mon, 09 Sep 2019 19:40:06 +0000
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>
+        Mon, 9 Sep 2019 15:40:13 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46914 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405742AbfIITkK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 15:40:10 -0400
+Received: by mail-pl1-f196.google.com with SMTP id t1so7044557plq.13;
+        Mon, 09 Sep 2019 12:40:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=k2rJm4CvH7ItooDwGblk7C556UgxQ12QlPbAY4dgCvo=;
+        b=t5udcyTTtFusDIAv00yIHTd8JqEAe+ZYWx63Ch1wybLIi4SWr/4uYM6l5hcqnvrpGY
+         IXLNyEz2To25QeMzA2+EaFL+8/E1e7SaLpFDEm1Z/pvcmMNYxoa7082ShsS982ikDgYP
+         C6OM1wxkehNO6hJGs3xhHdtnjEQ4zf2hxD4EFGPoe4TCFevakfve6hF+0xEWfF+09iWc
+         d4z+rPrky50JaH+lTCtBxhEeZMTSTPXAR6NE2eKQj0fXa5i+kh0dnbEP5SXVyj4LSqP1
+         3tqMFc3O2U/jbpHtIwANrFS+TLUTt9IWCpD/R1DcPQIa+lpO2e+tnbmAoyttlFBentqN
+         UQrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=k2rJm4CvH7ItooDwGblk7C556UgxQ12QlPbAY4dgCvo=;
+        b=RXp61uNeiUHvbu9wJ9i0kSgqUqlcSA7PsCEvUVHSuisUwKpE9zWrRbZHkWYE+EstHP
+         dJSLn8FFehHmBwlDAdGwDYyVppmURmoj3uM3OGhc5urwysFiLL8ebFzkRwCo3Cbxa2Sv
+         KgQ3YQqim+PA0IXviq8KoAUTveDLCLK4nXaruL/K8jHKLeXcdvyhUxMTeR36rjsPN+8g
+         ePFZ++VdE1+4+J0zhzyOL95eZ21ocIAtypfed42WsWYgvmRzit/+/WWbgVUNjBhBSZ9T
+         fm3Pr6hyCCGFR3smfdA3rtMAuYk5cBBBCudvAjhX5TpqXGdhGNASdn/Hmbnj3ksrQcsu
+         Q/5A==
+X-Gm-Message-State: APjAAAWiE2GZb8Jl9Oa686IyMiUFs67UQVBukzSl+PqSgcsvwbjXpvZi
+        XP4d3bODdjCNzjR43/Lnl6A=
+X-Google-Smtp-Source: APXvYqw2bPlVQJ/6oKoqhHbTwK+WILfFIcVuWcQH+JPfKFpsofBZKOpHXPLi5dZ3GHd4OW0a+7ukKg==
+X-Received: by 2002:a17:902:b598:: with SMTP id a24mr26743032pls.5.1568058009111;
+        Mon, 09 Sep 2019 12:40:09 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id r18sm14843158pfc.3.2019.09.09.12.40.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 09 Sep 2019 12:40:08 -0700 (PDT)
+Date:   Mon, 9 Sep 2019 12:40:07 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.2 00/94] 5.2.14-stable review
+Message-ID: <20190909194007.GD22633@roeck-us.net>
+References: <20190908121150.420989666@linuxfoundation.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 9 Sep 2019 15:16:04 +0100:
+On Sun, Sep 08, 2019 at 01:40:56PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.2.14 release.
+> There are 94 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Tue 10 Sep 2019 12:09:36 PM UTC.
+> Anything received after that time might be too late.
+> 
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/regulator-fix-v5.3-rc8
+Build results:
+	total: 159 pass: 159 fail: 0
+Qemu test results:
+	total: 390 pass: 390 fail: 0
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/56037cadf60461b4a2996b4d8f0057c4d343c17c
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Guenter
