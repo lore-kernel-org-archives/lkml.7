@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCB8C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C409C4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4FE3222C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:23:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB6B82089F
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:23:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="eJ1w8LF2"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="U0XMlxSQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390603AbfIIKXt (ORCPT
+        id S2390637AbfIIKXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 06:23:49 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39827 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390550AbfIIKXq (ORCPT
+        Mon, 9 Sep 2019 06:23:51 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55820 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390570AbfIIKXs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 06:23:46 -0400
-Received: by mail-wm1-f67.google.com with SMTP id q12so13993928wmj.4
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 03:23:45 -0700 (PDT)
+        Mon, 9 Sep 2019 06:23:48 -0400
+Received: by mail-wm1-f66.google.com with SMTP id g207so13144394wmg.5
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 03:23:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=f7Bzmc8unRj2o3NCWa0+dcZGFlGvmP3kCEEVnSXhkOA=;
-        b=eJ1w8LF2MYSOvsRCvj7XcfJA5lhEO87R1bLBeu65GW2j/DGqZqPprE6kQ/hoghBzbS
-         w6IdbZv33BK7k8oJg6WhQJ6q45RWIDsL9J4I4lmQeSytRwscjSdlC1vPe0up/jQedywO
-         ozLkAMFRLRFb272kZZBTRLL+klZgN6S6NvqmWL2zm4s8aU7nI6u7NRc01CFL+L4mhfAq
-         13ec60iL8+uugHfNqWE9jgWn4GLDuRC4ysdNh03NZwYyadGN2ZTHGbRzb+wzh1HI8hEf
-         RWxOlKkMMFrrMbl/ZDjywr90FbmUdRl8ZatAWFuhFYCT3A9SCDF+Qy7Us1qtVzMPfVr+
-         5ZRQ==
+        bh=IA0pHM62rBt/shfTkMZDw95CUns+TQYkKXXhJayt/9U=;
+        b=U0XMlxSQHq3X/3eDTFp9gMAg0RdWOTmIkI/8SejEwVjgRQkVN+mKfrmUO+6NK/B19i
+         J69SZuDgx6wSWiNJhyc+jxxJEjQODQtB3ii8qA590akliD2WOFuq8riSf4PUfQ1u9Wf7
+         HS8bUT+5T+5sgYfQjU/Nu0NUXkiPluWQZmVPxBfmlLGgEQGKoDx+XP8/rpRjdOoUQAXx
+         RUAUlmzy+KiDwBC3+RmSfExy8zDPCh320PC2BcR3iO0d+DSrkCR+Oc9s8IjP0SRHFW/b
+         Ivu2JW+UQMoQ2lhqXigxazO1duoF/4UIYCn4Oz8AuedOqrEd4r2+vw/AQajRaKAGjjrM
+         KOTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=f7Bzmc8unRj2o3NCWa0+dcZGFlGvmP3kCEEVnSXhkOA=;
-        b=Aze8nQO0qTQ6zFcQGMGO/kZsL8lGlXm97VYCLKKgwKxcg5CFJH1ICyhCmmHywl/tZd
-         cJYi7FBiUnGNC3l84YMTDkU9j9KgLtVGKwvwHUnLOj0kuxYjtVAF1jIMCRzEhYLxG+2d
-         GIDgAST+RwmaV07SkAsnHjcRLbHRap60byr8sGAIOncvcPGustaRJFfqO07fGZLlyOAK
-         zRIyKfIyvlnkV72c8edIVklZibeEmqPhXpKPZvxskBYjU+TzxbwOtwVfamZ731zF4zjp
-         hy4A0uU3+OTylG8ws0e72E82TaT/GxK5Ei6YOn9OUj3vuvsBIU64OjvEo/fkvKqCY5q+
-         2ZrA==
-X-Gm-Message-State: APjAAAUBsFm4OL+0oNpcrNLGvOTeYFWHV6vX537XujceWhRpIoXS7oHN
-        txsLN06Hx3HcFq5IeBWKfYzPmglhwHpUiQ==
-X-Google-Smtp-Source: APXvYqzmxzn7Fo/gtLbCgxCJksmoaFbMVNn7wj0/OSQx0ISZVsTWLDyDCK67zQsOMozuUO5BCkL7Zg==
-X-Received: by 2002:a1c:1acc:: with SMTP id a195mr18081713wma.106.1568024624900;
-        Mon, 09 Sep 2019 03:23:44 -0700 (PDT)
+        bh=IA0pHM62rBt/shfTkMZDw95CUns+TQYkKXXhJayt/9U=;
+        b=WeeZKVr6LK8hgOC31EQ6OUv6DndjcmmEz1MmtgYnKstl5RcmxOQIOKwdFSu5E01sEo
+         /edbv609Oh53O2GrlRPeZCtDmmxkuEcMwUdsgp11fQtawXU69wGZTgw8wZbHs9BD4oSw
+         fI90aEzrzJEyMfJvoDMBOlcmcyif4I/QX9MHjwt0zC3EzLFU8t/L9KoHmOdawlIUQr4J
+         mKIy+uI1r0PORp8gi1DCSMi3hbIZ8uQqe4QU77OAvYrAKs/3HhLkgM9F4zSk0z8Lz22T
+         AD94T4JDnI1K4nvidrdVhA6X2i8bL28OKnnB/KX3aoiTYXBKZINuHmdWuN/QTYmpbazW
+         Tdwg==
+X-Gm-Message-State: APjAAAW+deXv+8m7bzq2NnL4txh0+L70Qk/Rr5ngOum27vHnqmHaIeO6
+        dEcTTaZwl/XaAMJfW8R6s4mae1vMIiKrxg==
+X-Google-Smtp-Source: APXvYqxO92spFZfDerxwHiQLtm1hbtX83culFxinsCcT06VZq/PB8u2x8luUXD3yumaETBFthgzPsg==
+X-Received: by 2002:a1c:a558:: with SMTP id o85mr18092823wme.30.1568024626269;
+        Mon, 09 Sep 2019 03:23:46 -0700 (PDT)
 Received: from Mindolluin.localdomain ([148.69.85.38])
-        by smtp.gmail.com with ESMTPSA id d14sm1800008wrj.27.2019.09.09.03.23.43
+        by smtp.gmail.com with ESMTPSA id d14sm1800008wrj.27.2019.09.09.03.23.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Sep 2019 03:23:44 -0700 (PDT)
+        Mon, 09 Sep 2019 03:23:45 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -71,9 +71,9 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         containers@lists.linux-foundation.org,
         linux-fsdevel@vger.kernel.org
-Subject: [PATCH 1/9] futex: Remove unused uaddr2 in restart_block
-Date:   Mon,  9 Sep 2019 11:23:32 +0100
-Message-Id: <20190909102340.8592-2-dima@arista.com>
+Subject: [PATCH 2/9] restart_block: Prevent userspace set part of the block
+Date:   Mon,  9 Sep 2019 11:23:33 +0100
+Message-Id: <20190909102340.8592-3-dima@arista.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190909102340.8592-1-dima@arista.com>
 References: <20190909102340.8592-1-dima@arista.com>
@@ -84,28 +84,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Not used since introduction in commit 52400ba94675 ("futex: add
-requeue_pi functionality").
-The result union stays the same size, so nothing saved in task_struct,
-but still one __user pointer less to keep.
+Parameters for nanosleep() could be chosen the way to make
+hrtimer_nanosleep() fail. In that case changes to restarter_block bring
+it into inconsistent state. Luckily, it won't corrupt anything critical
+for poll() or futex(). But as it's not evident that userspace may do
+tricks in the union changing restart_block for other @fs(s) - than
+further changes in the code may create a potential local vulnerability.
+
+I.e., if userspace could do tricks with poll() or futex() than
+corruption to @clockid or @type would trigger BUG() in timer code.
+
+Set @fn every time restart_block is changed, preventing surprises.
+Also, add a comment for any new restart_block user.
 
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- include/linux/restart_block.h | 1 -
- 1 file changed, 1 deletion(-)
+ include/linux/restart_block.h  | 4 ++++
+ kernel/time/hrtimer.c          | 8 +++++---
+ kernel/time/posix-cpu-timers.c | 6 +++---
+ kernel/time/posix-stubs.c      | 8 +++++---
+ kernel/time/posix-timers.c     | 8 +++++---
+ 5 files changed, 22 insertions(+), 12 deletions(-)
 
 diff --git a/include/linux/restart_block.h b/include/linux/restart_block.h
-index bba2920e9c05..e5078cae5567 100644
+index e5078cae5567..e66e982105f4 100644
 --- a/include/linux/restart_block.h
 +++ b/include/linux/restart_block.h
-@@ -32,7 +32,6 @@ struct restart_block {
- 			u32 flags;
- 			u32 bitset;
- 			u64 time;
--			u32 __user *uaddr2;
- 		} futex;
- 		/* For nanosleep */
- 		struct {
+@@ -21,6 +21,10 @@ enum timespec_type {
+ 
+ /*
+  * System call restart block.
++ *
++ * Safety rule: if you change anything inside @restart_block,
++ * set @fn to keep the structure in consistent state and prevent
++ * userspace tricks in the union.
+  */
+ struct restart_block {
+ 	long (*fn)(struct restart_block *);
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index 5ee77f1a8a92..4ba2b50d068f 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -1762,8 +1762,9 @@ SYSCALL_DEFINE2(nanosleep, struct __kernel_timespec __user *, rqtp,
+ 	if (!timespec64_valid(&tu))
+ 		return -EINVAL;
+ 
+-	current->restart_block.nanosleep.type = rmtp ? TT_NATIVE : TT_NONE;
+-	current->restart_block.nanosleep.rmtp = rmtp;
++	current->restart_block.fn		= do_no_restart_syscall;
++	current->restart_block.nanosleep.type	= rmtp ? TT_NATIVE : TT_NONE;
++	current->restart_block.nanosleep.rmtp	= rmtp;
+ 	return hrtimer_nanosleep(&tu, HRTIMER_MODE_REL, CLOCK_MONOTONIC);
+ }
+ 
+@@ -1782,7 +1783,8 @@ SYSCALL_DEFINE2(nanosleep_time32, struct old_timespec32 __user *, rqtp,
+ 	if (!timespec64_valid(&tu))
+ 		return -EINVAL;
+ 
+-	current->restart_block.nanosleep.type = rmtp ? TT_COMPAT : TT_NONE;
++	current->restart_block.fn		= do_no_restart_syscall;
++	current->restart_block.nanosleep.type	= rmtp ? TT_COMPAT : TT_NONE;
+ 	current->restart_block.nanosleep.compat_rmtp = rmtp;
+ 	return hrtimer_nanosleep(&tu, HRTIMER_MODE_REL, CLOCK_MONOTONIC);
+ }
+diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.c
+index 0a426f4e3125..b4dddf74dd15 100644
+--- a/kernel/time/posix-cpu-timers.c
++++ b/kernel/time/posix-cpu-timers.c
+@@ -1243,6 +1243,8 @@ void set_process_cpu_timer(struct task_struct *tsk, unsigned int clock_idx,
+ 	tick_dep_set_signal(tsk->signal, TICK_DEP_BIT_POSIX_TIMER);
+ }
+ 
++static long posix_cpu_nsleep_restart(struct restart_block *restart_block);
++
+ static int do_cpu_nanosleep(const clockid_t which_clock, int flags,
+ 			    const struct timespec64 *rqtp)
+ {
+@@ -1330,6 +1332,7 @@ static int do_cpu_nanosleep(const clockid_t which_clock, int flags,
+ 		 * Report back to the user the time still remaining.
+ 		 */
+ 		restart = &current->restart_block;
++		restart->fn = posix_cpu_nsleep_restart;
+ 		restart->nanosleep.expires = expires;
+ 		if (restart->nanosleep.type != TT_NONE)
+ 			error = nanosleep_copyout(restart, &it.it_value);
+@@ -1338,8 +1341,6 @@ static int do_cpu_nanosleep(const clockid_t which_clock, int flags,
+ 	return error;
+ }
+ 
+-static long posix_cpu_nsleep_restart(struct restart_block *restart_block);
+-
+ static int posix_cpu_nsleep(const clockid_t which_clock, int flags,
+ 			    const struct timespec64 *rqtp)
+ {
+@@ -1361,7 +1362,6 @@ static int posix_cpu_nsleep(const clockid_t which_clock, int flags,
+ 		if (flags & TIMER_ABSTIME)
+ 			return -ERESTARTNOHAND;
+ 
+-		restart_block->fn = posix_cpu_nsleep_restart;
+ 		restart_block->nanosleep.clockid = which_clock;
+ 	}
+ 	return error;
+diff --git a/kernel/time/posix-stubs.c b/kernel/time/posix-stubs.c
+index 67df65f887ac..d73039a9ca8f 100644
+--- a/kernel/time/posix-stubs.c
++++ b/kernel/time/posix-stubs.c
+@@ -142,8 +142,9 @@ SYSCALL_DEFINE4(clock_nanosleep, const clockid_t, which_clock, int, flags,
+ 		return -EINVAL;
+ 	if (flags & TIMER_ABSTIME)
+ 		rmtp = NULL;
+-	current->restart_block.nanosleep.type = rmtp ? TT_NATIVE : TT_NONE;
+-	current->restart_block.nanosleep.rmtp = rmtp;
++	current->restart_block.fn		= do_no_restart_syscall;
++	current->restart_block.nanosleep.type	= rmtp ? TT_NATIVE : TT_NONE;
++	current->restart_block.nanosleep.rmtp	= rmtp;
+ 	return hrtimer_nanosleep(&t, flags & TIMER_ABSTIME ?
+ 				 HRTIMER_MODE_ABS : HRTIMER_MODE_REL,
+ 				 which_clock);
+@@ -228,7 +229,8 @@ SYSCALL_DEFINE4(clock_nanosleep_time32, clockid_t, which_clock, int, flags,
+ 		return -EINVAL;
+ 	if (flags & TIMER_ABSTIME)
+ 		rmtp = NULL;
+-	current->restart_block.nanosleep.type = rmtp ? TT_COMPAT : TT_NONE;
++	current->restart_block.fn		= do_no_restart_syscall;
++	current->restart_block.nanosleep.type	= rmtp ? TT_COMPAT : TT_NONE;
+ 	current->restart_block.nanosleep.compat_rmtp = rmtp;
+ 	return hrtimer_nanosleep(&t, flags & TIMER_ABSTIME ?
+ 				 HRTIMER_MODE_ABS : HRTIMER_MODE_REL,
+diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
+index d7f2d91acdac..0ca0bfc20aff 100644
+--- a/kernel/time/posix-timers.c
++++ b/kernel/time/posix-timers.c
+@@ -1189,8 +1189,9 @@ SYSCALL_DEFINE4(clock_nanosleep, const clockid_t, which_clock, int, flags,
+ 		return -EINVAL;
+ 	if (flags & TIMER_ABSTIME)
+ 		rmtp = NULL;
+-	current->restart_block.nanosleep.type = rmtp ? TT_NATIVE : TT_NONE;
+-	current->restart_block.nanosleep.rmtp = rmtp;
++	current->restart_block.fn		= do_no_restart_syscall;
++	current->restart_block.nanosleep.type	= rmtp ? TT_NATIVE : TT_NONE;
++	current->restart_block.nanosleep.rmtp	= rmtp;
+ 
+ 	return kc->nsleep(which_clock, flags, &t);
+ }
+@@ -1216,7 +1217,8 @@ SYSCALL_DEFINE4(clock_nanosleep_time32, clockid_t, which_clock, int, flags,
+ 		return -EINVAL;
+ 	if (flags & TIMER_ABSTIME)
+ 		rmtp = NULL;
+-	current->restart_block.nanosleep.type = rmtp ? TT_COMPAT : TT_NONE;
++	current->restart_block.fn		= do_no_restart_syscall;
++	current->restart_block.nanosleep.type	= rmtp ? TT_COMPAT : TT_NONE;
+ 	current->restart_block.nanosleep.compat_rmtp = rmtp;
+ 
+ 	return kc->nsleep(which_clock, flags, &t);
 -- 
 2.23.0
 
