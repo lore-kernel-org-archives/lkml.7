@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C41E9C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C22C49ED6
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CB0121D7B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F373F21D7B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:16:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568067391;
-	bh=g76naGs97Ybb8HLkSTNdZwBrQayN+tkzV82EWo/D3AQ=;
+	s=default; t=1568067396;
+	bh=Zqd5/E63vnr/mwIYahJPTQHIhkHsBfJp65brYETECCo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=twlPCYoryFffoYCB5v66ofVvJ2yd36v2BDDS2vrhGxznVBVSFhjFoYFMtKOouqOxB
-	 G7GmFl1/NK2pD80LDp/uCUsesZvhzE2t8yKrGorBi2WClBPAff+EAJbV1h8maCxVQU
-	 k067MvCdwiJAo9H+QogGJAhn0pNFUsf2UWAsiskM=
+	b=RpKgF94shBiLkpoYkhocwAUeg5ppUTEhiSHp7NknatNz3g6IjtWuU52aTPvNJjwxl
+	 zyzq37oN/SfTEpfhlwx3AWjbUgGgUU6UP5fEbrTnteDxqHltBCYDYiTIdYTN/fER1x
+	 RxzXzz+3j73nBeQNRFocPgQNfikaK0dZAS3fniWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406157AbfIIWQa (ORCPT
+        id S2406178AbfIIWQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 18:16:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45294 "EHLO mail.kernel.org"
+        Mon, 9 Sep 2019 18:16:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392099AbfIIWQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 18:16:26 -0400
+        id S2406149AbfIIWQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 18:16:30 -0400
 Received: from sasha-vm.mshome.net (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6303D222BF;
-        Mon,  9 Sep 2019 22:16:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B829E21D7B;
+        Mon,  9 Sep 2019 22:16:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568067385;
-        bh=g76naGs97Ybb8HLkSTNdZwBrQayN+tkzV82EWo/D3AQ=;
+        s=default; t=1568067389;
+        bh=Zqd5/E63vnr/mwIYahJPTQHIhkHsBfJp65brYETECCo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p8c3JL7WzHBCEkPtsBiAa+SIQF60qDJOB1yAuJoM3gOoN5wun43gGqr+8YTGWdGIV
-         j71fO2R7VLRsoIOD+khnzmD54qRhraFCsiSk8KsbrmJGe95d6WtwpzAblsivvOyyh/
-         yKTTM00WPWyecSylCcehVBlrw5Ezh7fXoRxvAFmQ=
+        b=DtSD5kRpWOmMKHecazLXZfeqDRlayQc8eUPuTSXb5SWEP0gFs11nNEV1KoRUoLjBW
+         Urmyu772gIT5yy5iUJPc0BOM/75FD9UjQ2d+sziGHd1zJ7y/Pnrq2jd1GfesFzAng2
+         1aUbWWMbRkDinO5NHJqPSocGyKH/r6fLYyweMAoY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 09/12] dmaengine: rcar-dmac: Fix DMACHCLR handling if iommu is mapped
-Date:   Mon,  9 Sep 2019 11:40:49 -0400
-Message-Id: <20190909154052.30941-9-sashal@kernel.org>
+Cc:     Stuart Hayes <stuart.w.hayes@gmail.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 5.2 11/12] iommu/amd: Flush old domains in kdump kernel
+Date:   Mon,  9 Sep 2019 11:40:51 -0400
+Message-Id: <20190909154052.30941-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190909154052.30941-1-sashal@kernel.org>
 References: <20190909154052.30941-1-sashal@kernel.org>
@@ -61,131 +60,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+From: Stuart Hayes <stuart.w.hayes@gmail.com>
 
-[ Upstream commit cf24aac38698bfa1d021afd3883df3c4c65143a4 ]
+[ Upstream commit 36b7200f67dfe75b416b5281ed4ace9927b513bc ]
 
-The commit 20c169aceb45 ("dmaengine: rcar-dmac: clear pertinence
-number of channels") forgets to clear the last channel by
-DMACHCLR in rcar_dmac_init() (and doesn't need to clear the first
-channel) if iommu is mapped to the device. So, this patch fixes it
-by using "channels_mask" bitfield.
+When devices are attached to the amd_iommu in a kdump kernel, the old device
+table entries (DTEs), which were copied from the crashed kernel, will be
+overwritten with a new domain number.  When the new DTE is written, the IOMMU
+is told to flush the DTE from its internal cache--but it is not told to flush
+the translation cache entries for the old domain number.
 
-Note that the hardware and driver don't support more than 32 bits
-in DMACHCLR register anyway, so this patch should reject more than
-32 channels in rcar_dmac_parse_of().
+Without this patch, AMD systems using the tg3 network driver fail when kdump
+tries to save the vmcore to a network system, showing network timeouts and
+(sometimes) IOMMU errors in the kernel log.
 
-Fixes: 20c169aceb459575 ("dmaengine: rcar-dmac: clear pertinence number of channels")
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/1567424643-26629-1-git-send-email-yoshihiro.shimoda.uh@renesas.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+This patch will flush IOMMU translation cache entries for the old domain when
+a DTE gets overwritten with a new domain number.
+
+Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+Fixes: 3ac3e5ee5ed5 ('iommu/amd: Copy old trans table from old kernel')
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/sh/rcar-dmac.c | 28 +++++++++++++++++++---------
- 1 file changed, 19 insertions(+), 9 deletions(-)
+ drivers/iommu/amd_iommu.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/drivers/dma/sh/rcar-dmac.c b/drivers/dma/sh/rcar-dmac.c
-index 54de669c38b84..f1d89bdebddab 100644
---- a/drivers/dma/sh/rcar-dmac.c
-+++ b/drivers/dma/sh/rcar-dmac.c
-@@ -192,6 +192,7 @@ struct rcar_dmac_chan {
-  * @iomem: remapped I/O memory base
-  * @n_channels: number of available channels
-  * @channels: array of DMAC channels
-+ * @channels_mask: bitfield of which DMA channels are managed by this driver
-  * @modules: bitmask of client modules in use
-  */
- struct rcar_dmac {
-@@ -202,6 +203,7 @@ struct rcar_dmac {
- 
- 	unsigned int n_channels;
- 	struct rcar_dmac_chan *channels;
-+	unsigned int channels_mask;
- 
- 	DECLARE_BITMAP(modules, 256);
- };
-@@ -438,7 +440,7 @@ static int rcar_dmac_init(struct rcar_dmac *dmac)
- 	u16 dmaor;
- 
- 	/* Clear all channels and enable the DMAC globally. */
--	rcar_dmac_write(dmac, RCAR_DMACHCLR, GENMASK(dmac->n_channels - 1, 0));
-+	rcar_dmac_write(dmac, RCAR_DMACHCLR, dmac->channels_mask);
- 	rcar_dmac_write(dmac, RCAR_DMAOR,
- 			RCAR_DMAOR_PRI_FIXED | RCAR_DMAOR_DME);
- 
-@@ -814,6 +816,9 @@ static void rcar_dmac_stop_all_chan(struct rcar_dmac *dmac)
- 	for (i = 0; i < dmac->n_channels; ++i) {
- 		struct rcar_dmac_chan *chan = &dmac->channels[i];
- 
-+		if (!(dmac->channels_mask & BIT(i)))
-+			continue;
-+
- 		/* Stop and reinitialize the channel. */
- 		spin_lock_irq(&chan->lock);
- 		rcar_dmac_chan_halt(chan);
-@@ -1776,6 +1781,8 @@ static int rcar_dmac_chan_probe(struct rcar_dmac *dmac,
- 	return 0;
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index dce1d8d2e8a44..b265062edf6c8 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -1143,6 +1143,17 @@ static void amd_iommu_flush_tlb_all(struct amd_iommu *iommu)
+ 	iommu_completion_wait(iommu);
  }
  
-+#define RCAR_DMAC_MAX_CHANNELS	32
++static void amd_iommu_flush_tlb_domid(struct amd_iommu *iommu, u32 dom_id)
++{
++	struct iommu_cmd cmd;
 +
- static int rcar_dmac_parse_of(struct device *dev, struct rcar_dmac *dmac)
++	build_inv_iommu_pages(&cmd, 0, CMD_INV_IOMMU_ALL_PAGES_ADDRESS,
++			      dom_id, 1);
++	iommu_queue_command(iommu, &cmd);
++
++	iommu_completion_wait(iommu);
++}
++
+ static void amd_iommu_flush_all(struct amd_iommu *iommu)
  {
- 	struct device_node *np = dev->of_node;
-@@ -1787,12 +1794,16 @@ static int rcar_dmac_parse_of(struct device *dev, struct rcar_dmac *dmac)
- 		return ret;
- 	}
+ 	struct iommu_cmd cmd;
+@@ -1863,6 +1874,7 @@ static void set_dte_entry(u16 devid, struct protection_domain *domain,
+ {
+ 	u64 pte_root = 0;
+ 	u64 flags = 0;
++	u32 old_domid;
  
--	if (dmac->n_channels <= 0 || dmac->n_channels >= 100) {
-+	/* The hardware and driver don't support more than 32 bits in CHCLR */
-+	if (dmac->n_channels <= 0 ||
-+	    dmac->n_channels >= RCAR_DMAC_MAX_CHANNELS) {
- 		dev_err(dev, "invalid number of channels %u\n",
- 			dmac->n_channels);
- 		return -EINVAL;
- 	}
+ 	if (domain->mode != PAGE_MODE_NONE)
+ 		pte_root = iommu_virt_to_phys(domain->pt_root);
+@@ -1912,8 +1924,20 @@ static void set_dte_entry(u16 devid, struct protection_domain *domain,
+ 	flags &= ~DEV_DOMID_MASK;
+ 	flags |= domain->id;
  
-+	dmac->channels_mask = GENMASK(dmac->n_channels - 1, 0);
++	old_domid = amd_iommu_dev_table[devid].data[1] & DEV_DOMID_MASK;
+ 	amd_iommu_dev_table[devid].data[1]  = flags;
+ 	amd_iommu_dev_table[devid].data[0]  = pte_root;
 +
- 	return 0;
++	/*
++	 * A kdump kernel might be replacing a domain ID that was copied from
++	 * the previous kernel--if so, it needs to flush the translation cache
++	 * entries for the old domain ID that is being overwritten
++	 */
++	if (old_domid) {
++		struct amd_iommu *iommu = amd_iommu_rlookup_table[devid];
++
++		amd_iommu_flush_tlb_domid(iommu, old_domid);
++	}
  }
  
-@@ -1802,7 +1813,6 @@ static int rcar_dmac_probe(struct platform_device *pdev)
- 		DMA_SLAVE_BUSWIDTH_2_BYTES | DMA_SLAVE_BUSWIDTH_4_BYTES |
- 		DMA_SLAVE_BUSWIDTH_8_BYTES | DMA_SLAVE_BUSWIDTH_16_BYTES |
- 		DMA_SLAVE_BUSWIDTH_32_BYTES | DMA_SLAVE_BUSWIDTH_64_BYTES;
--	unsigned int channels_offset = 0;
- 	struct dma_device *engine;
- 	struct rcar_dmac *dmac;
- 	struct resource *mem;
-@@ -1831,10 +1841,8 @@ static int rcar_dmac_probe(struct platform_device *pdev)
- 	 * level we can't disable it selectively, so ignore channel 0 for now if
- 	 * the device is part of an IOMMU group.
- 	 */
--	if (device_iommu_mapped(&pdev->dev)) {
--		dmac->n_channels--;
--		channels_offset = 1;
--	}
-+	if (device_iommu_mapped(&pdev->dev))
-+		dmac->channels_mask &= ~BIT(0);
- 
- 	dmac->channels = devm_kcalloc(&pdev->dev, dmac->n_channels,
- 				      sizeof(*dmac->channels), GFP_KERNEL);
-@@ -1892,8 +1900,10 @@ static int rcar_dmac_probe(struct platform_device *pdev)
- 	INIT_LIST_HEAD(&engine->channels);
- 
- 	for (i = 0; i < dmac->n_channels; ++i) {
--		ret = rcar_dmac_chan_probe(dmac, &dmac->channels[i],
--					   i + channels_offset);
-+		if (!(dmac->channels_mask & BIT(i)))
-+			continue;
-+
-+		ret = rcar_dmac_chan_probe(dmac, &dmac->channels[i], i);
- 		if (ret < 0)
- 			goto error;
- 	}
+ static void clear_dte_entry(u16 devid)
 -- 
 2.20.1
 
