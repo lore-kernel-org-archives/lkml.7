@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B4A2C49ED6
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D84C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1005921A4A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDEF1218DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:08:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iyCNoECD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UuVcZXvR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391384AbfIIRIF (ORCPT
+        id S2405376AbfIIRIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 13:08:05 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42178 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726671AbfIIRIF (ORCPT
+        Mon, 9 Sep 2019 13:08:14 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45838 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726671AbfIIRIN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 13:08:05 -0400
-Received: by mail-pl1-f193.google.com with SMTP id x20so1182999plm.9
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 10:08:03 -0700 (PDT)
+        Mon, 9 Sep 2019 13:08:13 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y72so9515209pfb.12
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 10:08:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=56EyWssaHrVJPXE31hURcuC1V8/jFVhyZHz6XUKnzv4=;
-        b=iyCNoECDOGhglhMlMRkG/M7wbl7O38JmAXZDUDCqurGskhSuEn4XspMI6Qfu7HS8xO
-         fECJBHJV6n/tNnXBGcNSt/1X+yT/zFefW6X9lOXu7TzZCxRr3Dik/CRsCWFuEPpr+c53
-         9XXQUbrPoaFuEKGKMfJoed8hZvWs0AcNLVBA3iF7TzqfklzZ3yL1HWdjnRy7uoPCeW1i
-         5hSJ5ZFTklONYZ9MMpambhIr/neRlZnRBjsdeaqVJw+uudcOSu9pOUOJ+eJSAXEcB2QN
-         yiTXM5ZnzTuj/+kRn5wocADmc9t11qSrBNmr2YIHJ00zULjW5PtSwZwD2qOdhqowlYwn
-         LOeQ==
+        bh=IAG1VLKBZpRTEI8L4+2XUQIRSxmDIwmG8l7u8lqUj7s=;
+        b=UuVcZXvRYiGsCOXoX7QtHfrnf25gH30tm3Jr+MLFXtA0xo/UN3oUbJHtk5i1n0Ilb3
+         IZL9SiXjwDj+bm3AtV9wLg3n6Jswk30v2yH6HpLhfbrVl6pTWflcxilGtD/kV1H0aJ36
+         dB8Pr7vF+PX/NrDC4T6C40H5DtyEHkOJNskSEX+bN2SScynCsurEyZj2XeCPs2wRUr4g
+         HXNJk6SrR5OgR+WzJaTTuH0fMzZgKMpJr1BmKVQg6/zn1jE7cWhxg4MlOklK1NkWr0Wn
+         b8OpbRs1OD0DzyZNmS10ql7vR4FEOEGP+a/u8M9idhR2f52v15FWTrlXEQyJC8TprYCl
+         IaNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=56EyWssaHrVJPXE31hURcuC1V8/jFVhyZHz6XUKnzv4=;
-        b=TWOXTNjV9pyREdKXs/B04d5AqXV0b9SgTkQWvvKZZcCbUktzOXkKbXpcBXyysDPhOB
-         WQeG52xSk3UVtWr9PVyPqAcpFPbydKloQDwb3EheAI8568hRz3GkTAZ3ir+HfFIN6/X9
-         cC6BJ9Pu/j7G2cc2q6wHEW1o9SN2iTYqaSmnupg4EG5wF2qrcRG4kkLoC4BnrnK44fOL
-         OauPSwwBe5BflL5vJiixkGIBqaIoPYKmfDKjUwLEbDLiI6qxb4cRruzazxrePXGXfT58
-         lKDt6ZqvOZ+7mJmOEYHd0gtnqjsg3OsYia845MP6dZqFssXooAy5RHw0LHad4ShjgvHI
-         QBaA==
-X-Gm-Message-State: APjAAAXNSZF5ni0wt9lXtLfqam9+pRG3NbVwC4ywDFDigL+GnmLp7J9J
-        E/57VKkY4TEQ38oruAKPcSs=
-X-Google-Smtp-Source: APXvYqwsxupkaHDNE3np35kiBbRGjbnxlo+dJddSG3pXBMatNaTwVdu3vLn2rL9/M/hjaAvSteC1qA==
-X-Received: by 2002:a17:902:b40c:: with SMTP id x12mr25776031plr.236.1568048883253;
-        Mon, 09 Sep 2019 10:08:03 -0700 (PDT)
+        bh=IAG1VLKBZpRTEI8L4+2XUQIRSxmDIwmG8l7u8lqUj7s=;
+        b=DyZJpXWqM0mn2Pr4L3UDZqeWPaWUkUFzBHKQ1DOFrGeaoQcYwofOZ9/tKKLZ6Y1gXY
+         TBxLx7nt5jac6XtUxwNza4Ex/n4zbLslPUYRc4PEMXexs+T79wQvUc+QxajNfy8M/lze
+         4f2/sWx00EhSItcpE+Jxv/EXgimNw0dcn1Gu+2DuZY3X9Lrx4L7dNXUBry80+27XzmQ7
+         y792sQSLS9FPo1LjTnA11K+U4oKb6mvobuyFPH5QdjSWTPzwMirW3kc2RHOyBGeDoJSo
+         27qiIaLn1fAWM8qHXNet1/sWzl20DE37btdPlp1Tp9v5W2FyTRmUmuxKFYIGwD5QMs6d
+         bnGQ==
+X-Gm-Message-State: APjAAAUaZASmEqJ8F8YWlHmdG0IBr330bmwRjyhflqq0oXuVhhQVHUFK
+        1vEMnk7A48+a+qF/aDaXihs=
+X-Google-Smtp-Source: APXvYqwibHgZWR+jw1Ah4yMCwZtMRhATUb+KbugeO1jo6o8Yxx06YncsTn+5H5M9UI4Gh/rYQvApxA==
+X-Received: by 2002:a63:5823:: with SMTP id m35mr23177084pgb.329.1568048892858;
+        Mon, 09 Sep 2019 10:08:12 -0700 (PDT)
 Received: from localhost.localdomain.localdomain ([2408:823c:c11:160:b8c3:8577:bf2f:3])
-        by smtp.gmail.com with ESMTPSA id b18sm107015pju.16.2019.09.09.10.07.51
+        by smtp.gmail.com with ESMTPSA id b18sm107015pju.16.2019.09.09.10.08.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Sep 2019 10:08:02 -0700 (PDT)
+        Mon, 09 Sep 2019 10:08:12 -0700 (PDT)
 From:   Pengfei Li <lpf.vector@gmail.com>
 To:     akpm@linux-foundation.org
 Cc:     vbabka@suse.cz, cl@linux.com, penberg@kernel.org,
         rientjes@google.com, iamjoonsoo.kim@lge.com, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, Pengfei Li <lpf.vector@gmail.com>
-Subject: [PATCH v2 1/4] mm, slab: Make kmalloc_info[] contain all types of names
-Date:   Tue, 10 Sep 2019 01:07:12 +0800
-Message-Id: <20190909170715.32545-2-lpf.vector@gmail.com>
+Subject: [PATCH v2 2/4] mm, slab: Remove unused kmalloc_size()
+Date:   Tue, 10 Sep 2019 01:07:13 +0800
+Message-Id: <20190909170715.32545-3-lpf.vector@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190909170715.32545-1-lpf.vector@gmail.com>
 References: <20190909170715.32545-1-lpf.vector@gmail.com>
@@ -75,179 +75,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are three types of kmalloc, KMALLOC_NORMAL, KMALLOC_RECLAIM
-and KMALLOC_DMA.
-
-The name of KMALLOC_NORMAL is contained in kmalloc_info[].name,
-but the names of KMALLOC_RECLAIM and KMALLOC_DMA are dynamically
-generated by kmalloc_cache_name().
-
-This patch predefines the names of all types of kmalloc to save
-the time spent dynamically generating names.
-
-Besides, remove the kmalloc_cache_name() that is no longer used.
+The size of kmalloc can be obtained from kmalloc_info[],
+so remove kmalloc_size() that will not be used anymore.
 
 Signed-off-by: Pengfei Li <lpf.vector@gmail.com>
 Acked-by: Vlastimil Babka <vbabka@suse.cz>
 ---
- mm/slab.c        |  2 +-
- mm/slab.h        |  2 +-
- mm/slab_common.c | 93 ++++++++++++++++++++++++++----------------------
- 3 files changed, 52 insertions(+), 45 deletions(-)
+ include/linux/slab.h | 20 --------------------
+ mm/slab.c            |  5 +++--
+ mm/slab_common.c     |  5 ++---
+ 3 files changed, 5 insertions(+), 25 deletions(-)
 
-diff --git a/mm/slab.c b/mm/slab.c
-index 9df370558e5d..c42b6211f42e 100644
---- a/mm/slab.c
-+++ b/mm/slab.c
-@@ -1247,7 +1247,7 @@ void __init kmem_cache_init(void)
- 	 * structures first.  Without this, further allocations will bug.
- 	 */
- 	kmalloc_caches[KMALLOC_NORMAL][INDEX_NODE] = create_kmalloc_cache(
--				kmalloc_info[INDEX_NODE].name,
-+				kmalloc_info[INDEX_NODE].name[KMALLOC_NORMAL],
- 				kmalloc_size(INDEX_NODE), ARCH_KMALLOC_FLAGS,
- 				0, kmalloc_size(INDEX_NODE));
- 	slab_state = PARTIAL_NODE;
-diff --git a/mm/slab.h b/mm/slab.h
-index 9057b8056b07..2fc8f956906a 100644
---- a/mm/slab.h
-+++ b/mm/slab.h
-@@ -76,7 +76,7 @@ extern struct kmem_cache *kmem_cache;
- 
- /* A table of kmalloc cache names and sizes */
- extern const struct kmalloc_info_struct {
--	const char *name;
-+	const char *name[NR_KMALLOC_TYPES];
- 	unsigned int size;
- } kmalloc_info[];
- 
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index 807490fe217a..61c1e2e54263 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -1092,26 +1092,56 @@ struct kmem_cache *kmalloc_slab(size_t size, gfp_t flags)
- 	return kmalloc_caches[kmalloc_type(flags)][index];
+diff --git a/include/linux/slab.h b/include/linux/slab.h
+index 56c9c7eed34e..e773e5764b7b 100644
+--- a/include/linux/slab.h
++++ b/include/linux/slab.h
+@@ -557,26 +557,6 @@ static __always_inline void *kmalloc(size_t size, gfp_t flags)
+ 	return __kmalloc(size, flags);
  }
  
-+#ifdef CONFIG_ZONE_DMA
-+#define SET_KMALLOC_SIZE(__size, __short_size)			\
-+{								\
-+	.name[KMALLOC_NORMAL]  = "kmalloc-" #__short_size,	\
-+	.name[KMALLOC_RECLAIM] = "kmalloc-rcl-" #__short_size,	\
-+	.name[KMALLOC_DMA]     = "dma-kmalloc-" #__short_size,	\
-+	.size = __size,						\
-+}
-+#else
-+#define SET_KMALLOC_SIZE(__size, __short_size)			\
-+{								\
-+	.name[KMALLOC_NORMAL]  = "kmalloc-" #__short_size,	\
-+	.name[KMALLOC_RECLAIM] = "kmalloc-rcl-" #__short_size,	\
-+	.size = __size,						\
-+}
-+#endif
-+
- /*
-  * kmalloc_info[] is to make slub_debug=,kmalloc-xx option work at boot time.
-  * kmalloc_index() supports up to 2^26=64MB, so the final entry of the table is
-  * kmalloc-67108864.
-  */
--const struct kmalloc_info_struct kmalloc_info[] __initconst = {
--	{NULL,                      0},		{"kmalloc-96",             96},
--	{"kmalloc-192",           192},		{"kmalloc-8",               8},
--	{"kmalloc-16",             16},		{"kmalloc-32",             32},
--	{"kmalloc-64",             64},		{"kmalloc-128",           128},
--	{"kmalloc-256",           256},		{"kmalloc-512",           512},
--	{"kmalloc-1k",           1024},		{"kmalloc-2k",           2048},
--	{"kmalloc-4k",           4096},		{"kmalloc-8k",           8192},
--	{"kmalloc-16k",         16384},		{"kmalloc-32k",         32768},
--	{"kmalloc-64k",         65536},		{"kmalloc-128k",       131072},
--	{"kmalloc-256k",       262144},		{"kmalloc-512k",       524288},
--	{"kmalloc-1M",        1048576},		{"kmalloc-2M",        2097152},
--	{"kmalloc-4M",        4194304},		{"kmalloc-8M",        8388608},
--	{"kmalloc-16M",      16777216},		{"kmalloc-32M",      33554432},
--	{"kmalloc-64M",      67108864}
-+const struct kmalloc_info_struct kmalloc_info[] = {
-+	SET_KMALLOC_SIZE(0, 0),
-+	SET_KMALLOC_SIZE(96, 96),
-+	SET_KMALLOC_SIZE(192, 192),
-+	SET_KMALLOC_SIZE(8, 8),
-+	SET_KMALLOC_SIZE(16, 16),
-+	SET_KMALLOC_SIZE(32, 32),
-+	SET_KMALLOC_SIZE(64, 64),
-+	SET_KMALLOC_SIZE(128, 128),
-+	SET_KMALLOC_SIZE(256, 256),
-+	SET_KMALLOC_SIZE(512, 512),
-+	SET_KMALLOC_SIZE(1024, 1k),
-+	SET_KMALLOC_SIZE(2048, 2k),
-+	SET_KMALLOC_SIZE(4096, 4k),
-+	SET_KMALLOC_SIZE(8192, 8k),
-+	SET_KMALLOC_SIZE(16384, 16k),
-+	SET_KMALLOC_SIZE(32768, 32k),
-+	SET_KMALLOC_SIZE(65536, 64k),
-+	SET_KMALLOC_SIZE(131072, 128k),
-+	SET_KMALLOC_SIZE(262144, 256k),
-+	SET_KMALLOC_SIZE(524288, 512k),
-+	SET_KMALLOC_SIZE(1048576, 1M),
-+	SET_KMALLOC_SIZE(2097152, 2M),
-+	SET_KMALLOC_SIZE(4194304, 4M),
-+	SET_KMALLOC_SIZE(8388608, 8M),
-+	SET_KMALLOC_SIZE(16777216, 16M),
-+	SET_KMALLOC_SIZE(33554432, 32M),
-+	SET_KMALLOC_SIZE(67108864, 64M)
- };
- 
- /*
-@@ -1161,36 +1191,14 @@ void __init setup_kmalloc_cache_index_table(void)
- 	}
- }
- 
--static const char *
--kmalloc_cache_name(const char *prefix, unsigned int size)
+-/*
+- * Determine size used for the nth kmalloc cache.
+- * return size or 0 if a kmalloc cache for that
+- * size does not exist
+- */
+-static __always_inline unsigned int kmalloc_size(unsigned int n)
 -{
+-#ifndef CONFIG_SLOB
+-	if (n > 2)
+-		return 1U << n;
 -
--	static const char units[3] = "\0kM";
--	int idx = 0;
+-	if (n == 1 && KMALLOC_MIN_SIZE <= 32)
+-		return 96;
 -
--	while (size >= 1024 && (size % 1024 == 0)) {
--		size /= 1024;
--		idx++;
--	}
--
--	return kasprintf(GFP_NOWAIT, "%s-%u%c", prefix, size, units[idx]);
+-	if (n == 2 && KMALLOC_MIN_SIZE <= 64)
+-		return 192;
+-#endif
+-	return 0;
 -}
 -
- static void __init
- new_kmalloc_cache(int idx, int type, slab_flags_t flags)
+ static __always_inline void *kmalloc_node(size_t size, gfp_t flags, int node)
  {
--	const char *name;
--
--	if (type == KMALLOC_RECLAIM) {
-+	if (type == KMALLOC_RECLAIM)
- 		flags |= SLAB_RECLAIM_ACCOUNT;
--		name = kmalloc_cache_name("kmalloc-rcl",
--						kmalloc_info[idx].size);
--		BUG_ON(!name);
--	} else {
--		name = kmalloc_info[idx].name;
--	}
+ #ifndef CONFIG_SLOB
+diff --git a/mm/slab.c b/mm/slab.c
+index c42b6211f42e..7bc4e90e1147 100644
+--- a/mm/slab.c
++++ b/mm/slab.c
+@@ -1248,8 +1248,9 @@ void __init kmem_cache_init(void)
+ 	 */
+ 	kmalloc_caches[KMALLOC_NORMAL][INDEX_NODE] = create_kmalloc_cache(
+ 				kmalloc_info[INDEX_NODE].name[KMALLOC_NORMAL],
+-				kmalloc_size(INDEX_NODE), ARCH_KMALLOC_FLAGS,
+-				0, kmalloc_size(INDEX_NODE));
++				kmalloc_info[INDEX_NODE].size,
++				ARCH_KMALLOC_FLAGS, 0,
++				kmalloc_info[INDEX_NODE].size);
+ 	slab_state = PARTIAL_NODE;
+ 	setup_kmalloc_cache_index_table();
  
--	kmalloc_caches[type][idx] = create_kmalloc_cache(name,
-+	kmalloc_caches[type][idx] = create_kmalloc_cache(
-+					kmalloc_info[idx].name[type],
- 					kmalloc_info[idx].size, flags, 0,
- 					kmalloc_info[idx].size);
- }
-@@ -1232,11 +1240,10 @@ void __init create_kmalloc_caches(slab_flags_t flags)
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index 61c1e2e54263..cae27210e4c3 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -1239,11 +1239,10 @@ void __init create_kmalloc_caches(slab_flags_t flags)
+ 		struct kmem_cache *s = kmalloc_caches[KMALLOC_NORMAL][i];
  
  		if (s) {
- 			unsigned int size = kmalloc_size(i);
--			const char *n = kmalloc_cache_name("dma-kmalloc", size);
- 
--			BUG_ON(!n);
+-			unsigned int size = kmalloc_size(i);
+-
  			kmalloc_caches[KMALLOC_DMA][i] = create_kmalloc_cache(
--				n, size, SLAB_CACHE_DMA | flags, 0, 0);
-+				kmalloc_info[i].name[KMALLOC_DMA],
-+				size, SLAB_CACHE_DMA | flags, 0, 0);
+ 				kmalloc_info[i].name[KMALLOC_DMA],
+-				size, SLAB_CACHE_DMA | flags, 0, 0);
++				kmalloc_info[i].size,
++				SLAB_CACHE_DMA | flags, 0, 0);
  		}
  	}
  #endif
