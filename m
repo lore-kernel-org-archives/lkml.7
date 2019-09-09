@@ -7,49 +7,52 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_PAST_06_12,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1ADC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F068C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFBEE21A4C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:18:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0246621A4A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:18:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568067491;
-	bh=dHaNzdX8RhfYNR3G9kvpasvBZPNiOdCFP+q6x9pJ5Pw=;
+	s=default; t=1568067499;
+	bh=SD+/dPytZJTVINNwhSYESFDl7e+W+IhKtgomcj9nMj0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AoMyPYGCR7fwGfnBWfiqptLh4rPcs8FAL7tMohK2U9U2yRhe0SctR6yEtXucc+o4K
-	 Rbjr9qyYukGAdZ00JIeUWYr8Typ/n6NGsRmuiyEA8jfALfqcKgUUF+wXexMThi18kq
-	 PitVB4vUwP/W3k8+LvnYGf8XbwTvDWRTEL+IYd4U=
+	b=NpNi0AcMJu/hxNYmrrCRdux+2t7Wx+8dm2Oo2iQfkC9IeaN/bO0fkL/MLtItuWA1N
+	 IgLFOq63ciOw9eMcUUpwbhv+NymSO23UZI1yY8weLdKaY+uuElEMHBLWLLmU74XTnN
+	 DXu7uAYvwdQ8D752e0QjQIoIQELQCYr4yxQebSfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392330AbfIIWSL (ORCPT
+        id S1732371AbfIIWSS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 18:18:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46164 "EHLO mail.kernel.org"
+        Mon, 9 Sep 2019 18:18:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392116AbfIIWRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 18:17:10 -0400
+        id S2406323AbfIIWRG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 18:17:06 -0400
 Received: from sasha-vm.mshome.net (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5628B21A4A;
-        Mon,  9 Sep 2019 22:17:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7E5521D79;
+        Mon,  9 Sep 2019 22:17:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568067430;
-        bh=dHaNzdX8RhfYNR3G9kvpasvBZPNiOdCFP+q6x9pJ5Pw=;
+        s=default; t=1568067425;
+        bh=SD+/dPytZJTVINNwhSYESFDl7e+W+IhKtgomcj9nMj0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ax39/VFZxdJmES5KGL6q78BkOveA1gHv+bLy8/9QE3pI5CNhAI2JLvE3+CYhkjPLk
-         svNfVIPwYhyn27OhzEmVE2/f8MRiEHEYnyN2j/HNi7KuUTUCAtZWfBNB0xUh4CJEP7
-         ETRp6SFlbd6OymVgBNITK+rrzbp0DQ5Ouqk2HhY4=
+        b=KvYhKFWS/2CAYw1F65A0jEayrUeC8/6KEol+azhi/a5K+0ldzNvOPukHGcZI/OS+b
+         zWi+HYU8oOuCNSohsz+BpJOtK7HGPA65Occk3lphOx/3rtdRSdD8q59WUqORpGSQfC
+         XW8ZNrXo/Mh0YHMiqm67sK10W6wTbyNUWDcH4hus=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hillf Danton <hdanton@sina.com>,
-        Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        David Howells <dhowells@redhat.com>,
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Jong Hyun Park <park.jonghyun@yonsei.ac.kr>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Borislav Petkov <bp@alien8.de>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 6/8] keys: Fix missing null pointer check in request_key_auth_describe()
-Date:   Mon,  9 Sep 2019 11:41:43 -0400
-Message-Id: <20190909154145.31263-6-sashal@kernel.org>
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 4/8] x86/hyper-v: Fix overflow bug in fill_gva_list()
+Date:   Mon,  9 Sep 2019 11:41:41 -0400
+Message-Id: <20190909154145.31263-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190909154145.31263-1-sashal@kernel.org>
 References: <20190909154145.31263-1-sashal@kernel.org>
@@ -62,72 +65,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hillf Danton <hdanton@sina.com>
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-[ Upstream commit d41a3effbb53b1bcea41e328d16a4d046a508381 ]
+[ Upstream commit 4030b4c585c41eeefec7bd20ce3d0e100a0f2e4d ]
 
-If a request_key authentication token key gets revoked, there's a window in
-which request_key_auth_describe() can see it with a NULL payload - but it
-makes no check for this and something like the following oops may occur:
+When the 'start' parameter is >=  0xFF000000 on 32-bit
+systems, or >= 0xFFFFFFFF'FF000000 on 64-bit systems,
+fill_gva_list() gets into an infinite loop.
 
-	BUG: Kernel NULL pointer dereference at 0x00000038
-	Faulting instruction address: 0xc0000000004ddf30
-	Oops: Kernel access of bad area, sig: 11 [#1]
-	...
-	NIP [...] request_key_auth_describe+0x90/0xd0
-	LR [...] request_key_auth_describe+0x54/0xd0
-	Call Trace:
-	[...] request_key_auth_describe+0x54/0xd0 (unreliable)
-	[...] proc_keys_show+0x308/0x4c0
-	[...] seq_read+0x3d0/0x540
-	[...] proc_reg_read+0x90/0x110
-	[...] __vfs_read+0x3c/0x70
-	[...] vfs_read+0xb4/0x1b0
-	[...] ksys_read+0x7c/0x130
-	[...] system_call+0x5c/0x70
+With such inputs, 'cur' overflows after adding HV_TLB_FLUSH_UNIT
+and always compares as less than end.  Memory is filled with
+guest virtual addresses until the system crashes.
 
-Fix this by checking for a NULL pointer when describing such a key.
+Fix this by never incrementing 'cur' to be larger than 'end'.
 
-Also make the read routine check for a NULL pointer to be on the safe side.
-
-[DH: Modified to not take already-held rcu lock and modified to also check
- in the read routine]
-
-Fixes: 04c567d9313e ("[PATCH] Keys: Fix race between two instantiators of a key")
-Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Signed-off-by: Hillf Danton <hdanton@sina.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: Jong Hyun Park <park.jonghyun@yonsei.ac.kr>
+Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: 2ffd9e33ce4a ("x86/hyper-v: Use hypercall for remote TLB flush")
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/keys/request_key_auth.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/x86/hyperv/mmu.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/security/keys/request_key_auth.c b/security/keys/request_key_auth.c
-index 5e515791ccd11..1d34b2a5f485e 100644
---- a/security/keys/request_key_auth.c
-+++ b/security/keys/request_key_auth.c
-@@ -71,6 +71,9 @@ static void request_key_auth_describe(const struct key *key,
- {
- 	struct request_key_auth *rka = get_request_key_auth(key);
+diff --git a/arch/x86/hyperv/mmu.c b/arch/x86/hyperv/mmu.c
+index 56c9ebac946fe..47718fff0b797 100644
+--- a/arch/x86/hyperv/mmu.c
++++ b/arch/x86/hyperv/mmu.c
+@@ -57,12 +57,14 @@ static inline int fill_gva_list(u64 gva_list[], int offset,
+ 		 * Lower 12 bits encode the number of additional
+ 		 * pages to flush (in addition to the 'cur' page).
+ 		 */
+-		if (diff >= HV_TLB_FLUSH_UNIT)
++		if (diff >= HV_TLB_FLUSH_UNIT) {
+ 			gva_list[gva_n] |= ~PAGE_MASK;
+-		else if (diff)
++			cur += HV_TLB_FLUSH_UNIT;
++		}  else if (diff) {
+ 			gva_list[gva_n] |= (diff - 1) >> PAGE_SHIFT;
++			cur = end;
++		}
  
-+	if (!rka)
-+		return;
-+
- 	seq_puts(m, "key:");
- 	seq_puts(m, key->description);
- 	if (key_is_positive(key))
-@@ -88,6 +91,9 @@ static long request_key_auth_read(const struct key *key,
- 	size_t datalen;
- 	long ret;
+-		cur += HV_TLB_FLUSH_UNIT;
+ 		gva_n++;
  
-+	if (!rka)
-+		return -EKEYREVOKED;
-+
- 	datalen = rka->callout_len;
- 	ret = datalen;
- 
+ 	} while (cur < end);
 -- 
 2.20.1
 
