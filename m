@@ -2,221 +2,140 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CCAC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 989A4C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35ED52084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A585218AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:07:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="cv9n4SkV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730794AbfIILGM (ORCPT
+        id S2403881AbfIILG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 07:06:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41506 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730736AbfIILGL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 07:06:11 -0400
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 16405765BF
-        for <linux-kernel@vger.kernel.org>; Mon,  9 Sep 2019 11:06:11 +0000 (UTC)
-Received: by mail-wm1-f69.google.com with SMTP id r187so4411799wme.0
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 04:06:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7P1L82Hvd2CHZtV3y3+DuSRQWJRg8V37be+Beu7AiBw=;
-        b=UHtq+oTTBnhyLbjPPZv5oI8gNuLirPDd3P+4MIUTe5mIpqk/E1gPK67icjfm/Hfh8m
-         L1Td5JHNSqLiiWYYCuGsx4CtVAfR3Jm340KIq9shUqGR0zdR485aIaU6oT1iaRmgo+TI
-         7BPDGInvYuD79264iB6ssyMmBP1LFyx27f+EkTqIQutdKHklL4BSse3Gasx9mr+TFSV4
-         qElPhFE6DqjIC2JYZZlKC9a6pmQEF4ZHE/KPcbMykHBHzbV8CjqhVRfYC8XjbFbZOUOk
-         kkjs+yWTmzfTHt8ZRBDuPJ7XPO3EQq/2s9InYVLN7d0DhtvtfFno2NY6HFcLutNzvUig
-         xr8Q==
-X-Gm-Message-State: APjAAAWIOJpay6HAd4T2ie9URmQs6UcCbM9pMt+vVm1i8D4EDYlpaKej
-        KohykwBLLpNfzR2biqjOT6owKSmwrX42D14fVNYs3RHQOM83PjLbJ9L8bBdGf8f0/OLVVm3eTZQ
-        MwT5m0fmTEympQhkvoaCDLB0j
-X-Received: by 2002:adf:f284:: with SMTP id k4mr3118596wro.294.1568027169600;
-        Mon, 09 Sep 2019 04:06:09 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwpJObjRb41D20LhnQ/9bC6pyQl1DWX1ZWggr3xyk6OHo4dXPNZEDXNgLaeWrw8SqEtwG9mSQ==
-X-Received: by 2002:adf:f284:: with SMTP id k4mr3118569wro.294.1568027169308;
-        Mon, 09 Sep 2019 04:06:09 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:8dc1:ce1e:4b83:3ab7? ([2001:b07:6468:f312:8dc1:ce1e:4b83:3ab7])
-        by smtp.gmail.com with ESMTPSA id x5sm19207918wrg.69.2019.09.09.04.06.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Sep 2019 04:06:08 -0700 (PDT)
-Subject: Re: [PATCH] Revert "locking/pvqspinlock: Don't wait if vCPU is
- preempted"
-To:     Waiman Long <longman@redhat.com>, Wanpeng Li <kernellwp@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, loobinliu@tencent.com,
-        stable@vger.kernel.org
-References: <1567993228-23668-1-git-send-email-wanpengli@tencent.com>
- <29d04ee4-60e7-4df9-0c4f-fc29f2b0c6a8@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <fbf152a5-134b-0540-3345-cb6b0b66f1a1@redhat.com>
-Date:   Mon, 9 Sep 2019 13:06:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <29d04ee4-60e7-4df9-0c4f-fc29f2b0c6a8@redhat.com>
-Content-Type: text/plain; charset=utf-8
+        Mon, 9 Sep 2019 07:06:59 -0400
+Received: from mail-eopbgr80048.outbound.protection.outlook.com ([40.107.8.48]:17806
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730736AbfIILG7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 07:06:59 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=e+d+FzpDAx4P7zsooviAE33s2eFVqezBNNOWPHielXzTaG0CDhQwqztoEbZKukQ0SnO4dLuiJrEWnYpF3BxN0STanit0DgY0ssqq1JawD+Gy7YCrnWAP8d2VFN4gZp/+aADQOUatwkPQ6F8DnVv0fUmIDsftw2SvK3JRoM66inq5zGGDkaFKifPJv/N8vIUq6hLcIyOygyZzCYfStrgzZZ23EIQRdSTRe75Zu40AIVE/bdPWfSoOETvhrc9GsABZiuOykuwEykJUIjmYq74somWV//ENjlgrq0qJ9h5n9zQejl0isZhVWR7dQ+WuEDAS9QKbKr1Dv7eIy/JC5LSpxA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xC5dcL9KPQTv+UkE1TH4HjEAvs0ItV9nDTE1kwV3bIo=;
+ b=fefdnH+6FjFswzkqkgrnvRaPBQ/ARIaX3ipJiuVVDjVKWtxh8+U+K29Kxz90drOJhfw8Ashs8y4afPcB9AqS2v3GKzx+RXyBVLe6iY0RNDgDQDiRtgBvXgJ2AoyuHMGUDSV0/nYBKwpNMKj+BL1WElr7lj7SWoFt479dzT/YdLrp2FJdqT5uDEf0Yu41bzjKfE7KZkMRE7I45MGbzvThrTFJngoOKI2dbtDJet/ZG8JrX/liN8fg4TClOuh6A2zkEoed5FW3HWOjEsNhmHnyA+wl+F3aBy1Cn627NX9bSlwPgNsOPjuEppz1fRdYX7EvTq4CnhP2dg/i5YJ1UqFHvw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xC5dcL9KPQTv+UkE1TH4HjEAvs0ItV9nDTE1kwV3bIo=;
+ b=cv9n4SkVTPR/uqkJZL6cjQzgyhIvWaGbEGufbGExXxgCSB1jmyri3RHZ5fAiCgcY+tILY8o2YoxpSiURSRNAyXr/l1wJ9o+vZD8mvOAxJVUgLF4KhN1ZKEP/uEsd1EWUQaI3nUdI1VPzxpH2jjFc/MqmioAwp3s+hwlCrKTYa5A=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB3869.eurprd04.prod.outlook.com (52.134.16.155) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2241.18; Mon, 9 Sep 2019 11:06:55 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::c1a3:2946:8fa8:bfc5]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::c1a3:2946:8fa8:bfc5%3]) with mapi id 15.20.2241.018; Mon, 9 Sep 2019
+ 11:06:55 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>
+CC:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: crypto: caam - Cast to long first before pointer conversion
+Thread-Topic: crypto: caam - Cast to long first before pointer conversion
+Thread-Index: AQHVZuK7jqoo8Xzl5UmMoE1xvNTDUg==
+Date:   Mon, 9 Sep 2019 11:06:55 +0000
+Message-ID: <VI1PR0402MB3485C9E54BC85C98CBC72C7898B70@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <20190904023515.7107-1-andrew.smirnov@gmail.com>
+ <20190904023515.7107-5-andrew.smirnov@gmail.com>
+ <20190909074636.GA21024@gondor.apana.org.au>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8f9c5572-0a6f-4ce4-604d-08d73515d373
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3869;
+x-ms-traffictypediagnostic: VI1PR0402MB3869:|VI1PR0402MB3869:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB38698A606252F37105472B0598B70@VI1PR0402MB3869.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2331;
+x-forefront-prvs: 01559F388D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(39860400002)(366004)(396003)(136003)(189003)(199004)(110136005)(7696005)(76116006)(91956017)(26005)(476003)(6246003)(66066001)(6116002)(3846002)(102836004)(2906002)(53936002)(44832011)(66446008)(66946007)(64756008)(66556008)(446003)(486006)(4326008)(71190400001)(6436002)(6506007)(71200400001)(53546011)(99286004)(81166006)(81156014)(8676002)(76176011)(14454004)(66476007)(256004)(186003)(8936002)(14444005)(25786009)(5660300002)(55016002)(7736002)(52536014)(9686003)(74316002)(478600001)(305945005)(229853002)(316002)(33656002)(54906003)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3869;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: vxASCqj/8aWCBHNsL+QZZraU8HySb11mQUK6VjaBgQFFT6NSzX9MpMBQ3WTs+l149FQ5s2AumWFKzRY31J9QY1jHk0ajdjF7XKxXAzWPWSSVe0us/h9xQwf59uKMg87A9LUZinn3lDXhjBIsTWHZ0gX43j47H59UU7Xb1T5KeK/mIBpKZRTqm2g1Swtwkmb8QP34X+ZyT06nDUa4Cp+EEDle+s7J0INPEP5F6l8t9Wd9gVHFACaAhlMu1TyKFY6KnddSOQ5N9o6bWLSO/rRInFz+bzLfSVvp6Ln5TryTG/OaRY0TexIS7mSq80ae+v0EVmrCeZvRzSR/8ys9yWs+6nrR7Prn0QbpeTihOe+gTotlvDVV46ZtAt551V8/L/nzRNXQ9jhX4MMPvvQP9bX9ZSQQNjajD7nxMOX3sw2JekY=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8f9c5572-0a6f-4ce4-604d-08d73515d373
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Sep 2019 11:06:55.3324
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: dxaFnC6R5w2MLhCNN010nPPbkNOe5JTiaBuzFVZ9EcLo1yeSRPE4vFyyI99RdmfHmxV7PW6jS1+MlwF6yfUIFw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3869
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/09/19 12:56, Waiman Long wrote:
-> On 9/9/19 2:40 AM, Wanpeng Li wrote:
->> From: Wanpeng Li <wanpengli@tencent.com>
->>
->> This patch reverts commit 75437bb304b20 (locking/pvqspinlock: Don't wait if 
->> vCPU is preempted), we found great regression caused by this commit.
->>
->> Xeon Skylake box, 2 sockets, 40 cores, 80 threads, three VMs, each is 80 vCPUs.
->> The score of ebizzy -M can reduce from 13000-14000 records/s to 1700-1800 
->> records/s with this commit.
->>
->>           Host                       Guest                score
->>
->> vanilla + w/o kvm optimizes     vanilla               1700-1800 records/s
->> vanilla + w/o kvm optimizes     vanilla + revert      13000-14000 records/s
->> vanilla + w/ kvm optimizes      vanilla               4500-5000 records/s
->> vanilla + w/ kvm optimizes      vanilla + revert      14000-15500 records/s
->>
->> Exit from aggressive wait-early mechanism can result in yield premature and 
->> incur extra scheduling latency in over-subscribe scenario.
->>
->> kvm optimizes:
->> [1] commit d73eb57b80b (KVM: Boost vCPUs that are delivering interrupts)
->> [2] commit 266e85a5ec9 (KVM: X86: Boost queue head vCPU to mitigate lock waiter preemption)
->>
->> Tested-by: loobinliu@tencent.com
->> Cc: Peter Zijlstra <peterz@infradead.org>
->> Cc: Thomas Gleixner <tglx@linutronix.de>
->> Cc: Ingo Molnar <mingo@kernel.org>
->> Cc: Waiman Long <longman@redhat.com>
->> Cc: Paolo Bonzini <pbonzini@redhat.com>
->> Cc: Radim Krčmář <rkrcmar@redhat.com>
->> Cc: loobinliu@tencent.com
->> Cc: stable@vger.kernel.org 
->> Fixes: 75437bb304b20 (locking/pvqspinlock: Don't wait if vCPU is preempted)
->> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
->> ---
->>  kernel/locking/qspinlock_paravirt.h | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/kernel/locking/qspinlock_paravirt.h b/kernel/locking/qspinlock_paravirt.h
->> index 89bab07..e84d21a 100644
->> --- a/kernel/locking/qspinlock_paravirt.h
->> +++ b/kernel/locking/qspinlock_paravirt.h
->> @@ -269,7 +269,7 @@ pv_wait_early(struct pv_node *prev, int loop)
->>  	if ((loop & PV_PREV_CHECK_MASK) != 0)
->>  		return false;
->>  
->> -	return READ_ONCE(prev->state) != vcpu_running || vcpu_is_preempted(prev->cpu);
->> +	return READ_ONCE(prev->state) != vcpu_running;
->>  }
->>  
->>  /*
-> 
-> There are several possibilities for this performance regression:
-> 
-> 1) Multiple vcpus calling vcpu_is_preempted() repeatedly may cause some
-> cacheline contention issue depending on how that callback is implemented.
-
-Unlikely, it is a single percpu read.
-
-> 2) KVM may set the preempt flag for a short period whenver an vmexit
-> happens even if a vmenter is executed shortly after. In this case, we
-> may want to use a more durable vcpu suspend flag that indicates the vcpu
-> won't get a real vcpu back for a longer period of time.
-
-It sets it for exits to userspace, but they shouldn't really happen on a 
-properly-configured system.
-
-However, it's easy to test this theory:
-
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 2e302e977dac..feb6c75a7a88 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -3368,26 +3368,28 @@ void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
- {
- 	int idx;
- 
--	if (vcpu->preempted)
-+	if (vcpu->preempted) {
- 		vcpu->arch.preempted_in_kernel = !kvm_x86_ops->get_cpl(vcpu);
- 
--	/*
--	 * Disable page faults because we're in atomic context here.
--	 * kvm_write_guest_offset_cached() would call might_fault()
--	 * that relies on pagefault_disable() to tell if there's a
--	 * bug. NOTE: the write to guest memory may not go through if
--	 * during postcopy live migration or if there's heavy guest
--	 * paging.
--	 */
--	pagefault_disable();
--	/*
--	 * kvm_memslots() will be called by
--	 * kvm_write_guest_offset_cached() so take the srcu lock.
--	 */
--	idx = srcu_read_lock(&vcpu->kvm->srcu);
--	kvm_steal_time_set_preempted(vcpu);
--	srcu_read_unlock(&vcpu->kvm->srcu, idx);
--	pagefault_enable();
-+		/*
-+		 * Disable page faults because we're in atomic context here.
-+		 * kvm_write_guest_offset_cached() would call might_fault()
-+		 * that relies on pagefault_disable() to tell if there's a
-+		 * bug. NOTE: the write to guest memory may not go through if
-+		 * during postcopy live migration or if there's heavy guest
-+		 * paging.
-+		 */
-+		pagefault_disable();
-+		/*
-+		 * kvm_memslots() will be called by
-+		 * kvm_write_guest_offset_cached() so take the srcu lock.
-+		 */
-+		idx = srcu_read_lock(&vcpu->kvm->srcu);
-+		kvm_steal_time_set_preempted(vcpu);
-+		srcu_read_unlock(&vcpu->kvm->srcu, idx);
-+		pagefault_enable();
-+	}
-+
- 	kvm_x86_ops->vcpu_put(vcpu);
- 	vcpu->arch.last_host_tsc = rdtsc();
- 	/*
-
-Wanpeng, can you try?
-
-Paolo
-
-> Perhaps you can add a lock event counter to count the number of
-> wait_early events caused by vcpu_is_preempted() being true to see if it
-> really cause a lot more wait_early than without the vcpu_is_preempted()
-> call.
-> 
-> I have no objection to this, I just want to find out the root cause of it.
-> 
-> Cheers,
-> Longman
-> 
-
+On 9/9/2019 10:46 AM, Herbert Xu wrote:=0A=
+> On Tue, Sep 03, 2019 at 07:35:07PM -0700, Andrey Smirnov wrote:=0A=
+>> With IRQ requesting being managed by devres we need to make sure that=0A=
+>> we dispose of IRQ mapping after and not before it is free'd (otherwise=
+=0A=
+>> we'll end up with a warning from the kernel). To achieve that simply=0A=
+>> convert IRQ mapping to rely on devres as well.=0A=
+>>=0A=
+>> Fixes: f314f12db65c ("crypto: caam - convert caam_jr_init() to use devre=
+s")=0A=
+>> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>=0A=
+>> Cc: Chris Healy <cphealy@gmail.com>=0A=
+>> Cc: Lucas Stach <l.stach@pengutronix.de>=0A=
+>> Cc: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
+>> Cc: Herbert Xu <herbert@gondor.apana.org.au>=0A=
+>> Cc: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
+>> Cc: linux-crypto@vger.kernel.org=0A=
+>> Cc: linux-kernel@vger.kernel.org=0A=
+>> ---=0A=
+>>  drivers/crypto/caam/jr.c | 14 ++++++++++----=0A=
+>>  1 file changed, 10 insertions(+), 4 deletions(-)=0A=
+> =0A=
+> I needed to apply this on top of it to shut up the compiler:=0A=
+> =0A=
+> ---8<---=0A=
+> While storing an int in a pointer is safe the compiler is not=0A=
+> happy about it.  So we need some extra casting in order to make=0A=
+> this warning free.=0A=
+> =0A=
+> Fixes: 1d3f75bce123 ("crypto: caam - dispose of IRQ mapping only...")=0A=
+> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>=0A=
+> =0A=
+Thanks Herbert.=0A=
+=0A=
+Indeed, this is needed for silencing compilation on ARM64=0A=
+(while compiling for ARM works fine).=0A=
+=0A=
+Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
+for the squashed patches.=0A=
+=0A=
+Horia=0A=
