@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C8DC433EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 932C1C4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B038221920
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:24:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60F122089F
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:24:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="KWVXJKkg"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="lJfo7jVn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390757AbfIIKYD (ORCPT
+        id S2390712AbfIIKX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 06:24:03 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53569 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390695AbfIIKX7 (ORCPT
+        Mon, 9 Sep 2019 06:23:58 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53247 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390658AbfIIKXz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 06:23:59 -0400
-Received: by mail-wm1-f68.google.com with SMTP id q19so13138615wmc.3
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 03:23:57 -0700 (PDT)
+        Mon, 9 Sep 2019 06:23:55 -0400
+Received: by mail-wm1-f66.google.com with SMTP id t17so13162069wmi.2
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 03:23:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=3oTy+lkWbkFFfNbPOS2AOFsjB8RXGgtp9fv0BAsW7sw=;
-        b=KWVXJKkgFOQhTfLznVaJozh5R/o/MAC5kqv+Qml3IcuGyQxjB7qRq685l5cBV05Ipo
-         sgDx5/qcqGjKuGr9VE0lmZRjo/HjTZbkkbXFm/HX027RXGgT8qgkUTjbTsrWFaU78863
-         wzESbRXN+09ou7ZrrCkHTB5+c4ETLx6aCyp21N8Pjc66pFQFBWAMgaiwDL3tp77qaRTC
-         LYyBTNH8KtaVoQ83sVMzOlD8AG50aQKGghkExi80zGT8ETXPvABPF/W2N78ihbUogsQy
-         WLTY1RGj/p6SaQ17it8EMedrfkaaf3HfqKRE7kznmLO5rNb9bMj7AYrYWpRKlNzPSiQM
-         +LqQ==
+        bh=IfO/aFsv9csBvAqLmxPrLHozIhVbgmsUP4z+fLvYLKk=;
+        b=lJfo7jVni8HmxsSWeAG1c3uqO1KeWoVPi/W0TZ0bzK7R9ne6ihwnEbCY4QEV66GRyz
+         /oklInIRK/cLDGhHPPMJjgG8aUlCQcMM4I4RXFMzEtrIjz7JjHpFdU5vr4NYtNmQ5r3j
+         RsPiEgCJIUX6Nw7HnJSqmhNg0pMNlR9drvx9g1FbFs1RROI9s/VCJjS9D+NiaqW/phwJ
+         XoTRJy47dlX018UraTK5GAPPLY7dy4rnAGZqip2nB5hJe1qiYoarfrmZ23hKYdqNJftT
+         X4wAzBecTiPRZglrkXmWf7kMTeYaFVzXp7RQtW6n/L3UgAmuHhxjTTeihM7H70Snb5lJ
+         QEqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=3oTy+lkWbkFFfNbPOS2AOFsjB8RXGgtp9fv0BAsW7sw=;
-        b=r2eC1VsWZQmPtf7rs4owBkho+jGmwCxDh25HcCL+YxXp+C5Lz0T2Jv+7lrX1fmhVxv
-         0+h5+QVEYyTNrNfpYkB462eR6/mVRm5tW9oKQzsKs9SW54jlAlUvc2LulC8coB5TwJZ7
-         n5dXfF2PxKnRSehPCMSdCtBE6IXgJsrEIcUcVz5kU5XzebOJGRLrb1wO/S3vJ8e/gaRI
-         cyqUCNVjddSOiP4oUqsu/fCH7m7bI65cXoHMECMpd74ctYQi7F28Okrmxk5aTk7u2k3F
-         Jp/VgMZIigtcemKB0/0zEYn5zxqqdL8HZdRKvVJwTlT500NKXy95cWYX2ficNI9Au+kN
-         SvUQ==
-X-Gm-Message-State: APjAAAVmtR0+Z4X81m/aF9tjsGlxNEFnL5RxC1xXMjZ0fu4OjVhJz996
-        DqVmbC6ztDxfK4lluImhxTVrCVnOqi8HYw==
-X-Google-Smtp-Source: APXvYqwkEm9NakHd5yjJLZAfHiHfqUsqd4ZN6ARrN70g1pNUadQK+lUNEg6XugNBQoIbW5DPuRGGdw==
-X-Received: by 2002:a1c:1aca:: with SMTP id a193mr19207427wma.120.1568024636323;
-        Mon, 09 Sep 2019 03:23:56 -0700 (PDT)
+        bh=IfO/aFsv9csBvAqLmxPrLHozIhVbgmsUP4z+fLvYLKk=;
+        b=e0O6HIKfVyNofNCcklFAVEyaHoPsO2uERPweDLDuCEKzAZgRdWHXPWIhypL1WxMKOc
+         6jsxX4aGP2wNHnFRNkseAAsvDyJXGNX/8e17lNuRAbY0KUokb6aBg6BlvNrdgcO74fqM
+         lWs82XK7RjE0MgPluzdKsflhMfhId9ogRwflGSUSizgtCNsWM/puRH8TlcZ/rAPvy7y0
+         ApatubBiB8TzODLk4/EIB3u5u9fomrKxH8/OA39bSlHgh9Nk3r2X0AhPuBo4Wz8b0EFG
+         98HPLdn+64lhkfjJE7cLqig5nAFZqlayfGiqbM3wHCpGm5GKjIJ2qjY64r2FuGFb91vH
+         YxFw==
+X-Gm-Message-State: APjAAAWZrwhDhEePdqjwtq8e+Nf2ryDlmF2YG/nzx7lb4ef6VUp93lST
+        h6vpWx1qwQf0RXpz/i7riWp+C716KtBfCQ==
+X-Google-Smtp-Source: APXvYqxhTzZ1Fh8C7DgSzqRlLzBHLQAbXCfmJHK6OASTOE6O9Taf1A+yq/zvODVupkbxdtsIx3tznQ==
+X-Received: by 2002:a1c:7513:: with SMTP id o19mr17677294wmc.126.1568024632076;
+        Mon, 09 Sep 2019 03:23:52 -0700 (PDT)
 Received: from Mindolluin.localdomain ([148.69.85.38])
-        by smtp.gmail.com with ESMTPSA id d14sm1800008wrj.27.2019.09.09.03.23.55
+        by smtp.gmail.com with ESMTPSA id d14sm1800008wrj.27.2019.09.09.03.23.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Sep 2019 03:23:55 -0700 (PDT)
+        Mon, 09 Sep 2019 03:23:51 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -71,9 +71,9 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         containers@lists.linux-foundation.org,
         linux-fsdevel@vger.kernel.org
-Subject: [PATCH 9/9] restart_block: Make common timeout
-Date:   Mon,  9 Sep 2019 11:23:40 +0100
-Message-Id: <20190909102340.8592-10-dima@arista.com>
+Subject: [PATCH 6/9] select: Extract common code into do_sys_ppoll()
+Date:   Mon,  9 Sep 2019 11:23:37 +0100
+Message-Id: <20190909102340.8592-7-dima@arista.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190909102340.8592-1-dima@arista.com>
 References: <20190909102340.8592-1-dima@arista.com>
@@ -84,187 +84,169 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to provide a unified API to get the leftover of timeout,
-the timeout for different users of restart_block can be joined.
-All preparations done, so move timeout out of union and convert
-the users.
+Reduce the amount of code and shrink a .text section a bit:
+[linux]$ ./scripts/bloat-o-meter -t /tmp/vmlinux.o.{old,new}
+add/remove: 1/0 grow/shrink: 0/4 up/down: 284/-691 (-407)
+Function                                     old     new   delta
+do_sys_ppoll                                   -     284    +284
+__x64_sys_ppoll                              214      42    -172
+__ia32_sys_ppoll                             213      40    -173
+__ia32_compat_sys_ppoll_time64               213      40    -173
+__ia32_compat_sys_ppoll_time32               213      40    -173
+Total: Before=13357557, After=13357150, chg -0.00%
+
+The downside is that "tsp" and "sigmask" parameters gets (void *),
+but it seems worth losing static type checking if there is only one
+line in syscall definition.
+Other way could be to add compat parameters in do_sys_ppoll(), but
+that trashes 2 more registers..
 
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- fs/select.c                    | 10 +++++-----
- include/linux/restart_block.h  |  4 +---
- kernel/futex.c                 | 14 +++++++-------
- kernel/time/alarmtimer.c       |  6 +++---
- kernel/time/hrtimer.c          |  6 +++---
- kernel/time/posix-cpu-timers.c |  6 +++---
- 6 files changed, 22 insertions(+), 24 deletions(-)
+ fs/select.c | 94 ++++++++++++++++++-----------------------------------
+ 1 file changed, 32 insertions(+), 62 deletions(-)
 
 diff --git a/fs/select.c b/fs/select.c
-index ff2b9c4865cd..9ab6fc6fb7c5 100644
+index 458f2a944318..262300e58370 100644
 --- a/fs/select.c
 +++ b/fs/select.c
-@@ -1001,7 +1001,7 @@ static long do_restart_poll(struct restart_block *restart_block)
+@@ -1056,54 +1056,58 @@ SYSCALL_DEFINE3(poll, struct pollfd __user *, ufds, unsigned int, nfds,
+ 	return ret;
+ }
+ 
+-SYSCALL_DEFINE5(ppoll, struct pollfd __user *, ufds, unsigned int, nfds,
+-		struct __kernel_timespec __user *, tsp, const sigset_t __user *, sigmask,
+-		size_t, sigsetsize)
++static int do_sys_ppoll(struct pollfd __user *ufds, unsigned int nfds,
++			void __user *tsp, const void __user *sigmask,
++			size_t sigsetsize, enum poll_time_type pt_type)
  {
- 	struct pollfd __user *ufds = restart_block->poll.ufds;
- 	int nfds = restart_block->poll.nfds;
--	ktime_t timeout = restart_block->poll.timeout;
-+	ktime_t timeout = restart_block->timeout;
+ 	struct timespec64 ts, end_time, *to = NULL;
  	int ret;
  
- 	ret = do_sys_poll(ufds, nfds, timeout);
-@@ -1030,10 +1030,10 @@ SYSCALL_DEFINE3(poll, struct pollfd __user *, ufds, unsigned int, nfds,
- 		struct restart_block *restart_block;
+ 	if (tsp) {
+-		if (get_timespec64(&ts, tsp))
+-			return -EFAULT;
++		switch (pt_type) {
++		case PT_TIMESPEC:
++			if (get_timespec64(&ts, tsp))
++				return -EFAULT;
++			break;
++		case PT_OLD_TIMESPEC:
++			if (get_old_timespec32(&ts, tsp))
++				return -EFAULT;
++			break;
++		default:
++			WARN_ON_ONCE(1);
++			return -ENOSYS;
++		}
  
- 		restart_block = &current->restart_block;
--		restart_block->fn		= do_restart_poll;
--		restart_block->poll.ufds	= ufds;
--		restart_block->poll.nfds	= nfds;
--		restart_block->poll.timeout	= timeout;
-+		restart_block->fn	 = do_restart_poll;
-+		restart_block->poll.ufds = ufds;
-+		restart_block->poll.nfds = nfds;
-+		restart_block->timeout	 = timeout;
- 
- 		ret = -ERESTART_RESTARTBLOCK;
+ 		to = &end_time;
+ 		if (poll_select_set_timeout(to, ts.tv_sec, ts.tv_nsec))
+ 			return -EINVAL;
  	}
-diff --git a/include/linux/restart_block.h b/include/linux/restart_block.h
-index 63d647b65395..02f90ab00a2d 100644
---- a/include/linux/restart_block.h
-+++ b/include/linux/restart_block.h
-@@ -27,6 +27,7 @@ enum timespec_type {
-  * userspace tricks in the union.
-  */
- struct restart_block {
-+	s64 timeout;
- 	long (*fn)(struct restart_block *);
- 	union {
- 		/* For futex_wait and futex_wait_requeue_pi */
-@@ -35,7 +36,6 @@ struct restart_block {
- 			u32 val;
- 			u32 flags;
- 			u32 bitset;
--			u64 time;
- 		} futex;
- 		/* For nanosleep */
- 		struct {
-@@ -45,11 +45,9 @@ struct restart_block {
- 				struct __kernel_timespec __user *rmtp;
- 				struct old_timespec32 __user *compat_rmtp;
- 			};
--			u64 expires;
- 		} nanosleep;
- 		/* For poll */
- 		struct {
--			u64 timeout;
- 			struct pollfd __user *ufds;
- 			int nfds;
- 		} poll;
-diff --git a/kernel/futex.c b/kernel/futex.c
-index 6d50728ef2e7..0738167e4911 100644
---- a/kernel/futex.c
-+++ b/kernel/futex.c
-@@ -2755,12 +2755,12 @@ static int futex_wait(u32 __user *uaddr, unsigned int flags, u32 val,
- 		goto out;
  
- 	restart = &current->restart_block;
--	restart->fn = futex_wait_restart;
--	restart->futex.uaddr = uaddr;
--	restart->futex.val = val;
--	restart->futex.time = *abs_time;
--	restart->futex.bitset = bitset;
--	restart->futex.flags = flags | FLAGS_HAS_TIMEOUT;
-+	restart->fn		= futex_wait_restart;
-+	restart->futex.uaddr	= uaddr;
-+	restart->futex.val	= val;
-+	restart->timeout	= *abs_time;
-+	restart->futex.bitset	= bitset;
-+	restart->futex.flags	= flags | FLAGS_HAS_TIMEOUT;
+-	ret = set_user_sigmask(sigmask, sigsetsize);
++	if (!in_compat_syscall())
++		ret = set_user_sigmask(sigmask, sigsetsize);
++	else
++		ret = set_compat_user_sigmask(sigmask, sigsetsize);
++
+ 	if (ret)
+ 		return ret;
  
- 	ret = -ERESTART_RESTARTBLOCK;
+ 	ret = do_sys_poll(ufds, nfds, to);
+-	return poll_select_finish(&end_time, tsp, PT_TIMESPEC, ret);
++	return poll_select_finish(&end_time, tsp, pt_type, ret);
+ }
  
-@@ -2779,7 +2779,7 @@ static long futex_wait_restart(struct restart_block *restart)
- 	ktime_t t, *tp = NULL;
+-#if defined(CONFIG_COMPAT_32BIT_TIME) && !defined(CONFIG_64BIT)
++SYSCALL_DEFINE5(ppoll, struct pollfd __user *, ufds, unsigned int, nfds,
++		struct __kernel_timespec __user *, tsp, const sigset_t __user *, sigmask,
++		size_t, sigsetsize)
++{
++	return do_sys_ppoll(ufds, nfds, tsp, sigmask, sigsetsize, PT_TIMESPEC);
++}
  
- 	if (restart->futex.flags & FLAGS_HAS_TIMEOUT) {
--		t = restart->futex.time;
-+		t = restart->timeout;
- 		tp = &t;
- 	}
- 	restart->fn = do_no_restart_syscall;
-diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
-index 57518efc3810..148b187c371e 100644
---- a/kernel/time/alarmtimer.c
-+++ b/kernel/time/alarmtimer.c
-@@ -763,7 +763,7 @@ alarm_init_on_stack(struct alarm *alarm, enum alarmtimer_type type,
- static long __sched alarm_timer_nsleep_restart(struct restart_block *restart)
++#if defined(CONFIG_COMPAT_32BIT_TIME) && !defined(CONFIG_64BIT)
+ SYSCALL_DEFINE5(ppoll_time32, struct pollfd __user *, ufds, unsigned int, nfds,
+ 		struct old_timespec32 __user *, tsp, const sigset_t __user *, sigmask,
+ 		size_t, sigsetsize)
  {
- 	enum  alarmtimer_type type = restart->nanosleep.clockid;
--	ktime_t exp = restart->nanosleep.expires;
-+	ktime_t exp = restart->timeout;
- 	struct alarm alarm;
+-	struct timespec64 ts, end_time, *to = NULL;
+-	int ret;
+-
+-	if (tsp) {
+-		if (get_old_timespec32(&ts, tsp))
+-			return -EFAULT;
+-
+-		to = &end_time;
+-		if (poll_select_set_timeout(to, ts.tv_sec, ts.tv_nsec))
+-			return -EINVAL;
+-	}
+-
+-	ret = set_user_sigmask(sigmask, sigsetsize);
+-	if (ret)
+-		return ret;
+-
+-	ret = do_sys_poll(ufds, nfds, to);
+-	return poll_select_finish(&end_time, tsp, PT_OLD_TIMESPEC, ret);
++	return do_sys_ppoll(ufds, nfds, tsp, sigmask, sigsetsize, PT_OLD_TIMESPEC);
+ }
+ #endif
  
- 	alarm_init_on_stack(&alarm, type, alarmtimer_nsleep_wakeup);
-@@ -816,9 +816,9 @@ static int alarm_timer_nsleep(const clockid_t which_clock, int flags,
- 	if (flags == TIMER_ABSTIME)
- 		return -ERESTARTNOHAND;
+@@ -1352,24 +1356,7 @@ COMPAT_SYSCALL_DEFINE5(ppoll_time32, struct pollfd __user *, ufds,
+ 	unsigned int,  nfds, struct old_timespec32 __user *, tsp,
+ 	const compat_sigset_t __user *, sigmask, compat_size_t, sigsetsize)
+ {
+-	struct timespec64 ts, end_time, *to = NULL;
+-	int ret;
+-
+-	if (tsp) {
+-		if (get_old_timespec32(&ts, tsp))
+-			return -EFAULT;
+-
+-		to = &end_time;
+-		if (poll_select_set_timeout(to, ts.tv_sec, ts.tv_nsec))
+-			return -EINVAL;
+-	}
+-
+-	ret = set_compat_user_sigmask(sigmask, sigsetsize);
+-	if (ret)
+-		return ret;
+-
+-	ret = do_sys_poll(ufds, nfds, to);
+-	return poll_select_finish(&end_time, tsp, PT_OLD_TIMESPEC, ret);
++	return do_sys_ppoll(ufds, nfds, tsp, sigmask, sigsetsize, PT_OLD_TIMESPEC);
+ }
+ #endif
  
--	restart->fn = alarm_timer_nsleep_restart;
-+	restart->fn		   = alarm_timer_nsleep_restart;
- 	restart->nanosleep.clockid = type;
--	restart->nanosleep.expires = exp;
-+	restart->timeout	   = exp;
- 	return ret;
+@@ -1378,24 +1365,7 @@ COMPAT_SYSCALL_DEFINE5(ppoll_time64, struct pollfd __user *, ufds,
+ 	unsigned int,  nfds, struct __kernel_timespec __user *, tsp,
+ 	const compat_sigset_t __user *, sigmask, compat_size_t, sigsetsize)
+ {
+-	struct timespec64 ts, end_time, *to = NULL;
+-	int ret;
+-
+-	if (tsp) {
+-		if (get_timespec64(&ts, tsp))
+-			return -EFAULT;
+-
+-		to = &end_time;
+-		if (poll_select_set_timeout(to, ts.tv_sec, ts.tv_nsec))
+-			return -EINVAL;
+-	}
+-
+-	ret = set_compat_user_sigmask(sigmask, sigsetsize);
+-	if (ret)
+-		return ret;
+-
+-	ret = do_sys_poll(ufds, nfds, to);
+-	return poll_select_finish(&end_time, tsp, PT_TIMESPEC, ret);
++	return do_sys_ppoll(ufds, nfds, tsp, sigmask, sigsetsize, PT_TIMESPEC);
  }
  
-diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-index 4ba2b50d068f..18d4b0cc919c 100644
---- a/kernel/time/hrtimer.c
-+++ b/kernel/time/hrtimer.c
-@@ -1709,7 +1709,7 @@ static long __sched hrtimer_nanosleep_restart(struct restart_block *restart)
- 
- 	hrtimer_init_on_stack(&t.timer, restart->nanosleep.clockid,
- 				HRTIMER_MODE_ABS);
--	hrtimer_set_expires_tv64(&t.timer, restart->nanosleep.expires);
-+	hrtimer_set_expires_tv64(&t.timer, restart->timeout);
- 
- 	ret = do_nanosleep(&t, HRTIMER_MODE_ABS);
- 	destroy_hrtimer_on_stack(&t.timer);
-@@ -1741,9 +1741,9 @@ long hrtimer_nanosleep(const struct timespec64 *rqtp,
- 	}
- 
- 	restart = &current->restart_block;
--	restart->fn = hrtimer_nanosleep_restart;
-+	restart->fn		   = hrtimer_nanosleep_restart;
- 	restart->nanosleep.clockid = t.timer.base->clockid;
--	restart->nanosleep.expires = hrtimer_get_expires_tv64(&t.timer);
-+	restart->timeout	   = hrtimer_get_expires_tv64(&t.timer);
- out:
- 	destroy_hrtimer_on_stack(&t.timer);
- 	return ret;
-diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.c
-index b4dddf74dd15..691de00107c2 100644
---- a/kernel/time/posix-cpu-timers.c
-+++ b/kernel/time/posix-cpu-timers.c
-@@ -1332,8 +1332,8 @@ static int do_cpu_nanosleep(const clockid_t which_clock, int flags,
- 		 * Report back to the user the time still remaining.
- 		 */
- 		restart = &current->restart_block;
--		restart->fn = posix_cpu_nsleep_restart;
--		restart->nanosleep.expires = expires;
-+		restart->fn	 = posix_cpu_nsleep_restart;
-+		restart->timeout = expires;
- 		if (restart->nanosleep.type != TT_NONE)
- 			error = nanosleep_copyout(restart, &it.it_value);
- 	}
-@@ -1372,7 +1372,7 @@ static long posix_cpu_nsleep_restart(struct restart_block *restart_block)
- 	clockid_t which_clock = restart_block->nanosleep.clockid;
- 	struct timespec64 t;
- 
--	t = ns_to_timespec64(restart_block->nanosleep.expires);
-+	t = ns_to_timespec64(restart_block->timeout);
- 
- 	return do_cpu_nanosleep(which_clock, TIMER_ABSTIME, &t);
- }
+ #endif
 -- 
 2.23.0
 
