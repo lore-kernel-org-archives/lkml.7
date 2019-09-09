@@ -2,184 +2,218 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63087C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 23:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD3DC4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 23:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23DD921670
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 23:40:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o4MyA1FN"
+	by mail.kernel.org (Postfix) with ESMTP id E323D2082C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 23:40:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390141AbfIIXkG (ORCPT
+        id S2390205AbfIIXk4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 19:40:06 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36978 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729483AbfIIXkG (ORCPT
+        Mon, 9 Sep 2019 19:40:56 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:34366 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729483AbfIIXkz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 19:40:06 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y5so7594385pfo.4
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 16:40:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lsAY+sKesJo6X+9Y7r1jhC7N0L/3nQaG5JDxGGcqtrE=;
-        b=o4MyA1FNVxeZf4lS2Hniu9EDwKX+uCC8ifCiyfx5wqdGJiCl0z8rgNIqocSF9bVmtW
-         se4ZzusnW7O7nxlAvL0p2RhCsqeyOBhWbebOJrVd5hAwaSn6NnwvgCq6hqWOUjTPh9Fx
-         GWn375ILoQ4dOAxWt789cKH7IdybL3P2KjMraseXaFXUYq3h+po/+dijUxOhG1aGB9Bt
-         kxXcoc16rQwiRs1bptNz58aA487q6Lv7cm4GjthOI+ylBFQYRIipVXoUvxPeoaTetjgo
-         MVH9PiVJZe4V3wcZUhXqp5nuYBNjsC1muQBI2fooLDpxbnreYHS9mWE2XGzRYePRn6Oy
-         BFxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lsAY+sKesJo6X+9Y7r1jhC7N0L/3nQaG5JDxGGcqtrE=;
-        b=Ymr71AhmlPtLbb9eF50xowuh/WnDMYMbmD54cMLxzECuO3vtNw0RONnd36VUrehlsP
-         T8ByczLLsidRIKMGQWznpec52WbmfXl59eyE2XEfmUJNxoAtdSJSydpS5Vk0bzncgsff
-         R91Gb5kPBjv27AuAxB2sWNpLZgE9rVaJVOq2KQqpsnau8B8pW4KadKwOYrXbY0Sy+5B7
-         1JW23626FiyXXnjKwz8gCbLmOb4AOKBpMg20e8VIk73g43yMI+YtwwcQIOuNb4qpgdIQ
-         9yCC2ZU3UC5jNPDdQ5e6mYNe9+VOE+8Ce7dAchHW/fh2+dDmynDdveVtvQdEQgxjpqoZ
-         8GeQ==
-X-Gm-Message-State: APjAAAVz0nu9mSUvhOBNlccU6a4VM7kQ+tgKDOaVH+202Va1ev2IAh5k
-        SalFrLvNpJvJ+nm4zSonwQ1bAhePjmLhuA==
-X-Google-Smtp-Source: APXvYqxdL3R2Olk6Zx4BmjokrnBXacU2oQU1j/LyH1UrjfeCisIVwW+i/aQeZ3G8PBHKmSCS6GFtsw==
-X-Received: by 2002:a63:4c46:: with SMTP id m6mr25353248pgl.59.1568072405177;
-        Mon, 09 Sep 2019 16:40:05 -0700 (PDT)
-Received: from mail.google.com ([149.28.153.17])
-        by smtp.gmail.com with ESMTPSA id r28sm30906266pfg.62.2019.09.09.16.40.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Sep 2019 16:40:04 -0700 (PDT)
-Date:   Tue, 10 Sep 2019 07:39:58 +0800
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Changbin Du <changbin.du@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ftrace: simplify ftrace hash lookup code
-Message-ID: <20190909233956.4gqs6u4i4siaf6mf@mail.google.com>
-References: <20190909003159.10574-1-changbin.du@gmail.com>
- <20190909105424.6769b552@oasis.local.home>
+        Mon, 9 Sep 2019 19:40:55 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1i7THA-0006j5-CC; Mon, 09 Sep 2019 17:40:52 -0600
+Received: from 110.8.30.213.rev.vodafone.pt ([213.30.8.110] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1i7TH7-0007xy-P4; Mon, 09 Sep 2019 17:40:52 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     "Michael Kerrisk \(man-pages\)" <mtk.manpages@gmail.com>
+Cc:     Philipp Wendler <ml@philippwendler.de>,
+        linux-man <linux-man@vger.kernel.org>,
+        Containers <containers@lists.linux-foundation.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jordan Ogas <jogas@lanl.gov>, werner@almesberger.net,
+        Al Viro <viro@ftp.linux.org.uk>
+References: <CAKgNAki0bR5zZr+kp_xjq+bNUky6-F+s2ep+jnR0YrjHhNMB1g@mail.gmail.com>
+        <20190805103630.tu4kytsbi5evfrhi@mikami>
+        <3a96c631-6595-b75e-f6a7-db703bf89bcf@gmail.com>
+        <da747415-4c7a-f931-6f2e-2962da63c161@philippwendler.de>
+        <CAKgNAkjS+x7aMVUiVSgCRwgi8rnukqJv=svtTARE-tt-oxQxWw@mail.gmail.com>
+        <87r24piwhm.fsf@x220.int.ebiederm.org>
+        <CAKgNAkhK2qBbz5aVY9VdK0UzvpZ=c7c7LWQ1MK2gu-rVKUz9_g@mail.gmail.com>
+Date:   Mon, 09 Sep 2019 18:40:29 -0500
+In-Reply-To: <CAKgNAkhK2qBbz5aVY9VdK0UzvpZ=c7c7LWQ1MK2gu-rVKUz9_g@mail.gmail.com>
+        (Michael Kerrisk's message of "Mon, 9 Sep 2019 16:48:01 +0200")
+Message-ID: <87ftl5donm.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190909105424.6769b552@oasis.local.home>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
+X-XM-SPF: eid=1i7TH7-0007xy-P4;;;mid=<87ftl5donm.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=213.30.8.110;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19C8a+fyJKpkMOSs2F/Y2I2o2EtRmXhpeo=
+X-SA-Exim-Connect-IP: 213.30.8.110
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: pivot_root(".", ".") and the fchdir() dance
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 09, 2019 at 10:54:24AM -0400, Steven Rostedt wrote:
-> On Mon,  9 Sep 2019 08:31:59 +0800
-> Changbin Du <changbin.du@gmail.com> wrote:
-> 
-> > Function ftrace_lookup_ip() will check empty hash table. So we don't
-> > need extra check outside.
-> > 
-> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> > 
-> > ---
-> > v2: fix incorrect code remove.
-> > ---
-> >  kernel/trace/ftrace.c | 9 ++-------
-> >  1 file changed, 2 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> > index f9821a3374e9..92aab854d3b1 100644
-> > --- a/kernel/trace/ftrace.c
-> > +++ b/kernel/trace/ftrace.c
-> > @@ -1463,8 +1463,7 @@ static bool hash_contains_ip(unsigned long ip,
-> >  	 */
-> >  	return (ftrace_hash_empty(hash->filter_hash) ||
-> >  		__ftrace_lookup_ip(hash->filter_hash, ip)) &&
-> > -		(ftrace_hash_empty(hash->notrace_hash) ||
-> > -		 !__ftrace_lookup_ip(hash->notrace_hash, ip));
-> > +	       !ftrace_lookup_ip(hash->notrace_hash, ip);
-> 
-> I don't care for this part. I've nacked this change in the past. Why?
-> let's compare the changes:
-> 
-> 	return (ftrace_hash_empty(hash->filter_hash) ||
-> 		__ftrace_lookup_ip(hash->filter_hash, ip)) &&
-> 		(ftrace_hash_empty(hash->notrace_hash) ||
-> 		 !__ftrace_lookup_ip(hash->notrace_hash, ip));
-> 
->  vs:
-> 
-> 	return (ftrace_hash_empty(hash->filter_hash) ||
-> 		__ftrace_lookup_ip(hash->filter_hash, ip)) &&
-> 		!ftrace_lookup_ip(hash->notrace_hash, ip);
-> 
-> The issue I have with this is that it abstracts out the difference
-> between the filter_hash and the notrace_hash. Sometimes open coded
-> works better if it is compared to something that is similar.
-> 
-> The current code I see:
-> 
-> 	Return true if (filter_hash is empty or ip exists in filter_hash
-> 		 and notrace_hash is empty or it does not exist in notrace_hash
-> 
-> With your update I see:
-> 
-> 	Return true if filter_hash is empty or ip exists in filter_hash
->                 and ip does not exist in notrace_hash
-> 
-> It makes it not easy to see if what happens if notrace_hash is empty
+"Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com> writes:
+
+> Hello Eric,
 >
-Yes, I agree with you entirly.
+> Thanks for chiming in; I should have thought to CC you at the start. I
+> have a question or two, below.
+>
+> On Mon, 9 Sep 2019 at 12:40, Eric W. Biederman <ebiederm@xmission.com> wrote:
+>>
+>> "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com> writes:
+>>
+>> > Hello Philipp,
+>> >
+>> > On Tue, 6 Aug 2019 at 10:12, Philipp Wendler <ml@philippwendler.de> wrote:
+>> >>
+>> >> Hello Michael, hello Aleksa,
+>> >>
+>> >> Am 05.08.19 um 14:29 schrieb Michael Kerrisk (man-pages):
+>> >>
+>> >> > On 8/5/19 12:36 PM, Aleksa Sarai wrote:
+>> >> >> On 2019-08-01, Michael Kerrisk (man-pages) <mtk.manpages@gmail.com> wrote:
+>> >> >>> I'd like to add some documentation about the pivot_root(".", ".")
+>> >> >>> idea, but I have a doubt/question. In the lxc_pivot_root() code we
+>> >> >>> have these steps
+>> >> >>>
+>> >> >>>         oldroot = open("/", O_DIRECTORY | O_RDONLY | O_CLOEXEC);
+>> >> >>>         newroot = open(rootfs, O_DIRECTORY | O_RDONLY | O_CLOEXEC);
+>> >> >>>
+>> >> >>>         fchdir(newroot);
+>> >> >>>         pivot_root(".", ".");
+>> >> >>>
+>> >> >>>         fchdir(oldroot);      // ****
+>> >> >>>
+>> >> >>>         mount("", ".", "", MS_SLAVE | MS_REC, NULL);
+>> >> >>>         umount2(".", MNT_DETACH);
+>> >> >>
+>> >> >>>         fchdir(newroot);      // ****
+>> >> >>
+>> >> >> And this one is required because we are in @oldroot at this point, due
+>> >> >> to the first fchdir(2). If we don't have the first one, then switching
+>> >> >> from "." to "/" in the mount/umount2 calls should fix the issue.
+>> >> >
+>> >> > See my notes above for why I therefore think that the second fchdir()
+>> >> > is also not needed (and therefore why switching from "." to "/" in the
+>> >> > mount()/umount2() calls is unnecessary.
+>> >> >
+>> >> > Do you agree with my analysis?
+>> >>
+>> >> If both the second and third fchdir are not required,
+>> >> then we do not need to bother with file descriptors at all, right?
+>> >
+>> > Exactly.
+>> >
+>> >> Indeed, my tests show that the following seems to work fine:
+>> >>
+>> >> chdir(rootfs)
+>> >> pivot_root(".", ".")
+>> >> umount2(".", MNT_DETACH)
+>> >
+>> > Thanks for the confirmation, That's also exactly what I tested.
+>> >
+>> >> I tested that with my own tool[1] that uses user namespaces and marks
+>> >> everything MS_PRIVATE before, so I do not need the mount(MS_SLAVE) here.
+>> >>
+>> >> And it works the same with both umount2("/") and umount2(".").
+>> >
+>> > Yes.
+>> >
+>> >> Did I overlook something that makes the file descriptors required?
+>> >
+>> > No.
+>> >
+>> >> If not, wouldn't the above snippet make sense as example in the man page?
+>> >
+>> > I have exactly that snippet in a pending change for the manual page :-).
+>>
+>> I have just spotted this conversation and I expect if you are going
+>> to use this example it is probably good to document what is going
+>> on so that people can follow along.
+>
+> (Sounds reasonable.)
+>
+>> >> chdir(rootfs)
+>> >> pivot_root(".", ".")
+>>
+>> At this point the mount stack should be:
+>> old_root
+>> new_root
+>> rootfs
+>
+> In this context, what is 'rootfs'? The initramfs? At least, when I
+> examine /proc/PID/mountinfo. When I look at the / mount point in
+> /proc/PID/mountinfo, I see just
+>
+>    old_root
+>    new_root
+>
+> But nothing below 'new_root'. So, I'm a little puzzled.
 
-> Hmm, come to think of it, perhaps we should change ftrace_lookup_ip()
-> to include what to do on empty.
-> 
-> Maybe:
-> 
-> bool ftrace_lookup_ip(struct ftrace_hash *hash, unsigned long ip, bool empty_result)
-> {
-> 	if (ftrace_hash_empty(hash))
-> 		return empty_result;
-> 
-> 	return __ftrace_lookup_ip(hash, ip);
-> }
-> 
-> Then we can change the above to:
-> 
-> 	return ftrace_lookup_ip(hash->filter_hash, ip, true) &&
-> 	       !ftrace_lookup_ip(hash->notrace_hash, ip, false);
-> 
-> That would probably work better.
-> 
-> Want to send that update?
-> 
-Yes, let me update it with your idea. Thanks!
+I think that is because Al changed /proc/mounts to not display mounts
+that are outside of your current root.  But yes there is typically
+the initramfs of file system type rootfs on their.  Even when it isn't
+used you have one.  Just to keep everything simple I presume.
 
-> -- Steve
-> 
-> 
-> >  }
-> >  
-> >  /*
-> > @@ -6036,11 +6035,7 @@ clear_func_from_hash(struct ftrace_init_func
-> > *func, struct ftrace_hash *hash) {
-> >  	struct ftrace_func_entry *entry;
-> >  
-> > -	if (ftrace_hash_empty(hash))
-> > -		return;
-> > -
-> > -	entry = __ftrace_lookup_ip(hash, func->ip);
-> > -
-> > +	entry = ftrace_lookup_ip(hash, func->ip);
-> >  	/*
-> >  	 * Do not allow this rec to match again.
-> >  	 * Yeah, it may waste some memory, but will be removed
-> 
+I haven't double checked lately to be certain it is there but I expect
+it is.
 
--- 
-Cheers,
-Changbin Du
+> By the way, why is 'old_root' stacked above 'new_root', do you know? I
+> mean, in this scenario it turns out to be useful, but it's kind of the
+> opposite from what I would have expected. (And if this was a
+> deliverate design decision in pivot_root(), it was never made
+> explicit.)
+
+Oh.  It is absolutely explicit and part of the design and it has nothing
+to do with this case.
+
+The pivot_root system calls takes two parameters:  new_root and put_old.
+
+In this case the old root is put on put_old (which is the new_root).
+And new_root is made the current root.
+
+The pivot_root code looks everything up before it moves anything.   With
+the result it is totally immaterrial which order the moves actually
+happen in the code.  Further it is pretty much necessary to look
+everything up before things are moved because the definition of paths
+change.
+
+So it would actually be difficult to have pivot_root(.,.) to do anything
+except what it does today.
+
+
+>> With "." and "/" pointing to new_root.
+>>
+>> >> umount2(".", MNT_DETACH)
+>>
+>> At this point resolving "." starts with new_root and follows up the
+>> mount stack to old-root.
+>
+> Okay.
+>
+>> Ordinarily if you unmount "/" as is happening above you then need to
+>> call chroot and possibly chdir to ensure neither "/" nor "." point to
+>> somewhere other than the unmounted root filesystem.  In this specific
+>> case because "/" and "." resolve to new_root under the filesystem that is
+>> being unmounted that all is well.
+>
+> s/that/then/ ?
+
+Yes.
+
+Eric
+
