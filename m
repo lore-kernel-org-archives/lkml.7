@@ -2,95 +2,93 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C51E7C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF379C4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 661C120863
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:36:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EB2921479
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:47:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Oh/81Sl2"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="HL/9htVW";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="H1nCZQ0g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389165AbfIIWgF (ORCPT
+        id S1730971AbfIIWrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 18:36:05 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:36388 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727989AbfIIWgF (ORCPT
+        Mon, 9 Sep 2019 18:47:19 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:37846 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728918AbfIIWrT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 18:36:05 -0400
-Received: from pendragon.ideasonboard.com (unknown [88.214.160.167])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 97E3D4FE;
-        Tue, 10 Sep 2019 00:36:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1568068562;
-        bh=ytpDKk/iTXIZzQdXuSLQiM1Plw/tdurNCuOlF0kQUBo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Oh/81Sl2yegYqXREdFzqny3O9/0MXoaO0hhHQz8Uaf+i1uVY7Hcea6+AOc82SUsr/
-         6wDS8y9xBfUdzP8pzfY83cphRhLjI4YfGqyYIjZqo6U99uPv64UjVENczPxqJetUQD
-         D/8XptB8PPpCjvPrnoWa98HtKYrkgF/IpQEm1Qww=
-Date:   Tue, 10 Sep 2019 01:35:56 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Jyri Sarha <jsarha@ti.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/tilcdc: include linux/pinctrl/consumer.h again
-Message-ID: <20190909223556.GB15652@pendragon.ideasonboard.com>
-References: <20190909203409.652308-1-arnd@arndb.de>
+        Mon, 9 Sep 2019 18:47:19 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 3DF4360303; Mon,  9 Sep 2019 22:47:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568069238;
+        bh=Y/IuLwHZa6E6V0WRz+uYsMdEVK899wiCU7hIZzCVVmg=;
+        h=Date:From:To:Cc:Subject:From;
+        b=HL/9htVWFkKjSV91mUDuHX0XKv0jblsNAbiBfDbZbi5I4j5WX/+wjkI1Hp4jqDrkk
+         YLatxn4yQigfEnxuzLUDmG5kZKWfEUzdPNLAJ/z1pAAk10uYYPEDAQJkW25PhLHnQt
+         zxc3Im4lfuJd43AyQHmxwThf44JgjMex+pQtKYWQ=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 634BE601D4;
+        Mon,  9 Sep 2019 22:47:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568069237;
+        bh=Y/IuLwHZa6E6V0WRz+uYsMdEVK899wiCU7hIZzCVVmg=;
+        h=Date:From:To:Cc:Subject:From;
+        b=H1nCZQ0gsMeDkNuHDtvNloVBw1wimd/3P+3OX73u0ZQTRUDX+wjBOAoFSn4THkjiI
+         XVAej3kngr+iWV26AdBoGx5SLL1klWaj78X/7d3nPeGn23VZGl8xVXbwF6Y7FWsbfO
+         JJvPiLhrnoyqONed+VIQnrpmG1IxXiCxoRyqOQwc=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190909203409.652308-1-arnd@arndb.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 09 Sep 2019 15:47:17 -0700
+From:   rishabhb@codeaurora.org
+To:     miklos@szeredi.hu, linux-unionfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     tsoni@codeaurora.org, psodagud@codeaurora.org,
+        jshriram@codeaurora.org
+Subject: Bug at kernel/cred.c +432
+Message-ID: <083b3f61efeca1d73839ac96e396748e@codeaurora.org>
+X-Sender: rishabhb@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
+Hi Miklos
 
-Thank you for the patch.
+In 4.19 kernel when we write to a file that doesn't exist we see the
+following stack:
+[  377.382745]  ovl_create_or_link+0xac/0x710
+[  377.382745]  ovl_create_object+0xb8/0x110
+[  377.382745]  ovl_create+0x34/0x40
+[  377.382745]  path_openat+0xd44/0x15a8
+[  377.382745]  do_filp_open+0x80/0x128
+[  377.382745]  do_sys_open+0x140/0x250
+[  377.382745]  __arm64_sys_openat+0x2c/0x38
 
-On Mon, Sep 09, 2019 at 10:33:57PM +0200, Arnd Bergmann wrote:
-> This was apparently dropped by accident in a recent
-> cleanup, causing a build failure in some configurations now:
-> 
-> drivers/gpu/drm/tilcdc/tilcdc_tfp410.c:296:12: error: implicit declaration of function 'devm_pinctrl_get_select_default' [-Werror,-Wimplicit-function-declaration]
-> 
-> Fixes: fcb57664172e ("drm/tilcdc: drop use of drmP.h")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/gpu/drm/tilcdc/tilcdc_tfp410.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/gpu/drm/tilcdc/tilcdc_tfp410.c b/drivers/gpu/drm/tilcdc/tilcdc_tfp410.c
-> index 525dc1c0f1c1..9edcdd7f2b96 100644
-> --- a/drivers/gpu/drm/tilcdc/tilcdc_tfp410.c
-> +++ b/drivers/gpu/drm/tilcdc/tilcdc_tfp410.c
-> @@ -8,6 +8,7 @@
->  #include <linux/mod_devicetable.h>
->  #include <linux/of_gpio.h>
->  #include <linux/platform_device.h>
-> +#include <linux/pinctrl/consumer.h>
+If the override_cred flag = off, the ovl_override_cred and 
+ovl_revert_cred just returns NULL.
+But there is another override_cred in between these two functions;
+		put_cred(override_creds(override_cred));
+		put_cred(override_cred);
 
-I'd put this before platform_device.h to keep the headers alphabetically
-ordered. Apart from that,
+This will override the credentials permanently as there is no 
+corresponding revert_cred associated.
+So whenever we do commit_creds for this task, we see a BUG_ON at 
+kernel/cred.c +443.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/cred.c#n443
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Should this override_cred be changed to ovl_override_cred to maintain 
+consistency and avoid this
+BUG_ON?
 
->  #include <drm/drm_atomic_helper.h>
->  #include <drm/drm_encoder.h>
 
--- 
-Regards,
-
-Laurent Pinchart
+Thanks,
+Rishabh
