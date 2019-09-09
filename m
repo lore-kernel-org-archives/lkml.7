@@ -2,142 +2,149 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6F0C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7466C4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9461C206A5
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 711E721A4C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:56:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JU7/JELG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CHcT5HCs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727528AbfIIQzy (ORCPT
+        id S1728558AbfIIQ4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 12:55:54 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35590 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726415AbfIIQzy (ORCPT
+        Mon, 9 Sep 2019 12:56:12 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43471 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726415AbfIIQ4M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 12:55:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:
-        Subject:From:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=3fWTUyRxX0mvy7shQ7gKeWr5v7P/Tt6F0XOk74ciJFA=; b=JU7/JELGI4YFnkDhrJWcATIm8
-        fmXDWLHGf7GgyQIqzLWrkrWt2Jn1HmF5XRf+BXR8i5cxcHEeuIaDY/DrYwB0gLcN0UyAzfFcrtaoy
-        Kp1yjwOwWWFoUI+KfhOvAiXlVrUkdjZIAVlbXH3PKmDKWbuLomDz5+OQnGhzx7PTXpcJGKAy8PR9U
-        9dc2ctrWHNnXhXv+qPx2Cg93DkTFNFO48SPjLzxvSzODe0UX/i7nGR7EduFnq4NkbwGhNAss4bwiv
-        Bd0JoQ1625cnbFAfASUWSd4xPMKkE1+orhVW3QhDQOhvfGZc0+5Z5LT/1GXxOdeTBk7l1qvWu8bh/
-        ITzAqNpkg==;
-Received: from c-73-157-219-8.hsd1.or.comcast.net ([73.157.219.8] helo=[10.0.0.252])
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i7MxF-00073u-Ur; Mon, 09 Sep 2019 16:55:54 +0000
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v3 0/9] hacking: make 'kernel hacking' menu better
- structurized
-To:     Changbin Du <changbin.du@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
-References: <20190909144453.3520-1-changbin.du@gmail.com>
-Message-ID: <da2774e1-fc41-0dde-01ed-0607920ce762@infradead.org>
-Date:   Mon, 9 Sep 2019 09:53:43 -0700
+        Mon, 9 Sep 2019 12:56:12 -0400
+Received: by mail-pl1-f193.google.com with SMTP id 4so6770232pld.10;
+        Mon, 09 Sep 2019 09:56:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=y9qCic0RC1dfwolQU9PTEee+EfaFSRsxAIhwE6N8haM=;
+        b=CHcT5HCsHPf4Lbc9zn6G6j9Iw6QfdsUI0o478E9UA1zXDDJZSFXoSLMBaUJWzzITWJ
+         PTBMdvrshg0O6HEVPh2gJMgrgiRCFoLWiTlLz+82oIAgVEML7RxTlSp6YuU8E9Spto69
+         LggzvLDkec06+JMp7EMKGr+Zv5i3PhOmrs7KmIBpAd0BLwO9LJRUpEfvTpb9gxWGkSrq
+         y5J5Uv7AIoA38TPghSi00j07XVS/Xj42fno3Wl4U1uDW81mDqbqKFi1xN9O39dpFWWYJ
+         DeM150tU8e1TVgyUCwN5HbTe2clO7CUo98CN40oiRXrfYT5kP4MEJnEyBFHM4wsusWep
+         utVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=y9qCic0RC1dfwolQU9PTEee+EfaFSRsxAIhwE6N8haM=;
+        b=H0KBjlOxbBahSfDQeTbECsppLIDfQATOkzTRf27td2xMnSCSmFzDxDJ6VlQmkDRUU8
+         55gthGKgVrBlvPmXAj0t/MoVKjEli89CNtIYt35z9wuTlrzTBdJpfU3GHzXoTSSzAcWk
+         Lo+TvTYQmlCz40jlaFww5reLryAFo4iURZkE0pcqqiXaJHvacNCB0drwfVlLNbV0r0u2
+         CWT+LEwaDQaXOgtF6Ffb65XDCn4nk9xQUs7RFyaYbIQwGxxPenoJeMlop5BuDs6WcLuH
+         tZuvltu2n9F4XogVDsJfmXX3EwTxWx7Ab5gyod/cSBhT/figq8AoCximJcs1uRI0/lnI
+         hQbw==
+X-Gm-Message-State: APjAAAVXFrtWyxigNdvtEGX+rTiDD4erRvFnHN6G6ZmVgaNJ2qJTTJFb
+        JHUxTl7dzTTkeVkexSs+lC1XYlgiusM=
+X-Google-Smtp-Source: APXvYqyKy5ZNYM7VFKQFK3xwWEa93feEA1A15MMlAXmhC+SZge85ANkrU37oZSFG3/19oTNlI0s9/g==
+X-Received: by 2002:a17:902:7685:: with SMTP id m5mr25519631pll.218.1568048170578;
+        Mon, 09 Sep 2019 09:56:10 -0700 (PDT)
+Received: from [10.67.49.31] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id 71sm30609915pfw.147.2019.09.09.09.56.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 09 Sep 2019 09:56:09 -0700 (PDT)
+Subject: Re: [PATCH v3 2/2] net: phy: dp83867: Add SGMII mode type switching
+To:     Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>, davem@davemloft.net,
+        robh+dt@kernel.org
+Cc:     Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Trent Piepho <tpiepho@impinj.com>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1568026945-3857-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
+ <1568047940-14490-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <2375a453-b14a-c583-2258-e395493d937e@gmail.com>
+Date:   Mon, 9 Sep 2019 09:56:08 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190909144453.3520-1-changbin.du@gmail.com>
+In-Reply-To: <1568047940-14490-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/9/19 7:44 AM, Changbin Du wrote:
-> This series is a trivial improvment for the layout of 'kernel hacking'
-> configuration menu. Now we have many items in it which makes takes
-> a little time to look up them since they are not well structurized yet.
+On 9/9/19 9:52 AM, Vitaly Gaiduk wrote:
+> This patch adds ability to switch beetween two PHY SGMII modes.
+> Some hardware, for example, FPGA IP designs may use 6-wire mode
+> which enables differential SGMII clock to MAC.
 > 
-> Early discussion is here:
-> https://lkml.org/lkml/2019/9/1/39
-> 
-> This is a preview:
-> 
->   │ ┌─────────────────────────────────────────────────────────────────────────┐ │  
->   │ │        printk and dmesg options  --->                                   │ │  
->   │ │        Compile-time checks and compiler options  --->                   │ │  
->   │ │        Generic Kernel Debugging Instruments  --->                       │ │  
->   │ │    -*- Kernel debugging                                                 │ │  
->   │ │    [*]   Miscellaneous debug code                                       │ │  
->   │ │        Memory Debugging  --->                                           │ │  
->   │ │    [ ] Debug shared IRQ handlers                                        │ │  
->   │ │        Debug Oops, Lockups and Hangs  --->                              │ │  
->   │ │        Scheduler Debugging  --->                                        │ │  
->   │ │    [*] Enable extra timekeeping sanity checking                         │ │  
->   │ │        Lock Debugging (spinlocks, mutexes, etc...)  --->                │ │  
->   │ │    -*- Stack backtrace support                                          │ │  
->   │ │    [ ] Warn for all uses of unseeded randomness                         │ │  
->   │ │    [ ] kobject debugging                                                │ │  
->   │ │        Debug kernel data structures  --->                               │ │  
->   │ │    [ ] Debug credential management                                      │ │  
->   │ │        RCU Debugging  --->                                              │ │  
->   │ │    [ ] Force round-robin CPU selection for unbound work items           │ │  
->   │ │    [ ] Force extended block device numbers and spread them              │ │  
->   │ │    [ ] Enable CPU hotplug state control                                 │ │  
->   │ │    [*] Latency measuring infrastructure                                 │ │  
->   │ │    [*] Tracers  --->                                                    │ │  
->   │ │    [ ] Remote debugging over FireWire early on boot                     │ │  
->   │ │    [*] Sample kernel code  --->                                         │ │  
->   │ │    [*] Filter access to /dev/mem                                        │ │  
->   │ │    [ ]   Filter I/O access to /dev/mem                                  │ │  
->   │ │    [ ] Additional debug code for syzbot                                 │ │  
->   │ │        x86 Debugging  --->                                              │ │  
->   │ │        Kernel Testing and Coverage  --->                                │ │  
->   │ │                                                                         │ │  
->   │ │                                                                         │ │  
->   │ └─────────────────────────────────────────────────────────────────────────┘ │  
->   ├─────────────────────────────────────────────────────────────────────────────┤  
->   │          <Select>    < Exit >    < Help >    < Save >    < Load >           │  
->   └─────────────────────────────────────────────────────────────────────────────┘ 
-> 
-> v3:
->   o change subject prefix.
-> v2:
->   o rebase to linux-next.
->   o move DEBUG_FS to 'Generic Kernel Debugging Instruments'
->   o move DEBUG_NOTIFIERS to 'Debug kernel data structures'
-> 
-> Changbin Du (9):
->   hacking: Group sysrq/kgdb/ubsan into 'Generic Kernel Debugging
->     Instruments'
->   hacking: Create submenu for arch special debugging options
->   hacking: Group kernel data structures debugging together
->   hacking: Move kernel testing and coverage options to same submenu
->   hacking: Move Oops into 'Lockups and Hangs'
->   hacking: Move SCHED_STACK_END_CHECK after DEBUG_STACK_USAGE
->   hacking: Create a submenu for scheduler debugging options
->   hacking: Move DEBUG_BUGVERBOSE to 'printk and dmesg options'
->   hacking: Move DEBUG_FS to 'Generic Kernel Debugging Instruments'
-> 
->  lib/Kconfig.debug | 659 ++++++++++++++++++++++++----------------------
->  1 file changed, 340 insertions(+), 319 deletions(-)
+> Signed-off-by: Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>
 
-Hi,
-Looks good to me.
-
-I verified that the before and after kernel .config file contains the same
-symbols and values (for allmodconfig).
-I also tested with menuconfig, nconfig, gconfig, and xconfig.
-
-for all 9 patches:
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
-
-Thanks.
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-~Randy
+Florian
