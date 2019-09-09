@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CF4C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E25C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2DE721D82
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA70C2054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:07:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568023645;
-	bh=bxIOGnc3wrD7BmBl8YRpr6+qBSbdWvYAnvYbcoAOaZk=;
+	s=default; t=1568023647;
+	bh=uqnhlmMJBnTR4u4VXY9M/SFJ0Vp2nbeKljgURp5COaU=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=n58hkRIhvG2r/uJVn0iiUNlLcvdYSGwh7OdYs7/koWPel7mAhN+2kCW9CnqcPmD6B
-	 NvTU/Wh7x75N2S/lWCzbG52Q6u+IkqAE+XMGwslJC7I4TNejgRongYto8Vhe/ukWJY
-	 h6BVYbzuhbH3vhu2DJus2YpjB4pml0vXYtQViAV4=
+	b=2vf0fnYwl17Ql1ZsMS64YF2qvoqERxjHkya2B/kPmVlkG15xSMUV/EeSmcNmcLddd
+	 TPr5sPvR4YzzRtdW7ViUnQK59z4+mJWo6n2dqEK1VfxF0DrMGLuqP/c7fWCDog2wef
+	 cnLLxEYkwqwIvLy//S5AkQfJ3iJABwFbYJef1LVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390149AbfIIKHY (ORCPT
+        id S2390234AbfIIKH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 06:07:24 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55984 "EHLO
+        Mon, 9 Sep 2019 06:07:27 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56020 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728701AbfIIKHX (ORCPT
+        with ESMTP id S1728701AbfIIKHZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 06:07:23 -0400
+        Mon, 9 Sep 2019 06:07:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=h7CwsGin/gAKd5MlPcygrl7rvGBDxjHcGgJA8rYLCjs=; b=jHXwY0XK8Lhz
-        CgaFjd5BtuovqmeEF7YD6sb77Vvs6Fvb3fgM1h1NCG/dz2ePiox6NR/t8gZM8b+Nipd9+3KgLLGjZ
-        MCqoJROXKVe4fxvxUA9OGEWx6dq0tzCP0Cyxz/kEi1uheBtSfTfSBWcIaKa6hBI+JefzGjHEme07L
-        Of120=;
+        List-Archive; bh=pgifkWS240+0IXtL8Cmh/xJGQiIwKppg9/fFNPpyMzA=; b=o+7g/kAVaukw
+        y4CcDvi6FPdDWUfOsbTaPm6f+qq1ZOedWjEtn8vj3pl4MbVQh0/w5lBI8zsD+HKMPoubYQnVh7bKo
+        bvUjTdBJW2O52gt1vcb9nFwA1JrgtML+K9TFhVcQnTqzXKjlB2NFKMrInhVVar9MY3WqWdBv/6WsN
+        uzzsY=;
 Received: from [148.69.85.38] (helo=fitzroy.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1i7GZp-0001rk-Ne; Mon, 09 Sep 2019 10:07:17 +0000
+        id 1i7GZp-0001s1-U1; Mon, 09 Sep 2019 10:07:17 +0000
 Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 1BBC2D02D74; Mon,  9 Sep 2019 11:07:17 +0100 (BST)
+        id 2EE5AD02D76; Mon,  9 Sep 2019 11:07:17 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Cc:     alsa-devel@alsa-project.org,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "SoC: simple-card-utils: set 0Hz to sysclk when shutdown" to the asoc tree
-In-Reply-To: <20190907174501.19833-1-katsuhiro@katsuster.net>
+Cc:     alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: rockchip: ignore 0Hz sysclk" to the asoc tree
+In-Reply-To: <20190907174332.19586-1-katsuhiro@katsuster.net>
 X-Patchwork-Hint: ignore
-Message-Id: <20190909100717.1BBC2D02D74@fitzroy.sirena.org.uk>
+Message-Id: <20190909100717.2EE5AD02D76@fitzroy.sirena.org.uk>
 Date:   Mon,  9 Sep 2019 11:07:17 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -62,7 +62,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   SoC: simple-card-utils: set 0Hz to sysclk when shutdown
+   ASoC: rockchip: ignore 0Hz sysclk
 
 has been applied to the asoc tree at
 
@@ -87,68 +87,39 @@ to this mail.
 Thanks,
 Mark
 
-From 2458adb8f92ad4d07ef7ab27c5bafa1d3f4678d6 Mon Sep 17 00:00:00 2001
+From f1879d7b98dc9081cffc7718b644c6c41628cd18 Mon Sep 17 00:00:00 2001
 From: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Date: Sun, 8 Sep 2019 02:45:01 +0900
-Subject: [PATCH] SoC: simple-card-utils: set 0Hz to sysclk when shutdown
+Date: Sun, 8 Sep 2019 02:43:32 +0900
+Subject: [PATCH] ASoC: rockchip: ignore 0Hz sysclk
 
-This patch set 0Hz to sysclk when shutdown the card.
+This patch ignores sysclk setting if it is 0Hz.
 
-Some codecs set rate constraints that derives from sysclk. This
-mechanism works correctly if machine drivers give fixed frequency.
-
-But simple-audio and audio-graph card set variable clock rate if
-'mclk-fs' property exists. In this case, rate constraints will go
-bad scenario. For example a codec accepts three limited rates
-(mclk / 256, mclk / 384, mclk / 512).
-
-Bad scenario as follows (mclk-fs = 256):
-   - Initialize sysclk by correct value (Ex. 12.288MHz)
-     - Codec set constraints of PCM rate by sysclk
-       48kHz (1/256), 32kHz (1/384), 24kHz (1/512)
-   - Play 48kHz sound, it's acceptable
-   - Sysclk is not changed
-
-   - Play 32kHz sound, it's acceptable
-   - Set sysclk to 8.192MHz (= fs * mclk-fs = 32k * 256)
-     - Codec set constraints of PCM rate by sysclk
-       32kHz (1/256), 21.33kHz (1/384), 16kHz (1/512)
-
-   - Play 48kHz again, but it's NOT acceptable because constraints
-     do not allow 48kHz
-
-So codecs treat 0Hz sysclk as signal of applying no constraints to
-avoid this problem.
+Some codecs treat 0Hz sysclk as signal of applying no constraints.
+This driver does not have such feature but current implementation
+outputs 'Failed to set mclk' error message if machine driver sets
+0Hz sysclk to this driver.
 
 Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Link: https://lore.kernel.org/r/20190907174501.19833-1-katsuhiro@katsuster.net
+Link: https://lore.kernel.org/r/20190907174332.19586-1-katsuhiro@katsuster.net
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/generic/simple-card-utils.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ sound/soc/rockchip/rockchip_i2s.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/sound/soc/generic/simple-card-utils.c b/sound/soc/generic/simple-card-utils.c
-index 556b1a789629..9b794775df53 100644
---- a/sound/soc/generic/simple-card-utils.c
-+++ b/sound/soc/generic/simple-card-utils.c
-@@ -213,10 +213,17 @@ EXPORT_SYMBOL_GPL(asoc_simple_startup);
- void asoc_simple_shutdown(struct snd_pcm_substream *substream)
- {
- 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_dai *codec_dai = rtd->codec_dai;
-+	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
- 	struct asoc_simple_priv *priv = snd_soc_card_get_drvdata(rtd->card);
- 	struct simple_dai_props *dai_props =
- 		simple_priv_to_props(priv, rtd->num);
+diff --git a/sound/soc/rockchip/rockchip_i2s.c b/sound/soc/rockchip/rockchip_i2s.c
+index 88ebaf6e1880..af2d5a6124c8 100644
+--- a/sound/soc/rockchip/rockchip_i2s.c
++++ b/sound/soc/rockchip/rockchip_i2s.c
+@@ -419,6 +419,9 @@ static int rockchip_i2s_set_sysclk(struct snd_soc_dai *cpu_dai, int clk_id,
+ 	struct rk_i2s_dev *i2s = to_info(cpu_dai);
+ 	int ret;
  
-+	if (dai_props->mclk_fs) {
-+		snd_soc_dai_set_sysclk(codec_dai, 0, 0, SND_SOC_CLOCK_IN);
-+		snd_soc_dai_set_sysclk(cpu_dai, 0, 0, SND_SOC_CLOCK_OUT);
-+	}
++	if (freq == 0)
++		return 0;
 +
- 	asoc_simple_clk_disable(dai_props->cpu_dai);
- 
- 	asoc_simple_clk_disable(dai_props->codec_dai);
+ 	ret = clk_set_rate(i2s->mclk, freq);
+ 	if (ret)
+ 		dev_err(i2s->dev, "Fail to set mclk %d\n", ret);
 -- 
 2.20.1
 
