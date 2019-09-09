@@ -2,104 +2,97 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D80FC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 18:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF57C4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 18:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D75721924
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 18:30:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="T/zoUw8t"
+	by mail.kernel.org (Postfix) with ESMTP id 445CB218AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 18:33:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731762AbfIISaK (ORCPT
+        id S1731835AbfIISdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 14:30:10 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:39863 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726768AbfIISaK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 14:30:10 -0400
-Received: by mail-ed1-f66.google.com with SMTP id u6so13855290edq.6
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 11:30:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8M5+TPDS2IjP0aWDzyGkaBopFbLj6s+vVoGtuuyUqNo=;
-        b=T/zoUw8tKc5M592mbqf3dI8cKV6ZOgavo+bW0sf82wiwxeahnejH1Es2N3YHzwsLY5
-         dRjX3VlE7qiQHjwM1RVgwqjkbBRSjznlm2/6IBrVp1xlPxIYGTD1jq4bIQO2KVFBvuHb
-         +ez3hiQngmBc6xO9JynEjvOo0o8cGsYmfrES4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8M5+TPDS2IjP0aWDzyGkaBopFbLj6s+vVoGtuuyUqNo=;
-        b=SzJs5ML6YwTrKwdQeR6GUaC+aEROnIt4jUAHQiPdWaLE/N4nfDf8rwrMZ+X6+dDrQd
-         LAsa5jx0I6AfMP8Ou9uuB68JzCUhzciW9q6zrAP0GPrq9jJbCCVC4tybVfoxV5BNxEvm
-         eBn5xpFVVAOfi5mXddl4ENdTS926uh4J1cS7uaECQHKlObuSn8az1SCmt/7+UQZovPM0
-         bycaMxI17CC+m5+f7b4E6qimBvHL6aS2E8VbW7vpzcPpmYCeSNqKtPivs6a+vv+n2lei
-         TAUb2+cwTMyM5vJnnOXXd9IszHlMrTYCLlGrv45PgxqWmS4K042rPFroSHSKjv3H7+mq
-         ZK7Q==
-X-Gm-Message-State: APjAAAWNURku6BcvPVbYWGsg6f7hImDV4fruT2XRyOw8NSnp6ceuPxOU
-        Jq8WsLgijyQg6SJOVpA3Pnu/UcK5e+mx/4yl
-X-Google-Smtp-Source: APXvYqzD8IHDXeozNxyelzcX+YHu6/LinTuuQDxQv3DDjTdPQp1mAn8uFEh/89nYDke9qQaJASBpdA==
-X-Received: by 2002:a17:906:bcc9:: with SMTP id lw9mr20786884ejb.161.1568053807693;
-        Mon, 09 Sep 2019 11:30:07 -0700 (PDT)
-Received: from [192.168.1.149] (ip-5-186-115-35.cgn.fibianet.dk. [5.186.115.35])
-        by smtp.gmail.com with ESMTPSA id g20sm520589ejs.15.2019.09.09.11.30.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 09 Sep 2019 11:30:07 -0700 (PDT)
-Subject: Re: [PATCH 1/5] mm, slab: Make kmalloc_info[] contain all types of
- names
-To:     Pengfei Li <lpf.vector@gmail.com>, Vlastimil Babka <vbabka@suse.cz>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christopher Lameter <cl@linux.com>, penberg@kernel.org,
-        rientjes@google.com, iamjoonsoo.kim@lge.com, linux-mm@kvack.org,
+        Mon, 9 Sep 2019 14:33:40 -0400
+Received: from bues.ch ([80.190.117.144]:35222 "EHLO bues.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727014AbfIISdk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 14:33:40 -0400
+X-Greylist: delayed 2442 seconds by postgrey-1.27 at vger.kernel.org; Mon, 09 Sep 2019 14:33:38 EDT
+Received: by bues.ch with esmtpsa (Exim 4.92)
+        (envelope-from <m@bues.ch>)
+        id 1i7NqP-0005NC-Vv; Mon, 09 Sep 2019 19:52:54 +0200
+Date:   Mon, 9 Sep 2019 19:53:12 +0200
+From:   Michael =?UTF-8?B?QsO8c2No?= <m@bues.ch>
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     Colin King <colin.king@canonical.com>,
+        linux-wireless@vger.kernel.org, kernel-janitors@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20190903160430.1368-1-lpf.vector@gmail.com>
- <20190903160430.1368-2-lpf.vector@gmail.com>
- <4e9a237f-2370-0f55-34d2-1fbb9334bf88@suse.cz>
- <CAD7_sbEwwqp_ONzYxPQfBDORH4g2Du=LKt=eWf+6SsLgtysBmA@mail.gmail.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <3a95d20d-ccf9-bd45-2db3-380cc3e0cd17@rasmusvillemoes.dk>
-Date:   Mon, 9 Sep 2019 20:30:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+Subject: Re: [PATCH] ssb: make array pwr_info_offset static const, makes
+ object smaller
+Message-ID: <20190909195312.1873c0f7@wiggum>
+In-Reply-To: <20190906154053.32218-1-colin.king@canonical.com>
+References: <20190906154053.32218-1-colin.king@canonical.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <CAD7_sbEwwqp_ONzYxPQfBDORH4g2Du=LKt=eWf+6SsLgtysBmA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/Gh5rJFI_YvQsdaAQbg3kPxs";
+ protocol="application/pgp-signature"; micalg=pgp-sha512
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/09/2019 18.53, Pengfei Li wrote:
-> On Mon, Sep 9, 2019 at 10:59 PM Vlastimil Babka <vbabka@suse.cz> wrote:
+--Sig_/Gh5rJFI_YvQsdaAQbg3kPxs
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
->>>   /*
->>>    * kmalloc_info[] is to make slub_debug=,kmalloc-xx option work at boot time.
->>>    * kmalloc_index() supports up to 2^26=64MB, so the final entry of the table is
->>>    * kmalloc-67108864.
->>>    */
->>>   const struct kmalloc_info_struct kmalloc_info[] __initconst = {
->>
->> BTW should it really be an __initconst, when references to the names
->> keep on living in kmem_cache structs? Isn't this for data that's
->> discarded after init?
-> 
-> You are right, I will remove __initconst in v2.
+On Fri,  6 Sep 2019 16:40:53 +0100
+Colin King <colin.king@canonical.com> wrote:
 
-No, __initconst is correct, and should be kept. The string literals
-which the .name pointers point to live in .rodata, and we're copying the
-values of these .name pointers. Nothing refers to something inside
-kmalloc_info[] after init. (It would be a whole different matter if
-struct kmalloc_info_struct consisted of { char name[NN]; unsigned int
-size; }).
+> diff --git a/drivers/ssb/pci.c b/drivers/ssb/pci.c
+> index da2d2ab8104d..7c3ae52f2b15 100644
+> --- a/drivers/ssb/pci.c
+> +++ b/drivers/ssb/pci.c
+> @@ -595,7 +595,7 @@ static void sprom_extract_r8(struct ssb_sprom *out, c=
+onst u16 *in)
+>  {
+>  	int i;
+>  	u16 o;
+> -	u16 pwr_info_offset[] =3D {
+> +	static const u16 pwr_info_offset[] =3D {
+>  		SSB_SROM8_PWR_INFO_CORE0, SSB_SROM8_PWR_INFO_CORE1,
+>  		SSB_SROM8_PWR_INFO_CORE2, SSB_SROM8_PWR_INFO_CORE3
+>  	};
 
-Rasmus
+Thanks for your contribution. This change makes sense.
+
+Kalle, can you please take it?
+
+Acked-by: Michael B=C3=BCsch <m@bues.ch>
+
+--=20
+Michael
+
+--Sig_/Gh5rJFI_YvQsdaAQbg3kPxs
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEihRzkKVZOnT2ipsS9TK+HZCNiw4FAl12kYgACgkQ9TK+HZCN
+iw4dkg//RkZq55Col2WsmizgjsdDYipwL9loeVjtw64YjtT2ZVcwSzQfooPf253D
+BKLbB6AbBNc3oniPuicHJZGxNX5ppfO6teIcHvzd1gtlNIDyRRU+dFA4DoqskKlK
+9n7JWAWmXxLhpw8121mQmtV5MYbHJRR6fhemrDJPtKRwJLfcZSLF5ENUu3VCifw2
+/G5PqA7Lsu7llxd6Cl5uz3fD4wX3o9LRaVsF/QZvmGoV6FdqUgf/cRGXtOGYzCQ4
+2DVxrykaS8VTWqvbJQ1LIlDv1u2cGxIWlvAlI3t40CCR6md914C9abWj+o48wDPd
+DE/kCQeJy6uHqcc3yYTp888a4tnWnsAovNySHNwefvRCbcU3q5fKbluX5Zth9r1u
+6JqQoAglH3wNUaUJ1nXuASWz9l7J9IkJakzHZzzxy1cQ5uvZXeP5T1FPbrlKOSJX
+cvICP9T79dtDR9XmjRd5jKLpXCHNO0ZVgo6PfxoRJtxD60cwLtKMKlNjP+9Hto23
+sKnQ6wuEhIluxun1x4pb73+8WLzL8f9u9nlh/HVSvnh39QlarMUMAbWXAH/J182J
+O/65KfRCcUkoBxMIvwtnCckj08NmrHrS5DVIp2YaMbzjlLpKvFSCxf+65pB2CREt
+EeG3/vOb9ElEjrJdWXy+BB4rOCLoxk4Ks07DZXbrq0FJPjg5DbI=
+=/ENb
+-----END PGP SIGNATURE-----
+
+--Sig_/Gh5rJFI_YvQsdaAQbg3kPxs--
