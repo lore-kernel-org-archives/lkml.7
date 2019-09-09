@@ -2,160 +2,79 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B774C433EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73223C433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39483218AC
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5035A2086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:58:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390185AbfIIJ6a (ORCPT
+        id S2390199AbfIIJ64 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 05:58:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41694 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729324AbfIIJ6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 05:58:16 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2262FAF54;
-        Mon,  9 Sep 2019 09:58:15 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     catalin.marinas@arm.com, hch@lst.de, wahrenst@gmx.net,
-        marc.zyngier@arm.com, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     f.fainelli@gmail.com, will@kernel.org, robin.murphy@arm.com,
-        nsaenzjulienne@suse.de, mbrugger@suse.com,
-        linux-rpi-kernel@lists.infradead.org, phill@raspberrypi.org,
-        m.szyprowski@samsung.com
-Subject: [PATCH v5 2/4] arm64: rename variables used to calculate ZONE_DMA32's size
-Date:   Mon,  9 Sep 2019 11:58:05 +0200
-Message-Id: <20190909095807.18709-3-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190909095807.18709-1-nsaenzjulienne@suse.de>
-References: <20190909095807.18709-1-nsaenzjulienne@suse.de>
+        Mon, 9 Sep 2019 05:58:56 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:34614 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728206AbfIIJ64 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 05:58:56 -0400
+Received: by mail-ot1-f67.google.com with SMTP id z26so2597572oto.1;
+        Mon, 09 Sep 2019 02:58:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hlpDfZePYVovMOgYxyTZv3r/AVbPjpMO1Fr6zFVJef8=;
+        b=iAi2ciUkl4AceL7TC9mhev1QELpqVMbC4VeRkwyWU3hTv3DW3/+eHJYPnHseHQ9bBP
+         yAnBkuxxu2LeZjWKdH0bBi/EVZchtTT0/VQfZqXgiqM/PmdzUnD3L6TLYE1USsqp4XjR
+         l4cbB0nTJrECy8cvsKqbR/NsX9RrAUSwq44sQD4CO7sqmD1eyw8RChmq4gPZ2Pz76Tbe
+         VVmAeX9U2K34jmdhjDdO+VooTifrlIDo5CGrSFDsrxL4WuRub1it0zhhK/ZRR/yId2UA
+         RVKh9v5cK/PiuGay8sbShRUdo9VBh/d91xRGvXIM2DiNDoBTX791xPpIl+U/2nbrnBkg
+         qPrA==
+X-Gm-Message-State: APjAAAXJbIdIjwsq333o6OxHn+FcFOCd346CBks7x+YV2N9AzsYxaRLU
+        4V3Fd18enJ4xvKviKaWU+FocVxun0WEx+oadexkomw==
+X-Google-Smtp-Source: APXvYqxnbUay5PiRGlAk1ZYomVlAdiyOVo02nv/J8yNZnhIS1OWHceNsLa/CuscQP9WJ+Ear0a9O2Nxlub7TP0r2NBo=
+X-Received: by 2002:a9d:2cc:: with SMTP id 70mr18636821otl.145.1568023135226;
+ Mon, 09 Sep 2019 02:58:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <b2dd074a-1693-3aea-42b4-da1f5ec155c4@web.de>
+In-Reply-To: <b2dd074a-1693-3aea-42b4-da1f5ec155c4@web.de>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 9 Sep 2019 11:58:44 +0200
+Message-ID: <CAMuHMdWkPFBphjKQf686LgW6ZE35MYM3A3TmUaY-PJYajSwuyw@mail.gmail.com>
+Subject: Re: [PATCH] spi-gpio: Use PTR_ERR_OR_ZERO() in spi_gpio_request()
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-spi <linux-spi@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let the name indicate that they are used to calculate ZONE_DMA32's size
-as opposed to ZONE_DMA.
+On Sun, Sep 8, 2019 at 2:46 PM Markus Elfring <Markus.Elfring@web.de> wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Sat, 7 Sep 2019 13:51:16 +0200
+>
+> Simplify this function implementation by using a known function.
+>
+> Generated by: scripts/coccinelle/api/ptr_ret.cocci
+>
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
----
- arch/arm64/mm/init.c | 30 +++++++++++++++---------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 098c0f5bedf6..8e9bc64c5878 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -56,7 +56,7 @@ EXPORT_SYMBOL(physvirt_offset);
- struct page *vmemmap __ro_after_init;
- EXPORT_SYMBOL(vmemmap);
- 
--phys_addr_t arm64_dma_phys_limit __ro_after_init;
-+phys_addr_t arm64_dma32_phys_limit __ro_after_init;
- 
- #ifdef CONFIG_KEXEC_CORE
- /*
-@@ -174,7 +174,7 @@ static void __init reserve_elfcorehdr(void)
-  * currently assumes that for memory starting above 4G, 32-bit devices will
-  * use a DMA offset.
-  */
--static phys_addr_t __init max_zone_dma_phys(void)
-+static phys_addr_t __init max_zone_dma32_phys(void)
- {
- 	phys_addr_t offset = memblock_start_of_DRAM() & GENMASK_ULL(63, 32);
- 	return min(offset + (1ULL << 32), memblock_end_of_DRAM());
-@@ -187,7 +187,7 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
- 	unsigned long max_zone_pfns[MAX_NR_ZONES]  = {0};
- 
- #ifdef CONFIG_ZONE_DMA32
--	max_zone_pfns[ZONE_DMA32] = PFN_DOWN(arm64_dma_phys_limit);
-+	max_zone_pfns[ZONE_DMA32] = PFN_DOWN(arm64_dma32_phys_limit);
- #endif
- 	max_zone_pfns[ZONE_NORMAL] = max;
- 
-@@ -200,16 +200,16 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
- {
- 	struct memblock_region *reg;
- 	unsigned long zone_size[MAX_NR_ZONES], zhole_size[MAX_NR_ZONES];
--	unsigned long max_dma = min;
-+	unsigned long max_dma32 = min;
- 
- 	memset(zone_size, 0, sizeof(zone_size));
- 
- 	/* 4GB maximum for 32-bit only capable devices */
- #ifdef CONFIG_ZONE_DMA32
--	max_dma = PFN_DOWN(arm64_dma_phys_limit);
--	zone_size[ZONE_DMA32] = max_dma - min;
-+	max_dma32 = PFN_DOWN(arm64_dma32_phys_limit);
-+	zone_size[ZONE_DMA32] = max_dma32 - min;
- #endif
--	zone_size[ZONE_NORMAL] = max - max_dma;
-+	zone_size[ZONE_NORMAL] = max - max_dma32;
- 
- 	memcpy(zhole_size, zone_size, sizeof(zhole_size));
- 
-@@ -221,14 +221,14 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
- 			continue;
- 
- #ifdef CONFIG_ZONE_DMA32
--		if (start < max_dma) {
--			unsigned long dma_end = min(end, max_dma);
-+		if (start < max_dma32) {
-+			unsigned long dma_end = min(end, max_dma32);
- 			zhole_size[ZONE_DMA32] -= dma_end - start;
- 		}
- #endif
--		if (end > max_dma) {
-+		if (end > max_dma32) {
- 			unsigned long normal_end = min(end, max);
--			unsigned long normal_start = max(start, max_dma);
-+			unsigned long normal_start = max(start, max_dma32);
- 			zhole_size[ZONE_NORMAL] -= normal_end - normal_start;
- 		}
- 	}
-@@ -420,9 +420,9 @@ void __init arm64_memblock_init(void)
- 
- 	/* 4GB maximum for 32-bit only capable devices */
- 	if (IS_ENABLED(CONFIG_ZONE_DMA32))
--		arm64_dma_phys_limit = max_zone_dma_phys();
-+		arm64_dma32_phys_limit = max_zone_dma32_phys();
- 	else
--		arm64_dma_phys_limit = PHYS_MASK + 1;
-+		arm64_dma32_phys_limit = PHYS_MASK + 1;
- 
- 	reserve_crashkernel();
- 
-@@ -430,7 +430,7 @@ void __init arm64_memblock_init(void)
- 
- 	high_memory = __va(memblock_end_of_DRAM() - 1) + 1;
- 
--	dma_contiguous_reserve(arm64_dma_phys_limit);
-+	dma_contiguous_reserve(arm64_dma32_phys_limit);
- }
- 
- void __init bootmem_init(void)
-@@ -534,7 +534,7 @@ static void __init free_unused_memmap(void)
- void __init mem_init(void)
- {
- 	if (swiotlb_force == SWIOTLB_FORCE ||
--	    max_pfn > (arm64_dma_phys_limit >> PAGE_SHIFT))
-+	    max_pfn > (arm64_dma32_phys_limit >> PAGE_SHIFT))
- 		swiotlb_init(1);
- 	else
- 		swiotlb_force = SWIOTLB_NO_FORCE;
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.23.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
