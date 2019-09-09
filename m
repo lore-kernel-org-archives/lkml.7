@@ -2,187 +2,161 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA9BC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFEE1C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20615218AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB81B218AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:50:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Zrm/Rwec"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391483AbfIIRtD (ORCPT
+        id S1730441AbfIIRut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 13:49:03 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:37195 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727514AbfIIRtC (ORCPT
+        Mon, 9 Sep 2019 13:50:49 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36586 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725852AbfIIRus (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 13:49:02 -0400
-Received: from [148.69.85.38] (port=24775 helo=[192.168.5.132])
-        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1i7Nmb-006VAY-QJ; Mon, 09 Sep 2019 19:48:57 +0200
-Subject: Re: [RFC,v2 2/6] i2c: add I2C Address Translator (ATR) support
-To:     Vladimir Zapolskiy <vz@mleia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        jacopo mondi <jacopo@jmondi.org>, Peter Rosin <peda@axentia.se>
-Cc:     linux-media@vger.kernel.org, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>
-References: <20190723203723.11730-1-luca@lucaceresoli.net>
- <20190723203723.11730-3-luca@lucaceresoli.net>
- <20190901143101.humomdehy5ee73sk@vino>
- <aedad45b-16d6-d189-b045-329727440ca5@mleia.com> <20190909072232.GA990@kunai>
- <8af9a049-06b9-dbe8-827b-5134d20e9435@mleia.com>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <152384b8-c0a8-e6fe-9a1f-52caf00533de@lucaceresoli.net>
-Date:   Mon, 9 Sep 2019 18:48:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 9 Sep 2019 13:50:48 -0400
+Received: by mail-wr1-f65.google.com with SMTP id y19so14963348wrd.3
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 10:50:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:cc:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding;
+        bh=DdPMRC7fgZpsKbVZ/B0zUuc2EzOH4bRfHzaKWExErGE=;
+        b=Zrm/RwecGRKIQ+VTy+JsDQ+fpIMX6Z3bVGkjeNioi7u1ctxGFchxRKk0w2X3J8paCs
+         nO+kpGwsngaIKWSBd+bLwD+msH1zmU5RfuH76T8G1k2JotXIfmE7t3pGKByUuMaJViOf
+         nySZ8j4oh9BLIR7zo+e+YkssIldksT3h1/8MAOFfVqwz7sUlisuBuSxM76bcV1Oi9Jma
+         adJP31ArUY/g32u+exgdl+SIWt/z38aT36wAx2uNt9ztXs0gJj9CHsL94b0pplSQsL8r
+         SsgQWhfcTm14jeBAtJNeJfJD3iO/kgZphoRk7PgkfxvCosxnTyIX7EEulsPuNjZp0X3/
+         F7UA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=DdPMRC7fgZpsKbVZ/B0zUuc2EzOH4bRfHzaKWExErGE=;
+        b=BsPFJY8okK/UlbxcTUo1KW54GRuA0QHKosqYQUJ0VZa2JFI8raOSi1BtjljbpzoCnv
+         /DFurXOtV8rUJq0JfxvdVDXjneXrVB3H/xvny4SiSeD7+shiySJ7JNDGAJnQ1Kah0wym
+         2qGNIrKy5He2RjBh6aFel2Mc6c47enl+SYFG5Ncr6tACsjLEUS+9T6Kuwhq4YWl/BFLZ
+         d490LUG8DmFFcdeJ7VP0NYkYjkQD45JM/yU7++xzPOiAesooPZlFLSLtoNT3IkO5HK6K
+         jj7NV/hr3Cf4YOYtrcP0uemK10WQ5Pfnh0fMBCxxjMhXyJ2N9GnbUrL0usA1AVlcC+9m
+         idvQ==
+X-Gm-Message-State: APjAAAUgNvuFmMkbL6Lo4IwdWQY5jlBdUhBRbrDRXMSjE3PHG8Zj8Pyk
+        AhRlpcpcZq+x/Uubiw8VMnV2OaK2CzV7/A==
+X-Google-Smtp-Source: APXvYqz5gCV5Ze/WC6zuHxMY6FG6sSTIDCIY33H80sMA4yZE+z6o/LNwDUTnh/CS7ryfujgHwlTHag==
+X-Received: by 2002:a5d:48c2:: with SMTP id p2mr7815743wrs.348.1568051444421;
+        Mon, 09 Sep 2019 10:50:44 -0700 (PDT)
+Received: from [192.168.1.77] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
+        by smtp.gmail.com with ESMTPSA id p8sm12079863wrq.22.2019.09.09.10.50.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 09 Sep 2019 10:50:43 -0700 (PDT)
+Subject: Re: [PATCH 6/6] arm64: dts: khadas-vim3: add commented support for
+ PCIe
+To:     Marc Zyngier <maz@kernel.org>
+References: <1567950178-4466-1-git-send-email-narmstrong@baylibre.com>
+ <1567950178-4466-7-git-send-email-narmstrong@baylibre.com>
+ <864l1ls9wy.wl-maz@kernel.org>
+Cc:     khilman@baylibre.com, bhelgaas@google.com,
+        lorenzo.pieralisi@arm.com, yue.wang@Amlogic.com, kishon@ti.com,
+        repk@triplefau.lt, linux-amlogic@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Message-ID: <2c25e8b5-191f-96c9-8989-23959a7b1c4e@baylibre.com>
+Date:   Mon, 9 Sep 2019 19:50:42 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:45.0)
+ Gecko/20100101 Thunderbird/45.8.0
 MIME-Version: 1.0
-In-Reply-To: <8af9a049-06b9-dbe8-827b-5134d20e9435@mleia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+In-Reply-To: <864l1ls9wy.wl-maz@kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vladimir,
+Hi Marc,
 
-On 09/09/19 16:10, Vladimir Zapolskiy wrote:
-> Hi Wolfram,
-> 
-> On 09/09/2019 10:22 AM, Wolfram Sang wrote:
->> Hi Vladimir,
+Le 09/09/2019 à 18:37, Marc Zyngier a écrit :
+> On Sun, 08 Sep 2019 14:42:58 +0100,
+> Neil Armstrong <narmstrong@baylibre.com> wrote:
 >>
->>> I won't attend the LPC, however I would appreciate if you book some
+>> The VIM3 on-board  MCU can mux the PCIe/USB3.0 shared differential
+>> lines using a FUSB340TMX USB 3.1 SuperSpeed Data Switch between
+>> an USB3.0 Type A connector and a M.2 Key M slot.
+>> The PHY driving these differential lines is shared between
+>> the USB3.0 controller and the PCIe Controller, thus only
+>> a single controller can use it.
 >>
->> A pity. I would have liked to have you in the room. Let's see if we can
->> get enough input from you via mail here.
+>> The needed DT configuration when the MCU is configured to mux
+>> the PCIe/USB3.0 differential lines to the M.2 Key M slot is
+>> added commented and may uncommented to disable USB3.0 from the
+>> USB Complex and enable the PCIe controller.
 >>
-> 
-> if it might help, I'll attend the Embedded Recipes and ELCE conferences
-> this year.
-> 
->>> time to review my original / alternative implementation of the TI
->>> DS90Ux9xx I2C bridge device driver.
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>> ---
+>>  .../amlogic/meson-g12b-a311d-khadas-vim3.dts  | 22 +++++++++++++++++++
+>>  .../amlogic/meson-g12b-s922x-khadas-vim3.dts  | 22 +++++++++++++++++++
+>>  .../boot/dts/amlogic/meson-khadas-vim3.dtsi   |  4 ++++
+>>  .../dts/amlogic/meson-sm1-khadas-vim3l.dts    | 22 +++++++++++++++++++
+>>  4 files changed, 70 insertions(+)
 >>
->> We have only 45 minutes, this will not allow to review specific
->> implementations. I want to give an overview of existing implementations
->> with pros/cons...
->>
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-khadas-vim3.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-khadas-vim3.dts
+>> index 3a6a1e0c1e32..0577b1435cbb 100644
+>> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-khadas-vim3.dts
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-khadas-vim3.dts
+>> @@ -14,3 +14,25 @@
+>>  / {
+>>  	compatible = "khadas,vim3", "amlogic,a311d", "amlogic,g12b";
+>>  };
+>> +
+>> +/*
+>> + * The VIM3 on-board  MCU can mux the PCIe/USB3.0 shared differential
+>> + * lines using a FUSB340TMX USB 3.1 SuperSpeed Data Switch between
+>> + * an USB3.0 Type A connector and a M.2 Key M slot.
+>> + * The PHY driving these differential lines is shared between
+>> + * the USB3.0 controller and the PCIe Controller, thus only
+>> + * a single controller can use it.
+>> + * If the MCU is configured to mux the PCIe/USB3.0 differential lines
+>> + * to the M.2 Key M slot, uncomment the following block to disable
+>> + * USB3.0 from the USB Complex and enable the PCIe controller.
+>> + */
+>> +/*
+>> +&pcie {
+>> +	status = "okay";
+>> +};
+>> +
+>> +&usb {
+>> +	phys = <&usb2_phy0>, <&usb2_phy1>;
+>> +	phy-names = "usb2-phy0", "usb2-phy1";
+>> +};
+>> + */
 > 
-> Sure! Any shared summary/opinions are greatly welcome.
-> 
->>> The reasons why my driver is better/more flexible/more functional are
->>> discussed earlier, please let me know, if you expect anything else
->>> from me to add, also I would be happy to get a summary of your offline
->>> discussion.
->>
->> ... and I'd appreciate support here from you, like your summary of the
->> back then discussion (from where I can dive deeper if needed).
->>
->> Also, with Luca's new series we discussed some scenarios which can
->> happen WRT to I2C address conflicts. Maybe you could comment on them,
->> too?
-> 
-> I do remember I've commented on the Luca's suggestion of using dynamic
-> I2C addresses from a pool (the introduced "i2c-alias-pool" property).
-> 
-> I have to scrutinize it in Luca's v2, but then it might happen that the
-> userspace won't know to which IC on the remote side it communicates to.
+> Although you can't do much more than this here, I'd expect firmware on
+> the machine to provide the DT that matches its configuration. Is it
+> the way it actually works? Or is the user actually expected to edit
+> this file?
 
-I think you suspect this because the assigned alias is
-non-deterministic, so you might end up in writing to the wrong alias.
-Well, this is not possible because the user is not supposed to know the
-alias at all. Let's say you have two identical eeproms on remote port 0,
-with physical addresses 0x50 and 0x51. Then, with my RFCv2 code, you'll
-access them with physical numbers, not the alias:
+It's the plan when initial VIM3 support will be merged in u-boot mainline,
+and the MCU driver will be added aswell :
+https://patchwork.ozlabs.org/cover/1156618/
+A custom board support altering the DT will be added when this patchset
+is merged upstream.
 
-# i2cdetect -l
-i2c-0	i2c   	amba:camera-i2c@0      I2C adapter
-i2c-4	i2c   	i2c-0-atr-0            I2C adapter
-i2c-5	i2c   	i2c-0-atr-1            I2C adapter
-# hexdump /sys/bus/i2c/devices/4-0050/eeprom
-0000000 ffff ffff ffff ffff ffff ffff ffff ffff
-*
-0000100
-# hexdump /sys/bus/i2c/devices/4-0051/eeprom
-0000000 0001 0203 0405 0607 0809 0a0b 0c0d 0e0f
-*
-0000100
-#
+But since these are separate projects, leaving this as commented is ugly,
+but necessary.
 
-Here i2c-0 is the "local" bus, i2c-4 and i2c-5 are the remote busses on
-ports 0 and 1. As you can see the eeproms are accessed using a name like
-"4-0050", meaning physical slave address 0x50 on bus 4. No alias is needed.
+Thanks,
+Neil
 
-Should you want to know the alias, perhaps for debugging (it's the
-address you'll see on your logic analyzer), they are shown in the kernel
-log.
-
-Does this reply to your concern?
-
->> As I read the old thread, you have a hardcoded aliases using
->> "ti,i2c-bridge-maps". This means you can't have own DTSI files for e.g.
->> add-on modules, do I get this correctly?
->>
 > 
-> Basically hardcoding of aliases completely resolves the highlighted
-> above problem. Still it is possible to have own DTSI files for the FPD
-> link detachable PCBs, and this is an exceptionally important scenario,
-> however some limitations shall be applied:
-> * dt overlays for "local" derializer/deserializer ICs, it's a generic
->   and universal solution, it is successfully used in the field,
-> * only "compatible" PCBs are supposed to be connected (same set of I2C
->   devices/addresses on every such PCB), this is imperfect for sure,
-> * "ti,i2c-bridge-maps" list is excessive to cover "almost compatible"
->   (in the sense from above) PCBs, some of the missed alias matches
->   just won't instantiate a driver, this is of course also imperfect.
+> Thanks,
 > 
-> In general nothing critical should happen, if some I2C device on the
-> remote side is simply not probed in runtime, in opposite you can imagine
-> that writing for instance to another EEPROM of two on the remote side
-> could be harmful.
+> 	M.
 > 
-> Any technically better solution to the two given approaches (from Luca
-> and from me) is more than appreciated. For non-dynamic/fixed local and
-> remote PCBs the fixed mapping is better, the dynamic case is covered
-> by the dt overlays, why not?
-> 
-> As a side note please do remember that the I2C bridging on Maxim GMSL
-> and TI DS90Ux9xx are different, the former one is a real mux, and the
-> latter one is not, I'm uncertain if it's reasonable to think of a
-> generalized solution which covers both IC series, so likely we
-> have to review the developed solutions for them separately instead
-> of trying to work out a combined one.
-> 
-> --
-> Best wishes,
-> Vladimir
-> 
-
-
--- 
-Luca
