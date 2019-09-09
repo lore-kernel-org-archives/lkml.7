@@ -2,156 +2,302 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B808C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27984C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A0FC21479
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:41:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD8B1218DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:42:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Dj/5EjTI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404748AbfIIMlO (ORCPT
+        id S2404859AbfIIMmK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 08:41:14 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:55602 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728291AbfIIMlN (ORCPT
+        Mon, 9 Sep 2019 08:42:10 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:36732 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728254AbfIIMmK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 08:41:13 -0400
-Received: from fsav110.sakura.ne.jp (fsav110.sakura.ne.jp [27.133.134.237])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x89CeRLt047567;
-        Mon, 9 Sep 2019 21:40:27 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav110.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav110.sakura.ne.jp);
- Mon, 09 Sep 2019 21:40:27 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav110.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126227201116.bbtec.net [126.227.201.116])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x89CeRQo047564
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Mon, 9 Sep 2019 21:40:27 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH (resend)] mm,oom: Defer dump_tasks() output.
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <1567159493-5232-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
- <7de2310d-afbd-e616-e83a-d75103b986c6@i-love.sakura.ne.jp>
- <20190909113627.GJ27159@dhcp22.suse.cz>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <579a27d2-52fb-207e-9278-fc20a2154394@i-love.sakura.ne.jp>
-Date:   Mon, 9 Sep 2019 21:40:24 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20190909113627.GJ27159@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 9 Sep 2019 08:42:10 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190909124207euoutp01ea281b0f4e581edcb37b54ba43af070a~CxaPdnFcQ0272202722euoutp013
+        for <linux-kernel@vger.kernel.org>; Mon,  9 Sep 2019 12:42:07 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190909124207euoutp01ea281b0f4e581edcb37b54ba43af070a~CxaPdnFcQ0272202722euoutp013
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1568032927;
+        bh=GQfp0KfghI3ZFpEMs3T7THOxuMfa9A+8AFLGOs78JFs=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=Dj/5EjTIoozbFyKg18tXjO6Oq+fvmvL6QAmIOQpH2417N2ZZ2uWBxvxrZYEro2Xtt
+         WPnRRA9LOzUV7Ark+mJHnnvjsWhl0tgO/J4mnOMNDdVP2gH7Yfc1aMmFC0eJMfZwoT
+         mrscmzZTafdga/tmYCsohRvIuJ7e72E3FpVE2WG0=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190909124207eucas1p2971d0a54c6221a33cb5ea060c8d7e6d4~CxaO4vuzv0605306053eucas1p2q;
+        Mon,  9 Sep 2019 12:42:07 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 1D.34.04309.E98467D5; Mon,  9
+        Sep 2019 13:42:06 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190909124206eucas1p13e4ffd50a3bbc6f390cb63f11034c34c~CxaOFuQg_0915909159eucas1p15;
+        Mon,  9 Sep 2019 12:42:06 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190909124206eusmtrp1cf57e34114dc588b256456042e77cdc6~CxaN3WCvi0603806038eusmtrp1v;
+        Mon,  9 Sep 2019 12:42:06 +0000 (GMT)
+X-AuditID: cbfec7f4-ae1ff700000010d5-04-5d76489e01cf
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 34.AD.04166.E98467D5; Mon,  9
+        Sep 2019 13:42:06 +0100 (BST)
+Received: from AMDC2459.DIGITAL.local (unknown [106.120.51.95]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190909124205eusmtip117e7a08607f65ff739475e7d54211a86~CxaNWmbf60611406114eusmtip1K;
+        Mon,  9 Sep 2019 12:42:05 +0000 (GMT)
+From:   Maciej Falkowski <m.falkowski@samsung.com>
+To:     linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     krzk@kernel.org, robh+dt@kernel.org, m.falkowski@samsung.com,
+        mark.rutland@arm.com, m.szyprowski@samsung.com, a.hajda@samsung.com
+Subject: [PATCH] dt-bindings: arm: samsung: Convert Samsung Exynos IOMMU
+ H/W, System MMU to dt-schema
+Date:   Mon,  9 Sep 2019 14:41:47 +0200
+Message-Id: <20190909124147.17510-1-m.falkowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrAIsWRmVeSWpSXmKPExsWy7djPc7rzPcpiDXgtbq07x2ox/wiQOH9+
+        A7vF5V1z2CxmnN/HZPGgeR2bxdojd9ktll6/yGTRuvcIuwOnx5p5axg9Nq3qZPPo27KK0ePz
+        JrkAligum5TUnMyy1CJ9uwSujK0LdrEX7LKt2LT4FVMD4zuDLkZODgkBE4k713+xdzFycQgJ
+        rGCU2DHjDSuE84VR4m3LDSYI5zOjxNHzhxhhWiZ//Q7VspxRYlHLaUa4lu4jf9hAqtgEDCT6
+        3+xlAbFFBBIlbv/uB+tgFmhnlDh74A4zSEJYIF3iz6l/rCA2i4CqxJzePWA2r4CNxKzOpewQ
+        6+QlVm84wAzSLCFwn03i4435LBAJF4l3U2GKhCVeHd8CZctInJ7cA1TDAWRXS1z7JgvR28Io
+        cX3aWzaIGmuJP6smsoHUMAtoSqzfpQ9R7ihxrDcYwuSTuPFWEKSYGcictG06M0SYV6KjTQjC
+        VJV4MyEWYpy0ROua/dDg8ZCY9LwB7EQhgViJd9PvME5glJuFsGkBI+MqRvHU0uLc9NRio7zU
+        cr3ixNzi0rx0veT83E2MwHRw+t/xLzsYd/1JOsQowMGoxMO7w7wsVog1say4MvcQowQHs5II
+        7/W+0lgh3pTEyqrUovz4otKc1OJDjNIcLErivNUMD6KFBNITS1KzU1MLUotgskwcnFINjIu2
+        KO1/9HBd5Z3bE76mOSiE95X0eR/M/jJx2cqbuvUaT0X27pC5VHlD+sodWdPXj8xKNxdv8g62
+        f5H5I9bvdvyN2wenZfzsMJM9/2ZjkkTyqdsak4+6H+T9PSNNhJvxyIrYA4Gfnk4qXXSefY1i
+        YSB76oOQmQ5/vd6rhP5WnrHT0krGo5S/QUuJpTgj0VCLuag4EQCdy8IsAwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFLMWRmVeSWpSXmKPExsVy+t/xu7rzPMpiDVofsFrcWneO1WL+ESBx
+        /vwGdovLu+awWcw4v4/J4kHzOjaLtUfuslssvX6RyaJ17xF2B06PNfPWMHpsWtXJ5tG3ZRWj
+        x+dNcgEsUXo2RfmlJakKGfnFJbZK0YYWRnqGlhZ6RiaWeobG5rFWRqZK+nY2Kak5mWWpRfp2
+        CXoZWxfsYi/YZVuxafErpgbGdwZdjJwcEgImEpO/fmcHsYUEljJKdP9OgIhLS+y/9pEdwhaW
+        +HOti62LkQuo5hOjxI7Hz1hBEmwCBhL9b/aygNgiAskSiw/vZAQpYhboZ5SY9HYtWEJYIFVi
+        9YUWJhCbRUBVYk7vHrBmXgEbiVmdS6E2yEus3nCAeQIjzwJGhlWMIqmlxbnpucWGesWJucWl
+        eel6yfm5mxiB4bjt2M/NOxgvbQw+xCjAwajEw7vDvCxWiDWxrLgy9xCjBAezkgjv9b7SWCHe
+        lMTKqtSi/Pii0pzU4kOMpkDLJzJLiSbnA2MlryTe0NTQ3MLS0NzY3NjMQkmct0PgYIyQQHpi
+        SWp2ampBahFMHxMHp1QDY3ba13CXKQvvif+ffPhyV2ldzZIzf8pKS4JLJCOdZ4c8zzkhfets
+        hv76RUUJugG3t6Q3PJEQXfbTwc91td+y5/ONuzx6Vxw5/Vph2q0Z73+XfvryZ9m6w5/1rmyS
+        +l2+OvvPVOuc6p8JvebbKzWiDl+T3yJ3J8elpaT/A2fM3hsrk7rXKFVXVSmxFGckGmoxFxUn
+        AgBkNKptXQIAAA==
+X-CMS-MailID: 20190909124206eucas1p13e4ffd50a3bbc6f390cb63f11034c34c
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190909124206eucas1p13e4ffd50a3bbc6f390cb63f11034c34c
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190909124206eucas1p13e4ffd50a3bbc6f390cb63f11034c34c
+References: <CGME20190909124206eucas1p13e4ffd50a3bbc6f390cb63f11034c34c@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/09/09 20:36, Michal Hocko wrote:
-> On Sat 07-09-19 19:54:32, Tetsuo Handa wrote:
->> (Resending to LKML as linux-mm ML dropped my posts.)
->>
->> If /proc/sys/vm/oom_dump_tasks != 0, dump_header() can become very slow
->> because dump_tasks() synchronously reports all OOM victim candidates, and
->> as a result ratelimit test for dump_header() cannot work as expected.
->>
->> This patch defers dump_tasks() output till oom_lock is released. As a
->> result of this patch, the latency between out_of_memory() is called and
->> SIGKILL is sent (and the OOM reaper starts reclaiming memory) will be
->> significantly reduced.
->>
->> Since CONFIG_PRINTK_CALLER was introduced, concurrent printk() became less
->> problematic. But we still need to correlate synchronously printed messages
->> and asynchronously printed messages if we defer dump_tasks() messages.
->> Thus, this patch also prefixes OOM killer messages using "OOM[$serial]:"
->> format. As a result, OOM killer messages would look like below.
->>
->>   [   31.935015][   T71] OOM[1]: kworker/4:1 invoked oom-killer: gfp_mask=0xcc0(GFP_KERNEL), order=-1, oom_score_adj=0
->>   (...snipped....)
->>   [   32.052635][   T71] OOM[1]: oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),global_oom,task_memcg=/,task=firewalld,pid=737,uid=0
->>   [   32.056886][   T71] OOM[1]: Out of memory: Killed process 737 (firewalld) total-vm:358672kB, anon-rss:22640kB, file-rss:12328kB, shmem-rss:0kB, UID:0 pgtables:421888kB oom_score_adj:0
->>   [   32.064291][   T71] OOM[1]: Tasks state (memory values in pages):
->>   [   32.067807][   T71] OOM[1]: [  pid  ]   uid  tgid total_vm      rss pgtables_bytes swapents oom_score_adj name
->>   [   32.070057][   T54] oom_reaper: reaped process 737 (firewalld), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
->>   [   32.072417][   T71] OOM[1]: [    548]     0   548     9772     1172   110592        0             0 systemd-journal
->>   (...snipped....)
->>   [   32.139566][   T71] OOM[1]: [    737]     0   737    89668     8742   421888        0             0 firewalld
->>   (...snipped....)
->>   [   32.221990][   T71] OOM[1]: [   1300]    48  1300    63025     1788   532480        0             0 httpd
->>
->> This patch might affect panic behavior triggered by panic_on_oom or no
->> OOM-killable tasks, for dump_header(oc, NULL) will not report OOM victim
->> candidates if there are not-yet-reported OOM victim candidates from past
->> rounds of OOM killer invocations. I don't know if that matters.
->>
->> For now this patch embeds "struct oom_task_info" into each
->> "struct task_struct". In order to avoid bloating "struct task_struct",
->> future patch might detach from "struct task_struct" because one
->> "struct oom_task_info" for one "struct signal_struct" will be enough.
-> 
-> This is not an improvement. It detaches the oom report and tasks_dump
-> for an arbitrary amount of time because the worder context might be
-> stalled for an arbitrary time. Even long after the oom is resolved.
+Convert Samsung Exynos IOMMU H/W, System Memory Management Unit
+to newer dt-schema format.
 
-A new worker thread is created if all existing worker threads are busy
-because this patch solves OOM situation quickly when a new worker thread
-cannot be created due to OOM situation.
+Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+---
+ .../bindings/iommu/samsung,sysmmu.txt         |  67 ------------
+ .../bindings/iommu/samsung,sysmmu.yaml        | 102 ++++++++++++++++++
+ 2 files changed, 102 insertions(+), 67 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt
+ create mode 100644 Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml
 
-Also, if a worker thread cannot run due to CPU starvation, the same thing
-applies to dump_tasks(). In other words, dump_tasks() cannot complete due
-to CPU starvation, which results in more costly and serious consequences.
-Being able to send SIGKILL and reclaim memory as soon as possible is
-an improvement.
-
-> Not to mention that 1:1 (oom to tasks) information dumping is
-> fundamentally broken. Any task might be on an oom list of different
-> OOM contexts in different oom scopes (think of OOM happening in disjunct
-> NUMA sets).
-
-I can't understand what you are talking about. This patch just defers
-printk() from /proc/sys/vm/oom_dump_tasks != 0. Please look at the patch
-carefully. If you are saying that it is bad that OOM victim candidates for
-OOM domain B, C, D ... cannot be printed if printing of OOM victim candidates
-for OOM domain A has not finished, I can update this patch to print them.
-
-> 
-> This is just adding more kludges and making the code more complex
-> without trying to address an underlying problems. So
-> Nacked-by: Michal Hocko <mhocko@suse.com>
-
-Since I'm sure that you are misunderstanding, this Nacked-by is invalid.
-
-> 
-> And more importantly it is _known_ that dump_tasks might be costly.
-
-So what? That's an unfortunate reason people have to use
-/proc/sys/vm/oom_dump_tasks == 0. That's not a reason we must not
-offload costly dump_tasks().
-
-Preemption from dump_tasks() is _fatally_ costly (e.g. SCHED_IDLE tasks
-calls out_of_memory() while there are many realtime tasks running around).
-This patch minimizes latency between "an allocating thread decided to
-invoke the OOM killer" and "the OOM killer sends SIGKILL (and the OOM
-reaper starts reclaiming memory)". In other words, this patch reduces
-unoperational duration due to OOM condition.
-
-> People who really need that information have to live with that fact.
-> There is the way to disable this functionality. I wish we could have it
-> disabled by default but it seems I am alone in that thinking so I am not
-> going to push for it.
-
-Setting /proc/sys/vm/oom_dump_tasks == 0 is not a solution.
-We need a solution which can work with /proc/sys/vm/oom_dump_tasks != 0.
+diff --git a/Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt b/Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt
+deleted file mode 100644
+index 525ec82615a6..000000000000
+--- a/Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt
++++ /dev/null
+@@ -1,67 +0,0 @@
+-Samsung Exynos IOMMU H/W, System MMU (System Memory Management Unit)
+-
+-Samsung's Exynos architecture contains System MMUs that enables scattered
+-physical memory chunks visible as a contiguous region to DMA-capable peripheral
+-devices like MFC, FIMC, FIMD, GScaler, FIMC-IS and so forth.
+-
+-System MMU is an IOMMU and supports identical translation table format to
+-ARMv7 translation tables with minimum set of page properties including access
+-permissions, shareability and security protection. In addition, System MMU has
+-another capabilities like L2 TLB or block-fetch buffers to minimize translation
+-latency.
+-
+-System MMUs are in many to one relation with peripheral devices, i.e. single
+-peripheral device might have multiple System MMUs (usually one for each bus
+-master), but one System MMU can handle transactions from only one peripheral
+-device. The relation between a System MMU and the peripheral device needs to be
+-defined in device node of the peripheral device.
+-
+-MFC in all Exynos SoCs and FIMD, M2M Scalers and G2D in Exynos5420 has 2 System
+-MMUs.
+-* MFC has one System MMU on its left and right bus.
+-* FIMD in Exynos5420 has one System MMU for window 0 and 4, the other system MMU
+-  for window 1, 2 and 3.
+-* M2M Scalers and G2D in Exynos5420 has one System MMU on the read channel and
+-  the other System MMU on the write channel.
+-
+-For information on assigning System MMU controller to its peripheral devices,
+-see generic IOMMU bindings.
+-
+-Required properties:
+-- compatible: Should be "samsung,exynos-sysmmu"
+-- reg: A tuple of base address and size of System MMU registers.
+-- #iommu-cells: Should be <0>.
+-- interrupts: An interrupt specifier for interrupt signal of System MMU,
+-	      according to the format defined by a particular interrupt
+-	      controller.
+-- clock-names: Should be "sysmmu" or a pair of "aclk" and "pclk" to gate
+-	       SYSMMU core clocks.
+-	       Optional "master" if the clock to the System MMU is gated by
+-	       another gate clock other core  (usually main gate clock
+-	       of peripheral device this SYSMMU belongs to).
+-- clocks: Phandles for respective clocks described by clock-names.
+-- power-domains: Required if the System MMU is needed to gate its power.
+-	  Please refer to the following document:
+-	  Documentation/devicetree/bindings/power/pd-samsung.txt
+-
+-Examples:
+-	gsc_0: gsc@13e00000 {
+-		compatible = "samsung,exynos5-gsc";
+-		reg = <0x13e00000 0x1000>;
+-		interrupts = <0 85 0>;
+-		power-domains = <&pd_gsc>;
+-		clocks = <&clock CLK_GSCL0>;
+-		clock-names = "gscl";
+-		iommus = <&sysmmu_gsc0>;
+-	};
+-
+-	sysmmu_gsc0: sysmmu@13e80000 {
+-		compatible = "samsung,exynos-sysmmu";
+-		reg = <0x13E80000 0x1000>;
+-		interrupt-parent = <&combiner>;
+-		interrupts = <2 0>;
+-		clock-names = "sysmmu", "master";
+-		clocks = <&clock CLK_SMMU_GSCL0>, <&clock CLK_GSCL0>;
+-		power-domains = <&pd_gsc>;
+-		#iommu-cells = <0>;
+-	};
+diff --git a/Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml b/Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml
+new file mode 100644
+index 000000000000..6c40dfb86899
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml
+@@ -0,0 +1,102 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iommu/samsung,sysmmu.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Samsung Exynos IOMMU H/W, System MMU (System Memory Management Unit)
++
++maintainers:
++  - Marek Szyprowski <m.szyprowski@samsung.com>
++
++description: |+
++  Samsung's Exynos architecture contains System MMUs that enables scattered
++  physical memory chunks visible as a contiguous region to DMA-capable peripheral
++  devices like MFC, FIMC, FIMD, GScaler, FIMC-IS and so forth.
++
++  System MMU is an IOMMU and supports identical translation table format to
++  ARMv7 translation tables with minimum set of page properties including access
++  permissions, shareability and security protection. In addition, System MMU has
++  another capabilities like L2 TLB or block-fetch buffers to minimize translation
++  latency.
++
++  System MMUs are in many to one relation with peripheral devices, i.e. single
++  peripheral device might have multiple System MMUs (usually one for each bus
++  master), but one System MMU can handle transactions from only one peripheral
++  device. The relation between a System MMU and the peripheral device needs to be
++  defined in device node of the peripheral device.
++
++  MFC in all Exynos SoCs and FIMD, M2M Scalers and G2D in Exynos5420 has 2 System
++  MMUs.
++  * MFC has one System MMU on its left and right bus.
++  * FIMD in Exynos5420 has one System MMU for window 0 and 4, the other system MMU
++    for window 1, 2 and 3.
++  * M2M Scalers and G2D in Exynos5420 has one System MMU on the read channel and
++    the other System MMU on the write channel.
++
++  For information on assigning System MMU controller to its peripheral devices,
++  see generic IOMMU bindings.
++
++properties:
++  compatible:
++    const: samsung,exynos-sysmmu
++  reg:
++    description: A tuple of base address and size of System MMU registers.
++    maxItems: 1
++  interrupts:
++    description: |
++      An interrupt specifier for interrupt signal of System MMU,
++      according to the format defined by a particular interrupt
++      controller.
++  clocks:
++    description: Phandles for respective clocks described by clock-names.
++  clock-names:
++    description: |
++      Should be "sysmmu" or a pair of "aclk" and "pclk" to gate
++      SYSMMU core clocks.
++      Optional "master" if the clock to the System MMU is gated by
++      another gate clock other core  (usually main gate clock
++      of peripheral device this SYSMMU belongs to).
++    minItems: 1
++    maxItems: 2
++  "#iommu-cells":
++    const: 0
++    description: Should be <0>.
++  power-domains:
++    description: |
++      Required if the System MMU is needed to gate its power.
++      Please refer to the following document:
++      Documentation/devicetree/bindings/power/pd-samsung.txt
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - "#iommu-cells"
++
++examples:
++  - |
++    gsc_0: gsc@13e00000 {
++      compatible = "samsung,exynos5-gsc";
++      reg = <0x13e00000 0x1000>;
++      interrupts = <0 85 0>;
++      power-domains = <&pd_gsc>;
++      clocks = <&clock 0>; //CLK_GSCL0
++      clock-names = "gscl";
++      iommus = <&sysmmu_gsc0>;
++    };
++  - |
++    sysmmu_gsc0: sysmmu@13e80000 {
++      compatible = "samsung,exynos-sysmmu";
++      reg = <0x13E80000 0x1000>;
++      interrupt-parent = <&combiner>;
++      interrupts = <2 0>;
++      clock-names = "sysmmu", "master";
++      clocks = <&clock 0>, // CLK_SMMU_GSCL0
++               <&clock 0>; // CLK_GSCL0
++      power-domains = <&pd_gsc>;
++      #iommu-cells = <0>;
++    };
++
+-- 
+2.17.1
 
