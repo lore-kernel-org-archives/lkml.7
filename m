@@ -2,149 +2,157 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7466C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D25C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:56:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 711E721A4C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:56:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CHcT5HCs"
+	by mail.kernel.org (Postfix) with ESMTP id C4C2D21479
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:56:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728558AbfIIQ4M (ORCPT
+        id S2391283AbfIIQ4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 12:56:12 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43471 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726415AbfIIQ4M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 12:56:12 -0400
-Received: by mail-pl1-f193.google.com with SMTP id 4so6770232pld.10;
-        Mon, 09 Sep 2019 09:56:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=y9qCic0RC1dfwolQU9PTEee+EfaFSRsxAIhwE6N8haM=;
-        b=CHcT5HCsHPf4Lbc9zn6G6j9Iw6QfdsUI0o478E9UA1zXDDJZSFXoSLMBaUJWzzITWJ
-         PTBMdvrshg0O6HEVPh2gJMgrgiRCFoLWiTlLz+82oIAgVEML7RxTlSp6YuU8E9Spto69
-         LggzvLDkec06+JMp7EMKGr+Zv5i3PhOmrs7KmIBpAd0BLwO9LJRUpEfvTpb9gxWGkSrq
-         y5J5Uv7AIoA38TPghSi00j07XVS/Xj42fno3Wl4U1uDW81mDqbqKFi1xN9O39dpFWWYJ
-         DeM150tU8e1TVgyUCwN5HbTe2clO7CUo98CN40oiRXrfYT5kP4MEJnEyBFHM4wsusWep
-         utVA==
+        Mon, 9 Sep 2019 12:56:39 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42668 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727097AbfIIQ4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 12:56:38 -0400
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 076BD81F0C
+        for <linux-kernel@vger.kernel.org>; Mon,  9 Sep 2019 16:56:38 +0000 (UTC)
+Received: by mail-wr1-f71.google.com with SMTP id j3so7637683wrn.7
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 09:56:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=y9qCic0RC1dfwolQU9PTEee+EfaFSRsxAIhwE6N8haM=;
-        b=H0KBjlOxbBahSfDQeTbECsppLIDfQATOkzTRf27td2xMnSCSmFzDxDJ6VlQmkDRUU8
-         55gthGKgVrBlvPmXAj0t/MoVKjEli89CNtIYt35z9wuTlrzTBdJpfU3GHzXoTSSzAcWk
-         Lo+TvTYQmlCz40jlaFww5reLryAFo4iURZkE0pcqqiXaJHvacNCB0drwfVlLNbV0r0u2
-         CWT+LEwaDQaXOgtF6Ffb65XDCn4nk9xQUs7RFyaYbIQwGxxPenoJeMlop5BuDs6WcLuH
-         tZuvltu2n9F4XogVDsJfmXX3EwTxWx7Ab5gyod/cSBhT/figq8AoCximJcs1uRI0/lnI
-         hQbw==
-X-Gm-Message-State: APjAAAVXFrtWyxigNdvtEGX+rTiDD4erRvFnHN6G6ZmVgaNJ2qJTTJFb
-        JHUxTl7dzTTkeVkexSs+lC1XYlgiusM=
-X-Google-Smtp-Source: APXvYqyKy5ZNYM7VFKQFK3xwWEa93feEA1A15MMlAXmhC+SZge85ANkrU37oZSFG3/19oTNlI0s9/g==
-X-Received: by 2002:a17:902:7685:: with SMTP id m5mr25519631pll.218.1568048170578;
-        Mon, 09 Sep 2019 09:56:10 -0700 (PDT)
-Received: from [10.67.49.31] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id 71sm30609915pfw.147.2019.09.09.09.56.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 09 Sep 2019 09:56:09 -0700 (PDT)
-Subject: Re: [PATCH v3 2/2] net: phy: dp83867: Add SGMII mode type switching
-To:     Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>, davem@davemloft.net,
-        robh+dt@kernel.org
-Cc:     Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Trent Piepho <tpiepho@impinj.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1568026945-3857-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
- <1568047940-14490-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
-From:   Florian Fainelli <f.fainelli@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to;
+        bh=b+DYBvL0oEEFzvAdvWpG5+5SFlJp7gZgu0SZ3ZeObvI=;
+        b=IEzpI3TofFvWjw7U1aF0A3twLIUBuO3LToNPtdw9RIcdobOYwXuukLTSQNziE1w5OB
+         p2SQthr6ZUTGFPFuIJxM4q3G1kRGybL1n3cMATvssdeZzVkghvIMjARV2SGT3VXsKqpv
+         TKknbfxLDRJGw76M/U35Xa24curp0H8ErFx0+0y2Lay4yQUrQZGKcH9Mq8FWnRGfJlCS
+         CRKeodwkvjsRZwAGpqLBpPJ9rxQRRTNwgX52pUdkO3FRazTBHtZxGQ4VeHCbb21YQnI1
+         T7frFT7sAZHCpEtmEDSfAEIx4DQbazkajM4ZRtSv4mNqMqSvqWAHAyeymrDQWyfjIjXb
+         irEw==
+X-Gm-Message-State: APjAAAWaU/9or5jZuRfx/G1iQUwugLWlgsyYaPOprErY6X2YawZ89ctX
+        d/gp8F1xBt+egE46PU37pm1CVZOEKVwUq5RV6BENoFyEAQc68mNqAc3tdvjo44fpKYLELa57ZnW
+        mattyrl+hzuHsQtQDR3eq+UQ3
+X-Received: by 2002:adf:e342:: with SMTP id n2mr2723309wrj.341.1568048196573;
+        Mon, 09 Sep 2019 09:56:36 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwCDEHfmFTtFBYf4wpg2xKJ2cjZDTuhPEW8XcTtrVh3SrWj7ioRNCGl/I1N77Z+ytfjL6XmFA==
+X-Received: by 2002:adf:e342:: with SMTP id n2mr2723289wrj.341.1568048196307;
+        Mon, 09 Sep 2019 09:56:36 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:4580:a289:2f55:eec1? ([2001:b07:6468:f312:4580:a289:2f55:eec1])
+        by smtp.gmail.com with ESMTPSA id q15sm18613985wrg.65.2019.09.09.09.56.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Sep 2019 09:56:35 -0700 (PDT)
+Subject: Re: [PATCH v2] scsi: virtio_scsi: unplug LUNs when events missed
+To:     Stefan Hajnoczi <stefanha@redhat.com>,
+        Matt Lupfer <mlupfer@ddn.com>
+Cc:     "mst@redhat.com" <mst@redhat.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190905181903.29756-1-mlupfer@ddn.com>
+ <20190906085409.GC5900@stefanha-x1.localdomain>
+From:   Paolo Bonzini <pbonzini@redhat.com>
 Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <2375a453-b14a-c583-2258-e395493d937e@gmail.com>
-Date:   Mon, 9 Sep 2019 09:56:08 -0700
+Message-ID: <45d4fc47-cfc2-b7ae-e147-fb993a77e9e5@redhat.com>
+Date:   Mon, 9 Sep 2019 18:55:48 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1568047940-14490-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190906085409.GC5900@stefanha-x1.localdomain>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="pxnQuVbtWYEwmX3SJy3OhOXnAXOYEWRNZ"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/9/19 9:52 AM, Vitaly Gaiduk wrote:
-> This patch adds ability to switch beetween two PHY SGMII modes.
-> Some hardware, for example, FPGA IP designs may use 6-wire mode
-> which enables differential SGMII clock to MAC.
-> 
-> Signed-off-by: Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--pxnQuVbtWYEwmX3SJy3OhOXnAXOYEWRNZ
+Content-Type: multipart/mixed; boundary="KlMsZ2txnG2HaPm51dmD2esB01PSzQkME";
+ protected-headers="v1"
+From: Paolo Bonzini <pbonzini@redhat.com>
+To: Stefan Hajnoczi <stefanha@redhat.com>, Matt Lupfer <mlupfer@ddn.com>
+Cc: "mst@redhat.com" <mst@redhat.com>,
+ "jasowang@redhat.com" <jasowang@redhat.com>,
+ "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+ "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+ "virtualization@lists.linux-foundation.org"
+ <virtualization@lists.linux-foundation.org>,
+ "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Message-ID: <45d4fc47-cfc2-b7ae-e147-fb993a77e9e5@redhat.com>
+Subject: Re: [PATCH v2] scsi: virtio_scsi: unplug LUNs when events missed
+References: <20190905181903.29756-1-mlupfer@ddn.com>
+ <20190906085409.GC5900@stefanha-x1.localdomain>
+In-Reply-To: <20190906085409.GC5900@stefanha-x1.localdomain>
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+--KlMsZ2txnG2HaPm51dmD2esB01PSzQkME
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+On 06/09/19 10:54, Stefan Hajnoczi wrote:
+> On Thu, Sep 05, 2019 at 06:19:28PM +0000, Matt Lupfer wrote:
+>> The event handler calls scsi_scan_host() when events are missed, which=
+
+>> will hotplug new LUNs.  However, this function won't remove any
+>> unplugged LUNs.  The result is that hotunplug doesn't work properly wh=
+en
+>> the number of unplugged LUNs exceeds the event queue size (currently 8=
+).
+>>
+>> Scan existing LUNs when events are missed to check if they are still
+>> present.  If not, remove them.
+>>
+>> Signed-off-by: Matt Lupfer <mlupfer@ddn.com>
+>> ---
+>>  drivers/scsi/virtio_scsi.c | 33 +++++++++++++++++++++++++++++++++
+>>  1 file changed, 33 insertions(+)
+>=20
+> Please include a changelog in future patch revisions.  For example:
+>=20
+>   Signed-off-by: ...
+>   ---
+>   v2:
+>     * Replaced magic constants with sd.h constants [Michael]
+>=20
+> Just C and virtio code review, no SCSI specifics:
+>=20
+> Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+>=20
+
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+
+
+--KlMsZ2txnG2HaPm51dmD2esB01PSzQkME--
+
+--pxnQuVbtWYEwmX3SJy3OhOXnAXOYEWRNZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEE8TM4V0tmI4mGbHaCv/vSX3jHroMFAl12hBQACgkQv/vSX3jH
+roNf/QgAmxUxJG1dOWyJiM9cOE05ZHpVBvjYtllR4MHb7M3HkgznPc7bAe3ojMCh
+MjjpnhamcSKKTKtx9cgDK1bh8uj8viucaOZ43r0/P+npJO8XsdwwAlzfx5WMQ/Al
+qEaNVoX1KUxdWZAEYS1y52JmEvOf+0SlmaeJZMYQOWSJHepaM3d7l2vslFhZMIdt
+y054MXFZiJxyEB/AE8R/Xy7LPe9/CHliHqxDBMVjLYRFuUeqtkgAXjKUVsThUsGt
+EIKONYmN0aQ+Nl8bphUlxHhVVUgCTZ+YP/OCQqAOWtGKpINsFKBcvipeJeAVj3id
+Z7Jdh+v01Bs92VJ3BdQHgIbvvRulCA==
+=O1le
+-----END PGP SIGNATURE-----
+
+--pxnQuVbtWYEwmX3SJy3OhOXnAXOYEWRNZ--
