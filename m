@@ -2,88 +2,115 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
+X-Spam-Status: No, score=-15.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7486C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 20:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A3FBC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 20:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 920E0218AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 20:34:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 190AB218AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 20:35:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391564AbfIIUef (ORCPT
+        id S2391587AbfIIUff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 16:34:35 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:44185 "EHLO
+        Mon, 9 Sep 2019 16:35:35 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:35477 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726806AbfIIUef (ORCPT
+        with ESMTP id S1726841AbfIIUfe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 16:34:35 -0400
+        Mon, 9 Sep 2019 16:35:34 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MtO06-1iPVTp25eQ-00uoyd; Mon, 09 Sep 2019 22:34:11 +0200
+ (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1M42Ss-1i7QNX0dMG-0000SB; Mon, 09 Sep 2019 22:35:15 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Jyri Sarha <jsarha@ti.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Sam Ravnborg <sam@ravnborg.org>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/tilcdc: include linux/pinctrl/consumer.h again
-Date:   Mon,  9 Sep 2019 22:33:57 +0200
-Message-Id: <20190909203409.652308-1-arnd@arndb.de>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Enrico Weigelt <info@metux.net>,
+        Johan Hovold <johan@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] gpio: fix incorrect merge of linux/gpio/driver.h
+Date:   Mon,  9 Sep 2019 22:34:59 +0200
+Message-Id: <20190909203512.675822-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:/QqqGQ82u5FnWbqdP+LbmWnNSFW6MUOsg6NDDvR5njC66ZcA0Je
- L7djSnqII3g8lTGDbl/GBpLAil9uf6kZVGkLQaA2W9PzuLBzJEzWfDplIgVm2DyIO55lP5G
- N1v+MoAA4QQoj7lQoIp2nvGAf4vgnF+K5TlgBHoJWygDbvoBkE+XZb0GSj5CuwK1LsJfhUp
- 3xPnWIVWeU204B5Qa4L+w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:YzuEVwEdJVE=:YBZv/R62O3TVU0Kr2ntzvH
- aEnQmenQ7MOIYP63yGzO2mA8M+3cIGxzLDgs7uKP6Crsz3wUv04WUwgdRwUNPWCe6boDSXxc5
- gGTtdrweJQCgl5aTEywkkPWdJP3ZMMnuHY/ya60EnGIAUKohQ/baIN+CeL9gMkXf0EB7ksufZ
- 3EqgH1Qyx7FQ13cWHNzBqk6ZF3tCkfzUIIMWqFPQopT/b6xGX7Owv0JHyaoxH1zK+33uQw9U/
- W967y4S1+AWmCaEyHgAsFu/E0P4U66L7Gv+d9S9tNejzz9m+W38otjSxBjxaQOHPOgzbniAjS
- HaKCNKyRtUxWLdsphRh23wn0ppnqpmS+JSH5pCltY20+OWbBGRUOcfciVhRxcqYLCLxQW8y8R
- Ye3ymhXW0nulkvizvinLgcgXyTsBuYJNKziXMce6Qnzjtbar2TaOre/Aq3XESXFEbaw3bxStz
- Lq+zQLlMKzfv1V4nw+4kVID77Bu0UIJ5wTra0UaIVVBcGuoBZxXUCjEXiBOSbsP0L8s65+eTN
- RutaFlyLHKc5BZJvexf0QAxAQTGzo8vNn8k3EyubuR8/hEStCEf6WR2/cesO6GBMo+jcyczLi
- JEdZp5FwSLTF+jDHh1CmXIoxEW+nVA32dkROzopTDuv6RZV12gRHNnHDFvWkpoQMQgn2AX7+R
- PkJtWI5Y6ywaQF9th6ufH3BJWkxtYQC72oqleEdluMXxQA7dZJTBTWuDI+gV3O+yePzuPhrF4
- YUagZp9JK/Vt2O90LAbN5j+zaYaFITkuuvkNhKjHVJXS+UZpzguYOJBIQg1XjUH7abnif/GIv
- Jmr285ZZHI0n3k0l9iZvpYbzkcJWq8I2TD3L9zXuhYGrawYk34=
+X-Provags-ID: V03:K1:h5/cCxSSdt5FyRzyzFCDSMqQaF4Hg9pI9atK4iqsbR31lQ7KMiY
+ HZAeIg66EFmJSMrNyZ0P/3udIPL7P1Uq1RxcQw39eige+TJduUc+qI84JaCbNmE6pN4562u
+ DT1TXQM7Hlqr3MmgDbtAXSEe5/srat/L/e5wF2ipINDnqAXjq+FY+ttXtWqlmsckjga8ojv
+ EMGEeDY/Hd764j+oJDcSQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:b+UibNyUIXA=:6UWSiK4lOn47hPscpafs31
+ HqEVEaRbsmhbhyRdmvHhzTuD/aYfFYtVSn3FHljL39ZdJjYaYhZFXgUIw6tm5gkR16MhvuPN/
+ 3ZfWT4S/0RNCO2jvvsUpDbTTjuTmg46ni4xR6FXbd23KthshPqsNc+sDBV0wzSwJTbmsp/d4S
+ djOnrQR0a2kJYYAVE5OS/1TCf0O6SSh6G08Bc4yOjDzOAhGFK9KJdt7VS/lzy0qB5KkqJhH+w
+ EPCYPeuxuBuwMvzjhUsaRB7/EY38Sers1+TYcPhoHSFixvOdh/MNTaG726z2HpoZS6YNRt+UZ
+ 6bG98fEtKF9TXqFZ4QO5H0QAvZ2Z9QxVaYwMuYzsqpeeljj5QHvJ1RscdQmxy3sZWcgX+oyUR
+ c293x3gUXFSlibU3SXkHtJlJKk9PdI5nHs7U8YRH3D8bNIRwHAEKwjzeUUhl5Bwkr+vQk6OUa
+ GO3a9nw0bFp/mtEQriDKdiZYG1NGXP4Ul7z3xj/xSHugA7JheWv0QaFu+ME89xFY5RcWM/SW8
+ vdmhWQiN+tWGQoXXvbbIGD9xwzaT+C2p7bvFhGE2FA+zRnwMc7SWHyhdXFmzgme0OD53HW+sw
+ RHnUBuSEmzAD9oknLHCSqNwOg8IxDo2DByNekZi8368oW9YGHDFzaNMIAhTNXNNEfp2mpLa9a
+ jz47ltPFMqwmo6c3Kx3TwoUkhV1MJvZbBTycxjNvuv37U/ohvEOWXUB42MZ+k13nGhWAFdT7w
+ kAeoOBPhOVOKpVgzZv7IGvG1f0povpQU84nP097S4RiFkczPGIiQ6Z0a+5dA+bKMSCp9f4tPW
+ Ov4vJCqBcusKI0JFv3hmi7US1yrK+XkysebHIopXK6HDTvT4v8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This was apparently dropped by accident in a recent
-cleanup, causing a build failure in some configurations now:
+Two otherwise correct patches got merged incorrectly, which leads to
+build problems when CONFIG_GPIOLIB is disabled:
 
-drivers/gpu/drm/tilcdc/tilcdc_tfp410.c:296:12: error: implicit declaration of function 'devm_pinctrl_get_select_default' [-Werror,-Wimplicit-function-declaration]
+include/linux/gpio/driver.h:722:19: error: static declaration of 'gpiochip_lock_as_irq' follows non-static declaration
+static inline int gpiochip_lock_as_irq(struct gpio_chip *chip,
+                  ^
+include/linux/gpio/driver.h:706:5: note: previous declaration is here
+int gpiochip_lock_as_irq(struct gpio_chip *chip, unsigned int offset);
+    ^
+include/linux/gpio/driver.h:729:20: error: static declaration of 'gpiochip_unlock_as_irq' follows non-static declaration
+static inline void gpiochip_unlock_as_irq(struct gpio_chip *chip,
+                   ^
+include/linux/gpio/driver.h:707:6: note: previous declaration is here
+void gpiochip_unlock_as_irq(struct gpio_chip *chip, unsigned int offset);
 
-Fixes: fcb57664172e ("drm/tilcdc: drop use of drmP.h")
+Fixes: 8a6abcd04e4c ("Merge tag 'gpio-v5.4-updates-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux into devel")
+Fixes: 9091373ab7ea ("gpio: remove less important #ifdef around declarations")
+Fixes: c7663fa2a663 ("gpio: Move gpiochip_lock/unlock_as_irq to gpio/driver.h")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/gpu/drm/tilcdc/tilcdc_tfp410.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/gpio/driver.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/tilcdc/tilcdc_tfp410.c b/drivers/gpu/drm/tilcdc/tilcdc_tfp410.c
-index 525dc1c0f1c1..9edcdd7f2b96 100644
---- a/drivers/gpu/drm/tilcdc/tilcdc_tfp410.c
-+++ b/drivers/gpu/drm/tilcdc/tilcdc_tfp410.c
-@@ -8,6 +8,7 @@
- #include <linux/mod_devicetable.h>
- #include <linux/of_gpio.h>
- #include <linux/platform_device.h>
-+#include <linux/pinctrl/consumer.h>
+diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+index b74a3bee85e5..fb134ff20f6b 100644
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@ -702,14 +702,14 @@ void gpiochip_free_own_desc(struct gpio_desc *desc);
+ void devprop_gpiochip_set_names(struct gpio_chip *chip,
+ 				const struct fwnode_handle *fwnode);
  
- #include <drm/drm_atomic_helper.h>
- #include <drm/drm_encoder.h>
+-/* lock/unlock as IRQ */
+-int gpiochip_lock_as_irq(struct gpio_chip *chip, unsigned int offset);
+-void gpiochip_unlock_as_irq(struct gpio_chip *chip, unsigned int offset);
+-
+ #ifdef CONFIG_GPIOLIB
+ 
+ struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc);
+ 
++/* lock/unlock as IRQ */
++int gpiochip_lock_as_irq(struct gpio_chip *chip, unsigned int offset);
++void gpiochip_unlock_as_irq(struct gpio_chip *chip, unsigned int offset);
++
+ #else /* CONFIG_GPIOLIB */
+ 
+ static inline struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc)
 -- 
 2.20.0
 
