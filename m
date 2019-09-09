@@ -2,99 +2,123 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 786FDC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7258AC49ED6
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48A1421479
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:36:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 479D82082C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:37:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568047059;
+	bh=mpLdfMUT8ALKmTj/ufjnldmb2WFPL9T1AcYl+u7yFxA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Q7QW6x9IratYS8IhkMd+nfIr/uv+Dn1N3KvHJwPs8Xc3u/NOPff+sdUYcMhfvKT97
+	 F5KKvJPE6fMo6Xs5rZO3madhP+5vP+ZwTnoCvblst5hht7NqXWCHxZh59dglfXmhHi
+	 SOfiDDl+vcppGfMOMASysUv97BMrDV2swslYATtY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729260AbfIIQgw convert rfc822-to-8bit (ORCPT
+        id S1729421AbfIIQhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 12:36:52 -0400
-Received: from mxout017.mail.hostpoint.ch ([217.26.49.177]:46967 "EHLO
-        mxout017.mail.hostpoint.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728012AbfIIQgw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 12:36:52 -0400
-Received: from [10.0.2.46] (helo=asmtp013.mail.hostpoint.ch)
-        by mxout017.mail.hostpoint.ch with esmtp (Exim 4.92.2 (FreeBSD))
-        (envelope-from <sandro@volery.com>)
-        id 1i7Mem-0007BO-Rh; Mon, 09 Sep 2019 18:36:48 +0200
-Received: from [213.55.220.251] (helo=[100.66.103.90])
-        by asmtp013.mail.hostpoint.ch with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92.2 (FreeBSD))
-        (envelope-from <sandro@volery.com>)
-        id 1i7Mem-0003Cv-Kd; Mon, 09 Sep 2019 18:36:48 +0200
-X-Authenticated-Sender-Id: sandro@volery.com
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-From:   Sandro Volery <sandro@volery.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] Fixed parentheses malpractice in apex_driver.c
-Date:   Mon, 9 Sep 2019 18:36:47 +0200
-Message-Id: <5ACCE874-244F-4689-B606-05669BE080BE@volery.com>
-References: <fbd0c88d97bf10ba9245755210a5b21362e57520.camel@perches.com>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Mon, 9 Sep 2019 12:37:38 -0400
+Received: from foss.arm.com ([217.140.110.172]:53562 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727006AbfIIQhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 12:37:38 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C891628;
+        Mon,  9 Sep 2019 09:37:37 -0700 (PDT)
+Received: from big-swifty.misterjones.org (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 23A9A3F59C;
+        Mon,  9 Sep 2019 09:37:34 -0700 (PDT)
+Date:   Mon, 09 Sep 2019 17:37:33 +0100
+Message-ID: <864l1ls9wy.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     khilman@baylibre.com, bhelgaas@google.com,
+        lorenzo.pieralisi@arm.com, yue.wang@Amlogic.com, kishon@ti.com,
+        repk@triplefau.lt, linux-amlogic@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-In-Reply-To: <fbd0c88d97bf10ba9245755210a5b21362e57520.camel@perches.com>
-To:     Joe Perches <joe@perches.com>
-X-Mailer: iPhone Mail (17A5831c)
+Subject: Re: [PATCH 6/6] arm64: dts: khadas-vim3: add commented support for PCIe
+In-Reply-To: <1567950178-4466-7-git-send-email-narmstrong@baylibre.com>
+References: <1567950178-4466-1-git-send-email-narmstrong@baylibre.com>
+        <1567950178-4466-7-git-send-email-narmstrong@baylibre.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Organization: Approximate
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> On 9 Sep 2019, at 18:15, Joe Perches <joe@perches.com> wrote:
+On Sun, 08 Sep 2019 14:42:58 +0100,
+Neil Armstrong <narmstrong@baylibre.com> wrote:
 > 
-> ﻿On Sat, 2019-09-07 at 18:12 +0200, Sandro Volery wrote:
->> Alright, I'll do that when I get home tonight!
+> The VIM3 on-board  MCU can mux the PCIe/USB3.0 shared differential
+> lines using a FUSB340TMX USB 3.1 SuperSpeed Data Switch between
+> an USB3.0 Type A connector and a M.2 Key M slot.
+> The PHY driving these differential lines is shared between
+> the USB3.0 controller and the PCIe Controller, thus only
+> a single controller can use it.
 > 
-> I'm going to assume this is not an actual problem.
+> The needed DT configuration when the MCU is configured to mux
+> the PCIe/USB3.0 differential lines to the M.2 Key M slot is
+> added commented and may uncommented to disable USB3.0 from the
+> USB Complex and enable the PCIe controller.
 > 
-
-Oh yeah I'm sorry, I was all busy reading documentations 
-about the Kernel and stuff ;)
-I got it to work, I actually just had my gitconfig name set as 'volery'.
-
-Thanks
-
-
-
-
->> Thanks,
->> Sandro V
->> 
->>>> On 7 Sep 2019, at 18:08, Joe Perches <joe@perches.com> wrote:
->>> 
->>> ﻿On Sat, 2019-09-07 at 17:56 +0200, Sandro Volery wrote:
->>>>>> On 7 Sep 2019, at 17:44, Joe Perches <joe@perches.com> wrote:
->>>>> 
->>>>> ﻿On Sat, 2019-09-07 at 17:34 +0200, Sandro Volery wrote:
->>>>>> On patchwork I entered 'volery' as my username because I didn't know better, and now checkpatch always complains when I add 'signed-off-by' with my actual full name.
->>>>> 
->>>>> How does checkpatch complain?
->>>>> There is no connection between patchwork
->>>>> and checkpatch.
->>>> 
->>>> Checkpatch tells me that I haven't used 'volery' as
->>>> my signed off name.
->>> 
->>> Please send the both the patch and the actual checkpatch output
->>> you get when running 'perl ./scripts/checkpatch.pl <patch>'
->>> 
->>> If this patch is a commit in your own local git tree:
->>> 
->>> $ git format-patch -1 --stdout <commit_id> > tmp
->>> $ perl ./scripts/checkpatch.pl --strict tmp
->>> 
->>> and send tmp and the checkpatch output.
->>> 
->>> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  .../amlogic/meson-g12b-a311d-khadas-vim3.dts  | 22 +++++++++++++++++++
+>  .../amlogic/meson-g12b-s922x-khadas-vim3.dts  | 22 +++++++++++++++++++
+>  .../boot/dts/amlogic/meson-khadas-vim3.dtsi   |  4 ++++
+>  .../dts/amlogic/meson-sm1-khadas-vim3l.dts    | 22 +++++++++++++++++++
+>  4 files changed, 70 insertions(+)
 > 
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-khadas-vim3.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-khadas-vim3.dts
+> index 3a6a1e0c1e32..0577b1435cbb 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-khadas-vim3.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-khadas-vim3.dts
+> @@ -14,3 +14,25 @@
+>  / {
+>  	compatible = "khadas,vim3", "amlogic,a311d", "amlogic,g12b";
+>  };
+> +
+> +/*
+> + * The VIM3 on-board  MCU can mux the PCIe/USB3.0 shared differential
+> + * lines using a FUSB340TMX USB 3.1 SuperSpeed Data Switch between
+> + * an USB3.0 Type A connector and a M.2 Key M slot.
+> + * The PHY driving these differential lines is shared between
+> + * the USB3.0 controller and the PCIe Controller, thus only
+> + * a single controller can use it.
+> + * If the MCU is configured to mux the PCIe/USB3.0 differential lines
+> + * to the M.2 Key M slot, uncomment the following block to disable
+> + * USB3.0 from the USB Complex and enable the PCIe controller.
+> + */
+> +/*
+> +&pcie {
+> +	status = "okay";
+> +};
+> +
+> +&usb {
+> +	phys = <&usb2_phy0>, <&usb2_phy1>;
+> +	phy-names = "usb2-phy0", "usb2-phy1";
+> +};
+> + */
 
+Although you can't do much more than this here, I'd expect firmware on
+the machine to provide the DT that matches its configuration. Is it
+the way it actually works? Or is the user actually expected to edit
+this file?
+
+Thanks,
+
+	M.
+
+-- 
+Jazz is not dead, it just smells funny.
