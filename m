@@ -2,225 +2,187 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7063AC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA9BC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49618218AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:45:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M9XjvkCU"
+	by mail.kernel.org (Postfix) with ESMTP id 20615218AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:49:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391435AbfIIRpz (ORCPT
+        id S2391483AbfIIRtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 13:45:55 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:32791 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729123AbfIIRpz (ORCPT
+        Mon, 9 Sep 2019 13:49:03 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:37195 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727514AbfIIRtC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 13:45:55 -0400
-Received: by mail-pl1-f193.google.com with SMTP id t11so6856288plo.0
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 10:45:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=NyVhJPPTs6wJnDV91iq2gfn2ADsla6hIU5GumREy3IU=;
-        b=M9XjvkCU8U0uc2A2HXkCDBumTsIS6nsgiD4PpQon98qdueFJ/bxdz8ON6SfMx3hgFN
-         aOOL0CBopLJ0Bdf6qem737wLy+F7G7ZNTprUazDp/KwTQXuO04EMFI8PggDeqxj/7b+B
-         oA7mU5eRAqRtD5NpqHTuV3kgdTPWRR1E2SlG8z8CuD29EFxUo6Pyh3Te+pg6HqWIgKPD
-         WhPaF6JmubDLd+fHXvT1S16wM6vcI9DTrMhs62+65QZ0Lk08dyWqwGKQKY13p6LwrYiJ
-         EA38F/qILGOCkDmfsnWUYehYUYIdbErBOUD/AP8VOevLr6+lCc6/ARFwKkqMAiWdQTG3
-         miYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=NyVhJPPTs6wJnDV91iq2gfn2ADsla6hIU5GumREy3IU=;
-        b=MMh8k8e6OTcB9NsBQSRfOMJ79km3rHopH7DzHLnbf6EQKfhL7ZARTaykDn2+m/iLco
-         TDi6r2Ou67LgvSnCTepZZN3BE5ddnoByyySs2br3JhowRqOOd7ZUWmvh65x3CJsp9KWP
-         f7tLNuV0l/QgulkpheTBTFdC564P7nTnXTIu27PEUtfANEF9lZdy9bAT1ISGyB/T8Oh4
-         WKzmW3kuVpdw8bSKfQzci0HbxsF9v8lrN5XLU/rrgc89a7vgJ0+QrqUTHxjqNlMwqJwM
-         jtEfzZfdN1zTMKwK1Zr1gGhbQIg8g3qP624OyXjyJMpk5gvh2ln30a9KlfoUP/T+gwAI
-         8kGA==
-X-Gm-Message-State: APjAAAUXng5B4iTM14gKXq7UjW4gaU8T9Ew4O0X2OWVhEMX+7HOis7N6
-        CDOnPKHmQZS07uKeud7H74Y=
-X-Google-Smtp-Source: APXvYqxneiElM9L6z2oc9GIFmEdOmZXAESGHesiUPjLlmzl0qWX+82SU80jLw2IpeN/5P0XxDrUsqw==
-X-Received: by 2002:a17:902:b201:: with SMTP id t1mr25927892plr.144.1568051153805;
-        Mon, 09 Sep 2019 10:45:53 -0700 (PDT)
-Received: from SD ([2405:204:810e:f33:a5a3:6372:2e94:6aea])
-        by smtp.gmail.com with ESMTPSA id u9sm162507pjb.4.2019.09.09.10.45.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Sep 2019 10:45:53 -0700 (PDT)
-Date:   Mon, 9 Sep 2019 23:15:41 +0530
-From:   Saiyam Doshi <saiyamdoshi.in@gmail.com>
-To:     broonie@kernel.org, srinivas.kandagatla@linaro.org
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: wcd9335: remove redundant use of ret variable
-Message-ID: <20190909174541.GA22718@SD>
+        Mon, 9 Sep 2019 13:49:02 -0400
+Received: from [148.69.85.38] (port=24775 helo=[192.168.5.132])
+        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1i7Nmb-006VAY-QJ; Mon, 09 Sep 2019 19:48:57 +0200
+Subject: Re: [RFC,v2 2/6] i2c: add I2C Address Translator (ATR) support
+To:     Vladimir Zapolskiy <vz@mleia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        jacopo mondi <jacopo@jmondi.org>, Peter Rosin <peda@axentia.se>
+Cc:     linux-media@vger.kernel.org, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>
+References: <20190723203723.11730-1-luca@lucaceresoli.net>
+ <20190723203723.11730-3-luca@lucaceresoli.net>
+ <20190901143101.humomdehy5ee73sk@vino>
+ <aedad45b-16d6-d189-b045-329727440ca5@mleia.com> <20190909072232.GA990@kunai>
+ <8af9a049-06b9-dbe8-827b-5134d20e9435@mleia.com>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <152384b8-c0a8-e6fe-9a1f-52caf00533de@lucaceresoli.net>
+Date:   Mon, 9 Sep 2019 18:48:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <8af9a049-06b9-dbe8-827b-5134d20e9435@mleia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All these functions declares and initializes variable ret with
-'0' and without modifying 'ret' variable, it is returned.
+Hi Vladimir,
 
-This patch removes this redundancy and returns '0' directly.
+On 09/09/19 16:10, Vladimir Zapolskiy wrote:
+> Hi Wolfram,
+> 
+> On 09/09/2019 10:22 AM, Wolfram Sang wrote:
+>> Hi Vladimir,
+>>
+>>> I won't attend the LPC, however I would appreciate if you book some
+>>
+>> A pity. I would have liked to have you in the room. Let's see if we can
+>> get enough input from you via mail here.
+>>
+> 
+> if it might help, I'll attend the Embedded Recipes and ELCE conferences
+> this year.
+> 
+>>> time to review my original / alternative implementation of the TI
+>>> DS90Ux9xx I2C bridge device driver.
+>>
+>> We have only 45 minutes, this will not allow to review specific
+>> implementations. I want to give an overview of existing implementations
+>> with pros/cons...
+>>
+> 
+> Sure! Any shared summary/opinions are greatly welcome.
+> 
+>>> The reasons why my driver is better/more flexible/more functional are
+>>> discussed earlier, please let me know, if you expect anything else
+>>> from me to add, also I would be happy to get a summary of your offline
+>>> discussion.
+>>
+>> ... and I'd appreciate support here from you, like your summary of the
+>> back then discussion (from where I can dive deeper if needed).
+>>
+>> Also, with Luca's new series we discussed some scenarios which can
+>> happen WRT to I2C address conflicts. Maybe you could comment on them,
+>> too?
+> 
+> I do remember I've commented on the Luca's suggestion of using dynamic
+> I2C addresses from a pool (the introduced "i2c-alias-pool" property).
+> 
+> I have to scrutinize it in Luca's v2, but then it might happen that the
+> userspace won't know to which IC on the remote side it communicates to.
 
-Signed-off-by: Saiyam Doshi <saiyamdoshi.in@gmail.com>
----
- sound/soc/codecs/wcd9335.c | 24 ++++++++----------------
- 1 file changed, 8 insertions(+), 16 deletions(-)
+I think you suspect this because the assigned alias is
+non-deterministic, so you might end up in writing to the wrong alias.
+Well, this is not possible because the user is not supposed to know the
+alias at all. Let's say you have two identical eeproms on remote port 0,
+with physical addresses 0x50 and 0x51. Then, with my RFCv2 code, you'll
+access them with physical numbers, not the alias:
 
-diff --git a/sound/soc/codecs/wcd9335.c b/sound/soc/codecs/wcd9335.c
-index 03f8a94bba2f..f318403133e9 100644
---- a/sound/soc/codecs/wcd9335.c
-+++ b/sound/soc/codecs/wcd9335.c
-@@ -3022,7 +3022,6 @@ static int wcd9335_codec_enable_slim(struct snd_soc_dapm_widget *w,
- 	struct snd_soc_component *comp = snd_soc_dapm_to_component(w->dapm);
- 	struct wcd9335_codec *wcd = snd_soc_component_get_drvdata(comp);
- 	struct wcd_slim_codec_dai_data *dai = &wcd->dai[w->shift];
--	int ret = 0;
- 
- 	switch (event) {
- 	case SND_SOC_DAPM_POST_PMU:
-@@ -3034,7 +3033,7 @@ static int wcd9335_codec_enable_slim(struct snd_soc_dapm_widget *w,
- 		break;
- 	}
- 
--	return ret;
-+	return 0;
- }
- 
- static int wcd9335_codec_enable_mix_path(struct snd_soc_dapm_widget *w,
-@@ -3539,7 +3538,6 @@ static int wcd9335_codec_hphl_dac_event(struct snd_soc_dapm_widget *w,
- 	struct wcd9335_codec *wcd = dev_get_drvdata(comp->dev);
- 	int hph_mode = wcd->hph_mode;
- 	u8 dem_inp;
--	int ret = 0;
- 
- 	switch (event) {
- 	case SND_SOC_DAPM_PRE_PMU:
-@@ -3579,7 +3577,7 @@ static int wcd9335_codec_hphl_dac_event(struct snd_soc_dapm_widget *w,
- 		break;
- 	};
- 
--	return ret;
-+	return 0;
- }
- 
- static int wcd9335_codec_lineout_dac_event(struct snd_soc_dapm_widget *w,
-@@ -3607,7 +3605,6 @@ static int wcd9335_codec_ear_dac_event(struct snd_soc_dapm_widget *w,
- {
- 	struct snd_soc_component *comp = snd_soc_dapm_to_component(w->dapm);
- 	struct wcd9335_codec *wcd = dev_get_drvdata(comp->dev);
--	int ret = 0;
- 
- 	switch (event) {
- 	case SND_SOC_DAPM_PRE_PMU:
-@@ -3621,7 +3618,7 @@ static int wcd9335_codec_ear_dac_event(struct snd_soc_dapm_widget *w,
- 		break;
- 	};
- 
--	return ret;
-+	return 0;
- }
- 
- static void wcd9335_codec_hph_post_pa_config(struct wcd9335_codec *wcd,
-@@ -3692,7 +3689,6 @@ static int wcd9335_codec_hphr_dac_event(struct snd_soc_dapm_widget *w,
- 	struct wcd9335_codec *wcd = dev_get_drvdata(comp->dev);
- 	int hph_mode = wcd->hph_mode;
- 	u8 dem_inp;
--	int ret = 0;
- 
- 	switch (event) {
- 	case SND_SOC_DAPM_PRE_PMU:
-@@ -3731,7 +3727,7 @@ static int wcd9335_codec_hphr_dac_event(struct snd_soc_dapm_widget *w,
- 		break;
- 	};
- 
--	return ret;
-+	return 0;
- }
- 
- static int wcd9335_codec_enable_hphl_pa(struct snd_soc_dapm_widget *w,
-@@ -3741,7 +3737,6 @@ static int wcd9335_codec_enable_hphl_pa(struct snd_soc_dapm_widget *w,
- 	struct snd_soc_component *comp = snd_soc_dapm_to_component(w->dapm);
- 	struct wcd9335_codec *wcd = dev_get_drvdata(comp->dev);
- 	int hph_mode = wcd->hph_mode;
--	int ret = 0;
- 
- 	switch (event) {
- 	case SND_SOC_DAPM_PRE_PMU:
-@@ -3780,7 +3775,7 @@ static int wcd9335_codec_enable_hphl_pa(struct snd_soc_dapm_widget *w,
- 		break;
- 	};
- 
--	return ret;
-+	return 0;
- }
- 
- static int wcd9335_codec_enable_lineout_pa(struct snd_soc_dapm_widget *w,
-@@ -3789,7 +3784,6 @@ static int wcd9335_codec_enable_lineout_pa(struct snd_soc_dapm_widget *w,
- {
- 	struct snd_soc_component *comp = snd_soc_dapm_to_component(w->dapm);
- 	int vol_reg = 0, mix_vol_reg = 0;
--	int ret = 0;
- 
- 	if (w->reg == WCD9335_ANA_LO_1_2) {
- 		if (w->shift == 7) {
-@@ -3837,7 +3831,7 @@ static int wcd9335_codec_enable_lineout_pa(struct snd_soc_dapm_widget *w,
- 		break;
- 	};
- 
--	return ret;
-+	return 0;
- }
- 
- static void wcd9335_codec_init_flyback(struct snd_soc_component *component)
-@@ -3892,7 +3886,6 @@ static int wcd9335_codec_enable_hphr_pa(struct snd_soc_dapm_widget *w,
- 	struct snd_soc_component *comp = snd_soc_dapm_to_component(w->dapm);
- 	struct wcd9335_codec *wcd = dev_get_drvdata(comp->dev);
- 	int hph_mode = wcd->hph_mode;
--	int ret = 0;
- 
- 	switch (event) {
- 	case SND_SOC_DAPM_PRE_PMU:
-@@ -3930,14 +3923,13 @@ static int wcd9335_codec_enable_hphr_pa(struct snd_soc_dapm_widget *w,
- 		break;
- 	};
- 
--	return ret;
-+	return 0;
- }
- 
- static int wcd9335_codec_enable_ear_pa(struct snd_soc_dapm_widget *w,
- 				       struct snd_kcontrol *kc, int event)
- {
- 	struct snd_soc_component *comp = snd_soc_dapm_to_component(w->dapm);
--	int ret = 0;
- 
- 	switch (event) {
- 	case SND_SOC_DAPM_POST_PMU:
-@@ -3967,7 +3959,7 @@ static int wcd9335_codec_enable_ear_pa(struct snd_soc_dapm_widget *w,
- 		break;
- 	};
- 
--	return ret;
-+	return 0;
- }
- 
- static irqreturn_t wcd9335_slimbus_irq(int irq, void *data)
+# i2cdetect -l
+i2c-0	i2c   	amba:camera-i2c@0      I2C adapter
+i2c-4	i2c   	i2c-0-atr-0            I2C adapter
+i2c-5	i2c   	i2c-0-atr-1            I2C adapter
+# hexdump /sys/bus/i2c/devices/4-0050/eeprom
+0000000 ffff ffff ffff ffff ffff ffff ffff ffff
+*
+0000100
+# hexdump /sys/bus/i2c/devices/4-0051/eeprom
+0000000 0001 0203 0405 0607 0809 0a0b 0c0d 0e0f
+*
+0000100
+#
+
+Here i2c-0 is the "local" bus, i2c-4 and i2c-5 are the remote busses on
+ports 0 and 1. As you can see the eeproms are accessed using a name like
+"4-0050", meaning physical slave address 0x50 on bus 4. No alias is needed.
+
+Should you want to know the alias, perhaps for debugging (it's the
+address you'll see on your logic analyzer), they are shown in the kernel
+log.
+
+Does this reply to your concern?
+
+>> As I read the old thread, you have a hardcoded aliases using
+>> "ti,i2c-bridge-maps". This means you can't have own DTSI files for e.g.
+>> add-on modules, do I get this correctly?
+>>
+> 
+> Basically hardcoding of aliases completely resolves the highlighted
+> above problem. Still it is possible to have own DTSI files for the FPD
+> link detachable PCBs, and this is an exceptionally important scenario,
+> however some limitations shall be applied:
+> * dt overlays for "local" derializer/deserializer ICs, it's a generic
+>   and universal solution, it is successfully used in the field,
+> * only "compatible" PCBs are supposed to be connected (same set of I2C
+>   devices/addresses on every such PCB), this is imperfect for sure,
+> * "ti,i2c-bridge-maps" list is excessive to cover "almost compatible"
+>   (in the sense from above) PCBs, some of the missed alias matches
+>   just won't instantiate a driver, this is of course also imperfect.
+> 
+> In general nothing critical should happen, if some I2C device on the
+> remote side is simply not probed in runtime, in opposite you can imagine
+> that writing for instance to another EEPROM of two on the remote side
+> could be harmful.
+> 
+> Any technically better solution to the two given approaches (from Luca
+> and from me) is more than appreciated. For non-dynamic/fixed local and
+> remote PCBs the fixed mapping is better, the dynamic case is covered
+> by the dt overlays, why not?
+> 
+> As a side note please do remember that the I2C bridging on Maxim GMSL
+> and TI DS90Ux9xx are different, the former one is a real mux, and the
+> latter one is not, I'm uncertain if it's reasonable to think of a
+> generalized solution which covers both IC series, so likely we
+> have to review the developed solutions for them separately instead
+> of trying to work out a combined one.
+> 
+> --
+> Best wishes,
+> Vladimir
+> 
+
+
 -- 
-2.20.1
-
+Luca
