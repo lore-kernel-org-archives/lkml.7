@@ -2,97 +2,124 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F34C49ED6
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C5F1C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CA0E218DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:14:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d0hM9Hrt"
+	by mail.kernel.org (Postfix) with ESMTP id 2D2102086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:16:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568038568;
+	bh=WRjZ44Y2X+VtFPk/w2hbQJ56D207xXfEQntjZgZQyrw=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=Hi5XF3KOPl6PI4aA9LRAKXdjXix4GRpXbzm+yi262wDP6OGXLavDOhTW4WrD/C5xp
+	 8YekjWrRyAEpv/YxLFFVxGGYeOLgMq3+cAqQs2RiEjhepn5QPTpKXVLFh7QQgaxTNy
+	 e1F7dpGKa04ZjOqyRkeeCv0/2ajqc9CRcmQMlNHs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405336AbfIIOO6 (ORCPT
+        id S2405353AbfIIOQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 10:14:58 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37111 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405250AbfIIOO6 (ORCPT
+        Mon, 9 Sep 2019 10:16:07 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50694 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404997AbfIIOQG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 10:14:58 -0400
-Received: by mail-lj1-f195.google.com with SMTP id y5so2104605lji.4;
-        Mon, 09 Sep 2019 07:14:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rwPtv2PkHjRWVfHgdMma8hT5zZLqlYAxoe2nwjsXNiM=;
-        b=d0hM9Hrtn18AtU+ItYS9C5KbSbAKVPpAtJi/W3hBTlbUSAWkLU0R2Mv3yQSK7Rgwwz
-         tcsA+5RnBZdnOqJ5dtNsDjuvjPPLMWHDEE9UwxY7LK2xb/qgGxnAH85F0O4/Dc6vWzkg
-         LnofrMxWnuLmgz3aiBmPeBMOcjjc0b3vwQhbhQ6oWa1DSisWWb1l0LCK9BfxIonpZRSt
-         lewluv90tzc1TxR7XBO+o4nRYdZgXLVGxJj2vktBoMfD60K+MO1B9gIYVoggs6MNp+5Z
-         WTYH0UmlsdBl/E9mryMLNUomGjZw6qwyfjxgRovhf3AJh36tirGbwfm2H3+Vbh4b6/yY
-         OHMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rwPtv2PkHjRWVfHgdMma8hT5zZLqlYAxoe2nwjsXNiM=;
-        b=FTdhHUrAyII4uVdlHMB+4M414uCE9YMEFHHf9e0nugGHdzgsEpelh5N8/3ppFi9YCg
-         Y25UtFuPO2rQaGHSkqwG7ragKg/yQ04wRw6/j8dv78fzzlb908w9NLczZAZWtZnZH7fJ
-         ysC0enDxGOToP1A87ebgpSQ1ghWj8VKMctLqSAAa0OZs5L12mNitAVJ4aXo1FZv8fYyL
-         0H1NR/evtgI5HWDR8LXaywxz2Wv3IG2WnTqn9fBq3CwKksaTVRtaspIrXoP1zHQwvl8B
-         IFDYYrUARZsN3ZS7urLWWj26E41tAFxMUuiHAstdWFUp0H8xmXeLTt/GuiyQJIML7lRu
-         91Hw==
-X-Gm-Message-State: APjAAAVn4h8rlD+6sP33OPASdDfh9MuVf/PGggHzodUJ0vGwIdXzZYNy
-        iSEsjQE8EqlLzcxUyOkKo/h1/D2tJz72VpQPmkU=
-X-Google-Smtp-Source: APXvYqzW8UtXCJLn1NiAEYBOEdyxkVEvLirKRufFFnCXOBna7CwH0djt8OgcYo082H7aaYsJDDuPbJx6pF2cN9g+nO4=
-X-Received: by 2002:a2e:9b43:: with SMTP id o3mr5058959ljj.214.1568038495704;
- Mon, 09 Sep 2019 07:14:55 -0700 (PDT)
+        Mon, 9 Sep 2019 10:16:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
+        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ncaGoyv9geFRKOoOCYmfj/M2T7iV6dkN+y33439/hIE=; b=wPCUkQLmKHZEibVvCCogQ5ua/
+        28sxrmbrMOEjq25ltxakLx0wcOjCLOIbQv0EwU5Bz2Sjhx7taIVMNPpVNjN3LNVLCw5jSNPBXGxZg
+        d+/l/j/gpp0Jx/NS04IQD/JNbesEGaJCgp2FDdIHW63E+pG/Xjy6wk5fq5hO19LiBbES4=;
+Received: from [148.69.85.38] (helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1i7KSb-0002cw-1E; Mon, 09 Sep 2019 14:16:05 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 69799D02D3E; Mon,  9 Sep 2019 15:16:04 +0100 (BST)
+Date:   Mon, 9 Sep 2019 15:16:04 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>
+Subject: [GIT PULL] regulator fixes for 5.3
+Message-ID: <20190909141604.GI2036@sirena.org.uk>
 MIME-Version: 1.0
-References: <20190909021214.25646-1-hui.song_1@nxp.com>
-In-Reply-To: <20190909021214.25646-1-hui.song_1@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Mon, 9 Sep 2019 11:14:45 -0300
-Message-ID: <CAOMZO5AG2xmnDbjmysTbiHpF1W0yERFFwYAa98+YFH7cGSPE6w@mail.gmail.com>
-Subject: Re: [PATCH v3] gpio/mpc8xxx: change irq handler from chained to normal
-To:     Hui Song <hui.song_1@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="itqfrb9Qq3wY07cp"
+Content-Disposition: inline
+X-Cookie: Be careful!  UGLY strikes 9 out of 10!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Song,
 
-On Mon, Sep 9, 2019 at 11:12 AM Hui Song <hui.song_1@nxp.com> wrote:
+--itqfrb9Qq3wY07cp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->  static void mpc8xxx_irq_unmask(struct irq_data *d)
-> @@ -409,8 +409,14 @@ static int mpc8xxx_probe(struct platform_device *pdev)
->         if (devtype->gpio_dir_in_init)
->                 devtype->gpio_dir_in_init(gc);
->
-> -       irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
-> -                                        mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
-> +       ret = request_irq(mpc8xxx_gc->irqn, mpc8xxx_gpio_irq_cascade,
-> +               IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade", mpc8xxx_gc);
-> +       if (ret) {
-> +               pr_err("%s: failed to request_irq(%d), ret = %d\n",
+The following changes since commit 811ba489fa524ec634933cdf83aaf6c007a4c004:
 
-In drivers, it is preferred to use dev_err() instead of pr_err().
+  regulator: of: Add of_node_put() before return in function (2019-08-01 14:07:46 +0100)
 
-Please swicth for dev_err().
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/regulator-fix-v5.3-rc8
+
+for you to fetch changes up to 3829100a63724f6dbf264b2a7f06e7f638ed952d:
+
+  regulator: twl: voltage lists for vdd1/2 on twl4030 (2019-08-15 15:08:41 +0100)
+
+----------------------------------------------------------------
+regulator: Fixes for v5.3
+
+This is obviouly very late, containing three small and simple
+driver specific fixes.  The main one is the TWL fix, this fixes
+issues with cpufreq on the PMICs used with BeagleBoard generation
+OMAP SoCs which had been broken due to changes in the generic OPP
+code exposing a bug in the regulator driver for these devices
+causing them to think that OPPs weren't supported on the system.
+
+Sorry about sending this so late, I hadn't registered that the
+TWL issue manifested in cpufreq.
+
+----------------------------------------------------------------
+
+Andreas Kemnade (1):
+      regulator: twl: voltage lists for vdd1/2 on twl4030
+
+Dan Carpenter (1):
+      regulator: slg51000: Fix a couple NULL vs IS_ERR() checks
+
+Raag Jadav (1):
+      regulator: act8945a-regulator: fix ldo register addresses in set_mode hook
+
+ drivers/regulator/act8945a-regulator.c |  8 ++++----
+ drivers/regulator/slg51000-regulator.c |  4 ++--
+ drivers/regulator/twl-regulator.c      | 23 ++++++++++++++++++++---
+ 3 files changed, 26 insertions(+), 9 deletions(-)
+
+--itqfrb9Qq3wY07cp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl12XqMACgkQJNaLcl1U
+h9DCigf/enqBxwYXqqvNW3drvpkZj8//pHANeq7uF4YzzNiuucfocWV8BPP4ZOV0
+E6/8ike5h91/Hv9Zr/Ls2QxIDHmpUv/Eoj5GCiiz0nr5E2kvLXzfFbk7YUWwAwbg
+Xj1qN3DsfIRUuV2V3TmYk5WHNBFkARepDbf9W9Qc1nSFjwntg7VeKNoG05V+lCkJ
+uAJTOFjEAnGNXxGIpTYb9qjLP8NsyqYGFjDn7U14IJ+x2jW63hlaXXke2iWK/F0D
+/sUikORUY+8iEN72vFrXjOa6uLYL7qXcuNGgFCBPPJGGE0a56pAEqbI1vwtsqX1d
+jv91sQCzGkt8HvbX2oJfcP98PTbg+w==
+=Utx9
+-----END PGP SIGNATURE-----
+
+--itqfrb9Qq3wY07cp--
