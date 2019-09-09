@@ -2,82 +2,192 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E129C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B250C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E010E218AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:40:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15EFF21920
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:40:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GJ+dgc+r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730516AbfIINka (ORCPT
+        id S1730787AbfIINkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 09:40:30 -0400
-Received: from mga14.intel.com ([192.55.52.115]:50293 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726698AbfIINk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 09:40:29 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Sep 2019 06:40:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,484,1559545200"; 
-   d="scan'208";a="191514217"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 09 Sep 2019 06:40:28 -0700
-Received: from [10.251.7.109] (kliang2-mobl.ccr.corp.intel.com [10.251.7.109])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 581CF580522;
-        Mon,  9 Sep 2019 06:40:27 -0700 (PDT)
-Subject: Re: [RESEND PATCH V3 3/8] perf/x86/intel: Support hardware TopDown
- metrics
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Andi Kleen <ak@linux.intel.com>
-Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com
-References: <20190826144740.10163-1-kan.liang@linux.intel.com>
- <20190826144740.10163-4-kan.liang@linux.intel.com>
- <20190828150238.GC17205@worktop.programming.kicks-ass.net>
- <20190828190445.GQ5447@tassilo.jf.intel.com>
- <20190831091931.GJ2369@hirez.programming.kicks-ass.net>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <9ec0a847-2b6b-3422-72bd-ac738f1c0d10@linux.intel.com>
-Date:   Mon, 9 Sep 2019 09:40:26 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 9 Sep 2019 09:40:40 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36612 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726698AbfIINkj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 09:40:39 -0400
+Received: by mail-wm1-f68.google.com with SMTP id p13so14774165wmh.1;
+        Mon, 09 Sep 2019 06:40:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=uU5JBRHXIvx/8FJrzT3Q8CzzXnkxCEsE/V9AOb2mS4I=;
+        b=GJ+dgc+rY09904fO5gRxx6o63f0twPMfDJSQdqowLkOjfgAXLFQCemSI2tCdamoI0F
+         PK/16ehPFz8eZ1J+/to26wtJpYeny8zIx3HweIIfUZDuzVkQcEiUEmQrnxzoy8QvnKUj
+         ogiVG2aAYw23JVQDI4CXFpfkoYvN06e3FEonUTDVBPbJLpJH5B9h2DsBpEY049QpMrIA
+         zdrhsg4SsRkqUhioUfsP+4UVph7LI0kKasz0lE3f7JPKuLNkGw54V/6KwOO87hOnICZj
+         GVaLCF8Vot3aD0lBr2IHng4BNbweksp6XRbO05QV/tMj6PG/IpFu0eMm8MorVzjObnxq
+         J8Iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=uU5JBRHXIvx/8FJrzT3Q8CzzXnkxCEsE/V9AOb2mS4I=;
+        b=OVdCkTikOtD3xfrK51rcgGPkEm2ac527O/GlYZc2utv5fOXGBW1yDC0zPjvU0CqVWI
+         00M7l8N/53zPvVU1P7jnAsmkAJFzgWqKxOAOKPdcx2Q8Ne7UOVkBR0LXJuAspDhjgwfj
+         F7ieHqSZpQ4lgNftVMgk3e4ghnJ+UD4nVMLDbOwxQvrB/LlOgyH7C1r129GMN/5y5uRf
+         Tq+ACko0ZieZCKq5Ikn5s+V/WIFWqHB0Anb34fbqmxurYo6RIzas2CGftPE1ildwX99X
+         YxaKEtTQTr3QHZ2Ne/xvGIIv0G+u549EY63I9q4MYr8i5OyBkjPC18up/4CWtujc1NhH
+         ZjXw==
+X-Gm-Message-State: APjAAAUn8qp+54MF5wkXmfDJMPY4D1ukfdOUWr2TLEJQUVibe8sxgAtD
+        T8yJFhYz3hzgir+B3nOcYCM=
+X-Google-Smtp-Source: APXvYqxHaF/yMZggxxln8G4flQD0InZGwOQ1ivuk3uCKtnT1meqyiO91xNlY2j5uvD1R7UsJvqTdjg==
+X-Received: by 2002:a1c:a404:: with SMTP id n4mr18354841wme.137.1568036436379;
+        Mon, 09 Sep 2019 06:40:36 -0700 (PDT)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id g201sm20586327wmg.34.2019.09.09.06.40.35
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 09 Sep 2019 06:40:35 -0700 (PDT)
+Date:   Mon, 9 Sep 2019 15:40:33 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Tero Kristo <t-kristo@ti.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Adam Ford <adam.ford@logicpd.com>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Paul Walmsley <paul@pwsan.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [RFC] ARM: omap3: Enable HWMODS for HW Random Number Generator
+Message-ID: <20190909134033.s26eiurpat3iekse@pali>
+References: <20190828150037.2640-1-aford173@gmail.com>
+ <20190905230443.GA52127@atomide.com>
+ <CAHCN7xL0fbr=Sv+b=0AuGB1PPhAAFdAFLEd_iBM+ZMTkUw5sHQ@mail.gmail.com>
+ <CAHCN7xL-Gfxe0qF5w7BUsHnyhcNNpmCnchdKErnmiqggXfsLWw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190831091931.GJ2369@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHCN7xL-Gfxe0qF5w7BUsHnyhcNNpmCnchdKErnmiqggXfsLWw@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Monday 09 September 2019 08:37:09 Adam Ford wrote:
+> On Mon, Sep 9, 2019 at 7:13 AM Adam Ford <aford173@gmail.com> wrote:
+> >
+> > On Thu, Sep 5, 2019 at 6:04 PM Tony Lindgren <tony@atomide.com> wrote:
+> > >
+> > > Hi,
+> > >
+> > > * Adam Ford <aford173@gmail.com> [190828 15:01]:
+> > > > The datasheet for the AM3517 shows the RNG is connected to L4.
+> > > > It shows the module address for the RNG is 0x480A0000, and it
+> > > > matches the omap2.dtsi description.  Since the driver can support
+> > > > omap2 and omap4, it seems reasonable to assume the omap3 would
+> > > > use the same core for the RNG.
+> > > >
+> > > > This RFC, mimics much of the omap2 hwmods on the OMAP3. It
+> > > > also adds the necessary clock for driving the RNG.  Unfortunately,
+> > > > it appears non-functional.  If anyone has any suggestions on how
+> > > > to finish the hwmod (or port it to the newer l4 device tree
+> > > > format), feedback is requested.
+> > >
+> > > Yup I'll take the bait :) The patch below seems to do the trick
+> > > for me on dm3730 based on translating your patch to probe with
+> > > ti-sysc.
+> > >
+> > > Not sure about 34xx, it seems we're missing rng_clk? Care
+> > > to give it a try and attempt simlar patches for 34xx and
+> > > 3517?
+> > >
+> > > At least I'm not needing the "ti,no-reset-on-init" property
+> > > that your patch has a comment for. Maybe that's needed on
+> > > some other omap3.
+> > >
+> > > Oh and this needs to default to status = "disabled" for
+> > > HS devices like n900 as it needs to use the omap3-rom-rng.
+> > >
+> > > Regards,
+> > >
+> > > Tony
+> > >
+> > > 8< -----------------------
+> > > diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap36xx.dtsi
+> > > --- a/arch/arm/boot/dts/omap36xx.dtsi
+> > > +++ b/arch/arm/boot/dts/omap36xx.dtsi
+> > > @@ -140,6 +140,29 @@
+> > >                         };
+> > >                 };
+> > >
+> > > +               rng_target: target-module@480a0000 {
+> > > +                       compatible = "ti,sysc-omap2", "ti,sysc";
+> > > +                       reg = <0x480a003c 0x4>,
+> > > +                             <0x480a0040 0x4>,
+> > > +                             <0x480a0044 0x4>;
+> > > +                       reg-names = "rev", "sysc", "syss";
+> > > +                       ti,sysc-mask = <(SYSC_OMAP2_AUTOIDLE)>;
+> > > +                       ti,sysc-sidle = <SYSC_IDLE_FORCE>,
+> > > +                                       <SYSC_IDLE_NO>;
+> > > +                       ti,syss-mask = <1>;
+> > > +                       clocks = <&rng_ick>;
+> > > +                       clock-names = "ick";
+> > > +                       #address-cells = <1>;
+> > > +                       #size-cells = <1>;
+> > > +                       ranges = <0 0x480a0000 0x2000>;
+> > > +
+> > > +                       rng: rng@0 {
+> > > +                               compatible = "ti,omap2-rng";
+> > > +                               reg = <0x0 0x2000>;
+> > > +                               interrupts = <52>;
+> > > +                       };
+> > > +               };
+> > > +
+> 
+> I applied this on 5.3 and it is working.  I assume the same is true in for-next.
+> 
+> Do you want to submit a formal patch?  I  can mark it as 'tested-by'
+> This really helps speed up the startup sequence on boards with sshd
+> because it delays for nearly 80 seconds waiting for entropy without
+> the hwrng.
 
+Hi! When applying a patch, could you please disable this rng for n900?
 
-On 8/31/2019 5:19 AM, Peter Zijlstra wrote:
->>> Then there is no mucking about with that odd counter/metrics msr pair
->>> reset nonsense. Becuase that really stinks.
->> You have to write them to reset the internal counters.
-> But not for ever read, only on METRIC_OVF.
+In omap3-n900.dts for rng should be status = "disabled" (as Tony already
+wrote), similarly like for aes.
 
-The precision are lost if the counters were running much longer than the 
-measured delta. We have to reset the counters after every read.
-For example, the worst case is:
-The previous reading was rounded up and the current reading is rounded 
-down. The error of METRICS is 1/256 - 1/SLOTS, which is related to 
-SLOTS. The error for each Topdown event is  (1/256 - 1/SLOTS) * SLOTS.
-With the SLOTS increasing, the precision will get worse and worse.
-Therefor, we have to reset the counters periodically.
+Thanks!
 
-Thanks,
-Kan
+> adam
+> >
+> > Tony,
+> >
+> > Can you tell me what branch you're using?  I am not seeing the note
+> > below, so I am not exactly sure what version to base my testing.
+> >
+> > ada,
+> > >                 /*
+> > >                  * Note that the sysconfig register layout is a subset of the
+> > >                  * "ti,sysc-omap4" type register with just sidle and midle bits
 
-
+-- 
+Pali Rohár
+pali.rohar@gmail.com
