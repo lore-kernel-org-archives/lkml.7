@@ -2,136 +2,226 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0686C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 18:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F55CC4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 19:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8760F21924
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 18:56:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C6F021A4C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 19:13:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="DhYg+foH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pl7DBJ9f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732482AbfIIS4o (ORCPT
+        id S1732878AbfIITNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 14:56:44 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39540 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727164AbfIIS4o (ORCPT
+        Mon, 9 Sep 2019 15:13:25 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38726 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732594AbfIITNY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 14:56:44 -0400
-Received: by mail-pl1-f193.google.com with SMTP id bd8so6938375plb.6
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 11:56:42 -0700 (PDT)
+        Mon, 9 Sep 2019 15:13:24 -0400
+Received: by mail-io1-f68.google.com with SMTP id k5so6128692iol.5;
+        Mon, 09 Sep 2019 12:13:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=9PpVHKOkn7AvbOWw4B8dKfxzmxwCcW0yqGrQBUq0hN8=;
-        b=DhYg+foHMBNgIp8ZI6L0UbWWMEHpLnOxeSdowJUQ0hVIusLXPBuzB5YrlNfmFeh+K6
-         Xm1rdE3/IBzPQjUatOMjcobzfLiFnLZihws9zc6ra29d7Wwo8P3N3LBSRVlys2Nug1v3
-         s+0LaXu2s4EWSkKyG4IEoUsd5ohWbInVKmiAM=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=VLbJxGohHfaGQxBUxT7MKeg7g91YDycpTiN6PkEm0v8=;
+        b=Pl7DBJ9fPF2Ix/2UjwPOVxRJv5yKUNes0Q0JD0FOXh/cLBf/27ZZMnRne0Fs+j/R+Q
+         7lV/aNU4l1s7V7l5B8DsjgWGtafltRxwfSAH6ma79QnJi1FEGvY5P6peeH8ha19HqrV4
+         fbfZ0fIHQjaEEY42TzZap4DtEtVwUICbuK7CI9PKC6mOVuJs6ewGidJFkCQcWw4IJ4+s
+         Ae6b7zZtL6AwuR6zHk8NzyJhe9jB2aIhWlz+JN2Ncmoz0zH7HO5pN4lpBqPAmPaLJgEF
+         CtZAaeYv966lMcpEohKwyXET3z6Rdr9woK4HgKzZb5qjGjI7WLodnJd2WOhVEjmmnHo2
+         1JGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9PpVHKOkn7AvbOWw4B8dKfxzmxwCcW0yqGrQBUq0hN8=;
-        b=O2DXVLUku58DLWb52jAUzC3tMnIQvnZdYnIRcgwSUvuzjkHq8fLdsD6uqB/5FI1WO8
-         mjwpprmBWOmjEo/ivixo/WmJoZ9tzMI+2ALcf07p9f/Ts8f9PfHhk2fzz9DxxTP02ZaF
-         tWldhsdm1b2dwyW+CERwlzfmMMp86nj9QcjaDXrFNhil+US5/Xu24aHdEuEV8++ap++5
-         I0aFJfLgXY51QkKPdw1519Oq1e36RtLAVwZy+lqa3dTfd7nRVXVuOEb81AyC3wcTYUnX
-         MYNmP9CG8vU+kKh9vZECLu620uoMboXtni/3s4iQvO7051iC9uimvd0vTNrJT6JJ945+
-         kdZA==
-X-Gm-Message-State: APjAAAUcqCAEjEuZ/47MDUNygAT1sqoEQtdh3o5pF6Ve1ka3FOZb8Vod
-        w5ja8KEYC8N5hlCAD46gUfF0liQB2xqC3O4Y841vyqO2l06xDWdOgRxgq132OvgfeIKUc92O/Pu
-        WTIq/hwVTc77VonTICR9duesQgfXSxSw8c8XqIkhBAlir4kXpKuVgHMsTct3CnXHY0KH6pNTy2r
-        DGF9g=
-X-Google-Smtp-Source: APXvYqxHAEqC9e+AAStf9IM6pukGCQTPomG2dj8gqDOX6pR5nm98F+0IcF0DggiI0chSTzXXODrb7A==
-X-Received: by 2002:a17:902:166:: with SMTP id 93mr26449506plb.320.1568055401720;
-        Mon, 09 Sep 2019 11:56:41 -0700 (PDT)
-Received: from rj-aorus.ric.broadcom.com ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id l72sm270722pjb.7.2019.09.09.11.56.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 09 Sep 2019 11:56:40 -0700 (PDT)
-Subject: Re: [PATCH v1 1/1] arm64: dts: Fix gpio to pinmux mapping
-To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1568018127-26730-1-git-send-email-rayagonda.kokatanur@broadcom.com>
-From:   Ray Jui <ray.jui@broadcom.com>
-Message-ID: <664091a5-7cc0-eeb9-425a-ce39c31b1dfc@broadcom.com>
-Date:   Mon, 9 Sep 2019 11:56:37 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=VLbJxGohHfaGQxBUxT7MKeg7g91YDycpTiN6PkEm0v8=;
+        b=rcufrZsZTLs9gbCtgOgqSsptm4XLo3hdh785JbOrxE94xjbCUmsWbElLqUDcvYmbJQ
+         6pmOKJwWLWCOgm5aNETByiMtJLfO+xjs8TZAOkwLF80lg3lRPuynlw0LdUdS/JBOpXMr
+         m/6uilBs6mxZaQhSAzYT0m4TfNayTGhTmEmz/fnScoYQwlgasBf+o5wrLvzYAOVCSUcp
+         g3/tKu+zpmvKQtO4y+uf6QMCZVN+ON2TOj6bz64idIQ23vwwe8nXgKZg3eX4qSOiTo0F
+         IMNJDknT6CDN1K3qn0QIwmnRc3nzXf2uvCv4rMKk1g12/kKoq8aJrFxOZDlIxyXl1BOg
+         TLoA==
+X-Gm-Message-State: APjAAAXAhq6ZPeVW+vBWSdRjT3zHRadDi9H+4UTowMF7CrEDt7Hw+ukp
+        oECNmV2sxO9maDVoF7ySXxDwTE87qWEbEzSOunM=
+X-Google-Smtp-Source: APXvYqzKwG5Hw87/g9cHikKba+W//tYQ1m76H3+ua5V0I7APpFX595GVrht8Tls9NxvLRsZYx6fPf7niFB4UMjbID4A=
+X-Received: by 2002:a6b:b213:: with SMTP id b19mr27546226iof.58.1568056401769;
+ Mon, 09 Sep 2019 12:13:21 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1568018127-26730-1-git-send-email-rayagonda.kokatanur@broadcom.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <C04F49BA-1229-4E96-9FCF-4FC662D1DB11@goldelico.com>
+ <CAHCN7x+Ye6sB_YqO0sAX1OJDw64B-qGS3pL545v3Xk5z914cwQ@mail.gmail.com>
+ <0C1EF64E-B33C-4BFA-A7D3-471DD1B9EE86@goldelico.com> <515048DE-138D-4400-8168-F2B7D61F1005@goldelico.com>
+ <CAHCN7xLPCX9rZ0+7KVBiA_bgZ6tg6VeCXqD-UXu+6iwpFMPVrA@mail.gmail.com>
+ <7B3D1D77-3E8C-444F-90B9-6DF2641178B8@goldelico.com> <CAHCN7xLW58ggx3CpVL=HdCVHWo6D-MCTB91A_9rtSRoZQ+xJuQ@mail.gmail.com>
+ <FA2920FE-B76A-4D44-A264-862A1CCBF7FC@goldelico.com> <CAHCN7xJsPa0i+Z+qpCkWcdAh9+udmGT0RPNchdDsfB=8ptd3Nw@mail.gmail.com>
+ <87420DBD-770F-4C32-9499-A3AEA5876E8A@goldelico.com> <20190909163236.GP52127@atomide.com>
+ <E001F74D-724E-4C50-9265-CBD33C4F2918@goldelico.com> <F8F08882-8011-441C-9581-ECCE9772EC21@goldelico.com>
+In-Reply-To: <F8F08882-8011-441C-9581-ECCE9772EC21@goldelico.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Mon, 9 Sep 2019 14:13:10 -0500
+Message-ID: <CAHCN7x+fgtMHMNYU2W7BRQwd-d2g_Tb8-L5QNcnZjCF=VzRXJg@mail.gmail.com>
+Subject: Re: [Letux-kernel] [RFC PATCH 0/3] Enable 1GHz support on omap36xx
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        =?UTF-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Nishanth Menon <nm@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Sep 9, 2019 at 1:11 PM H. Nikolaus Schaller <hns@goldelico.com> wro=
+te:
+>
+>
+> > Am 09.09.2019 um 18:54 schrieb H. Nikolaus Schaller <hns@goldelico.com>=
+:
+> >
+> > Hi Tony,
+> >
+> >> Am 09.09.2019 um 18:32 schrieb Tony Lindgren <tony@atomide.com>:
+> >>
+> >> Hi,
+> >>
+> >> * H. Nikolaus Schaller <hns@goldelico.com> [190909 14:57]:
+> >>> Another question that came up by private mail from Andr=C3=A9 was if =
+we
+> >>> should better disable the turbo OPPs of omap34xx and 36xx by default
+> >>> (status =3D "disabled";) because there are concerns about overheating
+> >>> the chips and we have no thermal regulation like for omap4 & 5.
+> >>>
+> >>> But this would mean that every board DTS would have to set it explici=
+tly
+> >>> to "enabled".
+> >>
+> >> Yes I started thinking about that too. I think there is a requirement
+> >> to do the scaling via the voltage processor for the higher modes.
+> >
+> > It depends on how you read the little footnotes...
+> >
+> > Table 4-18. Processor Voltages Without SmartReflex:
+> >
+> >       =E2=80=A2 This table defines the safe VDD1 (vdd_mpu_iva) voltage =
+ranges to be used before using the SmartReflex AVS feature for OPPs calibra=
+tion.
+> >       =E2=80=A2 Values are defined when SmartReflexTM feature is deacti=
+vated. They can be lower when SmartReflexTM is activated.
+> >       =E2=80=A2 OPP130 and OPP1G are not available above TJ of 90C.
+> >       =E2=80=A2 (6)  OPP1G is a high performance operating point which =
+has following requirements:
+> >               =E2=80=A2 =E2=80=93  ABB LDO must be set to FBB (Forward =
+Body Bias) mode when switching to this OPP. It requires having a 1 F capaci=
+tor connected to cap_vdd_bb_mpu_iva.
+> >               =E2=80=A2 =E2=80=93  AVS (Adaptive Voltage Scaling) power=
+ technique must be used to achieve optimum operating voltage.
+> >
+> > So I read this as:
+> >
+> > * OPP130 and OPP1G should be guarded by 90=C2=B0C thermal framework
+> > * OPP1G should also set the ABB LDO to FBB mode
+> > * AVS does only reduce voltage levels (to save energy =3D heat =3D prob=
+lem)
+> > * only if we want "optimum operating voltage" (read as: "lowest possibl=
+e voltage" =3D "highest energy saving") we must use AVS
+> >
+> > I.e. we do not necessarily need AVS or SmartReflex or help from the
+> > twl4030 (except for changing the voltage).
+> >
+> >> And there needs to be some way to automatically change to a lower
+> >> OPP in some cases.
+> >
+> > That should probably be done through the thermal framework like
+> > on omap4 & omap5?
+> >
+> >>
+> >> For normal OPPs, using the twl regulator directly should be OK.
+> >
+> > Maybe for the turbo OPPs as well.
+> >
+> >> For the higher modes, maybe we could pass the callback functions
+> >> from arch/arm/mach-omap2/voltage.c for the twl regulator so the
+> >> voltage processor hardware can handle them directly. Or add a
+> >> separate regulator driver operating the voltages like Nishanth
+> >> posted patches for earlier.
+> >
+> > So in my (limited) understanding it would suffice to set the ABB LDO
+> > to FBB mode for OPP1G.
+>
+> Ok, we have to check if the ti,abb-v2 "LDO" driver
+> drivers/regulator/ti-abb-regulator.c
+> can handle that with a DT entry similar to:
+>
+> https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/omap5.dt=
+si#L365
 
+At least for the 3630, the ti-abb-regulator driver is the same driver,
+but different structures based on v1, v2, or v3 are used based on
+which compatible flag is used.
 
-On 9/9/19 1:35 AM, Rayagonda Kokatanur wrote:
-> There are total of 151 non-secure gpio (0-150) and four
-> pins of pinmux (91, 92, 93 and 94) are not mapped to any
-> gpio pin, hence update same in DT.
-> 
-> Fixes: 8aa428cc1e2e ("arm64: dts: Add pinctrl DT nodes for Stingray SOC")
-> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-> ---
->   arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi | 5 +++--
->   arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi         | 3 +--
->   2 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi
-> index 8a3a770..56789cc 100644
-> --- a/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi
-> +++ b/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi
-> @@ -42,13 +42,14 @@
->   
->   		pinmux: pinmux@14029c {
->   			compatible = "pinctrl-single";
-> -			reg = <0x0014029c 0x250>;
-> +			reg = <0x0014029c 0x26c>;
->   			#address-cells = <1>;
->   			#size-cells = <1>;
->   			pinctrl-single,register-width = <32>;
->   			pinctrl-single,function-mask = <0xf>;
->   			pinctrl-single,gpio-range = <
-> -				&range 0 154 MODE_GPIO
-> +				&range 0  91 MODE_GPIO
-> +				&range 95 60 MODE_GPIO
->   				>;
->   			range: gpio-range {
->   				#pinctrl-single,gpio-range-cells = <3>;
-> diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-> index 71e2e34..0098dfd 100644
-> --- a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-> +++ b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-> @@ -464,8 +464,7 @@
->   					<&pinmux 108 16 27>,
->   					<&pinmux 135 77 6>,
->   					<&pinmux 141 67 4>,
-> -					<&pinmux 145 149 6>,
-> -					<&pinmux 151 91 4>;
-> +					<&pinmux 145 149 6>;
->   		};
->   
->   		i2c1: i2c@e0000 {
-> 
+I tried enabling the vbb-supply in the device tree, but the driver
+doesn't load it without .multi_regulator being true.
 
-Thanks for the fix. Looks good to me!
+cpus {
+/* OMAP3630/OMAP37xx variants OPP50 to OPP130 and OPP1G */
+     cpu: cpu@0 {
+          operating-points-v2 =3D <&cpu0_opp_table>;
+          vbb-supply =3D <&abb_mpu_iva>;
+          clock-latency =3D <300000>; /* From omap-cpufreq driver */
+     };
+};
 
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+I enabled that in the 3630 structure, but then the opp must list
+voltage points for both regulators.
+Looking at the entry for abb_mpu_iva, it appears to have voltages that
+directly match the OPP table, so I made a duplicate entry:
+
+ opp-microvolt =3D <1012500 1012500 1012500>,
+                           <1012500 1012500 1012500>;
+
+and similar for 600, 800 and 1000 similar to the way dra7.dtsi does
+it, but then I got some nasty errors and crashes.
+
+I started undoing the stuff, and I wanted to see if the abb_mpu_iva
+regulator was even running, but I would get -22 errors when I went to
+read the voltage.
+
+# cat /sys/devices/platform/68000000.ocp/483072f0.regulator-abb-mpu/regulat=
+or/regulator.5/microvolts
+-22
+
+If someone has any suggestions on how to test the abb_mpu_iva driver,
+let me know.
+
+>
+> Needs a little time to add to a new version of the patch set.
+>
+> > And make sure that the TJ does not exceed 90=C2=B0C by reducing the cpu=
+freq
+> > through the thermal framework. But: the thermal sensors of the omap3
+> > are quite odd (they seem to jump up by 10=C2=B0 after first use).
+
+Can we just do a dummy read to get it out of the way?  ;-)
+
+>
+> I'll leave this out for the moment for future study.
+Works for me, Baby steps.
+
+Thanks for all your work.
+
+adam
+>
+> BR and thanks,
+> Nikolaus
+>
