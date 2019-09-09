@@ -2,139 +2,145 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5093C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC568C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:04:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A94BE21479
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:59:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="iThLrsB7"
+	by mail.kernel.org (Postfix) with ESMTP id AFC6D2196E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:04:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568037862;
+	bh=BceXqHBVAXO0SzdF8rTWqk9w5ctjbmxf4pw3jTBHQxw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LGidZNRusALR4kkLQ3p14gMrK4KPsGV6TqvFC69r5W56b7Vj7E61EKySGdMCz7YIS
+	 FW0HJKmU2qzGrmCu7+Q5p0CdH48vl6ByOOHpmRZr8p/5s0sumvYqSSNzXk9zLAGHRv
+	 MhBGKBdr5Y82j282I7ETuloohCfwR8O2BzG2GIp8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730866AbfIIN7n (ORCPT
+        id S2405141AbfIIOEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 09:59:43 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:63751 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405137AbfIIN7m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 09:59:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1568037581; x=1599573581;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=K42g/AFNMDx/RgjzKJBTKWAce5pXZj/ROym93HlBV/I=;
-  b=iThLrsB7pkHCwAmSPl2JFKAjReiQpTcVs4GslPOukjdC1ZlQolkkH/xN
-   GC5nBTT2WFDl/oMVgNEcDhqOLtkewFS4ru5q5xCq4LTK4Fyve4Yb2MLO0
-   4YACa25Pz9wgmhI+zccrkrJxl6/YN1ljnX4cf8BLQr4hc876TWhkmrhuO
-   Y=;
-X-IronPort-AV: E=Sophos;i="5.64,484,1559520000"; 
-   d="scan'208";a="829304744"
-Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com) ([10.47.22.34])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 09 Sep 2019 13:59:14 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com (Postfix) with ESMTPS id 0CCB1A1E19;
-        Mon,  9 Sep 2019 13:59:12 +0000 (UTC)
-Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 9 Sep 2019 13:59:12 +0000
-Received: from [10.125.238.52] (10.43.160.27) by EX13D01EUB001.ant.amazon.com
- (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Mon, 9 Sep
- 2019 13:59:01 +0000
-Subject: Re: [PATCH 3/3] arm64: alpine: select AL_POS
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        gregkh <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Patrick Venture" <venture@google.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "Olof Johansson" <olof@lixom.net>,
-        Maxime Ripard <mripard@kernel.org>,
-        "Santosh Shilimkar" <ssantosh@kernel.org>,
-        <paul.kocialkowski@bootlin.com>, <mjourdan@baylibre.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "Will Deacon" <will@kernel.org>, DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        <hhhawa@amazon.com>, <ronenk@amazon.com>, <jonnyc@amazon.com>,
-        <hanochu@amazon.com>, <barakw@amazon.com>
-References: <1568020220-7758-1-git-send-email-talel@amazon.com>
- <1568020220-7758-4-git-send-email-talel@amazon.com>
- <CAK8P3a0DEMeFWK+RuAdSLyDYduWWwj9DxP_Beipays-d_6ixnA@mail.gmail.com>
- <ab512ced-d989-5c10-a550-2a4723d38e7e@amazon.com>
- <CAK8P3a34eKFXoAPOfkFN5+H4kxOhRjXgws_0wy+d-186LFxcTw@mail.gmail.com>
-From:   "Shenhar, Talel" <talel@amazon.com>
-Message-ID: <0d36f94d-596f-0ec7-6951-b097b5ee0d2d@amazon.com>
-Date:   Mon, 9 Sep 2019 16:58:56 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
+        Mon, 9 Sep 2019 10:04:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43200 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404997AbfIIOEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 10:04:21 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BA0121924;
+        Mon,  9 Sep 2019 14:04:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568037861;
+        bh=BceXqHBVAXO0SzdF8rTWqk9w5ctjbmxf4pw3jTBHQxw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=y6wNq/EwRmggE4exMTqn9Sn14AIYiMuQxdJQ+5B6cgNVIHbomUOBQUwlo4hA6w6P5
+         0uWyZboY2zCJ2Wq9XFAJLtSe2oyqHuAlwOLNa0ijdygIdPHq61SI0fHQ+bfttjJbIt
+         f/neASzyNQKDqnEkxbmK8L67avoAN5oqG+YLMUeY=
+Date:   Mon, 9 Sep 2019 15:04:16 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] iommu: Implement of_iommu_get_resv_regions()
+Message-ID: <20190909140415.axszldhakgqifibg@willie-the-truck>
+References: <20190829111407.17191-1-thierry.reding@gmail.com>
+ <20190829111407.17191-2-thierry.reding@gmail.com>
+ <0b7e050a-cec6-6ce7-9ed6-2146eabb2fe8@arm.com>
+ <20190902150056.GD1445@ulmo>
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a34eKFXoAPOfkFN5+H4kxOhRjXgws_0wy+d-186LFxcTw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.43.160.27]
-X-ClientProxiedBy: EX13D23UWA002.ant.amazon.com (10.43.160.40) To
- EX13D01EUB001.ant.amazon.com (10.43.166.194)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190902150056.GD1445@ulmo>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Sep 02, 2019 at 05:00:56PM +0200, Thierry Reding wrote:
+> On Mon, Sep 02, 2019 at 02:54:23PM +0100, Robin Murphy wrote:
+> > On 29/08/2019 12:14, Thierry Reding wrote:
+> > > From: Thierry Reding <treding@nvidia.com>
+> > > 
+> > > This is an implementation that IOMMU drivers can use to obtain reserved
+> > > memory regions from a device tree node. It uses the reserved-memory DT
+> > > bindings to find the regions associated with a given device. These
+> > > regions will be used to create 1:1 mappings in the IOMMU domain that
+> > > the devices will be attached to.
+> > > 
+> > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > Cc: Frank Rowand <frowand.list@gmail.com>
+> > > Cc: devicetree@vger.kernel.org
+> > > Signed-off-by: Thierry Reding <treding@nvidia.com>
+> > > ---
+> > >   drivers/iommu/of_iommu.c | 39 +++++++++++++++++++++++++++++++++++++++
+> > >   include/linux/of_iommu.h |  8 ++++++++
+> > >   2 files changed, 47 insertions(+)
+> > > 
+> > > diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+> > > index 614a93aa5305..0d47f626b854 100644
+> > > --- a/drivers/iommu/of_iommu.c
+> > > +++ b/drivers/iommu/of_iommu.c
+> > > @@ -9,6 +9,7 @@
+> > >   #include <linux/iommu.h>
+> > >   #include <linux/limits.h>
+> > >   #include <linux/of.h>
+> > > +#include <linux/of_address.h>
+> > >   #include <linux/of_iommu.h>
+> > >   #include <linux/of_pci.h>
+> > >   #include <linux/slab.h>
+> > > @@ -225,3 +226,41 @@ const struct iommu_ops *of_iommu_configure(struct device *dev,
+> > >   	return ops;
+> > >   }
+> > > +
+> > > +/**
+> > > + * of_iommu_get_resv_regions - reserved region driver helper for device tree
+> > > + * @dev: device for which to get reserved regions
+> > > + * @list: reserved region list
+> > > + *
+> > > + * IOMMU drivers can use this to implement their .get_resv_regions() callback
+> > > + * for memory regions attached to a device tree node. See the reserved-memory
+> > > + * device tree bindings on how to use these:
+> > > + *
+> > > + *   Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+> > > + */
+> > > +void of_iommu_get_resv_regions(struct device *dev, struct list_head *list)
+> > > +{
+> > > +	struct of_phandle_iterator it;
+> > > +	int err;
+> > > +
+> > > +	of_for_each_phandle(&it, err, dev->of_node, "memory-region", NULL, 0) {
+> > > +		struct iommu_resv_region *region;
+> > > +		struct resource res;
+> > > +
+> > > +		err = of_address_to_resource(it.node, 0, &res);
+> > > +		if (err < 0) {
+> > > +			dev_err(dev, "failed to parse memory region %pOF: %d\n",
+> > > +				it.node, err);
+> > > +			continue;
+> > > +		}
+> > 
+> > What if the device node has memory regions for other purposes, like private
+> > CMA carveouts? We wouldn't want to force mappings of those (and in the very
+> > worst case doing so could even render them unusable).
+> 
+> I suppose we could come up with additional properties to mark such
+> memory regions and skip them here.
 
-On 9/9/2019 4:45 PM, Arnd Bergmann wrote:
-> On Mon, Sep 9, 2019 at 12:17 PM Shenhar, Talel <talel@amazon.com> wrote:
->> On 9/9/2019 12:40 PM, Arnd Bergmann wrote:
->>> On Mon, Sep 9, 2019 at 11:14 AM Talel Shenhar <talel@amazon.com> wrote:
->>>> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
->>>> index 4778c77..bd86b15 100644
->>>> --- a/arch/arm64/Kconfig.platforms
->>>> +++ b/arch/arm64/Kconfig.platforms
->>>> @@ -25,6 +25,7 @@ config ARCH_SUNXI
->>>>    config ARCH_ALPINE
->>>>           bool "Annapurna Labs Alpine platform"
->>>>           select ALPINE_MSI if PCI
->>>> +       select AL_POS
->>>>           help
->>>>             This enables support for the Annapurna Labs Alpine
->>>>             Soc family.
->>> Generally I think this kind of thing should go into the defconfig
->>> rather than being hard-selected. There might be users that
->>> want to not enable the driver.
->> The reason for selecting it is because this is a driver that we will
->> always want for ARCH_ALPINE.
-> Can you put the exact requirement (other than "we want this")
-> in the changelog text then? It's still not clear to me what breaks
-> without this driver.
->
->          Arnd
+I think we need /something/ like that, both so that we can identify these
+memory regions as requiring an identity mapping in the SMMU but also so
+that we can place additional requirements on them, such as being 64k-aligned
+and mandating properties of the mapping, such as cacheability based on the
+device coherency.
 
-Its not that something will get broken. its error event detector for POS 
-events which allows seeing bad accesses to registers.
+I defer to the devicetree folks as to whether this should be an additional
+property, or a phandle or whatever.
 
-What is the general rule of which configs to put under select and which 
-under defconfig?
-
-I was thinking that "general" SoC support is good under select - those 
-things that we always want.
-
-And specific features, e.g. RAID support or features that supported only 
-on specific HW shall go under defconfig.
-
-
-Similar, I see ARCH_LAYERSCAPE selecting EDAC_SUPPORT.
-
-
-Will love to hear the general rule for select vs defconfig.
-
+Will
