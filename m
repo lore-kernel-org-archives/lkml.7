@@ -2,90 +2,177 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 962F3C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA8CC49ED6
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B29D21924
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:54:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6635E21479
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:54:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pg0BqddT"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="RIpsg1uj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391231AbfIIQy2 (ORCPT
+        id S2391264AbfIIQye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 12:54:28 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:45225 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727866AbfIIQy1 (ORCPT
+        Mon, 9 Sep 2019 12:54:34 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:43714 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727866AbfIIQyc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 12:54:27 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 41so9387319oti.12
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 09:54:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=31kxGZUlgh39qJethx0hRa+2PyryHdT/Kifm1vwiYDs=;
-        b=pg0BqddTOhx6M/Lw9KYbXBx53VB0/+25bq5PSVGS50kKhJAnUXeSYvtCFIgIlUO7I4
-         Sg1kq0KCyg8dXxJGHKD/MqCwcoPyMDnS6oFukKEhKHQoDCoLoj8esh2gRMKFIcUMl5La
-         2FHcOz3V5odVTWnN7UmsDFgD91cDoA9lm/fqufSc+5Jfe1CCXs3dxqddQtSFZUYmc+Mh
-         Q7v6HcK87vArL8+rNjdx+vspc3BNqWnc12MCGysMYEtg0aFAUl7cnDYzfUvg0oLEO0o+
-         k8ZvmZolsz5u43ZSfVkBrweedczj7i6/QGcV4lflm9XvPAaqCL9km3p4IpM1HxWR9qoP
-         hgfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=31kxGZUlgh39qJethx0hRa+2PyryHdT/Kifm1vwiYDs=;
-        b=t6tieiMkxgUO/5QA06Fzh9lg13t0H+jPoea975iX1RcBWVEWCbgSwtkfKZfM97JPLu
-         IXLQ91NNEpqGi5T/ZdvLCT/kBP0gWILEL6/QL6B+boqkFcd1mUHjPQA+wovDg2znniFh
-         gSuK5gbeALcQJaeiEMfrupAYPjLmAfF3ngCvDkwbzCejrOyDJ4ycWLgBeMH0a/zXWcWe
-         FR64drYa2izA2gyMjB1Q/HxC1aQ4WLlYlTyO0KatTL8YCrawE/WCRTmEKMjqQJv6Gd2A
-         MFjYF7acW0HNU2KYJ5fvtAIxaMQhbtiDf+khtDmNrXzI/rUe8/AY98ympWsg76sGfNrP
-         S5hQ==
-X-Gm-Message-State: APjAAAUZolGHY8vvfLEGx3YV/Yh+gsUoCPypUl1vQsC699cBlh4p+cFi
-        GwxdM6XsE7ZQe3wSL/NxIP2rpFVIXVGUnBQdJfrmtIMYn9I=
-X-Google-Smtp-Source: APXvYqxnlaS57V4kAtXP0r+RRN9r75uKF5+ohgYNaIFFekZNrp9ytwRto6OPiRHTdghftBB5ZTPY16S+Jyw0XDyq2s0=
-X-Received: by 2002:a9d:12e4:: with SMTP id g91mr19182974otg.368.1568048065736;
- Mon, 09 Sep 2019 09:54:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190903160430.1368-1-lpf.vector@gmail.com> <20190903160430.1368-3-lpf.vector@gmail.com>
- <80fe024b-006e-b38e-1548-70441d917b41@suse.cz>
-In-Reply-To: <80fe024b-006e-b38e-1548-70441d917b41@suse.cz>
-From:   Pengfei Li <lpf.vector@gmail.com>
-Date:   Tue, 10 Sep 2019 00:54:14 +0800
-Message-ID: <CAD7_sbFf429WxnqcROGgpsYvK4q1maF2uP9nZjqs60195aC95g@mail.gmail.com>
-Subject: Re: [PATCH 2/5] mm, slab_common: Remove unused kmalloc_cache_name()
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christopher Lameter <cl@linux.com>, penberg@kernel.org,
-        rientjes@google.com, iamjoonsoo.kim@lge.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 9 Sep 2019 12:54:32 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id EB2B7C0196;
+        Mon,  9 Sep 2019 16:54:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1568048072; bh=ztU5cXLi0V4K5mhBVrPh5y1if4Ams78t+OFbPXBvR9E=;
+        h=From:To:Cc:Subject:Date:From;
+        b=RIpsg1ujBISZCK6V15inoKksfPMnzSXgBKiCvP3SBoKcYo2tSiaqiVXAVjoTKz6LT
+         G2nTzlz5HF9Dia7IQ96oqJRA/DqBbUKFmFimUb3oR/vkGLI8reJf5sopl3bGe0y8+c
+         c6O6+lqyAEsU71J2Fe0cRvbCZUXLvCquZiQsrYpaUPpKdLMQnRt2MvvolBHpJ40IhS
+         el/Mfq+W4iXG77c7vqT+VdG4edAdoOwcBRdf6RaW5oNhOYscLkA6piuVMhfFh+iCG4
+         8KGA2iGbImOqqih0IfeNIY4Flp4QNjhfAXoNs3OvOWmS8cC/wuGWz+ZOJ97EEgdrmw
+         M97Tz76vpaUcw==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id E1219A0057;
+        Mon,  9 Sep 2019 16:54:28 +0000 (UTC)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next] net: stmmac: pci: Add HAPS support using GMAC5
+Date:   Mon,  9 Sep 2019 18:54:26 +0200
+Message-Id: <c37a55225e1ef66233b47c02b1441b91abeb3b76.1568047994.git.joabreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 9, 2019 at 10:59 PM Vlastimil Babka <vbabka@suse.cz> wrote:
->
-> On 9/3/19 6:04 PM, Pengfei Li wrote:
-> > Since the name of kmalloc can be obtained from kmalloc_info[],
-> > remove the kmalloc_cache_name() that is no longer used.
->
-> That could simply be part of patch 1/5 really.
->
+Add the support for Synopsys HAPS board that uses GMAC5.
 
-Ok, thanks.
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 
-> > Signed-off-by: Pengfei Li <lpf.vector@gmail.com>
->
-> Ack
->
-> > ---
-> >   mm/slab_common.c | 15 ---------------
-> >   1 file changed, 15 deletions(-)
+---
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Jose Abreu <joabreu@synopsys.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c | 71 ++++++++++++++++++++++++
+ 1 file changed, 71 insertions(+)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
+index 20906287b6d4..292045f4581f 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
+@@ -375,6 +375,75 @@ static const struct stmmac_pci_info quark_pci_info = {
+ 	.setup = quark_default_data,
+ };
+ 
++static int snps_gmac5_default_data(struct pci_dev *pdev,
++				   struct plat_stmmacenet_data *plat)
++{
++	int i;
++
++	plat->clk_csr = 5;
++	plat->has_gmac4 = 1;
++	plat->force_sf_dma_mode = 1;
++	plat->tso_en = 1;
++	plat->pmt = 1;
++
++	plat->mdio_bus_data->phy_mask = 0;
++
++	/* Set default value for multicast hash bins */
++	plat->multicast_filter_bins = HASH_TABLE_SIZE;
++
++	/* Set default value for unicast filter entries */
++	plat->unicast_filter_entries = 1;
++
++	/* Set the maxmtu to a default of JUMBO_LEN */
++	plat->maxmtu = JUMBO_LEN;
++
++	/* Set default number of RX and TX queues to use */
++	plat->tx_queues_to_use = 4;
++	plat->rx_queues_to_use = 4;
++
++	plat->tx_sched_algorithm = MTL_TX_ALGORITHM_WRR;
++	for (i = 0; i < plat->tx_queues_to_use; i++) {
++		plat->tx_queues_cfg[i].use_prio = false;
++		plat->tx_queues_cfg[i].mode_to_use = MTL_QUEUE_DCB;
++		plat->tx_queues_cfg[i].weight = 25;
++	}
++
++	plat->rx_sched_algorithm = MTL_RX_ALGORITHM_SP;
++	for (i = 0; i < plat->rx_queues_to_use; i++) {
++		plat->rx_queues_cfg[i].use_prio = false;
++		plat->rx_queues_cfg[i].mode_to_use = MTL_QUEUE_DCB;
++		plat->rx_queues_cfg[i].pkt_route = 0x0;
++		plat->rx_queues_cfg[i].chan = i;
++	}
++
++	plat->bus_id = 1;
++	plat->phy_addr = -1;
++	plat->interface = PHY_INTERFACE_MODE_GMII;
++
++	plat->dma_cfg->pbl = 32;
++	plat->dma_cfg->pblx8 = true;
++
++	/* Axi Configuration */
++	plat->axi = devm_kzalloc(&pdev->dev, sizeof(*plat->axi), GFP_KERNEL);
++	if (!plat->axi)
++		return -ENOMEM;
++
++	plat->axi->axi_wr_osr_lmt = 31;
++	plat->axi->axi_rd_osr_lmt = 31;
++
++	plat->axi->axi_fb = false;
++	plat->axi->axi_blen[0] = 4;
++	plat->axi->axi_blen[1] = 8;
++	plat->axi->axi_blen[2] = 16;
++	plat->axi->axi_blen[3] = 32;
++
++	return 0;
++}
++
++static const struct stmmac_pci_info snps_gmac5_pci_info = {
++	.setup = snps_gmac5_default_data,
++};
++
+ /**
+  * stmmac_pci_probe
+  *
+@@ -518,6 +587,7 @@ static SIMPLE_DEV_PM_OPS(stmmac_pm_ops, stmmac_pci_suspend, stmmac_pci_resume);
+ #define STMMAC_EHL_RGMII1G_ID	0x4b30
+ #define STMMAC_EHL_SGMII1G_ID	0x4b31
+ #define STMMAC_TGL_SGMII1G_ID	0xa0ac
++#define STMMAC_GMAC5_ID		0x7102
+ 
+ #define STMMAC_DEVICE(vendor_id, dev_id, info)	{	\
+ 	PCI_VDEVICE(vendor_id, dev_id),			\
+@@ -531,6 +601,7 @@ static const struct pci_device_id stmmac_id_table[] = {
+ 	STMMAC_DEVICE(INTEL, STMMAC_EHL_RGMII1G_ID, ehl_rgmii1g_pci_info),
+ 	STMMAC_DEVICE(INTEL, STMMAC_EHL_SGMII1G_ID, ehl_sgmii1g_pci_info),
+ 	STMMAC_DEVICE(INTEL, STMMAC_TGL_SGMII1G_ID, tgl_sgmii1g_pci_info),
++	STMMAC_DEVICE(SYNOPSYS, STMMAC_GMAC5_ID, snps_gmac5_pci_info),
+ 	{}
+ };
+ 
+-- 
+2.7.4
+
