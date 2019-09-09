@@ -2,106 +2,72 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D276DC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80ABCC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B380F218AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:41:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5697F21920
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:41:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568029318;
+	bh=DdcqA05sb3eqKRvdBNUo2gdcyimo6S9TMK/aUMCKo0E=;
+	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
+	b=NQ8SyDeOqAt3qVk+5oYJqqKp5gAUYMcr8AndPQVBPUdKmYcH1meWpZQ5gRka1U0ch
+	 ugQSUJ5GknjhuPCuxKskC0sKY0VfYWEiiMUJTACGbAqlkzh15IS46AoVsZ0QfxkzHK
+	 PhDJS3y3BjFcTSNTiMGFyerjsuz7lkOEhXr8fhjI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404280AbfIILlr (ORCPT
+        id S2404309AbfIILl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 07:41:47 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16204 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2404242AbfIILln (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 07:41:43 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x89BRH0j077225
-        for <linux-kernel@vger.kernel.org>; Mon, 9 Sep 2019 07:41:42 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uwmbfvxnb-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 07:41:41 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <tmricht@linux.ibm.com>;
-        Mon, 9 Sep 2019 12:41:40 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 9 Sep 2019 12:41:37 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x89BfZqj27131912
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 9 Sep 2019 11:41:35 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6899EA4051;
-        Mon,  9 Sep 2019 11:41:35 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 23BECA4053;
-        Mon,  9 Sep 2019 11:41:35 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  9 Sep 2019 11:41:35 +0000 (GMT)
-From:   Thomas Richter <tmricht@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Cc:     brueckner@linux.ibm.com, gor@linux.ibm.com,
-        heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH 3/3] perf/java: Add detection of java-11-openjdk-devel package
-Date:   Mon,  9 Sep 2019 13:41:16 +0200
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190909114116.50469-1-tmricht@linux.ibm.com>
-References: <20190909114116.50469-1-tmricht@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19090911-0020-0000-0000-00000369BF83
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19090911-0021-0000-0000-000021BF400F
-Message-Id: <20190909114116.50469-4-tmricht@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-09_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909090121
+        Mon, 9 Sep 2019 07:41:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45936 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404284AbfIILlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 07:41:55 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32E40218AF;
+        Mon,  9 Sep 2019 11:41:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568029315;
+        bh=DdcqA05sb3eqKRvdBNUo2gdcyimo6S9TMK/aUMCKo0E=;
+        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
+        b=WyQ8jiQ7tTY/AWeYJrgqnYiNYDRPVjz+k7THIhOyu61JYUpM2+8Rx3RWmbjVBV3/1
+         GGhaB0jSMEJrVhlT/OmhoskizQGkY4d5IjPs/6tvaI50nszmGyjjnPTv3DrJBL5XAj
+         OZRCLTD/wKOXMEA/8F5QvY4X4VkDfLFqmHMpJYgQ=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190826173120.2971-2-vkoul@kernel.org>
+References: <20190826173120.2971-1-vkoul@kernel.org> <20190826173120.2971-2-vkoul@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Vinod Koul <vkoul@kernel.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v5 1/4] dt-bindings: clock: Document the parent clocks
+User-Agent: alot/0.8.1
+Date:   Mon, 09 Sep 2019 04:41:54 -0700
+Message-Id: <20190909114155.32E40218AF@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With Java 11 there is no seperate JRE anymore.
-Details: https://coderanch.com/t/701603/java/JRE-JDK
-Therefore the detection of the JRE needs to be adapted.
+Quoting Vinod Koul (2019-08-26 10:31:17)
+> With clock parent data scheme we must specify the parent clocks for the
+> rpmhcc nodes. So describe the parent clock for rpmhcc in the bindings.
+>=20
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
 
-This change works for s390 and x86.
-I have not tested other platforms.
-
-Suggested-by: Andreas Krebbel <krebbel@linux.ibm.com>
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
----
- tools/perf/Makefile.config | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 89ac5a1f1550..3da374911852 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -908,7 +908,7 @@ ifndef NO_JVMTI
-     JDIR=$(shell /usr/sbin/update-java-alternatives -l | head -1 | awk '{print $$3}')
-   else
-     ifneq (,$(wildcard /usr/sbin/alternatives))
--      JDIR=$(shell /usr/sbin/alternatives --display java | tail -1 | cut -d' ' -f 5 | sed 's%/jre/bin/java.%%g')
-+      JDIR=$(shell /usr/sbin/alternatives --display java | tail -1 | cut -d' ' -f 5 | sed -e 's%/jre/bin/java.%%g' -e 's%/bin/java.%%g')
-     endif
-   endif
-   ifndef JDIR
--- 
-2.21.0
+Applied to clk-next
 
