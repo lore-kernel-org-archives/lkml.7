@@ -2,182 +2,166 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D50BC4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 23:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA8EC49ED6
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 23:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27BD4218DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 23:06:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A186821A4C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 23:10:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="G3dZKzQx";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RPWpxAux"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="GnujReBM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731646AbfIIXGO (ORCPT
+        id S1731717AbfIIXKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 19:06:14 -0400
-Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:42215 "EHLO
-        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728358AbfIIXGO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 19:06:14 -0400
-X-Greylist: delayed 485 seconds by postgrey-1.27 at vger.kernel.org; Mon, 09 Sep 2019 19:06:13 EDT
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailnew.west.internal (Postfix) with ESMTP id C597A5C0;
-        Mon,  9 Sep 2019 18:58:07 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Mon, 09 Sep 2019 18:58:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=c7SRxgGkl/n7ftaGRuh/aN2wiSp
-        1GC91qqjIL142vpY=; b=G3dZKzQxG/jRRbNObX/rxwuitX3uvOm0yJq4spn6u4F
-        yD2CpkOUVoxiuTrX2QZMwr5LUXv+DKhqAkX4KgyhTaUT58aDQgRUxDJt3eWbC5Mr
-        piw33yd5qX8u4yPMt9k2N5nEOUak+hc2Gr/H+CQBU8Ac8/4C2QL6WQ5RnDP9Mo4L
-        FusaMeESRa7eu1NPJqXpWUlekmBNcr+TVhqNMjBQbiEF/cOOz9rBJNoqG1UBfLy8
-        Ag2qtQf26igPzpoRjORYHrqlC6MIwfXJZAkfSFk0cBG3qqT5haB/DBlm5tUV8zrH
-        tkA1PSImctrM9gglg+mp/j5nggylrKIQ5YXM375XTEw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=c7SRxg
-        Gkl/n7ftaGRuh/aN2wiSp1GC91qqjIL142vpY=; b=RPWpxAuxPaSDJpabSG4dYI
-        Ptth1BbAnXyffkgaFO7Py31VLFwXre/UPi4ecVVdDVTqnRdQXj1g9s7cDnzaWDMv
-        JX10+fZipUFybkjtTEWISPKVBJyuRF6RGoVgROZRp+o8rNB2IAhypKZejBtzfjKC
-        lOYIqNLyqTqbn6aYVZL1VGSE0EcODUujXe7ewereY7ZM3MWvxQsOuN62IEU2X529
-        7poLNXuYYaYAQTIFjjgnPcbh/i9+tDKNpXU+o94lhOIz1AFTB8bkKTANpaTDQ5d8
-        aGK44GIfGfr2vqmCQZIgqlORbgROGILTtiJC3PmiXB9TwOMuN1I7ZWNgvp7AaJxw
-        ==
-X-ME-Sender: <xms:_th2XYFUAqHgaVXLqngGFV8WqvWxz17vLWRO4v8mF34Uq31HL17ARg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudekjedgudefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    goufhprghmkfhpqdhouhhtucdlhedttddmnecujfgurhepfffhvffukfhfgggtuggjfges
-    thdtredttdervdenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtg
-    homheqnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepiedvrddvkedrvdeg
-    tddruddugeenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtoh
-    hmnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:_th2XaF8_gevEinqTQQ_uNl-FdiE_vr_10nWdYvuL4Vg_bFMldp0Xg>
-    <xmx:_th2XQ3WXthQKPBf4ag-nrUOUCrRJiQARH8mBGnLtBjyhhkeB5niqg>
-    <xmx:_th2Xcdox1BsHrIBY_f9kUVdliBot0N3RNtWfUu8C9OINpQx6FUgoQ>
-    <xmx:_9h2Xdt6HwnmZejBm85Y1O-QNzqJqOUZpCfmiAxqpLkysdRAiHtjdk5ywtk>
-Received: from localhost (unknown [62.28.240.114])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 1611280068;
-        Mon,  9 Sep 2019 18:58:05 -0400 (EDT)
-Date:   Mon, 9 Sep 2019 23:58:04 +0100
-From:   Greg KH <greg@kroah.com>
-To:     Mark Salyzyn <salyzyn@android.com>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
-        Johannes Berg <johannes@sipsolutions.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v2] net: enable wireless core features with
- LEGACY_WEXT_ALLCONFIG
-Message-ID: <20190909225804.GA26405@kroah.com>
-References: <20190906192403.195620-1-salyzyn@android.com>
- <20190906233045.GB9478@kroah.com>
- <b7027a5d-5d75-677b-0e9b-cd70e5e30092@android.com>
+        Mon, 9 Sep 2019 19:10:11 -0400
+Received: from mail-eopbgr760092.outbound.protection.outlook.com ([40.107.76.92]:12071
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728358AbfIIXKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 19:10:11 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EM8CuyEvz1Pabfn+tGa9MwDPtXhEfsQKvsnOZCYUbBhNuDs2VdIMYOnHxhlUvueo7ONH0yTOuv1XOBp3hAaSoe4w2ngbKsiZjj0SLWhbrGUhPUxUngTfkqtkppaVL7M/TorqlNPIMb4eX4CP863oZwhcfPsXaE4eCKX2FaXubVXdkDfVUXsxX72BO6F1f2/cHl7NSA36E1HC8o82idpuclLq+63jNMHXLcjX0qgBqWVczrcNK3Fi/YZ8+XPg1wA0hqAIX43CCEeJTL2YYnBkNReoxgOnFBqSNVX1+zmLYIrw8GsNfu0zi6hOmWOvcetmfgbTWck1sMT8mdpK9lCJPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+cOvoSc64Svo78iy+UWfX/FF53VqcpqBA9RqkXLNe6U=;
+ b=g613LDkjuF5RZGT7fYqQ0LECYopzjSsHSqb3P0yY/JtaZV5MUmPHRCHeGpiC2ey4SdDPO0HFqzhmq5+RyGVmSw+LwXLEgdW7rbLPeCFWqrRXDMkh06XmPZG6GF0T3ElEjF0jGdnF4wjqu2NDHYwcTZr4kb6U22fKvIkZDVFXRaYC3f6bn0JZAd7ThAp0QqfKb2HTK/FlfwwEwvlAbrqmO6+tqLE8hsZs84NnTtReHzMzTKZsDX2GVU7VwOz3+9E4/K5s8Ht13SrZEpYwr3JovzD0LSHfFxqrexSaL5N+j3XR6HqFbssMSjMte4G9s8c1xt/Wj3QPwzKsyOTAcphB8w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+cOvoSc64Svo78iy+UWfX/FF53VqcpqBA9RqkXLNe6U=;
+ b=GnujReBMXDZyNQUbYegz9RDlq7wMdFleX1SI2nE/oUM+Xs5Wn2efN/lvvMY8cS/PGD/mAAadoq2YjjL8fL1JaKVZB/CvLqta2V6KPpEI4KBCs1jndBbka/HNK30TWDyCJNtgVp4NtVgbvq6cW5OMwkxVWYUml5kKg4WGLSkACsk=
+Received: from DM6PR21MB1337.namprd21.prod.outlook.com (20.179.53.80) by
+ DM6PR21MB1369.namprd21.prod.outlook.com (20.179.48.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.10; Mon, 9 Sep 2019 23:10:06 +0000
+Received: from DM6PR21MB1337.namprd21.prod.outlook.com
+ ([fe80::2cde:35d7:e09a:5639]) by DM6PR21MB1337.namprd21.prod.outlook.com
+ ([fe80::2cde:35d7:e09a:5639%6]) with mapi id 15.20.2263.005; Mon, 9 Sep 2019
+ 23:10:06 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: RE: linux-next: Signed-off-by missing for commit in the pci tree
+Thread-Topic: linux-next: Signed-off-by missing for commit in the pci tree
+Thread-Index: AQHVV50BkG1PELIBpk2+r3pdUVtPwKcFTy+AgB7GOCA=
+Date:   Mon, 9 Sep 2019 23:10:06 +0000
+Message-ID: <DM6PR21MB13377560DB091B7F7C68E5E1CAB70@DM6PR21MB1337.namprd21.prod.outlook.com>
+References: <20190821071939.11382b44@canb.auug.org.au>
+ <20190821090249.GA28112@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20190821090249.GA28112@e121166-lin.cambridge.arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-09T23:10:04.8914944Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=527cabc6-7439-4a01-9c43-8bc2b95c6996;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=haiyangz@microsoft.com; 
+x-originating-ip: [96.61.92.94]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0383f4d9-a8ac-4a49-51fc-08d7357ada5e
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM6PR21MB1369;
+x-ms-traffictypediagnostic: DM6PR21MB1369:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <DM6PR21MB1369E2D452917EC648E9E27CCAB70@DM6PR21MB1369.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 01559F388D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(346002)(376002)(39860400002)(396003)(136003)(53754006)(13464003)(199004)(189003)(8990500004)(10290500003)(81156014)(6506007)(54906003)(74316002)(446003)(6116002)(11346002)(66066001)(476003)(486006)(10090500001)(76176011)(2906002)(6436002)(66476007)(66556008)(66446008)(66946007)(8936002)(8676002)(76116006)(3846002)(26005)(53936002)(966005)(71190400001)(186003)(71200400001)(7696005)(478600001)(81166006)(102836004)(4326008)(86362001)(55016002)(229853002)(53546011)(14454004)(305945005)(64756008)(256004)(110136005)(9686003)(5660300002)(6306002)(52536014)(7736002)(22452003)(99286004)(316002)(25786009)(6246003)(33656002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1369;H:DM6PR21MB1337.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 4k0USou/CK3Bv+1baFir6w1McULG47vScBbbqNrRbrBNZMdXtv0yGClZn8EVFoRE27H/GgvZpvZMXz/y1VrUKY1rRzCONpMP1wikngCEk4no+H4bQ9tfhDn+DjFswV/C+YHoj0YKDpYUeEC/bbre66I48LToKuQ9FL2uJNYSKMYLlG8gAQoAi6EKruvCoKEUf7Kw0RLbGolV9SBQgROKhfKquHsYv2C92fzfJy55tRE26nq+Liw6sIbEPxQE8HsaA4Z1aPr3pAuXVcVVNBGmAxbTSNz7LYsHprKEVnCbbYUgVMKRm/LuWMWLWcRc5a0tWpQ6k0noB2S0gMn4E6B1axMbeMLWvPQEA73/lFyDiSzPnmNoUOAyzkgHLQvEnvpVoHTUSm5vMlUabzDW0Genus97vJ9BxFtm69k7swLMF4w=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b7027a5d-5d75-677b-0e9b-cd70e5e30092@android.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0383f4d9-a8ac-4a49-51fc-08d7357ada5e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Sep 2019 23:10:06.1394
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: MLCIVlBVCv5XPJjxKv9vBypHHM3xvMYRnKwIeYs3es1L2fG4UQ2BCINSUZO78WB7stofiND9QipU5cDKZ/MohQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1369
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 09, 2019 at 07:24:29AM -0700, Mark Salyzyn wrote:
-> On 9/6/19 4:30 PM, Greg KH wrote:
-> > On Fri, Sep 06, 2019 at 12:24:00PM -0700, Mark Salyzyn wrote:
-> > > In embedded environments the requirements are to be able to pick and
-> > > chose which features one requires built into the kernel.  If an
-> > > embedded environment wants to supports loading modules that have been
-> > > kbuilt out of tree, there is a need to enable hidden configurations
-> > > for legacy wireless core features to provide the API surface for
-> > > them to load.
-> > > 
-> > > Introduce CONFIG_LEGACY_WEXT_ALLCONFIG to select all legacy wireless
-> > > extension core features by activating in turn all the associated
-> > > hidden configuration options, without having to specifically select
-> > > any wireless module(s).
-> > > 
-> > > Signed-off-by: Mark Salyzyn <salyzyn@android.com>
-> > > Cc: kernel-team@android.com
-> > > Cc: Johannes Berg <johannes@sipsolutions.net>
-> > > Cc: "David S. Miller" <davem@davemloft.net>
-> > > Cc: Marcel Holtmann <marcel@holtmann.org>
-> > > Cc: linux-wireless@vger.kernel.org
-> > > Cc: netdev@vger.kernel.org
-> > > Cc: linux-kernel@vger.kernel.org
-> > > Cc: stable@vger.kernel.org # 4.19
-> > > ---
-> > > v2: change name and documentation to CONFIG_LEGACY_WEXT_ALLCONFIG
-> > > ---
-> > >   net/wireless/Kconfig | 14 ++++++++++++++
-> > >   1 file changed, 14 insertions(+)
-> > > 
-> > > diff --git a/net/wireless/Kconfig b/net/wireless/Kconfig
-> > > index 67f8360dfcee..0d646cf28de5 100644
-> > > --- a/net/wireless/Kconfig
-> > > +++ b/net/wireless/Kconfig
-> > > @@ -17,6 +17,20 @@ config WEXT_SPY
-> > >   config WEXT_PRIV
-> > >   	bool
-> > > +config LEGACY_WEXT_ALLCONFIG
-> > > +	bool "allconfig for legacy wireless extensions"
-> > > +	select WIRELESS_EXT
-> > > +	select WEXT_CORE
-> > > +	select WEXT_PROC
-> > > +	select WEXT_SPY
-> > > +	select WEXT_PRIV
-> > > +	help
-> > > +	  Config option used to enable all the legacy wireless extensions to
-> > > +	  the core functionality used by add-in modules.
-> > > +
-> > > +	  If you are not building a kernel to be used for a variety of
-> > > +	  out-of-kernel built wireless modules, say N here.
-> > > +
-> > >   config CFG80211
-> > >   	tristate "cfg80211 - wireless configuration API"
-> > >   	depends on RFKILL || !RFKILL
-> > > -- 
-> > > 2.23.0.187.g17f5b7556c-goog
-> > > 
-> > How is this patch applicable to stable kernels???
-> 
-> A) worth a shot ;-}
 
-Not nice, please, you know better :)
 
-> B) there is a shortcoming in _all_ kernel versions with respect to hidden
-> configurations options like this, hoping to set one precedent in how to
-> handle them if acceptable to the community.
+> -----Original Message-----
+> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Sent: Wednesday, August 21, 2019 5:03 AM
+> To: Stephen Rothwell <sfr@canb.auug.org.au>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>; Linux Next Mailing List <linux-
+> next@vger.kernel.org>; Linux Kernel Mailing List <linux-
+> kernel@vger.kernel.org>; Sasha Levin <sashal@kernel.org>; Haiyang Zhang
+> <haiyangz@microsoft.com>
+> Subject: Re: linux-next: Signed-off-by missing for commit in the pci tree
+>=20
+> On Wed, Aug 21, 2019 at 07:19:39AM +1000, Stephen Rothwell wrote:
+> > Hi all,
+> >
+> > Commit
+> >
+> >   c4a29fbba415 ("PCI: hv: Use bytes 4 and 5 from instance ID as the PCI
+> domain numbers")
+> >
+> > is missing a Signed-off-by from its committer.
+> >
+> > Also, all the tags should be kept together, please.
+>=20
+> Fixed it up in my pci/hv branch, apologies.
+>=20
+> Lorenzo
 
-That's fine, but it's a new feature, not for stable.
+Hi thanks for fixing this, but I found the following commit now has the Sub=
+ject line
+and commit message same as a previous patch.
 
-> C) [AGENDA ALERT] Android _will_ be back-porting this to android-4.19 kernel
-> anyway, would help maintenance if via stable. <holding hat in hand>
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/=
+drivers?id=3D87b20a08dcc265959f5c59f18603ea0487fe609b
 
-That's fine, lots of distros backport loads of stuff for new features
-for stuff that is upstream.  That's trivial to do, don't try to abuse
-the stable tree for new features like this please.  It only makes
-maintainers grumpy when you do so :(
+The correct message for the patch should be the msg below. Any possibility =
+to=20
+fix it again?  Thanks.
+- Haiyang
 
-> D) Not an ABI or interface break, does not introduce instability, but rather
-> keeps downstream kernels of any distributions from having to hack in their
-> own alternate means of dealing with this problem leading to further
-> fragmentation.
+Subject:  PCI: hv: Use bytes 4 and 5 from instance ID as the PCI domain num=
+bers
 
-Again, new feature, not fixing a bug, so not applicable for stable.
+As recommended by Azure host team, the bytes 4, 5 have more uniqueness
+(info entropy) than bytes 8, 9. So now we use bytes 4, 5 as the PCI domain
+numbers. On older hosts, bytes 4, 5 can also be used -- no backward
+compatibility issues here. The chance of collision is greatly reduced.
 
-For penance I require a handwritten copy of:
-    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+In the rare cases of collision, the driver code detects and finds another
+number that is not in use.
 
-thanks,
+Suggested-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+Acked-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 
-greg k-h
