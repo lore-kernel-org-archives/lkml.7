@@ -2,164 +2,182 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D1CC4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AE3C49ED6
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26E69206A1
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:32:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC834206A1
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:32:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="tNsqUGh0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n3A3SuBE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727473AbfIIOcL (ORCPT
+        id S1727605AbfIIOcv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 10:32:11 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:55517 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725770AbfIIOcK (ORCPT
+        Mon, 9 Sep 2019 10:32:51 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:40213 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727490AbfIIOcu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 10:32:10 -0400
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x89EVlkQ015470
-        for <linux-kernel@vger.kernel.org>; Mon, 9 Sep 2019 23:31:48 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x89EVlkQ015470
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1568039508;
-        bh=fby6/oIKJOZRDngIzBYUxjLaToyYt+eaALO1Qt64J6w=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=tNsqUGh0THC9PYogUyak04JYOQDuyLgIx9LLel0r/qMivDPYweIRP2Ix6oBbOyKvG
-         WdWUjMs4NZNebDgJyLgqVe6Jn2oNfQjaZF9A0UDuHpsySiW9ZTuI5lXUipygQonAde
-         zpSe26AwQDRRQX7Au6tg+sgiyq2aULFSc7RmXwEC6aX6pvGGdaFLeTEUeuyZJAGyr9
-         9zXeT4nnO8peuB1TXGDvXvqMbqkqljntG7QuQphvwrJg/RIMYWoj+3X4RcoYzRSZfH
-         2321xv1KwRJr8WBG9Z3EI2vh1mcR6cokYXWXeynmF2Aaii4Ikz5SRn2c7/Tq3aUtjU
-         fHdN+6eR3WszQ==
-X-Nifty-SrcIP: [209.85.217.54]
-Received: by mail-vs1-f54.google.com with SMTP id v10so5647018vsc.7
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 07:31:48 -0700 (PDT)
-X-Gm-Message-State: APjAAAWZde6QhpGoT5HE/gs2eN5jcpLKfcSzr/nr7b/XTi+gz5ybcHRl
-        wb7HWYQcKbtebfEjaTRvO5gF5Y78NeML8XoBg3s=
-X-Google-Smtp-Source: APXvYqyee/YuI377G0tWAtqkr6FheMPIrmhSIGnoalYNfzyc1wAWOtEcbzzuVZBzeRTNcam9oUgmaJjhEFFafSTlSmU=
-X-Received: by 2002:a67:eb18:: with SMTP id a24mr12758313vso.155.1568039506872;
- Mon, 09 Sep 2019 07:31:46 -0700 (PDT)
+        Mon, 9 Sep 2019 10:32:50 -0400
+Received: by mail-qk1-f195.google.com with SMTP id y144so5173885qkb.7
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 07:32:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nB56A57AoyNRyVPYSkSiIG8z/DKVcHYWbRMJROXBVZs=;
+        b=n3A3SuBEOsX4sJKFvwwRlbK2DLpNzRA/Y2fQbBpHxnQ1JPuEDug9rMnHbmmKiBAYbJ
+         lroXsTtteqs44K9uuzYAbFjhWhUT2D4Bx3uFhsntfJFu6AyScMn9zdizF34tKkEA9wIv
+         SazKmonLK3tbTKMv2De6mOVe1pp58GC0oZQQnrzE5XXaxaQ+TVrfk67gmX0u4OO6i0hN
+         0anmiiWYZCSzZXHAUBFuzErv2zeAKV3v9IG1MPxXC15jVmPEiYNjpYwiUYRSW3sqs+1y
+         aBGOP8KrNYrhow67bOipVrXOgk6mzsIl9/DrmPj0znF8pFJDeuqdeI+LTooHycFDDnB5
+         sEow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nB56A57AoyNRyVPYSkSiIG8z/DKVcHYWbRMJROXBVZs=;
+        b=htpGccMJUNdexUzMQB7OTNw9lcnvUqBAe9IwShetyxDrGTrDRSDNu0dkbzu7dEbto7
+         1z7Q0cNrG9nkPCn85Kl7WdeK2as5lB48NLdI4c23MbgYGdRbIJn5qW9N1sRPw7qICLrb
+         B6XEtXxZ1RdXgYxRMU/7M9qXRNKXJ/w/u+cFFUoIUTTfu5gF+t4FQNUyoZIJ7Z+KaZYV
+         kNfrVmXtBnsEzVzWsgJby8/Gcm2EFMpPKsPEqGGXdvNM6wt4gAOSoGIcXquo181yiNQG
+         nD92jMODJY6MjrIy30JDtokUVXOWKuyIK3EpyvWFnzYlAcLOfu3J8gUABwe4HO81ZJ85
+         JLSw==
+X-Gm-Message-State: APjAAAXtpl1/jjwaBkyl4jeeFiWFX/iyPCLSVjhZFsFHnFMR65xf3qxY
+        Mp4I3lxxE2vfLD7G088hsmiVamya
+X-Google-Smtp-Source: APXvYqy4+0bJz0i4RqatiNd+TkqwqmaVpq5uWSNuVgiLEEEcBHGccDyBnANV5//HcaxMkwm6XEYLBw==
+X-Received: by 2002:a37:9547:: with SMTP id x68mr6126614qkd.6.1568039569425;
+        Mon, 09 Sep 2019 07:32:49 -0700 (PDT)
+Received: from localhost.localdomain (201-42-109-60.dsl.telesp.net.br. [201.42.109.60])
+        by smtp.gmail.com with ESMTPSA id x55sm9363799qta.74.2019.09.09.07.32.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Sep 2019 07:32:49 -0700 (PDT)
+From:   Julio Faracco <jcfaracco@gmail.com>
+To:     greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org
+Cc:     elder@kernel.org, johan@kernel.org, lkcamp@lists.libreplanetbr.org
+Subject: [PATCH v2] staging: greybus: loopback_test: Adding missing brackets into if..else block
+Date:   Mon,  9 Sep 2019 14:32:44 +0000
+Message-Id: <20190909143244.371-1-jcfaracco@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190909141823.8638-1-changbin.du@gmail.com>
-In-Reply-To: <20190909141823.8638-1-changbin.du@gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Mon, 9 Sep 2019 23:31:10 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQGk_4f-aGVH3bxZdNna_gdHEBHeD6DNwY49Q5kxU=U7w@mail.gmail.com>
-Message-ID: <CAK7LNAQGk_4f-aGVH3bxZdNna_gdHEBHeD6DNwY49Q5kxU=U7w@mail.gmail.com>
-Subject: Re: [PATCH v2 0/9] kconfig/hacking: make 'kernel hacking' menu better structurized
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkuDQoNCk9uIE1vbiwgU2VwIDksIDIwMTkgYXQgMTE6MTggUE0gQ2hhbmdiaW4gRHUgPGNoYW5n
-YmluLmR1QGdtYWlsLmNvbT4gd3JvdGU6DQo+DQo+IFRoaXMgc2VyaWVzIGlzIGEgdHJpdmlhbCBp
-bXByb3ZtZW50IGZvciB0aGUgbGF5b3V0IG9mICdrZXJuZWwgaGFja2luZycNCj4gY29uZmlndXJh
-dGlvbiBtZW51LiBOb3cgd2UgaGF2ZSBtYW55IGl0ZW1zIGluIGl0IHdoaWNoIG1ha2VzIHRha2Vz
-DQo+IGEgbGl0dGxlIHRpbWUgdG8gbG9vayB1cCB0aGVtIHNpbmNlIHRoZXkgYXJlIG5vdCB3ZWxs
-IHN0cnVjdHVyaXplZCB5ZXQuDQoNCg0KQ291bGQgeW91IHBsZWFzZSBjaGFuZ2UgdGhlIHN1Ympl
-Y3QgcHJlZml4ICJrY29uZmlnL2hhY2tpbmc6IiA/DQooImhhY2tpbmc6IiAsICJkZWJ1ZzoiIG9y
-IHdoYXRldmVyLCBidXQgbm8gImtjb25maWciKQ0KDQpJIGp1c3Qgb3BlbmVkIHRoaXMgdGhyZWFk
-IGp1c3QgaW4gY2FzZSBpdCBtaWdodCBiZSByZWxhdGVkIHRvIGtjb25maWcsDQpidXQgaXQgd2Fz
-IG5vdC4NCg0KVGhhbmtzLg0KDQoNCg0KDQoNCg0KPiBFYXJseSBkaXNjdXNzaW9uIGlzIGhlcmU6
-DQo+IGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE5LzkvMS8zOQ0KPg0KPiBUaGlzIGlzIGEgcHJl
-dmlldzoNCj4NCj4gICDilIIg4pSM4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSQIOKUgg0KPiAgIOKUgiDilIIgICAgICAgIHByaW50ayBhbmQgZG1lc2cg
-b3B0aW9ucyAgLS0tPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4pSCIOKUgg0K
-PiAgIOKUgiDilIIgICAgICAgIENvbXBpbGUtdGltZSBjaGVja3MgYW5kIGNvbXBpbGVyIG9wdGlv
-bnMgIC0tLT4gICAgICAgICAgICAgICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgICAgIEdl
-bmVyaWMgS2VybmVsIERlYnVnZ2luZyBJbnN0cnVtZW50cyAgLS0tPiAgICAgICAgICAgICAgICAg
-ICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgLSotIEtlcm5lbCBkZWJ1Z2dpbmcgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4pSCIOKUgg0KPiAgIOKU
-giDilIIgICAgWypdICAgTWlzY2VsbGFuZW91cyBkZWJ1ZyBjb2RlICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgICAgIE1lbW9yeSBE
-ZWJ1Z2dpbmcgIC0tLT4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgWyBdIERlYnVnIHNoYXJlZCBJUlEgaGFuZGxlcnMgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIg
-ICAgICAgIERlYnVnIE9vcHMsIExvY2t1cHMgYW5kIEhhbmdzICAtLS0+ICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgICAgIFNjaGVkdWxlciBEZWJ1
-Z2dpbmcgIC0tLT4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4pSCIOKU
-gg0KPiAgIOKUgiDilIIgICAgWypdIEVuYWJsZSBleHRyYSB0aW1la2VlcGluZyBzYW5pdHkgY2hl
-Y2tpbmcgICAgICAgICAgICAgICAgICAgICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgICAg
-IExvY2sgRGVidWdnaW5nIChzcGlubG9ja3MsIG11dGV4ZXMsIGV0Yy4uLikgIC0tLT4gICAgICAg
-ICAgICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgLSotIFN0YWNrIGJhY2t0cmFjZSBzdXBw
-b3J0ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4pSCIOKUgg0KPiAg
-IOKUgiDilIIgICAgWyBdIFdhcm4gZm9yIGFsbCB1c2VzIG9mIHVuc2VlZGVkIHJhbmRvbW5lc3Mg
-ICAgICAgICAgICAgICAgICAgICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgWyBdIGtvYmpl
-Y3QgZGVidWdnaW5nICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAg4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgICAgIERlYnVnIGtlcm5lbCBkYXRhIHN0cnVjdHVy
-ZXMgIC0tLT4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4pSCIOKUgg0KPiAgIOKUgiDi
-lIIgICAgWyBdIERlYnVnIGNyZWRlbnRpYWwgbWFuYWdlbWVudCAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgICAgIFJDVSBEZWJ1Z2dp
-bmcgIC0tLT4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4pSC
-IOKUgg0KPiAgIOKUgiDilIIgICAgWyBdIEZvcmNlIHJvdW5kLXJvYmluIENQVSBzZWxlY3Rpb24g
-Zm9yIHVuYm91bmQgd29yayBpdGVtcyAgICAgICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIgICAg
-WyBdIEZvcmNlIGV4dGVuZGVkIGJsb2NrIGRldmljZSBudW1iZXJzIGFuZCBzcHJlYWQgdGhlbSAg
-ICAgICAgICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgWyBdIEVuYWJsZSBDUFUgaG90cGx1
-ZyBzdGF0ZSBjb250cm9sICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4pSCIOKUgg0K
-PiAgIOKUgiDilIIgICAgWypdIExhdGVuY3kgbWVhc3VyaW5nIGluZnJhc3RydWN0dXJlICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgWypdIFRy
-YWNlcnMgIC0tLT4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgWyBdIFJlbW90ZSBkZWJ1Z2dpbmcgb3ZlciBG
-aXJlV2lyZSBlYXJseSBvbiBib290ICAgICAgICAgICAgICAgICAgICAg4pSCIOKUgg0KPiAgIOKU
-giDilIIgICAgWypdIFNhbXBsZSBrZXJuZWwgY29kZSAgLS0tPiAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgWypdIEZpbHRlciBh
-Y2Nlc3MgdG8gL2Rldi9tZW0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgWyBdICAgRmlsdGVyIEkvTyBhY2Nlc3MgdG8gL2Rldi9t
-ZW0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIg
-ICAgWyBdIEFkZGl0aW9uYWwgZGVidWcgY29kZSBmb3Igc3l6Ym90ICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgICAgIHg4NiBEZWJ1Z2dpbmcg
-IC0tLT4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4pSCIOKU
-gg0KPiAgIOKUgiDilIIgICAgICAgIEtlcm5lbCBUZXN0aW5nIGFuZCBDb3ZlcmFnZSAgLS0tPiAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4pSCIOKUgg0KPiAg
-IOKUgiDilJTilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
-lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
-lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
-lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
-lJgg4pSCDQo+ICAg4pSc4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSkDQo+ICAg4pSCICAgICAgICAgIDxTZWxlY3Q+ICAgIDwgRXhp
-dCA+ICAgIDwgSGVscCA+ICAgIDwgU2F2ZSA+ICAgIDwgTG9hZCA+ICAgICAgICAgICDilIINCj4g
-ICDilJTilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
-lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
-lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
-lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
-lIDilIDilIDilJgNCj4NCj4gdjI6DQo+ICAgbyByZWJhc2UgdG8gbGludXgtbmV4dC4NCj4gICBv
-IG1vdmUgREVCVUdfRlMgdG8gJ0dlbmVyaWMgS2VybmVsIERlYnVnZ2luZyBJbnN0cnVtZW50cycN
-Cj4gICBvIG1vdmUgREVCVUdfTk9USUZJRVJTIHRvICdEZWJ1ZyBrZXJuZWwgZGF0YSBzdHJ1Y3R1
-cmVzJw0KPg0KPiBDaGFuZ2JpbiBEdSAoOSk6DQo+ICAga2NvbmZpZy9oYWNraW5nOiBHcm91cCBz
-eXNycS9rZ2RiL3Vic2FuIGludG8gJ0dlbmVyaWMgS2VybmVsIERlYnVnZ2luZw0KPiAgICAgSW5z
-dHJ1bWVudHMnDQo+ICAga2NvbmZpZy9oYWNraW5nOiBDcmVhdGUgc3VibWVudSBmb3IgYXJjaCBz
-cGVjaWFsIGRlYnVnZ2luZyBvcHRpb25zDQo+ICAga2NvbmZpZy9oYWNraW5nOiBHcm91cCBrZXJu
-ZWwgZGF0YSBzdHJ1Y3R1cmVzIGRlYnVnZ2luZyB0b2dldGhlcg0KPiAgIGtjb25maWcvaGFja2lu
-ZzogTW92ZSBrZXJuZWwgdGVzdGluZyBhbmQgY292ZXJhZ2Ugb3B0aW9ucyB0byBzYW1lDQo+ICAg
-ICBzdWJtZW51DQo+ICAga2NvbmZpZy9oYWNraW5nOiBNb3ZlIE9vcHMgaW50byAnTG9ja3VwcyBh
-bmQgSGFuZ3MnDQo+ICAga2NvbmZpZy9oYWNraW5nOiBNb3ZlIFNDSEVEX1NUQUNLX0VORF9DSEVD
-SyBhZnRlciBERUJVR19TVEFDS19VU0FHRQ0KPiAgIGtjb25maWcvaGFja2luZzogQ3JlYXRlIGEg
-c3VibWVudSBmb3Igc2NoZWR1bGVyIGRlYnVnZ2luZyBvcHRpb25zDQo+ICAga2NvbmZpZy9oYWNr
-aW5nOiBNb3ZlIERFQlVHX0JVR1ZFUkJPU0UgdG8gJ3ByaW50ayBhbmQgZG1lc2cgb3B0aW9ucycN
-Cj4gICBrY29uZmlnL2hhY2tpbmc6IE1vdmUgREVCVUdfRlMgdG8gJ0dlbmVyaWMgS2VybmVsIERl
-YnVnZ2luZw0KPiAgICAgSW5zdHJ1bWVudHMnDQo+DQo+ICBsaWIvS2NvbmZpZy5kZWJ1ZyB8IDY1
-OSArKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ICAxIGZp
-bGUgY2hhbmdlZCwgMzQwIGluc2VydGlvbnMoKyksIDMxOSBkZWxldGlvbnMoLSkNCj4NCj4gLS0N
-Cj4gMi4yMC4xDQo+DQoNCg0KLS0NCkJlc3QgUmVnYXJkcw0KTWFzYWhpcm8gWWFtYWRhDQo=
+Inside a block of if..else conditional, else structure does not contain
+brackets. This is not following regular policies of kernel coding style.
+All parts of this conditional blocks should respect brackets inclusion.
+This commit removes some blank spaces that are not following brackets
+policies too.
+
+Signed-off-by: Julio Faracco <jcfaracco@gmail.com>
+
+---
+
+Changes from v1:
+- fixing patch description
+- including more cases that brackets does not fill kernel code policies.
+
+---
+---
+ drivers/staging/greybus/tools/loopback_test.c | 14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/staging/greybus/tools/loopback_test.c b/drivers/staging/greybus/tools/loopback_test.c
+index ba6f905f2..22e79f197 100644
+--- a/drivers/staging/greybus/tools/loopback_test.c
++++ b/drivers/staging/greybus/tools/loopback_test.c
+@@ -238,7 +238,6 @@ static void show_loopback_devices(struct loopback_test *t)
+ 
+ 	for (i = 0; i < t->device_count; i++)
+ 		printf("device[%d] = %s\n", i, t->devices[i].name);
+-
+ }
+ 
+ int open_sysfs(const char *sys_pfx, const char *node, int flags)
+@@ -273,7 +272,6 @@ float read_sysfs_float_fd(int fd, const char *sys_pfx, const char *node)
+ 	char buf[SYSFS_MAX_INT];
+ 
+ 	if (read(fd, buf, sizeof(buf)) < 0) {
+-
+ 		fprintf(stderr, "unable to read from %s%s %s\n", sys_pfx, node,
+ 			strerror(errno));
+ 		close(fd);
+@@ -366,7 +364,6 @@ static int get_results(struct loopback_test *t)
+ 			r->apbridge_unipro_latency_max - r->apbridge_unipro_latency_min;
+ 		r->gbphy_firmware_latency_jitter =
+ 			r->gbphy_firmware_latency_max - r->gbphy_firmware_latency_min;
+-
+ 	}
+ 
+ 	/*calculate the aggregate results of all enabled devices */
+@@ -406,7 +403,6 @@ static int get_results(struct loopback_test *t)
+ 			r->apbridge_unipro_latency_max - r->apbridge_unipro_latency_min;
+ 		r->gbphy_firmware_latency_jitter =
+ 			r->gbphy_firmware_latency_max - r->gbphy_firmware_latency_min;
+-
+ 	}
+ 
+ 	return 0;
+@@ -535,8 +531,8 @@ static int log_results(struct loopback_test *t)
+ 			fprintf(stderr, "unable to open %s for appendation\n", file_name);
+ 			abort();
+ 		}
+-
+ 	}
++
+ 	for (i = 0; i < t->device_count; i++) {
+ 		if (!device_enabled(t, i))
+ 			continue;
+@@ -549,10 +545,8 @@ static int log_results(struct loopback_test *t)
+ 			if (ret == -1)
+ 				fprintf(stderr, "unable to write %d bytes to csv.\n", len);
+ 		}
+-
+ 	}
+ 
+-
+ 	if (t->aggregate_output) {
+ 		len = format_output(t, &t->aggregate_results, "aggregate",
+ 				    data, sizeof(data), &tm);
+@@ -739,7 +733,6 @@ static int wait_for_complete(struct loopback_test *t)
+ 		ts = &t->poll_timeout;
+ 
+ 	while (1) {
+-
+ 		ret = ppoll(t->fds, t->poll_count, ts, &mask_old);
+ 		if (ret <= 0) {
+ 			stop_tests(t);
+@@ -801,8 +794,9 @@ static void prepare_devices(struct loopback_test *t)
+ 			write_sysfs_val(t->devices[i].sysfs_entry,
+ 					"outstanding_operations_max",
+ 					t->async_outstanding_operations);
+-		} else
++		} else {
+ 			write_sysfs_val(t->devices[i].sysfs_entry, "async", 0);
++		}
+ 	}
+ }
+ 
+@@ -879,10 +873,8 @@ static int sanity_check(struct loopback_test *t)
+ 			fprintf(stderr, "Bad device mask %x\n", (1 << i));
+ 			return -1;
+ 		}
+-
+ 	}
+ 
+-
+ 	return 0;
+ }
+ 
+-- 
+2.20.1
+
