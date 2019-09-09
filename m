@@ -2,106 +2,188 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF1D8C00307
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 05:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2556C433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 06:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97EE921924
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 05:57:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63D2B21A4A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 06:00:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dnFVSsjo"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="T4LyxrSN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727446AbfIIF56 (ORCPT
+        id S1727488AbfIIGAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 01:57:58 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39074 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727325AbfIIF56 (ORCPT
+        Mon, 9 Sep 2019 02:00:12 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:40686 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726823AbfIIGAL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 01:57:58 -0400
-Received: by mail-wm1-f68.google.com with SMTP id q12so13075316wmj.4
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 22:57:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=00uQqKGc3ntry1sUHA28NuC7W2YW52OB0uzh/6SRnk4=;
-        b=dnFVSsjoxqSQxLiFpd7+EBfRtZDxKWV8t82KXqAehO1Vsl2O22PFD7pPt3gzFtlblQ
-         5FA9tNp5HySNWlDNCLPb7WPNYH1XzJH6mtgjEske8i+sUegf0BUZkw9A+9OSJczNf8al
-         dhDX6UvKUJihuhitVElv3mGro33zvxV69SxtHBYFJ2HM1hWtOk+LrhidapysjUR0cd9M
-         YmH6nlM2Wdsa0ALFBH2n753qXT5rddEiAyg5Ji4XcUSd/nJcotRIXyiLuCkJOHq+8UGP
-         LC0hqVg+J2fq4kA8cJYMtD92Jz0Rodd/4o4Bf7qmvnKhnamI2KcLMP9IN6HPjuwbYb4H
-         zd5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=00uQqKGc3ntry1sUHA28NuC7W2YW52OB0uzh/6SRnk4=;
-        b=DVHKymenBL7Enu4rMCHxasW7IfHMap+qldMzY5EMyxcytSYNt38Hf8IQS7NlK+Fz8Z
-         b+NX2E+h8k3WmjPSLgSpuetixPRNfh1AQafcPwSayRW5o5RRmITsOaUiLQc+/pfMe3Xk
-         /1aC9i78sDuzFuwfWXQmyk0y093vApGneYlYYRvtuVX4bWHTjWEgWaV+dMVMzWKZT/WY
-         tPN82+8YPpmfC/hRYdSvBty/L+hJG9YdzqFmrXu4zbvgJm0jn4GU1w0G3VfH2B+qSoE1
-         2PV4zc2vwixENKYQQ30SECxTq4gqzPWLsLEhE/JjcgCVpE9Kdo64ntzuNwhYSSj32HIJ
-         u5xQ==
-X-Gm-Message-State: APjAAAVhSL7hcvOzJ0cljYP7dd31E4QXMc3DVqkTmwrBf9jALRk2rOnS
-        Nmz4dJP/npvHgs5Dw3lV1vqDVg==
-X-Google-Smtp-Source: APXvYqyTuOYWiPrJQegHYIEdG0b8fajJCGI0sjBqLXu6MTa5++KDoPx8Kxrq8U2i/YY6IhYKXCtKjQ==
-X-Received: by 2002:a1c:7414:: with SMTP id p20mr17169399wmc.68.1568008676005;
-        Sun, 08 Sep 2019 22:57:56 -0700 (PDT)
-Received: from [192.168.0.102] (146-241-7-242.dyn.eolo.it. [146.241.7.242])
-        by smtp.gmail.com with ESMTPSA id r18sm14513325wrx.36.2019.09.08.22.57.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 08 Sep 2019 22:57:55 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH 0/4] block, bfq: series of improvements and small fixes of
- the injection mechanism
-From:   Paolo Valente <paolo.valente@linaro.org>
-In-Reply-To: <20190822152037.15413-1-paolo.valente@linaro.org>
-Date:   Mon, 9 Sep 2019 07:57:55 +0200
-Cc:     linux-block <linux-block@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, ulf.hansson@linaro.org,
-        linus.walleij@linaro.org, bfq-iosched@googlegroups.com,
-        oleksandr@natalenko.name
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <B7AE7BB9-667F-4732-87D4-F28C2D864645@linaro.org>
-References: <20190822152037.15413-1-paolo.valente@linaro.org>
-To:     Jens Axboe <axboe@kernel.dk>
-X-Mailer: Apple Mail (2.3445.104.8)
+        Mon, 9 Sep 2019 02:00:11 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x896037P018182;
+        Mon, 9 Sep 2019 01:00:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568008803;
+        bh=pnXFM66Qh5N+U8iCAu7F+S6mhz0Xw9FlLW/1OOH/KqA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=T4LyxrSNjZr1Ub1b8n0itm1xg7t6MGXisYTFMXwfdt6RGEddUfQvsGqHbFT1vZbdD
+         zlan87HDVIrS9oWl0PInuP7bs9VL1x7q85siOIaaUOrexYW33nf8xZjZ+K+22TNJ9G
+         16mR1jNIcV60O4BC3q68VR/DNtdaBrR2youe0mrc=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x89602fj074302
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 9 Sep 2019 01:00:03 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 9 Sep
+ 2019 01:00:00 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 9 Sep 2019 01:00:00 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x895xwnh059683;
+        Mon, 9 Sep 2019 00:59:58 -0500
+Subject: Re: [RFC 1/3] dt-bindings: dma: Add documentation for DMA domains
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     <robh+dt@kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dan.j.williams@intel.com>,
+        <devicetree@vger.kernel.org>
+References: <20190906141816.24095-1-peter.ujfalusi@ti.com>
+ <20190906141816.24095-2-peter.ujfalusi@ti.com>
+ <20190908120642.GK2672@vkoul-mobl>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <26072f6f-e099-9cd6-6cca-0175870c0c30@ti.com>
+Date:   Mon, 9 Sep 2019 09:00:29 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190908120642.GK2672@vkoul-mobl>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jens,
-have you looked into this?
 
-Thanks,
-Paolo
 
-> Il giorno 22 ago 2019, alle ore 17:20, Paolo Valente =
-<paolo.valente@linaro.org> ha scritto:
->=20
-> Hi Jens,
-> this patch series makes the injection mechanism better at preserving
-> control on I/O.
->=20
-> Thanks,
-> Paolo
->=20
-> Paolo Valente (4):
->  block, bfq: update inject limit only after injection occurred
->  block, bfq: reduce upper bound for inject limit to max_rq_in_driver+1
->  block, bfq: increase update frequency of inject limit
->  block, bfq: push up injection only after setting service time
->=20
-> block/bfq-iosched.c | 35 ++++++++++++++++++++++++++---------
-> 1 file changed, 26 insertions(+), 9 deletions(-)
->=20
-> --
-> 2.20.1
+On 08/09/2019 15.06, Vinod Koul wrote:
+> On 06-09-19, 17:18, Peter Ujfalusi wrote:
+>> On systems where multiple DMA controllers available, none Slave (for example
+> 
+> On systems with multiple DMA controllers, non Slave...
 
+Sure.
+
+>> memcpy operation) users can not be described in DT as there is no device
+>> involved from the DMA controller's point of view, DMA binding is not usable.
+>> However in these systems still a peripheral might need to be serviced by or
+>> it is better to serviced by specific DMA controller.
+>> When a memcpy is used to/from a memory mapped region for example a DMA in the
+>> same domain can perform better.
+>> For generic software modules doing mem 2 mem operations it also matter that
+>> they will get a channel from a controller which is faster in DDR to DDR mode
+>> rather then from the first controller happen to be loaded.
+>>
+>> This property is inherited, so it may be specified in a device node or in any
+>> of its parent nodes.
+>>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>> ---
+>>  .../devicetree/bindings/dma/dma-domain.yaml   | 59 +++++++++++++++++++
+>>  1 file changed, 59 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/dma/dma-domain.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/dma/dma-domain.yaml b/Documentation/devicetree/bindings/dma/dma-domain.yaml
+>> new file mode 100644
+>> index 000000000000..c2f182f30081
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/dma/dma-domain.yaml
+>> @@ -0,0 +1,59 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/dma/dma-controller.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: DMA Domain Controller Definition
+>> +
+>> +maintainers:
+>> +  - Vinod Koul <vkoul@kernel.org>
+>> +
+>> +allOf:
+>> +  - $ref: "dma-controller.yaml#"
+>> +
+>> +description:
+>> +  On systems where multiple DMA controllers available, none Slave (for example
+>> +  memcpy operation) users can not be described in DT as there is no device
+>> +  involved from the DMA controller's point of view, DMA binding is not usable.
+>> +  However in these systems still a peripheral might need to be serviced by or
+>> +  it is better to serviced by specific DMA controller.
+>> +  When a memcpy is used to/from a memory mapped region for example a DMA in the
+>> +  same domain can perform better.
+>> +  For generic software modules doing mem 2 mem operations it also matter that
+>> +  they will get a channel from a controller which is faster in DDR to DDR mode
+>> +  rather then from the first controller happen to be loaded.
+>> +
+>> +  This property is inherited, so it may be specified in a device node or in any
+>> +  of its parent nodes.
+>> +
+>> +properties:
+>> +  $dma-domain-controller:
+>> +    $ref: /schemas/types.yaml#definitions/phandle
+>> +    description:
+>> +      phande to the DMA controller node which should be used for the device or
+>> +      domain.
+>> +
+>> +examples:
+>> +  - |
+>> +    / {
+>> +        model = "Texas Instruments K3 AM654 SoC";
+>> +        compatible = "ti,am654";
+>> +        interrupt-parent = <&gic500>;
+>> +        /* For modules without device, DDR to DDR is faster on main UDMAP */
+>> +        dma-domain-controller = <&main_udmap>;
+>> +        #address-cells = <2>;
+>> +        #size-cells = <2>;
+>> +        ...
+>> +    };
+>> +
+>> +    &cbass_main {
+>> +        /* For modules within MAIN domain, use main UDMAP */
+>> +        dma-domain-controller = <&main_udmap>;
+>> +    };
+>> +
+>> +    &cbass_mcu {
+>> +        /* For modules within MCU domain, use mcu UDMAP */
+>> +        dma-domain-controller = <&mcu_udmap>;
+> 
+> perhaps add the example of main_udmap and mcu_udmap as well
+
+I can populate the tree with the main/mcu_udmap and on MCU I can also
+add the OSPI node.
+The idea is to specify the dma controller to be used for non slave
+channels on every device on MAIN/MCU domain.
+UDMAPs do not need this property specified, it is needed for clients.
+
+> 
+>> +    };
+>> +...
+>> -- 
+>> Peter
+>>
+>> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+>> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
