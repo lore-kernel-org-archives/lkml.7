@@ -2,102 +2,114 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90AB4C433EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96194C433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F9792086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:40:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E0362086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:40:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568022052;
+	bh=+fxGubaHQ5uhyxF2oz1WdKLJwDecWDNoiiEGSBT88l8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=JBZ9xpPmyoXj/RT9f+wyGv+mWUz1oDAgJUOSqVzKDTmDzN+1c0r/hh/GqhOoVQxIi
+	 kGnJONFoiZIRKt2o/zswoEIJnG+Oud6wa+z9RGkMBslDYpzijSZ8Px/M74tkBbhOPu
+	 PNhKYfVljDiuEpxkXhHPGcQ2/F+AlayB4/5yR2TA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390003AbfIIJkh (ORCPT
+        id S2388179AbfIIJkv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 05:40:37 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:41560 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725818AbfIIJkg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 05:40:36 -0400
-Received: by mail-qt1-f193.google.com with SMTP id j10so15367478qtp.8;
-        Mon, 09 Sep 2019 02:40:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OSsOhHBNA6WtbtbcXdsydd62P7AL/2R8zBg5KGvl2fg=;
-        b=PvPY02hUfe3iKw2FKJK+9my/KR5YHWL39pdOOUWtpgfHHPaqIldTkM16Pq98WCUKvU
-         xOBIXY4BColuhJFkPbDEM1t56yGDqIJFBOehoSTrrEFGdjvKSA4X/1kTo/MaSOCMHZHt
-         YKQJ5Zdxe3/D01BeJnvG8lqi84h5Yur7+dSVc1ueuUveiHFC154xvvicr4S5RDkKBMtz
-         NoiCvffyQxSf5YfGq6PAF1PLdqg/5bseSKIQO3fPEAO6RYTRbzqds9RXCqdHuygpUtf7
-         zhdj+ErG6PBRVzogrZ/qhqNal9z9+RjRYjfRBD5FvXIYDwfOOcBt8kfREDmhLfwYo8qu
-         en4w==
-X-Gm-Message-State: APjAAAXhGQ99zzN584yVfHejUvrSoWF9FAGM6QumZoxjaTBu9g+US1pk
-        g7jOCk8ul9E6Y9lCbCj13APuIyrMPwGj86i+0cI=
-X-Google-Smtp-Source: APXvYqwGHNSlvuqRvmxQq/EGJBTJRlR/BM2K59/TY6zrahtKUOrOlSXx0rXk+OXZ1vtblalawqRd5ou4Jyx8XeSegu8=
-X-Received: by 2002:ac8:6b1a:: with SMTP id w26mr21971357qts.304.1568022035326;
- Mon, 09 Sep 2019 02:40:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <1568020220-7758-1-git-send-email-talel@amazon.com> <1568020220-7758-4-git-send-email-talel@amazon.com>
-In-Reply-To: <1568020220-7758-4-git-send-email-talel@amazon.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 9 Sep 2019 11:40:19 +0200
-Message-ID: <CAK8P3a0DEMeFWK+RuAdSLyDYduWWwj9DxP_Beipays-d_6ixnA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] arm64: alpine: select AL_POS
+        Mon, 9 Sep 2019 05:40:51 -0400
+Received: from foss.arm.com ([217.140.110.172]:46696 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725818AbfIIJkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 05:40:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 50ADA1000;
+        Mon,  9 Sep 2019 02:40:50 -0700 (PDT)
+Received: from big-swifty.misterjones.org (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9EC1B3F71F;
+        Mon,  9 Sep 2019 02:40:47 -0700 (PDT)
+Date:   Mon, 09 Sep 2019 10:40:45 +0100
+Message-ID: <86d0g9st7m.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
 To:     Talel Shenhar <talel@amazon.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        gregkh <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Patrick Venture <venture@google.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Olof Johansson <olof@lixom.net>,
-        Maxime Ripard <mripard@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        paul.kocialkowski@bootlin.com, mjourdan@baylibre.com,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        hhhawa@amazon.com, ronenk@amazon.com, jonnyc@amazon.com,
-        hanochu@amazon.com, barakw@amazon.com
-Content-Type: text/plain; charset="UTF-8"
+Cc:     <tglx@linutronix.de>, <jason@lakedaemon.net>,
+        <linux-kernel@vger.kernel.org>, <dwmw@amazon.co.uk>,
+        <benh@kernel.crashing.org>, <hhhawa@amazon.com>,
+        <ronenk@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
+        <barakw@amazon.com>
+Subject: Re: [PATCH 1/1] irqchip: al-fic: add support for irq retrigger
+In-Reply-To: <1568018358-18985-1-git-send-email-talel@amazon.com>
+References: <1568018358-18985-1-git-send-email-talel@amazon.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Organization: Approximate
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 9, 2019 at 11:14 AM Talel Shenhar <talel@amazon.com> wrote:
->
-> Amazon's Annapurna Labs SoCs uses al-pos driver, enable it.
->
+On Mon, 09 Sep 2019 09:39:18 +0100,
+Talel Shenhar <talel@amazon.com> wrote:
+
+Hi Talel,
+
+> 
+> Introduce interrupts retrigger support for Amazon's Annapurna Labs Fabric
+> Interrupt Controller.
+> 
 > Signed-off-by: Talel Shenhar <talel@amazon.com>
 > ---
->  arch/arm64/Kconfig.platforms | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-> index 4778c77..bd86b15 100644
-> --- a/arch/arm64/Kconfig.platforms
-> +++ b/arch/arm64/Kconfig.platforms
-> @@ -25,6 +25,7 @@ config ARCH_SUNXI
->  config ARCH_ALPINE
->         bool "Annapurna Labs Alpine platform"
->         select ALPINE_MSI if PCI
-> +       select AL_POS
->         help
->           This enables support for the Annapurna Labs Alpine
->           Soc family.
+>  drivers/irqchip/irq-al-fic.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/drivers/irqchip/irq-al-fic.c b/drivers/irqchip/irq-al-fic.c
+> index 1a57cee..0b0a737 100644
+> --- a/drivers/irqchip/irq-al-fic.c
+> +++ b/drivers/irqchip/irq-al-fic.c
+> @@ -15,6 +15,7 @@
+>  
+>  /* FIC Registers */
+>  #define AL_FIC_CAUSE		0x00
+> +#define AL_FIC_SET_CAUSE	0x08
+>  #define AL_FIC_MASK		0x10
+>  #define AL_FIC_CONTROL		0x28
+>  
+> @@ -126,6 +127,16 @@ static void al_fic_irq_handler(struct irq_desc *desc)
+>  	chained_irq_exit(irqchip, desc);
+>  }
+>  
+> +static int al_fic_irq_retrigger(struct irq_data *data)
+> +{
+> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
+> +	struct al_fic *fic = gc->private;
+> +
+> +	writel_relaxed(BIT(data->hwirq), fic->base + AL_FIC_SET_CAUSE);
+> +
+> +	return 1;
+> +}
+> +
+>  static int al_fic_register(struct device_node *node,
+>  			   struct al_fic *fic)
+>  {
+> @@ -159,6 +170,7 @@ static int al_fic_register(struct device_node *node,
+>  	gc->chip_types->chip.irq_unmask = irq_gc_mask_clr_bit;
+>  	gc->chip_types->chip.irq_ack = irq_gc_ack_clr_bit;
+>  	gc->chip_types->chip.irq_set_type = al_fic_irq_set_type;
+> +	gc->chip_types->chip.irq_retrigger = al_fic_irq_retrigger;
+>  	gc->chip_types->chip.flags = IRQCHIP_SKIP_SET_WAKE;
+>  	gc->private = fic;
 
-Generally I think this kind of thing should go into the defconfig
-rather than being hard-selected. There might be users that
-want to not enable the driver.
+Looks good to me. Is this a fix or a new feature? If the former, I can
+queue it up for -rc1.
 
-       Arnd
+	M.
+
+-- 
+Jazz is not dead, it just smells funny.
