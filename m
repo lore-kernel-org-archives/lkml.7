@@ -2,115 +2,86 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45594C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC857C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 267BA21924
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95BFA20863
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:09:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733299AbfIINH5 convert rfc822-to-8bit (ORCPT
+        id S1729882AbfIINJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 09:07:57 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:48779 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729521AbfIINH5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 09:07:57 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-218-k_b-RoXrNR6sA5ZeQLxIog-1; Mon, 09 Sep 2019 14:07:53 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 9 Sep 2019 14:07:52 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 9 Sep 2019 14:07:52 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Dmitry Safonov' <dima@arista.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrei Vagin <avagin@openvz.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Pavel Emelyanov" <xemul@virtuozzo.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "containers@lists.linux-foundation.org" 
-        <containers@lists.linux-foundation.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: RE: [PATCH 8/9] select/restart_block: Convert poll's timeout to u64
-Thread-Topic: [PATCH 8/9] select/restart_block: Convert poll's timeout to u64
-Thread-Index: AQHVZvizzIDwzlC570SwWwtAb/4vwqcjUHzQ
-Date:   Mon, 9 Sep 2019 13:07:52 +0000
-Message-ID: <fd8bfb2bed23492cb5e6c43b10be6125@AcuMS.aculab.com>
-References: <20190909102340.8592-1-dima@arista.com>
- <20190909102340.8592-9-dima@arista.com>
-In-Reply-To: <20190909102340.8592-9-dima@arista.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 9 Sep 2019 09:09:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41232 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725978AbfIINJw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 09:09:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C724FB63D;
+        Mon,  9 Sep 2019 13:09:50 +0000 (UTC)
+Date:   Mon, 9 Sep 2019 15:09:57 +0200
+From:   Jean Delvare <jdelvare@suse.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Thomas <trenn@suse.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>
+Subject: Re: /dev/mem and secure boot
+Message-ID: <20190909150957.12abe684@endymion>
+In-Reply-To: <20190906121510.GA17328@kroah.com>
+References: <20190906130221.0b47a565@endymion>
+        <20190906121510.GA17328@kroah.com>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-X-MC-Unique: k_b-RoXrNR6sA5ZeQLxIog-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Safonov
-> Sent: 09 September 2019 11:24
-> 
-> All preparations have been done - now poll() can set u64 timeout in
-> restart_block. It allows to do the next step - unifying all timeouts in
-> restart_block and provide ptrace() API to read it.
-> 
-> Signed-off-by: Dmitry Safonov <dima@arista.com>
-> ---
->  fs/select.c                   | 27 +++++++--------------------
->  include/linux/restart_block.h |  4 +---
->  2 files changed, 8 insertions(+), 23 deletions(-)
-> 
-> diff --git a/fs/select.c b/fs/select.c
-> index 4af88feaa2fe..ff2b9c4865cd 100644
-> --- a/fs/select.c
-> +++ b/fs/select.c
-...
-> @@ -1037,16 +1030,10 @@ SYSCALL_DEFINE3(poll, struct pollfd __user *, ufds, unsigned int, nfds,
->  		struct restart_block *restart_block;
-> 
->  		restart_block = &current->restart_block;
-> -		restart_block->fn = do_restart_poll;
-> -		restart_block->poll.ufds = ufds;
-> -		restart_block->poll.nfds = nfds;
-> -
-> -		if (timeout_msecs >= 0) {
-> -			restart_block->poll.tv_sec = end_time.tv_sec;
-> -			restart_block->poll.tv_nsec = end_time.tv_nsec;
-> -			restart_block->poll.has_timeout = 1;
-> -		} else
-> -			restart_block->poll.has_timeout = 0;
-> +		restart_block->fn		= do_restart_poll;
-> +		restart_block->poll.ufds	= ufds;
-> +		restart_block->poll.nfds	= nfds;
-> +		restart_block->poll.timeout	= timeout;
+Hi Greg,
 
-What is all that whitespace for?
+On Fri, 6 Sep 2019 14:15:10 +0200, Greg Kroah-Hartman wrote:
+> On Fri, Sep 06, 2019 at 01:02:21PM +0200, Jean Delvare wrote:
+> > I've been bitten recently by mcelog not working on machines started in
+> > secure boot mode. mcelog tries to read DMI information from /dev/mem
+> > and fails to open it.  
+> 
+> What do you mean by "secure boot"?  Is this matthew's patchset that
+> restricts /dev/mem/ or something else?
 
-	David
+I mean that early in the kernel log is:
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+Secure boot enabled and kernel locked down
 
+Digging it up, I found that this comes from a patch in our SLES kernel,
+that's not upstream (yet). It is from a patch set by David Howells
+(Cc'd) posted in April 2017:
+
+https://patchwork.kernel.org/patch/9665591/
+https://patchwork.kernel.org/patch/9665015/
+
+I wrongly assumed it had been merged upstream meanwhile but I was
+wrong. David, any reason why this didn't happen? Out of curiosity, are
+these patches in RHEL kernels?
+
+> > This made me wonder: if not even root can read /dev/mem (nor, I
+> > suppose, /dev/kmem and /dev/port) in secure boot mode, why are we
+> > creating these device nodes at all in the first place? Can't we detect
+> > that we are in secure boot mode and skip that step, and reap the rewards
+> > (faster boot, lower memory footprint and less confusion)?  
+> 
+> Sure, feel free to not register it at all if the mode is enabled.
+
+Now I feel sorry that I asked my question upstream when there's nothing
+to be done there. I'll go bother SUSE kernel folks instead, sorry for
+the noise. And thanks for the advice.
+
+-- 
+Jean Delvare
+SUSE L3 Support
