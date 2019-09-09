@@ -2,106 +2,102 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11CEDC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6794C49ED6
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D64212171F
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:45:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78AC82196E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:46:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JVGesG1m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388808AbfIIPpL (ORCPT
+        id S2388830AbfIIPqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 11:45:11 -0400
-Received: from s3.sipsolutions.net ([144.76.43.62]:33806 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729326AbfIIPpK (ORCPT
+        Mon, 9 Sep 2019 11:46:15 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:43827 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729326AbfIIPqP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 11:45:10 -0400
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1i7LqW-0000DN-Ku; Mon, 09 Sep 2019 17:44:52 +0200
-Message-ID: <6f3487136e71afbd4d2b621551ee14e68c4cc1ab.camel@sipsolutions.net>
-Subject: Re: [PATCH v2] net: enable wireless core features with
- LEGACY_WEXT_ALLCONFIG
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Mark Salyzyn <salyzyn@android.com>, Greg KH <greg@kroah.com>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
-        "David S. Miller" <davem@davemloft.net>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        stable@vger.kernel.org
-Date:   Mon, 09 Sep 2019 17:44:51 +0200
-In-Reply-To: <b7027a5d-5d75-677b-0e9b-cd70e5e30092@android.com> (sfid-20190909_162434_303033_C0355249)
-References: <20190906192403.195620-1-salyzyn@android.com>
-         <20190906233045.GB9478@kroah.com>
-         <b7027a5d-5d75-677b-0e9b-cd70e5e30092@android.com>
-         (sfid-20190909_162434_303033_C0355249)
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 9 Sep 2019 11:46:15 -0400
+Received: by mail-io1-f68.google.com with SMTP id r8so4859209iol.10;
+        Mon, 09 Sep 2019 08:46:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=+8o/RGK/NPs8632xDSooMJK/phaky0Ro4hwcCw71TCc=;
+        b=JVGesG1mnmTyr6WT/iYtanVie5DVOtHQYVM7hTxh57S3deO0Wr539W3FHqd7jUBIQM
+         8HFwZj9JD+ynD2ZPR3LHJZAlIdbyODk7eftG12HWNqjYYoBtRE5a1J5kB9q5EshinA/U
+         xnUpCaqgHXXq/93EOzbizgqirgU26zOXiSSbeAI9mlZSatKKRR0CSVrUl1dRYsdvhNZ6
+         yIz1SqQABjMOyqEGTKVbX7mfrlSOeqvxq15YOwJZXsMY219Ruaypo+eEazOhnxVXNXcd
+         usjQyCxidilCtP3QrlAES09YnUE6I21FOvWgdRjDUN2bm54zPmT1w7FFGFUxAmw1I7b0
+         TUWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=+8o/RGK/NPs8632xDSooMJK/phaky0Ro4hwcCw71TCc=;
+        b=Lwz4MzHkfNsDMvMRwDaBpqVIUQHhEqCN/YzWAbu1sXqkCEqNUhRceWOYPxMvpk0yee
+         yC/ef1NbPTe9KFEOInw712YL0Q+2DvFMKVIf+CSim0jtjPJirzNbq6LPyP1h4EJR79lE
+         Ghdv0rRyoWRlMazs7wuv/tOjwXTW3jwj8NE9Sf4zY+vCoMjSH9+DYkchwcEBc8UOCJXR
+         B2VoSobzATXUnmJ9YtqeA7sC9htbJ3nkMTGe9w4vq5iqv9+T3zE9WY2ZgRnOaOQ+HBPU
+         RMp/K2M4rSs/aXVVnBxIAD3vr4C2yvwnRKz4YhuEyUGMvGmy4M2ihgB+hAgjcNREBvCJ
+         TS8w==
+X-Gm-Message-State: APjAAAWHMlZbd3AbDm5jfTIr3XFGQ4zVFNV+fP3YUkqwaS5zWKeAlh7k
+        8BfLtmfFSms7/HvGo2jTeT+CqJ2jE7Y=
+X-Google-Smtp-Source: APXvYqw3jiFsdDxXaxUuwsb4anV8XMwCTd4KNpVihyxLf9uoXYjoahKJ+etNOiOjAaM9BUZpQd2S2Q==
+X-Received: by 2002:a6b:7e45:: with SMTP id k5mr13113583ioq.178.1568043974166;
+        Mon, 09 Sep 2019 08:46:14 -0700 (PDT)
+Received: from aford-OptiPlex-7050.logicpd.com ([174.46.170.158])
+        by smtp.gmail.com with ESMTPSA id a21sm10402395ioe.27.2019.09.09.08.46.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Sep 2019 08:46:13 -0700 (PDT)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-omap@vger.kernel.org
+Cc:     neolynx@gmail.com, letux-kernel@openphoenux.org,
+        andreas@kemnade.info, tony@atomide.com, adam.ford@logicpd.com,
+        hns@goldelico.com, Adam Ford <aford173@gmail.com>,
+        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: [PATCH 1/2] cpufreq: ti-cpufreq: Add support for AM3517
+Date:   Mon,  9 Sep 2019 10:45:01 -0500
+Message-Id: <20190909154502.19804-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-09-09 at 07:24 -0700, Mark Salyzyn wrote:
-> 
-> > How is this patch applicable to stable kernels???
+The AM3517 only lists 600MHz @ 1.2V, but the revister values for
+0x4830A204 = 1b86 802f, it seems like am3517 might be a derivative
+of the omap36 which has OPPs would be OPP50 (300 MHz) and OPP100
+(600 MHz).
 
-I'm not sure I even buy the arguments to get it into the regular kernel.
+This patch simply enable adds the am3517 to the compatible table
+using the omap3630 structure instead of the 3430.
 
-> B) there is a shortcoming in _all_ kernel versions with respect to 
-> hidden configurations options like this, hoping to set one precedent in 
-> how to handle them if acceptable to the community.
+Signed-off-by: Adam Ford <aford173@gmail.com>
 
-This really is the only argument, I think, but I don't really see it as
-a shortcoming. The kernel is handling this properly, after all, with
-respect to itself. You just have issues with out-of-tree modules.
-
-And while it is true, setting that precedent might ultimately mean we'll
-end up with ~80 (**) new Kconfig options in net/ alone ... That's
-certainly *NOT* a precedent I want to set nor the way I want to see this
-handled, when we already get complaints that we're adding too many
-Kconfig options (and those are ones we really do need).
-
-Obviously, nothing stops you from putting this into your kernel (and I
-guess you already are), but I don't really see how it benefits us as a
-kernel community.
-
-> E) Timely discussion item for LPC?
-
-Perhaps you should indeed drive that discussion there, this really is
-bigger than this particular wireless feature. At the very least, to
-avoid Kconfig complexity explosion, add a single new
-
-config OPTIONS_FOR_OUT_OF_TREE_MODULES
-	bool "..."
-	depends on EXPERT
-	help
-	  ...
-
-and make LEGACY_WEXT_ALLCONFIG depend on that.
-
-But if you're honest and obvious about it like that, I have a hard time
-seeing you get that into the tree past Greg or Linus...
-
-
-Also, you probably know this, but in this particular case you really
-should just get rid of your wext dependencies ... this stuff is
-literally decades old, and while that isn't necessarily a bad thing, it
-also has issues that have been known for a decade or so that simply
-cannot be solved.
-
-
-(**) git grep "bool$" and "tristate$" in Kconfig files under net/ yields
-a bit more, but here you already set 5, who knows. Still, even if it's
-only 20 in the end that's too much.
-
-johannes
-
+diff --git a/drivers/cpufreq/ti-cpufreq.c b/drivers/cpufreq/ti-cpufreq.c
+index f2f58d689320..6b69fb1d6bdf 100644
+--- a/drivers/cpufreq/ti-cpufreq.c
++++ b/drivers/cpufreq/ti-cpufreq.c
+@@ -270,6 +270,7 @@ static int ti_cpufreq_setup_syscon_register(struct ti_cpufreq_data *opp_data)
+ 
+ static const struct of_device_id ti_cpufreq_of_match[] = {
+ 	{ .compatible = "ti,am33xx", .data = &am3x_soc_data, },
++	{ .compatible = "ti,am3517", .data = &omap36xx_soc_data, },
+ 	{ .compatible = "ti,am43", .data = &am4x_soc_data, },
+ 	{ .compatible = "ti,dra7", .data = &dra7_soc_data },
+ 	{ .compatible = "ti,omap34xx", .data = &omap34xx_soc_data, },
+-- 
+2.17.1
 
