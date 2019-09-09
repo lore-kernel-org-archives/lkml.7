@@ -2,125 +2,162 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6728CC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C31C4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A354218DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C5072196E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:11:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NLoru+PP"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="NgiYz666"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405190AbfIIOKf (ORCPT
+        id S2405241AbfIIOLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 10:10:35 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41591 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405006AbfIIOKf (ORCPT
+        Mon, 9 Sep 2019 10:11:34 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:28642 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405170AbfIIOLe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 10:10:35 -0400
-Received: by mail-pg1-f196.google.com with SMTP id x15so7903250pgg.8
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 07:10:34 -0700 (PDT)
+        Mon, 9 Sep 2019 10:11:34 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dhLOjyAxlv5hvB+opiwBQ6lHh3q9XNgiJ5S7TQfrU0o=;
-        b=NLoru+PPO4d2ul2bHGfePBx0BjpruaO0FMALx/pYwX60yTabxnY7/YHC2lXVrud/Jo
-         l6fAQ+bOpnG3zjqUgjvzun4Ms4Jq1XEF9mLV1cNV0zkPLNQD7RshflLzTGWlJtEyc3OO
-         i4NA65JWz7EDfTJe+d0Pq5DnmCBDLU6v8hNXLvzSgKmtvvrRv0CyTctIFb70L/A+cYqQ
-         kUVNC7aCDQHgKEnHNmvF9fg5lbDpA2DH0rryrYmXNcRxbrfCD/3jjY2gxqFfl3AP7t8e
-         FSrWfddTrvPBUUkXRVzd94lqfr03mr6e7sABgcgBbESvSwDemRJTWNNze8R+nrLBwNPY
-         Ykag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dhLOjyAxlv5hvB+opiwBQ6lHh3q9XNgiJ5S7TQfrU0o=;
-        b=U4gFH65YzT7dUcBwwAxcHa59YM1ZL3PIinBtzyCC1zHtUTi/wO1V1LdZNP4vvTiBhU
-         p1ib3tYQbjr23LQXJizzOR5aNRgAl22v27ATnajAJToAKsjJSX5ymjnl+kQFsAuGu/vD
-         weVW6+81PbG9skI3zGsRoLMolAIp9dtlzKivCFaTjc8MNnHVADKDndI0xcNdwiX11dq/
-         fDrtjDpqHTED/Ddw5uYWQtvA210VZLjK4WApwB06pn8QF4SpN8qWUPS8kfLMmy8XENT9
-         ULE3M5QtpbssSxzimmyKyEozzYqnN7ZBjT9OmNad8ibGck2eYwa8lWNaqQSlvwuaIyzx
-         SxzQ==
-X-Gm-Message-State: APjAAAWXsnFkmVIBfAYgPtPR2f0n99nUrySnEiGlR6CpwFqtRUYCCzT/
-        ZWltDstr1UhYoN35Ff7+faSsCeVsdJ6oBw==
-X-Google-Smtp-Source: APXvYqx95hTnC2f7WnsoV34LVzxoGGngBpO741sLdYteMNXiE1KayLJWs9EYiFIZQPX9Y0weE89KEA==
-X-Received: by 2002:a17:90a:c203:: with SMTP id e3mr2399275pjt.126.1568038234157;
-        Mon, 09 Sep 2019 07:10:34 -0700 (PDT)
-Received: from mail.google.com ([149.28.153.17])
-        by smtp.gmail.com with ESMTPSA id v18sm15452954pfn.24.2019.09.09.07.10.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Sep 2019 07:10:33 -0700 (PDT)
-Date:   Mon, 9 Sep 2019 22:10:26 +0800
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Changbin Du <changbin.du@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1568038293; x=1599574293;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=gi28FrqFGKtAvBvYFxkZYst96FU+E+hOzXKbUu21vJY=;
+  b=NgiYz6661i710lrns0RQQhBY7WORviGbrfTKjHpt5W1lMAUqyujP1QvJ
+   TMsUQXD8a/Qk4inMT8mx1gmKEG6LwVjyzq4Ywt0U6JhswsFkIwMOis+NP
+   lIZpExSCBUZlLIlF38B8/NNxQ9Zg35i3cDBVWd896pTS6piUNu0DixtC/
+   c=;
+X-IronPort-AV: E=Sophos;i="5.64,484,1559520000"; 
+   d="scan'208";a="829310330"
+Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-1e-27fb8269.us-east-1.amazon.com) ([10.47.22.34])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 09 Sep 2019 14:11:29 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-27fb8269.us-east-1.amazon.com (Postfix) with ESMTPS id 3BF3DA1CC0;
+        Mon,  9 Sep 2019 14:11:22 +0000 (UTC)
+Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 9 Sep 2019 14:11:22 +0000
+Received: from [10.125.238.52] (10.43.161.152) by EX13D01EUB001.ant.amazon.com
+ (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Mon, 9 Sep
+ 2019 14:11:11 +0000
+Subject: Re: [PATCH 2/3] soc: amazon: al-pos: Introduce Amazon's Annapurna
+ Labs POS driver
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        gregkh <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/8] kconfig/hacking: make 'kernel hacking' menu better
- structured
-Message-ID: <20190909141024.rq2pdl2vqqdmdm4m@mail.google.com>
-References: <20190908012800.12979-1-changbin.du@gmail.com>
- <81a27c4e-98d4-bf6a-c81c-b85666c9a366@infradead.org>
+        "Patrick Venture" <venture@google.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "Olof Johansson" <olof@lixom.net>,
+        Maxime Ripard <mripard@kernel.org>,
+        "Santosh Shilimkar" <ssantosh@kernel.org>,
+        <paul.kocialkowski@bootlin.com>, <mjourdan@baylibre.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "Will Deacon" <will@kernel.org>, DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        <hhhawa@amazon.com>, <ronenk@amazon.com>, <jonnyc@amazon.com>,
+        <hanochu@amazon.com>, <barakw@amazon.com>
+References: <1568020220-7758-1-git-send-email-talel@amazon.com>
+ <1568020220-7758-3-git-send-email-talel@amazon.com>
+ <CAK8P3a3UF7xPV1U3eW6Jdu754P1bzG208UxD9KUxEm1JjZudww@mail.gmail.com>
+ <98f0028e-5653-3116-fdaa-1385ecdf0289@amazon.com>
+ <CAK8P3a1NVGwYa1bw_vjBatd1xe-i875X1Vq1M+2G_Zxd2Oqusg@mail.gmail.com>
+From:   "Shenhar, Talel" <talel@amazon.com>
+Message-ID: <8f7840c3-a682-04a5-18bf-ac7a723725b0@amazon.com>
+Date:   Mon, 9 Sep 2019 17:11:05 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <81a27c4e-98d4-bf6a-c81c-b85666c9a366@infradead.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAK8P3a1NVGwYa1bw_vjBatd1xe-i875X1Vq1M+2G_Zxd2Oqusg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.43.161.152]
+X-ClientProxiedBy: EX13D15UWB002.ant.amazon.com (10.43.161.9) To
+ EX13D01EUB001.ant.amazon.com (10.43.166.194)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 08, 2019 at 05:44:54PM -0700, Randy Dunlap wrote:
-> On 9/7/19 6:27 PM, Changbin Du wrote:
-> > This series is a trivial improvment for the layout of 'kernel hacking'
-> > configuration menu. Now we have many items in it which makes takes
-> > a little time to look up them since they are not well structured yet.
-> > 
-> > Early discussion is here:
-> > https://lkml.org/lkml/2019/9/1/39
-> > 
-> > Changbin Du (8):
-> >   kconfig/hacking: Group sysrq/kgdb/ubsan into 'Generic Kernel Debugging
-> >     Instruments'
-> >   kconfig/hacking: Create submenu for arch special debugging options
-> >   kconfig/hacking: Group kernel data structures debugging together
-> >   kconfig/hacking: Move kernel testing and coverage options to same
-> >     submenu
-> >   kconfig/hacking: Move Oops into 'Lockups and Hangs'
-> >   kconfig/hacking: Move SCHED_STACK_END_CHECK after DEBUG_STACK_USAGE
-> >   kconfig/hacking: Create a submenu for scheduler debugging options
-> >   kconfig/hacking: Move DEBUG_BUGVERBOSE to 'printk and dmesg options'
-> > 
-> >  lib/Kconfig.debug | 627 ++++++++++++++++++++++++----------------------
-> >  1 file changed, 324 insertions(+), 303 deletions(-)
-> 
-> Hi,
-> 
-> Series applies to v5.3-rc7.  Has some problems applying to linux-next.
+
+On 9/9/2019 4:41 PM, Arnd Bergmann wrote:
+> On Mon, Sep 9, 2019 at 1:13 PM Shenhar, Talel <talel@amazon.com> wrote:
+>> On 9/9/2019 12:44 PM, Arnd Bergmann wrote:
+>>> On Mon, Sep 9, 2019 at 11:14 AM Talel Shenhar <talel@amazon.com> wrote:
+>>>> +       writel_relaxed(0, pos->mmio_base + AL_POS_ERROR_LOG_1);
+>>> Why do you require _relaxed() accessors here? Please add a comment
+>>> explaining that, or use the regular readl()/writel().
+>> I don't think commenting is needed here as there is nothing special in
+>> this type of access.
+>>
+>> I don't see this is common to comment the use of the _relaxed accessors.
+> I usually mention it in driver reviews, but most authors revert back
+> to the normal accessors when there is no difference.
 >
-Let me rebase to linux-next.
+>> This driver is for SoC using arm64 cpu.
+>>
+>> If one uses the non-relaxed version of readl while running on arm64, he
+>> shall cause read barrier, which is then doing dsm(ld).. This barrier is
+>> not needed here, so we spare the use of the more heavy readl in favor of
+>> the less "harmful" one.
+>>
+>> Let me know what you think.
+> If the barrier causes no harm, just leave it in to keep the code more
+> readable. Most developers don't need to know the difference between
+> the two, so using the less common interface just makes the reader
+> curious about why it was picked.
+>
+> Avoiding the barrier can make a huge performance difference in a
+> hot code path, but the downside is that it can behave in unexpected
+> ways if the same code is run on a different CPU architecture that
+> does not have the exact same rules about what _relaxed() means.
+>
+> In fact, replacing a 'readl()' with 'readl_relaxed() + rmb()' can lead
+> to slower rather than faster code when the explicit barrier is heavier
+> than the implied one (e.g. on x86), or readl_relaxed() does not skip
+> the barrier.
+>
+> The general rule with kernel interfaces when you have two versions
+> that both do what you want is to pick the one with the shorter name.
+> See spin_lock()/spin_lock_irqsave(),  ioremap()/ioremap_nocache(),
+> or ktime_get()/ktime_get_clocktai_ts64(). (yes, there are also
+> exceptions)
+>
+>      Arnd
 
-> Under 'Compile-time checks and compiler options', "Debug Filesystem" does not belong here.
-> Maybe move it under 'Generic Kernel Debugging Instruments'.
-> 
-yes, let's move it to 'Generic Kernel Debugging Instruments'.
 
-> I mostly like it.  I might have put 'Debug notifier call chains' under
-> 'Debug kernel data structures', but that's not a big deal.
-> 
-no problem.
+Thanks for the detailed response.
 
-> -- 
-> ~Randy
 
--- 
-Cheers,
-Changbin Du
+In current implementation of v1, I am not doing any read barrier, Hence, 
+using the non-relaxed will add unneeded memory barrier.
+
+I have no strong objection moving to the non-relaxed version and have an 
+unneeded memory barrier, as this path is not "hot" one.
+
+
+Beside of avoiding the unneeded memory barrier, I would be happy to keep 
+common behavior for our drivers:
+
+e.g.
+
+https://github.com/torvalds/linux/blob/master/drivers/irqchip/irq-al-fic.c#L49
+
+
+So what do you think we should go with? relaxed or non-relaxed?
+
+
