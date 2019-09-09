@@ -2,232 +2,114 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB41BC4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86CEDC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA2BC2086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:19:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BD9D218DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:20:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Kz4YOqP7"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="HE73ee2U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730184AbfIINTU (ORCPT
+        id S1730228AbfIINU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 09:19:20 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:33828 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730132AbfIINTT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 09:19:19 -0400
-Received: by mail-lj1-f193.google.com with SMTP id h2so6198350ljk.1
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 06:19:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ZGgBEktDuEpp437eI+l0oc8mQy/q7e53dFVNJhuHdZA=;
-        b=Kz4YOqP7hIoJolzb/cciYYVNzLGH6bJKibJMDqWRs02yTaESM889lgQOhuIIzfM4KS
-         S3/TG+Y9b6xRzM1CyHzYksvFI/u2uozMcGeWh0iSGlXKRoZ84Yo1ctmRx85eAmuUXnzR
-         3CgAin4gVpzhGvEjnY3HymYHP7muHFs3AYLcbc1cX+ZiorsnVr3B/RjG/lQgeGEXAAw7
-         kVlS1oEzQu2hgGaS7xw/XZRStllfVJPm0zKeSYJmalrv4zXgF+e1K8P+r8V58jbUuJQg
-         Wj5ZS+B6EEVini1g7LRSAqoca8bwd/hpBJRahzTq9Q0stsovMNNCQOfavqBdJV72zSvC
-         kzNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ZGgBEktDuEpp437eI+l0oc8mQy/q7e53dFVNJhuHdZA=;
-        b=q21jAg1JzEl3PXKe55FLX2qA9SCGVoVzX5sQ5ZFAPKF7nXj+ufmULGW3FwCzloRCPy
-         gpd0e39iMT+koDroxOXrJpH2xYNujZ7MQEeSc91nqlUbwuDFV+8WP2+MGWxSE0Q9Z8E3
-         hKd65PTXoI4ZZv8oBT41LklmuVS5APpOBV7Wkf2+Whc6IhBj7y0TGOUrBRI86L4yjx1F
-         NY5jLZdUg2DRhjVw6m1D44luWj5j0TirucGcM/nw1t8oNtMzEiKO0dM5wIZ6Et1z/0oA
-         PcqOPhBM+r8I+62HgHD9CnTtWHOAbojhrZDPwFO2tCXTr2HHg053axzYh+Z7wtWiBpEn
-         o8YQ==
-X-Gm-Message-State: APjAAAUOLLt5fVe+XBHtsTJWhRUyOxugYmIZH41yCM6E8L6i8/gWDhPz
-        4htJxY8z4ARZAmt9kEXD8XfGChXa50IAIX+J7dgkyiYut+U=
-X-Google-Smtp-Source: APXvYqwycdIBfJUQfKG6M1oZLvzuKTW+SyPB5bL2yKCH/1F0PrVqCy2vDB4TxpNS1NyR5YCvLNjmJuxi37mVTELLD6M=
-X-Received: by 2002:a2e:890d:: with SMTP id d13mr15918289lji.224.1568035157113;
- Mon, 09 Sep 2019 06:19:17 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190908121052.898169328@linuxfoundation.org>
-In-Reply-To: <20190908121052.898169328@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Mon, 9 Sep 2019 18:49:06 +0530
-Message-ID: <CA+G9fYuYNaCsfFFXmyv2OK0KycC29cw7OuX0eEWK=Vmv1Xe9tQ@mail.gmail.com>
-Subject: Re: [PATCH 4.4 00/23] 4.4.192-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 9 Sep 2019 09:20:28 -0400
+Received: from mail-eopbgr00082.outbound.protection.outlook.com ([40.107.0.82]:3072
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729896AbfIINU2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 09:20:28 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lPK9OZXVeRuOqGuOM1sNog0GZtkMX6vjXT+29yB4ssI7UmEeezJOF5xNCcjvcBsW9CTPK4Njo5kvF1OwF9LTjjqWAmYCwd9Drm6ZcBdtw7+akKmXaHtsl2B/L/zrhm70y1+6NaYnjHrkC175MAoGCfIKVhNPp+5sX80Ar4yq62nqvBqzZCXn3RRUt+gLsMBoB//pPeiQskIyd80JrmgEzw66PYG4N/fXEUbPUiQlAY0r9BOH467m6OgdDsabNlOjw3d0ghAc/qrxSqZU5L38V7+iYLc4oxaJPStMvmSmgBoer+t1z12bospqbOygcoYPR8ICHUUVQoV++DOjIfSbHA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D/HAj8PT0EHf0fhBEBNblSa4nYrU9p0z0d9wWc7PMJ8=;
+ b=XghDVq3m7VZFFh2n6BqszgFXRsMGGvxLeAJk8nB3VaCEJCHOFdELBeQnvVvLYr7SkkJj0lhBftqYRrrjhRW6Quh1Fr88bkLN2im82t4FCRr6dcK4bkzA8LWbCfV6bcXiJ6q9EM1v8THBljEQH04c6/54QVhOMvh5w2DHDC0cX8eiFXyRok5IHMaSbbcdCmQkp6CoOXHedFW1U1qi6X7OJYBQjTM+pSG+Kb1ceIAYImDEif4j4rRKvIKZ4ApUKZ0UF1pyLDMgoErbXBzj4XK0YB4dYKSVMliSo+NzqcE6SXXEtggdOUCJHExvNmmWc7EmdEmccbr3BO2JFDC7wT0BfA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D/HAj8PT0EHf0fhBEBNblSa4nYrU9p0z0d9wWc7PMJ8=;
+ b=HE73ee2UGQGjSSDSZ6oVm9d8W+N5KjF/F1GHRE8BG2uCRsmrlg5cYdMVVqQaaLQON5CIVCxshVS4qv+4470Rs9sG+QOED9GDP4vPHb9x0Oi/EbVWMmR8MjIL2wrq7PYOJYPR7wtxEyPA9+7RawVKF1TxblgGQp9JobpFaLGduFI=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB3744.eurprd04.prod.outlook.com (52.134.15.150) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2241.13; Mon, 9 Sep 2019 13:20:24 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::c1a3:2946:8fa8:bfc5]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::c1a3:2946:8fa8:bfc5%3]) with mapi id 15.20.2241.018; Mon, 9 Sep 2019
+ 13:20:24 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
+CC:     Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 05/12] crypto: caam - use devres to unmap memory
+Thread-Topic: [PATCH 05/12] crypto: caam - use devres to unmap memory
+Thread-Index: AQHVYslxhkN+v424iUiSLFIc+2ZSDA==
+Date:   Mon, 9 Sep 2019 13:20:23 +0000
+Message-ID: <VI1PR0402MB348584CFE60C93F5F58065FE98B70@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <20190904023515.7107-1-andrew.smirnov@gmail.com>
+ <20190904023515.7107-6-andrew.smirnov@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 32dcc714-379b-4a3a-f7c7-08d7352878f0
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3744;
+x-ms-traffictypediagnostic: VI1PR0402MB3744:|VI1PR0402MB3744:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB3744457743ACC09A9B59815898B70@VI1PR0402MB3744.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:224;
+x-forefront-prvs: 01559F388D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(366004)(136003)(396003)(346002)(199004)(189003)(99286004)(71200400001)(44832011)(4744005)(71190400001)(2906002)(476003)(256004)(110136005)(74316002)(316002)(7696005)(305945005)(486006)(229853002)(14454004)(54906003)(33656002)(446003)(186003)(4326008)(53936002)(26005)(7736002)(6436002)(2501003)(81156014)(8676002)(53546011)(86362001)(55016002)(8936002)(76176011)(6246003)(66556008)(66476007)(66946007)(6116002)(3846002)(9686003)(64756008)(76116006)(91956017)(5660300002)(25786009)(66066001)(66446008)(102836004)(52536014)(6506007)(81166006)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3744;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: +DUwp8AcyI9aZSGlzCItz57WAUg3dHYjBIpvAeJB52jzlCB+8YgSQABBo5UWKe+l66mBB3gb8i/A3baQdU3NTaMwv0bFyO9wHG3Mf30m84U0uxg//OC5OAKUUKaa6KuqSs4kOyLv7eSKeYghGckH7rfqZtzLIhxeo3VFIRkBHHswb8GXUz5fFpe38mPKtxjFSLnX0d3fP6Io4P5YVLZosIdM5FFu6OhBa3ei0cWbdfGpXu8u78+sgS00X7wnPo+ZdhW3EkeYDa8Im6s8x2/3vGlPZ6BEL5LOWd3sot87DZ1cjjlqr70t+qyhoRMGK5LkMrVNVQtDi1CKXeSzqoCe5DXUv5DtWkLeqd1VBVdXNDXv4teDS/1OC3plD52I7YzCj8RqDAjpLKDfUjn3SDbVxxzPf3McYdWd6GKq0d5wZFw=
+Content-Type: text/plain; charset="iso-8859-2"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 32dcc714-379b-4a3a-f7c7-08d7352878f0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Sep 2019 13:20:23.7727
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: v9OAStVsy6VyjQbv9/5Y+GcZLtzARzBI03W1o+P0BJREShQTmFuKBJAaUadMk2DNcihXLxabeCVie9zzacs/gQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3744
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 8 Sep 2019 at 18:13, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.4.192 release.
-> There are 23 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Tue 10 Sep 2019 12:09:36 PM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.4.192-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
-
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.4.192-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.4.y
-git commit: fbce796fcbec98dc9e077846a5b7ba9c0f42d0cc
-git describe: v4.4.191-24-gfbce796fcbec
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.4-oe/bui=
-ld/v4.4.191-24-gfbce796fcbec
-
-
-No regressions (compared to build v4.4.191)
-
-
-No fixes (compared to build v4.4.191)
-
-Ran 18270 total tests in the following environments and test suites.
-
-Environments
---------------
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-open-posix-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* network-basic-tests
-* perf
-* prep-tmp-disk
-* spectre-meltdown-checker-test
-* kvm-unit-tests
-* v4l2-compliance
-* install-android-platform-tools-r2600
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* ssuite
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.4.192-rc1
-git repo: https://git.linaro.org/lkft/arm64-stable-rc.git
-git branch: 4.4.192-rc1-hikey-20190908-552
-git commit: 2bbf7053f847783ad819ce5cdbc4e30b361cf11a
-git describe: 4.4.192-rc1-hikey-20190908-552
-Test details: https://qa-reports.linaro.org/lkft/linaro-hikey-stable-rc-4.4=
--oe/build/4.4.192-rc1-hikey-20190908-552
-
-
-No regressions (compared to build 4.4.192-rc1-hikey-20190908-551)
-
-
-No fixes (compared to build 4.4.192-rc1-hikey-20190908-551)
-
-Ran 1536 total tests in the following environments and test suites.
-
-Environments
---------------
-- hi6220-hikey - arm64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+On 9/4/2019 5:35 AM, Andrey Smirnov wrote:=0A=
+> Use devres to unmap memory and drop corresponding iounmap() call.=0A=
+> =0A=
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>=0A=
+> Cc: Chris Healy <cphealy@gmail.com>=0A=
+> Cc: Lucas Stach <l.stach@pengutronix.de>=0A=
+> Cc: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>=0A=
+> Cc: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
+> Cc: linux-crypto@vger.kernel.org=0A=
+> Cc: linux-kernel@vger.kernel.org=0A=
+Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
+=0A=
+Thanks,=0A=
+Horia=0A=
