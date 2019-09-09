@@ -2,79 +2,67 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73223C433EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 870F2C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:59:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5035A2086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59ADD2086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:59:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568023195;
+	bh=z18YdR9DjkfQCJRQMn6vKm/qgjme1hf1hZOqxE61B1E=;
+	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
+	b=H7MOLKzUCawpUVdzQ/8s6q8Mm6pFzCujx5juD8j/kgxKSYdQyLm+AVP5B9N7aHGL+
+	 cvFics8YE+tkpd94pH8GhIB+zCQqaG+EMZGAyilF3EnoRWz2UtZsItKSY/1bfeedG7
+	 /Rt8Y4QIbg1f+21NjtMpUj8Z1wkOr+81IPBaeovU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390199AbfIIJ64 (ORCPT
+        id S2390204AbfIIJ7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 05:58:56 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34614 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728206AbfIIJ64 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 05:58:56 -0400
-Received: by mail-ot1-f67.google.com with SMTP id z26so2597572oto.1;
-        Mon, 09 Sep 2019 02:58:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hlpDfZePYVovMOgYxyTZv3r/AVbPjpMO1Fr6zFVJef8=;
-        b=iAi2ciUkl4AceL7TC9mhev1QELpqVMbC4VeRkwyWU3hTv3DW3/+eHJYPnHseHQ9bBP
-         yAnBkuxxu2LeZjWKdH0bBi/EVZchtTT0/VQfZqXgiqM/PmdzUnD3L6TLYE1USsqp4XjR
-         l4cbB0nTJrECy8cvsKqbR/NsX9RrAUSwq44sQD4CO7sqmD1eyw8RChmq4gPZ2Pz76Tbe
-         VVmAeX9U2K34jmdhjDdO+VooTifrlIDo5CGrSFDsrxL4WuRub1it0zhhK/ZRR/yId2UA
-         RVKh9v5cK/PiuGay8sbShRUdo9VBh/d91xRGvXIM2DiNDoBTX791xPpIl+U/2nbrnBkg
-         qPrA==
-X-Gm-Message-State: APjAAAXJbIdIjwsq333o6OxHn+FcFOCd346CBks7x+YV2N9AzsYxaRLU
-        4V3Fd18enJ4xvKviKaWU+FocVxun0WEx+oadexkomw==
-X-Google-Smtp-Source: APXvYqxnbUay5PiRGlAk1ZYomVlAdiyOVo02nv/J8yNZnhIS1OWHceNsLa/CuscQP9WJ+Ear0a9O2Nxlub7TP0r2NBo=
-X-Received: by 2002:a9d:2cc:: with SMTP id 70mr18636821otl.145.1568023135226;
- Mon, 09 Sep 2019 02:58:55 -0700 (PDT)
+        Mon, 9 Sep 2019 05:59:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39358 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728770AbfIIJ7y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 05:59:54 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 599382086D;
+        Mon,  9 Sep 2019 09:59:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568023193;
+        bh=z18YdR9DjkfQCJRQMn6vKm/qgjme1hf1hZOqxE61B1E=;
+        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
+        b=doK3Rt+H3uLF1v+xCBrlyNi+vWF+rCBWTAYS3gvWYpv5mrCpkIQwGywSvh73XLqGt
+         dZUC4qzxevTsJOUIjD13yt6+ud8nYHavXD8xR95IJdPyLXoeGTl+5Q3e5uHmaokrkW
+         +/TKAQ5ZjJs9t5GLR8b67yVZwKVX24k7BtEcVNeU=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <b2dd074a-1693-3aea-42b4-da1f5ec155c4@web.de>
-In-Reply-To: <b2dd074a-1693-3aea-42b4-da1f5ec155c4@web.de>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 9 Sep 2019 11:58:44 +0200
-Message-ID: <CAMuHMdWkPFBphjKQf686LgW6ZE35MYM3A3TmUaY-PJYajSwuyw@mail.gmail.com>
-Subject: Re: [PATCH] spi-gpio: Use PTR_ERR_OR_ZERO() in spi_gpio_request()
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     linux-spi <linux-spi@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190826234729.145593-1-sboyd@kernel.org>
+References: <20190826234729.145593-1-sboyd@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] clk: Drop !clk checks in debugfs dumping
+User-Agent: alot/0.8.1
+Date:   Mon, 09 Sep 2019 02:59:52 -0700
+Message-Id: <20190909095953.599382086D@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 8, 2019 at 2:46 PM Markus Elfring <Markus.Elfring@web.de> wrote:
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Sat, 7 Sep 2019 13:51:16 +0200
->
-> Simplify this function implementation by using a known function.
->
-> Generated by: scripts/coccinelle/api/ptr_ret.cocci
->
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+Quoting Stephen Boyd (2019-08-26 16:47:29)
+> These recursive functions have checks for !clk being passed in, but the
+> callers are always looping through lists and therefore the pointers
+> can't be NULL. Drop the checks to simplify the code.
+>=20
+> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+> ---
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Applied to clk-next
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
