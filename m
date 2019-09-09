@@ -2,258 +2,242 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 114CDC00307
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 07:32:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E94BC00307
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 07:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C769621A4A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 07:32:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Nmp2Nta8"
+	by mail.kernel.org (Postfix) with ESMTP id 28FB321A4A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 07:33:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388210AbfIIHcI (ORCPT
+        id S1732386AbfIIHdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 03:32:08 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53503 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732252AbfIIHcE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 03:32:04 -0400
-Received: by mail-wm1-f65.google.com with SMTP id q19so12501347wmc.3
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 00:32:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Zyjk5LLEUpKt0UtgpDlm7KCNgviInbE7D7cMBgrLQBk=;
-        b=Nmp2Nta8RxHOTP0Ai3OSlk2CAwu/jWa+KWkMVPpAh2/xBK8uiovcqm4z1wSvte1jkt
-         6iUWhoDT5l2W164KcZuTpvo7o1yIZR3IBwSbqkeBHf1lLtqcY7woUt/JKqcVFHlia/bp
-         dyGFf2tKxXFEoeNOvzrPNKs4KH22VpTPdZ3+x4mh3CvP5I5G0/N5SGkjK5ArFa2f4qgL
-         9VG45Dn9Lz8h/kVWzA7AIyUmgmp1aoFGJQG+vkT7xS+LkH6059pSXqilXqhlkyElhcUx
-         U+5tRCgRHVXTi48ZdhKkhy0RG07bPT3w2oob2Fm8r5gBSnBd+ipMK4d1zi7GGWOmrzU+
-         YdTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Zyjk5LLEUpKt0UtgpDlm7KCNgviInbE7D7cMBgrLQBk=;
-        b=pcd5JAsCx+1ObqtEm7wGIXWZSmozQNG9gILTG3ndO9ORhOFyoPeDm4bpR5xMWUkviV
-         APSluTpIIX0Jip7Vh/YM5BN3DcuzhjzMMW1wUjRz66J0cOnVIAO9zzvF+McxTrpOdv0g
-         UeJ9F1CGNDp+KWqmJWsAZ8ejObk7qefq5/ZrK7YsZ/msN/Cclf81F/3vk16W8AXmNZcL
-         Jt6Q3vG0rcTbSqfl6fjRWgdQUmSnR1F0hHEmD7cc2C6lqLgALS12APH+RCmbdOkVt2+l
-         H/i0J9BqU/dFdlcavih4Lfdd9s0D0cPPlipi4DVfjJbSCEjuwzQIhpcntOKg7RMPBQ8H
-         PoUQ==
-X-Gm-Message-State: APjAAAUBO3VugdJFHJ7H0j6rcfJDO3A2QVYPTucbvwspbWHwqBWrgBH7
-        5PTMJLyEtRiMHIIcFZZuIYIjtg==
-X-Google-Smtp-Source: APXvYqzb8JvbKrEGaFkjXOiU6ctU/pbKgFV1vciAQbXJ0cCl7IKOCaM9VTWK3n3BiF6r43GpRzj6NQ==
-X-Received: by 2002:a1c:f403:: with SMTP id z3mr12896108wma.74.1568014322015;
-        Mon, 09 Sep 2019 00:32:02 -0700 (PDT)
-Received: from localhost.localdomain (146-241-7-242.dyn.eolo.it. [146.241.7.242])
-        by smtp.gmail.com with ESMTPSA id c8sm617012wrr.49.2019.09.09.00.32.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 09 Sep 2019 00:32:01 -0700 (PDT)
-From:   Paolo Valente <paolo.valente@linaro.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ulf.hansson@linaro.org, linus.walleij@linaro.org,
-        bfq-iosched@googlegroups.com, oleksandr@natalenko.name,
-        Tejun Heo <tj@kernel.org>, cgroups@vger.kernel.org,
-        Angelo Ruocco <angeloruocco90@gmail.com>,
-        Paolo Valente <paolo.valente@linaro.org>
-Subject: [PATCH 1/1] block, bfq: delete "bfq" prefix from cgroup filenames
-Date:   Mon,  9 Sep 2019 09:31:17 +0200
-Message-Id: <20190909073117.20625-2-paolo.valente@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190909073117.20625-1-paolo.valente@linaro.org>
-References: <20190909073117.20625-1-paolo.valente@linaro.org>
+        Mon, 9 Sep 2019 03:33:03 -0400
+Received: from mga17.intel.com ([192.55.52.151]:1681 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726988AbfIIHdD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 03:33:03 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Sep 2019 00:33:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,484,1559545200"; 
+   d="scan'208";a="183731697"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga008.fm.intel.com with ESMTP; 09 Sep 2019 00:33:00 -0700
+Received: from [10.226.38.10] (vramuthx-mobl1.gar.corp.intel.com [10.226.38.10])
+        by linux.intel.com (Postfix) with ESMTP id 0F12F5807FF;
+        Mon,  9 Sep 2019 00:32:53 -0700 (PDT)
+Subject: Re: [PATCH v2 2/3] mtd: spi-nor: cadence-quadspi: disable DMA and DAC
+ for Intel LGM
+To:     Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-mtd@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        dwmw2@infradead.org, computersforpeace@gmail.com, richard@nod.at,
+        jwboyer@gmail.com, boris.brezillon@free-electrons.com,
+        cyrille.pitchen@atmel.com, david.oberhollenzer@sigma-star.at,
+        miquel.raynal@bootlin.com, tudor.ambarus@gmail.com,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com
+References: <20190827035827.21024-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190827035827.21024-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <2596ecd4-4ba6-ff7d-472f-1f6e664b4a97@ti.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <3bff7de7-71a8-599b-c9e4-17f7f7c04981@linux.intel.com>
+Date:   Mon, 9 Sep 2019 15:32:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <2596ecd4-4ba6-ff7d-472f-1f6e664b4a97@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Angelo Ruocco <angeloruocco90@gmail.com>
+Hi Vignesh,
 
-When bfq was merged into mainline, there were two I/O schedulers that
-implemented the proportional-share policy: bfq for blk-mq and cfq for
-legacy blk. bfq's interface files in the blkio/io controller have the
-same names as cfq. But the cgroups interface doesn't allow two
-entities to use the same name for their files, so for bfq we had to
-prepend the "bfq" prefix to each of its files. However no legacy code
-uses these modified file names. This naming also causes confusion, as,
-e.g., in [1].
+Thank you so much for the review comments and your time.
 
-Now cfq has gone with legacy blk, so there is no need any longer for
-these prefixes in (the never used) bfq names. In view of this fact, this
-commit removes these prefixes, thereby enabling legacy code to truly
-use the proportional share policy in blk-mq.
+On 9/9/2019 2:05 PM, Vignesh Raghavendra wrote:
+> Hi,
+>
+> On 27/08/19 9:28 AM, Ramuthevar,Vadivel MuruganX wrote:
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>
+>> on Intel's Lightning Mountain(LGM) SoCs QSPI controller do not use
+>> Direct Memory Access(DMA) and Direct Access Controller(DAC).
+>>
+>> This patch introduces to properly disable the DMA and DAC
+>> for data transfer instead it uses indirect data transfer.
+>>
+>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> ---
+>>   drivers/mtd/spi-nor/Kconfig           |  2 +-
+>>   drivers/mtd/spi-nor/cadence-quadspi.c | 21 ++++++++++++++++++---
+>>   2 files changed, 19 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfig
+>> index 6de83277ce8b..ba2e372ae514 100644
+>> --- a/drivers/mtd/spi-nor/Kconfig
+>> +++ b/drivers/mtd/spi-nor/Kconfig
+>> @@ -34,7 +34,7 @@ config SPI_ASPEED_SMC
+>>   
+>>   config SPI_CADENCE_QUADSPI
+>>   	tristate "Cadence Quad SPI controller"
+>> -	depends on OF && (ARM || ARM64 || COMPILE_TEST)
+>> +	depends on OF && (ARM || ARM64 || COMPILE_TEST || X86)
+>>   	help
+>>   	  Enable support for the Cadence Quad SPI Flash controller.
+>>   
+>> diff --git a/drivers/mtd/spi-nor/cadence-quadspi.c b/drivers/mtd/spi-nor/cadence-quadspi.c
+>> index 67f15a1f16fd..69fa13e95110 100644
+>> --- a/drivers/mtd/spi-nor/cadence-quadspi.c
+>> +++ b/drivers/mtd/spi-nor/cadence-quadspi.c
+>> @@ -517,12 +517,16 @@ static int cqspi_indirect_read_execute(struct spi_nor *nor, u8 *rxbuf,
+>>   	struct cqspi_st *cqspi = f_pdata->cqspi;
+>>   	void __iomem *reg_base = cqspi->iobase;
+>>   	void __iomem *ahb_base = cqspi->ahb_base;
+>> +	u32 trigger_address = cqspi->trigger_address;
+>>   	unsigned int remaining = n_rx;
+>>   	unsigned int mod_bytes = n_rx % 4;
+>>   	unsigned int bytes_to_read = 0;
+>>   	u8 *rxbuf_end = rxbuf + n_rx;
+>>   	int ret = 0;
+>>   
+>> +	if (!f_pdata->use_direct_mode)
+>> +		writel(trigger_address, reg_base + CQSPI_REG_INDIRECTTRIGGER);
+>> +
+> Again, as I pointed out previously, this should not be needed.
+> cqspi_controller_init() already does above configuration and no need to
+> touch this register on every read.
+Agreed!, drop this one.
+>>   	writel(from_addr, reg_base + CQSPI_REG_INDIRECTRDSTARTADDR);
+>>   	writel(remaining, reg_base + CQSPI_REG_INDIRECTRDBYTES);
+>>   
+>> @@ -609,6 +613,14 @@ static int cqspi_write_setup(struct spi_nor *nor)
+>>   	struct cqspi_st *cqspi = f_pdata->cqspi;
+>>   	void __iomem *reg_base = cqspi->iobase;
+>>   
+>> +	/* Disable the DMA and direct access controller */
+>> +	if (!f_pdata->use_direct_mode) {
+>> +		reg = readl(reg_base + CQSPI_REG_CONFIG);
+>> +		reg &= ~CQSPI_REG_CONFIG_ENB_DIR_ACC_CTRL;
+>> +		reg &= ~CQSPI_REG_CONFIG_DMA_MASK;
+>> +		writel(reg, reg_base + CQSPI_REG_CONFIG);
+>> +	}
+>> +
+> You did not respond to my previous comment. Why would you need to clear
+> CQSPI_REG_CONFIG_DMA_MASK field, if reset default is 0 anyway?
+while testing on the real setup it is not working for me, double confirm 
+and drop it.
+>>   	/* Set opcode. */
+>>   	reg = nor->program_opcode << CQSPI_REG_WR_INSTR_OPCODE_LSB;
+>>   	writel(reg, reg_base + CQSPI_REG_WR_INSTR);
+>> @@ -1171,7 +1183,8 @@ static int cqspi_of_get_pdata(struct platform_device *pdev)
+>>   		return -ENXIO;
+>>   	}
+>>   
+>> -	cqspi->rclk_en = of_property_read_bool(np, "cdns,rclk-en");
+>> +	if (!of_device_is_compatible(np, "intel,lgm-qspi"))
+>> +		cqspi->rclk_en = of_property_read_bool(np, "cdns,rclk-en");
+>>   
+> If you don't want to use this property, then just drop it from your DT.
+> Don't override it in the driver based on compatible.
+Sure.
+>>   	return 0;
+>>   }
+>> @@ -1301,7 +1314,8 @@ static int cqspi_setup_flash(struct cqspi_st *cqspi, struct device_node *np)
+>>   		f_pdata->registered = true;
+>>   
+>>   		if (mtd->size <= cqspi->ahb_size) {
+>> -			f_pdata->use_direct_mode = true;
+>> +			f_pdata->use_direct_mode =
+>> +				!(of_device_is_compatible(np, "intel,lgm-qspi"));
+> Looks like, you haven't followed any of my advice. Please add a quirk
+> flag to disable DAC mode. Something like:
 
-[1] https://github.com/systemd/systemd/issues/7057
+Sorry,  on real setup kernel got crash if we add quirks, so that is the 
+reason I started using DT compatible to
 
-Signed-off-by: Angelo Ruocco <angeloruocco90@gmail.com>
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
----
- block/bfq-cgroup.c | 46 +++++++++++++++++++++++-----------------------
- 1 file changed, 23 insertions(+), 23 deletions(-)
+avoid crashing and also don't want disturb the existing functionalities.
 
-diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
-index 0f6cd688924f..14b7a1160664 100644
---- a/block/bfq-cgroup.c
-+++ b/block/bfq-cgroup.c
-@@ -1139,7 +1139,7 @@ struct blkcg_policy blkcg_policy_bfq = {
- 
- struct cftype bfq_blkcg_legacy_files[] = {
- 	{
--		.name = "bfq.weight",
-+		.name = "weight",
- 		.flags = CFTYPE_NOT_ON_ROOT,
- 		.seq_show = bfq_io_show_weight,
- 		.write_u64 = bfq_io_set_weight_legacy,
-@@ -1147,42 +1147,42 @@ struct cftype bfq_blkcg_legacy_files[] = {
- 
- 	/* statistics, covers only the tasks in the bfqg */
- 	{
--		.name = "bfq.io_service_bytes",
-+		.name = "io_service_bytes",
- 		.private = (unsigned long)&blkcg_policy_bfq,
- 		.seq_show = blkg_print_stat_bytes,
- 	},
- 	{
--		.name = "bfq.io_serviced",
-+		.name = "io_serviced",
- 		.private = (unsigned long)&blkcg_policy_bfq,
- 		.seq_show = blkg_print_stat_ios,
- 	},
- #ifdef CONFIG_BFQ_CGROUP_DEBUG
- 	{
--		.name = "bfq.time",
-+		.name = "time",
- 		.private = offsetof(struct bfq_group, stats.time),
- 		.seq_show = bfqg_print_stat,
- 	},
- 	{
--		.name = "bfq.sectors",
-+		.name = "sectors",
- 		.seq_show = bfqg_print_stat_sectors,
- 	},
- 	{
--		.name = "bfq.io_service_time",
-+		.name = "io_service_time",
- 		.private = offsetof(struct bfq_group, stats.service_time),
- 		.seq_show = bfqg_print_rwstat,
- 	},
- 	{
--		.name = "bfq.io_wait_time",
-+		.name = "io_wait_time",
- 		.private = offsetof(struct bfq_group, stats.wait_time),
- 		.seq_show = bfqg_print_rwstat,
- 	},
- 	{
--		.name = "bfq.io_merged",
-+		.name = "io_merged",
- 		.private = offsetof(struct bfq_group, stats.merged),
- 		.seq_show = bfqg_print_rwstat,
- 	},
- 	{
--		.name = "bfq.io_queued",
-+		.name = "io_queued",
- 		.private = offsetof(struct bfq_group, stats.queued),
- 		.seq_show = bfqg_print_rwstat,
- 	},
-@@ -1190,66 +1190,66 @@ struct cftype bfq_blkcg_legacy_files[] = {
- 
- 	/* the same statistics which cover the bfqg and its descendants */
- 	{
--		.name = "bfq.io_service_bytes_recursive",
-+		.name = "io_service_bytes_recursive",
- 		.private = (unsigned long)&blkcg_policy_bfq,
- 		.seq_show = blkg_print_stat_bytes_recursive,
- 	},
- 	{
--		.name = "bfq.io_serviced_recursive",
-+		.name = "io_serviced_recursive",
- 		.private = (unsigned long)&blkcg_policy_bfq,
- 		.seq_show = blkg_print_stat_ios_recursive,
- 	},
- #ifdef CONFIG_BFQ_CGROUP_DEBUG
- 	{
--		.name = "bfq.time_recursive",
-+		.name = "time_recursive",
- 		.private = offsetof(struct bfq_group, stats.time),
- 		.seq_show = bfqg_print_stat_recursive,
- 	},
- 	{
--		.name = "bfq.sectors_recursive",
-+		.name = "sectors_recursive",
- 		.seq_show = bfqg_print_stat_sectors_recursive,
- 	},
- 	{
--		.name = "bfq.io_service_time_recursive",
-+		.name = "io_service_time_recursive",
- 		.private = offsetof(struct bfq_group, stats.service_time),
- 		.seq_show = bfqg_print_rwstat_recursive,
- 	},
- 	{
--		.name = "bfq.io_wait_time_recursive",
-+		.name = "io_wait_time_recursive",
- 		.private = offsetof(struct bfq_group, stats.wait_time),
- 		.seq_show = bfqg_print_rwstat_recursive,
- 	},
- 	{
--		.name = "bfq.io_merged_recursive",
-+		.name = "io_merged_recursive",
- 		.private = offsetof(struct bfq_group, stats.merged),
- 		.seq_show = bfqg_print_rwstat_recursive,
- 	},
- 	{
--		.name = "bfq.io_queued_recursive",
-+		.name = "io_queued_recursive",
- 		.private = offsetof(struct bfq_group, stats.queued),
- 		.seq_show = bfqg_print_rwstat_recursive,
- 	},
- 	{
--		.name = "bfq.avg_queue_size",
-+		.name = "avg_queue_size",
- 		.seq_show = bfqg_print_avg_queue_size,
- 	},
- 	{
--		.name = "bfq.group_wait_time",
-+		.name = "group_wait_time",
- 		.private = offsetof(struct bfq_group, stats.group_wait_time),
- 		.seq_show = bfqg_print_stat,
- 	},
- 	{
--		.name = "bfq.idle_time",
-+		.name = "idle_time",
- 		.private = offsetof(struct bfq_group, stats.idle_time),
- 		.seq_show = bfqg_print_stat,
- 	},
- 	{
--		.name = "bfq.empty_time",
-+		.name = "empty_time",
- 		.private = offsetof(struct bfq_group, stats.empty_time),
- 		.seq_show = bfqg_print_stat,
- 	},
- 	{
--		.name = "bfq.dequeue",
-+		.name = "dequeue",
- 		.private = offsetof(struct bfq_group, stats.dequeue),
- 		.seq_show = bfqg_print_stat,
- 	},
-@@ -1259,7 +1259,7 @@ struct cftype bfq_blkcg_legacy_files[] = {
- 
- struct cftype bfq_blkg_files[] = {
- 	{
--		.name = "bfq.weight",
-+		.name = "weight",
- 		.flags = CFTYPE_NOT_ON_ROOT,
- 		.seq_show = bfq_io_show_weight,
- 		.write = bfq_io_set_weight,
--- 
-2.20.1
+Let me check once again.
 
+Thank you so much for your valuable comments.
+
+> #define CQSPI_DISABLE_DAC_MODE BIT(1)
+>
+> static const struct cqspi_driver_platdata intel_lgm_qspi = {
+>          .hwcaps_mask = CQSPI_BASE_HWCAPS_MASK,
+>          .quirks = CQSPI_DISABLE_DAC_MODE,
+> };
+>
+> static const struct of_device_id cqspi_dt_ids[] = {
+>
+> 	...
+>
+>          {
+>                  .compatible = "intel,lgm-qspi",
+>                  .data = &intel_lgm_qspi,
+>          },
+>
+> 	...
+> };
+>
+>
+> Then in cqspi_setup_flash(),
+>
+> 	if (mtd->size <= cqspi->ahb_size &&
+> 		!ddata->quirks & CQSPI_DISABLE_DAC_MODE) {
+> 		f_pdata->use_direct_mode = true;
+> 		...
+> 	}	
+>
+>
+>>   			dev_dbg(nor->dev, "using direct mode for %s\n",
+>>   				mtd->name);
+>>   
+>> @@ -1347,7 +1361,7 @@ static int cqspi_probe(struct platform_device *pdev)
+>>   	}
+>>   
+>>   	/* Obtain QSPI clock. */
+>> -	cqspi->clk = devm_clk_get(dev, NULL);
+>> +	cqspi->clk = devm_clk_get(dev, "qspi");
+> This will break DT backward compatibility. Existing DTs don't have
+> clock-names = "qspi". Hence, this code will error out.
+> What I meant in the previous mail was: if device does not have multiple
+> clk inputs then there is no need for clock-names and there is no need to
+> touch this part of code.
+>
+> 	cqspi->clk = devm_clk_get(dev, NULL);
+>
+> This should just work fine even on your board. So drop this hunk.
+Sure, I will drop it.
+>>   	if (IS_ERR(cqspi->clk)) {
+>>   		dev_err(dev, "Cannot claim QSPI clock.\n");
+>>   		return PTR_ERR(cqspi->clk);
+>> @@ -1369,6 +1383,7 @@ static int cqspi_probe(struct platform_device *pdev)
+>>   		return PTR_ERR(cqspi->ahb_base);
+>>   	}
+>>   	cqspi->mmap_phys_base = (dma_addr_t)res_ahb->start;
+>> +	cqspi->trigger_address = res_ahb->start;
+> Nope, this is not needed. See:
+> https://elixir.bootlin.com/linux/v5.3-rc6/source/drivers/mtd/spi-nor/cadence-quadspi.c#L1168
+>
+> Populate the trigger-address using cdns,trigger-address property in DT
+
+Agreed!,  fix it in the next version.
+
+Best Regards
+vadivel
+>>   	cqspi->ahb_size = resource_size(res_ahb);
+>>   
+>>   	init_completion(&cqspi->transfer_complete);
+>>
