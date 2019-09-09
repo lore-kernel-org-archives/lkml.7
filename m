@@ -2,172 +2,138 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C59FC433EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FC4C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0750E21D6C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:08:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B88252067B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:11:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="DUzCmDr9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tH6aQ2nC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404739AbfIIMIA (ORCPT
+        id S2404603AbfIIMLw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 08:08:00 -0400
-Received: from mail-eopbgr80057.outbound.protection.outlook.com ([40.107.8.57]:7168
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390907AbfIIMIA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 08:08:00 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=n8cBFhhUp6/hlxqrA7i9sgT/NmzdADFsoXVskNRBc5QJaZzr1SVOc+OPbOLx4gRwYHMx3B8ViRM+raIq0+FWFQIk8s7CuQNoRPfUfpvhyC0VWNWxuOe6SnFNyTNEgOEkmTO6cRjXfB4NDbVfAxm9hoVXBKlgd+AnwwvQUnipxNNk9p2EyUQHBRLPDrIhpcRSn21VnK0S6lmjAdI8fDxonuRBLk0Rcr94bK1Jd7bTD8of58Lh89aN18sn7E5MtN+zsNlJHrXreEA234+WtBGWBrDHxfglUwUqZT3asyXfAxfFcyhevgv+sXPonVml/Ebl4OK+rqaDBonkxKA9PRnKig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/y0ZKGvPbXOSE682aGkrIttSNboiADW5JoivkeTeyU8=;
- b=mpUfe4hAtZfcXh44Po8vXJdsXtuMF6Zi7ihcyPJPteDV0g/BqFx6lBa0fzSj39/6ZhMabAsXOh+nHbKs/ieeg+y+mSqJyf/dE4LobWNV4SgtYZLUIdSaz3XG5T3Kc+uKD4Sk6rG61VPeYDDlrvetWYpV2mzO+3YswoEgOq19zznPixMfs45HRowHVKc5EbPZQjFBQJZtLfSu6BlyjdlDepsIBzJ2wD2NP5pVn1sSuRsLcwr6W409huOOl20pQPwsgtYzok8rnbCvdt7/GrLNP/qsq/pRc7ipqKEVsfijLVP94fHWcGxJKAYEqz0PEvH/PaG2EJFXunP9hoLoo+wVPA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/y0ZKGvPbXOSE682aGkrIttSNboiADW5JoivkeTeyU8=;
- b=DUzCmDr9U6hy/SfFzSHQYEeR8H8mXzfWLQm7aejODtK2OJjMEdvu7Wcvq9z2SciSvcfdYMHJFiL5kdbMqatf0ojy+qerpH0H9mZ6icmlk/+j92jHxHYe7UuerlyX3MWMldYsks1Aydyik0aNhAW4JQSa7PjO2Ma1E856Gx+V3zQ=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB3344.eurprd04.prod.outlook.com (52.134.8.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.18; Mon, 9 Sep 2019 12:07:17 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::c1a3:2946:8fa8:bfc5]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::c1a3:2946:8fa8:bfc5%3]) with mapi id 15.20.2241.018; Mon, 9 Sep 2019
- 12:07:17 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>
-CC:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 00/12] CAAM bugfixes, small improvements
-Thread-Topic: [PATCH 00/12] CAAM bugfixes, small improvements
-Thread-Index: AQHVYsltKfzOWzulykSXuTfZEkbAhg==
-Date:   Mon, 9 Sep 2019 12:07:17 +0000
-Message-ID: <VI1PR0402MB3485DC32B1789CB76C16F23798B70@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <20190904023515.7107-1-andrew.smirnov@gmail.com>
- <20190909075308.GC21364@gondor.apana.org.au>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c4245aaf-aa52-49ae-a53f-08d7351e4234
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3344;
-x-ms-traffictypediagnostic: VI1PR0402MB3344:|VI1PR0402MB3344:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB33446FF84093657DB004DB0A98B70@VI1PR0402MB3344.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
-x-forefront-prvs: 01559F388D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(39860400002)(366004)(396003)(136003)(199004)(189003)(256004)(54906003)(86362001)(8936002)(33656002)(186003)(81166006)(14454004)(81156014)(8676002)(76176011)(316002)(229853002)(305945005)(74316002)(7696005)(110136005)(478600001)(9686003)(55016002)(5660300002)(7736002)(25786009)(52536014)(66476007)(446003)(44832011)(53936002)(2906002)(6246003)(476003)(26005)(91956017)(76116006)(66066001)(6116002)(3846002)(4326008)(71190400001)(486006)(6436002)(71200400001)(6506007)(53546011)(99286004)(66446008)(66556008)(64756008)(102836004)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3344;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 0cHAiooOiItgKpTWZeYwArs6/Ya2BUA0pDNOPQXOc8FdUbyVe1YvJE+U+3bInOf6MtAqc399TDLf8qS77a/mGL71iwC4E583tPjXoN9lyJhF5g3fYU45AN9b4dq4jV2Q3myvFD9Pvj3zCUW2Zv/hc6g1/NWyjC3UEJLuxzZ0us2UbZptGjZO/CGGLoZgg16LYhweh+L5DdLzfKJIVJSisTwJI5yCrkbczL4/V8Zk5XjO0gLLfhfO4iZKmBBYC6Ohs/baAM8zpAe3ACq9cj7PcKCoPBfnZ0mMpbMoTMYesI73P7YC1aqgLll+OQ2WqGjHFolpaLo4b+tDT0aW35ex3C+uurQ9GtMJSoj6Hb7lda+kYfojNqNiYoGS7262QRQJwXquQvBbNReVi4At04LdHEQhvJ+cX7tLIBLbOUSigfk=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 9 Sep 2019 08:11:52 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:47049 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729261AbfIIMLv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 08:11:51 -0400
+Received: by mail-lf1-f65.google.com with SMTP id t8so10252279lfc.13
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 05:11:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4+Nuw6Os0WLSEwpWKFno+g2UOwdVDp3JMqLLE2u1BHk=;
+        b=tH6aQ2nCdR/kKTtxRLZKY+JRdhLrLO74UFRvlfGrvL8AkXDCDPwknAk5qQz+eQ1QhE
+         dCDh1WPrLquvWJ0ExxXX8CNkZhuS1rFh1Z9/Qi/amQ2zDPqAwSO4dfnLLjPWo1fK5kBr
+         QjdNHIIKnToUPqYpE5SiK+EGQufqoGAlRuqXKwsLoCZbCqCdsInBbhHZtHnYyTiQ2F5H
+         uXdRx3YnlOmhMCpbB92K/TxQNaEtTK2WXlZttrEurxyVbPTGJBFH0zUS7Optzle3xGQp
+         hXfxPnkbB2DEr1NhbfnRGqKBBsO8ib/QPLDa7ljGhrmGsvAF4kSAhBuIIzVwuuwkQcor
+         +jOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4+Nuw6Os0WLSEwpWKFno+g2UOwdVDp3JMqLLE2u1BHk=;
+        b=PPs98yqygrx5SSGeCwGzPMTA3YE7YQMGveRoBynJ/7WfrqlQZkIy3cH9c52hl0I13E
+         6BE7HGSLQvUhmIGQnWeDv+wB7GAtFR5qcJxQndxYvkGw3gdvn/R25JQUJHllNwQRwGVw
+         4AbrFS/e8w4uq/9YSeh1Y2lEGsmqaVtCMWFNAJENZLgCNOpduPrGSlrgIeGdWoX3v0Rr
+         pvnSpN0t22yDTW0IfFZlubMpPTXoLygYMiH2bDhKSo9OApVUtimgPgv4bOhZfZ/djdRw
+         9l7wFCol9hwEJ+LLkfx87bZpOPxArz4esE7k86Cp6jJbUC1iUTnU6cpBDd+yi4K3725J
+         AUzQ==
+X-Gm-Message-State: APjAAAWm64u5fIt69+W2ZyGy7gDgxBYMzjMMFVG7+UMSZc6GwgyWeIjC
+        PNpD5nnbpJnrsfAjxX2bJEOYYQDbfVNDtRih03jHgg==
+X-Google-Smtp-Source: APXvYqwM8k/Y/CHwm/ldUlNUtOmUxd9VtM7uinfVYStfifFNnaCh+8zzZibX128c7cTTZIWzolBcQRI2Q+w1aYAxP2U=
+X-Received: by 2002:ac2:5bde:: with SMTP id u30mr15632980lfn.59.1568031107874;
+ Mon, 09 Sep 2019 05:11:47 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c4245aaf-aa52-49ae-a53f-08d7351e4234
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Sep 2019 12:07:17.0662
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /CR1IxVXaSkOFcD9RwD0PGgNqYDriu33JbvAnL9gabx2su/tzy3JTxlM8JQ35eED4zKzj+OiHxMEOlAHSaEHbQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3344
+References: <cover.1567740135.git.baolin.wang@linaro.org> <fc8a0fe513d244375013546c3c03967510feea4a.1567740135.git.baolin.wang@linaro.org>
+ <5594efd0-6076-bbb5-5aec-a6b3a21dd7ca@intel.com>
+In-Reply-To: <5594efd0-6076-bbb5-5aec-a6b3a21dd7ca@intel.com>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Mon, 9 Sep 2019 20:11:35 +0800
+Message-ID: <CAMz4kuJp38Y20XHpF5vm0bwFK3MQK8bqJNtgwgqeXu_FcdpikQ@mail.gmail.com>
+Subject: Re: [PATCH 4/4] mmc: host: sdhci: Add virtual command queue support
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>, riteshh@codeaurora.org,
+        asutoshd@codeaurora.org, Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/9/2019 10:53 AM, Herbert Xu wrote:=0A=
-> On Tue, Sep 03, 2019 at 07:35:03PM -0700, Andrey Smirnov wrote:=0A=
->> Everyone:=0A=
->>=0A=
->> This series bugfixes and small improvement I made while doing more=0A=
->> testing of CAAM code:=0A=
->>=0A=
->>  - "crypto: caam - make sure clocks are enabled first"=0A=
->>=0A=
->>    fixes a recent regression (and, conincidentally a leak cause by one=
-=0A=
->>    of my i.MX8MQ patches)=0A=
->>=0A=
->>  - "crypto: caam - use devres to unmap JR's registers"=0A=
->>    "crypto: caam - check irq_of_parse_and_map for errors"=0A=
->>=0A=
->>    are small improvements=0A=
->>=0A=
->>  - "crypto: caam - dispose of IRQ mapping only after IRQ is freed"=0A=
->>=0A=
->>    fixes a bug introduced by my i.MX8MQ series=0A=
->>=0A=
->>  - "crypto: caam - use devres to unmap memory"=0A=
->>    "crypto: caam - use devres to remove debugfs"=0A=
->>    "crypto: caam - use devres to de-initialize the RNG"=0A=
->>    "crypto: caam - use devres to de-initialize QI"=0A=
->>    "crypto: caam - user devres to populate platform devices"=0A=
->>    "crypto: caam - populate platform devices last"=0A=
->>=0A=
->>    are devres conversions/small improvments=0A=
->>=0A=
->>  - "crypto: caam - convert caamrng to platform device"=0A=
->>    "crypto: caam - change JR device ownership scheme"=0A=
->>=0A=
->>    are more of an RFC than proper fixes. I don't have a very high=0A=
->>    confidence in those fixes, but I think they are a good conversation=
-=0A=
->>    stater about the best approach to fix those issues=0A=
->>=0A=
->> Thanks,=0A=
->> Andrey Smirnov=0A=
->>=0A=
->> Andrey Smirnov (12):=0A=
->>   crypto: caam - make sure clocks are enabled first=0A=
->>   crypto: caam - use devres to unmap JR's registers=0A=
->>   crypto: caam - check irq_of_parse_and_map for errors=0A=
->>   crypto: caam - dispose of IRQ mapping only after IRQ is freed=0A=
->>   crypto: caam - use devres to unmap memory=0A=
->>   crypto: caam - use devres to remove debugfs=0A=
->>   crypto: caam - use devres to de-initialize the RNG=0A=
->>   crypto: caam - use devres to de-initialize QI=0A=
->>   crypto: caam - user devres to populate platform devices=0A=
->>   crypto: caam - populate platform devices last=0A=
->>   crypto: caam - convert caamrng to platform device=0A=
->>   crypto: caam - change JR device ownership scheme=0A=
->>=0A=
->>  drivers/crypto/caam/caamrng.c | 102 +++++-------=0A=
->>  drivers/crypto/caam/ctrl.c    | 294 ++++++++++++++++++----------------=
-=0A=
->>  drivers/crypto/caam/intern.h  |   4 -=0A=
->>  drivers/crypto/caam/jr.c      |  90 ++++++++---=0A=
->>  drivers/crypto/caam/qi.c      |   8 +-=0A=
->>  drivers/crypto/caam/qi.h      |   1 -=0A=
->>  6 files changed, 267 insertions(+), 232 deletions(-)=0A=
-> =0A=
-> All applied.  Thanks.=0A=
-> =0A=
-Why all?=0A=
-I've ack-ed only 1 and 4.=0A=
-=0A=
-Besides this, patches 11 and/or 12 break the functionality,=0A=
-i.e. driver gets stuck during crypto self-tests.=0A=
-=0A=
-Horia=0A=
+Hi Adrian,
+
+On Mon, 9 Sep 2019 at 20:04, Adrian Hunter <adrian.hunter@intel.com> wrote:
+>
+> On 6/09/19 6:52 AM, Baolin Wang wrote:
+> > Add cqhci_virt_finalize_request() to help to complete a request
+> > from virtual command queue.
+> >
+> > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> > ---
+> >  drivers/mmc/host/sdhci.c |    7 +++++--
+> >  1 file changed, 5 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> > index 4e9ebc8..fb5983e 100644
+> > --- a/drivers/mmc/host/sdhci.c
+> > +++ b/drivers/mmc/host/sdhci.c
+> > @@ -32,6 +32,7 @@
+> >  #include <linux/mmc/slot-gpio.h>
+> >
+> >  #include "sdhci.h"
+> > +#include "cqhci.h"
+> >
+> >  #define DRIVER_NAME "sdhci"
+> >
+> > @@ -2710,7 +2711,8 @@ static bool sdhci_request_done(struct sdhci_host *host)
+> >
+> >       spin_unlock_irqrestore(&host->lock, flags);
+> >
+> > -     mmc_request_done(host->mmc, mrq);
+> > +     if (!cqhci_virt_finalize_request(host->mmc, mrq))
+> > +             mmc_request_done(host->mmc, mrq);
+>
+> Please add a sdhci_ops callback for request->done then:
+>
+>         if (host->ops->request_done)
+>                 host->ops->request_done(host, mrq);
+>         else
+>                 mmc_request_done(host->mmc, mrq);
+
+Sure, will do.
+
+>
+> >
+> >       return false;
+> >  }
+> > @@ -3133,7 +3135,8 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
+> >
+> >       /* Process mrqs ready for immediate completion */
+> >       for (i = 0; i < SDHCI_MAX_MRQS; i++) {
+> > -             if (mrqs_done[i])
+> > +             if (mrqs_done[i] &&
+> > +                 !cqhci_virt_finalize_request(host->mmc, mrqs_done[i]))
+>
+> sdhci does not support calling mmc->ops->request in interrupt context.
+> So probably, you should avoid immediate completion.
+
+Yes, I missed this, will remove. Thanks.
+
+-- 
+Baolin Wang
+Best Regards
