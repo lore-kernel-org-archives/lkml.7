@@ -5,40 +5,37 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22675C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B774C433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 044F2218AC
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:58:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39483218AC
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:58:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390173AbfIIJ6Z (ORCPT
+        id S2390185AbfIIJ6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 05:58:25 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41762 "EHLO mx1.suse.de"
+        Mon, 9 Sep 2019 05:58:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41694 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390130AbfIIJ6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 05:58:20 -0400
+        id S1729324AbfIIJ6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 05:58:16 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 17B6FABE3;
-        Mon,  9 Sep 2019 09:58:18 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 2262FAF54;
+        Mon,  9 Sep 2019 09:58:15 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     catalin.marinas@arm.com, hch@lst.de, wahrenst@gmx.net,
         marc.zyngier@arm.com, robh+dt@kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-riscv@lists.infradead.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     f.fainelli@gmail.com, will@kernel.org, robin.murphy@arm.com,
-        nsaenzjulienne@suse.de, linux-kernel@vger.kernel.org,
-        mbrugger@suse.com, linux-rpi-kernel@lists.infradead.org,
-        phill@raspberrypi.org, m.szyprowski@samsung.com
-Subject: [PATCH v5 4/4] mm: refresh ZONE_DMA and ZONE_DMA32 comments in 'enum zone_type'
-Date:   Mon,  9 Sep 2019 11:58:07 +0200
-Message-Id: <20190909095807.18709-5-nsaenzjulienne@suse.de>
+        nsaenzjulienne@suse.de, mbrugger@suse.com,
+        linux-rpi-kernel@lists.infradead.org, phill@raspberrypi.org,
+        m.szyprowski@samsung.com
+Subject: [PATCH v5 2/4] arm64: rename variables used to calculate ZONE_DMA32's size
+Date:   Mon,  9 Sep 2019 11:58:05 +0200
+Message-Id: <20190909095807.18709-3-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190909095807.18709-1-nsaenzjulienne@suse.de>
 References: <20190909095807.18709-1-nsaenzjulienne@suse.de>
@@ -49,92 +46,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These zones usage has evolved with time and the comments were outdated.
-This joins both ZONE_DMA and ZONE_DMA32 explanation and gives up to date
-examples on how they are used on different architectures.
+Let the name indicate that they are used to calculate ZONE_DMA32's size
+as opposed to ZONE_DMA.
 
 Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-
 ---
+ arch/arm64/mm/init.c | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
 
-Changes in v3:
-- Update comment to match changes in arm64
-
-Changes in v2:
-- Try another approach merging both ZONE_DMA comments into one
-- Address Christoph's comments
-- If this approach doesn't get much traction I'll just drop the patch
-  from the series as it's not really essential
-
- include/linux/mmzone.h | 45 ++++++++++++++++++++++++------------------
- 1 file changed, 26 insertions(+), 19 deletions(-)
-
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 3f38c30d2f13..bf1b916c9ecb 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -357,33 +357,40 @@ struct per_cpu_nodestat {
- #endif /* !__GENERATING_BOUNDS.H */
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 098c0f5bedf6..8e9bc64c5878 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -56,7 +56,7 @@ EXPORT_SYMBOL(physvirt_offset);
+ struct page *vmemmap __ro_after_init;
+ EXPORT_SYMBOL(vmemmap);
  
- enum zone_type {
--#ifdef CONFIG_ZONE_DMA
- 	/*
--	 * ZONE_DMA is used when there are devices that are not able
--	 * to do DMA to all of addressable memory (ZONE_NORMAL). Then we
--	 * carve out the portion of memory that is needed for these devices.
--	 * The range is arch specific.
-+	 * ZONE_DMA and ZONE_DMA32 are used when there are peripherals not able
-+	 * to DMA to all of the addressable memory (ZONE_NORMAL).
-+	 * On architectures where this area covers the whole 32 bit address
-+	 * space ZONE_DMA32 is used. ZONE_DMA is left for the ones with smaller
-+	 * DMA addressing constraints. This distinction is important as a 32bit
-+	 * DMA mask is assumed when ZONE_DMA32 is defined. Some 64-bit
-+	 * platforms may need both zones as they support peripherals with
-+	 * different DMA addressing limitations.
-+	 *
-+	 * Some examples:
-+	 *
-+	 *  - i386 and x86_64 have a fixed 16M ZONE_DMA and ZONE_DMA32 for the
-+	 *    rest of the lower 4G.
-+	 *
-+	 *  - arm only uses ZONE_DMA, the size, up to 4G, may vary depending on
-+	 *    the specific device.
-+	 *
-+	 *  - arm64 has a fixed 1G ZONE_DMA and ZONE_DMA32 for the rest of the
-+	 *    lower 4G.
- 	 *
--	 * Some examples
-+	 *  - powerpc only uses ZONE_DMA, the size, up to 2G, may vary
-+	 *    depending on the specific device.
- 	 *
--	 * Architecture		Limit
--	 * ---------------------------
--	 * parisc, ia64, sparc	<4G
--	 * s390, powerpc	<2G
--	 * arm			Various
--	 * alpha		Unlimited or 0-16MB.
-+	 *  - s390 uses ZONE_DMA fixed to the lower 2G.
- 	 *
--	 * i386, x86_64 and multiple other arches
--	 * 			<16M.
-+	 *  - ia64 and riscv only use ZONE_DMA32.
-+	 *
-+	 *  - parisc uses neither.
- 	 */
-+#ifdef CONFIG_ZONE_DMA
- 	ZONE_DMA,
- #endif
+-phys_addr_t arm64_dma_phys_limit __ro_after_init;
++phys_addr_t arm64_dma32_phys_limit __ro_after_init;
+ 
+ #ifdef CONFIG_KEXEC_CORE
+ /*
+@@ -174,7 +174,7 @@ static void __init reserve_elfcorehdr(void)
+  * currently assumes that for memory starting above 4G, 32-bit devices will
+  * use a DMA offset.
+  */
+-static phys_addr_t __init max_zone_dma_phys(void)
++static phys_addr_t __init max_zone_dma32_phys(void)
+ {
+ 	phys_addr_t offset = memblock_start_of_DRAM() & GENMASK_ULL(63, 32);
+ 	return min(offset + (1ULL << 32), memblock_end_of_DRAM());
+@@ -187,7 +187,7 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
+ 	unsigned long max_zone_pfns[MAX_NR_ZONES]  = {0};
+ 
  #ifdef CONFIG_ZONE_DMA32
--	/*
--	 * x86_64 needs two ZONE_DMAs because it supports devices that are
--	 * only able to do DMA to the lower 16M but also 32 bit devices that
--	 * can only do DMA areas below 4G.
--	 */
- 	ZONE_DMA32,
+-	max_zone_pfns[ZONE_DMA32] = PFN_DOWN(arm64_dma_phys_limit);
++	max_zone_pfns[ZONE_DMA32] = PFN_DOWN(arm64_dma32_phys_limit);
  #endif
- 	/*
+ 	max_zone_pfns[ZONE_NORMAL] = max;
+ 
+@@ -200,16 +200,16 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
+ {
+ 	struct memblock_region *reg;
+ 	unsigned long zone_size[MAX_NR_ZONES], zhole_size[MAX_NR_ZONES];
+-	unsigned long max_dma = min;
++	unsigned long max_dma32 = min;
+ 
+ 	memset(zone_size, 0, sizeof(zone_size));
+ 
+ 	/* 4GB maximum for 32-bit only capable devices */
+ #ifdef CONFIG_ZONE_DMA32
+-	max_dma = PFN_DOWN(arm64_dma_phys_limit);
+-	zone_size[ZONE_DMA32] = max_dma - min;
++	max_dma32 = PFN_DOWN(arm64_dma32_phys_limit);
++	zone_size[ZONE_DMA32] = max_dma32 - min;
+ #endif
+-	zone_size[ZONE_NORMAL] = max - max_dma;
++	zone_size[ZONE_NORMAL] = max - max_dma32;
+ 
+ 	memcpy(zhole_size, zone_size, sizeof(zhole_size));
+ 
+@@ -221,14 +221,14 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
+ 			continue;
+ 
+ #ifdef CONFIG_ZONE_DMA32
+-		if (start < max_dma) {
+-			unsigned long dma_end = min(end, max_dma);
++		if (start < max_dma32) {
++			unsigned long dma_end = min(end, max_dma32);
+ 			zhole_size[ZONE_DMA32] -= dma_end - start;
+ 		}
+ #endif
+-		if (end > max_dma) {
++		if (end > max_dma32) {
+ 			unsigned long normal_end = min(end, max);
+-			unsigned long normal_start = max(start, max_dma);
++			unsigned long normal_start = max(start, max_dma32);
+ 			zhole_size[ZONE_NORMAL] -= normal_end - normal_start;
+ 		}
+ 	}
+@@ -420,9 +420,9 @@ void __init arm64_memblock_init(void)
+ 
+ 	/* 4GB maximum for 32-bit only capable devices */
+ 	if (IS_ENABLED(CONFIG_ZONE_DMA32))
+-		arm64_dma_phys_limit = max_zone_dma_phys();
++		arm64_dma32_phys_limit = max_zone_dma32_phys();
+ 	else
+-		arm64_dma_phys_limit = PHYS_MASK + 1;
++		arm64_dma32_phys_limit = PHYS_MASK + 1;
+ 
+ 	reserve_crashkernel();
+ 
+@@ -430,7 +430,7 @@ void __init arm64_memblock_init(void)
+ 
+ 	high_memory = __va(memblock_end_of_DRAM() - 1) + 1;
+ 
+-	dma_contiguous_reserve(arm64_dma_phys_limit);
++	dma_contiguous_reserve(arm64_dma32_phys_limit);
+ }
+ 
+ void __init bootmem_init(void)
+@@ -534,7 +534,7 @@ static void __init free_unused_memmap(void)
+ void __init mem_init(void)
+ {
+ 	if (swiotlb_force == SWIOTLB_FORCE ||
+-	    max_pfn > (arm64_dma_phys_limit >> PAGE_SHIFT))
++	    max_pfn > (arm64_dma32_phys_limit >> PAGE_SHIFT))
+ 		swiotlb_init(1);
+ 	else
+ 		swiotlb_force = SWIOTLB_NO_FORCE;
 -- 
 2.23.0
 
