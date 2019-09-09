@@ -2,101 +2,230 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4D3C00307
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8AB3C00307
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F4472089F
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2AD521D7E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:09:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zK6YC8uR"
+	dkim=pass (2048-bit key) header.d=ssi.gouv.fr header.i=@ssi.gouv.fr header.b="NZFLKcut"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389650AbfIIJI6 (ORCPT
+        id S1728200AbfIIJJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 05:08:58 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39406 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389597AbfIIJI5 (ORCPT
+        Mon, 9 Sep 2019 05:09:29 -0400
+Received: from smtp-out.ssi.gouv.fr ([86.65.182.90]:61989 "EHLO
+        smtp-out.ssi.gouv.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727135AbfIIJJ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 05:08:57 -0400
-Received: by mail-wm1-f66.google.com with SMTP id q12so13704245wmj.4
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 02:08:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+4BP5T9F1nQ04WHnHdo2p8zuW4F9kfRfYy2Oe7UAEX0=;
-        b=zK6YC8uR+gx2gtTbPZfrQvjTvhixWiVL06+lDRgRpep0OWa0qLpWHztn4WRtplHEyU
-         dQOdL99eUOl5HZrIxKhvz8dfoCAlkABvDPcWGJE4uSy83Zzmn2NfKPYVslAzh+QfpUWo
-         ybimlvKx5VDA92w9wUl/peF69vLGiurOdeQZruQLOv3G8a2aBXlxYz3yJueWUCk8pfF2
-         Fthtj+0kBNhsE8S2dvO2H6qCN7GXHeb46x6it+GSFJAJRgl25vEPcmAeyi6H913Yb/tY
-         DggHN5cjUxx6A+/nup96gQwTecH8lo3M6h8gbAJqjOac7MddbSYz9kNPcQ/LDv3A14BP
-         DNFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+4BP5T9F1nQ04WHnHdo2p8zuW4F9kfRfYy2Oe7UAEX0=;
-        b=RC51lR2PC6xgkcOl/+zmgsVz9g8FvYsY0wFhlZH0WyhKtSih6PpNluZlDYwKlhifo+
-         8295JASD7t7IWVdKZU0BWlv/MqUe+ETGaoS5QQ9aQW72B1m98Oe3oYwA6gcAOn+n/mLO
-         Zsy/y12ac9OWjIiWQ+P9PxJzi5P71ZZBUuZTBNLZie2oeotwKJNe23mz3kfWD+EByOut
-         3uR872SKwLhYfV1cGUp0XSUmxY6ElvoF/R4mNEL4+cgqBAG9nEbafgB8yjC6K0Easesz
-         zbLYPDJ+dy5xTg+QbepfNux1amBbxy6kTf9UhKya+9r3w07zLmCRbofZ7xwYKj0KfYNH
-         kZ6g==
-X-Gm-Message-State: APjAAAUbNPPzs/jdgGhs3QAiY2HRwmVWdtwb36XMfjchurZBDxBDadXs
-        T5K0Lmyza3bDTz4fSC8WbUb4DA==
-X-Google-Smtp-Source: APXvYqy4be4Dr2Cov1HiM8TXxugAZyZo8P+mQ23GodeQvo7+IfiZG3JqP+j/0SxUZhFRj9JeyQm2fA==
-X-Received: by 2002:a05:600c:228a:: with SMTP id 10mr18757070wmf.62.1568020134357;
-        Mon, 09 Sep 2019 02:08:54 -0700 (PDT)
-Received: from localhost.localdomain (69.red-83-35-113.dynamicip.rima-tde.net. [83.35.113.69])
-        by smtp.gmail.com with ESMTPSA id o12sm14734488wmh.43.2019.09.09.02.08.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 09 Sep 2019 02:08:53 -0700 (PDT)
-From:   Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-To:     jorge.ramirez-ortiz@linaro.org, agross@kernel.org,
-        jassisinghbrar@gmail.com
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bjorn.andersson@linaro.org, sboyd@kernel.org
-Subject: [PATCH v2] mailbox: qcom-apcs: fix max_register value
-Date:   Mon,  9 Sep 2019 11:08:50 +0200
-Message-Id: <20190909090850.10822-1-jorge.ramirez-ortiz@linaro.org>
-X-Mailer: git-send-email 2.23.0
+        Mon, 9 Sep 2019 05:09:29 -0400
+Received: from smtp-out.ssi.gouv.fr (localhost [127.0.0.1])
+        by smtp-out.ssi.gouv.fr (Postfix) with ESMTP id A3979D0006E;
+        Mon,  9 Sep 2019 11:09:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ssi.gouv.fr;
+        s=20160407; t=1568020166;
+        bh=opIRdxfCnQZ1C3Ck0d+pceeguG9JPIviZMLGs1p3xIM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To:From:Subject;
+        b=NZFLKcutgBubH+cejPYxXCLvDS5m9lg+j7jJPqpaSLtAT72ebm0tH/lyuDKUue33t
+         s/tCE82xi2on9sej/TiXEntjcjpGPb9hAQwu2//btq8Nco+nsksah6aY7BoKlMUS6O
+         kwAmmUSJCY1Z18Rrp6f8ChFkn3z8BHK5GwtEpmMJJQoZKvjSKXyPebNVC5XaDzri5x
+         dpY4IuGS5xq/2tKpaAeo1QfEkPfzfuRIo6RiNOIPJ1oQNjF1xrSTlLYmkltwwgACNz
+         kd0FVU04VynwUT2P+8altgQRdWPFR8sPcVBgc0Yz63znw6yMBmhPzSV/cp3wK8UCow
+         WWFvVFshIREvA==
+Subject: Re: [PATCH v2 0/5] Add support for O_MAYEXEC
+To:     Aleksa Sarai <cyphar@cyphar.com>,
+        Andy Lutomirski <luto@amacapital.net>
+CC:     Steve Grubb <sgrubb@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
+        <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Eric Chiang <ericchiang@google.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Steve Dower <steve.dower@python.org>,
+        Thibaut S autereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
+        <kernel-hardening@lists.openwall.com>, <linux-api@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>
+References: <20190906152455.22757-1-mic@digikod.net> <2989749.1YmIBkDdQn@x2>
+ <87mufhckxv.fsf@oldenburg2.str.redhat.com> <1802966.yheqmZt8Si@x2>
+ <C95B704C-F84F-4341-BDE7-CD70C5DDBEEF@amacapital.net>
+ <20190906224410.lffd6l5lnm4z3hht@yavin.dot.cyphar.com>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>
+Message-ID: <70e4244e-4dfb-6e67-416b-445e383aa1b5@ssi.gouv.fr>
+Date:   Mon, 9 Sep 2019 11:09:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190906224410.lffd6l5lnm4z3hht@yavin.dot.cyphar.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mailbox length is 0x1000 hence the max_register value is 0xFFC.
 
-Fixes: c6a8b171ca8e ("mailbox: qcom: Convert APCS IPC driver to use
-regmap")
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
----
+On 07/09/2019 00:44, Aleksa Sarai wrote:
+> On 2019-09-06, Andy Lutomirski <luto@amacapital.net> wrote:
+>>> On Sep 6, 2019, at 12:07 PM, Steve Grubb <sgrubb@redhat.com> wrote:
+>>>
+>>>> On Friday, September 6, 2019 2:57:00 PM EDT Florian Weimer wrote:
+>>>> * Steve Grubb:
+>>>>> Now with LD_AUDIT
+>>>>> $ LD_AUDIT=3D/home/sgrubb/test/openflags/strip-flags.so.0 strace ./te=
+st
+>>>>> 2>&1 | grep passwd openat(3, "passwd", O_RDONLY)           =3D 4
+>>>>>
+>>>>> No O_CLOEXEC flag.
+>>>>
+>>>> I think you need to explain in detail why you consider this a problem.
 
- v2: added Fixes tag
- 
- drivers/mailbox/qcom-apcs-ipc-mailbox.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Right, LD_PRELOAD and such things are definitely not part of the threat
+model for O_MAYEXEC, on purpose, because this must be addressed with
+other security mechanism (e.g. correct file system access-control, IMA
+policy, SELinux or other LSM security policies). This is a requirement
+for O_MAYEXEC to be useful.
 
-diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-index 705e17a5479c..e5d6b1b70441 100644
---- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-+++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-@@ -28,7 +28,7 @@ static const struct regmap_config apcs_regmap_config = {
- 	.reg_bits = 32,
- 	.reg_stride = 4,
- 	.val_bits = 32,
--	.max_register = 0x1000,
-+	.max_register = 0xFFC,
- 	.fast_io = true,
- };
- 
--- 
-2.23.0
+An interpreter is just a flexible program which is generic and doesn't
+have other purpose other than behaving accordingly to external rules
+(i.e. scripts). If you don't trust your interpreter, it should not be
+executable in the first place. O_MAYEXEC enables to restrict the use of
+(some) interpreters accordingly to a *global* system security policy.
 
+>>>
+>>> Because you can strip the O_MAYEXEC flag from being passed into the ker=
+nel.
+>>> Once you do that, you defeat the security mechanism because it never ge=
+ts
+>>> invoked. The issue is that the only thing that knows _why_ something is=
+ being
+>>> opened is user space. With this mechanism, you can attempt to pass this
+>>> reason to the kernel so that it may see if policy permits this. But you=
+ can
+>>> just remove the flag.
+>>
+>> I=E2=80=99m with Florian here. Once you are executing code in a process,=
+ you
+>> could just emulate some other unapproved code. This series is not
+>> intended to provide the kind of absolute protection you=E2=80=99re imagi=
+ning.
+>
+> I also agree, though I think that there is a separate argument to be
+> made that there are two possible problems with O_MAYEXEC (which might
+> not be really big concerns):
+>
+>   * It's very footgun-prone if you didn't call O_MAYEXEC yourself and
+>     you pass the descriptor elsewhere. You need to check f_flags to see
+>     if it contains O_MAYEXEC. Maybe there is an argument to be made that
+>     passing O_MAYEXECs around isn't a valid use-case, but in that case
+>     there should be some warnings about that.
+
+That could be an issue if you don't trust your system, especially if the
+mount points (and the "noexec" option) can be changed by untrusted
+users. As I said above, there is a requirement for basic security
+properties as a meaningful file system access control, and obviously not
+letting any user change mount points (which can lead to much sever
+security issues anyway).
+
+If a process A pass a FD to an interpreter B, then the interpreter B
+must trust the process A. Moreover, being able to tell if the FD was
+open with O_MAYEXEC and relying on it may create a wrong feeling of
+security. As I said in a previous email, being able to probe for
+O_MAYEXEC does not make sense because it would not be enough to
+know the system policy (either this flag is enforced or not, for mount
+points, based on xattr, time=E2=80=A6). The main goal of O_MAYEXEC is to as=
+k the
+kernel, on a trusted link (hence without LD_PRELOAD-like interfering),
+for a file which is allowed to be interpreted/executed by this interpreter.
+
+To be able to correctly handle the case you pointed out (FD passing),
+either an existing or a new LSM should handle this behavior according to
+the origin of the FD and the chain of processes getting it.
+
+Some advanced LSM rules could tie interpreters with scripts dedicated to
+them, and have different behavior for the same scripts but with
+different interpreters.
+
+>
+>   * There's effectively a TOCTOU flaw (even if you are sure O_MAYEXEC is
+>     in f_flags) -- if the filesystem becomes re-mounted noexec (or the
+>     file has a-x permissions) after you've done the check you won't get
+>     hit with an error when you go to use the file descriptor later.
+
+Again, the threat model needs to be appropriate to make O_MAYEXEC
+useful. The security policies of the system need to be seen as a whole,
+and updated as such.
+
+As for most file system access control on Linux, it may be possible to
+have TOCTOU, but the whole system should be designed to protect against
+that. For example, changing file access control (e.g. mount point
+options) without a reboot may lead to inconsistent security properties,
+which is why such thing are discouraged by some access control systems
+(e.g. SELinux).
+
+>
+> To fix both you'd need to do what you mention later:
+>
+>> What the kernel *could* do is prevent mmapping a non-FMODE_EXEC file
+>> with PROT_EXEC, which would indeed have a real effect (in an iOS-like
+>> world, for example) but would break many, many things.
+>
+> And I think this would be useful (with the two possible ways of
+> executing .text split into FMODE_EXEC and FMODE_MAP_EXEC, as mentioned
+> in a sister subthread), but would have to be opt-in for the obvious
+> reason you outlined. However, we could make it the default for
+> openat2(2) -- assuming we can agree on what the semantics of a
+> theoretical FMODE_EXEC should be.
+>
+> And of course we'd need to do FMODE_UPGRADE_EXEC (which would need to
+> also permit fexecve(2) though probably not PROT_EXEC -- I don't think
+> you can mmap() an O_PATH descriptor).
+
+The mmapping restriction may be interesting but it is a different use
+case. This series address the interpreter/script problem. Either the
+script may be mapped executable is the choice of the interpreter. In
+most cases, no script are mapped as such, exactly because they are
+interpreted by a process but not by the CPU.
+
+
+--
+Micka=C3=ABl Sala=C3=BCn
+
+Les donn=C3=A9es =C3=A0 caract=C3=A8re personnel recueillies et trait=C3=A9=
+es dans le cadre de cet =C3=A9change, le sont =C3=A0 seule fin d=E2=80=99ex=
+=C3=A9cution d=E2=80=99une relation professionnelle et s=E2=80=99op=C3=A8re=
+nt dans cette seule finalit=C3=A9 et pour la dur=C3=A9e n=C3=A9cessaire =C3=
+=A0 cette relation. Si vous souhaitez faire usage de vos droits de consulta=
+tion, de rectification et de suppression de vos donn=C3=A9es, veuillez cont=
+acter contact.rgpd@sgdsn.gouv.fr. Si vous avez re=C3=A7u ce message par err=
+eur, nous vous remercions d=E2=80=99en informer l=E2=80=99exp=C3=A9diteur e=
+t de d=C3=A9truire le message. The personal data collected and processed du=
+ring this exchange aims solely at completing a business relationship and is=
+ limited to the necessary duration of that relationship. If you wish to use=
+ your rights of consultation, rectification and deletion of your data, plea=
+se contact: contact.rgpd@sgdsn.gouv.fr. If you have received this message i=
+n error, we thank you for informing the sender and destroying the message.
