@@ -2,114 +2,93 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC690C00307
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 07:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC281C433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 07:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F1E021D7A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 07:22:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D267218AC
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 07:23:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388107AbfIIHWh (ORCPT
+        id S2388125AbfIIHW5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 03:22:37 -0400
-Received: from sauhun.de ([88.99.104.3]:55138 "EHLO pokefinder.org"
+        Mon, 9 Sep 2019 03:22:57 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:32838 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727546AbfIIHWg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 03:22:36 -0400
-Received: from localhost (234.77.63.94.rev.vodafone.pt [94.63.77.234])
-        by pokefinder.org (Postfix) with ESMTPSA id 84C1E2C3112;
-        Mon,  9 Sep 2019 09:22:33 +0200 (CEST)
-Date:   Mon, 9 Sep 2019 08:22:32 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Vladimir Zapolskiy <vz@mleia.com>
-Cc:     jacopo mondi <jacopo@jmondi.org>,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        Peter Rosin <peda@axentia.se>, linux-media@vger.kernel.org,
-        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>
-Subject: Re: [RFC,v2 2/6] i2c: add I2C Address Translator (ATR) support
-Message-ID: <20190909072232.GA990@kunai>
-References: <20190723203723.11730-1-luca@lucaceresoli.net>
- <20190723203723.11730-3-luca@lucaceresoli.net>
- <20190901143101.humomdehy5ee73sk@vino>
- <aedad45b-16d6-d189-b045-329727440ca5@mleia.com>
+        id S1728298AbfIIHW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 03:22:57 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
+        id 1i7E0e-0007BW-5B; Mon, 09 Sep 2019 17:22:49 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Mon, 09 Sep 2019 17:22:47 +1000
+Date:   Mon, 9 Sep 2019 17:22:47 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Horia Geanta <horia.geanta@nxp.com>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 01/12] crypto: caam - make sure clocks are enabled first
+Message-ID: <20190909072247.GA18908@gondor.apana.org.au>
+References: <20190904023515.7107-1-andrew.smirnov@gmail.com>
+ <20190904023515.7107-2-andrew.smirnov@gmail.com>
+ <VI1PR0402MB3485E5EBBC1DCEF17103964898BA0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+ <20190909072155.GA18825@gondor.apana.org.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="opJtzjQTFsWo+cga"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aedad45b-16d6-d189-b045-329727440ca5@mleia.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190909072155.GA18825@gondor.apana.org.au>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Sep 09, 2019 at 05:21:55PM +1000, Herbert Xu wrote:
+> On Fri, Sep 06, 2019 at 11:18:19AM +0000, Horia Geanta wrote:
+> > On 9/4/2019 5:35 AM, Andrey Smirnov wrote:
+> > > In order to access IP block's registers we need to enable appropriate
+> > > clocks first, otherwise we are risking hanging the CPU.
+> > > 
+> > > The problem becomes very apparent when trying to use CAAM driver built
+> > > as a kernel module. In that case caam_probe() gets called after
+> > > clk_disable_unused() which means all of the necessary clocks are
+> > > guaranteed to be disabled.
+> > > 
+> > > Coincidentally, this change also fixes iomap leak introduced by early
+> > > return (instead of "goto iounmap_ctrl") in commit
+> > > 41fc54afae70 ("crypto: caam - simplfy clock initialization")
+> > > 
+> > > Tested on ZII i.MX6Q+ RDU2
+> > > 
+> > > Fixes: 176435ad2ac7 ("crypto: caam - defer probing until QMan is available")
+> > > Fixes: 41fc54afae70 ("crypto: caam - simplfy clock initialization")
+> > > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > > Cc: Chris Healy <cphealy@gmail.com>
+> > > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > > Cc: Horia Geantă <horia.geanta@nxp.com>
+> > > Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> > > Cc: Iuliana Prodan <iuliana.prodan@nxp.com>
+> > > Cc: linux-crypto@vger.kernel.org
+> > > Cc: linux-kernel@vger.kernel.org
+> > Tested-by: Horia Geantă <horia.geanta@nxp.com>
+> > 
+> > Considering this is a boot hang, in case this does not make into v5.4
+> > I would appreciate appending:
+> > Cc: <stable@vger.kernel.org>
+> 
+> This patch does not apply against cryptodev or crypto.
 
---opJtzjQTFsWo+cga
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Nevermind, I was trying to apply patch 4 on top of patch 1 which
+is why it didn't work.
 
-Hi Vladimir,
-
-> I won't attend the LPC, however I would appreciate if you book some
-
-A pity. I would have liked to have you in the room. Let's see if we can
-get enough input from you via mail here.
-
-> time to review my original / alternative implementation of the TI
-> DS90Ux9xx I2C bridge device driver.
-
-We have only 45 minutes, this will not allow to review specific
-implementations. I want to give an overview of existing implementations
-with pros/cons...
-
-> The reasons why my driver is better/more flexible/more functional are
-> discussed earlier, please let me know, if you expect anything else
-> from me to add, also I would be happy to get a summary of your offline
-> discussion.
-
-... and I'd appreciate support here from you, like your summary of the
-back then discussion (from where I can dive deeper if needed).
-
-Also, with Luca's new series we discussed some scenarios which can
-happen WRT to I2C address conflicts. Maybe you could comment on them,
-too? As I read the old thread, you have a hardcoded aliases using
-"ti,i2c-bridge-maps". This means you can't have own DTSI files for e.g.
-add-on modules, do I get this correctly?
-
-Regards,
-
-   Wolfram
-
-
---opJtzjQTFsWo+cga
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl11/bQACgkQFA3kzBSg
-Kba0gw//SqXQP85w5Al3h5SpknTTtA58vH9+t7A1sh/8dQECAQiHyupLtYyIbo49
-fkEgUsofN7z1QbGLjiz7YHw6HaIOya6wzAlEA6Usnk8fApS5vAnHiZU3DFnHlsW+
-FOqvn2pwjyA3USz0+67ZSb1ioivrztQcNpd8lTVdTYLprIMNcAaiuMKRVEBX0xgW
-Sx7l4Gy7gzxKxFdNCERshQsge3qcKGTc90oXYriTY/uPEyuL8TbP5wy2l95njk/L
-CDxbIR+G+rrS4iCN+wK9bmmRog5tiP4T9voS1AgX0J2hW5GIfgLayR7cxCP9WRxR
-0UgaQfVPHruESXcd5fcwkLiW97VHgIfV3eSlBeDtx1Xl8h+s9AxxDeCNGF+XJNrJ
-2hmvGmv25qqcG5ZPb+Qj5iEDm8JIHtACnJEYb7GUyL8vwTFinLI9zpHhsXp2wIzc
-2mBGaiY4mw83eomSOy1untwqFdVkLq4sm98oFEZQFwrNCi0uO+F7Azl8lUMQDWcM
-GGsdtYxiQIhg5CvKCPDfJbJjF7mMTVrsIzHgfvD/oraN+52kDv6CFpkT0qDqBy+l
-AZ1l2/zR2K2nPnUxXcyU9CSLwboBNxcuQ0CNiq2G0F7WC646MiALQXLkLpu4FdGb
-4MaEUK7LHp9OPDhbjT3fGfbNw45zR1m3BSQgwL7unDYMhLZEUI4=
-=33hh
------END PGP SIGNATURE-----
-
---opJtzjQTFsWo+cga--
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
