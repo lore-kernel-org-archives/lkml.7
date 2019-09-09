@@ -2,192 +2,125 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B250C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 709EBC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15EFF21920
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:40:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GJ+dgc+r"
+	by mail.kernel.org (Postfix) with ESMTP id 49B2E218AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:41:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730787AbfIINkk (ORCPT
+        id S1730808AbfIINln (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 09:40:40 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36612 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbfIINkj (ORCPT
+        Mon, 9 Sep 2019 09:41:43 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:34720 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730097AbfIINlm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 09:40:39 -0400
-Received: by mail-wm1-f68.google.com with SMTP id p13so14774165wmh.1;
-        Mon, 09 Sep 2019 06:40:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=uU5JBRHXIvx/8FJrzT3Q8CzzXnkxCEsE/V9AOb2mS4I=;
-        b=GJ+dgc+rY09904fO5gRxx6o63f0twPMfDJSQdqowLkOjfgAXLFQCemSI2tCdamoI0F
-         PK/16ehPFz8eZ1J+/to26wtJpYeny8zIx3HweIIfUZDuzVkQcEiUEmQrnxzoy8QvnKUj
-         ogiVG2aAYw23JVQDI4CXFpfkoYvN06e3FEonUTDVBPbJLpJH5B9h2DsBpEY049QpMrIA
-         zdrhsg4SsRkqUhioUfsP+4UVph7LI0kKasz0lE3f7JPKuLNkGw54V/6KwOO87hOnICZj
-         GVaLCF8Vot3aD0lBr2IHng4BNbweksp6XRbO05QV/tMj6PG/IpFu0eMm8MorVzjObnxq
-         J8Iw==
+        Mon, 9 Sep 2019 09:41:42 -0400
+Received: by mail-qt1-f193.google.com with SMTP id j1so3426354qth.1;
+        Mon, 09 Sep 2019 06:41:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=uU5JBRHXIvx/8FJrzT3Q8CzzXnkxCEsE/V9AOb2mS4I=;
-        b=OVdCkTikOtD3xfrK51rcgGPkEm2ac527O/GlYZc2utv5fOXGBW1yDC0zPjvU0CqVWI
-         00M7l8N/53zPvVU1P7jnAsmkAJFzgWqKxOAOKPdcx2Q8Ne7UOVkBR0LXJuAspDhjgwfj
-         F7ieHqSZpQ4lgNftVMgk3e4ghnJ+UD4nVMLDbOwxQvrB/LlOgyH7C1r129GMN/5y5uRf
-         Tq+ACko0ZieZCKq5Ikn5s+V/WIFWqHB0Anb34fbqmxurYo6RIzas2CGftPE1ildwX99X
-         YxaKEtTQTr3QHZ2Ne/xvGIIv0G+u549EY63I9q4MYr8i5OyBkjPC18up/4CWtujc1NhH
-         ZjXw==
-X-Gm-Message-State: APjAAAUn8qp+54MF5wkXmfDJMPY4D1ukfdOUWr2TLEJQUVibe8sxgAtD
-        T8yJFhYz3hzgir+B3nOcYCM=
-X-Google-Smtp-Source: APXvYqxHaF/yMZggxxln8G4flQD0InZGwOQ1ivuk3uCKtnT1meqyiO91xNlY2j5uvD1R7UsJvqTdjg==
-X-Received: by 2002:a1c:a404:: with SMTP id n4mr18354841wme.137.1568036436379;
-        Mon, 09 Sep 2019 06:40:36 -0700 (PDT)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id g201sm20586327wmg.34.2019.09.09.06.40.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 09 Sep 2019 06:40:35 -0700 (PDT)
-Date:   Mon, 9 Sep 2019 15:40:33 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Adam Ford <adam.ford@logicpd.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Paul Walmsley <paul@pwsan.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [RFC] ARM: omap3: Enable HWMODS for HW Random Number Generator
-Message-ID: <20190909134033.s26eiurpat3iekse@pali>
-References: <20190828150037.2640-1-aford173@gmail.com>
- <20190905230443.GA52127@atomide.com>
- <CAHCN7xL0fbr=Sv+b=0AuGB1PPhAAFdAFLEd_iBM+ZMTkUw5sHQ@mail.gmail.com>
- <CAHCN7xL-Gfxe0qF5w7BUsHnyhcNNpmCnchdKErnmiqggXfsLWw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SDsZ3GvRAcyIUFZLokzUq7LE+Tk9DdpyOBzKvaT0DcA=;
+        b=KNWI68JfDOdc5qXiL8En5/ez2FXZj2E4TdRRdqolMXxn3umt1OMT0pec5iiVw194ee
+         JvTACLyclYp13ZmKtT8XElNBuhpsyNNoqSkfjAufbdfWnhN6+ZjCaAg4b6zAWaKOyjWf
+         QMcU0NvM0/CZS864OBvIN2gDQ9tSzcWnB94xDc43ZdgA0JI3k1qv51shYhLU4gmC3E/I
+         tIeyXPGQkQov0De73lQoZI7PQeAEB+26W85Est9pN9UbrkGQOBcLAdoBYBzOBDYK2whO
+         LWFkr6VN8sxwpngbjV5Yu0oNyhbHzQFrlqx2LeLeOS75y4YMPKo19wYB/mK0r2aHknVs
+         8DlQ==
+X-Gm-Message-State: APjAAAXp5pLGeSn9xj3hjzqL0ZAlGDn18/ZoIoMQDUvp2mfxK4fUx7zm
+        K/XvAmlLEfW1DRGMeOnI5UCfW0g8Fgf5raWtIRU=
+X-Google-Smtp-Source: APXvYqztw9yoFAktq4haAyRINAdunmh3DTRwfofdC/M2KAxhks4YcE64COGxATxqzbpKKrAUk9IYt0L30m58EvYBVs0=
+X-Received: by 2002:ac8:5306:: with SMTP id t6mr23047010qtn.204.1568036501922;
+ Mon, 09 Sep 2019 06:41:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHCN7xL-Gfxe0qF5w7BUsHnyhcNNpmCnchdKErnmiqggXfsLWw@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <1568020220-7758-1-git-send-email-talel@amazon.com>
+ <1568020220-7758-3-git-send-email-talel@amazon.com> <CAK8P3a3UF7xPV1U3eW6Jdu754P1bzG208UxD9KUxEm1JjZudww@mail.gmail.com>
+ <98f0028e-5653-3116-fdaa-1385ecdf0289@amazon.com>
+In-Reply-To: <98f0028e-5653-3116-fdaa-1385ecdf0289@amazon.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 9 Sep 2019 15:41:25 +0200
+Message-ID: <CAK8P3a1NVGwYa1bw_vjBatd1xe-i875X1Vq1M+2G_Zxd2Oqusg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] soc: amazon: al-pos: Introduce Amazon's Annapurna
+ Labs POS driver
+To:     "Shenhar, Talel" <talel@amazon.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        gregkh <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Patrick Venture <venture@google.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Olof Johansson <olof@lixom.net>,
+        Maxime Ripard <mripard@kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        paul.kocialkowski@bootlin.com, mjourdan@baylibre.com,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        hhhawa@amazon.com, ronenk@amazon.com, jonnyc@amazon.com,
+        hanochu@amazon.com, barakw@amazon.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday 09 September 2019 08:37:09 Adam Ford wrote:
-> On Mon, Sep 9, 2019 at 7:13 AM Adam Ford <aford173@gmail.com> wrote:
-> >
-> > On Thu, Sep 5, 2019 at 6:04 PM Tony Lindgren <tony@atomide.com> wrote:
-> > >
-> > > Hi,
-> > >
-> > > * Adam Ford <aford173@gmail.com> [190828 15:01]:
-> > > > The datasheet for the AM3517 shows the RNG is connected to L4.
-> > > > It shows the module address for the RNG is 0x480A0000, and it
-> > > > matches the omap2.dtsi description.  Since the driver can support
-> > > > omap2 and omap4, it seems reasonable to assume the omap3 would
-> > > > use the same core for the RNG.
-> > > >
-> > > > This RFC, mimics much of the omap2 hwmods on the OMAP3. It
-> > > > also adds the necessary clock for driving the RNG.  Unfortunately,
-> > > > it appears non-functional.  If anyone has any suggestions on how
-> > > > to finish the hwmod (or port it to the newer l4 device tree
-> > > > format), feedback is requested.
-> > >
-> > > Yup I'll take the bait :) The patch below seems to do the trick
-> > > for me on dm3730 based on translating your patch to probe with
-> > > ti-sysc.
-> > >
-> > > Not sure about 34xx, it seems we're missing rng_clk? Care
-> > > to give it a try and attempt simlar patches for 34xx and
-> > > 3517?
-> > >
-> > > At least I'm not needing the "ti,no-reset-on-init" property
-> > > that your patch has a comment for. Maybe that's needed on
-> > > some other omap3.
-> > >
-> > > Oh and this needs to default to status = "disabled" for
-> > > HS devices like n900 as it needs to use the omap3-rom-rng.
-> > >
-> > > Regards,
-> > >
-> > > Tony
-> > >
-> > > 8< -----------------------
-> > > diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap36xx.dtsi
-> > > --- a/arch/arm/boot/dts/omap36xx.dtsi
-> > > +++ b/arch/arm/boot/dts/omap36xx.dtsi
-> > > @@ -140,6 +140,29 @@
-> > >                         };
-> > >                 };
-> > >
-> > > +               rng_target: target-module@480a0000 {
-> > > +                       compatible = "ti,sysc-omap2", "ti,sysc";
-> > > +                       reg = <0x480a003c 0x4>,
-> > > +                             <0x480a0040 0x4>,
-> > > +                             <0x480a0044 0x4>;
-> > > +                       reg-names = "rev", "sysc", "syss";
-> > > +                       ti,sysc-mask = <(SYSC_OMAP2_AUTOIDLE)>;
-> > > +                       ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-> > > +                                       <SYSC_IDLE_NO>;
-> > > +                       ti,syss-mask = <1>;
-> > > +                       clocks = <&rng_ick>;
-> > > +                       clock-names = "ick";
-> > > +                       #address-cells = <1>;
-> > > +                       #size-cells = <1>;
-> > > +                       ranges = <0 0x480a0000 0x2000>;
-> > > +
-> > > +                       rng: rng@0 {
-> > > +                               compatible = "ti,omap2-rng";
-> > > +                               reg = <0x0 0x2000>;
-> > > +                               interrupts = <52>;
-> > > +                       };
-> > > +               };
-> > > +
-> 
-> I applied this on 5.3 and it is working.  I assume the same is true in for-next.
-> 
-> Do you want to submit a formal patch?  I  can mark it as 'tested-by'
-> This really helps speed up the startup sequence on boards with sshd
-> because it delays for nearly 80 seconds waiting for entropy without
-> the hwrng.
+On Mon, Sep 9, 2019 at 1:13 PM Shenhar, Talel <talel@amazon.com> wrote:
+> On 9/9/2019 12:44 PM, Arnd Bergmann wrote:
+> > On Mon, Sep 9, 2019 at 11:14 AM Talel Shenhar <talel@amazon.com> wrote:
 
-Hi! When applying a patch, could you please disable this rng for n900?
+> >> +       writel_relaxed(0, pos->mmio_base + AL_POS_ERROR_LOG_1);
+> > Why do you require _relaxed() accessors here? Please add a comment
+> > explaining that, or use the regular readl()/writel().
+>
+> I don't think commenting is needed here as there is nothing special in
+> this type of access.
+>
+> I don't see this is common to comment the use of the _relaxed accessors.
 
-In omap3-n900.dts for rng should be status = "disabled" (as Tony already
-wrote), similarly like for aes.
+I usually mention it in driver reviews, but most authors revert back
+to the normal accessors when there is no difference.
 
-Thanks!
+> This driver is for SoC using arm64 cpu.
+>
+> If one uses the non-relaxed version of readl while running on arm64, he
+> shall cause read barrier, which is then doing dsm(ld).. This barrier is
+> not needed here, so we spare the use of the more heavy readl in favor of
+> the less "harmful" one.
+>
+> Let me know what you think.
 
-> adam
-> >
-> > Tony,
-> >
-> > Can you tell me what branch you're using?  I am not seeing the note
-> > below, so I am not exactly sure what version to base my testing.
-> >
-> > ada,
-> > >                 /*
-> > >                  * Note that the sysconfig register layout is a subset of the
-> > >                  * "ti,sysc-omap4" type register with just sidle and midle bits
+If the barrier causes no harm, just leave it in to keep the code more
+readable. Most developers don't need to know the difference between
+the two, so using the less common interface just makes the reader
+curious about why it was picked.
 
--- 
-Pali Rohár
-pali.rohar@gmail.com
+Avoiding the barrier can make a huge performance difference in a
+hot code path, but the downside is that it can behave in unexpected
+ways if the same code is run on a different CPU architecture that
+does not have the exact same rules about what _relaxed() means.
+
+In fact, replacing a 'readl()' with 'readl_relaxed() + rmb()' can lead
+to slower rather than faster code when the explicit barrier is heavier
+than the implied one (e.g. on x86), or readl_relaxed() does not skip
+the barrier.
+
+The general rule with kernel interfaces when you have two versions
+that both do what you want is to pick the one with the shorter name.
+See spin_lock()/spin_lock_irqsave(),  ioremap()/ioremap_nocache(),
+or ktime_get()/ktime_get_clocktai_ts64(). (yes, there are also
+exceptions)
+
+    Arnd
