@@ -2,101 +2,75 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B091AC433EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 364DBC433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84CAA2089F
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:25:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="blcu5F/m"
+	by mail.kernel.org (Postfix) with ESMTP id 0C70021920
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:25:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568024743;
+	bh=/QuTF/zEDup0WFh7FpYwvfqXIv/EWMjcKBOyYW5JMqE=;
+	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
+	b=ZFE4gTOfswBKb7I9f1z6rsxykKlbSDZL8GuzdzmCousMv4qM1M+qI2kBGSq8P9s+X
+	 m0/VL7Vf3fP1fS7VHP3FXeV3FtSIVVZ4mjKlVtJErnjRVfLn1WzqvsfEO61hoVUgpJ
+	 i8e14VqcAWp9l9GsQVJkUXiwp9TUjNE5/1g6fPfw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403840AbfIIKZ2 (ORCPT
+        id S1730369AbfIIKZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 06:25:28 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41196 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403812AbfIIKZ1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 06:25:27 -0400
-Received: by mail-io1-f65.google.com with SMTP id r26so27317783ioh.8;
-        Mon, 09 Sep 2019 03:25:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Iih+uQUiA9izQUGr4jy/Sqv8n1Gdl/kNYnNhnb/eS84=;
-        b=blcu5F/m6M4e8lmPcljb3wQamY08n3LcD5Dz+Ie6fi0ZvtPexZLKYWO8dNDqhQyJZL
-         6IOgDT+Bxx+K2S5qdmPOUCkbR2Fif4zO0W1AoY7yZTmuQcsg576fe/MwS0uK0UoV79TP
-         nndu91jPG2ZIn5mVQ2pWMF0QUeFB2GIFibXC8PMJUHBcZZJwpUwb6bmkXrSIKdbxjOxw
-         9z0wbc1CIlHSn/CficejXP59A85PdGcS11C5ZLMZf7+pVuWCcIojfGFVMlI0tOP/Ge34
-         octtCcspkXOiWDLZvFT9Vw/AJxcEtwZpgkUNYCLRs4Ff0L06gUcrHuBwHiUzjI8YTpEl
-         xmBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Iih+uQUiA9izQUGr4jy/Sqv8n1Gdl/kNYnNhnb/eS84=;
-        b=MI8a4Y9tE/AW1IHpVzV5nKC58fNPrB7How8O2k10BbEoecAiVtG24Bfib/jVGVIVLW
-         dHrTH2CjvffaWmpXzVwf6/r4YMc+4H4cTm2ES3Rj0sjSJ7axTN51zgUWjY1qeby8f4SB
-         BDfZ/Kw9Ls0+AFfJ2wk3OOD7NDsUbuU99Zdo3j7+gWIoOJGdsk8cvBJ2W02qtgvP3/+K
-         G+IDcUg2kejHaB59RxB8Zr8M8X48X8+bf6wPPrNEHAYUUMSM9nTKGUPMr1l2qfTLIGVa
-         skH+7jYOUSQR8pCOoyqFpkCkd+Q4uD2xXhuT9E52ONQ1+qA8YNV/DnZijyTuAdYNibxZ
-         3AxQ==
-X-Gm-Message-State: APjAAAV2fYFOvuejE/sCzt/gd+SJBytlppBm3OzEMN0nPOdzvutsBMTO
-        XUpOORxwDg25gRK58JzILBIz85oxsvW689StcKOlDkyjJZE=
-X-Google-Smtp-Source: APXvYqwcEAG1JfqbQemeVAXvvAIlgTBhC6sqluMv7Q1nZgjEYLOd/AxmByYzgLyU3PLNhD2AQMMbQOen/2LF49mG7PI=
-X-Received: by 2002:a5e:8e0c:: with SMTP id a12mr19710141ion.22.1568024726318;
- Mon, 09 Sep 2019 03:25:26 -0700 (PDT)
+        Mon, 9 Sep 2019 06:25:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39472 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726937AbfIIKZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 06:25:42 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B3EB2089F;
+        Mon,  9 Sep 2019 10:25:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568024741;
+        bh=/QuTF/zEDup0WFh7FpYwvfqXIv/EWMjcKBOyYW5JMqE=;
+        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
+        b=g37B5hNNWnR5UL8rj0TTz+qIC4kjg2eMcaOVCFqKAwHBN2SLSFkOmRLPRUlnYc7Do
+         yWJZbv5OQ+ArpSB6SPwYjX3Fu5/Wio87Et45rUrtT79bztB/Cx00KJnmETKoqMvBGn
+         MpZ/p8VUGmP+nxgcWdPaFrT4eWY+VUD7FAa81wPA=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190907090534.GB1712@pc-sasha.localdomain> <CAKMK7uHYdXwruQxxBM12Q5MVeH9fjFpZvxZz06BSo7YrCQbM2w@mail.gmail.com>
- <20190908141307.GA7115@pc-sasha.localdomain> <20190909201159.778590a0@canb.auug.org.au>
- <20190909202128.0c420ddd@canb.auug.org.au>
-In-Reply-To: <20190909202128.0c420ddd@canb.auug.org.au>
-From:   Alexander Kapshuk <alexander.kapshuk@gmail.com>
-Date:   Mon, 9 Sep 2019 13:24:49 +0300
-Message-ID: <CAJ1xhMXKNRfOm1Xj3B_cgLByBfDP03P+DBEbRpWc+tU6kdxtBw@mail.gmail.com>
-Subject: Re: Kernel panic during drm/nouveau init 5.3.0-rc7-next-20190903
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux-Next <linux-next@vger.kernel.org>,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        sean@poorly.run, airlied@linux.ie
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190906045659.20621-1-vkoul@kernel.org>
+References: <20190906045659.20621-1-vkoul@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Taniya Das <tdas@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Vinod Koul <vkoul@kernel.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] clk: qcom: gcc-qcs404: Use floor ops for sdcc clks
+User-Agent: alot/0.8.1
+Date:   Mon, 09 Sep 2019 03:25:40 -0700
+Message-Id: <20190909102541.7B3EB2089F@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 9, 2019 at 1:21 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi,
->
-> On Mon, 9 Sep 2019 20:11:59 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> >
-> > If you are bisecting linux-next, I will suggest bisecting between the
-> > stable branch on linux-next (which is just Linus' tree when I started
-> > that day) and the top of the first linux-next that fails.  (Assuming
-> > that the stable branch is good).
->
-> Actually (since you won't be bisecting the latest linux-next), you
-> probably want to use
->
-> git merge-base stable next-20190903
->         (or whatever linux-next you are bisecting)
->
-> as your first good commit (assuming it id good :-)).
->
-> --
-> Cheers,
-> Stephen Rothwell
+Quoting Vinod Koul (2019-09-05 21:56:59)
+> Update the gcc qcs404 clock driver to use floor ops for sdcc clocks. As
+> disuccsed in [1] it is good idea to use floor ops for sdcc clocks as we
+> dont want the clock rates to do round up.
+>=20
+> [1]: https://lore.kernel.org/linux-arm-msm/20190830195142.103564-1-swboyd=
+@chromium.org/
+>=20
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
 
-Hi Stephen,
+Applied to clk-next
 
-Thanks very much for the tips.
-I'll go ahead and give those a try.
