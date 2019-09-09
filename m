@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C8AEC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C5DC433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DA7921A4C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3C8721D6C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:08:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568023679;
-	bh=FuNr+wCnPVF+u29lSFTsihKdutUNsbIAoO7WbcW5dJU=;
+	s=default; t=1568023683;
+	bh=Hk2n2dKBxfs4zAuUlVbwnSInRmDdHdg3lRHxTLXj9Xs=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=xWmgr8neygYFARmZqwEplpGM9sBLB6vcp8kDEIX8mxMRIRwfitJcoCjL+c+Yo7chq
-	 TKHEURgiYmVQHPyQ924DSooz+40q3ZOQ4zmk+D3yVDQ4lZcWu2b5KTPMOexLFYFGzr
-	 Vs8z7chig58deoPx6CPMFxbv8/9uKa0oKKu8P7cM=
+	b=ow+X3E32iA/JL2paQHQUiRJypphCn7JPQKI0G9OV6e48/sPSavI1JaPydQkpheK4Q
+	 HLHT8FpMRQWnNQsxqAtCM4dfnaNe6tMS8OPPeqG1XiIPnvzLLMWuwpbAYepnv673GY
+	 8Y7/aEpZVA9P8JVv0MULDP5ut5Jv9f4OnKUD3PDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390358AbfIIKHx (ORCPT
+        id S2390392AbfIIKIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 06:07:53 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56116 "EHLO
+        Mon, 9 Sep 2019 06:08:02 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56124 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728993AbfIIKH1 (ORCPT
+        with ESMTP id S2390204AbfIIKH0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 06:07:27 -0400
+        Mon, 9 Sep 2019 06:07:26 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=qvEqsVB11jXmmerUvV31z20Vlpx17lLYw1fsBAjdagI=; b=pXNo7qq2UWBq
-        spzRhEcGVj6jjCwtX6iq9ax3WlEaALupG2KGNADYj377FRXB5YK4B4iPhuIcB7TK+5I3QetDm0iRm
-        ZVttrfHQEuFTtXHUzTXds1OPS6QUk+fk4ykoDpRgEFTR2APfm+NXYLjMvX5IUAhAJJZqEDQhZQQ0B
-        KE+Z4=;
+        List-Archive; bh=7w2LNq0l01blkf8Ovxz57vph2tfWB91hAoQ/F6ph7eU=; b=TsNquHlerb4i
+        uZmGHimJ9xuqN1MjJBI5Byyj2RozKhiZnG0VQXsDJx5d9G5C8Uhdopl5YxBSAiEdOIckgXWFosGPI
+        w1rr2v4lYTlJ8RShwh8ZclKRTnlq1GomakQszRtgWUpiINMi4eUiyherUDNg12B9OUYZlt74goMBh
+        DpNpY=;
 Received: from [148.69.85.38] (helo=fitzroy.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1i7GZq-0001s5-0D; Mon, 09 Sep 2019 10:07:18 +0000
+        id 1i7GZv-0001tn-AF; Mon, 09 Sep 2019 10:07:23 +0000
 Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 559AED02D83; Mon,  9 Sep 2019 11:07:17 +0100 (BST)
+        id B5A28D02D1F; Mon,  9 Sep 2019 11:07:22 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Cc:     alsa-devel@alsa-project.org, Daniel Drake <drake@endlessm.com>,
-        David Yang <yangxiaohua@everest-semi.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: es8316: support fixed and variable both clock rates" to the asoc tree
-In-Reply-To: <20190907163653.9382-2-katsuhiro@katsuster.net>
+To:     Colin Ian King <colin.king@canonical.com>
+Cc:     kernel-janitors@vger.kernel.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Milo Kim <milo.kim@ti.com>
+Subject: Applied "regulator: lp8788-ldo: make array en_mask static const, makes object smaller" to the regulator tree
+In-Reply-To: <20190906130632.6709-1-colin.king@canonical.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190909100717.559AED02D83@fitzroy.sirena.org.uk>
-Date:   Mon,  9 Sep 2019 11:07:17 +0100 (BST)
+Message-Id: <20190909100722.B5A28D02D1F@fitzroy.sirena.org.uk>
+Date:   Mon,  9 Sep 2019 11:07:22 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -63,11 +63,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: es8316: support fixed and variable both clock rates
+   regulator: lp8788-ldo: make array en_mask static const, makes object smaller
 
-has been applied to the asoc tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.4
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -88,109 +88,45 @@ to this mail.
 Thanks,
 Mark
 
-From ebe02a5b9ef05e3b812af3d628cdf6206d9ba610 Mon Sep 17 00:00:00 2001
-From: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Date: Sun, 8 Sep 2019 01:36:53 +0900
-Subject: [PATCH] ASoC: es8316: support fixed and variable both clock rates
+From 6cbe29c92311ea6ef67a7eac2bc089357412973b Mon Sep 17 00:00:00 2001
+From: Colin Ian King <colin.king@canonical.com>
+Date: Fri, 6 Sep 2019 14:06:32 +0100
+Subject: [PATCH] regulator: lp8788-ldo: make array en_mask static const, makes
+ object smaller
 
-This patch supports some type of machine drivers that set 0 to mclk
-when sound device goes to idle state. After applied this patch,
-sysclk == 0 means there is no constraint of sound rate and other
-values will set constraints which is derived by sysclk setting.
+Don't populate the array en_mask on the stack but instead make it
+static const. Makes the object code smaller by 87 bytes.
 
-Original code refuses sysclk == 0 setting. But some boards and SoC
-(such as RockPro64 and RockChip I2S) has connected SoC MCLK out to
-ES8316 MCLK in. In this case, SoC side I2S will choose suitable
-frequency of MCLK such as fs * mclk-fs when user starts playing or
-capturing.
+Before:
+   text	   data	    bss	    dec	    hex	filename
+  12967	   3408	      0	  16375	   3ff7	drivers/regulator/lp8788-ldo.o
 
-Bad scenario as follows (mclk-fs = 256):
-  - Initialize sysclk by correct value (Ex. 12.288MHz)
-    - ES8316 set constraints of PCM rate by sysclk
-      48kHz (1/256), 32kHz (1/384), 30.720kHz (1/400),
-      24kHz (1/512), 16kHz (1/768), 12kHz (1/1024)
-  - Play 48kHz sound, it's acceptable
-  - Sysclk is not changed
+After:
+   text	   data	    bss	    dec	    hex	filename
+  12816	   3472	      0	  16288	   3fa0	drivers/regulator/lp8788-ldo.o
 
-  - Play 32kHz sound, it's acceptable
-  - Set sysclk by 8.192MHz (= fs * mclk-fs = 32k * 256)
-    - ES8316 set constraints of PCM rate by sysclk
-      32kHz (1/256), 21.33kHz (1/384), 20.48kHz (1/400),
-      16kHz (1/512), 10.66kHz (1/768), 8kHz (1/1024)
+(gcc version 9.2.1, amd64)
 
-  - Play 48kHz again, but it's NOT acceptable because constraints
-    list does not allow 48kHz
-
-Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Link: https://lore.kernel.org/r/20190907163653.9382-2-katsuhiro@katsuster.net
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Link: https://lore.kernel.org/r/20190906130632.6709-1-colin.king@canonical.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/es8316.c | 35 ++++++++++++++++++++---------------
- 1 file changed, 20 insertions(+), 15 deletions(-)
+ drivers/regulator/lp8788-ldo.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/es8316.c b/sound/soc/codecs/es8316.c
-index e9fa4981ccef..9150e7068467 100644
---- a/sound/soc/codecs/es8316.c
-+++ b/sound/soc/codecs/es8316.c
-@@ -367,8 +367,12 @@ static int es8316_set_dai_sysclk(struct snd_soc_dai *codec_dai,
- 
- 	es8316->sysclk = freq;
- 
--	if (freq == 0)
-+	if (freq == 0) {
-+		es8316->sysclk_constraints.list = NULL;
-+		es8316->sysclk_constraints.count = 0;
-+
- 		return 0;
-+	}
- 
- 	ret = clk_set_rate(es8316->mclk, freq);
- 	if (ret)
-@@ -447,17 +451,10 @@ static int es8316_pcm_startup(struct snd_pcm_substream *substream,
- 	struct snd_soc_component *component = dai->component;
- 	struct es8316_priv *es8316 = snd_soc_component_get_drvdata(component);
- 
--	if (es8316->sysclk == 0) {
--		dev_err(component->dev, "No sysclk provided\n");
--		return -EINVAL;
--	}
--
--	/* The set of sample rates that can be supported depends on the
--	 * MCLK supplied to the CODEC.
--	 */
--	snd_pcm_hw_constraint_list(substream->runtime, 0,
--				   SNDRV_PCM_HW_PARAM_RATE,
--				   &es8316->sysclk_constraints);
-+	if (es8316->sysclk_constraints.list)
-+		snd_pcm_hw_constraint_list(substream->runtime, 0,
-+					   SNDRV_PCM_HW_PARAM_RATE,
-+					   &es8316->sysclk_constraints);
- 
- 	return 0;
- }
-@@ -469,11 +466,19 @@ static int es8316_pcm_hw_params(struct snd_pcm_substream *substream,
- 	struct snd_soc_component *component = dai->component;
- 	struct es8316_priv *es8316 = snd_soc_component_get_drvdata(component);
- 	u8 wordlen = 0;
-+	int i;
- 
--	if (!es8316->sysclk) {
--		dev_err(component->dev, "No MCLK configured\n");
--		return -EINVAL;
-+	/* Validate supported sample rates that are autodetected from MCLK */
-+	for (i = 0; i < NR_SUPPORTED_MCLK_LRCK_RATIOS; i++) {
-+		const unsigned int ratio = supported_mclk_lrck_ratios[i];
-+
-+		if (es8316->sysclk % ratio != 0)
-+			continue;
-+		if (es8316->sysclk / ratio == params_rate(params))
-+			break;
- 	}
-+	if (i == NR_SUPPORTED_MCLK_LRCK_RATIOS)
-+		return -EINVAL;
- 
- 	switch (params_format(params)) {
- 	case SNDRV_PCM_FORMAT_S16_LE:
+diff --git a/drivers/regulator/lp8788-ldo.c b/drivers/regulator/lp8788-ldo.c
+index 1b00f3638996..00e9bb92c326 100644
+--- a/drivers/regulator/lp8788-ldo.c
++++ b/drivers/regulator/lp8788-ldo.c
+@@ -464,7 +464,7 @@ static int lp8788_config_ldo_enable_mode(struct platform_device *pdev,
+ {
+ 	struct lp8788 *lp = ldo->lp;
+ 	enum lp8788_ext_ldo_en_id enable_id;
+-	u8 en_mask[] = {
++	static const u8 en_mask[] = {
+ 		[EN_ALDO1]   = LP8788_EN_SEL_ALDO1_M,
+ 		[EN_ALDO234] = LP8788_EN_SEL_ALDO234_M,
+ 		[EN_ALDO5]   = LP8788_EN_SEL_ALDO5_M,
 -- 
 2.20.1
 
