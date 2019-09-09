@@ -2,111 +2,124 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E40BC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:06:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03FA1C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E2BE20863
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:06:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA9F220863
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:07:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729409AbfIINGq (ORCPT
+        id S1729513AbfIINHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 09:06:46 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:56116 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726640AbfIINGq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 09:06:46 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 1C60981FD3; Mon,  9 Sep 2019 15:06:30 +0200 (CEST)
-Date:   Mon, 9 Sep 2019 15:06:43 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Wenwen Wang <wenwen@cs.uga.edu>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 27/57] cxgb4: fix a memory leak bug
-Message-ID: <20190909130643.GC18869@amd>
-References: <20190908121125.608195329@linuxfoundation.org>
- <20190908121136.425579987@linuxfoundation.org>
+        Mon, 9 Sep 2019 09:07:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39608 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726640AbfIINHs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 09:07:48 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 737C5ADDD;
+        Mon,  9 Sep 2019 13:07:46 +0000 (UTC)
+Subject: Re: [PATCH v2 0/2] mm/kasan: dump alloc/free stack for page allocator
+To:     walter-zh.wu@mediatek.com,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michal Hocko <mhocko@kernel.org>, Qian Cai <cai@lca.pw>
+Cc:     linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com
+References: <20190909082412.24356-1-walter-zh.wu@mediatek.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <d53d88df-d9a4-c126-32a8-4baeb0645a2c@suse.cz>
+Date:   Mon, 9 Sep 2019 15:07:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="V88s5gaDVPzZ0KCq"
-Content-Disposition: inline
-In-Reply-To: <20190908121136.425579987@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190909082412.24356-1-walter-zh.wu@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 9/9/19 10:24 AM, walter-zh.wu@mediatek.com wrote:
+> From: Walter Wu <walter-zh.wu@mediatek.com>
+> 
+> This patch is KASAN report adds the alloc/free stacks for page allocator
+> in order to help programmer to see memory corruption caused by page.
+> 
+> By default, KASAN doesn't record alloc and free stack for page allocator.
+> It is difficult to fix up page use-after-free or dobule-free issue.
+> 
+> Our patchsets will record the last stack of pages.
+> It is very helpful for solving the page use-after-free or double-free.
+> 
+> KASAN report will show the last stack of page, it may be:
+> a) If page is in-use state, then it prints alloc stack.
+>     It is useful to fix up page out-of-bound issue.
 
---V88s5gaDVPzZ0KCq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I still disagree with duplicating most of page_owner functionality for 
+the sake of using a single stack handle for both alloc and free (while 
+page_owner + debug_pagealloc with patches in mmotm uses two handles). It 
+reduces the amount of potentially important debugging information, and I 
+really doubt the u32-per-page savings are significant, given the rest of 
+KASAN overhead.
 
-On Sun 2019-09-08 13:41:51, Greg Kroah-Hartman wrote:
-> [ Upstream commit c554336efa9bbc28d6ec14efbee3c7d63c61a34f ]
->=20
-> In blocked_fl_write(), 't' is not deallocated if bitmap_parse_user() fail=
-s,
-> leading to a memory leak bug. To fix this issue, free t before returning
-> the error.
+> BUG: KASAN: slab-out-of-bounds in kmalloc_pagealloc_oob_right+0x88/0x90
+> Write of size 1 at addr ffffffc0d64ea00a by task cat/115
+> ...
+> Allocation stack of page:
+>   set_page_stack.constprop.1+0x30/0xc8
+>   kasan_alloc_pages+0x18/0x38
+>   prep_new_page+0x5c/0x150
+>   get_page_from_freelist+0xb8c/0x17c8
+>   __alloc_pages_nodemask+0x1a0/0x11b0
+>   kmalloc_order+0x28/0x58
+>   kmalloc_order_trace+0x28/0xe0
+>   kmalloc_pagealloc_oob_right+0x2c/0x68
+> 
+> b) If page is freed state, then it prints free stack.
+>     It is useful to fix up page use-after-free or double-free issue.
+> 
+> BUG: KASAN: use-after-free in kmalloc_pagealloc_uaf+0x70/0x80
+> Write of size 1 at addr ffffffc0d651c000 by task cat/115
+> ...
+> Free stack of page:
+>   kasan_free_pages+0x68/0x70
+>   __free_pages_ok+0x3c0/0x1328
+>   __free_pages+0x50/0x78
+>   kfree+0x1c4/0x250
+>   kmalloc_pagealloc_uaf+0x38/0x80
+> 
+> This has been discussed, please refer below link.
+> https://bugzilla.kernel.org/show_bug.cgi?id=203967
 
-The code is quite strange ... it seems to use kvfree when free would
-be enough. Is that worth fixing? blocked_fl_read() seems to have same
-problem.
+That's not a discussion, but a single comment from Dmitry, which btw 
+contains "provide alloc *and* free stacks for it" ("it" refers to page, 
+emphasis mine). It would be nice if he or other KASAN guys could clarify.
 
-Best regards,
-
-								Pavel
-
-> Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-> Signed-off-by: David S. Miller <davem@davemloft.net>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> Changes since v1:
+> - slim page_owner and move it into kasan
+> - enable the feature by default
+> 
+> Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
 > ---
->  drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c b/drivers=
-/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
-> index 0f72f9c4ec74c..b429b726b987b 100644
-> --- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
-> +++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
-> @@ -3276,8 +3276,10 @@ static ssize_t blocked_fl_write(struct file *filp,=
- const char __user *ubuf,
->  		return -ENOMEM;
-> =20
->  	err =3D bitmap_parse_user(ubuf, count, t, adap->sge.egr_sz);
-> -	if (err)
-> +	if (err) {
-> +		kvfree(t);
->  		return err;
-> +	}
-> =20
->  	bitmap_copy(adap->sge.blocked_fl, t, adap->sge.egr_sz);
->  	kvfree(t);
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---V88s5gaDVPzZ0KCq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl12TmMACgkQMOfwapXb+vLr7ACgrFqWKI1vmjVdxL7GjkyyFF9F
-RKgAnR2ZVLEjzTRxzR3wkxeI1Vyz1RMP
-=2REJ
------END PGP SIGNATURE-----
-
---V88s5gaDVPzZ0KCq--
+>   include/linux/kasan.h |  1 +
+>   lib/Kconfig.kasan     |  2 ++
+>   mm/kasan/common.c     | 32 ++++++++++++++++++++++++++++++++
+>   mm/kasan/kasan.h      |  5 +++++
+>   mm/kasan/report.c     | 27 +++++++++++++++++++++++++++
+>   5 files changed, 67 insertions(+)
