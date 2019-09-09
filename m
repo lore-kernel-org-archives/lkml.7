@@ -2,315 +2,114 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8913CC00307
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C775C433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5707A21A49
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 245632086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:35:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568021641;
-	bh=yZJ3ka986SfLwgSg1wqiKBcarbCnbCLNWxBepkM70Ok=;
+	s=default; t=1568021736;
+	bh=f4CPiM/vPyCXEhBhoERBJqpi5WnskxYEiQAG5JQ2Xk0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0sj/px1w7iyY90SrhIr9Oo2sR7McsGk1yw2GQebVFOxmnnRHrD1IqkTJ1oD8xzhYZ
-	 yOUsGTHHEyY68xbYm27Ql8O+VDYgOM1Ur/Kj/CWC1T0Q97nndVH+ikJ1neh1okVdhk
-	 xj9W20Ln9B1wIGVHgCxxWYCi2jEj2GTZNZMQGsoI=
+	b=UhPloRsJ0xEuB+rby4DlFHsvUCUZElpSm+/d0nb87gHoSZ51FWgD1hf7C0tOnEOw0
+	 iFoBNM/G9IUCYKw9UeuujFasmQulq6XZqPwqy3X0J2O78JPmlfOyoeRqNFFQXonErP
+	 6L3yRq/1szu/f9BAZa0dKhJoqwD3jhgHa9j6aZC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389909AbfIIJeA (ORCPT
+        id S2389933AbfIIJfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 05:34:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50788 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728390AbfIIJeA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 05:34:00 -0400
-Received: from localhost (unknown [148.69.85.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 036E02086D;
-        Mon,  9 Sep 2019 09:33:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568021638;
-        bh=yZJ3ka986SfLwgSg1wqiKBcarbCnbCLNWxBepkM70Ok=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jRi1VKXVcj2HwNr6Z3ZnGZ7MHdDUjZLdCTeMaABs+qGLUkL5c5ui6XCXwQ0zirv3Y
-         jfX/7rMpui2j8HFrzgPp5Fu4ov8ixqq1faYbTOep8M7jjCWuPU3QWuquzew0EYjIGM
-         rCBxubdVTHt6WxfRDBl95MbCGW0x8tOvDar0aZhE=
-Date:   Mon, 9 Sep 2019 10:33:55 +0100
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     Chao Yu <chao@kernel.org>, linux-f2fs-devel@lists.sourceforge.net,
+        Mon, 9 Sep 2019 05:35:34 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58830 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728313AbfIIJfe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 05:35:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=RtSMw7LYI0eRDUtlq7qfyGVEIrksQWu0YB0DV1ta/d4=; b=HbRyn1jg+EF/Yur3Fl3HRguL3
+        6veVfjDcccwm+LR6G1qecksYT24lMhDU/JTMjTC4+R76PCEYp8LiLE6HgU1HPfy1ZtrHIry8LC2ng
+        a+EKmOwYWdWtFPL95aGNtSvP63KWUJKfkQkzDeChebh3bqB2QB4U6RjJtYXVYg9kjDFwE=;
+Received: from [148.69.85.38] (helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1i7G51-0001es-Nd; Mon, 09 Sep 2019 09:35:27 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 9A98DD02D18; Mon,  9 Sep 2019 10:35:26 +0100 (BST)
+Date:   Mon, 9 Sep 2019 10:35:26 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Ricard Wanderlof <ricard.wanderlof@axis.com>,
+        stable@vger.kernel.org, Greg Kroah-Hartman <gregkh@suse.de>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] f2fs: fix to avoid accessing uninitialized field of
- inode page in is_alive()
-Message-ID: <20190909093355.GA27742@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20190906105426.109151-1-yuchao0@huawei.com>
- <20190906234808.GC71848@jaegeuk-macbookpro.roam.corp.google.com>
- <080e8dee-4726-8294-622a-cac26e781083@kernel.org>
- <20190909074425.GB21625@jaegeuk-macbookpro.roam.corp.google.com>
- <79228eaa-776f-da89-89f8-a9b5a90034b6@huawei.com>
- <873f4c07-5694-6554-5266-81812a6bd617@huawei.com>
- <20190909083725.GB25724@jaegeuk-macbookpro.roam.corp.google.com>
- <05393d3c-b78d-3bb3-ff26-64d2d3939618@huawei.com>
+Subject: Re: revert: ASoC: Fail card instantiation if DAI format setup fails
+Message-ID: <20190909093526.GA2036@sirena.org.uk>
+References: <20190814021047.14828-1-sashal@kernel.org>
+ <20190814021047.14828-40-sashal@kernel.org>
+ <20190814092213.GC4640@sirena.co.uk>
+ <20190826013515.GG5281@sasha-vm>
+ <20190827110014.GD23391@sirena.co.uk>
+ <20190828021311.GV5281@sasha-vm>
+ <alpine.DEB.2.20.1908280859060.5799@lnxricardw1.se.axis.com>
+ <alpine.DEB.2.20.1909061031200.3985@lnxricardw1.se.axis.com>
+ <20190906105824.GS23391@sirena.co.uk>
+ <20190906183824.GB1528@sasha-vm>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="WIyZ46R2i8wDzkSu"
 Content-Disposition: inline
-In-Reply-To: <05393d3c-b78d-3bb3-ff26-64d2d3939618@huawei.com>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+In-Reply-To: <20190906183824.GB1528@sasha-vm>
+X-Cookie: Be careful!  UGLY strikes 9 out of 10!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/09, Chao Yu wrote:
-> On 2019/9/9 16:37, Jaegeuk Kim wrote:
-> > On 09/09, Chao Yu wrote:
-> >> On 2019/9/9 15:58, Chao Yu wrote:
-> >>> On 2019/9/9 15:44, Jaegeuk Kim wrote:
-> >>>> On 09/07, Chao Yu wrote:
-> >>>>> On 2019-9-7 7:48, Jaegeuk Kim wrote:
-> >>>>>> On 09/06, Chao Yu wrote:
-> >>>>>>> If inode is newly created, inode page may not synchronize with inode cache,
-> >>>>>>> so fields like .i_inline or .i_extra_isize could be wrong, in below call
-> >>>>>>> path, we may access such wrong fields, result in failing to migrate valid
-> >>>>>>> target block.
-> >>>>>>
-> >>>>>> If data is valid, how can we get new inode page?
-> >>>>
-> >>>> Let me rephrase the question. If inode is newly created, is this data block
-> >>>> really valid to move in GC?
-> >>>
-> >>> I guess it's valid, let double check that.
-> >>
-> >> We can see inode page:
-> >>
-> >> - f2fs_create
-> >>  - f2fs_add_link
-> >>   - f2fs_add_dentry
-> >>    - f2fs_init_inode_metadata
-> >>     - f2fs_add_inline_entry
-> >>      - ipage = f2fs_new_inode_page
-> >>      - f2fs_put_page(ipage)   <---- after this
-> > 
-> > Can you print out how many block was assigned to this inode?
-> 
-> Add log like this:
-> 
-> 		if (!test_and_set_bit(segno, SIT_I(sbi)->invalid_segmap)) {
-> 			if (is_inode) {
-> 				for (i = 0; i < 923 - 50; i++) {
-> 					__le32 *base = blkaddr_in_node(node);
-> 					unsigned ofs = offset_in_addr(inode);
-> 
-> 					printk("i:%u, addr:%x\n", i,
-> 						le32_to_cpu(*(base + i)));
-> 				}
-> 				printk("i_inline: %u\n", inode->i_inline);
-> 			}
-> 
-> It shows:
-> ...
-> i:10, addr:e66a
-> ...
-> i:46, addr:e66c
-> i:47, addr:e66d
-> i:48, addr:e66e
-> i:49, addr:e66f
-> i:50, addr:e670
-> i:51, addr:e671
-> i:52, addr:e672
-> i:53, addr:e673
-> i:54, addr:e674
-> i:55, addr:e675
-> i:56, addr:e676
-> ...
-> i:140, addr:2c35    <--- we want to migrate this block, however, without correct
-> .i_inline and .i_extra_isize value, we can just find i_addr[i:140-6] = NULL_ADDR
 
-So, the theory is the block is indeed valid and the address was updated before
-write_inode()?
+--WIyZ46R2i8wDzkSu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> i:141, addr:2c38
-> i:142, addr:2c39
-> i:143, addr:2c3b
-> i:144, addr:2c3e
-> i:145, addr:2c40
-> i:146, addr:2c44
-> i:147, addr:2c48
-> i:148, addr:2c4a
-> i:149, addr:2c4c
-> i:150, addr:2c4f
-> i:151, addr:2c59
-> i:152, addr:2c5d
-> ...
-> i:188, addr:e677
-> i:189, addr:e678
-> i:190, addr:e679
-> i:191, addr:e67a
-> i:192, addr:e67b
-> i:193, addr:e67c
-> i:194, addr:e67d
-> i:195, addr:e67e
-> i:196, addr:e67f
-> i:197, addr:e680
-> i:198, addr:ffffffff
-> i:199, addr:ffffffff
-> i:200, addr:ffffffff
-> i:201, addr:ffffffff
-> i:202, addr:ffffffff
-> i:203, addr:ffffffff
-> i:204, addr:ffffffff
-> i:205, addr:ffffffff
-> i:206, addr:ffffffff
-> i:207, addr:ffffffff
-> i:208, addr:ffffffff
-> i:209, addr:ffffffff
-> i:210, addr:ffffffff
-> i:211, addr:ffffffff
-> i:212, addr:ffffffff
-> i:213, addr:ffffffff
-> i:214, addr:ffffffff
-> i:215, addr:ffffffff
-> i:216, addr:ffffffff
-> i:217, addr:ffffffff
-> i:218, addr:ffffffff
-> i:219, addr:ffffffff
-> i:220, addr:ffffffff
-> i:221, addr:ffffffff
-> i:222, addr:ffffffff
-> i:223, addr:ffffffff
-> i:224, addr:ffffffff
-> i:225, addr:ffffffff
-> i:226, addr:ffffffff
-> i:227, addr:ffffffff
-> i:228, addr:ffffffff
-> i:229, addr:ffffffff
-> i:230, addr:ffffffff
-> i:231, addr:ffffffff
-> i:232, addr:ffffffff
-> i:233, addr:ffffffff
-> i:234, addr:b032
-> i:235, addr:b033
-> i:236, addr:b034
-> i:237, addr:b035
-> i:238, addr:b036
-> i:239, addr:b038
-> ...
-> i:283, addr:e681
-> ...
-> i_inline: 0
-> 
-> F2FS-fs (zram1): summary nid: 360, ofs: 134, ver: 0
-> F2FS-fs (zram1): blkaddr 2c35 (blkaddr in node 0) <-blkaddr in node is NULL_ADDR
-> F2FS-fs (zram1): expect: seg 14, ofs_in_seg: 53
-> F2FS-fs (zram1): real: seg 4294967295, ofs_in_seg: 0
-> F2FS-fs (zram1): ofs: 53, 0
-> F2FS-fs (zram1): node info ino:360, nid:360, nofs:0
-> F2FS-fs (zram1): ofs_in_addr: 0
-> F2FS-fs (zram1): end ========
-> 
-> > 
-> >>
-> >>>
-> >>>>
-> >>>>>
-> >>>>> is_alive()
-> >>>>> {
-> >>>>> ...
-> >>>>> 	node_page = f2fs_get_node_page(sbi, nid);  <--- inode page
-> >>>>
-> >>>> Aren't we seeing the below version warnings?
-> >>>>
-> >>>> if (sum->version != dni->version) {
-> >>>> 	f2fs_warn(sbi, "%s: valid data with mismatched node version.",
-> >>>>                            __func__);
-> >>>>         set_sbi_flag(sbi, SBI_NEED_FSCK);
-> >>>> }
-> >>
-> >> The version of summary and dni are all zero.
-> > 
-> > Then, this node was allocated and removed without being flushed.
-> > 
-> >>
-> >> summary nid: 613, ofs: 111, ver: 0
-> >> blkaddr 2436 (blkaddr in node 0)
-> >> expect: seg 10, ofs_in_seg: 54
-> >> real: seg 4294967295, ofs_in_seg: 0
-> >> ofs: 54, 0
-> >> node info ino:613, nid:613, nofs:0
-> >> ofs_in_addr: 0
-> >>
-> >> Thanks,
-> >>
-> >>>>
-> >>>>>
-> >>>>> 	source_blkaddr = datablock_addr(NULL, node_page, ofs_in_node);
-> >>>>
-> >>>> So, we're getting this? Does this incur infinite loop in GC?
-> >>>>
-> >>>> if (!test_and_set_bit(segno, SIT_I(sbi)->invalid_segmap)) {
-> >>>> 	f2fs_err(sbi, "mismatched blkaddr %u (source_blkaddr %u) in seg %u\n",
-> >>>> 	f2fs_bug_on(sbi, 1);
-> >>>> }
-> >>>
-> >>> Yes, I only get this with generic/269, rather than "valid data with mismatched
-> >>> node version.".
-> > 
-> > Was this block moved as valid? In either way, is_alive() returns false, no?
-> > How about checking i_blocks to detect the page is initialized in is_alive()?
-> > 
-> >>>
-> >>> With this patch, generic/269 won't panic again.
-> >>>
-> >>> Thanks,
-> >>>
-> >>>>
-> >>>>> ...
-> >>>>> }
-> >>>>>
-> >>>>> datablock_addr()
-> >>>>> {
-> >>>>> ...
-> >>>>> 	base = offset_in_addr(&raw_node->i);  <--- the base could be wrong here due to
-> >>>>> accessing uninitialized .i_inline of raw_node->i.
-> >>>>> ...
-> >>>>> }
-> >>>>>
-> >>>>> Thanks,
-> >>>>>
-> >>>>>>
-> >>>>>>>
-> >>>>>>> - gc_data_segment
-> >>>>>>>  - is_alive
-> >>>>>>>   - datablock_addr
-> >>>>>>>    - offset_in_addr
-> >>>>>>>
-> >>>>>>> Fixes: 7a2af766af15 ("f2fs: enhance on-disk inode structure scalability")
-> >>>>>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> >>>>>>> ---
-> >>>>>>>  fs/f2fs/dir.c | 3 +++
-> >>>>>>>  1 file changed, 3 insertions(+)
-> >>>>>>>
-> >>>>>>> diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
-> >>>>>>> index 765f13354d3f..b1840852967e 100644
-> >>>>>>> --- a/fs/f2fs/dir.c
-> >>>>>>> +++ b/fs/f2fs/dir.c
-> >>>>>>> @@ -479,6 +479,9 @@ struct page *f2fs_init_inode_metadata(struct inode *inode, struct inode *dir,
-> >>>>>>>  		if (IS_ERR(page))
-> >>>>>>>  			return page;
-> >>>>>>>  
-> >>>>>>> +		/* synchronize inode page's data from inode cache */
-> >>>>>>> +		f2fs_update_inode(inode, page);
-> >>>>>>> +
-> >>>>>>>  		if (S_ISDIR(inode->i_mode)) {
-> >>>>>>>  			/* in order to handle error case */
-> >>>>>>>  			get_page(page);
-> >>>>>>> -- 
-> >>>>>>> 2.18.0.rc1
-> >>>> .
-> >>>>
-> > .
-> > 
+On Fri, Sep 06, 2019 at 02:38:24PM -0400, Sasha Levin wrote:
+
+> However, I'd like to say that I don't agree with it. I understand your
+> reasoning about keeping the stable trees conservative, but I feel that
+> going to the extreme with it will just encourage folks to not upgrade
+> between major versions.
+
+This is a case where the change can't possibly make anything work
+in itself, it can only break things and help with debugging.  If
+people are sitting on stable hopefully they're not still
+debugging their systems.  I don't understand why you are pushing
+so hard for this, there is very little upside on stable.
+
+> I'd like to think that upgrading major versions should be the same as
+> upgrading minor ones (because numbers don't matter here). If that's not
+> the case, let's fix it!
+
+Backporting this won't help achieve that aim.
+
+--WIyZ46R2i8wDzkSu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl12HN0ACgkQJNaLcl1U
+h9Aapwf/SgDF6oiU9JmzPlzW9MsZjxf8dqgRL4pbbK/O/O1qCudJT5WG+X11YLu0
+lG6PWiUCflFBMikLLCxDSu5e9V33X10eqFgV/TRT91dnJZQ0JUQnV8M/X+LYYWXF
+hNP4InFCZEUm7G/M7IrSgUrvu350qCttPhfd8PfPBnJ9yibbgGopvmULvnTzbCn8
+MfPxtzLah0ceaySCYTQ35U9jQvLbqJcGq4+MEhQMTCABC7sKF4dGZ7nqx7l1mEWw
+DkEiVuCCtALMp7eZiICCzdXXvyYkf7D8D74VIqTA+PoYEc/eETFITw1LFW7tmPzn
+ssh4Js0xumuTSs9QRqNkN6A1cz3ATQ==
+=131T
+-----END PGP SIGNATURE-----
+
+--WIyZ46R2i8wDzkSu--
