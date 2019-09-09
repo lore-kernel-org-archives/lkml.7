@@ -2,80 +2,191 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA22FC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D530C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B38F22196E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:13:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568042027;
-	bh=OczvaEWRZL6NBT+VidhTnFSZ337CKbE2ZtYD2wSxjbg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WL9XxoF1kjP8EBCh92VdYsdfEXjJITPHgIQZiRR0RKpuOPZspJ/cGIO7TqlDhPhJf
-	 wws27fc7qMQcWB00tSoD6nkX5NwIWmPM+srvR7fgHa42KqginlFIJ4DsLLFCt1TIlt
-	 pd9Nhf70fVscwC3g5Z+x3fspMqH4sPJFf9baFgKs=
+	by mail.kernel.org (Postfix) with ESMTP id C9BCF21A4A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:13:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="lqK7soM8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727674AbfIIPNr (ORCPT
+        id S1729004AbfIIPNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 11:13:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49242 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726171AbfIIPNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 11:13:46 -0400
-Received: from localhost (unknown [148.69.85.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9895F218DE;
-        Mon,  9 Sep 2019 15:13:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568042026;
-        bh=OczvaEWRZL6NBT+VidhTnFSZ337CKbE2ZtYD2wSxjbg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=c5paWlIAqD2qaRD+OPdm/FmQISn2MvatJnaO3ZDAwL2QbxW2ecVqOFRUHcI1nEsFh
-         xVL28vB3dCtkl0hwmpA+ok77bZ2UVWS3csNwd+ppDYoBO/pOAY5qpFSb3/3KsLWDTY
-         X6QwNVRqe4baT7PAq0vgMfrpyQL5nd2jT35LjydU=
-Date:   Mon, 9 Sep 2019 17:13:43 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Mon, 9 Sep 2019 11:13:51 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:40775 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728221AbfIIPNu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 11:13:50 -0400
+Received: by mail-ed1-f66.google.com with SMTP id v38so13299857edm.7
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 08:13:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ptGQKrJwsC6QNZJxPTcIFHrTBzodlhROW8EV9Cr6mks=;
+        b=lqK7soM8Ql8EG2Ftn3h3hR+olO0M3L5hi5yR7FV9iLEmOGD4dckGUM3j+cW0/Dime1
+         tcaru2ydfakL0qOGX9NW71rS5xXhlEsWXHR5tZTvN8nAdg3jRR7H91vVYT27iUT4zLQL
+         /8sd6tx6RSZch+NQKzd2gDDMnTl6lfsTiDI17WOQGfxtCfWUReS2eIOCKDQqmHkeOOb6
+         CQ29hW9JyqW2659VgWaWS03hTBmcSoCzS6kj58DkCjvhtjcgvBnAojuQ6LW0JN5ngCCR
+         oxmuahVreVZAzOjjnErCDvkrgGlDpVGWckjhAKTQyS0XAzH5VKEiZW6qr15a3nTgG9T0
+         I28w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ptGQKrJwsC6QNZJxPTcIFHrTBzodlhROW8EV9Cr6mks=;
+        b=KgyU/Pp3HQWUN7IkMQTADZIHrZO8Qwdybi8e2CKCqnfuuztYamtqrc+QvMMx8te+rX
+         J0jn1dP4xfqUB3RtVkI+QmPPyvJkUzs6KrgySDxy6ttv8n4g72Uf0BZCETEYXLfy0Fb7
+         M+fsVNe6dJtv1pgRLxCqkwx2g/4fCek/QML5H/LoQMTlns4e2QTWPvdVVgt3lqHAsDBf
+         46fxjOKq0Y7Cvk+VLpLpmFoAvNvhh6iw4LX0e12lRdEA668UHYzz5f+DdMmYoeucFBNs
+         qnLpdwhTasQeUT0Arvnem9qR4PpS1lnxcRh39jfgFoirej7KKa7aPPdnvn3nDIzhmlI/
+         lv6w==
+X-Gm-Message-State: APjAAAU1/tBIemy7TcesPMf6ygStFfSJ1WLONLqmC1zDJiTujAOVOGyE
+        cM2rJt4FHSkehXP+f3Pa5xQrRg==
+X-Google-Smtp-Source: APXvYqwJokBcl6isKFmA//BZZyEEgwoj2uNW2kTs0Tg/Y35qXurjsqN7Jks2aTze1VFcwFZl9Fv8+Q==
+X-Received: by 2002:a17:906:c304:: with SMTP id s4mr20002026ejz.71.1568042026870;
+        Mon, 09 Sep 2019 08:13:46 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id bf19sm3010529edb.23.2019.09.09.08.13.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 09 Sep 2019 08:13:46 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id CD9501003B5; Mon,  9 Sep 2019 18:13:44 +0300 (+03)
+Date:   Mon, 9 Sep 2019 18:13:44 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     Gerald Schaefer <gerald.schaefer@de.ibm.com>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [patch V2 2/6] posix-cpu-timers: Fix permission check regression
-Message-ID: <20190909151342.GA2319@lerouge>
-References: <20190905120339.561100423@linutronix.de>
- <20190905120539.797994508@linutronix.de>
- <20190905173148.GE18251@lenoir>
- <alpine.DEB.2.21.1909052054200.1902@nanos.tec.linutronix.de>
- <alpine.DEB.2.21.1909052314110.1902@nanos.tec.linutronix.de>
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] mm/pgtable/debug: Add test validating architecture
+ page table helpers
+Message-ID: <20190909151344.ghfypjbgxyosjdk3@box>
+References: <1567497706-8649-1-git-send-email-anshuman.khandual@arm.com>
+ <1567497706-8649-2-git-send-email-anshuman.khandual@arm.com>
+ <20190904221618.1b624a98@thinkpad>
+ <20e3044d-2af5-b27b-7653-cec53bdec941@arm.com>
+ <20190905190629.523bdb87@thinkpad>
+ <3c609e33-afbb-ffaf-481a-6d225a06d1d0@arm.com>
+ <20190906210346.5ecbff01@thinkpad>
+ <3d5de35f-8192-1c75-50a9-03e66e3b8e5c@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1909052314110.1902@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <3d5de35f-8192-1c75-50a9-03e66e3b8e5c@arm.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 11:15:08PM +0200, Thomas Gleixner wrote:
-> +	if (gettime) {
-> +		/*
-> +		 * For clock_gettime(PROCESS) the task does not need to be
-> +		 * the actual group leader. tsk->sighand gives
-> +		 * access to the group's clock.
-> +		 *
-> +		 * Timers need the group leader because they take a
-> +		 * reference on it and store the task pointer until the
-> +		 * timer is destroyed.
+On Mon, Sep 09, 2019 at 11:56:50AM +0530, Anshuman Khandual wrote:
+> 
+> 
+> On 09/07/2019 12:33 AM, Gerald Schaefer wrote:
+> > On Fri, 6 Sep 2019 11:58:59 +0530
+> > Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+> > 
+> >> On 09/05/2019 10:36 PM, Gerald Schaefer wrote:
+> >>> On Thu, 5 Sep 2019 14:48:14 +0530
+> >>> Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+> >>>   
+> >>>>> [...]    
+> >>>>>> +
+> >>>>>> +#if !defined(__PAGETABLE_PMD_FOLDED) && !defined(__ARCH_HAS_4LEVEL_HACK)
+> >>>>>> +static void pud_clear_tests(pud_t *pudp)
+> >>>>>> +{
+> >>>>>> +	memset(pudp, RANDOM_NZVALUE, sizeof(pud_t));
+> >>>>>> +	pud_clear(pudp);
+> >>>>>> +	WARN_ON(!pud_none(READ_ONCE(*pudp)));
+> >>>>>> +}    
+> >>>>>
+> >>>>> For pgd/p4d/pud_clear(), we only clear if the page table level is present
+> >>>>> and not folded. The memset() here overwrites the table type bits, so
+> >>>>> pud_clear() will not clear anything on s390 and the pud_none() check will
+> >>>>> fail.
+> >>>>> Would it be possible to OR a (larger) random value into the table, so that
+> >>>>> the lower 12 bits would be preserved?    
+> >>>>
+> >>>> So the suggestion is instead of doing memset() on entry with RANDOM_NZVALUE,
+> >>>> it should OR a large random value preserving lower 12 bits. Hmm, this should
+> >>>> still do the trick for other platforms, they just need non zero value. So on
+> >>>> s390, the lower 12 bits on the page table entry already has valid value while
+> >>>> entering this function which would make sure that pud_clear() really does
+> >>>> clear the entry ?  
+> >>>
+> >>> Yes, in theory the table entry on s390 would have the type set in the last
+> >>> 4 bits, so preserving those would be enough. If it does not conflict with
+> >>> others, I would still suggest preserving all 12 bits since those would contain
+> >>> arch-specific flags in general, just to be sure. For s390, the pte/pmd tests
+> >>> would also work with the memset, but for consistency I think the same logic
+> >>> should be used in all pxd_clear_tests.  
+> >>
+> >> Makes sense but..
+> >>
+> >> There is a small challenge with this. Modifying individual bits on a given
+> >> page table entry from generic code like this test case is bit tricky. That
+> >> is because there are not enough helpers to create entries with an absolute
+> >> value. This would have been easier if all the platforms provided functions
+> >> like __pxx() which is not the case now. Otherwise something like this should
+> >> have worked.
+> >>
+> >>
+> >> pud_t pud = READ_ONCE(*pudp);
+> >> pud = __pud(pud_val(pud) | RANDOM_VALUE (keeping lower 12 bits 0))
+> >> WRITE_ONCE(*pudp, pud);
+> >>
+> >> But __pud() will fail to build in many platforms.
+> > 
+> > Hmm, I simply used this on my system to make pud_clear_tests() work, not
+> > sure if it works on all archs:
+> > 
+> > pud_val(*pudp) |= RANDOM_NZVALUE;
+> 
+> Which compiles on arm64 but then fails on x86 because of the way pmd_val()
+> has been defined there.
 
-Well, that would work with a non group leader as well but anyway that wouldn't
-be pretty.
+Use instead
 
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+	*pudp = __pud(pud_val(*pudp) | RANDOM_NZVALUE);
+
+It *should* be more portable.
+
+-- 
+ Kirill A. Shutemov
