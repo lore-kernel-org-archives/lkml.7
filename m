@@ -2,515 +2,227 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A37D7C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 20:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA98FC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 20:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 571AC218AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 20:39:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 463C82086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 20:42:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="VxgwAlQi"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="SPRvP4dm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391638AbfIIUjW (ORCPT
+        id S2391689AbfIIUmh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 16:39:22 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:34598 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391619AbfIIUjW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 16:39:22 -0400
-Received: by mail-ed1-f67.google.com with SMTP id c20so5495808eds.1
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 13:39:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=dNB6cdDlJajUIopvjn6wgG7ZFeMmyLb22+RWaA2bwIs=;
-        b=VxgwAlQiZqEvtauQcZlpeXrhqiZvJmVKra9jqlLgaK8NCFGR1KDP0GUB+vxDa0E9cb
-         qdFGrl10gwpZ3nDNGOpNaRi1FfVXVlPk3gxQ8qba74TDqZrFJtgjyq+39mHV+Z9HN67u
-         Idq4U601+zp91AHMfvzvkdfC6B4CRGn4cWVQ4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=dNB6cdDlJajUIopvjn6wgG7ZFeMmyLb22+RWaA2bwIs=;
-        b=ts39QCfQPdnC4Q8ZxOImNe9vUWSg24Kx9phAfwhhCRxhTo/5IWStv2T5cXoOOy2VmF
-         Wrma8qPpr1uAR4K+G101MJbxuMO6YSuNMeFHcl5IrycReSUIUUgspdgOgO3Z2yvYWc9W
-         u+qUXy/3ZdpOagP/TvZ0Knd0lK+p+xvISg/6ex/UZH5oljSsYfPxFtG44zQbP6iI0P8i
-         4pqZsvzd3GKLcLHKoHp+Prg2PHlAgWepJ5LLhfFg3EZIq/2haMX4McJV/gVeKIesh0m8
-         NEa/ECqussBteXcfAMnmJLdywtaarkYVK3gKB0uSTES7omJ154W4SDCURuCBqg3DpwTr
-         aBww==
-X-Gm-Message-State: APjAAAUOFhQR6kqlaldaXTlUExmUQisTyr8j2CQWXFNOqjSLe08XHbF0
-        GMqf1IjqJyXabmOyqXcIfO7P8Q==
-X-Google-Smtp-Source: APXvYqxwD0hkIL7zgRObNqXWZniHABDn/Uzgzhp9LzsKY+NbHEWZp3paobHi/D2fceqMB7H+tpzLpA==
-X-Received: by 2002:a17:906:4a46:: with SMTP id a6mr20959044ejv.184.1568061559702;
-        Mon, 09 Sep 2019 13:39:19 -0700 (PDT)
-Received: from prevas-ravi.prevas.se (ip-5-186-115-35.cgn.fibianet.dk. [5.186.115.35])
-        by smtp.gmail.com with ESMTPSA id k15sm1834283ejk.46.2019.09.09.13.39.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Sep 2019 13:39:19 -0700 (PDT)
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Joe Perches <joe@perches.com>, Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
-        linux-doc@vger.kernel.org
-Subject: [PATCH v2] printf: add support for printing symbolic error codes
-Date:   Mon,  9 Sep 2019 22:38:25 +0200
-Message-Id: <20190909203826.22263-1-linux@rasmusvillemoes.dk>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190830214655.6625-1-linux@rasmusvillemoes.dk>
-References: <20190830214655.6625-1-linux@rasmusvillemoes.dk>
+        Mon, 9 Sep 2019 16:42:37 -0400
+Received: from mail-eopbgr70078.outbound.protection.outlook.com ([40.107.7.78]:22880
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727530AbfIIUmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 16:42:36 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Of5wiJRSnRu69dWDE6T2FiwWPu2L/b74jqHsdr2+r3Qr5dtdqj3hqSX+QRx0B4qMThcu0OIK/xwF0B5z6VUDG2+X0/kEbR20680ERwprKgRia2iyLfHAYeUF0/Uah6IKoUuq90Zwv+Ov6oCkv93G7UcFXjYKSgrNUeiTTpT805Yg0XYkpYApB37nQS6NiCzy/OLDNal2C1kk6pJD01Zb4qf+zNHa1Ft+SGOh1D6maZxyXj+HY3e7uYxb/Avhb8Roq0UWaOCNFagibFgllTtTm11TCfF16gPU6fjCquTx2SJM/JcpIKtCDcLhOVLGSVnYkjqAi4XJzZBtvq2MB3+xTQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7dKr1AO0grJB8AxRgyb/O5MW2ARTdDyzCakbAxP9+z8=;
+ b=KPcYS0jSh5NLn4juRdEa+KBz49dfpQlDKmTgEvEVxd6HZifHkGat/a2wY9EBO05kqLuKH+LmrPjs2lvHa3mYVbhtlZOAUDnbaF0aOM+ffuvYBXbYU8Em2WaRvZBvo/ybpoJtC5hiBV/fD9bjIhtWxLL6ReuyxnB7Re3i3vrN5PJn6BFy0A5ULmVTVtXIYKmiBVcpuqzJOokYBDtidJpigDjhy34t10Qmbb7ysb7rwyDEJblhlm/EdWDQvQ0K3+BW3FW6C3o5825gNblxMAe2chdXTr7GHp2RBzUMHqaf+C59bcZ4xYoUBPtoxsMnECX89y/GOMI865rNgkJg0IRhxA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7dKr1AO0grJB8AxRgyb/O5MW2ARTdDyzCakbAxP9+z8=;
+ b=SPRvP4dmMui9LQPJs4GvDkx6dKVoARZvxPF4E4r8w01+8+2ioMX11TvQmNkQSANej73SOl+on+/R2oGBgRESYGp1PFQrw/Y5cB+pWAgbmE2DY7ZKw11E3sbA0QNiPZwFsjy5OXXZX/EYf4/TFvojlHlpMvRzm10acNCeKkHwjLc=
+Received: from AM0PR05MB4866.eurprd05.prod.outlook.com (20.176.214.160) by
+ AM0PR05MB6834.eurprd05.prod.outlook.com (10.186.175.82) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2241.18; Mon, 9 Sep 2019 20:42:32 +0000
+Received: from AM0PR05MB4866.eurprd05.prod.outlook.com
+ ([fe80::bc4c:7c4c:d3e2:8b28]) by AM0PR05MB4866.eurprd05.prod.outlook.com
+ ([fe80::bc4c:7c4c:d3e2:8b28%6]) with mapi id 15.20.2241.018; Mon, 9 Sep 2019
+ 20:42:32 +0000
+From:   Parav Pandit <parav@mellanox.com>
+To:     Parav Pandit <parav@mellanox.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "davem@davemloft.net" <davem@davemloft.net>
+CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: RE: [PATCH v3 0/5] Introduce variable length mdev alias
+Thread-Topic: [PATCH v3 0/5] Introduce variable length mdev alias
+Thread-Index: AQHVYUZdAS6KYIr8SUO1vQ8myuXcNacjy68w
+Date:   Mon, 9 Sep 2019 20:42:32 +0000
+Message-ID: <AM0PR05MB4866F76F807409ED887537D7D1B70@AM0PR05MB4866.eurprd05.prod.outlook.com>
+References: <20190826204119.54386-1-parav@mellanox.com>
+ <20190902042436.23294-1-parav@mellanox.com>
+In-Reply-To: <20190902042436.23294-1-parav@mellanox.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=parav@mellanox.com; 
+x-originating-ip: [208.176.44.194]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f24a7783-26d0-4dae-8590-08d735663cee
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR05MB6834;
+x-ms-traffictypediagnostic: AM0PR05MB6834:|AM0PR05MB6834:
+x-ms-exchange-purlcount: 3
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR05MB6834CF117498E9CE49A2EC51D1B70@AM0PR05MB6834.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3044;
+x-forefront-prvs: 01559F388D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(39860400002)(396003)(366004)(376002)(54534003)(13464003)(199004)(189003)(74316002)(7736002)(316002)(8676002)(6116002)(81156014)(81166006)(66946007)(7696005)(54906003)(476003)(76116006)(6506007)(53546011)(66446008)(52536014)(486006)(256004)(305945005)(26005)(55016002)(5660300002)(76176011)(2906002)(186003)(446003)(8936002)(66476007)(102836004)(11346002)(66556008)(64756008)(478600001)(6436002)(25786009)(2201001)(229853002)(14454004)(86362001)(3846002)(14444005)(71190400001)(53376002)(4326008)(110136005)(66066001)(71200400001)(6246003)(53936002)(33656002)(6306002)(9686003)(99286004)(2501003)(966005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB6834;H:AM0PR05MB4866.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 4jMwMwZzCXAXPXK0ewsJkJFKoMBME4ZVv1G7K7EPBMm7zyspCZiT3cP4SsLv0ZixzBM4uZuSDJYLY45vumdwG4jv2qMaB9SbQEhnCayBxCEU3AH9J8KsywYlSg7J9klgyn+lnlraQQdpp5x9yZZevgDwq5cGrcPOy9jy/81bslQ7W0FPDOxGzQXGs3LI93WnUcLL5JAhMoM2Cukp6gh4OWpbGyAs5Sqgel6QSTDJ0MOHYW4zwau4YGPXYO6mysl9WcTX8SbcUWtDVIODaTKhS5UpgE4efR7+KEGu47uLyxgXnf3jZAtXhOaFm47doB6wz+RIJiGUE0Xq3Z407yjZ4dMxnw+uxIrNf40FF8ij+BjKHOOofX0KgoOhpQucBN1pbPdulWOuE5hFoIhUGExf/lNMbzi4xTWNC910r7e29UA=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f24a7783-26d0-4dae-8590-08d735663cee
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Sep 2019 20:42:32.0286
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Oz6F+l4MJII7ZdkMacB0qNtr7FeKksE0szZ6Cc9stWcHHrMc3hcQLp1ZOnjH9wEF8t5pBowS6Z4QkcxvSb8ppw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB6834
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It has been suggested several times to extend vsnprintf() to be able
-to convert the numeric value of ENOSPC to print "ENOSPC". This is yet
-another attempt. Rather than adding another %p extension, simply teach
-plain %p to convert ERR_PTRs. While the primary use case is
+Hi Alex,
 
-  if (IS_ERR(foo)) {
-    pr_err("Sorry, can't do that: %p\n", foo);
-    return PTR_ERR(foo);
-  }
+> -----Original Message-----
+> From: Parav Pandit <parav@mellanox.com>
+> Sent: Sunday, September 1, 2019 11:25 PM
+> To: alex.williamson@redhat.com; Jiri Pirko <jiri@mellanox.com>;
+> kwankhede@nvidia.com; cohuck@redhat.com; davem@davemloft.net
+> Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
+> netdev@vger.kernel.org; Parav Pandit <parav@mellanox.com>
+> Subject: [PATCH v3 0/5] Introduce variable length mdev alias
+>=20
+> To have consistent naming for the netdevice of a mdev and to have consist=
+ent
+> naming of the devlink port [1] of a mdev, which is formed using
+> phys_port_name of the devlink port, current UUID is not usable because UU=
+ID
+> is too long.
+>=20
+> UUID in string format is 36-characters long and in binary 128-bit.
+> Both formats are not able to fit within 15 characters limit of netdev nam=
+e.
+>=20
+> It is desired to have mdev device naming consistent using UUID.
+> So that widely used user space framework such as ovs [2] can make use of
+> mdev representor in similar way as PCIe SR-IOV VF and PF representors.
+>=20
+> Hence,
+> (a) mdev alias is created which is derived using sha1 from the mdev name.
+> (b) Vendor driver describes how long an alias should be for the child mde=
+v
+> created for a given parent.
+> (c) Mdev aliases are unique at system level.
+> (d) alias is created optionally whenever parent requested.
+> This ensures that non networking mdev parents can function without alias
+> creation overhead.
+>=20
+> This design is discussed at [3].
+>=20
+> An example systemd/udev extension will have,
+>=20
+> 1. netdev name created using mdev alias available in sysfs.
+>=20
+> mdev UUID=3D83b8f4f2-509f-382f-3c1e-e6bfe0fa1001
+> mdev 12 character alias=3Dcd5b146a80a5
+>=20
+> netdev name of this mdev =3D enmcd5b146a80a5 Here en =3D Ethernet link m =
+=3D
+> mediated device
+>=20
+> 2. devlink port phys_port_name created using mdev alias.
+> devlink phys_port_name=3Dpcd5b146a80a5
+>=20
+> This patchset enables mdev core to maintain unique alias for a mdev.
+>=20
+> Patch-1 Introduces mdev alias using sha1.
+> Patch-2 Ensures that mdev alias is unique in a system.
+> Patch-3 Exposes mdev alias in a sysfs hirerchy, update Documentation
+> Patch-4 Introduces mdev_alias() API.
+> Patch-5 Extends mtty driver to optionally provide alias generation.
+> This also enables to test UUID based sha1 collision and trigger error han=
+dling
+> for duplicate sha1 results.
+>=20
+> [1] http://man7.org/linux/man-pages/man8/devlink-port.8.html
+> [2] https://docs.openstack.org/os-vif/latest/user/plugins/ovs.html
+> [3] https://patchwork.kernel.org/cover/11084231/
+>=20
+> ---
+> Changelog:
+> v2->v3:
+>  - Addressed comment from Yunsheng Lin
+>  - Changed strcmp() =3D=3D0 to !strcmp()
+>  - Addressed comment from Cornelia Hunk
+>  - Merged sysfs Documentation patch with syfs patch
+>  - Added more description for alias return value
 
-it is also more helpful to get a symbolic error code (or, worst case,
-a decimal number) in case an ERR_PTR is accidentally passed to some
-%p<something>, rather than the (efault) that check_pointer() would
-result in.
-
-With my embedded hat on, I've made it possible to remove this.
-
-I've tested that the #ifdeffery in errcode.c is sufficient to make
-this compile on arm, arm64, mips, powerpc, s390, x86 - I'm sure the
-0day bot will tell me which ones I've missed.
-
-The symbols to include have been found by massaging the output of
-
-  find arch include -iname 'errno*.h' | xargs grep -E 'define\s*E'
-
-In the cases where some common aliasing exists
-(e.g. EAGAIN=EWOULDBLOCK on all platforms, EDEADLOCK=EDEADLK on most),
-I've moved the more popular one (in terms of 'git grep -w Efoo | wc)
-to the bottom so that one takes precedence.
-
-Acked-by: Uwe Kleine-König <uwe@kleine-koenig.org>
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
----
-v2:
-- add #include <linux/stddef.h> to errcode.h (0day)
-- keep 'x' handling in switch() (Andy)
-- add paragraph to Documentation/core-api/printk-formats.rst
-- add ack from Uwe
-
- Documentation/core-api/printk-formats.rst |   8 +
- include/linux/errcode.h                   |  16 ++
- lib/Kconfig.debug                         |   8 +
- lib/Makefile                              |   1 +
- lib/errcode.c                             | 215 ++++++++++++++++++++++
- lib/test_printf.c                         |  14 ++
- lib/vsprintf.c                            |  26 +++
- 7 files changed, 288 insertions(+)
- create mode 100644 include/linux/errcode.h
- create mode 100644 lib/errcode.c
-
-diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
-index c6224d039bcb..7d3bf3cb207b 100644
---- a/Documentation/core-api/printk-formats.rst
-+++ b/Documentation/core-api/printk-formats.rst
-@@ -66,6 +66,14 @@ might be printed instead of the unreachable information::
- 	(efault) data on invalid address
- 	(einval) invalid data on a valid address
- 
-+Error pointers, i.e. pointers for which IS_ERR() is true, are handled
-+as follows: If CONFIG_SYMBOLIC_ERRCODE is set, an appropriate symbolic
-+constant is printed. For example, '"%p", PTR_ERR(-ENOSPC)' results in
-+"ENOSPC", while '"%p", PTR_ERR(-EWOULDBLOCK)' results in "EAGAIN"
-+(since EAGAIN == EWOULDBLOCK, and the former is the most common). If
-+CONFIG_SYMBOLIC_ERRCODE is not set, ERR_PTRs are printed as their
-+decimal representation ("-28" and "-11" for the two examples).
-+
- Plain Pointers
- --------------
- 
-diff --git a/include/linux/errcode.h b/include/linux/errcode.h
-new file mode 100644
-index 000000000000..c6a4c1b04f9c
---- /dev/null
-+++ b/include/linux/errcode.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_ERRCODE_H
-+#define _LINUX_ERRCODE_H
-+
-+#include <linux/stddef.h>
-+
-+#ifdef CONFIG_SYMBOLIC_ERRCODE
-+const char *errcode(int err);
-+#else
-+static inline const char *errcode(int err)
-+{
-+	return NULL;
-+}
-+#endif
-+
-+#endif /* _LINUX_ERRCODE_H */
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 5960e2980a8a..dc1b20872774 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -164,6 +164,14 @@ config DYNAMIC_DEBUG
- 	  See Documentation/admin-guide/dynamic-debug-howto.rst for additional
- 	  information.
- 
-+config SYMBOLIC_ERRCODE
-+	bool "Support symbolic error codes in printf"
-+	help
-+	  If you say Y here, the kernel's printf implementation will
-+	  be able to print symbolic errors such as ENOSPC instead of
-+	  the number 28. It makes the kernel image slightly larger
-+	  (about 3KB), but can make the kernel logs easier to read.
-+
- endmenu # "printk and dmesg options"
- 
- menu "Compile-time checks and compiler options"
-diff --git a/lib/Makefile b/lib/Makefile
-index 29c02a924973..664ecf10ee2a 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -185,6 +185,7 @@ lib-$(CONFIG_GENERIC_BUG) += bug.o
- obj-$(CONFIG_HAVE_ARCH_TRACEHOOK) += syscall.o
- 
- obj-$(CONFIG_DYNAMIC_DEBUG) += dynamic_debug.o
-+obj-$(CONFIG_SYMBOLIC_ERRCODE) += errcode.o
- 
- obj-$(CONFIG_NLATTR) += nlattr.o
- 
-diff --git a/lib/errcode.c b/lib/errcode.c
-new file mode 100644
-index 000000000000..7dcf97d5307f
---- /dev/null
-+++ b/lib/errcode.c
-@@ -0,0 +1,215 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/build_bug.h>
-+#include <linux/errno.h>
-+#include <linux/errcode.h>
-+#include <linux/kernel.h>
-+
-+/*
-+ * Ensure these tables to not accidentally become gigantic if some
-+ * huge errno makes it in. On most architectures, the first table will
-+ * only have about 140 entries, but mips and parisc have more sparsely
-+ * allocated errnos (with EHWPOISON = 257 on parisc, and EDQUOT = 1133
-+ * on mips), so this wastes a bit of space on those - though we
-+ * special case the EDQUOT case.
-+ */
-+#define E(err) [err + BUILD_BUG_ON_ZERO(err <= 0 || err > 300)] = #err
-+static const char *codes_0[] = {
-+	E(E2BIG),
-+	E(EACCES),
-+	E(EADDRINUSE),
-+	E(EADDRNOTAVAIL),
-+	E(EADV),
-+	E(EAFNOSUPPORT),
-+	E(EALREADY),
-+	E(EBADE),
-+	E(EBADF),
-+	E(EBADFD),
-+	E(EBADMSG),
-+	E(EBADR),
-+	E(EBADRQC),
-+	E(EBADSLT),
-+	E(EBFONT),
-+	E(EBUSY),
-+#ifdef ECANCELLED
-+	E(ECANCELLED),
-+#endif
-+	E(ECHILD),
-+	E(ECHRNG),
-+	E(ECOMM),
-+	E(ECONNABORTED),
-+	E(ECONNRESET),
-+	E(EDEADLOCK),
-+	E(EDESTADDRREQ),
-+	E(EDOM),
-+	E(EDOTDOT),
-+#ifndef CONFIG_MIPS
-+	E(EDQUOT),
-+#endif
-+	E(EEXIST),
-+	E(EFAULT),
-+	E(EFBIG),
-+	E(EHOSTDOWN),
-+	E(EHOSTUNREACH),
-+	E(EHWPOISON),
-+	E(EIDRM),
-+	E(EILSEQ),
-+#ifdef EINIT
-+	E(EINIT),
-+#endif
-+	E(EINPROGRESS),
-+	E(EINTR),
-+	E(EINVAL),
-+	E(EIO),
-+	E(EISCONN),
-+	E(EISDIR),
-+	E(EISNAM),
-+	E(EKEYEXPIRED),
-+	E(EKEYREJECTED),
-+	E(EKEYREVOKED),
-+	E(EL2HLT),
-+	E(EL2NSYNC),
-+	E(EL3HLT),
-+	E(EL3RST),
-+	E(ELIBACC),
-+	E(ELIBBAD),
-+	E(ELIBEXEC),
-+	E(ELIBMAX),
-+	E(ELIBSCN),
-+	E(ELNRNG),
-+	E(ELOOP),
-+	E(EMEDIUMTYPE),
-+	E(EMFILE),
-+	E(EMLINK),
-+	E(EMSGSIZE),
-+	E(EMULTIHOP),
-+	E(ENAMETOOLONG),
-+	E(ENAVAIL),
-+	E(ENETDOWN),
-+	E(ENETRESET),
-+	E(ENETUNREACH),
-+	E(ENFILE),
-+	E(ENOANO),
-+	E(ENOBUFS),
-+	E(ENOCSI),
-+	E(ENODATA),
-+	E(ENODEV),
-+	E(ENOENT),
-+	E(ENOEXEC),
-+	E(ENOKEY),
-+	E(ENOLCK),
-+	E(ENOLINK),
-+	E(ENOMEDIUM),
-+	E(ENOMEM),
-+	E(ENOMSG),
-+	E(ENONET),
-+	E(ENOPKG),
-+	E(ENOPROTOOPT),
-+	E(ENOSPC),
-+	E(ENOSR),
-+	E(ENOSTR),
-+#ifdef ENOSYM
-+	E(ENOSYM),
-+#endif
-+	E(ENOSYS),
-+	E(ENOTBLK),
-+	E(ENOTCONN),
-+	E(ENOTDIR),
-+	E(ENOTEMPTY),
-+	E(ENOTNAM),
-+	E(ENOTRECOVERABLE),
-+	E(ENOTSOCK),
-+	E(ENOTTY),
-+	E(ENOTUNIQ),
-+	E(ENXIO),
-+	E(EOPNOTSUPP),
-+	E(EOVERFLOW),
-+	E(EOWNERDEAD),
-+	E(EPERM),
-+	E(EPFNOSUPPORT),
-+	E(EPIPE),
-+#ifdef EPROCLIM
-+	E(EPROCLIM),
-+#endif
-+	E(EPROTO),
-+	E(EPROTONOSUPPORT),
-+	E(EPROTOTYPE),
-+	E(ERANGE),
-+	E(EREMCHG),
-+#ifdef EREMDEV
-+	E(EREMDEV),
-+#endif
-+	E(EREMOTE),
-+	E(EREMOTEIO),
-+#ifdef EREMOTERELEASE
-+	E(EREMOTERELEASE),
-+#endif
-+	E(ERESTART),
-+	E(ERFKILL),
-+	E(EROFS),
-+#ifdef ERREMOTE
-+	E(ERREMOTE),
-+#endif
-+	E(ESHUTDOWN),
-+	E(ESOCKTNOSUPPORT),
-+	E(ESPIPE),
-+	E(ESRCH),
-+	E(ESRMNT),
-+	E(ESTALE),
-+	E(ESTRPIPE),
-+	E(ETIME),
-+	E(ETIMEDOUT),
-+	E(ETOOMANYREFS),
-+	E(ETXTBSY),
-+	E(EUCLEAN),
-+	E(EUNATCH),
-+	E(EUSERS),
-+	E(EXDEV),
-+	E(EXFULL),
-+
-+	E(ECANCELED),
-+	E(EAGAIN), /* EWOULDBLOCK */
-+	E(ECONNREFUSED), /* EREFUSED */
-+	E(EDEADLK), /* EDEADLK */
-+};
-+#undef E
-+
-+#define E(err) [err - 512 + BUILD_BUG_ON_ZERO(err < 512 || err > 550)] = #err
-+static const char *codes_512[] = {
-+	E(ERESTARTSYS),
-+	E(ERESTARTNOINTR),
-+	E(ERESTARTNOHAND),
-+	E(ENOIOCTLCMD),
-+	E(ERESTART_RESTARTBLOCK),
-+	E(EPROBE_DEFER),
-+	E(EOPENSTALE),
-+	E(ENOPARAM),
-+
-+	E(EBADHANDLE),
-+	E(ENOTSYNC),
-+	E(EBADCOOKIE),
-+	E(ENOTSUPP),
-+	E(ETOOSMALL),
-+	E(ESERVERFAULT),
-+	E(EBADTYPE),
-+	E(EJUKEBOX),
-+	E(EIOCBQUEUED),
-+	E(ERECALLCONFLICT),
-+};
-+#undef E
-+
-+const char *errcode(int err)
-+{
-+	/* Might as well accept both -EIO and EIO. */
-+	if (err < 0)
-+		err = -err;
-+	if (err <= 0) /* INT_MIN or 0 */
-+		return NULL;
-+	if (err < ARRAY_SIZE(codes_0))
-+		return codes_0[err];
-+	if (err >= 512 && err - 512 < ARRAY_SIZE(codes_512))
-+		return codes_512[err - 512];
-+	/* But why? */
-+	if (IS_ENABLED(CONFIG_MIPS) && err == EDQUOT) /* 1133 */
-+		return "EDQUOT";
-+	return NULL;
-+}
-diff --git a/lib/test_printf.c b/lib/test_printf.c
-index 944eb50f3862..0401a2341245 100644
---- a/lib/test_printf.c
-+++ b/lib/test_printf.c
-@@ -212,6 +212,7 @@ test_string(void)
- #define PTR_STR "ffff0123456789ab"
- #define PTR_VAL_NO_CRNG "(____ptrval____)"
- #define ZEROS "00000000"	/* hex 32 zero bits */
-+#define FFFFS "ffffffff"
- 
- static int __init
- plain_format(void)
-@@ -243,6 +244,7 @@ plain_format(void)
- #define PTR_STR "456789ab"
- #define PTR_VAL_NO_CRNG "(ptrval)"
- #define ZEROS ""
-+#define FFFFS ""
- 
- static int __init
- plain_format(void)
-@@ -588,6 +590,17 @@ flags(void)
- 	kfree(cmp_buffer);
- }
- 
-+static void __init
-+errptr(void)
-+{
-+	test("-1234", "%p", ERR_PTR(-1234));
-+	test(FFFFS "ffffffff " FFFFS "ffffff00", "%px %px", ERR_PTR(-1), ERR_PTR(-256));
-+#ifdef CONFIG_SYMBOLIC_ERRCODE
-+	test("EIO EINVAL ENOSPC", "%p %p %p", ERR_PTR(-EIO), ERR_PTR(-EINVAL), ERR_PTR(-ENOSPC));
-+	test("EAGAIN EAGAIN", "%p %p", ERR_PTR(-EAGAIN), ERR_PTR(-EWOULDBLOCK));
-+#endif
-+}
-+
- static void __init
- test_pointer(void)
- {
-@@ -610,6 +623,7 @@ test_pointer(void)
- 	bitmap();
- 	netdev_features();
- 	flags();
-+	errptr();
- }
- 
- static void __init selftest(void)
-diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index b0967cf17137..bfa5c3025965 100644
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -21,6 +21,7 @@
- #include <linux/build_bug.h>
- #include <linux/clk.h>
- #include <linux/clk-provider.h>
-+#include <linux/errcode.h>
- #include <linux/module.h>	/* for KSYM_SYMBOL_LEN */
- #include <linux/types.h>
- #include <linux/string.h>
-@@ -2111,6 +2112,31 @@ static noinline_for_stack
- char *pointer(const char *fmt, char *buf, char *end, void *ptr,
- 	      struct printf_spec spec)
- {
-+	/*
-+	 * If it's an ERR_PTR, try to print its symbolic
-+	 * representation, except for %px, where the user explicitly
-+	 * wanted the pointer formatted as a hex value.
-+	 */
-+	if (IS_ERR(ptr) && *fmt != 'x') {
-+		long err = PTR_ERR(ptr);
-+		const char *sym = errcode(-err);
-+		if (sym)
-+			return string_nocheck(buf, end, sym, spec);
-+		/*
-+		 * Funky, somebody passed ERR_PTR(-1234) or some other
-+		 * non-existing Efoo - or more likely
-+		 * CONFIG_SYMBOLIC_ERRCODE=n. None of the
-+		 * %p<something> extensions can make any sense of an
-+		 * ERR_PTR(), and if this was just a plain %p, the
-+		 * user is still better off getting the decimal
-+		 * representation rather than the hash value that
-+		 * ptr_to_id() would generate.
-+		 */
-+		spec.flags |= SIGN;
-+		spec.base = 10;
-+		return number(buf, end, err, spec);
-+	}
-+
- 	switch (*fmt) {
- 	case 'F':
- 	case 'f':
--- 
-2.20.1
+Did you get a chance review this updated series?
+I addressed Cornelia's and yours comment.
+I do not think allocating alias memory twice, once for comparison and once =
+for storing is good idea or moving alias generation logic inside the mdev_l=
+ist_lock(). So I didn't address that suggestion of Cornelia.
+=20
+> v1->v2:
+>  - Corrected a typo from 'and' to 'an'
+>  - Addressed comments from Alex Williamson
+>  - Kept mdev_device naturally aligned
+>  - Added error checking for crypt_*() calls
+>  - Moved alias NULL check at beginning
+>  - Added mdev_alias() API
+>  - Updated mtty driver to show example mdev_alias() usage
+>  - Changed return type of generate_alias() from int to char*
+> v0->v1:
+>  - Addressed comments from Alex Williamson, Cornelia Hunk and Mark Bloch
+>  - Moved alias length check outside of the parent lock
+>  - Moved alias and digest allocation from kvzalloc to kzalloc
+>  - &alias[0] changed to alias
+>  - alias_length check is nested under get_alias_length callback check
+>  - Changed comments to start with an empty line
+>  - Added comment where alias memory ownership is handed over to mdev
+> device
+>  - Fixed cleaunup of hash if mdev_bus_register() fails
+>  - Updated documentation for new sysfs alias file
+>  - Improved commit logs to make description more clear
+>  - Fixed inclusiong of alias for NULL check
+>  - Added ratelimited debug print for sha1 hash collision error
+>=20
+> Parav Pandit (5):
+>   mdev: Introduce sha1 based mdev alias
+>   mdev: Make mdev alias unique among all mdevs
+>   mdev: Expose mdev alias in sysfs tree
+>   mdev: Introduce an API mdev_alias
+>   mtty: Optionally support mtty alias
+>=20
+>  .../driver-api/vfio-mediated-device.rst       |   9 ++
+>  drivers/vfio/mdev/mdev_core.c                 | 142 +++++++++++++++++-
+>  drivers/vfio/mdev/mdev_private.h              |   5 +-
+>  drivers/vfio/mdev/mdev_sysfs.c                |  26 +++-
+>  include/linux/mdev.h                          |   5 +
+>  samples/vfio-mdev/mtty.c                      |  13 ++
+>  6 files changed, 190 insertions(+), 10 deletions(-)
+>=20
+> --
+> 2.19.2
 
