@@ -5,47 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06861C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D41C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C519E2171F
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:17:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87BE221D7D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:17:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568067420;
-	bh=eTPyePWV3IKKH2kJg7I/BE53B+fu/Ar+GJyFDi2phBw=;
+	s=default; t=1568067428;
+	bh=dHaNzdX8RhfYNR3G9kvpasvBZPNiOdCFP+q6x9pJ5Pw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SbaHPgfA5jB1EtFH20O0vOLmvISiaG9IAi2vZzFJWGRq9qoulLDAZgPVKkGdq4YFY
-	 S9gkRZ7qP8OhomnfhWrzO0yb8l3Yk27JmgIY8YBItEz0tY1D+xEncRBSi8JMhWchn6
-	 Ii8cWu6mPy11aiBjtpUfvl6axn+F7ob0DzmeO0eE=
+	b=dlp7Kbw8rE+ad4+V25EBs/AP0KZi5tjX898F1NedStrPEmseKHp7liLBNDNydmV6q
+	 XHNj4SMz07d105s17GGX4QF9yiHXbnm8guyysSBZ8W8FEPhJpCa6TD3SYZ80lEpmzu
+	 Egd1AtAwkFbAmOPwmji0/DzPQLoai2T6oankY6Qg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406288AbfIIWQ7 (ORCPT
+        id S2388135AbfIIWRH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 18:16:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45678 "EHLO mail.kernel.org"
+        Mon, 9 Sep 2019 18:17:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406226AbfIIWQs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 18:16:48 -0400
+        id S2406244AbfIIWQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 18:16:50 -0400
 Received: from sasha-vm.mshome.net (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93C9421D7D;
-        Mon,  9 Sep 2019 22:16:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3231321D7B;
+        Mon,  9 Sep 2019 22:16:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568067407;
-        bh=eTPyePWV3IKKH2kJg7I/BE53B+fu/Ar+GJyFDi2phBw=;
+        s=default; t=1568067409;
+        bh=dHaNzdX8RhfYNR3G9kvpasvBZPNiOdCFP+q6x9pJ5Pw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iXDFmmD2nPCGjuE/78bjkJpqtaelHRRZYHRwfp5BgBSEzASh9pPM02bQOOX4xKRmb
-         O0tHdVZ7tV230aN4eTHtRUXgUf2x1X1SNJvpx9JQxeSER9k2rdFkVZ/0LbfMfIjY1P
-         eQqscBqyMcTzRqe6xE1LR1h5CEbdhReSlkoVyhWw=
+        b=bhWOWDD3cRCpoB41CXfxQMg2kdSoIBWb5gHkJKlfsWNl+UdRQICHKa6XmdJiUxBSm
+         bu5ap3fHYYciq6R29JFvuYq7l+QYTcpXPkgQqiYdgQjdj6D7M8/gqo5uJJETpVZhzj
+         VJTYVN82Xr0EvAJZBG1itFH8OiBHZYTmHDtuYkJ8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 5/8] configfs_register_group() shouldn't be (and isn't) called in rmdirable parts
-Date:   Mon,  9 Sep 2019 11:41:20 -0400
-Message-Id: <20190909154124.31146-5-sashal@kernel.org>
+Cc:     Hillf Danton <hdanton@sina.com>,
+        Sachin Sant <sachinp@linux.vnet.ibm.com>,
+        David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 6/8] keys: Fix missing null pointer check in request_key_auth_describe()
+Date:   Mon,  9 Sep 2019 11:41:21 -0400
+Message-Id: <20190909154124.31146-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190909154124.31146-1-sashal@kernel.org>
 References: <20190909154124.31146-1-sashal@kernel.org>
@@ -58,53 +62,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Hillf Danton <hdanton@sina.com>
 
-[ Upstream commit f19e4ed1e1edbfa3c9ccb9fed17759b7d6db24c6 ]
+[ Upstream commit d41a3effbb53b1bcea41e328d16a4d046a508381 ]
 
-revert cc57c07343bd "configfs: fix registered group removal"
-It was an attempt to handle something that fundamentally doesn't
-work - configfs_register_group() should never be done in a part
-of tree that can be rmdir'ed.  And in mainline it never had been,
-so let's not borrow trouble; the fix was racy anyway, it would take
-a lot more to make that work and desired semantics is not clear.
+If a request_key authentication token key gets revoked, there's a window in
+which request_key_auth_describe() can see it with a NULL payload - but it
+makes no check for this and something like the following oops may occur:
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+	BUG: Kernel NULL pointer dereference at 0x00000038
+	Faulting instruction address: 0xc0000000004ddf30
+	Oops: Kernel access of bad area, sig: 11 [#1]
+	...
+	NIP [...] request_key_auth_describe+0x90/0xd0
+	LR [...] request_key_auth_describe+0x54/0xd0
+	Call Trace:
+	[...] request_key_auth_describe+0x54/0xd0 (unreliable)
+	[...] proc_keys_show+0x308/0x4c0
+	[...] seq_read+0x3d0/0x540
+	[...] proc_reg_read+0x90/0x110
+	[...] __vfs_read+0x3c/0x70
+	[...] vfs_read+0xb4/0x1b0
+	[...] ksys_read+0x7c/0x130
+	[...] system_call+0x5c/0x70
+
+Fix this by checking for a NULL pointer when describing such a key.
+
+Also make the read routine check for a NULL pointer to be on the safe side.
+
+[DH: Modified to not take already-held rcu lock and modified to also check
+ in the read routine]
+
+Fixes: 04c567d9313e ("[PATCH] Keys: Fix race between two instantiators of a key")
+Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Signed-off-by: Hillf Danton <hdanton@sina.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/configfs/dir.c | 11 -----------
- 1 file changed, 11 deletions(-)
+ security/keys/request_key_auth.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/fs/configfs/dir.c b/fs/configfs/dir.c
-index 809c1edffbaf1..19c8ce2a40430 100644
---- a/fs/configfs/dir.c
-+++ b/fs/configfs/dir.c
-@@ -1782,16 +1782,6 @@ void configfs_unregister_group(struct config_group *group)
- 	struct dentry *dentry = group->cg_item.ci_dentry;
- 	struct dentry *parent = group->cg_item.ci_parent->ci_dentry;
+diff --git a/security/keys/request_key_auth.c b/security/keys/request_key_auth.c
+index 5e515791ccd11..1d34b2a5f485e 100644
+--- a/security/keys/request_key_auth.c
++++ b/security/keys/request_key_auth.c
+@@ -71,6 +71,9 @@ static void request_key_auth_describe(const struct key *key,
+ {
+ 	struct request_key_auth *rka = get_request_key_auth(key);
  
--	mutex_lock(&subsys->su_mutex);
--	if (!group->cg_item.ci_parent->ci_group) {
--		/*
--		 * The parent has already been unlinked and detached
--		 * due to a rmdir.
--		 */
--		goto unlink_group;
--	}
--	mutex_unlock(&subsys->su_mutex);
--
- 	inode_lock_nested(d_inode(parent), I_MUTEX_PARENT);
- 	spin_lock(&configfs_dirent_lock);
- 	configfs_detach_prep(dentry, NULL);
-@@ -1806,7 +1796,6 @@ void configfs_unregister_group(struct config_group *group)
- 	dput(dentry);
++	if (!rka)
++		return;
++
+ 	seq_puts(m, "key:");
+ 	seq_puts(m, key->description);
+ 	if (key_is_positive(key))
+@@ -88,6 +91,9 @@ static long request_key_auth_read(const struct key *key,
+ 	size_t datalen;
+ 	long ret;
  
- 	mutex_lock(&subsys->su_mutex);
--unlink_group:
- 	unlink_group(group);
- 	mutex_unlock(&subsys->su_mutex);
- }
++	if (!rka)
++		return -EKEYREVOKED;
++
+ 	datalen = rka->callout_len;
+ 	ret = datalen;
+ 
 -- 
 2.20.1
 
