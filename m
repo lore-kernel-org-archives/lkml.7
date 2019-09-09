@@ -2,329 +2,184 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 392C3C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52955C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 075FE218DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:37:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568039851;
-	bh=uwlr7F1SbdvbkuLNy/guvGddllk7Q3VH2Cqx+ngRKEM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WExef5r5oDNiXVmGKL1WxAGgsTGvvSD7dm+77BLSUt0JYKFd3sN3bjmwBWfX8B64z
-	 cGdy0XnI7JrmA2xwvRc0zeB8+Q1Qi8sJ0VzsPGcrzblx7b6dkuCliXiFTe7VLIiVmV
-	 nrOccT6SQMUWJ6zuUyptZo85AZzOFiNPpC0jBeX0=
+	by mail.kernel.org (Postfix) with ESMTP id 179702086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:41:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K8f6fj7w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728009AbfIIOha (ORCPT
+        id S1728380AbfIIOlm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 10:37:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56866 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726523AbfIIOh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 10:37:29 -0400
-Received: from localhost (unknown [148.69.85.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5F622086D;
-        Mon,  9 Sep 2019 14:37:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568039848;
-        bh=uwlr7F1SbdvbkuLNy/guvGddllk7Q3VH2Cqx+ngRKEM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PkDmGDW6UL/RHC1vBJTYlYllvsiwwPgRvArhhd1PJ7r0WiG3aOX0lN1WZswlkYkbd
-         FAP9mZqQ6g5v1wmZl+CsR1l4HIwml5rpBeXgiZJiFSlajFhNA+HEjIi8KWeQefk0bf
-         ueo4PUxgL5zBrA6RkQEgXwcfj9l6CCcXzY6kl9xY=
-Date:   Mon, 9 Sep 2019 15:37:25 +0100
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     Chao Yu <chao@kernel.org>, linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] f2fs: fix to avoid accessing uninitialized field of
- inode page in is_alive()
-Message-ID: <20190909143725.GC31108@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20190906105426.109151-1-yuchao0@huawei.com>
- <20190906234808.GC71848@jaegeuk-macbookpro.roam.corp.google.com>
- <080e8dee-4726-8294-622a-cac26e781083@kernel.org>
- <20190909074425.GB21625@jaegeuk-macbookpro.roam.corp.google.com>
- <79228eaa-776f-da89-89f8-a9b5a90034b6@huawei.com>
- <873f4c07-5694-6554-5266-81812a6bd617@huawei.com>
- <20190909083725.GB25724@jaegeuk-macbookpro.roam.corp.google.com>
- <05393d3c-b78d-3bb3-ff26-64d2d3939618@huawei.com>
- <20190909093355.GA27742@jaegeuk-macbookpro.roam.corp.google.com>
- <94ea2431-d4da-f1bf-d949-3c36948aeeca@huawei.com>
+        Mon, 9 Sep 2019 10:41:42 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45051 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727191AbfIIOlm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 10:41:42 -0400
+Received: by mail-pl1-f194.google.com with SMTP id k1so6613135pls.11
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 07:41:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=uC05T6OzEgW6D9R47LZsBlTEyshQuOy1KHz8dbUIb8o=;
+        b=K8f6fj7wGOOqNPpcQly1pOiFKD1s06y8nbYHIcGqWDK5/tkTEZTn2r29GcU+BA4w3J
+         sIMJ8+7jTEFe9fZneGa3yGXejF97V2liZtBK007iPvakM3l53zO6XmJqTmpcDJJbLoLt
+         +7YBWm2nhnDRv4oCeF7uYlo58n6yUOdhsX/XocOMgvWEp+d57hlOcsPKZiHp7U/i+2mE
+         GjuAYmtLP+cbK+zN8yeLEn6wh6BBhj7vTh4VKStK43ndddjdl6nv3NP604nMK6XYm7+q
+         ppUPbRfNIqAI6Wr4b2VwHCsYrgm314bR2ReKa9j8MQCGj1yFNcf8WC8yLgmUQkHMNzuZ
+         Fl/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=uC05T6OzEgW6D9R47LZsBlTEyshQuOy1KHz8dbUIb8o=;
+        b=FiRnKqQ655FRD4gWKLzeQdQ42dVWSIvJEVaYrZZCvks27hA2IvpyY7zy9glveT3C16
+         kr7EPqqj6OM8FFBAOi49SUgbsEJLwc3v2RxW1gbA86RbBihDNNlkwUXnxedg67lO6SfA
+         WsTnNumbArDjKkQCSEy97CncrnoYFIgyPgV+lAzZd6yKB8xCWSHnJzHXEEBUtS0l7ajn
+         k5PqcR0ep3in6GX0GxdEo/YIZjJqpOcr0qja3MhaDmORsj407/NFZXlcpp50IMTVnylh
+         3DSt8J7qbTEafzza2GT6hMs7V9x7xWSypGH9v35l2yLVQdDjLt3zKRDICynwRUDhzW3Y
+         YCRw==
+X-Gm-Message-State: APjAAAW+zwHZdZKHNmYa3evZjxho0A4CsPQBO6ZJbZ5lTcoAXPpjCLHF
+        XoWg7YMjq24gRdVySdDs7XU=
+X-Google-Smtp-Source: APXvYqz7Fyqy75Z6D/c9N4gu+v8aZvhuGRGMzGj1ncnyIlLTGRfUpFR428NmBRDeG1BkIhoqVgoxiA==
+X-Received: by 2002:a17:902:7613:: with SMTP id k19mr24582377pll.89.1568040101043;
+        Mon, 09 Sep 2019 07:41:41 -0700 (PDT)
+Received: from mail.google.com ([149.28.153.17])
+        by smtp.gmail.com with ESMTPSA id l6sm36565606pje.28.2019.09.09.07.41.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Sep 2019 07:41:40 -0700 (PDT)
+Date:   Mon, 9 Sep 2019 22:41:32 +0800
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/9] kconfig/hacking: make 'kernel hacking' menu
+ better structurized
+Message-ID: <20190909144130.4xvir2svtcizlc2g@mail.google.com>
+References: <20190909141823.8638-1-changbin.du@gmail.com>
+ <CAK7LNAQGk_4f-aGVH3bxZdNna_gdHEBHeD6DNwY49Q5kxU=U7w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <94ea2431-d4da-f1bf-d949-3c36948aeeca@huawei.com>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK7LNAQGk_4f-aGVH3bxZdNna_gdHEBHeD6DNwY49Q5kxU=U7w@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/09, Chao Yu wrote:
-> On 2019/9/9 17:33, Jaegeuk Kim wrote:
-> > On 09/09, Chao Yu wrote:
-> >> On 2019/9/9 16:37, Jaegeuk Kim wrote:
-> >>> On 09/09, Chao Yu wrote:
-> >>>> On 2019/9/9 15:58, Chao Yu wrote:
-> >>>>> On 2019/9/9 15:44, Jaegeuk Kim wrote:
-> >>>>>> On 09/07, Chao Yu wrote:
-> >>>>>>> On 2019-9-7 7:48, Jaegeuk Kim wrote:
-> >>>>>>>> On 09/06, Chao Yu wrote:
-> >>>>>>>>> If inode is newly created, inode page may not synchronize with inode cache,
-> >>>>>>>>> so fields like .i_inline or .i_extra_isize could be wrong, in below call
-> >>>>>>>>> path, we may access such wrong fields, result in failing to migrate valid
-> >>>>>>>>> target block.
-> >>>>>>>>
-> >>>>>>>> If data is valid, how can we get new inode page?
-> >>>>>>
-> >>>>>> Let me rephrase the question. If inode is newly created, is this data block
-> >>>>>> really valid to move in GC?
-> >>>>>
-> >>>>> I guess it's valid, let double check that.
-> >>>>
-> >>>> We can see inode page:
-> >>>>
-> >>>> - f2fs_create
-> >>>>  - f2fs_add_link
-> >>>>   - f2fs_add_dentry
-> >>>>    - f2fs_init_inode_metadata
-> >>>>     - f2fs_add_inline_entry
-> >>>>      - ipage = f2fs_new_inode_page
-> >>>>      - f2fs_put_page(ipage)   <---- after this
-> >>>
-> >>> Can you print out how many block was assigned to this inode?
+On Mon, Sep 09, 2019 at 11:31:10PM +0900, Masahiro Yamada wrote:
+> Hi.
+> 
+> On Mon, Sep 9, 2019 at 11:18 PM Changbin Du <changbin.du@gmail.com> wrote:
+> >
+> > This series is a trivial improvment for the layout of 'kernel hacking'
+> > configuration menu. Now we have many items in it which makes takes
+> > a little time to look up them since they are not well structurized yet.
+> 
+> 
+> Could you please change the subject prefix "kconfig/hacking:" ?
+> ("hacking:" , "debug:" or whatever, but no "kconfig")
+>
+sure, I pick 'hacking'.
 
-Can we update inode before finally putting ipage?
+> I just opened this thread just in case it might be related to kconfig,
+> but it was not.
+> 
+> Thanks.
+> 
+> 
+> 
+> 
+> 
+> 
+> > Early discussion is here:
+> > https://lkml.org/lkml/2019/9/1/39
+> >
+> > This is a preview:
+> >
+> >   │ ┌─────────────────────────────────────────────────────────────────────────┐ │
+> >   │ │        printk and dmesg options  --->                                   │ │
+> >   │ │        Compile-time checks and compiler options  --->                   │ │
+> >   │ │        Generic Kernel Debugging Instruments  --->                       │ │
+> >   │ │    -*- Kernel debugging                                                 │ │
+> >   │ │    [*]   Miscellaneous debug code                                       │ │
+> >   │ │        Memory Debugging  --->                                           │ │
+> >   │ │    [ ] Debug shared IRQ handlers                                        │ │
+> >   │ │        Debug Oops, Lockups and Hangs  --->                              │ │
+> >   │ │        Scheduler Debugging  --->                                        │ │
+> >   │ │    [*] Enable extra timekeeping sanity checking                         │ │
+> >   │ │        Lock Debugging (spinlocks, mutexes, etc...)  --->                │ │
+> >   │ │    -*- Stack backtrace support                                          │ │
+> >   │ │    [ ] Warn for all uses of unseeded randomness                         │ │
+> >   │ │    [ ] kobject debugging                                                │ │
+> >   │ │        Debug kernel data structures  --->                               │ │
+> >   │ │    [ ] Debug credential management                                      │ │
+> >   │ │        RCU Debugging  --->                                              │ │
+> >   │ │    [ ] Force round-robin CPU selection for unbound work items           │ │
+> >   │ │    [ ] Force extended block device numbers and spread them              │ │
+> >   │ │    [ ] Enable CPU hotplug state control                                 │ │
+> >   │ │    [*] Latency measuring infrastructure                                 │ │
+> >   │ │    [*] Tracers  --->                                                    │ │
+> >   │ │    [ ] Remote debugging over FireWire early on boot                     │ │
+> >   │ │    [*] Sample kernel code  --->                                         │ │
+> >   │ │    [*] Filter access to /dev/mem                                        │ │
+> >   │ │    [ ]   Filter I/O access to /dev/mem                                  │ │
+> >   │ │    [ ] Additional debug code for syzbot                                 │ │
+> >   │ │        x86 Debugging  --->                                              │ │
+> >   │ │        Kernel Testing and Coverage  --->                                │ │
+> >   │ │                                                                         │ │
+> >   │ │                                                                         │ │
+> >   │ └─────────────────────────────────────────────────────────────────────────┘ │
+> >   ├─────────────────────────────────────────────────────────────────────────────┤
+> >   │          <Select>    < Exit >    < Help >    < Save >    < Load >           │
+> >   └─────────────────────────────────────────────────────────────────────────────┘
+> >
+> > v2:
+> >   o rebase to linux-next.
+> >   o move DEBUG_FS to 'Generic Kernel Debugging Instruments'
+> >   o move DEBUG_NOTIFIERS to 'Debug kernel data structures'
+> >
+> > Changbin Du (9):
+> >   kconfig/hacking: Group sysrq/kgdb/ubsan into 'Generic Kernel Debugging
+> >     Instruments'
+> >   kconfig/hacking: Create submenu for arch special debugging options
+> >   kconfig/hacking: Group kernel data structures debugging together
+> >   kconfig/hacking: Move kernel testing and coverage options to same
+> >     submenu
+> >   kconfig/hacking: Move Oops into 'Lockups and Hangs'
+> >   kconfig/hacking: Move SCHED_STACK_END_CHECK after DEBUG_STACK_USAGE
+> >   kconfig/hacking: Create a submenu for scheduler debugging options
+> >   kconfig/hacking: Move DEBUG_BUGVERBOSE to 'printk and dmesg options'
+> >   kconfig/hacking: Move DEBUG_FS to 'Generic Kernel Debugging
+> >     Instruments'
+> >
+> >  lib/Kconfig.debug | 659 ++++++++++++++++++++++++----------------------
+> >  1 file changed, 340 insertions(+), 319 deletions(-)
+> >
+> > --
+> > 2.20.1
+> >
+> 
+> 
+> --
+> Best Regards
+> Masahiro Yamada
 
-> >>
-> >> Add log like this:
-> >>
-> >> 		if (!test_and_set_bit(segno, SIT_I(sbi)->invalid_segmap)) {
-> >> 			if (is_inode) {
-> >> 				for (i = 0; i < 923 - 50; i++) {
-> >> 					__le32 *base = blkaddr_in_node(node);
-> >> 					unsigned ofs = offset_in_addr(inode);
-> >>
-> >> 					printk("i:%u, addr:%x\n", i,
-> >> 						le32_to_cpu(*(base + i)));
-> >> 				}
-> >> 				printk("i_inline: %u\n", inode->i_inline);
-> >> 			}
-> >>
-> >> It shows:
-> >> ...
-> >> i:10, addr:e66a
-> >> ...
-> >> i:46, addr:e66c
-> >> i:47, addr:e66d
-> >> i:48, addr:e66e
-> >> i:49, addr:e66f
-> >> i:50, addr:e670
-> >> i:51, addr:e671
-> >> i:52, addr:e672
-> >> i:53, addr:e673
-> >> i:54, addr:e674
-> >> i:55, addr:e675
-> >> i:56, addr:e676
-> >> ...
-> >> i:140, addr:2c35    <--- we want to migrate this block, however, without correct
-> >> .i_inline and .i_extra_isize value, we can just find i_addr[i:140-6] = NULL_ADDR
-> > 
-> > So, the theory is the block is indeed valid and the address was updated before
-> > write_inode()?
-> 
-> I guess so. :)
-> 
-> Thanks,
-> 
-> > 
-> >> i:141, addr:2c38
-> >> i:142, addr:2c39
-> >> i:143, addr:2c3b
-> >> i:144, addr:2c3e
-> >> i:145, addr:2c40
-> >> i:146, addr:2c44
-> >> i:147, addr:2c48
-> >> i:148, addr:2c4a
-> >> i:149, addr:2c4c
-> >> i:150, addr:2c4f
-> >> i:151, addr:2c59
-> >> i:152, addr:2c5d
-> >> ...
-> >> i:188, addr:e677
-> >> i:189, addr:e678
-> >> i:190, addr:e679
-> >> i:191, addr:e67a
-> >> i:192, addr:e67b
-> >> i:193, addr:e67c
-> >> i:194, addr:e67d
-> >> i:195, addr:e67e
-> >> i:196, addr:e67f
-> >> i:197, addr:e680
-> >> i:198, addr:ffffffff
-> >> i:199, addr:ffffffff
-> >> i:200, addr:ffffffff
-> >> i:201, addr:ffffffff
-> >> i:202, addr:ffffffff
-> >> i:203, addr:ffffffff
-> >> i:204, addr:ffffffff
-> >> i:205, addr:ffffffff
-> >> i:206, addr:ffffffff
-> >> i:207, addr:ffffffff
-> >> i:208, addr:ffffffff
-> >> i:209, addr:ffffffff
-> >> i:210, addr:ffffffff
-> >> i:211, addr:ffffffff
-> >> i:212, addr:ffffffff
-> >> i:213, addr:ffffffff
-> >> i:214, addr:ffffffff
-> >> i:215, addr:ffffffff
-> >> i:216, addr:ffffffff
-> >> i:217, addr:ffffffff
-> >> i:218, addr:ffffffff
-> >> i:219, addr:ffffffff
-> >> i:220, addr:ffffffff
-> >> i:221, addr:ffffffff
-> >> i:222, addr:ffffffff
-> >> i:223, addr:ffffffff
-> >> i:224, addr:ffffffff
-> >> i:225, addr:ffffffff
-> >> i:226, addr:ffffffff
-> >> i:227, addr:ffffffff
-> >> i:228, addr:ffffffff
-> >> i:229, addr:ffffffff
-> >> i:230, addr:ffffffff
-> >> i:231, addr:ffffffff
-> >> i:232, addr:ffffffff
-> >> i:233, addr:ffffffff
-> >> i:234, addr:b032
-> >> i:235, addr:b033
-> >> i:236, addr:b034
-> >> i:237, addr:b035
-> >> i:238, addr:b036
-> >> i:239, addr:b038
-> >> ...
-> >> i:283, addr:e681
-> >> ...
-> >> i_inline: 0
-> >>
-> >> F2FS-fs (zram1): summary nid: 360, ofs: 134, ver: 0
-> >> F2FS-fs (zram1): blkaddr 2c35 (blkaddr in node 0) <-blkaddr in node is NULL_ADDR
-> >> F2FS-fs (zram1): expect: seg 14, ofs_in_seg: 53
-> >> F2FS-fs (zram1): real: seg 4294967295, ofs_in_seg: 0
-> >> F2FS-fs (zram1): ofs: 53, 0
-> >> F2FS-fs (zram1): node info ino:360, nid:360, nofs:0
-> >> F2FS-fs (zram1): ofs_in_addr: 0
-> >> F2FS-fs (zram1): end ========
-> >>
-> >>>
-> >>>>
-> >>>>>
-> >>>>>>
-> >>>>>>>
-> >>>>>>> is_alive()
-> >>>>>>> {
-> >>>>>>> ...
-> >>>>>>> 	node_page = f2fs_get_node_page(sbi, nid);  <--- inode page
-> >>>>>>
-> >>>>>> Aren't we seeing the below version warnings?
-> >>>>>>
-> >>>>>> if (sum->version != dni->version) {
-> >>>>>> 	f2fs_warn(sbi, "%s: valid data with mismatched node version.",
-> >>>>>>                            __func__);
-> >>>>>>         set_sbi_flag(sbi, SBI_NEED_FSCK);
-> >>>>>> }
-> >>>>
-> >>>> The version of summary and dni are all zero.
-> >>>
-> >>> Then, this node was allocated and removed without being flushed.
-> >>>
-> >>>>
-> >>>> summary nid: 613, ofs: 111, ver: 0
-> >>>> blkaddr 2436 (blkaddr in node 0)
-> >>>> expect: seg 10, ofs_in_seg: 54
-> >>>> real: seg 4294967295, ofs_in_seg: 0
-> >>>> ofs: 54, 0
-> >>>> node info ino:613, nid:613, nofs:0
-> >>>> ofs_in_addr: 0
-> >>>>
-> >>>> Thanks,
-> >>>>
-> >>>>>>
-> >>>>>>>
-> >>>>>>> 	source_blkaddr = datablock_addr(NULL, node_page, ofs_in_node);
-> >>>>>>
-> >>>>>> So, we're getting this? Does this incur infinite loop in GC?
-> >>>>>>
-> >>>>>> if (!test_and_set_bit(segno, SIT_I(sbi)->invalid_segmap)) {
-> >>>>>> 	f2fs_err(sbi, "mismatched blkaddr %u (source_blkaddr %u) in seg %u\n",
-> >>>>>> 	f2fs_bug_on(sbi, 1);
-> >>>>>> }
-> >>>>>
-> >>>>> Yes, I only get this with generic/269, rather than "valid data with mismatched
-> >>>>> node version.".
-> >>>
-> >>> Was this block moved as valid? In either way, is_alive() returns false, no?
-> >>> How about checking i_blocks to detect the page is initialized in is_alive()?
-> >>>
-> >>>>>
-> >>>>> With this patch, generic/269 won't panic again.
-> >>>>>
-> >>>>> Thanks,
-> >>>>>
-> >>>>>>
-> >>>>>>> ...
-> >>>>>>> }
-> >>>>>>>
-> >>>>>>> datablock_addr()
-> >>>>>>> {
-> >>>>>>> ...
-> >>>>>>> 	base = offset_in_addr(&raw_node->i);  <--- the base could be wrong here due to
-> >>>>>>> accessing uninitialized .i_inline of raw_node->i.
-> >>>>>>> ...
-> >>>>>>> }
-> >>>>>>>
-> >>>>>>> Thanks,
-> >>>>>>>
-> >>>>>>>>
-> >>>>>>>>>
-> >>>>>>>>> - gc_data_segment
-> >>>>>>>>>  - is_alive
-> >>>>>>>>>   - datablock_addr
-> >>>>>>>>>    - offset_in_addr
-> >>>>>>>>>
-> >>>>>>>>> Fixes: 7a2af766af15 ("f2fs: enhance on-disk inode structure scalability")
-> >>>>>>>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> >>>>>>>>> ---
-> >>>>>>>>>  fs/f2fs/dir.c | 3 +++
-> >>>>>>>>>  1 file changed, 3 insertions(+)
-> >>>>>>>>>
-> >>>>>>>>> diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
-> >>>>>>>>> index 765f13354d3f..b1840852967e 100644
-> >>>>>>>>> --- a/fs/f2fs/dir.c
-> >>>>>>>>> +++ b/fs/f2fs/dir.c
-> >>>>>>>>> @@ -479,6 +479,9 @@ struct page *f2fs_init_inode_metadata(struct inode *inode, struct inode *dir,
-> >>>>>>>>>  		if (IS_ERR(page))
-> >>>>>>>>>  			return page;
-> >>>>>>>>>  
-> >>>>>>>>> +		/* synchronize inode page's data from inode cache */
-> >>>>>>>>> +		f2fs_update_inode(inode, page);
-> >>>>>>>>> +
-> >>>>>>>>>  		if (S_ISDIR(inode->i_mode)) {
-> >>>>>>>>>  			/* in order to handle error case */
-> >>>>>>>>>  			get_page(page);
-> >>>>>>>>> -- 
-> >>>>>>>>> 2.18.0.rc1
-> >>>>>> .
-> >>>>>>
-> >>> .
-> >>>
-> > .
-> > 
+-- 
+Cheers,
+Changbin Du
