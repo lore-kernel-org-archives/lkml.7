@@ -2,130 +2,101 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64090C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5150BC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 270A621479
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:39:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QXaFOCvC"
+	by mail.kernel.org (Postfix) with ESMTP id 2DF102082C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:39:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729670AbfIIQjB (ORCPT
+        id S1730055AbfIIQjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 12:39:01 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:39263 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbfIIQjB (ORCPT
+        Mon, 9 Sep 2019 12:39:43 -0400
+Received: from smtprelay0165.hostedemail.com ([216.40.44.165]:54836 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729421AbfIIQjn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 12:39:01 -0400
-Received: by mail-io1-f68.google.com with SMTP id d25so30237821iob.6;
-        Mon, 09 Sep 2019 09:38:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=+exDBKH+dNdNetnxtSgRIkoL8JdSpk5kKasTurEcRLY=;
-        b=QXaFOCvCirix91oq1I3y9jyO7zmFYj1kibyfDKF5h6JjaKceZ3CMkszs6cXfFv/MW6
-         rlA4etc7Xc+FkdMlpD3z3UImJktiFeNFtOssjSQJRvQ8uay1E7Nn0+igaWT20Ky8h1J7
-         q8DMnzKoUF/NE2+S6BGk6w45LnM1SiSW67UzhfX5vhOdpGByN2YzUQrGFUpQG/rBe4A2
-         ffj81xe4UMFBkPV1DSlCeAbuozurYMKgpZekdjP0NNCXHwS15EYDhQ8kU/9Il+JeAF3Y
-         r4p/euuaUqJDvvwgzOQsyJVhrfLmPjsRRz3kZRO5o9p12hgi8Iu9UZfBJDFujJ6m93To
-         uDfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=+exDBKH+dNdNetnxtSgRIkoL8JdSpk5kKasTurEcRLY=;
-        b=HmSTcTG11v7aoVsBqFCBXHaXFq4qegN5FqeOxs21b9m95XDyXQPwaqPwoL6pOfGf1y
-         cFdOl7YMPc0lkUFwS6LXJlbRDKWAbPmtzm/GXrClAVgMVUCLkUdul4aazBWgw8hLF/bC
-         TBe/gMPKDesYeUrbftnxFt8+dcFxSBqfCupQJqRCJzxDZA2BthO3On3VQoVM5zZdjpxe
-         /GdTV/tec3wKAsACtP9C+w8trS7OQ53CPUYJeQ3uyXnyzBqzZizirkWIEXO3noSvXuaa
-         FOUD92f/zKezZIUUt+kfYRdV2NxHWzt4PKY4WUIN3jlfFwl+BbW6LUOdXr5w28FkswRg
-         +nIg==
-X-Gm-Message-State: APjAAAVxgx8QJ7jGJ9QSW447/L0eobdt/vAEW4FwMCgnehzw9AfPHUBk
-        /8Fn0VhGxNBuGC6mZxz0j5HJF0muZeNFlxBkUOU=
-X-Google-Smtp-Source: APXvYqzB5N65Dg7TWKyypDrotWGW9o3/gso0zSAc4Xb5afFY8ICmDS2eZQ/vuOUmdbEYlhs/LetR7ytw1TtkmwFUZ1o=
-X-Received: by 2002:a6b:8e92:: with SMTP id q140mr575826iod.205.1568047138483;
- Mon, 09 Sep 2019 09:38:58 -0700 (PDT)
+        Mon, 9 Sep 2019 12:39:43 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 35AB5181D341F;
+        Mon,  9 Sep 2019 16:39:41 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: tent99_1a341b076e050
+X-Filterd-Recvd-Size: 2865
+Received: from XPS-9350.home (unknown [47.151.152.152])
+        (Authenticated sender: joe@perches.com)
+        by omf20.hostedemail.com (Postfix) with ESMTPA;
+        Mon,  9 Sep 2019 16:39:39 +0000 (UTC)
+Message-ID: <7d870b0119afa378dc68c710670b9b550ef5bdd4.camel@perches.com>
+Subject: Re: [Patch 10/13] media: am437x-vpfe: Remove print_fourcc helper
+From:   Joe Perches <joe@perches.com>
+To:     Benoit Parrot <bparrot@ti.com>, Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Prabhakar Lad <prabhakar.csengg@gmail.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 09 Sep 2019 09:39:37 -0700
+In-Reply-To: <20190909162743.30114-11-bparrot@ti.com>
+References: <20190909162743.30114-1-bparrot@ti.com>
+         <20190909162743.30114-11-bparrot@ti.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-References: <C04F49BA-1229-4E96-9FCF-4FC662D1DB11@goldelico.com>
- <CAHCN7x+Ye6sB_YqO0sAX1OJDw64B-qGS3pL545v3Xk5z914cwQ@mail.gmail.com>
- <0C1EF64E-B33C-4BFA-A7D3-471DD1B9EE86@goldelico.com> <515048DE-138D-4400-8168-F2B7D61F1005@goldelico.com>
- <CAHCN7xLPCX9rZ0+7KVBiA_bgZ6tg6VeCXqD-UXu+6iwpFMPVrA@mail.gmail.com>
- <7B3D1D77-3E8C-444F-90B9-6DF2641178B8@goldelico.com> <CAHCN7xLW58ggx3CpVL=HdCVHWo6D-MCTB91A_9rtSRoZQ+xJuQ@mail.gmail.com>
- <FA2920FE-B76A-4D44-A264-862A1CCBF7FC@goldelico.com> <CAHCN7xJsPa0i+Z+qpCkWcdAh9+udmGT0RPNchdDsfB=8ptd3Nw@mail.gmail.com>
- <87420DBD-770F-4C32-9499-A3AEA5876E8A@goldelico.com> <20190909163236.GP52127@atomide.com>
-In-Reply-To: <20190909163236.GP52127@atomide.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Mon, 9 Sep 2019 11:38:47 -0500
-Message-ID: <CAHCN7xLyeSFCMn=qhmYa0ZsqsQheHDz8zyBz38giECK9wixbuw@mail.gmail.com>
-Subject: Re: [Letux-kernel] [RFC PATCH 0/3] Enable 1GHz support on omap36xx
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        =?UTF-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Nishanth Menon <nm@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 9, 2019 at 11:32 AM Tony Lindgren <tony@atomide.com> wrote:
->
-> Hi,
->
-> * H. Nikolaus Schaller <hns@goldelico.com> [190909 14:57]:
-> > Another question that came up by private mail from Andr=C3=A9 was if we
-> > should better disable the turbo OPPs of omap34xx and 36xx by default
-> > (status =3D "disabled";) because there are concerns about overheating
-> > the chips and we have no thermal regulation like for omap4 & 5.
+On Mon, 2019-09-09 at 11:27 -0500, Benoit Parrot wrote:
+> print_fourcc helper function was used for debug log the
+> convert a pixel format code into its readable form for display
+> purposes. But since it used a single static buffer to perform
+> the conversion this might lead to display format issue when more
+> than one instance was invoked simultaneously.
+> 
+> It turns out that print_fourcc can be safely replace by using
+> "%4.4s" instead and casting the pointer to the fourcc code
+> into a (char *).
+[]
+> diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
+[]
+> @@ -221,20 +221,6 @@ static void pix_to_mbus(struct vpfe_device *vpfe,
+[]
+> @@ -700,8 +686,8 @@ static int vpfe_ccdc_set_pixel_format(struct vpfe_ccdc *ccdc, u32 pixfmt)
+>  {
+>  	struct vpfe_device *vpfe = container_of(ccdc, struct vpfe_device, ccdc);
+>  
+> -	vpfe_dbg(1, vpfe, "%s: if_type: %d, pixfmt:%s\n",
+> -		 __func__, ccdc->ccdc_cfg.if_type, print_fourcc(pixfmt));
+> +	vpfe_dbg(1, vpfe, "%s: if_type: %d, pixfmt:%4.4s\n",
+> +		 __func__, ccdc->ccdc_cfg.if_type, (char *)&pixfmt);
 
-I thought there was a thermal sensor?
 
-cpu_thermal: cpu_thermal {
-        polling-delay-passive =3D <250>; /* milliseconds */
-        polling-delay =3D <1000>; /* milliseconds */
-        coefficients =3D <0 20000>;
+To avoid any possible defect in the content of pixfmt, it's
+probably better to use vsprintf extension "%4pE", &pixfmt
+see: Documentation/core-api/printk-formats.rst
 
-                        /* sensor       ID */
-        thermal-sensors =3D <&bandgap     0>;
-};
+	vpfe_dbg(1, vpfe, "%s: if_type: %d, pixfmt:%4pE\n",
+		 __func__, ccdc->ccdc_cfg.if_type, &pixfmt);
 
-Can this driver somehow notify the cpufreq that we've hit some limit?
-I know it's not as accurate as one would like, but even for non-1GHz
-versions, having it downclock would be a good thing when running at
-extreme temps.
+>  
+>  	if (ccdc->ccdc_cfg.if_type == VPFE_RAW_BAYER) {
+>  		ccdc->ccdc_cfg.bayer.pix_fmt = CCDC_PIXFMT_RAW;
+> @@ -989,8 +975,8 @@ static int vpfe_config_ccdc_image_format(struct vpfe_device *vpfe)
+>  
+>  	vpfe_dbg(2, vpfe, "%s:\n", __func__);
+>  
+> -	vpfe_dbg(1, vpfe, "pixelformat: %s\n",
+> -		print_fourcc(vpfe->v_fmt.fmt.pix.pixelformat));
+> +	vpfe_dbg(1, vpfe, "pixelformat: %4.4s\n",
+> +		 (char *)&vpfe->v_fmt.fmt.pix.pixelformat);
 
-adam
-> >
-> > But this would mean that every board DTS would have to set it explicitl=
-y
-> > to "enabled".
->
-> Yes I started thinking about that too. I think there is a requirement
-> to do the scaling via the voltage processor for the higher modes.
-> And there needs to be some way to automatically change to a lower
-> OPP in some cases.
->
-> For normal OPPs, using the twl regulator directly should be OK.
->
-> For the higher modes, maybe we could pass the callback functions
-> from arch/arm/mach-omap2/voltage.c for the twl regulator so the
-> voltage processor hardware can handle them directly. Or add a
-> separate regulator driver operating the voltages like Nishanth
-> posted patches for earlier.
->
-> Regards,
->
-> Tony
+	vpfe_dbg(1, vpfe, "pixelformat: %4pE\n",
+		 &vpfe->v_fmt.fmt.pix.pixelformat);
+
+etc...
+
+
