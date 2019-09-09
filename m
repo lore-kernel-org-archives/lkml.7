@@ -2,88 +2,195 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D837C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:45:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18093C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FD3E218DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:45:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7A20218DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:47:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728629AbfIIMpC (ORCPT
+        id S1728885AbfIIMrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 08:45:02 -0400
-Received: from mga01.intel.com ([192.55.52.88]:31239 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726008AbfIIMpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 08:45:02 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Sep 2019 05:45:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,484,1559545200"; 
-   d="scan'208";a="383963542"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.66]) ([10.237.72.66])
-  by fmsmga005.fm.intel.com with ESMTP; 09 Sep 2019 05:44:58 -0700
-Subject: Re: [PATCH 2/4] mmc: Add virtual command queue support
-To:     Baolin Wang <baolin.wang@linaro.org>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>, riteshh@codeaurora.org,
-        asutoshd@codeaurora.org, Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <cover.1567740135.git.baolin.wang@linaro.org>
- <14599f7165f23db2bf7b71a2596e808e2bc2056c.1567740135.git.baolin.wang@linaro.org>
- <3bcd69fd-2f8e-9b87-7292-4b0b1aa5be78@intel.com>
- <CAMz4kuKsk7ZN2BnD4zp53PQE22jD-BTsJLL53SL3ndZ5=OCHYA@mail.gmail.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <3d83db18-7e80-944c-fc4b-244249c71bbf@intel.com>
-Date:   Mon, 9 Sep 2019 15:43:48 +0300
+        Mon, 9 Sep 2019 08:47:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58956 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727474AbfIIMrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 08:47:00 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 467D0AFA5;
+        Mon,  9 Sep 2019 12:46:58 +0000 (UTC)
+Subject: Re: [PATCH v3 1/7] drm: add drm_print_bits
+To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>
+References: <20190904054740.20817-1-kraxel@redhat.com>
+ <20190904054740.20817-2-kraxel@redhat.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNKFRob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmNvbT7CwJQEEwEIAD4W
+ IQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznTtgIbAwUJA8JnAAULCQgHAgYVCgkICwIEFgID
+ AQIeAQIXgAAKCRBoDcEdUwt6I7D7CACBK42XW+7mCiK8ioXMEy1NzGbXC51RzGea8N83oEJS
+ 1KVUtQxrkDxgrW/WLSl/TfqHFsJpdEFOv1XubWbleun3uKPy0e5vZCd5UjZPkeNjnqfCYTDy
+ hVVsdOuFbtWDppJyJrThLqr9AgSFmoCNNUt1SVpYEEOLNE6C32BhlnSq21VLC+YXTgO/ZHTa
+ YXkq54hHj63jwrcjkBSCkXLh37kHeqnl++GHpN+3R+o3w2OpwHAlvVjdKPT27v1tVkiydsFG
+ 65Vd0n3m/ft+IOrGgxQM1C20uqKvsZGB4r3OGR50ekAybO7sjEJJ1Obl4ge/6RRqcvKz4LMb
+ tGs85D6tPIeFzsBNBFs50uABCADGJj+DP1fk+UWOWrf4O61HTbC4Vr9QD2K4fUUHnzg2B6zU
+ R1BPXqLGG0+lzK8kfYU/F5RjmEcClsIkAaFkg4kzKP14tvY1J5+AV3yNqcdg018HNtiyrSwI
+ E0Yz/qm1Ot2NMZ0DdvVBg22IMsiudQ1tx9CH9mtyTbIXgACvl3PW2o9CxiHPE/bohFhwZwh/
+ kXYYAE51lhinQ3oFEeQZA3w4OTvxSEspiQR8dg8qJJb+YOAc5IKk6sJmmM7JfFMWSr22satM
+ 23oQ3WvJb4RV6HTRTAIEyyZS7g2DhiytgMG60t0qdABG5KXSQW+OKlZRpuWwKWaLh3if/p/u
+ 69dvpanbABEBAAHCwHwEGAEIACYWIQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznS4AIbDAUJ
+ A8JnAAAKCRBoDcEdUwt6I6X3CACJ8D+TpXBCqJE5xwog08+Dp8uBpx0T9n1wE0GQisZruACW
+ NofYn8PTX9k4wmegDLwt7YQDdKxQ4+eTfZeLNQqWg6OCftH5Kx7sjWnJ09tOgniVdROzWJ7c
+ VJ/i0okazncsJ+nq48UYvRGE1Swh3A4QRIyphWX4OADOBmTFl9ZYNPnh23eaC9WrNvFr7yP7
+ iGjMlfEW8l6Lda//EC5VpXVNza0xeae0zFNst2R9pn+bLkihwDLWxOIyifGRxTqNxoS4I1aw
+ VhxPSVztPMSpIA/sOr/N/p6JrBLn+gui2K6mP7bGb8hF+szfArYqz3T1rv1VzUWAJf5Wre5U
+ iNx9uqqx
+Message-ID: <66258358-b27e-4eb1-44a4-c90aa342293c@suse.de>
+Date:   Mon, 9 Sep 2019 14:46:47 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAMz4kuKsk7ZN2BnD4zp53PQE22jD-BTsJLL53SL3ndZ5=OCHYA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190904054740.20817-2-kraxel@redhat.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="2skgr6sFYrh1Z5EQHu05feTjEDtqucFhH"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/09/19 3:16 PM, Baolin Wang wrote:
-> Hi Adrian,
-> 
-> On Mon, 9 Sep 2019 at 20:02, Adrian Hunter <adrian.hunter@intel.com> wrote:
->>
->> On 6/09/19 6:52 AM, Baolin Wang wrote:
->>> Now the MMC read/write stack will always wait for previous request is
->>> completed by mmc_blk_rw_wait(), before sending a new request to hardware,
->>> or queue a work to complete request, that will bring context switching
->>> overhead, especially for high I/O per second rates, to affect the IO
->>> performance.
->>>
->>> Thus this patch introduces virtual command queue interface, which is
->>> similar with the hardware command queue engine's idea, that can remove
->>> the context switching.
->>
->> CQHCI is a hardware interface for eMMC's that support command queuing.  What
->> you are doing is a software issue queue, unrelated to CQHCI.  I think you
-> 
-> Yes.
-> 
->> should avoid all reference to CQHCI i.e. call it something else.
-> 
-> Since its process is similar with CQHCI and re-use the CQHCI's
-> interfaces, I called it virtual command queue. I am not sure what else
-> name is better, any thoughts? VCQHCI? Thanks.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--2skgr6sFYrh1Z5EQHu05feTjEDtqucFhH
+Content-Type: multipart/mixed; boundary="cvmaHfE2YJqR393NckYCCAwLsnpy2D3uw";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>,
+ open list <linux-kernel@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+ Sean Paul <sean@poorly.run>
+Message-ID: <66258358-b27e-4eb1-44a4-c90aa342293c@suse.de>
+Subject: Re: [PATCH v3 1/7] drm: add drm_print_bits
+References: <20190904054740.20817-1-kraxel@redhat.com>
+ <20190904054740.20817-2-kraxel@redhat.com>
+In-Reply-To: <20190904054740.20817-2-kraxel@redhat.com>
 
-What about swq for software queue.  Maybe Ulf can suggest something?
+--cvmaHfE2YJqR393NckYCCAwLsnpy2D3uw
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+
+
+Am 04.09.19 um 07:47 schrieb Gerd Hoffmann:
+> New helper to print named bits of some value (think flags fields).
+>=20
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> ---
+>  include/drm/drm_print.h     |  3 +++
+>  drivers/gpu/drm/drm_print.c | 33 +++++++++++++++++++++++++++++++++
+>  2 files changed, 36 insertions(+)
+>=20
+> diff --git a/include/drm/drm_print.h b/include/drm/drm_print.h
+> index 112165d3195d..12d4916254b4 100644
+> --- a/include/drm/drm_print.h
+> +++ b/include/drm/drm_print.h
+> @@ -89,6 +89,9 @@ __printf(2, 3)
+>  void drm_printf(struct drm_printer *p, const char *f, ...);
+>  void drm_puts(struct drm_printer *p, const char *str);
+>  void drm_print_regset32(struct drm_printer *p, struct debugfs_regset32=
+ *regset);
+> +void drm_print_bits(struct drm_printer *p,
+> +		    unsigned long value, const char *bits[],
+> +		    unsigned int from, unsigned int to);
+> =20
+>  __printf(2, 0)
+>  /**
+> diff --git a/drivers/gpu/drm/drm_print.c b/drivers/gpu/drm/drm_print.c
+> index ad302d71eeee..dfa27367ebb8 100644
+> --- a/drivers/gpu/drm/drm_print.c
+> +++ b/drivers/gpu/drm/drm_print.c
+> @@ -185,6 +185,39 @@ void drm_printf(struct drm_printer *p, const char =
+*f, ...)
+>  }
+>  EXPORT_SYMBOL(drm_printf);
+> =20
+> +/**
+> + * drm_print_bits - print bits to a &drm_printer stream
+> + *
+> + * Print bits (in flag fields for example) in human readable form.
+> + * The first name in the @bits array is for the bit indexed by @from.
+> + *
+> + * @p: the &drm_printer
+> + * @value: field value.
+> + * @bits: Array with bit names.
+> + * @from: start of bit range to print (inclusive).
+> + * @to: end of bit range to print (exclusive).
+> + */
+> +void drm_print_bits(struct drm_printer *p,
+> +		    unsigned long value, const char *bits[],
+> +		    unsigned int from, unsigned int to)
+> +{
+> +	bool first =3D true;
+> +	unsigned int i;
+> +
+> +	for (i =3D from; i < to; i++) {
+> +		if (!(value & (1 << i)))
+> +			continue;
+> +		if (WARN_ON_ONCE(!bits[i-from]))
+> +			continue;
+> +		drm_printf(p, "%s%s", first ? "" : ",",
+> +			   bits[i-from]);
+> +		first =3D false;
+> +	}
+> +	if (first)
+> +		drm_printf(p, "(none)");
+> +}
+> +EXPORT_SYMBOL(drm_print_bits);
+> +
+>  void drm_dev_printk(const struct device *dev, const char *level,
+>  		    const char *format, ...)
+>  {
+>=20
+
+Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Linux GmbH, Maxfeldstrasse 5, 90409 Nuernberg, Germany
+GF: Felix Imend=C3=B6rffer, Mary Higgins, Sri Rasiah
+HRB 21284 (AG N=C3=BCrnberg)
+
+
+--cvmaHfE2YJqR393NckYCCAwLsnpy2D3uw--
+
+--2skgr6sFYrh1Z5EQHu05feTjEDtqucFhH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl12SbcACgkQaA3BHVML
+eiOgMQf+OLBhvRiFKKfSph9H1t6UnHvMrW1HxM+GGcoPTfz8kjSr+9E1QE1vdLGs
+XaU+2xBkVL38+Jo8CzwtFqAqiqhzc1nV1JECpzLcmnFSEjRKvBTZWz0Fv4OWhfCl
+FFXwTqgkVAU2aZXzJWdIgQRsdMc3R352tvt+m+tkNQElmGUoTMQYcOKG6sR8sEru
+w4veeSUGSowctfDrX2CsyFL635utCLwBcSg/PMXt2q4dbF00hP5h6M3f10SWUViM
+OtsUksUXdjOGKLwyCoP2Wtgojl6VPTPlQTV273WOjlBy8htLPpeFa6tW9Srbj7Bm
+qFeTeVXG6UptWfQBbVFzVIV4EPq7Bw==
+=tGTV
+-----END PGP SIGNATURE-----
+
+--2skgr6sFYrh1Z5EQHu05feTjEDtqucFhH--
