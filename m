@@ -2,104 +2,92 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D386EC00307
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 06:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F17AAC433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 06:07:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC7142067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 06:06:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC0952067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 06:07:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727587AbfIIGG6 (ORCPT
+        id S1727640AbfIIGHE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 02:06:58 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:47166 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726646AbfIIGG6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 02:06:58 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 186672B77F3E256462AD;
-        Mon,  9 Sep 2019 14:06:49 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.75) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 9 Sep 2019 14:06:40 +0800
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-To:     <gregkh@linuxfoundation.org>, <rafael@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <peterz@infradead.org>,
-        <mingo@kernel.org>, <mhocko@kernel.org>, <linuxarm@huawei.com>
-Subject: [PATCH] driver core: ensure a device has valid node id in device_add()
-Date:   Mon, 9 Sep 2019 14:04:23 +0800
-Message-ID: <1568009063-77714-1-git-send-email-linyunsheng@huawei.com>
-X-Mailer: git-send-email 2.8.1
+        Mon, 9 Sep 2019 02:07:04 -0400
+Received: from mga05.intel.com ([192.55.52.43]:17442 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726646AbfIIGHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 02:07:03 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Sep 2019 23:07:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,483,1559545200"; 
+   d="scan'208";a="186411116"
+Received: from shao2-debian.sh.intel.com (HELO [10.239.13.6]) ([10.239.13.6])
+  by orsmga003.jf.intel.com with ESMTP; 08 Sep 2019 23:07:00 -0700
+Subject: Re: [xfs] 610125ab1e: fsmark.app_overhead -71.2% improvement
+To:     Dave Chinner <dchinner@redhat.com>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        LKML <linux-kernel@vger.kernel.org>, linux-xfs@vger.kernel.org,
+        lkp@01.org
+References: <20190909015849.GN15734@shao2-debian> <20190909053236.GP2254@rh>
+From:   Rong Chen <rong.a.chen@intel.com>
+Message-ID: <df5f4105-58a9-492d-882e-0963fd5cb23f@intel.com>
+Date:   Mon, 9 Sep 2019 14:06:54 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.75]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190909053236.GP2254@rh>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently a device does not belong to any of the numa nodes
-(dev->numa_node is NUMA_NO_NODE) when the node id is neither
-specified by fw nor by virtual device layer and the device has
-no parent device.
+Hi Dave,
 
-According to discussion in [1]:
-Even if a device's numa node is not specified, the device really
-does belong to a node.
+On 9/9/19 1:32 PM, Dave Chinner wrote:
+> On Mon, Sep 09, 2019 at 09:58:49AM +0800, kernel test robot wrote:
+>> Greeting,
+>>
+>> FYI, we noticed a -71.2% improvement of fsmark.app_overhead due to commit:
+> A negative improvement? That's somewhat ambiguous...
 
-This patch sets the device node to node 0 in device_add() if the
-device's node id is not specified and it either has no parent
-device, or the parent device also does not have a valid node id.
+Sorry for causing the misunderstanding, it's a improvement not a regression.
 
-[1] https://lkml.org/lkml/2019/9/2/466
 
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
----
-Changelog RFC -> v1:
-1. Drop log error message and use a "if" instead of "? :".
-2. Drop the RFC tag.
----
- drivers/base/core.c  | 10 +++++++---
- include/linux/numa.h |  2 ++
- 2 files changed, 9 insertions(+), 3 deletions(-)
+>
+>> 0e822255f95db400 610125ab1e4b1b48dcffe74d9d8
+>> ---------------- ---------------------------
+>>           %stddev     %change         %stddev
+>>               \          |                \
+>>   1.095e+08           -71.2%   31557568        fsmark.app_overhead
+>>        6157           +95.5%      12034        fsmark.files_per_sec
+> So, the files/s rate doubled, and the amount of time spent in
+> userspace by the fsmark app dropped by 70%.
+>
+>>      167.31           -47.3%      88.25        fsmark.time.elapsed_time
+>>      167.31           -47.3%      88.25        fsmark.time.elapsed_time.max
+> Wall time went down by 50%.
+>
+>>       91.00            -8.8%      83.00        fsmark.time.percent_of_cpu_this_job_got
+>>      148.15           -53.2%      69.38        fsmark.time.system_time
+> As did system CPU.
+>
+> IOWs, this change has changed create performance by a factor of 4 -
+> the file create is 2x faster for half the CPU spent.
+>
+> I don't think this is a negative improvement - it's a large positive
+> improvement.  I suspect that you need to change the metric
+> classifications for this workload...
+To avoid misunderstanding, we'll use fsmark.files_per_sec instead of 
+fsmark.app_overhead in the subject.
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 1669d41..f79ad20 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -2107,9 +2107,13 @@ int device_add(struct device *dev)
- 	if (kobj)
- 		dev->kobj.parent = kobj;
- 
--	/* use parent numa_node */
--	if (parent && (dev_to_node(dev) == NUMA_NO_NODE))
--		set_dev_node(dev, dev_to_node(parent));
-+	/* use parent numa_node or default node 0 */
-+	if (!numa_node_valid(dev_to_node(dev))) {
-+		if (parent && numa_node_valid(dev_to_node(parent)))
-+			set_dev_node(dev, dev_to_node(parent));
-+		else
-+			set_dev_node(dev, 0);
-+	}
- 
- 	/* first, register with generic layer. */
- 	/* we require the name to be set before, and pass NULL */
-diff --git a/include/linux/numa.h b/include/linux/numa.h
-index 110b0e5..eccc757 100644
---- a/include/linux/numa.h
-+++ b/include/linux/numa.h
-@@ -13,4 +13,6 @@
- 
- #define	NUMA_NO_NODE	(-1)
- 
-+#define numa_node_valid(node)	((unsigned int)(node) < nr_node_ids)
-+
- #endif /* _LINUX_NUMA_H */
--- 
-2.8.1
-
+Best Regards,
+Rong Chen
