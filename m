@@ -2,178 +2,192 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D226BC00307
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5057BC00307
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:33:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97F5221924
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:33:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B9342196E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:33:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vrZnv+PS"
+	dkim=pass (2048-bit key) header.d=ssi.gouv.fr header.i=@ssi.gouv.fr header.b="mTxJMIVi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389853AbfIIJdK (ORCPT
+        id S2389885AbfIIJdp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 05:33:10 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:38027 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728390AbfIIJdK (ORCPT
+        Mon, 9 Sep 2019 05:33:45 -0400
+Received: from smtp-out.ssi.gouv.fr ([86.65.182.90]:63686 "EHLO
+        smtp-out.ssi.gouv.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728390AbfIIJdo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 05:33:10 -0400
-Received: by mail-qk1-f196.google.com with SMTP id x5so12372570qkh.5
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 02:33:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=2tHmH1stIAhWci8qIBPtmNf+VD11DJ+UCL9f9Y17abo=;
-        b=vrZnv+PStMf+ECSwAA9EBVmkJ1p3GaWvYFKNeMG3Owov4IHFuOEVR00hBZEXUYgKSh
-         OieKMKPXAWSyeWC/HP+/8QjHPAQdr34fWMdBDb4EyrTrZzcaWm+bFSXF8/i1Qu+HEiyz
-         CKq1XWiDER91AclIs00Rtj003JXkH1Eu9Ku5Gq5DOUvFkeqvW6kHPWF61Px47znWI9K1
-         S/swfW3z34aw9icDEOL4KLxAVFXkRZCd61hfEJTlf//onBcY4c/nTKxMTOkbTn4T4qAu
-         gUry9EPHH1pj8bML9BWQUN4v2UvpiQKwO3J3lFPxgg0Hq0i2zXZ1H1fYb9CNTHuZvNPo
-         y/0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=2tHmH1stIAhWci8qIBPtmNf+VD11DJ+UCL9f9Y17abo=;
-        b=COWxtEvjA0YPKz+70GirymX69Q65pd9NT1Y45CeDZubEP4AMzI4ZqQhMEkogUnJSMi
-         T9mNHp/OzeNoGohaKc6AODmupeNK5admjkFakdXLXZA/SwfjAdUap1ej8AGwsuL6z5gK
-         q9o29H719w4/n2iVZljz1Oc01yP6m7u9Iz8H5zA49YZCgJWO2NLZ8SOJs+jBFE2cYEJg
-         4LK1yoMsA8p6h5jsMqAz0pK6OxYYmSs9kGIynsG5MLuuBC0zDNFTKcQalIfy9TdbV4bI
-         dGGsBY/QTBofSgPJxdjCPZQAz12/oil35PPHoWL6Sl+75a60xR6WRRIyGLI/bnRFIcxy
-         gfrw==
-X-Gm-Message-State: APjAAAUH3kqU7nRnvsuDxL6afyntt5Ij11V4KXMkfl4BXEWGZ0EcJjoE
-        hNJXWZUoMkZc5fM7CICF5C530rWXDrNVPb/C3AOycg==
-X-Google-Smtp-Source: APXvYqyJ2skoDsCxCcviaFJEdYxXi0/LKrzEr6iBfeSawT0Q0tTImcnSBrPILhJzLyjKObBRKhPopIxIjwlVAoBadOo=
-X-Received: by 2002:ae9:dd81:: with SMTP id r123mr6813864qkf.103.1568021588009;
- Mon, 09 Sep 2019 02:33:08 -0700 (PDT)
+        Mon, 9 Sep 2019 05:33:44 -0400
+Received: from smtp-out.ssi.gouv.fr (localhost [127.0.0.1])
+        by smtp-out.ssi.gouv.fr (Postfix) with ESMTP id AD5BCD0006E;
+        Mon,  9 Sep 2019 11:33:42 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ssi.gouv.fr;
+        s=20160407; t=1568021622;
+        bh=7ghcKInNWHIy7GT6Up9av7IgQ5NyeQDPxdR0To5ZfbY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To:From:Subject;
+        b=mTxJMIViJkkbjc+HKYf4xj7YCDJe+mIhZNELtvydtPa5ksv9r9WLBOaIPA2SlJLZi
+         LotXdSTTmleCrUY25P9oXtCiBbJ1yphP588j2UoCkh/QxSzIfTvFXX8u9W47h4wSN9
+         q2Wh4e21ZEWc9Qb3j6t+gD8rNnyFwjSeP1Xt7mBFHvwqBHSCS2scmLyTNDlKM8hOP1
+         E5+6Sg63S8Mp1jw4kJoFLcp5B1wYUrwwrDnZk4DVjHswgstUVuf0gh9Z/34YjNPHBt
+         6KrVw4MgfzmSkpLdC8R3MjuSYCA2cQnlI1sA/J/EPnbPxnct52nTje4gKTFK9PHSdC
+         m95wAtzgE0jpw==
+Subject: Re: [PATCH v2 1/5] fs: Add support for an O_MAYEXEC flag on
+ sys_open()
+To:     Andy Lutomirski <luto@amacapital.net>,
+        Jeff Layton <jlayton@kernel.org>
+CC:     Aleksa Sarai <cyphar@cyphar.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
+        <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Eric Chiang <ericchiang@google.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
+        <kernel-hardening@lists.openwall.com>, <linux-api@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>
+References: <20190906152455.22757-1-mic@digikod.net>
+ <20190906152455.22757-2-mic@digikod.net>
+ <87ef0te7v3.fsf@oldenburg2.str.redhat.com>
+ <75442f3b-a3d8-12db-579a-2c5983426b4d@ssi.gouv.fr>
+ <f53ec45fd253e96d1c8d0ea6f9cca7f68afa51e3.camel@kernel.org>
+ <20190906171335.d7mc3no5tdrcn6r5@yavin.dot.cyphar.com>
+ <e1ac9428e6b768ac3145aafbe19b24dd6cf410b9.camel@kernel.org>
+ <D2A57C7B-B0FD-424E-9F81-B858FFF21FF0@amacapital.net>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>
+Message-ID: <382034b9-d9fb-b5d7-5cfe-c78f17abff04@ssi.gouv.fr>
+Date:   Mon, 9 Sep 2019 11:33:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.0
 MIME-Version: 1.0
-References: <1567761708-31777-1-git-send-email-yannick.fertre@st.com>
-In-Reply-To: <1567761708-31777-1-git-send-email-yannick.fertre@st.com>
-From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Date:   Mon, 9 Sep 2019 11:32:57 +0200
-Message-ID: <CA+M3ks6MQBScJ4mOY3VD-OTP-wG2VfSLMxA-9z6ZkNAeO53SMA@mail.gmail.com>
-Subject: Re: [PATCH] drm/stm: ltdc: add pinctrl for DPI encoder mode
-To:     =?UTF-8?Q?Yannick_Fertr=C3=A9?= <yannick.fertre@st.com>
-Cc:     Philippe Cornu <philippe.cornu@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Vincent Abriou <vincent.abriou@st.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <D2A57C7B-B0FD-424E-9F81-B858FFF21FF0@amacapital.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le ven. 6 sept. 2019 =C3=A0 11:22, Yannick Fertr=C3=A9 <yannick.fertre@st.c=
-om> a =C3=A9crit :
->
-> The implementation of functions encoder_enable and encoder_disable
-> make possible to control the pinctrl according to the encoder type.
-> The pinctrl must be activated only if the encoder type is DPI.
-> This helps to move the DPI-related pinctrl configuration from
-> all the panel or bridge to the LTDC dt node.
->
-> Reviewed-by: Philippe Cornu <philippe.cornu@st.com>
->
-> Signed-off-by: Yannick Fertr=C3=A9 <yannick.fertre@st.com>
 
-Applied on drm-misc-next,
-Thanks,
-Benjamin
+On 06/09/2019 22:06, Andy Lutomirski wrote:
+>
+>
+>> On Sep 6, 2019, at 12:43 PM, Jeff Layton <jlayton@kernel.org> wrote:
+>>
+>>> On Sat, 2019-09-07 at 03:13 +1000, Aleksa Sarai wrote:
+>>>> On 2019-09-06, Jeff Layton <jlayton@kernel.org> wrote:
+>>>>> On Fri, 2019-09-06 at 18:06 +0200, Micka=C3=ABl Sala=C3=BCn wrote:
+>>>>>> On 06/09/2019 17:56, Florian Weimer wrote:
+>>>>>> Let's assume I want to add support for this to the glibc dynamic loa=
+der,
+>>>>>> while still being able to run on older kernels.
+>>>>>>
+>>>>>> Is it safe to try the open call first, with O_MAYEXEC, and if that f=
+ails
+>>>>>> with EINVAL, try again without O_MAYEXEC?
+>>>>>
+>>>>> The kernel ignore unknown open(2) flags, so yes, it is safe even for
+>>>>> older kernel to use O_MAYEXEC.
+>>>>>
+>>>>
+>>>> Well...maybe. What about existing programs that are sending down bogus
+>>>> open flags? Once you turn this on, they may break...or provide a way t=
+o
+>>>> circumvent the protections this gives.
+>>>
+>>> It should be noted that this has been a valid concern for every new O_*
+>>> flag introduced (and yet we still introduced new flags, despite the
+>>> concern) -- though to be fair, O_TMPFILE actually does have a
+>>> work-around with the O_DIRECTORY mask setup.
+>>>
+>>> The openat2() set adds O_EMPTYPATH -- though in fairness it's also
+>>> backwards compatible because empty path strings have always given ENOEN=
+T
+>>> (or EINVAL?) while O_EMPTYPATH is a no-op non-empty strings.
+>>>
+>>>> Maybe this should be a new flag that is only usable in the new openat2=
+()
+>>>> syscall that's still under discussion? That syscall will enforce that
+>>>> all flags are recognized. You presumably wouldn't need the sysctl if y=
+ou
+>>>> went that route too.
+>>>
+>>> I'm also interested in whether we could add an UPGRADE_NOEXEC flag to
+>>> how->upgrade_mask for the openat2(2) patchset (I reserved a flag bit fo=
+r
+>>> it, since I'd heard about this work through the grape-vine).
+>>>
+>>
+>> I rather like the idea of having openat2 fds be non-executable by
+>> default, and having userland request it specifically via O_MAYEXEC (or
+>> some similar openat2 flag) if it's needed. Then you could add an
+>> UPGRADE_EXEC flag instead?
+>>
+>> That seems like something reasonable to do with a brand new API, and
+>> might be very helpful for preventing certain classes of attacks.
+>>
+>>
+>
+> There are at least four concepts of executability here:
+>
+> - Just check the file mode and any other relevant permissions. Return a n=
+ormal fd.  Makes sense for script interpreters, perhaps.
 
-> ---
->  drivers/gpu/drm/stm/ltdc.c | 35 +++++++++++++++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
+This is the purpose of this patch series. It doesn't make sense to add
+memory restrictions nor constrain fexecve and such.
+
+
 >
-> diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
-> index 3ab4fbf..1c4fde0 100644
-> --- a/drivers/gpu/drm/stm/ltdc.c
-> +++ b/drivers/gpu/drm/stm/ltdc.c
-> @@ -15,6 +15,7 @@
->  #include <linux/module.h>
->  #include <linux/of_address.h>
->  #include <linux/of_graph.h>
-> +#include <linux/pinctrl/consumer.h>
->  #include <linux/platform_device.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/reset.h>
-> @@ -1040,6 +1041,36 @@ static const struct drm_encoder_funcs ltdc_encoder=
-_funcs =3D {
->         .destroy =3D drm_encoder_cleanup,
->  };
+> - Make the fd fexecve-able.
 >
-> +static void ltdc_encoder_disable(struct drm_encoder *encoder)
-> +{
-> +       struct drm_device *ddev =3D encoder->dev;
-> +
-> +       DRM_DEBUG_DRIVER("\n");
-> +
-> +       /* Set to sleep state the pinctrl whatever type of encoder */
-> +       pinctrl_pm_select_sleep_state(ddev->dev);
-> +}
-> +
-> +static void ltdc_encoder_enable(struct drm_encoder *encoder)
-> +{
-> +       struct drm_device *ddev =3D encoder->dev;
-> +
-> +       DRM_DEBUG_DRIVER("\n");
-> +
-> +       /*
-> +        * Set to default state the pinctrl only with DPI type.
-> +        * Others types like DSI, don't need pinctrl due to
-> +        * internal bridge (the signals do not come out of the chipset).
-> +        */
-> +       if (encoder->encoder_type =3D=3D DRM_MODE_ENCODER_DPI)
-> +               pinctrl_pm_select_default_state(ddev->dev);
-> +}
-> +
-> +static const struct drm_encoder_helper_funcs ltdc_encoder_helper_funcs =
-=3D {
-> +       .disable =3D ltdc_encoder_disable,
-> +       .enable =3D ltdc_encoder_enable,
-> +};
-> +
->  static int ltdc_encoder_init(struct drm_device *ddev, struct drm_bridge =
-*bridge)
->  {
->         struct drm_encoder *encoder;
-> @@ -1055,6 +1086,8 @@ static int ltdc_encoder_init(struct drm_device *dde=
-v, struct drm_bridge *bridge)
->         drm_encoder_init(ddev, encoder, &ltdc_encoder_funcs,
->                          DRM_MODE_ENCODER_DPI, NULL);
+> - Make the resulting fd mappable PROT_EXEC.
 >
-> +       drm_encoder_helper_add(encoder, &ltdc_encoder_helper_funcs);
-> +
->         ret =3D drm_bridge_attach(encoder, bridge, NULL);
->         if (ret) {
->                 drm_encoder_cleanup(encoder);
-> @@ -1280,6 +1313,8 @@ int ltdc_load(struct drm_device *ddev)
+> - Make the resulting fd upgradable.
 >
->         clk_disable_unprepare(ldev->pixel_clk);
+> I=E2=80=99m not at all convinced that the kernel needs to distinguish all=
+ these, but at least upgradability should be its own thing IMO.
 >
-> +       pinctrl_pm_select_sleep_state(ddev->dev);
-> +
->         pm_runtime_enable(ddev->dev);
->
->         return 0;
-> --
-> 2.7.4
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+--
+Micka=C3=ABl Sala=C3=BCn
+
+Les donn=C3=A9es =C3=A0 caract=C3=A8re personnel recueillies et trait=C3=A9=
+es dans le cadre de cet =C3=A9change, le sont =C3=A0 seule fin d=E2=80=99ex=
+=C3=A9cution d=E2=80=99une relation professionnelle et s=E2=80=99op=C3=A8re=
+nt dans cette seule finalit=C3=A9 et pour la dur=C3=A9e n=C3=A9cessaire =C3=
+=A0 cette relation. Si vous souhaitez faire usage de vos droits de consulta=
+tion, de rectification et de suppression de vos donn=C3=A9es, veuillez cont=
+acter contact.rgpd@sgdsn.gouv.fr. Si vous avez re=C3=A7u ce message par err=
+eur, nous vous remercions d=E2=80=99en informer l=E2=80=99exp=C3=A9diteur e=
+t de d=C3=A9truire le message. The personal data collected and processed du=
+ring this exchange aims solely at completing a business relationship and is=
+ limited to the necessary duration of that relationship. If you wish to use=
+ your rights of consultation, rectification and deletion of your data, plea=
+se contact: contact.rgpd@sgdsn.gouv.fr. If you have received this message i=
+n error, we thank you for informing the sender and destroying the message.
