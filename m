@@ -2,157 +2,104 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C511DC4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC00C433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 971462196E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DDBF2067B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:14:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pku/NLUh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cT6yqph1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404749AbfIIMNm (ORCPT
+        id S2404764AbfIIMOl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 08:13:42 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:45134 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387487AbfIIMNl (ORCPT
+        Mon, 9 Sep 2019 08:14:41 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46502 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387486AbfIIMOl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 08:13:41 -0400
-Received: by mail-io1-f67.google.com with SMTP id f12so27975087iog.12;
-        Mon, 09 Sep 2019 05:13:41 -0700 (PDT)
+        Mon, 9 Sep 2019 08:14:41 -0400
+Received: by mail-lj1-f195.google.com with SMTP id e17so12434369ljf.13;
+        Mon, 09 Sep 2019 05:14:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qg8xC9UxmhKCmV81UpwtW3mMWGVvqlb5I9FtLPwmTUM=;
-        b=pku/NLUh4SJEsiCFuwtfYQi0lc090lQAayDr9JSBcsxNeYnjyOe+SOELeG2a0eqCX1
-         BKT2Q8DKiqV16ITAFeCNmxC0VsSWvASPSTs713atMDmvhrOcitTUKrCuCwQxMBUV8IUp
-         v1Qmpha3KShO+rFXG7/5aqdHM837Fyi+PFFMWRrMSqOHT5uvUtH+ulr9WDzoWVPpTP3s
-         XSfsqM55yMsEGmGYfubsHGOgRtx5SaLmm2XhpYyBwGK4Uu7Ar7vU69MBSm+oJ5I/eDdz
-         DwitdKuz5jdECbTDlC50wefxqE3Djak/O0KQ5npYtgoaqtfcAQ8WRF8ppSinzgPiBORq
-         Yx/w==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pFxxPSGzQ82HZys0kjMWLu4nLMt5F1OM+dYrK3t5KUE=;
+        b=cT6yqph1WHqVo4BHlHeHqAFIMjTp3Acp1uVHcbqgwoGOlIqlovKxe503zA/8WoErXn
+         BsWhEeubNs5SBKrX8zemTpTQpyKf8aURKe0eusDLzbJEENZEzm6PLiW7MfyRmJb9iEGy
+         Leso6x2MVJCDmsDCySr6Fk9QaENJKtSycGQWa6kfr8C39QyA5ldbGwlHBTOR1tDsdWd0
+         P+rXYyvw3PbqWdOBOoxAr1hANjCQCVJnAL9q9WHrrS84jvSXz6kkIRt4UvcNpYSV9ZbK
+         aCTAcUs1drW3WqJy+mZdDwDKVRS/0p0q7xHOxWc3NbKica2BqUH7trc0iekrUEknEvsu
+         32eQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qg8xC9UxmhKCmV81UpwtW3mMWGVvqlb5I9FtLPwmTUM=;
-        b=Yum2HJrCsuOtF+IYRU2NdPsNPOui228SGnkvX1ZsX/kivg3kzXm6xdpAbykbFggg3o
-         cxkgVHR6NeMEKYWIcMNoFGhNttMgD1is3k49cA3Hg04PenlnobYoU3f/qDWqTWLtTsJK
-         N20JVOMP7F0qfoj4Exx766m5tBWdatQhaI1sv/KgOEHqP/xf+BpV59IhMbi+PRnJ+pXZ
-         Z2o0dATeZRP2g/y0bbIT8uOx+1OqjCzpY8oGTmXPjpJhzcj1JCRNIDT/YweffsXAeMFg
-         HEGwqgw3lXchVmomjivmiLEbFIacs1B3MevV3udze+YFcUUm4XLYMyGtxLbrjU8+FbXZ
-         xqJg==
-X-Gm-Message-State: APjAAAXzZaPIBiS2Houu0ydIkn/ezT+Pq+mWR4Xrna83e761M2pvOxWp
-        NXdfRq+okeL/KQ9Lz88nexgYyNLWS65ECxc7l8I=
-X-Google-Smtp-Source: APXvYqyHw54reih0bwbQtWwZoTsD2HFT73oXHKwpVjtXdOQkOcP6NKzt03ZaIh/tcyxPMtwL33xaVzkLbAhFEKYczz0=
-X-Received: by 2002:a5e:de47:: with SMTP id e7mr15561943ioq.127.1568031220454;
- Mon, 09 Sep 2019 05:13:40 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pFxxPSGzQ82HZys0kjMWLu4nLMt5F1OM+dYrK3t5KUE=;
+        b=ebvpi8iS2U9OPqTuy1658fqExJz46P7FRqMjOHKiTjEpvOxJbEsbSBFhSWTNUOEeTa
+         1w/ioCNKiv66eCPb8VOh2rE/mkf4zhCBBrBCaGmQ1mlz4sH6LvHQjF/uoeXH9IfVAAhc
+         9lPu/VAR3Gnctm39x55b/ZxjSuVgNq9iVzmn3ZuX77x4iwnO3/gSRhdz1Ikhl7ZNikvd
+         qekbf1HR606CB7mwBUg0XV0xD4tP8jDW9OKSm5r59iAbRAhDeBgefCK/Wlsi5l698mxG
+         sWfM5tsq8KFT4mUhH/BX7xgHv9/MvTr8hc+mqmrsMMaO/eX3TGe69acZwCj/gCfP0QJ5
+         4fhA==
+X-Gm-Message-State: APjAAAUaI656Bdci6pHZJdLM59Wacb3vrCmg+3Reycl6gJWm3jrq6Stg
+        M1N8hhB0Ux5QNG11zm5eY88=
+X-Google-Smtp-Source: APXvYqwVLHKAjKXgmeV9NavO0mi2f/oJuinAaLJ4bnqdtte2ZZ4wLTD/k1MwfPEpTbw4bERFkaDxrg==
+X-Received: by 2002:a2e:9dd5:: with SMTP id x21mr15547930ljj.182.1568031278902;
+        Mon, 09 Sep 2019 05:14:38 -0700 (PDT)
+Received: from uranus.localdomain ([5.18.103.226])
+        by smtp.gmail.com with ESMTPSA id k28sm3212244lfj.33.2019.09.09.05.14.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Sep 2019 05:14:37 -0700 (PDT)
+Received: by uranus.localdomain (Postfix, from userid 1000)
+        id D81D7460667; Mon,  9 Sep 2019 15:14:36 +0300 (MSK)
+Date:   Mon, 9 Sep 2019 15:14:36 +0300
+From:   Cyrill Gorcunov <gorcunov@gmail.com>
+To:     Dmitry Safonov <0x7f454c46@gmail.com>
+Cc:     Dmitry Safonov <dima@arista.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrei Vagin <avagin@openvz.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 4/9] select: Micro-optimise __estimate_accuracy()
+Message-ID: <20190909121436.GC1508@uranus>
+References: <20190909102340.8592-1-dima@arista.com>
+ <20190909102340.8592-5-dima@arista.com>
+ <20190909111812.GB1508@uranus>
+ <CAJwJo6YX2qQit9aTbMhg8L5+JE1EsLzKyNt0a3X97zvJ-O9dNQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190828150037.2640-1-aford173@gmail.com> <20190905230443.GA52127@atomide.com>
-In-Reply-To: <20190905230443.GA52127@atomide.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Mon, 9 Sep 2019 07:13:29 -0500
-Message-ID: <CAHCN7xL0fbr=Sv+b=0AuGB1PPhAAFdAFLEd_iBM+ZMTkUw5sHQ@mail.gmail.com>
-Subject: Re: [RFC] ARM: omap3: Enable HWMODS for HW Random Number Generator
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Adam Ford <adam.ford@logicpd.com>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Paul Walmsley <paul@pwsan.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJwJo6YX2qQit9aTbMhg8L5+JE1EsLzKyNt0a3X97zvJ-O9dNQ@mail.gmail.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 5, 2019 at 6:04 PM Tony Lindgren <tony@atomide.com> wrote:
->
-> Hi,
->
-> * Adam Ford <aford173@gmail.com> [190828 15:01]:
-> > The datasheet for the AM3517 shows the RNG is connected to L4.
-> > It shows the module address for the RNG is 0x480A0000, and it
-> > matches the omap2.dtsi description.  Since the driver can support
-> > omap2 and omap4, it seems reasonable to assume the omap3 would
-> > use the same core for the RNG.
-> >
-> > This RFC, mimics much of the omap2 hwmods on the OMAP3. It
-> > also adds the necessary clock for driving the RNG.  Unfortunately,
-> > it appears non-functional.  If anyone has any suggestions on how
-> > to finish the hwmod (or port it to the newer l4 device tree
-> > format), feedback is requested.
->
-> Yup I'll take the bait :) The patch below seems to do the trick
-> for me on dm3730 based on translating your patch to probe with
-> ti-sysc.
->
-> Not sure about 34xx, it seems we're missing rng_clk? Care
-> to give it a try and attempt simlar patches for 34xx and
-> 3517?
->
-> At least I'm not needing the "ti,no-reset-on-init" property
-> that your patch has a comment for. Maybe that's needed on
-> some other omap3.
->
-> Oh and this needs to default to status = "disabled" for
-> HS devices like n900 as it needs to use the omap3-rom-rng.
->
-> Regards,
->
-> Tony
->
-> 8< -----------------------
-> diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap36xx.dtsi
-> --- a/arch/arm/boot/dts/omap36xx.dtsi
-> +++ b/arch/arm/boot/dts/omap36xx.dtsi
-> @@ -140,6 +140,29 @@
->                         };
->                 };
->
-> +               rng_target: target-module@480a0000 {
-> +                       compatible = "ti,sysc-omap2", "ti,sysc";
-> +                       reg = <0x480a003c 0x4>,
-> +                             <0x480a0040 0x4>,
-> +                             <0x480a0044 0x4>;
-> +                       reg-names = "rev", "sysc", "syss";
-> +                       ti,sysc-mask = <(SYSC_OMAP2_AUTOIDLE)>;
-> +                       ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-> +                                       <SYSC_IDLE_NO>;
-> +                       ti,syss-mask = <1>;
-> +                       clocks = <&rng_ick>;
-> +                       clock-names = "ick";
-> +                       #address-cells = <1>;
-> +                       #size-cells = <1>;
-> +                       ranges = <0 0x480a0000 0x2000>;
-> +
-> +                       rng: rng@0 {
-> +                               compatible = "ti,omap2-rng";
-> +                               reg = <0x0 0x2000>;
-> +                               interrupts = <52>;
-> +                       };
-> +               };
-> +
+On Mon, Sep 09, 2019 at 12:50:27PM +0100, Dmitry Safonov wrote:
+> Hi Cyrill,
+> 
+> On Mon, 9 Sep 2019 at 12:18, Cyrill Gorcunov <gorcunov@gmail.com> wrote:
+> > Compiler precompute constants so it doesn't do division here.
+> > But I didn't read the series yet so I might be missing
+> > something obvious.
+> 
+> Heh, like a division is in ktime_divns()?
 
-Tony,
-
-Can you tell me what branch you're using?  I am not seeing the note
-below, so I am not exactly sure what version to base my testing.
-
-ada,
->                 /*
->                  * Note that the sysconfig register layout is a subset of the
->                  * "ti,sysc-omap4" type register with just sidle and midle bits
+Ah, you meant the ktime_divns you've dropped out. I thought
+you were talking about the constant value we've had here before
+your patch. Seems I didn't got the changelog right. Anyway
+need to take more precise look on the series. Hopefully soon.
