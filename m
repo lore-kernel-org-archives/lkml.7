@@ -2,242 +2,103 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 727A7C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6223EC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4610F218DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3055B218DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:50:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dGdRH3Ty"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728897AbfIIMsD (ORCPT
+        id S1728986AbfIIMuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 08:48:03 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59254 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726462AbfIIMsD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 08:48:03 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 122AEAEB3;
-        Mon,  9 Sep 2019 12:48:00 +0000 (UTC)
-Subject: Re: [PATCH v3 7/7] drm/vram: fix Kconfig
-To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVER FOR BOCHS VIRTUAL GPU" 
-        <virtualization@lists.linux-foundation.org>,
-        Xinliang Liu <z.liuxinliang@hisilicon.com>,
-        David Airlie <airlied@linux.ie>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Rongrong Zou <zourongrong@gmail.com>,
-        Dave Airlie <airlied@redhat.com>, Sean Paul <sean@poorly.run>
-References: <20190904054740.20817-1-kraxel@redhat.com>
- <20190904054740.20817-8-kraxel@redhat.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNKFRob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmNvbT7CwJQEEwEIAD4W
- IQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznTtgIbAwUJA8JnAAULCQgHAgYVCgkICwIEFgID
- AQIeAQIXgAAKCRBoDcEdUwt6I7D7CACBK42XW+7mCiK8ioXMEy1NzGbXC51RzGea8N83oEJS
- 1KVUtQxrkDxgrW/WLSl/TfqHFsJpdEFOv1XubWbleun3uKPy0e5vZCd5UjZPkeNjnqfCYTDy
- hVVsdOuFbtWDppJyJrThLqr9AgSFmoCNNUt1SVpYEEOLNE6C32BhlnSq21VLC+YXTgO/ZHTa
- YXkq54hHj63jwrcjkBSCkXLh37kHeqnl++GHpN+3R+o3w2OpwHAlvVjdKPT27v1tVkiydsFG
- 65Vd0n3m/ft+IOrGgxQM1C20uqKvsZGB4r3OGR50ekAybO7sjEJJ1Obl4ge/6RRqcvKz4LMb
- tGs85D6tPIeFzsBNBFs50uABCADGJj+DP1fk+UWOWrf4O61HTbC4Vr9QD2K4fUUHnzg2B6zU
- R1BPXqLGG0+lzK8kfYU/F5RjmEcClsIkAaFkg4kzKP14tvY1J5+AV3yNqcdg018HNtiyrSwI
- E0Yz/qm1Ot2NMZ0DdvVBg22IMsiudQ1tx9CH9mtyTbIXgACvl3PW2o9CxiHPE/bohFhwZwh/
- kXYYAE51lhinQ3oFEeQZA3w4OTvxSEspiQR8dg8qJJb+YOAc5IKk6sJmmM7JfFMWSr22satM
- 23oQ3WvJb4RV6HTRTAIEyyZS7g2DhiytgMG60t0qdABG5KXSQW+OKlZRpuWwKWaLh3if/p/u
- 69dvpanbABEBAAHCwHwEGAEIACYWIQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznS4AIbDAUJ
- A8JnAAAKCRBoDcEdUwt6I6X3CACJ8D+TpXBCqJE5xwog08+Dp8uBpx0T9n1wE0GQisZruACW
- NofYn8PTX9k4wmegDLwt7YQDdKxQ4+eTfZeLNQqWg6OCftH5Kx7sjWnJ09tOgniVdROzWJ7c
- VJ/i0okazncsJ+nq48UYvRGE1Swh3A4QRIyphWX4OADOBmTFl9ZYNPnh23eaC9WrNvFr7yP7
- iGjMlfEW8l6Lda//EC5VpXVNza0xeae0zFNst2R9pn+bLkihwDLWxOIyifGRxTqNxoS4I1aw
- VhxPSVztPMSpIA/sOr/N/p6JrBLn+gui2K6mP7bGb8hF+szfArYqz3T1rv1VzUWAJf5Wre5U
- iNx9uqqx
-Message-ID: <bf878fb7-416a-ba41-c1a4-d1c95bd3a4ee@suse.de>
-Date:   Mon, 9 Sep 2019 14:47:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 9 Sep 2019 08:50:04 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:46733 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbfIIMuD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 08:50:03 -0400
+Received: by mail-ed1-f68.google.com with SMTP id i8so12779991edn.13;
+        Mon, 09 Sep 2019 05:50:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kW15KrOSvW9WpLErlquuKLeZEcnhbkdBFaJKzjm2XqU=;
+        b=dGdRH3TyQEBBns2NDy+wSx4qiZZHqhJACLMlJyoLQmYz05xthawa0+k7LN96Qw6Mz7
+         aOO0prdaRv0z16cxIqTxKOn/00JQgjzml+iKQgaqVjYrZ/sL0QuUf4StsZZbr1yV6SAR
+         q+ycLdvM6d8kyzDI7aW1XruXdUtWb+cwAqtGrsNRJkQB+ndeON2MJ54wWAARvvF+Gqqh
+         GtHc2HfxA456zL7Jy/S6575AC2SxNq7zL8i/FkSpQCoW4lT0NjwefK5+YavkP6Q4q675
+         eJ/wIlIpCNDIsBFYfwPT/6IqJxiRBuT3wCoFY09xjumX24vMdPLdTG/rbaumG0gjrOyG
+         O6og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kW15KrOSvW9WpLErlquuKLeZEcnhbkdBFaJKzjm2XqU=;
+        b=ijWypwctLx4F9swztFoH1zFL+JD5xZJNEm5XEUbcH7gM9urDhfbSzG9Y1TgpbPI7mW
+         eUJhQgyu5cR7hSjWMb5nwf2f0wfvZqUwAZn1fw8MqOgndZ2gmFS0+II5WnQo+5EFnGEo
+         bpXsFOKjodvCj/pkAws3s1JBXP2GWaMhk54VnsrzeNENNkmeQ9lldM8egbv8j0x1J0xg
+         /pL0dlF4Y5/ZBJsgqRnlNQJJlqi2xW/HssSGI8saSXAKLc37oSpVMV6MwTAyiZdMvHg8
+         vs0S6s87A+S95Xuea0OaqEwVWKJ80ucTrkvBL4nGeAnch3sNXKhL3KpLfe95oPyrsP1Q
+         xGkA==
+X-Gm-Message-State: APjAAAUO7vCGsJ3PU1SLTv9bJ7QXMUYunkDtPojnq7by/NE15LqqpC2j
+        iU/BlHHqo7PP74udWwRJv3LPriD+YPQy976ZjSNnsmVs
+X-Google-Smtp-Source: APXvYqw2QV3V6l2FcVkKtA9g3vp/G9rJbm6Z1GMbqDE18XZgEYh5t8on335dWmsCITRDRapbz13AOQsF2ZjdsTjwOy0=
+X-Received: by 2002:a50:ad5b:: with SMTP id z27mr24028370edc.252.1568033402140;
+ Mon, 09 Sep 2019 05:50:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190904054740.20817-8-kraxel@redhat.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="47bhEdBPYH43lCBuMRYtaXkG7ni6nsatf"
+References: <CADxRZqxmvfE9gYoT+1oLV6-o_BbUsay_U45qmMEYL3vErTCCLA@mail.gmail.com>
+ <VI1PR0802MB252826995ECEA2578C1B5C878FB70@VI1PR0802MB2528.eurprd08.prod.outlook.com>
+In-Reply-To: <VI1PR0802MB252826995ECEA2578C1B5C878FB70@VI1PR0802MB2528.eurprd08.prod.outlook.com>
+From:   Anatoly Pugachev <matorola@gmail.com>
+Date:   Mon, 9 Sep 2019 15:49:51 +0300
+Message-ID: <CADxRZqxOwPtaqiVyXR8hBf7VcDxZq5+w3E57YjaxEc=qS31AZQ@mail.gmail.com>
+Subject: Re: [sparc64] Kernel unaligned access at TPC lzo1x_1_do_compress
+To:     Dave Rodgman <dave.rodgman@arm.com>
+Cc:     Sparc kernel list <sparclinux@vger.kernel.org>,
+        Linux Kernel list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---47bhEdBPYH43lCBuMRYtaXkG7ni6nsatf
-Content-Type: multipart/mixed; boundary="OxFJn0wfhCczI7Nqkb3gSMltDAonUXRjh";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
-Cc: Hans de Goede <hdegoede@redhat.com>,
- Maxime Ripard <maxime.ripard@bootlin.com>,
- Chen Feng <puck.chen@hisilicon.com>, open list
- <linux-kernel@vger.kernel.org>,
- "open list:DRM DRIVER FOR BOCHS VIRTUAL GPU"
- <virtualization@lists.linux-foundation.org>,
- Xinliang Liu <z.liuxinliang@hisilicon.com>, David Airlie <airlied@linux.ie>,
- Xinwei Kong <kong.kongxinwei@hisilicon.com>,
- Rongrong Zou <zourongrong@gmail.com>, Dave Airlie <airlied@redhat.com>,
- Sean Paul <sean@poorly.run>
-Message-ID: <bf878fb7-416a-ba41-c1a4-d1c95bd3a4ee@suse.de>
-Subject: Re: [PATCH v3 7/7] drm/vram: fix Kconfig
-References: <20190904054740.20817-1-kraxel@redhat.com>
- <20190904054740.20817-8-kraxel@redhat.com>
-In-Reply-To: <20190904054740.20817-8-kraxel@redhat.com>
+On Mon, Sep 9, 2019 at 1:11 PM Dave Rodgman <dave.rodgman@arm.com> wrote:
+>
+> Thanks Anatoly, I'll take a look at this. Could you please let me know the exact hardware you're running on?
 
---OxFJn0wfhCczI7Nqkb3gSMltDAonUXRjh
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Dave,
 
+machine is a LDOM on T5-2 server.
+
+OS is debian unstable/sid linux with latest git kernel, currently :
+
+$ uname -a
+Linux ttip 5.3.0-rc8-dirty #1211 SMP Mon Sep 9 10:20:40 MSK 2019
+sparc64 GNU/Linux
+
+-dirty cause non-mainline (yet) fix for IPC [1] and reverted
+HAVE_GENERIC_GUP patch [2].
+
+$ gcc --version
+gcc (Debian 9.2.1-7) 9.2.1 20190905
+
+$ ld -V
+GNU ld (GNU Binutils for Debian) 2.32.51.20190821
+
+$ ldd --version
+ldd (Debian GLIBC 2.28-10) 2.28
 
 
-Am 04.09.19 um 07:47 schrieb Gerd Hoffmann:
-> select isn't recursive, so we can't turn on DRM_TTM + DRM_TTM_HELPER
-> in config DRM_VRAM_HELPER, we have to select them on the vram users
-> instead.
->=20
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> ---
->  drivers/gpu/drm/Kconfig                 | 2 --
->  drivers/gpu/drm/ast/Kconfig             | 2 ++
->  drivers/gpu/drm/bochs/Kconfig           | 2 ++
->  drivers/gpu/drm/hisilicon/hibmc/Kconfig | 3 ++-
->  drivers/gpu/drm/mgag200/Kconfig         | 2 ++
->  drivers/gpu/drm/vboxvideo/Kconfig       | 2 ++
->  6 files changed, 10 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
-> index 1be8ad30d8fe..cd11a3bde19c 100644
-> --- a/drivers/gpu/drm/Kconfig
-> +++ b/drivers/gpu/drm/Kconfig
-> @@ -168,8 +168,6 @@ config DRM_TTM
->  config DRM_VRAM_HELPER
->  	tristate
->  	depends on DRM
-> -	select DRM_TTM
-> -	select DRM_TTM_HELPER
->  	help
->  	  Helpers for VRAM memory management
-> =20
-> diff --git a/drivers/gpu/drm/ast/Kconfig b/drivers/gpu/drm/ast/Kconfig
-> index 829620d5326c..fbcf2f45cef5 100644
-> --- a/drivers/gpu/drm/ast/Kconfig
-> +++ b/drivers/gpu/drm/ast/Kconfig
-> @@ -4,6 +4,8 @@ config DRM_AST
->  	depends on DRM && PCI && MMU
->  	select DRM_KMS_HELPER
->  	select DRM_VRAM_HELPER
-> +	select DRM_TTM
-> +	select DRM_TTM_HELPER
->  	help
->  	 Say yes for experimental AST GPU driver. Do not enable
->  	 this driver without having a working -modesetting,
-> diff --git a/drivers/gpu/drm/bochs/Kconfig b/drivers/gpu/drm/bochs/Kcon=
-fig
-> index 32b043abb668..7bcdf294fed8 100644
-> --- a/drivers/gpu/drm/bochs/Kconfig
-> +++ b/drivers/gpu/drm/bochs/Kconfig
-> @@ -4,6 +4,8 @@ config DRM_BOCHS
->  	depends on DRM && PCI && MMU
->  	select DRM_KMS_HELPER
->  	select DRM_VRAM_HELPER
-> +	select DRM_TTM
-> +	select DRM_TTM_HELPER
->  	help
->  	  Choose this option for qemu.
->  	  If M is selected the module will be called bochs-drm.
-> diff --git a/drivers/gpu/drm/hisilicon/hibmc/Kconfig b/drivers/gpu/drm/=
-hisilicon/hibmc/Kconfig
-> index f20eedf0073a..8ad9a5b12e40 100644
-> --- a/drivers/gpu/drm/hisilicon/hibmc/Kconfig
-> +++ b/drivers/gpu/drm/hisilicon/hibmc/Kconfig
-> @@ -4,7 +4,8 @@ config DRM_HISI_HIBMC
->  	depends on DRM && PCI && MMU
->  	select DRM_KMS_HELPER
->  	select DRM_VRAM_HELPER
-> -
-> +	select DRM_TTM
-> +	select DRM_TTM_HELPER
->  	help
->  	  Choose this option if you have a Hisilicon Hibmc soc chipset.
->  	  If M is selected the module will be called hibmc-drm.
-> diff --git a/drivers/gpu/drm/mgag200/Kconfig b/drivers/gpu/drm/mgag200/=
-Kconfig
-> index 76fee0fbdcae..aed11f4f4c55 100644
-> --- a/drivers/gpu/drm/mgag200/Kconfig
-> +++ b/drivers/gpu/drm/mgag200/Kconfig
-> @@ -4,6 +4,8 @@ config DRM_MGAG200
->  	depends on DRM && PCI && MMU
->  	select DRM_KMS_HELPER
->  	select DRM_VRAM_HELPER
-> +	select DRM_TTM
-> +	select DRM_TTM_HELPER
->  	help
->  	 This is a KMS driver for the MGA G200 server chips, it
->           does not support the original MGA G200 or any of the desktop
-> diff --git a/drivers/gpu/drm/vboxvideo/Kconfig b/drivers/gpu/drm/vboxvi=
-deo/Kconfig
-> index 56ba510f21a2..45fe135d6e43 100644
-> --- a/drivers/gpu/drm/vboxvideo/Kconfig
-> +++ b/drivers/gpu/drm/vboxvideo/Kconfig
-> @@ -4,6 +4,8 @@ config DRM_VBOXVIDEO
->  	depends on DRM && X86 && PCI
->  	select DRM_KMS_HELPER
->  	select DRM_VRAM_HELPER
-> +	select DRM_TTM
-> +	select DRM_TTM_HELPER
->  	select GENERIC_ALLOCATOR
->  	help
->  	  This is a KMS driver for the virtual Graphics Card used in
->=20
+I could give you  account on this box to test or fix kernel if you would like.
 
-Thanks for fixing the Kconfigs for VRAM helpers.
+Thanks.
 
-Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
-
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Linux GmbH, Maxfeldstrasse 5, 90409 Nuernberg, Germany
-GF: Felix Imend=C3=B6rffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG N=C3=BCrnberg)
-
-
---OxFJn0wfhCczI7Nqkb3gSMltDAonUXRjh--
-
---47bhEdBPYH43lCBuMRYtaXkG7ni6nsatf
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl12Sf8ACgkQaA3BHVML
-eiPh6AgAl0mzBwbaxMhxqlfZNPq3tFs4h1Py9aWi3/+VF7K75pm8zhBl9y2q4TD+
-7DVEpJM5xzY5O9KivyzLr53y/q5Ilzp18oNlaO/gjCBMFgtB81IizFtm67yIdkLA
-AfrdR3IaWU/s01Fbs5fHUysMWXdKFNdcWWRvJTBoYAcrCO2VvVuyiTkatPmVBoNd
-AizqjzvMlv8m/cLFSEuOLotgG0+lQuUu5kYsTlv/9NG4BmU+n3r27Tjh/X1PSHU1
-xqFld4QRloIm+xusum2R8R/tZvzGnPf7wV7HBvZioqs6JQ9llc3agnyKoRRszTJz
-FKrHDtGQT3NuI8677j2ombzXIp3gtA==
-=V8zx
------END PGP SIGNATURE-----
-
---47bhEdBPYH43lCBuMRYtaXkG7ni6nsatf--
+1. https://marc.info/?l=linux-kernel&m=156769723218727
+2. https://marc.info/?l=linux-sparc&m=156026414826151
