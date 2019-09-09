@@ -2,114 +2,225 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB0A2C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7063AC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD8DD2086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:40:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49618218AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:45:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=impinj.com header.i=@impinj.com header.b="JALSAh34"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M9XjvkCU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390168AbfIIRkT (ORCPT
+        id S2391435AbfIIRpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 13:40:19 -0400
-Received: from us-smtp-delivery-168.mimecast.com ([63.128.21.168]:29033 "EHLO
-        us-smtp-delivery-168.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725872AbfIIRkT (ORCPT
+        Mon, 9 Sep 2019 13:45:55 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:32791 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729123AbfIIRpz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 13:40:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=impinj.com;
-        s=mimecast20190405; t=1568050817;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bGm8cFLECLLsTngjpe5Gi8z6a8eF/aJ7mMzplolIVHY=;
-        b=JALSAh34A+k9iugXDFMhLc1yGHidBjKVHDy+sTh5WVegq+ADgYOi0V5FzNS7p1uhQB0wY+
-        XjlOisgcEjqezXDZM688ckxtJE1yfKBToelck4z7HG4Ge0Al8xqxuGH4G5EkcwdfImUK8P
-        /pratiDFrmHjWf48+q+P2Wmjy3WRsWs=
-Received: from NAM05-BY2-obe.outbound.protection.outlook.com
- (mail-by2nam05lp2054.outbound.protection.outlook.com [104.47.50.54]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- us-mta-168-fV-PFGkmM-6c0elrEQ5tcA-1; Mon, 09 Sep 2019 13:40:16 -0400
-Received: from MWHPR0601MB3708.namprd06.prod.outlook.com (10.167.236.38) by
- MWHPR0601MB3660.namprd06.prod.outlook.com (10.167.236.26) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.20; Mon, 9 Sep 2019 17:40:11 +0000
-Received: from MWHPR0601MB3708.namprd06.prod.outlook.com
- ([fe80::60b3:e38a:69b0:3f95]) by MWHPR0601MB3708.namprd06.prod.outlook.com
- ([fe80::60b3:e38a:69b0:3f95%7]) with mapi id 15.20.2241.018; Mon, 9 Sep 2019
- 17:40:11 +0000
-From:   Trent Piepho <tpiepho@impinj.com>
-To:     "vitaly.gaiduk@cloudbear.ru" <vitaly.gaiduk@cloudbear.ru>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 2/2] net: phy: dp83867: Add SGMII mode type switching
-Thread-Topic: [PATCH v4 2/2] net: phy: dp83867: Add SGMII mode type switching
-Thread-Index: AQHVZzLGso1lPLk8MEK6S1hJcQkSf6cjnNsA
-Date:   Mon, 9 Sep 2019 17:40:11 +0000
-Message-ID: <1568050810.6344.13.camel@impinj.com>
-References: <1568047940-14490-2-git-send-email-vitaly.gaiduk@cloudbear.ru>
-         <1568049566-16708-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
-In-Reply-To: <1568049566-16708-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [216.207.205.253]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 00cfd251-b5eb-42b2-f9a5-08d7354cc39c
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR0601MB3660;
-x-ms-traffictypediagnostic: MWHPR0601MB3660:
-x-microsoft-antispam-prvs: <MWHPR0601MB3660B3B8B64424DD345CECABD3B70@MWHPR0601MB3660.namprd06.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 01559F388D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(199004)(189003)(66066001)(6246003)(6486002)(11346002)(446003)(26005)(2616005)(476003)(486006)(186003)(14454004)(53936002)(6512007)(256004)(66946007)(71200400001)(71190400001)(66476007)(66556008)(64756008)(66446008)(54906003)(110136005)(25786009)(76176011)(36756003)(4744005)(2201001)(5660300002)(86362001)(4326008)(229853002)(2906002)(102836004)(7736002)(305945005)(498600001)(6506007)(2501003)(6436002)(99286004)(6116002)(103116003)(3846002)(8676002)(8936002)(76116006)(91956017)(7416002)(81166006)(81156014);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR0601MB3660;H:MWHPR0601MB3708.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 12ETQ6/+gFRJQWkGLrDn7+BdwcJVPVKmEdM3d6kis1f4A/CuymXWelES9d3vjTyd58KHoh8YsUEmrWkS/Wt32BaN+oR/FyhQYOEJw1wvbDEHnLxflrTcezBn5otprRPp/1n6DTu57S0uLcyRXokiXYK08TgSYoJeHuWhb7rq8QK2ev88MLvGClcTcvzaA9DlKrqtGerCCXgXsUNFy7AoGVpU0aVyp1BoC7qRghzDgofcg+HeqhcrHN/jwMTGkSIjD/kK/JxOU5dIOLPrt0KpjBJlDq3yVhq8I50g8zR5dnFAR26VN2mL147hOPi0Xj60NhzLbxcJ4pFewVRSKforQvD5PDAXN8w0PIrmnQUEEIgog/XGIPUUDtvPW4GTEmCokxURjLofNdKEZ55aCtp8KARoBypePcXdMktBhgBZ9X8=
-x-ms-exchange-transport-forked: True
-Content-ID: <0D97D7714A6EC04584D8A4FBF64BAB87@namprd06.prod.outlook.com>
+        Mon, 9 Sep 2019 13:45:55 -0400
+Received: by mail-pl1-f193.google.com with SMTP id t11so6856288plo.0
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 10:45:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=NyVhJPPTs6wJnDV91iq2gfn2ADsla6hIU5GumREy3IU=;
+        b=M9XjvkCU8U0uc2A2HXkCDBumTsIS6nsgiD4PpQon98qdueFJ/bxdz8ON6SfMx3hgFN
+         aOOL0CBopLJ0Bdf6qem737wLy+F7G7ZNTprUazDp/KwTQXuO04EMFI8PggDeqxj/7b+B
+         oA7mU5eRAqRtD5NpqHTuV3kgdTPWRR1E2SlG8z8CuD29EFxUo6Pyh3Te+pg6HqWIgKPD
+         WhPaF6JmubDLd+fHXvT1S16wM6vcI9DTrMhs62+65QZ0Lk08dyWqwGKQKY13p6LwrYiJ
+         EA38F/qILGOCkDmfsnWUYehYUYIdbErBOUD/AP8VOevLr6+lCc6/ARFwKkqMAiWdQTG3
+         miYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=NyVhJPPTs6wJnDV91iq2gfn2ADsla6hIU5GumREy3IU=;
+        b=MMh8k8e6OTcB9NsBQSRfOMJ79km3rHopH7DzHLnbf6EQKfhL7ZARTaykDn2+m/iLco
+         TDi6r2Ou67LgvSnCTepZZN3BE5ddnoByyySs2br3JhowRqOOd7ZUWmvh65x3CJsp9KWP
+         f7tLNuV0l/QgulkpheTBTFdC564P7nTnXTIu27PEUtfANEF9lZdy9bAT1ISGyB/T8Oh4
+         WKzmW3kuVpdw8bSKfQzci0HbxsF9v8lrN5XLU/rrgc89a7vgJ0+QrqUTHxjqNlMwqJwM
+         jtEfzZfdN1zTMKwK1Zr1gGhbQIg8g3qP624OyXjyJMpk5gvh2ln30a9KlfoUP/T+gwAI
+         8kGA==
+X-Gm-Message-State: APjAAAUXng5B4iTM14gKXq7UjW4gaU8T9Ew4O0X2OWVhEMX+7HOis7N6
+        CDOnPKHmQZS07uKeud7H74Y=
+X-Google-Smtp-Source: APXvYqxneiElM9L6z2oc9GIFmEdOmZXAESGHesiUPjLlmzl0qWX+82SU80jLw2IpeN/5P0XxDrUsqw==
+X-Received: by 2002:a17:902:b201:: with SMTP id t1mr25927892plr.144.1568051153805;
+        Mon, 09 Sep 2019 10:45:53 -0700 (PDT)
+Received: from SD ([2405:204:810e:f33:a5a3:6372:2e94:6aea])
+        by smtp.gmail.com with ESMTPSA id u9sm162507pjb.4.2019.09.09.10.45.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Sep 2019 10:45:53 -0700 (PDT)
+Date:   Mon, 9 Sep 2019 23:15:41 +0530
+From:   Saiyam Doshi <saiyamdoshi.in@gmail.com>
+To:     broonie@kernel.org, srinivas.kandagatla@linaro.org
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: wcd9335: remove redundant use of ret variable
+Message-ID: <20190909174541.GA22718@SD>
 MIME-Version: 1.0
-X-OriginatorOrg: impinj.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 00cfd251-b5eb-42b2-f9a5-08d7354cc39c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Sep 2019 17:40:11.1016
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 6de70f0f-7357-4529-a415-d8cbb7e93e5e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: AF0KlE9WzASCltDdpi0Rif/5lPQ8OLdgW0ar3Di66zFCiaMjdblUt4uwv5aKWkTDomsEtuogNy2nqd/hOEVo9Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR0601MB3660
-X-MC-Unique: fV-PFGkmM-6c0elrEQ5tcA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTA5LTA5IGF0IDIwOjE5ICswMzAwLCBWaXRhbHkgR2FpZHVrIHdyb3RlOg0K
-PiBUaGlzIHBhdGNoIGFkZHMgYWJpbGl0eSB0byBzd2l0Y2ggYmVldHdlZW4gdHdvIFBIWSBTR01J
-SSBtb2Rlcy4NCj4gU29tZSBoYXJkd2FyZSwgZm9yIGV4YW1wbGUsIEZQR0EgSVAgZGVzaWducyBt
-YXkgdXNlIDYtd2lyZSBtb2RlDQo+IHdoaWNoIGVuYWJsZXMgZGlmZmVyZW50aWFsIFNHTUlJIGNs
-b2NrIHRvIE1BQy4NCj4gDQo+ICsNCj4gKwkJdmFsID0gcGh5X3JlYWRfbW1kKHBoeWRldiwgRFA4
-Mzg2N19ERVZBRERSLCBEUDgzODY3X1NHTUlJQ1RMKTsNCj4gKwkJLyogU0dNSUkgdHlwZSBpcyBz
-ZXQgdG8gNC13aXJlIG1vZGUgYnkgZGVmYXVsdC4NCj4gKwkJICogSWYgd2UgcGxhY2UgYXBwcm9w
-cmlhdGUgcHJvcGVydHkgaW4gZHRzIChzZWUgYWJvdmUpDQo+ICsJCSAqIHN3aXRjaCBvbiA2LXdp
-cmUgbW9kZS4NCj4gKwkJICovDQo+ICsJCWlmIChkcDgzODY3LT5zZ21paV9yZWZfY2xrX2VuKQ0K
-PiArCQkJdmFsIHw9IERQODM4NjdfU0dNSUlfVFlQRTsNCj4gKwkJZWxzZQ0KPiArCQkJdmFsICY9
-IH5EUDgzODY3X1NHTUlJX1RZUEU7DQo+ICsJCXBoeV93cml0ZV9tbWQocGh5ZGV2LCBEUDgzODY3
-X0RFVkFERFIsIERQODM4NjdfU0dNSUlDVEwsIHZhbCk7DQoNClNob3VsZCB1c2UgcGh5X21vZGlm
-eV9tbWQoKS4NCg==
+All these functions declares and initializes variable ret with
+'0' and without modifying 'ret' variable, it is returned.
+
+This patch removes this redundancy and returns '0' directly.
+
+Signed-off-by: Saiyam Doshi <saiyamdoshi.in@gmail.com>
+---
+ sound/soc/codecs/wcd9335.c | 24 ++++++++----------------
+ 1 file changed, 8 insertions(+), 16 deletions(-)
+
+diff --git a/sound/soc/codecs/wcd9335.c b/sound/soc/codecs/wcd9335.c
+index 03f8a94bba2f..f318403133e9 100644
+--- a/sound/soc/codecs/wcd9335.c
++++ b/sound/soc/codecs/wcd9335.c
+@@ -3022,7 +3022,6 @@ static int wcd9335_codec_enable_slim(struct snd_soc_dapm_widget *w,
+ 	struct snd_soc_component *comp = snd_soc_dapm_to_component(w->dapm);
+ 	struct wcd9335_codec *wcd = snd_soc_component_get_drvdata(comp);
+ 	struct wcd_slim_codec_dai_data *dai = &wcd->dai[w->shift];
+-	int ret = 0;
+ 
+ 	switch (event) {
+ 	case SND_SOC_DAPM_POST_PMU:
+@@ -3034,7 +3033,7 @@ static int wcd9335_codec_enable_slim(struct snd_soc_dapm_widget *w,
+ 		break;
+ 	}
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static int wcd9335_codec_enable_mix_path(struct snd_soc_dapm_widget *w,
+@@ -3539,7 +3538,6 @@ static int wcd9335_codec_hphl_dac_event(struct snd_soc_dapm_widget *w,
+ 	struct wcd9335_codec *wcd = dev_get_drvdata(comp->dev);
+ 	int hph_mode = wcd->hph_mode;
+ 	u8 dem_inp;
+-	int ret = 0;
+ 
+ 	switch (event) {
+ 	case SND_SOC_DAPM_PRE_PMU:
+@@ -3579,7 +3577,7 @@ static int wcd9335_codec_hphl_dac_event(struct snd_soc_dapm_widget *w,
+ 		break;
+ 	};
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static int wcd9335_codec_lineout_dac_event(struct snd_soc_dapm_widget *w,
+@@ -3607,7 +3605,6 @@ static int wcd9335_codec_ear_dac_event(struct snd_soc_dapm_widget *w,
+ {
+ 	struct snd_soc_component *comp = snd_soc_dapm_to_component(w->dapm);
+ 	struct wcd9335_codec *wcd = dev_get_drvdata(comp->dev);
+-	int ret = 0;
+ 
+ 	switch (event) {
+ 	case SND_SOC_DAPM_PRE_PMU:
+@@ -3621,7 +3618,7 @@ static int wcd9335_codec_ear_dac_event(struct snd_soc_dapm_widget *w,
+ 		break;
+ 	};
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static void wcd9335_codec_hph_post_pa_config(struct wcd9335_codec *wcd,
+@@ -3692,7 +3689,6 @@ static int wcd9335_codec_hphr_dac_event(struct snd_soc_dapm_widget *w,
+ 	struct wcd9335_codec *wcd = dev_get_drvdata(comp->dev);
+ 	int hph_mode = wcd->hph_mode;
+ 	u8 dem_inp;
+-	int ret = 0;
+ 
+ 	switch (event) {
+ 	case SND_SOC_DAPM_PRE_PMU:
+@@ -3731,7 +3727,7 @@ static int wcd9335_codec_hphr_dac_event(struct snd_soc_dapm_widget *w,
+ 		break;
+ 	};
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static int wcd9335_codec_enable_hphl_pa(struct snd_soc_dapm_widget *w,
+@@ -3741,7 +3737,6 @@ static int wcd9335_codec_enable_hphl_pa(struct snd_soc_dapm_widget *w,
+ 	struct snd_soc_component *comp = snd_soc_dapm_to_component(w->dapm);
+ 	struct wcd9335_codec *wcd = dev_get_drvdata(comp->dev);
+ 	int hph_mode = wcd->hph_mode;
+-	int ret = 0;
+ 
+ 	switch (event) {
+ 	case SND_SOC_DAPM_PRE_PMU:
+@@ -3780,7 +3775,7 @@ static int wcd9335_codec_enable_hphl_pa(struct snd_soc_dapm_widget *w,
+ 		break;
+ 	};
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static int wcd9335_codec_enable_lineout_pa(struct snd_soc_dapm_widget *w,
+@@ -3789,7 +3784,6 @@ static int wcd9335_codec_enable_lineout_pa(struct snd_soc_dapm_widget *w,
+ {
+ 	struct snd_soc_component *comp = snd_soc_dapm_to_component(w->dapm);
+ 	int vol_reg = 0, mix_vol_reg = 0;
+-	int ret = 0;
+ 
+ 	if (w->reg == WCD9335_ANA_LO_1_2) {
+ 		if (w->shift == 7) {
+@@ -3837,7 +3831,7 @@ static int wcd9335_codec_enable_lineout_pa(struct snd_soc_dapm_widget *w,
+ 		break;
+ 	};
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static void wcd9335_codec_init_flyback(struct snd_soc_component *component)
+@@ -3892,7 +3886,6 @@ static int wcd9335_codec_enable_hphr_pa(struct snd_soc_dapm_widget *w,
+ 	struct snd_soc_component *comp = snd_soc_dapm_to_component(w->dapm);
+ 	struct wcd9335_codec *wcd = dev_get_drvdata(comp->dev);
+ 	int hph_mode = wcd->hph_mode;
+-	int ret = 0;
+ 
+ 	switch (event) {
+ 	case SND_SOC_DAPM_PRE_PMU:
+@@ -3930,14 +3923,13 @@ static int wcd9335_codec_enable_hphr_pa(struct snd_soc_dapm_widget *w,
+ 		break;
+ 	};
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static int wcd9335_codec_enable_ear_pa(struct snd_soc_dapm_widget *w,
+ 				       struct snd_kcontrol *kc, int event)
+ {
+ 	struct snd_soc_component *comp = snd_soc_dapm_to_component(w->dapm);
+-	int ret = 0;
+ 
+ 	switch (event) {
+ 	case SND_SOC_DAPM_POST_PMU:
+@@ -3967,7 +3959,7 @@ static int wcd9335_codec_enable_ear_pa(struct snd_soc_dapm_widget *w,
+ 		break;
+ 	};
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static irqreturn_t wcd9335_slimbus_irq(int irq, void *data)
+-- 
+2.20.1
 
