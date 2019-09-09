@@ -2,124 +2,141 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C5F1C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E09C4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D2102086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:16:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568038568;
-	bh=WRjZ44Y2X+VtFPk/w2hbQJ56D207xXfEQntjZgZQyrw=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=Hi5XF3KOPl6PI4aA9LRAKXdjXix4GRpXbzm+yi262wDP6OGXLavDOhTW4WrD/C5xp
-	 8YekjWrRyAEpv/YxLFFVxGGYeOLgMq3+cAqQs2RiEjhepn5QPTpKXVLFh7QQgaxTNy
-	 e1F7dpGKa04ZjOqyRkeeCv0/2ajqc9CRcmQMlNHs=
+	by mail.kernel.org (Postfix) with ESMTP id 524BA206CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:16:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405353AbfIIOQH (ORCPT
+        id S2405363AbfIIOQf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 10:16:07 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50694 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404997AbfIIOQG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 10:16:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
-        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ncaGoyv9geFRKOoOCYmfj/M2T7iV6dkN+y33439/hIE=; b=wPCUkQLmKHZEibVvCCogQ5ua/
-        28sxrmbrMOEjq25ltxakLx0wcOjCLOIbQv0EwU5Bz2Sjhx7taIVMNPpVNjN3LNVLCw5jSNPBXGxZg
-        d+/l/j/gpp0Jx/NS04IQD/JNbesEGaJCgp2FDdIHW63E+pG/Xjy6wk5fq5hO19LiBbES4=;
-Received: from [148.69.85.38] (helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1i7KSb-0002cw-1E; Mon, 09 Sep 2019 14:16:05 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 69799D02D3E; Mon,  9 Sep 2019 15:16:04 +0100 (BST)
-Date:   Mon, 9 Sep 2019 15:16:04 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>
-Subject: [GIT PULL] regulator fixes for 5.3
-Message-ID: <20190909141604.GI2036@sirena.org.uk>
+        Mon, 9 Sep 2019 10:16:35 -0400
+Received: from mga09.intel.com ([134.134.136.24]:33539 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730690AbfIIOQf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 10:16:35 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Sep 2019 07:16:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,484,1559545200"; 
+   d="scan'208";a="185204986"
+Received: from cheolyon-mobl.gar.corp.intel.com (HELO [10.249.76.127]) ([10.249.76.127])
+  by fmsmga007.fm.intel.com with ESMTP; 09 Sep 2019 07:16:30 -0700
+Subject: Re: [PATCH v1 1/2] clk: intel: Add CGU clock driver for a new SoC
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>, sboyd@kernel.org
+Cc:     andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com, mturquette@baylibre.com,
+        qi-ming.wu@intel.com, rahul.tanwar@intel.com, robh+dt@kernel.org,
+        robh@kernel.org, yixin.zhu@linux.intel.com
+References: <6a3c26bc6e25d883686287883528dbde30725922.1566975410.git.rahul.tanwar@linux.intel.com>
+ <20190902222015.11360-1-martin.blumenstingl@googlemail.com>
+ <d9e96dab-96be-0c14-b7af-e1f2dc07ebd2@linux.intel.com>
+ <CAFBinCARQJ7q9q3r6c6Yr2SD0Oo_Drah-kxss3Obs-g=B1M28A@mail.gmail.com>
+ <b7920723-1df2-62df-61c7-98c3a1665aa1@linux.intel.com>
+ <CAFBinCA+J-HnXfRnquqviXvX0Jo84hoLC9=_uHbyWKZycwyAFw@mail.gmail.com>
+From:   "Kim, Cheol Yong" <cheol.yong.kim@linux.intel.com>
+Message-ID: <4e1ddc50-7ae3-3ba9-7e41-80a834fa2dbf@linux.intel.com>
+Date:   Mon, 9 Sep 2019 22:16:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="itqfrb9Qq3wY07cp"
-Content-Disposition: inline
-X-Cookie: Be careful!  UGLY strikes 9 out of 10!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAFBinCA+J-HnXfRnquqviXvX0Jo84hoLC9=_uHbyWKZycwyAFw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---itqfrb9Qq3wY07cp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 9/6/2019 4:47 AM, Martin Blumenstingl wrote:
+> Hi Rahul,
+>
+> On Wed, Sep 4, 2019 at 10:04 AM Tanwar, Rahul
+> <rahul.tanwar@linux.intel.com> wrote:
+>>
+>> Hi Martin,
+>>
+>> On 4/9/2019 2:53 AM, Martin Blumenstingl wrote:
+>>>> My understanding is that if we do not use syscon, then there is no
+>>>> point in using regmap because this driver uses simple 32 bit register
+>>>> access. Can directly read/write registers using readl() & writel().
+>>>>
+>>>> Would you agree ?
+>>> if there was only the LGM SoC then I would say: drop regmap
+>>>
+>>> however, last year a driver for the GRX350/GRX550 SoCs was proposed: [0]
+>>> this was never updated but it seems to use the same "framework" as the
+>>> LGM driver
+>>> with this in mind I am for keeping regmap support because.
+>>> I think it will be easier to add support for old SoCs like
+>>> GRX350/GRX550 (but also VRX200), because the PLL sub-driver (I am
+>>> assuming that it is similar on all SoCs) or some other helpers can be
+>>> re-used across various SoCs instead of "duplicating" code (where one
+>>> variant would use regmap and the other readl/writel).
+>>
+>> Earlier, we had discussed about it in our team.  There are no plans to
+>> upstream mips based platform code, past up-streaming efforts for mips
+>> platforms were also dropped. GRX350/GRX550/VRX200 are all mips
+>> based platforms. Plan is to upstream only x86 based platforms. In-fact,
+>> i had removed GRX & other older SoCs support from this driver before
+>> sending for review. So we can consider only x86 based LGM family of
+>> SoCs for this driver & all of them will be reusing same IP.
+> this is very sad news
+> as far as I can tell many IP cores are similar/identical on
+> GRX350/GRX550, LGM and even VRX200
+>
+> I already know that VRX200 is a legacy product and you won't be supporting it
+> once LGM support lands upstream you could add support for
+> GRX350/GRX550 with small to medium effort
+> that is a big win (in my opinion) because it means happier end-users
+> (see XWAY and VRX200 support in OpenWrt for example: while support
+> from Intel/Lantiq has died long ago these devices can still run a
+> recent LTS kernel and get security updates. without OpenWrt these
+> devices would probably end up as electronic waste)
 
-The following changes since commit 811ba489fa524ec634933cdf83aaf6c007a4c004:
+I'm sorry to say that we don't plan to support legacy SOCs. As you might 
+know, we tried to upstream some of drivers last year but found a lot of 
+problems to support both legacy SOCs and LGM.
 
-  regulator: of: Add of_node_put() before return in function (2019-08-01 14:07:46 +0100)
+It was a real pain to support all of them with limited resources/time 
+and we couldn't make it. Our new plan was to reattempt to upstream LGM 
+drivers only. This can be more realistic target for us.
 
-are available in the Git repository at:
+>
+> maybe implementing a re-usable regmap clock driver (for mux, gate and
+> divider) means less effort (compared to converting everything to
+> standard clock ops) for you.
+> (we did the switch from standard clock ops to regmap for the Amlogic
+> Meson clock drivers when we discovered that there were some non-clock
+> registers that belong to other IP blocks in it and it was a lot of
+> effort)
+> this will allow you to add support for GRX350/GRX550 in the future if
+> demand for upstream drivers rises.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/regulator-fix-v5.3-rc8
+I've discussed internally the amount of efforts to create a reusable 
+regmap clock driver which might be reused by other companies too.
 
-for you to fetch changes up to 3829100a63724f6dbf264b2a7f06e7f638ed952d:
+It seems it requires significant efforts for implementation/tests. As we 
+don't plan to support our old SOCs for now, I'm not sure if we need to 
+put such a big efforts.
 
-  regulator: twl: voltage lists for vdd1/2 on twl4030 (2019-08-15 15:08:41 +0100)
+Stephan,
 
-----------------------------------------------------------------
-regulator: Fixes for v5.3
+It seems you don't like both meson/qcom regmap clock implementation.
 
-This is obviouly very late, containing three small and simple
-driver specific fixes.  The main one is the TWL fix, this fixes
-issues with cpufreq on the PMICs used with BeagleBoard generation
-OMAP SoCs which had been broken due to changes in the generic OPP
-code exposing a bug in the regulator driver for these devices
-causing them to think that OPPs weren't supported on the system.
+What is your opinion for our current CGU clock driver implementation?
 
-Sorry about sending this so late, I hadn't registered that the
-TWL issue manifested in cpufreq.
 
-----------------------------------------------------------------
-
-Andreas Kemnade (1):
-      regulator: twl: voltage lists for vdd1/2 on twl4030
-
-Dan Carpenter (1):
-      regulator: slg51000: Fix a couple NULL vs IS_ERR() checks
-
-Raag Jadav (1):
-      regulator: act8945a-regulator: fix ldo register addresses in set_mode hook
-
- drivers/regulator/act8945a-regulator.c |  8 ++++----
- drivers/regulator/slg51000-regulator.c |  4 ++--
- drivers/regulator/twl-regulator.c      | 23 ++++++++++++++++++++---
- 3 files changed, 26 insertions(+), 9 deletions(-)
-
---itqfrb9Qq3wY07cp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl12XqMACgkQJNaLcl1U
-h9DCigf/enqBxwYXqqvNW3drvpkZj8//pHANeq7uF4YzzNiuucfocWV8BPP4ZOV0
-E6/8ike5h91/Hv9Zr/Ls2QxIDHmpUv/Eoj5GCiiz0nr5E2kvLXzfFbk7YUWwAwbg
-Xj1qN3DsfIRUuV2V3TmYk5WHNBFkARepDbf9W9Qc1nSFjwntg7VeKNoG05V+lCkJ
-uAJTOFjEAnGNXxGIpTYb9qjLP8NsyqYGFjDn7U14IJ+x2jW63hlaXXke2iWK/F0D
-/sUikORUY+8iEN72vFrXjOa6uLYL7qXcuNGgFCBPPJGGE0a56pAEqbI1vwtsqX1d
-jv91sQCzGkt8HvbX2oJfcP98PTbg+w==
-=Utx9
------END PGP SIGNATURE-----
-
---itqfrb9Qq3wY07cp--
+>
+> Martin
+>
