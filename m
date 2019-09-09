@@ -2,233 +2,156 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D9BBC4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 21:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE41C4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 21:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AE5321A4C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 21:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCD2E2081B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 21:48:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="cMqn+GpW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406093AbfIIVpK (ORCPT
+        id S2406098AbfIIVsp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 17:45:10 -0400
-Received: from mail-out.m-online.net ([212.18.0.9]:58285 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391889AbfIIVpH (ORCPT
+        Mon, 9 Sep 2019 17:48:45 -0400
+Received: from esa3.hc3370-68.iphmx.com ([216.71.145.155]:14036 "EHLO
+        esa3.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727104AbfIIVsp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 17:45:07 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 46S1sr3fJSz1rJgl;
-        Mon,  9 Sep 2019 23:45:04 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 46S1sr2qdxz1qqkC;
-        Mon,  9 Sep 2019 23:45:04 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id qZ8-lsPCxhJx; Mon,  9 Sep 2019 23:45:03 +0200 (CEST)
-X-Auth-Info: Aeq2wPB2g8JLijVeAgGXkDVoKmffLOMiGQJTIMBEAIw=
-Received: from localhost.localdomain (85-222-111-42.dynamic.chello.pl [85.222.111.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Mon,  9 Sep 2019 23:45:02 +0200 (CEST)
-From:   Lukasz Majewski <lukma@denx.de>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Enrico Weigelt <info@metux.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        linux-input@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lukasz Majewski <lukma@denx.de>
-Subject: [PATCH v5 3/3] input: touchscreen mc13xxx: Add mc34708 support
-Date:   Mon,  9 Sep 2019 23:44:40 +0200
-Message-Id: <20190909214440.30674-4-lukma@denx.de>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190909214440.30674-1-lukma@denx.de>
-References: <20190909214440.30674-1-lukma@denx.de>
+        Mon, 9 Sep 2019 17:48:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1568065722;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=MtqZUegknBgsc7V9oe2SWxhatbu90YiITWhF1QMXFXQ=;
+  b=cMqn+GpWr60vFpVz/DCuvwfIEiIEW8zHtmhL9shdy0Bmj4aFD0antSjt
+   hMUxv+YnsNQ5PACOzfmcIaKD8LRyfZ/BVC6tgzAjERZf+mBVK7/Yq1eMa
+   El7Av6SZqeZlOuSias03vLqwzmpS/jXUucqmw/eRzDeclahLiF+ynj+54
+   I=;
+Authentication-Results: esa3.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=igor.druzhinin@citrix.com; spf=Pass smtp.mailfrom=igor.druzhinin@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa3.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  igor.druzhinin@citrix.com) identity=pra;
+  client-ip=162.221.158.21; receiver=esa3.hc3370-68.iphmx.com;
+  envelope-from="igor.druzhinin@citrix.com";
+  x-sender="igor.druzhinin@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa3.hc3370-68.iphmx.com: domain of
+  igor.druzhinin@citrix.com designates 162.221.158.21 as
+  permitted sender) identity=mailfrom;
+  client-ip=162.221.158.21; receiver=esa3.hc3370-68.iphmx.com;
+  envelope-from="igor.druzhinin@citrix.com";
+  x-sender="igor.druzhinin@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83 ~all"
+Received-SPF: None (esa3.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa3.hc3370-68.iphmx.com;
+  envelope-from="igor.druzhinin@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: hCi2gIgXCpOpzBw/5gQOHY8H5elKkQJt9aNlcE1NFqFo0yPRohSWIGMRxTs0CjTDo5YTJqiyFG
+ fcBPotXRNk1rKG19cBsTmSUHUnMEDEHqgidlwyLuWBEDhq+OuqSeMlWtSehk032wQBIRjYTrip
+ W5DSJDoTmhfi9f2U8/FI2WEzbl7yZ79GCST1SOY8/Ztw0KGg1q0VymaIA2tfcHShwTogFgolRP
+ A6jg/uiT+vgu/xatzJ0Otyf8gvOgW7LMhSPpf46TGpWPsYTY7xHBqVZ1SbI++I9bx2WJucfliJ
+ MBo=
+X-SBRS: 2.7
+X-MesageID: 5348248
+X-Ironport-Server: esa3.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.64,487,1559534400"; 
+   d="scan'208";a="5348248"
+Subject: Re: [PATCH] xen/pci: try to reserve MCFG areas earlier
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        <xen-devel@lists.xenproject.org>, <linux-kernel@vger.kernel.org>
+CC:     <jgross@suse.com>
+References: <1567556431-9809-1-git-send-email-igor.druzhinin@citrix.com>
+ <5054ad91-5b87-652c-873a-b31758948bd7@oracle.com>
+ <e3114d56-51cd-b973-1ada-f6a60a7e99cc@citrix.com>
+ <43b7da04-5c42-80d8-898b-470ee1c91ed2@oracle.com>
+ <adefac87-c2b3-b67f-fb4d-d763ce920bef@citrix.com>
+ <1695c88d-e5ad-1854-cdef-3cd95c812574@oracle.com>
+ <4d3bf854-51de-99e4-9a40-a64c581bdd10@citrix.com>
+ <bc3da154-d451-02cf-6154-5e0dc721a6e6@oracle.com>
+From:   Igor Druzhinin <igor.druzhinin@citrix.com>
+Message-ID: <c45b8786-5735-a95d-bc40-61372c326037@citrix.com>
+Date:   Mon, 9 Sep 2019 22:48:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <bc3da154-d451-02cf-6154-5e0dc721a6e6@oracle.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sascha Hauer <s.hauer@pengutronix.de>
+On 09/09/2019 20:19, Boris Ostrovsky wrote:
+> On 9/8/19 7:37 PM, Igor Druzhinin wrote:
+>> On 09/09/2019 00:30, Boris Ostrovsky wrote:
+>>> On 9/8/19 5:11 PM, Igor Druzhinin wrote:
+>>>> On 08/09/2019 19:28, Boris Ostrovsky wrote:
+>>>>> On 9/6/19 7:00 PM, Igor Druzhinin wrote:
+>>>>>> On 06/09/2019 23:30, Boris Ostrovsky wrote:
+>>>>>>> Where is MCFG parsed? pci_arch_init()?
+>>>>>>>> It happens twice:
+>>>>>> 1) first time early one in pci_arch_init() that is arch_initcall - that
+>>>>>> time pci_mmcfg_list will be freed immediately there because MCFG area is
+>>>>>> not reserved in E820;
+>>>>>> 2) second time late one in acpi_init() which is subsystem_initcall right
+>>>>>> before where PCI enumeration starts - this time ACPI tables will be
+>>>>>> checked for a reserved resource and pci_mmcfg_list will be finally
+>>>>>> populated.
+>>>>>>
+>>>>>> The problem is that on a system that doesn't have MCFG area reserved in
+>>>>>> E820 pci_mmcfg_list is empty before acpi_init() and our PCI hooks are
+>>>>>> called in the same place. So MCFG is still not in use by Xen at this
+>>>>>> point since we haven't reached our xen_mcfg_late().
+>>>>> Would it be possible for us to parse MCFG ourselves in pci_xen_init()? I
+>>>>> realize that we'd be doing this twice (or maybe even three times since
+>>>>> apparently both pci_arch_init()  and acpi_ini() do it).
+>>>>>
+>>>> I don't thine it makes sense:
+>>>> a) it needs to be done after ACPI is initialized since we need to parse
+>>>> it to figure out the exact reserved region - that's why it's currently
+>>>> done in acpi_init() (see commit message for the reasons why)
+>>> Hmm... We should be able to parse ACPI tables by the time
+>>> pci_arch_init() is called. In fact, if you look at
+>>> pci_mmcfg_early_init() you will see that it does just that.
+>>>
+>> The point is not to parse MCFG after acpi_init but to parse DSDT for
+>> reserved resource which could be done only after ACPI initialization.
+> 
+> OK, I think I understand now what you are trying to do --- you are
+> essentially trying to account for the range inserted by
+> setup_mcfg_map(), right?
+> 
 
-The mc34708 has a different bit to enable pen detection. This
-adds the driver data and devtype necessary to probe the device
-and to distinguish between the mc13783 and the mc34708.
+Actually, pci_mmcfg_late_init() that's called out of acpi_init() -
+that's where MCFG areas are properly sized. setup_mcfg_map() is mostly
+for bus hotplug where MCFG area is discovered by evaluating _CBA method;
+for cold-plugged buses it just confirms that MCFG area is already
+registered because it is mandated for them to be in MCFG table at boot time.
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-Signed-off-by: Lukasz Majewski <lukma@denx.de>
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> The other question I have is why you think it's worth keeping
+> xen_mcfg_late() as a late initcall. How could MCFG info be updated
+> between acpi_init() and late_initcalls being run? I'd think it can only
+> happen when a new device is hotplugged.
+> 
 
----
-Changes for v5:
-- None
+It was a precaution against setup_mcfg_map() calls that might add new
+areas that are not in MCFG table but for some reason have _CBA method.
+It's obviously a "firmware is broken" scenario so I don't have strong
+feelings to keep it here. Will prefer to remove in v2 if you want.
 
-Changes for v4:
-- Remove type from struct mc13xx_chip
-- Add Acked-by from Dmitry
-
-Changes for v3:
-- Replace forward declaration of mc13xxx_driver_data with
-  structure definition
-- Rename mc13xxx_driver_data with mc13xxx_chip
-- Move static struct mc13xxx_chip mc13783_chip and mc34708_chip
-  closer to ID table
-- Do not check mc13xxx device type
-
-Changes for v2:
-- Change nested if statements to a single one (with cr0 > ...)
-- Replace hardcoded max resistance value (4080) with a generic driver data
-  value.
-- Introduce new include/linux/mfd/mc34708.h header file for mc34708 specific
-  defines
-- Define as driver data mask and value for accessing mc13xxx registers
-
-Changes from the original patch:
-- Simplify the mcXXXXX_set_pen_detection functions
-- Fix checkpatch warnings
----
----
- drivers/input/touchscreen/mc13783_ts.c | 48 +++++++++++++++++++++++---
- 1 file changed, 44 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/input/touchscreen/mc13783_ts.c b/drivers/input/touchscreen/mc13783_ts.c
-index edd49e44e0c9..1dd8ed396225 100644
---- a/drivers/input/touchscreen/mc13783_ts.c
-+++ b/drivers/input/touchscreen/mc13783_ts.c
-@@ -10,6 +10,7 @@
-  */
- #include <linux/platform_device.h>
- #include <linux/mfd/mc13783.h>
-+#include <linux/mfd/mc34708.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/input.h>
-@@ -30,6 +31,12 @@ MODULE_PARM_DESC(sample_tolerance,
- 		"is supposed to be wrong and is discarded.  Set to 0 to "
- 		"disable this check.");
- 
-+struct mc13xxx_chip {
-+	int max_resistance;
-+	u32 reg_mask;
-+	u32 reg_value;
-+};
-+
- struct mc13783_ts_priv {
- 	struct input_dev *idev;
- 	struct mc13xxx *mc13xxx;
-@@ -37,6 +44,7 @@ struct mc13783_ts_priv {
- 	unsigned int sample[4];
- 	u8 ato;
- 	bool atox;
-+	const struct mc13xxx_chip *chip;
- };
- 
- static irqreturn_t mc13783_ts_handler(int irq, void *data)
-@@ -93,6 +101,9 @@ static void mc13783_ts_report_sample(struct mc13783_ts_priv *priv)
- 
- 	cr0 = (cr0 + cr1) / 2;
- 
-+	if (cr0 > priv->chip->max_resistance)
-+		cr0 = 0;
-+
- 	if (!cr0 || !sample_tolerance ||
- 			(x2 - x0 < sample_tolerance &&
- 			 y2 - y0 < sample_tolerance)) {
-@@ -102,14 +113,14 @@ static void mc13783_ts_report_sample(struct mc13783_ts_priv *priv)
- 			input_report_abs(idev, ABS_Y, y1);
- 
- 			dev_dbg(&idev->dev, "report (%d, %d, %d)\n",
--					x1, y1, 0x1000 - cr0);
-+				x1, y1, priv->chip->max_resistance - cr0);
- 			schedule_delayed_work(&priv->work, HZ / 50);
- 		} else {
- 			dev_dbg(&idev->dev, "report release\n");
- 		}
- 
- 		input_report_abs(idev, ABS_PRESSURE,
--				cr0 ? 0x1000 - cr0 : cr0);
-+				 cr0 ? priv->chip->max_resistance - cr0 : 0);
- 		input_report_key(idev, BTN_TOUCH, cr0);
- 		input_sync(idev);
- 	} else {
-@@ -146,7 +157,8 @@ static int mc13783_ts_open(struct input_dev *dev)
- 		goto out;
- 
- 	ret = mc13xxx_reg_rmw(priv->mc13xxx, MC13XXX_ADC0,
--			MC13XXX_ADC0_TSMOD_MASK, MC13XXX_ADC0_TSMOD0);
-+			      priv->chip->reg_mask,
-+			      priv->chip->reg_value);
- 	if (ret)
- 		mc13xxx_irq_free(priv->mc13xxx, MC13XXX_IRQ_TS, priv);
- out:
-@@ -160,7 +172,7 @@ static void mc13783_ts_close(struct input_dev *dev)
- 
- 	mc13xxx_lock(priv->mc13xxx);
- 	mc13xxx_reg_rmw(priv->mc13xxx, MC13XXX_ADC0,
--			MC13XXX_ADC0_TSMOD_MASK, 0);
-+			priv->chip->reg_mask, 0);
- 	mc13xxx_irq_free(priv->mc13xxx, MC13XXX_IRQ_TS, priv);
- 	mc13xxx_unlock(priv->mc13xxx);
- 
-@@ -172,6 +184,7 @@ static int __init mc13783_ts_probe(struct platform_device *pdev)
- 	struct mc13783_ts_priv *priv;
- 	struct mc13xxx_ts_platform_data *pdata = dev_get_platdata(&pdev->dev);
- 	struct input_dev *idev;
-+	const struct platform_device_id *id = platform_get_device_id(pdev);
- 	int ret = -ENOMEM;
- 
- 	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-@@ -182,6 +195,7 @@ static int __init mc13783_ts_probe(struct platform_device *pdev)
- 	INIT_DELAYED_WORK(&priv->work, mc13783_ts_work);
- 	priv->mc13xxx = dev_get_drvdata(pdev->dev.parent);
- 	priv->idev = idev;
-+	priv->chip = (void *)id->driver_data;
- 
- 	if (pdata) {
- 		priv->atox = pdata->atox;
-@@ -228,7 +242,33 @@ static int mc13783_ts_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static struct mc13xxx_chip mc13783_chip = {
-+	.max_resistance = 4096,
-+	.reg_mask = MC13XXX_ADC0_TSMOD_MASK,
-+	.reg_value = MC13XXX_ADC0_TSMOD0,
-+};
-+
-+static struct mc13xxx_chip mc34708_chip = {
-+	.max_resistance = 4080,
-+	.reg_mask = MC34708_ADC0_TSMASK,
-+	.reg_value = MC34708_ADC0_TSPENDETEN,
-+};
-+
-+static const struct platform_device_id mc13xxx_ts_idtable[] = {
-+	{
-+		.name = "mc13783-ts",
-+		.driver_data = (kernel_ulong_t)&mc13783_chip,
-+	}, {
-+		.name = "mc34708-ts",
-+		.driver_data = (kernel_ulong_t)&mc34708_chip,
-+	}, {
-+		/* sentinel */
-+	}
-+};
-+MODULE_DEVICE_TABLE(platform, mc13xxx_ts_idtable);
-+
- static struct platform_driver mc13783_ts_driver = {
-+	.id_table	= mc13xxx_ts_idtable,
- 	.remove		= mc13783_ts_remove,
- 	.driver		= {
- 		.name	= MC13783_TS_NAME,
--- 
-2.20.1
-
+Igor
