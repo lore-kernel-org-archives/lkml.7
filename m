@@ -2,189 +2,80 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B49C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 422D4C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:39:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB46F2196E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D86421920
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:39:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388472AbfIIPhs (ORCPT
+        id S2388503AbfIIPjV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 11:37:48 -0400
-Received: from mga02.intel.com ([134.134.136.20]:10639 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729417AbfIIPhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 11:37:47 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Sep 2019 08:37:46 -0700
-X-IronPort-AV: E=Sophos;i="5.64,486,1559545200"; 
-   d="scan'208";a="186547593"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Sep 2019 08:37:46 -0700
-Message-ID: <64167c3a7b482d9cbeeabd3f5001cf7d357476c5.camel@linux.intel.com>
-Subject: Re: [PATCH v9 2/8] mm: Adjust shuffle code to allow for future
- coalescing
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
-        virtio-dev@lists.oasis-open.org, kvm@vger.kernel.org,
-        mst@redhat.com, catalin.marinas@arm.com, david@redhat.com,
-        dave.hansen@intel.com, linux-kernel@vger.kernel.org,
-        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org, osalvador@suse.de,
-        yang.zhang.wz@gmail.com, pagupta@redhat.com,
-        konrad.wilk@oracle.com, nitesh@redhat.com, riel@surriel.com,
-        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        ying.huang@intel.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com, fengguang.wu@intel.com,
-        kirill.shutemov@linux.intel.com
-Date:   Mon, 09 Sep 2019 08:37:46 -0700
-In-Reply-To: <20190909153529.3crs74uraos27ffh@box>
-References: <20190907172225.10910.34302.stgit@localhost.localdomain>
-         <20190907172520.10910.83100.stgit@localhost.localdomain>
-         <20190909094700.bbslsxpuwvxmodal@box>
-         <22a896255cba877cf820f552667e1bc14268fa20.camel@linux.intel.com>
-         <20190909153529.3crs74uraos27ffh@box>
+        Mon, 9 Sep 2019 11:39:21 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:51569 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727003AbfIIPjU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 11:39:20 -0400
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1i7Ll5-000154-JJ; Mon, 09 Sep 2019 17:39:15 +0200
+Message-ID: <1568043555.2956.9.camel@pengutronix.de>
+Subject: Re: [PATCH -next] reset: reset-scmi: add missing handle
+ initialisation
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Sudeep Holla <sudeep.holla@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Etienne Carriere <etienne.carriere@linaro.org>
+Cc:     linux-kernel@vger.kernel.org
+Date:   Mon, 09 Sep 2019 17:39:15 +0200
+In-Reply-To: <20190909152107.4968-1-sudeep.holla@arm.com>
+References: <20190909152107.4968-1-sudeep.holla@arm.com>
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
-MIME-Version: 1.0
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-09-09 at 18:35 +0300, Kirill A. Shutemov wrote:
-> On Mon, Sep 09, 2019 at 08:22:11AM -0700, Alexander Duyck wrote:
-> > > > +	area = &zone->free_area[order];
-> > > > +	if (is_shuffle_order(order) ? shuffle_pick_tail() :
-> > > > +	    buddy_merge_likely(pfn, buddy_pfn, page, order))
-> > > 
-> > > Too loaded condition to my taste. Maybe
-> > > 
-> > > 	bool to_tail;
-> > > 	...
-> > > 	if (is_shuffle_order(order))
-> > > 		to_tail = shuffle_pick_tail();
-> > > 	else if (buddy_merge_likely(pfn, buddy_pfn, page, order))
-> > > 		to_tail = true;
-> > > 	else
-> > > 		to_tail = false;
-> > 
-> > I can do that, although I would tweak this slightly and do something more
-> > like:
-> >         if (is_shuffle_order(order))
-> >                 to_tail = shuffle_pick_tail();
-> >         else
-> >                 to_tail = buddy+_merge_likely(pfn, buddy_pfn, page, order);
-> 
-> Okay. Looks fine.
-> 
-> > > 	if (to_tail)
-> > > 		add_to_free_area_tail(page, area, migratetype);
-> > > 	else
-> > > 		add_to_free_area(page, area, migratetype);
-> > > 
-> > > > +		add_to_free_area_tail(page, area, migratetype);
-> > > >  	else
-> > > > -		add_to_free_area(page, &zone->free_area[order], migratetype);
-> > > > -
-> > > > +		add_to_free_area(page, area, migratetype);
-> > > >  }
-> > > >  
-> > > >  /*
-> > > > diff --git a/mm/shuffle.c b/mm/shuffle.c
-> > > > index 9ba542ecf335..345cb4347455 100644
-> > > > --- a/mm/shuffle.c
-> > > > +++ b/mm/shuffle.c
-> > > > @@ -4,7 +4,6 @@
-> > > >  #include <linux/mm.h>
-> > > >  #include <linux/init.h>
-> > > >  #include <linux/mmzone.h>
-> > > > -#include <linux/random.h>
-> > > >  #include <linux/moduleparam.h>
-> > > >  #include "internal.h"
-> > > >  #include "shuffle.h"
-> > > 
-> > > Why do you move #include <linux/random.h> from .c to .h?
-> > > It's not obvious to me.
-> > 
-> > Because I had originally put the shuffle logic in an inline function. I
-> > can undo that now as I when back to doing the randomness in the .c
-> > sometime v5 I believe.
-> 
-> Yes, please. It's needless change now.
-> 
-> > > > @@ -190,8 +189,7 @@ struct batched_bit_entropy {
-> > > >  
-> > > >  static DEFINE_PER_CPU(struct batched_bit_entropy, batched_entropy_bool);
-> > > >  
-> > > > -void add_to_free_area_random(struct page *page, struct free_area *area,
-> > > > -		int migratetype)
-> > > > +bool __shuffle_pick_tail(void)
-> > > >  {
-> > > >  	struct batched_bit_entropy *batch;
-> > > >  	unsigned long entropy;
-> > > > @@ -213,8 +211,5 @@ void add_to_free_area_random(struct page *page, struct free_area *area,
-> > > >  	batch->position = position;
-> > > >  	entropy = batch->entropy_bool;
-> > > >  
-> > > > -	if (1ul & (entropy >> position))
-> > > > -		add_to_free_area(page, area, migratetype);
-> > > > -	else
-> > > > -		add_to_free_area_tail(page, area, migratetype);
-> > > > +	return 1ul & (entropy >> position);
-> > > >  }
-> > > > diff --git a/mm/shuffle.h b/mm/shuffle.h
-> > > > index 777a257a0d2f..0723eb97f22f 100644
-> > > > --- a/mm/shuffle.h
-> > > > +++ b/mm/shuffle.h
-> > > > @@ -3,6 +3,7 @@
-> > > >  #ifndef _MM_SHUFFLE_H
-> > > >  #define _MM_SHUFFLE_H
-> > > >  #include <linux/jump_label.h>
-> > > > +#include <linux/random.h>
-> > > >  
-> > > >  /*
-> > > >   * SHUFFLE_ENABLE is called from the command line enabling path, or by
-> > > > @@ -22,6 +23,7 @@ enum mm_shuffle_ctl {
-> > > >  DECLARE_STATIC_KEY_FALSE(page_alloc_shuffle_key);
-> > > >  extern void page_alloc_shuffle(enum mm_shuffle_ctl ctl);
-> > > >  extern void __shuffle_free_memory(pg_data_t *pgdat);
-> > > > +extern bool __shuffle_pick_tail(void);
-> > > >  static inline void shuffle_free_memory(pg_data_t *pgdat)
-> > > >  {
-> > > >  	if (!static_branch_unlikely(&page_alloc_shuffle_key))
-> > > > @@ -43,6 +45,11 @@ static inline bool is_shuffle_order(int order)
-> > > >  		return false;
-> > > >  	return order >= SHUFFLE_ORDER;
-> > > >  }
-> > > > +
-> > > > +static inline bool shuffle_pick_tail(void)
-> > > > +{
-> > > > +	return __shuffle_pick_tail();
-> > > > +}
-> > > 
-> > > I don't see a reason in __shuffle_pick_tail() existing if you call it
-> > > unconditionally.
-> > 
-> > That is for compilation purposes. The function is not used in the
-> > shuffle_pick_tail below that always returns false.
-> 
-> Wouldn't it be the same if you rename __shuffle_pick_tail() to
-> shuffle_pick_tail() and put its declaration under the same #ifdef?
-> 
+Hi Sudeep,
 
-Yeah I guess I can do that. I'll update that for v10.
+On Mon, 2019-09-09 at 16:21 +0100, Sudeep Holla wrote:
+> scmi_reset_data->handle needs to be initialised at probe, so that it
+> can be used to access scmi reset protocol apis using the same later.
+> 
+> Since it was tested with a module that obtained handle elsewhere,
+> it was missed easily. Add the missing scmi_reset_data->handle
+> initialisation to fix the issue.
+> 
+> Fixes: c8ae9c2da1cc ("reset: Add support for resets provided by SCMI")
+> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> Reported-by: Etienne Carriere <etienne.carriere@linaro.org>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>  drivers/reset/reset-scmi.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> Hi Philipp,
+> 
+> I can either take this via ARM SoC as the driver is getting merged through
+> ARM SoC tree, or you can apply this once it gets landed in mainline.
+> I am fine with whatever you prefer.
 
-Thanks.
+Feel free to take this in via ARM SoC directly, I see no need to wait
+for this to hit mainline.
 
-- Alex
+Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
 
+regards
+Philipp
