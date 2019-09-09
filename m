@@ -2,96 +2,101 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3ED7C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B091AC433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 860172089F
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:25:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84CAA2089F
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:25:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Gy3GdGrC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="blcu5F/m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403807AbfIIKZD (ORCPT
+        id S2403840AbfIIKZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 06:25:03 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:42996 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730310AbfIIKZC (ORCPT
+        Mon, 9 Sep 2019 06:25:28 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:41196 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403812AbfIIKZ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 06:25:02 -0400
-Received: by mail-pl1-f195.google.com with SMTP id x20so720854plm.9
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 03:25:02 -0700 (PDT)
+        Mon, 9 Sep 2019 06:25:27 -0400
+Received: by mail-io1-f65.google.com with SMTP id r26so27317783ioh.8;
+        Mon, 09 Sep 2019 03:25:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:to:from:subject:user-agent:date;
-        bh=TyNObdox1Iixd3zdjTU48f1Hvwe8ktTALjvLZDb3R8o=;
-        b=Gy3GdGrC2H0vAPvVXFy7E3x7By74bGTaeH6NGTKpD7w8/GgGJHjYKmbfMF22EDtA5B
-         f5t5fUsvRZnfkAg2s2I3/vJwMxsVh0krMkkMa7Ee4s/w4KIBoRIUCTM0OI59Mh4RXkVw
-         R7LTkg25XjGZcEUZlnpMa19BBp6+z5JcwqKWg=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Iih+uQUiA9izQUGr4jy/Sqv8n1Gdl/kNYnNhnb/eS84=;
+        b=blcu5F/m6M4e8lmPcljb3wQamY08n3LcD5Dz+Ie6fi0ZvtPexZLKYWO8dNDqhQyJZL
+         6IOgDT+Bxx+K2S5qdmPOUCkbR2Fif4zO0W1AoY7yZTmuQcsg576fe/MwS0uK0UoV79TP
+         nndu91jPG2ZIn5mVQ2pWMF0QUeFB2GIFibXC8PMJUHBcZZJwpUwb6bmkXrSIKdbxjOxw
+         9z0wbc1CIlHSn/CficejXP59A85PdGcS11C5ZLMZf7+pVuWCcIojfGFVMlI0tOP/Ge34
+         octtCcspkXOiWDLZvFT9Vw/AJxcEtwZpgkUNYCLRs4Ff0L06gUcrHuBwHiUzjI8YTpEl
+         xmBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:to:from:subject
-         :user-agent:date;
-        bh=TyNObdox1Iixd3zdjTU48f1Hvwe8ktTALjvLZDb3R8o=;
-        b=AQSdmc0r94CEZu8xal5o0+X9JiiXtmJHtXudpQeMSjq4oeElF+GNWSq/JYv1eGtgA0
-         qfVpTcbTGSLRiRyaODPjXxUBH8RYb8cldhBrLXGRn5+Q46ilMn2aYkwJj2R7P2LbjPv2
-         hTNhvTqRPc3pultLXeVzKR4ch3zIK8YYpLlaZUkAWvZ4+lrCnBllODyP76GnxXU3AeJm
-         HcukXwOlrMTzdhW1a37Ct5bl1KL4/b1he09UOPV9+8lvQhzqplsRN91qVqblqxWlEFDG
-         RFk+RyhtP6nrHbvgYkJWs3wGcPIUqqxkVTWwr/ozcn1UsDAD9guji3lOlczLRw1baPzJ
-         qh9Q==
-X-Gm-Message-State: APjAAAUf+R9JylvN/LM7QX4ltTCEE/rVrSdb8QPEWOIHq4e9V+NcFK3j
-        gLoRiWL/4Sy7jDbJHTP0TGlKs9Vua19kaveX
-X-Google-Smtp-Source: APXvYqzpzWFH0V95+RGywC3U3nviZcDv33Y78qLcJHexUGEwPoPTOCrEwCOBBtQM/gjQNV2ltj/5YA==
-X-Received: by 2002:a17:902:9347:: with SMTP id g7mr23722181plp.0.1568024702129;
-        Mon, 09 Sep 2019 03:25:02 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id l6sm33369863pje.28.2019.09.09.03.25.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Sep 2019 03:25:01 -0700 (PDT)
-Message-ID: <5d76287d.1c69fb81.1631c.4ca4@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Iih+uQUiA9izQUGr4jy/Sqv8n1Gdl/kNYnNhnb/eS84=;
+        b=MI8a4Y9tE/AW1IHpVzV5nKC58fNPrB7How8O2k10BbEoecAiVtG24Bfib/jVGVIVLW
+         dHrTH2CjvffaWmpXzVwf6/r4YMc+4H4cTm2ES3Rj0sjSJ7axTN51zgUWjY1qeby8f4SB
+         BDfZ/Kw9Ls0+AFfJ2wk3OOD7NDsUbuU99Zdo3j7+gWIoOJGdsk8cvBJ2W02qtgvP3/+K
+         G+IDcUg2kejHaB59RxB8Zr8M8X48X8+bf6wPPrNEHAYUUMSM9nTKGUPMr1l2qfTLIGVa
+         skH+7jYOUSQR8pCOoyqFpkCkd+Q4uD2xXhuT9E52ONQ1+qA8YNV/DnZijyTuAdYNibxZ
+         3AxQ==
+X-Gm-Message-State: APjAAAV2fYFOvuejE/sCzt/gd+SJBytlppBm3OzEMN0nPOdzvutsBMTO
+        XUpOORxwDg25gRK58JzILBIz85oxsvW689StcKOlDkyjJZE=
+X-Google-Smtp-Source: APXvYqwcEAG1JfqbQemeVAXvvAIlgTBhC6sqluMv7Q1nZgjEYLOd/AxmByYzgLyU3PLNhD2AQMMbQOen/2LF49mG7PI=
+X-Received: by 2002:a5e:8e0c:: with SMTP id a12mr19710141ion.22.1568024726318;
+ Mon, 09 Sep 2019 03:25:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190830195142.103564-1-swboyd@chromium.org>
-References: <20190830195142.103564-1-swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Taniya Das <tdas@codeaurora.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH] clk: qcom: gcc-sdm845: Use floor ops for sdcc clks
-User-Agent: alot/0.8.1
-Date:   Mon, 09 Sep 2019 03:25:00 -0700
+References: <20190907090534.GB1712@pc-sasha.localdomain> <CAKMK7uHYdXwruQxxBM12Q5MVeH9fjFpZvxZz06BSo7YrCQbM2w@mail.gmail.com>
+ <20190908141307.GA7115@pc-sasha.localdomain> <20190909201159.778590a0@canb.auug.org.au>
+ <20190909202128.0c420ddd@canb.auug.org.au>
+In-Reply-To: <20190909202128.0c420ddd@canb.auug.org.au>
+From:   Alexander Kapshuk <alexander.kapshuk@gmail.com>
+Date:   Mon, 9 Sep 2019 13:24:49 +0300
+Message-ID: <CAJ1xhMXKNRfOm1Xj3B_cgLByBfDP03P+DBEbRpWc+tU6kdxtBw@mail.gmail.com>
+Subject: Re: Kernel panic during drm/nouveau init 5.3.0-rc7-next-20190903
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux-Next <linux-next@vger.kernel.org>,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        sean@poorly.run, airlied@linux.ie
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Stephen Boyd (2019-08-30 12:51:42)
-> Some MMC cards fail to enumerate properly when inserted into an MMC slot
-> on sdm845 devices. This is because the clk ops for qcom clks round the
-> frequency up to the nearest rate instead of down to the nearest rate.
-> For example, the MMC driver requests a frequency of 52MHz from
-> clk_set_rate() but the qcom implementation for these clks rounds 52MHz
-> up to the next supported frequency of 100MHz. The MMC driver could be
-> modified to request clk rate ranges but for now we can fix this in the
-> clk driver by changing the rounding policy for this clk to be round down
-> instead of round up.
->=20
-> Fixes: 06391eddb60a ("clk: qcom: Add Global Clock controller (GCC) driver=
- for SDM845")
-> Reported-by: Douglas Anderson <dianders@chromium.org>
-> Cc: Taniya Das <tdas@codeaurora.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
+On Mon, Sep 9, 2019 at 1:21 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi,
+>
+> On Mon, 9 Sep 2019 20:11:59 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> >
+> > If you are bisecting linux-next, I will suggest bisecting between the
+> > stable branch on linux-next (which is just Linus' tree when I started
+> > that day) and the top of the first linux-next that fails.  (Assuming
+> > that the stable branch is good).
+>
+> Actually (since you won't be bisecting the latest linux-next), you
+> probably want to use
+>
+> git merge-base stable next-20190903
+>         (or whatever linux-next you are bisecting)
+>
+> as your first good commit (assuming it id good :-)).
+>
+> --
+> Cheers,
+> Stephen Rothwell
 
-Applied to clk-next
+Hi Stephen,
 
+Thanks very much for the tips.
+I'll go ahead and give those a try.
