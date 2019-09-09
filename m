@@ -2,114 +2,210 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9504DC433EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65949C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:26:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A6D3218AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:26:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XyUjZ3fN";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="o513epvp"
+	by mail.kernel.org (Postfix) with ESMTP id 39DDE2086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:26:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403992AbfIIL01 (ORCPT
+        id S2404078AbfIIL0p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 07:26:27 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:53360 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730089AbfIIL01 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 07:26:27 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 5538960271; Mon,  9 Sep 2019 11:26:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568028386;
-        bh=aGObAo7JXSTQg8/hilz+tj4Iff/k/ApkzjZWhbD7P/g=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=XyUjZ3fNsE/mmmtbuTZKRcv7p/Y2x2fkEhvFPT/aS1QcHAyBxpROhm81EBQAzQLuN
-         H40EroCwKI0abRFSSVXTfR7GLFJOQ3foeEBduV29LXXTgL3oZibIlUx11sc7kgZ18n
-         xz9GUi8/5+WpsRFY2YsVRTXAxrZEKgNPoX+YYwHQ=
-Received: from [10.206.13.37] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8AAD460769;
-        Mon,  9 Sep 2019 11:26:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568028385;
-        bh=aGObAo7JXSTQg8/hilz+tj4Iff/k/ApkzjZWhbD7P/g=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=o513epvpzF7DiEHZqA1NpKsUgt9QsWcjI8pWXX/qrBy/S7duZOa9HrZtCqmiAl30q
-         JJ8vhWsKxVnZTA8gtn6vrZ2L/CZrLk+IFOnLm4S5LKBJXkBkyRnY44dw8plOV4FNu5
-         JMr0MgGOem9wTCCO7/FICypwuLACjjmpHIgQ6+Ig=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8AAD460769
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH RFC 12/14] arm64: dts: qcom: add PDC interrupt controller
- for SDM845
-To:     Lina Iyer <ilina@codeaurora.org>, swboyd@chromium.org,
-        evgreen@chromium.org, marc.zyngier@arm.com,
-        linus.walleij@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, linux-gpio@vger.kernel.org,
-        rnayak@codeaurora.org
-References: <20190829181203.2660-1-ilina@codeaurora.org>
- <20190829181203.2660-13-ilina@codeaurora.org>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <1e311bff-752a-4226-ab75-be5e87ffcc62@codeaurora.org>
-Date:   Mon, 9 Sep 2019 16:56:19 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 9 Sep 2019 07:26:45 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:33910 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2404031AbfIIL0p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 07:26:45 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 794725134C95325920F7;
+        Mon,  9 Sep 2019 19:26:43 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 9 Sep 2019
+ 19:26:39 +0800
+Subject: Re: [f2fs-dev] [PATCH 2/2] f2fs: avoid infinite GC loop due to stale
+ atomic files
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20190909012532.20454-1-jaegeuk@kernel.org>
+ <20190909012532.20454-2-jaegeuk@kernel.org>
+ <f446ff29-38a5-61fd-4056-b4067b01c630@huawei.com>
+ <20190909073011.GA21625@jaegeuk-macbookpro.roam.corp.google.com>
+ <5a473076-14b8-768a-62ac-f686e850d5a6@huawei.com>
+ <20190909080108.GC21625@jaegeuk-macbookpro.roam.corp.google.com>
+ <bf0683d9-ac05-1edc-71ea-3d02f7b2fb55@huawei.com>
+ <20190909082112.GA25724@jaegeuk-macbookpro.roam.corp.google.com>
+ <2f5b844c-f722-6a80-a4ab-61bdd72b8be4@huawei.com>
+ <20190909083844.GC25724@jaegeuk-macbookpro.roam.corp.google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <83759349-644a-b3a0-787d-e463b0565885@huawei.com>
+Date:   Mon, 9 Sep 2019 19:26:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20190829181203.2660-13-ilina@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190909083844.GC25724@jaegeuk-macbookpro.roam.corp.google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019/9/9 16:38, Jaegeuk Kim wrote:
+> On 09/09, Chao Yu wrote:
+>> On 2019/9/9 16:21, Jaegeuk Kim wrote:
+>>> On 09/09, Chao Yu wrote:
+>>>> On 2019/9/9 16:01, Jaegeuk Kim wrote:
+>>>>> On 09/09, Chao Yu wrote:
+>>>>>> On 2019/9/9 15:30, Jaegeuk Kim wrote:
+>>>>>>> On 09/09, Chao Yu wrote:
+>>>>>>>> On 2019/9/9 9:25, Jaegeuk Kim wrote:
+>>>>>>>>> If committing atomic pages is failed when doing f2fs_do_sync_file(), we can
+>>>>>>>>> get commited pages but atomic_file being still set like:
+>>>>>>>>>
+>>>>>>>>> - inmem:    0, atomic IO:    4 (Max.   10), volatile IO:    0 (Max.    0)
+>>>>>>>>>
+>>>>>>>>> If GC selects this block, we can get an infinite loop like this:
+>>>>>>>>>
+>>>>>>>>> f2fs_submit_page_bio: dev = (253,7), ino = 2, page_index = 0x2359a8, oldaddr = 0x2359a8, newaddr = 0x2359a8, rw = READ(), type = COLD_DATA
+>>>>>>>>> f2fs_submit_read_bio: dev = (253,7)/(253,7), rw = READ(), DATA, sector = 18533696, size = 4096
+>>>>>>>>> f2fs_get_victim: dev = (253,7), type = No TYPE, policy = (Foreground GC, LFS-mode, Greedy), victim = 4355, cost = 1, ofs_unit = 1, pre_victim_secno = 4355, prefree = 0, free = 234
+>>>>>>>>> f2fs_iget: dev = (253,7), ino = 6247, pino = 5845, i_mode = 0x81b0, i_size = 319488, i_nlink = 1, i_blocks = 624, i_advise = 0x2c
+>>>>>>>>> f2fs_submit_page_bio: dev = (253,7), ino = 2, page_index = 0x2359a8, oldaddr = 0x2359a8, newaddr = 0x2359a8, rw = READ(), type = COLD_DATA
+>>>>>>>>> f2fs_submit_read_bio: dev = (253,7)/(253,7), rw = READ(), DATA, sector = 18533696, size = 4096
+>>>>>>>>> f2fs_get_victim: dev = (253,7), type = No TYPE, policy = (Foreground GC, LFS-mode, Greedy), victim = 4355, cost = 1, ofs_unit = 1, pre_victim_secno = 4355, prefree = 0, free = 234
+>>>>>>>>> f2fs_iget: dev = (253,7), ino = 6247, pino = 5845, i_mode = 0x81b0, i_size = 319488, i_nlink = 1, i_blocks = 624, i_advise = 0x2c
+>>>>>>>>>
+>>>>>>>>> In that moment, we can observe:
+>>>>>>>>>
+>>>>>>>>> [Before]
+>>>>>>>>> Try to move 5084219 blocks (BG: 384508)
+>>>>>>>>>   - data blocks : 4962373 (274483)
+>>>>>>>>>   - node blocks : 121846 (110025)
+>>>>>>>>> Skipped : atomic write 4534686 (10)
+>>>>>>>>>
+>>>>>>>>> [After]
+>>>>>>>>> Try to move 5088973 blocks (BG: 384508)
+>>>>>>>>>   - data blocks : 4967127 (274483)
+>>>>>>>>>   - node blocks : 121846 (110025)
+>>>>>>>>> Skipped : atomic write 4539440 (10)
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+>>>>>>>>> ---
+>>>>>>>>>  fs/f2fs/file.c | 10 +++++-----
+>>>>>>>>>  1 file changed, 5 insertions(+), 5 deletions(-)
+>>>>>>>>>
+>>>>>>>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+>>>>>>>>> index 7ae2f3bd8c2f..68b6da734e5f 100644
+>>>>>>>>> --- a/fs/f2fs/file.c
+>>>>>>>>> +++ b/fs/f2fs/file.c
+>>>>>>>>> @@ -1997,11 +1997,11 @@ static int f2fs_ioc_commit_atomic_write(struct file *filp)
+>>>>>>>>>  			goto err_out;
+>>>>>>>>>  
+>>>>>>>>>  		ret = f2fs_do_sync_file(filp, 0, LLONG_MAX, 0, true);
+>>>>>>>>> -		if (!ret) {
+>>>>>>>>> -			clear_inode_flag(inode, FI_ATOMIC_FILE);
+>>>>>>>>> -			F2FS_I(inode)->i_gc_failures[GC_FAILURE_ATOMIC] = 0;
+>>>>>>>>> -			stat_dec_atomic_write(inode);
+>>>>>>>>> -		}
+>>>>>>>>> +
+>>>>>>>>> +		/* doesn't need to check error */
+>>>>>>>>> +		clear_inode_flag(inode, FI_ATOMIC_FILE);
+>>>>>>>>> +		F2FS_I(inode)->i_gc_failures[GC_FAILURE_ATOMIC] = 0;
+>>>>>>>>> +		stat_dec_atomic_write(inode);
+>>>>>>>>
+>>>>>>>> If there are still valid atomic write pages linked in .inmem_pages, it may cause
+>>>>>>>> memory leak when we just clear FI_ATOMIC_FILE flag.
+>>>>>>>
+>>>>>>> f2fs_commit_inmem_pages() should have flushed them.
+>>>>>>
+>>>>>> Oh, we failed to flush its nodes.
+>>>>>>
+>>>>>> However we won't clear such info if we failed to flush inmen pages, it looks
+>>>>>> inconsistent.
+>>>>>>
+>>>>>> Any interface needed to drop inmem pages or clear ATOMIC_FILE flag in that two
+>>>>>> error path? I'm not very clear how sqlite handle such error.
+>>>>>
+>>>>> f2fs_drop_inmem_pages() did that, but not in this case.
+>>>>
+>>>> What I mean is, for any error returned from atomic_commit() interface, should
+>>>> userspace application handle it with consistent way, like trigger
+>>>> f2fs_drop_inmem_pages(), so we don't need to handle it inside atomic_commit().
+>>>
+>>> f2fs_ioc_abort_volatile_write() will be triggered.
+>>
+>> If userspace can do this, we can get rid of this patch, or am I missing sth?
+> 
+> We don't know when that will come. And, other threads are waiting for GC here.
 
-On 8/29/2019 11:42 PM, Lina Iyer wrote:
-> Add PDC interrupt controller device bindings for SDM845.
->
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> ---
->   arch/arm64/boot/dts/qcom/sdm845.dtsi | 10 ++++++++++
->   1 file changed, 10 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index be0022e09465..ffe28b3e41d8 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -2375,6 +2375,16 @@
->   			#power-domain-cells = <1>;
->   		};
->   
-> +		pdc_intc: interrupt-controller@b220000 {
-> +			compatible = "qcom,sdm845-pdc";
-> +			reg = <0 0x0b220000 0 0x30000>, <0x179900f0 0x60>;
+Yes, however, even atomic_write won't be called sometimes... that's why we add
+handling logic in f2fs_gc().
 
-second register also needs to be in below format
+> 
+>>
+>> - f2fs_ioc_abort_volatile_write
+>>  - f2fs_drop_inmem_pages
+>>   - clear_inode_flag(inode, FI_ATOMIC_FILE);
+>>   - fi->i_gc_failures[GC_FAILURE_ATOMIC] = 0;
+>>   - stat_dec_atomic_write(inode);
+>>
+>>>
+>>>>
+>>>>>
+>>>>>>
+>>>>>> Thanks,
+>>>>>>
+>>>>>>>
+>>>>>>>>
+>>>>>>>> So my question is why below logic didn't handle such condition well?
+>>>>>>>>
+>>>>>>>> f2fs_gc()
+>>>>>>>>
+>>>>>>>> 	if (has_not_enough_free_secs(sbi, sec_freed, 0)) {
+>>>>>>>> 		if (skipped_round <= MAX_SKIP_GC_COUNT ||
+>>>>>>>> 					skipped_round * 2 < round) {
+>>>>>>>> 			segno = NULL_SEGNO;
+>>>>>>>> 			goto gc_more;
+>>>>>>>> 		}
+>>>>>>>>
+>>>>>>>> 		if (first_skipped < last_skipped &&
+>>>>>>>> 				(last_skipped - first_skipped) >
+>>>>>>>> 						sbi->skipped_gc_rwsem) {
+>>>>>>>> 			f2fs_drop_inmem_pages_all(sbi, true);
+>>>>>>>
+>>>>>>> This is doing nothing, since f2fs_commit_inmem_pages() removed the inode
+>>>>>>> from inmem list.
 
-<0 0x179900f0 0 0x60>
+One possible solution is keeping inode in sbi->inode_lock[ATOMIC_FILE] list
+until f2fs_do_sync_file() return, then f2fs_drop_inmem_pages_all() can find and
+drop the inode.
 
-> +			qcom,pdc-ranges = <0 480 94>, <94 609 15>, <115 630 7>;
-> +			#interrupt-cells = <2>;
-> +			interrupt-parent = <&intc>;
-> +			interrupt-controller;
-> +			qcom,scm-spi-cfg;
-> +		};
-> +
->   		pdc_reset: reset-controller@b2e0000 {
->   			compatible = "qcom,sdm845-pdc-global";
->   			reg = <0 0x0b2e0000 0 0x20000>;
+Thanks,
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
+>>>>>>>
+>>>>>>>> 			segno = NULL_SEGNO;
+>>>>>>>> 			goto gc_more;
+>>>>>>>> 		}
+>>>>>>>> 		if (gc_type == FG_GC && !is_sbi_flag_set(sbi, SBI_CP_DISABLED))
+>>>>>>>> 			ret = f2fs_write_checkpoint(sbi, &cpc);
+>>>>>>>> 	}
+>>>>>>>>
+>>>>>>>>>  	} else {
+>>>>>>>>>  		ret = f2fs_do_sync_file(filp, 0, LLONG_MAX, 1, false);
+>>>>>>>>>  	}
+>>>>>>>>>
+>>>>>>> .
+>>>>>>>
+>>>>> .
+>>>>>
+>>> .
+>>>
+> .
+> 
