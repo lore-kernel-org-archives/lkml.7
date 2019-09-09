@@ -2,151 +2,102 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C620C49ED6
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40333C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECC7D2171F
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0235F21920
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:25:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="DGSmxlg0";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="PwZO/p4k"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HLl43lPr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389489AbfIIQZL (ORCPT
+        id S2389542AbfIIQZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 12:25:11 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:35812 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726287AbfIIQZK (ORCPT
+        Mon, 9 Sep 2019 12:25:51 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:55388 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726907AbfIIQZv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 12:25:10 -0400
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x89GNxV0029691;
-        Mon, 9 Sep 2019 09:24:03 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=m/+u36wyBdJNgYpeuMX8Bk/u91XmjHB9gZiyi7/IxXk=;
- b=DGSmxlg0ivDhney3HH603x02F4rWpPqa7jDUV095V+eM4fwK7KOLAfllr6/ATr1BYSVd
- Ic8hvBXuXsSzEJBPDJXbYsaBv4nN1Hc8HmdDCeEcaRZdMRqGSS93o9CMytRJIqq8aPkJ
- AJouNGGa4tYqLJykb6rH+sxzrqb1hYiVicA= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2uwrh2ghhq-11
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 09 Sep 2019 09:24:03 -0700
-Received: from prn-mbx07.TheFacebook.com (2620:10d:c081:6::21) by
- prn-hub06.TheFacebook.com (2620:10d:c081:35::130) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Mon, 9 Sep 2019 09:23:39 -0700
-Received: from prn-hub06.TheFacebook.com (2620:10d:c081:35::130) by
- prn-mbx07.TheFacebook.com (2620:10d:c081:6::21) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Mon, 9 Sep 2019 09:23:39 -0700
-Received: from NAM03-BY2-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.30) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Mon, 9 Sep 2019 09:23:39 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=J4bSKyKyXvVbVvTzuWiptbQj05aPKemC2ITYAT9UjBccDajEeOa9yK95Cte8GeyFMdQl+783j8Tibz/fZLeansz2DnldK665JVRoUaJ9266mi403gZnHszaB8nIpqgl0XbLWxE7I00EGE5y0RWsw1Nn/adoSfJQSgBp6+ksaGYF9JsxP6SqiF777Q5ha0ddKEq84e4+6/lMjxETH4pZJJuR/jVm12aHuxcXFCP/KtW9H9VVkCZfH4LI7+IXVUZztd1RXkVIrLkUxlESEyMmoANavciWJUjR4tuOB77I7lvxZfQeTMtIMkrsOamb8CWnYQuOEpRQLaVqswUFFz88y3Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=m/+u36wyBdJNgYpeuMX8Bk/u91XmjHB9gZiyi7/IxXk=;
- b=nPd3SF7skQ6voQlZ+e/yDskNzGdXW20tEJvl5S+VajMgkcguqr1DV2nUs4kWH9Td1EmrK5ypbnewuU+tf94gcA5sS0GiWmgWMtXI6aB7PRk7dN7gML3Wzhb0kzsqP+7p6FUvys0PFmpM05XQnmRU8Nncp8hz0DxL9pB1WpFaLmSDjU3jR8goIHEqwLcpHPnWh7FarAanBigLdGLmsgosoDO1sZH9deWcKBLGsKcFrBNHwSQysBDk69jlxVdOxsVnwgbYn5ylPrZp5Fpjp+/GU6jLMQ6v/sQ+JD/Ut8OHA3WAhUTuLezWR7qMcuZJdxIR8YydLftMTZPNv4Zj+fi8Ww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=m/+u36wyBdJNgYpeuMX8Bk/u91XmjHB9gZiyi7/IxXk=;
- b=PwZO/p4kQfRAep7egQlDvK3iqZyNv9M023X5cuQy4/hdgPyuHUdawsxN04FlKcDUwI9zSbqQe8PIuNJhzQudXQc8Z0L5NINE2/aSYO5uXqXesz5/NGsMT0jIcw4L9iJPa9dFC/Vf2539w8Nc5p3Jaqb5dpkIBMf535HL3PXBXRk=
-Received: from BN8PR15MB2626.namprd15.prod.outlook.com (20.179.137.220) by
- BN8PR15MB2948.namprd15.prod.outlook.com (20.178.219.31) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.18; Mon, 9 Sep 2019 16:23:38 +0000
-Received: from BN8PR15MB2626.namprd15.prod.outlook.com
- ([fe80::5d2:6eec:98cc:76d2]) by BN8PR15MB2626.namprd15.prod.outlook.com
- ([fe80::5d2:6eec:98cc:76d2%3]) with mapi id 15.20.2241.018; Mon, 9 Sep 2019
- 16:23:38 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     Ivan Safonov <insafonov@gmail.com>
-CC:     Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] cgroup: use kv(malloc|free) instead of
- pidlist_(allocate|free)
-Thread-Topic: [PATCH] cgroup: use kv(malloc|free) instead of
- pidlist_(allocate|free)
-Thread-Index: AQHVZlMwLyLH4umnXUO07VS6c1TXmqcjiTKA
-Date:   Mon, 9 Sep 2019 16:23:38 +0000
-Message-ID: <20190909162333.GA8571@tower.dhcp.thefacebook.com>
-References: <20190908144041.19667-1-insafonov@gmail.com>
-In-Reply-To: <20190908144041.19667-1-insafonov@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR02CA0022.namprd02.prod.outlook.com
- (2603:10b6:300:4b::32) To BN8PR15MB2626.namprd15.prod.outlook.com
- (2603:10b6:408:c7::28)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::eb41]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2ed38a49-f722-4e1b-34ff-08d7354211bf
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN8PR15MB2948;
-x-ms-traffictypediagnostic: BN8PR15MB2948:
-x-microsoft-antispam-prvs: <BN8PR15MB294840D1BF4C3ADD6E5BDCC7BEB70@BN8PR15MB2948.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 01559F388D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(366004)(39860400002)(396003)(136003)(376002)(199004)(189003)(53936002)(5660300002)(486006)(478600001)(256004)(6916009)(6116002)(229853002)(66946007)(9686003)(6512007)(1411001)(52116002)(76176011)(6246003)(54906003)(14454004)(316002)(99286004)(2906002)(6436002)(64756008)(66476007)(66446008)(66556008)(4744005)(8936002)(1076003)(4326008)(6486002)(81166006)(81156014)(25786009)(305945005)(7736002)(386003)(33656002)(8676002)(71200400001)(86362001)(6506007)(71190400001)(186003)(476003)(11346002)(46003)(102836004)(446003);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR15MB2948;H:BN8PR15MB2626.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: rBrqclbEFtzTMyJHO+5vXC3Q+ItzqqWhaShDsIuat2QdZs9tMTCFaSQ6bvY3W8f1G5Z+0R1CyRyDuDkMXZRKpm2Qenx/vbKW+y/lkA+ELzyVl8EDTNrN0UrIEiTDDoY4JOkqgPNU7wQuBCj1VRgVsF1j9I5+IeAL89RSbK8xTf2hJHIbPjy5qVMeeCDU3pYqEU+01MvOrXz+tjesvv5VbprxLxiZFMdi4mks5OQMAXswinVXlqBOUagR9BGUP1bmR/v4tiee8djwUpNa7mNbgYgvxUZiMKF0IU8rYxhUjK0Lt61bzVwB5+1pFqiR8wxU9tCXFp1uo1deYOwm8cmvt+mqMLDV3MVT5tu8AraygFH3KMMVqIZAWVF1iuyCfinja1zyco/6OFnZHAxkFQ2J/N/PkPkQsn/JOC3dqr2oZ6s=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <627F6A5E88B2754E875DE38D7C361586@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 9 Sep 2019 12:25:51 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x89GPnv3045109;
+        Mon, 9 Sep 2019 11:25:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568046349;
+        bh=qOaE43n59Xn9z85FENujisRAdEffat99mm+Z4EKhjCM=;
+        h=From:To:CC:Subject:Date;
+        b=HLl43lPrdDOu2pKKOE5dZryK1O88PrwirtOlAEXJ1u+ave5G/2/qkJzwnZp1mQUiA
+         ev/dV7srXdN6dSX6ey2RDHyTh8BOqTjl35gVnwHEpiwtUDWw4ynyOysfOGgUib4QEr
+         E9DwzVWHrgUD74ed8pSnMDe5rpX+RxxPbQy7ys1U=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x89GPn62026721
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 9 Sep 2019 11:25:49 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 9 Sep
+ 2019 11:25:49 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 9 Sep 2019 11:25:49 -0500
+Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x89GPnoO056522;
+        Mon, 9 Sep 2019 11:25:49 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+CC:     Prabhakar Lad <prabhakar.csengg@gmail.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
+Subject: [Patch 00/13] media: am437x-vpfe: overdue maintenance
+Date:   Mon, 9 Sep 2019 11:27:30 -0500
+Message-ID: <20190909162743.30114-1-bparrot@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2ed38a49-f722-4e1b-34ff-08d7354211bf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Sep 2019 16:23:38.1819
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tJo9nuTntlx1aBmJgetoCYxzJdrG3yhHm4w3QjT25dvpHH22pJOfdrLDxduzr7U/
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR15MB2948
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-09_07:2019-09-09,2019-09-09 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0 suspectscore=0
- phishscore=0 mlxlogscore=672 impostorscore=0 adultscore=0 malwarescore=0
- spamscore=0 bulkscore=0 lowpriorityscore=0 clxscore=1011
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1906280000 definitions=main-1909090166
-X-FB-Internal: deliver
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 08, 2019 at 05:40:41PM +0300, Ivan Safonov wrote:
-> Resolve TODO:
-> > The following two functions "fix" the issue where there are more pids
-> > than kmalloc will give memory for; in such cases, we use vmalloc/vfree.
-> > TODO: replace with a kernel-wide solution to this problem
->=20
-> kv(malloc|free) is appropriate replacement for pidlist_(allocate|free).
->=20
-> Signed-off-by: Ivan Safonov <insafonov@gmail.com>
+This patch series is a collection of patches we have been carrying for a
+while.
 
-Looks good to me!
+A few patches do fix actual bug and v4l2-compliance errors/warnings.
+Other are drivers re-work to simplify/clarify the code for easier
+maintenance.
 
-Acked-by: Roman Gushchin <guro@fb.com>
+We also include the SPDX Licensing update which seemed to have been
+missed by the global script thus far.
 
-Thanks!
+Benoit Parrot (12):
+  media: am437x-vpfe: Fix missing first line
+  media: am437x-vpfe: Rework ISR routine for clarity
+  media: am437x-vpfe: Wait for end of frame before tear-down
+  media: am437x-vpfe: Streamlined vb2 buffer cleanup
+  media: am437x-vpfe: Setting STD to current value is not an error
+  media: am437x-vpfe: Use a per instance format array instead of a
+    static one
+  media: am437x-vpfe: Maintain a reference to the current vpfe_fmt
+  media: am437x-vpfe: fix function trace debug log
+  media: am437x-vpfe: Remove print_fourcc helper
+  media: am437x-vpfe: TRY_FMT ioctl is not really trying anything
+  media: am437x-vpfe: Remove per bus width static data
+  media: am437x-vpfe: Switch to SPDX Licensing
+
+Dave Gerlach (1):
+  media: am437x-vpfe: Fix suspend path to always handle pinctrl config
+
+ drivers/media/platform/am437x/am437x-vpfe.c   | 906 ++++++++----------
+ drivers/media/platform/am437x/am437x-vpfe.h   |  44 +-
+ .../media/platform/am437x/am437x-vpfe_regs.h  |  10 +-
+ 3 files changed, 438 insertions(+), 522 deletions(-)
+
+-- 
+2.17.1
+
