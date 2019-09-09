@@ -2,144 +2,137 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1321AC433EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80624C433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:18:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E373221920
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:18:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 548FF21920
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:18:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="IvjpG6Bo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390433AbfIIKS3 (ORCPT
+        id S2390460AbfIIKSi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 06:18:29 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55866 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390297AbfIIKS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 06:18:28 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A0DFCAD88;
-        Mon,  9 Sep 2019 10:18:26 +0000 (UTC)
-From:   Luis Henriques <lhenriques@suse.com>
-To:     "Jeff Layton" <jlayton@kernel.org>
-Cc:     <ceph-devel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ceph: allow object copies across different filesystems in the same cluster
-References: <20190906135750.29543-1-lhenriques@suse.com>
-        <30b09cb015563913d073c488c8de8ba0cceedd7b.camel@kernel.org>
-        <87sgp9o0fo.fsf@suse.com>
-        <afce4ec5a02c17121e615423a2e7e1b664aa77a3.camel@kernel.org>
-Date:   Mon, 09 Sep 2019 11:18:25 +0100
-In-Reply-To: <afce4ec5a02c17121e615423a2e7e1b664aa77a3.camel@kernel.org> (Jeff
-        Layton's message of "Sat, 07 Sep 2019 09:53:29 -0400")
-Message-ID: <87k1ahojri.fsf@suse.com>
+        Mon, 9 Sep 2019 06:18:38 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:15689 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390297AbfIIKSh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 06:18:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1568024316; x=1599560316;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=PftOWRoYjF16gzp8Wil4H6jd2iHitkZNVA6hQVM9wzQ=;
+  b=IvjpG6Boe/cGwYPyNAyMGZvjw2a60ZIkPjGH/sQQHQb6g/l5hyCTOqqC
+   FsM9zLb3SQuxWFrDiH4W6JWzWHrZZvrp9T+6iMS55rk6AMLb+z8GgLGw9
+   b3b4jree6pJsboJa4x9jZu90pXyoyxkcCk2jmC40vZJfywe+2yEqPMItk
+   Q=;
+X-IronPort-AV: E=Sophos;i="5.64,484,1559520000"; 
+   d="scan'208";a="420172978"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-859fe132.us-west-2.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 09 Sep 2019 10:18:33 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-859fe132.us-west-2.amazon.com (Postfix) with ESMTPS id 4E97E221E48;
+        Mon,  9 Sep 2019 10:18:32 +0000 (UTC)
+Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 9 Sep 2019 10:18:31 +0000
+Received: from [10.125.238.52] (10.43.161.217) by EX13D01EUB001.ant.amazon.com
+ (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Mon, 9 Sep
+ 2019 10:18:26 +0000
+Subject: Re: [UNVERIFIED SENDER] Re: [PATCH 1/1] irqchip: al-fic: add support
+ for irq retrigger
+To:     Marc Zyngier <maz@kernel.org>
+CC:     <tglx@linutronix.de>, <jason@lakedaemon.net>,
+        <linux-kernel@vger.kernel.org>, <dwmw@amazon.co.uk>,
+        <benh@kernel.crashing.org>, <hhhawa@amazon.com>,
+        <ronenk@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
+        <barakw@amazon.com>
+References: <1568018358-18985-1-git-send-email-talel@amazon.com>
+ <86d0g9st7m.wl-maz@kernel.org>
+From:   "Shenhar, Talel" <talel@amazon.com>
+Message-ID: <3efe33a5-3ddb-aa77-8a62-bd011ae23110@amazon.com>
+Date:   Mon, 9 Sep 2019 13:18:21 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <86d0g9st7m.wl-maz@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.43.161.217]
+X-ClientProxiedBy: EX13D07UWB003.ant.amazon.com (10.43.161.66) To
+ EX13D01EUB001.ant.amazon.com (10.43.166.194)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Jeff Layton" <jlayton@kernel.org> writes:
 
-> On Fri, 2019-09-06 at 17:26 +0100, Luis Henriques wrote:
->> "Jeff Layton" <jlayton@kernel.org> writes:
->> 
->> > On Fri, 2019-09-06 at 14:57 +0100, Luis Henriques wrote:
->> > > OSDs are able to perform object copies across different pools.  Thus,
->> > > there's no need to prevent copy_file_range from doing remote copies if the
->> > > source and destination superblocks are different.  Only return -EXDEV if
->> > > they have different fsid (the cluster ID).
->> > > 
->> > > Signed-off-by: Luis Henriques <lhenriques@suse.com>
->> > > ---
->> > >  fs/ceph/file.c | 23 +++++++++++++++++++----
->> > >  1 file changed, 19 insertions(+), 4 deletions(-)
->> > > 
->> > > Hi!
->> > > 
->> > > I've finally managed to run some tests using multiple filesystems, both
->> > > within a single cluster and also using two different clusters.  The
->> > > behaviour of copy_file_range (with this patch, of course) was what I
->> > > expected:
->> > > 
->> > >   - Object copies work fine across different filesystems within the same
->> > >     cluster (even with pools in different PGs);
->> > >   - -EXDEV is returned if the fsid is different
->> > > 
->> > > (OT: I wonder why the cluster ID is named 'fsid'; historical reasons?
->> > >  Because this is actually what's in ceph.conf fsid in "[global]"
->> > >  section.  Anyway...)
->> > > 
->> > > So, what's missing right now is (I always mention this when I have the
->> > > opportunity!) to merge https://github.com/ceph/ceph/pull/25374 :-)
->> > > And add the corresponding support for the new flag to the kernel
->> > > client, of course.
->> > > 
->> > > Cheers,
->> > > --
->> > > Luis
->> > > 
->> > > diff --git a/fs/ceph/file.c b/fs/ceph/file.c
->> > > index 685a03cc4b77..88d116893c2b 100644
->> > > --- a/fs/ceph/file.c
->> > > +++ b/fs/ceph/file.c
->> > > @@ -1904,6 +1904,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
->> > >  	struct ceph_inode_info *src_ci = ceph_inode(src_inode);
->> > >  	struct ceph_inode_info *dst_ci = ceph_inode(dst_inode);
->> > >  	struct ceph_cap_flush *prealloc_cf;
->> > > +	struct ceph_fs_client *src_fsc = ceph_inode_to_client(src_inode);
->> > >  	struct ceph_object_locator src_oloc, dst_oloc;
->> > >  	struct ceph_object_id src_oid, dst_oid;
->> > >  	loff_t endoff = 0, size;
->> > > @@ -1915,8 +1916,22 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
->> > >  
->> > >  	if (src_inode == dst_inode)
->> > >  		return -EINVAL;
->> > > -	if (src_inode->i_sb != dst_inode->i_sb)
->> > > -		return -EXDEV;
->> > > +	if (src_inode->i_sb != dst_inode->i_sb) {
->> > > +		struct ceph_fs_client *dst_fsc = ceph_inode_to_client(dst_inode);
->> > > +
->> > > +		if (!src_fsc->client->have_fsid || !dst_fsc->client->have_fsid) {
->> > > +			dout("No fsid in a fs client\n");
->> > > +			return -EXDEV;
->> > > +		}
->> > 
->> > In what situation is there no fsid? Old cluster version?
->> > 
->> > If there is no fsid, can we take that to indicate that there is only a
->> > single filesystem possible in the cluster and that we should attempt the
->> > copy anyway?
->> 
->> TBH I'm not sure if 'have_fsid' can ever be 'false' in this call.  It is
->> set to 'true' when handling the monmap, and it's never changed back to
->> 'false'.  Since I don't think copy_file_range will be invoked *before*
->> we get the monmap, it should be safe to drop this check.  Maybe it could
->> be replaced it by a WARN_ON()?
->> 
+On 9/9/2019 12:40 PM, Marc Zyngier wrote:
+> On Mon, 09 Sep 2019 09:39:18 +0100,
+> Talel Shenhar <talel@amazon.com> wrote:
 >
-> Yeah. I think the have_fsid flag just allows us to avoid the pr_err msg
-> in ceph_check_fsid when the client is initially created. Maybe there is
-> some better way to achieve that?
+> Hi Talel,
+>
+>> Introduce interrupts retrigger support for Amazon's Annapurna Labs Fabric
+>> Interrupt Controller.
+>>
+>> Signed-off-by: Talel Shenhar <talel@amazon.com>
+>> ---
+>>   drivers/irqchip/irq-al-fic.c | 12 ++++++++++++
+>>   1 file changed, 12 insertions(+)
+>>
+>> diff --git a/drivers/irqchip/irq-al-fic.c b/drivers/irqchip/irq-al-fic.c
+>> index 1a57cee..0b0a737 100644
+>> --- a/drivers/irqchip/irq-al-fic.c
+>> +++ b/drivers/irqchip/irq-al-fic.c
+>> @@ -15,6 +15,7 @@
+>>   
+>>   /* FIC Registers */
+>>   #define AL_FIC_CAUSE		0x00
+>> +#define AL_FIC_SET_CAUSE	0x08
+>>   #define AL_FIC_MASK		0x10
+>>   #define AL_FIC_CONTROL		0x28
+>>   
+>> @@ -126,6 +127,16 @@ static void al_fic_irq_handler(struct irq_desc *desc)
+>>   	chained_irq_exit(irqchip, desc);
+>>   }
+>>   
+>> +static int al_fic_irq_retrigger(struct irq_data *data)
+>> +{
+>> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
+>> +	struct al_fic *fic = gc->private;
+>> +
+>> +	writel_relaxed(BIT(data->hwirq), fic->base + AL_FIC_SET_CAUSE);
+>> +
+>> +	return 1;
+>> +}
+>> +
+>>   static int al_fic_register(struct device_node *node,
+>>   			   struct al_fic *fic)
+>>   {
+>> @@ -159,6 +170,7 @@ static int al_fic_register(struct device_node *node,
+>>   	gc->chip_types->chip.irq_unmask = irq_gc_mask_clr_bit;
+>>   	gc->chip_types->chip.irq_ack = irq_gc_ack_clr_bit;
+>>   	gc->chip_types->chip.irq_set_type = al_fic_irq_set_type;
+>> +	gc->chip_types->chip.irq_retrigger = al_fic_irq_retrigger;
+>>   	gc->chip_types->chip.flags = IRQCHIP_SKIP_SET_WAKE;
+>>   	gc->private = fic;
+> Looks good to me. Is this a fix or a new feature? If the former, I can
+> queue it up for -rc1.
+>
+> 	M.
 
-I guess the struct ceph_fsid embedded in the client(s) could be changed
-into a pointer initialized to NULL (and later dynamically allocated).
-Then, the have_fsid check could be replaced by a NULL check.  Not sure
-if it would bring any real benefit, though.  Want me to give that a try?
-Or maybe I misunderstood you question.
+This is an enhancement to the merged al-fic driver. queuing it up sounds 
+good.
 
-> In any case, I'd just drop that condition here.
+Thanks Marc!
 
-Ok, I'll send v2 in a second, without this check.
 
-[ BTW, looks like my initial post didn't made it into vger.kernel.org.
-  It was probably dropped because I screwed-up the 'To:' field in my
-  email (no idea how I did that, TBH). ]
-
-Cheers,
--- 
-Luis
