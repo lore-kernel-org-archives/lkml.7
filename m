@@ -2,166 +2,161 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_SBL,URIBL_SBL_A,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 944F7C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B1D8C49ED6
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66E5F20863
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D289E20863
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:24:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RLM/Vg7p"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="EQ4hPfcz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbfIIOXV (ORCPT
+        id S1727198AbfIIOYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 10:23:21 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:40793 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725769AbfIIOXV (ORCPT
+        Mon, 9 Sep 2019 10:24:35 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:45083 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725294AbfIIOYd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 10:23:21 -0400
-Received: by mail-ot1-f68.google.com with SMTP id y39so12600776ota.7;
-        Mon, 09 Sep 2019 07:23:20 -0700 (PDT)
+        Mon, 9 Sep 2019 10:24:33 -0400
+Received: by mail-pl1-f195.google.com with SMTP id x3so6570896plr.12
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 07:24:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+qo6Cm0/mkvZdIkb/nI3qcoj0gdXAoPIp7Ut68/H0cU=;
-        b=RLM/Vg7pPP9Gs9ptF29WwngIfmrkDT5VfEUazZEBkCxuCsOn7b3wioQB60jcrqUEbW
-         6fw2m3n/87XYYfI4vthmzUUGA5tlat0RkdOErvas1keaMYyyALE+tZRB8b+Yu+1jBpi/
-         6T8fmVmuW+qoyfPVcQ86C932cqryRshSmRg/96kgfzMAgC3e5C2jNWSftJSjq7Z+2HBa
-         h9aT+B+GbPQpfiRDhwJCqJBenC84oDRH49r02S6ILJ9VoLP3vdLsJ36GfoFh80ubLdLy
-         JhU9zVK6B64gZ4wt90pWINwXY7Nx/7jcD8LQKzPe52CSNIx6A0TTx95mHnMe7Pj0xbK8
-         bM7w==
+        d=android.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=lbfN6bb/Cab8FhmK5hvUyGyJpQngTjGaLYzqkqMwwaw=;
+        b=EQ4hPfczVhylUYRlafgNbmIAVyWADkVHZnQxtGRIDwglF0ej4vEUlQs4ZeqXnwPEVT
+         2ItoFqyzus9e3C0nBj3hom99xV4k3T0CnheuBynGqH5sQvEQ34XAQhBwBybwtiIy3DG+
+         HFo0UykNjE7Ogp1fggKxfUNxUCAKcjjkDu/pIKDyQPDwrQnl584WWKljk91zf9jF9t5J
+         UxmGqAlEc3+ie2cousgkn5X6twTsNaKVgxb19X0CRygS41KNfbTazoD6PnAzvMvCjZsx
+         LwVP7Jkc348TE/OgZywMPCJfjkGWRz7YH79hq1nFdZgYockykF0oLyiXdECXQXnwNcbi
+         Cjtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+qo6Cm0/mkvZdIkb/nI3qcoj0gdXAoPIp7Ut68/H0cU=;
-        b=ERD8yQ5uZgZ5ZV93PU3WMiJ9x7SIwh+cRjF7b1Zx6KxqZ3TwQOmZ3h4GZfmeqFM0Xs
-         YD8SFmpumtL5K5RkOlApl3w2JjcNnEQFhY6mVrcitx91v+UaZME5mgwN9itujkzprUs1
-         IbgrnQHLP8Hqc6wnxIZCN8+o+yxZC5IEn4v/0Me6tRTxelUqdOUfHRWgm9HXptP24meG
-         JK7Daw+JSBT+TPanvU+uBLEc1EsVJcd9H7QuOqrUDAQRl0GBYM+acqmyruk1oRcyycfC
-         knCoMYthLzAL2DLO/HgIzj3f2XK9/RSFj0cm4XAHDwi1HBxIyru5SGFFVtiI+qiXBZFs
-         YmMg==
-X-Gm-Message-State: APjAAAVVINKd2LlEvlPof3q//eIMIocpb6IkSZqqAN2CZwj+VMuOgb3Y
-        2MZyWB9Vu9a9EfXMuc23OfUV0G4cq2o=
-X-Google-Smtp-Source: APXvYqws85LcAfZO0YokCPWxv1uj06YGGxYuW0goQpnopcM79gobnZvf2h6kemt8zWk+0H7K92VBDg==
-X-Received: by 2002:a05:6830:91:: with SMTP id a17mr20257910oto.322.1568039000193;
-        Mon, 09 Sep 2019 07:23:20 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id s12sm1468806oij.56.2019.09.09.07.23.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 09 Sep 2019 07:23:19 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] net: phy: dp83867: Add SGMII mode type switching
-To:     Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>, davem@davemloft.net,
-        robh+dt@kernel.org
-Cc:     Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Trent Piepho <tpiepho@impinj.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1567700761-14195-2-git-send-email-vitaly.gaiduk@cloudbear.ru>
- <1568026945-3857-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Message-ID: <51cf6e69-14ad-394e-0998-6032d239b717@gmail.com>
-Date:   Mon, 9 Sep 2019 07:23:16 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=lbfN6bb/Cab8FhmK5hvUyGyJpQngTjGaLYzqkqMwwaw=;
+        b=Q3cxIiiDWdDk+1Q2dlzstBOu2ye49z5jlfTRwYIkpbZLTCiHZS0sUm+OlQRynIkG1W
+         qLVNCFNDGq4mdsJ3S4/WcSzqoSt6iM5RSdx7KZX2nOJlWgGVZdi2XTFftSjMr7DvpFeG
+         XEf4eLLHTE03m5AO2wjkDOaeReCD0RJsvq56R098GLsxKZt1KzPCn3K3WH6eNJxA8S0W
+         Mt2Qqkw6AqaB6+o8vkY3eZFjjga7zaxgUotpSPa+HO1tOHkrgUolI1rit7TLfAd8A+zo
+         Lg76veUn86qsuxmiYdTVN565aG9INwbYNQ37qH6g9/n7XQWOB5B0W8CCWZcuZwC3UWzj
+         oKbg==
+X-Gm-Message-State: APjAAAXVRsriBoKbVI3g7zVHv44E8eB5/2BxbLI8SCFzJFNZtNrEPY84
+        db8PbqEft8E95hIngVVNW8+yUw==
+X-Google-Smtp-Source: APXvYqyjDridxJhQUEYdPB5+tEjPSrzcb2ywbeHXAAUKunZY07oQ/lp8Rm8oyeLdMgC3OJ/Z3wtddQ==
+X-Received: by 2002:a17:902:a615:: with SMTP id u21mr23375821plq.4.1568039071132;
+        Mon, 09 Sep 2019 07:24:31 -0700 (PDT)
+Received: from nebulus.mtv.corp.google.com ([2620:15c:211:200:5404:91ba:59dc:9400])
+        by smtp.googlemail.com with ESMTPSA id z21sm16010682pfn.183.2019.09.09.07.24.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Sep 2019 07:24:30 -0700 (PDT)
+Subject: Re: [PATCH v2] net: enable wireless core features with
+ LEGACY_WEXT_ALLCONFIG
+To:     Greg KH <greg@kroah.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
+        Johannes Berg <johannes@sipsolutions.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        stable@vger.kernel.org
+References: <20190906192403.195620-1-salyzyn@android.com>
+ <20190906233045.GB9478@kroah.com>
+From:   Mark Salyzyn <salyzyn@android.com>
+Message-ID: <b7027a5d-5d75-677b-0e9b-cd70e5e30092@android.com>
+Date:   Mon, 9 Sep 2019 07:24:29 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1568026945-3857-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20190906233045.GB9478@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 9/6/19 4:30 PM, Greg KH wrote:
+> On Fri, Sep 06, 2019 at 12:24:00PM -0700, Mark Salyzyn wrote:
+>> In embedded environments the requirements are to be able to pick and
+>> chose which features one requires built into the kernel.  If an
+>> embedded environment wants to supports loading modules that have been
+>> kbuilt out of tree, there is a need to enable hidden configurations
+>> for legacy wireless core features to provide the API surface for
+>> them to load.
+>>
+>> Introduce CONFIG_LEGACY_WEXT_ALLCONFIG to select all legacy wireless
+>> extension core features by activating in turn all the associated
+>> hidden configuration options, without having to specifically select
+>> any wireless module(s).
+>>
+>> Signed-off-by: Mark Salyzyn <salyzyn@android.com>
+>> Cc: kernel-team@android.com
+>> Cc: Johannes Berg <johannes@sipsolutions.net>
+>> Cc: "David S. Miller" <davem@davemloft.net>
+>> Cc: Marcel Holtmann <marcel@holtmann.org>
+>> Cc: linux-wireless@vger.kernel.org
+>> Cc: netdev@vger.kernel.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Cc: stable@vger.kernel.org # 4.19
+>> ---
+>> v2: change name and documentation to CONFIG_LEGACY_WEXT_ALLCONFIG
+>> ---
+>>   net/wireless/Kconfig | 14 ++++++++++++++
+>>   1 file changed, 14 insertions(+)
+>>
+>> diff --git a/net/wireless/Kconfig b/net/wireless/Kconfig
+>> index 67f8360dfcee..0d646cf28de5 100644
+>> --- a/net/wireless/Kconfig
+>> +++ b/net/wireless/Kconfig
+>> @@ -17,6 +17,20 @@ config WEXT_SPY
+>>   config WEXT_PRIV
+>>   	bool
+>>   
+>> +config LEGACY_WEXT_ALLCONFIG
+>> +	bool "allconfig for legacy wireless extensions"
+>> +	select WIRELESS_EXT
+>> +	select WEXT_CORE
+>> +	select WEXT_PROC
+>> +	select WEXT_SPY
+>> +	select WEXT_PRIV
+>> +	help
+>> +	  Config option used to enable all the legacy wireless extensions to
+>> +	  the core functionality used by add-in modules.
+>> +
+>> +	  If you are not building a kernel to be used for a variety of
+>> +	  out-of-kernel built wireless modules, say N here.
+>> +
+>>   config CFG80211
+>>   	tristate "cfg80211 - wireless configuration API"
+>>   	depends on RFKILL || !RFKILL
+>> -- 
+>> 2.23.0.187.g17f5b7556c-goog
+>>
+> How is this patch applicable to stable kernels???
 
+A) worth a shot ;-}
 
-On 9/9/2019 4:02 AM, Vitaly Gaiduk wrote:
-> This patch adds ability to switch beetween two PHY SGMII modes.
-> Some hardware, for example, FPGA IP designs may use 6-wire mode
-> which enables differential SGMII clock to MAC.
-> 
-> Signed-off-by: Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>
-> ---
-> Changes in v2:
-> - changed variable sgmii_type name to sgmii_ref_clk_en
-> 
->  drivers/net/phy/dp83867.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
-> index 1f1ecee..cd6260e 100644
-> --- a/drivers/net/phy/dp83867.c
-> +++ b/drivers/net/phy/dp83867.c
-> @@ -37,6 +37,7 @@
->  #define DP83867_STRAP_STS2	0x006f
->  #define DP83867_RGMIIDCTL	0x0086
->  #define DP83867_IO_MUX_CFG	0x0170
-> +#define DP83867_SGMIICTL	0x00D3
->  #define DP83867_10M_SGMII_CFG   0x016F
->  #define DP83867_10M_SGMII_RATE_ADAPT_MASK BIT(7)
-> 
-> @@ -61,6 +62,9 @@
->  #define DP83867_RGMII_TX_CLK_DELAY_EN		BIT(1)
->  #define DP83867_RGMII_RX_CLK_DELAY_EN		BIT(0)
-> 
-> +/* SGMIICTL bits */
-> +#define DP83867_SGMII_TYPE		BIT(14)
-> +
->  /* STRAP_STS1 bits */
->  #define DP83867_STRAP_STS1_RESERVED		BIT(11)
-> 
-> @@ -109,6 +113,7 @@ struct dp83867_private {
->  	bool rxctrl_strap_quirk;
->  	bool set_clk_output;
->  	u32 clk_output_sel;
-> +	bool sgmii_ref_clk_en;
->  };
-> 
->  static int dp83867_ack_interrupt(struct phy_device *phydev)
-> @@ -197,6 +202,9 @@ static int dp83867_of_init(struct phy_device *phydev)
->  	dp83867->rxctrl_strap_quirk = of_property_read_bool(of_node,
->  					"ti,dp83867-rxctrl-strap-quirk");
-> 
-> +	dp83867->sgmii_ref_clk_en = of_property_read_bool(of_node,
-> +					"ti,sgmii-ref-clock-output-enable");
-> +
->  	/* Existing behavior was to use default pin strapping delay in rgmii
->  	 * mode, but rgmii should have meant no delay.  Warn existing users.
->  	 */
-> @@ -389,6 +397,14 @@ static int dp83867_config_init(struct phy_device *phydev)
-> 
->  		if (ret)
->  			return ret;
-> +
-> +		/* SGMII type is set to 4-wire mode by default */
-> +		if (dp83867->sgmii_ref_clk_en) {
-> +			/* Switch on 6-wire mode */
-> +			val = phy_read_mmd(phydev, DP83867_DEVADDR, DP83867_SGMIICTL);
-> +			val |= DP83867_SGMII_TYPE;
-> +			phy_write_mmd(phydev, DP83867_DEVADDR, DP83867_SGMIICTL, val);
-> +		}
+B) there is a shortcoming in _all_ kernel versions with respect to 
+hidden configurations options like this, hoping to set one precedent in 
+how to handle them if acceptable to the community.
 
-Is there a case where the value could be retained across a power
-on/reset cycle and you would want to make sure you do write the intended
-"wire mode" here? What I am suggesting is just changing this into a:
+C) [AGENDA ALERT] Android _will_ be back-porting this to android-4.19 
+kernel anyway, would help maintenance if via stable. <holding hat in hand>
 
-	val =  phy_read_mmd(phydev, DP83867_DEVADDR, DP83867_SGMIICTL);
-	if (dp83867->sgmii_ref_clk_en)
-		val |= DP83867_SGMII_TYPE;
-	else
-		val &= ~DP83867_SGMII_TYPE;
-	phy_write_mmd(phydev, DP83867_DEVADDR, DP83867_SGMIICTL, val);
-	
-Other than that, LGTM
--- 
-Florian
+D) Not an ABI or interface break, does not introduce instability, but 
+rather keeps downstream kernels of any distributions from having to hack 
+in their own alternate means of dealing with this problem leading to 
+further fragmentation.
+
+E) Timely discussion item for LPC?
+
+Sincerely -- Mark Salyzyn
+
