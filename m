@@ -2,163 +2,83 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40360C433EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BCD1C433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13BB0218DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:54:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3353921920
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:57:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="lvoWhoZg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404521AbfIILy5 (ORCPT
+        id S2404537AbfIIL47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 07:54:57 -0400
-Received: from mx2.mailbox.org ([80.241.60.215]:34966 "EHLO mx2.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730901AbfIILy4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 07:54:56 -0400
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx2.mailbox.org (Postfix) with ESMTPS id BAB3BA01CD;
-        Mon,  9 Sep 2019 13:54:51 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
-        with ESMTP id v88C_yIZE0OA; Mon,  9 Sep 2019 13:54:46 +0200 (CEST)
-Date:   Mon, 9 Sep 2019 21:54:37 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>
-Cc:     James Morris <jmorris@namei.org>, Jeff Layton <jlayton@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
-        linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Eric Chiang <ericchiang@google.com>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Philippe =?utf-8?Q?Tr=C3=A9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] fs: Add support for an O_MAYEXEC flag on
- sys_open()
-Message-ID: <20190909115437.jwpyslcdhhvzo7g5@yavin>
-References: <20190906152455.22757-1-mic@digikod.net>
- <20190906152455.22757-2-mic@digikod.net>
- <87ef0te7v3.fsf@oldenburg2.str.redhat.com>
- <75442f3b-a3d8-12db-579a-2c5983426b4d@ssi.gouv.fr>
- <f53ec45fd253e96d1c8d0ea6f9cca7f68afa51e3.camel@kernel.org>
- <1fbf54f6-7597-3633-a76c-11c4b2481add@ssi.gouv.fr>
- <5a59b309f9d0603d8481a483e16b5d12ecb77540.camel@kernel.org>
- <alpine.LRH.2.21.1909061202070.18660@namei.org>
- <49e98ece-e85f-3006-159b-2e04ba67019e@ssi.gouv.fr>
+        Mon, 9 Sep 2019 07:56:59 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:60833 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404502AbfIIL47 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 07:56:59 -0400
+Received: from [192.168.4.140] (38.85.69.148.rev.vodafone.pt [148.69.85.38] (may be forged))
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x89BuRWN2370009
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Mon, 9 Sep 2019 04:56:29 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com x89BuRWN2370009
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019081901; t=1568030190;
+        bh=amVw5RKHgQtC48TDjO25VF7TYKPY9dwQtCHHtmUiWLE=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=lvoWhoZgfNLoIKEG5HMqgj2INg4WXNd1HFaah1iCDp0Ax9O9xMwZxJ/tVCfuFPX+t
+         SovlpLHk3dL63OePhXjpdYrpwk+zhAKreqHglsT1DKolM9uMw0xDHftZf7qSL4I1dm
+         cU7ZrGpYRYdJ2X4B5koCF9HFHOui2BhRpbBaPn/ZZnBBOy3f+nO1AZCVONjlCGdd+J
+         R1sDya84Assf38LZxcJN9R9OQyM+Sj4Bw84Sp4RZPx4P8thdY9mXqTbQlvMyex5s4h
+         oiSiklz8bhpNWZlFyYKe0WXb8ToI7I4SnOw/otHQAnzM5ukV/GqffGMu5/wJKBrnRn
+         CoQCM9nw4hqSg==
+Date:   Mon, 09 Sep 2019 12:56:18 +0100
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20190908072248.GB16220@zn.tnic>
+References: <20190905232222.14900-1-bshanks@codeweavers.com> <20190907212610.GA30930@ranerica-svr.sc.intel.com> <20190908072248.GB16220@zn.tnic>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ez37ojmvznisdz5u"
-Content-Disposition: inline
-In-Reply-To: <49e98ece-e85f-3006-159b-2e04ba67019e@ssi.gouv.fr>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] x86/umip: Add emulation for 64-bit processes
+To:     Borislav Petkov <bp@alien8.de>,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+CC:     Brendan Shanks <bshanks@codeweavers.com>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>
+From:   hpa@zytor.com
+Message-ID: <1E11E98F-4A38-4CDE-8549-64A2C28DC63E@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On September 8, 2019 8:22:48 AM GMT+01:00, Borislav Petkov <bp@alien8=2Ede>=
+ wrote:
+>On Sat, Sep 07, 2019 at 02:26:10PM -0700, Ricardo Neri wrote:
+>> > Wine users have encountered a number of 64-bit Windows games that
+>use
+>> > these instructions (particularly sgdt), and were crashing when run
+>on
+>> > UMIP-enabled systems=2E
+>>=20
+>> Emulation support for 64-bit processes was not initially included
+>> because no use cases had been identified=2E
+>
+>AFAIR, we said at the time that 64-bit doesn't need it because this is
+>legacy software only and 64-bit will get fixed properly not to use
+>those
+>insns=2E I can probably guess how that went =2E=2E=2E
 
---ez37ojmvznisdz5u
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On 2019-09-09, Micka=EBl Sala=FCn <mickael.salaun@ssi.gouv.fr> wrote:
-> On 06/09/2019 21:03, James Morris wrote:
-> > On Fri, 6 Sep 2019, Jeff Layton wrote:
-> >
-> >> The fact that open and openat didn't vet unknown flags is really a bug.
-> >>
-> >> Too late to fix it now, of course, and as Aleksa points out, we've
-> >> worked around that in the past. Now though, we have a new openat2
-> >> syscall on the horizon. There's little need to continue these sorts of
-> >> hacks.
-> >>
-> >> New open flags really have no place in the old syscalls, IMO.
-> >
-> > Agree here. It's unfortunate but a reality and Linus will reject any su=
-ch
-> > changes which break existing userspace.
->=20
-> Do you mean that adding new flags to open(2) is not possible?
-
-It is possible, as long as there is no case where a program that works
-today (and passes garbage to the unused bits in flags) works with the
-change.
-
-O_TMPFILE was okay because it's actually two flags (one is O_DIRECTORY)
-and no working program does file IO to a directory (there are also some
-other tricky things done there, I'll admit I don't fully understand it).
-
-O_EMPTYPATH works because it's a no-op with non-empty path strings, and
-empty path strings have always given an error (so no working program
-does it today).
-
-However, O_MAYEXEC will result in programs that pass garbage bits to
-potentially get -EACCES that worked previously.
-
-> As I said, O_MAYEXEC should be ignored if it is not supported by the
-> kernel, which perfectly fit with the current open(2) flags behavior, and
-> should also behave the same with openat2(2).
-
-NACK on having that behaviour with openat2(2). -EINVAL on unknown flags
-is how all other syscalls work (any new syscall proposed today that
-didn't do that would be rightly rejected), and is a quirk of open(2)
-which unfortunately cannot be fixed. The fact that *every new O_ flag
-needs to work around this problem* should be an indication that this
-interface mis-design should not be allowed to infect any more syscalls.
-
-Note that this point is regardless of the fact that O_MAYEXEC is a
-*security* flag -- if userspace wants to have a secure fallback on
-old kernels (which is "the right thing" to do) they would have to do
-more work than necessary. And programs that don't care don't have to do
-anything special.
-
-However with -EINVAL, the programs doing "the right thing" get an easy
--EINVAL check. And programs that don't care can just un-set O_MAYEXEC
-and retry. You should be forced to deal with the case where a flag is
-not supported -- and this is doubly true of security flags!
-
+I don't think Windows games was something we considered=2E However, needin=
+g to simulate these instructions is not a huge surprise=2E The important th=
+ing is that by simulating them, we can plug the leak of some very high valu=
+e kernel information =E2=80=93 mainly the GDT, IDT and TSS addresses=2E
 --=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---ez37ojmvznisdz5u
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXXY9egAKCRCdlLljIbnQ
-EjqNAQDvCWENjLmSU64mc7qWEe/HYDu0pcFBvD0dJVUnIZyr0QD/dtKaeEjccIWh
-RCZTPOrv97U5RjHt3IPWeWSeHVLCcAo=
-=tOAG
------END PGP SIGNATURE-----
-
---ez37ojmvznisdz5u--
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
