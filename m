@@ -2,104 +2,243 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4A5C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18161C4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E53C02089F
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:41:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568043708;
-	bh=fM4JbSVJbGXAjoftVI6cCaz2ZaDS1dmEdNr69EQNLl4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nZRY305Xz5lsZWR/BdhkKCFnS7ucmf912fv9y99bP8NaBQldHowCZvR8Ez0q2iVO7
-	 YUShuUNZ3Btzzb+RZTPWvSi5GMFS30PpIOvDPQnx6Ket2K9/1YlljhnTp/NxqZlvjz
-	 6ZmbJ1X9pIp5EacbpR51ugJlMYQ0/AZvf+C+iSZY=
+	by mail.kernel.org (Postfix) with ESMTP id E2B0F21A4C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:42:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388575AbfIIPlr (ORCPT
+        id S2388617AbfIIPmO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 11:41:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60478 "EHLO mail.kernel.org"
+        Mon, 9 Sep 2019 11:42:14 -0400
+Received: from foss.arm.com ([217.140.110.172]:52766 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725846AbfIIPlq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 11:41:46 -0400
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 142F32089F
-        for <linux-kernel@vger.kernel.org>; Mon,  9 Sep 2019 15:41:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568043706;
-        bh=fM4JbSVJbGXAjoftVI6cCaz2ZaDS1dmEdNr69EQNLl4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QHv+pIF0WkKCXPobKnhnm+m3bLWKtzErPwv9PJb/Q9LP2fL+MarhCoXM/uwRzAUgE
-         zD+eK2DD1rxsaNWmHnvUfoa5cFmfJWNWBmNP1TCG6ZGdM/k7ePwCma0B3v0gMbRo3c
-         IiRiUAseAivRcmSGGSDHZgXCSbLvGJdZVJ35g0d0=
-Received: by mail-qt1-f169.google.com with SMTP id n7so16682551qtb.6
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 08:41:46 -0700 (PDT)
-X-Gm-Message-State: APjAAAWGr5Tgcq4VV3o6gS9SFxuToDK4WLYVfkQn10JukFidlKZt04P+
-        zbithCOEmr4C0hYGWicduHRkwqPbeWPwBuUGXQ==
-X-Google-Smtp-Source: APXvYqz141Z8J3amoWSNvEnWBMcRo8P2gwc1042x2UJzSiJd8NyLDaEMcfylKvyhtyaKCZweTwgZC/eZ9i/0FZ1Xa0s=
-X-Received: by 2002:ac8:4a05:: with SMTP id x5mr12045321qtq.110.1568043705274;
- Mon, 09 Sep 2019 08:41:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190904123032.23263-1-broonie@kernel.org> <ccd81530-2dbd-3c02-ca0a-1085b00663b5@arm.com>
-In-Reply-To: <ccd81530-2dbd-3c02-ca0a-1085b00663b5@arm.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 9 Sep 2019 16:41:32 +0100
-X-Gmail-Original-Message-ID: <CAL_JsqKWEe=+X5AYRJ-_8peTzfrOrRBfFWgk8c6h3TN6f0ZHtA@mail.gmail.com>
-Message-ID: <CAL_JsqKWEe=+X5AYRJ-_8peTzfrOrRBfFWgk8c6h3TN6f0ZHtA@mail.gmail.com>
-Subject: Re: [PATCH] drm/panfrost: Fix regulator_get_optional() misuse
-To:     Steven Price <steven.price@arm.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        id S2388577AbfIIPmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 11:42:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CC136169E;
+        Mon,  9 Sep 2019 08:42:12 -0700 (PDT)
+Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 75B5B3F59C;
+        Mon,  9 Sep 2019 08:42:11 -0700 (PDT)
+Date:   Mon, 9 Sep 2019 16:42:08 +0100
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc for the
+ ARM SMC/HVC mailbox
+Message-ID: <20190909164208.6605054e@donnerap.cambridge.arm.com>
+In-Reply-To: <1567004515-3567-2-git-send-email-peng.fan@nxp.com>
+References: <1567004515-3567-1-git-send-email-peng.fan@nxp.com>
+        <1567004515-3567-2-git-send-email-peng.fan@nxp.com>
+Organization: ARM
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 6, 2019 at 4:23 PM Steven Price <steven.price@arm.com> wrote:
->
-> On 04/09/2019 13:30, Mark Brown wrote:
-> > The panfrost driver requests a supply using regulator_get_optional()
-> > but both the name of the supply and the usage pattern suggest that it is
-> > being used for the main power for the device and is not at all optional
-> > for the device for function, there is no meaningful handling for absent
-> > supplies.  Such regulators should use the vanilla regulator_get()
-> > interface, it will ensure that even if a supply is not described in the
-> > system integration one will be provided in software.
-> >
-> > Signed-off-by: Mark Brown <broonie@kernel.org>
->
-> Tested-by: Steven Price <steven.price@arm.com>
->
-> Looks like my approach to this was wrong - so we should also revert the
-> changes I made previously.
->
-> ----8<----
-> From fe20f8abcde8444bb41a8f72fb35de943a27ec5c Mon Sep 17 00:00:00 2001
-> From: Steven Price <steven.price@arm.com>
-> Date: Fri, 6 Sep 2019 15:20:53 +0100
-> Subject: [PATCH] drm/panfrost: Revert changes to cope with NULL regulator
->
-> Handling a NULL return from devm_regulator_get_optional() doesn't seem
-> like the correct way of handling this. Instead revert the changes in
-> favour of switching to using devm_regulator_get() which will return a
-> dummy regulator instead.
->
-> Reverts commit 52282163dfa6 ("drm/panfrost: Add missing check for pfdev->regulator")
-> Reverts commit e21dd290881b ("drm/panfrost: Enable devfreq to work without regulator")
+On Wed, 28 Aug 2019 03:02:58 +0000
+Peng Fan <peng.fan@nxp.com> wrote:
 
-Does a straight revert of these 2 patches not work? If it does work,
-can you do that and send to the list. I don't want my hand slapped
-again reverting things.
+Hi,
 
-Rob
+sorry for the late reply, eventually managed to have a closer look on this.
+
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> The ARM SMC/HVC mailbox binding describes a firmware interface to trigger
+> actions in software layers running in the EL2 or EL3 exception levels.
+> The term "ARM" here relates to the SMC instruction as part of the ARM
+> instruction set, not as a standard endorsed by ARM Ltd.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  .../devicetree/bindings/mailbox/arm-smc.yaml       | 125 +++++++++++++++++++++
+>  1 file changed, 125 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.yaml b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+> new file mode 100644
+> index 000000000000..f8eb28d5e307
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+> @@ -0,0 +1,125 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mailbox/arm-smc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ARM SMC Mailbox Interface
+> +
+> +maintainers:
+> +  - Peng Fan <peng.fan@nxp.com>
+> +
+> +description: |
+> +  This mailbox uses the ARM smc (secure monitor call) and hvc (hypervisor
+> +  call) instruction to trigger a mailbox-connected activity in firmware,
+> +  executing on the very same core as the caller. By nature this operation
+> +  is synchronous and this mailbox provides no way for asynchronous messages
+> +  to be delivered the other way round, from firmware to the OS, but
+> +  asynchronous notification could also be supported. However the value of
+> +  r0/w0/x0 the firmware returns after the smc call is delivered as a received
+> +  message to the mailbox framework, so a synchronous communication can be
+> +  established, for a asynchronous notification, no value will be returned.
+> +  The exact meaning of both the action the mailbox triggers as well as the
+> +  return value is defined by their users and is not subject to this binding.
+> +
+> +  One use case of this mailbox is the SCMI interface, which uses shared memory
+> +  to transfer commands and parameters, and a mailbox to trigger a function
+> +  call. This allows SoCs without a separate management processor (or when
+> +  such a processor is not available or used) to use this standardized
+> +  interface anyway.
+> +
+> +  This binding describes no hardware, but establishes a firmware interface.
+> +  Upon receiving an SMC using one of the described SMC function identifiers,
+> +  the firmware is expected to trigger some mailbox connected functionality.
+> +  The communication follows the ARM SMC calling convention.
+> +  Firmware expects an SMC function identifier in r0 or w0. The supported
+> +  identifiers are passed from consumers, or listed in the the arm,func-ids
+> +  properties as described below. The firmware can return one value in
+> +  the first SMC result register, it is expected to be an error value,
+> +  which shall be propagated to the mailbox client.
+> +
+> +  Any core which supports the SMC or HVC instruction can be used, as long as
+> +  a firmware component running in EL3 or EL2 is handling these calls.
+> +
+> +properties:
+> +  compatible:
+> +    const: arm,smc-mbox
+> +
+> +  "#mbox-cells":
+> +    const: 1
+> +
+> +  arm,num-chans:
+> +    description: The number of channels supported.
+> +    items:
+> +      minimum: 1
+> +      maximum: 4096 # Should be enough?
+
+This maximum sounds rather arbitrary. Why do we need one? In the driver this just allocates more memory, so why not just impose no artificial limit at all?
+
+Actually, do we need this property at all? Can't we just rely on the size of arm,func-ids to determine this (using of_property_count_elems_of_size() in the driver)? Having both sounds redundant and brings up the question what to do if they don't match.
+
+> +
+> +  method:
+> +    - enum:
+> +        - smc
+> +        - hvc
+> +
+> +  transports:
+> +    - enum:
+> +        - mem
+> +        - reg
+
+Shouldn't there be a description on what both mean, exactly?
+For instance I would expect a list of registers to be shown for the "reg" case, and be it by referring to the ARM SMCCC.
+
+Also looking at the driver this brings up more questions:
+- Which memory does mem refer to? If this is really the means of transport, it should be referenced in this *controller* node and populated by the driver. Looking at the example below and the driver code, it actually isn't used that way, instead the memory is used and controlled by the mailbox *client*.
+- What is the actual difference between the two transports? For "mem" we just populate the registers with 0, for "reg" we use the data. Couldn't this be left to the client?
+
+There are more points which makes me think this property is actually redundant, see my comments on patch 2/2.
+
+> +
+> +  arm,func-ids:
+> +    description: |
+> +      An array of 32-bit values specifying the function IDs used by each
+> +      mailbox channel. Those function IDs follow the ARM SMC calling
+> +      convention standard [1].
+> +
+> +      There is one identifier per channel and the number of supported
+> +      channels is determined by the length of this array.
+
+I think this makes it obvious that arm,num-chans is not needed.
+
+Also this somewhat contradicts the driver implementation, which allows the array to be shorter, marking this as UINT_MAX and later on using the first data item as a function identifier. This is somewhat surprising and not documented (unless I missed something).
+
+So I would suggest:
+- We drop the transports property, and always put the client provided data in the registers, according to the SMCCC. Document this here.
+  A client not needing those could always puts zeros (or garbage) in there, the respective firmware would just ignore the registers.
+- We drop "arm,num-chans", as this is just redundant with the length of the func-ids array.
+- We don't impose an arbitrary limit on the number of channels. From the firmware point of view this is just different function IDs, from Linux' point of view just the size of the memory used. Both don't need to be limited artificially IMHO.
+- We mark arm,func-ids as required, as this needs to be fixed, allocated number.
+
+For the question of "always one channel per controller" vs. "allow multiple channels per controller": I don't really have a strong opinion, but lean towards allowing multiple channels. This would allow to group functions belonging together, separating them from totally distinct controller uses (think virtual GPIO vs. SCMI).
+And it would still allow the special case of multiple single-channel controllers to be naturally specified.
+
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    minItems: 0
+> +    maxItems: 4096   # Should be enough?
+> +
+> +required:
+> +  - compatible
+> +  - "#mbox-cells"
+> +  - arm,num-chans
+> +  - transports
+> +  - method
+
+According to the above description arm,func-ids would also be required?
+
+Cheers,
+Andre.
+
+> +
+> +examples:
+> +  - |
+> +    sram@910000 {
+> +      compatible = "mmio-sram";
+> +      reg = <0x0 0x93f000 0x0 0x1000>;
+> +      #address-cells = <1>;
+> +      #size-cells = <1>;
+> +      ranges = <0 0x0 0x93f000 0x1000>;
+> +
+> +      cpu_scp_lpri: scp-shmem@0 {
+> +        compatible = "arm,scmi-shmem";
+> +        reg = <0x0 0x200>;
+> +      };
+> +
+> +      cpu_scp_hpri: scp-shmem@200 {
+> +        compatible = "arm,scmi-shmem";
+> +        reg = <0x200 0x200>;
+> +      };
+> +    };
+> +
+> +    firmware {
+> +      smc_mbox: mailbox {
+> +        #mbox-cells = <1>;
+> +        compatible = "arm,smc-mbox";
+> +        method = "smc";
+> +        arm,num-chans = <0x2>;
+> +        transports = "mem";
+> +        /* Optional */
+> +        arm,func-ids = <0xc20000fe>, <0xc20000ff>;
+> +      };
+> +
+> +      scmi {
+> +        compatible = "arm,scmi";
+> +        mboxes = <&smc_mbox 0>, <&smc_mbox 1>;
+> +        mbox-names = "tx", "rx";
+> +        shmem = <&cpu_scp_lpri>, <&cpu_scp_hpri>;
+> +      };
+> +    };
+> +
+> +...
+
