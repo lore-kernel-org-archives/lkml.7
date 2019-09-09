@@ -2,114 +2,108 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD26EC433EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 05:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 152D0C00307
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 05:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B216921924
+	by mail.kernel.org (Postfix) with ESMTP id D046121A49
 	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 05:53:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Um5pUjFo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727172AbfIIFwW (ORCPT
+        id S1727209AbfIIFxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 01:52:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44480 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727070AbfIIFwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 01:52:21 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B5F7330A00C5;
-        Mon,  9 Sep 2019 05:52:21 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-117-59.ams2.redhat.com [10.36.117.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BD9E05D6A7;
-        Mon,  9 Sep 2019 05:52:20 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id B9D2992F; Mon,  9 Sep 2019 07:52:19 +0200 (CEST)
-Date:   Mon, 9 Sep 2019 07:52:19 +0200
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     Jaak Ristioja <jaak@ristioja.ee>, Dave Airlie <airlied@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org,
-        spice-devel@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Xorg indefinitely hangs in kernelspace
-Message-ID: <20190909055219.q44k27cczwkuio3z@sirius.home.kraxel.org>
-References: <20190906055322.17900-1-hdanton@sina.com>
+        Mon, 9 Sep 2019 01:53:55 -0400
+Received: from gateway30.websitewelcome.com ([192.185.196.18]:49996 "EHLO
+        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727181AbfIIFxy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 01:53:54 -0400
+X-Greylist: delayed 1435 seconds by postgrey-1.27 at vger.kernel.org; Mon, 09 Sep 2019 01:53:54 EDT
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway30.websitewelcome.com (Postfix) with ESMTP id 0ED342736
+        for <linux-kernel@vger.kernel.org>; Mon,  9 Sep 2019 00:29:57 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 7CFRi3Kbd2PzO7CFRixu7a; Mon, 09 Sep 2019 00:29:57 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ZeDC3momsOT8YDmWDluDBvJqw1Yr3vZVteUjPazb11I=; b=Um5pUjFoBY6v0BZ8qlZ+WKF0wl
+        k8adoXfVN1zPhyJVO9MqjIguf2vcuZ4qPTS5wVQN/rAYPNPK78j/tJfddGNWlpy7xp8MExbuDJJO1
+        a5HiMfKRoJzyFKVYUtI5qX4WV3zwWgjH9lR2q/oBmcJcj+pXQtuSEfcuYogyVR2ZZQJlUmWXNAAhi
+        hQe15/xbDYVIbCqo18WTqvRmD1Fggv1ARP2eCPVKpeeNzDw0vXPeoC3PtjxeTjZtbOHNirxxMVPJO
+        K67OdD73jDqR3IqhPp7GM9RP6xRxzAeAnoRgEgPIhGty/6Zm2+ShrtzyGg2BWsinqe5sMx503/Ghi
+        GaBOWeDQ==;
+Received: from [148.69.85.38] (port=16527 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1i7CFP-001YEo-QC; Mon, 09 Sep 2019 00:29:55 -0500
+Date:   Mon, 9 Sep 2019 00:29:52 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] crypto: talitos - fix missing break in switch statement
+Message-ID: <20190909052952.GA32131@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190906055322.17900-1-hdanton@sina.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Mon, 09 Sep 2019 05:52:21 +0000 (UTC)
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 148.69.85.38
+X-Source-L: No
+X-Exim-ID: 1i7CFP-001YEo-QC
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [148.69.85.38]:16527
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 4
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  Hi,
+Add missing break statement in order to prevent the code from falling
+through to case CRYPTO_ALG_TYPE_AHASH.
 
---verbose please.  Do you see the same hang?  Does the patch fix it?
+Fixes: aeb4c132f33d ("crypto: talitos - Convert to new AEAD interface")
+Cc: stable@vger.kernel.org
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/crypto/talitos.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> --- a/drivers/gpu/drm/ttm/ttm_execbuf_util.c
-> +++ b/drivers/gpu/drm/ttm/ttm_execbuf_util.c
-> @@ -97,8 +97,9 @@ int ttm_eu_reserve_buffers(struct ww_acq
->  			   struct list_head *dups, bool del_lru)
-[ ... ]
-
-> +			if (locked)
-> +				ttm_eu_backoff_reservation_reverse(list, entry);
-
-Hmm, I think the patch is wrong.  As far I know it is the qxl drivers's
-job to call ttm_eu_backoff_reservation().  Doing that automatically in
-ttm will most likely break other ttm users.
-
-So I guess the call is missing in the qxl driver somewhere, most likely
-in some error handling code path given that this bug is a relatively
-rare event.
-
-There is only a single ttm_eu_reserve_buffers() call in qxl.
-So how about this?
-
------------------------ cut here --------------------
-diff --git a/drivers/gpu/drm/qxl/qxl_release.c b/drivers/gpu/drm/qxl/qxl_release.c
-index 312216caeea2..2f9950fa0b8d 100644
---- a/drivers/gpu/drm/qxl/qxl_release.c
-+++ b/drivers/gpu/drm/qxl/qxl_release.c
-@@ -262,18 +262,20 @@ int qxl_release_reserve_list(struct qxl_release *release, bool no_intr)
- 	ret = ttm_eu_reserve_buffers(&release->ticket, &release->bos,
- 				     !no_intr, NULL, true);
- 	if (ret)
--		return ret;
-+		goto err_backoff;
- 
- 	list_for_each_entry(entry, &release->bos, tv.head) {
- 		struct qxl_bo *bo = to_qxl_bo(entry->tv.bo);
- 
- 		ret = qxl_release_validate_bo(bo);
--		if (ret) {
--			ttm_eu_backoff_reservation(&release->ticket, &release->bos);
--			return ret;
--		}
-+		if (ret)
-+			goto err_backoff;
- 	}
- 	return 0;
-+
-+err_backoff:
-+	ttm_eu_backoff_reservation(&release->ticket, &release->bos);
-+	return ret;
- }
- 
- void qxl_release_backoff_reserve_list(struct qxl_release *release)
------------------------ cut here --------------------
-
-cheers,
-  Gerd
+diff --git a/drivers/crypto/talitos.c b/drivers/crypto/talitos.c
+index c9d686a0e805..4818ae427098 100644
+--- a/drivers/crypto/talitos.c
++++ b/drivers/crypto/talitos.c
+@@ -3140,6 +3140,7 @@ static int talitos_remove(struct platform_device *ofdev)
+ 			break;
+ 		case CRYPTO_ALG_TYPE_AEAD:
+ 			crypto_unregister_aead(&t_alg->algt.alg.aead);
++			break;
+ 		case CRYPTO_ALG_TYPE_AHASH:
+ 			crypto_unregister_ahash(&t_alg->algt.alg.hash);
+ 			break;
+-- 
+2.23.0
 
