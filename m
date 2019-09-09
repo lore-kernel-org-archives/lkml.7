@@ -2,192 +2,315 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5057BC00307
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8913CC00307
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B9342196E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:33:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ssi.gouv.fr header.i=@ssi.gouv.fr header.b="mTxJMIVi"
+	by mail.kernel.org (Postfix) with ESMTP id 5707A21A49
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:34:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568021641;
+	bh=yZJ3ka986SfLwgSg1wqiKBcarbCnbCLNWxBepkM70Ok=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0sj/px1w7iyY90SrhIr9Oo2sR7McsGk1yw2GQebVFOxmnnRHrD1IqkTJ1oD8xzhYZ
+	 yOUsGTHHEyY68xbYm27Ql8O+VDYgOM1Ur/Kj/CWC1T0Q97nndVH+ikJ1neh1okVdhk
+	 xj9W20Ln9B1wIGVHgCxxWYCi2jEj2GTZNZMQGsoI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389885AbfIIJdp (ORCPT
+        id S2389909AbfIIJeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 05:33:45 -0400
-Received: from smtp-out.ssi.gouv.fr ([86.65.182.90]:63686 "EHLO
-        smtp-out.ssi.gouv.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728390AbfIIJdo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 05:33:44 -0400
-Received: from smtp-out.ssi.gouv.fr (localhost [127.0.0.1])
-        by smtp-out.ssi.gouv.fr (Postfix) with ESMTP id AD5BCD0006E;
-        Mon,  9 Sep 2019 11:33:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ssi.gouv.fr;
-        s=20160407; t=1568021622;
-        bh=7ghcKInNWHIy7GT6Up9av7IgQ5NyeQDPxdR0To5ZfbY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To:From:Subject;
-        b=mTxJMIViJkkbjc+HKYf4xj7YCDJe+mIhZNELtvydtPa5ksv9r9WLBOaIPA2SlJLZi
-         LotXdSTTmleCrUY25P9oXtCiBbJ1yphP588j2UoCkh/QxSzIfTvFXX8u9W47h4wSN9
-         q2Wh4e21ZEWc9Qb3j6t+gD8rNnyFwjSeP1Xt7mBFHvwqBHSCS2scmLyTNDlKM8hOP1
-         E5+6Sg63S8Mp1jw4kJoFLcp5B1wYUrwwrDnZk4DVjHswgstUVuf0gh9Z/34YjNPHBt
-         6KrVw4MgfzmSkpLdC8R3MjuSYCA2cQnlI1sA/J/EPnbPxnct52nTje4gKTFK9PHSdC
-         m95wAtzgE0jpw==
-Subject: Re: [PATCH v2 1/5] fs: Add support for an O_MAYEXEC flag on
- sys_open()
-To:     Andy Lutomirski <luto@amacapital.net>,
-        Jeff Layton <jlayton@kernel.org>
-CC:     Aleksa Sarai <cyphar@cyphar.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
-        <linux-kernel@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Eric Chiang <ericchiang@google.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
-        <kernel-hardening@lists.openwall.com>, <linux-api@vger.kernel.org>,
-        <linux-security-module@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>
-References: <20190906152455.22757-1-mic@digikod.net>
- <20190906152455.22757-2-mic@digikod.net>
- <87ef0te7v3.fsf@oldenburg2.str.redhat.com>
- <75442f3b-a3d8-12db-579a-2c5983426b4d@ssi.gouv.fr>
- <f53ec45fd253e96d1c8d0ea6f9cca7f68afa51e3.camel@kernel.org>
- <20190906171335.d7mc3no5tdrcn6r5@yavin.dot.cyphar.com>
- <e1ac9428e6b768ac3145aafbe19b24dd6cf410b9.camel@kernel.org>
- <D2A57C7B-B0FD-424E-9F81-B858FFF21FF0@amacapital.net>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>
-Message-ID: <382034b9-d9fb-b5d7-5cfe-c78f17abff04@ssi.gouv.fr>
-Date:   Mon, 9 Sep 2019 11:33:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:52.0) Gecko/20100101
- Thunderbird/52.9.0
+        Mon, 9 Sep 2019 05:34:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50788 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728390AbfIIJeA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 05:34:00 -0400
+Received: from localhost (unknown [148.69.85.38])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 036E02086D;
+        Mon,  9 Sep 2019 09:33:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568021638;
+        bh=yZJ3ka986SfLwgSg1wqiKBcarbCnbCLNWxBepkM70Ok=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jRi1VKXVcj2HwNr6Z3ZnGZ7MHdDUjZLdCTeMaABs+qGLUkL5c5ui6XCXwQ0zirv3Y
+         jfX/7rMpui2j8HFrzgPp5Fu4ov8ixqq1faYbTOep8M7jjCWuPU3QWuquzew0EYjIGM
+         rCBxubdVTHt6WxfRDBl95MbCGW0x8tOvDar0aZhE=
+Date:   Mon, 9 Sep 2019 10:33:55 +0100
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     Chao Yu <chao@kernel.org>, linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] f2fs: fix to avoid accessing uninitialized field of
+ inode page in is_alive()
+Message-ID: <20190909093355.GA27742@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190906105426.109151-1-yuchao0@huawei.com>
+ <20190906234808.GC71848@jaegeuk-macbookpro.roam.corp.google.com>
+ <080e8dee-4726-8294-622a-cac26e781083@kernel.org>
+ <20190909074425.GB21625@jaegeuk-macbookpro.roam.corp.google.com>
+ <79228eaa-776f-da89-89f8-a9b5a90034b6@huawei.com>
+ <873f4c07-5694-6554-5266-81812a6bd617@huawei.com>
+ <20190909083725.GB25724@jaegeuk-macbookpro.roam.corp.google.com>
+ <05393d3c-b78d-3bb3-ff26-64d2d3939618@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <D2A57C7B-B0FD-424E-9F81-B858FFF21FF0@amacapital.net>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <05393d3c-b78d-3bb3-ff26-64d2d3939618@huawei.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 09/09, Chao Yu wrote:
+> On 2019/9/9 16:37, Jaegeuk Kim wrote:
+> > On 09/09, Chao Yu wrote:
+> >> On 2019/9/9 15:58, Chao Yu wrote:
+> >>> On 2019/9/9 15:44, Jaegeuk Kim wrote:
+> >>>> On 09/07, Chao Yu wrote:
+> >>>>> On 2019-9-7 7:48, Jaegeuk Kim wrote:
+> >>>>>> On 09/06, Chao Yu wrote:
+> >>>>>>> If inode is newly created, inode page may not synchronize with inode cache,
+> >>>>>>> so fields like .i_inline or .i_extra_isize could be wrong, in below call
+> >>>>>>> path, we may access such wrong fields, result in failing to migrate valid
+> >>>>>>> target block.
+> >>>>>>
+> >>>>>> If data is valid, how can we get new inode page?
+> >>>>
+> >>>> Let me rephrase the question. If inode is newly created, is this data block
+> >>>> really valid to move in GC?
+> >>>
+> >>> I guess it's valid, let double check that.
+> >>
+> >> We can see inode page:
+> >>
+> >> - f2fs_create
+> >>  - f2fs_add_link
+> >>   - f2fs_add_dentry
+> >>    - f2fs_init_inode_metadata
+> >>     - f2fs_add_inline_entry
+> >>      - ipage = f2fs_new_inode_page
+> >>      - f2fs_put_page(ipage)   <---- after this
+> > 
+> > Can you print out how many block was assigned to this inode?
+> 
+> Add log like this:
+> 
+> 		if (!test_and_set_bit(segno, SIT_I(sbi)->invalid_segmap)) {
+> 			if (is_inode) {
+> 				for (i = 0; i < 923 - 50; i++) {
+> 					__le32 *base = blkaddr_in_node(node);
+> 					unsigned ofs = offset_in_addr(inode);
+> 
+> 					printk("i:%u, addr:%x\n", i,
+> 						le32_to_cpu(*(base + i)));
+> 				}
+> 				printk("i_inline: %u\n", inode->i_inline);
+> 			}
+> 
+> It shows:
+> ...
+> i:10, addr:e66a
+> ...
+> i:46, addr:e66c
+> i:47, addr:e66d
+> i:48, addr:e66e
+> i:49, addr:e66f
+> i:50, addr:e670
+> i:51, addr:e671
+> i:52, addr:e672
+> i:53, addr:e673
+> i:54, addr:e674
+> i:55, addr:e675
+> i:56, addr:e676
+> ...
+> i:140, addr:2c35    <--- we want to migrate this block, however, without correct
+> .i_inline and .i_extra_isize value, we can just find i_addr[i:140-6] = NULL_ADDR
 
-On 06/09/2019 22:06, Andy Lutomirski wrote:
->
->
->> On Sep 6, 2019, at 12:43 PM, Jeff Layton <jlayton@kernel.org> wrote:
->>
->>> On Sat, 2019-09-07 at 03:13 +1000, Aleksa Sarai wrote:
->>>> On 2019-09-06, Jeff Layton <jlayton@kernel.org> wrote:
->>>>> On Fri, 2019-09-06 at 18:06 +0200, Micka=C3=ABl Sala=C3=BCn wrote:
->>>>>> On 06/09/2019 17:56, Florian Weimer wrote:
->>>>>> Let's assume I want to add support for this to the glibc dynamic loa=
-der,
->>>>>> while still being able to run on older kernels.
->>>>>>
->>>>>> Is it safe to try the open call first, with O_MAYEXEC, and if that f=
-ails
->>>>>> with EINVAL, try again without O_MAYEXEC?
->>>>>
->>>>> The kernel ignore unknown open(2) flags, so yes, it is safe even for
->>>>> older kernel to use O_MAYEXEC.
->>>>>
->>>>
->>>> Well...maybe. What about existing programs that are sending down bogus
->>>> open flags? Once you turn this on, they may break...or provide a way t=
-o
->>>> circumvent the protections this gives.
->>>
->>> It should be noted that this has been a valid concern for every new O_*
->>> flag introduced (and yet we still introduced new flags, despite the
->>> concern) -- though to be fair, O_TMPFILE actually does have a
->>> work-around with the O_DIRECTORY mask setup.
->>>
->>> The openat2() set adds O_EMPTYPATH -- though in fairness it's also
->>> backwards compatible because empty path strings have always given ENOEN=
-T
->>> (or EINVAL?) while O_EMPTYPATH is a no-op non-empty strings.
->>>
->>>> Maybe this should be a new flag that is only usable in the new openat2=
-()
->>>> syscall that's still under discussion? That syscall will enforce that
->>>> all flags are recognized. You presumably wouldn't need the sysctl if y=
-ou
->>>> went that route too.
->>>
->>> I'm also interested in whether we could add an UPGRADE_NOEXEC flag to
->>> how->upgrade_mask for the openat2(2) patchset (I reserved a flag bit fo=
-r
->>> it, since I'd heard about this work through the grape-vine).
->>>
->>
->> I rather like the idea of having openat2 fds be non-executable by
->> default, and having userland request it specifically via O_MAYEXEC (or
->> some similar openat2 flag) if it's needed. Then you could add an
->> UPGRADE_EXEC flag instead?
->>
->> That seems like something reasonable to do with a brand new API, and
->> might be very helpful for preventing certain classes of attacks.
->>
->>
->
-> There are at least four concepts of executability here:
->
-> - Just check the file mode and any other relevant permissions. Return a n=
-ormal fd.  Makes sense for script interpreters, perhaps.
+So, the theory is the block is indeed valid and the address was updated before
+write_inode()?
 
-This is the purpose of this patch series. It doesn't make sense to add
-memory restrictions nor constrain fexecve and such.
-
-
->
-> - Make the fd fexecve-able.
->
-> - Make the resulting fd mappable PROT_EXEC.
->
-> - Make the resulting fd upgradable.
->
-> I=E2=80=99m not at all convinced that the kernel needs to distinguish all=
- these, but at least upgradability should be its own thing IMO.
->
-
---
-Micka=C3=ABl Sala=C3=BCn
-
-Les donn=C3=A9es =C3=A0 caract=C3=A8re personnel recueillies et trait=C3=A9=
-es dans le cadre de cet =C3=A9change, le sont =C3=A0 seule fin d=E2=80=99ex=
-=C3=A9cution d=E2=80=99une relation professionnelle et s=E2=80=99op=C3=A8re=
-nt dans cette seule finalit=C3=A9 et pour la dur=C3=A9e n=C3=A9cessaire =C3=
-=A0 cette relation. Si vous souhaitez faire usage de vos droits de consulta=
-tion, de rectification et de suppression de vos donn=C3=A9es, veuillez cont=
-acter contact.rgpd@sgdsn.gouv.fr. Si vous avez re=C3=A7u ce message par err=
-eur, nous vous remercions d=E2=80=99en informer l=E2=80=99exp=C3=A9diteur e=
-t de d=C3=A9truire le message. The personal data collected and processed du=
-ring this exchange aims solely at completing a business relationship and is=
- limited to the necessary duration of that relationship. If you wish to use=
- your rights of consultation, rectification and deletion of your data, plea=
-se contact: contact.rgpd@sgdsn.gouv.fr. If you have received this message i=
-n error, we thank you for informing the sender and destroying the message.
+> i:141, addr:2c38
+> i:142, addr:2c39
+> i:143, addr:2c3b
+> i:144, addr:2c3e
+> i:145, addr:2c40
+> i:146, addr:2c44
+> i:147, addr:2c48
+> i:148, addr:2c4a
+> i:149, addr:2c4c
+> i:150, addr:2c4f
+> i:151, addr:2c59
+> i:152, addr:2c5d
+> ...
+> i:188, addr:e677
+> i:189, addr:e678
+> i:190, addr:e679
+> i:191, addr:e67a
+> i:192, addr:e67b
+> i:193, addr:e67c
+> i:194, addr:e67d
+> i:195, addr:e67e
+> i:196, addr:e67f
+> i:197, addr:e680
+> i:198, addr:ffffffff
+> i:199, addr:ffffffff
+> i:200, addr:ffffffff
+> i:201, addr:ffffffff
+> i:202, addr:ffffffff
+> i:203, addr:ffffffff
+> i:204, addr:ffffffff
+> i:205, addr:ffffffff
+> i:206, addr:ffffffff
+> i:207, addr:ffffffff
+> i:208, addr:ffffffff
+> i:209, addr:ffffffff
+> i:210, addr:ffffffff
+> i:211, addr:ffffffff
+> i:212, addr:ffffffff
+> i:213, addr:ffffffff
+> i:214, addr:ffffffff
+> i:215, addr:ffffffff
+> i:216, addr:ffffffff
+> i:217, addr:ffffffff
+> i:218, addr:ffffffff
+> i:219, addr:ffffffff
+> i:220, addr:ffffffff
+> i:221, addr:ffffffff
+> i:222, addr:ffffffff
+> i:223, addr:ffffffff
+> i:224, addr:ffffffff
+> i:225, addr:ffffffff
+> i:226, addr:ffffffff
+> i:227, addr:ffffffff
+> i:228, addr:ffffffff
+> i:229, addr:ffffffff
+> i:230, addr:ffffffff
+> i:231, addr:ffffffff
+> i:232, addr:ffffffff
+> i:233, addr:ffffffff
+> i:234, addr:b032
+> i:235, addr:b033
+> i:236, addr:b034
+> i:237, addr:b035
+> i:238, addr:b036
+> i:239, addr:b038
+> ...
+> i:283, addr:e681
+> ...
+> i_inline: 0
+> 
+> F2FS-fs (zram1): summary nid: 360, ofs: 134, ver: 0
+> F2FS-fs (zram1): blkaddr 2c35 (blkaddr in node 0) <-blkaddr in node is NULL_ADDR
+> F2FS-fs (zram1): expect: seg 14, ofs_in_seg: 53
+> F2FS-fs (zram1): real: seg 4294967295, ofs_in_seg: 0
+> F2FS-fs (zram1): ofs: 53, 0
+> F2FS-fs (zram1): node info ino:360, nid:360, nofs:0
+> F2FS-fs (zram1): ofs_in_addr: 0
+> F2FS-fs (zram1): end ========
+> 
+> > 
+> >>
+> >>>
+> >>>>
+> >>>>>
+> >>>>> is_alive()
+> >>>>> {
+> >>>>> ...
+> >>>>> 	node_page = f2fs_get_node_page(sbi, nid);  <--- inode page
+> >>>>
+> >>>> Aren't we seeing the below version warnings?
+> >>>>
+> >>>> if (sum->version != dni->version) {
+> >>>> 	f2fs_warn(sbi, "%s: valid data with mismatched node version.",
+> >>>>                            __func__);
+> >>>>         set_sbi_flag(sbi, SBI_NEED_FSCK);
+> >>>> }
+> >>
+> >> The version of summary and dni are all zero.
+> > 
+> > Then, this node was allocated and removed without being flushed.
+> > 
+> >>
+> >> summary nid: 613, ofs: 111, ver: 0
+> >> blkaddr 2436 (blkaddr in node 0)
+> >> expect: seg 10, ofs_in_seg: 54
+> >> real: seg 4294967295, ofs_in_seg: 0
+> >> ofs: 54, 0
+> >> node info ino:613, nid:613, nofs:0
+> >> ofs_in_addr: 0
+> >>
+> >> Thanks,
+> >>
+> >>>>
+> >>>>>
+> >>>>> 	source_blkaddr = datablock_addr(NULL, node_page, ofs_in_node);
+> >>>>
+> >>>> So, we're getting this? Does this incur infinite loop in GC?
+> >>>>
+> >>>> if (!test_and_set_bit(segno, SIT_I(sbi)->invalid_segmap)) {
+> >>>> 	f2fs_err(sbi, "mismatched blkaddr %u (source_blkaddr %u) in seg %u\n",
+> >>>> 	f2fs_bug_on(sbi, 1);
+> >>>> }
+> >>>
+> >>> Yes, I only get this with generic/269, rather than "valid data with mismatched
+> >>> node version.".
+> > 
+> > Was this block moved as valid? In either way, is_alive() returns false, no?
+> > How about checking i_blocks to detect the page is initialized in is_alive()?
+> > 
+> >>>
+> >>> With this patch, generic/269 won't panic again.
+> >>>
+> >>> Thanks,
+> >>>
+> >>>>
+> >>>>> ...
+> >>>>> }
+> >>>>>
+> >>>>> datablock_addr()
+> >>>>> {
+> >>>>> ...
+> >>>>> 	base = offset_in_addr(&raw_node->i);  <--- the base could be wrong here due to
+> >>>>> accessing uninitialized .i_inline of raw_node->i.
+> >>>>> ...
+> >>>>> }
+> >>>>>
+> >>>>> Thanks,
+> >>>>>
+> >>>>>>
+> >>>>>>>
+> >>>>>>> - gc_data_segment
+> >>>>>>>  - is_alive
+> >>>>>>>   - datablock_addr
+> >>>>>>>    - offset_in_addr
+> >>>>>>>
+> >>>>>>> Fixes: 7a2af766af15 ("f2fs: enhance on-disk inode structure scalability")
+> >>>>>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> >>>>>>> ---
+> >>>>>>>  fs/f2fs/dir.c | 3 +++
+> >>>>>>>  1 file changed, 3 insertions(+)
+> >>>>>>>
+> >>>>>>> diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
+> >>>>>>> index 765f13354d3f..b1840852967e 100644
+> >>>>>>> --- a/fs/f2fs/dir.c
+> >>>>>>> +++ b/fs/f2fs/dir.c
+> >>>>>>> @@ -479,6 +479,9 @@ struct page *f2fs_init_inode_metadata(struct inode *inode, struct inode *dir,
+> >>>>>>>  		if (IS_ERR(page))
+> >>>>>>>  			return page;
+> >>>>>>>  
+> >>>>>>> +		/* synchronize inode page's data from inode cache */
+> >>>>>>> +		f2fs_update_inode(inode, page);
+> >>>>>>> +
+> >>>>>>>  		if (S_ISDIR(inode->i_mode)) {
+> >>>>>>>  			/* in order to handle error case */
+> >>>>>>>  			get_page(page);
+> >>>>>>> -- 
+> >>>>>>> 2.18.0.rc1
+> >>>> .
+> >>>>
+> > .
+> > 
