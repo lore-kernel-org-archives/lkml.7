@@ -2,144 +2,151 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 107B8C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 520D3C4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D883B21920
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:35:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568025312;
-	bh=hRx9yb4pD46+5kN87jkPGzlRP7O/0R+F2wikb+6HcWA=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=g7rgGz/4xh0/weRyfLFafL+iEcc+uV9bXTv2AkLLOq+slAfKNrJ3u5FegNnkIH8ES
-	 /i8kzI2XMmXDDo9benQMeO3HH+uhThh+EcxZ6F3oeNlcypE1fNPflhFyWy2Tj5mXfL
-	 R/rCMXv/Ql53vnp1dYyAnKaNJUYbriHzn6avn8lE=
+	by mail.kernel.org (Postfix) with ESMTP id 339342086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:36:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732145AbfIIKfM (ORCPT
+        id S1729110AbfIIKg3 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 06:35:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45430 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730682AbfIIKfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 06:35:11 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 350922086D;
-        Mon,  9 Sep 2019 10:35:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568025309;
-        bh=hRx9yb4pD46+5kN87jkPGzlRP7O/0R+F2wikb+6HcWA=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Jo3pPW6/RwscCHhtxZZAfHBiK1LMxpjeeFw824tkKRa1EpEkK6JJk1P6a/zpCgo7V
-         Zhew8jObYvP56NaHXYqlPdIerExsgvVaAQeVQIgl+JH1K8eakg6ddaT8xtVC5JBOdc
-         jCjZxey8Rs6VwIE4kIHHJnstokJ5zHg+B2Tz9qIA=
-Message-ID: <3f838e42a50575595c7310386cf698aca8f89607.camel@kernel.org>
-Subject: Re: [PATCH v2] ceph: allow object copies across different
- filesystems in the same cluster
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Luis Henriques <lhenriques@suse.com>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 09 Sep 2019 06:35:07 -0400
-In-Reply-To: <20190909102834.16246-1-lhenriques@suse.com>
-References: <87k1ahojri.fsf@suse.com>
-         <20190909102834.16246-1-lhenriques@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Mon, 9 Sep 2019 06:36:29 -0400
+Received: from ZXSHCAS1.zhaoxin.com ([203.148.12.81]:6752 "EHLO
+        ZXSHCAS1.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728945AbfIIKg2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 06:36:28 -0400
+X-Greylist: delayed 902 seconds by postgrey-1.27 at vger.kernel.org; Mon, 09 Sep 2019 06:36:28 EDT
+Received: from zxbjmbx2.zhaoxin.com (10.29.252.164) by ZXSHCAS1.zhaoxin.com
+ (10.28.252.161) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Mon, 9 Sep
+ 2019 18:21:23 +0800
+Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by zxbjmbx2.zhaoxin.com
+ (10.29.252.164) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Mon, 9 Sep
+ 2019 18:21:23 +0800
+Received: from zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d]) by
+ zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d%16]) with mapi id
+ 15.01.1261.035; Mon, 9 Sep 2019 18:21:23 +0800
+From:   Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+To:     "tony.luck@intel.com" <tony.luck@intel.com>,
+        "Borislav Petkov (bp@alien8.de)" <bp@alien8.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "yazen.ghannam@amd.com" <yazen.ghannam@amd.com>,
+        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+        "qiuxu.zhuo@intel.com" <qiuxu.zhuo@intel.com>
+CC:     David Wang <DavidWang@zhaoxin.com>,
+        "Cooper Yan(BJ-RD)" <CooperYan@zhaoxin.com>,
+        "Qiyuan Wang(BJ-RD)" <QiyuanWang@zhaoxin.com>,
+        "Herry Yang(BJ-RD)" <HerryYang@zhaoxin.com>
+Subject: [PATCH v1 3/4] x86/mce: Add Zhaoxin CMCI support
+Thread-Topic: [PATCH v1 3/4] x86/mce: Add Zhaoxin CMCI support
+Thread-Index: AdVm9rhzHHwSHU0OR4CG5KfkCNKupA==
+Date:   Mon, 9 Sep 2019 10:21:22 +0000
+Message-ID: <29e895912c2f4989937fa33d59e55dd9@zhaoxin.com>
+Accept-Language: en-US, zh-CN
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.32.64.75]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-09-09 at 11:28 +0100, Luis Henriques wrote:
-> OSDs are able to perform object copies across different pools.  Thus,
-> there's no need to prevent copy_file_range from doing remote copies if the
-> source and destination superblocks are different.  Only return -EXDEV if
-> they have different fsid (the cluster ID).
-> 
-> Signed-off-by: Luis Henriques <lhenriques@suse.com>
-> ---
->  fs/ceph/file.c | 18 ++++++++++++++----
->  1 file changed, 14 insertions(+), 4 deletions(-)
-> 
-> Hi,
-> 
-> Here's the patch changelog since initial submittion:
-> 
-> - Dropped have_fsid checks on client structs
-> - Use %pU to print the fsid instead of raw hex strings (%*ph)
-> - Fixed 'To:' field in email so that this time the patch hits vger
-> 
-> Cheers,
-> --
-> Luis
-> 
-> diff --git a/fs/ceph/file.c b/fs/ceph/file.c
-> index 685a03cc4b77..4a624a1dd0bb 100644
-> --- a/fs/ceph/file.c
-> +++ b/fs/ceph/file.c
-> @@ -1904,6 +1904,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
->  	struct ceph_inode_info *src_ci = ceph_inode(src_inode);
->  	struct ceph_inode_info *dst_ci = ceph_inode(dst_inode);
->  	struct ceph_cap_flush *prealloc_cf;
-> +	struct ceph_fs_client *src_fsc = ceph_inode_to_client(src_inode);
->  	struct ceph_object_locator src_oloc, dst_oloc;
->  	struct ceph_object_id src_oid, dst_oid;
->  	loff_t endoff = 0, size;
-> @@ -1915,8 +1916,17 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
->  
->  	if (src_inode == dst_inode)
->  		return -EINVAL;
-> -	if (src_inode->i_sb != dst_inode->i_sb)
-> -		return -EXDEV;
-> +	if (src_inode->i_sb != dst_inode->i_sb) {
-> +		struct ceph_fs_client *dst_fsc = ceph_inode_to_client(dst_inode);
-> +
-> +		if (ceph_fsid_compare(&src_fsc->client->fsid,
-> +				      &dst_fsc->client->fsid)) {
-> +			dout("Copying object across different clusters:");
-> +			dout("  src fsid: %pU dst fsid: %pU\n",
-> +			     &src_fsc->client->fsid, &dst_fsc->client->fsid);
-> +			return -EXDEV;
-> +		}
-> +	}
+All Zhaoxin newer CPUs support CMCI that compatible with Intel's
+"Machine-Check Architecture", so add support for Zhaoxin CMCI in
+mce/core.c and mce/intel.c.
 
-Just to be clear: what happens here if I mount two entirely separate
-clusters, and their OSDs don't have any access to one another? Will this
-fail at some later point with an error that we can catch so that we can
-fall back?
+Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+---
+ arch/x86/include/asm/mce.h      |  6 ++++++
+ arch/x86/kernel/cpu/mce/core.c  | 25 +++++++++++++++++++++++++
+ arch/x86/kernel/cpu/mce/intel.c |  3 ++-
+ 3 files changed, 33 insertions(+), 1 deletion(-)
 
-
->  	if (ceph_snap(dst_inode) != CEPH_NOSNAP)
->  		return -EROFS;
->  
-> @@ -1928,7 +1938,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
->  	 * efficient).
->  	 */
->  
-> -	if (ceph_test_mount_opt(ceph_inode_to_client(src_inode), NOCOPYFROM))
-> +	if (ceph_test_mount_opt(src_fsc, NOCOPYFROM))
->  		return -EOPNOTSUPP;
->  
->  	if ((src_ci->i_layout.stripe_unit != dst_ci->i_layout.stripe_unit) ||
-> @@ -2044,7 +2054,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
->  				dst_ci->i_vino.ino, dst_objnum);
->  		/* Do an object remote copy */
->  		err = ceph_osdc_copy_from(
-> -			&ceph_inode_to_client(src_inode)->client->osdc,
-> +			&src_fsc->client->osdc,
->  			src_ci->i_vino.snap, 0,
->  			&src_oid, &src_oloc,
->  			CEPH_OSD_OP_FLAG_FADVISE_SEQUENTIAL |
-
+diff --git a/arch/x86/include/asm/mce.h b/arch/x86/include/asm/mce.h
+index dc2d4b2..0986a11 100644
+--- a/arch/x86/include/asm/mce.h
++++ b/arch/x86/include/asm/mce.h
+@@ -350,4 +350,10 @@ umc_normaddr_to_sysaddr(u64 norm_addr, u16 nid, u8 umc, u64 *sys_addr)	{ return
+ 
+ static inline void mce_hygon_feature_init(struct cpuinfo_x86 *c)	{ return mce_amd_feature_init(c); }
+ 
++#ifdef CONFIG_CPU_SUP_ZHAOXIN
++void mce_zhaoxin_feature_init(struct cpuinfo_x86 *c);
++#else
++static inline void mce_zhaoxin_feature_init(struct cpuinfo_x86 *c) { }
++#endif
++
+ #endif /* _ASM_X86_MCE_H */
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index 3f878f6..a3b07ca 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -1777,6 +1777,27 @@ static void mce_centaur_feature_init(struct cpuinfo_x86 *c)
+ 	}
+ }
+ 
++void mce_zhaoxin_feature_init(struct cpuinfo_x86 *c)
++{
++	struct mce_bank *mce_banks = this_cpu_ptr(mce_banks_array);
++
++	/*
++	 * These CPUs bank8 SVAD error may be triggered unexpected when
++	 * bringup virtual machine. it is not hardware bug. Always disable
++	 * bank8 SVAD error by default.
++	 */
++	if ((c->x86 == 6 && c->x86_model == 0x19 &&
++		(c->x86_stepping > 3 && c->x86_stepping < 8)) ||
++	    (c->x86 == 6 && c->x86_model == 0x1f) ||
++	    (c->x86 == 7 && c->x86_model == 0x1b)) {
++		if (this_cpu_read(mce_num_banks) > 8)
++			mce_banks[8].ctl = 0;
++	}
++
++	intel_init_cmci();
++	mce_adjust_timer = cmci_intel_adjust_timer;
++}
++
+ static void __mcheck_cpu_init_vendor(struct cpuinfo_x86 *c)
+ {
+ 	switch (c->x86_vendor) {
+@@ -1798,6 +1819,10 @@ static void __mcheck_cpu_init_vendor(struct cpuinfo_x86 *c)
+ 		mce_centaur_feature_init(c);
+ 		break;
+ 
++	case X86_VENDOR_ZHAOXIN:
++		mce_zhaoxin_feature_init(c);
++		break;
++
+ 	default:
+ 		break;
+ 	}
+diff --git a/arch/x86/kernel/cpu/mce/intel.c b/arch/x86/kernel/cpu/mce/intel.c
+index eee4b12..b49cba7 100644
+--- a/arch/x86/kernel/cpu/mce/intel.c
++++ b/arch/x86/kernel/cpu/mce/intel.c
+@@ -85,7 +85,8 @@ static int cmci_supported(int *banks)
+ 	 * initialization is vendor keyed and this
+ 	 * makes sure none of the backdoors are entered otherwise.
+ 	 */
+-	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
++	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL &&
++	    boot_cpu_data.x86_vendor != X86_VENDOR_ZHAOXIN)
+ 		return 0;
+ 	if (!boot_cpu_has(X86_FEATURE_APIC) || lapic_get_maxlvt() < 6)
+ 		return 0;
 -- 
-Jeff Layton <jlayton@kernel.org>
-
+2.7.4
