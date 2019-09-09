@@ -2,219 +2,216 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03085C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE06C4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7F37218DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:26:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8CA020678
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:30:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NIG2Kk2R"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="gxEMwh/a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727256AbfIIO0j (ORCPT
+        id S1727457AbfIIOaz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 10:26:39 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41778 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726774AbfIIO0i (ORCPT
+        Mon, 9 Sep 2019 10:30:55 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:33690 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726774AbfIIOay (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 10:26:38 -0400
-Received: by mail-io1-f68.google.com with SMTP id r26so29028524ioh.8;
-        Mon, 09 Sep 2019 07:26:37 -0700 (PDT)
+        Mon, 9 Sep 2019 10:30:54 -0400
+Received: by mail-qt1-f194.google.com with SMTP id r5so16418743qtd.0
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 07:30:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KazKYPGBG1a9BKrlXCLttJ1EE05FXkf2S4SfixOg0ts=;
-        b=NIG2Kk2RmcDDnLUV+hWJbozopWGGp/tdxuvo88MeyuHXRpPUnd4dmZjoTyotugdmei
-         50KGV1pQP9GJ1fUrbks9ZzygiqPRKpLXTNR3P4AR3XmNbA+YoXg5Ry5fY5U+4efz+Gpr
-         Q0NB92PL5VUJAulnNPtZ4Jb9cp7OpiHIYPLiWerH4BHmee1c97JDieWRPHbnWyo4JALq
-         V9OBujx/26cbGhraHJF/b6NLCAQE2JemX8mhQDD8xR0XCBCPTVk/VcKpURqp63n0/WUL
-         iEa1k8S+bLZ30eHMFbTrwgC3mFjYqF3Jaw7w+1gItzlkToJuSrHQEjVvjw8TM6RUV4Eh
-         PRCw==
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=CXfqRVCQFw7xqj7AICeJBWtrNhS6pGZdKh11BOOZ9lA=;
+        b=gxEMwh/a/ND2u6HYSSw+CvoCqCBHgB9WAY3kEMDTKnHS721fCqfnpsUSXC2a0oOeGf
+         hS6DIyV3UJqVsob9he/lOalVvuUnlHqXfyaB6/qIu5AZdsXVBD3H5UKaA89p9ehrqtw+
+         HyVJbHyy0BC20nYdMA7IvWJsrq/du8PbBCqzLf/32PujYUN1YiLrJBu2apAoILgQ2QQM
+         WXN1kirG4t98s2AA6PXav/e270xdKKCBwOxaaUgq+gIL67v8Nnc7hzablBWT5tXiqNyZ
+         dztk4qQJT8T3WUmUbdwsE/SUovPAHV8+d9xftGR/FzO4FcQmWQWioLNX0jmu7RnXkbMR
+         l9pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KazKYPGBG1a9BKrlXCLttJ1EE05FXkf2S4SfixOg0ts=;
-        b=alJ7ioiNmrUlz19ub02Wuq3Z9pw0vvIDM6U7eXhM2To+7Xr2NRYQrA3GFrtHbjRW4N
-         2R6JfiGJl6drj+ipGCK8i3QL+BRrnzAgGmBjV1GdC0ygNqHaqN8FxBWo23WTJ2sfwBo1
-         98qqy7Q+qrKF+2vmc2uy9tkfEz2wJw3QWUrF6cFIZu+/peahZjAYR9zKMjfNFYXSQZAi
-         xjhp7Gm7i7ypToFi5JZr65IwyLUfIYq4imRNZPG5F5Hy1N0DFG9S6fxjR3Y1JqpkTKNS
-         TYXaGmnBgoWAc8IqCOlCWZ+vJa5ceAi1ys2fk2upldE/t+ppGTOQvvJXgS/B9WeyToEa
-         r0nw==
-X-Gm-Message-State: APjAAAWqzRCmiGQuziIxrdDi7BXNVxppMwomjG83gsCp3q2VYgqaAuxW
-        M2GTJP7gpF8cIbJESJHYKp9lfh3cErIQnToc2oTgFNhzq6g=
-X-Google-Smtp-Source: APXvYqxrppHK3F7WjN3leofeRWQOpM76xMzqPEuap0Mw6NrShZbOedsVHFPy95s3IP6BMpC+vwVafi7Vn6BK9AFLnJ0=
-X-Received: by 2002:a6b:8e92:: with SMTP id q140mr4413737iod.205.1568039196607;
- Mon, 09 Sep 2019 07:26:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190801012823.28730-1-neolynx@gmail.com> <CAHCN7x+nD0J6KZYtfH+0ApQTPO5byO2obMkUwc9Uf4WubyRbTw@mail.gmail.com>
- <C04F49BA-1229-4E96-9FCF-4FC662D1DB11@goldelico.com> <CAHCN7x+Ye6sB_YqO0sAX1OJDw64B-qGS3pL545v3Xk5z914cwQ@mail.gmail.com>
- <0C1EF64E-B33C-4BFA-A7D3-471DD1B9EE86@goldelico.com> <515048DE-138D-4400-8168-F2B7D61F1005@goldelico.com>
- <CAHCN7xLPCX9rZ0+7KVBiA_bgZ6tg6VeCXqD-UXu+6iwpFMPVrA@mail.gmail.com>
- <7B3D1D77-3E8C-444F-90B9-6DF2641178B8@goldelico.com> <CAHCN7xLW58ggx3CpVL=HdCVHWo6D-MCTB91A_9rtSRoZQ+xJuQ@mail.gmail.com>
- <FA2920FE-B76A-4D44-A264-862A1CCBF7FC@goldelico.com>
-In-Reply-To: <FA2920FE-B76A-4D44-A264-862A1CCBF7FC@goldelico.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Mon, 9 Sep 2019 09:26:25 -0500
-Message-ID: <CAHCN7xJsPa0i+Z+qpCkWcdAh9+udmGT0RPNchdDsfB=8ptd3Nw@mail.gmail.com>
-Subject: Re: [Letux-kernel] [RFC PATCH 0/3] Enable 1GHz support on omap36xx
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     =?UTF-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andreas Kemnade <andreas@kemnade.info>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=CXfqRVCQFw7xqj7AICeJBWtrNhS6pGZdKh11BOOZ9lA=;
+        b=TVH1hDKS51AKWvEXHgC3Fp1qHLjikL76E02qRfU9SGPyxfzaF34NGQ1yh/7UYjPF7/
+         eAoXY5oDWRr6XbNgNdoxgQqJ6VOX5w6Fc0s3p+W5N+8HS0yc/E2TQUDbqniqseuV7K3w
+         DwuxVK4JBhSRWBdbtCbXKPMzcmZh0HhfETiX6r/Wl5gZuRcO8rGAT/1k2tEqqL3nnMqe
+         klp5R0nCXHTn5P+bKneNjzBKLHj6VlyDLYSLrBDUqQ15DLft7AAZ1orlIefNkl+6Ue+p
+         1qSQdX8Sb8ubGpkdx/FPAwyKdUOPZBJEstxLdwr4He84AdwAjlmUr8pCC3030HiiwLIR
+         Plow==
+X-Gm-Message-State: APjAAAXjguljcGDxpSnrPoi7yidk8lVLz0YdAzYgGBm2SXB8+1CITuDf
+        oxh4jL6+V8/0mk3WuAA9ldXpjg==
+X-Google-Smtp-Source: APXvYqz3L3fSgl55DmtBbUTWQgR45D2JISFvfWDBJBH3PWAbVc68BgzFeZ6k0wq1m7D4qm15IYPnzA==
+X-Received: by 2002:a0c:eda7:: with SMTP id h7mr14228023qvr.30.1568039452923;
+        Mon, 09 Sep 2019 07:30:52 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id w126sm6478943qkd.68.2019.09.09.07.30.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 09 Sep 2019 07:30:51 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     mpe@ellerman.id.au
+Cc:     benh@kernel.crashing.org, paulus@samba.org, mingo@kernel.org,
+        peterz@infradead.org, bvanassche@acm.org, arnd@arndb.de,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH v3] powerpc/lockdep: fix a false positive warning
+Date:   Mon,  9 Sep 2019 10:30:33 -0400
+Message-Id: <1568039433-10176-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 7, 2019 at 2:38 AM H. Nikolaus Schaller <hns@goldelico.com> wrote:
->
-> Hi Adam,
->
-> > Am 02.09.2019 um 23:10 schrieb Adam Ford <aford173@gmail.com>:
-> >
-> > On Mon, Sep 2, 2019 at 10:46 AM H. Nikolaus Schaller <hns@goldelico.com> wrote:
-> >>
-> >>
-> >>
-> >> But my tests show that decoding works now. So you already might give it a try.
-> >
-> > I am traveling all this week, but I have an omap3530, DM3730
-> > (omap3630), and an AM3517 that I use for testing.
->
-> now as the omap3430 and omap3630 opp-v2 tables are installed,
-> we could add am35x7 as well.
->
-> What needs to be done:
->
-> 1. add OPP-v2 table to am3517.dtsi
->
-> for example copy skeleton from omap36xx.dtsi
->
-> and define reasonable clock speeds. I would think about
-> 150 MHz, 300 MHz, 600MHz.
+The commit 108c14858b9e ("locking/lockdep: Add support for dynamic
+keys") introduced a boot warning on powerpc below, because since the
+commit 2d4f567103ff ("KVM: PPC: Introduce kvm_tmp framework") adds
+kvm_tmp[] into the .bss section and then free the rest of unused spaces
+back to the page allocator.
 
-This might be more of a question for TI, but  can we match the 3430
-list of frequencies?
+kernel_init
+  kvm_guest_init
+    kvm_free_tmp
+      free_reserved_area
+        free_unref_page
+          free_unref_page_prepare
 
-Something like:
-    125000  1200000
-    250000  1200000
-    500000  1200000
-    550000  1200000
-    600000  1200000
+Later, alloc_workqueue() happens to allocate some pages from there and
+trigger the warning at,
 
+if (WARN_ON_ONCE(static_obj(key)))
 
->
-> Debatable is if we need a clock-latency definition.
->
-> 2. change all voltages to 1.2V
->
->                         opp-microvolt = <1200000 1200000 1200000>;
->
-> There is no point to specify 3 voltages <target min max> here since we
-> will never need a min and a max value.
->
->                         opp-microvolt = <1200000>;
->
-> should also be ok (AFAIK, parser handles single-value records).
->
-> 3. AFAIK there is no speed binned eFuse...
->
-> But the ti-cpufreq driver always wants to read some eFuse register.
->
-> So please check if you can read 0x4800244C and 0x4830A204
-> like on omap36xx and if they produce stable values (and not
-> random noise).
+Fix it by adding a generic helper arch_is_bss_hole() to skip those areas
+in static_obj(). Since kvm_free_tmp() is only done early during the
+boot, just go lockless to make the implementation simple for now.
 
-For the AM3517,
+WARNING: CPU: 0 PID: 13 at kernel/locking/lockdep.c:1120
+Workqueue: events work_for_cpu_fn
+Call Trace:
+  lockdep_register_key+0x68/0x200
+  wq_init_lockdep+0x40/0xc0
+  trunc_msg+0x385f9/0x4c30f (unreliable)
+  wq_init_lockdep+0x40/0xc0
+  alloc_workqueue+0x1e0/0x620
+  scsi_host_alloc+0x3d8/0x490
+  ata_scsi_add_hosts+0xd0/0x220 [libata]
+  ata_host_register+0x178/0x400 [libata]
+  ata_host_activate+0x17c/0x210 [libata]
+  ahci_host_activate+0x84/0x250 [libahci]
+  ahci_init_one+0xc74/0xdc0 [ahci]
+  local_pci_probe+0x78/0x100
+  work_for_cpu_fn+0x40/0x70
+  process_one_work+0x388/0x750
+  process_scheduled_works+0x50/0x90
+  worker_thread+0x3d0/0x570
+  kthread+0x1b8/0x1e0
+  ret_from_kernel_thread+0x5c/0x7c
 
-0x4800244C = 0000 0cc0
-0x4830A204 = 1b86 802f
+Fixes: 108c14858b9e ("locking/lockdep: Add support for dynamic keys")
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
 
-The AM3517 shows these are valid addresses and I read them multiple
-times and they yielded the same results even after power cycling.
+v3: Change arch_is_bss_hole() to return a "bool".
+    Rearrange variables in kvm.c a bit.
+v2: No need to actually define arch_is_bss_hole() powerpc64 only.
 
+ arch/powerpc/include/asm/sections.h | 11 +++++++++++
+ arch/powerpc/kernel/kvm.c           |  8 +++++++-
+ include/asm-generic/sections.h      |  7 +++++++
+ kernel/locking/lockdep.c            |  3 +++
+ 4 files changed, 28 insertions(+), 1 deletion(-)
 
->
-> If yes, we simply assume that am3517 is similar enough to omap3630,
-> ignore that there is no eFuse, but read the register anyways and
-> then ignore the bit if it is 0 or 1.
->
-> This means that all OPPs can get
->
->                         opp-supported-hw = <0xffffffff 0xffffffff>;
->
-> There could also be a default handler if this property is missing,
-> but I have not researched this.
->
-Like this?
+diff --git a/arch/powerpc/include/asm/sections.h b/arch/powerpc/include/asm/sections.h
+index 4a1664a8658d..6e9e39ebbb27 100644
+--- a/arch/powerpc/include/asm/sections.h
++++ b/arch/powerpc/include/asm/sections.h
+@@ -5,8 +5,19 @@
+ 
+ #include <linux/elf.h>
+ #include <linux/uaccess.h>
++
++#define arch_is_bss_hole arch_is_bss_hole
++
+ #include <asm-generic/sections.h>
+ 
++extern void *bss_hole_start, *bss_hole_end;
++
++static inline bool arch_is_bss_hole(unsigned long addr)
++{
++	return addr >= (unsigned long)bss_hole_start &&
++	       addr < (unsigned long)bss_hole_end;
++}
++
+ extern char __head_end[];
+ 
+ #ifdef __powerpc64__
+diff --git a/arch/powerpc/kernel/kvm.c b/arch/powerpc/kernel/kvm.c
+index b7b3a5e4e224..e3c3b076ff07 100644
+--- a/arch/powerpc/kernel/kvm.c
++++ b/arch/powerpc/kernel/kvm.c
+@@ -64,9 +64,11 @@
+ #define KVM_INST_MTSRIN		0x7c0001e4
+ 
+ static bool kvm_patching_worked = true;
+-char kvm_tmp[1024 * 1024];
+ static int kvm_tmp_index;
+ 
++char kvm_tmp[1024 * 1024];
++void *bss_hole_start, *bss_hole_end;
++
+ static inline void kvm_patch_ins(u32 *inst, u32 new_inst)
+ {
+ 	*inst = new_inst;
+@@ -707,6 +709,10 @@ static __init void kvm_free_tmp(void)
+ 	 */
+ 	kmemleak_free_part(&kvm_tmp[kvm_tmp_index],
+ 			   ARRAY_SIZE(kvm_tmp) - kvm_tmp_index);
++
++	bss_hole_start = &kvm_tmp[kvm_tmp_index];
++	bss_hole_end = &kvm_tmp[ARRAY_SIZE(kvm_tmp)];
++
+ 	free_reserved_area(&kvm_tmp[kvm_tmp_index],
+ 			   &kvm_tmp[ARRAY_SIZE(kvm_tmp)], -1, NULL);
+ }
+diff --git a/include/asm-generic/sections.h b/include/asm-generic/sections.h
+index d1779d442aa5..28a7a56e7c8a 100644
+--- a/include/asm-generic/sections.h
++++ b/include/asm-generic/sections.h
+@@ -91,6 +91,13 @@ static inline int arch_is_kernel_initmem_freed(unsigned long addr)
+ }
+ #endif
+ 
++#ifndef arch_is_bss_hole
++static inline bool arch_is_bss_hole(unsigned long addr)
++{
++	return false;
++}
++#endif
++
+ /**
+  * memory_contains - checks if an object is contained within a memory region
+  * @begin: virtual address of the beginning of the memory region
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 4861cf8e274b..cd75b51f15ce 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -675,6 +675,9 @@ static int static_obj(const void *obj)
+ 	if (arch_is_kernel_initmem_freed(addr))
+ 		return 0;
+ 
++	if (arch_is_bss_hole(addr))
++		return 0;
++
+ 	/*
+ 	 * static variable?
+ 	 */
+-- 
+1.8.3.1
 
-opp1-125000000 {
-     opp-hz = /bits/ 64 <125000000>;
-     opp-microvolt = <1200000>;
-     opp-supported-hw = <0xffffffff 0xffffffff>;
-};
-
-opp2-250000000 {
-     opp-hz = /bits/ 64 <250000000>;
-     opp-microvolt = <1200000>;
-    opp-supported-hw = <0xffffffff 0xffffffff>;
-     opp-suspend;
-};
-
-opp3-500000000 {
-     opp-hz = /bits/ 64 <500000000>;
-     opp-microvolt = <1200000>;
-     opp-supported-hw = <0xffffffff 0xffffffff>;
-};
-
-opp4-550000000 {
-     opp-hz = /bits/ 64 <550000000>;
-     opp-microvolt = <1200000>;
-     opp-supported-hw = <0xffffffff 0xffffffff>;
-};
-
-opp5-600000000 {
-     opp-hz = /bits/ 64 <600000000>;
-     opp-microvolt = <1200000>;
-     opp-supported-hw = <0xffffffff 0xffffffff>;
-};
-
-What does opp-suspend do?  I noticed it in the 34xx.dtsi
-
-> 4. add compatible to ti-cpufreq
-> and share the register offsets, bit masks etc. with omap3630:
->
->         { .compatible = "ti,am33xx", .data = &am3x_soc_data, },
->         { .compatible = "ti,am3517", .data = &omap36xx_soc_data, },
->         { .compatible = "ti,am43", .data = &am4x_soc_data, },
->         { .compatible = "ti,dra7", .data = &dra7_soc_data },
->         { .compatible = "ti,omap3430", .data = &omap34xx_soc_data, },
->         { .compatible = "ti,omap3630", .data = &omap36xx_soc_data, },
->
-> 5. configure for CONFIG_ARM_TI_CPUFREQ=y
->
-> This should IMHO suffice.
-
-If you're OK with what I am proposing, I'll run some tests and submit
-a patch.  I won't promise to fully understand what's happening.  :-)
-
->
-> Since I can't test anything I can't define working OPP points
-> and therefore I can't provide patches myself. Hope you can make
-> it work this way.
->
-> BR,
-> Nikolaus
