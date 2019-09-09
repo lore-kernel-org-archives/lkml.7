@@ -2,168 +2,248 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34577C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B890C433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ABE6218AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:33:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBAD221D79
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 12:36:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ssi.gouv.fr header.i=@ssi.gouv.fr header.b="DIA1Z3Zu"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="f8TSLfG0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727383AbfIIMdz (ORCPT
+        id S1727776AbfIIMgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 08:33:55 -0400
-Received: from smtp-out.ssi.gouv.fr ([86.65.182.90]:53117 "EHLO
-        smtp-out.ssi.gouv.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726008AbfIIMdz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 08:33:55 -0400
-Received: from smtp-out.ssi.gouv.fr (localhost [127.0.0.1])
-        by smtp-out.ssi.gouv.fr (Postfix) with ESMTP id 1BC33D00071;
-        Mon,  9 Sep 2019 14:33:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ssi.gouv.fr;
-        s=20160407; t=1568032433;
-        bh=2i3c2h85LfgWysBXkgaRfA1GieIicnUeTJmX6tbk8zM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To:From:Subject;
-        b=DIA1Z3Zu3HCxstRjX0+tueSAj80lWxY1sAKxeq+efi6dSgyroVTJV8OH6MRAeufM2
-         jFE4bHUfovw/uhK0wdDYgP2+dhwRTY6lYUL+c4KPWD5O2xWX9gYCW8B+9ZeaQscNh+
-         iNgmxt2dbyBbJNWSYe3IeWpG9WChnuJn7iTXN2D5pqdOiwVahCkEkHfsbElRiYoEbR
-         7Pj1qPpKDIsa7HrTYf99kTTDALyksUu+nUQbc2yA/VCMkfJf0vVKqFFu1ivBw6yyfc
-         fxvQ1UAQ/LLpN5GSOEppLqdYvl7B1vMAuA5Fc4d8ZFb2PLhIdHUywDuJuj/giF4giW
-         C85NYH4BN6ojQ==
-Subject: Re: [PATCH v2 1/5] fs: Add support for an O_MAYEXEC flag on
- sys_open()
-To:     Aleksa Sarai <cyphar@cyphar.com>
-CC:     James Morris <jmorris@namei.org>, Jeff Layton <jlayton@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
-        <linux-kernel@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Eric Chiang <ericchiang@google.com>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
-        <kernel-hardening@lists.openwall.com>, <linux-api@vger.kernel.org>,
-        <linux-security-module@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>
-References: <20190906152455.22757-2-mic@digikod.net>
- <87ef0te7v3.fsf@oldenburg2.str.redhat.com>
- <75442f3b-a3d8-12db-579a-2c5983426b4d@ssi.gouv.fr>
- <f53ec45fd253e96d1c8d0ea6f9cca7f68afa51e3.camel@kernel.org>
- <1fbf54f6-7597-3633-a76c-11c4b2481add@ssi.gouv.fr>
- <5a59b309f9d0603d8481a483e16b5d12ecb77540.camel@kernel.org>
- <alpine.LRH.2.21.1909061202070.18660@namei.org>
- <49e98ece-e85f-3006-159b-2e04ba67019e@ssi.gouv.fr>
- <alpine.LRH.2.21.1909090309260.27895@namei.org>
- <073cb831-7c6b-1882-9b7d-eb810a2ef955@ssi.gouv.fr>
- <20190909122802.imfx6wp4zeroktuz@yavin>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>
-Message-ID: <045db737-107f-d06a-04ea-fdd0758de062@ssi.gouv.fr>
-Date:   Mon, 9 Sep 2019 14:33:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:52.0) Gecko/20100101
- Thunderbird/52.9.0
+        Mon, 9 Sep 2019 08:36:10 -0400
+Received: from vps.xff.cz ([195.181.215.36]:37556 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727428AbfIIMgK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 08:36:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1568032567; bh=uTm+MnC373y5QNcajftT9i4MZQ4QqvnPoh06Z6jmTyU=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=f8TSLfG0FgnnsVDqQHUDpPwvjBM30WhHeeNdeMT6ybxKyqMt8/zLjAyZPRRoB4qEA
+         49EeMmF3ZolOe1v3gnza8o59B+1sH9f2zigNcPhry7l4Zn+Pes6wcvQ3BMBl0khMW0
+         Ii/WXL4ece+wdMOu7f12J1Ipr0rR+rVAGaieX45E=
+Date:   Mon, 9 Sep 2019 14:36:06 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 00/10] Allwinner sunxi message box support
+Message-ID: <20190909123606.ezsjisxpj7747h6b@core.my.home>
+Mail-Followup-To: Samuel Holland <samuel@sholland.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Jassi Brar <jassisinghbrar@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20190820032311.6506-1-samuel@sholland.org>
+ <20190909032208.rlorx2ppytymtyej@core.my.home>
+ <bb6eab9a-f9cc-81ca-5e8c-9fb867c61ec2@sholland.org>
 MIME-Version: 1.0
-In-Reply-To: <20190909122802.imfx6wp4zeroktuz@yavin>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <bb6eab9a-f9cc-81ca-5e8c-9fb867c61ec2@sholland.org>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-On 09/09/2019 14:28, Aleksa Sarai wrote:
-> On 2019-09-09, Micka=EBl Sala=FCn <mickael.salaun@ssi.gouv.fr> wrote:
->> On 09/09/2019 12:12, James Morris wrote:
->>> On Mon, 9 Sep 2019, Micka=EBl Sala=FCn wrote:
->>>> As I said, O_MAYEXEC should be ignored if it is not supported by the
->>>> kernel, which perfectly fit with the current open(2) flags behavior, a=
-nd
->>>> should also behave the same with openat2(2).
->>>
->>> The problem here is programs which are already using the value of
->>> O_MAYEXEC, which will break.  Hence, openat2(2).
->>
->> Well, it still depends on the sysctl, which doesn't enforce anything by
->> default, hence doesn't break existing behavior, and this unused flags
->> could be fixed/removed or reported by sysadmins or distro developers.
->
-> Okay, but then this means that new programs which really want to enforce
-> O_MAYEXEC (and know that they really do want this feature) won't be able
-> to unless an admin has set the relevant sysctl. Not to mention that the
-> old-kernel fallback will not cover the "it's disabled by the sysctl"
-> case -- so the fallback handling would need to be:
->
->     int fd =3D open("foo", O_MAYEXEC|O_RDONLY);
->     if (!(fcntl(fd, F_GETFL) & O_MAYEXEC))
->         fallback();
->     if (!sysctl_feature_is_enabled)
->         fallback();
->
-> However, there is still a race here -- if an administrator enables
-> O_MAYEXEC after the program gets the fd, then you still won't hit the
-> fallback (and you can't tell that O_MAYEXEC checks weren't done).
+On Sun, Sep 08, 2019 at 10:54:17PM -0500, Samuel Holland wrote:
+> On 9/8/19 10:22 PM, Ondřej Jirman wrote:
+> > Hello Samuel,
+> > 
+> > On Mon, Aug 19, 2019 at 10:23:01PM -0500, Samuel Holland wrote:
+> >> This series adds support for the "hardware message box" in sun8i, sun9i,
+> >> and sun50i SoCs, used for communication with the ARISC management
+> >> processor (the platform's equivalent of the ARM SCP). The end goal is to
+> >> use the arm_scpi driver as a client, communicating with firmware running
+> >> on the AR100 CPU, or to use the mailbox to forward NMIs that the
+> >> firmware picks up from R_INTC.
+> >>
+> >> Unfortunately, the ARM SCPI client no longer works with this driver
+> >> since it now exposes all 8 hardware FIFOs individually. The SCPI client
+> >> could be made to work (and I posted proof-of-concept code to that effect
+> >> with v1 of this series), but that is a low priority, as Linux does not
+> >> directly use SCPI with the current firmware version; all SCPI use goes
+> >> through ATF via PSCI.
+> >>
+> >> As requested in the comments to v3 of this patchset, a demo client is
+> >> provided in the final patch. This demo goes along with a toy firmware
+> >> which shows that the driver does indeed work for two-way communication
+> >> on all channels. To build the firmware component, run:
+> > 
+> > I've tried using this driver with mainline arm_scpi driver (which is probably
+> > an expected future use, since crust provides SCPI interface).
+> 
+> If you've verified in some way that this driver works on A83T, I'd appreciate
+> your Tested-by, so I can send a patch for the A83T device tree node.
 
-I just replied to this concern here:
-https://lore.kernel.org/lkml/70e4244e-4dfb-6e67-416b-445e383aa1b5@ssi.gouv.=
-fr/
+Tested-by: Ondrej Jirman <megous@megous.com>
 
->
-> You could fix the issue with the sysctl by clearing O_MAYEXEC from
-> f_flags if the sysctl is disabled. You could also avoid some of the
-> problems with it being a global setting by making it a prctl(2) which
-> processes can opt-in to (though this has its own major problems).
+(on A83T)
 
-Security definition and enforcement should be manageable by sysadmins
-and distro developers.
+> > The problem I've found is that arm_scpi expects message box to be
+> > bi-directional, but this driver provides uni-directional interface.
+> > 
+> > What do you think about making this driver provide bi-directional interface?
+> > We could halve the number of channels to 4 and mandate TX/RX configuration
+> > (from main CPU's PoV) as ABI.
+> 
+> Funny you mention that. That's what I did originally for v1, but it got NAKed by
+> Maxime, Andre, and Jassi:
+> 
+> https://lkml.org/lkml/2018/2/28/125
+> https://lkml.org/lkml/2018/2/28/944
+> 
+> > Otherwise it's impossible to use it with the arm_scpi driver.
+> > 
+> > Or do you have any other ideas? I guess arm_scpi can be fixed to add a
+> > property that would make it possible to use single shmem with two
+> > mailboxes, one for rx and one for tx, but making sun6i mailbox have
+> > bi-directional interface sounds easier.
+> 
+> Yes, you can use the existence of the mbox-names property to determine if the
+> driver needs one mailbox or two, as I did in this driver:
+> 
+> https://lkml.org/lkml/2019/3/1/789
+> 
+> I'll have a patch available soon that implements this for arm_scpi.
 
->
-> Sorry, but I'm just really not a fan of this.
+Yeah, I've patched arm_scpi too. :)
 
-I guess there is some misunderstanding. I just replied to another thread
-and I think it should answer your concerns (especially about the PDP and
-PEP):
-https://lore.kernel.org/lkml/70e4244e-4dfb-6e67-416b-445e383aa1b5@ssi.gouv.=
-fr/
+https://megous.com/git/linux/commit/?h=tbs-5.3&id=69a0cd0093a63039ace2f763e8d82009c50ff03c
 
+(but that's just for the test, because it breaks the existing interface for
+other uses)
 
---
-Micka=EBl Sala=FCn
+Anyway, using mbox-names looks like a nice solution! Thanks! Though,
+arm_scpi driver has a bit more complicated existing interface, where it can use
+multiple mailboxes and rotates through them after every message.
 
-Les donn=E9es =E0 caract=E8re personnel recueillies et trait=E9es dans le c=
-adre de cet =E9change, le sont =E0 seule fin d=92ex=E9cution d=92une relati=
-on professionnelle et s=92op=E8rent dans cette seule finalit=E9 et pour la =
-dur=E9e n=E9cessaire =E0 cette relation. Si vous souhaitez faire usage de v=
-os droits de consultation, de rectification et de suppression de vos donn=
-=E9es, veuillez contacter contact.rgpd@sgdsn.gouv.fr. Si vous avez re=E7u c=
-e message par erreur, nous vous remercions d=92en informer l=92exp=E9diteur=
- et de d=E9truire le message. The personal data collected and processed dur=
-ing this exchange aims solely at completing a business relationship and is =
-limited to the necessary duration of that relationship. If you wish to use =
-your rights of consultation, rectification and deletion of your data, pleas=
-e contact: contact.rgpd@sgdsn.gouv.fr. If you have received this message in=
- error, we thank you for informing the sender and destroying the message.
+BTW, I'm slowly laboring through understanding how to get suspend to ram working
+on one A83T tablet. https://xnux.eu/tablet-hacking/ Which is how I tested this
+driver.
+
+regards,
+	o.
+
+> Cheers,
+> Samuel
+> 
+> > regards,
+> > 	o.
+> > 
+> >>   git clone https://github.com/crust-firmware/meta meta
+> >>   git clone -b mailbox-demo https://github.com/crust-firmware/crust meta/crust
+> >>   cd meta
+> >>   make
+> >>
+> >> That will by default produce a U-Boot + ATF + SCP firmware image in
+> >> [meta/]build/pinebook/u-boot-sunxi-with-spl.bin. See the top-level
+> >> README.md for more information, such as cross-compiler setup.
+> >>
+> >> I've now used this driver with three separate clients over the past two
+> >> years, and they all work. If there are no remaining concerns with the
+> >> driver, I'd like it to get merged.
+> >>
+> >> Even without the driver, the clock patches (1-2) can go in at any time.
+> >>
+> >> Changes from v3:
+> >>   - Rebased on sunxi-next
+> >>   - Added Rob's Reviewed-by for patch 3
+> >>   - Fixed a crash when receiving a message on a disabled channel
+> >>   - Cleaned up some comments/formatting in the driver
+> >>   - Fixed #mbox-cells in sunxi-h3-h5.dtsi (patch 7)
+> >>   - Removed the irqchip example (no longer relevant to the fw design)
+> >>   - Added a demo/example client that uses the driver and a toy firmware
+> >>
+> >> Changes from v2:
+> >>   - Merge patches 1-3
+> >>   - Add a comment in the code explaining the CLK_IS_CRITICAL usage
+> >>   - Add a patch to mark the AR100 clocks as critical
+> >>   - Use YAML for the device tree binding
+> >>   - Include a not-for-merge example usage of the mailbox
+> >>
+> >> Changes from v1:
+> >>   - Marked message box clocks as critical instead of hacks in the driver
+> >>   - 8 unidirectional channels instead of 4 bidirectional pairs
+> >>   - Use per-SoC compatible strings and an A31 fallback compatible
+> >>   - Dropped the mailbox framework patch
+> >>   - Include DT patches for SoCs that document the message box
+> >>
+> >> Samuel Holland (10):
+> >>   clk: sunxi-ng: Mark msgbox clocks as critical
+> >>   clk: sunxi-ng: Mark AR100 clocks as critical
+> >>   dt-bindings: mailbox: Add a sunxi message box binding
+> >>   mailbox: sunxi-msgbox: Add a new mailbox driver
+> >>   ARM: dts: sunxi: a80: Add msgbox node
+> >>   ARM: dts: sunxi: a83t: Add msgbox node
+> >>   ARM: dts: sunxi: h3/h5: Add msgbox node
+> >>   arm64: dts: allwinner: a64: Add msgbox node
+> >>   arm64: dts: allwinner: h6: Add msgbox node
+> >>   [DO NOT MERGE] drivers: firmware: msgbox demo
+> >>
+> >>  .../mailbox/allwinner,sunxi-msgbox.yaml       |  79 +++++
+> >>  arch/arm/boot/dts/sun8i-a83t.dtsi             |  10 +
+> >>  arch/arm/boot/dts/sun9i-a80.dtsi              |  10 +
+> >>  arch/arm/boot/dts/sunxi-h3-h5.dtsi            |  10 +
+> >>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  34 ++
+> >>  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  |  24 ++
+> >>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  10 +
+> >>  drivers/clk/sunxi-ng/ccu-sun50i-a64.c         |   3 +-
+> >>  drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c        |   2 +-
+> >>  drivers/clk/sunxi-ng/ccu-sun50i-h6.c          |   3 +-
+> >>  drivers/clk/sunxi-ng/ccu-sun8i-a23.c          |   3 +-
+> >>  drivers/clk/sunxi-ng/ccu-sun8i-a33.c          |   3 +-
+> >>  drivers/clk/sunxi-ng/ccu-sun8i-a83t.c         |   3 +-
+> >>  drivers/clk/sunxi-ng/ccu-sun8i-h3.c           |   3 +-
+> >>  drivers/clk/sunxi-ng/ccu-sun8i-r.c            |   2 +-
+> >>  drivers/clk/sunxi-ng/ccu-sun9i-a80.c          |   3 +-
+> >>  drivers/firmware/Kconfig                      |   6 +
+> >>  drivers/firmware/Makefile                     |   1 +
+> >>  drivers/firmware/sunxi_msgbox_demo.c          | 307 +++++++++++++++++
+> >>  drivers/mailbox/Kconfig                       |  10 +
+> >>  drivers/mailbox/Makefile                      |   2 +
+> >>  drivers/mailbox/sunxi-msgbox.c                | 323 ++++++++++++++++++
+> >>  22 files changed, 842 insertions(+), 9 deletions(-)
+> >>  create mode 100644 Documentation/devicetree/bindings/mailbox/allwinner,sunxi-msgbox.yaml
+> >>  create mode 100644 drivers/firmware/sunxi_msgbox_demo.c
+> >>  create mode 100644 drivers/mailbox/sunxi-msgbox.c
+> >>
+> >> -- 
+> >> 2.21.0
+> >>
+> >> _______________________________________________
+> >> linux-arm-kernel mailing list
+> >> linux-arm-kernel@lists.infradead.org
+> >> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
