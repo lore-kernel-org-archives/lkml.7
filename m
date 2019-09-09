@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 932C1C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39667C433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60F122089F
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0735221920
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:24:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="lJfo7jVn"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="DtU4lyMQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390712AbfIIKX6 (ORCPT
+        id S2390691AbfIIKX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 06:23:58 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53247 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390658AbfIIKXz (ORCPT
+        Mon, 9 Sep 2019 06:23:56 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55835 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390570AbfIIKXw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 06:23:55 -0400
-Received: by mail-wm1-f66.google.com with SMTP id t17so13162069wmi.2
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 03:23:52 -0700 (PDT)
+        Mon, 9 Sep 2019 06:23:52 -0400
+Received: by mail-wm1-f65.google.com with SMTP id g207so13144679wmg.5
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 03:23:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=IfO/aFsv9csBvAqLmxPrLHozIhVbgmsUP4z+fLvYLKk=;
-        b=lJfo7jVni8HmxsSWeAG1c3uqO1KeWoVPi/W0TZ0bzK7R9ne6ihwnEbCY4QEV66GRyz
-         /oklInIRK/cLDGhHPPMJjgG8aUlCQcMM4I4RXFMzEtrIjz7JjHpFdU5vr4NYtNmQ5r3j
-         RsPiEgCJIUX6Nw7HnJSqmhNg0pMNlR9drvx9g1FbFs1RROI9s/VCJjS9D+NiaqW/phwJ
-         XoTRJy47dlX018UraTK5GAPPLY7dy4rnAGZqip2nB5hJe1qiYoarfrmZ23hKYdqNJftT
-         X4wAzBecTiPRZglrkXmWf7kMTeYaFVzXp7RQtW6n/L3UgAmuHhxjTTeihM7H70Snb5lJ
-         QEqA==
+        bh=b96u2DZEmN+6gC1egZA7UNHltszHG2vFMnr/ogVBH54=;
+        b=DtU4lyMQhHwYVonGt7Yv5uvfdIscs6YoQ3ePua1nQ369s7idHb74TmeY4LLq8tTUoa
+         YwqpJtwSXQIRTw9hCyL7LKKcMj7NxFnQzRtg6sBswQQuY1Agwsf7KTIjs2rK3amt8bVQ
+         gXghtAAfetLzaL7jJGHR12sst2D9XvDTt0yqS4ubKamuocD8FEP2mGTmygkR466fduA4
+         th7EJO+7oL22XpuutN4/zN+JOixNa8VUDIiZGDiN6SshhI+9CUN+rRS44HA459UJCq4V
+         VhP4hEb3hLlCXHexrUzbnbfBsUyERMUwQEO1XmzK3VL6+qMiXRcaONnxP9Jj9lma8Psx
+         mQSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=IfO/aFsv9csBvAqLmxPrLHozIhVbgmsUP4z+fLvYLKk=;
-        b=e0O6HIKfVyNofNCcklFAVEyaHoPsO2uERPweDLDuCEKzAZgRdWHXPWIhypL1WxMKOc
-         6jsxX4aGP2wNHnFRNkseAAsvDyJXGNX/8e17lNuRAbY0KUokb6aBg6BlvNrdgcO74fqM
-         lWs82XK7RjE0MgPluzdKsflhMfhId9ogRwflGSUSizgtCNsWM/puRH8TlcZ/rAPvy7y0
-         ApatubBiB8TzODLk4/EIB3u5u9fomrKxH8/OA39bSlHgh9Nk3r2X0AhPuBo4Wz8b0EFG
-         98HPLdn+64lhkfjJE7cLqig5nAFZqlayfGiqbM3wHCpGm5GKjIJ2qjY64r2FuGFb91vH
-         YxFw==
-X-Gm-Message-State: APjAAAWZrwhDhEePdqjwtq8e+Nf2ryDlmF2YG/nzx7lb4ef6VUp93lST
-        h6vpWx1qwQf0RXpz/i7riWp+C716KtBfCQ==
-X-Google-Smtp-Source: APXvYqxhTzZ1Fh8C7DgSzqRlLzBHLQAbXCfmJHK6OASTOE6O9Taf1A+yq/zvODVupkbxdtsIx3tznQ==
-X-Received: by 2002:a1c:7513:: with SMTP id o19mr17677294wmc.126.1568024632076;
-        Mon, 09 Sep 2019 03:23:52 -0700 (PDT)
+        bh=b96u2DZEmN+6gC1egZA7UNHltszHG2vFMnr/ogVBH54=;
+        b=buoXw+ZWdA/Zb8KJLvrYIG9jGNZMBkbNNR0Qjibst95xKgx9yvQfLNZhJ/4tX9Y6yk
+         Ue9YC7G04Oz+vB06RxhtQxXSHAYN63t5rY//3jQHTWHcIAwHmT1tp7S/NXt03jfrN0DX
+         F/BgyelO6qkucfNZa2Y3KRvVI+rHJGRqUXaGrSE4pIZDtRoLsRZqEA5FB2Efp3tF4e8x
+         82efHlLj9wmqgZagTMcaiXU6rov2OkUOpUOhR08ERoVpUHYQh3nDTh/BJYRv+i2zYNnz
+         6rJkOb/rxicEvKLvHTfmGq8MP5VcLXlm/+b1amcHnbJL3OOrR9pRJO9fqy1uwsdXNMbv
+         MaUw==
+X-Gm-Message-State: APjAAAWUzmQRFzYxNnrmFXZWOyMKeoPmKWi64eZoO5OE3/m5Ro4g99sb
+        uMm+Ue2H9m05938QiqGc6540eqk4bxEEwA==
+X-Google-Smtp-Source: APXvYqwY+peEV0qNHvT12MvBJHBW1QbIn5NYjERIgrYxQ5I61p7PI7+Sb3g9dDm4YmLNnuuWbNR2gg==
+X-Received: by 2002:a1c:cb07:: with SMTP id b7mr19044419wmg.41.1568024630617;
+        Mon, 09 Sep 2019 03:23:50 -0700 (PDT)
 Received: from Mindolluin.localdomain ([148.69.85.38])
-        by smtp.gmail.com with ESMTPSA id d14sm1800008wrj.27.2019.09.09.03.23.50
+        by smtp.gmail.com with ESMTPSA id d14sm1800008wrj.27.2019.09.09.03.23.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Sep 2019 03:23:51 -0700 (PDT)
+        Mon, 09 Sep 2019 03:23:50 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -71,9 +71,9 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         containers@lists.linux-foundation.org,
         linux-fsdevel@vger.kernel.org
-Subject: [PATCH 6/9] select: Extract common code into do_sys_ppoll()
-Date:   Mon,  9 Sep 2019 11:23:37 +0100
-Message-Id: <20190909102340.8592-7-dima@arista.com>
+Subject: [PATCH 5/9] select: Convert select_estimate_accuracy() to take ktime_t
+Date:   Mon,  9 Sep 2019 11:23:36 +0100
+Message-Id: <20190909102340.8592-6-dima@arista.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190909102340.8592-1-dima@arista.com>
 References: <20190909102340.8592-1-dima@arista.com>
@@ -84,169 +84,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reduce the amount of code and shrink a .text section a bit:
-[linux]$ ./scripts/bloat-o-meter -t /tmp/vmlinux.o.{old,new}
-add/remove: 1/0 grow/shrink: 0/4 up/down: 284/-691 (-407)
-Function                                     old     new   delta
-do_sys_ppoll                                   -     284    +284
-__x64_sys_ppoll                              214      42    -172
-__ia32_sys_ppoll                             213      40    -173
-__ia32_compat_sys_ppoll_time64               213      40    -173
-__ia32_compat_sys_ppoll_time32               213      40    -173
-Total: Before=13357557, After=13357150, chg -0.00%
+Instead of converting the time on the first loop, the same
+if (end_time) can be shared. Simplify the loop by taking time
+conversion out.
 
-The downside is that "tsp" and "sigmask" parameters gets (void *),
-but it seems worth losing static type checking if there is only one
-line in syscall definition.
-Other way could be to add compat parameters in do_sys_ppoll(), but
-that trashes 2 more registers..
+Also prepare the ground for converting poll() restart_block timeout into
+ktime_t - that's the only user that leaves it in timespec.
+The conversion is needed to introduce an API for ptrace() to get
+a timeout from restart_block.
 
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- fs/select.c | 94 ++++++++++++++++++-----------------------------------
- 1 file changed, 32 insertions(+), 62 deletions(-)
+ fs/eventpoll.c       |  4 ++--
+ fs/select.c          | 38 ++++++++++++--------------------------
+ include/linux/poll.h |  2 +-
+ 3 files changed, 15 insertions(+), 29 deletions(-)
 
+diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+index d7f1f5011fac..d5120fc49a39 100644
+--- a/fs/eventpoll.c
++++ b/fs/eventpoll.c
+@@ -1836,9 +1836,9 @@ static int ep_poll(struct eventpoll *ep, struct epoll_event __user *events,
+ 	if (timeout > 0) {
+ 		struct timespec64 end_time = ep_set_mstimeout(timeout);
+ 
+-		slack = select_estimate_accuracy(&end_time);
++		expires = timespec64_to_ktime(end_time);
+ 		to = &expires;
+-		*to = timespec64_to_ktime(end_time);
++		slack = select_estimate_accuracy(expires);
+ 	} else if (timeout == 0) {
+ 		/*
+ 		 * Avoid the unnecessary trip to the wait queue loop, if the
 diff --git a/fs/select.c b/fs/select.c
-index 458f2a944318..262300e58370 100644
+index 2477c202631e..458f2a944318 100644
 --- a/fs/select.c
 +++ b/fs/select.c
-@@ -1056,54 +1056,58 @@ SYSCALL_DEFINE3(poll, struct pollfd __user *, ufds, unsigned int, nfds,
- 	return ret;
+@@ -66,7 +66,7 @@ static long __estimate_accuracy(ktime_t slack)
+ 	return slack;
  }
  
--SYSCALL_DEFINE5(ppoll, struct pollfd __user *, ufds, unsigned int, nfds,
--		struct __kernel_timespec __user *, tsp, const sigset_t __user *, sigmask,
--		size_t, sigsetsize)
-+static int do_sys_ppoll(struct pollfd __user *ufds, unsigned int nfds,
-+			void __user *tsp, const void __user *sigmask,
-+			size_t sigsetsize, enum poll_time_type pt_type)
+-u64 select_estimate_accuracy(struct timespec64 *timeout)
++u64 select_estimate_accuracy(ktime_t timeout)
  {
- 	struct timespec64 ts, end_time, *to = NULL;
- 	int ret;
+ 	ktime_t now, slack;
  
- 	if (tsp) {
--		if (get_timespec64(&ts, tsp))
--			return -EFAULT;
-+		switch (pt_type) {
-+		case PT_TIMESPEC:
-+			if (get_timespec64(&ts, tsp))
-+				return -EFAULT;
-+			break;
-+		case PT_OLD_TIMESPEC:
-+			if (get_old_timespec32(&ts, tsp))
-+				return -EFAULT;
-+			break;
-+		default:
-+			WARN_ON_ONCE(1);
-+			return -ENOSYS;
-+		}
+@@ -77,7 +77,7 @@ u64 select_estimate_accuracy(struct timespec64 *timeout)
+ 		return 0;
  
- 		to = &end_time;
- 		if (poll_select_set_timeout(to, ts.tv_sec, ts.tv_nsec))
- 			return -EINVAL;
+ 	now = ktime_get();
+-	slack = now - timespec64_to_ktime(*timeout);
++	slack = now - timeout;
+ 
+ 	slack = __estimate_accuracy(slack);
+ 	if (slack < current->timer_slack_ns)
+@@ -490,8 +490,11 @@ static int do_select(int n, fd_set_bits *fds, struct timespec64 *end_time)
+ 		timed_out = 1;
  	}
  
--	ret = set_user_sigmask(sigmask, sigsetsize);
-+	if (!in_compat_syscall())
-+		ret = set_user_sigmask(sigmask, sigsetsize);
-+	else
-+		ret = set_compat_user_sigmask(sigmask, sigsetsize);
-+
- 	if (ret)
- 		return ret;
+-	if (end_time && !timed_out)
+-		slack = select_estimate_accuracy(end_time);
++	if (end_time && !timed_out) {
++		expire = timespec64_to_ktime(*end_time);
++		to = &expire;
++		slack = select_estimate_accuracy(expire);
++	}
  
- 	ret = do_sys_poll(ufds, nfds, to);
--	return poll_select_finish(&end_time, tsp, PT_TIMESPEC, ret);
-+	return poll_select_finish(&end_time, tsp, pt_type, ret);
- }
+ 	retval = 0;
+ 	for (;;) {
+@@ -582,16 +585,6 @@ static int do_select(int n, fd_set_bits *fds, struct timespec64 *end_time)
+ 		}
+ 		busy_flag = 0;
  
--#if defined(CONFIG_COMPAT_32BIT_TIME) && !defined(CONFIG_64BIT)
-+SYSCALL_DEFINE5(ppoll, struct pollfd __user *, ufds, unsigned int, nfds,
-+		struct __kernel_timespec __user *, tsp, const sigset_t __user *, sigmask,
-+		size_t, sigsetsize)
-+{
-+	return do_sys_ppoll(ufds, nfds, tsp, sigmask, sigsetsize, PT_TIMESPEC);
-+}
+-		/*
+-		 * If this is the first loop and we have a timeout
+-		 * given, then we convert to ktime_t and set the to
+-		 * pointer to the expiry value.
+-		 */
+-		if (end_time && !to) {
+-			expire = timespec64_to_ktime(*end_time);
+-			to = &expire;
+-		}
+-
+ 		if (!poll_schedule_timeout(&table, TASK_INTERRUPTIBLE,
+ 					   to, slack))
+ 			timed_out = 1;
+@@ -876,8 +869,11 @@ static int do_poll(struct poll_list *list, struct poll_wqueues *wait,
+ 		timed_out = 1;
+ 	}
  
-+#if defined(CONFIG_COMPAT_32BIT_TIME) && !defined(CONFIG_64BIT)
- SYSCALL_DEFINE5(ppoll_time32, struct pollfd __user *, ufds, unsigned int, nfds,
- 		struct old_timespec32 __user *, tsp, const sigset_t __user *, sigmask,
- 		size_t, sigsetsize)
- {
--	struct timespec64 ts, end_time, *to = NULL;
--	int ret;
--
--	if (tsp) {
--		if (get_old_timespec32(&ts, tsp))
--			return -EFAULT;
--
--		to = &end_time;
--		if (poll_select_set_timeout(to, ts.tv_sec, ts.tv_nsec))
--			return -EINVAL;
--	}
--
--	ret = set_user_sigmask(sigmask, sigsetsize);
--	if (ret)
--		return ret;
--
--	ret = do_sys_poll(ufds, nfds, to);
--	return poll_select_finish(&end_time, tsp, PT_OLD_TIMESPEC, ret);
-+	return do_sys_ppoll(ufds, nfds, tsp, sigmask, sigsetsize, PT_OLD_TIMESPEC);
- }
- #endif
+-	if (end_time && !timed_out)
+-		slack = select_estimate_accuracy(end_time);
++	if (end_time && !timed_out) {
++		expire = timespec64_to_ktime(*end_time);
++		to = &expire;
++		slack = select_estimate_accuracy(expire);
++	}
  
-@@ -1352,24 +1356,7 @@ COMPAT_SYSCALL_DEFINE5(ppoll_time32, struct pollfd __user *, ufds,
- 	unsigned int,  nfds, struct old_timespec32 __user *, tsp,
- 	const compat_sigset_t __user *, sigmask, compat_size_t, sigsetsize)
- {
--	struct timespec64 ts, end_time, *to = NULL;
--	int ret;
--
--	if (tsp) {
--		if (get_old_timespec32(&ts, tsp))
--			return -EFAULT;
--
--		to = &end_time;
--		if (poll_select_set_timeout(to, ts.tv_sec, ts.tv_nsec))
--			return -EINVAL;
--	}
--
--	ret = set_compat_user_sigmask(sigmask, sigsetsize);
--	if (ret)
--		return ret;
--
--	ret = do_sys_poll(ufds, nfds, to);
--	return poll_select_finish(&end_time, tsp, PT_OLD_TIMESPEC, ret);
-+	return do_sys_ppoll(ufds, nfds, tsp, sigmask, sigsetsize, PT_OLD_TIMESPEC);
- }
- #endif
+ 	for (;;) {
+ 		struct poll_list *walk;
+@@ -930,16 +926,6 @@ static int do_poll(struct poll_list *list, struct poll_wqueues *wait,
+ 		}
+ 		busy_flag = 0;
  
-@@ -1378,24 +1365,7 @@ COMPAT_SYSCALL_DEFINE5(ppoll_time64, struct pollfd __user *, ufds,
- 	unsigned int,  nfds, struct __kernel_timespec __user *, tsp,
- 	const compat_sigset_t __user *, sigmask, compat_size_t, sigsetsize)
- {
--	struct timespec64 ts, end_time, *to = NULL;
--	int ret;
+-		/*
+-		 * If this is the first loop and we have a timeout
+-		 * given, then we convert to ktime_t and set the to
+-		 * pointer to the expiry value.
+-		 */
+-		if (end_time && !to) {
+-			expire = timespec64_to_ktime(*end_time);
+-			to = &expire;
+-		}
 -
--	if (tsp) {
--		if (get_timespec64(&ts, tsp))
--			return -EFAULT;
--
--		to = &end_time;
--		if (poll_select_set_timeout(to, ts.tv_sec, ts.tv_nsec))
--			return -EINVAL;
--	}
--
--	ret = set_compat_user_sigmask(sigmask, sigsetsize);
--	if (ret)
--		return ret;
--
--	ret = do_sys_poll(ufds, nfds, to);
--	return poll_select_finish(&end_time, tsp, PT_TIMESPEC, ret);
-+	return do_sys_ppoll(ufds, nfds, tsp, sigmask, sigsetsize, PT_TIMESPEC);
- }
+ 		if (!poll_schedule_timeout(wait, TASK_INTERRUPTIBLE, to, slack))
+ 			timed_out = 1;
+ 	}
+diff --git a/include/linux/poll.h b/include/linux/poll.h
+index 1cdc32b1f1b0..d0f21eb19257 100644
+--- a/include/linux/poll.h
++++ b/include/linux/poll.h
+@@ -112,7 +112,7 @@ struct poll_wqueues {
  
- #endif
+ extern void poll_initwait(struct poll_wqueues *pwq);
+ extern void poll_freewait(struct poll_wqueues *pwq);
+-extern u64 select_estimate_accuracy(struct timespec64 *tv);
++extern u64 select_estimate_accuracy(ktime_t timeout);
+ 
+ #define MAX_INT64_SECONDS (((s64)(~((u64)0)>>1)/HZ)-1)
+ 
 -- 
 2.23.0
 
