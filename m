@@ -2,99 +2,123 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C94A6C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D338C433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9968321920
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:16:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40D6621D82
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:17:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YrkFlb7O"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="gY8q6stD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729966AbfIIKP7 (ORCPT
+        id S1730016AbfIIKRI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 06:15:59 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36513 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728358AbfIIKP7 (ORCPT
+        Mon, 9 Sep 2019 06:17:08 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:62390 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728358AbfIIKRI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 06:15:59 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y22so8874435pfr.3;
-        Mon, 09 Sep 2019 03:15:58 -0700 (PDT)
+        Mon, 9 Sep 2019 06:17:08 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=eR0ilnRAfilkxH900ZHRgTRnftEfS8psnkYh74iN2G8=;
-        b=YrkFlb7Ouz0PAGbWQPPET9Vm1z6rB9MKeH2TUiQOfxqfpd8IYwMax+ynsXGcePSstf
-         pty7Jyq7IY38DemBpRJVYg+LyMBDbItdUJqA0iDWcyVLS2DcQO2jSRKhhF0CEZ8KiG4G
-         Zu0UnruSlDHyzsPPg3s4tRwGaFgvOeKanVzxcYrUmjFLgYWfRe0p5a72K2LW5S8YJoLP
-         5PCZJ4vs5DIB6ZvC9I6qSN0mZrj2dV2werYFUgCw5cGSinoacm1SooKKfBEXCKl8ryCh
-         Lqw77PEpT8oujYE8YaQkggTNsTgekLwyS8GjIM9GncBKN0IY/DfPrN49Qvb79LE6oSch
-         arcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eR0ilnRAfilkxH900ZHRgTRnftEfS8psnkYh74iN2G8=;
-        b=TEsPADUZuM+8nOsohHhljlolm2UISmlrtbrIcqSh/bc+QLfJn0NUKDlZ0ifREUXIC7
-         nVDcvpW35uAAxJYADp/jwdKz729ZSPJ04nmwczE4sGaGsVdrafqFUYmHNHesO+vr9ZnR
-         rWP0qQhgPW+rSmwiK+rex8mEMslOtGDM1k9Qq484+/H56kqeKFhUBFHrJnPADZjhise8
-         nuKZJux/t5jxYC1fHudA1VesiJAn66aKmMFXL2pbLktZzxkUy93TmVnfdFWxyk6PS7GS
-         qAtYYS2A0b8YiUsxIz7kPn3793HRI2p5RbEeeNiiK52OE197ERtrNkj3JK4KkMcjRdfz
-         jluQ==
-X-Gm-Message-State: APjAAAUsQv9hxaUqJKGyaHA7D64eBpIxUB1wfjQxn/icbzu3CnQvupNM
-        hTXq9LSL2cLGYGtN+1JGJXE=
-X-Google-Smtp-Source: APXvYqxS2O+zqfJizPPe+/IqtHW21XlsLT7myUVM5OksTn6TphABvgwS/AfMz3KKlQe+ewkTC7hvHw==
-X-Received: by 2002:a17:90a:b116:: with SMTP id z22mr24702277pjq.108.1568024157961;
-        Mon, 09 Sep 2019 03:15:57 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id v7sm14812756pff.87.2019.09.09.03.15.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Sep 2019 03:15:57 -0700 (PDT)
-Date:   Mon, 9 Sep 2019 03:15:55 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1568024227; x=1599560227;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=vMrY2p1PfXK9Uv4R55TgvSNS84UEi4ukNsLZIYc1Eds=;
+  b=gY8q6stD5DT5q5MxxUstpURmNR6JCyaSqChYpd/FR8nurX2DtHwydRIx
+   ecIgLaDrHQ5rnN8/kJ8eoSo0o3rdUbdG5AqOR9ygmQqDVZ+sZCZHqYPki
+   /357O1FDlU7m8nXj5qEaZ9PQ7+8L2PLYv893xQ+vuRCa1AkFFvYcs5LWx
+   A=;
+X-IronPort-AV: E=Sophos;i="5.64,484,1559520000"; 
+   d="scan'208";a="829217047"
+Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2c-397e131e.us-west-2.amazon.com) ([10.47.22.34])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 09 Sep 2019 10:17:05 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2c-397e131e.us-west-2.amazon.com (Postfix) with ESMTPS id B6210A226E;
+        Mon,  9 Sep 2019 10:17:04 +0000 (UTC)
+Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 9 Sep 2019 10:17:03 +0000
+Received: from [10.125.238.52] (10.43.161.176) by EX13D01EUB001.ant.amazon.com
+ (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Mon, 9 Sep
+ 2019 10:16:52 +0000
+Subject: Re: [PATCH 3/3] arm64: alpine: select AL_POS
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        gregkh <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Patrick Venture" <venture@google.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v3 03/13] software node: get rid of property_set_pointer()
-Message-ID: <20190909101555.GC145199@dtor-ws>
-References: <20190909081557.93766-1-dmitry.torokhov@gmail.com>
- <20190909081557.93766-4-dmitry.torokhov@gmail.com>
- <20190909095505.GQ2680@smile.fi.intel.com>
+        "Olof Johansson" <olof@lixom.net>,
+        Maxime Ripard <mripard@kernel.org>,
+        "Santosh Shilimkar" <ssantosh@kernel.org>,
+        <paul.kocialkowski@bootlin.com>, <mjourdan@baylibre.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "Will Deacon" <will@kernel.org>, DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        <hhhawa@amazon.com>, <ronenk@amazon.com>, <jonnyc@amazon.com>,
+        <hanochu@amazon.com>, <barakw@amazon.com>
+References: <1568020220-7758-1-git-send-email-talel@amazon.com>
+ <1568020220-7758-4-git-send-email-talel@amazon.com>
+ <CAK8P3a0DEMeFWK+RuAdSLyDYduWWwj9DxP_Beipays-d_6ixnA@mail.gmail.com>
+From:   "Shenhar, Talel" <talel@amazon.com>
+Message-ID: <ab512ced-d989-5c10-a550-2a4723d38e7e@amazon.com>
+Date:   Mon, 9 Sep 2019 13:16:47 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190909095505.GQ2680@smile.fi.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAK8P3a0DEMeFWK+RuAdSLyDYduWWwj9DxP_Beipays-d_6ixnA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.43.161.176]
+X-ClientProxiedBy: EX13D21UWB001.ant.amazon.com (10.43.161.108) To
+ EX13D01EUB001.ant.amazon.com (10.43.166.194)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 09, 2019 at 12:55:05PM +0300, Andy Shevchenko wrote:
-> On Mon, Sep 09, 2019 at 01:15:47AM -0700, Dmitry Torokhov wrote:
-> > Instead of explicitly setting values of integer types when copying property
-> > entries lets just copy entire value union when processing non-array values.
-> > 
-> > When handling array values assign the pointer there using the newly introduced
-> > "raw" pointer union member. This allows us to remove property_set_pointer().
-> 
-> Is this reincarnation of 318a19718261?
-> Have you read 63dcc7090137?
 
-Okay, I think if I squash this and the followup patch to
-property_get_data() then we'll only go through the "raw" pointer to get
-to the non-inline data and therefore we will not have the union aliasing
-issue.
+On 9/9/2019 12:40 PM, Arnd Bergmann wrote:
+> On Mon, Sep 9, 2019 at 11:14 AM Talel Shenhar <talel@amazon.com> wrote:
+>> Amazon's Annapurna Labs SoCs uses al-pos driver, enable it.
+>>
+>> Signed-off-by: Talel Shenhar <talel@amazon.com>
+>> ---
+>>   arch/arm64/Kconfig.platforms | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+>> index 4778c77..bd86b15 100644
+>> --- a/arch/arm64/Kconfig.platforms
+>> +++ b/arch/arm64/Kconfig.platforms
+>> @@ -25,6 +25,7 @@ config ARCH_SUNXI
+>>   config ARCH_ALPINE
+>>          bool "Annapurna Labs Alpine platform"
+>>          select ALPINE_MSI if PCI
+>> +       select AL_POS
+>>          help
+>>            This enables support for the Annapurna Labs Alpine
+>>            Soc family.
+> Generally I think this kind of thing should go into the defconfig
+> rather than being hard-selected. There might be users that
+> want to not enable the driver.
+>
+>         Arnd
 
-The in-line values never change their type when storing/accessing.
+The reason for selecting it is because this is a driver that we will 
+always want for ARCH_ALPINE.
 
--- 
-Dmitry
+
