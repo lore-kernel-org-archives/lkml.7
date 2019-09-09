@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_PAST_06_12,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BD1C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F8FC4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:17:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 614B821D7D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3383121A4A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:17:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568067446;
-	bh=O9VeM1BOlt+ur9Dx7odq4IYF9Sb2o2TtG1rbzNzzC/g=;
+	s=default; t=1568067451;
+	bh=eArGvEepIIpMO6s2toapya3rfKhfxPzPCS9EURu4A60=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oIqicTPSQPvPJHBxrfLw6rVjzzt3beEOuuE/TsoLRUPGErwOBJy1nLBbCzapvRSRO
-	 Io3LcoYblvl89cLSRcBQVULxxmqKbW9L5yt+cGBID9HUqPKUFTxQV303yI5Wi3SXKb
-	 aUhfANj0uaj9bkeNduKQ4qtp5Ca5a51gu4Iqj6Qo=
+	b=E4neK7GOZRjLlxLJuzmLwzD7kbf1TPXMvbe8B5n7ozUkoGC5TuBljlygxvbmtglMe
+	 fv2vIUafQ/K2AnMlN2/2qkjndyjAIF//ZdcOBXXG7cOPCfyca/6aZa7aWcgM+ww1Y4
+	 XEEECHogiPE0WZAxwIHWGlyaP5Vwo/HM7OhN1MoQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392313AbfIIWRZ (ORCPT
+        id S2406362AbfIIWRa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 18:17:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46534 "EHLO mail.kernel.org"
+        Mon, 9 Sep 2019 18:17:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392262AbfIIWRX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 18:17:23 -0400
+        id S2392262AbfIIWR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 18:17:27 -0400
 Received: from sasha-vm.mshome.net (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19C0521D79;
-        Mon,  9 Sep 2019 22:17:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E57421D6C;
+        Mon,  9 Sep 2019 22:17:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568067443;
-        bh=O9VeM1BOlt+ur9Dx7odq4IYF9Sb2o2TtG1rbzNzzC/g=;
+        s=default; t=1568067447;
+        bh=eArGvEepIIpMO6s2toapya3rfKhfxPzPCS9EURu4A60=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N/JZIoRwe+R0tlvyMu1ExaiN25pqJKI4vz4EKHdzq+WIAqNTamULIJLiGtT1oyN0/
-         WA5uoL/z+B4nQTIPdMRBoicoCFLHkvxdrZpSRQLW6eBDrCYMFTS3bOugLYLMNZV9YY
-         lRe4yY7FWlj+lEpaEnKKnoB/xTnrnStt/RMhr+Wk=
+        b=kbEYXeYpz6RYmRrNf/96Vze1F5FFDOZgnmEH4sQMfEmpI5Gkmi+2lFeh6hXwFh17W
+         X0B4xIfGbmwWSSzn4w5swsEq++2gkJcPRuTtNvZyhJ4kCdcXqBFqW+Ii2gCo3Q5dVE
+         M+V9650+qc/R7p+s4SJw21qPjKdKD6tPOY7+xsmU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, broonie@kernel.org,
-        sfr@canb.auug.org.au, akpm@linux-foundation.org, mhocko@suse.cz,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 3/6] x86/uaccess: Don't leak the AC flags into __get_user() argument evaluation
-Date:   Mon,  9 Sep 2019 11:42:02 -0400
-Message-Id: <20190909154205.31376-3-sashal@kernel.org>
+Cc:     Hillf Danton <hdanton@sina.com>,
+        Sachin Sant <sachinp@linux.vnet.ibm.com>,
+        David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 5/6] keys: Fix missing null pointer check in request_key_auth_describe()
+Date:   Mon,  9 Sep 2019 11:42:04 -0400
+Message-Id: <20190909154205.31376-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190909154205.31376-1-sashal@kernel.org>
 References: <20190909154205.31376-1-sashal@kernel.org>
@@ -62,55 +62,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Hillf Danton <hdanton@sina.com>
 
-[ Upstream commit 9b8bd476e78e89c9ea26c3b435ad0201c3d7dbf5 ]
+[ Upstream commit d41a3effbb53b1bcea41e328d16a4d046a508381 ]
 
-Identical to __put_user(); the __get_user() argument evalution will too
-leak UBSAN crud into the __uaccess_begin() / __uaccess_end() region.
-While uncommon this was observed to happen for:
+If a request_key authentication token key gets revoked, there's a window in
+which request_key_auth_describe() can see it with a NULL payload - but it
+makes no check for this and something like the following oops may occur:
 
-  drivers/xen/gntdev.c: if (__get_user(old_status, batch->status[i]))
+	BUG: Kernel NULL pointer dereference at 0x00000038
+	Faulting instruction address: 0xc0000000004ddf30
+	Oops: Kernel access of bad area, sig: 11 [#1]
+	...
+	NIP [...] request_key_auth_describe+0x90/0xd0
+	LR [...] request_key_auth_describe+0x54/0xd0
+	Call Trace:
+	[...] request_key_auth_describe+0x54/0xd0 (unreliable)
+	[...] proc_keys_show+0x308/0x4c0
+	[...] seq_read+0x3d0/0x540
+	[...] proc_reg_read+0x90/0x110
+	[...] __vfs_read+0x3c/0x70
+	[...] vfs_read+0xb4/0x1b0
+	[...] ksys_read+0x7c/0x130
+	[...] system_call+0x5c/0x70
 
-where UBSAN added array bound checking.
+Fix this by checking for a NULL pointer when describing such a key.
 
-This complements commit:
+Also make the read routine check for a NULL pointer to be on the safe side.
 
-  6ae865615fc4 ("x86/uaccess: Dont leak the AC flag into __put_user() argument evaluation")
+[DH: Modified to not take already-held rcu lock and modified to also check
+ in the read routine]
 
-Tested-by Sedat Dilek <sedat.dilek@gmail.com>
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: broonie@kernel.org
-Cc: sfr@canb.auug.org.au
-Cc: akpm@linux-foundation.org
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: mhocko@suse.cz
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Link: https://lkml.kernel.org/r/20190829082445.GM2369@hirez.programming.kicks-ass.net
+Fixes: 04c567d9313e ("[PATCH] Keys: Fix race between two instantiators of a key")
+Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Signed-off-by: Hillf Danton <hdanton@sina.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/uaccess.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ security/keys/request_key_auth.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
-index 2177c7551ff77..9db8d8758ed3b 100644
---- a/arch/x86/include/asm/uaccess.h
-+++ b/arch/x86/include/asm/uaccess.h
-@@ -438,8 +438,10 @@ do {									\
- ({									\
- 	int __gu_err;							\
- 	__inttype(*(ptr)) __gu_val;					\
-+	__typeof__(ptr) __gu_ptr = (ptr);				\
-+	__typeof__(size) __gu_size = (size);				\
- 	__uaccess_begin_nospec();					\
--	__get_user_size(__gu_val, (ptr), (size), __gu_err, -EFAULT);	\
-+	__get_user_size(__gu_val, __gu_ptr, __gu_size, __gu_err, -EFAULT);	\
- 	__uaccess_end();						\
- 	(x) = (__force __typeof__(*(ptr)))__gu_val;			\
- 	__builtin_expect(__gu_err, 0);					\
+diff --git a/security/keys/request_key_auth.c b/security/keys/request_key_auth.c
+index f60baeb338e5f..b47445022d5ce 100644
+--- a/security/keys/request_key_auth.c
++++ b/security/keys/request_key_auth.c
+@@ -71,6 +71,9 @@ static void request_key_auth_describe(const struct key *key,
+ {
+ 	struct request_key_auth *rka = key->payload.data[0];
+ 
++	if (!rka)
++		return;
++
+ 	seq_puts(m, "key:");
+ 	seq_puts(m, key->description);
+ 	if (key_is_positive(key))
+@@ -88,6 +91,9 @@ static long request_key_auth_read(const struct key *key,
+ 	size_t datalen;
+ 	long ret;
+ 
++	if (!rka)
++		return -EKEYREVOKED;
++
+ 	datalen = rka->callout_len;
+ 	ret = datalen;
+ 
 -- 
 2.20.1
 
