@@ -2,166 +2,193 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2678C00307
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 08:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 063CBC00307
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 08:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F7F3218DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 08:35:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C79C6218DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 08:37:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568018134;
-	bh=TKImRVK5QfysGcK3+T8jXTqGg/4D94n2fS1rumyJj0k=;
+	s=default; t=1568018250;
+	bh=wD71LFsWJb5anHHZVkg5MlXupNPiZs49JdKTq4lnvI0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uYUYliS/dgFDOkaGI3VLwdnYJQxHiFPgSEXhaG5D+UFfMh4aLlf1zMfqZGPwIdQUn
-	 Q6HPNqijgTNiEC/L81fsaVmyzPdtaUyxgMV1eSMxywS1r+XCVUei8yAqbuiOGk8dN6
-	 8tSOsfpswoCORRBun0mZNoFvSUdbG+bcetNxZ2Tw=
+	b=bjfwmS6OIh0uX+NZ+/Oo7bEzoqDJOIW5vQz/2QwLtB0VLBXmS6ov8tgsOdB/pmo5m
+	 4TmA42fVwJ/04xY/YmUryKWbh2zWb/7ID/Lv3gxJQi0Vw6JKsU3BO4IArG4pD0YhfT
+	 /b/f+g45QocuJ8YSRWpQqg9DeckuCaFYVo7SDlR8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389304AbfIIIfd (ORCPT
+        id S2389326AbfIIIha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 04:35:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38430 "EHLO mail.kernel.org"
+        Mon, 9 Sep 2019 04:37:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726779AbfIIIfd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 04:35:33 -0400
-Received: from linux-8ccs (ip5f5ade63.dynamic.kabel-deutschland.de [95.90.222.99])
+        id S1727003AbfIIIh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 04:37:29 -0400
+Received: from localhost (unknown [148.69.85.38])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2587E218AC;
-        Mon,  9 Sep 2019 08:35:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0D2B218AC;
+        Mon,  9 Sep 2019 08:37:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568018132;
-        bh=TKImRVK5QfysGcK3+T8jXTqGg/4D94n2fS1rumyJj0k=;
+        s=default; t=1568018248;
+        bh=wD71LFsWJb5anHHZVkg5MlXupNPiZs49JdKTq4lnvI0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TZcrEX8XikzlQDoHKc05y09WwC1EXW/eLqgiewIXoctMEF4T5kTG+SBZVvKmLSF4S
-         VceMDdm8DVu4k7r3KZcFC8odfFvXsgJyf0H+NA5s+jqm3ludZY4Ui/3lgYzsPbcv/q
-         zs77u5TDjehKhBneE5glLjJcM7UFKodd8kLRkcxQ=
-Date:   Mon, 9 Sep 2019 10:35:23 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Matthias Maennich <maennich@google.com>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
-        arnd@arndb.de, gregkh@linuxfoundation.org, joel@joelfernandes.org,
-        lucas.de.marchi@gmail.com, maco@android.com, sspatil@google.com,
-        will@kernel.org, yamada.masahiro@socionext.com,
-        linux-kbuild@vger.kernel.org, linux-modules@vger.kernel.org,
-        linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net
-Subject: Re: [PATCH v5 00/11] Symbol Namespaces
-Message-ID: <20190909083522.GA446@linux-8ccs>
-References: <20180716122125.175792-1-maco@android.com>
- <20190906103235.197072-1-maennich@google.com>
+        b=I69s85ADkGDxWPpQCOdyxbAuZNX7xCZLsxVKSdEjkUvBPyoaN7OVOtmx7tTp+2dS2
+         B0vxQPJbMP2hzJhJ7C+Ag4KRvh92rK6sSFwuYpfC+BoszH+4ob23B+3olyEx2kitAL
+         GZnG1puVl47FhDkb+TWrDhUHIXTl8ViIGP/w04lA=
+Date:   Mon, 9 Sep 2019 09:37:25 +0100
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     Chao Yu <chao@kernel.org>, linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] f2fs: fix to avoid accessing uninitialized field of
+ inode page in is_alive()
+Message-ID: <20190909083725.GB25724@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190906105426.109151-1-yuchao0@huawei.com>
+ <20190906234808.GC71848@jaegeuk-macbookpro.roam.corp.google.com>
+ <080e8dee-4726-8294-622a-cac26e781083@kernel.org>
+ <20190909074425.GB21625@jaegeuk-macbookpro.roam.corp.google.com>
+ <79228eaa-776f-da89-89f8-a9b5a90034b6@huawei.com>
+ <873f4c07-5694-6554-5266-81812a6bd617@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190906103235.197072-1-maennich@google.com>
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <873f4c07-5694-6554-5266-81812a6bd617@huawei.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Matthias Maennich [06/09/19 11:32 +0100]:
->As of Linux 5.3-rc7, there are 31207 [1] exported symbols in the kernel.
->That is a growth of roughly 1000 symbols since 4.17 (30206 [2]). There
->seems to be some consensus amongst kernel devs that the export surface
->is too large, and hard to reason about.
->
->Generally, these symbols fall in one of these categories:
->1) Symbols actually meant for drivers
->2) Symbols that are only exported because functionality is split over
->   multiple modules, yet they really shouldn't be used by modules outside
->   of their own subsystem
->3) Symbols really only meant for in-tree use
->
->When module developers try to upstream their code, it regularly turns
->out that they are using exported symbols that they really shouldn't be
->using. This problem is even bigger for drivers that are currently
->out-of-tree, which may be using many symbols that they shouldn't be
->using, and that break when those symbols are removed or modified.
->
->This patch allows subsystem maintainers to partition their exported
->symbols into separate namespaces, and module authors to import such
->namespaces only when needed.
->
->This allows subsystem maintainers to more easily limit availability of
->these namespaced symbols to other parts of the kernel. It can also be
->used to partition the set of exported symbols for documentation
->purposes; for example, a set of symbols that is really only used for
->debugging could be in a "SUBSYSTEM_DEBUG" namespace.
->
->I continued the work mainly done by Martijn Coenen.
->
->Changes in v2:
->- Rather than adding and evaluating separate sections __knsimport_NS,
->  use modinfo tags to declare the namespaces a module introduces.
->  Adjust modpost and the module loader accordingly.
->- Also add support for reading multiple modinfo values for the same tag
->  to allow list-like access to modinfo tags.
->- The macros in export.h have been cleaned up to avoid redundancy in the
->  macro parameters (ns, nspost, nspost2).
->- The introduction of relative references in the ksymtab entries caused
->  a rework of the macros to accommodate that configuration as well.
->- Alignment of kernel_symbol in the ksymtab needed to be fixed to allow
->  growing the kernel_symbol struct.
->- Modpost does now also append the namespace suffix to the symbol
->  entries in Module.symvers.
->- The configuration option MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS allows
->  relaxing the enforcement of properly declared namespace imports at
->  module loading time.
->- Symbols can be collectively exported into a namespace by defining
->  DEFAULT_SYMBOL_NAMESPACE in the corresponding Makefile.
->- The requirement for a very recent coccinelle spatch has been lifted by
->  simplifying the script.
->- nsdeps does now ensures MODULE_IMPORT_NS statements are sorted when
->  patching the module source files.
->- Some minor bugs have been addressed in nsdeps to allow it to work with
->  modules that have more than one source file.
->- The RFC for the usb-storage symbols has been simplified by using
->  DEFAULT_SYMBOL_NAMESPACE=USB_STORAGE rather than explicitly exporting
->  each and every symbol into that new namespace.
->
->Changes in v3:
->- Reword the documentation for the
->  MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS option for clarification.
->- Fix printed required version of spatch in coccinelle script.
->- Adopt kbuild changes for modpost: .mod files are no longer generated
->  in .tmp_versions. Similarely, generate the .ns_deps files in the tree
->  along with the .mod files. Also, nsdeps now uses modules.order as
->  source for the list modules to consider.
->- Add an RFC patch to introduce the namespace WATCHDOG_CORE for symbols
->  exported in watchdog_core.c.
->
->Changes in v4:
->- scripts/nsdeps:
->  - exit on first error
->  - support out-of-tree builds O=...
->- scripts/export_report.pl: update for new Module.symvers format
->- scripts/mod/modpost: make the namespace a separate field when
->  exporting to Module.symvers (rather than symbol.NS)
->- include/linux/export.h: fixed style nits
->- kernel/module.c: ensure namespaces are imported before taking a
->  reference to the owner module
->- Documentation: document the Symbol Namespace feature and update
->  references to Module.symvers and EXPORT_SYMBOL*
->
->Changes in v5:
->- Makefile: let 'nsdeps' depend on 'modules' to allow
->  `make clean; make nsdeps` to work
->- scripts/nsdeps: drop 'exit on first error' again as it just makes more
->  problems than it solves
->- drop the watchdog RFC patch for now
->
->This patch series was developed against v5.3-rc7.
+On 09/09, Chao Yu wrote:
+> On 2019/9/9 15:58, Chao Yu wrote:
+> > On 2019/9/9 15:44, Jaegeuk Kim wrote:
+> >> On 09/07, Chao Yu wrote:
+> >>> On 2019-9-7 7:48, Jaegeuk Kim wrote:
+> >>>> On 09/06, Chao Yu wrote:
+> >>>>> If inode is newly created, inode page may not synchronize with inode cache,
+> >>>>> so fields like .i_inline or .i_extra_isize could be wrong, in below call
+> >>>>> path, we may access such wrong fields, result in failing to migrate valid
+> >>>>> target block.
+> >>>>
+> >>>> If data is valid, how can we get new inode page?
+> >>
+> >> Let me rephrase the question. If inode is newly created, is this data block
+> >> really valid to move in GC?
+> > 
+> > I guess it's valid, let double check that.
+> 
+> We can see inode page:
+> 
+> - f2fs_create
+>  - f2fs_add_link
+>   - f2fs_add_dentry
+>    - f2fs_init_inode_metadata
+>     - f2fs_add_inline_entry
+>      - ipage = f2fs_new_inode_page
+>      - f2fs_put_page(ipage)   <---- after this
 
-Great work Matthias!
+Can you print out how many block was assigned to this inode?
 
-I think this patchset is shaping up nicely. As the merge window is
-coming up soon, I'd like to queue this up in modules-next by the end
-of today to allow for some testing and "soak" time in linux-next. If
-there are any more complaints, please speak up.
+> 
+> > 
+> >>
+> >>>
+> >>> is_alive()
+> >>> {
+> >>> ...
+> >>> 	node_page = f2fs_get_node_page(sbi, nid);  <--- inode page
+> >>
+> >> Aren't we seeing the below version warnings?
+> >>
+> >> if (sum->version != dni->version) {
+> >> 	f2fs_warn(sbi, "%s: valid data with mismatched node version.",
+> >>                            __func__);
+> >>         set_sbi_flag(sbi, SBI_NEED_FSCK);
+> >> }
+> 
+> The version of summary and dni are all zero.
 
-Thanks!
+Then, this node was allocated and removed without being flushed.
 
-Jessica
+> 
+> summary nid: 613, ofs: 111, ver: 0
+> blkaddr 2436 (blkaddr in node 0)
+> expect: seg 10, ofs_in_seg: 54
+> real: seg 4294967295, ofs_in_seg: 0
+> ofs: 54, 0
+> node info ino:613, nid:613, nofs:0
+> ofs_in_addr: 0
+> 
+> Thanks,
+> 
+> >>
+> >>>
+> >>> 	source_blkaddr = datablock_addr(NULL, node_page, ofs_in_node);
+> >>
+> >> So, we're getting this? Does this incur infinite loop in GC?
+> >>
+> >> if (!test_and_set_bit(segno, SIT_I(sbi)->invalid_segmap)) {
+> >> 	f2fs_err(sbi, "mismatched blkaddr %u (source_blkaddr %u) in seg %u\n",
+> >> 	f2fs_bug_on(sbi, 1);
+> >> }
+> > 
+> > Yes, I only get this with generic/269, rather than "valid data with mismatched
+> > node version.".
+
+Was this block moved as valid? In either way, is_alive() returns false, no?
+How about checking i_blocks to detect the page is initialized in is_alive()?
+
+> > 
+> > With this patch, generic/269 won't panic again.
+> > 
+> > Thanks,
+> > 
+> >>
+> >>> ...
+> >>> }
+> >>>
+> >>> datablock_addr()
+> >>> {
+> >>> ...
+> >>> 	base = offset_in_addr(&raw_node->i);  <--- the base could be wrong here due to
+> >>> accessing uninitialized .i_inline of raw_node->i.
+> >>> ...
+> >>> }
+> >>>
+> >>> Thanks,
+> >>>
+> >>>>
+> >>>>>
+> >>>>> - gc_data_segment
+> >>>>>  - is_alive
+> >>>>>   - datablock_addr
+> >>>>>    - offset_in_addr
+> >>>>>
+> >>>>> Fixes: 7a2af766af15 ("f2fs: enhance on-disk inode structure scalability")
+> >>>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> >>>>> ---
+> >>>>>  fs/f2fs/dir.c | 3 +++
+> >>>>>  1 file changed, 3 insertions(+)
+> >>>>>
+> >>>>> diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
+> >>>>> index 765f13354d3f..b1840852967e 100644
+> >>>>> --- a/fs/f2fs/dir.c
+> >>>>> +++ b/fs/f2fs/dir.c
+> >>>>> @@ -479,6 +479,9 @@ struct page *f2fs_init_inode_metadata(struct inode *inode, struct inode *dir,
+> >>>>>  		if (IS_ERR(page))
+> >>>>>  			return page;
+> >>>>>  
+> >>>>> +		/* synchronize inode page's data from inode cache */
+> >>>>> +		f2fs_update_inode(inode, page);
+> >>>>> +
+> >>>>>  		if (S_ISDIR(inode->i_mode)) {
+> >>>>>  			/* in order to handle error case */
+> >>>>>  			get_page(page);
+> >>>>> -- 
+> >>>>> 2.18.0.rc1
+> >> .
+> >>
