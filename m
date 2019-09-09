@@ -2,75 +2,113 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 364DBC433EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED417C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C70021920
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:25:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568024743;
-	bh=/QuTF/zEDup0WFh7FpYwvfqXIv/EWMjcKBOyYW5JMqE=;
-	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
-	b=ZFE4gTOfswBKb7I9f1z6rsxykKlbSDZL8GuzdzmCousMv4qM1M+qI2kBGSq8P9s+X
-	 m0/VL7Vf3fP1fS7VHP3FXeV3FtSIVVZ4mjKlVtJErnjRVfLn1WzqvsfEO61hoVUgpJ
-	 i8e14VqcAWp9l9GsQVJkUXiwp9TUjNE5/1g6fPfw=
+	by mail.kernel.org (Postfix) with ESMTP id C2EE82089F
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:29:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730369AbfIIKZm (ORCPT
+        id S1730502AbfIIK3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 06:25:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39472 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726937AbfIIKZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 06:25:42 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B3EB2089F;
-        Mon,  9 Sep 2019 10:25:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568024741;
-        bh=/QuTF/zEDup0WFh7FpYwvfqXIv/EWMjcKBOyYW5JMqE=;
-        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
-        b=g37B5hNNWnR5UL8rj0TTz+qIC4kjg2eMcaOVCFqKAwHBN2SLSFkOmRLPRUlnYc7Do
-         yWJZbv5OQ+ArpSB6SPwYjX3Fu5/Wio87Et45rUrtT79bztB/Cx00KJnmETKoqMvBGn
-         MpZ/p8VUGmP+nxgcWdPaFrT4eWY+VUD7FAa81wPA=
-Content-Type: text/plain; charset="utf-8"
+        Mon, 9 Sep 2019 06:29:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38452 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730369AbfIIK3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 06:29:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 512DBAE86;
+        Mon,  9 Sep 2019 10:28:36 +0000 (UTC)
+From:   Luis Henriques <lhenriques@suse.com>
+To:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>
+Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Luis Henriques <lhenriques@suse.com>
+Subject: [PATCH v2] ceph: allow object copies across different filesystems in the same cluster
+Date:   Mon,  9 Sep 2019 11:28:34 +0100
+Message-Id: <20190909102834.16246-1-lhenriques@suse.com>
+In-Reply-To: <87k1ahojri.fsf@suse.com>
+References: <87k1ahojri.fsf@suse.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190906045659.20621-1-vkoul@kernel.org>
-References: <20190906045659.20621-1-vkoul@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Vinod Koul <vkoul@kernel.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH] clk: qcom: gcc-qcs404: Use floor ops for sdcc clks
-User-Agent: alot/0.8.1
-Date:   Mon, 09 Sep 2019 03:25:40 -0700
-Message-Id: <20190909102541.7B3EB2089F@mail.kernel.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Vinod Koul (2019-09-05 21:56:59)
-> Update the gcc qcs404 clock driver to use floor ops for sdcc clocks. As
-> disuccsed in [1] it is good idea to use floor ops for sdcc clocks as we
-> dont want the clock rates to do round up.
->=20
-> [1]: https://lore.kernel.org/linux-arm-msm/20190830195142.103564-1-swboyd=
-@chromium.org/
->=20
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
+OSDs are able to perform object copies across different pools.  Thus,
+there's no need to prevent copy_file_range from doing remote copies if the
+source and destination superblocks are different.  Only return -EXDEV if
+they have different fsid (the cluster ID).
 
-Applied to clk-next
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
+---
+ fs/ceph/file.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
+Hi,
+
+Here's the patch changelog since initial submittion:
+
+- Dropped have_fsid checks on client structs
+- Use %pU to print the fsid instead of raw hex strings (%*ph)
+- Fixed 'To:' field in email so that this time the patch hits vger
+
+Cheers,
+--
+Luis
+
+diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+index 685a03cc4b77..4a624a1dd0bb 100644
+--- a/fs/ceph/file.c
++++ b/fs/ceph/file.c
+@@ -1904,6 +1904,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+ 	struct ceph_inode_info *src_ci = ceph_inode(src_inode);
+ 	struct ceph_inode_info *dst_ci = ceph_inode(dst_inode);
+ 	struct ceph_cap_flush *prealloc_cf;
++	struct ceph_fs_client *src_fsc = ceph_inode_to_client(src_inode);
+ 	struct ceph_object_locator src_oloc, dst_oloc;
+ 	struct ceph_object_id src_oid, dst_oid;
+ 	loff_t endoff = 0, size;
+@@ -1915,8 +1916,17 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+ 
+ 	if (src_inode == dst_inode)
+ 		return -EINVAL;
+-	if (src_inode->i_sb != dst_inode->i_sb)
+-		return -EXDEV;
++	if (src_inode->i_sb != dst_inode->i_sb) {
++		struct ceph_fs_client *dst_fsc = ceph_inode_to_client(dst_inode);
++
++		if (ceph_fsid_compare(&src_fsc->client->fsid,
++				      &dst_fsc->client->fsid)) {
++			dout("Copying object across different clusters:");
++			dout("  src fsid: %pU dst fsid: %pU\n",
++			     &src_fsc->client->fsid, &dst_fsc->client->fsid);
++			return -EXDEV;
++		}
++	}
+ 	if (ceph_snap(dst_inode) != CEPH_NOSNAP)
+ 		return -EROFS;
+ 
+@@ -1928,7 +1938,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+ 	 * efficient).
+ 	 */
+ 
+-	if (ceph_test_mount_opt(ceph_inode_to_client(src_inode), NOCOPYFROM))
++	if (ceph_test_mount_opt(src_fsc, NOCOPYFROM))
+ 		return -EOPNOTSUPP;
+ 
+ 	if ((src_ci->i_layout.stripe_unit != dst_ci->i_layout.stripe_unit) ||
+@@ -2044,7 +2054,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+ 				dst_ci->i_vino.ino, dst_objnum);
+ 		/* Do an object remote copy */
+ 		err = ceph_osdc_copy_from(
+-			&ceph_inode_to_client(src_inode)->client->osdc,
++			&src_fsc->client->osdc,
+ 			src_ci->i_vino.snap, 0,
+ 			&src_oid, &src_oloc,
+ 			CEPH_OSD_OP_FLAG_FADVISE_SEQUENTIAL |
