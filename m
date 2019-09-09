@@ -2,105 +2,125 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F529C49ED6
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8681C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 23:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3865521A4A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:59:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568069973;
-	bh=wnGFbFCsHYNvoXpyoyWnpL1YlHr9TO1GLdw1SaXPCGQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UEaMKTJOFqzojSXPNTihCviBqwpbYQ1/CZ1ZMW/wuE4aHWiIsPITwvTI9fYK0heQQ
-	 frMbhKAdDPBLhj5yv/w5czfkXzK/8Qzp4s8Yv2RCc3DkXpqggZmNXMGd0EJpLKuAzb
-	 kIGoesuX6Nh4hzji/g9yX2tygDmYjuevMFQyECzg=
+	by mail.kernel.org (Postfix) with ESMTP id A7CE2218DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 23:00:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BXlqN0nb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729512AbfIIW7c (ORCPT
+        id S1729700AbfIIXAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 18:59:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59476 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726474AbfIIW7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 18:59:32 -0400
-Received: from localhost (unknown [62.28.240.114])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E334E21479;
-        Mon,  9 Sep 2019 22:59:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568069971;
-        bh=wnGFbFCsHYNvoXpyoyWnpL1YlHr9TO1GLdw1SaXPCGQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mroRduAdLebUkfpP2PySv8Oug2YNSPLDoV0+hXxO+FmI31yayf0HCt4bVcRpqlm0f
-         b8Dgs+SMGaAgD/c5vYd0PQGR2h1J0Tn372p0LK4z/UXySK1WDe5xeuNWIXTst8yAXG
-         kLhYov+tgKolfGqK6TsTsJf7it9XlaexmeacTbWA=
-Date:   Mon, 9 Sep 2019 23:59:29 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Fabian Henneke <fabian.henneke@gmail.com>
-Cc:     Pavel Machek <pavel@denx.de>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 19/57] Bluetooth: hidp: Let hidp_send_message return
- number of queued bytes
-Message-ID: <20190909225929.GC26405@kroah.com>
-References: <20190908121125.608195329@linuxfoundation.org>
- <20190908121132.859238319@linuxfoundation.org>
- <20190909121555.GA18869@amd>
- <8e7731e0-f0ad-8cbb-799e-dd585e6b7ed6@gmail.com>
+        Mon, 9 Sep 2019 19:00:40 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:43660 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726474AbfIIXAk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 19:00:40 -0400
+Received: by mail-io1-f66.google.com with SMTP id r8so8035146iol.10;
+        Mon, 09 Sep 2019 16:00:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jZ0CxXKKRSMIVhulRY/LrdyN0Mz2dv9hIkZJA2zVyA4=;
+        b=BXlqN0nb7CgtNFmpukaK+ZjX8twylN31bZG8XHiLPs54wqhxw3eJFRorm6HAkDxywO
+         ZnO5MOYQNS1DP3xMjX9fcoHh/u8Xdn0ciMbKiR8tZU8Y0Qbp7jywhOE58YrqjwuR/wB/
+         M/L0PMfVWztCWCfNBX1LPUL29h1gYBlUZY7k4Bos7MSTtE8C9QHpHqCLmMYesKnNpPkw
+         7lAczT1Mhm6WvTDBiQ+XpTeRXdzgfbS3YETUs9PNAra8W6rU4h4r01uJnQOckCq2bjl1
+         xYNj8zDSBOGEh7xy2VEmJxO4Hx+wG9KunfwTkEAJazoarx9vVxzJnlsYL6d8fBITZHSB
+         iydg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jZ0CxXKKRSMIVhulRY/LrdyN0Mz2dv9hIkZJA2zVyA4=;
+        b=GwInGQsPz1+H0CR3Z9srq58lFekD9W4Xrd0k82eWB8oLM9VBUsF+dBsI6z1bojjsTB
+         OI+UfR3Us//pdBkbyM/9rSEDHlyv3UCYocW6FFNU7N2c2QixrrnHHLvWHr7QBJZ3XjM4
+         v/ai8sM9+hlkFFUR4EiUOXAag3NpR1PojUkzTJIyzHR4GaznkVvP1Tcz8RWFHVPiyE/s
+         7i1sCfwdQWrN2Q7p6FAYJKKeCDvLzkHUI4aSkdegGWipxKOcPYgKtg2GHzZ5m7JT+Zr/
+         CFgIarPsS1WflEXT6sqpcIDKZoM4iRUpBXu8foUDhDy1NJx1A4Lbw5t/KiCVqwrkEzAL
+         CY9g==
+X-Gm-Message-State: APjAAAUuon7t/jZmC5HSDMiQ6lPMjzqR0k8jrvIkEp9UJnoXvV2cLBke
+        a/VCMfMhaf2e8xLZ2U9alyHt6svgrfmsEPgHJK0=
+X-Google-Smtp-Source: APXvYqz5tkoILqOQfxq57H0P9tkxTC4goh/x89GWft5Ac8gJdidd31xRroqiBoQR1/ne+PiqKrF5ml3SwPNBcKg8TWk=
+X-Received: by 2002:a6b:c895:: with SMTP id y143mr27207977iof.271.1568070038089;
+ Mon, 09 Sep 2019 16:00:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8e7731e0-f0ad-8cbb-799e-dd585e6b7ed6@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190901211139.2405-1-lucmaga@gmail.com> <1fea2f25-98d1-f9f6-a483-17c74f89452e@xs4all.nl>
+In-Reply-To: <1fea2f25-98d1-f9f6-a483-17c74f89452e@xs4all.nl>
+From:   =?UTF-8?Q?Lucas_Magalh=C3=A3es?= <lucmaga@gmail.com>
+Date:   Mon, 9 Sep 2019 20:00:26 -0300
+Message-ID: <CAK0xOaGZx5dyDMAFp+JxnrfOYH3yYdvtcJzWdAmHyeRwUe38Lg@mail.gmail.com>
+Subject: Re: [PATCH] media: vimc: fla: Add virtual flash subdevice
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Helen Koike <helen.koike@collabora.com>, edusbarretto@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 09, 2019 at 03:00:46PM +0200, Fabian Henneke wrote:
-> Hi,
-> 
-> On Mon, Sep 9, 2019 at 2:15 PM Pavel Machek <pavel@denx.de> wrote:
-> 
-> > Hi!
-> >
-> > > [ Upstream commit 48d9cc9d85dde37c87abb7ac9bbec6598ba44b56 ]
-> > >
-> > > Let hidp_send_message return the number of successfully queued bytes
-> > > instead of an unconditional 0.
-> > >
-> > > With the return value fixed to 0, other drivers relying on hidp, such as
-> > > hidraw, can not return meaningful values from their respective
-> > > implementations of write(). In particular, with the current behavior, a
-> > > hidraw device's write() will have different return values depending on
-> > > whether the device is connected via USB or Bluetooth, which makes it
-> > > harder to abstract away the transport layer.
-> >
-> > So, does this change any actual behaviour?
-> >
-> > Is it fixing a bug, or is it just preparation for a patch that is not
-> > going to make it to stable?
-> >
-> 
-> I created this patch specifically in order to ensure that user space
-> applications can use HID devices with hidraw without needing to care about
-> whether the transport is USB or Bluetooth. Without the patch, every
-> hidraw-backed Bluetooth device needs to be treated specially as its write()
-> violates the usual return value contract, which could be viewed as a bug.
-> 
-> Please note that a later patch (
-> https://www.spinics.net/lists/linux-input/msg63291.html) fixes some
-> important error checks that were relying on the old behavior (and were
-> unfortunately missed by me).
+Hi Hans,
+Thanks for the review. I fixed most of the issues you found. Just have
+the question below.
 
-As that patch doesn't seem to be in Linus's tree yet, we should postpone
-taking this one in the stable tree right now, correct?
+On Mon, Sep 2, 2019 at 9:04 AM Hans Verkuil <hverkuil@xs4all.nl> wrote:
+>
+> > +
+> > +int vimc_fla_add(struct vimc_device *vimc, struct vimc_ent_config *vcfg)
+> > +{
+> > +     struct v4l2_device *v4l2_dev = &vimc->v4l2_dev;
+> > +     struct vimc_fla_device *vfla;
+> > +     int ret;
+> > +
+> > +     /* Allocate the vfla struct */
+> > +     vfla = kzalloc(sizeof(*vfla), GFP_KERNEL);
+> > +     if (!vfla)
+> > +             return -ENOMEM;
+> > +
+> > +     v4l2_ctrl_handler_init(&vfla->hdl, 4);
+> > +
+> > +     v4l2_ctrl_new_std_menu(&vfla->hdl, &vimc_fla_ctrl_ops,
+> > +                            V4L2_CID_FLASH_LED_MODE,
+> > +                            V4L2_FLASH_LED_MODE_TORCH, ~0x7,
+> > +                            V4L2_FLASH_LED_MODE_NONE);
+> > +     v4l2_ctrl_new_std_menu(&vfla->hdl, &vimc_fla_ctrl_ops,
+> > +                            V4L2_CID_FLASH_STROBE_SOURCE, 0x1, ~0x3,
+> > +                            V4L2_FLASH_STROBE_SOURCE_SOFTWARE);
+> > +     v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
+> > +                       V4L2_CID_FLASH_STROBE, 0, 0, 0, 0);
+> > +     v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
+> > +                       V4L2_CID_FLASH_STROBE_STOP, 0, 0, 0, 0);
+> > +     v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
+> > +                       V4L2_CID_FLASH_TIMEOUT, 1, 10, 1, 10);
+> > +     v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
+> > +                       V4L2_CID_FLASH_TORCH_INTENSITY, 0, 255, 1, 255);
+> > +     v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
+> > +                       V4L2_CID_FLASH_INTENSITY, 0, 255, 1, 255);
+> > +     v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
+> > +                       V4L2_CID_FLASH_INDICATOR_INTENSITY, 0, 255, 1, 255);
+> > +     v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
+> > +                       V4L2_CID_FLASH_STROBE_STATUS, 0, 0, 0, 0);
+>
+> It would be nice if this would actually reflect the actual strobe status.
+>
+Regarding the strobe status I was reading the code and find out that
+V4L2_CID_FLASH_STROBE_STATUS is a V4L2_CTRL_FLAG_READ_ONLY
+but it's not a V4L2_CTRL_FLAG_VOLATILE. I found this intriguing. How an
+I suppose to get it if its not volatile? As I understood it changes over time
+if the strobe starts and the timeout expire, isn't it? Shouldn't it be volatile
+if so?
 
-thanks,
+I've already made a simple implementation were V4L2_CID_FLASH_STROBE_STATUS
+returns after calling V4L2_CID_FLASH_STROBE and becomes false after the timeout
+time passes.
 
-greg k-h
+Thanks!
