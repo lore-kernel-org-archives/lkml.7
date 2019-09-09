@@ -2,134 +2,60 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD174C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 188E5C4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EF1C21479
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:01:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudbear.ru header.i=@cloudbear.ru header.b="qvXsmizE"
+	by mail.kernel.org (Postfix) with ESMTP id DF36E21479
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 17:02:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405162AbfIIRBe (ORCPT
+        id S2405288AbfIIRC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 13:01:34 -0400
-Received: from forward103o.mail.yandex.net ([37.140.190.177]:52994 "EHLO
-        forward103o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728529AbfIIRBe (ORCPT
+        Mon, 9 Sep 2019 13:02:29 -0400
+Received: from smtprelay0254.hostedemail.com ([216.40.44.254]:32894 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725872AbfIIRC2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 13:01:34 -0400
-X-Greylist: delayed 543 seconds by postgrey-1.27 at vger.kernel.org; Mon, 09 Sep 2019 13:01:31 EDT
-Received: from mxback28g.mail.yandex.net (mxback28g.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:328])
-        by forward103o.mail.yandex.net (Yandex) with ESMTP id D2C785F815FC;
-        Mon,  9 Sep 2019 19:52:26 +0300 (MSK)
-Received: from smtp2o.mail.yandex.net (smtp2o.mail.yandex.net [2a02:6b8:0:1a2d::26])
-        by mxback28g.mail.yandex.net (nwsmtp/Yandex) with ESMTP id XWZQwjux5k-qQKiwCRN;
-        Mon, 09 Sep 2019 19:52:26 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cloudbear.ru; s=mail; t=1568047946;
-        bh=k8swhfH/56jurkc7C5cLy1ftu0/fKHmRA39ehTChfM8=;
-        h=In-Reply-To:Subject:To:From:Cc:References:Date:Message-Id;
-        b=qvXsmizEqwj4U4oAE1Etz1OuSoxNXcRKg9VaSl1/zJkXw8FGHddDyywR6lQ6pV8tP
-         Gv6iPeWL8bk+eMSLDi4r92Vsaxo8WgKmj1vNVUkNu9ty0P4AUr4xGURUYH1gZjIC25
-         bmT0JFU7LTIFF52BO2fR64xefQLXsvBY4Hh1IgKI=
-Authentication-Results: mxback28g.mail.yandex.net; dkim=pass header.i=@cloudbear.ru
-Received: by smtp2o.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id aUn2Pn2Gxb-qPtC6UCe;
-        Mon, 09 Sep 2019 19:52:25 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (Client certificate not present)
-From:   Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>
-To:     davem@davemloft.net, robh+dt@kernel.org, f.fainelli@gmail.com
-Cc:     Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Trent Piepho <tpiepho@impinj.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] net: phy: dp83867: Add SGMII mode type switching
-Date:   Mon,  9 Sep 2019 19:52:18 +0300
-Message-Id: <1568047940-14490-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1568026945-3857-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
-References: <1568026945-3857-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
+        Mon, 9 Sep 2019 13:02:28 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 78F6A18224D99;
+        Mon,  9 Sep 2019 17:02:27 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: bulb50_4f83836154911
+X-Filterd-Recvd-Size: 1233
+Received: from XPS-9350.home (unknown [47.151.152.152])
+        (Authenticated sender: joe@perches.com)
+        by omf08.hostedemail.com (Postfix) with ESMTPA;
+        Mon,  9 Sep 2019 17:02:26 +0000 (UTC)
+Message-ID: <78acf5cf46bec83c007692be057851a28bed9108.camel@perches.com>
+Subject: Re: [PATCH] Bluetooth: trivial: tidy up printk message output from
+ btrtl.
+From:   Joe Perches <joe@perches.com>
+To:     Rui Salvaterra <rsalvaterra@gmail.com>, marcel@holtmann.org,
+        johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 09 Sep 2019 10:02:25 -0700
+In-Reply-To: <20190909150329.1779-1-rsalvaterra@gmail.com>
+References: <20190909150329.1779-1-rsalvaterra@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds ability to switch beetween two PHY SGMII modes.
-Some hardware, for example, FPGA IP designs may use 6-wire mode
-which enables differential SGMII clock to MAC.
+On Mon, 2019-09-09 at 16:03 +0100, Rui Salvaterra wrote:
+> The rtl_dev_* calls in the Realtek USB Bluetooth driver add unnecessary
+> device prefixes and new lines at the end of most messages, which make the
+> dmesg output look like this:
 
-Signed-off-by: Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>
----
-Changes in v3:
-- Fixed retaining DP83867_SGMII_TYPE bit
+OK, but maybe you could fix this one too:
 
- drivers/net/phy/dp83867.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+drivers/bluetooth/hci_h5.c:             rtl_dev_err(h5->hu->hdev, "set baud rate command failed\n");
 
-diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
-index 1f1ecee..37fceaf 100644
---- a/drivers/net/phy/dp83867.c
-+++ b/drivers/net/phy/dp83867.c
-@@ -37,6 +37,7 @@
- #define DP83867_STRAP_STS2	0x006f
- #define DP83867_RGMIIDCTL	0x0086
- #define DP83867_IO_MUX_CFG	0x0170
-+#define DP83867_SGMIICTL	0x00D3
- #define DP83867_10M_SGMII_CFG   0x016F
- #define DP83867_10M_SGMII_RATE_ADAPT_MASK BIT(7)
-
-@@ -61,6 +62,9 @@
- #define DP83867_RGMII_TX_CLK_DELAY_EN		BIT(1)
- #define DP83867_RGMII_RX_CLK_DELAY_EN		BIT(0)
-
-+/* SGMIICTL bits */
-+#define DP83867_SGMII_TYPE		BIT(14)
-+
- /* STRAP_STS1 bits */
- #define DP83867_STRAP_STS1_RESERVED		BIT(11)
-
-@@ -109,6 +113,7 @@ struct dp83867_private {
- 	bool rxctrl_strap_quirk;
- 	bool set_clk_output;
- 	u32 clk_output_sel;
-+	bool sgmii_ref_clk_en;
- };
-
- static int dp83867_ack_interrupt(struct phy_device *phydev)
-@@ -197,6 +202,9 @@ static int dp83867_of_init(struct phy_device *phydev)
- 	dp83867->rxctrl_strap_quirk = of_property_read_bool(of_node,
- 					"ti,dp83867-rxctrl-strap-quirk");
-
-+	dp83867->sgmii_ref_clk_en = of_property_read_bool(of_node,
-+					"ti,sgmii-ref-clock-output-enable");
-+
- 	/* Existing behavior was to use default pin strapping delay in rgmii
- 	 * mode, but rgmii should have meant no delay.  Warn existing users.
- 	 */
-@@ -389,6 +397,17 @@ static int dp83867_config_init(struct phy_device *phydev)
-
- 		if (ret)
- 			return ret;
-+
-+		val = phy_read_mmd(phydev, DP83867_DEVADDR, DP83867_SGMIICTL);
-+		/* SGMII type is set to 4-wire mode by default.
-+		 * If we place appropriate property in dts (see above)
-+		 * switch on 6-wire mode.
-+		 */
-+		if (dp83867->sgmii_ref_clk_en)
-+			val |= DP83867_SGMII_TYPE;
-+		else
-+			val &= ~DP83867_SGMII_TYPE;
-+		phy_write_mmd(phydev, DP83867_DEVADDR, DP83867_SGMIICTL, val);
- 	}
-
- 	/* Enable Interrupt output INT_OE in CFG3 register */
---
-2.7.4
 
