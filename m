@@ -2,114 +2,101 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA782C433EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8464DC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF6E121479
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:59:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PVIe3K3q"
+	by mail.kernel.org (Postfix) with ESMTP id 5B9B121920
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:59:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390883AbfIIK7s (ORCPT
+        id S2390908AbfIIK76 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 06:59:48 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40383 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390755AbfIIK7q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 06:59:46 -0400
-Received: by mail-wm1-f67.google.com with SMTP id t9so14102822wmi.5
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 03:59:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cC4g9BRBEaf08E8q7Ceq+EDE6JFex4JwlziqyOjWmy0=;
-        b=PVIe3K3q+MLvV9INLxU2fZYlQCC9Jc1EePTFLZast77owUaVemUSI1wYrcz+h1thcT
-         /DU/8gPgn0DHHXvoBNfU9oEobDMKs3QGwxbmVTSpJl6oZaSDoJyZpnsiqcT945v+w/fz
-         mJDJtD8l/7MHSRYQppq1Jdi+Z4kY06oBD/kg65+/MCD/YmxvzjTJ7gD/H7xy0vmBXiz1
-         FP6c9+wIoz5/qyhzC5+uqESbx88b4zOeFtyaNfkWBrnRvGaoNVd01IgGSmUs93HKYmfU
-         xbV7YqOoRdRUq9LLJv9mbAvGCpjbkOfC63THV2N7eFR5xusJYYpO+yQpmy5HKDgAakji
-         ORYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cC4g9BRBEaf08E8q7Ceq+EDE6JFex4JwlziqyOjWmy0=;
-        b=krSZGKtHWEt7ypRi6SBFdUM2rkKGSc8PZfxoIcvcpEkn0ALSpVs7FJ13gI1ijFt9OT
-         iZ5hnsV5ZuUT3tLfzWz4DoOAV/qvVZpyOquT1ZTIb/u3PK+GwAD2xfl4hWKx/waPhkD2
-         qkyQRhnpDsJKhFLRFoOXf7/68ttGLrGeyAG1rsFML7KZ0RwTNf+vOUNf+8DOj+Yk27y7
-         +l7O6rYmXr4Mf0AStYAeFrfKJuPDZXuDLPRtN6kBbJ6gpQRODXQCN+Kyo+v1n8dWY5V5
-         VgsZKgBBZ6Ia8PE8ySVxZjc0MJ29KywovvAI2IvL3xSA2RWpnAqQAV6sLGBPNI6SSOtz
-         FWjw==
-X-Gm-Message-State: APjAAAWSTCpK2E9i3QV3cUenjuFriL91qWedCtu0tOngjK7GdX91F4EF
-        vB60/mYq7zQL94Aw7WDIO3RKqg==
-X-Google-Smtp-Source: APXvYqzyqfA2w/Lqb9/5hfL+KB+09ziudbSV+CalqKx6i1gQ7KLdpqRoeuy4hGtJtvQV1S9tM22+/Q==
-X-Received: by 2002:a05:600c:2105:: with SMTP id u5mr155367wml.150.1568026784923;
-        Mon, 09 Sep 2019 03:59:44 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id s3sm10943664wmj.48.2019.09.09.03.59.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Sep 2019 03:59:44 -0700 (PDT)
-Date:   Mon, 9 Sep 2019 11:59:42 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     lee.jones@linaro.org, jingoohan1@gmail.com,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com,
-        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fbdev@vger.kernel.org,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH 2/2] dt-bindings: backlight: lm3630a: add enable_gpios
-Message-ID: <20190909105942.pxwz6rtjg3cxlcnf@holly.lan>
-References: <20190908203704.30147-1-andreas@kemnade.info>
- <20190908203704.30147-3-andreas@kemnade.info>
+        Mon, 9 Sep 2019 06:59:58 -0400
+Received: from foss.arm.com ([217.140.110.172]:47812 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390885AbfIIK74 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 06:59:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 72C9C1000;
+        Mon,  9 Sep 2019 03:59:55 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.194.52])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C01DC3F71F;
+        Mon,  9 Sep 2019 03:59:53 -0700 (PDT)
+Date:   Mon, 9 Sep 2019 11:59:51 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Jirka =?utf-8?Q?Hladk=C3=BD?= <jhladky@redhat.com>,
+        =?utf-8?B?SmnFmcOtIFZvesOhcg==?= <jvozar@redhat.com>,
+        x86@kernel.org
+Subject: Re: [PATCH 2/2] sched/debug: add sched_update_nr_running tracepoint
+Message-ID: <20190909105951.rycwzsaome4l5d5f@e107158-lin.cambridge.arm.com>
+References: <20190903154340.860299-1-rkrcmar@redhat.com>
+ <20190903154340.860299-3-rkrcmar@redhat.com>
+ <20190904143711.zorh2whdapymc5ng@e107158-lin.cambridge.arm.com>
+ <20190904174841.GW2332@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190908203704.30147-3-andreas@kemnade.info>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190904174841.GW2332@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 08, 2019 at 10:37:04PM +0200, Andreas Kemnade wrote:
-> add enable-gpios to describe HWEN pin
+On 09/04/19 19:48, Peter Zijlstra wrote:
+> On Wed, Sep 04, 2019 at 03:37:11PM +0100, Qais Yousef wrote:
 > 
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-
-Looks like patches are in the wrong order. Changes to bindings must
-appear in patchsets *before* the Linux implementation of the bindings.
-
-
-> ---
->  .../devicetree/bindings/leds/backlight/lm3630a-backlight.yaml | 4 ++++
->  1 file changed, 4 insertions(+)
+> > I managed to hook into sched_switch to get the nr_running of cfs tasks via
+> > eBPF.
+> > 
+> > ```
+> > int on_switch(struct sched_switch_args *args) {
+> >     struct task_struct *prev = (struct task_struct *)bpf_get_current_task();
+> >     struct cgroup *prev_cgroup = prev->cgroups->subsys[cpuset_cgrp_id]->cgroup;
+> >     const char *prev_cgroup_name = prev_cgroup->kn->name;
+> > 
+> >     if (prev_cgroup->kn->parent) {
+> >         bpf_trace_printk("sched_switch_ext: nr_running=%d prev_cgroup=%s\\n",
+> >                          prev->se.cfs_rq->nr_running,
+> >                          prev_cgroup_name);
+> >     } else {
+> >         bpf_trace_printk("sched_switch_ext: nr_running=%d prev_cgroup=/\\n",
+> >                          prev->se.cfs_rq->nr_running);
+> >     }
+> >     return 0;
+> > };
+> > ```
+> > 
+> > You can do something similar by attaching to the sched_switch tracepoint from
+> > a module and a create a new event to get the nr_running.
+> > 
+> > Now this is not as accurate as your proposed new tracepoint in terms where you
+> > sample nr_running, but should be good enough?
 > 
-> diff --git a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
-> index dc129d9a329e..a9656d72b668 100644
-> --- a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
-> +++ b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
-> @@ -29,6 +29,10 @@ properties:
->    '#size-cells':
->      const: 0
->  
-> +  enable-gpios:
-> +    description: GPIO to use to enable/disable the backlight (HWEN pin).
-> +    maxItems: 1
-> +
->  required:
->    - compatible
->    - reg
+> The above is after deactivate() and gives an up-to-date count for
+> decrements. Attach something to trace_sched_wakeup() to get the
+> increment update.
 
-Please add enable-gpios to one of the examples.
+I just remembered that sched_switch and sched_wakeup aren't
+EXPORT_TRACEPOINT*() so can't be attached to via out of tree module. But still
+accessible via eBPF.
 
+There has been several attempts to export these tracepoints but they were
+NACKed because there was no in-kernel module that needed them.
 
-Daniel.
+https://lore.kernel.org/lkml/20150422130052.4996e231@gandalf.local.home/
+
+--
+Qais Yousef
