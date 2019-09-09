@@ -2,113 +2,123 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED417C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DCBCC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2EE82089F
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:29:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48CCD2086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:32:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730502AbfIIK3q (ORCPT
+        id S1730675AbfIIKcs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 06:29:46 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38452 "EHLO mx1.suse.de"
+        Mon, 9 Sep 2019 06:32:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40738 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730369AbfIIK3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 06:29:45 -0400
+        id S1730552AbfIIKcs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 06:32:48 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 512DBAE86;
-        Mon,  9 Sep 2019 10:28:36 +0000 (UTC)
-From:   Luis Henriques <lhenriques@suse.com>
-To:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Luis Henriques <lhenriques@suse.com>
-Subject: [PATCH v2] ceph: allow object copies across different filesystems in the same cluster
-Date:   Mon,  9 Sep 2019 11:28:34 +0100
-Message-Id: <20190909102834.16246-1-lhenriques@suse.com>
-In-Reply-To: <87k1ahojri.fsf@suse.com>
-References: <87k1ahojri.fsf@suse.com>
+        by mx1.suse.de (Postfix) with ESMTP id B5189ABE3;
+        Mon,  9 Sep 2019 10:32:45 +0000 (UTC)
+Subject: Re: [PATCHv2] nvme: Assign subsy instance from first ctrl
+To:     Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org, Christoph Hellwig <hch@lst.de>
+Cc:     Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@fb.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Hannes Reinecke <hare@suse.com>, linux-kernel@vger.kernel.org
+References: <20190905163354.25139-1-kbusch@kernel.org>
+From:   Hannes Reinecke <hare@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
+ mQINBE6KyREBEACwRN6XKClPtxPiABx5GW+Yr1snfhjzExxkTYaINHsWHlsLg13kiemsS6o7
+ qrc+XP8FmhcnCOts9e2jxZxtmpB652lxRB9jZE40mcSLvYLM7S6aH0WXKn8bOqpqOGJiY2bc
+ 6qz6rJuqkOx3YNuUgiAxjuoYauEl8dg4bzex3KGkGRuxzRlC8APjHlwmsr+ETxOLBfUoRNuE
+ b4nUtaseMPkNDwM4L9+n9cxpGbdwX0XwKFhlQMbG3rWA3YqQYWj1erKIPpgpfM64hwsdk9zZ
+ QO1krgfULH4poPQFpl2+yVeEMXtsSou915jn/51rBelXeLq+cjuK5+B/JZUXPnNDoxOG3j3V
+ VSZxkxLJ8RO1YamqZZbVP6jhDQ/bLcAI3EfjVbxhw9KWrh8MxTcmyJPn3QMMEp3wpVX9nSOQ
+ tzG72Up/Py67VQe0x8fqmu7R4MmddSbyqgHrab/Nu+ak6g2RRn3QHXAQ7PQUq55BDtj85hd9
+ W2iBiROhkZ/R+Q14cJkWhzaThN1sZ1zsfBNW0Im8OVn/J8bQUaS0a/NhpXJWv6J1ttkX3S0c
+ QUratRfX4D1viAwNgoS0Joq7xIQD+CfJTax7pPn9rT////hSqJYUoMXkEz5IcO+hptCH1HF3
+ qz77aA5njEBQrDRlslUBkCZ5P+QvZgJDy0C3xRGdg6ZVXEXJOQARAQABtCpIYW5uZXMgUmVp
+ bmVja2UgKFN1U0UgTGFicykgPGhhcmVAc3VzZS5kZT6JAkEEEwECACsCGwMFCRLMAwAGCwkI
+ BwMCBhUIAgkKCwQWAgMBAh4BAheABQJOisquAhkBAAoJEGz4yi9OyKjPOHoQAJLeLvr6JNHx
+ GPcHXaJLHQiinz2QP0/wtsT8+hE26dLzxb7hgxLafj9XlAXOG3FhGd+ySlQ5wSbbjdxNjgsq
+ FIjqQ88/Lk1NfnqG5aUTPmhEF+PzkPogEV7Pm5Q17ap22VK623MPaltEba+ly6/pGOODbKBH
+ ak3gqa7Gro5YCQzNU0QVtMpWyeGF7xQK76DY/atvAtuVPBJHER+RPIF7iv5J3/GFIfdrM+wS
+ BubFVDOibgM7UBnpa7aohZ9RgPkzJpzECsbmbttxYaiv8+EOwark4VjvOne8dRaj50qeyJH6
+ HLpBXZDJH5ZcYJPMgunghSqghgfuUsd5fHmjFr3hDb5EoqAfgiRMSDom7wLZ9TGtT6viDldv
+ hfWaIOD5UhpNYxfNgH6Y102gtMmN4o2P6g3UbZK1diH13s9DA5vI2mO2krGz2c5BOBmcctE5
+ iS+JWiCizOqia5Op+B/tUNye/YIXSC4oMR++Fgt30OEafB8twxydMAE3HmY+foawCpGq06yM
+ vAguLzvm7f6wAPesDAO9vxRNC5y7JeN4Kytl561ciTICmBR80Pdgs/Obj2DwM6dvHquQbQrU
+ Op4XtD3eGUW4qgD99DrMXqCcSXX/uay9kOG+fQBfK39jkPKZEuEV2QdpE4Pry36SUGfohSNq
+ xXW+bMc6P+irTT39VWFUJMcSuQINBE6KyREBEACvEJggkGC42huFAqJcOcLqnjK83t4TVwEn
+ JRisbY/VdeZIHTGtcGLqsALDzk+bEAcZapguzfp7cySzvuR6Hyq7hKEjEHAZmI/3IDc9nbdh
+ EgdCiFatah0XZ/p4vp7KAelYqbv8YF/ORLylAdLh9rzLR6yHFqVaR4WL4pl4kEWwFhNSHLxe
+ 55G56/dxBuoj4RrFoX3ynerXfbp4dH2KArPc0NfoamqebuGNfEQmDbtnCGE5zKcR0zvmXsRp
+ qU7+caufueZyLwjTU+y5p34U4PlOO2Q7/bdaPEdXfpgvSpWk1o3H36LvkPV/PGGDCLzaNn04
+ BdiiiPEHwoIjCXOAcR+4+eqM4TSwVpTn6SNgbHLjAhCwCDyggK+3qEGJph+WNtNU7uFfscSP
+ k4jqlxc8P+hn9IqaMWaeX9nBEaiKffR7OKjMdtFFnBRSXiW/kOKuuRdeDjL5gWJjY+IpdafP
+ KhjvUFtfSwGdrDUh3SvB5knSixE3qbxbhbNxmqDVzyzMwunFANujyyVizS31DnWC6tKzANkC
+ k15CyeFC6sFFu+WpRxvC6fzQTLI5CRGAB6FAxz8Hu5rpNNZHsbYs9Vfr/BJuSUfRI/12eOCL
+ IvxRPpmMOlcI4WDW3EDkzqNAXn5Onx/b0rFGFpM4GmSPriEJdBb4M4pSD6fN6Y/Jrng/Bdwk
+ SQARAQABiQIlBBgBAgAPBQJOiskRAhsMBQkSzAMAAAoJEGz4yi9OyKjPgEwQAIP/gy/Xqc1q
+ OpzfFScswk3CEoZWSqHxn/fZasa4IzkwhTUmukuIvRew+BzwvrTxhHcz9qQ8hX7iDPTZBcUt
+ ovWPxz+3XfbGqE+q0JunlIsP4N+K/I10nyoGdoFpMFMfDnAiMUiUatHRf9Wsif/nT6oRiPNJ
+ T0EbbeSyIYe+ZOMFfZBVGPqBCbe8YMI+JiZeez8L9JtegxQ6O3EMQ//1eoPJ5mv5lWXLFQfx
+ f4rAcKseM8DE6xs1+1AIsSIG6H+EE3tVm+GdCkBaVAZo2VMVapx9k8RMSlW7vlGEQsHtI0FT
+ c1XNOCGjaP4ITYUiOpfkh+N0nUZVRTxWnJqVPGZ2Nt7xCk7eoJWTSMWmodFlsKSgfblXVfdM
+ 9qoNScM3u0b9iYYuw/ijZ7VtYXFuQdh0XMM/V6zFrLnnhNmg0pnK6hO1LUgZlrxHwLZk5X8F
+ uD/0MCbPmsYUMHPuJd5dSLUFTlejVXIbKTSAMd0tDSP5Ms8Ds84z5eHreiy1ijatqRFWFJRp
+ ZtWlhGRERnDH17PUXDglsOA08HCls0PHx8itYsjYCAyETlxlLApXWdVl9YVwbQpQ+i693t/Y
+ PGu8jotn0++P19d3JwXW8t6TVvBIQ1dRZHx1IxGLMn+CkDJMOmHAUMWTAXX2rf5tUjas8/v2
+ azzYF4VRJsdl+d0MCaSy8mUh
+Message-ID: <27980172-c302-ad17-791b-c8ffa80066f4@suse.de>
+Date:   Mon, 9 Sep 2019 12:32:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <20190905163354.25139-1-kbusch@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-OSDs are able to perform object copies across different pools.  Thus,
-there's no need to prevent copy_file_range from doing remote copies if the
-source and destination superblocks are different.  Only return -EXDEV if
-they have different fsid (the cluster ID).
-
-Signed-off-by: Luis Henriques <lhenriques@suse.com>
----
- fs/ceph/file.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
-
-Hi,
-
-Here's the patch changelog since initial submittion:
-
-- Dropped have_fsid checks on client structs
-- Use %pU to print the fsid instead of raw hex strings (%*ph)
-- Fixed 'To:' field in email so that this time the patch hits vger
+On 9/5/19 6:33 PM, Keith Busch wrote:
+> The namespace disk names must be unique for the lifetime of the
+> subsystem. This was accomplished by using their parent subsystems'
+> instances which were allocated independently from the controllers
+> connected to that subsystem. This allowed name prefixes assigned to
+> namespaces to match a controller from an unrelated subsystem, and has
+> created confusion among users examining device nodes.
+> 
+> Ensure a namespace's subsystem instance never clashes with a controller
+> instance of another subsystem by transferring the instance ownership
+> to the parent subsystem from the first controller discovered in that
+> subsystem.
+> 
+> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+> Signed-off-by: Keith Busch <kbusch@kernel.org>
+> ---
+> v1 -> v2:
+> 
+>   Changelog: reduce sensationalism, fix spelling 
+> 
+>  drivers/nvme/host/core.c | 21 ++++++++++-----------
+>  1 file changed, 10 insertions(+), 11 deletions(-)
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.com>
 
 Cheers,
---
-Luis
 
-diff --git a/fs/ceph/file.c b/fs/ceph/file.c
-index 685a03cc4b77..4a624a1dd0bb 100644
---- a/fs/ceph/file.c
-+++ b/fs/ceph/file.c
-@@ -1904,6 +1904,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
- 	struct ceph_inode_info *src_ci = ceph_inode(src_inode);
- 	struct ceph_inode_info *dst_ci = ceph_inode(dst_inode);
- 	struct ceph_cap_flush *prealloc_cf;
-+	struct ceph_fs_client *src_fsc = ceph_inode_to_client(src_inode);
- 	struct ceph_object_locator src_oloc, dst_oloc;
- 	struct ceph_object_id src_oid, dst_oid;
- 	loff_t endoff = 0, size;
-@@ -1915,8 +1916,17 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
- 
- 	if (src_inode == dst_inode)
- 		return -EINVAL;
--	if (src_inode->i_sb != dst_inode->i_sb)
--		return -EXDEV;
-+	if (src_inode->i_sb != dst_inode->i_sb) {
-+		struct ceph_fs_client *dst_fsc = ceph_inode_to_client(dst_inode);
-+
-+		if (ceph_fsid_compare(&src_fsc->client->fsid,
-+				      &dst_fsc->client->fsid)) {
-+			dout("Copying object across different clusters:");
-+			dout("  src fsid: %pU dst fsid: %pU\n",
-+			     &src_fsc->client->fsid, &dst_fsc->client->fsid);
-+			return -EXDEV;
-+		}
-+	}
- 	if (ceph_snap(dst_inode) != CEPH_NOSNAP)
- 		return -EROFS;
- 
-@@ -1928,7 +1938,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
- 	 * efficient).
- 	 */
- 
--	if (ceph_test_mount_opt(ceph_inode_to_client(src_inode), NOCOPYFROM))
-+	if (ceph_test_mount_opt(src_fsc, NOCOPYFROM))
- 		return -EOPNOTSUPP;
- 
- 	if ((src_ci->i_layout.stripe_unit != dst_ci->i_layout.stripe_unit) ||
-@@ -2044,7 +2054,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
- 				dst_ci->i_vino.ino, dst_objnum);
- 		/* Do an object remote copy */
- 		err = ceph_osdc_copy_from(
--			&ceph_inode_to_client(src_inode)->client->osdc,
-+			&src_fsc->client->osdc,
- 			src_ci->i_vino.snap, 0,
- 			&src_oid, &src_oloc,
- 			CEPH_OSD_OP_FLAG_FADVISE_SEQUENTIAL |
+Hannes
+-- 
+Dr. Hannes Reinecke		      Teamlead Storage & Networking
+hare@suse.de			                  +49 911 74053 688
+SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 247165 (AG München), GF: Felix Imendörffer
