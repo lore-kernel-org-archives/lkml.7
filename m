@@ -7,174 +7,189 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E98C433EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 03:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CACACC4360D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 03:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EE362196F
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 03:13:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97C9A21A4A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 03:22:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O5lXIvrU"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="XtHCSzy5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387447AbfIIDNH (ORCPT
+        id S2387483AbfIIDWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 23:13:07 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34187 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387412AbfIIDNH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 23:13:07 -0400
-Received: by mail-lf1-f68.google.com with SMTP id z21so9284281lfe.1
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 20:13:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=3LfCbYav0GuA0YL9gmVzYCUuIMsC4Vv6UiM5Mn7c/LM=;
-        b=O5lXIvrUXnr+WXbBbwSSiq5gXFIIxXcbW9uQLIbQKyA4HtPBk/3jqsAppET63fAgm2
-         J5zOWrn6s8UnYjEgQrmrJJTcgVkm0KII5G3V1NNRzawSKm8+QdUOxR6i3B7YtgTMgfEo
-         /R+z7F95ftZMRK/Y9uR61G+BFg5193eFOH5VuARuJjOpHkpG2cERFZBFlC5/vmCTT7X5
-         p5eK2weHnDIkj0URyKTuUZQziSTLlqXT3AeRJls+hce8RKeRoYFxwQnVf2EDLhLZPScM
-         klAXg3oH8jPdm910u1kEP1bLQbCgfnnsvtVOAYXlFZnLCIuN1uVxiTk6HBWpDg6I5wIK
-         rQHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3LfCbYav0GuA0YL9gmVzYCUuIMsC4Vv6UiM5Mn7c/LM=;
-        b=c7pacqgIrWsqD5ndZCLRl1BlOACZk3p8eEJB4ugDIVStLkdihiLr4oNhIB/nVNSSbJ
-         mrcnhvgMnlqwDTv6m/0+9anyABw46nVIRxgvyidt9Sy5n57PQCjVTst6k3mW7zxL8Wot
-         L6Px48DuKm9J/su7IHOcs1mtvywafQVtffhXeTtCkfCOL5Sp26XYXbE+q1k6EwSdm2Mx
-         8r7CFLw2xeWu2mO/24Bs/xxDK4+ENtbPnFexSW/EMrH/HSiOhYysx35LquVl75+8BTft
-         Rhui/MfBrAeu8MnkFAXTtWax2c2K03hgLc0/Cw/NRUJh9CtTgq4y+2qnT9+Ny7Y88wbF
-         PYsA==
-X-Gm-Message-State: APjAAAVDmcIjZFRUkzQVp+gBsBlwQqphuzuxhn/DT0R5msqP1qrHDLIh
-        0BBNw2b/5eT0mr3oTat8DNZHWZEbP54zY+0ZtmVoQNzgJG8=
-X-Google-Smtp-Source: APXvYqzTargLBkYl79X0rGmUOLaXZUdvMWAMG7oW/+CUGnU/EiQ1JEwEMQuXHB1GLY4nZD/63U4bbu8hdAXHZjWMZ84=
-X-Received: by 2002:ac2:4352:: with SMTP id o18mr15000583lfl.164.1567998783481;
- Sun, 08 Sep 2019 20:13:03 -0700 (PDT)
+        Sun, 8 Sep 2019 23:22:12 -0400
+Received: from vps.xff.cz ([195.181.215.36]:57512 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733187AbfIIDWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 23:22:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1567999329; bh=vGYPee7mKvLamg5HC7jtXbBVYj6KXR/2WLHAods+Fag=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=XtHCSzy5e62L1bITKndtj+3FFoPAdA6OegqfjwJSR/jyEmq+59SgqFa+A8wFEwHS0
+         WLmj3PTQilbBuH5qhJMipBhxeByZPp/oTf4p5Fnm1GQcApTFCfSnZmqWjg2QLt07Hw
+         tP6IhXE0K/lCI8SUbrEwrpjP32k4VpLdiNm8ITrA=
+Date:   Mon, 9 Sep 2019 05:22:08 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 00/10] Allwinner sunxi message box support
+Message-ID: <20190909032208.rlorx2ppytymtyej@core.my.home>
+Mail-Followup-To: Samuel Holland <samuel@sholland.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Jassi Brar <jassisinghbrar@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20190820032311.6506-1-samuel@sholland.org>
 MIME-Version: 1.0
-References: <20190908121125.608195329@linuxfoundation.org>
-In-Reply-To: <20190908121125.608195329@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Mon, 9 Sep 2019 08:42:51 +0530
-Message-ID: <CA+G9fYttXw5buEQkt+PVH2By+S0OazBJZp6FJbDQXPZru_obew@mail.gmail.com>
-Subject: Re: [PATCH 4.19 00/57] 4.19.72-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190820032311.6506-1-samuel@sholland.org>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 8 Sep 2019 at 18:20, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.19.72 release.
-> There are 57 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Tue 10 Sep 2019 12:09:36 PM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.19.72-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.19.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+Hello Samuel,
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+On Mon, Aug 19, 2019 at 10:23:01PM -0500, Samuel Holland wrote:
+> This series adds support for the "hardware message box" in sun8i, sun9i,
+> and sun50i SoCs, used for communication with the ARISC management
+> processor (the platform's equivalent of the ARM SCP). The end goal is to
+> use the arm_scpi driver as a client, communicating with firmware running
+> on the AR100 CPU, or to use the mailbox to forward NMIs that the
+> firmware picks up from R_INTC.
+> 
+> Unfortunately, the ARM SCPI client no longer works with this driver
+> since it now exposes all 8 hardware FIFOs individually. The SCPI client
+> could be made to work (and I posted proof-of-concept code to that effect
+> with v1 of this series), but that is a low priority, as Linux does not
+> directly use SCPI with the current firmware version; all SCPI use goes
+> through ATF via PSCI.
+> 
+> As requested in the comments to v3 of this patchset, a demo client is
+> provided in the final patch. This demo goes along with a toy firmware
+> which shows that the driver does indeed work for two-way communication
+> on all channels. To build the firmware component, run:
 
-Summary
-------------------------------------------------------------------------
+I've tried using this driver with mainline arm_scpi driver (which is probably
+an expected future use, since crust provides SCPI interface).
 
-kernel: 4.19.72-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.19.y
-git commit: 20f1e9f544166cca04c111f8719286155a5b9b09
-git describe: v4.19.70-60-g20f1e9f54416
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
-ild/v4.19.70-60-g20f1e9f54416
+The problem I've found is that arm_scpi expects message box to be
+bi-directional, but this driver provides uni-directional interface.
 
+What do you think about making this driver provide bi-directional interface?
+We could halve the number of channels to 4 and mandate TX/RX configuration
+(from main CPU's PoV) as ABI.
 
-No regressions (compared to build v4.19.70)
+Otherwise it's impossible to use it with the arm_scpi driver.
 
+Or do you have any other ideas? I guess arm_scpi can be fixed to add a
+property that would make it possible to use single shmem with two
+mailboxes, one for rx and one for tx, but making sun6i mailbox have
+bi-directional interface sounds easier.
 
-No fixes (compared to build v4.19.70)
+regards,
+	o.
 
-Ran 22190 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* network-basic-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-open-posix-tests
-* kvm-unit-tests
-* ssuite
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+>   git clone https://github.com/crust-firmware/meta meta
+>   git clone -b mailbox-demo https://github.com/crust-firmware/crust meta/crust
+>   cd meta
+>   make
+> 
+> That will by default produce a U-Boot + ATF + SCP firmware image in
+> [meta/]build/pinebook/u-boot-sunxi-with-spl.bin. See the top-level
+> README.md for more information, such as cross-compiler setup.
+> 
+> I've now used this driver with three separate clients over the past two
+> years, and they all work. If there are no remaining concerns with the
+> driver, I'd like it to get merged.
+> 
+> Even without the driver, the clock patches (1-2) can go in at any time.
+> 
+> Changes from v3:
+>   - Rebased on sunxi-next
+>   - Added Rob's Reviewed-by for patch 3
+>   - Fixed a crash when receiving a message on a disabled channel
+>   - Cleaned up some comments/formatting in the driver
+>   - Fixed #mbox-cells in sunxi-h3-h5.dtsi (patch 7)
+>   - Removed the irqchip example (no longer relevant to the fw design)
+>   - Added a demo/example client that uses the driver and a toy firmware
+> 
+> Changes from v2:
+>   - Merge patches 1-3
+>   - Add a comment in the code explaining the CLK_IS_CRITICAL usage
+>   - Add a patch to mark the AR100 clocks as critical
+>   - Use YAML for the device tree binding
+>   - Include a not-for-merge example usage of the mailbox
+> 
+> Changes from v1:
+>   - Marked message box clocks as critical instead of hacks in the driver
+>   - 8 unidirectional channels instead of 4 bidirectional pairs
+>   - Use per-SoC compatible strings and an A31 fallback compatible
+>   - Dropped the mailbox framework patch
+>   - Include DT patches for SoCs that document the message box
+> 
+> Samuel Holland (10):
+>   clk: sunxi-ng: Mark msgbox clocks as critical
+>   clk: sunxi-ng: Mark AR100 clocks as critical
+>   dt-bindings: mailbox: Add a sunxi message box binding
+>   mailbox: sunxi-msgbox: Add a new mailbox driver
+>   ARM: dts: sunxi: a80: Add msgbox node
+>   ARM: dts: sunxi: a83t: Add msgbox node
+>   ARM: dts: sunxi: h3/h5: Add msgbox node
+>   arm64: dts: allwinner: a64: Add msgbox node
+>   arm64: dts: allwinner: h6: Add msgbox node
+>   [DO NOT MERGE] drivers: firmware: msgbox demo
+> 
+>  .../mailbox/allwinner,sunxi-msgbox.yaml       |  79 +++++
+>  arch/arm/boot/dts/sun8i-a83t.dtsi             |  10 +
+>  arch/arm/boot/dts/sun9i-a80.dtsi              |  10 +
+>  arch/arm/boot/dts/sunxi-h3-h5.dtsi            |  10 +
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  34 ++
+>  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  |  24 ++
+>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  10 +
+>  drivers/clk/sunxi-ng/ccu-sun50i-a64.c         |   3 +-
+>  drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c        |   2 +-
+>  drivers/clk/sunxi-ng/ccu-sun50i-h6.c          |   3 +-
+>  drivers/clk/sunxi-ng/ccu-sun8i-a23.c          |   3 +-
+>  drivers/clk/sunxi-ng/ccu-sun8i-a33.c          |   3 +-
+>  drivers/clk/sunxi-ng/ccu-sun8i-a83t.c         |   3 +-
+>  drivers/clk/sunxi-ng/ccu-sun8i-h3.c           |   3 +-
+>  drivers/clk/sunxi-ng/ccu-sun8i-r.c            |   2 +-
+>  drivers/clk/sunxi-ng/ccu-sun9i-a80.c          |   3 +-
+>  drivers/firmware/Kconfig                      |   6 +
+>  drivers/firmware/Makefile                     |   1 +
+>  drivers/firmware/sunxi_msgbox_demo.c          | 307 +++++++++++++++++
+>  drivers/mailbox/Kconfig                       |  10 +
+>  drivers/mailbox/Makefile                      |   2 +
+>  drivers/mailbox/sunxi-msgbox.c                | 323 ++++++++++++++++++
+>  22 files changed, 842 insertions(+), 9 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/allwinner,sunxi-msgbox.yaml
+>  create mode 100644 drivers/firmware/sunxi_msgbox_demo.c
+>  create mode 100644 drivers/mailbox/sunxi-msgbox.c
+> 
+> -- 
+> 2.21.0
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
