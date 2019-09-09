@@ -2,216 +2,164 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE06C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D1CC4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8CA020678
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:30:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26E69206A1
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:32:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="gxEMwh/a"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="tNsqUGh0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727457AbfIIOaz (ORCPT
+        id S1727473AbfIIOcL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 10:30:55 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:33690 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726774AbfIIOay (ORCPT
+        Mon, 9 Sep 2019 10:32:11 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:55517 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725770AbfIIOcK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 10:30:54 -0400
-Received: by mail-qt1-f194.google.com with SMTP id r5so16418743qtd.0
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 07:30:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=CXfqRVCQFw7xqj7AICeJBWtrNhS6pGZdKh11BOOZ9lA=;
-        b=gxEMwh/a/ND2u6HYSSw+CvoCqCBHgB9WAY3kEMDTKnHS721fCqfnpsUSXC2a0oOeGf
-         hS6DIyV3UJqVsob9he/lOalVvuUnlHqXfyaB6/qIu5AZdsXVBD3H5UKaA89p9ehrqtw+
-         HyVJbHyy0BC20nYdMA7IvWJsrq/du8PbBCqzLf/32PujYUN1YiLrJBu2apAoILgQ2QQM
-         WXN1kirG4t98s2AA6PXav/e270xdKKCBwOxaaUgq+gIL67v8Nnc7hzablBWT5tXiqNyZ
-         dztk4qQJT8T3WUmUbdwsE/SUovPAHV8+d9xftGR/FzO4FcQmWQWioLNX0jmu7RnXkbMR
-         l9pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=CXfqRVCQFw7xqj7AICeJBWtrNhS6pGZdKh11BOOZ9lA=;
-        b=TVH1hDKS51AKWvEXHgC3Fp1qHLjikL76E02qRfU9SGPyxfzaF34NGQ1yh/7UYjPF7/
-         eAoXY5oDWRr6XbNgNdoxgQqJ6VOX5w6Fc0s3p+W5N+8HS0yc/E2TQUDbqniqseuV7K3w
-         DwuxVK4JBhSRWBdbtCbXKPMzcmZh0HhfETiX6r/Wl5gZuRcO8rGAT/1k2tEqqL3nnMqe
-         klp5R0nCXHTn5P+bKneNjzBKLHj6VlyDLYSLrBDUqQ15DLft7AAZ1orlIefNkl+6Ue+p
-         1qSQdX8Sb8ubGpkdx/FPAwyKdUOPZBJEstxLdwr4He84AdwAjlmUr8pCC3030HiiwLIR
-         Plow==
-X-Gm-Message-State: APjAAAXjguljcGDxpSnrPoi7yidk8lVLz0YdAzYgGBm2SXB8+1CITuDf
-        oxh4jL6+V8/0mk3WuAA9ldXpjg==
-X-Google-Smtp-Source: APXvYqz3L3fSgl55DmtBbUTWQgR45D2JISFvfWDBJBH3PWAbVc68BgzFeZ6k0wq1m7D4qm15IYPnzA==
-X-Received: by 2002:a0c:eda7:: with SMTP id h7mr14228023qvr.30.1568039452923;
-        Mon, 09 Sep 2019 07:30:52 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id w126sm6478943qkd.68.2019.09.09.07.30.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 09 Sep 2019 07:30:51 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     mpe@ellerman.id.au
-Cc:     benh@kernel.crashing.org, paulus@samba.org, mingo@kernel.org,
-        peterz@infradead.org, bvanassche@acm.org, arnd@arndb.de,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH v3] powerpc/lockdep: fix a false positive warning
-Date:   Mon,  9 Sep 2019 10:30:33 -0400
-Message-Id: <1568039433-10176-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 9 Sep 2019 10:32:10 -0400
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id x89EVlkQ015470
+        for <linux-kernel@vger.kernel.org>; Mon, 9 Sep 2019 23:31:48 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x89EVlkQ015470
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1568039508;
+        bh=fby6/oIKJOZRDngIzBYUxjLaToyYt+eaALO1Qt64J6w=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tNsqUGh0THC9PYogUyak04JYOQDuyLgIx9LLel0r/qMivDPYweIRP2Ix6oBbOyKvG
+         WdWUjMs4NZNebDgJyLgqVe6Jn2oNfQjaZF9A0UDuHpsySiW9ZTuI5lXUipygQonAde
+         zpSe26AwQDRRQX7Au6tg+sgiyq2aULFSc7RmXwEC6aX6pvGGdaFLeTEUeuyZJAGyr9
+         9zXeT4nnO8peuB1TXGDvXvqMbqkqljntG7QuQphvwrJg/RIMYWoj+3X4RcoYzRSZfH
+         2321xv1KwRJr8WBG9Z3EI2vh1mcR6cokYXWXeynmF2Aaii4Ikz5SRn2c7/Tq3aUtjU
+         fHdN+6eR3WszQ==
+X-Nifty-SrcIP: [209.85.217.54]
+Received: by mail-vs1-f54.google.com with SMTP id v10so5647018vsc.7
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 07:31:48 -0700 (PDT)
+X-Gm-Message-State: APjAAAWZde6QhpGoT5HE/gs2eN5jcpLKfcSzr/nr7b/XTi+gz5ybcHRl
+        wb7HWYQcKbtebfEjaTRvO5gF5Y78NeML8XoBg3s=
+X-Google-Smtp-Source: APXvYqyee/YuI377G0tWAtqkr6FheMPIrmhSIGnoalYNfzyc1wAWOtEcbzzuVZBzeRTNcam9oUgmaJjhEFFafSTlSmU=
+X-Received: by 2002:a67:eb18:: with SMTP id a24mr12758313vso.155.1568039506872;
+ Mon, 09 Sep 2019 07:31:46 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190909141823.8638-1-changbin.du@gmail.com>
+In-Reply-To: <20190909141823.8638-1-changbin.du@gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Mon, 9 Sep 2019 23:31:10 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQGk_4f-aGVH3bxZdNna_gdHEBHeD6DNwY49Q5kxU=U7w@mail.gmail.com>
+Message-ID: <CAK7LNAQGk_4f-aGVH3bxZdNna_gdHEBHeD6DNwY49Q5kxU=U7w@mail.gmail.com>
+Subject: Re: [PATCH v2 0/9] kconfig/hacking: make 'kernel hacking' menu better structurized
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 108c14858b9e ("locking/lockdep: Add support for dynamic
-keys") introduced a boot warning on powerpc below, because since the
-commit 2d4f567103ff ("KVM: PPC: Introduce kvm_tmp framework") adds
-kvm_tmp[] into the .bss section and then free the rest of unused spaces
-back to the page allocator.
-
-kernel_init
-  kvm_guest_init
-    kvm_free_tmp
-      free_reserved_area
-        free_unref_page
-          free_unref_page_prepare
-
-Later, alloc_workqueue() happens to allocate some pages from there and
-trigger the warning at,
-
-if (WARN_ON_ONCE(static_obj(key)))
-
-Fix it by adding a generic helper arch_is_bss_hole() to skip those areas
-in static_obj(). Since kvm_free_tmp() is only done early during the
-boot, just go lockless to make the implementation simple for now.
-
-WARNING: CPU: 0 PID: 13 at kernel/locking/lockdep.c:1120
-Workqueue: events work_for_cpu_fn
-Call Trace:
-  lockdep_register_key+0x68/0x200
-  wq_init_lockdep+0x40/0xc0
-  trunc_msg+0x385f9/0x4c30f (unreliable)
-  wq_init_lockdep+0x40/0xc0
-  alloc_workqueue+0x1e0/0x620
-  scsi_host_alloc+0x3d8/0x490
-  ata_scsi_add_hosts+0xd0/0x220 [libata]
-  ata_host_register+0x178/0x400 [libata]
-  ata_host_activate+0x17c/0x210 [libata]
-  ahci_host_activate+0x84/0x250 [libahci]
-  ahci_init_one+0xc74/0xdc0 [ahci]
-  local_pci_probe+0x78/0x100
-  work_for_cpu_fn+0x40/0x70
-  process_one_work+0x388/0x750
-  process_scheduled_works+0x50/0x90
-  worker_thread+0x3d0/0x570
-  kthread+0x1b8/0x1e0
-  ret_from_kernel_thread+0x5c/0x7c
-
-Fixes: 108c14858b9e ("locking/lockdep: Add support for dynamic keys")
-Signed-off-by: Qian Cai <cai@lca.pw>
----
-
-v3: Change arch_is_bss_hole() to return a "bool".
-    Rearrange variables in kvm.c a bit.
-v2: No need to actually define arch_is_bss_hole() powerpc64 only.
-
- arch/powerpc/include/asm/sections.h | 11 +++++++++++
- arch/powerpc/kernel/kvm.c           |  8 +++++++-
- include/asm-generic/sections.h      |  7 +++++++
- kernel/locking/lockdep.c            |  3 +++
- 4 files changed, 28 insertions(+), 1 deletion(-)
-
-diff --git a/arch/powerpc/include/asm/sections.h b/arch/powerpc/include/asm/sections.h
-index 4a1664a8658d..6e9e39ebbb27 100644
---- a/arch/powerpc/include/asm/sections.h
-+++ b/arch/powerpc/include/asm/sections.h
-@@ -5,8 +5,19 @@
- 
- #include <linux/elf.h>
- #include <linux/uaccess.h>
-+
-+#define arch_is_bss_hole arch_is_bss_hole
-+
- #include <asm-generic/sections.h>
- 
-+extern void *bss_hole_start, *bss_hole_end;
-+
-+static inline bool arch_is_bss_hole(unsigned long addr)
-+{
-+	return addr >= (unsigned long)bss_hole_start &&
-+	       addr < (unsigned long)bss_hole_end;
-+}
-+
- extern char __head_end[];
- 
- #ifdef __powerpc64__
-diff --git a/arch/powerpc/kernel/kvm.c b/arch/powerpc/kernel/kvm.c
-index b7b3a5e4e224..e3c3b076ff07 100644
---- a/arch/powerpc/kernel/kvm.c
-+++ b/arch/powerpc/kernel/kvm.c
-@@ -64,9 +64,11 @@
- #define KVM_INST_MTSRIN		0x7c0001e4
- 
- static bool kvm_patching_worked = true;
--char kvm_tmp[1024 * 1024];
- static int kvm_tmp_index;
- 
-+char kvm_tmp[1024 * 1024];
-+void *bss_hole_start, *bss_hole_end;
-+
- static inline void kvm_patch_ins(u32 *inst, u32 new_inst)
- {
- 	*inst = new_inst;
-@@ -707,6 +709,10 @@ static __init void kvm_free_tmp(void)
- 	 */
- 	kmemleak_free_part(&kvm_tmp[kvm_tmp_index],
- 			   ARRAY_SIZE(kvm_tmp) - kvm_tmp_index);
-+
-+	bss_hole_start = &kvm_tmp[kvm_tmp_index];
-+	bss_hole_end = &kvm_tmp[ARRAY_SIZE(kvm_tmp)];
-+
- 	free_reserved_area(&kvm_tmp[kvm_tmp_index],
- 			   &kvm_tmp[ARRAY_SIZE(kvm_tmp)], -1, NULL);
- }
-diff --git a/include/asm-generic/sections.h b/include/asm-generic/sections.h
-index d1779d442aa5..28a7a56e7c8a 100644
---- a/include/asm-generic/sections.h
-+++ b/include/asm-generic/sections.h
-@@ -91,6 +91,13 @@ static inline int arch_is_kernel_initmem_freed(unsigned long addr)
- }
- #endif
- 
-+#ifndef arch_is_bss_hole
-+static inline bool arch_is_bss_hole(unsigned long addr)
-+{
-+	return false;
-+}
-+#endif
-+
- /**
-  * memory_contains - checks if an object is contained within a memory region
-  * @begin: virtual address of the beginning of the memory region
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 4861cf8e274b..cd75b51f15ce 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -675,6 +675,9 @@ static int static_obj(const void *obj)
- 	if (arch_is_kernel_initmem_freed(addr))
- 		return 0;
- 
-+	if (arch_is_bss_hole(addr))
-+		return 0;
-+
- 	/*
- 	 * static variable?
- 	 */
--- 
-1.8.3.1
-
+SGkuDQoNCk9uIE1vbiwgU2VwIDksIDIwMTkgYXQgMTE6MTggUE0gQ2hhbmdiaW4gRHUgPGNoYW5n
+YmluLmR1QGdtYWlsLmNvbT4gd3JvdGU6DQo+DQo+IFRoaXMgc2VyaWVzIGlzIGEgdHJpdmlhbCBp
+bXByb3ZtZW50IGZvciB0aGUgbGF5b3V0IG9mICdrZXJuZWwgaGFja2luZycNCj4gY29uZmlndXJh
+dGlvbiBtZW51LiBOb3cgd2UgaGF2ZSBtYW55IGl0ZW1zIGluIGl0IHdoaWNoIG1ha2VzIHRha2Vz
+DQo+IGEgbGl0dGxlIHRpbWUgdG8gbG9vayB1cCB0aGVtIHNpbmNlIHRoZXkgYXJlIG5vdCB3ZWxs
+IHN0cnVjdHVyaXplZCB5ZXQuDQoNCg0KQ291bGQgeW91IHBsZWFzZSBjaGFuZ2UgdGhlIHN1Ympl
+Y3QgcHJlZml4ICJrY29uZmlnL2hhY2tpbmc6IiA/DQooImhhY2tpbmc6IiAsICJkZWJ1ZzoiIG9y
+IHdoYXRldmVyLCBidXQgbm8gImtjb25maWciKQ0KDQpJIGp1c3Qgb3BlbmVkIHRoaXMgdGhyZWFk
+IGp1c3QgaW4gY2FzZSBpdCBtaWdodCBiZSByZWxhdGVkIHRvIGtjb25maWcsDQpidXQgaXQgd2Fz
+IG5vdC4NCg0KVGhhbmtzLg0KDQoNCg0KDQoNCg0KPiBFYXJseSBkaXNjdXNzaW9uIGlzIGhlcmU6
+DQo+IGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE5LzkvMS8zOQ0KPg0KPiBUaGlzIGlzIGEgcHJl
+dmlldzoNCj4NCj4gICDilIIg4pSM4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSQIOKUgg0KPiAgIOKUgiDilIIgICAgICAgIHByaW50ayBhbmQgZG1lc2cg
+b3B0aW9ucyAgLS0tPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4pSCIOKUgg0K
+PiAgIOKUgiDilIIgICAgICAgIENvbXBpbGUtdGltZSBjaGVja3MgYW5kIGNvbXBpbGVyIG9wdGlv
+bnMgIC0tLT4gICAgICAgICAgICAgICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgICAgIEdl
+bmVyaWMgS2VybmVsIERlYnVnZ2luZyBJbnN0cnVtZW50cyAgLS0tPiAgICAgICAgICAgICAgICAg
+ICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgLSotIEtlcm5lbCBkZWJ1Z2dpbmcgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4pSCIOKUgg0KPiAgIOKU
+giDilIIgICAgWypdICAgTWlzY2VsbGFuZW91cyBkZWJ1ZyBjb2RlICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgICAgIE1lbW9yeSBE
+ZWJ1Z2dpbmcgIC0tLT4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgWyBdIERlYnVnIHNoYXJlZCBJUlEgaGFuZGxlcnMgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIg
+ICAgICAgIERlYnVnIE9vcHMsIExvY2t1cHMgYW5kIEhhbmdzICAtLS0+ICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgICAgIFNjaGVkdWxlciBEZWJ1
+Z2dpbmcgIC0tLT4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4pSCIOKU
+gg0KPiAgIOKUgiDilIIgICAgWypdIEVuYWJsZSBleHRyYSB0aW1la2VlcGluZyBzYW5pdHkgY2hl
+Y2tpbmcgICAgICAgICAgICAgICAgICAgICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgICAg
+IExvY2sgRGVidWdnaW5nIChzcGlubG9ja3MsIG11dGV4ZXMsIGV0Yy4uLikgIC0tLT4gICAgICAg
+ICAgICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgLSotIFN0YWNrIGJhY2t0cmFjZSBzdXBw
+b3J0ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4pSCIOKUgg0KPiAg
+IOKUgiDilIIgICAgWyBdIFdhcm4gZm9yIGFsbCB1c2VzIG9mIHVuc2VlZGVkIHJhbmRvbW5lc3Mg
+ICAgICAgICAgICAgICAgICAgICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgWyBdIGtvYmpl
+Y3QgZGVidWdnaW5nICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAg4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgICAgIERlYnVnIGtlcm5lbCBkYXRhIHN0cnVjdHVy
+ZXMgIC0tLT4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4pSCIOKUgg0KPiAgIOKUgiDi
+lIIgICAgWyBdIERlYnVnIGNyZWRlbnRpYWwgbWFuYWdlbWVudCAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgICAgIFJDVSBEZWJ1Z2dp
+bmcgIC0tLT4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4pSC
+IOKUgg0KPiAgIOKUgiDilIIgICAgWyBdIEZvcmNlIHJvdW5kLXJvYmluIENQVSBzZWxlY3Rpb24g
+Zm9yIHVuYm91bmQgd29yayBpdGVtcyAgICAgICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIgICAg
+WyBdIEZvcmNlIGV4dGVuZGVkIGJsb2NrIGRldmljZSBudW1iZXJzIGFuZCBzcHJlYWQgdGhlbSAg
+ICAgICAgICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgWyBdIEVuYWJsZSBDUFUgaG90cGx1
+ZyBzdGF0ZSBjb250cm9sICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4pSCIOKUgg0K
+PiAgIOKUgiDilIIgICAgWypdIExhdGVuY3kgbWVhc3VyaW5nIGluZnJhc3RydWN0dXJlICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgWypdIFRy
+YWNlcnMgIC0tLT4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgWyBdIFJlbW90ZSBkZWJ1Z2dpbmcgb3ZlciBG
+aXJlV2lyZSBlYXJseSBvbiBib290ICAgICAgICAgICAgICAgICAgICAg4pSCIOKUgg0KPiAgIOKU
+giDilIIgICAgWypdIFNhbXBsZSBrZXJuZWwgY29kZSAgLS0tPiAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgWypdIEZpbHRlciBh
+Y2Nlc3MgdG8gL2Rldi9tZW0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgWyBdICAgRmlsdGVyIEkvTyBhY2Nlc3MgdG8gL2Rldi9t
+ZW0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIg
+ICAgWyBdIEFkZGl0aW9uYWwgZGVidWcgY29kZSBmb3Igc3l6Ym90ICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgICAgIHg4NiBEZWJ1Z2dpbmcg
+IC0tLT4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4pSCIOKU
+gg0KPiAgIOKUgiDilIIgICAgICAgIEtlcm5lbCBUZXN0aW5nIGFuZCBDb3ZlcmFnZSAgLS0tPiAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAg4pSCIOKUgg0KPiAgIOKUgiDilIIgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4pSCIOKUgg0KPiAg
+IOKUgiDilJTilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
+lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
+lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
+lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
+lJgg4pSCDQo+ICAg4pSc4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSA4pSA4pSkDQo+ICAg4pSCICAgICAgICAgIDxTZWxlY3Q+ICAgIDwgRXhp
+dCA+ICAgIDwgSGVscCA+ICAgIDwgU2F2ZSA+ICAgIDwgTG9hZCA+ICAgICAgICAgICDilIINCj4g
+ICDilJTilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
+lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
+lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
+lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
+lIDilIDilIDilJgNCj4NCj4gdjI6DQo+ICAgbyByZWJhc2UgdG8gbGludXgtbmV4dC4NCj4gICBv
+IG1vdmUgREVCVUdfRlMgdG8gJ0dlbmVyaWMgS2VybmVsIERlYnVnZ2luZyBJbnN0cnVtZW50cycN
+Cj4gICBvIG1vdmUgREVCVUdfTk9USUZJRVJTIHRvICdEZWJ1ZyBrZXJuZWwgZGF0YSBzdHJ1Y3R1
+cmVzJw0KPg0KPiBDaGFuZ2JpbiBEdSAoOSk6DQo+ICAga2NvbmZpZy9oYWNraW5nOiBHcm91cCBz
+eXNycS9rZ2RiL3Vic2FuIGludG8gJ0dlbmVyaWMgS2VybmVsIERlYnVnZ2luZw0KPiAgICAgSW5z
+dHJ1bWVudHMnDQo+ICAga2NvbmZpZy9oYWNraW5nOiBDcmVhdGUgc3VibWVudSBmb3IgYXJjaCBz
+cGVjaWFsIGRlYnVnZ2luZyBvcHRpb25zDQo+ICAga2NvbmZpZy9oYWNraW5nOiBHcm91cCBrZXJu
+ZWwgZGF0YSBzdHJ1Y3R1cmVzIGRlYnVnZ2luZyB0b2dldGhlcg0KPiAgIGtjb25maWcvaGFja2lu
+ZzogTW92ZSBrZXJuZWwgdGVzdGluZyBhbmQgY292ZXJhZ2Ugb3B0aW9ucyB0byBzYW1lDQo+ICAg
+ICBzdWJtZW51DQo+ICAga2NvbmZpZy9oYWNraW5nOiBNb3ZlIE9vcHMgaW50byAnTG9ja3VwcyBh
+bmQgSGFuZ3MnDQo+ICAga2NvbmZpZy9oYWNraW5nOiBNb3ZlIFNDSEVEX1NUQUNLX0VORF9DSEVD
+SyBhZnRlciBERUJVR19TVEFDS19VU0FHRQ0KPiAgIGtjb25maWcvaGFja2luZzogQ3JlYXRlIGEg
+c3VibWVudSBmb3Igc2NoZWR1bGVyIGRlYnVnZ2luZyBvcHRpb25zDQo+ICAga2NvbmZpZy9oYWNr
+aW5nOiBNb3ZlIERFQlVHX0JVR1ZFUkJPU0UgdG8gJ3ByaW50ayBhbmQgZG1lc2cgb3B0aW9ucycN
+Cj4gICBrY29uZmlnL2hhY2tpbmc6IE1vdmUgREVCVUdfRlMgdG8gJ0dlbmVyaWMgS2VybmVsIERl
+YnVnZ2luZw0KPiAgICAgSW5zdHJ1bWVudHMnDQo+DQo+ICBsaWIvS2NvbmZpZy5kZWJ1ZyB8IDY1
+OSArKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ICAxIGZp
+bGUgY2hhbmdlZCwgMzQwIGluc2VydGlvbnMoKyksIDMxOSBkZWxldGlvbnMoLSkNCj4NCj4gLS0N
+Cj4gMi4yMC4xDQo+DQoNCg0KLS0NCkJlc3QgUmVnYXJkcw0KTWFzYWhpcm8gWWFtYWRhDQo=
