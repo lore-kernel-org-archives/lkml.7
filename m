@@ -2,164 +2,103 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C260AC433EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7072C433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ACB32089F
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:09:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88A762067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:10:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hLdJ4Pa8"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="efBvLZog"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389709AbfIIJJx (ORCPT
+        id S2389720AbfIIJK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 05:09:53 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42377 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbfIIJJx (ORCPT
+        Mon, 9 Sep 2019 05:10:56 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:28288 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbfIIJK4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 05:09:53 -0400
-Received: by mail-pf1-f196.google.com with SMTP id w22so8749043pfi.9;
-        Mon, 09 Sep 2019 02:09:53 -0700 (PDT)
+        Mon, 9 Sep 2019 05:10:56 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=U5NCtSQYid1u8C34eAEqP1Aq7f0r5wTbuSh3G4fErsg=;
-        b=hLdJ4Pa8HA5IJO/Dalzmk8viU2XnTDLr6ibidCeKWstsBsWlg9SZrBbFTmwIvJrkOK
-         3hVSsvYy0Vdx1VnAK7zfj7Dt9sRVkDhoJxhS2eak4S80ja1hfwbIsumTVoCtt419ENsE
-         W2WUSTSNo3uzYC5Otnn0SfccrIcy7qVm9VqHbS2a492CeKPfAaxnoQRqLGAQ69sAIT+M
-         ZLKms0ChcVW6WAKA1uEx0gZUQt5uiFH89uAun7luHj/XHBu/j/epXdzP3gjqZ4ad4415
-         AKYQGckxR7/71o7gtDDQ34Ghb0HA1ThskT+a1vgodtRuSiViPLToQ36Zg5Byn8hhsgWs
-         5LUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=U5NCtSQYid1u8C34eAEqP1Aq7f0r5wTbuSh3G4fErsg=;
-        b=AJ3uI/iYNkqXQtBtrzgvhArvIUb9SGYUO+utGp8x4TX4eWs3YC52uLMRIyb8VMYFiq
-         6m0eEE+KcWYhsRCIwT1yLCHa40J4M77lyeLf11JCaFdd/r48dhZWxpir+S1z6Kr2jA6J
-         SeXZUSefuvXFgC7og9hw79dWLNw+schlCoYhRXPhWHRT6KXUR9WSNx1nv4qvJ0L43K0i
-         VyE2V1xTtn5M7q3ttBR7JOo3vQ4ujI56a0A38KbhBAyluhMa5LLp4+CpvIE7D+yRnm7C
-         k4YpDUEXyP/ED8ooO9VKMPonv1cHm+YBZM/QuNP+uH1G12GXBply6JNYhKZHSSloFgp/
-         TRdg==
-X-Gm-Message-State: APjAAAVIKiXMwTLWDjRgZb6iGNCJGjLabmPtcIWEnUU13MMzq0o5fQh/
-        Cj1SEqI442nzwMKJKxgYeZh8NZ8cCOM=
-X-Google-Smtp-Source: APXvYqxEqt8hkjK1fOi3DC5vXYYjxVtlSq7gWu1J2oOdPulgj6r2wLlAwOu3jdgw13HfdVitXUdqMg==
-X-Received: by 2002:a17:90a:db0e:: with SMTP id g14mr23729979pjv.54.1568020192535;
-        Mon, 09 Sep 2019 02:09:52 -0700 (PDT)
-Received: from localhost.localdomain ([175.203.71.146])
-        by smtp.googlemail.com with ESMTPSA id s18sm19122962pfh.0.2019.09.09.02.09.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Sep 2019 02:09:52 -0700 (PDT)
-From:   Seunghun Han <kkamagui@gmail.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Peter Huewe <peterhuewe@gmx.de>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        linux-integrity@vger.kernel.org (open list:TPM DEVICE DRIVER),
-        linux-kernel@vger.kernel.org, Seunghun Han <kkamagui@gmail.com>
-Subject: [PATCH v2 2/2] tpm: tpm_crb: enhance resource mapping mechanism for supporting AMD's fTPM
-Date:   Mon,  9 Sep 2019 18:09:06 +0900
-Message-Id: <20190909090906.28700-3-kkamagui@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190909090906.28700-1-kkamagui@gmail.com>
-References: <20190909090906.28700-1-kkamagui@gmail.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1568020255; x=1599556255;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=ey40doxX0rG3pVBsPnyWR0CfVV2FkV/uoAA9DcuSCtw=;
+  b=efBvLZog0TBHxq86JvIpJl+8ECtshWWRp88im5svuaxWdSUy7NHYl8YL
+   fGYFmUaQjxZhuwiyRncArfnZvFrv3whAxcz7QU5H3edmWBrS6EbmEi8If
+   ttnscbXQErNjBfSeZ9coOI0cg/eb8gylAPJCK/a+xCOtpYMrVy1Lqbj1Y
+   0=;
+X-IronPort-AV: E=Sophos;i="5.64,484,1559520000"; 
+   d="scan'208";a="783971868"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 09 Sep 2019 09:10:50 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com (Postfix) with ESMTPS id 7832DA1D01;
+        Mon,  9 Sep 2019 09:10:48 +0000 (UTC)
+Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 9 Sep 2019 09:10:47 +0000
+Received: from udc4a3e82dbc15a031435.hfa15.amazon.com (10.43.161.176) by
+ EX13D01EUB001.ant.amazon.com (10.43.166.194) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 9 Sep 2019 09:10:36 +0000
+From:   Talel Shenhar <talel@amazon.com>
+To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <mchehab+samsung@kernel.org>, <davem@davemloft.net>,
+        <gregkh@linuxfoundation.org>, <nicolas.ferre@microchip.com>,
+        <tglx@linutronix.de>, <arnd@arndb.de>, <venture@google.com>,
+        <linus.walleij@linaro.org>, <olof@lixom.net>, <mripard@kernel.org>,
+        <ssantosh@kernel.org>, <paul.kocialkowski@bootlin.com>,
+        <mjourdan@baylibre.com>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <talel@amazon.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
+        <hhhawa@amazon.com>, <ronenk@amazon.com>, <jonnyc@amazon.com>,
+        <hanochu@amazon.com>, <barakw@amazon.com>
+Subject: [PATCH 0/3] Amazon's Annapurna Labs POS Driver
+Date:   Mon, 9 Sep 2019 12:10:17 +0300
+Message-ID: <1568020220-7758-1-git-send-email-talel@amazon.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.176]
+X-ClientProxiedBy: EX13D23UWA001.ant.amazon.com (10.43.160.68) To
+ EX13D01EUB001.ant.amazon.com (10.43.166.194)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I got an AMD system which had a Ryzen Threadripper 1950X and MSI
-mainboard, and I had a problem with AMD's fTPM. My machine showed an error
-message below, and the fTPM didn't work because of it.
+The Amazon's Annapurna Labs SoCs includes Point Of Serialization error
+logging unit that reports an error in case of write error (e.g. attempt to
+write to a read only register).
 
-[  5.732084] tpm_crb MSFT0101:00: can't request region for resource
-             [mem 0x79b4f000-0x79b4ffff]
-[  5.732089] tpm_crb: probe of MSFT0101:00 failed with error -16
+This patch series introduces the support for this unit.
 
-When I saw the iomem, I found two fTPM regions were in the ACPI NVS area. 
-The regions are below.
 
-79a39000-79b6afff : ACPI Non-volatile Storage
-  79b4b000-79b4bfff : MSFT0101:00
-  79b4f000-79b4ffff : MSFT0101:00
+Talel Shenhar (3):
+  dt-bindings: soc: al-pos: Amazon's Annapurna Labs POS
+  soc: amazon: al-pos: Introduce Amazon's Annapurna Labs POS driver
+  arm64: alpine: select AL_POS
 
-After analyzing this issue, I found that crb_map_io() function called
-devm_ioremap_resource() and it failed. The ACPI NVS didn't allow the TPM
-CRB driver to assign a resource in it because a busy bit was set to
-the ACPI NVS area.
+ .../bindings/soc/amazon/amazon,al-pos.txt          |  18 +++
+ MAINTAINERS                                        |   6 +
+ arch/arm64/Kconfig.platforms                       |   1 +
+ drivers/soc/Kconfig                                |   1 +
+ drivers/soc/Makefile                               |   1 +
+ drivers/soc/amazon/Kconfig                         |   5 +
+ drivers/soc/amazon/Makefile                        |   1 +
+ drivers/soc/amazon/al_pos.c                        | 129 +++++++++++++++++++++
+ 8 files changed, 162 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/amazon/amazon,al-pos.txt
+ create mode 100644 drivers/soc/amazon/Kconfig
+ create mode 100644 drivers/soc/amazon/Makefile
+ create mode 100644 drivers/soc/amazon/al_pos.c
 
-To support AMD's fTPM, I added a function to check intersects between
-the TPM region and ACPI NVS before it mapped the region. If some
-intersects are detected, the function just calls devm_ioremap() for
-a workaround. If there is no intersect, it calls devm_ioremap_resource().
-
-Signed-off-by: Seunghun Han <kkamagui@gmail.com>
----
-Changes in v2: fix a warning of kbuild test robot. The link is below.
-               https://lkml.org/lkml/2019/8/31/217
-
- drivers/char/tpm/tpm_crb.c | 25 +++++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/char/tpm/tpm_crb.c b/drivers/char/tpm/tpm_crb.c
-index 14f486c23af2..6b98a3a995b7 100644
---- a/drivers/char/tpm/tpm_crb.c
-+++ b/drivers/char/tpm/tpm_crb.c
-@@ -450,6 +450,27 @@ static int crb_check_resource(struct acpi_resource *ares, void *data)
- 	return 1;
- }
- 
-+static void __iomem *crb_ioremap_resource(struct device *dev,
-+					  const struct resource *res)
-+{
-+	int rc;
-+	resource_size_t size = resource_size(res);
-+
-+	/* Broken BIOS assigns command and response buffers in ACPI NVS region.
-+	 * Check intersections between a resource and ACPI NVS for W/A.
-+	 */
-+	rc = region_intersects(res->start, size, IORESOURCE_MEM |
-+			       IORESOURCE_BUSY, IORES_DESC_ACPI_NV_STORAGE);
-+	if (rc != REGION_DISJOINT) {
-+		dev_err(dev,
-+			FW_BUG "Resource overlaps with a ACPI NVS. %pr\n",
-+			res);
-+		return devm_ioremap(dev, res->start, size);
-+	}
-+
-+	return devm_ioremap_resource(dev, res);
-+}
-+
- static void __iomem *crb_map_res(struct device *dev, struct crb_priv *priv,
- 				 struct resource *io_res, u64 start, u32 size)
- {
-@@ -464,7 +485,7 @@ static void __iomem *crb_map_res(struct device *dev, struct crb_priv *priv,
- 		return (void __iomem *) ERR_PTR(-EINVAL);
- 
- 	if (!resource_contains(io_res, &new_res))
--		return devm_ioremap_resource(dev, &new_res);
-+		return crb_ioremap_resource(dev, &new_res);
- 
- 	return priv->iobase + (new_res.start - io_res->start);
- }
-@@ -536,7 +557,7 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
- 		goto out_early;
- 	}
- 
--	priv->iobase = devm_ioremap_resource(dev, &io_res);
-+	priv->iobase = crb_ioremap_resource(dev, &io_res);
- 	if (IS_ERR(priv->iobase)) {
- 		ret = PTR_ERR(priv->iobase);
- 		goto out_early;
 -- 
-2.21.0
+2.7.4
 
