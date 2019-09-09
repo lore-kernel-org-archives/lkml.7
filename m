@@ -2,40 +2,43 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A5DAC49ED6
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3FDC49ED6
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C0CF218AC
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 551A0218AC
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 09:58:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390131AbfIIJ6T (ORCPT
+        id S2390149AbfIIJ6W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 05:58:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41632 "EHLO mx1.suse.de"
+        Mon, 9 Sep 2019 05:58:22 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41720 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728187AbfIIJ6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 05:58:16 -0400
+        id S2390117AbfIIJ6T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 05:58:19 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D3BF2AC6E;
-        Mon,  9 Sep 2019 09:58:13 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 82153B603;
+        Mon,  9 Sep 2019 09:58:16 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     catalin.marinas@arm.com, hch@lst.de, wahrenst@gmx.net,
         marc.zyngier@arm.com, robh+dt@kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-riscv@lists.infradead.org
-Cc:     f.fainelli@gmail.com, will@kernel.org, robin.murphy@arm.com,
-        nsaenzjulienne@suse.de, linux-kernel@vger.kernel.org,
-        mbrugger@suse.com, linux-rpi-kernel@lists.infradead.org,
-        phill@raspberrypi.org, m.szyprowski@samsung.com
-Subject: [PATCH v5 0/4] Raspberry Pi 4 DMA addressing support
-Date:   Mon,  9 Sep 2019 11:58:03 +0200
-Message-Id: <20190909095807.18709-1-nsaenzjulienne@suse.de>
+        linux-riscv@lists.infradead.org, Will Deacon <will@kernel.org>
+Cc:     f.fainelli@gmail.com, robin.murphy@arm.com, nsaenzjulienne@suse.de,
+        linux-kernel@vger.kernel.org, mbrugger@suse.com,
+        linux-rpi-kernel@lists.infradead.org, phill@raspberrypi.org,
+        m.szyprowski@samsung.com
+Subject: [PATCH v5 3/4] arm64: use both ZONE_DMA and ZONE_DMA32
+Date:   Mon,  9 Sep 2019 11:58:06 +0200
+Message-Id: <20190909095807.18709-4-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190909095807.18709-1-nsaenzjulienne@suse.de>
+References: <20190909095807.18709-1-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -43,105 +46,194 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
-this series attempts to address some issues we found while bringing up
-the new Raspberry Pi 4 in arm64 and it's intended to serve as a follow
-up of these discussions:
-v4: https://lkml.org/lkml/2019/9/6/352
-v3: https://lkml.org/lkml/2019/9/2/589
-v2: https://lkml.org/lkml/2019/8/20/767
-v1: https://lkml.org/lkml/2019/7/31/922
-RFC: https://lkml.org/lkml/2019/7/17/476
+So far all arm64 devices have supported 32 bit DMA masks for their
+peripherals. This is not true anymore for the Raspberry Pi 4 as most of
+it's peripherals can only address the first GB of memory on a total of
+up to 4 GB.
 
-The new Raspberry Pi 4 has up to 4GB of memory but most peripherals can
-only address the first GB: their DMA address range is
-0xc0000000-0xfc000000 which is aliased to the first GB of physical
-memory 0x00000000-0x3c000000. Note that only some peripherals have these
-limitations: the PCIe, V3D, GENET, and 40-bit DMA channels have a wider
-view of the address space by virtue of being hooked up trough a second
-interconnect.
+This goes against ZONE_DMA32's intent, as it's expected for ZONE_DMA32
+to be addressable with a 32 bit mask. So it was decided to re-introduce
+ZONE_DMA in arm64.
 
-Part of this is solved on arm32 by setting up the machine specific
-'.dma_zone_size = SZ_1G', which takes care of reserving the coherent
-memory area at the right spot. That said no buffer bouncing (needed for
-dma streaming) is available at the moment, but that's a story for
-another series.
+ZONE_DMA will contain the lower 1G of memory, which is currently the
+memory area addressable by any peripheral on an arm64 device.
+ZONE_DMA32 will contain the rest of the 32 bit addressable memory.
 
-Unfortunately there is no such thing as 'dma_zone_size' in arm64. Only
-ZONE_DMA32 is created which is interpreted by dma-direct and the arm64
-arch code as if all peripherals where be able to address the first 4GB
-of memory.
-
-In the light of this, the series implements the following changes:
-
-- Create both DMA zones in arm64, ZONE_DMA will contain the first 1G
-  area and ZONE_DMA32 the rest of the 32 bit addressable memory. So far
-  the RPi4 is the only arm64 device with such DMA addressing limitations
-  so this hardcoded solution was deemed preferable.
-
-- Properly set ARCH_ZONE_DMA_BITS.
-
-- Reserve the CMA area in a place suitable for all peripherals.
-
-This series has been tested on multiple devices both by checking the
-zones setup matches the expectations and by double-checking physical
-addresses on pages allocated on the three relevant areas GFP_DMA,
-GFP_DMA32, GFP_KERNEL:
-
-- On an RPi4 with variations on the ram memory size. But also forcing
-  the situation where all three memory zones are nonempty by setting a 3G
-  ZONE_DMA32 ceiling on a 4G setup. Both with and without NUMA support.
-
-- On a Synquacer box[1] with 32G of memory.
-
-- On an ACPI based Huawei TaiShan server[2] with 256G of memory.
-
-- On a QEMU virtual machine running arm64's OpenSUSE Tumbleweed.
-
-That's all.
-
-Regards,
-Nicolas
-
-[1] https://www.96boards.org/product/developerbox/
-[2] https://e.huawei.com/en/products/cloud-computing-dc/servers/taishan-server/taishan-2280-v2
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
 
 ---
 
 Changes in v5:
-- Fix issue with swiotlb initialization
+- Fixed swiotlb initialization
 
 Changes in v4:
-- Rebased to linux-next
-- Fix issue when NUMA=n and ZONE_DMA=n
-- Merge two max_zone_dma*_phys() functions
+- Fixed issue when NUMA=n and ZONE_DMA=n
+- Merged two max_zone_dma*_phys() functions
 
 Changes in v3:
-- Fixed ZONE_DMA's size to 1G
-- Update mmzone.h's comment to match changes in arm64
-- Remove all dma-direct patches
+- Used fixed size ZONE_DMA
+- Fix check befor swiotlb_init()
 
 Changes in v2:
 - Update comment to reflect new zones split
 - ZONE_DMA will never be left empty
-- Try another approach merging both ZONE_DMA comments into one
-- Address Christoph's comments
-- If this approach doesn't get much traction I'll just drop the patch
-  from the series as it's not really essential
 
-Nicolas Saenz Julienne (4):
-  arm64: mm: use arm64_dma_phys_limit instead of calling
-    max_zone_dma_phys()
-  arm64: rename variables used to calculate ZONE_DMA32's size
-  arm64: use both ZONE_DMA and ZONE_DMA32
-  mm: refresh ZONE_DMA and ZONE_DMA32 comments in 'enum zone_type'
+ arch/arm64/Kconfig            |  4 +++
+ arch/arm64/include/asm/page.h |  2 ++
+ arch/arm64/mm/init.c          | 52 +++++++++++++++++++++++++----------
+ 3 files changed, 44 insertions(+), 14 deletions(-)
 
- arch/arm64/Kconfig            |  4 ++
- arch/arm64/include/asm/page.h |  2 +
- arch/arm64/mm/init.c          | 71 +++++++++++++++++++++++++----------
- include/linux/mmzone.h        | 45 ++++++++++++----------
- 4 files changed, 83 insertions(+), 39 deletions(-)
-
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 6b6362b83004..2dbe0165bd15 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -267,6 +267,10 @@ config GENERIC_CSUM
+ config GENERIC_CALIBRATE_DELAY
+ 	def_bool y
+ 
++config ZONE_DMA
++	bool "Support DMA zone" if EXPERT
++	default y
++
+ config ZONE_DMA32
+ 	bool "Support DMA32 zone" if EXPERT
+ 	default y
+diff --git a/arch/arm64/include/asm/page.h b/arch/arm64/include/asm/page.h
+index d39ddb258a04..7b8c98830101 100644
+--- a/arch/arm64/include/asm/page.h
++++ b/arch/arm64/include/asm/page.h
+@@ -38,4 +38,6 @@ extern int pfn_valid(unsigned long);
+ 
+ #include <asm-generic/getorder.h>
+ 
++#define ARCH_ZONE_DMA_BITS 30
++
+ #endif
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 8e9bc64c5878..92c911fc2ff9 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -56,6 +56,13 @@ EXPORT_SYMBOL(physvirt_offset);
+ struct page *vmemmap __ro_after_init;
+ EXPORT_SYMBOL(vmemmap);
+ 
++/*
++ * We create both ZONE_DMA and ZONE_DMA32. ZONE_DMA covers the first 1G of
++ * memory as some devices, namely the Raspberry Pi 4, have peripherals with
++ * this limited view of the memory. ZONE_DMA32 will cover the rest of the 32
++ * bit addressable memory area.
++ */
++phys_addr_t arm64_dma_phys_limit __ro_after_init;
+ phys_addr_t arm64_dma32_phys_limit __ro_after_init;
+ 
+ #ifdef CONFIG_KEXEC_CORE
+@@ -169,15 +176,16 @@ static void __init reserve_elfcorehdr(void)
+ {
+ }
+ #endif /* CONFIG_CRASH_DUMP */
++
+ /*
+- * Return the maximum physical address for ZONE_DMA32 (DMA_BIT_MASK(32)). It
+- * currently assumes that for memory starting above 4G, 32-bit devices will
+- * use a DMA offset.
++ * Return the maximum physical address for a zone with a given address size
++ * limit. It currently assumes that for memory starting above 4G, 32-bit
++ * devices will use a DMA offset.
+  */
+-static phys_addr_t __init max_zone_dma32_phys(void)
++static phys_addr_t __init max_zone_phys(unsigned int zone_bits)
+ {
+ 	phys_addr_t offset = memblock_start_of_DRAM() & GENMASK_ULL(63, 32);
+-	return min(offset + (1ULL << 32), memblock_end_of_DRAM());
++	return min(offset + (1ULL << zone_bits), memblock_end_of_DRAM());
+ }
+ 
+ #ifdef CONFIG_NUMA
+@@ -186,6 +194,9 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
+ {
+ 	unsigned long max_zone_pfns[MAX_NR_ZONES]  = {0};
+ 
++#ifdef CONFIG_ZONE_DMA
++	max_zone_pfns[ZONE_DMA] = PFN_DOWN(arm64_dma_phys_limit);
++#endif
+ #ifdef CONFIG_ZONE_DMA32
+ 	max_zone_pfns[ZONE_DMA32] = PFN_DOWN(arm64_dma32_phys_limit);
+ #endif
+@@ -201,13 +212,18 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
+ 	struct memblock_region *reg;
+ 	unsigned long zone_size[MAX_NR_ZONES], zhole_size[MAX_NR_ZONES];
+ 	unsigned long max_dma32 = min;
++	unsigned long max_dma = min;
+ 
+ 	memset(zone_size, 0, sizeof(zone_size));
+ 
+-	/* 4GB maximum for 32-bit only capable devices */
++#ifdef CONFIG_ZONE_DMA
++	max_dma = PFN_DOWN(arm64_dma_phys_limit);
++	zone_size[ZONE_DMA] = max_dma - min;
++	max_dma32 = max_dma;
++#endif
+ #ifdef CONFIG_ZONE_DMA32
+ 	max_dma32 = PFN_DOWN(arm64_dma32_phys_limit);
+-	zone_size[ZONE_DMA32] = max_dma32 - min;
++	zone_size[ZONE_DMA32] = max_dma32 - max_dma;
+ #endif
+ 	zone_size[ZONE_NORMAL] = max - max_dma32;
+ 
+@@ -219,11 +235,17 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
+ 
+ 		if (start >= max)
+ 			continue;
+-
++#ifdef CONFIG_ZONE_DMA
++		if (start < max_dma) {
++			unsigned long dma_end = min_not_zero(end, max_dma);
++			zhole_size[ZONE_DMA] -= dma_end - start;
++		}
++#endif
+ #ifdef CONFIG_ZONE_DMA32
+ 		if (start < max_dma32) {
+-			unsigned long dma_end = min(end, max_dma32);
+-			zhole_size[ZONE_DMA32] -= dma_end - start;
++			unsigned long dma32_end = min(end, max_dma32);
++			unsigned long dma32_start = max(start, max_dma);
++			zhole_size[ZONE_DMA32] -= dma32_end - dma32_start;
+ 		}
+ #endif
+ 		if (end > max_dma32) {
+@@ -418,9 +440,11 @@ void __init arm64_memblock_init(void)
+ 
+ 	early_init_fdt_scan_reserved_mem();
+ 
+-	/* 4GB maximum for 32-bit only capable devices */
++	if (IS_ENABLED(CONFIG_ZONE_DMA))
++		arm64_dma_phys_limit = max_zone_phys(ARCH_ZONE_DMA_BITS);
++
+ 	if (IS_ENABLED(CONFIG_ZONE_DMA32))
+-		arm64_dma32_phys_limit = max_zone_dma32_phys();
++		arm64_dma32_phys_limit = max_zone_phys(32);
+ 	else
+ 		arm64_dma32_phys_limit = PHYS_MASK + 1;
+ 
+@@ -430,7 +454,7 @@ void __init arm64_memblock_init(void)
+ 
+ 	high_memory = __va(memblock_end_of_DRAM() - 1) + 1;
+ 
+-	dma_contiguous_reserve(arm64_dma32_phys_limit);
++	dma_contiguous_reserve(arm64_dma_phys_limit ? : arm64_dma32_phys_limit);
+ }
+ 
+ void __init bootmem_init(void)
+@@ -534,7 +558,7 @@ static void __init free_unused_memmap(void)
+ void __init mem_init(void)
+ {
+ 	if (swiotlb_force == SWIOTLB_FORCE ||
+-	    max_pfn > (arm64_dma32_phys_limit >> PAGE_SHIFT))
++	    max_pfn > PFN_DOWN(arm64_dma_phys_limit ? : arm64_dma32_phys_limit))
+ 		swiotlb_init(1);
+ 	else
+ 		swiotlb_force = SWIOTLB_NO_FORCE;
 -- 
 2.23.0
 
