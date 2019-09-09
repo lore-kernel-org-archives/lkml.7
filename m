@@ -2,116 +2,253 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E54C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0DFCC49ED6
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF4062171F
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:48:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DF252082C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:49:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="pyj6eZzO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388565AbfIIPs6 (ORCPT
+        id S2388978AbfIIPti (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 11:48:58 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53282 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728373AbfIIPs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 11:48:58 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A30DCAFC6;
-        Mon,  9 Sep 2019 15:48:56 +0000 (UTC)
-From:   Luis Henriques <lhenriques@suse.com>
-To:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Luis Henriques <lhenriques@suse.com>
-Subject: [PATCH v3] ceph: allow object copies across different filesystems in the same cluster
-Date:   Mon,  9 Sep 2019 16:48:54 +0100
-Message-Id: <20190909154854.23839-1-lhenriques@suse.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 9 Sep 2019 11:49:38 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45938 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729792AbfIIPth (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 11:49:37 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 4so8038901pgm.12
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 08:49:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=TcpVRxPvSCJBDeMrd2YTMRp8Rl8PbIZu3n0i+gvGrs0=;
+        b=pyj6eZzOMQKgCMAnu5hk7YcUQt/XRn56h4r0IMODI0hyM9G9CYPIi2I36Xh8bWAswe
+         HQ69epbn6Uf9ynM4L80OZwNVT7+NKwhsVjbbBOdgZ3Sno+ciFri39Kli05LwVBVwXMO4
+         WPQPuPR8PH4DNpoQm9XN6dklzcVFGdNXqpu0a1NtCG6oZM5UZY52+iEmc5U+69aWMSDD
+         TtFXWImbrKRvBbStNAPXOn384l3qdIeXuF90JziftEWHMPomjRynDL5FJz+grsE1Ojux
+         M7UMm0N5iJ2ogZ3iHxqnGcVPcNf5bXqHXW4l+fPAohZq2BPjtEtmzX37Gd63Ig1oZN85
+         4jrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=TcpVRxPvSCJBDeMrd2YTMRp8Rl8PbIZu3n0i+gvGrs0=;
+        b=XO7Y+h5WWINGDDEUDmPfHnI48kz9LSia3/d/LFUUlEqQpOf4YaF3zK+ShwbekiL6au
+         RUxIqbaH1HbxtOmQEzxabISaAIrHWIx7TY+/PS2Fxg6HTh8VmyJ3EtzThtnfYb7i9Die
+         Dzst3a5L6sjLsbprM0SpmyoHnKTvGO8IPzK6rXQGxlVYLWF8rhlpvrhOHUIS374gCd02
+         YeWfO4JfPnpWjAuPg6WFshW/RImCYIEU8AvZpFxg8Z4luXYcJnjryDMFUIk8UaEiRU4o
+         Hy/F/RVDG4Vu1DXgL4eodZHALJL2r3NngO/WZgVfM48gx92m8jvdnO41SwH1titG0bJ2
+         DEgg==
+X-Gm-Message-State: APjAAAXw5HwMA2qlXQocNEwpfGbWJXHkILpht3YS7efClYqrKE/XP9h9
+        ymdTnQ5oMZoWqDXEfZGxDq3B2g==
+X-Google-Smtp-Source: APXvYqySGg+p3Dw7cgCsaiUZVu10eDMnz9rdqxHXA7Nhsj2dAxRpToTiDCtfq8sckKTaoarNWjC1Vw==
+X-Received: by 2002:a63:df06:: with SMTP id u6mr21484642pgg.96.1568044176881;
+        Mon, 09 Sep 2019 08:49:36 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:75ae:6074:df59:7e95? ([2601:646:c200:1ef2:75ae:6074:df59:7e95])
+        by smtp.gmail.com with ESMTPSA id d15sm15407841pfo.118.2019.09.09.08.49.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 09 Sep 2019 08:49:33 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v2 1/5] fs: Add support for an O_MAYEXEC flag on sys_open()
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16G102)
+In-Reply-To: <9e43ca3f-04c0-adba-1ab4-bbc8ed487934@ssi.gouv.fr>
+Date:   Mon, 9 Sep 2019 08:49:32 -0700
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Eric Chiang <ericchiang@google.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?utf-8?Q?Philippe_Tr=C3=A9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <D3D3F165-F562-4090-831D-D8E39F9C5246@amacapital.net>
+References: <20190906152455.22757-1-mic@digikod.net> <20190906152455.22757-2-mic@digikod.net> <87ef0te7v3.fsf@oldenburg2.str.redhat.com> <75442f3b-a3d8-12db-579a-2c5983426b4d@ssi.gouv.fr> <f53ec45fd253e96d1c8d0ea6f9cca7f68afa51e3.camel@kernel.org> <1fbf54f6-7597-3633-a76c-11c4b2481add@ssi.gouv.fr> <5a59b309f9d0603d8481a483e16b5d12ecb77540.camel@kernel.org> <D1212E06-773B-42B9-B7C3-C4C1C2A6111D@amacapital.net> <9e43ca3f-04c0-adba-1ab4-bbc8ed487934@ssi.gouv.fr>
+To:     =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-OSDs are able to perform object copies across different pools.  Thus,
-there's no need to prevent copy_file_range from doing remote copies if the
-source and destination superblocks are different.  Only return -EXDEV if
-they have different fsid (the cluster ID).
 
-Signed-off-by: Luis Henriques <lhenriques@suse.com>
----
- fs/ceph/file.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+> On Sep 9, 2019, at 2:18 AM, Micka=C3=ABl Sala=C3=BCn <mickael.salaun@ssi.g=
+ouv.fr> wrote:
+>=20
+>=20
+>> On 06/09/2019 20:41, Andy Lutomirski wrote:
+>>=20
+>>=20
+>>>> On Sep 6, 2019, at 11:38 AM, Jeff Layton <jlayton@kernel.org> wrote:
+>>>>=20
+>>>>> On Fri, 2019-09-06 at 19:14 +0200, Micka=C3=ABl Sala=C3=BCn wrote:
+>>>>>> On 06/09/2019 18:48, Jeff Layton wrote:
+>>>>>>> On Fri, 2019-09-06 at 18:06 +0200, Micka=C3=ABl Sala=C3=BCn wrote:
+>>>>>>> On 06/09/2019 17:56, Florian Weimer wrote:
+>>>>>>> Let's assume I want to add support for this to the glibc dynamic loa=
+der,
+>>>>>>> while still being able to run on older kernels.
+>>>>>>>=20
+>>>>>>> Is it safe to try the open call first, with O_MAYEXEC, and if that f=
+ails
+>>>>>>> with EINVAL, try again without O_MAYEXEC?
+>>>>>>=20
+>>>>>> The kernel ignore unknown open(2) flags, so yes, it is safe even for
+>>>>>> older kernel to use O_MAYEXEC.
+>>>>>>=20
+>>>>>=20
+>>>>> Well...maybe. What about existing programs that are sending down bogus=
 
-Hi,
+>>>>> open flags? Once you turn this on, they may break...or provide a way t=
+o
+>>>>> circumvent the protections this gives.
+>>>>=20
+>>>> Well, I don't think we should nor could care about bogus programs that
+>>>> do not conform to the Linux ABI.
+>>>>=20
+>>>=20
+>>> But they do conform. The ABI is just undefined here. Unknown flags are
+>>> ignored so we never really know if $random_program may be setting them.
+>>>=20
+>>>>> Maybe this should be a new flag that is only usable in the new openat2=
+()
+>>>>> syscall that's still under discussion? That syscall will enforce that
+>>>>> all flags are recognized. You presumably wouldn't need the sysctl if y=
+ou
+>>>>> went that route too.
+>>>>=20
+>>>> Here is a thread about a new syscall:
+>>>> https://lore.kernel.org/lkml/1544699060.6703.11.camel@linux.ibm.com/
+>>>>=20
+>>>> I don't think it fit well with auditing nor integrity. Moreover using
+>>>> the current open(2) behavior of ignoring unknown flags fit well with th=
+e
+>>>> usage of O_MAYEXEC (because it is only a hint to the kernel about the
+>>>> use of the *opened* file).
+>>>>=20
+>>>=20
+>>> The fact that open and openat didn't vet unknown flags is really a bug.
+>>>=20
+>>> Too late to fix it now, of course, and as Aleksa points out, we've
+>>> worked around that in the past. Now though, we have a new openat2
+>>> syscall on the horizon. There's little need to continue these sorts of
+>>> hacks.
+>>>=20
+>>> New open flags really have no place in the old syscalls, IMO.
+>>>=20
+>>>>> Anyone that wants to use this will have to recompile anyway. If the
+>>>>> kernel doesn't support openat2 or if the flag is rejected then you kno=
+w
+>>>>> that you have no O_MAYEXEC support and can decide what to do.
+>>>>=20
+>>>> If we want to enforce a security policy, we need to either be the syste=
+m
+>>>> administrator or the distro developer. If a distro ship interpreters
+>>>> using this flag, we don't need to recompile anything, but we need to be=
 
-Here's the changelog:
+>>>> able to control the enforcement according to the mount point
+>>>> configuration (or an advanced MAC, or an IMA config). I don't see why a=
+n
+>>>> userspace process should check if this flag is supported or not, it
+>>>> should simply use it, and the sysadmin will enable an enforcement if it=
 
-* since v2
+>>>> makes sense for the whole system.
+>>>>=20
+>>>=20
+>>> A userland program may need to do other risk mitigation if it sets
+>>> O_MAYEXEC and the kernel doesn't recognize it.
+>>>=20
+>>> Personally, here's what I'd suggest:
+>>>=20
+>>> - Base this on top of the openat2 set
+>>> - Change it that so that openat2() files are non-executable by default. A=
+nyone wanting to do that needs to set O_MAYEXEC or upgrade the fd somehow.
+>>> - Only have the openat2 syscall pay attention to O_MAYEXEC. Let open and=
+ openat continue ignoring the new flag.
+>>>=20
+>>> That works around a whole pile of potential ABI headaches. Note that
+>>> we'd need to make that decision before the openat2 patches are merged.
+>>>=20
+>>> Even better would be to declare the new flag in some openat2-only flag
+>>> space, so there's no confusion about it being supported by legacy open
+>>> calls.
+>>>=20
+>>> If glibc wants to implement an open -> openat2 wrapper in userland
+>>> later, it can set that flag in the wrapper implicitly to emulate the old=
 
-- single dout() in error path
+>>> behavior.
+>>>=20
+>>> Given that you're going to have to recompile software to take advantage
+>>> of this anyway, what's the benefit to changing legacy syscalls?
+>>>=20
+>>>>>>> Or do I risk disabling this security feature if I do that?
+>>>>>>=20
+>>>>>> It is only a security feature if the kernel support it, otherwise it i=
+s
+>>>>>> a no-op.
+>>>>>>=20
+>>>>>=20
+>>>>> With a security feature, I think we really want userland to aware of
+>>>>> whether it works.
+>>>>=20
+>>>> If userland would like to enforce something, it can already do it
+>>>> without any kernel modification. The goal of the O_MAYEXEC flag is to
+>>>> enable the kernel, hence sysadmins or system designers, to enforce a
+>>>> global security policy that makes sense.
+>>>>=20
+>>>=20
+>>> I don't see how this helps anything if you can't tell whether the kernel=
 
-* since v1:
+>>> recognizes the damned thing. Also, our track record with global sysctl
+>>> switches like this is pretty poor. They're an administrative headache as=
 
-- Dropped have_fsid checks on client structs
-- Use %pU to print the fsid instead of raw hex strings (%*ph)
-- Fixed 'To:' field in email so that this time the patch hits vger
+>>> well as a potential attack vector.
+>>=20
+>> I tend to agree. The sysctl seems like it=E2=80=99s asking for trouble. I=
+ can see an ld.so.conf option to turn this thing off making sense.
+>=20
+> The sysctl is required to enable the adoption of this flag without
+> breaking existing systems. Current systems may have "noexec" on mount
+> points containing scripts. Without giving the ability to the sysadmin to
+> control that behavior, updating to a newer version of an interpreter
+> using O_MAYEXEC may break such systems.
+>=20
+> How would you do this with ld.so.conf ?
+>=20
 
-Cheers,
---
-Luis
+By telling user code not to use O_MAYEXEC?
 
-diff --git a/fs/ceph/file.c b/fs/ceph/file.c
-index 685a03cc4b77..846cf5aea85e 100644
---- a/fs/ceph/file.c
-+++ b/fs/ceph/file.c
-@@ -1904,6 +1904,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
- 	struct ceph_inode_info *src_ci = ceph_inode(src_inode);
- 	struct ceph_inode_info *dst_ci = ceph_inode(dst_inode);
- 	struct ceph_cap_flush *prealloc_cf;
-+	struct ceph_fs_client *src_fsc = ceph_inode_to_client(src_inode);
- 	struct ceph_object_locator src_oloc, dst_oloc;
- 	struct ceph_object_id src_oid, dst_oid;
- 	loff_t endoff = 0, size;
-@@ -1915,8 +1916,16 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
- 
- 	if (src_inode == dst_inode)
- 		return -EINVAL;
--	if (src_inode->i_sb != dst_inode->i_sb)
--		return -EXDEV;
-+	if (src_inode->i_sb != dst_inode->i_sb) {
-+		struct ceph_fs_client *dst_fsc = ceph_inode_to_client(dst_inode);
-+
-+		if (ceph_fsid_compare(&src_fsc->client->fsid,
-+				      &dst_fsc->client->fsid)) {
-+			dout("Copying files across clusters: src: %pU dst: %pU\n",
-+			     &src_fsc->client->fsid, &dst_fsc->client->fsid);
-+			return -EXDEV;
-+		}
-+	}
- 	if (ceph_snap(dst_inode) != CEPH_NOSNAP)
- 		return -EROFS;
- 
-@@ -1928,7 +1937,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
- 	 * efficient).
- 	 */
- 
--	if (ceph_test_mount_opt(ceph_inode_to_client(src_inode), NOCOPYFROM))
-+	if (ceph_test_mount_opt(src_fsc, NOCOPYFROM))
- 		return -EOPNOTSUPP;
- 
- 	if ((src_ci->i_layout.stripe_unit != dst_ci->i_layout.stripe_unit) ||
-@@ -2044,7 +2053,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
- 				dst_ci->i_vino.ino, dst_objnum);
- 		/* Do an object remote copy */
- 		err = ceph_osdc_copy_from(
--			&ceph_inode_to_client(src_inode)->client->osdc,
-+			&src_fsc->client->osdc,
- 			src_ci->i_vino.snap, 0,
- 			&src_oid, &src_oloc,
- 			CEPH_OSD_OP_FLAG_FADVISE_SEQUENTIAL |
+Alternatively, you could allow O_MAYEXEC even on a noexec mount and have a s=
+trong_noexec option that blocks it.=
