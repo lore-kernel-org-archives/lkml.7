@@ -2,282 +2,92 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5B4C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A826C4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60BFA218DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:57:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="ty9pCv8i"
+	by mail.kernel.org (Postfix) with ESMTP id 087C7206CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:57:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732646AbfIIO5D (ORCPT
+        id S1732756AbfIIO5P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 10:57:03 -0400
-Received: from mo4-p00-ob.smtp.rzone.de ([85.215.255.20]:13205 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731919AbfIIO5D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 10:57:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1568041017;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=GF9QWFAeWPT5xgeVLqGMsw7outsKW8oxl4popYjcjI8=;
-        b=ty9pCv8ip+gaah9Y9z85fY/iB77O+EDu/L37zwpZFWdY1IY4YswF61m5qH3PVj71k0
-        G3KTIJEnAe1wvYEkjopmjRP3r7I+QfWXkKn2PPJPyBSqIN+GJDK47Y4VgjOq1wG/GGqy
-        52bT/Vvly3J3XS7SaBYwRqzeyaFeY4yosGx47Q1c5B3DRDB0zGi/UN9f7OGGcn3qhEhD
-        T60xM4UFQD3gHxLt5RvSEtvXuFX9itljn/xK4xBcy6LkiLdgUS7uqhhP0pltRYVHxNXx
-        m6gZmJtwiwnP14GAG2c2jeE0NEXhESvnEudQkhR3fmfbFT/XzMES6JYK7JXVepw6rAwW
-        2qMA==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmMnw4vkig=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 44.27.0 DYNA|AUTH)
-        with ESMTPSA id u036f9v89EuqxVR
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Mon, 9 Sep 2019 16:56:52 +0200 (CEST)
-Content-Type: text/plain; charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [Letux-kernel] [RFC PATCH 0/3] Enable 1GHz support on omap36xx
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <CAHCN7xJsPa0i+Z+qpCkWcdAh9+udmGT0RPNchdDsfB=8ptd3Nw@mail.gmail.com>
-Date:   Mon, 9 Sep 2019 16:56:51 +0200
-Cc:     =?utf-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Tony Lindgren <tony@atomide.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <87420DBD-770F-4C32-9499-A3AEA5876E8A@goldelico.com>
-References: <20190801012823.28730-1-neolynx@gmail.com> <CAHCN7x+nD0J6KZYtfH+0ApQTPO5byO2obMkUwc9Uf4WubyRbTw@mail.gmail.com> <C04F49BA-1229-4E96-9FCF-4FC662D1DB11@goldelico.com> <CAHCN7x+Ye6sB_YqO0sAX1OJDw64B-qGS3pL545v3Xk5z914cwQ@mail.gmail.com> <0C1EF64E-B33C-4BFA-A7D3-471DD1B9EE86@goldelico.com> <515048DE-138D-4400-8168-F2B7D61F1005@goldelico.com> <CAHCN7xLPCX9rZ0+7KVBiA_bgZ6tg6VeCXqD-UXu+6iwpFMPVrA@mail.gmail.com> <7B3D1D77-3E8C-444F-90B9-6DF2641178B8@goldelico.com> <CAHCN7xLW58ggx3CpVL=HdCVHWo6D-MCTB91A_9rtSRoZQ+xJuQ@mail.gmail.com> <FA2920FE-B76A-4D44-A264-862A1CCBF7FC@goldelico.com> <CAHCN7xJsPa0i+Z+qpCkWcdAh9+udmGT0RPNchdDsfB=8ptd3Nw@mail.gmail.com>
-To:     Adam Ford <aford173@gmail.com>
-X-Mailer: Apple Mail (2.3124)
+        Mon, 9 Sep 2019 10:57:15 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41620 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731919AbfIIO5O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 10:57:14 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 623CF10C0920;
+        Mon,  9 Sep 2019 14:57:14 +0000 (UTC)
+Received: from localhost (unknown [10.18.25.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D6A295D6B2;
+        Mon,  9 Sep 2019 14:57:04 +0000 (UTC)
+Date:   Mon, 9 Sep 2019 10:57:04 -0400
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Martijn Coenen <maco@android.com>,
+        Mikulas Patocka <mpatocka@redhat.com>
+Cc:     agk@redhat.com, dm-devel@redhat.com, dariofreni@google.com,
+        jiyong@google.com, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, maco@google.com, ioffe@google.com,
+        narayan@google.com, kernel-team@android.com
+Subject: Re: dm-bufio: Allow clients to specify an upper bound on cache size.
+Message-ID: <20190909145703.GA16249@redhat.com>
+References: <20190906074526.169194-1-maco@android.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190906074526.169194-1-maco@android.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Mon, 09 Sep 2019 14:57:14 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adam,
+On Fri, Sep 06 2019 at  3:45am -0400,
+Martijn Coenen <maco@android.com> wrote:
 
-> Am 09.09.2019 um 16:26 schrieb Adam Ford <aford173@gmail.com>:
->=20
-> On Sat, Sep 7, 2019 at 2:38 AM H. Nikolaus Schaller =
-<hns@goldelico.com> wrote:
->>=20
->> Hi Adam,
->>=20
->>> Am 02.09.2019 um 23:10 schrieb Adam Ford <aford173@gmail.com>:
->>>=20
->>> On Mon, Sep 2, 2019 at 10:46 AM H. Nikolaus Schaller =
-<hns@goldelico.com> wrote:
->>>>=20
->>>>=20
->>>>=20
->>>> But my tests show that decoding works now. So you already might =
-give it a try.
->>>=20
->>> I am traveling all this week, but I have an omap3530, DM3730
->>> (omap3630), and an AM3517 that I use for testing.
->>=20
->> now as the omap3430 and omap3630 opp-v2 tables are installed,
->> we could add am35x7 as well.
->>=20
->> What needs to be done:
->>=20
->> 1. add OPP-v2 table to am3517.dtsi
->>=20
->> for example copy skeleton from omap36xx.dtsi
->>=20
->> and define reasonable clock speeds. I would think about
->> 150 MHz, 300 MHz, 600MHz.
->=20
-> This might be more of a question for TI, but  can we match the 3430
-> list of frequencies?
->=20
-> Something like:
->    125000  1200000
->    250000  1200000
->    500000  1200000
->    550000  1200000
->    600000  1200000
+> The upper limit on the cache size of a client is currently determined by
+> dividing the total cache size by the number of clients. However, in some
+> cases it is beneficial to give one client a higher limit than others; an
+> example is a device with many dm-verity targets, where one target has a
+> very large hashtree, and all the others have a small hashtree. Giving
+> the target with the large hashtree a higher limit will be beneficial.
+> Another example is dm-verity-fec: FEC is only used in (rare) error
+> conditions, yet for every dm-verity target with FEC, we create two FEC
+> dm-bufio clients, which together have a higher cache limit than the
+> dm-verity target itself.
+> 
+> This patchset allows a client to indicate a maximum cache size for its
+> client; if that maximum is lower than the calculated per-client limit,
+> that maximum will be used instead, and the freed up cache size will be
+> allocated to other clients (that haven't set a maximum).
+> 
+> Note that this algorithm is not perfect; if we have 100MB with 3
+> clients, where the first set a max of 1MB, the second set a max of 40MB,
+> and the third set no maximumm, the ideal allocation would be 1:40:59,
+> respectively. However, because the initial per-client limit is 100 / 3
+> =~33MB, the requested max of 40MB is over the per-client limit, and
+> instead the allocation will end up being ~ 1:40:49. This is still better
+> than the original 33:33:33 allocation. An iterative algorithm could do
+> better, but it also complicates the code significantly.
 
-And another question: is it more derived from omap3430 or omap3630?
+Definitely not very intuitive.. but yes I think it is a reasonable
+tradeoff between your goals and further code complexity to be able to
+achieve the "ideal".
 
->=20
->=20
->>=20
->> Debatable is if we need a clock-latency definition.
->>=20
->> 2. change all voltages to 1.2V
->>=20
->>                        opp-microvolt =3D <1200000 1200000 1200000>;
->>=20
->> There is no point to specify 3 voltages <target min max> here since =
-we
->> will never need a min and a max value.
->>=20
->>                        opp-microvolt =3D <1200000>;
->>=20
->> should also be ok (AFAIK, parser handles single-value records).
->>=20
->> 3. AFAIK there is no speed binned eFuse...
->>=20
->> But the ti-cpufreq driver always wants to read some eFuse register.
->>=20
->> So please check if you can read 0x4800244C and 0x4830A204
->> like on omap36xx and if they produce stable values (and not
->> random noise).
->=20
-> For the AM3517,
->=20
-> 0x4800244C =3D 0000 0cc0
+Think the documented example can be made clearer by documenting that
+dm_bufio_cache_size_per_client = 49.  And that _that_ is the reason why
+the client that didn't set a maximum is bounded to 49.
 
-If it behaves like an dm3730 (Table 1-6) this would be read as =
-800/600MHz
-and some reserved code in bit 7:6.
+Overall I think this patch looks reasonable, but I'd like Mikulas to
+review this closer before I pick it up.
 
-If it behaves like an omap3530 (Table 1-6) this would bean 600MHz but =
-reserved
-value for IVA Frequency.
-
-
-> 0x4830A204 =3D 1b86 802f
-
-would be decoded (Table 1-7) as "AM/DM37x ES1.1"
-
-omap35xx would have a different code (Table 1-9). Most similar is =
-"OMAP35x ES2.0" with 0x1B7A E02F
-
-So this seems to answer that the am3517 is indeed a derivative of the =
-am/dm37xx.
-
-Therefore the only OPPs would be OPP50 (300 MHz) and OPP100 (600 MHz).
-
-Only tests or TI internal documentations could show if the am3517 still
-runs stable at newly invented "OPP25" (150MHz).
-
->=20
-> The AM3517 shows these are valid addresses and I read them multiple
-> times and they yielded the same results even after power cycling.
->=20
->=20
->>=20
->> If yes, we simply assume that am3517 is similar enough to omap3630,
->> ignore that there is no eFuse, but read the register anyways and
->> then ignore the bit if it is 0 or 1.
->>=20
->> This means that all OPPs can get
->>=20
->>                        opp-supported-hw =3D <0xffffffff 0xffffffff>;
->>=20
->> There could also be a default handler if this property is missing,
->> but I have not researched this.
->>=20
-> Like this?
->=20
-> opp1-125000000 {
->     opp-hz =3D /bits/ 64 <125000000>;
->     opp-microvolt =3D <1200000>;
->     opp-supported-hw =3D <0xffffffff 0xffffffff>;
-> };
->=20
-> opp2-250000000 {
->     opp-hz =3D /bits/ 64 <250000000>;
->     opp-microvolt =3D <1200000>;
->    opp-supported-hw =3D <0xffffffff 0xffffffff>;
->     opp-suspend;
-> };
->=20
-> opp3-500000000 {
->     opp-hz =3D /bits/ 64 <500000000>;
->     opp-microvolt =3D <1200000>;
->     opp-supported-hw =3D <0xffffffff 0xffffffff>;
-> };
->=20
-> opp4-550000000 {
->     opp-hz =3D /bits/ 64 <550000000>;
->     opp-microvolt =3D <1200000>;
->     opp-supported-hw =3D <0xffffffff 0xffffffff>;
-> };
->=20
-> opp5-600000000 {
->     opp-hz =3D /bits/ 64 <600000000>;
->     opp-microvolt =3D <1200000>;
->     opp-supported-hw =3D <0xffffffff 0xffffffff>;
-> };
-
-Yes.
-
->=20
-> What does opp-suspend do?  I noticed it in the 34xx.dtsi
-
-Good question. I think it is the OPP to be chosen before suspend:
-
-https://www.kernel.org/doc/Documentation/devicetree/bindings/opp/opp.txt
-says
-
-- opp-suspend: Marks the OPP to be used during device suspend. Only one =
-OPP in
-  the table should have this.
-
-But that doesn't mean the drivers make use of this marker.
-
-This makes me also wonder if we should tag the OPP1G and OPP6 as =
-"turbo-mode"...
-
-Another question that came up by private mail from Andr=C3=A9 was if we
-should better disable the turbo OPPs of omap34xx and 36xx by default
-(status =3D "disabled";) because there are concerns about overheating
-the chips and we have no thermal regulation like for omap4 & 5.
-
-But this would mean that every board DTS would have to set it explicitly
-to "enabled".
-
-And another concern is if the 1GHz OPP doesn't also need to switch the
-ABB bias LDO to a different mode. This is not done by the ti-cpufreq =
-driver.
-Maybe it is done by some driver in mach-omap but I have not searched =
-for.
-
-So the concern is that we will run the turbo modes outside of the TI =
-specs
-while before applying the patch set this would be a lesser problem =
-(OPP130
-should also be thermally limited to 90=C2=B0C).
-
-I.e. users of 1GHz capable boards will not only see 25% more speed but
-suddenly higher SoC temperatures than the years before.
-
->=20
->> 4. add compatible to ti-cpufreq
->> and share the register offsets, bit masks etc. with omap3630:
->>=20
->>        { .compatible =3D "ti,am33xx", .data =3D &am3x_soc_data, },
->>        { .compatible =3D "ti,am3517", .data =3D &omap36xx_soc_data, =
-},
->>        { .compatible =3D "ti,am43", .data =3D &am4x_soc_data, },
->>        { .compatible =3D "ti,dra7", .data =3D &dra7_soc_data },
->>        { .compatible =3D "ti,omap3430", .data =3D &omap34xx_soc_data, =
-},
->>        { .compatible =3D "ti,omap3630", .data =3D &omap36xx_soc_data, =
-},
->>=20
->> 5. configure for CONFIG_ARM_TI_CPUFREQ=3Dy
->>=20
->> This should IMHO suffice.
->=20
-> If you're OK with what I am proposing, I'll run some tests and submit
-> a patch.  I won't promise to fully understand what's happening.  :-)
-
-Same for me :)
-
-BR and thanks,
-Nikolaus
-
+Thanks,
+Mike
