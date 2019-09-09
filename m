@@ -6,81 +6,80 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC592C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2BD4C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEC9421920
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:28:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9156221D6C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:32:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728676AbfIIQ2O (ORCPT
+        id S1727006AbfIIQck (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 12:28:14 -0400
-Received: from mga11.intel.com ([192.55.52.93]:61682 "EHLO mga11.intel.com"
+        Mon, 9 Sep 2019 12:32:40 -0400
+Received: from muru.com ([72.249.23.125]:60392 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726148AbfIIQ2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 12:28:13 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Sep 2019 09:28:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,486,1559545200"; 
-   d="scan'208";a="213975881"
-Received: from pstarove-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.38.118])
-  by fmsmga002.fm.intel.com with ESMTP; 09 Sep 2019 09:28:09 -0700
-Date:   Mon, 9 Sep 2019 17:28:08 +0100
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Doug Anderson <dianders@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "# 4.0+" <stable@vger.kernel.org>,
-        Vadim Sukhomlinov <sukhomlinov@google.com>,
-        linux-integrity@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>
-Subject: Re: [PATCH AUTOSEL 4.19 126/167] tpm: Fix TPM 1.2 Shutdown sequence
- to prevent future TPM operations
-Message-ID: <20190909162808.ggcnrtvbvor7deqy@linux.intel.com>
-References: <20190903162519.7136-1-sashal@kernel.org>
- <20190903162519.7136-126-sashal@kernel.org>
- <CAD=FV=W0YodeoOCiCv9zmv+-gswuU8U_XgrBnesE=wynTbDBiA@mail.gmail.com>
- <20190903165346.hwqlrin77cmzjiti@cantor>
- <20190903194335.GG5281@sasha-vm>
- <f2224c094836a4b8989c1cd6243a0b7ad1261a87.camel@linux.intel.com>
- <20190907220448.GB2012@sasha-vm>
+        id S1725908AbfIIQck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 12:32:40 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 4035B80BF;
+        Mon,  9 Sep 2019 16:33:10 +0000 (UTC)
+Date:   Mon, 9 Sep 2019 09:32:36 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Adam Ford <aford173@gmail.com>,
+        =?utf-8?B?QW5kcsOp?= Roth <neolynx@gmail.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Nishanth Menon <nm@ti.com>
+Subject: Re: [Letux-kernel] [RFC PATCH 0/3] Enable 1GHz support on omap36xx
+Message-ID: <20190909163236.GP52127@atomide.com>
+References: <C04F49BA-1229-4E96-9FCF-4FC662D1DB11@goldelico.com>
+ <CAHCN7x+Ye6sB_YqO0sAX1OJDw64B-qGS3pL545v3Xk5z914cwQ@mail.gmail.com>
+ <0C1EF64E-B33C-4BFA-A7D3-471DD1B9EE86@goldelico.com>
+ <515048DE-138D-4400-8168-F2B7D61F1005@goldelico.com>
+ <CAHCN7xLPCX9rZ0+7KVBiA_bgZ6tg6VeCXqD-UXu+6iwpFMPVrA@mail.gmail.com>
+ <7B3D1D77-3E8C-444F-90B9-6DF2641178B8@goldelico.com>
+ <CAHCN7xLW58ggx3CpVL=HdCVHWo6D-MCTB91A_9rtSRoZQ+xJuQ@mail.gmail.com>
+ <FA2920FE-B76A-4D44-A264-862A1CCBF7FC@goldelico.com>
+ <CAHCN7xJsPa0i+Z+qpCkWcdAh9+udmGT0RPNchdDsfB=8ptd3Nw@mail.gmail.com>
+ <87420DBD-770F-4C32-9499-A3AEA5876E8A@goldelico.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190907220448.GB2012@sasha-vm>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87420DBD-770F-4C32-9499-A3AEA5876E8A@goldelico.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 07, 2019 at 06:04:48PM -0400, Sasha Levin wrote:
-> On Sat, Sep 07, 2019 at 09:55:18PM +0300, Jarkko Sakkinen wrote:
-> > On Tue, 2019-09-03 at 15:43 -0400, Sasha Levin wrote:
-> > > Right. I gave a go at backporting a few patches and this happens to be
-> > > one of them. It will be a while before it goes in a stable tree
-> > > (probably way after after LPC).
-> > 
-> > It *semantically* depends on
-> > 
-> > db4d8cb9c9f2 ("tpm: use tpm_try_get_ops() in tpm-sysfs.c.")
-> > 
-> > I.e. can cause crashes without the above patch. As a code change your
-> > patch is fine but it needs the above patch backported to work in stable
-> > manner.
-> > 
-> > So... either I can backport that one (because ultimately I have
-> > responsibility to do that as the maintainer) but if you want to finish
-> > this one that is what you need to backport in addition and then it
-> > should be fine.
+Hi,
+
+* H. Nikolaus Schaller <hns@goldelico.com> [190909 14:57]:
+> Another question that came up by private mail from André was if we
+> should better disable the turbo OPPs of omap34xx and 36xx by default
+> (status = "disabled";) because there are concerns about overheating
+> the chips and we have no thermal regulation like for omap4 & 5.
 > 
-> If you're ok with the backport of this commit, I can just add
-> db4d8cb9c9f2 on top.
+> But this would mean that every board DTS would have to set it explicitly
+> to "enabled".
 
-Sure, I've already gave my promise to do that :-)
+Yes I started thinking about that too. I think there is a requirement
+to do the scaling via the voltage processor for the higher modes.
+And there needs to be some way to automatically change to a lower
+OPP in some cases.
 
-/Jarkko
+For normal OPPs, using the twl regulator directly should be OK.
+
+For the higher modes, maybe we could pass the callback functions
+from arch/arm/mach-omap2/voltage.c for the twl regulator so the
+voltage processor hardware can handle them directly. Or add a
+separate regulator driver operating the voltages like Nishanth
+posted patches for earlier.
+
+Regards,
+
+Tony
