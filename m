@@ -2,87 +2,149 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D54C433EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 07:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F77C00307
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 07:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1229421D6C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 07:39:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lXJeLxZA"
+	by mail.kernel.org (Postfix) with ESMTP id 8C3C421D71
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 07:39:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732793AbfIIHj0 (ORCPT
+        id S2388213AbfIIHjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 03:39:26 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:51312 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbfIIHjZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 03:39:25 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x897cZvh033689;
-        Mon, 9 Sep 2019 02:38:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568014715;
-        bh=iamZWF3P+/BxrZM9dDpicBskGflhaFV85H5xVtlEl/g=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=lXJeLxZAKfBOar8uSu/9xAVammm8uZhs8xLCYmJhyqb4VmDJ1rrocfTCy0/A7mfvh
-         jeRyg9IgXn9UMa9vKIIw/2seXLOYFH8xD003SJlPqsNZpVcxoMQcuetMt2DzeEXomY
-         axgTdGPA/IBqoRkrBTffBUX0uWTreM2n9eqg2zw4=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x897cZPL066397
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 9 Sep 2019 02:38:35 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 9 Sep
- 2019 02:38:35 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 9 Sep 2019 02:38:35 -0500
-Received: from [172.24.190.212] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x897cWVg099486;
-        Mon, 9 Sep 2019 02:38:33 -0500
-Subject: Re: [PATCH v2 5/5] ARM: multi_v5_defconfig: make DaVinci part of the
- ARM v5 multiplatform build
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kevin Hilman <khilman@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Lechner <david@lechnology.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20190725131257.6142-1-brgl@bgdev.pl>
- <20190725131257.6142-6-brgl@bgdev.pl>
-From:   Sekhar Nori <nsekhar@ti.com>
-Message-ID: <9c1974ea-f19c-768e-9db4-f2dd3a35b9c3@ti.com>
-Date:   Mon, 9 Sep 2019 13:08:31 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 9 Sep 2019 03:39:40 -0400
+Received: from mga17.intel.com ([192.55.52.151]:2203 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726026AbfIIHjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 03:39:40 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Sep 2019 00:39:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,484,1559545200"; 
+   d="scan'208";a="196113218"
+Received: from fyin-dev.sh.intel.com ([10.239.143.122])
+  by orsmga002.jf.intel.com with ESMTP; 09 Sep 2019 00:39:38 -0700
+From:   Yin Fengwei <fengwei.yin@intel.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        linux-acpi@vger.kernel.org (open list:ACPI),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [RESEND] ACPI / processor_idle: use dead loop instead of io port access for wait
+Date:   Mon,  9 Sep 2019 15:39:37 +0800
+Message-Id: <20190909073937.31554-1-fengwei.yin@intel.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-In-Reply-To: <20190725131257.6142-6-brgl@bgdev.pl>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/07/19 6:42 PM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> Add all DaVinci boards to multi_v5_defconfig.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+In function acpi_idle_do_entry(), we do an io port access to guarantee
+hardware behavior. But it could trigger unnecessary vmexit for
+virtualization environemnt.
 
-Acked-by: Sekhar Nori <nsekhar@ti.com>
+From the comments of this part of code, we could use busy wait instead
+of io port access to guarantee hardware behavior and avoid unnecessary
+vmexit.
 
-Thanks,
-Sekhar
+Signed-off-by: Yin Fengwei <fengwei.yin@intel.com>
+---
+ drivers/acpi/processor_idle.c | 33 ++++++++++++++++++++++++++++++---
+ 1 file changed, 30 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
+index ed56c6d20b08..676553228e8f 100644
+--- a/drivers/acpi/processor_idle.c
++++ b/drivers/acpi/processor_idle.c
+@@ -55,6 +55,8 @@ struct cpuidle_driver acpi_idle_driver = {
+ };
+ 
+ #ifdef CONFIG_ACPI_PROCESSOR_CSTATE
++static struct timespec64 dummy_delta = {0L, 0L};
++
+ static
+ DEFINE_PER_CPU(struct acpi_processor_cx * [CPUIDLE_STATE_MAX], acpi_cstate);
+ 
+@@ -64,6 +66,18 @@ static int disabled_by_idle_boot_param(void)
+ 		boot_option_idle_override == IDLE_HALT;
+ }
+ 
++static void dummy_wait(void)
++{
++	struct timespec64 now, target;
++
++	ktime_get_real_ts64(&now);
++	target = timespec64_add(now, dummy_delta);
++
++	do {
++		ktime_get_real_ts64(&now);
++	} while (timespec64_compare(&now, &target) < 0);
++}
++
+ /*
+  * IBM ThinkPad R40e crashes mysteriously when going into C2 or C3.
+  * For now disable this. Probably a bug somewhere else.
+@@ -660,8 +674,12 @@ static void __cpuidle acpi_idle_do_entry(struct acpi_processor_cx *cx)
+ 		inb(cx->address);
+ 		/* Dummy wait op - must do something useless after P_LVL2 read
+ 		   because chipsets cannot guarantee that STPCLK# signal
+-		   gets asserted in time to freeze execution properly. */
+-		inl(acpi_gbl_FADT.xpm_timer_block.address);
++		   gets asserted in time to freeze execution properly.
++
++		   Previously, we do io port access here which could trigger
++		   unnecessary trap to HV for virtualization env. We use dead
++		   loop here to avoid the impact to virtualization env. */
++		dummy_wait();
+ 	}
+ }
+ 
+@@ -683,7 +701,7 @@ static int acpi_idle_play_dead(struct cpuidle_device *dev, int index)
+ 		else if (cx->entry_method == ACPI_CSTATE_SYSTEMIO) {
+ 			inb(cx->address);
+ 			/* See comment in acpi_idle_do_entry() */
+-			inl(acpi_gbl_FADT.xpm_timer_block.address);
++			dummy_wait();
+ 		} else
+ 			return -ENODEV;
+ 	}
+@@ -902,6 +920,7 @@ static inline void acpi_processor_cstate_first_run_checks(void)
+ {
+ 	acpi_status status;
+ 	static int first_run;
++	struct timespec64 ts0, ts1;
+ 
+ 	if (first_run)
+ 		return;
+@@ -912,6 +931,13 @@ static inline void acpi_processor_cstate_first_run_checks(void)
+ 			  max_cstate);
+ 	first_run++;
+ 
++	/* profiling the time used for dummy wait op */
++	ktime_get_real_ts64(&ts0);
++	inl(acpi_gbl_FADT.xpm_timer_block.address);
++	ktime_get_real_ts64(&ts1);
++
++	dummy_delta = timespec64_sub(ts1, ts0);
++
+ 	if (acpi_gbl_FADT.cst_control && !nocst) {
+ 		status = acpi_os_write_port(acpi_gbl_FADT.smi_command,
+ 					    acpi_gbl_FADT.cst_control, 8);
+@@ -920,6 +946,7 @@ static inline void acpi_processor_cstate_first_run_checks(void)
+ 					"Notifying BIOS of _CST ability failed"));
+ 	}
+ }
++
+ #else
+ 
+ static inline int disabled_by_idle_boot_param(void) { return 0; }
+-- 
+2.19.1
+
