@@ -2,127 +2,208 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C618AC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8ABDC433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 956AF2086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:22:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1E1D2086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:25:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568028169;
-	bh=djir5zIjxtB7vbKGxBqG3x1AAyvfHdo7BAfPDPCNLXQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=u94Fv7k/yxMus2yO3qMUEQ2jUFz6r0z8Q+nqfnzbZhQU87ifEXFoLo0OdQ2f7P+Q+
-	 BFCEMHL8qa2I/vh0oXRk5x4OyDmGWjAQzjnUZPe+ydbUR1EFIe7b+iPR7YM0v7uq5h
-	 co2YqAZyfmPmH9WO8pR9A0fHBfKet3c0m1Hy8cfw=
+	s=default; t=1568028306;
+	bh=4i9OqlcCTqpctGXVlpzItZpC4GiX2VRaDheX3LG0BlU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=JBkQZmQxD2DoGce4G0vWcktKWs69ndqf6gVWiLnqkc/NCWyNux36spDVz3KGfyv0L
+	 nxtf1vT6LxEA/oP/OMf3ntFdIHjSRrT9K5cjszjKUHcOzGZEnZrXClTl+RNXj+fz3R
+	 1n3Kv9315b0NBA+CItkYBm3b++78PuzsfbnW0JRw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390201AbfIILWs (ORCPT
+        id S2391010AbfIILZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 07:22:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44018 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729339AbfIILWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 07:22:48 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 38CA5ACD8;
-        Mon,  9 Sep 2019 11:22:46 +0000 (UTC)
-Date:   Mon, 9 Sep 2019 13:22:45 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Thomas Lindroth <thomas.lindroth@gmail.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Subject: Re: [PATCH] memcg, kmem: do not fail __GFP_NOFAIL charges
-Message-ID: <20190909112245.GH27159@dhcp22.suse.cz>
-References: <31131c2d-a936-8bbf-e58d-a3baaa457340@gmail.com>
- <20190906125608.32129-1-mhocko@kernel.org>
- <CALvZod5w72jH8fJSFRaw7wgQTnzF6nb=+St-sSXVGSiG6Bs3Lg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALvZod5w72jH8fJSFRaw7wgQTnzF6nb=+St-sSXVGSiG6Bs3Lg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 9 Sep 2019 07:25:05 -0400
+Received: from foss.arm.com ([217.140.110.172]:48220 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730361AbfIILZF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 07:25:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 676AA28;
+        Mon,  9 Sep 2019 04:25:04 -0700 (PDT)
+Received: from big-swifty.misterjones.org (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 841D23F71F;
+        Mon,  9 Sep 2019 04:25:01 -0700 (PDT)
+Date:   Mon, 09 Sep 2019 12:24:59 +0100
+Message-ID: <86blvtsodw.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     "Jianyong Wu (Arm Technology China)" <Jianyong.Wu@arm.com>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "richardcochran@gmail.com" <richardcochran@gmail.com>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Will Deacon <Will.Deacon@arm.com>,
+        Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Steve Capper <Steve.Capper@arm.com>,
+        "Kaly Xin (Arm Technology China)" <Kaly.Xin@arm.com>,
+        "Justin He (Arm Technology China)" <Justin.He@arm.com>
+Subject: Re: [RFC PATCH 3/3] Enable ptp_kvm for arm64
+In-Reply-To: <HE1PR0801MB16768BE47D3D1F0662DDC3C7F4B70@HE1PR0801MB1676.eurprd08.prod.outlook.com>
+References: <20190829063952.18470-1-jianyong.wu@arm.com>
+        <20190829063952.18470-4-jianyong.wu@arm.com>
+        <4d04867c-2188-9574-fbd1-2356c6b99b7d@kernel.org>
+        <HE1PR0801MB16768ED94EA50010EEF634EAF4BA0@HE1PR0801MB1676.eurprd08.prod.outlook.com>
+        <86h85osbzz.wl-maz@kernel.org>
+        <HE1PR0801MB16768BE47D3D1F0662DDC3C7F4B70@HE1PR0801MB1676.eurprd08.prod.outlook.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Organization: Approximate
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 06-09-19 11:24:55, Shakeel Butt wrote:
-> On Fri, Sep 6, 2019 at 5:56 AM Michal Hocko <mhocko@kernel.org> wrote:
+On Mon, 09 Sep 2019 11:17:24 +0100,
+"Jianyong Wu (Arm Technology China)" <Jianyong.Wu@arm.com> wrote:
+
+Hi Jianyoung,
+
+[...]
+
+> > > > I'm definitely not keen on exposing the internals of the arch_timer
+> > > > driver to random subsystems. Furthermore, you seem to expect that
+> > > > the guest kernel will only use the arch timer as a clocksource, and
+> > > > nothing really guarantees that (in which case
+> > get_device_system_crosststamp will fail).
+> > > >
+> > > The code here is really ugly, I need a better solution to offer a
+> > > clock source For the guest.
+> > >
+> > > > It looks to me that we'd be better off exposing a core timekeeping
+> > > > API that populates a struct system_counterval_t based on the
+> > > > *current* timekeeper monotonic clocksource. This would simplify the
+> > > > split between generic and arch-specific code.
+> > > >
+> > > I think it really necessary.
+> > >
+> > > > Whether or not tglx will be happy with the idea is another problem,
+> > > > but I'm certainly not taking any change to the arch timer code based on
+> > this.
+> > > >
+> > > I can have a try, but the detail is not clear for me now.
 > >
-> > From: Michal Hocko <mhocko@suse.com>
+> > Something along those lines:
 > >
-> > Thomas has noticed the following NULL ptr dereference when using cgroup
-> > v1 kmem limit:
-> > BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
-> > PGD 0
-> > P4D 0
-> > Oops: 0000 [#1] PREEMPT SMP PTI
-> > CPU: 3 PID: 16923 Comm: gtk-update-icon Not tainted 4.19.51 #42
-> > Hardware name: Gigabyte Technology Co., Ltd. Z97X-Gaming G1/Z97X-Gaming G1, BIOS F9 07/31/2015
-> > RIP: 0010:create_empty_buffers+0x24/0x100
-> > Code: cd 0f 1f 44 00 00 0f 1f 44 00 00 41 54 49 89 d4 ba 01 00 00 00 55 53 48 89 fb e8 97 fe ff ff 48 89 c5 48 89 c2 eb 03 48 89 ca <48> 8b 4a 08 4c 09 22 48 85 c9 75 f1 48 89 6a 08 48 8b 43 18 48 8d
-> > RSP: 0018:ffff927ac1b37bf8 EFLAGS: 00010286
-> > RAX: 0000000000000000 RBX: fffff2d4429fd740 RCX: 0000000100097149
-> > RDX: 0000000000000000 RSI: 0000000000000082 RDI: ffff9075a99fbe00
-> > RBP: 0000000000000000 R08: fffff2d440949cc8 R09: 00000000000960c0
-> > R10: 0000000000000002 R11: 0000000000000000 R12: 0000000000000000
-> > R13: ffff907601f18360 R14: 0000000000002000 R15: 0000000000001000
-> > FS:  00007fb55b288bc0(0000) GS:ffff90761f8c0000(0000) knlGS:0000000000000000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: 0000000000000008 CR3: 000000007aebc002 CR4: 00000000001606e0
-> > Call Trace:
-> >  create_page_buffers+0x4d/0x60
-> >  __block_write_begin_int+0x8e/0x5a0
-> >  ? ext4_inode_attach_jinode.part.82+0xb0/0xb0
-> >  ? jbd2__journal_start+0xd7/0x1f0
-> >  ext4_da_write_begin+0x112/0x3d0
-> >  generic_perform_write+0xf1/0x1b0
-> >  ? file_update_time+0x70/0x140
-> >  __generic_file_write_iter+0x141/0x1a0
-> >  ext4_file_write_iter+0xef/0x3b0
-> >  __vfs_write+0x17e/0x1e0
-> >  vfs_write+0xa5/0x1a0
-> >  ksys_write+0x57/0xd0
-> >  do_syscall_64+0x55/0x160
-> >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > From 5f1c061e55c691d64012bc7c1490a1a8c4432c67 Mon Sep 17 00:00:00 2001
+> > From: Marc Zyngier <maz@kernel.org>
+> > Date: Sat, 7 Sep 2019 10:11:49 +0100
+> > Subject: [PATCH] timekeeping: Expose API allowing retrival of current
+> > clocksource and counter value
 > >
-> >  Tetsuo then noticed that this is because the __memcg_kmem_charge_memcg
-> >  fails __GFP_NOFAIL charge when the kmem limit is reached. This is a
-> >  wrong behavior because nofail allocations are not allowed to fail.
-> >  Normal charge path simply forces the charge even if that means to cross
-> >  the limit. Kmem accounting should be doing the same.
+> > Signed-off-by: Marc Zyngier <maz@kernel.org>
+> > ---
+> >  include/linux/timekeeping.h |  5 +++++
+> >  kernel/time/timekeeping.c   | 12 ++++++++++++
+> >  2 files changed, 17 insertions(+)
 > >
-> > Reported-by: Thomas Lindroth <thomas.lindroth@gmail.com>
-> > Debugged-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-> > Cc: stable
-> > Signed-off-by: Michal Hocko <mhocko@suse.com>
+> > diff --git a/include/linux/timekeeping.h b/include/linux/timekeeping.h index
+> > b27e2ffa96c1..6df26a913711 100644
+> > --- a/include/linux/timekeeping.h
+> > +++ b/include/linux/timekeeping.h
+> > @@ -275,6 +275,11 @@ extern int get_device_system_crosststamp(
+> >                       struct system_time_snapshot *history,
+> >                       struct system_device_crosststamp *xtstamp);
+> >
+> > +/*
+> > + * Obtain current monotonic clock and its counter value  */ extern void
+> > +get_current_counterval(struct system_counterval_t *sc);
+> > +
+> >  /*
+> >   * Simultaneously snapshot realtime and monotonic raw clocks
+> >   */
+> > diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c index
+> > d911c8470149..de689bbd3808 100644
+> > --- a/kernel/time/timekeeping.c
+> > +++ b/kernel/time/timekeeping.c
+> > @@ -1098,6 +1098,18 @@ static bool cycle_between(u64 before, u64 test,
+> > u64 after)
+> >       return false;
+> >  }
+> >
+> > +/**
+> > + * get_current_counterval - Snapshot the current clocksource and counter
+> > value
+> > + * @sc:      Pointer to a struct containing the current clocksource and its
+> > value
+> > + */
+> > +void get_current_counterval(struct system_counterval_t *sc) {
+> > +     struct timekeeper *tk = &tk_core.timekeeper;
+> > +
+> > +     sc->cs = READ_ONCE(tk->tkr_mono.clock);
+> > +     sc->cycles = sc->cs->read(sc->cs);
+> > +}
+> > +
+> >  /**
+> >   * get_device_system_crosststamp - Synchronously capture system/device
+> > timestamp
+> >   * @get_time_fn:     Callback to get simultaneous device time and
+> >
+> > which should do the right thing.
+> >
+> It is a good news for me. These code is indeed what I need!  So
+> what's your plan about this patch?  Is there any problem with you if
+> I include these code into my patch ?
+
+Just add this patch as part of your series (I'll try to write an
+actual commit log for that).
+
+[...]
+
+> > > > Other questions: how does this works with VM migration? Specially
+> > > > when moving from a hypervisor that supports the feature to one that
+> > doesn't?
+> > > >
+> > > I think it won't solve the problem generated by VM migration and only
+> > > for VMs in a single machine.  Ptp_kvm only works for VMs in the same
+> > > machine.  But using ptp (not ptp_kvm) clock, all the machines in a low
+> > > latency network environment can keep time sync in high precision, Then
+> > > VMs move from one machine to another will obtain a high precision time
+> > > sync.
+> >
+> > That's a problem. Migration must be possible from one host to another, even
+> > if that means temporarily loosing some (or a lot of) precision. The service
+> > must be discoverable from userspace on the host so that the MVV can decie
+> > whether a migration is possible or not.
+> >
+> Don't worry, things will be not that bad.  ptp_kvm will not trouble
+> the VM migration. This ptp_kvm is one clocksource of the clock pool
+> for chrony. Chrony will choose the highest precision clock from the
+> pool. If host does not support ptp_kvm, the ptp_kvm will not be
+> chosen as the clocksouce of chrony.  We have roughly the same logic
+> of implementation of ptp_kvm with x86, and ptp_kvm works well in
+> x86.  so I think that will be the case for arm64.
 > 
-> I wonder what has changed since
-> <http://lkml.kernel.org/r/20180525185501.82098-1-shakeelb@google.com/>.
+> Maybe I miss your point, I have no idea of MVV and can't get related
+> info from google.  Also I'm not clear of your last words of how to
+> decide VM migration is possible?
 
-I have completely forgot about that one. It seems that we have just
-repeated the same discussion again. This time we have a poor user who
-actually enabled the kmem limit.
+Sorry. s/MVV/VMM/. Basically userspace, such as QEMU.
 
-I guess there was no real objection to the change back then. The primary
-discussion revolved around the fact that the accounting will stay broken
-even when this particular part was fixed. Considering this leads to easy
-to trigger crash (with the limit enabled) then I guess we should just
-make it less broken and backport to stable trees and have a serious
-discussion about discontinuing of the limit. Start by simply failing to
-set any limit in the current upstream kernels.
+Here's an example: The guest runs on a PTP aware host, starts using
+the PTP service and uses HVC calls to get its clock. We now migrate
+the guest to a non PTP-aware host. The hypercalls are now going to
+fail unexpectedly. Is that something that is acceptable? I don't think
+it is. Once you've allowed a guest to use a service, this service
+should be preserved. I'd be more confident if we gave to userspace the
+indication that the hypervisor supports PTP. Userspace can then decide
+whether to perform migration or not.
+
+Thanks,
+
+	M.
 
 -- 
-Michal Hocko
-SUSE Labs
+Jazz is not dead, it just smells funny.
