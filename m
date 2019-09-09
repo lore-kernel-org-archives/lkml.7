@@ -2,168 +2,144 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62763C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF74C433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3596E2089F
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:12:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3F292089F
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 11:13:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BkQbGtCL"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="YM4sNYFO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403925AbfIILMS (ORCPT
+        id S2403945AbfIILNP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 07:12:18 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35868 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730250AbfIILMS (ORCPT
+        Mon, 9 Sep 2019 07:13:15 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:63327 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731027AbfIILNO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 07:12:18 -0400
-Received: by mail-wr1-f67.google.com with SMTP id y19so13369917wrd.3
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 04:12:16 -0700 (PDT)
+        Mon, 9 Sep 2019 07:13:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=r0cqelu1CHocdn9tAl3rxNNP2PFx49WcLGnntUDmH00=;
-        b=BkQbGtCLTXPp+0ahNqGnKkBg9mw1KDONv/V/dovinCIjnlFHwTGsyK8iWoB9FnIpMw
-         8TKZ2mMZ622pGuvFHAW5ZIMPEzo5HHE/eJMai7lsyTdSu6i8fx/Qog4gpYYQaZire8J4
-         acRrOqaYGh3x1Ou+o7UsSmuOR5yevYuqFSgDv9JydXEOD7RQvEB4Cql8uUEon6IR1MHb
-         8gGKs4cDvaodT+IW0I03i+zZCZhYEYVzKD1KJGIOu1I/FE8Fe1XPRj9g+z2RkKcaYe6R
-         Uhrop5P4MrMzUgcEhuLGfr3DKNWxVhulxq1ndBupq6OJEuJpWq60u8AVxWzYwdBKfIMp
-         L7rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=r0cqelu1CHocdn9tAl3rxNNP2PFx49WcLGnntUDmH00=;
-        b=PRCAeq/tHnYllA8h6g2kt22h2jaHG2pItqUQOUXjWI1CNCO4ab2OpfY221m+fibbzs
-         w8FxLz+hxSw3eQZVtLgf4hb0Gqx2W+njPlPJWaxqwdgYPIztA/df2zk4TmMmQS7jwZ80
-         VGRl3v5iapsK5tf47xjqNJBXMTxghgkhULj1CXAjspOfirp8KZtBmdsEAVwAK9xlB6rl
-         wioJ+hbSRI70P6/gj0qDr9+f8gaEJPfzsTSvAevTPusHly4CmTwc/F91J1q519hdgfD5
-         4H5IgjihJYXvXuGdi0p0d1GwtBC0SmiBhKmXQ8tq+P832d9i5bDndUB0TZUPoDbV5PGV
-         RkuA==
-X-Gm-Message-State: APjAAAUVlBFUgrlBNoXNrhuUhB7xUUKtwXhfB+90WDWBtctLdLZd67CZ
-        K3CF6H+DBYdd2zh2V6aBNCh1mg==
-X-Google-Smtp-Source: APXvYqzaBI0NkJdKnfne3ZbLfenHCgShMsft+MxAjXo4pydOyPT+jtolAEOiXuPQUOi3pKczahHhYA==
-X-Received: by 2002:adf:d1a4:: with SMTP id w4mr19670272wrc.331.1568027535792;
-        Mon, 09 Sep 2019 04:12:15 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id k6sm29499911wrg.0.2019.09.09.04.12.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Sep 2019 04:12:15 -0700 (PDT)
-Date:   Mon, 9 Sep 2019 12:12:13 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>, pavel@ucw.cz,
-        robh+dt@kernel.org, mark.rutland@arm.com, jingoohan1@gmail.com,
-        dmurphy@ti.com, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        tomi.valkeinen@ti.com
-Subject: Re: [PATCH v4 0/4] Add a generic driver for LED-based backlight
-Message-ID: <20190909111213.objkrztpikruhgzi@holly.lan>
-References: <20190717141514.21171-1-jjhiblot@ti.com>
- <283d9044-df2d-b176-bea9-7e1520d9cf56@gmail.com>
- <20190722070620.GD8402@dell>
- <9cbd9cf6-3422-85df-885f-904f52e9cabd@gmail.com>
- <e8b4bf9a-2ee2-a496-c4de-1ed643211ec7@gmail.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1568027593; x=1599563593;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=F9WoBKV+oWdvDBwrEieyAZ8tIJPF4Cx6CuXAUeqFsQk=;
+  b=YM4sNYFOJvl1c6aVtpZ5jJV9DG55cDh+WJmP1lArz9A7Khhu1N+msu/d
+   xOZyLhcBlT/BRpp4XnYOvKpXPxBDDNDBdQoh/6nsGG38H/pcK46Tj6bkE
+   8x9pMojCzjnRZIfzFe6T8hiXDIYRS6X+VcaajL5xR0C0Bwn+HUXTS+bnY
+   U=;
+X-IronPort-AV: E=Sophos;i="5.64,484,1559520000"; 
+   d="scan'208";a="414286943"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-74cf8b49.us-east-1.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 09 Sep 2019 11:13:12 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1d-74cf8b49.us-east-1.amazon.com (Postfix) with ESMTPS id 57341C0934;
+        Mon,  9 Sep 2019 11:13:06 +0000 (UTC)
+Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 9 Sep 2019 11:13:05 +0000
+Received: from [10.125.238.52] (10.43.161.152) by EX13D01EUB001.ant.amazon.com
+ (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Mon, 9 Sep
+ 2019 11:12:54 +0000
+Subject: Re: [PATCH 2/3] soc: amazon: al-pos: Introduce Amazon's Annapurna
+ Labs POS driver
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        gregkh <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Patrick Venture" <venture@google.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "Olof Johansson" <olof@lixom.net>,
+        Maxime Ripard <mripard@kernel.org>,
+        "Santosh Shilimkar" <ssantosh@kernel.org>,
+        <paul.kocialkowski@bootlin.com>, <mjourdan@baylibre.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "Will Deacon" <will@kernel.org>, DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        <hhhawa@amazon.com>, <ronenk@amazon.com>, <jonnyc@amazon.com>,
+        <hanochu@amazon.com>, <barakw@amazon.com>
+References: <1568020220-7758-1-git-send-email-talel@amazon.com>
+ <1568020220-7758-3-git-send-email-talel@amazon.com>
+ <CAK8P3a3UF7xPV1U3eW6Jdu754P1bzG208UxD9KUxEm1JjZudww@mail.gmail.com>
+From:   "Shenhar, Talel" <talel@amazon.com>
+Message-ID: <98f0028e-5653-3116-fdaa-1385ecdf0289@amazon.com>
+Date:   Mon, 9 Sep 2019 14:12:48 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e8b4bf9a-2ee2-a496-c4de-1ed643211ec7@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAK8P3a3UF7xPV1U3eW6Jdu754P1bzG208UxD9KUxEm1JjZudww@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.43.161.152]
+X-ClientProxiedBy: EX13D16UWB001.ant.amazon.com (10.43.161.17) To
+ EX13D01EUB001.ant.amazon.com (10.43.166.194)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 08, 2019 at 06:17:50PM +0200, Jacek Anaszewski wrote:
-> On 7/22/19 11:23 PM, Jacek Anaszewski wrote:
-> > On 7/22/19 9:06 AM, Lee Jones wrote:
-> >> On Thu, 18 Jul 2019, Jacek Anaszewski wrote:
-> >>
-> >>> On 7/17/19 4:15 PM, Jean-Jacques Hiblot wrote:
-> >>>> This series aims to add a led-backlight driver, similar to pwm-backlight,
-> >>>> but using a LED class device underneath.
-> >>>>
-> >>>> A few years ago (2015), Tomi Valkeinen posted a series implementing a
-> >>>> backlight driver on top of a LED device:
-> >>>> https://patchwork.kernel.org/patch/7293991/
-> >>>> https://patchwork.kernel.org/patch/7294001/
-> >>>> https://patchwork.kernel.org/patch/7293981/
-> >>>>
-> >>>> The discussion stopped because Tomi lacked the time to work on it.
-> >>>>
-> >>>> changes in v4:
-> >>>> - fix dev_err() messages and commit logs following the advices of Pavel
-> >>>> - cosmetic changes (indents, getting rid of  "? 1 : 0" in
-> >>>>   led_match_led_node())
-> >>>>
-> >>>> changes in v3:
-> >>>> - dt binding: don't limit the brightness range to 0-255. Use the range of
-> >>>>   the underlying LEDs. as a side-effect, all LEDs must now have the same
-> >>>>   range
-> >>>> - driver: Adapt to dt binding update.
-> >>>> - driver: rework probe() for clarity and remove the remaining goto.
-> >>>>
-> >>>> changes in v2:
-> >>>> - handle more than one LED.
-> >>>> - don't make the backlight device a child of the LED controller.
-> >>>> - make brightness-levels and default-brightness-level optional
-> >>>> - removed the option to use a GPIO enable.
-> >>>> - removed the option to use a regulator. It should be handled by the LED
-> >>>>   core
-> >>>> - don't make any change to the LED core (not needed anymore)
-> >>>>
-> >>>> Jean-Jacques Hiblot (2):
-> >>>>   leds: Add managed API to get a LED from a device driver
-> >>>>   dt-bindings: backlight: Add led-backlight binding
-> >>>>
-> >>>> Tomi Valkeinen (2):
-> >>>>   leds: Add of_led_get() and led_put()
-> >>>>   backlight: add led-backlight driver
-> >>>>
-> >>>>  .../bindings/leds/backlight/led-backlight.txt |  28 ++
-> >>>>  drivers/leds/led-class.c                      |  92 ++++++
-> >>>>  drivers/video/backlight/Kconfig               |   7 +
-> >>>>  drivers/video/backlight/Makefile              |   1 +
-> >>>>  drivers/video/backlight/led_bl.c              | 268 ++++++++++++++++++
-> >>>>  include/linux/leds.h                          |   6 +
-> >>>>  6 files changed, 402 insertions(+)
-> >>>>  create mode 100644 Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
-> >>>>  create mode 100644 drivers/video/backlight/led_bl.c
-> >>>>
-> >>>
-> >>> For the whole set:
-> >>>
-> >>> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> >>>
-> >>> Lee - we need to create immutable branch for this set since there will
-> >>> be some interfering changes in the LED core in this cycle.
-> >>>
-> >>> I can create the branch and send the pull request once we will
-> >>> obtain the ack from Rob for DT bindings, unless you have other
-> >>> preference.
-> >>
-> >> We also require a review to be conducted by Daniel Thompson.
-> >>
-> >> After which, an immutable branch sounds like a good idea.  I'd like to
-> >> create this myself if you don't mind.
-> > 
-> > Sure, thanks.
-> 
-> Unfortunately that hasn't happened and it will miss 5.4 merge window.
-> 
-> Daniel, we need your ack for this patch set.
 
-Sorry for dropping the ball here.
+On 9/9/2019 12:44 PM, Arnd Bergmann wrote:
+> On Mon, Sep 9, 2019 at 11:14 AM Talel Shenhar <talel@amazon.com> wrote:
+>> The Amazon's Annapurna Labs SoCs includes Point Of Serialization error
+>> logging unit that reports an error in case write error (e.g. attempt to
+>> write to a read only register).
+>> This patch introduces the support for this unit.
+>>
+>> Signed-off-by: Talel Shenhar <talel@amazon.com>
+> Looks ok overall, juts a few minor comments:
+Thanks.
+>
+>> +MODULE_LICENSE("GPL v2");
+>> +MODULE_AUTHOR("Talel Shenhar");
+>> +MODULE_DESCRIPTION("Amazon's Annapurna Labs POS driver");
+> These usually go to the end of the file.
+Ack, Will move them as part of v2.
+>
+>> +       log1 = readl_relaxed(pos->mmio_base + AL_POS_ERROR_LOG_1);
+>> +       if (!FIELD_GET(AL_POS_ERROR_LOG_1_VALID, log1))
+>> +               return IRQ_NONE;
+>> +
+>> +       log0 = readl_relaxed(pos->mmio_base + AL_POS_ERROR_LOG_0);
+>> +       writel_relaxed(0, pos->mmio_base + AL_POS_ERROR_LOG_1);
+> Why do you require _relaxed() accessors here? Please add a comment
+> explaining that, or use the regular readl()/writel().
 
-I'm afraid I couldn't ack since I spotted a bug but I have shared
-review feedback now!
+I don't think commenting is needed here as there is nothing special in 
+this type of access.
 
+I don't see this is common to comment the use of the _relaxed accessors.
 
-Daniel.
+This driver is for SoC using arm64 cpu.
+
+If one uses the non-relaxed version of readl while running on arm64, he 
+shall cause read barrier, which is then doing dsm(ld).. This barrier is 
+not needed here, so we spare the use of the more heavy readl in favor of 
+the less "harmful" one.
+
+Let me know what you think.
+
+>
+>> +       resource = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +       pos->mmio_base = devm_ioremap_resource(&pdev->dev, resource);
+> This can be simplified to devm_platform_ioremap_resource().
+Ack, Will simplify them in v2.
+>
+>> +       pos->irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
+> And this is usually written as platform_get_irq()
+Ack, Will replace them with platform_get_irq() in v2.
+>
+>         Arnd
