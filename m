@@ -2,82 +2,92 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BED8C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 19:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB929C4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 19:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 115D521A4A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 19:38:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82C1321A4A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 19:39:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="phKgBEnp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405722AbfIITiY (ORCPT
+        id S2405741AbfIITjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 15:38:24 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:37499 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726814AbfIITiX (ORCPT
+        Mon, 9 Sep 2019 15:39:02 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38629 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726814AbfIITjC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 15:38:23 -0400
-Received: by mail-qt1-f195.google.com with SMTP id g13so17239158qtj.4
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 12:38:23 -0700 (PDT)
+        Mon, 9 Sep 2019 15:39:02 -0400
+Received: by mail-pl1-f195.google.com with SMTP id p9so2344298plk.5;
+        Mon, 09 Sep 2019 12:39:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4H6ftL4w/KG9uJvy2mrU/7QxzhtokGvQhKcpWq83rv0=;
+        b=phKgBEnppdEopSh7fnlpu+7MGHjVjpCeCxu85/JATLxc72twyPGbMqbqFmmq774xaW
+         jgycHgI8v3t4+YkD823P6ZuEBolXehjwDtTHgwEl3FrSEu0fQ/zAqKUy2nHsce517QK9
+         ZBMKxwixwuGVW14mu0JiWq4D88HDH3rJjzT22Uws1AuEu0rFF72mRjpBEp563hQuOynH
+         t2yQ1us/JmTl3fz/mqllh1lsjpHrZ/nJLXGY4H6Ha6A4cDpGWQJ7o7vLn427wgVirdQn
+         iB8+zIjqp8R4zchvrBDciPH2a1NIRjpor7894rSesmhJ1N3jJ3QfGZnglcniFWITX8Hq
+         7zDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=83C5cArNTuV93R+PRhbVcq8+PPG/Zw02UW3M6xNCISo=;
-        b=aXCYMiXdpFBEt4xKtneB/M7TupsW7edlwMxBPKtlz5U2H8pYnsD1dtIztJ86OXmWv4
-         SfXnbpAnmH7YHybW96tUs5yBwIGOjT3P6P+BnrNboGZFhqBDHLoAMw5QRAHp+KrzN1+4
-         itEKQMv24dQF/5xzOkMF+cOxF+sR+A7iisK+rzKdhMGp/q95uJuHXINA8g/a/la6sOM6
-         /QgemULYbRVuF6rXOt3IchZeGiaVEInMEpKGV3bcz0/9B11+7Z+ws1MurMHj4dcnjHmK
-         Lv1VnjJmJuy4C+60RU99t+ZSt3pecT3IacKjcKRb7nlZNAF/heApXJ/TjE+0Z2w8XmuW
-         +lKg==
-X-Gm-Message-State: APjAAAX4PKzSFqlwqXn/ni+1NLkfJwRVDyH3VHN/9OvVxEDoooqvTlxr
-        0xy0oPvJQfNwZdC/v2zJdABDHdQe8w3ZdOqXNUg=
-X-Google-Smtp-Source: APXvYqznJr6bft2FiwRFx9J/NlM8tBNYOscDbgcfzeUzZ476EMTWBnkI79bb5QynlE2kwyHibHS1sjNun1Tqhuq/ovY=
-X-Received: by 2002:a0c:e0c4:: with SMTP id x4mr15820028qvk.176.1568057902529;
- Mon, 09 Sep 2019 12:38:22 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4H6ftL4w/KG9uJvy2mrU/7QxzhtokGvQhKcpWq83rv0=;
+        b=MPpfec9CeSTfl5JuPqZFaBSZuNVtCmfC47WlJmefjMEfr1j18bRenrNZFZJu6wk0gx
+         kQHu8YtGfupeee3CG6HEvZYC1D1vG+/X72BpueQDAOKN+8TyJRndUOR+ZZ7rQP2bm2uJ
+         4ycwkELrkgLRDyBvf7NIwgBqRCLSrobMsumPeJWvwRFa/JdPA1uB2j28DIVpJu5ZQNdh
+         Zri1kwB8+JVZiRc03lkTna+m5kL6Hy+31jC4nDC+p0I+qe5W9VK7AhkbhlxSY7Ga2h5J
+         V+kEh3AWoSekY7yDtukj20LTl5AQ/2aWOg1oUk5CFRrurR6IFnbGzPXBaz2HLXOOgrGV
+         iPlQ==
+X-Gm-Message-State: APjAAAVpbZxuHJdLRy8J++ni5XGRh8oD7+0qCbco7ODy9y/2eQ2aEflz
+        2AxIcyfYzROvy4ga0unWAQQ=
+X-Google-Smtp-Source: APXvYqwP+alHs6QiirEJm0wd5PErVpvWZTSxHWoH7MzFozdLcD3TL5dN4JIdmjcHY56IpGoCoGe95A==
+X-Received: by 2002:a17:902:aa4a:: with SMTP id c10mr25255450plr.340.1568057940241;
+        Mon, 09 Sep 2019 12:39:00 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id b20sm19074312pff.158.2019.09.09.12.38.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 09 Sep 2019 12:38:58 -0700 (PDT)
+Date:   Mon, 9 Sep 2019 12:38:57 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.4 00/23] 4.4.192-stable review
+Message-ID: <20190909193857.GA22633@roeck-us.net>
+References: <20190908121052.898169328@linuxfoundation.org>
 MIME-Version: 1.0
-References: <20190725131257.6142-1-brgl@bgdev.pl> <20190725131257.6142-5-brgl@bgdev.pl>
- <5fd79cda-59d4-b69b-9902-5d01e1087c62@ti.com>
-In-Reply-To: <5fd79cda-59d4-b69b-9902-5d01e1087c62@ti.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 9 Sep 2019 21:38:06 +0200
-Message-ID: <CAK8P3a0tCrax_5QvWConV5PF-FjFWusNLfnU73EyjQic+Zm9+Q@mail.gmail.com>
-Subject: Re: [PATCH v2 4/5] ARM: davinci: support multiplatform build for ARM v5
-To:     Sekhar Nori <nsekhar@ti.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kevin Hilman <khilman@kernel.org>,
-        David Lechner <david@lechnology.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190908121052.898169328@linuxfoundation.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 9, 2019 at 9:38 AM Sekhar Nori <nsekhar@ti.com> wrote:
->
-> On 25/07/19 6:42 PM, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Add modifications necessary to make davinci part of the ARM v5
-> > multiplatform build.
-> >
-> > Move the arch-specific configuration out of arch/arm/Kconfig and
-> > into mach-davinci/Kconfig. Remove the sub-menu for DaVinci
-> > implementations (they'll be visible directly under the system type.
-> > Select all necessary options not already selected by ARCH_MULTI_V5.
-> > Update davinci_all_defconfig. Explicitly include the mach-specific
-> > headers in mach-davinci/Makefile.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> Acked-by: Sekhar Nori <nsekhar@ti.com>
+On Sun, Sep 08, 2019 at 01:41:35PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.192 release.
+> There are 23 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Tue 10 Sep 2019 12:09:36 PM UTC.
+> Anything received after that time might be too late.
+> 
 
-Ok, pulled both into arm/soc.
+Build results:
+	total: 170 pass: 170 fail: 0
+Qemu test results:
+	total: 324 pass: 324 fail: 0
 
-     Arnd
+Guenter
