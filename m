@@ -2,172 +2,173 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F1BC4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 010A7C4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F363218DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:26:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uQqSJMs4"
+	by mail.kernel.org (Postfix) with ESMTP id C9FE221920
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:28:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390521AbfIIQ0w (ORCPT
+        id S1728338AbfIIQ2M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 12:26:52 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:54470 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389706AbfIIQ0F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 12:26:05 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x89GQ4dQ034918;
-        Mon, 9 Sep 2019 11:26:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568046364;
-        bh=bOGVnBJIvQUxSEqD3gF2J/p86KFbfTC5UBF/IOoiDHY=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=uQqSJMs4k+VlmHr097FvVGEzOwl4jc+BRNjSpN2mULGZvm9o1E9C6ES/r9IxpR6p7
-         rcSijd8q5DCwOlWzvLmA2lJlkXNtPKePntNJ8EvgOVPTGcb5dIKSZR4Wx837BnT1Qa
-         +04TP/zG8WiQEiDqQ0KYbCL8kIjIjvKMB3rT3mrc=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x89GQ4hQ090616
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 9 Sep 2019 11:26:04 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 9 Sep
- 2019 11:26:04 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 9 Sep 2019 11:26:04 -0500
-Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x89GPnoT056522;
-        Mon, 9 Sep 2019 11:26:04 -0500
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-CC:     Prabhakar Lad <prabhakar.csengg@gmail.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [Patch 05/13] media: am437x-vpfe: Streamlined vb2 buffer cleanup
-Date:   Mon, 9 Sep 2019 11:27:35 -0500
-Message-ID: <20190909162743.30114-6-bparrot@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190909162743.30114-1-bparrot@ti.com>
-References: <20190909162743.30114-1-bparrot@ti.com>
+        Mon, 9 Sep 2019 12:28:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35904 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726148AbfIIQ2L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 12:28:11 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9E1F020EF;
+        Mon,  9 Sep 2019 16:28:10 +0000 (UTC)
+Received: from rh2.redhat.com (ovpn-124-7.rdu2.redhat.com [10.10.124.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6D2B75D6B7;
+        Mon,  9 Sep 2019 16:28:09 +0000 (UTC)
+From:   Mike Christie <mchristi@redhat.com>
+To:     axboe@kernel.dk, James.Bottomley@HansenPartnership.com,
+        martin.petersen@oracle.com, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-block@vger.kernel.org
+Cc:     Mike Christie <mchristi@redhat.com>
+Subject: [RFC PATCH] Add proc interface to set PF_MEMALLOC flags
+Date:   Mon,  9 Sep 2019 11:28:04 -0500
+Message-Id: <20190909162804.5694-1-mchristi@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Mon, 09 Sep 2019 16:28:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Returning queued vb2 buffers back to user space is a common
-task best handled by a helper function.
+There are several storage drivers like dm-multipath, iscsi, and nbd that
+have userspace components that can run in the IO path. For example,
+iscsi and nbd's userspace deamons may need to recreate a socket and/or
+send IO on it, and dm-multipath's daemon multipathd may need to send IO
+to figure out the state of paths and re-set them up.
 
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
+In the kernel these drivers have access to GFP_NOIO/GFP_NOFS and the
+memalloc_*_save/restore functions to control the allocation behavior,
+but for userspace we would end up hitting a allocation that ended up
+writing data back to the same device we are trying to allocate for.
+
+This patch allows the userspace deamon to set the PF_MEMALLOC* flags
+through procfs. It currently only supports PF_MEMALLOC_NOIO, but
+depending on what other drivers and userspace file systems need, for
+the final version I can add the other flags for that file or do a file
+per flag or just do a memalloc_noio file.
+
+Signed-off-by: Mike Christie <mchristi@redhat.com>
 ---
- drivers/media/platform/am437x/am437x-vpfe.c | 54 ++++++++++-----------
- 1 file changed, 26 insertions(+), 28 deletions(-)
+ Documentation/filesystems/proc.txt |  6 ++++
+ fs/proc/base.c                     | 53 ++++++++++++++++++++++++++++++
+ 2 files changed, 59 insertions(+)
 
-diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
-index 3a8ad9bdf283..52f7fc6e11dd 100644
---- a/drivers/media/platform/am437x/am437x-vpfe.c
-+++ b/drivers/media/platform/am437x/am437x-vpfe.c
-@@ -1949,6 +1949,29 @@ static void vpfe_buffer_queue(struct vb2_buffer *vb)
- 	spin_unlock_irqrestore(&vpfe->dma_queue_lock, flags);
- }
+diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
+index 99ca040e3f90..b5456a61a013 100644
+--- a/Documentation/filesystems/proc.txt
++++ b/Documentation/filesystems/proc.txt
+@@ -46,6 +46,7 @@ Table of Contents
+   3.10  /proc/<pid>/timerslack_ns - Task timerslack value
+   3.11	/proc/<pid>/patch_state - Livepatch patch operation state
+   3.12	/proc/<pid>/arch_status - Task architecture specific information
++  3.13  /proc/<pid>/memalloc - Control task's memory reclaim behavior
  
-+static void vpfe_return_all_buffers(struct vpfe_device *vpfe,
-+				    enum vb2_buffer_state state)
+   4	Configuring procfs
+   4.1	Mount options
+@@ -1980,6 +1981,11 @@ Example
+  $ cat /proc/6753/arch_status
+  AVX512_elapsed_ms:      8
+ 
++3.13 /proc/<pid>/memalloc - Control task's memory reclaim behavior
++-----------------------------------------------------------------------
++A value of "noio" indicates that when a task allocates memory it will not
++reclaim memory that requires starting phisical IO.
++
+ Description
+ -----------
+ 
+diff --git a/fs/proc/base.c b/fs/proc/base.c
+index ebea9501afb8..c4faa3464602 100644
+--- a/fs/proc/base.c
++++ b/fs/proc/base.c
+@@ -1223,6 +1223,57 @@ static const struct file_operations proc_oom_score_adj_operations = {
+ 	.llseek		= default_llseek,
+ };
+ 
++static ssize_t memalloc_read(struct file *file, char __user *buf, size_t count,
++			     loff_t *ppos)
 +{
-+	struct vpfe_cap_buffer *buf, *node;
-+	unsigned long flags;
++	struct task_struct *task;
++	ssize_t rc = 0;
 +
-+	spin_lock_irqsave(&vpfe->dma_queue_lock, flags);
-+	list_for_each_entry_safe(buf, node, &vpfe->dma_queue, list) {
-+		vb2_buffer_done(&buf->vb.vb2_buf, state);
-+		list_del(&buf->list);
-+	}
++	task = get_proc_task(file_inode(file));
++	if (!task)
++		return -ESRCH;
 +
-+	if (vpfe->cur_frm)
-+		vb2_buffer_done(&vpfe->cur_frm->vb.vb2_buf, state);
-+
-+	if (vpfe->next_frm && vpfe->next_frm != vpfe->cur_frm)
-+		vb2_buffer_done(&vpfe->next_frm->vb.vb2_buf, state);
-+
-+	vpfe->cur_frm = NULL;
-+	vpfe->next_frm = NULL;
-+	spin_unlock_irqrestore(&vpfe->dma_queue_lock, flags);
++	if (task->flags & PF_MEMALLOC_NOIO)
++		rc = simple_read_from_buffer(buf, count, ppos, "noio", 4);
++	put_task_struct(task);
++	return rc;
 +}
 +
- /*
-  * vpfe_start_streaming : Starts the DMA engine for streaming
-  * @vb: ptr to vb2_buffer
-@@ -1957,7 +1980,6 @@ static void vpfe_buffer_queue(struct vb2_buffer *vb)
- static int vpfe_start_streaming(struct vb2_queue *vq, unsigned int count)
- {
- 	struct vpfe_device *vpfe = vb2_get_drv_priv(vq);
--	struct vpfe_cap_buffer *buf, *tmp;
- 	struct vpfe_subdev_info *sdinfo;
- 	unsigned long flags;
- 	unsigned long addr;
-@@ -2003,11 +2025,8 @@ static int vpfe_start_streaming(struct vb2_queue *vq, unsigned int count)
- 	return 0;
++static ssize_t memalloc_write(struct file *file, const char __user *buf,
++			      size_t count, loff_t *ppos)
++{
++	struct task_struct *task;
++	char buffer[5];
++	int rc = count;
++
++	memset(buffer, 0, sizeof(buffer));
++	if (count != sizeof(buffer) - 1)
++		return -EINVAL;
++
++	if (copy_from_user(buffer, buf, count))
++		return -EFAULT;
++	buffer[count] = '\0';
++
++	task = get_proc_task(file_inode(file));
++	if (!task)
++		return -ESRCH;
++
++	if (!strcmp(buffer, "noio")) {
++		task->flags |= PF_MEMALLOC_NOIO;
++	} else {
++		rc = -EINVAL;
++	}
++
++	put_task_struct(task);
++	return rc;
++}
++
++static const struct file_operations proc_memalloc_operations = {
++	.read		= memalloc_read,
++	.write		= memalloc_write,
++	.llseek		= default_llseek,
++};
++
+ #ifdef CONFIG_AUDIT
+ #define TMPBUFLEN 11
+ static ssize_t proc_loginuid_read(struct file * file, char __user * buf,
+@@ -3097,6 +3148,7 @@ static const struct pid_entry tgid_base_stuff[] = {
+ #ifdef CONFIG_PROC_PID_ARCH_STATUS
+ 	ONE("arch_status", S_IRUGO, proc_pid_arch_status),
+ #endif
++	REG("memalloc", S_IRUGO|S_IWUSR, proc_memalloc_operations),
+ };
  
- err:
--	list_for_each_entry_safe(buf, tmp, &vpfe->dma_queue, list) {
--		list_del(&buf->list);
--		vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_QUEUED);
--	}
--
-+	vpfe_return_all_buffers(vpfe, VB2_BUF_STATE_QUEUED);
-+	vpfe_pcr_enable(&vpfe->ccdc, 0);
- 	return ret;
- }
+ static int proc_tgid_base_readdir(struct file *file, struct dir_context *ctx)
+@@ -3487,6 +3539,7 @@ static const struct pid_entry tid_base_stuff[] = {
+ #ifdef CONFIG_PROC_PID_ARCH_STATUS
+ 	ONE("arch_status", S_IRUGO, proc_pid_arch_status),
+ #endif
++	REG("memalloc", S_IRUGO|S_IWUSR, proc_memalloc_operations),
+ };
  
-@@ -2022,7 +2041,6 @@ static void vpfe_stop_streaming(struct vb2_queue *vq)
- {
- 	struct vpfe_device *vpfe = vb2_get_drv_priv(vq);
- 	struct vpfe_subdev_info *sdinfo;
--	unsigned long flags;
- 	int ret;
- 
- 	vpfe_pcr_enable(&vpfe->ccdc, 0);
-@@ -2040,27 +2058,7 @@ static void vpfe_stop_streaming(struct vb2_queue *vq)
- 		vpfe_dbg(1, vpfe, "stream off failed in subdev\n");
- 
- 	/* release all active buffers */
--	spin_lock_irqsave(&vpfe->dma_queue_lock, flags);
--	if (vpfe->cur_frm == vpfe->next_frm) {
--		vb2_buffer_done(&vpfe->cur_frm->vb.vb2_buf,
--				VB2_BUF_STATE_ERROR);
--	} else {
--		if (vpfe->cur_frm != NULL)
--			vb2_buffer_done(&vpfe->cur_frm->vb.vb2_buf,
--					VB2_BUF_STATE_ERROR);
--		if (vpfe->next_frm != NULL)
--			vb2_buffer_done(&vpfe->next_frm->vb.vb2_buf,
--					VB2_BUF_STATE_ERROR);
--	}
--
--	while (!list_empty(&vpfe->dma_queue)) {
--		vpfe->next_frm = list_entry(vpfe->dma_queue.next,
--						struct vpfe_cap_buffer, list);
--		list_del(&vpfe->next_frm->list);
--		vb2_buffer_done(&vpfe->next_frm->vb.vb2_buf,
--				VB2_BUF_STATE_ERROR);
--	}
--	spin_unlock_irqrestore(&vpfe->dma_queue_lock, flags);
-+	vpfe_return_all_buffers(vpfe, VB2_BUF_STATE_ERROR);
- }
- 
- static int vpfe_g_pixelaspect(struct file *file, void *priv,
+ static int proc_tid_base_readdir(struct file *file, struct dir_context *ctx)
 -- 
-2.17.1
+2.21.0
 
