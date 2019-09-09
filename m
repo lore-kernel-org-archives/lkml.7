@@ -2,343 +2,192 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE2BEC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 112C7C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79830207FC
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:20:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bnmQNE2w"
+	by mail.kernel.org (Postfix) with ESMTP id D6A9F207FC
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:22:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389234AbfIIQU5 (ORCPT
+        id S2389269AbfIIQWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 12:20:57 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:33831 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389119AbfIIQU5 (ORCPT
+        Mon, 9 Sep 2019 12:22:00 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22192 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726287AbfIIQV7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 12:20:57 -0400
-Received: by mail-io1-f68.google.com with SMTP id k13so14836247ioj.1;
-        Mon, 09 Sep 2019 09:20:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ABER+Vp83QhpLC7ztUdo6EAJlYvZ3jhpJVftXotXY0s=;
-        b=bnmQNE2wGZ3vWymPRdckA3HJmyfHS5Gry2LnnBjJ4tAgYVuE/055q81VbAOFyGl1A2
-         3BLIGZAktTXxeV/hqU2ApvRFQjuuGTDND5ivq0OTKAS7IB6gMrwRZl57PYfvys/i3mqX
-         S5zBKSJ5FFxbWlUd03Gs2kgnXzi79Ulb7nNn5unAQB1vQBjdoVKDTB0xIyyw1EA2E8YU
-         HZaKcuKEmpAxXRMHe7HX2I6D2E4uXRUOufzOMf3C+v21P8LNM+Tk0mU/I0awGtgNs+du
-         QG6WNcIWeG93ilsC42nmChsbp1HOQL1Spc99gU+y7ce5AVkeId62h8C5XLmGzlEg+f/n
-         dMEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ABER+Vp83QhpLC7ztUdo6EAJlYvZ3jhpJVftXotXY0s=;
-        b=uAvbfxvdPxtxAPrjPUjnQ+I5BBDrdgRALr8bG+ot5by9K4bWQO1ogPfXl5kr11yT6w
-         wYzZdv+ec4vU64f6c6jl/6bzOyqi8TC7mYq/aAzsqgjzSJC/rMUlHBjq/PrvOSf0yVu/
-         L8xNxaSgxwp8mNRKjoB1Nv3kd2ENTVq5LfZXXpn7Fb1BFCgtHwZrXj9S+AMGzTzD8NI9
-         SVhw67hlM/cuZhzIX1GToXK+SG8ogYOXMxIdMVemOCulCXwc3VkpMbXpuNlO+cZyFfV5
-         Q6fmcBhqEfGTT36cjC+Qr8nsg9lLlWUoUziO89Cic2JnDYOwwqotDmKQ1DvM3mbL+LVr
-         poaA==
-X-Gm-Message-State: APjAAAWU8fZ2DY8V8RVoviB4s3ghKe0LGokfI/u25s/k2+8CnPMRh27P
-        77thiRvokAHsK4bZBgNmvis3XiDw77WKjW61DAw=
-X-Google-Smtp-Source: APXvYqxPnVuMnnLvO5mW18/G/WIXKzWDQDOokRzNWcEHoewTt+bpmgaB+g3uD2BHtK6pIYyWOLj+A8j7JpEMv2WIfAQ=
-X-Received: by 2002:a02:7810:: with SMTP id p16mr26889541jac.55.1568046055889;
- Mon, 09 Sep 2019 09:20:55 -0700 (PDT)
+        Mon, 9 Sep 2019 12:21:59 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x89GLvvQ091060
+        for <linux-kernel@vger.kernel.org>; Mon, 9 Sep 2019 12:21:58 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uwrn7mmkv-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 12:21:58 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Mon, 9 Sep 2019 17:21:52 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 9 Sep 2019 17:21:50 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x89GLmqV60883142
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 9 Sep 2019 16:21:48 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6BD31A4055;
+        Mon,  9 Sep 2019 16:21:48 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 10263A404D;
+        Mon,  9 Sep 2019 16:21:48 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.65.169])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  9 Sep 2019 16:21:47 +0000 (GMT)
+Subject: Re: [PATCH] kvm_s390_vm_start_migration: check dirty_bitmap before
+ using it as target for memset()
+To:     Igor Mammedov <imammedo@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     david@redhat.com, cohuck@redhat.com,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>
+References: <20190909145545.11759-1-imammedo@redhat.com>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ syiRa+UVlsKmx1hsEg==
+Date:   Mon, 9 Sep 2019 18:21:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190801012823.28730-1-neolynx@gmail.com> <CAHCN7x+nD0J6KZYtfH+0ApQTPO5byO2obMkUwc9Uf4WubyRbTw@mail.gmail.com>
- <C04F49BA-1229-4E96-9FCF-4FC662D1DB11@goldelico.com> <CAHCN7x+Ye6sB_YqO0sAX1OJDw64B-qGS3pL545v3Xk5z914cwQ@mail.gmail.com>
- <0C1EF64E-B33C-4BFA-A7D3-471DD1B9EE86@goldelico.com> <515048DE-138D-4400-8168-F2B7D61F1005@goldelico.com>
- <CAHCN7xLPCX9rZ0+7KVBiA_bgZ6tg6VeCXqD-UXu+6iwpFMPVrA@mail.gmail.com>
- <7B3D1D77-3E8C-444F-90B9-6DF2641178B8@goldelico.com> <CAHCN7xLW58ggx3CpVL=HdCVHWo6D-MCTB91A_9rtSRoZQ+xJuQ@mail.gmail.com>
- <FA2920FE-B76A-4D44-A264-862A1CCBF7FC@goldelico.com> <CAHCN7xJsPa0i+Z+qpCkWcdAh9+udmGT0RPNchdDsfB=8ptd3Nw@mail.gmail.com>
- <87420DBD-770F-4C32-9499-A3AEA5876E8A@goldelico.com>
-In-Reply-To: <87420DBD-770F-4C32-9499-A3AEA5876E8A@goldelico.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Mon, 9 Sep 2019 11:20:44 -0500
-Message-ID: <CAHCN7xJe+sBVZHfXN0ZEaepxAR8RGuMTVGA4GMR5Nqn5LG2TeA@mail.gmail.com>
-Subject: Re: [Letux-kernel] [RFC PATCH 0/3] Enable 1GHz support on omap36xx
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     =?UTF-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Tony Lindgren <tony@atomide.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190909145545.11759-1-imammedo@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19090916-0028-0000-0000-00000399D984
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19090916-0029-0000-0000-0000245C3998
+Message-Id: <4668e4e9-c0bc-3647-6387-20c6f8107ed3@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-09_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=927 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909090166
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 9, 2019 at 9:57 AM H. Nikolaus Schaller <hns@goldelico.com> wro=
-te:
->
-> Hi Adam,
->
-> > Am 09.09.2019 um 16:26 schrieb Adam Ford <aford173@gmail.com>:
-> >
-> > On Sat, Sep 7, 2019 at 2:38 AM H. Nikolaus Schaller <hns@goldelico.com>=
- wrote:
-> >>
-> >> Hi Adam,
-> >>
-> >>> Am 02.09.2019 um 23:10 schrieb Adam Ford <aford173@gmail.com>:
-> >>>
-> >>> On Mon, Sep 2, 2019 at 10:46 AM H. Nikolaus Schaller <hns@goldelico.c=
-om> wrote:
-> >>>>
-> >>>>
-> >>>>
-> >>>> But my tests show that decoding works now. So you already might give=
- it a try.
-> >>>
-> >>> I am traveling all this week, but I have an omap3530, DM3730
-> >>> (omap3630), and an AM3517 that I use for testing.
-> >>
-> >> now as the omap3430 and omap3630 opp-v2 tables are installed,
-> >> we could add am35x7 as well.
-> >>
-> >> What needs to be done:
-> >>
-> >> 1. add OPP-v2 table to am3517.dtsi
-> >>
-> >> for example copy skeleton from omap36xx.dtsi
-> >>
-> >> and define reasonable clock speeds. I would think about
-> >> 150 MHz, 300 MHz, 600MHz.
-> >
-> > This might be more of a question for TI, but  can we match the 3430
-> > list of frequencies?
-> >
-> > Something like:
-> >    125000  1200000
-> >    250000  1200000
-> >    500000  1200000
-> >    550000  1200000
-> >    600000  1200000
->
-> And another question: is it more derived from omap3430 or omap3630?
->
-> >
-> >
-> >>
-> >> Debatable is if we need a clock-latency definition.
-> >>
-> >> 2. change all voltages to 1.2V
-> >>
-> >>                        opp-microvolt =3D <1200000 1200000 1200000>;
-> >>
-> >> There is no point to specify 3 voltages <target min max> here since we
-> >> will never need a min and a max value.
-> >>
-> >>                        opp-microvolt =3D <1200000>;
-> >>
-> >> should also be ok (AFAIK, parser handles single-value records).
-> >>
-> >> 3. AFAIK there is no speed binned eFuse...
-> >>
-> >> But the ti-cpufreq driver always wants to read some eFuse register.
-> >>
-> >> So please check if you can read 0x4800244C and 0x4830A204
-> >> like on omap36xx and if they produce stable values (and not
-> >> random noise).
-> >
-> > For the AM3517,
-> >
-> > 0x4800244C =3D 0000 0cc0
->
-> If it behaves like an dm3730 (Table 1-6) this would be read as 800/600MHz
-> and some reserved code in bit 7:6.
->
-> If it behaves like an omap3530 (Table 1-6) this would bean 600MHz but res=
-erved
-> value for IVA Frequency.
->
->
-> > 0x4830A204 =3D 1b86 802f
->
-> would be decoded (Table 1-7) as "AM/DM37x ES1.1"
->
-> omap35xx would have a different code (Table 1-9). Most similar is "OMAP35=
-x ES2.0" with 0x1B7A E02F
->
-> So this seems to answer that the am3517 is indeed a derivative of the am/=
-dm37xx.
->
-> Therefore the only OPPs would be OPP50 (300 MHz) and OPP100 (600 MHz).
->
-> Only tests or TI internal documentations could show if the am3517 still
-> runs stable at newly invented "OPP25" (150MHz).
->
-> >
-> > The AM3517 shows these are valid addresses and I read them multiple
-> > times and they yielded the same results even after power cycling.
-> >
-> >
-> >>
-> >> If yes, we simply assume that am3517 is similar enough to omap3630,
-> >> ignore that there is no eFuse, but read the register anyways and
-> >> then ignore the bit if it is 0 or 1.
-> >>
-> >> This means that all OPPs can get
-> >>
-> >>                        opp-supported-hw =3D <0xffffffff 0xffffffff>;
-> >>
-> >> There could also be a default handler if this property is missing,
-> >> but I have not researched this.
-> >>
-> > Like this?
-> >
-> > opp1-125000000 {
-> >     opp-hz =3D /bits/ 64 <125000000>;
-> >     opp-microvolt =3D <1200000>;
-> >     opp-supported-hw =3D <0xffffffff 0xffffffff>;
-> > };
-> >
-> > opp2-250000000 {
-> >     opp-hz =3D /bits/ 64 <250000000>;
-> >     opp-microvolt =3D <1200000>;
-> >    opp-supported-hw =3D <0xffffffff 0xffffffff>;
-> >     opp-suspend;
-> > };
-> >
-> > opp3-500000000 {
-> >     opp-hz =3D /bits/ 64 <500000000>;
-> >     opp-microvolt =3D <1200000>;
-> >     opp-supported-hw =3D <0xffffffff 0xffffffff>;
-> > };
-> >
-> > opp4-550000000 {
-> >     opp-hz =3D /bits/ 64 <550000000>;
-> >     opp-microvolt =3D <1200000>;
-> >     opp-supported-hw =3D <0xffffffff 0xffffffff>;
-> > };
-> >
-> > opp5-600000000 {
-> >     opp-hz =3D /bits/ 64 <600000000>;
-> >     opp-microvolt =3D <1200000>;
-> >     opp-supported-hw =3D <0xffffffff 0xffffffff>;
-> > };
->
-> Yes.
->
-> >
-> > What does opp-suspend do?  I noticed it in the 34xx.dtsi
->
-> Good question. I think it is the OPP to be chosen before suspend:
->
-> https://www.kernel.org/doc/Documentation/devicetree/bindings/opp/opp.txt
-> says
->
-> - opp-suspend: Marks the OPP to be used during device suspend. Only one O=
-PP in
->   the table should have this.
->
-> But that doesn't mean the drivers make use of this marker.
->
-> This makes me also wonder if we should tag the OPP1G and OPP6 as "turbo-m=
-ode"...
->
-> Another question that came up by private mail from Andr=C3=A9 was if we
-> should better disable the turbo OPPs of omap34xx and 36xx by default
-> (status =3D "disabled";) because there are concerns about overheating
-> the chips and we have no thermal regulation like for omap4 & 5.
->
-> But this would mean that every board DTS would have to set it explicitly
-> to "enabled".
->
-> And another concern is if the 1GHz OPP doesn't also need to switch the
-> ABB bias LDO to a different mode. This is not done by the ti-cpufreq driv=
-er.
-> Maybe it is done by some driver in mach-omap but I have not searched for.
+Adding Janosch (co-maintainer) and Claudio (author of that code)
 
-ti-omap5-opp-supply.txt shows
+On 09.09.19 16:55, Igor Mammedov wrote:
+> If userspace doesn't set KVM_MEM_LOG_DIRTY_PAGES on memslot before calling
+> kvm_s390_vm_start_migration(), kernel will oops with:
+> 
+>   Unable to handle kernel pointer dereference in virtual kernel address space
+>   Failing address: 0000000000000000 TEID: 0000000000000483
+>   Fault in home space mode while using kernel ASCE.
+>   AS:0000000002a2000b R2:00000001bff8c00b R3:00000001bff88007 S:00000001bff91000 P:000000000000003d
+>   Oops: 0004 ilc:2 [#1] SMP
+>   ...
+>   Call Trace:
+>   ([<001fffff804ec552>] kvm_s390_vm_set_attr+0x347a/0x3828 [kvm])
+>    [<001fffff804ecfc0>] kvm_arch_vm_ioctl+0x6c0/0x1998 [kvm]
+>    [<001fffff804b67e4>] kvm_vm_ioctl+0x51c/0x11a8 [kvm]
+>    [<00000000008ba572>] do_vfs_ioctl+0x1d2/0xe58
+>    [<00000000008bb284>] ksys_ioctl+0x8c/0xb8
+>    [<00000000008bb2e2>] sys_ioctl+0x32/0x40
+>    [<000000000175552c>] system_call+0x2b8/0x2d8
+>   INFO: lockdep is turned off.
+>   Last Breaking-Event-Address:
+>    [<0000000000dbaf60>] __memset+0xc/0xa0
+> 
+> due to ms->dirty_bitmap being NULL, which migh crash the host.
+> 
+> Make sure that ms->dirty_bitmap is set before using it or
+> print a warning and return -ENIVAL otherwise.
+> 
+> Signed-off-by: Igor Mammedov <imammedo@redhat.com>
+> ---
+> 
+> PS:
+>   keeping it private for now as issue might DoS host,
+>   I'll leave it upto maintainers to decide if it should be handled as security
+>   bug (I'm not sure what process for handling such bugs should be used).
 
-Required Properties for Device Node:
-- vdd-supply: phandle to regulator controlling VDD supply
-- vbb-supply: phandle to regulator controlling Body Bias supply
-      (Usually Adaptive Body Bias regulator)
+I think its fine to send to the public lists. Its just a bug and with cc stable this
+should cascade quickly to the right places. 
+> 
+> 
+>  arch/s390/kvm/kvm-s390.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+> index f329dcb3f44c..dfba51c9d60c 100644
+> --- a/arch/s390/kvm/kvm-s390.c
+> +++ b/arch/s390/kvm/kvm-s390.c
+> @@ -1018,6 +1018,10 @@ static int kvm_s390_vm_start_migration(struct kvm *kvm)
+>  	/* mark all the pages in active slots as dirty */
+>  	for (slotnr = 0; slotnr < slots->used_slots; slotnr++) {
+>  		ms = slots->memslots + slotnr;
+> +		if (!ms->dirty_bitmap) {
+> +			WARN(1, "ms->dirty_bitmap == NULL\n");
 
-Looking at the ti-cpufreq.c driver, it appears as if there is both a
-vdd and a vbb listed in the table (line 302).  AFAICT, we should be
-able to just set it up pointing VDD to the PMIC and VBB at the ABB
-unless I am missing something.
+I would prefer to not have a WARN_ON. Otherwise this would allow a malicious user
+to spam the log. 
 
-Currently, I have the follwing in my device tree:
 
-/* Reroute power feeding the CPU to come from the external PMIC */
-&reg_arm
-{
-     vin-supply =3D <&sw1a_reg>;
-};
+> +			return -EINVAL;
+> +		}
+>  		/*
+>  		 * The second half of the bitmap is only used on x86,
+>  		 * and would be wasted otherwise, so we put it to good
+> 
 
-&reg_soc
-{
-      vin-supply =3D <&sw1c_reg>;
-};
-
-Is this still correct with the new cpufreq driver?   I am wondering if
-we need VDD and VBB references under the cpu entry.  The
-ti-omap5-opp-supply ready me also reads:
-
-/* Device Node (CPU)  */
-cpus {
-     cpu0: cpu@0 {
-          device_type =3D "cpu";
-
-...
-
-          vdd-supply =3D <&vcc>;
-          vbb-supply =3D <&abb_mpu>;
-     };
-};
-
-This isn't in the ti-cpufreq.txt, however it might actually be
-utilized based on a quick skim of the driver.
-
-adam
->
-> So the concern is that we will run the turbo modes outside of the TI spec=
-s
-> while before applying the patch set this would be a lesser problem (OPP13=
-0
-> should also be thermally limited to 90=C2=B0C).
->
-> I.e. users of 1GHz capable boards will not only see 25% more speed but
-> suddenly higher SoC temperatures than the years before.
->
-> >
-> >> 4. add compatible to ti-cpufreq
-> >> and share the register offsets, bit masks etc. with omap3630:
-> >>
-> >>        { .compatible =3D "ti,am33xx", .data =3D &am3x_soc_data, },
-> >>        { .compatible =3D "ti,am3517", .data =3D &omap36xx_soc_data, },
-> >>        { .compatible =3D "ti,am43", .data =3D &am4x_soc_data, },
-> >>        { .compatible =3D "ti,dra7", .data =3D &dra7_soc_data },
-> >>        { .compatible =3D "ti,omap3430", .data =3D &omap34xx_soc_data, =
-},
-> >>        { .compatible =3D "ti,omap3630", .data =3D &omap36xx_soc_data, =
-},
-> >>
-> >> 5. configure for CONFIG_ARM_TI_CPUFREQ=3Dy
-> >>
-> >> This should IMHO suffice.
-> >
-> > If you're OK with what I am proposing, I'll run some tests and submit
-> > a patch.  I won't promise to fully understand what's happening.  :-)
->
-> Same for me :)
->
-> BR and thanks,
-> Nikolaus
->
