@@ -2,100 +2,114 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C2B4C433EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 05:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD26EC433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 05:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB41921A49
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 05:42:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mitSbrQl"
+	by mail.kernel.org (Postfix) with ESMTP id B216921924
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 05:53:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbfIIFm0 (ORCPT
+        id S1727172AbfIIFwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 01:42:26 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36548 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726729AbfIIFmZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 01:42:25 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y22so8445565pfr.3;
-        Sun, 08 Sep 2019 22:42:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=sNPKiG4f293O1xukhlprF97TRd4tQ/u8W2A8cgfAduc=;
-        b=mitSbrQlq45lqe66coysoEZ9CZFcjROBTC6aTnCdZyTxToUM5CA+2gLVnBxUkmGyqQ
-         GPx2LZlomyvyd846pVL3KcIXWqj6AeTuTTs5Ko32TVwVp9RYr1iJPUuDWDzs4guZI6xK
-         EAiQ5qXNix9ANr5YqmjWHV7z+KIC2gabJEMmPX454jOvB+jx14DXK4rudT5/U0O0B2cs
-         ZCZdv1g2n9Q+Rw05GaaYys7f/jTNDkOlfHL+HPMF9F4+2TLSuprpd2r8w24qv2XtdBcu
-         EDNlW+SFrP8Ykm7ILmHfcB4oiiJ/tqGUbmPfhcOCCFJ8rLv8Biov/OTGqtAhB+2TbHoD
-         BcRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=sNPKiG4f293O1xukhlprF97TRd4tQ/u8W2A8cgfAduc=;
-        b=mcsOXzgClALXSXi26aTEuBKLH0NnAUj6As8k6IEC/9XdKq/FKc2eWaDIPWrTSiZeCS
-         kTxdRlT3IX0p9AMetbYk6o5qFHkV8dfNSfraoy/FLTy9Hvc7FnKJKNQvcD/NXr7+mGkZ
-         HoY5O4wGQFR9/U9qaOpI7Jin8JGnArN63gjFwVB5qFnCp2PapHHwL0cCm6WQGgfxNJ4S
-         uny4oKTON/QDvfko54G+HzXFIN6go+HlXZGRrmNuzr398E6dQyo/bFIzR9vRktByS+iJ
-         uPzqmj7HMSxXHiYf+JWsAgIiUWD3bjEsaLBX4jXBOUWkkLFH0z0S01VuSLLDk+XaorZi
-         EMFg==
-X-Gm-Message-State: APjAAAWcD5iq8wl7iQbGyNPj0OeJUJm0zf3u02Y120dvVfJdF1A2z+nH
-        IIGUr0z7pa8ynRnRCnjqP0M=
-X-Google-Smtp-Source: APXvYqxoacRC+/vSFdUYCrCBb6ycMAA52BjDl92rD7oTqzhufwGKXKqEXJ0K/V3kYnY5i9wy7h1C6Q==
-X-Received: by 2002:a63:b20f:: with SMTP id x15mr20450987pge.453.1568007744641;
-        Sun, 08 Sep 2019 22:42:24 -0700 (PDT)
-Received: from LGEARND20B15 ([27.122.242.75])
-        by smtp.gmail.com with ESMTPSA id h66sm22763016pjb.0.2019.09.08.22.42.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 08 Sep 2019 22:42:24 -0700 (PDT)
-Date:   Mon, 9 Sep 2019 14:42:19 +0900
-From:   Austin Kim <austindh.kim@gmail.com>
-To:     aacraid@microsemi.com, jejb@linux.ibm.com,
-        martin.petersen@oracle.com
-Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
-Subject: [PATCH] scsi: dpt_i2o: drop unnecessary comparison statement
-Message-ID: <20190909054219.GA119246@LGEARND20B15>
+        Mon, 9 Sep 2019 01:52:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44480 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727070AbfIIFwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 01:52:21 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B5F7330A00C5;
+        Mon,  9 Sep 2019 05:52:21 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-117-59.ams2.redhat.com [10.36.117.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BD9E05D6A7;
+        Mon,  9 Sep 2019 05:52:20 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id B9D2992F; Mon,  9 Sep 2019 07:52:19 +0200 (CEST)
+Date:   Mon, 9 Sep 2019 07:52:19 +0200
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     Jaak Ristioja <jaak@ristioja.ee>, Dave Airlie <airlied@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        virtualization@lists.linux-foundation.org,
+        spice-devel@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Xorg indefinitely hangs in kernelspace
+Message-ID: <20190909055219.q44k27cczwkuio3z@sirius.home.kraxel.org>
+References: <20190906055322.17900-1-hdanton@sina.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190906055322.17900-1-hdanton@sina.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Mon, 09 Sep 2019 05:52:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The type of 'chan' is u32 which contain non-negative value.
-So 'chan < 0' is statment is always false.
+  Hi,
 
-Remove unnecessary comparison statement
+--verbose please.  Do you see the same hang?  Does the patch fix it?
 
-Signed-off-by: Austin Kim <austindh.kim@gmail.com>
----
- drivers/scsi/dpt_i2o.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> --- a/drivers/gpu/drm/ttm/ttm_execbuf_util.c
+> +++ b/drivers/gpu/drm/ttm/ttm_execbuf_util.c
+> @@ -97,8 +97,9 @@ int ttm_eu_reserve_buffers(struct ww_acq
+>  			   struct list_head *dups, bool del_lru)
+[ ... ]
 
-diff --git a/drivers/scsi/dpt_i2o.c b/drivers/scsi/dpt_i2o.c
-index abc74fd..df48ef5 100644
---- a/drivers/scsi/dpt_i2o.c
-+++ b/drivers/scsi/dpt_i2o.c
-@@ -1120,7 +1120,7 @@ static struct adpt_device* adpt_find_device(adpt_hba* pHba, u32 chan, u32 id, u6
- {
- 	struct adpt_device* d;
+> +			if (locked)
+> +				ttm_eu_backoff_reservation_reverse(list, entry);
+
+Hmm, I think the patch is wrong.  As far I know it is the qxl drivers's
+job to call ttm_eu_backoff_reservation().  Doing that automatically in
+ttm will most likely break other ttm users.
+
+So I guess the call is missing in the qxl driver somewhere, most likely
+in some error handling code path given that this bug is a relatively
+rare event.
+
+There is only a single ttm_eu_reserve_buffers() call in qxl.
+So how about this?
+
+----------------------- cut here --------------------
+diff --git a/drivers/gpu/drm/qxl/qxl_release.c b/drivers/gpu/drm/qxl/qxl_release.c
+index 312216caeea2..2f9950fa0b8d 100644
+--- a/drivers/gpu/drm/qxl/qxl_release.c
++++ b/drivers/gpu/drm/qxl/qxl_release.c
+@@ -262,18 +262,20 @@ int qxl_release_reserve_list(struct qxl_release *release, bool no_intr)
+ 	ret = ttm_eu_reserve_buffers(&release->ticket, &release->bos,
+ 				     !no_intr, NULL, true);
+ 	if (ret)
+-		return ret;
++		goto err_backoff;
  
--	if(chan < 0 || chan >= MAX_CHANNEL)
-+	if(chan >= MAX_CHANNEL)
- 		return NULL;
- 	
- 	d = pHba->channel[chan].device[id];
--- 
-2.6.2
+ 	list_for_each_entry(entry, &release->bos, tv.head) {
+ 		struct qxl_bo *bo = to_qxl_bo(entry->tv.bo);
+ 
+ 		ret = qxl_release_validate_bo(bo);
+-		if (ret) {
+-			ttm_eu_backoff_reservation(&release->ticket, &release->bos);
+-			return ret;
+-		}
++		if (ret)
++			goto err_backoff;
+ 	}
+ 	return 0;
++
++err_backoff:
++	ttm_eu_backoff_reservation(&release->ticket, &release->bos);
++	return ret;
+ }
+ 
+ void qxl_release_backoff_reserve_list(struct qxl_release *release)
+----------------------- cut here --------------------
+
+cheers,
+  Gerd
 
