@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C59C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F3BFC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DAE42086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E99AF206CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:19:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HiV0R0l7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uDgCrBJ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732205AbfIIOTX (ORCPT
+        id S1728389AbfIIOT0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 10:19:23 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41584 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbfIIOTV (ORCPT
+        Mon, 9 Sep 2019 10:19:26 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40058 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732116AbfIIOTW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 10:19:21 -0400
-Received: by mail-pf1-f194.google.com with SMTP id b13so9230666pfo.8
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 07:19:20 -0700 (PDT)
+        Mon, 9 Sep 2019 10:19:22 -0400
+Received: by mail-pf1-f195.google.com with SMTP id x127so9247815pfb.7
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 07:19:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=d/AHpfqgPLf1YWnb3Rp5h86h74k5SWCtkf5nB4QsU3Q=;
-        b=HiV0R0l7MX5KSirnc6nhAmvFvFG5jCcU9gkGxXQndKyFMXR+OVDg2n7PYt+54rW1Hi
-         kB+qvkohDcASccOI6KwQUzkhJTbiH1jH2A/nwR5Mvy+JK4ZBdJ/xomZpPwG0tAb6rnWw
-         P4ko5SuWy2yG7wcMke2A1wmI6tzNzouWURyi9SZoSeqHNRrkYWOgLiNp1ZPlytDvFBYz
-         cj+0DsXZNtGcBrLvGIquFRuEch93hGXyXYQRwfBcp7PU0E9FBUVCz1+Q7Lfyl+xgMlTm
-         8CnnbJGbkbVbHHnUCDjGftHCuLgql8fShnV8XFHFIM+x70zyOI/8vMV4bip2A0r7v9Rd
-         exDg==
+        bh=26Wst1tOghrDUnY62Gv01qINYsQrhb3q0IbTkiTmqqM=;
+        b=uDgCrBJ8MVKrIJnLVcX6OI2xCnSlaOKwBS0DSWEhI6CUBa93RmqQTvPt7XgnLSveB3
+         7oLwbehofSn81Eqmdkn69+iqm8nxTQ/fh6mDVvWzlmNnqkx3Kyn/g3Xo9SGRD51zWJYu
+         8+DfMUGX3DN0jRMSzeAqntZ/HCCH1mOOZACEsbT1kibLUXi6qbNaDoyI8Oyke2h00GeE
+         cJYn9BNcRKNUJ4ktDjoajQAXj3zexp3l44Sx0hJ00zRb/4ihTYszssdJf/F28XtCbp2v
+         EZtMO49bblr+anhM8nYxPoWfGV4UC6Vha1MjwFzb/O5z8e5yeYGaHYzBQvR9FSAVGGnA
+         fmrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=d/AHpfqgPLf1YWnb3Rp5h86h74k5SWCtkf5nB4QsU3Q=;
-        b=UFatXCiFamENILTYA58e1ZMFMPDX9vB5kPMiEGZpo/UrCbO+VyrY0IqPiwdbdFlXG8
-         FAxYxrnN4ns0xJ0GxsTPKXvss1vSBerEzf3ZjISUJUgOYxveuOtDQSYaeBvJR6vjh65K
-         HmgE0e1X2cirAU/jJxQhEdvQJT0shJmzCPbJ+hLTlZDPQM5jQMuo/D8vrrkSzSvZG4WC
-         QrMFedUPuUHRAJxQWDlZvlQpc8eIgeUlLBmZX+FwIvTsgErf9GAT263N1G3q1W9AXCCV
-         lP6r/iyJ0ZFkBPmhuJ32qw46Ajczu7tZJDmNxoUX7wg4NxyUO39ic+NpLCjDTnfj4bpB
-         jKBQ==
-X-Gm-Message-State: APjAAAVyAnok7cdql2JCDz20RPCF0XGXzkpEYIenmQcL4FeEN6ZKT1xZ
-        wO5/3ZBDrgLCDIlrKOBcWPo=
-X-Google-Smtp-Source: APXvYqxV/lYZ7fob+xvcztFy0b3HBrXnpwukQBqAxJYZnFEVYhsxjZmOxb0kuRfnFhavKL50RlT6Ww==
-X-Received: by 2002:a62:2b46:: with SMTP id r67mr28802143pfr.140.1568038745876;
-        Mon, 09 Sep 2019 07:19:05 -0700 (PDT)
+        bh=26Wst1tOghrDUnY62Gv01qINYsQrhb3q0IbTkiTmqqM=;
+        b=GCiukuPBMMCumFjvb1Xvjcx/knzds5y7qWGsNw8IfC9i6GTSXGqitUrVqFaTRPq0L3
+         0AAYTRmLmcCrLxayMua5RdcW3kbM3x2ZWspGtTADB5+stEChqlKZj8WxXTqOEnd0nz7f
+         6XCPtBdLSdlAjVOnJw9BjzcqV8hmq3AndbqNyIX/+48G27bBU9EFKS/q4UJbXfwMVJZv
+         RmKKENBG1MScdw2RGmBisoGtQpW3143wfLzs1BlrT480eu52MAQK/KD95s6VALIl0/zR
+         O9t526JL165o342i7TyJys3jNHoVUqmpSgwuexE5MV+H7BxmIbdb1/QqsW+m8bgPiatk
+         042g==
+X-Gm-Message-State: APjAAAW8+ZEzC4RYW7nlf1Ca4FL6IjV2nL6VE/uhUGMi++a2GCD+ch/C
+        aSnOaIjgYJEPcL1iQKh226k=
+X-Google-Smtp-Source: APXvYqzZVjw/bj3xu3E4R9KuJmmaHaRN5jsb+5yhdPs2IhUNbwNVcPJYnTMhEKaKM/jfzKb67DLD9A==
+X-Received: by 2002:aa7:82d9:: with SMTP id f25mr17667823pfn.117.1568038761846;
+        Mon, 09 Sep 2019 07:19:21 -0700 (PDT)
 Received: from localhost.localdomain ([149.28.153.17])
-        by smtp.gmail.com with ESMTPSA id w6sm34574695pfw.84.2019.09.09.07.19.02
+        by smtp.gmail.com with ESMTPSA id w6sm34574695pfw.84.2019.09.09.07.19.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Sep 2019 07:19:05 -0700 (PDT)
+        Mon, 09 Sep 2019 07:19:21 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     Andrew Morton <akpm@linux-foundation.org>,
         Randy Dunlap <rdunlap@infradead.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
         Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v2 5/9] kconfig/hacking: Move Oops into 'Lockups and Hangs'
-Date:   Mon,  9 Sep 2019 22:18:19 +0800
-Message-Id: <20190909141823.8638-6-changbin.du@gmail.com>
+Subject: [PATCH v2 8/9] kconfig/hacking: Move DEBUG_BUGVERBOSE to 'printk and dmesg options'
+Date:   Mon,  9 Sep 2019 22:18:22 +0800
+Message-Id: <20190909141823.8638-9-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190909141823.8638-1-changbin.du@gmail.com>
 References: <20190909141823.8638-1-changbin.du@gmail.com>
@@ -75,89 +75,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-They are similar options so place them together.
+I think DEBUG_BUGVERBOSE is a dmesg option which gives more debug info
+to dmesg.
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 ---
- lib/Kconfig.debug | 58 +++++++++++++++++++++++------------------------
- 1 file changed, 29 insertions(+), 29 deletions(-)
+ lib/Kconfig.debug | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 7b3552531d02..1385e17122a1 100644
+index ce891713c914..ceefe0c1e78b 100644
 --- a/lib/Kconfig.debug
 +++ b/lib/Kconfig.debug
-@@ -793,7 +793,35 @@ config DEBUG_SHIRQ
- 	  Drivers ought to be able to handle interrupts coming in at those
- 	  points; some don't and need to be caught.
+@@ -164,6 +164,15 @@ config DYNAMIC_DEBUG
+ 	  See Documentation/admin-guide/dynamic-debug-howto.rst for additional
+ 	  information.
  
--menu "Debug Lockups and Hangs"
-+menu "Debug Oops, Lockups and Hangs"
-+
-+config PANIC_ON_OOPS
-+	bool "Panic on Oops"
++config DEBUG_BUGVERBOSE
++	bool "Verbose BUG() reporting (adds 70K)" if DEBUG_KERNEL && EXPERT
++	depends on BUG && (GENERIC_BUG || HAVE_DEBUG_BUGVERBOSE)
++	default y
 +	help
-+	  Say Y here to enable the kernel to panic when it oopses. This
-+	  has the same effect as setting oops=panic on the kernel command
-+	  line.
++	  Say Y here to make BUG() panics output the file name and line number
++	  of the BUG call as well as the EIP and oops trace.  This aids
++	  debugging but costs about 70-100K of memory.
 +
-+	  This feature is useful to ensure that the kernel does not do
-+	  anything erroneous after an oops which could result in data
-+	  corruption or other issues.
-+
-+	  Say N if unsure.
-+
-+config PANIC_ON_OOPS_VALUE
-+	int
-+	range 0 1
-+	default 0 if !PANIC_ON_OOPS
-+	default 1 if PANIC_ON_OOPS
-+
-+config PANIC_TIMEOUT
-+	int "panic timeout"
-+	default 0
-+	help
-+	  Set the timeout value (in seconds) until a reboot occurs when the
-+	  the kernel panics. If n = 0, then we wait forever. A timeout
-+	  value n > 0 will wait n seconds before rebooting, while a timeout
-+	  value n < 0 will reboot immediately.
+ endmenu # "printk and dmesg options"
  
- config LOCKUP_DETECTOR
+ menu "Compile-time checks and compiler options"
+@@ -1323,15 +1332,6 @@ config DEBUG_KOBJECT_RELEASE
+ config HAVE_DEBUG_BUGVERBOSE
  	bool
-@@ -951,34 +979,6 @@ config WQ_WATCHDOG
  
- endmenu # "Debug lockups and hangs"
+-config DEBUG_BUGVERBOSE
+-	bool "Verbose BUG() reporting (adds 70K)" if DEBUG_KERNEL && EXPERT
+-	depends on BUG && (GENERIC_BUG || HAVE_DEBUG_BUGVERBOSE)
+-	default y
+-	help
+-	  Say Y here to make BUG() panics output the file name and line number
+-	  of the BUG call as well as the EIP and oops trace.  This aids
+-	  debugging but costs about 70-100K of memory.
+-
+ menu "Debug kernel data structures"
  
--config PANIC_ON_OOPS
--	bool "Panic on Oops"
--	help
--	  Say Y here to enable the kernel to panic when it oopses. This
--	  has the same effect as setting oops=panic on the kernel command
--	  line.
--
--	  This feature is useful to ensure that the kernel does not do
--	  anything erroneous after an oops which could result in data
--	  corruption or other issues.
--
--	  Say N if unsure.
--
--config PANIC_ON_OOPS_VALUE
--	int
--	range 0 1
--	default 0 if !PANIC_ON_OOPS
--	default 1 if PANIC_ON_OOPS
--
--config PANIC_TIMEOUT
--	int "panic timeout"
--	default 0
--	help
--	  Set the timeout value (in seconds) until a reboot occurs when the
--	  the kernel panics. If n = 0, then we wait forever. A timeout
--	  value n > 0 will wait n seconds before rebooting, while a timeout
--	  value n < 0 will reboot immediately.
--
- config SCHED_DEBUG
- 	bool "Collect scheduler debugging info"
- 	depends on DEBUG_KERNEL && PROC_FS
+ config DEBUG_LIST
 -- 
 2.20.1
 
