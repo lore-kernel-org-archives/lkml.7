@@ -2,141 +2,128 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E09C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00928C49ED6
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:17:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 524BA206CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:16:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC562206CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 14:17:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Flbcx2BC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405363AbfIIOQf (ORCPT
+        id S1731312AbfIIORp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 10:16:35 -0400
-Received: from mga09.intel.com ([134.134.136.24]:33539 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730690AbfIIOQf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 10:16:35 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Sep 2019 07:16:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,484,1559545200"; 
-   d="scan'208";a="185204986"
-Received: from cheolyon-mobl.gar.corp.intel.com (HELO [10.249.76.127]) ([10.249.76.127])
-  by fmsmga007.fm.intel.com with ESMTP; 09 Sep 2019 07:16:30 -0700
-Subject: Re: [PATCH v1 1/2] clk: intel: Add CGU clock driver for a new SoC
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>, sboyd@kernel.org
-Cc:     andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mark.rutland@arm.com, mturquette@baylibre.com,
-        qi-ming.wu@intel.com, rahul.tanwar@intel.com, robh+dt@kernel.org,
-        robh@kernel.org, yixin.zhu@linux.intel.com
-References: <6a3c26bc6e25d883686287883528dbde30725922.1566975410.git.rahul.tanwar@linux.intel.com>
- <20190902222015.11360-1-martin.blumenstingl@googlemail.com>
- <d9e96dab-96be-0c14-b7af-e1f2dc07ebd2@linux.intel.com>
- <CAFBinCARQJ7q9q3r6c6Yr2SD0Oo_Drah-kxss3Obs-g=B1M28A@mail.gmail.com>
- <b7920723-1df2-62df-61c7-98c3a1665aa1@linux.intel.com>
- <CAFBinCA+J-HnXfRnquqviXvX0Jo84hoLC9=_uHbyWKZycwyAFw@mail.gmail.com>
-From:   "Kim, Cheol Yong" <cheol.yong.kim@linux.intel.com>
-Message-ID: <4e1ddc50-7ae3-3ba9-7e41-80a834fa2dbf@linux.intel.com>
-Date:   Mon, 9 Sep 2019 22:16:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 9 Sep 2019 10:17:45 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38507 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730690AbfIIORo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 10:17:44 -0400
+Received: by mail-wm1-f68.google.com with SMTP id o184so14888857wme.3
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 07:17:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2qb5xUYiQ7B8gJNTYidGOmiStSSf8Mji6z+Cq9akdzo=;
+        b=Flbcx2BCt5vaMvdtOI3H+Teqq4mwUXKD+Vl4eF5nM5MnB25gGA7qaHWiUmW4867wb7
+         meo/YTmyrqM0PAwLwQFIBsfqCf522XecZkUj5Z3UuZyGYZqIISZWW+WOGmnEDWnow1b7
+         HWqpVnNPEdZaqDTudQ+INYo05gBQETKL5j4ibd3js4cA7j3Sw5ll5/cqBtMoYYmnSM8l
+         3o3vyibK1sSuOhgSy3pxPnIN2KEqjy+l0e4YU8wA+GL+6P5Xl7GjnhgYZ81Ezh9f+t/E
+         svHOSKVSGKWAjz2Ui5K+YbgUbRVo1k1ka6cFmWe9IixwWPVXZnVsba3XdRXgrS6JmdRB
+         RoLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2qb5xUYiQ7B8gJNTYidGOmiStSSf8Mji6z+Cq9akdzo=;
+        b=UwD1Nktci/u5fA4Pgzdzg6lxY1oHoaQVL6vKqY3wRPEtJt5YEcHLGCPtkpSU1cVR/l
+         iPYDKV5C+bxjpESHsgJH8XE1fsugqL3i6kRILHQMpTDxYXdRbCDwpqZWEpI/qCULAUmv
+         guz6nQP31EQlwiI2nufNHLeIqB/DPMGjaOkOv6BZc+b6vNPUX1y6wyxEEIXQ7n+J4EgI
+         gWmExlFdCrv+ny7d8GDxOk26wnd0Itlo1HaA9TpqyuVOn/tTqRk1bRPQdN2CQQEo42XN
+         Q/7sT0fBhCm2cdCBAx+JZepz/xLKQdegxpoLKbqFtCMCt3xfwukTDRvt+KWjMZlnZzql
+         dKrA==
+X-Gm-Message-State: APjAAAVnG8JdfKzS98otSY2MS/68xVyHCJAea96tZ5Guw9YHTneynGZW
+        2jPTOZySgWYGhkbzsf79dBF9JQ==
+X-Google-Smtp-Source: APXvYqxDvIFV/NVWVLGmp7FjrlkvLwAO5iOMBuEdJaZBZlUzZur45Ig1Y1u68ulDq2RQcMpTNRH5nQ==
+X-Received: by 2002:a7b:cc82:: with SMTP id p2mr18607472wma.165.1568038662629;
+        Mon, 09 Sep 2019 07:17:42 -0700 (PDT)
+Received: from igloo (69.red-83-35-113.dynamicip.rima-tde.net. [83.35.113.69])
+        by smtp.gmail.com with ESMTPSA id d9sm22225290wrc.44.2019.09.09.07.17.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 09 Sep 2019 07:17:41 -0700 (PDT)
+From:   "Jorge Ramirez-Ortiz, Linaro" <jorge.ramirez-ortiz@linaro.org>
+X-Google-Original-From: "Jorge Ramirez-Ortiz, Linaro" <JorgeRamirez-Ortiz>
+Date:   Mon, 9 Sep 2019 16:17:40 +0200
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     agross@kernel.org, jorge.ramirez-ortiz@linaro.org,
+        mturquette@baylibre.com, bjorn.andersson@linaro.org,
+        niklas.cassel@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/5] clk: qcom: apcs-msm8916: get parent clock names from
+ DT
+Message-ID: <20190909141740.GA23964@igloo>
+References: <20190826164510.6425-1-jorge.ramirez-ortiz@linaro.org>
+ <20190826164510.6425-2-jorge.ramirez-ortiz@linaro.org>
+ <20190909102117.245112089F@mail.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAFBinCA+J-HnXfRnquqviXvX0Jo84hoLC9=_uHbyWKZycwyAFw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190909102117.245112089F@mail.kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 09/09/19 03:21:16, Stephen Boyd wrote:
+> Quoting Jorge Ramirez-Ortiz (2019-08-26 09:45:07)
+> > @@ -76,10 +88,11 @@ static int qcom_apcs_msm8916_clk_probe(struct platform_device *pdev)
+> >         a53cc->src_shift = 8;
+> >         a53cc->parent_map = gpll0_a53cc_map;
+> >  
+> > -       a53cc->pclk = devm_clk_get(parent, NULL);
+> > +       a53cc->pclk = of_clk_get(parent->of_node, pll_index);
+> 
+> Presumably the PLL was always index 0, so why are we changing it to
+> index 1 sometimes? Seems unnecessary.
+> 
 
-On 9/6/2019 4:47 AM, Martin Blumenstingl wrote:
-> Hi Rahul,
->
-> On Wed, Sep 4, 2019 at 10:04 AM Tanwar, Rahul
-> <rahul.tanwar@linux.intel.com> wrote:
->>
->> Hi Martin,
->>
->> On 4/9/2019 2:53 AM, Martin Blumenstingl wrote:
->>>> My understanding is that if we do not use syscon, then there is no
->>>> point in using regmap because this driver uses simple 32 bit register
->>>> access. Can directly read/write registers using readl() & writel().
->>>>
->>>> Would you agree ?
->>> if there was only the LGM SoC then I would say: drop regmap
->>>
->>> however, last year a driver for the GRX350/GRX550 SoCs was proposed: [0]
->>> this was never updated but it seems to use the same "framework" as the
->>> LGM driver
->>> with this in mind I am for keeping regmap support because.
->>> I think it will be easier to add support for old SoCs like
->>> GRX350/GRX550 (but also VRX200), because the PLL sub-driver (I am
->>> assuming that it is similar on all SoCs) or some other helpers can be
->>> re-used across various SoCs instead of "duplicating" code (where one
->>> variant would use regmap and the other readl/writel).
->>
->> Earlier, we had discussed about it in our team.  There are no plans to
->> upstream mips based platform code, past up-streaming efforts for mips
->> platforms were also dropped. GRX350/GRX550/VRX200 are all mips
->> based platforms. Plan is to upstream only x86 based platforms. In-fact,
->> i had removed GRX & other older SoCs support from this driver before
->> sending for review. So we can consider only x86 based LGM family of
->> SoCs for this driver & all of them will be reusing same IP.
-> this is very sad news
-> as far as I can tell many IP cores are similar/identical on
-> GRX350/GRX550, LGM and even VRX200
->
-> I already know that VRX200 is a legacy product and you won't be supporting it
-> once LGM support lands upstream you could add support for
-> GRX350/GRX550 with small to medium effort
-> that is a big win (in my opinion) because it means happier end-users
-> (see XWAY and VRX200 support in OpenWrt for example: while support
-> from Intel/Lantiq has died long ago these devices can still run a
-> recent LTS kernel and get security updates. without OpenWrt these
-> devices would probably end up as electronic waste)
+it came as a personal preference. hope it is acceptable (I would
+rather not change it)
 
-I'm sorry to say that we don't plan to support legacy SOCs. As you might 
-know, we tried to upstream some of drivers last year but found a lot of 
-problems to support both legacy SOCs and LGM.
+apcs-msm8916.c declares the following
 
-It was a real pain to support all of them with limited resources/time 
-and we couldn't make it. Our new plan was to reattempt to upstream LGM 
-drivers only. This can be more realistic target for us.
-
->
-> maybe implementing a re-usable regmap clock driver (for mux, gate and
-> divider) means less effort (compared to converting everything to
-> standard clock ops) for you.
-> (we did the switch from standard clock ops to regmap for the Amlogic
-> Meson clock drivers when we discovered that there were some non-clock
-> registers that belong to other IP blocks in it and it was a lot of
-> effort)
-> this will allow you to add support for GRX350/GRX550 in the future if
-> demand for upstream drivers rises.
-
-I've discussed internally the amount of efforts to create a reusable 
-regmap clock driver which might be reused by other companies too.
-
-It seems it requires significant efforts for implementation/tests. As we 
-don't plan to support our old SOCs for now, I'm not sure if we need to 
-put such a big efforts.
-
-Stephan,
-
-It seems you don't like both meson/qcom regmap clock implementation.
-
-What is your opinion for our current CGU clock driver implementation?
+[..]
+static const u32 gpll0_a53cc_map[] = { 4, 5 };
+static const char *gpll0_a53cc[] = {
+       "gpll0_vote",
+	"a53pll",
+	};
+[..]
 
 
->
-> Martin
->
+now will be doing this
+
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -429,7 +429,8 @@
+     compatible = "qcom,msm8916-apcs-kpss-global", "syscon";
+     reg = <0xb011000 0x1000>;
+     #mbox-cells = <1>;
+-                   clocks = <&a53pll>;
++                 clocks = <&gcc GPLL0_VOTE>, <&a53pll>;
++                 clock-names = "aux", "pll";
+                      #clock-cells = <0>;
+               };
+														
+
+so I chose to keep the consistency between the clocks definition and
+just change the index before calling of_clk_get.
+
+
+
+
