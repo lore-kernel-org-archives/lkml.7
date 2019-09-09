@@ -2,105 +2,92 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D74C6C49ED6
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B5AC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADA1E2086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:05:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lElCnuM/"
+	by mail.kernel.org (Postfix) with ESMTP id 70CF32086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:06:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729762AbfIIQFr (ORCPT
+        id S1732292AbfIIQGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 12:05:47 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41569 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727495AbfIIQFo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 12:05:44 -0400
-Received: by mail-pg1-f194.google.com with SMTP id x15so8078446pgg.8;
-        Mon, 09 Sep 2019 09:05:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hCEUuZTmH7JZSazgZauiNORQYEOZ09QkyRcwVeQ8pb8=;
-        b=lElCnuM/yk8u5jMO6suEdZBYPmjwu8chy23l7E6HJm4jvZ1dFx8vmP7GAVOP5wKIBp
-         WgliA0r1aKN4fNChItK6BSgX06QM0LLGrZt0TvdcmxRCkuNIzJYajKGxUSretj1tbHPb
-         jtNhGSWvesra0WBCfz4+SQ0DT3AHDn2Ku0cHTHssk6Jxu1f5b2zGpzjHVFdo+Prpb8MG
-         g+eJf2EPcrTpeKGIWgLWqe9KBpx8oMdRgxus0PF5vnoGeDO3l/ZHA2OBut0HTD1W3ToO
-         C3d05bhLrhY20xyTj+tLb3R/mwsJEZHVc5w+JIeMTihLl2qBWj5jPs71+q9kdrtXRlpA
-         CHwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hCEUuZTmH7JZSazgZauiNORQYEOZ09QkyRcwVeQ8pb8=;
-        b=UPQy4/GGbh9AvTZaRdckfLk7oX4FP/xQ5GbgmYM2JyCM/z7UWogueFer3Sfj6EVxe2
-         4oMaNkCB2KV/oxN/x4wXBKcDh/SS01mQb90Wh6pPHpPZt+NC2GJ81plD7EQXUQcXfVOH
-         wFytcAYIfHE+kFg2++fAtJf4P8lZ9o2QQD/XTYGn9EUH6ovbz0AD+69+//D5TTjqMxXw
-         bH84EzIE+aENIBqy1BXNdG2bZ6v87pxz2QHwGQyy56u+cjI5L0DMCKim7QEI7axn2Ivy
-         VqorzoZp59VebOA4M0CBRVnGKdVcthvxBUrtvuDnqE5yk3rkV0DDP5VtaJwfyabVW76z
-         074w==
-X-Gm-Message-State: APjAAAXcKzYjqFCksz+j9yVh25ADZC4w61xFtjxYQRXRSNCB96r8W6L9
-        B440CSPzLROeVzg7IWnWgek=
-X-Google-Smtp-Source: APXvYqy5qweVioephEKiH0izUHIYnTdxGqMdTN4qo3BtjRl9Wwi0YFrcMjmeztZHWUiwS6zU92mPGg==
-X-Received: by 2002:a17:90a:2243:: with SMTP id c61mr33978pje.39.1568045143137;
-        Mon, 09 Sep 2019 09:05:43 -0700 (PDT)
-Received: from localhost ([121.137.63.184])
-        by smtp.gmail.com with ESMTPSA id x8sm14913863pfm.35.2019.09.09.09.05.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Sep 2019 09:05:42 -0700 (PDT)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Date:   Tue, 10 Sep 2019 01:05:39 +0900
-To:     20190819234111.9019-8-keescook@chromium.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Drew Davenport <ddavenport@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Feng Tang <feng.tang@intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Borislav Petkov <bp@suse.de>,
-        YueHaibing <yuehaibing@huawei.com>, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 7/7] bug: Move WARN_ON() "cut here" into exception
- handler
-Message-ID: <20190909160539.GA989@tigerII.localdomain>
-References: <201908200943.601DD59DCE@keescook>
+        Mon, 9 Sep 2019 12:06:19 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:37956 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729326AbfIIQGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 12:06:18 -0400
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1i7MB5-0004oJ-Iq; Mon, 09 Sep 2019 10:06:08 -0600
+To:     Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Cc:     Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
+        Jens Axboe <axboe@fb.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190828215429.4572-1-logang@deltatee.com>
+ <20190828215429.4572-14-logang@deltatee.com>
+ <92d61426-65a2-827c-936b-55f12f3d6afb@grimberg.me>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <ca4ebcd9-fa5d-5ddf-c2a7-70318410dd97@deltatee.com>
+Date:   Mon, 9 Sep 2019 10:06:03 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201908200943.601DD59DCE@keescook>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <92d61426-65a2-827c-936b-55f12f3d6afb@grimberg.me>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, maxg@mellanox.com, Chaitanya.Kulkarni@wdc.com, axboe@fb.com, kbusch@kernel.org, hch@lst.de, linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, sagi@grimberg.me
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH v8 13/13] nvmet-passthru: support block accounting
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (08/20/19 09:47), Kees Cook wrote:
-[..]
-> @@ -181,6 +181,15 @@ enum bug_trap_type report_bug(unsigned long bugaddr, struct pt_regs *regs)
->  		}
->  	}
->  
-> +	/*
-> +	 * BUG() and WARN_ON() families don't print a custom debug message
-> +	 * before triggering the exception handler, so we must add the
-> +	 * "cut here" line now. WARN() issues its own "cut here" before the
-> +	 * extra debugging message it writes before triggering the handler.
-> +	 */
-> +	if ((bug->flags & BUGFLAG_NO_CUT_HERE) == 0)
-> +		printk(KERN_DEFAULT CUT_HERE);
 
-Shouldn't this be pr_warn() or pr_crit()?
 
-	-ss
+On 2019-09-06 6:00 p.m., Sagi Grimberg wrote:
+> 
+>> Support block disk accounting by setting the RQF_IO_STAT flag
+>> and gendisk in the request.
+>>
+>> After this change, IO counts will be reflected correctly in
+>> /proc/diskstats for drives being used by passthru.
+>>
+>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+>> ---
+>>   drivers/nvme/target/io-cmd-passthru.c | 5 ++++-
+>>   1 file changed, 4 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/nvme/target/io-cmd-passthru.c b/drivers/nvme/target/io-cmd-passthru.c
+>> index 7557927a3451..63f12750a80d 100644
+>> --- a/drivers/nvme/target/io-cmd-passthru.c
+>> +++ b/drivers/nvme/target/io-cmd-passthru.c
+>> @@ -410,6 +410,9 @@ static struct request *nvmet_passthru_blk_make_request(struct nvmet_req *req,
+>>   	if (unlikely(IS_ERR(rq)))
+>>   		return rq;
+>>   
+>> +	if (blk_queue_io_stat(q) && cmd->common.opcode != nvme_cmd_flush)
+>> +		rq->rq_flags |= RQF_IO_STAT;
+
+Thanks for the review!
+
+> Does flush has data bytes in the request? Why the special casing?
+
+Well it was special cased in the vanilla blk account flow... But I think
+it's required to be special cased so the IO and in_flight counts don't
+count flushes (as they do not for regular block device traffic).
+
+Logan
+
