@@ -2,126 +2,119 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D144CC4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E03C4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5AD021A4C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:59:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568037558;
-	bh=1LOeIrNaojbFutO/35pibYdicy6zk1C9NEftmHLgaYE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2EPO/Z6EAvWX9dHkXDl0m2ibfBrCp5bqQbSBVMoY4p17qTuw9V/J5pppIdk4YN82n
-	 dIYJrR9yV0fARrumErj5c9FNCTzfmZMd913zn5FnVQ387+VmKxat4B+jfWAnwvfRvN
-	 W6m8J+GGZrAmjW/sCtRIp6cOLRlGlHk0Bb4fN0mI=
+	by mail.kernel.org (Postfix) with ESMTP id 75C2121924
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 13:59:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="TI2mf67X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405119AbfIIN7Q (ORCPT
+        id S2405066AbfIIN7a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 09:59:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40922 "EHLO mail.kernel.org"
+        Mon, 9 Sep 2019 09:59:30 -0400
+Received: from mail.andi.de1.cc ([85.214.55.253]:43216 "EHLO mail.andi.de1.cc"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405085AbfIIN7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 09:59:16 -0400
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7759E2086D;
-        Mon,  9 Sep 2019 13:59:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568037554;
-        bh=1LOeIrNaojbFutO/35pibYdicy6zk1C9NEftmHLgaYE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UieH1zXYFmI9ZQoBmDFp/Caccsfb8zgAwWbjMjeDAAsY7nOdDGw25MsSl3XEWM/eK
-         aCMGsGuAWbMv29jYF4cNJLtde8dflId6l4spy1NhpVNiZk1DIBghKpAI9y5BFNAJ5s
-         Vr1SD9rR+VQpQwiMsnxecPLCM1nyBKQ6YwApwNbI=
-Date:   Mon, 9 Sep 2019 15:59:10 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        linux@armlinux.org.uk, mark.rutland@arm.com, robh+dt@kernel.org,
-        wens@csie.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 2/9] crypto: Add Allwinner sun8i-ce Crypto Engine
-Message-ID: <20190909135908.vkvcuykrplhxxwtd@flea>
-References: <20190906184551.17858-1-clabbe.montjoie@gmail.com>
- <20190906184551.17858-3-clabbe.montjoie@gmail.com>
- <20190907081951.v2huvhm44jfprfop@flea>
- <20190907190408.GE2628@Red>
- <20190909113837.vrnqdfgzhsiymfpm@flea>
- <20190909131906.GA12882@Red>
+        id S1726698AbfIIN7a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 09:59:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
+        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=/AFGG/f6EaJVXJNRdgri096CPzRiFvet7SwlKHTMKh4=; b=TI2mf67XY3jlg30elZyEGOQzQ
+        af405SRfOPFtWLppj1PdSHwiUGgF8GRtgwaRMtl3PG3s5BYWkKHidXCzkZemv/qj51k2GAn1GpR43
+        +2HapYaxNwNp9avJvKy7ILiNSfDUTNnJYcaVAtIazJfhhUO//31/3uaQ3A01JQ9XZMVdo=;
+Received: from [2a02:790:ff:1019:7ee9:d3ff:fe1f:a246] (helo=localhost)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1i7KCR-0002fX-Dv; Mon, 09 Sep 2019 15:59:23 +0200
+Received: from [::1] (helo=localhost)
+        by localhost with esmtp (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1i7KCO-0007EI-Tt; Mon, 09 Sep 2019 15:59:21 +0200
+Date:   Mon, 9 Sep 2019 15:59:11 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        Nishanth Menon <nm@ti.com>, vireshk@kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v2] regulator: twl: voltage lists for vdd1/2 on twl4030
+Message-ID: <20190909155911.63f8bb54@kemnade.info>
+In-Reply-To: <CAHCN7xJ0RmRQwo3bSF6FoLjOtrg5YZAMD9+=332LMzLLR1qdDA@mail.gmail.com>
+References: <20190814214319.24087-1-andreas@kemnade.info>
+        <CAHCN7xL4K+1nJDXDRs7yVi6LhGL-4uPu9M+SN1dcOPu8=M8s2g@mail.gmail.com>
+        <CAHCN7xJ0RmRQwo3bSF6FoLjOtrg5YZAMD9+=332LMzLLR1qdDA@mail.gmail.com>
+X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; i686-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190909131906.GA12882@Red>
-User-Agent: NeoMutt/20180716
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/i1vz99ml6P9dqs764owEbgp"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 09, 2019 at 03:19:06PM +0200, Corentin Labbe wrote:
-> On Mon, Sep 09, 2019 at 01:38:37PM +0200, Maxime Ripard wrote:
-> > On Sat, Sep 07, 2019 at 09:04:08PM +0200, Corentin Labbe wrote:
-> > > > Also, I'm not sure what is the point of having the clocks names be
-> > > > parameters there as well. It's constant across all the compatibles,
-> > > > the only thing that isn't is the number of clocks and the module clock
-> > > > rate. It's what you should have in there.
+--Sig_/i1vz99ml6P9dqs764owEbgp
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, 9 Sep 2019 08:32:06 -0500
+Adam Ford <aford173@gmail.com> wrote:
+
+
+> > > The patch fixes declaration of VDD1/2 regulators by
+> > > adding proper voltage lists.
 > > >
-> > > Since the datasheet give some max frequency, I think I will add a
-> > > max_freq and add a check to verify if the clock is in the right
-> > > range
+> > > Fixes: 498209445124 ("regulator: core: simplify return value on supor=
+ted_voltage")
+> > > Cc: stable@vger.kernel.org
+> > > Signed-off-by: Andreas Kemnade <andreas@kemnade.info> =20
 > >
-> > It's a bit pointless. What are you going to do if it's not correct?
-> > What are you trying to fix / report with this?
->
-> I thinked to print a warning.  If someone want to play with
-> overclocking for example, the driver should said that probably some
-> result could be invalid.
+> > Tested-by: Adam Ford <aford173@gmail.com> #logicpd-torpedo-37xx-devkit
+> > =20
+>=20
+> I am not sure who the right maintainer is, but as of today, cpufreq
+> for users of twl4030 on 5.3-RC8 is still broken without this patch.
+> Is there any way it can be applied before the final release?
+>=20
+seems to have arrived in Mark Brown's regulator branches. and in linux-next=
+/pending-fixes.
+But did not go further...
 
-If someone wants to play with overclocking, the crypto engine is going
-to be the least of their concern.
+Regards,
+Andreas
 
-> > > > > +int sun8i_ce_get_engine_number(struct sun8i_ce_dev *ce)
-> > > > > +{
-> > > > > +	return atomic_inc_return(&ce->flow) % ce->variant->maxflow;
-> > > > > +}
-> > > >
-> > > > I'm not sure what this is supposed to be doing, but that mod there
-> > > > seems pretty dangerous.
-> > > >
-> > > > ...
-> > >
-> > > This mod do a round robin on each channel.
-> > > I dont see why it is dangerous.
-> >
-> > Well, you're using the atomic API here which is most commonly used for
-> > refcounting, while you're using a mod.
-> >
-> > Plus, while the increment is atomic, the modulo isn't, so you can end
-> > up in a case where you would be preempted between the
-> > atomic_inc_return and the mod, which is dangerous.
-> >
-> > Again, I'm not sure what this function is doing (which is also a
-> > problem in itself). I guess you should just make it clearer what it
-> > does, and then we can discuss it properly.
->
-> Each request need to be assigned to a channel.
-> Each channel are identified by a number from 1 to 4.
->
-> So this function return the channel to use, 1 then 2 then 3 then 4 then 1...
->
-> Note that this is uncritical. If, due to anything, two request are
-> assigned to the same channel, nothing will break.
+--Sig_/i1vz99ml6P9dqs764owEbgp
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-I'm not sure why you're using the atomic API then?
+-----BEGIN PGP SIGNATURE-----
 
-Also, I guess a bitfield and find_first_bit (and a different function
-name) would be more obvious to the reader.
+iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl12Wq8ACgkQl4jFM1s/
+ye84Jw//S1zGHJKjlOFnpDDPhc/2QqOWuOmzhP2x79Vh4Iv+cmyvcUdhkJTWi5gA
+W/Meomgy7EQ3jvFv3HCkOBd64kk32PFjo5COjR/FwzTuDiVRaBfsLb/wjc4IOKCg
+0llnlB7V3lX9ZmTkGRg3GbnJhdGn+fiAl41YQ16sUQ6Ef52nneE0x+mX7z50KvjD
+BQhAbXzsBZLLcW/MH12DkszXc5JJ3FtU9/yx0B4UKPCCY9BeqoUYGTZrJ2yop7b5
+RiCTcsxa659f6kGybnIGb743cYi1ibc6yGHIsR9qQf53hIvKFR+bXzjZ/UoGca02
+VHOtATygBzHOsg5EKFwit60h3l1tvuPHb5LzqYok+lWHQtF1FFVcr2tGvlEycGd5
+TF8XnlPUhEMFS7eGaB7r3xuZoTaVevhCOpznNQfVk8U/ebpW0K5I7Vu6XMKmbqIt
+nXG/7GPk1hdcQdqqRg3mPDvNB8vcFv5L9duOmL+rW5nkF6Xmyr4v8vmyqBeYaZ3R
+/gBXy3oCIwxIxpEJXmlGZOI/3cdKDJncib+PJRICPHfbubT86iZp3psMVCdtCohA
+rqd4On/JjPvsVPc7rHyU//K/v9PnzkWIwXKRTDfP2lhbgPoRyrYh7cwRdBA/aw0o
+ru9SIpgvx+oEsoXcQf1KB53IyntcG/6OT7F7ibxld69Pam3wBpM=
+=+Fw/
+-----END PGP SIGNATURE-----
 
-Thanks!
-Maxime
+--Sig_/i1vz99ml6P9dqs764owEbgp--
