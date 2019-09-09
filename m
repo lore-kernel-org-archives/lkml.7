@@ -2,184 +2,149 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CA3C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B78C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0578021D82
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:22:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5E4A2171F
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 22:23:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RPdPTPGT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfIIWWY (ORCPT
+        id S1727958AbfIIWXl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 18:22:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59808 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726406AbfIIWWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 18:22:23 -0400
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4E351C058CBD
-        for <linux-kernel@vger.kernel.org>; Mon,  9 Sep 2019 22:22:23 +0000 (UTC)
-Received: by mail-qk1-f198.google.com with SMTP id v143so18147174qka.21
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 15:22:23 -0700 (PDT)
+        Mon, 9 Sep 2019 18:23:41 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41184 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726406AbfIIWXl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 18:23:41 -0400
+Received: by mail-pf1-f196.google.com with SMTP id b13so10180043pfo.8;
+        Mon, 09 Sep 2019 15:23:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vOphhoNfzWMZzHDOQQuW1poFUNZeqDatd/w1IZj/GC0=;
+        b=RPdPTPGTTgo/F2lL5g119C+u+A3sDeld1Dd7b37Y4edSImc5bnLW26HBC49uVCnTer
+         yvattJF9PUsn9wtfQCuQ7Tt7zKXH6EtORE/Q+WIw7AeGtu/tiRo7+TcELEHkfKhrVhfe
+         1eNX6cPTjuSFRcMIJPfALR0NjZ2lQF1hR77x7I9qKSmTrAX+1qB09HlvJ/b/FV91GFlq
+         gkelEUgTNQmwF4fRq8+WWAGdBWn9Sz5GZFSEspqEFh8jPBN3/DGgRwMKxOaX2rvLqRhI
+         0ufIcZtcbOEcg13dMZ9WHVoLZNCFcR0bn9X0pVIVakpJ+l2xnTYLLYhgXLOj05ZCJlE/
+         PHSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DPNwyU/i5Hrqk518iMHxH7f+QUjV0R1yOPd/BqO65Co=;
-        b=mUaSbZXYQTvrHZ85wg1JlbLPwvnQdY/ODgPDiArnCZ5x6WXO3RMfPGtiu6U9PU2GqD
-         RnqChBxY60yn5YKIg5GxcAr4PSYsypPR2bcp5Y5tgin9vS/y/eOPc3g5TN3vRZ2/nCs7
-         /4A+aQ2Bc7U2rggf9fjZDHVHMojsa3MyEmalARNV0RM+hsuBgqZnxdIoyU1edK02bdoR
-         i0Ww756+FSwTk60LWLWUV/mWoPim7suXyNakAMFtEeeBT1qeRZ5mrFpIZ6fZCB9UjNfw
-         4XSEqgBzxohIMYPb8YlA0BjBRCBoYs03zzpTY2Ix6sIE22FafYfP3MPslqnnIU/K1gHQ
-         gSHQ==
-X-Gm-Message-State: APjAAAVXIeQ/WUD/mn9oHhk97HUdmEy8X4bhP6ccImxcm69daopZtqLg
-        alDsjRkM8wVYKq9z6qsCER4QBfaOVOzKCfUfE1jSKJ+KwyWFjQmghojOjmHFxBaPtw5Y+4rnknm
-        PEWQzvmxFvTB7znoXwxtA/zUPL3v4ITlhP0ixG0wu
-X-Received: by 2002:a37:a704:: with SMTP id q4mr8563256qke.385.1568067742238;
-        Mon, 09 Sep 2019 15:22:22 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyGnOwm2ekp6jByIB3XOFxN2unWHvHlemsm8rvM+i9VYMDuMiI2JiyRDC/WJZGNljWt1aHGW1G97/hJZGLFmEk=
-X-Received: by 2002:a37:a704:: with SMTP id q4mr8563216qke.385.1568067741764;
- Mon, 09 Sep 2019 15:22:21 -0700 (PDT)
+        bh=vOphhoNfzWMZzHDOQQuW1poFUNZeqDatd/w1IZj/GC0=;
+        b=et01wz3lk+K6bclb5nEOG5t1kQ2gf7Xy8d9Cr3x8Qw8UegGwKoHkdVUBMwM2Hon/Np
+         qtkLfgzc78v+FdlwE+Wl7fOnG1AiJta78VhERukRivyTnGeJAx0YHM8oIZADtuam6R32
+         yOfaLuMvywy2+LP5gJHR9MZYoW1gMkXI5OHWRM8LLMzX117UcnFTFfnEmLZC+tUAPpHk
+         jyNwxNnaqj0NW87E0WSbeVU/zKztIh1KJ8wa78stBdI5aGqX+/AC5vvfb1PMuJhluVYB
+         yK3cndtXBHjZ7VGHMqmCg8mlQcRFTgn0noUdVqYZyA/mWKdB2Injj6/ZxirBwNcBpKHi
+         j9Ag==
+X-Gm-Message-State: APjAAAUJisQouFiuQJU2AromAmntG6nmC/vjiZ5lIf0l1mK+SEEYO2Co
+        B3eX5fu+T1SKDV/X9zhf05YtQ7hZv4MVyIiL/38=
+X-Google-Smtp-Source: APXvYqxTUE31bhTYkJ/aDJj+cTKPfsKtlfVi5Bz2nwWjPIUfWsCZgknHRNMjJyb7o3hLHGunux32XZ7Wkek2JRY6WWc=
+X-Received: by 2002:aa7:8ac3:: with SMTP id b3mr11093751pfd.242.1568067820440;
+ Mon, 09 Sep 2019 15:23:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <87k1ahojri.fsf@suse.com> <20190909102834.16246-1-lhenriques@suse.com>
- <3f838e42a50575595c7310386cf698aca8f89607.camel@kernel.org> <87d0g9oh4r.fsf@suse.com>
-In-Reply-To: <87d0g9oh4r.fsf@suse.com>
-From:   Gregory Farnum <gfarnum@redhat.com>
-Date:   Mon, 9 Sep 2019 15:22:10 -0700
-Message-ID: <CAJ4mKGZVjJxQA69s92C+7DFbDxv87SOj10AUfyLXwVe9b+SDTw@mail.gmail.com>
-Subject: Re: [PATCH v2] ceph: allow object copies across different filesystems
- in the same cluster
-To:     Luis Henriques <lhenriques@suse.com>
-Cc:     Jeff Layton <jlayton@kernel.org>, IlyaDryomov <idryomov@gmail.com>,
-        Sage Weil <sage@redhat.com>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20190908072907.15220-1-hdanton@sina.com>
+In-Reply-To: <20190908072907.15220-1-hdanton@sina.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Mon, 9 Sep 2019 15:23:28 -0700
+Message-ID: <CAM_iQpU495Dg-6oeOvrBEu=hbh5Evjv_yYSdr6BxOC_okSo=Wg@mail.gmail.com>
+Subject: Re: general protection fault in cbs_destroy
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     syzbot <syzbot+3a8d6a998cbb73bcf337@syzkaller.appspotmail.com>,
+        David Miller <davem@davemloft.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Vinicius Costa Gomes <vinicius.gomes@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 9, 2019 at 4:15 AM Luis Henriques <lhenriques@suse.com> wrote:
+On Sun, Sep 8, 2019 at 12:29 AM Hillf Danton <hdanton@sina.com> wrote:
 >
-> "Jeff Layton" <jlayton@kernel.org> writes:
 >
-> > On Mon, 2019-09-09 at 11:28 +0100, Luis Henriques wrote:
-> >> OSDs are able to perform object copies across different pools.  Thus,
-> >> there's no need to prevent copy_file_range from doing remote copies if the
-> >> source and destination superblocks are different.  Only return -EXDEV if
-> >> they have different fsid (the cluster ID).
-> >>
-> >> Signed-off-by: Luis Henriques <lhenriques@suse.com>
-> >> ---
-> >>  fs/ceph/file.c | 18 ++++++++++++++----
-> >>  1 file changed, 14 insertions(+), 4 deletions(-)
-> >>
-> >> Hi,
-> >>
-> >> Here's the patch changelog since initial submittion:
-> >>
-> >> - Dropped have_fsid checks on client structs
-> >> - Use %pU to print the fsid instead of raw hex strings (%*ph)
-> >> - Fixed 'To:' field in email so that this time the patch hits vger
-> >>
-> >> Cheers,
-> >> --
-> >> Luis
-> >>
-> >> diff --git a/fs/ceph/file.c b/fs/ceph/file.c
-> >> index 685a03cc4b77..4a624a1dd0bb 100644
-> >> --- a/fs/ceph/file.c
-> >> +++ b/fs/ceph/file.c
-> >> @@ -1904,6 +1904,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
-> >>      struct ceph_inode_info *src_ci = ceph_inode(src_inode);
-> >>      struct ceph_inode_info *dst_ci = ceph_inode(dst_inode);
-> >>      struct ceph_cap_flush *prealloc_cf;
-> >> +    struct ceph_fs_client *src_fsc = ceph_inode_to_client(src_inode);
-> >>      struct ceph_object_locator src_oloc, dst_oloc;
-> >>      struct ceph_object_id src_oid, dst_oid;
-> >>      loff_t endoff = 0, size;
-> >> @@ -1915,8 +1916,17 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
-> >>
-> >>      if (src_inode == dst_inode)
-> >>              return -EINVAL;
-> >> -    if (src_inode->i_sb != dst_inode->i_sb)
-> >> -            return -EXDEV;
-> >> +    if (src_inode->i_sb != dst_inode->i_sb) {
-> >> +            struct ceph_fs_client *dst_fsc = ceph_inode_to_client(dst_inode);
-> >> +
-> >> +            if (ceph_fsid_compare(&src_fsc->client->fsid,
-> >> +                                  &dst_fsc->client->fsid)) {
-> >> +                    dout("Copying object across different clusters:");
-> >> +                    dout("  src fsid: %pU dst fsid: %pU\n",
-> >> +                         &src_fsc->client->fsid, &dst_fsc->client->fsid);
-> >> +                    return -EXDEV;
-> >> +            }
-> >> +    }
+> > syzbot found the following crash on Sat, 07 Sep 2019 23:08:08 -0700
 > >
-> > Just to be clear: what happens here if I mount two entirely separate
-> > clusters, and their OSDs don't have any access to one another? Will this
-> > fail at some later point with an error that we can catch so that we can
-> > fall back?
->
-> This is exactly what this check prevents: if we have two CephFS from two
-> unrelated clusters mounted and we try to copy a file across them, the
-> operation will fail with -EXDEV[1] because the FSIDs for these two
-> ceph_fs_client will be different.  OTOH, if these two filesystems are
-> within the same cluster (and thus with the same FSID), then the OSDs are
-> able to do 'copy-from' operations between them.
->
-> I've tested all these scenarios and they seem to be handled correctly.
-> Now, I'm assuming that *all* OSDs within the same ceph cluster can
-> communicate between themselves; if this assumption is false, then this
-> patch is broken.  But again, I'm not aware of any mechanism that
-> prevents 2 OSDs from communicating between them.
-
-Your assumption is correct: all OSDs in a Ceph cluster can communicate
-with each other. I'm not aware of any plans to change this.
-
-I spent a bit of time trying to figure out how this could break
-security models and things and didn't come up with anything, so I
-think functionally it's fine even though I find it a bit scary.
-
-Also, yes, cluster FSIDs are UUIDs so they shouldn't collide.
--Greg
-
->
-> [1] Actually, the files will still be copied because we'll fallback into
-> the default VFS generic_copy_file_range behaviour, which is to do
-> reads+writes operations.
->
-> Cheers,
-> --
-> Luis
->
->
+> > HEAD commit:    3b47fd5c Merge tag 'nfs-for-5.3-4' of git://git.linux-nfs...
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=14854e71600000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=144488c6c6c6d2b6
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=3a8d6a998cbb73bcf337
+> > compiler:       clang version 9.0.0 (/home/glider/llvm/clang
+> > 80fee25776c2fb61e74c1ecb1a523375c2500b69)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17998f9e600000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10421efa600000
 > >
-> >
-> >>      if (ceph_snap(dst_inode) != CEPH_NOSNAP)
-> >>              return -EROFS;
-> >>
-> >> @@ -1928,7 +1938,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
-> >>       * efficient).
-> >>       */
-> >>
-> >> -    if (ceph_test_mount_opt(ceph_inode_to_client(src_inode), NOCOPYFROM))
-> >> +    if (ceph_test_mount_opt(src_fsc, NOCOPYFROM))
-> >>              return -EOPNOTSUPP;
-> >>
-> >>      if ((src_ci->i_layout.stripe_unit != dst_ci->i_layout.stripe_unit) ||
-> >> @@ -2044,7 +2054,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
-> >>                              dst_ci->i_vino.ino, dst_objnum);
-> >>              /* Do an object remote copy */
-> >>              err = ceph_osdc_copy_from(
-> >> -                    &ceph_inode_to_client(src_inode)->client->osdc,
-> >> +                    &src_fsc->client->osdc,
-> >>                      src_ci->i_vino.snap, 0,
-> >>                      &src_oid, &src_oloc,
-> >>                      CEPH_OSD_OP_FLAG_FADVISE_SEQUENTIAL |
+> > general protection fault: 0000 [#1] PREEMPT SMP KASAN
+> > CPU: 0 PID: 9249 Comm: syz-executor457 Not tainted 5.3.0-rc7+ #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > Google 01/01/2011
+> > RIP: 0010:__list_del_entry_valid+0x6b/0x100 lib/list_debug.c:51
+> > Code: 4c 89 f7 e8 97 d0 58 fe 48 ba 00 01 00 00 00 00 ad de 49 8b 1e 48 39
+> > d3 74 54 48 83 c2 22 49 39 d7 74 5e 4c 89 f8 48 c1 e8 03 <42> 80 3c 20 00
+> > 74 08 4c 89 ff e8 66 d0 58 fe 49 8b 17 4c 39 f2 75
+> > RSP: 0018:ffff88809898f568 EFLAGS: 00010246
+> > RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000001
+> > RDX: dead000000000122 RSI: 0000000000000004 RDI: ffff88809fb5a7e8
+> > RBP: ffff88809898f588 R08: dffffc0000000000 R09: ffffed1013131ea8
+> > R10: ffffed1013131ea8 R11: 0000000000000000 R12: dffffc0000000000
+> > R13: ffff88809fb5a480 R14: ffff88809fb5a7e0 R15: 0000000000000000
+> > FS:  00005555568cb880(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
+> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > CR2: 0000000020000610 CR3: 00000000a3968000 CR4: 00000000001406f0
+> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > Call Trace:
+> >   __list_del_entry include/linux/list.h:131 [inline]
+> >   list_del include/linux/list.h:139 [inline]
+> >   cbs_destroy+0x85/0x3e0 net/sched/sch_cbs.c:435
+> >   qdisc_create+0xff8/0x13e0 net/sched/sch_api.c:1302
+> >   tc_modify_qdisc+0x989/0x1ea0 net/sched/sch_api.c:1652
+> >   rtnetlink_rcv_msg+0x889/0xd40 net/core/rtnetlink.c:5223
+> >   netlink_rcv_skb+0x19e/0x3d0 net/netlink/af_netlink.c:2477
+> >   rtnetlink_rcv+0x1c/0x20 net/core/rtnetlink.c:5241
+> >   netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+> >   netlink_unicast+0x787/0x900 net/netlink/af_netlink.c:1328
+> >   netlink_sendmsg+0x993/0xc50 net/netlink/af_netlink.c:1917
+> >   sock_sendmsg_nosec net/socket.c:637 [inline]
+> >   sock_sendmsg net/socket.c:657 [inline]
+> >   ___sys_sendmsg+0x60d/0x910 net/socket.c:2311
+> >   __sys_sendmsg net/socket.c:2356 [inline]
+> >   __do_sys_sendmsg net/socket.c:2365 [inline]
+> >   __se_sys_sendmsg net/socket.c:2363 [inline]
+> >   __x64_sys_sendmsg+0x17c/0x200 net/socket.c:2363
+> >   do_syscall_64+0xfe/0x140 arch/x86/entry/common.c:296
+> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>
+> --- a/net/sched/sch_cbs.c
+> +++ b/net/sched/sch_cbs.c
+> @@ -401,6 +401,7 @@ static int cbs_init(struct Qdisc *sch, s
+>         if (!q->qdisc)
+>                 return -ENOMEM;
+>
+> +       INIT_LIST_HEAD(&q->cbs_list);
+>         qdisc_hash_add(q->qdisc, false);
+>
+>         q->queue = sch->dev_queue - netdev_get_tx_queue(dev, 0);
+
+There is already a patch for the same bug:
+http://patchwork.ozlabs.org/patch/1154697/
+
+Vinicius, can you send V2 as David requested?
+
+Thanks.
