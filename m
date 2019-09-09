@@ -2,321 +2,165 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82AC1C00307
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 06:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0DFC433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 07:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37CDB21479
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 06:59:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A78B321479
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 07:02:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DHm1ahO5"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="MQBNNQyW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731422AbfIIG7S (ORCPT
+        id S1731532AbfIIHCl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 02:59:18 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45748 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726823AbfIIG7S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 02:59:18 -0400
-Received: by mail-wr1-f67.google.com with SMTP id l16so12443573wrv.12
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Sep 2019 23:59:14 -0700 (PDT)
+        Mon, 9 Sep 2019 03:02:41 -0400
+Received: from mail-eopbgr750073.outbound.protection.outlook.com ([40.107.75.73]:29592
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731448AbfIIHCk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 03:02:40 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mXAmwDnly/Fkw3vqkgbreggXduaGd0CHg5UQwdWAMT3aVgUtkuo+L5tK6jAhtmhjpu23JdWUoRdm1IvU8uZVAN1io4x6AFLvDz28B25RaLGIbGv9cNtA4E5j4xOZqeSaJY43HMeP+c7vhFlFMJ1T57J0Yux9GolGfzrXxJlkSCEci1rFHMaeNzv46yfZwnkQ/srKWALfRe2ui7Ge03+aTN6uP2qVbghxdJos8ehjBI5oPAgeL2Kex2Hqg2Bq1GJ86kbdgSN3MF45s8CXcFOgZeGjTPwgWxtHktQV0Sjpwq5z6bhI7pD1WbR9/OhB4kn4yxQlw1yGutN0FwriCDi9ew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p8Es7HS5guxNK4+EPog1EfXg2m2RYw/UahN3eC/izzg=;
+ b=g+/1UtQYpvP8EL9fICDkFmKuy8+vv6DZReJudmk+AXWeVgxKoxhNibuY0e4tul/bayD3jL1hyuD1OrGD53ja0IGF0yUpCSYPtyC2sQcLPJggpodoiA7A3rKxTQd3Z8wwcvs63bPdcm2i98xjxMyhIrJybGgRBvtZmkOiHXBf7gMH8ahYWFkDdQgcEeM5mXiVUyhQ0bz0Y+cP6R84XyAosJDFOHP863TyqzT/41THNF/aMvTY8VYsNC5sXfNqbzZSPk6OriEuMQC2IxzqD1VBia4/bGk8FT4OS5XWIai/8cEXAGIp71HtK3WiR6RS/0b0UtUmRmRK18hB/bfVPLKEPg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=reply-to:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=uPb7ZUb8kECFK5vFQJ+UGqGz0n2kxO9qQItYwAt4gFY=;
-        b=DHm1ahO5q654Gu/6Vd7heKonLzVNGhmts5Gw+GY4zikwM9j0Qv0vZMNqgqhPhlM32l
-         mTk3Jxrv5U9JewLXC7NZmjZ8kQ/Qj0x8vtbuwEd9I3C1NncdXA5XxRO9xvFOLfva+OUJ
-         BdMIjfPrAJCTDzCWtu1ysbUe89Iogc3N+RRYq414Jj9a1voUWEK4sxl0IhQImQkW+UTI
-         QcahwVn9F28k6+H9NMBA/n1bD9AWlIVCGHc8GJZzpqLFFs2c5smia0qwWphPiwfvSAyu
-         BgI5E99u53IAwobj8OlzRT9q3Clv4aJJRaxhMIgRq3fCAJLHFIrLesixzwdag37MKwJd
-         mA4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-transfer-encoding:content-language;
-        bh=uPb7ZUb8kECFK5vFQJ+UGqGz0n2kxO9qQItYwAt4gFY=;
-        b=mAeFKaMyRs8k+/0w6SwrCS3e0yDRicpRkMpn0IbIRyIsVmrS2CvS9wbqif/sQ9qC57
-         CNDZwFG9Remo1zWT3h+8EX0/QIdqUxmcNd5uzBfbghrV1/O56jEjgSu7W59+6fHQZXJC
-         yxQGyp4OHH4nIdsoDjfTTQDO7UgVacBt9GPyK6pLAfT7At8w+1vbHk7EQeD8jL8AdZ89
-         ipKz/cvVHNyMv5pG/RBxXAy20D4UFssG9F6l6c1fLdJknDx0416lrsGNpBCh5kx4I3+2
-         CHBs+v2/A4OygztPsK3u9twQs4LyEo/R9l9qMZnxTNs3woaqiq0SvREIUDDMkLocUPzf
-         67mQ==
-X-Gm-Message-State: APjAAAUFkEjzvZ0A/eHN0fl3HFkeMaSnnJiLtmJpdWc9IsSPEHeAOps8
-        BmrI/JDQyMZ7EU5P0ur0iyY=
-X-Google-Smtp-Source: APXvYqw/C6I8CzsT9UGXJlxxLpdeCtDXrqqzvRbYoW4dVD4JuyoSQaL05Is8JEnR4Ta69DMV7MaNPg==
-X-Received: by 2002:adf:8b13:: with SMTP id n19mr14297307wra.203.1568012354232;
-        Sun, 08 Sep 2019 23:59:14 -0700 (PDT)
-Received: from ?IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7? ([2a02:908:1252:fb60:be8a:bd56:1f94:86e7])
-        by smtp.gmail.com with ESMTPSA id n30sm8600164wmd.15.2019.09.08.23.59.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 08 Sep 2019 23:59:13 -0700 (PDT)
-Reply-To: christian.koenig@amd.com
-Subject: Re: [PATCH 1/8] drm/ttm: turn ttm_bo_device.vma_manager into a
- pointer
-To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
-Cc:     "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        David Airlie <airlied@linux.ie>,
-        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
-        <nouveau@lists.freedesktop.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:RADEON and AMDGPU DRM DRIVERS" 
-        <amd-gfx@lists.freedesktop.org>,
-        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
-        <virtualization@lists.linux-foundation.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Huang Rui <ray.huang@amd.com>,
-        VMware Graphics <linux-graphics-maintainer@vmware.com>,
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p8Es7HS5guxNK4+EPog1EfXg2m2RYw/UahN3eC/izzg=;
+ b=MQBNNQyWMhYUA7XEV7P57KUCCFs6RxZnk14ftR3nDqPo+pIP30uEv9Azs9WeBXhOSUvwjUD6j7ZuvkbDbAIpFoxt4owe7m9ORhtCKli1OJFilv8d0QnKoCsMFpuL3c8Vb46TsK1KH+zmAZxSyUBrluju5e51O2HiC+QucemjCvk=
+Received: from DM5PR12MB1705.namprd12.prod.outlook.com (10.175.88.22) by
+ DM5PR12MB1867.namprd12.prod.outlook.com (10.175.88.135) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2241.15; Mon, 9 Sep 2019 07:02:33 +0000
+Received: from DM5PR12MB1705.namprd12.prod.outlook.com
+ ([fe80::9d43:b3d4:9ef:29fc]) by DM5PR12MB1705.namprd12.prod.outlook.com
+ ([fe80::9d43:b3d4:9ef:29fc%8]) with mapi id 15.20.2241.018; Mon, 9 Sep 2019
+ 07:02:33 +0000
+From:   "Koenig, Christian" <Christian.Koenig@amd.com>
+To:     Gerd Hoffmann <kraxel@redhat.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+CC:     "Huang, Ray" <Ray.Huang@amd.com>, David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
-        <spice-devel@lists.freedesktop.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Dave Airlie <airlied@redhat.com>, Sean Paul <sean@poorly.run>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Ben Skeggs <bskeggs@redhat.com>
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 8/8] drm/ttm: remove embedded vma_offset_manager
+Thread-Topic: [PATCH 8/8] drm/ttm: remove embedded vma_offset_manager
+Thread-Index: AQHVY7hH7UW6yTc8ukC7LpOkOjAu7Kci8aIA
+Date:   Mon, 9 Sep 2019 07:02:33 +0000
+Message-ID: <d276f21e-fa03-aa68-4bf7-b154a7dc3e2e@amd.com>
 References: <20190905070509.22407-1-kraxel@redhat.com>
- <20190905070509.22407-2-kraxel@redhat.com>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>
-Message-ID: <851d89ec-968f-2209-91d2-29ec0b083e0b@gmail.com>
-Date:   Mon, 9 Sep 2019 08:59:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190905070509.22407-2-kraxel@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+ <20190905070509.22407-9-kraxel@redhat.com>
+In-Reply-To: <20190905070509.22407-9-kraxel@redhat.com>
+Accept-Language: de-DE, en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+x-originating-ip: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
+x-clientproxiedby: AM0PR10CA0005.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:208:17c::15) To DM5PR12MB1705.namprd12.prod.outlook.com
+ (2603:10b6:3:10c::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Christian.Koenig@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a487d5ae-65be-4da3-a0e6-08d734f3b01b
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM5PR12MB1867;
+x-ms-traffictypediagnostic: DM5PR12MB1867:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR12MB1867EC49D48141EE02D1C38483B70@DM5PR12MB1867.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2150;
+x-forefront-prvs: 01559F388D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(396003)(39860400002)(376002)(346002)(189003)(199004)(256004)(7736002)(14444005)(229853002)(36756003)(305945005)(6506007)(76176011)(102836004)(31686004)(386003)(66946007)(2906002)(66476007)(64756008)(66446008)(66556008)(6116002)(2501003)(14454004)(8936002)(86362001)(81156014)(81166006)(8676002)(31696002)(65956001)(65806001)(478600001)(6512007)(6436002)(25786009)(6246003)(486006)(99286004)(110136005)(54906003)(186003)(71190400001)(58126008)(71200400001)(6486002)(66574012)(316002)(5660300002)(11346002)(53936002)(476003)(446003)(52116002)(46003)(4326008)(2616005);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1867;H:DM5PR12MB1705.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ALUxI0mHrMp9aknTbVgWMieYRVYkiVRvMwXmfstc3+DkErRX+G+fiGvPgvIEOWIRuNmZGRcUJ6cHnahqbiLtgPGBuK3ZqZoYCylrTVpDrRVIdFXAo5FoXTAlbychNoK8/l6zrbsZai9NuEAnl+w2qtBoR40MWN3a1syuWnF5fk0JmygLySyAEKPsiwR6CtikYPKt30CBtZxrwnY0lXMji4O/7GvUFd3IgE/mXzuCArI0Wb0kYl/I6sJvB63rBqn6Fl1m8LuxFAlN6CrHyOkibgiUnXgb1qT7WLozDLk4QQUWfiLv49mktwPCWCf5NONrLTJDUqAZjaEXOjaeRde793//Z5/JYq/x9/q2pZK+cuh1jWoBL4rKopB7GU3rusmPF1qoJ2or/T/mlJfNdMCpe3uMqi2RNA3z3Y4EZ4nn5wA=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D2DE1219726E2D48A35767D0DBD8B217@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a487d5ae-65be-4da3-a0e6-08d734f3b01b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Sep 2019 07:02:33.5811
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: CziMbXGbyMgOQj8pcHCWh3+2/Q0h8lizUmy8uChPb5jtHHhPqqFRSJ+V8g+YGQRu
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1867
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 05.09.19 um 09:05 schrieb Gerd Hoffmann:
-> Rename the embedded struct vma_offset_manager, new name is _vma_manager.
-> ttm_bo_device.vma_manager changed to a pointer.
->
-> The ttm_bo_device_init() function gets an additional vma_manager
-> argument which allows to initialize ttm with a different vma manager.
-> When passing NULL the embedded _vma_manager is used.
->
-> All callers are updated to pass NULL, so the behavior doesn't change.
->
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-
-Reviewed-by: Christian König <christian.koenig@amd.com>
-
-> ---
->   include/drm/ttm/ttm_bo_driver.h         |  8 ++++++--
->   drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c |  1 +
->   drivers/gpu/drm/drm_vram_mm_helper.c    |  1 +
->   drivers/gpu/drm/nouveau/nouveau_ttm.c   |  1 +
->   drivers/gpu/drm/qxl/qxl_ttm.c           |  1 +
->   drivers/gpu/drm/radeon/radeon_ttm.c     |  1 +
->   drivers/gpu/drm/ttm/ttm_bo.c            | 13 +++++++++----
->   drivers/gpu/drm/ttm/ttm_bo_vm.c         |  6 +++---
->   drivers/gpu/drm/vmwgfx/vmwgfx_drv.c     |  1 +
->   9 files changed, 24 insertions(+), 9 deletions(-)
->
-> diff --git a/include/drm/ttm/ttm_bo_driver.h b/include/drm/ttm/ttm_bo_driver.h
-> index e88e00c6cbf2..e365434f92b3 100644
-> --- a/include/drm/ttm/ttm_bo_driver.h
-> +++ b/include/drm/ttm/ttm_bo_driver.h
-> @@ -441,7 +441,8 @@ extern struct ttm_bo_global {
->    *
->    * @driver: Pointer to a struct ttm_bo_driver struct setup by the driver.
->    * @man: An array of mem_type_managers.
-> - * @vma_manager: Address space manager
-> + * @vma_manager: Address space manager (pointer)
-> + * @_vma_manager: Address space manager (enbedded)
->    * lru_lock: Spinlock that protects the buffer+device lru lists and
->    * ddestroy lists.
->    * @dev_mapping: A pointer to the struct address_space representing the
-> @@ -464,7 +465,8 @@ struct ttm_bo_device {
->   	/*
->   	 * Protected by internal locks.
->   	 */
-> -	struct drm_vma_offset_manager vma_manager;
-> +	struct drm_vma_offset_manager *vma_manager;
-> +	struct drm_vma_offset_manager _vma_manager;
->   
->   	/*
->   	 * Protected by the global:lru lock.
-> @@ -585,6 +587,7 @@ int ttm_bo_device_release(struct ttm_bo_device *bdev);
->    * @glob: A pointer to an initialized struct ttm_bo_global.
->    * @driver: A pointer to a struct ttm_bo_driver set up by the caller.
->    * @mapping: The address space to use for this bo.
-> + * @vma_manager: A pointer to a vma manager or NULL.
->    * @file_page_offset: Offset into the device address space that is available
->    * for buffer data. This ensures compatibility with other users of the
->    * address space.
-> @@ -596,6 +599,7 @@ int ttm_bo_device_release(struct ttm_bo_device *bdev);
->   int ttm_bo_device_init(struct ttm_bo_device *bdev,
->   		       struct ttm_bo_driver *driver,
->   		       struct address_space *mapping,
-> +		       struct drm_vma_offset_manager *vma_manager,
->   		       bool need_dma32);
->   
->   /**
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
-> index fb09314bcfd4..34ee5d725faf 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
-> @@ -1728,6 +1728,7 @@ int amdgpu_ttm_init(struct amdgpu_device *adev)
->   	r = ttm_bo_device_init(&adev->mman.bdev,
->   			       &amdgpu_bo_driver,
->   			       adev->ddev->anon_inode->i_mapping,
-> +			       NULL,
->   			       adev->need_dma32);
->   	if (r) {
->   		DRM_ERROR("failed initializing buffer object driver(%d).\n", r);
-> diff --git a/drivers/gpu/drm/drm_vram_mm_helper.c b/drivers/gpu/drm/drm_vram_mm_helper.c
-> index c911781d6728..56fd1519eb35 100644
-> --- a/drivers/gpu/drm/drm_vram_mm_helper.c
-> +++ b/drivers/gpu/drm/drm_vram_mm_helper.c
-> @@ -172,6 +172,7 @@ int drm_vram_mm_init(struct drm_vram_mm *vmm, struct drm_device *dev,
->   
->   	ret = ttm_bo_device_init(&vmm->bdev, &bo_driver,
->   				 dev->anon_inode->i_mapping,
-> +				 NULL,
->   				 true);
->   	if (ret)
->   		return ret;
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_ttm.c b/drivers/gpu/drm/nouveau/nouveau_ttm.c
-> index f0daf958e03a..e67eb10843d1 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_ttm.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_ttm.c
-> @@ -236,6 +236,7 @@ nouveau_ttm_init(struct nouveau_drm *drm)
->   	ret = ttm_bo_device_init(&drm->ttm.bdev,
->   				  &nouveau_bo_driver,
->   				  dev->anon_inode->i_mapping,
-> +				 NULL,
->   				  drm->client.mmu.dmabits <= 32 ? true : false);
->   	if (ret) {
->   		NV_ERROR(drm, "error initialising bo driver, %d\n", ret);
-> diff --git a/drivers/gpu/drm/qxl/qxl_ttm.c b/drivers/gpu/drm/qxl/qxl_ttm.c
-> index 9b24514c75aa..69da0eea6e4c 100644
-> --- a/drivers/gpu/drm/qxl/qxl_ttm.c
-> +++ b/drivers/gpu/drm/qxl/qxl_ttm.c
-> @@ -325,6 +325,7 @@ int qxl_ttm_init(struct qxl_device *qdev)
->   	r = ttm_bo_device_init(&qdev->mman.bdev,
->   			       &qxl_bo_driver,
->   			       qdev->ddev.anon_inode->i_mapping,
-> +			       NULL,
->   			       false);
->   	if (r) {
->   		DRM_ERROR("failed initializing buffer object driver(%d).\n", r);
-> diff --git a/drivers/gpu/drm/radeon/radeon_ttm.c b/drivers/gpu/drm/radeon/radeon_ttm.c
-> index 35ac75a11d38..e2c12e59704d 100644
-> --- a/drivers/gpu/drm/radeon/radeon_ttm.c
-> +++ b/drivers/gpu/drm/radeon/radeon_ttm.c
-> @@ -794,6 +794,7 @@ int radeon_ttm_init(struct radeon_device *rdev)
->   	r = ttm_bo_device_init(&rdev->mman.bdev,
->   			       &radeon_bo_driver,
->   			       rdev->ddev->anon_inode->i_mapping,
-> +			       NULL,
->   			       rdev->need_dma32);
->   	if (r) {
->   		DRM_ERROR("failed initializing buffer object driver(%d).\n", r);
-> diff --git a/drivers/gpu/drm/ttm/ttm_bo.c b/drivers/gpu/drm/ttm/ttm_bo.c
-> index 58d1f2b28132..8dc26babc5cb 100644
-> --- a/drivers/gpu/drm/ttm/ttm_bo.c
-> +++ b/drivers/gpu/drm/ttm/ttm_bo.c
-> @@ -672,7 +672,7 @@ static void ttm_bo_release(struct kref *kref)
->   	struct ttm_bo_device *bdev = bo->bdev;
->   	struct ttm_mem_type_manager *man = &bdev->man[bo->mem.mem_type];
->   
-> -	drm_vma_offset_remove(&bdev->vma_manager, &bo->base.vma_node);
-> +	drm_vma_offset_remove(bdev->vma_manager, &bo->base.vma_node);
->   	ttm_mem_io_lock(man, false);
->   	ttm_mem_io_free_vm(bo);
->   	ttm_mem_io_unlock(man);
-> @@ -1353,7 +1353,7 @@ int ttm_bo_init_reserved(struct ttm_bo_device *bdev,
->   	 */
->   	if (bo->type == ttm_bo_type_device ||
->   	    bo->type == ttm_bo_type_sg)
-> -		ret = drm_vma_offset_add(&bdev->vma_manager, &bo->base.vma_node,
-> +		ret = drm_vma_offset_add(bdev->vma_manager, &bo->base.vma_node,
->   					 bo->mem.num_pages);
->   
->   	/* passed reservation objects should already be locked,
-> @@ -1704,7 +1704,7 @@ int ttm_bo_device_release(struct ttm_bo_device *bdev)
->   			pr_debug("Swap list %d was clean\n", i);
->   	spin_unlock(&glob->lru_lock);
->   
-> -	drm_vma_offset_manager_destroy(&bdev->vma_manager);
-> +	drm_vma_offset_manager_destroy(&bdev->_vma_manager);
->   
->   	if (!ret)
->   		ttm_bo_global_release();
-> @@ -1716,11 +1716,15 @@ EXPORT_SYMBOL(ttm_bo_device_release);
->   int ttm_bo_device_init(struct ttm_bo_device *bdev,
->   		       struct ttm_bo_driver *driver,
->   		       struct address_space *mapping,
-> +		       struct drm_vma_offset_manager *vma_manager,
->   		       bool need_dma32)
->   {
->   	struct ttm_bo_global *glob = &ttm_bo_glob;
->   	int ret;
->   
-> +	if (!vma_manager)
-> +		vma_manager = &bdev->_vma_manager;
-> +
->   	ret = ttm_bo_global_init();
->   	if (ret)
->   		return ret;
-> @@ -1737,7 +1741,8 @@ int ttm_bo_device_init(struct ttm_bo_device *bdev,
->   	if (unlikely(ret != 0))
->   		goto out_no_sys;
->   
-> -	drm_vma_offset_manager_init(&bdev->vma_manager,
-> +	bdev->vma_manager = vma_manager;
-> +	drm_vma_offset_manager_init(&bdev->_vma_manager,
->   				    DRM_FILE_PAGE_OFFSET_START,
->   				    DRM_FILE_PAGE_OFFSET_SIZE);
->   	INIT_DELAYED_WORK(&bdev->wq, ttm_bo_delayed_workqueue);
-> diff --git a/drivers/gpu/drm/ttm/ttm_bo_vm.c b/drivers/gpu/drm/ttm/ttm_bo_vm.c
-> index 76eedb963693..4aa007edffb0 100644
-> --- a/drivers/gpu/drm/ttm/ttm_bo_vm.c
-> +++ b/drivers/gpu/drm/ttm/ttm_bo_vm.c
-> @@ -409,16 +409,16 @@ static struct ttm_buffer_object *ttm_bo_vm_lookup(struct ttm_bo_device *bdev,
->   	struct drm_vma_offset_node *node;
->   	struct ttm_buffer_object *bo = NULL;
->   
-> -	drm_vma_offset_lock_lookup(&bdev->vma_manager);
-> +	drm_vma_offset_lock_lookup(bdev->vma_manager);
->   
-> -	node = drm_vma_offset_lookup_locked(&bdev->vma_manager, offset, pages);
-> +	node = drm_vma_offset_lookup_locked(bdev->vma_manager, offset, pages);
->   	if (likely(node)) {
->   		bo = container_of(node, struct ttm_buffer_object,
->   				  base.vma_node);
->   		bo = ttm_bo_get_unless_zero(bo);
->   	}
->   
-> -	drm_vma_offset_unlock_lookup(&bdev->vma_manager);
-> +	drm_vma_offset_unlock_lookup(bdev->vma_manager);
->   
->   	if (!bo)
->   		pr_err("Could not find buffer object to map\n");
-> diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
-> index cd0d49d8a8da..20bc91214e75 100644
-> --- a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
-> +++ b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
-> @@ -830,6 +830,7 @@ static int vmw_driver_load(struct drm_device *dev, unsigned long chipset)
->   	ret = ttm_bo_device_init(&dev_priv->bdev,
->   				 &vmw_bo_driver,
->   				 dev->anon_inode->i_mapping,
-> +				 NULL,
->   				 false);
->   	if (unlikely(ret != 0)) {
->   		DRM_ERROR("Failed initializing TTM buffer object driver.\n");
-
+QW0gMDUuMDkuMTkgdW0gMDk6MDUgc2NocmllYiBHZXJkIEhvZmZtYW5uOg0KPiBObyB1c2VycyBs
+ZWZ0LiAgRHJpdmVycyBlaXRoZXIgc2V0dXAgdm1hX29mZnNldF9tYW5hZ2VyIHRoZW1zZWxmDQo+
+ICh2bXdnZngpIG9yIHBhc3MgdGhlIGdlbSB2bWFfb2Zmc2V0X21hbmFnZXIgdG8gdHRtX2JvX2Rl
+dmljZV9pbml0DQo+IChhbGwgb3RoZXIgZHJpdmVycykuDQo+DQo+IFNpZ25lZC1vZmYtYnk6IEdl
+cmQgSG9mZm1hbm4gPGtyYXhlbEByZWRoYXQuY29tPg0KDQpQYXRjaGVzICM0LCAjNSBhbmQgIzgg
+aW4gdGhpcyBzZXJpZXMgYXJlIFJldmlld2VkLWJ5OiBDaHJpc3RpYW4gS8O2bmlnIA0KPGNocmlz
+dGlhbi5rb2VuaWdAYW1kLmNvbT4NCg0KSSBjYW4ndCBzZWUgdGhlIHJlc3QgaW4gbXkgaW5ib3gg
+YW55d2hlcmUuIEhhdmUgeW91IHNlbmQgYWxsIG9mIHRoZW0gdG8gDQpkcmktZGV2ZWw/DQoNCkNo
+cmlzdGlhbi4NCg0KPiAtLS0NCj4gICBpbmNsdWRlL2RybS90dG0vdHRtX2JvX2RyaXZlci5oIHwg
+NCArLS0tDQo+ICAgZHJpdmVycy9ncHUvZHJtL3R0bS90dG1fYm8uYyAgICB8IDkgKystLS0tLS0t
+DQo+ICAgMiBmaWxlcyBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDEwIGRlbGV0aW9ucygtKQ0K
+Pg0KPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9kcm0vdHRtL3R0bV9ib19kcml2ZXIuaCBiL2luY2x1
+ZGUvZHJtL3R0bS90dG1fYm9fZHJpdmVyLmgNCj4gaW5kZXggZTM2NTQzNGY5MmIzLi40ZTMwN2Y2
+NWY0OTcgMTAwNjQ0DQo+IC0tLSBhL2luY2x1ZGUvZHJtL3R0bS90dG1fYm9fZHJpdmVyLmgNCj4g
+KysrIGIvaW5jbHVkZS9kcm0vdHRtL3R0bV9ib19kcml2ZXIuaA0KPiBAQCAtNDQyLDcgKzQ0Miw2
+IEBAIGV4dGVybiBzdHJ1Y3QgdHRtX2JvX2dsb2JhbCB7DQo+ICAgICogQGRyaXZlcjogUG9pbnRl
+ciB0byBhIHN0cnVjdCB0dG1fYm9fZHJpdmVyIHN0cnVjdCBzZXR1cCBieSB0aGUgZHJpdmVyLg0K
+PiAgICAqIEBtYW46IEFuIGFycmF5IG9mIG1lbV90eXBlX21hbmFnZXJzLg0KPiAgICAqIEB2bWFf
+bWFuYWdlcjogQWRkcmVzcyBzcGFjZSBtYW5hZ2VyIChwb2ludGVyKQ0KPiAtICogQF92bWFfbWFu
+YWdlcjogQWRkcmVzcyBzcGFjZSBtYW5hZ2VyIChlbmJlZGRlZCkNCj4gICAgKiBscnVfbG9jazog
+U3BpbmxvY2sgdGhhdCBwcm90ZWN0cyB0aGUgYnVmZmVyK2RldmljZSBscnUgbGlzdHMgYW5kDQo+
+ICAgICogZGRlc3Ryb3kgbGlzdHMuDQo+ICAgICogQGRldl9tYXBwaW5nOiBBIHBvaW50ZXIgdG8g
+dGhlIHN0cnVjdCBhZGRyZXNzX3NwYWNlIHJlcHJlc2VudGluZyB0aGUNCj4gQEAgLTQ2Niw3ICs0
+NjUsNiBAQCBzdHJ1Y3QgdHRtX2JvX2RldmljZSB7DQo+ICAgCSAqIFByb3RlY3RlZCBieSBpbnRl
+cm5hbCBsb2Nrcy4NCj4gICAJICovDQo+ICAgCXN0cnVjdCBkcm1fdm1hX29mZnNldF9tYW5hZ2Vy
+ICp2bWFfbWFuYWdlcjsNCj4gLQlzdHJ1Y3QgZHJtX3ZtYV9vZmZzZXRfbWFuYWdlciBfdm1hX21h
+bmFnZXI7DQo+ICAgDQo+ICAgCS8qDQo+ICAgCSAqIFByb3RlY3RlZCBieSB0aGUgZ2xvYmFsOmxy
+dSBsb2NrLg0KPiBAQCAtNTg3LDcgKzU4NSw3IEBAIGludCB0dG1fYm9fZGV2aWNlX3JlbGVhc2Uo
+c3RydWN0IHR0bV9ib19kZXZpY2UgKmJkZXYpOw0KPiAgICAqIEBnbG9iOiBBIHBvaW50ZXIgdG8g
+YW4gaW5pdGlhbGl6ZWQgc3RydWN0IHR0bV9ib19nbG9iYWwuDQo+ICAgICogQGRyaXZlcjogQSBw
+b2ludGVyIHRvIGEgc3RydWN0IHR0bV9ib19kcml2ZXIgc2V0IHVwIGJ5IHRoZSBjYWxsZXIuDQo+
+ICAgICogQG1hcHBpbmc6IFRoZSBhZGRyZXNzIHNwYWNlIHRvIHVzZSBmb3IgdGhpcyBiby4NCj4g
+LSAqIEB2bWFfbWFuYWdlcjogQSBwb2ludGVyIHRvIGEgdm1hIG1hbmFnZXIgb3IgTlVMTC4NCj4g
+KyAqIEB2bWFfbWFuYWdlcjogQSBwb2ludGVyIHRvIGEgdm1hIG1hbmFnZXIuDQo+ICAgICogQGZp
+bGVfcGFnZV9vZmZzZXQ6IE9mZnNldCBpbnRvIHRoZSBkZXZpY2UgYWRkcmVzcyBzcGFjZSB0aGF0
+IGlzIGF2YWlsYWJsZQ0KPiAgICAqIGZvciBidWZmZXIgZGF0YS4gVGhpcyBlbnN1cmVzIGNvbXBh
+dGliaWxpdHkgd2l0aCBvdGhlciB1c2VycyBvZiB0aGUNCj4gICAgKiBhZGRyZXNzIHNwYWNlLg0K
+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3R0bS90dG1fYm8uYyBiL2RyaXZlcnMvZ3B1
+L2RybS90dG0vdHRtX2JvLmMNCj4gaW5kZXggOGRjMjZiYWJjNWNiLi44ODFjZjI2ZDY5OGUgMTAw
+NjQ0DQo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS90dG0vdHRtX2JvLmMNCj4gKysrIGIvZHJpdmVy
+cy9ncHUvZHJtL3R0bS90dG1fYm8uYw0KPiBAQCAtMTcwNCw4ICsxNzA0LDYgQEAgaW50IHR0bV9i
+b19kZXZpY2VfcmVsZWFzZShzdHJ1Y3QgdHRtX2JvX2RldmljZSAqYmRldikNCj4gICAJCQlwcl9k
+ZWJ1ZygiU3dhcCBsaXN0ICVkIHdhcyBjbGVhblxuIiwgaSk7DQo+ICAgCXNwaW5fdW5sb2NrKCZn
+bG9iLT5scnVfbG9jayk7DQo+ICAgDQo+IC0JZHJtX3ZtYV9vZmZzZXRfbWFuYWdlcl9kZXN0cm95
+KCZiZGV2LT5fdm1hX21hbmFnZXIpOw0KPiAtDQo+ICAgCWlmICghcmV0KQ0KPiAgIAkJdHRtX2Jv
+X2dsb2JhbF9yZWxlYXNlKCk7DQo+ICAgDQo+IEBAIC0xNzIyLDggKzE3MjAsOCBAQCBpbnQgdHRt
+X2JvX2RldmljZV9pbml0KHN0cnVjdCB0dG1fYm9fZGV2aWNlICpiZGV2LA0KPiAgIAlzdHJ1Y3Qg
+dHRtX2JvX2dsb2JhbCAqZ2xvYiA9ICZ0dG1fYm9fZ2xvYjsNCj4gICAJaW50IHJldDsNCj4gICAN
+Cj4gLQlpZiAoIXZtYV9tYW5hZ2VyKQ0KPiAtCQl2bWFfbWFuYWdlciA9ICZiZGV2LT5fdm1hX21h
+bmFnZXI7DQo+ICsJaWYgKFdBUk5fT04odm1hX21hbmFnZXIgPT0gTlVMTCkpDQo+ICsJCXJldHVy
+biAtRUlOVkFMOw0KPiAgIA0KPiAgIAlyZXQgPSB0dG1fYm9fZ2xvYmFsX2luaXQoKTsNCj4gICAJ
+aWYgKHJldCkNCj4gQEAgLTE3NDIsOSArMTc0MCw2IEBAIGludCB0dG1fYm9fZGV2aWNlX2luaXQo
+c3RydWN0IHR0bV9ib19kZXZpY2UgKmJkZXYsDQo+ICAgCQlnb3RvIG91dF9ub19zeXM7DQo+ICAg
+DQo+ICAgCWJkZXYtPnZtYV9tYW5hZ2VyID0gdm1hX21hbmFnZXI7DQo+IC0JZHJtX3ZtYV9vZmZz
+ZXRfbWFuYWdlcl9pbml0KCZiZGV2LT5fdm1hX21hbmFnZXIsDQo+IC0JCQkJICAgIERSTV9GSUxF
+X1BBR0VfT0ZGU0VUX1NUQVJULA0KPiAtCQkJCSAgICBEUk1fRklMRV9QQUdFX09GRlNFVF9TSVpF
+KTsNCj4gICAJSU5JVF9ERUxBWUVEX1dPUksoJmJkZXYtPndxLCB0dG1fYm9fZGVsYXllZF93b3Jr
+cXVldWUpOw0KPiAgIAlJTklUX0xJU1RfSEVBRCgmYmRldi0+ZGRlc3Ryb3kpOw0KPiAgIAliZGV2
+LT5kZXZfbWFwcGluZyA9IG1hcHBpbmc7DQoNCg==
