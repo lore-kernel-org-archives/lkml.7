@@ -2,74 +2,87 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D34C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FE2C4740C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 772512082C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:10:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77EC920640
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 16:10:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568045401;
-	bh=nslVTONxqFVxi0hsm1QBWjVFX7rQyENOoz3iPe0MrJE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bHblDzR22JtBrQ0sawOzwv1ajOo5XI5KTIQE52PQurD/24lqBh4VSN/ynQxI2zfos
-	 6kIrWyf6j/5iPIdLht1Px44BrZF7wDRUa1yDOTtYuXBTKorYB/xUcfXbV4msHKszOW
-	 aq9hM0H7qpljoxgQsRBTRZOZF38lt4USoLa6lwF0=
+	s=default; t=1568045454;
+	bh=jv+lB6acHNmcxzA4svQYs31plQCvgdNvK7cuKzZn79s=;
+	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
+	b=peaiWPXhVamEfb+CYC7aS4/10plf5uWfEfWowfaih1KmOxrcXvxmiU3djQWsoyS+2
+	 VzKan4RkG117oLDslH3kJUxFjilz5vStf6zpPTcDBJ5sB1czvY78XJU53grN60N6n+
+	 3xIdUcxdujgRUMKyF1tSYcg1M6cTy8daOneKdkcc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbfIIQKA (ORCPT
+        id S1726773AbfIIQKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 12:10:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50056 "EHLO mail.kernel.org"
+        Mon, 9 Sep 2019 12:10:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725957AbfIIQJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 12:09:56 -0400
-Received: from localhost (110.8.30.213.rev.vodafone.pt [213.30.8.110])
+        id S1725832AbfIIQKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 12:10:53 -0400
+Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CACEA2082C;
-        Mon,  9 Sep 2019 16:09:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0FC62084D;
+        Mon,  9 Sep 2019 16:03:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568045395;
-        bh=nslVTONxqFVxi0hsm1QBWjVFX7rQyENOoz3iPe0MrJE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qQhLj28ynCVjtUk0tgq/f7uRkVaUrRCE2ktCMkkabT4aXN2AqLG55U5QPUXwnykzf
-         5lklwzfx9118WAg9tFzxer/+Dw8zXJs3ugMZoAPi/5EMFCVm8TniYug6ac1n9HjSGy
-         2zWD1mC/GmW1wnfqxmBJzCYSp7JgQxPm8Kh05sXQ=
-Date:   Mon, 9 Sep 2019 17:09:52 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Julio Faracco <jcfaracco@gmail.com>
-Cc:     greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org,
-        elder@kernel.org, johan@kernel.org
-Subject: Re: [PATCH v2] staging: greybus: loopback_test: Adding missing
- brackets into if..else block
-Message-ID: <20190909160952.GA9971@kroah.com>
-References: <20190909143244.371-1-jcfaracco@gmail.com>
+        s=default; t=1568044986;
+        bh=jv+lB6acHNmcxzA4svQYs31plQCvgdNvK7cuKzZn79s=;
+        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
+        b=NHGQIQa6hXnkYMu8wrfBHNikhz5+XfEZxuV3XIBK8yIY7rWHVB46YkUaclIv0ba1g
+         bRRhXmBcPHP6POSR/izAQ9O7Kf0qYnzZmjvnHpalWk3Z/4UGuLkJyOkKeezuRkGsN7
+         zqZ7uv4XnG5O1PvoC3FQ57GfU96wQtG7GgiKChxU=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190909143244.371-1-jcfaracco@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190826121453.21732-2-vkoul@kernel.org>
+References: <20190826121453.21732-1-vkoul@kernel.org> <20190826121453.21732-2-vkoul@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Vinod Koul <vkoul@kernel.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v4 1/4] dt-bindings: clock: Document the parent clocks
+User-Agent: alot/0.8.1
+Date:   Mon, 09 Sep 2019 09:03:05 -0700
+Message-Id: <20190909160305.E0FC62084D@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 09, 2019 at 02:32:44PM +0000, Julio Faracco wrote:
-> Inside a block of if..else conditional, else structure does not contain
-> brackets. This is not following regular policies of kernel coding style.
-> All parts of this conditional blocks should respect brackets inclusion.
-> This commit removes some blank spaces that are not following brackets
-> policies too.
+Quoting Vinod Koul (2019-08-26 05:14:50)
+> With clock parent data scheme we must specify the parent clocks for the
+> rpmhcc nodes. So describe the parent clock for rpmhcc in the bindings.
+>=20
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt b/=
+Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
+> index 3c007653da31..8b97968f9c88 100644
+> --- a/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
+> +++ b/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
+> @@ -9,6 +9,9 @@ Required properties :
+>  - compatible : shall contain "qcom,sdm845-rpmh-clk"
+> =20
+>  - #clock-cells : must contain 1
+> +- clocks: a list of phandles and clock-specifier pairs,
+> +         one for each entry in clock-names.
+> +- clock-names: Parent board clock: "xo".
 
-Whenever you say "too" or "also" that's a huge hint that you should
-break the patch up into multiple patches.
+Ok. xo is fine!
 
-Please do that here, only do "one logical thing" per patch.
-
-thanks,
-
-greg k-h
