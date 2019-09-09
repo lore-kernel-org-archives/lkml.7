@@ -2,154 +2,135 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F108AC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD78AC433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C35B5222C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:54:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ssi.gouv.fr header.i=@ssi.gouv.fr header.b="bsPrfe3f"
+	by mail.kernel.org (Postfix) with ESMTP id BE5C121479
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 10:56:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390201AbfIIKyU (ORCPT
+        id S2390400AbfIIK4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 06:54:20 -0400
-Received: from smtp-out.ssi.gouv.fr ([86.65.182.90]:53148 "EHLO
-        smtp-out.ssi.gouv.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728358AbfIIKyU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 06:54:20 -0400
-Received: from smtp-out.ssi.gouv.fr (localhost [127.0.0.1])
-        by smtp-out.ssi.gouv.fr (Postfix) with ESMTP id 68FEDD00069;
-        Mon,  9 Sep 2019 12:54:18 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ssi.gouv.fr;
-        s=20160407; t=1568026458;
-        bh=lsE8Nf8H8eP9Ra9FaOYEExhywlR7G0uudTTjxz1hvFc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To:From:Subject;
-        b=bsPrfe3facITGSy7DMYPy8YYzwh1VjblL+C13Jn98z/Ykyq4WF4HusFGQluS1lRBd
-         QYYlffK04WUyhAEq8eXB0G3SbxesMMAAm5maeRLiYC+OGgwGm/UFnzGlEJmS5yTjgv
-         eDWHr12JCE7LIy1AnpTqixcRdqDzgwzq7JGzTrSFVJXeir6LdPgy/jMps6OeNW1+Ba
-         aChlFqI2Rwdfl7KYY82HfNbR9YLCc/r3WdWUMbTIopvQs4RYI2ecpdxUeyJYeoZrak
-         hYdIFTmBcuxxlC16cK/J4YqCEyLJQ1AbFThzUt7fkCISGm2XqYe9FM8OenXBMO8HEi
-         fKi53bdY2BZXA==
-Subject: Re: [PATCH v2 1/5] fs: Add support for an O_MAYEXEC flag on
- sys_open()
-To:     James Morris <jmorris@namei.org>
-CC:     Jeff Layton <jlayton@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
-        <linux-kernel@vger.kernel.org>, Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Eric Chiang <ericchiang@google.com>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
+        Mon, 9 Sep 2019 06:56:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39330 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729084AbfIIK4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 06:56:10 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3B376C049E10;
+        Mon,  9 Sep 2019 10:56:10 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-120-141.rdu2.redhat.com [10.10.120.141])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 121D760623;
+        Mon,  9 Sep 2019 10:56:01 +0000 (UTC)
+Subject: Re: [PATCH] Revert "locking/pvqspinlock: Don't wait if vCPU is
+ preempted"
+To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
-        <kernel-hardening@lists.openwall.com>, <linux-api@vger.kernel.org>,
-        <linux-security-module@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>
-References: <20190906152455.22757-1-mic@digikod.net>
- <20190906152455.22757-2-mic@digikod.net>
- <87ef0te7v3.fsf@oldenburg2.str.redhat.com>
- <75442f3b-a3d8-12db-579a-2c5983426b4d@ssi.gouv.fr>
- <f53ec45fd253e96d1c8d0ea6f9cca7f68afa51e3.camel@kernel.org>
- <1fbf54f6-7597-3633-a76c-11c4b2481add@ssi.gouv.fr>
- <5a59b309f9d0603d8481a483e16b5d12ecb77540.camel@kernel.org>
- <alpine.LRH.2.21.1909061202070.18660@namei.org>
- <49e98ece-e85f-3006-159b-2e04ba67019e@ssi.gouv.fr>
- <alpine.LRH.2.21.1909090309260.27895@namei.org>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>
-Message-ID: <073cb831-7c6b-1882-9b7d-eb810a2ef955@ssi.gouv.fr>
-Date:   Mon, 9 Sep 2019 12:54:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:52.0) Gecko/20100101
- Thunderbird/52.9.0
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, loobinliu@tencent.com,
+        stable@vger.kernel.org
+References: <1567993228-23668-1-git-send-email-wanpengli@tencent.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <29d04ee4-60e7-4df9-0c4f-fc29f2b0c6a8@redhat.com>
+Date:   Mon, 9 Sep 2019 11:56:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <alpine.LRH.2.21.1909090309260.27895@namei.org>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <1567993228-23668-1-git-send-email-wanpengli@tencent.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Mon, 09 Sep 2019 10:56:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 09/09/2019 12:12, James Morris wrote:
-> On Mon, 9 Sep 2019, Micka=C3=ABl Sala=C3=BCn wrote:
+On 9/9/19 2:40 AM, Wanpeng Li wrote:
+> From: Wanpeng Li <wanpengli@tencent.com>
 >
->>
->> On 06/09/2019 21:03, James Morris wrote:
->>> On Fri, 6 Sep 2019, Jeff Layton wrote:
->>>
->>>> The fact that open and openat didn't vet unknown flags is really a bug=
-.
->>>>
->>>> Too late to fix it now, of course, and as Aleksa points out, we've
->>>> worked around that in the past. Now though, we have a new openat2
->>>> syscall on the horizon. There's little need to continue these sorts of
->>>> hacks.
->>>>
->>>> New open flags really have no place in the old syscalls, IMO.
->>>
->>> Agree here. It's unfortunate but a reality and Linus will reject any su=
-ch
->>> changes which break existing userspace.
->>
->> Do you mean that adding new flags to open(2) is not possible?
->>
->> Does it means that unspecified behaviors are definitely part of the
->> Linux specification and can't be fixed?
+> This patch reverts commit 75437bb304b20 (locking/pvqspinlock: Don't wait if 
+> vCPU is preempted), we found great regression caused by this commit.
 >
-> This is my understanding.
+> Xeon Skylake box, 2 sockets, 40 cores, 80 threads, three VMs, each is 80 vCPUs.
+> The score of ebizzy -M can reduce from 13000-14000 records/s to 1700-1800 
+> records/s with this commit.
 >
->>
->> As I said, O_MAYEXEC should be ignored if it is not supported by the
->> kernel, which perfectly fit with the current open(2) flags behavior, and
->> should also behave the same with openat2(2).
+>           Host                       Guest                score
 >
-> The problem here is programs which are already using the value of
-> O_MAYEXEC, which will break.  Hence, openat2(2).
+> vanilla + w/o kvm optimizes     vanilla               1700-1800 records/s
+> vanilla + w/o kvm optimizes     vanilla + revert      13000-14000 records/s
+> vanilla + w/ kvm optimizes      vanilla               4500-5000 records/s
+> vanilla + w/ kvm optimizes      vanilla + revert      14000-15500 records/s
+>
+> Exit from aggressive wait-early mechanism can result in yield premature and 
+> incur extra scheduling latency in over-subscribe scenario.
+>
+> kvm optimizes:
+> [1] commit d73eb57b80b (KVM: Boost vCPUs that are delivering interrupts)
+> [2] commit 266e85a5ec9 (KVM: X86: Boost queue head vCPU to mitigate lock waiter preemption)
+>
+> Tested-by: loobinliu@tencent.com
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Waiman Long <longman@redhat.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Radim Krčmář <rkrcmar@redhat.com>
+> Cc: loobinliu@tencent.com
+> Cc: stable@vger.kernel.org 
+> Fixes: 75437bb304b20 (locking/pvqspinlock: Don't wait if vCPU is preempted)
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> ---
+>  kernel/locking/qspinlock_paravirt.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/kernel/locking/qspinlock_paravirt.h b/kernel/locking/qspinlock_paravirt.h
+> index 89bab07..e84d21a 100644
+> --- a/kernel/locking/qspinlock_paravirt.h
+> +++ b/kernel/locking/qspinlock_paravirt.h
+> @@ -269,7 +269,7 @@ pv_wait_early(struct pv_node *prev, int loop)
+>  	if ((loop & PV_PREV_CHECK_MASK) != 0)
+>  		return false;
+>  
+> -	return READ_ONCE(prev->state) != vcpu_running || vcpu_is_preempted(prev->cpu);
+> +	return READ_ONCE(prev->state) != vcpu_running;
+>  }
+>  
+>  /*
 
-Well, it still depends on the sysctl, which doesn't enforce anything by
-default, hence doesn't break existing behavior, and this unused flags
-could be fixed/removed or reported by sysadmins or distro developers.
+There are several possibilities for this performance regression:
 
+1) Multiple vcpus calling vcpu_is_preempted() repeatedly may cause some
+cacheline contention issue depending on how that callback is implemented.
 
---
-Micka=C3=ABl Sala=C3=BCn
+2) KVM may set the preempt flag for a short period whenver an vmexit
+happens even if a vmenter is executed shortly after. In this case, we
+may want to use a more durable vcpu suspend flag that indicates the vcpu
+won't get a real vcpu back for a longer period of time.
 
-Les donn=C3=A9es =C3=A0 caract=C3=A8re personnel recueillies et trait=C3=A9=
-es dans le cadre de cet =C3=A9change, le sont =C3=A0 seule fin d=E2=80=99ex=
-=C3=A9cution d=E2=80=99une relation professionnelle et s=E2=80=99op=C3=A8re=
-nt dans cette seule finalit=C3=A9 et pour la dur=C3=A9e n=C3=A9cessaire =C3=
-=A0 cette relation. Si vous souhaitez faire usage de vos droits de consulta=
-tion, de rectification et de suppression de vos donn=C3=A9es, veuillez cont=
-acter contact.rgpd@sgdsn.gouv.fr. Si vous avez re=C3=A7u ce message par err=
-eur, nous vous remercions d=E2=80=99en informer l=E2=80=99exp=C3=A9diteur e=
-t de d=C3=A9truire le message. The personal data collected and processed du=
-ring this exchange aims solely at completing a business relationship and is=
- limited to the necessary duration of that relationship. If you wish to use=
- your rights of consultation, rectification and deletion of your data, plea=
-se contact: contact.rgpd@sgdsn.gouv.fr. If you have received this message i=
-n error, we thank you for informing the sender and destroying the message.
+Perhaps you can add a lock event counter to count the number of
+wait_early events caused by vcpu_is_preempted() being true to see if it
+really cause a lot more wait_early than without the vcpu_is_preempted()
+call.
+
+I have no objection to this, I just want to find out the root cause of it.
+
+Cheers,
+Longman
+
