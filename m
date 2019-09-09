@@ -2,269 +2,191 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B97C433EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 08:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BEDDC433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 08:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0EA32086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 08:24:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14BC92086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 08:28:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389281AbfIIIYb (ORCPT
+        id S2388728AbfIII2D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 04:24:31 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:12389 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727965AbfIIIYb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 04:24:31 -0400
-X-UUID: 96a3632492f04e00a7a7c7b28a279f24-20190909
-X-UUID: 96a3632492f04e00a7a7c7b28a279f24-20190909
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 150415789; Mon, 09 Sep 2019 16:24:15 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 9 Sep 2019 16:24:13 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 9 Sep 2019 16:24:13 +0800
-From:   <walter-zh.wu@mediatek.com>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Will Deacon <will@kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michal Hocko <mhocko@kernel.org>, Qian Cai <cai@lca.pw>
-CC:     <linux-kernel@vger.kernel.org>, <kasan-dev@googlegroups.com>,
-        <linux-mm@kvack.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        Walter Wu <walter-zh.wu@mediatek.com>
-Subject: [PATCH v2 0/2] mm/kasan: dump alloc/free stack for page allocator
-Date:   Mon, 9 Sep 2019 16:24:12 +0800
-Message-ID: <20190909082412.24356-1-walter-zh.wu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Mon, 9 Sep 2019 04:28:03 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2242 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725818AbfIII2C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 04:28:02 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 093C4DC141C1F1E4F691;
+        Mon,  9 Sep 2019 16:28:00 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 9 Sep 2019
+ 16:27:56 +0800
+Subject: Re: [f2fs-dev] [PATCH 2/2] f2fs: avoid infinite GC loop due to stale
+ atomic files
+To:     Jaegeuk Kim <jaegeuk@kernel.org>,
+        <g@jaegeuk-macbookpro.roam.corp.google.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20190909012532.20454-1-jaegeuk@kernel.org>
+ <20190909012532.20454-2-jaegeuk@kernel.org>
+ <f446ff29-38a5-61fd-4056-b4067b01c630@huawei.com>
+ <20190909073011.GA21625@jaegeuk-macbookpro.roam.corp.google.com>
+ <5a473076-14b8-768a-62ac-f686e850d5a6@huawei.com>
+ <20190909080108.GC21625@jaegeuk-macbookpro.roam.corp.google.com>
+ <bf0683d9-ac05-1edc-71ea-3d02f7b2fb55@huawei.com>
+ <20190909082112.GA25724@jaegeuk-macbookpro.roam.corp.google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <2f5b844c-f722-6a80-a4ab-61bdd72b8be4@huawei.com>
+Date:   Mon, 9 Sep 2019 16:27:42 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+In-Reply-To: <20190909082112.GA25724@jaegeuk-macbookpro.roam.corp.google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Walter Wu <walter-zh.wu@mediatek.com>
+On 2019/9/9 16:21, Jaegeuk Kim wrote:
+> On 09/09, Chao Yu wrote:
+>> On 2019/9/9 16:01, Jaegeuk Kim wrote:
+>>> On 09/09, Chao Yu wrote:
+>>>> On 2019/9/9 15:30, Jaegeuk Kim wrote:
+>>>>> On 09/09, Chao Yu wrote:
+>>>>>> On 2019/9/9 9:25, Jaegeuk Kim wrote:
+>>>>>>> If committing atomic pages is failed when doing f2fs_do_sync_file(), we can
+>>>>>>> get commited pages but atomic_file being still set like:
+>>>>>>>
+>>>>>>> - inmem:    0, atomic IO:    4 (Max.   10), volatile IO:    0 (Max.    0)
+>>>>>>>
+>>>>>>> If GC selects this block, we can get an infinite loop like this:
+>>>>>>>
+>>>>>>> f2fs_submit_page_bio: dev = (253,7), ino = 2, page_index = 0x2359a8, oldaddr = 0x2359a8, newaddr = 0x2359a8, rw = READ(), type = COLD_DATA
+>>>>>>> f2fs_submit_read_bio: dev = (253,7)/(253,7), rw = READ(), DATA, sector = 18533696, size = 4096
+>>>>>>> f2fs_get_victim: dev = (253,7), type = No TYPE, policy = (Foreground GC, LFS-mode, Greedy), victim = 4355, cost = 1, ofs_unit = 1, pre_victim_secno = 4355, prefree = 0, free = 234
+>>>>>>> f2fs_iget: dev = (253,7), ino = 6247, pino = 5845, i_mode = 0x81b0, i_size = 319488, i_nlink = 1, i_blocks = 624, i_advise = 0x2c
+>>>>>>> f2fs_submit_page_bio: dev = (253,7), ino = 2, page_index = 0x2359a8, oldaddr = 0x2359a8, newaddr = 0x2359a8, rw = READ(), type = COLD_DATA
+>>>>>>> f2fs_submit_read_bio: dev = (253,7)/(253,7), rw = READ(), DATA, sector = 18533696, size = 4096
+>>>>>>> f2fs_get_victim: dev = (253,7), type = No TYPE, policy = (Foreground GC, LFS-mode, Greedy), victim = 4355, cost = 1, ofs_unit = 1, pre_victim_secno = 4355, prefree = 0, free = 234
+>>>>>>> f2fs_iget: dev = (253,7), ino = 6247, pino = 5845, i_mode = 0x81b0, i_size = 319488, i_nlink = 1, i_blocks = 624, i_advise = 0x2c
+>>>>>>>
+>>>>>>> In that moment, we can observe:
+>>>>>>>
+>>>>>>> [Before]
+>>>>>>> Try to move 5084219 blocks (BG: 384508)
+>>>>>>>   - data blocks : 4962373 (274483)
+>>>>>>>   - node blocks : 121846 (110025)
+>>>>>>> Skipped : atomic write 4534686 (10)
+>>>>>>>
+>>>>>>> [After]
+>>>>>>> Try to move 5088973 blocks (BG: 384508)
+>>>>>>>   - data blocks : 4967127 (274483)
+>>>>>>>   - node blocks : 121846 (110025)
+>>>>>>> Skipped : atomic write 4539440 (10)
+>>>>>>>
+>>>>>>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+>>>>>>> ---
+>>>>>>>  fs/f2fs/file.c | 10 +++++-----
+>>>>>>>  1 file changed, 5 insertions(+), 5 deletions(-)
+>>>>>>>
+>>>>>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+>>>>>>> index 7ae2f3bd8c2f..68b6da734e5f 100644
+>>>>>>> --- a/fs/f2fs/file.c
+>>>>>>> +++ b/fs/f2fs/file.c
+>>>>>>> @@ -1997,11 +1997,11 @@ static int f2fs_ioc_commit_atomic_write(struct file *filp)
+>>>>>>>  			goto err_out;
+>>>>>>>  
+>>>>>>>  		ret = f2fs_do_sync_file(filp, 0, LLONG_MAX, 0, true);
+>>>>>>> -		if (!ret) {
+>>>>>>> -			clear_inode_flag(inode, FI_ATOMIC_FILE);
+>>>>>>> -			F2FS_I(inode)->i_gc_failures[GC_FAILURE_ATOMIC] = 0;
+>>>>>>> -			stat_dec_atomic_write(inode);
+>>>>>>> -		}
+>>>>>>> +
+>>>>>>> +		/* doesn't need to check error */
+>>>>>>> +		clear_inode_flag(inode, FI_ATOMIC_FILE);
+>>>>>>> +		F2FS_I(inode)->i_gc_failures[GC_FAILURE_ATOMIC] = 0;
+>>>>>>> +		stat_dec_atomic_write(inode);
+>>>>>>
+>>>>>> If there are still valid atomic write pages linked in .inmem_pages, it may cause
+>>>>>> memory leak when we just clear FI_ATOMIC_FILE flag.
+>>>>>
+>>>>> f2fs_commit_inmem_pages() should have flushed them.
+>>>>
+>>>> Oh, we failed to flush its nodes.
+>>>>
+>>>> However we won't clear such info if we failed to flush inmen pages, it looks
+>>>> inconsistent.
+>>>>
+>>>> Any interface needed to drop inmem pages or clear ATOMIC_FILE flag in that two
+>>>> error path? I'm not very clear how sqlite handle such error.
+>>>
+>>> f2fs_drop_inmem_pages() did that, but not in this case.
+>>
+>> What I mean is, for any error returned from atomic_commit() interface, should
+>> userspace application handle it with consistent way, like trigger
+>> f2fs_drop_inmem_pages(), so we don't need to handle it inside atomic_commit().
+> 
+> f2fs_ioc_abort_volatile_write() will be triggered.
 
-This patch is KASAN report adds the alloc/free stacks for page allocator
-in order to help programmer to see memory corruption caused by page.
+If userspace can do this, we can get rid of this patch, or am I missing sth?
 
-By default, KASAN doesn't record alloc and free stack for page allocator.
-It is difficult to fix up page use-after-free or dobule-free issue.
+- f2fs_ioc_abort_volatile_write
+ - f2fs_drop_inmem_pages
+  - clear_inode_flag(inode, FI_ATOMIC_FILE);
+  - fi->i_gc_failures[GC_FAILURE_ATOMIC] = 0;
+  - stat_dec_atomic_write(inode);
 
-Our patchsets will record the last stack of pages.
-It is very helpful for solving the page use-after-free or double-free.
-
-KASAN report will show the last stack of page, it may be:
-a) If page is in-use state, then it prints alloc stack.
-   It is useful to fix up page out-of-bound issue.
-
-BUG: KASAN: slab-out-of-bounds in kmalloc_pagealloc_oob_right+0x88/0x90
-Write of size 1 at addr ffffffc0d64ea00a by task cat/115
-...
-Allocation stack of page:
- set_page_stack.constprop.1+0x30/0xc8
- kasan_alloc_pages+0x18/0x38
- prep_new_page+0x5c/0x150
- get_page_from_freelist+0xb8c/0x17c8
- __alloc_pages_nodemask+0x1a0/0x11b0
- kmalloc_order+0x28/0x58
- kmalloc_order_trace+0x28/0xe0
- kmalloc_pagealloc_oob_right+0x2c/0x68
-
-b) If page is freed state, then it prints free stack.
-   It is useful to fix up page use-after-free or double-free issue.
-
-BUG: KASAN: use-after-free in kmalloc_pagealloc_uaf+0x70/0x80
-Write of size 1 at addr ffffffc0d651c000 by task cat/115
-...
-Free stack of page:
- kasan_free_pages+0x68/0x70
- __free_pages_ok+0x3c0/0x1328
- __free_pages+0x50/0x78
- kfree+0x1c4/0x250
- kmalloc_pagealloc_uaf+0x38/0x80
-
-This has been discussed, please refer below link.
-https://bugzilla.kernel.org/show_bug.cgi?id=203967
-
-Changes since v1:
-- slim page_owner and move it into kasan
-- enable the feature by default
-
-Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
----
- include/linux/kasan.h |  1 +
- lib/Kconfig.kasan     |  2 ++
- mm/kasan/common.c     | 32 ++++++++++++++++++++++++++++++++
- mm/kasan/kasan.h      |  5 +++++
- mm/kasan/report.c     | 27 +++++++++++++++++++++++++++
- 5 files changed, 67 insertions(+)
-
-diff --git a/include/linux/kasan.h b/include/linux/kasan.h
-index cc8a03cc9674..97e1bcb20489 100644
---- a/include/linux/kasan.h
-+++ b/include/linux/kasan.h
-@@ -19,6 +19,7 @@ extern pte_t kasan_early_shadow_pte[PTRS_PER_PTE];
- extern pmd_t kasan_early_shadow_pmd[PTRS_PER_PMD];
- extern pud_t kasan_early_shadow_pud[PTRS_PER_PUD];
- extern p4d_t kasan_early_shadow_p4d[MAX_PTRS_PER_P4D];
-+extern struct page_ext_operations page_stack_ops;
- 
- int kasan_populate_early_shadow(const void *shadow_start,
- 				const void *shadow_end);
-diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
-index 4fafba1a923b..b5a9410ba4e8 100644
---- a/lib/Kconfig.kasan
-+++ b/lib/Kconfig.kasan
-@@ -41,6 +41,7 @@ config KASAN_GENERIC
- 	select SLUB_DEBUG if SLUB
- 	select CONSTRUCTORS
- 	select STACKDEPOT
-+	select PAGE_EXTENSION
- 	help
- 	  Enables generic KASAN mode.
- 	  Supported in both GCC and Clang. With GCC it requires version 4.9.2
-@@ -63,6 +64,7 @@ config KASAN_SW_TAGS
- 	select SLUB_DEBUG if SLUB
- 	select CONSTRUCTORS
- 	select STACKDEPOT
-+	select PAGE_EXTENSION
- 	help
- 	  Enables software tag-based KASAN mode.
- 	  This mode requires Top Byte Ignore support by the CPU and therefore
-diff --git a/mm/kasan/common.c b/mm/kasan/common.c
-index 2277b82902d8..c349143d2587 100644
---- a/mm/kasan/common.c
-+++ b/mm/kasan/common.c
-@@ -211,10 +211,38 @@ void kasan_unpoison_stack_above_sp_to(const void *watermark)
- 	kasan_unpoison_shadow(sp, size);
- }
- 
-+static bool need_page_stack(void)
-+{
-+	return true;
-+}
-+
-+struct page_ext_operations page_stack_ops = {
-+	.size = sizeof(depot_stack_handle_t),
-+	.need = need_page_stack,
-+};
-+
-+static void set_page_stack(struct page *page, gfp_t gfp_mask)
-+{
-+	struct page_ext *page_ext = lookup_page_ext(page);
-+	depot_stack_handle_t handle;
-+	depot_stack_handle_t *page_stack;
-+
-+	if (unlikely(!page_ext))
-+		return;
-+
-+	handle = save_stack(gfp_mask);
-+
-+	page_stack = get_page_stack(page_ext);
-+	*page_stack = handle;
-+}
-+
- void kasan_alloc_pages(struct page *page, unsigned int order)
- {
- 	u8 tag;
- 	unsigned long i;
-+	gfp_t gfp_flags = GFP_KERNEL;
-+
-+	set_page_stack(page, gfp_flags);
- 
- 	if (unlikely(PageHighMem(page)))
- 		return;
-@@ -227,6 +255,10 @@ void kasan_alloc_pages(struct page *page, unsigned int order)
- 
- void kasan_free_pages(struct page *page, unsigned int order)
- {
-+	gfp_t gfp_flags = GFP_KERNEL;
-+
-+	set_page_stack(page, gfp_flags);
-+
- 	if (likely(!PageHighMem(page)))
- 		kasan_poison_shadow(page_address(page),
- 				PAGE_SIZE << order,
-diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
-index 014f19e76247..95b3b510d04f 100644
---- a/mm/kasan/kasan.h
-+++ b/mm/kasan/kasan.h
-@@ -126,6 +126,11 @@ static inline bool addr_has_shadow(const void *addr)
- 	return (addr >= kasan_shadow_to_mem((void *)KASAN_SHADOW_START));
- }
- 
-+static inline depot_stack_handle_t *get_page_stack(struct page_ext *page_ext)
-+{
-+	return (void *)page_ext + page_stack_ops.offset;
-+}
-+
- void kasan_poison_shadow(const void *address, size_t size, u8 value);
- 
- /**
-diff --git a/mm/kasan/report.c b/mm/kasan/report.c
-index 0e5f965f1882..2e26bc192114 100644
---- a/mm/kasan/report.c
-+++ b/mm/kasan/report.c
-@@ -344,6 +344,32 @@ static void print_address_stack_frame(const void *addr)
- 	print_decoded_frame_descr(frame_descr);
- }
- 
-+static void dump_page_stack(struct page *page)
-+{
-+	struct page_ext *page_ext = lookup_page_ext(page);
-+	depot_stack_handle_t handle;
-+	unsigned long *entries;
-+	unsigned int nr_entries;
-+	depot_stack_handle_t *page_stack;
-+
-+	if (unlikely(!page_ext))
-+		return;
-+
-+	page_stack = get_page_stack(page_ext);
-+
-+	handle = READ_ONCE(*page_stack);
-+	if (!handle)
-+		return;
-+
-+	if ((unsigned long)page->flags & PAGE_FLAGS_CHECK_AT_PREP)
-+		pr_info("Allocation stack of page:\n");
-+	else
-+		pr_info("Free stack of page:\n");
-+
-+	nr_entries = stack_depot_fetch(handle, &entries);
-+	stack_trace_print(entries, nr_entries, 0);
-+}
-+
- static void print_address_description(void *addr)
- {
- 	struct page *page = addr_to_page(addr);
-@@ -366,6 +392,7 @@ static void print_address_description(void *addr)
- 	if (page) {
- 		pr_err("The buggy address belongs to the page:\n");
- 		dump_page(page, "kasan: bad access detected");
-+		dump_page_stack(page);
- 	}
- 
- 	print_address_stack_frame(addr);
--- 
-2.18.0
-
+> 
+>>
+>>>
+>>>>
+>>>> Thanks,
+>>>>
+>>>>>
+>>>>>>
+>>>>>> So my question is why below logic didn't handle such condition well?
+>>>>>>
+>>>>>> f2fs_gc()
+>>>>>>
+>>>>>> 	if (has_not_enough_free_secs(sbi, sec_freed, 0)) {
+>>>>>> 		if (skipped_round <= MAX_SKIP_GC_COUNT ||
+>>>>>> 					skipped_round * 2 < round) {
+>>>>>> 			segno = NULL_SEGNO;
+>>>>>> 			goto gc_more;
+>>>>>> 		}
+>>>>>>
+>>>>>> 		if (first_skipped < last_skipped &&
+>>>>>> 				(last_skipped - first_skipped) >
+>>>>>> 						sbi->skipped_gc_rwsem) {
+>>>>>> 			f2fs_drop_inmem_pages_all(sbi, true);
+>>>>>
+>>>>> This is doing nothing, since f2fs_commit_inmem_pages() removed the inode
+>>>>> from inmem list.
+>>>>>
+>>>>>> 			segno = NULL_SEGNO;
+>>>>>> 			goto gc_more;
+>>>>>> 		}
+>>>>>> 		if (gc_type == FG_GC && !is_sbi_flag_set(sbi, SBI_CP_DISABLED))
+>>>>>> 			ret = f2fs_write_checkpoint(sbi, &cpc);
+>>>>>> 	}
+>>>>>>
+>>>>>>>  	} else {
+>>>>>>>  		ret = f2fs_do_sync_file(filp, 0, LLONG_MAX, 1, false);
+>>>>>>>  	}
+>>>>>>>
+>>>>> .
+>>>>>
+>>> .
+>>>
+> .
+> 
