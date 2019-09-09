@@ -2,27 +2,27 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE69FC4360D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 02:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2807C433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 02:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A15722190F
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 02:37:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A598B2067B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 02:37:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733078AbfIICha (ORCPT
+        id S1733116AbfIIChc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 22:37:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54580 "EHLO mx1.suse.de"
+        Sun, 8 Sep 2019 22:37:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54660 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731928AbfIICh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 22:37:29 -0400
+        id S1731928AbfIIChc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Sep 2019 22:37:32 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id BCA83AE5E;
-        Mon,  9 Sep 2019 02:37:27 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 4B818AF25;
+        Mon,  9 Sep 2019 02:37:30 +0000 (UTC)
 From:   Giovanni Gherdovich <ggherdovich@suse.cz>
 To:     srinivas.pandruvada@linux.intel.com, tglx@linutronix.de,
         mingo@redhat.com, peterz@infradead.org, bp@suse.de,
@@ -33,55 +33,60 @@ Cc:     x86@kernel.org, linux-pm@vger.kernel.org,
         juri.lelli@redhat.com, pjt@google.com, vincent.guittot@linaro.org,
         qperret@qperret.net, dietmar.eggemann@arm.com,
         Giovanni Gherdovich <ggherdovich@suse.cz>
-Subject: [PATCH 0/2] Add support for frequency invariance for (some) x86
-Date:   Mon,  9 Sep 2019 04:42:14 +0200
-Message-Id: <20190909024216.5942-1-ggherdovich@suse.cz>
+Subject: [PATCH 2/2] cpufreq: intel_pstate: Conditional frequency invariant accounting
+Date:   Mon,  9 Sep 2019 04:42:16 +0200
+Message-Id: <20190909024216.5942-3-ggherdovich@suse.cz>
 X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20190909024216.5942-1-ggherdovich@suse.cz>
+References: <20190909024216.5942-1-ggherdovich@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a resend with of Peter Zijlstra's patch to support frequency
-scale-invariance on x86 from May 2018 [see 1]. I've added some modifications
-and included performance test results. If Peter doesn't mind, I'm slapping my
-name on it :)
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-The changes from Peter's original implementation are:
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-1) normalizing against the 4-cores turbo level instead or 1-core turbo
-2) removing the run-time search for when the above value isn't found in the
-   various Intel MSRs -- the base frequency value is taken in that case.
+intel_pstate has two operating modes: active and passive. In "active"
+mode, the in-built scaling governor is used and in "passive" mode,
+the driver can be used with any governor like "schedutil". In "active"
+mode the utilization values from schedutil is not used and there is
+a requirement from high performance computing use cases, not to read
+any APERF/MPERF MSRs. In this case no need to use CPU cycles for
+frequency invariant accounting by reading APERF/MPERF MSRs.
+With this change frequency invariant account is only enabled in
+"passive" mode.
 
-The section "4. KNOWN LIMITATIONS" in the first patch commit message addresses
-the reason why this approach was dropped back in 2018, and explains that the
-performance gains outweight that issue.
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Giovanni Gherdovich <ggherdovich@suse.cz>
+---
+ drivers/cpufreq/intel_pstate.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-The second patch from Srinivas is taken verbatim from the May 2018 submission
-as it still applies.
-
-I apologies for the length of patch #1 commit message; I've made a table of
-contents with summaries of each section that should make easier to skim
-through the content.
-
-This submission incorporates the feedback and requests for additional tests
-received during the presentation made at OSPM 2019 in Pisa three months ago.
-
-[1] https://lore.kernel.org/lkml/20180516044911.28797-2-srinivas.pandruvada@linux.intel.com/
-
-Giovanni Gherdovich (1):
-  x86,sched: Add support for frequency invariance
-
-Srinivas Pandruvada (1):
-  cpufreq: intel_pstate: Conditional frequency invariant accounting
-
- arch/x86/include/asm/topology.h |  29 +++++++
- arch/x86/kernel/smpboot.c       | 180 +++++++++++++++++++++++++++++++++++++++-
- drivers/cpufreq/intel_pstate.c  |   5 ++
- kernel/sched/core.c             |   1 +
- kernel/sched/sched.h            |   7 ++
- 5 files changed, 221 insertions(+), 1 deletion(-)
-
+diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+index cc27d4c59dca..d55da8604d50 100644
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -2381,6 +2381,8 @@ static int intel_pstate_register_driver(struct cpufreq_driver *driver)
+ {
+ 	int ret;
+ 
++	x86_arch_scale_freq_tick_disable();
++
+ 	memset(&global, 0, sizeof(global));
+ 	global.max_perf_pct = 100;
+ 
+@@ -2393,6 +2395,9 @@ static int intel_pstate_register_driver(struct cpufreq_driver *driver)
+ 
+ 	global.min_perf_pct = min_perf_pct_min();
+ 
++	if (driver == &intel_cpufreq)
++		x86_arch_scale_freq_tick_enable();
++
+ 	return 0;
+ }
+ 
 -- 
 2.16.4
 
