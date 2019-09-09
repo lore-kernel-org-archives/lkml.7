@@ -2,102 +2,105 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B66C49ED4
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 07:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5624DC00307
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 07:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E95321479
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 07:46:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 253BE21479
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 07:48:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FsV+bI66";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FsV+bI66"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388347AbfIIHqt (ORCPT
+        id S2388373AbfIIHsr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 03:46:49 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:32860 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388282AbfIIHqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 03:46:49 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1i7ENi-0007V3-Pf; Mon, 09 Sep 2019 17:46:39 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Mon, 09 Sep 2019 17:46:37 +1000
-Date:   Mon, 9 Sep 2019 17:46:37 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     linux-crypto@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        linux-kernel@vger.kernel.org
-Subject: crypto: caam - Cast to long first before pointer conversion
-Message-ID: <20190909074636.GA21024@gondor.apana.org.au>
-References: <20190904023515.7107-1-andrew.smirnov@gmail.com>
- <20190904023515.7107-5-andrew.smirnov@gmail.com>
+        Mon, 9 Sep 2019 03:48:47 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:38432 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388282AbfIIHsr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 03:48:47 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 8A6CF607C6; Mon,  9 Sep 2019 07:48:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568015325;
+        bh=LBIHaUHy7oCabOja1vBhxQ0rSOGqjdP1HeHyaPjBtvA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=FsV+bI66Pdy2oEVRZFLBlACJzR7q64OhTjw9FxTFu0G6N6APK5vM4fKbDFB49lqC1
+         X1eN0DAN9Gg3ItZVm+w0VecFJnaO35Vq6mzJv3yi6gZ5RTw1oJOY5w6lWF99cF6ktp
+         m9LmcNAFG1HzRGYK8QvFEJkT/sRY+mY4D5/4HxcU=
+Received: from [10.206.28.9] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 764CC602F8;
+        Mon,  9 Sep 2019 07:48:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568015325;
+        bh=LBIHaUHy7oCabOja1vBhxQ0rSOGqjdP1HeHyaPjBtvA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=FsV+bI66Pdy2oEVRZFLBlACJzR7q64OhTjw9FxTFu0G6N6APK5vM4fKbDFB49lqC1
+         X1eN0DAN9Gg3ItZVm+w0VecFJnaO35Vq6mzJv3yi6gZ5RTw1oJOY5w6lWF99cF6ktp
+         m9LmcNAFG1HzRGYK8QvFEJkT/sRY+mY4D5/4HxcU=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 764CC602F8
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+Subject: Re: [PATCH] clk: qcom: gcc-qcs404: Use floor ops for sdcc clks
+To:     Stephen Boyd <sboyd@kernel.org>, Vinod Koul <vkoul@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190906045659.20621-1-vkoul@kernel.org>
+ <20190906203827.A2259208C3@mail.kernel.org>
+From:   Taniya Das <tdas@codeaurora.org>
+Message-ID: <adaad84a-15ce-3212-9fec-7ff387da2a88@codeaurora.org>
+Date:   Mon, 9 Sep 2019 13:18:39 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190904023515.7107-5-andrew.smirnov@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190906203827.A2259208C3@mail.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 07:35:07PM -0700, Andrey Smirnov wrote:
-> With IRQ requesting being managed by devres we need to make sure that
-> we dispose of IRQ mapping after and not before it is free'd (otherwise
-> we'll end up with a warning from the kernel). To achieve that simply
-> convert IRQ mapping to rely on devres as well.
+Hi Stephen, Vinod,
+
+On 9/7/2019 2:08 AM, Stephen Boyd wrote:
+> Quoting Vinod Koul (2019-09-05 21:56:59)
+>> Update the gcc qcs404 clock driver to use floor ops for sdcc clocks. As
+>> disuccsed in [1] it is good idea to use floor ops for sdcc clocks as we
+>> dont want the clock rates to do round up.
+>>
+>> [1]: https://lore.kernel.org/linux-arm-msm/20190830195142.103564-1-swboyd@chromium.org/
+>>
+>> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+>> ---
 > 
-> Fixes: f314f12db65c ("crypto: caam - convert caam_jr_init() to use devres")
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Horia Geantă <horia.geanta@nxp.com>
-> Cc: Herbert Xu <herbert@gondor.apana.org.au>
-> Cc: Iuliana Prodan <iuliana.prodan@nxp.com>
-> Cc: linux-crypto@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  drivers/crypto/caam/jr.c | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
+> Is Taniya writing the rest? Please don't dribble it out over the next
+> few weeks!
 
-I needed to apply this on top of it to shut up the compiler:
+I have pushed the patch : https://patchwork.kernel.org/patch/11137393/
 
----8<---
-While storing an int in a pointer is safe the compiler is not
-happy about it.  So we need some extra casting in order to make
-this warning free.
+Vinod, I have taken care of the QCS404 in the same patch, so as to keep 
+the change in one patch.
 
-Fixes: 1d3f75bce123 ("crypto: caam - dispose of IRQ mapping only...")
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+> 
+>>   drivers/clk/qcom/gcc-qcs404.c | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>
 
-diff --git a/drivers/crypto/caam/jr.c b/drivers/crypto/caam/jr.c
-index 8a30bbd7f2aa..c5acd9e24e14 100644
---- a/drivers/crypto/caam/jr.c
-+++ b/drivers/crypto/caam/jr.c
-@@ -500,7 +500,7 @@ static int caam_jr_init(struct device *dev)
- 
- static void caam_jr_irq_dispose_mapping(void *data)
- {
--	irq_dispose_mapping((int)data);
-+	irq_dispose_mapping((unsigned long)data);
- }
- 
- /*
-@@ -558,7 +558,7 @@ static int caam_jr_probe(struct platform_device *pdev)
- 	}
- 
- 	error = devm_add_action_or_reset(jrdev, caam_jr_irq_dispose_mapping,
--					 (void *)jrpriv->irq);
-+					 (void *)(unsigned long)jrpriv->irq);
- 	if (error)
- 		return error;
- 
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
+
+--
