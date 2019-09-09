@@ -2,82 +2,75 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC50C4360D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 01:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BF6C4360D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 01:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F74420854
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 01:53:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7EE6218AC
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 01:56:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="YmI8WuX1";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gSGn1BhJ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nFoHhQ+r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732570AbfIIBx3 (ORCPT
+        id S1732621AbfIIB4s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Sep 2019 21:53:29 -0400
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:37587 "EHLO
-        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732468AbfIIBx3 (ORCPT
+        Sun, 8 Sep 2019 21:56:48 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:44890 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732304AbfIIB4s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Sep 2019 21:53:29 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id 10CBF666;
-        Sun,  8 Sep 2019 21:53:28 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Sun, 08 Sep 2019 21:53:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=heMFjdjLm+JvFR3BTNKLlq77Ee6tOAO
-        N0xWmiX14zOI=; b=YmI8WuX1c6avsekUIqvUMCvoL5nWhFoFIH5/qo6lETy4oD6
-        QJpJ+hZaKzUjzYutk7BvrTcJrJAiz93NZJ/fVza9Po0xCYaBw4Zf3GA1dPE2DdH6
-        /gLiU9I8M+/+QUjWk1dRId5eI0qvyTgg528yon0CYwj+/Hxj82NMI6d47KWydh9g
-        GmloJFgP1dXiKXi0MH3N0NUBojzpk+CKg3jUABf7KikhUMIq+RXmqSoWv2uwtW4P
-        xbE+Ho0JMt1gbWthpGd5o0DvOMpqa3pZddM8a05IXvcljURRd3nkbZI68bEENRT/
-        WmUay8+80ZZh5evknhzJV+X027qKRNZ4NM1X93Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=heMFjd
-        jLm+JvFR3BTNKLlq77Ee6tOAON0xWmiX14zOI=; b=gSGn1BhJpBwVTeKbLSPJA1
-        nxu2WvzJEwAB8CyiOc6NZ229kLL8jDpaxwZgQZ1ouxjdS9aho3AONtviggLXosSJ
-        ipunIvNZWwYyQe+Jg37Z9jVK5ct9kT9NhaJnHMm1956cX5w2bjm4PWnd3w1C6eTK
-        TVYGEUxIt2vSSDYAY08xtcJgMZ49qY1GX7ksbvjLRZVHfDHHomrllhDMMPIOqKUi
-        JiVHQU3hKHZV+7s1M/CWmOxw4m3HPzetsIDxgwc3Vh3VStHvrX+oD5OtALPwHjBL
-        xSWVM5aKfqvq96DN6BAx0t8IUjlg2WOQrh/5qpDNDeETBVT6N7m/bWlYQA7Ivb7g
-        ==
-X-ME-Sender: <xms:lrB1XScWpoS1AmB5PU0MLKUKeiGdl6CYlDuLyctnMRi9XZstGYI6eg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudekhedghedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreerjeenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecuffhomh
-    grihhnpeifihhnughofidrqddqqdhpihhnghenucfrrghrrghmpehmrghilhhfrhhomhep
-    rghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:lrB1XQdut5HhPiTBXjQBDcD9DwwNfNIczAWlXMW_KvqFBtXjmcs_Bg>
-    <xmx:lrB1XegPExrUQOkXqQV9GHlrPEzlgxNS2Omg0jHhJZvmMiFNtxUtug>
-    <xmx:lrB1XUQ_RyOIpSfLtN_-cNbLBFPNM5u3GafpvVUsTFXrmMKqhUSCdw>
-    <xmx:l7B1XSvhSHVcRDCU41Ecxe_h3Db164lAofWbrkTrQC_qRQYnbPmK1w>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 87B75E00A3; Sun,  8 Sep 2019 21:53:26 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-188-g385deb1-fmstable-20190905v2
-Mime-Version: 1.0
-Message-Id: <5f66333d-1621-4e36-b138-52453f61cc68@www.fastmail.com>
-In-Reply-To: <20190829071738.2523-1-andrew@aj.id.au>
-References: <20190829071738.2523-1-andrew@aj.id.au>
-Date:   Mon, 09 Sep 2019 11:23:57 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     linux-gpio@vger.kernel.org,
-        "Linus Walleij" <linus.walleij@linaro.org>
-Cc:     "Joel Stanley" <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org,
-        openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, "John Wang" <wangzqbj@inspur.com>
-Subject: =?UTF-8?Q?Re:_[PATCH_pinctrl/fixes]_pinctrl:_aspeed:_Fix_spurious_mux_fa?=
- =?UTF-8?Q?ilures_on_the_AST2500?=
-Content-Type: text/plain
+        Sun, 8 Sep 2019 21:56:48 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x891ucNi093546;
+        Sun, 8 Sep 2019 20:56:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1567994198;
+        bh=lUH/u9a2zTD6UF778x023rDtCPXhaWcsnAHpbSuBK3o=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=nFoHhQ+r46Wn0jPfAF+YacwzfnNk4mm29ggO1pW5VUXM90PuQMzsYZ7PQda6sx/nm
+         wkxRkAYX44pkz21mUWS5IbKnkVQBZzd3W+oqvcyirTBTQPFuwObt+WBpGWFn15uiJw
+         eXh3LIsGFqpFkBGe4/BjbIdlFokfub5YhMT0GjiQ=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x891ubNL019345
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sun, 8 Sep 2019 20:56:38 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Sun, 8 Sep
+ 2019 20:56:37 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Sun, 8 Sep 2019 20:56:37 -0500
+Received: from [172.24.191.45] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x891uWaN094203;
+        Sun, 8 Sep 2019 20:56:32 -0500
+Subject: Re: [PATCH] bus: ti-sysc: Remove unpaired sysc_clkdm_deny_idle()
+To:     Tony Lindgren <tony@atomide.com>, <linux-omap@vger.kernel.org>
+CC:     "Andrew F . Davis" <afd@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+References: <20190906200154.6510-1-tony@atomide.com>
+From:   Keerthy <j-keerthy@ti.com>
+Message-ID: <40e5c2a1-3682-584a-4eb9-4d96901bbfda@ti.com>
+Date:   Mon, 9 Sep 2019 07:27:12 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190906200154.6510-1-tony@atomide.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -85,46 +78,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On Thu, 29 Aug 2019, at 16:47, Andrew Jeffery wrote:
-> Commit 674fa8daa8c9 ("pinctrl: aspeed-g5: Delay acquisition of regmaps")
-> was determined to be a partial fix to the problem of acquiring the LPC
-> Host Controller and GFX regmaps: The AST2500 pin controller may need to
-> fetch syscon regmaps during expression evaluation as well as when
-> setting mux state. For example, this case is hit by attempting to export
-> pins exposing the LPC Host Controller as GPIOs.
+On 07/09/19 1:31 AM, Tony Lindgren wrote:
+> Commit d098913a10f8 ("bus: ti-sysc: Fix clock handling for no-idle
+> quirks") fixed handling for no-idle quirk modules that are not enabled
+> by the bootloader.
 > 
-> An optional eval() hook is added to the Aspeed pinmux operation struct
-> and called from aspeed_sig_expr_eval() if the pointer is set by the
-> SoC-specific driver. This enables the AST2500 to perform the custom
-> action of acquiring its regmap dependencies as required.
+> But it also caused unpaired clockdomain calls that won't allow idling
+> the system. That's because clkdm_allow_idle_nolock() and
+> clkdm_deny_idle_nolock() have usage count with clkdm->forcewake_count.
 > 
-> John Wang tested the fix on an Inspur FP5280G2 machine (AST2500-based)
-> where the issue was found, and I've booted the fix on Witherspoon
-> (AST2500) and Palmetto (AST2400) machines, and poked at relevant pins
-> under QEMU by forcing mux configurations via devmem before exporting
-> GPIOs to exercise the driver.
-> 
-> Fixes: 7d29ed88acbb ("pinctrl: aspeed: Read and write bits in LPC and 
-> GFX controllers")
-> Fixes: 674fa8daa8c9 ("pinctrl: aspeed-g5: Delay acquisition of regmaps")
-> Reported-by: John Wang <wangzqbj@inspur.com>
-> Tested-by: John Wang <wangzqbj@inspur.com>
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> 
-> ---
-> Hi Linus,
-> 
-> The timing of merging the AST2600 (g6) driver and 674fa8daa8c9 ("pinctrl:
-> aspeed-g5: Delay acquisition of regmaps") caused a bit of a rough spot a
-> few weeks back. This fix doesn't cause any such disruption - I've
-> developed it on top of pinctrl/fixes and back-merged the result into
-> pinctrl/devel to test for build breakage (via CONFIG_COMPILE_TEST to
-> enable all of the g4, g5 and g6 drivers). All three ASPEED pinctrl
-> drivers built successfully, so it should be enough to simply take this
-> patch through pinctrl/fixes and leave pinctrl/devel as is for the 5.4
-> merge window.
-> ---
+> Let's drop the unpaired sysc_clkdm_deny_idle() to fix idling of devices.
 
-Ping? Was hoping to get this merged before 5.3 is tagged.
+Tested-by: Keerthy <j-keerthy@ti.com>
 
-Andrew
+I believe still the previous fix [1] for nfs boot is still not on 
+linux-next. Are you planning on more testing or it will be queued as fixes?
+
+
+[1] https://lkml.org/lkml/2019/9/5/616
+
+- Keerthy
+
+> 
+> Fixes: d098913a10f8 ("bus: ti-sysc: Fix clock handling for no-idle quirks")
+> Cc: Keerthy <j-keerthy@ti.com>
+> Cc: Vignesh Raghavendra <vigneshr@ti.com>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> ---
+>   drivers/bus/ti-sysc.c | 1 -
+>   1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+> --- a/drivers/bus/ti-sysc.c
+> +++ b/drivers/bus/ti-sysc.c
+> @@ -2363,7 +2363,6 @@ static void ti_sysc_idle(struct work_struct *work)
+>   	 */
+>   	if (ddata->cfg.quirks & (SYSC_QUIRK_NO_IDLE |
+>   				 SYSC_QUIRK_NO_IDLE_ON_INIT)) {
+> -		sysc_clkdm_deny_idle(ddata);
+>   		sysc_disable_main_clocks(ddata);
+>   		sysc_disable_opt_clocks(ddata);
+>   		sysc_clkdm_allow_idle(ddata);
+> 
