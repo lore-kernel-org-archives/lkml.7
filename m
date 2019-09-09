@@ -2,92 +2,173 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B67C00307
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 07:59:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C32C5C433EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 08:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B19BC218AC
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 07:59:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F1272086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 08:01:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568016074;
+	bh=WeTo+BdvzzbRRxQlI462OFYzEzPSy9ztUAYVF2pRjGg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EM/Ez/+FsvSmg/KWRTltg7ybRgEcRS67vZMuuncl7Ysug4WM9+XXTDNsuDb2X8MBc
+	 GMqK6E0NB8m98IDtCabMzcOXeGZ7Fnd4KntJ+3QPyjBnCrKmRN7wBh6zNFN9PW4FLJ
+	 exXWNAkUPZCpYK8fSerjC5cli1Nqq2QwGwsjrLkE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388717AbfIIH7s (ORCPT
+        id S1732085AbfIIIBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 03:59:48 -0400
-Received: from mga03.intel.com ([134.134.136.65]:35724 "EHLO mga03.intel.com"
+        Mon, 9 Sep 2019 04:01:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725999AbfIIH7q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 03:59:46 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Sep 2019 00:59:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,484,1559545200"; 
-   d="scan'208";a="335516815"
-Received: from pipin.fi.intel.com ([10.237.72.175])
-  by orsmga004.jf.intel.com with ESMTP; 09 Sep 2019 00:59:44 -0700
-From:   Felipe Balbi <felipe.balbi@linux.intel.com>
-To:     Richard Cochran <richardcochran@gmail.com>
-Cc:     Christopher S Hall <christopher.s.hall@intel.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: [PATCH v3 2/2] PTP: add support for one-shot output
-Date:   Mon,  9 Sep 2019 10:59:40 +0300
-Message-Id: <20190909075940.12843-2-felipe.balbi@linux.intel.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190909075940.12843-1-felipe.balbi@linux.intel.com>
-References: <20190909075940.12843-1-felipe.balbi@linux.intel.com>
+        id S1725818AbfIIIBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 04:01:13 -0400
+Received: from localhost (unknown [148.69.85.38])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B00E2067D;
+        Mon,  9 Sep 2019 08:01:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568016071;
+        bh=WeTo+BdvzzbRRxQlI462OFYzEzPSy9ztUAYVF2pRjGg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=S1baNIpVVJ3kqOR8CcDgqkO0yY+88QdTS0YFD7Rk6IUya9rMHInST+bgXFwYTG4pU
+         AX1RGz+Nc0hV31OsuvevdJ3EkZK/50w66WOhHnOucKqtUH1QGhtQhTuoXVw6S7q/fv
+         EyNxp+gxPWztxQ+Erg4ZIwtwNrIMtQtxbQU5zwmc=
+Date:   Mon, 9 Sep 2019 09:01:08 +0100
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [f2fs-dev] [PATCH 2/2] f2fs: avoid infinite GC loop due to stale
+ atomic files
+Message-ID: <20190909080108.GC21625@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190909012532.20454-1-jaegeuk@kernel.org>
+ <20190909012532.20454-2-jaegeuk@kernel.org>
+ <f446ff29-38a5-61fd-4056-b4067b01c630@huawei.com>
+ <20190909073011.GA21625@jaegeuk-macbookpro.roam.corp.google.com>
+ <5a473076-14b8-768a-62ac-f686e850d5a6@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5a473076-14b8-768a-62ac-f686e850d5a6@huawei.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some controllers allow for a one-shot output pulse, in contrast to
-periodic output. Now that we have extensible versions of our IOCTLs, we
-can finally make use of the 'flags' field to pass a bit telling driver
-that if we want one-shot pulse output.
+On 09/09, Chao Yu wrote:
+> On 2019/9/9 15:30, Jaegeuk Kim wrote:
+> > On 09/09, Chao Yu wrote:
+> >> On 2019/9/9 9:25, Jaegeuk Kim wrote:
+> >>> If committing atomic pages is failed when doing f2fs_do_sync_file(), we can
+> >>> get commited pages but atomic_file being still set like:
+> >>>
+> >>> - inmem:    0, atomic IO:    4 (Max.   10), volatile IO:    0 (Max.    0)
+> >>>
+> >>> If GC selects this block, we can get an infinite loop like this:
+> >>>
+> >>> f2fs_submit_page_bio: dev = (253,7), ino = 2, page_index = 0x2359a8, oldaddr = 0x2359a8, newaddr = 0x2359a8, rw = READ(), type = COLD_DATA
+> >>> f2fs_submit_read_bio: dev = (253,7)/(253,7), rw = READ(), DATA, sector = 18533696, size = 4096
+> >>> f2fs_get_victim: dev = (253,7), type = No TYPE, policy = (Foreground GC, LFS-mode, Greedy), victim = 4355, cost = 1, ofs_unit = 1, pre_victim_secno = 4355, prefree = 0, free = 234
+> >>> f2fs_iget: dev = (253,7), ino = 6247, pino = 5845, i_mode = 0x81b0, i_size = 319488, i_nlink = 1, i_blocks = 624, i_advise = 0x2c
+> >>> f2fs_submit_page_bio: dev = (253,7), ino = 2, page_index = 0x2359a8, oldaddr = 0x2359a8, newaddr = 0x2359a8, rw = READ(), type = COLD_DATA
+> >>> f2fs_submit_read_bio: dev = (253,7)/(253,7), rw = READ(), DATA, sector = 18533696, size = 4096
+> >>> f2fs_get_victim: dev = (253,7), type = No TYPE, policy = (Foreground GC, LFS-mode, Greedy), victim = 4355, cost = 1, ofs_unit = 1, pre_victim_secno = 4355, prefree = 0, free = 234
+> >>> f2fs_iget: dev = (253,7), ino = 6247, pino = 5845, i_mode = 0x81b0, i_size = 319488, i_nlink = 1, i_blocks = 624, i_advise = 0x2c
+> >>>
+> >>> In that moment, we can observe:
+> >>>
+> >>> [Before]
+> >>> Try to move 5084219 blocks (BG: 384508)
+> >>>   - data blocks : 4962373 (274483)
+> >>>   - node blocks : 121846 (110025)
+> >>> Skipped : atomic write 4534686 (10)
+> >>>
+> >>> [After]
+> >>> Try to move 5088973 blocks (BG: 384508)
+> >>>   - data blocks : 4967127 (274483)
+> >>>   - node blocks : 121846 (110025)
+> >>> Skipped : atomic write 4539440 (10)
+> >>>
+> >>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> >>> ---
+> >>>  fs/f2fs/file.c | 10 +++++-----
+> >>>  1 file changed, 5 insertions(+), 5 deletions(-)
+> >>>
+> >>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> >>> index 7ae2f3bd8c2f..68b6da734e5f 100644
+> >>> --- a/fs/f2fs/file.c
+> >>> +++ b/fs/f2fs/file.c
+> >>> @@ -1997,11 +1997,11 @@ static int f2fs_ioc_commit_atomic_write(struct file *filp)
+> >>>  			goto err_out;
+> >>>  
+> >>>  		ret = f2fs_do_sync_file(filp, 0, LLONG_MAX, 0, true);
+> >>> -		if (!ret) {
+> >>> -			clear_inode_flag(inode, FI_ATOMIC_FILE);
+> >>> -			F2FS_I(inode)->i_gc_failures[GC_FAILURE_ATOMIC] = 0;
+> >>> -			stat_dec_atomic_write(inode);
+> >>> -		}
+> >>> +
+> >>> +		/* doesn't need to check error */
+> >>> +		clear_inode_flag(inode, FI_ATOMIC_FILE);
+> >>> +		F2FS_I(inode)->i_gc_failures[GC_FAILURE_ATOMIC] = 0;
+> >>> +		stat_dec_atomic_write(inode);
+> >>
+> >> If there are still valid atomic write pages linked in .inmem_pages, it may cause
+> >> memory leak when we just clear FI_ATOMIC_FILE flag.
+> > 
+> > f2fs_commit_inmem_pages() should have flushed them.
+> 
+> Oh, we failed to flush its nodes.
+> 
+> However we won't clear such info if we failed to flush inmen pages, it looks
+> inconsistent.
+> 
+> Any interface needed to drop inmem pages or clear ATOMIC_FILE flag in that two
+> error path? I'm not very clear how sqlite handle such error.
 
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
----
+f2fs_drop_inmem_pages() did that, but not in this case.
 
-Changes since v2:
-	- Add _PEROUT_ to bit macro
-
-Changes since v1:
-	- remove comment from .flags field
-
- include/uapi/linux/ptp_clock.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/include/uapi/linux/ptp_clock.h b/include/uapi/linux/ptp_clock.h
-index 12911785991b..cbdc0d97b471 100644
---- a/include/uapi/linux/ptp_clock.h
-+++ b/include/uapi/linux/ptp_clock.h
-@@ -38,8 +38,8 @@
- /*
-  * Bits of the ptp_perout_request.flags field:
-  */
--#define PTP_PEROUT_VALID_FLAGS (~0)
--
-+#define PTP_PEROUT_ONE_SHOT (1<<0)
-+#define PTP_PEROUT_VALID_FLAGS	(~PTP_PEROUT_ONE_SHOT)
- /*
-  * struct ptp_clock_time - represents a time value
-  *
-@@ -77,7 +77,7 @@ struct ptp_perout_request {
- 	struct ptp_clock_time start;  /* Absolute start time. */
- 	struct ptp_clock_time period; /* Desired period, zero means disable. */
- 	unsigned int index;           /* Which channel to configure. */
--	unsigned int flags;           /* Reserved for future use. */
-+	unsigned int flags;
- 	unsigned int rsv[4];          /* Reserved for future use. */
- };
- 
--- 
-2.23.0
-
+> 
+> Thanks,
+> 
+> > 
+> >>
+> >> So my question is why below logic didn't handle such condition well?
+> >>
+> >> f2fs_gc()
+> >>
+> >> 	if (has_not_enough_free_secs(sbi, sec_freed, 0)) {
+> >> 		if (skipped_round <= MAX_SKIP_GC_COUNT ||
+> >> 					skipped_round * 2 < round) {
+> >> 			segno = NULL_SEGNO;
+> >> 			goto gc_more;
+> >> 		}
+> >>
+> >> 		if (first_skipped < last_skipped &&
+> >> 				(last_skipped - first_skipped) >
+> >> 						sbi->skipped_gc_rwsem) {
+> >> 			f2fs_drop_inmem_pages_all(sbi, true);
+> > 
+> > This is doing nothing, since f2fs_commit_inmem_pages() removed the inode
+> > from inmem list.
+> > 
+> >> 			segno = NULL_SEGNO;
+> >> 			goto gc_more;
+> >> 		}
+> >> 		if (gc_type == FG_GC && !is_sbi_flag_set(sbi, SBI_CP_DISABLED))
+> >> 			ret = f2fs_write_checkpoint(sbi, &cpc);
+> >> 	}
+> >>
+> >>>  	} else {
+> >>>  		ret = f2fs_do_sync_file(filp, 0, LLONG_MAX, 1, false);
+> >>>  	}
+> >>>
+> > .
+> > 
