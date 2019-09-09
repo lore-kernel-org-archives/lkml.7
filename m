@@ -2,146 +2,80 @@ Return-Path: <SRS0=hqT0=XE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4540C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA22FC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:13:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A27EB2196E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:12:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B38F22196E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Sep 2019 15:13:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568042027;
+	bh=OczvaEWRZL6NBT+VidhTnFSZ337CKbE2ZtYD2wSxjbg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WL9XxoF1kjP8EBCh92VdYsdfEXjJITPHgIQZiRR0RKpuOPZspJ/cGIO7TqlDhPhJf
+	 wws27fc7qMQcWB00tSoD6nkX5NwIWmPM+srvR7fgHa42KqginlFIJ4DsLLFCt1TIlt
+	 pd9Nhf70fVscwC3g5Z+x3fspMqH4sPJFf9baFgKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388109AbfIIPMO (ORCPT
+        id S1727674AbfIIPNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 11:12:14 -0400
-Received: from mga06.intel.com ([134.134.136.31]:38457 "EHLO mga06.intel.com"
+        Mon, 9 Sep 2019 11:13:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726587AbfIIPMO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 11:12:14 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Sep 2019 08:12:12 -0700
-X-IronPort-AV: E=Sophos;i="5.64,486,1559545200"; 
-   d="scan'208";a="335622307"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Sep 2019 08:12:12 -0700
-Message-ID: <f2fc0cda183098aa9b3b071ff0f49249f6d94bd5.camel@linux.intel.com>
-Subject: Re: [PATCH v9 1/8] mm: Add per-cpu logic to page shuffling
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     virtio-dev@lists.oasis-open.org, kvm@vger.kernel.org,
-        mst@redhat.com, catalin.marinas@arm.com, david@redhat.com,
-        dave.hansen@intel.com, linux-kernel@vger.kernel.org,
-        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org, osalvador@suse.de,
-        yang.zhang.wz@gmail.com, pagupta@redhat.com,
-        konrad.wilk@oracle.com, nitesh@redhat.com, riel@surriel.com,
-        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        ying.huang@intel.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com, fengguang.wu@intel.com,
-        kirill.shutemov@linux.intel.com
-Date:   Mon, 09 Sep 2019 08:12:12 -0700
-In-Reply-To: <20190909090701.7ebz4foxyu3rxzvc@box>
-References: <20190907172225.10910.34302.stgit@localhost.localdomain>
-         <20190907172512.10910.74435.stgit@localhost.localdomain>
-         <20190909090701.7ebz4foxyu3rxzvc@box>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        id S1726171AbfIIPNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 11:13:46 -0400
+Received: from localhost (unknown [148.69.85.38])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9895F218DE;
+        Mon,  9 Sep 2019 15:13:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568042026;
+        bh=OczvaEWRZL6NBT+VidhTnFSZ337CKbE2ZtYD2wSxjbg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=c5paWlIAqD2qaRD+OPdm/FmQISn2MvatJnaO3ZDAwL2QbxW2ecVqOFRUHcI1nEsFh
+         xVL28vB3dCtkl0hwmpA+ok77bZ2UVWS3csNwd+ppDYoBO/pOAY5qpFSb3/3KsLWDTY
+         X6QwNVRqe4baT7PAq0vgMfrpyQL5nd2jT35LjydU=
+Date:   Mon, 9 Sep 2019 17:13:43 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [patch V2 2/6] posix-cpu-timers: Fix permission check regression
+Message-ID: <20190909151342.GA2319@lerouge>
+References: <20190905120339.561100423@linutronix.de>
+ <20190905120539.797994508@linutronix.de>
+ <20190905173148.GE18251@lenoir>
+ <alpine.DEB.2.21.1909052054200.1902@nanos.tec.linutronix.de>
+ <alpine.DEB.2.21.1909052314110.1902@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1909052314110.1902@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-09-09 at 12:07 +0300, Kirill A. Shutemov wrote:
-> On Sat, Sep 07, 2019 at 10:25:12AM -0700, Alexander Duyck wrote:
-> > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > 
-> > Change the logic used to generate randomness in the suffle path so that we
-> 
-> Typo.
-> 
-> > can avoid cache line bouncing. The previous logic was sharing the offset
-> > and entropy word between all CPUs. As such this can result in cache line
-> > bouncing and will ultimately hurt performance when enabled.
-> > 
-> > To resolve this I have moved to a per-cpu logic for maintaining a unsigned
-> > long containing some amount of bits, and an offset value for which bit we
-> > can use for entropy with each call.
-> > 
-> > Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > ---
-> >  mm/shuffle.c |   33 +++++++++++++++++++++++----------
-> >  1 file changed, 23 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/mm/shuffle.c b/mm/shuffle.c
-> > index 3ce12481b1dc..9ba542ecf335 100644
-> > --- a/mm/shuffle.c
-> > +++ b/mm/shuffle.c
-> > @@ -183,25 +183,38 @@ void __meminit __shuffle_free_memory(pg_data_t *pgdat)
-> >  		shuffle_zone(z);
-> >  }
-> >  
-> > +struct batched_bit_entropy {
-> > +	unsigned long entropy_bool;
-> > +	int position;
-> > +};
-> > +
-> > +static DEFINE_PER_CPU(struct batched_bit_entropy, batched_entropy_bool);
-> > +
-> >  void add_to_free_area_random(struct page *page, struct free_area *area,
-> >  		int migratetype)
-> >  {
-> > -	static u64 rand;
-> > -	static u8 rand_bits;
-> > +	struct batched_bit_entropy *batch;
-> > +	unsigned long entropy;
-> > +	int position;
-> >  
-> >  	/*
-> > -	 * The lack of locking is deliberate. If 2 threads race to
-> > -	 * update the rand state it just adds to the entropy.
-> > +	 * We shouldn't need to disable IRQs as the only caller is
-> > +	 * __free_one_page and it should only be called with the zone lock
-> > +	 * held and either from IRQ context or with local IRQs disabled.
-> >  	 */
-> > -	if (rand_bits == 0) {
-> > -		rand_bits = 64;
-> > -		rand = get_random_u64();
-> > +	batch = raw_cpu_ptr(&batched_entropy_bool);
-> > +	position = batch->position;
-> > +
-> > +	if (--position < 0) {
-> > +		batch->entropy_bool = get_random_long();
-> > +		position = BITS_PER_LONG - 1;
-> >  	}
-> >  
-> > -	if (rand & 1)
-> > +	batch->position = position;
-> > +	entropy = batch->entropy_bool;
-> > +
-> > +	if (1ul & (entropy >> position))
-> 
-> Maybe something like this would be more readble:
-> 
-> 	if (entropy & BIT(position))
-> 
-> >  		add_to_free_area(page, area, migratetype);
-> >  	else
-> >  		add_to_free_area_tail(page, area, migratetype);
-> > -	rand_bits--;
-> > -	rand >>= 1;
-> >  }
-> > 
-> > 
+On Thu, Sep 05, 2019 at 11:15:08PM +0200, Thomas Gleixner wrote:
+> +	if (gettime) {
+> +		/*
+> +		 * For clock_gettime(PROCESS) the task does not need to be
+> +		 * the actual group leader. tsk->sighand gives
+> +		 * access to the group's clock.
+> +		 *
+> +		 * Timers need the group leader because they take a
+> +		 * reference on it and store the task pointer until the
+> +		 * timer is destroyed.
 
-Thanks for the review. I will update these two items for v10.
+Well, that would work with a non group leader as well but anyway that wouldn't
+be pretty.
 
-- Alex
-
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
