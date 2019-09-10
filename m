@@ -2,85 +2,123 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD03C49ED9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 18:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BAB1C49ED9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 18:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EBD921019
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 18:46:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568141178;
-	bh=rQ/nvK3T9rENRRBG/OIG+/iIDCn7OyCZ4JAA2hbwlf8=;
-	h=From:To:Subject:Date:List-ID:From;
-	b=P6v2CTiAqllplRNL2Yuc4UkYd0vgrynE71ijqgNTs7U+zD18uDAPkI/Jpac5L8jpc
-	 LczjKBCKL1z46vcOwtfxDpY/7qpLOEP4iyvi7bGXcNurzU+MRTk6ktfm4/mJadD1YR
-	 E1twanPTrPrgffXqqjLhHX7T8z0uJdtgYMeuxCg0=
+	by mail.kernel.org (Postfix) with ESMTP id 29C0421928
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 18:46:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727567AbfIJSqR (ORCPT
+        id S1728214AbfIJSq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 14:46:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47040 "EHLO mail.kernel.org"
+        Tue, 10 Sep 2019 14:46:56 -0400
+Received: from sauhun.de ([88.99.104.3]:50760 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725875AbfIJSqR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 14:46:17 -0400
-Received: from localhost.localdomain (unknown [194.230.155.145])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E7DF2084D;
-        Tue, 10 Sep 2019 18:46:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568141176;
-        bh=rQ/nvK3T9rENRRBG/OIG+/iIDCn7OyCZ4JAA2hbwlf8=;
-        h=From:To:Subject:Date:From;
-        b=F9pwHGOzODffz54jObJUi5RmOvoC49GZ2Uq69cWJmiDkebXOFkE6n6Cv6doNUrs2k
-         ZcGqaUxqWSG/NBp3/LP3UiaoEKoU+dZSH+oDEP64WHC9hJUHvrH9zcUL2jsw/O9uUW
-         yYqoq9zcdYb7USbibjI3TqhRQq+4Ga6BwsPkQzQY=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND] ia64: configs: Remove useless UEVENT_HELPER_PATH
-Date:   Tue, 10 Sep 2019 20:46:05 +0200
-Message-Id: <20190910184605.21959-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        id S1725875AbfIJSq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 14:46:56 -0400
+Received: from localhost (234.77.63.94.rev.vodafone.pt [94.63.77.234])
+        by pokefinder.org (Postfix) with ESMTPSA id 19EC92C0095;
+        Tue, 10 Sep 2019 20:46:54 +0200 (CEST)
+Date:   Tue, 10 Sep 2019 19:46:53 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     Peter Rosin <peda@axentia.se>, jacopo mondi <jacopo@jmondi.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Vladimir Zapolskiy <vz@mleia.com>
+Subject: Re: [RFC,v2 2/6] i2c: add I2C Address Translator (ATR) support
+Message-ID: <20190910184653.GB5581@kunai>
+References: <20190723203723.11730-1-luca@lucaceresoli.net>
+ <20190723203723.11730-3-luca@lucaceresoli.net>
+ <20190901143101.humomdehy5ee73sk@vino>
+ <20bac324-c4d3-270c-5175-0a7f261fd760@lucaceresoli.net>
+ <51dede3c-545b-b66a-5e89-9e889d784eb9@axentia.se>
+ <2d770b36-9521-820d-726a-bc9b52048ef8@lucaceresoli.net>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="8P1HSweYDcXXzwPJ"
+Content-Disposition: inline
+In-Reply-To: <2d770b36-9521-820d-726a-bc9b52048ef8@lucaceresoli.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the CONFIG_UEVENT_HELPER_PATH because:
-1. It is disabled since commit 1be01d4a5714 ("driver: base: Disable
-   CONFIG_UEVENT_HELPER by default") as its dependency (UEVENT_HELPER) was
-   made default to 'n',
-2. It is not recommended (help message: "This should not be used today
-   [...] creates a high system load") and was kept only for ancient
-   userland,
-3. Certain userland specifically requests it to be disabled (systemd
-   README: "Legacy hotplug slows down the system and confuses udev").
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- arch/ia64/configs/generic_defconfig | 1 -
- 1 file changed, 1 deletion(-)
+--8P1HSweYDcXXzwPJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/ia64/configs/generic_defconfig b/arch/ia64/configs/generic_defconfig
-index 661d90b3e148..d60851066389 100644
---- a/arch/ia64/configs/generic_defconfig
-+++ b/arch/ia64/configs/generic_defconfig
-@@ -37,7 +37,6 @@ CONFIG_INET=y
- CONFIG_IP_MULTICAST=y
- CONFIG_SYN_COOKIES=y
- # CONFIG_IPV6 is not set
--CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
- CONFIG_CONNECTOR=y
- # CONFIG_PNP_DEBUG_MESSAGES is not set
- CONFIG_BLK_DEV_LOOP=m
--- 
-2.17.1
 
+> I still have to examine in depth all of the problems in the i2c-mux
+> documented in Documentation/i2c/i2c-topology (thanks for having written
+> those docs!), but at first sight it looks like the ATR is not going to
+> introduce big problems because of how it works.
+
+Assuming we are using the previously discussed NEEDS_ATR flag for the adapter
+instead of the attach/detach callbacks:
+
+Can't we then simply understand an ATR as a generic 1:1 mapping device
+which can be setup when registering an adapter?
+
+When we add an adapter using i2c_add_adapter, we have:
+
+
+              .-----.  Slave X @ 0x10
+  .-----.     |     |   |
+  | CPU |--A--| ATR |---+---- B
+  `-----'     |     |
+              `-----'
+
+When we use i2c_add_mux_adapter, we have:
+
+
+                                Slave X @ 0x10
+              .-----.   .-----.   |
+  .-----.     |     |---| ATR |---+---- B
+  | CPU |--A--| MUX |   '-----'
+  `-----'     |     |   .-----.
+              |     |---| ATR |---+---- C
+              `-----'   '-----'   |
+                                 Slave Y @ 0x10
+
+
+That way we could keep the topology handling solely to the mux-core.
+
+Am I overlooking something?
+
+
+--8P1HSweYDcXXzwPJ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1375gACgkQFA3kzBSg
+KbYJow/+JCThTpeS2XICmf9Q3MrO1dOKBMlUgPruJRw4irTMMkrMProjr3EhIYCw
+7LuYkhW8Pessu8F9PbIJ9iU6IDb2UC5+Ao16IdbWYauY/Ij3ayhXsUd3ECl19lo4
+SjbUynLbxbch6xzw4nitl1Vg8pxH1eVHA+3wi60O2eGBr2WHTouAMHa5YI6a6fw6
+5MkxCxS4A08Ss0TUKZhJvl+7WttM5uigTmTsaI8FQLS0T+Z5rlxQIQR0CMP3ZyOR
+1Fc/sndLvWOK5lRk/+v76LC7lFYEXa9ePLqql9IqP00u0qTO+wE+l3t51R5oTjpj
+poXtKqLcjtfyue7efqfYm+rQDu39I9lEguZsp8OivuYQlCkWzRu/IRYSxQSsBmbd
+37XvMAHedHMQy4PIhzRSq9MtprK6RcMgFvUxf3fr/05WW+P2udby4gluEI3ba4lo
+MydbdFgf3rJfLkJ0TjC3GplUjDbffGmQ/uLvcwyxC1i3FCsQrK10NsUScZPg/oM9
+KJjwa06l9ua0MrwDMq1s/3eqcWXCV9kyaIu1bE9CT6hLmJd7yacadcFRo5WqgVK1
+qGBofVZbgsIrerqrYcKdXGS9vFCbsEZP6NQ2JpKHbiEITBy9Cqi1g2Jjo82byCqE
+BtyGllOLEvVIpm8938c9epfklbGk+ZIlWVJciamn1gG89j3bI/4=
+=3L8E
+-----END PGP SIGNATURE-----
+
+--8P1HSweYDcXXzwPJ--
