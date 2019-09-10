@@ -2,100 +2,121 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04255C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E1DC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD2FD21019
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B09521019
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:57:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406517AbfIJG5f (ORCPT
+        id S2406536AbfIJG5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 02:57:35 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:53037 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729634AbfIJG5e (ORCPT
+        Tue, 10 Sep 2019 02:57:39 -0400
+Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:41947 "EHLO
+        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729634AbfIJG5h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 02:57:34 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1i7a5h-0007Cf-NK; Tue, 10 Sep 2019 08:57:29 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 138A21C0714;
-        Tue, 10 Sep 2019 08:57:29 +0200 (CEST)
-Date:   Tue, 10 Sep 2019 06:57:28 -0000
-From:   "tip-bot2 for Josh Poimboeuf" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/objtool] objtool: Clobber user CFLAGS variable
-Cc:     Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <83a276df209962e6058fcb6c615eef9d401c21bc.1567121311.git.jpoimboe@redhat.com>
-References: <83a276df209962e6058fcb6c615eef9d401c21bc.1567121311.git.jpoimboe@redhat.com>
+        Tue, 10 Sep 2019 02:57:37 -0400
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id 7a5ki8cZP50xT7a5niDcUA; Tue, 10 Sep 2019 08:57:36 +0200
+Subject: Re: [PATCH] media: vimc: fla: Add virtual flash subdevice
+To:     =?UTF-8?Q?Lucas_Magalh=c3=a3es?= <lucmaga@gmail.com>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Helen Koike <helen.koike@collabora.com>, edusbarretto@gmail.com
+References: <20190901211139.2405-1-lucmaga@gmail.com>
+ <1fea2f25-98d1-f9f6-a483-17c74f89452e@xs4all.nl>
+ <CAK0xOaGZx5dyDMAFp+JxnrfOYH3yYdvtcJzWdAmHyeRwUe38Lg@mail.gmail.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <4ee1410b-6ab2-b1e2-46e1-734ba69e8d49@xs4all.nl>
+Date:   Tue, 10 Sep 2019 08:57:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Message-ID: <156809864897.24167.16002808408492392040.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <CAK0xOaGZx5dyDMAFp+JxnrfOYH3yYdvtcJzWdAmHyeRwUe38Lg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfKamq/PflL4zEMonyAaFfMMxg3y0lQOgRwwMET9oKFk0ms0iq8qBgSn7Qh3H8EJCej9PSK00T778GW2w+SaVsMZc4Q94KLs9b6MjxmQtIdeBU6wst9hY
+ M0i4FZknYrdIb65f+8RRAwA02T7X2No/dKrRo4n1Dhuv5IUwkLdtGDSblIZD6LDRQFrA1w5gFZvEIFJOw1u9Nuut6oeKI0I3aBoBbo1W+z2cFIQKEUrnJTjz
+ 5/4ukxMl84GVBIyyrTXVphMWOnSFsqhEhrvELg2YZJ+KSWbIJhkVqlQkz/8aPWysEYYUDSB40P58axMCJtl3lg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the core/objtool branch of tip:
+On 9/10/19 1:00 AM, Lucas Magalhães wrote:
+> Hi Hans,
+> Thanks for the review. I fixed most of the issues you found. Just have
+> the question below.
+> 
+> On Mon, Sep 2, 2019 at 9:04 AM Hans Verkuil <hverkuil@xs4all.nl> wrote:
+>>
+>>> +
+>>> +int vimc_fla_add(struct vimc_device *vimc, struct vimc_ent_config *vcfg)
+>>> +{
+>>> +     struct v4l2_device *v4l2_dev = &vimc->v4l2_dev;
+>>> +     struct vimc_fla_device *vfla;
+>>> +     int ret;
+>>> +
+>>> +     /* Allocate the vfla struct */
+>>> +     vfla = kzalloc(sizeof(*vfla), GFP_KERNEL);
+>>> +     if (!vfla)
+>>> +             return -ENOMEM;
+>>> +
+>>> +     v4l2_ctrl_handler_init(&vfla->hdl, 4);
+>>> +
+>>> +     v4l2_ctrl_new_std_menu(&vfla->hdl, &vimc_fla_ctrl_ops,
+>>> +                            V4L2_CID_FLASH_LED_MODE,
+>>> +                            V4L2_FLASH_LED_MODE_TORCH, ~0x7,
+>>> +                            V4L2_FLASH_LED_MODE_NONE);
+>>> +     v4l2_ctrl_new_std_menu(&vfla->hdl, &vimc_fla_ctrl_ops,
+>>> +                            V4L2_CID_FLASH_STROBE_SOURCE, 0x1, ~0x3,
+>>> +                            V4L2_FLASH_STROBE_SOURCE_SOFTWARE);
+>>> +     v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
+>>> +                       V4L2_CID_FLASH_STROBE, 0, 0, 0, 0);
+>>> +     v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
+>>> +                       V4L2_CID_FLASH_STROBE_STOP, 0, 0, 0, 0);
+>>> +     v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
+>>> +                       V4L2_CID_FLASH_TIMEOUT, 1, 10, 1, 10);
+>>> +     v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
+>>> +                       V4L2_CID_FLASH_TORCH_INTENSITY, 0, 255, 1, 255);
+>>> +     v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
+>>> +                       V4L2_CID_FLASH_INTENSITY, 0, 255, 1, 255);
+>>> +     v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
+>>> +                       V4L2_CID_FLASH_INDICATOR_INTENSITY, 0, 255, 1, 255);
+>>> +     v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
+>>> +                       V4L2_CID_FLASH_STROBE_STATUS, 0, 0, 0, 0);
+>>
+>> It would be nice if this would actually reflect the actual strobe status.
+>>
+> Regarding the strobe status I was reading the code and find out that
+> V4L2_CID_FLASH_STROBE_STATUS is a V4L2_CTRL_FLAG_READ_ONLY
+> but it's not a V4L2_CTRL_FLAG_VOLATILE. I found this intriguing. How an
+> I suppose to get it if its not volatile? As I understood it changes over time
+> if the strobe starts and the timeout expire, isn't it? Shouldn't it be volatile
+> if so?
 
-Commit-ID:     f73b3cc39c84220e6dccd463b5c8279b03514646
-Gitweb:        https://git.kernel.org/tip/f73b3cc39c84220e6dccd463b5c8279b03514646
-Author:        Josh Poimboeuf <jpoimboe@redhat.com>
-AuthorDate:    Thu, 29 Aug 2019 18:28:49 -05:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 10 Sep 2019 08:49:52 +02:00
+A non-volatile read-only control is set deterministically by the the driver.
+So the driver calls v4l2_ctrl_s_ctrl() to change the controls value.
 
-objtool: Clobber user CFLAGS variable
+A volatile read-only control is one where the value is read from a hardware
+register that is continuously changing. E.g. if autogain is on, then the gain
+register in a device contains the currently calculated gain, but that might be
+changed the next time the register is read.
 
-If the build user has the CFLAGS variable set in their environment,
-objtool blindly appends to it, which can cause unexpected behavior.
+Regards,
 
-Clobber CFLAGS to ensure consistent objtool compilation behavior.
+	Hans
 
-Reported-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Tested-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/83a276df209962e6058fcb6c615eef9d401c21bc.1567121311.git.jpoimboe@redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- tools/objtool/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> I've already made a simple implementation were V4L2_CID_FLASH_STROBE_STATUS
+> returns after calling V4L2_CID_FLASH_STROBE and becomes false after the timeout
+> time passes.
+> 
+> Thanks!
+> 
 
-diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
-index 8815823..20f67fc 100644
---- a/tools/objtool/Makefile
-+++ b/tools/objtool/Makefile
-@@ -35,7 +35,7 @@ INCLUDES := -I$(srctree)/tools/include \
- 	    -I$(srctree)/tools/arch/$(HOSTARCH)/include/uapi \
- 	    -I$(srctree)/tools/objtool/arch/$(ARCH)/include
- WARNINGS := $(EXTRA_WARNINGS) -Wno-switch-default -Wno-switch-enum -Wno-packed
--CFLAGS   += -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
-+CFLAGS   := -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
- LDFLAGS  += $(LIBELF_LIBS) $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS)
- 
- # Allow old libelf to be used:
