@@ -2,142 +2,174 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02217C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:23:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 832B3C49ED6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD2DF208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:23:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568118198;
-	bh=r0h5+0PNde7Ju2fGtVMrkeh6aOnNcZ8fGDSFqdiXbJ8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=o1WaZg4Go9d4zsSWb9e6aXk2uZGpGQvXklnBQgxW7wEf+u4WDVGYoM3eJ/rppW0ym
-	 Z7RE2X/suzcseHMDncHaQdANNiSRyXGkKOEd48X+GqkF/TEWzBAQPRAAeuHfPQmjkX
-	 gw7MiUgN5J4lg/tMSJSJ+45htf7CaGDC5cZRMAdI=
+	by mail.kernel.org (Postfix) with ESMTP id 5AD83208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:25:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="oYktEStV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391439AbfIJMXR (ORCPT
+        id S2392001AbfIJMZS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 08:23:17 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50384 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727265AbfIJMXR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 08:23:17 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9A3ACB68B;
-        Tue, 10 Sep 2019 12:23:14 +0000 (UTC)
-Date:   Tue, 10 Sep 2019 14:23:13 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     virtio-dev@lists.oasis-open.org, kvm@vger.kernel.org,
-        mst@redhat.com, catalin.marinas@arm.com, david@redhat.com,
-        dave.hansen@intel.com, linux-kernel@vger.kernel.org,
-        willy@infradead.org, linux-mm@kvack.org, akpm@linux-foundation.org,
-        will@kernel.org, linux-arm-kernel@lists.infradead.org,
-        osalvador@suse.de, yang.zhang.wz@gmail.com, pagupta@redhat.com,
-        konrad.wilk@oracle.com, nitesh@redhat.com, riel@surriel.com,
-        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        ying.huang@intel.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com, fengguang.wu@intel.com,
-        alexander.h.duyck@linux.intel.com, kirill.shutemov@linux.intel.com
-Subject: Re: [PATCH v9 3/8] mm: Move set/get_pcppage_migratetype to mmzone.h
-Message-ID: <20190910122313.GW2063@dhcp22.suse.cz>
-References: <20190907172225.10910.34302.stgit@localhost.localdomain>
- <20190907172528.10910.37051.stgit@localhost.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190907172528.10910.37051.stgit@localhost.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 10 Sep 2019 08:25:18 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:55157 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726762AbfIJMZS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 08:25:18 -0400
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190910122515epoutp042c364d88453dbcd3bac5fc99a98ab5a5~DE0yx7Cu81602616026epoutp04e
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 12:25:15 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190910122515epoutp042c364d88453dbcd3bac5fc99a98ab5a5~DE0yx7Cu81602616026epoutp04e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1568118315;
+        bh=sQF95YLtKl5rVaHTr3Uy0/3EKF880fnDcvOaP01+qt0=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=oYktEStVc5P4UzIOEg7/AUEuX8JhREBUrvWSynBIX50dBmcazq4KBRLs9Lo5d+crb
+         VeN6LCrXpuZwU8/LdSqw0Bwv5BpanVcgiINOC5LDzrdJckqPXo7UUmnoL8yztbtxTQ
+         u1ZF9J8TynDOSAG2f1KOJTD5OZBZiG3C6zNRCW60=
+Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+        20190910122515epcas5p152f64e1f15250afc22a1815603e12790~DE0yfknFt3249032490epcas5p1B;
+        Tue, 10 Sep 2019 12:25:15 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        2A.F1.04429.A26977D5; Tue, 10 Sep 2019 21:25:14 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+        20190910122514epcas5p4f00c0f999333dd7707c0a353fd06b57f~DE0yGlI5T2388523885epcas5p4g;
+        Tue, 10 Sep 2019 12:25:14 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190910122514epsmtrp1252b912ff7ce89f6c0f53d30f5a9afd8~DE0yF0WIu1251612516epsmtrp1J;
+        Tue, 10 Sep 2019 12:25:14 +0000 (GMT)
+X-AuditID: b6c32a4a-655ff7000000114d-eb-5d77962abc28
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        7F.B6.03706.A26977D5; Tue, 10 Sep 2019 21:25:14 +0900 (KST)
+Received: from ubuntu.sa.corp.samsungelectronics.net (unknown
+        [107.108.83.125]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190910122513epsmtip2cee3ff68d6694ff80315d5f5f7355488~DE0w1qlZA0913509135epsmtip2K;
+        Tue, 10 Sep 2019 12:25:13 +0000 (GMT)
+From:   Pankaj Dubey <pankaj.dubey@samsung.com>
+To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        Anvesh Salveru <anvesh.s@samsung.com>,
+        Pankaj Dubey <pankaj.dubey@samsung.com>
+Subject: [PATCH 1/2] PCI: dwc: Add support to disable GEN3 equalization
+Date:   Tue, 10 Sep 2019 17:55:01 +0530
+Message-Id: <1568118302-10505-1-git-send-email-pankaj.dubey@samsung.com>
+X-Mailer: git-send-email 2.7.4
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrLIsWRmVeSWpSXmKPExsWy7bCmhq7WtPJYgwuzrC3O7lrIarGkKcNi
+        190OdosVX2ayW1zeNYfN4uy842wWb36/YLdYtPULuwOHx5p5axg9ds66y+6xYFOpR9+WVYwe
+        W/Z/ZvT4vEkugC2KyyYlNSezLLVI3y6BK2PeT8GCQ8IVlxdNZmlgvCHQxcjJISFgIjG77xNb
+        FyMXh5DAbkaJBSfmskI4nxglDm3cwwThfGOUeDnvOhtMy9beaWC2kMBeRonGR1YQRS1MEl9b
+        /zGDJNgEdCWevJ8LZosIWEs0vFoFNpYZZMe/iZeBHA4OYQF3iVtfKkBqWARUJQ7f/MwEEuYV
+        8JDoWuYIsUtO4ua5TmYIewKbxKcThiAlEgIuEh82mECEhSVeHd/CDmFLSbzsb4Oy8yV+LJ7E
+        DLJVQqCFUWLycZDPQBL2EgeuzGEBmcMsoCmxfpc+SJhZgE+i9/cTJojxvBIdbUIQ1WoS35+f
+        gbpARuJh81ImCNtD4v6uqcyQUIiVmLz5PfsERplZCEMXMDKuYpRMLSjOTU8tNi0wykst1ytO
+        zC0uzUvXS87P3cQIjnQtrx2My875HGIU4GBU4uF90FYeK8SaWFZcmXuIUYKDWUmE93pfaawQ
+        b0piZVVqUX58UWlOavEhRmkOFiVx3kmsV2OEBNITS1KzU1MLUotgskwcnFINjCX71Vq7eHve
+        rfy0sDU2OyD3iSNTnpn8/0cLpx5eHB50tPuPCF+F0lM9lXtfbi2Jurrq8RWdmuTlMou5+BxT
+        pwWLzKhifZCqM2f/2curgqcYGqnKPTIT7tgX8KKr7I+05UZW5t2ZBVEFgqG+m14oLTU04mRe
+        OcGgRvHoZo3+R5XHOHfXV1r+UWIpzkg01GIuKk4EAEqYAdDwAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprELMWRmVeSWpSXmKPExsWy7bCSvK7WtPJYg8aVihZndy1ktVjSlGGx
+        624Hu8WKLzPZLS7vmsNmcXbecTaLN79fsFss2vqF3YHDY828NYweO2fdZfdYsKnUo2/LKkaP
+        Lfs/M3p83iQXwBbFZZOSmpNZllqkb5fAlTHvp2DBIeGKy4smszQw3hDoYuTkkBAwkdjaO42t
+        i5GLQ0hgN6PEjvb5zBAJGYnJq1ewQtjCEiv/PWeHKGpikvjd3sUEkmAT0JV48n4uWIOIgK1E
+        w98OZpAiZoGDjBJXlu4DKuLgEBZwl7j1pQKkhkVAVeLwzc9gYV4BD4muZY4Q8+Ukbp7rZJ7A
+        yLOAkWEVo2RqQXFuem6xYYFhXmq5XnFibnFpXrpecn7uJkZwSGlp7mC8vCT+EKMAB6MSD++D
+        tvJYIdbEsuLK3EOMEhzMSiK81/tKY4V4UxIrq1KL8uOLSnNSiw8xSnOwKInzPs07FikkkJ5Y
+        kpqdmlqQWgSTZeLglGpgLJDr3e5wW7Z927E9xtNeydocnWArcs1cI2zN7R1LVijP9jNRydgm
+        GCiZm3JDuXE3/7X2b3qdnzpWq1/3y738uFTl1Hnji+uVS0Lvdkxu5WM/orfqj8Zz49f3crPt
+        i9lM30bP2ZBoMaFn9xY7D5bA20fWWqR/e9m+xmsb56EGlyxpoUqBy/eClViKMxINtZiLihMB
+        57g6VCUCAAA=
+X-CMS-MailID: 20190910122514epcas5p4f00c0f999333dd7707c0a353fd06b57f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20190910122514epcas5p4f00c0f999333dd7707c0a353fd06b57f
+References: <CGME20190910122514epcas5p4f00c0f999333dd7707c0a353fd06b57f@epcas5p4.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 07-09-19 10:25:28, Alexander Duyck wrote:
-> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> 
-> In order to support page reporting it will be necessary to store and
-> retrieve the migratetype of a page. To enable that I am moving the set and
-> get operations for pcppage_migratetype into the mm/internal.h header so
-> that they can be used outside of the page_alloc.c file.
+From: Anvesh Salveru <anvesh.s@samsung.com>
 
-Please describe who is the user and why does it needs this interface.
-This is really important because migratetype is an MM internal thing and
-external users shouldn't really care about it at all. We really do not
-want a random code to call those, especially the set_pcppage_migratetype.
+In some platforms, PCIe PHY may have issues which will prevent linkup
+to happen in GEN3 or high speed. In case equalization fails, link will
+fallback to GEN1.
 
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> ---
->  mm/internal.h   |   18 ++++++++++++++++++
->  mm/page_alloc.c |   18 ------------------
->  2 files changed, 18 insertions(+), 18 deletions(-)
-> 
-> diff --git a/mm/internal.h b/mm/internal.h
-> index 0d5f720c75ab..e4a1a57bbd40 100644
-> --- a/mm/internal.h
-> +++ b/mm/internal.h
-> @@ -549,6 +549,24 @@ static inline bool is_migrate_highatomic_page(struct page *page)
->  	return get_pageblock_migratetype(page) == MIGRATE_HIGHATOMIC;
->  }
->  
-> +/*
-> + * A cached value of the page's pageblock's migratetype, used when the page is
-> + * put on a pcplist. Used to avoid the pageblock migratetype lookup when
-> + * freeing from pcplists in most cases, at the cost of possibly becoming stale.
-> + * Also the migratetype set in the page does not necessarily match the pcplist
-> + * index, e.g. page might have MIGRATE_CMA set but be on a pcplist with any
-> + * other index - this ensures that it will be put on the correct CMA freelist.
-> + */
-> +static inline int get_pcppage_migratetype(struct page *page)
-> +{
-> +	return page->index;
-> +}
-> +
-> +static inline void set_pcppage_migratetype(struct page *page, int migratetype)
-> +{
-> +	page->index = migratetype;
-> +}
-> +
->  void setup_zone_pageset(struct zone *zone);
->  extern struct page *alloc_new_node_page(struct page *page, unsigned long node);
->  #endif	/* __MM_INTERNAL_H */
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 4e4356ba66c7..a791f2baeeeb 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -185,24 +185,6 @@ static int __init early_init_on_free(char *buf)
->  }
->  early_param("init_on_free", early_init_on_free);
->  
-> -/*
-> - * A cached value of the page's pageblock's migratetype, used when the page is
-> - * put on a pcplist. Used to avoid the pageblock migratetype lookup when
-> - * freeing from pcplists in most cases, at the cost of possibly becoming stale.
-> - * Also the migratetype set in the page does not necessarily match the pcplist
-> - * index, e.g. page might have MIGRATE_CMA set but be on a pcplist with any
-> - * other index - this ensures that it will be put on the correct CMA freelist.
-> - */
-> -static inline int get_pcppage_migratetype(struct page *page)
-> -{
-> -	return page->index;
-> -}
-> -
-> -static inline void set_pcppage_migratetype(struct page *page, int migratetype)
-> -{
-> -	page->index = migratetype;
-> -}
-> -
->  #ifdef CONFIG_PM_SLEEP
->  /*
->   * The following functions are used by the suspend/hibernate code to temporarily
+Designware controller has support for disabling GEN3 equalization if
+required. This patch enables the designware driver to disable the PCIe
+GEN3 equalization by writing into PCIE_PORT_GEN3_RELATED.
 
+Platform drivers can disable equalization by setting the dwc_pci_quirk
+flag DWC_EQUALIZATION_DISABLE.
+
+Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
+Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+---
+ drivers/pci/controller/dwc/pcie-designware.c | 7 +++++++
+ drivers/pci/controller/dwc/pcie-designware.h | 7 +++++++
+ 2 files changed, 14 insertions(+)
+
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+index 7d25102..bf82091 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -466,4 +466,11 @@ void dw_pcie_setup(struct dw_pcie *pci)
+ 		break;
+ 	}
+ 	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
++
++	val = dw_pcie_readl_dbi(pci, PCIE_PORT_GEN3_RELATED);
++
++	if (pci->dwc_pci_quirk & DWC_EQUALIZATION_DISABLE)
++		val |= PORT_LOGIC_GEN3_EQ_DISABLE;
++
++	dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
+ }
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index ffed084..a1453c5 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -29,6 +29,9 @@
+ #define LINK_WAIT_MAX_IATU_RETRIES	5
+ #define LINK_WAIT_IATU			9
+ 
++/* Parameters for PCIe Quirks */
++#define DWC_EQUALIZATION_DISABLE	0x1
++
+ /* Synopsys-specific PCIe configuration registers */
+ #define PCIE_PORT_LINK_CONTROL		0x710
+ #define PORT_LINK_MODE_MASK		GENMASK(21, 16)
+@@ -60,6 +63,9 @@
+ #define PCIE_MSI_INTR0_MASK		0x82C
+ #define PCIE_MSI_INTR0_STATUS		0x830
+ 
++#define PCIE_PORT_GEN3_RELATED		0x890
++#define PORT_LOGIC_GEN3_EQ_DISABLE	BIT(16)
++
+ #define PCIE_ATU_VIEWPORT		0x900
+ #define PCIE_ATU_REGION_INBOUND		BIT(31)
+ #define PCIE_ATU_REGION_OUTBOUND	0
+@@ -244,6 +250,7 @@ struct dw_pcie {
+ 	struct dw_pcie_ep	ep;
+ 	const struct dw_pcie_ops *ops;
+ 	unsigned int		version;
++	unsigned int		dwc_pci_quirk;
+ };
+ 
+ #define to_dw_pcie_from_pp(port) container_of((port), struct dw_pcie, pp)
 -- 
-Michal Hocko
-SUSE Labs
+2.7.4
+
