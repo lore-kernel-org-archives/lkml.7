@@ -2,78 +2,72 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA75C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 07:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BEEC4740A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 07:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4290921019
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 07:31:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568100685;
-	bh=6biTzo7iAZosJTEx3rHSrgAsJH7N9jOfN0l1QdidfjU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Zym57SKbJFEzKg1YQsxXc7zrOd4qVxGIaCXj81bkTn94Bu7vYEaTWSZfO3sPRnup9
-	 U/LxQ2jzPfClVDpYEhZP4ZRkqGZgCw6OtueUvy9czpqvwJt79/vaJCR/MUVWJgD3R8
-	 3YhEJn1HVw9R9O4htbxg7V169ier1T10NdudJhU4=
+	by mail.kernel.org (Postfix) with ESMTP id BBF69216F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 07:31:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728938AbfIJHbY (ORCPT
+        id S1732109AbfIJHb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 03:31:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56496 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726008AbfIJHbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 03:31:24 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 53D38B011;
-        Tue, 10 Sep 2019 07:31:22 +0000 (UTC)
-Date:   Tue, 10 Sep 2019 09:31:20 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        Chris Down <chris@chrisdown.name>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>, lkp@01.org,
-        Roman Gushchin <guro@fb.com>
-Subject: Re: [LKP] [mm, memcg] 1e577f970f: will-it-scale.per_process_ops
- -7.2% regression
-Message-ID: <20190910073120.GK2063@dhcp22.suse.cz>
-References: <20190909021544.GP15734@shao2-debian>
- <20190909194652.GE2063@dhcp22.suse.cz>
- <87d0g8hbly.fsf@yhuang-dev.intel.com>
+        Tue, 10 Sep 2019 03:31:27 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:42784 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726008AbfIJHb1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 03:31:27 -0400
+Received: by mail-qk1-f193.google.com with SMTP id f13so15970214qkm.9;
+        Tue, 10 Sep 2019 00:31:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=J4aIbTcgYnsL2jAn60izorNqL2E+CEoVtmdgC/gCJ2A=;
+        b=rA+YV42bahdlJ80KZYTG6Br/IowEbQmS5Ti/4npAstLMK+yviYQ3Bcgsz2fq/TGbHF
+         duOfieiqXaTGK/YC7wEM4gL5Ut1F+JJLXs52bePD3n4DwilGs/viE8ttiv/u6yfyMhbw
+         EocqobjA5Ha8Nz2wmUdnJgTK63rWAVTHOn32mldsL+EvLjzmbvuiPj09PK3usQHrQRmT
+         3DtD78DOZUrmTj5lW1I1iWt3yhF0SGgNcNJV8NyCSz4Dg2/Jt3ahMSivNgLJj4Y7jTr+
+         +MFWsPyxBUteSGgfjj0iw7OavAjdw0wZo9P4LiSNITPNtYEN3FeXJg8Ac9awCOkvYIV3
+         zvpg==
+X-Gm-Message-State: APjAAAVWDyJebX/TmJ1XHcnUIxtqbEOQXJ+KeokVomo0nL6OF9Jcdwxy
+        6487PwdIIbFFrZaumE168c6hrZQka8yHHtLSmRlR9Yp1
+X-Google-Smtp-Source: APXvYqzxfu9hm0NXuOKA2ZPbbiK1FbMXuncwD0ThgVH5KBnNGFfYb5fTYOiTxWRMVJbtLh9Ew4O+xiYHL4ZLpkip+vI=
+X-Received: by 2002:ae9:ef8c:: with SMTP id d134mr27834191qkg.286.1568100685778;
+ Tue, 10 Sep 2019 00:31:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87d0g8hbly.fsf@yhuang-dev.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190909204201.931830-1-arnd@arndb.de> <20190910071030.GG2063@dhcp22.suse.cz>
+In-Reply-To: <20190910071030.GG2063@dhcp22.suse.cz>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 10 Sep 2019 09:31:09 +0200
+Message-ID: <CAK8P3a2_nuy-nxYapRbkZfAa+xABGUSPekEOwTunu4G-=V2cCA@mail.gmail.com>
+Subject: Re: [PATCH] mm: add dummy can_do_mlock() helper
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 10-09-19 15:08:41, Huang, Ying wrote:
-> Michal Hocko <mhocko@kernel.org> writes:
-> 
-> > On Mon 09-09-19 10:15:44, kernel test robot wrote:
-> >> Greeting,
-> >> 
-> >> FYI, we noticed a -7.2% regression of will-it-scale.per_process_ops due to commit:
-> >
-> > What is the memcg setup for this test?
-> 
-> Except enabling memcg in kernel config, we don't do any special
-> setup for memcg for the test.
+On Tue, Sep 10, 2019 at 9:10 AM Michal Hocko <mhocko@kernel.org> wrote:
 
-OK, this is really interesting because the local events introduced by
-this commits do not apply to the root memcg. So this smells like another
-case when a microbenchmark is sensitive on the memcg layout changes.
--- 
-Michal Hocko
-SUSE Labs
+> but IB on nonMMU? Whut? Is there any HW that actually supports this?
+> Just wondering...
+
+Probably not, but I can't think of a good reason to completely disable
+it in Kconfig.
+Almost everything can be built without MMU at the moment, but the subset
+of things that are actually useful is hard to know.
+
+         Arnd
