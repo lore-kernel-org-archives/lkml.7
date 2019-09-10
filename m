@@ -2,74 +2,85 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83186C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1810C49ED6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 596BB20863
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:37:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ED1D20863
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:38:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uIct9Bvb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732796AbfIJNhy (ORCPT
+        id S1731790AbfIJNie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 09:37:54 -0400
-Received: from mga17.intel.com ([192.55.52.151]:40813 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726613AbfIJNhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 09:37:54 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Sep 2019 06:37:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,489,1559545200"; 
-   d="scan'208";a="189345404"
-Received: from marshy.an.intel.com ([10.122.105.159])
-  by orsmga006.jf.intel.com with ESMTP; 10 Sep 2019 06:37:52 -0700
-From:   richard.gong@linux.intel.com
-To:     catalin.marinas@arm.com, will@kernel.org, shawnguo@kernel.org,
-        olof@lixom.net, mripard@kernel.org, bjorn.andersson@linaro.org,
-        arnd@arndb.de, dinguyen@kernel.org, marcin.juszkiewicz@linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     richard.gong@linux.intel.com, Richard Gong <richard.gong@intel.com>
-Subject: [PATCHv1] arm64: defconfig: enable rsu driver
-Date:   Tue, 10 Sep 2019 08:49:46 -0500
-Message-Id: <1568123386-530-1-git-send-email-richard.gong@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 10 Sep 2019 09:38:34 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:43202 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726060AbfIJNid (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 09:38:33 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8ADcT25076996;
+        Tue, 10 Sep 2019 08:38:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568122709;
+        bh=EcMSu4m42xGnN8JKAeX2Bwa3OOPO+UWNpzBhOLNRiVE=;
+        h=From:To:CC:Subject:Date;
+        b=uIct9BvbpF+T3tBHyKU6q08ZPd5T2ZFxTFsJtQQ10otTjRgLHwKJoP16veDR2arYC
+         KRb7oLGWXcgEH0nTa932lTSmn/Op/DuuAXP52vvWJnJvjaDTCPKIv5THdEVXHw5CiT
+         R7RK6VzYTBPubSnPmj/7EraNVsScR1mZp55H9IeQ=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8ADcTog097629
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 10 Sep 2019 08:38:29 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 10
+ Sep 2019 08:38:29 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 10 Sep 2019 08:38:29 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8ADcSBd065480;
+        Tue, 10 Sep 2019 08:38:28 -0500
+From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <dmurphy@ti.com>
+CC:     <tomi.valkeinen@ti.com>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Jean-Jacques Hiblot <jjhiblot@ti.com>
+Subject: [RESEND,v2 0/2] leds: tlc591xx: switch to OF and managed API
+Date:   Tue, 10 Sep 2019 15:38:12 +0200
+Message-ID: <20190910133814.10275-1-jjhiblot@ti.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Gong <richard.gong@intel.com>
+This mini-series updates the tlc591xx driver to use the managed API. The
+driver is also modified to pass the DT node to the LED core layer.
+The goal is to be able to the generic led-backlight [0] driver on top of
+it.
 
-Enable Intel Stratix10 Remote System Update (RSU) driver
+changes in v2:
+- fixed LED indexing. Previous version did not allow for holes: if n LEDs
+  were used, they had to be led(0) to led(n-1)
 
-The Intel Remote System Update (RSU) driver provides a way for customers
-to update the boot configuration of a Intel Stratix 10 SoC device with
-significantly reduced risk of corrupting the bitstream storage and
-bricking the system.
+Jean-Jacques Hiblot (2):
+  leds: tlc591xx: simplify driver by using the managed led API
+  leds: tlc591xx: Use the OF version of the LED registration function
 
-Signed-off-by: Richard Gong <richard.gong@intel.com>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/leds/leds-tlc591xx.c | 79 +++++++++---------------------------
+ 1 file changed, 20 insertions(+), 59 deletions(-)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 8c7b664..7325115 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -90,6 +90,7 @@ CONFIG_ARM_TEGRA186_CPUFREQ=y
- CONFIG_ARM_SCPI_PROTOCOL=y
- CONFIG_RASPBERRYPI_FIRMWARE=y
- CONFIG_INTEL_STRATIX10_SERVICE=y
-+CONFIG_INTEL_STRATIX10_RSU=m
- CONFIG_TI_SCI_PROTOCOL=y
- CONFIG_EFI_CAPSULE_LOADER=y
- CONFIG_IMX_SCU=y
 -- 
-2.7.4
+2.17.1
 
