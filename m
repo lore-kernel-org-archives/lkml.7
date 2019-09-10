@@ -2,115 +2,118 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBA9C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B15BC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5DA42168B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:43:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19A5E2081B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:44:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391231AbfIJJnf (ORCPT
+        id S2405024AbfIJJoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 05:43:35 -0400
-Received: from mga07.intel.com ([134.134.136.100]:52456 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731809AbfIJJne (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 05:43:34 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Sep 2019 02:43:33 -0700
-X-IronPort-AV: E=Sophos;i="5.64,489,1559545200"; 
-   d="scan'208";a="178624836"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Sep 2019 02:43:29 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 411A820A0F; Tue, 10 Sep 2019 12:43:27 +0300 (EEST)
-Date:   Tue, 10 Sep 2019 12:43:27 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     linux-media@vger.kernel.org, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Peter Rosin <peda@axentia.se>
-Subject: Re: [RFC,v2 3/6] media: dt-bindings: add DS90UB954-Q1 video
- deserializer
-Message-ID: <20190910094327.GG5781@paasikivi.fi.intel.com>
-References: <20190723203723.11730-1-luca@lucaceresoli.net>
- <20190723203723.11730-4-luca@lucaceresoli.net>
+        Tue, 10 Sep 2019 05:44:09 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:44138 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2391245AbfIJJoJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 05:44:09 -0400
+X-UUID: 7db3989441fd4168b9615b951f209fdb-20190910
+X-UUID: 7db3989441fd4168b9615b951f209fdb-20190910
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1966950674; Tue, 10 Sep 2019 17:44:03 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 10 Sep 2019 17:43:58 +0800
+Received: from [172.21.84.99] (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 10 Sep 2019 17:43:58 +0800
+Message-ID: <1568108638.24886.7.camel@mtksdccf07>
+Subject: Re: [PATCH v2 1/2] mm/page_ext: support to record the last stack of
+ page
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+CC:     David Hildenbrand <david@redhat.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        "Dmitry Vyukov" <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michal Hocko <mhocko@kernel.org>, Qian Cai <cai@lca.pw>,
+        <linux-kernel@vger.kernel.org>, <kasan-dev@googlegroups.com>,
+        <linux-mm@kvack.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>
+Date:   Tue, 10 Sep 2019 17:43:58 +0800
+In-Reply-To: <20190910093103.4cmqk4semlhgpmle@box.shutemov.name>
+References: <20190909085339.25350-1-walter-zh.wu@mediatek.com>
+         <36b5a8e0-2783-4c0e-4fc7-78ea652ba475@redhat.com>
+         <1568077669.24886.3.camel@mtksdccf07>
+         <20190910093103.4cmqk4semlhgpmle@box.shutemov.name>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190723203723.11730-4-luca@lucaceresoli.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Luca,
+On Tue, 2019-09-10 at 12:31 +0300, Kirill A. Shutemov wrote:
+> On Tue, Sep 10, 2019 at 09:07:49AM +0800, Walter Wu wrote:
+> > On Mon, 2019-09-09 at 12:57 +0200, David Hildenbrand wrote:
+> > > On 09.09.19 10:53, Walter Wu wrote:
+> > > > KASAN will record last stack of page in order to help programmer
+> > > > to see memory corruption caused by page.
+> > > > 
+> > > > What is difference between page_owner and our patch?
+> > > > page_owner records alloc stack of page, but our patch is to record
+> > > > last stack(it may be alloc or free stack of page).
+> > > > 
+> > > > Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
+> > > > ---
+> > > >  mm/page_ext.c | 3 +++
+> > > >  1 file changed, 3 insertions(+)
+> > > > 
+> > > > diff --git a/mm/page_ext.c b/mm/page_ext.c
+> > > > index 5f5769c7db3b..7ca33dcd9ffa 100644
+> > > > --- a/mm/page_ext.c
+> > > > +++ b/mm/page_ext.c
+> > > > @@ -65,6 +65,9 @@ static struct page_ext_operations *page_ext_ops[] = {
+> > > >  #if defined(CONFIG_IDLE_PAGE_TRACKING) && !defined(CONFIG_64BIT)
+> > > >  	&page_idle_ops,
+> > > >  #endif
+> > > > +#ifdef CONFIG_KASAN
+> > > > +	&page_stack_ops,
+> > > > +#endif
+> > > >  };
+> > > >  
+> > > >  static unsigned long total_usage;
+> > > > 
+> > > 
+> > > Are you sure this patch compiles?
+> > > 
+> > This is patchsets, it need another patch2.
+> > We have verified it by running KASAN UT on Qemu.
+> 
+> Any patchset must be bisectable: do not break anything in the middle of
+> patchset.
+> 
 
-On Tue, Jul 23, 2019 at 10:37:20PM +0200, Luca Ceresoli wrote:
+Thanks your reminder.
+I should explain complete message at commit log.
+Our patchsets is below:
+https://lkml.org/lkml/2019/9/9/104
+https://lkml.org/lkml/2019/9/9/123
 
-...
 
-> +Device node example
-> +-------------------
-> +
-> +&i2c0 {
-> +	deser: deser@3d {
-> +		compatible = "ti,ds90ub954-q1";
-> +		reg-names = "main", "rxport0", "rxport1", "ser0", "ser1";
-> +		reg       = <0x3d>,  <0x40>,    <0x41>,   <0x44>, <0x45>;
-> +		clocks = <&clk_25M>;
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <3 1 IRQ_TYPE_LEVEL_HIGH>;
-> +		reset-gpios = <&gpio_ctl 4 GPIO_ACTIVE_LOW>;
-> +
-> +		i2c-alias-pool = /bits/ 16 <0x4a 0x4b 0x4c 0x4d 0x4e 0x4f>;
-> +
-> +		gpio-controller;
-> +		#gpio-cells = <3>; /* rxport, remote gpio num, flags */
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +				ds90ub954_fpd3_in0: endpoint {
-> +					remote-endpoint = <&sensor_0_out>;
-> +				};
-> +			};
-> +
-> +			port@1 {
-> +				reg = <1>;
-> +				ds90ub954_fpd3_in1: endpoint {
-> +					remote-endpoint = <&sensor_1_out>;
-> +				};
-> +			};
-> +
-> +			port@2 {
-> +				reg = <2>;
-> +				ds90ub954_mipi_out0: endpoint {
-> +					data-lanes = <1 2 3 4>;
-> +					/* Actually a REFCLK multiplier */
-> +					data-rate = <1600000000>;
-
-What is data-rate used for? Is it documented somewhere? Could you use
-link-frequencies property instead? It's defined in video-interfaces.txt.
-
--- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
