@@ -2,146 +2,107 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08FECC49ED7
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E137C49ED9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF61A2082C
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:40:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B9A2216F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:43:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E8zBDg+t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437159AbfIJRke (ORCPT
+        id S2437151AbfIJRnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 13:40:34 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:34541 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2436916AbfIJRke (ORCPT
+        Tue, 10 Sep 2019 13:43:22 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:37354 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732096AbfIJRnV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 13:40:34 -0400
-Received: from [148.69.85.38] (port=22750 helo=[192.168.5.132])
-        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1i7k7v-007JEr-Id; Tue, 10 Sep 2019 19:40:27 +0200
-Subject: Re: [RFC,v2 2/6] i2c: add I2C Address Translator (ATR) support
-To:     Vladimir Zapolskiy <vz@mleia.com>,
-        jacopo mondi <jacopo@jmondi.org>,
-        Wolfram Sang <wsa@the-dreams.de>, Peter Rosin <peda@axentia.se>
-Cc:     linux-media@vger.kernel.org, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>
-References: <20190723203723.11730-1-luca@lucaceresoli.net>
- <20190723203723.11730-3-luca@lucaceresoli.net>
- <20190901143101.humomdehy5ee73sk@vino>
- <aedad45b-16d6-d189-b045-329727440ca5@mleia.com>
- <1fb71437-eaa2-99a7-885f-63ee769969aa@mleia.com>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <2f883643-6af3-4e34-cf2b-f65fed9392a1@lucaceresoli.net>
-Date:   Tue, 10 Sep 2019 18:40:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 10 Sep 2019 13:43:21 -0400
+Received: by mail-vs1-f67.google.com with SMTP id q9so11877623vsl.4
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 10:43:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iZFN9sZS2h8SFWG+P0x7nyGva9yupkamPkDWX3SwdVA=;
+        b=E8zBDg+tTwWnNy6Z4n8i89oWK6PRu64Hw71Y7M42Z/TQwydXy//2zYP/oDlh9/X5Wk
+         Sp93Eh4WKbfU0Sp/Qizmwi3ZEgM/181PPLN7uNYURu6dFIOzvjT9ggjvNNPm/NnT5usp
+         4mloXyqX1j/ipt5bGlTOqpUldlnrlz9OdIjY1bQeZu3uvVd6hJTv4i8I/5ne7DvJC6wO
+         tVUuJbONRHGV63jNWKH06cva+nh6anS0I+z/x8XoGpFPoejFwncsxWA9nR6wmG/a1e0O
+         XiZOYKL0hlmmUH7CkcAXsV62Wor73r3yfRuxZl0GzVmyq6QMQkbRIGpu24nb28C4DtLx
+         TVOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iZFN9sZS2h8SFWG+P0x7nyGva9yupkamPkDWX3SwdVA=;
+        b=h41Y72eMSv2Oh4eFWhmiGLGfYdx9TB6nK4rsL2OgMPLBMiY5p/R4yvAKROALWAGVa6
+         bqAUHMcjrpYDQPKvfFoULGaWWG+iet8snofqqyc/73oX2EjIthEl+HAOYW9Ljtzp937X
+         HnziLAqs7kNClNWBxs2lqP+sKj6LTDdGp79rsUwTeSd8gTka4PbdqUH3wi5W5/CoV4tP
+         Za+sV0m7NBnISZq66L5Fct1XlJahqAWNCTSn0D7qTbk4E9x+fP2bs10IT4o5eHJ11820
+         28wHLPFk4uIkRZnoSpfhRvyc941Io1Nw57TjQKV/GaR93ucWmkwaCZoIwjItpqZjVGU2
+         SZFA==
+X-Gm-Message-State: APjAAAV7HXXuFGSSHu+nlRgsRCaQI61XETGuvAWQn0Lvuslh0glU0itk
+        L62PLgYO7dTllIyFsWM/ED9/ficS1RXo9c9ZL/qoEQ==
+X-Google-Smtp-Source: APXvYqwztIyJeOVDg7mHYVMP5EiFipb+OaSO/GlDtBUviPUH8Ju2PrPm1ueyE3eP7+PRthYsLhXBYb4deBGXOUAj3c4=
+X-Received: by 2002:a67:1043:: with SMTP id 64mr2413213vsq.114.1568137400264;
+ Tue, 10 Sep 2019 10:43:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1fb71437-eaa2-99a7-885f-63ee769969aa@mleia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+References: <20190905005313.126823-1-dancol@google.com> <CALCETrU2Wycgdfo8vLZQUnx1J9ro=6ddSkP37BhsfBkKL1mbMA@mail.gmail.com>
+In-Reply-To: <CALCETrU2Wycgdfo8vLZQUnx1J9ro=6ddSkP37BhsfBkKL1mbMA@mail.gmail.com>
+From:   Daniel Colascione <dancol@google.com>
+Date:   Tue, 10 Sep 2019 10:42:43 -0700
+Message-ID: <CAKOZuevMiomDQwzrHVb4qU6nhKOiENWsEmFhVKrBvjVNa0ff+w@mail.gmail.com>
+Subject: Re: [RFC] Add critical process prctl
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Tim Murray <timmurray@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vladimir,
+On Tue, Sep 10, 2019 at 9:57 AM Andy Lutomirski <luto@kernel.org> wrote:
+>
+> On Wed, Sep 4, 2019 at 5:53 PM Daniel Colascione <dancol@google.com> wrote:
+> >
+> > A task with CAP_SYS_ADMIN can mark itself PR_SET_TASK_CRITICAL,
+> > meaning that if the task ever exits, the kernel panics. This facility
+> > is intended for use by low-level core system processes that cannot
+> > gracefully restart without a reboot. This prctl allows these processes
+> > to ensure that the system restarts when they die regardless of whether
+> > the rest of userspace is operational.
+>
+> The kind of panic produced by init crashing is awful -- logs don't get
+> written, etc.
 
-On 09/09/19 05:56, Vladimir Zapolskiy wrote:
-> Hi Luca, Jacopo, Wolfram, Peter,
-> 
-> On 09/08/2019 11:45 PM, Vladimir Zapolskiy wrote:
->> Hi Luca, Jacopo, Wolfram, Peter,
->>
->> On 09/01/2019 05:31 PM, jacopo mondi wrote:
->>> Hi Luca,
->>>    thanks for keep pushing this series! I hope we can use part of this
->>> for the (long time) on-going GMSL work...
->>>
->>> I hope you will be patient enough to provide (another :) overview
->>> of this work during the BoF Wolfram has organized at LPC for the next
->>> week.
->>>
->>> In the meantime I would have some comments after having a read at the
->>> series and trying to apply its concept to GMSL
->>>
->>
->> I won't attend the LPC, however I would appreciate if you book some
->> time to review my original / alternative implementation of the TI
->> DS90Ux9xx I2C bridge device driver.
->>
->> For your convenience the links to the driver are given below:
->> * dt bindings: https://lore.kernel.org/lkml/20181012060314.GU4939@dell/T/#mead5ea226550b
->> * driver code: https://lore.kernel.org/lkml/20181012060314.GU4939@dell/T/#m2fe3664c5f884
->> * usage example: https://lore.kernel.org/lkml/20181012060314.GU4939@dell/T/#m56c146f5decdc
->>
->> The reasons why my driver is better/more flexible/more functional are
->> discussed earlier, please let me know, if you expect anything else
->> from me to add, also I would be happy to get a summary of your offline
->> discussion.
-> 
-> I forgot to repeat my main objection against Luca's approach, the TI
-> DS90Ux9xx I2C bridge driver does not require to call i2c_add_adapter()
-> or register a new mux/bus and then do run select/deselect in runtime to
-> overcome the created handicap.
+True today --- but that's a separate problem, and one that can be
+solved in a few ways, e.g., pre-registering log buffers to be
+incorporated into any kexec kernel memory dumps. If a system aiming
+for reliability can't diagnose panics, that's a problem with or
+without my patch.
 
-Whether the ser/deser drivers should or not instantiate an adapter
-depends on whether the child I2C bus is a separate bus or it's "the same
-bus" as the parent bus. Which in turn is not obvious, and depends on how
-you look at it.
+> I'm wondering if you would be better off with a new
+> watchdog-like device that, when closed, kills the system in a
+> configurable way (e.g. after a certain amount of time, while still
+> logging something and having a decent chance of getting the logs
+> written out.)  This could plausibly even be an extension to the
+> existing /dev/watchdog API.
 
-On one hand, the child bus looks like it is the same as the parent bus
-because transactions on the child bus also happen on the parent bus (bus
-not the other way around).
-
-On the other hand the child bus also looks like a separate bus because
-it is electrically separated from the parent bus, it can have a
-different speed, and devices on one child bus cannot talk with devices
-on another child bus under the same ser/deser.
-
-The way you modeled it has the advantage of not requiring a runtime
-rewriting of slave addresses. Thas's what I implemented in
-i2c_atr_map_msgs(), I don't love the fact that it happens at every
-iteration, but its runtime cost is negligible compared to I2C speeds. On
-the other hand I'm not sure how your approach would work if you have an
-i2c bridge behind another i2c bridge (see the "ATR behind another ATR"
-case mentioned by Peter).
-
-By contrast, adding an adapter for each child bus has its advantages. I
-didn't have to write code to instantiate the devices, letting the i2c
-core do it. Also, as child busses show up as real busses it's possible
-to instantiate devices from userspace just like any standard i2c bus with:
-
-  echo eeprom 0x50 > /sys/bus/i2c/devices/i2c-4/new_device
-
-and devices will be assigned an alias and be usable normally.
-
-Finally, there is no need to call select()/deselect() in runtime. Those
-callbacks are optional, and I'm probably removing them in a future
-iteration as I'm more and more convinced they are not needed at all.
-
--- 
-Luca
+There are lots of approaches that work today: a few people have
+suggested just having init watch processes, perhaps with pidfds. What
+I worry about is increasing the length (both in terms of time and
+complexity) of the critical path between something going wrong in a
+critical process and the system getting back into a known-good state.
+A panic at the earliest moment we know that a marked-critical process
+has become doomed seems like the most reliable approach, especially
+since alternatives can get backed up behind things like file
+descriptor closing and various forms of scheduling delay.
