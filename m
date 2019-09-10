@@ -2,208 +2,148 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A9F5C4740A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30091C49ED8
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1B282168B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:42:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="GT8lNuPE"
+	by mail.kernel.org (Postfix) with ESMTP id 0FE7E21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:42:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392954AbfIJOmB (ORCPT
+        id S2393110AbfIJOmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 10:42:01 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:42936 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732260AbfIJOlc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 10:41:32 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        Tue, 10 Sep 2019 10:42:06 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51086 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392956AbfIJOmC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 10:42:02 -0400
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 55FC0C2B53;
-        Tue, 10 Sep 2019 14:41:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1568126492; bh=k7i2LIyV7LDIsI6c/mIJA82Jt8oRa7SZ14gdZwpgnzQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=GT8lNuPEF+IGHxeJrxoakh2f6pBPKJ8bRrTnanH8xqxv2md2aoEDwo8J8lCvVVdgB
-         ji4XHJtmI8k+5pseKyepOsC+Gpp4E5//xaJwjj03QXBQoWReBGkmci2gJeQ3x1qmAO
-         YVskWAP52i0hzwr1F0X5QcRU1HzqGYguiA4labidVaQqARpg8Q4nBa/7zo0lcgrh2p
-         j+at4NSIz+aObQA4Y4/e77umsQGjNfizRjp/RSvj3XgIlo9txiqsVQ/2OzPCFD4Zc5
-         FhiXrID3ppkSXMPvy7XvFpX/sOaX9cVFTBOO2DBIwtNt49idd1NLetQ/StKOrbFJFh
-         5Rv/lwqdZlq3w==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id EECDCA0067;
-        Tue, 10 Sep 2019 14:41:29 +0000 (UTC)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     netdev@vger.kernel.org
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 4/6] net: stmmac: Add support for SA Insertion/Replacement in GMAC4+
-Date:   Tue, 10 Sep 2019 16:41:25 +0200
-Message-Id: <34f683da6f4774a1336174a213d035483e9e088f.1568126224.git.joabreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1568126224.git.joabreu@synopsys.com>
-References: <cover.1568126224.git.joabreu@synopsys.com>
-In-Reply-To: <cover.1568126224.git.joabreu@synopsys.com>
-References: <cover.1568126224.git.joabreu@synopsys.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 9733285539
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 14:42:01 +0000 (UTC)
+Received: by mail-wr1-f70.google.com with SMTP id h6so6615429wrh.6
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 07:42:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bT12KRgZOTisqUXhqBmZuyXHkuoI5E2VzJwdrt5Ywu0=;
+        b=ey9gF3hAELg6VdMPje+BslA0N/OyTL10ZXbIcej7yrT50uh+lHjNfEGPyNbCMfJ2b7
+         mWr52xkPm+xNwWowN77WuYEbSRBh3poW/7GpDSQaWyvM60WnZYmUFQq7bvBC3wrDQRLc
+         WINJPv8FnotNOkDgdrurf9BJPoCPeeMqk+mVIyz0uVQ4rZw3Q6OHNaBwQzY7ba86dxY9
+         nO964zJ9dj+9xS6IVxPPUSh/V8ce7l9ELigAL3GX7yRofvJbxCLBJD/USwAg+evdzSbw
+         trXQiZnJ88CnG65K6PoxP7H6+BrY2sglsolvkEC044XVezOL7+SB9MOKFnM5Q+fj/ezj
+         GphQ==
+X-Gm-Message-State: APjAAAVguUAwc6sA+drGbt1HQwc1ibBJcrnemnBHNF85CCDXoAJS875Q
+        vnmCpuU0/uQ9Qh9XjVFV7mvjovT6DscAl3058tpO4a+kt7JYlXNNEVrguiNgz57einFT+85VoDw
+        j572R7DdOu81reWnHd2a0sKu3
+X-Received: by 2002:adf:ef12:: with SMTP id e18mr26533943wro.65.1568126520272;
+        Tue, 10 Sep 2019 07:42:00 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxYCnJJYgIX4oew9IGSu9sfnNhgnO8lhKUywmdsYpWsRh5l50jOQx3zkdI6kX5X1a2V2STQFw==
+X-Received: by 2002:adf:ef12:: with SMTP id e18mr26533909wro.65.1568126520007;
+        Tue, 10 Sep 2019 07:42:00 -0700 (PDT)
+Received: from [192.168.10.150] ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id 189sm5004427wma.6.2019.09.10.07.41.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Sep 2019 07:41:59 -0700 (PDT)
+Subject: Re: [PATCH] KVM: x86: Manually calculate reserved bits when loading
+ PDPTRS
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Nadav Amit <nadav.amit@gmail.com>,
+        Doug Reiland <doug.reiland@intel.com>
+References: <20190903233645.21125-1-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <7a83d8a7-b751-1232-a35f-38f8d9b660f3@redhat.com>
+Date:   Tue, 10 Sep 2019 16:41:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190903233645.21125-1-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the support for Source Address Insertion and Replacement in GMAC4
-and GMAC5 cores. Two methods are supported: Descriptor based and
-register based.
+On 04/09/19 01:36, Sean Christopherson wrote:
+> Manually generate the PDPTR reserved bit mask when explicitly loading
+> PDPTRs.  The reserved bits that are being tracked by the MMU reflect the
+> current paging mode, which is unlikely to be PAE paging in the vast
+> majority of flows that use load_pdptrs(), e.g. CR0 and CR4 emulation,
+> __set_sregs(), etc...  This can cause KVM to incorrectly signal a bad
+> PDPTR, or more likely, miss a reserved bit check and subsequently fail
+> a VM-Enter due to a bad VMCS.GUEST_PDPTR.
+> 
+> Add a one off helper to generate the reserved bits instead of sharing
+> code across the MMU's calculations and the PDPTR emulation.  The PDPTR
+> reserved bits are basically set in stone, and pushing a helper into
+> the MMU's calculation adds unnecessary complexity without improving
+> readability.
+> 
+> Oppurtunistically fix/update the comment for load_pdptrs().
+> 
+> Note, the buggy commit also introduced a deliberate functional change,
+> "Also remove bit 5-6 from rsvd_bits_mask per latest SDM.", which was
+> effectively (and correctly) reverted by commit cd9ae5fe47df ("KVM: x86:
+> Fix page-tables reserved bits").  A bit of SDM archaeology shows that
+> the SDM from late 2008 had a bug (likely a copy+paste error) where it
+> listed bits 6:5 as AVL and A for PDPTEs used for 4k entries but reserved
+> for 2mb entries.  I.e. the SDM contradicted itself, and bits 6:5 are and
+> always have been reserved.
+> 
+> Fixes: 20c466b56168d ("KVM: Use rsvd_bits_mask in load_pdptrs()")
+> Cc: stable@vger.kernel.org
+> Cc: Nadav Amit <nadav.amit@gmail.com>
+> Reported-by: Doug Reiland <doug.reiland@intel.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/x86.c | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 290c3c3efb87..548cc6ef5408 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -674,8 +674,14 @@ static int kvm_read_nested_guest_page(struct kvm_vcpu *vcpu, gfn_t gfn,
+>  				       data, offset, len, access);
+>  }
+>  
+> +static inline u64 pdptr_rsvd_bits(struct kvm_vcpu *vcpu)
+> +{
+> +	return rsvd_bits(cpuid_maxphyaddr(vcpu), 63) | rsvd_bits(5, 8) |
+> +	       rsvd_bits(1, 2);
+> +}
+> +
+>  /*
+> - * Load the pae pdptrs.  Return true is they are all valid.
+> + * Load the pae pdptrs.  Return 1 if they are all valid, 0 otherwise.
+>   */
+>  int load_pdptrs(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu, unsigned long cr3)
+>  {
+> @@ -694,8 +700,7 @@ int load_pdptrs(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu, unsigned long cr3)
+>  	}
+>  	for (i = 0; i < ARRAY_SIZE(pdpte); ++i) {
+>  		if ((pdpte[i] & PT_PRESENT_MASK) &&
+> -		    (pdpte[i] &
+> -		     vcpu->arch.mmu->guest_rsvd_check.rsvd_bits_mask[0][2])) {
+> +		    (pdpte[i] & pdptr_rsvd_bits(vcpu))) {
+>  			ret = 0;
+>  			goto out;
+>  		}
+> 
 
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Queued, thanks.
 
----
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Jose Abreu <joabreu@synopsys.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: netdev@vger.kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/net/ethernet/stmicro/stmmac/dwmac4.h       |  3 +++
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c  | 13 +++++++++++++
- drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.c |  8 ++++++++
- drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.h |  1 +
- drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c   |  1 +
- 5 files changed, 26 insertions(+)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
-index 4dfa69850040..fad121cbfe0e 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
-@@ -160,6 +160,8 @@ enum power_event {
- #define GMAC_DEBUG_RPESTS		BIT(0)
- 
- /* MAC config */
-+#define GMAC_CONFIG_SARC		GENMASK(30, 28)
-+#define GMAC_CONFIG_SARC_SHIFT		28
- #define GMAC_CONFIG_IPC			BIT(27)
- #define GMAC_CONFIG_2K			BIT(22)
- #define GMAC_CONFIG_ACS			BIT(20)
-@@ -175,6 +177,7 @@ enum power_event {
- #define GMAC_CONFIG_RE			BIT(0)
- 
- /* MAC HW features0 bitmap */
-+#define GMAC_HW_FEAT_SAVLANINS		BIT(27)
- #define GMAC_HW_FEAT_ADDMAC		BIT(18)
- #define GMAC_HW_FEAT_RXCOESEL		BIT(16)
- #define GMAC_HW_FEAT_TXCOSEL		BIT(14)
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-index 5b43a8df1536..73dbfd810fca 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -759,6 +759,16 @@ static void dwmac4_update_vlan_hash(struct mac_device_info *hw, u32 hash,
- 	}
- }
- 
-+static void dwmac4_sarc_configure(void __iomem *ioaddr, int val)
-+{
-+	u32 value = readl(ioaddr + GMAC_CONFIG);
-+
-+	value &= ~GMAC_CONFIG_SARC;
-+	value |= val << GMAC_CONFIG_SARC_SHIFT;
-+
-+	writel(value, ioaddr + GMAC_CONFIG);
-+}
-+
- const struct stmmac_ops dwmac4_ops = {
- 	.core_init = dwmac4_core_init,
- 	.set_mac = stmmac_set_mac,
-@@ -790,6 +800,7 @@ const struct stmmac_ops dwmac4_ops = {
- 	.set_filter = dwmac4_set_filter,
- 	.set_mac_loopback = dwmac4_set_mac_loopback,
- 	.update_vlan_hash = dwmac4_update_vlan_hash,
-+	.sarc_configure = dwmac4_sarc_configure,
- };
- 
- const struct stmmac_ops dwmac410_ops = {
-@@ -823,6 +834,7 @@ const struct stmmac_ops dwmac410_ops = {
- 	.set_filter = dwmac4_set_filter,
- 	.set_mac_loopback = dwmac4_set_mac_loopback,
- 	.update_vlan_hash = dwmac4_update_vlan_hash,
-+	.sarc_configure = dwmac4_sarc_configure,
- };
- 
- const struct stmmac_ops dwmac510_ops = {
-@@ -861,6 +873,7 @@ const struct stmmac_ops dwmac510_ops = {
- 	.flex_pps_config = dwmac5_flex_pps_config,
- 	.set_mac_loopback = dwmac4_set_mac_loopback,
- 	.update_vlan_hash = dwmac4_update_vlan_hash,
-+	.sarc_configure = dwmac4_sarc_configure,
- };
- 
- int dwmac4_setup(struct stmmac_priv *priv)
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.c
-index dbde23e7e169..8edc9f8787cc 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.c
-@@ -443,6 +443,13 @@ static void dwmac4_clear(struct dma_desc *p)
- 	p->des3 = 0;
- }
- 
-+static void dwmac4_set_sarc(struct dma_desc *p, u32 sarc_type)
-+{
-+	sarc_type <<= TDES3_SA_INSERT_CTRL_SHIFT;
-+
-+	p->des3 |= cpu_to_le32(sarc_type & TDES3_SA_INSERT_CTRL_MASK);
-+}
-+
- static int set_16kib_bfsize(int mtu)
- {
- 	int ret = 0;
-@@ -476,6 +483,7 @@ const struct stmmac_desc_ops dwmac4_desc_ops = {
- 	.get_addr = dwmac4_get_addr,
- 	.set_addr = dwmac4_set_addr,
- 	.clear = dwmac4_clear,
-+	.set_sarc = dwmac4_set_sarc,
- };
- 
- const struct stmmac_mode_ops dwmac4_ring_mode_ops = {
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.h b/drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.h
-index f58191174287..6089d76a00d3 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.h
-@@ -32,6 +32,7 @@
- #define TDES3_HDR_LEN_SHIFT		19
- #define TDES3_SLOT_NUMBER_MASK		GENMASK(22, 19)
- #define TDES3_SA_INSERT_CTRL_MASK	GENMASK(25, 23)
-+#define TDES3_SA_INSERT_CTRL_SHIFT	23
- #define TDES3_CRC_PAD_CTRL_MASK		GENMASK(27, 26)
- 
- /* TDES3 (write back format) */
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
-index 2456f421aac9..82d9761b2df2 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
-@@ -348,6 +348,7 @@ static void dwmac4_get_hw_feature(void __iomem *ioaddr,
- 	/* TX and RX csum */
- 	dma_cap->tx_coe = (hw_cap & GMAC_HW_FEAT_TXCOSEL) >> 14;
- 	dma_cap->rx_coe =  (hw_cap & GMAC_HW_FEAT_RXCOESEL) >> 16;
-+	dma_cap->vlins = (hw_cap & GMAC_HW_FEAT_SAVLANINS) >> 27;
- 
- 	/* MAC HW feature1 */
- 	hw_cap = readl(ioaddr + GMAC_HW_FEATURE1);
--- 
-2.7.4
-
+Paolo
