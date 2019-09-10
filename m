@@ -2,69 +2,144 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1523EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA4EC4740A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D817F21479
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:18:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7195821479
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:19:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405253AbfIJISS (ORCPT
+        id S2405287AbfIJITO convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 04:18:18 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59578 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731155AbfIJISR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 04:18:17 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id BF5CFAE35;
-        Tue, 10 Sep 2019 08:18:15 +0000 (UTC)
-From:   Andreas Schwab <schwab@suse.de>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     gregkh@linuxfoundation.org, jslaby@suse.com,
-        paul.walmsley@sifive.com, linux-serial@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] serial/sifive: select SERIAL_EARLYCON
-References: <20190910055923.28384-1-hch@lst.de> <mvm4l1kskny.fsf@suse.de>
-        <20190910070503.GA31743@lst.de>
-X-Yow:  I'll clean your ROOM!!  I know some GOOD stories, too!!  All about
- ROAD Island's, HUSH Puppies, and how LUKE finds GOLD on his LAND!!
-Date:   Tue, 10 Sep 2019 10:18:15 +0200
-In-Reply-To: <20190910070503.GA31743@lst.de> (Christoph Hellwig's message of
-        "Tue, 10 Sep 2019 09:05:03 +0200")
-Message-ID: <mvmzhjcr2d4.fsf@suse.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Tue, 10 Sep 2019 04:19:14 -0400
+Received: from ZXSHCAS2.zhaoxin.com ([203.148.12.82]:15622 "EHLO
+        ZXSHCAS2.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731155AbfIJITO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 04:19:14 -0400
+Received: from zxbjmbx3.zhaoxin.com (10.29.252.165) by ZXSHCAS2.zhaoxin.com
+ (10.28.252.162) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Tue, 10 Sep
+ 2019 16:19:09 +0800
+Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by zxbjmbx3.zhaoxin.com
+ (10.29.252.165) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Tue, 10 Sep
+ 2019 16:19:08 +0800
+Received: from zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d]) by
+ zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d%16]) with mapi id
+ 15.01.1261.035; Tue, 10 Sep 2019 16:19:08 +0800
+From:   Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+To:     "tony.luck@intel.com" <tony.luck@intel.com>,
+        "Borislav Petkov (bp@alien8.de)" <bp@alien8.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "yazen.ghannam@amd.com" <yazen.ghannam@amd.com>,
+        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+        "qiuxu.zhuo@intel.com" <qiuxu.zhuo@intel.com>
+CC:     David Wang <DavidWang@zhaoxin.com>,
+        "Cooper Yan(BJ-RD)" <CooperYan@zhaoxin.com>,
+        "Qiyuan Wang(BJ-RD)" <QiyuanWang@zhaoxin.com>,
+        "Herry Yang(BJ-RD)" <HerryYang@zhaoxin.com>
+Subject: [PATCH v2 1/4] x86/mce: Add Zhaoxin MCE support
+Thread-Topic: [PATCH v2 1/4] x86/mce: Add Zhaoxin MCE support
+Thread-Index: AdVnqN8gcs/qr4n4QmGIov91NLhkWA==
+Date:   Tue, 10 Sep 2019 08:19:08 +0000
+Message-ID: <d2660f92baf04d1f9aef5fedc39d7360@zhaoxin.com>
+Accept-Language: en-US, zh-CN
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.32.64.75]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sep 10 2019, Christoph Hellwig <hch@lst.de> wrote:
+All Zhaoxin newer CPUs support MCE that compatible with Intel's
+"Machine-Check Architecture", so add support for Zhaoxin MCE in
+mce/core.c.
 
-> On Tue, Sep 10, 2019 at 08:57:37AM +0200, Andreas Schwab wrote:
->> On Sep 10 2019, Christoph Hellwig <hch@lst.de> wrote:
->> 
->> > The sifive serial driver implements earlycon support,
->> 
->> It should probably be documented in admin-guide/kernel-parameters.txt.
->
-> How so?  Wіth OF and a stdout path you just set earlycon on the
-> command line without any arguments and it will be found.
+Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+---
+ arch/x86/kernel/cpu/mce/core.c | 30 ++++++++++++++++++++++++------
+ 1 file changed, 24 insertions(+), 6 deletions(-)
 
-Doesn't work for me.
-
-[    0.000000] Malformed early option 'earlycon'
-
-Andreas.
-
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index 743370e..3f878f6 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -488,8 +488,9 @@ int mce_usable_address(struct mce *m)
+ 	if (!(m->status & MCI_STATUS_ADDRV))
+ 		return 0;
+ 
+-	/* Checks after this one are Intel-specific: */
+-	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
++	/* Checks after this one are Intel/Zhaoxin-specific: */
++	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL &&
++	    boot_cpu_data.x86_vendor != X86_VENDOR_ZHAOXIN)
+ 		return 1;
+ 
+ 	if (!(m->status & MCI_STATUS_MISCV))
+@@ -510,7 +511,8 @@ bool mce_is_memory_error(struct mce *m)
+ 	if (m->cpuvendor == X86_VENDOR_AMD ||
+ 	    m->cpuvendor == X86_VENDOR_HYGON) {
+ 		return amd_mce_is_memory_error(m);
+-	} else if (m->cpuvendor == X86_VENDOR_INTEL) {
++	} else if (m->cpuvendor == X86_VENDOR_INTEL ||
++		   m->cpuvendor == X86_VENDOR_ZHAOXIN) {
+ 		/*
+ 		 * Intel SDM Volume 3B - 15.9.2 Compound Error Codes
+ 		 *
+@@ -1697,6 +1699,21 @@ static int __mcheck_cpu_apply_quirks(struct cpuinfo_x86 *c)
+ 		if (c->x86 == 6 && c->x86_model == 45)
+ 			quirk_no_way_out = quirk_sandybridge_ifu;
+ 	}
++
++	if (c->x86_vendor == X86_VENDOR_ZHAOXIN) {
++		/*
++		 * All newer Zhaoxin CPUs support MCE broadcasting. Enable
++		 * synchronization with a one second timeout.
++		 */
++		if ((c->x86 == 6 && c->x86_model == 0x19 &&
++			(c->x86_stepping > 3 && c->x86_stepping < 8)) ||
++		    (c->x86 == 6 && c->x86_model == 0x1f) ||
++		     c->x86 > 6) {
++			if (cfg->monarch_timeout < 0)
++				cfg->monarch_timeout = USEC_PER_SEC;
++		}
++	}
++
+ 	if (cfg->monarch_timeout < 0)
+ 		cfg->monarch_timeout = 0;
+ 	if (cfg->bootlog != 0)
+@@ -2014,15 +2031,16 @@ static void mce_disable_error_reporting(void)
+ static void vendor_disable_error_reporting(void)
+ {
+ 	/*
+-	 * Don't clear on Intel or AMD or Hygon CPUs. Some of these MSRs
+-	 * are socket-wide.
++	 * Don't clear on Intel or AMD or Hygon or Zhaoxin CPUs. Some of these
++	 * MSRs are socket-wide.
+ 	 * Disabling them for just a single offlined CPU is bad, since it will
+ 	 * inhibit reporting for all shared resources on the socket like the
+ 	 * last level cache (LLC), the integrated memory controller (iMC), etc.
+ 	 */
+ 	if (boot_cpu_data.x86_vendor == X86_VENDOR_INTEL ||
+ 	    boot_cpu_data.x86_vendor == X86_VENDOR_HYGON ||
+-	    boot_cpu_data.x86_vendor == X86_VENDOR_AMD)
++	    boot_cpu_data.x86_vendor == X86_VENDOR_AMD ||
++	    boot_cpu_data.x86_vendor == X86_VENDOR_ZHAOXIN)
+ 		return;
+ 
+ 	mce_disable_error_reporting();
 -- 
-Andreas Schwab, SUSE Labs, schwab@suse.de
-GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
-"And now for something completely different."
+2.7.4
