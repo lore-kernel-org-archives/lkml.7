@@ -2,96 +2,83 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD6F6C5AE59
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 779A2C49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEC5921670
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:52:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4114F2082C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:57:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568134628;
+	bh=UMv65zBvlpgle8E7mO8AeZIREr1Yo4NYVJ1nbN8qSVM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=EdWvs5YotHYNGhLkyW7LBKvCGB3spmlC1gfIe+NfJLlMimCPh/ndunqxH7YfcFF8S
+	 w8464tPyj218wQ2n3GprbLYS4skWVrTpVVcPPZ1b1vg+Bv6E04SGcToPayTE0Ix/g4
+	 UnZjz3195HCQfOgvd+gZ+hxO+ZUHznB0YuJy73Gw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436956AbfIJQwG (ORCPT
+        id S2436969AbfIJQ5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 12:52:06 -0400
-Received: from foss.arm.com ([217.140.110.172]:38308 "EHLO foss.arm.com"
+        Tue, 10 Sep 2019 12:57:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436473AbfIJQwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 12:52:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F13301000;
-        Tue, 10 Sep 2019 09:52:04 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B2D733F71F;
-        Tue, 10 Sep 2019 09:52:00 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] iommu: add support for drivers that manage iommu
- explicitly
-To:     Rob Clark <robdclark@gmail.com>, Joerg Roedel <joro@8bytes.org>
-Cc:     "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Joe Perches <joe@perches.com>, Arnd Bergmann <arnd@arndb.de>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190906214409.26677-1-robdclark@gmail.com>
- <20190906214409.26677-2-robdclark@gmail.com>
- <20190910081415.GB3247@8bytes.org>
- <CAF6AEGsFmuO5M_RWm-RjDT_F_1Z=MLYmNqRXqFNDR7aUoPaMdg@mail.gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <4b5b59bb-39a4-0757-e2bb-0961cfc7e4c1@arm.com>
-Date:   Tue, 10 Sep 2019 17:51:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S2436952AbfIJQ5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 12:57:07 -0400
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C054F2082C
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 16:57:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568134626;
+        bh=UMv65zBvlpgle8E7mO8AeZIREr1Yo4NYVJ1nbN8qSVM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=e1hX7isN+rAXTlm06BSmdEGyCvO3oQbCh6L/9Olfhzt4Y+y59rIpiBCm8PJpxCChO
+         FCRcJF/2xU+q8Phok/2XXMX76E8p/JMAZlEGTHgtnqAVI+aswneboowGT8wmpPbbnn
+         iARZ/NI6MaxQrc1CMVLcrjgzH43Kye41dyNNNz6I=
+Received: by mail-wr1-f48.google.com with SMTP id t16so21416642wra.6
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 09:57:05 -0700 (PDT)
+X-Gm-Message-State: APjAAAXxV08m6mJYF1SjHQUvt5JuR9ed+WU4lMbxvfg51bnGGy2KavY7
+        esG9Who1KSbSd1t05PuRI5SPsCqP1aUs5e/CsM/WIw==
+X-Google-Smtp-Source: APXvYqzfNckRdcOeF31SlRnVdskoQYKf5gkvVGtyy8lb/m05shVLaJXCnbiercrrU11/uQLbaerxQn/FCbkMHMmLr+k=
+X-Received: by 2002:adf:dcc4:: with SMTP id x4mr19271602wrm.221.1568134624270;
+ Tue, 10 Sep 2019 09:57:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAF6AEGsFmuO5M_RWm-RjDT_F_1Z=MLYmNqRXqFNDR7aUoPaMdg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20190905005313.126823-1-dancol@google.com>
+In-Reply-To: <20190905005313.126823-1-dancol@google.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 10 Sep 2019 09:56:53 -0700
+X-Gmail-Original-Message-ID: <CALCETrU2Wycgdfo8vLZQUnx1J9ro=6ddSkP37BhsfBkKL1mbMA@mail.gmail.com>
+Message-ID: <CALCETrU2Wycgdfo8vLZQUnx1J9ro=6ddSkP37BhsfBkKL1mbMA@mail.gmail.com>
+Subject: Re: [RFC] Add critical process prctl
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Tim Murray <timmurray@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/09/2019 16:34, Rob Clark wrote:
-> On Tue, Sep 10, 2019 at 1:14 AM Joerg Roedel <joro@8bytes.org> wrote:
->>
->> On Fri, Sep 06, 2019 at 02:44:01PM -0700, Rob Clark wrote:
->>> @@ -674,7 +674,7 @@ int iommu_group_add_device(struct iommu_group *group, struct device *dev)
->>>
->>>        mutex_lock(&group->mutex);
->>>        list_add_tail(&device->list, &group->devices);
->>> -     if (group->domain)
->>> +     if (group->domain && !(dev->driver && dev->driver->driver_manages_iommu))
->>
->> Hmm, this code usually runs at enumeration time when no driver is
->> attached to the device. Actually it would be pretty dangerous when this
->> code runs while a driver is attached to the device. How does that change
->> make things work for you?
->>
-> 
-> I was seeing this get called via the path driver_probe_device() ->
-> platform_dma_configure() -> of_dma_configure() -> of_iommu_configure()
-> -> iommu_probe_device() -> ...
-> 
-> The only cases I was seeing where dev->driver is NULL where a few
-> places that drivers call of_dma_configure() on their own sub-devices.
-> But maybe there are some other paths that I did not notice?
+On Wed, Sep 4, 2019 at 5:53 PM Daniel Colascione <dancol@google.com> wrote:
+>
+> A task with CAP_SYS_ADMIN can mark itself PR_SET_TASK_CRITICAL,
+> meaning that if the task ever exits, the kernel panics. This facility
+> is intended for use by low-level core system processes that cannot
+> gracefully restart without a reboot. This prctl allows these processes
+> to ensure that the system restarts when they die regardless of whether
+> the rest of userspace is operational.
 
-For the of_iommu flow, it very much depends on your DT layout and driver 
-probe order as to whether you catch the "proper" call from 
-iommu_bus_notifier()/iommu_bus_init() or the late "replay" from 
-of_iommu_configure(). I wouldn't make any assumptions of consistency.
+The kind of panic produced by init crashing is awful -- logs don't get
+written, etc.  I'm wondering if you would be better off with a new
+watchdog-like device that, when closed, kills the system in a
+configurable way (e.g. after a certain amount of time, while still
+logging something and having a decent chance of getting the logs
+written out.)  This could plausibly even be an extension to the
+existing /dev/watchdog API.
 
-Robin.
+--Andy
