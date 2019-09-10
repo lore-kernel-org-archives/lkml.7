@@ -2,105 +2,105 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B801C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1467DC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDC8821019
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:56:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D459C20863
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:58:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="AHxH269d"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MGu+T7cO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbfIJI4L (ORCPT
+        id S1727194AbfIJI6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 04:56:11 -0400
-Received: from mail-lf1-f53.google.com ([209.85.167.53]:34622 "EHLO
-        mail-lf1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbfIJI4L (ORCPT
+        Tue, 10 Sep 2019 04:58:24 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37516 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbfIJI6X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 04:56:11 -0400
-Received: by mail-lf1-f53.google.com with SMTP id r22so1498221lfm.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 01:56:10 -0700 (PDT)
+        Tue, 10 Sep 2019 04:58:23 -0400
+Received: by mail-wr1-f68.google.com with SMTP id i1so17875754wro.4
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 01:58:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UNfZ6D6BkW5VBAgD6NV0GNz1BCxCA3u2wXgw+w9oDDM=;
-        b=AHxH269dTSeO5uFrk+ZsTv2xttxAWwY3vGT2RqKL9s0VLWiIaUREEiiQ2NyF1pfTOl
-         8tDMzqHAvfuQDvW7vVaKCh7EJX6qYDY0Wa9oCheLgS/9hVZHp3Tx6IfGmTxdieRkl032
-         /p07TJ47w4YX+L1Ivl1LQykhDn72UeNSqngrdEaF1KXMWRGigsy57ZykyS+027i/QwLq
-         S+TddAHz1w3sJevGi9elfNke689QN8rN9S/cSXFOYB4Ssn8CT9mJxODj+RBHVrwPfBBb
-         KLWT10dHr2IGLTW68zuk5XEL26YvdUoOPwYRDTim4Y6LW1aa3pNtzPtMKhrm4gP8UA9f
-         rLmQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=uM1JHpYUMo3Cp4di2I20gUOtFuQlYUuIB4UQxpZ8dOc=;
+        b=MGu+T7cOqK98jSo1eTCQ2pKjbL5XTl/1XsHxliFkZuPfKm3K5Ktj0q24+QlcwMtnlO
+         ew87wYK/YyqUjDhHpD5pD3HkBDDfdm82cNQGMkPTkckyAmyTbdEcfzj0clqI/U2ia/R9
+         qJak+UvS49/jHzbNBWm3nI0Lm4/jLaECIv6SBK7SEJgI9Yhrt8L7BB2Twx39gocXjb7N
+         gg4QWq+oX9ZJOij9g7faFIVdjyYm9UMdympcV5jaLMmGA9CgyBdKcdY4apkTgUz8CySJ
+         KBNfDhvpjqA022kvyW1N1UE2K2U4HxUwnq7NM4RuGtDbfpc1YS5CCkJ2N+8moedwCa+M
+         8Cqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UNfZ6D6BkW5VBAgD6NV0GNz1BCxCA3u2wXgw+w9oDDM=;
-        b=ugEC3lJdmXAXuSZizT/yqTcBVVZ7GMHcFVWyHpNjiODqsEE2RPhD41et9AJLMX+mzV
-         NLgRAN/lefllqGXQTIPXFCPIl+XGDo/NMrd2VXt5Wib1exXlTNS9yTa2A5FU8UhtrZNt
-         KcC5+fZ5qPhwhfvamKs1KBEwHzljFU/nLaYNbCO69/znmNCzL+ua7b+b7sOR+SVRPygD
-         H4wc4gircswmhMNVDjzG87TJH9DrHP+U7MeUdScMBasQPyPgy/QcVrCuLg/oOyr6+qtv
-         oRH8OuwYKUiLz3ekQmBiW40dAHoRQ0jAKoPL0QH0aZie2Csg3ng4luItp6y8RrEV0GmK
-         cVDA==
-X-Gm-Message-State: APjAAAUoBXfN9nIS3rwmFX6Fv0wT2svnNOo2HZC2TIVX0+1ycPu1mCHx
-        Sgk/ZWjwBFiAp1+VwPzJF74BSF02Xff8QvnCg+5TrA==
-X-Google-Smtp-Source: APXvYqx8WFbmdHzdtKi9N5oQGSAaZLgzlIwkKwBIHnTKsUuZ4/h/Dy+UpUVGQdty83dzdc2Fa+IL1f33HIyuzNDtxoY=
-X-Received: by 2002:a19:3805:: with SMTP id f5mr19258381lfa.173.1568105769318;
- Tue, 10 Sep 2019 01:56:09 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=uM1JHpYUMo3Cp4di2I20gUOtFuQlYUuIB4UQxpZ8dOc=;
+        b=HQ+fIjpQoBxy6bMcuZoIQcQoaAjjn1w/Gw7HelBqBaN0csenvLMVX/AdwJrdRYPlKy
+         eIuDByhlJC+F/b1/Z2OpfyJYCPt6CWvUFtKDGZLjP1zefbhsrpBSvXWedm79zVBVktH4
+         +7PlAE2IbENV33E6pflc9nh9VlFM4cicNQkcEpu9NpgSZ4kGa6J4Wlh3RlntJ+nKLzN5
+         QF2mz2mXJKp1a8OtcdSdZJNy03U9uq+2rXNZDRKD7VcNEuPkM+Os1hquCJ5d/puPerRn
+         tzbStJc/Y2ESOKwjV67WmuXv58JaiJLZbyK8TSiL43oHWxqlaTsVfGlpoRmGmGTVwCeP
+         VAEg==
+X-Gm-Message-State: APjAAAUEgmkD7cigU/Rm9OArIs6KTrP1kvpWaQFgE18rtOPnAW2xLrRh
+        hF2p3cVvaHNVo2CZX1XVuYD2d/jubxJkKhggUdg=
+X-Google-Smtp-Source: APXvYqyruTqEO33YqxkX3BPmsdW2MSG9Qb+7nWIXpI+eBMKJI355V9C/L1sxuVLS46qTGcri9MtUQLmbmJ2mr9NfrkQ=
+X-Received: by 2002:adf:a54d:: with SMTP id j13mr23663252wrb.261.1568105900512;
+ Tue, 10 Sep 2019 01:58:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190906074526.169194-1-maco@android.com> <20190909145703.GA16249@redhat.com>
-In-Reply-To: <20190909145703.GA16249@redhat.com>
-From:   Martijn Coenen <maco@android.com>
-Date:   Tue, 10 Sep 2019 10:55:58 +0200
-Message-ID: <CAB0TPYEb-WdggSj=i+tpABfkO9KFqcgMc0twMx0L=ZcAN4HDfw@mail.gmail.com>
-Subject: Re: dm-bufio: Allow clients to specify an upper bound on cache size.
-To:     Mike Snitzer <snitzer@redhat.com>
-Cc:     Mikulas Patocka <mpatocka@redhat.com>, agk@redhat.com,
-        dm-devel@redhat.com, Dario Freni <dariofreni@google.com>,
-        Jiyong Park <jiyong@google.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Martijn Coenen <maco@google.com>,
-        Nikita Ioffe <ioffe@google.com>,
-        Narayan Kamath <narayan@google.com>, kernel-team@android.com
+References: <20190904181740.GA19688@gmail.com> <CAHk-=wi2VOPoweqnDhxXKJ9fcLQzkV1oEDjteV=z-C7KXrpomg@mail.gmail.com>
+ <CANiq72mXLbaefVBqZzz1vSREi0=HiBUgR1KU3iRjOCum7rvfrw@mail.gmail.com>
+ <CAHk-=wiNksYaQ5zRFgTdY4TMHkxRi3aOcTC2zMMS6+aVSx+yeQ@mail.gmail.com>
+ <CANiq72kyk6uzxS3LRvcOs9zgYYh7V7V2yPtAFkDwpHmyYcsz_Q@mail.gmail.com>
+ <CAKwvOdkodVFxUr_Xc-qeUHnpxEmofENDhNdvCuiRzcGXQ54QkQ@mail.gmail.com>
+ <CAHk-=wg+PD-+FEdKJuRVrrsgnFFLoAgU4Uz7tnohq_TgsEcNig@mail.gmail.com>
+ <CAKwvOdmCBgKMLkXt29=vgvws_ek4XY3urMdfBUzbREH8Bj3uYA@mail.gmail.com>
+ <CAHk-=whZ-ac4jm9zt=805xWsXaDAFWn2Bwn2PNtOBVx1vUmVvQ@mail.gmail.com>
+ <CAKwvOdkWcB6jhqpr6p3LQkJOOt2si3i=bTGM11Poz8cZypS5EA@mail.gmail.com>
+ <CAHk-=wiyxKDMW2fPumh2WyP3tP1BHpispjGfTWQ-we8keZ=q7Q@mail.gmail.com>
+ <CA+icZUVNATrXZ7SDTrKa10cK8xtrRiC6VeXjkP6e9WyeKstMnA@mail.gmail.com> <CANiq72mOjC+JrpAOveqLPuE8f=XLXnr99DHb79ZVz=SKV6zhnA@mail.gmail.com>
+In-Reply-To: <CANiq72mOjC+JrpAOveqLPuE8f=XLXnr99DHb79ZVz=SKV6zhnA@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Tue, 10 Sep 2019 10:58:09 +0200
+Message-ID: <CA+icZUVPFHimzas_YfmYJc14-qthsPRAXwj1m-fvBfP-HpziOQ@mail.gmail.com>
+Subject: Re: [GIT PULL] compiler-attributes for v5.3-rc8
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Will Deacon <will@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Paul Burton <paul.burton@mips.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Behan Webster <behanw@gmail.com>,
+        Behan Webster <behanw@converseincode.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mike,
-
-On Mon, Sep 9, 2019 at 4:57 PM Mike Snitzer <snitzer@redhat.com> wrote:
-> Definitely not very intuitive.. but yes I think it is a reasonable
-> tradeoff between your goals and further code complexity to be able to
-> achieve the "ideal".
-
-Thanks for the feedback. I do have a patch for the "optimal"
-allocation lying around as well, if you'd like to take a look. It's
-not as bad as I thought, but it does require another list_head in
-dm_bufio_client; other than that it's just O(N), so not so bad.
-
-> Think the documented example can be made clearer by documenting that
-> dm_bufio_cache_size_per_client = 49.  And that _that_ is the reason why
-> the client that didn't set a maximum is bounded to 49.
-
-Ack, will send a v2 to clarify.
-
+On Sat, Sep 7, 2019 at 1:59 PM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
 >
-> Overall I think this patch looks reasonable, but I'd like Mikulas to
-> review this closer before I pick it up.
-
-Thanks; let me know if you want to see the alternative as an RFC, and
-I'll clean it up and send it out.
-
-Thanks,
-Martijn
-
+> On Sat, Sep 7, 2019 at 7:50 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+> >
+> > The compiler-attribute patchset sit for some weeks in linux-next, so I
+> > have not seen any complains.
 >
-> Thanks,
-> Mike
+> It has been there only since Monday (cleanly), not weeks.
+>
+
+
+Sorry, I was not precise enough and didn't remember correctly.
+
+I have re-tested with Linux v5.3-rc8. All OK.
+
+- Sedat -
