@@ -2,86 +2,96 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF23C49ED6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC48C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF04921479
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:33:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568111587;
-	bh=LJtBmi1tzU6euOWenIIUw2u/xvJ895RqpElZGcqoEFA=;
-	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
-	b=BBG7vD3Lad62rPQU/YorJyKTXcWtyo12+6bNlw9Elj6n1W53CPkFB2iEet6eYHXQE
-	 9mHPMOhG73I4661SlRKsSiU0ynAIeZ3EXn6je/ynBlF0y66b/oABxx5hWwWB/IBeoS
-	 k+EJnSFBJQdUuGyRQLBU2gzbtqPWG08c8RXyqhkw=
+	by mail.kernel.org (Postfix) with ESMTP id 525EB20872
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:33:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ge60Pgil"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393835AbfIJKdH (ORCPT
+        id S2392597AbfIJKdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 06:33:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55350 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726869AbfIJKdG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 06:33:06 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4E1B20872;
-        Tue, 10 Sep 2019 10:33:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568111585;
-        bh=LJtBmi1tzU6euOWenIIUw2u/xvJ895RqpElZGcqoEFA=;
-        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
-        b=OAZJ7pZnOmv9TWBnrIlLZYkgxdz9nE3yZkkswcGMUvEz1dDtQQtUpjisOcxQVWi8m
-         pSr+mBZWVY9wjfPqJncBp2lPnBzesriGkO0xQ7zUSzOnyAUjNCPwVhecpHQPreRFHS
-         JoMAZd14rknZjzD54lrSggDKmIYLet8VngkurqyI=
-Content-Type: text/plain; charset="utf-8"
+        Tue, 10 Sep 2019 06:33:46 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:47032 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726869AbfIJKdq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 06:33:46 -0400
+Received: by mail-lj1-f196.google.com with SMTP id e17so15841896ljf.13
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 03:33:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DGSrpCaXqgzMsNgewILLlh1XqzPAveIzeVgEw6Biryo=;
+        b=ge60Pgil5AfX4PcdyWwdIJOtoU+rI7c68w2fhSX/GA21cW8Fh+Dxq4KzdU1eEWEawv
+         KrGBFusza5pub5hw+4tsXQy1zZzpc7+z3jCeGmBXB6nTIr0xY0ox+CjEeUcB7G2eJXBk
+         ZOH30LkwKVKfD++vh/8Ncy7CCx5JKTZWzn5OL5vP340flT0nlTFNVb9ydKaGsftsnzdE
+         LsjziEoue0PS893oAQF94bHoZnqSZyUKFT9lsDi3rVqyMaCfDiw7TRj44FfeuDktDpbc
+         Ya5WTKocZrXgyDGIrgBEYJMYOyC9HAaabULeuTQcyqlEx+35X9QbEQb/EZ2Ax+Uh4Ro0
+         03BQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DGSrpCaXqgzMsNgewILLlh1XqzPAveIzeVgEw6Biryo=;
+        b=pfxfcJ7buQVLYEkAgZoK5nr/Cbv9t+pVPMgiWbsOgKPe1USEPPr0eBBgzWAtrRxj4x
+         LDj76UYor9smLtObTmJ32NdWPaW8ah7iv+cAWO/Xd+f+9evDua6da8WkB6Px4/iYsFe3
+         SVjmAlEk+/mGHHnAbdrKh29cKihIkmjBwik3dHO+z29SWBDHcRH7VI+/NcyHsF9ISQI6
+         2BA89ufhkKL+MctaKyeiJaFeHR9uqr3eqSWMi68fhoykxjOkB/YfmTkCKSJxlyZKuXlJ
+         9uMb0pJy7f8q0Rj0fkehI1YlOr1vfzRCSnU/bMZzMUChPtzAsOPuIfW/HOkeQwU4J4b2
+         LMmA==
+X-Gm-Message-State: APjAAAXamm7ItZNq0w5RwM3fsoPYum6WMIH3W/71lUvwB4fmYS3ZWn5g
+        vRIuZhzgwm+0QmTFo91geSMNKXqFDf7UacznAAp6cQ==
+X-Google-Smtp-Source: APXvYqzrS203uVyxVpv+f0AE49RyYwVN2ICTnAspsO3UNfX1wnKJSzWjWHoN0RFD+Do6MezjnHUSSEG/UbPW0dCtt1Y=
+X-Received: by 2002:a2e:9dc3:: with SMTP id x3mr15475740ljj.108.1568111624439;
+ Tue, 10 Sep 2019 03:33:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190811210043.20122-2-digetx@gmail.com>
-References: <20190811210043.20122-1-digetx@gmail.com> <20190811210043.20122-2-digetx@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Joseph Lo <josephl@nvidia.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v10 01/15] clk: tegra20/30: Add custom EMC clock implementation
-User-Agent: alot/0.8.1
-Date:   Tue, 10 Sep 2019 03:33:04 -0700
-Message-Id: <20190910103305.B4E1B20872@mail.kernel.org>
+References: <20190903231856.GA165165@dtor-ws>
+In-Reply-To: <20190903231856.GA165165@dtor-ws>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 10 Sep 2019 11:33:32 +0100
+Message-ID: <CACRpkdYrSt7R8tA+zfN21DZpkz=1KaV5QihzHw7-KPCrUZhA-Q@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: of: fix fallback quirks handling
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Dmitry Osipenko (2019-08-11 14:00:29)
-> A proper External Memory Controller clock rounding and parent selection
-> functionality is required by the EMC drivers, it is not available using
-> the generic clock implementation because only the Memory Controller driver
-> is aware of what clock rates are actually available for a particular
-> device. EMC drivers will have to register a Tegra-specific CLK-API
-> callback which will perform rounding of a requested rate. EMC clock users
-> won't be able to request EMC clock by getting -EPROBE_DEFER until EMC
-> driver is probed and the callback is set up.
->=20
-> The functionality is somewhat similar to the clk-emc.c which serves
-> Tegra124+ SoCs. The later HW generations support more parent clock sources
-> and the HW configuration / integration with the EMC drivers differs a tad
-> from the older gens, hence it's not really worth to try to squash
-> everything into a single source file.
->=20
-> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
+On Wed, Sep 4, 2019 at 12:18 AM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
 
-Acked-by: Stephen Boyd <sboyd@kernel.org>
+> We should only try to execute fallback quirks handling when previous
+> call returned -ENOENT, and not when we did not get -EPROBE_DEFER.
+> The other errors should be treated as hard errors: we did find the GPIO
+> description, but for some reason we failed to handle it properly.
+>
+> The fallbacks should only be executed when previous handlers returned
+> -ENOENT, which means the mapping/description was not found.
+>
+> Also let's remove the explicit deferral handling when iterating through
+> GPIO suffixes: it is not needed anymore as we will not be calling
+> fallbacks for anything but -ENOENT.
+>
+> Fixes: df451f83e1fc ("gpio: of: fix Freescale SPI CS quirk handling")
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
+Patch applied with Andy's review tag.
+
+Sorry for not catching this before, the reasoning with the patch
+is correct and I should have noticed. Overload I guess.
+
+Yours,
+Linus Walleij
