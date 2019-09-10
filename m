@@ -2,108 +2,119 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAAC2C4740A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67AD8C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EA8D20872
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:20:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568110816;
-	bh=3omawxBmTSTQ4L4eFHnvS5YYJiKjDUvu+gM4S3o1u4A=;
-	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
-	b=H8GWmcfMHvup+zQwwVNp4wD5U7udTt7KKKc8J27RJ2TIoov2yEIGZxFOIjxY/Zdt8
-	 ThQq4fZbPhC4fehIj8hgDrzzvQa4BuY07FMFQfEy0Hr/DW2bZGFo2nRgO0JP4NQ/JL
-	 kR985pE0UKLyIRbNitTJnAJGI55/TqU0u73gTn3s=
+	by mail.kernel.org (Postfix) with ESMTP id 43FE2206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:21:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388692AbfIJKUQ (ORCPT
+        id S1729855AbfIJKVX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 06:20:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48232 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732367AbfIJKUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 06:20:15 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CD3C2081B;
-        Tue, 10 Sep 2019 10:20:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568110815;
-        bh=3omawxBmTSTQ4L4eFHnvS5YYJiKjDUvu+gM4S3o1u4A=;
-        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
-        b=lMchchyBM1wQPTh0xgo8L18bKMq4gy+2VZw757QGmCdDrGHuf1R20mhc7qMeg8P4V
-         QUKrsRe6rjuPr1Er/FMOhlZge5JWGHEzrkJOjh5KkFAGTD/JVW+Tp8JG8jcyRyndme
-         7Q/1ZOXhb8bxz+C5EJZjxdy+xvzmeu4oh80ruBNM=
-Content-Type: text/plain; charset="utf-8"
+        Tue, 10 Sep 2019 06:21:23 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49598 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726231AbfIJKVX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 06:21:23 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8AAIHSZ125873
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 06:21:21 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ux6t3xj4d-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 06:21:21 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <imbrenda@linux.ibm.com>;
+        Tue, 10 Sep 2019 11:21:18 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 10 Sep 2019 11:21:15 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8AALDcq59441152
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Sep 2019 10:21:13 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C98E1A4053;
+        Tue, 10 Sep 2019 10:21:13 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 918DFA4040;
+        Tue, 10 Sep 2019 10:21:13 +0000 (GMT)
+Received: from p-imbrenda.boeblingen.de.ibm.com (unknown [9.152.224.39])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 10 Sep 2019 10:21:13 +0000 (GMT)
+Date:   Tue, 10 Sep 2019 12:21:12 +0200
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Igor Mammedov <imammedo@redhat.com>, linux-kernel@vger.kernel.org,
+        david@redhat.com, cohuck@redhat.com,
+        Janosch Frank <frankja@linux.ibm.com>
+Subject: Re: [PATCH] kvm_s390_vm_start_migration: check dirty_bitmap before
+ using it as target for memset()
+In-Reply-To: <4668e4e9-c0bc-3647-6387-20c6f8107ed3@de.ibm.com>
+References: <20190909145545.11759-1-imammedo@redhat.com>
+        <4668e4e9-c0bc-3647-6387-20c6f8107ed3@de.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <3517a1e0-6092-362f-f696-fcc1528ce026@linaro.org>
-References: <20190826164510.6425-1-jorge.ramirez-ortiz@linaro.org> <20190826164510.6425-2-jorge.ramirez-ortiz@linaro.org> <20190909102117.245112089F@mail.kernel.org> <20190909141740.GA23964@igloo> <20190909161704.07FAE20640@mail.kernel.org> <20190909165408.GC23964@igloo> <20190910091437.CCA78208E4@mail.kernel.org> <fcac3f60-6a96-b3ee-f734-a03636fbbee4@linaro.org> <3517a1e0-6092-362f-f696-fcc1528ce026@linaro.org>
-Cc:     agross@kernel.org, mturquette@baylibre.com,
-        bjorn.andersson@linaro.org, niklas.cassel@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-To:     Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 2/5] clk: qcom: apcs-msm8916: get parent clock names from DT
-User-Agent: alot/0.8.1
-Date:   Tue, 10 Sep 2019 03:20:03 -0700
-Message-Id: <20190910102015.1CD3C2081B@mail.kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19091010-0012-0000-0000-000003497464
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19091010-0013-0000-0000-00002183D856
+Message-Id: <20190910122112.098e3494@p-imbrenda.boeblingen.de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-10_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=773 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909100105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jorge Ramirez (2019-09-10 02:40:34)
-> On 9/10/19 11:34, Jorge Ramirez wrote:
-> > On 9/10/19 11:14, Stephen Boyd wrote:
-> >>
-> >> This is not a backwards compatible change.
-> >>
-> >>>>> --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> >>>>> +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> >>>>> @@ -429,7 +429,8 @@
-> >>>>>      compatible =3D "qcom,msm8916-apcs-kpss-global", "syscon";
-> >>>>>      reg =3D <0xb011000 0x1000>;
-> >>>>>      #mbox-cells =3D <1>;
-> >>>>> -                   clocks =3D <&a53pll>;
-> >>>>> +                 clocks =3D <&gcc GPLL0_VOTE>, <&a53pll>;
-> >>>>> +                 clock-names =3D "aux", "pll";
-> >>>>>                       #clock-cells =3D <0>;
-> >>>>>                };
-> >>>>>                                                                    =
-                                            =20
-> >>
-> >> Because the "clocks" property changed from
-> >>
-> >>      <&a53pll>
-> >>
-> >> to
-> >>
-> >>      <&gcc GPLL0_VOTE>, <&a53pll>
-> >>
-> >> and that moves pll to cell 1 instead of cell 0.
-> >>
-> >>
-> >=20
-> > what do you mean by backwards compatible? because this change does not
-> > break previous clients.
->=20
-> as per the comments I added to the code (in case this helps framing the
-> discussion)
->=20
-> [..]
-> legacy bindings only defined the pll parent clock (index =3D 0) with no
-> name; when both of the parents are specified in the bindings, the
-> pll is the second one (index =3D 1).
+On Mon, 9 Sep 2019 18:21:47 +0200
+Christian Borntraeger <borntraeger@de.ibm.com> wrote:
 
-The 'clock-names' property is entirely irrelevant to this discussion.
-The PLL _must_ be index 0 forever so that the binding is left in a
-backwards compatible state. Moving the PLL to index 1 and then using
-clock-names to find it is a backwards incompatible change. The order of
-clks in the 'clocks' property is an ABI.
+[...]
+
+
+> > diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+> > index f329dcb3f44c..dfba51c9d60c 100644
+> > --- a/arch/s390/kvm/kvm-s390.c
+> > +++ b/arch/s390/kvm/kvm-s390.c
+> > @@ -1018,6 +1018,10 @@ static int
+> > kvm_s390_vm_start_migration(struct kvm *kvm) /* mark all the pages
+> > in active slots as dirty */ for (slotnr = 0; slotnr <
+> > slots->used_slots; slotnr++) { ms = slots->memslots + slotnr;
+> > +		if (!ms->dirty_bitmap) {
+> > +			WARN(1, "ms->dirty_bitmap == NULL\n");  
+> 
+> I would prefer to not have a WARN_ON. Otherwise this would allow a
+> malicious user to spam the log. 
+
+I agree, the WARN is not needed.
+ 
+> 
+> > +			return -EINVAL;
+> > +		}
+> >  		/*
+> >  		 * The second half of the bitmap is only used on
+> > x86,
+> >  		 * and would be wasted otherwise, so we put it to
+> > good 
+
+Otherwise it looks good.
+
+
+
+Claudio Imbrenda
 
