@@ -2,235 +2,186 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B92C4740A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED4A4C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1B5B2067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:57:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C30B62067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:00:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="QxUSuXEe"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="GxPXDkYL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405376AbfIJJ5I (ORCPT
+        id S2391962AbfIJKAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 05:57:08 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:10100 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727557AbfIJJ5H (ORCPT
+        Tue, 10 Sep 2019 06:00:04 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:36980 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391894AbfIJKAD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 05:57:07 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8A9uDBj023826;
-        Tue, 10 Sep 2019 11:56:59 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=ErUgIUS2VY+/8qf6Vv9yQV5SKk6g/uDQJFIeqna0UrM=;
- b=QxUSuXEe0+XePhIbyucyVpq3ALGS95czxcVswPVyEkvw/Zyf2UW8mE+lRvXItfxFpuc3
- KAqhRoAhwjObnJEjd2Q4DrSbpUMIDwMzetRIhP2ezl1Q2uOo728eVkaRsysWLvddcbUb
- U5Ll/XBoRJR1+Dv14VJeR0KKo0iOBYvSZSJPZVF+jv5UeHWcYrq+jzK0JdJe6EmmLLbe
- ajjgEzdjt6Ll/jG9680dT5UEdM5R1A3R1ic/EnhhypZQ7jBhYluYT3YIIP0v0zQqHpCC
- 9DUxZhQiWPqalSkNsUZu+M3DSOkLh1nRjH+vKF4Apbt1wGnLjFvmPM1ZqmMZdmAH/Y4B sA== 
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2uv212keu4-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 10 Sep 2019 11:56:59 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 45AE022;
-        Tue, 10 Sep 2019 09:56:55 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 99E802BA3FF;
-        Tue, 10 Sep 2019 11:56:54 +0200 (CEST)
-Received: from [10.48.0.131] (10.75.127.48) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 10 Sep
- 2019 11:56:53 +0200
-Subject: Re: [PATCH 1/3] rpmsg: core: add API to get message length
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-CC:     Ohad Ben-Cohen <ohad@wizery.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>, Suman Anna <s-anna@ti.com>,
-        Fabien DESSENNE <fabien.dessenne@st.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <1567693630-27544-1-git-send-email-arnaud.pouliquen@st.com>
- <1567693630-27544-2-git-send-email-arnaud.pouliquen@st.com>
- <CAOCk7Nrja=31soMB+MhcrxhGHMT+bj9U+3_h6cTLo3+AAsFKqQ@mail.gmail.com>
- <8e87ccff-1bdb-255c-0be4-db34869f0d13@st.com>
- <CAOCk7NraQwa2O=tptWk9enKdvta+eOCJ6ZZ=v6xOE-tocGdgpA@mail.gmail.com>
-From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Message-ID: <158df963-4cec-a454-d335-24a9b93f74cd@st.com>
-Date:   Tue, 10 Sep 2019 11:56:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 10 Sep 2019 06:00:03 -0400
+Received: by mail-ed1-f67.google.com with SMTP id i1so16510578edv.4
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 03:00:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pUWhX3ThjBsfsGFjHTg5vM8zbxi9HZ/0nZMiaDbj8tw=;
+        b=GxPXDkYLjPwpEyC9jWChtUTWeR0/79A5cu90rpnDmM8on2MRXtnBKzG29ORgLNA6f1
+         txcUcoaQTdyTAiUGkQUZZPJkuD7nugbVl3CoybHPuQAFAMtvHrQNCku4QefgSsIOGT5b
+         GUwbPSSrp+wXw9hrMHdTQNdmUSFac6yQhUk7I67mBDwyM41vxlCITlbm0a6vv00s+fSY
+         qXDIpgTKRMsVg9s5v3fD0Iea3f5IqYCoYeYadWUZdGSt94hYnIyN0FHw7mmmsMZPFsKe
+         4eW7ii0xEN698uaYMy49yVN+Hursc/82AAUIRsnWjFuvJblw4Boic9ulaxPxCxm0f7Y3
+         0oLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pUWhX3ThjBsfsGFjHTg5vM8zbxi9HZ/0nZMiaDbj8tw=;
+        b=mx08OUJTONTGMTrCW301qg5o6zDX9Hq0MpZwOSAPYtK9UAkumTsPGzIlc2zYJPuOUU
+         pPsMmE9MpPWihyiTiEJz14YU7w9xWR6H+DJypHkisSCUhuX+kSO/r0xZlgraecinKAcd
+         1f74wTiIGmvEqWlzWS2/QfHuP14ZgExAcuDj5MMlmEVpx9k22CUlRLeAEVs1vFc/+NRp
+         xaJ8IjEwa3q5SGvf0OPEUNSzhXJPKiBLfOCC09qf8K28XlZiAjjGdZlvqJT1OMp3kWcR
+         7zCCvKmsGB/BWyanEU8IrfOJ8R3AwdXOHhaveuG8EvUhcPrw/Dpg/AOyWvHzsenrcAp1
+         8k1g==
+X-Gm-Message-State: APjAAAVKNNvPXGkrQG6m+8IiKvIubpRiSzyqSmJrDblxh+aVStpi0rgZ
+        DpZnJ5Ymdbe2z5ppqpwl16kP9Q==
+X-Google-Smtp-Source: APXvYqzz4uL9Be0Dv1iBucS5Ebliv1AOhngwcvBEpja1udqCYli84dpW7omCy5uIzxmAlbj9c8Usvw==
+X-Received: by 2002:a17:906:5f84:: with SMTP id a4mr23374522eju.109.1568109601468;
+        Tue, 10 Sep 2019 03:00:01 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id a55sm3486246edd.34.2019.09.10.03.00.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 10 Sep 2019 03:00:00 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id E0B701009F6; Tue, 10 Sep 2019 13:00:00 +0300 (+03)
+Date:   Tue, 10 Sep 2019 13:00:00 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Mike Christie <mchristi@redhat.com>
+Cc:     axboe@kernel.dk, James.Bottomley@HansenPartnership.com,
+        martin.petersen@oracle.com, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-block@vger.kernel.org
+Subject: Re: [RFC PATCH] Add proc interface to set PF_MEMALLOC flags
+Message-ID: <20190910100000.mcik63ot6o3dyzjv@box.shutemov.name>
+References: <20190909162804.5694-1-mchristi@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAOCk7NraQwa2O=tptWk9enKdvta+eOCJ6ZZ=v6xOE-tocGdgpA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG6NODE3.st.com (10.75.127.18) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-10_07:2019-09-09,2019-09-10 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190909162804.5694-1-mchristi@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 9/5/19 6:18 PM, Jeffrey Hugo wrote:
-> On Thu, Sep 5, 2019 at 10:02 AM Arnaud Pouliquen
-> <arnaud.pouliquen@st.com> wrote:
->>
->> Hi Jeffrey,
->>
->>
->> On 9/5/19 4:42 PM, Jeffrey Hugo wrote:
->>> On Thu, Sep 5, 2019 at 8:35 AM Arnaud Pouliquen <arnaud.pouliquen@st.com> wrote:
->>>>
->>>> Return the rpmsg buffer size for sending message, so rpmsg users
->>>> can split a long message in several sub rpmsg buffers.
->>>>
->>>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
->>>> ---
->>>>    drivers/rpmsg/rpmsg_core.c       | 21 +++++++++++++++++++++
->>>>    drivers/rpmsg/rpmsg_internal.h   |  2 ++
->>>>    drivers/rpmsg/virtio_rpmsg_bus.c | 10 ++++++++++
->>>>    include/linux/rpmsg.h            | 10 ++++++++++
->>>>    4 files changed, 43 insertions(+)
->>>>
->>>> diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
->>>> index e330ec4dfc33..a6ef54c4779a 100644
->>>> --- a/drivers/rpmsg/rpmsg_core.c
->>>> +++ b/drivers/rpmsg/rpmsg_core.c
->>>> @@ -283,6 +283,27 @@ int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
->>>>    }
->>>>    EXPORT_SYMBOL(rpmsg_trysend_offchannel);
->>>>
->>>> +/**
->>>> + * rpmsg_get_mtu() - get maximum transmission buffer size for sending message.
->>>> + * @ept: the rpmsg endpoint
->>>> + *
->>>> + * This function returns maximum buffer size available for a single message.
->>>> + *
->>>> + * Return: the maximum transmission size on success and an appropriate error
->>>> + * value on failure.
->>>> + */
->>>
->>> What is the intent of this?
->>>
->>> The term "mtu" is "maximum transfer unit" - ie the largest payload of
->>> data that could possibly be sent, however at any one point in time,
->>> that might not be able to be accommodated.
->> I was not aware that the MTU has to be static in time. And I'm not
->> enough expert to be able challenge this.
->> The use of the MTU initially came from a Bjorn request and IMHO makes
->> sense in RPMSG protocol as other protocols. The aim here is not to
->> guaranty the available size but to provide to rpmsg client a packet size
->> information that is not available today at rpmsg client level.
->> For instance for the virtio rpmsg bus we provide the size of a vring
->> buffer, not the total size available in the vring.
->>
->>>
->>> I don't think this is implemented correctly.  In GLINK and SMD, you've
->>> not implemented MTU, you've implemented "how much can I send at this
->>> point in time".  To me, this is not mtu.
->> If MTU has to be static i agree with you.
->>>
->>> In the case of SMD, you could get the fifo size and return that as the
->>> mtu, but since you seem to be wanting to use this from the TTY layer
->>> to determine how much can be sent at a particular point in time, I
->>> don't think you actually want mtu.
->> Please forget the TTY for the moment, The mtu is used to help the tty
->> framework to split the buffer to write. The size is then adjusted on write.
->> For SMD i can provide the fifo_size,or a division of this size to
->> "limit" congestion.
->> would this make sense for you?
+On Mon, Sep 09, 2019 at 11:28:04AM -0500, Mike Christie wrote:
+> There are several storage drivers like dm-multipath, iscsi, and nbd that
+> have userspace components that can run in the IO path. For example,
+> iscsi and nbd's userspace deamons may need to recreate a socket and/or
+> send IO on it, and dm-multipath's daemon multipathd may need to send IO
+> to figure out the state of paths and re-set them up.
 > 
-> Historically, TTY over SMD (I'm basing this on my experience with the
-> downstream code) has operated in a streaming fasion, where it attempts
-> to put as much data as will fit in the fifo at that point in time.  So
-> you would have a "write_size_avail" operation that returns the amount
-> of free space in the fifo, and then the TTY client would attempt to
-> write that amount of data into the fifo.
+> In the kernel these drivers have access to GFP_NOIO/GFP_NOFS and the
+> memalloc_*_save/restore functions to control the allocation behavior,
+> but for userspace we would end up hitting a allocation that ended up
+> writing data back to the same device we are trying to allocate for.
 > 
-> In sort, the fifo size is the maximum that could be put into the
-> transport, but at any one point in time, there may be data sitting in
-> the fifo that the remote end has not yet procesed, which would limit
-> the amount of data you could put in the fifo to fifo_size - size of
-> data currently sitting in the fifo.
-Regarding __qcom_smd_send function. if message length is higher than 
-fifo_size EINVAL error is returned, else if send failed EAGAIN error is 
-returned ( meaning that it is busy and that client has to retry to sent 
-it later).
-Based on this behavior, seems make sense to return channel->fifo_size
-as MTU value.
-
+> This patch allows the userspace deamon to set the PF_MEMALLOC* flags
+> through procfs. It currently only supports PF_MEMALLOC_NOIO, but
+> depending on what other drivers and userspace file systems need, for
+> the final version I can add the other flags for that file or do a file
+> per flag or just do a memalloc_noio file.
 > 
-> SMD channels have dedicated fifos, and are assumed to be used for a
-> single client.  If the channel is muxed between multiple clients, and
-> you want to manage "congestion", that would need to be managed at a
-> layer above SMD.
-Yes this is the flow control that could have to be in core or splitted 
-between the core and the platform driver. We had a first discussion with 
-Bjorn few month ago on this subject, the need was identified.
-
->>>
->>> For GLINK, I don't actually think you can get a mtu based on the
->>> design, but I'm trying to remember from 5-6 years ago when we designed
->>> it.  It would be possible that a larger intent would be made available
->>> later.
->> Is it possible to have the largest intent? or it's not deterministic.
+> Signed-off-by: Mike Christie <mchristi@redhat.com>
+> ---
+>  Documentation/filesystems/proc.txt |  6 ++++
+>  fs/proc/base.c                     | 53 ++++++++++++++++++++++++++++++
+>  2 files changed, 59 insertions(+)
 > 
-> Not really.  I think GLINK defines a maximum size that it can handle
-> as an intent (something like uint32_max), however there is no
-> guarantee that any particular client will support that.  If you
-> attempt to have the MTU as the max that GLINK supports, and a client
-> never queues an intent that large, the data will never be able to be
-> transmitted.  The MTU is really based on the the whims of the remote
-> side, and I don't recall if there is a way in the GLINK protocol to
-> query that.  If I recall correctly, there is a way to request the
-> remote side queue an intent of a specific size, which the remote side
-> can either do (success) or reject the request (failure).
-> 
-> In my mind, there should be a valid scenario in which a client can
-> transmit data of a size equal to the MTU (although the client may need
-> to wait for that to happen), however I don't have a simple answer on
-> how to determine that value in a generic way for GLINK.
+> diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
+> index 99ca040e3f90..b5456a61a013 100644
+> --- a/Documentation/filesystems/proc.txt
+> +++ b/Documentation/filesystems/proc.txt
+> @@ -46,6 +46,7 @@ Table of Contents
+>    3.10  /proc/<pid>/timerslack_ns - Task timerslack value
+>    3.11	/proc/<pid>/patch_state - Livepatch patch operation state
+>    3.12	/proc/<pid>/arch_status - Task architecture specific information
+> +  3.13  /proc/<pid>/memalloc - Control task's memory reclaim behavior
+>  
+>    4	Configuring procfs
+>    4.1	Mount options
+> @@ -1980,6 +1981,11 @@ Example
+>   $ cat /proc/6753/arch_status
+>   AVX512_elapsed_ms:      8
+>  
+> +3.13 /proc/<pid>/memalloc - Control task's memory reclaim behavior
+> +-----------------------------------------------------------------------
+> +A value of "noio" indicates that when a task allocates memory it will not
+> +reclaim memory that requires starting phisical IO.
+> +
+>  Description
+>  -----------
+>  
+> diff --git a/fs/proc/base.c b/fs/proc/base.c
+> index ebea9501afb8..c4faa3464602 100644
+> --- a/fs/proc/base.c
+> +++ b/fs/proc/base.c
+> @@ -1223,6 +1223,57 @@ static const struct file_operations proc_oom_score_adj_operations = {
+>  	.llseek		= default_llseek,
+>  };
+>  
+> +static ssize_t memalloc_read(struct file *file, char __user *buf, size_t count,
+> +			     loff_t *ppos)
+> +{
+> +	struct task_struct *task;
+> +	ssize_t rc = 0;
+> +
+> +	task = get_proc_task(file_inode(file));
+> +	if (!task)
+> +		return -ESRCH;
+> +
+> +	if (task->flags & PF_MEMALLOC_NOIO)
+> +		rc = simple_read_from_buffer(buf, count, ppos, "noio", 4);
+> +	put_task_struct(task);
+> +	return rc;
+> +}
+> +
+> +static ssize_t memalloc_write(struct file *file, const char __user *buf,
+> +			      size_t count, loff_t *ppos)
+> +{
+> +	struct task_struct *task;
+> +	char buffer[5];
+> +	int rc = count;
+> +
+> +	memset(buffer, 0, sizeof(buffer));
+> +	if (count != sizeof(buffer) - 1)
+> +		return -EINVAL;
+> +
+> +	if (copy_from_user(buffer, buf, count))
+> +		return -EFAULT;
+> +	buffer[count] = '\0';
+> +
+> +	task = get_proc_task(file_inode(file));
+> +	if (!task)
+> +		return -ESRCH;
+> +
+> +	if (!strcmp(buffer, "noio")) {
+> +		task->flags |= PF_MEMALLOC_NOIO;
+> +	} else {
+> +		rc = -EINVAL;
+> +	}
 
-So no simple way for GLINK :(, anyway thanks for you time and your 
-expertise.
+Really? Without any privilege check? So any random user can tap into
+__GFP_NOIO allocations?
 
-> 
->>>
->>> I think you need to first determine if you are actually looking for
->>> mtu, or "how much data can I send right now", because right now, it
->>> isn't clear.
->>>
->> In my view it is the MTU. "how much data can I send right now" is an
->> information that is very volatile as buffers can be shared between
->> several clients, therefore unusable.
-> 
-> Thats valid.  If you want MTU, then I think you need to fix the
-> GLINK/SMD implementations since those are not providing the correct
-> information.  Unfortunately, GLINK is complicated.  I think Bjorn
-> should chime in on what he thinks would be valid behavior for GLINK.
-> 
-An alternative could be a DT property that could be defined depending on 
-the remote side constraint.
+NAK.
 
-Bjorn,
-please, could you share your view to help to find a solution to 
-implement the MTU for Glink? or should we simply consider the MTU ops as 
-optional and in this case how to determine a default size?
+I don't think that it's great idea in general to expose this low-level
+machinery to userspace. But it's better to get comment from people move
+familiar with reclaim path.
 
-Thanks,
-Arnaud
-
-
+-- 
+ Kirill A. Shutemov
