@@ -6,130 +6,83 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 669E3C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 900C6C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 430C1208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:49:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6095D208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:50:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404595AbfIJGtC (ORCPT
+        id S2404672AbfIJGuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 02:49:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57680 "EHLO mx1.redhat.com"
+        Tue, 10 Sep 2019 02:50:37 -0400
+Received: from mx1.emlix.com ([188.40.240.192]:33030 "EHLO mx1.emlix.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729270AbfIJGtC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 02:49:02 -0400
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1729518AbfIJGuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 02:50:37 -0400
+X-Greylist: delayed 573 seconds by postgrey-1.27 at vger.kernel.org; Tue, 10 Sep 2019 02:50:36 EDT
+Received: from mailer.emlix.com (unknown [81.20.119.6])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CD2807E423
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 06:49:01 +0000 (UTC)
-Received: by mail-qt1-f200.google.com with SMTP id o13so13173528qtr.15
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 23:49:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=dfiQALXz5+7KOgf5kpTvYt6Xu5cXYJTwms28arJUb+Y=;
-        b=ponLbkMYutVBdAaWHTDo9PfQMRrOCXHi8lz80tWZJVBw1myEmQ3etvzsmero3u9xol
-         DIKXHrld+MgTsABv0uk93rhsp/Rs4t+Cinoi1iGnOAC3XbQ/CexKbWSd91OnyBSEL3O7
-         Nl4GKOkebm79DddGdMswshdmZf3AHuvxrzdSepObPPYj5010ULIInYtEUH5sPG0miEaP
-         8SDhWKcAKrt3AmjOq8xwB69R2EUAByYHwBvPf1AmeeiN/jmVGnXt6He6nNtObwPHa68A
-         vFPyU19E6DSKwCWPRym+SFg6lmAYMxSdCooM2jptXR5fSR6J4MkfIr/eL/th1LV6+RxM
-         bM3Q==
-X-Gm-Message-State: APjAAAVBNUhEnQI9mRoRQJ3yBRz9LYu4iuyRMb0bRrk39UcM3naCm+0a
-        29jFhQ9aSYbn/h507FxI1qC0dKtJsCXFj41OLb6Zv0PNSm/19MD1zKRCxiO/XcoYhLc1YDFfGfL
-        W1k0WpR9/TGuzqYq/L6ELmu/0
-X-Received: by 2002:ac8:718c:: with SMTP id w12mr27618510qto.235.1568098141170;
-        Mon, 09 Sep 2019 23:49:01 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzv6IYVdd0f5WQVUeM0vPrOJIlCYkZC8iTVcIPS0hC3pXejSbPr3ajEFZbHAbLF59dsjfyt7g==
-X-Received: by 2002:ac8:718c:: with SMTP id w12mr27618495qto.235.1568098141014;
-        Mon, 09 Sep 2019 23:49:01 -0700 (PDT)
-Received: from redhat.com ([80.74.107.118])
-        by smtp.gmail.com with ESMTPSA id l7sm8266259qke.67.2019.09.09.23.48.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Sep 2019 23:49:00 -0700 (PDT)
-Date:   Tue, 10 Sep 2019 02:48:55 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Subject: Re: [RFC PATCH untested] vhost: block speculation of translated
- descriptors
-Message-ID: <20190910024814-mutt-send-email-mst@kernel.org>
-References: <20190908110521.4031-1-mst@redhat.com>
- <db4d77d7-c467-935d-b4ae-1da7635e9b6b@redhat.com>
- <20190909104355-mutt-send-email-mst@kernel.org>
- <9ab48e0f-50a9-bed4-1801-73c37a7da27c@redhat.com>
+        by mx1.emlix.com (Postfix) with ESMTPS id B189A5F8BE;
+        Tue, 10 Sep 2019 08:41:01 +0200 (CEST)
+From:   Rolf Eike Beer <eb@emlix.com>
+To:     David Woodhouse <dwmw2@infradead.org>
+Cc:     Linux Kernel Developers List <linux-kernel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>, keyrings@vger.kernel.org
+Subject: [PATCH v3][RESEND] scripts: use pkg-config to locate libcrypto
+Date:   Tue, 10 Sep 2019 08:41:01 +0200
+Message-ID: <2010898.sAvVGPNi7W@devpool35>
+Organization: emlix GmbH
+In-Reply-To: <20538915.Wj2CyUsUYa@devpool35>
+References: <20538915.Wj2CyUsUYa@devpool35>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9ab48e0f-50a9-bed4-1801-73c37a7da27c@redhat.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 09:52:10AM +0800, Jason Wang wrote:
-> 
-> On 2019/9/9 下午10:45, Michael S. Tsirkin wrote:
-> > On Mon, Sep 09, 2019 at 03:19:55PM +0800, Jason Wang wrote:
-> > > On 2019/9/8 下午7:05, Michael S. Tsirkin wrote:
-> > > > iovec addresses coming from vhost are assumed to be
-> > > > pre-validated, but in fact can be speculated to a value
-> > > > out of range.
-> > > > 
-> > > > Userspace address are later validated with array_index_nospec so we can
-> > > > be sure kernel info does not leak through these addresses, but vhost
-> > > > must also not leak userspace info outside the allowed memory table to
-> > > > guests.
-> > > > 
-> > > > Following the defence in depth principle, make sure
-> > > > the address is not validated out of node range.
-> > > > 
-> > > > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> > > > ---
-> > > >    drivers/vhost/vhost.c | 4 +++-
-> > > >    1 file changed, 3 insertions(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-> > > > index 5dc174ac8cac..0ee375fb7145 100644
-> > > > --- a/drivers/vhost/vhost.c
-> > > > +++ b/drivers/vhost/vhost.c
-> > > > @@ -2072,7 +2072,9 @@ static int translate_desc(struct vhost_virtqueue *vq, u64 addr, u32 len,
-> > > >    		size = node->size - addr + node->start;
-> > > >    		_iov->iov_len = min((u64)len - s, size);
-> > > >    		_iov->iov_base = (void __user *)(unsigned long)
-> > > > -			(node->userspace_addr + addr - node->start);
-> > > > +			(node->userspace_addr +
-> > > > +			 array_index_nospec(addr - node->start,
-> > > > +					    node->size));
-> > > >    		s += size;
-> > > >    		addr += size;
-> > > >    		++ret;
-> > > 
-> > > I've tried this on Kaby Lake smap off metadata acceleration off using
-> > > testpmd (virtio-user) + vhost_net. I don't see obvious performance
-> > > difference with TX PPS.
-> > > 
-> > > Thanks
-> > Should I push this to Linus right now then? It's a security thing so
-> > maybe we better do it ASAP ... what's your opinion?
-> 
-> 
-> Yes, you can.
-> 
-> Acked-by: Jason Wang <jasowang@redhat.com>
+Otherwise build fails if the headers are not in the default location. While at
+it also ask pkg-config for the libs, with fallback to the existing value.
+
+Signed-off-by: Rolf Eike Beer <eb@emlix.com>
+Cc: stable@vger.kernel.org
+---
+ scripts/Makefile | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/Makefile b/scripts/Makefile
+index 16bcb8087899..1715adcd8f81 100644
+--- a/scripts/Makefile
++++ b/scripts/Makefile
+@@ -8,7 +8,11 @@
+ # conmakehash:   Create chartable
+ # conmakehash:	 Create arrays for initializing the kernel console tables
+ 
++PKG_CONFIG?= pkg-config
++
+ HOST_EXTRACFLAGS += -I$(srctree)/tools/include
++CRYPTO_LIBS = $(shell $(PKG_CONFIG) --libs libcrypto 2> /dev/null || echo -lcrypto)
++CRYPTO_CFLAGS = $(shell $(PKG_CONFIG) --cflags libcrypto 2> /dev/null)
+ 
+ hostprogs-$(CONFIG_BUILD_BIN2C)  += bin2c
+ hostprogs-$(CONFIG_KALLSYMS)     += kallsyms
+@@ -23,8 +27,9 @@ hostprogs-$(CONFIG_SYSTEM_EXTRA_CERTIFICATE) += insert-sys-cert
+ 
+ HOSTCFLAGS_sortextable.o = -I$(srctree)/tools/include
+ HOSTCFLAGS_asn1_compiler.o = -I$(srctree)/include
+-HOSTLDLIBS_sign-file = -lcrypto
+-HOSTLDLIBS_extract-cert = -lcrypto
++HOSTLDLIBS_sign-file = $(CRYPTO_LIBS)
++HOSTCFLAGS_extract-cert.o = $(CRYPTO_CFLAGS)
++HOSTLDLIBS_extract-cert = $(CRYPTO_LIBS)
+ 
+ always		:= $(hostprogs-y) $(hostprogs-m)
+ 
+-- 
+2.23.0
 
 
-And should I include
 
-Tested-by: Jason Wang <jasowang@redhat.com>
 
-?
-
-> 
-> 
-> > 
