@@ -2,126 +2,147 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1341CC49ED8
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9546C49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:26:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDB0D21881
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:23:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 789E021670
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:26:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="G6nGr7fA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="caR2EHx2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393924AbfIJPX2 (ORCPT
+        id S2393392AbfIJP0o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 11:23:28 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:60448 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731043AbfIJPX1 (ORCPT
+        Tue, 10 Sep 2019 11:26:44 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42056 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730821AbfIJP0o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 11:23:27 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8AFItUK027960;
-        Tue, 10 Sep 2019 15:22:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=tOczzZS4JVmfczdE9mY887heuT2/utVYNO9vG7SJCcc=;
- b=G6nGr7fAvGgT+9NCwikhlTwHcRA7ww33aAgb+LexAHOEHnXH8h0HpfNoNEENo/jRPvqt
- tnKbN1EnMhQh7HLj51k5bjAfWtTCXau6gbwiLIPxfPwXFKrBpHgzcFFTD1mGrpjxe3pq
- ilX2FaHLtQMOBd4XAfkP+vQhXvvsllltPBMXHHGgLKmtFqz7AvHuJyuR1IXuAPSHq9v0
- 9j+fHJ/iaoXJhaE7WoHUhaJHl0BzH7xA+svEuJdzlZjrdoZ4NvQQMAWbQIX0CAgevkbm
- 8FdVE2RCgjaHH2SVQjKIfU0Joc1aw3E7ITG8swlkozjhUJzvbFSwEX8gM8C8cQngCbhB Ew== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2uw1jkc7gw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Sep 2019 15:22:22 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8AFIiQQ191566;
-        Tue, 10 Sep 2019 15:22:21 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2uwq9q5j9b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Sep 2019 15:21:11 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8AFJwpG020463;
-        Tue, 10 Sep 2019 15:19:58 GMT
-Received: from char.us.oracle.com (/10.152.32.25)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 10 Sep 2019 08:19:58 -0700
-Received: by char.us.oracle.com (Postfix, from userid 1000)
-        id 18E256A010E; Tue, 10 Sep 2019 11:21:42 -0400 (EDT)
-Date:   Tue, 10 Sep 2019 11:21:42 -0400
-From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@lst.de>, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
-        mika.westerberg@linux.intel.com, Ingo Molnar <mingo@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        pengfei.xu@intel.com, Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 0/5] iommu: Bounce page for untrusted devices
-Message-ID: <20190910152142.GC7585@char.us.oracle.com>
-References: <20190906061452.30791-1-baolu.lu@linux.intel.com>
- <20190910145322.GB24103@8bytes.org>
+        Tue, 10 Sep 2019 11:26:44 -0400
+Received: by mail-pf1-f194.google.com with SMTP id w22so11719572pfi.9;
+        Tue, 10 Sep 2019 08:26:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=szCNIUW6BgbokX0FPeRCVgqZ5ZdcFTN5rqoeuNdt524=;
+        b=caR2EHx2Qt5HEr4rR7I7x4dW2X6VHrZZOd5QrFiwQrJcRuuNMXoYgnzTkWyFAo2FLI
+         hIuVDkZMSQqupEAwSEVivqHBmD+UeeHLzBycMfwnzYXxLpNvOQnQjmpVF0AeIhJiGaEX
+         C9BiYSXNaiFNjeXt5ERdvlkklW0kUyxOdN1pPlxEKI2FxI0WyoAzMVcmgMehTclWwZUS
+         k4iPIKC58a+zGDjb0brPpC9UNBfDxITrvoCS6El+GKqRPLIkgHjzbTpEe14u9Le+86l/
+         nd+6LahlcilZwQyO+zDB6DQKre3yKJB4kqglYJK5ji3DbC72wx35fRtE2asafjN68Et/
+         Tymg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=szCNIUW6BgbokX0FPeRCVgqZ5ZdcFTN5rqoeuNdt524=;
+        b=ucU0zRb9cbCBe9CFHh6DW4s16NhNmHFdnPRuNoZoLxJty+ET/KHdLlFAV3HQxAs1pD
+         SP02zumpsvW+Rsp7p3D0xeM/Nc1Q7Fkbsps0RMNDZEZN4n6Kdq9Ua0/E248r0OyEbUj1
+         2jkzdHTQ6NqgUpFhglYZlRBow5OkGv1CVcT0v1F9rzmAyklEo1HcCjVpJCtbp7u2ejQl
+         aHMtTuMXbFesBreca+GXqrix/hREVZ5POQjpYRjVrd1G0fMNSUZiZS3Tti14pTUW7V8K
+         kd5a4pUFe99+oJoKqRG+Q/rkNLd9kpa+v/Ao50FguyGfWTtRO+MV2cOyaQ2a8op69sJB
+         Xcjg==
+X-Gm-Message-State: APjAAAVFppRVYqzJ5AuLiT2vRRd1Ici6sZnhXCLggsL2ML2FKWm3Smhn
+        qH8IIGBrq/sFtyEvrJZLL3nZNEd9HnE6polHPkI=
+X-Google-Smtp-Source: APXvYqzOINBFtfLvF0b9qbl9PEWwDqdKgy6gSXJJzwn3QWuI+u/Xg4GqfM8xomnm9stnWRBe4FRdbpMx7VLIvJ9L0cU=
+X-Received: by 2002:a17:90a:b313:: with SMTP id d19mr56369pjr.132.1568129203532;
+ Tue, 10 Sep 2019 08:26:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190910145322.GB24103@8bytes.org>
-User-Agent: Mutt/1.9.1 (2017-09-22)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9376 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1909100147
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9376 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1909100147
+References: <20190830214655.6625-1-linux@rasmusvillemoes.dk> <20190909203826.22263-1-linux@rasmusvillemoes.dk>
+In-Reply-To: <20190909203826.22263-1-linux@rasmusvillemoes.dk>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 10 Sep 2019 18:26:32 +0300
+Message-ID: <CAHp75Vdpd5uMCM-n+4vAZLwUpN=-cHnHs1uxoV2MDd5fk+CQig@mail.gmail.com>
+Subject: Re: [PATCH v2] printf: add support for printing symbolic error codes
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Joe Perches <joe@perches.com>, Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe@kleine-koenig.org>,
+        Linux Documentation List <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 04:53:23PM +0200, Joerg Roedel wrote:
-> On Fri, Sep 06, 2019 at 02:14:47PM +0800, Lu Baolu wrote:
-> > Lu Baolu (5):
-> >   swiotlb: Split size parameter to map/unmap APIs
-> >   iommu/vt-d: Check whether device requires bounce buffer
-> >   iommu/vt-d: Don't switch off swiotlb if bounce page is used
-> >   iommu/vt-d: Add trace events for device dma map/unmap
-> >   iommu/vt-d: Use bounce buffer for untrusted devices
-> > 
-> >  .../admin-guide/kernel-parameters.txt         |   5 +
-> >  drivers/iommu/Kconfig                         |   1 +
-> >  drivers/iommu/Makefile                        |   1 +
-> >  drivers/iommu/intel-iommu.c                   | 310 +++++++++++++++++-
-> >  drivers/iommu/intel-trace.c                   |  14 +
-> >  drivers/xen/swiotlb-xen.c                     |   8 +-
-> >  include/linux/swiotlb.h                       |   8 +-
-> >  include/trace/events/intel_iommu.h            | 106 ++++++
-> >  kernel/dma/direct.c                           |   2 +-
-> >  kernel/dma/swiotlb.c                          |  30 +-
-> >  10 files changed, 449 insertions(+), 36 deletions(-)
-> >  create mode 100644 drivers/iommu/intel-trace.c
-> >  create mode 100644 include/trace/events/intel_iommu.h
-> 
-> Applied, thanks.
+On Mon, Sep 9, 2019 at 11:39 PM Rasmus Villemoes
+<linux@rasmusvillemoes.dk> wrote:
+>
+> It has been suggested several times to extend vsnprintf() to be able
+> to convert the numeric value of ENOSPC to print "ENOSPC". This is yet
+> another attempt. Rather than adding another %p extension, simply teach
+> plain %p to convert ERR_PTRs. While the primary use case is
+>
+>   if (IS_ERR(foo)) {
+>     pr_err("Sorry, can't do that: %p\n", foo);
+>     return PTR_ERR(foo);
+>   }
+>
+> it is also more helpful to get a symbolic error code (or, worst case,
+> a decimal number) in case an ERR_PTR is accidentally passed to some
+> %p<something>, rather than the (efault) that check_pointer() would
+> result in.
+>
+> With my embedded hat on, I've made it possible to remove this.
+>
+> I've tested that the #ifdeffery in errcode.c is sufficient to make
+> this compile on arm, arm64, mips, powerpc, s390, x86 - I'm sure the
+> 0day bot will tell me which ones I've missed.
+>
+> The symbols to include have been found by massaging the output of
+>
+>   find arch include -iname 'errno*.h' | xargs grep -E 'define\s*E'
+>
+> In the cases where some common aliasing exists
+> (e.g. EAGAIN=EWOULDBLOCK on all platforms, EDEADLOCK=EDEADLK on most),
+> I've moved the more popular one (in terms of 'git grep -w Efoo | wc)
+> to the bottom so that one takes precedence.
 
-Please un-apply the swiotlb until the WARN_ON gets fixed. Or alternatively
-squash the fix once that is done.
+> +#define E(err) [err + BUILD_BUG_ON_ZERO(err <= 0 || err > 300)] = #err
+> +#define E(err) [err - 512 + BUILD_BUG_ON_ZERO(err < 512 || err > 550)] = #err
 
+From long term prospective 300 and 550 hard coded here may be forgotten.
+
+> +const char *errcode(int err)
+We got long, why not to use long type for it?
+
+> +{
+> +       /* Might as well accept both -EIO and EIO. */
+> +       if (err < 0)
+> +               err = -err;
+
+> +       if (err <= 0) /* INT_MIN or 0 */
+> +               return NULL;
+> +       if (err < ARRAY_SIZE(codes_0))
+
+> +               return codes_0[err];
+
+It won't work if one of the #ifdef:s in the array fails.
+Would it?
+
+> +       if (err >= 512 && err - 512 < ARRAY_SIZE(codes_512))
+> +               return codes_512[err - 512];
+> +       /* But why? */
+> +       if (IS_ENABLED(CONFIG_MIPS) && err == EDQUOT) /* 1133 */
+> +               return "EDQUOT";
+> +       return NULL;
+> +}
+
+> +               long err = PTR_ERR(ptr);
+> +               const char *sym = errcode(-err);
+
+Do we need additional sign change if we already have such check inside
+errcode()?
+
+-- 
+With Best Regards,
+Andy Shevchenko
