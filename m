@@ -7,21 +7,21 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E5C1C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3594C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A93921479
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:01:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE31A208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:01:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732855AbfIJJBS (ORCPT
+        id S1731903AbfIJJBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 05:01:18 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:55750 "EHLO huawei.com"
+        Tue, 10 Sep 2019 05:01:17 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:55746 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728341AbfIJJBL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729785AbfIJJBL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Sep 2019 05:01:11 -0400
 Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B8AC2C03910CED310B4D;
+        by Forcepoint Email with ESMTP id B27B7EE014CCFCA192FB;
         Tue, 10 Sep 2019 17:01:07 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
@@ -31,11 +31,11 @@ To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <jakub.kicinski@netronome.com>,
-        Guangbin Huang <huangguangbin2@huawei.com>,
+        Yonglong Liu <liuyonglong@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 5/7] net: hns3: modify some logs format
-Date:   Tue, 10 Sep 2019 16:58:26 +0800
-Message-ID: <1568105908-60983-6-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 3/7] net: hns3: fix shaper parameter algorithm
+Date:   Tue, 10 Sep 2019 16:58:24 +0800
+Message-ID: <1568105908-60983-4-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1568105908-60983-1-git-send-email-tanhuazhong@huawei.com>
 References: <1568105908-60983-1-git-send-email-tanhuazhong@huawei.com>
@@ -48,82 +48,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guangbin Huang <huangguangbin2@huawei.com>
+From: Yonglong Liu <liuyonglong@huawei.com>
 
-The pfc_en and pfc_map need to be displayed in hexadecimal notation,
-printing dma address should use %pad, and the end of printed string
-needs to be add "\n".
+Currently when hns3 driver configures the tm shaper to limit
+bandwidth below 20Mbit using the parameters calculated by
+hclge_shaper_para_calc(), the actual bandwidth limited by tm
+hardware module is not accurate enough, for example, 1.28 Mbit
+when the user is configuring 1 Mbit.
 
-This patch modifies them.
+This patch adjusts the ir_calc to be closer to ir, and
+always calculate the ir_b parameter when user is configuring
+a small bandwidth. Also, removes an unnecessary parenthesis
+when calculating denominator.
 
-Signed-off-by: Guangbin Huang <huangguangbin2@huawei.com>
+Fixes: 848440544b41 ("net: hns3: Add support of TX Scheduler & Shaper to HNS3 driver")
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c      | 7 +++++--
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c  | 2 +-
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 2 +-
- 3 files changed, 7 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c
-index 5cf4c1e..28961a6 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c
-@@ -166,6 +166,7 @@ static int hns3_dbg_bd_info(struct hnae3_handle *h, const char *cmd_buf)
- 	struct hns3_enet_ring *ring;
- 	u32 tx_index, rx_index;
- 	u32 q_num, value;
-+	dma_addr_t addr;
- 	int cnt;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
+index e829101..9f0e35f 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
+@@ -81,16 +81,13 @@ static int hclge_shaper_para_calc(u32 ir, u8 shaper_level,
+ 		return 0;
+ 	} else if (ir_calc > ir) {
+ 		/* Increasing the denominator to select ir_s value */
+-		while (ir_calc > ir) {
++		while (ir_calc >= ir && ir) {
+ 			ir_s_calc++;
+ 			ir_calc = DIVISOR_IR_B_126 / (tick * (1 << ir_s_calc));
+ 		}
  
- 	cnt = sscanf(&cmd_buf[8], "%u %u", &q_num, &tx_index);
-@@ -194,8 +195,9 @@ static int hns3_dbg_bd_info(struct hnae3_handle *h, const char *cmd_buf)
+-		if (ir_calc == ir)
+-			*ir_b = 126;
+-		else
+-			*ir_b = (ir * tick * (1 << ir_s_calc) +
+-				 (DIVISOR_CLK >> 1)) / DIVISOR_CLK;
++		*ir_b = (ir * tick * (1 << ir_s_calc) + (DIVISOR_CLK >> 1)) /
++			DIVISOR_CLK;
+ 	} else {
+ 		/* Increasing the numerator to select ir_u value */
+ 		u32 numerator;
+@@ -104,7 +101,7 @@ static int hclge_shaper_para_calc(u32 ir, u8 shaper_level,
+ 		if (ir_calc == ir) {
+ 			*ir_b = 126;
+ 		} else {
+-			u32 denominator = (DIVISOR_CLK * (1 << --ir_u_calc));
++			u32 denominator = DIVISOR_CLK * (1 << --ir_u_calc);
+ 			*ir_b = (ir * tick + (denominator >> 1)) / denominator;
+ 		}
  	}
- 
- 	tx_desc = &ring->desc[tx_index];
-+	addr = le64_to_cpu(tx_desc->addr);
- 	dev_info(dev, "TX Queue Num: %u, BD Index: %u\n", q_num, tx_index);
--	dev_info(dev, "(TX)addr: 0x%llx\n", tx_desc->addr);
-+	dev_info(dev, "(TX)addr: %pad\n", &addr);
- 	dev_info(dev, "(TX)vlan_tag: %u\n", tx_desc->tx.vlan_tag);
- 	dev_info(dev, "(TX)send_size: %u\n", tx_desc->tx.send_size);
- 	dev_info(dev, "(TX)vlan_tso: %u\n", tx_desc->tx.type_cs_vlan_tso);
-@@ -217,8 +219,9 @@ static int hns3_dbg_bd_info(struct hnae3_handle *h, const char *cmd_buf)
- 	rx_index = (cnt == 1) ? value : tx_index;
- 	rx_desc	 = &ring->desc[rx_index];
- 
-+	addr = le64_to_cpu(rx_desc->addr);
- 	dev_info(dev, "RX Queue Num: %u, BD Index: %u\n", q_num, rx_index);
--	dev_info(dev, "(RX)addr: 0x%llx\n", rx_desc->addr);
-+	dev_info(dev, "(RX)addr: %pad\n", &addr);
- 	dev_info(dev, "(RX)l234_info: %u\n", rx_desc->rx.l234_info);
- 	dev_info(dev, "(RX)pkt_len: %u\n", rx_desc->rx.pkt_len);
- 	dev_info(dev, "(RX)size: %u\n", rx_desc->rx.size);
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
-index 816f920..c063301 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
-@@ -342,7 +342,7 @@ static int hclge_ieee_setpfc(struct hnae3_handle *h, struct ieee_pfc *pfc)
- 	hdev->tm_info.pfc_en = pfc->pfc_en;
- 
- 	netif_dbg(h, drv, netdev,
--		  "set pfc: pfc_en=%u, pfc_map=%u, num_tc=%u\n",
-+		  "set pfc: pfc_en=%x, pfc_map=%x, num_tc=%u\n",
- 		  pfc->pfc_en, pfc_map, hdev->tm_info.num_tc);
- 
- 	hclge_tm_pfc_info_update(hdev);
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 8d4dc1b..bc5bad3 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -3751,7 +3751,7 @@ static void hclge_reset_event(struct pci_dev *pdev, struct hnae3_handle *handle)
- 	else if (time_after(jiffies, (hdev->last_reset_time + 4 * 5 * HZ)))
- 		hdev->reset_level = HNAE3_FUNC_RESET;
- 
--	dev_info(&hdev->pdev->dev, "received reset event , reset type is %d",
-+	dev_info(&hdev->pdev->dev, "received reset event, reset type is %d\n",
- 		 hdev->reset_level);
- 
- 	/* request reset & schedule reset task */
 -- 
 2.7.4
 
