@@ -2,140 +2,132 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33706C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BACEC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 026272089F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:18:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568096304;
-	bh=8QubJZfJaeGmmoiRCuuX0FsldVc+ePkWKtEyLgcSuLI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TYHpgYE+gTOUin1+0UNESOzheJbfC1iHvq+bnuTgIw98Gqq/ju9QMTQhHAe+WXeiv
-	 S/FVti7pmjs29/abg3ulWlm7dmEx/mpFMslZ6Tkap0WbrrYf4rTK0Kb+G0PKP4cwT3
-	 GlDbg/QHxxYYbg/KQqLlJvN9NCQgoy1bIzQFOG0M=
+	by mail.kernel.org (Postfix) with ESMTP id 122712089F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:18:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="bQvc3MUJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393382AbfIJGSX (ORCPT
+        id S2393401AbfIJGS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 02:18:23 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41145 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730336AbfIJGSW (ORCPT
+        Tue, 10 Sep 2019 02:18:26 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:29660 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730336AbfIJGSZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 02:18:22 -0400
-Received: by mail-wr1-f67.google.com with SMTP id h7so16519202wrw.8
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 23:18:19 -0700 (PDT)
+        Tue, 10 Sep 2019 02:18:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lcRZ+gmqkRI/8wjYYIRGOzRppQSTNB6wSfg2biqLEWM=;
-        b=uYfxvbHG4hrOBB2ocromyu9I9NtZXbvsfyVPCGC4CwdZbuEJsGP2WnFSTWzItCgtjc
-         2bMYfEmuXS0jDGFyXcHq8SUFs50EUkX0/xae84/Fmm0f3X4mRQIlvFbbBIuwIL1hbKQW
-         EJSEDgJTohSuijRirnp0IYaaogOEe5sVvTw31L/Q/5G4TcsnxQVI2PKQZV5X6+sIwVi+
-         RilmfzXpaoTc+M8k43GUxIIXnXoUhiMyCLroMRtTprHdTvICXqP2qiVuyWoszmbmCG1b
-         bxH9Mq0S8V9PcpN7x+zjMYUF32EB4l6hDxKb4egP3t4bRVEt2zOE8jmca51GXIGQl14Z
-         zeBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lcRZ+gmqkRI/8wjYYIRGOzRppQSTNB6wSfg2biqLEWM=;
-        b=bfEetsnBdYbWPTI/3ILOzvCcPiq+xsTUei8NFvVqwsfs+/ZV8EOrA80MvInNhAl5fF
-         EbGkxrkVLIDNYKIDMQxuQ5lJdo3RkPVAC6PNzKockY8j5u2YQE/k22x2nF8XiFsl5pq8
-         RfkuC07tIkUbUi0vfICeL/3a81wTJUEWZkOSw0Hre5qu2/t8ePPXblqdVmTB6ys5IRya
-         25lE0ay5UR/wjbah65h3G15dJ5p/5MCGSKCYIuVP8o+BkMtvDLmXUCgC6pc9ivopQrI0
-         pYEi/ArcjCllUnH1xKKlH3IRsq+tFawXy/VtPpuT7xVFzcJ5ccCwTAyBM4ERRjWg1Ebp
-         hhOA==
-X-Gm-Message-State: APjAAAWmEAiiRr7WmS3lqiO9SiSjsP/ZEZWV5lPk9mmwOCJCvoT/KJ0e
-        gtQ3Wuh+MUbLRTeGP6/WATs=
-X-Google-Smtp-Source: APXvYqxAgwnlMWHqpbd9xwOGL0fLsNoflWayYi73oiBA8hJJEZ58rPZiJBLknOdEg9CKZtd6AgkIMw==
-X-Received: by 2002:adf:f303:: with SMTP id i3mr5465116wro.242.1568096299298;
-        Mon, 09 Sep 2019 23:18:19 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id b184sm3773148wmg.47.2019.09.09.23.18.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Sep 2019 23:18:18 -0700 (PDT)
-Date:   Tue, 10 Sep 2019 08:18:15 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Steve Wahl <steve.wahl@hpe.com>,
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1568096304; x=1599632304;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=NUby1e5z8ZmZZG/r8xjMa7/ADWenJfdiJrb9sSaJJJI=;
+  b=bQvc3MUJ5s/JTaKRQOCHqdJgS4wK5znTY/wujDnOWfMBwqfAuUaUnHTA
+   MPa3I7cBCEoeYlhsz+SCpkX6g3K/Noib0oP1sK8eH7NJ9eqbZsLm6i/9e
+   3he7IEKymrEaf5B8nSCiKYOmbPUa+fmX7xHUNxKAbuDojZ/W/CZQnP4ge
+   U=;
+X-IronPort-AV: E=Sophos;i="5.64,487,1559520000"; 
+   d="scan'208";a="701737185"
+Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com) ([10.47.22.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 10 Sep 2019 06:17:38 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com (Postfix) with ESMTPS id 374E0A226A;
+        Tue, 10 Sep 2019 06:17:28 +0000 (UTC)
+Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 10 Sep 2019 06:17:28 +0000
+Received: from [10.125.238.52] (10.43.161.82) by EX13D01EUB001.ant.amazon.com
+ (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Tue, 10 Sep
+ 2019 06:17:17 +0000
+Subject: Re: [PATCH 3/3] arm64: alpine: select AL_POS
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        gregkh <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Juergen Gross <jgross@suse.com>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Jordan Borgner <mail@jordan-borgner.de>,
-        Feng Tang <feng.tang@intel.com>, linux-kernel@vger.kernel.org,
-        Baoquan He <bhe@redhat.com>, russ.anderson@hpe.com,
-        dimitri.sivanich@hpe.com, mike.travis@hpe.com
-Subject: Re: [PATCH] x86/boot/64: Make level2_kernel_pgt pages invalid
- outside kernel area.
-Message-ID: <20190910061815.GA40059@gmail.com>
-References: <20190906212950.GA7792@swahl-linux>
- <20190909081414.5e3q47fzzruesscx@box>
+        "Patrick Venture" <venture@google.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "Olof Johansson" <olof@lixom.net>,
+        Maxime Ripard <mripard@kernel.org>,
+        "Santosh Shilimkar" <ssantosh@kernel.org>,
+        <paul.kocialkowski@bootlin.com>, <mjourdan@baylibre.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "Will Deacon" <will@kernel.org>, DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        <hhhawa@amazon.com>, <ronenk@amazon.com>, <jonnyc@amazon.com>,
+        <hanochu@amazon.com>, <barakw@amazon.com>
+References: <1568020220-7758-1-git-send-email-talel@amazon.com>
+ <1568020220-7758-4-git-send-email-talel@amazon.com>
+ <CAK8P3a0DEMeFWK+RuAdSLyDYduWWwj9DxP_Beipays-d_6ixnA@mail.gmail.com>
+ <ab512ced-d989-5c10-a550-2a4723d38e7e@amazon.com>
+ <CAK8P3a34eKFXoAPOfkFN5+H4kxOhRjXgws_0wy+d-186LFxcTw@mail.gmail.com>
+ <0d36f94d-596f-0ec7-6951-b097b5ee0d2d@amazon.com>
+ <CAK8P3a0RUHxcpyUJU5bpd8nqpm0Sqhy4aJaoh7K9jVn8zJC6aQ@mail.gmail.com>
+From:   "Shenhar, Talel" <talel@amazon.com>
+Message-ID: <a616c903-6d3e-cf84-8afb-ade48d5ca68f@amazon.com>
+Date:   Tue, 10 Sep 2019 09:17:11 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190909081414.5e3q47fzzruesscx@box>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAK8P3a0RUHxcpyUJU5bpd8nqpm0Sqhy4aJaoh7K9jVn8zJC6aQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.43.161.82]
+X-ClientProxiedBy: EX13D08UWC002.ant.amazon.com (10.43.162.168) To
+ EX13D01EUB001.ant.amazon.com (10.43.166.194)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-* Kirill A. Shutemov <kirill@shutemov.name> wrote:
+On 9/9/2019 6:08 PM, Arnd Bergmann wrote:
+> On Mon, Sep 9, 2019 at 3:59 PM Shenhar, Talel <talel@amazon.com> wrote:
+>> On 9/9/2019 4:45 PM, Arnd Bergmann wrote:
+>>
+>> Its not that something will get broken. its error event detector for POS
+>> events which allows seeing bad accesses to registers.
+>>
+>> What is the general rule of which configs to put under select and which
+>> under defconfig?
+>>
+>> I was thinking that "general" SoC support is good under select - those
+>> things that we always want.
+> I generally want as little as possible to be selected, basically only
+> things that are required for linking the kernel and booting it without
+> potentially destroying the hardware.
+>
+> In particular, I want most drivers to be enabled as loadable modules
+> if possible. When you have general-purpose distributions support
+> your platform, there is no need to have this module built-in while
+> running on a different chip, even if you always want to load the
+> module when it's running on yours.
+>
+>> And specific features, e.g. RAID support or features that supported only
+>> on specific HW shall go under defconfig.
+>>
+>> Similar, I see ARCH_LAYERSCAPE selecting EDAC_SUPPORT.
+> I think this was done to avoid a link failure. It's also possible that this
+> is a mistake and just did not get caught in review.
+>
+>         Arnd
 
-> On Fri, Sep 06, 2019 at 04:29:50PM -0500, Steve Wahl wrote:
-> > Our hardware (UV aka Superdome Flex) has address ranges marked
-> > reserved by the BIOS. These ranges can cause the system to halt if
-> > accessed.
-> > 
-> > During kernel initialization, the processor was speculating into
-> > reserved memory causing system halts.  The processor speculation is
-> > enabled because the reserved memory is being mapped by the kernel.
-> > 
-> > The page table level2_kernel_pgt is 1 GiB in size, and had all pages
-> > initially marked as valid, and the kernel is placed anywhere in this
-> > range depending on the virtual address selected by KASLR.  Later on in
-> > the boot process, the valid area gets trimmed back to the space
-> > occupied by the kernel.
-> > 
-> > But during the interval of time when the full 1 GiB space was marked
-> > as valid, if the kernel physical address chosen by KASLR was close
-> > enough to our reserved memory regions, the valid pages outside the
-> > actual kernel space were allowing the processor to issue speculative
-> > accesses to the reserved space, causing the system to halt.
-> > 
-> > This was encountered somewhat rarely on a normal system boot, and
-> > somewhat more often when starting the crash kernel if
-> > "crashkernel=512M,high" was specified on the command line (because
-> > this heavily restricts the physical address of the crash kernel,
-> > usually to within 1 GiB of our reserved space).
-> > 
-> > The answer is to invalidate the pages of this table outside the
-> > address range occupied by the kernel before the page table is
-> > activated.  This patch has been validated to fix this problem on our
-> > hardware.
-> 
-> If the goal is to avoid *any* mapping of the reserved region to stop
-> speculation, I don't think this patch will do the job. We still (likely)
-> have the same memory mapped as part of the identity mapping. And it
-> happens at least in two places: here and before on decompression stage.
 
-Yeah, this really needs a fix at the KASLR level: it should only ever map 
-into regions that are fully RAM backed.
+I see.
 
-Is the problem that the 1 GiB mapping is a direct mapping, which can be 
-speculated into? I presume KASLR won't accidentally map the kernel into 
-the reserved region, right?
+Will remove this from v2.
 
-Thanks,
-
-	Ingo
