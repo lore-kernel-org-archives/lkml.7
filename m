@@ -2,138 +2,85 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B9BC49ED8
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4375C49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA91B208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:28:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HJbBOpaK"
+	by mail.kernel.org (Postfix) with ESMTP id 79C76208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:29:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393929AbfIJP2e (ORCPT
+        id S2393940AbfIJP3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 11:28:34 -0400
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:39687 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727977AbfIJP2d (ORCPT
+        Tue, 10 Sep 2019 11:29:53 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:47699 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727457AbfIJP3x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 11:28:33 -0400
-Received: by mail-yb1-f196.google.com with SMTP id o80so3447975ybc.6;
-        Tue, 10 Sep 2019 08:28:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vKYdc9cN7UUMlwojbvq9IlbGHtZMRPDdw+6lRqJRyFA=;
-        b=HJbBOpaKk5mixp0xoDM8iD6kLK2zZrpVE+7AH1qhOA4SgO+QWGwYERZiSICsYREVl+
-         l4uP803Vic4AE7KKCx4DkQXCC6Uy8psO7cVLGqGI2097hYQ5dK1e9OYIEjSmQjJpesTk
-         GpjsoXlLp5rUlnQkiskSlqbK39hHVuQICRBH43VDdOK0EDoNNAEgY7YdzZ2KL2bQqMDn
-         2DSShvio62+2OcWzwg4pSIN4gALneDBrPysJOm7kF1B98Pfa6rHoOsnxE6JX4OBiT3bQ
-         L3Dc4w3DrzjCAYavgCUyb+jnRYz5V9sS//pF2yCnwkP9lH1rtDCzKWz1BvgEHQYADdUq
-         JGVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vKYdc9cN7UUMlwojbvq9IlbGHtZMRPDdw+6lRqJRyFA=;
-        b=Sy9gUY957YLWVn514R5qdXdbd6AYPgKYLRDWD+yQEfhgko2JluJmERkjOMZSQGoXpp
-         +tIGdJqAVokxV9U+4XY2xOK+W+fyTqRqSfhGmuARzJmus5EZ5sbyDLOyT576vi2b2Fvx
-         drSCHylnG41ic7ZlFZgk2sgJIMd/NtmP0qFLFm9PvO6FtRKi8UAFe9xlmXwcD9v5Ygt5
-         oHaf1gEY3/P7jugtW3DSf0jQDY5pn1/aRCF/H7L2TavQKL2IM3HdQ/9FSyhcLXaEzltk
-         Ck1wcPts/QGgnKu2ZducckJttmTHhmjXHwN5Up/TtMaVaYrZW/8xSgbMgd7ELZcBDudL
-         YM6g==
-X-Gm-Message-State: APjAAAX5B78XQOiM0kIzQ5a4nFM10Tce6jyDew8FOgyOBrVV1gCGgNoV
-        AcRzDivwGPY2u0Psom+GGL7bffP4Jxngw4QXeFb/7AAidHI=
-X-Google-Smtp-Source: APXvYqztz7oapn1LJuLxoz0mf2ylZTwLVr+YBvn8qM++B/ZQxqgzWIZRx7haTmp8EjSfOmdEUIIqSURfLtYgECrDQjM=
-X-Received: by 2002:a5b:305:: with SMTP id j5mr20079957ybp.256.1568129312654;
- Tue, 10 Sep 2019 08:28:32 -0700 (PDT)
+        Tue, 10 Sep 2019 11:29:53 -0400
+X-Originating-IP: 86.250.200.211
+Received: from localhost.localdomain (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 19DB860012;
+        Tue, 10 Sep 2019 15:29:50 +0000 (UTC)
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: [PATCH 1/3] gpio: syscon: Add support for a custom get operation
+Date:   Tue, 10 Sep 2019 17:28:53 +0200
+Message-Id: <20190910152855.111588-1-paul.kocialkowski@bootlin.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <20190909090906.28700-1-kkamagui@gmail.com> <20190909090906.28700-3-kkamagui@gmail.com>
- <20190910144215.GA30780@linux.intel.com> <20190910150342.GA1920@linux.intel.com>
-In-Reply-To: <20190910150342.GA1920@linux.intel.com>
-From:   Seunghun Han <kkamagui@gmail.com>
-Date:   Wed, 11 Sep 2019 00:28:18 +0900
-Message-ID: <CAHjaAcRf3fcJMp6AwVRTrVaABZVzSkhBwRcpKZogAS4SSDK3zg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] tpm: tpm_crb: enhance resource mapping mechanism
- for supporting AMD's fTPM
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Peter Huewe <peterhuewe@gmx.de>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Vanya Lazeev <ivan.lazeev@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->
-> On Tue, Sep 10, 2019 at 03:42:15PM +0100, Jarkko Sakkinen wrote:
-> > On Mon, Sep 09, 2019 at 06:09:06PM +0900, Seunghun Han wrote:
-> > > I got an AMD system which had a Ryzen Threadripper 1950X and MSI
-> > > mainboard, and I had a problem with AMD's fTPM. My machine showed an error
-> > > message below, and the fTPM didn't work because of it.
-> > >
-> > > [  5.732084] tpm_crb MSFT0101:00: can't request region for resource
-> > >              [mem 0x79b4f000-0x79b4ffff]
-> > > [  5.732089] tpm_crb: probe of MSFT0101:00 failed with error -16
-> > >
-> > > When I saw the iomem, I found two fTPM regions were in the ACPI NVS area.
-> > > The regions are below.
-> > >
-> > > 79a39000-79b6afff : ACPI Non-volatile Storage
-> > >   79b4b000-79b4bfff : MSFT0101:00
-> > >   79b4f000-79b4ffff : MSFT0101:00
-> > >
-> > > After analyzing this issue, I found that crb_map_io() function called
-> > > devm_ioremap_resource() and it failed. The ACPI NVS didn't allow the TPM
-> > > CRB driver to assign a resource in it because a busy bit was set to
-> > > the ACPI NVS area.
-> > >
-> > > To support AMD's fTPM, I added a function to check intersects between
-> > > the TPM region and ACPI NVS before it mapped the region. If some
-> > > intersects are detected, the function just calls devm_ioremap() for
-> > > a workaround. If there is no intersect, it calls devm_ioremap_resource().
-> > >
-> > > Signed-off-by: Seunghun Han <kkamagui@gmail.com>
-> >
-> > This problem is still valid and not addressed by Vanya's patch (and
-> > should not be as it is a disjoint issue).  However, calling
-> > devm_ioremap() is somewhat racy as the NVS driver is not aware of that.
-> >
-> > My take is that this should be fixed in the code that assigns regions to
-> > the NVS driver e.g. it could look up the regions assigned to the
-> > MSFT0101 and ignore those regions. In the end linux-acpi maintainers
-> > have the say on this but this would be the angle that I'd take to
-> > implement such patch probably.
->
-> Matthew pointed out that having a hook in NVS driver is better solution
-> because it is nil functionality if the TPM driver is loaded. We need
-> functions to:
->
-> 1. Request a region from the NVS driver (when tpm_crb loads)
-> 2. Release a region back to the NVS Driver (when tpm_crb unloads).
->
-> My proposal would unnecessarily duplicate code and also leave a
-> side-effect when TPM is not used in the first place.
->
-> I see this as the overally best solution. If you can come up with a
-> patch for the NVS side and changes to CRB drivers to utilize the new
-> hooks, then combined with Vanya's changes we have a sustainable solution
-> for AMD fTPM.
+Some drivers might need a custom get operation to match custom
+behavior implemented in the set operation.
 
-It's a great solution. I will update this patch on your advice and
-send it to you soon.
+Add plumbing for supporting that.
 
-By the way, I have a question about your advice.
-If we handle the NVS region with NVS driver, calling devm_ioremap()
-function is fine like crb_ioremap_resource() function in this patch?
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+---
+ drivers/gpio/gpio-syscon.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
->
-> /Jarkko
+diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
+index 31f332074d7d..05c537ed73f1 100644
+--- a/drivers/gpio/gpio-syscon.c
++++ b/drivers/gpio/gpio-syscon.c
+@@ -43,8 +43,9 @@ struct syscon_gpio_data {
+ 	unsigned int	bit_count;
+ 	unsigned int	dat_bit_offset;
+ 	unsigned int	dir_bit_offset;
+-	void		(*set)(struct gpio_chip *chip,
+-			       unsigned offset, int value);
++	int		(*get)(struct gpio_chip *chip, unsigned offset);
++	void		(*set)(struct gpio_chip *chip, unsigned offset,
++			       int value);
+ };
+ 
+ struct syscon_gpio_priv {
+@@ -252,7 +253,7 @@ static int syscon_gpio_probe(struct platform_device *pdev)
+ 	priv->chip.label = dev_name(dev);
+ 	priv->chip.base = -1;
+ 	priv->chip.ngpio = priv->data->bit_count;
+-	priv->chip.get = syscon_gpio_get;
++	priv->chip.get = priv->data->get ? : syscon_gpio_get;
+ 	if (priv->data->flags & GPIO_SYSCON_FEAT_IN)
+ 		priv->chip.direction_input = syscon_gpio_dir_in;
+ 	if (priv->data->flags & GPIO_SYSCON_FEAT_OUT) {
+-- 
+2.23.0
+
