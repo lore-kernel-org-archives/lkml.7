@@ -2,145 +2,93 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7634C5AE59
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 18:08:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F39EC49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 18:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97BC72168B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 18:08:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UODuqFDG"
+	by mail.kernel.org (Postfix) with ESMTP id 8186521019
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 18:10:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731859AbfIJSIg (ORCPT
+        id S1732291AbfIJSKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 14:08:36 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45702 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725937AbfIJSIf (ORCPT
+        Tue, 10 Sep 2019 14:10:54 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44102 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728116AbfIJSKy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 14:08:35 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y72so11970722pfb.12;
-        Tue, 10 Sep 2019 11:08:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VwwR89FpLpifmdwhttpMzRbm9Mo2l5M4v9cq9zL1hHU=;
-        b=UODuqFDGMeFzwb/jFWRxBDymM9OOY7fs5E9syt1xsI69W6tT4yOJqvVkiphv8sz9Sa
-         hNL+NVLNv/pzWq3VNFOhdVg1yLwD7fo0p6h7p9nQaSKbYDrVWGySe5whTohCo7mBWndN
-         1dw66AzeFa/Vzas6WLPM6XH0xOjqFb2ARYkFrbYBV7CIP2gCDUvATi0hB1gT74gFwhtn
-         CQUM0jBvgeD54Y3P8xubrFaX4S+8D4JLZJ8zro8kOciPqbECifooZfB2sYpO4/SbADNw
-         QdUyVK3mHvc/6WvvEordOtt1lvOBwtibiRzZUz+U2zLV26s7CkNN6E7zW+JJrR65ZYAU
-         3uRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VwwR89FpLpifmdwhttpMzRbm9Mo2l5M4v9cq9zL1hHU=;
-        b=k+mrSnQjSrBzca54rcTFtQnOpHkZF3O4El1ku3MCHXLmMMFZEith4aKguoE+Wrj/wJ
-         bMO/mBR3t6XWEnV2NZtbwGtFEIYaKnum3XfM8MSgfFof7Xkd1D/AOBAkmUUQTRHUUIPO
-         vbujOdIP+JO+aXx7ID8Uq5XYzgVznpyxH0YeEjcCDE22iwEcIFfixyRct8J7bc6KwTvl
-         oBDgObqxzbt9SlGaGHQcfedUbR0A6nCl32XOm5K452nW0ZPtn9seg7lQG4CEZ/ZWsCIW
-         CBUM0SYJDB8oPtZkNN2hbK2PZQzVMARD3w5kA69fcygRiM4sHuuOOQVKvbpN4t0Kq4IT
-         6MIw==
-X-Gm-Message-State: APjAAAXUMpZitgZbFrQan/RwQvv+Zoufq9eOSBh1X+unzzbPL+VoiXXk
-        ZkWTvZj7yOLnEpvIUD0CeP8=
-X-Google-Smtp-Source: APXvYqz4+EDh5QYKLyTBOfHENLJwzd94dQm9MxFksKrz5K1FiyR6Kxg8ffJue0PofAR0nt46TCZcVQ==
-X-Received: by 2002:a63:1507:: with SMTP id v7mr27676269pgl.397.1568138914827;
-        Tue, 10 Sep 2019 11:08:34 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id s7sm280080pjn.8.2019.09.10.11.08.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 10 Sep 2019 11:08:34 -0700 (PDT)
-Date:   Tue, 10 Sep 2019 11:08:33 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Cc:     bjorn.andersson@linaro.org, wim@linux-watchdog.org,
-        agross@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] watchdog: qcom: remove unnecessary variable from
- private storage
-Message-ID: <20190910180833.GA25692@roeck-us.net>
-References: <20190906205411.31666-1-jorge.ramirez-ortiz@linaro.org>
- <20190906205411.31666-3-jorge.ramirez-ortiz@linaro.org>
+        Tue, 10 Sep 2019 14:10:54 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8AHvYT5097782
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 14:10:53 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2uxfx4t200-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 14:10:52 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Tue, 10 Sep 2019 19:10:51 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 10 Sep 2019 19:10:46 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8AIAjNQ39321930
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Sep 2019 18:10:45 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 17C32AE06A;
+        Tue, 10 Sep 2019 18:10:45 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A3DD3AE059;
+        Tue, 10 Sep 2019 18:10:44 +0000 (GMT)
+Received: from osiris (unknown [9.145.57.86])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 10 Sep 2019 18:10:44 +0000 (GMT)
+Date:   Tue, 10 Sep 2019 20:10:43 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Igor Mammedov <imammedo@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, borntraeger@de.ibm.com,
+        david@redhat.com, cohuck@redhat.com, frankja@linux.ibm.com,
+        gor@linux.ibm.com, imbrenda@linux.ibm.com,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] KVM: s390: kvm_s390_vm_start_migration: check
+ dirty_bitmap before using it as target for memset()
+References: <20190910130215.23647-1-imammedo@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190906205411.31666-3-jorge.ramirez-ortiz@linaro.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190910130215.23647-1-imammedo@redhat.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19091018-0028-0000-0000-0000039A9C5F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19091018-0029-0000-0000-0000245D0143
+Message-Id: <20190910181043.GB4313@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-10_11:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=498 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909100172
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 06, 2019 at 10:54:11PM +0200, Jorge Ramirez-Ortiz wrote:
-> there is no need to continue keeping the clock in private storage.
-> 
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+On Tue, Sep 10, 2019 at 09:02:15AM -0400, Igor Mammedov wrote:
+> Make sure that ms->dirty_bitmap is set before using it or
+> print a warning and return -ENIVAL otherwise.
+...
+> v2:
+>    - drop WARN()
+...
+> +		if (!ms->dirty_bitmap)
+> +			return -EINVAL;
 
-Good catch.
+The patch description needs an update. ;)
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-
-> ---
->  drivers/watchdog/qcom-wdt.c | 15 +++++++--------
->  1 file changed, 7 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
-> index 935c78a882a3..e98f5a3d83ea 100644
-> --- a/drivers/watchdog/qcom-wdt.c
-> +++ b/drivers/watchdog/qcom-wdt.c
-> @@ -42,7 +42,6 @@ static const u32 reg_offset_data_kpss[] = {
->  
->  struct qcom_wdt {
->  	struct watchdog_device	wdd;
-> -	struct clk		*clk;
->  	unsigned long		rate;
->  	void __iomem		*base;
->  	const u32		*layout;
-> @@ -189,6 +188,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
->  	const u32 *regs;
->  	u32 percpu_offset;
->  	int irq, ret;
-> +	struct clk *clk;
->  
->  	regs = of_device_get_match_data(dev);
->  	if (!regs) {
-> @@ -215,19 +215,18 @@ static int qcom_wdt_probe(struct platform_device *pdev)
->  	if (IS_ERR(wdt->base))
->  		return PTR_ERR(wdt->base);
->  
-> -	wdt->clk = devm_clk_get(dev, NULL);
-> -	if (IS_ERR(wdt->clk)) {
-> +	clk = devm_clk_get(dev, NULL);
-> +	if (IS_ERR(clk)) {
->  		dev_err(dev, "failed to get input clock\n");
-> -		return PTR_ERR(wdt->clk);
-> +		return PTR_ERR(clk);
->  	}
->  
-> -	ret = clk_prepare_enable(wdt->clk);
-> +	ret = clk_prepare_enable(clk);
->  	if (ret) {
->  		dev_err(dev, "failed to setup clock\n");
->  		return ret;
->  	}
-> -	ret = devm_add_action_or_reset(dev, qcom_clk_disable_unprepare,
-> -				       wdt->clk);
-> +	ret = devm_add_action_or_reset(dev, qcom_clk_disable_unprepare, clk);
->  	if (ret)
->  		return ret;
->  
-> @@ -239,7 +238,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
->  	 * that it would bite before a second elapses it's usefulness is
->  	 * limited.  Bail if this is the case.
->  	 */
-> -	wdt->rate = clk_get_rate(wdt->clk);
-> +	wdt->rate = clk_get_rate(clk);
->  	if (wdt->rate == 0 ||
->  	    wdt->rate > 0x10000000U) {
->  		dev_err(dev, "invalid clock rate\n");
