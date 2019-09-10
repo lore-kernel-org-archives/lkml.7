@@ -2,196 +2,137 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7480DC4740A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE6EBC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C5CB20863
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:38:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eROMurHf"
+	by mail.kernel.org (Postfix) with ESMTP id AFACF208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:43:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732887AbfIJNij (ORCPT
+        id S1732950AbfIJNns (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 09:38:39 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:45026 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726613AbfIJNid (ORCPT
+        Tue, 10 Sep 2019 09:43:48 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:34109 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729662AbfIJNnr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 09:38:33 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8ADcVgo066860;
-        Tue, 10 Sep 2019 08:38:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568122711;
-        bh=VsiXL+zAxe9QV+2PwF448UVgiwJxHtymmgfX/kQ2kxQ=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=eROMurHfTRlzYM1iZOoH4nvds0F9sMBQNo7Mr3ekhjmPCNRe5vrmQ9SAXiZ4rSgUx
-         X7aXcXdfPfXluIgsWr1ZTRcL2PmzQM4YNvShhjQu7uoFTdLICE/EsV8aYLZ4C5e1f4
-         QSKUSDR3A0F7lGEh/NkAx9gjxfxcE3xFM4xRv+to=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8ADcUlF097642
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 10 Sep 2019 08:38:31 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 10
- Sep 2019 08:38:30 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 10 Sep 2019 08:38:30 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8ADcTTa029601;
-        Tue, 10 Sep 2019 08:38:30 -0500
-From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <dmurphy@ti.com>
-CC:     <tomi.valkeinen@ti.com>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>
-Subject: [RESEND,v2 1/2] leds: tlc591xx: simplify driver by using the managed led API
-Date:   Tue, 10 Sep 2019 15:38:13 +0200
-Message-ID: <20190910133814.10275-2-jjhiblot@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190910133814.10275-1-jjhiblot@ti.com>
-References: <20190910133814.10275-1-jjhiblot@ti.com>
+        Tue, 10 Sep 2019 09:43:47 -0400
+Received: by mail-qk1-f194.google.com with SMTP id q203so17062903qke.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 06:43:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=p6zPc+01Hqtj70FYQH87POktpG3lo+D/uPeGYtLeCvc=;
+        b=qynhaLo1pqxhcQFzhoOgbhx9rpE0iYbUvUQqeuy+KWoVXuXBPkPyG1GW93MBlA5DGL
+         eDy30KCgF2+K5xHl1UsiyKlon1l7V5rB6l15r1TC8pvuMSvy1KbkeI6eZVEVbAqQW+lS
+         qSDjgD/mr05ddUjsgDzs4dkZSJaOS3//8kFcif0hYkXEKoe+e0fYJ6vpS5CdBpu88uAC
+         wVIT9bFPj6g9qsjGFcy7OMFiL7p35Cl23KXFiwUFVJvWAemBXTtpc5VXSZaCVsYvfnrt
+         KRzoE63GjHhS/rbJIqQQE92Xn7qT35qm9t3l4NEwRLJ6ZpSxCFeizPB2sQBrlegS3G4/
+         C4eQ==
+X-Gm-Message-State: APjAAAWbW/LNTKqAOo9SdVsnPtO8aDb5kh8S5y3DpVm5EM7/SRNTrrMR
+        WZ09pdw0XE1uvBTEx5HnOimhmVSdDFjJ+HRmHxU=
+X-Google-Smtp-Source: APXvYqx63W2KmaLnbZnwoNzPoM9AmlM0KI9/P88LEJJ6BbifXaOvNlmx+AWjiX8rS0YSdxh0Xc6uuOzmtj/wUOvmmm8=
+X-Received: by 2002:ae9:ee06:: with SMTP id i6mr8806139qkg.3.1568123026492;
+ Tue, 10 Sep 2019 06:43:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20190909202153.144970-1-arnd@arndb.de> <20190910074606.45k5m2pkztlpj4nj@willie-the-truck>
+ <CAK8P3a0O8bVLgMzyc9bXb8joy6CZevP4CVn5eEwEPVqAOutDEw@mail.gmail.com> <20190910132415.4j2ygxhuanihvzhx@willie-the-truck>
+In-Reply-To: <20190910132415.4j2ygxhuanihvzhx@willie-the-truck>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 10 Sep 2019 15:43:29 +0200
+Message-ID: <CAK8P3a3w6q7iUy2zYRhUqiWCR3o-L5s3BTYvXZMXb0zEa=Ydig@mail.gmail.com>
+Subject: Re: [PATCH] arm64: fix unreachable code issue with cmpxchg
+To:     Will Deacon <will@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the managed API of the LED class (devm_led_classdev_register()
-instead of led_classdev_register()).
-This allows us to remove the code used to track-and-destroy the LED devices
+On Tue, Sep 10, 2019 at 3:24 PM Will Deacon <will@kernel.org> wrote:
+> On Tue, Sep 10, 2019 at 10:04:24AM +0200, Arnd Bergmann wrote:
+> > On Tue, Sep 10, 2019 at 9:46 AM Will Deacon <will@kernel.org> wrote:
+> > - In theory, CONFIG_OPTIMIZE_INLINING is the right thing to do -- the compilers
+> >   also make some particularly bad decisions around inlining when each inline
+> >   turns into an __always_inline, as has been the case in Linux for a long time.
+> >   I think in most cases, we get better object code with CONFIG_OPTIMIZE_INLINING
+> >   and in the cases where this is worse, it may be better to fix the compiler.
+> >   The new "asm_inline"  macro should also help with that.
+>
+> Sure, in theory, but it looks like there isn't a single arm64 compiler out
+> there which gets it right.
 
-Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
----
- drivers/leds/leds-tlc591xx.c | 79 +++++++++---------------------------
- 1 file changed, 20 insertions(+), 59 deletions(-)
+I don't see anything architecture specific in here. When the option was
+made generic instead of x86 specific, I fixed a ton of bugs that showed
+up all over the place. If we don't want it on arm64, I'd suggest making
+it a per-architecture opt-in instead of an opt-out.
 
-diff --git a/drivers/leds/leds-tlc591xx.c b/drivers/leds/leds-tlc591xx.c
-index 59ff088c7d75..3d5a4b92f016 100644
---- a/drivers/leds/leds-tlc591xx.c
-+++ b/drivers/leds/leds-tlc591xx.c
-@@ -128,51 +128,6 @@ tlc591xx_brightness_set(struct led_classdev *led_cdev,
- 	return err;
- }
- 
--static void
--tlc591xx_destroy_devices(struct tlc591xx_priv *priv, unsigned int j)
--{
--	int i = j;
--
--	while (--i >= 0) {
--		if (priv->leds[i].active)
--			led_classdev_unregister(&priv->leds[i].ldev);
--	}
--}
--
--static int
--tlc591xx_configure(struct device *dev,
--		   struct tlc591xx_priv *priv,
--		   const struct tlc591xx *tlc591xx)
--{
--	unsigned int i;
--	int err = 0;
--
--	tlc591xx_set_mode(priv->regmap, MODE2_DIM);
--	for (i = 0; i < TLC591XX_MAX_LEDS; i++) {
--		struct tlc591xx_led *led = &priv->leds[i];
--
--		if (!led->active)
--			continue;
--
--		led->priv = priv;
--		led->led_no = i;
--		led->ldev.brightness_set_blocking = tlc591xx_brightness_set;
--		led->ldev.max_brightness = LED_FULL;
--		err = led_classdev_register(dev, &led->ldev);
--		if (err < 0) {
--			dev_err(dev, "couldn't register LED %s\n",
--				led->ldev.name);
--			goto exit;
--		}
--	}
--
--	return 0;
--
--exit:
--	tlc591xx_destroy_devices(priv, i);
--	return err;
--}
--
- static const struct regmap_config tlc591xx_regmap = {
- 	.reg_bits = 8,
- 	.val_bits = 8,
-@@ -225,7 +180,11 @@ tlc591xx_probe(struct i2c_client *client,
- 
- 	i2c_set_clientdata(client, priv);
- 
-+	tlc591xx_set_mode(priv->regmap, MODE2_DIM);
-+
- 	for_each_child_of_node(np, child) {
-+		struct tlc591xx_led *led;
-+
- 		err = of_property_read_u32(child, "reg", &reg);
- 		if (err) {
- 			of_node_put(child);
-@@ -236,22 +195,25 @@ tlc591xx_probe(struct i2c_client *client,
- 			of_node_put(child);
- 			return -EINVAL;
- 		}
--		priv->leds[reg].active = true;
--		priv->leds[reg].ldev.name =
-+		led = &priv->leds[reg];
-+
-+		led->active = true;
-+		led->ldev.name =
- 			of_get_property(child, "label", NULL) ? : child->name;
--		priv->leds[reg].ldev.default_trigger =
-+		led->ldev.default_trigger =
- 			of_get_property(child, "linux,default-trigger", NULL);
--	}
--	return tlc591xx_configure(dev, priv, tlc591xx);
--}
--
--static int
--tlc591xx_remove(struct i2c_client *client)
--{
--	struct tlc591xx_priv *priv = i2c_get_clientdata(client);
--
--	tlc591xx_destroy_devices(priv, TLC591XX_MAX_LEDS);
- 
-+		led->priv = priv;
-+		led->led_no = reg;
-+		led->ldev.brightness_set_blocking = tlc591xx_brightness_set;
-+		led->ldev.max_brightness = LED_FULL;
-+		err = devm_led_classdev_register(dev, &led->ldev);
-+		if (err < 0) {
-+			dev_err(dev, "couldn't register LED %s\n",
-+				led->ldev.name);
-+			return err;
-+		}
-+	}
- 	return 0;
- }
- 
-@@ -268,7 +230,6 @@ static struct i2c_driver tlc591xx_driver = {
- 		.of_match_table = of_match_ptr(of_tlc591xx_leds_match),
- 	},
- 	.probe = tlc591xx_probe,
--	.remove = tlc591xx_remove,
- 	.id_table = tlc591xx_id,
- };
- 
--- 
-2.17.1
+> >
+> >     | commit 4f81c5350b44bcc501ab6f8a089b16d064b4d2f6
+> >     | Author: Jeff Dike <jdike@addtoit.com>
+> >     | Date:   Mon Jul 7 13:36:56 2008 -0400
+> >     |
+> >     |     [UML] fix gcc ICEs and unresolved externs
+> >     [...]
+> >     |    This patch reintroduces unit-at-a-time for gcc >= 4.0,
+> > bringing back the
+> >     |    possibility of Uli's crash.  If that happens, we'll debug it.
+> >
+> >     it's still default-off and thus opt-in.
+>
+> This appears to be fixing an ICE, whereas the issue reported recently for
+> arm64 gcc was silent miscompilation of atomics in some cases. Unfortunately,
+> I can't seem to find the thread :/ Mark, you were on that one too, right?
 
+Sorry, that reference was unclear, I meant the text for commit 3f9b5cc01856,
+which in turn contains a citation of the earlier 4f81c5350b44bc commit.
+
+> > - The inlining decisions of gcc and clang are already very different, and
+> >    the bugs we are finding around that are much more common than
+> >    the difference between CONFIG_OPTIMIZE_INLINING=y/n on a
+> >    given compiler.
+>
+> Sorry, not sure that you're getting at here.
+>
+> Anyway, the second version of your patch looks fine, but I would still
+> prefer to go the extra mile and disable CONFIG_OPTIMIZE_INLINING altogether
+> given that I don't think it's a safe option to enable for us.
+
+The point is that function inlining frequently causes all kinds of problems
+when code was written in a way that is not entirely reproducible but
+depends on the behavior of a particular implementation. I've fixed
+lots of bugs based on any of these:
+
+- gcc-4.0 and higher started ignoring 'inline' without
+  __attribute__((always_inline)), so a workaround got applied
+  in 2.6.26, and this turned into CONFIG_OPTIMIZE_INLINING=n
+  later
+- gcc -O2 makes different decisions compared to -Os and -O3,
+  which is an endless source of "uninitialized variable" warnings
+  and similar problems
+- Some configuration options like KASAN grow the code to result
+  in less inlining
+- clang and gcc behave completely differently
+- gcc is traditionally bad at guessing the size of inline assembly
+  to make a good decision
+- newer compilers tend to get better at identifying which functions
+  benefit from inlining, which changes the balance
+
+CONFIG_OPTIMIZE_INLINING clearly adds to that mess, but it's
+not the worst part. The only real solution tends to be to write
+portable and correct code rather than making assumptions
+about compiler behavior.
+
+    Arnd
