@@ -2,204 +2,227 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE82C49ED6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8193BC49ED9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3AF321479
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CB9C2082C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:52:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387691AbfIJNuh (ORCPT
+        id S1729595AbfIJNw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 09:50:37 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:38773 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbfIJNug (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 09:50:36 -0400
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="Claudiu.Beznea@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: 7Qx/t+qsjV6E0Dj1xcyp25xO9F6J0eJMEgv8Rljttory/h06/GeKzflrUaMK23yk4zpcyzRSgD
- oc7X0UF5ZKXrf8PPjGuE4u5QFaEIVxR4voyfKyb3pZ+bW+1/amxVUdogsl++SEkth8xqzN7fiC
- 2cW8K4IWn+UhZN2FvlZT5ULMgk4nHeh06WVzpS/tVawEfSwvFI3NAhxNOQiiiRqT++v7ZXDv6d
- e/omb4OFyKX+MKSCiBXGp+7xlJnBhpZDZgUm66rk0ykVRhT17zotZ/yYy7Hy4kCN71Um3RINx+
- JN4=
-X-IronPort-AV: E=Sophos;i="5.64,489,1559545200"; 
-   d="scan'208";a="48512205"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Sep 2019 06:50:33 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 10 Sep 2019 06:50:27 -0700
-Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.85.251) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Tue, 10 Sep 2019 06:50:05 -0700
-From:   Claudiu Beznea <claudiu.beznea@microchip.com>
-To:     <daniel.lezcano@linaro.org>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <linux@armlinux.org.uk>, <nsekhar@ti.com>,
-        <bgolaszewski@baylibre.com>, <monstr@monstr.eu>,
-        <john@phrozen.org>, <ralf@linux-mips.org>, <paul.burton@mips.com>,
-        <jhogan@kernel.org>, <lftan@altera.com>, <tglx@linutronix.de>,
-        <vgupta@synopsys.com>, <marc.zyngier@arm.com>,
-        <patrice.chotard@st.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <eric@anholt.net>, <wahrenst@gmx.net>,
-        <f.fainelli@gmail.com>, <rjui@broadcom.com>,
-        <sbranden@broadcom.com>, <bcm-kernel-feedback-list@broadcom.com>,
-        <linus.walleij@linaro.org>, <shc_work@mail.ru>, <kgene@kernel.org>,
-        <krzk@kernel.org>, <ysato@users.sourceforge.jp>,
-        <liviu.dudau@arm.com>, <sudeep.holla@arm.com>,
-        <lorenzo.pieralisi@arm.com>, <shawnguo@kernel.org>,
-        <s.hauer@pengutronix.de>, <kernel@pengutronix.de>,
-        <festevam@gmail.com>, <linux-imx@nxp.com>, <baohua@kernel.org>,
-        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <ludovic.desroches@microchip.com>, <baruch@tkos.co.il>,
-        <u.kleine-koenig@pengutronix.de>, <guoren@kernel.org>,
-        <kaloz@openwrt.org>, <khalasa@piap.pl>, <ssantosh@kernel.org>,
-        <vz@mleia.com>, <slemieux.tyco@gmail.com>, <khilman@baylibre.com>,
-        <avifishman70@gmail.com>, <tmaimon77@gmail.com>,
-        <tali.perry1@gmail.com>, <venture@google.com>, <yuenn@google.com>,
-        <benjaminfair@google.com>, <afaerber@suse.de>,
-        <manivannan.sadhasivam@linaro.org>, <narmstrong@baylibre.com>,
-        <agross@kernel.org>, <palmer@sifive.com>, <aou@eecs.berkeley.edu>,
-        <heiko@sntech.de>, <orsonzhai@gmail.com>, <baolin.wang@linaro.org>,
-        <zhang.lyra@gmail.com>, <maxime.ripard@bootlin.com>,
-        <wens@csie.org>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <linux@prisktech.co.nz>,
-        <john.stultz@linaro.org>, <sboyd@kernel.org>,
-        <matthias.bgg@gmail.com>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mips@vger.kernel.org>, <nios2-dev@lists.rocketboards.org>,
-        <linux-snps-arc@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-rpi-kernel@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>,
-        <uclinux-h8-devel@lists.sourceforge.jp>,
-        <linux-amlogic@lists.infradead.org>, <openbmc@lists.ozlabs.org>,
-        <linux-oxnas@groups.io>, <linux-arm-msm@vger.kernel.org>,
-        <linux-unisoc@lists.infradead.org>,
-        <linux-riscv@lists.infradead.org>,
-        <linux-rockchip@lists.infradead.org>,
-        <linux-tegra@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        "Claudiu Beznea" <claudiu.beznea@microchip.com>
-Subject: [PATCH 7/7] clocksource/drivers/integrator-ap: parse the chosen node
-Date:   Tue, 10 Sep 2019 16:47:16 +0300
-Message-ID: <1568123236-767-8-git-send-email-claudiu.beznea@microchip.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1568123236-767-1-git-send-email-claudiu.beznea@microchip.com>
-References: <1568123236-767-1-git-send-email-claudiu.beznea@microchip.com>
+        Tue, 10 Sep 2019 09:52:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39996 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726008AbfIJNw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 09:52:57 -0400
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E6454C049E32
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 13:52:55 +0000 (UTC)
+Received: by mail-qt1-f199.google.com with SMTP id b1so19928313qtj.9
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 06:52:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=vKjBadJZsVZtUGd3WVckVL2DIAFF4FA1DCNgRycmkBI=;
+        b=CMrZK/Fs87GSIpp4iKDxpSpPVAIvIKvm5bHh/nskF+/aRsxTgq+53yGfk5+NSYw0wx
+         pYRVYjW170QSJ3pGDwU+O3ZaLlXkg/+3UAXxefWbkf73mPn7yp6ouKvjzctqW5h3g+qb
+         tdw1Pj1vch/QUMXL8jMJZPYIvRx8ycJY6K1LbMsLbQ+KPVzk80SEshtY518WzvANZx1C
+         CW5PttdbY7fdBG5bryTfagr9I88xq+5/9sC15rBdWLh14wQfBnate01N9zqbhHnpB2Ez
+         3O9f8jPOAm5LLLr2RCEdRw/Iqhd3r4dlek1DG2GrLBKs++W8E+2qIGe8dlHJu6edO1a8
+         AKHQ==
+X-Gm-Message-State: APjAAAU9KGbMTbojNF4HPzfrnEzYdc3gxlEUfxbziDBYldjCkyK4RLUZ
+        ZAILQGqkVPfwiEcWh+Xlc9DQQ4fiVKf5o2wyy0JnyzUu6q8+vM3gmSqy7STEIW+ZID+riay2CEP
+        u5EQ2WQ3sR2OmiP5Mgn9Zh/yE
+X-Received: by 2002:a0c:e811:: with SMTP id y17mr7641986qvn.68.1568123575198;
+        Tue, 10 Sep 2019 06:52:55 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqy87Xk8h9CwEg4tdqy4DXt/JFYQLpQHouOJ6fOEiaMkub6yelg6yVSS11xTwQ5fJFutl2Pk0A==
+X-Received: by 2002:a0c:e811:: with SMTP id y17mr7641951qvn.68.1568123574950;
+        Tue, 10 Sep 2019 06:52:54 -0700 (PDT)
+Received: from redhat.com ([80.74.107.118])
+        by smtp.gmail.com with ESMTPSA id n42sm10807604qta.31.2019.09.10.06.52.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Sep 2019 06:52:53 -0700 (PDT)
+Date:   Tue, 10 Sep 2019 09:52:46 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kwankhede@nvidia.com, alex.williamson@redhat.com,
+        cohuck@redhat.com, tiwei.bie@intel.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, idos@mellanox.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com
+Subject: Re: [RFC PATCH 3/4] virtio: introudce a mdev based transport
+Message-ID: <20190910094807-mutt-send-email-mst@kernel.org>
+References: <20190910081935.30516-1-jasowang@redhat.com>
+ <20190910081935.30516-4-jasowang@redhat.com>
+ <20190910055744-mutt-send-email-mst@kernel.org>
+ <572ffc34-3081-8503-d3cc-192edc9b5311@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <572ffc34-3081-8503-d3cc-192edc9b5311@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+On Tue, Sep 10, 2019 at 09:13:02PM +0800, Jason Wang wrote:
+> 
+> On 2019/9/10 下午6:01, Michael S. Tsirkin wrote:
+> > > +#ifndef _LINUX_VIRTIO_MDEV_H
+> > > +#define _LINUX_VIRTIO_MDEV_H
+> > > +
+> > > +#include <linux/interrupt.h>
+> > > +#include <linux/vringh.h>
+> > > +#include <uapi/linux/virtio_net.h>
+> > > +
+> > > +/*
+> > > + * Ioctls
+> > > + */
+> > Pls add a bit more content here. It's redundant to state these
+> > are ioctls. Much better to document what does each one do.
+> 
+> 
+> Ok.
+> 
+> 
+> > 
+> > > +
+> > > +struct virtio_mdev_callback {
+> > > +	irqreturn_t (*callback)(void *);
+> > > +	void *private;
+> > > +};
+> > > +
+> > > +#define VIRTIO_MDEV 0xAF
+> > > +#define VIRTIO_MDEV_SET_VQ_CALLBACK _IOW(VIRTIO_MDEV, 0x00, \
+> > > +					 struct virtio_mdev_callback)
+> > > +#define VIRTIO_MDEV_SET_CONFIG_CALLBACK _IOW(VIRTIO_MDEV, 0x01, \
+> > > +					struct virtio_mdev_callback)
+> > Function pointer in an ioctl parameter? How does this ever make sense?
+> 
+> 
+> I admit this is hacky (casting).
+> 
+> 
+> > And can't we use a couple of registers for this, and avoid ioctls?
+> 
+> 
+> Yes, how about something like interrupt numbers for each virtqueue and
+> config?
 
-The driver currently uses aliases to know whether the timer is the
-clocksource or the clockevent. Add the /chosen/linux,clocksource and
-/chosen/linux,clockevent parsing while keeping backward compatibility.
+Should we just reuse VIRTIO_PCI_COMMON_Q_XXX then?
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
- drivers/clocksource/Kconfig               |  1 +
- drivers/clocksource/timer-integrator-ap.c | 21 ++++++++++++++++++++-
- 2 files changed, 21 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index a642c23b2fba..e1742c0abb03 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -240,6 +240,7 @@ config KEYSTONE_TIMER
- config INTEGRATOR_AP_TIMER
- 	bool "Integrator-ap timer driver" if COMPILE_TEST
- 	select CLKSRC_MMIO
-+	select TIMER_OF
- 	help
- 	  Enables support for the Integrator-ap timer.
- 
-diff --git a/drivers/clocksource/timer-integrator-ap.c b/drivers/clocksource/timer-integrator-ap.c
-index 8d6f814ace36..78af89e73125 100644
---- a/drivers/clocksource/timer-integrator-ap.c
-+++ b/drivers/clocksource/timer-integrator-ap.c
-@@ -14,6 +14,7 @@
- #include <linux/interrupt.h>
- #include <linux/sched_clock.h>
- 
-+#include "timer-of.h"
- #include "timer-sp.h"
- 
- static void __iomem * sched_clk_base;
-@@ -160,6 +161,12 @@ static int integrator_clockevent_init(unsigned long inrate,
- 	return 0;
- }
- 
-+static struct timer_of to[] = {
-+	{ .flags = TIMER_OF_TYPE_CS, },
-+	{ .flags = TIMER_OF_TYPE_CE, },
-+	{ /* sentinel */ }
-+};
-+
- static int __init integrator_ap_timer_init_of(struct device_node *node)
- {
- 	const char *path;
-@@ -169,6 +176,7 @@ static int __init integrator_ap_timer_init_of(struct device_node *node)
- 	struct clk *clk;
- 	unsigned long rate;
- 	struct device_node *alias_node;
-+	struct timer_of *to = node->data;
- 
- 	base = of_io_request_and_map(node, 0, "integrator-timer");
- 	if (IS_ERR(base))
-@@ -183,6 +191,17 @@ static int __init integrator_ap_timer_init_of(struct device_node *node)
- 	rate = clk_get_rate(clk);
- 	writel(0, base + TIMER_CTRL);
- 
-+	if (timer_of_is_clocksource(to))
-+		/* The primary timer lacks IRQ, use as clocksource */
-+		return integrator_clocksource_init(rate, base);
-+
-+	if (timer_of_is_clockevent(to)) {
-+		/* The secondary timer will drive the clock event */
-+		irq = irq_of_parse_and_map(node, 0);
-+		return integrator_clockevent_init(rate, base, irq);
-+	}
-+
-+	/* DT ABI compatibility below */
- 	err = of_property_read_string(of_aliases,
- 				"arm,timer-primary", &path);
- 	if (err) {
-@@ -227,4 +246,4 @@ static int __init integrator_ap_timer_init_of(struct device_node *node)
- }
- 
- TIMER_OF_DECLARE(integrator_ap_timer, "arm,integrator-timer",
--		       integrator_ap_timer_init_of, NULL);
-+		       integrator_ap_timer_init_of, to);
--- 
-2.7.4
+> 
+> > 
+> > > +
+> > > +#define VIRTIO_MDEV_DEVICE_API_STRING		"virtio-mdev"
+> > > +
+> > > +/*
+> > > + * Control registers
+> > > + */
+> > > +
+> > > +/* Magic value ("virt" string) - Read Only */
+> > > +#define VIRTIO_MDEV_MAGIC_VALUE		0x000
+> > > +
+> > > +/* Virtio device version - Read Only */
+> > > +#define VIRTIO_MDEV_VERSION		0x004
+> > > +
+> > > +/* Virtio device ID - Read Only */
+> > > +#define VIRTIO_MDEV_DEVICE_ID		0x008
+> > > +
+> > > +/* Virtio vendor ID - Read Only */
+> > > +#define VIRTIO_MDEV_VENDOR_ID		0x00c
+> > > +
+> > > +/* Bitmask of the features supported by the device (host)
+> > > + * (32 bits per set) - Read Only */
+> > > +#define VIRTIO_MDEV_DEVICE_FEATURES	0x010
+> > > +
+> > > +/* Device (host) features set selector - Write Only */
+> > > +#define VIRTIO_MDEV_DEVICE_FEATURES_SEL	0x014
+> > > +
+> > > +/* Bitmask of features activated by the driver (guest)
+> > > + * (32 bits per set) - Write Only */
+> > > +#define VIRTIO_MDEV_DRIVER_FEATURES	0x020
+> > > +
+> > > +/* Activated features set selector - Write Only */
+> > > +#define VIRTIO_MDEV_DRIVER_FEATURES_SEL	0x024
+> > > +
+> > > +/* Queue selector - Write Only */
+> > > +#define VIRTIO_MDEV_QUEUE_SEL		0x030
+> > > +
+> > > +/* Maximum size of the currently selected queue - Read Only */
+> > > +#define VIRTIO_MDEV_QUEUE_NUM_MAX	0x034
+> > > +
+> > > +/* Queue size for the currently selected queue - Write Only */
+> > > +#define VIRTIO_MDEV_QUEUE_NUM		0x038
+> > > +
+> > > +/* Ready bit for the currently selected queue - Read Write */
+> > > +#define VIRTIO_MDEV_QUEUE_READY		0x044
+> > Is this same as started?
+> 
+> 
+> Do you mean "status"?
 
+I really meant "enabled", didn't remember the correct name.
+As in:  VIRTIO_PCI_COMMON_Q_ENABLE
+
+> 
+> > 
+> > > +
+> > > +/* Alignment of virtqueue - Read Only */
+> > > +#define VIRTIO_MDEV_QUEUE_ALIGN		0x048
+> > > +
+> > > +/* Queue notifier - Write Only */
+> > > +#define VIRTIO_MDEV_QUEUE_NOTIFY	0x050
+> > > +
+> > > +/* Device status register - Read Write */
+> > > +#define VIRTIO_MDEV_STATUS		0x060
+> > > +
+> > > +/* Selected queue's Descriptor Table address, 64 bits in two halves */
+> > > +#define VIRTIO_MDEV_QUEUE_DESC_LOW	0x080
+> > > +#define VIRTIO_MDEV_QUEUE_DESC_HIGH	0x084
+> > > +
+> > > +/* Selected queue's Available Ring address, 64 bits in two halves */
+> > > +#define VIRTIO_MDEV_QUEUE_AVAIL_LOW	0x090
+> > > +#define VIRTIO_MDEV_QUEUE_AVAIL_HIGH	0x094
+> > > +
+> > > +/* Selected queue's Used Ring address, 64 bits in two halves */
+> > > +#define VIRTIO_MDEV_QUEUE_USED_LOW	0x0a0
+> > > +#define VIRTIO_MDEV_QUEUE_USED_HIGH	0x0a4
+> > > +
+> > > +/* Configuration atomicity value */
+> > > +#define VIRTIO_MDEV_CONFIG_GENERATION	0x0fc
+> > > +
+> > > +/* The config space is defined by each driver as
+> > > + * the per-driver configuration space - Read Write */
+> > > +#define VIRTIO_MDEV_CONFIG		0x100
+> > Mixing device and generic config space is what virtio pci did,
+> > caused lots of problems with extensions.
+> > It would be better to reserve much more space.
+> 
+> 
+> I see, will do this.
+> 
+> Thanks
+> 
+> 
+> > 
+> > 
+> > > +
+> > > +#endif
+> > > +
+> > > +
+> > > +/* Ready bit for the currently selected queue - Read Write */
+> > > -- 
+> > > 2.19.1
