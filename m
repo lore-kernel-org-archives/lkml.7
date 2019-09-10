@@ -2,193 +2,138 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C41FC49ED9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB85C49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54D4E20872
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:16:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2955D2089F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:17:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394130AbfIJQQl (ORCPT
+        id S2394154AbfIJQRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 12:16:41 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:42006 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729971AbfIJQQl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 12:16:41 -0400
-Received: by mail-yw1-f68.google.com with SMTP id i207so6637332ywc.9;
-        Tue, 10 Sep 2019 09:16:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FDQLIng6kCw7wl/fv02qjtPxeGZB6gd6OThPCSovKTs=;
-        b=LjDrRh4W31/m10U40aUMoKxR0cgMfqwGtYeBrZlHgiNbgMaLMKzRw14ygyw8R3YJds
-         Jt5VmvBmfdNiyRSDbpKX/BnDjzUNTdt+d9TATzlVAr/q8O5UfleVeG/38/k4N88pAqUu
-         U+CGVo06PqUCYDOgW0z13zeiVpD6J5fa0GevbiyofE7ej6liii51wbJLM1BKYYCCM8pW
-         wr5HiFjpVnOguw0HtbB5Z/ItdD/hlhpEp2RtBkhoK05k2QjAC5iion3DB1jPDlVkoc+0
-         vaFpuRp0aHdsoFOySzLP4IwdmaODghkOTfX/eBq1ltEYseGABQrLQzyKtIwJ/yGTffRc
-         ak3A==
-X-Gm-Message-State: APjAAAUC5rKu8dhq81dQB+3zgTjyxYLGjat+y4C5T0SHYXz2XRvSI4Wz
-        TZ9QPUgCYPjCZYMU8zMFGxjZg2WyvwZnWZEUvZw=
-X-Google-Smtp-Source: APXvYqzmsL42TZRBK6S3XMFhX7UkHuUJCmUwDrJ9agMT2fIQE8XEq9em+k3KCl5sn2MIVcOApA8FI+6GaRs+DWfpqxU=
-X-Received: by 2002:a81:8105:: with SMTP id r5mr20891732ywf.489.1568132199817;
- Tue, 10 Sep 2019 09:16:39 -0700 (PDT)
+        Tue, 10 Sep 2019 12:17:53 -0400
+Received: from guitar.tcltek.co.il ([192.115.133.116]:36970 "EHLO
+        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2394139AbfIJQRx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 12:17:53 -0400
+Received: from sapphire.tkos.co.il (unknown [192.168.100.188])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx.tkos.co.il (Postfix) with ESMTPS id 619F14402AC;
+        Tue, 10 Sep 2019 19:17:49 +0300 (IDT)
+Date:   Tue, 10 Sep 2019 19:17:48 +0300
+From:   Baruch Siach <baruch@tkos.co.il>
+To:     tinywrkb <tinywrkb@gmail.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Fabio Estevam <festevam@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Russell King <linux@armlinux.org.uk>,
+        open list <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] ARM: dts: imx6dl: SolidRun: add phy node with 100Mb/s
+ max-speed
+Message-ID: <20190910161748.dbvudrkx6i2avoha@sapphire.tkos.co.il>
+References: <20190910155507.491230-1-tinywrkb@gmail.com>
 MIME-Version: 1.0
-References: <CGME20190910122514epcas5p4f00c0f999333dd7707c0a353fd06b57f@epcas5p4.samsung.com>
- <1568118302-10505-1-git-send-email-pankaj.dubey@samsung.com> <20190910135813.GK9720@e119886-lin.cambridge.arm.com>
-In-Reply-To: <20190910135813.GK9720@e119886-lin.cambridge.arm.com>
-From:   Pankaj Dubey <pankaj.dubey@samsung.com>
-Date:   Tue, 10 Sep 2019 21:46:28 +0530
-Message-ID: <CAGcde9F6dTGga6Rxo62PPk3AMb3tK8oqo9K6Zi=0TbnFktmQQw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] PCI: dwc: Add support to disable GEN3 equalization
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jingoo Han <jingoohan1@gmail.com>,
-        gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Anvesh Salveru <anvesh.s@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190910155507.491230-1-tinywrkb@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Sep 2019 at 19:56, Andrew Murray <andrew.murray@arm.com> wrote:
->
-> On Tue, Sep 10, 2019 at 05:55:01PM +0530, Pankaj Dubey wrote:
-> > From: Anvesh Salveru <anvesh.s@samsung.com>
-> >
-> > In some platforms, PCIe PHY may have issues which will prevent linkup
-> > to happen in GEN3 or high speed. In case equalization fails, link will
-> > fallback to GEN1.
->
-> When you refer to "high speed", do you mean "higher speeds" as in GEN3,
-> GEN4, etc?
->
+Hi tinywrkb,
 
-Yes. Will reword the commit message as "higher speeds"
+On Tue, Sep 10, 2019 at 06:55:07PM +0300, tinywrkb wrote:
+> Cubox-i Solo/DualLite carrier board has 100Mb/s magnetics while the
+> Atheros AR8035 PHY on the MicroSoM v1.3 CPU module is a 1GbE PHY device.
 
-> >
-> > Designware controller has support for disabling GEN3 equalization if
-> > required. This patch enables the designware driver to disable the PCIe
-> > GEN3 equalization by writing into PCIE_PORT_GEN3_RELATED.
->
-> Thus limiting to GEN2 speeds max, right?
->
-> Is the purpose of PORT_LOGIC_GEN3_EQ_DISABLE to disable GEN3 and above
-> even though we advertise GEN3 and above speeds? I.e. the IP advertises
-> GEN3 but the phy can't handle it, we can't change what the IP advertises
-> and so we disable equalization to limit to GEN2?
->
-> I notice many of the other dwc drivers (dra7xx, keystone, tegra194, imx6)
-> seem to use the device tree to specify a max-link-speed and then impose
-> that limit by changing the value in PCI_EXP_LNKCAP. Is your
-> PORT_LOGIC_GEN3_EQ_DISABLE approach and alternative to the PCI_EXP_LNKCAP
-> approach, or does your approach add something else?
->
+According to the hardware designer, Rabeeh Khoury, there is not such 
+limitation in the Cubox-i carrier magnetics.
 
-No, max speed will be still as per advertised by link or it will be
-equal to the limited speed as per DT property if any.
-This register will prohibit to perform all phases of equalization and
-thus allowing link to happen in maximum supported/advertised speed.
+> Since commit 5502b218e001 ("net: phy: use phy_resolve_aneg_linkmode in
+> genphy_read_status") ethernet is broken on Cubox-i Solo/DualLite devices.
 
-This is not to limit max link speed, this register helps link to
-happen in higher speeds (GEN3/4) without going through equalization
-phases. It is intended to use only if at all link fails to latch up in
-GEN3/4 due to failure in equalization phases.
+Does revert of 5502b218e001 fixes your issue?
 
-> >
-> > Platform drivers can disable equalization by setting the dwc_pci_quirk
-> > flag DWC_EQUALIZATION_DISABLE.
-> >
-> > Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
-> > Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-designware.c | 7 +++++++
-> >  drivers/pci/controller/dwc/pcie-designware.h | 7 +++++++
-> >  2 files changed, 14 insertions(+)
-> >
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> > index 7d25102..bf82091 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> > @@ -466,4 +466,11 @@ void dw_pcie_setup(struct dw_pcie *pci)
-> >               break;
-> >       }
-> >       dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
-> > +
-> > +     val = dw_pcie_readl_dbi(pci, PCIE_PORT_GEN3_RELATED);
-> > +
-> > +     if (pci->dwc_pci_quirk & DWC_EQUALIZATION_DISABLE)
-> > +             val |= PORT_LOGIC_GEN3_EQ_DISABLE;
-> > +
-> > +     dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
->
-> The problem here is that even when DWC_EQUALIZATION_DISABLE is not set
-> the driver will read and write PCIE_PORT_GEN3_RELATED when it is not
-> needed. How about something like:
->
-> > +
-> > +     if (pci->dwc_pci_quirk & DWC_EQUALIZATION_DISABLE) {
-> > +             val = dw_pcie_readl_dbi(pci, PCIE_PORT_GEN3_RELATED);
-> > +             val |= PORT_LOGIC_GEN3_EQ_DISABLE;
-> > +             dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
-> > +     }
->
+> This adds a phy node to the MicroSoM DTS and a 100Mb/s max-speed limit
+> to the Cubox-i Solo/DualLite carrier DTS.
+> 
+> Signed-off-by: tinywrkb <tinywrkb@gmail.com>
 
-Yes, before posting we taught about it, but then next patchset is
-adding one more quirk and in that case we need to repeat read and
-write under each if condition. I hope that repetition should be fine.
+You must use your real name in sign-off.
 
-> >  }
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> > index ffed084..a1453c5 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware.h
-> > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> > @@ -29,6 +29,9 @@
-> >  #define LINK_WAIT_MAX_IATU_RETRIES   5
-> >  #define LINK_WAIT_IATU                       9
-> >
-> > +/* Parameters for PCIe Quirks */
-> > +#define DWC_EQUALIZATION_DISABLE     0x1
->
-> How about using BIT(1) instead? Thus implying that you can combine
-> quirks.
->
+> ---
+> This patch fixes ethernet on my Cubox-i2-300-D which is limited to 100Mb/s,
+> afaik due to the carrier board  magnetics, and was since commit 5502b218e001
+> ("net: phy: use phy_resolve_aneg_linkmode in genphy_read_status")
+> 
+> The AR8035 PHY on the CPU module reports to the driver as 1GbE capable
+> via MII_BSMR's BMSR_ESTATEN status bit, the auto-negotiation sets the
+> speed at 1GbE while the carrier board can't support it.
+> Same behavior with the generic phy_device and the at803x drivers.
+> 
+> While the PHY is on the CPU module board I added the max-speed limit to
+> the cubox-i carrier DTS as I suspect that if the Solo or DualLite v1.3
+> MicroSoM will be connected to a 1GbE capable carrier board then it would
+> work correctly with 1GbE.
+> 
+> I can confirm that this commit doesn't break networking on the my
+> Cubox-i4Pro Quad (i4P-300-D) with it's 1GbE capable carrier board, and
+> was tested separately with the generic phy_device and at803x drivers.
+> 
+>  arch/arm/boot/dts/imx6dl-cubox-i.dts  | 4 ++++
+>  arch/arm/boot/dts/imx6qdl-sr-som.dtsi | 9 +++++++++
+>  2 files changed, 13 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6dl-cubox-i.dts b/arch/arm/boot/dts/imx6dl-cubox-i.dts
+> index 2b1b3e193f53..cfc82513c78c 100644
+> --- a/arch/arm/boot/dts/imx6dl-cubox-i.dts
+> +++ b/arch/arm/boot/dts/imx6dl-cubox-i.dts
+> @@ -49,3 +49,7 @@
+>  	model = "SolidRun Cubox-i Solo/DualLite";
+>  	compatible = "solidrun,cubox-i/dl", "fsl,imx6dl";
+>  };
+> +
+> +&ethphy {
+> +	max-speed = <100>;
+> +};
 
-Agreed.
+Where is the ethphy lable defined? Have you build tested this patch?
 
-> Thanks,
->
-> Andrew Murray
->
-> > +
-> >  /* Synopsys-specific PCIe configuration registers */
-> >  #define PCIE_PORT_LINK_CONTROL               0x710
-> >  #define PORT_LINK_MODE_MASK          GENMASK(21, 16)
-> > @@ -60,6 +63,9 @@
-> >  #define PCIE_MSI_INTR0_MASK          0x82C
-> >  #define PCIE_MSI_INTR0_STATUS                0x830
-> >
-> > +#define PCIE_PORT_GEN3_RELATED               0x890
-> > +#define PORT_LOGIC_GEN3_EQ_DISABLE   BIT(16)
-> > +
-> >  #define PCIE_ATU_VIEWPORT            0x900
-> >  #define PCIE_ATU_REGION_INBOUND              BIT(31)
-> >  #define PCIE_ATU_REGION_OUTBOUND     0
-> > @@ -244,6 +250,7 @@ struct dw_pcie {
-> >       struct dw_pcie_ep       ep;
-> >       const struct dw_pcie_ops *ops;
-> >       unsigned int            version;
-> > +     unsigned int            dwc_pci_quirk;
-> >  };
-> >
-> >  #define to_dw_pcie_from_pp(port) container_of((port), struct dw_pcie, pp)
-> > --
-> > 2.7.4
-> >
+> diff --git a/arch/arm/boot/dts/imx6qdl-sr-som.dtsi b/arch/arm/boot/dts/imx6qdl-sr-som.dtsi
+> index 6d7f6b9035bc..969bc96c3f99 100644
+> --- a/arch/arm/boot/dts/imx6qdl-sr-som.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-sr-som.dtsi
+> @@ -57,6 +57,15 @@
+>  	phy-reset-duration = <2>;
+>  	phy-reset-gpios = <&gpio4 15 GPIO_ACTIVE_LOW>;
+>  	status = "okay";
+> +	phy-handle = <&ethphy>;
+> +	mdio {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		ethphy: ethernet-phy@0 {
+> +			compatible = "ethernet-phy-ieee802.3-c22";
+> +			reg = <0>;
+> +		};
+> +	};
+>  };
+>  
+>  &iomuxc {
+
+baruch
+
+-- 
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.2.679.5364, http://www.tkos.co.il -
