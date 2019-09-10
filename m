@@ -2,137 +2,110 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB33C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC4EC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 618312081B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:34:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VZjHJldh"
+	by mail.kernel.org (Postfix) with ESMTP id 3C69D2081B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:38:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390117AbfIJJev (ORCPT
+        id S2390244AbfIJJiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 05:34:51 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38510 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727076AbfIJJev (ORCPT
+        Tue, 10 Sep 2019 05:38:55 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:45745 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731249AbfIJJiz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 05:34:51 -0400
-Received: by mail-wr1-f67.google.com with SMTP id l11so18699649wrx.5
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 02:34:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1s+ZG63MAQccFl9RI5BId8EEo4YivDiX7geRRVwkm2s=;
-        b=VZjHJldhG0W3JDoaKZJebBv6Nu1AnmYHqVop5+xyxHcpiFcHKhSdgyCvDLtabgiUkb
-         aNZrPr+1tl2zkEnl3X0VUImt6sUHiofe+F3X5IHEHfpOytlb1OKMc9KJgJVHsWiwpBfQ
-         mqHdMk0u2gQrQsxKFF8iXB3C3no8IW1ubgYLNVaytshnavnPzwBpOh1bIpmkG1fLPjR0
-         cdOere/WA0hk5zOsZtPATfWVO4CrPuImlrzrs3nMsaq9nzjuGK2/3E61mIfm4Ca/dDXq
-         53RNh3xlJM+xnY42EOq4e6q7174kRNQkYhVyj3oZmGOvtAKlHQR8NTbzzcXLdt9Z7bjp
-         G5uQ==
+        Tue, 10 Sep 2019 05:38:55 -0400
+Received: by mail-qk1-f195.google.com with SMTP id z67so16218660qkb.12
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 02:38:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1s+ZG63MAQccFl9RI5BId8EEo4YivDiX7geRRVwkm2s=;
-        b=Y7oZw7MD2mweywTHc/HPGsCfnaFE/9Wozj2xw5AOE8bSSfId1CdzomU5mmVcmrMbYI
-         7bQhKOgcFLxTX/537romWO1c9My8dLSt4aQs6FKNc44XAz0mtYOqtz4toFukLIGJjGgE
-         inlo09xHWrpgggw00GHkl0vOKp06eLbVy8qzcsuiAKeBR21YetQIclrD3c91Kpwbr4y6
-         yojAFxaLOoNEqMA9nwvL96V5aF+mJqGiDmSmffIOyTOz98kvNmcAXDy7GrIsVSJKts/y
-         NLR91+/10svsRnWiaCsRoU42huYSOpSUs0DEpFinM47eXUhyTQZ+jzpEgy1CcRBr4teS
-         3e0g==
-X-Gm-Message-State: APjAAAVKG5H2CHaVBSPMAi9qpUEChjtVXPWF8Ve0HQKesVnfN4qHt8VL
-        4PLpnOMiBDArbVZbgd7PMp274A58F8Q=
-X-Google-Smtp-Source: APXvYqxJvqDDgTOUB+fbAweVs87j9YToDzCTcDRxjeiuUhtOrOlS+jia9dUzciDQe9YIL2egPmffog==
-X-Received: by 2002:adf:de03:: with SMTP id b3mr23565048wrm.14.1568108087657;
-        Tue, 10 Sep 2019 02:34:47 -0700 (PDT)
-Received: from [192.168.1.6] (69.red-83-35-113.dynamicip.rima-tde.net. [83.35.113.69])
-        by smtp.gmail.com with ESMTPSA id 74sm2332116wma.15.2019.09.10.02.34.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 10 Sep 2019 02:34:47 -0700 (PDT)
-Subject: Re: [PATCH 2/5] clk: qcom: apcs-msm8916: get parent clock names from
- DT
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     agross@kernel.org, mturquette@baylibre.com,
-        bjorn.andersson@linaro.org, niklas.cassel@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190826164510.6425-1-jorge.ramirez-ortiz@linaro.org>
- <20190826164510.6425-2-jorge.ramirez-ortiz@linaro.org>
- <20190909102117.245112089F@mail.kernel.org> <20190909141740.GA23964@igloo>
- <20190909161704.07FAE20640@mail.kernel.org> <20190909165408.GC23964@igloo>
- <20190910091437.CCA78208E4@mail.kernel.org>
-From:   Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-Message-ID: <fcac3f60-6a96-b3ee-f734-a03636fbbee4@linaro.org>
-Date:   Tue, 10 Sep 2019 11:34:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7BZdQMWt/4gR8KdMEOxeANPATM7+OW7WAKZb9Cg8SzQ=;
+        b=Z7OGTfQ+LxfKSKU1UavhwtLfodbyShLBUYk+90kGieOQGxSx4WXoI6Re5bs5qOJszO
+         Q3fmX6sF5IU3PaJSQPIfvRsqLWAsOTT+56R7pFvZAJIedd+RmHaY8tVBBswgn28vslGQ
+         ONGRm6mnVlnI57cOsfg9Wm1+tv6hdp5eA+XOIMo0Sud61gvbg4QMxQoGID2ehkMkI/UE
+         t0zplJqCMhv+3xln0xJEndrT6acUNe7v6nVwDbKtfihC3OwpQLv8d3ql3iFOSfGzEP3D
+         ZG+pyZFwVdI0PQbp7ntkfkwVqTdvQOtfgpJ2p3JEAt67Nv1YHGDX/cNbQ/v0AZWTFS8U
+         NpLQ==
+X-Gm-Message-State: APjAAAUldd7oYZ/fHgwUdLRyyBiYDSaU3HiMUbMkERqKlqWvpj0ObSQd
+        J5DpJATxq6QGUh1HZOvuzwsV2DoIUTCK7T0eI00=
+X-Google-Smtp-Source: APXvYqygubpVqiS/wSXVGWFNayc7m09LJvYEQNsdOSnjyL1XZ4yHTZgAN89jOwGLzB/ZJAVK3JgfKGVy21wh0HHzwvc=
+X-Received: by 2002:ae9:ee06:: with SMTP id i6mr7667748qkg.3.1568108334116;
+ Tue, 10 Sep 2019 02:38:54 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190910091437.CCA78208E4@mail.kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190909202153.144970-1-arnd@arndb.de> <20190910092324.GI9720@e119886-lin.cambridge.arm.com>
+In-Reply-To: <20190910092324.GI9720@e119886-lin.cambridge.arm.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 10 Sep 2019 11:38:37 +0200
+Message-ID: <CAK8P3a2Vk+KSUGJyPTRuLPD=KPEAR43SZ1ofB6k+KeQi3fSERw@mail.gmail.com>
+Subject: Re: [PATCH] arm64: fix unreachable code issue with cmpxchg
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/10/19 11:14, Stephen Boyd wrote:
-> Quoting Jorge Ramirez-Ortiz, Linaro (2019-09-09 09:54:08)
->> On 09/09/19 09:17:03, Stephen Boyd wrote:
->>> But now the binding is different for the same compatible. I'd prefer we
->>> keep using devm_clk_get() and use a device pointer here and reorder the
->>> map and parent arrays instead. The clocks property shouldn't change in a
->>> way that isn't "additive" so that we maintain backwards compatibility.
->>>
->>
->> but the backwards compatibility is fully maintained - that is the main reason
->> behind the change. the new stuff is that  instead of hardcoding the
->> names in the source - like it is being done on the msm8916- we provide
->> the clocks in the dts node (a cleaner approach with the obvious
->> benefit of allowing new users to be added without having to modify the
->> sources).
->>
-> 
-> This is not a backwards compatible change.
-> 
->>>> --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
->>>> +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
->>>> @@ -429,7 +429,8 @@
->>>>      compatible = "qcom,msm8916-apcs-kpss-global", "syscon";
->>>>      reg = <0xb011000 0x1000>;
->>>>      #mbox-cells = <1>;
->>>> -                   clocks = <&a53pll>;
->>>> +                 clocks = <&gcc GPLL0_VOTE>, <&a53pll>;
->>>> +                 clock-names = "aux", "pll";
->>>>                       #clock-cells = <0>;
->>>>                };
->>>>                                                                                                                 
-> 
-> Because the "clocks" property changed from
-> 
-> 	<&a53pll>
-> 
-> to
-> 
-> 	<&gcc GPLL0_VOTE>, <&a53pll>
-> 
-> and that moves pll to cell 1 instead of cell 0.
-> 
-> 
+On Tue, Sep 10, 2019 at 11:23 AM Andrew Murray <andrew.murray@arm.com> wrote:
 
-what do you mean by backwards compatible? because this change does not
-break previous clients.
+>
+> >  arch/arm64/include/asm/cmpxchg.h | 15 ++++++++-------
+> >  1 file changed, 8 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/arch/arm64/include/asm/cmpxchg.h b/arch/arm64/include/asm/cmpxchg.h
+> > index a1398f2f9994..fd64dc8a235f 100644
+> > --- a/arch/arm64/include/asm/cmpxchg.h
+> > +++ b/arch/arm64/include/asm/cmpxchg.h
+> > @@ -19,7 +19,7 @@
+> >   * acquire+release for the latter.
+> >   */
+> >  #define __XCHG_CASE(w, sfx, name, sz, mb, nop_lse, acq, acq_lse, rel, cl)    \
+> > -static inline u##sz __xchg_case_##name##sz(u##sz x, volatile void *ptr)              \
+> > +static __always_inline u##sz __xchg_case_##name##sz(u##sz x, volatile void *ptr)\
+>
+> This hunk isn't needed, there is no BUILD_BUG here.
 
+Right, I noticed this, but it seemed like a good idea regardless given the small
+size of the function compared with the overhead of a function call.  We clearly
+want these to be inlined all the time.
 
+Same for the others.
 
+> Alternatively is it possible to replace the BUILD_BUG's with something else?
+>
+> I think because we use BUILD_BUG at the end of a switch statement, we make
+> the assumption that size is known at compile time, for this reason we should
+> ensure the function containing the BUILD_BUG is __always_inline.
+>
+> Looking across the kernel where BUILD_BUG is used as a default in a switch
+> statment ($ git grep -B 3 BUILD_BUG\( | grep default), most instances are
+> within macros, but many are found in an __always_inline function:
+>
+> arch/x86/kvm/cpuid.h
+> mm/kasan/generic.c
+>
+> Though some are not:
+>
+> include/linux/signal.h
+> arch/arm64/include/asm/arm_dsu/pmu.h
+>
+> I wonder if there may be a latent mole ready to whack with pmu.h?
 
+Right, it can't hurt to annotate those as well. I actually have another
+fixup for linux/signal.h that I would have to revisit at some point.
+See https://bugs.llvm.org/show_bug.cgi?id=38789, I think this is
+fixed with clang-9 now, but maybe not with clang-8.
 
-
-
+      Arnd
