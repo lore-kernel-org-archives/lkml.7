@@ -2,155 +2,133 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D2FC4740A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2335C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D079820863
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:07:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568110030;
-	bh=I77/5uA1C2fcp4Z7+VaFfllUZh/CgpQAc1yphu3MTBA=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=fUL+hQ5r9uInK0ppSM9r0r0WZclkm6/4wbYcvkfre6V+naObBizLm2MPvI+8tLrDA
-	 litULBYsXz4gDgv9+4zvm5i1E7Z/Hp8dbmdVK2KmdgxWH/LWy5B1wY0CdGPjLTKhpk
-	 aqzH1oe+AeIa+Ghm1RT30DFd5Vf3BvIE2BvCsfos=
+	by mail.kernel.org (Postfix) with ESMTP id B08412067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:09:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="IbiowjFd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405701AbfIJKHJ (ORCPT
+        id S2405732AbfIJKJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 06:07:09 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:47664 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391992AbfIJKHI (ORCPT
+        Tue, 10 Sep 2019 06:09:08 -0400
+Received: from esa2.hc3370-68.iphmx.com ([216.71.145.153]:1324 "EHLO
+        esa2.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388625AbfIJKJI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 06:07:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=TAVHKaWXI4BEycgQJrIFHO035PWGPpF60zavVSn6Qw4=; b=FX3kfwpO8H3z
-        ZvMWbvzSvmJAITPgXUsPv4uK/PJ6gKEYzSGHIKKbESt7CQU5s/bVTeUfjdOy+NZBRkBm+iW1CZUJo
-        2AFcAKECVnzGaonfq2Xe03dY3JAg96AlcWIaBkcf+2d0OIvy55fEAVx88CVrS3fQl+LQe/t8B159Y
-        twKpA=;
-Received: from [148.69.85.38] (helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1i7d36-0006j7-Io; Tue, 10 Sep 2019 10:07:00 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id E825CD02D5A; Tue, 10 Sep 2019 11:06:59 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     devicetree@vger.kernel.org,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Applied "regulator: uniphier: Add Pro5 USB3 VBUS support" to the regulator tree
-In-Reply-To: <1568080304-1572-1-git-send-email-hayashi.kunihiko@socionext.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20190910100659.E825CD02D5A@fitzroy.sirena.org.uk>
-Date:   Tue, 10 Sep 2019 11:06:59 +0100 (BST)
+        Tue, 10 Sep 2019 06:09:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1568110147;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=pBz+UuMi9t93ue09GBBv3yYtxQyJZrHCSoPQj54RG68=;
+  b=IbiowjFdvCrTET/hnp4FUOF9fNzxF/u3FKqSu4XIMxpyRD4G2agsTYEb
+   XpJlVuPYMkIzi0+ApdTYpRMClcIGueSpFVbj/lDbKOrIhINakPr/IXJwK
+   ivznr0ChUo0x3kOCbb9RtPVoOF8uFAmhQHqa/T5IZPYbKo+MXVuoZ5uEY
+   A=;
+Authentication-Results: esa2.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=igor.druzhinin@citrix.com; spf=Pass smtp.mailfrom=igor.druzhinin@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa2.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  igor.druzhinin@citrix.com) identity=pra;
+  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
+  envelope-from="igor.druzhinin@citrix.com";
+  x-sender="igor.druzhinin@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa2.hc3370-68.iphmx.com: domain of
+  igor.druzhinin@citrix.com designates 162.221.158.21 as
+  permitted sender) identity=mailfrom;
+  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
+  envelope-from="igor.druzhinin@citrix.com";
+  x-sender="igor.druzhinin@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83 ~all"
+Received-SPF: None (esa2.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
+  envelope-from="igor.druzhinin@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: TBU9T7jchkQ1P6Nrhbf6mhdO6bD+/m42BsdXyRYJtPpVp/Rs3BiRhYYuEDtYOV+OYR0sXCTfV3
+ i9xCXGd7TleNz75eYywzvFE9JqvxK+Avt2qtc2hWfvBvzVOcVwbohM15EKXFGzitdShIprtrJK
+ tmAk/VYBahVFLE1fRtlTuyEo0c8uMtiDP/nqz4L1UD6xaERdMa1SfhX2dc8mk6jEeeANJTDgrj
+ 6DA51xzX8DCoggt7+BSzLGh8d/VkQVUuu8T50AI0xpZ8LYO2EMD6Fm25u46HxewvhDOFFtfsXi
+ Bck=
+X-SBRS: 2.7
+X-MesageID: 5361133
+X-Ironport-Server: esa2.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.64,489,1559534400"; 
+   d="scan'208";a="5361133"
+Subject: Re: [Xen-devel] [PATCH] xen/pci: try to reserve MCFG areas earlier
+To:     Jan Beulich <jbeulich@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        <linux-kernel@vger.kernel.org>
+CC:     <xen-devel@lists.xenproject.org>, Juergen Gross <jgross@suse.com>
+References: <1567556431-9809-1-git-send-email-igor.druzhinin@citrix.com>
+ <5054ad91-5b87-652c-873a-b31758948bd7@oracle.com>
+ <e3114d56-51cd-b973-1ada-f6a60a7e99cc@citrix.com>
+ <43b7da04-5c42-80d8-898b-470ee1c91ed2@oracle.com>
+ <adefac87-c2b3-b67f-fb4d-d763ce920bef@citrix.com>
+ <1695c88d-e5ad-1854-cdef-3cd95c812574@oracle.com>
+ <4d3bf854-51de-99e4-9a40-a64c581bdd10@citrix.com>
+ <bc3da154-d451-02cf-6154-5e0dc721a6e6@oracle.com>
+ <c45b8786-5735-a95d-bc40-61372c326037@citrix.com>
+ <43e492ff-f967-7218-65c4-d16581fabea3@oracle.com>
+ <416ff4b7-3186-f61a-75fa-bcfc968f8117@citrix.com>
+ <64d52960-28d5-fb23-8892-35c9d4ed9d90@suse.com>
+From:   Igor Druzhinin <igor.druzhinin@citrix.com>
+Message-ID: <8fa50f93-bc83-3474-8bca-3437f3b47a6e@citrix.com>
+Date:   Tue, 10 Sep 2019 11:08:59 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <64d52960-28d5-fb23-8892-35c9d4ed9d90@suse.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On 10/09/2019 10:55, Jan Beulich wrote:
+> On 10.09.2019 11:46, Igor Druzhinin wrote:
+>> On 10/09/2019 02:47, Boris Ostrovsky wrote:
+>>> On 9/9/19 5:48 PM, Igor Druzhinin wrote:
+>>>> Actually, pci_mmcfg_late_init() that's called out of acpi_init() -
+>>>> that's where MCFG areas are properly sized. 
+>>>
+>>> pci_mmcfg_late_init() reads the (static) MCFG, which doesn't need DSDT parsing, does it? setup_mcfg_map() OTOH does need it as it uses data from _CBA (or is it _CRS?), and I think that's why we can't parse MCFG prior to acpi_init(). So what I said above indeed won't work.
+>>>
+>>
+>> No, it uses is_acpi_reserved() (it's called indirectly so might be well
+>> hidden) to parse DSDT to find a reserved resource in it and size MCFG
+>> area accordingly. setup_mcfg_map() is called for every root bus
+>> discovered and indeed tries to evaluate _CBA but at this point
+>> pci_mmcfg_late_init() has already finished MCFG registration for every
+>> cold-plugged bus (which information is described in MCFG table) so those
+>> calls are dummy.
+> 
+> I don't think they're strictly dummy. Even for boot time available devices
+> iirc there's no strict requirement for there to be respective data in MCFG.
+> Such a requirement exists only for devices which are actually needed to
+> start the OS (disk or network, perhaps video or alike), or maybe even just
+> its loader.
+> 
 
-   regulator: uniphier: Add Pro5 USB3 VBUS support
+This was my interpretation of 4.1.3 of "PCI Frimware specification":
+"Memory mapped configuration base addresses for non-hot pluggable host
+bridges must be described using MCFG table." Although, I admit that
+"non-hot pluggable" might mean available at boot as well.
 
-has been applied to the regulator tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.4
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 3ba5368dc4e5947cb70287754960776c471eb23d Mon Sep 17 00:00:00 2001
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Date: Tue, 10 Sep 2019 10:51:44 +0900
-Subject: [PATCH] regulator: uniphier: Add Pro5 USB3 VBUS support
-
-Pro5 SoC has same scheme of USB3 VBUS as Pro4, so the data for Pro5 is
-equivalent to Pro4.
-
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Link: https://lore.kernel.org/r/1568080304-1572-1-git-send-email-hayashi.kunihiko@socionext.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../devicetree/bindings/regulator/uniphier-regulator.txt     | 5 +++--
- drivers/regulator/uniphier-regulator.c                       | 4 ++++
- 2 files changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/regulator/uniphier-regulator.txt b/Documentation/devicetree/bindings/regulator/uniphier-regulator.txt
-index c9919f4b92d2..94fd38b0d163 100644
---- a/Documentation/devicetree/bindings/regulator/uniphier-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/uniphier-regulator.txt
-@@ -13,6 +13,7 @@ this layer. These clocks and resets should be described in each property.
- Required properties:
- - compatible: Should be
-     "socionext,uniphier-pro4-usb3-regulator" - for Pro4 SoC
-+    "socionext,uniphier-pro5-usb3-regulator" - for Pro5 SoC
-     "socionext,uniphier-pxs2-usb3-regulator" - for PXs2 SoC
-     "socionext,uniphier-ld20-usb3-regulator" - for LD20 SoC
-     "socionext,uniphier-pxs3-usb3-regulator" - for PXs3 SoC
-@@ -20,12 +21,12 @@ Required properties:
- - clocks: A list of phandles to the clock gate for USB3 glue layer.
- 	According to the clock-names, appropriate clocks are required.
- - clock-names: Should contain
--    "gio", "link" - for Pro4 SoC
-+    "gio", "link" - for Pro4 and Pro5 SoCs
-     "link"        - for others
- - resets: A list of phandles to the reset control for USB3 glue layer.
- 	According to the reset-names, appropriate resets are required.
- - reset-names: Should contain
--    "gio", "link" - for Pro4 SoC
-+    "gio", "link" - for Pro4 and Pro5 SoCs
-     "link"        - for others
- 
- See Documentation/devicetree/bindings/regulator/regulator.txt
-diff --git a/drivers/regulator/uniphier-regulator.c b/drivers/regulator/uniphier-regulator.c
-index 9026d5a3e964..2311924c3103 100644
---- a/drivers/regulator/uniphier-regulator.c
-+++ b/drivers/regulator/uniphier-regulator.c
-@@ -185,6 +185,10 @@ static const struct of_device_id uniphier_regulator_match[] = {
- 		.compatible = "socionext,uniphier-pro4-usb3-regulator",
- 		.data = &uniphier_pro4_usb3_data,
- 	},
-+	{
-+		.compatible = "socionext,uniphier-pro5-usb3-regulator",
-+		.data = &uniphier_pro4_usb3_data,
-+	},
- 	{
- 		.compatible = "socionext,uniphier-pxs2-usb3-regulator",
- 		.data = &uniphier_pxs2_usb3_data,
--- 
-2.20.1
-
+Igor
