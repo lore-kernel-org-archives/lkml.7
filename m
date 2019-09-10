@@ -2,33 +2,34 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B89C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 07:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43768C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 07:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 637862084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 07:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17E0B21019
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 07:14:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406676AbfIJHOs (ORCPT
+        id S2406692AbfIJHO4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 03:14:48 -0400
-Received: from mxwww.masterlogin.de ([95.129.51.220]:43544 "EHLO
+        Tue, 10 Sep 2019 03:14:56 -0400
+Received: from mxwww.masterlogin.de ([95.129.51.220]:43550 "EHLO
         mxwww.masterlogin.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404327AbfIJHOc (ORCPT
+        with ESMTP id S2406598AbfIJHOc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Sep 2019 03:14:32 -0400
-Received: from mxout1.routing.net (unknown [192.168.10.81])
-        by new.mxwww.masterlogin.de (Postfix) with ESMTPS id A088C962BA;
-        Tue, 10 Sep 2019 07:05:11 +0000 (UTC)
+Received: from mxout2.routing.net (unknown [192.168.10.82])
+        by new.mxwww.masterlogin.de (Postfix) with ESMTPS id 5844B96E76;
+        Tue, 10 Sep 2019 07:05:19 +0000 (UTC)
 Received: from mxbox2.masterlogin.de (unknown [192.168.10.253])
-        by mxout1.routing.net (Postfix) with ESMTP id ED6A343E8B;
-        Tue, 10 Sep 2019 07:05:11 +0000 (UTC)
+        by mxout2.routing.net (Postfix) with ESMTP id B592C6208B;
+        Tue, 10 Sep 2019 07:05:19 +0000 (UTC)
 Received: from localhost.localdomain (fttx-pool-185.75.73.135.bambit.de [185.75.73.135])
-        by mxbox2.masterlogin.de (Postfix) with ESMTPSA id C3943100B88;
-        Tue, 10 Sep 2019 07:05:10 +0000 (UTC)
+        by mxbox2.masterlogin.de (Postfix) with ESMTPSA id 66E82100909;
+        Tue, 10 Sep 2019 07:05:18 +0000 (UTC)
 From:   Frank Wunderlich <frank-w@public-files.de>
 To:     linux-mediatek@lists.infradead.org
 Cc:     Frank Wunderlich <frank-w@public-files.de>,
@@ -45,79 +46,52 @@ Cc:     Frank Wunderlich <frank-w@public-files.de>,
         Sean Wang <sean.wang@mediatek.com>,
         Sebastian Reichel <sre@kernel.org>,
         "Tianping Fang" <tianping.fang@mediatek.com>
-Subject: [PATCH v7 0/7] implement poweroff for mt6323 / bpi-r2
-Date:   Tue, 10 Sep 2019 09:04:39 +0200
-Message-Id: <20190910070446.639-1-frank-w@public-files.de>
+Subject: [PATCH v7 6/7] MAINTAINERS: add Mediatek shutdown drivers
+Date:   Tue, 10 Sep 2019 09:04:45 +0200
+Message-Id: <20190910070446.639-7-frank-w@public-files.de>
 X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190910070446.639-1-frank-w@public-files.de>
+References: <20190910070446.639-1-frank-w@public-files.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mainline-driver does not support mt6323
+From: Josef Friedl <josef.friedl@speed.at>
 
-this series makes some cleanup to mt6397-rtc-driver, adds mt6323 and
-implement power-controller on it.
+add Section in MAINTAINERS file for poweroff driver
 
-tested on bananapi-r2
+Signed-off-by: Josef Friedl <josef.friedl@speed.at>
+Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+---
+changes since v6: none
+changes since v5: none
+changes since v4: none
+changes since v3: moved SOB
+changes since v2: none (=v2 part 6)
+---
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Original Patch from Josef Friedl
-
-changes since v6:
-	- rebased on 5.3-rc8
-	- post only 7 Patches because 6 are already applied to next
-	- update copyright in "move some common definitions into rtc.h"
-changes since v5:
-	- splitted part 1 to separate changes and additions not related to pwrc
-	- move mfd/mt6397/core.h from v4.8 in separate patch "add mutex include"
-	- changed recipients (moved from To to Cc, removed committers)
-changes since v4:
-	- relative path in part 1+2
-	- drop change of copyright-year in part 5
-changes since v3:
-	- moved SOB in 2/10 and 9/10
-	- moved part 5 to 6 to be near driver-change
-	- changehistory of patches below ---
-changes since v2:
-	- Splitted some parts and rebased on 5.3-rc2:
-
-	v2.1 dt-bindings: add powercontroller – try to make better subject
-	v2.2 separate rtc-mt6397.txt (suggested by Alexandre Belloni)
-	     add missing commit-message (suggested by Matthias Brugger)
-	v2.3 fix alloc after IRQ (suggested by Alexandre Belloni)
-	     new compatible (splitting suggested by Alexandre Belloni)
-	     needed due to different rtc-base/size see #7
-	v2.4 simplifications (Define-res-macros)
-	     add mt6323 rtc+pwrc
-	v2.5 add poweroff-driver (no change)
-	v2.6 MAINTAINERS (no change)
-	v2.7 DTS-Changes (no change)
-
-Josef Friedl (7):
-  dt-bindings: rtc: mediatek: add missing mt6397 rtc
-  rtc: mt6397: move some common definitions into rtc.h
-  rtc: mt6397: improvements of rtc driver
-  rtc: mt6397: add compatible for mt6323
-  power: reset: add driver for mt6323 poweroff
-  MAINTAINERS: add Mediatek shutdown drivers
-  arm: dts: mt6323: add keys, power-controller, rtc and codec
-
- .../devicetree/bindings/rtc/rtc-mt6397.txt    |  29 +++++
- MAINTAINERS                                   |   7 ++
- arch/arm/boot/dts/mt6323.dtsi                 |  27 +++++
- drivers/power/reset/Kconfig                   |  10 ++
- drivers/power/reset/Makefile                  |   1 +
- drivers/power/reset/mt6323-poweroff.c         |  97 ++++++++++++++++
- drivers/rtc/rtc-mt6397.c                      | 107 ++++--------------
- include/linux/mfd/mt6397/rtc.h                |  71 ++++++++++++
- 8 files changed, 263 insertions(+), 86 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
- create mode 100644 drivers/power/reset/mt6323-poweroff.c
- create mode 100644 include/linux/mfd/mt6397/rtc.h
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e7a47b5210fd..46d13e845740 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10149,6 +10149,13 @@ S:	Maintained
+ F:	drivers/net/dsa/mt7530.*
+ F:	net/dsa/tag_mtk.c
+ 
++MEDIATEK BOARD LEVEL SHUTDOWN DRIVERS
++M:	Sean Wang <sean.wang@mediatek.com>
++L:	linux-pm@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
++F:	drivers/power/reset/mt6323-poweroff.c
++
+ MEDIATEK JPEG DRIVER
+ M:	Rick Chang <rick.chang@mediatek.com>
+ M:	Bin Liu <bin.liu@mediatek.com>
 -- 
 2.17.1
 
