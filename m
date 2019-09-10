@@ -2,98 +2,92 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE364C4740A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECFF4C4740A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B149F2168B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:42:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QJtFt4FJ"
+	by mail.kernel.org (Postfix) with ESMTP id C1B9121019
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:42:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393294AbfIJOmK (ORCPT
+        id S2393380AbfIJOmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 10:42:10 -0400
-Received: from ozlabs.org ([203.11.71.1]:38637 "EHLO ozlabs.org"
+        Tue, 10 Sep 2019 10:42:22 -0400
+Received: from mga18.intel.com ([134.134.136.126]:12299 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393023AbfIJOmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 10:42:06 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46SSQY2r3lz9s4Y;
-        Wed, 11 Sep 2019 00:41:21 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1568126523;
-        bh=OgL1E3Bn836EI/U9TfNLgjcy9EiqKvLZ4vknVwwsPfE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=QJtFt4FJe9ZV89RhMLsPUEIccr+G9wrvlU5ZTHMDm9G/iJg50qjvIS/SAF+2F8d7G
-         qYnIhgShhNf07dQNvuFku8heFGfZ7gh7tZsJxvzMhdtqusRMaulcw8MyOU5KLEjQgb
-         0S607N0fz3QwuumuwUl3YfwgVcmtsU8IRXAmTN0oxq2nFBNYCOt2JPf2Ee5RertKLn
-         4wI79U0DuEmJzLmAw31DBljOo57JxH0AVgeBdISYMZa2+UPVLNL+Wx0woNzd7yLDVV
-         j8g3J73gCLk4NHGCmQDkAbe2NTCW/SGjQzVR8JS3+cbmVqYi0ytTys6vc14Cg5O3q8
-         YOU7JR+ReQFMw==
-Date:   Wed, 11 Sep 2019 00:41:03 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        The j1939 authors <linux-can@vger.kernel.org>,
-        Bastian Stender <bst@pengutronix.de>,
-        Elenita Hinds <ecathinds@gmail.com>,
-        Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>,
-        kbuild test robot <lkp@intel.com>,
-        Maxime Jayat <maxime.jayat@mobile-devices.fr>,
-        Robin van der Gracht <robin@protonic.nl>,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: linux-next: Signed-off-by missing for commit in the net-next tree
-Message-ID: <20190911004103.3480fa40@canb.auug.org.au>
+        id S2393221AbfIJOmU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 10:42:20 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Sep 2019 07:42:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,489,1559545200"; 
+   d="scan'208";a="184187283"
+Received: from agreppma-mobl.ger.corp.intel.com (HELO localhost) ([10.252.53.7])
+  by fmsmga008.fm.intel.com with ESMTP; 10 Sep 2019 07:42:16 -0700
+Date:   Tue, 10 Sep 2019 15:42:15 +0100
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Seunghun Han <kkamagui@gmail.com>
+Cc:     Peter Huewe <peterhuewe@gmx.de>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Vanya Lazeev <ivan.lazeev@gmail.com>
+Subject: Re: [PATCH v2 2/2] tpm: tpm_crb: enhance resource mapping mechanism
+ for supporting AMD's fTPM
+Message-ID: <20190910144215.GA30780@linux.intel.com>
+References: <20190909090906.28700-1-kkamagui@gmail.com>
+ <20190909090906.28700-3-kkamagui@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/9Jn59mgO98rup=kQiyX7Z.U";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190909090906.28700-3-kkamagui@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/9Jn59mgO98rup=kQiyX7Z.U
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Sep 09, 2019 at 06:09:06PM +0900, Seunghun Han wrote:
+> I got an AMD system which had a Ryzen Threadripper 1950X and MSI
+> mainboard, and I had a problem with AMD's fTPM. My machine showed an error
+> message below, and the fTPM didn't work because of it.
+> 
+> [  5.732084] tpm_crb MSFT0101:00: can't request region for resource
+>              [mem 0x79b4f000-0x79b4ffff]
+> [  5.732089] tpm_crb: probe of MSFT0101:00 failed with error -16
+> 
+> When I saw the iomem, I found two fTPM regions were in the ACPI NVS area. 
+> The regions are below.
+> 
+> 79a39000-79b6afff : ACPI Non-volatile Storage
+>   79b4b000-79b4bfff : MSFT0101:00
+>   79b4f000-79b4ffff : MSFT0101:00
+> 
+> After analyzing this issue, I found that crb_map_io() function called
+> devm_ioremap_resource() and it failed. The ACPI NVS didn't allow the TPM
+> CRB driver to assign a resource in it because a busy bit was set to
+> the ACPI NVS area.
+> 
+> To support AMD's fTPM, I added a function to check intersects between
+> the TPM region and ACPI NVS before it mapped the region. If some
+> intersects are detected, the function just calls devm_ioremap() for
+> a workaround. If there is no intersect, it calls devm_ioremap_resource().
+> 
+> Signed-off-by: Seunghun Han <kkamagui@gmail.com>
 
-Hi all,
+This problem is still valid and not addressed by Vanya's patch (and
+should not be as it is a disjoint issue).  However, calling
+devm_ioremap() is somewhat racy as the NVS driver is not aware of that.
 
-Commit
+My take is that this should be fixed in the code that assigns regions to
+the NVS driver e.g. it could look up the regions assigned to the
+MSFT0101 and ignore those regions. In the end linux-acpi maintainers
+have the say on this but this would be the angle that I'd take to
+implement such patch probably.
 
-  9d71dd0c7009 ("can: add support of SAE J1939 protocol")
-
-is missing a Signed-off-by from its author.
-
-[Not sure if I should complain about this one ...]
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/9Jn59mgO98rup=kQiyX7Z.U
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl13tf8ACgkQAVBC80lX
-0Gz1XQgAghJMDzpTB959LAyRnZ2BTcdjC1I1Ql+yI07GFjjckCpckq6nNv+XJQ8V
-8v0zFk21GxHe4iiFr5TENfSfALy1o8hw1lqjfilqQk9q8E6RjkNrVE+j6rnEVG95
-iLE41mafTnm/T6b2sUBdLPQ8hkir6ToIcLeEQp8k3naw1cEqa7dG1D07nRiOFDoU
-OzQREKHCUpFGmbne150OlvNIBzM5tQmicoRALm6dAwGckksLMeGwtES07coQsSqZ
-dMydcYHuHSfMLzrail0URBEN2Llw75EZxKc+Y6XJhNhQLYhuKiERhZ0ZtWykz82i
-cvM+OQfoJINzEz+OyEne3/nLz1azEg==
-=F1hC
------END PGP SIGNATURE-----
-
---Sig_/9Jn59mgO98rup=kQiyX7Z.U--
+/Jarkko
