@@ -2,131 +2,105 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E111AC49ED6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B801C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B80F620863
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:51:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDC8821019
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:56:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="FP63dxnY"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="AHxH269d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728788AbfIJIvH (ORCPT
+        id S1726533AbfIJI4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 04:51:07 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34986 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbfIJIvH (ORCPT
+        Tue, 10 Sep 2019 04:56:11 -0400
+Received: from mail-lf1-f53.google.com ([209.85.167.53]:34622 "EHLO
+        mail-lf1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbfIJI4L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 04:51:07 -0400
-Received: by mail-ot1-f66.google.com with SMTP id t6so4079005otp.2
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 01:51:06 -0700 (PDT)
+        Tue, 10 Sep 2019 04:56:11 -0400
+Received: by mail-lf1-f53.google.com with SMTP id r22so1498221lfm.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 01:56:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        d=android.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=TORtZiXw+gviBY1uqojNwtzUG5Du45WnPV4wu8nw43A=;
-        b=FP63dxnYbqidnXC5M+glimtjNBKD/siLT23X23yuuOER2/9MRjpqdmr17EYxW/s6p0
-         E+BlJ699H7VMsfwq2N1wqcggLYV4SabdWzY7R+9yPxtI/5t3nmNf5ca2zAEhu1LnVkuB
-         djYTbLY1JIMnBRApHzAxKwnWqjP+nN1qESTU3SbZUvPgE9If19AaeeYRC/e77mGKGlHs
-         Z8ZBwXsPYqqQJgcLf6S0grCdZJQsRslVL3vSrRDO2qTE8+rlRH1udar3q0c+ncpOXXIv
-         4GVPY8w0RyJ4klXWtdtrKObo3MRhX8E73WYW7kEYXbu2xbXOjxHEltwsAL090sa9hSiJ
-         ROuA==
+         :cc;
+        bh=UNfZ6D6BkW5VBAgD6NV0GNz1BCxCA3u2wXgw+w9oDDM=;
+        b=AHxH269dTSeO5uFrk+ZsTv2xttxAWwY3vGT2RqKL9s0VLWiIaUREEiiQ2NyF1pfTOl
+         8tDMzqHAvfuQDvW7vVaKCh7EJX6qYDY0Wa9oCheLgS/9hVZHp3Tx6IfGmTxdieRkl032
+         /p07TJ47w4YX+L1Ivl1LQykhDn72UeNSqngrdEaF1KXMWRGigsy57ZykyS+027i/QwLq
+         S+TddAHz1w3sJevGi9elfNke689QN8rN9S/cSXFOYB4Ssn8CT9mJxODj+RBHVrwPfBBb
+         KLWT10dHr2IGLTW68zuk5XEL26YvdUoOPwYRDTim4Y6LW1aa3pNtzPtMKhrm4gP8UA9f
+         rLmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=TORtZiXw+gviBY1uqojNwtzUG5Du45WnPV4wu8nw43A=;
-        b=a49iuQ4bJBIEhqP97Tfl3feFiL49KfbKKaO2tlrklioSJOapHYIiPOntjD4SNlNrSu
-         z47CKoC/0O0wOmQBJ/AXJ4cs2QSCVNTzCVBSeDpvCKkoFvXntlveJRAg4Xz8Dx1VwLxz
-         Pwhh50gEGvfTkBMq3pFNwe2eG8SOGAt4A6J5IoBNc2v3t8W3UoZZSeO1ZV3WDiyYootY
-         yefodFRl2LVoBsBr1BBR/A+HuqCjrNhkXB+4AvFCYJjEOOYsEgGsd7nJczp5LBdEKjK/
-         uiV8063LFNvs6qLKfJYaY+GIvgdDyfRWL0zNG9YQaAlUhch2ezwbZj6TbmYGi0Gbo1lF
-         jm9w==
-X-Gm-Message-State: APjAAAWRbhlYNut+Y0p44kqdIjnWu2y8t8CRBE+MOltRBauGpv1PAv5g
-        FE7B7DS9yUgH5G9hCQMQAICkuKF7ez6pTfD14gsvAw==
-X-Google-Smtp-Source: APXvYqxAsq9CF/Si2rdwo5vSZgIzEMUPMsKHEsRblYndhdS59/hlsoR7x+5MiowCWiAhLmrRORnRA4H2pVT8BZGTtxI=
-X-Received: by 2002:a05:6830:1d4e:: with SMTP id p14mr1451146oth.292.1568105466197;
- Tue, 10 Sep 2019 01:51:06 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=UNfZ6D6BkW5VBAgD6NV0GNz1BCxCA3u2wXgw+w9oDDM=;
+        b=ugEC3lJdmXAXuSZizT/yqTcBVVZ7GMHcFVWyHpNjiODqsEE2RPhD41et9AJLMX+mzV
+         NLgRAN/lefllqGXQTIPXFCPIl+XGDo/NMrd2VXt5Wib1exXlTNS9yTa2A5FU8UhtrZNt
+         KcC5+fZ5qPhwhfvamKs1KBEwHzljFU/nLaYNbCO69/znmNCzL+ua7b+b7sOR+SVRPygD
+         H4wc4gircswmhMNVDjzG87TJH9DrHP+U7MeUdScMBasQPyPgy/QcVrCuLg/oOyr6+qtv
+         oRH8OuwYKUiLz3ekQmBiW40dAHoRQ0jAKoPL0QH0aZie2Csg3ng4luItp6y8RrEV0GmK
+         cVDA==
+X-Gm-Message-State: APjAAAUoBXfN9nIS3rwmFX6Fv0wT2svnNOo2HZC2TIVX0+1ycPu1mCHx
+        Sgk/ZWjwBFiAp1+VwPzJF74BSF02Xff8QvnCg+5TrA==
+X-Google-Smtp-Source: APXvYqx8WFbmdHzdtKi9N5oQGSAaZLgzlIwkKwBIHnTKsUuZ4/h/Dy+UpUVGQdty83dzdc2Fa+IL1f33HIyuzNDtxoY=
+X-Received: by 2002:a19:3805:: with SMTP id f5mr19258381lfa.173.1568105769318;
+ Tue, 10 Sep 2019 01:56:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190906084539.21838-1-geert+renesas@glider.be>
-In-Reply-To: <20190906084539.21838-1-geert+renesas@glider.be>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 10 Sep 2019 10:50:55 +0200
-Message-ID: <CAMpxmJVrQ92+ULRrzyN52LwEcdPTuK7OZssZjUcRPRSTBQ=fwg@mail.gmail.com>
-Subject: Re: [PATCH 0/4] gpio: API boundary cleanups
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20190906074526.169194-1-maco@android.com> <20190909145703.GA16249@redhat.com>
+In-Reply-To: <20190909145703.GA16249@redhat.com>
+From:   Martijn Coenen <maco@android.com>
+Date:   Tue, 10 Sep 2019 10:55:58 +0200
+Message-ID: <CAB0TPYEb-WdggSj=i+tpABfkO9KFqcgMc0twMx0L=ZcAN4HDfw@mail.gmail.com>
+Subject: Re: dm-bufio: Allow clients to specify an upper bound on cache size.
+To:     Mike Snitzer <snitzer@redhat.com>
+Cc:     Mikulas Patocka <mpatocka@redhat.com>, agk@redhat.com,
+        dm-devel@redhat.com, Dario Freni <dariofreni@google.com>,
+        Jiyong Park <jiyong@google.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Martijn Coenen <maco@google.com>,
+        Nikita Ioffe <ioffe@google.com>,
+        Narayan Kamath <narayan@google.com>, kernel-team@android.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pt., 6 wrz 2019 o 10:45 Geert Uytterhoeven <geert+renesas@glider.be> napisa=
-=C5=82(a):
->
->         Hi Linus, Bartosz,
->
-> This patch series contains various API boundary cleanups for gpiolib:
->   - The first two patches make two functions private,
->   - The last two patches switch the remaining gpiolib exported functions
->     from EXPORT_SYMBOL() to EXPORT_SYMBOL_GPL().
->
-> After this there is only a single GPIO driver function exported with
-> EXPORT_SYMBOL();
->
->     drivers/gpio/gpio-htc-egpio.c:EXPORT_SYMBOL(htc_egpio_get_wakeup_irq)=
-;
->
-> I believe this symbol was never used upstream, and may be a relic of the
-> original out-of-tree code the htc-egpio was based on.  I don't know if
-> there (still) exist out-of-tree users of the symbol.
->
-> Thanks for your comments!
+Hi Mike,
 
-All looks good to me. Are you fine with this being picked up after the
-v5.4 merge window?
+On Mon, Sep 9, 2019 at 4:57 PM Mike Snitzer <snitzer@redhat.com> wrote:
+> Definitely not very intuitive.. but yes I think it is a reasonable
+> tradeoff between your goals and further code complexity to be able to
+> achieve the "ideal".
 
-Bart
+Thanks for the feedback. I do have a patch for the "optimal"
+allocation lying around as well, if you'd like to take a look. It's
+not as bad as I thought, but it does require another list_head in
+dm_bufio_client; other than that it's just O(N), so not so bad.
+
+> Think the documented example can be made clearer by documenting that
+> dm_bufio_cache_size_per_client = 49.  And that _that_ is the reason why
+> the client that didn't set a maximum is bounded to 49.
+
+Ack, will send a v2 to clarify.
 
 >
-> Geert Uytterhoeven (4):
->   gpio: of: Make of_get_named_gpiod_flags() private
->   gpio: of: Make of_gpio_simple_xlate() private
->   gpio: of: Switch to EXPORT_SYMBOL_GPL()
->   gpio: devres: Switch to EXPORT_SYMBOL_GPL()
+> Overall I think this patch looks reasonable, but I'd like Mikulas to
+> review this closer before I pick it up.
+
+Thanks; let me know if you want to see the alternative as an RFC, and
+I'll clean it up and send it out.
+
+Thanks,
+Martijn
+
 >
->  drivers/gpio/gpiolib-devres.c | 28 ++++++++++++++--------------
->  drivers/gpio/gpiolib-of.c     | 16 ++++++++--------
->  drivers/gpio/gpiolib-of.h     |  7 -------
->  include/linux/of_gpio.h       | 11 -----------
->  4 files changed, 22 insertions(+), 40 deletions(-)
->
-> --
-> 2.17.1
->
-> Gr{oetje,eeting}s,
->
->                                                 Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
-8k.org
->
-> In personal conversations with technical people, I call myself a hacker. =
-But
-> when I'm talking to journalists I just say "programmer" or something like=
- that.
->                                                             -- Linus Torv=
-alds
+> Thanks,
+> Mike
