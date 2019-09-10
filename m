@@ -7,80 +7,106 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C528C49ED9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 18:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB932C49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 18:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBE2521019
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 18:47:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84FF72084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 18:47:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568141240;
-	bh=DtA1ZIJa0KT7HzP2wl8Z4/P/Ia1Bv1IRlb/FPekwQn4=;
-	h=From:To:Subject:Date:List-ID:From;
-	b=nioWzPgjb+h6a90q77TvSn4IcQ5zW7nmvysapyYPxHfYx3WkZPftuZj+Qc3I4sc05
-	 5XXSMBdJh19vf/3ZgDZ0WZt9sDWyryIitb/hey1S3jfRM24v2LGCcbWwBCDQTjKhlu
-	 HCYBhLBB2y8EmQwkpzYoUuVXb9stLXYjxv6Wp+hU=
+	s=default; t=1568141243;
+	bh=zaKmPQ7vH0+cAyYV/z6y+X+ZB80bGLkw9eVR6IiI6M8=;
+	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=CJFPrm/9ZIky/7bvXHCCBOwf5H/E39XnaUOS0U+8AchKE7nNXANnfw85HV91XWBxn
+	 oRsoIBgU0bIyv51r/ADDmC4pobnNKQLYvow0ZQke0GcERcsomho0z+tP3/tr7gZPvG
+	 /b20Zjo2ZymcV6oPPWHFPSTrMT+tOWDDZ3N76lMI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728414AbfIJSrT (ORCPT
+        id S1728578AbfIJSrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 14:47:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47576 "EHLO mail.kernel.org"
+        Tue, 10 Sep 2019 14:47:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728256AbfIJSrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 14:47:18 -0400
+        id S1728256AbfIJSrU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 14:47:20 -0400
 Received: from localhost.localdomain (unknown [194.230.155.145])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D75842084D;
-        Tue, 10 Sep 2019 18:47:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7CFB216F4;
+        Tue, 10 Sep 2019 18:47:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568141238;
-        bh=DtA1ZIJa0KT7HzP2wl8Z4/P/Ia1Bv1IRlb/FPekwQn4=;
-        h=From:To:Subject:Date:From;
-        b=wUC/GACTC0iPw/SDrWBq6bZSbqO3VxntVr5gffzzRoqfe1ZbXQpTc8HzlIGPc1r8O
-         ODDOB3qHnSJSWzI116i0dob6pzIuRPyrgzGnw7zz9nAbQTN2zRCtB5SKY/rYIVIO4Z
-         ZAB3TdHP1R8y+YXq7B1yOD7h+qC4To87AUHXA+pE=
+        s=default; t=1568141240;
+        bh=zaKmPQ7vH0+cAyYV/z6y+X+ZB80bGLkw9eVR6IiI6M8=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=tPMuaLObBflJclHYQCj82OHKoALRbmnidS1oa2MZJ+syYLcMhSA/LlRPR8JYukXcc
+         epxK+8VCs0pdOq5IhgyjB47ZGVyNNSbOVmuEc/U3tlqx9jQhAd6tyroCkSM85Upn7k
+         0qWqzuOirsAOaGDmZTRWF7faXSMicEGOBt6YU1VE=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Richard Kuo <rkuo@codeaurora.org>,
         Krzysztof Kozlowski <krzk@kernel.org>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND 1/2] hexagon: configs: Remove useless UEVENT_HELPER_PATH
-Date:   Tue, 10 Sep 2019 20:47:10 +0200
-Message-Id: <20190910184711.22153-1-krzk@kernel.org>
+Subject: [PATCH RESEND 2/2] hexagon: defconfig: Cleanup from old Kconfig options
+Date:   Tue, 10 Sep 2019 20:47:11 +0200
+Message-Id: <20190910184711.22153-2-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190910184711.22153-1-krzk@kernel.org>
+References: <20190910184711.22153-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the CONFIG_UEVENT_HELPER_PATH because:
-1. It is disabled since commit 1be01d4a5714 ("driver: base: Disable
-   CONFIG_UEVENT_HELPER by default") as its dependency (UEVENT_HELPER) was
-   made default to 'n',
-2. It is not recommended (help message: "This should not be used today
-   [...] creates a high system load") and was kept only for ancient
-   userland,
-3. Certain userland specifically requests it to be disabled (systemd
-   README: "Legacy hotplug slows down the system and confuses udev").
+Remove old, dead Kconfig options (in order appearing in this commit):
+ - EXPERIMENTAL is gone since v3.9;
+ - NETDEV_1000 and NETDEV_10000: commit f860b0522f65 ("drivers/net:
+   Kconfig and Makefile cleanup"); NET_ETHERNET should be replaced with
+   just ETHERNET but that is separate change;
+ - HID_SUPPORT: commit 1f41a6a99476 ("HID: Fix the generic Kconfig
+   options");
+ - INET_LRO: commit 7bbf3cae65b6 ("ipv4: Remove inet_lro library");
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Richard Kuo <rkuo@codeaurora.org>
 ---
- arch/hexagon/configs/comet_defconfig | 1 -
- 1 file changed, 1 deletion(-)
+ arch/hexagon/configs/comet_defconfig | 5 -----
+ 1 file changed, 5 deletions(-)
 
 diff --git a/arch/hexagon/configs/comet_defconfig b/arch/hexagon/configs/comet_defconfig
-index e324f65f41e7..d4320ebdb4b9 100644
+index d4320ebdb4b9..6b9397aacdf9 100644
 --- a/arch/hexagon/configs/comet_defconfig
 +++ b/arch/hexagon/configs/comet_defconfig
-@@ -18,7 +18,6 @@ CONFIG_BLK_DEV_INITRD=y
- CONFIG_EMBEDDED=y
- # CONFIG_VM_EVENT_COUNTERS is not set
- # CONFIG_BLK_DEV_BSG is not set
--CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
- # CONFIG_STANDALONE is not set
- CONFIG_CONNECTOR=y
- CONFIG_BLK_DEV_LOOP=y
+@@ -1,7 +1,6 @@
+ CONFIG_SMP=y
+ CONFIG_DEFAULT_MMAP_MIN_ADDR=0
+ CONFIG_HZ_100=y
+-CONFIG_EXPERIMENTAL=y
+ CONFIG_CROSS_COMPILE="hexagon-"
+ CONFIG_LOCALVERSION="-smp"
+ # CONFIG_LOCALVERSION_AUTO is not set
+@@ -26,8 +25,6 @@ CONFIG_NETDEVICES=y
+ CONFIG_MII=y
+ CONFIG_PHYLIB=y
+ CONFIG_NET_ETHERNET=y
+-# CONFIG_NETDEV_1000 is not set
+-# CONFIG_NETDEV_10000 is not set
+ # CONFIG_INPUT_MOUSEDEV is not set
+ # CONFIG_INPUT_KEYBOARD is not set
+ # CONFIG_INPUT_MOUSE is not set
+@@ -41,7 +38,6 @@ CONFIG_SPI_DEBUG=y
+ CONFIG_SPI_BITBANG=y
+ # CONFIG_HWMON is not set
+ # CONFIG_VGA_CONSOLE is not set
+-# CONFIG_HID_SUPPORT is not set
+ # CONFIG_USB_SUPPORT is not set
+ CONFIG_EXT2_FS=y
+ CONFIG_EXT2_FS_XATTR=y
+@@ -67,7 +63,6 @@ CONFIG_INET=y
+ # CONFIG_INET_XFRM_MODE_TRANSPORT is not set
+ # CONFIG_INET_XFRM_MODE_TUNNEL is not set
+ # CONFIG_INET_XFRM_MODE_BEET is not set
+-# CONFIG_INET_LRO is not set
+ # CONFIG_INET_DIAG is not set
+ # CONFIG_IPV6 is not set
+ CONFIG_CRYPTO_MD5=y
 -- 
 2.17.1
 
