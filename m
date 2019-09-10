@@ -2,115 +2,100 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53DF4C4740A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 026E3C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2688F207FC
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:10:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="YCiqv1qG"
+	by mail.kernel.org (Postfix) with ESMTP id BE93E2082C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:12:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568113976;
+	bh=PD9H6wLyS/xRG838kVHNjqCpnvHomor6bbn+BhwaSnk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QLS8v7UND0wKN3k1dYmToSkZsrehqO+wylGn9GA1x6ssdTbB02mujrROjk5G8teLK
+	 GeyB7o8MT4Dcd1YHmEU/FefkBOUD8yJZEMZ6YSTadoeneMqvlp2PHXx8lsm89enTgp
+	 M3bHkAduA7+BMt0lstQwc2Kq4f7FVcWpGFMK7M2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390960AbfIJLKY (ORCPT
+        id S1732396AbfIJLM4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 07:10:24 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:35286 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727816AbfIJLKY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 07:10:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1568113823; x=1599649823;
-  h=from:subject:to:cc:references:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=fgDPTEsn7ZWHjFND/LI/Wp/mhnZ31/D6nGDRthZQawY=;
-  b=YCiqv1qGPMOtqnBojWNk9JFLwymPYXGNXvIS4PEOHbUyeceA33oYpyU+
-   s0dXRe3EDCvga4KIJtqxPHwJyvzhUm//l49b/yyqqXpUv6Gh1G0xsJ0Ub
-   AcWt4iNO2KEjT4m+kK4TZ9UIjczM6SGPWhqN3G7KIheLEyGMu4j45wTKZ
-   c=;
-X-IronPort-AV: E=Sophos;i="5.64,489,1559520000"; 
-   d="scan'208";a="784192521"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-55156cd4.us-west-2.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 10 Sep 2019 11:10:20 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-55156cd4.us-west-2.amazon.com (Postfix) with ESMTPS id CEDFAA1D54;
-        Tue, 10 Sep 2019 11:10:19 +0000 (UTC)
-Received: from EX13D21UWA003.ant.amazon.com (10.43.160.184) by
- EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 10 Sep 2019 11:10:19 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
- EX13D21UWA003.ant.amazon.com (10.43.160.184) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 10 Sep 2019 11:10:19 +0000
-Received: from [10.125.238.37] (10.125.238.37) by mail-relay.amazon.com
- (10.43.160.118) with Microsoft SMTP Server (TLS) id 15.0.1367.3 via Frontend
- Transport; Tue, 10 Sep 2019 11:10:16 +0000
-From:   "Hawa, Hanna" <hhhawa@amazon.com>
-Subject: Re: [PATCH 1/1] edac: Add an API for edac device to report for
- multiple errors
-To:     Borislav Petkov <bp@alien8.de>
-CC:     Robert Richter <rrichter@marvell.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dwmw@amazon.co.uk" <dwmw@amazon.co.uk>,
-        "benh@amazon.com" <benh@amazon.com>,
-        "ronenk@amazon.com" <ronenk@amazon.com>,
-        "talel@amazon.com" <talel@amazon.com>,
-        "jonnyc@amazon.com" <jonnyc@amazon.com>,
-        "hanochu@amazon.com" <hanochu@amazon.com>
-References: <20190905083745.6899-1-hhhawa@amazon.com>
- <20190905095642.ohqkcllm7wufx6sc@rric.localdomain>
- <50f5bc27-98da-ee3e-59dd-7252c3ed7a0a@amazon.com>
- <20190908081602.GC16220@zn.tnic> <20190908083535.GD16220@zn.tnic>
-Message-ID: <488b07a8-ce39-d3fe-4e73-5e6f19176f1b@amazon.com>
-Date:   Tue, 10 Sep 2019 14:10:13 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 10 Sep 2019 07:12:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51946 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729270AbfIJLMz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 07:12:55 -0400
+Received: from localhost (110.8.30.213.rev.vodafone.pt [213.30.8.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74CA1207FC;
+        Tue, 10 Sep 2019 11:12:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568113975;
+        bh=PD9H6wLyS/xRG838kVHNjqCpnvHomor6bbn+BhwaSnk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oz3PQejY4fHlFE7NNmUuqi02wtM30x68VrstR+jB50Y6No3lozKwy9x2b6C7iQQ1P
+         7MyfGeVyn1I5qyr6PEz1BAg0fsFy55sBQiKNz14d+DVXIkVSNakpNUkUtBJtJVV9hQ
+         KD+acilLF9FKFjD+T4qVlZX1gXjnxqAiIOjwnPN0=
+Date:   Tue, 10 Sep 2019 12:12:52 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Yunsheng Lin <linyunsheng@huawei.com>, rafael@kernel.org,
+        linux-kernel@vger.kernel.org, peterz@infradead.org,
+        mingo@kernel.org, linuxarm@huawei.com
+Subject: Re: [PATCH] driver core: ensure a device has valid node id in
+ device_add()
+Message-ID: <20190910111252.GA8970@kroah.com>
+References: <1568009063-77714-1-git-send-email-linyunsheng@huawei.com>
+ <20190909095347.GB6314@kroah.com>
+ <9598b359-ab96-7d61-687a-917bee7a5cd9@huawei.com>
+ <20190910093114.GA19821@kroah.com>
+ <34feca56-c95e-41a6-e09f-8fc2d2fd2bce@huawei.com>
+ <20190910110451.GP2063@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20190908083535.GD16220@zn.tnic>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190910110451.GP2063@dhcp22.suse.cz>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+On Tue, Sep 10, 2019 at 01:04:51PM +0200, Michal Hocko wrote:
+> On Tue 10-09-19 18:58:05, Yunsheng Lin wrote:
+> > On 2019/9/10 17:31, Greg KH wrote:
+> > > On Tue, Sep 10, 2019 at 02:43:32PM +0800, Yunsheng Lin wrote:
+> > >> On 2019/9/9 17:53, Greg KH wrote:
+> > >>> On Mon, Sep 09, 2019 at 02:04:23PM +0800, Yunsheng Lin wrote:
+> > >>>> Currently a device does not belong to any of the numa nodes
+> > >>>> (dev->numa_node is NUMA_NO_NODE) when the node id is neither
+> > >>>> specified by fw nor by virtual device layer and the device has
+> > >>>> no parent device.
+> > >>>
+> > >>> Is this really a problem?
+> > >>
+> > >> Not really.
+> > >> Someone need to guess the node id when it is not specified, right?
+> > > 
+> > > No, why?  Guessing guarantees you will get it wrong on some systems.
+> > > 
+> > > Are you seeing real problems because the id is not being set?  What
+> > > problem is this fixing that you can actually observe?
+> > 
+> > When passing the return value of dev_to_node() to cpumask_of_node()
+> > without checking the node id if the node id is not valid, there is
+> > global-out-of-bounds detected by KASAN as below:
+> 
+> OK, I seem to remember this being brought up already. And now when I
+> think about it, we really want to make cpumask_of_node NUMA_NO_NODE
+> aware. That means using the same trick the allocator does for this
+> special case.
 
-On 9/8/2019 11:35 AM, Borislav Petkov wrote:
-> On Sun, Sep 08, 2019 at 10:16:02AM +0200, Borislav Petkov wrote:
->> On Sun, Sep 08, 2019 at 10:58:31AM +0300, Hawa, Hanna wrote:
->>>> Better use WARN_ON_ONCE() to avoid flooding.
->>>
->>> In case of two drivers using this function with wrong error count, only the
->>> first WARN_ON_ONCE will catch in this case, and other will miss other wrong
->>> usage of other edac device drivers.
->>
->> The idea is to catch any driver using a 0 error count and fix it, not to
->> flood dmesg. You want _ONCE.
-> 
-> ... and you want to return early too, i.e.,
-> 
-> 	if (WARN_ON_ONCE(!error_count))
-> 		return;
-> 
-> Frankly, I'd even remove all the warning functionality and simply do
-> 
-> 	if (!error_count)
-> 		return;
+That seems reasonable to me, and much more "obvious" as to what is going
+on.
 
-I'll keep it simple as you suggest and remove the warning functionality.
+thanks,
 
-> 
-> but let's see how much it screams first.
-> 
-
-Thanks,
-Hanna
+greg k-h
