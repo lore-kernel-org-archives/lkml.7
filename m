@@ -2,110 +2,65 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70599C49ED9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E91DC49ED9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44CED2171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:45:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568137558;
-	bh=nhozy1+SIp5fZkkmBLeMpwh1CRoYgJBvilyJiNcb0+k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2QI2bsppqxtDOwreGMCQjFXcHmD+SjZN6tWrhMZCRdkducwyw4AigGR4DlMocI20U
-	 d8E8JRtpv6aQ93Ypd7ReAtQ3507FTYFmQfiAPMpbVdTRFfgMt+tQdyDoJWzUxw/3gT
-	 yRfyccs5KHLEgd7Kg95CasEYET5zza0Cq6+3lSn8=
+	by mail.kernel.org (Postfix) with ESMTP id 702402089F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:47:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437174AbfIJRp5 (ORCPT
+        id S2437182AbfIJRrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 13:45:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44990 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2437122AbfIJRp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 13:45:57 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E89D9AD17;
-        Tue, 10 Sep 2019 17:45:54 +0000 (UTC)
-Date:   Tue, 10 Sep 2019 19:45:53 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Oscar Salvador <osalvador@suse.de>,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
-        "Wang, Wei W" <wei.w.wang@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>, ying.huang@intel.com,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH v9 3/8] mm: Move set/get_pcppage_migratetype to mmzone.h
-Message-ID: <20190910174553.GC4023@dhcp22.suse.cz>
-References: <20190907172225.10910.34302.stgit@localhost.localdomain>
- <20190907172528.10910.37051.stgit@localhost.localdomain>
- <20190910122313.GW2063@dhcp22.suse.cz>
- <CAKgT0Ud1xqhEy_LL4AfMgreP0uXrkF-fSDn=6uDXfn7Pvj5AAw@mail.gmail.com>
+        Tue, 10 Sep 2019 13:47:46 -0400
+Received: from mail.thelounge.net ([91.118.73.15]:63129 "EHLO
+        mail.thelounge.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731510AbfIJRrq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 13:47:46 -0400
+Received: from srv-rhsoft.rhsoft.net  (Authenticated sender: h.reindl@thelounge.net) by mail.thelounge.net (THELOUNGE MTA) with ESMTPSA id 46SXYT1JfHzXqt;
+        Tue, 10 Sep 2019 19:47:41 +0200 (CEST)
+Subject: Re: Linux 5.3-rc8
+To:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+References: <CAHk-=whBQ+6c-h+htiv6pp8ndtv97+45AH9WvdZougDRM6M4VQ@mail.gmail.com>
+ <20190910042107.GA1517@darwi-home-pc>
+ <CAHk-=wimE=Rw4s8MHKpsgc-ZsdoTp-_CAs7fkm9scn87ZbkMFg@mail.gmail.com>
+ <20190910173243.GA3992@darwi-home-pc>
+From:   Reindl Harald <h.reindl@thelounge.net>
+Openpgp: id=9D2B46CDBC140A36753AE4D733174D5A5892B7B8;
+ url=https://arrakis-tls.thelounge.net/gpg/h.reindl_thelounge.net.pub.txt
+Organization: the lounge interactive design
+Message-ID: <120457cc-760e-b042-ef12-2ad2f74ba387@thelounge.net>
+Date:   Tue, 10 Sep 2019 19:47:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKgT0Ud1xqhEy_LL4AfMgreP0uXrkF-fSDn=6uDXfn7Pvj5AAw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190910173243.GA3992@darwi-home-pc>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-CH
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 10-09-19 07:46:50, Alexander Duyck wrote:
-> On Tue, Sep 10, 2019 at 5:23 AM Michal Hocko <mhocko@kernel.org> wrote:
-> >
-> > On Sat 07-09-19 10:25:28, Alexander Duyck wrote:
-> > > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > >
-> > > In order to support page reporting it will be necessary to store and
-> > > retrieve the migratetype of a page. To enable that I am moving the set and
-> > > get operations for pcppage_migratetype into the mm/internal.h header so
-> > > that they can be used outside of the page_alloc.c file.
-> >
-> > Please describe who is the user and why does it needs this interface.
-> > This is really important because migratetype is an MM internal thing and
-> > external users shouldn't really care about it at all. We really do not
-> > want a random code to call those, especially the set_pcppage_migratetype.
+
+
+Am 10.09.19 um 19:33 schrieb Ahmed S. Darwish:
+> Yes, doing any of below steps makes the problem reliably disappear:
 > 
-> I was using it to store the migratetype of the page so that I could
-> find the boundary list that contained the reported page as the array
-> is indexed based on page order and migratetype. However on further
-> discussion I am thinking I may just use page->index directly to index
-> into the boundary array. Doing that I should be able to get a very
-> slight improvement in lookup time since I am not having to pull order
-> and migratetype and then compute the index based on that. In addition
-> it becomes much more clear as to what is going on, and if needed I
-> could add debug checks to verify the page is "Reported" and that the
-> "Buddy" page type is set.
+>   - boot param "random.trust_cpu=on"
+>   - rngd(8) enabled at boot (entropy source: x86 RDRAND + jitter)
+>   - pressing random 3 or 4 keyboard keys while GDM boot is stuck
 
-Be careful though. A free page belongs to the page allocator and it is
-free to reuse any fields for its purpose so using any of them nilly
-willy is no go. If you need to stuff something like that then there
-better be an api the allocator is aware of. My main objection is the
-abuse migrate type. There might be other ways to express what you need.
-Please make sure you clearly define that though.
-
--- 
-Michal Hocko
-SUSE Labs
+and on machines without or broken RDRAND (AMD) and nobody near the
+keyboard to play some song on it?
