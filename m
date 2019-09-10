@@ -2,147 +2,70 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4207BC49ED7
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 18:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8A8C5AE59
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 18:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EE332082C
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 18:24:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tek+1Zjh"
+	by mail.kernel.org (Postfix) with ESMTP id 2F72A21924
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 18:26:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728511AbfIJSYW (ORCPT
+        id S1728009AbfIJS01 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 14:24:22 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42280 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726613AbfIJSYW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 14:24:22 -0400
-Received: by mail-pg1-f195.google.com with SMTP id p3so10151777pgb.9
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 11:24:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=0I346vx91sUiAeUkNi54oztkGxRJ6TRG5+oqyFk02bY=;
-        b=Tek+1ZjhvQoukKmunz9oWSi7ehimuA5KNE4USUlNH47zOHVd7hK0lshi8vdBQQkbft
-         Y+iykjcmDFByvT0DrQj25tk3pbgmrZ1AcmvSU8+8z2lSWZLPwQWvSuVxWC21ApMyga2A
-         yG+q1sDyeQ6DN+YIJUtFgFBoE3iV+h8EvN++Y3O+9vAiayxcmUZwiloMHp0ijIqcaF0r
-         Hy1BK9ziX1IvLaq7/XZ5KN9NmyX+QBXkuIlC665PpUyuLLdIVS8LHHvCVe9DEuNUxJtE
-         UuW59djanWpWgRWGAdhnyGGGyTKYYvRDzhuPP6gynSHQZGjd208Vs/hTeflWpKMNYWt/
-         nv8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=0I346vx91sUiAeUkNi54oztkGxRJ6TRG5+oqyFk02bY=;
-        b=IhKCtaBQdbOFQFkA0u6ZFep7VHeRyjZGx68FcRPbUDo4IHHQGKK3JdPrw6kUDVWcU5
-         XLaDR9eDWueuQt4Z/eJ5jnkJ45PuJSdmdbkMRfCsIuj8N5vmwiRd46XK1KOPQfi1UAyi
-         47bixa4cY1Sht+lzEAO7MWJZPT497EaeJuOAwtuxQHYVFR7r1FKrgQlx3ZMtjM9Ec6FT
-         +vDBQ+SPzBnV0/mt4GOFHpnsSlUGUyVuWsoVdbICGz4HYjC7ZZ5xbBJYP9nfI3pjrMIc
-         EXScZCqFc50FZO/eEteUucMepefSapJAKc5sBJoy4wyKi87w4ngnqETTVSd2i/ACZVWd
-         9P3g==
-X-Gm-Message-State: APjAAAUkxOhbQIyASGuxh9tLzS4Du2e2bNVts7EBMJ3SVpcXyGexhKCs
-        NW+2C9+GZN51nqI9N8Ly3N1GF9X0LG493A==
-X-Google-Smtp-Source: APXvYqxa8LiqtCxiVtBgng/u1HVtbAH6tYazztOwvGiOc/JeuqbxpUEnR4B5jfyPSEnwhlrgw3VhAw==
-X-Received: by 2002:a17:90a:1c01:: with SMTP id s1mr930789pjs.76.1568139861681;
-        Tue, 10 Sep 2019 11:24:21 -0700 (PDT)
-Received: from SARKAR ([1.186.12.73])
-        by smtp.gmail.com with ESMTPSA id u1sm14384025pgi.28.2019.09.10.11.24.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Sep 2019 11:24:21 -0700 (PDT)
-Date:   Tue, 10 Sep 2019 23:54:15 +0530
-From:   Rohit Sarkar <rohitsarkar5398@gmail.com>
-To:     gregkh@linuxfoundation.org, johnfwhitmore@gmail.com,
-        devel@driverdev.osuosl.org
-Cc:     rohitsarkar5398@gmail.com, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: rtl8192u: ieee80211: Replace snprintf with scnprintf
-Message-ID: <20190910182415.GA5768@SARKAR>
+        Tue, 10 Sep 2019 14:26:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41872 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725770AbfIJS01 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 14:26:27 -0400
+Received: from oasis.local.home (unknown [148.69.85.38])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52AC42082C;
+        Tue, 10 Sep 2019 18:26:23 +0000 (UTC)
+Date:   Tue, 10 Sep 2019 14:26:21 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
+        rafael@kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        linux-trace-devel@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH v6 01/12] tools lib traceevent: Convert remaining %p[fF]
+ users to %p[sS]
+Message-ID: <20190910142621.0bec208d@oasis.local.home>
+In-Reply-To: <61a2b2ab4693535850306f396aac2a328e1d5a21.camel@perches.com>
+References: <20190910084707.18380-1-sakari.ailus@linux.intel.com>
+        <20190910084707.18380-2-sakari.ailus@linux.intel.com>
+        <20190910071837.2e9110f8@oasis.local.home>
+        <61a2b2ab4693535850306f396aac2a328e1d5a21.camel@perches.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the number of bytes to be printed exceeds the limit snprintf
-returns the number of bytes that would have been printed (if there was
-no truncation). This might cause issues, hence use scnprintf which
-returns the actual number of bytes printed to buffer always.
+On Tue, 10 Sep 2019 10:18:44 -0700
+Joe Perches <joe@perches.com> wrote:
 
-Signed-off-by: Rohit Sarkar <rohitsarkar5398@gmail.com>
----
- drivers/staging/rtl8192u/ieee80211/ieee80211_rx.c | 4 ++--
- drivers/staging/rtl8192u/ieee80211/ieee80211_wx.c | 8 ++++----
- 2 files changed, 6 insertions(+), 6 deletions(-)
+> > It's not just for the lastest kernel. We must maintain backward
+> > compatibility here too. If there use to be a usage of this, then we
+> > must keep it until the kernels are no longer used (perhaps 7 years?)  
+> 
+> That argues for not using "%pfw" at all for some number of years.
+> 
+> Perhaps the '%pfw' should be '%pnfw' for 'name' and 'fwnode'
 
-diff --git a/drivers/staging/rtl8192u/ieee80211/ieee80211_rx.c b/drivers/staging/rtl8192u/ieee80211/ieee80211_rx.c
-index 0a3e478fccd6..b0a78508f378 100644
---- a/drivers/staging/rtl8192u/ieee80211/ieee80211_rx.c
-+++ b/drivers/staging/rtl8192u/ieee80211/ieee80211_rx.c
-@@ -1647,7 +1647,7 @@ int ieee80211_parse_info_param(struct ieee80211_device *ieee,
- 			for (i = 0; i < network->rates_len; i++) {
- 				network->rates[i] = info_element->data[i];
- #ifdef CONFIG_IEEE80211_DEBUG
--				p += snprintf(p, sizeof(rates_str) -
-+				p += scnprintf(p, sizeof(rates_str) -
- 					      (p - rates_str), "%02X ",
- 					      network->rates[i]);
- #endif
-@@ -1674,7 +1674,7 @@ int ieee80211_parse_info_param(struct ieee80211_device *ieee,
- 			for (i = 0; i < network->rates_ex_len; i++) {
- 				network->rates_ex[i] = info_element->data[i];
- #ifdef CONFIG_IEEE80211_DEBUG
--				p += snprintf(p, sizeof(rates_str) -
-+				p += scnprintf(p, sizeof(rates_str) -
- 					      (p - rates_str), "%02X ",
- 					      network->rates_ex[i]);
- #endif
-diff --git a/drivers/staging/rtl8192u/ieee80211/ieee80211_wx.c b/drivers/staging/rtl8192u/ieee80211/ieee80211_wx.c
-index be08cd1d37a7..8f378ba0e62a 100644
---- a/drivers/staging/rtl8192u/ieee80211/ieee80211_wx.c
-+++ b/drivers/staging/rtl8192u/ieee80211/ieee80211_wx.c
-@@ -109,7 +109,7 @@ static inline char *rtl819x_translate_scan(struct ieee80211_device *ieee,
- 	/* Add basic and extended rates */
- 	max_rate = 0;
- 	p = custom;
--	p += snprintf(p, MAX_CUSTOM_LEN - (p - custom), " Rates (Mb/s): ");
-+	p += scnprintf(p, MAX_CUSTOM_LEN - (p - custom), " Rates (Mb/s): ");
- 	for (i = 0, j = 0; i < network->rates_len; ) {
- 		if (j < network->rates_ex_len &&
- 		    ((network->rates_ex[j] & 0x7F) <
-@@ -119,12 +119,12 @@ static inline char *rtl819x_translate_scan(struct ieee80211_device *ieee,
- 			rate = network->rates[i++] & 0x7F;
- 		if (rate > max_rate)
- 			max_rate = rate;
--		p += snprintf(p, MAX_CUSTOM_LEN - (p - custom),
-+		p += scnprintf(p, MAX_CUSTOM_LEN - (p - custom),
- 			      "%d%s ", rate >> 1, (rate & 1) ? ".5" : "");
- 	}
- 	for (; j < network->rates_ex_len; j++) {
- 		rate = network->rates_ex[j] & 0x7F;
--		p += snprintf(p, MAX_CUSTOM_LEN - (p - custom),
-+		p += scnprintf(p, MAX_CUSTOM_LEN - (p - custom),
- 			      "%d%s ", rate >> 1, (rate & 1) ? ".5" : "");
- 		if (rate > max_rate)
- 			max_rate = rate;
-@@ -215,7 +215,7 @@ static inline char *rtl819x_translate_scan(struct ieee80211_device *ieee,
- 	 * for given network. */
- 	iwe.cmd = IWEVCUSTOM;
- 	p = custom;
--	p += snprintf(p, MAX_CUSTOM_LEN - (p - custom),
-+	p += scnprintf(p, MAX_CUSTOM_LEN - (p - custom),
- 		      " Last beacon: %lums ago", (jiffies - network->last_scanned) / (HZ / 100));
- 	iwe.u.data.length = p - custom;
- 	if (iwe.u.data.length)
--- 
-2.17.1
+  -ENOCOMPREHENSION
 
+-- Steve
