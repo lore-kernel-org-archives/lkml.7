@@ -2,108 +2,131 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0513DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D3EBC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF3972168B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:19:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Ay/lq56E"
+	by mail.kernel.org (Postfix) with ESMTP id 4B419222BD
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:19:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389491AbfIJJTq (ORCPT
+        id S2389580AbfIJJTw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 05:19:46 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:18513 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389420AbfIJJTo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 05:19:44 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d776ab00000>; Tue, 10 Sep 2019 02:19:44 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 10 Sep 2019 02:19:43 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 10 Sep 2019 02:19:43 -0700
-Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 10 Sep
- 2019 09:19:40 +0000
-Subject: Re: [PATCH 4.14 00/40] 4.14.143-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20190908121114.260662089@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <5f4ed3d8-8680-00b6-e3d0-19f8c828dab2@nvidia.com>
-Date:   Tue, 10 Sep 2019 10:19:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 10 Sep 2019 05:19:52 -0400
+Received: from smtp2.goneo.de ([85.220.129.33]:33154 "EHLO smtp2.goneo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729360AbfIJJTv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 05:19:51 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by smtp2.goneo.de (Postfix) with ESMTP id 66E5823F688;
+        Tue, 10 Sep 2019 11:19:49 +0200 (CEST)
+X-Virus-Scanned: by goneo
+Received: from smtp2.goneo.de ([127.0.0.1])
+        by localhost (smtp2.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id mHjNSwEED_oc; Tue, 10 Sep 2019 11:19:48 +0200 (CEST)
+Received: from lem-wkst-02.lemonage.de. (hq.lemonage.de [87.138.178.34])
+        by smtp2.goneo.de (Postfix) with ESMTPA id BE12323F063;
+        Tue, 10 Sep 2019 11:19:47 +0200 (CEST)
+From:   Lars Poeschel <poeschel@lemonage.de>
+To:     Kate Stewart <kstewart@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Lars Poeschel <poeschel@lemonage.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
+        Steve Winslow <swinslow@gmail.com>,
+        netdev@vger.kernel.org (open list:NFC SUBSYSTEM),
+        linux-kernel@vger.kernel.org (open list)
+Cc:     Johan Hovold <johan@kernel.org>
+Subject: [PATCH v7 3/7] nfc: pn533: Add dev_up/dev_down hooks to phy_ops
+Date:   Tue, 10 Sep 2019 11:33:09 +0200
+Message-Id: <20190910093312.1981-1-poeschel@lemonage.de>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20190908121114.260662089@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1568107184; bh=5IngZMOsYnJHGdMaiWBQqS9qP+RQw00npVJpXII6K+M=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Ay/lq56EoHOIlKm1eVkDuSS+95Yro5NV+8GhQ4REOQ5Ei5Jg4R89kB8pCjogdTtG7
-         HBt8/XHT2o84ovKMJGSgkH4q1nLBT+Pw81FbAmesNZ3kuV7OkHvVVOkNRQPynyyYck
-         lFIJ6QBkzH2pTRXVJ8KKkIoOYfCqKVDqLgAFGqOR8GKYyY6hOqHgvpDq0t2O2w59Iw
-         9j6ffCdXImIXB5a+snyBdyou6kIzN5UUDbp51TQ5dEFiUKWGJjsznWA9/UxMadvW/r
-         IrDFA0ORT6pVbN5wDwm5WoFuabbJe7H1ANreRNSQgBszbUOaKdYS1n2BrK52weD8SE
-         Qrk35rKI9ioFw==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This adds hooks for dev_up and dev_down to the phy_ops. They are
+optional.
+The idea is to inform the phy driver when the nfc chip is really going
+to be used. When it is not used, the phy driver can suspend it's
+interface to the nfc chip to save some power. The nfc chip is considered
+not in use before dev_up and after dev_down.
 
-On 08/09/2019 13:41, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.143 release.
-> There are 40 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Tue 10 Sep 2019 12:09:36 PM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.143-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+Cc: Johan Hovold <johan@kernel.org>
+Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
+---
+Changes in v6:
+- Rebased the patch series on v5.3-rc5
 
-All tests are passing for Tegra ...
+Changes in v5:
+- (dev->phy_ops->dev_up) instead (dev->phy_ops)
 
-Test results for stable-v4.14:
-    8 builds:	8 pass, 0 fail
-    16 boots:	16 pass, 0 fail
-    24 tests:	24 pass, 0 fail
+Changes in v4:
+- This patch is new in v4
 
-Linux version:	4.14.143-rc1-g9ea9c62091b3
-Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
+ drivers/nfc/pn533/pn533.c | 12 +++++++++++-
+ drivers/nfc/pn533/pn533.h |  9 +++++++++
+ 2 files changed, 20 insertions(+), 1 deletion(-)
 
-Cheers
-Jon
-
+diff --git a/drivers/nfc/pn533/pn533.c b/drivers/nfc/pn533/pn533.c
+index a172a32aa9d9..64836c727aee 100644
+--- a/drivers/nfc/pn533/pn533.c
++++ b/drivers/nfc/pn533/pn533.c
+@@ -2458,6 +2458,9 @@ static int pn533_dev_up(struct nfc_dev *nfc_dev)
+ {
+ 	struct pn533 *dev = nfc_get_drvdata(nfc_dev);
+ 
++	if (dev->phy_ops->dev_up)
++		dev->phy_ops->dev_up(dev);
++
+ 	if (dev->device_type == PN533_DEVICE_PN532) {
+ 		int rc = pn532_sam_configuration(nfc_dev);
+ 
+@@ -2470,7 +2473,14 @@ static int pn533_dev_up(struct nfc_dev *nfc_dev)
+ 
+ static int pn533_dev_down(struct nfc_dev *nfc_dev)
+ {
+-	return pn533_rf_field(nfc_dev, 0);
++	struct pn533 *dev = nfc_get_drvdata(nfc_dev);
++	int ret;
++
++	ret = pn533_rf_field(nfc_dev, 0);
++	if (dev->phy_ops->dev_down && !ret)
++		dev->phy_ops->dev_down(dev);
++
++	return ret;
+ }
+ 
+ static struct nfc_ops pn533_nfc_ops = {
+diff --git a/drivers/nfc/pn533/pn533.h b/drivers/nfc/pn533/pn533.h
+index 8bf9d6ece0f5..570ee0a3e832 100644
+--- a/drivers/nfc/pn533/pn533.h
++++ b/drivers/nfc/pn533/pn533.h
+@@ -207,6 +207,15 @@ struct pn533_phy_ops {
+ 			  struct sk_buff *out);
+ 	int (*send_ack)(struct pn533 *dev, gfp_t flags);
+ 	void (*abort_cmd)(struct pn533 *priv, gfp_t flags);
++	/*
++	 * dev_up and dev_down are optional.
++	 * They are used to inform the phy layer that the nfc chip
++	 * is going to be really used very soon. The phy layer can then
++	 * bring up it's interface to the chip and have it suspended for power
++	 * saving reasons otherwise.
++	 */
++	void (*dev_up)(struct pn533 *priv);
++	void (*dev_down)(struct pn533 *priv);
+ };
+ 
+ 
 -- 
-nvpublic
+2.23.0
+
