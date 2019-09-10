@@ -2,106 +2,212 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F76C49ED9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 379EAC49ED6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4346720863
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:00:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1940D206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:01:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727723AbfIJJAE convert rfc822-to-8bit (ORCPT
+        id S1729783AbfIJJBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 05:00:04 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33270 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbfIJJAE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 05:00:04 -0400
-Received: by mail-ot1-f65.google.com with SMTP id g25so16094045otl.0;
-        Tue, 10 Sep 2019 02:00:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=tDTK3OLpchCjCRU8TOfjhGkxmXXLcL73wfiJk/3qy3k=;
-        b=rG4hCQ4KSKKUbjmtgEOyUvwZommEuCu2CTjo/TtvMcTdfiJT9A2Iq6JPNDK1IHKmDR
-         svoqw71zy5N1Zx1QFQ7OZQWfHL9xD+oUi0F5u7GFor1rd/E9edZlNWrUgX+yv5col899
-         XF/dv7DSTTc52cP96tJGvONAiGcV6SBL+4AsA2HGtEvj7QS7wtpcEKWnbQ4SP2RKZOb4
-         5ZJvdUYE6GTrp0DcIualJvV0ByeIsW9HADnX/tSj8+wjmSz0EREHRL26FUsgzCwmO0ks
-         G0vJgAWgWVdEcPrYLoOhIyOS4djBHsSAGMypouJefqnkBNaJR5Peupci6jO0NZl/TWT/
-         zGpA==
-X-Gm-Message-State: APjAAAVD6l9QjS2sETo3/63uPgGYii9X1W1U7jNRYqSalc6mqi93fJtm
-        uSrffj6J6EMsLscOA9QElgbDEcC997VmhdGjUXn8Sw==
-X-Google-Smtp-Source: APXvYqw1/V7JJZY7iU4ASdisuWl7yMwdrDM7D32UeSrm/lIre9DoD2PTYCLldEyJ3F30z/x0IGm9trL79jz0Nifw45k=
-X-Received: by 2002:a9d:2cc:: with SMTP id 70mr24743844otl.145.1568106003005;
- Tue, 10 Sep 2019 02:00:03 -0700 (PDT)
+        Tue, 10 Sep 2019 05:01:10 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:55626 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728341AbfIJJBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 05:01:09 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id A38FE77727358FEB736F;
+        Tue, 10 Sep 2019 17:01:07 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.132) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 10 Sep 2019 17:00:59 +0800
+From:   Huazhong Tan <tanhuazhong@huawei.com>
+To:     <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
+        <linuxarm@huawei.com>, <jakub.kicinski@netronome.com>,
+        Guangbin Huang <huangguangbin2@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH net-next 1/7] net: hns3: add ethtool_ops.set_channels support for HNS3 VF driver
+Date:   Tue, 10 Sep 2019 16:58:22 +0800
+Message-ID: <1568105908-60983-2-git-send-email-tanhuazhong@huawei.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1568105908-60983-1-git-send-email-tanhuazhong@huawei.com>
+References: <1568105908-60983-1-git-send-email-tanhuazhong@huawei.com>
 MIME-Version: 1.0
-References: <20190906084539.21838-1-geert+renesas@glider.be> <CAMpxmJVrQ92+ULRrzyN52LwEcdPTuK7OZssZjUcRPRSTBQ=fwg@mail.gmail.com>
-In-Reply-To: <CAMpxmJVrQ92+ULRrzyN52LwEcdPTuK7OZssZjUcRPRSTBQ=fwg@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 10 Sep 2019 10:59:51 +0200
-Message-ID: <CAMuHMdWpDOSpz3Mak7Vd=CY7r_kxPUx3A0CMqC-VY6TXtD9cqg@mail.gmail.com>
-Subject: Re: [PATCH 0/4] gpio: API boundary cleanups
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.132]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bartosz,
+From: Guangbin Huang <huangguangbin2@huawei.com>
 
-On Tue, Sep 10, 2019 at 10:51 AM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
-> pt., 6 wrz 2019 o 10:45 Geert Uytterhoeven <geert+renesas@glider.be> napisał(a):
-> > This patch series contains various API boundary cleanups for gpiolib:
-> >   - The first two patches make two functions private,
-> >   - The last two patches switch the remaining gpiolib exported functions
-> >     from EXPORT_SYMBOL() to EXPORT_SYMBOL_GPL().
-> >
-> > After this there is only a single GPIO driver function exported with
-> > EXPORT_SYMBOL();
-> >
-> >     drivers/gpio/gpio-htc-egpio.c:EXPORT_SYMBOL(htc_egpio_get_wakeup_irq);
-> >
-> > I believe this symbol was never used upstream, and may be a relic of the
-> > original out-of-tree code the htc-egpio was based on.  I don't know if
-> > there (still) exist out-of-tree users of the symbol.
-> >
-> > Thanks for your comments!
->
-> All looks good to me. Are you fine with this being picked up after the
-> v5.4 merge window?
+This patch adds ethtool_ops.set_channels support for HNS3 VF driver,
+and updates related TQP information and RSS information, to support
+modification of VF TQP number, and uses current rss_size instead of
+max_rss_size to initialize RSS.
 
-Sure, whatever suits you best.
+Also, fixes a format error in hclgevf_get_rss().
 
-Thanks!
+Signed-off-by: Guangbin Huang <huangguangbin2@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+---
+ drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c |  1 +
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  | 87 ++++++++++++++++++++--
+ 2 files changed, 83 insertions(+), 5 deletions(-)
 
-> > Geert Uytterhoeven (4):
-> >   gpio: of: Make of_get_named_gpiod_flags() private
-> >   gpio: of: Make of_gpio_simple_xlate() private
-> >   gpio: of: Switch to EXPORT_SYMBOL_GPL()
-> >   gpio: devres: Switch to EXPORT_SYMBOL_GPL()
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+index aa692b1..f5a681d 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+@@ -1397,6 +1397,7 @@ static const struct ethtool_ops hns3vf_ethtool_ops = {
+ 	.set_rxfh = hns3_set_rss,
+ 	.get_link_ksettings = hns3_get_link_ksettings,
+ 	.get_channels = hns3_get_channels,
++	.set_channels = hns3_set_channels,
+ 	.get_coalesce = hns3_get_coalesce,
+ 	.set_coalesce = hns3_set_coalesce,
+ 	.get_regs_len = hns3_get_regs_len,
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+index 594cae8..d77dcc2 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+@@ -743,7 +743,7 @@ static int hclgevf_get_rss(struct hnae3_handle *handle, u32 *indir, u8 *key,
+ }
+ 
+ static int hclgevf_set_rss(struct hnae3_handle *handle, const u32 *indir,
+-			   const  u8 *key, const  u8 hfunc)
++			   const u8 *key, const u8 hfunc)
+ {
+ 	struct hclgevf_dev *hdev = hclgevf_ae_get_hdev(handle);
+ 	struct hclgevf_rss_cfg *rss_cfg = &hdev->rss_cfg;
+@@ -2060,9 +2060,10 @@ static int hclgevf_config_gro(struct hclgevf_dev *hdev, bool en)
+ static int hclgevf_rss_init_hw(struct hclgevf_dev *hdev)
+ {
+ 	struct hclgevf_rss_cfg *rss_cfg = &hdev->rss_cfg;
+-	int i, ret;
++	int ret;
++	u32 i;
+ 
+-	rss_cfg->rss_size = hdev->rss_size_max;
++	rss_cfg->rss_size = hdev->nic.kinfo.rss_size;
+ 
+ 	if (hdev->pdev->revision >= 0x21) {
+ 		rss_cfg->hash_algo = HCLGEVF_RSS_HASH_ALGO_SIMPLE;
+@@ -2099,13 +2100,13 @@ static int hclgevf_rss_init_hw(struct hclgevf_dev *hdev)
+ 
+ 	/* Initialize RSS indirect table */
+ 	for (i = 0; i < HCLGEVF_RSS_IND_TBL_SIZE; i++)
+-		rss_cfg->rss_indirection_tbl[i] = i % hdev->rss_size_max;
++		rss_cfg->rss_indirection_tbl[i] = i % rss_cfg->rss_size;
+ 
+ 	ret = hclgevf_set_rss_indir_table(hdev);
+ 	if (ret)
+ 		return ret;
+ 
+-	return hclgevf_set_rss_tc_mode(hdev, hdev->rss_size_max);
++	return hclgevf_set_rss_tc_mode(hdev, rss_cfg->rss_size);
+ }
+ 
+ static int hclgevf_init_vlan_config(struct hclgevf_dev *hdev)
+@@ -2835,6 +2836,81 @@ static void hclgevf_get_tqps_and_rss_info(struct hnae3_handle *handle,
+ 	*max_rss_size = hdev->rss_size_max;
+ }
+ 
++static void hclgevf_update_rss_size(struct hnae3_handle *handle,
++				    u32 new_tqps_num)
++{
++	struct hnae3_knic_private_info *kinfo = &handle->kinfo;
++	struct hclgevf_dev *hdev = hclgevf_ae_get_hdev(handle);
++	u16 max_rss_size;
++
++	kinfo->req_rss_size = new_tqps_num;
++
++	max_rss_size = min_t(u16, hdev->rss_size_max,
++			     hdev->num_tqps / kinfo->num_tc);
++
++	/* Set to user value, no larger than max_rss_size. */
++	if (kinfo->req_rss_size != kinfo->rss_size && kinfo->req_rss_size &&
++	    kinfo->req_rss_size <= max_rss_size) {
++		dev_info(&hdev->pdev->dev, "rss changes from %u to %u\n",
++			 kinfo->rss_size, kinfo->req_rss_size);
++		kinfo->rss_size = kinfo->req_rss_size;
++	} else if (kinfo->rss_size > max_rss_size ||
++		   (!kinfo->req_rss_size && kinfo->rss_size < max_rss_size)) {
++		/* Set to the maximum specification value (max_rss_size). */
++		dev_info(&hdev->pdev->dev, "rss changes from %u to %u\n",
++			 kinfo->rss_size, max_rss_size);
++		kinfo->rss_size = max_rss_size;
++	}
++
++	kinfo->num_tqps = kinfo->num_tc * kinfo->rss_size;
++}
++
++static int hclgevf_set_channels(struct hnae3_handle *handle, u32 new_tqps_num,
++				bool rxfh_configured)
++{
++	struct hclgevf_dev *hdev = hclgevf_ae_get_hdev(handle);
++	struct hnae3_knic_private_info *kinfo = &handle->kinfo;
++	u16 cur_rss_size = kinfo->rss_size;
++	u16 cur_tqps = kinfo->num_tqps;
++	u32 *rss_indir;
++	unsigned int i;
++	int ret;
++
++	hclgevf_update_rss_size(handle, new_tqps_num);
++
++	ret = hclgevf_set_rss_tc_mode(hdev, kinfo->rss_size);
++	if (ret)
++		return ret;
++
++	/* RSS indirection table has been configuared by user */
++	if (rxfh_configured)
++		goto out;
++
++	/* Reinitializes the rss indirect table according to the new RSS size */
++	rss_indir = kcalloc(HCLGEVF_RSS_IND_TBL_SIZE, sizeof(u32), GFP_KERNEL);
++	if (!rss_indir)
++		return -ENOMEM;
++
++	for (i = 0; i < HCLGEVF_RSS_IND_TBL_SIZE; i++)
++		rss_indir[i] = i % kinfo->rss_size;
++
++	ret = hclgevf_set_rss(handle, rss_indir, NULL, 0);
++	if (ret)
++		dev_err(&hdev->pdev->dev, "set rss indir table fail, ret=%d\n",
++			ret);
++
++	kfree(rss_indir);
++
++out:
++	if (!ret)
++		dev_info(&hdev->pdev->dev,
++			 "Channels changed, rss_size from %u to %u, tqps from %u to %u",
++			 cur_rss_size, kinfo->rss_size,
++			 cur_tqps, kinfo->rss_size * kinfo->num_tc);
++
++	return ret;
++}
++
+ static int hclgevf_get_status(struct hnae3_handle *handle)
+ {
+ 	struct hclgevf_dev *hdev = hclgevf_ae_get_hdev(handle);
+@@ -3042,6 +3118,7 @@ static const struct hnae3_ae_ops hclgevf_ops = {
+ 	.enable_hw_strip_rxvtag = hclgevf_en_hw_strip_rxvtag,
+ 	.reset_event = hclgevf_reset_event,
+ 	.set_default_reset_request = hclgevf_set_def_reset_request,
++	.set_channels = hclgevf_set_channels,
+ 	.get_channels = hclgevf_get_channels,
+ 	.get_tqps_and_rss_info = hclgevf_get_tqps_and_rss_info,
+ 	.get_regs_len = hclgevf_get_regs_len,
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.7.4
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
