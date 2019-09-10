@@ -2,74 +2,99 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3605C49ED7
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 19:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BED45C49ED9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 19:22:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C136721019
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 19:20:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FAB321019
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 19:22:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dbad3cwS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="L/4ZyO/Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728504AbfIJTUj (ORCPT
+        id S1728636AbfIJTWr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 15:20:39 -0400
-Received: from mail-pf1-f178.google.com ([209.85.210.178]:35688 "EHLO
-        mail-pf1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727849AbfIJTUj (ORCPT
+        Tue, 10 Sep 2019 15:22:47 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:8944 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727131AbfIJTWq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 15:20:39 -0400
-Received: by mail-pf1-f178.google.com with SMTP id 205so12122018pfw.2;
-        Tue, 10 Sep 2019 12:20:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hjznco4o+Dn2VZDtAq/yGZeHT9P3y4uXRyWwDlemFd8=;
-        b=dbad3cwS3bDXPXiia9RQOxLMxcCGqZO4+b9pM/wM5CA0PyGVDYA5yr8aBY4DsMN1N7
-         6kx4wLnjH9RnixBOI+XZDwA2PXkae1VpOAG71leCuERWo762t+CKEMr+OntzMFI83DZs
-         XlXE3G065vOSrrv6l3w1CXw3QwSuoiqILjlukElsnnzwbexoMU4ejxHixn2Uk0s/rueV
-         OzZgGk+d++G4jH9n/qAcNNiW9la3nrF3/lGmBh3etyaoG36K0y9uijbf8b5mzNlbN7v+
-         fLiNRugxBdu2tfelixWCVOCA59dUhwffC73i+Bwyf7TjhX2td6k/mww0w6YUMXwxCmyc
-         mPpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hjznco4o+Dn2VZDtAq/yGZeHT9P3y4uXRyWwDlemFd8=;
-        b=TijoTTkYV9uT5zKqUv17DtvLKVQw1WDcdVxKTeLvyfCdlBkOkHZFtrGfuJyVq/iBct
-         aYuSODxIbm1iOAVtLHXExnq9eozpo1GKVoS5iR9t/FPutEknTJHgSQTVs7YPoQ0zNNTH
-         WTZXpxBfstCaEkXc/Zss6suV8EvOqSgPH/Q76mAvTc0uTOWbmK8ViTICFlsNw1Byy+k6
-         ol3l1Vvmh5eHYLCqFpY+8gAgbyU4HIXUeLHaobfaJdgyZQ4HR+R7bLHn4QLOO3l5o76m
-         u9YGfjbNV1D4HQPmLCfv5fDBifM2RvKMAfwx/01njCdCtSncWJnAtdzJyDftdKW2luOj
-         LRCw==
-X-Gm-Message-State: APjAAAVZuTxxNqqZYD0/ehle9t0kGclMVUaH+HUYte+X32KxRP1riyT1
-        H6KtPaOCHBBaBLNRj317GnaXAKQKpeRLrdW8l9k=
-X-Google-Smtp-Source: APXvYqw/HUFmrOU8dCiX0+yLftcHJVhZDygwUw4PA7p0G0QzOsod91uplKxeY9bzTmrCWVN7zKwfjR76Jx9zNF5eu5k=
-X-Received: by 2002:a63:36cc:: with SMTP id d195mr29148700pga.157.1568143238774;
- Tue, 10 Sep 2019 12:20:38 -0700 (PDT)
+        Tue, 10 Sep 2019 15:22:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1568143365;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=Q2xo+8m/PTpfyib2FwPbe4+jFPDhaQCjl4xznLzRWQY=;
+        b=L/4ZyO/QHymt7sZahA1NX80/tpUYDWCRIDGmLbJ9wQdlXtYUBYrKlwSyPPPFIq8XMJ
+        GFMrkzzmamSurLICOCPJdkPFyvJZZ+9S+sfrurnzm0wvS8n+9aj+HVLJ8BM0mtyFIoJ5
+        wwduuVq0DXACnZgxVFmU8J6LddrBmctgCg8sZsOkAQG6mhzizSswIB3xKxHsDhVW0esx
+        3D37a84oSm/qkdNjWyAWeYGZqA1vOFEf8SySOqgp/DtpdP0/mfiWPZOf2+a1zHJ+dNsQ
+        5NBU8wPpcj6drwzFu9gyXASSFvkeST/wUC7hxCNXE2d4jc1NOdwrjZ6f9nT3Cbc3TQ/H
+        g30g==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M7N8YnI7o="
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 44.27.0 DYNA|AUTH)
+        with ESMTPSA id u036f9v8AJMU3Yg
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Tue, 10 Sep 2019 21:22:30 +0200 (CEST)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, Adam Ford <aford173@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH] regulator: core: Fix error return for /sys access
+Date:   Tue, 10 Sep 2019 21:22:29 +0200
+Message-Id: <f37f2a1276efcb34cf3b7f1a25481175be048806.1568143348.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-References: <000000000000bcb83d059237c30a@google.com>
-In-Reply-To: <000000000000bcb83d059237c30a@google.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Tue, 10 Sep 2019 12:20:27 -0700
-Message-ID: <CAM_iQpVT3P_mrPtVOayfdRKpLvEO_YtkjrDK3uX_G7P1MzM8EA@mail.gmail.com>
-Subject: Re: INFO: rcu detected stall in br_handle_frame
-To:     syzbot <syzbot+2addc1f058bd021b0a40@syzkaller.appspotmail.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-#syz fix: sch_hhf: ensure quantum and hhf_non_hh_weight are non-zero
+regulator_uV_show() is missing error handling if regulator_get_voltage_rdev()
+returns negative values. Instead it prints the errno as a string, e.g. -EINVAL
+as "-22" which could be interpreted as -22 µV.
+
+We also do not need to hold the lock while converting the integer to a string.
+
+Reported-by: Adam Ford <aford173@gmail.com>
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+---
+ drivers/regulator/core.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index e0c0cf462004..ea48cb5a68b8 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -564,13 +564,15 @@ static ssize_t regulator_uV_show(struct device *dev,
+ 				struct device_attribute *attr, char *buf)
+ {
+ 	struct regulator_dev *rdev = dev_get_drvdata(dev);
+-	ssize_t ret;
++	int uV;
+ 
+ 	regulator_lock(rdev);
+-	ret = sprintf(buf, "%d\n", regulator_get_voltage_rdev(rdev));
++	uV = regulator_get_voltage_rdev(rdev);
+ 	regulator_unlock(rdev);
+ 
+-	return ret;
++	if (uV < 0)
++		return uV;
++	return sprintf(buf, "%d\n", uV);
+ }
+ static DEVICE_ATTR(microvolts, 0444, regulator_uV_show, NULL);
+ 
+-- 
+2.19.1
+
