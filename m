@@ -2,119 +2,97 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16AA3C49ED9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42FD7C49ED8
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB36621019
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:05:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B49621019
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:08:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mUKkp32c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387809AbfIJOFG (ORCPT
+        id S2387827AbfIJOIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 10:05:06 -0400
-Received: from foss.arm.com ([217.140.110.172]:35856 "EHLO foss.arm.com"
+        Tue, 10 Sep 2019 10:08:44 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:45477 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727289AbfIJOFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 10:05:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA23928;
-        Tue, 10 Sep 2019 07:05:04 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4FF9E3F59C;
-        Tue, 10 Sep 2019 07:05:04 -0700 (PDT)
-Date:   Tue, 10 Sep 2019 15:05:02 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Pankaj Dubey <pankaj.dubey@samsung.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        Anvesh Salveru <anvesh.s@samsung.com>
-Subject: Re: [PATCH 2/2] PCI: dwc: Add support to disable equalization phase
- 2 and 3
-Message-ID: <20190910140502.GL9720@e119886-lin.cambridge.arm.com>
-References: <1568118302-10505-1-git-send-email-pankaj.dubey@samsung.com>
- <CGME20190910122520epcas5p1faeb16f7c38ee057ce93783a637e6bf4@epcas5p1.samsung.com>
- <1568118302-10505-2-git-send-email-pankaj.dubey@samsung.com>
+        id S1725942AbfIJOIo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 10:08:44 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46SRhg1kZDz9s00;
+        Wed, 11 Sep 2019 00:08:31 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1568124521;
+        bh=ToRhPGlcoQOz3W0tvCtXfppcVOrElMxZdY3EbgCg89I=;
+        h=Date:From:To:Cc:Subject:From;
+        b=mUKkp32cve5EpbR2bbmXPEG18/3BbjyjlbKzBwH3hUPk2ujm8l8zFQjbsRhY9atBm
+         5s5L6zNiThsUqIW/0UxIKmQfA4kNlvrJCel1YGMceh5VgxPPloHX8PyxN7r2j4RMe7
+         lk2A3mgUBektE3BTCMrQujoyVHYpACBD3t1Gt6kNxUykiAdlipX1vbn8HSch9ccmPv
+         acfpmiJAK4W5B6KWuD0gkRXgCWaqO5C74r1qu1+rT+fBdWsnpSqTQKCICZ6otTDQOK
+         y4a6DxursNgNFim61BtWqnsj6a9RT+8a4vD9XuNxJpTW0Y4cz3s5zS2PNXvJexNFXw
+         8sL7I3go/R/Qw==
+Date:   Wed, 11 Sep 2019 00:08:18 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Adam Ford <aford173@gmail.com>
+Subject: linux-next: Fixes tag needs some work in the omap-fixes tree
+Message-ID: <20190911000818.6539fd35@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1568118302-10505-2-git-send-email-pankaj.dubey@samsung.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+Content-Type: multipart/signed; boundary="Sig_/NXap02BYKNTOsWkBiCfmvNM";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 05:55:02PM +0530, Pankaj Dubey wrote:
-> From: Anvesh Salveru <anvesh.s@samsung.com>
-> 
-> In some platforms, PCIe PHY may have issues which will prevent linkup
-> to happen in GEN3 or high speed. In case equalization fails, link will
-> fallback to GEN1.
-> 
-> Designware controller gives flexibility to disable GEN3 equalization
-> completely or only phase 2 and 3.
+--Sig_/NXap02BYKNTOsWkBiCfmvNM
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Do some platforms have issues conducting phase 2 and 3 when they successfully
-conduct phase 0 and 1?
+Hi all,
 
-> 
-> Platform drivers can disable equalization phase 2 and 3, by setting
-> dwc_pci_quirk flag DWC_EQUALIZATION_DISABLE.
-> 
-> Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
-> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-> ---
->  drivers/pci/controller/dwc/pcie-designware.c | 3 +++
->  drivers/pci/controller/dwc/pcie-designware.h | 2 ++
->  2 files changed, 5 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index bf82091..97a8268 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -472,5 +472,8 @@ void dw_pcie_setup(struct dw_pcie *pci)
->  	if (pci->dwc_pci_quirk & DWC_EQUALIZATION_DISABLE)
->  		val |= PORT_LOGIC_GEN3_EQ_DISABLE;
->  
-> +	if (pci->dwc_pci_quirk & DWC_EQ_PHASE_2_3_DISABLE)
-> +		val |= PORT_LOGIC_GEN3_EQ_PHASE_2_3_DISABLE;
-> +
->  	dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
->  }
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index a1453c5..b541508 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -31,6 +31,7 @@
->  
->  /* Parameters for PCIe Quirks */
->  #define DWC_EQUALIZATION_DISABLE	0x1
-> +#define DWC_EQ_PHASE_2_3_DISABLE	0x2
+In commit
 
-It only makes sense for either DWC_EQUALIZATION_DISABLE or DWC_EQ_PHASE_2_3_DISABLE
-to be specified, though if dwc_pci_quirk intends to hold other quirks should these
-be numbers and not bit fields?
+  a932b77b4d19 ("ARM: dts: logicpd-som-lv: Fix i2c2 and i2c3 Pin mux")
 
-Thanks,
+Fixes tag
 
-Andrew Murray
+  Fixes: 5fe3c0fa0d54 ("ARM: dts: Add pinmuxing for i2c2 and i2c3
 
->  
->  /* Synopsys-specific PCIe configuration registers */
->  #define PCIE_PORT_LINK_CONTROL		0x710
-> @@ -65,6 +66,7 @@
->  
->  #define PCIE_PORT_GEN3_RELATED		0x890
->  #define PORT_LOGIC_GEN3_EQ_DISABLE	BIT(16)
-> +#define PORT_LOGIC_GEN3_EQ_PHASE_2_3_DISABLE	BIT(9)
->  
->  #define PCIE_ATU_VIEWPORT		0x900
->  #define PCIE_ATU_REGION_INBOUND		BIT(31)
-> -- 
-> 2.7.4
-> 
+has these problem(s):
+
+  - Subject has leading but no trailing parentheses
+  - Subject has leading but no trailing quotes
+
+Please do not split Fixes tags over more than one line (and also just
+keep them with all the other tags).
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/NXap02BYKNTOsWkBiCfmvNM
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl13rlIACgkQAVBC80lX
+0GwPmgf+PBwutFnwkTwruJb8CZzAfNQY6r8L2e5fudE676JyAgIhjsvO4KIGclBQ
+EHz3YufphJbxGvr7Ia5NbQGcX8IclDdPdknMy4MI9UoQbXqOLCVbVzuHUn4QRYHw
+W6MUg1V+miHRA7qqAVOWDLrMg0jY4XxLMHGeEGBiZ7LLc1tONlKAHj8qp1uOGkO7
+EZQlYGdoqXZ1ENZmpOFcGdULq14dlxxofqG0aEw5flYCT1oDF3/NWOEX0BLGFzKM
+VTqXa3fCmdcqGw71eFKWZRQStqWlt9JyLdqqT4rjwbN/pRW/mbDfCJEl2MmIYbJE
+ReAo+7WkNOarPF9wd4wZB/E0+EtgBA==
+=fUB1
+-----END PGP SIGNATURE-----
+
+--Sig_/NXap02BYKNTOsWkBiCfmvNM--
