@@ -2,132 +2,114 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BACEC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E92C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 122712089F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:18:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="bQvc3MUJ"
+	by mail.kernel.org (Postfix) with ESMTP id 91A002089F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:19:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393401AbfIJGS0 (ORCPT
+        id S2393414AbfIJGTh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 02:18:26 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:29660 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730336AbfIJGSZ (ORCPT
+        Tue, 10 Sep 2019 02:19:37 -0400
+Received: from mxout017.mail.hostpoint.ch ([217.26.49.177]:31811 "EHLO
+        mxout017.mail.hostpoint.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730336AbfIJGTh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 02:18:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1568096304; x=1599632304;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=NUby1e5z8ZmZZG/r8xjMa7/ADWenJfdiJrb9sSaJJJI=;
-  b=bQvc3MUJ5s/JTaKRQOCHqdJgS4wK5znTY/wujDnOWfMBwqfAuUaUnHTA
-   MPa3I7cBCEoeYlhsz+SCpkX6g3K/Noib0oP1sK8eH7NJ9eqbZsLm6i/9e
-   3he7IEKymrEaf5B8nSCiKYOmbPUa+fmX7xHUNxKAbuDojZ/W/CZQnP4ge
-   U=;
-X-IronPort-AV: E=Sophos;i="5.64,487,1559520000"; 
-   d="scan'208";a="701737185"
-Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com) ([10.47.22.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 10 Sep 2019 06:17:38 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com (Postfix) with ESMTPS id 374E0A226A;
-        Tue, 10 Sep 2019 06:17:28 +0000 (UTC)
-Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 10 Sep 2019 06:17:28 +0000
-Received: from [10.125.238.52] (10.43.161.82) by EX13D01EUB001.ant.amazon.com
- (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Tue, 10 Sep
- 2019 06:17:17 +0000
-Subject: Re: [PATCH 3/3] arm64: alpine: select AL_POS
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        gregkh <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Patrick Venture" <venture@google.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "Olof Johansson" <olof@lixom.net>,
-        Maxime Ripard <mripard@kernel.org>,
-        "Santosh Shilimkar" <ssantosh@kernel.org>,
-        <paul.kocialkowski@bootlin.com>, <mjourdan@baylibre.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "Will Deacon" <will@kernel.org>, DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        <hhhawa@amazon.com>, <ronenk@amazon.com>, <jonnyc@amazon.com>,
-        <hanochu@amazon.com>, <barakw@amazon.com>
-References: <1568020220-7758-1-git-send-email-talel@amazon.com>
- <1568020220-7758-4-git-send-email-talel@amazon.com>
- <CAK8P3a0DEMeFWK+RuAdSLyDYduWWwj9DxP_Beipays-d_6ixnA@mail.gmail.com>
- <ab512ced-d989-5c10-a550-2a4723d38e7e@amazon.com>
- <CAK8P3a34eKFXoAPOfkFN5+H4kxOhRjXgws_0wy+d-186LFxcTw@mail.gmail.com>
- <0d36f94d-596f-0ec7-6951-b097b5ee0d2d@amazon.com>
- <CAK8P3a0RUHxcpyUJU5bpd8nqpm0Sqhy4aJaoh7K9jVn8zJC6aQ@mail.gmail.com>
-From:   "Shenhar, Talel" <talel@amazon.com>
-Message-ID: <a616c903-6d3e-cf84-8afb-ade48d5ca68f@amazon.com>
-Date:   Tue, 10 Sep 2019 09:17:11 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
+        Tue, 10 Sep 2019 02:19:37 -0400
+Received: from [10.0.2.45] (helo=asmtp012.mail.hostpoint.ch)
+        by mxout017.mail.hostpoint.ch with esmtp (Exim 4.92.2 (FreeBSD))
+        (envelope-from <sandro@volery.com>)
+        id 1i7ZUw-000CyG-0M; Tue, 10 Sep 2019 08:19:30 +0200
+Received: from 8.28.150.83.ftth.ewwwb.as8758.net ([83.150.28.8] helo=volery)
+        by asmtp012.mail.hostpoint.ch with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92.2 (FreeBSD))
+        (envelope-from <sandro@volery.com>)
+        id 1i7ZUv-000IZx-TV; Tue, 10 Sep 2019 08:19:29 +0200
+X-Authenticated-Sender-Id: sandro@volery.com
+Date:   Tue, 10 Sep 2019 08:19:28 +0200
+From:   Sandro Volery <sandro@volery.com>
+To:     rspringer@google.com, toddpoynor@google.com, benchan@chromium.org,
+        gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Cc:     joe@perches.com
+Subject: [PATCH v3] Staging: gasket: Use temporaries to reduce line length.
+Message-ID: <20190910061928.GA9623@volery>
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a0RUHxcpyUJU5bpd8nqpm0Sqhy4aJaoh7K9jVn8zJC6aQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.43.161.82]
-X-ClientProxiedBy: EX13D08UWC002.ant.amazon.com (10.43.162.168) To
- EX13D01EUB001.ant.amazon.com (10.43.166.194)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Using temporaries for gasket_page_table entries to remove scnprintf()
+statements and reduce line length, as suggested by Joe Perches. Thanks!
 
-On 9/9/2019 6:08 PM, Arnd Bergmann wrote:
-> On Mon, Sep 9, 2019 at 3:59 PM Shenhar, Talel <talel@amazon.com> wrote:
->> On 9/9/2019 4:45 PM, Arnd Bergmann wrote:
->>
->> Its not that something will get broken. its error event detector for POS
->> events which allows seeing bad accesses to registers.
->>
->> What is the general rule of which configs to put under select and which
->> under defconfig?
->>
->> I was thinking that "general" SoC support is good under select - those
->> things that we always want.
-> I generally want as little as possible to be selected, basically only
-> things that are required for linking the kernel and booting it without
-> potentially destroying the hardware.
->
-> In particular, I want most drivers to be enabled as loadable modules
-> if possible. When you have general-purpose distributions support
-> your platform, there is no need to have this module built-in while
-> running on a different chip, even if you always want to load the
-> module when it's running on yours.
->
->> And specific features, e.g. RAID support or features that supported only
->> on specific HW shall go under defconfig.
->>
->> Similar, I see ARCH_LAYERSCAPE selecting EDAC_SUPPORT.
-> I think this was done to avoid a link failure. It's also possible that this
-> is a mistake and just did not get caught in review.
->
->         Arnd
+Signed-off-by: Sandro Volery <sandro@volery.com>
+---
+v3: Fixed faulty copy/paste of function
+v2: Attempt to fix
+v1: Original patch
 
 
-I see.
+ drivers/staging/gasket/apex_driver.c | 20 +++++++++-----------
+ 1 file changed, 9 insertions(+), 11 deletions(-)
 
-Will remove this from v2.
+diff --git a/drivers/staging/gasket/apex_driver.c b/drivers/staging/gasket/apex_driver.c
+index 2973bb920a26..46199c8ca441 100644
+--- a/drivers/staging/gasket/apex_driver.c
++++ b/drivers/staging/gasket/apex_driver.c
+@@ -509,6 +509,8 @@ static ssize_t sysfs_show(struct device *device, struct device_attribute *attr,
+ 	struct gasket_dev *gasket_dev;
+ 	struct gasket_sysfs_attribute *gasket_attr;
+ 	enum sysfs_attribute_type type;
++	struct gasket_page_table *gpt;
++	uint val;
+ 
+ 	gasket_dev = gasket_sysfs_get_device_data(device);
+ 	if (!gasket_dev) {
+@@ -524,29 +526,25 @@ static ssize_t sysfs_show(struct device *device, struct device_attribute *attr,
+ 	}
+ 
+ 	type = (enum sysfs_attribute_type)gasket_attr->data.attr_type;
++	gpt = gasket_dev->page_table[0];
+ 	switch (type) {
+ 	case ATTR_KERNEL_HIB_PAGE_TABLE_SIZE:
+-		ret = scnprintf(buf, PAGE_SIZE, "%u\n",
+-				gasket_page_table_num_entries(
+-					gasket_dev->page_table[0]));
++		val = gasket_page_table_num_entries(gpt);
+ 		break;
+ 	case ATTR_KERNEL_HIB_SIMPLE_PAGE_TABLE_SIZE:
+-		ret = scnprintf(buf, PAGE_SIZE, "%u\n",
+-				gasket_page_table_num_simple_entries(
+-					gasket_dev->page_table[0]));
++		val = gasket_page_table_num_simple_entries(gpt);
+ 		break;
+ 	case ATTR_KERNEL_HIB_NUM_ACTIVE_PAGES:
+-		ret = scnprintf(buf, PAGE_SIZE, "%u\n",
+-				gasket_page_table_num_active_pages(
+-					gasket_dev->page_table[0]));
++		val = gasket_page_table_num_active_pages(gpt);
+ 		break;
+ 	default:
+ 		dev_dbg(gasket_dev->dev, "Unknown attribute: %s\n",
+ 			attr->attr.name);
+ 		ret = 0;
+-		break;
++		goto exit;
+ 	}
+-
++	ret = scnprintf(buf, PAGE_SIZE, "%u\n", val);
++exit:
+ 	gasket_sysfs_put_attr(device, gasket_attr);
+ 	gasket_sysfs_put_device_data(device, gasket_dev);
+ 	return ret;
+-- 
+2.23.0
 
