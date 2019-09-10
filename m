@@ -2,120 +2,99 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA358C4740A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A6FC4740A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8545921670
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:37:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568126256;
-	bh=y1WgrtzyvFdOq+b4d4REujchX5rk4th/6G7OOccfmxM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=S4SLPXnexVppJynCENCzXSJyJZuwudIq5xRzwN08w9bI4JYBjHEBM9MfJIj++7lhD
-	 SppDcn09X0KoAVNs88LClQ2pZarzodXT8y7MigRfN2eKd3Wbtq+eCBtHq3E5iRFqDM
-	 TjbbQG+0tJnxmyurtNt3oQasx3wzEZD75exwl1OA=
+	by mail.kernel.org (Postfix) with ESMTP id 64D8121670
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:37:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="btUcsowt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387909AbfIJOhf (ORCPT
+        id S2388216AbfIJOhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 10:37:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53634 "EHLO mail.kernel.org"
+        Tue, 10 Sep 2019 10:37:40 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:58833 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726066AbfIJOhf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 10:37:35 -0400
-Received: from earth.universe (unknown [148.69.85.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2387676AbfIJOhj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 10:37:39 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95C0121479;
-        Tue, 10 Sep 2019 14:37:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568126254;
-        bh=y1WgrtzyvFdOq+b4d4REujchX5rk4th/6G7OOccfmxM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iYlI8DaVumn332PgaHqmbGve4wfPHMu0RUKeSPGg0tR/ZBCA5cMBGisOPvfJ5WTat
-         QFfogJ1XfKG4+7MXP5TZNCCqhaSNCAgjaVnZ0lZ9X2TpoxJ9fC0zIbRwf7lAqP9XiG
-         1a67UW/obuJuytpzOoVZrwD9QXBSgZWniN83km5U=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 8B5D53C0CFA; Tue, 10 Sep 2019 16:37:32 +0200 (CEST)
-Date:   Tue, 10 Sep 2019 15:37:32 +0100
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Paul Walmsley <paul@pwsan.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Russell King <linux@armlinux.org.uk>,
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46SSKw4gk0z9s4Y;
+        Wed, 11 Sep 2019 00:37:22 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1568126256;
+        bh=4z1XeOUTPzpueRuks3y9AT8sA53R1X8yxALmPSFyLfk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=btUcsowtL4lESBd70quiC+OgRZhZajfwjetohFph8KfhWzB3JVKAzrOyNGVGDRPB6
+         cZkVavBqR6o5S+1SqugF2VHXEyxtNnCwlsJw0lp3sl8cpN+o6PWW/tUe7g9oyC7Z52
+         1BGGNsay7vs9V/NScef6KqOr1igjLT0U3Tk44WbCZ9zmlBMoP/eyoyQ/B6CkP5EF7Y
+         TpS83s9szMwsMCjDO2yzHzjSV0CzREkeymYhh3qmuCzu55dU4yj5DWg3WdSRPZ7FE7
+         WxNce16q9OHLd+8heBq3KcPrY2Gev5lfOw5v4ZFFVHaxRQAtkbZnzP9qiQ0U0c0exh
+         gPsgHlCDxsatA==
+Date:   Wed, 11 Sep 2019 00:37:13 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [RFC] ARM: omap3: Enable HWMODS for HW Random Number Generator
-Message-ID: <20190910143732.3g3q4acvnx2pqvjx@earth.universe>
-References: <20190828150037.2640-1-aford173@gmail.com>
- <20190905230443.GA52127@atomide.com>
- <CAHCN7xKxffJUV2V2CCuw0iPqUm4LJT28GMrcF2=8rDJQM2dOOw@mail.gmail.com>
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Alexei Starovoitov <ast@kernel.org>
+Subject: linux-next: Fixes tag needs some work in the net-next tree
+Message-ID: <20190911003713.1e7579f0@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qrixv7njwauekhyc"
-Content-Disposition: inline
-In-Reply-To: <CAHCN7xKxffJUV2V2CCuw0iPqUm4LJT28GMrcF2=8rDJQM2dOOw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Type: multipart/signed; boundary="Sig_/WIOCxjaEg2HC.1+3FoJPwMR";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---qrixv7njwauekhyc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--Sig_/WIOCxjaEg2HC.1+3FoJPwMR
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi all,
 
-On Tue, Sep 10, 2019 at 08:56:49AM -0500, Adam Ford wrote:
-> On Thu, Sep 5, 2019 at 6:04 PM Tony Lindgren <tony@atomide.com> wrote:
-> > Oh and this needs to default to status =3D "disabled" for
-> > HS devices like n900 as it needs to use the omap3-rom-rng.
->=20
-> I don't know enough about the HS version of the OMAP3, but what's the
-> main difference between omap3-rom-rng and this one?
+In commit
 
-The OMAP HS chips have the bus firewall configured to block direct
-access to some cryptography related devices. The kernel will crash
-with a bus error, if you try to read/write the registers for
-protected devices. The omap3-rom-rng avoids this by communicating
-with the security middleware component instead of directly accessing
-the RNG hardware.
+  ed4a3983cd3e ("tools: bpftool: fix argument for p_err() in BTF do_dump()")
 
--- Sebastian
+Fixes tag
 
---qrixv7njwauekhyc
-Content-Type: application/pgp-signature; name="signature.asc"
+  Fixes: c93cc69004dt ("bpftool: add ability to dump BTF types")
+
+has these problem(s):
+
+  - missing space between the SHA1 and the subject
+
+Presumably:
+
+Fixes: c93cc69004df ("bpftool: add ability to dump BTF types")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/WIOCxjaEg2HC.1+3FoJPwMR
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl13tSkACgkQ2O7X88g7
-+prv8g//byjix58ZdQFHZMVKdcFO70kTP9egx8f9Bsi2ZGMy3ybyYweRBD1xerSj
-9ytb9qNeNKC1Tn9R4HXWF2s0uG8YiCCwYv8XO2RGD1gBYc+ohxHMgu2LUHkqrYkd
-4ch8aa6vWOfoYz5p6RZ4TSMifa6pEL/Dntv73BZ2iWyIPNFiU3G0JYERDwh1k2mE
-zJQ/eEq/1G+ztEYBSa5HoRSLQUfgbpRWdnjw/WMQZMYIGb67iKJhEnFRl9bKdiS+
-Bj0od1d1EuQWiYclgBn2qGrfxKbweSmX9rDGTsQKzzb32zUSYLd5eh4m6dpO3Cea
-eWNc4w0cBN5XXDjmVf400xtdbhl4GNS0gwfHUb6QCHp4aSPKGIvv3rU2vt5Rf+HI
-K/u+3sywozcr9D6NbgmTyGNRRUxpZZe7QZdAtIaZChEcwi8FgtCxmeAtnUyXHNxr
-+0vPFHKA3IFKHfR2pNKu2UlS7HbKxUg+ZEgCq6dUAVGQ8BdNK5/a26MbJCASEGor
-OLfajRDyxnyFSlV2rKMh2Ich5oD39lI+rwA2jIJf+EbcHAudd25/4mGxc6Gb2oBb
-PgogxAzpXE95iStDWlUeoS/8Jh0hQtD/zb9amYgvwYSookOL9Wt39x5iMovt8IBm
-pHpoVJGzv5+DB874xaKn0jUe988yQdhym1joC+xayv+LGfBQvkE=
-=hSyU
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl13tRkACgkQAVBC80lX
+0GzmIgf/d0fr3KZyh4rd0Zh18hxgWl2xksEnj3LhDI+CEDzizWxE5DaV9VYByLIH
+5Xh/hKCkC7e9kdxrKVMv9ZSmk5eOioALtUy3mW+Txnc6RZRSsWs1A+Tr3pa6oaF3
+S+cMRA7cV/5hQxiZvXrAf76LZoYes+/7CMhqN2NAKTIFNf6mTNWwdu5MBFrCPpRC
+8q7CgV4dlvcri61IcijgvS5/igQ0VZ2ct12Biu1fTIsN3v9d+otmUDxdVDdoq/PM
+Cttjlp5OQ/OmIZPNSyPMkeXjJ/w2O5dMU0cF/g1CaGEZsCrgzpqjddfJ7b6FPdFW
+R34DdPhK2oi6zD0M5GsvdSRHcRCjXg==
+=CfTU
 -----END PGP SIGNATURE-----
 
---qrixv7njwauekhyc--
+--Sig_/WIOCxjaEg2HC.1+3FoJPwMR--
