@@ -2,70 +2,128 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B23E2C4740A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D2EFC49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D7D4208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F0C021D7B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:42:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mdlhWpzQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393399AbfIJOmg (ORCPT
+        id S2393450AbfIJOm4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 10:42:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42654 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732767AbfIJOmf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 10:42:35 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CD812B742;
-        Tue, 10 Sep 2019 14:42:33 +0000 (UTC)
-From:   Andreas Schwab <schwab@suse.de>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     gregkh@linuxfoundation.org, jslaby@suse.com,
-        paul.walmsley@sifive.com, linux-serial@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] serial/sifive: select SERIAL_EARLYCON
-References: <20190910055923.28384-1-hch@lst.de> <mvm4l1kskny.fsf@suse.de>
-        <20190910070503.GA31743@lst.de> <mvmzhjcr2d4.fsf@suse.de>
-        <20190910143630.GA6794@lst.de>
-X-Yow:  I'm in DISGUISE as a BAGGAGE CHECKER....I can watch the house, if it's
- ORANGE...
-Date:   Tue, 10 Sep 2019 16:42:33 +0200
-In-Reply-To: <20190910143630.GA6794@lst.de> (Christoph Hellwig's message of
-        "Tue, 10 Sep 2019 16:36:30 +0200")
-Message-ID: <mvmftl4p606.fsf@suse.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Tue, 10 Sep 2019 10:42:56 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34360 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732465AbfIJOmz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 10:42:55 -0400
+Received: by mail-io1-f68.google.com with SMTP id k13so22848847ioj.1;
+        Tue, 10 Sep 2019 07:42:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qwfqdrsthj6wGMKbVfq9KS+2D4+bl2wd+HAoXgrqGpM=;
+        b=mdlhWpzQsILASMQ7+1ikwT0fUSiwI9Yno2A8k95yLHD6P9eV0S05kOW5Jv6prsMvSt
+         iBXlVLmgNneBJJPewyY1Iz+eUwtz//m6IWYeMweTFXG1suDqKgsSJ2xCT/kZ1HcGuX4Y
+         n5DFuajmtetj/LpA2LEgEC9oiE4MlkG9fH5vD+eWjaUxrS6bT4PmDA2aOayknXG3RXII
+         9e0AvcNoE4ZxbCtIxiI/lT91HGh0dhQFb9BVLzxS7z4Bakuzjqvda8OJvgMc4cNBYsKq
+         JywENk314egMFnOMmeOVAlHQzPFr5FrWB11JMPxvnyAvp/9VaOr3lB+4BYVwvWI0USRT
+         DKkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qwfqdrsthj6wGMKbVfq9KS+2D4+bl2wd+HAoXgrqGpM=;
+        b=Z9LPZMhsolBeT8q3jBZpNieT2wYdkoa/4VTmTXMcfGuh2Y6jsWSoYgTaxevanmkA/k
+         1Q3SR6D2IVWgmcWBJumyvlN+SD0PWYd0PZeLkHQUVHz5xdwVcsm+IV/cMaowhPw9j14v
+         ftQ+3bWVwMvJ/rYd8bR92mNuZRDRTXPA0H0M7394VUrW1HnWrKe1/7C2L2xYZu4jrqGP
+         Q5Ehx5hdBngM+1emZFoaN0k/jc7QEeT1nIU0OcJ8kWa949foPkFugkL9uBSngWz3RFcJ
+         PPx1kVfzyJh+PqvbHNjGkE+QuHLBqMcAJiPQB6ZYg1BdfcsvMW0bXdFKzhgjEtDAoRWY
+         Up0g==
+X-Gm-Message-State: APjAAAWbYmT0uoHevvdwytI1PNgAz8HRx7+MufoYxRvNI6BXe/wNl6Dt
+        7VGbILc/Y59ylpi6KcXH+rgac/wt/0SFsRstpbQ=
+X-Google-Smtp-Source: APXvYqw25PAt3681VzSp2aKtn4HION8cnSVVgIaDxDN4t5As0qF4aUf02XL+Yw/GC74k1NJX1qc/ljlh1hZcV/Ap7TM=
+X-Received: by 2002:a02:9f16:: with SMTP id z22mr31770205jal.83.1568126574433;
+ Tue, 10 Sep 2019 07:42:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+References: <20190907172225.10910.34302.stgit@localhost.localdomain> <20190910124209.GY2063@dhcp22.suse.cz>
+In-Reply-To: <20190910124209.GY2063@dhcp22.suse.cz>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Tue, 10 Sep 2019 07:42:43 -0700
+Message-ID: <CAKgT0Udr6nYQFTRzxLbXk41SiJ-pcT_bmN1j1YR4deCwdTOaUQ@mail.gmail.com>
+Subject: Re: [PATCH v9 0/8] stg mail -e --version=v9 \
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Oscar Salvador <osalvador@suse.de>,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Pankaj Gupta <pagupta@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
+        "Wang, Wei W" <wei.w.wang@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>, ying.huang@intel.com,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sep 10 2019, Christoph Hellwig <hch@lst.de> wrote:
-
-> On Tue, Sep 10, 2019 at 10:18:15AM +0200, Andreas Schwab wrote:
->> > How so?  Wіth OF and a stdout path you just set earlycon on the
->> > command line without any arguments and it will be found.
->> 
->> Doesn't work for me.
->> 
->> [    0.000000] Malformed early option 'earlycon'
+On Tue, Sep 10, 2019 at 5:42 AM Michal Hocko <mhocko@kernel.org> wrote:
 >
-> That functionality is implemented by param_setup_earlycon and
-> early_init_dt_scan_chosen_stdout.  Check why those aren't built into
-> your kernel.
+> I wanted to review "mm: Introduce Reported pages" just realize that I
+> have no clue on what is going on so returned to the cover and it didn't
+> really help much. I am completely unfamiliar with virtio so please bear
+> with me.
+>
+> On Sat 07-09-19 10:25:03, Alexander Duyck wrote:
+> [...]
+> > This series provides an asynchronous means of reporting to a hypervisor
+> > that a guest page is no longer in use and can have the data associated
+> > with it dropped. To do this I have implemented functionality that allows
+> > for what I am referring to as unused page reporting
+> >
+> > The functionality for this is fairly simple. When enabled it will allocate
+> > statistics to track the number of reported pages in a given free area.
+> > When the number of free pages exceeds this value plus a high water value,
+> > currently 32, it will begin performing page reporting which consists of
+> > pulling pages off of free list and placing them into a scatter list. The
+> > scatterlist is then given to the page reporting device and it will perform
+> > the required action to make the pages "reported", in the case of
+> > virtio-balloon this results in the pages being madvised as MADV_DONTNEED
+> > and as such they are forced out of the guest. After this they are placed
+> > back on the free list,
+>
+> And here I am reallly lost because "forced out of the guest" makes me
+> feel that those pages are no longer usable by the guest. So how come you
+> can add them back to the free list. I suspect understanding this part
+> will allow me to understand why we have to mark those pages and prevent
+> merging.
 
-They are.
-
-Andreas.
-
--- 
-Andreas Schwab, SUSE Labs, schwab@suse.de
-GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
-"And now for something completely different."
+Basically as the paragraph above mentions "forced out of the guest"
+really is just the hypervisor calling MADV_DONTNEED on the page in
+question. So the behavior is the same as any userspace application
+that calls MADV_DONTNEED where the contents are no longer accessible
+from userspace and attempting to access them will result in a fault
+and the page being populated with a zero fill on-demand page, or a
+copy of the file contents if the memory is file backed.
