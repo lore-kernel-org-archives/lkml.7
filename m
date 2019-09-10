@@ -2,71 +2,74 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B0DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FEBFC49ED6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25D232084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:00:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 678112089F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:03:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbfIJL77 (ORCPT
+        id S1728664AbfIJMD2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 07:59:59 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:49051 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbfIJL77 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 07:59:59 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1i7eoL-0003mF-92; Tue, 10 Sep 2019 13:59:53 +0200
-Message-ID: <1568116792.3062.3.camel@pengutronix.de>
-Subject: Re: [PATCH] reset: uniphier-glue: Add Pro5 USB3 support
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Date:   Tue, 10 Sep 2019 13:59:52 +0200
-In-Reply-To: <20190910205640.6ABD.4A936039@socionext.com>
-References: <1568080527-1767-1-git-send-email-hayashi.kunihiko@socionext.com>
-         <1568101695.3062.1.camel@pengutronix.de>
-         <20190910205640.6ABD.4A936039@socionext.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Tue, 10 Sep 2019 08:03:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33944 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726066AbfIJMD2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 08:03:28 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4DD6320FD;
+        Tue, 10 Sep 2019 12:03:28 +0000 (UTC)
+Received: from asgard.redhat.com (ovpn-112-63.ams2.redhat.com [10.36.112.63])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B9AF16012C;
+        Tue, 10 Sep 2019 12:03:24 +0000 (UTC)
+Date:   Tue, 10 Sep 2019 13:02:57 +0100
+From:   Eugene Syromiatnikov <esyr@redhat.com>
+To:     linux-kernel@vger.kernel.org,
+        Christian Brauner <christian@brauner.io>,
+        Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org
+Cc:     Adrian Reber <areber@redhat.com>
+Subject: [PATCH 0/6] Update clone3 self-tests
+Message-ID: <cover.1568116761.git.esyr@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Tue, 10 Sep 2019 12:03:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kunihiko,
+Hello.
 
-On Tue, 2019-09-10 at 20:56 +0900, Kunihiko Hayashi wrote:
-[...]
-> This driver is derived from reset-simple, so the method to control reset
-> in the glue block is the same for each SoC.
-> 
-> And both Pro4 and Pro5 need same parent clock and reset, so the data for
-> these SoCs refer same parent clock names and parent reset names.
-> 
-> However, since the glue block itself can be different, I think that
-> compatible string should be distinguished for each SoC.
+This patch set updates clone3 selftest in several aspects:
+ - adding a check for kernel not ignoring highest 32 bits of exit_signal
+   field of clone3 syscall arguments structure;
+ - adding clone3 to selftests targets;
+ - enabling clone3 tests on all architectures;
+ - minor cleanups of the clone3 test.
 
-Ok, in that case I'll apply the patch as-is. Thank you for clarifying.
+Applied on top of brauer/linux.git/for-next.
 
-regards
-Philipp
+Eugene Syromiatnikov (6):
+  selftests/clone3: convert test modes into an enum
+  selftests/clone3: add a check for invalid exit_signal
+  selftests/clone3: use uint64_t for flags parameter
+  selftests/clone3: fix up format strings
+  selftests/clone3: enable clone3 self-tests on all architectures
+  selftests: add clone3 to TARGETS
+
+ tools/testing/selftests/Makefile        |  1 +
+ tools/testing/selftests/clone3/Makefile |  4 +---
+ tools/testing/selftests/clone3/clone3.c | 37 +++++++++++++++++++++++++--------
+ 3 files changed, 30 insertions(+), 12 deletions(-)
+
+-- 
+2.1.4
+
