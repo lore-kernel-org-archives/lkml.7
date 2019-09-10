@@ -2,104 +2,106 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC52FC4740A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 01:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A1AC4740C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 01:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE66F2171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 01:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F4E920872
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 01:52:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392630AbfIJBvy (ORCPT
+        id S2403773AbfIJBwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 21:51:54 -0400
-Received: from mx.socionext.com ([202.248.49.38]:11572 "EHLO mx.socionext.com"
+        Mon, 9 Sep 2019 21:52:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53176 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726903AbfIJBvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 21:51:53 -0400
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 10 Sep 2019 10:51:51 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id DDFBC605F8;
-        Tue, 10 Sep 2019 10:51:51 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Tue, 10 Sep 2019 10:51:51 +0900
-Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id 5EFEF1A04FB;
-        Tue, 10 Sep 2019 10:51:51 +0900 (JST)
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH] regulator: uniphier: Add Pro5 USB3 VBUS support
-Date:   Tue, 10 Sep 2019 10:51:44 +0900
-Message-Id: <1568080304-1572-1-git-send-email-hayashi.kunihiko@socionext.com>
-X-Mailer: git-send-email 2.7.4
+        id S1726903AbfIJBwQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 21:52:16 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C4F82A3769A;
+        Tue, 10 Sep 2019 01:52:15 +0000 (UTC)
+Received: from [10.72.12.185] (ovpn-12-185.pek2.redhat.com [10.72.12.185])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 73D585D9D6;
+        Tue, 10 Sep 2019 01:52:11 +0000 (UTC)
+Subject: Re: [RFC PATCH untested] vhost: block speculation of translated
+ descriptors
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+References: <20190908110521.4031-1-mst@redhat.com>
+ <db4d77d7-c467-935d-b4ae-1da7635e9b6b@redhat.com>
+ <20190909104355-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <9ab48e0f-50a9-bed4-1801-73c37a7da27c@redhat.com>
+Date:   Tue, 10 Sep 2019 09:52:10 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190909104355-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Tue, 10 Sep 2019 01:52:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pro5 SoC has same scheme of USB3 VBUS as Pro4, so the data for Pro5 is
-equivalent to Pro4.
 
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
----
- Documentation/devicetree/bindings/regulator/uniphier-regulator.txt | 5 +++--
- drivers/regulator/uniphier-regulator.c                             | 4 ++++
- 2 files changed, 7 insertions(+), 2 deletions(-)
+On 2019/9/9 下午10:45, Michael S. Tsirkin wrote:
+> On Mon, Sep 09, 2019 at 03:19:55PM +0800, Jason Wang wrote:
+>> On 2019/9/8 下午7:05, Michael S. Tsirkin wrote:
+>>> iovec addresses coming from vhost are assumed to be
+>>> pre-validated, but in fact can be speculated to a value
+>>> out of range.
+>>>
+>>> Userspace address are later validated with array_index_nospec so we can
+>>> be sure kernel info does not leak through these addresses, but vhost
+>>> must also not leak userspace info outside the allowed memory table to
+>>> guests.
+>>>
+>>> Following the defence in depth principle, make sure
+>>> the address is not validated out of node range.
+>>>
+>>> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+>>> ---
+>>>    drivers/vhost/vhost.c | 4 +++-
+>>>    1 file changed, 3 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+>>> index 5dc174ac8cac..0ee375fb7145 100644
+>>> --- a/drivers/vhost/vhost.c
+>>> +++ b/drivers/vhost/vhost.c
+>>> @@ -2072,7 +2072,9 @@ static int translate_desc(struct vhost_virtqueue *vq, u64 addr, u32 len,
+>>>    		size = node->size - addr + node->start;
+>>>    		_iov->iov_len = min((u64)len - s, size);
+>>>    		_iov->iov_base = (void __user *)(unsigned long)
+>>> -			(node->userspace_addr + addr - node->start);
+>>> +			(node->userspace_addr +
+>>> +			 array_index_nospec(addr - node->start,
+>>> +					    node->size));
+>>>    		s += size;
+>>>    		addr += size;
+>>>    		++ret;
+>>
+>> I've tried this on Kaby Lake smap off metadata acceleration off using
+>> testpmd (virtio-user) + vhost_net. I don't see obvious performance
+>> difference with TX PPS.
+>>
+>> Thanks
+> Should I push this to Linus right now then? It's a security thing so
+> maybe we better do it ASAP ... what's your opinion?
 
-diff --git a/Documentation/devicetree/bindings/regulator/uniphier-regulator.txt b/Documentation/devicetree/bindings/regulator/uniphier-regulator.txt
-index c9919f4..94fd38b 100644
---- a/Documentation/devicetree/bindings/regulator/uniphier-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/uniphier-regulator.txt
-@@ -13,6 +13,7 @@ this layer. These clocks and resets should be described in each property.
- Required properties:
- - compatible: Should be
-     "socionext,uniphier-pro4-usb3-regulator" - for Pro4 SoC
-+    "socionext,uniphier-pro5-usb3-regulator" - for Pro5 SoC
-     "socionext,uniphier-pxs2-usb3-regulator" - for PXs2 SoC
-     "socionext,uniphier-ld20-usb3-regulator" - for LD20 SoC
-     "socionext,uniphier-pxs3-usb3-regulator" - for PXs3 SoC
-@@ -20,12 +21,12 @@ Required properties:
- - clocks: A list of phandles to the clock gate for USB3 glue layer.
- 	According to the clock-names, appropriate clocks are required.
- - clock-names: Should contain
--    "gio", "link" - for Pro4 SoC
-+    "gio", "link" - for Pro4 and Pro5 SoCs
-     "link"        - for others
- - resets: A list of phandles to the reset control for USB3 glue layer.
- 	According to the reset-names, appropriate resets are required.
- - reset-names: Should contain
--    "gio", "link" - for Pro4 SoC
-+    "gio", "link" - for Pro4 and Pro5 SoCs
-     "link"        - for others
- 
- See Documentation/devicetree/bindings/regulator/regulator.txt
-diff --git a/drivers/regulator/uniphier-regulator.c b/drivers/regulator/uniphier-regulator.c
-index 9026d5a..2311924 100644
---- a/drivers/regulator/uniphier-regulator.c
-+++ b/drivers/regulator/uniphier-regulator.c
-@@ -186,6 +186,10 @@ static const struct of_device_id uniphier_regulator_match[] = {
- 		.data = &uniphier_pro4_usb3_data,
- 	},
- 	{
-+		.compatible = "socionext,uniphier-pro5-usb3-regulator",
-+		.data = &uniphier_pro4_usb3_data,
-+	},
-+	{
- 		.compatible = "socionext,uniphier-pxs2-usb3-regulator",
- 		.data = &uniphier_pxs2_usb3_data,
- 	},
--- 
-2.7.4
 
+Yes, you can.
+
+Acked-by: Jason Wang <jasowang@redhat.com>
+
+
+
+>
