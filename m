@@ -2,184 +2,193 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7519CC49ED7
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 20:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF83C49ED9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 21:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AB922168B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 20:58:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="SBDpDnVV"
+	by mail.kernel.org (Postfix) with ESMTP id CB31721019
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 21:09:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726070AbfIJU6G (ORCPT
+        id S1726121AbfIJVJa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 16:58:06 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:44920 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725880AbfIJU6G (ORCPT
+        Tue, 10 Sep 2019 17:09:30 -0400
+Received: from gateway21.websitewelcome.com ([192.185.46.113]:19918 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725263AbfIJVJa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 16:58:06 -0400
-Received: by mail-qk1-f195.google.com with SMTP id i78so18530580qke.11
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 13:58:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=KYFhv9bMRfcvUBHNAof2AFYDxJfGsK1ZyovdXaHUiLo=;
-        b=SBDpDnVVvq1VmEXJpj059aHElpbOMJtMbWNNs7k6QDrk6XCa7yP6pKOobs4yeh98X5
-         36Hk0QWYoE3LN01/Mshpx9Zc2DZAbiqYXIImiRdp4RNVW4/45kYFB0OxujOIbklCKPUY
-         gveJ8dh5WlSGvoNlPgvvJ58hWWH1IinL+Kff6wkRRR3U0+rwQWL/31TCWsTSRYt2lFTC
-         O1x9DY9/0bMQFx03a3OXB+WqKkRRmdvicyUCXiK70hRMHltTBLxmUn2Npi4WLoEvFywn
-         OsCrYy00B7oVcbBhOvFbJ1Hn3s2lmATA+BwrQcEOn1YFU7t/FfRcUVgSN4h4L9SY1wvt
-         MSFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=KYFhv9bMRfcvUBHNAof2AFYDxJfGsK1ZyovdXaHUiLo=;
-        b=nPexPzyEP5fpQPX8UV4Kn8e+P3Zjvqb9xL/WKpbyfnAIPIgDnsXRSal+qvXFFGBjHB
-         Ue8izLUtF/4F1EbW2vKl3Xre2XabrIhPzqa0M21PiCg3ISiDelnH0BIP8hyEzKDtebUz
-         XE+CVGdjPZG9afpyrN3v2KAJkAmTSSp9BSomiqXc8Z4+OmEoFpetWBgRlBhYHaLZ6Lq1
-         /7Kj/3GEuDxdJUadB3KX346UMGb6UIgBiLxpNIUbS6aTPG04s4NrvHz90jmYs9aLlVyN
-         wb1pDj8lexdZGmO2violqwWc1mbCWwBM8wK0+oXmQe99KItG6Q7lqngeOYsXrldeFqRy
-         K9CA==
-X-Gm-Message-State: APjAAAXn4p0kbJYR66+FQpGXJQI+MkPM6JdQYCdHPo8GnIFA+IxnLv/u
-        iQb7xcqckI1R3Fsuy/mhI1R4Dg==
-X-Google-Smtp-Source: APXvYqxgYngqTRdEQRqPw0xdg2YUzduErdUjn74RnRnW8f5ZOTQSNS9iz6A2x8T8MWdCE1LICAYbFQ==
-X-Received: by 2002:ae9:e00a:: with SMTP id m10mr33234934qkk.167.1568149084459;
-        Tue, 10 Sep 2019 13:58:04 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id v12sm5536512qtb.5.2019.09.10.13.58.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 10 Sep 2019 13:58:03 -0700 (PDT)
-Message-ID: <1568149081.5576.136.camel@lca.pw>
-Subject: Re: [PATCH -next v2] sched/fair: fix -Wunused-but-set-variable
- warnings
-From:   Qian Cai <cai@lca.pw>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@redhat.com, bsegall@google.com, chiluk+linux@indeed.com,
-        pauld@redhat.com, linux-kernel@vger.kernel.org
-Date:   Tue, 10 Sep 2019 16:58:01 -0400
-In-Reply-To: <20190903141554.GS2349@hirez.programming.kicks-ass.net>
-References: <1566326455-8038-1-git-send-email-cai@lca.pw>
-         <1567515806.5576.41.camel@lca.pw>
-         <20190903141554.GS2349@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 10 Sep 2019 17:09:30 -0400
+X-Greylist: delayed 1212 seconds by postgrey-1.27 at vger.kernel.org; Tue, 10 Sep 2019 17:09:29 EDT
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id 1308E400C9A84
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 15:49:17 -0500 (CDT)
+Received: from gator3278.hostgator.com ([198.57.247.242])
+        by cmsmtp with SMTP
+        id 7n4ei3nQj3Qi07n4eigVTs; Tue, 10 Sep 2019 15:49:17 -0500
+X-Authority-Reason: nr=8
+Received: from 89-69-237-178.dynamic.chello.pl ([89.69.237.178]:39390 helo=comp.lan)
+        by gator3278.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <arkadiusz@drabczyk.org>)
+        id 1i7n4d-003thB-Sc; Tue, 10 Sep 2019 15:49:16 -0500
+From:   Arkadiusz Drabczyk <arkadiusz@drabczyk.org>
+To:     vishal@chelsio.com
+Cc:     davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] cxgb4: Fix spelling typos
+Date:   Tue, 10 Sep 2019 22:49:01 +0200
+Message-Id: <20190910204901.11741-1-arkadiusz@drabczyk.org>
+X-Mailer: git-send-email 2.9.0
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator3278.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - drabczyk.org
+X-BWhitelist: no
+X-Source-IP: 89.69.237.178
+X-Source-L: No
+X-Exim-ID: 1i7n4d-003thB-Sc
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 89-69-237-178.dynamic.chello.pl (comp.lan) [89.69.237.178]:39390
+X-Source-Auth: arkadiusz@drabczyk.org
+X-Email-Count: 1
+X-Source-Cap: cmt1bXZicmg7cmt1bXZicmg7Z2F0b3IzMjc4Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-09-03 at 16:15 +0200, Peter Zijlstra wrote:
-> On Tue, Sep 03, 2019 at 09:03:26AM -0400, Qian Cai wrote:
-> > Ingo or Peter, please take a look at this trivial patch. Still see the warning
-> > in linux-next every day.
-> > 
-> > On Tue, 2019-08-20 at 14:40 -0400, Qian Cai wrote:
-> > > The linux-next commit "sched/fair: Fix low cpu usage with high
-> > > throttling by removing expiration of cpu-local slices" [1] introduced a
-> > > few compilation warnings,
-> > > 
-> > > kernel/sched/fair.c: In function '__refill_cfs_bandwidth_runtime':
-> > > kernel/sched/fair.c:4365:6: warning: variable 'now' set but not used
-> > > [-Wunused-but-set-variable]
-> > > kernel/sched/fair.c: In function 'start_cfs_bandwidth':
-> > > kernel/sched/fair.c:4992:6: warning: variable 'overrun' set but not used
-> > > [-Wunused-but-set-variable]
-> > > 
-> > > Also, __refill_cfs_bandwidth_runtime() does no longer update the
-> > > expiration time, so fix the comments accordingly.
-> > > 
-> > > [1] https://lore.kernel.org/lkml/1558121424-2914-1-git-send-email-chiluk+linux
-> > > @indeed.com/
-> > > 
-> > > Signed-off-by: Qian Cai <cai@lca.pw>
-> 
-> Rewrote the Changelog like so:
+Fix several spelling typos in comments in t4_hw.c.
 
-Looks good. I suppose it still need Ingo to pick it up, as today's tip/auto-
-latest still show those warnings.
+Signed-off-by: Arkadiusz Drabczyk <arkadiusz@drabczyk.org>
+---
+ drivers/net/ethernet/chelsio/cxgb4/t4_hw.c | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
 
-> 
-> ---
-> Subject: sched/fair: Fix -Wunused-but-set-variable warnings
-> From: Qian Cai <cai@lca.pw>
-> Date: Tue, 20 Aug 2019 14:40:55 -0400
-> 
-> Commit de53fd7aedb1 ("sched/fair: Fix low cpu usage with high
-> throttling by removing expiration of cpu-local slices") introduced a
-> few compilation warnings:
-> 
->   kernel/sched/fair.c: In function '__refill_cfs_bandwidth_runtime':
->   kernel/sched/fair.c:4365:6: warning: variable 'now' set but not used [-Wunused-but-set-variable]
->   kernel/sched/fair.c: In function 'start_cfs_bandwidth':
->   kernel/sched/fair.c:4992:6: warning: variable 'overrun' set but not used [-Wunused-but-set-variable]
-> 
-> Also, __refill_cfs_bandwidth_runtime() does no longer update the
-> expiration time, so fix the comments accordingly.
-> 
-> Fixes: de53fd7aedb1 ("sched/fair: Fix low cpu usage with high throttling by removing expiration of cpu-local slices")
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Reviewed-by: Ben Segall <bsegall@google.com>
-> Reviewed-by: Dave Chiluk <chiluk+linux@indeed.com>
-> Cc: mingo@redhat.com
-> Cc: pauld@redhat.com
-> Link: https://lkml.kernel.org/r/1566326455-8038-1-git-send-email-cai@lca.pw
-> ---
->  kernel/sched/fair.c |   19 ++++++-------------
->  1 file changed, 6 insertions(+), 13 deletions(-)
-> 
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -4386,21 +4386,16 @@ static inline u64 sched_cfs_bandwidth_sl
->  }
->  
->  /*
-> - * Replenish runtime according to assigned quota and update expiration time.
-> - * We use sched_clock_cpu directly instead of rq->clock to avoid adding
-> - * additional synchronization around rq->lock.
-> + * Replenish runtime according to assigned quota. We use sched_clock_cpu
-> + * directly instead of rq->clock to avoid adding additional synchronization
-> + * around rq->lock.
->   *
->   * requires cfs_b->lock
->   */
->  void __refill_cfs_bandwidth_runtime(struct cfs_bandwidth *cfs_b)
->  {
-> -	u64 now;
-> -
-> -	if (cfs_b->quota == RUNTIME_INF)
-> -		return;
-> -
-> -	now = sched_clock_cpu(smp_processor_id());
-> -	cfs_b->runtime = cfs_b->quota;
-> +	if (cfs_b->quota != RUNTIME_INF)
-> +		cfs_b->runtime = cfs_b->quota;
->  }
->  
->  static inline struct cfs_bandwidth *tg_cfs_bandwidth(struct task_group *tg)
-> @@ -5021,15 +5016,13 @@ static void init_cfs_rq_runtime(struct c
->  
->  void start_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
->  {
-> -	u64 overrun;
-> -
->  	lockdep_assert_held(&cfs_b->lock);
->  
->  	if (cfs_b->period_active)
->  		return;
->  
->  	cfs_b->period_active = 1;
-> -	overrun = hrtimer_forward_now(&cfs_b->period_timer, cfs_b->period);
-> +	hrtimer_forward_now(&cfs_b->period_timer, cfs_b->period);
->  	hrtimer_start_expires(&cfs_b->period_timer, HRTIMER_MODE_ABS_PINNED);
->  }
->  
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
+index f7fc553..f2a7824 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
+@@ -329,7 +329,7 @@ int t4_wr_mbox_meat_timeout(struct adapter *adap, int mbox, const void *cmd,
+ 	for (i = 0; ; i += ms) {
+ 		/* If we've waited too long, return a busy indication.  This
+ 		 * really ought to be based on our initial position in the
+-		 * mailbox access list but this is a start.  We very rearely
++		 * mailbox access list but this is a start.  We very rarely
+ 		 * contend on access to the mailbox ...
+ 		 */
+ 		pcie_fw = t4_read_reg(adap, PCIE_FW_A);
+@@ -606,7 +606,7 @@ void t4_memory_rw_residual(struct adapter *adap, u32 off, u32 addr, u8 *buf,
+  *
+  *	Reads/writes an [almost] arbitrary memory region in the firmware: the
+  *	firmware memory address and host buffer must be aligned on 32-bit
+- *	boudaries; the length may be arbitrary.  The memory is transferred as
++ *	boundaries; the length may be arbitrary.  The memory is transferred as
+  *	a raw byte sequence from/to the firmware's memory.  If this memory
+  *	contains data structures which contain multi-byte integers, it's the
+  *	caller's responsibility to perform appropriate byte order conversions.
+@@ -3774,7 +3774,7 @@ int t4_phy_fw_ver(struct adapter *adap, int *phy_fw_ver)
+  *	A negative error number will be returned if an error occurs.  If
+  *	version number support is available and there's no need to upgrade
+  *	the firmware, 0 will be returned.  If firmware is successfully
+- *	transferred to the adapter, 1 will be retured.
++ *	transferred to the adapter, 1 will be returned.
+  *
+  *	NOTE: some adapters only have local RAM to store the PHY firmware.  As
+  *	a result, a RESET of the adapter would cause that RAM to lose its
+@@ -3808,7 +3808,7 @@ int t4_load_phy_fw(struct adapter *adap,
+ 	}
+ 
+ 	/* Ask the firmware where it wants us to copy the PHY firmware image.
+-	 * The size of the file requires a special version of the READ coommand
++	 * The size of the file requires a special version of the READ command
+ 	 * which will pass the file size via the values field in PARAMS_CMD and
+ 	 * retrieve the return value from firmware and place it in the same
+ 	 * buffer values
+@@ -4082,7 +4082,7 @@ static inline fw_port_cap32_t cc_to_fwcap_pause(enum cc_pause cc_pause)
+ 		fw_pause |= FW_PORT_CAP32_FORCE_PAUSE;
+ 
+ 	/* Translate orthogonal Pause controls into IEEE 802.3 Pause,
+-	 * Asymetrical Pause for use in reporting to upper layer OS code, etc.
++	 * Asymmetrical Pause for use in reporting to upper layer OS code, etc.
+ 	 * Note that these bits are ignored in L1 Configure commands.
+ 	 */
+ 	if (cc_pause & PAUSE_RX) {
+@@ -4151,7 +4151,7 @@ fw_port_cap32_t t4_link_acaps(struct adapter *adapter, unsigned int port,
+ 	/* Convert Common Code Forward Error Control settings into the
+ 	 * Firmware's API.  If the current Requested FEC has "Automatic"
+ 	 * (IEEE 802.3) specified, then we use whatever the Firmware
+-	 * sent us as part of it's IEEE 802.3-based interpratation of
++	 * sent us as part of its IEEE 802.3-based interpretation of
+ 	 * the Transceiver Module EPROM FEC parameters.  Otherwise we
+ 	 * use whatever is in the current Requested FEC settings.
+ 	 */
+@@ -4248,7 +4248,7 @@ int t4_link_l1cfg_core(struct adapter *adapter, unsigned int mbox,
+ 
+ 	/* Unfortunately, even if the Requested Port Capabilities "fit" within
+ 	 * the Physical Port Capabilities, some combinations of features may
+-	 * still not be leagal.  For example, 40Gb/s and Reed-Solomon Forward
++	 * still not be legal.  For example, 40Gb/s and Reed-Solomon Forward
+ 	 * Error Correction.  So if the Firmware rejects the L1 Configure
+ 	 * request, flag that here.
+ 	 */
+@@ -6797,7 +6797,7 @@ int t4_sge_ctxt_flush(struct adapter *adap, unsigned int mbox, int ctxt_type)
+ }
+ 
+ /**
+- *	t4_read_sge_dbqtimers - reag SGE Doorbell Queue Timer values
++ *	t4_read_sge_dbqtimers - read SGE Doorbell Queue Timer values
+  *	@adap - the adapter
+  *	@ndbqtimers: size of the provided SGE Doorbell Queue Timer table
+  *	@dbqtimers: SGE Doorbell Queue Timer table
+@@ -6925,8 +6925,8 @@ int t4_fw_hello(struct adapter *adap, unsigned int mbox, unsigned int evt_mbox,
+ 			waiting -= 50;
+ 
+ 			/*
+-			 * If neither Error nor Initialialized are indicated
+-			 * by the firmware keep waiting till we exaust our
++			 * If neither Error nor Initialized are indicated
++			 * by the firmware keep waiting till we exhaust our
+ 			 * timeout ... and then retry if we haven't exhausted
+ 			 * our retries ...
+ 			 */
+@@ -7238,7 +7238,7 @@ int t4_fl_pkt_align(struct adapter *adap)
+ 	 * separately.  The actual Ingress Packet Data alignment boundary
+ 	 * within Packed Buffer Mode is the maximum of these two
+ 	 * specifications.  (Note that it makes no real practical sense to
+-	 * have the Pading Boudary be larger than the Packing Boundary but you
++	 * have the Padding Boundary be larger than the Packing Boundary but you
+ 	 * could set the chip up that way and, in fact, legacy T4 code would
+ 	 * end doing this because it would initialize the Padding Boundary and
+ 	 * leave the Packing Boundary initialized to 0 (16 bytes).)
+@@ -8973,10 +8973,10 @@ static int t4_get_flash_params(struct adapter *adap)
+ 			goto found;
+ 		}
+ 
+-	/* Decode Flash part size.  The code below looks repetative with
++	/* Decode Flash part size.  The code below looks repetitive with
+ 	 * common encodings, but that's not guaranteed in the JEDEC
+-	 * specification for the Read JADEC ID command.  The only thing that
+-	 * we're guaranteed by the JADEC specification is where the
++	 * specification for the Read JEDEC ID command.  The only thing that
++	 * we're guaranteed by the JEDEC specification is where the
+ 	 * Manufacturer ID is in the returned result.  After that each
+ 	 * Manufacturer ~could~ encode things completely differently.
+ 	 * Note, all Flash parts must have 64KB sectors.
+@@ -9317,7 +9317,7 @@ int t4_init_devlog_params(struct adapter *adap)
+ 	struct fw_devlog_cmd devlog_cmd;
+ 	int ret;
+ 
+-	/* If we're dealing with newer firmware, the Device Log Paramerters
++	/* If we're dealing with newer firmware, the Device Log Parameters
+ 	 * are stored in a designated register which allows us to access the
+ 	 * Device Log even if we can't talk to the firmware.
+ 	 */
+-- 
+2.9.0
+
