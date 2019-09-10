@@ -4,59 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F9BC49ED6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D2FC4740A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FEDC2067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:07:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D079820863
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:07:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568110028;
-	bh=sugD8d7P/hdIgXsNGQcQSb8SHzKvrU+8Yjcn8UZe2c4=;
+	s=default; t=1568110030;
+	bh=I77/5uA1C2fcp4Z7+VaFfllUZh/CgpQAc1yphu3MTBA=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=DRDHJeVNtTfCmvzUir+7eHzDSaDkC0OGoZmQQTo2WGUR/Mt1d1zMYI/EZq7A0W+Hc
-	 xXjHCtrayPYXAzASziUz0MByKQqrNnor5QFe4AC8CeZdomc6y8KhlQnN7un7mdoOY4
-	 pyd9W4k8elBMGXJhv+NPhmTXLNsJiywmTrX3eYnU=
+	b=fUL+hQ5r9uInK0ppSM9r0r0WZclkm6/4wbYcvkfre6V+naObBizLm2MPvI+8tLrDA
+	 litULBYsXz4gDgv9+4zvm5i1E7Z/Hp8dbmdVK2KmdgxWH/LWy5B1wY0CdGPjLTKhpk
+	 aqzH1oe+AeIa+Ghm1RT30DFd5Vf3BvIE2BvCsfos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405646AbfIJKHH (ORCPT
+        id S2405701AbfIJKHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 06:07:07 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:47576 "EHLO
+        Tue, 10 Sep 2019 06:07:09 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:47664 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388027AbfIJKHH (ORCPT
+        with ESMTP id S2391992AbfIJKHI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 06:07:07 -0400
+        Tue, 10 Sep 2019 06:07:08 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=rSWF4enHkdRTYcF1KH14HvviXZQ+MYgAvo7p7sd69rY=; b=poOAlplhypjb
-        GxHQ2Cy93fBMlai+4xHT/FACT2rvA6NyywSUFiA8a66fmHZlDJhBlZ3j+fxSCKidL+6S+J8i7JH+A
-        rvaUu2idBlPkQh1B9GXaOTyt7nxBYlKDKZXDsf7rmtCzn86jqBgY8AxwhmE1/GErQT/a5+co7kyaa
-        dXREU=;
+        List-Archive; bh=TAVHKaWXI4BEycgQJrIFHO035PWGPpF60zavVSn6Qw4=; b=FX3kfwpO8H3z
+        ZvMWbvzSvmJAITPgXUsPv4uK/PJ6gKEYzSGHIKKbESt7CQU5s/bVTeUfjdOy+NZBRkBm+iW1CZUJo
+        2AFcAKECVnzGaonfq2Xe03dY3JAg96AlcWIaBkcf+2d0OIvy55fEAVx88CVrS3fQl+LQe/t8B159Y
+        twKpA=;
 Received: from [148.69.85.38] (helo=fitzroy.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1i7d36-0006jA-T6; Tue, 10 Sep 2019 10:07:00 +0000
+        id 1i7d36-0006j7-Io; Tue, 10 Sep 2019 10:07:00 +0000
 Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 2F4B8D02D74; Tue, 10 Sep 2019 11:07:00 +0100 (BST)
+        id E825CD02D5A; Tue, 10 Sep 2019 11:06:59 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     devicetree@vger.kernel.org,
+        Jassi Brar <jaswinder.singh@linaro.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Mark Brown <broonie@kernel.org>,
-        Sangbeom Kim <sbkim73@samsung.com>
-Subject: Applied "regulator: s2mps11: Consistently use local variable" to the regulator tree
-In-Reply-To: <20190909155723.24734-1-krzk@kernel.org>
+        Mark Rutland <mark.rutland@arm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Applied "regulator: uniphier: Add Pro5 USB3 VBUS support" to the regulator tree
+In-Reply-To: <1568080304-1572-1-git-send-email-hayashi.kunihiko@socionext.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190910100700.2F4B8D02D74@fitzroy.sirena.org.uk>
-Date:   Tue, 10 Sep 2019 11:07:00 +0100 (BST)
+Message-Id: <20190910100659.E825CD02D5A@fitzroy.sirena.org.uk>
+Date:   Tue, 10 Sep 2019 11:06:59 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -64,7 +68,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: s2mps11: Consistently use local variable
+   regulator: uniphier: Add Pro5 USB3 VBUS support
 
 has been applied to the regulator tree at
 
@@ -89,35 +93,64 @@ to this mail.
 Thanks,
 Mark
 
-From d57d90f4443bd725b3facdc6130a1940af4560c4 Mon Sep 17 00:00:00 2001
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Date: Mon, 9 Sep 2019 17:57:23 +0200
-Subject: [PATCH] regulator: s2mps11: Consistently use local variable
+From 3ba5368dc4e5947cb70287754960776c471eb23d Mon Sep 17 00:00:00 2001
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Date: Tue, 10 Sep 2019 10:51:44 +0900
+Subject: [PATCH] regulator: uniphier: Add Pro5 USB3 VBUS support
 
-The value under 's2mps11->ext_control_gpiod[i]' is assigned to local
-variable and used in probe in one place before.  Use it consistently
-later so code will be easier to read.
+Pro5 SoC has same scheme of USB3 VBUS as Pro4, so the data for Pro5 is
+equivalent to Pro4.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Link: https://lore.kernel.org/r/20190909155723.24734-1-krzk@kernel.org
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Link: https://lore.kernel.org/r/1568080304-1572-1-git-send-email-hayashi.kunihiko@socionext.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/s2mps11.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../devicetree/bindings/regulator/uniphier-regulator.txt     | 5 +++--
+ drivers/regulator/uniphier-regulator.c                       | 4 ++++
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/s2mps11.c b/drivers/regulator/s2mps11.c
-index 054baaadfdfd..5bc00884cf51 100644
---- a/drivers/regulator/s2mps11.c
-+++ b/drivers/regulator/s2mps11.c
-@@ -1226,7 +1226,7 @@ static int s2mps11_pmic_probe(struct platform_device *pdev)
- 			goto out;
- 		}
+diff --git a/Documentation/devicetree/bindings/regulator/uniphier-regulator.txt b/Documentation/devicetree/bindings/regulator/uniphier-regulator.txt
+index c9919f4b92d2..94fd38b0d163 100644
+--- a/Documentation/devicetree/bindings/regulator/uniphier-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/uniphier-regulator.txt
+@@ -13,6 +13,7 @@ this layer. These clocks and resets should be described in each property.
+ Required properties:
+ - compatible: Should be
+     "socionext,uniphier-pro4-usb3-regulator" - for Pro4 SoC
++    "socionext,uniphier-pro5-usb3-regulator" - for Pro5 SoC
+     "socionext,uniphier-pxs2-usb3-regulator" - for PXs2 SoC
+     "socionext,uniphier-ld20-usb3-regulator" - for LD20 SoC
+     "socionext,uniphier-pxs3-usb3-regulator" - for PXs3 SoC
+@@ -20,12 +21,12 @@ Required properties:
+ - clocks: A list of phandles to the clock gate for USB3 glue layer.
+ 	According to the clock-names, appropriate clocks are required.
+ - clock-names: Should contain
+-    "gio", "link" - for Pro4 SoC
++    "gio", "link" - for Pro4 and Pro5 SoCs
+     "link"        - for others
+ - resets: A list of phandles to the reset control for USB3 glue layer.
+ 	According to the reset-names, appropriate resets are required.
+ - reset-names: Should contain
+-    "gio", "link" - for Pro4 SoC
++    "gio", "link" - for Pro4 and Pro5 SoCs
+     "link"        - for others
  
--		if (s2mps11->ext_control_gpiod[i]) {
-+		if (config.ena_gpiod) {
- 			ret = s2mps14_pmic_enable_ext_control(s2mps11,
- 					regulator);
- 			if (ret < 0) {
+ See Documentation/devicetree/bindings/regulator/regulator.txt
+diff --git a/drivers/regulator/uniphier-regulator.c b/drivers/regulator/uniphier-regulator.c
+index 9026d5a3e964..2311924c3103 100644
+--- a/drivers/regulator/uniphier-regulator.c
++++ b/drivers/regulator/uniphier-regulator.c
+@@ -185,6 +185,10 @@ static const struct of_device_id uniphier_regulator_match[] = {
+ 		.compatible = "socionext,uniphier-pro4-usb3-regulator",
+ 		.data = &uniphier_pro4_usb3_data,
+ 	},
++	{
++		.compatible = "socionext,uniphier-pro5-usb3-regulator",
++		.data = &uniphier_pro4_usb3_data,
++	},
+ 	{
+ 		.compatible = "socionext,uniphier-pxs2-usb3-regulator",
+ 		.data = &uniphier_pxs2_usb3_data,
 -- 
 2.20.1
 
