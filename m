@@ -2,134 +2,106 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB65C49ED6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF4A7C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 322AC2089F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:27:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E2D42089F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:27:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gbfGpBVw"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bTH63Odz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390788AbfIJG1Q (ORCPT
+        id S2390957AbfIJG16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 02:27:16 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46147 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729518AbfIJG1Q (ORCPT
+        Tue, 10 Sep 2019 02:27:58 -0400
+Received: from mail-ot1-f46.google.com ([209.85.210.46]:43019 "EHLO
+        mail-ot1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729880AbfIJG16 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 02:27:16 -0400
-Received: by mail-wr1-f68.google.com with SMTP id d17so4826863wrq.13;
-        Mon, 09 Sep 2019 23:27:14 -0700 (PDT)
+        Tue, 10 Sep 2019 02:27:58 -0400
+Received: by mail-ot1-f46.google.com with SMTP id b2so16675122otq.10
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 23:27:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MDvvxlm4EPJtB9eDBS496uoPhxHiq1jejHiyH1JIX3w=;
-        b=gbfGpBVwxLb3OM8f45S2s1YeSAa5lyhvkVJNbkgzI6wSrzp7sYwXHGzEZdw172CgJg
-         m2uAr7g0irO5xJe7qyz24mLCbjo+Nb++VbHVnMEr3kh0wsTIZAIs+n2knElp0F0xu5xk
-         QXa0E4FtZFGLueh6ICShw+3tLg67yzSJ5URQcvDK1gRDcYxXhjWY2ltzNfGVBqS1g7b+
-         2nc73i5D3peBeCS8XBpovwPoudCBzfH7wLD2epolcb5J+5CtnGT0195IQunrP59DPUBE
-         K8n+QNCEQqoBqKV9AQTB4Mgcn5tooYqz87rMpQ5nclai85aNjsGyREeTWdR5LRz9y5Jz
-         YTgw==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=VjaVCvw7Es75Y87+TuInwO6wTJKd4OwHl3OoUN4X21M=;
+        b=bTH63OdzbSyyfI3d3StOzzqmtb8AS1gEb5tEBg2YYe6kYDPWrrnohRw63Mv+AtEFPC
+         eWNn1hnQMGWcD0GEOas6omOi5qouS2jNfDof/HckHf5JLRnmWPAwc388uCLFLM9dfg0Z
+         llevmXvb0BEBOQlCbvsjl5BXxCyjHnTz48VK+mBewdU9j3H+/XnF3Bk09dYGl6HDXlef
+         8u+z1a7c+bXliR0jZL30DYnFg1jPYy8B1rPnH+Dw/peMdjW576iR82HAgFKWA4Ns0bqL
+         fh2Uau3mMqTelW1lljFchIkflqhhm+Ox+mJZopP4Y/OokuzULyG94TsqWJfseQeocDuj
+         qhoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MDvvxlm4EPJtB9eDBS496uoPhxHiq1jejHiyH1JIX3w=;
-        b=tFZVI6k6tuaj6lW9vY1arL3mMVl8wwUQmtdaxTZ4s6J2s7i4XDkBPrnvmemkFEzGWV
-         PDKjcsjPG8JH2XWyirvnnOUCBEHAHsKmq21Qtq8KflQIorl04xyhZF3ta18/MAFWK1ao
-         1oSy8Rn+YIqbgIrRsyqGBcMIkZ8oHzY2JY3TAuUgZ0x9I3Kr9ikNbrqRbXUlT0W6HR2H
-         yvcuF53VxqCxtJAVaRENTsUxXeNa82IE8vGC3hg7e4it31+f25IVwbAYGE+Pts/8n7NB
-         0QRaXrOGJFBd3th7b5wGy+IJ/phdLkA5LoegTUMnz8cpzj/CqqWFDdiW0Ldcz8b/lNUG
-         +RTg==
-X-Gm-Message-State: APjAAAXtY9VyQ/vr4FaGKdf9zOD3m/DWqF/96+JxmTqHUTrLXg5F5yjx
-        ZHqctwEQ8jGqV51cEWye9dmCBeQAWuLN/w==
-X-Google-Smtp-Source: APXvYqw8soMWKGbHP/fAAIX35fInxB9u8K5H1DveBH6z0hz2IhGtG8PVN68CzYYJSR8kIoPUbmY3JQ==
-X-Received: by 2002:a05:6000:1101:: with SMTP id z1mr19069387wrw.332.1568096833318;
-        Mon, 09 Sep 2019 23:27:13 -0700 (PDT)
-Received: from ?IPv6:2a02:810d:8cc0:4ff8:6441:f1c4:968a:e9d0? ([2a02:810d:8cc0:4ff8:6441:f1c4:968a:e9d0])
-        by smtp.gmail.com with ESMTPSA id b144sm1873123wmb.3.2019.09.09.23.27.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 09 Sep 2019 23:27:12 -0700 (PDT)
-Subject: Re: [PATCH 4.19 19/57] Bluetooth: hidp: Let hidp_send_message return
- number of queued bytes
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Pavel Machek <pavel@denx.de>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>
-References: <20190908121125.608195329@linuxfoundation.org>
- <20190908121132.859238319@linuxfoundation.org> <20190909121555.GA18869@amd>
- <8e7731e0-f0ad-8cbb-799e-dd585e6b7ed6@gmail.com>
- <20190909225929.GC26405@kroah.com>
-From:   Fabian Henneke <fabian.henneke@gmail.com>
-Message-ID: <c7aa8abe-86c1-e401-67b4-a9fbb85bf475@gmail.com>
-Date:   Tue, 10 Sep 2019 08:27:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=VjaVCvw7Es75Y87+TuInwO6wTJKd4OwHl3OoUN4X21M=;
+        b=sDWuVg9aOH3YOeGHsDPTMpQ7uykeYXjp+mZbYKRzNtB/A57DsueMkUWXEXtJgAET18
+         4ALnSn/SYSyXOTj+yJDI2gp477kPjRdfgn/PR4kk6YxWi7Il73Ch3l30hzJKRzvVuDRd
+         m2zp8Y+pUC/5b7GtBpIccAVcJoNz7eO2cYf8DQ8vOa3Zh1ILhNgPqTuo9HxcaKqc/L7b
+         sPMIr3FfcnODNgOMugE9qgXae/bx7LnhnPiVaoc/fQBooC8R9TibUqWoVjGhHwrgGGdA
+         sc0BWBSTxAkS3XmRDcD5FeBCi9lq2r1fAlBSBjr0Fhyq7MDzzS5/fnV24d6NuCGRSBge
+         cmLQ==
+X-Gm-Message-State: APjAAAWkVPyLV26kmAR0uYyaASp6OEAl660A6p+7JenBHuh7tJw81IfQ
+        NKU4EJrSp9SnOu/PLbAcla2TSA==
+X-Google-Smtp-Source: APXvYqyr/5ZSWwhxcxVoEpZMzkdjrJd95+TstKsGF8R+eAlLsTaGkBCm/1mlMp5lP9ovy746SFUEIQ==
+X-Received: by 2002:a05:6830:184:: with SMTP id q4mr20085871ota.128.1568096876476;
+        Mon, 09 Sep 2019 23:27:56 -0700 (PDT)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id e7sm3507003otp.64.2019.09.09.23.27.54
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 09 Sep 2019 23:27:55 -0700 (PDT)
+Date:   Mon, 9 Sep 2019 23:27:15 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Al Viro <viro@zeniv.linux.org.uk>
+cc:     Hugh Dickins <hughd@google.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        David Howells <dhowells@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, lkp@01.org
+Subject: Re: [vfs]  8bb3c61baf:  vm-scalability.median -23.7% regression
+In-Reply-To: <20190909035653.GF1131@ZenIV.linux.org.uk>
+Message-ID: <alpine.LSU.2.11.1909092301120.1267@eggly.anvils>
+References: <20190903084122.GH15734@shao2-debian> <20190908214601.GC1131@ZenIV.linux.org.uk> <20190908234722.GE1131@ZenIV.linux.org.uk> <alpine.LSU.2.11.1909081953360.1134@eggly.anvils> <20190909035653.GF1131@ZenIV.linux.org.uk>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-In-Reply-To: <20190909225929.GC26405@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 10.09.19 00:59, Greg Kroah-Hartman wrote:
-> On Mon, Sep 09, 2019 at 03:00:46PM +0200, Fabian Henneke wrote:
->> Hi,
->>
->> On Mon, Sep 9, 2019 at 2:15 PM Pavel Machek <pavel@denx.de> wrote:
->>
->>> Hi!
->>>
->>>> [ Upstream commit 48d9cc9d85dde37c87abb7ac9bbec6598ba44b56 ]
->>>>
->>>> Let hidp_send_message return the number of successfully queued bytes
->>>> instead of an unconditional 0.
->>>>
->>>> With the return value fixed to 0, other drivers relying on hidp, such as
->>>> hidraw, can not return meaningful values from their respective
->>>> implementations of write(). In particular, with the current behavior, a
->>>> hidraw device's write() will have different return values depending on
->>>> whether the device is connected via USB or Bluetooth, which makes it
->>>> harder to abstract away the transport layer.
->>>
->>> So, does this change any actual behaviour?
->>>
->>> Is it fixing a bug, or is it just preparation for a patch that is not
->>> going to make it to stable?
->>>
->>
->> I created this patch specifically in order to ensure that user space
->> applications can use HID devices with hidraw without needing to care about
->> whether the transport is USB or Bluetooth. Without the patch, every
->> hidraw-backed Bluetooth device needs to be treated specially as its write()
->> violates the usual return value contract, which could be viewed as a bug.
->>
->> Please note that a later patch (
->> https://www.spinics.net/lists/linux-input/msg63291.html) fixes some
->> important error checks that were relying on the old behavior (and were
->> unfortunately missed by me).
+On Mon, 9 Sep 2019, Al Viro wrote:
 > 
-> As that patch doesn't seem to be in Linus's tree yet, we should postpone
-> taking this one in the stable tree right now, correct?
-> 
-> thanks,
-> 
-> greg k-h
-> 
+> Anyway, see vfs.git#uncertain.shmem for what I've got with those folded in.
+> Do you see any problems with that one?  That's the last 5 commits in there...
 
-Yes, please wait for the other patch if it's not in his tree yet and apply the two together.
+It's mostly fine, I've no problem with going your way instead of what
+we had in mmotm; but I have seen some problems with it, and had been
+intending to send you a fixup patch tonight (shmem_reconfigure() missing
+unlock on error is the main problem, but there are other fixes needed).
 
-Thank you,
-Fabian
+But I'm growing tired. I've a feeling my "swap" of the mpols, instead
+of immediate mpol_put(), was necessary to protect against a race with
+shmem_get_sbmpol(), but I'm not clear-headed enough to trust myself on
+that now.  And I've a mystery to solve, that shmem_reconfigure() gets
+stuck into showing the wrong error message.
+
+Tomorrow....
+
+Oh, and my first attempt to build and boot that series over 5.3-rc5
+wouldn't boot. Luckily there was a tell-tale "i915" in the stacktrace,
+which reminded me of the drivers/gpu/drm/i915/gem/i915_gemfs.c fix
+we discussed earlier in the cycle.  That is of course in linux-next
+by now, but I wonder if your branch ought to contain a duplicate of
+that fix, so that people with i915 doing bisections on 5.4-rc do not
+fall into an unbootable hole between vfs and gpu merges.
+
+Hugh
