@@ -2,116 +2,109 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2859C49ED7
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:51:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C5ACC49ED8
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C344D21479
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:51:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="E7ZcTs+M"
+	by mail.kernel.org (Postfix) with ESMTP id 3CB2321479
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:51:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393422AbfIJOvY (ORCPT
+        id S2403831AbfIJOv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 10:51:24 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:40319 "EHLO ozlabs.org"
+        Tue, 10 Sep 2019 10:51:58 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:23719 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726535AbfIJOvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 10:51:24 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46SSdw1nBFz9s4Y;
-        Wed, 11 Sep 2019 00:51:15 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1568127081;
-        bh=xTGng1PFAw78WfL/fbqCAECPSaVA5i4x9d/+ZBoGsSU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=E7ZcTs+M6FsovY4pIjQGIN90fyQFtRrLsft/EcxDgKLua2H+zPKsLJLvSmN3dQA5V
-         VnIPD/n/DcgEq/yffUG9SMhlINd3uKqu/o8/pF/bJKZIM/U8rpptuwU6gC8IBP0D6H
-         r86RvaHaV2In716tyx6AgCFe+rtZNqxeoPwsU+JUwSPf0IQe374DE682OXXT9kc3ja
-         0IRkctlZinzXpaqT6XWJ+ThU9v7/+9GNe4JT6OrvWLiebhRUzXhcOF+g7/EfgJfJHm
-         4G5EpA0jelHnka9nNukwZUTNEwSH5iVpPd74CYcnyvX1daZzZXVG3P78TEePHStokY
-         NqTykjC9JYAEA==
-Date:   Wed, 11 Sep 2019 00:51:05 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Linux Crypto List <linux-crypto@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: linux-next: Fixes tags need some work in the crypto tree
-Message-ID: <20190911005105.748a9c9d@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/mg/xGGmHn51/jLzy/PaNEfF";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        id S2393454AbfIJOv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 10:51:58 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46SSfg4bygz9tyfH;
+        Tue, 10 Sep 2019 16:51:55 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id KXm1t-ZnXWpN; Tue, 10 Sep 2019 16:51:55 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46SSfg0PKyz9tyfF;
+        Tue, 10 Sep 2019 16:51:55 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8CDC68B88B;
+        Tue, 10 Sep 2019 16:51:56 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 3u6XCYj-DB3d; Tue, 10 Sep 2019 16:51:56 +0200 (CEST)
+Received: from pc16032vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 558258B885;
+        Tue, 10 Sep 2019 16:51:56 +0200 (CEST)
+Received: by pc16032vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 30D986B750; Tue, 10 Sep 2019 14:51:56 +0000 (UTC)
+Message-Id: <eb3d8f42231aec65b64b079dd17bd6c008a3fe29.1568127106.git.christophe.leroy@c-s.fr>
+From:   Trond Myklebust <trond.myklebust@hammerspace.com>
+Subject: [PATCH v2 1/2] NFS: Fix inode fileid checks in attribute revalidation
+ code
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Tue, 10 Sep 2019 14:51:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/mg/xGGmHn51/jLzy/PaNEfF
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+We want to throw out the attrbute if it refers to the mounted on fileid,
+and not the real fileid. However we do not want to block cache consistency
+updates from NFSv4 writes.
 
-Hi all,
+Reported-by: Murphy Zhou <jencce.kernel@gmail.com>
+Fixes: 7e10cc25bfa0 ("NFS: Don't refresh attributes with mounted-on-file...")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ fs/nfs/inode.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-In commit
+diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+index c764cfe456e5..2a03bfeec10a 100644
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -1403,11 +1403,12 @@ static int nfs_check_inode_attributes(struct inode *inode, struct nfs_fattr *fat
+ 	if (NFS_PROTO(inode)->have_delegation(inode, FMODE_READ))
+ 		return 0;
+ 
+-	/* No fileid? Just exit */
+-	if (!(fattr->valid & NFS_ATTR_FATTR_FILEID))
+-		return 0;
++	if (!(fattr->valid & NFS_ATTR_FATTR_FILEID)) {
++		/* Only a mounted-on-fileid? Just exit */
++		if (fattr->valid & NFS_ATTR_FATTR_MOUNTED_ON_FILEID)
++			return 0;
+ 	/* Has the inode gone and changed behind our back? */
+-	if (nfsi->fileid != fattr->fileid) {
++	} else if (nfsi->fileid != fattr->fileid) {
+ 		/* Is this perhaps the mounted-on fileid? */
+ 		if ((fattr->valid & NFS_ATTR_FATTR_MOUNTED_ON_FILEID) &&
+ 		    nfsi->fileid == fattr->mounted_on_fileid)
+@@ -1807,11 +1808,12 @@ static int nfs_update_inode(struct inode *inode, struct nfs_fattr *fattr)
+ 			nfs_display_fhandle_hash(NFS_FH(inode)),
+ 			atomic_read(&inode->i_count), fattr->valid);
+ 
+-	/* No fileid? Just exit */
+-	if (!(fattr->valid & NFS_ATTR_FATTR_FILEID))
+-		return 0;
++	if (!(fattr->valid & NFS_ATTR_FATTR_FILEID)) {
++		/* Only a mounted-on-fileid? Just exit */
++		if (fattr->valid & NFS_ATTR_FATTR_MOUNTED_ON_FILEID)
++			return 0;
+ 	/* Has the inode gone and changed behind our back? */
+-	if (nfsi->fileid != fattr->fileid) {
++	} else if (nfsi->fileid != fattr->fileid) {
+ 		/* Is this perhaps the mounted-on fileid? */
+ 		if ((fattr->valid & NFS_ATTR_FATTR_MOUNTED_ON_FILEID) &&
+ 		    nfsi->fileid == fattr->mounted_on_fileid)
+-- 
+2.13.3
 
-  f2ef960231d7 ("crypto: caam - dispose of IRQ mapping only after IRQ is fr=
-eed")
-
-Fixes tag
-
-  Fixes: f314f12db65c ("crypto: caam - convert caam_jr_init() to use devres=
-")
-
-has these problem(s):
-
-  - Target SHA1 does not exist
-
-Did you mean
-
-Fixes: a6c4194ead00 ("crypto: caam - convert caam_jr_init() to use devres")
-
-In commit
-
-  796114f5c522 ("crypto: caam - make sure clocks are enabled first")
-
-Fixes tag
-
-  Fixes: 41fc54afae70 ("crypto: caam - simplfy clock initialization")
-
-has these problem(s):
-
-  - Target SHA1 does not exist
-
-Did you mean
-
-Fixes: 51e002e949d4 ("crypto: caam - simplfy clock initialization")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/mg/xGGmHn51/jLzy/PaNEfF
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl13uFkACgkQAVBC80lX
-0Gxl1gf/eyJ+2T3PuEA0TkBug0dlrEhXaXly7GL4XRfavmaq4OuRUjniYKYBgGhS
-54zFsqGPJSvj547XyVWAbSvkPoR5X+u084dwP2M/33vgEphfFgh5xHe76CzGeEer
-WvAxntziRv9WypHcb+ClzhRSado9trr9WvRrb2l14PH2YQFZyULA08Zvn+Lcox3W
-66OaHPT3AiNw+AmPn07u4yYApk0XsUQEG2C665w3m2giJ9MGvDln7NpJCk1lDkRl
-LzImsBMvJEhVFXP6ZnIf6nzij6lGZpltzUYNN+ijVFyMKC4tZ3tIxAZWGK0YAV0C
-1I476SrKUsmCQ3JKDP/En0e1yXJ6Gw==
-=CXNa
------END PGP SIGNATURE-----
-
---Sig_/mg/xGGmHn51/jLzy/PaNEfF--
