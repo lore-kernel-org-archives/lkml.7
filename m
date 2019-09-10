@@ -2,71 +2,127 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F93C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D2ECC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1CA020872
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:41:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 618A520872
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:43:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jKHppvFk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732907AbfIJIlh (ORCPT
+        id S1733080AbfIJInH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 04:41:37 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2260 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726121AbfIJIlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 04:41:36 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 4BA335619E8BE2D3678D;
-        Tue, 10 Sep 2019 16:41:34 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 10 Sep 2019 16:41:24 +0800
-From:   Mao Wenan <maowenan@huawei.com>
-To:     <tsbogend@alpha.franken.de>, <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>, Mao Wenan <maowenan@huawei.com>
-Subject: [PATCH net] net: sonic: replace dev_kfree_skb in sonic_send_packet
-Date:   Tue, 10 Sep 2019 16:58:48 +0800
-Message-ID: <20190910085848.144780-1-maowenan@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 10 Sep 2019 04:43:07 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40026 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbfIJInH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 04:43:07 -0400
+Received: by mail-wr1-f66.google.com with SMTP id w13so18362963wru.7;
+        Tue, 10 Sep 2019 01:43:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=nfdC2GGtaooPtZtmidwW3K7yrWTHhue1SpTbAz123sM=;
+        b=jKHppvFkO5Gt5906dogykoF3lYe9HZbBaPvbhIUFyv+x7WW/g8Sdj17t4VhfEqZpEB
+         q4k4j3WBTG90HOZP1t2HW994ApnivdCukvcifEY+8RQbGxHF4oTeiUeCH1ywXaT/bcZT
+         GTxMMZ5NKWsd1gCNCOZ25vYup9pxunGCqnTVnrJ6EOLCk5U328VUNYDCrrYSymggX6On
+         18z3mD1KH5AyFou6teiXOU/rPf+/P6ZIrWLNzyBIJC6FMQKDcIrAqyOc6YAdmgDej+2F
+         7T49SC1PwKbY8Uyz1vvf3trKAh/IHBpzSKvh6uUF2YuTxi9OlJq4A3CrPj483kpYWcUr
+         4Rrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=nfdC2GGtaooPtZtmidwW3K7yrWTHhue1SpTbAz123sM=;
+        b=tvz0D22PzhvMRWQSk/3OUMW1Byn4i86Y7I5Z5EHcvv65NJyHUemPrQ7RjG5MDZzk1f
+         grqThqlZxyqIJZdJYWxDqpNhmLiqtnAQTA+1fPQ7fRR6LT1p+9Ux+Ma4VcIIywvjKlG9
+         5BBXU/lPWd5FTltWSnI+vInSEIZnzYNmXvnRnJJD3brmtEoZcYF9TgY+scBtfeFhSMNN
+         jCJHSrCtQsgnHZpFkFwMXIdYiI+37RLI7n/+I6z9CTGiiHpMkbMVcvGVIZVmQlsZdVvJ
+         LQthHhSonBmk8pIh8ndmZKvdzMvHA06+Vg2s9NLhHxRC/x1Eet23zNpWsbeyvY0R1U6a
+         PfDA==
+X-Gm-Message-State: APjAAAW5ofdmbFG9FBa5XlP3mJ3nfu+omEbAm6XoRIwo15BpHpk/K5/N
+        u6NXTzZ69qQWhiS+MiB/7Oc8VoQ6z5g=
+X-Google-Smtp-Source: APXvYqydvCw8RjIL5trT9vYV+h75kxjAAQgjOhtgr/ThwUm0YuVUtshKI2bG//L18ev46IW1+a6HAA==
+X-Received: by 2002:a5d:6604:: with SMTP id n4mr24405862wru.267.1568104984503;
+        Tue, 10 Sep 2019 01:43:04 -0700 (PDT)
+Received: from arch-late ([148.69.85.38])
+        by smtp.gmail.com with ESMTPSA id n8sm3473721wma.7.2019.09.10.01.43.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Sep 2019 01:43:03 -0700 (PDT)
+References: <20190906150823.30859-1-colin.king@canonical.com>
+User-agent: mu4e 1.2.0; emacs 27.0.50
+From:   Rui Miguel Silva <rmfrfs@gmail.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-arm-kernel@lists.infradead.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media: imx7-mipi-csis: make array 'registers' static const, makes object smaller
+In-reply-to: <20190906150823.30859-1-colin.king@canonical.com>
+Date:   Tue, 10 Sep 2019 09:43:01 +0100
+Message-ID: <m3y2ywley2.fsf@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sonic_send_packet will be processed in irq or none
-irq context, so it would better use dev_kfree_skb_any
-instead of dev_kfree_skb.
+Hi Colin,
+Thanks for the patch.
 
-Fixes: d9fb9f384292 ("*sonic/natsemi/ns83829: Move the National Semi-conductor drivers")
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
----
- drivers/net/ethernet/natsemi/sonic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Fri 06 Sep 2019 at 16:08, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> Don't populate the array 'registers' on the stack but instead make it
+> static const. Makes the object code smaller by 10 bytes.
+>
+>
+> Before:
+>    text	   data	    bss	    dec	    hex	filename
+>   20138	   5196	    128	  25462	   6376	staging/media/imx/imx7-mipi-csis.o
+>
+> After:
+>    text	   data	    bss	    dec	    hex	filename
+>   20032	   5292	    128	  25452	   636c	staging/media/imx/imx7-mipi-csis.o
+>
+> (gcc version 9.2.1, amd64)
+>
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-diff --git a/drivers/net/ethernet/natsemi/sonic.c b/drivers/net/ethernet/natsemi/sonic.c
-index 18fd62fbfb64..b339125b2f09 100644
---- a/drivers/net/ethernet/natsemi/sonic.c
-+++ b/drivers/net/ethernet/natsemi/sonic.c
-@@ -233,7 +233,7 @@ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
- 	laddr = dma_map_single(lp->device, skb->data, length, DMA_TO_DEVICE);
- 	if (!laddr) {
- 		pr_err_ratelimited("%s: failed to map tx DMA buffer.\n", dev->name);
--		dev_kfree_skb(skb);
-+		dev_kfree_skb_any(skb);
- 		return NETDEV_TX_OK;
- 	}
- 
--- 
-2.20.1
+Looks very good to me.
+Reviewed-by: Rui Miguel Silva <rmfrfs@gmail.com>
+
+Cheers,
+   Rui
+> ---
+>  drivers/staging/media/imx/imx7-mipi-csis.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c b/drivers/staging/media/imx/imx7-mipi-csis.c
+> index 73d8354e618c..f8a97b7e2535 100644
+> --- a/drivers/staging/media/imx/imx7-mipi-csis.c
+> +++ b/drivers/staging/media/imx/imx7-mipi-csis.c
+> @@ -293,7 +293,7 @@ static int mipi_csis_dump_regs(struct csi_state *state)
+>  	struct device *dev = &state->pdev->dev;
+>  	unsigned int i;
+>  	u32 cfg;
+> -	struct {
+> +	static const struct {
+>  		u32 offset;
+>  		const char * const name;
+>  	} registers[] = {
 
