@@ -2,106 +2,89 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FEDC4740A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 01:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C78EC4740C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 01:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83DAC21D79
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 01:27:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CwKvZC/r"
+	by mail.kernel.org (Postfix) with ESMTP id 2FA9321726
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 01:39:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392371AbfIJB1q (ORCPT
+        id S2392452AbfIJBjt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 21:27:46 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46571 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390949AbfIJB1p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 21:27:45 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q5so10491336pfg.13
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 18:27:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=z0ivIH0CLLNNjAWBlrwIKDFI2cokRF0sKteG5gWpNc4=;
-        b=CwKvZC/r+gmvybd4uHXDOj6GImjAwuSp/3ZG529ovEbvTmzdB+ugI3QMZykaj8Vj0b
-         +3cW7ORGPP38mahjYemQIFY/ZLI2B20X3aL2SSMn+G/+VM3m9Wznt4MwsSZo/MUw5A7t
-         IZdcmAk2HpK4IVD0MQ8IOVzv+gqHN7182CP9plZhTaT5FkAUrHLHoz0f7ntiZR3FwipF
-         U9Dkjds7cDIfUDgvErgcoSjEJ3wGlvku1xZeq5aARNTJTDSg6LEm0wrNzk55E62e8ifk
-         UmdOds+v5ABGh2/f14kh4MZqCAZDFiSIDQBaFJtIbz14tCnH8GMbflVYQSqmpZp1dlyw
-         pevg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=z0ivIH0CLLNNjAWBlrwIKDFI2cokRF0sKteG5gWpNc4=;
-        b=VbBO8nnLixNLRvgv4sS953hlz1oqGtjF2Ov1XPRFjMj0F10J46sT2jc5aNsZyLnrF/
-         M1iLR0RZWyOiUpfG1Ur8P8UHHuDq23Xl3z1v2Wxw5K4+K0nCpHyS3vycQ1WaJGK+GFVz
-         VDbJHZf/99mxCGdiFVLbtP3KHsmAD7WbALoaBWDzsBTgMp3xdGLFb6qiLDnpn3wSA4Fa
-         jNiojbm4Sa3rscpbjeYgxIBaTp7OXj/NQ5KtD67we6IzzD4U+/sMzxhkISy5i5yN5m6Y
-         spY0544ZoJ+okzb0JT1/r0px4VZrOdQ5UihXpgqV47QeQ3bczrsEhQWp0sFZTC6Y9e7J
-         2Iug==
-X-Gm-Message-State: APjAAAUMf45qs1i1ZVjwCWScSfswrQ63I7NVfVQdRibm53PdMaF1+x++
-        WWbPi4HPEw47ft5etuK3fqo=
-X-Google-Smtp-Source: APXvYqzzsQDdtbXZUkzusTKy4WxRxPWuZxQNE+lSoOl5lbcBkgjJohKXfZw/PYBmP5eYuUnatXVOUg==
-X-Received: by 2002:a62:3893:: with SMTP id f141mr15612910pfa.221.1568078864996;
-        Mon, 09 Sep 2019 18:27:44 -0700 (PDT)
-Received: from localhost.localdomain.localdomain ([2408:823c:c11:160:b8c3:8577:bf2f:3])
-        by smtp.gmail.com with ESMTPSA id b20sm19558629pff.158.2019.09.09.18.27.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Sep 2019 18:27:44 -0700 (PDT)
-From:   Pengfei Li <lpf.vector@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     vbabka@suse.cz, cl@linux.com, penberg@kernel.org,
-        rientjes@google.com, iamjoonsoo.kim@lge.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, guro@fb.com,
-        Pengfei Li <lpf.vector@gmail.com>
-Subject: [PATCH v3 4/4] mm, slab_common: Make the loop for initializing KMALLOC_DMA start from 1
-Date:   Tue, 10 Sep 2019 09:26:52 +0800
-Message-Id: <20190910012652.3723-5-lpf.vector@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190910012652.3723-1-lpf.vector@gmail.com>
-References: <20190910012652.3723-1-lpf.vector@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 9 Sep 2019 21:39:49 -0400
+Received: from mx.socionext.com ([202.248.49.38]:11398 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390948AbfIJBjt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 21:39:49 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 10 Sep 2019 10:39:46 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 19DC1605F8;
+        Tue, 10 Sep 2019 10:39:47 +0900 (JST)
+Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Tue, 10 Sep 2019 10:39:47 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by iyokan.css.socionext.com (Postfix) with ESMTP id D410840373;
+        Tue, 10 Sep 2019 10:39:46 +0900 (JST)
+Received: from user-VB.e01.socionext.com (unknown [10.213.119.151])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id BFD711204B3;
+        Tue, 10 Sep 2019 10:39:46 +0900 (JST)
+From:   Takao Orito <orito.takao@socionext.com>
+To:     ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        adrian.hunter@intel.com
+Cc:     linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, masami.hiramatsu@linaro.org,
+        jaswinder.singh@linaro.org, sugaya.taichi@socionext.com,
+        kasai.kazuhiro@socionext.com, kanematsu.shinji@socionext.com,
+        orito.takao@socionext.com
+Subject: [PATCH v3 0/2] mmc: sdhci-milbeaut: add Milbeaut SD driver
+Date:   Tue, 10 Sep 2019 10:40:31 +0900
+Message-Id: <1568079631-28808-1-git-send-email-orito.takao@socionext.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KMALLOC_DMA will be initialized only if KMALLOC_NORMAL with
-the same index exists.
+The following patches add driver for SD Host controller on
+Socionext's Milbeaut M10V platforms.
 
-And kmalloc_caches[KMALLOC_NORMAL][0] is always NULL.
+SD Host controller on Milbeaut consists of two controller parts.
+One is core controller F_SDH30, this is similar to sdhci-fujitsu
+controller.
+Another is bridge controller. This bridge controller is not compatible
+with sdhci-fujitsu controller. This is special for Milbeaut series.
 
-Therefore, the loop that initializes KMALLOC_DMA should start
-at 1 instead of 0, which will reduce 1 meaningless attempt.
+It has the several parts,
+ - reset control
+ - clock enable / select for SDR50/25/12
+ - hold control of DATA/CMD line
+ - select characteristics for WP/CD/LED line
+ - Re-tuning control for mode3
+ - Capability setting
+   Timeout Clock / Base Clock / Timer Count for Re-Tuning /
+   Debounce period
+These requires special procedures at reset or clock enable/change or
+ further tuning of clock.
 
-Signed-off-by: Pengfei Li <lpf.vector@gmail.com>
----
- mm/slab_common.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Takao Orito (2):
+  dt-bindings: mmc: add DT bindings for Milbeaut SD controller
+  mmc: sdhci-milbeaut: add Milbeaut SD controller driver
 
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index af45b5278fdc..c81fc7dc2946 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -1236,7 +1236,7 @@ void __init create_kmalloc_caches(slab_flags_t flags)
- 	slab_state = UP;
- 
- #ifdef CONFIG_ZONE_DMA
--	for (i = 0; i <= KMALLOC_SHIFT_HIGH; i++) {
-+	for (i = 1; i <= KMALLOC_SHIFT_HIGH; i++) {
- 		struct kmem_cache *s = kmalloc_caches[KMALLOC_NORMAL][i];
- 
- 		if (s) {
+ .../devicetree/bindings/mmc/sdhci-milbeaut.txt     |  30 ++
+ drivers/mmc/host/Kconfig                           |  11 +
+ drivers/mmc/host/Makefile                          |   1 +
+ drivers/mmc/host/sdhci-milbeaut.c                  | 362 +++++++++++++++++++++
+ drivers/mmc/host/sdhci_f_sdh30.c                   |  26 +-
+ drivers/mmc/host/sdhci_f_sdh30.h                   |  32 ++
+ 6 files changed, 437 insertions(+), 25 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-milbeaut.txt
+ create mode 100644 drivers/mmc/host/sdhci-milbeaut.c
+ create mode 100644 drivers/mmc/host/sdhci_f_sdh30.h
+
 -- 
-2.21.0
+1.9.1
+
 
