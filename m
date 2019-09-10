@@ -2,127 +2,275 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D2ECC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E9EC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 618A520872
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:43:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jKHppvFk"
+	by mail.kernel.org (Postfix) with ESMTP id 5326920872
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:44:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568105045;
+	bh=n2FnhZvZY86zGRCH5evX7+DlwR5AirNLeqrX264yekM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ZzCJIZ3Jn4emUiz/gMNzz5iB5z53DT97FuAfjJeU8kqF+KNstRzVYlyIoglypnTSJ
+	 G59NZl2WcWap246HfFsaeAMkhx40ACLEblV07fvMecH3ztxVPpmwYnXqiosBAz06CS
+	 utl9vYuMfwfXOnAQCfBiQreqJLMd4jrAjzxuqenM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733080AbfIJInH (ORCPT
+        id S1733195AbfIJIoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 04:43:07 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40026 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbfIJInH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 04:43:07 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w13so18362963wru.7;
-        Tue, 10 Sep 2019 01:43:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=nfdC2GGtaooPtZtmidwW3K7yrWTHhue1SpTbAz123sM=;
-        b=jKHppvFkO5Gt5906dogykoF3lYe9HZbBaPvbhIUFyv+x7WW/g8Sdj17t4VhfEqZpEB
-         q4k4j3WBTG90HOZP1t2HW994ApnivdCukvcifEY+8RQbGxHF4oTeiUeCH1ywXaT/bcZT
-         GTxMMZ5NKWsd1gCNCOZ25vYup9pxunGCqnTVnrJ6EOLCk5U328VUNYDCrrYSymggX6On
-         18z3mD1KH5AyFou6teiXOU/rPf+/P6ZIrWLNzyBIJC6FMQKDcIrAqyOc6YAdmgDej+2F
-         7T49SC1PwKbY8Uyz1vvf3trKAh/IHBpzSKvh6uUF2YuTxi9OlJq4A3CrPj483kpYWcUr
-         4Rrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=nfdC2GGtaooPtZtmidwW3K7yrWTHhue1SpTbAz123sM=;
-        b=tvz0D22PzhvMRWQSk/3OUMW1Byn4i86Y7I5Z5EHcvv65NJyHUemPrQ7RjG5MDZzk1f
-         grqThqlZxyqIJZdJYWxDqpNhmLiqtnAQTA+1fPQ7fRR6LT1p+9Ux+Ma4VcIIywvjKlG9
-         5BBXU/lPWd5FTltWSnI+vInSEIZnzYNmXvnRnJJD3brmtEoZcYF9TgY+scBtfeFhSMNN
-         jCJHSrCtQsgnHZpFkFwMXIdYiI+37RLI7n/+I6z9CTGiiHpMkbMVcvGVIZVmQlsZdVvJ
-         LQthHhSonBmk8pIh8ndmZKvdzMvHA06+Vg2s9NLhHxRC/x1Eet23zNpWsbeyvY0R1U6a
-         PfDA==
-X-Gm-Message-State: APjAAAW5ofdmbFG9FBa5XlP3mJ3nfu+omEbAm6XoRIwo15BpHpk/K5/N
-        u6NXTzZ69qQWhiS+MiB/7Oc8VoQ6z5g=
-X-Google-Smtp-Source: APXvYqydvCw8RjIL5trT9vYV+h75kxjAAQgjOhtgr/ThwUm0YuVUtshKI2bG//L18ev46IW1+a6HAA==
-X-Received: by 2002:a5d:6604:: with SMTP id n4mr24405862wru.267.1568104984503;
-        Tue, 10 Sep 2019 01:43:04 -0700 (PDT)
-Received: from arch-late ([148.69.85.38])
-        by smtp.gmail.com with ESMTPSA id n8sm3473721wma.7.2019.09.10.01.43.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Sep 2019 01:43:03 -0700 (PDT)
-References: <20190906150823.30859-1-colin.king@canonical.com>
-User-agent: mu4e 1.2.0; emacs 27.0.50
-From:   Rui Miguel Silva <rmfrfs@gmail.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-arm-kernel@lists.infradead.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: imx7-mipi-csis: make array 'registers' static const, makes object smaller
-In-reply-to: <20190906150823.30859-1-colin.king@canonical.com>
-Date:   Tue, 10 Sep 2019 09:43:01 +0100
-Message-ID: <m3y2ywley2.fsf@gmail.com>
+        Tue, 10 Sep 2019 04:44:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46560 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726496AbfIJIoE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 04:44:04 -0400
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87FFC20872;
+        Tue, 10 Sep 2019 08:44:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568105042;
+        bh=n2FnhZvZY86zGRCH5evX7+DlwR5AirNLeqrX264yekM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tCo1Kq8SFbvD4DYtaThEjzPnJ8wMI1qw6EzeYppN+oebsEi1BVcA7WO5hJoIkPZ4M
+         15Ua51GgYfkUlB2GFraSGek9uGRDMdBD4zEWOFoUTC6WUivURgmZHtN7m3QVItkC9C
+         zxa2WuJkfTRc78Gbpek2RsCOfrlaW7sXlCQRfq0c=
+Received: by mail-lf1-f48.google.com with SMTP id q27so12753764lfo.10;
+        Tue, 10 Sep 2019 01:44:02 -0700 (PDT)
+X-Gm-Message-State: APjAAAXzE99L3aYSniq0OA8PoILJ/59ABgN/Grqeb/hjiFA90iEVKqvF
+        HvW2+FPOf4CmKXkSF9UzAx96ApujOwXrfhJCO98=
+X-Google-Smtp-Source: APXvYqyXRx393/LoDIHBKgAXm7I9lWbgJlOjw6C1wPm1MmUEsJ2qFw1Q5BapRrLrck9Q02orzG3OjXJU3ctiAn/YZg0=
+X-Received: by 2002:a19:770a:: with SMTP id s10mr1997656lfc.30.1568105040685;
+ Tue, 10 Sep 2019 01:44:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190909183436.9045-1-krzk@kernel.org> <CAL_JsqJpZ-64Y7p1w5ctMwbjdftQPLjeh3XRHkBeS6tfYY0a+A@mail.gmail.com>
+In-Reply-To: <CAL_JsqJpZ-64Y7p1w5ctMwbjdftQPLjeh3XRHkBeS6tfYY0a+A@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Tue, 10 Sep 2019 10:43:49 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPf2b5QsNWq_7D0tyXuEcp93F_CsxEkAze_oV8Z07oNJXA@mail.gmail.com>
+Message-ID: <CAJKOXPf2b5QsNWq_7D0tyXuEcp93F_CsxEkAze_oV8Z07oNJXA@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/2] dt-bindings: pwm: Convert PWM bindings to json-schema
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Maciej Falkowski <m.falkowski@samsung.com>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Colin,
-Thanks for the patch.
+On Tue, 10 Sep 2019 at 10:33, Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Mon, Sep 9, 2019 at 7:35 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >
+> > Convert generic PWM bindings to DT schema format using json-schema.  The
+> > consumer bindings are split to separate file.
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > ---
+> >  .../devicetree/bindings/clock/pwm-clock.txt   |  2 +-
+> >  .../bindings/display/bridge/ti,sn65dsi86.txt  |  2 +-
+> >  .../devicetree/bindings/display/ssd1307fb.txt |  2 +-
+> >  .../bindings/leds/backlight/pwm-backlight.txt |  2 +-
+> >  .../devicetree/bindings/leds/leds-pwm.txt     |  2 +-
+> >  .../devicetree/bindings/mfd/max77693.txt      |  2 +-
+> >  .../bindings/pwm/atmel-hlcdc-pwm.txt          |  2 +-
+> >  .../devicetree/bindings/pwm/atmel-pwm.txt     |  2 +-
+> >  .../devicetree/bindings/pwm/atmel-tcb-pwm.txt |  2 +-
+> >  .../bindings/pwm/brcm,bcm7038-pwm.txt         |  2 +-
+> >  .../bindings/pwm/brcm,iproc-pwm.txt           |  2 +-
+> >  .../devicetree/bindings/pwm/brcm,kona-pwm.txt |  2 +-
+> >  .../devicetree/bindings/pwm/img-pwm.txt       |  2 +-
+> >  .../devicetree/bindings/pwm/imx-pwm.txt       |  2 +-
+> >  .../devicetree/bindings/pwm/imx-tpm-pwm.txt   |  2 +-
+> >  .../bindings/pwm/lpc1850-sct-pwm.txt          |  2 +-
+> >  .../devicetree/bindings/pwm/mxs-pwm.txt       |  2 +-
+> >  .../bindings/pwm/nvidia,tegra20-pwm.txt       |  2 +-
+> >  .../bindings/pwm/nxp,pca9685-pwm.txt          |  2 +-
+> >  .../devicetree/bindings/pwm/pwm-bcm2835.txt   |  2 +-
+> >  .../devicetree/bindings/pwm/pwm-berlin.txt    |  2 +-
+> >  .../bindings/pwm/pwm-consumers.yaml           | 76 +++++++++++++++++++
+> >  .../devicetree/bindings/pwm/pwm-fsl-ftm.txt   |  2 +-
+> >  .../devicetree/bindings/pwm/pwm-hibvt.txt     |  2 +-
+> >  .../devicetree/bindings/pwm/pwm-lp3943.txt    |  2 +-
+> >  .../devicetree/bindings/pwm/pwm-mediatek.txt  |  2 +-
+> >  .../devicetree/bindings/pwm/pwm-meson.txt     |  2 +-
+> >  .../devicetree/bindings/pwm/pwm-mtk-disp.txt  |  2 +-
+> >  .../bindings/pwm/pwm-omap-dmtimer.txt         |  2 +-
+> >  .../devicetree/bindings/pwm/pwm-rockchip.txt  |  2 +-
+> >  .../devicetree/bindings/pwm/pwm-sifive.txt    |  2 +-
+> >  .../devicetree/bindings/pwm/pwm-stm32-lp.txt  |  2 +-
+> >  .../devicetree/bindings/pwm/pwm-stm32.txt     |  2 +-
+> >  .../devicetree/bindings/pwm/pwm-tiecap.txt    |  2 +-
+> >  .../devicetree/bindings/pwm/pwm-tiehrpwm.txt  |  2 +-
+> >  .../devicetree/bindings/pwm/pwm-zx.txt        |  2 +-
+> >  Documentation/devicetree/bindings/pwm/pwm.txt | 69 -----------------
+> >  .../devicetree/bindings/pwm/pwm.yaml          | 30 ++++++++
+> >  .../bindings/pwm/renesas,pwm-rcar.txt         |  2 +-
+> >  .../bindings/pwm/renesas,tpu-pwm.txt          |  4 +-
+> >  .../devicetree/bindings/pwm/spear-pwm.txt     |  2 +-
+> >  .../devicetree/bindings/pwm/st,stmpe-pwm.txt  |  2 +-
+> >  .../devicetree/bindings/pwm/ti,twl-pwm.txt    |  2 +-
+> >  .../devicetree/bindings/pwm/ti,twl-pwmled.txt |  2 +-
+> >  .../devicetree/bindings/pwm/vt8500-pwm.txt    |  2 +-
+> >  .../bindings/regulator/pwm-regulator.txt      |  2 +-
+> >  .../devicetree/bindings/timer/ingenic,tcu.txt |  2 +-
+>
+> We've been leaving the .txt file with a reference to the schema file
+> to avoid doing all the updates. But as you've done it already, that's
+> good.
+>
+> >  47 files changed, 151 insertions(+), 114 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-consumers.yaml
+> >  delete mode 100644 Documentation/devicetree/bindings/pwm/pwm.txt
+> >  create mode 100644 Documentation/devicetree/bindings/pwm/pwm.yaml
+>
+> [...]
+>
+> > diff --git a/Documentation/devicetree/bindings/pwm/pwm-consumers.yaml b/Documentation/devicetree/bindings/pwm/pwm-consumers.yaml
+> > new file mode 100644
+> > index 000000000000..39c844fe6338
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pwm/pwm-consumers.yaml
+>
+> We already have a PWM consumer schema in dt-schema repository. It
+> doesn't have the descriptions because we need permission to relicense.
+> My aim is to have all common schema in the dt-schema repo, but we have
+> a mixture because of needing to relicense.
 
-On Fri 06 Sep 2019 at 16:08, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
->
-> Don't populate the array 'registers' on the stack but instead make it
-> static const. Makes the object code smaller by 10 bytes.
->
->
-> Before:
->    text	   data	    bss	    dec	    hex	filename
->   20138	   5196	    128	  25462	   6376	staging/media/imx/imx7-mipi-csis.o
->
-> After:
->    text	   data	    bss	    dec	    hex	filename
->   20032	   5292	    128	  25452	   636c	staging/media/imx/imx7-mipi-csis.o
->
-> (gcc version 9.2.1, amd64)
->
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+I forgot to check it. In such case the pwm-consumers here do not offer
+much more, except some description and examples. I guess it can be
+just dropped then?
 
-Looks very good to me.
-Reviewed-by: Rui Miguel Silva <rmfrfs@gmail.com>
-
-Cheers,
-   Rui
-> ---
->  drivers/staging/media/imx/imx7-mipi-csis.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> > @@ -0,0 +1,76 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/pwm/pwm-consumers.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Specifying PWM information for devices
+> > +
+> > +maintainers:
+> > +  - Thierry Reding <thierry.reding@gmail.com>
+> > +
+> > +description: |
+> > +  PWM properties should be named "pwms". The exact meaning of each pwms
+> > +  property must be documented in the device tree binding for each device.
+> > +  An optional property "pwm-names" may contain a list of strings to label
+> > +  each of the PWM devices listed in the "pwms" property. If no "pwm-names"
+> > +  property is given, the name of the user node will be used as fallback.
+> > +
+> > +  Drivers for devices that use more than a single PWM device can use the
+> > +  "pwm-names" property to map the name of the PWM device requested by the
+> > +  pwm_get() call to an index into the list given by the "pwms" property.
+> > +
+> > +properties:
+> > +  pwms:
+> > +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> > +    description: |
+> > +      Phandle to PWM controller node and pwm-specifier (controller specific).
+> > +      pwm-specifier typically encodes the chip-relative PWM number and the PWM
+> > +      period in nanoseconds.
+> > +      Optionally, the pwm-specifier can encode a number of flags (defined in
+> > +      <dt-bindings/pwm/pwm.h>) in a third cell:
+> > +        - PWM_POLARITY_INVERTED: invert the PWM signal polarity
+> > +
+> > +  pwm-names:
+> > +    $ref: /schemas/types.yaml#/definitions/string-array
+> > +    description:
+> > +      A list of strings to label each of the PWM devices listed in the "pwms"
+> > +      property. If no "pwm-names" property is given, the name of the user node
+> > +      will be used as fallback.
+> > +
+> > +required:
+> > +  - pwms
 >
-> diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c b/drivers/staging/media/imx/imx7-mipi-csis.c
-> index 73d8354e618c..f8a97b7e2535 100644
-> --- a/drivers/staging/media/imx/imx7-mipi-csis.c
-> +++ b/drivers/staging/media/imx/imx7-mipi-csis.c
-> @@ -293,7 +293,7 @@ static int mipi_csis_dump_regs(struct csi_state *state)
->  	struct device *dev = &state->pdev->dev;
->  	unsigned int i;
->  	u32 cfg;
-> -	struct {
-> +	static const struct {
->  		u32 offset;
->  		const char * const name;
->  	} registers[] = {
+> Doing this means every consumer has to include this file where as I do
+> 'select: true' some every occurrence of these properties is checked.
+> We're generally only including other schema on the provider side.
+>
+> > +
+> > +dependencies:
+> > +  pwm-names: [ pwms ]
+> > +
+> > +examples:
+> > +  - |
+> > +    // The following example could be used to describe a PWM-based
+> > +    // backlight device:
+> > +
+> > +    pwm: pwm {
+> > +      #pwm-cells = <2>;
+> > +    };
+> > +
+> > +    bl: backlight {
+> > +      pwms = <&pwm 0 5000000>;
+> > +      pwm-names = "backlight";
+> > +    };
+> > +
+> > +    // Note that in the example above, specifying the "pwm-names" is redundant
+> > +    // because the name "backlight" would be used as fallback anyway.
+> > +
+> > +  - |
+> > +    // Example with optional PWM specifier for inverse polarity
+> > +
+> > +    #include <dt-bindings/pwm/pwm.h>
+> > +
+> > +    pwm2: pwm {
+> > +      #pwm-cells = <3>;
+> > +    };
+> > +
+> > +    backlight {
+> > +      pwms = <&pwm2 0 5000000 PWM_POLARITY_INVERTED>;
+> > +      pwm-names = "backlight";
+> > +    };
+>
+> > diff --git a/Documentation/devicetree/bindings/pwm/pwm.yaml b/Documentation/devicetree/bindings/pwm/pwm.yaml
+> > new file mode 100644
+> > index 000000000000..5d8029f11ccc
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pwm/pwm.yaml
+> > @@ -0,0 +1,30 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/pwm/pwm.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: PWM controllers (providers)
+> > +
+> > +maintainers:
+> > +  - Thierry Reding <thierry.reding@gmail.com>
+> > +
+> > +properties:
+> > +  $nodename:
+> > +    pattern: "^pwm(@.*)?$"
+>
+> Copy the pattern for spi. We allow for 'pwm-[0-9]' for cases like GPIO PWMs.
 
+Sure
+
+>
+> > +
+> > +  "#pwm-cells":
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+>
+> You don't actually need to define the type as we already have for '#.*-cells'
+
+OK.
+
+Best regards,
+Krzysztof
