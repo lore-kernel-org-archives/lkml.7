@@ -2,93 +2,112 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82FCDC49ED9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 20:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E320C49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 20:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5015E2171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 20:25:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fviAnWWV"
+	by mail.kernel.org (Postfix) with ESMTP id D7E8320692
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 20:26:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726067AbfIJUZR (ORCPT
+        id S1726139AbfIJU00 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 16:25:17 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44894 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725294AbfIJUZQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 16:25:16 -0400
-Received: by mail-wr1-f66.google.com with SMTP id k6so9870047wrn.11;
-        Tue, 10 Sep 2019 13:25:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=va7zx4dWy4opl/0MisZyc5Dgg3A7vjbqzLK/FnBX/Ho=;
-        b=fviAnWWVJY2LWZyAlaPZFkG1cdl//otHF8ct4EeO410hyLBcHPd/6eqIpKhqbLB0nc
-         NAXmIsmJRoD9Qr1ij5k9f05AyQyRVETf3UdJ/f+pQEKVzFuILU/XMFb00dPBBXlKHmjq
-         tq6IWXLkAoLv6e4pTGROdEZdZk/q/nAoYZQHfgFEeTphpqiJ82hYWPO4BKFXidU8rkxY
-         AvmU680qKKnUV10BUlK8USgig7Ot+YDY90jraycKKxyS6N090oV+rGyIpWj6fLVb59Qn
-         H74ui4HynoVaB0/YzYu3HvXysTKS2o8ZLsZ8cabU2yo8uRHvAtO8Ja3C7ziZ67p/gEI3
-         ki2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=va7zx4dWy4opl/0MisZyc5Dgg3A7vjbqzLK/FnBX/Ho=;
-        b=T13ZAWMR6oK5ASMNZ7gJI4TGXSf2ejI8TVdEuiGkFx+E9LWJcVj/w5Kdaqcjdp48Xy
-         z7nGMuctUEiCY92I7InFDxjCtV9w5Sm8L/andWSEpncDNXYZGs/1upQPFx8fOU6B0Z80
-         gLR/lxtbShsUBRILYHaYzvo2XFXhxTk/vnHb1kNcOceBvUAjgNqsuPG+SsSBtXSjke7Z
-         SQMwas7wocWgiNPveVeJ2iJw4iVmcHP1+yFyxseRrhpZI7zmqgPk35OWGsHz8KqULDdR
-         cpRRtjemIBlk8OCpTX1av/BLi+3PWGOFISiyACT+srVUVW2q6HSYuvu1Ggi/1lVhRKna
-         cqHw==
-X-Gm-Message-State: APjAAAUsNGCMqkhXOPDRwlRudnY1AgHM66/xcGv60kgJj1OOgEj+RJLf
-        w10UQYJ3KWkEiQQKg9iBblLxk4yvjuE=
-X-Google-Smtp-Source: APXvYqxopsBTm1LI6ZET3eOZ+cxvt4V+YcW4hRdhrbBo6FMZ0k8YPNAnPTjK3cnFDWGFBSHhF8gPSA==
-X-Received: by 2002:a5d:4f08:: with SMTP id c8mr30042573wru.51.1568147114468;
-        Tue, 10 Sep 2019 13:25:14 -0700 (PDT)
-Received: from rocinante ([91.64.150.195])
-        by smtp.gmail.com with ESMTPSA id g3sm8305904wrq.64.2019.09.10.13.25.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Sep 2019 13:25:13 -0700 (PDT)
-Date:   Tue, 10 Sep 2019 22:25:06 +0200
-From:   Krzysztof Wilczynski <kw@linux.com>
-To:     Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: light: bh1750: Move static keyword to the front of
- declaration
-Message-ID: <20190910202504.GA19939@rocinante>
-References: <20190902113132.26658-1-kw@linux.com>
- <20190908114944.18bb78e3@archlinux>
- <20190908135208.GA29162@rocinante>
- <20190910143550.00000e64@huawei.com>
+        Tue, 10 Sep 2019 16:26:26 -0400
+Received: from mga07.intel.com ([134.134.136.100]:38771 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725263AbfIJU0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 16:26:25 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Sep 2019 13:26:25 -0700
+X-IronPort-AV: E=Sophos;i="5.64,490,1559545200"; 
+   d="scan'208";a="175429665"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Sep 2019 13:26:24 -0700
+Message-ID: <ab45e54fd81589c0e9a0645be5f0b9b4027b93ba.camel@linux.intel.com>
+Subject: Re: [PATCH v9 3/8] mm: Move set/get_pcppage_migratetype to mmzone.h
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     Michal Hocko <mhocko@kernel.org>,
+        Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Oscar Salvador <osalvador@suse.de>,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Pankaj Gupta <pagupta@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
+        "Wang, Wei W" <wei.w.wang@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>, ying.huang@intel.com,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Date:   Tue, 10 Sep 2019 13:26:24 -0700
+In-Reply-To: <20190910174553.GC4023@dhcp22.suse.cz>
+References: <20190907172225.10910.34302.stgit@localhost.localdomain>
+         <20190907172528.10910.37051.stgit@localhost.localdomain>
+         <20190910122313.GW2063@dhcp22.suse.cz>
+         <CAKgT0Ud1xqhEy_LL4AfMgreP0uXrkF-fSDn=6uDXfn7Pvj5AAw@mail.gmail.com>
+         <20190910174553.GC4023@dhcp22.suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190910143550.00000e64@huawei.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Jonathan,
+On Tue, 2019-09-10 at 19:45 +0200, Michal Hocko wrote:
+> On Tue 10-09-19 07:46:50, Alexander Duyck wrote:
+> > On Tue, Sep 10, 2019 at 5:23 AM Michal Hocko <mhocko@kernel.org> wrote:
+> > > On Sat 07-09-19 10:25:28, Alexander Duyck wrote:
+> > > > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > > > 
+> > > > In order to support page reporting it will be necessary to store and
+> > > > retrieve the migratetype of a page. To enable that I am moving the set and
+> > > > get operations for pcppage_migratetype into the mm/internal.h header so
+> > > > that they can be used outside of the page_alloc.c file.
+> > > 
+> > > Please describe who is the user and why does it needs this interface.
+> > > This is really important because migratetype is an MM internal thing and
+> > > external users shouldn't really care about it at all. We really do not
+> > > want a random code to call those, especially the set_pcppage_migratetype.
+> > 
+> > I was using it to store the migratetype of the page so that I could
+> > find the boundary list that contained the reported page as the array
+> > is indexed based on page order and migratetype. However on further
+> > discussion I am thinking I may just use page->index directly to index
+> > into the boundary array. Doing that I should be able to get a very
+> > slight improvement in lookup time since I am not having to pull order
+> > and migratetype and then compute the index based on that. In addition
+> > it becomes much more clear as to what is going on, and if needed I
+> > could add debug checks to verify the page is "Reported" and that the
+> > "Buddy" page type is set.
+> 
+> Be careful though. A free page belongs to the page allocator and it is
+> free to reuse any fields for its purpose so using any of them nilly
+> willy is no go. If you need to stuff something like that then there
+> better be an api the allocator is aware of. My main objection is the
+> abuse migrate type. There might be other ways to express what you need.
+> Please make sure you clearly define that though.
 
-Thank you for the feedback.  I really appreciate it.
+I will. Basically if the Reported is set then it will mean that the index
+value is in use and provides the index into the boundary array. The
+Reported flag will be cleared when the page is pulled from the buddy list
+and in the case of the page being allocated it is already overwritten by
+__rmqueue_smallest calling set_pcppage_migratetype which is what gave me
+the idea to just use that in the first place.
 
-[...]
-> We can do that of course, but that's nothing to do with moving the static
-> keyword to the front of the declaration which is what the patch claims
-> to be doing.
-
-I see your point.  I am going to send a v2 that hopefully will be much
-cleaner and better worded.  Thank you!
-
-Krzysztof
