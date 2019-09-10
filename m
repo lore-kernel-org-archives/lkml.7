@@ -2,170 +2,102 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 226D6C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 594BBC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD10320872
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:48:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="CiW2CUw+"
+	by mail.kernel.org (Postfix) with ESMTP id 39CB120872
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:49:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391303AbfIJJsE (ORCPT
+        id S2391334AbfIJJtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 05:48:04 -0400
-Received: from mail.efficios.com ([167.114.142.138]:42152 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727535AbfIJJsE (ORCPT
+        Tue, 10 Sep 2019 05:49:17 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:41827 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727265AbfIJJtR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 05:48:04 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id E1B93BCDD5;
-        Tue, 10 Sep 2019 05:48:02 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id lpzdfGQbw0SW; Tue, 10 Sep 2019 05:48:02 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 6B6DFBCDCD;
-        Tue, 10 Sep 2019 05:48:02 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 6B6DFBCDCD
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1568108882;
-        bh=IdusK4PuURuSTT8wxQ41V7XVI28sGALL5MVCjAUT6lM=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=CiW2CUw+BauNaL7r3gZSkrCEotim2gRrhdpdhgmqENqWDcHnrxH9ptP4d7YMddtg+
-         T5SAJ8HgG5HEYIF5K0NLSASpjzm3p4J59ikUt6OJ13UnWaJEV0koAFTBRhp16NjCY+
-         DLwjVFQbLJaKSm723W8VPTRQGR2j/YNYX2u9Hw+RSkGT0hTWIwALO/wKy5t8CXjVXt
-         62XnYeo2eWJUwAlmJRYUQkDw84TezHw5aJG7vyp0aN8xaQ9IsgQUCqEU2BlpqqcdFO
-         nqrRQRt/W6fb47AINlIjZv8oO9L2qgYrZK4J0AsrxLZFgnIe16Yjkmw8FoDlDBa7xc
-         YA7cK/GwzOoeQ==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id rW-lRaCiW0vA; Tue, 10 Sep 2019 05:48:02 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id 4893DBCDC1;
-        Tue, 10 Sep 2019 05:48:02 -0400 (EDT)
-Date:   Tue, 10 Sep 2019 05:48:02 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        paulmck <paulmck@linux.ibm.com>, Ingo Molnar <mingo@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Russell King, ARM Linux" <linux@armlinux.org.uk>,
-        Chris Metcalf <cmetcalf@ezchip.com>,
-        Chris Lameter <cl@linux.com>, Kirill Tkhai <tkhai@yandex.ru>,
-        Mike Galbraith <efault@gmx.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>
-Message-ID: <137355288.1941.1568108882233.JavaMail.zimbra@efficios.com>
-In-Reply-To: <CAHk-=wg3AANn8K3OyT7KRNvVC5s0rvWVxXJ=_R+TAd3CGdcF+A@mail.gmail.com>
-References: <20190906082305.GU2349@hirez.programming.kicks-ass.net> <20190908134909.12389-1-mathieu.desnoyers@efficios.com> <CAHk-=wg3AANn8K3OyT7KRNvVC5s0rvWVxXJ=_R+TAd3CGdcF+A@mail.gmail.com>
-Subject: Re: [RFC PATCH 4/4] Fix: sched/membarrier: p->mm->membarrier_state
- racy load (v2)
+        Tue, 10 Sep 2019 05:49:17 -0400
+Received: by mail-qt1-f193.google.com with SMTP id j10so19892965qtp.8;
+        Tue, 10 Sep 2019 02:49:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=JSfsPm8OOMeroYM52zzFmiDbu7+5YUx10p0JkzA7dx8=;
+        b=JopmYea3fE/w7QNA+xqWMpc03gAJFWEUUKvn1DjtHmErGCeCsyTXzPgui+vnKE2WM5
+         KSGfybAPB5lgPMtCXRDMKbK5/yda9nSWcFDKqnMKUbbMnk7H7RGzKTiYVTKxiq18UWse
+         8stNwCMEKtLzoR7m9iNfKgS4/+oXKFM5v+SMEWoWMBvjpl4+b8ivgprvvXEw/iy/Plxb
+         iCTMKhYdyLIUCo6jFoAVvYoYN7DewMtWzvaT81D6eirmpc7pREPUFals3Ks7xSuXewhD
+         YUByY5lheeCREozeWVg4KsehMPub3eNkV4Ij+kilW1K96O7IUX6QJs+ipfw8VV6u1IXL
+         v1Ag==
+X-Gm-Message-State: APjAAAXtazMCTXTfNg7u2xW/ScG1V92C8uOlkonS9DmXvKM4xyyNWZgW
+        6cOp89pML1yjOz5XLcNK30Ir0CsH6yo5VqC/9uY=
+X-Google-Smtp-Source: APXvYqwbr3u1y02e76/2W3wSR+GwWdg6PJL3TQGf0P0/L96UbtcPJGij9lMatNR5TFbo8oM/JpY3M7Bf7OBjM81fXAY=
+X-Received: by 2002:ac8:5306:: with SMTP id t6mr27972543qtn.204.1568108956064;
+ Tue, 10 Sep 2019 02:49:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.15_GA_3829 (ZimbraWebClient - FF68 (Linux)/8.8.15_GA_3829)
-Thread-Topic: sched/membarrier: p->mm->membarrier_state racy load (v2)
-Thread-Index: U08tj4vVS7vLih3Xxyh7ZqZVN5xuZQ==
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 10 Sep 2019 11:49:00 +0200
+Message-ID: <CAK8P3a1Q0ec50n2ueWDKHirpem+SQvsv3sYXzw9EFRqXiUqxUg@mail.gmail.com>
+Subject: [GIT PULL] ipc: fix regressions from y2038 patches
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        David Miller <davem@davemloft.net>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        Matt Turner <mattst88@gmail.com>,
+        Anatoly Pugachev <matorola@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Guo Ren <guoren@kernel.org>, Stafford Horne <shorne@gmail.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Manfred Spraul <manfred@colorfullife.com>,
+        Waiman Long <longman@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Sep 8, 2019, at 5:51 PM, Linus Torvalds torvalds@linux-foundation.org wrote:
+The following changes since commit 089cf7f6ecb266b6a4164919a2e69bd2f938374a:
 
-> On Sun, Sep 8, 2019 at 6:49 AM Mathieu Desnoyers
-> <mathieu.desnoyers@efficios.com> wrote:
->>
->> +static void sync_runqueues_membarrier_state(struct mm_struct *mm)
->> +{
->> +       int membarrier_state = atomic_read(&mm->membarrier_state);
->> +       bool fallback = false;
->> +       cpumask_var_t tmpmask;
->> +
->> +       if (!zalloc_cpumask_var(&tmpmask, GFP_NOWAIT)) {
->> +               /* Fallback for OOM. */
->> +               fallback = true;
->> +       }
->> +
->> +       /*
->> +        * For each cpu runqueue, if the task's mm match @mm, ensure that all
->> +        * @mm's membarrier state set bits are also set in in the runqueue's
->> +        * membarrier state. This ensures that a runqueue scheduling
->> +        * between threads which are users of @mm has its membarrier state
->> +        * updated.
->> +        */
->> +       cpus_read_lock();
->> +       rcu_read_lock();
->> +       for_each_online_cpu(cpu) {
->> +               struct rq *rq = cpu_rq(cpu);
->> +               struct task_struct *p;
->> +
->> +               p = task_rcu_dereference(&rq->curr);
->> +               if (p && p->mm == mm) {
->> +                       if (!fallback)
->> +                               __cpumask_set_cpu(cpu, tmpmask);
->> +                       else
->> +                               smp_call_function_single(cpu, ipi_sync_rq_state,
->> +                                                        mm, 1);
->> +               }
->> +       }
-> 
-> I really absolutely detest this whole "fallback" code.
-> 
-> It will never get any real testing, and the code is just broken.
-> 
-> Why don't you just use the mm_cpumask(mm) unconditionally? Yes, it
-> will possibly call too many CPU's, but this fallback code is just
-> completely disgusting.
-> 
-> Do a simple and clean implementation. Then, if you can show real
-> performance issues (which I doubt), maybe do something else, but even
-> then you should never do something that will effectively create cases
-> that have absolutely zero test-coverage.
+  Linux 5.3-rc7 (2019-09-02 09:57:40 -0700)
 
-A few points worth mentioning here:
+are available in the Git repository at:
 
-1) As I stated earlier, using mm_cpumask in its current form is not
-   an option for membarrier. For two reasons:
+  git://git.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic.git
+tags/ipc-fixes
 
-   A) The mask is not populated on all architectures (e.g. arm64 does
-      not populate it),
+for you to fetch changes up to fb377eb80c80339b580831a3c0fcce34a4c9d1ad:
 
-   B) Even if it was populated on all architectures, we would need to
-      carefully audit and document every spot where this mm_cpumask
-      is set or cleared within each architecture code, and ensure we
-      have the required memory barriers between user-space memory
-      accesses and those stores, documenting those requirements into
-      each architecture code in the process. This seems to be a lot of
-      useless error-prone code churn.
+  ipc: fix sparc64 ipc() wrapper (2019-09-07 21:42:25 +0200)
 
-2) I should actually use GFP_KERNEL rather than GFP_NOWAIT in this
-   membarrier registration code. But it can still fail. However, the other
-   membarrier code using the same fallback pattern (private and global
-   expedited) documents that those membarrier commands do not block in
-   the membarrier(2) man page, so GFP_NOWAIT is appropriate in those cases.
+----------------------------------------------------------------
+ipc: fix regressions from y2038 patches
 
-3) Testing-wise, I fully agree with your argument of lacking test coverage.
-   One option I'm considering would be to add a selftest based on the
-   fault-injection infrastructure, which would ensure that we have coverage
-   of the failure case in the kernel selftests.
+These are two regression fixes for bugs that got introduced
+during the system call rework that went into linux-5.1
+but only bisected and fixed now:
 
-Thoughts ?
+- One patch affects semtimedop() on many of the less
+  common 32-bit architectures, this just needs a single-line
+  bugfix.
 
-Thanks,
+- The other affects only sparc64 and has a slightly more
+  invasive workaround to apply the same change to sparc64
+  that was done to the generic code used everywhere else.
 
-Mathieu
+----------------------------------------------------------------
+Arnd Bergmann (2):
+      ipc: fix semtimedop for generic 32-bit architectures
+      ipc: fix sparc64 ipc() wrapper
 
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+ arch/sparc/kernel/sys_sparc_64.c  | 33 ++++++++++++++++++---------------
+ include/linux/syscalls.h          | 19 +++++++++++++++++++
+ include/uapi/asm-generic/unistd.h |  2 +-
+ ipc/util.h                        | 25 ++-----------------------
+ 4 files changed, 40 insertions(+), 39 deletions(-)
