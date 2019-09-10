@@ -2,102 +2,119 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F07F6C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 674D2C4740A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFC232089F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DC3A21479
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:29:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568107750;
+	bh=S1LVx0xn7hzAb75Z1Ud5+wv+aqECl0vDMsdAvm8Z72I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rizfBmhUvefLwAii7N3vS+Z5KqHiaI6KQ/qK0Ts9jbbUT3AL0hI/WQNKid8mrZpHh
+	 HBdGZP2ElrNnsiKlfMMhTrSXp6rAZMb5LqjQzphJ4ooeAy0C9UUANaUQYzJY/Vyv2Z
+	 VCbrdz3MWEstzPlyJlNFos5pQMqkaCd5IflMUxI4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732086AbfIJJ2I (ORCPT
+        id S1732384AbfIJJ3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 05:28:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46982 "EHLO mail.kernel.org"
+        Tue, 10 Sep 2019 05:29:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726060AbfIJJ2H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 05:28:07 -0400
-Received: from oasis.local.home (unknown [148.69.85.38])
+        id S1726060AbfIJJ3J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 05:29:09 -0400
+Received: from localhost (110.8.30.213.rev.vodafone.pt [213.30.8.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34EC620872;
-        Tue, 10 Sep 2019 09:28:06 +0000 (UTC)
-Date:   Tue, 10 Sep 2019 05:28:04 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ftrace: simplify ftrace hash lookup code
-Message-ID: <20190910052804.57308909@oasis.local.home>
-In-Reply-To: <20190910003321.d3q65j756z3vzhiw@mail.google.com>
-References: <20190909003159.10574-1-changbin.du@gmail.com>
-        <20190909105424.6769b552@oasis.local.home>
-        <20190910003321.d3q65j756z3vzhiw@mail.google.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id B935D20872;
+        Tue, 10 Sep 2019 09:29:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568107748;
+        bh=S1LVx0xn7hzAb75Z1Ud5+wv+aqECl0vDMsdAvm8Z72I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qnRnpan4G8nAcCuLHZWNCPMCU7E5pyHPYSNhGmcvNIgT0vda4KrBdchZ1VcYhMY9e
+         PDaPa9/ac6fJjT31iT5bX1bMV2bpbJzL1p9/p45sjhDQktCo2gjD8zshmN8NgEzBkA
+         NNJoN7yvwS7nLw2MsT+4+G/HjvocgPqbC6+HESrM=
+Date:   Tue, 10 Sep 2019 10:29:05 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Fabian Henneke <fabian.henneke@gmail.com>
+Cc:     Pavel Machek <pavel@denx.de>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 19/57] Bluetooth: hidp: Let hidp_send_message return
+ number of queued bytes
+Message-ID: <20190910092905.GA19176@kroah.com>
+References: <20190908121125.608195329@linuxfoundation.org>
+ <20190908121132.859238319@linuxfoundation.org>
+ <20190909121555.GA18869@amd>
+ <8e7731e0-f0ad-8cbb-799e-dd585e6b7ed6@gmail.com>
+ <20190909225929.GC26405@kroah.com>
+ <c7aa8abe-86c1-e401-67b4-a9fbb85bf475@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c7aa8abe-86c1-e401-67b4-a9fbb85bf475@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Sep 2019 08:33:23 +0800
-Changbin Du <changbin.du@gmail.com> wrote:
-
+On Tue, Sep 10, 2019 at 08:27:10AM +0200, Fabian Henneke wrote:
+> 
+> 
+> On 10.09.19 00:59, Greg Kroah-Hartman wrote:
+> > On Mon, Sep 09, 2019 at 03:00:46PM +0200, Fabian Henneke wrote:
+> >> Hi,
+> >>
+> >> On Mon, Sep 9, 2019 at 2:15 PM Pavel Machek <pavel@denx.de> wrote:
+> >>
+> >>> Hi!
+> >>>
+> >>>> [ Upstream commit 48d9cc9d85dde37c87abb7ac9bbec6598ba44b56 ]
+> >>>>
+> >>>> Let hidp_send_message return the number of successfully queued bytes
+> >>>> instead of an unconditional 0.
+> >>>>
+> >>>> With the return value fixed to 0, other drivers relying on hidp, such as
+> >>>> hidraw, can not return meaningful values from their respective
+> >>>> implementations of write(). In particular, with the current behavior, a
+> >>>> hidraw device's write() will have different return values depending on
+> >>>> whether the device is connected via USB or Bluetooth, which makes it
+> >>>> harder to abstract away the transport layer.
+> >>>
+> >>> So, does this change any actual behaviour?
+> >>>
+> >>> Is it fixing a bug, or is it just preparation for a patch that is not
+> >>> going to make it to stable?
+> >>>
+> >>
+> >> I created this patch specifically in order to ensure that user space
+> >> applications can use HID devices with hidraw without needing to care about
+> >> whether the transport is USB or Bluetooth. Without the patch, every
+> >> hidraw-backed Bluetooth device needs to be treated specially as its write()
+> >> violates the usual return value contract, which could be viewed as a bug.
+> >>
+> >> Please note that a later patch (
+> >> https://www.spinics.net/lists/linux-input/msg63291.html) fixes some
+> >> important error checks that were relying on the old behavior (and were
+> >> unfortunately missed by me).
 > > 
-> > bool ftrace_lookup_ip(struct ftrace_hash *hash, unsigned long ip, bool empty_result)
-> > {
-> > 	if (ftrace_hash_empty(hash))
-> > 		return empty_result;
+> > As that patch doesn't seem to be in Linus's tree yet, we should postpone
+> > taking this one in the stable tree right now, correct?
 > > 
-> > 	return __ftrace_lookup_ip(hash, ip);
-> > }
-> >  
-> We must add another similar function since ftrace_lookup_ip() returns a pointer.
+> > thanks,
+> > 
+> > greg k-h
+> > 
 > 
-> bool ftrace_contains_ip(struct ftrace_hash *hash, unsigned long ip,
-> 			bool empty_result)
-> {
-> 	if (ftrace_hash_empty(hash))
-> 		return empty_result;
-> 
-> 	return !!__ftrace_lookup_ip(hash, ip);
-> }
-> 
-> But after this, it's a little overkill I think. It is not much simpler than before.
-> Do you still want this then?
-> 
->
+> Yes, please wait for the other patch if it's not in his tree yet and apply the two together.
 
-Or...
+Ok, will move it out and wait for the fixup patch to hit Linus's tree,
+thanks!
 
-static struct ftrace_func_entry empty_func_entry;
-#define EMPTY_FUNC_ENTRY = &empty_func_entry;
-
-[..]
- * @empty_result: return NULL if false or EMPTY_FUNC_ENTRY on true
-[..]
- * @empty_result should be false, unless this is used for testing if the ip
- * exists in the hash, and an empty hash should be considered true.
- * This is useful when the empty hash is considered to contain all addresses.
-[..]
-struct ftrace_func_entry *
-ftrace_lookup_ip(struct ftrace_hash *hash, unsigned long ip, bool empty_result)
-{
-	if (ftrace_hash_empty(hash))
-		return empty_result ? EMPTY_FUNC_ENTRY : NULL;
-
-	return __ftrace_lookup_ip(hash, ip);
-}
-
-But looking at this more, I'm going back to not touching the code in
-this location, because __ftrace_lookup_ip() is static, where as
-ftrace_lookup_ip() is not, and this is in a very fast path, and I
-rather keep it open coded.
-
-Lets just drop the first hunk of your patch. The second hunk is fine.
-
-
--- Steve
+greg k-h
