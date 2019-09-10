@@ -2,200 +2,179 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67252C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0038C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E24E21019
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADAFD21019
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:15:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730727AbfIJNNR (ORCPT
+        id S1730849AbfIJNPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 09:13:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33240 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726175AbfIJNNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 09:13:17 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7B5FB300DA3A;
-        Tue, 10 Sep 2019 13:13:16 +0000 (UTC)
-Received: from [10.72.12.23] (ovpn-12-23.pek2.redhat.com [10.72.12.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B145A6012A;
-        Tue, 10 Sep 2019 13:13:01 +0000 (UTC)
-Subject: Re: [RFC PATCH 3/4] virtio: introudce a mdev based transport
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kwankhede@nvidia.com, alex.williamson@redhat.com,
-        cohuck@redhat.com, tiwei.bie@intel.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, idos@mellanox.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com
-References: <20190910081935.30516-1-jasowang@redhat.com>
- <20190910081935.30516-4-jasowang@redhat.com>
- <20190910055744-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <572ffc34-3081-8503-d3cc-192edc9b5311@redhat.com>
-Date:   Tue, 10 Sep 2019 21:13:02 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 10 Sep 2019 09:15:45 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:23522 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725942AbfIJNPo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 09:15:44 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8ADFDbS101653
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 09:15:43 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2uxcdu0fa0-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 09:15:42 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Tue, 10 Sep 2019 14:15:39 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 10 Sep 2019 14:15:36 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8ADFZf044564870
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Sep 2019 13:15:35 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ED699AE04D;
+        Tue, 10 Sep 2019 13:15:34 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 44628AE056;
+        Tue, 10 Sep 2019 13:15:22 +0000 (GMT)
+Received: from bangoria.ibmuc.com (unknown [9.199.51.250])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 10 Sep 2019 13:15:20 +0000 (GMT)
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+To:     mpe@ellerman.id.au, mikey@neuling.org
+Cc:     benh@kernel.crashing.org, paulus@samba.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        christophe.leroy@c-s.fr,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>
+Subject: [PATCH v2] powerpc/watchpoint: Disable watchpoint hit by larx/stcx instructions
+Date:   Tue, 10 Sep 2019 18:45:13 +0530
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20190910055744-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 10 Sep 2019 13:13:16 +0000 (UTC)
+X-TM-AS-GCONF: 00
+x-cbid: 19091013-0028-0000-0000-0000039A7D4A
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19091013-0029-0000-0000-0000245CE11D
+Message-Id: <20190910131513.30499-1-ravi.bangoria@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-10_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=557 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909100129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+If watchpoint exception is generated by larx/stcx instructions, the
+reservation created by larx gets lost while handling exception, and
+thus stcx instruction always fails. Generally these instructions are
+used in a while(1) loop, for example spinlocks. And because stcx
+never succeeds, it loops forever and ultimately hangs the system.
 
-On 2019/9/10 下午6:01, Michael S. Tsirkin wrote:
->> +#ifndef _LINUX_VIRTIO_MDEV_H
->> +#define _LINUX_VIRTIO_MDEV_H
->> +
->> +#include <linux/interrupt.h>
->> +#include <linux/vringh.h>
->> +#include <uapi/linux/virtio_net.h>
->> +
->> +/*
->> + * Ioctls
->> + */
-> Pls add a bit more content here. It's redundant to state these
-> are ioctls. Much better to document what does each one do.
+Note that ptrace anyway works in one-shot mode and thus for ptrace
+we don't change the behaviour. It's up to ptrace user to take care
+of this.
 
+Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Acked-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+---
+v1->v2:
+ - v1: https://lists.ozlabs.org/pipermail/linuxppc-dev/2019-September/196818.html
+ - Christophe's patch is already merged. Don't include it.
+ - Rewrite warning message
 
-Ok.
+ arch/powerpc/kernel/hw_breakpoint.c | 49 +++++++++++++++++++----------
+ 1 file changed, 33 insertions(+), 16 deletions(-)
 
+diff --git a/arch/powerpc/kernel/hw_breakpoint.c b/arch/powerpc/kernel/hw_breakpoint.c
+index 28ad3171bb82..1007ec36b4cb 100644
+--- a/arch/powerpc/kernel/hw_breakpoint.c
++++ b/arch/powerpc/kernel/hw_breakpoint.c
+@@ -195,14 +195,32 @@ void thread_change_pc(struct task_struct *tsk, struct pt_regs *regs)
+ 	tsk->thread.last_hit_ubp = NULL;
+ }
+ 
++static bool is_larx_stcx_instr(struct pt_regs *regs, unsigned int instr)
++{
++	int ret, type;
++	struct instruction_op op;
++
++	ret = analyse_instr(&op, regs, instr);
++	type = GETTYPE(op.type);
++	return (!ret && (type == LARX || type == STCX));
++}
++
+ /*
+  * Handle debug exception notifications.
+  */
+ static bool stepping_handler(struct pt_regs *regs, struct perf_event *bp,
+ 			     unsigned long addr)
+ {
+-	int stepped;
+-	unsigned int instr;
++	unsigned int instr = 0;
++
++	if (__get_user_inatomic(instr, (unsigned int *)regs->nip))
++		goto fail;
++
++	if (is_larx_stcx_instr(regs, instr)) {
++		printk_ratelimited("Breakpoint hit on instruction that can't be emulated."
++				   " Breakpoint at 0x%lx will be disabled.\n", addr);
++		goto disable;
++	}
+ 
+ 	/* Do not emulate user-space instructions, instead single-step them */
+ 	if (user_mode(regs)) {
+@@ -211,23 +229,22 @@ static bool stepping_handler(struct pt_regs *regs, struct perf_event *bp,
+ 		return false;
+ 	}
+ 
+-	stepped = 0;
+-	instr = 0;
+-	if (!__get_user_inatomic(instr, (unsigned int *)regs->nip))
+-		stepped = emulate_step(regs, instr);
++	if (!emulate_step(regs, instr))
++		goto fail;
+ 
++	return true;
++
++fail:
+ 	/*
+-	 * emulate_step() could not execute it. We've failed in reliably
+-	 * handling the hw-breakpoint. Unregister it and throw a warning
+-	 * message to let the user know about it.
++	 * We've failed in reliably handling the hw-breakpoint. Unregister
++	 * it and throw a warning message to let the user know about it.
+ 	 */
+-	if (!stepped) {
+-		WARN(1, "Unable to handle hardware breakpoint. Breakpoint at "
+-			"0x%lx will be disabled.", addr);
+-		perf_event_disable_inatomic(bp);
+-		return false;
+-	}
+-	return true;
++	WARN(1, "Unable to handle hardware breakpoint. Breakpoint at "
++		"0x%lx will be disabled.", addr);
++
++disable:
++	perf_event_disable_inatomic(bp);
++	return false;
+ }
+ 
+ int hw_breakpoint_handler(struct die_args *args)
+-- 
+2.21.0
 
->
->> +
->> +struct virtio_mdev_callback {
->> +	irqreturn_t (*callback)(void *);
->> +	void *private;
->> +};
->> +
->> +#define VIRTIO_MDEV 0xAF
->> +#define VIRTIO_MDEV_SET_VQ_CALLBACK _IOW(VIRTIO_MDEV, 0x00, \
->> +					 struct virtio_mdev_callback)
->> +#define VIRTIO_MDEV_SET_CONFIG_CALLBACK _IOW(VIRTIO_MDEV, 0x01, \
->> +					struct virtio_mdev_callback)
-> Function pointer in an ioctl parameter? How does this ever make sense?
-
-
-I admit this is hacky (casting).
-
-
-> And can't we use a couple of registers for this, and avoid ioctls?
-
-
-Yes, how about something like interrupt numbers for each virtqueue and 
-config?
-
-
->
->> +
->> +#define VIRTIO_MDEV_DEVICE_API_STRING		"virtio-mdev"
->> +
->> +/*
->> + * Control registers
->> + */
->> +
->> +/* Magic value ("virt" string) - Read Only */
->> +#define VIRTIO_MDEV_MAGIC_VALUE		0x000
->> +
->> +/* Virtio device version - Read Only */
->> +#define VIRTIO_MDEV_VERSION		0x004
->> +
->> +/* Virtio device ID - Read Only */
->> +#define VIRTIO_MDEV_DEVICE_ID		0x008
->> +
->> +/* Virtio vendor ID - Read Only */
->> +#define VIRTIO_MDEV_VENDOR_ID		0x00c
->> +
->> +/* Bitmask of the features supported by the device (host)
->> + * (32 bits per set) - Read Only */
->> +#define VIRTIO_MDEV_DEVICE_FEATURES	0x010
->> +
->> +/* Device (host) features set selector - Write Only */
->> +#define VIRTIO_MDEV_DEVICE_FEATURES_SEL	0x014
->> +
->> +/* Bitmask of features activated by the driver (guest)
->> + * (32 bits per set) - Write Only */
->> +#define VIRTIO_MDEV_DRIVER_FEATURES	0x020
->> +
->> +/* Activated features set selector - Write Only */
->> +#define VIRTIO_MDEV_DRIVER_FEATURES_SEL	0x024
->> +
->> +/* Queue selector - Write Only */
->> +#define VIRTIO_MDEV_QUEUE_SEL		0x030
->> +
->> +/* Maximum size of the currently selected queue - Read Only */
->> +#define VIRTIO_MDEV_QUEUE_NUM_MAX	0x034
->> +
->> +/* Queue size for the currently selected queue - Write Only */
->> +#define VIRTIO_MDEV_QUEUE_NUM		0x038
->> +
->> +/* Ready bit for the currently selected queue - Read Write */
->> +#define VIRTIO_MDEV_QUEUE_READY		0x044
-> Is this same as started?
-
-
-Do you mean "status"?
-
-
->
->> +
->> +/* Alignment of virtqueue - Read Only */
->> +#define VIRTIO_MDEV_QUEUE_ALIGN		0x048
->> +
->> +/* Queue notifier - Write Only */
->> +#define VIRTIO_MDEV_QUEUE_NOTIFY	0x050
->> +
->> +/* Device status register - Read Write */
->> +#define VIRTIO_MDEV_STATUS		0x060
->> +
->> +/* Selected queue's Descriptor Table address, 64 bits in two halves */
->> +#define VIRTIO_MDEV_QUEUE_DESC_LOW	0x080
->> +#define VIRTIO_MDEV_QUEUE_DESC_HIGH	0x084
->> +
->> +/* Selected queue's Available Ring address, 64 bits in two halves */
->> +#define VIRTIO_MDEV_QUEUE_AVAIL_LOW	0x090
->> +#define VIRTIO_MDEV_QUEUE_AVAIL_HIGH	0x094
->> +
->> +/* Selected queue's Used Ring address, 64 bits in two halves */
->> +#define VIRTIO_MDEV_QUEUE_USED_LOW	0x0a0
->> +#define VIRTIO_MDEV_QUEUE_USED_HIGH	0x0a4
->> +
->> +/* Configuration atomicity value */
->> +#define VIRTIO_MDEV_CONFIG_GENERATION	0x0fc
->> +
->> +/* The config space is defined by each driver as
->> + * the per-driver configuration space - Read Write */
->> +#define VIRTIO_MDEV_CONFIG		0x100
-> Mixing device and generic config space is what virtio pci did,
-> caused lots of problems with extensions.
-> It would be better to reserve much more space.
-
-
-I see, will do this.
-
-Thanks
-
-
->
->
->> +
->> +#endif
->> +
->> +
->> +/* Ready bit for the currently selected queue - Read Write */
->> -- 
->> 2.19.1
