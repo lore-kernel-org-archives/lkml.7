@@ -2,83 +2,103 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 779A2C49ED7
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62AAEC49ED9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4114F2082C
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:57:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568134628;
-	bh=UMv65zBvlpgle8E7mO8AeZIREr1Yo4NYVJ1nbN8qSVM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=EdWvs5YotHYNGhLkyW7LBKvCGB3spmlC1gfIe+NfJLlMimCPh/ndunqxH7YfcFF8S
-	 w8464tPyj218wQ2n3GprbLYS4skWVrTpVVcPPZ1b1vg+Bv6E04SGcToPayTE0Ix/g4
-	 UnZjz3195HCQfOgvd+gZ+hxO+ZUHznB0YuJy73Gw=
+	by mail.kernel.org (Postfix) with ESMTP id 3760E21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:57:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436969AbfIJQ5H (ORCPT
+        id S2436982AbfIJQ5d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 12:57:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58998 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436952AbfIJQ5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 12:57:07 -0400
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C054F2082C
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 16:57:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568134626;
-        bh=UMv65zBvlpgle8E7mO8AeZIREr1Yo4NYVJ1nbN8qSVM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=e1hX7isN+rAXTlm06BSmdEGyCvO3oQbCh6L/9Olfhzt4Y+y59rIpiBCm8PJpxCChO
-         FCRcJF/2xU+q8Phok/2XXMX76E8p/JMAZlEGTHgtnqAVI+aswneboowGT8wmpPbbnn
-         iARZ/NI6MaxQrc1CMVLcrjgzH43Kye41dyNNNz6I=
-Received: by mail-wr1-f48.google.com with SMTP id t16so21416642wra.6
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 09:57:05 -0700 (PDT)
-X-Gm-Message-State: APjAAAXxV08m6mJYF1SjHQUvt5JuR9ed+WU4lMbxvfg51bnGGy2KavY7
-        esG9Who1KSbSd1t05PuRI5SPsCqP1aUs5e/CsM/WIw==
-X-Google-Smtp-Source: APXvYqzfNckRdcOeF31SlRnVdskoQYKf5gkvVGtyy8lb/m05shVLaJXCnbiercrrU11/uQLbaerxQn/FCbkMHMmLr+k=
-X-Received: by 2002:adf:dcc4:: with SMTP id x4mr19271602wrm.221.1568134624270;
- Tue, 10 Sep 2019 09:57:04 -0700 (PDT)
+        Tue, 10 Sep 2019 12:57:33 -0400
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:29760 "EHLO
+        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2436883AbfIJQ5d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 12:57:33 -0400
+Received: from pps.filterd (m0150242.ppops.net [127.0.0.1])
+        by mx0a-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8AGv3OH030750;
+        Tue, 10 Sep 2019 16:57:11 GMT
+Received: from g9t5009.houston.hpe.com (g9t5009.houston.hpe.com [15.241.48.73])
+        by mx0a-002e3701.pphosted.com with ESMTP id 2ux7qqq4vu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 10 Sep 2019 16:57:11 +0000
+Received: from g9t2301.houston.hpecorp.net (g9t2301.houston.hpecorp.net [16.220.97.129])
+        by g9t5009.houston.hpe.com (Postfix) with ESMTP id BAA1258;
+        Tue, 10 Sep 2019 16:57:10 +0000 (UTC)
+Received: from [16.116.129.27] (unknown [16.116.129.27])
+        by g9t2301.houston.hpecorp.net (Postfix) with ESMTP id 8FC924D;
+        Tue, 10 Sep 2019 16:57:09 +0000 (UTC)
+Subject: Re: [PATCH 0/8] x86/platform/UV: Update UV Hubless System Support
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Hedi Berriche <hedi.berriche@hpe.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org
+References: <20190905130252.590161292@stormcage.eag.rdlabs.hpecorp.net>
+ <CANiq72nTKbNEKezoy_CqdFRuQ0SD2OsORV8u=i_1g=2atkCRiA@mail.gmail.com>
+ <797654d8-562a-6492-79e1-65a292157d04@hpe.com>
+ <20190910164050.GH23931@zn.tnic>
+From:   Mike Travis <mike.travis@hpe.com>
+Message-ID: <ba26a8c1-26e7-fb88-9466-76ba35404a05@hpe.com>
+Date:   Tue, 10 Sep 2019 09:57:39 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190905005313.126823-1-dancol@google.com>
-In-Reply-To: <20190905005313.126823-1-dancol@google.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 10 Sep 2019 09:56:53 -0700
-X-Gmail-Original-Message-ID: <CALCETrU2Wycgdfo8vLZQUnx1J9ro=6ddSkP37BhsfBkKL1mbMA@mail.gmail.com>
-Message-ID: <CALCETrU2Wycgdfo8vLZQUnx1J9ro=6ddSkP37BhsfBkKL1mbMA@mail.gmail.com>
-Subject: Re: [RFC] Add critical process prctl
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Tim Murray <timmurray@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190910164050.GH23931@zn.tnic>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-10_11:2019-09-10,2019-09-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
+ mlxscore=0 lowpriorityscore=0 adultscore=0 clxscore=1015 suspectscore=0
+ malwarescore=0 priorityscore=1501 phishscore=0 mlxlogscore=999
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1906280000 definitions=main-1909100162
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 4, 2019 at 5:53 PM Daniel Colascione <dancol@google.com> wrote:
->
-> A task with CAP_SYS_ADMIN can mark itself PR_SET_TASK_CRITICAL,
-> meaning that if the task ever exits, the kernel panics. This facility
-> is intended for use by low-level core system processes that cannot
-> gracefully restart without a reboot. This prctl allows these processes
-> to ensure that the system restarts when they die regardless of whether
-> the rest of userspace is operational.
 
-The kind of panic produced by init crashing is awful -- logs don't get
-written, etc.  I'm wondering if you would be better off with a new
-watchdog-like device that, when closed, kills the system in a
-configurable way (e.g. after a certain amount of time, while still
-logging something and having a decent chance of getting the logs
-written out.)  This could plausibly even be an extension to the
-existing /dev/watchdog API.
 
---Andy
+On 9/10/2019 9:40 AM, Borislav Petkov wrote:
+> On Tue, Sep 10, 2019 at 08:34:44AM -0700, Mike Travis wrote:
+>> Hi,  I'm not conscientiously adding any attachments.  I think what is
+>> happening is some email readers mistake the '---' to signify an attachment
+>> follows.  I see the "staple" symbol on some indicating an attachment, but
+>> not usually all of the email I send.  Thanks, Mike
+> 
+> Btw, is there anyway to fix your mail setup and not flood with your
+> patchset?
+> 
+> I have received your V2 patchset 5(!) times yesterday and today. All
+> separate submissions!
+> 
+> ;-(
+> 
+
+Sorry, I've been testing them and monitoring LKML to check for leakages. 
+  I certainly did not intend for any of those test sends to get out. 
+And I don't understand right now how they did.  I am using sendmail in 
+it's basic form and you or anyone else was not on the recipient list.
+
+(Honestly, if I had known they got out, I would have stopped testing... 
+:)  But the latest ones are obviously the "official" submissions, since 
+those are the copies that I also have.)  If you accept them upstream, 
+I'll quit sending them, I promise... :)
