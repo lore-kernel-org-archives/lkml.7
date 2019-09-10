@@ -2,96 +2,109 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F71C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 04:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D93C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 05:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9618C21924
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 04:51:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D6E6206CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 05:06:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732840AbfIJEvv convert rfc822-to-8bit (ORCPT
+        id S2390239AbfIJFGF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 00:51:51 -0400
-Received: from mxout013.mail.hostpoint.ch ([217.26.49.173]:63206 "EHLO
+        Tue, 10 Sep 2019 01:06:05 -0400
+Received: from mxout013.mail.hostpoint.ch ([217.26.49.173]:65021 "EHLO
         mxout013.mail.hostpoint.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729013AbfIJEvv (ORCPT
+        by vger.kernel.org with ESMTP id S1729014AbfIJFGF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 00:51:51 -0400
-Received: from [10.0.2.45] (helo=asmtp012.mail.hostpoint.ch)
+        Tue, 10 Sep 2019 01:06:05 -0400
+Received: from [10.0.2.46] (helo=asmtp013.mail.hostpoint.ch)
         by mxout013.mail.hostpoint.ch with esmtp (Exim 4.92.2 (FreeBSD))
         (envelope-from <sandro@volery.com>)
-        id 1i7Y7z-000Htx-Gd; Tue, 10 Sep 2019 06:51:43 +0200
-Received: from [213.55.220.251] (helo=[100.66.103.90])
-        by asmtp012.mail.hostpoint.ch with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        id 1i7YLn-000KPG-7A; Tue, 10 Sep 2019 07:05:59 +0200
+Received: from pool1-72.cgn.as8758.net ([212.25.6.72] helo=volery)
+        by asmtp013.mail.hostpoint.ch with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
         (Exim 4.92.2 (FreeBSD))
         (envelope-from <sandro@volery.com>)
-        id 1i7Y7z-0003VR-A3; Tue, 10 Sep 2019 06:51:43 +0200
+        id 1i7YLn-000MlS-3h; Tue, 10 Sep 2019 07:05:59 +0200
 X-Authenticated-Sender-Id: sandro@volery.com
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Date:   Tue, 10 Sep 2019 07:05:57 +0200
 From:   Sandro Volery <sandro@volery.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] Staging: gasket: Use temporaries to reduce line length.
-Date:   Tue, 10 Sep 2019 06:51:42 +0200
-Message-Id: <32BC7615-D278-4EBD-B68B-2891EF996942@volery.com>
-References: <348e946eb5e90c1af3971fd50b5678668cc1a3d3.camel@perches.com>
-Cc:     rspringer@google.com, toddpoynor@google.com, benchan@chromium.org,
+To:     rspringer@google.com, toddpoynor@google.com, benchan@chromium.org,
         gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org
-In-Reply-To: <348e946eb5e90c1af3971fd50b5678668cc1a3d3.camel@perches.com>
-To:     Joe Perches <joe@perches.com>
-X-Mailer: iPhone Mail (17A5831c)
+Cc:     joe@perches.com
+Subject: [PATCH v2] Staging: gasket: Use temporaries to reduce line length.
+Message-ID: <20190910050557.GA8338@volery>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Using temporaries for gasket_page_table entries to remove scnprintf()
+statements and reduce line length, as suggested by Joe Perches. Thanks!
 
+Signed-off-by: Sandro Volery <sandro@volery.com>
+---
+ drivers/staging/gasket/apex_driver.c | 20 +++++++++-----------
+ 1 file changed, 9 insertions(+), 11 deletions(-)
 
-> On 10 Sep 2019, at 00:30, Joe Perches <joe@perches.com> wrote:
-> 
-> ﻿On Mon, 2019-09-09 at 22:28 +0200, Sandro Volery wrote:
->> Using temporaries for gasket_page_table entries to remove scnprintf()
->> statements and reduce line length, as suggested by Joe Perches. Thanks!
-> 
-> nak.  Slow down.  You broke the code.
-> 
-> Please be _way_ more careful and verify for yourself
-> the code you submit _before_ you submit it.
-> 
-> compile/test/verify, twice if necessary.
-> 
-
-Shoot. I'm sorry I'm just really trying to get into all this...
-
-
-> You also should have cc'd me on this patch.
-> 
-
-Will do! I'll submit v2 this afternoon.
-
->> diff --git a/drivers/staging/gasket/apex_driver.c b/drivers/staging/gasket/apex_driver.c
-> []
->> @@ -524,29 +526,25 @@ static ssize_t sysfs_show(struct device *device, struct device_attribute *attr,
->>    }
->> 
->>    type = (enum sysfs_attribute_type)gasket_attr->data.attr_type;
->> +    gpt = gasket_dev->page_table[0];
->>    switch (type) {
->>    case ATTR_KERNEL_HIB_PAGE_TABLE_SIZE:
->> -        ret = scnprintf(buf, PAGE_SIZE, "%u\n",
->> -                gasket_page_table_num_entries(
->> -                    gasket_dev->page_table[0]));
->> +        val = gasket_page_table_num_simple_entries(gpt);
-> 
-> You likely duplicated this line via copy/paste.
-> This should be:
->        val = gasket_page_table_num_entries(gpt);
-> 
-
-Thanks for being patient with me so far... I'd imagine others would've freaked out at me by now :)
-
+diff --git a/drivers/staging/gasket/apex_driver.c b/drivers/staging/gasket/apex_driver.c
+index 2973bb920a26..16ac4329d65f 100644
+--- a/drivers/staging/gasket/apex_driver.c
++++ b/drivers/staging/gasket/apex_driver.c
+@@ -509,6 +509,8 @@ static ssize_t sysfs_show(struct device *device, struct device_attribute *attr,
+ 	struct gasket_dev *gasket_dev;
+ 	struct gasket_sysfs_attribute *gasket_attr;
+ 	enum sysfs_attribute_type type;
++	struct gasket_page_table *gpt;
++	uint val;
+ 
+ 	gasket_dev = gasket_sysfs_get_device_data(device);
+ 	if (!gasket_dev) {
+@@ -524,29 +526,25 @@ static ssize_t sysfs_show(struct device *device, struct device_attribute *attr,
+ 	}
+ 
+ 	type = (enum sysfs_attribute_type)gasket_attr->data.attr_type;
++	gpt = gasket_dev->page_table[0];
+ 	switch (type) {
+ 	case ATTR_KERNEL_HIB_PAGE_TABLE_SIZE:
+-		ret = scnprintf(buf, PAGE_SIZE, "%u\n",
+-				gasket_page_table_num_entries(
+-					gasket_dev->page_table[0]));
++		val = gasket_page_table_num_simple_entries(gpt);
+ 		break;
+ 	case ATTR_KERNEL_HIB_SIMPLE_PAGE_TABLE_SIZE:
+-		ret = scnprintf(buf, PAGE_SIZE, "%u\n",
+-				gasket_page_table_num_simple_entries(
+-					gasket_dev->page_table[0]));
++		val = gasket_page_table_num_simple_entries(gpt);
+ 		break;
+ 	case ATTR_KERNEL_HIB_NUM_ACTIVE_PAGES:
+-		ret = scnprintf(buf, PAGE_SIZE, "%u\n",
+-				gasket_page_table_num_active_pages(
+-					gasket_dev->page_table[0]));
++		val = gasket_page_table_num_active_pages(gpt);
+ 		break;
+ 	default:
+ 		dev_dbg(gasket_dev->dev, "Unknown attribute: %s\n",
+ 			attr->attr.name);
+ 		ret = 0;
+-		break;
++		goto exit;
+ 	}
+-
++	ret = scnprintf(buf, PAGE_SIZE, "%u\n", val);
++exit:
+ 	gasket_sysfs_put_attr(device, gasket_attr);
+ 	gasket_sysfs_put_device_data(device, gasket_dev);
+ 	return ret;
+-- 
+2.23.0
 
