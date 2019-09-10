@@ -2,178 +2,93 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D62C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73640C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8D8B206CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:28:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D3DE206CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:29:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="V5e2Nbz9"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Xq1EY1oH";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="X1zbG0bN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732503AbfIJN2B (ORCPT
+        id S1732532AbfIJN3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 09:28:01 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:42156 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727739AbfIJN1r (ORCPT
+        Tue, 10 Sep 2019 09:29:06 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:43526 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726394AbfIJN3G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 09:27:47 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8ADRcdW074556;
-        Tue, 10 Sep 2019 08:27:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568122058;
-        bh=88mpiURaZ0Bg8Ua0PPuNeiQeaqUqbzMHmmZqerjgVIE=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=V5e2Nbz9ulWefAKKyrmMfNZnf4PbnuwtTtuLj71hBjlbYGW755kipGLjKRAimeJIr
-         Mg9CbMOVDbMYUAXys3CIhtA8iVeTmo9yHRjFCAbpipZyVAkC5OCXBO0qfGW7e/yjVC
-         1w8TS0AufUYnRm2izLPoO1WDeMkvR4rM31Iapl/A=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8ADRcer080158;
-        Tue, 10 Sep 2019 08:27:38 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 10
- Sep 2019 08:27:38 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 10 Sep 2019 08:27:37 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8ADRbfE035367;
-        Tue, 10 Sep 2019 08:27:37 -0500
-From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <lee.jones@linaro.org>,
-        <daniel.thompson@linaro.org>
-CC:     <dmurphy@ti.com>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <tomi.valkeinen@ti.com>, Jean-Jacques Hiblot <jjhiblot@ti.com>
-Subject: [PATCH v6 1/4] leds: Add of_led_get() and led_put()
-Date:   Tue, 10 Sep 2019 15:27:31 +0200
-Message-ID: <20190910132734.9544-2-jjhiblot@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190910132734.9544-1-jjhiblot@ti.com>
-References: <20190910132734.9544-1-jjhiblot@ti.com>
+        Tue, 10 Sep 2019 09:29:06 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 23E80602BC; Tue, 10 Sep 2019 13:29:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568122145;
+        bh=Qd5RfGYiHCwy3bpUbxAghJdbdVfjVR23GDfE0IN+sDE=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=Xq1EY1oHMatnwSDvLZVni9wYYLrfShk4joikKGtrueRyzCw7o70EwRWEn+REWMHU8
+         r6CDDRJkSprxSv3H0aO16dbruS6RYlXvWnQZCjJxyOdoFgAaElgS8VGsR/E0vZQ8pM
+         7JqAxbuWFOt/seuurC32awoDKILZVR2Cu6R2ihh0=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E8A9F602BC;
+        Tue, 10 Sep 2019 13:29:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568122144;
+        bh=Qd5RfGYiHCwy3bpUbxAghJdbdVfjVR23GDfE0IN+sDE=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=X1zbG0bNjqXZ7i3dokzqk0OdZlF7b4Hc651P4oLZw6EVg9zWWNBhJ2gl+UXcN5GjG
+         G9A7O8eIBgZTTS4LLckcKxV9CgpLxaDSN0LHTNcFUJ8BtfBxLMIZwt43kJLwIL6qGV
+         7mPEe8wMPrGZeNA3bRP+w5Nw+eUlB3ivYOeRgOAo=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E8A9F602BC
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] ath9k_htc: release allocated buffer if timed out
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190906182604.9282-1-navid.emamdoost@gmail.com>
+References: <20190906182604.9282-1-navid.emamdoost@gmail.com>
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     unlisted-recipients:; (no To-header on input) emamd001@umn.edu,
+        smccaman@umn.edu, kjlu@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        QCA ath9k Development <ath9k-devel@qca.qualcomm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Illegal-Object: Syntax error in Cc: address found on vger.kernel.org:
+        Cc:     unlisted-recipients:; (no To-header on input)emamd001@umn.edu
+                                                                     ^-missing end of address
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190910132905.23E80602BC@smtp.codeaurora.org>
+Date:   Tue, 10 Sep 2019 13:29:05 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Navid Emamdoost <navid.emamdoost@gmail.com> wrote:
 
-This patch adds basic support for a kernel driver to get a LED device.
-This will be used by the led-backlight driver.
+> In htc_config_pipe_credits, htc_setup_complete, and htc_connect_service
+> if time out happens, the allocated buffer needs to be released.
+> Otherwise there will be memory leak.
+> 
+> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 
-Only OF version is implemented for now, and the behavior is similar to
-PWM's of_pwm_get() and pwm_put().
+Patch applied to ath-next branch of ath.git, thanks.
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
-Acked-by: Pavel Machek <pavel@ucw.cz>
----
- drivers/leds/led-class.c | 50 ++++++++++++++++++++++++++++++++++++++++
- include/linux/leds.h     |  4 ++++
- 2 files changed, 54 insertions(+)
+853acf7caf10 ath9k_htc: release allocated buffer if timed out
 
-diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-index 159c6caa374b..d4d22f4b5052 100644
---- a/drivers/leds/led-class.c
-+++ b/drivers/leds/led-class.c
-@@ -18,6 +18,7 @@
- #include <linux/spinlock.h>
- #include <linux/timer.h>
- #include <uapi/linux/uleds.h>
-+#include <linux/of.h>
- #include "leds.h"
- 
- static struct class *leds_class;
-@@ -213,6 +214,55 @@ static int led_resume(struct device *dev)
- 
- static SIMPLE_DEV_PM_OPS(leds_class_dev_pm_ops, led_suspend, led_resume);
- 
-+static int led_match_led_node(struct device *led_dev, const void *data)
-+{
-+	return led_dev->of_node == data;
-+}
-+
-+/**
-+ * of_led_get() - request a LED device via the LED framework
-+ * @np: device node to get the LED device from
-+ * @index: the index of the LED
-+ *
-+ * Returns the LED device parsed from the phandle specified in the "leds"
-+ * property of a device tree node or a negative error-code on failure.
-+ */
-+struct led_classdev *of_led_get(struct device_node *np, int index)
-+{
-+	struct device *led_dev;
-+	struct led_classdev *led_cdev;
-+	struct device_node *led_node;
-+
-+	led_node = of_parse_phandle(np, "leds", index);
-+	if (!led_node)
-+		return ERR_PTR(-ENOENT);
-+
-+	led_dev = class_find_device(leds_class, NULL, led_node,
-+		led_match_led_node);
-+	of_node_put(led_node);
-+
-+	if (!led_dev)
-+		return ERR_PTR(-EPROBE_DEFER);
-+
-+	led_cdev = dev_get_drvdata(led_dev);
-+
-+	if (!try_module_get(led_cdev->dev->parent->driver->owner))
-+		return ERR_PTR(-ENODEV);
-+
-+	return led_cdev;
-+}
-+EXPORT_SYMBOL_GPL(of_led_get);
-+
-+/**
-+ * led_put() - release a LED device
-+ * @led_cdev: LED device
-+ */
-+void led_put(struct led_classdev *led_cdev)
-+{
-+	module_put(led_cdev->dev->parent->driver->owner);
-+}
-+EXPORT_SYMBOL_GPL(led_put);
-+
- static int match_name(struct device *dev, const void *data)
- {
- 	if (!dev_name(dev))
-diff --git a/include/linux/leds.h b/include/linux/leds.h
-index bee8e3f8dddd..0a71c7cdd191 100644
---- a/include/linux/leds.h
-+++ b/include/linux/leds.h
-@@ -19,6 +19,7 @@
- 
- struct device;
- struct led_pattern;
-+struct device_node;
- /*
-  * LED Core
-  */
-@@ -145,6 +146,9 @@ extern void devm_led_classdev_unregister(struct device *parent,
- extern void led_classdev_suspend(struct led_classdev *led_cdev);
- extern void led_classdev_resume(struct led_classdev *led_cdev);
- 
-+extern struct led_classdev *of_led_get(struct device_node *np, int index);
-+extern void led_put(struct led_classdev *led_cdev);
-+
- /**
-  * led_blink_set - set blinking with software fallback
-  * @led_cdev: the LED to start blinking
 -- 
-2.17.1
+https://patchwork.kernel.org/patch/11135781/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
