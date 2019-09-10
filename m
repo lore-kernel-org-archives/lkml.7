@@ -2,99 +2,134 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91129C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB65C49ED6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E5A920863
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:26:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 322AC2089F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:27:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="PMXmrPRZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gbfGpBVw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730723AbfIJG0I (ORCPT
+        id S2390788AbfIJG1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 02:26:08 -0400
-Received: from pio-pvt-msa3.bahnhof.se ([79.136.2.42]:44088 "EHLO
-        pio-pvt-msa3.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726141AbfIJG0I (ORCPT
+        Tue, 10 Sep 2019 02:27:16 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46147 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729518AbfIJG1Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 02:26:08 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTP id 06CFE3FCAD;
-        Tue, 10 Sep 2019 08:26:00 +0200 (CEST)
-Authentication-Results: pio-pvt-msa3.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=PMXmrPRZ;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa3.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa3.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id p1Q5uxKwuk5g; Tue, 10 Sep 2019 08:25:59 +0200 (CEST)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTPA id 0B7013FCA8;
-        Tue, 10 Sep 2019 08:25:56 +0200 (CEST)
-Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 8BB9536007E;
-        Tue, 10 Sep 2019 08:25:56 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1568096756; bh=FIsOVU9sEdD7eTcpsHsOzRwFVOc3rhd5yiOdJ+Zt71Q=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=PMXmrPRZaYzzK46IhmFaiBLdKoWKRFHkazdUlhqdGIYJpfBSMgvl06AaCA2vndHYD
-         zj7PDNJJfFZkbMcNnP7i9T8XLCgm0p06zFmVHCx5EWB1yrEO6de6HOAt2gMhpFu2qr
-         xzZ7xq4NMS+j05XbMrowIlDg++h5DtKrsN/JIkw4=
-Subject: Re: [RFC PATCH 0/2] Fix SEV user-space mapping of unencrypted
- coherent memory
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        pv-drivers@vmware.com, Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-References: <20190905103541.4161-1-thomas_os@shipmail.org>
- <20190905112311.GA10199@infradead.org> <20190910061110.GA10968@infradead.org>
-From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Organization: VMware Inc.
-Message-ID: <ff56161d-3c0c-30e9-448f-d450578f772d@shipmail.org>
-Date:   Tue, 10 Sep 2019 08:25:56 +0200
+        Tue, 10 Sep 2019 02:27:16 -0400
+Received: by mail-wr1-f68.google.com with SMTP id d17so4826863wrq.13;
+        Mon, 09 Sep 2019 23:27:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=MDvvxlm4EPJtB9eDBS496uoPhxHiq1jejHiyH1JIX3w=;
+        b=gbfGpBVwxLb3OM8f45S2s1YeSAa5lyhvkVJNbkgzI6wSrzp7sYwXHGzEZdw172CgJg
+         m2uAr7g0irO5xJe7qyz24mLCbjo+Nb++VbHVnMEr3kh0wsTIZAIs+n2knElp0F0xu5xk
+         QXa0E4FtZFGLueh6ICShw+3tLg67yzSJ5URQcvDK1gRDcYxXhjWY2ltzNfGVBqS1g7b+
+         2nc73i5D3peBeCS8XBpovwPoudCBzfH7wLD2epolcb5J+5CtnGT0195IQunrP59DPUBE
+         K8n+QNCEQqoBqKV9AQTB4Mgcn5tooYqz87rMpQ5nclai85aNjsGyREeTWdR5LRz9y5Jz
+         YTgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MDvvxlm4EPJtB9eDBS496uoPhxHiq1jejHiyH1JIX3w=;
+        b=tFZVI6k6tuaj6lW9vY1arL3mMVl8wwUQmtdaxTZ4s6J2s7i4XDkBPrnvmemkFEzGWV
+         PDKjcsjPG8JH2XWyirvnnOUCBEHAHsKmq21Qtq8KflQIorl04xyhZF3ta18/MAFWK1ao
+         1oSy8Rn+YIqbgIrRsyqGBcMIkZ8oHzY2JY3TAuUgZ0x9I3Kr9ikNbrqRbXUlT0W6HR2H
+         yvcuF53VxqCxtJAVaRENTsUxXeNa82IE8vGC3hg7e4it31+f25IVwbAYGE+Pts/8n7NB
+         0QRaXrOGJFBd3th7b5wGy+IJ/phdLkA5LoegTUMnz8cpzj/CqqWFDdiW0Ldcz8b/lNUG
+         +RTg==
+X-Gm-Message-State: APjAAAXtY9VyQ/vr4FaGKdf9zOD3m/DWqF/96+JxmTqHUTrLXg5F5yjx
+        ZHqctwEQ8jGqV51cEWye9dmCBeQAWuLN/w==
+X-Google-Smtp-Source: APXvYqw8soMWKGbHP/fAAIX35fInxB9u8K5H1DveBH6z0hz2IhGtG8PVN68CzYYJSR8kIoPUbmY3JQ==
+X-Received: by 2002:a05:6000:1101:: with SMTP id z1mr19069387wrw.332.1568096833318;
+        Mon, 09 Sep 2019 23:27:13 -0700 (PDT)
+Received: from ?IPv6:2a02:810d:8cc0:4ff8:6441:f1c4:968a:e9d0? ([2a02:810d:8cc0:4ff8:6441:f1c4:968a:e9d0])
+        by smtp.gmail.com with ESMTPSA id b144sm1873123wmb.3.2019.09.09.23.27.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 09 Sep 2019 23:27:12 -0700 (PDT)
+Subject: Re: [PATCH 4.19 19/57] Bluetooth: hidp: Let hidp_send_message return
+ number of queued bytes
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Pavel Machek <pavel@denx.de>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>
+References: <20190908121125.608195329@linuxfoundation.org>
+ <20190908121132.859238319@linuxfoundation.org> <20190909121555.GA18869@amd>
+ <8e7731e0-f0ad-8cbb-799e-dd585e6b7ed6@gmail.com>
+ <20190909225929.GC26405@kroah.com>
+From:   Fabian Henneke <fabian.henneke@gmail.com>
+Message-ID: <c7aa8abe-86c1-e401-67b4-a9fbb85bf475@gmail.com>
+Date:   Tue, 10 Sep 2019 08:27:10 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190910061110.GA10968@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190909225929.GC26405@kroah.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/10/19 8:11 AM, Christoph Hellwig wrote:
-> On Thu, Sep 05, 2019 at 04:23:11AM -0700, Christoph Hellwig wrote:
->> This looks fine from the DMA POV.  I'll let the x86 guys comment on the
->> rest.
-> Do we want to pick this series up for 5.4?  Should I queue it up in
-> the dma-mapping tree?
-
-Hi, Christoph
-
-I think the DMA change is pretty uncontroversial.
-
-There are still some questions about the x86 change: After digging a bit 
-deeper into the mm code I think Dave is correct about that we should 
-include the sme_me_mask in _PAGE_CHG_MASK.
-
-I'll respin that patch and then I guess we need an ack from the x86 people.
-
-Thanks,
-Thomas
 
 
+On 10.09.19 00:59, Greg Kroah-Hartman wrote:
+> On Mon, Sep 09, 2019 at 03:00:46PM +0200, Fabian Henneke wrote:
+>> Hi,
+>>
+>> On Mon, Sep 9, 2019 at 2:15 PM Pavel Machek <pavel@denx.de> wrote:
+>>
+>>> Hi!
+>>>
+>>>> [ Upstream commit 48d9cc9d85dde37c87abb7ac9bbec6598ba44b56 ]
+>>>>
+>>>> Let hidp_send_message return the number of successfully queued bytes
+>>>> instead of an unconditional 0.
+>>>>
+>>>> With the return value fixed to 0, other drivers relying on hidp, such as
+>>>> hidraw, can not return meaningful values from their respective
+>>>> implementations of write(). In particular, with the current behavior, a
+>>>> hidraw device's write() will have different return values depending on
+>>>> whether the device is connected via USB or Bluetooth, which makes it
+>>>> harder to abstract away the transport layer.
+>>>
+>>> So, does this change any actual behaviour?
+>>>
+>>> Is it fixing a bug, or is it just preparation for a patch that is not
+>>> going to make it to stable?
+>>>
+>>
+>> I created this patch specifically in order to ensure that user space
+>> applications can use HID devices with hidraw without needing to care about
+>> whether the transport is USB or Bluetooth. Without the patch, every
+>> hidraw-backed Bluetooth device needs to be treated specially as its write()
+>> violates the usual return value contract, which could be viewed as a bug.
+>>
+>> Please note that a later patch (
+>> https://www.spinics.net/lists/linux-input/msg63291.html) fixes some
+>> important error checks that were relying on the old behavior (and were
+>> unfortunately missed by me).
+> 
+> As that patch doesn't seem to be in Linus's tree yet, we should postpone
+> taking this one in the stable tree right now, correct?
+> 
+> thanks,
+> 
+> greg k-h
+> 
+
+Yes, please wait for the other patch if it's not in his tree yet and apply the two together.
+
+Thank you,
+Fabian
