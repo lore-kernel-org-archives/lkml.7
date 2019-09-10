@@ -2,161 +2,77 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BABC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00BEEC4740A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1421206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:22:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="w5yp3SAo"
+	by mail.kernel.org (Postfix) with ESMTP id D6190206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:24:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbfIJIWW (ORCPT
+        id S1727191AbfIJIYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 04:22:22 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38131 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbfIJIWV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 04:22:21 -0400
-Received: by mail-wr1-f65.google.com with SMTP id l11so18228237wrx.5
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 01:22:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RMKlXc+O7D5bCEwjDFFMVCcJWJjC2HcosOo5F0af2FI=;
-        b=w5yp3SAoZLSEZHdc4COhQMLChm6+6lkbYEEEox3jiTQJlbtARAZq0gCWGPUZbvCR1N
-         Fa28W1OpRk6mjYDIeE4Q3QDcQzEZef+qYmuz1Tl1SktRh24VyKr5+UaleXWmlK8iXYvA
-         OTedXapPS/oe2CR46mDhaAsNYE6Jc3mvwjcyHTwQ2019/hOvrPvZSpTucSsY55149Azr
-         FYUUT9T9xmvBIE8NsXwokYqaEXA/FhRuLa7qNK/IR3fvAIrGBr4qVQkvURboA2mqVUfs
-         8xTP1rWx8wj+SsUGMoXzy1+DXMZXOeaFqFj3wpbuXBA2cZ59Enp9bcacLMSs9Y49dBrn
-         jWRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RMKlXc+O7D5bCEwjDFFMVCcJWJjC2HcosOo5F0af2FI=;
-        b=CDMPFVd1S060Z0kadmWIFpPb/A/GVOfd9quIypON9Y+nrwyfrl6hc+Wb6twgAaT0t6
-         mWcW/BvA+t0aDsv675mA/dKxvTf9/LeIPpIIN5KORPo9WYxAjHipc0IolXZb/5fc704n
-         70G/B7Yit7dMc4+pdq3pOq979uNKySXeuTQNFVb/YRmO7NGyYHsgFNTTY4tuYn7fZsqB
-         tiv4YmJGLyIWn81EXv0UM7B9Kxxx/AlUKN6yYrfhzzLaRAv2OdCXDsVKZgeqItGYwSgs
-         MVqF22w0C6fbEQBcA25/548pI5x2EW1TVJVY5sxj4ffuSqXtQ0UXyjOJmTd/6CoCLfSV
-         xBDw==
-X-Gm-Message-State: APjAAAU3bziy5PRoqTTP7ICe3oxMV/GOlSieQo7keceKfHOJVURwZhaz
-        bQc38h9aNgXp34KzHo93l+PpEA==
-X-Google-Smtp-Source: APXvYqyM5+/RiHdg9qMKBydxzwyIXjhSzKk7we5ZuMc9Gn9PbbHTDuepiFwku8fXnT/Vo+JTAk0qyQ==
-X-Received: by 2002:adf:dc41:: with SMTP id m1mr11190301wrj.46.1568103738351;
-        Tue, 10 Sep 2019 01:22:18 -0700 (PDT)
-Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
-        by smtp.gmail.com with ESMTPSA id 189sm2534813wmz.19.2019.09.10.01.22.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Sep 2019 01:22:17 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        stable@vger.kernel.org, Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH] gpiolib: don't clear FLAG_IS_OUT when emulating open-drain/open-source
-Date:   Tue, 10 Sep 2019 10:21:38 +0200
-Message-Id: <20190910082138.30193-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.21.0
+        Tue, 10 Sep 2019 04:24:47 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:42040 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725876AbfIJIYq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 04:24:46 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 4D02E163D3A232B0C647;
+        Tue, 10 Sep 2019 16:24:44 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.132) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 10 Sep 2019 16:24:37 +0800
+From:   tiantao6 <tiantao6@huawei.com>
+To:     <tony.luck@intel.com>, <bp@alien8.de>, <linux-edac@vger.kernel.org>
+CC:     <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] ras: debugfs: Fix warning: no previous prototype
+Date:   Tue, 10 Sep 2019 16:22:19 +0800
+Message-ID: <1568103739-36667-1-git-send-email-tiantao6@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.212.132]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+fixed the fellow warning when building with warnings enabled (W=1)
 
-When emulating open-drain/open-source by not actively driving the output
-lines - we're simply changing their mode to input. This is wrong as it
-will then make it impossible to change the value of such line - it's now
-considered to actually be in input mode. If we want to still use the
-direction_input() callback for simplicity then we need to set FLAG_IS_OUT
-manually in gpiod_direction_output() and not clear it in
-gpio_set_open_drain_value_commit() and
-gpio_set_open_source_value_commit().
+drivers/ras/debugfs.c:8:5: warning: no previous prototype for
+‘ras_userspace_consumers’ [-Wmissing-prototypes]
+int ras_userspace_consumers(void)
 
-Fixes: c663e5f56737 ("gpio: support native single-ended hardware drivers")
-Cc: stable@vger.kernel.org
-Reported-by: Kent Gibson <warthog618@gmail.com>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+drivers/ras/debugfs.c:38:12: warning: no previous prototype for
+‘ras_add_daemon_trace’ [-Wmissing-prototypes]
+int __init ras_add_daemon_trace(void)
+
+drivers/ras/debugfs.c:54:13: warning: no previous prototype for
+‘ras_debugfs_init’ [-Wmissing-prototypes]
+void __init ras_debugfs_init(void)
+
+Signed-off-by: tiantao6 <tiantao6@huawei.com>
 ---
- drivers/gpio/gpiolib.c | 27 +++++++++++++++++++--------
- 1 file changed, 19 insertions(+), 8 deletions(-)
+ drivers/ras/debugfs.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index cca749010cd0..6bb4191d3844 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -2769,8 +2769,10 @@ int gpiod_direction_output(struct gpio_desc *desc, int value)
- 		if (!ret)
- 			goto set_output_value;
- 		/* Emulate open drain by not actively driving the line high */
--		if (value)
--			return gpiod_direction_input(desc);
-+		if (value) {
-+			ret = gpiod_direction_input(desc);
-+			goto set_output_flag;
-+		}
- 	}
- 	else if (test_bit(FLAG_OPEN_SOURCE, &desc->flags)) {
- 		ret = gpio_set_config(gc, gpio_chip_hwgpio(desc),
-@@ -2778,8 +2780,10 @@ int gpiod_direction_output(struct gpio_desc *desc, int value)
- 		if (!ret)
- 			goto set_output_value;
- 		/* Emulate open source by not actively driving the line low */
--		if (!value)
--			return gpiod_direction_input(desc);
-+		if (!value) {
-+			ret = gpiod_direction_input(desc);
-+			goto set_output_flag;
-+		}
- 	} else {
- 		gpio_set_config(gc, gpio_chip_hwgpio(desc),
- 				PIN_CONFIG_DRIVE_PUSH_PULL);
-@@ -2787,6 +2791,17 @@ int gpiod_direction_output(struct gpio_desc *desc, int value)
+diff --git a/drivers/ras/debugfs.c b/drivers/ras/debugfs.c
+index 9c1b717..39b96a5 100644
+--- a/drivers/ras/debugfs.c
++++ b/drivers/ras/debugfs.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ #include <linux/debugfs.h>
++#include <linux/ras.h>
  
- set_output_value:
- 	return gpiod_direction_output_raw_commit(desc, value);
-+
-+set_output_flag:
-+	/*
-+	 * When emulating open-source or open-drain functionalities by not
-+	 * actively driving the line (setting mode to input) we still need to
-+	 * set the IS_OUT flag or otherwise we won't be able to set the line
-+	 * value anymore.
-+	 */
-+	if (ret == 0)
-+		set_bit(FLAG_IS_OUT, &desc->flags);
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(gpiod_direction_output);
+ struct dentry *ras_debugfs_dir;
  
-@@ -3147,8 +3162,6 @@ static void gpio_set_open_drain_value_commit(struct gpio_desc *desc, bool value)
- 
- 	if (value) {
- 		err = chip->direction_input(chip, offset);
--		if (!err)
--			clear_bit(FLAG_IS_OUT, &desc->flags);
- 	} else {
- 		err = chip->direction_output(chip, offset, 0);
- 		if (!err)
-@@ -3178,8 +3191,6 @@ static void gpio_set_open_source_value_commit(struct gpio_desc *desc, bool value
- 			set_bit(FLAG_IS_OUT, &desc->flags);
- 	} else {
- 		err = chip->direction_input(chip, offset);
--		if (!err)
--			clear_bit(FLAG_IS_OUT, &desc->flags);
- 	}
- 	trace_gpio_direction(desc_to_gpio(desc), !value, err);
- 	if (err < 0)
 -- 
-2.21.0
+2.7.4
 
