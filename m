@@ -2,93 +2,101 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE18C5AE59
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 23:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD62C49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 23:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A79D216F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 23:39:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B2B4216F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 23:44:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="U+YTbJMs"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="agIEQzR/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726317AbfIJXjw (ORCPT
+        id S1726429AbfIJXo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 19:39:52 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:4934 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbfIJXjw (ORCPT
+        Tue, 10 Sep 2019 19:44:28 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:47033 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbfIJXo2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 19:39:52 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d7834480000>; Tue, 10 Sep 2019 16:39:53 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 10 Sep 2019 16:39:51 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 10 Sep 2019 16:39:51 -0700
-Received: from ngvpn01-172-168.dyn.scz.us.nvidia.com (172.20.13.39) by
- HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3; Tue, 10 Sep 2019 23:39:49 +0000
-Subject: Re: [PATCH] gpio: fix build failure: gpiochip_[un]lock*()
- static/non-static
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     YueHaibing <yuehaibing@huawei.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190907010534.23713-1-jhubbard@nvidia.com>
- <CACRpkdbmw-EOm5Os=BjoX1G+ZDxRGnJ3Zd3BWtDksnQ46aJ_JA@mail.gmail.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <c917f7f2-2f3b-f01e-8ea2-858eaf5f3e2d@nvidia.com>
-Date:   Wed, 11 Sep 2019 00:39:48 +0100
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <CACRpkdbmw-EOm5Os=BjoX1G+ZDxRGnJ3Zd3BWtDksnQ46aJ_JA@mail.gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1568158793; bh=Qy6VepiFpAZlMrNzDzcHtBi9QfYWbrDNF8q7ZPJDXvk=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=U+YTbJMsGjo52Kl1kpYBHxmh75vkb8qhsWJ16f8tDrh832uxffBKPi5Ntka/pAjmZ
-         Kpd6l13CODtxkA9wRTe3PTbSYTNQ2uK+T/pIuMk5GTthp7EkDPiTLSTXoCH89kKHSd
-         rb2xT0l7h81/+Rw03UKc4PfvzuFcqs5qveahnT68VRsrgUxc36pkyvcFN3k6/hNN4s
-         7muMJmhYSDv5Tx9g/g8o/s9/flBlMuxqjGmCjwKXr4UkpI15JiYng1eUCE74G9B7ro
-         MGer5IQH993ovdUiRKtqVc8Y6+9MFa782qoTsdp0Z98c3sDap4OOjfdco9ei+o1CWf
-         0+tXPJ7JteGDQ==
+        Tue, 10 Sep 2019 19:44:28 -0400
+Received: by mail-io1-f68.google.com with SMTP id d17so19749943ios.13;
+        Tue, 10 Sep 2019 16:44:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=ZGP+PYUf116KpmFZWCQJ/+W1BpD8OneYbmbPw8KI1DY=;
+        b=agIEQzR/UIcZsX92ydKv9iYSTD0wKkF0DCdfCvbuRl+mJRlsmk4xv6oXdAgiahYN66
+         Y4Q1c3uqGfdg1IWTY8T5VS2bzEO4YTifAiDII2S1ZWE4qCq8jQdhAiMYFsy8Ny7SDa1i
+         RXfYurzoCzrqs+1B+eQquaIosJ9qTs67bacbWDhEbp+bhuDtAJoSJ2fs0ADFREjunWBy
+         UiNXq4j/j6LSfUZc7/Al3xGpHnxht5yshuaAEMNrtlbZPVklWY2XcluBTm1eBpVv4pNu
+         6n0+q3EwwYu6YMWPprH1JbHi2Uu9ZaR2Jluku1++jFb128U92+e23LofkhY5gkwB7hwY
+         Liug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ZGP+PYUf116KpmFZWCQJ/+W1BpD8OneYbmbPw8KI1DY=;
+        b=Vn2eF6QjqBqKG9rCWyHMzAcWxAyjzqoNnmTtmP1drV/AtPZojXG21vO6Yrnrd0w3PE
+         D6Ej3hyD9banePwuxeoxD9PJaOZhH6vDSisM4T6cdycmHACIq7Q4y0wNLMJHmBpfx92C
+         WnE4PkQBXz9XrBkbHT0/qI0csFhmBgKD4B+pbnRSAiIqSIt4WSSTwSpLo/TOL7Ub4fTj
+         pzgVYex3XzJEdoPo2wADo0RBjCbf+JqPDME58Yub8LpfLVerY/I/+jo838cdS9dbfHcN
+         cD1eu4BYssjD887++aPPqQnIKLOMNl4pra1065KqKPtIfrEB1T9nwAqxbcC8/weZWeAn
+         MbFA==
+X-Gm-Message-State: APjAAAVbAnon8+4rQ6lpU3M2lHtSY87bZtAXd06oMDim1otUrO2FXd8d
+        LBElDhZf0bU+XXNO4CU1XdQ=
+X-Google-Smtp-Source: APXvYqzpHFPcs8wqSh6UDjLhtAgV9r92A+H6PKQaASa8MTnRPf9hCZWEZ/wN9o/vH1jWAEJYkcaPtA==
+X-Received: by 2002:a6b:b714:: with SMTP id h20mr37211941iof.302.1568159067609;
+        Tue, 10 Sep 2019 16:44:27 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id z20sm19383990iof.38.2019.09.10.16.44.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Sep 2019 16:44:27 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Anil Gurumurthy <anil.gurumurthy@qlogic.com>,
+        Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: bfa: release allocated memory in case of error
+Date:   Tue, 10 Sep 2019 18:44:15 -0500
+Message-Id: <20190910234417.22151-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/8/19 12:16 AM, Linus Walleij wrote:
-> On Sat, Sep 7, 2019 at 2:05 AM John Hubbard <jhubbard@nvidia.com> wrote:
-> 
->> While building with !CONFIG_GPIOLIB, I experienced a build failure,
->> because driver.h in that configuration supplies both a static and
->> a non-static version of these routines:
-> 
-> I think this is fixed in my latest version of the "devel" branch?
-> 
+In bfad_im_get_stats if bfa_port_get_stats fails, allocated memory
+needs to be released.
 
-OK, sounds good to me. Sorry for not spotting that a fix is in
-the pipeline. :)
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ drivers/scsi/bfa/bfad_attr.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-
-thanks,
+diff --git a/drivers/scsi/bfa/bfad_attr.c b/drivers/scsi/bfa/bfad_attr.c
+index 29ab81df75c0..fbfce02e5b93 100644
+--- a/drivers/scsi/bfa/bfad_attr.c
++++ b/drivers/scsi/bfa/bfad_attr.c
+@@ -275,8 +275,10 @@ bfad_im_get_stats(struct Scsi_Host *shost)
+ 	rc = bfa_port_get_stats(BFA_FCPORT(&bfad->bfa),
+ 				fcstats, bfad_hcb_comp, &fcomp);
+ 	spin_unlock_irqrestore(&bfad->bfad_lock, flags);
+-	if (rc != BFA_STATUS_OK)
++	if (rc != BFA_STATUS_OK) {
++		kfree(fcstats);
+ 		return NULL;
++	}
+ 
+ 	wait_for_completion(&fcomp.comp);
+ 
 -- 
-John Hubbard
-NVIDIA
+2.17.1
+
