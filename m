@@ -2,158 +2,127 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F752C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D210FC4740A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E738820872
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:25:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9079208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:25:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=d-silva.org header.i=@d-silva.org header.b="bLdhODUh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aEbCPCQi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388081AbfIJKZI (ORCPT
+        id S2390017AbfIJKZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 06:25:08 -0400
-Received: from ushosting.nmnhosting.com ([66.55.73.32]:42938 "EHLO
-        ushosting.nmnhosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726960AbfIJKZF (ORCPT
+        Tue, 10 Sep 2019 06:25:12 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36335 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389029AbfIJKZK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 06:25:05 -0400
-Received: from mail2.nmnhosting.com (unknown [202.169.106.97])
-        by ushosting.nmnhosting.com (Postfix) with ESMTPS id C3FF82DC1B4F;
-        Tue, 10 Sep 2019 06:25:00 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=d-silva.org;
-        s=201810a; t=1568111101;
-        bh=HDAltXrE8fa0s1cXwhaPiIFePgfp29KfB1TH4WQiFKM=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date:From;
-        b=bLdhODUhBW4Fo/x94Nj+R+V91mwnbDdWHLNOGLCq0biZGZH3Jh+idjt+I4APSOr8C
-         Rbc8OmvyYWwlcbdY4DffVqXm1RUEEn3bfRKdaZ1uoMBCsX+spov/LrzTCPI8p/m6yG
-         eorPdXIjF7Xp4/1L2OakqTNsZo7lNf7vyW9f4wCMpok5yTmvZEsL0GMXwFEsrDvVqV
-         u2BgYZUPjehGpv0d4ae7pNuevsXh0ymINJnKAs/jiu7A8fXASd+pYF2Z09eDbzZJTh
-         rpu+wYaQiZaqh9o5kRpPypjiPm7X6UFOTf8brRROPvWQI0tSg3gcbZbnpN8doK/0IN
-         To853JLOgdR9DOz+Rofmdkpor1j24qEnCwrL59ebH7AMvY/hgaDftc8bL+w6G3fDiu
-         /DdLZUth6SFIpG/syJjKU3YM7QaK33iOJMTO6896o/9bTT2Wyrd0PQItUV+aDxtWFh
-         5uh5FAYEVcPNCe4PJ7st0HYpohFsbuKa9xyf360C6loFML0oFu6jUNQYj0uur0Skg0
-         1fg545R3fYt0a+/SbIObDbvt9lhOh7fMJeqCxkIaudOiWBuTxoYKmBCzDF+5yKubCL
-         f82z0VccKg8yE5D2YaC57RDufBuKihrXFF2SH0JqSFbPOehLLX0RZH1maGEvkJ7hTj
-         ZOP4NSLQU6ekz1+NkJkLdFdQ=
-Received: from Hawking (ntp.lan [10.0.1.1])
-        (authenticated bits=0)
-        by mail2.nmnhosting.com (8.15.2/8.15.2) with ESMTPSA id x8AAOsMd022564
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Tue, 10 Sep 2019 20:24:54 +1000 (AEST)
-        (envelope-from alastair@d-silva.org)
-From:   "Alastair D'Silva" <alastair@d-silva.org>
-To:     "'David Hildenbrand'" <david@redhat.com>,
-        "'Alastair D'Silva'" <alastair@au1.ibm.com>
-Cc:     "'Andrew Morton'" <akpm@linux-foundation.org>,
-        "'Oscar Salvador'" <osalvador@suse.com>,
-        "'Michal Hocko'" <mhocko@suse.com>,
-        "'Pavel Tatashin'" <pasha.tatashin@soleen.com>,
-        "'Dan Williams'" <dan.j.williams@intel.com>,
-        "'Wei Yang'" <richard.weiyang@gmail.com>,
-        "'Qian Cai'" <cai@lca.pw>, "'Jason Gunthorpe'" <jgg@ziepe.ca>,
-        "'Logan Gunthorpe'" <logang@deltatee.com>,
-        "'Ira Weiny'" <ira.weiny@intel.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190910025225.25904-1-alastair@au1.ibm.com> <20190910025225.25904-3-alastair@au1.ibm.com> <6ca671a0-8b00-e974-7de9-a574ad9b77ec@redhat.com>
-In-Reply-To: <6ca671a0-8b00-e974-7de9-a574ad9b77ec@redhat.com>
-Subject: RE: [PATCH 2/2] mm: Add a bounds check in devm_memremap_pages()
-Date:   Tue, 10 Sep 2019 20:24:54 +1000
-Message-ID: <05af01d567c1$fdb256d0$f9170470$@d-silva.org>
+        Tue, 10 Sep 2019 06:25:10 -0400
+Received: by mail-wr1-f65.google.com with SMTP id y19so19052248wrd.3
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 03:25:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vEAz+Y7APZfz1l8Dh96l5dI6vRULTuCJ/MZX/t986yo=;
+        b=aEbCPCQi0wcPkmxmCDIuGnHOPhylUfSgnlSVwIZ6W2w5o7qQhdLkBb5lz7h87Kf4+0
+         uh8Z0WnKWZYkh593TZ9xl2Y+bhFfehBF2Qa4IN6vOJypJN+F2gKkJKTTp3UmT9m3ZW58
+         SGIQcXSQjx5L5RAfIBBtFOkIfOXgQkQzD+xiLjRO7Zii80i8bCMpGPnz1kL9f5lkpZOe
+         7F6xVFBVBmZqKsnAALHkc8z6Db7ua5cAOQe3bll5o5Yjad1JMTg1DF9GVB8+3MpiLbCu
+         yXBh/wYj4RZ6I5CtCoswqeNKEDdlJ16163CLEfR5vxdM7PW53MDiHKWGehXR/a2dbZe5
+         lWxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vEAz+Y7APZfz1l8Dh96l5dI6vRULTuCJ/MZX/t986yo=;
+        b=ZrnYh37DGWOE72g0SXgzm1VRjSjj0K94tBWR8HIEYabQrSpkvUCAwCEWJK+tFPr+0E
+         g5K//1GF1AJm3FNBk3nTpKIArsERAmyJ6xdapFGOn46wzMniGTfYxCBXklUs8NG+3/Pk
+         SZ8Q9lr8dtT7osInkCMkCAAVD7+WLK+G0tu64cjB+jup6qP4BQpgzYk02DwR61Ol5+h3
+         Q4lO1XlIGPiZwIn1MsXmaYmyEu65j2HyDDNrfHNbhvyTHoyN+y4DbsLtOPi1GKhNQx7W
+         e58CbQ19uEQLqXPDFFoicYh6NEIK1gYpoAbrlyW/iVhIhVzCiCovxMnPXppnSpL6zDxD
+         N0kg==
+X-Gm-Message-State: APjAAAUlkZ9gU7IN9adMs2DGHUY+jssV3szWsYYSClltLcI2jiOvEqLf
+        8YqC2+4fVWV2WQYctS+K2t2CCw==
+X-Google-Smtp-Source: APXvYqwcFh+5AHaeQ32JwyB8p5MAuUpAL0phC2yYPGlCXsZIhaa4ZKBqf85xJnZPvtb1eRPGpd2mqA==
+X-Received: by 2002:a5d:500f:: with SMTP id e15mr10799631wrt.300.1568111108330;
+        Tue, 10 Sep 2019 03:25:08 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id a144sm4235807wme.13.2019.09.10.03.25.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Sep 2019 03:25:07 -0700 (PDT)
+Date:   Tue, 10 Sep 2019 11:25:05 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Tomer Maimon <tmaimon77@gmail.com>
+Cc:     mpm@selenic.com, herbert@gondor.apana.org.au, arnd@arndb.de,
+        gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, avifishman70@gmail.com,
+        tali.perry1@gmail.com, venture@google.com, yuenn@google.com,
+        benjaminfair@google.com, sumit.garg@linaro.org,
+        jens.wiklander@linaro.org, vkoul@kernel.org, tglx@linutronix.de,
+        joel@jms.id.au, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        openbmc@lists.ozlabs.org
+Subject: Re: [PATCH v2 1/2] dt-binding: hwrng: add NPCM RNG documentation
+Message-ID: <20190910102505.vgyomi575ldrk2lq@holly.lan>
+References: <20190909123840.154745-1-tmaimon77@gmail.com>
+ <20190909123840.154745-2-tmaimon77@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQHvMJj7Zv4jgOWqcZIGTeYry0K56gJQpAzUAu4+QZimxyuUcA==
-Content-Language: en-au
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (mail2.nmnhosting.com [10.0.1.20]); Tue, 10 Sep 2019 20:24:56 +1000 (AEST)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190909123840.154745-2-tmaimon77@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: David Hildenbrand <david@redhat.com>
-> Sent: Tuesday, 10 September 2019 5:39 PM
-> To: Alastair D'Silva <alastair@au1.ibm.com>; alastair@d-silva.org
-> Cc: Andrew Morton <akpm@linux-foundation.org>; Oscar Salvador
-> <osalvador@suse.com>; Michal Hocko <mhocko@suse.com>; Pavel Tatashin
-> <pasha.tatashin@soleen.com>; Dan Williams <dan.j.williams@intel.com>;
-> Wei Yang <richard.weiyang@gmail.com>; Qian Cai <cai@lca.pw>; Jason
-> Gunthorpe <jgg@ziepe.ca>; Logan Gunthorpe <logang@deltatee.com>; Ira
-> Weiny <ira.weiny@intel.com>; linux-mm@kvack.org; linux-
-> kernel@vger.kernel.org
-> Subject: Re: [PATCH 2/2] mm: Add a bounds check in
-> devm_memremap_pages()
+On Mon, Sep 09, 2019 at 03:38:39PM +0300, Tomer Maimon wrote:
+> Added device tree binding documentation for Nuvoton BMC
+> NPCM Random Number Generator (RNG).
 > 
-> On 10.09.19 04:52, Alastair D'Silva wrote:
-> > From: Alastair D'Silva <alastair@d-silva.org>
-> >
-> > The call to check_hotplug_memory_addressable() validates that the
-> > memory is fully addressable.
-> >
-> > Without this call, it is possible that we may remap pages that is not
-> > physically addressable, resulting in bogus section numbers being
-> > returned from __section_nr().
-> >
-> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> > ---
-> >  mm/memremap.c | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> >
-> > diff --git a/mm/memremap.c b/mm/memremap.c index
-> > 86432650f829..fd00993caa3e 100644
-> > --- a/mm/memremap.c
-> > +++ b/mm/memremap.c
-> > @@ -269,6 +269,13 @@ void *devm_memremap_pages(struct device
-> *dev,
-> > struct dev_pagemap *pgmap)
-> >
-> >  	mem_hotplug_begin();
-> >
-> > +	error = check_hotplug_memory_addressable(res->start,
-> > +						 resource_size(res));
-> > +	if (error) {
-> > +		mem_hotplug_done();
-> > +		goto err_checkrange;
-> > +	}
-> > +
+> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> ---
+>  .../bindings/rng/nuvoton,npcm-rng.txt           | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt
 > 
-> No need to check under the memory hotplug lock.
-> 
+> diff --git a/Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt b/Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt
+> new file mode 100644
+> index 000000000000..a697b4425fb3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt
+> @@ -0,0 +1,17 @@
+> +NPCM SoC Random Number Generator
+> +
+> +Required properties:
+> +- compatible  : "nuvoton,npcm750-rng" for the NPCM7XX BMC.
+> +- reg         : Specifies physical base address and size of the registers.
+> +
+> +Optional property:
+> +- quality : estimated number of bits of true entropy per 1024 bits
+> +			read from the rng.
+> +			If this property is not defined, it defaults to 1000.
 
-Thanks, I'll adjust it.
+There are pending unreplied review comments about this property (my own
+as it happens):
+https://patchwork.kernel.org/patch/11119371/
 
-> >  	/*
-> >  	 * For device private memory we call add_pages() as we only need to
-> >  	 * allocate and initialize struct page for the device memory. More-
-> > @@ -324,6 +331,7 @@ void *devm_memremap_pages(struct device *dev,
-> > struct dev_pagemap *pgmap)
-> >
-> >   err_add_memory:
-> >  	kasan_remove_zero_shadow(__va(res->start), resource_size(res));
-> > + err_checkrange:
-> >   err_kasan:
-> >  	untrack_pfn(NULL, PHYS_PFN(res->start), resource_size(res));
-> >   err_pfn_remap:
-> >
-> 
-> 
-> --
-> 
-> Thanks,
-> 
-> David / dhildenb
-> 
 
--- 
-Alastair D'Silva           mob: 0423 762 819
-skype: alastair_dsilva     msn: alastair@d-silva.org
-blog: http://alastair.d-silva.org    Twitter: @EvilDeece
+Daniel.
 
+> +
+> +Example:
+> +
+> +rng: rng@f000b000 {
+> +	compatible = "nuvoton,npcm750-rng";
+> +	reg = <0xf000b000 0x8>;
+> +};
+> -- 
+> 2.18.0
+> 
