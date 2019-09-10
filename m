@@ -2,78 +2,152 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3380DC49ED7
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71202C49ED9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07F8021019
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:30:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DB2A2082C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:33:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MgjPgu1d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437114AbfIJRaM (ORCPT
+        id S2437120AbfIJRdR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 13:30:12 -0400
-Received: from mga14.intel.com ([192.55.52.115]:52936 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732925AbfIJRaL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 13:30:11 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Sep 2019 10:30:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,490,1559545200"; 
-   d="scan'208";a="184239176"
-Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
-  by fmsmga008.fm.intel.com with ESMTP; 10 Sep 2019 10:30:10 -0700
-Received: from orsmsx123.amr.corp.intel.com (10.22.240.116) by
- ORSMSX106.amr.corp.intel.com (10.22.225.133) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 10 Sep 2019 10:30:10 -0700
-Received: from orsmsx113.amr.corp.intel.com ([169.254.9.198]) by
- ORSMSX123.amr.corp.intel.com ([169.254.1.98]) with mapi id 14.03.0439.000;
- Tue, 10 Sep 2019 10:30:10 -0700
-From:   "Mehta, Sohil" <sohil.mehta@intel.com>
-To:     "joro@8bytes.org" <joro@8bytes.org>,
-        "Park, Kyung Min" <kyung.min.park@intel.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Lu, Baolu" <baolu.lu@intel.com>,
-        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
-        "dwmw2@infradead.org" <dwmw2@infradead.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>
-Subject: Re: [PATCH] iommu/vt-d: Add Scalable Mode fault information
-Thread-Topic: [PATCH] iommu/vt-d: Add Scalable Mode fault information
-Thread-Index: AQHVZN/HQgvpmNXZLUqG3t3JDwxWUaclCW2AgACd4YA=
-Date:   Tue, 10 Sep 2019 17:30:09 +0000
-Message-ID: <1568136807.58430.11.camel@intel.com>
-References: <1567793642-17063-1-git-send-email-kyung.min.park@intel.com>
-         <20190910080823.GA3247@8bytes.org>
-In-Reply-To: <20190910080823.GA3247@8bytes.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.25.110.4]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <CFD19441763DE043B6380832CA51AC62@intel.com>
-Content-Transfer-Encoding: base64
+        Tue, 10 Sep 2019 13:33:17 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36812 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436774AbfIJRdR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 13:33:17 -0400
+Received: by mail-wm1-f68.google.com with SMTP id p13so492731wmh.1;
+        Tue, 10 Sep 2019 10:33:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Wt5JeczPrCBzCgehywueQJ61lZygPQJ472U+kIhvLrQ=;
+        b=MgjPgu1diPg/vU26ZJEZ4SaIsGlgvuk87hug7Apxetu4ogdIBFhtK7fOez+vO9hgYv
+         Iw474Le88m62b9l9kMEuMpo06G8GVRd7JMSFsz/fbo7uOLUbV92+DMuWOn9QD72vYogO
+         3SvdPYAW7cBmmZEz6/0ZDOKcStVrIG1PNuFbAatjfUcWcEs3L4NNRJbfCKv9OO9yWCTx
+         1JKqidVSrzGQ4jWdDluZ24Bb6ettRk8Qo9/qDAQbfWA0ONz/uez4HS4o5VKlTf1jQj+l
+         U7TF1JazfDxx6avjv9BrgjuMhjEgFiuNc4VM2ySTzqd0wa7/nSr9sVih8Ppor4oCA4AK
+         sc/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Wt5JeczPrCBzCgehywueQJ61lZygPQJ472U+kIhvLrQ=;
+        b=kz6v9LxYN/2/tn8/N0W+O6TNmltRVc3LA7U4+abgBsaRQXe8d9XoIb2iQuoHY/KJQA
+         fHfnW9rXtQnfcw3QR+O8/WkzTYHgW6CrwIxc0sd2L7thHDPRPOtc+uxNXhvNHyT+9NWp
+         7mqtwDt3AO+xD9DPkBdGk2vQuaNwP4FlNuFwbAbQ6GP8Cs8EFfVB49PRFvM1QVSteL99
+         u2dT6lDOdLKjoBWWeB0YnyMqqFTKBe9hoM2kJrZSpMu5XOFGIw8t14fiLn7fkFkKYPjr
+         mOEXb9RzNfwMDSL8P4alNL+pZta2BwzySW9yC1ET/2nVLlGYW1Rq65y5zW4DJ60X3F/5
+         9ckQ==
+X-Gm-Message-State: APjAAAXyvnOqG/m4SGn74YblASSm+qYCcGZvmkJB/35ii8bc8Ci/sLb4
+        ziBq/k80OMf3blACSSU0loo=
+X-Google-Smtp-Source: APXvYqymzz3cJ6lzpTekYi4CrZ9yidlFwg56ZZE1gRSlX/QGn5wag2FH62iKVhiUIS1+/1ytdemN3g==
+X-Received: by 2002:a1c:ef14:: with SMTP id n20mr520579wmh.89.1568136793312;
+        Tue, 10 Sep 2019 10:33:13 -0700 (PDT)
+Received: from darwi-home-pc (p200300D06F2D144910CD9D07D5336EC2.dip0.t-ipconnect.de. [2003:d0:6f2d:1449:10cd:9d07:d533:6ec2])
+        by smtp.gmail.com with ESMTPSA id n7sm17956584wrx.42.2019.09.10.10.33.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Sep 2019 10:33:12 -0700 (PDT)
+Date:   Tue, 10 Sep 2019 19:33:04 +0200
+From:   "Ahmed S. Darwish" <darwish.07@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: Linux 5.3-rc8
+Message-ID: <20190910173243.GA3992@darwi-home-pc>
+References: <CAHk-=whBQ+6c-h+htiv6pp8ndtv97+45AH9WvdZougDRM6M4VQ@mail.gmail.com>
+ <20190910042107.GA1517@darwi-home-pc>
+ <CAHk-=wimE=Rw4s8MHKpsgc-ZsdoTp-_CAs7fkm9scn87ZbkMFg@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wimE=Rw4s8MHKpsgc-ZsdoTp-_CAs7fkm9scn87ZbkMFg@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTA5LTEwIGF0IDEwOjA4ICswMjAwLCBKb2VyZyBSb2VkZWwgd3JvdGU6DQo+
-ID4gK8KgwqDCoMKgwqAiVW5rbm93biIsICJVbmtub3duIiwgIlVua25vd24iLCAiVW5rbm93biIs
-ICJVbmtub3duIiwNCj4gIlVua25vd24iLCAiVW5rbm93biIsIC8qIDB4NDktMHg0RiAqLw0KPiAN
-Cj4gTWF5YmUgYWRkIHRoZSBudW1iZXIgKDB4NDktMHg0ZikgdG8gdGhlIHJlc3BlY3RpbmcgIlVu
-a25vd24iIGZpZWxkcz8NCj4gSWYNCj4gd2UgY2FuJ3QgZ2l2ZSBhIHJlYXNvbiB3ZSBzaG91bGQg
-Z2l2ZSB0aGUgbnVtYmVyIGZvciBlYXNpZXIgZGVidWdnaW5nDQo+IGluDQo+IHRoZSBmdXR1cmUu
-IFNhbWUgZm9yIHRoZSAiVW5rbm93biIgZmllbGRzIGJlbG93Lg0KDQpJIGJlbGlldmUgYSBmYXVs
-dCBudW1iZXIgaXMgYWx3YXlzIHByaW50ZWQgaW7CoGRtYXJfZmF1bHRfZG9fb25lKCkgZXZlbg0K
-aWYgdGhlIHJlYXNvbiBpcyB1bmtub3duLg0KDQpETUFSOiBbRE1BIFdyaXRlXSBSZXF1ZXN0IGRl
-dmljZSBbMDA6MDIuMF0gZmF1bHQgYWRkciAxMDhhMDAwIFtmYXVsdA0KcmVhc29uIDIzXSBVbmtu
-b3duDQoNCi0tU29oaWwNCg==
+On Tue, Sep 10, 2019 at 12:33:12PM +0100, Linus Torvalds wrote:
+> On Tue, Sep 10, 2019 at 5:21 AM Ahmed S. Darwish <darwish.07@gmail.com> wrote:
+> >
+> > The commit b03755ad6f33 (ext4: make __ext4_get_inode_loc plug), [1]
+> > which was merged in v5.3-rc1, *always* leads to a blocked boot on my
+> > system due to low entropy.
+>
+> Exactly what is it that blocks on entropy? Nobody should do that
+> during boot, because on some systems entropy is really really low
+> (think flash memory with polling IO etc).
+>
+
+Ok, I've tracked it down further. It's unfortunately GDM
+intentionally blocking on a getrandom(buf, 16, 0).
+
+Booting the system with an straced GDM service
+("ExecStart=strace -f /usr/bin/gdm") reveals:
+
+  ...
+  [  3.779375] strace[262]: [pid   323] execve("/usr/lib/gnome-session-binary",
+                                                 ... /* 28 vars */) = 0
+  ...
+  [  4.019227] strace[262]: [pid   323] getrandom( <unfinished ...>
+  [ 79.601433] kernel: random: crng init done
+  [ 79.601443] kernel: random: 3 urandom warning(s) missed due to ratelimiting
+  [ 79.601262] strace[262]: [pid   323] <... getrandom resumed>..., 16, 0) = 16
+  [ 79.601262] strace[262]: [pid   323] getrandom(..., 16, 0) = 16
+  [ 79.603041] strace[262]: [pid   323] getrandom(..., 16, 0) = 16
+  [ 79.603041] strace[262]: [pid   323] getrandom(..., 16, 0) = 16
+  [ 79.603041] strace[262]: [pid   323] getrandom(..., 16, 0) = 16
+
+As can be seen in the timestamps, the GDM boot was only continued
+by typing randomly on the keyboard..
+
+> That said, I would have expected that any PC gets plenty of entropy.
+> Are you sure it's entropy that is blocking, and not perhaps some odd
+> "forgot to unplug" situation?
+>
+
+Yes, doing any of below steps makes the problem reliably disappear:
+
+  - boot param "random.trust_cpu=on"
+  - rngd(8) enabled at boot (entropy source: x86 RDRAND + jitter)
+  - pressing random 3 or 4 keyboard keys while GDM boot is stuck
+
+> > Can this even be considered a user-space breakage? I'm honestly not
+> > sure. On my modern RDRAND-capable x86, just running rng-tools rngd(8)
+> > early-on fixes the problem. I'm not sure about the status of older
+> > CPUs though.
+>
+> It's definitely breakage, although rather odd. I would have expected
+> us to have other sources of entropy than just the disk. Did we stop
+> doing low bits of TSC from timer interrupts etc?
+>
+
+Exactly.
+
+While gnome-session is obviously at fault here by requiring
+*blocking* randomness at the boot path, it's still not requesting
+much, just (5 * 16) bytes to be exact.
+
+I guess an x86 laptop should be able to provide that, even without
+RDRAND / random.trust_cpu=on (TSC jitter, etc.) ?
+
+thanks,
+--darwi
+
+> Ted, either way - ext4 IO patterns or random number entropy - this is
+> your code. Comments?
+>
+>                  Linus
