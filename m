@@ -2,127 +2,116 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A04C49ED7
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF9BC49ED8
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:47:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79F2F21D79
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:47:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A39F821019
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:47:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bctqj0dI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405208AbfIJOq6 (ORCPT
+        id S2405452AbfIJOrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 10:46:58 -0400
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:46346 "EHLO
-        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2393645AbfIJOqk (ORCPT
+        Tue, 10 Sep 2019 10:47:05 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:33653 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405395AbfIJOrC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 10:46:40 -0400
-Received: from pps.filterd (m0134420.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8AEfMsL006251;
-        Tue, 10 Sep 2019 14:46:22 GMT
-Received: from g4t3427.houston.hpe.com (g4t3427.houston.hpe.com [15.241.140.73])
-        by mx0b-002e3701.pphosted.com with ESMTP id 2uxbxdsuf9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 10 Sep 2019 14:46:22 +0000
-Received: from stormcage.eag.rdlabs.hpecorp.net (stormcage.eag.rdlabs.hpecorp.net [128.162.236.70])
-        by g4t3427.houston.hpe.com (Postfix) with ESMTP id 97D7E72;
-        Tue, 10 Sep 2019 14:46:21 +0000 (UTC)
-Received: by stormcage.eag.rdlabs.hpecorp.net (Postfix, from userid 5508)
-        id 3F506201FCF22; Tue, 10 Sep 2019 09:46:21 -0500 (CDT)
-Message-Id: <20190910144610.300020245@stormcage.eag.rdlabs.hpecorp.net>
-References: <20190910144609.909602978@stormcage.eag.rdlabs.hpecorp.net>
-User-Agent: quilt/0.46-1
-Date:   Tue, 10 Sep 2019 09:46:12 -0500
-From:   Mike Travis <mike.travis@hpe.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Hedi Berriche <hedi.berriche@hpe.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Justin Ernst <justin.ernst@hpe.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/8] x86/platform/uv: Add return code to UV BIOS Init function
-Content-Disposition: inline; filename=add-bios_init-rc
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-10_10:2019-09-10,2019-09-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- priorityscore=1501 bulkscore=0 suspectscore=0 adultscore=0
- lowpriorityscore=0 mlxscore=0 malwarescore=0 spamscore=0 impostorscore=0
- clxscore=1015 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1906280000 definitions=main-1909100142
+        Tue, 10 Sep 2019 10:47:02 -0400
+Received: by mail-io1-f68.google.com with SMTP id m11so38140099ioo.0;
+        Tue, 10 Sep 2019 07:47:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=83TThgQAjkQ0ae/WfN2rozL6NZ6sFqo/tzTJieGwWhY=;
+        b=bctqj0dIEQG02DidTblEEKKmlRq95iuCrJbWTEZEFy6f4ldmknD9AC82Hjp7WtIcUL
+         wdtgqANYPFpfuqN9RWFoV81S+TL4TZWcW/eRB1zbwCnI4axFiqpnKB/4F9Vb1ASsBmwM
+         MoGeD5V7oPXNrI0TLfR8qwBLS/a5rmpBqaVS40yQVLdcqID59aFUJKp3thzSPP4Ym5fo
+         oUxnlGZ+RikUHkghsxU4t9MUOUJM1V923cataTV37iHuaUS8taTW2ilbXf8zuGBL2rrr
+         GFcYtmHJkRVPpjaQYbMNqFd6Z6x57kRfzb33fCPJ6liqZh8sZLRJMVMsx0Mc0ssKXqB7
+         m1dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=83TThgQAjkQ0ae/WfN2rozL6NZ6sFqo/tzTJieGwWhY=;
+        b=W9N7gezhQNg1WG4oLf0K+lRaR7fEVZLBCpgY6d7YqL7EIUxwwd5lF+yRrnldvMTA6i
+         XaS/bfqnVmrB85wRDp9NRmCrEtT7WuNy0e5vyb0G8eWkkwUgIV5E6TlxnDMRWBaK4XOv
+         pgOmkyAaoudtzyp2v6rXn81jpTS1vNue8vtPwL4JvaICatc5WbsWlgZ+WUogQG6NI2Cl
+         aWf4AfbJ52AVTTKqdFKK6eMJxiqdSGyn4Y8n0e0dMNfCiM+A5P+Xl2W4ZfXHNWyT6H/J
+         unjia/KY650Km/BSdiA0ShdB9J3Sqsugy2NDAwXR6LgM5ti++sgy0ef9dMKGpN2ba4q2
+         yj0Q==
+X-Gm-Message-State: APjAAAV3mDU/E7CQnDy/X6dpky4LggsUGMCV29Vir2KS+0cNn1ORT2+y
+        0iMtS4vSfO+BioA6pX29mZ/tNQpOaK2BovOgkjg=
+X-Google-Smtp-Source: APXvYqxrAgxnAGDouzK82zOnS/FEXuQVFFiHhPiHvEJcvMSKDH7nqj7q9uv+1GUDlOR7M4uUZTjdaBK0SNIGv69duNM=
+X-Received: by 2002:a5d:8f86:: with SMTP id l6mr20769278iol.270.1568126821359;
+ Tue, 10 Sep 2019 07:47:01 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190907172225.10910.34302.stgit@localhost.localdomain>
+ <20190907172528.10910.37051.stgit@localhost.localdomain> <20190910122313.GW2063@dhcp22.suse.cz>
+In-Reply-To: <20190910122313.GW2063@dhcp22.suse.cz>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Tue, 10 Sep 2019 07:46:50 -0700
+Message-ID: <CAKgT0Ud1xqhEy_LL4AfMgreP0uXrkF-fSDn=6uDXfn7Pvj5AAw@mail.gmail.com>
+Subject: Re: [PATCH v9 3/8] mm: Move set/get_pcppage_migratetype to mmzone.h
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Oscar Salvador <osalvador@suse.de>,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Pankaj Gupta <pagupta@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
+        "Wang, Wei W" <wei.w.wang@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>, ying.huang@intel.com,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a return code to the UV BIOS init function that indicates the 
-successful initialization of the kernel/BIOS callback interface.
+On Tue, Sep 10, 2019 at 5:23 AM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Sat 07-09-19 10:25:28, Alexander Duyck wrote:
+> > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> >
+> > In order to support page reporting it will be necessary to store and
+> > retrieve the migratetype of a page. To enable that I am moving the set and
+> > get operations for pcppage_migratetype into the mm/internal.h header so
+> > that they can be used outside of the page_alloc.c file.
+>
+> Please describe who is the user and why does it needs this interface.
+> This is really important because migratetype is an MM internal thing and
+> external users shouldn't really care about it at all. We really do not
+> want a random code to call those, especially the set_pcppage_migratetype.
 
-Signed-off-by: Mike Travis <mike.travis@hpe.com>
-Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
-Reviewed-by: Dimitri Sivanich <dimitri.sivanich@hpe.com>
----
- arch/x86/include/asm/uv/bios.h |    2 +-
- arch/x86/platform/uv/bios_uv.c |    9 +++++----
- 2 files changed, 6 insertions(+), 5 deletions(-)
-
---- linux.orig/arch/x86/include/asm/uv/bios.h
-+++ linux/arch/x86/include/asm/uv/bios.h
-@@ -138,7 +138,7 @@ extern s64 uv_bios_change_memprotect(u64
- extern s64 uv_bios_reserved_page_pa(u64, u64 *, u64 *, u64 *);
- extern int uv_bios_set_legacy_vga_target(bool decode, int domain, int bus);
- 
--extern void uv_bios_init(void);
-+extern int uv_bios_init(void);
- 
- extern unsigned long sn_rtc_cycles_per_second;
- extern int uv_type;
---- linux.orig/arch/x86/platform/uv/bios_uv.c
-+++ linux/arch/x86/platform/uv/bios_uv.c
-@@ -184,20 +184,20 @@ int uv_bios_set_legacy_vga_target(bool d
- }
- EXPORT_SYMBOL_GPL(uv_bios_set_legacy_vga_target);
- 
--void uv_bios_init(void)
-+int uv_bios_init(void)
- {
- 	uv_systab = NULL;
- 	if ((uv_systab_phys == EFI_INVALID_TABLE_ADDR) ||
- 	    !uv_systab_phys || efi_runtime_disabled()) {
- 		pr_crit("UV: UVsystab: missing\n");
--		return;
-+		return -EEXIST;
- 	}
- 
- 	uv_systab = ioremap(uv_systab_phys, sizeof(struct uv_systab));
- 	if (!uv_systab || strncmp(uv_systab->signature, UV_SYSTAB_SIG, 4)) {
- 		pr_err("UV: UVsystab: bad signature!\n");
- 		iounmap(uv_systab);
--		return;
-+		return -EINVAL;
- 	}
- 
- 	/* Starting with UV4 the UV systab size is variable */
-@@ -208,8 +208,9 @@ void uv_bios_init(void)
- 		uv_systab = ioremap(uv_systab_phys, size);
- 		if (!uv_systab) {
- 			pr_err("UV: UVsystab: ioremap(%d) failed!\n", size);
--			return;
-+			return -EFAULT;
- 		}
- 	}
- 	pr_info("UV: UVsystab: Revision:%x\n", uv_systab->revision);
-+	return 0;
- }
-
--- 
-
+I was using it to store the migratetype of the page so that I could
+find the boundary list that contained the reported page as the array
+is indexed based on page order and migratetype. However on further
+discussion I am thinking I may just use page->index directly to index
+into the boundary array. Doing that I should be able to get a very
+slight improvement in lookup time since I am not having to pull order
+and migratetype and then compute the index based on that. In addition
+it becomes much more clear as to what is going on, and if needed I
+could add debug checks to verify the page is "Reported" and that the
+"Buddy" page type is set.
