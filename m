@@ -2,313 +2,100 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B31C49ED9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA10C49ED9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9493B2168B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:16:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568135766;
-	bh=hUYdhn7tFl6XOIHOWQRJF5fSSz97EzLxhwquR6JM8RQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=g9vfEMaK5uMjKGuKD8oLhqUg2f7aV9x+p3acX0jFGWnLqfBMu782fYpAJqvEo6Bd0
-	 0R0aBo1r9wOzoiOp/VtfS/XtxRRMZEJpFHBTK01yoiZgvt6iop2DnRFV90T4xOs1N6
-	 MuGEm2qxNe6Zq9EBc8GF8EiYH+FClEkNPJKaACtI=
+	by mail.kernel.org (Postfix) with ESMTP id BD04B20872
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:16:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437100AbfIJRQG (ORCPT
+        id S2437105AbfIJRQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 13:16:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38658 "EHLO mail.kernel.org"
+        Tue, 10 Sep 2019 13:16:34 -0400
+Received: from sauhun.de ([88.99.104.3]:50016 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437088AbfIJRQF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 13:16:05 -0400
-Received: from localhost (110.8.30.213.rev.vodafone.pt [213.30.8.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EADF2081B;
-        Tue, 10 Sep 2019 17:16:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568135764;
-        bh=hUYdhn7tFl6XOIHOWQRJF5fSSz97EzLxhwquR6JM8RQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sXDmL5mSBT5euAGAZPqxXUqzw0UFP0uFkP/pG7aKaZmh1fF9xAXMlJ2OpEWpOo7of
-         TnQ4oaGoaAZljjOztF78qwJSuXeGtowodS81bvPIhet6Gtu564hp73M0stF3Q1r/lX
-         +hNkdh4MuZPDYjJvtt3mVdoSElPBVlcsplcLQ0Jk=
-Date:   Tue, 10 Sep 2019 18:16:01 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
-Cc:     =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Rajan Vaja <rajan.vaja@xilinx.com>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Ray Jui <ray.jui@broadcom.com>,
-        Vikram Prakash <vikram.prakash@broadcom.com>,
-        tee-dev@lists.linaro.org, bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        Vikas Gupta <vikas.gupta@broadcom.com>
-Subject: Re: [PATCH] firmware: broadcom: add OP-TEE based BNXT f/w manager
-Message-ID: <20190910171601.GA12665@kroah.com>
-References: <1568128624-2902-1-git-send-email-sheetal.tigadoli@broadcom.com>
+        id S2387433AbfIJRQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 13:16:34 -0400
+Received: from localhost (234.77.63.94.rev.vodafone.pt [94.63.77.234])
+        by pokefinder.org (Postfix) with ESMTPSA id 1A4A42C0095;
+        Tue, 10 Sep 2019 19:16:31 +0200 (CEST)
+Date:   Tue, 10 Sep 2019 18:16:30 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     Vladimir Zapolskiy <vz@mleia.com>,
+        jacopo mondi <jacopo@jmondi.org>,
+        Peter Rosin <peda@axentia.se>, linux-media@vger.kernel.org,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>
+Subject: Re: [RFC,v2 2/6] i2c: add I2C Address Translator (ATR) support
+Message-ID: <20190910171629.GA5581@kunai>
+References: <20190723203723.11730-1-luca@lucaceresoli.net>
+ <20190723203723.11730-3-luca@lucaceresoli.net>
+ <20190901143101.humomdehy5ee73sk@vino>
+ <aedad45b-16d6-d189-b045-329727440ca5@mleia.com>
+ <20190909072232.GA990@kunai>
+ <8af9a049-06b9-dbe8-827b-5134d20e9435@mleia.com>
+ <152384b8-c0a8-e6fe-9a1f-52caf00533de@lucaceresoli.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="GvXjxJ+pjyke8COw"
 Content-Disposition: inline
-In-Reply-To: <1568128624-2902-1-git-send-email-sheetal.tigadoli@broadcom.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <152384b8-c0a8-e6fe-9a1f-52caf00533de@lucaceresoli.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 08:47:04PM +0530, Sheetal Tigadoli wrote:
-> From: Vikas Gupta <vikas.gupta@broadcom.com>
-> 
-> This driver registers on TEE bus to interact with OP-TEE based
-> BNXT firmware management modules
-> 
-> Signed-off-by: Vikas Gupta <vikas.gupta@broadcom.com>
-> Signed-off-by: Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
-> ---
->  drivers/firmware/broadcom/Kconfig             |   8 +
->  drivers/firmware/broadcom/Makefile            |   1 +
->  drivers/firmware/broadcom/tee_bnxt_fw.c       | 447 ++++++++++++++++++++++++++
->  include/linux/firmware/broadcom/tee_bnxt_fw.h |  17 +
->  4 files changed, 473 insertions(+)
->  create mode 100644 drivers/firmware/broadcom/tee_bnxt_fw.c
->  create mode 100644 include/linux/firmware/broadcom/tee_bnxt_fw.h
-> 
-> diff --git a/drivers/firmware/broadcom/Kconfig b/drivers/firmware/broadcom/Kconfig
-> index 6468082..a846a21 100644
-> --- a/drivers/firmware/broadcom/Kconfig
-> +++ b/drivers/firmware/broadcom/Kconfig
-> @@ -22,3 +22,11 @@ config BCM47XX_SPROM
->  	  In case of SoC devices SPROM content is stored on a flash used by
->  	  bootloader firmware CFE. This driver provides method to ssb and bcma
->  	  drivers to read SPROM on SoC.
-> +
-> +config TEE_BNXT_FW
-> +	bool "Broadcom BNXT firmware manager"
-> +	depends on ARCH_BCM_IPROC && OPTEE
 
-No ability to build with compile testing?
-
-> +	default ARCH_BCM_IPROC
-> +	help
-> +	  This module help to manage firmware on Broadcom BNXT device. The module
-> +	  registers on tee bus and invoke calls to manage firmware on BNXT device.
-> diff --git a/drivers/firmware/broadcom/Makefile b/drivers/firmware/broadcom/Makefile
-> index 72c7fdc..17c5061 100644
-> --- a/drivers/firmware/broadcom/Makefile
-> +++ b/drivers/firmware/broadcom/Makefile
-> @@ -1,3 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  obj-$(CONFIG_BCM47XX_NVRAM)		+= bcm47xx_nvram.o
->  obj-$(CONFIG_BCM47XX_SPROM)		+= bcm47xx_sprom.o
-> +obj-$(CONFIG_TEE_BNXT_FW)		+= tee_bnxt_fw.o
-> diff --git a/drivers/firmware/broadcom/tee_bnxt_fw.c b/drivers/firmware/broadcom/tee_bnxt_fw.c
-> new file mode 100644
-> index 00000000..89a48fd
-> --- /dev/null
-> +++ b/drivers/firmware/broadcom/tee_bnxt_fw.c
-> @@ -0,0 +1,447 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright 2019 Broadcom.
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/slab.h>
-> +#include <linux/tee_drv.h>
-> +#include <linux/uuid.h>
-> +
-> +#include <linux/firmware/broadcom/tee_bnxt_fw.h>
-> +
-> +#define DRIVER_NAME	"tee-bnxt-fw"
-
-KBUILD_MODNAME?
-
-> +#define MAX_SHM_MEM_SZ	SZ_4M
-
-Why?
-
-> +
-> +#define MAX_TEE_PARAM_ARRY_MEMB		4
-> +
-> +enum ta_cmd {
-> +/*
-> + * TA_CMD_BNXT_FASTBOOT - boot bnxt device by copying f/w into sram
-> + *
-> + * param[0] unused
-> + * param[1] unused
-> + * param[2] unused
-> + * param[3] unused
-> + *
-> + * Result:
-> + * TEE_SUCCESS - Invoke command success
-> + * TEE_ERROR_ITEM_NOT_FOUND - Corrupt f/w image found on memory
-> + */
-> +	TA_CMD_BNXT_FASTBOOT = 0,
-> +
-
-Please indent the comments too.  As-is this is hard to read.
+--GvXjxJ+pjyke8COw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 
-> +/*
-> + * TA_CMD_BNXT_HEALTH_STATUS - to check health of bnxt device
-> + *
-> + * param[0] (out value) - value.a: health status
-> + * param[1] unused
-> + * param[2] unused
-> + * param[3] unused
-> + *
-> + * Result:
-> + * TEE_SUCCESS - Invoke command success
-> + * TEE_ERROR_BAD_PARAMETERS - Incorrect input param
-> + */
-> +	TA_CMD_BNXT_HEALTH_STATUS,
+> Here i2c-0 is the "local" bus, i2c-4 and i2c-5 are the remote busses on
+> ports 0 and 1. As you can see the eeproms are accessed using a name like
+> "4-0050", meaning physical slave address 0x50 on bus 4. No alias is neede=
+d.
+>=20
+> Should you want to know the alias, perhaps for debugging (it's the
+> address you'll see on your logic analyzer), they are shown in the kernel
+> log.
 
-Should all of these have explicit values?
+And to add to that: The aliases on i2c-0 will be marked busy and show up
+as used if you run i2cdetect. So, you'd need a force-flag if you'd want
+to access them from userspace.
 
-> +
-> +/*
-> + * TA_CMD_BNXT_HANDSHAKE - to check bnxt device is booted
-> + *
-> + * param[0] (in value)  - value.a: max timeout value
-> + * param[0] (out value) - value.a: boot status
-> + * param[1] unused
-> + * param[2] unused
-> + * param[3] unused
-> + *
-> + * Result:
-> + * TEE_SUCCESS - Invoke command success
-> + * TEE_ERROR_BAD_PARAMETERS - Incorrect input param
-> + */
-> +	TA_CMD_BNXT_HANDSHAKE,
-> +
-> +/*
-> + * TA_CMD_BNXT_COPY_COREDUMP - copy the core dump into shm
-> + *
-> + * param[0] (in value) - value.a: offset at which data to be copied from
-> + *			 value.b: size of the data
-> + * param[1] unused
-> + * param[2] unused
-> + * param[3] unused
-> + *
-> + * Result:
-> + * TEE_SUCCESS - Invoke command success
-> + * TEE_ERROR_BAD_PARAMETERS - Incorrect input param
-> + * TEE_ERROR_ITEM_NOT_FOUND - Corrupt core dump
-> + */
-> +	TA_CMD_BNXT_COPY_COREDUMP,
-> +
-> +/*
-> + * TA_CMD_BNXT_FW_UPGRADE - upgrade the bnxt firmware
-> + *
-> + * param[0] (in value) - value.a: size of the f/w image
-> + * param[1] unused
-> + * param[2] unused
-> + * param[3] unused
-> + *
-> + * Result:
-> + * TEE_SUCCESS - Invoke command success
-> + * TEE_ERROR_BAD_PARAMETERS - Incorrect input param
-> + */
-> +	TA_CMD_BNXT_FW_UPGRADE,
-> +};
-> +
-> +/**
-> + * struct tee_bnxt_fw_private - OP-TEE bnxt private data
-> + * @dev:		OP-TEE based bnxt device.
-> + * @ctx:		OP-TEE context handler.
-> + * @session_id:		TA session identifier.
-> + */
-> +struct tee_bnxt_fw_private {
-> +	struct device *dev;
 
-Why is the pointer back needed?
+--GvXjxJ+pjyke8COw
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +	struct tee_context *ctx;
-> +	u32 session_id;
-> +	struct tee_shm *fw_shm_pool;
-> +};
-> +
-> +static struct tee_bnxt_fw_private pvt_data;
-> +
-> +static inline void prepare_args(int cmd,
-> +				struct tee_ioctl_invoke_arg *inv_arg,
-> +				struct tee_param *param)
-> +{
-> +	memset(inv_arg, 0, sizeof(*inv_arg));
-> +	memset(param, 0, (MAX_TEE_PARAM_ARRY_MEMB * sizeof(*param)));
-> +
-> +	inv_arg->func = cmd;
-> +	inv_arg->session = pvt_data.session_id;
-> +	inv_arg->num_params = MAX_TEE_PARAM_ARRY_MEMB;
-> +
-> +	/* Fill invoke cmd params */
-> +	switch (cmd) {
-> +	case TA_CMD_BNXT_HEALTH_STATUS:
-> +		param[0].attr = TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_OUTPUT;
-> +		break;
-> +	case TA_CMD_BNXT_HANDSHAKE:
-> +		param[0].attr = TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INOUT;
-> +		break;
-> +	case TA_CMD_BNXT_COPY_COREDUMP:
-> +	case TA_CMD_BNXT_FW_UPGRADE:
-> +		param[0].attr = TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT;
-> +		param[0].u.memref.shm = pvt_data.fw_shm_pool;
-> +		param[0].u.memref.size = MAX_SHM_MEM_SZ;
-> +		param[0].u.memref.shm_offs = 0;
-> +		param[1].attr = TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INPUT;
-> +		break;
-> +	case TA_CMD_BNXT_FASTBOOT:
-> +	default:
-> +		/* Nothing to do */
-> +		break;
-> +	}
-> +}
-> +
-> +/**
-> + * tee_bnxt_fw_load() - Load the bnxt firmware
-> + *		    Uses an OP-TEE call to start a secure
-> + *		    boot process.
-> + * Returns 0 on success, negative errno otherwise.
-> + */
-> +int tee_bnxt_fw_load(void)
-> +{
-> +	int ret = 0;
-> +	struct tee_ioctl_invoke_arg inv_arg;
-> +	struct tee_param param[MAX_TEE_PARAM_ARRY_MEMB];
-> +
-> +	if (!pvt_data.ctx)
-> +		return -ENODEV;
-> +
-> +	prepare_args(TA_CMD_BNXT_FASTBOOT, &inv_arg, param);
-> +
-> +	ret = tee_client_invoke_func(pvt_data.ctx, &inv_arg, param);
-> +	if ((ret < 0) || (inv_arg.ret != 0)) {
-> +		dev_err(pvt_data.dev, "TA_CMD_BNXT_LOAD invoke err: %x\n",
-> +			(ret < 0) ? ret : inv_arg.ret);
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(tee_bnxt_fw_load);
+-----BEGIN PGP SIGNATURE-----
 
-Why are you exporting symbols for a single file?  What uses these?
-This feels really wrong, are you sure this all is correct?
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl132mkACgkQFA3kzBSg
+KbY7KA//dTGgRdQZxIRRuFmdxhZR6aCLbnLiEuCcMagiQ2aa/EP1vhN8qPrUaucL
+Jf+XXPeFbx9q1ycOa/tOuI7CZbK9jXKDfMPQtP/gTx3MuHzv4MlHgTIWpEm8YMfr
+CgblrDzIKZqaeR3PGdu7AD6gSWDorwh/Rq4tt8hxqVi+KMiXgQBjiQFb2F5h2g5z
+nKjONcRnItlAnieSUnnzYzEs5jtLTHfaioMpAyrVXVRBr1uvRsQAxqUvN7bV+ThA
+mwmJfUOCrNf6gk596ug3SrHow7rgZxaNds6kEqiSY7Kib9MEfvkUj8q9yfBz8wCk
+YB052AdefuREt64vShJtmgbSjj+wRvBNkTB+/fdZptFL6CxORGhw+GKgkQnssqyQ
+W0Arjte++VEG3jGMtCx7I4GxDOdp2FqjSnBHDW9u1piPYBZOaxMeknBLhrrxiyfa
+Vrr3ZRgKTdz+70h1lQsQ5udADUxq6DhhGfoouGDlvk1JP6aLMXUr7PSNpjpYpZ0V
+N4qx2eJMRLkYrcNbbyDe+GWwFp3b1j859nk0jmi5M2zDTkqVji11DBkb0p1zrT1j
+7pvW9Us/V2i1jCLBHED2CSSQIaBs8StDnkPFvbeezoCUDxDeBz7ePDXO2asDYu9+
+jWDqFrb/qOTkZZdhvcurGUF3lL1SEgLR6gvWutjx1B5hQTHTE8g=
+=vLj2
+-----END PGP SIGNATURE-----
 
-I stopped reading here :)
-
-thanks,
-
-greg k-h
+--GvXjxJ+pjyke8COw--
