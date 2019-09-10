@@ -2,106 +2,109 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4443C49ED9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE2BC49ED9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 857DC20872
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:02:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sDSgQd3q"
+	by mail.kernel.org (Postfix) with ESMTP id 0B25920872
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:06:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437014AbfIJRCu (ORCPT
+        id S2437018AbfIJRF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 13:02:50 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42123 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437004AbfIJRCu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 13:02:50 -0400
-Received: by mail-pf1-f196.google.com with SMTP id w22so11885626pfi.9
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 10:02:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=331RNabWtb60kqhgnVTFAtsMSj9tZLuroHtAQOBPHUk=;
-        b=sDSgQd3qmFs96lJTvB5DCgU2/oeklTqTiXsrPG7nhbB2x5SXApm7s0nPTZhlg6iJGN
-         Y4hgHT/1dlqpDghG/2wjJWvHsqFY+czx46L5N9mo3A3rw5gTPTkNLs9GggfOLN3R+xw1
-         xr0wUHGdnl6qRyn1+IwrEdCMqdVQhwksRttOUPbdFjHPxQnuTThc9afK2wH5CE61CI2I
-         IP50jbCqMWecxRC5CBQGTLHVmkD63WVtlBt2W2ltX2faqZA+z68vRINs8sooTtZkKoc0
-         f746Io9+WK4p9lTi59Lkwe89M04tiUA+4QttD8vBc2MYv1pBjpWYg/Q1f7qW4BD0C6LO
-         CS5A==
+        Tue, 10 Sep 2019 13:05:59 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:27204 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2436845AbfIJRF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 13:05:59 -0400
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C00D8369AC
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 17:05:58 +0000 (UTC)
+Received: by mail-wm1-f71.google.com with SMTP id 1so58583wmk.4
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 10:05:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=331RNabWtb60kqhgnVTFAtsMSj9tZLuroHtAQOBPHUk=;
-        b=R2Fkaz0ShYCUXos0k/3gAV9pQBbevD10ktkdCb+RTWAS++J5dkkP1ky6ywXF7AiN1/
-         ZxWk9WqswEsL2Sn6JLsfeyXF2uEVIRIwAjsVjf8/floh+wXVdqi6o3fpjiw0JDCOYp9C
-         9O49R6PYYYji93k4+mGVeHQnrRtZLgqCPOk1vGHw6JKRvRopUqH37rYTtY2z/KGix1JA
-         uZmxW+soma0LzNRY7UnSZvkRNM51DxMk19YKHvH/ZZdi3RsTOxzDrnmTOrjZRroOcJEE
-         IiCiw65OgqE+wJC032Q2vfrEBm8DsBj3anNQrb8AsgmmHGywaHt7UtohJvCGyVu/LXmv
-         i3AA==
-X-Gm-Message-State: APjAAAWOQoeBoNATEiB9D2IOr+Js/W94hhucPWJIEU1yg2+JlIGhC/Wk
-        d/HttriXCMF4ChC10MBJKvo=
-X-Google-Smtp-Source: APXvYqzW1FhbDKX0449h3r0I8mhKyhuV0JV5ajdGYtZieMQlG4PLrEMH08om2Z4oFTeld2BjWBK+UA==
-X-Received: by 2002:a17:90a:af8d:: with SMTP id w13mr509181pjq.92.1568134969327;
-        Tue, 10 Sep 2019 10:02:49 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id t3sm19971572pfe.7.2019.09.10.10.02.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Sep 2019 10:02:48 -0700 (PDT)
-Date:   Tue, 10 Sep 2019 10:02:46 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Support Opensource <support.opensource@diasemi.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] regulator: da9211: fix obtaining "enable" GPIO
-Message-ID: <20190910170246.GA56792@dtor-ws>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jTN7yrs5BImP0ztJITVPxIbvfd1nbau/x4aKAUJCsuo=;
+        b=csm7vJJPasue4H8vm+o3zQgtold8WyNnLtHhiWveG+plc/QPZbu/vPYUP6Ci8c6tM6
+         StNbDQpLnAzksREySgflGxP8c5Fbk3nylxwxmz+PIkAWRx0RLw1I5LOiLmrKo6PhpKHw
+         q6YEpboamLe3SjfqwoF9wLn8HTDujyotzUz2N6d2XbAh2lVQiZz0FnDBsMLbmHu7oM5w
+         7chEsDlFQD6k0yQTVlYhjyDu5uq0hngBGQQnPXSB6FSB8fiilYl/JdnP1stmgDfr29IU
+         Oqe4MA1275IBXtzhJRjJN3ItplYcwWvhtpD1fbnS4lLRvCd1KS1kSsHhYuAkESlrQDqX
+         KdFg==
+X-Gm-Message-State: APjAAAWtzYkKRPSD9oRUO1cuL+/1S1ICcuou1SpGSBHgnPE0TA+GbgvO
+        C2aww33MSVHzep4vtFnpdDRbCTrM8HBJkJEjaKH5RZhaRON2dxWLko96C2FRI2/asei54ta1Bxf
+        YATRCeB/GMMH4p9IF0LKMYf3d
+X-Received: by 2002:a1c:1aca:: with SMTP id a193mr438450wma.120.1568135157320;
+        Tue, 10 Sep 2019 10:05:57 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxDDrxFlAzzHxvk36XY/616PH7XZzouT/DdV+oNbe4DLA1Luuuk6vcsXkVP+/0EEEsUzxtZZA==
+X-Received: by 2002:a1c:1aca:: with SMTP id a193mr438412wma.120.1568135156940;
+        Tue, 10 Sep 2019 10:05:56 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:1435:25df:c911:3338? ([2001:b07:6468:f312:1435:25df:c911:3338])
+        by smtp.gmail.com with ESMTPSA id r20sm24253567wrg.61.2019.09.10.10.05.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Sep 2019 10:05:56 -0700 (PDT)
+Subject: Re: [PATCH v4 0/4] KVM: X86: Some tracepoint enhancements
+To:     Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <kernellwp@gmail.com>,
+        Krish Sadhukhan <krish.sadhukhan@oracle.com>
+References: <20190906021722.2095-1-peterx@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <77e8aced-545f-24c6-6952-2f73a2231ce1@redhat.com>
+Date:   Tue, 10 Sep 2019 19:05:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190906021722.2095-1-peterx@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This fixes 11da04af0d3b, as devm_gpiod_get_from_of_node() does
-not do translation "con-id" -> "con-id-gpios" that our bindings expects,
-and therefore it was wrong to change connection ID to be simply "enable"
-when moving to using devm_gpiod_get_from_of_node().
+On 06/09/19 04:17, Peter Xu wrote:
+> v4:
+> - pick r-b
+> - swap the last two patches [Sean]
+> 
+> v3:
+> - use unsigned int for vcpu id [Sean]
+> - a new patch to fix ple_window type [Sean]
+> 
+> v2:
+> - fix commit messages, change format of ple window tracepoint [Sean]
+> - rebase [Wanpeng]
+> 
+> Each small patch explains itself.  I noticed them when I'm tracing
+> some IRQ paths and I found them helpful at least to me.
+> 
+> Please have a look.  Thanks,
+> 
+> Peter Xu (4):
+>   KVM: X86: Trace vcpu_id for vmexit
+>   KVM: X86: Remove tailing newline for tracepoints
+>   KVM: VMX: Change ple_window type to unsigned int
+>   KVM: X86: Tune PLE Window tracepoint
+> 
+>  arch/x86/kvm/svm.c     | 16 ++++++++--------
+>  arch/x86/kvm/trace.h   | 34 ++++++++++++++--------------------
+>  arch/x86/kvm/vmx/vmx.c | 18 ++++++++++--------
+>  arch/x86/kvm/vmx/vmx.h |  2 +-
+>  arch/x86/kvm/x86.c     |  2 +-
+>  5 files changed, 34 insertions(+), 38 deletions(-)
+> 
 
-Fixes: 11da04af0d3b ("regulator: da9211: Pass descriptors instead of GPIO numbers")
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
- drivers/regulator/da9211-regulator.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Queued, thanks.
 
-diff --git a/drivers/regulator/da9211-regulator.c b/drivers/regulator/da9211-regulator.c
-index 0309823d2c72..bf80748f1ccc 100644
---- a/drivers/regulator/da9211-regulator.c
-+++ b/drivers/regulator/da9211-regulator.c
-@@ -285,7 +285,7 @@ static struct da9211_pdata *da9211_parse_regulators_dt(
- 		pdata->reg_node[n] = da9211_matches[i].of_node;
- 		pdata->gpiod_ren[n] = devm_gpiod_get_from_of_node(dev,
- 				  da9211_matches[i].of_node,
--				  "enable",
-+				  "enable-gpios",
- 				  0,
- 				  GPIOD_OUT_HIGH | GPIOD_FLAGS_BIT_NONEXCLUSIVE,
- 				  "da9211-enable");
--- 
-2.23.0.162.g0b9fbb3734-goog
-
-
--- 
-Dmitry
+Paolo
