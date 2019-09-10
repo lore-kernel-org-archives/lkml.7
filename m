@@ -2,214 +2,134 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D84C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFFD5C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FA4720872
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:39:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XbS41MO2"
+	by mail.kernel.org (Postfix) with ESMTP id BD32820872
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:41:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436603AbfIJKjt (ORCPT
+        id S1728598AbfIJKlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 06:39:49 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:37720 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392462AbfIJKil (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 06:38:41 -0400
-Received: by mail-lf1-f65.google.com with SMTP id w67so13013840lff.4
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 03:38:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=lE9SLT+Epa1yWUlST5UPew6aiB+QEt/X8AxyplMCiDk=;
-        b=XbS41MO2It/+s08Mt+jg4mQofYHABfBh/17XT+H25A67nYUI3NKRzMxlcR8o0XsMui
-         yhmYJBLbMYziu4MNSkOyMf5ynB9Tls558FwISlsty5eqg/PQmDV6o6ciRjgOiiJVS2cx
-         YunZEd6zgyRA7XSJ50pC+vnel2C+l0FGcLij20AIKDOEsEkGaamaLJCjqD9QQ0hctJ3Z
-         mL6w40PkgQPp1J+zCrdkABkhaWkm+RzMngHJCcBEt0MVpcGpSd2q0RaTiE8dzOCtt9pO
-         mSWyhQTu4IN7vV9MxrbOq2FX1e/vHa3m3c5kj/bckNfJHv3uPOwkBegR+bla/eg+WxIf
-         dOlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=lE9SLT+Epa1yWUlST5UPew6aiB+QEt/X8AxyplMCiDk=;
-        b=iso9D+/o6Qj6jbM/LCaQQBCxalWIl8mCNIJnprxgXpeUJmDUPPkDs1OuKl8vWYnZr+
-         4K8cvht6pNTd4FMcFIr3P2NRKgL4xQAvTUYhznClRUAJPWRtprIrfdGzv51jh1uPoZpl
-         3Pp+4mpFR/fi0kcHM5pOzIIZjNSQTdhpWnKv86j2eaPDyA2WsK7WgCLODHsiSscss4Fs
-         RP/lzHu1nFLGxTLHZcOpO3axPeqXtNbF8ihrJCCXBK0RnMAU8QWMFQBez75w/W1Nh5p1
-         CgbRDMBa8tsLxAIzSWVF5goMNJeXkAcJKuKN8SqKFvamz6wcKbhQa3m6VrRGH6XBOLD6
-         EZMA==
-X-Gm-Message-State: APjAAAV7c5EPTHn5iklo8NPtmLySgriCxD67A42B1nh5KKLb8GhZws0q
-        9CYECmXB8Vq6I4VhMo67HAteCg==
-X-Google-Smtp-Source: APXvYqwri8jWHj8TfOmjvtA+O/2LoyqOPeA9w/OG+vHxJsQBjvSGXd2iswRslc5Fh2ZGjfK2p7c07g==
-X-Received: by 2002:a19:48c3:: with SMTP id v186mr19952832lfa.141.1568111917725;
-        Tue, 10 Sep 2019 03:38:37 -0700 (PDT)
-Received: from localhost.localdomain (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
-        by smtp.gmail.com with ESMTPSA id g5sm4005563lfh.2.2019.09.10.03.38.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Sep 2019 03:38:36 -0700 (PDT)
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com,
-        davem@davemloft.net, jakub.kicinski@netronome.com, hawk@kernel.org,
-        john.fastabend@gmail.com
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Subject: [PATCH bpf-next 00/11] samples: bpf: improve/fix cross-compilation
-Date:   Tue, 10 Sep 2019 13:38:19 +0300
-Message-Id: <20190910103830.20794-1-ivan.khoronzhuk@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Tue, 10 Sep 2019 06:41:32 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2203 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725797AbfIJKlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 06:41:31 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 8F8E7C44C905677AE275;
+        Tue, 10 Sep 2019 18:41:27 +0800 (CST)
+Received: from [127.0.0.1] (10.74.191.121) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Tue, 10 Sep 2019
+ 18:41:19 +0800
+Subject: Re: [PATCH] driver core: ensure a device has valid node id in
+ device_add()
+To:     Michal Hocko <mhocko@kernel.org>
+CC:     <gregkh@linuxfoundation.org>, <rafael@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <peterz@infradead.org>,
+        <mingo@kernel.org>, <linuxarm@huawei.com>
+References: <1568009063-77714-1-git-send-email-linyunsheng@huawei.com>
+ <20190909185035.GC2063@dhcp22.suse.cz>
+ <07576292-e129-5949-6a2e-45fff067ca5a@huawei.com>
+ <20190910072425.GI2063@dhcp22.suse.cz>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <434aff9a-2acb-73d7-83fa-43d5494471c0@huawei.com>
+Date:   Tue, 10 Sep 2019 18:40:12 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
+MIME-Version: 1.0
+In-Reply-To: <20190910072425.GI2063@dhcp22.suse.cz>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series contains mainly fixes/improvements for cross-compilation
-but not only, tested for arm, arm64, but intended for any arch.
-Also verified on native build (not cross compilation) for x86_64
-and arm.
+On 2019/9/10 15:24, Michal Hocko wrote:
+> Our emails crossed, sorry about that.
+> 
+> On Tue 10-09-19 15:08:20, Yunsheng Lin wrote:
+>> On 2019/9/10 2:50, Michal Hocko wrote:
+>>> On Mon 09-09-19 14:04:23, Yunsheng Lin wrote:
+> [...]
+>>>> Even if a device's numa node is not specified, the device really
+>>>> does belong to a node.
+>>>
+>>> What does this mean?
+>>
+>> It means some one need to guess the node id if the node is not
+>> specified.
+> 
+> I have asked about this in other email so let's not cross the
+> communication even more.
 
-Initial RFC link:
-https://lkml.org/lkml/2019/8/29/1665
+I may just answer your question here.
 
-Prev. version:
-https://www.spinics.net/lists/netdev/msg597823.html
-
-Besides the patches given here, the RFC also contains couple patches
-related to llvm clang
-  arm: include: asm: swab: mask rev16 instruction for clang
-  arm: include: asm: unified: mask .syntax unified for clang
-They are necessarily to verify arm build.
-
-The change touches not only cross-compilation and can have impact on
-other archs and build environments, so might be good idea to verify
-it in order to add appropriate changes, some warn options could be
-tuned also.
-
-All is tasted on x86-64 with clang installed (has to be built containing
-targets for arm, arm64..., see llvm -v, usually it's present already)
-
-Instructions to test native on x86_64
-=================================================
-Native build on x86_64 is done in usual way and shouldn't have difference
-except HOSTCC is now printed as CC wile building the samples.
-
-Instructions to test cross compilation on arm64
-=================================================
-#Toolchain used for test:
-gcc version 8.3.0
-(GNU Toolchain for the A-profile Architecture 8.3-2019.03 (arm-rel-8.36))
-
-# Get some arm64 FS, containing at least libelf
-I've used sdk for TI am65x got here:
-http://downloads.ti.com/processor-sdk-linux/esd/AM65X/latest/exports/\
-ti-processor-sdk-linux-am65xx-evm-06.00.00.07-Linux-x86-Install.bin
-
-# Install this binary to some dir, say "sdk".
-# Configure kernel (use defconfig as no matter), but clean everything
-# before.
-make ARCH=arm64 -C tools/ clean
-make ARCH=arm64 -C samples/bpf clean
-make ARCH=arm64 clean
-make ARCH=arm64 defconfig
-
-# The kernel version used in sdk doesn't correspond to checked one,
-# but for this verification only headers need to be syched,
-# so install them:
-make ARCH=arm64 headers_install
-
-# or on SDK if need keep them in sync (not necessarily to verify):
-
-make ARCH=arm64 INSTALL_HDR_PATH=/../sdk/\
-ti-processor-sdk-linux-am65xx-evm-06.00.00.07/linux-devkit/sysroots/\
-aarch64-linux/usr headers_install
-
-# Build samples
-make samples/bpf/ ARCH=arm64 CROSS_COMPILE="aarch64-linux-gnu-"\
-SYSROOT="/../sdk/ti-processor-sdk-linux-am65xx-evm-06.00.00.07/\
-linux-devkit/sysroots/aarch64-linux"
-
-Instructions to test cross compilation on arm
-=================================================
-#Toolchains used for test:
-arm-linux-gnueabihf-gcc (Linaro GCC 7.2-2017.11) 7.2.1 20171011
-or
-arm-linux-gnueabihf-gcc
-(GNU Toolchain for the A-profile Architecture 8.3-2019.03 \
-(arm-rel-8.36)) 8.3.0
-
-# Get some FS, I've used sdk for TI am52xx got here:
-http://downloads.ti.com/processor-sdk-linux/esd/AM57X/05_03_00_07/exports/\
-ti-processor-sdk-linux-am57xx-evm-05.03.00.07-Linux-x86-Install.bin
-
-# Install this binary to some dir, say "sdk".
-# Configure kernel, but clean everything before.
-make ARCH=arm -C tools/ clean
-make ARCH=arm -C samples/bpf clean
-make ARCH=arm clean
-make ARCH=arm omap2plus_defconfig
-
-# The kernel version used in sdk doesn't correspond to checked one, but
-headers only should be synched, so install them:
-
-make ARCH=arm64 headers_install
-
-# or on SDK if need keep them in sync (not necessarily):
-
-make ARCH=arm INSTALL_HDR_PATH=/../sdk/\
-ti-processor-sdk-linux-am57xx-evm-05.03.00.07/linux-devkit/sysroots/\
-armv7ahf-neon-linux-gnueabi/usr headers_install
-
-# Build samples
-make samples/bpf/ ARCH=arm CROSS_COMPILE="arm-linux-gnueabihf-"\
-SYSROOT="/../sdk/ti-processor-sdk-linux-am57xx-evm-05.03\
-.00.07/linux-devkit/sysroots/armv7ahf-neon-linux-gnueabi"
+Besides the page allocator, cpu allocator or scheduler may need to
+know about the node id to figure out which cpu to run is more
+optimized, like in workqueue_select_cpu_near().
 
 
-Based on bpf-next/master
+>  
+>>>> This patch sets the device node to node 0 in device_add() if the
+>>>> device's node id is not specified and it either has no parent
+>>>> device, or the parent device also does not have a valid node id.
+>>>
+>>> Why is node 0 special? I have seen platforms with node 0 missing or
+>>> being memory less. The changelog also lacks an actual problem
+>>
+>> by node 0 missing, how do we know if node 0 is missing?
+>> by node_online(0)?
+> 
+> No, this is a dynamic situation. Node might get offline via hotremove.
+> In most cases it wouldn't because there will likely be some kernel
+> memory on node0 but you cannot really make any assumptions here. Besides
+> that nothing should really care.
 
-v2..v1:
-- restructured patches order
-- split "samples: bpf: Makefile: base progs build on Makefile.progs"
-  to make change more readable. It added couple nice extra patches.
-- removed redundant patch:
-  "samples: bpf: Makefile: remove target for native build"
-- added fix:
-  "samples: bpf: makefile: fix cookie_uid_helper_example obj build"
-- limited -D option filter only for arm
-- improved comments
-- added couple instructions to verify cross compilation for arm and
-  arm64 arches based on TI am57xx and am65xx sdks.
-- corrected include a little order
+From the node checking:
+'(unsigned)node_id >= nr_node_ids'
 
-Ivan Khoronzhuk (11):
-  samples: bpf: makefile: fix HDR_PROBE "echo"
-  samples: bpf: makefile: fix cookie_uid_helper_example obj build
-  samples: bpf: makefile: use --target from cross-compile
-  samples: bpf: use own EXTRA_CFLAGS for clang commands
-  samples: bpf: makefile: use D vars from KBUILD_CFLAGS to handle
-    headers
-  samples: bpf: makefile: drop unnecessarily inclusion for bpf_load
-  samples: bpf: add makefile.prog for separate CC build
-  samples: bpf: makefile: base progs build on makefile.progs
-  samples: bpf: makefile: use CC environment for HDR_PROBE
-  libbpf: makefile: add C/CXX/LDFLAGS to libbpf.so and test_libpf
-    targets
-  samples: bpf: makefile: add sysroot support
+If the nr_node_ids > 0, then node 0 is a valid node according to
+the above checking, is there a function to check if a node is
+missing?
 
- samples/bpf/Makefile      | 172 ++++++++++++++++++++++----------------
- samples/bpf/Makefile.prog |  77 +++++++++++++++++
- samples/bpf/README.rst    |  10 +++
- tools/lib/bpf/Makefile    |  11 ++-
- 4 files changed, 194 insertions(+), 76 deletions(-)
- create mode 100644 samples/bpf/Makefile.prog
+Also, I am not sure if I understand "nothing should really care".
+Does it means a device still can be a numa that is missing, just
+have some performance degradation?
 
--- 
-2.17.1
+> 
+>>> descripton. Why do we even care about NUMA_NO_NODE? E.g. the page
+>>> allocator interprets NUMA_NO_NODE as the closest node with a memory.
+>>> And by closest it really means to the CPU which is performing the
+>>> allocation.
+>>
+>> Yes, I should have mentioned that in the commit log.
+>>
+>> I mentioned the below in the RFC, but somehow deleted when sending
+>> V1:
+>> "There may be explicit handling out there relying on NUMA_NO_NODE,
+>> like in nvme_probe()."
+> 
+> This code, and other doing similar things, is very likely bogus. Just
+> look at what the code does. It takes the node affinity from the dev and
+> uses it for an allocation. So far so good. But it tries to be clever
+> and special cases NUMA_NO_NODE to be first_node. So now the allocator
+> has used a proper fallback to the nearest node with memory for the
+> current CPU that is executing the code while dev will point to a
+> first_node which might be a completely different one. See the
+> discrepancy?
+
+Do you mean let kzalloc_node handle the NUMA_NO_NODE case, if node
+id is NUMA_NO_NODE, kzalloc_node handles it as numa_mem_id().
+
+If yes, above makes more sense.
+
+> 
 
