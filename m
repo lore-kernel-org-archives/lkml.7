@@ -2,89 +2,143 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E9AC5AE59
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 875A7C49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9B8820872
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:18:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61195206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:23:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g8eBFeJU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437066AbfIJRSu (ORCPT
+        id S2437023AbfIJRXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 13:18:50 -0400
-Received: from smtprelay0028.hostedemail.com ([216.40.44.28]:45751 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387907AbfIJRSt (ORCPT
+        Tue, 10 Sep 2019 13:23:00 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46511 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729580AbfIJRXA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 13:18:49 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id BB5D9182CED34;
-        Tue, 10 Sep 2019 17:18:47 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: force61_86aba8a95f343
-X-Filterd-Recvd-Size: 2385
-Received: from XPS-9350.home (unknown [47.151.152.152])
-        (Authenticated sender: joe@perches.com)
-        by omf12.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 10 Sep 2019 17:18:45 +0000 (UTC)
-Message-ID: <61a2b2ab4693535850306f396aac2a328e1d5a21.camel@perches.com>
-Subject: Re: [PATCH v6 01/12] tools lib traceevent: Convert remaining %p[fF]
- users to %p[sS]
-From:   Joe Perches <joe@perches.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
-        rafael@kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        linux-trace-devel@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 10 Sep 2019 10:18:44 -0700
-In-Reply-To: <20190910071837.2e9110f8@oasis.local.home>
-References: <20190910084707.18380-1-sakari.ailus@linux.intel.com>
-         <20190910084707.18380-2-sakari.ailus@linux.intel.com>
-         <20190910071837.2e9110f8@oasis.local.home>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
+        Tue, 10 Sep 2019 13:23:00 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q5so11902538pfg.13
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 10:23:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WytUsbUCueuTaHp+R3kiieTTsIcIBaJbRPUzOY9zmMs=;
+        b=g8eBFeJURPLmM7K80XMyv6QCx9j8YlqaXas7oh2yW8WK40QJIDwACb+8Fed1j4td8M
+         rDgIx0hMCLUGE2ZLv0+DhqEU6GEAD9EgjaTcKC2f7slxN9qUxOR3H7UikEyiSWfyziwL
+         lzkvnZGQUh93SlN+8AXzBgLvJqZ2UCH0Zeycm3EFae21/p/tcstsMHN7DgvmMYWoSa/E
+         xEz6R5wNLvHQWPJ3Bb6JtYorQKBqOqedQneR/BXDcedQqQEDA50N8N9h36EL9837Y5G0
+         WlDnCjhRt6OajXG+J5ay44IycrumkvdYDUnesB54fFvPe3v8pBv4tcVLn8H/X/zSOSne
+         RDzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WytUsbUCueuTaHp+R3kiieTTsIcIBaJbRPUzOY9zmMs=;
+        b=KsbMj6cphLFNyCo2HR9+DGalil4OG8Y3EuWNlldK3yjYUBmkFaP2RuO9etKaTSB2eU
+         mCkb3zN+ksCy6eUXdsSoykCdvkv0xva+k9ivT98310tORySavh93UGq17adTrSCvMyDw
+         PAtA301MWoJ9mYsvuVv7N6LwG++HxEbH0vXKpE8yOZ1lfBNoCCOf8impCmrrvjF66AE9
+         n/ImQ4oe/MrRHpc84DhQ+UCjccIU/Qqd8L28VXV/gNeiYvKjimJJTQ0Ntg9unw9zjtF2
+         YEoKJDPudLVkEmBq49Z0d7a4K4jNpL5UDdVrcY7gLVzGE1Uoy9NcukBQg3GveUwWSshw
+         8OuQ==
+X-Gm-Message-State: APjAAAWMib4i+hybAWqtE9hH/YSxyxWB9Ksd8y9m+AG2sCZ7wt/Wh+pw
+        Du/8x2MkKieEQEjirmdWiAcGQQ==
+X-Google-Smtp-Source: APXvYqxmkQCQc3l3UoT5KLzpgDQQV9we+Pmo9WXUarV5tvLUbmr6ZHi67Bb91kphtkBUZgPj7hoTOg==
+X-Received: by 2002:a63:dd0c:: with SMTP id t12mr27742480pgg.82.1568136178740;
+        Tue, 10 Sep 2019 10:22:58 -0700 (PDT)
+Received: from google.com ([2620:15c:201:2:ce90:ab18:83b0:619])
+        by smtp.gmail.com with ESMTPSA id j2sm19138413pfe.130.2019.09.10.10.22.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Sep 2019 10:22:58 -0700 (PDT)
+Date:   Tue, 10 Sep 2019 10:22:53 -0700
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Yonghong Song <yhs@fb.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kees Cook <keescook@chromium.org>, Martin Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] bpf: validate bpf_func when BPF_JIT is enabled
+Message-ID: <20190910172253.GA164966@google.com>
+References: <20190909223236.157099-1-samitolvanen@google.com>
+ <4f4136f5-db54-f541-2843-ccb35be25ab4@fb.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4f4136f5-db54-f541-2843-ccb35be25ab4@fb.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-09-10 at 07:18 -0400, Steven Rostedt wrote:
-> On Tue, 10 Sep 2019 11:46:56 +0300
-> Sakari Ailus <sakari.ailus@linux.intel.com> wrote:
-> 
-> > There are no in-kernel %p[fF] users left. Convert the traceevent tool,
-> > too, to align with the kernel.
-[]
-> > diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-[]
-> > @@ -4335,8 +4335,6 @@ static struct tep_print_arg *make_bprint_args(char *fmt, void *data, int size, s
-> >  					switch (*ptr) {
-> >  					case 's':
-> >  					case 'S':
-> > -					case 'f':
-> > -					case 'F':
-> 
-> This file is used to parse output from older kernels, so remove this hunk.
-> 
-> It's not just for the lastest kernel. We must maintain backward
-> compatibility here too. If there use to be a usage of this, then we
-> must keep it until the kernels are no longer used (perhaps 7 years?)
+On Tue, Sep 10, 2019 at 08:37:19AM +0000, Yonghong Song wrote:
+> You did not mention BPF_BINARY_HEADER_MAGIC and added member
+> of `magic` in bpf_binary_header. Could you add some details
+> on what is the purpose for this `magic` member?
 
-That argues for not using "%pfw" at all for some number of years.
+Sure, I'll add a description to the next version.
 
-Perhaps the '%pfw' should be '%pnfw' for 'name' and 'fwnode'
+The magic is a random number used to identify bpf_binary_header in
+memory. The purpose of this patch is to limit the possible call
+targets for the function pointer and checking for the magic helps
+ensure we are jumping to a page that contains a jited function,
+instead of allowing calls to arbitrary targets.
 
+This is particularly useful when combined with the compiler-based
+Control-Flow Integrity (CFI) mitigation, which Google started shipping
+in Pixel kernels last year. The compiler injects checks to all
+indirect calls, but cannot obviously validate jumps to dynamically
+generated code.
 
+> > +unsigned int bpf_call_func(const struct bpf_prog *prog, const void *ctx)
+> > +{
+> > +	const struct bpf_binary_header *hdr = bpf_jit_binary_hdr(prog);
+> > +
+> > +	if (!IS_ENABLED(CONFIG_BPF_JIT_ALWAYS_ON) && !prog->jited)
+> > +		return prog->bpf_func(ctx, prog->insnsi);
+> > +
+> > +	if (unlikely(hdr->magic != BPF_BINARY_HEADER_MAGIC ||
+> > +		     !arch_bpf_jit_check_func(prog))) {
+> > +		WARN(1, "attempt to jump to an invalid address");
+> > +		return 0;
+> > +	}
+> > +
+> > +	return prog->bpf_func(ctx, prog->insnsi);
+> > +}
 
+> The above can be rewritten as
+> 	if (IS_ENABLED(CONFIG_BPF_JIT_ALWAYS_ON) || prog->jited ||
+> 	    hdr->magic != BPF_BINARY_HEADER_MAGIC ||
+> 	    !arch_bpf_jit_check_func(prog))) {
+> 		WARN(1, "attempt to jump to an invalid address");
+> 		return 0;
+> 	}
+
+That doesn't look quite equivalent, but yes, this can be rewritten as a
+single if statement like this:
+
+	if ((IS_ENABLED(CONFIG_BPF_JIT_ALWAYS_ON) ||
+	     prog->jited) &&
+	    (hdr->magic != BPF_BINARY_HEADER_MAGIC ||
+	     !arch_bpf_jit_check_func(prog)))
+
+I think splitting the interpreter and JIT paths would be more readable,
+but I can certainly change this if you prefer.
+
+> BPF_PROG_RUN() will be called during xdp fast path.
+> Have you measured how much slowdown the above change could
+> cost for the performance?
+
+I have not measured the overhead, but it shouldn't be significant. Is
+there a particular benchmark you'd like me to run?
+
+Sami
