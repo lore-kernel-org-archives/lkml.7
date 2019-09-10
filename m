@@ -2,90 +2,149 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C910C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C586FC49ED6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B394206CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B953206CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:27:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sSXYxdiK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732302AbfIJN1F (ORCPT
+        id S1732398AbfIJN1r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 09:27:05 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:38929 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728759AbfIJN1F (ORCPT
+        Tue, 10 Sep 2019 09:27:47 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:53234 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728759AbfIJN1r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 09:27:05 -0400
-Received: from [148.69.85.38] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1i7gAh-0005Io-08; Tue, 10 Sep 2019 13:27:03 +0000
-Date:   Tue, 10 Sep 2019 15:27:02 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Eugene Syromiatnikov <esyr@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        Christian Brauner <christian@brauner.io>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Eric Biederman <ebiederm@xmission.com>
-Subject: Re: [PATCH] fork: fail on non-zero higher 32 bits of args.exit_signal
-Message-ID: <20190910132701.s5o5nidewyo5zl7h@wittgenstein>
-References: <20190910115711.GA3755@asgard.redhat.com>
- <20190910124440.GA25647@redhat.com>
- <20190910130935.jxqxbt7wop3ostob@wittgenstein>
- <20190910131048.e7xr52az2zej4p4v@wittgenstein>
+        Tue, 10 Sep 2019 09:27:47 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8ADRdkm025009;
+        Tue, 10 Sep 2019 08:27:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568122059;
+        bh=d5veEZ1PcXAieWongpOg9OtCDdccu5gYAuMOT2iHat8=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=sSXYxdiKY/JMCbuhm/iUxpx+DxRYN5lYkuEZBUvUalIXXfLYMQGVj5xMNOutvmwFn
+         KL81w1wRhTrKnru18FNfiewYAv9dB5O3Jsf86SQd174PWQHz/5/RESmqoTXq4buxWU
+         +92GuZOmeAeREQO5uR6BTb5pJSanW46oY3f08tWE=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8ADRd6G086640
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 10 Sep 2019 08:27:39 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 10
+ Sep 2019 08:27:39 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 10 Sep 2019 08:27:39 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8ADRcKu048670;
+        Tue, 10 Sep 2019 08:27:38 -0500
+From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <lee.jones@linaro.org>,
+        <daniel.thompson@linaro.org>
+CC:     <dmurphy@ti.com>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <tomi.valkeinen@ti.com>, Jean-Jacques Hiblot <jjhiblot@ti.com>
+Subject: [PATCH v6 2/4] leds: Add managed API to get a LED from a device driver
+Date:   Tue, 10 Sep 2019 15:27:32 +0200
+Message-ID: <20190910132734.9544-3-jjhiblot@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190910132734.9544-1-jjhiblot@ti.com>
+References: <20190910132734.9544-1-jjhiblot@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190910131048.e7xr52az2zej4p4v@wittgenstein>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 03:10:48PM +0200, Christian Brauner wrote:
-> On Tue, Sep 10, 2019 at 03:09:35PM +0200, Christian Brauner wrote:
-> > On Tue, Sep 10, 2019 at 02:44:41PM +0200, Oleg Nesterov wrote:
-> > > On 09/10, Eugene Syromiatnikov wrote:
-> > > >
-> > > > --- a/kernel/fork.c
-> > > > +++ b/kernel/fork.c
-> > > > @@ -2562,6 +2562,9 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
-> > > >  	if (copy_from_user(&args, uargs, size))
-> > > >  		return -EFAULT;
-> > > >  
-> > > > +	if (unlikely(((unsigned int)args.exit_signal) != args.exit_signal))
-> > > > +		return -EINVAL;
-> > > 
-> > > Hmm. Unless I am totally confused you found a serious bug...
-> > > 
-> > > Without CLONE_THREAD/CLONE_PARENT copy_process() blindly does
-> > > 
-> > > 	p->exit_signal = args->exit_signal;
-> > > 
-> > > the valid_signal(sig) check in do_notify_parent() mostly saves us, but we
-> > > must not allow child->exit_signal < 0, if nothing else this breaks
-> > > thread_group_leader().
-> > > 
-> > > And afaics this patch doesn't fix this? I think we need the valid_signal()
-> > > check...
-> > 
-> > Thanks for sending this patch so quickly after our conversation
-> > yesterday, Eugene!
-> > We definitely want valid_signal() to verify the signal is ok.
+If the LED is acquired by a consumer device with devm_led_get(), it is
+automatically released when the device is detached.
 
-So we could do your check in copy_clone_args_from_user(), and then we do
-another valid_signal() check in clone3_args_valid()? We could do the
-latter in copy_clone_args_from_user() too but it's nicer to do it along
-the other checks in clone3_args_valid().
+Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+---
+ drivers/leds/led-class.c | 42 ++++++++++++++++++++++++++++++++++++++++
+ include/linux/leds.h     |  2 ++
+ 2 files changed, 44 insertions(+)
 
-Christian
+diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+index d4d22f4b5052..664c81e2513c 100644
+--- a/drivers/leds/led-class.c
++++ b/drivers/leds/led-class.c
+@@ -263,6 +263,48 @@ void led_put(struct led_classdev *led_cdev)
+ }
+ EXPORT_SYMBOL_GPL(led_put);
+ 
++static void devm_led_release(struct device *dev, void *res)
++{
++	struct led_classdev **p = res;
++
++	led_put(*p);
++}
++
++/**
++ * devm_led_get - Resource-managed request of a LED device
++ * @dev:	LED consumer
++ * @idx:	index of the LED to obtain in the consumer
++ *
++ * The device node of the device is parse to find the request LED device.
++ * The LED device returned from this function is automatically released
++ * on driver detach.
++ *
++ * @return a pointer to a LED device or ERR_PTR(errno) on failure.
++ */
++struct led_classdev *__must_check devm_led_get(struct device *dev,
++					       int index)
++{
++	struct led_classdev *led;
++	struct led_classdev **dr;
++
++	led = of_led_get(dev->of_node, index);
++	if (IS_ERR(led))
++		return led;
++
++	dr = devres_alloc(devm_led_release, sizeof(struct led_classdev *),
++			  GFP_KERNEL);
++	if (!dr) {
++		led_put(led);
++		return ERR_PTR(-ENOMEM);
++	}
++
++	*dr = led;
++	devres_add(dev, dr);
++
++	return led;
++}
++EXPORT_SYMBOL_GPL(devm_led_get);
++
+ static int match_name(struct device *dev, const void *data)
+ {
+ 	if (!dev_name(dev))
+diff --git a/include/linux/leds.h b/include/linux/leds.h
+index 0a71c7cdd191..7fcec566d774 100644
+--- a/include/linux/leds.h
++++ b/include/linux/leds.h
+@@ -148,6 +148,8 @@ extern void led_classdev_resume(struct led_classdev *led_cdev);
+ 
+ extern struct led_classdev *of_led_get(struct device_node *np, int index);
+ extern void led_put(struct led_classdev *led_cdev);
++struct led_classdev *__must_check devm_led_get(struct device *dev,
++					       int index);
+ 
+ /**
+  * led_blink_set - set blinking with software fallback
+-- 
+2.17.1
+
