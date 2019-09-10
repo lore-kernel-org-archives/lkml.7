@@ -2,90 +2,100 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08ADCC49ED8
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF505C49ED8
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDB8221479
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:38:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 988DD2089F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:44:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kq6eaah8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393988AbfIJPib (ORCPT
+        id S2436529AbfIJPo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 11:38:31 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:24607 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2391115AbfIJPia (ORCPT
+        Tue, 10 Sep 2019 11:44:56 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35477 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726664AbfIJPo4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 11:38:30 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-165-ivUePp4GPIuX29LloUIPJQ-1; Tue, 10 Sep 2019 16:38:28 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 10 Sep 2019 16:38:27 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 10 Sep 2019 16:38:27 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Arnd Bergmann' <arnd@arndb.de>,
-        Saeed Mahameed <saeedm@mellanox.com>
-CC:     "cai@lca.pw" <cai@lca.pw>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        Moshe Shemesh <moshe@mellanox.com>,
-        Feras Daoud <ferasda@mellanox.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Eran Ben Elisha" <eranbe@mellanox.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "leon@kernel.org" <leon@kernel.org>,
-        Erez Shitrit <erezsh@mellanox.com>
-Subject: RE: [PATCH] net/mlx5: reduce stack usage in FW tracer
-Thread-Topic: [PATCH] net/mlx5: reduce stack usage in FW tracer
-Thread-Index: AQHVZ6/gotndlflYLEiLmwBbeCyLo6clCo3w
-Date:   Tue, 10 Sep 2019 15:38:27 +0000
-Message-ID: <d50f78334e64476bad033862035c734c@AcuMS.aculab.com>
-References: <20190906151123.1088455-1-arnd@arndb.de>
- <383db08b6001503ac45c2e12ac514208dc5a4bba.camel@mellanox.com>
- <CAK8P3a0_VhZ9hYmc6P3Qx+Z6WSHh3PVZ7JZh7Tr=R1CAKvqWmA@mail.gmail.com>
- <5abccf6452a9d4efa2a1593c0af6d41703d4f16f.camel@mellanox.com>
- <CAK8P3a3q4NqiU-OydMqU3J=gT-8eBmsiL5tPsyJb1PNgR+48hA@mail.gmail.com>
-In-Reply-To: <CAK8P3a3q4NqiU-OydMqU3J=gT-8eBmsiL5tPsyJb1PNgR+48hA@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 10 Sep 2019 11:44:56 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 205so11763212pfw.2;
+        Tue, 10 Sep 2019 08:44:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=m63hw1cs8JEboshBAGEaMeLbl7XzJEKKBEYO3wrpjaI=;
+        b=kq6eaah8+m6F18GfdV3XcEdwfQpiX+5ZJMezDnp2FBv2dUX6PeRDkg7ovLEztgIHKo
+         eeyjRSDV1yoViFEibX7LnpZVrcyVlkFrzF7ej8S4Bk4B5tVG4VhJeES/wBlWX3XUW04c
+         //sHuqxm2vtx3hU2s9ktsvkZzDl0QGddQbZe/7nCS0SG2QtgubWVVB27TNu5thGuBGUE
+         vbgaq9IBjZ/e87w67LMiIEKqfuFy3xvM+jFnuynJ1Ev5fliVXnmHuroW4rZVy/AHZb9f
+         KoQTCCvN/EXdNVLqE1tAQygH532nLPZ6NRHsVk3X3PYRATF8GKVNhzARK+Kq435GWLzp
+         ZbfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=m63hw1cs8JEboshBAGEaMeLbl7XzJEKKBEYO3wrpjaI=;
+        b=ncNzIDBAuFmOLqA3rPYDVbaxdvkqOfxr+P8DQ9cn1td8rxffsAfki2+bvq3kCVZKDA
+         wiLWM6Cjf/zVD1SSbXK51Cq+XLR2VGyyWF3CJ5/6tN8unr5v9pEY7OJq0xs6TPsPms4f
+         qBhqZL95J8bqaYvVlcY+n32YV4ak9TYa8CS3t72LYUT5eRiYGRUH38Q1bKT/e74WA+bA
+         ix4zYcZR7/qH/lS6iXU8OlMIkxzS81nywY0KbZHAndndqbR7YxAip7yA379pUpZgY2sQ
+         71OesntgRe7QrziOhvx2nyDxBL2C5ayACEiqnVSOgxu9QRZ6ZlVqFbpZl1BNvF7yUoeS
+         v8Sw==
+X-Gm-Message-State: APjAAAXOsoUxiGbOhHSAgW89Gt4vre9TsY0RM2upIk6M5v3OUjnAvb8o
+        98nE2XgnmGt0xM9h3X37TlW5PBqo
+X-Google-Smtp-Source: APXvYqzV1cJeUMekbuzzKB1C1mNg0F0I/CBYw9iROFj0oksAoAudc6Y047duVySUEjBnmgRBOFdOeQ==
+X-Received: by 2002:a63:7887:: with SMTP id t129mr28839763pgc.309.1568130295689;
+        Tue, 10 Sep 2019 08:44:55 -0700 (PDT)
+Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
+        by smtp.gmail.com with ESMTPSA id 127sm34662989pfy.56.2019.09.10.08.44.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Sep 2019 08:44:54 -0700 (PDT)
+Date:   Tue, 10 Sep 2019 08:44:52 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc:     Christopher S Hall <christopher.s.hall@intel.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] PTP: introduce new versions of IOCTLs
+Message-ID: <20190910154452.GB4016@localhost>
+References: <20190909075940.12843-1-felipe.balbi@linux.intel.com>
 MIME-Version: 1.0
-X-MC-Unique: ivUePp4GPIuX29LloUIPJQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190909075940.12843-1-felipe.balbi@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQXJuZCBCZXJnbWFubg0KPiBTZW50OiAxMCBTZXB0ZW1iZXIgMjAxOSAwOToxNQ0KLi4u
-DQo+ID4gSSBhbSBub3Qgc3VyZSBob3cgdGhpcyB3b3VsZCB3b3JrLCBzaW5jZSB0aGUgZm9ybWF0
-IHBhcmFtZXRlcnMgY2FuDQo+ID4gY2hhbmdlcyBkZXBlbmRpbmcgb24gdGhlIEZXIHN0cmluZyBh
-bmQgdGhlIHNwZWNpZmljIHRyYWNlcy4NCj4gDQo+IEFoLCBzbyB0aGUgZm9ybWF0IHN0cmluZyBj
-b21lcyBmcm9tIHRoZSBmaXJtd2FyZT8gSSBkaWRuJ3QgbG9vaw0KPiBhdCB0aGUgY29kZSBpbiBl
-bm91Z2ggZGV0YWlsIHRvIHVuZGVyc3RhbmQgd2h5IGl0J3MgZG9uZSBsaWtlIHRoaXMsDQo+IG9u
-bHkgZW5vdWdoIHRvIG5vdGljZSB0aGF0IGl0J3MgcmF0aGVyIHVudXN1YWwuDQoNCklmIHRoZSBm
-b3JtYXQgc3RyaW5nIGNvbWVzIGZyb20gdGhlIGZpcm13YXJlIHlvdSByZWFsbHkgc2hvdWxkbid0
-DQpwYXNzIGl0IHRvIGFueSBzdGFuZGFyZCBwcmludGYgZnVuY3Rpb24uDQpZb3UgbXVzdCBlbnN1
-cmUgdGhhdCBpdCBkb2Vzbid0IGNvbnRhaW4gYW55IGZvcm1hdCBlZmZlY3RvcnMNCnRoYXQgbWln
-aHQgZGVyZWZlcmVuY2UgcGFyYW1ldGVycy4NCihUaGUgY29kZSBtaWdodCB0cnkgdG8gZG8gdGhh
-dC4pDQoNCkdpdmVuIHRoYXQgJ3BvaW50ZXInIGZvcm1hdCBlZmZlY3RvcnMgY2FuJ3QgYmUgdXNl
-ZCwgdGhlIGZpcm13YXJlDQptdXN0IGFsc28gc3VwcGx5IHRoZSByZWxldmFudCBpbnRlZ2VyIG9u
-ZXM/DQpUaGlzIHNob3VsZCBtZWFuIHRoYXQgYWxsIHRoZSBwcm9jZXNzaW5nIGlzIGRlZmVycmFi
-bGUgdW50aWwgdGhlDQp0cmFjZSByZWNvcmQgaXMgcmVhZC4NCg0KJ25vaW5saW5lJyBqdXN0IHBh
-cGVycyBvdmVyIHRoZSBjcmFja3MuDQpFc3BlY2lhbGx5IHNpbmNlIHZhc3ByaW50ZigpIGlzIGxp
-a2VseSB0byB1c2UgYSBsb3Qgb2Ygc3RhY2suDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFk
-ZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywg
-TUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+On Mon, Sep 09, 2019 at 10:59:39AM +0300, Felipe Balbi wrote:
 
+>  	case PTP_PEROUT_REQUEST:
+> +	case PTP_PEROUT_REQUEST2:
+
+...
+
+> +		if (((req.perout.flags & ~PTP_PEROUT_VALID_FLAGS) ||
+> +			req.perout.rsv[0] || req.perout.rsv[1] ||
+> +			req.perout.rsv[2] || req.perout.rsv[3]) &&
+> +			cmd == PTP_PEROUT_REQUEST2) {
+> +			err = -EINVAL;
+> +			break;
+
+...
+
+> +/*
+> + * Bits of the ptp_perout_request.flags field:
+> + */
+> +#define PTP_PEROUT_VALID_FLAGS (~0)
+
+I think you meant (0) here, or I am confused...
+
+Thanks,
+Richard
