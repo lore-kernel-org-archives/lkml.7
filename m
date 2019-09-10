@@ -2,110 +2,102 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7201C49ED8
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A52C4C49ED9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8CF22089F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72C32206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:10:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TV22LbY9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387680AbfIJPGh (ORCPT
+        id S1732385AbfIJPKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 11:06:37 -0400
-Received: from mga04.intel.com ([192.55.52.120]:21182 "EHLO mga04.intel.com"
+        Tue, 10 Sep 2019 11:10:53 -0400
+Received: from ozlabs.org ([203.11.71.1]:41965 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725935AbfIJPGh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 11:06:37 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Sep 2019 08:06:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,489,1559545200"; 
-   d="scan'208";a="214334308"
-Received: from aseticx-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.38.199])
-  by fmsmga002.fm.intel.com with ESMTP; 10 Sep 2019 08:06:32 -0700
-Date:   Tue, 10 Sep 2019 16:06:29 +0100
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Seunghun Han <kkamagui@gmail.com>
-Cc:     Peter Huewe <peterhuewe@gmx.de>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Vanya Lazeev <ivan.lazeev@gmail.com>
-Subject: Re: [PATCH v2 2/2] tpm: tpm_crb: enhance resource mapping mechanism
- for supporting AMD's fTPM
-Message-ID: <20190910150342.GA1920@linux.intel.com>
-References: <20190909090906.28700-1-kkamagui@gmail.com>
- <20190909090906.28700-3-kkamagui@gmail.com>
- <20190910144215.GA30780@linux.intel.com>
+        id S1726060AbfIJPKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 11:10:53 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46ST4J1tPYz9s4Y;
+        Wed, 11 Sep 2019 01:10:39 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1568128250;
+        bh=aoTIYRp7peYZiE+TXTLfLFyQ53Zbvaf6xr3h0aWndyc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=TV22LbY9UPupLC3medhAwwRc5+Jeqlh6Bkzl82vwKfJWzYxG7dLL+V6+2KEsPQG7z
+         wcyzxuvIQ0yHrKDKCfbcRGrFJRV1EDl68pRwRMO5m2A/VkvTxYj//2CAKiB/0+B7Xd
+         42kslQ02mdZyg3wMNuWoyptnFgC0GFqvD4o3qD7wt9TT9u+gtxeatqosHNZ8/qbHVf
+         QPFLeISAp/3kQi/uFjzQgJ1p9f8lr7VNy1f80//qxONTWCz9U+Iv8iCiDkLNxZ2hod
+         If7YevIHscHFmaINlfZWAlLxLKQGrjqU77NQSOo1HjQxGut+s5LbF99gF0TEdt9uF4
+         bX4K2aqQNUJ8Q==
+Date:   Wed, 11 Sep 2019 01:10:34 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: linux-next: Fixes tag needs some work in the y2038 tree
+Message-ID: <20190911011034.3bae9ee3@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190910144215.GA30780@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_/S5C.=bsUr7rtZGW3yNn0cwS";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 03:42:15PM +0100, Jarkko Sakkinen wrote:
-> On Mon, Sep 09, 2019 at 06:09:06PM +0900, Seunghun Han wrote:
-> > I got an AMD system which had a Ryzen Threadripper 1950X and MSI
-> > mainboard, and I had a problem with AMD's fTPM. My machine showed an error
-> > message below, and the fTPM didn't work because of it.
-> > 
-> > [  5.732084] tpm_crb MSFT0101:00: can't request region for resource
-> >              [mem 0x79b4f000-0x79b4ffff]
-> > [  5.732089] tpm_crb: probe of MSFT0101:00 failed with error -16
-> > 
-> > When I saw the iomem, I found two fTPM regions were in the ACPI NVS area. 
-> > The regions are below.
-> > 
-> > 79a39000-79b6afff : ACPI Non-volatile Storage
-> >   79b4b000-79b4bfff : MSFT0101:00
-> >   79b4f000-79b4ffff : MSFT0101:00
-> > 
-> > After analyzing this issue, I found that crb_map_io() function called
-> > devm_ioremap_resource() and it failed. The ACPI NVS didn't allow the TPM
-> > CRB driver to assign a resource in it because a busy bit was set to
-> > the ACPI NVS area.
-> > 
-> > To support AMD's fTPM, I added a function to check intersects between
-> > the TPM region and ACPI NVS before it mapped the region. If some
-> > intersects are detected, the function just calls devm_ioremap() for
-> > a workaround. If there is no intersect, it calls devm_ioremap_resource().
-> > 
-> > Signed-off-by: Seunghun Han <kkamagui@gmail.com>
-> 
-> This problem is still valid and not addressed by Vanya's patch (and
-> should not be as it is a disjoint issue).  However, calling
-> devm_ioremap() is somewhat racy as the NVS driver is not aware of that.
-> 
-> My take is that this should be fixed in the code that assigns regions to
-> the NVS driver e.g. it could look up the regions assigned to the
-> MSFT0101 and ignore those regions. In the end linux-acpi maintainers
-> have the say on this but this would be the angle that I'd take to
-> implement such patch probably.
+--Sig_/S5C.=bsUr7rtZGW3yNn0cwS
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Matthew pointed out that having a hook in NVS driver is better solution
-because it is nil functionality if the TPM driver is loaded. We need
-functions to:
+Hi all,
 
-1. Request a region from the NVS driver (when tpm_crb loads)
-2. Release a region back to the NVS Driver (when tpm_crb unloads).
+In commit
 
-My proposal would unnecessarily duplicate code and also leave a
-side-effect when TPM is not used in the first place.
+  e83dd16c24d8 ("fix compat handling of FICLONERANGE, FIDEDUPERANGE and FS_=
+IOC_FIEMAP")
 
-I see this as the overally best solution. If you can come up with a
-patch for the NVS side and changes to CRB drivers to utilize the new
-hooks, then combined with Vanya's changes we have a sustainable solution
-for AMD fTPM.
+Fixes tag
 
-/Jarkko
+  Fixes: d79bdd52d8be7 54dbc15172375 ceac204e1da94
+
+has these problem(s):
+
+  - Subject does not match target commit subject
+    Just use
+	git log -1 --format=3D'Fixes: %h ("%s")'
+
+So (presumably):
+
+Fixes: d79bdd52d8be ("vfs: wire up compat ioctl for CLONE/CLONE_RANGE")
+Fixes: 54dbc1517237 ("vfs: hoist the btrfs deduplication ioctl to the vfs")
+Fixes: ceac204e1da9 ("fs: make fiemap work from compat_ioctl")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/S5C.=bsUr7rtZGW3yNn0cwS
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl13vOoACgkQAVBC80lX
+0GzuDAf9F/1qwJOLmEv3UX6XFctYMUxrhL4/qZBy2zVZuTwmF2GD1SH0PnXAeLCZ
+I1sKqfjYjWxd4XP7fOSfr2YcsnrcVbpgnQdchv1Q1BH4EVISbY1gRIvNAFoQw7TR
+gSUV0cebZVwb6fFJImo42XWQ64RUeXa+rL5Nis/h2u3nXPl0J9YIwknBTtjOq+rj
+dMa+i8+AWUeTCLDS+d3EPNeyXjdCWKYqK6lJzgs8hOhYH662bRkZuO3aAlnWhaY4
+pxM/f1JFtQcISFs7n1qsO0Li7QOTXU3AbVegx/g63Xg/+ZpIWAlhitTUYH6Jr6eD
+mA2POPrnE0sF7vR0u/ADbZrjYtuQMg==
+=vWUy
+-----END PGP SIGNATURE-----
+
+--Sig_/S5C.=bsUr7rtZGW3yNn0cwS--
