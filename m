@@ -2,197 +2,96 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D651C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B792C4740A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55287206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:22:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF5AF206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:22:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OWD1IplS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vK1D15dW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389019AbfIJKWC (ORCPT
+        id S1731452AbfIJKWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 06:22:02 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37687 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729206AbfIJKWC (ORCPT
+        Tue, 10 Sep 2019 06:22:43 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42205 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728971AbfIJKWm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 06:22:02 -0400
-Received: by mail-wr1-f67.google.com with SMTP id i1so18435012wro.4
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 03:21:59 -0700 (PDT)
+        Tue, 10 Sep 2019 06:22:42 -0400
+Received: by mail-lj1-f194.google.com with SMTP id y23so15828505lje.9
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 03:22:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Wpr2coDySs9Rh34jajBcihEANouoWM4tiMrDCeWl8sg=;
-        b=OWD1IplSbH+Uj6fRnvAWQMTtgsLhiEt+qYbKjXaLSulXC/QfZK1S8iBbPUxjl80LQs
-         Sxa/NOEYbyoMdACAwtywuw45EkqtZ4cwdzmxnQTw9JieI26ywI5teAX/795GB6Jtqmp9
-         SK1E4X5R8xry3MoVaEDSWL3tNsjqoxoGYqC+m1t6M9u5PG5TtnU76MQiPPj/ch8FZCVh
-         VNAkXR11i4Q+SFgNCBjUbiUoEY9M8+hM44rio0gVfl4Q1Eof5sap2IoUobfy8txXXqGa
-         SdF6Z2HV1FVkF11y1n4OqbppwEtKiDW3lebmGQ+6jAoCKHsYYEQQTXBbwSvCj25uPmQ+
-         BMfA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/RnO7aDpzX5C5EyL4y2IfgyW41OmQo4u8v7lMN7YHKQ=;
+        b=vK1D15dW6aK1jvV0nmXA12AyrRJ4vLk03n2a23yq0lZRGq48xLdY0RhJGf/oVx3ddU
+         BUAjXvFBI/R3XlUEEH3n9JnN/c8UDxlRqcZ0ljT/0fp2iSi9QNFMbGUQ1uNvvf/pHRBf
+         yY68Kq2lxaiYmbOSRv4PDu75QITFpvy/hmgAYMpzQ4dWeFI7almhAIwEc7t5+FspOqdW
+         RCKI6Rw+pO36dveGJhF4K3kXhysgPyGbM8rk1Ptjz4PRpFBDezeBWpCpFOHSXJjUnNaQ
+         CgVPB0tp5Gh/UsxejI6EgLuWO/WSB1of8qF1yn/BDTBwMYqJmaoxG9DlUKZtw5/EGyMd
+         dnPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Wpr2coDySs9Rh34jajBcihEANouoWM4tiMrDCeWl8sg=;
-        b=LeabYc9QAR/+k0qhFXj+QE+05FQ9YdhGCBxBoS1o9eUmlq7c0kxHZGZAdxnxzj7wFd
-         +xyO4XBXpEO9l2LUtAYxlscGrGuziiz3q51gUH+POzBXl5FAf0R2g1saVHRO5Ev6y83m
-         CsidWecTDfQBGsOzkeV67H+CpkPZfNTkxiMlgKjF1CiKCE5H72FhqbIkvRG+FkaiJllx
-         vNA0E2HOVhgJjSdtGn9brgZQLBlFKf0LFe62PvhfxUV6DjJEX7yGz4biGNzZ74h/e71g
-         tN2Oic5Wb3FmXLmMi9Q38PxbGLYlzpwIeiOm/ZKkS1TJ2JToKRYRFdI5przdJ3gbW6vr
-         umNg==
-X-Gm-Message-State: APjAAAUGo7l/I+nw7xyxvG+zXbwWdTHeMubm1CWkSmZz48CKvrOOGyOv
-        AC4oQxKhwUEWtIfxHtDp4a8KWw==
-X-Google-Smtp-Source: APXvYqzG45USjR48kMX2kVZsXNO4YuCGkE3qBxH6BwrxuV+lwOeTtCvs9XVNlmc/kSobyXOtgJDQdA==
-X-Received: by 2002:adf:f04f:: with SMTP id t15mr13262934wro.250.1568110919018;
-        Tue, 10 Sep 2019 03:21:59 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id o19sm23744301wro.50.2019.09.10.03.21.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Sep 2019 03:21:58 -0700 (PDT)
-Date:   Tue, 10 Sep 2019 11:21:56 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     lee.jones@linaro.org, jingoohan1@gmail.com,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com,
-        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fbdev@vger.kernel.org,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH 1/2] backlight: lm3630a: add an enable gpio for the HWEN
- pin
-Message-ID: <20190910102156.vmprsjebmlphkv34@holly.lan>
-References: <20190908203704.30147-1-andreas@kemnade.info>
- <20190908203704.30147-2-andreas@kemnade.info>
- <20190909105729.w5552rtop7rhghy2@holly.lan>
- <20190909221349.46ca5a1f@aktux>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/RnO7aDpzX5C5EyL4y2IfgyW41OmQo4u8v7lMN7YHKQ=;
+        b=WZoSxCuQJBFtCdXgpHtmiocPnngzwEEk5mg1t/VT1IZ8djKXRq6K3wVDKAsX8oyn0P
+         kz17ebyEVfIYXpzT07gob9NM+Aak1VkFc0vIJ6QFI74zV4IIGUG8cM5putIUtCRKrHyc
+         nnn44CWHzXH2pjIhoJkyw+32u/tGqyhAPWQGNWXC50vxJiaSTDnBncsxG1BFz24RRiLg
+         LErTuvlvikIe2W/PKYdI4taVkhuC7kIf0H5QRg1ZaaZXssnl8Dd0sJlDdwudjqv1DBh1
+         1hDYo5Pq7IofGR+ddIH9F9h4kreQlslCD/GTZ4UskAq4vpj84JEzKDBO11hzD8brR8Pp
+         S4Dw==
+X-Gm-Message-State: APjAAAXU0wdkSxgD/6jE7bRsWJFM0OFSxWfKYK7m0RIvptNZr1BtM2rk
+        bYHdaY7yuBc4pU8uc0vByHubaMfGEz96yqEfBP8B6A==
+X-Google-Smtp-Source: APXvYqxTmNO1MGnu8vYhnE2IUmvw4ev8RpQUmIyLWCAtSHO9mqRjl78UFY8OZp8Ndh+gq+efvNad6aAMm/6X66YLAJ8=
+X-Received: by 2002:a2e:8056:: with SMTP id p22mr14060234ljg.69.1568110959123;
+ Tue, 10 Sep 2019 03:22:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190909221349.46ca5a1f@aktux>
-User-Agent: NeoMutt/20180716
+References: <20190906084539.21838-1-geert+renesas@glider.be>
+In-Reply-To: <20190906084539.21838-1-geert+renesas@glider.be>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 10 Sep 2019 11:22:27 +0100
+Message-ID: <CACRpkdax+KYuB9Gs4V-9wnFu=DPu0MNCmOupeNkUEa-pNdSZig@mail.gmail.com>
+Subject: Re: [PATCH 0/4] gpio: API boundary cleanups
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 09, 2019 at 10:13:49PM +0200, Andreas Kemnade wrote:
-> On Mon, 9 Sep 2019 11:57:29 +0100
-> Daniel Thompson <daniel.thompson@linaro.org> wrote:
-> 
-> > On Sun, Sep 08, 2019 at 10:37:03PM +0200, Andreas Kemnade wrote:
-> > > For now just enable it in the probe function to allow i2c
-> > > access and disable it on remove. Disabling also means resetting
-> > > the register values to default.
-> > > 
-> > > Tested on Kobo Clara HD.
-> > > 
-> > > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> > > ---
-> > >  drivers/video/backlight/lm3630a_bl.c | 18 ++++++++++++++++++
-> > >  1 file changed, 18 insertions(+)
-> > > 
-> > > diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
-> > > index b04b35d007a2..3b45a1733198 100644
-> > > --- a/drivers/video/backlight/lm3630a_bl.c
-> > > +++ b/drivers/video/backlight/lm3630a_bl.c
-> > > @@ -12,6 +12,8 @@
-> > >  #include <linux/uaccess.h>
-> > >  #include <linux/interrupt.h>
-> > >  #include <linux/regmap.h>
-> > > +#include <linux/gpio/consumer.h>
-> > > +#include <linux/gpio.h>
-> > >  #include <linux/pwm.h>
-> > >  #include <linux/platform_data/lm3630a_bl.h>
-> > >  
-> > > @@ -48,6 +50,7 @@ struct lm3630a_chip {
-> > >  	struct lm3630a_platform_data *pdata;
-> > >  	struct backlight_device *bleda;
-> > >  	struct backlight_device *bledb;
-> > > +	struct gpio_desc *enable_gpio;
-> > >  	struct regmap *regmap;
-> > >  	struct pwm_device *pwmd;
-> > >  };
-> > > @@ -506,6 +509,14 @@ static int lm3630a_probe(struct i2c_client *client,
-> > >  		return -ENOMEM;
-> > >  	pchip->dev = &client->dev;
-> > >  
-> > > +	pchip->enable_gpio = devm_gpiod_get_optional(&client->dev, "enable",
-> > > +						GPIOD_ASIS);  
-> > 
-> > Initializing GPIOD_ASIS doesn't look right to me.
-> > 
-> > If you initialize ASIS then the driver must configure the pin as an
-> > output... far easier just to set GPIOD_OUT_HIGH during the get.
-> > 
-> > Note also that the call to this function should also be moved *below*
-> > the calls parse the DT.
-> > 
-> oops, must have forgotten that, and had good luck here.
-> > 
-> > > +	if (IS_ERR(pchip->enable_gpio)) {
-> > > +		rval = PTR_ERR(pchip->enable_gpio);
-> > > +		return rval;
-> > > +	}
-> > > +
-> > > +
-> > >  	pchip->regmap = devm_regmap_init_i2c(client, &lm3630a_regmap);
-> > >  	if (IS_ERR(pchip->regmap)) {
-> > >  		rval = PTR_ERR(pchip->regmap);
-> > > @@ -535,6 +546,10 @@ static int lm3630a_probe(struct i2c_client *client,
-> > >  	}
-> > >  	pchip->pdata = pdata;
-> > >  
-> > > +	if (pchip->enable_gpio) {
-> > > +		gpiod_set_value_cansleep(pchip->enable_gpio, 1);  
-> > 
-> > Not needed, use GPIOD_OUT_HIGH instead.
-> > 
-> > 
-> > > +		usleep_range(1000, 2000);  
-> > 
-> > Not needed, this sleep is already part of lm3630a_chip_init().
-> > 
-> you are right.
-> > 
-> > > +	}
-> > >  	/* chip initialize */
-> > >  	rval = lm3630a_chip_init(pchip);
-> > >  	if (rval < 0) {
-> > > @@ -586,6 +601,9 @@ static int lm3630a_remove(struct i2c_client *client)
-> > >  	if (rval < 0)
-> > >  		dev_err(pchip->dev, "i2c failed to access register\n");
-> > >  
-> > > +	if (pchip->enable_gpio)
-> > > +		gpiod_set_value_cansleep(pchip->enable_gpio, 0);
-> > > +  
-> > 
-> > Is this needed?
-> > 
-> > This is a remove path, not a power management path, and we have no idea
-> > what the original status of the pin was anyway?
-> > 
-> 
-> Looking at Ishdn on page 5 of the datasheet, switching it off everytime
-> possible seems not needed. We would need to call chip_init() everytime
-> we enable the gpio or live with default values.
-> Therefore I did decide to not put it into any power management path.
-> But switching it on and not switching it off feels so unbalanced. 
+On Fri, Sep 6, 2019 at 9:45 AM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-Either the power consumed by the controller when strings aren't lit up
-matters, in which case the driver should implement proper power
-management or it doesn't matter and changing the pin state isn't needed.
+> This patch series contains various API boundary cleanups for gpiolib:
+>   - The first two patches make two functions private,
+>   - The last two patches switch the remaining gpiolib exported functions
+>     from EXPORT_SYMBOL() to EXPORT_SYMBOL_GPL().
 
-I'm happy with either of the above but this looks like a third way,
-where eager users could hack in a bit of extra power management by
-forcing drivers to unbind. 
+Good stuff, let's merge for early v5.4 (possibly rebasing if necessary).
 
+> After this there is only a single GPIO driver function exported with
+> EXPORT_SYMBOL();
+>
+>     drivers/gpio/gpio-htc-egpio.c:EXPORT_SYMBOL(htc_egpio_get_wakeup_irq);
 
-Daniel.
+Kill it. People using this platform should step up if they need it.
+The outoftree code was at handhelds.org and that web site is
+even down. There is a copy of their git tree on github
+somewhere but it is definately not maintained.
+
+Yours,
+Linus Walleij
