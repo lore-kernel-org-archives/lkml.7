@@ -2,242 +2,219 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4AF1C49ED9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 20:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1FCEC49ED9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 20:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BCDC21019
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 20:12:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R61eEifg"
+	by mail.kernel.org (Postfix) with ESMTP id AD7782168B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 20:19:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568146756;
+	bh=zKRo37Pf7dFOQl5bAW44sn3H0snx91tL8n5bI5LlTIM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qx2Bn+7C3qwXctlwec70Ub1reYgVypPk73S8W0g3/GM/1prnSJskimeNEqzX4A/j/
+	 u5g4SCGX+mQpXokUl52AFL5fX3UDTBCTGhHAX68iFZxqNHLlxeW/rmZb+uYVQDJnCQ
+	 FrvnpMcfUdoIEus9cKweeOYzP0d84cFn+efzF0Jc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbfIJUMZ (ORCPT
+        id S1726403AbfIJUTP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 16:12:25 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:47037 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725263AbfIJUMZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 16:12:25 -0400
-Received: by mail-pl1-f194.google.com with SMTP id t1so9088381plq.13
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 13:12:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=15hWnr6f2tJrfEoilZ1helN5HSi4DmE9rTuHqUhMmkU=;
-        b=R61eEifgYMh7PnNayuYxhvP5bhbfW2mOmVNcjBrX0u4fCMa2T6Ler3WWj5Apg/ZTMQ
-         f1/ye3xAfOzASybxWrea9GsS6SoROey6PHwxCSthuxwXK0qDfT/cYfz/fb9ycyHnRX2e
-         EbV46qG2jGs23H1GpBftp0RKBI0c8rFuNQb3M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=15hWnr6f2tJrfEoilZ1helN5HSi4DmE9rTuHqUhMmkU=;
-        b=kZpQ2aaPLvWdfvSGqvPXMAGXkWN0hnpeD/pPtPlik4AtGmcPT6sxNUxzGJyvt8+MHv
-         GW5FYUQgYCEnMc1x9bDZ57VzFPi2KDCPlKVdu2E+4aOAgwC1UOdB7G9oPzyV3iqnEnml
-         JcpNQPzfpBLg/h8iSEfx7+P3dMNrhL7nXCKFh8LsP39k0taW26emcP5gH4M6JN7HXHTB
-         h/KRMx3QKp/n7SO4t3rvVT3v+xhwGlG0MEpG2dtXAMd0N4tpAH48GEGrdFe7AHGrEEon
-         B+gxhUs+TBJM9noPAGu6NBj/kcPb0w7og1bhRlACb/F92vQkQyaGiU3AztXIuaLxJuqI
-         pIPA==
-X-Gm-Message-State: APjAAAV14SNvoOyY5chVimYw3+WNgbedFh6p+gPyoiaTxcPkokstYZid
-        C07QtUR8HwieJ9hF3Iozzb3Rqg==
-X-Google-Smtp-Source: APXvYqxe5wirZcu9g1h+r/nLCfi6tx506Er0HD6EdTcai5ASMPCpU4DNsON/yG0qYLuEnO9zkBPWPw==
-X-Received: by 2002:a17:902:b497:: with SMTP id y23mr33009585plr.201.1568146344505;
-        Tue, 10 Sep 2019 13:12:24 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:e9ae:bd45:1bd9:e60d])
-        by smtp.gmail.com with ESMTPSA id c8sm1581955pgw.37.2019.09.10.13.12.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Sep 2019 13:12:23 -0700 (PDT)
-From:   David Riley <davidriley@chromium.org>
-To:     dri-devel@lists.freedesktop.org,
-        virtualization@lists.linux-foundation.org
-Cc:     David Airlie <airlied@linux.ie>, Gerd Hoffmann <kraxel@redhat.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Gurchetan Singh <gurchetansingh@chromium.org>,
-        =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu@chromium.org>,
-        linux-kernel@vger.kernel.org, David Riley <davidriley@chromium.org>
-Subject: [PATCH v3 2/2] drm/virtio: Use vmalloc for command buffer allocations.
-Date:   Tue, 10 Sep 2019 13:06:51 -0700
-Message-Id: <20190910200651.118628-2-davidriley@chromium.org>
-X-Mailer: git-send-email 2.23.0.162.g0b9fbb3734-goog
-In-Reply-To: <20190829212417.257397-1-davidriley@chromium.org>
-References: <20190829212417.257397-1-davidriley@chromium.org>
+        Tue, 10 Sep 2019 16:19:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57788 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726318AbfIJUTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 16:19:14 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 94DEDAD31;
+        Tue, 10 Sep 2019 20:19:10 +0000 (UTC)
+Date:   Tue, 10 Sep 2019 22:19:05 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Nitin Gupta <nigupta@nvidia.com>
+Cc:     akpm@linux-foundation.org, vbabka@suse.cz,
+        mgorman@techsingularity.net, dan.j.williams@intel.com,
+        khalid.aziz@oracle.com, Matthew Wilcox <willy@infradead.org>,
+        Yu Zhao <yuzhao@google.com>, Qian Cai <cai@lca.pw>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Allison Randal <allison@lohutok.net>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arun KS <arunks@codeaurora.org>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH] mm: Add callback for defining compaction completion
+Message-ID: <20190910201905.GG4023@dhcp22.suse.cz>
+References: <20190910200756.7143-1-nigupta@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190910200756.7143-1-nigupta@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Userspace requested command buffer allocations could be too large
-to make as a contiguous allocation.  Use vmalloc if necessary to
-satisfy those allocations.
+On Tue 10-09-19 13:07:32, Nitin Gupta wrote:
+> For some applications we need to allocate almost all memory as hugepages.
+> However, on a running system, higher order allocations can fail if the
+> memory is fragmented. Linux kernel currently does on-demand compaction as
+> we request more hugepages but this style of compaction incurs very high
+> latency. Experiments with one-time full memory compaction (followed by
+> hugepage allocations) shows that kernel is able to restore a highly
+> fragmented memory state to a fairly compacted memory state within <1 sec
+> for a 32G system. Such data suggests that a more proactive compaction can
+> help us allocate a large fraction of memory as hugepages keeping allocation
+> latencies low.
+> 
+> In general, compaction can introduce unexpected latencies for applications
+> that don't even have strong requirements for contiguous allocations. It is
+> also hard to efficiently determine if the current system state can be
+> easily compacted due to mixing of unmovable memory. Due to these reasons,
+> automatic background compaction by the kernel itself is hard to get right
+> in a way which does not hurt unsuspecting applications or waste CPU cycles.
 
-Signed-off-by: David Riley <davidriley@chromium.org>
----
- drivers/gpu/drm/virtio/virtgpu_ioctl.c |  4 +-
- drivers/gpu/drm/virtio/virtgpu_vq.c    | 79 +++++++++++++++++++++++---
- 2 files changed, 73 insertions(+), 10 deletions(-)
+We do trigger background compaction on a high order pressure from the
+page allocator by waking up kcompactd. Why is that not sufficient?
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-index ac60be9b5c19..a8732a8af766 100644
---- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-@@ -195,7 +195,7 @@ static int virtio_gpu_execbuffer_ioctl(struct drm_device *dev, void *data,
- 	if (ret)
- 		goto out_free;
- 
--	buf = memdup_user(u64_to_user_ptr(exbuf->command), exbuf->size);
-+	buf = vmemdup_user(u64_to_user_ptr(exbuf->command), exbuf->size);
- 	if (IS_ERR(buf)) {
- 		ret = PTR_ERR(buf);
- 		goto out_unresv;
-@@ -230,7 +230,7 @@ static int virtio_gpu_execbuffer_ioctl(struct drm_device *dev, void *data,
- 	return 0;
- 
- out_memdup:
--	kfree(buf);
-+	kvfree(buf);
- out_unresv:
- 	ttm_eu_backoff_reservation(&ticket, &validate_list);
- out_free:
-diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
-index bf5a4a50b002..76cf2b9d5d1d 100644
---- a/drivers/gpu/drm/virtio/virtgpu_vq.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
-@@ -154,7 +154,7 @@ static void free_vbuf(struct virtio_gpu_device *vgdev,
- {
- 	if (vbuf->resp_size > MAX_INLINE_RESP_SIZE)
- 		kfree(vbuf->resp_buf);
--	kfree(vbuf->data_buf);
-+	kvfree(vbuf->data_buf);
- 	kmem_cache_free(vgdev->vbufs, vbuf);
- }
- 
-@@ -251,13 +251,54 @@ void virtio_gpu_dequeue_cursor_func(struct work_struct *work)
- 	wake_up(&vgdev->cursorq.ack_queue);
- }
- 
-+/* Create sg_table from a vmalloc'd buffer. */
-+static struct sg_table *vmalloc_to_sgt(char *data, uint32_t size, int *sg_ents)
-+{
-+	int ret, s, i;
-+	struct sg_table *sgt;
-+	struct scatterlist *sg;
-+	struct page *pg;
-+
-+	if (WARN_ON(!PAGE_ALIGNED(data)))
-+		return NULL;
-+
-+	sgt = kmalloc(sizeof(*sgt), GFP_KERNEL);
-+	if (!sgt)
-+		return NULL;
-+
-+	*sg_ents = DIV_ROUND_UP(size, PAGE_SIZE);
-+	ret = sg_alloc_table(sgt, *sg_ents, GFP_KERNEL);
-+	if (ret) {
-+		kfree(sgt);
-+		return NULL;
-+	}
-+
-+	for_each_sg(sgt->sgl, sg, *sg_ents, i) {
-+		pg = vmalloc_to_page(data);
-+		if (!pg) {
-+			sg_free_table(sgt);
-+			kfree(sgt);
-+			return NULL;
-+		}
-+
-+		s = min_t(int, PAGE_SIZE, size);
-+		sg_set_page(sg, pg, s, 0);
-+
-+		size -= s;
-+		data += s;
-+	}
-+
-+	return sgt;
-+}
-+
- static int virtio_gpu_queue_ctrl_buffer_locked(struct virtio_gpu_device *vgdev,
--					       struct virtio_gpu_vbuffer *vbuf)
-+					       struct virtio_gpu_vbuffer *vbuf,
-+					       struct scatterlist *vout)
- 		__releases(&vgdev->ctrlq.qlock)
- 		__acquires(&vgdev->ctrlq.qlock)
- {
- 	struct virtqueue *vq = vgdev->ctrlq.vq;
--	struct scatterlist *sgs[3], vcmd, vout, vresp;
-+	struct scatterlist *sgs[3], vcmd, vresp;
- 	int outcnt = 0, incnt = 0;
- 	int ret;
- 
-@@ -268,9 +309,8 @@ static int virtio_gpu_queue_ctrl_buffer_locked(struct virtio_gpu_device *vgdev,
- 	sgs[outcnt + incnt] = &vcmd;
- 	outcnt++;
- 
--	if (vbuf->data_size) {
--		sg_init_one(&vout, vbuf->data_buf, vbuf->data_size);
--		sgs[outcnt + incnt] = &vout;
-+	if (vout) {
-+		sgs[outcnt + incnt] = vout;
- 		outcnt++;
- 	}
- 
-@@ -305,7 +345,24 @@ static int virtio_gpu_queue_fenced_ctrl_buffer(struct virtio_gpu_device *vgdev,
- 					       struct virtio_gpu_fence *fence)
- {
- 	struct virtqueue *vq = vgdev->ctrlq.vq;
-+	struct scatterlist *vout = NULL, sg;
-+	struct sg_table *sgt = NULL;
- 	int rc;
-+	int outcnt = 0;
-+
-+	if (vbuf->data_size) {
-+		if (is_vmalloc_addr(vbuf->data_buf)) {
-+			sgt = vmalloc_to_sgt(vbuf->data_buf, vbuf->data_size,
-+					     &outcnt);
-+			if (!sgt)
-+				return -ENOMEM;
-+			vout = sgt->sgl;
-+		} else {
-+			sg_init_one(&sg, vbuf->data_buf, vbuf->data_size);
-+			vout = &sg;
-+			outcnt = 1;
-+		}
-+	}
- 
- again:
- 	spin_lock(&vgdev->ctrlq.qlock);
-@@ -318,7 +375,7 @@ static int virtio_gpu_queue_fenced_ctrl_buffer(struct virtio_gpu_device *vgdev,
- 	 * to wait for free space, which can result in fence ids being
- 	 * submitted out-of-order.
- 	 */
--	if (vq->num_free < 3) {
-+	if (vq->num_free < 2 + outcnt) {
- 		spin_unlock(&vgdev->ctrlq.qlock);
- 		wait_event(vgdev->ctrlq.ack_queue, vq->num_free >= 3);
- 		goto again;
-@@ -326,8 +383,14 @@ static int virtio_gpu_queue_fenced_ctrl_buffer(struct virtio_gpu_device *vgdev,
- 
- 	if (hdr && fence)
- 		virtio_gpu_fence_emit(vgdev, hdr, fence);
--	rc = virtio_gpu_queue_ctrl_buffer_locked(vgdev, vbuf);
-+	rc = virtio_gpu_queue_ctrl_buffer_locked(vgdev, vbuf, vout);
- 	spin_unlock(&vgdev->ctrlq.qlock);
-+
-+	if (sgt) {
-+		sg_free_table(sgt);
-+		kfree(sgt);
-+	}
-+
- 	return rc;
- }
- 
+> Even with these caveats, pro-active compaction can still be very useful in
+> certain scenarios to reduce hugepage allocation latencies. This callback
+> interface allows drivers to drive compaction based on their own policies
+> like the current level of external fragmentation for a particular order,
+> system load etc.
+
+So we do not trust the core MM to make a reasonable decision while we
+give a free ticket to modules. How does this make any sense at all? How
+is a random module going to make a more informed decision when it has
+less visibility on the overal MM situation.
+
+If you need to control compaction from the userspace you have an
+interface for that.  It is also completely unexplained why you need a
+completion callback.
+
+That being said, this looks like a terrible idea to me.
+
+> Signed-off-by: Nitin Gupta <nigupta@nvidia.com>
+> ---
+>  include/linux/compaction.h | 10 ++++++++++
+>  mm/compaction.c            | 20 ++++++++++++++------
+>  mm/internal.h              |  2 ++
+>  3 files changed, 26 insertions(+), 6 deletions(-)
+> 
+> diff --git a/include/linux/compaction.h b/include/linux/compaction.h
+> index 9569e7c786d3..1ea828450fa2 100644
+> --- a/include/linux/compaction.h
+> +++ b/include/linux/compaction.h
+> @@ -58,6 +58,16 @@ enum compact_result {
+>  	COMPACT_SUCCESS,
+>  };
+>  
+> +/* Callback function to determine if compaction is finished. */
+> +typedef enum compact_result (*compact_finished_cb)(
+> +	struct zone *zone, int order);
+> +
+> +enum compact_result compact_zone_order(struct zone *zone, int order,
+> +		gfp_t gfp_mask, enum compact_priority prio,
+> +		unsigned int alloc_flags, int classzone_idx,
+> +		struct page **capture,
+> +		compact_finished_cb compact_finished_cb);
+> +
+>  struct alloc_context; /* in mm/internal.h */
+>  
+>  /*
+> diff --git a/mm/compaction.c b/mm/compaction.c
+> index 952dc2fb24e5..73e2e9246bc4 100644
+> --- a/mm/compaction.c
+> +++ b/mm/compaction.c
+> @@ -1872,6 +1872,9 @@ static enum compact_result __compact_finished(struct compact_control *cc)
+>  			return COMPACT_PARTIAL_SKIPPED;
+>  	}
+>  
+> +	if (cc->compact_finished_cb)
+> +		return cc->compact_finished_cb(cc->zone, cc->order);
+> +
+>  	if (is_via_compact_memory(cc->order))
+>  		return COMPACT_CONTINUE;
+>  
+> @@ -2274,10 +2277,11 @@ compact_zone(struct compact_control *cc, struct capture_control *capc)
+>  	return ret;
+>  }
+>  
+> -static enum compact_result compact_zone_order(struct zone *zone, int order,
+> +enum compact_result compact_zone_order(struct zone *zone, int order,
+>  		gfp_t gfp_mask, enum compact_priority prio,
+>  		unsigned int alloc_flags, int classzone_idx,
+> -		struct page **capture)
+> +		struct page **capture,
+> +		compact_finished_cb compact_finished_cb)
+>  {
+>  	enum compact_result ret;
+>  	struct compact_control cc = {
+> @@ -2293,10 +2297,11 @@ static enum compact_result compact_zone_order(struct zone *zone, int order,
+>  					MIGRATE_ASYNC :	MIGRATE_SYNC_LIGHT,
+>  		.alloc_flags = alloc_flags,
+>  		.classzone_idx = classzone_idx,
+> -		.direct_compaction = true,
+> +		.direct_compaction = !compact_finished_cb,
+>  		.whole_zone = (prio == MIN_COMPACT_PRIORITY),
+>  		.ignore_skip_hint = (prio == MIN_COMPACT_PRIORITY),
+> -		.ignore_block_suitable = (prio == MIN_COMPACT_PRIORITY)
+> +		.ignore_block_suitable = (prio == MIN_COMPACT_PRIORITY),
+> +		.compact_finished_cb = compact_finished_cb
+>  	};
+>  	struct capture_control capc = {
+>  		.cc = &cc,
+> @@ -2313,11 +2318,13 @@ static enum compact_result compact_zone_order(struct zone *zone, int order,
+>  	VM_BUG_ON(!list_empty(&cc.freepages));
+>  	VM_BUG_ON(!list_empty(&cc.migratepages));
+>  
+> -	*capture = capc.page;
+> +	if (capture)
+> +		*capture = capc.page;
+>  	current->capture_control = NULL;
+>  
+>  	return ret;
+>  }
+> +EXPORT_SYMBOL(compact_zone_order);
+>  
+>  int sysctl_extfrag_threshold = 500;
+>  
+> @@ -2361,7 +2368,8 @@ enum compact_result try_to_compact_pages(gfp_t gfp_mask, unsigned int order,
+>  		}
+>  
+>  		status = compact_zone_order(zone, order, gfp_mask, prio,
+> -				alloc_flags, ac_classzone_idx(ac), capture);
+> +				alloc_flags, ac_classzone_idx(ac), capture,
+> +				NULL);
+>  		rc = max(status, rc);
+>  
+>  		/* The allocation should succeed, stop compacting */
+> diff --git a/mm/internal.h b/mm/internal.h
+> index e32390802fd3..f873f7c2b9dc 100644
+> --- a/mm/internal.h
+> +++ b/mm/internal.h
+> @@ -11,6 +11,7 @@
+>  #include <linux/mm.h>
+>  #include <linux/pagemap.h>
+>  #include <linux/tracepoint-defs.h>
+> +#include <linux/compaction.h>
+>  
+>  /*
+>   * The set of flags that only affect watermark checking and reclaim
+> @@ -203,6 +204,7 @@ struct compact_control {
+>  	bool whole_zone;		/* Whole zone should/has been scanned */
+>  	bool contended;			/* Signal lock or sched contention */
+>  	bool rescan;			/* Rescanning the same pageblock */
+> +	compact_finished_cb compact_finished_cb;
+>  };
+>  
+>  /*
+> -- 
+> 2.21.0
+
 -- 
-2.23.0.162.g0b9fbb3734-goog
-
+Michal Hocko
+SUSE Labs
