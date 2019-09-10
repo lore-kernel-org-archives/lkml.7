@@ -5,31 +5,31 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43768C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 07:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F3B4C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 07:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17E0B21019
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 07:14:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B2A021924
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 07:15:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406692AbfIJHO4 (ORCPT
+        id S2406708AbfIJHPJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 03:14:56 -0400
-Received: from mxwww.masterlogin.de ([95.129.51.220]:43550 "EHLO
+        Tue, 10 Sep 2019 03:15:09 -0400
+Received: from mxwww.masterlogin.de ([95.129.51.220]:43452 "EHLO
         mxwww.masterlogin.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406598AbfIJHOc (ORCPT
+        with ESMTP id S2404313AbfIJHOa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 03:14:32 -0400
+        Tue, 10 Sep 2019 03:14:30 -0400
 Received: from mxout2.routing.net (unknown [192.168.10.82])
-        by new.mxwww.masterlogin.de (Postfix) with ESMTPS id 5844B96E76;
-        Tue, 10 Sep 2019 07:05:19 +0000 (UTC)
+        by new.mxwww.masterlogin.de (Postfix) with ESMTPS id 38CCF9630D;
+        Tue, 10 Sep 2019 07:05:14 +0000 (UTC)
 Received: from mxbox2.masterlogin.de (unknown [192.168.10.253])
-        by mxout2.routing.net (Postfix) with ESMTP id B592C6208B;
-        Tue, 10 Sep 2019 07:05:19 +0000 (UTC)
+        by mxout2.routing.net (Postfix) with ESMTP id 80AE26205B;
+        Tue, 10 Sep 2019 07:05:14 +0000 (UTC)
 Received: from localhost.localdomain (fttx-pool-185.75.73.135.bambit.de [185.75.73.135])
-        by mxbox2.masterlogin.de (Postfix) with ESMTPSA id 66E82100909;
-        Tue, 10 Sep 2019 07:05:18 +0000 (UTC)
+        by mxbox2.masterlogin.de (Postfix) with ESMTPSA id E2744100C3C;
+        Tue, 10 Sep 2019 07:05:11 +0000 (UTC)
 From:   Frank Wunderlich <frank-w@public-files.de>
 To:     linux-mediatek@lists.infradead.org
 Cc:     Frank Wunderlich <frank-w@public-files.de>,
@@ -46,9 +46,9 @@ Cc:     Frank Wunderlich <frank-w@public-files.de>,
         Sean Wang <sean.wang@mediatek.com>,
         Sebastian Reichel <sre@kernel.org>,
         "Tianping Fang" <tianping.fang@mediatek.com>
-Subject: [PATCH v7 6/7] MAINTAINERS: add Mediatek shutdown drivers
-Date:   Tue, 10 Sep 2019 09:04:45 +0200
-Message-Id: <20190910070446.639-7-frank-w@public-files.de>
+Subject: [PATCH v7 1/7] dt-bindings: rtc: mediatek: add missing mt6397 rtc
+Date:   Tue, 10 Sep 2019 09:04:40 +0200
+Message-Id: <20190910070446.639-2-frank-w@public-files.de>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190910070446.639-1-frank-w@public-files.de>
 References: <20190910070446.639-1-frank-w@public-files.de>
@@ -59,39 +59,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Josef Friedl <josef.friedl@speed.at>
 
-add Section in MAINTAINERS file for poweroff driver
+add missing devicetree-binding document for mt6397 rtc
+in later patch driver is extended with mt6323 chip
 
+Suggested-By: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Josef Friedl <josef.friedl@speed.at>
 Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
 changes since v6: none
 changes since v5: none
-changes since v4: none
+changes since v4: use relative path
 changes since v3: moved SOB
-changes since v2: none (=v2 part 6)
+changes since v2: splitted rtc-mt6397.txt from first patch
 ---
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+ .../devicetree/bindings/rtc/rtc-mt6397.txt    | 29 +++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e7a47b5210fd..46d13e845740 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10149,6 +10149,13 @@ S:	Maintained
- F:	drivers/net/dsa/mt7530.*
- F:	net/dsa/tag_mtk.c
- 
-+MEDIATEK BOARD LEVEL SHUTDOWN DRIVERS
-+M:	Sean Wang <sean.wang@mediatek.com>
-+L:	linux-pm@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
-+F:	drivers/power/reset/mt6323-poweroff.c
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-mt6397.txt b/Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
+new file mode 100644
+index 000000000000..55a0c8874c03
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
+@@ -0,0 +1,29 @@
++Device-Tree bindings for MediaTek PMIC based RTC
 +
- MEDIATEK JPEG DRIVER
- M:	Rick Chang <rick.chang@mediatek.com>
- M:	Bin Liu <bin.liu@mediatek.com>
++MediaTek PMIC based RTC is an independent function of MediaTek PMIC that works
++as a type of multi-function device (MFD). The RTC can be configured and set up
++with PMIC wrapper bus which is a common resource shared with the other
++functions found on the same PMIC.
++
++For MediaTek PMIC MFD bindings, see:
++../mfd/mt6397.txt
++
++For MediaTek PMIC wrapper bus bindings, see:
++../soc/mediatek/pwrap.txt
++
++Required properties:
++- compatible: Should be one of follows
++       "mediatek,mt6323-rtc": for MT6323 PMIC
++       "mediatek,mt6397-rtc": for MT6397 PMIC
++
++Example:
++
++       pmic {
++               compatible = "mediatek,mt6323";
++
++               ...
++
++               rtc {
++                       compatible = "mediatek,mt6323-rtc";
++               };
++       };
 -- 
 2.17.1
 
