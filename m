@@ -2,142 +2,281 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E412C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4094FC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E490B206CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:52:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ljRKsul0"
+	by mail.kernel.org (Postfix) with ESMTP id 12065206CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:53:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391458AbfIJJwp (ORCPT
+        id S2391537AbfIJJxb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 05:52:45 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:34994 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391369AbfIJJwp (ORCPT
+        Tue, 10 Sep 2019 05:53:31 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:61529 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727557AbfIJJxb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 05:52:45 -0400
-Received: by mail-lf1-f65.google.com with SMTP id w6so12959042lfl.2
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 02:52:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UCCxiazzNKm8GfRdBMzix7RqbnKVVm8PwfIPcf8Ud9o=;
-        b=ljRKsul0mZVE7hjuRdwu0vDFTakT8JFE/2cyerU5FPgdhHWt1rkLc/XVmzFSuCdPyA
-         /G3lIV76GIKLQb3bB+uKUlq6zEOJp1/Jn7Bscc2/jQI6vtCMBKWUsj/fmMSyCEd2qNAL
-         V1vG8Se1hHXhwDqAbg8s7vDI3Ibg8uD2ZzkbbiS48Sm3gFFKFoG/OpoGBsMLp+jl42NB
-         CX+IqlW87dKEJnQTPMd2wc1doUzIXECqEdcQZZhRlbagUPN5NRb3QL2t3CHNXtubY7Qk
-         qdl1LrhsmO8b1M0BjYMm7Z3hO+0+IS7IDQImB+80dHHcpeWxrs8aFoFmvgFMCl1SsLZg
-         yH/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UCCxiazzNKm8GfRdBMzix7RqbnKVVm8PwfIPcf8Ud9o=;
-        b=Gg6WLshm2jpTtwSkBnMocf6Vv6RIRbdU9tTm9EsYuQwbwMA1W1gj5zD1nqlvP776F5
-         UsleVncq2KMG43dsCZq3NPe4CRUGw0VMqT+ioPnjMvUJOm1AoWKeq5+xKR0oHDKR4QhI
-         8c7JYDDNpc81XdjYgODFMI1fjDU4vB4cmVVv63HdCFfjD6W9aPEVSSJvjGVQK7lkctxw
-         45v4cVHL29qnltBYsmsqN0XiafqQ3e7xlKDqecRSzJlLs9805REJYJbUITuHHEakymK/
-         K1gmPv2ql1OwF94hQgE0JEqmRkmkXXyWKAKZQYH2ut8aPZhwz8Zd/sOLZWTuoQqCw56w
-         uv2w==
-X-Gm-Message-State: APjAAAUCb19qhurx474d6ilHtIUGvbhuM11q99rt26GBiSAfy39Ixk/Q
-        BHTWAH8uBkdupc8B0ERTyMQD29KqJn63Uo7sJFu7oEPM
-X-Google-Smtp-Source: APXvYqx9y3L6l20MO17A9IA6zgodZQShZyGHzkSX5INuMhtqmNR4XtMFHhM2ZZJH9fSmw/HaeCyGmGFqU1WqfGLgg0o=
-X-Received: by 2002:a19:770a:: with SMTP id s10mr2194571lfc.30.1568109163186;
- Tue, 10 Sep 2019 02:52:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <1566379420-26762-1-git-send-email-yash.shah@sifive.com>
-In-Reply-To: <1566379420-26762-1-git-send-email-yash.shah@sifive.com>
-From:   Yash Shah <yash.shah@sifive.com>
-Date:   Tue, 10 Sep 2019 15:22:07 +0530
-Message-ID: <CAJ2_jOGO-isv52rnwRusV7jtyCY_JWYWAj9opN3Zg6ZbZr-8-w@mail.gmail.com>
-Subject: Re: [PATCH] riscv: dts: Add DT support for SiFive FU540 PWM driver
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Bin Meng <bmeng.cn@gmail.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Sachin Ghadi <sachin.ghadi@sifive.com>
+        Tue, 10 Sep 2019 05:53:31 -0400
+X-UUID: 39136821071a4a61acaf347912375c23-20190910
+X-UUID: 39136821071a4a61acaf347912375c23-20190910
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 761175253; Tue, 10 Sep 2019 17:53:25 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 10 Sep 2019 17:53:23 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 10 Sep 2019 17:53:23 +0800
+Message-ID: <1568109204.24886.14.camel@mtksdccf07>
+Subject: Re: [PATCH v2 0/2] mm/kasan: dump alloc/free stack for page
+ allocator
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        "Arnd Bergmann" <arnd@arndb.de>, Qian Cai <cai@lca.pw>
+CC:     Alexander Potapenko <glider@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        Michal Hocko <mhocko@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kasan-dev@googlegroups.com>,
+        <linux-mm@kvack.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>
+Date:   Tue, 10 Sep 2019 17:53:24 +0800
+In-Reply-To: <20190909082412.24356-1-walter-zh.wu@mediatek.com>
+References: <20190909082412.24356-1-walter-zh.wu@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-Any comments on this patch?
-
-- Yash
-
-On Wed, Aug 21, 2019 at 2:53 PM Yash Shah <yash.shah@sifive.com> wrote:
->
-> Add the PWM DT node in SiFive FU540 soc-specific DT file.
-> Enable the PWM nodes in HiFive Unleashed board-specific DT file.
->
-> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+On Mon, 2019-09-09 at 16:24 +0800, walter-zh.wu@mediatek.com wrote:
+> From: Walter Wu <walter-zh.wu@mediatek.com>
+> 
+> This patch is KASAN report adds the alloc/free stacks for page allocator
+> in order to help programmer to see memory corruption caused by page.
+> 
+> By default, KASAN doesn't record alloc and free stack for page allocator.
+> It is difficult to fix up page use-after-free or dobule-free issue.
+> 
+> Our patchsets will record the last stack of pages.
+> It is very helpful for solving the page use-after-free or double-free.
+> 
+> KASAN report will show the last stack of page, it may be:
+> a) If page is in-use state, then it prints alloc stack.
+>    It is useful to fix up page out-of-bound issue.
+> 
+> BUG: KASAN: slab-out-of-bounds in kmalloc_pagealloc_oob_right+0x88/0x90
+> Write of size 1 at addr ffffffc0d64ea00a by task cat/115
+> ...
+> Allocation stack of page:
+>  set_page_stack.constprop.1+0x30/0xc8
+>  kasan_alloc_pages+0x18/0x38
+>  prep_new_page+0x5c/0x150
+>  get_page_from_freelist+0xb8c/0x17c8
+>  __alloc_pages_nodemask+0x1a0/0x11b0
+>  kmalloc_order+0x28/0x58
+>  kmalloc_order_trace+0x28/0xe0
+>  kmalloc_pagealloc_oob_right+0x2c/0x68
+> 
+> b) If page is freed state, then it prints free stack.
+>    It is useful to fix up page use-after-free or double-free issue.
+> 
+> BUG: KASAN: use-after-free in kmalloc_pagealloc_uaf+0x70/0x80
+> Write of size 1 at addr ffffffc0d651c000 by task cat/115
+> ...
+> Free stack of page:
+>  kasan_free_pages+0x68/0x70
+>  __free_pages_ok+0x3c0/0x1328
+>  __free_pages+0x50/0x78
+>  kfree+0x1c4/0x250
+>  kmalloc_pagealloc_uaf+0x38/0x80
+> 
+> This has been discussed, please refer below link.
+> https://bugzilla.kernel.org/show_bug.cgi?id=203967
+> 
+> Changes since v1:
+> - slim page_owner and move it into kasan
+> - enable the feature by default
+> 
+> Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
 > ---
->  arch/riscv/boot/dts/sifive/fu540-c000.dtsi          | 19 +++++++++++++++++++
->  arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts |  8 ++++++++
->  2 files changed, 27 insertions(+)
->
-> diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-> index 42b5ec2..bb422db 100644
-> --- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-> +++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-> @@ -230,6 +230,25 @@
->                         #size-cells = <0>;
->                         status = "disabled";
->                 };
-> +               pwm0: pwm@10020000 {
-> +                       compatible = "sifive,pwm0";
-> +                       reg = <0x0 0x10020000 0x0 0x1000>;
-> +                       interrupt-parent = <&plic0>;
-> +                       interrupts = <42 43 44 45>;
-> +                       clocks = <&prci PRCI_CLK_TLCLK>;
-> +                       #pwm-cells = <3>;
-> +                       status = "disabled";
-> +               };
-> +               pwm1: pwm@10021000 {
-> +                       compatible = "sifive,pwm0";
-> +                       reg = <0x0 0x10021000 0x0 0x1000>;
-> +                       interrupt-parent = <&plic0>;
-> +                       interrupts = <46 47 48 49>;
-> +                       reg-names = "control";
-> +                       clocks = <&prci PRCI_CLK_TLCLK>;
-> +                       #pwm-cells = <3>;
-> +                       status = "disabled";
-> +               };
->
->         };
->  };
-> diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> index 93d68cb..104d334 100644
-> --- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> +++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> @@ -85,3 +85,11 @@
->                 reg = <0>;
->         };
->  };
+>  include/linux/kasan.h |  1 +
+>  lib/Kconfig.kasan     |  2 ++
+>  mm/kasan/common.c     | 32 ++++++++++++++++++++++++++++++++
+>  mm/kasan/kasan.h      |  5 +++++
+>  mm/kasan/report.c     | 27 +++++++++++++++++++++++++++
+>  5 files changed, 67 insertions(+)
+> 
+> diff --git a/include/linux/kasan.h b/include/linux/kasan.h
+> index cc8a03cc9674..97e1bcb20489 100644
+> --- a/include/linux/kasan.h
+> +++ b/include/linux/kasan.h
+> @@ -19,6 +19,7 @@ extern pte_t kasan_early_shadow_pte[PTRS_PER_PTE];
+>  extern pmd_t kasan_early_shadow_pmd[PTRS_PER_PMD];
+>  extern pud_t kasan_early_shadow_pud[PTRS_PER_PUD];
+>  extern p4d_t kasan_early_shadow_p4d[MAX_PTRS_PER_P4D];
+> +extern struct page_ext_operations page_stack_ops;
+>  
+>  int kasan_populate_early_shadow(const void *shadow_start,
+>  				const void *shadow_end);
+> diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
+> index 4fafba1a923b..b5a9410ba4e8 100644
+> --- a/lib/Kconfig.kasan
+> +++ b/lib/Kconfig.kasan
+> @@ -41,6 +41,7 @@ config KASAN_GENERIC
+>  	select SLUB_DEBUG if SLUB
+>  	select CONSTRUCTORS
+>  	select STACKDEPOT
+> +	select PAGE_EXTENSION
+>  	help
+>  	  Enables generic KASAN mode.
+>  	  Supported in both GCC and Clang. With GCC it requires version 4.9.2
+> @@ -63,6 +64,7 @@ config KASAN_SW_TAGS
+>  	select SLUB_DEBUG if SLUB
+>  	select CONSTRUCTORS
+>  	select STACKDEPOT
+> +	select PAGE_EXTENSION
+>  	help
+>  	  Enables software tag-based KASAN mode.
+>  	  This mode requires Top Byte Ignore support by the CPU and therefore
+> diff --git a/mm/kasan/common.c b/mm/kasan/common.c
+> index 2277b82902d8..c349143d2587 100644
+> --- a/mm/kasan/common.c
+> +++ b/mm/kasan/common.c
+> @@ -211,10 +211,38 @@ void kasan_unpoison_stack_above_sp_to(const void *watermark)
+>  	kasan_unpoison_shadow(sp, size);
+>  }
+>  
+> +static bool need_page_stack(void)
+> +{
+> +	return true;
+> +}
 > +
-> +&pwm0 {
-> +       status = "okay";
+> +struct page_ext_operations page_stack_ops = {
+> +	.size = sizeof(depot_stack_handle_t),
+> +	.need = need_page_stack,
 > +};
 > +
-> +&pwm1 {
-> +       status = "okay";
-> +};
-> --
-> 1.9.1
->
+> +static void set_page_stack(struct page *page, gfp_t gfp_mask)
+> +{
+> +	struct page_ext *page_ext = lookup_page_ext(page);
+> +	depot_stack_handle_t handle;
+> +	depot_stack_handle_t *page_stack;
+> +
+> +	if (unlikely(!page_ext))
+> +		return;
+> +
+> +	handle = save_stack(gfp_mask);
+> +
+> +	page_stack = get_page_stack(page_ext);
+> +	*page_stack = handle;
+> +}
+> +
+>  void kasan_alloc_pages(struct page *page, unsigned int order)
+>  {
+>  	u8 tag;
+>  	unsigned long i;
+> +	gfp_t gfp_flags = GFP_KERNEL;
+> +
+> +	set_page_stack(page, gfp_flags);
+>  
+>  	if (unlikely(PageHighMem(page)))
+>  		return;
+> @@ -227,6 +255,10 @@ void kasan_alloc_pages(struct page *page, unsigned int order)
+>  
+>  void kasan_free_pages(struct page *page, unsigned int order)
+>  {
+> +	gfp_t gfp_flags = GFP_KERNEL;
+> +
+> +	set_page_stack(page, gfp_flags);
+> +
+>  	if (likely(!PageHighMem(page)))
+>  		kasan_poison_shadow(page_address(page),
+>  				PAGE_SIZE << order,
+> diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
+> index 014f19e76247..95b3b510d04f 100644
+> --- a/mm/kasan/kasan.h
+> +++ b/mm/kasan/kasan.h
+> @@ -126,6 +126,11 @@ static inline bool addr_has_shadow(const void *addr)
+>  	return (addr >= kasan_shadow_to_mem((void *)KASAN_SHADOW_START));
+>  }
+>  
+> +static inline depot_stack_handle_t *get_page_stack(struct page_ext *page_ext)
+> +{
+> +	return (void *)page_ext + page_stack_ops.offset;
+> +}
+> +
+>  void kasan_poison_shadow(const void *address, size_t size, u8 value);
+>  
+>  /**
+> diff --git a/mm/kasan/report.c b/mm/kasan/report.c
+> index 0e5f965f1882..2e26bc192114 100644
+> --- a/mm/kasan/report.c
+> +++ b/mm/kasan/report.c
+> @@ -344,6 +344,32 @@ static void print_address_stack_frame(const void *addr)
+>  	print_decoded_frame_descr(frame_descr);
+>  }
+>  
+> +static void dump_page_stack(struct page *page)
+> +{
+> +	struct page_ext *page_ext = lookup_page_ext(page);
+> +	depot_stack_handle_t handle;
+> +	unsigned long *entries;
+> +	unsigned int nr_entries;
+> +	depot_stack_handle_t *page_stack;
+> +
+> +	if (unlikely(!page_ext))
+> +		return;
+> +
+> +	page_stack = get_page_stack(page_ext);
+> +
+> +	handle = READ_ONCE(*page_stack);
+> +	if (!handle)
+> +		return;
+> +
+> +	if ((unsigned long)page->flags & PAGE_FLAGS_CHECK_AT_PREP)
+> +		pr_info("Allocation stack of page:\n");
+> +	else
+> +		pr_info("Free stack of page:\n");
+> +
+> +	nr_entries = stack_depot_fetch(handle, &entries);
+> +	stack_trace_print(entries, nr_entries, 0);
+> +}
+> +
+>  static void print_address_description(void *addr)
+>  {
+>  	struct page *page = addr_to_page(addr);
+> @@ -366,6 +392,7 @@ static void print_address_description(void *addr)
+>  	if (page) {
+>  		pr_err("The buggy address belongs to the page:\n");
+>  		dump_page(page, "kasan: bad access detected");
+> +		dump_page_stack(page);
+>  	}
+>  
+>  	print_address_stack_frame(addr);
+
+Hi All,
+
+We implement another version, it is different with v1. We hope that you
+can give an ideas and make the KASAN report better. If it is possible,
+we can use the less memory to show the corruption information that is
+enough to help programmer to fix up memory corruption.
+
+Thanks.
+Walter
+
