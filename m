@@ -2,94 +2,190 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FC2C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A323C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D49BF20872
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBD3A20872
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:44:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389649AbfIJKm5 (ORCPT
+        id S1729471AbfIJKo2 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 06:42:57 -0400
-Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:39259 "EHLO
-        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729308AbfIJKm5 (ORCPT
+        Tue, 10 Sep 2019 06:44:28 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61192 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728993AbfIJKo1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 06:42:57 -0400
-Received: from [IPv6:2001:420:44c1:2577:9dde:3063:4dc7:2a88] ([IPv6:2001:420:44c1:2577:9dde:3063:4dc7:2a88])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id 7dbniVrTy9b7T7dbrii3hs; Tue, 10 Sep 2019 12:42:55 +0200
-Subject: Re: [Patch 00/13] media: am437x-vpfe: overdue maintenance
-To:     Benoit Parrot <bparrot@ti.com>
-Cc:     Prabhakar Lad <prabhakar.csengg@gmail.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190909162743.30114-1-bparrot@ti.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <5b73285c-5d05-1799-06fc-f4ab84cb9a1d@xs4all.nl>
-Date:   Tue, 10 Sep 2019 12:42:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 10 Sep 2019 06:44:27 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8AAc8Ab194748
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 06:44:26 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ux7346w5y-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 06:44:26 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.ibm.com>;
+        Tue, 10 Sep 2019 11:44:24 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 10 Sep 2019 11:44:22 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8AAiLRt54395070
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Sep 2019 10:44:21 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 742594203F;
+        Tue, 10 Sep 2019 10:44:21 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 144E442045;
+        Tue, 10 Sep 2019 10:44:21 +0000 (GMT)
+Received: from localhost (unknown [9.85.92.121])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 10 Sep 2019 10:44:20 +0000 (GMT)
+Date:   Tue, 10 Sep 2019 16:14:17 +0530
+From:   "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
+Subject: Re: [PATCH 2/2] powerpc/watchpoint: Disable watchpoint hit by
+ larx/stcx instructions
+To:     mikey@neuling.org, mpe@ellerman.id.au,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc:     benh@kernel.crashing.org, christophe.leroy@c-s.fr,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        paulus@samba.org
+References: <20190910102422.23233-1-ravi.bangoria@linux.ibm.com>
+        <20190910102422.23233-3-ravi.bangoria@linux.ibm.com>
+In-Reply-To: <20190910102422.23233-3-ravi.bangoria@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190909162743.30114-1-bparrot@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfDgLUEHVN+RKov8OWXK1F7XNGT12EkJNiYeymJivzCZcZuFob/plBzrX/mPgK47XVhOZy64hbgWTJSXRZXg53bsDL2o24RyqG6Yk5/bKNtsBxMPfo7lf
- 6Y+6E9PCVDB74klKgCifSzdihMf4RSAKZuVrvrpZyZ6M5enTvN1rpiivxHtqdvR4HbGZfUJSozQGB0h6r/fqV4wpFbb8IMFmENSV9czometSb2ird2gjTPN8
- ULjQA2TVpldqO/OaNYq37mUO7HXKqfxx49Xe3hASQEYcPyc/pr1qS6rc6+D/0c3Exh0ZoHGwcsXffW9RzuglCcXXvhexe5ywDmOySNcx67yXuWUr6RUgGNMX
- dDYcgO1NXn9hwaUqDoNOc9FZ3McMA4pjti1dCJjC70VflsSdpSEPUHPpDE9R4MLLInQji2HJB5H/1BYnGEhc+78FZjjdWA==
+User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8BIT
+X-TM-AS-GCONF: 00
+x-cbid: 19091010-0028-0000-0000-0000039A7159
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19091010-0029-0000-0000-0000245CD4A5
+Message-Id: <1568111933.eaf72yeuof.naveen@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-10_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=636 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909100108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Benoit,
-
-On 9/9/19 6:27 PM, Benoit Parrot wrote:
-> This patch series is a collection of patches we have been carrying for a
-> while.
+Ravi Bangoria wrote:
+> If watchpoint exception is generated by larx/stcx instructions, the
+> reservation created by larx gets lost while handling exception, and
+> thus stcx instruction always fails. Generally these instructions are
+> used in a while(1) loop, for example spinlocks. And because stcx
+> never succeeds, it loops forever and ultimately hangs the system.
 > 
-> A few patches do fix actual bug and v4l2-compliance errors/warnings.
-> Other are drivers re-work to simplify/clarify the code for easier
-> maintenance.
-
-Can you post the output of the latest version of v4l2-compliance? Use
-the '-s' option so streaming is tested as well.
-
-Thanks!
-
-	Hans
-
+> Note that ptrace anyway works in one-shot mode and thus for ptrace
+> we don't change the behaviour. It's up to ptrace user to take care
+> of this.
 > 
-> We also include the SPDX Licensing update which seemed to have been
-> missed by the global script thus far.
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+> ---
+>  arch/powerpc/kernel/hw_breakpoint.c | 49 +++++++++++++++++++----------
+>  1 file changed, 33 insertions(+), 16 deletions(-)
 > 
-> Benoit Parrot (12):
->   media: am437x-vpfe: Fix missing first line
->   media: am437x-vpfe: Rework ISR routine for clarity
->   media: am437x-vpfe: Wait for end of frame before tear-down
->   media: am437x-vpfe: Streamlined vb2 buffer cleanup
->   media: am437x-vpfe: Setting STD to current value is not an error
->   media: am437x-vpfe: Use a per instance format array instead of a
->     static one
->   media: am437x-vpfe: Maintain a reference to the current vpfe_fmt
->   media: am437x-vpfe: fix function trace debug log
->   media: am437x-vpfe: Remove print_fourcc helper
->   media: am437x-vpfe: TRY_FMT ioctl is not really trying anything
->   media: am437x-vpfe: Remove per bus width static data
->   media: am437x-vpfe: Switch to SPDX Licensing
+> diff --git a/arch/powerpc/kernel/hw_breakpoint.c b/arch/powerpc/kernel/hw_breakpoint.c
+> index 28ad3171bb82..9fa496a598ce 100644
+> --- a/arch/powerpc/kernel/hw_breakpoint.c
+> +++ b/arch/powerpc/kernel/hw_breakpoint.c
+> @@ -195,14 +195,32 @@ void thread_change_pc(struct task_struct *tsk, struct pt_regs *regs)
+>  	tsk->thread.last_hit_ubp = NULL;
+>  }
+>  
+> +static bool is_larx_stcx_instr(struct pt_regs *regs, unsigned int instr)
+> +{
+> +	int ret, type;
+> +	struct instruction_op op;
+> +
+> +	ret = analyse_instr(&op, regs, instr);
+> +	type = GETTYPE(op.type);
+> +	return (!ret && (type == LARX || type == STCX));
+> +}
+> +
+>  /*
+>   * Handle debug exception notifications.
+>   */
+>  static bool stepping_handler(struct pt_regs *regs, struct perf_event *bp,
+>  			     unsigned long addr)
+>  {
+> -	int stepped;
+> -	unsigned int instr;
+> +	unsigned int instr = 0;
+> +
+> +	if (__get_user_inatomic(instr, (unsigned int *)regs->nip))
+> +		goto fail;
+> +
+> +	if (is_larx_stcx_instr(regs, instr)) {
+> +		printk_ratelimited("Watchpoint: Can't emulate/single-step larx/"
+> +				   "stcx instructions. Disabling watchpoint.\n");
+
+The below WARN() uses the term 'breakpoint'. Better to use consistent 
+terminology. I would rewrite the above as:
+	printk_ratelimited("Breakpoint hit on instruction that can't be emulated. "
+				"Breakpoint at 0x%lx will be disabled.\n", addr);
+
+Otherwise:
+Acked-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+
+- Naveen
+
+> +		goto disable;
+> +	}
+>  
+>  	/* Do not emulate user-space instructions, instead single-step them */
+>  	if (user_mode(regs)) {
+> @@ -211,23 +229,22 @@ static bool stepping_handler(struct pt_regs *regs, struct perf_event *bp,
+>  		return false;
+>  	}
+>  
+> -	stepped = 0;
+> -	instr = 0;
+> -	if (!__get_user_inatomic(instr, (unsigned int *)regs->nip))
+> -		stepped = emulate_step(regs, instr);
+> +	if (!emulate_step(regs, instr))
+> +		goto fail;
+>  
+> +	return true;
+> +
+> +fail:
+>  	/*
+> -	 * emulate_step() could not execute it. We've failed in reliably
+> -	 * handling the hw-breakpoint. Unregister it and throw a warning
+> -	 * message to let the user know about it.
+> +	 * We've failed in reliably handling the hw-breakpoint. Unregister
+> +	 * it and throw a warning message to let the user know about it.
+>  	 */
+> -	if (!stepped) {
+> -		WARN(1, "Unable to handle hardware breakpoint. Breakpoint at "
+> -			"0x%lx will be disabled.", addr);
+> -		perf_event_disable_inatomic(bp);
+> -		return false;
+> -	}
+> -	return true;
+> +	WARN(1, "Unable to handle hardware breakpoint. Breakpoint at "
+> +		"0x%lx will be disabled.", addr);
+> +
+> +disable:
+> +	perf_event_disable_inatomic(bp);
+> +	return false;
+>  }
+>  
+>  int hw_breakpoint_handler(struct die_args *args)
+> -- 
+> 2.21.0
 > 
-> Dave Gerlach (1):
->   media: am437x-vpfe: Fix suspend path to always handle pinctrl config
-> 
->  drivers/media/platform/am437x/am437x-vpfe.c   | 906 ++++++++----------
->  drivers/media/platform/am437x/am437x-vpfe.h   |  44 +-
->  .../media/platform/am437x/am437x-vpfe_regs.h  |  10 +-
->  3 files changed, 438 insertions(+), 522 deletions(-)
 > 
 
