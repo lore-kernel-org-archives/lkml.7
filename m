@@ -2,159 +2,107 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6141C49ED8
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F88C49ED8
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8695D208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:44:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="8Tiu8Mx6"
+	by mail.kernel.org (Postfix) with ESMTP id E6D36208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:44:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387796AbfIJOoT (ORCPT
+        id S2393506AbfIJOo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 10:44:19 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:16522 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725935AbfIJOoT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 10:44:19 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8AEhacq014269;
-        Tue, 10 Sep 2019 10:43:48 -0400
-Received: from nam02-cy1-obe.outbound.protection.outlook.com (mail-cys01nam02lp2059.outbound.protection.outlook.com [104.47.37.59])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2uv9f6ahtv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 10 Sep 2019 10:43:48 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KFMg5Y6fwsGvkVrVLIKV+rJJCGn9J9ZmI19fgryFuTXMT7DnL69FzZqC1pptsJ+uYGpNbFn+w8yI24fieUwkhAYyDbRQYuyFtQc5eiAIXDOYfC4jCdVyZnExW6tDh3VyIyZuAqV0LX8GUBaq0rCCHboVmecVs+YSbo/XoJpzJsdtyMQYW+WAl61F0tDfg+aBHTbdtZGqA8zQPlza323ajKaZ2LsW/K1S4za+Rm28QairPbhypgOQkXnD91YkR9XOhXFjxUjyI9x00vh6MtlTsiFXAaXSY7t6yAEKdrR/0gQSKuc7eSRSfHw/1e4vYbrwTZupX/91uLPRAnVyBym4MA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=POajf/KlRCSSRHjI0CEDVfbADDg05/wbdDPcrno9tt8=;
- b=YZqldz6hh5kfCeBb4gZuP5H+OCf+Yfpr8LZaZqj2KBYk7s+c0ZENaXM+D2Dpf8vbaTtyNLQg9GWN/dDP1kkvW0bJCCuZ2or10VcCLyBmPUSBBjip0csVnkguIqTgEQWpDU+OXMdyUPtHNBtsENJHrr3EN/LdUg0V4QwxXxId6G31nZW8tei5LncI/AhEkwZQzFHK99SvvOSYM3YRgSGULsULbrIKK/0yOT4pRg2SKP9c/mVfRY8BoYsiJWtJFMjyVvd+07mMJj0+gRdu8UWxXCyG7b+9XvckAJ2R7Ybo9qWl7OwzLTbdBeiDR1qbEMi1TOQEMcjOyCPb/6EtyG3tGg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.71.25.55) smtp.rcpttodomain=gmx.de smtp.mailfrom=analog.com;
- dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=POajf/KlRCSSRHjI0CEDVfbADDg05/wbdDPcrno9tt8=;
- b=8Tiu8Mx61Hv7ZQElX5fe+n/qnS3TRbGGRa4fUM8YjDixaZwcMP8sJ4VpRr82qb5ck7PJQ3jh5D9gWjWuzbmOIOs8uGJ6YIdqwOyvjJNDZHnRen5R5yHXAS0wBvBcSVtFuHJB3qyTuHxAz1g8MZL2sgJiwUoKSnernap3CIDjVog=
-Received: from BN6PR03CA0076.namprd03.prod.outlook.com (2603:10b6:405:6f::14)
- by CH2PR03MB5189.namprd03.prod.outlook.com (2603:10b6:610:a1::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2241.13; Tue, 10 Sep
- 2019 14:43:46 +0000
-Received: from CY1NAM02FT031.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::207) by BN6PR03CA0076.outlook.office365.com
- (2603:10b6:405:6f::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2241.15 via Frontend
- Transport; Tue, 10 Sep 2019 14:43:46 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
-Received: from nwd2mta1.analog.com (137.71.25.55) by
- CY1NAM02FT031.mail.protection.outlook.com (10.152.75.180) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2241.14
- via Frontend Transport; Tue, 10 Sep 2019 14:43:46 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x8AEhidD030172
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Tue, 10 Sep 2019 07:43:44 -0700
-Received: from linux.ad.analog.com (10.32.226.41) by NWD2HUBCAS7.ad.analog.com
- (10.64.69.107) with Microsoft SMTP Server id 14.3.408.0; Tue, 10 Sep 2019
- 10:43:44 -0400
-From:   Stefan Popa <stefan.popa@analog.com>
-To:     <jic23@kernel.org>
-CC:     <Michael.Hennerich@analog.com>, <knaack.h@gmx.de>,
-        <lars@metafoo.de>, <pmeerw@pmeerw.net>,
-        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <stefan.popa@analog.com>
-Subject: [PATCH v2 1/3] iio: accel: adxl372: Fix/remove limitation for FIFO samples
-Date:   Tue, 10 Sep 2019 17:43:32 +0300
-Message-ID: <1568126612-13134-1-git-send-email-stefan.popa@analog.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 10 Sep 2019 10:44:26 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36326 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725935AbfIJOoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 10:44:25 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 96B5A10C696B;
+        Tue, 10 Sep 2019 14:44:25 +0000 (UTC)
+Received: from gondolin (ovpn-117-116.ams2.redhat.com [10.36.117.116])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0E2E560BF7;
+        Tue, 10 Sep 2019 14:44:19 +0000 (UTC)
+Date:   Tue, 10 Sep 2019 16:44:15 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Igor Mammedov <imammedo@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, borntraeger@de.ibm.com,
+        david@redhat.com, frankja@linux.ibm.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, imbrenda@linux.ibm.com,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] KVM: s390: kvm_s390_vm_start_migration: check
+ dirty_bitmap before using it as target for memset()
+Message-ID: <20190910164415.3ef74c39.cohuck@redhat.com>
+In-Reply-To: <20190910130215.23647-1-imammedo@redhat.com>
+References: <20190910130215.23647-1-imammedo@redhat.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(346002)(396003)(136003)(39860400002)(2980300002)(189003)(199004)(36756003)(48376002)(50466002)(44832011)(47776003)(8676002)(356004)(6666004)(336012)(7696005)(486006)(50226002)(426003)(478600001)(70206006)(106002)(70586007)(8936002)(4326008)(5660300002)(186003)(476003)(2616005)(107886003)(126002)(305945005)(26005)(7636002)(51416003)(2906002)(246002)(2351001)(54906003)(316002)(16586007)(6916009);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR03MB5189;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 816862ab-9db1-4c7c-52c2-08d735fd490a
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(4709080)(1401327)(4618075)(2017052603328);SRVR:CH2PR03MB5189;
-X-MS-TrafficTypeDiagnostic: CH2PR03MB5189:
-X-Microsoft-Antispam-PRVS: <CH2PR03MB5189B9C12FDCA92193F056DF9DB60@CH2PR03MB5189.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-Forefront-PRVS: 01565FED4C
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: vOzVsSaeQ++k3q0Ity8flje/Yif1i3Iux/GWhVm1zA1q/7mJfv0iHJXj4z5hxYuPNAH0pLXzMnAodO0b1A+qt53ptdean2NitSwWhelTWz5qf9nYJ+gq+fLfa9+gLo+d9EIh8CGCR+2hzmOiA3jMtUgs4O3QDDCeIJy1yBry2LKNYQ9U7jM/2JJ0SUSKadSgfHye8wrSTUeFDnWGSg/HpRH7P8uGacFzBzz28YNAdVMtba57Qmb98h4dba6pikvWPUkLAZi/WfxpSoqcWKtRVynksyE7CBftHplaHPGEO6REY0g6Jlw0qjyYoPPD3G+rQ478dHVELW2M4rdijVDgV0RkFawyOAs8u/Aj+vcE0ETk8KrJ5TJ0vQ9FJbhbQR6Bxo4HENXWvmvNIGAbYZnFz83qEP1eiAA0MUX9WDuQBlQ=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2019 14:43:46.0303
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 816862ab-9db1-4c7c-52c2-08d735fd490a
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR03MB5189
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-10_10:2019-09-10,2019-09-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=1 spamscore=0 adultscore=0 phishscore=0 mlxscore=0
- impostorscore=0 bulkscore=0 lowpriorityscore=0 malwarescore=0
- mlxlogscore=801 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1906280000 definitions=main-1909100142
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.65]); Tue, 10 Sep 2019 14:44:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, the driver sets the FIFO_SAMPLES register with the number of
-sample sets (maximum of 170 for 3 axis data, 256 for 2-axis and 512 for
-single axis). However, the FIFO_SAMPLES register should store the number
-of samples, regardless of how the FIFO format is configured.
+On Tue, 10 Sep 2019 09:02:15 -0400
+Igor Mammedov <imammedo@redhat.com> wrote:
 
-Signed-off-by: Stefan Popa <stefan.popa@analog.com>
----
-Changes in v2:
-	- st->watermark needs to store the number of sample sets, 
-	  the total number of samples is computed in
-	  adxl372_configure_fifo() func.
+> If userspace doesn't set KVM_MEM_LOG_DIRTY_PAGES on memslot before calling
+> kvm_s390_vm_start_migration(), kernel will oops with:
+> 
+>   Unable to handle kernel pointer dereference in virtual kernel address space
+>   Failing address: 0000000000000000 TEID: 0000000000000483
+>   Fault in home space mode while using kernel ASCE.
+>   AS:0000000002a2000b R2:00000001bff8c00b R3:00000001bff88007 S:00000001bff91000 P:000000000000003d
+>   Oops: 0004 ilc:2 [#1] SMP
+>   ...
+>   Call Trace:
+>   ([<001fffff804ec552>] kvm_s390_vm_set_attr+0x347a/0x3828 [kvm])
+>    [<001fffff804ecfc0>] kvm_arch_vm_ioctl+0x6c0/0x1998 [kvm]
+>    [<001fffff804b67e4>] kvm_vm_ioctl+0x51c/0x11a8 [kvm]
+>    [<00000000008ba572>] do_vfs_ioctl+0x1d2/0xe58
+>    [<00000000008bb284>] ksys_ioctl+0x8c/0xb8
+>    [<00000000008bb2e2>] sys_ioctl+0x32/0x40
+>    [<000000000175552c>] system_call+0x2b8/0x2d8
+>   INFO: lockdep is turned off.
+>   Last Breaking-Event-Address:
+>    [<0000000000dbaf60>] __memset+0xc/0xa0
+> 
+> due to ms->dirty_bitmap being NULL, which might crash the host.
+> 
+> Make sure that ms->dirty_bitmap is set before using it or
+> print a warning and return -ENIVAL otherwise.
+> 
+> Fixes: afdad61615cc ("KVM: s390: Fix storage attributes migration with memory slots")
+> Signed-off-by: Igor Mammedov <imammedo@redhat.com>
+> ---
+> Cc: stable@vger.kernel.org # v4.19+
+> 
+> v2:
+>    - drop WARN()
+> 
+>  arch/s390/kvm/kvm-s390.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+> index f329dcb3f44c..2a40cd3e40b4 100644
+> --- a/arch/s390/kvm/kvm-s390.c
+> +++ b/arch/s390/kvm/kvm-s390.c
+> @@ -1018,6 +1018,8 @@ static int kvm_s390_vm_start_migration(struct kvm *kvm)
+>  	/* mark all the pages in active slots as dirty */
+>  	for (slotnr = 0; slotnr < slots->used_slots; slotnr++) {
+>  		ms = slots->memslots + slotnr;
+> +		if (!ms->dirty_bitmap)
+> +			return -EINVAL;
+>  		/*
+>  		 * The second half of the bitmap is only used on x86,
+>  		 * and would be wasted otherwise, so we put it to good
 
- drivers/iio/accel/adxl372.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/iio/accel/adxl372.c b/drivers/iio/accel/adxl372.c
-index 055227cb..7de5e1b 100644
---- a/drivers/iio/accel/adxl372.c
-+++ b/drivers/iio/accel/adxl372.c
-@@ -474,12 +474,17 @@ static int adxl372_configure_fifo(struct adxl372_state *st)
- 	if (ret < 0)
- 		return ret;
- 
--	fifo_samples = st->watermark & 0xFF;
-+	/*
-+	 * watermak stores the number of sets; we need to write the FIFO
-+	 * registers with the number of samples
-+	 */
-+	fifo_samples = (st->watermark * st->fifo_set_size);
- 	fifo_ctl = ADXL372_FIFO_CTL_FORMAT_MODE(st->fifo_format) |
- 		   ADXL372_FIFO_CTL_MODE_MODE(st->fifo_mode) |
--		   ADXL372_FIFO_CTL_SAMPLES_MODE(st->watermark);
-+		   ADXL372_FIFO_CTL_SAMPLES_MODE(fifo_samples);
- 
--	ret = regmap_write(st->regmap, ADXL372_FIFO_SAMPLES, fifo_samples);
-+	ret = regmap_write(st->regmap,
-+			   ADXL372_FIFO_SAMPLES, fifo_samples & 0xFF);
- 	if (ret < 0)
- 		return ret;
- 
--- 
-2.7.4
-
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
