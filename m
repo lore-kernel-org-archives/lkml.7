@@ -2,101 +2,88 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5792BC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA26C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21EC62084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:45:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bbRtTRVs"
+	by mail.kernel.org (Postfix) with ESMTP id 57E242081B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:45:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392395AbfIJMpE (ORCPT
+        id S2390174AbfIJMp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 08:45:04 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:59956 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726892AbfIJMpD (ORCPT
+        Tue, 10 Sep 2019 08:45:57 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:22841 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726193AbfIJMp5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 08:45:03 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8AChvVk087799;
-        Tue, 10 Sep 2019 12:44:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=kPBxmrG7XhnSVDi7TSZHk3MEipMVpG8IYBW8hct14Lg=;
- b=bbRtTRVsZ07ULd4fnpUUrlkZCYxFSs1e5iGN4kXQIa6U/AhdL9pIwQgGUrzHnpZuyXXz
- /tMCqthdo0EJIx6IkBNXWz99Onn/IW6+jU4iLJjaPfgpBeePfHatuw8tHgE0wQVtk/6B
- Vu86cG0bLBidCVz5RFngm7uuYN3FmuRyIpRC1OpzldeRADVSlkQDQDICLga6S/xQD0yc
- qmp2mZAeLIuD9CXwJeHUWKd/SwAZ14IYsasPVa6Wdb5D4ytXeSAtBSEs+SlCd37zUpTK
- s7a4ExIGxeyEi8mZhDsiYKCmsPuju5NZXlPVQZVdiv7jMbBL8Zns5S/sHsnlLwrdIPt+ +Q== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2uw1m8u4hv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Sep 2019 12:44:59 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8ACiAPj191077;
-        Tue, 10 Sep 2019 12:44:58 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2uwqktpaew-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Sep 2019 12:44:57 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8ACio9l009207;
-        Tue, 10 Sep 2019 12:44:50 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 10 Sep 2019 05:44:49 -0700
-Date:   Tue, 10 Sep 2019 15:44:43 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: staging: exfat: issue with FFS_MEDIAERR error return assignment
-Message-ID: <20190910124443.GD15977@kadam>
-References: <c569b04c-2959-c8eb-0d38-628e8c5ff7ac@canonical.com>
+        Tue, 10 Sep 2019 08:45:57 -0400
+X-UUID: ea7760d474544bb18f6fd74ca1614a77-20190910
+X-UUID: ea7760d474544bb18f6fd74ca1614a77-20190910
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1580390971; Tue, 10 Sep 2019 20:45:50 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 10 Sep 2019 20:45:48 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 10 Sep 2019 20:45:48 +0800
+Message-ID: <1568119549.24886.18.camel@mtksdccf07>
+Subject: Re: [PATCH v2 0/2] mm/kasan: dump alloc/free stack for page
+ allocator
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Vlastimil Babka <vbabka@suse.cz>
+CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        "Andrey Konovalov" <andreyknvl@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        Michal Hocko <mhocko@kernel.org>, Qian Cai <cai@lca.pw>,
+        <linux-kernel@vger.kernel.org>, <kasan-dev@googlegroups.com>,
+        <linux-mm@kvack.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>
+Date:   Tue, 10 Sep 2019 20:45:49 +0800
+In-Reply-To: <4faedb4d-f16c-1917-9eaa-b0f9c169fa50@suse.cz>
+References: <20190909082412.24356-1-walter-zh.wu@mediatek.com>
+         <d53d88df-d9a4-c126-32a8-4baeb0645a2c@suse.cz>
+         <a7863965-90ab-5dae-65e7-8f68f4b4beb5@virtuozzo.com>
+         <4faedb4d-f16c-1917-9eaa-b0f9c169fa50@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c569b04c-2959-c8eb-0d38-628e8c5ff7ac@canonical.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9375 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1909100123
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9375 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1909100124
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 07:38:00PM +0100, Colin Ian King wrote:
-> Hi,
+On Tue, 2019-09-10 at 13:53 +0200, Vlastimil Babka wrote:
+> On 9/10/19 12:50 PM, Andrey Ryabinin wrote:
+> > 
+> > 
+> > For slab objects we memorize both alloc and free stacks. You'll never know in advance what information will be usefull
+> > to fix an issue, so it usually better to provide more information. I don't think we should do anything different for pages.
 > 
-> Static analysis on exfat with Coverity has picked up an assignment of
-> FFS_MEDIAERR that gets over-written:
+> Exactly, thanks.
 > 
+> > Given that we already have the page_owner responsible for providing alloc/free stacks for pages, all that we should in KASAN do is to
+> > enable the feature by default. Free stack saving should be decoupled from debug_pagealloc into separate option so that it can be enabled
+> > by KASAN and/or debug_pagealloc.
 > 
-> 1750        if (is_dir) {
-> 1751                if ((fid->dir.dir == p_fs->root_dir) &&
-> 1752                    (fid->entry == -1)) {
-> 1753                        if (p_fs->dev_ejected)
+> Right. Walter, can you do it that way, or should I?
+> 
+> Thanks,
+> Vlastimil
 
-Idealy we would have both a filename and a function name but this email
-doesn't have either so no one knows what code you are talking about.  :P
+I will send new patch v3.
 
-regards,
-dan carpenter
