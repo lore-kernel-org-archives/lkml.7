@@ -2,103 +2,87 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F34CFC4740A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB2EC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BED73208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:14:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568106879;
-	bh=DgC/aNJtAOc1T0MEY/ZcIlzwdK2cF+tcElqdvDvsEFY=;
-	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
-	b=Io9UP6jBUfrDyPXhP+3MMxAu6qfabLHhwmUpfU3ZJIFrvw61g5fj2K+ks+hE4kcoe
-	 x/vfyHAxTrRiTkqHRjEU7eDsCh4q6Eazia8+My8DAKOie1tatOPftBE/sTeJx5tuji
-	 EWpycPIgiktIVA9ikXxULmU6NDrY/NiCrAfJDbMk=
+	by mail.kernel.org (Postfix) with ESMTP id D51D7208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:15:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728562AbfIJJOj (ORCPT
+        id S1728779AbfIJJP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 05:14:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37536 "EHLO mail.kernel.org"
+        Tue, 10 Sep 2019 05:15:28 -0400
+Received: from foss.arm.com ([217.140.110.172]:59534 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726060AbfIJJOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 05:14:38 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCA78208E4;
-        Tue, 10 Sep 2019 09:14:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568106877;
-        bh=DgC/aNJtAOc1T0MEY/ZcIlzwdK2cF+tcElqdvDvsEFY=;
-        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
-        b=Z4lnQ+1/EKOE1cLMXP9DTuyWPWjAysbttbXZLxnHW1JWIkctquRHj9fhjR5pAfnEX
-         /xZgGoIsd0qjQKlfl5s+Zu4PGrgR3H6M2CJOTF12qSdOlGimUf2sevwvXYjX6zZ/0g
-         H8hIahkC2rZMZcSg+/hQNF7KLVUbjNkchVkm1Cz8=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190909165408.GC23964@igloo>
-References: <20190826164510.6425-1-jorge.ramirez-ortiz@linaro.org> <20190826164510.6425-2-jorge.ramirez-ortiz@linaro.org> <20190909102117.245112089F@mail.kernel.org> <20190909141740.GA23964@igloo> <20190909161704.07FAE20640@mail.kernel.org> <20190909165408.GC23964@igloo>
-Cc:     "Jorge Ramirez-Ortiz, Linaro" <jorge.ramirez-ortiz@linaro.org>,
-        agross@kernel.org, mturquette@baylibre.com,
-        bjorn.andersson@linaro.org, niklas.cassel@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        id S1726836AbfIJJP1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 05:15:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4613D28;
+        Tue, 10 Sep 2019 02:15:27 -0700 (PDT)
+Received: from C02TF0J2HF1T.local (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F2BB63F67D;
+        Tue, 10 Sep 2019 02:15:23 -0700 (PDT)
+Date:   Tue, 10 Sep 2019 10:15:15 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Jia He <justin.he@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Airlie <airlied@redhat.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-To:     "Jorge Ramirez-Ortiz, Linaro" <jorge.ramirez-ortiz@linaro.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 2/5] clk: qcom: apcs-msm8916: get parent clock names from DT
-User-Agent: alot/0.8.1
-Date:   Tue, 10 Sep 2019 02:14:36 -0700
-Message-Id: <20190910091437.CCA78208E4@mail.kernel.org>
+Subject: Re: [PATCH v2] mm: fix double page fault on arm64 if PTE_AF is
+ cleared
+Message-ID: <20190910091515.GE14442@C02TF0J2HF1T.local>
+References: <20190906135747.211836-1-justin.he@arm.com>
+ <20190906145742.GX29434@bombadil.infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190906145742.GX29434@bombadil.infradead.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jorge Ramirez-Ortiz, Linaro (2019-09-09 09:54:08)
-> On 09/09/19 09:17:03, Stephen Boyd wrote:
-> > But now the binding is different for the same compatible. I'd prefer we
-> > keep using devm_clk_get() and use a device pointer here and reorder the
-> > map and parent arrays instead. The clocks property shouldn't change in a
-> > way that isn't "additive" so that we maintain backwards compatibility.
-> >=20
->=20
-> but the backwards compatibility is fully maintained - that is the main re=
-ason
-> behind the change. the new stuff is that  instead of hardcoding the
-> names in the source - like it is being done on the msm8916- we provide
-> the clocks in the dts node (a cleaner approach with the obvious
-> benefit of allowing new users to be added without having to modify the
-> sources).
->=20
+On Fri, Sep 06, 2019 at 07:57:42AM -0700, Matthew Wilcox wrote:
+> On Fri, Sep 06, 2019 at 09:57:47PM +0800, Jia He wrote:
+> >  		 * This really shouldn't fail, because the page is there
+> >  		 * in the page tables. But it might just be unreadable,
+> >  		 * in which case we just give up and fill the result with
+> > -		 * zeroes.
+> > +		 * zeroes. If PTE_AF is cleared on arm64, it might
+> > +		 * cause double page fault. So makes pte young here
+> 
+> How about:
+> 		 * zeroes. On architectures with software "accessed" bits,
+> 		 * we would take a double page fault here, so mark it
+> 		 * accessed here.
+> 
+> >  		 */
+> > +		if (!pte_young(vmf->orig_pte)) {
+> 
+> Let's guard this with:
+> 
+> 		if (arch_sw_access_bit && !pte_young(vmf->orig_pte)) {
+> 
+> #define arch_sw_access_bit	0
+> by default and have arm64 override it (either to a variable or a constant
+> ... your choice).  Also, please somebody decide on a better name than
+> arch_sw_access_bit.
 
-This is not a backwards compatible change.
+I'm not good at names either (is arch_faults_on_old_pte any better?) but
+I'd make this a 0 args call: arch_sw_access_bit(). This way we can make
+it a static inline function on arm64 with some static label check.
 
-> > > --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> > > +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> > > @@ -429,7 +429,8 @@
-> > >      compatible =3D "qcom,msm8916-apcs-kpss-global", "syscon";
-> > >      reg =3D <0xb011000 0x1000>;
-> > >      #mbox-cells =3D <1>;
-> > > -                   clocks =3D <&a53pll>;
-> > > +                 clocks =3D <&gcc GPLL0_VOTE>, <&a53pll>;
-> > > +                 clock-names =3D "aux", "pll";
-> > >                       #clock-cells =3D <0>;
-> > >                };
-> > >                                                                      =
-                                          =20
-
-Because the "clocks" property changed from
-
-	<&a53pll>
-
-to
-
-	<&gcc GPLL0_VOTE>, <&a53pll>
-
-and that moves pll to cell 1 instead of cell 0.
-
+-- 
+Catalin
