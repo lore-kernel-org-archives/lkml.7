@@ -2,158 +2,73 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA06FC4740A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 02:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC45C4740A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 02:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 673B421670
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 02:24:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Ar5Woo5m"
+	by mail.kernel.org (Postfix) with ESMTP id 4AF9A21479
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 02:32:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392728AbfIJCYs (ORCPT
+        id S2404040AbfIJCcm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 22:24:48 -0400
-Received: from mail-eopbgr130047.outbound.protection.outlook.com ([40.107.13.47]:44637
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        Mon, 9 Sep 2019 22:32:42 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:52354 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388705AbfIJCYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 22:24:48 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mGrgJXH11geTd5cl5wHh8r2ekpOt7Py4IS7NOdeWtRnAO+Z0UdCfBu2nDOTnxKvUB2Xme2Jb+G1mFXwOi2gAUrLXEPqKwMJw+sJUuS6uQ40976JSt+iIkTOPZP1Wfch06boiyVwLyGh0UuAnJLYM6hi8Y6JnxwQSiEUQpWie+IEJRBLFJA8NyaJHdDBwc24urrWwM8ObKxY/SrLrgSSQzaVZSKppgN2veUfm7Um/7bNGEotNEnOz2qeFfJs2TxGiGLwn3E7oH/ZPhabWpT3p73bI3jzoC2Pguu1O9ktq4/HKoVacpWsHv1P8RmeG4kt+5iEHgEGeS4O9GvSgGNKFEw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TdiaonOFDubgYIr8S+S+o9VxHyYersRibCwvHrh5reY=;
- b=WQ0pbpkvSLDROtEPIu3lCjKY3221uQnpddOkoHvf1piG3+gT1rWD63jycGh8Io8MkZhW1uIJ0ob2mBhdru92oNNNuQ0D+KJlAEGr/xK0WtNtaOUKicsZ0o+28n41b5gGi33XR+wOZdoN5YxAujgYDrvFAIIs4RXfASNVPCm/NVVKeI/upEaSnqRqLoPv4K5O7eWlOLQpdFYMtQ6wpzSbTs9hrSFPBO/EsjyExDx14ZCJlCZolhMCFYO+XHlr+ugIpvg8J5mw6RRLZnlCxbXr9DnMSS9FYFW6AhVBzFQGGNqLu4crMw3DSKHWsS3imtPPqmvXvel/07tmspfEwe13uA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TdiaonOFDubgYIr8S+S+o9VxHyYersRibCwvHrh5reY=;
- b=Ar5Woo5muJI8egLgj7IQmIU2YpC5dRfRT7nms2UlUuELf8hB7mnrYu0hBH49BbEQBwN26o6t8yuMz5yIL6xsEZR+h7Kokp7dFvqMM64qSxBu4swjqyBSdnfCv6aJkHy/4mHz0wb7r1Sozg4YO/7qBkxtaHMo69AnKeoZbE6TxgM=
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.233.80) by
- VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.233.80) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.13; Tue, 10 Sep 2019 02:24:43 +0000
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::5049:d7e5:95ff:3d53]) by VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::5049:d7e5:95ff:3d53%7]) with mapi id 15.20.2241.018; Tue, 10 Sep 2019
- 02:24:43 +0000
-From:   "S.j. Wang" <shengjiu.wang@nxp.com>
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-CC:     "timur@kernel.org" <timur@kernel.org>,
-        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "perex@perex.cz" <perex@perex.cz>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] Re: [PATCH 3/3] ASoC: fsl_asrc: Fix error with S24_3LE
- format bitstream in i.MX8
-Thread-Topic: [EXT] Re: [PATCH 3/3] ASoC: fsl_asrc: Fix error with S24_3LE
- format bitstream in i.MX8
-Thread-Index: AQHVZ3pvowRNFUg35EqaOi9AfKWf6ackLjzQ
-Date:   Tue, 10 Sep 2019 02:24:43 +0000
-Message-ID: <VE1PR04MB647982DF7060E527385CE50CE3B60@VE1PR04MB6479.eurprd04.prod.outlook.com>
-References: <cover.1568025083.git.shengjiu.wang@nxp.com>
- <2b6e028ca27b8569da4ab7868d7b90ff8c3225d0.1568025083.git.shengjiu.wang@nxp.com>
- <20190910015212.GA16760@Asurada-Nvidia.nvidia.com>
-In-Reply-To: <20190910015212.GA16760@Asurada-Nvidia.nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=shengjiu.wang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1cb21239-7f47-40ad-f24c-08d735960a90
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6479;
-x-ms-traffictypediagnostic: VE1PR04MB6479:
-x-microsoft-antispam-prvs: <VE1PR04MB64799ADBCAF5DFE92A11E5D7E3B60@VE1PR04MB6479.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 01565FED4C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(136003)(396003)(346002)(376002)(199004)(189003)(53936002)(81166006)(14454004)(7736002)(55016002)(26005)(305945005)(52536014)(76176011)(2906002)(33656002)(6916009)(316002)(7416002)(9686003)(6436002)(54906003)(6506007)(102836004)(66476007)(66556008)(14444005)(256004)(25786009)(1411001)(64756008)(8676002)(66446008)(229853002)(86362001)(3846002)(66066001)(476003)(71200400001)(446003)(4326008)(8936002)(71190400001)(5660300002)(76116006)(478600001)(66946007)(81156014)(99286004)(186003)(486006)(11346002)(6246003)(7696005)(74316002)(6116002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6479;H:VE1PR04MB6479.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: BgrHQK+sWsfjsXE5Auklv9urfSGQdgaGrMxXpPiRhyl6hQTGxjSQD2SyrWH4+uMrCflR43kSz8MWu/OZWu309epJ2DqAPOUU9nVCeI+7wUVWBnPm8x2BHevpGVqLOEge0XeyumT+3CSN204fb/pIcHvJKImaDD3l0SYHzF+owRloDNEpimxD/iBruiu5eyj/Jaejj0lwVqN2/1Ab9KAQy3kcGfLzc0/PayMDsLbWroZOSII/2Z9HWc3kcvQP/rLKNc8EIMxTazSxUCTIEVD0Jgb9yjyesLGLQU7aeVJm19AOTuumLxb90gYxnzGlf277EHnZNZErPfyw890j3k9OA/XQwdYWRHZ+ijBvYiHE/PjWcnOlLDVJ5HQB8HuiX9Fdfotegiqyp22qQGwC2U5CAOnITUq3vPLZsjjA+D0k3gI=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S2392735AbfIJCcm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 22:32:42 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 98B1043E833CED385D60;
+        Tue, 10 Sep 2019 10:32:39 +0800 (CST)
+Received: from huawei.com (10.175.104.217) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Tue, 10 Sep 2019
+ 10:32:30 +0800
+From:   Miaohe Lin <linmiaohe@huawei.com>
+To:     <adobriyan@gmail.com>, <tglx@linutronix.de>,
+        <akpm@linux-foundation.org>, <dhowells@redhat.com>,
+        <cyphar@cyphar.com>, <christian@brauner.io>,
+        <aubrey.li@linux.intel.com>, <linux-kernel@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>
+CC:     <linmiaohe@huawei.com>, <mingfangsen@huawei.com>
+Subject: [PATCH] proc:fix confusing macro arg name
+Date:   Tue, 10 Sep 2019 10:17:47 +0800
+Message-ID: <20190910021747.11216-1-linmiaohe@huawei.com>
+X-Mailer: git-send-email 2.21.GIT
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1cb21239-7f47-40ad-f24c-08d735960a90
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Sep 2019 02:24:43.4552
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yNDOFIlEyftPpeGQwGGFVDk3mFnLDoDHddpjfkXCakqBvtzHZfT+Kjm4odur2pA0ipPXri547e5wwItOLEQkXg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6479
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.104.217]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+state_size and ops are in the wrong position, fix it.
 
-Hi
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+---
+ include/linux/proc_fs.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
->=20
-> On Mon, Sep 09, 2019 at 06:33:21PM -0400, Shengjiu Wang wrote:
-> > There is error "aplay: pcm_write:2023: write error: Input/output error"
-> > on i.MX8QM/i.MX8QXP platform for S24_3LE format.
-> >
-> > In i.MX8QM/i.MX8QXP, the DMA is EDMA, which don't support 24bit
-> > sample, but we didn't add any constraint, that cause issues.
-> >
-> > So we need to query the caps of dma, then update the hw parameters
-> > according to the caps.
->=20
-> > @@ -285,8 +293,81 @@ static int fsl_asrc_dma_startup(struct
-> > snd_pcm_substream *substream)
-> >
-> >       runtime->private_data =3D pair;
-> >
-> > -     snd_pcm_hw_constraint_integer(substream->runtime,
-> > -                                   SNDRV_PCM_HW_PARAM_PERIODS);
-> > +     ret =3D snd_pcm_hw_constraint_integer(substream->runtime,
-> > +                                         SNDRV_PCM_HW_PARAM_PERIODS);
-> > +     if (ret < 0) {
-> > +             dev_err(dev, "failed to set pcm hw params periods\n");
-> > +             return ret;
-> > +     }
-> > +
-> > +     dma_data =3D snd_soc_dai_get_dma_data(rtd->cpu_dai, substream);
-> > +
-> > +     /* Request a temp pair, which is release in the end */
-> > +     fsl_asrc_request_pair(1, pair);
->=20
-> Not sure if it'd be practical, but a pair request could fail. Will probab=
-ly need
-> to check return value.
->=20
-> And a quick feeling is that below code is mostly identical to what is in =
-the
-> soc-generic-dmaengine-pcm.c file. So I'm wondering if we could abstract a
-> helper function somewhere in the ASoC core: Mark?
->=20
-> Thanks
-> Nicolin
->=20
-Yes, it refers to the code in soc-generic-dmaengine-pcm.c, if there is a co=
-mmon
-API, this is helpful.
-
-Best regards
-Wang shengjiu
+diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
+index a705aa2d03f9..0640be56dcbd 100644
+--- a/include/linux/proc_fs.h
++++ b/include/linux/proc_fs.h
+@@ -58,8 +58,8 @@ extern int remove_proc_subtree(const char *, struct proc_dir_entry *);
+ struct proc_dir_entry *proc_create_net_data(const char *name, umode_t mode,
+ 		struct proc_dir_entry *parent, const struct seq_operations *ops,
+ 		unsigned int state_size, void *data);
+-#define proc_create_net(name, mode, parent, state_size, ops) \
+-	proc_create_net_data(name, mode, parent, state_size, ops, NULL)
++#define proc_create_net(name, mode, parent, ops, state_size) \
++	proc_create_net_data(name, mode, parent, ops, state_size, NULL)
+ struct proc_dir_entry *proc_create_net_single(const char *name, umode_t mode,
+ 		struct proc_dir_entry *parent,
+ 		int (*show)(struct seq_file *, void *), void *data);
+-- 
+2.21.GIT
 
