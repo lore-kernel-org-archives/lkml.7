@@ -4,138 +4,182 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B9FC4740A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D90C4740A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 599A92067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:25:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 866F72084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:26:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732228AbfIJNZO (ORCPT
+        id S1732163AbfIJN0c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 09:25:14 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63518 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731963AbfIJNZO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 09:25:14 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8ADMhkC071957
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 09:25:13 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ux9w4ekyt-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 09:25:12 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <imbrenda@linux.ibm.com>;
-        Tue, 10 Sep 2019 14:25:10 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 10 Sep 2019 14:25:06 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8ADOdAC38207808
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Sep 2019 13:24:39 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0D27F42054;
-        Tue, 10 Sep 2019 13:25:04 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9A9A64204D;
-        Tue, 10 Sep 2019 13:25:03 +0000 (GMT)
-Received: from p-imbrenda.boeblingen.de.ibm.com (unknown [9.152.224.39])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 10 Sep 2019 13:25:03 +0000 (GMT)
-Date:   Tue, 10 Sep 2019 15:25:02 +0200
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     Igor Mammedov <imammedo@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, borntraeger@de.ibm.com,
-        david@redhat.com, cohuck@redhat.com, frankja@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] KVM: s390: kvm_s390_vm_start_migration: check
- dirty_bitmap before using it as target for memset()
-In-Reply-To: <20190910130215.23647-1-imammedo@redhat.com>
-References: <20190910130215.23647-1-imammedo@redhat.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Tue, 10 Sep 2019 09:26:32 -0400
+Received: from foss.arm.com ([217.140.110.172]:35458 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726394AbfIJN0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 09:26:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A19B828;
+        Tue, 10 Sep 2019 06:26:30 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 968663F59C;
+        Tue, 10 Sep 2019 06:26:29 -0700 (PDT)
+Subject: Re: [PATCH v4 3/3] iommu: arm-smmu-impl: Add sdm845 implementation
+ hook
+To:     Vivek Gautam <vivek.gautam@codeaurora.org>, joro@8bytes.org,
+        agross@kernel.org, will.deacon@arm.com,
+        iommu@lists.linux-foundation.org
+Cc:     bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190823063248.13295-1-vivek.gautam@codeaurora.org>
+ <20190823063248.13295-4-vivek.gautam@codeaurora.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <9fb7d18c-e292-cbc9-aa6d-d85465ea249e@arm.com>
+Date:   Tue, 10 Sep 2019 14:26:25 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190823063248.13295-4-vivek.gautam@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19091013-0016-0000-0000-000002A98282
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19091013-0017-0000-0000-0000330A09CF
-Message-Id: <20190910152502.4e90735d@p-imbrenda.boeblingen.de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-10_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=965 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909100131
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Sep 2019 09:02:15 -0400
-Igor Mammedov <imammedo@redhat.com> wrote:
-
-> If userspace doesn't set KVM_MEM_LOG_DIRTY_PAGES on memslot before
-> calling kvm_s390_vm_start_migration(), kernel will oops with:
+On 23/08/2019 07:32, Vivek Gautam wrote:
+> Add reset hook for sdm845 based platforms to turn off
+> the wait-for-safe sequence.
 > 
->   Unable to handle kernel pointer dereference in virtual kernel
-> address space Failing address: 0000000000000000 TEID: 0000000000000483
->   Fault in home space mode while using kernel ASCE.
->   AS:0000000002a2000b R2:00000001bff8c00b R3:00000001bff88007
-> S:00000001bff91000 P:000000000000003d Oops: 0004 ilc:2 [#1] SMP
->   ...
->   Call Trace:
->   ([<001fffff804ec552>] kvm_s390_vm_set_attr+0x347a/0x3828 [kvm])
->    [<001fffff804ecfc0>] kvm_arch_vm_ioctl+0x6c0/0x1998 [kvm]
->    [<001fffff804b67e4>] kvm_vm_ioctl+0x51c/0x11a8 [kvm]
->    [<00000000008ba572>] do_vfs_ioctl+0x1d2/0xe58
->    [<00000000008bb284>] ksys_ioctl+0x8c/0xb8
->    [<00000000008bb2e2>] sys_ioctl+0x32/0x40
->    [<000000000175552c>] system_call+0x2b8/0x2d8
->   INFO: lockdep is turned off.
->   Last Breaking-Event-Address:
->    [<0000000000dbaf60>] __memset+0xc/0xa0
+> Understanding how wait-for-safe logic affects USB and UFS performance
+> on MTP845 and DB845 boards:
 > 
-> due to ms->dirty_bitmap being NULL, which might crash the host.
+> Qcom's implementation of arm,mmu-500 adds a WAIT-FOR-SAFE logic
+> to address under-performance issues in real-time clients, such as
+> Display, and Camera.
+> On receiving an invalidation requests, the SMMU forwards SAFE request
+> to these clients and waits for SAFE ack signal from real-time clients.
+> The SAFE signal from such clients is used to qualify the start of
+> invalidation.
+> This logic is controlled by chicken bits, one for each - MDP (display),
+> IFE0, and IFE1 (camera), that can be accessed only from secure software
+> on sdm845.
 > 
-> Make sure that ms->dirty_bitmap is set before using it or
-> print a warning and return -ENIVAL otherwise.
+> This configuration, however, degrades the performance of non-real time
+> clients, such as USB, and UFS etc. This happens because, with wait-for-safe
+> logic enabled the hardware tries to throttle non-real time clients while
+> waiting for SAFE ack signals from real-time clients.
 > 
-> Fixes: afdad61615cc ("KVM: s390: Fix storage attributes migration
-> with memory slots") Signed-off-by: Igor Mammedov <imammedo@redhat.com>
+> On mtp845 and db845 devices, with wait-for-safe logic enabled by the
+> bootloaders we see degraded performance of USB and UFS when kernel
+> enables the smmu stage-1 translations for these clients.
+> Turn off this wait-for-safe logic from the kernel gets us back the perf
+> of USB and UFS devices until we re-visit this when we start seeing perf
+> issues on display/camera on upstream supported SDM845 platforms.
+> The bootloaders on these boards implement secure monitor callbacks to
+> handle a specific command - QCOM_SCM_SVC_SMMU_PROGRAM with which the
+> logic can be toggled.
+> 
+> There are other boards such as cheza whose bootloaders don't enable this
+> logic. Such boards don't implement callbacks to handle the specific SCM
+> call so disabling this logic for such boards will be a no-op.
+> 
+> This change is inspired by the downstream change from Patrick Daly
+> to address performance issues with display and camera by handling
+> this wait-for-safe within separte io-pagetable ops to do TLB
+> maintenance. So a big thanks to him for the change and for all the
+> offline discussions.
+> 
+> Without this change the UFS reads are pretty slow:
+> $ time dd if=/dev/sda of=/dev/zero bs=1048576 count=10 conv=sync
+> 10+0 records in
+> 10+0 records out
+> 10485760 bytes (10.0MB) copied, 22.394903 seconds, 457.2KB/s
+> real    0m 22.39s
+> user    0m 0.00s
+> sys     0m 0.01s
+> 
+> With this change they are back to rock!
+> $ time dd if=/dev/sda of=/dev/zero bs=1048576 count=300 conv=sync
+> 300+0 records in
+> 300+0 records out
+> 314572800 bytes (300.0MB) copied, 1.030541 seconds, 291.1MB/s
+> real    0m 1.03s
+> user    0m 0.00s
+> sys     0m 0.54s
+> 
+> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
 > ---
-> Cc: stable@vger.kernel.org # v4.19+
-> 
-> v2:
->    - drop WARN()
-> 
->  arch/s390/kvm/kvm-s390.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-> index f329dcb3f44c..2a40cd3e40b4 100644
-> --- a/arch/s390/kvm/kvm-s390.c
-> +++ b/arch/s390/kvm/kvm-s390.c
-> @@ -1018,6 +1018,8 @@ static int kvm_s390_vm_start_migration(struct
-> kvm *kvm) /* mark all the pages in active slots as dirty */
->  	for (slotnr = 0; slotnr < slots->used_slots; slotnr++) {
->  		ms = slots->memslots + slotnr;
-> +		if (!ms->dirty_bitmap)
-> +			return -EINVAL;
->  		/*
->  		 * The second half of the bitmap is only used on x86,
->  		 * and would be wasted otherwise, so we put it to
-> good
+>   drivers/iommu/arm-smmu-impl.c | 27 ++++++++++++++++++++++++++-
 
-Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+I'd be inclined to introduce the inevitable arm-smmu-qcom.c from the 
+start, and save worrying about moving this out later. Other than that, 
+though, the general self-contained shape of it all is every bit as 
+beautiful as I'd hoped :D
 
+Robin.
+
+>   1 file changed, 26 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/arm-smmu-impl.c b/drivers/iommu/arm-smmu-impl.c
+> index 3f88cd078dd5..0aef87c41f9c 100644
+> --- a/drivers/iommu/arm-smmu-impl.c
+> +++ b/drivers/iommu/arm-smmu-impl.c
+> @@ -6,6 +6,7 @@
+>   
+>   #include <linux/bitfield.h>
+>   #include <linux/of.h>
+> +#include <linux/qcom_scm.h>
+>   
+>   #include "arm-smmu.h"
+>   
+> @@ -102,7 +103,6 @@ static struct arm_smmu_device *cavium_smmu_impl_init(struct arm_smmu_device *smm
+>   	return &cs->smmu;
+>   }
+>   
+> -
+>   #define ARM_MMU500_ACTLR_CPRE		(1 << 1)
+>   
+>   #define ARM_MMU500_ACR_CACHE_LOCK	(1 << 26)
+> @@ -147,6 +147,28 @@ static const struct arm_smmu_impl arm_mmu500_impl = {
+>   	.reset = arm_mmu500_reset,
+>   };
+>   
+> +static int qcom_sdm845_smmu500_reset(struct arm_smmu_device *smmu)
+> +{
+> +	int ret;
+> +
+> +	arm_mmu500_reset(smmu);
+> +
+> +	/*
+> +	 * To address performance degradation in non-real time clients,
+> +	 * such as USB and UFS, turn off wait-for-safe on sdm845 based boards,
+> +	 * such as MTP and db845, whose firmwares implement secure monitor
+> +	 * call handlers to turn on/off the wait-for-safe logic.
+> +	 */
+> +	ret = qcom_scm_qsmmu500_wait_safe_toggle(0);
+> +	if (ret)
+> +		dev_warn(smmu->dev, "Failed to turn off SAFE logic\n");
+> +
+> +	return 0;
+> +}
+> +
+> +const struct arm_smmu_impl qcom_sdm845_smmu500_impl = {
+> +	.reset = qcom_sdm845_smmu500_reset,
+> +};
+>   
+>   struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu)
+>   {
+> @@ -170,5 +192,8 @@ struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu)
+>   				  "calxeda,smmu-secure-config-access"))
+>   		smmu->impl = &calxeda_impl;
+>   
+> +	if (of_device_is_compatible(smmu->dev->of_node, "qcom,sdm845-smmu-500"))
+> +		smmu->impl = &qcom_sdm845_smmu500_impl;
+> +
+>   	return smmu;
+>   }
+> 
