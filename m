@@ -2,96 +2,100 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 327B7C4740A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90590C4740A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B66821479
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:41:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DE98208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:41:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="maG0dwN9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732075AbfIJOlD (ORCPT
+        id S2390180AbfIJOld (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 10:41:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45294 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729518AbfIJOlC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 10:41:02 -0400
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 10 Sep 2019 10:41:33 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:42924 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732225AbfIJOlc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 10:41:32 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6B39C7FDC9
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 14:41:02 +0000 (UTC)
-Received: by mail-wr1-f69.google.com with SMTP id a4so7772023wrg.8
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 07:41:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cJrLJhg77HdXITw7W6jWRWxQLFrh8FY3brtGhslg/yU=;
-        b=UPhkHjNAwr6cg8GVO0iJVjkKS7JAOiKQzj3D9YxO0b4l/zt166e9A3vkuFrxZ2UgAZ
-         rXirXzbjrdI1VVCNtPoVf5ehGKO1//JPZtlp9a1SDNX70gjsdq9iD9aBZLT/CO+L3Q1y
-         eYANiXb89wGtiUVh5Rh37ww+e/NvUtUfIGxoUozAIFEDmWJwBDrtvTeKINA7fAi3+Rxl
-         QFOKMHijowJrVDe01ezDpBGi0p7EgrQ3XSnC56QWsSV18QrvIGu2CEJhfPf99r5WS6Vn
-         isWf4VGJ7Rh4zj7PN4svHXP6ti75iAlBBUj9RZ2MfSjkq0YBwQdhQZGfE/FqxtfqS5tx
-         cCKA==
-X-Gm-Message-State: APjAAAXT6Hfxnu1gqUXXCEoCdePYcyC0h67wOp7xXk8qLHtJSiu2owLZ
-        5NUaXjdFlwUZRnZ2+YBQNRjIA33Qdmt/SDit33kM28BhCbSUzMoBx0bIrIcRyRtVSqvcScxQ2an
-        KafhMXFBlY92vPMbAPMEs3S0p
-X-Received: by 2002:adf:fc05:: with SMTP id i5mr21459277wrr.134.1568126461120;
-        Tue, 10 Sep 2019 07:41:01 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqy7r22ycaiyIAOgheL4k6r1Mn72f2EGSPwZkUVY5WoV3EEGyJTIURDBq8k7n4jtyP6PoMsfpw==
-X-Received: by 2002:adf:fc05:: with SMTP id i5mr21459245wrr.134.1568126460876;
-        Tue, 10 Sep 2019 07:41:00 -0700 (PDT)
-Received: from [192.168.10.150] ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id i9sm3720112wmf.14.2019.09.10.07.40.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Sep 2019 07:41:00 -0700 (PDT)
-Subject: Re: [PATCH v3] KVM: x86: Disable posted interrupts for odd IRQs
-To:     Christoph Hellwig <hch@infradead.org>,
-        Alexander Graf <graf@amazon.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jim Mattson <jmattson@google.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Liran Alon <liran.alon@oracle.com>
-References: <20190905125818.22395-1-graf@amazon.com>
- <20190910061554.GD10968@infradead.org>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <1cc51fa5-ee1c-88a4-c935-c293c947f240@redhat.com>
-Date:   Tue, 10 Sep 2019 16:40:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190910061554.GD10968@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 52123C2B52;
+        Tue, 10 Sep 2019 14:41:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1568126491; bh=lVkOCoCejw+FdVkNi1DEkuCSQsbWp0vzSCTOU+r1FbE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=maG0dwN9sqjrTYcrEmJPWJUP11sOR4TjwYTc/MdWqa86UHYx9amjx7WXN7iAC+X8M
+         mVwZWht6k+04SQMQPE5QtONFUn9ZnaRd6EyeW0GuwNmhnvWLsc8MCWaWL5gQsWif08
+         rw2+dGz1Pu0ZGhUzzSZHcptwmipKRX9a3Q1QxkcoeNo3F0IHZKwMEN3ceDPjwV2HFq
+         j5ttxy0brNyRnkZQboYkwk+J/KxEYILqVO66dtro7EVCKhhzk44R0OhFMkvGcm0YnU
+         9Jez7KvcLGghNIGdNV54/Wniet79x2KhVijxtu0YcPYQvgJqStKHup6KA2HvlpgHuL
+         AzHmrwhJt99Pg==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id DD654A0064;
+        Tue, 10 Sep 2019 14:41:29 +0000 (UTC)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next 3/6] net: stmmac: xgmac: Reinitialize correctly a variable
+Date:   Tue, 10 Sep 2019 16:41:24 +0200
+Message-Id: <cc78134084a4d7c4f2ea35e369c422b71209d021.1568126224.git.joabreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1568126224.git.joabreu@synopsys.com>
+References: <cover.1568126224.git.joabreu@synopsys.com>
+In-Reply-To: <cover.1568126224.git.joabreu@synopsys.com>
+References: <cover.1568126224.git.joabreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/09/19 08:15, Christoph Hellwig wrote:
-> And what about even ones? :)
-> 
-> Sorry, just joking, but the "odd" qualifier here looks a little weird,
-> maybe something like "non-standard develiry modes" might make sense
-> here.
+'value' was being or'ed with a value from another register. This is a
+typo and could cause new written value to be wrong. Fix it.
 
-Indeed, folded this into the commit message.  Thanks Christoph.
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 
-Alex, I queued the patch but I don't think I'll include it in 5.3.
+---
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Jose Abreu <joabreu@synopsys.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Paolo
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+index 78ac659da279..d5173dd02a71 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+@@ -568,7 +568,7 @@ static void dwxgmac2_update_vlan_hash(struct mac_device_info *hw, u32 hash,
+ 
+ 		writel(value, ioaddr + XGMAC_PACKET_FILTER);
+ 
+-		value |= XGMAC_VLAN_VTHM | XGMAC_VLAN_ETV;
++		value = XGMAC_VLAN_VTHM | XGMAC_VLAN_ETV;
+ 		if (is_double) {
+ 			value |= XGMAC_VLAN_EDVLP;
+ 			value |= XGMAC_VLAN_ESVL;
+-- 
+2.7.4
 
