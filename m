@@ -2,151 +2,113 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46620C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F81C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18DAB218AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:35:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568097344;
-	bh=ADmVggpTAYqf/jvT8x9qLpHs3SVTmoxx1uZch2+DMVw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=T2ptBan9/4V6j4ZnSjca0FmiVR7NCOe8oAC7MP6iwatHql+HDpE6fYLP+d7v1/C7P
-	 H/NPVLA/99S1MKaffuw1ge6yPXTWuGKSkDfMpVYNIk2Pua4D+L23oa2MSoRUidUEbs
-	 qQCI6NVWx/QCzeNrR+jVHy/Qm60jEaKoTjglzEHw=
+	by mail.kernel.org (Postfix) with ESMTP id 4445B20872
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:36:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393518AbfIJGfn (ORCPT
+        id S2393537AbfIJGgE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 02:35:43 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34009 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729627AbfIJGfl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 02:35:41 -0400
-Received: by mail-wr1-f66.google.com with SMTP id a11so7851369wrx.1;
-        Mon, 09 Sep 2019 23:35:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9uC8BSyBqqvpBHr+UBJrMjpTjeLS9eaSkiimfXBOGmI=;
-        b=RT2CZzYflWq0hJIviZ1qNiz7T8GR4+WUrisMZXe3m9cauTkqIyyVGGFPULrde7A02W
-         tj7FplDkEllE02owPbUYDzEtapP1C48use/4kFc7fZZmFt/DdDZTI55D8qvOaO2r24Ne
-         q4FNPrvlkjfx+lYW3lSYcZ69k2e463dcG9Y4rn+PPa/Glpr++eDfgJ8gFO5kdGQ+ZZAk
-         nXhnUxrt/DhKZTkCCWYef7FPywkEzNn0z8LUShNXRMIkZZwOG/G3kJoXGIwG7zGeC0aS
-         TI+DZ2QVgsA7VVK9EZCvbN7bPdpk9PkNXAPdUVWeWNcFfO4yiY8K5tj2pJUrGvJYeUSW
-         9/rw==
+        Tue, 10 Sep 2019 02:36:04 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55714 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732338AbfIJGgE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 02:36:04 -0400
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E43D0821D8
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 06:36:03 +0000 (UTC)
+Received: by mail-pf1-f199.google.com with SMTP id s139so12301474pfc.21
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 23:36:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9uC8BSyBqqvpBHr+UBJrMjpTjeLS9eaSkiimfXBOGmI=;
-        b=OGIIu7kQiC9NfKryZfiQuYrZPpsBPFxbvEH8fwEKiZuuqtgtF7jXfIN29NnGbc7fId
-         rvFMXp1KemiGvI8uDGKpmB7TKTpH09ZSH+pP6wff/kjUKi7y/gzYWD37MGi08QJKXSU5
-         qIzIK/9psV/Dmfg+9g4+w5obNvUboDNYacCXAulcDEnDDCAlCvNGVCW+/KRRgW+yYKgs
-         bJbBptmLeUkrnIBvsbU7dGCeqeZV5c2GnIcnxDregkX0MA47Sf4/LsthdFQLCntmSSpS
-         lDqB3Sg9s1mVKXpH8rGLDUn39r1sa8uWlauqHahO9JXETkbxQ2gJO9wOvf2hvpR7bsNy
-         0bJQ==
-X-Gm-Message-State: APjAAAVO1jrEEqNqZtkwzYjI7tJkcM927HxyjlUx7zJFLbv3jtpt93vv
-        vOFlChZAgfWDE3vxlNeRRCw=
-X-Google-Smtp-Source: APXvYqw8XHm4leFwnC6sWR8BjhyMsv0e/YjeclMhzrktUUdT/wG1WxzN3IHekSLZEGkf3MnHklk0qA==
-X-Received: by 2002:a5d:6b0f:: with SMTP id v15mr22340960wrw.19.1568097336267;
-        Mon, 09 Sep 2019 23:35:36 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id u22sm32329249wru.72.2019.09.09.23.35.33
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oY3Ce/5Kbiwb4uUtpEcG5bKndL/d68YsWBrf+ZfdEUg=;
+        b=DiWXjawbuUtJEmjU0RbkdBDMv4cOW5UWUYQTLt2PlchVo0jIk5FKgb0EJr5AgqDaxU
+         3sh0PSj1p3EhguujPe6zWZ7jbHn0EmG4hborpmuNOkVIojM6A1Vc8GL//+tIJKGrACc4
+         lNxFrfXRNmc6gcIEqSXHwaoRBlJxjgmz3cU98b+bSPeIau0jIPVFSKa36rHj42DslUBV
+         ft+dXDXdnW/czqXVQhC+UBQB0zJF7z+l5aevtLI/ZsGxfKdeOYlINl8ggL7Okj4gII2y
+         Pa1ZBUGZDSrchAyRoLQIU3ZCI1l0Vfdr6Wo88MZaQpvYtV22V4ZwcM6BvuGmLDc98Cp4
+         qckA==
+X-Gm-Message-State: APjAAAXcTMqsv+5pZplRdL15I70w0NbmxARhhRLH3jUDbTo0BZ1lUwL2
+        I8zVygQkmHdPanOtzVe1CpGbWtwYP6/FtLeUSUgaWLpW1uiLIIHY+ZLKJF0qbGKwkZFlm/zrfvj
+        o6YfW68VqunKQSq+VCsB1l1Hm
+X-Received: by 2002:a62:cf82:: with SMTP id b124mr32811079pfg.159.1568097363356;
+        Mon, 09 Sep 2019 23:36:03 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzBN6NUbe6QHosEJOHGq8wA7M68Xro9xrRVctByU6UK/vg6Yda0DomOLpqVHL7ahH1j5pqomg==
+X-Received: by 2002:a62:cf82:: with SMTP id b124mr32811050pfg.159.1568097363109;
+        Mon, 09 Sep 2019 23:36:03 -0700 (PDT)
+Received: from xz-x1 ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id a29sm30436883pfr.152.2019.09.09.23.35.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Sep 2019 23:35:35 -0700 (PDT)
-Date:   Tue, 10 Sep 2019 08:35:32 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Jeff Layton <jlayton@kernel.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian@brauner.io>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        alpha <linux-alpha@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-ia64@vger.kernel.org,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v12 11/12] open: openat2(2) syscall
-Message-ID: <20190910063532.GB1579@gmail.com>
-References: <20190904201933.10736-1-cyphar@cyphar.com>
- <20190904201933.10736-12-cyphar@cyphar.com>
- <7236f382d72130f2afbbe8940e72cc67e5c6dce0.camel@kernel.org>
- <CAHk-=whZx97Nm-gUK0ppofj2RA2LLz2vmaDUTKSSV-+yYB9q_Q@mail.gmail.com>
- <C81D6D29-F6BF-48E6-A15E-3ABCB2C992E5@amacapital.net>
- <CAHk-=whe90Ec_RRrMRLE0=bJOHNS9YmVwcytVxmrfK3oCuZF6A@mail.gmail.com>
+        Mon, 09 Sep 2019 23:36:02 -0700 (PDT)
+Date:   Tue, 10 Sep 2019 14:35:52 +0800
+From:   Peter Xu <peterx@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Nadav Amit <nadav.amit@gmail.com>,
+        Doug Reiland <doug.reiland@intel.com>
+Subject: Re: [PATCH] KVM: x86: Manually calculate reserved bits when loading
+ PDPTRS
+Message-ID: <20190910063552.GB8696@xz-x1>
+References: <20190903233645.21125-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAHk-=whe90Ec_RRrMRLE0=bJOHNS9YmVwcytVxmrfK3oCuZF6A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190903233645.21125-1-sean.j.christopherson@intel.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-* Linus Torvalds <torvalds@linux-foundation.org> wrote:
-
-> On Sat, Sep 7, 2019 at 10:42 AM Andy Lutomirski <luto@amacapital.net> wrote:
-> >
-> > Linus, you rejected resolveat() because you wanted a *nice* API
+On Tue, Sep 03, 2019 at 04:36:45PM -0700, Sean Christopherson wrote:
+> Manually generate the PDPTR reserved bit mask when explicitly loading
+> PDPTRs.  The reserved bits that are being tracked by the MMU reflect the
+> current paging mode, which is unlikely to be PAE paging in the vast
+> majority of flows that use load_pdptrs(), e.g. CR0 and CR4 emulation,
+> __set_sregs(), etc...  This can cause KVM to incorrectly signal a bad
+> PDPTR, or more likely, miss a reserved bit check and subsequently fail
+> a VM-Enter due to a bad VMCS.GUEST_PDPTR.
 > 
-> No. I rejected resoveat() because it was a completely broken garbage
-> API that couldn't do even basic stuff right (like O_CREAT).
+> Add a one off helper to generate the reserved bits instead of sharing
+> code across the MMU's calculations and the PDPTR emulation.  The PDPTR
+> reserved bits are basically set in stone, and pushing a helper into
+> the MMU's calculation adds unnecessary complexity without improving
+> readability.
 > 
-> We have a ton of flag space in the new openat2() model, we might as
-> well leave the old flags alone that people are (a) used to and (b) we
-> have code to support _anyway_.
+> Oppurtunistically fix/update the comment for load_pdptrs().
 > 
-> Making up a new flag namespace is only going to cause us - and users -
-> more work, and more confusion. For no actual advantage. It's not going
-> to be "cleaner". It's just going to be worse.
+> Note, the buggy commit also introduced a deliberate functional change,
+> "Also remove bit 5-6 from rsvd_bits_mask per latest SDM.", which was
+> effectively (and correctly) reverted by commit cd9ae5fe47df ("KVM: x86:
+> Fix page-tables reserved bits").  A bit of SDM archaeology shows that
+> the SDM from late 2008 had a bug (likely a copy+paste error) where it
+> listed bits 6:5 as AVL and A for PDPTEs used for 4k entries but reserved
+> for 2mb entries.  I.e. the SDM contradicted itself, and bits 6:5 are and
+> always have been reserved.
+> 
+> Fixes: 20c466b56168d ("KVM: Use rsvd_bits_mask in load_pdptrs()")
+> Cc: stable@vger.kernel.org
+> Cc: Nadav Amit <nadav.amit@gmail.com>
+> Reported-by: Doug Reiland <doug.reiland@intel.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 
-I suspect there is a "add a clean new flags namespace" analogy to the 
-classic "add a clean new standard" XKCD:
+Maybe with a test case would be even better?  FWIW:
 
-	https://xkcd.com/927/
+Reviewed-by: Peter Xu <peterx@redhat.com>
 
-Thanks,
-
-	Ingo
+-- 
+Peter Xu
