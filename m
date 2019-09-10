@@ -2,207 +2,231 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0DFCC49ED9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C04C49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70EFE21928
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 702292089F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:22:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="tLMUSP0a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394209AbfIJQWv (ORCPT
+        id S2436619AbfIJQW5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 12:22:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36494 "EHLO mx1.redhat.com"
+        Tue, 10 Sep 2019 12:22:57 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:7576 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394113AbfIJQWv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 12:22:51 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3841410C697D;
-        Tue, 10 Sep 2019 16:22:50 +0000 (UTC)
-Received: from [10.36.116.108] (ovpn-116-108.ams2.redhat.com [10.36.116.108])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D38D95C207;
-        Tue, 10 Sep 2019 16:22:37 +0000 (UTC)
-Subject: Re: [virtio-dev] Re: [PATCH v9 0/8] stg mail -e --version=v9 \
-To:     "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Michal Hocko <mhocko@kernel.org>, virtio-dev@lists.oasis-open.org,
-        kvm list <kvm@vger.kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Oscar Salvador <osalvador@suse.de>,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
-        "Wang, Wei W" <wei.w.wang@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>, ying.huang@intel.com,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-References: <20190907172225.10910.34302.stgit@localhost.localdomain>
- <20190910124209.GY2063@dhcp22.suse.cz>
- <CAKgT0Udr6nYQFTRzxLbXk41SiJ-pcT_bmN1j1YR4deCwdTOaUQ@mail.gmail.com>
- <20190910144713.GF2063@dhcp22.suse.cz>
- <CAKgT0UdB4qp3vFGrYEs=FwSXKpBEQ7zo7DV55nJRO2C-KCEOrw@mail.gmail.com>
- <20190910161818.GF2797@work-vm>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <f74117db-225d-92cb-9476-22c0f752659d@redhat.com>
-Date:   Tue, 10 Sep 2019 18:22:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190910161818.GF2797@work-vm>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.65]); Tue, 10 Sep 2019 16:22:50 +0000 (UTC)
+        id S2394211AbfIJQW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 12:22:57 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46SVgd4bCYz9tyvS;
+        Tue, 10 Sep 2019 18:22:53 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=tLMUSP0a; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id nz-WxYFQc0gT; Tue, 10 Sep 2019 18:22:53 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46SVgd3Qyqz9tyvQ;
+        Tue, 10 Sep 2019 18:22:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1568132573; bh=+6o+78VZsQA+v7vQ/HRTMCRCI9xi61deAbzDhccBXKU=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=tLMUSP0aHHdfA/uGbuUYrb2i2RZcbnaUor8S5aGIXKI/8hTw6KLlkfP1zkiS+j7Iq
+         wNjfSOdNqW2YyRvQbIUfQi6RYegbVQwKqqbLDUTsWGdvNCqJOYftPsLB+uPD9jqSDc
+         WlccUH+JzrhK3heSCZunkAjJwVzvOAZLwBqjl39Y=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 234238B88E;
+        Tue, 10 Sep 2019 18:22:55 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id Z-JXUHdkEBL5; Tue, 10 Sep 2019 18:22:55 +0200 (CEST)
+Received: from pc16032vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id CC1588B885;
+        Tue, 10 Sep 2019 18:22:54 +0200 (CEST)
+Received: by pc16032vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 96AFD6B751; Tue, 10 Sep 2019 16:22:54 +0000 (UTC)
+Message-Id: <d6979510ee67331de69d5859054258e483ceddfc.1568132567.git.christophe.leroy@c-s.fr>
+In-Reply-To: <b8fbdac205bbebd8e860dc42e12246de29bcc68f.1568132567.git.christophe.leroy@c-s.fr>
+References: <b8fbdac205bbebd8e860dc42e12246de29bcc68f.1568132567.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v3 2/2] powerpc/kexec: move kexec files into a dedicated
+ subdir.
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Tue, 10 Sep 2019 16:22:54 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10.09.19 18:18, Dr. David Alan Gilbert wrote:
-> * Alexander Duyck (alexander.duyck@gmail.com) wrote:
->> On Tue, Sep 10, 2019 at 7:47 AM Michal Hocko <mhocko@kernel.org> wrote:
->>>
->>> On Tue 10-09-19 07:42:43, Alexander Duyck wrote:
->>>> On Tue, Sep 10, 2019 at 5:42 AM Michal Hocko <mhocko@kernel.org> wrote:
->>>>>
->>>>> I wanted to review "mm: Introduce Reported pages" just realize that I
->>>>> have no clue on what is going on so returned to the cover and it didn't
->>>>> really help much. I am completely unfamiliar with virtio so please bear
->>>>> with me.
->>>>>
->>>>> On Sat 07-09-19 10:25:03, Alexander Duyck wrote:
->>>>> [...]
->>>>>> This series provides an asynchronous means of reporting to a hypervisor
->>>>>> that a guest page is no longer in use and can have the data associated
->>>>>> with it dropped. To do this I have implemented functionality that allows
->>>>>> for what I am referring to as unused page reporting
->>>>>>
->>>>>> The functionality for this is fairly simple. When enabled it will allocate
->>>>>> statistics to track the number of reported pages in a given free area.
->>>>>> When the number of free pages exceeds this value plus a high water value,
->>>>>> currently 32, it will begin performing page reporting which consists of
->>>>>> pulling pages off of free list and placing them into a scatter list. The
->>>>>> scatterlist is then given to the page reporting device and it will perform
->>>>>> the required action to make the pages "reported", in the case of
->>>>>> virtio-balloon this results in the pages being madvised as MADV_DONTNEED
->>>>>> and as such they are forced out of the guest. After this they are placed
->>>>>> back on the free list,
->>>>>
->>>>> And here I am reallly lost because "forced out of the guest" makes me
->>>>> feel that those pages are no longer usable by the guest. So how come you
->>>>> can add them back to the free list. I suspect understanding this part
->>>>> will allow me to understand why we have to mark those pages and prevent
->>>>> merging.
->>>>
->>>> Basically as the paragraph above mentions "forced out of the guest"
->>>> really is just the hypervisor calling MADV_DONTNEED on the page in
->>>> question. So the behavior is the same as any userspace application
->>>> that calls MADV_DONTNEED where the contents are no longer accessible
->>>> from userspace and attempting to access them will result in a fault
->>>> and the page being populated with a zero fill on-demand page, or a
->>>> copy of the file contents if the memory is file backed.
->>>
->>> As I've said I have no idea about virt so this doesn't really tell me
->>> much. Does that mean that if somebody allocates such a page and tries to
->>> access it then virt will handle a fault and bring it back?
->>
->> Actually I am probably describing too much as the MADV_DONTNEED is the
->> hypervisor behavior in response to the virtio-balloon notification. A
->> more thorough explanation of it can be found by just running "man
->> madvise", probably best just to leave it at that since I am probably
->> confusing things by describing hypervisor behavior in a kernel patch
->> set.
->>
->> For the most part all the page reporting really does is provide a way
->> to incrementally identify unused regions of memory in the buddy
->> allocator. That in turn is used by virtio-balloon in a polling thread
->> to report to the hypervisor what pages are not in use so that it can
->> make a decision on what to do with the pages now that it knows they
->> are unused.
->>
->> All this is providing is just a report and it is optional if the
->> hypervisor will act on it or not. If the hypervisor takes some sort of
->> action on the page, then the expectation is that the hypervisor will
->> use some sort of mechanism such as a page fault to discover when the
->> page is used again.
-> 
-> OK, that's interestingly different (but OK) from some other schemes that
-> hav ebeen described which *require* the guest to somehow indicate the
-> page is in use before starting to use the page again.
-> 
+arch/powerpc/kernel/ contains 8 files dedicated to kexec.
 
-virtio-balloon also has a mode where the guest would not have to
-indicate to the host before re-using a page. Only
-VIRTIO_BALLOON_F_MUST_TELL_HOST enforces this. So it's not completely new.
+Move them into a dedicated subdirectory.
 
-> Dave
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
+---
+v2: moved crash.c as well as it's part of kexec suite.
+v3: renamed files to remove 'kexec' keyword from names.
+---
+ arch/powerpc/kernel/Makefile                       | 19 +---------------
+ arch/powerpc/kernel/kexec/Makefile                 | 25 ++++++++++++++++++++++
+ arch/powerpc/kernel/{ => kexec}/crash.c            |  0
+ .../kernel/{kexec_elf_64.c => kexec/elf_64.c}      |  0
+ arch/powerpc/kernel/{ima_kexec.c => kexec/ima.c}   |  0
+ .../kernel/{machine_kexec.c => kexec/machine.c}    |  0
+ .../{machine_kexec_32.c => kexec/machine_32.c}     |  0
+ .../{machine_kexec_64.c => kexec/machine_64.c}     |  0
+ .../machine_file_64.c}                             |  0
+ .../{kexec_relocate_32.S => kexec/relocate_32.S}   |  2 +-
+ 10 files changed, 27 insertions(+), 19 deletions(-)
+ create mode 100644 arch/powerpc/kernel/kexec/Makefile
+ rename arch/powerpc/kernel/{ => kexec}/crash.c (100%)
+ rename arch/powerpc/kernel/{kexec_elf_64.c => kexec/elf_64.c} (100%)
+ rename arch/powerpc/kernel/{ima_kexec.c => kexec/ima.c} (100%)
+ rename arch/powerpc/kernel/{machine_kexec.c => kexec/machine.c} (100%)
+ rename arch/powerpc/kernel/{machine_kexec_32.c => kexec/machine_32.c} (100%)
+ rename arch/powerpc/kernel/{machine_kexec_64.c => kexec/machine_64.c} (100%)
+ rename arch/powerpc/kernel/{machine_kexec_file_64.c => kexec/machine_file_64.c} (100%)
+ rename arch/powerpc/kernel/{kexec_relocate_32.S => kexec/relocate_32.S} (99%)
 
+diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
+index f6c80f31502a..42e150e6e663 100644
+--- a/arch/powerpc/kernel/Makefile
++++ b/arch/powerpc/kernel/Makefile
+@@ -5,9 +5,6 @@
+ 
+ CFLAGS_ptrace.o		+= -DUTS_MACHINE='"$(UTS_MACHINE)"'
+ 
+-# Disable clang warning for using setjmp without setjmp.h header
+-CFLAGS_crash.o		+= $(call cc-disable-warning, builtin-requires-header)
+-
+ ifdef CONFIG_PPC64
+ CFLAGS_prom_init.o	+= $(NO_MINIMAL_TOC)
+ endif
+@@ -81,7 +78,6 @@ obj-$(CONFIG_CRASH_DUMP)	+= crash_dump.o
+ obj-$(CONFIG_FA_DUMP)		+= fadump.o
+ ifdef CONFIG_PPC32
+ obj-$(CONFIG_E500)		+= idle_e500.o
+-obj-$(CONFIG_KEXEC_CORE)	+= kexec_relocate_32.o
+ endif
+ obj-$(CONFIG_PPC_BOOK3S_32)	+= idle_6xx.o l2cr_6xx.o cpu_setup_6xx.o
+ obj-$(CONFIG_TAU)		+= tau_6xx.o
+@@ -125,14 +121,7 @@ pci64-$(CONFIG_PPC64)		+= pci_dn.o pci-hotplug.o isa-bridge.o
+ obj-$(CONFIG_PCI)		+= pci_$(BITS).o $(pci64-y) \
+ 				   pci-common.o pci_of_scan.o
+ obj-$(CONFIG_PCI_MSI)		+= msi.o
+-obj-$(CONFIG_KEXEC_CORE)	+= machine_kexec.o crash.o \
+-				   machine_kexec_$(BITS).o
+-obj-$(CONFIG_KEXEC_FILE)	+= machine_kexec_file_$(BITS).o kexec_elf_$(BITS).o
+-ifdef CONFIG_HAVE_IMA_KEXEC
+-ifdef CONFIG_IMA
+-obj-y				+= ima_kexec.o
+-endif
+-endif
++obj-$(CONFIG_KEXEC_CORE)	+= kexec/
+ 
+ obj-$(CONFIG_AUDIT)		+= audit.o
+ obj64-$(CONFIG_AUDIT)		+= compat_audit.o
+@@ -164,12 +153,6 @@ endif
+ GCOV_PROFILE_prom_init.o := n
+ KCOV_INSTRUMENT_prom_init.o := n
+ UBSAN_SANITIZE_prom_init.o := n
+-GCOV_PROFILE_machine_kexec_64.o := n
+-KCOV_INSTRUMENT_machine_kexec_64.o := n
+-UBSAN_SANITIZE_machine_kexec_64.o := n
+-GCOV_PROFILE_machine_kexec_32.o := n
+-KCOV_INSTRUMENT_machine_kexec_32.o := n
+-UBSAN_SANITIZE_machine_kexec_32.o := n
+ GCOV_PROFILE_kprobes.o := n
+ KCOV_INSTRUMENT_kprobes.o := n
+ UBSAN_SANITIZE_kprobes.o := n
+diff --git a/arch/powerpc/kernel/kexec/Makefile b/arch/powerpc/kernel/kexec/Makefile
+new file mode 100644
+index 000000000000..46e52ee95322
+--- /dev/null
++++ b/arch/powerpc/kernel/kexec/Makefile
+@@ -0,0 +1,25 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# Makefile for the linux kernel.
++#
++
++# Disable clang warning for using setjmp without setjmp.h header
++CFLAGS_crash.o		+= $(call cc-disable-warning, builtin-requires-header)
++
++obj-y				+= machine.o crash.o machine_$(BITS).o
++
++obj-$(CONFIG_PPC32)		+= relocate_32.o
++
++obj-$(CONFIG_KEXEC_FILE)	+= machine_file_$(BITS).o elf_$(BITS).o
++
++ifdef CONFIG_HAVE_IMA_KEXEC
++ifdef CONFIG_IMA
++obj-y				+= ima.o
++endif
++endif
++
++
++# Disable GCOV, KCOV & sanitizers in odd or sensitive code
++GCOV_PROFILE_machine_$(BITS).o := n
++KCOV_INSTRUMENT_machine_$(BITS).o := n
++UBSAN_SANITIZE_machine_$(BITS).o := n
+diff --git a/arch/powerpc/kernel/crash.c b/arch/powerpc/kernel/kexec/crash.c
+similarity index 100%
+rename from arch/powerpc/kernel/crash.c
+rename to arch/powerpc/kernel/kexec/crash.c
+diff --git a/arch/powerpc/kernel/kexec_elf_64.c b/arch/powerpc/kernel/kexec/elf_64.c
+similarity index 100%
+rename from arch/powerpc/kernel/kexec_elf_64.c
+rename to arch/powerpc/kernel/kexec/elf_64.c
+diff --git a/arch/powerpc/kernel/ima_kexec.c b/arch/powerpc/kernel/kexec/ima.c
+similarity index 100%
+rename from arch/powerpc/kernel/ima_kexec.c
+rename to arch/powerpc/kernel/kexec/ima.c
+diff --git a/arch/powerpc/kernel/machine_kexec.c b/arch/powerpc/kernel/kexec/machine.c
+similarity index 100%
+rename from arch/powerpc/kernel/machine_kexec.c
+rename to arch/powerpc/kernel/kexec/machine.c
+diff --git a/arch/powerpc/kernel/machine_kexec_32.c b/arch/powerpc/kernel/kexec/machine_32.c
+similarity index 100%
+rename from arch/powerpc/kernel/machine_kexec_32.c
+rename to arch/powerpc/kernel/kexec/machine_32.c
+diff --git a/arch/powerpc/kernel/machine_kexec_64.c b/arch/powerpc/kernel/kexec/machine_64.c
+similarity index 100%
+rename from arch/powerpc/kernel/machine_kexec_64.c
+rename to arch/powerpc/kernel/kexec/machine_64.c
+diff --git a/arch/powerpc/kernel/machine_kexec_file_64.c b/arch/powerpc/kernel/kexec/machine_file_64.c
+similarity index 100%
+rename from arch/powerpc/kernel/machine_kexec_file_64.c
+rename to arch/powerpc/kernel/kexec/machine_file_64.c
+diff --git a/arch/powerpc/kernel/kexec_relocate_32.S b/arch/powerpc/kernel/kexec/relocate_32.S
+similarity index 99%
+rename from arch/powerpc/kernel/kexec_relocate_32.S
+rename to arch/powerpc/kernel/kexec/relocate_32.S
+index 3f8ca6a566fb..b9355e0d5c85 100644
+--- a/arch/powerpc/kernel/kexec_relocate_32.S
++++ b/arch/powerpc/kernel/kexec/relocate_32.S
+@@ -32,7 +32,7 @@ relocate_new_kernel:
+ 	mr	r31, r5
+ 
+ #define ENTRY_MAPPING_KEXEC_SETUP
+-#include "fsl_booke_entry_mapping.S"
++#include <kernel/fsl_booke_entry_mapping.S>
+ #undef ENTRY_MAPPING_KEXEC_SETUP
+ 
+ 	mr      r3, r29
 -- 
+2.13.3
 
-Thanks,
-
-David / dhildenb
