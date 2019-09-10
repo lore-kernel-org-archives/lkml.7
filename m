@@ -2,132 +2,78 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 968DBC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECC3C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EA1720872
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:37:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568097446;
-	bh=iXwR5E+V3IMrkAlLuBkFaBvywhV49oCFScu9hDsTHiQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SaoA+dVXXIH84a/fcLm3ebCdO5vPk6HEWPmDPVsZvUdj7hU2f0OvDsYx1PwhAYERr
-	 prRPdwd4CcfzuUewBS2Cs/mZKeIgZn9Y2OPplosHIr60dJMJiusrv/6C8Ndxp9a+kG
-	 IxEzACE0cXLRNmKhRO30K5MsosopJ0YeZ5xcXcwg=
+	by mail.kernel.org (Postfix) with ESMTP id 4D20120872
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:41:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403856AbfIJGhZ (ORCPT
+        id S2404012AbfIJGlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 02:37:25 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42419 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730803AbfIJGhZ (ORCPT
+        Tue, 10 Sep 2019 02:41:32 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:53005 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730080AbfIJGlc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 02:37:25 -0400
-Received: by mail-wr1-f67.google.com with SMTP id q14so17607917wrm.9
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 23:37:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WwreKyJz6a0m9AsIB4mh5cJwRXEulm8GSDTGV49+p+4=;
-        b=iFGdTxOY1ArJwYZtufy5HoiITmr5KoGP4h4T1E9Ti+pvHZd/zoqroxiX4HhUXyMHKt
-         WU7GPw6ahU4BDH6L4TKAhTJJk/q7yKtk0WTHFmuFo5i5ieIuLVj6/QC/49DxqQhkrhbb
-         QveHgNXG33sa+TtN7WgqK3QTtf2bjz67DnqDrYmGb+56CxRuKU1Mli8mkGLae2hxI3zN
-         tIDKb4sw+w6ri/79kLuq3wouWbf+XjAKeeclYn5LqA5OPmrfDWpwfWejl0g3iFrZycrR
-         Cn6KmfnOnlNq740ubnQrqeBQaNp7cHB/XwnH8DxRB4XJpJtHmCTBa/YpVCDTF16W+LrG
-         4fZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WwreKyJz6a0m9AsIB4mh5cJwRXEulm8GSDTGV49+p+4=;
-        b=rmMLqt9/Wp+yPUPOY2Blx5khczeSmVNlJa7/0D30GetAdfodVfklwrtD/YyNnVdEmw
-         d/3+hRQ1E1tw6/32bmScnxr+BafqQPCfEN3M5BDMcmz9hQeWiRKZ8KlxOVafxiJG4UNT
-         YQGVj7vWsXqn5vUZsEJTu5Chu94pzfI/JA/Lhe3dbpnsgYp5/wqQU0z0KQVRnYHkbQPv
-         fmnqLRdrX2SdYUhks7nPaD/yQTkSRWbBNLnSNkSyTjCsuH/2nrJiISvluBTNyaLwHLfd
-         BgQap20DXmdr5KklE2KDOdeYwW7XnzBvzCNkG5sg1m7t6I3mAh2OUpwylbt/cMY5INFO
-         KNiA==
-X-Gm-Message-State: APjAAAVkdGD85dP7/wJqtlBdY74dyF8Z11cZ+nzxpaJqU7hI9D31HGJ2
-        WkZbbRfB4FAa7wcbn//hpRw=
-X-Google-Smtp-Source: APXvYqwxhbuPcMc0USKFhWX4CFmU1OZIxN7YclQHX3/YLo/SzibisszPJIBK75yySMuHergiKnETSg==
-X-Received: by 2002:adf:ff91:: with SMTP id j17mr21581651wrr.5.1568097441594;
-        Mon, 09 Sep 2019 23:37:21 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id m17sm18138001wrs.9.2019.09.09.23.37.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Sep 2019 23:37:21 -0700 (PDT)
-Date:   Tue, 10 Sep 2019 08:37:19 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     hpa@zytor.com
-Cc:     Brendan Shanks <bshanks@codeweavers.com>,
-        linux-kernel@vger.kernel.org,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Tue, 10 Sep 2019 02:41:32 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1i7Zpv-0006wR-1M; Tue, 10 Sep 2019 08:41:11 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 688E41C0714;
+        Tue, 10 Sep 2019 08:41:10 +0200 (CEST)
+Date:   Tue, 10 Sep 2019 06:41:10 -0000
+From:   "tip-bot2 for Brendan Shanks" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/asm] x86/umip: Add emulation (spoofing) for UMIP covered
+ instructions in 64-bit processes as well
+Cc:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Brendan Shanks <bshanks@codeweavers.com>,
+        "H. Peter Anvin (Intel)" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Brian Gerst <brgerst@gmail.com>,
+        Denys Vlasenko <dvlasenk@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>
-Subject: [PATCH v2] x86/umip: Add emulation for 64-bit processes
-Message-ID: <20190910063719.GC1579@gmail.com>
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+In-Reply-To: <20190905232222.14900-1-bshanks@codeweavers.com>
 References: <20190905232222.14900-1-bshanks@codeweavers.com>
- <7BFFC7D1-6158-4237-AEF9-D10635F054FC@zytor.com>
- <20190910062828.GA40888@gmail.com>
- <193CDEE9-B533-4BFE-972E-384C00359945@zytor.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <193CDEE9-B533-4BFE-972E-384C00359945@zytor.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Message-ID: <156809767030.24167.5942247529564112051.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following commit has been merged into the x86/asm branch of tip:
 
-* hpa@zytor.com <hpa@zytor.com> wrote:
+Commit-ID:     e86c2c8b9380440bbe761b8e2f63ab6b04a45ac2
+Gitweb:        https://git.kernel.org/tip/e86c2c8b9380440bbe761b8e2f63ab6b04a45ac2
+Author:        Brendan Shanks <bshanks@codeweavers.com>
+AuthorDate:    Thu, 05 Sep 2019 16:22:21 -07:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 10 Sep 2019 08:36:16 +02:00
 
-> On September 10, 2019 7:28:28 AM GMT+01:00, Ingo Molnar <mingo@kernel.org> wrote:
-> >
-> >* hpa@zytor.com <hpa@zytor.com> wrote:
-> >
-> >> I would strongly suggest that we change the term "emulation" to 
-> >> "spoofing" for these instructions. We need to explain that we do
-> >*not* 
-> >> execute these instructions the was the CPU would have, and unlike the
-> >
-> >> native instructions do not leak kernel information.
-> >
-> >Ok, I've edited the patch to add the 'spoofing' wording where 
-> >appropriate, and I also made minor fixes such as consistently 
-> >capitalizing instruction names.
-> >
-> >Can I also add your Reviewed-by tag?
-> >
-> >So the patch should show up in tip:x86/asm today-ish, and barring any 
-> >complications is v5.4 material.
-> >
-> >Thanks,
-> >
-> >	Ingo
-> 
-> Yes, please do.
-> 
-> Reviewed-by: H. Peter Anvin (Intel) <hpa@zytor.com>
-
-Thanks!
-
-I've attached the updated version of the patch I'm testing.
-
-	Ingo
-
-==================>
-From e86c2c8b9380440bbe761b8e2f63ab6b04a45ac2 Mon Sep 17 00:00:00 2001
-From: Brendan Shanks <bshanks@codeweavers.com>
-Date: Thu, 5 Sep 2019 16:22:21 -0700
-Subject: [PATCH] x86/umip: Add emulation (spoofing) for UMIP covered instructions in 64-bit processes as well
+x86/umip: Add emulation (spoofing) for UMIP covered instructions in 64-bit processes as well
 
 Add emulation (spoofing) of the SGDT, SIDT, and SMSW instructions for 64-bit
 processes.
@@ -152,11 +98,11 @@ Link: https://lkml.kernel.org/r/20190905232222.14900-1-bshanks@codeweavers.com
 [ Minor edits: capitalization, added 'spoofing' wording. ]
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/kernel/umip.c | 65 +++++++++++++++++++++++++++++---------------------
+ arch/x86/kernel/umip.c | 65 +++++++++++++++++++++++------------------
  1 file changed, 38 insertions(+), 27 deletions(-)
 
 diff --git a/arch/x86/kernel/umip.c b/arch/x86/kernel/umip.c
-index 5b345add550f..548fefed71ee 100644
+index 5b345ad..548fefe 100644
 --- a/arch/x86/kernel/umip.c
 +++ b/arch/x86/kernel/umip.c
 @@ -19,7 +19,7 @@
