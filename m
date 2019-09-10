@@ -2,178 +2,124 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B73C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23058C49ED6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF96021479
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:50:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEDF82168B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:50:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LA/FMTDx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sa7HyIV0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731827AbfIJLuS (ORCPT
+        id S1731883AbfIJLu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 07:50:18 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:33214 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731726AbfIJLuQ (ORCPT
+        Tue, 10 Sep 2019 07:50:27 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40549 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725981AbfIJLu0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 07:50:16 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8ABoEDe040830;
-        Tue, 10 Sep 2019 06:50:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568116214;
-        bh=FIswI+Spzr3FuHme+8/MFEJTlDFumZEJPiU62/4thvM=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=LA/FMTDxr9pw0iuLQXwJ1fFYHeR9eJPh5VbzS625h/0cakdjpulc+aNUUdC+HEwQ9
-         t06+BDOfAYFdPyJ88JCZaKUJI3uf12qTZjVEDGztFgguUyll7nHXu2/G8LyYszC4jV
-         MAh95JoQn3GcMZ1XvgVyeD+jqrgAV1ncFEXxsAUc=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8ABoEW0089127;
-        Tue, 10 Sep 2019 06:50:14 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 10
- Sep 2019 06:50:14 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 10 Sep 2019 06:50:14 -0500
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8ABo5cI028909;
-        Tue, 10 Sep 2019 06:50:12 -0500
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <vkoul@kernel.org>, <robh+dt@kernel.org>
-CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dan.j.williams@intel.com>, <devicetree@vger.kernel.org>
-Subject: [PATCH 3/3] dmaengine: Support for requesting channels preferring DMA domain controller
-Date:   Tue, 10 Sep 2019 14:50:37 +0300
-Message-ID: <20190910115037.23539-4-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190910115037.23539-1-peter.ujfalusi@ti.com>
-References: <20190910115037.23539-1-peter.ujfalusi@ti.com>
+        Tue, 10 Sep 2019 07:50:26 -0400
+Received: by mail-wr1-f66.google.com with SMTP id w13so19576782wru.7;
+        Tue, 10 Sep 2019 04:50:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Mp/+xh4B3lpSZPmUYL9dk1fTpKxVKAigwQspDwbteG4=;
+        b=sa7HyIV0cMMHhgL1oWqjGwgDx6yJ6vvqgaCRI6+aVF6/EOgson57KX5taONf0xwhZc
+         1tj9JmDKUINzY4o7P0ZhBW9gvdwuWFZoa5FraxRlX46Y3xbGIUiXtBz8bmJl3e4YVsN2
+         KaLQXi4gy1N2kMStAOhOee9ajNjA2xn2QelLNQ3G76kGH/XIyjvf8QFDakFhQ3a8oViO
+         foT1pNIPDEE+6AtOWPfcLkTx06a67K0AzOG6LqpRXIbptk9eHupVpHni78cO9Y6Ff31d
+         RpmzI6X7ksKaQUorQnu+Fatg5ziWPviVAjqiYPCCzHsoX1xJ0TIF0P1Qa3NhxDdHIn9T
+         tZhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Mp/+xh4B3lpSZPmUYL9dk1fTpKxVKAigwQspDwbteG4=;
+        b=Wj8eCn9JVviq4SVCNXkfUoET2CikTJTfUnFc+fGTn/RKwRv3DBSemGYFMZ6whYnP5Q
+         1OiLzNS3rlREOAKzaTOsFmsnOHOxYzyXj4mnKD6+PCfB5+8N3i13ICe999ZgtgWopfhW
+         cXExPnnCDe4SxbNfSLUR3R5A4Lc9oZY8NBjjhBvpM4I/g/yijCIn4lvl2I03HiEK01UE
+         FYJGMiAuGNsr6ldWPY3Bf05gfzeVmXqI861ueMroN3RnZgeK1Eg6cRJQiHIfnY4i1qQ5
+         t9+TlQk9LwxeRuCBEid7iYWt5N6Hi54bUPvuXT9GroLbK/WRdbqhgYFrNMPgBxmvo0Dj
+         IggQ==
+X-Gm-Message-State: APjAAAVJYX2/inNIOoiRF87kAwTzysDXflpTXk/c9KwaUgyX6A/meVCS
+        1dPB8dTbxTLWS7wYGv8voUzK7rhqSTKhblb+CM0=
+X-Google-Smtp-Source: APXvYqy/r75bH4ygY8YmMgMk2X4bmFVs4CUIe5R1fGiV9fEib8ljRft33b37v8rwJrOA1FWZgNDjwW6HapTyAN886xw=
+X-Received: by 2002:a05:6000:142:: with SMTP id r2mr2208566wrx.212.1568116224155;
+ Tue, 10 Sep 2019 04:50:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1566936978-28519-1-git-send-email-peng.fan@nxp.com>
+ <20190906172044.B99FB20838@mail.kernel.org> <CAA+hA=To9B0H1z6Hh1eSZN9_rcextT_Oe-CTMmz9fC9CDNUBTQ@mail.gmail.com>
+ <DB3PR0402MB3916906683B58843B459ABE1F5B60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <DB3PR0402MB3916906683B58843B459ABE1F5B60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Tue, 10 Sep 2019 14:50:12 +0300
+Message-ID: <CAEnQRZCAWa61dj+0=iTBQOrntZ-8mk=YB_jtRV4LAEGTfwZuHQ@mail.gmail.com>
+Subject: Re: [PATCH] clk: imx: lpcg: write twice when writing lpcg regs
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     Dong Aisheng <dongas86@gmail.com>, Stephen Boyd <sboyd@kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case the channel is not requested via the slave API, use the
-of_find_dma_domain() to see if a system default DMA controller is
-specified.
+On Tue, Sep 10, 2019 at 1:40 PM Anson Huang <anson.huang@nxp.com> wrote:
+>
+>
+>
+> > On Sat, Sep 7, 2019 at 9:47 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> > >
+> > > Quoting Peng Fan (2019-08-27 01:17:50)
+> > > > From: Peng Fan <peng.fan@nxp.com>
+> > > >
+> > > > There is hardware issue that:
+> > > > The output clock the LPCG cell will not turn back on as expected,
+> > > > even though a read of the IPG registers in the LPCG indicates that
+> > > > the clock should be enabled.
+> > > >
+> > > > The software workaround is to write twice to enable the LPCG clock
+> > > > output.
+> > > >
+> > > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > >
+> > > Does this need a Fixes tag?
+> >
+> > Not sure as it's not code logic issue but a hardware bug.
+> > And 4.19 LTS still have not this driver support.
+>
+> Looks like there is an errata for this issue, and Ranjani just sent a patch for review internally,
+>
+> Back-to-back LPCG writes can be ignored by the LPCG register due to a
+> HW bug. The writes need to be separated by atleast 4 cycles of the gated clock.
+> The workaround is implemented as follows:
+> 1. For clocks running greater than 50MHz no delay is required as the
+> delay in accessing the LPCG register is sufficient.
+> 2. For clocks running greater than 23MHz, a read followed by the write
+> will provide the sufficient delay.
+> 3. For clocks running below 23MHz, LPCG is not used.
 
-Add new function which can be used by clients to request channels by mask
-from their DMA domain controller if specified.
+Lets add this information in the commit message and also
+enhance the comment before the double write.
 
-Client drivers can take advantage of the domain support by moving from
-dma_request_chan_by_mask() to dma_request_chan_by_domain()
-
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- drivers/dma/dmaengine.c   | 21 ++++++++++++++++-----
- include/linux/dmaengine.h |  9 ++++++---
- 2 files changed, 22 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index 03ac4b96117c..1bae3ff24da0 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -640,6 +640,10 @@ struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
- 	struct dma_device *device, *_d;
- 	struct dma_chan *chan = NULL;
- 
-+	/* If np is not specified, get the default DMA domain controller */
-+	if (!np)
-+		np = of_find_dma_domain(NULL);
-+
- 	/* Find a channel */
- 	mutex_lock(&dma_list_mutex);
- 	list_for_each_entry_safe(device, _d, &dma_device_list, global_node) {
-@@ -751,19 +755,26 @@ struct dma_chan *dma_request_slave_channel(struct device *dev,
- EXPORT_SYMBOL_GPL(dma_request_slave_channel);
- 
- /**
-- * dma_request_chan_by_mask - allocate a channel satisfying certain capabilities
-- * @mask: capabilities that the channel must satisfy
-+ * dma_request_chan_by_domain - allocate a channel by mask from DMA domain
-+ * @dev:	pointer to client device structure
-+ * @mask:	capabilities that the channel must satisfy
-  *
-  * Returns pointer to appropriate DMA channel on success or an error pointer.
-  */
--struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask)
-+struct dma_chan *dma_request_chan_by_domain(struct device *dev,
-+					    const dma_cap_mask_t *mask)
- {
- 	struct dma_chan *chan;
- 
- 	if (!mask)
- 		return ERR_PTR(-ENODEV);
- 
--	chan = __dma_request_channel(mask, NULL, NULL, NULL);
-+	if (dev)
-+		chan = __dma_request_channel(mask, NULL, NULL,
-+					     of_find_dma_domain(dev->of_node));
-+	else
-+		chan = __dma_request_channel(mask, NULL, NULL, NULL);
-+
- 	if (!chan) {
- 		mutex_lock(&dma_list_mutex);
- 		if (list_empty(&dma_device_list))
-@@ -775,7 +786,7 @@ struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask)
- 
- 	return chan;
- }
--EXPORT_SYMBOL_GPL(dma_request_chan_by_mask);
-+EXPORT_SYMBOL_GPL(dma_request_chan_by_domain);
- 
- void dma_release_channel(struct dma_chan *chan)
- {
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 8fcdee1c0cf9..de5c52810443 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -1307,7 +1307,8 @@ struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
- struct dma_chan *dma_request_slave_channel(struct device *dev, const char *name);
- 
- struct dma_chan *dma_request_chan(struct device *dev, const char *name);
--struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask);
-+struct dma_chan *dma_request_chan_by_domain(struct device *dev,
-+					    const dma_cap_mask_t *mask);
- 
- void dma_release_channel(struct dma_chan *chan);
- int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps);
-@@ -1344,8 +1345,8 @@ static inline struct dma_chan *dma_request_chan(struct device *dev,
- {
- 	return ERR_PTR(-ENODEV);
- }
--static inline struct dma_chan *dma_request_chan_by_mask(
--						const dma_cap_mask_t *mask)
-+static inline struct dma_chan *dma_request_chan_by_domain(struct device *dev,
-+			const dma_cap_mask_t *mask)
- {
- 	return ERR_PTR(-ENODEV);
- }
-@@ -1406,6 +1407,8 @@ struct dma_chan *dma_get_any_slave_channel(struct dma_device *device);
- 	__dma_request_channel(&(mask), x, y, NULL)
- #define dma_request_slave_channel_compat(mask, x, y, dev, name) \
- 	__dma_request_slave_channel_compat(&(mask), x, y, dev, name)
-+#define dma_request_chan_by_mask(mask) \
-+	dma_request_chan_by_domain(NULL, mask)
- 
- static inline struct dma_chan
- *__dma_request_slave_channel_compat(const dma_cap_mask_t *mask,
--- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+Also, why can't we add a udelay after the first write and remove
+the second write as having two writes for writing a value looks
+very un-natural.
