@@ -2,108 +2,101 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F88C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE126C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C413208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:44:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E54B216F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:45:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SG/MvSUK"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DaEKQpD8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731197AbfIJLo1 (ORCPT
+        id S1731302AbfIJLpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 07:44:27 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:52316 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728639AbfIJLo1 (ORCPT
+        Tue, 10 Sep 2019 07:45:38 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:59058 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731205AbfIJLpi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 07:44:27 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8ABhtR2015616;
-        Tue, 10 Sep 2019 11:44:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=M26h0AGYcEfBiuzAehJPVIMkfowFx11TlIwUQGcORAs=;
- b=SG/MvSUKOt8/vQ/CC2E1Ek4pG76eF728aO3+ozGQel+pGltwvyPzJpwxOwB9YgUYHagp
- zFwogIBRBjMsZmjfAJDll3ff4gSpI4hNrOQYLV/+mNAe0sqSz3etTFIFsk9YLIRA1nm1
- w4TODF64f/X22x368ggdPdEELSV1EWZ7w7iBIqjOUAY7OiMghHulPfHobhxDWdtOParS
- hnRyAyOzmEP5lXI8GKsvZ+0XOtrHhdAQUCDKLBRud/sncSwcUESeZDWCJZKK2lbTLNCP
- R4Kk40qVeDftAYR+k7byGAReINl9GBCMEeMgK1Qz8vf/Op3DxAA8DBtN9PzFozM+FFyr Mg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2uw1jkas9c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Sep 2019 11:44:22 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8ABi7fr084674;
-        Tue, 10 Sep 2019 11:44:22 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2uwqqdwa70-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Sep 2019 11:44:20 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8ABhGrd030663;
-        Tue, 10 Sep 2019 11:43:17 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 10 Sep 2019 04:43:15 -0700
-Date:   Tue, 10 Sep 2019 14:43:03 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Sandro Volery <sandro@volery.com>
-Cc:     gregkh@linuxfoundation.org, osdevtc@gmail.com,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Staging: wlan-ng: parenthesis at end of line fix
-Message-ID: <20190910114135.GD30834@kadam>
-References: <20190907205720.GA25377@volery>
+        Tue, 10 Sep 2019 07:45:38 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8ABjVRn049469;
+        Tue, 10 Sep 2019 06:45:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568115931;
+        bh=rGQYwREz07lItXpjPOr/Y91fa8TR1naCyoIvgeiuneo=;
+        h=From:To:CC:Subject:Date;
+        b=DaEKQpD8MFWd9BGXwD5jrtps80mKQVA0DwDLHO21R1JoQTFTDFqqVfxERkMr1Ty2t
+         CfX29vb1kWdxmDrRTkhdFdHiHphdnXD8yOPmUKkfMmESmNLZdrwRYlkWFgSYfNEAsq
+         X3sn+/mWKoD7YBgS1IrWoLzjjANT1zG5whzQn8Ac=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8ABjVbM088210
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 10 Sep 2019 06:45:31 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 10
+ Sep 2019 06:45:30 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 10 Sep 2019 06:45:30 -0500
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8ABjRpI119821;
+        Tue, 10 Sep 2019 06:45:28 -0500
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vkoul@kernel.org>, <robh+dt@kernel.org>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dan.j.williams@intel.com>, <devicetree@vger.kernel.org>
+Subject: [PATCH v2 0/3] dmaengine: bindings/edma: dma-channel-mask to array
+Date:   Tue, 10 Sep 2019 14:45:56 +0300
+Message-ID: <20190910114559.22810-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190907205720.GA25377@volery>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9375 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1909100117
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9375 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1909100117
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 07, 2019 at 10:57:20PM +0200, Sandro Volery wrote:
-> Fixed open parenthesis at the end of the line on line 327.
-> 
-> Signed-off-by: Sandro Volery <sandro@volery.com>
-> ---
->  drivers/staging/wlan-ng/cfg80211.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/wlan-ng/cfg80211.c b/drivers/staging/wlan-ng/cfg80211.c
-> index eee1998c4b18..0a4c7415f773 100644
-> --- a/drivers/staging/wlan-ng/cfg80211.c
-> +++ b/drivers/staging/wlan-ng/cfg80211.c
-> @@ -324,7 +324,8 @@ static int prism2_scan(struct wiphy *wiphy,
->  		(i < request->n_channels) && i < ARRAY_SIZE(prism2_channels);
->  		i++)
->  		msg1.channellist.data.data[i] =
-> -			ieee80211_frequency_to_channel(
-> +			ieee80211_frequency_to_channel
-> +			(
->  				request->channels[i]->center_freq);
+Hi,
 
-No, that looks even worse.
+Changes since v1:
+- Extend the common dma-channel-mask to uint32-array to be usable for
+  controllers with more than 32 channels
+- Use the dma-channel-mask instead custom property for available channels for
+  EDMA.
 
-regards,
-dan carpenter
+The original patch was part of the EDMA multicore usage series.
+
+Rob: I'm not sure if I got the dma-common.yaml update correctly...
+
+EDMAs can have 32 or 64 channels depending on the SoC, the dma-channel-mask
+needs to be an array to be usable for the driver.
+
+Regards,
+Peter
+---
+Peter Ujfalusi (3):
+  dt-bindings: dmaengine: dma-common: Change dma-channel-mask to
+    uint32-array
+  dt-bindings: dma: ti-edma: Document dma-channel-mask for EDMA
+  dmaengine: ti: edma: Add support for handling reserved channels
+
+ .../devicetree/bindings/dma/dma-common.yaml   | 10 +++-
+ .../devicetree/bindings/dma/ti-edma.txt       |  6 ++
+ drivers/dma/ti/edma.c                         | 59 +++++++++++++++++--
+ 3 files changed, 68 insertions(+), 7 deletions(-)
+
+-- 
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
