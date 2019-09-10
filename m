@@ -2,153 +2,226 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C8EEC49ED7
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 104ECC49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6A8B20872
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:18:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2E4920872
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:18:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="h9jpQ9OV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394168AbfIJQSk (ORCPT
+        id S2436770AbfIJQSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 12:18:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48516 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729971AbfIJQSj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 12:18:39 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CE513882EF;
-        Tue, 10 Sep 2019 16:18:38 +0000 (UTC)
-Received: from work-vm (ovpn-117-238.ams2.redhat.com [10.36.117.238])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8A45E5DA21;
-        Tue, 10 Sep 2019 16:18:20 +0000 (UTC)
-Date:   Tue, 10 Sep 2019 17:18:18 +0100
-From:   "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Michal Hocko <mhocko@kernel.org>, virtio-dev@lists.oasis-open.org,
-        kvm list <kvm@vger.kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Oscar Salvador <osalvador@suse.de>,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
-        "Wang, Wei W" <wei.w.wang@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>, ying.huang@intel.com,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [virtio-dev] Re: [PATCH v9 0/8] stg mail -e --version=v9 \
-Message-ID: <20190910161818.GF2797@work-vm>
-References: <20190907172225.10910.34302.stgit@localhost.localdomain>
- <20190910124209.GY2063@dhcp22.suse.cz>
- <CAKgT0Udr6nYQFTRzxLbXk41SiJ-pcT_bmN1j1YR4deCwdTOaUQ@mail.gmail.com>
- <20190910144713.GF2063@dhcp22.suse.cz>
- <CAKgT0UdB4qp3vFGrYEs=FwSXKpBEQ7zo7DV55nJRO2C-KCEOrw@mail.gmail.com>
+        Tue, 10 Sep 2019 12:18:47 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:43324 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394172AbfIJQSq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 12:18:46 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8AGIixD026061;
+        Tue, 10 Sep 2019 11:18:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568132324;
+        bh=WrXStszfsrayb1veGMxPq501TIVEzrdZNXN0frw1/XA=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=h9jpQ9OVh56XsKziQVVlMLuTwbJoJOmd3rC83TdzVP/E0UQFrGJnKs+kIKZMkDgxl
+         VRLzqFCN0t0MDFE9CaTz0rMuMQdNRYOfg0x3EwN3QR4ayxw/A41XW37Ro8wJAu8b2o
+         UR1RsGkgtyYtHXf5XMI4+ZkoqM/RLFfbUAjNxgUM=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8AGIiVj042159
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 10 Sep 2019 11:18:44 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 10
+ Sep 2019 11:18:44 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 10 Sep 2019 11:18:44 -0500
+Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with SMTP id x8AGIiuL121084;
+        Tue, 10 Sep 2019 11:18:44 -0500
+Date:   Tue, 10 Sep 2019 11:20:48 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+CC:     Prabhakar Lad <prabhakar.csengg@gmail.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [Patch 00/13] media: am437x-vpfe: overdue maintenance
+Message-ID: <20190910162048.wrxy7tjlmf3k6axm@ti.com>
+References: <20190909162743.30114-1-bparrot@ti.com>
+ <5b73285c-5d05-1799-06fc-f4ab84cb9a1d@xs4all.nl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <CAKgT0UdB4qp3vFGrYEs=FwSXKpBEQ7zo7DV55nJRO2C-KCEOrw@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 10 Sep 2019 16:18:39 +0000 (UTC)
+In-Reply-To: <5b73285c-5d05-1799-06fc-f4ab84cb9a1d@xs4all.nl>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Alexander Duyck (alexander.duyck@gmail.com) wrote:
-> On Tue, Sep 10, 2019 at 7:47 AM Michal Hocko <mhocko@kernel.org> wrote:
-> >
-> > On Tue 10-09-19 07:42:43, Alexander Duyck wrote:
-> > > On Tue, Sep 10, 2019 at 5:42 AM Michal Hocko <mhocko@kernel.org> wrote:
-> > > >
-> > > > I wanted to review "mm: Introduce Reported pages" just realize that I
-> > > > have no clue on what is going on so returned to the cover and it didn't
-> > > > really help much. I am completely unfamiliar with virtio so please bear
-> > > > with me.
-> > > >
-> > > > On Sat 07-09-19 10:25:03, Alexander Duyck wrote:
-> > > > [...]
-> > > > > This series provides an asynchronous means of reporting to a hypervisor
-> > > > > that a guest page is no longer in use and can have the data associated
-> > > > > with it dropped. To do this I have implemented functionality that allows
-> > > > > for what I am referring to as unused page reporting
-> > > > >
-> > > > > The functionality for this is fairly simple. When enabled it will allocate
-> > > > > statistics to track the number of reported pages in a given free area.
-> > > > > When the number of free pages exceeds this value plus a high water value,
-> > > > > currently 32, it will begin performing page reporting which consists of
-> > > > > pulling pages off of free list and placing them into a scatter list. The
-> > > > > scatterlist is then given to the page reporting device and it will perform
-> > > > > the required action to make the pages "reported", in the case of
-> > > > > virtio-balloon this results in the pages being madvised as MADV_DONTNEED
-> > > > > and as such they are forced out of the guest. After this they are placed
-> > > > > back on the free list,
-> > > >
-> > > > And here I am reallly lost because "forced out of the guest" makes me
-> > > > feel that those pages are no longer usable by the guest. So how come you
-> > > > can add them back to the free list. I suspect understanding this part
-> > > > will allow me to understand why we have to mark those pages and prevent
-> > > > merging.
-> > >
-> > > Basically as the paragraph above mentions "forced out of the guest"
-> > > really is just the hypervisor calling MADV_DONTNEED on the page in
-> > > question. So the behavior is the same as any userspace application
-> > > that calls MADV_DONTNEED where the contents are no longer accessible
-> > > from userspace and attempting to access them will result in a fault
-> > > and the page being populated with a zero fill on-demand page, or a
-> > > copy of the file contents if the memory is file backed.
-> >
-> > As I've said I have no idea about virt so this doesn't really tell me
-> > much. Does that mean that if somebody allocates such a page and tries to
-> > access it then virt will handle a fault and bring it back?
+Hans Verkuil <hverkuil@xs4all.nl> wrote on Tue [2019-Sep-10 12:42:51 +0200]:
+> Hi Benoit,
 > 
-> Actually I am probably describing too much as the MADV_DONTNEED is the
-> hypervisor behavior in response to the virtio-balloon notification. A
-> more thorough explanation of it can be found by just running "man
-> madvise", probably best just to leave it at that since I am probably
-> confusing things by describing hypervisor behavior in a kernel patch
-> set.
+> On 9/9/19 6:27 PM, Benoit Parrot wrote:
+> > This patch series is a collection of patches we have been carrying for a
+> > while.
+> > 
+> > A few patches do fix actual bug and v4l2-compliance errors/warnings.
+> > Other are drivers re-work to simplify/clarify the code for easier
+> > maintenance.
 > 
-> For the most part all the page reporting really does is provide a way
-> to incrementally identify unused regions of memory in the buddy
-> allocator. That in turn is used by virtio-balloon in a polling thread
-> to report to the hypervisor what pages are not in use so that it can
-> make a decision on what to do with the pages now that it knows they
-> are unused.
+> Can you post the output of the latest version of v4l2-compliance? Use
+> the '-s' option so streaming is tested as well.
 > 
-> All this is providing is just a report and it is optional if the
-> hypervisor will act on it or not. If the hypervisor takes some sort of
-> action on the page, then the expectation is that the hypervisor will
-> use some sort of mechanism such as a page fault to discover when the
-> page is used again.
+> Thanks!
+> 
+> 	Hans
 
-OK, that's interestingly different (but OK) from some other schemes that
-hav ebeen described which *require* the guest to somehow indicate the
-page is in use before starting to use the page again.
+As already discussed, I'll paste the result here and I'll make sure to
+include it in the next revision.
 
-Dave
+./v4l2-compliance_5b168dc84739 -d 0 -s   
+v4l2-compliance SHA: 5b168dc8473911227890526bad26553d9e8ff81b, 32 bits
 
-> ---------------------------------------------------------------------
-> To unsubscribe, e-mail: virtio-dev-unsubscribe@lists.oasis-open.org
-> For additional commands, e-mail: virtio-dev-help@lists.oasis-open.org
+Compliance test for vpfe device /dev/video0:
+
+Driver Info:
+	Driver name      : vpfe
+	Card type        : TI AM437x VPFE
+	Bus info         : platform:vpfe 48326000.vpfe
+	Driver v ersion   : 5.3.0
+	Capabilities     : 0x85200001
+		Video Capture
+		Read/Write
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x05200001
+		Video Capture
+		Read/Write
+		Streaming
+		Extended Pix Format
+
+Required ioctls:
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video0 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 1 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls (Input 0):
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+	test VIDIOC_QUERYCTRL: OK
+	test VIDIOC_G/S_CTRL: OK
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 3 Private Controls: 0
+
+Format ioctls (Input 0):
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+		fail: v4l2-test-formats.cpp(1419): node->frmsizes_count[pixfmt] > 1
+	test Cropping: FAIL
+	test Composing: OK (Not Supported)
+	test Scaling: OK (Not Supported)
+
+Codec ioctls (Input 0):
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls (Input 0):
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK (Not Supported)
+
+Test input 0:
+
+Streaming ioctls:
+	test read/write: OK
+	test blocking wait: OK
+	test MMAP (no poll): OK                           
+	test MMAP (select): OK                            
+	test MMAP (epoll): OK                             
+	test USERPTR (no poll): OK (Not Supported)
+	test USERPTR (select): OK (Not Supported)
+	test DMABUF: Cannot test, specify --expbuf-device
+
+Total for vpfe device /dev/video0: 51, Succeeded: 50, Failed: 1, Warnings: 0
+
+Benoit
+
 > 
---
-Dr. David Alan Gilbert / dgilbert@redhat.com / Manchester, UK
+> > 
+> > We also include the SPDX Licensing update which seemed to have been
+> > missed by the global script thus far.
+> > 
+> > Benoit Parrot (12):
+> >   media: am437x-vpfe: Fix missing first line
+> >   media: am437x-vpfe: Rework ISR routine for clarity
+> >   media: am437x-vpfe: Wait for end of frame before tear-down
+> >   media: am437x-vpfe: Streamlined vb2 buffer cleanup
+> >   media: am437x-vpfe: Setting STD to current value is not an error
+> >   media: am437x-vpfe: Use a per instance format array instead of a
+> >     static one
+> >   media: am437x-vpfe: Maintain a reference to the current vpfe_fmt
+> >   media: am437x-vpfe: fix function trace debug log
+> >   media: am437x-vpfe: Remove print_fourcc helper
+> >   media: am437x-vpfe: TRY_FMT ioctl is not really trying anything
+> >   media: am437x-vpfe: Remove per bus width static data
+> >   media: am437x-vpfe: Switch to SPDX Licensing
+> > 
+> > Dave Gerlach (1):
+> >   media: am437x-vpfe: Fix suspend path to always handle pinctrl config
+> > 
+> >  drivers/media/platform/am437x/am437x-vpfe.c   | 906 ++++++++----------
+> >  drivers/media/platform/am437x/am437x-vpfe.h   |  44 +-
+> >  .../media/platform/am437x/am437x-vpfe_regs.h  |  10 +-
+> >  3 files changed, 438 insertions(+), 522 deletions(-)
+> > 
+> 
