@@ -2,111 +2,270 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 093D4C3A5A2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1833C49ED9
 	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0A672084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:56:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EAA02084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:56:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eZ3fntW5"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LndjXVPE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728611AbfIJL4T (ORCPT
+        id S1730500AbfIJL4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 07:56:19 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:54656 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728249AbfIJL4S (ORCPT
+        Tue, 10 Sep 2019 07:56:20 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:41596 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728155AbfIJL4T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 07:56:18 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8ABrjjQ183698;
-        Tue, 10 Sep 2019 11:56:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=ivdH+jkLdC2yHvpK29OWsjhzVtybUeJgo5z2e3uXc10=;
- b=eZ3fntW5pgwadibllzOdiuvGQQ4GkoD+0OHfJnnreNWlKwq3gOohSS7YUY7NHvQYQ1M+
- mnlaQyYRl+dsrqCT7JVOOR6yDsE3lLuou5QTv8u9Eg/GjEIAKRCFeILeGQ7pb+H9K00D
- o8sB50Y2Y1mZAPMkTpC2zqwApR8ZZKRNdCYtCxlSOtxU4VJcrkqCDIN2kS0KDYnu8VSR
- Xv3v3WIddvK+fJRdWqGrFu32QnqMw08nwMzB6ZMEAVlILL8gIGa0SJjp/I2u4U5ebjYu
- 2qUbqWhiqt1IN3INIQC3H7hQzUJ7yDFkJMf0R9elOBC9R2l6cy2Bk/ISympMW0GFlDKZ uw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2uw1jy2u0h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Sep 2019 11:56:02 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8ABsLD0060248;
-        Tue, 10 Sep 2019 11:56:02 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2uwqktmp1p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Sep 2019 11:56:02 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8ABu0GM028873;
-        Tue, 10 Sep 2019 11:56:00 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 10 Sep 2019 04:56:00 -0700
-Date:   Tue, 10 Sep 2019 14:55:50 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Adam Zerella <adam.zerella@gmail.com>
-Cc:     labbott@redhat.com, sumit.semwal@linaro.org,
-        devel@driverdev.osuosl.org, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org
-Subject: Re: [PATCH] staging: android: ion: Replace strncpy() for stracpy()
-Message-ID: <20190910115550.GA15977@kadam>
-References: <20190908043450.1078-1-adam.zerella@gmail.com>
+        Tue, 10 Sep 2019 07:56:19 -0400
+Received: by mail-wr1-f65.google.com with SMTP id h7so18600956wrw.8
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 04:56:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Mo5yaJO0wDVZcxETvf9G+UGVDSKQo9wAMG0rLSLtogk=;
+        b=LndjXVPEBFKf9NfnEjUH1zWqN81OMhGQKkiFSw0ZnRcuw9u6GOnMYvRHHRwD27QVbp
+         FyEaRjUMQDct4sdlb9zQLV2WiEW2puaRQA6o+7u7UkrFHcJKi3rF0G5PIXSbuwnBufnY
+         xdPdtLud10jXs7U6myLB4IEPfNM/vMegT12kc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Mo5yaJO0wDVZcxETvf9G+UGVDSKQo9wAMG0rLSLtogk=;
+        b=SJ3tYK0LTHWgjQ23p50GrIjsxk8kTEC1gS0sXbnqDG93+naQnNyiCBgircSlP659f2
+         wOqgQMZwP8dB+bBa+KvL2Y0tDcHg6+Fat0MdScMWewnYdwbGgH1EjI+XknmcNYetVQle
+         82rIrrycDPNDq2e6PEtMoG8mw7Bf9ldG4lD6hTsY+QPQSE4xCulyNG0FxIYeGqj/oBnm
+         PDMNIOYB2J3JxBTDu2UBThwRXjlPL+ebLUiY5Ata0vJvDed5CRJW3vWg9qLtmZyMCR6D
+         HCvoczhN85sMt6jpaaJPM66zW5wLtx6PDpUFw7OpldRBziJ5SdM0vbe2O58ctm2d52/l
+         54cw==
+X-Gm-Message-State: APjAAAVQBYOZJwvqWJcPnkpjb2skLYoN1MvxXlD5iwvx+DZssf+5EyEg
+        nz0xeXE9nq3fOLJ2TcPPYyB7mXYZh4c=
+X-Google-Smtp-Source: APXvYqxcPw89DoJ6YHSuGa/7uopRoYoLj5Au52WboX0WqnHqMLiDvIJcLDkFkW4lnm/E/oOiANF4cw==
+X-Received: by 2002:a5d:45c3:: with SMTP id b3mr26777502wrs.207.1568116576461;
+        Tue, 10 Sep 2019 04:56:16 -0700 (PDT)
+Received: from kpsingh-kernel.c.hoisthospitality.com (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
+        by smtp.gmail.com with ESMTPSA id q19sm23732935wra.89.2019.09.10.04.56.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Sep 2019 04:56:15 -0700 (PDT)
+From:   KP Singh <kpsingh@chromium.org>
+To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
+Subject: [RFC v1 00/14] Kernel Runtime Security Instrumentation
+Date:   Tue, 10 Sep 2019 13:55:13 +0200
+Message-Id: <20190910115527.5235-1-kpsingh@chromium.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190908043450.1078-1-adam.zerella@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9375 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1909100119
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9375 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1909100119
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 08, 2019 at 02:34:50PM +1000, Adam Zerella wrote:
-> Using strncpy() does not always terminate the destination string.
-> stracpy() is a alternative function that does, by using this new
-> function we will no longer need to insert a null separator.
-> 
-> Signed-off-by: Adam Zerella <adam.zerella@gmail.com>
-> ---
->  drivers/staging/android/ion/ion.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/staging/android/ion/ion.c b/drivers/staging/android/ion/ion.c
-> index e6b1ca141b93..17901bd626be 100644
-> --- a/drivers/staging/android/ion/ion.c
-> +++ b/drivers/staging/android/ion/ion.c
-> @@ -433,8 +433,7 @@ static int ion_query_heaps(struct ion_heap_query *query)
->  	max_cnt = query->cnt;
->  
->  	plist_for_each_entry(heap, &dev->heaps, node) {
-> -		strncpy(hdata.name, heap->name, MAX_HEAP_NAME);
-> -		hdata.name[sizeof(hdata.name) - 1] = '\0';
-> +		stracpy(hdata.name, heap->name, MAX_HEAP_NAME);
+From: KP Singh <kpsingh@google.com>
 
-stracpy() only takes two arguments.  This doesn't compile.
+# Motivation
 
-regards,
-dan carpenter
+Signaling and mitigation are two key aspects of security which go
+hand-in-hand.  Signals provide the necessary context to narrow down a
+malicious actor and are key to creating effective MAC policies to
+mitigate/prevent the malicious actor.
+
+One can obtain signals from the kernel by using the audit infrastructure.
+System-wide MAC is done separately as a part of the LSMs (eg. SELinux,
+AppArmor).
+
+Augmenting the signal information provided by audit requires kernel
+changes to audit, its policy language and user-space components.
+Furthermore, building a MAC policy based on the newly added signal
+requires changes to various LSMs and their own respective policy
+languages.
+
+KRSI attempts to solve this problem by providing a common policy API in
+the form of security focussed eBPF helpers and a common surface for
+creating dynamic (not requiring re-compilation of the kernel) MAC and
+Audit policies by attaching eBPF programs to the various LSM hooks.
+
+
+# Why an LSM?
+
+Linux Security Modules target security behaviours rather than the API. For
+example, it's easy to miss out a newly added system call for executing
+processes (eg. execve, execveat etc.) while the LSM framework ensures that
+all process executions trigger the relevant hooks irrespective of how the
+process was executed.
+
+Allowing users to attach eBPF programs to LSM hooks also benefits the LSM
+eco-system by enabling feedback from the security community about the kind
+of behaviours that the LSM should be targeting.
+
+
+# How does it work?
+
+NOTE: The cover letter will be assimilated into the documentation
+(Documentation/security/) as a part of the patch series.
+
+## SecurityFS Interface
+
+KRSI hooks create a file in securityfs to which eBPF programs can be
+attached.  This file maps to a single LSM hook but adds a layer of
+indirection thus shielding the user-space from any changes to the
+underlying hook. This includes changes like renaming of the underlying
+hook or replacing the hook with another that maps better to the security
+behaviour represented.
+
+For Example:
+
+	/sys/kernel/security/krsi/process_execution -> bprm_check_security
+
+## eBPF Program / Helpers
+
+In order to keep things simple for the user, KRSI intends to provide one
+eBPF program type. Since, there is only one type of context for a given
+eBPF program type, the members of the KRSI context are selectively
+populated depending on the hook.
+
+KRSI is conservative about the access into the context and expects users
+to use the helpers as an API for getting the required information. This
+helps limit the internals of the LSM exposed to the user and maintain
+backward compatibility. It also allows the maintainers to update the
+structure of the context without worrying about breaking user-space.
+
+The intention is to keep the helpers precise and not depend on kernel
+headers or internals strengthening the backward compatibility and
+usability across a large and diverse fleet.
+
+Precise helpers also help in tackling seemingly intractable problems. For
+example, a helper to dump all environment variables is hard because the
+environment variables can be 32 pages long. While a helper to only extract
+certain relevant environment variables (e.g. LD_PRELOAD, HISTFILESIZE)
+helps in building a more reliable and precise signal with lower overhead.
+
+## Attachment
+
+A privileged (CAP_SYS_ADMIN for loading / attaching eBPF programs)
+user-space program opens the securityfs file and the eBPF program
+(BPF_PROG_LOAD) and attaches (BPF_PROG_ATTACH) the eBPF program to the
+hook.
+
+	hook_fd = open("/sys/kernel/security/krsi/process_execution", O_RDWR) 
+	prog_fd = bpf(BPF_PROG_LOAD, ...) 
+	bpf(BPF_PROG_ATTACH, hook_fd, prog_fd)
+
+There can be more than one program attached to a hook and attaching a
+program with the same name replaces the existing program. The user can see
+the programs attached to the hook as follows:
+
+	cat /sys/kernel/security/krsi/process_execution 
+	env_dumper
+	my_auditor
+
+## Audit / MAC Policy
+
+The userspace controls the policy by installing eBPF programs to the LSM
+hook.  If any of the attached eBPF programs return an error (-ENOPERM),
+the action represented by the hook is denied.
+
+The audit logs are written using a format chosen by the eBPF program to
+the perf events buffer (using bpf_perf_event_output) and can be further
+processed in user-space.
+
+
+# Current Status
+
+The RFC provides a proto-type implementation with a few helpers and a
+sample program samples/bpf/krsi_kern.c that hooks into process execution
+and logs specific environment variables to the perf events buffer.
+
+The user-space program samples/bpf/krsi_user.c loads the eBPF program,
+configures the environment variable that needs to be audited and listens
+for perf events.
+
+
+KP Singh (14):
+  krsi: Add a skeleton and config options for the KRSI LSM
+  krsi: Introduce types for KRSI eBPF
+  bpf: krsi: sync BPF UAPI header with tools
+  krsi: Add support in libbpf for BPF_PROG_TYPE_KRSI
+  krsi: Initialize KRSI hooks and create files in securityfs
+  krsi: Implement eBPF operations, attachment and execution
+  krsi: Check for premissions on eBPF attachment
+  krsi: Show attached program names in hook read handler.
+  krsi: Add a helper function for bpf_perf_event_output
+  krsi: Handle attachment of the same program
+  krsi: Pin argument pages in bprm_check_security hook
+  krsi: Add an eBPF helper function to get the value of an env variable
+  krsi: Provide an example to read and log environment variables
+  krsi: Pin arg pages only when needed
+
+ MAINTAINERS                               |   8 +
+ include/linux/bpf_types.h                 |   3 +
+ include/linux/krsi.h                      |  19 ++
+ include/uapi/linux/bpf.h                  |  44 ++-
+ kernel/bpf/syscall.c                      |   7 +
+ samples/bpf/.gitignore                    |   1 +
+ samples/bpf/Makefile                      |   3 +
+ samples/bpf/krsi_helpers.h                |  31 ++
+ samples/bpf/krsi_kern.c                   |  52 ++++
+ samples/bpf/krsi_user.c                   | 202 +++++++++++++
+ security/Kconfig                          |   1 +
+ security/Makefile                         |   2 +
+ security/krsi/Kconfig                     |  22 ++
+ security/krsi/Makefile                    |   3 +
+ security/krsi/include/hooks.h             |  22 ++
+ security/krsi/include/krsi_fs.h           |  19 ++
+ security/krsi/include/krsi_init.h         | 106 +++++++
+ security/krsi/krsi.c                      | 157 ++++++++++
+ security/krsi/krsi_fs.c                   | 190 ++++++++++++
+ security/krsi/ops.c                       | 342 ++++++++++++++++++++++
+ tools/include/uapi/linux/bpf.h            |  44 ++-
+ tools/lib/bpf/libbpf.c                    |   4 +
+ tools/lib/bpf/libbpf.h                    |   2 +
+ tools/lib/bpf/libbpf.map                  |   2 +
+ tools/lib/bpf/libbpf_probes.c             |   1 +
+ tools/testing/selftests/bpf/bpf_helpers.h |   3 +
+ 26 files changed, 1288 insertions(+), 2 deletions(-)
+ create mode 100644 include/linux/krsi.h
+ create mode 100644 samples/bpf/krsi_helpers.h
+ create mode 100644 samples/bpf/krsi_kern.c
+ create mode 100644 samples/bpf/krsi_user.c
+ create mode 100644 security/krsi/Kconfig
+ create mode 100644 security/krsi/Makefile
+ create mode 100644 security/krsi/include/hooks.h
+ create mode 100644 security/krsi/include/krsi_fs.h
+ create mode 100644 security/krsi/include/krsi_init.h
+ create mode 100644 security/krsi/krsi.c
+ create mode 100644 security/krsi/krsi_fs.c
+ create mode 100644 security/krsi/ops.c
+
+-- 
+2.20.1
 
