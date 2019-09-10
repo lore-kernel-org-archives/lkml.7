@@ -2,95 +2,65 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7CA5C49ED6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:20:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B51C6C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73D98208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:20:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568118034;
-	bh=VyFjngry8JwUDlxLugcWXUNSbKo9DlhhJow8lZ9dJFs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=t/lR+8HDR7tCsZtvVzpHHKEUa1JJSXY+hfYnXhAMtEVmCV+ZAlT+TCzteRnqo52Av
-	 QVmS62ACeepXLUflxIOQ5Rs95FdSOpPH0oj9Z0a9BmuAID+EkamtfwzoxwOlUB7e+F
-	 LMso+3YqVqb8MwXW18n+NJto6040lMPB/Cj3L+4w=
+	by mail.kernel.org (Postfix) with ESMTP id 91AAE208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:20:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388733AbfIJMUd (ORCPT
+        id S2388863AbfIJMUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 08:20:33 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48852 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731146AbfIJMUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 08:20:33 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 80E9FABCE;
-        Tue, 10 Sep 2019 12:20:31 +0000 (UTC)
-Date:   Tue, 10 Sep 2019 14:20:30 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     virtio-dev@lists.oasis-open.org, kvm@vger.kernel.org,
-        mst@redhat.com, catalin.marinas@arm.com, david@redhat.com,
-        dave.hansen@intel.com, linux-kernel@vger.kernel.org,
-        willy@infradead.org, linux-mm@kvack.org, akpm@linux-foundation.org,
-        will@kernel.org, linux-arm-kernel@lists.infradead.org,
-        osalvador@suse.de, yang.zhang.wz@gmail.com, pagupta@redhat.com,
-        konrad.wilk@oracle.com, nitesh@redhat.com, riel@surriel.com,
-        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        ying.huang@intel.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com, fengguang.wu@intel.com,
-        alexander.h.duyck@linux.intel.com, kirill.shutemov@linux.intel.com
-Subject: Re: [PATCH v9 2/8] mm: Adjust shuffle code to allow for future
- coalescing
-Message-ID: <20190910122030.GV2063@dhcp22.suse.cz>
-References: <20190907172225.10910.34302.stgit@localhost.localdomain>
- <20190907172520.10910.83100.stgit@localhost.localdomain>
+        Tue, 10 Sep 2019 08:20:35 -0400
+Received: from vmicros1.altlinux.org ([194.107.17.57]:46586 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388476AbfIJMUe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 08:20:34 -0400
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id 4363B72CC6C;
+        Tue, 10 Sep 2019 15:20:32 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+        id BD4867CCB47; Tue, 10 Sep 2019 15:20:31 +0300 (MSK)
+Date:   Tue, 10 Sep 2019 15:20:31 +0300
+From:   "Dmitry V. Levin" <ldv@altlinux.org>
+To:     Eugene Syromiatnikov <esyr@redhat.com>,
+        Christian Brauner <christian@brauner.io>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Oleg Nesterov <oleg@redhat.com>
+Subject: Re: [PATCH] fork: fail on non-zero higher 32 bits of args.exit_signal
+Message-ID: <20190910122031.GA5311@altlinux.org>
+References: <20190910115711.GA3755@asgard.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190907172520.10910.83100.stgit@localhost.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190910115711.GA3755@asgard.redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 07-09-19 10:25:20, Alexander Duyck wrote:
-> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+On Tue, Sep 10, 2019 at 12:57:11PM +0100, Eugene Syromiatnikov wrote:
+> Previously, higher 32 bits of exit_signal fields were lost when
+> copied to the kernel args structure (that uses int as a type for the
+> respective field).  Fail with EINVAL if these are set as it looks like
+> there's no sane reason to accept them.
 > 
-> Move the head/tail adding logic out of the shuffle code and into the
-> __free_one_page function since ultimately that is where it is really
-> needed anyway. By doing this we should be able to reduce the overhead
-> and can consolidate all of the list addition bits in one spot.
+> * kernel/fork.c (copy_clone_args_from_user): Fail with -EINVAL if
+> args.exit_signal converted to unsigned int is not equal to the original
+> value.
+> 
+> Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
 
-This changelog doesn't really explain why we want this. You are
-reshuffling the code, allright, but why do we want to reshuffle? Is the
-result readability a better code reuse or something else? Where
-does the claimed reduced overhead coming from?
+Reviewed-by: Dmitry V. Levin <ldv@altlinux.org>
 
-From a quick look buddy_merge_likely looks nicer than the code splat
-we have. Good.
 
-But then
-
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-
-[...]
-
-> -	if (is_shuffle_order(order))
-> -		add_to_free_area_random(page, &zone->free_area[order],
-> -				migratetype);
-> +	area = &zone->free_area[order];
-> +	if (is_shuffle_order(order) ? shuffle_pick_tail() :
-> +	    buddy_merge_likely(pfn, buddy_pfn, page, order))
-
-Ouch this is just awful don't you think?
 -- 
-Michal Hocko
-SUSE Labs
+ldv
