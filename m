@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D9AC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 07:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B06C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 07:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A55302084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 07:45:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 459832084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 07:46:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393552AbfIJHpw (ORCPT
+        id S2393566AbfIJHqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 03:45:52 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50850 "EHLO mx1.redhat.com"
+        Tue, 10 Sep 2019 03:46:00 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50154 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728157AbfIJHpw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 03:45:52 -0400
+        id S1728157AbfIJHp7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 03:45:59 -0400
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 88B9BC05AA58;
-        Tue, 10 Sep 2019 07:45:51 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1CE3D7BDAB;
+        Tue, 10 Sep 2019 07:45:59 +0000 (UTC)
 Received: from [10.36.117.199] (ovpn-117-199.ams2.redhat.com [10.36.117.199])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7FDFD5D9C9;
-        Tue, 10 Sep 2019 07:45:48 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 559EF5D9C9;
+        Tue, 10 Sep 2019 07:45:56 +0000 (UTC)
 Subject: Re: [PATCH 1/2] memory_hotplug: Add a bounds check to
  check_hotplug_memory_range()
 To:     Alastair D'Silva <alastair@au1.ibm.com>, alastair@d-silva.org
@@ -88,8 +88,8 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  +8Umfre0Xt4713VxMygW0PnQt5aSQdMD58jHFxTk092mU+yIHj5LeYgvwSgZN4airXk5yRXl
  SE+xAvmumFBY
 Organization: Red Hat GmbH
-Message-ID: <f2cde731-30a8-04ca-0ec6-f654d48db7bc@redhat.com>
-Date:   Tue, 10 Sep 2019 09:45:47 +0200
+Message-ID: <117e4c00-48f6-a752-60de-48f72630372c@redhat.com>
+Date:   Tue, 10 Sep 2019 09:45:55 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
@@ -98,7 +98,7 @@ Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 10 Sep 2019 07:45:51 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Tue, 10 Sep 2019 07:45:59 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -159,7 +159,7 @@ On 10.09.19 04:52, Alastair D'Silva wrote:
 > +#endif
 > +
 
-I think using MAX_POSSIBLE_PHYSMEM_BITS bits is wrong. You should use
+I think using MAX_POSSIBLE_PHYSMEM_BITS is wrong. You should use
 MAX_PHYSMEM_BITS.
 
 E.g. on x86_64, MAX_POSSIBLE_PHYSMEM_BITS is 52, while MAX_PHYSMEM_BITS
