@@ -2,34 +2,33 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0ECC49ED6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 07:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B89C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 07:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40A8C2084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 07:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 637862084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 07:14:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406623AbfIJHOc (ORCPT
+        id S2406676AbfIJHOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 03:14:32 -0400
-Received: from mxwww.masterlogin.de ([95.129.51.220]:43462 "EHLO
+        Tue, 10 Sep 2019 03:14:48 -0400
+Received: from mxwww.masterlogin.de ([95.129.51.220]:43544 "EHLO
         mxwww.masterlogin.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404377AbfIJHOb (ORCPT
+        with ESMTP id S2404327AbfIJHOc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 03:14:31 -0400
-Received: from mxout2.routing.net (unknown [192.168.10.82])
-        by new.mxwww.masterlogin.de (Postfix) with ESMTPS id 38F899632A;
-        Tue, 10 Sep 2019 07:05:15 +0000 (UTC)
+        Tue, 10 Sep 2019 03:14:32 -0400
+Received: from mxout1.routing.net (unknown [192.168.10.81])
+        by new.mxwww.masterlogin.de (Postfix) with ESMTPS id A088C962BA;
+        Tue, 10 Sep 2019 07:05:11 +0000 (UTC)
 Received: from mxbox2.masterlogin.de (unknown [192.168.10.253])
-        by mxout2.routing.net (Postfix) with ESMTP id 7EAB26496E;
-        Tue, 10 Sep 2019 07:05:15 +0000 (UTC)
+        by mxout1.routing.net (Postfix) with ESMTP id ED6A343E8B;
+        Tue, 10 Sep 2019 07:05:11 +0000 (UTC)
 Received: from localhost.localdomain (fttx-pool-185.75.73.135.bambit.de [185.75.73.135])
-        by mxbox2.masterlogin.de (Postfix) with ESMTPSA id 75028100C0F;
-        Tue, 10 Sep 2019 07:05:14 +0000 (UTC)
+        by mxbox2.masterlogin.de (Postfix) with ESMTPSA id C3943100B88;
+        Tue, 10 Sep 2019 07:05:10 +0000 (UTC)
 From:   Frank Wunderlich <frank-w@public-files.de>
 To:     linux-mediatek@lists.infradead.org
 Cc:     Frank Wunderlich <frank-w@public-files.de>,
@@ -46,182 +45,79 @@ Cc:     Frank Wunderlich <frank-w@public-files.de>,
         Sean Wang <sean.wang@mediatek.com>,
         Sebastian Reichel <sre@kernel.org>,
         "Tianping Fang" <tianping.fang@mediatek.com>
-Subject: [PATCH v7 2/7] rtc: mt6397: move some common definitions into rtc.h
-Date:   Tue, 10 Sep 2019 09:04:41 +0200
-Message-Id: <20190910070446.639-3-frank-w@public-files.de>
+Subject: [PATCH v7 0/7] implement poweroff for mt6323 / bpi-r2
+Date:   Tue, 10 Sep 2019 09:04:39 +0200
+Message-Id: <20190910070446.639-1-frank-w@public-files.de>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190910070446.639-1-frank-w@public-files.de>
-References: <20190910070446.639-1-frank-w@public-files.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Friedl <josef.friedl@speed.at>
+mainline-driver does not support mt6323
 
-move code to separate header-file to reuse definitions later
-in poweroff-driver (drivers/power/reset/mt6323-poweroff.c)
+this series makes some cleanup to mt6397-rtc-driver, adds mt6323 and
+implement power-controller on it.
 
-Suggested-by: Frank Wunderlich <frank-w@public-files.de>
-Signed-off-by: Josef Friedl <josef.friedl@speed.at>
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
----
-changes since v6: updated copyright
-changes since v5: none
-changes since v4: none
-changes since v3: none
-changes since v2: add missing commit-message
----
- drivers/rtc/rtc-mt6397.c       | 55 +-------------------------
- include/linux/mfd/mt6397/rtc.h | 71 ++++++++++++++++++++++++++++++++++
- 2 files changed, 72 insertions(+), 54 deletions(-)
+tested on bananapi-r2
+
+Original Patch from Josef Friedl
+
+changes since v6:
+	- rebased on 5.3-rc8
+	- post only 7 Patches because 6 are already applied to next
+	- update copyright in "move some common definitions into rtc.h"
+changes since v5:
+	- splitted part 1 to separate changes and additions not related to pwrc
+	- move mfd/mt6397/core.h from v4.8 in separate patch "add mutex include"
+	- changed recipients (moved from To to Cc, removed committers)
+changes since v4:
+	- relative path in part 1+2
+	- drop change of copyright-year in part 5
+changes since v3:
+	- moved SOB in 2/10 and 9/10
+	- moved part 5 to 6 to be near driver-change
+	- changehistory of patches below ---
+changes since v2:
+	- Splitted some parts and rebased on 5.3-rc2:
+
+	v2.1 dt-bindings: add powercontroller – try to make better subject
+	v2.2 separate rtc-mt6397.txt (suggested by Alexandre Belloni)
+	     add missing commit-message (suggested by Matthias Brugger)
+	v2.3 fix alloc after IRQ (suggested by Alexandre Belloni)
+	     new compatible (splitting suggested by Alexandre Belloni)
+	     needed due to different rtc-base/size see #7
+	v2.4 simplifications (Define-res-macros)
+	     add mt6323 rtc+pwrc
+	v2.5 add poweroff-driver (no change)
+	v2.6 MAINTAINERS (no change)
+	v2.7 DTS-Changes (no change)
+
+Josef Friedl (7):
+  dt-bindings: rtc: mediatek: add missing mt6397 rtc
+  rtc: mt6397: move some common definitions into rtc.h
+  rtc: mt6397: improvements of rtc driver
+  rtc: mt6397: add compatible for mt6323
+  power: reset: add driver for mt6323 poweroff
+  MAINTAINERS: add Mediatek shutdown drivers
+  arm: dts: mt6323: add keys, power-controller, rtc and codec
+
+ .../devicetree/bindings/rtc/rtc-mt6397.txt    |  29 +++++
+ MAINTAINERS                                   |   7 ++
+ arch/arm/boot/dts/mt6323.dtsi                 |  27 +++++
+ drivers/power/reset/Kconfig                   |  10 ++
+ drivers/power/reset/Makefile                  |   1 +
+ drivers/power/reset/mt6323-poweroff.c         |  97 ++++++++++++++++
+ drivers/rtc/rtc-mt6397.c                      | 107 ++++--------------
+ include/linux/mfd/mt6397/rtc.h                |  71 ++++++++++++
+ 8 files changed, 263 insertions(+), 86 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
+ create mode 100644 drivers/power/reset/mt6323-poweroff.c
  create mode 100644 include/linux/mfd/mt6397/rtc.h
 
-diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-index b46ed4dc7015..c08ee5edf865 100644
---- a/drivers/rtc/rtc-mt6397.c
-+++ b/drivers/rtc/rtc-mt6397.c
-@@ -9,60 +9,7 @@
- #include <linux/module.h>
- #include <linux/regmap.h>
- #include <linux/rtc.h>
--#include <linux/irqdomain.h>
--#include <linux/platform_device.h>
--#include <linux/of_address.h>
--#include <linux/of_irq.h>
--#include <linux/io.h>
--#include <linux/mfd/mt6397/core.h>
--
--#define RTC_BBPU		0x0000
--#define RTC_BBPU_CBUSY		BIT(6)
--
--#define RTC_WRTGR		0x003c
--
--#define RTC_IRQ_STA		0x0002
--#define RTC_IRQ_STA_AL		BIT(0)
--#define RTC_IRQ_STA_LP		BIT(3)
--
--#define RTC_IRQ_EN		0x0004
--#define RTC_IRQ_EN_AL		BIT(0)
--#define RTC_IRQ_EN_ONESHOT	BIT(2)
--#define RTC_IRQ_EN_LP		BIT(3)
--#define RTC_IRQ_EN_ONESHOT_AL	(RTC_IRQ_EN_ONESHOT | RTC_IRQ_EN_AL)
--
--#define RTC_AL_MASK		0x0008
--#define RTC_AL_MASK_DOW		BIT(4)
--
--#define RTC_TC_SEC		0x000a
--/* Min, Hour, Dom... register offset to RTC_TC_SEC */
--#define RTC_OFFSET_SEC		0
--#define RTC_OFFSET_MIN		1
--#define RTC_OFFSET_HOUR		2
--#define RTC_OFFSET_DOM		3
--#define RTC_OFFSET_DOW		4
--#define RTC_OFFSET_MTH		5
--#define RTC_OFFSET_YEAR		6
--#define RTC_OFFSET_COUNT	7
--
--#define RTC_AL_SEC		0x0018
--
--#define RTC_PDN2		0x002e
--#define RTC_PDN2_PWRON_ALARM	BIT(4)
--
--#define RTC_MIN_YEAR		1968
--#define RTC_BASE_YEAR		1900
--#define RTC_NUM_YEARS		128
--#define RTC_MIN_YEAR_OFFSET	(RTC_MIN_YEAR - RTC_BASE_YEAR)
--
--struct mt6397_rtc {
--	struct device		*dev;
--	struct rtc_device	*rtc_dev;
--	struct mutex		lock;
--	struct regmap		*regmap;
--	int			irq;
--	u32			addr_base;
--};
-+#include <linux/mfd/mt6397/rtc.h>
- 
- static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
- {
-diff --git a/include/linux/mfd/mt6397/rtc.h b/include/linux/mfd/mt6397/rtc.h
-new file mode 100644
-index 000000000000..f84b9163c0ee
---- /dev/null
-+++ b/include/linux/mfd/mt6397/rtc.h
-@@ -0,0 +1,71 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2014-2019 MediaTek Inc.
-+ *
-+ * Author: Tianping.Fang <tianping.fang@mediatek.com>
-+ *        Sean Wang <sean.wang@mediatek.com>
-+ */
-+
-+#ifndef _LINUX_MFD_MT6397_RTC_H_
-+#define _LINUX_MFD_MT6397_RTC_H_
-+
-+#include <linux/jiffies.h>
-+#include <linux/mutex.h>
-+#include <linux/regmap.h>
-+#include <linux/rtc.h>
-+
-+#define RTC_BBPU               0x0000
-+#define RTC_BBPU_CBUSY         BIT(6)
-+#define RTC_BBPU_KEY            (0x43 << 8)
-+
-+#define RTC_WRTGR              0x003c
-+
-+#define RTC_IRQ_STA            0x0002
-+#define RTC_IRQ_STA_AL         BIT(0)
-+#define RTC_IRQ_STA_LP         BIT(3)
-+
-+#define RTC_IRQ_EN             0x0004
-+#define RTC_IRQ_EN_AL          BIT(0)
-+#define RTC_IRQ_EN_ONESHOT     BIT(2)
-+#define RTC_IRQ_EN_LP          BIT(3)
-+#define RTC_IRQ_EN_ONESHOT_AL  (RTC_IRQ_EN_ONESHOT | RTC_IRQ_EN_AL)
-+
-+#define RTC_AL_MASK            0x0008
-+#define RTC_AL_MASK_DOW                BIT(4)
-+
-+#define RTC_TC_SEC             0x000a
-+/* Min, Hour, Dom... register offset to RTC_TC_SEC */
-+#define RTC_OFFSET_SEC         0
-+#define RTC_OFFSET_MIN         1
-+#define RTC_OFFSET_HOUR                2
-+#define RTC_OFFSET_DOM         3
-+#define RTC_OFFSET_DOW         4
-+#define RTC_OFFSET_MTH         5
-+#define RTC_OFFSET_YEAR                6
-+#define RTC_OFFSET_COUNT       7
-+
-+#define RTC_AL_SEC             0x0018
-+
-+#define RTC_PDN2               0x002e
-+#define RTC_PDN2_PWRON_ALARM   BIT(4)
-+
-+#define RTC_MIN_YEAR           1968
-+#define RTC_BASE_YEAR          1900
-+#define RTC_NUM_YEARS          128
-+#define RTC_MIN_YEAR_OFFSET    (RTC_MIN_YEAR - RTC_BASE_YEAR)
-+
-+#define MTK_RTC_POLL_DELAY_US  10
-+#define MTK_RTC_POLL_TIMEOUT   (jiffies_to_usecs(HZ))
-+
-+struct mt6397_rtc {
-+	struct device           *dev;
-+	struct rtc_device       *rtc_dev;
-+
-+	/* Protect register access from multiple tasks */
-+	struct mutex            lock;
-+	struct regmap           *regmap;
-+	int                     irq;
-+	u32                     addr_base;
-+};
-+
-+#endif /* _LINUX_MFD_MT6397_RTC_H_ */
 -- 
 2.17.1
 
