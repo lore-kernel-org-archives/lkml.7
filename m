@@ -2,102 +2,142 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 594BBC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E412C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:52:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39CB120872
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:49:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E490B206CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:52:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ljRKsul0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391334AbfIJJtR (ORCPT
+        id S2391458AbfIJJwp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 05:49:17 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:41827 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727265AbfIJJtR (ORCPT
+        Tue, 10 Sep 2019 05:52:45 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:34994 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391369AbfIJJwp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 05:49:17 -0400
-Received: by mail-qt1-f193.google.com with SMTP id j10so19892965qtp.8;
-        Tue, 10 Sep 2019 02:49:16 -0700 (PDT)
+        Tue, 10 Sep 2019 05:52:45 -0400
+Received: by mail-lf1-f65.google.com with SMTP id w6so12959042lfl.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 02:52:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UCCxiazzNKm8GfRdBMzix7RqbnKVVm8PwfIPcf8Ud9o=;
+        b=ljRKsul0mZVE7hjuRdwu0vDFTakT8JFE/2cyerU5FPgdhHWt1rkLc/XVmzFSuCdPyA
+         /G3lIV76GIKLQb3bB+uKUlq6zEOJp1/Jn7Bscc2/jQI6vtCMBKWUsj/fmMSyCEd2qNAL
+         V1vG8Se1hHXhwDqAbg8s7vDI3Ibg8uD2ZzkbbiS48Sm3gFFKFoG/OpoGBsMLp+jl42NB
+         CX+IqlW87dKEJnQTPMd2wc1doUzIXECqEdcQZZhRlbagUPN5NRb3QL2t3CHNXtubY7Qk
+         qdl1LrhsmO8b1M0BjYMm7Z3hO+0+IS7IDQImB+80dHHcpeWxrs8aFoFmvgFMCl1SsLZg
+         yH/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=JSfsPm8OOMeroYM52zzFmiDbu7+5YUx10p0JkzA7dx8=;
-        b=JopmYea3fE/w7QNA+xqWMpc03gAJFWEUUKvn1DjtHmErGCeCsyTXzPgui+vnKE2WM5
-         KSGfybAPB5lgPMtCXRDMKbK5/yda9nSWcFDKqnMKUbbMnk7H7RGzKTiYVTKxiq18UWse
-         8stNwCMEKtLzoR7m9iNfKgS4/+oXKFM5v+SMEWoWMBvjpl4+b8ivgprvvXEw/iy/Plxb
-         iCTMKhYdyLIUCo6jFoAVvYoYN7DewMtWzvaT81D6eirmpc7pREPUFals3Ks7xSuXewhD
-         YUByY5lheeCREozeWVg4KsehMPub3eNkV4Ij+kilW1K96O7IUX6QJs+ipfw8VV6u1IXL
-         v1Ag==
-X-Gm-Message-State: APjAAAXtazMCTXTfNg7u2xW/ScG1V92C8uOlkonS9DmXvKM4xyyNWZgW
-        6cOp89pML1yjOz5XLcNK30Ir0CsH6yo5VqC/9uY=
-X-Google-Smtp-Source: APXvYqwbr3u1y02e76/2W3wSR+GwWdg6PJL3TQGf0P0/L96UbtcPJGij9lMatNR5TFbo8oM/JpY3M7Bf7OBjM81fXAY=
-X-Received: by 2002:ac8:5306:: with SMTP id t6mr27972543qtn.204.1568108956064;
- Tue, 10 Sep 2019 02:49:16 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UCCxiazzNKm8GfRdBMzix7RqbnKVVm8PwfIPcf8Ud9o=;
+        b=Gg6WLshm2jpTtwSkBnMocf6Vv6RIRbdU9tTm9EsYuQwbwMA1W1gj5zD1nqlvP776F5
+         UsleVncq2KMG43dsCZq3NPe4CRUGw0VMqT+ioPnjMvUJOm1AoWKeq5+xKR0oHDKR4QhI
+         8c7JYDDNpc81XdjYgODFMI1fjDU4vB4cmVVv63HdCFfjD6W9aPEVSSJvjGVQK7lkctxw
+         45v4cVHL29qnltBYsmsqN0XiafqQ3e7xlKDqecRSzJlLs9805REJYJbUITuHHEakymK/
+         K1gmPv2ql1OwF94hQgE0JEqmRkmkXXyWKAKZQYH2ut8aPZhwz8Zd/sOLZWTuoQqCw56w
+         uv2w==
+X-Gm-Message-State: APjAAAUCb19qhurx474d6ilHtIUGvbhuM11q99rt26GBiSAfy39Ixk/Q
+        BHTWAH8uBkdupc8B0ERTyMQD29KqJn63Uo7sJFu7oEPM
+X-Google-Smtp-Source: APXvYqx9y3L6l20MO17A9IA6zgodZQShZyGHzkSX5INuMhtqmNR4XtMFHhM2ZZJH9fSmw/HaeCyGmGFqU1WqfGLgg0o=
+X-Received: by 2002:a19:770a:: with SMTP id s10mr2194571lfc.30.1568109163186;
+ Tue, 10 Sep 2019 02:52:43 -0700 (PDT)
 MIME-Version: 1.0
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 10 Sep 2019 11:49:00 +0200
-Message-ID: <CAK8P3a1Q0ec50n2ueWDKHirpem+SQvsv3sYXzw9EFRqXiUqxUg@mail.gmail.com>
-Subject: [GIT PULL] ipc: fix regressions from y2038 patches
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        David Miller <davem@davemloft.net>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        Matt Turner <mattst88@gmail.com>,
-        Anatoly Pugachev <matorola@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Guo Ren <guoren@kernel.org>, Stafford Horne <shorne@gmail.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Manfred Spraul <manfred@colorfullife.com>,
-        Waiman Long <longman@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
+References: <1566379420-26762-1-git-send-email-yash.shah@sifive.com>
+In-Reply-To: <1566379420-26762-1-git-send-email-yash.shah@sifive.com>
+From:   Yash Shah <yash.shah@sifive.com>
+Date:   Tue, 10 Sep 2019 15:22:07 +0530
+Message-ID: <CAJ2_jOGO-isv52rnwRusV7jtyCY_JWYWAj9opN3Zg6ZbZr-8-w@mail.gmail.com>
+Subject: Re: [PATCH] riscv: dts: Add DT support for SiFive FU540 PWM driver
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Bin Meng <bmeng.cn@gmail.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 089cf7f6ecb266b6a4164919a2e69bd2f938374a:
+Hi,
 
-  Linux 5.3-rc7 (2019-09-02 09:57:40 -0700)
+Any comments on this patch?
 
-are available in the Git repository at:
+- Yash
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic.git
-tags/ipc-fixes
-
-for you to fetch changes up to fb377eb80c80339b580831a3c0fcce34a4c9d1ad:
-
-  ipc: fix sparc64 ipc() wrapper (2019-09-07 21:42:25 +0200)
-
-----------------------------------------------------------------
-ipc: fix regressions from y2038 patches
-
-These are two regression fixes for bugs that got introduced
-during the system call rework that went into linux-5.1
-but only bisected and fixed now:
-
-- One patch affects semtimedop() on many of the less
-  common 32-bit architectures, this just needs a single-line
-  bugfix.
-
-- The other affects only sparc64 and has a slightly more
-  invasive workaround to apply the same change to sparc64
-  that was done to the generic code used everywhere else.
-
-----------------------------------------------------------------
-Arnd Bergmann (2):
-      ipc: fix semtimedop for generic 32-bit architectures
-      ipc: fix sparc64 ipc() wrapper
-
- arch/sparc/kernel/sys_sparc_64.c  | 33 ++++++++++++++++++---------------
- include/linux/syscalls.h          | 19 +++++++++++++++++++
- include/uapi/asm-generic/unistd.h |  2 +-
- ipc/util.h                        | 25 ++-----------------------
- 4 files changed, 40 insertions(+), 39 deletions(-)
+On Wed, Aug 21, 2019 at 2:53 PM Yash Shah <yash.shah@sifive.com> wrote:
+>
+> Add the PWM DT node in SiFive FU540 soc-specific DT file.
+> Enable the PWM nodes in HiFive Unleashed board-specific DT file.
+>
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> ---
+>  arch/riscv/boot/dts/sifive/fu540-c000.dtsi          | 19 +++++++++++++++++++
+>  arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts |  8 ++++++++
+>  2 files changed, 27 insertions(+)
+>
+> diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+> index 42b5ec2..bb422db 100644
+> --- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+> +++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+> @@ -230,6 +230,25 @@
+>                         #size-cells = <0>;
+>                         status = "disabled";
+>                 };
+> +               pwm0: pwm@10020000 {
+> +                       compatible = "sifive,pwm0";
+> +                       reg = <0x0 0x10020000 0x0 0x1000>;
+> +                       interrupt-parent = <&plic0>;
+> +                       interrupts = <42 43 44 45>;
+> +                       clocks = <&prci PRCI_CLK_TLCLK>;
+> +                       #pwm-cells = <3>;
+> +                       status = "disabled";
+> +               };
+> +               pwm1: pwm@10021000 {
+> +                       compatible = "sifive,pwm0";
+> +                       reg = <0x0 0x10021000 0x0 0x1000>;
+> +                       interrupt-parent = <&plic0>;
+> +                       interrupts = <46 47 48 49>;
+> +                       reg-names = "control";
+> +                       clocks = <&prci PRCI_CLK_TLCLK>;
+> +                       #pwm-cells = <3>;
+> +                       status = "disabled";
+> +               };
+>
+>         };
+>  };
+> diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+> index 93d68cb..104d334 100644
+> --- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+> +++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+> @@ -85,3 +85,11 @@
+>                 reg = <0>;
+>         };
+>  };
+> +
+> +&pwm0 {
+> +       status = "okay";
+> +};
+> +
+> +&pwm1 {
+> +       status = "okay";
+> +};
+> --
+> 1.9.1
+>
