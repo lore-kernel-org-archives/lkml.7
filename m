@@ -2,215 +2,101 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F19BDC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5249C4740A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:56:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFB3E208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:56:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CHldEZZf"
+	by mail.kernel.org (Postfix) with ESMTP id 9EF37208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:56:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393018AbfIJL4t (ORCPT
+        id S2393086AbfIJL4z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 07:56:49 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35648 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388328AbfIJL4o (ORCPT
+        Tue, 10 Sep 2019 07:56:55 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:37767 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2393023AbfIJL4w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 07:56:44 -0400
-Received: by mail-wr1-f67.google.com with SMTP id g7so19677429wrx.2
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 04:56:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=goHxQO5WE56PjZrElqp9mWD4UyL0ez4HVWRIM6UzU3c=;
-        b=CHldEZZfNkVRxXOpA/ZEWOkGHLNYox5M0eQi+ih3ANNwJcZssMhLi1RvrKo6pFLpIu
-         O0krOoKt/DkqNYVlPOFbFJ/LCVr2AyI88WBCpVC/zADylr9USKLI3of2dqtzmKkjm1EM
-         AkCKEJMXkpFGE+nb6HJM6DAYeR0LzGOGEhFgg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=goHxQO5WE56PjZrElqp9mWD4UyL0ez4HVWRIM6UzU3c=;
-        b=W1wYPboGaUHhBkIj1E3WOcACLYJzjTXwzg5z1HTdBaKKnaJr40z63T5sqT8wZCwumi
-         1GRhNKOfCSlvPPeNX+NYJpekd3npL4cR7Vo8VpuKn1CA+tyL19BqU/ebl7Hf+HyjVhgg
-         1cC/v1GmnPmBx3Q9MhJVUQWoDOBNJ31/TRVlH6u5Fb8ylbgkPRPOk1nHuGKQyES/YF/+
-         8AxHjXLtbEhtyE86urCdgb7MXpGt81HY+8oQUzHEIIOsYMcf7IMRTyEGnL+XAwJRYirx
-         OIv43s4y/hsBWoibvtIpjoPbqBecHwMMnSUUNGvOwyCIAM+IMMgiAVzpHd4eT67AiDRz
-         6x8g==
-X-Gm-Message-State: APjAAAU6+PjBE5sPqbO7+7ur81nYiOOkpifZvpw185WIaPB0yp8IK3xX
-        7Z+ta2a2/ZzXusd/hw2zKk4vK3RloBM=
-X-Google-Smtp-Source: APXvYqy41deBTxwWe2+aWhU+4LiCXFDvi6WI4YCLje4OsKhs9MTrTG1c6KpCz0h80p4KZoQRWYOFwg==
-X-Received: by 2002:a5d:4fcf:: with SMTP id h15mr25996339wrw.237.1568116602133;
-        Tue, 10 Sep 2019 04:56:42 -0700 (PDT)
-Received: from kpsingh-kernel.c.hoisthospitality.com (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
-        by smtp.gmail.com with ESMTPSA id q19sm23732935wra.89.2019.09.10.04.56.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Sep 2019 04:56:41 -0700 (PDT)
-From:   KP Singh <kpsingh@chromium.org>
-To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
-Subject: [RFC v1 11/14] krsi: Pin argument pages in bprm_check_security hook
-Date:   Tue, 10 Sep 2019 13:55:24 +0200
-Message-Id: <20190910115527.5235-12-kpsingh@chromium.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190910115527.5235-1-kpsingh@chromium.org>
-References: <20190910115527.5235-1-kpsingh@chromium.org>
+        Tue, 10 Sep 2019 07:56:52 -0400
+Received: from callcc.thunk.org (38.85.69.148.rev.vodafone.pt [148.69.85.38] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x8ABua45016670
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 10 Sep 2019 07:56:39 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 97FF742049E; Tue, 10 Sep 2019 07:56:35 -0400 (EDT)
+Date:   Tue, 10 Sep 2019 07:56:35 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     "Ahmed S. Darwish" <darwish.07@gmail.com>
+Cc:     Andreas Dilger <adilger.kernel@dilger.ca>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jan Kara <jack@suse.cz>, zhangjs <zachary@baishancloud.com>,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Linux 5.3-rc8
+Message-ID: <20190910115635.GB2740@mit.edu>
+References: <CAHk-=whBQ+6c-h+htiv6pp8ndtv97+45AH9WvdZougDRM6M4VQ@mail.gmail.com>
+ <20190910042107.GA1517@darwi-home-pc>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190910042107.GA1517@darwi-home-pc>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: KP Singh <kpsingh@google.com>
+On Tue, Sep 10, 2019 at 06:21:07AM +0200, Ahmed S. Darwish wrote:
+> 
+> The commit b03755ad6f33 (ext4: make __ext4_get_inode_loc plug), [1]
+> which was merged in v5.3-rc1, *always* leads to a blocked boot on my
+> system due to low entropy.
+> 
+> The hardware is not a VM: it's a Thinkpad E480 (i5-8250U CPU), with
+> a standard Arch user-space.
 
-Pin the memory allocated to the the argv + envv for the new
-process and passes it in the context to the eBPF programs attached to
-the hook.
+Hmm, I'm not seeing this on a Dell XPS 13 (model 9380) using a Debian
+Bullseye (Testing) running a rc4+ kernel.
 
-The get_user_pages_remote cannot be called from an eBPF helper because
-the helpers run in atomic context and the get_user_pages_remote function
-can sleep.
+This could be because Debian is simply doing more I/O; or it could be
+because I don't have some package installed which is trying to reading
+from /dev/random or calling getrandom(2).  Previously, Fedora ran into
+blocking issues because of some FIPS compliance patches to some
+userspace daemons.  So it's going to be very user space dependent and
+package dependent.
 
-The following heuristics can be added as an optimization:
+> It seems that batching the directory lookup I/O requests (which are
+> possibly a lot during boot) is minimizing sources of disk-activity-
+> induced entropy? [2] [3]
+> 
+> Can this even be considered a user-space breakage? I'm honestly not
+> sure. On my modern RDRAND-capable x86, just running rng-tools rngd(8)
+> early-on fixes the problem. I'm not sure about the status of older
+> CPUs though.
 
-- Don't pin the pages if no eBPF programs are attached.
-- Don't pin the pages if none of the eBPF programs depend on the
-  information. This would require introspection of the byte-code and
-  checking if certain helpers are called.
+You can probably also fix this problem by adding random.trust_cpu=true
+to the boot command line, or by enabling CONFIG_RANDOM_TRUST_CPU.
+This obviously assumes that you trust Intel's implementation of
+RDRAND, but that's true regardless of whether of whether you use rngd
+or the kernel config option.
 
-Signed-off-by: KP Singh <kpsingh@google.com>
----
- security/krsi/include/krsi_init.h |  3 ++
- security/krsi/krsi.c              | 56 +++++++++++++++++++++++++++++++
- 2 files changed, 59 insertions(+)
+As far as whether it's considered user-space breakage; that's though.
+File system performance improvements can cause a reduced amount of
+I/O, and that can cause less entropy to be collected, and depending on
+a complex combination of kernel config options, distribution-specific
+patches, and what packages are loaded, that could potentially cause
+boot hangs waiting for entropy.  Does that we we're can't make any
+file system performace improvements?  Surely that doesn't seem like
+the right answer.
 
-diff --git a/security/krsi/include/krsi_init.h b/security/krsi/include/krsi_init.h
-index 4e17ecacd4ed..6152847c3b08 100644
---- a/security/krsi/include/krsi_init.h
-+++ b/security/krsi/include/krsi_init.h
-@@ -16,6 +16,9 @@ extern int krsi_fs_initialized;
- 
- struct krsi_bprm_ctx {
- 	struct linux_binprm *bprm;
-+	char *arg_pages;
-+	unsigned long num_arg_pages;
-+	unsigned long max_arg_offset;
- };
- 
- /*
-diff --git a/security/krsi/krsi.c b/security/krsi/krsi.c
-index d3a4a361c192..00a7150c1b22 100644
---- a/security/krsi/krsi.c
-+++ b/security/krsi/krsi.c
-@@ -4,6 +4,8 @@
- #include <linux/filter.h>
- #include <linux/bpf.h>
- #include <linux/binfmts.h>
-+#include <linux/highmem.h>
-+#include <linux/mm.h>
- 
- #include "krsi_init.h"
- 
-@@ -17,6 +19,53 @@ struct krsi_hook krsi_hooks_list[] = {
- 	#undef KRSI_HOOK_INIT
- };
- 
-+static int pin_arg_pages(struct krsi_bprm_ctx *ctx)
-+{
-+	int ret = 0;
-+	char *kaddr;
-+	struct page *page;
-+	unsigned long i, pos, num_arg_pages;
-+	struct linux_binprm *bprm = ctx->bprm;
-+	char *buf;
-+
-+	/*
-+	 * The bprm->vma_pages does not have the correct count
-+	 * for execution that is done by a kernel thread using the UMH.
-+	 * vm_pages is updated in acct_arg_size and bails
-+	 * out if current->mm is NULL (which is the case for a kernel thread).
-+	 * It's safer to use vma_pages(struct linux_binprm*) to get the
-+	 * actual number
-+	 */
-+	num_arg_pages = vma_pages(bprm->vma);
-+	if (!num_arg_pages)
-+		return -ENOMEM;
-+
-+	buf = kmalloc_array(num_arg_pages, PAGE_SIZE, GFP_KERNEL);
-+	if (!buf)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < num_arg_pages; i++) {
-+		pos = ALIGN_DOWN(bprm->p, PAGE_SIZE) + i * PAGE_SIZE;
-+		ret = get_user_pages_remote(current, bprm->mm, pos, 1,
-+					    FOLL_FORCE, &page, NULL, NULL);
-+		if (ret <= 0) {
-+			kfree(buf);
-+			return -ENOMEM;
-+		}
-+
-+		kaddr = kmap(page);
-+		memcpy(buf + i * PAGE_SIZE, kaddr, PAGE_SIZE);
-+		kunmap(page);
-+		put_page(page);
-+	}
-+
-+	ctx->arg_pages = buf;
-+	ctx->num_arg_pages = num_arg_pages;
-+	ctx->max_arg_offset = num_arg_pages * PAGE_SIZE;
-+
-+	return 0;
-+}
-+
- static int krsi_process_execution(struct linux_binprm *bprm)
- {
- 	int ret;
-@@ -26,7 +75,14 @@ static int krsi_process_execution(struct linux_binprm *bprm)
- 		.bprm = bprm,
- 	};
- 
-+	ret = pin_arg_pages(&ctx.bprm_ctx);
-+	if (ret < 0)
-+		goto out_arg_pages;
-+
- 	ret = krsi_run_progs(PROCESS_EXECUTION, &ctx);
-+	kfree(ctx.bprm_ctx.arg_pages);
-+
-+out_arg_pages:
- 	return ret;
- }
- 
--- 
-2.20.1
+It would be useful to figure out what process is blocking waiting on
+entropy, since in general, trying to rely on cryptographic entropy in
+early boot, especially if it is to generate cryptographic keys, is
+going to be more dangerous compared to a "just in time" approach to
+generating crypto keys.  So this could also be considered a userspace
+bug, depending on your point of view...
 
+					- Ted
