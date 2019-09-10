@@ -2,75 +2,119 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1B1C4740A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:03:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16AA3C49ED9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9863A2081B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:03:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="EVoil5Ak"
+	by mail.kernel.org (Postfix) with ESMTP id EB36621019
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:05:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387765AbfIJODR (ORCPT
+        id S2387809AbfIJOFG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 10:03:17 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:38026 "EHLO vps0.lunn.ch"
+        Tue, 10 Sep 2019 10:05:06 -0400
+Received: from foss.arm.com ([217.140.110.172]:35856 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726263AbfIJODR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 10:03:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=FqKfQsiBOTyZitqzXjJVEKWxZ/2yB1mlJyy6Xco5aA4=; b=EVoil5AkVpuXllPLDdeqTzo5Lb
-        f/N1jzf74Y1+whpcnUaski9yXT9ZydIZ2AZaSb2lXz7uiuATX2ZhC4SYhgI2UwqoDTndjPpsmRnj1
-        zlWSy5nwH1bpyYvESKm08uHPWiebWUaDCIrxYWIrkFwxcwJNiC0hUZ4C6HqUwUv/0qgk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1i7gjY-0001NC-MR; Tue, 10 Sep 2019 16:03:04 +0200
-Date:   Tue, 10 Sep 2019 16:03:04 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     George McCollister <george.mccollister@gmail.com>
-Cc:     netdev@vger.kernel.org, Woojung Huh <woojung.huh@microchip.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Tristram Ha <Tristram.Ha@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Marek Vasut <marex@denx.de>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2 1/3] net: dsa: microchip: add KSZ9477 I2C
- driver
-Message-ID: <20190910140304.GA4683@lunn.ch>
-References: <20190910131836.114058-1-george.mccollister@gmail.com>
- <20190910131836.114058-2-george.mccollister@gmail.com>
+        id S1727289AbfIJOFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 10:05:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA23928;
+        Tue, 10 Sep 2019 07:05:04 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4FF9E3F59C;
+        Tue, 10 Sep 2019 07:05:04 -0700 (PDT)
+Date:   Tue, 10 Sep 2019 15:05:02 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Pankaj Dubey <pankaj.dubey@samsung.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        Anvesh Salveru <anvesh.s@samsung.com>
+Subject: Re: [PATCH 2/2] PCI: dwc: Add support to disable equalization phase
+ 2 and 3
+Message-ID: <20190910140502.GL9720@e119886-lin.cambridge.arm.com>
+References: <1568118302-10505-1-git-send-email-pankaj.dubey@samsung.com>
+ <CGME20190910122520epcas5p1faeb16f7c38ee057ce93783a637e6bf4@epcas5p1.samsung.com>
+ <1568118302-10505-2-git-send-email-pankaj.dubey@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190910131836.114058-2-george.mccollister@gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <1568118302-10505-2-git-send-email-pankaj.dubey@samsung.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi George
+On Tue, Sep 10, 2019 at 05:55:02PM +0530, Pankaj Dubey wrote:
+> From: Anvesh Salveru <anvesh.s@samsung.com>
+> 
+> In some platforms, PCIe PHY may have issues which will prevent linkup
+> to happen in GEN3 or high speed. In case equalization fails, link will
+> fallback to GEN1.
+> 
+> Designware controller gives flexibility to disable GEN3 equalization
+> completely or only phase 2 and 3.
 
-> +KSZ_REGMAP_TABLE(ksz9477, not_used, 16, 0, 0);
-> +
-> @@ -294,6 +294,8 @@ static inline void ksz_pwrite32(struct ksz_device *dev, int port, int offset,
->  #define KSZ_SPI_OP_RD		3
->  #define KSZ_SPI_OP_WR		2
+Do some platforms have issues conducting phase 2 and 3 when they successfully
+conduct phase 0 and 1?
+
+> 
+> Platform drivers can disable equalization phase 2 and 3, by setting
+> dwc_pci_quirk flag DWC_EQUALIZATION_DISABLE.
+> 
+> Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
+> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware.c | 3 +++
+>  drivers/pci/controller/dwc/pcie-designware.h | 2 ++
+>  2 files changed, 5 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index bf82091..97a8268 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -472,5 +472,8 @@ void dw_pcie_setup(struct dw_pcie *pci)
+>  	if (pci->dwc_pci_quirk & DWC_EQUALIZATION_DISABLE)
+>  		val |= PORT_LOGIC_GEN3_EQ_DISABLE;
 >  
-> +#define swabnot_used(x)		0
-
+> +	if (pci->dwc_pci_quirk & DWC_EQ_PHASE_2_3_DISABLE)
+> +		val |= PORT_LOGIC_GEN3_EQ_PHASE_2_3_DISABLE;
 > +
->  #define KSZ_SPI_OP_FLAG_MASK(opcode, swp, regbits, regpad)		\
->  	swab##swp((opcode) << ((regbits) + (regpad)))
+>  	dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
+>  }
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index a1453c5..b541508 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -31,6 +31,7 @@
+>  
+>  /* Parameters for PCIe Quirks */
+>  #define DWC_EQUALIZATION_DISABLE	0x1
+> +#define DWC_EQ_PHASE_2_3_DISABLE	0x2
 
-There seems to be quite a lot of macro magic here which is not
-obvious. Can this be simplified or made more obvious?
+It only makes sense for either DWC_EQUALIZATION_DISABLE or DWC_EQ_PHASE_2_3_DISABLE
+to be specified, though if dwc_pci_quirk intends to hold other quirks should these
+be numbers and not bit fields?
 
-	 Andrew
+Thanks,
+
+Andrew Murray
+
+>  
+>  /* Synopsys-specific PCIe configuration registers */
+>  #define PCIE_PORT_LINK_CONTROL		0x710
+> @@ -65,6 +66,7 @@
+>  
+>  #define PCIE_PORT_GEN3_RELATED		0x890
+>  #define PORT_LOGIC_GEN3_EQ_DISABLE	BIT(16)
+> +#define PORT_LOGIC_GEN3_EQ_PHASE_2_3_DISABLE	BIT(9)
+>  
+>  #define PCIE_ATU_VIEWPORT		0x900
+>  #define PCIE_ATU_REGION_INBOUND		BIT(31)
+> -- 
+> 2.7.4
+> 
