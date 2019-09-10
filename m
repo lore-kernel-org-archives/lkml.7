@@ -2,179 +2,154 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DEADC49ED9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 22:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 443C4C49ED9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 22:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D060E216F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 22:05:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1156121A4C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 22:05:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AZn/r4pL"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Qusch0ro";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="OtMIX1aI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726291AbfIJWFe (ORCPT
+        id S1726379AbfIJWFt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 18:05:34 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46123 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbfIJWFd (ORCPT
+        Tue, 10 Sep 2019 18:05:49 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:56100 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725875AbfIJWFt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 18:05:33 -0400
-Received: by mail-pg1-f194.google.com with SMTP id m3so10392659pgv.13;
-        Tue, 10 Sep 2019 15:05:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wG8oUPOGoqWmMI9QMUUYWenFyT3dvkUgLjfyhyfFc+U=;
-        b=AZn/r4pL6TwtTkI1heM23lGyEA2Kcnq+qw7npDhlOYw2U5Q8Lqt8T2OonYWqY5CrjF
-         +UCXTWsWEXzftk2Ewmd16oiUsHcatjvGReMcMR3pP1FUCZmoFX/GmhXyxC/PKQzJMWnU
-         LmrQl95XAopvmm3/1Z00rRJOtCNR+9xDKFyp+6If6lOYLduckhoKuTmIZn1qHJEIxrFZ
-         opDEJ6fyaN+aEnbGWZy+GAgEimdYXcX9OFgPAm2Y1yXUp3PNmNkiMXdaHouzJMu48nr3
-         lO/TeyxbHNO/iegQ8uU4VJDOQebJ//qasWqul3enjqmwNMcHX52KWstYmN+5xyQZLv8P
-         AS+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=wG8oUPOGoqWmMI9QMUUYWenFyT3dvkUgLjfyhyfFc+U=;
-        b=F3Uu9N8rxUQ9i/Z0VJSWjiePNnOSkzoFW19Vs1rYQdcYIGpvidy3UtrUvbgZ1KwEuT
-         J4pjZvWSJgSW3reWrK+9fbgwhwKoMLf1Mo4A68u5TJ9MK/2MFT0g9z1hcUrzSmtBYN+z
-         VB70e3ufW3jibOP5aPmrLVay7AOcmWu3h3plKM25ZY0eocwfCZVqQYZdCrVnf5ZdC9iv
-         5Ys+RPkpEcxKa/CBkQ6h3CSp66ScvBpe8Q0s5hVnpLAAxifDvb+9H06GXGkVqC9vz3j5
-         Mmdj5tYTqrnM7qujezo0BJsXv3Tn6in4QHiM3XkkI5NNouOprl2uoKgoLTzqzH5tZd7Z
-         IKFw==
-X-Gm-Message-State: APjAAAWByjerlpwEnK2MkK64Z1MQwdo5HKRUjA5Efvxh2/VvPaPYuj0y
-        1zwU2KbqSZODHUFxqCwlMYA=
-X-Google-Smtp-Source: APXvYqw//s58WRv9yzXobhfr8JVDPqhjjSS2p4LLvK6T8U5N9a3ruXMSpHXPpGW0Sr5vhUgQ/mXbsQ==
-X-Received: by 2002:a63:c008:: with SMTP id h8mr30784663pgg.427.1568153132415;
-        Tue, 10 Sep 2019 15:05:32 -0700 (PDT)
-Received: from [10.67.49.31] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id ep24sm652529pjb.26.2019.09.10.15.05.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 10 Sep 2019 15:05:31 -0700 (PDT)
-Subject: Re: [PATCH] ftgmac100: Disable HW checksum generation on AST2500
-To:     Vijay Khemka <vijaykhemka@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        YueHaibing <yuehaibing@huawei.com>, Andrew Lunn <andrew@lunn.ch>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>,
-        joel@jms.id.au, linux-aspeed@lists.ozlabs.org, sdasari@fb.com
-References: <20190910213734.3112330-1-vijaykhemka@fb.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <bd5eab2e-6ba6-9e27-54d4-d9534da9d5f7@gmail.com>
-Date:   Tue, 10 Sep 2019 15:05:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190910213734.3112330-1-vijaykhemka@fb.com>
-Content-Type: text/plain; charset=utf-8
+        Tue, 10 Sep 2019 18:05:49 -0400
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id x8ALvFav009823;
+        Tue, 10 Sep 2019 15:05:29 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=Oi1aRQuIHWWpAPjw0A/tkFVK/FRrpdHJcjfu2BWSOqU=;
+ b=Qusch0roIpdObaCUq0cO95k/++MFTvFaYmyrdSTmiWCG+ZPHq1QlK3ylK+d1KqvDb+z/
+ U7oT7PbwoJRY5CVJMZr50634ioZ5IWBCDmY6tsqc54NKDKiCRTi3gzcqJaDM+ch2masp
+ EMlnxtIyN+KIWwgQTfW+FPdrpfojSUuh0jg= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by m0001303.ppops.net with ESMTP id 2uxf95t2jx-18
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 10 Sep 2019 15:05:29 -0700
+Received: from prn-hub01.TheFacebook.com (2620:10d:c081:35::125) by
+ prn-hub04.TheFacebook.com (2620:10d:c081:35::128) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Tue, 10 Sep 2019 15:05:18 -0700
+Received: from NAM01-BN3-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Tue, 10 Sep 2019 15:05:18 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AVBLBOiAJEx3hj4uRCQjoaXD0XU5MRFYZo8ZtdsYEQ7DA3rMASqxv+SoO+FWU3aVunL/KiYczcvhg9AB1eLqANcCOkenLzvmD8Iwj4k4M4ANeuTVwkZY8skKBlVX1Kds6QontxhmBAP83z8AzZ+MIbkSTj1e3y7dZlH7pbu8djJxCBYHY3SINcdgvl5g4aXqy+yLuM9o3HKaGBT7HMOspg5HWh9vcR8nZu6tGeUqGmJDSi46POfWOqMzZI4QvsFHP8vyCTOdahnSgJ/1UgRutBNKlNhjQYfcQyeRRrT5EfLyyMfS5uAee5X+6RezLhQk8mnSZPgt8SQfIE3jd3xQ8Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Oi1aRQuIHWWpAPjw0A/tkFVK/FRrpdHJcjfu2BWSOqU=;
+ b=OwMXEE3j2qyO3uqCmR8IELPFPRpecY+lnu4tmVWLvEz50YbLDWNNThr629EJYk8XD70ZIZDil8+9vtkt37Nx+PByWnB+bH3/eBhITudTRDcYQXouS6zZ0hLij8Fx0KIBgWAgoOgdCxHapsGC+U3cnOkESGiZ1XwuzhJzHBnTLD/OJaHYR3I443FwDo9GyZ6jODhVkOHgWPVqftoSmN9mdaWQqWlBF+ax/4IqQAQbXoKq6L24JlSXI4Q2Bwr51OGla2qn7BDGxvWQjfl6NHmrItgbuBb3af1DlszAXIilm9HiQ7ZXZyQWrK7ssSf4R2Wa9IQbz1f9GHQfz8QiM9UaBw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Oi1aRQuIHWWpAPjw0A/tkFVK/FRrpdHJcjfu2BWSOqU=;
+ b=OtMIX1aI7k/QqurjUXCCHcpNa5IOYiyxMOLiCenGSOq+mFBJapbcREKix//Tj9xT5Xl9ofdlK8YVz+n9prw+aBWkAS4zx9Efm5Rs6EVUrlgfQ1d54PpuBzrrqc0CHHF3Z6dB0skw66CnwDTmT7mhEXAy641mwxQXGKzbRxdCW1U=
+Received: from CY4PR15MB1269.namprd15.prod.outlook.com (10.172.177.11) by
+ CY4PR15MB1494.namprd15.prod.outlook.com (10.172.160.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2241.18; Tue, 10 Sep 2019 22:05:16 +0000
+Received: from CY4PR15MB1269.namprd15.prod.outlook.com
+ ([fe80::38b1:336:13e6:b02b]) by CY4PR15MB1269.namprd15.prod.outlook.com
+ ([fe80::38b1:336:13e6:b02b%7]) with mapi id 15.20.2241.018; Tue, 10 Sep 2019
+ 22:05:16 +0000
+From:   Vijay Khemka <vijaykhemka@fb.com>
+To:     Rashmica Gupta <rashmica.g@gmail.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>
+CC:     "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Bartosz Golaszewski" <bgolaszewski@baylibre.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 1/4] gpio/aspeed: Fix incorrect number of banks
+Thread-Topic: [PATCH v2 1/4] gpio/aspeed: Fix incorrect number of banks
+Thread-Index: AQHVY4eukfcaDm3E3UCrHqUIDwG6LKclCz8A
+Date:   Tue, 10 Sep 2019 22:05:16 +0000
+Message-ID: <4DEF3F24-0249-4A77-981C-EB62EEC29A92@fb.com>
+References: <20190905011635.15902-1-rashmica.g@gmail.com>
+In-Reply-To: <20190905011635.15902-1-rashmica.g@gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [2620:10d:c090:200::2:1b73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f7ebd765-f157-4e10-7700-08d7363af698
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CY4PR15MB1494;
+x-ms-traffictypediagnostic: CY4PR15MB1494:
+x-microsoft-antispam-prvs: <CY4PR15MB14943CA2FDFBED9838FEAA39DDB60@CY4PR15MB1494.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4125;
+x-forefront-prvs: 01565FED4C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(366004)(346002)(376002)(39860400002)(199004)(189003)(91956017)(11346002)(99286004)(66446008)(36756003)(4326008)(2616005)(25786009)(5660300002)(186003)(305945005)(86362001)(6486002)(6436002)(15650500001)(229853002)(46003)(4744005)(6512007)(14454004)(110136005)(8676002)(76176011)(54906003)(256004)(14444005)(7736002)(81156014)(81166006)(6506007)(76116006)(2906002)(8936002)(6246003)(486006)(478600001)(316002)(476003)(102836004)(71200400001)(66946007)(64756008)(2501003)(66476007)(53936002)(66556008)(33656002)(6116002)(446003)(71190400001);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR15MB1494;H:CY4PR15MB1269.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: HRoumQrngF3joe0cWmM42WJ/fEeBRSKNxvJOH66pglOWJlVOo04hFR3pkx1Re1RTFmWzMrZT5IhTE+3lA4VaRE9EbM+s1PbiJiFAHs//3UVtg/jmB8+bgF9h2OsaIovDyOd+5LrTH84WCrw0sRJ4bZQebwZV66fU2ZhbmcafUTpn3j6ggAxxhFRwIyfR1ikQGGDbaUihYw56vPUSZGsiSDuamVgH2IqkZ/W/nmCkAEuYaEtiOWELSTE8NsXeJy3aV5KdvJnTHOKIWU+mAJx/dY17TEZ1mrp7/ZWdle4ECwLitinhJv6qXyotrsFySc4UkY4UxX10MBA9UfqJqF/upem9bjAp6sl50HC54anWHzsTxtNHCWhdOD32xJ9ml/FOMMucoq/7R1qPoJgZrGEEQ9nqSBxvMd8o3UcjUYpofxo=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <04CABF0679C2A6449F9C3251D1D066A9@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: f7ebd765-f157-4e10-7700-08d7363af698
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Sep 2019 22:05:16.8514
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: RSNdzNTdY4L0p1SEgu4xSQgl+8W3qWp7Qhij8q5AR1L9jLbzSxjtepnL2QnaM6G8PTyyIxOzo6AHiPkXQ+dPmw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR15MB1494
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-10_12:2019-09-10,2019-09-10 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0 spamscore=0
+ adultscore=0 mlxscore=0 mlxlogscore=999 priorityscore=1501 suspectscore=0
+ malwarescore=0 lowpriorityscore=0 bulkscore=0 clxscore=1011
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1906280000 definitions=main-1909100207
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/10/19 2:37 PM, Vijay Khemka wrote:
-> HW checksum generation is not working for AST2500, specially with IPV6
-> over NCSI. All TCP packets with IPv6 get dropped. By disabling this
-> it works perfectly fine with IPV6.
-> 
-> Verified with IPV6 enabled and can do ssh.
-
-How about IPv4, do these packets have problem? If not, can you continue
-advertising NETIF_F_IP_CSUM but take out NETIF_F_IPV6_CSUM?
-
-> 
-> Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
-> ---
->  drivers/net/ethernet/faraday/ftgmac100.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/faraday/ftgmac100.c b/drivers/net/ethernet/faraday/ftgmac100.c
-> index 030fed65393e..591c9725002b 100644
-> --- a/drivers/net/ethernet/faraday/ftgmac100.c
-> +++ b/drivers/net/ethernet/faraday/ftgmac100.c
-> @@ -1839,8 +1839,9 @@ static int ftgmac100_probe(struct platform_device *pdev)
->  	if (priv->use_ncsi)
->  		netdev->hw_features |= NETIF_F_HW_VLAN_CTAG_FILTER;
->  
-> -	/* AST2400  doesn't have working HW checksum generation */
-> -	if (np && (of_device_is_compatible(np, "aspeed,ast2400-mac")))
-> +	/* AST2400  and AST2500 doesn't have working HW checksum generation */
-> +	if (np && (of_device_is_compatible(np, "aspeed,ast2400-mac") ||
-> +		   of_device_is_compatible(np, "aspeed,ast2500-mac")))
->  		netdev->hw_features &= ~NETIF_F_HW_CSUM;
->  	if (np && of_get_property(np, "no-hw-checksum", NULL))
->  		netdev->hw_features &= ~(NETIF_F_HW_CSUM | NETIF_F_RXCSUM);
-> 
-
-
--- 
-Florian
+DQoNCu+7v09uIDkvNC8xOSwgNjoxNyBQTSwgIkxpbnV4LWFzcGVlZCBvbiBiZWhhbGYgb2YgUmFz
+aG1pY2EgR3VwdGEiIDxsaW51eC1hc3BlZWQtYm91bmNlcyt2aWpheWtoZW1rYT1mYi5jb21AbGlz
+dHMub3psYWJzLm9yZyBvbiBiZWhhbGYgb2YgcmFzaG1pY2EuZ0BnbWFpbC5jb20+IHdyb3RlOg0K
+DQogICAgVGhlIGN1cnJlbnQgY2FsY3VsYXRpb24gZm9yIHRoZSBudW1iZXIgb2YgR1BJTyBiYW5r
+cyBpcyBvbmx5IGNvcnJlY3QgaWYNCiAgICB0aGUgbnVtYmVyIG9mIEdQSU9zIGlzIGEgbXVsdGlw
+bGUgb2YgMzIgKGlmIHRoZXJlIHdlcmUgMzEgR1BJT3Mgd2Ugd291bGQNCiAgICBjdXJyZW50bHkg
+c2F5IHRoZXJlIGFyZSAwIGJhbmtzLCB3aGljaCBpcyBpbmNvcnJlY3QpLg0KICAgIA0KICAgIEZp
+eGVzOiAzNjFiNzkxMTlhNGI3ICgnZ3BpbzogQWRkIEFzcGVlZCBkcml2ZXInKQ0KICAgIA0KICAg
+IFNpZ25lZC1vZmYtYnk6IFJhc2htaWNhIEd1cHRhIDxyYXNobWljYS5nQGdtYWlsLmNvbT4NClJl
+dmlld2VkLWJ5OiBWaWpheSBLaGVta2EgPHZpamF5a2hlbWthQGZiLmNvbT4NCiAgICAtLS0NCiAg
+ICAgZHJpdmVycy9ncGlvL2dwaW8tYXNwZWVkLmMgfCAyICstDQogICAgIDEgZmlsZSBjaGFuZ2Vk
+LCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KICAgIA0KICAgIGRpZmYgLS1naXQgYS9k
+cml2ZXJzL2dwaW8vZ3Bpby1hc3BlZWQuYyBiL2RyaXZlcnMvZ3Bpby9ncGlvLWFzcGVlZC5jDQog
+ICAgaW5kZXggOWRlZmUyNWQ0NzIxLi5iODNlMjNhZWNkMTggMTAwNjQ0DQogICAgLS0tIGEvZHJp
+dmVycy9ncGlvL2dwaW8tYXNwZWVkLmMNCiAgICArKysgYi9kcml2ZXJzL2dwaW8vZ3Bpby1hc3Bl
+ZWQuYw0KICAgIEBAIC0xMTY1LDcgKzExNjUsNyBAQCBzdGF0aWMgaW50IF9faW5pdCBhc3BlZWRf
+Z3Bpb19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KICAgICAJZ3Bpby0+Y2hp
+cC5iYXNlID0gLTE7DQogICAgIA0KICAgICAJLyogQWxsb2NhdGUgYSBjYWNoZSBvZiB0aGUgb3V0
+cHV0IHJlZ2lzdGVycyAqLw0KICAgIC0JYmFua3MgPSBncGlvLT5jb25maWctPm5yX2dwaW9zID4+
+IDU7DQogICAgKwliYW5rcyA9IERJVl9ST1VORF9VUChncGlvLT5jb25maWctPm5yX2dwaW9zLCAz
+Mik7DQpHb29kIGNhdGNoDQogICAgIAlncGlvLT5kY2FjaGUgPSBkZXZtX2tjYWxsb2MoJnBkZXYt
+PmRldiwNCiAgICAgCQkJCSAgICBiYW5rcywgc2l6ZW9mKHUzMiksIEdGUF9LRVJORUwpOw0KICAg
+ICAJaWYgKCFncGlvLT5kY2FjaGUpDQogICAgLS0gDQogICAgMi4yMC4xDQogICAgDQogICAgDQoN
+Cg==
