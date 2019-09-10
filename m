@@ -2,110 +2,125 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2262CC4740C
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 01:14:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69DACC4740C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 01:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA84221726
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 01:14:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 348832171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 01:27:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dYDodNZN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391057AbfIJBOf (ORCPT
+        id S2391073AbfIJB1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 21:14:35 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2197 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729327AbfIJBOf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 21:14:35 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 79E7E2D5954FCE6DA913;
-        Tue, 10 Sep 2019 09:14:33 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 10 Sep 2019 09:14:24 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH v2] f2fs: fix to avoid accessing uninitialized field of inode page in is_alive()
-Date:   Tue, 10 Sep 2019 09:14:16 +0800
-Message-ID: <20190910011416.28768-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Mon, 9 Sep 2019 21:27:16 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36659 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729327AbfIJB1Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 21:27:16 -0400
+Received: by mail-pg1-f194.google.com with SMTP id l21so8897453pgm.3
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 18:27:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=htVKbWpEm9QB8qGdRGMXDAO+pxBcl0ZnD2WqCc7LzfU=;
+        b=dYDodNZNZBL5k3zCSxOWdPRcFUyUB01dhilO31VRCQCWzNTMmGKwgRqx0ezOfDNyAW
+         Xam9LqMjWHWhmXYZ+UyPClwkIDonR2TO65P68AgHwdI+LfXGtXhOV+odbW27EuJiV4SP
+         XTvrH2cyaxDU5S7EOTZIh8ZgmIO9Vta9yYvLfVVzJ6tPL8MOhtJkVxJZPSFFuj67j8ht
+         keJg435MhybFE/gLA3crGRYdZ2lA8uk+6OFVaRys6lrMlTQ3wlHysXZ6BZlWF0dXyJBy
+         7keLQZaUsd4mzy4NYzg79RUQWhi3PbxSlYR1MYRG7hv9PUI8MXdUUzjCGpUVkyRvCYwr
+         iBag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=htVKbWpEm9QB8qGdRGMXDAO+pxBcl0ZnD2WqCc7LzfU=;
+        b=BbG73QIhhUL9H4GYqjTaWuanSRfKy01jYwREZX36S+TdFkX8pp5R306ZZ/wYvy1xGW
+         J5NV5cbUXuvVZvc0QWlVTp7CkNmCnHdrByXwfzz4EslN1dvRrIPKvUExscxTWieApqUl
+         bcMnYGDHk+i1Kk+IoXuMYH2USMUSwaF3d5GdOU50NErVnYyDhLNtC/iFRD/rYJCWJgeH
+         tOTKtt6xkJScRNEyn5PVtBA6Goh4HEDY1z+OfdzRz6oeoBvM7ZCsBiW8aRMI1ehBGeat
+         jEQ0PhlH1mJQ8UGIyj8k6YI+6gM9czqayLoh6bGCGbKuGMFxEPRn3n8DxbYethIMzOjM
+         0HRg==
+X-Gm-Message-State: APjAAAVQIXw0S4QyO9Mc8l19rOe3GoazLa/7ec4Ri7JLdShjiSZdBuMv
+        oLqNMZW89slqFB7QVTOay7c=
+X-Google-Smtp-Source: APXvYqxUIk1rV0t0iVtAqOPrGBZ2YrYBDkkoRIbbfvd0laZuVU6CmCAT86RnUjmrgQPtc1DrgI+F5Q==
+X-Received: by 2002:a62:f246:: with SMTP id y6mr31513531pfl.22.1568078835198;
+        Mon, 09 Sep 2019 18:27:15 -0700 (PDT)
+Received: from localhost.localdomain.localdomain ([2408:823c:c11:160:b8c3:8577:bf2f:3])
+        by smtp.gmail.com with ESMTPSA id b20sm19558629pff.158.2019.09.09.18.27.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Sep 2019 18:27:14 -0700 (PDT)
+From:   Pengfei Li <lpf.vector@gmail.com>
+To:     akpm@linux-foundation.org
+Cc:     vbabka@suse.cz, cl@linux.com, penberg@kernel.org,
+        rientjes@google.com, iamjoonsoo.kim@lge.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, guro@fb.com,
+        Pengfei Li <lpf.vector@gmail.com>
+Subject: [PATCH v3 0/4] mm, slab: Make kmalloc_info[] contain all types of names
+Date:   Tue, 10 Sep 2019 09:26:48 +0800
+Message-Id: <20190910012652.3723-1-lpf.vector@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If inode is newly created, inode page may not synchronize with inode cache,
-so fields like .i_inline or .i_extra_isize could be wrong, in below call
-path, we may access such wrong fields, result in failing to migrate valid
-target block.
+Changes in v3
+--
+1. restore __initconst (patch 1/4)
+2. rename patch 3/4
+3. add more clarification for patch 4/4
 
-Thread A				Thread B
-- f2fs_create
- - f2fs_add_link
-  - f2fs_add_dentry
-   - f2fs_init_inode_metadata
-    - f2fs_add_inline_entry
-     - f2fs_new_inode_page
-     - f2fs_put_page
-     : inode page wasn't updated with inode cache
-					- gc_data_segment
-					 - is_alive
-					  - f2fs_get_node_page
-					  - datablock_addr
-					   - offset_in_addr
-					   : access uninitialized fields
+Changes in v2
+--
+1. remove __initconst (patch 1/5)
+2. squash patch 2/5
+3. add ack tag from Vlastimil Babka
 
-Fixes: 7a2af766af15 ("f2fs: enhance on-disk inode structure scalability")
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
-v2:
-- update inode page before f2fs_put_page()
- fs/f2fs/dir.c    | 5 +++++
- fs/f2fs/inline.c | 5 +++++
- 2 files changed, 10 insertions(+)
 
-diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
-index 7afbf8f5ab08..4033778bcbbf 100644
---- a/fs/f2fs/dir.c
-+++ b/fs/f2fs/dir.c
-@@ -682,6 +682,11 @@ int f2fs_add_regular_entry(struct inode *dir, const struct qstr *new_name,
- 
- 	if (inode) {
- 		f2fs_i_pino_write(inode, dir->i_ino);
-+
-+		/* synchronize inode page's data from inode cache */
-+		if (is_inode_flag_set(inode, FI_NEW_INODE))
-+			f2fs_update_inode(inode, page);
-+
- 		f2fs_put_page(page, 1);
- 	}
- 
-diff --git a/fs/f2fs/inline.c b/fs/f2fs/inline.c
-index 16ebdd4d1f2c..896db0416f0e 100644
---- a/fs/f2fs/inline.c
-+++ b/fs/f2fs/inline.c
-@@ -589,6 +589,11 @@ int f2fs_add_inline_entry(struct inode *dir, const struct qstr *new_name,
- 	/* we don't need to mark_inode_dirty now */
- 	if (inode) {
- 		f2fs_i_pino_write(inode, dir->i_ino);
-+
-+		/* synchronize inode page's data from inode cache */
-+		if (is_inode_flag_set(inode, FI_NEW_INODE))
-+			f2fs_update_inode(inode, page);
-+
- 		f2fs_put_page(page, 1);
- 	}
- 
+There are three types of kmalloc, KMALLOC_NORMAL, KMALLOC_RECLAIM
+and KMALLOC_DMA.
+
+The name of KMALLOC_NORMAL is contained in kmalloc_info[].name,
+but the names of KMALLOC_RECLAIM and KMALLOC_DMA are dynamically
+generated by kmalloc_cache_name().
+
+Patch1 predefines the names of all types of kmalloc to save
+the time spent dynamically generating names.
+
+The other 4 patches did some cleanup work.
+
+These changes make sense, and the time spent by new_kmalloc_cache()
+has been reduced by approximately 36.3%.
+
+                         Time spent by
+                         new_kmalloc_cache()
+5.3-rc7                       66264
+5.3-rc7+patch                 42188
+
+
+Pengfei Li (4):
+  mm, slab: Make kmalloc_info[] contain all types of names
+  mm, slab: Remove unused kmalloc_size()
+  mm, slab_common: use enum kmalloc_cache_type to iterate over kmalloc
+    caches
+  mm, slab_common: Make the loop for initializing KMALLOC_DMA start from
+    1
+
+ include/linux/slab.h |  20 ---------
+ mm/slab.c            |   7 +--
+ mm/slab.h            |   2 +-
+ mm/slab_common.c     | 101 +++++++++++++++++++++++--------------------
+ 4 files changed, 59 insertions(+), 71 deletions(-)
+
 -- 
-2.18.0.rc1
+2.21.0
 
