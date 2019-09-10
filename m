@@ -2,45 +2,44 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90590C4740A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C57DFC4740A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DE98208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B7FC21479
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:41:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="maG0dwN9"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="C2o6PJo4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390180AbfIJOld (ORCPT
+        id S2388599AbfIJOld (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 10 Sep 2019 10:41:33 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:42924 "EHLO
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:42888 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732225AbfIJOlc (ORCPT
+        by vger.kernel.org with ESMTP id S1732145AbfIJOlc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Sep 2019 10:41:32 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 52123C2B52;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 4F355C2B07;
         Tue, 10 Sep 2019 14:41:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1568126491; bh=lVkOCoCejw+FdVkNi1DEkuCSQsbWp0vzSCTOU+r1FbE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=maG0dwN9sqjrTYcrEmJPWJUP11sOR4TjwYTc/MdWqa86UHYx9amjx7WXN7iAC+X8M
-         mVwZWht6k+04SQMQPE5QtONFUn9ZnaRd6EyeW0GuwNmhnvWLsc8MCWaWL5gQsWif08
-         rw2+dGz1Pu0ZGhUzzSZHcptwmipKRX9a3Q1QxkcoeNo3F0IHZKwMEN3ceDPjwV2HFq
-         j5ttxy0brNyRnkZQboYkwk+J/KxEYILqVO66dtro7EVCKhhzk44R0OhFMkvGcm0YnU
-         9Jez7KvcLGghNIGdNV54/Wniet79x2KhVijxtu0YcPYQvgJqStKHup6KA2HvlpgHuL
-         AzHmrwhJt99Pg==
+        t=1568126491; bh=Tub4nxbeU4nreRv8Psll6baSDgasdHP9Jdi2H3FUuM0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=C2o6PJo4/Gf/7lp2JOLM+WEG1MfCOq73flr31Z7C9+k5tPz3ahpk3X+Jdiw3i1fn9
+         imLq+yTn/PJJlWrTdXHoTa/8aus7nXy5gjO+RrI80mGiwkgCCXASzT7qN2WCdjCmue
+         OfxO8I9cv2dqEbJBlSWxOiLrHu6RW1A/4GkyB+sQraKB0raSVjXXKSPSvCrFaIga4B
+         y9BuCLwa04cyaUqPgnY6ADYrMAWgEQzFctN1M50DadnTDXTeUkweuOTpiwzxUdd5pr
+         rfMt62re75WqJhRakCtdR1TKDAOFu4McgBvPV74oFBSIxBzoQgSa7LdCuXxvsneLn/
+         kptY6jHGqPW/g==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id DD654A0064;
-        Tue, 10 Sep 2019 14:41:29 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id B7508A0057;
+        Tue, 10 Sep 2019 14:41:28 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
 Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
@@ -51,23 +50,18 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 3/6] net: stmmac: xgmac: Reinitialize correctly a variable
-Date:   Tue, 10 Sep 2019 16:41:24 +0200
-Message-Id: <cc78134084a4d7c4f2ea35e369c422b71209d021.1568126224.git.joabreu@synopsys.com>
+Subject: [PATCH net-next 0/6] net: stmmac: Improvements for -next
+Date:   Tue, 10 Sep 2019 16:41:21 +0200
+Message-Id: <cover.1568126224.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1568126224.git.joabreu@synopsys.com>
-References: <cover.1568126224.git.joabreu@synopsys.com>
-In-Reply-To: <cover.1568126224.git.joabreu@synopsys.com>
-References: <cover.1568126224.git.joabreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'value' was being or'ed with a value from another register. This is a
-typo and could cause new written value to be wrong. Fix it.
-
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Misc patches for -next. It includes:
+ - Two fixes for features in -next only
+ - New features support for GMAC cores (which includes GMAC4 and GMAC5)
 
 ---
 Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
@@ -80,22 +74,24 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-index 78ac659da279..d5173dd02a71 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-@@ -568,7 +568,7 @@ static void dwxgmac2_update_vlan_hash(struct mac_device_info *hw, u32 hash,
- 
- 		writel(value, ioaddr + XGMAC_PACKET_FILTER);
- 
--		value |= XGMAC_VLAN_VTHM | XGMAC_VLAN_ETV;
-+		value = XGMAC_VLAN_VTHM | XGMAC_VLAN_ETV;
- 		if (is_double) {
- 			value |= XGMAC_VLAN_EDVLP;
- 			value |= XGMAC_VLAN_ESVL;
+Jose Abreu (6):
+  net: stmmac: Prevent divide-by-zero
+  net: stmmac: Add VLAN HASH filtering support in GMAC4+
+  net: stmmac: xgmac: Reinitialize correctly a variable
+  net: stmmac: Add support for SA Insertion/Replacement in GMAC4+
+  net: stmmac: Add support for VLAN Insertion Offload in GMAC4+
+  net: stmmac: ARP Offload for GMAC4+ Cores
+
+ drivers/net/ethernet/stmicro/stmmac/dwmac4.h       | 23 +++++++
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c  | 79 ++++++++++++++++++++++
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.c | 43 ++++++++++++
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.h |  9 +++
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c   |  5 +-
+ .../net/ethernet/stmicro/stmmac/dwxgmac2_core.c    |  2 +-
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |  4 +-
+ 7 files changed, 162 insertions(+), 3 deletions(-)
+
 -- 
 2.7.4
 
