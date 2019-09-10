@@ -2,95 +2,133 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46FD7C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF56C49ED6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 146C8208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:38:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568115497;
-	bh=oPpSgYkgfX9L+xNnSU+0zQyu5dmjqLUbl5HTxqNtjTg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lXoE0FkGv+4AXk+5e43sjgX+O+rOfZFeNPyhieIIH/XcGH1RiE8cUMi1qgbuewV8g
-	 q0UvoH6WmhNYYI8/+CcLWM5jPHMcqhCBjharefuhbJ7WkvEnH5C5jkOd12rV5EE8D2
-	 7zB1sH1ChCLNl0KdYeI4lv/+eF8johAvka2r/LVY=
+	by mail.kernel.org (Postfix) with ESMTP id B55D120872
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:38:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="acvOFDjh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730993AbfIJLiQ (ORCPT
+        id S1731054AbfIJLid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 07:38:16 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59738 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730304AbfIJLiP (ORCPT
+        Tue, 10 Sep 2019 07:38:33 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:40648 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730304AbfIJLic (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 07:38:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=dHsV/RZwls+pHHVDbGZCAK0HFYsQemt5oRt7DrcnlWg=; b=wksF6c6S+zT5Y0cM11IjPsTuP
-        LpIXR4wYPcts1I3/JK/nEWllT9nXWCSBAs943ICstbB8zZ+0TUFj8X5Zq1xmQmlnCJhjZEkA8hbk3
-        VxGGGPiaBvoWAT8ezRiV3LD7Tg3cEvUgpj8yvP9sFPQFBAi1jAx3NTbzJnk4Kol98jFH0=;
-Received: from [148.69.85.38] (helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1i7eT4-00070T-Cb; Tue, 10 Sep 2019 11:37:54 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 4B64ED02D76; Tue, 10 Sep 2019 12:37:53 +0100 (BST)
-Date:   Tue, 10 Sep 2019 12:37:53 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     shifu0704@thundersoft.com
-Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
-        dmurphy@ti.com, navada@ti.com
-Subject: Re: [PATCH] tas2770: add tas2770 smart PA dt bindings
-Message-ID: <20190910113753.GO2036@sirena.org.uk>
-References: <1567753564-13699-1-git-send-email-shifu0704@thundersoft.com>
+        Tue, 10 Sep 2019 07:38:32 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8ABcM1W128774;
+        Tue, 10 Sep 2019 06:38:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568115502;
+        bh=voPq94gyTYBJharks+/kgS8tgNA07rMeqP3KLw0SvmU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=acvOFDjh8pz/X1m1a2mb53mPM1XTchkC7mjBSqZthh7TnCiY99+8awOVF0GL4c5wK
+         6fnO5UiVd4CxVEtQNQ1WGlVCHfMxdprkB09sTLD+w8nyoU+gGImeZluIecCpoK9hiw
+         MzFyNy3J+tB/+Q3lU84BMNxU60+tIz83SW/h8ZoI=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8ABcMRi079886
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 10 Sep 2019 06:38:22 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 10
+ Sep 2019 06:38:21 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 10 Sep 2019 06:38:21 -0500
+Received: from [10.250.98.129] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8ABcJdD005202;
+        Tue, 10 Sep 2019 06:38:19 -0500
+Subject: Re: [PATCH v5 4/4] backlight: add led-backlight driver
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+CC:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <lee.jones@linaro.org>, <dmurphy@ti.com>,
+        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dridevel@lists.freedesktop.org>, <tomi.valkeinen@ti.com>
+References: <20190910105946.23057-1-jjhiblot@ti.com>
+ <20190910105946.23057-5-jjhiblot@ti.com>
+ <20190910112622.iflmknh5qplbfoyu@holly.lan>
+From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
+Message-ID: <8c80495a-440e-05c6-22c8-cf05d4f6b611@ti.com>
+Date:   Tue, 10 Sep 2019 13:38:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="fpolVoprVozDR81Y"
-Content-Disposition: inline
-In-Reply-To: <1567753564-13699-1-git-send-email-shifu0704@thundersoft.com>
-X-Cookie: Be careful!  UGLY strikes 9 out of 10!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190910112622.iflmknh5qplbfoyu@holly.lan>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---fpolVoprVozDR81Y
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 10/09/2019 13:26, Daniel Thompson wrote:
+>
+>>   endmenu
+>> diff --git a/drivers/video/backlight/Makefile b/drivers/video/backlight/Makefile
+>> index 63c507c07437..2a67642966a5 100644
+>> --- a/drivers/video/backlight/Makefile
+>> +++ b/drivers/video/backlight/Makefile
+>> @@ -57,3 +57,4 @@ obj-$(CONFIG_BACKLIGHT_TPS65217)	+= tps65217_bl.o
+>>   obj-$(CONFIG_BACKLIGHT_WM831X)		+= wm831x_bl.o
+>>   obj-$(CONFIG_BACKLIGHT_ARCXCNN) 	+= arcxcnn_bl.o
+>>   obj-$(CONFIG_BACKLIGHT_RAVE_SP)		+= rave-sp-backlight.o
+>> +obj-$(CONFIG_BACKLIGHT_LED)		+= led_bl.o
+>> diff --git a/drivers/video/backlight/led_bl.c b/drivers/video/backlight/led_bl.c
+>> new file mode 100644
+>> index 000000000000..a72456e11fb9
+>> --- /dev/null
+>> +++ b/drivers/video/backlight/led_bl.c
+>> @@ -0,0 +1,264 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (C) 2015-2019 Texas Instruments Incorporated -  http://www.ti.com/
+>> + * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
+>> + *
+>> + * Based on pwm_bl.c
+>> + */
+>> +
+>> +#include <linux/backlight.h>
+>> +#include <linux/gpio/consumer.h>
+> Maybe this is a nitpick but it is one I have now raised three times and
+> I don't recall any response, what symbols from this header are used in
+> this file?
+>
+> AFAICT everything defined in this header includes the string "gpio" and
+> that string doesn't appear anywhere in the file (except this line).
+>
+>
+>> +#include <linux/leds.h>
+>> +#include <linux/module.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/slab.h>
+> Come to think of it, are you sure you need this include? devm_kzalloc()
+> doesn't comes from this file.
+>
+>
+>> +#define BKL_FULL_BRIGHTNESS 255
+> This is unused. Please remove.
+>
+>
+> Other than that, looks good!
 
-On Fri, Sep 06, 2019 at 03:06:03PM +0800, shifu0704@thundersoft.com wrote:
+Thanks for the quick review. I forgot to cleanup the headers. I'll fix 
+that now
 
-> + - ti,left-slot:   - Sets TDM RX left time slots.
-> + - ti,right-slot:  - Sets TDM RX right time slots.
+JJ
 
-This looks like it's duplicating things that are normally done
-with the set_tdm_slot() callback.  Otherwise the binding looks
-good.
-
---fpolVoprVozDR81Y
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl13ixAACgkQJNaLcl1U
-h9Bzigf/QbdVHbADoNlxGIhXNjlodxB2+bXhJ+BOngKzGbZFOfmv6pyKAz/RWIps
-hlFrlJ1zF0V9g3qkuoiapWwq+jMZBnLVEXmMn7Y0oLXeck5AaWyv0PI178l6Qu8h
-Pd37fRgJme/Ks6Fz9uH0xDaTl+93bSV9fR2nioiLi9C9GsU6fBE+YTEizQuPL1Lc
-MEHUL3KlTh8qaMNpiqowHRNoy9VwzwkYF7mdmYe3XOKimJOb7l4VNb1mhPhBxoUI
-b6hmfiS5lIb0d894W/u30vabn52L263Chhtnp3yKvUe+cE0PacHCoEdjrH9P6dr3
-yBjOWhfmWmIxQQ2RsWveZ//xCi5vgg==
-=Tj+k
------END PGP SIGNATURE-----
-
---fpolVoprVozDR81Y--
+>
+>
+> Daniel.
