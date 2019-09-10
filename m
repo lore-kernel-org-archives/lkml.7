@@ -2,112 +2,101 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5C3C49ED6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD00DC49ED6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 201EB208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:55:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2DC0208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:56:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b3q/Lpqg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392675AbfIJMzX (ORCPT
+        id S2392843AbfIJM4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 08:55:23 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49918 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730525AbfIJMzX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 08:55:23 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D2174B8EF;
-        Tue, 10 Sep 2019 12:55:20 +0000 (UTC)
-Date:   Tue, 10 Sep 2019 14:55:14 +0200
-From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     hannes@cmpxchg.org, clm@fb.com, dennisz@fb.com, newella@fb.com,
-        lizefan@huawei.com, axboe@kernel.dk, josef@toxicpanda.com,
-        Josef Bacik <jbacik@fb.com>, kernel-team@fb.com,
-        Rik van Riel <riel@surriel.com>, cgroups@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Valente <paolo.valente@linaro.org>
-Subject: Re: [PATCH 08/10] blkcg: implement blk-iocost
-Message-ID: <20190910125513.GA6399@blackbody.suse.cz>
-References: <20190828220600.2527417-1-tj@kernel.org>
- <20190828220600.2527417-9-tj@kernel.org>
+        Tue, 10 Sep 2019 08:56:43 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44368 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731546AbfIJM4m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 08:56:42 -0400
+Received: by mail-lj1-f194.google.com with SMTP id u14so16290601ljj.11;
+        Tue, 10 Sep 2019 05:56:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ThZUjst48nBsQQrwmyp4kkeqgEJqPKlkWHGIw30bhN4=;
+        b=b3q/Lpqg9Sp34lOtUgzjULZ9aV3rmUKNkbT0CrVcbQzJ9ET1bQxl9z9U9BxJs7qMny
+         n94QaUzz81Lo0A4ZGMfzKns8Agjx4Bf2PoMlceqJGMeNwuOD6bdZLREa7H/LenwpuCo+
+         Y+oIzhIA9H8HYwHjTTtV9f4IG3o5KfXSnGFFr7IkSzv9m2X9+F5+M82mQ5Go8kzhU+tg
+         qekG0xSEC51m0qJTX5VfXsIxSYWuJojb6yItYiPBCiqbui+363+EO94btvTPeNABHwV3
+         CZ2ul6a0X5Gv20H/I114/+V5GgEUBeNlseTDrMc2me8SZZpFZtQZwa83USnlRJ0cxUw/
+         /Abg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ThZUjst48nBsQQrwmyp4kkeqgEJqPKlkWHGIw30bhN4=;
+        b=n/W/Zt4keH38rCiYZfq6rrCiXYFnopXtNSqKXaJ6Vo30v8y61MxlIzkMvqOEMTpIDP
+         nnHcX3PQUd11h07VNQAhwrJ3FrxzPiyMipI5+E9+w4AYrPrAe+Y6uQ1BbOH5dnssi9hN
+         NWZliF1Def5CrxXOvA9kKeEKokFiftXU3wUqnEt+jT2JRm++wEB53OOuUGUYM1ncKIkt
+         yFq7JVcjeNytoByuMuuj4qpLddk0c3vfVg9FFtRVpa7BxyGLwiZz02ylgUO5P9CVqZek
+         hGrbc8CSBMVLcNn3ACrINDCOrDsE+6D5Q+FzRt2yKl0e2vOl4owTIeze2/T/lFK8eo2x
+         +Ztw==
+X-Gm-Message-State: APjAAAV5NsTSC2y3tTakPMuEv8WET+ZZwxYnvZz4M9NYDy0jRlUTLIh/
+        OuEVdG3EINQgwxTX8eYJk51xxk8cf81Aj5lvbjw=
+X-Google-Smtp-Source: APXvYqxq4KmKDj3pDHYdpmtLYyyUHmVZr8CQS2gK4J2CDzE4ivbWi++aFawMEADWVn/+QqgnnwuW1PQNzQrcK1Tku6s=
+X-Received: by 2002:a2e:83d6:: with SMTP id s22mr19759114ljh.104.1568120200429;
+ Tue, 10 Sep 2019 05:56:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="1yeeQ81UyVL57Vl7"
-Content-Disposition: inline
-In-Reply-To: <20190828220600.2527417-9-tj@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1567889743.git.jrdr.linux@gmail.com> <20190909154253.q55olcm4cqwh7izd@box>
+In-Reply-To: <20190909154253.q55olcm4cqwh7izd@box>
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+Date:   Tue, 10 Sep 2019 18:26:28 +0530
+Message-ID: <CAFqt6zZNHGdgaiiRvz-1AFe5g1652oyZpNQidK1V0B6weQHz0w@mail.gmail.com>
+Subject: Re: [PATCH 0/3] Remove __online_page_set_limits()
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org, Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>, sstabellini@kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, david@redhat.com,
+        osalvador@suse.com, Michal Hocko <mhocko@suse.com>,
+        pasha.tatashin@soleen.com, Dan Williams <dan.j.williams@intel.com>,
+        richard.weiyang@gmail.com, Qian Cai <cai@lca.pw>,
+        linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Linux-MM <linux-mm@kvack.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Sep 9, 2019 at 9:12 PM Kirill A. Shutemov <kirill@shutemov.name> wrote:
+>
+> On Sun, Sep 08, 2019 at 03:17:01AM +0530, Souptick Joarder wrote:
+> > __online_page_set_limits() is a dummy function and an extra call
+> > to this can be avoided.
+> >
+> > As both of the callers are now removed, __online_page_set_limits()
+> > can be removed permanently.
+> >
+> > Souptick Joarder (3):
+> >   hv_ballon: Avoid calling dummy function __online_page_set_limits()
+> >   xen/ballon: Avoid calling dummy function __online_page_set_limits()
+> >   mm/memory_hotplug.c: Remove __online_page_set_limits()
+> >
+> >  drivers/hv/hv_balloon.c        | 1 -
+> >  drivers/xen/balloon.c          | 1 -
+> >  include/linux/memory_hotplug.h | 1 -
+> >  mm/memory_hotplug.c            | 5 -----
+> >  4 files changed, 8 deletions(-)
+>
+> Do we really need 3 separate patches to remove 8 lines of code?
 
---1yeeQ81UyVL57Vl7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hello.
-
-On Wed, Aug 28, 2019 at 03:05:58PM -0700, Tejun Heo <tj@kernel.org> wrote:
-> diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-> [...]
-> +static struct cftype ioc_files[] = {
-> +		.name = "weight",
-> [...]
-This adds the generic io.weight attribute. How will this compose with
-the weight from IO schedulers? (AFAIK, only BFQ allows proportional
-control as of now. +CC Paolo.)
-
-I see this attributes are effectively per-cgroup per-device. Apparently,
-one device should have only one weight across hierarchy. Would it make
-sense to have io.bfq.weight and io.cost.weight with disjunctive devices?
-
-(Alas, I have no idea how to make the users of io.weight happy, when
-proportionality control mechanism seems orthogonal to the weight.
-(Vector weights?))
-
-
-> +		.name = "cost.qos",
-> +		.flags = CFTYPE_ONLY_ON_ROOT,
-> [...]
-> +		.name = "cost.model",
-> +		.flags = CFTYPE_ONLY_ON_ROOT,
-I'm concerned that these aren't true cgroup attributes. The root cgroup
-would act as container for global configuration options. Wouldn't these
-values better fit as (configurable) attributes of the respective
-devices?
-
-Secondly, how is CFTYPE_ONLY_ON_ROOT supposed to be presented in cgroup
-namespaces?
-
-Thanks,
-Michal
-
---1yeeQ81UyVL57Vl7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl13nSUACgkQia1+riC5
-qShK8w//Q7gh2wjcYmn/uuKlxF40/MhRa8LwT9aDjZp3gEiRmMQbHUHpx3Td5aAl
-nPOQEp/W2sucYziohHPIokkeXIx+RwJliOEYfOCP+47ZOtWpeBXe6bTfmeRe87Ak
-xSZ6M3ibr2Y4mNLdcvjSzSeh1T0qAha9B5DBEuK7C4xqK45DKSekLjVmd9jd71cE
-CoYm56fVYZpDcYAHdTW7kjMie85QTLbiEY0WsuC563fxAoHDBZCDReIEtuAeMMog
-lgOgBquPb6OCObzkE9CYMSroWMCRPkq2F9BTnk85fnpXkeQeE1cP8FbFt8CXGSh2
-wsaz3dP8z7TAkUHRGySQiqaxsWDKRh/6KBk8Lv/wxffF3nSGLXuHC8tKcQIWHP45
-y+e6utaK47XA7JDZcXObloE200Vpko5MhYM6vKsUYNDQ8BQjew/+xs5aYdU7yO/z
-RtstUYBwgH6WWufm7D4yezdWGaJCZCuqtd46hy9vz8sJpm7iuJFbQdIQRD9z4kSf
-NieSVJLSO3p6QJVYOdbtN1xzEEz1Qm8UJaHcgyjaUckKVjnkB7UWe/U5wj7D+b5R
-sI0i0ACF6fdMsM0UnVArg4usmuFcwhO7NkngLrY85c6UTP75At+FhmTRJA3ZaIXI
-l3T8OtIYNXt3+PBYIGwcPHLDa+HbPOToKpeP6ePE1r9ZzSV8bzI=
-=VCDP
------END PGP SIGNATURE-----
-
---1yeeQ81UyVL57Vl7--
+I prefer to split into series of 3 which looks more clean. But I am ok
+with other option.
+Would you like to merge into single one ?
