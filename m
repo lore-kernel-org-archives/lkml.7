@@ -2,148 +2,119 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F12CC49ED6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 07:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B62C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 07:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C7A021928
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 07:27:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Q5pfHFxD"
+	by mail.kernel.org (Postfix) with ESMTP id 114D720872
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 07:28:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728058AbfIJH1b (ORCPT
+        id S1728312AbfIJH2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 03:27:31 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:34360 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726008AbfIJH1b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 03:27:31 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8A7RMsQ110822;
-        Tue, 10 Sep 2019 02:27:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568100442;
-        bh=2FCd0oZbRrdPCe62KstnW9at/OLpq3YSA6a8smnF4tk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Q5pfHFxDCfgC6N02F5/G2haKPQ50rdZTL5YUbgXbo7+W399JruszDiz+L8SKbx8YE
-         +dgQTtIpRXpjpvSkISqBImURt1DxtqbU+TiTFyyLVeL4c83VE4F2/fjXp6IEfbYhdp
-         KZWUYDJYaxIhbw8O/4oQM5Yu8viW1Cw7ZK6y3bS4=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8A7RMXw082532
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 10 Sep 2019 02:27:22 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 10
- Sep 2019 02:27:21 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 10 Sep 2019 02:27:21 -0500
-Received: from [10.250.98.116] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8A7RH75031075;
-        Tue, 10 Sep 2019 02:27:18 -0500
-Subject: Re: [PATCH v2 08/14] dmaengine: ti: New driver for K3 UDMA - split#1:
- defines, structs, io func
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, <vkoul@kernel.org>,
-        <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>
-CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <lokeshvutla@ti.com>, <t-kristo@ti.com>, <tony@atomide.com>,
-        <j-keerthy@ti.com>
-References: <20190730093450.12664-1-peter.ujfalusi@ti.com>
- <20190730093450.12664-9-peter.ujfalusi@ti.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <2081d1fb-dfa5-d7ca-2dd3-bdf42b60e51c@ti.com>
-Date:   Tue, 10 Sep 2019 10:27:16 +0300
+        Tue, 10 Sep 2019 03:28:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42188 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726008AbfIJH2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 03:28:33 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A41AF81F2F;
+        Tue, 10 Sep 2019 07:28:33 +0000 (UTC)
+Received: from [10.72.12.188] (ovpn-12-188.pek2.redhat.com [10.72.12.188])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 23B5660BF3;
+        Tue, 10 Sep 2019 07:28:28 +0000 (UTC)
+Subject: Re: [RFC PATCH untested] vhost: block speculation of translated
+ descriptors
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+References: <20190908110521.4031-1-mst@redhat.com>
+ <db4d77d7-c467-935d-b4ae-1da7635e9b6b@redhat.com>
+ <20190909104355-mutt-send-email-mst@kernel.org>
+ <9ab48e0f-50a9-bed4-1801-73c37a7da27c@redhat.com>
+ <20190910024814-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <bb71974e-a8b3-4cc4-f3e1-e48118469b78@redhat.com>
+Date:   Tue, 10 Sep 2019 15:28:27 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190730093450.12664-9-peter.ujfalusi@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+In-Reply-To: <20190910024814-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 10 Sep 2019 07:28:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+On 2019/9/10 下午2:48, Michael S. Tsirkin wrote:
+> On Tue, Sep 10, 2019 at 09:52:10AM +0800, Jason Wang wrote:
+>> On 2019/9/9 下午10:45, Michael S. Tsirkin wrote:
+>>> On Mon, Sep 09, 2019 at 03:19:55PM +0800, Jason Wang wrote:
+>>>> On 2019/9/8 下午7:05, Michael S. Tsirkin wrote:
+>>>>> iovec addresses coming from vhost are assumed to be
+>>>>> pre-validated, but in fact can be speculated to a value
+>>>>> out of range.
+>>>>>
+>>>>> Userspace address are later validated with array_index_nospec so we can
+>>>>> be sure kernel info does not leak through these addresses, but vhost
+>>>>> must also not leak userspace info outside the allowed memory table to
+>>>>> guests.
+>>>>>
+>>>>> Following the defence in depth principle, make sure
+>>>>> the address is not validated out of node range.
+>>>>>
+>>>>> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+>>>>> ---
+>>>>>     drivers/vhost/vhost.c | 4 +++-
+>>>>>     1 file changed, 3 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+>>>>> index 5dc174ac8cac..0ee375fb7145 100644
+>>>>> --- a/drivers/vhost/vhost.c
+>>>>> +++ b/drivers/vhost/vhost.c
+>>>>> @@ -2072,7 +2072,9 @@ static int translate_desc(struct vhost_virtqueue *vq, u64 addr, u32 len,
+>>>>>     		size = node->size - addr + node->start;
+>>>>>     		_iov->iov_len = min((u64)len - s, size);
+>>>>>     		_iov->iov_base = (void __user *)(unsigned long)
+>>>>> -			(node->userspace_addr + addr - node->start);
+>>>>> +			(node->userspace_addr +
+>>>>> +			 array_index_nospec(addr - node->start,
+>>>>> +					    node->size));
+>>>>>     		s += size;
+>>>>>     		addr += size;
+>>>>>     		++ret;
+>>>> I've tried this on Kaby Lake smap off metadata acceleration off using
+>>>> testpmd (virtio-user) + vhost_net. I don't see obvious performance
+>>>> difference with TX PPS.
+>>>>
+>>>> Thanks
+>>> Should I push this to Linus right now then? It's a security thing so
+>>> maybe we better do it ASAP ... what's your opinion?
+>>
+>> Yes, you can.
+>>
+>> Acked-by: Jason Wang <jasowang@redhat.com>
+>
+> And should I include
+>
+> Tested-by: Jason Wang <jasowang@redhat.com>
+>
+> ?
 
-On 30/07/2019 12:34, Peter Ujfalusi wrote:
-> Split patch for review containing: defines, structs, io and low level
-> functions and interrupt callbacks.
-> 
-> DMA driver for
-> Texas Instruments K3 NAVSS Unified DMA – Peripheral Root Complex (UDMA-P)
-> 
-> The UDMA-P is intended to perform similar (but significantly upgraded) functions
-> as the packet-oriented DMA used on previous SoC devices. The UDMA-P module
-> supports the transmission and reception of various packet types. The UDMA-P is
-> architected to facilitate the segmentation and reassembly of SoC DMA data
-> structure compliant packets to/from smaller data blocks that are natively
-> compatible with the specific requirements of each connected peripheral. Multiple
-> Tx and Rx channels are provided within the DMA which allow multiple segmentation
-> or reassembly operations to be ongoing. The DMA controller maintains state
-> information for each of the channels which allows packet segmentation and
-> reassembly operations to be time division multiplexed between channels in order
-> to share the underlying DMA hardware. An external DMA scheduler is used to
-> control the ordering and rate at which this multiplexing occurs for Transmit
-> operations. The ordering and rate of Receive operations is indirectly controlled
-> by the order in which blocks are pushed into the DMA on the Rx PSI-L interface.
-> 
-> The UDMA-P also supports acting as both a UTC and UDMA-C for its internal
-> channels. Channels in the UDMA-P can be configured to be either Packet-Based or
-> Third-Party channels on a channel by channel basis.
-> 
-> The initial driver supports:
-> - MEM_TO_MEM (TR mode)
-> - DEV_TO_MEM (Packet / TR mode)
-> - MEM_TO_DEV (Packet / TR mode)
-> - Cyclic (Packet / TR mode)
-> - Metadata for descriptors
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
 
-[...]
+Yes.
 
-> +
-> +/* Generic register access functions */
-> +static inline u32 udma_read(void __iomem *base, int reg)
-> +{
-> +	return __raw_readl(base + reg);
-> +}
-> +
-> +static inline void udma_write(void __iomem *base, int reg, u32 val)
-> +{
-> +	__raw_writel(val, base + reg);
-> +}
-> +
-> +static inline void udma_update_bits(void __iomem *base, int reg,
-> +				    u32 mask, u32 val)
-> +{
-> +	u32 tmp, orig;
-> +
-> +	orig = __raw_readl(base + reg);
-> +	tmp = orig & ~mask;
-> +	tmp |= (val & mask);
-> +
-> +	if (tmp != orig)
-> +		__raw_writel(tmp, base + reg);
-> +}
+Thanks
 
-Pls, do not use  _raw APIs in drivers.
 
-[...]
-
--- 
-Best regards,
-grygorii
+>
+>>
