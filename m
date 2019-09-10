@@ -2,127 +2,194 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57618C4740A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 00:24:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E988C4740A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 00:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D84521670
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 00:24:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D81F620872
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 00:33:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JalEDdTD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390567AbfIJAYv (ORCPT
+        id S2390655AbfIJAdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 20:24:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38484 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729118AbfIJAYv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 20:24:51 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 326AF10576D5;
-        Tue, 10 Sep 2019 00:24:50 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-16.pek2.redhat.com [10.72.8.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8FDDE5C21F;
-        Tue, 10 Sep 2019 00:24:39 +0000 (UTC)
-Date:   Tue, 10 Sep 2019 08:24:34 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Long Li <longli@microsoft.com>
-Cc:     Keith Busch <kbusch@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Keith Busch <keith.busch@intel.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        John Garry <john.garry@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        Jens Axboe <axboe@fb.com>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>
-Subject: Re: [PATCH 1/4] softirq: implement IRQ flood detection mechanism
-Message-ID: <20190910002433.GA20557@ming.t460p>
-References: <20190903072848.GA22170@ming.t460p>
- <dd96def4-1121-afbe-2431-9e516a06850c@linaro.org>
- <6f3b6557-1767-8c80-f786-1ea667179b39@acm.org>
- <2a8bd278-5384-d82f-c09b-4fce236d2d95@linaro.org>
- <20190905090617.GB4432@ming.t460p>
- <6a36ccc7-24cd-1d92-fef1-2c5e0f798c36@linaro.org>
- <20190906014819.GB27116@ming.t460p>
- <20190906141858.GA3953@localhost.localdomain>
- <CY4PR21MB0741091795CEE3D4624977CFCEBA0@CY4PR21MB0741.namprd21.prod.outlook.com>
- <20190906221920.GA12290@ming.t460p>
+        Mon, 9 Sep 2019 20:33:32 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33145 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727115AbfIJAdc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 20:33:32 -0400
+Received: by mail-pl1-f195.google.com with SMTP id t11so7577302plo.0
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 17:33:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LdMkj9ydUpeGQz38kxhXmRjgb45ZaaFVzNT7mjTRqas=;
+        b=JalEDdTDZRzhywQC2f0WOr6aN0yHO+NIVCzPWd16sAX9Xx3743FU/DqlqeKPO9oUQn
+         LhQI+rSmR8nNHmr5Pcp1sjdPOdxOvGS8gejJJpcQnW7t2WPwhTvYzlgQ8h/wzX77pq/p
+         A3Val6pjIKL5+cCKFWKWaKZgaw0w0kc7IIphk2/oQk2EwJTZx95hS4eOc3dAKY4QjXiK
+         3tbt+oxYVCq1jFI5+juIJ5NuBIbhm4W8EswtebjLBCnbDYXKTWX4Q6XhzAfL3Egbx+VV
+         99XpHqUz2Lg7xcM2xozNeHbXUFLAJ1GLUMqYvOQetxMGngcHcj92EmtBN7LMH4/WrRTk
+         g5tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LdMkj9ydUpeGQz38kxhXmRjgb45ZaaFVzNT7mjTRqas=;
+        b=PEJcyfyBuhsFO3UyBaSGBaXlzbyLT1C6x/M6USS/IdoGz7UJ7+eF1iUsW3nON5HPJB
+         beG3OsFK7elj1WKpqtPhclmRNXjKiNBHyS0GEyVYRnOQcotstmJkHh+2jHOVrsrXqsxO
+         kquQwPTqICi0l8NQ6gOwlR1WqASXLzdYzUYHgEv+bZcii+9qVbrRRuMBQze1zDeCzaL9
+         GLRBmMYq+ywYqtoqKjmiFunQPOptNW+mrz/eCmzTKH1umdqTsR0xTpsFSnGMWQaS6mC/
+         mm3eXsRmn7p2TiSYPZ8rrVkkL+4DjhKmDvUOR+blDoOfu6Kqxx6QUiam2HgowetE9Cn8
+         LvFQ==
+X-Gm-Message-State: APjAAAX8F7urOSEdeN4CYLbOlyC7kItOPP1nmvBEw9yNpHegl4Vx8ZEh
+        URGmFNL/K//TWYPh4ifk8N0=
+X-Google-Smtp-Source: APXvYqxoz8p0CnnYz2lpULO/pJTvkWfE44ItpK9zgm5aMH1SkPlm6sGG3GHzCb/wBoeqpUBjRgxvyQ==
+X-Received: by 2002:a17:902:b110:: with SMTP id q16mr26545337plr.50.1568075611247;
+        Mon, 09 Sep 2019 17:33:31 -0700 (PDT)
+Received: from mail.google.com ([149.28.153.17])
+        by smtp.gmail.com with ESMTPSA id b19sm16515847pgs.10.2019.09.09.17.33.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Sep 2019 17:33:30 -0700 (PDT)
+Date:   Tue, 10 Sep 2019 08:33:23 +0800
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] ftrace: simplify ftrace hash lookup code
+Message-ID: <20190910003321.d3q65j756z3vzhiw@mail.google.com>
+References: <20190909003159.10574-1-changbin.du@gmail.com>
+ <20190909105424.6769b552@oasis.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190906221920.GA12290@ming.t460p>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Tue, 10 Sep 2019 00:24:50 +0000 (UTC)
+In-Reply-To: <20190909105424.6769b552@oasis.local.home>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 07, 2019 at 06:19:20AM +0800, Ming Lei wrote:
-> On Fri, Sep 06, 2019 at 05:50:49PM +0000, Long Li wrote:
-> > >Subject: Re: [PATCH 1/4] softirq: implement IRQ flood detection mechanism
-> > >
-> > >On Fri, Sep 06, 2019 at 09:48:21AM +0800, Ming Lei wrote:
-> > >> When one IRQ flood happens on one CPU:
-> > >>
-> > >> 1) softirq handling on this CPU can't make progress
-> > >>
-> > >> 2) kernel thread bound to this CPU can't make progress
-> > >>
-> > >> For example, network may require softirq to xmit packets, or another
-> > >> irq thread for handling keyboards/mice or whatever, or rcu_sched may
-> > >> depend on that CPU for making progress, then the irq flood stalls the
-> > >> whole system.
-> > >>
-> > >> >
-> > >> > AFAIU, there are fast medium where the responses to requests are
-> > >> > faster than the time to process them, right?
-> > >>
-> > >> Usually medium may not be faster than CPU, now we are talking about
-> > >> interrupts, which can be originated from lots of devices concurrently,
-> > >> for example, in Long Li'test, there are 8 NVMe drives involved.
-> > >
-> > >Why are all 8 nvmes sharing the same CPU for interrupt handling?
-> > >Shouldn't matrix_find_best_cpu_managed() handle selecting the least used
-> > >CPU from the cpumask for the effective interrupt handling?
+On Mon, Sep 09, 2019 at 10:54:24AM -0400, Steven Rostedt wrote:
+> On Mon,  9 Sep 2019 08:31:59 +0800
+> Changbin Du <changbin.du@gmail.com> wrote:
+> 
+> > Function ftrace_lookup_ip() will check empty hash table. So we don't
+> > need extra check outside.
 > > 
-> > The tests run on 10 NVMe disks on a system of 80 CPUs. Each NVMe disk has 32 hardware queues.
+> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> > 
+> > ---
+> > v2: fix incorrect code remove.
+> > ---
+> >  kernel/trace/ftrace.c | 9 ++-------
+> >  1 file changed, 2 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> > index f9821a3374e9..92aab854d3b1 100644
+> > --- a/kernel/trace/ftrace.c
+> > +++ b/kernel/trace/ftrace.c
+> > @@ -1463,8 +1463,7 @@ static bool hash_contains_ip(unsigned long ip,
+> >  	 */
+> >  	return (ftrace_hash_empty(hash->filter_hash) ||
+> >  		__ftrace_lookup_ip(hash->filter_hash, ip)) &&
+> > -		(ftrace_hash_empty(hash->notrace_hash) ||
+> > -		 !__ftrace_lookup_ip(hash->notrace_hash, ip));
+> > +	       !ftrace_lookup_ip(hash->notrace_hash, ip);
 > 
-> Then there are total 320 NVMe MSI/X vectors, and 80 CPUs, so irq matrix
-> can't avoid effective CPUs overlapping at all.
+> I don't care for this part. I've nacked this change in the past. Why?
+> let's compare the changes:
 > 
-> > It seems matrix_find_best_cpu_managed() has done its job, but we may still have CPUs that service several hardware queues mapped from other issuing CPUs.
-> > Another thing to consider is that there may be other managed interrupts on the system, so NVMe interrupts may not end up evenly distributed on such a system.
+> 	return (ftrace_hash_empty(hash->filter_hash) ||
+> 		__ftrace_lookup_ip(hash->filter_hash, ip)) &&
+> 		(ftrace_hash_empty(hash->notrace_hash) ||
+> 		 !__ftrace_lookup_ip(hash->notrace_hash, ip));
 > 
-> Another improvement could be to try to not overlap effective CPUs among
-> vectors of fast device first, meantime allow the overlap between slow
-> vectors and fast vectors.
+>  vs:
 > 
-> This way could improve in case that total fast vectors are <= nr_cpu_cores.
+> 	return (ftrace_hash_empty(hash->filter_hash) ||
+> 		__ftrace_lookup_ip(hash->filter_hash, ip)) &&
+> 		!ftrace_lookup_ip(hash->notrace_hash, ip);
+> 
+> The issue I have with this is that it abstracts out the difference
+> between the filter_hash and the notrace_hash. Sometimes open coded
+> works better if it is compared to something that is similar.
+> 
+> The current code I see:
+> 
+> 	Return true if (filter_hash is empty or ip exists in filter_hash
+> 		 and notrace_hash is empty or it does not exist in notrace_hash
+> 
+> With your update I see:
+> 
+> 	Return true if filter_hash is empty or ip exists in filter_hash
+>                 and ip does not exist in notrace_hash
+> 
+> It makes it not easy to see if what happens if notrace_hash is empty
+> 
+> Hmm, come to think of it, perhaps we should change ftrace_lookup_ip()
+> to include what to do on empty.
+> 
+> Maybe:
+> 
+> bool ftrace_lookup_ip(struct ftrace_hash *hash, unsigned long ip, bool empty_result)
+> {
+> 	if (ftrace_hash_empty(hash))
+> 		return empty_result;
+> 
+> 	return __ftrace_lookup_ip(hash, ip);
+> }
+>
+We must add another similar function since ftrace_lookup_ip() returns a pointer.
 
-For this particular case, it can't be done, because:
+bool ftrace_contains_ip(struct ftrace_hash *hash, unsigned long ip,
+			bool empty_result)
+{
+	if (ftrace_hash_empty(hash))
+		return empty_result;
 
-1) this machine has 10 NUMA nodes, and each NVMe has 8 hw queues, so too
-many CPUs are assigned to the 1st two hw queues, see the code branch of
-'if (numvecs <= nodes)' in __irq_build_affinity_masks().
+	return !!__ftrace_lookup_ip(hash, ip);
+}
 
-2) then less CPUs are assigned to the other 6 hw queues
+But after this, it's a little overkill I think. It is not much simpler than before.
+Do you still want this then?
 
-3) finally same effective CPU is shared by two IRQ vector.
+> Then we can change the above to:
+> 
+> 	return ftrace_lookup_ip(hash->filter_hash, ip, true) &&
+> 	       !ftrace_lookup_ip(hash->notrace_hash, ip, false);
+> 
+> That would probably work better.
+> 
+> Want to send that update?
+> 
+> -- Steve
+> 
+> 
+> >  }
+> >  
+> >  /*
+> > @@ -6036,11 +6035,7 @@ clear_func_from_hash(struct ftrace_init_func
+> > *func, struct ftrace_hash *hash) {
+> >  	struct ftrace_func_entry *entry;
+> >  
+> > -	if (ftrace_hash_empty(hash))
+> > -		return;
+> > -
+> > -	entry = __ftrace_lookup_ip(hash, func->ip);
+> > -
+> > +	entry = ftrace_lookup_ip(hash, func->ip);
+> >  	/*
+> >  	 * Do not allow this rec to match again.
+> >  	 * Yeah, it may waste some memory, but will be removed
+> 
 
-Also looks matrix_find_best_cpu_managed() has been doing well enough for
-choosing best effective CPU.
-
-
-Thanks,
-Ming
+-- 
+Cheers,
+Changbin Du
