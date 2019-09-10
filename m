@@ -2,59 +2,86 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24808C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF23C49ED6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:33:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02A5820872
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF04921479
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:33:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568111587;
+	bh=LJtBmi1tzU6euOWenIIUw2u/xvJ895RqpElZGcqoEFA=;
+	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
+	b=BBG7vD3Lad62rPQU/YorJyKTXcWtyo12+6bNlw9Elj6n1W53CPkFB2iEet6eYHXQE
+	 9mHPMOhG73I4661SlRKsSiU0ynAIeZ3EXn6je/ynBlF0y66b/oABxx5hWwWB/IBeoS
+	 k+EJnSFBJQdUuGyRQLBU2gzbtqPWG08c8RXyqhkw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393813AbfIJKcl (ORCPT
+        id S2393835AbfIJKdH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 06:32:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33772 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726869AbfIJKck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 06:32:40 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D1B74ABED;
-        Tue, 10 Sep 2019 10:32:39 +0000 (UTC)
-Date:   Tue, 10 Sep 2019 12:32:37 +0200
-From:   Oscar Salvador <osalvador@suse.de>
-To:     n-horiguchi@ah.jp.nec.com
-Cc:     mhocko@kernel.org, mike.kravetz@oracle.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/10] Hwpoison soft-offline rework
-Message-ID: <20190910103233.GA14370@linux>
-References: <20190910103016.14290-1-osalvador@suse.de>
+        Tue, 10 Sep 2019 06:33:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55350 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726869AbfIJKdG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 06:33:06 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4E1B20872;
+        Tue, 10 Sep 2019 10:33:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568111585;
+        bh=LJtBmi1tzU6euOWenIIUw2u/xvJ895RqpElZGcqoEFA=;
+        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
+        b=OAZJ7pZnOmv9TWBnrIlLZYkgxdz9nE3yZkkswcGMUvEz1dDtQQtUpjisOcxQVWi8m
+         pSr+mBZWVY9wjfPqJncBp2lPnBzesriGkO0xQ7zUSzOnyAUjNCPwVhecpHQPreRFHS
+         JoMAZd14rknZjzD54lrSggDKmIYLet8VngkurqyI=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190910103016.14290-1-osalvador@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190811210043.20122-2-digetx@gmail.com>
+References: <20190811210043.20122-1-digetx@gmail.com> <20190811210043.20122-2-digetx@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Joseph Lo <josephl@nvidia.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v10 01/15] clk: tegra20/30: Add custom EMC clock implementation
+User-Agent: alot/0.8.1
+Date:   Tue, 10 Sep 2019 03:33:04 -0700
+Message-Id: <20190910103305.B4E1B20872@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 12:30:06PM +0200, Oscar Salvador wrote:
-> 
-> This patchset was based on Naoya's hwpoison rework [1], so thanks to him
-> for the initial work.
-> 
-> This patchset aims to fix some issues laying in soft-offline handling,
-> but it also takes the chance and takes some further steps to perform 
-> cleanups and some refactoring as well.
+Quoting Dmitry Osipenko (2019-08-11 14:00:29)
+> A proper External Memory Controller clock rounding and parent selection
+> functionality is required by the EMC drivers, it is not available using
+> the generic clock implementation because only the Memory Controller driver
+> is aware of what clock rates are actually available for a particular
+> device. EMC drivers will have to register a Tegra-specific CLK-API
+> callback which will perform rounding of a requested rate. EMC clock users
+> won't be able to request EMC clock by getting -EPROBE_DEFER until EMC
+> driver is probed and the callback is set up.
+>=20
+> The functionality is somewhat similar to the clk-emc.c which serves
+> Tegra124+ SoCs. The later HW generations support more parent clock sources
+> and the HW configuration / integration with the EMC drivers differs a tad
+> from the older gens, hence it's not really worth to try to squash
+> everything into a single source file.
+>=20
+> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
 
-Of course, this was meant to be a "RFC PATCH" and not a "PATCH", but
-fat-fingers...
+Acked-by: Stephen Boyd <sboyd@kernel.org>
 
-Sorry for the inconvenience.
-
--- 
-Oscar Salvador
-SUSE L3
