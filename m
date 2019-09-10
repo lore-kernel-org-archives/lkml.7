@@ -6,96 +6,92 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA10C49ED9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC8FFC49ED9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD04B20872
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D25120872
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:18:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437105AbfIJRQe (ORCPT
+        id S2437029AbfIJRSn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 13:16:34 -0400
-Received: from sauhun.de ([88.99.104.3]:50016 "EHLO pokefinder.org"
+        Tue, 10 Sep 2019 13:18:43 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45314 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387433AbfIJRQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 13:16:34 -0400
-Received: from localhost (234.77.63.94.rev.vodafone.pt [94.63.77.234])
-        by pokefinder.org (Postfix) with ESMTPSA id 1A4A42C0095;
-        Tue, 10 Sep 2019 19:16:31 +0200 (CEST)
-Date:   Tue, 10 Sep 2019 18:16:30 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     Vladimir Zapolskiy <vz@mleia.com>,
-        jacopo mondi <jacopo@jmondi.org>,
-        Peter Rosin <peda@axentia.se>, linux-media@vger.kernel.org,
-        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>
-Subject: Re: [RFC,v2 2/6] i2c: add I2C Address Translator (ATR) support
-Message-ID: <20190910171629.GA5581@kunai>
-References: <20190723203723.11730-1-luca@lucaceresoli.net>
- <20190723203723.11730-3-luca@lucaceresoli.net>
- <20190901143101.humomdehy5ee73sk@vino>
- <aedad45b-16d6-d189-b045-329727440ca5@mleia.com>
- <20190909072232.GA990@kunai>
- <8af9a049-06b9-dbe8-827b-5134d20e9435@mleia.com>
- <152384b8-c0a8-e6fe-9a1f-52caf00533de@lucaceresoli.net>
+        id S2387907AbfIJRSm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 13:18:42 -0400
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 22B95882F2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 17:18:42 +0000 (UTC)
+Received: by mail-wr1-f69.google.com with SMTP id j10so9284816wrb.16
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 10:18:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZuYfhbb8Z3aRapTv3k5IPcJghNBswcS6futL7Li8nHM=;
+        b=MzFU48cKVeHIoPDaEvHxEeo5qirMKsITPG7XHZJTD+AryS6onoAr944mnTSXGtyKaa
+         Kx9o/eH+vReNW/aPZdz5GgHCLMBTZmiiHfM9jaNX818qHMuhJBwkXD72iqJ0OCCW7kp6
+         qawy+6ktCWLMbtyBlfknNT6KW7AJE4vWRMRu/4uW4AoHb3X+DKW/VSmN5zPHMToluQrf
+         4/8aqg/VLvG83Pbs71iOJtvEQd4wYdflLjqrA8aK1jKtZXBDyHfM2bPW9JSD+8ch/1/D
+         lRkv9/63Gp/qkwHmQ372roDYBLo3UXrs5+qFm3rO+BkgYU5abJ6AQ47XuPDXg0tTFgf/
+         YZIw==
+X-Gm-Message-State: APjAAAWM7xaTRwDrLxSjZfLWOdB/rPEkbXPsNLAesFE/uVOj3epwPLFj
+        eSsytTQaPGfVR/QZIgM7HSThUQNr+I+kXpkd3mNMUGF9f1MvxcD9NzrgROuEBl2S7/nVbuWL04L
+        EdOQFIRGxuMz2NrfMDL69p4Vo
+X-Received: by 2002:adf:ebd0:: with SMTP id v16mr19039442wrn.352.1568135920582;
+        Tue, 10 Sep 2019 10:18:40 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzYjKMgs5O889hJHkbRLK9ngJgaS8XcoAuY+Os0MVZLwwO9DHPaW3BKOh6dklif3M9ClGYfhQ==
+X-Received: by 2002:adf:ebd0:: with SMTP id v16mr19039422wrn.352.1568135920337;
+        Tue, 10 Sep 2019 10:18:40 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:1435:25df:c911:3338? ([2001:b07:6468:f312:1435:25df:c911:3338])
+        by smtp.gmail.com with ESMTPSA id l1sm21649073wrb.1.2019.09.10.10.18.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Sep 2019 10:18:39 -0700 (PDT)
+Subject: Re: [PATCH 0/2] KVM: x86: Refactor MSR related helpers
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190905212255.26549-1-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <96c13fa0-2547-99e2-caad-bcf3fb73806a@redhat.com>
+Date:   Tue, 10 Sep 2019 19:18:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="GvXjxJ+pjyke8COw"
-Content-Disposition: inline
-In-Reply-To: <152384b8-c0a8-e6fe-9a1f-52caf00533de@lucaceresoli.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190905212255.26549-1-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 05/09/19 23:22, Sean Christopherson wrote:
+> Refactor x86's MSR accessors to reduce the amount of boilerplate code
+> required to get/set an MSR, and consolidate the RDMSR/WRMSR emulation
+> for VMX and SVM since the code is functionally identical.
+> 
+> Sean Christopherson (2):
+>   KVM: x86: Refactor up kvm_{g,s}et_msr() to simplify callers
+>   KVM: x86: Add kvm_emulate_{rd,wr}msr() to consolidate VXM/SVM code
+> 
+>  arch/x86/include/asm/kvm_host.h |   6 +-
+>  arch/x86/kvm/svm.c              |  34 +-------
+>  arch/x86/kvm/vmx/nested.c       |  22 ++---
+>  arch/x86/kvm/vmx/vmx.c          |  33 +-------
+>  arch/x86/kvm/x86.c              | 138 ++++++++++++++++++++------------
+>  5 files changed, 100 insertions(+), 133 deletions(-)
+> 
 
---GvXjxJ+pjyke8COw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Queued, thanks.
 
-
-> Here i2c-0 is the "local" bus, i2c-4 and i2c-5 are the remote busses on
-> ports 0 and 1. As you can see the eeproms are accessed using a name like
-> "4-0050", meaning physical slave address 0x50 on bus 4. No alias is neede=
-d.
->=20
-> Should you want to know the alias, perhaps for debugging (it's the
-> address you'll see on your logic analyzer), they are shown in the kernel
-> log.
-
-And to add to that: The aliases on i2c-0 will be marked busy and show up
-as used if you run i2cdetect. So, you'd need a force-flag if you'd want
-to access them from userspace.
-
-
---GvXjxJ+pjyke8COw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl132mkACgkQFA3kzBSg
-KbY7KA//dTGgRdQZxIRRuFmdxhZR6aCLbnLiEuCcMagiQ2aa/EP1vhN8qPrUaucL
-Jf+XXPeFbx9q1ycOa/tOuI7CZbK9jXKDfMPQtP/gTx3MuHzv4MlHgTIWpEm8YMfr
-CgblrDzIKZqaeR3PGdu7AD6gSWDorwh/Rq4tt8hxqVi+KMiXgQBjiQFb2F5h2g5z
-nKjONcRnItlAnieSUnnzYzEs5jtLTHfaioMpAyrVXVRBr1uvRsQAxqUvN7bV+ThA
-mwmJfUOCrNf6gk596ug3SrHow7rgZxaNds6kEqiSY7Kib9MEfvkUj8q9yfBz8wCk
-YB052AdefuREt64vShJtmgbSjj+wRvBNkTB+/fdZptFL6CxORGhw+GKgkQnssqyQ
-W0Arjte++VEG3jGMtCx7I4GxDOdp2FqjSnBHDW9u1piPYBZOaxMeknBLhrrxiyfa
-Vrr3ZRgKTdz+70h1lQsQ5udADUxq6DhhGfoouGDlvk1JP6aLMXUr7PSNpjpYpZ0V
-N4qx2eJMRLkYrcNbbyDe+GWwFp3b1j859nk0jmi5M2zDTkqVji11DBkb0p1zrT1j
-7pvW9Us/V2i1jCLBHED2CSSQIaBs8StDnkPFvbeezoCUDxDeBz7ePDXO2asDYu9+
-jWDqFrb/qOTkZZdhvcurGUF3lL1SEgLR6gvWutjx1B5hQTHTE8g=
-=vLj2
------END PGP SIGNATURE-----
-
---GvXjxJ+pjyke8COw--
+Paolo
