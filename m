@@ -2,147 +2,123 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53049C49ED7
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 19:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A57C49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 19:23:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F76821019
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 19:23:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568143390;
-	bh=etYMx4uYkaJNWx+5fCuNlCZa+2SODxGgtDViXli0tOw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=g+8zHpl2PPyIBGHIM9XvjgDdKoIb0B708g3ZUroFJ8lsTAj53LpQspD+dfH/YmTz2
-	 Rac8bQu1s9TBYR9CeRGKzb2lVqIJ8TZsBXHWbVAGKmcZVeWKCv50FKq4qU6bU22OHq
-	 TvS6dF3AGuPrb54T7e968aybggxjsyF8Z4bfmZgQ=
+	by mail.kernel.org (Postfix) with ESMTP id 6920C21019
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 19:23:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="i2Zg7YwK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728689AbfIJTXJ (ORCPT
+        id S1728759AbfIJTXS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 15:23:09 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34912 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727131AbfIJTXI (ORCPT
+        Tue, 10 Sep 2019 15:23:18 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:49178 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727131AbfIJTXS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 15:23:08 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 205so12125554pfw.2
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 12:23:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Fubhhbk8mxGQHPIu8VHPq/5qo3lMlhc0PCcFAaxFEGw=;
-        b=Gt1VGbq3idOl6Pfrz2txkeuG9O1wiAO53ibNvoeLaHaxro0fJ8rXjlbFedy5/YQNUm
-         e4uwdYOTu80BR1VJ1iin45qfQeyExtRvdHZor7SDe6QkMvGtjMDsyfE0yQzFWq84ze5A
-         lVC+orwGCh/1CQe24dWiEiGCOmiU0PqQvW1Cft0nrmvA+DYu+sqzqa3HbuU/6bKLNb5D
-         mZ8Fg/V3uolNAKmOw3lmSoGNNS/JltnhyxPyuxq8m2D0jnK6ljkx7ewMKSE0UuIZDMrj
-         ZORHKfO4D7/PnvRDI1SU0kBdY9gazIsy3pMuV4EvpY80bkGzyrThKyb4AiN5xx8zwarF
-         mW0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Fubhhbk8mxGQHPIu8VHPq/5qo3lMlhc0PCcFAaxFEGw=;
-        b=TR+MYlvkc4nOvKOPaiwaSTHQa91RG/sX5/LPoUpzSzl1n5LcoOOBosCFBCQcL8ba9T
-         1uMBGgmkHpqCJ7dy+syiXmTbxT4UuDQCJi7++xUiVkDkFe7vZlhTo1IfaKyVu29KZt23
-         LfGKCwLH6iUntMRa8wF8Wfbe36fHgL9WHNSoKmTux/JnEIZPRXHpKWW8tTBvALknT9wm
-         uGY0nkhH6/F5SCXghGqzJDrYOrna+CW4rLjGX7en68ji6GtJ8eHsRMzN2C5s80wzGjnu
-         4z5KDH2cHwQUMxf09yWTRW4DxTGUZgeG0IaqQC6WH3QIvfYoeNmz9Mpf2/gSs1WZXhTN
-         lI8A==
-X-Gm-Message-State: APjAAAWxCCuMq1L954SfzB8RqvLHv+ypV/qq5fFVo35Th5uKbU7XQr7B
-        y4Gf8y4RVZhmwm9Weu93nDA2k2J8
-X-Google-Smtp-Source: APXvYqwTr7I/0FMR7eX2wqUS4TniGCurKs704j7dqSnY0tcIsHL6uyUViuXQmxjpXx7GquwkQsyA6g==
-X-Received: by 2002:a17:90a:d0c3:: with SMTP id y3mr1214847pjw.102.1568143387926;
-        Tue, 10 Sep 2019 12:23:07 -0700 (PDT)
-Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id o9sm14597446pgv.19.2019.09.10.12.23.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Sep 2019 12:23:06 -0700 (PDT)
-Date:   Tue, 10 Sep 2019 12:23:04 -0700
-From:   Minchan Kim <minchan@kernel.org>
-To:     sunqiuyang <sunqiuyang@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 1/1] mm/migrate: fix list corruption in migration of
- non-LRU movable pages
-Message-ID: <20190910192304.GA220078@google.com>
-References: <20190903082746.20736-1-sunqiuyang@huawei.com>
+        Tue, 10 Sep 2019 15:23:18 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8AJIZMQ048968;
+        Tue, 10 Sep 2019 19:22:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=tksQD2Rpoes/XpADezB0hnxBUleozwtCafj604Oeb2A=;
+ b=i2Zg7YwKCPWc5PIladBSkin1Ogyg6IVzqSySgL5xkhhEogQ28xOAjXET4JGka2Axh3Cj
+ yug91VriQG4y04rrou4BHZJeT36/JBVNhoP+PSW4v8wbseAOkmVo9H1x+NvX0v7JhN6N
+ NMsFTla22NwVDD9qBj1Q4egeMW9OUhURIVW7yXx8XbRQuFZTlFjNoV78KLH0XJ008Djj
+ qrHlrqq+iN4LKyzqkTgLo75DWRSB1E/W0R+fa0Yh5+YdBpC48o2LL5DBQnO2PuuvA8v5
+ NVEsj/9O/mFLjBeghCcRE428WiadbEua6X5YDL5UFLD4u/UcjKtm+AXji17XFVzKB9aq yg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2uw1jkdkr8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Sep 2019 19:22:21 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8AJIF7X067086;
+        Tue, 10 Sep 2019 19:22:20 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2uwqku4nex-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Sep 2019 19:22:20 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8AJMIRK026489;
+        Tue, 10 Sep 2019 19:22:18 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 10 Sep 2019 12:22:18 -0700
+Date:   Tue, 10 Sep 2019 22:22:08 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Mao Wenan <maowenan@huawei.com>
+Cc:     vyasevich@gmail.com, nhorman@tuxdriver.com,
+        marcelo.leitner@gmail.com, davem@davemloft.net,
+        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH net 1/2] sctp: remove redundant assignment when call
+ sctp_get_port_local
+Message-ID: <20190910192207.GE20699@kadam>
+References: <20190910071343.18808-1-maowenan@huawei.com>
+ <20190910071343.18808-2-maowenan@huawei.com>
+ <20190910185710.GF15977@kadam>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190903082746.20736-1-sunqiuyang@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190910185710.GF15977@kadam>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9376 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1909100181
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9376 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1909100181
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 04:27:46PM +0800, sunqiuyang wrote:
-> From: Qiuyang Sun <sunqiuyang@huawei.com>
+On Tue, Sep 10, 2019 at 09:57:10PM +0300, Dan Carpenter wrote:
+> On Tue, Sep 10, 2019 at 03:13:42PM +0800, Mao Wenan wrote:
+> > There are more parentheses in if clause when call sctp_get_port_local
+> > in sctp_do_bind, and redundant assignment to 'ret'. This patch is to
+> > do cleanup.
+> > 
+> > Signed-off-by: Mao Wenan <maowenan@huawei.com>
+> > ---
+> >  net/sctp/socket.c | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > 
+> > diff --git a/net/sctp/socket.c b/net/sctp/socket.c
+> > index 9d1f83b10c0a..766b68b55ebe 100644
+> > --- a/net/sctp/socket.c
+> > +++ b/net/sctp/socket.c
+> > @@ -399,9 +399,8 @@ static int sctp_do_bind(struct sock *sk, union sctp_addr *addr, int len)
+> >  	 * detection.
+> >  	 */
+> >  	addr->v4.sin_port = htons(snum);
+> > -	if ((ret = sctp_get_port_local(sk, addr))) {
+> > +	if (sctp_get_port_local(sk, addr))
+> >  		return -EADDRINUSE;
 > 
-> Currently, after a page is migrated, it
-> 1) has its PG_isolated flag cleared in move_to_new_page(), and
-> 2) is deleted from its LRU list (cc->migratepages) in unmap_and_move().
-> However, between steps 1) and 2), the page could be isolated by another
-> thread in isolate_movable_page(), and added to another LRU list, leading
-> to list_del corruption later.
+> sctp_get_port_local() returns a long which is either 0,1 or a pointer
+> casted to long.  It's not documented what it means and neither of the
+> callers use the return since commit 62208f12451f ("net: sctp: simplify
+> sctp_get_port").
 
-Once non-LRU page is migrated out successfully, driver should clear
-the movable flag in the page. Look at reset_page in zs_page_migrate.
-So, other thread couldn't isolate the page during the window.
+Actually it was commit 4e54064e0a13 ("sctp: Allow only 1 listening
+socket with SO_REUSEADDR") from 11 years ago.  That patch fixed a bug,
+because before the code assumed that a pointer casted to an int was the
+same as a pointer casted to a long.
 
-If I miss something, let me know it.
-Thanks.
+regards,
+dan carpenter
 
-> 
-> This patch fixes the bug by moving list_del into the critical section
-> protected by lock_page(), so that a page will not be isolated again before
-> it has been deleted from its LRU list.
-> 
-> Signed-off-by: Qiuyang Sun <sunqiuyang@huawei.com>
-> ---
->  mm/migrate.c | 11 +++--------
->  1 file changed, 3 insertions(+), 8 deletions(-)
-> 
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index a42858d..c58a606 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -1124,6 +1124,8 @@ static int __unmap_and_move(struct page *page, struct page *newpage,
->  	/* Drop an anon_vma reference if we took one */
->  	if (anon_vma)
->  		put_anon_vma(anon_vma);
-> +	if (rc != -EAGAIN)
-> +		list_del(&page->lru);
->  	unlock_page(page);
->  out:
->  	/*
-> @@ -1190,6 +1192,7 @@ static ICE_noinline int unmap_and_move(new_page_t get_new_page,
->  			put_new_page(newpage, private);
->  		else
->  			put_page(newpage);
-> +		list_del(&page->lru);
->  		goto out;
->  	}
->  
-> @@ -1200,14 +1203,6 @@ static ICE_noinline int unmap_and_move(new_page_t get_new_page,
->  out:
->  	if (rc != -EAGAIN) {
->  		/*
-> -		 * A page that has been migrated has all references
-> -		 * removed and will be freed. A page that has not been
-> -		 * migrated will have kepts its references and be
-> -		 * restored.
-> -		 */
-> -		list_del(&page->lru);
-> -
-> -		/*
->  		 * Compaction can migrate also non-LRU pages which are
->  		 * not accounted to NR_ISOLATED_*. They can be recognized
->  		 * as __PageMovable
-> -- 
-> 1.8.3.1
-> 
-> 
