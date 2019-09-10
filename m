@@ -2,194 +2,64 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03953C49ED7
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E820C49ED9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAA5D2171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:12:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50C4A206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:12:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393867AbfIJPMR (ORCPT
+        id S2393888AbfIJPMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 11:12:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35692 "EHLO mx1.redhat.com"
+        Tue, 10 Sep 2019 11:12:19 -0400
+Received: from gate.crashing.org ([63.228.1.57]:60999 "EHLO gate.crashing.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393533AbfIJPMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 11:12:16 -0400
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 470FFC056808
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 15:12:15 +0000 (UTC)
-Received: by mail-wr1-f72.google.com with SMTP id v16so9126405wrt.17
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 08:12:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=OAN7nnEOH+Yjifk4c+jX2lC/QmauX+hAkPf3AFHmQks=;
-        b=er6ImRR7kMO55SQ3nYuEj/yltt93xj4gnIKWeZpKnVxfYngIeEo6U1V0zgiK5xQD2o
-         wTD/scM5biP9JSVKXQd0sNDxTBnjomZ+snCIqZZs+xfJmmW/QrzD3/mGGxdxZy19NEuY
-         phWInDEII/HLvAX2ux38ekjA3Dj+FUgxmL2ubFmhdIxqspxlUM1woKabhlQFXeFA05O8
-         OLVNydweYsgkqZNicwjGf5YXp3icMeuyqxd7I47mcj9OsEB0s1MR2D9CflGCEArXm/zq
-         GX9sKkMYYlMbLfjkT0FZwyD4B0uxPuE+cgyhYaSqueJloLVjaFPj2778rVT7WAWFgX2/
-         tR5g==
-X-Gm-Message-State: APjAAAVnF3C5HXpA+yE1h5ItzmTQpCN2hSWsV8cg6FwXK3XcO9Z6v2Eb
-        B3eREUD9nCoW+GCUMltbaO7g9cf2e1bwahcpHknXS7typxyKKf6el3Y9gZortuaChZGEI0AVS6a
-        DjaJi6Cy3AA6vo8Y4OURh0OUq
-X-Received: by 2002:adf:9050:: with SMTP id h74mr26234795wrh.191.1568128333801;
-        Tue, 10 Sep 2019 08:12:13 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwvOQRQwrn10rdgOMO23uRs00N8x3JYmcNUIw+5WHM1A0xUU4eykcv2yQqRRFgic5VK12F86w==
-X-Received: by 2002:adf:9050:: with SMTP id h74mr26234766wrh.191.1568128333561;
-        Tue, 10 Sep 2019 08:12:13 -0700 (PDT)
-Received: from miu.piliscsaba.redhat.com (catv-212-96-48-140.catv.broadband.hu. [212.96.48.140])
-        by smtp.gmail.com with ESMTPSA id g185sm12803wme.10.2019.09.10.08.12.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Sep 2019 08:12:13 -0700 (PDT)
-From:   Miklos Szeredi <mszeredi@redhat.com>
-To:     virtualization@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org
-Cc:     Stefan Hajnoczi <stefanha@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-Subject: [PATCH v5 3/4] virtio-fs: add Documentation/filesystems/virtiofs.rst
-Date:   Tue, 10 Sep 2019 17:12:05 +0200
-Message-Id: <20190910151206.4671-4-mszeredi@redhat.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190910151206.4671-1-mszeredi@redhat.com>
-References: <20190910151206.4671-1-mszeredi@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S2393861AbfIJPMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 11:12:18 -0400
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x8AFBrQS016611;
+        Tue, 10 Sep 2019 10:11:53 -0500
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id x8AFBqhw016608;
+        Tue, 10 Sep 2019 10:11:52 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Tue, 10 Sep 2019 10:11:52 -0500
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] powerpc/kexec: move kexec files into a dedicated subdir.
+Message-ID: <20190910151152.GV9749@gate.crashing.org>
+References: <68d12eb0b815049049babc9be243ffd8521b48c7.1568127294.git.christophe.leroy@c-s.fr> <9019b24c1f6ed838550669135fcaa9493670e188.1568127294.git.christophe.leroy@c-s.fr>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9019b24c1f6ed838550669135fcaa9493670e188.1568127294.git.christophe.leroy@c-s.fr>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Hajnoczi <stefanha@redhat.com>
+On Tue, Sep 10, 2019 at 02:55:27PM +0000, Christophe Leroy wrote:
+> arch/powerpc/kernel/ contains 7 files dedicated to kexec.
+> 
+> Move them into a dedicated subdirectory.
 
-Add information about the new "virtiofs" file system.
+>  arch/powerpc/kernel/{ => kexec}/ima_kexec.c        |  0
+>  arch/powerpc/kernel/{ => kexec}/kexec_32.S         |  2 +-
+>  arch/powerpc/kernel/{ => kexec}/kexec_elf_64.c     |  0
+>  arch/powerpc/kernel/{ => kexec}/machine_kexec.c    |  0
+>  arch/powerpc/kernel/{ => kexec}/machine_kexec_32.c |  0
+>  arch/powerpc/kernel/{ => kexec}/machine_kexec_64.c |  0
+>  .../kernel/{ => kexec}/machine_kexec_file_64.c     |  0
 
-Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
----
- Documentation/filesystems/index.rst    | 10 +++++
- Documentation/filesystems/virtiofs.rst | 60 ++++++++++++++++++++++++++
- MAINTAINERS                            | 11 +++++
- 3 files changed, 81 insertions(+)
- create mode 100644 Documentation/filesystems/virtiofs.rst
+The filenames do not really need "kexec" in there anymore then?
 
-diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index 2de2fe2ab078..56e94bfc580f 100644
---- a/Documentation/filesystems/index.rst
-+++ b/Documentation/filesystems/index.rst
-@@ -32,3 +32,13 @@ filesystem implementations.
- 
-    journalling
-    fscrypt
-+
-+Filesystems
-+===========
-+
-+Documentation for filesystem implementations.
-+
-+.. toctree::
-+   :maxdepth: 2
-+
-+   virtiofs
-diff --git a/Documentation/filesystems/virtiofs.rst b/Documentation/filesystems/virtiofs.rst
-new file mode 100644
-index 000000000000..4f338e3cb3f7
---- /dev/null
-+++ b/Documentation/filesystems/virtiofs.rst
-@@ -0,0 +1,60 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===================================================
-+virtiofs: virtio-fs host<->guest shared file system
-+===================================================
-+
-+- Copyright (C) 2019 Red Hat, Inc.
-+
-+Introduction
-+============
-+The virtiofs file system for Linux implements a driver for the paravirtualized
-+VIRTIO "virtio-fs" device for guest<->host file system sharing.  It allows a
-+guest to mount a directory that has been exported on the host.
-+
-+Guests often require access to files residing on the host or remote systems.
-+Use cases include making files available to new guests during installation,
-+booting from a root file system located on the host, persistent storage for
-+stateless or ephemeral guests, and sharing a directory between guests.
-+
-+Although it is possible to use existing network file systems for some of these
-+tasks, they require configuration steps that are hard to automate and they
-+expose the storage network to the guest.  The virtio-fs device was designed to
-+solve these problems by providing file system access without networking.
-+
-+Furthermore the virtio-fs device takes advantage of the co-location of the
-+guest and host to increase performance and provide semantics that are not
-+possible with network file systems.
-+
-+Usage
-+=====
-+Mount file system with tag ``myfs`` on ``/mnt``:
-+
-+.. code-block:: sh
-+
-+  guest# mount -t virtiofs myfs /mnt
-+
-+Please see https://virtio-fs.gitlab.io/ for details on how to configure QEMU
-+and the virtiofsd daemon.
-+
-+Internals
-+=========
-+Since the virtio-fs device uses the FUSE protocol for file system requests, the
-+virtiofs file system for Linux is integrated closely with the FUSE file system
-+client.  The guest acts as the FUSE client while the host acts as the FUSE
-+server.  The /dev/fuse interface between the kernel and userspace is replaced
-+with the virtio-fs device interface.
-+
-+FUSE requests are placed into a virtqueue and processed by the host.  The
-+response portion of the buffer is filled in by the host and the guest handles
-+the request completion.
-+
-+Mapping /dev/fuse to virtqueues requires solving differences in semantics
-+between /dev/fuse and virtqueues.  Each time the /dev/fuse device is read, the
-+FUSE client may choose which request to transfer, making it possible to
-+prioritize certain requests over others.  Virtqueues have queue semantics and
-+it is not possible to change the order of requests that have been enqueued.
-+This is especially important if the virtqueue becomes full since it is then
-+impossible to add high priority requests.  In order to address this difference,
-+the virtio-fs device uses a "hiprio" virtqueue specifically for requests that
-+have priority over normal requests.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9cbcf167bdd0..459b3fa8e25e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17117,6 +17117,17 @@ S:	Supported
- F:	drivers/s390/virtio/
- F:	arch/s390/include/uapi/asm/virtio-ccw.h
- 
-+VIRTIO FILE SYSTEM
-+M:	Stefan Hajnoczi <stefanha@redhat.com>
-+M:	Miklos Szeredi <miklos@szeredi.hu>
-+L:	virtualization@lists.linux-foundation.org
-+L:	linux-fsdevel@vger.kernel.org
-+W:	https://virtio-fs.gitlab.io/
-+S:	Supported
-+F:	fs/fuse/virtio_fs.c
-+F:	include/uapi/linux/virtio_fs.h
-+F:	Documentation/filesystems/virtiofs.rst
-+
- VIRTIO GPU DRIVER
- M:	David Airlie <airlied@linux.ie>
- M:	Gerd Hoffmann <kraxel@redhat.com>
--- 
-2.21.0
 
+Segher
